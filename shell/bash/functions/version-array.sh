@@ -243,8 +243,8 @@ koopa::sanitize_version() { # {{{1
     # Sanitize version.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_args "$#"
     local pattern x
+    koopa::assert_has_args "$#"
     pattern='[.0-9]+'
     for x in "$@"
     do

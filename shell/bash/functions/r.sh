@@ -9,8 +9,8 @@ koopa::array_to_r_vector() { # {{{1
     # koopa::array_to_r_vector "aaa" "bbb"
     # ## c("aaa", "bbb")
     # """
-    koopa::assert_has_args "$#"
     local x
+    koopa::assert_has_args "$#"
     x="$(printf '"%s", ' "$@")"
     x="$(koopa::strip_right ", " "$x")"
     x="$(printf "c(%s)\n" "$x")"
@@ -26,9 +26,9 @@ koopa::link_r_etc() { # {{{1
     #
     # Don't copy Makevars file across machines.
     # """
-    koopa::assert_has_args_le "$#" 1
     local file files koopa_prefix os_id r r_etc_source r_etc_target \
         r_prefix version
+    koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     koopa::is_installed "$r" || return 1
     r_prefix="$(koopa::r_prefix "$r")"
@@ -195,8 +195,8 @@ koopa::update_r_config() { # {{{1
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
-    koopa::assert_has_args_le "$#" 1
     local r r_prefix
+    koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     r="$(koopa::which_realpath "$r")"
     koopa::assert_is_installed "$r"

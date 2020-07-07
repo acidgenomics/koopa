@@ -9,10 +9,10 @@ koopa::download_sra_accession_list() {
     # Download SRA accession list.
     # @note Updated 2020-07-02.
     # """
+    local file id
     koopa::assert_has_args_le "$#" 2
     koopa::activate_conda_env entrez-direct
     koopa::assert_is_installed esearch efetch
-    local file id
     id="${1:?}"
     file="${2:-"SraAccList.txt"}"
     koopa::h1 "Downloading SRA '${id}' to '${file}'."

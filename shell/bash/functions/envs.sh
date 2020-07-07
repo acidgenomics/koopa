@@ -5,9 +5,9 @@ koopa::conda_env_list() { # {{{1
     # Return a list of conda environments in JSON format.
     # @note Updated 2019-06-30.
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed conda
-    local x
     x="$(conda env list --json)"
     koopa::print "$x"
     return 0
@@ -43,4 +43,3 @@ koopa::conda_env_prefix() { # {{{1
     koopa::print "$x"
     return 0
 }
-

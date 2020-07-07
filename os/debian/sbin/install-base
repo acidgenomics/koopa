@@ -24,9 +24,9 @@ koopa::install_debian_base() { # {{{1
     # Configure time zone:
     # > sudo dpkg-reconfigure tzdata
     # """
-    koopa::assert_is_installed apt apt-get sed sudo
     local apt_installed compact dev enabled_repos extra legacy_pkgs name_fancy \
         pkg pkgs remove remove_pkgs upgrade
+    koopa::assert_is_installed apt apt-get sed sudo
     # This is intended for compact mode configuration in 'configure-vm' script,
     # which when disabled builds a lot of GCC packages and other programs from
     # source, rather than relying on system binary packages.

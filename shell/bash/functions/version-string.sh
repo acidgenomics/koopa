@@ -7,9 +7,9 @@ koopa::current_bcbio_version() { # {{{1
     #
     # This approach checks for latest stable release available via bioconda.
     # """
+    local url x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed curl
-    local url x
     url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
 /master/requirements-conda.txt"
     x="$( \
@@ -27,9 +27,9 @@ koopa::current_bioc_version() { # {{{1
     # Current Bioconductor version.
     # @note Updated 2020-06-29.
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed curl
-    local x
     x="$(curl --silent 'https://bioconductor.org/bioc-version')"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -41,9 +41,9 @@ koopa::gcc_version() { # {{{1
     # GCC version.
     # @note Updated 2020-06-29.
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed gcc
-    local x
     if koopa::is_macos
     then
         x="$(gcc --version 2>&1 | sed -n '2p')"
@@ -66,9 +66,9 @@ koopa::github_latest_release() { # {{{1
     # # Expected failure:
     # koopa::github_latest_release "acidgenomics/acidgenomics.github.io"
     # """
+    local json repo url x
     koopa::assert_has_args "$#"
     koopa::assert_is_installed curl
-    local json repo url x
     repo="${1:?}"
     url="https://api.github.com/repos/${repo}/releases/latest"
     json="$(curl -s "$url" 2>&1 || true)"
@@ -90,9 +90,9 @@ koopa::hdf5_version() { # {{{1
     #
     # Debian: 'dpkg -s libhdf5-dev'
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed h5cc
-    local x
     x="$( \
         h5cc -showconfig \
             | grep 'HDF5 Version:' \
@@ -108,9 +108,9 @@ koopa::linux_version() { # {{{1
     # Linux version.
     # @note Updated 2020-07-03.
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_linux
-    local x
     x="$(uname -r)"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -124,8 +124,8 @@ koopa::llvm_version() { # {{{1
     #
     # Note that 'llvm-config' is versioned on most systems.
     # """
-    koopa::assert_has_no_args "$#"
     local x
+    koopa::assert_has_no_args "$#"
     x="${LLVM_CONFIG:-}"
     [[ -n "$x" ]] || return 1
     x="$(koopa::return_version "$LLVM_CONFIG")"
@@ -144,8 +144,8 @@ koopa::lmod_version() { # {{{1
     # >     | grep -Eo "Version [.0-9]+" \
     # >     | cut -d ' ' -f 2
     # """
-    koopa::assert_has_no_args "$#"
     local x
+    koopa::assert_has_no_args "$#"
     x="${LMOD_VERSION:-}"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -157,9 +157,9 @@ koopa::openjdk_version() { # {{{1
     # Java (OpenJDK) version.
     # @note Updated 2020-06-29.
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed java
-    local x
     x="$( \
         java --version \
             | head -n 1 \
@@ -175,9 +175,9 @@ koopa::oracle_instantclient_version() { # {{{1
     # Oracle InstantClient version.
     # @note Updated 2020-06-29.
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed sqlplus
-    local x
     x="$(sqlplus -v | grep -E '^Version')"
     x="$(koopa::extract_version "$x")"
     [[ -n "$x" ]] || return 1
@@ -192,8 +192,8 @@ koopa::os_version() { # {{{1
     #
     # 'uname' returns Darwin kernel version for macOS.
     # """
-    koopa::assert_has_no_args "$#"
     local x
+    koopa::assert_has_no_args "$#"
     if koopa::is_macos
     then
         x="$(koopa::macos_version)"
@@ -210,9 +210,9 @@ koopa::parallel_version() { # {{{1
     # GNU parallel version.
     # @note Updated 2020-06-29.
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed parallel
-    local x
     x="$( \
         parallel --version \
             | head -n 1 \
@@ -228,9 +228,9 @@ koopa::perl_file_rename_version() { # {{{1
     # Perl File::Rename version.
     # @note Updated 2020-07-03.
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed perl rename
-    local x
     x="$(rename --version 2>/dev/null | head -n 1)"
     koopa::str_match "$x" 'File::Rename' || return 1
     koopa::extract_version "$x"
@@ -263,9 +263,9 @@ koopa::tex_version() { # {{{1
     # Here's what it looks like on Debian/Ubuntu:
     # TeX 3.14159265 (TeX Live 2017/Debian)
     # """
+    local x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed tex
-    local x
     x="$( \
         tex --version \
             | head -n 1 \
@@ -304,9 +304,9 @@ koopa::vim_version() { # {{{1
     # Vim version.
     # @note Updated 2020-06-29.
     # """
+    local major patch version x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed vim
-    local major patch version x
     x="$(vim --version 2>/dev/null)"
     major="$( \
         koopa::print "$x" \

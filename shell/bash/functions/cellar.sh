@@ -5,15 +5,13 @@ koopa::find_cellar_version() { # {{{1
     # Find cellar installation directory.
     # @note Updated 2020-06-30.
     # """
+    local name prefix x
     koopa::assert_has_args "$#"
-    local name
     name="${1:?}"
-    local prefix
     prefix="$(koopa::cellar_prefix)"
     koopa::assert_is_dir "$prefix"
     prefix="${prefix}/${name}"
     koopa::assert_is_dir "$prefix"
-    local x
     x="$( \
         find "$prefix" \
             -mindepth 1 \
@@ -33,19 +31,18 @@ koopa::install_cellar() { # {{{1
     # Install cellar program.
     # @note Updated 2020-06-29.
     # """
-    koopa::assert_has_args "$#"
-    koopa::assert_is_linux
-    koopa::assert_has_no_envs
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
         name_fancy pass_args prefix reinstall script_name script_path tmp_dir \
         version
+    koopa::assert_has_args "$#"
+    koopa::assert_is_linux
+    koopa::assert_has_no_envs
     include_dirs=
     link_cellar=1
     name_fancy=
     reinstall=0
     script_name=
     version=
-    # Define passthrough args array, for looping.
     pass_args=()
     while (("$#"))
     do
@@ -113,7 +110,6 @@ koopa::install_cellar() { # {{{1
     [[ -z "$script_name" ]] && script_name="$name"
     [[ -z "$version" ]] && version="$(koopa::variable "$name")"
     prefix="$(koopa::cellar_prefix)/${name}/${version}"
-    # shellcheck disable=SC2034
     make_prefix="$(koopa::make_prefix)"
     if [[ "$reinstall" -eq 1 ]]
     then
@@ -173,9 +169,9 @@ koopa::link_cellar() { # {{{1
     # @examples
     # koopa::link_cellar emacs 26.3
     # """
-    koopa::assert_is_linux
     local cellar_prefix cellar_subdirs cp_flags include_dirs make_prefix name \
         pos verbose version
+    koopa::assert_is_linux
     include_dirs=
     verbose=0
     version=

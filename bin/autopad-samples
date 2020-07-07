@@ -9,8 +9,8 @@ koopa::autopad_samples() {
     # Autopad samples.
     # @note Updated 2020-07-01.
     # """
-    koopa::assert_has_args "$#"
     local files newname num padwidth oldname pos prefix stem
+    koopa::assert_has_args "$#"
     prefix="sample"
     padwidth=2
     pos=()

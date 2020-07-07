@@ -10,8 +10,8 @@ koopa::extract() { # {{{1
     # See also:
     # - https://github.com/stephenturner/oneliners
     # """
-    koopa::assert_has_args "$#"
     local file
+    koopa::assert_has_args "$#"
     for file in "$@"
     do
         koopa::assert_is_file "$file"
@@ -77,4 +77,3 @@ koopa::extract() { # {{{1
     done
     return 0
 }
-

@@ -24,8 +24,8 @@ koopa::install_arch_base() {
     # Note that Arch is currently overwriting PS1 for root.
     # This is due to configuration in '/etc/profile'.
     # """
-    koopa::assert_is_installed pacman sudo
     local name_fancy packages
+    koopa::assert_is_installed pacman sudo
     name_fancy="Arch base system"
     koopa::install_start "$name_fancy"
     # Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which

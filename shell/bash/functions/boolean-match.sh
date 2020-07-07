@@ -9,8 +9,8 @@ koopa::file_match() { # {{{1
     # koopa::file_match FILE PATTERN
     # echo FILE | koopa::file_match PATTERN
     # """
-    koopa::assert_has_args "$#"
     local file pattern
+    koopa::assert_has_args "$#"
     if [[ "$#" -eq 2 ]]
     then
         # Standard input.

@@ -9,8 +9,8 @@ koopa::install_perl_packages() {
     # Install Perl packages.
     # @note Updated 2020-07-02.
     # """
-    koopa::assert_is_installed cpan perl
     local module modules name_fancy
+    koopa::assert_is_installed cpan perl
     name_fancy="Perl packages"
     koopa::install_start "$name_fancy"
     export PERL_MM_USE_DEFAULT=1

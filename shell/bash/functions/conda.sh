@@ -6,8 +6,8 @@ koopa::conda_create_env() { # {{{1
     # Create a conda environment.
     # @note Updated 2020-06-29.
     # """
-    koopa::assert_has_args "$#"
     local flags force env_name name pos prefix version
+    koopa::assert_has_args "$#"
     force=0
     version=
     pos=()
@@ -81,6 +81,7 @@ koopa::conda_remove_env() { # {{{1
     # Remove conda environment.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa::assert_has_args "$#"
     koopa::activate_conda
     koopa::assert_is_installed conda

@@ -5,9 +5,9 @@ koopa::check_azure() { # {{{1
     # Check Azure VM integrity.
     # @note Updated 2020-07-04.
     # """
+    local mount
     koopa::assert_has_no_args "$#"
     koopa::is_azure || return 0
-    local mount
     mount='/mnt/resource'
     if [[ -e "$mount" ]]
     then
@@ -24,8 +24,8 @@ koopa::check_access_human() { # {{{1
     # Check if file or directory has expected human readable access.
     # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args "$#"
     local access code file
+    koopa::assert_has_args "$#"
     file="${1:?}"
     code="${2:?}"
     if [[ ! -e "$file" ]]
@@ -46,8 +46,8 @@ koopa::check_access_octal() { # {{{1
     # Check if file or directory has expected octal access.
     # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args "$#"
     local access code file
+    koopa::assert_has_args "$#"
     file="${1:?}"
     code="${2:?}"
     if [[ ! -e "$file" ]]
@@ -68,17 +68,16 @@ koopa::check_data_disk() { # {{{1
     # Check data disk configuration.
     # @note Updated 2020-07-03.
     # """
+    local app_prefix data_disk_link_prefix
     koopa::assert_has_no_args "$#"
     koopa::is_linux || return 0
     # e.g. '/n'.
-    local data_disk_link_prefix
     data_disk_link_prefix="$(koopa::data_disk_link_prefix)"
     if [[ -L "$data_disk_link_prefix" ]] && [[ ! -e "$data_disk_link_prefix" ]]
     then
         koopa::warning "Data disk link error: '${data_disk_link_prefix}'."
     fi
     # e.g. '/usr/local/opt'.
-    local app_prefix
     app_prefix="$(koopa::app_prefix)"
     if [[ -L "$app_prefix" ]] && [[ ! -e "$app_prefix" ]]
     then
@@ -93,8 +92,8 @@ koopa::check_disk() { # {{{1
     # @note Updated 2020-06-30.
     # """
     local limit used
-    used="$(koopa::disk_pct_used "$@")"
     limit=90
+    used="$(koopa::disk_pct_used "$@")"
     if [[ "$used" -gt "$limit" ]]
     then
         koopa::warning "Disk usage is ${used}%."
@@ -107,8 +106,8 @@ koopa::check_group() { # {{{1
     # Check if file or directory has an expected group.
     # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args "$#"
     local code file group
+    koopa::assert_has_args "$#"
     file="${1:?}"
     code="${2:?}"
     if [[ ! -e "$file" ]]
@@ -131,9 +130,9 @@ koopa::check_mount() { # {{{1
     # Usage of find is recommended over ls here.
     # @note Updated 2020-07-04.
     # """
+    local mnt
     koopa::assert_has_args "$#"
     koopa::assert_is_installed find
-    local mnt
     mnt="${1:?}"
     if [[ "$(find "$mnt" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]]
     then
@@ -148,8 +147,8 @@ koopa::check_user() { # {{{1
     # Check if file or directory is owned by an expected user.
     # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args "$#"
     local current_user expected_user file
+    koopa::assert_has_args "$#"
     file="${1:?}"
     if [[ ! -e "$file" ]]
     then
@@ -176,8 +175,8 @@ koopa::check_version() { # {{{1
     # How to break a loop with an error code:
     # https://stackoverflow.com/questions/14059342/
     # """
-    koopa::assert_has_args "$#"
     local current expected status
+    koopa::assert_has_args "$#"
     IFS='.' read -r -a current <<< "${1:?}"
     IFS='.' read -r -a expected <<< "${2:?}"
     status=0
@@ -191,4 +190,3 @@ koopa::check_version() { # {{{1
     done
     return "$status"
 }
-

@@ -15,7 +15,7 @@ koopa::add_conda_env_to_path() { # {{{1
         bin_dir="${CONDA_PREFIX}/envs/${name}/bin"
         if [[ ! -d "$bin_dir" ]]
         then
-            koopa::warning "Conda environment missing: '${bin_dir}'."
+            koopa::warning "Conda environment missing: \"${bin_dir}\"."
             return 1
         fi
         koopa::add_to_path_start "$bin_dir"
@@ -44,9 +44,9 @@ koopa::list_path_priority() { # {{{1
     # - https://www.unix.com/shell-programming-and-scripting/
     #       77199-splitting-string-awk.html
     # """
+    local str
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed awk
-    local str
     str="${1:-$PATH}"
     x="$( \
         koopa::print "$str" \
@@ -62,8 +62,8 @@ koopa::list_path_priority_unique() { # {{{1
     # Split PATH string by ':' delim into lines but only return uniques.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_is_installed awk tac
     local x
+    koopa::assert_is_installed awk tac
     x="$( \
         koopa::list_path_priority "$@" \
             | tac \
@@ -87,9 +87,9 @@ koopa::which() { # {{{1
     # koopa::which bash
     # ## /usr/local/bin/bash
     # """
+    local cmd
     koopa::assert_has_args "$#"
     koopa::assert_is_installed "$@"
-    local cmd
     for cmd in "$@"
     do
         koopa::is_alias "$cmd" && cmd="$(unalias "$cmd")"
@@ -118,8 +118,8 @@ koopa::which_realpath() { # {{{1
     # ## /usr/local/Cellar/bash/5.0.17/bin/bash
     # ## /usr/local/Cellar/vim/8.2.1050/bin/vim
     # """
-    koopa::assert_has_args "$#"
     local cmd
+    koopa::assert_has_args "$#"
     for cmd in "$@"
     do
         cmd="$(koopa::which "$cmd")"

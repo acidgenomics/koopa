@@ -5,8 +5,8 @@ koopa::pip_install() { # {{{1
     # Internal pip install command.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_args "$#"
     local python
+    koopa::assert_has_args "$#"
     python="python3"
     koopa::assert_is_installed "$python"
     "$python" \
@@ -24,9 +24,9 @@ koopa::python_remove_pycache() { # {{{1
     # These directories can create permission issues when attempting to rsync
     # installation across multiple VMs.
     # """
+    local prefix python
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find
-    local prefix python
     prefix="${1:-}"
     if [[ -z "$prefix" ]]
     then
@@ -53,10 +53,10 @@ koopa::venv_create() {
     # Create Python virtual environment.
     # @note Updated 2020-07-02.
     # """
+    local name prefix py_exe
     koopa::assert_has_no_envs
     koopa::assert_is_installed python3
     koopa::assert_is_current_version python
-    local name prefix py_exe
     name="${1:?}"
     prefix="$(koopa::venv_prefix)/${name}"
     [[ -d "$prefix" ]] && return 0
@@ -114,8 +114,8 @@ koopa::venv_create_r_reticulate() {
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
-    koopa::assert_has_no_args "$#"
     local name packages
+    koopa::assert_has_no_args "$#"
     name="r-reticulate"
     packages=(
         Cython
@@ -133,19 +133,19 @@ koopa::venv_create_r_reticulate() {
     )
     if koopa::is_macos
     then
-        export CC="/usr/bin/clang"
-        export CXX="/usr/bin/clang++"
+        export CC='/usr/bin/clang'
+        export CXX='/usr/bin/clang++'
         export CFLAGS="${CFLAGS:-} -I/usr/local/opt/libomp/include"
         export CPPFLAGS="${CPPFLAGS:-} -Xpreprocessor -fopenmp"
         export CXXFLAGS="${CXXFLAGS:-} -I/usr/local/opt/libomp/include"
-        export DYLD_LIBRARY_PATH="/usr/local/opt/libomp/lib"
+        export DYLD_LIBRARY_PATH='/usr/local/opt/libomp/lib'
         export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
     fi
     if [[ -n "${LLVM_CONFIG:-}" ]]
     then
-        koopa::info "LLVM_CONFIG: '${LLVM_CONFIG}'."
+        koopa::info "LLVM_CONFIG: \"${LLVM_CONFIG}\"."
     else
-        koopa::note "Export 'LLVM_CONFIG' to locate LLVM llvm-config binary."
+        koopa::note 'Export "LLVM_CONFIG" to locate LLVM llvm-config binary.'
     fi
     koopa::venv_create "$name" "${packages[@]}"
     return 0

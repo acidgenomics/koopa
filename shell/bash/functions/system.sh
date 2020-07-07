@@ -910,9 +910,9 @@ koopa::view_latest_tmp_log_file() { # {{{1
     # View the latest temporary log file.
     # @note Updated 2020-07-05.
     # """
+    local dir log_file
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed find
-    local dir log_file
     dir="${TMPDIR:-/tmp}"
     log_file="$( \
         find "$dir" \
@@ -938,6 +938,7 @@ koopa::warn_if_export() { # {{{1
     # Useful for checking against unwanted compiler settings.
     # In particular, useful to check for 'LD_LIBRARY_PATH'.
     # """
+    local arg
     koopa::assert_has_args "$#"
     for arg in "$@"
     do

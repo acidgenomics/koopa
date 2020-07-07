@@ -5,11 +5,11 @@ koopa::apt_add_azure_cli_repo() { # {{{1
     # Add Microsoft Azure CLI apt repo.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_no_args "$#"
     local file os_codename string url
+    koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/azure-cli.list'
     [[ -f "$file" ]] && return 0
-    koopa::info "Adding Microsoft Azure CLI repo at '${file}'."
+    koopa::info "Adding Microsoft Azure CLI repo at \"${file}\"."
     koopa::apt_add_microsoft_key
     os_codename="$(koopa::os_codename)"
     url='https://packages.microsoft.com/repos/azure-cli/'
@@ -23,8 +23,8 @@ koopa::apt_add_docker_key() { # {{{1
     # Add the Docker key.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_no_args "$#"
     local key name url
+    koopa::assert_has_no_args "$#"
     name='Docker'
     url="https://download.docker.com/linux/$(koopa::os_id)/gpg"
     key='9DC858229FC7DD38854AE2D88D81803C0EBFCD88'
@@ -40,8 +40,8 @@ koopa::apt_add_docker_repo() { # {{{1
     # Ubuntu 20 (Focal Fossa) not yet supported:
     # https://download.docker.com/linux/
     # """
-    koopa::assert_has_no_args "$#"
     local file os_codename os_id string url
+    koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/docker.list'
     [[ -f "$file" ]] && return 0
     koopa::info "Adding Docker repo at '${file}'."
@@ -65,8 +65,8 @@ koopa::apt_add_google_cloud_key() { # {{{1
     # Add the Google Cloud key.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local file url
+    koopa::assert_has_no_args "$#"
     url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     file='/usr/share/keyrings/cloud.google.gpg'
     [[ -e "$file" ]] && return 0
@@ -82,8 +82,8 @@ koopa::apt_add_google_cloud_sdk_repo() { # {{{1
     # Add Google Cloud SDK apt repo.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local file string
+    koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/google-cloud-sdk.list'
     [[ -f "$file" ]] && return 0
     koopa::info "Adding Google Cloud SDK repo at '${file}'."
@@ -99,8 +99,8 @@ koopa::apt_add_llvm_key() { # {{{1
     # Add the LLVM key.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local key name url
+    koopa::assert_has_no_args "$#"
     name='LLVM'
     url='https://apt.llvm.org/llvm-snapshot.gpg.key'
     key='6084F3CF814B57C1CF12EFD515CF4D18AF4F7421'
@@ -113,8 +113,8 @@ koopa::apt_add_llvm_repo() { # {{{1
     # Add LLVM apt repo.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local file os_codename string version
+    koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/llvm.list'
     [[ -f "$file" ]] && return 0
     koopa::info "Adding LLVM repo at '${file}'."
@@ -133,8 +133,8 @@ koopa::apt_add_microsoft_key() {  #{{{1
     # Add the Microsoft Azure CLI key.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local file url
+    koopa::assert_has_no_args "$#"
     url='https://packages.microsoft.com/keys/microsoft.asc'
     file='/etc/apt/trusted.gpg.d/microsoft.asc.gpg'
     [[ -e "$file" ]] && return 0
@@ -151,8 +151,8 @@ koopa::apt_add_r_key() { # {{{1
     # Add the R key.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local key keyserver
+    koopa::assert_has_no_args "$#"
     if koopa::is_ubuntu
     then
         # Release is signed by Michael Rutter <marutter@gmail.com>.
@@ -177,8 +177,8 @@ koopa::apt_add_r_repo() { # {{{1
     # Add R apt repo.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_args_le "$#" 1
     local file os_codename os_id repo string version
+    koopa::assert_has_args_le "$#" 1
     version="${1:-}"
     if [[ -z "$version" ]]
     then
@@ -239,8 +239,8 @@ koopa::apt_add_wine_key() { # {{{1
     # > wget -nc https://dl.winehq.org/wine-builds/winehq.key
     # > sudo apt-key add winehq.key
     # """
-    koopa::assert_has_no_args "$#"
     local key name url
+    koopa::assert_has_no_args "$#"
     name='Wine'
     url='https://dl.winehq.org/wine-builds/winehq.key'
     key='D43F640145369C51D786DDEA76F1A20FF987672F'
@@ -258,8 +258,8 @@ koopa::apt_add_wine_repo() { # {{{1
     # - Ubuntu:
     #   https://wiki.winehq.org/Ubuntu
     # """
-    koopa::assert_has_no_args "$#"
     local file os_codename os_id string url
+    koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/wine.list'
     [[ -f "$file" ]] && return 0
     koopa::info "Adding Wine repo at '${file}'."
@@ -277,8 +277,8 @@ koopa::apt_add_wine_obs_key() { # {{{1
     # Add the Wine OBS openSUSE key.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local key name os_string subdir url
+    koopa::assert_has_no_args "$#"
     name='Wine OBS'
     os_string="$(koopa::os_string)"
     # Signed by <Emulators@build.opensuse.org>.
@@ -314,8 +314,8 @@ koopa::apt_add_wine_obs_repo() { # {{{1
     # - https://wiki.winehq.org/Debian
     # - https://forum.winehq.org/viewtopic.php?f=8&t=32192
     # """
-    koopa::assert_has_no_args "$#"
     local base_url file os_string repo_url string
+    koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/wine-obs.list'
     [[ -f "$file" ]] && return 0
     koopa::info "Adding Wine OBS repo at '${file}'."
@@ -346,8 +346,8 @@ koopa::apt_configure_sources() { # {{{1
     #
     # Previously, we used a symlink approach here until 2020-02-24.
     # """
-    koopa::assert_has_no_args "$#"
     local os_codename sources_list sources_list_d
+    koopa::assert_has_no_args "$#"
     sources_list='/etc/apt/sources.list'
     [[ -L "$sources_list" ]] && koopa::sys_rm "$sources_list"
     sources_list_d='/etc/apt/sources.list.d'
@@ -376,8 +376,8 @@ koopa::apt_disable_deb_src() { # {{{1
     # Enable 'deb-src' source packages.
     # @note Updated 2020-02-05.
     # """
-    koopa::assert_has_args_le "$#" 1
     local file
+    koopa::assert_has_args_le "$#" 1
     file="${1:-/etc/apt/sources.list}"
     file="$(realpath "$file")"
     koopa::info "Disabling Debian sources in '${file}'."
@@ -396,8 +396,8 @@ koopa::apt_enable_deb_src() { # {{{1
     # Enable 'deb-src' source packages.
     # @note Updated 2020-02-05.
     # """
-    koopa::assert_has_args_le "$#" 1
     local file
+    koopa::assert_has_args_le "$#" 1
     file="${1:-/etc/apt/sources.list}"
     file="$(realpath "$file")"
     koopa::info "Enabling Debian sources in '${file}'."
@@ -416,8 +416,8 @@ koopa::apt_enabled_repos() { # {{{1
     # Get a list of enabled default apt repos.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_no_args "$#"
     local os_codename x
+    koopa::assert_has_no_args "$#"
     os_codename="$(koopa::os_codename)"
     x="$( \
         grep -E "^deb\s.+\s${os_codename}\s.+$" /etc/apt/sources.list \
@@ -460,8 +460,8 @@ koopa::apt_is_key_imported() { # {{{1
     # Is a GPG key imported for apt?
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_args_eq "$#" 1
     local key
+    koopa::assert_has_args_eq "$#" 1
     key="${1:?}"
     key="$( \
         koopa::print "$key" \
@@ -483,8 +483,8 @@ koopa::apt_key_add() {  #{{{1
     # Using '-k/--insecure' flag here to handle some servers
     # (e.g. download.opensuse.org) that will fail otherwise.
     # """
-    koopa::assert_has_args_le "$#" 3
     local name url key
+    koopa::assert_has_args_le "$#" 3
     name="${1:?}"
     url="${2:?}"
     key="${3:-}"
@@ -530,8 +530,8 @@ koopa::apt_space_used_by_grep() { # {{{1
     # See also:
     # https://askubuntu.com/questions/490945
     # """
-    koopa::assert_has_args "$#"
     local x
+    koopa::assert_has_args "$#"
     x="$( \
         sudo apt-get --assume-no autoremove "$@" \
             | grep freed \

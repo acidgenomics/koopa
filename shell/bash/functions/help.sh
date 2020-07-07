@@ -5,9 +5,9 @@ koopa::help() { # {{{1
     # Show usage via '--help' flag.
     # @note Updated 2020-07-05.
     # """
+    local arg args first_arg last_arg man_file prefix script_name
     [[ "$#" -eq 0 ]] && return 0
     [[ "${1:-}" == "" ]] && return 0
-    local arg args first_arg last_arg man_file prefix script_name
     first_arg="${1:?}"
     last_arg="${!#}"
     args=("$first_arg" "$last_arg")

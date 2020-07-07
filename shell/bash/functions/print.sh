@@ -131,7 +131,7 @@ koopa::uninstall_start() { # {{{1
     prefix="${2:-}"
     if [[ -n "$prefix" ]]
     then
-        msg="Uninstalling ${name} at '${prefix}'."
+        msg="Uninstalling ${name} at \"${prefix}\"."
     else
         msg="Uninstalling ${name}."
     fi
@@ -154,13 +154,13 @@ koopa::update_start() { # {{{1
     # Inform the user about start of update.
     # @note Updated 2020-07-01.
     # """
-    koopa::assert_has_args "$#"
     local name msg prefix
+    koopa::assert_has_args "$#"
     name="${1:?}"
     prefix="${2:-}"
     if [[ -n "$prefix" ]]
     then
-        msg="Updating ${name} at '${prefix}'."
+        msg="Updating ${name} at \"${prefix}\"."
     else
         msg="Updating ${name}."
     fi
@@ -177,4 +177,3 @@ koopa::update_success() { # {{{1
     koopa::success "Update of ${1:?} was successful."
     return 0
 }
-

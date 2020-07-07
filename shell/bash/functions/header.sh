@@ -7,8 +7,8 @@ koopa::header() { # {{{1
     #
     # Useful for private scripts using koopa code outside of package.
     # """
-    koopa::assert_has_args_eq "$#" 1
     local file header_type koopa_prefix
+    koopa::assert_has_args_eq "$#" 1
     header_type="${1:?}"
     koopa_prefix="$(koopa::prefix)"
     case "$header_type" in
@@ -62,4 +62,3 @@ koopa::header() { # {{{1
     koopa::print "$file"
     return 0
 }
-

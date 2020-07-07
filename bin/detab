@@ -9,9 +9,9 @@ koopa::detab() { # {{{1
     # Detab files.
     # @note Updated 2020-07-01.
     # """
+    local file
     koopa::assert_has_args "$#"
     koopa::assert_is_installed vim
-    local file
     for file in "$@"
     do
         vim \

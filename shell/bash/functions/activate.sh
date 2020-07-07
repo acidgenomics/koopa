@@ -6,8 +6,8 @@ koopa::activate_bash_aliases() { # {{{1
     # @note Updated 2020-06-19.
     # See /usr/share/doc/bash-doc/examples in the bash-doc package.
     # """
-    koopa::assert_has_no_args "$#"
     local user_aliases
+    koopa::assert_has_no_args "$#"
     user_aliases="${HOME}/.bash_aliases"
     if [[ -f "$user_aliases" ]]
     then
@@ -93,9 +93,9 @@ koopa::activate_bash_readline() { # {{{1
     # Readline input options.
     # @note Updated 2020-06-19.
     # """
+    local input_rc
     koopa::assert_has_no_args "$#"
     [[ -n "${INPUTRC:-}" ]] && return 0
-    local input_rc
     input_rc="${HOME}/.inputrc"
     [[ -r "$input_rc" ]] || return 0
     export INPUTRC="${HOME}/.inputrc"

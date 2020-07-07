@@ -5,9 +5,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 source "${script_dir}/../shell/bash/include/header.sh"
 
 koopa::conda_create_bioinfo_envs() {
-    koopa::assert_is_installed conda
     local all aligners chipseq data_mining file_formats methylation \
         quality_control rnaseq singlecell trimming variation workflows
+    koopa::assert_is_installed conda
     all=0
     aligners=0
     chipseq=0

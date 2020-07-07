@@ -43,8 +43,8 @@ koopa::tldr_display() {
     # Display rendered tldr page.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_args_eq "$#" 1
     local file italic_end italic_start line lines
+    koopa::assert_has_args_eq "$#" 1
     file="${1:?}"
     koopa::assert_is_file "$file"
     readarray -t lines < "$file"
@@ -103,8 +103,8 @@ koopa::tldr_download_cache() {
     # Cache a local copy of the tldr-pages repo.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_no_args "$#"
     local file prefix tmp_dir url
+    koopa::assert_has_no_args "$#"
     prefix="$(koopa::tldr_prefix)"
     [[ -d "$prefix" ]] && return 0
     koopa::info "Caching tldr pages from GitHub."
@@ -127,8 +127,8 @@ koopa::tldr_file() {
     # Get the tldr file path, using 'index.json' and platform key.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_args_eq "$#" 1
     local cmd desc file index_file platform prefix subdir
+    koopa::assert_has_args_eq "$#" 1
     cmd="${1:?}"
     platform="$(koopa::tldr_platform)"
     prefix="$(koopa::tldr_prefix)"
@@ -165,9 +165,9 @@ koopa::tldr_list_pages() {
     # List locally cached tldr pages.
     # @note Updated 2020-06-20.
     # """
+    local cmd pages prefix
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed fzf
-    local cmd pages prefix
     prefix="$(koopa::tldr_prefix)"
     readarray -t pages <<< "$( \
         find "$prefix" \
@@ -188,8 +188,8 @@ koopa::tldr_platform() {
     # Convert the local platorm name to tldr's version.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_no_args "$#"
     local str
+    koopa::assert_has_no_args "$#"
     case "$(uname -s)" in
         Darwin)
             str="osx"
@@ -222,8 +222,8 @@ koopa::tldr_update_index() {
     # Update tldr index.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_no_args "$#"
     local file url
+    koopa::assert_has_no_args "$#"
     file="$(koopa::tldr_index_file)"
     koopa::is_recent "$file" && return 0
     url="https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/\
