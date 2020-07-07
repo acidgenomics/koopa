@@ -1,5 +1,33 @@
 #!/usr/bin/env bash
 
+koopa::test_find_files() { # {{{1
+    # """
+    # Find relevant files for unit tests.
+    # @note Updated 2020-07-07.
+    # Not sorting speeds up this function quite a bit.
+    # """
+    koopa::assert_has_no_args "$#"
+    local prefix x
+    prefix="$(koopa::prefix)"
+    x="$( \
+        find "$prefix" \
+            -mindepth 1 \
+            -type f \
+            -not -name "$(basename "$0")" \
+            -not -name '*.md' \
+            -not -name '.pylintrc' \
+            -not -path "${prefix}/.git/*" \
+            -not -path "${prefix}/cellar/*" \
+            -not -path "${prefix}/coverage/*" \
+            -not -path "${prefix}/dotfiles/*" \
+            -not -path "${prefix}/opt/*" \
+            -not -path "${prefix}/tests/*" \
+            -not -path '*/etc/R/*' \
+            -print \
+    )"
+    koopa::print "$x"
+}
+
 koopa::test_find_files_by_ext() { # {{{1
     # """
     # Find relevant test files by extension.
@@ -44,19 +72,37 @@ koopa::test_find_files_by_shebang() { # {{{1
     return 0
 }
 
-koopa::test_find_failures() { # {{{1
+koopa::test_grep() { # {{{1
     # """
-    # Find test failures.
-    # @note Updated 2020-06-29.
+    # Grep illegal patterns.
+    # @note Updated 2020-07-07.
     # """
-    local failures file files ignore name pattern x
+    local OPTIND failures file ignore name pattern x
     koopa::assert_has_args "$#"
-    name="$(koopa::basename_sans_ext "$0")"
-    pattern="${1:?}"
-    ignore="${2:-}"
+    ignore=
+    OPTIND=1
+    while getopts 'i:n:p:' opt
+    do
+        case "$opt" in
+            i)
+                ignore="$OPTARG"
+                ;;
+            n)
+                name="$OPTARG"
+                ;;
+            p)
+                pattern="$OPTARG"
+                ;;
+            \?)
+                koopa::stop "Invalid option: -${OPTARG}"
+            ;;
+        esac
+    done
+    shift "$((OPTIND-1))"
+    koopa::assert_has_args "$#"
+    koopa::assert_is_set name pattern
     failures=()
-    readarray -t files <<< "$(koopa::test_find_files)"
-    for file in "${files[@]}"
+    for file in "$@"
     do
         # Skip ignored files.
         if [[ -n "$ignore" ]]
@@ -84,6 +130,6 @@ koopa::test_find_failures() { # {{{1
         printf '%s\n' "${failures[@]}"
         return 1
     fi
-    koopa::status_ok "${name} [${#files[@]}]"
+    koopa::status_ok "${name} [${#}]"
     return 0
 }
