@@ -21,7 +21,7 @@ _koopa_activate() {
         set -o errexit
         set -o nounset
         set -o xtrace
-        if [ "${KOOPA_SHELL:?}" = "bash" ]
+        if [ "${KOOPA_SHELL:?}" = 'bash' ]
         then
             # shellcheck disable=SC2039
             set -o errtrace
@@ -446,7 +446,7 @@ _koopa_preflight_zsh_check() {
 }
 
 _koopa_realpath() {
-    if [ "$(uname -s)" = "Darwin" ]
+    if [ "$(uname -s)" = 'Darwin' ]
     then
         perl -MCwd -e 'print Cwd::abs_path shift' "$1"
     else
