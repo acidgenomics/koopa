@@ -7,20 +7,20 @@ koopa::link_emacs() { # {{{1
     #
     # Currently supports Doom, Spacemacs, and minimal ESS config.
     # """
-    koopa::assert_has_args "$#"
     local custom_prefix default_prefix name
+    koopa::assert_has_args "$#"
     name="${1:?}"
     default_prefix="$(koopa::emacs_prefix)"
     custom_prefix="${default_prefix}-${name}"
     koopa::assert_is_dir "$custom_prefix"
-    if [ -d "$default_prefix" ] && [ ! -L "$default_prefix" ]
+    if [[ -d "$default_prefix" ]] && [[ ! -L "$default_prefix" ]]
     then
         koopa::stop "Emacs directory detected at '${default_prefix}'."
     fi
-    if [ "$name" != 'minimal' ]
+    if [[ "$name" != 'minimal' ]]
     then
         rm -fv "${HOME}/.emacs"
-    elif [ "$name" != 'spacemacs' ]
+    elif [[ "$name" != 'spacemacs' ]]
     then
         rm -fv "${HOME}/.spacemacs"
     fi
@@ -62,7 +62,7 @@ koopa::is_spacemacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     # Check for 'Spacemacs' inside 'init.el' file.
     init_file="${prefix}/init.el"
-    [ -s "$init_file" ] || return 1
+    [[ -s "$init_file" ]] || return 1
     grep -q 'Spacemacs' "$init_file" || return 1
     return 0
 }

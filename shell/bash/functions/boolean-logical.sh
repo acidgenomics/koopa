@@ -24,7 +24,7 @@ koopa::has_monorepo() { # {{{1
     # Does the current user have a monorepo?
     # @note Updated 2020-07-03.
     # """
-    [ -d "$(koopa::monorepo_prefix)" ]
+    [[ -d "$(koopa::monorepo_prefix)" ]]
 }
 
 koopa::has_no_environments() { # {{{1
@@ -82,7 +82,7 @@ koopa::has_sudo() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     # Always return true for root user.
-    [ "$(koopa::user_id)" -eq 0 ] && return 0
+    [[ "$(koopa::user_id)" -eq 0 ]] && return 0
     # Return false if 'sudo' program is not installed.
     koopa::is_installed sudo || return 1
     # Early return true if user has passwordless sudo enabled.
@@ -157,13 +157,13 @@ koopa::is_cellar() { # {{{1
     koopa::assert_has_args "$#"
     local cellar_prefix str
     cellar_prefix="$(koopa::cellar_prefix)"
-    [ -d "$cellar_prefix" ] || return 1
+    [[ -d "$cellar_prefix" ]] || return 1
     for str in "$@"
     do
         if koopa::is_installed "$str"
         then
             str="$(koopa::which_realpath "$str")"
-        elif [ -e "$str" ]
+        elif [[ -e "$str" ]]
         then
             str="$(realpath "$str")"
         else
@@ -185,7 +185,7 @@ koopa::is_current_version() { # {{{1
     do
         expected_version="$(koopa::variable "$app")"
         actual_version="$(koopa::get_version "$app")"
-        [ "$actual_version" = "$expected_version" ] || return 1
+        [[ "$actual_version" = "$expected_version" ]] || return 1
     done
     return 0
 }
@@ -247,13 +247,13 @@ koopa::is_file_system_case_sensitive() { # {{{1
     touch '.tmp.checkcase' '.tmp.checkCase'
     count="$(find . -maxdepth 1 -iname '.tmp.checkcase' | wc -l)"
     koopa::quiet_rm '.tmp.check'*
-    [ "$count" -eq 2 ]
+    [[ "$count" -eq 2 ]]
 }
 
 koopa::is_function() { # {{{1
     # """
     # Check if variable is a function.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-07.
     #
     # Note that 'declare' and 'typeset' are bashisms, and not POSIX.
     # Checking against 'type' works consistently across POSIX shells.
@@ -265,7 +265,7 @@ koopa::is_function() { # {{{1
     # > declare -f "$fun"
     #
     # Works in bash (note use of '-t' flag):
-    # > [ "$(type -t "$fun")" == "function" ]
+    # [[ "$(type -t "$fun")" == "function" ]]
     #
     # @seealso
     # - https://stackoverflow.com/questions/11478673/
@@ -277,7 +277,7 @@ koopa::is_function() { # {{{1
     do
         str="$(type "$fun" 2>/dev/null)"
         # Harden against empty string return.
-        [ -z "$str" ] && str='no'
+        [[ -z "$str" ]] && str='no'
         koopa::str_match "$str" 'function' || return 1
     done
     return 0
@@ -309,7 +309,7 @@ koopa::is_powerful() { # {{{1
     koopa::assert_has_no_args "$#"
     local cores
     cores="$(koopa::cpu_count)"
-    [ "$cores" -ge 7 ] && return 0
+    [[ "$cores" -ge 7 ]] && return 0
     return 1
 }
 
@@ -446,7 +446,7 @@ koopa::is_recent() {
     days=14
     for file in "$@"
     do
-        [ -e "$file" ] || return 1
+        [[ -e "$file" ]] || return 1
         exists="$( \
             find "$file" \
                 -mindepth 0 \
@@ -454,7 +454,7 @@ koopa::is_recent() {
                 -mtime "-${days}" \
             2>/dev/null \
         )"
-        [ -n "$exists" ] || return 1
+        [[ -n "$exists" ]] || return 1
     done
     return 0
 }
@@ -508,7 +508,7 @@ koopa::is_ssh_enabled() { # {{{1
             -o StrictHostKeyChecking=no \
             "$url" 2>&1 \
     )"
-    [ -n "$x" ] || return 1
+    [[ -n "$x" ]] || return 1
     koopa::str_match "$x" "$pattern"
 }
 

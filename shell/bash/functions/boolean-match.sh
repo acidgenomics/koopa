@@ -11,12 +11,12 @@ koopa::file_match() { # {{{1
     # """
     koopa::assert_has_args "$#"
     local file pattern
-    if [ "$#" -eq 2 ]
+    if [[ "$#" -eq 2 ]]
     then
         # Standard input.
         file="${1:?}"
         pattern="${2:?}"
-    elif [ "$#" -eq 1 ]
+    elif [[ "$#" -eq 1 ]]
     then
         # Piped input using stdin.
         pattern="${1:?}"
@@ -25,7 +25,7 @@ koopa::file_match() { # {{{1
     else
         return 1
     fi
-    [ -f "$file" ] || return 1
+    [[ -f "$file" ]] || return 1
     grep -Fq "$pattern" "$file" >/dev/null
 }
 
@@ -34,14 +34,14 @@ koopa::file_match_regex() { # {{{1
     # Is a string defined in a file?
     # @note Updated 2020-04-30.
     # """
-    koopa::assert_has_args "$#"
     local file pattern
-    if [ "$#" -eq 2 ]
+    koopa::assert_has_args "$#"
+    if [[ "$#" -eq 2 ]]
     then
         # Standard input.
         file="${1:?}"
         pattern="${2:?}"
-    elif [ "$#" -eq 1 ]
+    elif [[ "$#" -eq 1 ]]
     then
         # Piped input using stdin.
         pattern="${1:?}"
@@ -50,7 +50,6 @@ koopa::file_match_regex() { # {{{1
     else
         return 1
     fi
-    [ -f "$file" ] || return 1
+    [[ -f "$file" ]] || return 1
     grep -Eq "$pattern" "$file" >/dev/null
 }
-

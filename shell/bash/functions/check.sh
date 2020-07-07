@@ -95,7 +95,7 @@ koopa::check_disk() { # {{{1
     local limit used
     used="$(koopa::disk_pct_used "$@")"
     limit=90
-    if [ "$used" -gt "$limit" ]
+    if [[ "$used" -gt "$limit" ]]
     then
         koopa::warning "Disk usage is ${used}%."
     fi

@@ -80,10 +80,10 @@ koopa::activate_bash_lesspipe() { # {{{1
 koopa::activate_bash_prompt() { # {{{1
     # """
     # Activate Bash prompt.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-07-07.
     # """
     koopa::assert_has_no_args "$#"
-    PS1="$(_koopa_prompt)"
+    PS1="$(koopa::prompt)"
     export PS1
     return 0
 }

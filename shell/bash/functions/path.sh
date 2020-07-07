@@ -52,7 +52,7 @@ koopa::list_path_priority() { # {{{1
         koopa::print "$str" \
         | awk '{split($0,array,":")} END { for (i in array) print array[i] }' \
     )"
-    [ -n "$x" ] || return 1
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
@@ -70,7 +70,7 @@ koopa::list_path_priority_unique() { # {{{1
             | awk '!a[$0]++' \
             | tac \
     )"
-    [ -n "$x" ] || return 1
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
