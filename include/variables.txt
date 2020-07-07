@@ -305,7 +305,7 @@ tex="2020"
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.7"
 
-# Ag
+# aka Ag
 # https://github.com/ggreer/the_silver_searcher
 the-silver-searcher="2.2.0"
 
@@ -331,8 +331,6 @@ zsh="5.8"
 # macOS app versions {{{1
 # ==============================================================================
 
-# > koopa get-macos-app-version "XXX"
-
 macos-app-alacritty="0.4.3"
 macos-app-aspera-connect="3.9.9"
 macos-app-bbedit="13.1"
@@ -349,7 +347,5 @@ macos-app-xcode="11.3.1"
 
 # Homebrew cask versions {{{1
 # ==============================================================================
-
-# > koopa get-homebrew-cask-version "XXX"
 
 homebrew-cask-gpg-suite="2020.1"
