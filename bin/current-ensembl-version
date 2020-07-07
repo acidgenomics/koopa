@@ -9,9 +9,9 @@ koopa::current_ensembl_version() { # {{{1
     # Current Ensembl version.
     # @note Updated 2020-07-01.
     # """
+    local version
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed curl
-    local version
     version="$( \
         curl --silent "ftp://ftp.ensembl.org/pub/current_README" \
         | sed -n 3p \

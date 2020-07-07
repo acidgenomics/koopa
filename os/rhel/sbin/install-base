@@ -11,8 +11,8 @@ koopa::install_rhel_base() {
     #
     # Note that RHEL 8+ now uses dnf instead of yum.
     # """
-    koopa::assert_is_installed dnf sudo
     local dev extra name_fancy pkgs
+    koopa::assert_is_installed dnf sudo
     dev=1
     extra=1
     koopa::is_docker && extra=0

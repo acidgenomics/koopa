@@ -19,9 +19,9 @@ koopa::download() { # {{{1
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # """
+    local bn file url wd
     koopa::assert_has_args "$#"
     koopa::assert_is_installed curl
-    local bn file url wd
     url="${1:?}"
     file="${2:-}"
     if [[ -z "$file" ]]
@@ -43,4 +43,3 @@ koopa::download() { # {{{1
         "$url"
     return 0
 }
-

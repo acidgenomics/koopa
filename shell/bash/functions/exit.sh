@@ -5,6 +5,7 @@ koopa::exit_if_current_version() { # {{{1
     # Assert that programs are installed and current.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
@@ -21,6 +22,7 @@ koopa::exit_if_dir() { # {{{1
     # Exit with note if directory exists.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
@@ -50,6 +52,7 @@ koopa::exit_if_exists() { # {{{1
     # Exit with note if any file type exists.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
@@ -66,6 +69,7 @@ koopa::exit_if_installed() { # {{{1
     # Exit with note if an app is installed.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
@@ -84,6 +88,7 @@ koopa::exit_if_not_installed() { # {{{1
     # Exit with note if an app is not installed.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
@@ -100,6 +105,7 @@ koopa::exit_if_python_package_not_installed() { # {{{1
     # Exit with note if a Python package is not installed.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
@@ -116,6 +122,7 @@ koopa::exit_if_r_package_installed() { # {{{1
     # Exit with note if a R package is installed.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
@@ -132,6 +139,7 @@ koopa::exit_if_r_package_not_installed() { # {{{1
     # Exit with note if a R package is not installed.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa::assert_has_args "$#"
     for arg in "$@"
     do

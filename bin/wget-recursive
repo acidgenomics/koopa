@@ -13,9 +13,9 @@ koopa::wget_recursive() {
     # For direct input, can just use single quotes to escape.
     # See also: https://unix.stackexchange.com/questions/379181
     # """
+    local log_file password timestamp url user
     koopa::assert_has_args_eq "$#" 3
     koopa::assert_is_installed wget
-    local log_file password timestamp url user
     url="${1:?}"
     user="${2:?}"
     password="${3:?}"

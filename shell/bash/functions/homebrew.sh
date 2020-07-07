@@ -15,9 +15,9 @@ koopa::brew_cask_outdated() { # {{{
     # - brew list --versions
     # - brew info
     # """
+    local tmp_file x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
-    local tmp_file x
     tmp_file="$(koopa::tmp_file)"
     script -q "$tmp_file" brew cask outdated --greedy >/dev/null
     x="$(grep -v "(latest)" "$tmp_file")"
@@ -58,9 +58,9 @@ koopa::brew_update() { # {{{1
     # Refer to useful discussion regarding '--greedy' flag.
     # https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
     # """
+    local casks name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
-    local casks name_fancy
     name_fancy="Homebrew"
     koopa::update_start "$name_fancy"
     brew analytics off
@@ -85,4 +85,3 @@ koopa::brew_update() { # {{{1
     koopa::update_success "$name_fancy"
     return 0
 }
-

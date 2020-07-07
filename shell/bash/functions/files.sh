@@ -7,12 +7,12 @@ koopa::basename() { # {{{1
     #
     # Parameterized, supporting multiple basename extractions.
     # """
+    local arg
     koopa::assert_has_args "$#"
     if koopa::is_installed basename
     then
         koopa::print "$(basename -a "$@")"
     else
-        local arg
         for arg in "$@"
         do
             koopa::print "${arg##*/}"
@@ -35,8 +35,8 @@ koopa::basename_sans_ext() { # {{{1
     #
     # See also: koopa::file_ext
     # """
-    koopa::assert_has_args "$#"
     local file str
+    koopa::assert_has_args "$#"
     for file in "$@"
     do
         str="$(koopa::basename "$file")"
@@ -60,8 +60,8 @@ koopa::basename_sans_ext2() { # {{{1
     #
     # See also: koopa::file_ext2
     # """
-    koopa::assert_has_args "$#"
     local file str
+    koopa::assert_has_args "$#"
     for file in "$@"
     do
         str="$(koopa::basename "$file")"
@@ -110,8 +110,8 @@ koopa::file_ext() { # {{{1
     #
     # See also: koopa::basename_sans_ext
     # """
-    koopa::assert_has_args "$#"
     local file x
+    koopa::assert_has_args "$#"
     for file in "$@"
     do
         if koopa::has_file_ext "$file"
@@ -138,15 +138,15 @@ koopa::file_ext2() { # {{{1
     #
     # See also: koopa::basename_sans_ext2
     # """
-    koopa::assert_has_args "$#"
     local file x
+    koopa::assert_has_args "$#"
     for file in "$@"
     do
         if koopa::has_file_ext "$file"
         then
             x="$(koopa::print "$file" | cut -d '.' -f 2-)"
         else
-            x=""
+            x=''
         fi
         koopa::print "$x"
     done
@@ -164,8 +164,8 @@ koopa::find_and_replace_in_files() { # {{{1
     # by default on macOS.
     # https://stackoverflow.com/questions/4247068/
     # """
-    koopa::assert_has_args_ge "$#" 3
     local file from to
+    koopa::assert_has_args_ge "$#" 3
     from="${1:?}"
     to="${2:?}"
     shift 2
@@ -226,9 +226,9 @@ koopa::find_dotfiles() { # {{{1
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. "Files")
     # """
+    local header type x
     koopa::assert_has_args_eq "$#" 2
     koopa::assert_is_installed awk find
-    local header type x
     type="${1:?}"
     header="${2:?}"
     x="$( \
@@ -252,9 +252,9 @@ koopa::find_empty_dirs() { # {{{1
     # Find empty directories.
     # @note Updated 2020-07-03.
     # """
+    local dir x
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find grep
-    local dir x
     dir="${1:-"."}"
     dir="$(realpath "$dir")"
     x="$( \
@@ -278,10 +278,10 @@ koopa::find_large_dirs() { # {{{1
     # Find large directories.
     # @note Updated 2020-07-01.
     # """
+    local dir x
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed du
-    local dir x
-    dir="${1:-"."}"
+    dir="${1:-.}"
     dir="$(realpath "$dir")"
     x="$( \
         du \
@@ -309,10 +309,10 @@ koopa::find_large_files() { # {{{1
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
+    local dir x
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find grep
-    local dir x
-    dir="${1:-"."}"
+    dir="${1:-.}"
     dir="$(realpath "$dir")"
     x="$( \
         find "$dir" \
@@ -341,9 +341,9 @@ koopa::find_non_cellar_make_files() { # {{{1
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
     # """
+    local prefix x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed find || return 1
-    local prefix x
     prefix="$(koopa::make_prefix)"
     x="$( \
         find "$prefix" \
@@ -369,8 +369,8 @@ koopa::line_count() { # {{{1
     #
     # Example: koopa::line_count tx2gene.csv
     # """
-    koopa::assert_has_args "$#"
     local file x
+    koopa::assert_has_args "$#"
     for file in "$@"
     do
         x="$( \
@@ -393,8 +393,8 @@ koopa::realpath() { # {{{1
     # @seealso
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
-    koopa::assert_has_args "$#"
     local arg x
+    koopa::assert_has_args "$#"
     if koopa::is_installed realpath
     then
         x="$(realpath "$@")"
@@ -421,8 +421,8 @@ koopa::remove_broken_symlinks() { # {{{1
     # Remove broken symlinks.
     # @note Updated 2020-06-29.
     # """
-    koopa::assert_has_args "$#"
     local file files
+    koopa::assert_has_args "$#"
     readarray -t files <<< "$(koopa::find_broken_symlinks "$@")"
     koopa::is_array_non_empty "${files[@]}" || return 0
     koopa::note "Removing ${#files[@]} broken symlinks."
@@ -441,8 +441,8 @@ koopa::remove_empty_dirs() { # {{{1
     # Remove empty directories.
     # @note Updated 2020-06-29.
     # """
-    koopa::assert_has_args "$#"
     local dirs
+    koopa::assert_has_args "$#"
     readarray -t dirs <<< "$(koopa::find_empty_dirs "$@")"
     koopa::is_array_non_empty "${dirs[@]}" || return 0
     koopa::note "Removing ${#dirs[@]} empty directories."
@@ -461,8 +461,8 @@ koopa::stat_access_human() { # {{{1
     # Get the current access permissions in human readable form.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_args "$#"
     local x
+    koopa::assert_has_args "$#"
     x="$(stat -c '%A' "$@")"
     koopa::print "$x"
     return 0
@@ -473,8 +473,8 @@ koopa::stat_access_octal() { # {{{1
     # Get the current access permissions in octal form.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_args "$#"
     local x
+    koopa::assert_has_args "$#"
     x="$(stat -c '%a' "$@")"
     koopa::print "$x"
     return 0
@@ -487,8 +487,8 @@ koopa::stat_dereference() { # {{{1
     #
     # Return quoted file with dereference if symbolic link.
     # """
-    koopa::assert_has_args "$#"
     local x
+    koopa::assert_has_args "$#"
     x="$(stat --printf='%N\n' "$@")"
     koopa::print "$x"
     return 0
@@ -499,8 +499,8 @@ koopa::stat_group() { # {{{1
     # Get the current group of a file or directory.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_args "$#"
     local x
+    koopa::assert_has_args "$#"
     x="$(stat -c '%G' "$@")"
     koopa::print "$x"
     return 0
@@ -520,8 +520,8 @@ koopa::stat_modified() {
     #
     # koopa::stat_modified 'file.pdf' '%Y-%m-%d'
     # """
-    koopa::assert_has_args_eq "$#" 2
     local file format x
+    koopa::assert_has_args_eq "$#" 2
     file="${1:?}"
     format="${2:?}"
     if koopa::is_macos
@@ -545,8 +545,8 @@ koopa::stat_user() { # {{{1
     # Get the current user (owner) of a file or directory.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_args "$#"
     local x
+    koopa::assert_has_args "$#"
     x="$(stat -c '%U' "$@")"
     koopa::print "$x"
     return 0

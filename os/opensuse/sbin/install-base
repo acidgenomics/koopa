@@ -12,8 +12,8 @@ koopa::install_opensuse_base() {
     # zypper cheat sheet:
     # https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
     # """
-    koopa::assert_is_installed sudo zypper
     local name_fancy packages
+    koopa::assert_is_installed sudo zypper
     name_fancy="openSUSE base system"
     koopa::install_start "$name_fancy"
     sudo zypper refresh

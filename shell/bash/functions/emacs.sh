@@ -56,9 +56,9 @@ koopa::is_spacemacs_installed() { # {{{1
     # Is Spacemacs installed?
     # @note Updated 2020-06-29.
     # """
+    local init_file prefix
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed emacs
-    local init_file prefix
     prefix="$(koopa::emacs_prefix)"
     # Check for 'Spacemacs' inside 'init.el' file.
     init_file="${prefix}/init.el"
@@ -74,8 +74,8 @@ koopa::update_spacemacs() { # {{{1
     #
     # Potentially useful: 'emacs --no-window-system'
     # """
-    koopa::assert_has_no_args "$#"
     local prefix
+    koopa::assert_has_no_args "$#"
     if ! koopa::is_spacemacs_installed
     then
         koopa::note 'Spacemacs is not installed.'

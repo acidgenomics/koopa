@@ -10,8 +10,8 @@ koopa::has_file_ext() { # {{{1
     # @examples
     # koopa::has_file_ext "hello.txt"
     # """
-    koopa::assert_has_args "$#"
     local file
+    koopa::assert_has_args "$#"
     for file in "$@"
     do
         koopa::str_match "$(koopa::print "$file")" '.' || return 1
@@ -103,8 +103,8 @@ koopa::is_alias() { # {{{1
     # @example
     # koopa::is_alias R
     # """
-    koopa::assert_has_args "$#"
     local cmd str
+    koopa::assert_has_args "$#"
     for cmd in "$@"
     do
         koopa::is_installed "$cmd" || return 1
@@ -123,8 +123,8 @@ koopa::is_array_non_empty() { # {{{1
     # Particularly useful for checking against readarray return, which currently
     # returns a length of 1 for empty input, due to newlines line break.
     # """
-    koopa::assert_has_args "$#"
     local arr
+    koopa::assert_has_args "$#"
     arr=("$@")
     [[ "${#arr[@]}" -eq 0 ]] && return 1
     [[ -z "${arr[0]}" ]] && return 1
@@ -154,8 +154,8 @@ koopa::is_cellar() { # {{{1
     #
     # Currently only supported for Linux.
     # """
-    koopa::assert_has_args "$#"
     local cellar_prefix str
+    koopa::assert_has_args "$#"
     cellar_prefix="$(koopa::cellar_prefix)"
     [[ -d "$cellar_prefix" ]] || return 1
     for str in "$@"
@@ -179,8 +179,8 @@ koopa::is_current_version() { # {{{1
     # Is the program version current?
     # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args "$#"
     local actual_version app expected_version
+    koopa::assert_has_args "$#"
     for app in "$@"
     do
         expected_version="$(koopa::variable "$app")"
@@ -195,8 +195,8 @@ koopa::is_defined_in_user_profile() { # {{{1
     # Is koopa defined in current user's shell profile configuration file?
     # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_no_args "$#"
     local file
+    koopa::assert_has_no_args "$#"
     file="$(koopa::find_user_profile)"
     koopa::file_match "$file" 'koopa'
 }
@@ -225,8 +225,8 @@ koopa::is_export() { # {{{1
     # @examples
     # koopa::is_export "KOOPA_SHELL"
     # """
-    koopa::assert_has_args "$#"
     local arg exports
+    koopa::assert_has_args "$#"
     exports="$(export -p)"
     for arg in "$@"
     do
@@ -271,8 +271,8 @@ koopa::is_function() { # {{{1
     # - https://stackoverflow.com/questions/11478673/
     # - https://stackoverflow.com/questions/85880/
     # """
-    koopa::assert_has_args "$#"
     local fun str
+    koopa::assert_has_args "$#"
     for fun in "$@"
     do
         str="$(type "$fun" 2>/dev/null)"
@@ -306,8 +306,8 @@ koopa::is_powerful() { # {{{1
     # Is the current machine powerful?
     # @note Updated 2020-03-07.
     # """
-    koopa::assert_has_no_args "$#"
     local cores
+    koopa::assert_has_no_args "$#"
     cores="$(koopa::cpu_count)"
     [[ "$cores" -ge 7 ]] && return 0
     return 1
@@ -329,8 +329,8 @@ koopa::is_python_package_installed() { # {{{1
     # - https://stackoverflow.com/questions/1051254
     # - https://askubuntu.com/questions/588390
     # """
-    koopa::assert_has_args "$#"
     local pkg pos prefix python
+    koopa::assert_has_args "$#"
     python='python3'
     pos=()
     while (("$#"))
@@ -384,8 +384,8 @@ koopa::is_r_package_installed() { # {{{1
     # > Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
     # >     | grep -q "TRUE"
     # """
-    koopa::assert_has_args "$#"
     local pkg pos r
+    koopa::assert_has_args "$#"
     r='R'
     pos=()
     while (("$#"))
@@ -440,9 +440,9 @@ koopa::is_recent() {
     # @examples
     # koopa::is_recent ~/hello-world.txt
     # """
+    local days exists file
     koopa::assert_has_args "$#"
     koopa::assert_is_installed find
-    local days exists file
     days=14
     for file in "$@"
     do
@@ -498,8 +498,9 @@ koopa::is_ssh_enabled() { # {{{1
     # - https://help.github.com/en/github/authenticating-to-github/
     #       testing-your-ssh-connection
     # """
-    koopa::assert_has_args_eq "$#" 2
     local pattern url x
+    koopa::assert_has_args_eq "$#" 2
+
     url="${1:?}"
     pattern="${2:?}"
     koopa::is_installed ssh || return 1
@@ -511,4 +512,3 @@ koopa::is_ssh_enabled() { # {{{1
     [[ -n "$x" ]] || return 1
     koopa::str_match "$x" "$pattern"
 }
-

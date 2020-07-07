@@ -8,8 +8,8 @@ koopa::r_prefix() { # {{{1
     # We're suppressing errors here that can pop up if 'etc' isn't linked yet
     # after a clean install. Can warn about ldpaths missing.
     # """
-    koopa::assert_has_args_le "$#" 1
     local prefix r rscript
+    koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     rscript="${r}script"
     koopa::assert_is_installed "$r" "$rscript"
@@ -29,8 +29,8 @@ koopa::r_library_prefix() { # {{{1
     # R default library prefix.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_args_le "$#" 1
     local prefix r rscript
+    koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     rscript="${r}script"
     koopa::assert_is_installed "$r" "$rscript"
@@ -45,8 +45,8 @@ koopa::r_system_library_prefix() { # {{{1
     # R system library prefix.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_args_le "$#" 1
     local prefix r rscript
+    koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     rscript="${r}script"
     koopa::assert_is_installed "$r" "$rscript"
@@ -59,4 +59,3 @@ koopa::r_system_library_prefix() { # {{{1
     koopa::print "$prefix"
     return 0
 }
-
