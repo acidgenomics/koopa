@@ -83,7 +83,7 @@ output_dir="$(koopa::strip_trailing_slash "$output_dir")"
 koopa::h1 "Running bowtie2."
 
 koopa::activate_conda_env bowtie2
-koopa::dl "bowtie2" "$(koopa::which_realpath bowtie2)"
+koopa::dl 'bowtie2' "$(koopa::which_realpath bowtie2)"
 
 fastq_dir="$(realpath "$fastq_dir")"
 koopa::dl "fastq dir" "$fastq_dir"
@@ -125,7 +125,7 @@ else
         --index-dir="$index_dir"
 fi
 
-koopa::dl "index" "$index_dir"
+koopa::dl 'index' "$index_dir"
 
 # Alignment {{{1
 # ==============================================================================

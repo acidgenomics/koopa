@@ -30,7 +30,7 @@ koopa::current_flybase_version() { # {{{1
             curl --list-only --silent "${url}/current/" \
             | grep -E "^dmel_r[.0-9]+$" \
             | head -n 1 \
-            | cut -d "_" -f 2 \
+            | cut -d '_' -f 2 \
         )"
     else
         x="$( \

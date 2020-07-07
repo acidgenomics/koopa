@@ -144,7 +144,7 @@ _koopa_os_id() { # {{{1
     # Operating system ID.
     # @note Updated 2020-06-30.
     #
-    # Just return the OS platform ID (e.g. "debian").
+    # Just return the OS platform ID (e.g. debian).
     # """
     # shellcheck disable=SC2039
     local os_id

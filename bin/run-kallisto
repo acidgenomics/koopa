@@ -82,10 +82,9 @@ fi
 fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
 output_dir="$(koopa::strip_trailing_slash "$output_dir")"
 
-koopa::h1 "Running kallisto."
-
+koopa::h1 'Running kallisto.'
 koopa::activate_conda_env kallisto
-koopa::dl "kallisto" "$(koopa::which_realpath kallisto)"
+koopa::dl 'kallisto' "$(koopa::which_realpath kallisto)"
 
 fastq_dir="$(realpath "$fastq_dir")"
 koopa::dl "fastq dir" "$fastq_dir"

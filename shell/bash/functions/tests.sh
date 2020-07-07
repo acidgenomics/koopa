@@ -109,7 +109,7 @@ koopa::test_grep() { # {{{1
         then
             if grep -Eq \
                 --binary-files="without-match" \
-                "^# koopa nolint=\"${ignore}\"$" \
+                "^# koopa nolint=${ignore}$" \
                 "$file"
             then
                 continue
