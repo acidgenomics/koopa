@@ -13,7 +13,7 @@ source "${script_dir}/../include/header.sh"
 # > brew info libxml2
 # """
 
-_koopa_assert_is_installed Rscript
+koopa::assert_is_installed Rscript
 
 Rscript -e "\
     install.packages(

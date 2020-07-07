@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_docker_build() { # {{{1
+koopa::docker_build() { # {{{1
     # """
     # Build and push a docker image.
     # Updated 2020-06-02.
@@ -15,13 +15,13 @@ _koopa_docker_build() { # {{{1
     # - docker build --help
     # - https://docs.docker.com/engine/reference/builder/#arg
     # """
-    [[ "$#" -gt 0 ]] || return 1
-    _koopa_assert_is_installed docker
     local delete docker_dir image image_ids pos push server source_image \
         symlink_tag symlink_tagged_image symlink_tagged_image_today tag \
         tagged_image tagged_image_today today
-    docker_dir="$(_koopa_docker_prefix)"
-    _koopa_assert_is_dir "$docker_dir"
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed docker
+    docker_dir="$(koopa::docker_prefix)"
+    koopa::assert_is_dir "$docker_dir"
     delete=0
     push=1
     server="docker.io"
@@ -67,7 +67,7 @@ _koopa_docker_build() { # {{{1
                 break
                 ;;
             --*|-*)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -79,18 +79,18 @@ _koopa_docker_build() { # {{{1
     # e.g. acidgenomics/debian
     image="${1:?}"
     # Assume acidgenomics recipe by default.
-    if ! _koopa_str_match "$image" "/"
+    if ! koopa::str_match "$image" "/"
     then
         image="acidgenomics/${image}"
     fi
     # Handle tag support, if necessary.
-    if _koopa_str_match "$image" ":"
+    if koopa::str_match "$image" ":"
     then
-        tag="$(_koopa_print "$image" | cut -d ':' -f 2)"
-        image="$(_koopa_print "$image" | cut -d ':' -f 1)"
+        tag="$(koopa::print "$image" | cut -d ':' -f 2)"
+        image="$(koopa::print "$image" | cut -d ':' -f 1)"
     fi
     source_image="${docker_dir}/${image}/${tag}"
-    _koopa_assert_is_dir "$source_image"
+    koopa::assert_is_dir "$source_image"
     today="$(date "+%Y%m%d")"
     if [[ -L "$source_image" ]]
     then
@@ -98,14 +98,14 @@ _koopa_docker_build() { # {{{1
         symlink_tagged_image="${image}:${symlink_tag}"
         symlink_tagged_image_today="${symlink_tagged_image}-${today}"
         # Now resolve the symlink to real path.
-        source_image="$(_koopa_realpath "$source_image")"
+        source_image="$(realpath "$source_image")"
         tag="$(basename "$source_image")"
     fi
     # e.g. acidgenomics/debian:latest
     tagged_image="${image}:${tag}"
     # e.g. acidgenomics/debian:latest-20200101
     tagged_image_today="${tagged_image}-${today}"
-    _koopa_h1 "Building '${tagged_image}' Docker image."
+    koopa::h1 "Building '${tagged_image}' Docker image."
     docker login "$server"
     # Force remove any existing local tagged images.
     if [[ "$delete" -eq 1 ]]
@@ -115,7 +115,7 @@ _koopa_docker_build() { # {{{1
                 --filter reference="$tagged_image" \
                 --quiet \
         )"
-        if _koopa_is_array_non_empty "${image_ids[@]}"
+        if koopa::is_array_non_empty "${image_ids[@]}"
         then
             docker image rm --force "${image_ids[@]}"
         fi
@@ -143,17 +143,17 @@ _koopa_docker_build() { # {{{1
         fi
     fi
     docker image ls --filter reference="$tagged_image"
-    _koopa_success "Build of '${tagged_image}' was successful."
+    koopa::success "Build of '${tagged_image}' was successful."
     return 0
 }
 
-_koopa_docker_build_all_batch_images() { # {{{1
+koopa::docker_build_all_batch_images() { # {{{1
     # """
     # Build all AWS Batch Docker images.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_is_installed docker-build-all-images
     local batch_dirs flags force images prefix
+    koopa::assert_is_installed docker-build-all-images
     force=0
     while (("$#"))
     do
@@ -163,7 +163,7 @@ _koopa_docker_build_all_batch_images() { # {{{1
                 shift 1
                 ;;
             *)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
@@ -172,27 +172,27 @@ _koopa_docker_build_all_batch_images() { # {{{1
     then
         flags+=("--force")
     fi
-    prefix="$(_koopa_docker_prefix)"
+    prefix="$(koopa::docker_prefix)"
     batch_dirs="$( \
         find "${prefix}/acidgenomics" \
             -name "aws-batch*" \
             -type d \
         | sort \
     )"
-    batch_dirs="$(_koopa_sub "${prefix}/" "" "$batch_dirs")"
-    readarray -t images <<< "$(_koopa_print "$batch_dirs")"
+    batch_dirs="$(koopa::sub "${prefix}/" "" "$batch_dirs")"
+    readarray -t images <<< "$(koopa::print "$batch_dirs")"
     docker-build-all-images "${flags[@]}" "${images[@]}"
     return 0
 }
 
-_koopa_docker_build_all_images() { # {{{1
+koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_is_installed docker docker-build-all-tags
     local batch_arr batch_dirs extra force image images json nextflow_arr \
         nextflow_dirs prefix prune pos timestamp today utc_timestamp
+    koopa::assert_is_installed docker docker-build-all-tags
     extra=0
     force=0
     prune=0
@@ -217,7 +217,7 @@ _koopa_docker_build_all_images() { # {{{1
                 break
                 ;;
             --*|-*)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -230,7 +230,7 @@ _koopa_docker_build_all_images() { # {{{1
     # If empty, define default images.
     if [[ "$#" -eq 0 ]]
     then
-        prefix="$(_koopa_docker_prefix)"
+        prefix="$(koopa::docker_prefix)"
         images=()
         # Recommended Linux images.
         images+=(
@@ -267,8 +267,8 @@ _koopa_docker_build_all_images() { # {{{1
                 -type d \
                 | sort \
         )"
-        nextflow_dirs="$(_koopa_sub "${prefix}/" "" "$nextflow_dirs")"
-        readarray -t nextflow_arr <<< "$(_koopa_print "$nextflow_dirs")"
+        nextflow_dirs="$(koopa::sub "${prefix}/" "" "$nextflow_dirs")"
+        readarray -t nextflow_arr <<< "$(koopa::print "$nextflow_dirs")"
         images=("${images[@]}" "${nextflow_arr[@]}")
         # AWS batch images.
         # Ensure we build these after the other images.
@@ -278,8 +278,8 @@ _koopa_docker_build_all_images() { # {{{1
                 -type d \
                 | sort \
         )"
-        batch_dirs="$(_koopa_sub "${prefix}/" "" "$batch_dirs")"
-        readarray -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
+        batch_dirs="$(koopa::sub "${prefix}/" "" "$batch_dirs")"
+        readarray -t batch_arr <<< "$(koopa::print "$batch_dirs")"
         images=("${images[@]}" "${batch_arr[@]}")
         # Large bioinformatics images.
         # These don't need to be updated frequently and can be built manually.
@@ -294,58 +294,40 @@ _koopa_docker_build_all_images() { # {{{1
     else
         images=("$@")
     fi
-    _koopa_h1 "Building ${#images[@]} Docker images."
+    koopa::h1 "Building ${#images[@]} Docker images."
     docker login
     for image in "${images[@]}"
     do
+        # Force remove all images, if desired.
         if [[ "$prune" -eq 1 ]]
         then
-            docker system prune --all --force
+            koopa::docker_prune
         fi
         # Skip image if pushed already today.
         if [[ "$force" -ne 1 ]]
         then
-            docker pull "$image"
-            json="$( \
-                docker inspect \
-                --format='{{json .Created}}' \
-                "$image" \
-            )"
-            # Note that we need to convert UTC to local time.
-            utc_timestamp="$( \
-                _koopa_print "$json" \
-                    | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
-                    | sed 's/T/ /' \
-                    | sed 's/$/ UTC/'
-            )"
-            timestamp="$(date -d "$utc_timestamp" '+%Y-%m-%d')"
-            today=$(date '+%Y-%m-%d')
-            if [[ "$timestamp" == "$today" ]]
-            then
-                _koopa_note "'${image}' image already pushed today."
-                continue
-            fi
+            koopa::is_docker_build_today "$image" && continue
         fi
         # Build outdated images automatically.
         docker-build-all-tags "$image"
     done
     docker system prune --all --force
-    _koopa_success "All Docker images built successfully."
+    koopa::success "All Docker images built successfully."
     return 0
 }
 
-_koopa_docker_prune() { # {{{1
+koopa::docker_prune() { # {{{1
     # """
     # Docker prune.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -eq 0 ]] || return 1
-    _koopa_is_installed docker
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed docker
     docker system prune --all --force
     return 0
 }
 
-_koopa_docker_push() { # {{{1
+koopa::docker_push() { # {{{1
     # """
     # Push a local Docker build.
     # Updated 2020-02-18.
@@ -358,19 +340,19 @@ _koopa_docker_push() { # {{{1
     # @examples
     # docker-push acidgenomics/debian:latest
     # """
-    [[ "$#" -gt 0 ]] || return 1
-    _koopa_assert_is_installed docker
     local image images json pattern server
-    server="docker.io"
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed docker
+    server='docker.io'
     for pattern in "$@"
     do
-        _koopa_h1 "Pushing images matching '${pattern}' to ${server}."
-        _koopa_assert_is_matching_regex "$pattern" '^.+/.+$'
+        koopa::h1 "Pushing images matching \"${pattern}\" to ${server}."
+        koopa::assert_is_matching_regex "$pattern" '^.+/.+$'
         json="$(docker inspect --format="{{json .RepoTags}}" "$pattern")"
         # Convert JSON to lines.
         # shellcheck disable=SC2001
         readarray -t images <<< "$( \
-            _koopa_print "$json" \
+            koopa::print "$json" \
                 | tr ',' '\n' \
                 | sed 's/^\[//' \
                 | sed 's/\]$//' \
@@ -378,28 +360,28 @@ _koopa_docker_push() { # {{{1
                 | sed 's/\"$//g' \
                 | sort \
         )"
-        if ! _koopa_is_array_non_empty "${images[@]}"
+        if ! koopa::is_array_non_empty "${images[@]}"
         then
             docker image ls
-            _koopa_stop "'${image}' failed to match any images."
+            koopa::stop "\"${image}\" failed to match any images."
         fi
         for image in "${images[@]}"
         do
-            _koopa_h2 "Pushing '${image}'."
+            koopa::h2 "Pushing \"${image}\"."
             docker push "${server}/${image}"
         done
     done
     return 0
 }
 
-_koopa_docker_remove() { # {{{1
+koopa::docker_remove() { # {{{1
     # """
     # Remove docker images by pattern.
     # Updated 2020-07-01.
     # """
-    [[ "$#" -gt 0 ]] || return 1
-    _koopa_assert_is_installed docker
     local pattern
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed docker
     for pattern in "$@"
     do
         docker images \
@@ -410,14 +392,14 @@ _koopa_docker_remove() { # {{{1
     return 0
 }
 
-_koopa_docker_run() { # {{{1
+koopa::docker_run() { # {{{1
     # """
     # Run Docker image.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -gt 0 ]] || return 1
-    _koopa_assert_is_installed docker
     local bash flags image pos workdir
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed docker
     bash=0
     workdir="/mnt/work"
     pos=()
@@ -441,7 +423,7 @@ _koopa_docker_run() { # {{{1
                 break
                 ;;
             --*|-*)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -451,7 +433,7 @@ _koopa_docker_run() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     image="$1"
-    workdir="$(_koopa_strip_trailing_slash "$workdir")"
+    workdir="$(koopa::strip_trailing_slash "$workdir")"
     docker pull "$image"
     flags=(
         "--interactive"
@@ -468,7 +450,7 @@ _koopa_docker_run() { # {{{1
     return 0
 }
 
-_koopa_docker_run_wine() { # {{{1
+koopa::docker_run_wine() { # {{{1
     # """
     # Run Wine Docker image.
     # @note Updated 2020-07-01.
@@ -476,8 +458,8 @@ _koopa_docker_run_wine() { # {{{1
     # Allow access from localhost.
     # > xhost + "$HOSTNAME"
     # """
-    _koopa_assert_is_installed docker xhost
     local image workdir
+    koopa::assert_is_installed docker xhost
     image="acidgenomics/wine"
     workdir="/mnt/work"
     xhost + 127.0.0.1
@@ -493,29 +475,29 @@ _koopa_docker_run_wine() { # {{{1
     return 0
 }
 
-_koopa_docker_tag() { # {{{1
+koopa::docker_tag() { # {{{1
     # """
     # Add Docker tag.
     # Updated 2020-02-18.
     # """
-    [[ "$#" -gt 0 ]] || return 1
-    _koopa_assert_is_installed docker
     local dest_tag image server source_tag
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed docker
     image="${1:?}"
     source_tag="${2:?}"
     dest_tag="${3:-latest}"
     server="docker.io"
     # Assume acidgenomics recipe by default.
-    if ! _koopa_str_match "$image" "/"
+    if ! koopa::str_match "$image" "/"
     then
         image="acidgenomics/${image}"
     fi
     if [[ "$source_tag" == "$dest_tag" ]]
     then
-        _koopa_print "Source tag identical to destination ('${source_tag}')."
+        koopa::print "Source tag identical to destination ('${source_tag}')."
         return 0
     fi
-    _koopa_h1 "Tagging '${image}' image tag '${source_tag}' as '${dest_tag}'."
+    koopa::h1 "Tagging '${image}' image tag '${source_tag}' as '${dest_tag}'."
     docker login "$server"
     docker pull "${server}/${image}:${source_tag}"
     docker tag "${image}:${source_tag}" "${image}:${dest_tag}"
@@ -523,3 +505,32 @@ _koopa_docker_tag() { # {{{1
     return 0
 }
 
+koopa::is_docker_build_today() { # {{{1
+    # """
+    # Check if a Docker image has been built today.
+    # @note Updated 2020-07-02.
+    # """
+    local image json timestamp today utc_timestamp
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed docker
+    today="$(date "+%Y-%m-%d")"
+    for image in "$@"
+    do
+        docker pull "$image" >/dev/null
+        json="$( \
+            docker inspect \
+            --format="{{json .Created}}" \
+            "$image" \
+        )"
+        # Note that we need to convert UTC to local time.
+        utc_timestamp="$( \
+            koopa::print "$json" \
+                | grep -Eo "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" \
+                | sed "s/T/ /" \
+                | sed "s/\$/ UTC/"
+        )"
+        timestamp="$(date -d "$utc_timestamp" "+%Y-%m-%d")"
+        [[ "$timestamp" != "$today" ]] && return 1
+    done
+    return 0
+}

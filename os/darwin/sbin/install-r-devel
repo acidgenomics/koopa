@@ -3,33 +3,33 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
 r_version="devel"
 macos_version="el-capitan"
-tmp_dir="$(_koopa_tmp_dir)"
+tmp_dir="$(koopa::tmp_dir)"
 
 name_fancy="R-${r_version} for ${macos_version}."
 
-_koopa_install_start "$name_fancy"
-_koopa_note "Use of r-devel inside a Docker container is now preferred."
+koopa::install_start "$name_fancy"
+koopa::note "Use of r-devel inside a Docker container is now preferred."
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
     url="https://mac.r-project.org/${macos_version}/R-${r_version}/${file}"
-    _koopa_download "$url"
+    koopa::download "$url"
     # Back up, if necessary.
     if [[ -d "/Library/Frameworks/R.framework" ]] &&
         [[ ! -L "/Library/Frameworks/R.framework" ]]
     then
-        _koopa_note "Backing up existing 'R.framework'."
+        koopa::note "Backing up existing 'R.framework'."
         sudo mv "/Library/Frameworks/R.framework" \
             "/Library/Frameworks/R.framework.bak"
     fi
     # Now we're ready to install.
     sudo tar -xzvf "$file" -C /
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
@@ -39,5 +39,5 @@ sudo mv "/Library/Frameworks/R.framework" \
 sudo ln -fnsv "/Library/Frameworks/R-${r_version}.framework" \
     "/Library/Frameworks/R.framework"
 
-_koopa_install_success "$name_fancy"
-_koopa_note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
+koopa::install_success "$name_fancy"
+koopa::note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."

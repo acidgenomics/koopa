@@ -4,19 +4,19 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_copy_bam_files() { # {{{1
+koopa::copy_bam_files() { # {{{1
     # """
     # Copy BAM files.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     #
     # Intended primarily for use with bcbio-nextgen.
     # """
-    [[ "$#" -gt 0 ]] || return 1
     local source_dir target_dir
-    source_dir="$(_koopa_realpath "${1:?}")"
-    target_dir="$(_koopa_realpath "${2:?}")"
-    _koopa_dl "Source" "${source_dir}"
-    _koopa_dl "Target" "${target_dir}"
+    koopa::assert_has_args "$#"
+    source_dir="$(realpath "${1:?}")"
+    target_dir="$(realpath "${2:?}")"
+    koopa::dl 'Source' "${source_dir}"
+    koopa::dl 'Target' "${target_dir}"
     find -L "$source_dir" \
         -maxdepth 4 \
         -type f \
@@ -28,4 +28,4 @@ _koopa_copy_bam_files() { # {{{1
     return 0
 }
 
-_koopa_copy_bam_files "$@"
+koopa::copy_bam_files "$@"

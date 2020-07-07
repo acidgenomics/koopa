@@ -3,6 +3,6 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_is_installed convmv
+koopa::is_installed convmv
 
 convmv -r -f utf8 -t utf8 --nfc --notest "$@"

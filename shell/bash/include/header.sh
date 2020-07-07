@@ -31,10 +31,10 @@ then
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 fi
 
-_koopa_bash_header() { # {{{1
+koopa::bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-05.
     # """
     local file major_version pos
     [[ -n "${KOOPA_VERBOSE:-}" ]] && local verbose=1
@@ -49,10 +49,6 @@ _koopa_bash_header() { # {{{1
     fi
     # Customize optional shell behavior.
     # These are not recommended to be set during koopa activation.
-    #
-    # See also:
-    # > set --help
-    # > shopt
     if [[ "$shopts" -eq 1 ]]
     then
         [[ "$verbose" -eq 1 ]] && set -o xtrace                             # -x
@@ -62,24 +58,23 @@ _koopa_bash_header() { # {{{1
         set -o nounset                                                      # -u
         set -o pipefail
     fi
-    # Requiring Bash >= 4 for exported scripts.
-    # macOS ships with an ancient version of Bash, due to licensing.
-    # If we're performing a clean install and loading up Homebrew, this step
-    # will fail unless we skip checks.
+    # Requiring Bash >= 4. macOS ships with an ancient version of Bash, due to
+    # licensing. If we're performing a clean install and loading up Homebrew,
+    # this step will fail unless we skip checks.
     if [[ "$checks" -eq 1 ]]
     then
         major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
         if [[ ! "$major_version" -ge 4 ]]
         then
-            >&2 printf '%s\n' 'ERROR: Bash >= 4 is required.'
-            >&2 printf 'BASH_VERSION: %s\n' "$BASH_VERSION"
+            printf '%s\n' 'ERROR: Bash >= 4 is required.' >&2
+            printf '%s: %s\n' 'BASH_VERSION' "$BASH_VERSION" >&2
             exit 1
         fi
         # Check that user's Bash has readarray (mapfile) builtin defined.
         # We use this a lot to handle arrays.
-        if [[ $(type -t readarray) != "builtin" ]]
+        if [[ $(type -t readarray) != 'builtin' ]]
         then
-            >&2 printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).'
+            printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
             exit 1
         fi
     fi
@@ -99,19 +94,13 @@ _koopa_bash_header() { # {{{1
         # shellcheck source=/dev/null
         [[ -f "$file" ]] && source "$file"
     done
-    # Source Bash and Zsh shared functions.
-    for file in "${KOOPA_PREFIX}/shell/bash-and-zsh/functions/"*".sh"
-    do
-        # shellcheck source=/dev/null
-        [[ -f "$file" ]] && source "$file"
-    done
-    _koopa_help "$@"
+    koopa::help "$@"
     # Require sudo permission to run 'sbin/' scripts.
     if [[ "$checks" -eq 1 ]]
     then
-        if _koopa_str_match "$0" "/sbin"
+        if koopa::str_match "$0" '/sbin'
         then
-            _koopa_assert_has_sudo
+            koopa::assert_has_sudo
         fi
     fi
     # Disable user-defined aliases.
@@ -124,4 +113,4 @@ _koopa_bash_header() { # {{{1
     return 0
 }
 
-_koopa_bash_header "$@"
+koopa::bash_header "$@"

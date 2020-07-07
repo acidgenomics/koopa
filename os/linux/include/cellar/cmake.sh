@@ -26,12 +26,12 @@
 # Set CC and CXX globals to avoid this (see below).
 # """
 
-_koopa_assert_is_file /usr/bin/gcc /usr/bin/g++
+koopa::assert_is_file /usr/bin/gcc /usr/bin/g++
 
 file="cmake-${version}.tar.gz"
 url="https://github.com/Kitware/CMake/releases/download/v${version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 # Note that the './configure' script is just a wrapper for './bootstrap'.
 export CC="/usr/bin/gcc"

@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 dir="$1"
-_koopa_assert_is_dir "$dir"
+koopa::assert_is_dir "$dir"
 
 dir="$(realpath "$dir")"
 name="$(basename "$dir")"

@@ -1,16 +1,22 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 if ! _koopa_is_installed basename
 then
-    basename() { # {{{1
+    basename() {
         _koopa_basename "$@"
+    }
+fi
+
+if ! _koopa_is_installed echo
+then
+    echo() {
+        _koopa_print "$@"
     }
 fi
 
 if ! _koopa_is_installed realpath
 then
-    realpath() { # {{{1
+    realpath() {
         _koopa_realpath "$@"
     }
 fi

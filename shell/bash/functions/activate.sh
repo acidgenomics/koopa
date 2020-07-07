@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-_koopa_activate_bash_aliases() { # {{{1
+koopa::activate_bash_aliases() { # {{{1
     # """
     # Alias definitions.
     # @note Updated 2020-06-19.
     # See /usr/share/doc/bash-doc/examples in the bash-doc package.
     # """
-    [[ "$#" -eq 0 ]] || return 1
     local user_aliases
+    koopa::assert_has_no_args "$#"
     user_aliases="${HOME}/.bash_aliases"
     if [[ -f "$user_aliases" ]]
     then
@@ -17,75 +17,85 @@ _koopa_activate_bash_aliases() { # {{{1
     return 0
 }
 
-_koopa_activate_bash_completion() { # {{{1
+koopa::activate_bash_completion() { # {{{1
     # """
     # Activate Bash completion.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-07-06.
     # Add tab completion for many commands.
     # """
-    [[ "$#" -eq 0 ]] || return 1
-    local etc_completion
-    etc_completion="/etc/bash_completion"
-    if _koopa_is_installed brew
+    local brew_prefix nounset script
+    koopa::assert_has_no_args "$#"
+    if koopa::is_installed brew
     then
-        local brew_prefix
-        brew_prefix="$(_koopa_homebrew_prefix)"
+        brew_prefix="$(koopa::homebrew_prefix)"
         # Ensure existing Homebrew v1 completions continue to work.
         export BASH_COMPLETION_COMPAT_DIR="${brew_prefix}/etc/bash_completion.d"
         # shellcheck source=/dev/null
-        source "${brew_prefix}/etc/profile.d/bash_completion.sh"
-    elif [[ -f "$etc_completion" ]]
+        script="${brew_prefix}/etc/profile.d/bash_completion.sh"
+    else
+        script='/etc/bash_completion'
+    fi
+    [[ -r "$script" ]] || return 0
+    nounset="$(koopa::boolean_nounset)"
+    if [[ "$nounset" -eq 1 ]]
     then
-        # shellcheck source=/dev/null
-        source "$etc_completion"
+        set +e
+        set +u
+    fi
+    # shellcheck source=/dev/null
+    source "$script"
+    if [[ "$nounset" -eq 1 ]]
+    then
+        set -e
+        set -u
     fi
     return 0
 }
 
-_koopa_activate_bash_extras() { # {{{1
+koopa::activate_bash_extras() { # {{{1
     # """
     # Activate Bash extras.
     # @note Updated 2020-06-19.
     # """
-    [[ "$#" -eq 0 ]] || return 1
-    _koopa_activate_bash_completion
-    _koopa_activate_bash_readline
-    _koopa_activate_bash_lesspipe
-    _koopa_activate_bash_aliases
-    _koopa_activate_bash_prompt
+    koopa::assert_has_no_args "$#"
+    koopa::activate_bash_completion
+    koopa::activate_bash_readline
+    koopa::activate_bash_lesspipe
+    koopa::activate_bash_aliases
+    koopa::activate_bash_prompt
     return 0
 }
 
-_koopa_activate_bash_lesspipe() { # {{{1
+koopa::activate_bash_lesspipe() { # {{{1
     # """
     # Activate lesspipe for Bash.
     # @note Updated 2020-06-19.
     # Make less more friendly for non-text input files, see lesspipe(1).
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    koopa::assert_has_no_args "$#"
     [[ -x /usr/bin/lesspipe ]] && eval "$(SHELL=/bin/sh lesspipe)"
     return 0
 }
 
-_koopa_activate_bash_prompt() { # {{{1
+koopa::activate_bash_prompt() { # {{{1
     # """
     # Activate Bash prompt.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-07-07.
     # """
-    [[ "$#" -eq 0 ]] || return 1
-    PS1="$(_koopa_prompt)"
+    koopa::assert_has_no_args "$#"
+    PS1="$(koopa::prompt)"
     export PS1
     return 0
 }
 
-_koopa_activate_bash_readline() { # {{{1
+koopa::activate_bash_readline() { # {{{1
     # """
     # Readline input options.
     # @note Updated 2020-06-19.
     # """
-    [[ "$#" -eq 0 ]] || return 1
-    [[ -n "${INPUTRC:-}" ]] && return 0
     local input_rc
+    koopa::assert_has_no_args "$#"
+    [[ -n "${INPUTRC:-}" ]] && return 0
     input_rc="${HOME}/.inputrc"
     [[ -r "$input_rc" ]] || return 0
     export INPUTRC="${HOME}/.inputrc"

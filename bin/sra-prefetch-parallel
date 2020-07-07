@@ -4,11 +4,11 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_is_installed ascp prefetch
-_koopa_assert_is_file SRRAccList.txt
+koopa::assert_is_installed ascp prefetch
+koopa::assert_is_file SRRAccList.txt
 
-file="${1:-"SraAccList.txt"}"
-jobs="$(_koopa_cpu_count)"
+file="${1:-SraAccList.txt}"
+jobs="$(koopa::cpu_count)"
 
 find . \(-name "*.lock" -o -name "*.tmp"\) -delete
 sort -u "$file" \

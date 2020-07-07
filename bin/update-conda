@@ -14,20 +14,20 @@ do
             shift 1
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
-prefix="$(_koopa_conda_prefix)"
-_koopa_assert_is_dir "$prefix"
+prefix="$(koopa::conda_prefix)"
+koopa::assert_is_dir "$prefix"
 
 if [[ "$force" -eq 0 ]]
 then
-    _koopa_exit_if_current_version conda
+    koopa::exit_if_current_version conda
 fi
 
-_koopa_h1 "Updating Conda at '${prefix}'."
+koopa::h1 "Updating Conda at '${prefix}'."
 
 (
     conda="${prefix}/condabin/conda"
@@ -35,7 +35,7 @@ _koopa_h1 "Updating Conda at '${prefix}'."
     "$conda" update --yes --name=base --channel=defaults conda
     "$conda" update --yes --name=base --channel=defaults --all
     # > "$conda" clean --yes --tarballs
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
-_koopa_remove_broken_symlinks "$prefix"
-_koopa_set_permissions --recursive "$prefix"
+koopa::remove_broken_symlinks "$prefix"
+koopa::sys_set_permissions -r "$prefix"
