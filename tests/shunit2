@@ -145,7 +145,7 @@ do
     esac
 done
 
-koopa::h1 "Running unit tests with shUnit2."
+koopa::h1 'Running unit tests with shUnit2.'
 
 # Don't exit on errors, which are handled by shunit2.
 set +o errexit

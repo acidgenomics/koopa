@@ -871,11 +871,12 @@ _koopa_activate_rust() { # {{{1
 _koopa_activate_secrets() { # {{{1
     # """
     # Source secrets file.
-    # @note Updated 2020-02-23.
+    # @note Updated 2020-07-07.
     # """
     # shellcheck disable=SC2039
     local file
-    file="${1:-"${HOME}/.secrets"}"
+    file="${1:-}"
+    [ -z "$file" ] && file="${HOME}/.secrets"
     [ -r "$file" ] || return 0
     # shellcheck source=/dev/null
     . "$file"

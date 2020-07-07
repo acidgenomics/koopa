@@ -5,8 +5,6 @@ koopa::has_file_ext() { # {{{1
     # Does the input contain a file extension?
     # @note Updated 2020-07-04.
     #
-    # Simply looks for a "." and returns true/false.
-    #
     # @examples
     # koopa::has_file_ext "hello.txt"
     # """

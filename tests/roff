@@ -23,7 +23,7 @@ readarray -t man_dirs <<< "$( \
     find "$koopa_prefix" \
         -mindepth 1 \
         -type d \
-        -name "man" \
+        -name 'man' \
         -not -path "${koopa_prefix}/.git/*" \
         -not -path "${koopa_prefix}/dotfiles/*" \
         -not -path "${koopa_prefix}/opt/*" \
@@ -40,7 +40,7 @@ done
 # man file formatting {{{1
 # ==============================================================================
 
-koopa::h2 "Checking troff man file formatting."
+koopa::h2 'Checking troff man file formatting.'
 
 for dir in "${man_dirs[@]}"
 do
@@ -78,7 +78,7 @@ readarray -t bin_dirs <<< "$( \
     find "$koopa_prefix" \
         -mindepth 1 \
         -type d \
-        \( -name "bin" -o -name "sbin" \) \
+        \( -name 'bin' -o -name 'sbin' \) \
         -not -path "${koopa_prefix}/opt/*" \
         -not -path "${koopa_prefix}/shunit2-*" \
         -not -path "*/cellar/*" \

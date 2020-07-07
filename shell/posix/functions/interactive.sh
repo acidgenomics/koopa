@@ -63,7 +63,8 @@ _koopa_today_bucket() { # {{{1
     # """
     # shellcheck disable=SC2039
     local bucket_dir today_bucket today_link
-    bucket_dir="${KOOPA_BUCKET:-"${HOME:?}/bucket"}"
+    bucket_dir="${KOOPA_BUCKET:-}"
+    [ -z "$bucket_dir" ] && bucket_dir="${HOME:?}/bucket"
     # Early return if there's no bucket directory on the system.
     [ -d "$bucket_dir" ] || return 0
     today_bucket="$(date '+%Y/%m/%d')"

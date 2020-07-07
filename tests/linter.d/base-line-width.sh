@@ -10,4 +10,4 @@ source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
 grep_pattern="^[^\n]{81}"
 
-koopa::test_find_failures "$grep_pattern" "line-width"
+koopa::test_find_failures "$grep_pattern" 'line-width'

@@ -11,8 +11,9 @@ bcbio_exe="$(koopa::which_realpath "bcbio_nextgen.py")"
 bcbio_dir="$(cd "$(dirname "$bcbio_exe")/../.." && pwd -P)"
 genomes_dir="${bcbio_dir}/genomes"
 
-genomes="${1:-"BDGP6,canFam3,hg38,mm10,rn6"}"
-IFS=', ' read -r -a genomes <<< "$genomes"
+genomes="${1:-}"
+[[ -z "$genomes" ]] && genomes='BDGP6,canFam3,hg38,mm10,rn6'
+IFS=',' read -r -a genomes <<< "$genomes"
 
 name_fancy="bcbio-nextgen genomes"
 

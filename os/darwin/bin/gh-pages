@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-dir="${1:-"."}"
+dir="${1:-.}"
 koopa::assert_is_dir "$dir"
 
 (

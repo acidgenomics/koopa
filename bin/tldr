@@ -19,7 +19,8 @@ koopa::tldr() {
     # - https://github.com/tldr-pages/tldr/tree/master/pages
     # """
     local cmd file
-    cmd="${1:-"--list"}"
+    cmd="${1:-}"
+    [[ -z "$cmd" ]] && cmd='--list'
     case "$cmd" in
         -c|-u|--cache|--update)
             koopa::tldr_cache

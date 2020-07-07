@@ -137,7 +137,10 @@ _koopa_config_prefix() { # {{{1
     # Local koopa config directory.
     # @note Updated 2020-07-01.
     # """
-    _koopa_print "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
+    local prefix
+    prefix="${XDG_CONFIG_HOME:-}"
+    [ -z "$prefix" ] && prefix="${HOME:?}/.config"
+    _koopa_print "${prefix}/koopa"
     return 0
 }
 
