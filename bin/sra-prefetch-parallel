@@ -7,7 +7,7 @@ source "${script_dir}/../shell/bash/include/header.sh"
 koopa::assert_is_installed ascp prefetch
 koopa::assert_is_file SRRAccList.txt
 
-file="${1:-"SraAccList.txt"}"
+file="${1:-SraAccList.txt}"
 jobs="$(koopa::cpu_count)"
 
 find . \(-name "*.lock" -o -name "*.tmp"\) -delete

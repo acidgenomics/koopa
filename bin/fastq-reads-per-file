@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-dir="${1:-"."}"
+dir="${1:-.}"
 dir="$(koopa::strip_trailing_slash "$dir")"
 
 # Divide by 4.

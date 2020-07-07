@@ -5,9 +5,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 source "${script_dir}/../shell/bash/include/header.sh"
 
 koopa::assert_has_no_args "$#"
-koopa::assert_is_installed "fastq-dump"
+koopa::assert_is_installed fastq-dump
 
-filelist="${1:-"SRR_Acc_List.txt"}"
+filelist="${1:-SRR_Acc_List.txt}"
 koopa::assert_is_file "$filelist"
 
 while read -r id

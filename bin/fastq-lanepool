@@ -4,9 +4,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-source_dir="."
-target_dir="."
-prefix="lanepool"
+source_dir='.'
+target_dir='.'
+prefix='lanepool'
 
 while (("$#"))
 do

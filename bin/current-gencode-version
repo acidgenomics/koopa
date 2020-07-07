@@ -19,7 +19,7 @@ koopa::current_gencode_version() { # {{{1
             pattern="Release [0-9]+"
             ;;
         'Mus musculus')
-            short_name="mouse"
+            short_name='mouse'
             pattern="Release M[0-9]+"
             ;;
         *)
