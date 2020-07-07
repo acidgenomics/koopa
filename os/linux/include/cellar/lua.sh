@@ -8,8 +8,8 @@
 
 file="${name}-${version}.tar.gz"
 url="http://www.lua.org/ftp/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 make linux
 make test

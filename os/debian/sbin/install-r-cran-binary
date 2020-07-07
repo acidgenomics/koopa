@@ -52,7 +52,7 @@ source "${script_dir}/../include/header.sh"
 # E: Package 'r-api-3.5' has no installation candidate
 
 r_exe="/usr/bin/R"
-_koopa_exit_if_installed "$r_exe"
+koopa::exit_if_installed "$r_exe"
 
 while (("$#"))
 do
@@ -66,18 +66,18 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 if [[ -z "${version:-}" ]]
 then
-    version="$(_koopa_variable r)"
+    version="$(koopa::variable r)"
 fi
 
 name_fancy="R CRAN ${version} binary package"
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
 # This ensures we're starting fresh with the correct apt repo.
 sudo rm -frv \
@@ -85,17 +85,17 @@ sudo rm -frv \
     /etc/apt/sources.list.d/r.list \
     /usr/lib/R/etc
 
-_koopa_apt_add_r_repo "$version"
+koopa::apt_add_r_repo "$version"
 
 pkgs=(
     r-base
     r-base-dev
 )
 
-_koopa_apt_install "${pkgs[@]}"
-_koopa_update_r_config "$r_exe"
+koopa::apt_install "${pkgs[@]}"
+koopa::update_r_config "$r_exe"
 
 # Ensure we don't have a duplicate site library.
 sudo rm -frv /usr/local/lib/R
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

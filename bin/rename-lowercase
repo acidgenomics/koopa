@@ -4,8 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
-_koopa_assert_is_installed rename
+koopa::assert_has_args "$#"
+koopa::assert_is_installed rename
 
 recursive=0
 
@@ -22,7 +22,7 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
         *)
             pos+=("$1")

@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_args "$@"
+koopa::assert_has_args "$#"
 
 # Argument parsing {{{1
 # ==============================================================================
@@ -26,7 +26,7 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
         *)
             pos+=("$1")
@@ -38,7 +38,7 @@ done
 
 if [[ -z "${source_ip:-}" ]]
 then
-    _koopa_missing_arg
+    koopa::missing_arg
 fi
 
 # Source check {{{1
@@ -46,10 +46,10 @@ fi
 
 # Ensure that source and local (host) IP addresses are not identical. If they
 # are, early exit without error, as this script is called inside 'configure-vm'.
-host_ip="$(_koopa_local_ip_address)"
+host_ip="$(koopa::local_ip_address)"
 if [[ "$source_ip" == "$host_ip" ]]
 then
-    _koopa_exit "Skipping rsync because '${host_ip}' is source machine."
+    koopa::exit "Skipping rsync because '${host_ip}' is source machine."
 fi
 
 # Custom paths {{{1
@@ -59,7 +59,7 @@ if [[ "$#" -gt 0 ]]
 then
     for prefix in "$@"
     do
-        _koopa_rsync_vm \
+        koopa::rsync_vm \
             --prefix="$prefix" \
             --source-ip="$source_ip"
     done
@@ -75,13 +75,13 @@ fi
 # Need to sync this before make prefix step, otherwise some symlinks won't
 # resolve as expected, and chmod will error.
 
-app_prefix="$(_koopa_app_prefix)"
+app_prefix="$(koopa::app_prefix)"
 
 if [[ -d "$app_prefix" ]]
 then
     # Skipping programs that are specific to powerful multi-core VMs.
-    readarray -t app_flags <<< "$(_koopa_rsync_flags)"
-    if ! _koopa_is_powerful
+    readarray -t app_flags <<< "$(koopa::rsync_flags)"
+    if ! koopa::is_powerful
     then
         app_flags+=(
             "--exclude=bcbio"
@@ -90,38 +90,38 @@ then
             "--exclude=omicsoft"
         )
     fi
-    _koopa_rsync_vm \
-        --flags="${app_flags[*]}" \
+    koopa::rsync_vm \
         --prefix="$app_prefix" \
+        --rsync-flags="${app_flags[*]}" \
         --source-ip="$source_ip"
 else
-    _koopa_note "Skipping '${app_prefix}'."
+    koopa::note "Skipping '${app_prefix}'."
 fi
 
 # make prefix {{{2
 # ------------------------------------------------------------------------------
 
-make_prefix="$(_koopa_make_prefix)"
+make_prefix="$(koopa::make_prefix)"
 
 if [[ -d "$make_prefix" ]]
 then
-    _koopa_rsync_vm \
+    koopa::rsync_vm \
         --prefix="$make_prefix" \
         --source-ip="$source_ip"
 else
-    _koopa_note "Skipping '${make_prefix}'."
+    koopa::note "Skipping '${make_prefix}'."
 fi
 
 # refdata prefix {{{2
 # ------------------------------------------------------------------------------
 
-refdata_prefix="$(_koopa_refdata_prefix)"
+refdata_prefix="$(koopa::refdata_prefix)"
 
 if [[ -d "$refdata_prefix" ]]
 then
     # Skipping references that are specific to powerful multi-core VMs.
-    readarray -t refdata_flags <<< "$(_koopa_rsync_flags)"
-    if ! _koopa_is_powerful
+    readarray -t refdata_flags <<< "$(koopa::rsync_flags)"
+    if ! koopa::is_powerful
     then
         refdata_flags+=(
             "--exclude=bcbio"
@@ -130,12 +130,12 @@ then
             "--exclude=gtex"
         )
     fi
-    _koopa_rsync_vm \
-        --flags="${refdata_flags[*]}" \
+    koopa::rsync_vm \
         --prefix="$refdata_prefix" \
+        --rsync-flags="${refdata_flags[*]}" \
         --source-ip="$source_ip"
 else
-    _koopa_note "Skipping '${refdata_prefix}'."
+    koopa::note "Skipping '${refdata_prefix}'."
 fi
 
-_koopa_success "rsync from ${source_ip} was successful."
+koopa::success "rsync from ${source_ip} was successful."

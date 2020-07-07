@@ -1,33 +1,61 @@
 #!/usr/bin/env bash
 
-_koopa_test_find_files_by_ext() { # {{{1
+koopa::test_find_files() { # {{{1
+    # """
+    # Find relevant files for unit tests.
+    # @note Updated 2020-07-07.
+    # Not sorting speeds up this function quite a bit.
+    # """
+    koopa::assert_has_no_args "$#"
+    local prefix x
+    prefix="$(koopa::prefix)"
+    x="$( \
+        find "$prefix" \
+            -mindepth 1 \
+            -type f \
+            -not -name "$(basename "$0")" \
+            -not -name '*.md' \
+            -not -name '.pylintrc' \
+            -not -path "${prefix}/.git/*" \
+            -not -path "${prefix}/cellar/*" \
+            -not -path "${prefix}/coverage/*" \
+            -not -path "${prefix}/dotfiles/*" \
+            -not -path "${prefix}/opt/*" \
+            -not -path "${prefix}/tests/*" \
+            -not -path '*/etc/R/*' \
+            -print \
+    )"
+    koopa::print "$x"
+}
+
+koopa::test_find_files_by_ext() { # {{{1
     # """
     # Find relevant test files by extension.
     # @note Updated 2020-06-29.
     # """
-    [[ "$#" -gt 0 ]] || return 1
     local ext files pattern x
+    koopa::assert_has_args "$#"
     ext="${1:?}"
     pattern="\.${ext}$"
-    readarray -t files <<< "$(_koopa_test_find_files)"
+    readarray -t files <<< "$(koopa::test_find_files)"
     x="$( \
         printf '%s\n' "${files[@]}" \
         | grep -Ei "$pattern" \
     )"
     [[ -n "$x" ]] || return 1
-    _koopa_print "$x"
+    koopa::print "$x"
     return 0
 }
 
-_koopa_test_find_files_by_shebang() { # {{{1
+koopa::test_find_files_by_shebang() { # {{{1
     # """
     # Find relevant test files by shebang.
     # @note Updated 2020-06-29.
     # """
-    [[ "$#" -gt 0 ]] || return 1
     local file files pattern shebang_files x
+    koopa::assert_has_args "$#"
     pattern="${1:?}"
-    readarray -t files <<< "$(_koopa_test_find_files)"
+    readarray -t files <<< "$(koopa::test_find_files)"
     shebang_files=()
     for file in "${files[@]}"
     do
@@ -44,26 +72,44 @@ _koopa_test_find_files_by_shebang() { # {{{1
     return 0
 }
 
-_koopa_test_find_failures() { # {{{1
+koopa::test_grep() { # {{{1
     # """
-    # Find test failures.
-    # @note Updated 2020-06-29.
+    # Grep illegal patterns.
+    # @note Updated 2020-07-07.
     # """
-    [[ "$#" -gt 0 ]] || return 1
-    local failures file files ignore name pattern x
-    name="$(_koopa_basename_sans_ext "$0")"
-    pattern="${1:?}"
-    ignore="${2:-}"
+    local OPTIND failures file ignore name pattern x
+    koopa::assert_has_args "$#"
+    ignore=
+    OPTIND=1
+    while getopts 'i:n:p:' opt
+    do
+        case "$opt" in
+            i)
+                ignore="$OPTARG"
+                ;;
+            n)
+                name="$OPTARG"
+                ;;
+            p)
+                pattern="$OPTARG"
+                ;;
+            \?)
+                koopa::stop "Invalid option: -${OPTARG}"
+            ;;
+        esac
+    done
+    shift "$((OPTIND-1))"
+    koopa::assert_has_args "$#"
+    koopa::assert_is_set name pattern
     failures=()
-    readarray -t files <<< "$(_koopa_test_find_files)"
-    for file in "${files[@]}"
+    for file in "$@"
     do
         # Skip ignored files.
         if [[ -n "$ignore" ]]
         then
             if grep -Eq \
                 --binary-files="without-match" \
-                "^# koopa nolint=\"${ignore}\"$" \
+                "^# koopa nolint=${ignore}$" \
                 "$file"
             then
                 continue
@@ -80,10 +126,10 @@ _koopa_test_find_failures() { # {{{1
     done
     if [[ "${#failures[@]}" -gt 0 ]]
     then
-        _koopa_status_fail "${name} [${#failures[@]}]"
+        koopa::status_fail "${name} [${#failures[@]}]"
         printf '%s\n' "${failures[@]}"
         return 1
     fi
-    _koopa_status_ok "${name} [${#files[@]}]"
+    koopa::status_ok "${name} [${#}]"
     return 0
 }

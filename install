@@ -17,12 +17,13 @@ set -Eeu -o pipefail
 # """
 
 usage() { # {{{1
-cat << EOF
+cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
+Updated 2020-07-05.
 
-optional arguments:
+Optional arguments:
     --help, -h
         Show this help message and exit.
     --non-interactive
@@ -36,10 +37,9 @@ optional arguments:
         Enable verbose test mode.
         Used for Travis CI checks and building Docker images.
 
-non-interactive configuration arguments:
+Non-interactive configuration arguments:
     --dotfiles (default); --no-dotfiles
-        Clone and install dotfiles from
-        https://github.com/mjsteinbaugh/dotfiles?
+        Install dot files from https://github.com/acidgenomics/dotfiles?
     --passwordless-sudo; --no-passwordless-sudo (default)
         Enable passwordless sudo. Can be a potential security risk.
     --profile (default); --no-profile
@@ -52,10 +52,10 @@ non-interactive configuration arguments:
     --shared (default); --no-shared
         Install for all users, if current user has administrator (sudo)
         permissions. Otherwise, install for current user only.
-EOF
+END
 }
 
-_koopa_install() { # {{{1
+koopa::install() { # {{{1
     # """
     # Install koopa.
     # @note Updated 2020-07-02.
@@ -129,7 +129,7 @@ _koopa_install() { # {{{1
                 break
                 ;;
             --*|-*)
-                >&2 printf "ERROR: Invalid arg: '%s'\n" "$1"
+                printf "ERROR: Invalid arg: '%s'\n" "$1" >&2
                 exit 1
                 ;;
         esac
@@ -141,7 +141,7 @@ _koopa_install() { # {{{1
     # Before we proceed, ensure that koopa isn't already installed.
     if [[ -n "${KOOPA_PREFIX:-}" ]]
     then
-        >&2 printf "ERROR: koopa is installed: '%s'.\n" "$KOOPA_PREFIX"
+        printf "ERROR: koopa is installed: '%s'.\n" "$KOOPA_PREFIX" >&2
         exit 1
     fi
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
@@ -151,11 +151,11 @@ _koopa_install() { # {{{1
     # Check that temporary activation was successful.
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX'.\n"
+        printf "ERROR: Installer failed to set 'KOOPA_PREFIX'.\n" >&2
         exit 1
     fi
     # Ensure existing user configuration gets removed.
-    rm -fr "$(_koopa_config_prefix)"
+    rm -fr "$(koopa::config_prefix)"
 
     # Default arguments {{{2
     # --------------------------------------------------------------------------
@@ -167,7 +167,7 @@ _koopa_install() { # {{{1
     [[ -z "${profile:-}" ]] && profile=1
     if [[ -z "${shared:-}" ]]
     then
-        if _koopa_has_sudo
+        if koopa::has_sudo
         then
             shared=1
         else
@@ -183,7 +183,7 @@ _koopa_install() { # {{{1
     then
         if [[ "$shared" -eq 1 ]] && [[ "$interactive" -eq 1 ]]
         then
-            shared="$(_koopa_read_yn "Install for all users" "$shared")"
+            shared="$(koopa::read_yn "Install for all users" "$shared")"
         fi
         # Set the default install prefix.
         if [[ "$shared" -eq 1 ]]
@@ -198,11 +198,11 @@ _koopa_install() { # {{{1
     # Prompt the user where they want to install.
     if [[ "$interactive" -eq 1 ]]
     then
-        koopa_prefix="$(_koopa_read "Install prefix" "$koopa_prefix")"
+        koopa_prefix="$(koopa::read "Install prefix" "$koopa_prefix")"
     fi
     # Catch if the user is attempting to install into a shared space.
     if [[ "$shared" -eq 0 ]] && \
-        _koopa_print "$koopa_prefix" | grep -Eqv "^${HOME}"
+        koopa::print "$koopa_prefix" | grep -Eqv "^${HOME}"
     then
         shared=1
     fi
@@ -211,20 +211,20 @@ _koopa_install() { # {{{1
     # ==========================================================================
 
     # Alternatively, can consider using rsync here instead of cp.
-    _koopa_h1 "Installing koopa at '${koopa_prefix}'."
-    _koopa_assert_is_non_existing "$koopa_prefix"
+    koopa::h1 "Installing koopa at '${koopa_prefix}'."
+    koopa::assert_is_non_existing "$koopa_prefix"
     if [[ "$shared" -eq 1 ]]
     then
-        _koopa_info "Shared installation detected."
-        _koopa_note "sudo permissions are required."
-        _koopa_assert_has_sudo
+        koopa::info "Shared installation detected."
+        koopa::note "sudo permissions are required."
+        koopa::assert_has_sudo
         sudo mkdir -p "$koopa_prefix"
         sudo rm -fr "$koopa_prefix"
         sudo cp -af "$script_dir" "$koopa_prefix"
-        admin_group="$(_koopa_admin_group)"
+        admin_group="$(koopa::admin_group)"
         sudo chgrp "$admin_group" "$koopa_prefix"
         sudo chmod g+ws "$koopa_prefix"
-        _koopa_add_make_prefix_link "$koopa_prefix"
+        koopa::add_make_prefix_link "$koopa_prefix"
     else
         mkdir -p "$koopa_prefix"
         rm -fr "$koopa_prefix"
@@ -234,26 +234,30 @@ _koopa_install() { # {{{1
     # Activate {{{1
     # ==========================================================================
 
-    _koopa_h2 "Activating koopa."
+    koopa::h2 "Activating koopa."
     set +u
     force=1 test="$test" source "${koopa_prefix}/activate"
     set -u
     # Check that prefix is set correctly.
     if [[ "${koopa_prefix:?}" != "${KOOPA_PREFIX:?}" ]]
     then
-        >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX' correctly.\n"
-        >&2 printf "Expected: %s\n" "$koopa_prefix"
-        >&2 printf "Actual: %s\n" "$KOOPA_PREFIX"
-        >&2 printf "PWD: %s\n" "$PWD"
-        >&2 printf "BASH_SOURCE: %s\n" "${BASH_SOURCE[0]}"
+        >&2 cat << END
+ERROR: Installer failed to set 'KOOPA_PREFIX' correctly.
+Expected: '$koopa_prefix'
+Actual: '$KOOPA_PREFIX'
+PWD: '$PWD'
+BASH_SOURCE: '${BASH_SOURCE[0]}'
+END
         exit 1
     fi
     # Check that activation puts koopa into PATH, as expected.
-    if ! _koopa_is_installed koopa
+    if ! koopa::is_installed koopa
     then
-        >&2 printf "ERROR: Installer failed to set 'PATH' correctly.\n"
-        >&2 printf '%s: %s\n' 'KOOPA_PREFIX' "$KOOPA_PREFIX"
-        >&2 printf '%s: %s\n' 'PATH' "$PATH"
+        >&2 cat << END
+ERROR: Installer failed to set 'PATH' correctly.
+KOOPA_PREFIX: '$KOOPA_PREFIX'
+PATH: '$PATH'
+END
         exit 1
     fi
 
@@ -261,15 +265,15 @@ _koopa_install() { # {{{1
     # ==========================================================================
 
     # Prompt if the user wants to enable passwordless sudo.
-    if _koopa_is_linux && \
+    if koopa::is_linux && \
         [[ "$interactive" -eq 1 ]] && \
         [[ "$shared" -eq 1 ]]
     then
         passwordless="$( \
-            _koopa_read_yn "Enable passwordless sudo" "$passwordless" \
+            koopa::read_yn "Enable passwordless sudo" "$passwordless" \
         )"
     fi
-    [[ "$passwordless" -eq 1 ]] && _koopa_enable_passwordless_sudo
+    [[ "$passwordless" -eq 1 ]] && koopa::enable_passwordless_sudo
 
     # Dot files {{{1
     # ==========================================================================
@@ -278,48 +282,48 @@ _koopa_install() { # {{{1
     if [[ "$interactive" -eq 1 ]]
     then
         # Check if a user profile exists, and warn.
-        file="$(_koopa_find_user_profile)"
+        file="$(koopa::find_user_profile)"
         if [[ -e "$file" ]]
         then
-            _koopa_note "User profile exists: '${file}'."
-            _koopa_note "This will be overwritten if dot files are linked."
+            koopa::note "User profile exists: '${file}'."
+            koopa::note "This will be overwritten if dot files are linked."
         fi
-        dotfiles="$(_koopa_read_yn "Install and link dot files" "$dotfiles")"
+        dotfiles="$(koopa::read_yn "Install and link dot files" "$dotfiles")"
     fi
     if [[ "$dotfiles" -eq 1 ]]
     then
-        _koopa_git_clone_dotfiles
-        _koopa_install_dotfiles
+        koopa::git_clone_dotfiles
+        koopa::install_dotfiles
     fi
 
     # User profile {{{1
     # ==========================================================================
 
-    profile_file="$(_koopa_find_user_profile)"
-    if ! _koopa_is_defined_in_user_profile && [[ ! -L "$profile_file" ]]
+    profile_file="$(koopa::find_user_profile)"
+    if ! koopa::is_defined_in_user_profile && [[ ! -L "$profile_file" ]]
     then
         if [[ "$interactive" -eq 1 ]]
         then
-            _koopa_note "Koopa activation code needs to be added to '${file}'."
-            profile="$(_koopa_read_yn "Modify '${file}'" "$profile")"
+            koopa::note "Koopa activation code needs to be added to '${file}'."
+            profile="$(koopa::read_yn "Modify '${file}'" "$profile")"
         fi
-        [[ "$profile" -eq 1 ]] && _koopa_add_to_user_profile
+        [[ "$profile" -eq 1 ]] && koopa::add_to_user_profile
     fi
 
     # Final steps and return {{{1
     # ==========================================================================
 
-    if _koopa_is_bash_ok
+    if koopa::is_bash_ok
     then
-        _koopa_remove_broken_symlinks "$koopa_prefix"
+        koopa::remove_broken_symlinks "$koopa_prefix"
     else
-        _koopa_note "Bash is very old and must be upgraded."
+        koopa::note "Bash is very old and must be upgraded."
     fi
-    _koopa_update_etc_profile_d
-    _koopa_fix_zsh_permissions
-    _koopa_install_success "koopa"
-    _koopa_restart
+    koopa::update_etc_profile_d
+    koopa::fix_zsh_permissions
+    koopa::install_success "koopa"
+    koopa::restart
     return 0
 }
 
-_koopa_install "$@"
+koopa::install "$@"

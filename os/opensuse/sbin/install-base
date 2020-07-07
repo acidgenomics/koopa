@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_install_opensuse_base() {
+koopa::install_opensuse_base() {
     # """
     # Install openSUSE base system.
     # @note Updated 2020-07-02.
@@ -12,10 +12,10 @@ _koopa_install_opensuse_base() {
     # zypper cheat sheet:
     # https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
     # """
-    _koopa_assert_is_installed sudo zypper
     local name_fancy packages
+    koopa::assert_is_installed sudo zypper
     name_fancy="openSUSE base system"
-    _koopa_install_start "$name_fancy"
+    koopa::install_start "$name_fancy"
     sudo zypper refresh
     sudo zypper --non-interactive update
     packages=(
@@ -58,8 +58,8 @@ _koopa_install_opensuse_base() {
         zlib-devel
     )
     sudo zypper --non-interactive install "${packages[@]}"
-    _koopa_install_success "$name_fancy"
+    koopa::install_success "$name_fancy"
     return 0
 }
 
-_koopa_install_opensuse_base "$@"
+koopa::install_opensuse_base "$@"

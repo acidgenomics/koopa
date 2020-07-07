@@ -3,46 +3,194 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
 
-# """
-# Modified version of tldr client by Ray Lee.
-# http://github.com/raylee/tldr
-# """
-
-
-
-# Functions {{{1
-# ==============================================================================
-
-# Configuration {{{2
-# ------------------------------------------------------------------------------
-
-config() {
-    # Local configuration.
-    config_dir="$(_koopa_config_prefix)/tldr"
-    index_file="${config_dir}/index.json"
-    platform="$(get_platform)"
-
-    # tldr URLs.
-    base_url="https://raw.githubusercontent.com/tldr-pages/tldr/master/pages"
-    index_json_url="https://raw.githubusercontent.com/tldr-pages/\
-tldr-pages.github.io/master/assets/index.json"
+koopa::tldr() {
+    # """
+    # tldr
+    # @note Updated 2020-07-03.
+    #
+    # Modified version of tldr client by Ray Lee.
+    #
+    # There are pages with hypens in them, such as 'git-tag'. This converts
+    # 'tldr git tag' to the hyphenated version.
+    #
+    # @seealso
+    # - http://github.com/raylee/tldr
+    # - https://github.com/tldr-pages/tldr/tree/master/pages
+    # """
+    local cmd file
+    cmd="${1:-}"
+    [[ -z "$cmd" ]] && cmd='--list'
+    case "$cmd" in
+        -c|-u|--cache|--update)
+            koopa::tldr_cache
+            exit 0
+            ;;
+        -l|--list)
+            koopa::tldr_list_pages
+            exit 0
+            ;;
+    esac
+    cmd="$(koopa::gsub " " "-" "$*")"
+    koopa::tldr_download_cache
+    koopa::tldr_update_index
+    file="$(koopa::tldr_file "$cmd")"
+    koopa::tldr_display "$file"
+    return 0
 }
 
-# Variables {{{2
-# ------------------------------------------------------------------------------
+koopa::tldr_display() {
+    # """
+    # Display rendered tldr page.
+    # @note Updated 2020-07-03.
+    # """
+    local file italic_end italic_start line lines
+    koopa::assert_has_args_eq "$#" 1
+    file="${1:?}"
+    koopa::assert_is_file "$file"
+    readarray -t lines < "$file"
+    # Reformat style tags, making text italic.
+    italic_start="$(printf "\033[3m")"
+    italic_end="$(printf "\033[23m")"
+    readarray -t lines <<< "$( \
+        koopa::print "${lines[@]}" \
+            | sed "s/{{/${italic_start}/g;s/}}/${italic_end}/g" \
+    )"
+    code() {
+        koopa::print_default_bold "$( \
+            koopa::print "${1:?}" \
+                | sed "s/\`\([^\`]*\)\`/  \1/g" \
+        )"
+    }
+    heading() {
+        koopa::print_default_bold "${*#??}"
+    }
+    list_item() {
+        koopa::print "${1:-}"
+    }
+    quotation() {
+        koopa::print "${*#??}"
+    }
+    text() {
+        koopa::print "${1:-}"
+    }
+    (
+        for line in "${lines[@]}"
+        do
+            case "$line" in
+                \#*)
+                    heading "$line"
+                    ;;
+                \>*)
+                    quotation "$line"
+                    ;;
+                -*)
+                    list_item "$line"
+                    ;;
+                \`*)
+                    code "$line"
+                    ;;
+                *)
+                    text "$line"
+                    ;;
+            esac
+        done
+    ) | koopa::pager
+    return 0
+}
 
-get_platform() {
+koopa::tldr_download_cache() {
+    # """
+    # Cache a local copy of the tldr-pages repo.
+    # @note Updated 2020-07-03.
+    # """
+    local file prefix tmp_dir url
+    koopa::assert_has_no_args "$#"
+    prefix="$(koopa::tldr_prefix)"
+    [[ -d "$prefix" ]] && return 0
+    koopa::info "Caching tldr pages from GitHub."
+    mkdir -pv "$prefix"
+    tmp_dir="$(koopa::tmp_dir)"
+    (
+        koopa::cd "$tmp_dir"
+        url="https://github.com/tldr-pages/tldr/tarball/master"
+        file="master.tar.gz"
+        koopa::download "$url" "$file"
+        koopa::extract "$file"
+        rsync -a "tldr-pages-tldr-"*"/pages/" "${prefix}/"
+    )
+    rm -fr "$tmp_dir"
+    return 0
+}
+
+koopa::tldr_file() {
+    # """
+    # Get the tldr file path, using 'index.json' and platform key.
+    # @note Updated 2020-07-03.
+    # """
+    local cmd desc file index_file platform prefix subdir
+    koopa::assert_has_args_eq "$#" 1
+    cmd="${1:?}"
+    platform="$(koopa::tldr_platform)"
+    prefix="$(koopa::tldr_prefix)"
+    index_file="$(koopa::tldr_index_file)"
+    # Parse the JSON file.
+    desc="$( \
+        tr '{' '\n' < "$index_file" \
+        | grep "\"name\":\"${cmd}\"" \
+    )"
+    # Use the platform-specific version of the tldr first.
+    if koopa::str_match "$desc" "$platform"
+    then
+        subdir="$platform"
+    elif koopa::str_match "$desc" "common"
+    then
+        subdir="common"
+    else
+        koopa::stop "Failed to locate tldr for '${cmd}'."
+    fi
+    file="${prefix}/${subdir}/${cmd}.md"
+    koopa::assert_is_file "$file"
+    koopa::print "$file"
+    return 0
+}
+
+koopa::tldr_index_file() {
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::tldr_prefix)/index.json"
+    return 0
+}
+
+koopa::tldr_list_pages() {
+    # """
+    # List locally cached tldr pages.
+    # @note Updated 2020-06-20.
+    # """
+    local cmd pages prefix
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed fzf
+    prefix="$(koopa::tldr_prefix)"
+    readarray -t pages <<< "$( \
+        find "$prefix" \
+            -mindepth 1 \
+            -type f \
+            -iname "*.md" \
+            -print \
+        | sort -u \
+    )"
+    cmd="$(koopa::basename_sans_ext "${pages[@]}" | fzf || true)"
+    [ -n "$cmd" ] || return 0
+    tldr "$cmd"
+    return 0
+}
+
+koopa::tldr_platform() {
     # """
     # Convert the local platorm name to tldr's version.
-    #
-    # @note Updated 2020-04-27.
-    #
-    # Supported tldr platforms:
-    # https://github.com/tldr-pages/tldr/tree/master/pages
+    # @note Updated 2020-07-03.
     # """
     local str
+    koopa::assert_has_no_args "$#"
     case "$(uname -s)" in
         Darwin)
             str="osx"
@@ -60,276 +208,29 @@ get_platform() {
             str="common"
             ;;
     esac
-    _koopa_print "$str"
-}
-
-# Caching and indexing {{{2
-# ------------------------------------------------------------------------------
-
-auto_update_index() {
-    # """
-    # Auto-update index.
-    #
-    # @note Updated 2020-04-27.
-    # """
-    if ! _koopa_is_recent "$index_file"
-    then
-        update_index
-    fi
+    koopa::print "$str"
     return 0
 }
 
-cache_tldr() {
-    # """
-    # Cache a local copy of the tldr-pages repo.
-    #
-    # @note Updated 2020-04-27.
-    # """
-    _koopa_h1 "Caching tldr pages from GitHub."
-    local tmp_dir
-    tmp_dir="$(_koopa_tmp_dir)"
-    (
-        _koopa_cd_tmp_dir "$tmp_dir"
-        local url
-        url="https://github.com/tldr-pages/tldr/tarball/master"
-        local file
-        file="master.tar.gz"
-        _koopa_download "$url" "$file"
-        _koopa_extract "$file"
-        rsync -a \
-            "tldr-pages-tldr-"*"/pages/" \
-            "${config_dir}/"
-    )
-    rm -fr "$tmp_dir"
-    update_index
+koopa::tldr_prefix() {
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::config_prefix)/tldr"
     return 0
 }
 
-get_tldr() {
-    # """
-    # Return the local cached copy of the tldrpage, or retrieve and cache from
-    # GitHub.
-    #
-    # @note Updated 2020-04-27.
-    # """
-    
-    # Get the relative path to subdirectory location.
-    # Note that we're re-using this in GitHub URL call below.
-    local p
-    p="$(get_tldr_path "${1:?}")"
-    
-    # File path for local cache file.
-    local cache_file
-    cache_file="${config_dir}/${p}"
-    
-    # Download missing file from GitHub, if not cached.
-    if ! _koopa_is_recent "$cache_file"
-    then
-        mkdir -p "$(dirname "$cache_file")"
-        local source_url
-        source_url="${base_url}/${p}"
-        _koopa_download "$source_url" "$cache_file"
-    fi
-    
-    cat "$cache_file"
-    
-    return 0
-}
-
-get_tldr_path() {
-    # """
-    # Get the platform key from 'index.json' and return preferred subpath.
-    # to tldrpage.
-    #
-    # @note Updated 2020-04-27.
-    # """
-
-    local cmd
-    cmd="${1:?}"
-    
-    # Parse the JSON file.
-    local desc
-    desc="$( \
-        tr '{' '\n' < "$index_file" \
-        | grep "\"name\":\"${cmd}\"" \
-    )"
-
-    # Use the platform-specific version of the tldr first.
-    local subdir
-    if _koopa_str_match "$desc" "$platform"
-    then
-        subdir="$platform"
-    elif _koopa_str_match "$desc" "common"
-    then
-        subdir="common"
-    else
-        _koopa_stop "Failed to locate documentation for '${cmd}'."
-    fi
-    
-    _koopa_print "${subdir}/${cmd}.md"
-}
-
-update_index() {
+koopa::tldr_update_index() {
     # """
     # Update tldr index.
-    #
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-07-03.
     # """
-    _koopa_download "$index_json_url" "$index_file"
+    local file url
+    koopa::assert_has_no_args "$#"
+    file="$(koopa::tldr_index_file)"
+    koopa::is_recent "$file" && return 0
+    url="https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/\
+master/assets/index.json"
+    koopa::download "$url" "$file"
     return 0
 }
 
-# Runners {{{2
-# ------------------------------------------------------------------------------
-
-display_tldr() {
-    # """
-    # Display tldr page.
-    #
-    # @note Updated 2020-04-27.
-    # """
-    local page
-    page="${1:?}"
-
-    # Reformat style tags, making text italic.
-    # This step is faster to across all lines in a single call.
-    local italic_start italic_end
-    italic_start="$(printf "\033[3m")"
-    italic_end="$(printf "\033[23m")"
-    page="$( \
-        _koopa_print "${page}" \
-            | sed "s/{{/${italic_start}/g;s/}}/${italic_end}/g" \
-    )"
-
-    code() {
-        _koopa_print_default_bold "$( \
-            _koopa_print "${1:?}" \
-                | sed "s/\`\([^\`]*\)\`/  \1/g" \
-        )"
-    }
-
-    heading() {
-        _koopa_h1 "${*#??}"
-    }
-
-    list_item() {
-        _koopa_print "${1:-}"
-    }
-
-    quotation() {
-        _koopa_print "${*#??}"
-    }
-
-    text() {
-        _koopa_print "${1:-}"
-    }
-
-    # Read lines into array.
-    readarray -t lines <<< "$(_koopa_print "$page")"
-
-    # Process line-by-line.
-    for line in "${lines[@]}"
-    do
-        case "$line" in
-            \#*)
-                heading "$line"
-                ;;
-            \>*)
-                quotation "$line"
-                ;;
-            -*)
-                list_item "$line"
-                ;;
-            \`*)
-                code "$line"
-                ;;
-            *)
-                text "$line"
-                ;;
-        esac
-    done
-}
-
-list_pages() {
-    # """
-    # List locally cached tldr pages.
-    # @note Updated 2020-06-20.
-    # """
-    _koopa_h1 "Listing known tldr pages."
-    local pages
-    readarray -t pages <<< "$( \
-        find "$config_dir" \
-            -mindepth 1 \
-            -type f \
-            -iname "*.md" \
-            -print \
-        | sort -u \
-    )"
-    _koopa_basename_sans_ext "${pages[@]}"
-    return 0
-}
-
-
-
-# Argument parsing {{{1
-# ==============================================================================
-
-while [[ "$#" -gt 0 ]]
-do
-    case "$1" in
-        -c|-u|--cache|--update)
-            cache_tldr
-            exit 0
-            ;;
-        -l|--list)
-            list_pages
-            exit 0
-            ;;
-        *)
-            # There are pages with hypens in them, such as 'git-tag'.
-            # This converts 'tldr git tag' to the hyphenated version.
-            page="$(printf '%s' "$*" | tr ' ' '-')"
-            break
-            ;;
-    esac
-    shift 1
-done
-
-
-
-# Configuration {{{1
-# ==============================================================================
-
-config
-
-
-
-# Cache / index {{{1
-# ==============================================================================
-
-# Check if config folder exists, otherwise create it.
-if [[ ! -d "$config_dir" ]]
-then
-    mkdir -p "$config_dir"
-    cache_tldr
-fi
-
-if [[ ! -f "$index_file" ]]
-then
-    update_index
-fi
-auto_update_index
-
-
-
-# Display tldr page {{{1
-# ==============================================================================
-
-tldr="$(get_tldr "$page")"
-
-if [[ -z "$tldr" ]]
-then
-    _koopa_stop "tldr page for command ${page} not found."
-fi
-
-display_tldr "$tldr"
+koopa::tldr "$@"

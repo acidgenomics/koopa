@@ -58,25 +58,25 @@
 # Here we're requiring that that the major version always matches.
 # This speeds up Docker builds on Linux distros with relatively recent
 # configurations, such as Fedora.
-# > if _koopa_is_installed "$name"
+# > if koopa::is_installed "$name"
 # > then
-# >     current="$(_koopa_get_version "$name")"
-# >     current="$(_koopa_major_version "$current")"
-# >     expected="$(_koopa_major_version "$version")"
-# >     if _koopa_check_version "$current" "$expected"
+# >     current="$(koopa::get_version "$name")"
+# >     current="$(koopa::major_version "$current")"
+# >     expected="$(koopa::major_version "$version")"
+# >     if koopa::check_version "$current" "$expected"
 # >     then
-# >         _koopa_note "${name} ${current} is installed."
+# >         koopa::note "${name} ${current} is installed."
 # >         exit 0
 # >     fi
 # > fi
 
 file="${name}-${version}.tar.xz"
 url="${gnu_mirror}/${name}/${name}-${version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 # Need to build outside of source code directory.
 mkdir build
-_koopa_cd build
+koopa::cd build
 flags=(
     "--disable-multilib"
     "--enable-languages=c,c++,fortran"

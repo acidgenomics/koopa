@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_h1 "Listing launch agents and daemons."
+koopa::h1 "Listing launch agents and daemons."
 
 ls \
     "${HOME}/Library/LaunchAgents" \

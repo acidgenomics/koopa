@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_wget_recursive() {
+koopa::wget_recursive() {
     # """
     # Download files with wget recursively.
     # @note Updated 2020-07-02.
@@ -13,9 +13,9 @@ _koopa_wget_recursive() {
     # For direct input, can just use single quotes to escape.
     # See also: https://unix.stackexchange.com/questions/379181
     # """
-    [[ "$#" -eq 3 ]] || return 1
-    _koopa_assert_is_installed wget
     local log_file password timestamp url user
+    koopa::assert_has_args_eq "$#" 3
+    koopa::assert_is_installed wget
     url="${1:?}"
     user="${2:?}"
     password="${3:?}"
@@ -34,4 +34,4 @@ _koopa_wget_recursive() {
     return 0
 }
 
-_koopa_wget_recursive "$@"
+koopa::wget_recursive "$@"

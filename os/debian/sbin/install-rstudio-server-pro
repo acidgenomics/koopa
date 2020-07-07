@@ -22,7 +22,7 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
         *)
             pos+=("$1")
@@ -33,25 +33,25 @@ done
 [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
 name="rstudio-server-pro"
-version="$(_koopa_variable "$name")"
+version="$(koopa::variable "$name")"
 name_fancy="RStudio Server Pro ${version}"
 
-if ! _koopa_is_current_version rstudio-server
+if ! koopa::is_current_version rstudio-server
 then
     reinstall=1
 fi
 
 if [[ "$reinstall" -eq 0 ]]
 then
-    _koopa_exit_if_installed rstudio-server
+    koopa::exit_if_installed rstudio-server
 fi
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed R gdebi
+koopa::assert_has_no_args "$#"
+koopa::assert_is_installed R gdebi
 
-os_codename="$(_koopa_os_codename)"
+os_codename="$(koopa::os_codename)"
 
 case "$os_codename" in
     # Debian 10
@@ -66,29 +66,29 @@ case "$os_codename" in
     bionic)
         ;;
     *)
-        _koopa_stop "Unsupported OS version: '${os_codename}'."
+        koopa::stop "Unsupported OS version: '${os_codename}'."
         ;;
 esac
 
-tmp_dir="$(_koopa_tmp_dir)"
+tmp_dir="$(koopa::tmp_dir)"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="rstudio-server-pro-${version}-amd64.deb"
     url="https://download2.rstudio.org/server/${os_codename}/amd64/${file}"
-    _koopa_download "$url"
+    koopa::download "$url"
     sudo gdebi --non-interactive "$file"
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"
 
-cat << EOF
+cat << END
 Activate product license key (if necessary):
 > sudo rstudio-server license-manager activate <product-key>
 
 If you want to move your license of RStudio Server to another system you should
 first deactivate it on the old system with the command:
 > sudo rstudio-server license-manager deactivate
-EOF
+END

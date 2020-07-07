@@ -4,10 +4,10 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
+koopa::assert_has_args "$#"
 
 file="$1"
-_koopa_assert_is_file_type "$file" "csv"
+koopa::assert_is_file_type "$file" 'csv'
 
 while read -r line
 do

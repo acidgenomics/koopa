@@ -22,12 +22,12 @@ case "$version" in
         pinentry_version="1.1.0"
         ;;
     *)
-        _koopa_stop "Unsupported GnuPG version."
+        koopa::stop "Unsupported GnuPG version."
         ;;
 esac
 
 # Download GnuPG release signing keys.
-if _koopa_is_installed gpg-agent
+if koopa::is_installed gpg-agent
 then
     gpg --list-keys
     gpg --keyserver hkp://keyserver.ubuntu.com:80 \
@@ -41,39 +41,39 @@ fi
 gcrypt_url="https://gnupg.org/ftp/gcrypt"
 
 # Install dependencies.
-_koopa_install_cellar \
+koopa::install_cellar \
     --name="libgpg-error" \
     --version="$libgpg_error_version" \
     --script-name="gnupg-gcrypt" \
     "$@"
-_koopa_install_cellar \
+koopa::install_cellar \
     --name="libgcrypt" \
     --version="$libgcrypt_version" \
     --script-name="gnupg-gcrypt" \
     "$@"
-_koopa_install_cellar \
+koopa::install_cellar \
     --name="libassuan" \
     --version="$libassuan_version" \
     --script-name="gnupg-gcrypt" \
     "$@"
-_koopa_install_cellar \
+koopa::install_cellar \
     --name="libksba" \
     --version="$libksba_version" \
     --script-name="gnupg-gcrypt" \
     "$@"
-_koopa_install_cellar \
+koopa::install_cellar \
     --name="npth" \
     --version="$npth_version" \
     --script-name="gnupg-gcrypt" \
     "$@"
-_koopa_install_cellar \
+koopa::install_cellar \
     --name="pinentry" \
     --version="$pinentry_version" \
     --script-name="gnupg-pinentry" \
     "$@"
 
 # Now ready to install GnuPG.
-_koopa_install_cellar \
+koopa::install_cellar \
     --name="gnupg" \
     --version="$version" \
     --script-name="gnupg-gcrypt" \

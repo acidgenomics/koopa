@@ -26,14 +26,14 @@
 # Can uninstall with uninstall.py script.
 # """
 
-_koopa_assert_is_not_installed autojump
-_koopa_assert_is_not_dir "${HOME}/.autojump"
-_koopa_assert_is_current_version python
+koopa::assert_is_not_installed autojump
+koopa::assert_is_not_dir "${HOME}/.autojump"
+koopa::assert_is_current_version python
 
 file="release-v${version}.tar.gz"
 url="https://github.com/wting/autojump/archive/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "autojump-release-v${version}" || exit 1
 ./install.py \
     --destdir "$prefix" \

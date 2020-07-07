@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-07-02"
+koopa-date="2020-07-07"
 koopa-version="0.8.0a"
 
 koopa-github-url="https://github.com/acidgenomics/koopa/"
@@ -109,7 +109,7 @@ gcc="9.3.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.1.1"
+gdal="3.1.2"
 
 # https://github.com/libgeos/geos/releases
 geos="3.8.1"
@@ -225,6 +225,10 @@ pip="20.1.1"
 # https://pypi.org/project/pipx/
 pipx="0.15.4.0"
 
+# Note that Fedora now masks this with pkgconf.
+# https://pkg-config.freedesktop.org/releases/
+pkg-config="0.29.2"
+
 # https://proj.org/
 proj="7.1.0"
 
@@ -262,7 +266,7 @@ rust="1.44.1"
 rustup="1.21.1"
 
 # https://download.samba.org/pub/rsync/src/
-rsync="3.2.1"
+rsync="3.2.2"
 
 # http://rtomayko.github.io/ronn/
 ronn="0.7.3"
@@ -301,7 +305,7 @@ tex="2020"
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.7"
 
-# Ag
+# aka Ag
 # https://github.com/ggreer/the_silver_searcher
 the-silver-searcher="2.2.0"
 
@@ -327,8 +331,6 @@ zsh="5.8"
 # macOS app versions {{{1
 # ==============================================================================
 
-# > koopa get-macos-app-version "XXX"
-
 macos-app-alacritty="0.4.3"
 macos-app-aspera-connect="3.9.9"
 macos-app-bbedit="13.1"
@@ -345,7 +347,5 @@ macos-app-xcode="11.3.1"
 
 # Homebrew cask versions {{{1
 # ==============================================================================
-
-# > koopa get-homebrew-cask-version "XXX"
 
 homebrew-cask-gpg-suite="2020.1"

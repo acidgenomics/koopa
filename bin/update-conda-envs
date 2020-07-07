@@ -4,10 +4,10 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed conda
+koopa::assert_has_no_args "$#"
+koopa::assert_is_installed conda
 
-conda_prefix="$(_koopa_conda_prefix)"
+conda_prefix="$(koopa::conda_prefix)"
 conda_exe="${conda_prefix}/condabin/conda"
 # > conda_exe="${conda_prefix}/bin/conda"
 
@@ -20,22 +20,22 @@ readarray -t env_prefixes <<< "$( \
         | sort \
 )"
 
-if ! _koopa_is_array_non_empty "${env_prefixes[@]}"
+if ! koopa::is_array_non_empty "${env_prefixes[@]}"
 then
-    _koopa_note "Failed to detect any conda environments."
+    koopa::note "Failed to detect any conda environments."
     exit 0
 fi
 
-_koopa_h1 "Updating ${#env_prefixes[@]} environments at '${conda_prefix}'."
+koopa::h1 "Updating ${#env_prefixes[@]} environments at '${conda_prefix}'."
 
-_koopa_h2 "Updating conda installation."
+koopa::h2 "Updating conda installation."
 update-conda > /dev/null
 
 for env_prefix in "${env_prefixes[@]}"
 do
-    _koopa_h2 "Updating '${env_prefix}'."
+    koopa::h2 "Updating '${env_prefix}'."
     "$conda_exe" update -y --prefix="$env_prefix" --all
 done
 
 # > "$conda_exe" clean --yes --tarballs
-_koopa_set_permissions --recursive "$conda_prefix"
+koopa::sys_set_permissions -r "$conda_prefix"

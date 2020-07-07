@@ -1,20 +1,68 @@
 #!/usr/bin/env bash
 
-_koopa_venv_create() {
+koopa::pip_install() { # {{{1
+    # """
+    # Internal pip install command.
+    # @note Updated 2020-07-03.
+    # """
+    local python
+    koopa::assert_has_args "$#"
+    python="python3"
+    koopa::assert_is_installed "$python"
+    "$python" \
+        -m pip install \
+        --no-warn-script-location \
+        "$@"
+    return 0
+}
+
+koopa::python_remove_pycache() { # {{{1
+    # """
+    # Remove Python '__pycache__/' from site packages.
+    # @note Updated 2020-06-30.
+    #
+    # These directories can create permission issues when attempting to rsync
+    # installation across multiple VMs.
+    # """
+    local prefix python
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_installed find
+    prefix="${1:-}"
+    if [[ -z "$prefix" ]]
+    then
+        # e.g. /usr/local/cellar/python/3.8.1
+        python="$(koopa::which_realpath "python3")"
+        prefix="$(realpath "$(dirname "$python")/..")"
+    fi
+    koopa::info "Removing pycache in '${prefix}'."
+    # > find "$prefix" \
+    # >     -type d \
+    # >     -name "__pycache__" \
+    # >     -print0 \
+    # >     -exec rm -frv "{}" \;
+    find "$prefix" \
+        -type d \
+        -name "__pycache__" \
+        -print0 \
+        | xargs -0 -I {} rm -frv "{}"
+    return 0
+}
+
+koopa::venv_create() {
     # """
     # Create Python virtual environment.
     # @note Updated 2020-07-02.
     # """
-    _koopa_assert_has_no_envs
-    _koopa_assert_is_installed python3
-    _koopa_assert_is_current_version python
     local name prefix py_exe
+    koopa::assert_has_no_envs
+    koopa::assert_is_installed python3
+    koopa::assert_is_current_version python
     name="${1:?}"
-    prefix="$(_koopa_venv_prefix)/${name}"
+    prefix="$(koopa::venv_prefix)/${name}"
     [[ -d "$prefix" ]] && return 0
     shift 1
-    _koopa_info "Installing Python '${name}' virtual environment at '${prefix}'."
-    _koopa_mkdir "$prefix"
+    koopa::info "Installing Python '${name}' virtual environment at '${prefix}'."
+    koopa::mkdir "$prefix"
     python3 -m venv "$prefix"
     py_exe="${prefix}/bin/python3"
     "$py_exe" -m pip install --upgrade pip setuptools wheel
@@ -25,22 +73,22 @@ _koopa_venv_create() {
     then
         "$py_exe" -m pip install "$name"
     fi
-    _koopa_set_permissions --recursive "$prefix"
+    koopa::sys_set_permissions -r "$prefix"
     "$py_exe" -m pip list
     return 0
 }
 
-_koopa_venv_create_base() {
+koopa::venv_create_base() {
     # """
     # Create base Python virtual environment.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-03.
     # """
-    [[ "$#" -eq 0 ]] || return 0
-    _koopa_venv_create "base"
+    koopa::assert_has_no_args "$#"
+    koopa::venv_create "base"
     return 0
 }
 
-_koopa_venv_create_r_reticulate() {
+koopa::venv_create_r_reticulate() {
     # """
     # Create Python reticulate environment for R.
     # @note Updated 2020-07-02.
@@ -66,8 +114,8 @@ _koopa_venv_create_r_reticulate() {
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
-    [[ "$#" -eq 0 ]] || return 1
     local name packages
+    koopa::assert_has_no_args "$#"
     name="r-reticulate"
     packages=(
         Cython
@@ -83,22 +131,22 @@ _koopa_venv_create_r_reticulate() {
         umap-learn
         wheel
     )
-    if _koopa_is_macos
+    if koopa::is_macos
     then
-        export CC="/usr/bin/clang"
-        export CXX="/usr/bin/clang++"
+        export CC='/usr/bin/clang'
+        export CXX='/usr/bin/clang++'
         export CFLAGS="${CFLAGS:-} -I/usr/local/opt/libomp/include"
         export CPPFLAGS="${CPPFLAGS:-} -Xpreprocessor -fopenmp"
         export CXXFLAGS="${CXXFLAGS:-} -I/usr/local/opt/libomp/include"
-        export DYLD_LIBRARY_PATH="/usr/local/opt/libomp/lib"
+        export DYLD_LIBRARY_PATH='/usr/local/opt/libomp/lib'
         export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
     fi
     if [[ -n "${LLVM_CONFIG:-}" ]]
     then
-        _koopa_info "LLVM_CONFIG: '${LLVM_CONFIG}'."
+        koopa::info "LLVM_CONFIG: \"${LLVM_CONFIG}\"."
     else
-        _koopa_note "Export 'LLVM_CONFIG' to locate LLVM llvm-config binary."
+        koopa::note 'Export "LLVM_CONFIG" to locate LLVM llvm-config binary.'
     fi
-    _koopa_venv_create "$name" "${packages[@]}"
+    koopa::venv_create "$name" "${packages[@]}"
     return 0
 }

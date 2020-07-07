@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_envs
+koopa::assert_has_no_envs
 
 while (("$#"))
 do
@@ -34,7 +34,7 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
@@ -44,41 +44,41 @@ if [[ -z "${git_dir:-}" ]]
 then
     git_dir="${HOME}/git/bcbio-nextgen"
 fi
-_koopa_assert_is_dir "$git_dir"
+koopa::assert_is_dir "$git_dir"
 
 # Locate bcbio python.
 if [[ -z "${bcbio_python:-}" ]]
 then
-    bcbio_python="$(_koopa_which_realpath "bcbio_python")"
+    bcbio_python="$(koopa::which_realpath "bcbio_python")"
 fi
-_koopa_assert_is_executable "$bcbio_python"
+koopa::assert_is_executable "$bcbio_python"
 
 # Locate bcbio installation directory.
 if [[ -z "${install_dir:-}" ]]
 then
     install_dir="$(dirname "$(dirname "$(dirname "$bcbio_python")")")"
 fi
-_koopa_assert_is_dir "$install_dir"
+koopa::assert_is_dir "$install_dir"
 
 name_fancy="bcbio-nextgen"
 
-_koopa_h1 "Patching ${name_fancy} installation."
+koopa::h1 "Patching ${name_fancy} installation."
 
-cat << EOF
+cat << END
 git_dir:
   ${git_dir}
 bcbio_python:
   ${bcbio_python}
 install_dir:
   ${install_dir}
-EOF
+END
 
-_koopa_h2 "Removing Python cache and compiled pyc files in Git repo."
+koopa::h2 "Removing Python cache and compiled pyc files in Git repo."
 
 find "$git_dir" -name "*.pyc" -delete
 find "$git_dir" -name "__pycache__" -type d -exec rm -rv {} \;
 
-_koopa_h2 "Removing Python installer cruft inside 'anaconda/lib/'."
+koopa::h2 "Removing Python installer cruft inside 'anaconda/lib/'."
 
 rm -frv "${install_dir}/anaconda/lib/python"*"/site-packages/bcbio"*
 
@@ -87,8 +87,8 @@ rm -frv "${install_dir}/anaconda/lib/python"*"/site-packages/bcbio"*
 (
     cd "$git_dir" || exit 1
     rm -fr tests/test_automated_output
-    _koopa_h2 "Patching installation via 'setup.py' script."
+    koopa::h2 "Patching installation via 'setup.py' script."
     "$bcbio_python" setup.py install
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
-_koopa_success "Patching of ${name_fancy} was successful."
+koopa::success "Patching of ${name_fancy} was successful."

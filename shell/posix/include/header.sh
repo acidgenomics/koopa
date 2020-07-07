@@ -1,20 +1,15 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# """
-# POSIX shared header script.
-# @note Updated 2020-06-30.
-# """
-
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-05.
     # """
     local file
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
-        >&2 printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset."
+        printf "%s\n" "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         exit 1
     fi
     # Source POSIX functions.
@@ -29,4 +24,4 @@ _koopa_posix_header() { # {{{1
     return 0
 }
 
-_koopa_posix_header
+_koopa_posix_header "$@"

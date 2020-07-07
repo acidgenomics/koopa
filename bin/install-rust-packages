@@ -14,14 +14,14 @@ source "${script_dir}/../shell/bash/include/header.sh"
 # - https://github.com/rust-lang/cargo/pull/7560
 # """
 
-_koopa_assert_has_no_envs
-_koopa_activate_rust
-_koopa_exit_if_not_installed cargo rustc rustup
+koopa::assert_has_no_envs
+koopa::activate_rust
+koopa::exit_if_not_installed cargo rustc rustup
 
 name_fancy="Rust cargo crates"
 prefix="$CARGO_HOME"
 
-_koopa_install_start "$name_fancy" "$prefix"
+koopa::install_start "$name_fancy" "$prefix"
 
 if [[ "$#" -eq 0 ]]
 then
@@ -40,15 +40,14 @@ else
     crates=("$@")
 fi
 
-_koopa_dl "Crates" "$(_koopa_to_string "${crates[@]}")"
-
-_koopa_set_permissions  --recursive --user "$prefix"
+koopa::dl 'Crates' "$(koopa::to_string "${crates[@]}")"
+koopa::sys_set_permissions -ru "$prefix"
 
 for crate in "${crates[@]}"
 do
     cargo install "$crate"
 done
 
-_koopa_set_permissions --recursive "$prefix"
+koopa::sys_set_permissions -r "$prefix"
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

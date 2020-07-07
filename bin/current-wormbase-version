@@ -4,13 +4,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_current_wormbase_version() { # {{{1
+koopa::current_wormbase_version() { # {{{1
     # """
     # Current WormBase version.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -eq 0 ]] || return 1
     local url version
+    koopa::assert_has_no_args "$#"
     url="ftp://ftp.wormbase.org/pub/wormbase/\
 releases/current-production-release"
     version="$( \
@@ -18,8 +18,8 @@ releases/current-production-release"
         grep -Eo "letter.WS[0-9]+" | \
         cut -d '.' -f 2 \
     )"
-    _koopa_print "$version"
+    koopa::print "$version"
     return 0
 }
 
-_koopa_current_wormbase_version "$@"
+koopa::current_wormbase_version "$@"

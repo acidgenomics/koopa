@@ -3,33 +3,33 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_args "$@"
+koopa::assert_has_args "$#"
 
 cloud="${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
-_koopa_assert_is_dir "$cloud"
+koopa::assert_is_dir "$cloud"
 
 file="$1"
 local="${HOME}/.${file}"
 
 if [[ -f "$cloud" ]] && [[ -f "$local" ]]
 then
-    _koopa_h1 "'${file}' exists in both places."
-    _koopa_h1 "Deleting local copy."
+    koopa::h1 "'${file}' exists in both places."
+    koopa::h1 "Deleting local copy."
     rm -v "$local"
-    _koopa_h1 "Adding symlink."
+    koopa::h1 "Adding symlink."
     ln -fnsv "$cloud" "$local"
 elif [[ -f "$cloud" ]]
 then
-    _koopa_h1 "'${file}' is only saved on iCloud."
-    _koopa_h1 "Adding local symlink."
+    koopa::h1 "'${file}' is only saved on iCloud."
+    koopa::h1 "Adding local symlink."
     ln -fsnv "$cloud" "$local"
 elif [[ -f "$local" ]]
 then
-    _koopa_h1 "'${file}' only exists locally."
-    _koopa_h1 "Moving to iCloud."
+    koopa::h1 "'${file}' only exists locally."
+    koopa::h1 "Moving to iCloud."
     mv -v "$local" "$cloud"
-    _koopa_h1 "Adding symlink."
+    koopa::h1 "Adding symlink."
     ln -fsnv "$cloud" "$local"
 else
-    _koopa_stop "'${file}' doesn't exist."
+    koopa::stop "'${file}' doesn't exist."
 fi

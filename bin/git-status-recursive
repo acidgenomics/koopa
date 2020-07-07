@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-dir="${1:-"."}"
+dir="${1:-.}"
 dir="$(realpath "$dir")"
 
 # Using '-L' flag here in case git dir is a symlink.
@@ -16,17 +16,17 @@ readarray -t repos <<< "$( \
         -print \
 )"
 
-if ! _koopa_is_array_non_empty "${repos[@]}"
+if ! koopa::is_array_non_empty "${repos[@]}"
 then
-    _koopa_stop "Failed to detect any git repos."
+    koopa::stop 'Failed to detect any git repos.'
 fi
 
-_koopa_h1 "Checking status of ${#repos[@]} git repos recursively at '${dir}'."
+koopa::h1 "Checking status of ${#repos[@]} git repos recursively at '${dir}'."
 
 for repo in "${repos[@]}"
 do
     repo="$(dirname "$repo")"
-    _koopa_h2 "$(basename "$repo")"
+    koopa::h2 "$(basename "$repo")"
     (
         cd "$repo" || exit 1
         pwd

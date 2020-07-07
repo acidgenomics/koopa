@@ -2,7 +2,7 @@
 
 # """
 # Check that scripts do not contain lints.
-# Updated 2020-02-01.
+# Updated 2020-07-07.
 # """
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
@@ -10,15 +10,15 @@ koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${koopa_prefix}/shell/bash/include/header.sh"
 
-_koopa_h1 "Running linter checks."
+koopa::h1 'Running linter checks.'
 
 # Check that linter config files are linked correctly.
 # This step can error if dotfiles submodule hasn't cloned.
-_koopa_git_clone_dotfiles >/dev/null
-_koopa_assert_is_symlink "${koopa_prefix}/."{lintr,pylintrc}
+koopa::git_clone_dotfiles >/dev/null
+koopa::assert_is_symlink "${koopa_prefix}/."{'lintr','pylintrc'}
 
 linter_dir="${script_dir}/linter.d"
-for file in "${linter_dir}/"*".sh"
+for file in "${linter_dir}/"*'.sh'
 do
     # shellcheck source=/dev/null
     [ -f "$file" ] && "$file"

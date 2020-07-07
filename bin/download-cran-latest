@@ -4,12 +4,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
-_koopa_assert_is_installed curl
+koopa::assert_has_args "$#"
+koopa::assert_is_installed curl
 
 name="$1"
 
 url="https://cran.r-project.org/web/packages/${name}/"
 pattern="${name}_[.0-9]+.tar.gz"
 file="$(curl --silent "$url" | grep -Eo "$pattern" | head -n 1)"
-_koopa_download "https://cran.r-project.org/src/contrib/${file}"
+koopa::download "https://cran.r-project.org/src/contrib/${file}"
