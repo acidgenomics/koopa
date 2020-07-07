@@ -15,8 +15,8 @@ koopa::youtube_thumbnail() {
     #
     # Not all videos will return max res thumbnail, so stick with hq instead.
     # """
-    koopa::assert_has_args "$#"
     local id url
+    koopa::assert_has_args "$#"
     for url in "$@"
     do
         id="$( \

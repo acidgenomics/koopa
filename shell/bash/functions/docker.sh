@@ -15,11 +15,11 @@ koopa::docker_build() { # {{{1
     # - docker build --help
     # - https://docs.docker.com/engine/reference/builder/#arg
     # """
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
     local delete docker_dir image image_ids pos push server source_image \
         symlink_tag symlink_tagged_image symlink_tagged_image_today tag \
         tagged_image tagged_image_today today
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed docker
     docker_dir="$(koopa::docker_prefix)"
     koopa::assert_is_dir "$docker_dir"
     delete=0
@@ -152,8 +152,8 @@ koopa::docker_build_all_batch_images() { # {{{1
     # Build all AWS Batch Docker images.
     # @note Updated 2020-07-01.
     # """
-    koopa::assert_is_installed docker-build-all-images
     local batch_dirs flags force images prefix
+    koopa::assert_is_installed docker-build-all-images
     force=0
     while (("$#"))
     do
@@ -190,9 +190,9 @@ koopa::docker_build_all_images() { # {{{1
     # Build all Docker images.
     # @note Updated 2020-07-01.
     # """
-    koopa::assert_is_installed docker docker-build-all-tags
     local batch_arr batch_dirs extra force image images json nextflow_arr \
         nextflow_dirs prefix prune pos timestamp today utc_timestamp
+    koopa::assert_is_installed docker docker-build-all-tags
     extra=0
     force=0
     prune=0
@@ -340,13 +340,13 @@ koopa::docker_push() { # {{{1
     # @examples
     # docker-push acidgenomics/debian:latest
     # """
+    local image images json pattern server
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    local image images json pattern server
-    server="docker.io"
+    server='docker.io'
     for pattern in "$@"
     do
-        koopa::h1 "Pushing images matching '${pattern}' to ${server}."
+        koopa::h1 "Pushing images matching \"${pattern}\" to ${server}."
         koopa::assert_is_matching_regex "$pattern" '^.+/.+$'
         json="$(docker inspect --format="{{json .RepoTags}}" "$pattern")"
         # Convert JSON to lines.
@@ -363,11 +363,11 @@ koopa::docker_push() { # {{{1
         if ! koopa::is_array_non_empty "${images[@]}"
         then
             docker image ls
-            koopa::stop "'${image}' failed to match any images."
+            koopa::stop "\"${image}\" failed to match any images."
         fi
         for image in "${images[@]}"
         do
-            koopa::h2 "Pushing '${image}'."
+            koopa::h2 "Pushing \"${image}\"."
             docker push "${server}/${image}"
         done
     done
@@ -379,9 +379,9 @@ koopa::docker_remove() { # {{{1
     # Remove docker images by pattern.
     # Updated 2020-07-01.
     # """
+    local pattern
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    local pattern
     for pattern in "$@"
     do
         docker images \
@@ -397,9 +397,9 @@ koopa::docker_run() { # {{{1
     # Run Docker image.
     # @note Updated 2020-07-01.
     # """
+    local bash flags image pos workdir
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    local bash flags image pos workdir
     bash=0
     workdir="/mnt/work"
     pos=()
@@ -458,8 +458,8 @@ koopa::docker_run_wine() { # {{{1
     # Allow access from localhost.
     # > xhost + "$HOSTNAME"
     # """
-    koopa::assert_is_installed docker xhost
     local image workdir
+    koopa::assert_is_installed docker xhost
     image="acidgenomics/wine"
     workdir="/mnt/work"
     xhost + 127.0.0.1
@@ -480,9 +480,9 @@ koopa::docker_tag() { # {{{1
     # Add Docker tag.
     # Updated 2020-02-18.
     # """
+    local dest_tag image server source_tag
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    local dest_tag image server source_tag
     image="${1:?}"
     source_tag="${2:?}"
     dest_tag="${3:-latest}"
@@ -510,9 +510,9 @@ koopa::is_docker_build_today() { # {{{1
     # Check if a Docker image has been built today.
     # @note Updated 2020-07-02.
     # """
+    local image json timestamp today utc_timestamp
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    local image json timestamp today utc_timestamp
     today="$(date "+%Y-%m-%d")"
     for image in "$@"
     do

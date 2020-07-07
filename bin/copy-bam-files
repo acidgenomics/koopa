@@ -11,8 +11,8 @@ koopa::copy_bam_files() { # {{{1
     #
     # Intended primarily for use with bcbio-nextgen.
     # """
-    koopa::assert_has_args "$#"
     local source_dir target_dir
+    koopa::assert_has_args "$#"
     source_dir="$(realpath "${1:?}")"
     target_dir="$(realpath "${2:?}")"
     koopa::dl "Source" "${source_dir}"

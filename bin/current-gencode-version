@@ -9,9 +9,9 @@ koopa::current_gencode_version() { # {{{1
     # Current GENCODE version.
     # @note Updated 2020-07-01.
     # """
+    local base_url organism pattern short_name url x
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed curl
-    local base_url organism pattern short_name url x
     organism="${1:-"Homo sapiens"}"
     case "$organism" in
         "Homo sapiens")

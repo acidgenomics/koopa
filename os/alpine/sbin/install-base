@@ -12,8 +12,8 @@ koopa::install_alpine_base() { # {{{1
     # Potentially useful flags:
     # > apk add --no-cache --virtual .build-dependencies
     # """
-    koopa::assert_is_installed apk sudo
     local name_fancy packages
+    koopa::assert_is_installed apk sudo
     name_fancy="Alpine base system"
     koopa::install_start "$name_fancy"
     sudo apk update

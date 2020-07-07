@@ -5,8 +5,8 @@ koopa::yum_add_azure_cli_repo() { # {{{1
     # Add Microsoft Azure CLI yum repo.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_no_args "$#"
     local file
+    koopa::assert_has_no_args "$#"
     file='/etc/yum.repos.d/azure-cli.repo'
     [[ -f "$file" ]] && return 0
     sudo tee "$file" >/dev/null << END
@@ -34,8 +34,8 @@ koopa::yum_add_google_cloud_sdk_repo() { # {{{1
     # - https://github.com/kubernetes/kubernetes/issues/60134
     # - https://github.com/GoogleCloudPlatform/google-fluentd/issues/136
     # """
-    koopa::assert_has_no_args "$#"
     local file gpgcheck
+    koopa::assert_has_no_args "$#"
     file='/etc/yum.repos.d/google-cloud-sdk.repo'
     [[ -f "$file" ]] && return 0
     # Fix attempt for build error on CentOS 8 due to 141 error code.

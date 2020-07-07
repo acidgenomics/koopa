@@ -5,8 +5,8 @@ koopa::_git_clone_to_config() { # {{{1
     # Clone a git repo or symlink from monorepo.
     # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args_eq "$#" 1
     local config_prefix name url
+    koopa::assert_has_args_eq "$#" 1
     config_prefix="$(koopa::config_prefix)"
     for url in "$@"
     do
@@ -27,8 +27,8 @@ koopa::add_config_link() { # {{{1
     # Add a symlink into the koopa configuration directory.
     # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args_le "$#" 2
     local config_prefix dest_file dest_name source_file
+    koopa::assert_has_args_le "$#" 2
     source_file="${1:?}"
     koopa::assert_is_existing "$source_file"
     source_file="$(realpath "$source_file")"
@@ -49,9 +49,9 @@ koopa::add_make_prefix_link() { # {{{1
     # This is particularly useful for external scripts that source koopa header.
     # This approach works nicely inside a hardened R environment.
     # """
+    local koopa_prefix make_prefix source_link target_link
     koopa::assert_has_args_le "$#" 1
     koopa::is_shared_install || return 0
-    local koopa_prefix make_prefix source_link target_link
     koopa_prefix="${1:-"$(koopa::prefix)"}"
     make_prefix="$(koopa::make_prefix)"
     [[ -d "$make_prefix" ]] || return 0
@@ -68,9 +68,9 @@ koopa::add_monorepo_config_link() { # {{{1
     # Add koopa configuration link from user's git monorepo.
     # @note Updated 2020-07-04.
     # """
+    local monorepo_prefix subdir
     koopa::assert_has_args "$#"
     koopa::assert_has_monorepo
-    local monorepo_prefix subdir
     monorepo_prefix="$(koopa::monorepo_prefix)"
     for subdir in "$@"
     do
@@ -84,8 +84,8 @@ koopa::add_to_user_profile() { # {{{1
     # Add koopa configuration to user profile.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_args "$#"
     local source_file target_file
+    koopa::assert_has_args "$#"
     target_file="$(koopa::find_user_profile)"
     source_file="$(koopa::prefix)/shell/posix/include/profile.sh"
     koopa::assert_is_file "$source_file"
@@ -105,9 +105,9 @@ koopa::add_user_to_etc_passwd() { # {{{1
     #
     # Note that this function will enable use of RStudio for domain users.
     # """
+    local passwd_file user user_string
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_linux
-    local passwd_file user user_string
     passwd_file="/etc/passwd"
     koopa::assert_is_file "$passwd_file"
     user="${1:-${USER:?}}"
@@ -133,9 +133,9 @@ koopa::add_user_to_group() { # {{{1
     # @examples
     # koopa::add_user_to_group "docker"
     # """
+    local group user
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed gpasswd
-    local group user
     group="${1:?}"
     user="${2:-${USER:?}}"
     koopa::info "Adding user '${user}' to group '${group}'."
@@ -148,8 +148,8 @@ koopa::delete_dotfile() { # {{{1
     # Delete a dot file.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_args "$#"
     local filepath name
+    koopa::assert_has_args "$#"
     for name in "$@"
     do
         name="${1:?}"
@@ -171,10 +171,10 @@ koopa::enable_passwordless_sudo() { # {{{1
     # Enable passwordless sudo access for all admin users.
     # @note Updated 2020-06-30.
     # """
+    local group string sudo_file
     koopa::assert_has_no_args "$#"
     koopa::is_root && return 0
     koopa::assert_has_sudo
-    local group string sudo_file
     group="$(koopa::admin_group)"
     sudo_file='/etc/sudoers.d/sudo'
     sudo touch "$sudo_file"
@@ -196,9 +196,9 @@ koopa::enable_shell() { # {{{1
     # Enable shell.
     # @note Updated 2020-07-05.
     # """
+    local cmd_name cmd_path etc_file
     koopa::assert_has_args "$#"
     koopa::has_sudo || return 0
-    local cmd_name cmd_path etc_file
     cmd_name="${1:?}"
     cmd_path="$(koopa::make_prefix)/bin/${cmd_name}"
     etc_file='/etc/shells'
@@ -219,8 +219,8 @@ koopa::find_user_profile() { # {{{1
     # Find current user's shell profile configuration file.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_no_args "$#"
     local file shell
+    koopa::assert_has_no_args "$#"
     shell="$(koopa::shell)"
     case "$shell" in
         bash)
@@ -239,8 +239,8 @@ koopa::fix_pyenv_permissions() { # {{{1
     # Ensure Python pyenv shims have correct permissions.
     # @note Updated 2020-02-11.
     # """
-    koopa::assert_has_no_args "$#"
     local pyenv_prefix
+    koopa::assert_has_no_args "$#"
     pyenv_prefix="$(koopa::pyenv_prefix)"
     [[ -d "${pyenv_prefix}/shims" ]] || return 0
     koopa::info 'Fixing Python pyenv shim permissions.'
@@ -253,8 +253,8 @@ koopa::fix_rbenv_permissions() { # {{{1
     # Ensure Ruby rbenv shims have correct permissions.
     # @note Updated 2020-02-11.
     # """
-    koopa::assert_has_no_args "$#"
     local rbenv_prefix
+    koopa::assert_has_no_args "$#"
     rbenv_prefix="$(koopa::rbenv_prefix)"
     [[ -d "${rbenv_prefix}/shims" ]] || return 0
     koopa::info 'Fixing Ruby rbenv shim permissions.'
@@ -267,8 +267,8 @@ koopa::fix_zsh_permissions() { # {{{1
     # Fix ZSH permissions, to ensure compaudit checks pass.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local cellar_prefix koopa_prefix make_prefix zsh_exe
+    koopa::assert_has_no_args "$#"
     koopa::info 'Fixing Zsh permissions to pass compaudit checks.'
     koopa_prefix="$(koopa::prefix)"
     koopa::sys_chmod -v g-w \
@@ -362,8 +362,8 @@ koopa::install_dotfiles() { # {{{1
     # Install dot files.
     # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_no_args "$#"
     local prefix script
+    koopa::assert_has_no_args "$#"
     prefix="$(koopa::dotfiles_prefix)"
     [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles
     script="${prefix}/install"
@@ -377,8 +377,8 @@ koopa::install_dotfiles_private() { # {{{1
     # Install private dot files.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local prefix script
+    koopa::assert_has_no_args "$#"
     prefix="$(koopa::dotfiles_private_prefix)"
     [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles_private
     script="${prefix}/install"
@@ -413,13 +413,12 @@ koopa::java_update_alternatives() {
     # This step is intentionally skipped for non-admin installs, when calling
     # from 'install-openjdk' script.
     # """
+    local prefix priority
     koopa::assert_has_args_eq "$#" 1
     koopa::is_shared_install || return 0
     koopa::is_installed update-alternatives || return 0
-    local prefix
     prefix="${1:?}"
     prefix="$(realpath "$prefix")"
-    local priority
     priority=100
     sudo rm -fv /var/lib/alternatives/java
     sudo update-alternatives --install \
@@ -459,10 +458,10 @@ koopa::link_docker() { # {{{1
     # Link Docker library onto data disk for VM.
     # @note Updated 2020-07-05.
     # """
+    local dd_link_prefix etc_source lib_n lib_sys os_id
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker || return 0
     koopa::assert_has_sudo
-    local dd_link_prefix etc_source lib_n lib_sys os_id
     # e.g. '/mnt/data01/n' to '/n' for AWS.
     dd_link_prefix="$(koopa::data_disk_link_prefix)"
     [[ -d "$dd_link_prefix" ]] || return 0
@@ -498,10 +497,10 @@ koopa::remove_user_from_group() { # {{{1
     # @examples
     # koopa::remove_user_from_group "docker"
     # """
+    local group user
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed gpasswd sudo
     koopa::assert_has_sudo
-    local group user
     group="${1:?}"
     user="${2:-${USER}}"
     sudo gpasswd --delete "$user" "$group"
@@ -513,8 +512,8 @@ koopa::uninstall_dotfiles() { # {{{1
     # Uninstall dot files.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local prefix script
+    koopa::assert_has_no_args "$#"
     prefix="$(koopa::dotfiles_prefix)"
     if [[ ! -d "$prefix" ]]
     then
@@ -532,8 +531,8 @@ koopa::uninstall_dotfiles_private() { # {{{1
     # Uninstall private dot files.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
     local prefix script
+    koopa::assert_has_no_args "$#"
     prefix="$(koopa::dotfiles_private_prefix)"
     if [[ ! -d "$prefix" ]]
     then
@@ -551,11 +550,11 @@ koopa::update_etc_profile_d() { # {{{1
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
     # @note Updated 2020-07-05.
     # """
+    local file koopa_prefix string
     koopa::assert_has_no_args "$#"
     koopa::is_linux || return 0
     koopa::is_shared_install || return 0
     koopa::assert_has_sudo
-    local file
     file='/etc/profile.d/zzz-koopa.sh'
     # Early return if file exists and is not a symlink.
     # Previous verisons of koopa prior to 2020-05-09 created a symlink here.
@@ -564,9 +563,7 @@ koopa::update_etc_profile_d() { # {{{1
         return 0
     fi
     sudo rm -fv "$file"
-    local koopa_prefix
     koopa_prefix="$(koopa::prefix)"
-    local string
     read -r -d '' string << END || true
 #!/bin/sh
 
@@ -583,12 +580,12 @@ koopa::update_ldconfig() { # {{{1
     # Update dynamic linker (LD) configuration.
     # @note Updated 2020-06-30.
     # """
+    local conf_source dest_file os_id prefix source_file
     koopa::assert_has_no_args "$#"
     koopa::is_linux || return 0
     [[ -d '/etc/ld.so.conf.d' ]] || return 0
     koopa::assert_is_installed ldconfig
     koopa::assert_has_sudo
-    local conf_source dest_file os_id prefix source_file
     os_id="$(koopa::os_id)"
     prefix="$(koopa::prefix)"
     conf_source="${prefix}/os/${os_id}/etc/ld.so.conf.d"
@@ -615,10 +612,10 @@ koopa::update_lmod_config() { # {{{1
     # ln: failed to create symbolic link '/etc/fish/conf.d/z00_lmod.fish':
     # No suchfile or directory
     # """
+    local etc_dir init_dir
     koopa::assert_has_no_args "$#"
     koopa::is_linux || return 0
     koopa::assert_has_sudo
-    local etc_dir init_dir
     init_dir="$(koopa::app_prefix)/lmod/apps/lmod/lmod/init"
     [[ -d "$init_dir" ]] || return 0
     koopa::h2 'Updating Lmod init configuration.'
@@ -637,4 +634,3 @@ koopa::update_lmod_config() { # {{{1
     fi
     return 0
 }
-

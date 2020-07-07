@@ -17,10 +17,10 @@ koopa::aws_batch_fetch_and_run() {
     # - https://github.com/FredHutch/url-fetch-and-run
     # - https://github.com/awslabs/aws-batch-helpers
     # """
+    local file url
     koopa::assert_has_no_args "$#"
     koopa::assert_is_set BATCH_FILE_URL
     koopa::assert_is_installed aws curl unzip
-    local file url
     url="$BATCH_FILE_URL"
     file="$(koopa::tmp_file)"
     case "$url" in
@@ -44,13 +44,13 @@ koopa::aws_batch_list_jobs() {
     # List AWS Batch jobs.
     # @note Updated 2020-07-01.
     # """
+    local job_queue job_queue_array status status_array
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed aws
     koopa::assert_is_set \
         AWS_BATCH_ACCOUNT_ID \
         AWS_BATCH_QUEUE \
         AWS_BATCH_REGION
-    local job_queue job_queue_array status status_array
     koopa::h1 "Checking AWS Batch job status."
     job_queue_array=(
         "arn"
@@ -90,9 +90,9 @@ koopa::aws_cp_regex() { # {{{1
     # @seealso
     # - aws s3 cp help
     # """
+    local pattern source_prefix target_prefix
     koopa::assert_has_args "$#"
     koopa::assert_is_installed aws
-    local pattern source_prefix target_prefix
     pattern="${1:?}"
     source_prefix="${2:?}"
     target_prefix="${3:?}"
@@ -121,9 +121,9 @@ koopa::aws_s3_find() { # {{{1
     #     --exclude="antisense" \
     #     s3://bioinfo/igv/
     # """
+    local exclude include pos x
     koopa::assert_has_args "$#"
     koopa::assert_is_installed aws
-    local exclude include pos x
     exclude=
     include=
     pos=()
@@ -192,13 +192,13 @@ koopa::aws_s3_ls() { # {{{1
     # # Directories only:
     # aws-s3-ls --type=f s3://cpi-bioinfo01/datasets/
     # """
+    local bucket_prefix dirs files flags pos prefix recursive type x
     koopa::assert_is_installed aws
     if [[ "$#" -eq 0 ]]
     then
         aws s3 ls
-        exit 0
+        return 0
     fi
-    local bucket_prefix dirs files flags pos prefix recursive type x
     flags=()
     recursive=0
     type=
@@ -328,9 +328,9 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
+    local bn dn1 dn2 file files prefix target x
     koopa::assert_has_args "$#"
     koopa::assert_is_installed aws
-    local bn dn1 dn2 file files prefix target x
     prefix="${1:?}"
     x="$(aws-s3-ls "$prefix")"
     [[ -n "$x" ]] || return 0
