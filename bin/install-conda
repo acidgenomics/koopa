@@ -24,16 +24,16 @@ done
 
 if [[ "$anaconda" -eq 1 ]]
 then
-    name="anaconda3"
+    name='anaconda3'
     version="$(koopa::variable "$name")"
 else
-    name="miniconda3"
+    name='miniconda3'
 fi
 
 prefix="$(koopa::conda_prefix)"
 koopa::exit_if_dir "$prefix"
 
-name_fancy="Conda"
+name_fancy='Conda'
 
 koopa::install_start "$name_fancy" "$prefix"
 
@@ -89,7 +89,7 @@ set +u
 koopa::activate_conda
 set -u
 
-if [[ "$name" == "miniconda3" ]]
+if [[ "$name" == 'miniconda3' ]]
 then
     update-conda
 fi
