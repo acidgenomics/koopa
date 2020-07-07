@@ -34,7 +34,7 @@ _koopa_kebab_case() { # {{{1
     # - Exported 'kebab-case' that uses R syntactic internally.
     #
     # @examples
-    # _koopa_kebab_case "hello world"
+    # _koopa_kebab_case 'hello world'
     # ## hello-world
     #
     # _koopa_kebab_case "bcbio-nextgen.py"
@@ -74,7 +74,7 @@ _koopa_snake_case() { # {{{1
     # - Exported 'snake-case' that uses R syntactic internally.
     #
     # @examples
-    # _koopa_snake_case "hello world"
+    # _koopa_snake_case 'hello world'
     # ## hello_world
     #
     # _koopa_snake_case "bcbio-nextgen.py"

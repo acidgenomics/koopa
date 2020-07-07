@@ -403,10 +403,10 @@ ERROR: Failed to activate koopa in the current shell.
 
 Supported POSIX shells: Bash, Dash, Zsh.
 
-  KOOPA_SHELL : '${KOOPA_SHELL}'
-        SHELL : '${SHELL:-}'
-            - : '${-}'
-            0 : '${0}'
+  KOOPA_SHELL : ${KOOPA_SHELL}
+        SHELL : ${SHELL:-}
+            - : ${-}
+            0 : ${0}
 
 Consider switching to bash:
 > chsh -s /bin/bash
@@ -425,8 +425,8 @@ _koopa_preflight_zsh_check() {
     # Zsh currently requires presence of '~/.zshrc' for clean activation.
     #
     # Note that sourcing in '/etc/profile' doesn't return script path in
-    # '$0', which is commonly recommended online in place of '$BASH_SOURCE'.
-    # '$0' in this case instead returns '_src_etc_profile'.
+    # '0', which is commonly recommended online in place of 'BASH_SOURCE'.
+    # '0' in this case instead returns '_src_etc_profile'.
     #
     # This approach covers both '_src_etc_profile' and '_src_etc_profile_d'.
     #

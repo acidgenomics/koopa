@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# koopa nolint="line-width"
+# koopa nolint=line-width
 
 # """
 # How to read current value:
@@ -50,7 +50,7 @@ defaults write com.apple.universalaccess differentiateWithoutColor -bool true
 
 # Enable Dark mode by default.
 # To disable, delete entry with 'defaults delete'.
-defaults write -globalDomain "AppleInterfaceStyle" -string "Dark"
+defaults write -globalDomain 'AppleInterfaceStyle' -string 'Dark'
 
 # Accent color.
 #
@@ -60,8 +60,8 @@ defaults write -globalDomain "AppleInterfaceStyle" -string "Dark"
 #
 # It also presets AppleHighlightColor, but this can be overriden.
 #
-# Note that AppleAquaColorVariant is always "1" except for "Graphite", where it
-# is "6". Note that the AccentColor "Blue" is default (when there is no entry)
+# Note that AppleAquaColorVariant is always '1' except for 'Graphite', where it
+# is '6'. Note that the AccentColor 'Blue' is default (when there is no entry)
 # and has no AppleHighlightColor definition.
 #
 # AACV: AppleAquaColorVariant
@@ -69,26 +69,26 @@ defaults write -globalDomain "AppleInterfaceStyle" -string "Dark"
 #
 # | Color    | AACV | AC | AppleHighlightColor                   |
 # |----------|------|----|---------------------------------------|
-# | Red      |    1 |  0 | "1.000000 0.733333 0.721569 Red"      |
-# | Orange   |    1 |  1 | "1.000000 0.874510 0.701961 Orange"   |
-# | Yellow   |    1 |  2 | "1.000000 0.937255 0.690196 Yellow"   |
-# | Green    |    1 |  3 | "0.752941 0.964706 0.678431 Green"    |
-# | Purple   |    1 |  5 | "0.968627 0.831373 1.000000 Purple"   |
-# | Pink     |    1 |  6 | "1.000000 0.749020 0.823529 Pink"     |
+# | Red      |    1 |  0 | '1.000000 0.733333 0.721569 Red'      |
+# | Orange   |    1 |  1 | '1.000000 0.874510 0.701961 Orange'   |
+# | Yellow   |    1 |  2 | '1.000000 0.937255 0.690196 Yellow'   |
+# | Green    |    1 |  3 | '0.752941 0.964706 0.678431 Green'    |
+# | Purple   |    1 |  5 | '0.968627 0.831373 1.000000 Purple'   |
+# | Pink     |    1 |  6 | '1.000000 0.749020 0.823529 Pink'     |
 # | Blue     |    1 | NA | NA                                    |
-# | Graphite |    6 | -1 | "0.847059 0.847059 0.862745 Graphite" |
+# | Graphite |    6 | -1 | '0.847059 0.847059 0.862745 Graphite' |
 #
 # Here we're setting accent and highlight color to Orange by default.
-defaults write -globalDomain "AppleAquaColorVariant" -int 1
-defaults write -globalDomain "AccentColor" -int 1
-defaults write -globalDomain "AppleHighlightColor" -string "1.000000 0.874510 0.701961 Orange"
+defaults write -globalDomain 'AppleAquaColorVariant' -int 1
+defaults write -globalDomain 'AccentColor' -int 1
+defaults write -globalDomain 'AppleHighlightColor' -string '1.000000 0.874510 0.701961 Orange'
 
 # Set sidebar icon size to medium.
 defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
 
 # Set the default scrollbar appearance.
 # Possible values: 'WhenScrolling', 'Automatic' and 'Always'.
-defaults write NSGlobalDomain AppleShowScrollBars -string "Automatic"
+defaults write NSGlobalDomain AppleShowScrollBars -string 'Automatic'
 
 # Disable the over-the-top focus ring animation.
 defaults write NSGlobalDomain NSUseAnimatedFocusRing -bool false
@@ -105,9 +105,9 @@ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
 # Automatically quit printer app once the print jobs complete.
-defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+defaults write com.apple.print.PrintingPrefs 'Quit When Finished' -bool true
 
-# Disable the "Are you sure you want to open this application?" dialog.
+# Disable the 'Are you sure you want to open this application?' dialog.
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
 # Disable Resume system-wide.
@@ -137,14 +137,11 @@ defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 # Increase window resize speed for Cocoa applications.
 defaults write NSGlobalDomain NSWindowResizeTime .001
 
-# Disable the sound effects on boot.
-# > sudo nvram SystemAudioVolume=" "
-
 # Reveal IP address, hostname, OS version, etc. when clicking the clock in the login window.
 # > sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
 # Disable the crash reporter.
-# > defaults write com.apple.CrashReporter DialogType -string "none"
+# > defaults write com.apple.CrashReporter DialogType -string 'none'
 
 # Disable transparency in the menu bar and elsewhere.
 # > defaults write com.apple.universalaccess reduceTransparency -bool true
@@ -162,7 +159,7 @@ defaults write com.apple.dock mouse-over-hilite-stack -bool true
 defaults write com.apple.dock tilesize -int 36
 
 # Change minimize/maximize window effect.
-defaults write com.apple.dock mineffect -string "scale"
+defaults write com.apple.dock mineffect -string 'scale'
 
 # Minimize windows into their application's icon.
 defaults write com.apple.dock minimize-to-application -bool true
@@ -219,11 +216,7 @@ defaults write com.apple.dock show-recents -bool false
 # > defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
 
 # Reset Launchpad, but keep the desktop wallpaper intact.
-# > find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -delete
-
-# Add iOS & Watch Simulator to Launchpad.
-# > sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app" "/Applications/Simulator.app"
-# > sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator (Watch).app" "/Applications/Simulator (Watch).app"
+# > find "${HOME}/Library/Application Support/Dock" -name '*-*.db' -maxdepth 1 -delete
 
 # Add a spacer to the left side of the Dock (where the applications are).
 # > defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
@@ -382,10 +375,10 @@ defaults write -g InitialKeyRepeat -int 15
 defaults write -g KeyRepeat -int 2
 
 # Set text formats.
-defaults write NSGlobalDomain AppleLocale -string "en_US@currency=USD"
+defaults write NSGlobalDomain AppleLocale -string 'en_US@currency=USD'
 
 # Use the metric system.
-defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
+defaults write NSGlobalDomain AppleMeasurementUnits -string 'Centimeters'
 defaults write NSGlobalDomain AppleMetricUnits -bool true
 
 # Use scroll gesture with the Ctrl (^) modifier key to zoom.
@@ -393,16 +386,16 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 # > defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 262144
 
 # Set language(s). Here's how to enable both English and Dutch, for example.
-# > defaults write NSGlobalDomain AppleLanguages -array "en" "nl"
+# > defaults write NSGlobalDomain AppleLanguages -array 'en' 'nl'
 
 # Show language menu in the top right corner of the boot screen.
 # > sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool true
 
 # Increase sound quality for Bluetooth headphones/headsets.
-# > defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+# > defaults write com.apple.BluetoothAudioAgent 'Apple Bitpool Min (editable)' -int 40
 
 # Set the timezone; see 'sudo systemsetup -listtimezones' for other values.
-# > sudo systemsetup -settimezone "America/New_York" > /dev/null
+# > sudo systemsetup -settimezone 'America/New_York' > /dev/null
 
 # Power management {{{1
 # ==============================================================================
@@ -433,7 +426,7 @@ defaults write NSGlobalDomain AppleFontSmoothing -int 0
 defaults write com.apple.screencapture name Screenshot
 
 # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF).
-defaults write com.apple.screencapture type -string "png"
+defaults write com.apple.screencapture type -string 'png'
 
 # Disable shadow in screenshots.
 defaults write com.apple.screencapture disable-shadow -bool true
@@ -456,11 +449,11 @@ defaults write com.apple.screencapture location "$screenshots_dir"
 # > defaults write com.apple.finder AppleShowAllFiles -bool true
 
 # Set Desktop as the default location for new Finder windows.
-# > defaults write com.apple.finder NewWindowTarget -string "PfDe"
+# > defaults write com.apple.finder NewWindowTarget -string 'PfDe'
 # > defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desktop/"
 
 # Set Documents as the default location for new Finder windows.
-defaults write com.apple.finder NewWindowTarget -string "PfLo"
+defaults write com.apple.finder NewWindowTarget -string 'PfLo'
 defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Documents/"
 
 # Disable window animations and Get Info animations.
@@ -488,7 +481,7 @@ defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 defaults write com.apple.finder _FXSortFoldersFirst -bool true
 
 # When performing a search, search the current folder by default.
-defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+defaults write com.apple.finder FXDefaultSearchScope -string 'SCcf'
 
 # Disable the warning when changing a file extension.
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
@@ -514,32 +507,32 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 # > defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
 
 # Show item info near icons on the desktop and in other icon views.
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:showItemInfo true" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:showItemInfo true" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:showItemInfo true" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :DesktopViewSettings:IconViewSettings:showItemInfo true' ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :FK_StandardViewSettings:IconViewSettings:showItemInfo true' ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :StandardViewSettings:IconViewSettings:showItemInfo true' ~/Library/Preferences/com.apple.finder.plist
 
 # Show item info to the right of the icons on the desktop.
-/usr/libexec/PlistBuddy -c "Set DesktopViewSettings:IconViewSettings:labelOnBottom false" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set DesktopViewSettings:IconViewSettings:labelOnBottom false' ~/Library/Preferences/com.apple.finder.plist
 
 # Sort icon views by name.
-# Alternatively, can use "grid" here for snap-to-grid.
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy name" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy name" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy name" ~/Library/Preferences/com.apple.finder.plist
+# Alternatively, can use 'grid' here for snap-to-grid.
+/usr/libexec/PlistBuddy -c 'Set :DesktopViewSettings:IconViewSettings:arrangeBy name' ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :FK_StandardViewSettings:IconViewSettings:arrangeBy name' ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :StandardViewSettings:IconViewSettings:arrangeBy name' ~/Library/Preferences/com.apple.finder.plist
 
 # Set grid spacing for icons on the desktop and in other icon views.
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:gridSpacing 100" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:gridSpacing 100" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:gridSpacing 100" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :DesktopViewSettings:IconViewSettings:gridSpacing 100' ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :FK_StandardViewSettings:IconViewSettings:gridSpacing 100' ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :StandardViewSettings:IconViewSettings:gridSpacing 100' ~/Library/Preferences/com.apple.finder.plist
 
 # Set the size of icons on the desktop and in other icon views.
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:iconSize 48" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:iconSize 48" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:iconSize 48" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :DesktopViewSettings:IconViewSettings:iconSize 48' ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :FK_StandardViewSettings:IconViewSettings:iconSize 48' ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c 'Set :StandardViewSettings:IconViewSettings:iconSize 48' ~/Library/Preferences/com.apple.finder.plist
 
 # Use list view in all Finder windows by default.
 # Four-letter codes for the other view modes: 'icnv', 'clmv', 'glyv'
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+defaults write com.apple.finder FXPreferredViewStyle -string 'Nlsv'
 
 # Disable the warning before emptying the Trash.
 defaults write com.apple.finder WarnOnEmptyTrash -bool false
@@ -605,7 +598,7 @@ defaults write com.apple.ActivityMonitor IconType -int 5
 defaults write com.apple.ActivityMonitor ShowCategory -int 0
 
 # Sort Activity Monitor results by CPU usage.
-defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
+defaults write com.apple.ActivityMonitor SortColumn -string 'CPUUsage'
 defaults write com.apple.ActivityMonitor SortDirection -int 0
 
 # Disk Utility {{{1
@@ -623,8 +616,8 @@ defaults write com.apple.DiskUtility advanced-image-options -bool true
 
 # Disable Spotlight indexing for any volume that gets mounted and has not yet
 # been indexed before.
-# Use 'sudo mdutil -i off "/Volumes/foo"' to stop indexing any volume.
-# > sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+# Use 'sudo mdutil -i off /Volumes/foo' to stop indexing any volume.
+# > sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array '/Volumes'
 
 # Load new settings before rebuilding the index.
 # > killall mds > /dev/null 2>&1
@@ -662,7 +655,7 @@ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebK
 defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 
 # Set Safari's home page to 'about:blank' for faster loading.
-defaults write com.apple.Safari HomePage -string "about:blank"
+defaults write com.apple.Safari HomePage -string 'about:blank'
 
 # Prevent Safari from opening 'safe' files automatically after downloading.
 defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
@@ -686,7 +679,7 @@ defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
 
 # Remove useless icons from Safari's bookmarks bar.
-# > defaults write com.apple.Safari ProxiesInBookmarksBar "()"
+# > defaults write com.apple.Safari ProxiesInBookmarksBar '()'
 
 # Enable the Develop menu and the Web Inspector in Safari.
 defaults write com.apple.Safari IncludeDevelopMenu -bool true
@@ -747,18 +740,18 @@ defaults write com.apple.mail DisableSendAnimations -bool true
 defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 
 # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app.
-defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
+defaults write com.apple.mail NSUserKeyEquivalents -dict-add 'Send' '@\U21a9'
 
 # Display emails in threaded mode, sorted by date (oldest at the top).
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "no"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
+defaults write com.apple.mail DraftsViewerAttributes -dict-add 'DisplayInThreadedMode' -string 'yes'
+defaults write com.apple.mail DraftsViewerAttributes -dict-add 'SortedDescending' -string 'no'
+defaults write com.apple.mail DraftsViewerAttributes -dict-add 'SortOrder' -string 'received-date'
 
 # Disable inline attachments (just show the icons).
 defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
 
 # Disable automatic spell checking.
-defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
+defaults write com.apple.mail SpellCheckingBehavior -string 'NoSpellCheckingEnabled'
 
 # Terminal {{{1
 # ==============================================================================
@@ -797,13 +790,13 @@ defaults write com.apple.itunes disablePodcasts -bool YES
 # ==============================================================================
 
 # Disable automatic emoji substitution (i.e. use plain text smileys).
-defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "automaticEmojiSubstitutionEnablediMessage" -bool false
+defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add 'automaticEmojiSubstitutionEnablediMessage' -bool false
 
 # Disable smart quotes as it's annoying for messages that contain code.
-defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "automaticQuoteSubstitutionEnabled" -bool false
+defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add 'automaticQuoteSubstitutionEnabled' -bool false
 
 # Disable continuous spell checking.
-defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "continuousSpellCheckingEnabled" -bool false
+defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add 'continuousSpellCheckingEnabled' -bool false
 
 # Photos {{{1
 # ==============================================================================
@@ -855,22 +848,22 @@ defaults write com.tapbots.TweetbotMac OpenURLsDirectly -bool true
 # Final steps {{{1
 # ==============================================================================
 
-# Remove duplicates in the "Open With" menu (also see 'lscleanup' alias).
+# Remove duplicates in the 'Open With' menu (also see 'lscleanup' alias).
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
     -kill -r -domain local -domain system -domain user
 
 # Kill affected apps.
 for app in \
-    "Activity Monitor" \
-    "Dock" \
-    "Finder" \
-    "Google Chrome" \
-    "SystemUIServer" \
-    "Tweetbot" \
-    "cfprefsd"
+    'Activity Monitor' \
+    'Dock' \
+    'Finder' \
+    'Google Chrome' \
+    'SystemUIServer' \
+    'Tweetbot' \
+    'cfprefsd'
 do
     killall "${app}" &>/dev/null || true
 done
 
 koopa::update_success "$name_fancy"
-koopa::note "Some of these changes require a logout/restart to take effect."
+koopa::note 'Some of these changes require a logout/restart to take effect.'

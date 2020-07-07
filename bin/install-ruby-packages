@@ -12,7 +12,7 @@ name_fancy="Ruby gems"
 koopa::install_start "$name_fancy"
 
 # > gemdir="$(gem environment gemdir)"
-# > koopa::dl "gemdir" "$gemdir"
+# > koopa::dl 'gemdir' "$gemdir"
 
 if [[ "$#" -eq 0 ]]
 then
@@ -25,7 +25,7 @@ else
     gems=("$@")
 fi
 
-koopa::dl "Gems" "$(koopa::to_string "${gems[@]}")"
+koopa::dl 'Gems' "$(koopa::to_string "${gems[@]}")"
 
 for gem in "${gems[@]}"
 do

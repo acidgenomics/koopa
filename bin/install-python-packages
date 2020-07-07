@@ -28,7 +28,7 @@ pkgs=(
     wheel
 )
 
-koopa::dl "Packages" "$(koopa::to_string "${pkgs[@]}")"
+koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
 
 # Ensure pip is current.
 koopa::pip_install --upgrade pip

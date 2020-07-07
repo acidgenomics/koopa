@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# koopa nolint="illegal-strings"
+# koopa nolint=illegal-strings
 
 test_array_to_r_vector() {
     assertEquals \

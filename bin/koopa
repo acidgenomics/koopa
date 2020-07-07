@@ -77,7 +77,7 @@ case "$1" in
         koopa::defunct 'koopa prefix'
         ;;
     update-r-config)
-        koopa::defunct 'update-r-config (without "koopa" prefix)'
+        koopa::defunct 'update-r-config (without koopa prefix)'
         ;;
     r-home)
         koopa::defunct 'koopa which-realpath R'

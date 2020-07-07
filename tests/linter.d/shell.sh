@@ -23,7 +23,7 @@ test_illegal_strings() {
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
     array=(
-        "'\$"
+        # "'\$"
         ":-'"
         ' path='
         '"[A-Z0-9][-.0-9A-Za-z ]+"'
