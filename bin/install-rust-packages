@@ -40,7 +40,7 @@ else
     crates=("$@")
 fi
 
-koopa::dl "Crates" "$(koopa::to_string "${crates[@]}")"
+koopa::dl 'Crates' "$(koopa::to_string "${crates[@]}")"
 koopa::sys_set_permissions -ru "$prefix"
 
 for crate in "${crates[@]}"

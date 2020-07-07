@@ -71,10 +71,10 @@ koopa::info "samtools: '$(koopa::which_realpath samtools)'."
 
 case "$keep_sam" in
     0)
-        koopa::note "SAM files will be deleted."
+        koopa::note 'SAM files will be deleted.'
         ;;
     1)
-        koopa::note "SAM files will be preserved."
+        koopa::note 'SAM files will be preserved.'
         ;;
 esac
 
