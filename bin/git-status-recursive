@@ -18,7 +18,7 @@ readarray -t repos <<< "$( \
 
 if ! koopa::is_array_non_empty "${repos[@]}"
 then
-    koopa::stop "Failed to detect any git repos."
+    koopa::stop 'Failed to detect any git repos.'
 fi
 
 koopa::h1 "Checking status of ${#repos[@]} git repos recursively at '${dir}'."
