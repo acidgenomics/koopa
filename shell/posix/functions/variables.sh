@@ -80,8 +80,8 @@ _koopa_host_id() { # {{{1
     # Currently intended to support AWS, Azure, and Harvard clusters.
     #
     # Returns useful host type matching either:
-    # - VMs: "aws", "azure".
-    # - HPCs: "harvard-o2", "harvard-odyssey".
+    # - VMs: aws, azure.
+    # - HPCs: harvard-o2, harvard-odyssey.
     #
     # Returns empty for local machines and/or unsupported types.
     #
