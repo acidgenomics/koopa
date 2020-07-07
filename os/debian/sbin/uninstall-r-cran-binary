@@ -6,15 +6,15 @@ source "${script_dir}/../include/header.sh"
 
 name_fancy="R CRAN binary"
 
-_koopa_uninstall_start "$name_fancy"
+koopa::uninstall_start "$name_fancy"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
+koopa::assert_has_no_args "$#"
+koopa::assert_has_no_envs
 
 sudo rm -frv \
     /etc/R \
     /usr/lib/R/etc
 
-_koopa_apt_remove 'r-*'
+koopa::apt_remove 'r-*'
 
-_koopa_uninstall_success "$name_fancy"
+koopa::uninstall_success "$name_fancy"

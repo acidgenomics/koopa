@@ -6,10 +6,10 @@ source "${script_dir}/../include/header.sh"
 
 name_fancy="LLVM"
 
-_koopa_uninstall_start "$name_fancy"
+koopa::uninstall_start "$name_fancy"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
+koopa::assert_has_no_args "$#"
+koopa::assert_has_no_envs
 
 unset -v LLVM_CONFIG
 
@@ -18,4 +18,4 @@ sudo apt-get --yes autoremove
 
 sudo rm -f /etc/apt/sources.list.d/llvm.list
 
-_koopa_uninstall_success "$name_fancy"
+koopa::uninstall_success "$name_fancy"

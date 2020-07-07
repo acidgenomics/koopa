@@ -14,18 +14,18 @@ do
             shift 1
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 if [[ "$force" -eq 0 ]]
 then
-    _koopa_exit_if_current_version rust
+    koopa::exit_if_current_version rust
 fi
 
-_koopa_h1 "Updating Rust via rustup."
-_koopa_exit_if_not_installed rustup
+koopa::h1 "Updating Rust via rustup."
+koopa::exit_if_not_installed rustup
 
 export RUST_BACKTRACE="full"
 

@@ -33,29 +33,14 @@
 # the current session.
 # """
 
-_koopa_coffee_time
-
+koopa::coffee_time
 file="${name}-${version}.tar.gz"
 url="https://www.cpan.org/src/5.0/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 ./Configure -des -Dprefix="$prefix"
 make --jobs="$jobs"
 # The installer will warn when you skip this step.
 # > make test
 make install
-
-export PERL_MM_USE_DEFAULT=1
-
-_koopa_h2 "Installing CPAN Minus."
-"${prefix}/bin/cpan" -i "App::cpanminus"
-
-modules=(
-    'File::Rename'
-)
-for module in "${modules[@]}"
-do
-    _koopa_h2 "Installing '${module}' module."
-    "${prefix}/bin/cpanm" "$module"
-done

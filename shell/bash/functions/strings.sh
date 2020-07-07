@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_paste0() { # {{{1
+koopa::paste0() { # {{{1
     # """
     # Paste arguments (e.g. from an array) into a string separated by delimiter
     # defined in the first positional argument.
@@ -32,12 +32,12 @@ _koopa_paste0() { # {{{1
     return 0
 }
 
-_koopa_to_string() { # {{{1
+koopa::to_string() { # {{{1
     # """
     # Paste arguments to a comma separated string.
     # @note Updated 2020-06-30.
     # """
-    [[ "$#" -gt 0 ]] || return 1
-    _koopa_paste0 ", " "$@"
+    koopa::assert_has_args "$#"
+    koopa::paste0 ", " "$@"
     return 0
 }

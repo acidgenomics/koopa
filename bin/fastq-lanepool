@@ -4,9 +4,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-source_dir="."
-target_dir="."
-prefix="lanepool"
+source_dir='.'
+target_dir='.'
+prefix='lanepool'
 
 while (("$#"))
 do
@@ -36,13 +36,13 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
-source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
-target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
+source_dir="$(koopa::strip_trailing_slash "$source_dir")"
+target_dir="$(koopa::strip_trailing_slash "$target_dir")"
 
 # Pipe GNU find into array.
 readarray -t array <<< "$( \
@@ -58,7 +58,7 @@ readarray -t array <<< "$( \
 # Error if file array is empty.
 if [[ "${#array[@]}" -eq 0 ]]
 then
-    _koopa_stop "No lane-split FASTQ files detected."
+    koopa::stop 'No lane-split FASTQ files detected.'
 fi
 
 # Create the target directory automatically, if necessary.

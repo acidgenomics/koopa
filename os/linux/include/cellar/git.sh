@@ -13,8 +13,8 @@
 
 file="${name}-${version}.tar.gz"
 url="https://mirrors.edge.kernel.org/pub/software/scm/${name}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "git-${version}" || exit 1
 make configure
 ./configure \

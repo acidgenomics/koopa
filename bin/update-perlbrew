@@ -4,11 +4,11 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_exit_if_not_installed perlbrew
+koopa::exit_if_not_installed perlbrew
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
+koopa::assert_has_no_args "$#"
+koopa::assert_has_no_envs
 
-_koopa_h1 "Updating Perlbrew."
+koopa::h1 "Updating Perlbrew."
 
 perlbrew self-upgrade

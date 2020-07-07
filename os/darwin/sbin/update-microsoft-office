@@ -3,9 +3,9 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
-_koopa_h1 "Updating Microsoft Office via 'msupdate'."
+koopa::h1 "Updating Microsoft Office via 'msupdate'."
 
 update_exe="/Library/Application Support/Microsoft/MAU2.0/\
 Microsoft AutoUpdate.app/Contents/MacOS/msupdate"

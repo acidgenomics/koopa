@@ -4,42 +4,45 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_install_fedora_base() { # {{{1
+koopa::install_fedora_base() { # {{{1
     # """
     # Install Fedora base system.
     # @note Updated 2020-07-02.
     # """
-    _koopa_assert_is_installed dnf sudo
     local dev extra name_fancy pkgs upgrade
+    koopa::assert_is_installed dnf sudo
     dev=1
     extra=1
     upgrade=1
-    _koopa_is_docker && extra=0
+    koopa::is_docker && extra=0
     name_fancy="Fedora base system"
-    _koopa_install_start "$name_fancy"
+    koopa::install_start "$name_fancy"
 
     # Upgrade {{{1
     # ==========================================================================
 
     if [[ "$upgrade" -eq 1 ]]
     then
-        _koopa_h2 "Upgrading install via 'dnf update'."
+        koopa::h2 "Upgrading install via 'dnf update'."
         sudo dnf -y update
     fi
 
     # Default {{{1
     # ==========================================================================
 
-    _koopa_h2 "Installing default packages."
+    koopa::h2 "Installing default packages."
     pkgs=(
         autoconf
+        automake
         bash
         byacc
         bzip2
         cmake
         convmv
+        coreutils
         cryptsetup
         curl
+        diffutils
         findutils
         gcc
         gcc-c++
@@ -53,6 +56,7 @@ _koopa_install_fedora_base() { # {{{1
         man-db
         ncurses
         openssl
+        pkgconfig  # note this is now pkgconf
         qpdf
         readline
         squashfs-tools
@@ -67,7 +71,7 @@ _koopa_install_fedora_base() { # {{{1
         yum-utils
         zip
     )
-    if ! _koopa_is_rhel
+    if ! koopa::is_rhel
     then
         pkgs+=(texinfo)
     fi
@@ -77,13 +81,14 @@ _koopa_install_fedora_base() { # {{{1
 
     if [[ "$dev" -eq 1 ]]
     then
-        _koopa_h2 "Installing developer libraries."
+        koopa::h2 "Installing developer libraries."
         sudo dnf -y groupinstall "Development Tools"
         pkgs+=(
             apr-devel  # subversion
             apr-util-devel  # subversion
             bzip2-devel
             expat-devel  # udunits
+            glib2-devel  # ag
             gmp-devel
             gnutls-devel
             gsl-devel
@@ -107,8 +112,9 @@ _koopa_install_fedora_base() { # {{{1
             readline-devel
             unixODBC-devel
             xz-devel
+            zlib-devel
         )
-        if ! _koopa_is_rhel
+        if ! koopa::is_rhel
         then
             pkgs+=(
                 # udunits2-devel  # use 'install-udunits'.
@@ -127,7 +133,7 @@ _koopa_install_fedora_base() { # {{{1
 
     if [[ "$extra" -eq 1 ]]
     then
-        _koopa_h2 "Installing extra recommended packages."
+        koopa::h2 "Installing extra recommended packages."
         pkgs+=(
             # emacs
             # golang
@@ -164,8 +170,8 @@ _koopa_install_fedora_base() { # {{{1
     # ==========================================================================
 
     sudo dnf -y install "${pkgs[@]}"
-    _koopa_install_success "$name_fancy"
+    koopa::install_success "$name_fancy"
     return 0
 }
 
-_koopa_install_fedora_base "$@"
+koopa::install_fedora_base "$@"

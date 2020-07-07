@@ -7,8 +7,8 @@
 
 file="openssl-${version}.tar.gz"
 url="https://www.openssl.org/source/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "openssl-${version}" || exit 1
 ./config \
     --prefix="$prefix" \

@@ -4,12 +4,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
 # Check if EPEL is already enabled.
 if sudo dnf repolist | grep -q "epel/"
 then
-    _koopa_success "EPEL 8 is already enabled."
+    koopa::success "EPEL 8 is already enabled."
     exit 0
 fi
 

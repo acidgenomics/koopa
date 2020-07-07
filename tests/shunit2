@@ -128,7 +128,7 @@ koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${koopa_prefix}/shell/bash/include/header.sh"
 
-_koopa_exit_if_not_installed shunit2
+koopa::exit_if_not_installed shunit2
 
 extra=0
 
@@ -140,12 +140,12 @@ do
             shift 1
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
-_koopa_h1 "Running unit tests with shUnit2."
+koopa::h1 'Running unit tests with shUnit2.'
 
 # Don't exit on errors, which are handled by shunit2.
 set +o errexit

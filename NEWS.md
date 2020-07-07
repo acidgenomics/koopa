@@ -9,8 +9,8 @@ overhaluled and improved.
     saved in `man/man1/`. These are accessible per program via the `--help`
     flag, which now spawns `man` internally. Python scripts still use the
     argparser help format.
-- Renamed all internal shell functions with `_koopa_` prefix instead of previous
-  `_koopa_` prefix. Note that we always want to use an internal prefix, so we
+- Renamed all internal shell functions with `koopa::` prefix instead of previous
+  `koopa::` prefix. Note that we always want to use an internal prefix, so we
   don't accidentally mask any system functions defined for bash and/or zsh
   loaded by other program scripts. For example, be careful not to mask
   `deactivate` for Python venv.
@@ -130,7 +130,7 @@ This release improves prompt consistency between zsh and bash.
   instead of Pure prompt. This prompt is visually identical to our bash PS1.
 - Reduced the number of available string returns from main `koopa` function.
   Instead, these are now called more consistently using internal prefixes.
-  (e.g. `_koopa_cellar_prefix` instead of `koopa cellar-prefix)`.
+  (e.g. `koopa::cellar_prefix` instead of `koopa cellar-prefix)`.
 
 ## koopa 0.5.1 (2019-08-15)
 

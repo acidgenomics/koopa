@@ -6,12 +6,12 @@
 # """
 
 # Ensure '2.6.5p' becomes '2.6.5' here, for example.
-version="$(_koopa_sanitize_version "$version")"
-minor_version="$(_koopa_major_minor_version "$version")"
+version="$(koopa::sanitize_version "$version")"
+minor_version="$(koopa::major_minor_version "$version")"
 file="${name}-${version}.tar.gz"
 url="https://cache.ruby-lang.org/pub/${name}/${minor_version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 # This will fail on Ubuntu 18 otherwise.
 # https://github.com/rbenv/ruby-build/issues/156

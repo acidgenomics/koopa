@@ -4,18 +4,18 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_envs
-_koopa_assert_is_installed docker
+koopa::assert_has_no_envs
+koopa::assert_is_installed docker
 
 name="bcbio-vm"
-prefix="$(_koopa_app_prefix)/${name}"
+prefix="$(koopa::app_prefix)/${name}"
 
-_koopa_exit_if_dir "$prefix"
+koopa::exit_if_dir "$prefix"
 
-_koopa_install_start "$name" "$prefix"
+koopa::install_start "$name" "$prefix"
 
 bin_dir="${prefix}/anaconda/bin"
-tmp_dir="$(_koopa_tmp_dir)"
+tmp_dir="$(koopa::tmp_dir)"
 
 # Docker {{{1
 # ==============================================================================
@@ -32,10 +32,10 @@ fi
 # ==============================================================================
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="Miniconda3-latest-Linux-x86_64.sh"
     url="https://repo.continuum.io/miniconda/${file}"
-    _koopa_download "$url"
+    koopa::download "$url"
     bash "$file" -b -p "${prefix}/anaconda"
 )
 
@@ -70,4 +70,4 @@ data_dir="${prefix}/latest"
 "${bin_dir}/bcbio_vm.py" --datadir="$data_dir" saveconfig
 # > "${bin_dir}/bcbio_vm.py" install --tools --image "$image"
 
-_koopa_install_success "$name"
+koopa::install_success "$name"

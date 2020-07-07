@@ -306,6 +306,12 @@ checkVersion(
     expected = expectedVersion("ssh")
 )
 checkVersion(
+    name = "pkg-config",
+    whichName = "pkg-config",
+    current = currentVersion("pkg-config"),
+    expected = expectedVersion("pkg-config")
+)
+checkVersion(
     name = "rsync",
     whichName = "rsync",
     current = currentVersion("rsync"),

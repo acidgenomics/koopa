@@ -16,15 +16,15 @@
 # """
 
 # Skip building on CentOS.
-if _koopa_is_centos
+if koopa::is_centos
 then
-    _koopa_exit "'${name}' currently won't build on CentOS."
+    koopa::exit "'${name}' currently won't build on CentOS."
 fi
 
 file="v${version}.tar.gz"
 url="https://github.com/${name}/${name}/archive/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 make \
     --jobs="$jobs" \

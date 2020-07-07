@@ -3,11 +3,11 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
-_koopa_h1 "Configuring macOS system."
+koopa::h1 "Configuring macOS system."
 
-_koopa_enable_passwordless_sudo
+koopa::enable_passwordless_sudo
 
 install-homebrew
 install-homebrew-recipes
@@ -19,4 +19,4 @@ install-conda
 install-rbenv-ruby
 update-macos-defaults
 
-_koopa_success "Configuration was successful."
+koopa::success "Configuration was successful."

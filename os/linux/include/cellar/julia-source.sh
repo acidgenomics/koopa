@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
-_koopa_coffee_time
+koopa::coffee_time
 
 # If set, this will interfere with internal LLVM build required for
 # Julia. See 'build.md' file for LLVM details.
@@ -11,8 +11,8 @@ unset LLVM_CONFIG
 # > url="https://github.com/JuliaLang/julia/archive/${file}"
 file="${name}-${version}-full.tar.gz"
 url="https://github.com/JuliaLang/${name}/releases/download/v${version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 # Customize the 'Make.user' file.
 # Need to ensure we configure internal LLVM build here.

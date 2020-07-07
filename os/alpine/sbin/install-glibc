@@ -38,7 +38,7 @@ name="glibc"
 version="2.30-r0"
 name_fancy="${name} ${version}"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
 # Add key required for signed apk releases.
 pub_key="sgerrand.rsa.pub"
@@ -86,4 +86,4 @@ rm \
     "$apk_i18n_file" \
     "$pub_key"
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

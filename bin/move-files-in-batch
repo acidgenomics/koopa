@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../shell/bash/include/header.sh"
+
+koopa::move_files_in_batch() {
+    # Batch move a limited number of files.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_args_eq "$#" 3
+    koopa::assert_is_installed find
+    n="${1:?}"
+    source_dir="${2:?}"
+    target_dir="${3:?}"
+    koopa::assert_is_dir "$source_dir" "$target_dir"
+    find "$source_dir" \
+        -type f \
+        -regex ".+/[^.].+$" \
+        -print0 \
+        | sort -z \
+        | head -z -n "$n" \
+        | xargs -0 mv -t "$target_dir"
+    return 0
+}
+
+koopa::move_files_in_batch "$@"

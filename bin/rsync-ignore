@@ -3,13 +3,13 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
+koopa::assert_has_args "$#"
 
 # """
 # https://stackoverflow.com/questions/13713101/
 # """
 
-_koopa_assert_is_installed rsync
+koopa::assert_is_installed rsync
 
 global=0
 
@@ -26,7 +26,7 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
         *)
             pos+=("$1")
@@ -50,7 +50,7 @@ flags=(
 if [[ "$global" -eq 1 ]]
 then
     ignore_global="${HOME}/.gitignore"
-    _koopa_assert_is_file "$ignore_global"
+    koopa::assert_is_file "$ignore_global"
     flags+=("--filter=dir-merge,- $ignore_global")
 fi
 

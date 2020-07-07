@@ -33,7 +33,7 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
         *)
             pos+=("$1")
@@ -44,7 +44,7 @@ done
 [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
 dir="${1:-.}"
-_koopa_assert_is_dir "$dir"
+koopa::assert_is_dir "$dir"
 dir="$(realpath "$dir")"
 
 # Pipe GNU find into array.
@@ -59,29 +59,29 @@ readarray -t sam_files <<< "$( \
 )"
 
 # Error if file array is empty.
-if ! _koopa_is_array_non_empty "${sam_files[@]}"
+if ! koopa::is_array_non_empty "${sam_files[@]}"
 then
-    _koopa_stop "No SAM files detected in '${dir}'."
+    koopa::stop "No SAM files detected in '${dir}'."
 fi
 
-_koopa_h1 "Converting SAM files in '${dir}' to BAM format."
+koopa::h1 "Converting SAM files in '${dir}' to BAM format."
 
-_koopa_activate_conda_env samtools
-_koopa_info "samtools: '$(_koopa_which_realpath samtools)'."
+koopa::activate_conda_env samtools
+koopa::info "samtools: '$(koopa::which_realpath samtools)'."
 
 case "$keep_sam" in
     0)
-        _koopa_note "SAM files will be deleted."
+        koopa::note 'SAM files will be deleted.'
         ;;
     1)
-        _koopa_note "SAM files will be preserved."
+        koopa::note 'SAM files will be preserved.'
         ;;
 esac
 
 for sam_file in "${sam_files[@]}"
 do
     bam_file="${sam_file%.sam}.bam"
-    _koopa_sam_to_bam \
+    koopa::sam_to_bam \
         --input-sam="$sam_file" \
         --output-bam="$bam_file"
     if [[ "$keep_sam" -eq 0 ]]

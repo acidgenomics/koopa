@@ -14,16 +14,16 @@ source "${script_dir}/../include/header.sh"
 # Configures at '/var/lib/docker/'.
 # """
 
-_koopa_exit_if_docker
-_koopa_exit_if_installed docker
+koopa::exit_if_docker
+koopa::exit_if_installed docker
 
 name_fancy="Docker"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
-_koopa_apt_add_docker_repo
+koopa::apt_add_docker_repo
 
 # Ready to install Docker.
 pkgs=(
@@ -31,13 +31,13 @@ pkgs=(
     docker-ce
     docker-ce-cli
 )
-_koopa_apt_install "${pkgs[@]}"
+koopa::apt_install "${pkgs[@]}"
 
 # Ensure current user is added to Docker group.
-_koopa_add_user_to_group "docker"
+koopa::add_user_to_group "docker"
 
 # Move '/var/lib/docker' to '/n/var/lib/docker'.
-_koopa_link_docker
+koopa::link_docker
 
-_koopa_install_success "$name_fancy"
-_koopa_restart
+koopa::install_success "$name_fancy"
+koopa::restart

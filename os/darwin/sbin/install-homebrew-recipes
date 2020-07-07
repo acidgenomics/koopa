@@ -3,7 +3,7 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 checks=0 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
 # """
 # Check taps with `brew tap`.
@@ -35,8 +35,8 @@ _koopa_assert_has_no_args "$@"
 # """
 
 name_fancy="Homebrew recipes"
-_koopa_install_start "$name_fancy"
-_koopa_assert_is_installed brew
+koopa::install_start "$name_fancy"
+koopa::assert_is_installed brew
 export HOMEBREW_FORCE_BOTTLE=1
 
 # Casks {{{1
@@ -57,7 +57,7 @@ export HOMEBREW_FORCE_BOTTLE=1
 # - visual-studio-code
 # - iterm
 
-_koopa_h2 "Installing casks."
+koopa::h2 "Installing casks."
 installed_casks="$(brew cask list)"
 casks=(
     # Priority {{{2
@@ -136,9 +136,9 @@ casks=(
 for cask in "${casks[@]}"
 do
     name="$(basename "$cask")"
-    if _koopa_print "$installed_casks" | grep -Eq "^${name}$"
+    if koopa::print "$installed_casks" | grep -Eq "^${name}$"
     then
-        _koopa_note "'${cask}' is already installed."
+        koopa::note "'${cask}' is already installed."
         continue
     fi
     brew cask install --force --no-quarantine "$cask"
@@ -154,7 +154,7 @@ done
 # - ripgrep
 # - xsv
 
-_koopa_h2 "Installing brews."
+koopa::h2 "Installing brews."
 installed_brews="$(brew list)"
 
 # Linked brews (default) {{{2
@@ -177,6 +177,7 @@ brews=(
     # moreutils  # conflicts with parallel and ts
     # pyenv
     # rbenv (or use rvm?)
+    ack
     autoconf
     autojump
     automake
@@ -286,9 +287,9 @@ brews=(
 )
 for brew in "${brews[@]}"
 do
-    if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
+    if koopa::print "$installed_brews" | grep -Eq "^${brew}$"
     then
-        _koopa_note "'${brew}' is already installed."
+        koopa::note "'${brew}' is already installed."
         continue
     fi
     brew install "$brew"
@@ -303,9 +304,9 @@ keg_only_brews=(
 )
 for brew in "${keg_only_brews[@]}"
 do
-    if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
+    if koopa::print "$installed_brews" | grep -Eq "^${brew}$"
     then
-        _koopa_note "'${brew}' is already installed."
+        koopa::note "'${brew}' is already installed."
     else
         brew install "$brew"
     fi
@@ -330,13 +331,13 @@ external_brews=(
 for brew in "${external_brews[@]}"
 do
     name="$(basename "$brew")"
-    if _koopa_print "$installed_brews" | grep -Eq "^${name}$"
+    if koopa::print "$installed_brews" | grep -Eq "^${name}$"
     then
-        _koopa_note "'${brew}' is already installed."
+        koopa::note "'${brew}' is already installed."
     else
         brew install "$brew"
     fi
     brew link "$brew" &>/dev/null || true
 done
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

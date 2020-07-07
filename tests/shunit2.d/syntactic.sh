@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 ## shellcheck disable=SC2016
 
-if ! _koopa_is_r_package_installed syntactic
+if ! koopa::is_r_package_installed syntactic
 then
-    _koopa_note "'syntactic' R package is not installed. Skipping checks."
+    koopa::note "'syntactic' R package is not installed. Skipping checks."
     return 0
 fi
 

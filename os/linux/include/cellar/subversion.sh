@@ -10,7 +10,7 @@
 # Utility (APRUTIL) library.
 # """
 
-if _koopa_is_fedora
+if koopa::is_fedora
 then
     apr_config="/usr/bin/apr-1-config"
     apu_config="/usr/bin/apu-1-config"
@@ -19,12 +19,12 @@ else
     apu_config="apu-config"
 fi
 
-_koopa_assert_is_installed "$apr_config" "$apu_config"
+koopa::assert_is_installed "$apr_config" "$apu_config"
 
 file="${name}-${version}.tar.bz2"
 url="https://mirrors.ocf.berkeley.edu/apache/${name}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 ./configure \
     --prefix="$prefix" \

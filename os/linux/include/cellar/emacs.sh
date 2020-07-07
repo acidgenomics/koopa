@@ -71,14 +71,14 @@
 # - https://github.com/moby/moby/issues/22801
 # """
 
-_koopa_exit_if_docker
-_koopa_assert_is_installed tee
+koopa::exit_if_docker
+koopa::assert_is_installed tee
 
 
 file="emacs-${version}.tar.xz"
 url="${gnu_mirror}/emacs/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "emacs-${version}" || exit 1
 ./configure \
     --prefix="$prefix" \

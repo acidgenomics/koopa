@@ -36,9 +36,9 @@ source "${script_dir}/../include/header.sh"
 # - xvfb
 # """
 
-_koopa_apt_add_r_repo
-_koopa_apt_get build-dep r-base
-_koopa_install_cellar \
+koopa::apt_add_r_repo
+koopa::apt_get build-dep r-base
+koopa::install_cellar \
     --name="r" \
     --name-fancy="R" \
     --version="devel" \

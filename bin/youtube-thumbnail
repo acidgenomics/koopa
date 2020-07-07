@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../shell/bash/include/header.sh"
+
+koopa::youtube_thumbnail() {
+    # """
+    # Download a thumbnail image from YouTube.
+    # @note Updated 2020-07-04.
+    #
+    # File options:
+    # - hqdefault (smaller)
+    # - maxresdefault (larger)
+    #
+    # Not all videos will return max res thumbnail, so stick with hq instead.
+    # """
+    local id url
+    koopa::assert_has_args "$#"
+    for url in "$@"
+    do
+        id="$( \
+            koopa::print "$url" \
+                | grep -Eo 'v=[A-Za-z0-9_-]+' \
+                | cut -d '=' -f 2 \
+        )"
+        koopa::download "https://i.ytimg.com/vi/${id}/hqdefault.jpg" "${id}.jpg"
+    done
+    return 0
+}
+
+koopa::youtube_thumbnail "$@"

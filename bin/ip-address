@@ -18,16 +18,16 @@ do
             shift 1
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 case "$type" in
     local)
-        _koopa_local_ip_address
+        koopa::local_ip_address
         ;;
     public)
-        _koopa_public_ip_address
+        koopa::public_ip_address
         ;;
 esac

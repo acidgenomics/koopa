@@ -4,30 +4,30 @@ set -Eeu -o pipefail
 script_path="${BASH_SOURCE[0]}"
 if [ -L "$script_path" ]
 then
-    _koopa_realpath() {
-        if [ "$(uname -s)" = "Darwin" ]
+    koopa::realpath() {
+        if [ "$(uname -s)" = 'Darwin' ]
         then
             perl -MCwd -e 'print Cwd::abs_path shift' "$1"
         else
             readlink -f "$@"
         fi
     }
-    script_path="$(_koopa_realpath "$script_path")"
+    script_path="$(koopa::realpath "$script_path")"
 fi
 script_dir="$(cd "$(dirname "$script_path")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 checks=0 source "${script_dir}/../shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
+koopa::assert_has_args "$#"
 
 # Update corresponding Bash completion file, if necessary.
 case "$1" in
     # Auto-completion {{{1
     # ==========================================================================
     --version|-V)
-        f="version"
+        f='version'
         ;;
     info)
-        f="system_info"
+        f='sys_info'
         ;;
     check-system | \
     header | \
@@ -43,13 +43,13 @@ case "$1" in
     # Supported, but hidden from user {{{1
     # ==========================================================================
     check)
-        f="check_system"
+        f='check_system'
         ;;
     log)
-        f="view_latest_tmp_log_file"
+        f='view_latest_tmp_log_file'
         ;;
     pull)
-        f="system_git_pull"
+        f='sys_git_pull'
         ;;
     app-prefix | \
     cellar-prefix | \
@@ -71,26 +71,26 @@ case "$1" in
     # Deprecated args / error catching {{{1
     # ==========================================================================
     help)
-        _koopa_defunct "koopa --help"
+        koopa::defunct 'koopa --help'
         ;;
     home)
-        _koopa_defunct "koopa prefix"
+        koopa::defunct 'koopa prefix'
         ;;
     update-r-config)
-        _koopa_defunct "update-r-config (without 'koopa' prefix)"
+        koopa::defunct 'update-r-config (without koopa prefix)'
         ;;
     r-home)
-        _koopa_defunct "koopa which-realpath R"
+        koopa::defunct 'koopa which-realpath R'
         ;;
     upgrade)
-        _koopa_defunct "koopa update"
+        koopa::defunct 'koopa update'
         ;;
     *)
-        _koopa_invalid_arg "$1"
+        koopa::invalid_arg "$1"
         ;;
 esac
 
-fun="_koopa_${f//-/_}"
-_koopa_assert_is_function "$fun"
+fun="koopa::${f//-/_}"
+koopa::assert_is_function "$fun"
 shift 1
 "$fun" "$@"

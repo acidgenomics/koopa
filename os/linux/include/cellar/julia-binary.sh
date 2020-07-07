@@ -24,12 +24,12 @@
 #     problem-building-julia-version-jl-llvm-6-0-not-found/11545
 # """
 
-minor_version="$(_koopa_major_minor_version "$version")"
+minor_version="$(koopa::major_minor_version "$version")"
 file="${name}-${version}-linux-x86_64.tar.gz"
 url="https://julialang-s3.julialang.org/bin/linux/x64/${minor_version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 rm LICENSE.md
-_koopa_mkdir "$prefix"
+koopa::mkdir "$prefix"
 cp -r . "$prefix"

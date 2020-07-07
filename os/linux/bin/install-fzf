@@ -23,37 +23,37 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 name="fzf"
-[[ -z "$version" ]] && version="$(_koopa_variable "$name")"
-prefix="$(_koopa_fzf_prefix)/${version}"
-_koopa_exit_if_dir "$prefix"
+[[ -z "$version" ]] && version="$(koopa::variable "$name")"
+prefix="$(koopa::fzf_prefix)/${version}"
+koopa::exit_if_dir "$prefix"
 
-_koopa_install_start "$name" "$version" "$prefix"
+koopa::install_start "$name" "$version" "$prefix"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
-_koopa_activate_go
-_koopa_assert_is_installed go
+koopa::assert_has_no_args "$#"
+koopa::assert_has_no_envs
+koopa::activate_go
+koopa::assert_is_installed go
 
 goroot="$(go env GOROOT)"
-_koopa_dl "GOROOT" "$goroot"
+koopa::dl "GOROOT" "$goroot"
 
 prefix_parent="$(dirname "$prefix")"
-jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)"
+jobs="$(koopa::cpu_count)"
+tmp_dir="$(koopa::tmp_dir)"
 
-_koopa_mkdir "$prefix"
+koopa::mkdir "$prefix"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="${version}.tar.gz"
-    _koopa_download "https://github.com/junegunn/fzf/archive/${file}"
-    _koopa_extract "$file"
+    koopa::download "https://github.com/junegunn/fzf/archive/${file}"
+    koopa::extract "$file"
     cd "${name}-${version}" || exit 1
     make --jobs="$jobs"
     # > make test
@@ -65,16 +65,16 @@ _koopa_mkdir "$prefix"
     # Following approach used in Homebrew recipe here.
     rm -fr .[[:alnum:]]* src target
     cp -rv . "$prefix"
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
 (
-    _koopa_cd "$prefix_parent"
-    _koopa_ln "$version" "latest"
+    koopa::cd "$prefix_parent"
+    koopa::sys_ln "$version" "latest"
 )
 
-_koopa_set_permissions --recursive "$prefix_parent"
+koopa::sys_set_permissions -r "$prefix_parent"
 
-_koopa_install_success "$name"
-_koopa_note "Reload the shell to complete activation."
+koopa::install_success "$name"
+koopa::note "Reload the shell to complete activation."

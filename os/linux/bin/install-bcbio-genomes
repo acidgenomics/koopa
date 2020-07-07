@@ -4,23 +4,24 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_envs
-_koopa_assert_is_installed bcbio_nextgen.py
+koopa::assert_has_no_envs
+koopa::assert_is_installed bcbio_nextgen.py
 
-bcbio_exe="$(_koopa_which_realpath "bcbio_nextgen.py")"
+bcbio_exe="$(koopa::which_realpath "bcbio_nextgen.py")"
 bcbio_dir="$(cd "$(dirname "$bcbio_exe")/../.." && pwd -P)"
 genomes_dir="${bcbio_dir}/genomes"
 
-genomes="${1:-"BDGP6,canFam3,hg38,mm10,rn6"}"
-IFS=', ' read -r -a genomes <<< "$genomes"
+genomes="${1:-}"
+[[ -z "$genomes" ]] && genomes='BDGP6,canFam3,hg38,mm10,rn6'
+IFS=',' read -r -a genomes <<< "$genomes"
 
 name_fancy="bcbio-nextgen genomes"
 
-_koopa_install_start "$name_fancy" "$genomes_dir"
-_koopa_dl "Genomes" "$(_koopa_to_string "${genomes[@]}")"
+koopa::install_start "$name_fancy" "$genomes_dir"
+koopa::dl "Genomes" "$(koopa::to_string "${genomes[@]}")"
 
-cores="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)"
+cores="$(koopa::cpu_count)"
+tmp_dir="$(koopa::tmp_dir)"
 
 genome_flags=()
 for genome in "${genomes[@]}"
@@ -34,13 +35,13 @@ flags=(
     "${genome_flags[@]}"
 )
 
-_koopa_dl "Flags" "${flags[@]}"
+koopa::dl "Flags" "${flags[@]}"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     bcbio_nextgen.py upgrade "${flags[@]}"
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"
