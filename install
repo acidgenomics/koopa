@@ -2,6 +2,8 @@
 # shellcheck disable=SC1090,SC1091,SC2162
 set -Eeu -o pipefail
 
+# FIXME THIS ISNT CREATING DOTFILES LINK IN CONFIG CORRECTLY.
+
 # """
 # koopa shell
 # https://koopa.acidgenomics.com/
@@ -21,7 +23,7 @@ cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
-Updated 2020-07-05.
+Updated 2020-07-07.
 
 Optional arguments:
     --help, -h
@@ -55,7 +57,7 @@ Non-interactive configuration arguments:
 END
 }
 
-koopa::install() { # {{{1
+install() { # {{{1
     # """
     # Install koopa.
     # @note Updated 2020-07-02.
@@ -326,4 +328,4 @@ END
     return 0
 }
 
-koopa::install "$@"
+install "$@"

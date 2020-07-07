@@ -43,14 +43,15 @@ koopa::link_dotfile() {
     then
         dot_dir="$(koopa::dotfiles_private_config_link)"
     else
+        # FIXME Can I remove and simplify this step?
         # e.g. ~/.config/koopa/dotfiles
         dot_dir="$(koopa::dotfiles_config_link)"
         # Note that this step automatically links into koopa config for users.
         if [[ ! -d "$dot_dir" ]]
         then
             dot_repo="$(koopa::dotfiles_prefix)"
-            rm -fr "$dot_dir"
-            ln -fnsv "$dot_repo" "$dot_dir"
+            koopa::rm "$dot_dir"
+            koopa::ln "$dot_repo" "$dot_dir"
         fi
     fi
     koopa::assert_is_dir "$dot_dir"
@@ -64,6 +65,7 @@ koopa::link_dotfile() {
     # Add link either in HOME (default) or XDG_CONFIG_HOME.
     if [[ "$config" -eq 1 ]]
     then
+        # FIXME REQUIRE THIS. ERROR IF NOT SET.
         if [[ -z "${XDG_CONFIG_HOME:-}" ]]
         then
             XDG_CONFIG_HOME="${HOME}/.config"
