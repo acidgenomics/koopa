@@ -787,33 +787,6 @@ koopa::test() { # {{{1
     return 0
 }
 
-koopa::test_find_files() { # {{{1
-    # """
-    # Find relevant files for unit tests.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    local prefix x
-    prefix="$(koopa::prefix)"
-    x="$( \
-        find "$prefix" \
-            -mindepth 1 \
-            -type f \
-            -not -name "$(basename "$0")" \
-            -not -name '*.md' \
-            -not -name '.pylintrc' \
-            -not -path "${prefix}/.git/*" \
-            -not -path "${prefix}/cellar/*" \
-            -not -path "${prefix}/coverage/*" \
-            -not -path "${prefix}/dotfiles/*" \
-            -not -path "${prefix}/opt/*" \
-            -not -path "${prefix}/tests/*" \
-            -not -path '*/etc/R/*' \
-            -print | sort \
-    )"
-    koopa::print "$x"
-}
-
 koopa::test_true_color() { # {{{1
     # """
     # Test 24-bit true color support.

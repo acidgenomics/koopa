@@ -58,7 +58,7 @@ readarray -t array <<< "$( \
 # Error if file array is empty.
 if [[ "${#array[@]}" -eq 0 ]]
 then
-    koopa::stop "No lane-split FASTQ files detected."
+    koopa::stop 'No lane-split FASTQ files detected.'
 fi
 
 # Create the target directory automatically, if necessary.
