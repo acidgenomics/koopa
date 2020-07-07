@@ -5,6 +5,7 @@ koopa::cd() { # {{{1
     # Change directory quietly.
     # @note Updated 2020-06-30.
     # """
+    unalias -a
     koopa::assert_has_args_eq "$#" 1
     cd "${1:?}" >/dev/null || return 1
     return 0
@@ -20,6 +21,7 @@ koopa::cp() { # {{{1
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
     local OPTIND cp cp_flags mkdir rm sudo target_dir
+    unalias -a
     koopa::assert_is_installed cp
     sudo=0
     target_dir=
@@ -71,6 +73,7 @@ koopa::df() { # {{{1
     # Human friendlier version of df.
     # @note Updated 2020-07-01.
     # """
+    unalias -a
     koopa::assert_is_installed df
     df \
         --portability \
@@ -87,6 +90,7 @@ koopa::ln() { # {{{1
     # @note Updated 2020-07-06.
     # """
     local OPTIND ln rm source_file target_file
+    unalias -a
     koopa::assert_is_installed ln
     sudo=0
     OPTIND=1
@@ -123,6 +127,7 @@ koopa::mkdir() { # {{{1
     # Create directories with parents automatically.
     # @note Updated 2020-07-06.
     local OPTIND mkdir sudo
+    unalias -a
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -161,6 +166,7 @@ koopa::mv() { # {{{1
     # - --strip-trailing-slashes
     # """
     local OPTIND mkdir mv rm source_file sudo target_file
+    unalias -a
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -198,9 +204,10 @@ koopa::mv() { # {{{1
 koopa::relink() { # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # @note Updated 2020-07-06.
+    # @note Updated 2020-07-07.
     # """
     local OPTIND dest_file ln rm source_file sudo
+    unalias -a
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -218,10 +225,10 @@ koopa::relink() { # {{{1
     koopa::assert_has_args_eq "$#" 2
     if [[ "$sudo" -eq 1 ]]
     then
-        ln=('sudo' 'ln')
+        ln=('koopa::ln' '-S')
         rm=('koopa::rm' '-S')
     else
-        ln=('ln')
+        ln=('koopa::ln')
         rm=('koopa::rm')
     fi
     source_file="${1:?}"
@@ -230,7 +237,7 @@ koopa::relink() { # {{{1
     [[ -e "$source_file" ]] || return 0
     [[ -L "$dest_file" ]] && return 0
     "${rm[@]}" "$dest_file"
-    "${ln[@]}" -fns "$source_file" "$dest_file"
+    "${ln[@]}" "$source_file" "$dest_file"
     return 0
 }
 
@@ -240,6 +247,7 @@ koopa::rm() { # {{{1
     # @note Updated 2020-07-06.
     # """
     local OPTIND rm sudo
+    unalias -a
     sudo=0
     OPTIND=1
     while getopts 'S' opt
