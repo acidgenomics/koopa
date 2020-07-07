@@ -3,10 +3,10 @@
 koopa::_status() { # {{{1
     # """
     # Koopa status.
-    # @note Updated 2020-07-06.
+    # @note Updated 2020-07-07.
     # """
     local color nocolor label string x
-    koopa::assert_has_args_eq "$#" 2
+    koopa::assert_has_args_ge "$#" 3
     label="$(printf '%10s\n' "${1:?}")"
     color="$(koopa::_ansi_escape "${2:?}")"
     nocolor="$(koopa::_ansi_escape 'nocolor')"
@@ -42,28 +42,25 @@ koopa::exit() { # {{{1
 koopa::install_start() { # {{{1
     # """
     # Inform the user about start of installation.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-07.
     # """
-    koopa::assert_has_args "$#"
     local msg name version prefix
+    koopa::assert_has_args_le "$#" 3
     name="${1:?}"
     version=
     prefix=
-    if [ "$#" -eq 2 ]
+    if [[ "$#" -eq 2 ]]
     then
         prefix="${2:?}"
-    elif [ "$#" -eq 3 ]
+    elif [[ "$#" -eq 3 ]]
     then
         version="${2:?}"
         prefix="${3:?}"
-    elif [ "$#" -ge 4 ]
-    then
-        koopa::stop "Invalid number of arguments."
     fi
-    if [ -n "$prefix" ] && [ -n "$version" ]
+    if [[ -n "$prefix" ]] && [[ -n "$version" ]]
     then
         msg="Installing ${name} ${version} at '${prefix}'."
-    elif [ -n "$prefix" ]
+    elif [[ -n "$prefix" ]]
     then
         msg="Installing ${name} at '${prefix}'."
     else
@@ -89,25 +86,37 @@ koopa::restart() { # {{{1
     # @note Updated 2020-07-01.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::note "Restart the shell."
+    koopa::note 'Restart the shell.'
     return 0
 }
 
 koopa::status_fail() { # {{{1
+    # """
+    # FAIL status.
+    # @note Updated 2020-07-07.
+    # """
     koopa::assert_has_args "$#"
-    koopa::_status "FAIL" "red" "$@" >&2
+    koopa::_status 'FAIL' 'red' "$@" >&2
     return 0
 }
 
 koopa::status_note() { # {{{1
+    # """
+    # NOTE status.
+    # @note Updated 2020-07-07.
+    # """
     koopa::assert_has_args "$#"
-    koopa::_status "NOTE" "yellow" "$@"
+    koopa::_status 'NOTE' 'yellow' "$@"
     return 0
 }
 
 koopa::status_ok() { # {{{1
+    # """
+    # OK status.
+    # @note Updated 2020-07-07.
+    # """
     koopa::assert_has_args "$#"
-    koopa::_status "OK" "green" "$@"
+    koopa::_status 'OK' 'green' "$@"
     return 0
 }
 
@@ -116,12 +125,11 @@ koopa::uninstall_start() { # {{{1
     # Inform the user about start of uninstall.
     # @note Updated 2020-03-05.
     # """
-    local name
+    local msg name prefix
+    koopa::assert_has_args_le "$#" 2
     name="${1:?}"
-    local prefix
     prefix="${2:-}"
-    local msg
-    if [ -n "$prefix" ]
+    if [[ -n "$prefix" ]]
     then
         msg="Uninstalling ${name} at '${prefix}'."
     else
@@ -150,7 +158,7 @@ koopa::update_start() { # {{{1
     local name msg prefix
     name="${1:?}"
     prefix="${2:-}"
-    if [ -n "$prefix" ]
+    if [[ -n "$prefix" ]]
     then
         msg="Updating ${name} at '${prefix}'."
     else

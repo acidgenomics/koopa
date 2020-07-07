@@ -23,14 +23,14 @@ koopa::conda_env_prefix() { # {{{1
     #
     # Example: koopa::conda_env_prefix "deeptools"
     # """
+    local env_dir env_list env_name x
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed conda
-    local env_dir env_list env_name x
     env_name="${1:?}"
-    [ -n "$env_name" ] || return 1
+    [[ -n "$env_name" ]] || return 1
     env_list="${2:-$(koopa::conda_env_list)}"
     env_list="$(koopa::print "$env_list" | grep "$env_name")"
-    if [ -z "$env_list" ]
+    if [[ -z "$env_list" ]]
     then
         koopa::stop "Failed to detect prefix for '${env_name}'."
     fi

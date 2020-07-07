@@ -28,6 +28,10 @@ koopa::prefix() {
     _koopa_prefix "$@"
 }
 
+koopa::prompt() {
+    _koopa_prompt "$@"
+}
+
 koopa::warning() {
     _koopa_warning "$@"
 }

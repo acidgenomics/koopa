@@ -441,7 +441,7 @@ koopa::monorepo_prefix() {
 }
 
 koopa::note() {
-    _koopa::note "$@"
+    _koopa_note "$@"
 }
 
 koopa::openjdk_prefix() {
@@ -466,6 +466,10 @@ koopa::perlbrew_prefix() {
 
 koopa::prefix() {
     _koopa_prefix "$@"
+}
+
+koopa::prompt() {
+    _koopa_prompt "$@"
 }
 
 koopa::print() {

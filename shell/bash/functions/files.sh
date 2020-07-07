@@ -77,7 +77,7 @@ koopa::basename_sans_ext2() { # {{{1
 koopa::ensure_newline_at_end_of_file() { # {{{1
     # """
     # Ensure output CSV contains trailing line break.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-07.
     #
     # Otherwise 'readr::read_csv()' will skip the last line in R.
     # https://unix.stackexchange.com/questions/31947
@@ -88,10 +88,11 @@ koopa::ensure_newline_at_end_of_file() { # {{{1
     # ed -s file <<< w
     # sed -i -e '$a\' file
     # """
-    koopa::assert_has_args_eq "$#" 1
     local file
+    koopa::assert_has_args_eq "$#" 1
     file="${1:?}"
-    [ -n "$(tail -c1 "$file")" ] && printf '\n' >>"$file"
+    [[ -n "$(tail -c1 "$file")" ]] || return 0
+    printf '\n' >>"$file"
     return 0
 }
 
@@ -194,11 +195,11 @@ koopa::find_broken_symlinks() { # {{{1
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
+    local dir
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find grep
-    local dir
     dir="${1:-"."}"
-    [ -d "$dir" ] || return 0
+    [[ -d "$dir" ]] || return 0
     dir="$(realpath "$dir")"
     local x
     x="$( \

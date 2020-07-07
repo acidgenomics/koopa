@@ -8,6 +8,8 @@
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
+set -x
+
 # shellcheck disable=SC2016
 illegal_strings=(
     ' path='
@@ -23,7 +25,5 @@ illegal_strings=(
     '^path='
     'os.system'
 )
-
 grep_pattern="$(koopa::paste0 '|' "${illegal_strings[@]}")"
-
-koopa::test_find_failures "$grep_pattern" "illegal-strings"
+koopa::test_find_failures "$grep_pattern" 'illegal-strings'
