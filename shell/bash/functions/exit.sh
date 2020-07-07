@@ -24,7 +24,7 @@ koopa::exit_if_dir() { # {{{1
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
-        if [ -d "$arg" ]
+        if [[ -d "$arg" ]]
         then
             koopa::exit "Directory exists: '${arg}'."
         fi
@@ -53,7 +53,7 @@ koopa::exit_if_exists() { # {{{1
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
-        if [ -e "$arg" ]
+        if [[ -e "$arg" ]]
         then
             koopa::exit "Exists: '${arg}'."
         fi
