@@ -4,14 +4,18 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_args "$#"
+koopa_rename_from_csv() {
+    local file
+    koopa::assert_has_args "$#"
+    file="${1:?}"
+    koopa::assert_is_file_type "$file" 'csv'
+    while read -r line
+    do
+        from="${line%,*}"
+        to="${line#*,}"
+        koopa::mv "$from" "$to"
+    done < "$file"
+    return 0
+}
 
-file="$1"
-koopa::assert_is_file_type "$file" 'csv'
-
-while read -r line
-do
-    from="${line%,*}"
-    to="${line#*,}"
-    mv -v "$from" "$to"
-done < "$file"
+koopa::rename_from_csv "$@"

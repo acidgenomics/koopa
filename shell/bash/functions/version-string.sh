@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+koopa::anaconda_version() { # {{{
+    # """
+    # Anaconda verison.
+    # @note Updated 2020-07-08.
+    # """
+    local x
+    koopa::is_anaconda || return 1
+    koopa::assert_is_installed awk grep
+    x="$( \
+        conda list 'anaconda' \
+            | grep -E '^anaconda ' \
+            | awk '{print $2}' \
+    )"
+    koopa::print "$x"
+    return 0
+}
+
 koopa::current_bcbio_version() { # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.

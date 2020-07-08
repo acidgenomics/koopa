@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # """
 # Run Cell Ranger.
@@ -6,8 +6,10 @@
 # Updated 2019-06-21.
 #
 # See also:
-# - https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq
-# - https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
+# - https://support.10xgenomics.com/single-cell-gene-expression/software/
+#       pipelines/latest/using/mkfastq
+# - https://support.10xgenomics.com/single-cell-gene-expression/software/
+#       pipelines/latest/using/count
 # """
 
 module load bcl2fastq/2.20.0.422
@@ -30,20 +32,20 @@ fastqs=(
 )
 
 cellranger mkfastq \
-    --run="$run" \
-    --csv="$csv" \
-    --localcores="$localcores" \
-    --localmem="$localmem" \
-    --delete-undetermined
+    --csv "$csv" \
+    --delete-undetermined \
+    --localcores "$localcores" \
+    --localmem "$localmem" \
+    --run "$run"
 
 for sample in "${samples[@]}"
 do
     cellranger count \
-        --id="$sample" \
-        --sample="$sample" \
-        --fastqs="$fastqs" \
-        --transcriptome="$transcriptome" \
-        --localcores="$localcores" \
-        --localmem="$localmem" \
-        --nosecondary
+        --fastqs "${fastqs[@]}" \
+        --id "$sample" \
+        --localcores "$localcores" \
+        --localmem "$localmem" \
+        --nosecondary \
+        --sample "$sample" \
+        --transcriptome "$transcriptome"
 done
