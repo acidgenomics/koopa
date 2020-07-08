@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# koopa nolint=coreutils
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
@@ -18,7 +19,7 @@ koopa::delete_named_subdirs() { # {{{1
         -type d \
         -name "$subdir_name" \
         -print0 \
-        | xargs -0 -I {} koopa::rm {}
+        | xargs -0 -I {} rm -frv {}
     return 0
 }
 

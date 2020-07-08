@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# koopa nolint=coreutils
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
@@ -6,8 +7,9 @@ source "${script_dir}/../shell/bash/include/header.sh"
 
 koopa::move_files_in_batch() {
     # Batch move a limited number of files.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-08.
     # """
+    local n source_dir target_dir
     koopa::assert_has_args_eq "$#" 3
     koopa::assert_is_installed find
     n="${1:?}"
@@ -16,7 +18,7 @@ koopa::move_files_in_batch() {
     koopa::assert_is_dir "$source_dir" "$target_dir"
     find "$source_dir" \
         -type f \
-        -regex ".+/[^.].+$" \
+        -regex '.+/[^.].+$' \
         -print0 \
         | sort -z \
         | head -z -n "$n" \
