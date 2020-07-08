@@ -22,6 +22,7 @@ koopa::test_find_files() { # {{{1
             -not -path "${prefix}/dotfiles/*" \
             -not -path "${prefix}/opt/*" \
             -not -path "${prefix}/tests/*" \
+            -not -path "${prefix}/workflows/*" \
             -not -path '*/etc/R/*' \
             -print \
         | sort \
