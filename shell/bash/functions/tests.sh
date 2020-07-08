@@ -3,8 +3,8 @@
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2020-07-07.
-    # Not sorting speeds up this function quite a bit.
+    # @note Updated 2020-07-08.
+    # Not sorting here can speed the function up.
     # """
     koopa::assert_has_no_args "$#"
     local prefix x
@@ -24,6 +24,7 @@ koopa::test_find_files() { # {{{1
             -not -path "${prefix}/tests/*" \
             -not -path '*/etc/R/*' \
             -print \
+        | sort \
     )"
     koopa::print "$x"
 }

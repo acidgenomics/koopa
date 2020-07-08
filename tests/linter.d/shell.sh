@@ -13,8 +13,32 @@ test() {
     koopa::assert_has_no_args "$#"
     readarray -t files <<< \
         "$(koopa::test_find_files_by_shebang '^#!/.*\b(ba)?sh\b$')"
+    test_coreutils "${files[@]}"
     test_illegal_strings "${files[@]}"
+    test_quoting "${files[@]}"
     test_shellcheck "${files[@]}"
+    return 0
+}
+
+test_coreutils() {
+    local array pattern
+    koopa::assert_has_args "$#"
+    # shellcheck disable=SC2016
+    array=(
+        ' cd '
+        ' cp '
+        ' ln '
+        ' mkdir '
+        ' mv '
+        ' path='
+        ' rm '
+    )
+    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    koopa::test_grep \
+        -i 'coreutils' \
+        -n 'shell-coreutils' \
+        -p "$pattern" \
+        "$@"
     return 0
 }
 
@@ -23,17 +47,8 @@ test_illegal_strings() {
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
     array=(
-        # "'\$"
-        ":-'"
-        ' cd '
-        ' cp '
-        ' ln '
-        ' mkdir '
-        ' mv '
         ' path='
-        ' rm '
-        '"[A-Z0-9][-.0-9A-Za-z ]+"'
-        ':-"'
+        ' || exit'
         '; do'
         '; then'
         '<  <'
@@ -45,6 +60,25 @@ test_illegal_strings() {
     koopa::test_grep \
         -i 'illegal-strings' \
         -n 'shell-illegal-strings' \
+        -p "$pattern" \
+        "$@"
+    return 0
+}
+
+test_quoting() {
+    local array pattern
+    koopa::assert_has_args "$#"
+    # shellcheck disable=SC2016
+    array=(
+        # "'\$"
+        ":-'"
+        '"[A-Z0-9][-.0-9A-Za-z ]+"'
+        ':-"'
+    )
+    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    koopa::test_grep \
+        -i 'quoting' \
+        -n 'shell-quoting' \
         -p "$pattern" \
         "$@"
     return 0
