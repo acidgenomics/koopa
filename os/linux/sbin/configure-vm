@@ -236,6 +236,8 @@ koopa::configure_vm() { # {{{1
     install-openjdk
     if [[ "$compact" -eq 0 ]]
     then
+        install-curl
+        install-wget
         install-cmake
         install-make
         install-autoconf
@@ -257,8 +259,6 @@ koopa::configure_vm() { # {{{1
         install-zsh
         install-bash
         install-fish
-        install-curl
-        install-wget
         install-git
         install-openssh
         install-python

@@ -6,6 +6,8 @@ url="${gnu_mirror}/${name}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
 cd "${name}-${version}" || exit 1
-./configure --prefix="$prefix" --with-ssl="openssl"
+./configure \
+    --prefix="$prefix" \
+    --with-ssl='openssl'
 make --jobs="$jobs"
 make install
