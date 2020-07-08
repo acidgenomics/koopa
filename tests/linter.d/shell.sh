@@ -25,7 +25,13 @@ test_illegal_strings() {
     array=(
         # "'\$"
         ":-'"
+        ' cd '
+        ' cp '
+        ' ln '
+        ' mkdir '
+        ' mv '
         ' path='
+        ' rm '
         '"[A-Z0-9][-.0-9A-Za-z ]+"'
         ':-"'
         '; do'

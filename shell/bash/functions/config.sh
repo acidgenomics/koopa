@@ -1,27 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::_git_clone_to_config() { # {{{1
-    # """
-    # Clone a git repo or symlink from monorepo.
-    # @note Updated 2020-07-04.
-    # """
-    local config_prefix name url
-    koopa::assert_has_args_eq "$#" 1
-    config_prefix="$(koopa::config_prefix)"
-    for url in "$@"
-    do
-        name="$(basename "$url")"
-        name="$(koopa::sub '\.git$' '' "$name")"
-        if koopa::has_monorepo
-        then
-            koopa::add_monorepo_config_link "$name"
-        else
-            koopa::git_clone "$url" "${config_prefix}/${name}"
-        fi
-    done
-    return 0
-}
-
 koopa::add_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
@@ -44,7 +22,7 @@ koopa::add_config_link() { # {{{1
 koopa::add_make_prefix_link() { # {{{1
     # """
     # Ensure 'koopa' is linked inside make prefix.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-07.
     #
     # This is particularly useful for external scripts that source koopa header.
     # This approach works nicely inside a hardened R environment.
@@ -58,7 +36,7 @@ koopa::add_make_prefix_link() { # {{{1
     [[ -d "$make_prefix" ]] || return 0
     target_link="${make_prefix}/bin/koopa"
     [[ -L "$target_link" ]] && return 0
-    koopa::info "Adding 'koopa' link inside '${make_prefix}'."
+    koopa::info "Adding \"koopa\" link inside \"${make_prefix}\"."
     source_link="${koopa_prefix}/bin/koopa"
     koopa::sys_ln "$source_link" "$target_link"
     return 0
@@ -109,16 +87,16 @@ koopa::add_user_to_etc_passwd() { # {{{1
     local passwd_file user user_string
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_linux
-    passwd_file="/etc/passwd"
+    passwd_file='/etc/passwd'
     koopa::assert_is_file "$passwd_file"
     user="${1:-${USER:?}}"
     user_string="$(getent passwd "$user")"
-    koopa::info "Updating '${passwd_file}' to include '${user}'."
+    koopa::info "Updating \"${passwd_file}\" to include \"${user}\"."
     if ! sudo grep -q "$user" "$passwd_file"
     then
-        sudo sh -c "printf '%s\n' '${user_string}' >> '${passwd_file}'"
+        sudo sh -c "printf \"%s\n\" \"${user_string}\" >> \"${passwd_file}\""
     else
-        koopa::note "$user already defined in '${passwd_file}'."
+        koopa::note "$user already defined in \"${passwd_file}\"."
     fi
     return 0
 }
@@ -126,7 +104,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
 koopa::add_user_to_group() { # {{{1
     # """
     # Add user to group.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-07.
     #
     # Alternate approach:
     # > usermod -a -G group user
@@ -139,7 +117,7 @@ koopa::add_user_to_group() { # {{{1
     koopa::assert_is_installed gpasswd
     group="${1:?}"
     user="${2:-${USER:?}}"
-    koopa::info "Adding user '${user}' to group '${group}'."
+    koopa::info "Adding user \"${user}\" to group \"${group}\"."
     sudo gpasswd --add "$user" "$group"
     return 0
 }
@@ -157,11 +135,11 @@ koopa::delete_dotfile() { # {{{1
         filepath="${HOME:?}/.${name}"
         if [[ -L "$filepath" ]]
         then
-            koopa::info "Removing '${filepath}'."
+            koopa::info "Removing \"${filepath}\"."
             rm -f "$filepath"
         elif [[ -f "$filepath" ]] || [[ -d "$filepath" ]]
         then
-            koopa::warning "Not a symlink: '${filepath}'."
+            koopa::warning "Not a symlink: \"${filepath}\"."
         fi
     done
     return 0
@@ -170,7 +148,7 @@ koopa::delete_dotfile() { # {{{1
 koopa::enable_passwordless_sudo() { # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-07.
     # """
     local group string sudo_file
     koopa::assert_has_no_args "$#"
@@ -181,21 +159,21 @@ koopa::enable_passwordless_sudo() { # {{{1
     sudo touch "$sudo_file"
     if sudo grep -q "$group" "$sudo_file"
     then
-        koopa::success "Passwordless sudo already enabled for '${group}' group."
+        koopa::success "Passwordless sudo enabled for \"${group}\" group."
         return 0
     fi
-    koopa::info "Updating '${sudo_file}' to include '${group}'."
+    koopa::info "Updating '${sudo_file}' to include \"${group}\"."
     string="%${group} ALL=(ALL) NOPASSWD: ALL"
-    sudo sh -c "printf '%s\n' '$string' >> '${sudo_file}'"
+    sudo sh -c "printf \"%s\n\" \"$string\" >> \"${sudo_file}\""
     sudo chmod -v 0440 "$sudo_file"
-    koopa::success "Passwordless sudo enabled for '${group}' group."
+    koopa::success "Passwordless sudo enabled for \"${group}\"."
     return 0
 }
 
 koopa::enable_shell() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-07.
     # """
     local cmd_name cmd_path etc_file
     koopa::assert_has_args "$#"
@@ -204,14 +182,14 @@ koopa::enable_shell() { # {{{1
     cmd_path="$(koopa::make_prefix)/bin/${cmd_name}"
     etc_file='/etc/shells'
     [[ -f "$etc_file" ]] || return 0
-    koopa::info "Updating '${etc_file}' to include '${cmd_path}'."
+    koopa::info "Updating \"${etc_file}\" to include \"${cmd_path}\"."
     if ! grep -q "$cmd_path" "$etc_file"
     then
-        sudo sh -c "printf '%s\n' '${cmd_path}' >> '${etc_file}'"
+        sudo sh -c "printf \"%s\n\" \"${cmd_path}\" >> \"${etc_file}\""
     else
-        koopa::success "'${cmd_path}' already defined in '${etc_file}'."
+        koopa::success "\"${cmd_path}\" already defined in \"${etc_file}\"."
     fi
-    koopa::note "Run 'chsh -s ${cmd_path} ${USER}' to change default shell."
+    koopa::note "Run \"chsh -s ${cmd_path} ${USER}\" to change default shell."
     return 0
 }
 
@@ -301,28 +279,6 @@ koopa::fix_zsh_permissions() { # {{{1
     return 0
 }
 
-koopa::git_clone_docker() { # {{{1
-    # """
-    # Clone docker repo.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_git_clone_to_config \
-        'git@github.com:acidgenomics/docker.git'
-    return 0
-}
-
-koopa::git_clone_docker_private() { # {{{1
-    # """
-    # Clone docker-private repo.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_git_clone_to_config \
-        'git@github.com:acidgenomics/docker-private.git'
-    return 0
-}
-
 koopa::git_clone_dotfiles() { # {{{1
     # """
     # Clone dotfiles repo.
@@ -335,38 +291,16 @@ koopa::git_clone_dotfiles() { # {{{1
     return 0
 }
 
-koopa::git_clone_dotfiles_private() { # {{{1
-    # """
-    # Clone dotfiles-private repo.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_github_ssh_enabled
-    koopa::_git_clone_to_config \
-        'git@github.com:mjsteinbaugh/dotfiles-private.git'
-    return 0
-}
-
-koopa::git_clone_scripts_private() {
-    # """
-    # Clone private scripts.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_git_clone_to_config \
-        'git@github.com:mjsteinbaugh/scripts-private.git'
-    return 0
-}
-
 koopa::install_dotfiles() { # {{{1
     # """
     # Install dot files.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-07.
     # """
     local prefix script
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::dotfiles_prefix)"
     [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles
+    koopa::add_config_link "$prefix"
     script="${prefix}/install"
     koopa::assert_is_file "$script"
     "$script"
@@ -376,11 +310,12 @@ koopa::install_dotfiles() { # {{{1
 koopa::install_dotfiles_private() { # {{{1
     # """
     # Install private dot files.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-07.
     # """
     local prefix script
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::dotfiles_private_prefix)"
+    koopa::add_monorepo_config_link 'dotfiles-private'
     [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles_private
     script="${prefix}/install"
     koopa::assert_is_file "$script"
@@ -391,18 +326,17 @@ koopa::install_dotfiles_private() { # {{{1
 koopa::install_mike() { # {{{1
     # """
     # Install additional Mike-specific config files.
-    # @note Updated 2020-03-05.
+    # @note Updated 2020-07-07.
     #
     # Note that these repos require SSH key to be set on GitHub.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::git_clone_docker
-    koopa::git_clone_docker_private
-    koopa::git_clone_dotfiles
-    koopa::git_clone_dotfiles_private
-    koopa::git_clone_scripts_private
     koopa::install_dotfiles
     koopa::install_dotfiles_private
+    koopa::add_monorepo_config_link \
+        'docker' \
+        'dotfiles-private' \
+        'scripts-private'
     return 0
 }
 
@@ -487,6 +421,95 @@ koopa::link_docker() { # {{{1
     koopa::note 'Restarting Docker.'
     sudo systemctl enable docker
     sudo systemctl start docker
+    return 0
+}
+
+koopa::link_dotfile() { # {{{1
+    # """
+    # Link dotfile.
+    # @note Updated 2020-07-07.
+    # """
+    local config dot_dir dot_repo force pos private source_name symlink_name
+    koopa::assert_has_args "$#"
+    config=0
+    force=0
+    private=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --config)
+                config=1
+                shift 1
+                ;;
+            --force)
+                force=1
+                shift 1
+                ;;
+            --private)
+                private=1
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args_le "$#" 2
+    source_name="$1"
+    symlink_name="${2:-}"
+    if [[ "$private" -eq 1 ]]
+    then
+        dot_dir="$(koopa::dotfiles_private_config_link)"
+    else
+        # e.g. ~/.config/koopa/dotfiles
+        dot_dir="$(koopa::dotfiles_config_link)"
+        # Note that this step automatically links into koopa config for users.
+        if [[ ! -d "$dot_dir" ]]
+        then
+            dot_repo="$(koopa::dotfiles_prefix)"
+            koopa::rm "$dot_dir"
+            koopa::ln "$dot_repo" "$dot_dir"
+        fi
+    fi
+    koopa::assert_is_dir "$dot_dir"
+    source_path="${dot_dir}/${source_name}"
+    koopa::assert_is_existing "$source_path"
+    # Define optional target symlink name.
+    if [[ -z "$symlink_name" ]]
+    then
+        symlink_name="$(basename "$source_path")"
+    fi
+    # Add link either in HOME (default) or XDG_CONFIG_HOME.
+    if [[ "$config" -eq 1 ]]
+    then
+        symlink_path="${XDG_CONFIG_HOME:?}/${symlink_name}"
+    else
+        symlink_path="${HOME:?}/.${symlink_name}"
+    fi
+    # Inform the user when nuking a broken symlink.
+    if [[ "$force" -eq 1 ]] ||
+        { [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]; }
+    then
+        koopa::rm "$symlink_path"
+    elif [[ -e "$symlink_path" ]]
+    then
+        koopa::stop "Existing dotfile: \"${symlink_path}\"."
+        return 1
+    fi
+    koopa::dl "$symlink_path" "$source_path"
+    symlink_dn="$(dirname "$symlink_path")"
+    [[ "$symlink_dn" != "${HOME:?}" ]] && koopa::mkdir "$symlink_dn"
+    koopa::ln "$source_path" "$symlink_path"
     return 0
 }
 
