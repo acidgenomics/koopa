@@ -87,9 +87,9 @@ koopa::df() { # {{{1
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly.
-    # @note Updated 2020-07-06.
+    # @note Updated 2020-07-08.
     # """
-    local OPTIND ln rm source_file target_file
+    local OPTIND ln mkdir rm source_file target_file
     unalias -a
     koopa::assert_is_installed ln
     sudo=0
@@ -110,14 +110,17 @@ koopa::ln() { # {{{1
     if [[ "$sudo" -eq 1 ]]
     then
         ln=('sudo' 'ln')
+        mkdir=('koopa::mkdir' '-S')
         rm=('koopa::rm' '-S')
     else
         ln=('ln')
+        mkdir=('koopa::mkdir')
         rm=('koopa::rm')
     fi
     source_file="${1:?}"
     target_file="${2:?}"
     "${rm[@]}" "$target_file"
+    "${mkdir[@]}" "$(dirname "$target_file")"
     "${ln[@]}" -fns "$source_file" "$target_file"
     return 0
 }
