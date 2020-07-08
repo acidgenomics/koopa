@@ -81,7 +81,7 @@ koopa::conda_env() {
 }
 
 koopa::conda_prefix() {
-    _koopa_cellar_prefix "$@"
+    _koopa_conda_prefix "$@"
 }
 
 koopa::config_prefix() {
