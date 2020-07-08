@@ -27,6 +27,22 @@ koopa::git_clone() { # {{{1
     return 0
 }
 
+koopa::git_init() {
+    repo="${1:-}"
+    koopa::assert_has_args_le "$#" 1
+    git init
+    if [[ -n "$repo" ]]
+    then
+        git remote add 'origin' "$repo"
+        git remote -v
+        git fetch --all
+        git branch --set-upstream-to='origin/master' 'master'
+        git pull 'origin' 'master' --allow-unrelated-histories
+    fi
+    git status
+    return 0
+}
+
 koopa::git_last_commit_local() { # {{{1
     # """
     # Last git commit of local repository.
@@ -62,6 +78,81 @@ koopa::git_last_commit_remote() { # {{{1
     koopa::print "$x"
 }
 
+koopa::git_pull_recursive() {
+    local dir repo repos
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    dir="$(realpath "$dir")"
+    # Using '-L' flag here in case git dir is a symlink.
+    readarray -t repos <<< "$( \
+        find -L "$dir" \
+            -mindepth 1 \
+            -maxdepth 2 \
+            -name ".git" \
+            -print \
+    )"
+    if ! koopa::is_array_non_empty "${repos[@]}"
+    then
+        koopa::stop 'Failed to detect any git repos.'
+    fi
+    koopa::h1 "Pulling ${#repos[@]} git repos at \"${dir}\"."
+    for repo in "${repos[@]}"
+    do
+        repo="$(dirname "$repo")"
+        koopa::h2 "$repo"
+        (
+            koopa::cd "$repo"
+            git fetch --all
+            git pull --all
+            git status
+        )
+    done
+    return 0
+}
+
+koopa::git_push_recursive() {
+    local dir repo repos
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    dir="$(realpath "$dir")"
+    # Using '-L' flag here in case git dir is a symlink.
+    readarray -t repos <<< "$( \
+        find -L "$dir" \
+            -mindepth 1 \
+            -maxdepth 2 \
+            -name ".git" \
+            -print \
+    )"
+    if ! koopa::is_array_non_empty "${repos[@]}"
+    then
+        koopa::stop 'Failed to detect any git repos.'
+    fi
+    koopa::h1 "Pushing ${#repos[@]} git repos at \"${dir}\"."
+    for repo in "${repos[@]}"
+    do
+        repo="$(dirname "$repo")"
+        koopa::h2 "$repo"
+        (
+            koopa::cd "$repo"
+            git push
+        )
+    done
+    return 0
+}
+
+koopa::git_push_submodules() {
+    local dir
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    (
+        koopa::cd "$dir"
+        git submodule update --remote --merge
+        git commit -m 'Update submodules.'
+        git push
+    )
+    return 0
+}
+
 koopa::git_remote_url() { # {{{1
     # """
     # Return the git remote url for origin.
@@ -73,6 +164,20 @@ koopa::git_remote_url() { # {{{1
     koopa::is_installed git || return 1
     x="$(git config --get 'remote.origin.url')"
     koopa::print "$x"
+    return 0
+}
+
+koopa::git_reset_fork_to_upstream() {
+    local dir
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    (
+        koopa::cd "$dir"
+        git checkout 'master'
+        git fetch upstream
+        git reset --hard 'upstream/master'
+        git push 'origin' 'master' --force
+    )
     return 0
 }
 
@@ -95,7 +200,7 @@ koopa::git_rm_submodule() { # {{{1
         git submodule deinit -f "$module"
         # Remove the submodule directory from the superproject's '.git/modules'
         # directory.
-        rm -fr ".git/modules/${module}"
+        koopa::rm ".git/modules/${module}"
         # Remove the entry in '.gitmodules' and remove the submodule directory
         # located at 'path/to/submodule'.
         git rm -f "$module"
@@ -192,9 +297,9 @@ koopa::git_pull() {
         git submodule --quiet foreach --recursive \
             git fetch --all --quiet
         git submodule --quiet foreach --recursive \
-            git checkout master --quiet
+            git checkout 'master' --quiet
         git submodule --quiet foreach --recursive \
-            git pull origin master
+            git pull 'origin' 'master'
     fi
     koopa::success 'Pull was successful.'
     return 0
@@ -234,3 +339,34 @@ koopa::git_reset() { # {{{1
     fi
     return 0
 }
+
+koopa::git_status_recursive() {
+    local dir repo repos
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    dir="$(realpath "$dir")"
+    # Using '-L' flag here in case git dir is a symlink.
+    readarray -t repos <<< "$( \
+        find -L "$dir" \
+            -mindepth 1 \
+            -maxdepth 2 \
+            -name ".git" \
+            -print \
+    )"
+    if ! koopa::is_array_non_empty "${repos[@]}"
+    then
+        koopa::stop 'Failed to detect any git repos.'
+    fi
+    koopa::h1 "Checking status of ${#repos[@]} git repos at \"${dir}\"."
+    for repo in "${repos[@]}"
+    do
+        repo="$(dirname "$repo")"
+        koopa::h2 "$repo"
+        (
+            koopa::cd "$repo"
+            git status
+        )
+    done
+    return 0
+}
+
