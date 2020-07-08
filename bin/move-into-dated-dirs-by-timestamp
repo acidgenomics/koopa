@@ -4,12 +4,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_args "$#"
+koopa::move_into_dated_dirs_by_timestamp() {
+    local file subdir
+    koopa::assert_has_args "$#"
+    for file in "$@"
+    do
+        subdir="$(koopa::stat_modified "$file" '%Y/%m/%d')"
+        koopa::mv -t "$subdir" "$file"
+    done
+    return 0
+}
 
-for file in "$@"
-do
-    target_dir="$(koopa::stat_modified "$file" '%Y/%m/%d')"
-    mkdir -pv "$target_dir"
-    target_file="${target_dir}/$(basename "$file")"
-    mv -v "$file" "$target_file"
-done
+koopa::move_into_dated_dirs_by_timestamp "$@"

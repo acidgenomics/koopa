@@ -54,6 +54,7 @@ koopa::cp() { # {{{1
     if [[ -n "$target_dir" ]]
     then
         koopa::assert_is_existing "$@"
+        target_dir="$(koopa::strip_trailing_slash "$target_dir")"
         cp_flags+=('-t' "$target_dir")
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
     else
@@ -170,15 +171,19 @@ koopa::mv() { # {{{1
     # - -T: no-target-directory
     # - --strip-trailing-slashes
     # """
-    local OPTIND mkdir mv rm source_file sudo target_file target_parent
+    local OPTIND mkdir mv mv_flags rm source_file sudo target_file target_parent
     unalias -a
     sudo=0
+    target_dir=
     OPTIND=1
-    while getopts 'S' opt
+    while getopts 'St:' opt
     do
         case "$opt" in
             S)
                 sudo=1
+                ;;
+            t)
+                target_dir="$OPTARG"
                 ;;
             \?)
                 koopa::stop "Invalid option: -${OPTARG}"
@@ -186,7 +191,7 @@ koopa::mv() { # {{{1
         esac
     done
     shift "$((OPTIND-1))"
-    koopa::assert_has_args_eq "$#" 2
+    koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
         mkdir=('koopa::mkdir' '-S')
@@ -197,13 +202,23 @@ koopa::mv() { # {{{1
         mv=('mv')
         rm=('koopa::rm')
     fi
-    source_file="$(koopa::strip_trailing_slash "${1:?}")"
-    koopa::assert_is_existing "$source_file"
-    target_file="$(koopa::strip_trailing_slash "${2:?}")"
-    [[ -e "$target_file" ]] && "${rm[@]}" "$target_file"
-    target_parent="$(dirname "$target_file")"
-    [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
-    "${mv[@]}" -f "$source_file" "$target_file" &>/dev/null
+    mv_flags=('-f')
+    if [[ -n "$target_dir" ]]
+    then
+        koopa::assert_is_existing "$@"
+        target_dir="$(koopa::strip_trailing_slash "$target_dir")"
+        mv_flags+=('-t' "$target_dir")
+        [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
+    else
+        koopa::assert_has_args_eq "$#" 2
+        source_file="$(koopa::strip_trailing_slash "${1:?}")"
+        koopa::assert_is_existing "$source_file"
+        target_file="$(koopa::strip_trailing_slash "${2:?}")"
+        [[ -e "$target_file" ]] && "${rm[@]}" "$target_file"
+        target_parent="$(dirname "$target_file")"
+        [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
+    fi
+    "${mv[@]}" "${mv_flags[@]}" "$@" &>/dev/null
     return 0
 }
 
