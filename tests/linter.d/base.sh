@@ -6,7 +6,7 @@ source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 test() {
     # """
     # Base lint checks.
-    # @note Updated 2020-07-07.
+    # @note Updated 2020-07-08.
     # """
     local files
     koopa::assert_has_no_args "$#"
@@ -24,7 +24,6 @@ test_illegal_strings() {
         '>>>>>>>'
         '\bFIXME\b'
         '\bTODO\b'
-        'os.system'
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
