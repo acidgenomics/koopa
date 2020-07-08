@@ -4,26 +4,29 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_no_args "$#"
+koopa::install_rcheck() {
+    # """
+    # Install Rcheck scripts for CI.
+    # @note Updated 2020-07-08.
+    # """
+    local link_name name source_repo target_dir
+    koopa::assert_has_no_args "$#"
+    name='Rcheck'
+    source_repo="https://github.com/acidgenomics/${name}.git"
+    target_dir="$(koopa::local_app_prefix)/${name}"
+    link_name=".${name}"
+    koopa::install_start "$name"
+    if [[ ! -d "$target_dir" ]]
+    then
+        koopa::h2 "Downloading ${name} to \"${target_dir}\"."
+        (
+            koopa::mkdir "$target_dir"
+            git clone "$source_repo" "$target_dir"
+        )
+    fi
+    koopa::ln "$target_dir" "$link_name"
+    koopa::install_success "$name"
+    return 0
+}
 
-name="Rcheck"
-source_repo="https://github.com/acidgenomics/${name}.git"
-target_dir="$(koopa::local_app_prefix)/${name}"
-link_name=".${name}"
-
-koopa::install_start "$name"
-
-# This will clone the Git repo once, if necessary.
-if [[ ! -d "$target_dir" ]]
-then
-    koopa::h2 "Downloading ${name} to '${target_dir}'."
-    (
-        mkdir -pv "$target_dir"
-        git clone "$source_repo" "$target_dir"
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-fi
-
-# Add symlink in current working directory.
-ln -fnsv "$target_dir" "$link_name"
-
-koopa::install_success "$name"
+koopa::install_rcheck "$@"

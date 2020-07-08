@@ -1,60 +1,205 @@
 #!/usr/bin/env bash
 
-# """
-# Run ShellCheck on all Bash and Zsh scripts.
-# Updated 2020-06-20.
-# """
 
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
 test() {
-    local files
-    koopa::assert_has_no_args "$#"
-    readarray -t files <<< \
-        "$(koopa::test_find_files_by_shebang '^#!/.*\b(ba)?sh\b$')"
-    test_illegal_strings "${files[@]}"
-    test_shellcheck "${files[@]}"
+    # """
+    # Shell script checks.
+    # Updated 2020-07-08.
+    # """
+    test_all
+    test_posix
+    test_bash
+    test_zsh
+    test_shellcheck
     return 0
 }
 
-test_illegal_strings() {
+test_all() {
+    local files
+    koopa::assert_has_no_args "$#"
+    readarray -t files <<< \
+        "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh|zsh)$')"
+    test_all_coreutils "${files[@]}"
+    test_all_illegal_strings "${files[@]}"
+    test_all_quoting "${files[@]}"
+    return 0
+}
+
+test_all_coreutils() {
+    local array pattern
+    koopa::assert_has_args "$#"
+    # shellcheck disable=SC2016
+    array=(
+        ' cd '
+        ' cp '
+        ' ln '
+        ' mkdir '
+        ' mv '
+        ' rm '
+    )
+    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    koopa::test_grep \
+        -i 'coreutils' \
+        -n 'shell | all | coreutils' \
+        -p "$pattern" \
+        "$@"
+    return 0
+}
+
+test_all_illegal_strings() {
+    local array pattern
+    koopa::assert_has_args "$#"
+    # shellcheck disable=SC2016
+    array=(
+        ' path='    # zsh will freak out
+        ' || exit'  # wrap in function and return instead
+        '; do'      # newline instead
+        '; then'    # newline instead
+        '<  <'      # use '<<<' instead
+        'IFS= '     # this is default, look for weird edge cases
+        '\$path'    # zsh will freak out
+        '^path='    # zsh will freak out
+    )
+    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    koopa::test_grep \
+        -i 'illegal-strings' \
+        -n 'shell | all | illegal-strings' \
+        -p "$pattern" \
+        "$@"
+    return 0
+}
+
+test_all_quoting() {
     local array pattern
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
     array=(
         # "'\$"
         ":-'"
-        ' cd '
-        ' cp '
-        ' ln '
-        ' mkdir '
-        ' mv '
-        ' path='
-        ' rm '
         '"[A-Z0-9][-.0-9A-Za-z ]+"'
         ':-"'
-        '; do'
-        '; then'
-        '<  <'
-        'IFS=  '
-        '\$path'
-        '^path='
+    )
+    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    koopa::test_grep \
+        -i 'quoting' \
+        -n 'shell | all | quoting' \
+        -p "$pattern" \
+        "$@"
+    return 0
+}
+
+test_bash() {
+    # """
+    # Bash shell checks.
+    # @note Updated 2020-07-08.
+    # """
+    local files
+    koopa::assert_has_no_args "$#"
+    readarray -t files <<< \
+       "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash)$')"
+    test_bash_illegal_strings "${files[@]}"
+    return 0
+}
+
+test_bash_illegal_strings() {
+    local array pattern
+    koopa::assert_has_args "$#"
+    array=(
+        ' = '
+        ' \[ '
+        ' \] '
+        ' \]$'
+        '^\[ '
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
         -i 'illegal-strings' \
-        -n 'shell-illegal-strings' \
+        -n 'shell | bash | illegal-strings' \
+        -p "$pattern" \
+        "$@"
+    return 0
+}
+
+test_posix() {
+    # """
+    # POSIX shell checks.
+    # @note Updated 2020-07-08.
+    # """
+    local files
+    koopa::assert_has_no_args "$#"
+    readarray -t files <<< \
+        "$(koopa::test_find_files_by_shebang '^#!/bin/sh$')"
+    test_posix_illegal_strings "${files[@]}"
+    return 0
+}
+
+test_posix_illegal_strings() {
+    local array pattern
+    koopa::assert_has_args "$#"
+    array=(
+        ' == '
+        ' \[\[ '
+        ' \]\] '
+        ' \]\]$'
+        '^\[\[ '
+        '\[@\]\}'
+    )
+    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    koopa::test_grep \
+        -i 'illegal-strings' \
+        -n 'shell | posix | illegal-strings' \
+        -p "$pattern" \
+        "$@"
+    return 0
+}
+
+test_zsh() {
+    # """
+    # Zsh shell checks.
+    # @note Updated 2020-07-08.
+    # """
+    local files
+    koopa::assert_has_no_args "$#"
+    readarray -t files <<< \
+        "$(koopa::test_find_files_by_shebang '^#!/.+\b(zsh)$')"
+    test_zsh_illegal_strings "${files[@]}"
+    return 0
+}
+
+test_zsh_illegal_strings() {
+    local array pattern
+    koopa::assert_has_args "$#"
+    array=(
+        ' = '
+        ' \[ '
+        ' \] '
+        ' \]$'
+        '^\[ '
+    )
+    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    koopa::test_grep \
+        -i 'illegal-strings' \
+        -n 'shell | zsh | illegal-strings' \
         -p "$pattern" \
         "$@"
     return 0
 }
 
 test_shellcheck() {
-    koopa::assert_has_args "$#"
+    # """
+    # Run ShellCheck.
+    # @note Updated 2020-07-08.
+    # Only Bash and POSIX (but not Zsh) are supported.
+    # """
+    koopa::assert_has_no_args "$#"
     koopa::assert_is_installed shellcheck
-    shellcheck -x "$@"
-    koopa::status_ok "shell-shellcheck [${#files[@]}]"
+    readarray -t files <<< \
+        "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh)$')"
+    shellcheck -x "${files[@]}"
+    koopa::status_ok "shell | shellcheck [${#files[@]}]"
     return 0
 }
 

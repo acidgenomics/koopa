@@ -113,6 +113,14 @@ koopa::is_alias() { # {{{1
     return 0
 }
 
+koopa::is_anaconda() { # {{{1
+    # """
+    # Is Anaconda (rather than Miniconda) installed?
+    # @note Updated 2020-07-08.
+    # """
+    [[ -x "$(koopa::conda_prefix)/bin/anaconda" ]]
+}
+
 koopa::is_array_non_empty() { # {{{1
     # """
     # Is the array non-empty?

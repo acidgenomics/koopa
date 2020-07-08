@@ -4,36 +4,33 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_args "$#"
+koopa::move_into_dated_dirs_by_filename() {
+    local day file grep_array grep_string month subdir year
+    koopa::assert_has_args "$#"
+    grep_array=(
+        '^([0-9]{4})'
+        '([-_])?'
+        '([0-9]{2})'
+        '([-_])?'
+        '([0-9]{2})'
+        '([-_])?'
+        '(.+)$'
+    )
+    grep_string="$(printf %s "${grep_array[@]}" $'\n')"
+    for file in "$@"
+    do
+        if [[ "$file" =~ $grep_string ]]
+        then
+            year="${BASH_REMATCH[1]}"
+            month="${BASH_REMATCH[3]}"
+            day="${BASH_REMATCH[5]}"
+            subdir="${year}/${month}/${day}"
+            koopa::mv -t "$subdir" "$file"
+        else
+            koopa::stop "Does not contain date: \"${file}\"."
+        fi
+    done
+    return 0
+}
 
-grep_array=(
-    '^([0-9]{4})'
-    '([-_])?'
-    '([0-9]{2})'
-    '([-_])?'
-    '([0-9]{2})'
-    '([-_])?'
-    '([0-9]{2})'
-    '([-_])?'
-    '([0-9]{2})'
-    '([-_])?'
-    '([0-9]{2})'
-    '(.+)$'
-)
-grep_string="$(printf %s "${grep_array[@]}" $'\n')"
-
-for file in "$@"
-do
-    # Using Bash built-in regular expressions here.
-    if [[ "$file" =~ $grep_string ]]
-    then
-        year="${BASH_REMATCH[1]}"
-        month="${BASH_REMATCH[3]}"
-        day="${BASH_REMATCH[5]}"
-        subdir="${year}/${month}/${day}"
-        mkdir --parents --verbose "$subdir"
-        mv --no-clobber --verbose "$file" "$subdir"
-    else
-        koopa::stop "'${file}' does not contain date."
-    fi
-done
+koopa::move_into_dated_dirs_by_filename "$@"
