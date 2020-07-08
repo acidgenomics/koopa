@@ -137,6 +137,7 @@ _koopa_config_prefix() { # {{{1
     # Local koopa config directory.
     # @note Updated 2020-07-01.
     # """
+    # shellcheck disable=SC2039
     local prefix
     prefix="${XDG_CONFIG_HOME:-}"
     [ -z "$prefix" ] && prefix="${HOME:?}/.config"
