@@ -7,7 +7,7 @@ source "${script_dir}/../shell/bash/include/header.sh"
 koopa::autopad_samples() {
     # """
     # Autopad samples.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-08.
     # """
     local files newname num padwidth oldname pos prefix stem
     koopa::assert_has_args "$#"
@@ -63,7 +63,7 @@ koopa::autopad_samples() {
             stem=${BASH_REMATCH[2]}
             # Combine with prefix to create desired file name.
             newname="${prefix}_${num}${stem}"
-            mv -nv "$oldname" "$newname"
+            koopa::mv "$oldname" "$newname"
         else
             koopa::note "Skipping '${file}'."
         fi
