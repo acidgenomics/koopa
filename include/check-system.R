@@ -407,12 +407,22 @@ if (!isTRUE(docker)) {
 
 ## Version managers ============================================================
 h2("Version managers")
-checkVersion(
-    name = "Conda",
-    whichName = "conda",
-    current = currentVersion("conda"),
-    expected = expectedVersion("conda")
-)
+condaPrefix <- shell(command = koopa, args = "conda-prefix", stdout = TRUE)
+if (file.exists(file.path(condaPrefix, "bin", "anaconda"))) {
+    checkVersion(
+        name = "Anaconda",
+        whichName = "conda",
+        current = currentVersion("anaconda"),
+        expected = expectedVersion("anaconda")
+    )
+} else {
+    checkVersion(
+        name = "Miniconda",
+        whichName = "conda",
+        current = currentVersion("conda"),
+        expected = expectedVersion("conda")
+    )
+}
 checkVersion(
     name = "Python : pip",
     whichName = "pip3",

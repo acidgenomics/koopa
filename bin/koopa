@@ -53,6 +53,7 @@ case "$1" in
         ;;
     app-prefix | \
     cellar-prefix | \
+    conda-prefix | \
     config-prefix | \
     get-homebrew-cask-version | \
     get-macos-app-version | \
