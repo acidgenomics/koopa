@@ -4,95 +4,80 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::exit_if_installed conda
-koopa::assert_has_no_envs
+install_conda() {
+    local anaconda name name_fancy script tmp_dir url version
+    koopa::exit_if_installed conda
+    koopa::assert_has_no_envs
+    anaconda=0
+    while (("$#"))
+    do
+        case "$1" in
+            --anaconda)
+                anaconda=1
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ "$anaconda" -eq 1 ]]
+    then
+        name='anaconda3'
+        version="$(koopa::variable "$name")"
+    else
+        name='miniconda3'
+    fi
+    prefix="$(koopa::conda_prefix)"
+    koopa::exit_if_dir "$prefix"
+    name_fancy='Conda'
+    koopa::install_start "$name_fancy" "$prefix"
+    koopa::mkdir "$prefix"
+    tmp_dir="$(koopa::tmp_dir)"
+    (
+        koopa::cd "$tmp_dir"
+        case "$name" in
+            anaconda3)
+                case "${OSTYPE:?}" in
+                    darwin*)
+                        script="Anaconda3-${version}-MacOSX-x86_64.sh"
+                        ;;
+                    linux*)
+                        script="Anaconda3-${version}-Linux-x86_64.sh"
+                        ;;
+                    *)
+                        koopa::stop "'${OSTYPE}' is not supported."
+                        ;;
+                esac
+                url="https://repo.anaconda.com/archive/${script}"
+                ;;
+            miniconda3)
+                case "${OSTYPE:?}" in
+                    darwin*)
+                        script="Miniconda3-${version}-MacOSX-x86_64.sh"
+                        ;;
+                    linux*)
+                        script="Miniconda3-${version}-Linux-x86_64.sh"
+                        ;;
+                    *)
+                        koopa::stop "'${OSTYPE}' is not supported."
+                        ;;
+                esac
+                url="https://repo.continuum.io/miniconda/${script}"
+                ;;
+        esac
+        koopa::download "$url"
+        bash "$script" -bf -p "$prefix"
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    koopa::rm "$tmp_dir"
+    koopa::ln "$(koopa::prefix)/os/linux/etc/conda/condarc" "${prefix}/.condarc"
+    koopa::remove_broken_symlinks "$prefix"
+    koopa::sys_set_permissions -r "$prefix"
+    set +u; koopa::activate_conda; set -u
+    [[ "$name" == 'miniconda3' ]] && update-conda
+    koopa::install_success "$name_fancy"
+    koopa::restart
+    return 0
+}
 
-anaconda=0
-
-while (("$#"))
-do
-    case "$1" in
-        --anaconda)
-            anaconda=1
-            shift 1
-            ;;
-        *)
-            koopa::invalid_arg "$1"
-            ;;
-    esac
-done
-
-if [[ "$anaconda" -eq 1 ]]
-then
-    name='anaconda3'
-    version="$(koopa::variable "$name")"
-else
-    name='miniconda3'
-fi
-
-prefix="$(koopa::conda_prefix)"
-koopa::exit_if_dir "$prefix"
-
-name_fancy='Conda'
-
-koopa::install_start "$name_fancy" "$prefix"
-
-koopa::mkdir "$prefix"
-tmp_dir="$(koopa::tmp_dir)"
-
-(
-    koopa::cd "$tmp_dir"
-    case "$name" in
-        anaconda3)
-            case "${OSTYPE:?}" in
-                darwin*)
-                    script="Anaconda3-${version}-MacOSX-x86_64.sh"
-                    ;;
-                linux*)
-                    script="Anaconda3-${version}-Linux-x86_64.sh"
-                    ;;
-                *)
-                    koopa::stop "'${OSTYPE}' is not supported."
-                    ;;
-            esac
-            url="https://repo.anaconda.com/archive/${script}"
-            ;;
-        miniconda3)
-            # Note that versioned script for v4.8+ currently isn't available.
-            case "${OSTYPE:?}" in
-                darwin*)
-                    script="Miniconda3-latest-MacOSX-x86_64.sh"
-                    ;;
-                linux*)
-                    script="Miniconda3-latest-Linux-x86_64.sh"
-                    ;;
-                *)
-                    koopa::stop "'${OSTYPE}' is not supported."
-                    ;;
-            esac
-            url="https://repo.continuum.io/miniconda/${script}"
-            ;;
-    esac
-    koopa::download "$url"
-    bash "$script" -bf -p "$prefix"
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-ln -fnsv "$(koopa::prefix)/os/linux/etc/conda/condarc" \
-    "${prefix}/.condarc"
-
-koopa::remove_broken_symlinks "$prefix"
-koopa::sys_set_permissions -r "$prefix"
-
-set +u
-koopa::activate_conda
-set -u
-
-if [[ "$name" == 'miniconda3' ]]
-then
-    update-conda
-fi
-
-koopa::install_success "$name_fancy"
-koopa::restart
+koopa::install_conda "$@"
