@@ -31,7 +31,7 @@ koopa::tldr() {
             exit 0
             ;;
     esac
-    cmd="$(koopa::gsub " " "-" "$*")"
+    cmd="$(koopa::gsub ' ' '-' "$*")"
     koopa::tldr_download_cache
     koopa::tldr_update_index
     file="$(koopa::tldr_file "$cmd")"
@@ -50,16 +50,17 @@ koopa::tldr_display() {
     koopa::assert_is_file "$file"
     readarray -t lines < "$file"
     # Reformat style tags, making text italic.
-    italic_start="$(printf "\033[3m")"
-    italic_end="$(printf "\033[23m")"
+    italic_start="$(printf '\033[3m')"
+    italic_end="$(printf '\033[23m')"
     readarray -t lines <<< "$( \
         koopa::print "${lines[@]}" \
             | sed "s/{{/${italic_start}/g;s/}}/${italic_end}/g" \
     )"
     code() {
+        # shellcheck disable=SC2016
         koopa::print_default_bold "$( \
             koopa::print "${1:?}" \
-                | sed "s/\`\([^\`]*\)\`/  \1/g" \
+                | sed 's/\`\([^\`]*\)\`/  \1/g' \
         )"
     }
     heading() {
@@ -108,25 +109,25 @@ koopa::tldr_download_cache() {
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::tldr_prefix)"
     [[ -d "$prefix" ]] && return 0
-    koopa::info "Caching tldr pages from GitHub."
-    mkdir -pv "$prefix"
+    koopa::info 'Caching tldr pages from GitHub.'
+    koopa::mkdir "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        url="https://github.com/tldr-pages/tldr/tarball/master"
-        file="master.tar.gz"
+        url='https://github.com/tldr-pages/tldr/tarball/master'
+        file='master.tar.gz'
         koopa::download "$url" "$file"
         koopa::extract "$file"
-        rsync -a "tldr-pages-tldr-"*"/pages/" "${prefix}/"
+        rsync -a 'tldr-pages-tldr-'*'/pages/' "${prefix}/"
     )
-    rm -fr "$tmp_dir"
+    koopa::rm "$tmp_dir"
     return 0
 }
 
 koopa::tldr_file() {
     # """
     # Get the tldr file path, using 'index.json' and platform key.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-08.
     # """
     local cmd desc file index_file platform prefix subdir
     koopa::assert_has_args_eq "$#" 1
@@ -143,11 +144,11 @@ koopa::tldr_file() {
     if koopa::str_match "$desc" "$platform"
     then
         subdir="$platform"
-    elif koopa::str_match "$desc" "common"
+    elif koopa::str_match "$desc" 'common'
     then
-        subdir="common"
+        subdir='common'
     else
-        koopa::stop "Failed to locate tldr for '${cmd}'."
+        koopa::stop "Failed to locate tldr for \"${cmd}\"."
     fi
     file="${prefix}/${subdir}/${cmd}.md"
     koopa::assert_is_file "$file"
@@ -174,7 +175,7 @@ koopa::tldr_list_pages() {
         find "$prefix" \
             -mindepth 1 \
             -type f \
-            -iname "*.md" \
+            -iname '*.md' \
             -print \
         | sort -u \
     )"
@@ -193,19 +194,19 @@ koopa::tldr_platform() {
     koopa::assert_has_no_args "$#"
     case "$(uname -s)" in
         Darwin)
-            str="osx"
+            str='osx'
             ;;
         Linux)
-            str="linux"
+            str='linux'
             ;;
         SunOS)
-            str="sunos"
+            str='sunos'
             ;;
         CYGWIN*|MINGW32*|MSYS*)
-            str="windows"
+            str='windows'
             ;;
         *)
-            str="common"
+            str='common'
             ;;
     esac
     koopa::print "$str"

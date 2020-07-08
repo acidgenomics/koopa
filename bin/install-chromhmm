@@ -3,24 +3,26 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
-koopa::assert_has_no_args "$#"
 
-name='ChromHMM'
-prefix="$(koopa::app_prefix)/$(koopa::lowercase "$name")"
-tmp_dir="$(koopa::tmp_dir)"
+koopa::install_chromhmm() {
+    local file name prefix tmp_dir url
+    koopa::assert_has_no_args "$#"
+    name='ChromHMM'
+    prefix="$(koopa::app_prefix)/$(koopa::lowercase "$name")"
+    koopa::install_start "$name" "$prefix"
+    tmp_dir="$(koopa::tmp_dir)"
+    (
+        koopa::cd "$tmp_dir"
+        file="${name}.zip"
+        url="http://compbio.mit.edu/${name}/${file}"
+        koopa::download "$url"
+        koopa::extract "$file"
+        koopa::cp "$name" "$prefix"
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    koopa::rm "$tmp_dir"
+    koopa::sys_set_permissions -r "$prefix"
+    koopa::install_success "$name"
+    return 0
+}
 
-koopa::install_start "$name" "$prefix"
-
-(
-    koopa::cd "$tmp_dir"
-    file="${name}.zip"
-    koopa::download "http://compbio.mit.edu/${name}/${file}"
-    koopa::extract "$file"
-    mv -v "$name" "$prefix"
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-koopa::sys_set_permissions -r "$prefix"
-
-koopa::install_success "$name"
+koopa::install_chromhmm "$@"

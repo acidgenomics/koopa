@@ -4,17 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-repo="${1:-}"
-
-git init
-
-if [[ -n "$repo" ]]
-then
-    git remote add origin "$repo"
-    git remote -v
-    git fetch --all
-    git branch --set-upstream-to=origin/master master
-    git pull origin master --allow-unrelated-histories
-fi
-
-git status
+koopa::git_init "$@"
