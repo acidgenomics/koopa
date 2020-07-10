@@ -728,34 +728,28 @@ koopa::assert_is_not_symlink() { # {{{1
 koopa::assert_is_python_package_installed() { # {{{1
     # """
     # Assert that specific Python packages are installed.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-07-10.
     # """
-    local arg
     koopa::assert_has_args "$#"
-    for arg in "$@"
-    do
-        if ! koopa::is_python_package_installed "${arg}"
-        then
-            koopa::stop "Python package \"${arg}\" is not installed."
-        fi
-    done
+    if ! koopa::is_python_package_installed "$@"
+    then
+        koopa::dl 'Args' "$*"
+        koopa::stop 'Required Python packages missing.'
+    fi
     return 0
 }
 
 koopa::assert_is_r_package_installed() { # {{{1
     # """
     # Assert that specific R packages are installed.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-07-10.
     # """
-    local arg
     koopa::assert_has_args "$#"
-    for arg in "$@"
-    do
-        if ! koopa::is_r_package_installed "${arg}"
-        then
-            koopa::stop "R package \"${arg}\" is not installed."
-        fi
-    done
+    if ! koopa::is_r_package_installed "$@"
+    then
+        koopa::dl 'Args' "$*"
+        koopa::stop 'Required R packages missing.'
+    fi
     return 0
 }
 
