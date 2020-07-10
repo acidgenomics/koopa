@@ -4,8 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-# FIXME SUPPORT --REINSTALL FLAG.
-
 koopa::install_python_packages() {
     # """
     # Install Python packages.
