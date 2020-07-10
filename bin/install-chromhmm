@@ -18,7 +18,7 @@ koopa::install_chromhmm() {
         koopa::download "$url"
         koopa::extract "$file"
         koopa::cp "$name" "$prefix"
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    )
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$prefix"
     koopa::install_success "$name"

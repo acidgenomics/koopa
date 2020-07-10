@@ -13,7 +13,7 @@ koopa::install_ensembl_perl_api() {
     koopa::install_start "$name_fancy" "$prefix"
     koopa::mkdir "$prefix"
     (
-        koopa::cd "$prefix" || exit 1
+        koopa::cd "$prefix"
         # Install BioPerl.
         git clone -b release-1-6-924 --depth 1 \
             "https://github.com/bioperl/bioperl-live.git"
