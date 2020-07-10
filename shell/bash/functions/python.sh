@@ -5,14 +5,58 @@ koopa::pip_install() { # {{{1
     # Internal pip install command.
     # @note Updated 2020-07-03.
     # """
-    local python
+    local pip_install_flags pos python reinstall
     koopa::assert_has_args "$#"
-    python="python3"
+    python='python3'
+    reinstall=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --python=*)
+                python="${1#*=}"
+                shift 1
+                ;;
+            --python)
+                python="$2"
+                shift 2
+                ;;
+            --reinstall)
+                reinstall=1
+                shift 1
+                ;;
+            '')
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_is_installed "$python"
-    "$python" \
-        -m pip install \
-        --no-warn-script-location \
-        "$@"
+    koopa::assert_is_python_package_installed --python="$python" 'pip'
+    pip_install_flags=(
+        '--no-warn-script-location'
+        '--verbose'
+    )
+    if [[ "$reinstall" -eq 1 ]]
+    then
+        pip_flags+=(
+            '--force-reinstall'
+            '--ignore-installed'
+        )
+    fi
+    koopa::dl 'Packages' "$(koopa::to_string "$@")"
+    "$python" -m pip install "${pip_install_flags[@]}" "$@"
     return 0
 }
 

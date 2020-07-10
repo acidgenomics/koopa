@@ -6,6 +6,9 @@ source "${script_dir}/../shell/bash/include/header.sh"
 
 koopa::install_perlbrew() { # {{{1
     # """
+    # Install Perlbrew.
+    # @note Updated 2020-07-10.
+    #
     # Available releases:
     # > perlbrew available
     # """
