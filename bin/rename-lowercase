@@ -4,57 +4,58 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_args "$#"
-koopa::assert_is_installed rename
+koopa::rename_lowercase() {
+    local dir pos recursive
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed find rename
+    recursive=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --recursive)
+                recursive=1
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$recursive" -eq 1 ]]
+    then
+        dir="${1:-.}"
+        # Rename files.
+        find "$dir" \
+            -mindepth 1 \
+            -type f \
+            -name "*[A-Z]*" \
+            -not -name ".*" \
+            -print0 \
+            | sort --zero-terminated \
+            | xargs -0 -I {} rename --force --verbose 'y/A-Z/a-z/' {}
+        # Rename directories.
+        find "$dir" \
+            -mindepth 1 \
+            -type d \
+            -name "*[A-Z]*" \
+            -not -name ".*" \
+            -print0 \
+            | sort --reverse --zero-terminated \
+            | xargs -0 -I {} rename --force --verbose 'y/A-Z/a-z/' {}
+    else
+        rename --force --verbose 'y/A-Z/a-z/' "$@"
+    fi
+    return 0
+}
 
-recursive=0
-
-pos=()
-while (("$#"))
-do
-    case "$1" in
-        --recursive)
-            recursive=1
-            shift 1
-            ;;
-        --)
-            shift 1
-            break
-            ;;
-        --*|-*)
-            koopa::invalid_arg "$1"
-            ;;
-        *)
-            pos+=("$1")
-            shift 1
-            ;;
-    esac
-done
-[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-
-if [[ "$recursive" -eq 1 ]]
-then
-    dir="${1:-.}"
-    # Rename files.
-    find "$dir" \
-        -mindepth 1 \
-        -type f \
-        -name "*[A-Z]*" \
-        -not -name ".*" \
-        -print0 \
-        | sort --zero-terminated \
-        | xargs -0 -I {} rename --force --verbose 'y/A-Z/a-z/' {}
-    # Rename directories.
-    find "$dir" \
-        -mindepth 1 \
-        -type d \
-        -name "*[A-Z]*" \
-        -not -name ".*" \
-        -print0 \
-        | sort --reverse --zero-terminated \
-        | xargs -0 -I {} rename --force --verbose 'y/A-Z/a-z/' {}
-else
-    rename --force --verbose 'y/A-Z/a-z/' "$@"
-fi
-
-exit 0
+koopa::rename_lowercase "$@"

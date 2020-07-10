@@ -4,106 +4,114 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-# > koopa::assert_has_args "$#"
-koopa::assert_is_installed docker
+koopa::run_rnaeditingindexer() {
+    # """
+    # Run RNAEditingIndexer.
+    # @note Updated 2020-07-10.
+    #
+    # Genome must be indexed by BEDGenomeIndexer.
+    # Note that '--verbose' flag includes more output in summary CSV.
+    #
+    # This file is missing and currently causes issues on Docker:
+    # - /bin/AEI/RNAEditingIndexer/Resources/Genomes/HomoSapiens/
+    #       ucscHg38Genome.fa.fai
+    # ucscHg38Genome.fa source information:
+    # - https://github.com/a2iEditing/RNAEditingIndexer/
+    #       blob/master/make/initResources.sh
+    # Useful environment variables:
+    # - HG38_FTP_URL="http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/"
+    # - HG38_FTP_GENOME_URL="http://hgdownload.soe.ucsc.edu/
+    #       goldenPath/hg38/bigZips/"
+    #
+    # @seealso
+    # - https://github.com/a2iEditing/RNAEditingIndexer/blob/master/Docs/
+    #       Docker.README.md
+    # - https://github.com/a2iEditing/RNAEditingIndexer/
+    #       search?q=index+file&unscoped_q=index+file
+    # """
+    local bam_dir bam_suffix bam_suffix_arr example genome output_dir
+    koopa::assert_is_installed docker
+    bam_dir='bam'
+    bam_suffix='.Aligned.sortedByCoord.out.bam'
+    genome='hg38'
+    output_dir='rnaedit'
+    example=0
+    while (("$#"))
+    do
+        case "$1" in
+            --bam-dir=*)
+                bam_dir="${1#*=}"
+                shift 1
+                ;;
+            --bam-dir)
+                bam_dir="$2"
+                shift 2
+                ;;
+            --example)
+                example=1
+                shift 1
+                ;;
+            --genome=*)
+                genome="${1#*=}"
+                shift 1
+                ;;
+            --genome)
+                genome="$2"
+                shift 2
+                ;;
+            --output-dir=*)
+                output_dir="${1#*=}"
+                shift 1
+                ;;
+            --output-dir)
+                output_dir="$2"
+                shift 2
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    # Ensure 'bam_dir' and 'output_dir' are absolute paths, otherwise
+    # RNAEditingIndex can fail on relative paths.
+    bam_dir="$(koopa::which_realpath "$bam_dir")"
+    output_dir="$(koopa::which_realpath "$output_dir")"
+    koopa::rm "$output_dir"
+    koopa::mkdir "$output_dir"
+    mnt_bam_dir='/mnt/bam'
+    mnt_output_dir='/mnt/output'
+    # Minimal example:
+    if [[ "$example" -eq 1 ]]
+    then
+        bam_dir='/bin/AEI/RNAEditingIndexer/TestResources/BAMs'
+        bam_suffix_arr=(
+            '_sampled_with_0.1'
+            'Aligned'
+            'sortedByCoord'
+            'out'
+            'bam'
+            'AluChr1Only'
+            'bam'
+        )
+        bam_suffix="$(koopa::paste0 '.' "${bam_suffix_arr[@]}")"
+    fi
+    # Note that genome indexing to generate 'ucscHg38Genome.fa.fai' is currently
+    # failing due to root permission requirement.
+    # Otherwise, set permissions as current user for better output.
+    docker run \
+        -v "${bam_dir}:${mnt_bam_dir}:ro" \
+        -v "${output_dir}:${mnt_output_dir}:rw" \
+        acidgenomics/rnaeditingindexer \
+        RNAEditingIndex \
+            --genome "$genome" \
+            --keep_cmpileup \
+            --verbose \
+            -d "$mnt_bam_dir" \
+            -f "$bam_suffix" \
+            -l "${mnt_output_dir}/logs" \
+            -o "${mnt_output_dir}/cmpileups" \
+            -os "${mnt_output_dir}/summary"
+    return 0
+}
 
-# https://github.com/a2iEditing/RNAEditingIndexer/blob/master/Docs/
-#     Docker.README.md
-
-# This file is missing and currently causes issues on Docker:
-# /bin/AEI/RNAEditingIndexer/Resources/Genomes/HomoSapiens/ucscHg38Genome.fa.fai
-#
-# ucscHg38Genome.fa source information.
-# https://github.com/a2iEditing/RNAEditingIndexer/blob/master/make/initResources.sh
-#
-# HG38_FTP_URL="http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/"
-# HG38_FTP_GENOME_URL="http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/"
-#
-# https://github.com/a2iEditing/RNAEditingIndexer/search?q=index+file&unscoped_q=index+file
-# Genome must be indexed by BEDGenomeIndexer
-
-# Note that '--verbose' flag includes more output in summary CSV.
-
-bam_dir="bam"
-bam_suffix=".Aligned.sortedByCoord.out.bam"
-output_dir="rnaedit"
-genome="hg38"
-
-example=0
-
-while (("$#"))
-do
-    case "$1" in
-        --bam-dir=*)
-            bam_dir="${1#*=}"
-            shift 1
-            ;;
-        --bam-dir)
-            bam_dir="$2"
-            shift 2
-            ;;
-        --example)
-            example=1
-            shift 1
-            ;;
-        --genome=*)
-            genome="${1#*=}"
-            shift 1
-            ;;
-        --genome)
-            genome="$2"
-            shift 2
-            ;;
-        --output-dir=*)
-            output_dir="${1#*=}"
-            shift 1
-            ;;
-        --output-dir)
-            output_dir="$2"
-            shift 2
-            ;;
-        *)
-            koopa::invalid_arg "$1"
-            ;;
-    esac
-done
-
-# Ensure 'bam_dir' and 'output_dir' are absolute paths, otherwise
-# RNAEditingIndex can fail on relative paths.
-bam_dir="$(koopa::which_realpath "$bam_dir")"
-output_dir="$(koopa::which_realpath "$output_dir")"
-
-rm -frv "$output_dir"
-mkdir -pv "$output_dir"
-
-mnt_bam_dir="/mnt/bam"
-mnt_output_dir="/mnt/output"
-
-# Minimal example:
-if [[ "$example" -eq 1 ]]
-then
-    bam_dir="/bin/AEI/RNAEditingIndexer/TestResources/BAMs"
-    bam_suffix="_sampled_with_0.1.Aligned.sortedByCoord.out.bam.AluChr1Only.bam"
-fi
-
-# Note that genome indexing to generate 'ucscHg38Genome.fa.fai' is currently
-# failing due to root permission requirement.
-# Otherwise, set permissions as current user for better output.
-# > -u "$(id -u "${USER}"):$(id -g "${USER}")" \
-
-# --paired_end
-# --stranded
-
-docker run \
-    -v "${bam_dir}:${mnt_bam_dir}:ro" \
-    -v "${output_dir}:${mnt_output_dir}:rw" \
-    acidgenomics/rnaeditingindexer \
-    RNAEditingIndex \
-        --genome "$genome" \
-        --keep_cmpileup \
-        --verbose \
-        -d "$mnt_bam_dir" \
-        -f "$bam_suffix" \
-        -l "${mnt_output_dir}/logs" \
-        -o "${mnt_output_dir}/cmpileups" \
-        -os "${mnt_output_dir}/summary"
+koopa::run_rnaeditingindexer "$@"
