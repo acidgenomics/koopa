@@ -4,50 +4,51 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-# """
-# Cargo documentation:
-# https://doc.rust-lang.org/cargo/
-#
-# install-update now supported:
-# - https://stackoverflow.com/questions/34484361
-# - https://github.com/rust-lang/cargo/pull/6798
-# - https://github.com/rust-lang/cargo/pull/7560
-# """
+koopa::install_rust_packages() {
+    # """
+    # Install Rust packages.
+    # @note Updated 2020-07-10.
+    #
+    # Cargo documentation:
+    # https://doc.rust-lang.org/cargo/
+    #
+    # install-update now supported:
+    # - https://stackoverflow.com/questions/34484361
+    # - https://github.com/rust-lang/cargo/pull/6798
+    # - https://github.com/rust-lang/cargo/pull/7560
+    # """
+    local crate crates name_fancy prefix
+    koopa::assert_has_no_envs
+    koopa::activate_rust
+    koopa::exit_if_not_installed cargo rustc rustup
+    name_fancy='Rust cargo crates'
+    prefix="${CARGO_HOME:?}"
+    koopa::install_start "$name_fancy" "$prefix"
+    if [[ "$#" -eq 0 ]]
+    then
+        crates=(
+            bat
+            broot
+            du-dust
+            exa
+            fd-find
+            hyperfine
+            ripgrep
+            tokei
+            xsv
+        )
+    else
+        crates=("$@")
+    fi
+    koopa::dl 'Crates' "$(koopa::to_string "${crates[@]}")"
+    koopa::sys_set_permissions -ru "$prefix"
+    for crate in "${crates[@]}"
+    do
+        cargo install "$crate"
+    done
+    koopa::sys_set_permissions -r "$prefix"
+    koopa::install_success "$name_fancy"
+    return 0
+}
 
-koopa::assert_has_no_envs
-koopa::activate_rust
-koopa::exit_if_not_installed cargo rustc rustup
-
-name_fancy="Rust cargo crates"
-prefix="$CARGO_HOME"
-
-koopa::install_start "$name_fancy" "$prefix"
-
-if [[ "$#" -eq 0 ]]
-then
-    crates=(
-        bat
-        broot
-        du-dust
-        exa
-        fd-find
-        hyperfine
-        ripgrep
-        tokei
-        xsv
-    )
-else
-    crates=("$@")
-fi
-
-koopa::dl 'Crates' "$(koopa::to_string "${crates[@]}")"
-koopa::sys_set_permissions -ru "$prefix"
-
-for crate in "${crates[@]}"
-do
-    cargo install "$crate"
-done
-
-koopa::sys_set_permissions -r "$prefix"
-
-koopa::install_success "$name_fancy"
+koopa::install_rust_packages "$@"

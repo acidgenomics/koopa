@@ -4,62 +4,61 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-reinstall=0
+koopa::install_rust() {
+    local file name_fancy pos reinstall tmp_dir url
+    reinstall=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --reinstall)
+                reinstall=1
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    CARGO_HOME="$(koopa::rust_cargo_prefix)"
+    export CARGO_HOME
+    RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
+    export RUSTUP_HOME
+    if [[ "$reinstall" -eq 1 ]]
+    then
+        koopa::sys_rm "$CARGO_HOME" "$RUSTUP_HOME"
+    fi
+    koopa::exit_if_dir "$CARGO_HOME" "$RUSTUP_HOME"
+    name_fancy='Rust'
+    koopa::install_start "$name_fancy"
+    koopa::assert_has_no_args "$#"
+    koopa::assert_has_no_envs
+    koopa::assert_is_not_installed rustup-init
+    koopa::dl 'CARGO_HOME' "$CARGO_HOME"
+    koopa::dl 'RUSTUP_HOME' "$RUSTUP_HOME"
+    koopa::mkdir "$CARGO_HOME" "$RUSTUP_HOME"
+    tmp_dir="$(koopa::tmp_dir)"
+    (
+        url='https://sh.rustup.rs'
+        file='rustup.sh'
+        koopa::download "$url" "$file"
+        chmod +x file
+        ./rustup.sh --no-modify-path -v -y
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    koopa::rm "$tmp_dir"
+    koopa::sys_set_permissions -r "$CARGO_HOME" "$RUSTUP_HOME"
+    koopa::install_success "$name_fancy"
+    koopa::restart
+    return 0
+}
 
-pos=()
-while (("$#"))
-do
-    case "$1" in
-        --reinstall)
-            reinstall=1
-            shift 1
-            ;;
-        --)
-            shift 1
-            break
-            ;;
-        --*|-*)
-            koopa::invalid_arg "$1"
-            ;;
-        *)
-            pos+=("$1")
-            shift 1
-            ;;
-    esac
-done
-[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-
-CARGO_HOME="$(koopa::rust_cargo_prefix)"
-RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
-
-if [[ "$reinstall" -eq 1 ]]
-then
-    koopa::sys_rm "$CARGO_HOME" "$RUSTUP_HOME"
-fi
-
-koopa::exit_if_dir "$CARGO_HOME" "$RUSTUP_HOME"
-
-name_fancy="Rust"
-
-koopa::install_start "$name_fancy"
-
-koopa::assert_has_no_args "$#"
-koopa::assert_has_no_envs
-koopa::assert_is_not_installed rustup-init
-
-export CARGO_HOME
-export RUSTUP_HOME
-
-koopa::dl "CARGO_HOME" "$CARGO_HOME"
-koopa::dl "RUSTUP_HOME" "$RUSTUP_HOME"
-
-koopa::mkdir "$CARGO_HOME" "$RUSTUP_HOME"
-
-(
-    curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-koopa::sys_set_permissions -r "$CARGO_HOME" "$RUSTUP_HOME"
-
-koopa::install_success "$name_fancy"
-koopa::restart
+koopa::install_rust "$@"
