@@ -4,26 +4,28 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_args "$#"
+koopa::tx2gene_from_wormbase_fasta() {
+    local count fasta_file fasta_file_bn output_file output_file_bn
+    koopa::assert_has_args_le "$#" 2
+    koopa::assert_is_installed awk cut grep gunzip sed tr
+    fasta_file="${1:?}"
+    koopa::assert_is_file "$fasta_file"
+    output_file="${2:-tx2gene.csv}"
+    koopa::assert_is_matching_fixed "$fasta_file" '.mRNA_transcripts.fa.gz'
+    koopa::assert_is_not_file "$output_file"
+    fasta_file_bn="$(basename "$fasta_file")"
+    output_file_bn="$(basename "$output_file")"
+    koopa::h1 "Generating \"${output_file_bn}\" from \"${fasta_file_bn}\"."
+    gunzip -c "$fasta_file" \
+        | grep '>' \
+        | cut -d ' ' -f1,2 \
+        | awk '!a[$0]++' \
+        | tr -d '>' \
+        | sed -E 's/ [a-z]+=/,/g' \
+        > "$output_file"
+    count="$(koopa::line_count "$output_file")"
+    koopa::info "${count} transcripts detected."
+    return 0
+}
 
-fasta_file="$1"
-koopa::assert_is_file "$fasta_file"
-
-output_file="${2:-tx2gene.csv}"
-koopa::assert_is_matching_fixed "$fasta_file" ".mRNA_transcripts.fa.gz"
-koopa::assert_is_not_file "$output_file"
-
-koopa::h1 "Generating '$(basename "$output_file")' from \
-'$(basename "$fasta_file")'."
-
-gunzip -c "$fasta_file" \
-    | grep '>' \
-    | cut -d ' ' -f1,2 \
-    | awk '!a[$0]++' \
-    | tr -d '>' \
-    | sed -E 's/ [a-z]+=/,/g' \
-    > "$output_file"
-
-# Return the number of transcripts.
-count="$(koopa::line_count "$output_file")"
-koopa::h1 "${count} transcripts detected."
+koopa::tx2gene_from_wormbase_fasta "$@"

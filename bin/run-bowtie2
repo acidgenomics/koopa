@@ -84,8 +84,8 @@ koopa::run_bowtie2() {
     fastq_dir="$(realpath "$fastq_dir")"
     koopa::dl 'fastq dir' "$fastq_dir"
 
-    # Sample array from FASTQ files {{{1
-    # ==========================================================================
+    # Sample array from FASTQ files {{{2
+    # --------------------------------------------------------------------------
 
     # Create a per-sample array from the R1 FASTQ files.
     # Pipe GNU find into array.
@@ -105,8 +105,8 @@ koopa::run_bowtie2() {
     fi
     koopa::info "${#fastq_r1_files[@]} samples detected."
 
-    # Index {{{1
-    # ==========================================================================
+    # Index {{{2
+    # --------------------------------------------------------------------------
 
     # Generate the genome index on the fly, if necessary.
     if [[ -n "${index_dir:-}" ]]
@@ -120,8 +120,8 @@ koopa::run_bowtie2() {
     fi
     koopa::dl 'index' "$index_dir"
 
-    # Alignment {{{1
-    # ==========================================================================
+    # Alignment {{{2
+    # --------------------------------------------------------------------------
 
     # Loop across the per-sample array and align.
     for fastq_r1 in "${fastq_r1_files[@]}"
