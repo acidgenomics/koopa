@@ -4,12 +4,21 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-prefix="${1:?}"
 
-# > ls -1 "$prefix" | wc -l
+koopa::file_count() {
+    # """
+    # Return number of files.
+    # @note Updated 2020-07-11.
+    #
+    # Alternate approach:
+    # > ls -1 "$prefix" | wc -l
+    # """
+    local prefix x
+    koopa::assert_is_installed find wc
+    prefix="${1:?}"
+    x="$(find "$prefix" -mindepth 1 -type f -printf '.' | wc -c)"
+    koopa::print "$x"
+    return 0
+}
 
-find "$prefix" \
-    -type f \
-    -printf '.' \
-    | wc -c
-
+koopa::file_count "$@"
