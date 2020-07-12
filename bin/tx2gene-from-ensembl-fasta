@@ -6,7 +6,7 @@ source "${script_dir}/../shell/bash/include/header.sh"
 
 koopa::tx2gene_from_ensembl_fasta() {
     local count fasta_file fasta_file_bn output_file output_file_bn
-    koopa::assert_has_args "$#"
+    koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed awk cut grep gunzip sed tr
     fasta_file="${1:?}"
     koopa::assert_is_file "$fasta_file"
@@ -23,9 +23,8 @@ koopa::tx2gene_from_ensembl_fasta() {
         | tr -d '>' \
         | sed -E 's/ [a-z]+:/,/g' \
         > "$output_file"
-    # Return the number of transcripts.
     count="$(koopa::line_count "$output_file")"
-    koopa::h1 "${count} transcripts detected."
+    koopa::info "${count} transcripts detected."
     return 0
 }
 
