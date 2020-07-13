@@ -92,3 +92,42 @@ koopa::wget_recursive() {
     return 0
 }
 
+koopa::youtube_mp3() {
+    # """
+    # Download MP3 audio from YouTube, Soundcloud, Mixcloud, etc.
+    # @note Updated 2020-07-04.
+    # """
+    local url
+    koopa::assert_is_installed youtube-dl
+    for url in "$@"
+    do
+        youtube-dl --extract-audio --audio-format mp3 "$url"
+    done
+    return 0
+}
+
+koopa::youtube_thumbnail() {
+    # """
+    # Download a thumbnail image from YouTube.
+    # @note Updated 2020-07-04.
+    #
+    # File options:
+    # - hqdefault (smaller)
+    # - maxresdefault (larger)
+    #
+    # Not all videos will return max res thumbnail, so stick with hq instead.
+    # """
+    local id url
+    koopa::assert_has_args "$#"
+    for url in "$@"
+    do
+        id="$( \
+            koopa::print "$url" \
+                | grep -Eo 'v=[A-Za-z0-9_-]+' \
+                | cut -d '=' -f 2 \
+        )"
+        koopa::download "https://i.ytimg.com/vi/${id}/hqdefault.jpg" "${id}.jpg"
+    done
+    return 0
+}
+
