@@ -188,6 +188,16 @@ koopa::ftp_mirror() {
     return 0
 }
 
+koopa::sra_prefetch_parallel() {
+    koopa::assert_is_installed ascp find parallel prefetch
+    koopa::assert_is_file SRRAccList.txt
+    file="${1:-SraAccList.txt}"
+    jobs="$(koopa::cpu_count)"
+    find . \(-name '*.lock' -o -name '*.tmp'\) -delete
+    sort -u "$file" | parallel -j "$jobs" 'prefetch --verbose {}'
+    return 0
+}
+
 koopa::wget_recursive() {
     # """
     # Download files with wget recursively.

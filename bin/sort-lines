@@ -4,20 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::sort_lines() {
-    # """
-    # Sort lines.
-    # @note Updated 2020-07-10.
-    # """
-    local file
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed vim
-    koopa::assert_is_file "$@"
-    for file in "$@"
-    do
-        vim -c :sort -c :wq -E -s "$file"
-    done
-    return 0
-}
-
 koopa::sort_lines "$@"
