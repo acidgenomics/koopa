@@ -53,6 +53,99 @@ koopa::current_bioc_version() { # {{{1
     return 0
 }
 
+koopa::current_ensembl_version() { # {{{1
+    # """
+    # Current Ensembl version.
+    # @note Updated 2020-07-01.
+    # """
+    local version
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed curl
+    version="$( \
+        curl --silent "ftp://ftp.ensembl.org/pub/current_README" \
+        | sed -n 3p \
+        | cut -d ' ' -f 3 \
+    )"
+    koopa::print "$version"
+    return 0
+}
+
+koopa::current_flybase_version() { # {{{1
+    # """
+    # Current FlyBase version.
+    # @note Updated 2020-07-01.
+    # """
+    local dmel url x
+    url="ftp://ftp.flybase.net/releases"
+    dmel=0
+    while (("$#"))
+    do
+        case "$1" in
+            --dmel)
+                dmel=1
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ "$dmel" -eq 1 ]]
+    then
+        x="$( \
+            curl --list-only --silent "${url}/current/" \
+            | grep -E "^dmel_r[.0-9]+$" \
+            | head -n 1 \
+            | cut -d '_' -f 2 \
+        )"
+    else
+        x="$( \
+            curl --list-only --silent "${url}/" \
+            | grep -E "^FB[0-9]{4}_[0-9]{2}$" \
+            | sort \
+            | tail -n 1 \
+        )"
+    fi
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
+}
+
+koopa::current_gencode_version() { # {{{1
+    # """
+    # Current GENCODE version.
+    # @note Updated 2020-07-01.
+    # """
+    local base_url organism pattern short_name url x
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_installed curl
+    organism="${1:-Homo sapiens}"
+    case "$organism" in
+        'Homo sapiens')
+            short_name='human'
+            pattern="Release [0-9]+"
+            ;;
+        'Mus musculus')
+            short_name='mouse'
+            pattern="Release M[0-9]+"
+            ;;
+        *)
+            koopa::stop "Unsupported organism: '${organism}'."
+            ;;
+    esac
+    base_url="https://www.gencodegenes.org"
+    url="${base_url}/${short_name}/"
+    x="$( \
+        curl --silent "$url" \
+        | grep -Eo "$pattern" \
+        | head -n 1 \
+        | cut -d ' ' -f 2 \
+    )"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
+}
+
 koopa::gcc_version() { # {{{1
     # """
     # GCC version.
