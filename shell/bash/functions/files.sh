@@ -190,8 +190,8 @@ koopa::detab() { # {{{1
     do
         vim \
             -c 'set expandtab tabstop=4 shiftwidth=4' \
-            -c :%retab \
-            -c :wq -E -s "$file"
+            -c ':%retab' \
+            -c ':wq' -E -s "$file"
     done
     return 0
 }
@@ -215,6 +215,40 @@ koopa::ensure_newline_at_end_of_file() { # {{{1
     file="${1:?}"
     [[ -n "$(tail -c1 "$file")" ]] || return 0
     printf '\n' >>"$file"
+    return 0
+}
+
+koopa::entab() { # {{{1
+    # """
+    # Entab files.
+    # @note Updated 2020-07-01.
+    # """
+    local file
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed vim
+    for file in "$@"
+    do
+        vim \
+            -c 'set noexpandtab tabstop=4 shiftwidth=4' \
+            -c ':%retab!' \
+            -c ':wq' -E -s "$file"
+    done
+    return 0
+}
+
+koopa::file_count() { # {{{1
+    # """
+    # Return number of files.
+    # @note Updated 2020-07-11.
+    #
+    # Alternate approach:
+    # > ls -1 "$prefix" | wc -l
+    # """
+    local prefix x
+    koopa::assert_is_installed find wc
+    prefix="${1:?}"
+    x="$(find "$prefix" -mindepth 1 -type f -printf '.' | wc -c)"
+    koopa::print "$x"
     return 0
 }
 
