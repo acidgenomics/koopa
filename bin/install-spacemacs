@@ -4,32 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::install_spacemacs() {
-    # """
-    # Install Spacemacs.
-    # @note Updated 2020-07-10.
-    #
-    # Note that master branch is ancient and way behind current codebase.
-    # Switching to more recent code on develop branch.
-    # """
-    local emacs_prefix install_dir name
-    name='spacemacs'
-    emacs_prefix="$(koopa::emacs_prefix)"
-    install_dir="${emacs_prefix}-${name}"
-    koopa::exit_if_dir "$install_dir"
-    koopa::h1 "Installing ${name} at '${install_dir}."
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed emacs
-    (
-        repo="https://github.com/syl20bnr/${name}.git"
-        git clone "$repo" "$install_dir"
-        koopa::cd "$install_dir"
-        git checkout -b develop origin/develop
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::link_emacs "$name"
-    koopa::update_spacemacs
-    koopa::install_success "$name"
-    return 0
-}
-
 koopa::install_spacemacs "$@"
