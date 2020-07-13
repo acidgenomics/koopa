@@ -60,6 +60,18 @@ koopa::pip_install() { # {{{1
     return 0
 }
 
+koopa::python() { # {{{1
+    # """
+    # Python executable path.
+    # @note Updated 2020-07-13.
+    # """
+    local python
+    python='python3'
+    koopa::is_installed "$python" || return 1
+    koopa::print "$python"
+    return 0
+}
+
 koopa::python_remove_pycache() { # {{{1
     # """
     # Remove Python '__pycache__/' from site packages.

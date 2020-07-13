@@ -7,21 +7,21 @@ source "${script_dir}/../shell/bash/include/header.sh"
 koopa::wget_recursive() {
     # """
     # Download files with wget recursively.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-13.
     #
     # Note that we need to escape the wildcards in the password.
     # For direct input, can just use single quotes to escape.
     # See also: https://unix.stackexchange.com/questions/379181
     # """
-    local log_file password timestamp url user
+    local datetime log_file password url user
     koopa::assert_has_args_eq "$#" 3
     koopa::assert_is_installed wget
     url="${1:?}"
     user="${2:?}"
     password="${3:?}"
     password="${password@Q}"
-    timestamp="$(date "+%Y%m%d-%H%M%S")"
-    log_file="wget-${timestamp}.log"
+    datetime="$(koopa::datetime)"
+    log_file="wget-${datetime}.log"
     wget \
         --continue \
         --debug \
