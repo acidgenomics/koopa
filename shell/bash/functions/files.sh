@@ -576,6 +576,22 @@ koopa::remove_empty_dirs() { # {{{1
     return 0
 }
 
+koopa::reset_permissions() {
+    local dir group user
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    user="$(koopa::user)"
+    group="$(koopa::group)"
+    chown -R "${user}:${group}" "$dir"
+    find "$dir" -type d -print0 \
+        | xargs -0 -I {} chmod 'u=rwx,g=rwx,o=rx' {}
+    find "$dir" -type f -print0 \
+        | xargs -0 -I {} chmod 'u=rw,g=rw,o=r' {}
+    find "$dir" -name '*.sh' -type f -print0 \
+        | xargs -0 -I {} chmod 'u=rwx,g=rwx,o=rx' {}
+    return 0
+}
+
 koopa::stat_access_human() { # {{{1
     # """
     # Get the current access permissions in human readable form.
