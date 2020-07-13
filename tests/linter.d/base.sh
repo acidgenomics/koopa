@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
-test() {
+test() { # {{{1
     # """
     # Base lint checks.
     # @note Updated 2020-07-08.
@@ -16,7 +16,7 @@ test() {
     return 0
 }
 
-test_illegal_strings() {
+test_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     array=(
@@ -34,7 +34,7 @@ test_illegal_strings() {
     return 0
 }
 
-test_line_width() {
+test_line_width() { # {{{1
     koopa::assert_has_args "$#"
     koopa::test_grep \
         -i 'line-width' \

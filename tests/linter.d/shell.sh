@@ -4,7 +4,7 @@
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
-test() {
+test() { # {{{1
     # """
     # Shell script checks.
     # Updated 2020-07-08.
@@ -17,7 +17,7 @@ test() {
     return 0
 }
 
-test_all() {
+test_all() { # {{{1
     local files
     koopa::assert_has_no_args "$#"
     readarray -t files <<< \
@@ -28,7 +28,7 @@ test_all() {
     return 0
 }
 
-test_all_coreutils() {
+test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
@@ -49,13 +49,14 @@ test_all_coreutils() {
     return 0
 }
 
-test_all_illegal_strings() {
+test_all_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
     array=(
         ' path='    # zsh will freak out
         ' || exit'  # wrap in function and return instead
+        '() {$'     # functions should include vim marker
         '; do'      # newline instead
         '; then'    # newline instead
         '<  <'      # use '<<<' instead
@@ -72,7 +73,7 @@ test_all_illegal_strings() {
     return 0
 }
 
-test_all_quoting() {
+test_all_quoting() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
@@ -91,7 +92,7 @@ test_all_quoting() {
     return 0
 }
 
-test_bash() {
+test_bash() { # {{{1
     # """
     # Bash shell checks.
     # @note Updated 2020-07-08.
@@ -104,7 +105,7 @@ test_bash() {
     return 0
 }
 
-test_bash_illegal_strings() {
+test_bash_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     array=(
@@ -123,7 +124,7 @@ test_bash_illegal_strings() {
     return 0
 }
 
-test_posix() {
+test_posix() { # {{{1
     # """
     # POSIX shell checks.
     # @note Updated 2020-07-08.
@@ -136,7 +137,7 @@ test_posix() {
     return 0
 }
 
-test_posix_illegal_strings() {
+test_posix_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     array=(
@@ -156,7 +157,7 @@ test_posix_illegal_strings() {
     return 0
 }
 
-test_zsh() {
+test_zsh() { # {{{1
     # """
     # Zsh shell checks.
     # @note Updated 2020-07-08.
@@ -169,7 +170,7 @@ test_zsh() {
     return 0
 }
 
-test_zsh_illegal_strings() {
+test_zsh_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     array=(
@@ -188,7 +189,7 @@ test_zsh_illegal_strings() {
     return 0
 }
 
-test_shellcheck() {
+test_shellcheck() { # {{{1
     # """
     # Run ShellCheck.
     # @note Updated 2020-07-08.

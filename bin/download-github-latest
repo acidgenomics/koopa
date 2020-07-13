@@ -4,25 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::download_github_latest() {
-    # """
-    # Download GitHub latest release.
-    # @note Updated 2020-07-11.
-    # """
-    local repo tag tarball_url
-    koopa::assert_has_args "$#"
-    for repo in "$@"
-    do
-        tarball_url="$( \
-            curl -s "https://api.github.com/repos/${repo}/releases/latest" \
-            | grep 'tarball_url' \
-            | cut -d ':' -f 2,3 \
-            | tr -d ' ,"' \
-        )"
-        tag="$(basename "$tarball_url")"
-        koopa::download "$tarball_url" "${tag}.tar.gz"
-    done
-    return 0
-}
-
 koopa::download_github_latest "$@"
