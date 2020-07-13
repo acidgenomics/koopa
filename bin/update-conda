@@ -4,47 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::update_conda() {
-    # """
-    # Update Conda.
-    # @note Updated 2020-07-11.
-    # """
-    local force
-    force=0
-    while (("$#"))
-    do
-        case "$1" in
-            --force)
-                force=1
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    prefix="$(koopa::conda_prefix)"
-    koopa::assert_is_dir "$prefix"
-    if [[ "$force" -eq 0 ]]
-    then
-        if koopa::is_anaconda
-        then
-            koopa::note 'Update not supported for Anaconda.'
-            return 0
-        fi
-        koopa::exit_if_current_version conda
-    fi
-    koopa::h1 "Updating Conda at '${prefix}'."
-    conda="${prefix}/condabin/conda"
-    koopa::assert_is_file "$conda"
-    (
-        "$conda" update --yes --name='base' --channel='defaults' conda
-        "$conda" update --yes --name='base' --channel='defaults' --all
-        # > "$conda" clean --yes --tarballs
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::remove_broken_symlinks "$prefix"
-    koopa::sys_set_permissions -r "$prefix"
-    return 0
-}
-
 koopa::update_conda "$@"
