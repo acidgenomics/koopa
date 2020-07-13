@@ -10,7 +10,8 @@ koopa::install_python_packages() {
     # @note Updated 2020-07-10.
     # These are used internally by koopa.
     # """
-    local install_flags name_fancy pkgs pos
+    local install_flags name_fancy pkgs pos python
+    python="$(koopa::python)"
     reinstall=0
     pos=()
     while (("$#"))
@@ -35,7 +36,7 @@ koopa::install_python_packages() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_envs
-    koopa::assert_is_installed python3
+    koopa::assert_is_installed "$python"
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
@@ -59,7 +60,7 @@ koopa::install_python_packages() {
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
     koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
-    koopa::is_cellar python3 && koopa::link_cellar python
+    koopa::is_cellar "$python" && koopa::link_cellar python
     koopa::install_success "$name_fancy"
     return 0
 }
