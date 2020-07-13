@@ -383,7 +383,7 @@ local({
         "continue" = " ",
         "max.print" = 1000L,
         "menu.graphics" = FALSE,
-        "prompt" = "\nR ❯ ",
+        "prompt" = "R ❯ ",
         "show.signif.stars" = FALSE,
         "verbose" = FALSE,
         "width" = 80L
