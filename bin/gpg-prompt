@@ -5,16 +5,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 source "${script_dir}/../shell/bash/include/header.sh"
 koopa::assert_has_no_args "$#"
 
-koopa::gpg_prompt() {
-    # """
-    # Force GPG to prompt for password.
-    # @note Updated 2020-07-10.
-    # Useful for building Docker images, etc. inside tmux.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed gpg
-    printf '' | gpg -s
-    return 0
-}
-
 koopa::gpg_prompt "$@"
