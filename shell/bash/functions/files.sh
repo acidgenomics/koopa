@@ -141,6 +141,61 @@ koopa::basename_sans_ext2() { # {{{1
     return 0
 }
 
+koopa::delete_file_system_cruft() { # {{{1
+    # """
+    # Delete file system cruft.
+    # @note Updated 2020-07-01.
+    # """
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    find "$dir" \
+        -type f \
+        \( \
+            -name ".DS_Store" -o \
+            -name "._*" -o \
+            -name "Thumbs.db*" \
+        \) \
+        -delete \
+        -print
+    return 0
+}
+
+koopa::delete_named_subdirs() { # {{{1
+    # """
+    # Delete named subdirectories.
+    # @note Updated 2020-07-08.
+    # """
+    local dir subdir_name
+    koopa::assert_has_args_eq "$#" 2
+    koopa::assert_is_installed find
+    dir="${1:?}"
+    subdir_name="${2:?}"
+    find "$dir" \
+        -type d \
+        -name "$subdir_name" \
+        -print0 \
+        | xargs -0 -I {} rm -frv {}
+    return 0
+}
+
+koopa::detab() { # {{{1
+    # """
+    # Detab files.
+    # @note Updated 2020-07-01.
+    # """
+    local file
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed vim
+    for file in "$@"
+    do
+        vim \
+            -c 'set expandtab tabstop=4 shiftwidth=4' \
+            -c :%retab \
+            -c :wq -E -s "$file"
+    done
+    return 0
+}
+
 koopa::ensure_newline_at_end_of_file() { # {{{1
     # """
     # Ensure output CSV contains trailing line break.
