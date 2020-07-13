@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME REFERENCE FUNCTIONS HERE WHEN POSSIBLE.
 koopa::update() { # {{{1
     # """
     # Update koopa installation.
@@ -180,3 +181,192 @@ koopa::update() { # {{{1
     [[ "$system" -eq 1 ]] && koopa check-system
     return 0
 }
+
+# shellcheck disable=SC2120
+koopa::update_conda() { # {{{1
+    # """
+    # Update Conda.
+    # @note Updated 2020-07-11.
+    # """
+    local force
+    force=0
+    while (("$#"))
+    do
+        case "$1" in
+            --force)
+                force=1
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_has_no_args "$#"
+    prefix="$(koopa::conda_prefix)"
+    koopa::assert_is_dir "$prefix"
+    if [[ "$force" -eq 0 ]]
+    then
+        if koopa::is_anaconda
+        then
+            koopa::note 'Update not supported for Anaconda.'
+            return 0
+        fi
+        koopa::exit_if_current_version conda
+    fi
+    koopa::h1 "Updating Conda at '${prefix}'."
+    conda="${prefix}/condabin/conda"
+    koopa::assert_is_file "$conda"
+    (
+        "$conda" update --yes --name='base' --channel='defaults' conda
+        "$conda" update --yes --name='base' --channel='defaults' --all
+        # > "$conda" clean --yes --tarballs
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    koopa::remove_broken_symlinks "$prefix"
+    koopa::sys_set_permissions -r "$prefix"
+    return 0
+}
+
+koopa::update_conda_envs() { # {{{1
+    local conda conda_prefix envs prefix
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed conda
+    conda_prefix="$(koopa::conda_prefix)"
+    koopa::assert_is_dir "$conda_prefix"
+    conda="${conda_prefix}/condabin/conda"
+    koopa::assert_is_file conda
+    readarray -t envs <<< "$( \
+        find "${conda_prefix}/envs" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type d \
+            -print \
+            | sort \
+    )"
+    if ! koopa::is_array_non_empty "${envs[@]}"
+    then
+        koopa::note 'Failed to detect any conda environments.'
+        return 0
+    fi
+    # shellcheck disable=SC2119
+    koopa::update_conda
+    koopa::h1 "Updating ${#envs[@]} environments at \"${conda_prefix}\"."
+    for prefix in "${envs[@]}"
+    do
+        koopa::h2 "Updating \"${prefix}\"."
+        "$conda" update -y --prefix="$prefix" --all
+    done
+    # > "$conda" clean --yes --tarballs
+    koopa::sys_set_permissions -r "$conda_prefix"
+    return 0
+}
+
+koopa::update_perlbrew() { # {{{1
+    koopa::assert_has_no_args "$#"
+    koopa::exit_if_not_installed perlbrew
+    koopa::assert_has_no_envs
+    koopa::h1 'Updating Perlbrew.'
+    perlbrew self-upgrade
+    return 0
+}
+
+koopa::update_pyenv() { # {{{1
+    koopa::assert_has_no_args "$#"
+    koopa::exit_if_not_installed pyenv
+    koopa::assert_has_no_envs
+    koopa::h1 'Updating pyenv.'
+    (
+        koopa::cd "$(pyenv root)"
+        git pull
+    )
+    return 0
+}
+
+koopa::update_python_packages() { # {{{1
+    # """
+    # Update all pip packages.
+    # @note Updated 2020-07-13.
+    # @seealso
+    # - https://github.com/pypa/pip/issues/59
+    # - https://stackoverflow.com/questions/2720014
+    # """
+    local name_fancy pkgs prefix python x
+    koopa::assert_has_no_args "$#"
+    koopa::assert_has_no_envs
+    koopa::exit_if_not_installed "$python"
+    name_fancy='Python packages'
+    koopa::install_start "$name_fancy"
+    x="$("$python" -m pip list --outdated --format='freeze')"
+    x="$(koopa::print "$x" | grep -v '^\-e')"
+    if [[ -z "$x" ]]
+    then
+        koopa::success 'All Python packages are current.'
+        return 0
+    fi
+    prefix="$(koopa::python_site_packages_prefix)"
+    readarray -t pkgs <<< "$(koopa::print "$x" | cut -d '=' -f 1)"
+    koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
+    koopa::dl 'Prefix' "$prefix"
+    "$python" -m pip install --no-warn-script-location --upgrade "${pkgs[@]}"
+    koopa::is_cellar "$python" && koopa::link_cellar python
+    koopa::install_success "$name_fancy"
+    return 0
+}
+
+koopa::update_rust() { # {{{1
+    local force
+    koopa::assert_has_no_envs
+    force=0
+    while (("$#"))
+    do
+        case "$1" in
+            --force)
+                force=1
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_has_no_args "$#"
+    [[ "$force" -eq 0 ]] && koopa::exit_if_current_version rust
+    koopa::h1 'Updating Rust via rustup.'
+    koopa::exit_if_not_installed rustup
+    export RUST_BACKTRACE='full'
+    # rustup v1.21.0 fix.
+    # https://github.com/rust-lang/rustup/issues/2166
+    mkdir -pv "${RUSTUP_HOME}/downloads"
+    # rustup v1.21.1 fix (2020-01-31).
+    rm -f "${CARGO_HOME}/bin/"{'cargo-fmt','rustfmt'}
+    # > rustup update stable
+    rustup update
+    return 0
+}
+
+koopa::update_venv() {
+    # """
+    # Update Python virtual environment.
+    # @note Updated 2020-07-13.
+    # """
+    local array lines python
+    koopa::assert_has_no_args "$#"
+    python="$(koopa::python)"
+    koopa::assert_is_installed "$python"
+    if ! koopa::is_venv_active
+    then
+        koopa::note 'No active Python venv detected.'
+        return 0
+    fi
+    koopa::h1 'Updating Python venv.'
+    "$python" -m pip install --upgrade pip
+    lines="$("$python" -m pip list --outdated --format='freeze')"
+    readarray -t array <<< "$lines"
+    koopa::is_array_non_empty "${array[@]}" || exit 0
+    koopa::h1 "${#array[@]} outdated packages detected."
+    koopa::print "$lines" \
+        | cut -d '=' -f 1 \
+        | xargs -n1 "$python" -m pip install --upgrade
+    return 0
+}
+
