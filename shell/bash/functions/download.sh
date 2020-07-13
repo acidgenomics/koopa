@@ -62,6 +62,84 @@ koopa::download_cran_latest() {
     return 0
 }
 
+koopa::download_github_latest() {
+    # """
+    # Download GitHub latest release.
+    # @note Updated 2020-07-11.
+    # """
+    local repo tag tarball_url
+    koopa::assert_has_args "$#"
+    for repo in "$@"
+    do
+        tarball_url="$( \
+            curl -s "https://api.github.com/repos/${repo}/releases/latest" \
+            | grep 'tarball_url' \
+            | cut -d ':' -f 2,3 \
+            | tr -d ' ,"' \
+        )"
+        tag="$(basename "$tarball_url")"
+        koopa::download "$tarball_url" "${tag}.tar.gz"
+    done
+    return 0
+}
+
+koopa::download_refdata_scsig() {
+    local base_url prefix version
+    koopa::assert_has_no_args "$#"
+    version='1.0'
+    prefix="$(koopa::refdata_prefix)/scsig/${version}"
+    base_url='http://software.broadinstitute.org/gsea/msigdb/supplemental'
+    koopa::exit_if_dir "$prefix"
+    koopa::h1 "Downloading MSigDB SCSig ${version}."
+    koopa::mkdir "$prefix"
+    (
+        koopa::cd "$prefix"
+        koopa::download "${base_url}/scsig.all.v${version}.symbols.gmt"
+        koopa::download "${base_url}/scsig.all.v${version}.entrez.gmt"
+        koopa::download "${base_url}/scsig.v${version}.metadata.xls"
+        koopa::download "${base_url}/scsig.v${version}.metadata.txt"
+    )
+    koopa::sys_set_permissions -r "$prefix"
+    koopa::success 'Download of SCSig was successful.'
+    return 0
+}
+
+koopa::download_sra_accession_list() {
+    # """
+    # Download SRA accession list.
+    # @note Updated 2020-07-02.
+    # """
+    local file id
+    koopa::assert_has_args_le "$#" 2
+    koopa::activate_conda_env entrez-direct
+    koopa::assert_is_installed esearch efetch
+    id="${1:?}"
+    file="${2:-SraAccList.txt}"
+    koopa::h1 "Downloading SRA '${id}' to '${file}'."
+    esearch -db sra -q "$id" \
+        | efetch -format runinfo \
+        | sed 1d \
+        | cut -d ',' -f 1 \
+        > "$file"
+    return 0
+}
+
+koopa::download_sra_run_info_table() {
+    # """
+    # Download SRA run info table.
+    # @note Updated 2020-07-02.
+    # """
+    koopa::activate_conda_env entrez-direct
+    koopa::assert_is_installed esearch efetch
+    id="${1:?}"
+    file="${2:-SraRunTable.txt}"
+    koopa::h1 "Downloading SRA '${id}' to '${file}'."
+    esearch -db sra -q "$id" \
+        | efetch -format runinfo \
+        > "$file"
+    return 0
+}
+
 koopa::wget_recursive() {
     # """
     # Download files with wget recursively.

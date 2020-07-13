@@ -146,6 +146,38 @@ koopa::current_gencode_version() { # {{{1
     return 0
 }
 
+koopa::current_refseq_version() { # {{{1
+    # """
+    # Current RefSeq version.
+    # @note Updated 2020-07-01.
+    # """
+    local url version
+    koopa::assert_has_no_args "$#"
+    url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
+    version="$(curl --silent "$url")"
+    [[ -n "$version" ]] || return 1
+    koopa::print "$version"
+    return 0
+}
+
+koopa::current_wormbase_version() { # {{{1
+    # """
+    # Current WormBase version.
+    # @note Updated 2020-07-01.
+    # """
+    local url version
+    koopa::assert_has_no_args "$#"
+    url="ftp://ftp.wormbase.org/pub/wormbase/\
+releases/current-production-release"
+    version="$( \
+        curl --list-only --silent "${url}/" | \
+        grep -Eo "letter.WS[0-9]+" | \
+        cut -d '.' -f 2 \
+    )"
+    koopa::print "$version"
+    return 0
+}
+
 koopa::gcc_version() { # {{{1
     # """
     # GCC version.

@@ -4,21 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::fastq_dump_from_sra_file_list() {
-    local filelist id
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed fastq-dump
-    filelist="${1:-SRR_Acc_List.txt}"
-    koopa::assert_is_file "$filelist"
-    while read -r id
-    do
-        if [[ ! -f "${id}.fastq.gz" ]] && [[ ! -f "${id}_1.fastq.gz" ]]
-        then
-            koopa::h1 "SRA Accession ID: \"${id}\"."
-            fastq-dump --gzip --split-files "${id}"
-        fi
-    done < "$filelist"
-    return 0
-}
-
 koopa::fastq_dump_from_sra_file_list "$@"
