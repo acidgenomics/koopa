@@ -3,14 +3,5 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
-koopa::assert_has_args "$#"
-
-koopa::trash() {
-    local trash_dir
-    trash_dir="${HOME}/.trash/"
-    koopa::mkdir "$trash_dir"
-    koopa::mv -t "$trash_dir" "$@"
-    return 0
-}
 
 koopa::trash "$@"
