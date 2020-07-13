@@ -4,26 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::install_doom_emacs() {
-    local doom emacs_prefix install_dir name repo
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed git tee
-    name='doom'
-    emacs_prefix="$(koopa::emacs_prefix)"
-    install_dir="${emacs_prefix}-${name}"
-    koopa::exit_if_dir "$install_dir"
-    koopa::install_start "$name" "$install_dir"
-    (
-        repo='https://github.com/hlissner/doom-emacs'
-        git clone "$repo" "$install_dir"
-        doom="${install_dir}/bin/doom"
-        "$doom" quickstart
-        "$doom" refresh
-        "$doom" doctor
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::link_emacs "$name"
-    koopa::install_success "$name"
-    return 0
-}
-
 koopa::install_doom_emacs "$@"
