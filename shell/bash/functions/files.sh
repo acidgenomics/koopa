@@ -673,3 +673,13 @@ koopa::stat_user() { # {{{1
     koopa::print "$x"
     return 0
 }
+
+koopa::trash() {
+    local trash_dir
+    koopa::assert_has_args "$#"
+    trash_dir="${HOME}/.trash/"
+    koopa::mkdir "$trash_dir"
+    koopa::mv -t "$trash_dir" "$@"
+    return 0
+}
+
