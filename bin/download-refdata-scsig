@@ -4,25 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::download_refdata_scsig() {
-    local base_url prefix version
-    koopa::assert_has_no_args "$#"
-    version='1.0'
-    prefix="$(koopa::refdata_prefix)/scsig/${version}"
-    base_url='http://software.broadinstitute.org/gsea/msigdb/supplemental'
-    koopa::exit_if_dir "$prefix"
-    koopa::h1 "Downloading MSigDB SCSig ${version}."
-    koopa::mkdir "$prefix"
-    (
-        koopa::cd "$prefix"
-        koopa::download "${base_url}/scsig.all.v${version}.symbols.gmt"
-        koopa::download "${base_url}/scsig.all.v${version}.entrez.gmt"
-        koopa::download "${base_url}/scsig.v${version}.metadata.xls"
-        koopa::download "${base_url}/scsig.v${version}.metadata.txt"
-    )
-    koopa::sys_set_permissions -r "$prefix"
-    koopa::success 'Download of SCSig was successful.'
-    return 0
-}
-
 koopa::download_refdata_scsig "$@"
