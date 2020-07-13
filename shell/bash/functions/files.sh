@@ -178,24 +178,6 @@ koopa::delete_named_subdirs() { # {{{1
     return 0
 }
 
-koopa::detab() { # {{{1
-    # """
-    # Detab files.
-    # @note Updated 2020-07-01.
-    # """
-    local file
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed vim
-    for file in "$@"
-    do
-        vim \
-            -c 'set expandtab tabstop=4 shiftwidth=4' \
-            -c ':%retab' \
-            -c ':wq' -E -s "$file"
-    done
-    return 0
-}
-
 koopa::ensure_newline_at_end_of_file() { # {{{1
     # """
     # Ensure output CSV contains trailing line break.
@@ -215,24 +197,6 @@ koopa::ensure_newline_at_end_of_file() { # {{{1
     file="${1:?}"
     [[ -n "$(tail -c1 "$file")" ]] || return 0
     printf '\n' >>"$file"
-    return 0
-}
-
-koopa::entab() { # {{{1
-    # """
-    # Entab files.
-    # @note Updated 2020-07-01.
-    # """
-    local file
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed vim
-    for file in "$@"
-    do
-        vim \
-            -c 'set noexpandtab tabstop=4 shiftwidth=4' \
-            -c ':%retab!' \
-            -c ':wq' -E -s "$file"
-    done
     return 0
 }
 
