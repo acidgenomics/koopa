@@ -140,6 +140,54 @@ koopa::download_sra_run_info_table() {
     return 0
 }
 
+koopa::ftp_mirror() {
+    local dir host user
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed wget
+    dir=
+    while (("$#"))
+    do
+        case "$1" in
+            --dir=*)
+                dir="${1#*=}"
+                shift 1
+                ;;
+            --dir)
+                dir="$2"
+                shift 2
+                ;;
+            --host=*)
+                host="${1#*=}"
+                shift 1
+                ;;
+            --host)
+                host="$2"
+                shift 2
+                ;;
+            --user=*)
+                user="${1#*=}"
+                shift 1
+                ;;
+            --user)
+                user="$2"
+                shift 2
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_set host user
+    if [[ -n "$dir" ]]
+    then
+        dir="${host}/${dir}"
+    else
+        dir="${host}"
+    fi
+    wget --ask-password --mirror "ftp://${user}@${dir}/"*
+    return 0
+}
+
 koopa::wget_recursive() {
     # """
     # Download files with wget recursively.
