@@ -389,7 +389,7 @@ local({
     )
 
     if (!isTRUE(.rprofile[["rstudio"]])) {
-        options("prompt" = "R ❯ ")
+        options("prompt" = "> ")
     }
 
     ## Turn on auto-completion of installed package names.
@@ -511,28 +511,26 @@ local({
     ## Session info {{{2
     ## -------------------------------------------------------------------------
 
-    ## > if (isTRUE(interactive())) {
-    ## >     local({
-    ## >         pathString <- paste0("  %.", getOption("width") - 2L, "s")
-    ## >         msg <- sprintf(
-    ## >             fmt = paste(
-    ## >                 "",
-    ## >                 "%s",
-    ## >                 "Home:", pathString,
-    ## >                 "Package Library:", pathString,
-    ## >                 "Working Directory:", pathString,
-    ## >                 "",
-    ## >                 "",
-    ## >                 sep = "\n"
-    ## >             ),
-    ## >             R.version[["version.string"]],
-    ## >             normalizePath(R.home(), mustWork = TRUE),
-    ## >             normalizePath(.libPaths()[[1L]], mustWork = TRUE),
-    ## >             normalizePath(getwd(), mustWork = TRUE)
-    ## >         )
-    ## >         cat(msg)
-    ## >     })
-    ## > }
+    if (isTRUE(interactive()) && !isTRUE(.rprofile[["rstudio"]])) {
+        local({
+            pathString <- paste0("  %.", getOption("width") - 2L, "s")
+            msg <- sprintf(
+                fmt = paste(
+                    "%s",
+                    "Home:", pathString,
+                    "Package Library:", pathString,
+                    "Working Directory:", pathString,
+                    "",
+                    sep = "\n"
+                ),
+                R.version[["version.string"]],
+                normalizePath(R.home(), mustWork = TRUE),
+                normalizePath(.libPaths()[[1L]], mustWork = TRUE),
+                normalizePath(getwd(), mustWork = TRUE)
+            )
+            cat(msg)
+        })
+    }
 
     rm(isInstalled)
 }
