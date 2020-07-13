@@ -62,3 +62,33 @@ koopa::download_cran_latest() {
     return 0
 }
 
+koopa::wget_recursive() {
+    # """
+    # Download files with wget recursively.
+    # @note Updated 2020-07-13.
+    #
+    # Note that we need to escape the wildcards in the password.
+    # For direct input, can just use single quotes to escape.
+    # See also: https://unix.stackexchange.com/questions/379181
+    # """
+    local datetime log_file password url user
+    koopa::assert_has_args_eq "$#" 3
+    koopa::assert_is_installed wget
+    url="${1:?}"
+    user="${2:?}"
+    password="${3:?}"
+    password="${password@Q}"
+    datetime="$(koopa::datetime)"
+    log_file="wget-${datetime}.log"
+    wget \
+        --continue \
+        --debug \
+        --no-parent \
+        --output-file="$log_file" \
+        --password="$password" \
+        --recursive \
+        --user="$user" \
+        "$url"/*
+    return 0
+}
+
