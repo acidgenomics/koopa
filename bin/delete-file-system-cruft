@@ -4,23 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::delete_file_system_cruft() { # {{{1
-    # """
-    # Delete file system cruft.
-    # @note Updated 2020-07-01.
-    # """
-    koopa::assert_has_args_le "$#" 1
-    dir="${1:-.}"
-    find "$dir" \
-        -type f \
-        \( \
-            -name ".DS_Store" -o \
-            -name "._*" -o \
-            -name "Thumbs.db*" \
-        \) \
-        -delete \
-        -print
-    return 0
-}
-
 koopa::delete_file_system_cruft "$@"
