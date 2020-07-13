@@ -383,11 +383,14 @@ local({
         "continue" = " ",
         "max.print" = 1000L,
         "menu.graphics" = FALSE,
-        "prompt" = "R ❯ ",
         "show.signif.stars" = FALSE,
         "verbose" = FALSE,
         "width" = 80L
     )
+
+    if (!isTRUE(.rprofile[["rstudio"]])) {
+        options("prompt" = "R ❯ ")
+    }
 
     ## Turn on auto-completion of installed package names.
     if (isTRUE(interactive())) {

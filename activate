@@ -75,6 +75,7 @@ _koopa_activate() {
         _koopa_activate_pyenv
         _koopa_activate_conda
         _koopa_activate_venv
+        _koopa_activate_python_startup
         _koopa_activate_autojump
         _koopa_activate_broot
         _koopa_activate_fzf
