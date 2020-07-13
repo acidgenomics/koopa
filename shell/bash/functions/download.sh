@@ -43,3 +43,22 @@ koopa::download() { # {{{1
         "$url"
     return 0
 }
+
+koopa::download_cran_latest() {
+    # """
+    # Download CRAN latest.
+    # @note Updated 2020-07-11.
+    # """
+    local name pattern url
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed curl grep head
+    for name in "$@"
+    do
+        url="https://cran.r-project.org/web/packages/${name}/"
+        pattern="${name}_[.0-9]+.tar.gz"
+        file="$(curl --silent "$url" | grep -Eo "$pattern" | head -n 1)"
+        koopa::download "https://cran.r-project.org/src/contrib/${file}"
+    done
+    return 0
+}
+
