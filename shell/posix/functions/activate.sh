@@ -781,6 +781,21 @@ _koopa_activate_pyenv() { # {{{1
     return 0
 }
 
+_koopa_activate_python_startup() { # {{{1
+    # """
+    # Activate Python startup configuration.
+    # @note Updated 2020-07-13.
+    # @seealso
+    # - https://stackoverflow.com/questions/33683744/
+    # """
+    # shellcheck disable=SC2039
+    local file
+    file="${HOME}/.pyrc"
+    [ -f "$file" ] || return 0
+    export PYTHONSTARTUP="$file"
+    return 0
+}
+
 _koopa_activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
