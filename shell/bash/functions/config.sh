@@ -321,6 +321,39 @@ koopa::install_mike() { # {{{1
     return 0
 }
 
+koopa::ip_address() {
+    # """
+    # IP address.
+    # @note Updated 2020-07-14.
+    # """
+    type='public'
+    while (("$#"))
+    do
+        case "$1" in
+            --local)
+                type='local'
+                shift 1
+                ;;
+            --public)
+                type='public'
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    case "$type" in
+        local)
+            koopa::local_ip_address
+            ;;
+        public)
+            koopa::public_ip_address
+            ;;
+    esac
+    return 0
+}
+
 koopa::java_update_alternatives() {
     # """
     # Update Java alternatives.
@@ -492,6 +525,17 @@ koopa::link_dotfile() { # {{{1
     [[ "$symlink_dn" != "${HOME:?}" ]] && koopa::mkdir "$symlink_dn"
     koopa::ln "$source_path" "$symlink_path"
     return 0
+}
+
+koopa::list_dotfiles() {
+    # """
+    # List dotfiles.
+    # @note Updated 2020-07-10.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::find_dotfiles l 'Symlinks'
+    koopa::find_dotfiles f 'Files'
+    koopa::find_dotfiles d 'Directories'
 }
 
 koopa::remove_user_from_group() { # {{{1

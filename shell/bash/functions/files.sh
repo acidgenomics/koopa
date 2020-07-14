@@ -503,6 +503,15 @@ koopa::line_count() { # {{{1
     return 0
 }
 
+koopa::md5sum_check_to_new_md5_file() {
+    local datetime log_file
+    koopa::assert_has_args "$#"
+    datetime="$(koopa::datetime)"
+    log_file="md5sum-${datetime}.md5"
+    md5sum "$@" 2>&1 | tee "$log_file"
+    return 0
+}
+
 koopa::realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
