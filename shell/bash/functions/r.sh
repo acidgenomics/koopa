@@ -19,6 +19,12 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
+koopa::kill_r() {
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed pkill
+    pkill rsession
+}
+
 koopa::link_r_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
