@@ -64,8 +64,8 @@ koopa::conda_create_bioinfo_envs() {
     # Create Conda bioinformatics environments.
     # @note Updated 2020-07-14.
     # """
-    local all aligners chipseq data_mining envs file_formats methylation \
-        quality_control rnaseq trimming variation workflows
+    local all aligners chipseq data_mining env envs file_formats methylation \
+        quality_control rnaseq trimming variation version workflows
     koopa::assert_is_installed conda
     all=0
     aligners=0
@@ -140,6 +140,8 @@ koopa::conda_create_bioinfo_envs() {
                 ;;
         esac
     done
+    koopa::h1 'Installing conda environments for bioinformatics.'
+    envs=()
     if [[ "$all" -eq 1 ]]
     then
         aligners=1
@@ -152,135 +154,114 @@ koopa::conda_create_bioinfo_envs() {
         trimming=1
         variation=1
         workflows=1
-    fi
-    koopa::h1 'Installing conda environments for bioinformatics.'
-    envs=()
-    if [[ "$file_formats" -eq 1 ]]
-    then
-        koopa::h2 'File formats'
-        envs+=(
-            "bamtools=2.5.1"
-            "bcftools=1.10.2"
-            "bedtools=2.29.2"
-            "bioawk=1.0"
-            "gffutils=0.10.1"
-            "htslib=1.10.2"
-            "sambamba=0.7.1"
-            "samblaster=0.1.26"
-            "samtools=1.10"
-            "seqtk=1.3"
-        )
-        if koopa::is_linux
-        then
-            envs+=("biobambam=2.0.87")
-        fi
-    fi
-    if [[ "$data_mining" -eq 1 ]]
-    then
-        koopa::h2 'Data mining'
-        envs+=(
-            "entrez-direct=13.3"
-            "sra-tools=2.10.1"
-        )
-    fi
-    if [[ "$workflows" -eq 1 ]]
-    then
-        koopa::h2 'Workflows'
-        # Consider: cromwell
-        envs+=(
-            "fgbio=1.2.0"
-            "gatk4=4.1.8.0"
-            "jupyterlab=2.1.5"
-            "nextflow=20.04.1"
-            "picard=2.23.2"
-            "snakemake=5.20.1"
-        )
-    fi
-    if [[ "$quality_control" -eq 1 ]]
-    then
-        koopa::h2 'Quality control'
-        envs+=(
-            "fastqc=0.11.9"
-            "kraken=1.1.1"
-            "multiqc=1.9"
-            "qualimap=2.2.2d"
-        )
-    fi
-    if [[ "$trimming" -eq 1 ]]
-    then
-        koopa::h2 'Trimming'
-        envs+=(
-            "atropos=1.1.28"
-            "trimmomatic=0.39"
-        )
+        envs+=('igvtools')
     fi
     if [[ "$aligners" -eq 1 ]]
     then
-        koopa::h2 'Aligners'
         # Consider: minimap2, novoalign
         envs+=(
-            "bowtie2=2.4.1"
-            "bwa=0.7.17"
-            "hisat2=2.2.0"
-            "rsem=1.3.3"
-            "star=2.7.5a"
+            'bowtie2'
+            'bwa'
+            'hisat2'
+            'rsem'
+            'star'
         )
         if koopa::is_linux
         then
-            envs+=("bwa-mem2=2.0")
+            envs+=('bwa-mem2')
         fi
-    fi
-    if [[ "$variation" -eq 1 ]]
-    then
-        koopa::h2 'Variation'
-        envs+=(
-            "ericscript=0.5.5"
-            "oncofuse=1.1.1"
-            "peddy=0.4.7"
-            "pizzly=0.37.3"
-            "squid=1.5"
-            "star-fusion=1.9.0"
-            "vardict=2019.06.04"
-        )
-        if koopa::is_linux
-        then
-            envs+=("arriba=1.2.0")
-        fi
-    fi
-    if [[ "$rnaseq" -eq 1 ]]
-    then
-        koopa::h2 'RNA-seq'
-        # Consider: rapmap
-        envs+=(
-            "kallisto=0.46.2"
-            "salmon=1.3.0"
-        )
     fi
     if [[ "$chipseq" -eq 1 ]]
     then
-        koopa::h2 'ChIP-seq'
         envs+=(
-            "chromhmm=1.21"
-            "deeptools=3.4.3"
-            "genrich=0.6"
-            "homer=4.11"
-            "macs2=2.2.7.1"
-            "sicer2=1.0.2"
+            'chromhmm'
+            'deeptools'
+            'genrich'
+            'homer'
+            'macs2'
+            'sicer2'
         )
+    fi
+    if [[ "$data_mining" -eq 1 ]]
+    then
+        envs+=('entrez-direct' 'sra-tools')
+    fi
+    if [[ "$file_formats" -eq 1 ]]
+    then
+        envs+=(
+            'bamtools'
+            'bcftools'
+            'bedtools'
+            'bioawk'
+            'gffutils'
+            'htslib'
+            'sambamba'
+            'samblaster'
+            'samtools'
+            'seqtk'
+        )
+        if koopa::is_linux
+        then
+            envs+=('biobambam')
+        fi
     fi
     if [[ "$methylation" -eq 1 ]]
     then
-        koopa::h2 'Methylation'
-        envs+=("bismark=0.22.3")
+        envs+=('bismark')
     fi
-    if [[ "$all" -eq 1 ]]
+    if [[ "$quality_control" -eq 1 ]]
     then
-        koopa::h2 'Other tools'
-        envs+=("igvtools=2.5.3")
+        envs+=(
+            'fastqc'
+            'kraken'
+            'multiqc'
+            'qualimap'
+        )
     fi
+    if [[ "$rnaseq" -eq 1 ]]
+    then
+        # Consider: rapmap
+        envs+=('kallisto' 'salmon')
+    fi
+    if [[ "$trimming" -eq 1 ]]
+    then
+        envs+=('atropos' 'trimmomatic')
+    fi
+    if [[ "$variation" -eq 1 ]]
+    then
+        envs+=(
+            'ericscript'
+            'oncofuse'
+            'peddy'
+            'pizzly'
+            'squid'
+            'star-fusion'
+            'vardict'
+        )
+        if koopa::is_linux
+        then
+            envs+=('arriba')
+        fi
+    fi
+    if [[ "$workflows" -eq 1 ]]
+    then
+        # Consider: cromwell
+        envs+=(
+            'fgbio'
+            'gatk4'
+            'jupyterlab'
+            'nextflow'
+            'picard'
+            'snakemake'
+        )
+    fi
+    for i in ${!envs[*]}
+    do
+        env="${envs[$i]}"
+        version="$(koopa::variable "$env")"
+        envs[$i]="${env}=${version}"
+    done
     koopa::conda_create_env "${envs[@]}"
-    koopa::sys_set_permissions -r "$(koopa::conda_prefix)"
-    conda env list
     return 0
 }
 
@@ -320,6 +301,7 @@ koopa::conda_create_env() { # {{{1
     conda_prefix="$(koopa::conda_prefix)"
     for env in "$@"
     do
+        # Get supported version.
         if ! koopa::str_match "$env" '='
         then
             koopa::stop 'Version is required. Specify as "NAME=VERSION".'
