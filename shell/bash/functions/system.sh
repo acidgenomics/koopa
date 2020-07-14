@@ -379,6 +379,13 @@ koopa::public_ip_address() { # {{{1
     return 0
 }
 
+koopa::reload_shell() { # {{{1
+    koopa::assert_has_no_args "$#"
+    # shellcheck disable=SC2093
+    exec "${SHELL:?}" -il
+    return 0
+}
+
 koopa::run_if_installed() { # {{{1
     # """
     # Run program(s) if installed.
