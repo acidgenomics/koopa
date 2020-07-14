@@ -5,7 +5,7 @@
 # https://www.ruby-lang.org/en/downloads/
 # """
 
-# Ensure '2.6.5p' becomes '2.6.5' here, for example.
+# Ensure '2.7.1p83' becomes '2.7.1' here, for example.
 version="$(koopa::sanitize_version "$version")"
 minor_version="$(koopa::major_minor_version "$version")"
 file="${name}-${version}.tar.gz"
