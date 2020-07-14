@@ -434,10 +434,10 @@ koopa::version() { # {{{1
 koopa::version_pattern() { # {{{1
     # """
     # Version pattern.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-14.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::print '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?'
+    koopa::print '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?([0-9]+)?'
     return 0
 }
 
