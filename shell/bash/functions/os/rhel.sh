@@ -79,8 +79,10 @@ koopa::rhel_install_rstudio_server() { # {{{1
     # > sudo rstudio-server start
     # > sudo rstudio-server status
     # """
+    local file name name_fancy pos pro reinstall tmp_dir url version
     pro=0
     reinstall=0
+    version=
     pos=()
     while (("$#"))
     do
@@ -92,6 +94,14 @@ koopa::rhel_install_rstudio_server() { # {{{1
             --reinstall)
                 reinstall=1
                 shift 1
+                ;;
+            --version=*)
+                version="${1#*=}"
+                shift 1
+                ;;
+            --version)
+                version="$2"
+                shift 2
                 ;;
             --)
                 shift 1
@@ -119,7 +129,7 @@ koopa::rhel_install_rstudio_server() { # {{{1
     else
         file="rstudio-server-rhel-${version}-x86_64.rpm"
     fi
-    version="$(koopa::variable "$name")"
+    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
     name_fancy="${name_fancy} ${version}"
     ! koopa::is_current_version "$name" && reinstall=1
     [[ "$reinstall" -eq 0 ]] && koopa::exit_if_installed "$name"
@@ -153,7 +163,7 @@ END
     return 0
 }
 
-koopa::rhel_install_rstudio_server_pro() {
+koopa::rhel_install_rstudio_server_pro() { # {{{1
     koopa::rhel_install_rstudio_server --pro "$@"
     return 0
 }
