@@ -2,6 +2,6 @@
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../shell/bash/include/header.sh"
+source "${script_dir}/../include/header.sh"
 
-koopa::install_chromhmm "$@"
+koopa::install_bcbio_genome "$@"
