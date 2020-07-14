@@ -338,16 +338,17 @@ koopa::install_python_packages() {
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
+            "black==$(koopa::variable 'python-black')"
+            "flake8==$(koopa::variable 'python-flake8')"
+            "logbook==$(koopa::variable 'python-logbook')"
+            "pip==$(koopa::variable 'python-pip')"
+            "pipx==$(koopa::variable 'python-pipx')"
+            "pyflakes==$(koopa::variable 'python-pyflakes')"
+            "pylint==$(koopa::variable 'python-pylint')"
+            "pytest==$(koopa::variable 'python-pytest')"
+            "six==$(koopa::variable 'python-six')"
             'setuptools'
             'wheel'
-            'black==19.10b0'
-            'flake8==3.8.3'
-            'logbook==1.5.3'
-            'pipx==0.15.4.0'
-            'pyflakes==2.2.0'
-            'pylint==2.5.3'
-            'pytest==5.4.3'
-            'six==1.15.0'
         )
     fi
     name_fancy='Python packages'
