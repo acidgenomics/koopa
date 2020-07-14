@@ -512,6 +512,22 @@ koopa::md5sum_check_to_new_md5_file() {
     return 0
 }
 
+koopa::nfiletypes() {
+    local dir
+    koopa::assert_has_args_ne "$#" 1
+    koopa::assert_is_installed find
+    dir="${1:-.}"
+    find "$dir" \
+        -maxdepth 1 \
+        -type f \
+        | sed 's/.*\.//' \
+        | sort \
+        | uniq -c \
+        | sed 's/^ *//g' \
+        | sed 's/ /\t/g'
+    return 0
+}
+
 koopa::realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
