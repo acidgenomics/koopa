@@ -1,6 +1,64 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2039
 
+koopa::activate_conda_env() { # {{{1
+    # """
+    # Activate a conda environment.
+    # @note Updated 2020-07-14.
+    #
+    # Designed to work inside calling scripts and/or subshells.
+    #
+    # Currently, the conda activation script returns a 'conda()' function in
+    # the current shell that doesn't propagate to subshells. This function
+    # attempts to rectify the current situation.
+    #
+    # Note that the conda activation script currently has unbound variables
+    # (e.g. PS1), that will cause this step to fail unless we temporarily
+    # disable unbound variable checks.
+    #
+    # Alternate approach:
+    # > eval "$(conda shell.bash hook)"
+    #
+    # See also:
+    # - https://github.com/conda/conda/issues/7980
+    # - https://stackoverflow.com/questions/34534513
+    # """
+    local conda_prefix env env_dir nounset
+    koopa::assert_has_args_eq "$#" 1
+    env="${1:?}"
+    conda_prefix="$(koopa::conda_prefix)"
+    # Locate latest version automatically, if necessary.
+    if ! koopa::str_match "$env" '@'
+    then
+        koopa::assert_is_installed find
+        env_dir="$( \
+            find "${conda_prefix}/envs" \
+                -mindepth 1 \
+                -maxdepth 1 \
+                -type d \
+                -name "${env}@*" \
+                -print \
+            | sort \
+            | tail -n 1 \
+        )"
+        if [[ ! -d "$env_dir" ]]
+        then
+            koopa::stop "Failed to locate \"${env}\" conda environment."
+        fi
+        env="$(basename "$env_dir")"
+    fi
+    nounset="$(koopa::boolean_nounset)"
+    [[ "$nounset" -eq 1 ]] && set +u
+    if ! type conda | grep -q conda.sh
+    then
+        # shellcheck source=/dev/null
+        . "${conda_prefix}/etc/profile.d/conda.sh"
+    fi
+    conda activate "$env"
+    [[ "$nounset" -eq 1 ]] && set -u
+    return 0
+}
+
 koopa::conda_create_bioinfo_envs() {
     # """
     # Create Conda bioinformatics environments.
@@ -131,7 +189,7 @@ koopa::conda_create_bioinfo_envs() {
         # Consider: cromwell
         envs+=(
             "fgbio=1.2.0"
-            "gat4k=4.1.8.0"
+            "gatk4=4.1.8.0"
             "jupyterlab=2.1.5"
             "nextflow=20.04.1"
             "picard=2.23.2"
