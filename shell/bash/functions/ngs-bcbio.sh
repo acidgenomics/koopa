@@ -136,7 +136,8 @@ koopa::install_bcbio_ensembl_genome() { # {{{1
     local bcbio_genome_name bcbio_species_dir build cores fasta gtf indexes \
         organism release tmp_dir
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed bcbio_setup_genome.py
+    koopa::assert_is_installed awk bcbio_setup_genome.py \
+        download-ensembl-genome du find head sort xargs
     while (("$#"))
     do
         case "$1" in
@@ -208,14 +209,41 @@ koopa::install_bcbio_ensembl_genome() { # {{{1
             --type 'genome' \
             --annotation 'gtf' \
             --decompress
-        # FIXME THESE WILL DOWNLOAD TO SUBDIRECTORY.
-        # e.g. Homo_sapiens.GRCh38.dna.primary_assembly.fa
-        fasta="${organism}.${build}.dna.primary_assembly.fa"
-        # e.g. Homo_sapiens.GRCh38.96.gtf
-        gtf="${organism}.${build}.${release}.gtf"
-        koopa::assert_is_file "$fasta" "$gtf"
+        # Automatically locate the largest FASTA and GTF files.
+        # e.g. homo-sapiens-grch38-ensembl-100/genome/
+        #          Homo_sapiens.GRCh38.dna.primary_assembly.fa
+        fasta="$(\
+            find '.' \
+                -mindepth 3 \
+                -maxdepth 3 \
+                -name '*.fa' \
+                -print0 \
+            | xargs -0 du -sk \
+            | sort -nr  \
+            | head -n 1 \
+            | awk '{print $2}' \
+        )"
+        koopa::assert_is_file "$fasta"
         fasta="$(realpath "$fasta")"
+        # e.g. homo-sapiens-grch38-ensembl-100/gtf/
+        #          Homo_sapiens.GRCh38.100.chr_patch_hapl_scaff.gtf
+        gtf="$( \
+            find . \
+                -mindepth 3 \
+                -maxdepth 3 \
+                -name '*.gtf' \
+                -type f \
+                -print0 \
+            | xargs -0 du -sk \
+            | sort -nr  \
+            | head -n 1 \
+            | awk '{print $2}' \
+        )"
+        koopa::assert_is_file "$gtf"
         gtf="$(realpath "$gtf")"
+        koopa::dl 'FASTA' "$(basename "$fasta")"
+        koopa::dl 'GTF' "$(basename "$gtf")"
+        koopa::dl 'Indexes' "${indexes[*]}"
         bcbio_setup_genome.py \
             --name "$bcbio_species_dir" \
             --build "$bcbio_genome_name" \
