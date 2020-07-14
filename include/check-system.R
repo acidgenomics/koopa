@@ -302,8 +302,8 @@ checkVersion(
 checkVersion(
     name = "OpenSSH",
     whichName = "ssh",
-    current = currentVersion("ssh"),
-    expected = expectedVersion("ssh")
+    current = currentVersion("openssh"),
+    expected = expectedVersion("openssh")
 )
 checkVersion(
     name = "pkg-config",
@@ -423,18 +423,6 @@ if (file.exists(file.path(condaPrefix, "bin", "anaconda"))) {
         expected = expectedVersion("conda")
     )
 }
-checkVersion(
-    name = "Python : pip",
-    whichName = "pip3",
-    current = currentVersion("pip"),
-    expected = expectedVersion("pip")
-)
-checkVersion(
-    name = "Python : pipx",
-    whichName = "pipx",
-    current = currentVersion("pipx"),
-    expected = expectedVersion("pipx")
-)
 if (!isTRUE(docker)) {
     checkVersion(
         name = "Rust : rustup",
@@ -719,6 +707,7 @@ installed(
     which = c(
         "black",
         "flake8",
+        "pip",
         "pylint",
         "pytest"
     )
