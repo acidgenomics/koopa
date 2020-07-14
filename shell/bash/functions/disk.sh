@@ -3,13 +3,13 @@
 koopa::disk_gb_free() { # {{{1
     # """
     # Available free disk space in GB.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-14.
     #
     # Alternatively, can use '-BG' for 1G-blocks.
     # This is what gets returned by 'df -h'.
     # """
     local disk x
-    koopa::assert_has_args_le_eq "$#" 1
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed df grep head sed
     disk="${1:-/}"
     x="$( \
@@ -28,10 +28,10 @@ koopa::disk_gb_free() { # {{{1
 koopa::disk_gb_total() { # {{{1
     # """
     # Total disk space size in GB.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-14.
     # """
     local disk x
-    koopa::assert_has_args_le_eq "$#" 1
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed df grep head sed
     disk="${1:-/}"
     x="$( \
@@ -49,10 +49,10 @@ koopa::disk_gb_total() { # {{{1
 koopa::disk_gb_used() { # {{{1
     # """
     # Used disk space in GB.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-14.
     # """
     local disk x
-    koopa::assert_has_args_le_eq "$#" 1
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed df grep head sed
     disk="${1:-/}"
     x="$( \
@@ -71,10 +71,10 @@ koopa::disk_gb_used() { # {{{1
 koopa::disk_pct_free() { # {{{1
     # """
     # Free disk space percentage (on main drive).
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-14.
     # """
     local disk pct_free pct_used
-    koopa::assert_has_args_le_eq "$#" 1
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed df grep head sed
     disk="${1:-/}"
     pct_used="$(koopa::disk_pct_used "$disk")"
@@ -86,10 +86,10 @@ koopa::disk_pct_free() { # {{{1
 koopa::disk_pct_used() { # {{{1
     # """
     # Disk usage percentage (on main drive).
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-14.
     # """
     local disk x
-    koopa::assert_has_args_le_eq "$#" 1
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed df grep head sed
     disk="${1:-/}"
     x="$( \
