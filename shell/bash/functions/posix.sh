@@ -20,10 +20,6 @@ koopa::activate_conda() {
     _koopa_activate_conda "$@"
 }
 
-koopa::activate_conda_env() {
-    _koopa_activate_conda_env "$@"
-}
-
 koopa::add_config_link() { # {{{1
     _koopa_add_config_link "$@"
 }
