@@ -4,40 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# Currently supports overlay2, aufs and btrfs storage drivers.
-#
-# See also:
-# - https://docs.docker.com/install/linux/docker-ce/debian/
-# - https://docs.docker.com/install/linux/docker-ce/ubuntu/
-#
-# Configures at '/var/lib/docker/'.
-# """
-
-koopa::exit_if_docker
-koopa::exit_if_installed docker
-
-name_fancy="Docker"
-
-koopa::install_start "$name_fancy"
-
-koopa::assert_has_no_args "$#"
-
-koopa::apt_add_docker_repo
-
-# Ready to install Docker.
-pkgs=(
-    containerd.io
-    docker-ce
-    docker-ce-cli
-)
-koopa::apt_install "${pkgs[@]}"
-
-# Ensure current user is added to Docker group.
-koopa::add_user_to_group "docker"
-
-# Move '/var/lib/docker' to '/n/var/lib/docker'.
-koopa::link_docker
-
-koopa::install_success "$name_fancy"
-koopa::restart
+koopa::debian_install_docker "$@"
