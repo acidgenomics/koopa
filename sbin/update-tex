@@ -4,14 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::update_tex() {
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed tlmgr
-    koopa::h1 'Updating TeX Live.'
-    sudo tlmgr update --self
-    sudo tlmgr update --list
-    sudo tlmgr update --all
-    return 0
-}
-
 koopa::update_tex "$@"
