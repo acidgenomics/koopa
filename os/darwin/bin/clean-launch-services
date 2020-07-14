@@ -3,17 +3,5 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-koopa::assert_has_no_args "$#"
 
-koopa::h1 "Cleaning LaunchServices 'Open With' menu."
-
-/System/Library/Frameworks/CoreServices.framework/Frameworks/\
-LaunchServices.framework/Support/lsregister \
-    -kill \
-    -r \
-    -domain local \
-    -domain system \
-    -domain user
-killall Finder
-
-koopa::success "Clean up was successful."
+koopa::macos_clean_launch_services "$@"
