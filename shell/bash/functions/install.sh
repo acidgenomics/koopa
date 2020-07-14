@@ -1,26 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_chromhmm() {
-    local file name prefix tmp_dir url
-    koopa::assert_has_no_args "$#"
-    name='ChromHMM'
-    prefix="$(koopa::app_prefix)/$(koopa::lowercase "$name")"
-    koopa::install_start "$name" "$prefix"
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        file="${name}.zip"
-        url="http://compbio.mit.edu/${name}/${file}"
-        koopa::download "$url"
-        koopa::extract "$file"
-        koopa::cp "$name" "$prefix"
-    )
-    koopa::rm "$tmp_dir"
-    koopa::sys_set_permissions -r "$prefix"
-    koopa::install_success "$name"
-    return 0
-}
-
 koopa::install_conda() {
     local anaconda name_fancy ostype script tmp_dir url version
     koopa::exit_if_installed conda
