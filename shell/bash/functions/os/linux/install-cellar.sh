@@ -272,7 +272,59 @@ koopa::install_ruby() {
     return 0
 }
 
+koopa::install_sed() {
+    koopa::install_cellar --name="sed" "$@"
+    return 0
+}
+
+koopa::install_shellcheck() {
+    koopa::install_cellar --name="shellcheck" --name-fancy="ShellCheck" "$@"
+    return 0
+}
+
+koopa::install_shunit2() {
+    koopa::install_cellar --name="shunit2" --name-fancy="shUnit2" "$@"
+    return 0
+}
+
 koopa::install_singularity() {
     koopa::install_cellar --name='singularity' "$@"
+    return 0
+}
+
+koopa::install_sqlite() {
+    koopa::install_cellar --name="sqlite" --name-fancy="SQLite" "$@"
+    koopa::note "Reinstall PROJ and GDAL, if applicable."
+    return 0
+}
+
+koopa::install_subversion() {
+    koopa::install_cellar --name="subversion" "$@"
+    return 0
+}
+
+koopa::install_texinfo() {
+    koopa::install_cellar --name="texinfo" "$@"
+    return 0
+}
+
+koopa::install_udunits() {
+    koopa::install_cellar --name="udunits" "$@"
+    return 0
+}
+
+koopa::install_vim() {
+    koopa::install_cellar --name="vim" --name-fancy="Vim" "$@"
+    return 0
+}
+
+koopa::install_wget() {
+    koopa::install_cellar --name="wget" "$@"
+    return 0
+}
+
+koopa::install_zsh() {
+    koopa::install_cellar --name="zsh" --name-fancy="Zsh" "$@"
+    koopa::fix_zsh_permissions
     return 0
 }
