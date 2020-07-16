@@ -3,4 +3,7 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../../shell/bash/include/header.sh"
+# shellcheck source=/dev/null
+source "${script_dir}/../../../shell/bash/functions/os/linux.sh"
+
 koopa::assert_is_linux
