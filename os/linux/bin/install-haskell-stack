@@ -4,18 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-koopa::assert_has_no_args "$#"
-koopa::assert_has_no_envs
-
-name_fancy="Haskell stack"
-koopa::install_start "$name_fancy"
-
-(
-    # Installer will warn if this local directory doesn't exist.
-    xdg_bin_dir="${HOME}/.local/bin"
-    mkdir -pv "$xdg_bin_dir"
-    koopa::add_to_path_start "$xdg_bin_dir"
-    curl -sSL "https://get.haskellstack.org/" | bash
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-koopa::install_success "$name_fancy"
+koopa::install_haskell_stack "$@"
