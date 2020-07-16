@@ -4,25 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-koopa::assert_has_no_args "$#"
-koopa::assert_has_no_envs
-koopa::assert_is_installed bcbio_nextgen.py
-
-tmp_dir="$(koopa::tmp_dir)"
-cores="$(koopa::cpu_count)"
-
-name_fancy="bcbio-nextgen"
-
-koopa::update_start "$name_fancy"
-koopa::dl "bcbio_nextgen.py" "$(koopa::which_realpath "bcbio_nextgen.py")"
-
-(
-    koopa::cd "$tmp_dir"
-    bcbio_nextgen.py upgrade \
-        --upgrade="stable" \
-        --tools \
-        --data \
-        --cores="$cores"
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-koopa::update_success "$name_fancy"
+koopa::update_bcbio "$@"
