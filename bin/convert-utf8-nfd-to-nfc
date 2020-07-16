@@ -2,7 +2,6 @@
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../include/header.sh"
-koopa::is_installed convmv
+source "${script_dir}/../shell/bash/include/header.sh"
 
-convmv -r -f utf8 -t utf8 --nfc --notest "$@"
+koopa::convert_utf8_nfd_to_nfc "$@"
