@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::linux_configure_vm() { # {{{1
+koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
     # @note Updated 2020-07-16.
