@@ -4,10 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-koopa::h1 "Listing launch agents and daemons."
-
-ls \
-    "${HOME}/Library/LaunchAgents" \
-    "/Library/LaunchAgents" \
-    "/Library/LaunchDaemons" \
-    "/Library/PrivilegedHelperTools"
+koopa::macos_list_launch_agents "$@"
