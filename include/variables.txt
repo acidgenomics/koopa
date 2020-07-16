@@ -120,7 +120,7 @@ git="2.27.0"
 gnupg="2.2.21"
 
 # https://golang.org/dl/
-go="1.14"
+go="1.14.5"
 
 # https://www.gnu.org/software/grep/
 grep="3.4"
@@ -222,7 +222,7 @@ proj="7.1.0"
 pyenv="1.2.16"
 
 # https://www.python.org/downloads/
-python="3.8.3"
+python="3.8.4"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
