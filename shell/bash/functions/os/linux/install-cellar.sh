@@ -308,6 +308,16 @@ koopa::install_texinfo() {
     return 0
 }
 
+koopa::install_the_silver_searcher() {
+    koopa::install_cellar --name="the-silver-searcher" "$@"
+    return 0
+}
+
+koopa::install_tmux() {
+    koopa::install_cellar --name="tmux" "$@"
+    return 0
+}
+
 koopa::install_udunits() {
     koopa::install_cellar --name="udunits" "$@"
     return 0
