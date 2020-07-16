@@ -3,12 +3,21 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-koopa::assert_has_no_args "$#"
 
-sudo find "/tmp" -mindepth 1 -maxdepth 1 -ctime +30 -exec rm -frv {} \;
+koopa::linux_clean_tmp() {
+    local dir dirs
+    koopa::assert_has_no_args "$#"
+    dirs=('/tmp')
+    [[ "${TMPDIR:-}" != '/tmp' ]] && dirs+=("$TMPDIR")
+    for dir in "${dirs[@]}"
+    do
+        sudo find "$dir" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -ctime +30 \
+            -exec rm -frv {} \;
+    done
+    return 0
+}
 
-# Clean up alternate tmp directory (e.g. SSD), if necessary.
-if [[ "${TMPDIR:-}" != "/tmp" ]]
-then
-    sudo find "$TMPDIR" -mindepth 1 -maxdepth 1 -ctime +30 -exec rm -frv {} \;
-fi
+koopa::linux_clean_tmp "$@"
