@@ -1,5 +1,58 @@
 #!/usr/bin/env bash
 
+koopa::install_bcbio_vm() {
+    # """
+    # Install bcbio-vm.
+    # @note Updated 2020-07-16.
+    # """
+    local bin_dir data_dir file name prefix tmp_dir url
+    koopa::assert_has_no_envs
+    koopa::assert_is_installed docker
+    name='bcbio-vm'
+    prefix="$(koopa::app_prefix)/${name}"
+    koopa::exit_if_dir "$prefix"
+    koopa::install_start "$name" "$prefix"
+    bin_dir="${prefix}/anaconda/bin"
+    tmp_dir="$(koopa::tmp_dir)"
+    # Configure Docker, if necessary.
+    if ! koopa::str_match "$(groups)" 'docker'
+    then
+        sudo groupadd docker
+        sudo service docker restart
+        sudo gpasswd -a "$(whoami)" docker
+        newgrp docker
+    fi
+    # Download and install Conda.
+    (
+        koopa::cd "$tmp_dir"
+        file='Miniconda3-latest-Linux-x86_64.sh'
+        url="https://repo.continuum.io/miniconda/${file}"
+        koopa::download "$url"
+        bash "$file" -b -p "${prefix}/anaconda"
+    )
+    koopa::rm "$tmp_dir"
+    # Ready to install bcbio-vm.
+    "${bin_dir}/conda" install --yes \
+        --channel='conda-forge' \
+        --channel='bioconda' \
+        bcbio-nextgen \
+        bcbio-nextgen-vm
+    koopa::ln -S "${bin_dir}/bcbio_vm.py" '/usr/local/bin/bcbio_vm.py'
+    koopa::ln -S "${bin_dir}/conda" '/usr/local/bin/bcbiovm_conda'
+    sudo chgrp docker '/usr/local/bin/bcbio_vm.py'
+    sudo chmod g+s '/usr/local/bin/bcbio_vm.py'
+    # v1.1.3:
+    # > data_dir="${prefix}/v1.1.3"
+    # > image="quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3"
+    # latest version:
+    data_dir="${prefix}/latest"
+    # > image="quay.io/bcbio/bcbio-vc"
+    "${bin_dir}/bcbio_vm.py" --datadir="$data_dir" saveconfig
+    # > "${bin_dir}/bcbio_vm.py" install --tools --image "$image"
+    koopa::install_success "$name"
+    return 0
+}
+
 koopa::bcbio_run_tests() { # {{{1
     # """
     # Run bcbio unit tests.
