@@ -4,17 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# https://cloud.google.com/sdk/docs/downloads-yum
-# """
-
-koopa::exit_if_installed gcloud
-
-name_fancy="Google Cloud SDK"
-
-koopa::install_start "$name_fancy"
-
-koopa::yum_add_google_cloud_sdk_repo
-sudo dnf -y install google-cloud-sdk
-
-koopa::install_success "$name_fancy"
+koopa::fedora_install_google_cloud_sdk "$@"
