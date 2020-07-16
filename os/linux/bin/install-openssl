@@ -4,8 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-koopa::install_cellar \
-    --name="openssl" \
-    --name-fancy="OpenSSL" \
-    --cellar-only \
-    "$@"
+koopa::install_openssl "$@"
