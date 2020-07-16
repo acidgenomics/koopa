@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::linux_clean_tmp() {
+koopa::clean_tmp() {
     local dir dirs
     koopa::assert_has_no_args "$#"
     dirs=('/tmp')
