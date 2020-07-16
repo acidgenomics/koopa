@@ -141,6 +141,40 @@ koopa::basename_sans_ext2() { # {{{1
     return 0
 }
 
+koopa::convert_utf8_nfd_to_nfc() {
+    # """
+    # Convert UTF-8 NFD to NFC.
+    # @note Updated 2020-07-15.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::is_installed convmv
+    convmv -r -f utf8 -t utf8 --nfc --notest "$@"
+    return 0
+}
+
+koopa::delete_adobe_bridge_cache() {
+    # """
+    # Delete Adobe Bridge cache files.
+    # @note Updated 2020-07-16.
+    # """
+    local dir
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_installed find
+    dir="${1:-.}"
+    koopa::assert_is_dir "$dir"
+    koopa::h1 "Deleting Adobe Bridge cache in \"${dir}\"."
+    find "$dir" \
+        -mindepth 1 \
+        -type f \
+        \( \
+            -name '.BridgeCache' -o \
+            -name '.BridgeCacheT' \
+        \) \
+        -delete \
+        -print
+    return 0
+}
+
 koopa::delete_file_system_cruft() { # {{{1
     # """
     # Delete file system cruft.
