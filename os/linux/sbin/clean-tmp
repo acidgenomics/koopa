@@ -4,20 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-koopa::linux_clean_tmp() {
-    local dir dirs
-    koopa::assert_has_no_args "$#"
-    dirs=('/tmp')
-    [[ "${TMPDIR:-}" != '/tmp' ]] && dirs+=("$TMPDIR")
-    for dir in "${dirs[@]}"
-    do
-        sudo find "$dir" \
-            -mindepth 1 \
-            -maxdepth 1 \
-            -ctime +30 \
-            -exec rm -frv {} \;
-    done
-    return 0
-}
-
 koopa::linux_clean_tmp "$@"
