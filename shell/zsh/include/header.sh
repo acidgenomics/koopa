@@ -34,7 +34,7 @@ fi
 koopa::zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-16.
     # """
     local file major_version pos
     [[ -n "${KOOPA_VERBOSE:-}" ]] && local verbose=1
@@ -77,17 +77,14 @@ koopa::zsh_header() { # {{{1
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
     # Source Zsh functions.
-    for file in "${KOOPA_PREFIX}/shell/zsh/functions/"*".sh"
+    for file in "${KOOPA_PREFIX}/shell/zsh/functions/"*'.sh'
     do
         # shellcheck source=/dev/null
         [[ -f "$file" ]] && source "$file"
     done
     # Disable user-defined aliases.
     # Primarily intended to reset cp, mv, rf for use inside scripts.
-    if [[ "$activate" -eq 0 ]]
-    then
-        unalias -a
-    fi
+    [[ "$activate" -eq 0 ]] && unalias -a
     unset -v activate checks shopts verbose
     return 0
 }
