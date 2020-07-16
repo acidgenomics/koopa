@@ -654,3 +654,84 @@ koopa::debian_install_r_devel() {
         "$@"
     return 0
 }
+
+koopa::debian_install_wine() {
+    # """
+    # Install Wine.
+    # @note Updated 2020-07-16.
+    #
+    # aptitude will return more informative error messages on held package
+    # errors, such as with missing libaudio0 dependency.
+    #
+    # dpkg alternative for .deb file installation:
+    # https://unix.stackexchange.com/questions/159094/
+    # > sudo dpkg -i /path/to/deb/file
+    # > sudo apt-get install -f
+    #
+    # @seealso
+    # - https://wiki.winehq.org/Debian
+    # - https://forum.winehq.org/viewtopic.php?f=8&t=32192
+    # - https://forum.winehq.org/viewtopic.php?t=31261
+    # - https://askubuntu.com/questions/1145473/how-do-i-install-libfaudio0
+    # - https://github.com/scottyhardy/docker-wine
+    # - https://github.com/baztian/docker-wine/blob/master/Dockerfile
+    # - https://gist.github.com/cschiewek/246a244ba23da8b9f0e7b11a68bf3285
+    # - https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949
+    # """
+    local name_fancy
+    koopa::exit_if_installed wine
+    name_fancy='Wine'
+    koopa::install_start "$name_fancy"
+    koopa::apt_add_wine_repo
+    # This is required to install missing libaudio0 dependency.
+    koopa::apt_add_wine_obs_repo
+    # Enable 32-bit packages.
+    sudo dpkg --add-architecture i386
+    # Old stable version: Use wine, wine32 here.
+    koopa::apt_get install \
+        winbind \
+        x11-apps \
+        xauth \
+        xvfb
+    # Install latest stable version of Wine.
+    sudo DEBIAN_FRONTEND=noninteractive \
+        apt-get --yes install \
+            --install-recommends \
+            winehq-stable
+    koopa::install_success "$name_fancy"
+    return 0
+}
+
+koopa::debian_uninstall_llvm() {
+    # """
+    # Uninstall LLVM.
+    # @note Updated 2020-07-16.
+    # """
+    name_fancy='LLVM'
+    koopa::uninstall_start "$name_fancy"
+    koopa::assert_has_no_args "$#"
+    koopa::assert_has_no_envs
+    unset -v LLVM_CONFIG
+    sudo apt-get --yes remove '^clang-[0-9]+.*' '^llvm-[0-9]+.*'
+    sudo apt-get --yes autoremove
+    koopa::rm -S '/etc/apt/sources.list.d/llvm.list'
+    koopa::uninstall_success "$name_fancy"
+    return 0
+}
+
+koopa::debian_uninstall_r_cran_binary() {
+    # """
+    # Uninstall R CRAN binary.
+    # @note Updated 2020-07-16.
+    # """
+    local name_fancy
+    koopa::assert_has_no_args "$#"
+    name_fancy='R CRAN binary'
+    koopa::uninstall_start "$name_fancy"
+    koopa::assert_has_no_args "$#"
+    koopa::assert_has_no_envs
+    koopa::rm -S '/etc/R' '/usr/lib/R/etc'
+    koopa::apt_remove 'r-*'
+    koopa::uninstall_success "$name_fancy"
+    return 0
+}
