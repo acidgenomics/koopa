@@ -1,5 +1,49 @@
 #!/usr/bin/env bash
 
+koopa::macos_install_r_cran_clang() {
+    local file major_version name prefix tmp_dir url version
+    while (("$#"))
+    do
+        case "$1" in
+            --version=*)
+                version="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_has_no_args "$#"
+    name='clang'
+    major_version="$(koopa::major_version "$version")"
+    prefix="/usr/local/${name}${major_version}"
+    koopa::exit_if_dir "$prefix"
+    koopa::h1 "Installing ${name} ${version} to \"${prefix}\"."
+    tmp_dir="$(koopa::tmp_dir)"
+    (
+        koopa::cd "$tmp_dir"
+        file="${name}-${version}.pkg"
+        url="https://cran.r-project.org/bin/macosx/tools/${file}"
+        koopa::download "$url"
+        sudo installer -pkg "$file" -target '/'
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    koopa::rm "$tmp_dir"
+    koopa::install_success "$name"
+    koopa::restart
+    return 0
+}
+
+koopa::macos_install_r_cran_clang_7() {
+    koopa::macos_install_r_cran_clang --version='7.0.0'
+    return 0
+}
+
+koopa::macos_install_r_cran_clang_8() {
+    koopa::macos_install_r_cran_clang --version='8.0.0'
+    return 0
+}
+
 koopa::macos_install_r_sf() { # {{{1
     # """
     # Install R sf package.
