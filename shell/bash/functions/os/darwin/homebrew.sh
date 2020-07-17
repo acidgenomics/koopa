@@ -86,7 +86,7 @@ koopa::brew_update() { # {{{1
     return 0
 }
 
-koopa::update_homebrew() {
+koopa::macos_update_homebrew() {
     koopa::exit_if_not_installed brew
     koopa::brew_update "$@"
     return 0
