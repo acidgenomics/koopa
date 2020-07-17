@@ -4,7 +4,7 @@
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
-test() {
+test() { # {{{1
     # """
     # Python script checks.
     # Updated 2020-07-07.
@@ -18,14 +18,14 @@ test() {
     return 0
 }
 
-test_flake8() {
+test_flake8() { # {{{1
     koopa::assert_is_installed flake8
     flake8 --ignore='E402,W503' "$@"
     koopa::status_ok "python-flake8 [${#}]"
     return 0
 }
 
-test_pylint() {
+test_pylint() { # {{{1
     # Note that setting '--jobs=0' flag here enables multicore.
     koopa::assert_is_installed pylint
     pylint --jobs=0 --score='n' "$@"

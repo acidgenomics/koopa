@@ -4,26 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-system_plist="/Library/LaunchDaemons/com.crashplan.engine.plist"
-user_plist="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
-
-if [[ -f "${user_plist}.disabled" ]]
-then
-    mv -v "${user_plist}.disabled" "$user_plist"
-fi
-
-if [[ -f "$user_plist" ]]
-then
-    launchctl load "$user_plist"
-fi
-
-if [[ -f "${system_plist}.disabled" ]]
-then
-    sudo mv -v "${system_plist}.disabled" "$system_plist"
-fi
-
-if [[ -f "$system_plist" ]]
-then
-    sudo launchctl load "$system_plist"
-    # > sudo launchctl start com.crashplan.engine
-fi
+koopa::macos_enable_crashplan "$@"

@@ -4,18 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::youtube_mp3() {
-    # """
-    # Download MP3 audio from YouTube, Soundcloud, Mixcloud, etc.
-    # @note Updated 2020-07-04.
-    # """
-    local url
-    koopa::assert_is_installed youtube-dl
-    for url in "$@"
-    do
-        youtube-dl --extract-audio --audio-format mp3 "$url"
-    done
-    return 0
-}
-
 koopa::youtube_mp3 "$@"

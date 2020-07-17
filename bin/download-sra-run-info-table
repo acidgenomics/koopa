@@ -4,20 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::download_sra_run_info_table() {
-    # """
-    # Download SRA run info table.
-    # @note Updated 2020-07-02.
-    # """
-    koopa::activate_conda_env entrez-direct
-    koopa::assert_is_installed esearch efetch
-    id="${1:?}"
-    file="${2:-SraRunTable.txt}"
-    koopa::h1 "Downloading SRA '${id}' to '${file}'."
-    esearch -db sra -q "$id" \
-        | efetch -format runinfo \
-        > "$file"
-    return 0
-}
-
 koopa::download_sra_run_info_table "$@"

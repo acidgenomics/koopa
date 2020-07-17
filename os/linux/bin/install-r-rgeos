@@ -4,15 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-koopa::exit_if_r_package_installed rgeos
-koopa::assert_is_not_file /usr/bin/geos-config
-
-Rscript --vanilla -e "\
-    install.packages(
-        pkgs = \"rgeos\",
-        type = \"source\",
-        repos = \"https://cran.rstudio.com\",
-        configure.args = paste(
-            \"--with-geos-config=/usr/local/bin/geos-config\"
-        )
-    )"
+koopa::linux_install_r_geos "$@"

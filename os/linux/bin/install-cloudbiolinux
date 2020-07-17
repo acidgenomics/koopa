@@ -4,15 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-dir="${1:-cloudbiolinux}"
-koopa::exit_if_dir "$dir"
-
-name_fancy="CloudBioLinux"
-koopa::install_start "$name_fancy"
-
-# Using our forked repo, to control for unexpected upstream changes.
-(
-    git clone "https://github.com/acidgenomics/cloudbiolinux.git" "$dir"
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-koopa::install_success "$name_fancy"
+koopa::install_cloudbiolinux "$@"

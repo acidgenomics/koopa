@@ -126,54 +126,6 @@ koopa::delete_dotfile() { # {{{1
     return 0
 }
 
-koopa::enable_passwordless_sudo() { # {{{1
-    # """
-    # Enable passwordless sudo access for all admin users.
-    # @note Updated 2020-07-07.
-    # """
-    local group string sudo_file
-    koopa::assert_has_no_args "$#"
-    koopa::is_root && return 0
-    koopa::assert_has_sudo
-    group="$(koopa::admin_group)"
-    sudo_file='/etc/sudoers.d/sudo'
-    sudo touch "$sudo_file"
-    if sudo grep -q "$group" "$sudo_file"
-    then
-        koopa::success "Passwordless sudo enabled for \"${group}\" group."
-        return 0
-    fi
-    koopa::info "Updating '${sudo_file}' to include \"${group}\"."
-    string="%${group} ALL=(ALL) NOPASSWD: ALL"
-    sudo sh -c "printf \"%s\n\" \"$string\" >> \"${sudo_file}\""
-    sudo chmod -v 0440 "$sudo_file"
-    koopa::success "Passwordless sudo enabled for \"${group}\"."
-    return 0
-}
-
-koopa::enable_shell() { # {{{1
-    # """
-    # Enable shell.
-    # @note Updated 2020-07-07.
-    # """
-    local cmd_name cmd_path etc_file
-    koopa::assert_has_args "$#"
-    koopa::has_sudo || return 0
-    cmd_name="${1:?}"
-    cmd_path="$(koopa::make_prefix)/bin/${cmd_name}"
-    etc_file='/etc/shells'
-    [[ -f "$etc_file" ]] || return 0
-    koopa::info "Updating \"${etc_file}\" to include \"${cmd_path}\"."
-    if ! grep -q "$cmd_path" "$etc_file"
-    then
-        sudo sh -c "printf \"%s\n\" \"${cmd_path}\" >> \"${etc_file}\""
-    else
-        koopa::success "\"${cmd_path}\" already defined in \"${etc_file}\"."
-    fi
-    koopa::note "Run \"chsh -s ${cmd_path} ${USER}\" to change default shell."
-    return 0
-}
-
 koopa::find_user_profile() { # {{{1
     # """
     # Find current user's shell profile configuration file.
@@ -318,6 +270,39 @@ koopa::install_mike() { # {{{1
         'docker' \
         'dotfiles-private' \
         'scripts-private'
+    return 0
+}
+
+koopa::ip_address() {
+    # """
+    # IP address.
+    # @note Updated 2020-07-14.
+    # """
+    type='public'
+    while (("$#"))
+    do
+        case "$1" in
+            --local)
+                type='local'
+                shift 1
+                ;;
+            --public)
+                type='public'
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    case "$type" in
+        local)
+            koopa::local_ip_address
+            ;;
+        public)
+            koopa::public_ip_address
+            ;;
+    esac
     return 0
 }
 
@@ -492,6 +477,17 @@ koopa::link_dotfile() { # {{{1
     [[ "$symlink_dn" != "${HOME:?}" ]] && koopa::mkdir "$symlink_dn"
     koopa::ln "$source_path" "$symlink_path"
     return 0
+}
+
+koopa::list_dotfiles() {
+    # """
+    # List dotfiles.
+    # @note Updated 2020-07-10.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::find_dotfiles l 'Symlinks'
+    koopa::find_dotfiles f 'Files'
+    koopa::find_dotfiles d 'Directories'
 }
 
 koopa::remove_user_from_group() { # {{{1

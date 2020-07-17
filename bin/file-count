@@ -4,12 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-prefix="${1:?}"
-
-# > ls -1 "$prefix" | wc -l
-
-find "$prefix" \
-    -type f \
-    -printf '.' \
-    | wc -c
-
+koopa::file_count "$@"

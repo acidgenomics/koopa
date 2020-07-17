@@ -4,32 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# https://wiki.winehq.org/Fedora
-#
-# Note that 'winehq-stable' is currently only available on Fedora 31.
-# Can use 'winehq-devel' on Fedora 32.
-# """
-
-koopa::exit_if_installed wine
-
-name_fancy="Wine"
-
-koopa::install_start "$name_fancy"
-
-version="$( \
-    grep 'VERSION_ID=' /etc/os-release \
-        | cut -d '=' -f 2 \
-)"
-repo_url="https://dl.winehq.org/wine-builds/fedora/${version}/winehq.repo"
-
-dnf -y update
-dnf -y install dnf-plugins-core
-dnf config-manager --add-repo "$repo_url"
-dnf -y install \
-    winehq-stable \
-    xorg-x11-apps \
-    xorg-x11-server-Xvfb \
-    xorg-x11-xauth
-
-koopa::install_success "$name_fancy"
+koopa::fedora_install_wine "$@"

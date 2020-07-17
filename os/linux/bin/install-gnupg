@@ -4,9 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-koopa::install_cellar --name="gnupg" --name-fancy="GnuPG suite" "$@"
-
-if koopa::is_installed gpg-agent
-then
-    gpgconf --kill gpg-agent
-fi
+koopa::install_gnupg "$@"

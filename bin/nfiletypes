@@ -4,13 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-dir="${1:-.}"
-
-find "$dir" \
-    -maxdepth 1 \
-    -type f \
-    | sed 's/.*\.//' \
-    | sort \
-    | uniq -c \
-    | sed 's/^ *//g' \
-    | sed 's/ /\t/g'
+koopa::nfiletypes "$@"
