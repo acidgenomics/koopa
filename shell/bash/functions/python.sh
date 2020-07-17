@@ -169,10 +169,7 @@ koopa::pip_install() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_is_installed "$python"
     koopa::assert_is_python_package_installed --python="$python" 'pip'
-    pip_install_flags=(
-        '--no-warn-script-location'
-        '--verbose'
-    )
+    pip_install_flags=('--no-warn-script-location')
     if [[ "$reinstall" -eq 1 ]]
     then
         pip_flags+=(

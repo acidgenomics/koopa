@@ -170,10 +170,9 @@ koopa::link_cellar() { # {{{1
     # koopa::link_cellar emacs 26.3
     # """
     local cellar_prefix cellar_subdirs cp_flags include_dirs make_prefix name \
-        pos verbose version
+        pos version
     koopa::assert_is_linux
     include_dirs=
-    verbose=0
     version=
     pos=()
     while (("$#"))
@@ -194,10 +193,6 @@ koopa::link_cellar() { # {{{1
             --name)
                 name="$2"
                 shift 2
-                ;;
-            --verbose)
-                verbose=1
-                shift 1
                 ;;
             --version=*)
                 version="${1#*=}"
@@ -256,7 +251,6 @@ koopa::link_cellar() { # {{{1
         )"
     fi
     cp_flags=("-frs")
-    [[ "$verbose" -eq 1 ]] && cp_flags+=("-v")
     cp "${cp_flags[@]}" "${cellar_subdirs[@]}" -t "${make_prefix}/"
     koopa::is_shared_install && koopa::update_ldconfig
     return 0
