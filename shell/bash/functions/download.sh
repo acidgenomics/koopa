@@ -9,7 +9,6 @@ koopa::download() { # {{{1
     # * --connect-timeout <seconds>
     # * --silent
     # * --stderr
-    # * --verbose
     #
     # Note that '--fail-early' flag is useful, but not supported on old versions
     # of curl (e.g. 7.29.0; RHEL 7).
@@ -234,6 +233,7 @@ koopa::youtube_mp3() {
     # @note Updated 2020-07-04.
     # """
     local url
+    koopa::assert_has_args "$#"
     koopa::assert_is_installed youtube-dl
     for url in "$@"
     do
