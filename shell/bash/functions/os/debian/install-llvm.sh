@@ -41,8 +41,7 @@ koopa::debian_install_llvm() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    # FIXME Convert to function.
-    [[ "$reinstall" -eq 1 ]] && uninstall-llvm
+    [[ "$reinstall" -eq 1 ]] && koopa::debian_uninstall_llvm
     name='llvm'
     version="$(koopa::variable "$name")"
     major_version="$(koopa::major_version "$version")"
@@ -58,8 +57,7 @@ koopa::debian_install_llvm() {
             exit 0
         else
             koopa::dl 'LLVM config' "$LLVM_CONFIG"
-            # FIXME Convert to function.
-            uninstall-llvm
+            koopa::debian_uninstall_llvm
         fi
     fi
     koopa::install_start "$name_fancy"
