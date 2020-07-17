@@ -309,6 +309,7 @@ koopa::macos_install_homebrew_recipes() { # {{{1
     brews=(
         # Priority {{{4
         # ----------------------------------------------------------------------
+        'python'
         'bash'
         'fish'
         'ksh'
@@ -445,19 +446,19 @@ koopa::macos_install_homebrew_recipes() { # {{{1
     # Cellar (keg)-only brews {{{3
     # --------------------------------------------------------------------------
 
-    keg_only_brews=(
-        'python'
-    )
-    for brew in "${keg_only_brews[@]}"
-    do
-        if koopa_str_match_regex "$installed_brews" "^${brew}$"
-        then
-            koopa::note "\"${brew}\" is already installed."
-        else
-            brew install "$brew"
-        fi
-        brew unlink "$brew" >/dev/null || true
-    done
+    # > keg_only_brews=(
+    # >     'python'
+    # > )
+    # > for brew in "${keg_only_brews[@]}"
+    # > do
+    # >     if koopa::str_match_regex "$installed_brews" "^${brew}$"
+    # >     then
+    # >         koopa::note "\"${brew}\" is already installed."
+    # >     else
+    # >         brew install "$brew"
+    # >     fi
+    # >     brew unlink "$brew" >/dev/null || true
+    # > done
 
     # Externally tapped brews {{{3
     # --------------------------------------------------------------------------
@@ -488,7 +489,7 @@ koopa::macos_install_homebrew_recipes() { # {{{1
     for brew in "${external_brews[@]}"
     do
         name="$(basename "$brew")"
-        if koopa::print "$installed_brews" | grep -Eq "^${name}$"
+        if koopa::str_match_regex "$installed_brews" "^${name}$"
         then
             koopa::note "\"${brew}\" is already installed."
         else
