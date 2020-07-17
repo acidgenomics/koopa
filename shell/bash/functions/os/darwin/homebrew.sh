@@ -160,45 +160,21 @@ ${version}/LittleSnitch-${version}.dmg"
     return 0
 }
 
-koopa::macos_install_homebrew_recipes() { # {{{1
+koopa::macos_install_homebrew_packages() { # {{{1
     # """
-    # Check taps with `brew tap`.
-    #
-    # Potentially useful binaries:
-    # https://github.com/mathiasbynens/dotfiles/blob/main/brew.sh
-    #
-    # XQuartz:
-    # Install XQuartz 2.7.9 manually instead of using 'xquartz' cask.
-    #
-    # Little Snitch:
-    # 'little-snitch' cask currently requires manual follow-up installation:
-    # /usr/local/Caskroom/little-snitch/*/LittleSnitch-*.dmg
-    #
-    # LLVM:
-    # LLVM takes up 4 GB of disk space but is required for some Python packages.
-    # In particular, if we want to install umap-learn, this is now required.
-    #
-    # PROJ/GDAL:
-    # Consider using 'osgeo-gdal' instead of regular 'gdal' brew. This one gets
-    # updated more regularly. However, I've found that the newer version can
-    # cause some R packages to fail to build from source.
-    #
-    # Rust:
-    # Just use the 'install-rust' script instead of Homebrew 'rustup-init'. I
-    # hit some permissions issues with the 'rustup' cellar symlink installed at
-    # '/usr/local/bin/rustup' that doesn't occur when running the official
-    # script. And be sure not to install 'rust' alongside 'rustup-init'.
+    # Install Homebrew packages using Bundle Brewfile.
+    # @note Updated 2020-07-17.
     # """
-    local brew brews cask casks installed_brews installed_casks name \
-        name_fancy tap taps untap untaps
+    local brewfile name_fancy
     koopa::assert_has_no_args "$#"
-    name_fancy='Homebrew recipes'
+    name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
     koopa::assert_is_installed brew
     export HOMEBREW_FORCE_BOTTLE=1
-
-    # FIXME SWITCH TO BUNDLE APPROACH HERE.
-
+    brewfile="$(koopa::brewfile)"
+    koopa::assert_is_file "$brewfile"
+    koopa::dl 'Brewfile' "$brewfile"
+    brew bundle install --file="$brewfile" --no-lock --no-upgrade
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -212,4 +188,3 @@ koopa::macos_update_homebrew() {
     koopa::brew_update "$@"
     return 0
 }
-

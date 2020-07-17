@@ -4,4 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 checks=0 source "${script_dir}/../include/header.sh"
 
-koopa::macos_install_homebrew_recipes "$@"
+koopa::macos_install_homebrew_packages "$@"
