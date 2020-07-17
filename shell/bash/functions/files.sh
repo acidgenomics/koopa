@@ -1,5 +1,72 @@
 #!/usr/bin/env bash
 
+koopa::autopad_samples() {
+    # """
+    # Autopad samples.
+    # @note Updated 2020-07-08.
+    # """
+    local files newname num padwidth oldname pos prefix stem
+    koopa::assert_has_args "$#"
+    prefix='sample'
+    padwidth=2
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --padwidth=*)
+                padwidth="${1#*=}"
+                shift 1
+                ;;
+            --padwidth)
+                padwidth="$2"
+                shift 2
+                ;;
+            --prefix=*)
+                prefix="${1#*=}"
+                shift 1
+                ;;
+            --prefix)
+                prefix="$2"
+                shift 2
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    files=("$@")
+    if ! koopa::is_array_non_empty "${files[@]}"
+    then
+        koopa::stop 'No files.'
+    fi
+    for file in "${files[@]}"
+    do
+        if [[ "$file" =~ ^([0-9]+)(.*)$ ]]
+        then
+            oldname="${BASH_REMATCH[0]}"
+            num=${BASH_REMATCH[1]}
+            # Now pad the number prefix.
+            num=$(printf "%.${padwidth}d" "$num")
+            stem=${BASH_REMATCH[2]}
+            # Combine with prefix to create desired file name.
+            newname="${prefix}_${num}${stem}"
+            koopa::mv "$oldname" "$newname"
+        else
+            koopa::note "Skipping '${file}'."
+        fi
+    done
+    return 0
+}
+
 koopa::basename() { # {{{1
     # """
     # Extract the file basename.
@@ -74,6 +141,77 @@ koopa::basename_sans_ext2() { # {{{1
     return 0
 }
 
+koopa::convert_utf8_nfd_to_nfc() {
+    # """
+    # Convert UTF-8 NFD to NFC.
+    # @note Updated 2020-07-15.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::is_installed convmv
+    convmv -r -f utf8 -t utf8 --nfc --notest "$@"
+    return 0
+}
+
+koopa::delete_adobe_bridge_cache() {
+    # """
+    # Delete Adobe Bridge cache files.
+    # @note Updated 2020-07-16.
+    # """
+    local dir
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_installed find
+    dir="${1:-.}"
+    koopa::assert_is_dir "$dir"
+    koopa::h1 "Deleting Adobe Bridge cache in \"${dir}\"."
+    find "$dir" \
+        -mindepth 1 \
+        -type f \
+        \( \
+            -name '.BridgeCache' -o \
+            -name '.BridgeCacheT' \
+        \) \
+        -delete \
+        -print
+    return 0
+}
+
+koopa::delete_file_system_cruft() { # {{{1
+    # """
+    # Delete file system cruft.
+    # @note Updated 2020-07-01.
+    # """
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    find "$dir" \
+        -type f \
+        \( \
+            -name ".DS_Store" -o \
+            -name "._*" -o \
+            -name "Thumbs.db*" \
+        \) \
+        -delete \
+        -print
+    return 0
+}
+
+koopa::delete_named_subdirs() { # {{{1
+    # """
+    # Delete named subdirectories.
+    # @note Updated 2020-07-08.
+    # """
+    local dir subdir_name
+    koopa::assert_has_args_eq "$#" 2
+    koopa::assert_is_installed find
+    dir="${1:?}"
+    subdir_name="${2:?}"
+    find "$dir" \
+        -type d \
+        -name "$subdir_name" \
+        -print0 \
+        | xargs -0 -I {} rm -frv {}
+    return 0
+}
+
 koopa::ensure_newline_at_end_of_file() { # {{{1
     # """
     # Ensure output CSV contains trailing line break.
@@ -93,6 +231,22 @@ koopa::ensure_newline_at_end_of_file() { # {{{1
     file="${1:?}"
     [[ -n "$(tail -c1 "$file")" ]] || return 0
     printf '\n' >>"$file"
+    return 0
+}
+
+koopa::file_count() { # {{{1
+    # """
+    # Return number of files.
+    # @note Updated 2020-07-11.
+    #
+    # Alternate approach:
+    # > ls -1 "$prefix" | wc -l
+    # """
+    local prefix x
+    koopa::assert_is_installed find wc
+    prefix="${1:?}"
+    x="$(find "$prefix" -mindepth 1 -type f -printf '.' | wc -c)"
+    koopa::print "$x"
     return 0
 }
 
@@ -383,6 +537,31 @@ koopa::line_count() { # {{{1
     return 0
 }
 
+koopa::md5sum_check_to_new_md5_file() {
+    local datetime log_file
+    koopa::assert_has_args "$#"
+    datetime="$(koopa::datetime)"
+    log_file="md5sum-${datetime}.md5"
+    md5sum "$@" 2>&1 | tee "$log_file"
+    return 0
+}
+
+koopa::nfiletypes() {
+    local dir
+    koopa::assert_has_args_ne "$#" 1
+    koopa::assert_is_installed find
+    dir="${1:-.}"
+    find "$dir" \
+        -maxdepth 1 \
+        -type f \
+        | sed 's/.*\.//' \
+        | sort \
+        | uniq -c \
+        | sed 's/^ *//g' \
+        | sed 's/ /\t/g'
+    return 0
+}
+
 koopa::realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
@@ -453,6 +632,22 @@ koopa::remove_empty_dirs() { # {{{1
         koopa::info "Removing '${dir}'."
         rm -fr "$dir"
     done
+    return 0
+}
+
+koopa::reset_permissions() {
+    local dir group user
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    user="$(koopa::user)"
+    group="$(koopa::group)"
+    chown -R "${user}:${group}" "$dir"
+    find "$dir" -type d -print0 \
+        | xargs -0 -I {} chmod 'u=rwx,g=rwx,o=rx' {}
+    find "$dir" -type f -print0 \
+        | xargs -0 -I {} chmod 'u=rw,g=rw,o=r' {}
+    find "$dir" -name '*.sh' -type f -print0 \
+        | xargs -0 -I {} chmod 'u=rwx,g=rwx,o=rx' {}
     return 0
 }
 
@@ -551,3 +746,13 @@ koopa::stat_user() { # {{{1
     koopa::print "$x"
     return 0
 }
+
+koopa::trash() {
+    local trash_dir
+    koopa::assert_has_args "$#"
+    trash_dir="${HOME}/.trash/"
+    koopa::mkdir "$trash_dir"
+    koopa::mv -t "$trash_dir" "$@"
+    return 0
+}
+

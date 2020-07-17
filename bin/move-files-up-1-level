@@ -4,20 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::move_files_up_1_level() {
-    # """
-    # Move files up 1 level.
-    # @note Updated 2020-07-08.
-    # """
-    local dir
-    dir="${1:-.}"
-    (
-        koopa::cd "$dir"
-        find . -type f -mindepth 2 -exec koopa::mv {} . \;
-        find . -mindepth 2
-        find . -type d -delete -print
-    )
-    return 0
-}
-
 koopa::move_files_up_1_level "$@"

@@ -4,14 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-koopa::assert_has_no_args "$#"
-
-# Check if EPEL is already enabled.
-if sudo dnf repolist | grep -q "epel/"
-then
-    koopa::success "EPEL 8 is already enabled."
-    exit 0
-fi
-
-sudo dnf install -y \
-    https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+koopa::rhel_enable_epel "$@"

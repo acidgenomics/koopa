@@ -3,7 +3,7 @@
 _koopa_prompt() { # {{{1
     # """
     # Prompt string.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-13.
     #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
@@ -48,7 +48,11 @@ _koopa_prompt() { # {{{1
         zsh)
             # shellcheck disable=SC2039
             newline=$'\n'
-            prompt='%%'
+            # Note that Zsh uses '%' by default.
+            # > prompt='%%'
+            # Inspired by Pure prompt.
+            # https://github.com/sindresorhus/pure
+            prompt='❯'
             wd='%~'
             ;;
         *)

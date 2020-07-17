@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
-test() {
+test() { # {{{1
     # """
     # R script checks.
     # Updated 2020-07-07.
@@ -26,7 +26,7 @@ test() {
     return 0
 }
 
-test_lintr() {
+test_lintr() { # {{{1
     local file
     koopa::assert_has_args "$#"
     for file in "$@"

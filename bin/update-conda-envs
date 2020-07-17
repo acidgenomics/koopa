@@ -4,38 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_no_args "$#"
-koopa::assert_is_installed conda
-
-conda_prefix="$(koopa::conda_prefix)"
-conda_exe="${conda_prefix}/condabin/conda"
-# > conda_exe="${conda_prefix}/bin/conda"
-
-readarray -t env_prefixes <<< "$( \
-    find "${conda_prefix}/envs" \
-        -mindepth 1 \
-        -maxdepth 1 \
-        -type d \
-        -print \
-        | sort \
-)"
-
-if ! koopa::is_array_non_empty "${env_prefixes[@]}"
-then
-    koopa::note "Failed to detect any conda environments."
-    exit 0
-fi
-
-koopa::h1 "Updating ${#env_prefixes[@]} environments at '${conda_prefix}'."
-
-koopa::h2 "Updating conda installation."
-update-conda > /dev/null
-
-for env_prefix in "${env_prefixes[@]}"
-do
-    koopa::h2 "Updating '${env_prefix}'."
-    "$conda_exe" update -y --prefix="$env_prefix" --all
-done
-
-# > "$conda_exe" clean --yes --tarballs
-koopa::sys_set_permissions -r "$conda_prefix"
+koopa::update_conda_envs "$@"

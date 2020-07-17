@@ -3,9 +3,5 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
-koopa::assert_has_args "$#"
 
-trash_dir="${HOME}/.trash/"
-
-mkdir -pv "$trash_dir"
-mv -v "$@" "$trash_dir"
+koopa::trash "$@"
