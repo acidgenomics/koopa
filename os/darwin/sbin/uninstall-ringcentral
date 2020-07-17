@@ -4,17 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# FIXME
-koopa::assert_has_no_args "$#"
-name_fancy="RingCentral"
-koopa::uninstall_start "$name_fancy"
-rm -frv \
-    "${HOME}/Library/Application Support/RingCentral Meetings" \
-    "${HOME}/Library/Caches/us.zoom.ringcentral" \
-    "${HOME}/Library/Internet Plug-Ins/RingCentralMeetings.plugin" \
-    "${HOME}/Library/Internet Plug-Ins/RingCentralMeetings.plugin/Contents/MacOS/RingCentralMeetings" \
-    "${HOME}/Library/Logs/RingCentralMeetings" \
-    "${HOME}/Preferences/RingcentralChat.plist" \
-    "${HOME}/Preferences/us.zoom.ringcentral.plist"
-sudo rm -frv "/Applications/RingCentral Meetings.app"
-koopa::uninstall_success "$name_fancy"
+koopa::macos_uninstall_ringcentral "$@"
