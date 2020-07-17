@@ -5,17 +5,23 @@
 # @note Updated 2020-07-17.
 # """
 
-koopa_prefix="$( \
-    cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../.." \
-    &>/dev/null \
-    && pwd -P \
-)"
+if [[ -z "${KOOPA_PREFIX:-}" ]]
+then
+    KOOPA_PREFIX="$( \
+        cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../.." \
+        &>/dev/null \
+        && pwd -P \
+    )"
+    export KOOPA_PREFIX
+fi
+
 # shellcheck source=/dev/null
-source "${koopa_prefix}/os/linux/include/header.sh"
-for file in "${koopa_prefix}/shell/bash/functions/os/debian/"*'.sh'
+source "${KOOPA_PREFIX}/os/linux/include/header.sh"
+for file in "${KOOPA_PREFIX}/shell/bash/functions/os/debian/"*'.sh'
 do
     # shellcheck source=/dev/null
     [[ -f "$file" ]] && source "$file"
 done
-unset -v file koopa_prefix
+unset -v file
+
 koopa::assert_is_debian
