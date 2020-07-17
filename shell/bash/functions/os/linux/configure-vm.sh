@@ -226,7 +226,7 @@ koopa::configure_vm() { # {{{1
     # Programs {{{2
     # --------------------------------------------------------------------------
 
-    koopa::is_debian && koopa::debian_install_llvm
+    koopa::run_if_installed install-llvm
     koopa::install_conda
     koopa::install_openjdk
     if [[ "$compact" -eq 0 ]]
