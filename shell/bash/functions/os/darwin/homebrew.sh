@@ -309,7 +309,7 @@ koopa::macos_install_homebrew_recipes() { # {{{1
     brews=(
         # Priority {{{4
         # ----------------------------------------------------------------------
-        'python'
+        'python@3.8'
         'bash'
         'fish'
         'ksh'
