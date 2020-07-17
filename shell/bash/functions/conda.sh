@@ -340,3 +340,77 @@ koopa::conda_remove_env() { # {{{1
     done
     return 0
 }
+
+koopa::install_conda() {
+    # """
+    # Install Conda (or Anaconda).
+    # @note Updated 2020-07-17.
+    # """
+    local anaconda name_fancy ostype script tmp_dir url version
+    koopa::exit_if_installed conda
+    koopa::assert_has_no_envs
+    ostype="${OSTYPE:?}"
+    case "$ostype" in
+        darwin*)
+            ostype='MacOSX'
+            ;;
+        linux*)
+            ostype='Linux'
+            ;;
+        *)
+            koopa::stop "\"${ostype}\" is not supported."
+            ;;
+    esac
+    anaconda=0
+    version=
+    while (("$#"))
+    do
+        case "$1" in
+            --anaconda)
+                anaconda=1
+                shift 1
+                ;;
+            --version=*)
+                version="${1#*=}"
+                shift 1
+                ;;
+            --version)
+                version="$2"
+                shift 2
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    prefix="$(koopa::conda_prefix)"
+    koopa::exit_if_dir "$prefix"
+    if [[ "$anaconda" -eq 1 ]]
+    then
+        [[ -z "$version" ]] && version="$(koopa::variable 'anaconda')"
+        name_fancy='Anaconda'
+        script="Anaconda3-${version}-${ostype}-x86_64.sh"
+        url="https://repo.anaconda.com/archive/${script}"
+    else
+        [[ -z "$version" ]] && version="$(koopa::variable 'conda')"
+        name_fancy='Miniconda'
+        # The py38 release is currently buggy.
+        script="Miniconda3-py37_${version}-${ostype}-x86_64.sh"
+        url="https://repo.continuum.io/miniconda/${script}"
+    fi
+    koopa::install_start "$name_fancy" "$prefix"
+    koopa::mkdir "$prefix"
+    tmp_dir="$(koopa::tmp_dir)"
+    (
+        koopa::cd "$tmp_dir"
+        koopa::download "$url"
+        bash "$script" -bf -p "$prefix"
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    koopa::rm "$tmp_dir"
+    koopa::ln "$(koopa::prefix)/os/linux/etc/conda/condarc" "${prefix}/.condarc"
+    koopa::remove_broken_symlinks "$prefix"
+    koopa::sys_set_permissions -r "$prefix"
+    koopa::install_success "$name_fancy"
+    koopa::restart
+    return 0
+}
