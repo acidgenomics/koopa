@@ -130,7 +130,7 @@ koopa::update() { # {{{1
             koopa::update_perlbrew
             koopa::update_python_packages
             koopa::update_rust
-            update-rust-packages  # FIXME (symlink)
+            koopa::update_rust_packages
             update-r-packages  # FIXME R script.
             if koopa::is_linux
             then
