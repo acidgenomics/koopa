@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-koopa::macos_install_r_cran_clang() {
+koopa::macos_install_r_cran_clang() { # {{{1
+    # """
+    # Install CRAN clang.
+    # @note Updated 2020-07-17.
+    # Only needed for R < 4.0.
+    # """
     local file major_version name prefix tmp_dir url version
     while (("$#"))
     do
@@ -34,13 +39,107 @@ koopa::macos_install_r_cran_clang() {
     return 0
 }
 
-koopa::macos_install_r_cran_clang_7() {
+koopa::macos_install_r_cran_clang_7() { # {{{1
     koopa::macos_install_r_cran_clang --version='7.0.0'
     return 0
 }
 
-koopa::macos_install_r_cran_clang_8() {
+koopa::macos_install_r_cran_clang_8() { # {{{1
     koopa::macos_install_r_cran_clang --version='8.0.0'
+    return 0
+}
+
+koopa::macos_install_r_cran_gfortran() { # {{{1
+    # """
+    # Install CRAN gfortran.
+    # @note Updated 2020-07-17.
+    # @seealso
+    # - https://github.com/fxcoudert/gfortran-for-macOS
+    # """
+    local file name pkg prefix stem tmp_dir url version
+    while (("$#"))
+    do
+        case "$1" in
+            --version=*)
+                version="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_has_no_args "$#"
+    name='gfortran'
+    prefix="/usr/local/${name}"
+    koopa::exit_if_dir "$prefix"
+    koopa::h1 "Installing ${name} ${version} to \"${prefix}\"."
+    tmp_dir="$(koopa::tmp_dir)"
+    (
+        koopa::cd "$tmp_dir"
+        # This is compatible with Catalina.
+        stem="${name}-${version}-Mojave"
+        file="${stem}.dmg"
+        url="https://mac.r-project.org/tools/${file}"
+        koopa::download "$url"
+        hdiutil mount "$file"
+        pkg="/Volumes/${stem}/${stem}/gfortran.pkg"
+        sudo installer -pkg "$pkg" -target /
+        hdiutil unmount "/Volumes/${stem}"
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    koopa::rm "$tmp_dir"
+    koopa::install_success "$name"
+    koopa::restart
+    return 0
+}
+
+koopa::macos_install_r_cran_gfortran_8() { # {{{1
+    koopa::macos_install_r_cran_gfortran --version='6.1'
+    return 0
+}
+
+koopa::macos_install_r_cran_gfortran_8() { # {{{1
+    koopa::macos_install_r_cran_gfortran --version='8.2'
+    return 0
+}
+
+koopa::macos_install_r_devel() { # {{{1
+    # """
+    # Install R-devel on macOS.
+    # @note Updated 2020-07-17.
+    # """
+    koopa::assert_has_no_args "$#"
+    r_version='devel'
+    macos_version='el-capitan'
+    tmp_dir="$(koopa::tmp_dir)"
+    name_fancy="R-${r_version} for ${macos_version}."
+    koopa::install_start "$name_fancy"
+    koopa::note 'Debian r-devel inside a Docker container is preferred.'
+    (
+        koopa::cd "$tmp_dir"
+        file="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
+        url="https://mac.r-project.org/${macos_version}/R-${r_version}/${file}"
+        koopa::download "$url"
+        if [[ -d '/Library/Frameworks/R.framework' ]] &&
+            [[ ! -L '/Library/Frameworks/R.framework' ]]
+        then
+            koopa::note 'Backing up existing "R.framework".'
+            koopa::mv -S \
+                '/Library/Frameworks/R.framework' \
+                '/Library/Frameworks/R.framework.bak'
+        fi
+        sudo tar -xzvf "$file" -C /
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    koopa::rm "$tmp_dir"
+    # Create versioned symlinks.
+    koopa::mv -S \
+        '/Library/Frameworks/R.framework' \
+        "/Library/Frameworks/R-${r_version}.framework"
+    koopa::ln -S \
+        "/Library/Frameworks/R-${r_version}.framework" \
+        '/Library/Frameworks/R.framework'
+    koopa::install_success "$name_fancy"
+    koopa::note 'Ensure that "R_LIBS_USER" in "~/.Renviron" is correct.'
     return 0
 }
 

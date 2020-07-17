@@ -3,22 +3,19 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-koopa::assert_has_no_args "$#"
 
+# FIXME
 # """
 # https://help.webex.com/en-us/WBX38280/
 #     How-Do-I-Uninstall-Webex-Software-on-a-Mac
 # """
-
+koopa::assert_has_no_args "$#"
 name_fancy="Webex"
-
 koopa::uninstall_start "$name_fancy"
-
 # ~/.Webex
 # ~/Library/Application Support/Google/Chrome Canary/NativeMessagingHosts/com.webex.meeting.json
 # ~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.webex.meeting.json
 # ~/Library/Application Support/Mozilla/NativeMessagingHosts/com.webex.meeting.json
-
 rm -frv \
     "${HOME}/Library/Application Support/Cisco/WebEx Meetings" \
     "${HOME}/Library/Application Support/WebEx Folder" \
@@ -35,7 +32,5 @@ com.apple.LSSharedFileList.ApplicationRecentDocuments/"*.webex.*.sfl \
     "${HOME}/Library/Receipts/"*.webex.* \
     "${HOME}/Library/Safari/LocalStorage/"*.webex.com* \
     "${HOME}/Library/WebKit/com.webex.meetingmanager"
-
 sudo rm -frv "/Applications/Cisco Webex Meetings.app"
-
 koopa::uninstall_success "$name_fancy"
