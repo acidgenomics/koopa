@@ -4,26 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-name="clang"
-version="7.0.0"
-major_version="$(koopa::major_version "$version")"
-prefix="/usr/local/${name}${major_version}"
-
-koopa::exit_if_dir "$prefix"
-
-koopa::h1 "Installing ${name} ${version} to '${prefix}'."
-
-tmp_dir="$(koopa::tmp_dir)"
-
-(
-    koopa::cd "$tmp_dir"
-    file="${name}-${version}.pkg"
-    url="https://cran.r-project.org/bin/macosx/tools/${file}"
-    koopa::download "$url"
-    sudo installer -pkg "$file" -target /
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-koopa::install_success "$name"
-koopa::restart
+koopa::macos_install_r_cran_clang_7 "$@"

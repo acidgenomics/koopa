@@ -4,14 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-koopa::assert_is_installed Rscript
-
-Rscript -e "\
-    install.packages(
-        pkgs = \"units\",
-        type = \"source\",
-        configure.args = c(
-            \"--with-udunits2-lib=/usr/local/lib\",
-            \"--with-udunits2-include=/usr/include/udunits2\"
-        )
-    )"
+koopa::macos_install_r_units "$@"

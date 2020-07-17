@@ -174,45 +174,6 @@ _koopa_activate_conda() { # {{{1
     return 0
 }
 
-_koopa_activate_conda_env() { # {{{1
-    # """
-    # Activate a conda environment.
-    # @note Updated 2020-06-30.
-    #
-    # Designed to work inside calling scripts and/or subshells.
-    #
-    # Currently, the conda activation script returns a 'conda()' function in
-    # the current shell that doesn't propagate to subshells. This function
-    # attempts to rectify the current situation.
-    #
-    # Note that the conda activation script currently has unbound variables
-    # (e.g. PS1), that will cause this step to fail unless we temporarily
-    # disable unbound variable checks.
-    #
-    # Alternate approach:
-    # > eval "$(conda shell.bash hook)"
-    #
-    # See also:
-    # - https://github.com/conda/conda/issues/7980
-    # - https://stackoverflow.com/questions/34534513
-    # """
-    # shellcheck disable=SC2039
-    local name nounset prefix
-    _koopa_is_installed conda || return 1
-    name="${1:?}"
-    prefix="$(_koopa_conda_prefix)"
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    if ! type conda | grep -q conda.sh
-    then
-        # shellcheck source=/dev/null
-        . "${prefix}/etc/profile.d/conda.sh"
-    fi
-    conda activate "$name"
-    [ "$nounset" -eq 1 ] && set -u
-    return 0
-}
-
 _koopa_activate_coreutils() { # {{{1
     # """
     # Activate hardened interactive aliases for coreutils.
@@ -468,28 +429,6 @@ _koopa_activate_homebrew_prefix() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}"
-    return 0
-}
-
-_koopa_activate_homebrew_python() {
-    # """
-    # Activate Homebrew Python.
-    # @note Updated 2020-06-30.
-    #
-    # Use official installer in '/Library/Frameworks' instead.
-    #
-    # Homebrew is lagging on new Python releases, so install manually instead.
-    # See 'python.sh' script for activation.
-    #
-    # Don't add to PATH if a virtual environment is active.
-    #
-    # @seealso
-    # - /usr/local/opt/python/bin
-    # - https://docs.brew.sh/Homebrew-and-Python
-    # - brew info python
-    # """
-    [ -z "${VIRTUAL_ENV:-}" ] || return 0
-    _koopa_activate_homebrew_prefix "python"
     return 0
 }
 
@@ -781,6 +720,21 @@ _koopa_activate_pyenv() { # {{{1
     return 0
 }
 
+_koopa_activate_python_startup() { # {{{1
+    # """
+    # Activate Python startup configuration.
+    # @note Updated 2020-07-13.
+    # @seealso
+    # - https://stackoverflow.com/questions/33683744/
+    # """
+    # shellcheck disable=SC2039
+    local file
+    file="${HOME}/.pyrc"
+    [ -f "$file" ] || return 0
+    export PYTHONSTARTUP="$file"
+    return 0
+}
+
 _koopa_activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
@@ -817,17 +771,15 @@ _koopa_activate_rbenv() { # {{{1
 _koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-17.
     # """
     # shellcheck disable=SC2039
     local gem_home
-    [ -n "${GEM_HOME:-}" ] && return 0
-    gem_home="${HOME}/.gem"
-    if [ -d "$gem_home" ]
-    then
-        _koopa_add_to_path_start "$gem_home"
-        export GEM_HOME="$gem_home"
-    fi
+    gem_home="${GEM_HOME:-}"
+    [ -z "$gem_home" ] && gem_home="${HOME}/.gem"
+    [ -d "$gem_home" ] || return 0
+    _koopa_activate_prefix "$gem_home"
+    export GEM_HOME="$gem_home"
     return 0
 }
 

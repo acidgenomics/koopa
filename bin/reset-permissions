@@ -4,16 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-user="$(koopa::user)"
-group="$(koopa::group)"
-
-dir="${1:-.}"
-
-chown -R "${user}:${group}" "$dir"
-
-find "$dir" -type d -print0 | \
-    xargs -0 -I {} chmod u=rwx,g=rwx,o=rx {}
-find "$dir" -type f -print0 | \
-    xargs -0 -I {} chmod u=rw,g=rw,o=r {}
-find "$dir" -name "*.sh" -type f -print0 | \
-    xargs -0 -I {} chmod u=rwx,g=rwx,o=rx {}
+koopa::reset_permissions "$@"

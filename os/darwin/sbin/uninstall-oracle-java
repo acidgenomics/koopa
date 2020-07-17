@@ -3,26 +3,5 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-koopa::assert_has_no_args "$#"
 
-# https://www.java.com/en/download/help/mac_uninstall_java.xml
-
-name_fancy="Oracle Java"
-
-koopa::uninstall_start "$name_fancy"
-
-rm -frv \
-    "${HOME}/Library/Caches/com.oracle.java.Java-Updater" \
-    "${HOME}/Library/Application Support/Oracle/Java" \
-    "${HOME}/Library/Preferences/com.apple.java.util.prefs.plist" \
-    "${HOME}/Library/Preferences/com.oracle.java.JavaAppletPlugin.plist" \
-    "${HOME}/Library/Safari/LocalStorage/https_www.java.com_0.localstorage"*
-
-sudo rm -frv \
-    "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin" \
-    "/Library/LaunchAgents/com.oracle.java.Java-Updater.plist" \
-    "/Library/LaunchDaemons/com.oracle.java.Helper-Tool.plist" \
-    "/Library/PreferencePanes/JavaControlPanel.prefPane" \
-    "/Library/Preferences/com.oracle.java.Helper-Tool.plist"
-
-koopa::uninstall_success "$name_fancy"
+koopa::macos_uninstall_oracle_java "$@"

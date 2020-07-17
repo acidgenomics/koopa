@@ -4,42 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh" --no-header-checks
 
-# """
-# https://docs.brew.sh/Installation
-#
-# This script installs Homebrew to /usr/local so that you don’t need sudo when
-# you brew install. It is a careful script; it can be run even if you have stuff
-# installed to /usr/local already. It tells you exactly what it will do before
-# it does it too. You have to confirm everything it will do before it starts.
-#
-# Alternative install, supporting custom prefix (e.g. /usr/local/homebrew):
-# > mkdir homebrew && \
-# >     curl -L https://github.com/Homebrew/brew/tarball/master \
-# >     | tar xz --strip 1 -C homebrew
-# """
-
-koopa::exit_if_installed brew
-
-name_fancy="Homebrew"
-
-koopa::install_start "$name_fancy"
-
-koopa::assert_has_no_args "$#"
-
-koopa::h2 "Installing Xcode command line tools (CLT)."
-xcode-select --install &>/dev/null || true
-
-tmp_dir="$(koopa::tmp_dir)"
-
-(
-    koopa::cd "$tmp_dir"
-    file="install.sh"
-    url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
-    koopa::download "$url"
-    chmod +x "$file"
-    "./${file}"
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-koopa::install_success "$name_fancy"
+koopa::macos_install_homebrew "$@"

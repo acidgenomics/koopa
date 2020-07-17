@@ -6,6 +6,12 @@ test_gsub() {
         'aaa-aaa-ccc-ccc'
 }
 
+test_sanitize_version() {
+    assertEquals \
+        "$(koopa::sanitize_version '2.7.1p83')" \
+        '2.7.1'
+}
+
 test_snake_case() {
     assertEquals \
         "$(koopa::snake_case 'hello world')" \

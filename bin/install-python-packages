@@ -4,38 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_no_envs
-koopa::assert_is_installed python3
-
-name_fancy="Python packages"
-
-koopa::install_start "$name_fancy"
-koopa::dl "Site library" "$(koopa::python_site_packages_prefix)"
-
-koopa::install_pip
-
-# These are used internally by koopa.
-pkgs=(
-    black
-    flake8
-    logbook
-    pipx
-    pyflakes
-    pylint
-    pytest
-    setuptools
-    six
-    wheel
-)
-
-koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
-
-# Ensure pip is current.
-koopa::pip_install --upgrade pip
-
-# Now ready to install packages.
-koopa::pip_install "${pkgs[@]}"
-
-koopa::is_cellar python3 && koopa::link_cellar python
-
-koopa::install_success "$name_fancy"
+koopa::install_python_packages "$@"

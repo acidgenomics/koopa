@@ -4,9 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_args "$#"
-
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_file="md5sum-${timestamp}.md5"
-
-md5sum "$@" 2>&1 | tee "$log_file"
+koopa::md5sum_check_to_new_md5_file "$@"

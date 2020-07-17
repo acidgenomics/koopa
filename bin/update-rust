@@ -4,37 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-force=0
-
-while (("$#"))
-do
-    case "$1" in
-        --force)
-            force=1
-            shift 1
-            ;;
-        *)
-            koopa::invalid_arg "$1"
-            ;;
-    esac
-done
-
-if [[ "$force" -eq 0 ]]
-then
-    koopa::exit_if_current_version rust
-fi
-
-koopa::h1 "Updating Rust via rustup."
-koopa::exit_if_not_installed rustup
-
-export RUST_BACKTRACE="full"
-
-# rustup v1.21.0 fix.
-# https://github.com/rust-lang/rustup/issues/2166
-mkdir -pv "${RUSTUP_HOME}/downloads"
-
-# rustup v1.21.1 fix (2020-01-31).
-rm -f "${CARGO_HOME}/bin/"{cargo-fmt,rustfmt}
-
-# > rustup update stable
-rustup update
+koopa::update_rust "$@"

@@ -4,24 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_args "$#"
-
-flags=(
-    # "--exclude=bam"
-    # "--exclude=cram"
-    # "--exclude=fastq"
-    # "--exclude=sam"
-    "--exclude=.Rproj.user"
-    "--exclude=.git"
-    "--exclude=.gitignore"
-    "--exclude=work"
-    "--human-readable"
-    "--no-links"
-    "--progress"
-    "--recursive"
-    "--size-only"
-    "--stats"
-    "--verbose"
-)
-
-rsync "${flags[@]}" --rsync-path="sudo rsync" "$@"
+koopa::rsync_cloud "$@"

@@ -4,30 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-type="public"
-
-while (("$#"))
-do
-    case "$1" in
-        --local)
-            type="local"
-            shift 1
-            ;;
-        --public)
-            type="public"
-            shift 1
-            ;;
-        *)
-            koopa::invalid_arg "$1"
-            ;;
-    esac
-done
-
-case "$type" in
-    local)
-        koopa::local_ip_address
-        ;;
-    public)
-        koopa::public_ip_address
-        ;;
-esac
+koopa::ip_address "$@"

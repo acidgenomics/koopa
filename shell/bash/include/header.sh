@@ -34,7 +34,7 @@ fi
 koopa::bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-16.
     # """
     local file major_version pos
     [[ -n "${KOOPA_VERBOSE:-}" ]] && local verbose=1
@@ -81,15 +81,18 @@ koopa::bash_header() { # {{{1
     # Ensure koopa prefix is exported, if necessary.
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
-            &>/dev/null && pwd -P)"
+        KOOPA_PREFIX="$( \
+            cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../.." \
+            &>/dev/null \
+            && pwd -P \
+        )"
         export KOOPA_PREFIX
     fi
     # Source POSIX header (which includes functions).
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
     # Source Bash functions.
-    for file in "${KOOPA_PREFIX}/shell/bash/functions/"*".sh"
+    for file in "${KOOPA_PREFIX}/shell/bash/functions/"*'.sh'
     do
         # shellcheck source=/dev/null
         [[ -f "$file" ]] && source "$file"
@@ -98,17 +101,11 @@ koopa::bash_header() { # {{{1
     # Require sudo permission to run 'sbin/' scripts.
     if [[ "$checks" -eq 1 ]]
     then
-        if koopa::str_match "$0" '/sbin'
-        then
-            koopa::assert_has_sudo
-        fi
+        koopa::str_match "$0" '/sbin' && koopa::assert_has_sudo
     fi
     # Disable user-defined aliases.
     # Primarily intended to reset cp, mv, rf for use inside scripts.
-    if [[ "$activate" -eq 0 ]]
-    then
-        unalias -a
-    fi
+    [[ "$activate" -eq 0 ]] && unalias -a
     unset -v activate checks shopts verbose
     return 0
 }

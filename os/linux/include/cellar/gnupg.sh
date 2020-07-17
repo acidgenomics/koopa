@@ -3,6 +3,15 @@
 
 # https://gnupg.org/download/index.html
 case "$version" in
+    2.2.21)
+        # 2020-07-09
+        libgpg_error_version="1.38"
+        libgcrypt_version="1.8.6"
+        libksba_version="1.4.0"
+        libassuan_version="2.5.3"
+        npth_version="1.6"
+        pinentry_version="1.1.0"
+        ;;
     2.2.20)
         # 2020-03-20
         libgpg_error_version="1.38"

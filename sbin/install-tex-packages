@@ -4,47 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_no_args "$#"
-
-koopa::h1 "Installing TeX packages recommended for RStudio."
-
-sudo tlmgr update --self
-
-packages=(
-    collection-fontsrecommended  # priority
-    collection-latexrecommended  # priority
-    bera  # beramono
-    biblatex
-    caption
-    changepage
-    csvsimple
-    enumitem
-    etoolbox
-    fancyhdr
-    footmisc
-    framed
-    geometry
-    hyperref
-    inconsolata
-    logreq
-    marginfix
-    mathtools
-    natbib
-    nowidow
-    parnotes
-    parskip
-    placeins
-    preprint  # authblk
-    sectsty
-    soul
-    titlesec
-    titling
-    units
-    wasysym
-    xstring
-)
-
-for package in "${packages[@]}"
-do
-    sudo tlmgr install "$package"
-done
+koopa::install_tex_packages "$@"

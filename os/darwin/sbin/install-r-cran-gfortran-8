@@ -4,33 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# Source: https://github.com/fxcoudert/gfortran-for-macOS
-# """
-
-name="gfortran"
-version="8.2"
-prefix="/usr/local/${name}"
-
-koopa::exit_if_dir "$prefix"
-
-koopa::h1 "Installing ${name} ${version} to '${prefix}'."
-
-tmp_dir="$(koopa::tmp_dir)"
-
-(
-    koopa::cd "$tmp_dir"
-    stem="${name}-${version}-Mojave"
-    file="${stem}.dmg"
-    url="https://mac.r-project.org/tools/${file}"
-    koopa::download "$url"
-    hdiutil mount "$file"
-    pkg="/Volumes/${stem}/${stem}/gfortran.pkg"
-    sudo installer -pkg "$pkg" -target /
-    hdiutil unmount "/Volumes/${stem}"
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-koopa::install_success "$name"
-koopa::restart
+koopa::macos_install_r_cran_gfortran_8 "$@"

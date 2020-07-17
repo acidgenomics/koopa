@@ -122,7 +122,7 @@ koopa::r_package_version() { # {{{1
 koopa::return_version() { # {{{1
     # """
     # Return version (via extraction).
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-14.
     # """
     local cmd flag x
     koopa::assert_has_args_le "$#" 2
@@ -173,6 +173,9 @@ koopa::return_version() { # {{{1
             ;;
         neovim)
             cmd='nvim'
+            ;;
+        openssh)
+            cmd='ssh'
             ;;
         pip)
             cmd='pip3'
@@ -241,7 +244,10 @@ koopa::return_version() { # {{{1
 koopa::sanitize_version() { # {{{1
     # """
     # Sanitize version.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-14.
+    # @examples
+    # koopa::sanitize_version '2.7.1p83'
+    # ## 2.7.1
     # """
     local pattern x
     koopa::assert_has_args "$#"
@@ -249,7 +255,7 @@ koopa::sanitize_version() { # {{{1
     for x in "$@"
     do
         koopa::str_match_regex "$x" "$pattern" || return 1
-        x="$(koopa::print "$x" | grep -Eo "$pattern")"
+        x="$(koopa::sub '^([.0-9]+).*$' '\1' "$x")"
         koopa::print "$x"
     done
     return 0

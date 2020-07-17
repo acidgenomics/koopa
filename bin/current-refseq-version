@@ -4,18 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::current_refseq_version() { # {{{1
-    # """
-    # Current RefSeq version.
-    # @note Updated 2020-07-01.
-    # """
-    local url version
-    koopa::assert_has_no_args "$#"
-    url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
-    version="$(curl --silent "$url")"
-    [[ -n "$version" ]] || return 1
-    koopa::print "$version"
-    return 0
-}
-
 koopa::current_refseq_version "$@"

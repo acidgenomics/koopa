@@ -5,4 +5,3 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 source "${script_dir}/../shell/bash/include/header.sh"
 
 koopa::remove_empty_dirs "$@"
-
