@@ -19,6 +19,31 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
+koopa::install_rcheck() { # {{{1
+    # """
+    # Install Rcheck scripts for CI.
+    # @note Updated 2020-07-08.
+    # """
+    local link_name name source_repo target_dir
+    koopa::assert_has_no_args "$#"
+    name='Rcheck'
+    source_repo="https://github.com/acidgenomics/${name}.git"
+    target_dir="$(koopa::local_app_prefix)/${name}"
+    link_name=".${name}"
+    koopa::install_start "$name"
+    if [[ ! -d "$target_dir" ]]
+    then
+        koopa::h2 "Downloading ${name} to \"${target_dir}\"."
+        (
+            koopa::mkdir "$target_dir"
+            git clone "$source_repo" "$target_dir"
+        )
+    fi
+    koopa::ln "$target_dir" "$link_name"
+    koopa::install_success "$name"
+    return 0
+}
+
 koopa::kill_r() {
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed pkill
