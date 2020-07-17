@@ -707,7 +707,7 @@ installed(
     which = c(
         "black",
         "flake8",
-        "pip",
+        "pip3",
         "pylint",
         "pytest"
     )

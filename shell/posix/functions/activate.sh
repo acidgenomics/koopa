@@ -432,28 +432,6 @@ _koopa_activate_homebrew_prefix() { # {{{1
     return 0
 }
 
-_koopa_activate_homebrew_python() {
-    # """
-    # Activate Homebrew Python.
-    # @note Updated 2020-06-30.
-    #
-    # Use official installer in '/Library/Frameworks' instead.
-    #
-    # Homebrew is lagging on new Python releases, so install manually instead.
-    # See 'python.sh' script for activation.
-    #
-    # Don't add to PATH if a virtual environment is active.
-    #
-    # @seealso
-    # - /usr/local/opt/python/bin
-    # - https://docs.brew.sh/Homebrew-and-Python
-    # - brew info python
-    # """
-    [ -z "${VIRTUAL_ENV:-}" ] || return 0
-    _koopa_activate_homebrew_prefix "python"
-    return 0
-}
-
 _koopa_activate_homebrew_ruby_gems() { # {{{1
     # """
     # Activate Homebrew Ruby gems.
