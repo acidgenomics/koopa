@@ -31,6 +31,18 @@ koopa::brew_cask_quarantine_fix() {
     return 0
 }
 
+koopa::brewfile() { # {{{1
+    # """
+    # Homebrew Bundle Brewfile path.
+    # @note Updated 2020-07-17.
+    # """
+    local file
+    file="$(koopa::dotfiles_prefix)/os/macos/app/homebrew/Brewfile"
+    [[ -f "$file" ]] || return 1
+    koopa::print "$file"
+    return 0
+}
+
 koopa::brew_outdated() { # {{{
     # """
     # Listed outdated Homebrew brews and casks, in a single call.
