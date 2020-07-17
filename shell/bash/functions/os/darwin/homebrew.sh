@@ -175,7 +175,6 @@ koopa::macos_install_homebrew_packages() { # {{{1
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
     brew bundle install --file="$brewfile" --no-lock --no-upgrade
-    koopa::install_success "$name_fancy"
     return 0
 }
 
