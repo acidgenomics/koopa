@@ -287,6 +287,7 @@ koopa::macos_install_homebrew_recipes() { # {{{1
             koopa::note "\"${cask}\" is already installed."
             continue
         fi
+        koopa::info "Installing cask \"${cask}\."
         brew cask install --force --no-quarantine "$cask"
     done
 
@@ -439,6 +440,7 @@ koopa::macos_install_homebrew_recipes() { # {{{1
             koopa::note "\"${brew}\" is already installed."
             continue
         fi
+        koopa::info "Installing brew \"${brew}\."
         brew install "$brew"
         brew link "$brew" &>/dev/null || true
     done
@@ -492,9 +494,10 @@ koopa::macos_install_homebrew_recipes() { # {{{1
         if koopa::str_match_regex "$installed_brews" "^${name}$"
         then
             koopa::note "\"${brew}\" is already installed."
-        else
-            brew install "$brew"
+            continue
         fi
+        koopa::info "Installing brew \"${brew}\."
+        brew install "$brew"
         brew link "$brew" &>/dev/null || true
     done
 
