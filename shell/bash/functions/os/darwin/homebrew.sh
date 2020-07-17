@@ -178,6 +178,37 @@ koopa::macos_install_homebrew_packages() { # {{{1
     return 0
 }
 
+koopa::macos_uninstall_homebrew() { # {{{1
+    # """
+    # Uninstall Homebrew.
+    # @note Updated 2020-07-17.
+    # @seealso
+    # - https://docs.brew.sh/FAQ
+    # """
+    local file name_fancy tmp_dir url
+    koopa::exit_if_not_installed brew
+    name_fancy='Homebrew'
+    koopa::uninstall_start "$name_fancy"
+    koopa::assert_has_no_args "$#"
+    # Note that macOS Catalina now uses Zsh instead of Bash by default.
+    koopa::h2 'Changing default shell to system Zsh.'
+    chsh -s '/bin/zsh' "$USER"
+    koopa::h2 'Resetting permissions in "/usr/local".'
+    sudo chown -Rhv "$USER" '/usr/local/'*
+    tmp_dir="$(koopa::tmp_dir)"
+    (
+        koopa::cd "$tmp_dir"
+        file='uninstall.sh'
+        url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
+        koopa::download "$url"
+        chmod +x "$file"
+        "./${file}"
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    koopa::rm "$tmp_dir"
+    koopa::uninstall_success "$name_fancy"
+    return 0
+}
+
 koopa::macos_update_homebrew() {
     # """
     # Update Homebrew.

@@ -4,7 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# FIXME
-koopa::assert_has_args "$#"
-name="$1"
-sudo -a "${name}.app"
+koopa::macos_sudo_open_app "$@"
