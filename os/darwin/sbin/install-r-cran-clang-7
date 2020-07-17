@@ -4,6 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+
+
 name="clang"
 version="7.0.0"
 major_version="$(koopa::major_version "$version")"

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Prompt the user about this one.
 koopa::macos_force_reset_icloud_drive() { # {{{1
     # """
     # Force reset iCloud Drive.
+    # @note Updated 2020-07-17.
     #
     # iCloud Drive is located here:
     # ~/Library/Mobile\ Documents/com~apple~CloudDocs
@@ -13,7 +13,7 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
     # Then log out of iCloud.
     # Reboot.
     #
-    # Close safari.
+    # Close Safari.
     # Nuke the old Safari bookmarks.
     # Note that this will remove the reading list.
     # > rm /Users/mike/Library/Safari/Bookmarks.plist 
@@ -21,7 +21,7 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
     #
     # > sudo brctl log --wait --shorten
     # error while reading logs: <NSError:0x7fd360d01990(NSPOSIXErrorDomain:5)
-
+    #
     # Remove bird?
     # > sudo launchctl remove com.apple.bird
     # """
@@ -33,3 +33,19 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
     return 0
 }
 
+koopa::macos_symlink_dropbox() {
+    koopa::rm -S "${HOME}/Desktop"
+    koopa::ln "${HOME}/Dropbox/Desktop" "${HOME}/."
+    koopa::rm -S "${HOME}/Documents"
+    koopa::ln "${HOME}/Dropbox/Documents" "${HOME}/."
+    sudo killAll Finder
+    return 0
+}
+
+koopa::macos_symlink_icloud_drive() {
+    koopa::assert_has_no_args "$#"
+    koopa::ln \
+        "${HOME}/Library/Mobile Documents/com~apple~CloudDocs" \
+        "${HOME}/icloud"
+    return 0
+}
