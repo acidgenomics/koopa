@@ -771,17 +771,15 @@ _koopa_activate_rbenv() { # {{{1
 _koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-17.
     # """
     # shellcheck disable=SC2039
     local gem_home
-    [ -n "${GEM_HOME:-}" ] && return 0
-    gem_home="${HOME}/.gem"
-    if [ -d "$gem_home" ]
-    then
-        _koopa_add_to_path_start "$gem_home"
-        export GEM_HOME="$gem_home"
-    fi
+    gem_home="${GEM_HOME:-}"
+    [ -z "$gem_home" ] && gem_home="${HOME}/.gem"
+    [ -d "$gem_home" ] || return 0
+    _koopa_activate_prefix "$gem_home"
+    export GEM_HOME="$gem_home"
     return 0
 }
 
