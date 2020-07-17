@@ -77,7 +77,7 @@ koopa::update() { # {{{1
     then
         user=1
     fi
-    koopa::h1 "Updating koopa at '${koopa_prefix}'."
+    koopa::h1 "Updating koopa at \"${koopa_prefix}\"."
     koopa::sys_set_permissions -r "$koopa_prefix"
     if [[ "$rsync" -eq 0 ]]
     then
@@ -104,11 +104,11 @@ koopa::update() { # {{{1
     koopa::update_xdg_config
     if [[ "$system" -eq 1 ]]
     then
-        koopa::h2 "Updating system configuration."
+        koopa::h2 'Updating system configuration.'
         koopa::assert_has_sudo
-        koopa::dl "App prefix" "${app_prefix}"
-        koopa::dl "Config prefix" "${config_prefix}"
-        koopa::dl "Make prefix" "${make_prefix}"
+        koopa::dl 'App prefix' "${app_prefix}"
+        koopa::dl 'Config prefix' "${config_prefix}"
+        koopa::dl 'Make prefix' "${make_prefix}"
         koopa::add_make_prefix_link
         if koopa::is_linux
         then
@@ -118,7 +118,7 @@ koopa::update() { # {{{1
         if koopa::is_linux
         then
             # Allow passthrough of specific arguments to 'configure-vm' script.
-            configure_flags=("--no-check")
+            configure_flags=('--no-check')
             if [[ "$rsync" -eq 1 ]]
             then
                 configure_flags+=("--source-ip=${source_ip}")
@@ -131,7 +131,7 @@ koopa::update() { # {{{1
             koopa::update_python_packages
             koopa::update_rust
             update-rust-packages  # FIXME (symlink)
-            update-r-packages  # FIXME
+            update-r-packages  # FIXME R script.
             if koopa::is_linux
             then
                 koopa::update_google_cloud_sdk
@@ -139,15 +139,15 @@ koopa::update() { # {{{1
                 koopa::update_rbenv
             elif koopa::is_macos
             then
-                update-homebrew  # FIXME
-                update-microsoft-office  # FIXME
+                koopa::macos_update_homebrew
+                koopa::macos_update_microsoft_office
             fi
         fi
         koopa::fix_zsh_permissions
     fi
     if [[ "$user" -eq 1 ]]
     then
-        koopa::h2 "Updating user configuration."
+        koopa::h2 'Updating user configuration.'
         # Remove legacy directories from user config, if necessary.
         koopa::rm "${config_prefix}/"\
 {'Rcheck','autojump','oh-my-zsh','pyenv','rbenv','spacemacs'}
@@ -172,7 +172,7 @@ koopa::update() { # {{{1
         koopa::install_dotfiles_private
         koopa::update_spacemacs
     fi
-    koopa::success "koopa update was successful."
+    koopa::success 'koopa update was successful.'
     koopa::restart
     [[ "$system" -eq 1 ]] && koopa::koopa check-system
     return 0
