@@ -81,9 +81,11 @@ koopa::bash_header() { # {{{1
     # Ensure koopa prefix is exported, if necessary.
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        # FIXME USE REALPATH HERE.
-        KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
-            &>/dev/null && pwd -P)"
+        KOOPA_PREFIX="$( \
+            cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../.." \
+            &>/dev/null \
+            && pwd -P \
+        )"
         export KOOPA_PREFIX
     fi
     # Source POSIX header (which includes functions).
