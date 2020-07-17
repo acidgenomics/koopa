@@ -3,13 +3,5 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-koopa::assert_has_no_args "$#"
 
-version="$(koopa::extract_version "$(brew cask info little-snitch)")"
-
-dmg_file="$(koopa::homebrew_prefix)/Caskroom/little-snitch/\
-${version}/LittleSnitch-${version}.dmg"
-koopa::assert_is_file "$dmg_file"
-
-hdiutil attach "$dmg_file" &>/dev/null
-open "/Volumes/Little Snitch ${version}/Little Snitch Installer.app"
+koopa::macos_install_homebrew_little_snitch "$@"

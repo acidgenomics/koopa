@@ -3,12 +3,5 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-koopa::assert_has_no_args "$#"
 
-koopa::h1 "Flushing DNS."
-
-sudo dscacheutil -flushcache
-sudo killall -HUP mDNSResponder
-
-# > say flushed
-koopa::success "DNS flush was successful."
+koopa::macos_flush_dns "$@"
