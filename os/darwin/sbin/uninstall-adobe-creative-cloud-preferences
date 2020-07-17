@@ -3,12 +3,11 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
+
+# FIXME
 koopa::assert_has_no_args "$#"
-
 name_fancy="Adobe Creative Cloud preferences"
-
 koopa::uninstall_start "$name_fancy"
-
 rm -frv \
     "${HOME}/Documents/Adobe" \
     "${HOME}/Library/Application Support/Adobe"* \
@@ -19,7 +18,6 @@ rm -frv \
     "${HOME}/Library/Preferences/Macromedia" \
     "${HOME}/Library/Preferences/com."{a,A}"dobe"* \
     "${HOME}/Library/Saved Application State/com."{a,A}"dobe"*
-
 sudo rm -frv \
     "/Library/Application Support/Adobe"* \
     "/Library/Application Support/regid."*".com.adobe" \
@@ -28,5 +26,4 @@ sudo rm -frv \
     "/Library/Preferences/com."{a,A}"dobe"* \
     "/Library/ScriptingAdditions/Adobe Unit Types.osax" \
     "/Users/Shared/Adobe"
-
 koopa::uninstall_success "$name_fancy"
