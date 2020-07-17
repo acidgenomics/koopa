@@ -625,21 +625,6 @@ if (isTRUE(linux)) {
         current = currentVersion("tex"),
         expected = expectedVersion("tex")
     )
-    checkMacOSAppVersion(c(
-        ## "Numbers",
-        ## "Xcode",
-        "Alacritty",
-        "Aspera Connect",
-        "BBEdit",
-        "Docker",
-        "Firefox",
-        "LibreOffice",
-        "Microsoft Excel",
-        "RStudio",
-        "Tunnelblick",
-        "Visual Studio Code",
-        "iTerm"
-    ))
     checkHomebrewCaskVersion("gpg-suite")
 }
 
