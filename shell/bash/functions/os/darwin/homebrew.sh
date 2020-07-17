@@ -85,3 +85,10 @@ koopa::brew_update() { # {{{1
     koopa::update_success "$name_fancy"
     return 0
 }
+
+koopa::update_homebrew() {
+    koopa::exit_if_not_installed brew
+    koopa::brew_update "$@"
+    return 0
+}
+
