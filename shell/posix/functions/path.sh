@@ -295,9 +295,6 @@ _koopa_which() { # {{{1
     # Locate which program.
     # @note Updated 2020-07-18.
     #
-    # Note that this intentionally doesn't resolve symlinks.
-    # Use 'koopa_realpath' for that output instead.
-    #
     # Example:
     # koopa::which bash
     # ## /usr/local/bin/bash
@@ -308,36 +305,6 @@ _koopa_which() { # {{{1
     do
         _koopa_is_alias "$cmd" && cmd="$(unalias "$cmd")"
         cmd="$(command -v "$cmd")"
-        _koopa_print "$cmd"
-    done
-    return 0
-}
-
-_koopa_which_realpath() { # {{{1
-    # """
-    # Locate the realpath of a program.
-    # @note Updated 2020-07-18.
-    #
-    # This resolves symlinks automatically.
-    # For 'which' style return, use 'koopa::which' instead.
-    #
-    # @seealso
-    # - https://stackoverflow.com/questions/7665
-    # - https://unix.stackexchange.com/questions/85249
-    # - https://stackoverflow.com/questions/7522712
-    # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
-    #
-    # @examples
-    # koopa::which_realpath bash vim
-    # ## /usr/local/Cellar/bash/5.0.17/bin/bash
-    # ## /usr/local/Cellar/vim/8.2.1050/bin/vim
-    # """
-    # shellcheck disable=SC2039
-    local cmd
-    for cmd in "$@"
-    do
-        cmd="$(_koopa_which "$cmd")"
-        cmd="$(_koopa_realpath "$cmd")"
         _koopa_print "$cmd"
     done
     return 0
