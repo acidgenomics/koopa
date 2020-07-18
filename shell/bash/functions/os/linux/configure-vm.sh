@@ -195,7 +195,6 @@ koopa::configure_vm() { # {{{1
     koopa::assert_is_installed install-base
     install_base_flags=()
     [[ "$compact" -eq 1 ]] && install_base_flags+=('--compact')
-    koopa::assert_is_installed install-base
     install-base "${install_base_flags[@]:-}"
     # Maybe include: tclsh
     koopa::assert_is_installed \
@@ -227,12 +226,12 @@ koopa::configure_vm() { # {{{1
     # --------------------------------------------------------------------------
 
     koopa::run_if_installed install-llvm
-    koopa::install_conda
-    koopa::install_openjdk
+    install-conda
+    install-openjdk
     if [[ "$compact" -eq 0 ]]
     then
-        koopa::install_curl
-        koopa::install_wget
+        install-curl
+        install-wget
         install-cmake
         install-make
         install-autoconf
@@ -274,37 +273,36 @@ koopa::configure_vm() { # {{{1
         install-fzf
         install-the-silver-searcher
     fi
-    koopa::install_tmux
-    koopa::install_vim
-    koopa::install_shellcheck
-    koopa::install_shunit2
-    koopa::install_aws_cli
+    install-tmux
+    install-vim
+    install-shellcheck
+    install-shunit2
+    install-aws-cli
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
         koopa::run_if_installed \
             install-azure-cli \
             install-docker \
             install-google-cloud-sdk
-        koopa::install_docker_credential_pass
-        koopa::install_neovim
-        koopa::install_emacs
-        koopa::install_julia
-        koopa::install_lua
-        koopa::install_luarocks
-        koopa::install_lmod
-        koopa::install_htop
-        koopa::install_autojump
-        koopa::install_gcc --cellar-only
+        install-docker-credential-pass
+        install-neovim
+        install-emacs
+        install-julia
+        install-lua
+        install-luarocks
+        install-lmod
+        install-htop
+        install-autojump
+        install-gcc --cellar-only
     fi
     if [[ "$r_version" == 'devel' ]]
     then
-        koopa::assert_is_installed install-r-devel
         install-r-devel
     elif koopa::is_installed install-r-cran-binary
     then
         install-r-cran-binary --version="$r_version"
     else
-        koopa::install_r --version="$r_version"
+        install-r --version="$r_version"
     fi
     koopa::run_if_installed install-rstudio-server install-shiny-server
     koopa::update_r_config
@@ -316,14 +314,14 @@ koopa::configure_vm() { # {{{1
     sudo ldconfig
     if [[ "$rsync" -eq 0 ]]
     then
-        koopa::install_python_packages
-        koopa::venv_create_r_reticulate
-        koopa::install_perl_packages
+        install-python-packages
+        venv-create-r-reticulate
+        install-perl-packages
         install-r-packages
         if [[ "$compact" -eq 0 ]]
         then
-            koopa::install_ruby_packages
-            koopa::install_rust_packages
+            install-ruby-packages
+            install-rust-packages
         fi
     fi
 
@@ -332,9 +330,9 @@ koopa::configure_vm() { # {{{1
 
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
     then
-        koopa::install_aspera_connect
-        koopa::conda_create_bioinfo_envs
-        # > koopa::install_bcbio
+        install-aspera-connect
+        conda-create-bioinfo-envs
+        # > install-bcbio
     fi
 
     # Final steps and clean up {{{2
@@ -393,7 +391,7 @@ koopa::configure_vm() { # {{{1
     # Run system check and return {{{2
     # --------------------------------------------------------------------------
 
-    [[ "$check" -eq 1 ]] && koopa::koopa check
+    [[ "$check" -eq 1 ]] && koopa check
     koopa::success 'Configuration completed successfully.'
     return 0
 }
