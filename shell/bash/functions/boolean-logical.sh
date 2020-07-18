@@ -124,15 +124,14 @@ koopa::is_anaconda() { # {{{1
 koopa::is_array_non_empty() { # {{{1
     # """
     # Is the array non-empty?
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-17.
     #
     # Particularly useful for checking against readarray return, which currently
     # returns a length of 1 for empty input, due to newlines line break.
     # """
     local arr
-    koopa::assert_has_args "$#"
+    [[ "$#" -gt 0 ]] || return 1
     arr=("$@")
-    [[ "${#arr[@]}" -eq 0 ]] && return 1
     [[ -z "${arr[0]}" ]] && return 1
     return 0
 }
