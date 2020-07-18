@@ -256,6 +256,10 @@ koopa::invalid_arg() {
     _koopa_invalid_arg "$@"
 }
 
+koopa::is_alias() {
+    _koopa_is_alias "$@"
+}
+
 koopa::is_alpine() {
     _koopa_is_alpine "$@"
 }
@@ -663,3 +667,12 @@ koopa::venv_prefix() {
 koopa::warning() {
     _koopa_warning "$@"
 }
+
+koopa::which() {
+    _koopa_which "$@"
+}
+
+koopa::which_realpath() {
+    _koopa_which_realpath "$@"
+}
+

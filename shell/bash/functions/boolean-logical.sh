@@ -90,29 +90,6 @@ koopa::has_sudo() { # {{{1
     koopa::str_match_regex "$(groups)" '\b(admin|root|sudo|wheel)\b'
 }
 
-koopa::is_alias() { # {{{1
-    # """
-    # Is the specified argument an alias?
-    # @note Updated 2020-07-04.
-    #
-    # Intended primarily to determine if we need to unalias.
-    # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
-    #
-    # @example
-    # koopa::is_alias R
-    # """
-    local cmd str
-    koopa::assert_has_args "$#"
-    for cmd in "$@"
-    do
-        koopa::is_installed "$cmd" || return 1
-        str="$(type "$cmd")"
-        koopa::str_match "$str" ' tracked alias ' && return 1
-        koopa::str_match_regex "$str" '\balias(ed)?\b' || return 1
-    done
-    return 0
-}
-
 koopa::is_anaconda() { # {{{1
     # """
     # Is Anaconda (rather than Miniconda) installed?
