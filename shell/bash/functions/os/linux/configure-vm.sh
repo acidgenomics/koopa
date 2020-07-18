@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-18.
     # """
     local app_prefix app_prefix_bn app_prefix_real bioconductor check compact \
         data_disk data_disk_link data_disk_real docker gb_total \
@@ -319,7 +319,7 @@ koopa::configure_vm() { # {{{1
         koopa::install_python_packages
         koopa::venv_create_r_reticulate
         koopa::install_perl_packages
-        install-r-packages  # FIXME Convert to bash script.
+        install-r-packages
         if [[ "$compact" -eq 0 ]]
         then
             koopa::install_ruby_packages
