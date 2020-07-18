@@ -89,6 +89,29 @@ _koopa_has_gnu_tar() { # {{{1
     __koopa_has_gnu tar
 }
 
+_koopa_is_alias() { # {{{1
+    # """
+    # Is the specified argument an alias?
+    # @note Updated 2020-07-17.
+    #
+    # Intended primarily to determine if we need to unalias.
+    # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
+    #
+    # @example
+    # koopa::is_alias R
+    # """
+    # shellcheck disable=SC2039
+    local cmd str
+    for cmd in "$@"
+    do
+        _koopa_is_installed "$cmd" || return 1
+        str="$(type "$cmd")"
+        _koopa_str_match "$str" ' tracked alias ' && return 1
+        _koopa_str_match_regex "$str" '\balias(ed)?\b' || return 1
+    done
+    return 0
+}
+
 _koopa_is_alpine() { # {{{1
     # """
     # Is the operating system Alpine Linux?

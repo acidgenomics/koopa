@@ -3,7 +3,7 @@
 koopa::update() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-18.
     # """
     local app_prefix config_prefix configure_flags core dotfiles \
         dotfiles_prefix fast koopa_prefix make_prefix repos repo source_ip \
@@ -131,7 +131,7 @@ koopa::update() { # {{{1
             koopa::update_python_packages
             koopa::update_rust
             koopa::update_rust_packages
-            update-r-packages  # FIXME R script.
+            update-r-packages
             if koopa::is_linux
             then
                 koopa::update_google_cloud_sdk
