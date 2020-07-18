@@ -671,8 +671,3 @@ koopa::warning() {
 koopa::which() {
     _koopa_which "$@"
 }
-
-koopa::which_realpath() {
-    _koopa_which_realpath "$@"
-}
-

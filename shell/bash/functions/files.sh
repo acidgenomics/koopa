@@ -562,39 +562,6 @@ koopa::nfiletypes() {
     return 0
 }
 
-koopa::realpath() { # {{{1
-    # """
-    # Real path to file/directory on disk.
-    # @note Updated 2020-06-30.
-    #
-    # Note that 'readlink -f' doesn't work on macOS.
-    #
-    # @seealso
-    # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
-    # """
-    local arg x
-    koopa::assert_has_args "$#"
-    if koopa::is_installed realpath
-    then
-        x="$(realpath "$@")"
-        koopa::print "$x"
-    elif koopa::has_gnu readlink
-    then
-        x="$(readlink -f "$@")"
-        koopa::print "$x"
-    elif koopa::is_installed perl
-    then
-        for arg in "$@"
-        do
-            x="$(perl -MCwd -e 'print Cwd::abs_path shift' "$arg")"
-            koopa::print "$x"
-        done
-    else
-        return 1
-    fi
-    return 0
-}
-
 koopa::remove_broken_symlinks() { # {{{1
     # """
     # Remove broken symlinks.
