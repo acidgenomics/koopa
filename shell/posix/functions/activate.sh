@@ -659,7 +659,7 @@ _koopa_activate_pipx() { # {{{1
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-18.
     #
     # These are defined primarily for R environment. In particular these make
     # building tricky pages from source, such as rgdal, sf and others  easier.
@@ -667,12 +667,14 @@ _koopa_activate_pkg_config() { # {{{1
     # This is necessary for rgdal, sf packages to install clean.
     # """
     _koopa_add_to_pkg_config_start \
-        /usr/lib/pkgconfig \
-        /usr/lib64/pkgconfig \
-        /usr/local/share/pkgconfig \
-        /usr/lib/x86_64-linux-gnu/pkgconfig \
-        /usr/local/lib/pkgconfig \
-        /usr/local/lib64/pkgconfig
+        '/usr/share/pkgconfig' \
+        '/usr/lib/pkgconfig' \
+        '/usr/lib64/pkgconfig' \
+        '/usr/lib/x86_64-linux-gnu/pkgconfig' \
+        '/usr/local/share/pkgconfig' \
+        '/usr/local/lib/pkgconfig' \
+        '/usr/local/lib64/pkgconfig' \
+        '/usr/local/lib/x86_64-linux-gnu/pkgconfig'
     return 0
 }
 
