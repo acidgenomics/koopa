@@ -108,10 +108,10 @@ _koopa_add_to_path_start() { # {{{1
     return 0
 }
 
-_koopa_add_to_pkg_config_end() { # {{{1
+_koopa_add_to_pkg_config_path_end() { # {{{1
     # """
     # Add directory to end of PKG_CONFIG_PATH.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-19.
     # """
     # shellcheck disable=SC2039
     local dir
@@ -126,10 +126,10 @@ _koopa_add_to_pkg_config_end() { # {{{1
     return 0
 }
 
-_koopa_add_to_pkg_config_start() { # {{{1
+_koopa_add_to_pkg_config_path_start() { # {{{1
     # """
     # Add directory to start of PKG_CONFIG_PATH.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-19.
     # """
     # shellcheck disable=SC2039
     local dir
@@ -239,6 +239,37 @@ _koopa_force_add_to_path_start() { # {{{1
     return 0
 }
 
+_koopa_force_add_to_pkg_config_path_end() { # {{{1
+    # """
+    # Force add to end of PKG_CONFIG_PATH.
+    # @note Updated 2020-07-19.
+    # """
+    # shellcheck disable=SC2039
+    local dir
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        _koopa_remove_from_pkg_config_path "$dir"
+        _koopa_add_to_pkg_config_path_end "$dir"
+    done
+    return 0
+}
+
+_koopa_force_add_to_pkg_config_path_start() { # {{{1
+    # """
+    # Force add to start of PKG_CONFIG_PATH.
+    # @note Updated 2020-07-19.
+    # """
+    # shellcheck disable=SC2039
+    local dir
+    for dir in "$@"
+    do
+        _koopa_remove_from_pkg_config_path "$dir"
+        _koopa_add_to_pkg_config_path_start "$dir"
+    done
+    return 0
+}
+
 _koopa_remove_from_fpath() { # {{{1
     # """
     # Remove directory from FPATH.
@@ -287,6 +318,24 @@ _koopa_remove_from_path() { # {{{1
         PATH="$(_koopa_print "$PATH" | sed "s|:${dir}||g")"
     done
     export PATH
+    return 0
+}
+
+_koopa_remove_from_pkg_config_path() { # {{{1
+    # """
+    # Remove directory from PKG_CONFIG_PATH.
+    # @note Updated 2020-07-19.
+    # """
+    # shellcheck disable=SC2039
+    local dir
+    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
+    for dir in "$@"
+    do
+        PKG_CONFIG_PATH="$( \
+            _koopa_print "$PKG_CONFIG_PATH" | sed "s|:${dir}||g" \
+        )"
+    done
+    export PKG_CONFIG_PATH
     return 0
 }
 
