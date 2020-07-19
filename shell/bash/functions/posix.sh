@@ -40,12 +40,12 @@ koopa::add_to_path_start() {
     _koopa_add_to_path_start "$@"
 }
 
-koopa::add_to_pkgconfig_end() {
-    _koopa_add_to_pkgconfig_end "$@"
+koopa::add_to_pkg_config_path_end() {
+    _koopa_add_to_pkg_config_path_end "$@"
 }
 
-koopa::add_to_pkgconfig_start() {
-    _koopa_add_to_pkgconfig_start "$@"
+koopa::add_to_pkg_config_path_start() {
+    _koopa_add_to_pkg_config_path_start "$@"
 }
 
 koopa::app_prefix() {
@@ -150,6 +150,14 @@ koopa::force_add_to_path_end() {
 
 koopa::force_add_to_path_start() {
     _koopa_force_add_to_path_start "$@"
+}
+
+koopa::force_add_to_pkg_config_path_end() {
+    _koopa_force_add_to_pkg_config_path_end "$@"
+}
+
+koopa::force_add_to_pkg_config_path_start() {
+    _koopa_force_add_to_pkg_config_path_start "$@"
 }
 
 koopa::fzf_prefix() {
