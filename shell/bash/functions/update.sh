@@ -101,7 +101,6 @@ koopa::update() { # {{{1
         fi
         koopa::sys_set_permissions -r "$koopa_prefix"
     fi
-    koopa::update_xdg_config
     if [[ "$system" -eq 1 ]]
     then
         koopa::h2 'Updating system configuration.'
