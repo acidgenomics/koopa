@@ -48,7 +48,7 @@ koopa::install_rust() { # {{{1
         file='rustup.sh'
         koopa::download "$url" "$file"
         chmod +x "$file"
-        "$file" --no-modify-path -v -y
+        "./${file}" --no-modify-path -v -y
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$CARGO_HOME" "$RUSTUP_HOME"
