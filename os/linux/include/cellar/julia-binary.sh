@@ -32,4 +32,4 @@ koopa::extract "$file"
 koopa::cd "${name}-${version}"
 koopa::rm 'LICENSE.md'
 koopa::mkdir "$prefix"
-cp -r . "$prefix"
+koopa::cp . "$prefix"
