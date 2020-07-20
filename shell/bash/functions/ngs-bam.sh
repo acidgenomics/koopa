@@ -211,7 +211,7 @@ koopa::bam_filter() { # {{{1
     # Performing filtering in multiple steps here.
     for bam_file in "${bam_files[@]}"
     do
-        final_output_tail="filtered"
+        final_output_tail='filtered'
         final_output_bam="${bam_file%.bam}.${final_output_tail}.bam"
         if [[ -f "$final_output_bam" ]]
         then
@@ -220,7 +220,7 @@ koopa::bam_filter() { # {{{1
         fi
         # Filter duplicate reads.
         input_bam="$bam_file"
-        output_tail="filtered-1-no-duplicates"
+        output_tail='filtered-1-no-duplicates'
         output_bam="${input_bam%.bam}.${output_tail}.bam"
         koopa::_bam_filter_duplicates \
             --input-bam="$input_bam" \
@@ -228,17 +228,16 @@ koopa::bam_filter() { # {{{1
         # Filter unmapped reads.
         input_tail="$output_tail"
         input_bam="$output_bam"
-        output_tail="filtered-2-no-unmapped"
+        output_tail='filtered-2-no-unmapped'
         output_bam="${input_bam/${input_tail}/${output_tail}}"
         koopa::_bam_filter_unmapped \
             --input-bam="$input_bam" \
             --output-bam="$output_bam"
-        # Filter multimapping reads.
-        # Note that this step can overfilter some samples with with large global
-        # changes in chromatin state.
+        # Filter multimapping reads. Note that this step can overfilter some
+        # samples with with large global changes in chromatin state.
         input_tail="$output_tail"
         input_bam="$output_bam"
-        output_tail="filtered-3-no-multimappers"
+        output_tail='filtered-3-no-multimappers'
         output_bam="${input_bam/${input_tail}/${output_tail}}"
         koopa::_bam_filter_multimappers \
             --input-bam="$input_bam" \

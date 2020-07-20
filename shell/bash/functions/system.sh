@@ -845,7 +845,7 @@ koopa::tmp_log_file() { # {{{1
     #
     # Note that mktemp on macOS and BusyBox doesn't support '--suffix' flag.
     # Otherwise, we can use:
-    # > koopa::mktemp --suffix=".log"
+    # > koopa::mktemp --suffix='.log'
     # """
     koopa::assert_has_no_args "$#"
     koopa::tmp_file

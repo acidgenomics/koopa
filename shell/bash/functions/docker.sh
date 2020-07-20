@@ -401,7 +401,7 @@ koopa::docker_run() { # {{{1
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
     bash=0
-    workdir="/mnt/work"
+    workdir='/mnt/work'
     pos=()
     while (("$#"))
     do
@@ -453,23 +453,23 @@ koopa::docker_run() { # {{{1
 koopa::docker_run_wine() { # {{{1
     # """
     # Run Wine Docker image.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-20.
     #
     # Allow access from localhost.
     # > xhost + "$HOSTNAME"
     # """
     local image workdir
     koopa::assert_is_installed docker xhost
-    image="acidgenomics/wine"
-    workdir="/mnt/work"
-    xhost + 127.0.0.1
+    image='acidgenomics/wine'
+    workdir='/mnt/work'
+    xhost + '127.0.0.1'
     docker run \
-        --privileged \
-        -e DISPLAY=host.docker.internal:0 \
         --interactive \
+        --privileged \
         --tty \
         --volume="${PWD}:${workdir}" \
         --workdir="${workdir}" \
+        -e 'DISPLAY=host.docker.internal:0' \
         "$image" \
         "$@"
     return 0
@@ -486,7 +486,7 @@ koopa::docker_tag() { # {{{1
     image="${1:?}"
     source_tag="${2:?}"
     dest_tag="${3:-latest}"
-    server="docker.io"
+    server='docker.io'
     # Assume acidgenomics recipe by default.
     if ! koopa::str_match "$image" '/'
     then
@@ -519,7 +519,7 @@ koopa::is_docker_build_today() { # {{{1
         docker pull "$image" >/dev/null
         json="$( \
             docker inspect \
-            --format="{{json .Created}}" \
+            --format='{{json .Created}}' \
             "$image" \
         )"
         # Note that we need to convert UTC to local time.

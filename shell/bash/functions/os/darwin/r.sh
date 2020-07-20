@@ -193,7 +193,7 @@ koopa::macos_install_r_xml() { # {{{1
     # @note Updated 2020-07-16.
     #
     # Note that CRAN recommended clang7 compiler doesn't currently work.
-    # CC="/usr/local/clang7/bin/clang"
+    # CC='/usr/local/clang7/bin/clang'
     # > brew info gcc
     # > brew info libxml2
     # """

@@ -11,8 +11,8 @@ _koopa_prompt() { # {{{1
     # Unicode characters don't work well with some Windows fonts.
     #
     # User name and host.
-    # - Bash : user="\u@\h"
-    # - ZSH  : user="%n@%m"
+    # - Bash : user='\u@\h'
+    # - ZSH  : user='%n@%m'
     #
     # Bash: The default value is '\s-\v\$ '.
     #
