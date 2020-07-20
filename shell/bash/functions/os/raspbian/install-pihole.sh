@@ -19,7 +19,7 @@ koopa::install_pihole() { # {{{1
         url='https://install.pi-hole.net'
         koopa::download "$url" "$file"
         chmod +x "$file"
-        "$file"
+        "./${file}"
     )
     koopa::rm "$tmp_dir"
     koopa::install_success "$name_fancy"

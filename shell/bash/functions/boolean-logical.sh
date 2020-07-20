@@ -159,7 +159,7 @@ koopa::is_cellar() { # {{{1
 koopa::is_current_version() { # {{{1
     # """
     # Is the program version current?
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-20.
     # """
     local actual_version app expected_version
     koopa::assert_has_args "$#"
@@ -167,7 +167,7 @@ koopa::is_current_version() { # {{{1
     do
         expected_version="$(koopa::variable "$app")"
         actual_version="$(koopa::get_version "$app")"
-        [[ "$actual_version" = "$expected_version" ]] || return 1
+        [[ "$actual_version" == "$expected_version" ]] || return 1
     done
     return 0
 }

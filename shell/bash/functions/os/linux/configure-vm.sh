@@ -150,9 +150,9 @@ koopa::configure_vm() { # {{{1
         koopa::info 'Checking available local disk space.'
         df -h '/'
         gb_total="$(koopa::disk_gb_total)"
-        [ "$gb_total" -lt 16 ] && compact=1
+        [[ "$gb_total" -lt 16 ]] && compact=1
         # > gb_free="$(koopa::disk_gb_free)"
-        # > [ "$gb_free" -lt 10 ] && compact=1
+        # > [[ "$gb_free" -lt 10 ]] && compact=1
         # Attempt to detect an attached disk automatically.
         if [[ ! -e "$data_disk" ]]
         then
