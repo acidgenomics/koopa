@@ -3,7 +3,7 @@
 koopa::debian_install_pandoc() {
     # """
     # Install Pandoc.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-20.
     # """
     local name name_fancy tmp_dir version
     koopa::assert_has_no_args "$#"
@@ -19,7 +19,6 @@ koopa::debian_install_pandoc() {
         url="https://github.com/jgm/${name}/releases/download/${version}/${file}"
         koopa::download "$url"
         sudo dpkg -i "$file"
-        rm -rf "$file"
     )
     koopa::rm "$tmp_dir"
     koopa::install_success "$name_fancy"

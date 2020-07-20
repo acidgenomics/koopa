@@ -97,7 +97,7 @@ koopa::brew_update() { # {{{1
     fi
     koopa::h2 "Running cleanup."
     brew cleanup -s || true
-    rm -fr "$(brew --cache)"
+    koopa::rm "$(brew --cache)"
     koopa::update_r_config
     koopa::update_success "$name_fancy"
     return 0

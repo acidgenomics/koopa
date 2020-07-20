@@ -244,7 +244,7 @@ koopa::bam_filter() { # {{{1
             --input-bam="$input_bam" \
             --output-bam="$output_bam"
         # Copy the final result.
-        cp -v "$output_bam" "$final_output_bam"
+        koopa::cp "$output_bam" "$final_output_bam"
         # Index the final filtered BAM file.
         koopa::bam_index "$final_output_bam"
     done
@@ -390,11 +390,11 @@ koopa::sam_to_bam() {
     # Error if file array is empty.
     if ! koopa::is_array_non_empty "${sam_files[@]}"
     then
-        koopa::stop "No SAM files detected in '${dir}'."
+        koopa::stop "No SAM files detected in \"${dir}\"."
     fi
-    koopa::h1 "Converting SAM files in '${dir}' to BAM format."
+    koopa::h1 "Converting SAM files in \"${dir}\" to BAM format."
     koopa::activate_conda_env samtools
-    koopa::info "samtools: \"$(koopa::which_realpath samtools)\"."
+    koopa::dl 'samtools' "$(koopa::which_realpath samtools)"
     case "$keep_sam" in
         0)
             koopa::note 'SAM files will be deleted.'
@@ -409,10 +409,7 @@ koopa::sam_to_bam() {
         koopa::_sam_to_bam \
             --input-sam="$sam_file" \
             --output-bam="$bam_file"
-        if [[ "$keep_sam" -eq 0 ]]
-        then
-            rm -v "$sam_file"
-        fi
+        [[ "$keep_sam" -eq 0 ]] && koopa::rm "$sam_file"
     done
     return 0
 }

@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME MAKE ALL FUNCTIONS THAT REQUIRE THIS POSIX.
 koopa::_ansi_escape() {
     __koopa_ansi_escape "$@"
 }
 
+# FIXME MAKE ALL FUNCTIONS THAT REQUIRE THIS POSIX.
 koopa::_msg() {
     __koopa_msg "$@"
 }
@@ -70,6 +72,10 @@ koopa::bcbio_prefix() {
 
 koopa::boolean_nounset() {
     _koopa_boolean_nounset "$@"
+}
+
+koopa::cd() {
+    _koopa_cd "$@"
 }
 
 koopa::cellar_prefix() {
@@ -186,6 +192,10 @@ koopa::group_id() {
 
 koopa::gsub() {
     _koopa_gsub "$@"
+}
+
+koopa::has_gnu() {
+    _koopa_has_gnu "$@"
 }
 
 koopa::has_gnu_binutils() {
@@ -476,6 +486,10 @@ koopa::os_string() {
     _koopa_os_string "$@"
 }
 
+koopa::parent_dir() {
+    _koopa_parent_dir "$@"
+}
+
 koopa::perlbrew_prefix() {
     _koopa_perlbrew_prefix "$@"
 }
@@ -574,6 +588,10 @@ koopa::python_site_packages_prefix() {
 
 koopa::rbenv_prefix() {
     _koopa_rbenv_prefix "$@"
+}
+
+koopa::realpath() {
+    _koopa_realpath "$@"
 }
 
 koopa::refdata_prefix() {
@@ -682,4 +700,8 @@ koopa::warning() {
 
 koopa::which() {
     _koopa_which "$@"
+}
+
+koopa::which_realpath() {
+    _koopa_which_realpath "$@"
 }

@@ -444,7 +444,7 @@ koopa::sudo_write_string() { # {{{1
 koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
-    # @note Updated 2020-07-06.
+    # @note Updated 2020-07-20.
     #
     # Intended for use with 'koopa pull'.
     #
@@ -455,15 +455,12 @@ koopa::sys_git_pull() { # {{{1
     local branch prefix
     (
         prefix="$(koopa::prefix)"
-        cd "$prefix" || exit 1
+        koopa::cd "$prefix"
         koopa::sys_set_permissions -r "${prefix}/shell/zsh" &>/dev/null
         branch="$(koopa::git_branch)"
         koopa::git_pull
         # Ensure other branches, such as develop, are rebased.
-        if [[ "$branch" != "master" ]]
-        then
-            koopa::git_pull origin master
-        fi
+        [[ "$branch" != "master" ]] && koopa::git_pull origin master
         koopa::fix_zsh_permissions &>/dev/null
     )
     return 0
@@ -485,11 +482,11 @@ koopa::sys_info() { # {{{
     if koopa::is_git_toplevel "$koopa_prefix"
     then
         origin="$( \
-            cd "$koopa_prefix" || exit 1; \
+            koopa::cd "$koopa_prefix"; \
             koopa::git_remote_url
         )"
         commit="$( \
-            cd "$koopa_prefix" || exit 1; \
+            koopa::cd "$koopa_prefix"; \
             koopa::git_last_commit_local
         )"
         array+=(

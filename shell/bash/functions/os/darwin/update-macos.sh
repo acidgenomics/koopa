@@ -809,7 +809,7 @@ koopa::update_macos_defaults() { # {{{1
 
     # Save screenshots into Documents, instead of Desktop.
     screenshots_dir="${HOME}/Documents/screenshots"
-    mkdir -pv "$screenshots_dir"
+    koopa::mkdir "$screenshots_dir"
     defaults write \
         'com.apple.screencapture' \
         'location' \
