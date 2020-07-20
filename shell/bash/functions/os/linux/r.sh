@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_r_geos() {
+koopa::linux_install_r_geos() { # {{{1
     koopa::assert_is_installed Rscript
     koopa::exit_if_r_package_installed rgeos
     koopa::assert_is_not_file /usr/bin/geos-config
@@ -16,7 +16,7 @@ koopa::linux_install_r_geos() {
     return 0
 }
 
-koopa::linux_install_r_sf() {
+koopa::linux_install_r_sf() { # {{{1
     local gdal_prefix geos_prefix make_prefix pkg_config_arr proj_prefix
     koopa::assert_is_installed Rscript
     koopa::exit_if_r_package_installed sf

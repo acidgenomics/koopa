@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_install_google_cloud_sdk() {
+koopa::debian_install_google_cloud_sdk() { # {{{1
     # """
     # https://cloud.google.com/sdk/docs/downloads-apt-get
     #

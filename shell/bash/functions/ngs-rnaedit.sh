@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::rnaeditingindexer() {
+koopa::rnaeditingindexer() { # {{{1
     # """
     # Run RNAEditingIndexer.
     # @note Updated 2020-07-10.

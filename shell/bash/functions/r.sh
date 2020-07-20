@@ -44,7 +44,7 @@ koopa::install_rcheck() { # {{{1
     return 0
 }
 
-koopa::kill_r() {
+koopa::kill_r() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed pkill
     pkill rsession

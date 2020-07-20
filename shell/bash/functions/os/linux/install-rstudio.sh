@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_install_rstudio_server() {
+koopa::_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
     # @note Updated 2020-07-20.
@@ -136,7 +136,7 @@ END
     return 0
 }
 
-koopa::debian_install_rstudio_server() {
+koopa::debian_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
     # @note Updated 2020-07-16.
@@ -168,7 +168,7 @@ koopa::debian_install_rstudio_server() {
     return 0
 }
 
-koopa::debian_install_rstudio_server_pro() {
+koopa::debian_install_rstudio_server_pro() { # {{{1
     koopa::debian_install_rstudio_server --pro "$@"
     return 0
 }

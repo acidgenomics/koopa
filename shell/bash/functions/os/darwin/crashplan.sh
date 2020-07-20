@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_disable_crashplan() {
+koopa::macos_disable_crashplan() { # {{{1
     # """
     # Disable CrashPlan.
     # @note Updated 2020-07-20.

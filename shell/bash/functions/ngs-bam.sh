@@ -334,7 +334,7 @@ koopa::copy_bam_files() { # {{{1
     return 0
 }
 
-koopa::sam_to_bam() {
+koopa::sam_to_bam() { # {{{1
     # """
     # Convert SAM to BAM files.
     # @note Updated 2020-07-08.

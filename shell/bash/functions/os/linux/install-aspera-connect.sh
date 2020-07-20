@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_aspera_connect() {
+koopa::install_aspera_connect() { # {{{1
     # """
     # Install Aspera Connect.
     # @note Updated 2020-07-04.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::autopad_samples() {
+koopa::autopad_samples() { # {{{1
     # """
     # Autopad samples.
     # @note Updated 2020-07-08.
@@ -141,7 +141,7 @@ koopa::basename_sans_ext2() { # {{{1
     return 0
 }
 
-koopa::convert_utf8_nfd_to_nfc() {
+koopa::convert_utf8_nfd_to_nfc() { # {{{1
     # """
     # Convert UTF-8 NFD to NFC.
     # @note Updated 2020-07-15.
@@ -152,7 +152,7 @@ koopa::convert_utf8_nfd_to_nfc() {
     return 0
 }
 
-koopa::delete_adobe_bridge_cache() {
+koopa::delete_adobe_bridge_cache() { # {{{1
     # """
     # Delete Adobe Bridge cache files.
     # @note Updated 2020-07-16.
@@ -537,7 +537,7 @@ koopa::line_count() { # {{{1
     return 0
 }
 
-koopa::md5sum_check_to_new_md5_file() {
+koopa::md5sum_check_to_new_md5_file() { # {{{1
     local datetime log_file
     koopa::assert_has_args "$#"
     datetime="$(koopa::datetime)"
@@ -546,7 +546,7 @@ koopa::md5sum_check_to_new_md5_file() {
     return 0
 }
 
-koopa::nfiletypes() {
+koopa::nfiletypes() { # {{{1
     local dir
     koopa::assert_has_args_ne "$#" 1
     koopa::assert_is_installed find
@@ -602,7 +602,7 @@ koopa::remove_empty_dirs() { # {{{1
     return 0
 }
 
-koopa::reset_permissions() {
+koopa::reset_permissions() { # {{{1
     local dir group user
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
@@ -668,7 +668,7 @@ koopa::stat_group() { # {{{1
     return 0
 }
 
-koopa::stat_modified() {
+koopa::stat_modified() { # {{{1
     # """
     # Get file modification time.
     # @note Updated 2020-03-06.
@@ -714,7 +714,7 @@ koopa::stat_user() { # {{{1
     return 0
 }
 
-koopa::trash() {
+koopa::trash() { # {{{1
     local trash_dir
     koopa::assert_has_args "$#"
     trash_dir="${HOME}/.trash/"

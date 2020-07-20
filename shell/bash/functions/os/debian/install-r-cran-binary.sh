@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_install_r_cran_binary() {
+koopa::debian_install_r_cran_binary() { # {{{1
     # """
     # Install latest version of R from CRAN.
     # @note Updated 2020-07-16.

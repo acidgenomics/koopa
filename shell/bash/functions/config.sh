@@ -273,7 +273,7 @@ koopa::install_mike() { # {{{1
     return 0
 }
 
-koopa::ip_address() {
+koopa::ip_address() { # {{{1
     # """
     # IP address.
     # @note Updated 2020-07-14.
@@ -306,7 +306,7 @@ koopa::ip_address() {
     return 0
 }
 
-koopa::java_update_alternatives() {
+koopa::java_update_alternatives() { # {{{1
     # """
     # Update Java alternatives.
     # @note Updated 2020-07-05.
@@ -479,7 +479,7 @@ koopa::link_dotfile() { # {{{1
     return 0
 }
 
-koopa::list_dotfiles() {
+koopa::list_dotfiles() { # {{{1
     # """
     # List dotfiles.
     # @note Updated 2020-07-10.

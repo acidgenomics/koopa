@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::jekyll_serve() {
+koopa::jekyll_serve() { # {{{1
     # """
     # Render Jekyll website.
     # Updated 2020-07-08.

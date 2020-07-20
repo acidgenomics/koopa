@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_open_app() {
+koopa::macos_open_app() { # {{{1
     # """
     # Open a macOS GUI application.
     # @note Updated 2020-07-16.
@@ -12,7 +12,7 @@ koopa::macos_open_app() {
     return 0
 }
 
-koopa::macos_sudo_open_app() {
+koopa::macos_sudo_open_app() { # {{{1
     # """
     # Open a macOS GUI application with admin permissions.
     # @note Updated 2020-07-17.

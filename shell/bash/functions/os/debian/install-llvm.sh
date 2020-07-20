@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_install_llvm() {
+koopa::debian_install_llvm() { # {{{1
     # """
     # Install LLVM (clang).
     # @note Updated 2020-07-16.

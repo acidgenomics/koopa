@@ -43,7 +43,7 @@ koopa::download() { # {{{1
     return 0
 }
 
-koopa::download_cran_latest() {
+koopa::download_cran_latest() { # {{{1
     # """
     # Download CRAN latest.
     # @note Updated 2020-07-11.
@@ -61,7 +61,7 @@ koopa::download_cran_latest() {
     return 0
 }
 
-koopa::download_github_latest() {
+koopa::download_github_latest() { # {{{1
     # """
     # Download GitHub latest release.
     # @note Updated 2020-07-11.
@@ -82,7 +82,7 @@ koopa::download_github_latest() {
     return 0
 }
 
-koopa::download_refdata_scsig() {
+koopa::download_refdata_scsig() { # {{{1
     local base_url prefix version
     koopa::assert_has_no_args "$#"
     version='1.0'
@@ -103,7 +103,7 @@ koopa::download_refdata_scsig() {
     return 0
 }
 
-koopa::download_sra_accession_list() {
+koopa::download_sra_accession_list() { # {{{1
     # """
     # Download SRA accession list.
     # @note Updated 2020-07-02.
@@ -123,7 +123,7 @@ koopa::download_sra_accession_list() {
     return 0
 }
 
-koopa::download_sra_run_info_table() {
+koopa::download_sra_run_info_table() { # {{{1
     # """
     # Download SRA run info table.
     # @note Updated 2020-07-02.
@@ -139,7 +139,7 @@ koopa::download_sra_run_info_table() {
     return 0
 }
 
-koopa::ftp_mirror() {
+koopa::ftp_mirror() { # {{{1
     local dir host user
     koopa::assert_has_args "$#"
     koopa::assert_is_installed wget
@@ -187,7 +187,7 @@ koopa::ftp_mirror() {
     return 0
 }
 
-koopa::sra_prefetch_parallel() {
+koopa::sra_prefetch_parallel() { # {{{1
     koopa::assert_is_installed ascp find parallel prefetch
     koopa::assert_is_file SRRAccList.txt
     file="${1:-SraAccList.txt}"
@@ -197,7 +197,7 @@ koopa::sra_prefetch_parallel() {
     return 0
 }
 
-koopa::wget_recursive() {
+koopa::wget_recursive() { # {{{1
     # """
     # Download files with wget recursively.
     # @note Updated 2020-07-13.
@@ -227,7 +227,7 @@ koopa::wget_recursive() {
     return 0
 }
 
-koopa::youtube_mp3() {
+koopa::youtube_mp3() { # {{{1
     # """
     # Download MP3 audio from YouTube, Soundcloud, Mixcloud, etc.
     # @note Updated 2020-07-04.
@@ -242,7 +242,7 @@ koopa::youtube_mp3() {
     return 0
 }
 
-koopa::youtube_thumbnail() {
+koopa::youtube_thumbnail() { # {{{1
     # """
     # Download a thumbnail image from YouTube.
     # @note Updated 2020-07-04.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::update_venv() {
+koopa::update_venv() { # {{{1
     # """
     # Update Python virtual environment.
     # @note Updated 2020-07-13.

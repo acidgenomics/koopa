@@ -339,7 +339,7 @@ koopa::mktemp() { # {{{1
     return 0
 }
 
-koopa::pager() {
+koopa::pager() { # {{{1
     # """
     # Run less with support for colors (escape characters).
     # @note Updated 2020-07-03.
@@ -643,7 +643,7 @@ koopa::sys_chmod() { # {{{1
     return 0
 }
 
-koopa::sys_chmod_flags() {
+koopa::sys_chmod_flags() { # {{{1
     # """
     # Default recommended flags for chmod.
     # @note Updated 2020-04-16.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_merge_pdf() {
+koopa::macos_merge_pdf() { # {{{1
     # """
     # Merge PDF files, preserving hyperlinks
     # @note Updated 2020-07-16.

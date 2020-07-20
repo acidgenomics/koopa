@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_perl_packages() {
+koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
     # @note Updated 2020-07-20.

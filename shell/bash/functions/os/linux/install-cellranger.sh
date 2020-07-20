@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_cellranger() {
+koopa::install_cellranger() { # {{{1
     # """
     # Install Cell Ranger.
     # @note Updated 2020-07-16.

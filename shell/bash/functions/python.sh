@@ -63,7 +63,7 @@ koopa::install_pip() { # {{{1
     return 0
 }
 
-koopa::install_python_packages() {
+koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
     # @note Updated 2020-07-10.
@@ -226,7 +226,7 @@ koopa::python_remove_pycache() { # {{{1
     return 0
 }
 
-koopa::venv_create() {
+koopa::venv_create() { # {{{1
     # """
     # Create Python virtual environment.
     # @note Updated 2020-07-02.
@@ -256,7 +256,7 @@ koopa::venv_create() {
     return 0
 }
 
-koopa::venv_create_base() {
+koopa::venv_create_base() { # {{{1
     # """
     # Create base Python virtual environment.
     # @note Updated 2020-07-03.
@@ -266,7 +266,7 @@ koopa::venv_create_base() {
     return 0
 }
 
-koopa::venv_create_r_reticulate() {
+koopa::venv_create_r_reticulate() { # {{{1
     # """
     # Create Python reticulate environment for R.
     # @note Updated 2020-07-02.

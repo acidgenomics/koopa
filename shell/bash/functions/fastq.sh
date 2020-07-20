@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::fastq_dump_from_sra_file_list() {
+koopa::fastq_dump_from_sra_file_list() { # {{{1
     local filelist id
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed fastq-dump
@@ -17,7 +17,7 @@ koopa::fastq_dump_from_sra_file_list() {
     return 0
 }
 
-koopa::fastq_lanepool() {
+koopa::fastq_lanepool() { # {{{1
     local array basenames head i out prefix source_dir tail target_dir
     prefix='lanepool'
     source_dir='.'
@@ -104,7 +104,7 @@ koopa::fastq_lanepool() {
     return 0
 }
 
-koopa::fastq_reads_per_file() {
+koopa::fastq_reads_per_file() { # {{{1
     local dir
     koopa::assert_is_installed awk wc zcat
     dir="${1:-.}"
@@ -116,7 +116,7 @@ koopa::fastq_reads_per_file() {
     return 0
 }
 
-koopa::fastq_to_fasta() {
+koopa::fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.
     # @note Updated 2020-07-11.

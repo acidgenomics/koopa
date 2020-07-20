@@ -40,7 +40,7 @@ koopa::entab() { # {{{1
     return 0
 }
 
-koopa::sort_lines() {
+koopa::sort_lines() { # {{{1
     # """
     # Sort lines.
     # @note Updated 2020-07-13.

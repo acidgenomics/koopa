@@ -783,7 +783,7 @@ koopa::assert_is_root() { # {{{1
     return 0
 }
 
-koopa::assert_is_set() {
+koopa::assert_is_set() { # {{{1
     # """
     # Assert that variables are set (and not unbound).
     # @note Updated 2020-03-04.

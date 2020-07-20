@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::fedora_install_oracle_instantclient() {
+koopa::fedora_install_oracle_instantclient() { # {{{1
     # """
     # Install Oracle InstantClient.
     # @note Updated 2020-07-16.

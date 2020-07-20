@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_install_pandoc() {
+koopa::debian_install_pandoc() { # {{{1
     # """
     # Install Pandoc.
     # @note Updated 2020-07-20.

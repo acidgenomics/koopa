@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::bcl2fastq_indrops() {
+koopa::bcl2fastq_indrops() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed bcl2fastq
     bcl2fastq \

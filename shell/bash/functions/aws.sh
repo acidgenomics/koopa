@@ -6,7 +6,7 @@
 # >     --output json \
 # >     --bucket tests.acidgenomics.com
 
-koopa::aws_batch_fetch_and_run() {
+koopa::aws_batch_fetch_and_run() { # {{{1
     # """
     # Fetch and run a script on AWS Batch.
     # @note Updated 2020-07-01.
@@ -39,7 +39,7 @@ koopa::aws_batch_fetch_and_run() {
     return 0
 }
 
-koopa::aws_batch_list_jobs() {
+koopa::aws_batch_list_jobs() { # {{{1
     # """
     # List AWS Batch jobs.
     # @note Updated 2020-07-01.

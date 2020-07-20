@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_go() {
+koopa::install_go() { # {{{1
     # """
     # Install Go.
     # @note Updated 2020-07-16.

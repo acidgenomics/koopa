@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_install_xcode_clt() {
+koopa::macos_install_xcode_clt() { # {{{1
     # """
     # Install Xcode CLT.
     # @note Updated 2020-07-17.

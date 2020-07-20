@@ -289,7 +289,7 @@ koopa::install_bcbio_genome() { # {{{1
     return 0
 }
 
-koopa::install_bcbio_vm() {
+koopa::install_bcbio_vm() { # {{{1
     # """
     # Install bcbio-vm.
     # @note Updated 2020-07-16.
@@ -342,7 +342,7 @@ koopa::install_bcbio_vm() {
     return 0
 }
 
-koopa::patch_bcbio() {
+koopa::patch_bcbio() { # {{{1
     # """
     # Patch bcbio.
     # @note Updated 2020-07-16.
@@ -422,7 +422,7 @@ koopa::patch_bcbio() {
     return 0
 }
 
-koopa::update_bcbio() {
+koopa::update_bcbio() { # {{{1
     local bcbio cores name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs

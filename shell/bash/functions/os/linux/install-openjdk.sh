@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_openjdk() {
+koopa::install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
     # @note Updated 2020-07-16.

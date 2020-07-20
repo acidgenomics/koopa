@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::ubuntu_install_shiny_server() {
+koopa::ubuntu_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Ubuntu.
     # @note Updated 2020-07-14.
