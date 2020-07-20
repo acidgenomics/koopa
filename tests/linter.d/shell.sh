@@ -7,7 +7,7 @@ source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 test() { # {{{1
     # """
     # Shell script checks.
-    # Updated 2020-07-08.
+    # Updated 2020-07-20.
     # """
     test_all
     test_posix
@@ -32,14 +32,7 @@ test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
-    array=(
-        ' cd '
-        ' cp '
-        ' ln '
-        ' mkdir '
-        ' mv '
-        ' rm '
-    )
+    array=('(^| )(cd|cp|ln|mkdir|mv|rm) ')
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
         -i 'coreutils' \
@@ -54,15 +47,17 @@ test_all_illegal_strings() { # {{{1
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
     array=(
-        ' path='    # zsh will freak out
-        ' || exit'  # wrap in function and return instead
-        '() {$'     # functions should include vim marker
-        '; do'      # newline instead
-        '; then'    # newline instead
-        '<  <'      # use '<<<' instead
-        'IFS= '     # this is default, look for weird edge cases
-        '\$path'    # zsh will freak out
-        '^path='    # zsh will freak out
+        ' path='            # zsh will freak out
+        ' || exit'          # wrap in function and return instead
+        '""'
+        '() {$'             # functions should include vim marker
+        '; do'              # newline instead
+        '; then'            # newline instead
+        '<  <'              # use '<<<' instead
+        'IFS= '             # this is default, look for weird edge cases
+        '\$path'            # zsh will freak out
+        '\b(EOF|EOL)\b'     # Use 'END' instead.
+        '^path='            # zsh will freak out
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \

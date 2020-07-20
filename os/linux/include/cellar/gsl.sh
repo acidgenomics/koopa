@@ -5,7 +5,7 @@ file="gsl-${version}.tar.gz"
 url="http://mirror.keystealth.org/gnu/gsl/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "gsl-${version}" || exit 1
+koopa::cd "gsl-${version}"
 ./configure --prefix="$prefix"
 make --jobs="$jobs"
 # > make check

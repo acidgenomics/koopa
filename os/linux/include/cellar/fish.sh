@@ -10,10 +10,9 @@ url="https://github.com/fish-shell/fish-shell/releases/download/\
 ${version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 cmake -DCMAKE_INSTALL_PREFIX="$prefix"
 make --jobs="$jobs"
 # > make test
 make install
-
 koopa::enable_shell "$name"

@@ -29,7 +29,7 @@ file="${name}-${version}-linux-x86_64.tar.gz"
 url="https://julialang-s3.julialang.org/bin/linux/x64/${minor_version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
-rm LICENSE.md
+koopa::cd "${name}-${version}"
+koopa::rm 'LICENSE.md'
 koopa::mkdir "$prefix"
 cp -r . "$prefix"
