@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::alpine_install_glibc() {
+koopa::alpine_install_glibc() { # {{{1
     # """
     # Install glibc
     # @note Updated 2020-07-09.

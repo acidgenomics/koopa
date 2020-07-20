@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::update_rbenv() {
+koopa::update_rbenv() { # {{{1
     local rbenv_root
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs

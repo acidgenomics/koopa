@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_haskell_stack() {
+koopa::install_haskell_stack() { # {{{1
     local file name_fancy tmp_dir url xdg_bin_dir
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs

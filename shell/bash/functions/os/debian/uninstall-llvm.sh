@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_uninstall_llvm() {
+koopa::debian_uninstall_llvm() { # {{{1
     # """
     # Uninstall LLVM.
     # @note Updated 2020-07-16.

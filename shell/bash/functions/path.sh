@@ -75,7 +75,7 @@ koopa::add_conda_env_to_path() { # {{{1
     return 0
 }
 
-koopa::list_path_priority() {
+koopa::list_path_priority() { # {{{1
     # """
     # List path priority.
     # @note Updated 2020-07-10.

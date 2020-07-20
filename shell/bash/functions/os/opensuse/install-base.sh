@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::opensuse_install_base() {
+koopa::opensuse_install_base() { # {{{1
     # """
     # Install openSUSE base system.
     # @note Updated 2020-07-02.

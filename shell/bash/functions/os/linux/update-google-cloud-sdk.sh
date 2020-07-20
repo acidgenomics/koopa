@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::update_google_cloud_sdk() {
+koopa::update_google_cloud_sdk() { # {{{1
     # """
     # Update Google Cloud SDK.
     # @note Updated 2020-07-16.

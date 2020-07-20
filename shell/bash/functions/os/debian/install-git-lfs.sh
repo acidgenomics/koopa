@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_install_git_lfs() {
+koopa::debian_install_git_lfs() { # {{{1
     local file name_fancy tmp_dir url
     koopa::assert_has_no_args "$#"
     name_fancy='Git LFS'

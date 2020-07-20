@@ -414,7 +414,7 @@ _koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
-_koopa_python_site_packages_prefix() {
+_koopa_python_site_packages_prefix() { # {{{1
     # """
     # Python site packages library location.
     # @note Updated 2020-07-01.

@@ -115,7 +115,7 @@ koopa::_kallisto_quant() { # {{{1
     return 0
 }
 
-koopa::kallisto() {
+koopa::kallisto() { # {{{1
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     koopa::assert_has_args "$#"
     fastq_dir='fastq'

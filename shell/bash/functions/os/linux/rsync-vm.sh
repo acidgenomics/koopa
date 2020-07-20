@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::rsync_vm() {
+koopa::rsync_vm() { # {{{1
     # """
     # rsync virtual machine configuration.
     # @note Updated 2020-07-16.

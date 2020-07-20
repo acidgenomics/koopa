@@ -389,7 +389,7 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     return 0
 }
 
-_koopa_activate_homebrew_google_cloud_sdk() {
+_koopa_activate_homebrew_google_cloud_sdk() { # {{{1
     # """
     # Activate Homebrew Google Cloud SDK.
     # @note Updated 2020-06-30.
@@ -556,7 +556,7 @@ _koopa_activate_macos_extras() { # {{{1
     return 0
 }
 
-_koopa_activate_macos_python() {
+_koopa_activate_macos_python() { # {{{1
     # """
     # Activate macOS Python install.
     # @note Updated 2020-07-03.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::tx2gene_from_ensembl_fasta() {
+koopa::tx2gene_from_ensembl_fasta() { # {{{1
     local count fasta_file fasta_file_bn output_file output_file_bn
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed awk cut grep gunzip sed tr
@@ -24,7 +24,7 @@ koopa::tx2gene_from_ensembl_fasta() {
     return 0
 }
 
-koopa::tx2gene_from_flybase_fasta() {
+koopa::tx2gene_from_flybase_fasta() { # {{{1
     local count fasta_file fasta_file_bn output_file output_file_bn
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed awk cut grep gunzip sed tr
@@ -48,7 +48,7 @@ koopa::tx2gene_from_flybase_fasta() {
     return 0
 }
 
-koopa::tx2gene_from_gencode_fasta() {
+koopa::tx2gene_from_gencode_fasta() { # {{{1
     local fasta_file fasta_file_bn output_file output_file_bn
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed awk cut grep gunzip sed tr
@@ -72,7 +72,7 @@ koopa::tx2gene_from_gencode_fasta() {
     return 0
 }
 
-koopa::tx2gene_from_wormbase_fasta() {
+koopa::tx2gene_from_wormbase_fasta() { # {{{1
     local count fasta_file fasta_file_bn output_file output_file_bn
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed awk cut grep gunzip sed tr
