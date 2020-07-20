@@ -76,7 +76,7 @@ koopa::current_flybase_version() { # {{{1
     # @note Updated 2020-07-01.
     # """
     local dmel url x
-    url="ftp://ftp.flybase.net/releases"
+    url='ftp://ftp.flybase.net/releases'
     dmel=0
     while (("$#"))
     do
@@ -94,14 +94,14 @@ koopa::current_flybase_version() { # {{{1
     then
         x="$( \
             curl --list-only --silent "${url}/current/" \
-            | grep -E "^dmel_r[.0-9]+$" \
+            | grep -E '^dmel_r[.0-9]+$' \
             | head -n 1 \
             | cut -d '_' -f 2 \
         )"
     else
         x="$( \
             curl --list-only --silent "${url}/" \
-            | grep -E "^FB[0-9]{4}_[0-9]{2}$" \
+            | grep -E '^FB[0-9]{4}_[0-9]{2}$' \
             | sort \
             | tail -n 1 \
         )"
