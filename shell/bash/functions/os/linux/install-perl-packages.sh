@@ -15,6 +15,7 @@ koopa::install_perl_packages() {
         koopa::info "CPAN Minus"
         cpan -i "App::cpanminus" &>/dev/null
     fi
+    koopa::assert_is_installed cpanm
     if [[ "$#" -gt 0 ]]
     then
         modules=("$@")
