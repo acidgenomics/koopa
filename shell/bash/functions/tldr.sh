@@ -176,7 +176,7 @@ koopa::tldr_list_pages() { # {{{1
         | sort -u \
     )"
     cmd="$(koopa::basename_sans_ext "${pages[@]}" | fzf || true)"
-    [ -n "$cmd" ] || return 0
+    [[ -n "$cmd" ]] || return 0
     tldr "$cmd"
     return 0
 }

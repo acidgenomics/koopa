@@ -112,10 +112,10 @@ test_bash_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     array=(
-        ' = '
         ' \[ '
         ' \] '
         ' \]$'
+        '\[\[ ([^\]]+) = ([^\]]+) \]\]'
         '^\[ '
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
@@ -177,10 +177,10 @@ test_zsh_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     array=(
-        ' = '
         ' \[ '
         ' \] '
         ' \]$'
+        '\[\[ ([^\]]+) = ([^\]]+) \]\]'
         '^\[ '
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
