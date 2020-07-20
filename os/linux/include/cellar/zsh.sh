@@ -38,14 +38,11 @@ make --jobs="$jobs"
 # > make check
 # > make test
 make install
-
 if koopa::is_debian
 then
-    koopa::h1 "Linking shared config scripts into '${etc_dir}'."
-    mkdir -pv "$etc_dir"
-    ln -fnsv \
-        "$(koopa::prefix)/os/$(koopa::os_id)/etc/zsh/"* \
-        -t "${etc_dir}/"
+    koopa::info "Linking shared config scripts into \"${etc_dir}\"."
+    koopa::ln \
+        -t "${etc_dir}" \
+        "$(koopa::prefix)/os/$(koopa::os_id)/etc/zsh/"*
 fi
-
 koopa::enable_shell "$name"

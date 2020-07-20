@@ -5,11 +5,12 @@
 # On macOS, use './Configure darwin64-x86_64-cc'
 # """
 
-file="openssl-${version}.tar.gz"
-url="https://www.openssl.org/source/${file}"
+name='openssl'
+file="${name}-${version}.tar.gz"
+url="https://www.${name}.org/source/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "openssl-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./config \
     --prefix="$prefix" \
     --openssldir="$prefix" \

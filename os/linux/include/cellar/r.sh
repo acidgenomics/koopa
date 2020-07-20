@@ -16,37 +16,34 @@
 # """
 
 koopa::activate_openjdk
-
 major_version="$(koopa::major_version "$version")"
 file="R-${version}.tar.gz"
 url="https://cloud.r-project.org/src/base/R-${major_version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "R-${version}" || exit 1
+koopa::cd "R-${version}"
 # R will warn if R_HOME environment variable is set.
 unset -v R_HOME
 # Fix for reg-tests-1d.R error, due to unset TZ variable.
 # https://stackoverflow.com/questions/46413691
-export TZ="America/New_York"
+export TZ='America/New_York'
 flags=(
-    "--enable-R-profiling"
-    "--enable-R-shlib"
-    "--enable-memory-profiling"
     "--prefix=${prefix}"
-    "--with-blas"
-    "--with-cairo"
-    "--with-jpeglib"
-    "--with-lapack"
-    "--with-readline"
-    "--with-tcltk"
-    "--with-x=no"
+    '--enable-R-profiling'
+    '--enable-R-shlib'
+    '--enable-memory-profiling'
+    '--with-blas'
+    '--with-cairo'
+    '--with-jpeglib'
+    '--with-lapack'
+    '--with-readline'
+    '--with-tcltk'
+    '--with-x=no'
 )
 # Need to modify BLAS configuration handling specificallly on Debian.
 if ! koopa::is_debian
 then
-    flags+=(
-        "--enable-BLAS-shlib"
-    )
+    flags+=('--enable-BLAS-shlib')
 fi
 ./configure "${flags[@]}"
 make --jobs="$jobs"
@@ -54,7 +51,6 @@ make --jobs="$jobs"
 make pdf
 make info
 make install
-
 if [[ "$link_cellar" -eq 1 ]]
 then
     # Update R configuration.

@@ -35,7 +35,7 @@ file="${version}.tar.gz"
 url="https://github.com/ggreer/${name2}/archive/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name2}-${version}" || exit 1
+koopa::cd "${name2}-${version}"
 # Refer to 'build.sh' script for details.
 ./autogen.sh
 ./configure --prefix="$prefix"

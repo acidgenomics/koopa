@@ -9,5 +9,4 @@ url="https://github.com/koalaman/${name}/releases/download/\
 v${version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-mkdir -pv "${prefix}/bin"
-cp "${name}-v${version}/${name}" "${prefix}/bin"
+koopa::cp -t "${prefix}/bin" "${name}-v${version}/${name}"
