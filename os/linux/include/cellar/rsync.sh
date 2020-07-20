@@ -7,13 +7,13 @@ koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-${version}"
 flags=(
-    "--disable-zstd"
     "--prefix=${prefix}"
-    # "--without-included-zlib"
+    # '--without-included-zlib'
+    '--disable-zstd'
 )
 if koopa::is_rhel
 then
-    flags+=("--disable-xxhash")
+    flags+=('--disable-xxhash')
 fi
 ./configure "${flags[@]}"
 make --jobs="$jobs"

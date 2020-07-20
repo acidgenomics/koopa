@@ -111,7 +111,7 @@ koopa::macos_install_homebrew() { # {{{1
     # @seealso
     # https://docs.brew.sh/Installation
     #
-    # This script installs Homebrew to '/usr/local' so that you don’t need sudo
+    # This script installs Homebrew to '/usr/local' so that you don't need sudo
     # when you run 'brew install'. It is a careful script; it can be run even if
     # you have stuff installed to '/usr/local' already. It tells you exactly
     # what it will do before it does it too. You have to confirm everything it
