@@ -179,12 +179,56 @@ __koopa_print_ansi() { # {{{1
     return 0
 }
 
+__koopa_status() { # {{{1
+    # """
+    # Koopa status.
+    # @note Updated 2020-07-20.
+    # """
+    # shellcheck disable=SC2039
+    local color nocolor label string x
+    [ "$#" -ge 3 ] || return 1
+    label="$(printf '%10s\n' "${1:?}")"
+    color="$(__koopa_ansi_escape "${2:?}")"
+    nocolor="$(__koopa_ansi_escape 'nocolor')"
+    shift 2
+    for string in "$@"
+    do
+        x="${color}${label}${nocolor} | ${string}"
+        _koopa_print "$x"
+    done
+    return 0
+}
+
+_koopa_coffee_time() { # {{{1
+    # """
+    # Coffee time.
+    # @note Updated 2020-07-20.
+    # """
+    _koopa_note 'This step takes a while. Time for a coffee break! ☕☕'
+    return 0
+}
+
 _koopa_dl() { # {{{1
     # """
     # Definition list.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-20.
     # """
-    __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:?}"
+    [ "$#" -ge 2 ] || return 1
+    while [ "$#" -ge 2 ]
+    do
+        __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:?}"
+        shift 2
+    done
+    return 0
+}
+
+_koopa_exit() { # {{{1
+    # """
+    # Exit showing note, without error.
+    # @note Updated 2020-07-20.
+    # """
+    _koopa_note "$@"
+    exit 0
 }
 
 _koopa_h1() { # {{{1
@@ -376,6 +420,42 @@ _koopa_print_white() { # {{{1
 
 _koopa_print_white_bold() { # {{{1
     __koopa_print_ansi 'white-bold' "$@"
+    return 0
+}
+
+_koopa_restart() { # {{{1
+    # """
+    # Inform the user that they should restart shell.
+    # @note Updated 2020-07-20.
+    # """
+    _koopa_note 'Restart the shell.'
+    return 0
+}
+
+_koopa_status_fail() { # {{{1
+    # """
+    # FAIL status.
+    # @note Updated 2020-07-20.
+    # """
+    __koopa_status 'FAIL' 'red' "$@" >&2
+    return 0
+}
+
+_koopa_status_note() { # {{{1
+    # """
+    # NOTE status.
+    # @note Updated 2020-07-20.
+    # """
+    __koopa_status 'NOTE' 'yellow' "$@"
+    return 0
+}
+
+_koopa_status_ok() { # {{{1
+    # """
+    # OK status.
+    # @note Updated 2020-07-20.
+    # """
+    __koopa_status 'OK' 'green' "$@"
     return 0
 }
 
