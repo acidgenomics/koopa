@@ -32,7 +32,7 @@ test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
-    array=('(^| )(cd|cp|ln|mkdir|mv|rm) ')
+    array=('^([ ]+)?(cd|cp|ln|mkdir|mv|rm) ')
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
         -i 'coreutils' \

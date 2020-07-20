@@ -20,17 +20,21 @@ koopa::cp() { # {{{1
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
-    local OPTIND cp cp_flags mkdir rm sudo target_dir target_parent
+    local OPTIND cp cp_flags mkdir rm sudo symlink target_dir target_parent
     unalias -a
     koopa::assert_is_installed cp
     sudo=0
+    symlink=0
     target_dir=
     OPTIND=1
-    while getopts 'St:' opt
+    while getopts 'Sst:' opt
     do
         case "$opt" in
             S)
                 sudo=1
+                ;;
+            s)
+                symlink=1
                 ;;
             t)
                 target_dir="$OPTARG"
@@ -53,6 +57,7 @@ koopa::cp() { # {{{1
         rm=('koopa::rm')
     fi
     cp_flags=('-af')
+    [[ "$symlink" -eq 1 ]] && cp_flags+=('-s')
     if [[ -n "$target_dir" ]]
     then
         koopa::assert_is_existing "$@"
