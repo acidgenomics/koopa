@@ -88,22 +88,26 @@ koopa::df() { # {{{1
     return 0
 }
 
-# FIXME NEED TO SUPPORT -T FLAG HERE.
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly.
     # @note Updated 2020-07-20.
     # """
-    local OPTIND ln mkdir rm source_file target_file target_parent
+    local OPTIND ln ln_flags mkdir rm source_file target_file target_dir \
+        target_parent
     unalias -a
     koopa::assert_is_installed ln
     sudo=0
+    target_dir=
     OPTIND=1
-    while getopts 'S' opt
+    while getopts 'St:' opt
     do
         case "$opt" in
             S)
                 sudo=1
+                ;;
+            t)
+                target_dir="$OPTARG"
                 ;;
             \?)
                 koopa::invalid_arg
@@ -111,7 +115,7 @@ koopa::ln() { # {{{1
         esac
     done
     shift "$((OPTIND-1))"
-    koopa::assert_has_args_eq "$#" 2
+    koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
         ln=('sudo' 'ln')
@@ -122,12 +126,23 @@ koopa::ln() { # {{{1
         mkdir=('koopa::mkdir')
         rm=('koopa::rm')
     fi
-    source_file="${1:?}"
-    target_file="${2:?}"
-    "${rm[@]}" "$target_file"
-    target_parent="$(dirname "$target_file")"
-    [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
-    "${ln[@]}" -fns "$source_file" "$target_file" &>/dev/null
+    ln_flags=('-fns')
+    if [[ -n "$target_dir" ]]
+    then
+        koopa::assert_is_existing "$@"
+        target_dir="$(koopa::strip_trailing_slash "$target_dir")"
+        ln_flags+=('-t' "$target_dir")
+        [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
+    else
+        koopa::assert_has_args_eq "$#" 2
+        source_file="${1:?}"
+        koopa::assert_is_existing "$source_file"
+        target_file="${2:?}"
+        [[ -e "$target_file" ]] && "${rm[@]}" "$target_file"
+        target_parent="$(dirname "$target_file")"
+        [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
+    fi
+    "${ln[@]}" "${ln_flags[@]}" "$@" &>/dev/null
     return 0
 }
 
