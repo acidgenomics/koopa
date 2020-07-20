@@ -1184,7 +1184,7 @@ koopa::update_macos_defaults() { # {{{1
     # Time Machine {{{2
     # --------------------------------------------------------------------------
 
-    # Prevent Time Machine from prompting to use new hard drives as backup volume.
+    # Prevent Time Machine from prompting to use new hard drives as backup.
     defaults write \
         'com.apple.TimeMachine' \
         'DoNotOfferNewDisksForBackup' \
