@@ -9,11 +9,11 @@ test() { # {{{1
     # Shell script checks.
     # Updated 2020-07-20.
     # """
+    test_shellcheck
     test_all
     test_posix
     test_bash
     test_zsh
-    test_shellcheck
     return 0
 }
 
