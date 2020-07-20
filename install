@@ -2,8 +2,6 @@
 # shellcheck disable=SC1090,SC1091,SC2162
 set -Eeu -o pipefail
 
-set -x
-
 # """
 # koopa shell
 # https://koopa.acidgenomics.com/
@@ -23,7 +21,7 @@ cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
-Updated 2020-07-08.
+Updated 2020-07-20.
 
 Optional arguments:
     --help, -h
@@ -131,7 +129,7 @@ install() { # {{{1
                 break
                 ;;
             --*|-*)
-                printf 'ERROR: Invalid arg: "%s"\n' "$1" >&2
+                printf 'ERROR: Invalid arg: "%s".\n' "$1" >&2
                 return 1
                 ;;
         esac
@@ -153,7 +151,7 @@ install() { # {{{1
     # Check that temporary activation was successful.
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        printf 'ERROR: Installer failed to set "KOOPA_PREFIX".\n' >&2
+        printf 'ERROR: Installer failed to set KOOPA_PREFIX.\n' >&2
         return 1
     fi
     # Ensure existing user configuration gets removed.
@@ -240,11 +238,11 @@ install() { # {{{1
     if [[ "${koopa_prefix:?}" != "${KOOPA_PREFIX:?}" ]]
     then
         >&2 cat << END
-ERROR: Installer failed to set "KOOPA_PREFIX" correctly.
-Expected: "$koopa_prefix"
-Actual: "$KOOPA_PREFIX"
-PWD: "$PWD"
-BASH_SOURCE: "${BASH_SOURCE[0]}"
+ERROR: Installer failed to set KOOPA_PREFIX correctly.
+    Expected: "$koopa_prefix"
+    Actual: "$KOOPA_PREFIX"
+    PWD: "$PWD"
+    BASH_SOURCE: "${BASH_SOURCE[0]}"
 END
         return 1
     fi
@@ -252,9 +250,9 @@ END
     if ! koopa::is_installed koopa
     then
         >&2 cat << END
-ERROR: Installer failed to set "PATH" correctly.
-KOOPA_PREFIX: "$KOOPA_PREFIX"
-PATH: "$PATH"
+ERROR: Installer failed to set PATH correctly.
+    KOOPA_PREFIX: "$KOOPA_PREFIX"
+    PATH: "$PATH"
 END
         return 1
     fi
@@ -283,8 +281,9 @@ END
         file="$(koopa::find_user_profile)"
         if [[ -e "$file" ]]
         then
-            koopa::note "User profile exists: \"${file}\"."
-            koopa::note 'This will be overwritten if dot files are linked.'
+            koopa::note \
+                "User profile exists: \"${file}\"." \
+                'This will be overwritten if dot files are linked.'
         fi
         dotfiles="$(koopa::read_yn 'Install and link dot files' "$dotfiles")"
     fi

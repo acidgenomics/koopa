@@ -6,7 +6,7 @@ koopa::has_file_ext() { # {{{1
     # @note Updated 2020-07-04.
     #
     # @examples
-    # koopa::has_file_ext "hello.txt"
+    # koopa::has_file_ext 'hello.txt'
     # """
     local file
     koopa::assert_has_args "$#"
@@ -205,7 +205,7 @@ koopa::is_export() { # {{{1
     # - https://unix.stackexchange.com/questions/390831
     #
     # @examples
-    # koopa::is_export "KOOPA_SHELL"
+    # koopa::is_export 'KOOPA_SHELL'
     # """
     local arg exports
     koopa::assert_has_args "$#"
@@ -363,8 +363,8 @@ koopa::is_r_package_installed() { # {{{1
     # Fast mode: checking the 'site-library' directory.
     #
     # Alternate, slow mode:
-    # > Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
-    # >     | grep -q "TRUE"
+    # > Rscript -e "\"${1}\" %in% rownames(utils::installed.packages())" \
+    # >     | grep -q 'TRUE'
     # """
     local pkg pos r
     koopa::assert_has_args "$#"

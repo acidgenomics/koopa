@@ -31,7 +31,7 @@ koopa::aws_batch_fetch_and_run() { # {{{1
             aws s3 cp "$url" "$file"
             ;;
         *)
-            koopa::stop "Unsupported URL: '${url}'."
+            koopa::stop "Unsupported URL: \"${url}\"."
             ;;
     esac
     chmod u+x "$file"
@@ -51,24 +51,24 @@ koopa::aws_batch_list_jobs() { # {{{1
         AWS_BATCH_ACCOUNT_ID \
         AWS_BATCH_QUEUE \
         AWS_BATCH_REGION
-    koopa::h1 "Checking AWS Batch job status."
+    koopa::h1 'Checking AWS Batch job status.'
     job_queue_array=(
-        "arn"
-        "aws"
-        "batch"
+        'arn'
+        'aws'
+        'batch'
         "${AWS_BATCH_REGION:?}"
         "${AWS_BATCH_ACCOUNT_ID:?}"
         "job-queue/${AWS_BATCH_QUEUE:?}"
     )
-    job_queue="$(koopa::paste0 ":" "${job_queue_array[@]}")"
+    job_queue="$(koopa::paste0 ':' "${job_queue_array[@]}")"
     status_array=(
-        "SUBMITTED"
-        "PENDING"
-        "RUNNABLE"
-        "STARTING"
-        "RUNNING"
-        "SUCCEEDED"
-        "FAILED"
+        'SUBMITTED'
+        'PENDING'
+        'RUNNABLE'
+        'STARTING'
+        'RUNNING'
+        'SUCCEEDED'
+        'FAILED'
     )
     for status in "${status_array[@]}"
     do
@@ -97,7 +97,7 @@ koopa::aws_cp_regex() { # {{{1
     source_prefix="${2:?}"
     target_prefix="${3:?}"
     aws s3 cp \
-        --exclude="*" \
+        --exclude='*' \
         --follow-symlinks \
         --include="$pattern" \
         --recursive \
@@ -208,7 +208,7 @@ koopa::aws_s3_ls() { # {{{1
         case "$1" in
             --recursive)
                 recursive=1
-                flags+=("--recursive")
+                flags+=('--recursive')
                 shift 1
                 ;;
             --type=*)
@@ -236,7 +236,7 @@ koopa::aws_s3_ls() { # {{{1
     # Don't allow '--type' argument when '--recursive' flag is set.
     if [[ "$recursive" -eq 1 ]] && [[ -n "$type" ]]
     then
-        koopa::stop "'--type' argument isn't supported for '--recursive' mode."
+        koopa::stop '"--type" argument not supported for "--recursive" mode.'
     fi
     case "${type:-}" in
         d)
@@ -256,7 +256,7 @@ koopa::aws_s3_ls() { # {{{1
     prefix="$(koopa::strip_trailing_slash "$prefix")"
     prefix="${prefix}/"
     # Automatically add 's3://' if missing.
-    if ! koopa::str_match_regex "$prefix" "^s3://"
+    if ! koopa::str_match_regex "$prefix" '^s3://'
     then
         prefix="s3://${prefix}"
     fi

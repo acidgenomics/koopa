@@ -18,16 +18,16 @@
 # > python3 setup.py install
 # """
 
-file="awscli-exe-linux-x86_64.zip"
+file='awscli-exe-linux-x86_64.zip'
 url="https://awscli.amazonaws.com/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-tmp_install_dir="tmp_install"
-tmp_bin_dir="tmp_bin"
+tmp_install_dir='tmp_install'
+tmp_bin_dir='tmp_bin'
 ./aws/install -i "$tmp_install_dir" -b "$tmp_bin_dir" > /dev/null
 koopa::cd "${tmp_install_dir}/v2"
 # Note that directory structure currently returns differently for Alpine.
-version2="$(find . -mindepth 1 -maxdepth 1 -type d -name "2.*")"
-[[ -z "$version2" ]] && koopa::stop "Failed to detect version."
+version2="$(find . -mindepth 1 -maxdepth 1 -type d -name '2.*')"
+[[ -z "$version2" ]] && koopa::stop 'Failed to detect version.'
 version2="$(basename "$version2")"
 koopa::sys_cp "$version2" "$prefix"
