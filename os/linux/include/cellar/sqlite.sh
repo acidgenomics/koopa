@@ -18,13 +18,12 @@
 
 case "$version" in
     3.32.*)
-        year="2020"
+        year='2020'
         ;;
     *)
-        koopa::stop "Unsupported version."
+        koopa::stop 'Unsupported version.'
         ;;
 esac
-
 # e.g. 3.32.3 to 3320300.
 file_version="$( \
     koopa::print "$version" \
@@ -34,7 +33,7 @@ file="${name}-autoconf-${file_version}.tar.gz"
 url="https://www.sqlite.org/${year}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-autoconf-${file_version}" || exit 1
+koopa::cd "${name}-autoconf-${file_version}"
 # Potential flags:
 # --disable-dynamic-extensions
 # --disable-shared

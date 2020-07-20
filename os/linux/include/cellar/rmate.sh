@@ -7,5 +7,5 @@ koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-${version}"
 chmod a+x rmate
-mkdir -p "${prefix}/bin"
-cp rmate -t "${prefix}/bin"
+koopa::mkdir "${prefix}/bin"
+koopa::cp -t "${prefix}/bin" 'rmate'
