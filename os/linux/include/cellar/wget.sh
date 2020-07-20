@@ -5,7 +5,7 @@ file="${name}-${version}.tar.gz"
 url="${gnu_mirror}/${name}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./configure \
     --prefix="$prefix" \
     --with-ssl='openssl'

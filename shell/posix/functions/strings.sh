@@ -37,7 +37,7 @@ _koopa_kebab_case() { # {{{1
     # _koopa_kebab_case 'hello world'
     # ## hello-world
     #
-    # _koopa_kebab_case "bcbio-nextgen.py"
+    # _koopa_kebab_case 'bcbio-nextgen.py'
     # ## bcbio-nextgen-py
     # """
     _koopa_gsub '[^-A-Za-z0-9]' '-' "$@"
@@ -77,7 +77,7 @@ _koopa_snake_case() { # {{{1
     # _koopa_snake_case 'hello world'
     # ## hello_world
     #
-    # _koopa_snake_case "bcbio-nextgen.py"
+    # _koopa_snake_case 'bcbio-nextgen.py'
     # ## bcbio_nextgen_py
     # """
     _koopa_gsub '[^A-Za-z0-9_]' '_' "$@"
@@ -139,7 +139,7 @@ _koopa_strip_trailing_slash() { # {{{1
     # > sed 's/\/$//' <<< "$1"
     #
     # @examples
-    # _koopa_strip_trailing_slash "./dir1/" "./dir2/"
+    # _koopa_strip_trailing_slash './dir1/' './dir2/'
     # ## ./dir1
     # ## ./dir2
     # """

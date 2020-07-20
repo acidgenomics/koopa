@@ -18,7 +18,6 @@ _koopa_str_match() { # {{{1
     # """
     # shellcheck disable=SC2039
     local string pattern
-    _koopa_is_installed grep || return 1
     if [ "$#" -eq 2 ]
     then
         # Standard input.
@@ -54,11 +53,18 @@ _koopa_str_match_posix() { # {{{1
 _koopa_str_match_regex() { # {{{1
     # """
     # Does the input match a regular expression?
-    # @note Updated 2020-05-05.
+    # @note Updated 2020-07-20.
+    #
+    # Regex modes:
+    # * -E, --extended-regexp
+    # * -G, --basic-regexp
+    # * -P, --perl-regexp
+    #
+    # Note that Perl-compatible regular expressions (PCREs) support negative
+    # lookaheads, which are often very useful.
     # """
     # shellcheck disable=SC2039
     local string pattern
-    _koopa_is_installed grep || return 1
     if [ "$#" -eq 2 ]
     then
         # Standard input.
@@ -76,5 +82,5 @@ _koopa_str_match_regex() { # {{{1
     else
         return 1
     fi
-    echo "$string" | grep -Eq "$pattern" >/dev/null
+    echo "$string" | grep -Pq "$pattern" >/dev/null
 }

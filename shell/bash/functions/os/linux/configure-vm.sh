@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-07-18.
+    # @note Updated 2020-07-20.
     # """
     local app_prefix app_prefix_bn app_prefix_real bioconductor check compact \
         data_disk data_disk_link data_disk_real docker gb_total \
@@ -150,9 +150,9 @@ koopa::configure_vm() { # {{{1
         koopa::info 'Checking available local disk space.'
         df -h '/'
         gb_total="$(koopa::disk_gb_total)"
-        [ "$gb_total" -lt 16 ] && compact=1
+        [[ "$gb_total" -lt 16 ]] && compact=1
         # > gb_free="$(koopa::disk_gb_free)"
-        # > [ "$gb_free" -lt 10 ] && compact=1
+        # > [[ "$gb_free" -lt 10 ]] && compact=1
         # Attempt to detect an attached disk automatically.
         if [[ ! -e "$data_disk" ]]
         then
@@ -161,7 +161,7 @@ koopa::configure_vm() { # {{{1
         fi
         if [[ -e "$data_disk" ]]
         then
-            koopa::info "Data disk detected at \"${data_disk}\"."
+            koopa::info "Data disk detected at '${data_disk}'."
         fi
     fi
     # Prepare app prefix on external disk for write access (e.g. '/n').
@@ -271,7 +271,7 @@ koopa::configure_vm() { # {{{1
         install-password-store
         install-neofetch
         install-fzf
-        install-the-silver-searcher
+        # > install-the-silver-searcher
     fi
     install-tmux
     install-vim
@@ -377,7 +377,7 @@ koopa::configure_vm() { # {{{1
     then
         koopa::h2 'Removing caches, logs, and temporary files.'
         # Don't clear '/var/log/' here, as this can mess with 'sshd'.
-        koopa:rm -S \
+        koopa::rm -S \
             '/root/.cache' \
             '/tmp/'* \
             '/var/backups/'* \

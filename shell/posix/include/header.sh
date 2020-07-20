@@ -1,13 +1,14 @@
 #!/bin/sh
+# koopa nolint=coreutils
 
 # """
 # POSIX shell header.
-# @note Updated 2020-07-05.
+# @note Updated 2020-07-20.
 # """
 
 if [ -z "${KOOPA_PREFIX:-}" ]
 then
-    printf '%s\n' 'ERROR: Required "KOOPA_PREFIX" is unset.' >&2
+    printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
     exit 1
 fi
 

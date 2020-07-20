@@ -53,15 +53,15 @@ koopa::_bowtie2() { # {{{1
     sample_output_dir="${output_dir}/${id}"
     if [[ -d "$sample_output_dir" ]]
     then
-        koopa::note "Skipping \"${id}\"."
+        koopa::note "Skipping '${id}'."
         return 0
     fi
-    koopa::h2 "Aligning \"${id}\" into \"${sample_output_dir}\"."
+    koopa::h2 "Aligning '${id}' into '${sample_output_dir}'."
     threads="$(koopa::cpu_count)"
     koopa::dl 'Threads' "$threads"
     sam_file="${sample_output_dir}/${id}.sam"
     log_file="${sample_output_dir}/bowtie2.log"
-    mkdir -pv "$sample_output_dir"
+    koopa::mkdir "$sample_output_dir"
     bowtie2 \
         --local \
         --sensitive-local \
@@ -108,16 +108,16 @@ koopa::_bowtie2_index() { # {{{1
     koopa::assert_is_file "$fasta_file"
     if [[ -d "$index_dir" ]]
     then
-        koopa::note "Index exists at \"${index_dir}\". Skipping."
+        koopa::note "Index exists at '${index_dir}'. Skipping."
         return 0
     fi
-    koopa::h2 "Generating bowtie2 index at \"${index_dir}\"."
+    koopa::h2 "Generating bowtie2 index at '${index_dir}'."
     threads="$(koopa::cpu_count)"
     koopa::dl 'Threads' "$threads"
     # Note that this step adds 'bowtie2.*' to the file names created in the
     # index directory.
     index_prefix="${index_dir}/bowtie2"
-    mkdir -pv "$index_dir"
+    koopa::mkdir "$index_dir"
     bowtie2-build \
         --threads="$threads" \
         "$fasta_file" \
@@ -125,7 +125,7 @@ koopa::_bowtie2_index() { # {{{1
     return 0
 }
 
-koopa::bowtie2() {
+koopa::bowtie2() { # {{{1
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     fastq_dir='fastq'
     output_dir='bowtie2'
@@ -189,10 +189,10 @@ koopa::bowtie2() {
     done
     if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-dir".'
+        koopa::stop "Specify 'fasta-file' or 'index-dir'."
     elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-dir", but not both.'
+        koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
     elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
     then
         koopa::missing_arg
@@ -222,7 +222,7 @@ koopa::bowtie2() {
     # Error on FASTQ match failure.
     if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No FASTQs in \"${fastq_dir}\" with \"${r1_tail}\"."
+        koopa::stop "No FASTQs in '${fastq_dir}' with '${r1_tail}'."
     fi
     koopa::info "${#fastq_r1_files[@]} samples detected."
 

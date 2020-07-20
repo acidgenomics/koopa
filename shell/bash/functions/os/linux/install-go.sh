@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_go() {
+koopa::install_go() { # {{{1
     # """
     # Install Go.
     # @note Updated 2020-07-16.
@@ -53,19 +53,19 @@ koopa::install_go() {
         url="https://dl.google.com/go/${file}"
         koopa::download "$url"
         koopa::extract "$file"
-        cp -rv go/* "${app_prefix}/."
+        koopa::cp -t "$app_prefix" 'go/'*
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$app_prefix"
-    koopa::h2 "Linking from \"${app_prefix}\" into \"${cellar_prefix}\"."
-    cp -frsv -t "$cellar_prefix" "${app_prefix}/bin"
+    koopa::h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
+    koopa::cp -t "$cellar_prefix" "${app_prefix}/bin"
     if [[ "$link_cellar" -eq 1 ]]
     then
         koopa::link_cellar "$name" "$version"
         # Need to create directory expected by GOROOT environment variable.
         # If this doesn't exist, Go will currently error.
         goroot='/usr/local/go'
-        koopa::h2 "Linking GOROOT directory at \"${goroot}\"."
+        koopa::h2 "Linking GOROOT directory at '${goroot}'."
         koopa::ln "$app_prefix" "$goroot"
         # > go env GOROOT
     fi

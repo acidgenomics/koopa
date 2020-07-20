@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_aspera_connect() {
+koopa::install_aspera_connect() { # {{{1
     # """
     # Install Aspera Connect.
     # @note Updated 2020-07-04.
@@ -66,7 +66,7 @@ ${version}/${file}"
     koopa::rm "$tmp_dir"
     (
         koopa::cd "$aspera_dir"
-        koopa::sys_ln "$version" "latest"
+        koopa::sys_ln "$version" 'latest'
     )
     koopa::sys_set_permissions -r "$aspera_dir"
     koopa::install_success "$name_fancy"

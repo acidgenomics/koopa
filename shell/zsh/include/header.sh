@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+# koopa nolint=coreutils
 
 # """
 # Zsh header.

@@ -47,7 +47,7 @@ koopa::rsync_flags_macos() { # {{{1
     return 0
 }
 
-koopa::rsync_ignore() {
+koopa::rsync_ignore() { # {{{1
     # """
     # Run rsync with automatic ignore.
     # @note Updated 2020-07-10.
@@ -160,7 +160,7 @@ koopa::rsync_vm() { # {{{1
     rsync_flags+=("--rsync-path=sudo ${rsync}")
     user="${USER:?}"
     koopa::h1 "Syncing '${prefix}' from '${source_ip}'."
-    koopa::dl "Flags" "${rsync_flags[*]}"
+    koopa::dl 'Flags' "${rsync_flags[*]}"
     koopa::sys_mkdir "$prefix"
     koopa::remove_broken_symlinks "$prefix"
     koopa::sys_set_permissions -ru "$prefix"

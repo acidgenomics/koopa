@@ -33,7 +33,7 @@ test_lintr() { # {{{1
     do
         # Handle empty string edge case.
         [ -f "$file" ] || continue
-        Rscript -e "lintr::lint(file = \"${file}\")"
+        Rscript -e "lintr::lint(file = '${file}')"
     done
     koopa::status_ok "r-linter [${#}]"
     return 0

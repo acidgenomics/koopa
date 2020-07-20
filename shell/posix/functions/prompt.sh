@@ -11,8 +11,8 @@ _koopa_prompt() { # {{{1
     # Unicode characters don't work well with some Windows fonts.
     #
     # User name and host.
-    # - Bash : user="\u@\h"
-    # - ZSH  : user="%n@%m"
+    # - Bash : user='\u@\h'
+    # - ZSH  : user='%n@%m'
     #
     # Bash: The default value is '\s-\v\$ '.
     #
@@ -122,9 +122,9 @@ _koopa_prompt_conda() { # {{{1
 _koopa_prompt_git() { # {{{1
     # """
     # Return the current git branch, if applicable.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-07-20.
     #
-    # Also indicate status with "*" if dirty (i.e. has unstaged changes).
+    # Also indicate status with '*' if dirty (i.e. has unstaged changes).
     # """
     # shellcheck disable=SC2039
     local git_branch git_status
@@ -132,7 +132,7 @@ _koopa_prompt_git() { # {{{1
     git_branch="$(_koopa_git_branch)"
     if _koopa_is_git_clean
     then
-        git_status=''
+        git_status=
     else
         git_status='*'
     fi

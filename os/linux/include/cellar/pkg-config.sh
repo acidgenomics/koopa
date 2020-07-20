@@ -11,7 +11,7 @@ file="${name}-${version}.tar.gz"
 url="https://${name}.freedesktop.org/releases/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./configure --prefix="$prefix"
 make --jobs="$jobs"
 make install

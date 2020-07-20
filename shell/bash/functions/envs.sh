@@ -21,7 +21,7 @@ koopa::conda_env_prefix() { # {{{1
     # Note that we're allowing env_list passthrough as second positional
     # variable, to speed up loading upon activation.
     #
-    # Example: koopa::conda_env_prefix "deeptools"
+    # Example: koopa::conda_env_prefix 'deeptools'
     # """
     local env_dir env_list env_name x
     koopa::assert_has_args_le "$#" 2

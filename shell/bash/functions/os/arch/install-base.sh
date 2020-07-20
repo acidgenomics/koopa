@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::arch_install_base() {
+koopa::arch_install_base() { # {{{1
     # """
     # Install Arch Linux base system.
     # @note Updated 2020-07-02.

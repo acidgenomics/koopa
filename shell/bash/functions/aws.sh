@@ -6,7 +6,7 @@
 # >     --output json \
 # >     --bucket tests.acidgenomics.com
 
-koopa::aws_batch_fetch_and_run() {
+koopa::aws_batch_fetch_and_run() { # {{{1
     # """
     # Fetch and run a script on AWS Batch.
     # @note Updated 2020-07-01.
@@ -39,7 +39,7 @@ koopa::aws_batch_fetch_and_run() {
     return 0
 }
 
-koopa::aws_batch_list_jobs() {
+koopa::aws_batch_list_jobs() { # {{{1
     # """
     # List AWS Batch jobs.
     # @note Updated 2020-07-01.
@@ -51,24 +51,24 @@ koopa::aws_batch_list_jobs() {
         AWS_BATCH_ACCOUNT_ID \
         AWS_BATCH_QUEUE \
         AWS_BATCH_REGION
-    koopa::h1 "Checking AWS Batch job status."
+    koopa::h1 'Checking AWS Batch job status.'
     job_queue_array=(
-        "arn"
-        "aws"
-        "batch"
+        'arn'
+        'aws'
+        'batch'
         "${AWS_BATCH_REGION:?}"
         "${AWS_BATCH_ACCOUNT_ID:?}"
         "job-queue/${AWS_BATCH_QUEUE:?}"
     )
-    job_queue="$(koopa::paste0 ":" "${job_queue_array[@]}")"
+    job_queue="$(koopa::paste0 ':' "${job_queue_array[@]}")"
     status_array=(
-        "SUBMITTED"
-        "PENDING"
-        "RUNNABLE"
-        "STARTING"
-        "RUNNING"
-        "SUCCEEDED"
-        "FAILED"
+        'SUBMITTED'
+        'PENDING'
+        'RUNNABLE'
+        'STARTING'
+        'RUNNING'
+        'SUCCEEDED'
+        'FAILED'
     )
     for status in "${status_array[@]}"
     do
@@ -97,7 +97,7 @@ koopa::aws_cp_regex() { # {{{1
     source_prefix="${2:?}"
     target_prefix="${3:?}"
     aws s3 cp \
-        --exclude="*" \
+        --exclude='*' \
         --follow-symlinks \
         --include="$pattern" \
         --recursive \
@@ -208,7 +208,7 @@ koopa::aws_s3_ls() { # {{{1
         case "$1" in
             --recursive)
                 recursive=1
-                flags+=("--recursive")
+                flags+=('--recursive')
                 shift 1
                 ;;
             --type=*)
@@ -236,7 +236,7 @@ koopa::aws_s3_ls() { # {{{1
     # Don't allow '--type' argument when '--recursive' flag is set.
     if [[ "$recursive" -eq 1 ]] && [[ -n "$type" ]]
     then
-        koopa::stop "'--type' argument isn't supported for '--recursive' mode."
+        koopa::stop "'--type' argument not supported for '--recursive' mode."
     fi
     case "${type:-}" in
         d)
@@ -256,7 +256,7 @@ koopa::aws_s3_ls() { # {{{1
     prefix="$(koopa::strip_trailing_slash "$prefix")"
     prefix="${prefix}/"
     # Automatically add 's3://' if missing.
-    if ! koopa::str_match_regex "$prefix" "^s3://"
+    if ! koopa::str_match_regex "$prefix" '^s3://'
     then
         prefix="s3://${prefix}"
     fi
@@ -349,8 +349,7 @@ koopa::aws_s3_mv_to_parent() { # {{{1
 koopa::aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
-    #
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-20.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
@@ -362,7 +361,7 @@ koopa::aws_s3_sync() { # {{{1
     # - https://github.com/aws/aws-cli/issues/476
     # - https://stackoverflow.com/questions/36215713/
     #
-    # Nuclear dotfile option: --exclude=".*"
+    # Nuclear dotfile option: --exclude='.*'
     # Otherwise, can manually ignore '.git', '.gitignore', etc.
     #
     # Currently ignores:
@@ -374,14 +373,14 @@ koopa::aws_s3_sync() { # {{{1
     koopa::assert_has_args "$#"
     koopa::assert_is_installed aws
     aws s3 sync \
-        --exclude="*.Rproj/*" \
-        --exclude="*.swp" \
-        --exclude="*.tmp" \
-        --exclude=".*" \
-        --exclude=".DS_Store" \
-        --exclude=".Rproj.user/*" \
-        --exclude="._*" \
-        --exclude=".git/*" \
+        --exclude='*.Rproj/*' \
+        --exclude='*.swp' \
+        --exclude='*.tmp' \
+        --exclude='.*' \
+        --exclude='.DS_Store' \
+        --exclude='.Rproj.user/*' \
+        --exclude='._*' \
+        --exclude='.git/*' \
         "$@"
     return 0
 }

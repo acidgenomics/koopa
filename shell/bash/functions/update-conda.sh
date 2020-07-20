@@ -68,10 +68,10 @@ koopa::update_conda_envs() { # {{{1
     fi
     # shellcheck disable=SC2119
     koopa::update_conda
-    koopa::h1 "Updating ${#envs[@]} environments at \"${conda_prefix}\"."
+    koopa::h1 "Updating ${#envs[@]} environments at '${conda_prefix}'."
     for prefix in "${envs[@]}"
     do
-        koopa::h2 "Updating \"${prefix}\"."
+        koopa::h2 "Updating '${prefix}'."
         "$conda" update -y --prefix="$prefix" --all
     done
     # > "$conda" clean --yes --tarballs

@@ -27,13 +27,14 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     sudo killall bird
-    rm -fr "${HOME}/Library/Application Support/CloudDocs"
-    rm -fr "${HOME}/Library/Caches/"*
+    koopa::rm \
+        "${HOME}/Library/Application Support/CloudDocs" \
+        "${HOME}/Library/Caches/"*
     sudo reboot now
     return 0
 }
 
-koopa::macos_symlink_dropbox() {
+koopa::macos_symlink_dropbox() { # {{{1
     koopa::rm -S "${HOME}/Desktop"
     koopa::ln "${HOME}/Dropbox/Desktop" "${HOME}/."
     koopa::rm -S "${HOME}/Documents"
@@ -42,7 +43,7 @@ koopa::macos_symlink_dropbox() {
     return 0
 }
 
-koopa::macos_symlink_icloud_drive() {
+koopa::macos_symlink_icloud_drive() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::ln \
         "${HOME}/Library/Mobile Documents/com~apple~CloudDocs" \

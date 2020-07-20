@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::tldr() {
+koopa::tldr() { # {{{1
     # """
     # tldr
     # @note Updated 2020-07-03.
@@ -35,7 +35,7 @@ koopa::tldr() {
     return 0
 }
 
-koopa::tldr_display() {
+koopa::tldr_display() { # {{{1
     # """
     # Display rendered tldr page.
     # @note Updated 2020-07-03.
@@ -52,23 +52,23 @@ koopa::tldr_display() {
         koopa::print "${lines[@]}" \
             | sed "s/{{/${italic_start}/g;s/}}/${italic_end}/g" \
     )"
-    code() {
+    code() { # {{{1
         # shellcheck disable=SC2016
         koopa::print_blue_bold "$( \
             koopa::print "${1:?}" \
                 | sed 's/\`\([^\`]*\)\`/  \1/g' \
         )"
     }
-    heading() {
+    heading() { # {{{1
         koopa::print_magenta_bold "${*#??}"
     }
-    list_item() {
+    list_item() { # {{{1
         koopa::print "${1:-}"
     }
-    quotation() {
+    quotation() { # {{{1
         koopa::print "${*#??}"
     }
-    text() {
+    text() { # {{{1
         koopa::print "${1:-}"
     }
     (
@@ -96,7 +96,7 @@ koopa::tldr_display() {
     return 0
 }
 
-koopa::tldr_download_cache() {
+koopa::tldr_download_cache() { # {{{1
     # """
     # Cache a local copy of the tldr-pages repo.
     # @note Updated 2020-07-03.
@@ -120,7 +120,7 @@ koopa::tldr_download_cache() {
     return 0
 }
 
-koopa::tldr_file() {
+koopa::tldr_file() { # {{{1
     # """
     # Get the tldr file path, using 'index.json' and platform key.
     # @note Updated 2020-07-08.
@@ -134,7 +134,7 @@ koopa::tldr_file() {
     # Parse the JSON file.
     desc="$( \
         tr '{' '\n' < "$index_file" \
-        | grep "\"name\":\"${cmd}\"" \
+        | grep "\"name\":'${cmd}'" \
     )"
     # Use the platform-specific version of the tldr first.
     if koopa::str_match "$desc" "$platform"
@@ -144,7 +144,7 @@ koopa::tldr_file() {
     then
         subdir='common'
     else
-        koopa::stop "Failed to locate tldr for \"${cmd}\"."
+        koopa::stop "Failed to locate tldr for '${cmd}'."
     fi
     file="${prefix}/${subdir}/${cmd}.md"
     koopa::assert_is_file "$file"
@@ -152,13 +152,13 @@ koopa::tldr_file() {
     return 0
 }
 
-koopa::tldr_index_file() {
+koopa::tldr_index_file() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::print "$(koopa::tldr_prefix)/index.json"
     return 0
 }
 
-koopa::tldr_list_pages() {
+koopa::tldr_list_pages() { # {{{1
     # """
     # List locally cached tldr pages.
     # @note Updated 2020-06-20.
@@ -176,12 +176,12 @@ koopa::tldr_list_pages() {
         | sort -u \
     )"
     cmd="$(koopa::basename_sans_ext "${pages[@]}" | fzf || true)"
-    [ -n "$cmd" ] || return 0
+    [[ -n "$cmd" ]] || return 0
     tldr "$cmd"
     return 0
 }
 
-koopa::tldr_platform() {
+koopa::tldr_platform() { # {{{1
     # """
     # Convert the local platorm name to tldr's version.
     # @note Updated 2020-07-03.
@@ -209,13 +209,13 @@ koopa::tldr_platform() {
     return 0
 }
 
-koopa::tldr_prefix() {
+koopa::tldr_prefix() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::print "$(koopa::config_prefix)/tldr"
     return 0
 }
 
-koopa::tldr_update_index() {
+koopa::tldr_update_index() { # {{{1
     # """
     # Update tldr index.
     # @note Updated 2020-07-03.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_openjdk() {
+koopa::install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
     # @note Updated 2020-07-16.
@@ -65,7 +65,7 @@ koopa::install_openjdk() {
                 unique='664493ef4a6946b186ff29eb326336a2/7'
                 ;;
             *)
-                koopa::stop "Unsupported version: \"${version}\"."
+                koopa::stop "Unsupported version: '${version}'."
         esac
         file="${name}-${version}_linux-x64_bin.tar.gz"
         url="https://download.java.net/java/GA/jdk${version}/\
@@ -77,7 +77,7 @@ ${unique}/GPL/${file}"
     koopa::rm "$tmp_dir"
     (
         koopa::cd "$jdk_dir"
-        koopa::sys_ln "$version" "latest"
+        koopa::sys_ln "$version" 'latest'
     )
     koopa::sys_set_permissions -r "$jdk_dir"
     # This step will skip for non-shared install.
