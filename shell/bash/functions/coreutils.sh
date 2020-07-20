@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::cd() { # {{{1
-    # """
-    # Change directory quietly.
-    # @note Updated 2020-06-30.
-    # """
-    unalias -a
-    koopa::assert_has_args_eq "$#" 1
-    cd "${1:?}" &>/dev/null || return 1
-    return 0
-}
-
 koopa::cp() { # {{{1
     # """
     # Hardened version of coreutils copy.

@@ -596,8 +596,8 @@ koopa::remove_empty_dirs() { # {{{1
     for dir in "${dirs[@]}"
     do
         [[ -z "$dir" ]] && continue
-        koopa::info "Removing '${dir}'."
-        rm -fr "$dir"
+        koopa::info "Removing \"${dir}\"."
+        koopa::rm "$dir"
     done
     return 0
 }

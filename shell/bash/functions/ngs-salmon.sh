@@ -35,7 +35,7 @@ koopa::_salmon_index() { # {{{1
     threads="$(koopa::cpu_count)"
     koopa::dl "Threads" "$threads"
     log_file="$(dirname "$index_dir")/salmon-index.log"
-    mkdir -pv "$index_dir"
+    koopa::mkdir "$index_dir"
     salmon index \
         -k 31 \
         -p "$threads" \
@@ -106,7 +106,7 @@ koopa::_salmon_quant() { # {{{1
     threads="$(koopa::cpu_count)"
     koopa::dl "Threads" "$threads"
     log_file="${sample_output_dir}/salmon-quant.log"
-    mkdir -pv "$sample_output_dir"
+    koopa::mkdir "$sample_output_dir"
     salmon quant \
         --gcBias \
         --index="$index_dir" \

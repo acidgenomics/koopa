@@ -61,7 +61,7 @@ koopa::_bowtie2() { # {{{1
     koopa::dl 'Threads' "$threads"
     sam_file="${sample_output_dir}/${id}.sam"
     log_file="${sample_output_dir}/bowtie2.log"
-    mkdir -pv "$sample_output_dir"
+    koopa::mkdir "$sample_output_dir"
     bowtie2 \
         --local \
         --sensitive-local \
@@ -117,7 +117,7 @@ koopa::_bowtie2_index() { # {{{1
     # Note that this step adds 'bowtie2.*' to the file names created in the
     # index directory.
     index_prefix="${index_dir}/bowtie2"
-    mkdir -pv "$index_dir"
+    koopa::mkdir "$index_dir"
     bowtie2-build \
         --threads="$threads" \
         "$fasta_file" \

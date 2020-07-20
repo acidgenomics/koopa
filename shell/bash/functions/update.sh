@@ -91,7 +91,7 @@ koopa::update() { # {{{1
         then
             (
                 dotfiles_prefix="$(koopa::dotfiles_prefix)"
-                cd "$dotfiles_prefix" || exit 1
+                koopa::cd "$dotfiles_prefix"
                 # Preivously, this repo was at 'mjsteinbaugh/dotfiles'.
                 koopa::git_set_remote_url \
                     'https://github.com/acidgenomics/dotfiles.git'
@@ -176,4 +176,3 @@ koopa::update() { # {{{1
     [[ "$system" -eq 1 ]] && koopa::koopa check-system
     return 0
 }
-

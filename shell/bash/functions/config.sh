@@ -106,7 +106,7 @@ koopa::add_user_to_group() { # {{{1
 koopa::delete_dotfile() { # {{{1
     # """
     # Delete a dot file.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-20.
     # """
     local filepath name
     koopa::assert_has_args "$#"
@@ -117,7 +117,7 @@ koopa::delete_dotfile() { # {{{1
         if [[ -L "$filepath" ]]
         then
             koopa::info "Removing \"${filepath}\"."
-            rm -f "$filepath"
+            koopa::rm "$filepath"
         elif [[ -f "$filepath" ]] || [[ -d "$filepath" ]]
         then
             koopa::warning "Not a symlink: \"${filepath}\"."

@@ -29,10 +29,7 @@ koopa::install_rust() { # {{{1
     export CARGO_HOME
     RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
     export RUSTUP_HOME
-    if [[ "$reinstall" -eq 1 ]]
-    then
-        koopa::sys_rm "$CARGO_HOME" "$RUSTUP_HOME"
-    fi
+    [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$CARGO_HOME" "$RUSTUP_HOME"
     koopa::exit_if_dir "$CARGO_HOME" "$RUSTUP_HOME"
     name_fancy='Rust'
     koopa::install_start "$name_fancy"
@@ -105,6 +102,10 @@ koopa::install_rust_packages() { # {{{1
 }
 
 koopa::update_rust() { # {{{1
+    # """
+    # Install Rust.
+    # @note Updated 2020-07-20.
+    # """
     local force
     koopa::assert_has_no_envs
     force=0
@@ -127,9 +128,9 @@ koopa::update_rust() { # {{{1
     export RUST_BACKTRACE='full'
     # rustup v1.21.0 fix.
     # https://github.com/rust-lang/rustup/issues/2166
-    mkdir -pv "${RUSTUP_HOME}/downloads"
+    koopa::mkdir "${RUSTUP_HOME}/downloads"
     # rustup v1.21.1 fix (2020-01-31).
-    rm -f "${CARGO_HOME}/bin/"{'cargo-fmt','rustfmt'}
+    koopa::rm "${CARGO_HOME}/bin/"{'cargo-fmt','rustfmt'}
     # > rustup update stable
     rustup update
     return 0

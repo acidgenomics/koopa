@@ -115,16 +115,14 @@ _koopa_cellar_prefix() { # {{{1
 _koopa_conda_prefix() { # {{{1
     # """
     # Conda prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-20.
     # @seealso conda info --base
     # """
     # shellcheck disable=SC2039
     local prefix
     if [ -n "${CONDA_EXE:-}" ]
     then
-        prefix="$( \
-            cd "$(dirname "$CONDA_EXE")/.." >/dev/null 2>&1 && pwd -P \
-        )"
+        prefix="$(_koopa_parent_dir -n 2 "$CONDA_EXE")"
     else
         prefix="$(_koopa_app_prefix)/conda"
     fi

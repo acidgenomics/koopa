@@ -50,7 +50,7 @@ koopa::bcbio_run_tests() { # {{{1
         ./run_tests.sh stranded
         ./run_tests.sh chipseq
         ./run_tests.sh scrnaseq
-        rm -frv test_automated_output
+        koopa::rm test_automated_output
     )
     koopa::success 'All unit tests passed.'
     return 0
@@ -398,11 +398,7 @@ koopa::patch_bcbio() {
     # Locate bcbio installation directory.
     if [[ -z "${install_dir:-}" ]]
     then
-        install_dir="$( \
-            cd "$(dirname "$bcbio_python")/../.." \
-            &>/dev/null \
-            && pwd -P \
-        )"
+        install_dir="$(koopa::cd "$(dirname "$bcbio_python")/../.." && pwd -P)"
     fi
     koopa::assert_is_dir "$install_dir"
     koopa::h1 "Patching ${name_fancy} installation."
