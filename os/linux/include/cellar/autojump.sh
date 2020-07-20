@@ -36,5 +36,5 @@ koopa::extract "$file"
 koopa::cd "autojump-release-v${version}"
 ./install.py \
     --destdir "$prefix" \
-    --prefix='' \
+    --prefix= \
     --zshshare 'share/zsh/site-functions'
