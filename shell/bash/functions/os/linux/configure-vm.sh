@@ -377,7 +377,7 @@ koopa::configure_vm() { # {{{1
     then
         koopa::h2 'Removing caches, logs, and temporary files.'
         # Don't clear '/var/log/' here, as this can mess with 'sshd'.
-        koopa:rm -S \
+        koopa::rm -S \
             '/root/.cache' \
             '/tmp/'* \
             '/var/backups/'* \
