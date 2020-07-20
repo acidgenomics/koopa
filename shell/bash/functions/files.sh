@@ -185,9 +185,9 @@ koopa::delete_file_system_cruft() { # {{{1
     find "$dir" \
         -type f \
         \( \
-            -name ".DS_Store" -o \
-            -name "._*" -o \
-            -name "Thumbs.db*" \
+            -name '.DS_Store' -o \
+            -name '._*' -o \
+            -name 'Thumbs.db*' \
         \) \
         -delete \
         -print
@@ -287,7 +287,7 @@ koopa::file_ext2() { # {{{1
     # This assumes file names are not in dotted case.
     #
     # Examples:
-    # koopa::file_ext2 "hello-world.tar.gz"
+    # koopa::file_ext2 'hello-world.tar.gz'
     # ## tar.gz
     #
     # See also: koopa::basename_sans_ext2
@@ -363,7 +363,7 @@ koopa::find_broken_symlinks() { # {{{1
             -xtype l \
             -print \
             2>&1 \
-            | grep -v "Permission denied" \
+            | grep -v 'Permission denied' \
             | sort \
     )"
     koopa::print "$x"
@@ -378,7 +378,7 @@ koopa::find_dotfiles() { # {{{1
     # This is used internally by 'list-dotfiles' script.
     #
     # 1. Type ('f' file; or 'd' directory).
-    # 2. Header message (e.g. "Files")
+    # 2. Header message (e.g. 'Files')
     # """
     local header type x
     koopa::assert_has_args_eq "$#" 2
@@ -389,14 +389,14 @@ koopa::find_dotfiles() { # {{{1
         find "$HOME" \
             -mindepth 1 \
             -maxdepth 1 \
-            -name ".*" \
+            -name '.*' \
             -type "$type" \
             -print0 \
             | xargs -0 -n1 basename \
             | sort \
             | awk '{print "  ",$0}' \
     )"
-    koopa::print "\n%s:\n\n" "$header"
+    koopa::print '\n%s:\n\n' "$header"
     koopa::print "$x"
     return 0
 }
@@ -416,11 +416,11 @@ koopa::find_empty_dirs() { # {{{1
             -xdev \
             -mindepth 1 \
             -type d \
-            -not -path "*/.*/*" \
+            -not -path '*/.*/*' \
             -empty \
             -print \
             2>&1 \
-            | grep -v "Permission denied" \
+            | grep -v 'Permission denied' \
             | sort \
     )"
     koopa::print "$x"
@@ -478,7 +478,7 @@ koopa::find_large_files() { # {{{1
             2>&1 \
             | grep \
                 --null-data \
-                --invert-match "Permission denied" \
+                --invert-match 'Permission denied' \
             | xargs -0 du \
             | sort -n \
             | tail -n 100 \

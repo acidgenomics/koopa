@@ -88,7 +88,7 @@ koopa::git_pull_recursive() { # {{{1
         find -L "$dir" \
             -mindepth 1 \
             -maxdepth 2 \
-            -name ".git" \
+            -name '.git' \
             -print \
     )"
     if ! koopa::is_array_non_empty "${repos[@]}"
@@ -120,7 +120,7 @@ koopa::git_push_recursive() { # {{{1
         find -L "$dir" \
             -mindepth 1 \
             -maxdepth 2 \
-            -name ".git" \
+            -name '.git' \
             -print \
     )"
     if ! koopa::is_array_non_empty "${repos[@]}"
@@ -315,11 +315,11 @@ koopa::git_reset() { # {{{1
     #
     # Additional steps:
     # # Ensure accidental swap files created by vim get nuked.
-    # > find . -type f -name "*.swp" -delete
+    # > find . -type f -name '*.swp' -delete
     # # Ensure invisible files get nuked on macOS.
     # > if koopa::is_macos
     # > then
-    # >     find . -type f -name ".DS_Store" -delete
+    # >     find . -type f -name '.DS_Store' -delete
     # > fi
     #
     # See also:
@@ -350,7 +350,7 @@ koopa::git_status_recursive() { # {{{1
         find -L "$dir" \
             -mindepth 1 \
             -maxdepth 2 \
-            -name ".git" \
+            -name '.git' \
             -print \
     )"
     if ! koopa::is_array_non_empty "${repos[@]}"

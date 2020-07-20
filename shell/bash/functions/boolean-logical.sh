@@ -247,7 +247,7 @@ koopa::is_function() { # {{{1
     # > declare -f "$fun"
     #
     # Works in bash (note use of '-t' flag):
-    # [[ "$(type -t "$fun")" == "function" ]]
+    # [[ "$(type -t "$fun")" == 'function' ]]
     #
     # @seealso
     # - https://stackoverflow.com/questions/11478673/

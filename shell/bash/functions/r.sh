@@ -3,17 +3,13 @@
 koopa::array_to_r_vector() { # {{{1
     # """
     # Convert a bash array to an R vector string.
-    # @note Updated 2020-07-01.
-    #
-    # @examples
-    # koopa::array_to_r_vector "aaa" "bbb"
-    # ## c("aaa", "bbb")
+    # @note Updated 2020-07-20.
     # """
     local x
     koopa::assert_has_args "$#"
     x="$(printf '"%s", ' "$@")"
-    x="$(koopa::strip_right ", " "$x")"
-    x="$(printf "c(%s)\n" "$x")"
+    x="$(koopa::strip_right ', ' "$x")"
+    x="$(printf 'c(%s)\n' "$x")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -265,6 +261,6 @@ koopa::update_r_config() { # {{{1
     koopa::link_r_etc "$r"
     koopa::link_r_site_library "$r"
     koopa::r_javareconf "$r"
-    koopa::success "Update of R configuration was successful."
+    koopa::success 'Update of R configuration was successful.'
     return 0
 }

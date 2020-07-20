@@ -5,7 +5,7 @@ koopa::extract() { # {{{1
     # Extract compressed files automatically.
     # @note Updated 2020-07-05.
     #
-    # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
+    # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
     # See also:
     # - https://github.com/stephenturner/oneliners

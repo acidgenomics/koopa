@@ -436,15 +436,15 @@ koopa::docker_run() { # {{{1
     workdir="$(koopa::strip_trailing_slash "$workdir")"
     docker pull "$image"
     flags=(
-        "--interactive"
-        "--tty"
+        "$image"
         "--volume=${PWD}:${workdir}"
         "--workdir=${workdir}"
-        "$image"
+        '--interactive'
+        '--tty'
     )
     if [[ "$bash" -eq 1 ]]
     then
-        flags+=("bash" "-il")
+        flags+=('bash' '-il')
     fi
     docker run "${flags[@]}"
     return 0
@@ -488,7 +488,7 @@ koopa::docker_tag() { # {{{1
     dest_tag="${3:-latest}"
     server="docker.io"
     # Assume acidgenomics recipe by default.
-    if ! koopa::str_match "$image" "/"
+    if ! koopa::str_match "$image" '/'
     then
         image="acidgenomics/${image}"
     fi
@@ -513,7 +513,7 @@ koopa::is_docker_build_today() { # {{{1
     local image json timestamp today utc_timestamp
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    today="$(date "+%Y-%m-%d")"
+    today="$(date '+%Y-%m-%d')"
     for image in "$@"
     do
         docker pull "$image" >/dev/null
@@ -525,11 +525,11 @@ koopa::is_docker_build_today() { # {{{1
         # Note that we need to convert UTC to local time.
         utc_timestamp="$( \
             koopa::print "$json" \
-                | grep -Eo "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" \
-                | sed "s/T/ /" \
-                | sed "s/\$/ UTC/"
+                | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
+                | sed 's/T/ /' \
+                | sed 's/\$/ UTC/'
         )"
-        timestamp="$(date -d "$utc_timestamp" "+%Y-%m-%d")"
+        timestamp="$(date -d "$utc_timestamp" '+%Y-%m-%d')"
         [[ "$timestamp" != "$today" ]] && return 1
     done
     return 0

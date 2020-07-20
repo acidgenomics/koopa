@@ -33,7 +33,7 @@ koopa::_salmon_index() { # {{{1
     fi
     koopa::h2 "Generating salmon index at '${index_dir}'."
     threads="$(koopa::cpu_count)"
-    koopa::dl "Threads" "$threads"
+    koopa::dl 'Threads' "$threads"
     log_file="$(dirname "$index_dir")/salmon-index.log"
     koopa::mkdir "$index_dir"
     salmon index \
@@ -102,9 +102,9 @@ koopa::_salmon_quant() { # {{{1
     fi
     koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
     bootstraps=30
-    koopa::dl "Bootstraps" "$bootstraps"
+    koopa::dl 'Bootstraps' "$bootstraps"
     threads="$(koopa::cpu_count)"
-    koopa::dl "Threads" "$threads"
+    koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/salmon-quant.log"
     koopa::mkdir "$sample_output_dir"
     salmon quant \
@@ -186,10 +186,10 @@ koopa::salmon() { # {{{1
     done
     if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-dir".'
+        koopa::stop "Specify 'fasta-file' or 'index-dir'."
     elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-dir", but not both.'
+        koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
     elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
     then
         koopa::missing_arg

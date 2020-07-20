@@ -304,7 +304,7 @@ koopa::conda_create_env() { # {{{1
         # Get supported version.
         if ! koopa::str_match "$env" '='
         then
-            koopa::stop 'Version is required. Specify as "NAME=VERSION".'
+            koopa::stop "Version is required. Specify as 'NAME=VERSION'."
         fi
         env_name="${env//=/@}"
         prefix="${conda_prefix}/envs/${env_name}"

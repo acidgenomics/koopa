@@ -98,7 +98,7 @@ koopa::date() { # {{{1
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::variable "koopa-date"
+    koopa::variable 'koopa-date'
     return 0
 }
 
@@ -109,7 +109,7 @@ koopa::datetime() { # {{{
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed date
     local x
-    x="$(date "+%Y%m%d-%H%M%S")"
+    x="$(date '+%Y%m%d-%H%M%S')"
     koopa::print "$x"
     return 0
 }
@@ -205,7 +205,7 @@ koopa::github_url() { # {{{1
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::variable "koopa-github-url"
+    koopa::variable 'koopa-github-url'
     return 0
 }
 
@@ -215,7 +215,7 @@ koopa::gnu_mirror() { # {{{1
     # @note Updated 2020-04-16.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::variable "gnu-mirror"
+    koopa::variable 'gnu-mirror'
     return 0
 }
 
@@ -231,13 +231,13 @@ koopa::info_box() { # {{{1
     local array
     array=("$@")
     local barpad
-    barpad="$(printf "━%.0s" {1..70})"
-    printf "  %s%s%s  \n" "┏" "$barpad" "┓"
+    barpad="$(printf '━%.0s' {1..70})"
+    printf '  %s%s%s  \n' '┏' "$barpad" '┓'
     for i in "${array[@]}"
     do
-        printf "  ┃ %-68s ┃  \n" "${i::68}"
+        printf '  ┃ %-68s ┃  \n' "${i::68}"
     done
-    printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
+    printf '  %s%s%s  \n\n' '┗' "$barpad" '┛'
     return 0
 }
 
@@ -460,7 +460,7 @@ koopa::sys_git_pull() { # {{{1
         branch="$(koopa::git_branch)"
         koopa::git_pull
         # Ensure other branches, such as develop, are rebased.
-        [[ "$branch" != "master" ]] && koopa::git_pull origin master
+        [[ "$branch" != 'master' ]] && koopa::git_pull origin master
         koopa::fix_zsh_permissions &>/dev/null
     )
     return 0
@@ -546,7 +546,7 @@ koopa::sys_info() { # {{{
             ""
         )
     fi
-    array+=('Run "koopa check" to verify installation.')
+    array+=("Run 'koopa check' to verify installation.")
     cat "$(koopa::include_prefix)/ascii-turtle.txt"
     koopa::info_box "${array[@]}"
     return 0

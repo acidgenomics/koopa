@@ -124,7 +124,7 @@ _koopa_prompt_git() { # {{{1
     # Return the current git branch, if applicable.
     # @note Updated 2020-07-20.
     #
-    # Also indicate status with "*" if dirty (i.e. has unstaged changes).
+    # Also indicate status with '*' if dirty (i.e. has unstaged changes).
     # """
     # shellcheck disable=SC2039
     local git_branch git_status
