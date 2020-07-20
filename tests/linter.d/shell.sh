@@ -22,9 +22,9 @@ test_all() { # {{{1
     koopa::assert_has_no_args "$#"
     readarray -t files <<< \
         "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh|zsh)$')"
-    test_all_coreutils "${files[@]}"
-    test_all_illegal_strings "${files[@]}"
     test_all_quoting "${files[@]}"
+    test_all_illegal_strings "${files[@]}"
+    test_all_coreutils "${files[@]}"
     return 0
 }
 
@@ -45,20 +45,21 @@ test_all_coreutils() { # {{{1
 test_all_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
-    # shellcheck disable=SC2016
+    # shellcheck disable=SC1112,SC2016
     array=(
         "=''"
         ' \|\| exit'        # wrap in function and return instead
         ' path='            # zsh will freak out
-        '\(\) {$'             # functions should include vim marker
         '; do'              # newline instead
         '; then'            # newline instead
         '<  <'              # use '<<<' instead
         'IFS= '             # this is default, look for weird edge cases
         '[=|]""$'
+        '[“”‘’]'            # no unicode quotes
         '\$path'            # zsh will freak out
+        '\(\) \{$'          # functions should include vim marker
         '\b(EOF|EOL)\b'     # Use 'END' instead.
-        '^path='            # zsh will freak out
+        '^path='            # can mess up Zsh PATH
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
@@ -74,17 +75,23 @@ test_all_quoting() { # {{{1
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
     array=(
-        # "'\$"
-        ":-'"
-        '"[A-Z0-9][-.0-9A-Za-z ]+"'
-        ':-"'
+        "'\$.+'"
+        ":-['\"]"
+        "^((?!').)*[ =\(]\"[^\$\"]+\"+$"
+        '\\\"\$'
+        '\}\\\"'
     )
-    pattern="$(koopa::paste0 '|' "${array[@]}")"
-    koopa::test_grep \
-        -i 'quoting' \
-        -n 'shell | all | quoting' \
-        -p "$pattern" \
-        "$@"
+    # Check for escaped double quotes.
+    # > array+=(
+    # > )
+    for pattern in "${array[@]}"
+    do
+        koopa::test_grep \
+            -i 'quoting' \
+            -n "shell | all | quoting | ${pattern}" \
+            -p "$pattern" \
+            "$@"
+    done
     return 0
 }
 

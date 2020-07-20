@@ -85,13 +85,13 @@ koopa::add_user_to_etc_passwd() { # {{{1
 koopa::add_user_to_group() { # {{{1
     # """
     # Add user to group.
-    # @note Updated 2020-07-07.
+    # @note Updated 2020-07-20.
     #
     # Alternate approach:
     # > usermod -a -G group user
     #
     # @examples
-    # koopa::add_user_to_group "docker"
+    # koopa::add_user_to_group 'docker'
     # """
     local group user
     koopa::assert_has_args_le "$#" 2
@@ -378,8 +378,7 @@ koopa::link_docker() { # {{{1
     etc_source="$(koopa::prefix)/os/${os_id}/etc/docker"
     if [[ -d "$etc_source" ]]
     then
-        sudo mkdir -pv "/etc/docker"
-        sudo ln -fnsv "${etc_source}"* "/etc/docker/."
+        koopa::ln -S -t '/etc/docker' "${etc_source}/"*
     fi
     sudo rm -frv "$lib_sys"
     sudo mkdir -pv "$lib_n"

@@ -17,7 +17,7 @@ koopa::extract "$file"
 koopa::cd "${name}-${version}"
 ./configure \
     --prefix="$prefix" \
-    --enable-python3interp="yes" \
+    --enable-python3interp='yes' \
     --with-python3-command="${python3_exe}" \
     --with-python3-config-dir="${python3_config_dir}" \
     LDFLAGS="-Wl,--rpath=${make_prefix}/lib"

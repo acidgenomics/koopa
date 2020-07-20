@@ -1048,7 +1048,7 @@ koopa::update_macos_defaults() { # {{{1
     sudo chflags nohidden '/Volumes'
 
     # Expand the following File Info panes:
-    # “General”, “Open with”, and “Sharing & Permissions”
+    # 'General', 'Open with', and 'Sharing & Permissions'
     defaults write \
         'com.apple.finder' \
         'FXInfoPanesExpanded' -dict \
@@ -1373,7 +1373,7 @@ WebKit2JavaEnabledForLocalFiles" \
 WebKit2JavaScriptCanOpenWindowsAutomatically" \
         -bool false
 
-    # Enable “Do Not Track”.
+    # Enable 'Do Not Track'.
     defaults write \
         'com.apple.Safari' \
         'SendDoNotTrackHTTPHeader' \
