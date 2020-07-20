@@ -577,8 +577,8 @@ koopa::sys_set_permissions() { # {{{1
                 user=1
                 ;;
             \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
+                koopa::invalid_arg
+                ;;
         esac
     done
     shift "$((OPTIND-1))"

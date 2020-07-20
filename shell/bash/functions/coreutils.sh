@@ -36,8 +36,8 @@ koopa::cp() { # {{{1
                 target_dir="$OPTARG"
                 ;;
             \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
+                koopa::invalid_arg
+                ;;
         esac
     done
     shift "$((OPTIND-1))"
@@ -88,10 +88,11 @@ koopa::df() { # {{{1
     return 0
 }
 
+# FIXME NEED TO SUPPORT -T FLAG HERE.
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly.
-    # @note Updated 2020-07-08.
+    # @note Updated 2020-07-20.
     # """
     local OPTIND ln mkdir rm source_file target_file target_parent
     unalias -a
@@ -105,8 +106,8 @@ koopa::ln() { # {{{1
                 sudo=1
                 ;;
             \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
+                koopa::invalid_arg
+                ;;
         esac
     done
     shift "$((OPTIND-1))"
@@ -145,8 +146,8 @@ koopa::mkdir() { # {{{1
                 sudo=1
                 ;;
             \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
+                koopa::invalid_arg
+                ;;
         esac
     done
     shift "$((OPTIND-1))"
@@ -188,8 +189,8 @@ koopa::mv() { # {{{1
                 target_dir="$OPTARG"
                 ;;
             \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
+                koopa::invalid_arg
+                ;;
         esac
     done
     shift "$((OPTIND-1))"
@@ -240,8 +241,8 @@ koopa::relink() { # {{{1
                 sudo=1
                 ;;
             \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
+                koopa::invalid_arg
+                ;;
         esac
     done
     shift "$((OPTIND-1))"
@@ -280,8 +281,8 @@ koopa::rm() { # {{{1
                 sudo=1
                 ;;
             \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
+                koopa::invalid_arg
+                ;;
         esac
     done
     shift "$((OPTIND-1))"

@@ -234,9 +234,17 @@ _koopa_info() { # {{{1
 _koopa_invalid_arg() { # {{{1
     # """
     # Error on invalid argument.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-20.
     # """
-    _koopa_stop "Invalid argument: '${1:?}'."
+    # shellcheck disable=SC2039
+    local x
+    if [ "$#" -gt 0 ]
+    then
+        x="Invalid argument: \"${1:?}\"."
+    else
+        x='Invalid argument.'
+    fi
+    _koopa_stop "$x"
 }
 
 _koopa_missing_arg() { # {{{1

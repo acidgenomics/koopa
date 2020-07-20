@@ -96,8 +96,8 @@ koopa::test_grep() { # {{{1
                 pattern="$OPTARG"
                 ;;
             \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
+                koopa::invalid_arg
+                ;;
         esac
     done
     shift "$((OPTIND-1))"
