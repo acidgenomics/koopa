@@ -1,18 +1,5 @@
 #!/bin/sh
 
-__koopa_has_gnu() { # {{{1
-    # """
-    # Is a GNU program installed?
-    # @note Updated 2020-07-04.
-    # """
-    # shellcheck disable=SC2039
-    local cmd str
-    cmd="${1:?}"
-    _koopa_is_installed "$cmd" || return 1
-    str="$("$cmd" --version 2>&1 || true)"
-    _koopa_str_match_posix "$str" 'GNU'
-}
-
 __koopa_is_os_release() { # {{{1
     # """
     # Is a specific OS release?
@@ -49,12 +36,25 @@ _koopa_expr() { # {{{1
     expr "${1:?}" : "${2:?}" 1>/dev/null
 }
 
+_koopa_has_gnu() { # {{{1
+    # """
+    # Is a GNU program installed?
+    # @note Updated 2020-07-20.
+    # """
+    # shellcheck disable=SC2039
+    local cmd str
+    cmd="${1:?}"
+    _koopa_is_installed "$cmd" || return 1
+    str="$("$cmd" --version 2>&1 || true)"
+    _koopa_str_match_posix "$str" 'GNU'
+}
+
 _koopa_has_gnu_binutils() { # {{{1
     # """
     # Is GNU binutils installed?
     # @note Updated 2020-04-27.
     # """
-    __koopa_has_gnu ld
+    _koopa_has_gnu ld
 }
 
 _koopa_has_gnu_coreutils() { # {{{1
@@ -62,7 +62,7 @@ _koopa_has_gnu_coreutils() { # {{{1
     # Is GNU coreutils installed?
     # @note Updated 2020-04-27.
     # """
-    __koopa_has_gnu env
+    _koopa_has_gnu env
 }
 
 _koopa_has_gnu_findutils() { # {{{1
@@ -70,7 +70,7 @@ _koopa_has_gnu_findutils() { # {{{1
     # Is GNU findutils installed?
     # @note Updated 2020-04-27.
     # """
-    __koopa_has_gnu find
+    _koopa_has_gnu find
 }
 
 _koopa_has_gnu_sed() { # {{{1
@@ -78,7 +78,7 @@ _koopa_has_gnu_sed() { # {{{1
     # Is GNU tar installed?
     # @note Updated 2020-04-27.
     # """
-    __koopa_has_gnu sed
+    _koopa_has_gnu sed
 }
 
 _koopa_has_gnu_tar() { # {{{1
@@ -86,7 +86,7 @@ _koopa_has_gnu_tar() { # {{{1
     # Is GNU tar installed?
     # @note Updated 2020-04-27.
     # """
-    __koopa_has_gnu tar
+    _koopa_has_gnu tar
 }
 
 _koopa_is_alias() { # {{{1

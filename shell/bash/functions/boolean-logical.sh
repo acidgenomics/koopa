@@ -6,7 +6,7 @@ koopa::has_file_ext() { # {{{1
     # @note Updated 2020-07-04.
     #
     # @examples
-    # koopa::has_file_ext "hello.txt"
+    # koopa::has_file_ext 'hello.txt'
     # """
     local file
     koopa::assert_has_args "$#"
@@ -159,7 +159,7 @@ koopa::is_cellar() { # {{{1
 koopa::is_current_version() { # {{{1
     # """
     # Is the program version current?
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-20.
     # """
     local actual_version app expected_version
     koopa::assert_has_args "$#"
@@ -167,7 +167,7 @@ koopa::is_current_version() { # {{{1
     do
         expected_version="$(koopa::variable "$app")"
         actual_version="$(koopa::get_version "$app")"
-        [[ "$actual_version" = "$expected_version" ]] || return 1
+        [[ "$actual_version" == "$expected_version" ]] || return 1
     done
     return 0
 }
@@ -205,7 +205,7 @@ koopa::is_export() { # {{{1
     # - https://unix.stackexchange.com/questions/390831
     #
     # @examples
-    # koopa::is_export "KOOPA_SHELL"
+    # koopa::is_export 'KOOPA_SHELL'
     # """
     local arg exports
     koopa::assert_has_args "$#"
@@ -247,7 +247,7 @@ koopa::is_function() { # {{{1
     # > declare -f "$fun"
     #
     # Works in bash (note use of '-t' flag):
-    # [[ "$(type -t "$fun")" == "function" ]]
+    # [[ "$(type -t "$fun")" == 'function' ]]
     #
     # @seealso
     # - https://stackoverflow.com/questions/11478673/
@@ -363,8 +363,8 @@ koopa::is_r_package_installed() { # {{{1
     # Fast mode: checking the 'site-library' directory.
     #
     # Alternate, slow mode:
-    # > Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
-    # >     | grep -q "TRUE"
+    # > Rscript -e "'${1}' %in% rownames(utils::installed.packages())" \
+    # >     | grep -q 'TRUE'
     # """
     local pkg pos r
     koopa::assert_has_args "$#"
@@ -405,7 +405,7 @@ koopa::is_r_package_installed() { # {{{1
     return 0
 }
 
-koopa::is_recent() {
+koopa::is_recent() { # {{{1
     # """
     # If the file exists and is more recent than 2 weeks old.
     #

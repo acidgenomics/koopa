@@ -67,7 +67,7 @@ koopa::add_conda_env_to_path() { # {{{1
         bin_dir="${CONDA_PREFIX}/envs/${name}/bin"
         if [[ ! -d "$bin_dir" ]]
         then
-            koopa::warning "Conda environment missing: \"${bin_dir}\"."
+            koopa::warning "Conda environment missing: '${bin_dir}'."
             return 1
         fi
         koopa::add_to_path_start "$bin_dir"
@@ -75,7 +75,7 @@ koopa::add_conda_env_to_path() { # {{{1
     return 0
 }
 
-koopa::list_path_priority() {
+koopa::list_path_priority() { # {{{1
     # """
     # List path priority.
     # @note Updated 2020-07-10.
@@ -94,68 +94,5 @@ koopa::list_path_priority() {
         koopa::note "${n_dupes} duplicate(s) detected."
     fi
     koopa::print "$all"
-    return 0
-}
-
-koopa::realpath() { # {{{1
-    # """
-    # Real path to file/directory on disk.
-    # @note Updated 2020-06-30.
-    #
-    # Note that 'readlink -f' doesn't work on macOS.
-    #
-    # @seealso
-    # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
-    # """
-    local arg x
-    koopa::assert_has_args "$#"
-    if koopa::is_installed realpath
-    then
-        x="$(realpath "$@")"
-        koopa::print "$x"
-    elif koopa::has_gnu readlink
-    then
-        x="$(readlink -f "$@")"
-        koopa::print "$x"
-    elif koopa::is_installed perl
-    then
-        for arg in "$@"
-        do
-            x="$(perl -MCwd -e 'print Cwd::abs_path shift' "$arg")"
-            koopa::print "$x"
-        done
-    else
-        return 1
-    fi
-    return 0
-}
-
-koopa::which_realpath() { # {{{1
-    # """
-    # Locate the realpath of a program.
-    # @note Updated 2020-06-30.
-    #
-    # This resolves symlinks automatically.
-    # For 'which' style return, use 'koopa::which' instead.
-    #
-    # @seealso
-    # - https://stackoverflow.com/questions/7665
-    # - https://unix.stackexchange.com/questions/85249
-    # - https://stackoverflow.com/questions/7522712
-    # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
-    #
-    # @examples
-    # koopa::which_realpath bash vim
-    # ## /usr/local/Cellar/bash/5.0.17/bin/bash
-    # ## /usr/local/Cellar/vim/8.2.1050/bin/vim
-    # """
-    local cmd
-    koopa::assert_has_args "$#"
-    for cmd in "$@"
-    do
-        cmd="$(koopa::which "$cmd")"
-        cmd="$(koopa::realpath "$cmd")"
-        koopa::print "$cmd"
-    done
     return 0
 }

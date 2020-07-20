@@ -73,16 +73,14 @@
 
 koopa::exit_if_docker
 koopa::assert_is_installed tee
-
-
 file="emacs-${version}.tar.xz"
 url="${gnu_mirror}/emacs/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "emacs-${version}" || exit 1
+koopa::cd "emacs-${version}"
 ./configure \
     --prefix="$prefix" \
-    --with-x-toolkit="no" \
-    --with-xpm="no"
+    --with-x-toolkit='no' \
+    --with-xpm='no'
 make --jobs="$jobs"
 make install

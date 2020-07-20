@@ -29,7 +29,7 @@ koopa::find_cellar_version() { # {{{1
 koopa::install_cellar() { # {{{1
     # """
     # Install cellar program.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-20.
     # """
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
         name_fancy pass_args prefix reinstall script_name script_path tmp_dir \
@@ -49,7 +49,7 @@ koopa::install_cellar() { # {{{1
         case "$1" in
             --cellar-only)
                 link_cellar=0
-                pass_args+=("--cellar-only")
+                pass_args+=('--cellar-only')
                 shift 1
                 ;;
             --include-dirs=*)
@@ -78,7 +78,7 @@ koopa::install_cellar() { # {{{1
                 ;;
             --reinstall)
                 reinstall=1
-                pass_args+=("--reinstall")
+                pass_args+=('--reinstall')
                 shift 1
                 ;;
             --script-name=*)
@@ -129,7 +129,7 @@ koopa::install_cellar() { # {{{1
         # shellcheck source=/dev/null
         source "$script_path" "${pass_args[@]:-}"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    rm -fr "$tmp_dir"
+    koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$prefix"
     if [[ "$link_cellar" -eq 1 ]]
     then
@@ -169,8 +169,7 @@ koopa::link_cellar() { # {{{1
     # @examples
     # koopa::link_cellar emacs 26.3
     # """
-    local cellar_prefix cellar_subdirs cp_flags include_dirs make_prefix name \
-        pos version
+    local cellar_prefix cellar_subdirs include_dirs make_prefix name pos version
     koopa::assert_is_linux
     include_dirs=
     version=
@@ -250,8 +249,8 @@ koopa::link_cellar() { # {{{1
             | sort \
         )"
     fi
-    cp_flags=("-frs")
-    cp "${cp_flags[@]}" "${cellar_subdirs[@]}" -t "${make_prefix}/"
+    # Copy as symbolic links.
+    koopa::cp -s -t "${make_prefix}" "${cellar_subdirs[@]}"
     koopa::is_shared_install && koopa::update_ldconfig
     return 0
 }

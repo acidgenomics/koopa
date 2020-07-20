@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::autopad_samples() {
+koopa::autopad_samples() { # {{{1
     # """
     # Autopad samples.
     # @note Updated 2020-07-08.
@@ -94,10 +94,10 @@ koopa::basename_sans_ext() { # {{{1
     # @note Updated 2020-06-30.
     #
     # Examples:
-    # koopa::basename_sans_ext "dir/hello-world.txt"
+    # koopa::basename_sans_ext 'dir/hello-world.txt'
     # ## hello-world
     #
-    # koopa::basename_sans_ext "dir/hello-world.tar.gz"
+    # koopa::basename_sans_ext 'dir/hello-world.tar.gz'
     # ## hello-world.tar
     #
     # See also: koopa::file_ext
@@ -122,7 +122,7 @@ koopa::basename_sans_ext2() { # {{{1
     # @note Updated 2020-06-30.
     #
     # Examples:
-    # koopa::basename_sans_ext2 "dir/hello-world.tar.gz"
+    # koopa::basename_sans_ext2 'dir/hello-world.tar.gz'
     # ## hello-world
     #
     # See also: koopa::file_ext2
@@ -141,7 +141,7 @@ koopa::basename_sans_ext2() { # {{{1
     return 0
 }
 
-koopa::convert_utf8_nfd_to_nfc() {
+koopa::convert_utf8_nfd_to_nfc() { # {{{1
     # """
     # Convert UTF-8 NFD to NFC.
     # @note Updated 2020-07-15.
@@ -152,7 +152,7 @@ koopa::convert_utf8_nfd_to_nfc() {
     return 0
 }
 
-koopa::delete_adobe_bridge_cache() {
+koopa::delete_adobe_bridge_cache() { # {{{1
     # """
     # Delete Adobe Bridge cache files.
     # @note Updated 2020-07-16.
@@ -162,7 +162,7 @@ koopa::delete_adobe_bridge_cache() {
     koopa::assert_is_installed find
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
-    koopa::h1 "Deleting Adobe Bridge cache in \"${dir}\"."
+    koopa::h1 "Deleting Adobe Bridge cache in '${dir}'."
     find "$dir" \
         -mindepth 1 \
         -type f \
@@ -185,9 +185,9 @@ koopa::delete_file_system_cruft() { # {{{1
     find "$dir" \
         -type f \
         \( \
-            -name ".DS_Store" -o \
-            -name "._*" -o \
-            -name "Thumbs.db*" \
+            -name '.DS_Store' -o \
+            -name '._*' -o \
+            -name 'Thumbs.db*' \
         \) \
         -delete \
         -print
@@ -253,13 +253,13 @@ koopa::file_count() { # {{{1
 koopa::file_ext() { # {{{1
     # """
     # Extract the file extension from input.
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-07-20.
     #
     # Examples:
-    # koopa::file_ext "hello-world.txt"
+    # koopa::file_ext 'hello-world.txt'
     # ## txt
     #
-    # koopa::file_ext "hello-world.tar.gz"
+    # koopa::file_ext 'hello-world.tar.gz'
     # ## gz
     #
     # See also: koopa::basename_sans_ext
@@ -272,7 +272,7 @@ koopa::file_ext() { # {{{1
         then
             x="${file##*.}"
         else
-            x=""
+            x=
         fi
         koopa::print "$x"
     done
@@ -282,12 +282,12 @@ koopa::file_ext() { # {{{1
 koopa::file_ext2() { # {{{1
     # """
     # Extract the file extension after any dots in the file name.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-20.
     #
     # This assumes file names are not in dotted case.
     #
     # Examples:
-    # koopa::file_ext2 "hello-world.tar.gz"
+    # koopa::file_ext2 'hello-world.tar.gz'
     # ## tar.gz
     #
     # See also: koopa::basename_sans_ext2
@@ -300,7 +300,7 @@ koopa::file_ext2() { # {{{1
         then
             x="$(koopa::print "$file" | cut -d '.' -f 2-)"
         else
-            x=''
+            x=
         fi
         koopa::print "$x"
     done
@@ -330,7 +330,7 @@ koopa::find_and_replace_in_files() { # {{{1
         koopa::str_match "${to}" '/' && ! koopa::str_match "${to}" '\/'; \
     }
     then
-        koopa::stop "Unescaped slash detected."
+        koopa::stop 'Unescaped slash detected.'
     fi
     for file in "$@"
     do
@@ -363,7 +363,7 @@ koopa::find_broken_symlinks() { # {{{1
             -xtype l \
             -print \
             2>&1 \
-            | grep -v "Permission denied" \
+            | grep -v 'Permission denied' \
             | sort \
     )"
     koopa::print "$x"
@@ -378,7 +378,7 @@ koopa::find_dotfiles() { # {{{1
     # This is used internally by 'list-dotfiles' script.
     #
     # 1. Type ('f' file; or 'd' directory).
-    # 2. Header message (e.g. "Files")
+    # 2. Header message (e.g. 'Files')
     # """
     local header type x
     koopa::assert_has_args_eq "$#" 2
@@ -389,14 +389,14 @@ koopa::find_dotfiles() { # {{{1
         find "$HOME" \
             -mindepth 1 \
             -maxdepth 1 \
-            -name ".*" \
+            -name '.*' \
             -type "$type" \
             -print0 \
             | xargs -0 -n1 basename \
             | sort \
             | awk '{print "  ",$0}' \
     )"
-    koopa::print "\n%s:\n\n" "$header"
+    koopa::print '\n%s:\n\n' "$header"
     koopa::print "$x"
     return 0
 }
@@ -416,11 +416,11 @@ koopa::find_empty_dirs() { # {{{1
             -xdev \
             -mindepth 1 \
             -type d \
-            -not -path "*/.*/*" \
+            -not -path '*/.*/*' \
             -empty \
             -print \
             2>&1 \
-            | grep -v "Permission denied" \
+            | grep -v 'Permission denied' \
             | sort \
     )"
     koopa::print "$x"
@@ -478,7 +478,7 @@ koopa::find_large_files() { # {{{1
             2>&1 \
             | grep \
                 --null-data \
-                --invert-match "Permission denied" \
+                --invert-match 'Permission denied' \
             | xargs -0 du \
             | sort -n \
             | tail -n 100 \
@@ -537,7 +537,7 @@ koopa::line_count() { # {{{1
     return 0
 }
 
-koopa::md5sum_check_to_new_md5_file() {
+koopa::md5sum_check_to_new_md5_file() { # {{{1
     local datetime log_file
     koopa::assert_has_args "$#"
     datetime="$(koopa::datetime)"
@@ -546,7 +546,7 @@ koopa::md5sum_check_to_new_md5_file() {
     return 0
 }
 
-koopa::nfiletypes() {
+koopa::nfiletypes() { # {{{1
     local dir
     koopa::assert_has_args_ne "$#" 1
     koopa::assert_is_installed find
@@ -565,7 +565,7 @@ koopa::nfiletypes() {
 koopa::remove_broken_symlinks() { # {{{1
     # """
     # Remove broken symlinks.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-30.
     # """
     local file files
     koopa::assert_has_args "$#"
@@ -577,7 +577,7 @@ koopa::remove_broken_symlinks() { # {{{1
     do
         [[ -z "$file" ]] && continue
         koopa::info "Removing '${file}'."
-        rm -f "$file"
+        koopa::rm "$file"
     done
     return 0
 }
@@ -597,12 +597,12 @@ koopa::remove_empty_dirs() { # {{{1
     do
         [[ -z "$dir" ]] && continue
         koopa::info "Removing '${dir}'."
-        rm -fr "$dir"
+        koopa::rm "$dir"
     done
     return 0
 }
 
-koopa::reset_permissions() {
+koopa::reset_permissions() { # {{{1
     local dir group user
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
@@ -668,7 +668,7 @@ koopa::stat_group() { # {{{1
     return 0
 }
 
-koopa::stat_modified() {
+koopa::stat_modified() { # {{{1
     # """
     # Get file modification time.
     # @note Updated 2020-03-06.
@@ -714,7 +714,7 @@ koopa::stat_user() { # {{{1
     return 0
 }
 
-koopa::trash() {
+koopa::trash() { # {{{1
     local trash_dir
     koopa::assert_has_args "$#"
     trash_dir="${HOME}/.trash/"

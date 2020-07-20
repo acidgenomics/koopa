@@ -43,7 +43,7 @@ file="Python-${version}.tar.xz"
 url="https://www.python.org/ftp/python/${version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "Python-${version}" || exit 1
+koopa::cd "Python-${version}"
 ./configure \
     --prefix="$prefix" \
     --enable-shared \
@@ -60,5 +60,5 @@ make install
 if [[ ! -f "${prefix}/bin/python" ]]
 then
     koopa::h2 "Symlinking 'python3' to 'python'."
-    ln -fnsv "${prefix}/bin/python3" "${prefix}/bin/python"
+    kooopa::ln "${prefix}/bin/python3" "${prefix}/bin/python"
 fi

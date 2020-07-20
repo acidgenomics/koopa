@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::koopa() {
+koopa::koopa() { # {{{1
     koopa::assert_has_args "$#"
     # Update corresponding Bash completion file, if necessary.
     case "$1" in

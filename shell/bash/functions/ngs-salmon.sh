@@ -28,14 +28,14 @@ koopa::_salmon_index() { # {{{1
     koopa::assert_is_file "$fasta_file"
     if [[ -d "$index_dir" ]]
     then
-        koopa::note "Index exists at \"${index_dir}\". Skipping."
+        koopa::note "Index exists at '${index_dir}'. Skipping."
         return 0
     fi
-    koopa::h2 "Generating salmon index at \"${index_dir}\"."
+    koopa::h2 "Generating salmon index at '${index_dir}'."
     threads="$(koopa::cpu_count)"
-    koopa::dl "Threads" "$threads"
+    koopa::dl 'Threads' "$threads"
     log_file="$(dirname "$index_dir")/salmon-index.log"
-    mkdir -pv "$index_dir"
+    koopa::mkdir "$index_dir"
     salmon index \
         -k 31 \
         -p "$threads" \
@@ -97,16 +97,16 @@ koopa::_salmon_quant() { # {{{1
     sample_output_dir="${output_dir}/${id}"
     if [[ -d "$sample_output_dir" ]]
     then
-        koopa::note "Skipping \"${id}\"."
+        koopa::note "Skipping '${id}'."
         return 0
     fi
-    koopa::h2 "Quantifying \"${id}\" into \"${sample_output_dir}\"."
+    koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
     bootstraps=30
-    koopa::dl "Bootstraps" "$bootstraps"
+    koopa::dl 'Bootstraps' "$bootstraps"
     threads="$(koopa::cpu_count)"
-    koopa::dl "Threads" "$threads"
+    koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/salmon-quant.log"
-    mkdir -pv "$sample_output_dir"
+    koopa::mkdir "$sample_output_dir"
     salmon quant \
         --gcBias \
         --index="$index_dir" \
@@ -121,7 +121,7 @@ koopa::_salmon_quant() { # {{{1
     return 0
 }
 
-koopa::salmon() {
+koopa::salmon() { # {{{1
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     koopa::assert_has_args "$#"
     fastq_dir='fastq'
@@ -186,10 +186,10 @@ koopa::salmon() {
     done
     if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-dir".'
+        koopa::stop "Specify 'fasta-file' or 'index-dir'."
     elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-dir", but not both.'
+        koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
     elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
     then
         koopa::missing_arg
@@ -219,7 +219,7 @@ koopa::salmon() {
     # Error on FASTQ match failure.
     if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No FASTQs in \"${fastq_dir}\" with \"${r1_tail}\"."
+        koopa::stop "No FASTQs in '${fastq_dir}' with '${r1_tail}'."
     fi
     koopa::info "${#fastq_r1_files[@]} samples detected."
     koopa::mkdir "$output_dir"

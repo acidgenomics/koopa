@@ -50,7 +50,7 @@ koopa::bcbio_run_tests() { # {{{1
         ./run_tests.sh stranded
         ./run_tests.sh chipseq
         ./run_tests.sh scrnaseq
-        rm -frv test_automated_output
+        koopa::rm test_automated_output
     )
     koopa::success 'All unit tests passed.'
     return 0
@@ -185,7 +185,7 @@ koopa::install_bcbio_ensembl_genome() { # {{{1
     # Check for valid organism input.
     if ! koopa::str_match_regex "$organism" '^([A-Z][a-z]+)(\s|_)([a-z]+)$'
     then
-        koopa::stop "Invalid organism: \"${organism}\"."
+        koopa::stop "Invalid organism: '${organism}'."
     fi
     # Sanitize spaces into underscores.
     # Use bash built-in rather than sed, when possible.
@@ -193,7 +193,7 @@ koopa::install_bcbio_ensembl_genome() { # {{{1
     source='Ensembl'
     bcbio_genome_name="${build}-${source}-${release}"
     koopa::install_start "$bcbio_genome_name"
-    # e.g. "Hsapiens".
+    # e.g. 'Hsapiens'.
     bcbio_species_dir="$( \
         koopa::print "$organism" \
             | sed -r 's/^([A-Z]).+_([a-z]+)$/\1\2/g' \
@@ -289,7 +289,7 @@ koopa::install_bcbio_genome() { # {{{1
     return 0
 }
 
-koopa::install_bcbio_vm() {
+koopa::install_bcbio_vm() { # {{{1
     # """
     # Install bcbio-vm.
     # @note Updated 2020-07-16.
@@ -332,17 +332,17 @@ koopa::install_bcbio_vm() {
     sudo chmod g+s '/usr/local/bin/bcbio_vm.py'
     # v1.1.3:
     # > data_dir="${prefix}/v1.1.3"
-    # > image="quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3"
+    # > image='quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3'
     # latest version:
     data_dir="${prefix}/latest"
-    # > image="quay.io/bcbio/bcbio-vc"
+    # > image='quay.io/bcbio/bcbio-vc'
     "${bin_dir}/bcbio_vm.py" --datadir="$data_dir" saveconfig
     # > "${bin_dir}/bcbio_vm.py" install --tools --image "$image"
     koopa::install_success "$name"
     return 0
 }
 
-koopa::patch_bcbio() {
+koopa::patch_bcbio() { # {{{1
     # """
     # Patch bcbio.
     # @note Updated 2020-07-16.
@@ -398,11 +398,7 @@ koopa::patch_bcbio() {
     # Locate bcbio installation directory.
     if [[ -z "${install_dir:-}" ]]
     then
-        install_dir="$( \
-            cd "$(dirname "$bcbio_python")/../.." \
-            &>/dev/null \
-            && pwd -P \
-        )"
+        install_dir="$(koopa::cd "$(dirname "$bcbio_python")/../.." && pwd -P)"
     fi
     koopa::assert_is_dir "$install_dir"
     koopa::h1 "Patching ${name_fancy} installation."
@@ -412,21 +408,21 @@ koopa::patch_bcbio() {
     koopa::h2 'Removing Python cache and compiled pyc files in Git repo.'
     find "$git_dir" -name '*.pyc' -delete
     find "$git_dir" -name '__pycache__' -type d -exec rm -rv {} \;
-    koopa::h2 'Removing Python installer cruft inside "anaconda/lib/".'
+    koopa::h2 "Removing Python installer cruft inside 'anaconda/lib/'."
     koopa::rm "${install_dir}/anaconda/lib/python"*'/site-packages/bcbio'*
     # Install command must be run relative to our forked git repo.
     # Note the use of absolute path to bcbio_python here.
     (
         koopa::cd "$git_dir"
         koopa::rm 'tests/test_automated_output'
-        koopa::h2 'Patching installation via "setup.py" script.'
+        koopa::h2 "Patching installation via 'setup.py' script."
         "$bcbio_python" setup.py install
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::success "Patching of ${name_fancy} was successful."
     return 0
 }
 
-koopa::update_bcbio() {
+koopa::update_bcbio() { # {{{1
     local bcbio cores name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs

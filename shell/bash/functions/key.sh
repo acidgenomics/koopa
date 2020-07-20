@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::generate_ssh_key() {
+koopa::generate_ssh_key() { # {{{1
     # """
     # Generate SSH key.
     # @note Updated 2020-07-10.
@@ -43,11 +43,11 @@ koopa::generate_ssh_key() {
         -f "$file" \
         -q \
         -t rsa
-    koopa::success "Generated SSH key at \"${file}\"."
+    koopa::success "Generated SSH key at '${file}'."
     return 0
 }
 
-koopa::gpg_prompt() {
+koopa::gpg_prompt() { # {{{1
     # """
     # Force GPG to prompt for password.
     # @note Updated 2020-07-10.
@@ -59,14 +59,14 @@ koopa::gpg_prompt() {
     return 0
 }
 
-koopa::gpg_reload() {
+koopa::gpg_reload() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed gpg-connect-agent
     gpg-connect-agent reloadagent /bye
     return 0
 }
 
-koopa::gpg_restart() {
+koopa::gpg_restart() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed gpgconf
     gpgconf --kill gpg-agent

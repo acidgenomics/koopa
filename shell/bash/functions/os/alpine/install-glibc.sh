@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::alpine_install_glibc() {
+koopa::alpine_install_glibc() { # {{{1
     # """
     # Install glibc
-    # @note Updated 2020-07-09.
+    # @note Updated 2020-07-20.
     #
     # Custom glibc library is required to install conda.
     #
@@ -55,16 +55,16 @@ releases/download/${version}"
         "$apk_main_file"
     # Setting en_US.UTF-8 by default, as recommended by alpine-pkg-glibc repo.
     /usr/glibc-compat/bin/localedef \
-        -f UTF-8 \
-        -i en_US \
-        en_US.UTF-8 \
+        -f 'UTF-8' \
+        -i 'en_US' \
+        'en_US.UTF-8' \
         || true
     # docker-alpine-glibc approach for setting C.UTF-8 locale as default.
-    # > [[ -n "${LANG:-}" ]] || LANG="C.UTF-8"
+    # > [[ -n "${LANG:-}" ]] || LANG='C.UTF-8'
     # > /usr/glibc-compat/bin/localedef \
-    # >     --charmap UTF-8 "$LANG" \
+    # >     --charmap 'UTF-8' "$LANG" \
     # >     --force \
-    # >     --inputfile POSIX \
+    # >     --inputfile 'POSIX' \
     # >     || true
     koopa::rm \
         "$apk_bin_file" \

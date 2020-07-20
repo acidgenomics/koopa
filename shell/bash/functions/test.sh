@@ -3,7 +3,7 @@
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2020-07-08.
+    # @note Updated 2020-07-20.
     # Not sorting here can speed the function up.
     # """
     koopa::assert_has_no_args "$#"
@@ -14,6 +14,7 @@ koopa::test_find_files() { # {{{1
             -mindepth 1 \
             -type f \
             -not -name "$(basename "$0")" \
+            -not -name '*.1' \
             -not -name '*.md' \
             -not -name '.pylintrc' \
             -not -path "${prefix}/.git/*" \
@@ -43,6 +44,7 @@ koopa::test_find_files_by_ext() { # {{{1
     x="$( \
         printf '%s\n' "${files[@]}" \
         | grep -Ei "$pattern" \
+        || true \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -52,23 +54,19 @@ koopa::test_find_files_by_ext() { # {{{1
 koopa::test_find_files_by_shebang() { # {{{1
     # """
     # Find relevant test files by shebang.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-20.
     # """
-    local file files pattern shebang_files x
+    local file files pattern shebang shebang_files x
     koopa::assert_has_args "$#"
     pattern="${1:?}"
     readarray -t files <<< "$(koopa::test_find_files)"
     shebang_files=()
     for file in "${files[@]}"
     do
-        x="$(
-            grep -El \
-                --binary-files="without-match" \
-                "$pattern" \
-                "$file" \
-            || true \
-        )"
-        [[ -n "$x" ]] && shebang_files+=("$x")
+        [[ -s "$file" ]] || continue
+        shebang="$(head -n 1 "$file")"
+        [[ -n "$shebang" ]] || continue
+        koopa::str_match_regex "$shebang" "$pattern" && shebang_files+=("$file")
     done
     printf '%s\n' "${shebang_files[@]}"
     return 0
@@ -77,7 +75,7 @@ koopa::test_find_files_by_shebang() { # {{{1
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
-    # @note Updated 2020-07-07.
+    # @note Updated 2020-07-20.
     # """
     local OPTIND failures file ignore name pattern x
     koopa::assert_has_args "$#"
@@ -96,8 +94,8 @@ koopa::test_grep() { # {{{1
                 pattern="$OPTARG"
                 ;;
             \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
+                koopa::invalid_arg
+                ;;
         esac
     done
     shift "$((OPTIND-1))"
@@ -109,8 +107,8 @@ koopa::test_grep() { # {{{1
         # Skip ignored files.
         if [[ -n "$ignore" ]]
         then
-            if grep -Eq \
-                --binary-files="without-match" \
+            if grep -Pq \
+                --binary-files='without-match' \
                 "^# koopa nolint=${ignore}$" \
                 "$file"
             then
@@ -118,8 +116,8 @@ koopa::test_grep() { # {{{1
             fi
         fi
         x="$(
-            grep -EHn \
-                --binary-files="without-match" \
+            grep -HPn \
+                --binary-files='without-match' \
                 "$pattern" \
                 "$file" \
             || true \

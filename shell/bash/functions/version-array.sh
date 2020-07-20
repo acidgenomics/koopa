@@ -105,15 +105,17 @@ koopa::r_package_version() { # {{{1
     pkgs=("$@")
     koopa::assert_is_r_package_installed "${pkgs[@]}"
     vec="$(koopa::array_to_r_vector "${pkgs[@]}")"
-    x="$("$rscript" -e " \
-        cat(vapply( \
-            X = ${vec}, \
-            FUN = function(x) { \
-                as.character(packageVersion(x)) \
-            }, \
-            FUN.VALUE = character(1L) \
-        ), sep = '\n') \
-    ")"
+    x="$( \
+        "$rscript" -e " \
+            cat(vapply( \
+                X = ${vec}, \
+                FUN = function(x) { \
+                    as.character(packageVersion(x)) \
+                }, \
+                FUN.VALUE = character(1L) \
+            ), sep = '\n') \
+        " \
+    )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::move_files_in_batch() {
+koopa::move_files_in_batch() { # {{{1
     # Batch move a limited number of files.
     # @note Updated 2020-07-08.
     # """
@@ -21,7 +21,7 @@ koopa::move_files_in_batch() {
     return 0
 }
 
-koopa::move_files_up_1_level() {
+koopa::move_files_up_1_level() { # {{{1
     # """
     # Move files up 1 level.
     # @note Updated 2020-07-08.
@@ -37,7 +37,7 @@ koopa::move_files_up_1_level() {
     return 0
 }
 
-koopa::move_into_dated_dirs_by_filename() {
+koopa::move_into_dated_dirs_by_filename() { # {{{1
     local day file grep_array grep_string month subdir year
     koopa::assert_has_args "$#"
     grep_array=(
@@ -60,13 +60,13 @@ koopa::move_into_dated_dirs_by_filename() {
             subdir="${year}/${month}/${day}"
             koopa::mv -t "$subdir" "$file"
         else
-            koopa::stop "Does not contain date: \"${file}\"."
+            koopa::stop "Does not contain date: '${file}'."
         fi
     done
     return 0
 }
 
-koopa::move_into_dated_dirs_by_timestamp() {
+koopa::move_into_dated_dirs_by_timestamp() { # {{{1
     local file subdir
     koopa::assert_has_args "$#"
     for file in "$@"

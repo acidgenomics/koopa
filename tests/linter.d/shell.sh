@@ -7,13 +7,13 @@ source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 test() { # {{{1
     # """
     # Shell script checks.
-    # Updated 2020-07-08.
+    # Updated 2020-07-20.
     # """
+    test_shellcheck
     test_all
     test_posix
     test_bash
     test_zsh
-    test_shellcheck
     return 0
 }
 
@@ -22,9 +22,9 @@ test_all() { # {{{1
     koopa::assert_has_no_args "$#"
     readarray -t files <<< \
         "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh|zsh)$')"
-    test_all_coreutils "${files[@]}"
-    test_all_illegal_strings "${files[@]}"
     test_all_quoting "${files[@]}"
+    test_all_illegal_strings "${files[@]}"
+    test_all_coreutils "${files[@]}"
     return 0
 }
 
@@ -32,14 +32,7 @@ test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
-    array=(
-        ' cd '
-        ' cp '
-        ' ln '
-        ' mkdir '
-        ' mv '
-        ' rm '
-    )
+    array=('^([ ]+)?(cd|cp|ln|mkdir|mv|rm) ')
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
         -i 'coreutils' \
@@ -52,17 +45,21 @@ test_all_coreutils() { # {{{1
 test_all_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
-    # shellcheck disable=SC2016
+    # shellcheck disable=SC1112,SC2016
     array=(
-        ' path='    # zsh will freak out
-        ' || exit'  # wrap in function and return instead
-        '() {$'     # functions should include vim marker
-        '; do'      # newline instead
-        '; then'    # newline instead
-        '<  <'      # use '<<<' instead
-        'IFS= '     # this is default, look for weird edge cases
-        '\$path'    # zsh will freak out
-        '^path='    # zsh will freak out
+        "=''"
+        ' \|\| exit'        # wrap in function and return instead
+        ' path='            # zsh will freak out
+        '; do'              # newline instead
+        '; then'            # newline instead
+        '<  <'              # use '<<<' instead
+        'IFS= '             # this is default, look for weird edge cases
+        '[=|]""$'
+        '[“”‘’]'            # no unicode quotes
+        '\$path'            # zsh will freak out
+        '\(\) \{$'          # functions should include vim marker
+        '\b(EOF|EOL)\b'     # Use 'END' instead.
+        '^path='            # can mess up Zsh PATH
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
@@ -78,17 +75,23 @@ test_all_quoting() { # {{{1
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
     array=(
-        # "'\$"
-        ":-'"
-        '"[A-Z0-9][-.0-9A-Za-z ]+"'
-        ':-"'
+        "'\$.+'"
+        ":-['\"]"
+        "^((?!').)*[ =\(]\"[^'\$\"]+\"+$"
+        # '\\\"\$'
+        # '\}\\\"'
     )
-    pattern="$(koopa::paste0 '|' "${array[@]}")"
-    koopa::test_grep \
-        -i 'quoting' \
-        -n 'shell | all | quoting' \
-        -p "$pattern" \
-        "$@"
+    # Check for escaped double quotes.
+    # > array+=(
+    # > )
+    for pattern in "${array[@]}"
+    do
+        koopa::test_grep \
+            -i 'quoting' \
+            -n "shell | all | quoting | ${pattern}" \
+            -p "$pattern" \
+            "$@"
+    done
     return 0
 }
 
@@ -109,10 +112,10 @@ test_bash_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     array=(
-        ' = '
         ' \[ '
         ' \] '
         ' \]$'
+        '\[\[ ([^\]]+) = ([^\]]+) \]\]'
         '^\[ '
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
@@ -174,10 +177,10 @@ test_zsh_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     array=(
-        ' = '
         ' \[ '
         ' \] '
         ' \]$'
+        '\[\[ ([^\]]+) = ([^\]]+) \]\]'
         '^\[ '
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"

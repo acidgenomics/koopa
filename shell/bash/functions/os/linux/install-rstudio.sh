@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::_install_rstudio_server() {
+koopa::_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-20.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -23,7 +23,6 @@ koopa::_install_rstudio_server() {
     # """
     local file file_ext file_stem install name name_fancy os_codename platform \
         pos pro reinstall server tmp_dir url version
-    koopa::assert_has_no_args "$#"
     koopa::assert_is_installed R
     pro=0
     reinstall=0
@@ -94,6 +93,7 @@ koopa::_install_rstudio_server() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_no_args "$#"
     name='rstudio-server'
     file_stem="$name"
     koopa::is_rhel && file_stem="${file_stem}-rhel"
@@ -117,7 +117,7 @@ koopa::_install_rstudio_server() {
         koopa::cd "$tmp_dir"
         koopa::download "$url"
         file="$(basename "$url")"
-        install=("$install")
+        IFS=' ' read -r -a install <<< "$install"
         "${install[@]}" "$file"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
@@ -136,7 +136,7 @@ END
     return 0
 }
 
-koopa::debian_install_rstudio_server() {
+koopa::debian_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
     # @note Updated 2020-07-16.
@@ -156,7 +156,7 @@ koopa::debian_install_rstudio_server() {
         bionic)
             ;;
         *)
-            koopa::stop "Unsupported OS version: \"${os_codename}\"."
+            koopa::stop "Unsupported OS version: '${os_codename}'."
             ;;
     esac
     koopa::_install_rstudio_server \
@@ -168,7 +168,7 @@ koopa::debian_install_rstudio_server() {
     return 0
 }
 
-koopa::debian_install_rstudio_server_pro() {
+koopa::debian_install_rstudio_server_pro() { # {{{1
     koopa::debian_install_rstudio_server --pro "$@"
     return 0
 }

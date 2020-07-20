@@ -9,7 +9,7 @@ koopa::apt_add_azure_cli_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/azure-cli.list'
     [[ -f "$file" ]] && return 0
-    koopa::info "Adding Microsoft Azure CLI repo at \"${file}\"."
+    koopa::info "Adding Microsoft Azure CLI repo at '${file}'."
     koopa::apt_add_microsoft_key
     os_codename="$(koopa::os_codename)"
     url='https://packages.microsoft.com/repos/azure-cli/'
@@ -342,11 +342,11 @@ Emulators:/Wine:/Debian"
 koopa::apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-20.
     #
     # Previously, we used a symlink approach here until 2020-02-24.
     # """
-    local os_codename sources_list sources_list_d
+    local os_codename repos sources_list sources_list_d
     koopa::assert_has_no_args "$#"
     sources_list='/etc/apt/sources.list'
     [[ -L "$sources_list" ]] && koopa::sys_rm "$sources_list"
@@ -356,10 +356,11 @@ koopa::apt_configure_sources() { # {{{1
     os_codename="$(koopa::os_codename)"
     if koopa::is_ubuntu
     then
+        repos=('main' 'restricted' 'universe')
         sudo tee "$sources_list" >/dev/null << END
-deb http://archive.ubuntu.com/ubuntu/ ${os_codename} main restricted universe
-deb http://archive.ubuntu.com/ubuntu/ ${os_codename}-updates main restricted universe
-deb http://security.ubuntu.com/ubuntu/ ${os_codename}-security main restricted universe
+deb http://archive.ubuntu.com/ubuntu/ ${os_codename} ${repos[*]}
+deb http://archive.ubuntu.com/ubuntu/ ${os_codename}-updates ${repos[*]}
+deb http://security.ubuntu.com/ubuntu/ ${os_codename}-security ${repos[*]}
 END
     else
         sudo tee "$sources_list" >/dev/null << END

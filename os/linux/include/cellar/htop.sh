@@ -13,7 +13,7 @@ file="${name}-${version}.tar.gz"
 url="https://hisham.hm/${name}/releases/${version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./configure \
     --disable-unicode \
     --prefix="$prefix"

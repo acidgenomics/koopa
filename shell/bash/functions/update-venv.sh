@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::update_venv() {
+koopa::update_venv() { # {{{1
     # """
     # Update Python virtual environment.
-    # @note Updated 2020-07-13.
+    # @note Updated 2020-07-20.
     # """
     local array lines python
     koopa::assert_has_no_args "$#"
@@ -18,7 +18,7 @@ koopa::update_venv() {
     "$python" -m pip install --upgrade pip
     lines="$("$python" -m pip list --outdated --format='freeze')"
     readarray -t array <<< "$lines"
-    koopa::is_array_non_empty "${array[@]}" || exit 0
+    koopa::is_array_non_empty "${array[@]}" || return 0
     koopa::h1 "${#array[@]} outdated packages detected."
     koopa::print "$lines" \
         | cut -d '=' -f 1 \

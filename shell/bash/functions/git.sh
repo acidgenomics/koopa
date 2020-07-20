@@ -27,7 +27,7 @@ koopa::git_clone() { # {{{1
     return 0
 }
 
-koopa::git_init() {
+koopa::git_init() { # {{{1
     repo="${1:-}"
     koopa::assert_has_args_le "$#" 1
     git init
@@ -78,7 +78,7 @@ koopa::git_last_commit_remote() { # {{{1
     koopa::print "$x"
 }
 
-koopa::git_pull_recursive() {
+koopa::git_pull_recursive() { # {{{1
     local dir repo repos
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
@@ -88,14 +88,14 @@ koopa::git_pull_recursive() {
         find -L "$dir" \
             -mindepth 1 \
             -maxdepth 2 \
-            -name ".git" \
+            -name '.git' \
             -print \
     )"
     if ! koopa::is_array_non_empty "${repos[@]}"
     then
         koopa::stop 'Failed to detect any git repos.'
     fi
-    koopa::h1 "Pulling ${#repos[@]} git repos at \"${dir}\"."
+    koopa::h1 "Pulling ${#repos[@]} git repos at '${dir}'."
     for repo in "${repos[@]}"
     do
         repo="$(dirname "$repo")"
@@ -110,7 +110,7 @@ koopa::git_pull_recursive() {
     return 0
 }
 
-koopa::git_push_recursive() {
+koopa::git_push_recursive() { # {{{1
     local dir repo repos
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
@@ -120,14 +120,14 @@ koopa::git_push_recursive() {
         find -L "$dir" \
             -mindepth 1 \
             -maxdepth 2 \
-            -name ".git" \
+            -name '.git' \
             -print \
     )"
     if ! koopa::is_array_non_empty "${repos[@]}"
     then
         koopa::stop 'Failed to detect any git repos.'
     fi
-    koopa::h1 "Pushing ${#repos[@]} git repos at \"${dir}\"."
+    koopa::h1 "Pushing ${#repos[@]} git repos at '${dir}'."
     for repo in "${repos[@]}"
     do
         repo="$(dirname "$repo")"
@@ -140,7 +140,7 @@ koopa::git_push_recursive() {
     return 0
 }
 
-koopa::git_push_submodules() {
+koopa::git_push_submodules() { # {{{1
     local dir
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
@@ -167,7 +167,7 @@ koopa::git_remote_url() { # {{{1
     return 0
 }
 
-koopa::git_reset_fork_to_upstream() {
+koopa::git_reset_fork_to_upstream() { # {{{1
     local dir
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
@@ -223,7 +223,7 @@ koopa::git_rm_untracked() { # {{{1
     return 0
 }
 
-koopa::git_set_remote_url() {
+koopa::git_set_remote_url() { # {{{1
     # """
     # Set (or change) the remote URL of a git repo.
     # @note Updated 2020-07-04.
@@ -237,7 +237,7 @@ koopa::git_set_remote_url() {
     return 0
 }
 
-koopa::git_submodule_init() {
+koopa::git_submodule_init() { # {{{1
     # """
     # Initialize git submodules.
     # @note Updated 2020-07-04.
@@ -274,7 +274,7 @@ koopa::git_submodule_init() {
     return 0
 }
 
-koopa::git_pull() {
+koopa::git_pull() { # {{{1
     # """
     # Pull (update) a git repository.
     # @note Updated 2020-07-04.
@@ -315,11 +315,11 @@ koopa::git_reset() { # {{{1
     #
     # Additional steps:
     # # Ensure accidental swap files created by vim get nuked.
-    # > find . -type f -name "*.swp" -delete
+    # > find . -type f -name '*.swp' -delete
     # # Ensure invisible files get nuked on macOS.
     # > if koopa::is_macos
     # > then
-    # >     find . -type f -name ".DS_Store" -delete
+    # >     find . -type f -name '.DS_Store' -delete
     # > fi
     #
     # See also:
@@ -340,7 +340,7 @@ koopa::git_reset() { # {{{1
     return 0
 }
 
-koopa::git_status_recursive() {
+koopa::git_status_recursive() { # {{{1
     local dir repo repos
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
@@ -350,14 +350,14 @@ koopa::git_status_recursive() {
         find -L "$dir" \
             -mindepth 1 \
             -maxdepth 2 \
-            -name ".git" \
+            -name '.git' \
             -print \
     )"
     if ! koopa::is_array_non_empty "${repos[@]}"
     then
         koopa::stop 'Failed to detect any git repos.'
     fi
-    koopa::h1 "Checking status of ${#repos[@]} git repos at \"${dir}\"."
+    koopa::h1 "Checking status of ${#repos[@]} git repos at '${dir}'."
     for repo in "${repos[@]}"
     do
         repo="$(dirname "$repo")"

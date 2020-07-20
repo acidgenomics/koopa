@@ -37,14 +37,14 @@ koopa::install_pip() { # {{{1
     python="${1:-python3}"
     if ! koopa::is_installed "$python"
     then
-        koopa::warning "Python (\"${python}\") is not installed."
+        koopa::warning "Python ('${python}') is not installed."
         return 1
     fi
     if [[ "$reinstall" -eq 0 ]]
     then
         if koopa::is_python_package_installed --python="$python" "$name"
         then
-            koopa::note "Python package \"${name}\" is already installed."
+            koopa::note "Python package '${name}' is already installed."
             return 0
         fi
     fi
@@ -63,7 +63,7 @@ koopa::install_pip() { # {{{1
     return 0
 }
 
-koopa::install_python_packages() {
+koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
     # @note Updated 2020-07-10.
@@ -209,27 +209,27 @@ koopa::python_remove_pycache() { # {{{1
     if [[ -z "$prefix" ]]
     then
         # e.g. /usr/local/cellar/python/3.8.1
-        python="$(koopa::which_realpath "python3")"
+        python="$(koopa::which_realpath 'python3')"
         prefix="$(realpath "$(dirname "$python")/..")"
     fi
     koopa::info "Removing pycache in '${prefix}'."
     # > find "$prefix" \
     # >     -type d \
-    # >     -name "__pycache__" \
+    # >     -name '__pycache__' \
     # >     -print0 \
-    # >     -exec rm -frv "{}" \;
+    # >     -exec rm -frv '{}' \;
     find "$prefix" \
         -type d \
-        -name "__pycache__" \
+        -name '__pycache__' \
         -print0 \
-        | xargs -0 -I {} rm -frv "{}"
+        | xargs -0 -I {} rm -frv '{}'
     return 0
 }
 
-koopa::venv_create() {
+koopa::venv_create() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-20.
     # """
     local name prefix py_exe
     koopa::assert_has_no_envs
@@ -239,7 +239,7 @@ koopa::venv_create() {
     prefix="$(koopa::venv_prefix)/${name}"
     [[ -d "$prefix" ]] && return 0
     shift 1
-    koopa::info "Installing Python '${name}' virtual environment at '${prefix}'."
+    koopa::info "Installing Python '${name}' venv at '${prefix}'."
     koopa::mkdir "$prefix"
     python3 -m venv "$prefix"
     py_exe="${prefix}/bin/python3"
@@ -247,7 +247,7 @@ koopa::venv_create() {
     if [[ "$#" -gt 0 ]]
     then
         "$py_exe" -m pip install --upgrade "$@"
-    elif [[ "$name" != "base" ]]
+    elif [[ "$name" != 'base' ]]
     then
         "$py_exe" -m pip install "$name"
     fi
@@ -256,20 +256,20 @@ koopa::venv_create() {
     return 0
 }
 
-koopa::venv_create_base() {
+koopa::venv_create_base() { # {{{1
     # """
     # Create base Python virtual environment.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-20.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::venv_create "base"
+    koopa::venv_create 'base'
     return 0
 }
 
-koopa::venv_create_r_reticulate() {
+koopa::venv_create_r_reticulate() { # {{{1
     # """
     # Create Python reticulate environment for R.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-20.
     #
     # Check that LLVM is configured correctly.
     # umap-learn > numba > llvmlite
@@ -277,8 +277,8 @@ koopa::venv_create_r_reticulate() {
     # https://github.com/numba/llvmlite/issues/523
     #
     # macOS compiler flags:
-    # These flags are now required for scikit-learn to compile, which now requires
-    # OpenMP that is unsupported by system default gcc alias.
+    # These flags are now required for scikit-learn to compile, which now
+    # requires OpenMP that is unsupported by system default gcc alias.
     #
     # Ensure that we're using the correct Clang and LLVM settings.
     #
@@ -294,20 +294,20 @@ koopa::venv_create_r_reticulate() {
     # """
     local name packages
     koopa::assert_has_no_args "$#"
-    name="r-reticulate"
+    name='r-reticulate'
     packages=(
-        Cython
-        cwltool
-        louvain
-        numpy
-        pandas
-        pip
-        pyyaml
-        scikit-learn
-        scipy
-        setuptools
-        umap-learn
-        wheel
+        'Cython'
+        'cwltool'
+        'louvain'
+        'numpy'
+        'pandas'
+        'pip'
+        'pyyaml'
+        'scikit-learn'
+        'scipy'
+        'setuptools'
+        'umap-learn'
+        'wheel'
     )
     if koopa::is_macos
     then
@@ -321,9 +321,9 @@ koopa::venv_create_r_reticulate() {
     fi
     if [[ -n "${LLVM_CONFIG:-}" ]]
     then
-        koopa::info "LLVM_CONFIG: \"${LLVM_CONFIG}\"."
+        koopa::info "LLVM_CONFIG: '${LLVM_CONFIG}'."
     else
-        koopa::note 'Export "LLVM_CONFIG" to locate LLVM llvm-config binary.'
+        koopa::note "Export 'LLVM_CONFIG' to locate LLVM llvm-config binary."
     fi
     koopa::venv_create "$name" "${packages[@]}"
     return 0

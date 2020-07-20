@@ -38,7 +38,7 @@ file="${name}-${version}.tar.gz"
 url="https://www.cpan.org/src/5.0/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./Configure -des -Dprefix="$prefix"
 make --jobs="$jobs"
 # The installer will warn when you skip this step.

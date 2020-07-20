@@ -24,7 +24,7 @@ koopa::macos_install_r_cran_clang() { # {{{1
     major_version="$(koopa::major_version "$version")"
     prefix="/usr/local/${name}${major_version}"
     koopa::exit_if_dir "$prefix"
-    koopa::h1 "Installing ${name} ${version} to \"${prefix}\"."
+    koopa::h1 "Installing ${name} ${version} to '${prefix}'."
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -73,7 +73,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     name='gfortran'
     prefix="/usr/local/${name}"
     koopa::exit_if_dir "$prefix"
-    koopa::h1 "Installing ${name} ${version} to \"${prefix}\"."
+    koopa::h1 "Installing ${name} ${version} to '${prefix}'."
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -123,7 +123,7 @@ koopa::macos_install_r_devel() { # {{{1
         if [[ -d '/Library/Frameworks/R.framework' ]] &&
             [[ ! -L '/Library/Frameworks/R.framework' ]]
         then
-            koopa::note 'Backing up existing "R.framework".'
+            koopa::note "Backing up existing 'R.framework'."
             koopa::mv -S \
                 '/Library/Frameworks/R.framework' \
                 '/Library/Frameworks/R.framework.bak'
@@ -139,7 +139,7 @@ koopa::macos_install_r_devel() { # {{{1
         "/Library/Frameworks/R-${r_version}.framework" \
         '/Library/Frameworks/R.framework'
     koopa::install_success "$name_fancy"
-    koopa::note 'Ensure that "R_LIBS_USER" in "~/.Renviron" is correct.'
+    koopa::note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
     return 0
 }
 
@@ -193,7 +193,7 @@ koopa::macos_install_r_xml() { # {{{1
     # @note Updated 2020-07-16.
     #
     # Note that CRAN recommended clang7 compiler doesn't currently work.
-    # CC="/usr/local/clang7/bin/clang"
+    # CC='/usr/local/clang7/bin/clang'
     # > brew info gcc
     # > brew info libxml2
     # """

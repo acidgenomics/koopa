@@ -12,7 +12,6 @@
 #   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithCMake
 #
 # Alternate autotools approach:
-# > cd "${name}-${version}" || exit 1
 # > ./autogen.sh
 # > ./configure --prefix="$prefix"
 # > make --jobs="$jobs"
@@ -20,12 +19,11 @@
 # """
 
 koopa::assert_is_not_file /usr/bin/geos-config
-
 file="${version}.tar.gz"
 url="https://github.com/libgeos/${name}/archive/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-mkdir build
+koopa::mkdir build
 koopa::cd build
 cmake "../${name}-${version}" \
     -DCMAKE_INSTALL_PREFIX="$prefix"

@@ -3,10 +3,9 @@
 
 koopa::mkdir "$prefix"
 git clone \
-    "https://github.com/sstephenson/rbenv.git" \
+    'https://github.com/sstephenson/rbenv.git' \
     "$prefix"
-
 koopa::mkdir "${prefix}/plugins"
 git clone \
-    "https://github.com/sstephenson/ruby-build.git" \
+    'https://github.com/sstephenson/ruby-build.git' \
     "${prefix}/plugins/ruby-build"

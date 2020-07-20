@@ -3,17 +3,13 @@
 koopa::array_to_r_vector() { # {{{1
     # """
     # Convert a bash array to an R vector string.
-    # @note Updated 2020-07-01.
-    #
-    # @examples
-    # koopa::array_to_r_vector "aaa" "bbb"
-    # ## c("aaa", "bbb")
+    # @note Updated 2020-07-20.
     # """
     local x
     koopa::assert_has_args "$#"
     x="$(printf '"%s", ' "$@")"
-    x="$(koopa::strip_right ", " "$x")"
-    x="$(printf "c(%s)\n" "$x")"
+    x="$(koopa::strip_right ', ' "$x")"
+    x="$(printf 'c(%s)\n' "$x")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -33,7 +29,7 @@ koopa::install_rcheck() { # {{{1
     koopa::install_start "$name"
     if [[ ! -d "$target_dir" ]]
     then
-        koopa::h2 "Downloading ${name} to \"${target_dir}\"."
+        koopa::h2 "Downloading ${name} to '${target_dir}'."
         (
             koopa::mkdir "$target_dir"
             git clone "$source_repo" "$target_dir"
@@ -44,7 +40,7 @@ koopa::install_rcheck() { # {{{1
     return 0
 }
 
-koopa::kill_r() {
+koopa::kill_r() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed pkill
     pkill rsession
@@ -265,6 +261,6 @@ koopa::update_r_config() { # {{{1
     koopa::link_r_etc "$r"
     koopa::link_r_site_library "$r"
     koopa::r_javareconf "$r"
-    koopa::success "Update of R configuration was successful."
+    koopa::success 'Update of R configuration was successful.'
     return 0
 }

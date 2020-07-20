@@ -165,7 +165,7 @@ _koopa_activate_conda() { # {{{1
     # shellcheck source=/dev/null
     . "$script"
     # Ensure base environment gets deactivated by default.
-    if [ "$name" = "base" ]
+    if [ "$name" = 'base' ]
     then
         # Don't use the full conda path here; will return config error.
         conda deactivate
@@ -179,8 +179,8 @@ _koopa_activate_coreutils() { # {{{1
     # Activate hardened interactive aliases for coreutils.
     # @note Updated 2020-07-03.
     #
-    # These aliases get "unaliased" inside of koopa scripts, and they should
-    # only apply to interactive use at the command prompt.
+    # These aliases get unaliased inside of koopa scripts, and they should only
+    # apply to interactive use at the command prompt.
     #
     # macOS ships with a very old version of GNU coreutils. Use Homebrew.
     # """
@@ -389,7 +389,7 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     return 0
 }
 
-_koopa_activate_homebrew_google_cloud_sdk() {
+_koopa_activate_homebrew_google_cloud_sdk() { # {{{1
     # """
     # Activate Homebrew Google Cloud SDK.
     # @note Updated 2020-06-30.
@@ -524,7 +524,7 @@ _koopa_activate_local_etc_profile() { # {{{1
             return 0
             ;;
     esac
-    prefix="/usr/local/etc/profile.d"
+    prefix='/usr/local/etc/profile.d'
     [ -d "$prefix" ] || return 0
     for script in "${prefix}/"*'.sh'
     do
@@ -556,7 +556,7 @@ _koopa_activate_macos_extras() { # {{{1
     return 0
 }
 
-_koopa_activate_macos_python() {
+_koopa_activate_macos_python() { # {{{1
     # """
     # Activate macOS Python install.
     # @note Updated 2020-07-03.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_install_r_devel() {
+koopa::debian_install_r_devel() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
     # @note Updated 2020-07-16.

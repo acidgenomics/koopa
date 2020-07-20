@@ -1,23 +1,12 @@
 #!/usr/bin/env bash
 
-koopa::rnaeditingindexer() {
+koopa::rnaeditingindexer() { # {{{1
     # """
     # Run RNAEditingIndexer.
-    # @note Updated 2020-07-10.
+    # @note Updated 2020-07-20.
     #
     # Genome must be indexed by BEDGenomeIndexer.
     # Note that '--verbose' flag includes more output in summary CSV.
-    #
-    # This file is missing and currently causes issues on Docker:
-    # - /bin/AEI/RNAEditingIndexer/Resources/Genomes/HomoSapiens/
-    #       ucscHg38Genome.fa.fai
-    # ucscHg38Genome.fa source information:
-    # - https://github.com/a2iEditing/RNAEditingIndexer/
-    #       blob/master/make/initResources.sh
-    # Useful environment variables:
-    # - HG38_FTP_URL="http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/"
-    # - HG38_FTP_GENOME_URL="http://hgdownload.soe.ucsc.edu/
-    #       goldenPath/hg38/bigZips/"
     #
     # @seealso
     # - https://github.com/a2iEditing/RNAEditingIndexer/blob/master/Docs/

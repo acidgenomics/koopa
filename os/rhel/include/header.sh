@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# koopa nolint=coreutils
 
 # """
 # Red Hat Enterprise Linux (RHEL) header.

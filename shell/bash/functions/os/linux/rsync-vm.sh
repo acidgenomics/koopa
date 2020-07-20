@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::rsync_vm() {
+koopa::rsync_vm() { # {{{1
     # """
     # rsync virtual machine configuration.
     # @note Updated 2020-07-16.
@@ -41,7 +41,7 @@ koopa::rsync_vm() {
     host_ip="$(koopa::local_ip_address)"
     if [[ "$source_ip" == "$host_ip" ]]
     then
-        koopa::exit "Skipping rsync because \"${host_ip}\" is source machine."
+        koopa::exit "Skipping rsync because '${host_ip}' is source machine."
     fi
     # Allow user to input custom paths.
     if [[ "$#" -gt 0 ]]
@@ -76,7 +76,7 @@ koopa::rsync_vm() {
             --rsync-flags="${app_rsync_flags[*]}" \
             --source-ip="$source_ip"
     else
-        koopa::note "Skipping \"${app_prefix}\"."
+        koopa::note "Skipping '${app_prefix}'."
     fi
     make_prefix="$(koopa::make_prefix)"
     if [[ -d "$make_prefix" ]]
@@ -85,7 +85,7 @@ koopa::rsync_vm() {
             --prefix="$make_prefix" \
             --source-ip="$source_ip"
     else
-        koopa::note "Skipping \"${make_prefix}\"."
+        koopa::note "Skipping '${make_prefix}'."
     fi
     refdata_prefix="$(koopa::refdata_prefix)"
     if [[ -d "$refdata_prefix" ]]
@@ -106,7 +106,7 @@ koopa::rsync_vm() {
             --rsync-flags="${refdata_rsync_flags[*]}" \
             --source-ip="$source_ip"
     else
-        koopa::note "Skipping \"${refdata_prefix}\"."
+        koopa::note "Skipping '${refdata_prefix}'."
     fi
     koopa::success "rsync from ${source_ip} was successful."
     return 0

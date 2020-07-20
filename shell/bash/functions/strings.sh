@@ -28,7 +28,7 @@ koopa::paste0() { # {{{1
     str="${*/#/$delim}"
     # Print without the first delimiter.
     str="${str:${#delim}}"
-    printf "%s\n" "$str"
+    printf '%s\n' "$str"
     return 0
 }
 
@@ -38,6 +38,6 @@ koopa::to_string() { # {{{1
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_args "$#"
-    koopa::paste0 ", " "$@"
+    koopa::paste0 ', ' "$@"
     return 0
 }

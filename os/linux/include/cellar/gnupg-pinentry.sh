@@ -8,7 +8,7 @@ then
     gpg --verify "${name}-${version}.tar.bz2.sig"
 fi
 koopa::extract "${name}-${version}.tar.bz2"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 flags=("--prefix=${prefix}")
 if koopa::is_opensuse
 then
@@ -22,12 +22,12 @@ then
     #
     # Falling back to using 'pinentry-tty' instead in this case.
     flags+=(
-        "--disable-fallback-curses"
-        "--disable-pinentry-curses"
-        "--enable-pinentry-tty"
+        '--disable-fallback-curses'
+        '--disable-pinentry-curses'
+        '--enable-pinentry-tty'
     )
 else
-    flags+=("--enable-pinentry-curses")
+    flags+=('--enable-pinentry-curses')
 fi
 ./configure "${flags[@]}"
 make --jobs="$jobs"
