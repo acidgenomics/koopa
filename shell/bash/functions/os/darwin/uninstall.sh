@@ -53,7 +53,7 @@ koopa::macos_uninstall_ringcentral() { # {{{1
     # """
     local name_fancy
     koopa::assert_has_no_args "$#"
-    name_fancy="RingCentral"
+    name_fancy='RingCentral'
     koopa::uninstall_start "$name_fancy"
     koopa::rm \
         "${HOME}/Library/Application Support/RingCentral Meetings" \
@@ -79,7 +79,7 @@ koopa::macos_uninstall_webex() { # {{{1
     # """
     local name_fancy
     koopa::assert_has_no_args "$#"
-    name_fancy="Webex"
+    name_fancy='Webex'
     koopa::uninstall_start "$name_fancy"
     # Consider:
     # - ~/.Webex

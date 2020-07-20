@@ -524,7 +524,7 @@ _koopa_activate_local_etc_profile() { # {{{1
             return 0
             ;;
     esac
-    prefix="/usr/local/etc/profile.d"
+    prefix='/usr/local/etc/profile.d'
     [ -d "$prefix" ] || return 0
     for script in "${prefix}/"*'.sh'
     do

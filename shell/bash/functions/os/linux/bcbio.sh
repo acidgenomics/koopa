@@ -332,10 +332,10 @@ koopa::install_bcbio_vm() { # {{{1
     sudo chmod g+s '/usr/local/bin/bcbio_vm.py'
     # v1.1.3:
     # > data_dir="${prefix}/v1.1.3"
-    # > image="quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3"
+    # > image='quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3'
     # latest version:
     data_dir="${prefix}/latest"
-    # > image="quay.io/bcbio/bcbio-vc"
+    # > image='quay.io/bcbio/bcbio-vc'
     "${bin_dir}/bcbio_vm.py" --datadir="$data_dir" saveconfig
     # > "${bin_dir}/bcbio_vm.py" install --tools --image "$image"
     koopa::install_success "$name"

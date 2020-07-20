@@ -78,7 +78,7 @@ koopa::brew_update() { # {{{1
     local casks name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
-    name_fancy="Homebrew"
+    name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
     brew analytics off
     brew update >/dev/null

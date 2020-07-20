@@ -48,7 +48,7 @@ koopa::macos_install_python_framework() { # {{{1
     name_fancy='Python'
     name='python'
     version="$(koopa::variable "$name")"
-    framework_dir="/Library/Frameworks/Python.framework"
+    framework_dir='/Library/Frameworks/Python.framework'
     if ! koopa::is_current_version "$name" || [[ "$reinstall" -eq 1 ]]
     then
         koopa::sys_rm "$framework_dir"

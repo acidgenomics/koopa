@@ -123,17 +123,17 @@ koopa::current_gencode_version() { # {{{1
     case "$organism" in
         'Homo sapiens')
             short_name='human'
-            pattern="Release [0-9]+"
+            pattern='Release [0-9]+'
             ;;
         'Mus musculus')
             short_name='mouse'
-            pattern="Release M[0-9]+"
+            pattern='Release M[0-9]+'
             ;;
         *)
             koopa::stop "Unsupported organism: '${organism}'."
             ;;
     esac
-    base_url="https://www.gencodegenes.org"
+    base_url='https://www.gencodegenes.org'
     url="${base_url}/${short_name}/"
     x="$( \
         curl --silent "$url" \
@@ -153,7 +153,7 @@ koopa::current_refseq_version() { # {{{1
     # """
     local url version
     koopa::assert_has_no_args "$#"
-    url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
+    url='ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER'
     version="$(curl --silent "$url")"
     [[ -n "$version" ]] || return 1
     koopa::print "$version"

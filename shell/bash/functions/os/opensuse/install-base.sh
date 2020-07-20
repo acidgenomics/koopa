@@ -10,7 +10,7 @@ koopa::opensuse_install_base() { # {{{1
     # """
     local name_fancy packages
     koopa::assert_is_installed sudo zypper
-    name_fancy="openSUSE base system"
+    name_fancy='openSUSE base system'
     koopa::install_start "$name_fancy"
     sudo zypper refresh
     sudo zypper --non-interactive update
