@@ -29,7 +29,7 @@ file="${name}-${version}.tar.xz"
 url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./configure \
     --prefix="$prefix" \
     --enable-etcdir="$etc_dir" \

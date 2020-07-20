@@ -25,7 +25,7 @@ file="${name}-${version}.tar.bz2"
 url="https://mirrors.ocf.berkeley.edu/apache/${name}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./configure \
     --prefix="$prefix" \
     --with-apr-config="$apr_config" \

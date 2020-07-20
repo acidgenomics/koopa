@@ -9,7 +9,7 @@ url="https://support.hdfgroup.org/ftp/HDF5/releases/${name}-${minor_version}/\
 ${name}-${version}/src/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./configure \
     --prefix="$prefix" \
     --enable-cxx \
