@@ -1405,115 +1405,206 @@ WebKit2AllowsInlineMediaPlayback" \
 WebKit2AllowsInlineMediaPlayback" \
         -bool false
 
-    # Mail {{{1
-    # ==============================================================================
+    # Mail {{{2
+    # --------------------------------------------------------------------------
 
     # Disable send and reply animations in Mail.app.
-    defaults write com.apple.mail DisableReplyAnimations -bool true
-    defaults write com.apple.mail DisableSendAnimations -bool true
+    defaults write \
+        'com.apple.mail' \
+        'DisableReplyAnimations' \
+        -bool true
+    defaults write \
+        'com.apple.mail' \
+        'DisableSendAnimations' \
+        -bool true
 
-    # Copy email addresses as 'foo@example.com' instead of 'Foo Bar <foo@example.com>' in Mail.app.
-    defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+    # Copy email addresses as 'foo@example.com' instead of
+    # 'Foo Bar <foo@example.com>' in Mail.app.
+    defaults write \
+        'com.apple.mail' \
+        'AddressesIncludeNameOnPasteboard' \
+        -bool false
 
     # Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app.
-    defaults write com.apple.mail NSUserKeyEquivalents -dict-add 'Send' '@\U21a9'
+    defaults write \
+        'com.apple.mail' \
+        'NSUserKeyEquivalents' \
+        -dict-add 'Send' '@\U21a9'
 
     # Display emails in threaded mode, sorted by date (oldest at the top).
-    defaults write com.apple.mail DraftsViewerAttributes -dict-add 'DisplayInThreadedMode' -string 'yes'
-    defaults write com.apple.mail DraftsViewerAttributes -dict-add 'SortedDescending' -string 'no'
-    defaults write com.apple.mail DraftsViewerAttributes -dict-add 'SortOrder' -string 'received-date'
+    defaults write \
+        'com.apple.mail' \
+        'DraftsViewerAttributes' \
+        -dict-add 'DisplayInThreadedMode' -string 'yes'
+    defaults write \
+        'com.apple.mail' \
+        'DraftsViewerAttributes' \
+        -dict-add 'SortedDescending' -string 'no'
+    defaults write \
+        'com.apple.mail' \
+        'DraftsViewerAttributes' \
+        -dict-add 'SortOrder' -string 'received-date'
 
     # Disable inline attachments (just show the icons).
-    defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
+    defaults write \
+        'com.apple.mail' \
+        'DisableInlineAttachmentViewing' \
+        -bool true
 
     # Disable automatic spell checking.
-    defaults write com.apple.mail SpellCheckingBehavior -string 'NoSpellCheckingEnabled'
+    defaults write \
+        'com.apple.mail' \
+        'SpellCheckingBehavior' \
+        -string 'NoSpellCheckingEnabled'
 
-    # Terminal {{{1
-    # ==============================================================================
+    # Terminal {{{2
+    # --------------------------------------------------------------------------
 
     # Only use UTF-8 in Terminal.app.
-    defaults write com.apple.terminal StringEncodings -array 4
+    defaults write \
+        'com.apple.terminal' \
+        'StringEncodings' \
+        -array 4
 
     # Enable Secure Keyboard Entry in Terminal.app.
     # See: https://security.stackexchange.com/a/47786/8918
-    defaults write com.apple.terminal SecureKeyboardEntry -bool true
+    defaults write \
+        'com.apple.terminal' \
+        'SecureKeyboardEntry' \
+        -bool true
 
     # Disable the annoying line marks.
-    defaults write com.apple.Terminal ShowLineMarks -int 0
+    defaults write \
+        'com.apple.Terminal' \
+        'ShowLineMarks' \
+        -int 0
 
-    # Enable “focus follows mouse” for Terminal.app and all X11 apps.
-    # i.e. hover over a window and start typing in it without clicking first.
-    # > defaults write com.apple.terminal FocusFollowsMouse -bool true
-    # > defaults write org.x.X11 wm_ffm -bool true
-
-    # iTerm {{{1
-    # ==============================================================================
+    # iTerm {{{2
+    # --------------------------------------------------------------------------
 
     # Don't display the annoying prompt when quitting iTerm.
-    defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+    defaults write \
+        'com.googlecode.iterm2' \
+        'PromptOnQuit' \
+        -bool false
 
-    # iTunes {{{1
-    # ==============================================================================
+    # iTunes {{{2
+    # --------------------------------------------------------------------------
 
     # Disable podcasts in iTunes.
-    defaults write com.apple.itunes disablePodcasts -bool YES
+    defaults write \
+        'com.apple.itunes' \
+        'disablePodcasts' \
+        -bool YES
 
     # Stop iTunes from responding to the keyboard media keys.
-    # > launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
+    # > launchctl unload \
+    # >     -w '/System/Library/LaunchAgents/com.apple.rcd.plist' \
+    # >     2> /dev/null
 
-    # Messages {{{1
-    # ==============================================================================
+    # Messages {{{2
+    # --------------------------------------------------------------------------
 
     # Disable automatic emoji substitution (i.e. use plain text smileys).
-    defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add 'automaticEmojiSubstitutionEnablediMessage' -bool false
+    defaults write \
+        'com.apple.messageshelper.MessageController' \
+        'SOInputLineSettings' \
+        -dict-add 'automaticEmojiSubstitutionEnablediMessage' \
+        -bool false
 
     # Disable smart quotes as it's annoying for messages that contain code.
-    defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add 'automaticQuoteSubstitutionEnabled' -bool false
+    defaults write \
+        'com.apple.messageshelper.MessageController' \
+        'SOInputLineSettings' \
+        -dict-add 'automaticQuoteSubstitutionEnabled' \
+        -bool false
 
     # Disable continuous spell checking.
-    defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add 'continuousSpellCheckingEnabled' -bool false
+    defaults write \
+        'com.apple.messageshelper.MessageController' \
+        'SOInputLineSettings' \
+        -dict-add 'continuousSpellCheckingEnabled' \
+        -bool false
 
-    # Photos {{{1
-    # ==============================================================================
+    # Photos {{{2
+    # --------------------------------------------------------------------------
 
     # Prevent Photos from opening automatically when devices are plugged in.
-    defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+    defaults -currentHost write \
+        'com.apple.ImageCapture' \
+        'disableHotPlug' \
+        -bool true
 
-    # TextEdit {{{1
-    # ==============================================================================
+    # TextEdit {{{2
+    # --------------------------------------------------------------------------
 
     # Use plain text mode for new TextEdit documents.
-    defaults write com.apple.TextEdit RichText -int 0
+    defaults write \
+        'com.apple.TextEdit' \
+        'RichText' \
+        -int 0
 
     # Open and save files as UTF-8 in TextEdit.
-    defaults write com.apple.TextEdit PlainTextEncoding -int 4
-    defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+    defaults write \
+        'com.apple.TextEdit' \
+        'PlainTextEncoding' \
+        -int 4
+    defaults write \
+        'com.apple.TextEdit' \
+        'PlainTextEncodingForWrite' \
+        -int 4
 
-    # Google Chrome and Google Chrome Canary {{{1
-    # ==============================================================================
+    # Google Chrome and Google Chrome Canary {{{2
+    # --------------------------------------------------------------------------
 
     # Disable the all too sensitive backswipe on trackpads.
-    defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
-    defaults write com.google.Chrome.canary AppleEnableSwipeNavigateWithScrolls -bool false
+    defaults write \
+        'com.google.Chrome' \
+        'AppleEnableSwipeNavigateWithScrolls' \
+        -bool false
+    defaults write \
+        'com.google.Chrome.canary' \
+        'AppleEnableSwipeNavigateWithScrolls' \
+        -bool false
 
     # Disable the all too sensitive backswipe on Magic Mouse.
-    defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
-    defaults write com.google.Chrome.canary AppleEnableMouseSwipeNavigateWithScrolls -bool false
+    defaults write \
+        'com.google.Chrome' \
+        'AppleEnableMouseSwipeNavigateWithScrolls' \
+        -bool false
+    defaults write \
+        'com.google.Chrome.canary' \
+        'AppleEnableMouseSwipeNavigateWithScrolls' \
+        -bool false
 
     # Use the system-native print preview dialog.
-    defaults write com.google.Chrome DisablePrintPreview -bool true
-    defaults write com.google.Chrome.canary DisablePrintPreview -bool true
+    defaults write \
+        'com.google.Chrome' \
+        'DisablePrintPreview' \
+        -bool true
+    defaults write \
+        'com.google.Chrome.canary' \
+        'DisablePrintPreview' \
+        -bool true
 
     # Expand the print dialog by default.
-    defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
-    defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
+    defaults write \
+        'com.google.Chrome' \
+        'PMPrintingExpandedStateForPrint2' \
+        -bool true
+    defaults write \
+        'com.google.Chrome.canary' \
+        'PMPrintingExpandedStateForPrint2' \
+        -bool true
 
-    # GPGMail {{{1
-    # ==============================================================================
+    # GPGMail {{{2
+    # --------------------------------------------------------------------------
 
     # Disable signing emails by default
-    defaults write ~/Library/Preferences/org.gpgtools.gpgmail SignNewEmailsByDefault -bool false
+    defaults write \
+        "${HOME}/Library/Preferences/org.gpgtools.gpgmail" \
+        'SignNewEmailsByDefault' \
+        -bool false
 
     # Tweetbot {{{2
     # --------------------------------------------------------------------------
