@@ -8,7 +8,7 @@ koopa::assert_are_identical() { # {{{1
     koopa::assert_has_args_eq "$#" 2
     if [[ "${1:?}" != "${2:?}" ]]
     then
-        koopa::stop "\"${1}\" is not identical to \"${2}\"."
+        koopa::stop "'${1}' is not identical to '${2}'."
     fi
     return 0
 }
@@ -19,9 +19,9 @@ koopa::assert_are_not_identical() { # {{{1
     # @note Updated 2020-07-03.
     # """
     koopa::assert_has_args_eq "$#" 2
-    if [[ "${1:?}" = "${2:?}" ]]
+    if [[ "${1:?}" == "${2:?}" ]]
     then
-        koopa::stop "\"${1}\" is identical to \"${2}\"."
+        koopa::stop "'${1}' is identical to '${2}'."
     fi
     return 0
 }
@@ -29,7 +29,7 @@ koopa::assert_are_not_identical() { # {{{1
 koopa::assert_has_args() { # {{{1
     # """
     # Assert that non-zero arguments have been passed.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-20.
     # Does not check for empty strings.
     # """
     if [[ "$#" -ne 1 ]]
@@ -42,7 +42,7 @@ koopa::assert_has_args() { # {{{1
     then
         koopa::stop \
             'Required arguments missing.' \
-            'Run with "--help" flag for usage details.'
+            "Run with '--help' flag for usage details."
     fi
     return 0
 }
@@ -125,7 +125,7 @@ koopa::assert_has_file_ext() { # {{{1
     do
         if ! koopa::has_file_ext "$arg"
         then
-            koopa::stop "No file extension: \"${arg}\"."
+            koopa::stop "No file extension: '${arg}'."
         fi
     done
     return 0
@@ -204,7 +204,7 @@ koopa::assert_has_monorepo() { # {{{1
     koopa::assert_has_no_args "$#"
     if ! koopa::has_monorepo
     then
-        koopa::stop "No monorepo at \"$(koopa::monorepo_prefix)\"."
+        koopa::stop "No monorepo at '$(koopa::monorepo_prefix)'."
     fi
     return 0
 }
@@ -224,7 +224,7 @@ koopa::assert_has_no_args() { # {{{1
     then
         koopa::stop \
             'Arguments are not allowed.' \
-            'Run with "--help" flag for usage details.'
+            "Run with '--help' flag for usage details."
     fi
     return 0
 }
@@ -312,7 +312,7 @@ koopa::assert_is_cellar() { # {{{1
     do
         if ! koopa::is_cellar "$arg"
         then
-            koopa::stop "Not in cellar: \"${arg}\"."
+            koopa::stop "Not in cellar: '${arg}'."
         fi
     done
     return 0
@@ -343,7 +343,7 @@ koopa::assert_is_current_version() { # {{{1
         if ! koopa::is_installed "$arg"
         then
             expected="$(koopa::variable "$arg")"
-            koopa::stop "\"${arg}\" is not current; expecting \"${expected}\"."
+            koopa::stop "'${arg}' is not current; expecting '${expected}'."
         fi
     done
     return 0
@@ -373,7 +373,7 @@ koopa::assert_is_dir() { # {{{1
     do
         if [[ ! -d "$arg" ]]
         then
-            koopa::stop "Not directory: \"${arg}\"."
+            koopa::stop "Not directory: '${arg}'."
         fi
     done
     return 0
@@ -390,7 +390,7 @@ koopa::assert_is_executable() { # {{{1
     do
         if [[ ! -x "$arg" ]]
         then
-            koopa::stop "Not executable: \"${arg}\"."
+            koopa::stop "Not executable: '${arg}'."
         fi
     done
     return 0
@@ -409,7 +409,7 @@ koopa::assert_is_existing() { # {{{1
     do
         if [[ ! -e "$arg" ]]
         then
-            koopa::stop "Does not exist: \"${arg}\"."
+            koopa::stop "Does not exist: '${arg}'."
         fi
     done
     return 0
@@ -439,7 +439,7 @@ koopa::assert_is_file() { # {{{1
     do
         if [[ ! -f "$arg" ]]
         then
-            koopa::stop "Not file: \"${arg}\"."
+            koopa::stop "Not file: '${arg}'."
         fi
     done
     return 0
@@ -472,7 +472,7 @@ koopa::assert_is_function() { # {{{1
     do
         if ! koopa::is_function "$arg"
         then
-            koopa::stop "Not function: \"${arg}\"."
+            koopa::stop "Not function: '${arg}'."
         fi
     done
     return 0
@@ -486,7 +486,7 @@ koopa::assert_is_git() { # {{{1
     koopa::assert_has_no_args "$#"
     if ! koopa::is_git
     then
-        koopa::stop "Not a git repo: \"${PWD:?}\"."
+        koopa::stop "Not a git repo: '${PWD:?}'."
     fi
     return 0
 }
@@ -526,7 +526,7 @@ koopa::assert_is_installed() { # {{{1
     do
         if ! koopa::is_installed "$arg"
         then
-            koopa::stop "Not installed: \"${arg}\"."
+            koopa::stop "Not installed: '${arg}'."
         fi
     done
     return 0
@@ -569,7 +569,7 @@ koopa::assert_is_non_existing() { # {{{1
     do
         if [[ -e "$arg" ]]
         then
-            koopa::stop "Exists: \"${arg}\"."
+            koopa::stop "Exists: '${arg}'."
         fi
     done
     return 0
@@ -586,7 +586,7 @@ koopa::assert_is_nonzero_file() { # {{{1
     do
         if [[ ! -s "$arg" ]]
         then
-            koopa::stop "Not non-zero file: \"${arg}\"."
+            koopa::stop "Not non-zero file: '${arg}'."
         fi
     done
     return 0
@@ -603,7 +603,7 @@ koopa::assert_is_not_dir() { # {{{1
     do
         if [[ -d "$arg" ]]
         then
-            koopa::stop "Directory exists: \"${arg}\"."
+            koopa::stop "Directory exists: '${arg}'."
         fi
     done
     return 0
@@ -620,7 +620,7 @@ koopa::assert_is_not_file() { # {{{1
     do
         if [[ -f "$arg" ]]
         then
-            koopa::stop "File exists: \"${arg}\"."
+            koopa::stop "File exists: '${arg}'."
         fi
     done
     return 0
@@ -637,7 +637,7 @@ koopa::assert_is_not_installed() { # {{{1
     do
         if koopa::is_installed "$arg"
         then
-            koopa::stop "Installed: \"${arg}\"."
+            koopa::stop "Installed: '${arg}'."
         fi
     done
     return 0
@@ -719,7 +719,7 @@ koopa::assert_is_not_symlink() { # {{{1
     do
         if [[ -L "$arg" ]]
         then
-            koopa::stop "Symlink exists: \"${arg}\"."
+            koopa::stop "Symlink exists: '${arg}'."
         fi
     done
     return 0
@@ -764,7 +764,7 @@ koopa::assert_is_readable() { # {{{1
     do
         if [[ ! -r "$arg" ]]
         then
-            koopa::stop "Not readable: \"${arg}\"."
+            koopa::stop "Not readable: '${arg}'."
         fi
     done
     return 0
@@ -783,7 +783,7 @@ koopa::assert_is_root() { # {{{1
     return 0
 }
 
-koopa::assert_is_set() {
+koopa::assert_is_set() { # {{{1
     # """
     # Assert that variables are set (and not unbound).
     # @note Updated 2020-03-04.
@@ -803,7 +803,7 @@ koopa::assert_is_set() {
     do
         if ! koopa::is_set "$arg"
         then
-            koopa::stop "\"${arg}\" is unset."
+            koopa::stop "'${arg}' is unset."
         fi
     done
     return 0
@@ -820,7 +820,7 @@ koopa::assert_is_symlink() { # {{{1
     do
         if [[ ! -L "$arg" ]]
         then
-            koopa::stop "Not symlink: \"${arg}\"."
+            koopa::stop "Not symlink: '${arg}'."
         fi
     done
     return 0
@@ -851,7 +851,7 @@ koopa::assert_is_writable() { # {{{1
     do
         if [[ ! -r "$arg" ]]
         then
-            koopa::stop "Not writable: \"${arg}\"."
+            koopa::stop "Not writable: '${arg}'."
         fi
     done
     return 0
@@ -868,7 +868,7 @@ koopa::assert_is_matching_fixed() { # {{{1
     pattern="${2:?}"
     if ! koopa::str_match "$string" "$pattern"
     then
-        koopa::stop "\"${string}\" doesn't match \"${pattern}\"."
+        koopa::stop "'${string}' doesn't match '${pattern}'."
     fi
     return 0
 }
@@ -884,7 +884,7 @@ koopa::assert_is_matching_regex() { # {{{1
     pattern="${2:?}"
     if ! koopa::str_match_regex "$string" "$pattern"
     then
-        koopa::stop "\"${string}\" doesn't match regex \"${pattern}\"."
+        koopa::stop "'${string}' doesn't match regex '${pattern}'."
     fi
     return 0
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_lmod() {
+koopa::install_lmod() { # {{{1
     # """
     # Install Lmod.
     # @note Updated 2020-07-16.

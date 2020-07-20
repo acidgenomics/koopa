@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::opensuse_install_base() {
+koopa::opensuse_install_base() { # {{{1
     # """
     # Install openSUSE base system.
     # @note Updated 2020-07-02.
@@ -10,7 +10,7 @@ koopa::opensuse_install_base() {
     # """
     local name_fancy packages
     koopa::assert_is_installed sudo zypper
-    name_fancy="openSUSE base system"
+    name_fancy='openSUSE base system'
     koopa::install_start "$name_fancy"
     sudo zypper refresh
     sudo zypper --non-interactive update

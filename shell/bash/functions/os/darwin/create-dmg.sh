@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_create_dmg() {
+koopa::macos_create_dmg() { # {{{1
     # """
     # Create DMG image.
     # @note Updated 2020-07-15.

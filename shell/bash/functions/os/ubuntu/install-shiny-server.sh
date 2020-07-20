@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::ubuntu_install_shiny_server() {
+koopa::ubuntu_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Ubuntu.
     # @note Updated 2020-07-14.
@@ -42,7 +42,7 @@ koopa::ubuntu_install_shiny_server() {
     tmp_dir="$(koopa::tmp_dir)"
     if ! koopa::is_r_package_installed shiny
     then
-        koopa::h2 'Installing "shiny" R package.'
+        koopa::h2 'Installing shiny R package.'
         (
             Rscript -e 'install.packages("shiny")'
         ) 2>&1 | tee "$(koopa::tmp_log_file)"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-_koopa_activate() {
+_koopa_activate() { # {{{1
     case "${1:-}" in
         --help|-h)
             _koopa_activate_usage
@@ -136,7 +136,7 @@ _koopa_activate() {
     return 0
 }
 
-_koopa_activate_duration_start() {
+_koopa_activate_duration_start() { # {{{1
     [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
     _koopa_is_linux && _koopa_is_installed bc date || return 0
     KOOPA_DURATION_START="$(date -u +%s%3N)"
@@ -144,7 +144,7 @@ _koopa_activate_duration_start() {
     return 0
 }
 
-_koopa_activate_duration_stop() {
+_koopa_activate_duration_stop() { # {{{1
     [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
     _koopa_is_linux && _koopa_is_installed bc date || return 0
     KOOPA_DURATION_STOP="$(date -u +%s%3N)"
@@ -157,7 +157,7 @@ _koopa_activate_duration_stop() {
     return 0
 }
 
-_koopa_activate_export_force() {
+_koopa_activate_export_force() { # {{{1
     [ -n "${KOOPA_FORCE:-}" ] && return 0
     case "${force:-}" in
         0|false)
@@ -175,7 +175,7 @@ _koopa_activate_export_force() {
     return 0
 }
 
-_koopa_activate_export_minimal() {
+_koopa_activate_export_minimal() { # {{{1
     [ -n "${KOOPA_MINIMAL:-}" ] && return 0
     case "${minimal:-}" in
         0|false)
@@ -200,7 +200,7 @@ _koopa_activate_export_minimal() {
     return 0
 }
 
-_koopa_activate_export_prefix() {
+_koopa_activate_export_prefix() { # {{{1
     case "${KOOPA_SHELL:?}" in
         bash)
             # shellcheck disable=SC2039
@@ -215,8 +215,8 @@ _koopa_activate_export_prefix() {
             # POSIX doesn't support file path resolution of sourced dot scripts.
             if [ ! -d "${KOOPA_PREFIX:?}" ] && _koopa_is_interactive
             then
-                printf "ERROR: Failed to locate koopa activation script.\n" >&2
-                printf "Required 'KOOPA_PREFIX' variable is unset.\n" >&2
+                printf 'ERROR: Failed to locate koopa activation script.\n' >&2
+                printf 'Required KOOPA_PREFIX variable is unset.\n' >&2
                 return 1
             fi
             KOOPA_ACTIVATE_SCRIPT="${KOOPA_PREFIX}/activate"
@@ -235,14 +235,14 @@ _koopa_activate_export_prefix() {
     return 0
 }
 
-_koopa_activate_export_subshell() {
+_koopa_activate_export_subshell() { # {{{1
     [ -n "${KOOPA_SUBSHELL:-}" ] && return 0
     KOOPA_SUBSHELL=0
     export KOOPA_SUBSHELL
     return 0
 }
 
-_koopa_activate_export_test() {
+_koopa_activate_export_test() { # {{{1
     [ -n "${KOOPA_TEST:-}" ] && return 0
     case "${test:-}" in
         0|false)
@@ -260,7 +260,7 @@ _koopa_activate_export_test() {
     return 0
 }
 
-_koopa_activate_skip_check() {
+_koopa_activate_skip_check() { # {{{1
     [ -n "${KOOPA_FORCE:-}" ] && return 0
     [ -n "${KOOPA_SKIP:-}" ] || return 1
     _koopa_is_interactive || return 1
@@ -270,7 +270,7 @@ _koopa_activate_skip_check() {
     return 0
 }
 
-_koopa_activate_header() {
+_koopa_activate_header() { # {{{1
     # shellcheck disable=SC2039
     local header
     # Load shell header file, which will source required functions.
@@ -284,7 +284,7 @@ _koopa_activate_header() {
     return 0
 }
 
-_koopa_activate_usage() {
+_koopa_activate_usage() { # {{{1
     cat << END
 usage: activate [--help|-h]
 
@@ -329,16 +329,16 @@ note:
 END
 }
 
-_koopa_export_user() {
+_koopa_export_user() { # {{{1
     [ -z "${USER:-}" ] && USER="$(id -un)" && export USER
     return 0
 }
 
-_koopa_is_interactive() {
+_koopa_is_interactive() { # {{{1
     printf '%s\n' "$-" | grep -q 'i'
 }
 
-_koopa_is_koopa_active() {
+_koopa_is_koopa_active() { # {{{1
     type '_koopa_prefix' 2>/dev/null | grep -q 'function'
 }
 
@@ -346,27 +346,27 @@ _koopa_is_linux() { # {{{1
     [ "$(uname -s)" = 'Linux' ]
 }
 
-_koopa_is_subshell() {
+_koopa_is_subshell() { # {{{1
     [ "${KOOPA_SUBSHELL:-0}" -eq 1 ]
 }
 
-_koopa_is_user_named_admin() {
+_koopa_is_user_named_admin() { # {{{1
     printf '%s\n' "${USER:?}" | grep -Eq '^admin'
 }
 
-_koopa_is_user_skip() {
+_koopa_is_user_skip() { # {{{1
     [ -z "${KOOPA_USERS_SKIP:-}" ] && return 1
     printf '%s\n' "${KOOPA_USERS_SKIP:?}" | grep -Eq "\b${USER:?}\b"
 }
 
-_koopa_preflight_checks() {
+_koopa_preflight_checks() { # {{{1
     _koopa_preflight_os_check || return 1
     _koopa_preflight_shell_check || return 1
     _koopa_preflight_zsh_check || return 1
     return 0
 }
 
-_koopa_preflight_os_check() {
+_koopa_preflight_os_check() { # {{{1
     case "$(uname -s)" in
         Darwin)
             ;;
@@ -380,7 +380,7 @@ _koopa_preflight_os_check() {
     return 0
 }
 
-_koopa_preflight_shell_check() {
+_koopa_preflight_shell_check() { # {{{1
     # Refer to '_koopa_shell' function for additional details.
     if [ -n "${BASH_VERSION:-}" ]
     then
@@ -423,7 +423,7 @@ END
     return 0
 }
 
-_koopa_preflight_zsh_check() {
+_koopa_preflight_zsh_check() { # {{{1
     # Zsh currently requires presence of '~/.zshrc' for clean activation.
     #
     # Note that sourcing in '/etc/profile' doesn't return script path in
@@ -447,7 +447,7 @@ _koopa_preflight_zsh_check() {
     return 0
 }
 
-_koopa_realpath() {
+_koopa_realpath() { # {{{1
     if [ "$(uname -s)" = 'Darwin' ]
     then
         perl -MCwd -e 'print Cwd::abs_path shift' "$1"

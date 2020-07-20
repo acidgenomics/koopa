@@ -16,8 +16,9 @@ koopa::install_pivpn() { # {{{1
         koopa::cd "$tmp_dir"
         file='pivpn.sh'
         url='https://install.pivpn.io'
+        koopa::download "$url" "$file"
         chmod +x "$file"
-        "$file"
+        "./${file}"
     )
     koopa::rm "$tmp_dir"
     koopa::install_success "$name_fancy"

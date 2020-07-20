@@ -1,7 +1,8 @@
 .TH CREATE-DMG 1 2019-11-09 Bash
 .SH NAME
 copy-bam-files \-
-Copy BAM and BAI index sidecar files from a source directory to a target directory
+Copy BAM and BAI index sidecar files from a source directory to a target
+directory
 .SH SYNOPSIS
 .B copy-bam-files
 .I source_dir
@@ -20,8 +21,8 @@ Azure Files and Windows CIFS/SMB shares.
 We're allowing symlinks in the search path (via 'find -L' internally).
 .PP
 Note that we're ignoring some bcbio output cruft here.
-Skip transfer of BAM files in the 'work/' directory, and don't copy any
-of the transcriptome BAMs automatically.
+Skip transfer of BAM files in the 'work/' directory, and don't copy any of the
+transcriptome BAMs automatically.
 .PP
 Ignore list:
 .IP
@@ -29,8 +30,8 @@ Ignore list:
 .IP
 \(bu '*-transcriptome.bam'
 .PP
-rsync works more reliably for resuming interrupted transfers. Currently
-using this to transfer to Azure Files.
+rsync works more reliably for resuming interrupted transfers.
+Currently using this to transfer to Azure Files.
 .PP
 Alternate method:
 .RS

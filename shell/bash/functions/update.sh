@@ -16,8 +16,8 @@ koopa::update() { # {{{1
         url="$(koopa::url)"
         koopa::note \
             "Stable release of koopa ${version} detected." \
-            'To update, first run the "uninstall" script.' \
-            "Then run the default install command at \"${url}\"."
+            "To update, first run the 'uninstall' script." \
+            "Then run the default install command at '${url}'."
         return 1
     fi
     config_prefix="$(koopa::config_prefix)"
@@ -77,7 +77,7 @@ koopa::update() { # {{{1
     then
         user=1
     fi
-    koopa::h1 "Updating koopa at \"${koopa_prefix}\"."
+    koopa::h1 "Updating koopa at '${koopa_prefix}'."
     koopa::sys_set_permissions -r "$koopa_prefix"
     if [[ "$rsync" -eq 0 ]]
     then
@@ -91,7 +91,7 @@ koopa::update() { # {{{1
         then
             (
                 dotfiles_prefix="$(koopa::dotfiles_prefix)"
-                cd "$dotfiles_prefix" || exit 1
+                koopa::cd "$dotfiles_prefix"
                 # Preivously, this repo was at 'mjsteinbaugh/dotfiles'.
                 koopa::git_set_remote_url \
                     'https://github.com/acidgenomics/dotfiles.git'
@@ -101,7 +101,6 @@ koopa::update() { # {{{1
         fi
         koopa::sys_set_permissions -r "$koopa_prefix"
     fi
-    koopa::update_xdg_config
     if [[ "$system" -eq 1 ]]
     then
         koopa::h2 'Updating system configuration.'
@@ -177,4 +176,3 @@ koopa::update() { # {{{1
     [[ "$system" -eq 1 ]] && koopa::koopa check-system
     return 0
 }
-

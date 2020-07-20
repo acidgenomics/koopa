@@ -161,7 +161,7 @@ _koopa_os_string() { # {{{1
     # Returns 'ID' and major 'VERSION_ID' separated by a '-'.
     #
     # Always returns lowercase, with unique names for Linux distros
-    # (e.g. "rhel-8").
+    # (e.g. 'rhel-8').
     #
     # Alternatively, use hostnamectl.
     # https://linuxize.com/post/how-to-check-linux-version/
@@ -279,7 +279,7 @@ _koopa_variable() { # {{{1
     value="$( \
         _koopa_print "$value" \
             | head -n 1 \
-            | cut -d "\"" -f 2 \
+            | cut -d '"' -f 2 \
     )"
     [ -n "$value" ] || return 1
     _koopa_print "$value"

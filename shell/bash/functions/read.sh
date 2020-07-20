@@ -9,13 +9,13 @@ koopa::_int_to_yn() { # {{{1
     koopa::assert_has_args_eq "$#" 1
     case "${1:?}" in
         0)
-            x="no"
+            x='no'
             ;;
         1)
-            x="yes"
+            x='yes'
             ;;
         *)
-            koopa::stop "Invalid choice: requires 0 or 1."
+            koopa::stop 'Invalid choice: requires 0 or 1.'
             ;;
     esac
     koopa::print "$x"
@@ -25,14 +25,14 @@ koopa::_int_to_yn() { # {{{1
 koopa::_read_prompt_yn() { # {{{1
     # """
     # Show colorful yes/no default choices in prompt.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-20.
     # """
     local no no_default prompt yes yes_default yn
     koopa::assert_has_args_eq "$#" 2
-    no="$(koopa::print_red "no")"
-    no_default="$(koopa::print_red_bold "NO")"
-    yes="$(koopa::print_green "yes")"
-    yes_default="$(koopa::print_green_bold "YES")"
+    no="$(koopa::print_red 'no')"
+    no_default="$(koopa::print_red_bold 'NO')"
+    yes="$(koopa::print_green 'yes')"
+    yes_default="$(koopa::print_green_bold 'YES')"
     prompt="${1:?}"
     case "${2:?}" in
         0)
@@ -42,7 +42,7 @@ koopa::_read_prompt_yn() { # {{{1
             yn="${yes_default}/${no}"
             ;;
         *)
-            koopa::stop "Invalid choice: requires 0 or 1."
+            koopa::stop 'Invalid choice: requires 0 or 1.'
             ;;
     esac
     koopa::print "${prompt}? [${yn}]: "

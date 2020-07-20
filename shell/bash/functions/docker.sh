@@ -24,8 +24,8 @@ koopa::docker_build() { # {{{1
     koopa::assert_is_dir "$docker_dir"
     delete=0
     push=1
-    server="docker.io"
-    tag="latest"
+    server='docker.io'
+    tag='latest'
     pos=()
     while (("$#"))
     do
@@ -79,19 +79,19 @@ koopa::docker_build() { # {{{1
     # e.g. acidgenomics/debian
     image="${1:?}"
     # Assume acidgenomics recipe by default.
-    if ! koopa::str_match "$image" "/"
+    if ! koopa::str_match "$image" '/'
     then
         image="acidgenomics/${image}"
     fi
     # Handle tag support, if necessary.
-    if koopa::str_match "$image" ":"
+    if koopa::str_match "$image" ':'
     then
         tag="$(koopa::print "$image" | cut -d ':' -f 2)"
         image="$(koopa::print "$image" | cut -d ':' -f 1)"
     fi
     source_image="${docker_dir}/${image}/${tag}"
     koopa::assert_is_dir "$source_image"
-    today="$(date "+%Y%m%d")"
+    today="$(date '+%Y%m%d')"
     if [[ -L "$source_image" ]]
     then
         symlink_tag="$(basename "$source_image")"
@@ -150,7 +150,7 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_batch_images() { # {{{1
     # """
     # Build all AWS Batch Docker images.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-20.
     # """
     local batch_dirs flags force images prefix
     koopa::assert_is_installed docker-build-all-images
@@ -170,12 +170,12 @@ koopa::docker_build_all_batch_images() { # {{{1
     flags=()
     if [[ "$force" -eq 1 ]]
     then
-        flags+=("--force")
+        flags+=('--force')
     fi
     prefix="$(koopa::docker_prefix)"
     batch_dirs="$( \
         find "${prefix}/acidgenomics" \
-            -name "aws-batch*" \
+            -name 'aws-batch*' \
             -type d \
         | sort \
     )"
@@ -234,36 +234,36 @@ koopa::docker_build_all_images() { # {{{1
         images=()
         # Recommended Linux images.
         images+=(
-            acidgenomics/debian
-            acidgenomics/ubuntu
-            acidgenomics/fedora
-            acidgenomics/centos
+            'acidgenomics/debian'
+            'acidgenomics/ubuntu'
+            'acidgenomics/fedora'
+            'acidgenomics/centos'
         )
         # Extra Linux images.
         images+=(
-            acidgenomics/alpine
-            acidgenomics/amzn
-            acidgenomics/arch
-            acidgenomics/opensuse
+            'acidgenomics/alpine'
+            'acidgenomics/amzn'
+            'acidgenomics/arch'
+            'acidgenomics/opensuse'
         )
         # Minimal bioinformatics images.
         images+=(
-            acidgenomics/miniconda3
-            acidgenomics/biocontainers
+            'acidgenomics/miniconda3'
+            'acidgenomics/biocontainers'
         )
         # R images.
         images+=(
-            acidgenomics/bioconductor
-            acidgenomics/r-basejump
-            acidgenomics/r-bcbiornaseq
-            acidgenomics/r-bcbiosinglecell
-            acidgenomics/r-rnaseq
-            acidgenomics/r-singlecell
+            'acidgenomics/bioconductor'
+            'acidgenomics/r-basejump'
+            'acidgenomics/r-bcbiornaseq'
+            'acidgenomics/r-bcbiosinglecell'
+            'acidgenomics/r-rnaseq'
+            'acidgenomics/r-singlecell'
         )
         # Nextflow images.
         nextflow_dirs="$( \
             find "$prefix" \
-                -name "nextflow-*" \
+                -name 'nextflow-*' \
                 -type d \
                 | sort \
         )"
@@ -274,7 +274,7 @@ koopa::docker_build_all_images() { # {{{1
         # Ensure we build these after the other images.
         batch_dirs="$( \
             find "$prefix" \
-                -name "aws-batch*" \
+                -name 'aws-batch*' \
                 -type d \
                 | sort \
         )"
@@ -286,9 +286,9 @@ koopa::docker_build_all_images() { # {{{1
         if [[ "$extra" -eq 1 ]]
         then
             images+=(
-                acidgenomics/bcbio
-                acidgenomics/rnaeditingindexer
-                acidgenomics/maestro
+                'acidgenomics/bcbio'
+                'acidgenomics/rnaeditingindexer'
+                'acidgenomics/maestro'
             )
     fi
     else
@@ -312,7 +312,7 @@ koopa::docker_build_all_images() { # {{{1
         docker-build-all-tags "$image"
     done
     docker system prune --all --force
-    koopa::success "All Docker images built successfully."
+    koopa::success 'All Docker images built successfully.'
     return 0
 }
 
@@ -346,7 +346,7 @@ koopa::docker_push() { # {{{1
     server='docker.io'
     for pattern in "$@"
     do
-        koopa::h1 "Pushing images matching \"${pattern}\" to ${server}."
+        koopa::h1 "Pushing images matching '${pattern}' to ${server}."
         koopa::assert_is_matching_regex "$pattern" '^.+/.+$'
         json="$(docker inspect --format="{{json .RepoTags}}" "$pattern")"
         # Convert JSON to lines.
@@ -363,11 +363,11 @@ koopa::docker_push() { # {{{1
         if ! koopa::is_array_non_empty "${images[@]}"
         then
             docker image ls
-            koopa::stop "\"${image}\" failed to match any images."
+            koopa::stop "'${image}' failed to match any images."
         fi
         for image in "${images[@]}"
         do
-            koopa::h2 "Pushing \"${image}\"."
+            koopa::h2 "Pushing '${image}'."
             docker push "${server}/${image}"
         done
     done
@@ -401,7 +401,7 @@ koopa::docker_run() { # {{{1
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
     bash=0
-    workdir="/mnt/work"
+    workdir='/mnt/work'
     pos=()
     while (("$#"))
     do
@@ -436,15 +436,15 @@ koopa::docker_run() { # {{{1
     workdir="$(koopa::strip_trailing_slash "$workdir")"
     docker pull "$image"
     flags=(
-        "--interactive"
-        "--tty"
+        "$image"
         "--volume=${PWD}:${workdir}"
         "--workdir=${workdir}"
-        "$image"
+        '--interactive'
+        '--tty'
     )
     if [[ "$bash" -eq 1 ]]
     then
-        flags+=("bash" "-il")
+        flags+=('bash' '-il')
     fi
     docker run "${flags[@]}"
     return 0
@@ -453,23 +453,23 @@ koopa::docker_run() { # {{{1
 koopa::docker_run_wine() { # {{{1
     # """
     # Run Wine Docker image.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-20.
     #
     # Allow access from localhost.
     # > xhost + "$HOSTNAME"
     # """
     local image workdir
     koopa::assert_is_installed docker xhost
-    image="acidgenomics/wine"
-    workdir="/mnt/work"
-    xhost + 127.0.0.1
+    image='acidgenomics/wine'
+    workdir='/mnt/work'
+    xhost + '127.0.0.1'
     docker run \
-        --privileged \
-        -e DISPLAY=host.docker.internal:0 \
         --interactive \
+        --privileged \
         --tty \
         --volume="${PWD}:${workdir}" \
         --workdir="${workdir}" \
+        -e 'DISPLAY=host.docker.internal:0' \
         "$image" \
         "$@"
     return 0
@@ -486,9 +486,9 @@ koopa::docker_tag() { # {{{1
     image="${1:?}"
     source_tag="${2:?}"
     dest_tag="${3:-latest}"
-    server="docker.io"
+    server='docker.io'
     # Assume acidgenomics recipe by default.
-    if ! koopa::str_match "$image" "/"
+    if ! koopa::str_match "$image" '/'
     then
         image="acidgenomics/${image}"
     fi
@@ -513,23 +513,23 @@ koopa::is_docker_build_today() { # {{{1
     local image json timestamp today utc_timestamp
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    today="$(date "+%Y-%m-%d")"
+    today="$(date '+%Y-%m-%d')"
     for image in "$@"
     do
         docker pull "$image" >/dev/null
         json="$( \
             docker inspect \
-            --format="{{json .Created}}" \
+            --format='{{json .Created}}' \
             "$image" \
         )"
         # Note that we need to convert UTC to local time.
         utc_timestamp="$( \
             koopa::print "$json" \
-                | grep -Eo "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" \
-                | sed "s/T/ /" \
-                | sed "s/\$/ UTC/"
+                | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
+                | sed 's/T/ /' \
+                | sed 's/\$/ UTC/'
         )"
-        timestamp="$(date -d "$utc_timestamp" "+%Y-%m-%d")"
+        timestamp="$(date -d "$utc_timestamp" '+%Y-%m-%d')"
         [[ "$timestamp" != "$today" ]] && return 1
     done
     return 0

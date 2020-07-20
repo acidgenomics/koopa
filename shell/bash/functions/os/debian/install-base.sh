@@ -79,8 +79,8 @@ koopa::debian_install_base() { # {{{1
     if koopa::is_ubuntu && ! koopa::str_match "$enabled_repos" 'universe'
     then
         koopa::stop \
-            'The Ubuntu "universe" repo is disabled.' \
-            'Check "/etc/apt/sources.list".'
+            "The Ubuntu 'universe' repo is disabled." \
+            "Check '/etc/apt/sources.list'."
     fi
 
     # Upgrade {{{2
@@ -88,7 +88,7 @@ koopa::debian_install_base() { # {{{1
 
     if [[ "$upgrade" -eq 1 ]]
     then
-        koopa::h2 'Upgrading install via "dist-upgrade".'
+        koopa::h2 "Upgrading install via 'dist-upgrade'."
         koopa::apt_get dist-upgrade
     fi
 
@@ -286,7 +286,7 @@ koopa::debian_install_base() { # {{{1
 
     if [[ "$extra" -eq 1 ]]
     then
-        koopa::h2 "Installing extra recommended packages."
+        koopa::h2 'Installing extra recommended packages.'
         pkgs+=(
             # default-jdk
             'alien'

@@ -29,14 +29,12 @@
 koopa::assert_is_not_installed autojump
 koopa::assert_is_not_dir "${HOME}/.autojump"
 koopa::assert_is_current_version python
-
 file="release-v${version}.tar.gz"
 url="https://github.com/wting/autojump/archive/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "autojump-release-v${version}" || exit 1
+koopa::cd "autojump-release-v${version}"
 ./install.py \
     --destdir "$prefix" \
-    --prefix="" \
-    --zshshare "share/zsh/site-functions"
-
+    --prefix= \
+    --zshshare 'share/zsh/site-functions'

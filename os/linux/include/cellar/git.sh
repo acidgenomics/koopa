@@ -15,10 +15,10 @@ file="${name}-${version}.tar.gz"
 url="https://mirrors.edge.kernel.org/pub/software/scm/${name}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "git-${version}" || exit 1
+koopa::cd "git-${version}"
 make configure
 ./configure \
     --prefix="$prefix" \
-    --with-openssl="/bin/openssl"
+    --with-openssl='/bin/openssl'
 make --jobs="$jobs" V=1
 make install

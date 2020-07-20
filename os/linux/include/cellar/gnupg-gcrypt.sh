@@ -8,7 +8,7 @@ then
     gpg --verify "${name}-${version}.tar.bz2.sig"
 fi
 koopa::extract "${name}-${version}.tar.bz2"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./configure --prefix="$prefix"
 make --jobs="$jobs"
 make install
