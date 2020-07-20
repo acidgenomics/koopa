@@ -37,14 +37,14 @@ koopa::install_pip() { # {{{1
     python="${1:-python3}"
     if ! koopa::is_installed "$python"
     then
-        koopa::warning "Python (\"${python}\") is not installed."
+        koopa::warning "Python ('${python}') is not installed."
         return 1
     fi
     if [[ "$reinstall" -eq 0 ]]
     then
         if koopa::is_python_package_installed --python="$python" "$name"
         then
-            koopa::note "Python package \"${name}\" is already installed."
+            koopa::note "Python package '${name}' is already installed."
             return 0
         fi
     fi

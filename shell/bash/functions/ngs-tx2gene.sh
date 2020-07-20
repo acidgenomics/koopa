@@ -11,7 +11,7 @@ koopa::tx2gene_from_ensembl_fasta() { # {{{1
     koopa::assert_is_not_file "$output_file"
     fasta_file_bn="$(basename "$fasta_file")"
     output_file_bn="$(basename "$output_file")"
-    koopa::h1 "Generating \"${output_file_bn}\" from \"${fasta_file_bn}\"."
+    koopa::h1 "Generating '${output_file_bn}' from '${fasta_file_bn}'."
     gunzip -c "$fasta_file" \
         | grep '>' \
         | cut -d ' ' -f1,4 \
@@ -35,7 +35,7 @@ koopa::tx2gene_from_flybase_fasta() { # {{{1
     koopa::assert_is_not_file "$output_file"
     fasta_file_bn="$(basename "$fasta_file")"
     output_file_bn="$(basename "$output_file")"
-    koopa::h1 "Generating \"${output_file_bn}\" from \"${fasta_file_bn}\"."
+    koopa::h1 "Generating '${output_file_bn}' from '${fasta_file_bn}'."
     gunzip -c "$fasta_file" \
         | grep '>' \
         | cut -d ' ' -f1,9 \
@@ -59,7 +59,7 @@ koopa::tx2gene_from_gencode_fasta() { # {{{1
     koopa::assert_is_not_file "$output_file"
     fasta_file_bn="$(basename "$fasta_file")"
     output_file_bn="$(basename "$output_file")"
-    koopa::h1 "Generating \"${output_file_bn}\" from \"${fasta_file_bn}\"."
+    koopa::h1 "Generating '${output_file_bn}' from '${fasta_file_bn}'."
     gunzip -c "$fasta_file" \
         | grep '>' \
         | cut -d '|' -f1,2 \
@@ -83,7 +83,7 @@ koopa::tx2gene_from_wormbase_fasta() { # {{{1
     koopa::assert_is_not_file "$output_file"
     fasta_file_bn="$(basename "$fasta_file")"
     output_file_bn="$(basename "$output_file")"
-    koopa::h1 "Generating \"${output_file_bn}\" from \"${fasta_file_bn}\"."
+    koopa::h1 "Generating '${output_file_bn}' from '${fasta_file_bn}'."
     gunzip -c "$fasta_file" \
         | grep '>' \
         | cut -d ' ' -f1,2 \

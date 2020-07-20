@@ -31,7 +31,7 @@ koopa::aws_batch_fetch_and_run() { # {{{1
             aws s3 cp "$url" "$file"
             ;;
         *)
-            koopa::stop "Unsupported URL: \"${url}\"."
+            koopa::stop "Unsupported URL: '${url}'."
             ;;
     esac
     chmod u+x "$file"
@@ -236,7 +236,7 @@ koopa::aws_s3_ls() { # {{{1
     # Don't allow '--type' argument when '--recursive' flag is set.
     if [[ "$recursive" -eq 1 ]] && [[ -n "$type" ]]
     then
-        koopa::stop '"--type" argument not supported for "--recursive" mode.'
+        koopa::stop "'--type' argument not supported for '--recursive' mode."
     fi
     case "${type:-}" in
         d)
@@ -349,8 +349,7 @@ koopa::aws_s3_mv_to_parent() { # {{{1
 koopa::aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
-    #
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-20.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
@@ -362,7 +361,7 @@ koopa::aws_s3_sync() { # {{{1
     # - https://github.com/aws/aws-cli/issues/476
     # - https://stackoverflow.com/questions/36215713/
     #
-    # Nuclear dotfile option: --exclude=".*"
+    # Nuclear dotfile option: --exclude='.*'
     # Otherwise, can manually ignore '.git', '.gitignore', etc.
     #
     # Currently ignores:
@@ -374,14 +373,14 @@ koopa::aws_s3_sync() { # {{{1
     koopa::assert_has_args "$#"
     koopa::assert_is_installed aws
     aws s3 sync \
-        --exclude="*.Rproj/*" \
-        --exclude="*.swp" \
-        --exclude="*.tmp" \
-        --exclude=".*" \
-        --exclude=".DS_Store" \
-        --exclude=".Rproj.user/*" \
-        --exclude="._*" \
-        --exclude=".git/*" \
+        --exclude='*.Rproj/*' \
+        --exclude='*.swp' \
+        --exclude='*.tmp' \
+        --exclude='.*' \
+        --exclude='.DS_Store' \
+        --exclude='.Rproj.user/*' \
+        --exclude='._*' \
+        --exclude='.git/*' \
         "$@"
     return 0
 }

@@ -13,7 +13,7 @@ koopa::defunct() { # {{{1
     msg='Defunct.'
     if [[ -n "$new" ]]
     then
-        msg="${msg} Use \"${new}\" instead."
+        msg="${msg} Use '${new}' instead."
     fi
     koopa::stop "${msg}"
 }

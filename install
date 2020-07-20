@@ -211,7 +211,7 @@ install() { # {{{1
     # ==========================================================================
 
     # Alternatively, can consider using rsync here instead of cp.
-    koopa::h1 "Installing koopa at \"${koopa_prefix}\"."
+    koopa::h1 "Installing koopa at '${koopa_prefix}'."
     koopa::assert_is_non_existing "$koopa_prefix"
     if [[ "$shared" -eq 1 ]]
     then
@@ -282,7 +282,7 @@ END
         if [[ -e "$file" ]]
         then
             koopa::note \
-                "User profile exists: \"${file}\"." \
+                "User profile exists: '${file}'." \
                 'This will be overwritten if dot files are linked.'
         fi
         dotfiles="$(koopa::read_yn 'Install and link dot files' "$dotfiles")"
@@ -297,8 +297,8 @@ END
     then
         if [[ "$interactive" -eq 1 ]]
         then
-            koopa::note "Koopa activation should be added to \"${file}\"."
-            profile="$(koopa::read_yn "Modify \"${file}\"" "$profile")"
+            koopa::note "Koopa activation should be added to '${file}'."
+            profile="$(koopa::read_yn "Modify '${file}'" "$profile")"
         fi
         [[ "$profile" -eq 1 ]] && koopa::add_to_user_profile
     fi

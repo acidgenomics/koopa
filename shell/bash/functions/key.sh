@@ -43,7 +43,7 @@ koopa::generate_ssh_key() { # {{{1
         -f "$file" \
         -q \
         -t rsa
-    koopa::success "Generated SSH key at \"${file}\"."
+    koopa::success "Generated SSH key at '${file}'."
     return 0
 }
 

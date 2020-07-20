@@ -24,7 +24,7 @@ koopa::macos_install_r_cran_clang() { # {{{1
     major_version="$(koopa::major_version "$version")"
     prefix="/usr/local/${name}${major_version}"
     koopa::exit_if_dir "$prefix"
-    koopa::h1 "Installing ${name} ${version} to \"${prefix}\"."
+    koopa::h1 "Installing ${name} ${version} to '${prefix}'."
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -73,7 +73,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     name='gfortran'
     prefix="/usr/local/${name}"
     koopa::exit_if_dir "$prefix"
-    koopa::h1 "Installing ${name} ${version} to \"${prefix}\"."
+    koopa::h1 "Installing ${name} ${version} to '${prefix}'."
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"

@@ -43,7 +43,7 @@ koopa::activate_conda_env() { # {{{1
         )"
         if [[ ! -d "$env_dir" ]]
         then
-            koopa::stop "Failed to locate \"${env}\" conda environment."
+            koopa::stop "Failed to locate '${env}' conda environment."
         fi
         env="$(basename "$env_dir")"
     fi
@@ -314,11 +314,11 @@ koopa::conda_create_env() { # {{{1
             then
                 conda remove --name "$env_name" --all
             else
-                koopa::note "Conda environment \"${env_name}\" exists."
+                koopa::note "Conda environment '${env_name}' exists."
                 continue
             fi
         fi
-        koopa::info "Creating \"${env_name}\" conda environment."
+        koopa::info "Creating '${env_name}' conda environment."
         conda create --name="$env_name" --quiet --yes "$env"
         koopa::sys_set_permissions -r "$prefix"
     done
@@ -358,7 +358,7 @@ koopa::install_conda() { # {{{1
             ostype='Linux'
             ;;
         *)
-            koopa::stop "\"${ostype}\" is not supported."
+            koopa::stop "'${ostype}' is not supported."
             ;;
     esac
     anaconda=0

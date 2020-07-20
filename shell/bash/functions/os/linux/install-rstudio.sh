@@ -156,7 +156,7 @@ koopa::debian_install_rstudio_server() { # {{{1
         bionic)
             ;;
         *)
-            koopa::stop "Unsupported OS version: \"${os_codename}\"."
+            koopa::stop "Unsupported OS version: '${os_codename}'."
             ;;
     esac
     koopa::_install_rstudio_server \
