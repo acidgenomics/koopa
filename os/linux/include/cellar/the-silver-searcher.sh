@@ -27,8 +27,6 @@
 # """
 
 koopa::assert_is_installed pcre-config
-export PCRE_CFLAGS='/usr/include/x86_64-linux-gnu'
-export PCRE_LIBS='/usr/lib/x86_64-linux-gnu -lpcre'
 # Temporarily installing from master branch, which has bug fixes that aren't
 # yet available in tagged release, especially for GCC 10.
 version='master'

@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-07-18.
+    # @note Updated 2020-07-20.
     # """
     local app_prefix app_prefix_bn app_prefix_real bioconductor check compact \
         data_disk data_disk_link data_disk_real docker gb_total \
@@ -271,7 +271,7 @@ koopa::configure_vm() { # {{{1
         install-password-store
         install-neofetch
         install-fzf
-        install-the-silver-searcher
+        # > install-the-silver-searcher
     fi
     install-tmux
     install-vim
