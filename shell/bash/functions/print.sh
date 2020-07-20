@@ -1,44 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::_status() { # {{{1
-    # """
-    # Koopa status.
-    # @note Updated 2020-07-07.
-    # """
-    local color nocolor label string x
-    koopa::assert_has_args_ge "$#" 3
-    label="$(printf '%10s\n' "${1:?}")"
-    color="$(koopa::_ansi_escape "${2:?}")"
-    nocolor="$(koopa::_ansi_escape 'nocolor')"
-    shift 2
-    for string in "$@"
-    do
-        x="${color}${label}${nocolor} | ${string}"
-        koopa::print "$x"
-    done
-    return 0
-}
-
-koopa::coffee_time() { # {{{1
-    # """
-    # Coffee time.
-    # @note Updated 2020-07-01.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::note 'This step takes a while. Time for a coffee break! ☕☕'
-    return 0
-}
-
-koopa::exit() { # {{{1
-    # """
-    # Exit showing note, without error.
-    # @note Updated 2020-07-01.
-    # """
-    koopa::assert_has_args_eq "$#" 1
-    koopa::note "${1:?}"
-    exit 0
-}
-
 koopa::install_start() { # {{{1
     # """
     # Inform the user about start of installation.
@@ -77,46 +38,6 @@ koopa::install_success() { # {{{1
     # """
     koopa::assert_has_args_eq "$#" 1
     koopa::success "Installation of ${1:?} was successful."
-    return 0
-}
-
-koopa::restart() { # {{{1
-    # """
-    # Inform the user that they should restart shell.
-    # @note Updated 2020-07-01.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::note 'Restart the shell.'
-    return 0
-}
-
-koopa::status_fail() { # {{{1
-    # """
-    # FAIL status.
-    # @note Updated 2020-07-07.
-    # """
-    koopa::assert_has_args "$#"
-    koopa::_status 'FAIL' 'red' "$@" >&2
-    return 0
-}
-
-koopa::status_note() { # {{{1
-    # """
-    # NOTE status.
-    # @note Updated 2020-07-07.
-    # """
-    koopa::assert_has_args "$#"
-    koopa::_status 'NOTE' 'yellow' "$@"
-    return 0
-}
-
-koopa::status_ok() { # {{{1
-    # """
-    # OK status.
-    # @note Updated 2020-07-07.
-    # """
-    koopa::assert_has_args "$#"
-    koopa::_status 'OK' 'green' "$@"
     return 0
 }
 
