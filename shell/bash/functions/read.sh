@@ -9,10 +9,10 @@ koopa::_int_to_yn() { # {{{1
     koopa::assert_has_args_eq "$#" 1
     case "${1:?}" in
         0)
-            x="no"
+            x='no'
             ;;
         1)
-            x="yes"
+            x='yes'
             ;;
         *)
             koopa::stop 'Invalid choice: requires 0 or 1.'
