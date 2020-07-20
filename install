@@ -129,7 +129,7 @@ install() { # {{{1
                 break
                 ;;
             --*|-*)
-                printf 'ERROR: Invalid arg: "%s".\n' "$1" >&2
+                printf "ERROR: Invalid arg: '%s'.\n" "$1" >&2
                 return 1
                 ;;
         esac
@@ -141,7 +141,7 @@ install() { # {{{1
     # Before we proceed, ensure that koopa isn't already installed.
     if [[ -n "${KOOPA_PREFIX:-}" ]]
     then
-        printf 'ERROR: koopa is installed: "%s".\n' "$KOOPA_PREFIX" >&2
+        printf "ERROR: koopa is installed: '%s'.\n" "$KOOPA_PREFIX" >&2
         return 1
     fi
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"

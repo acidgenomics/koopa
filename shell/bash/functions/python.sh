@@ -209,20 +209,20 @@ koopa::python_remove_pycache() { # {{{1
     if [[ -z "$prefix" ]]
     then
         # e.g. /usr/local/cellar/python/3.8.1
-        python="$(koopa::which_realpath "python3")"
+        python="$(koopa::which_realpath 'python3')"
         prefix="$(realpath "$(dirname "$python")/..")"
     fi
     koopa::info "Removing pycache in '${prefix}'."
     # > find "$prefix" \
     # >     -type d \
-    # >     -name "__pycache__" \
+    # >     -name '__pycache__' \
     # >     -print0 \
-    # >     -exec rm -frv "{}" \;
+    # >     -exec rm -frv '{}' \;
     find "$prefix" \
         -type d \
-        -name "__pycache__" \
+        -name '__pycache__' \
         -print0 \
-        | xargs -0 -I {} rm -frv "{}"
+        | xargs -0 -I {} rm -frv '{}'
     return 0
 }
 

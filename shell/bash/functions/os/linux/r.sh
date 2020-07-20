@@ -26,11 +26,11 @@ koopa::linux_install_r_sf() { # {{{1
         '/usr/bin/proj'
     # How to enable versioned support, if necessary.
     # > cellar_prefix="$(koopa::cellar_prefix)"
-    # > gdal_version="$(koopa::variable "gdal")"
+    # > gdal_version="$(koopa::variable 'gdal')"
     # > gdal_prefix="${cellar_prefix}/gdal/${gdal_version}"
-    # > geos_version="$(koopa::variable "geos")"
+    # > geos_version="$(koopa::variable 'geos')"
     # > geos_prefix="${cellar_prefix}/geos/${geos_version}"
-    # > proj_version="$(koopa::variable "proj")"
+    # > proj_version="$(koopa::variable 'proj')"
     # > proj_prefix="${cellar_prefix}/proj/${proj_version}"
     make_prefix="$(koopa::make_prefix)"
     gdal_prefix="$make_prefix"

@@ -37,11 +37,11 @@ koopa::macos_uninstall_oracle_java() { # {{{1
         "${HOME}/Library/Preferences/com.oracle.java.JavaAppletPlugin.plist" \
         "${HOME}/Library/Safari/LocalStorage/https_www.java.com_0.localstorage"*
     koopa::rm -S \
-        "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin" \
-        "/Library/LaunchAgents/com.oracle.java.Java-Updater.plist" \
-        "/Library/LaunchDaemons/com.oracle.java.Helper-Tool.plist" \
-        "/Library/PreferencePanes/JavaControlPanel.prefPane" \
-        "/Library/Preferences/com.oracle.java.Helper-Tool.plist"
+        '/Library/Internet Plug-Ins/JavaAppletPlugin.plugin' \
+        '/Library/LaunchAgents/com.oracle.java.Java-Updater.plist' \
+        '/Library/LaunchDaemons/com.oracle.java.Helper-Tool.plist' \
+        '/Library/PreferencePanes/JavaControlPanel.prefPane' \
+        '/Library/Preferences/com.oracle.java.Helper-Tool.plist'
     koopa::uninstall_success "$name_fancy"
     return 0
 }
@@ -64,7 +64,7 @@ Contents/MacOS/RingCentralMeetings" \
         "${HOME}/Library/Logs/RingCentralMeetings" \
         "${HOME}/Preferences/RingcentralChat.plist" \
         "${HOME}/Preferences/us.zoom.ringcentral.plist"
-    koopa::rm -S "/Applications/RingCentral Meetings.app"
+    koopa::rm -S '/Applications/RingCentral Meetings.app'
     koopa::uninstall_success "$name_fancy"
     return 0
 }

@@ -20,7 +20,7 @@ koopa::brew_cask_outdated() { # {{{
     koopa::assert_is_installed brew
     tmp_file="$(koopa::tmp_file)"
     script -q "$tmp_file" brew cask outdated --greedy >/dev/null
-    x="$(grep -v "(latest)" "$tmp_file")"
+    x="$(grep -v '(latest)' "$tmp_file")"
     [[ -n "$x" ]] && return 0
     koopa::print "$x"
     return 0
@@ -49,11 +49,11 @@ koopa::brew_outdated() { # {{{
     # @note Updated 2020-07-01.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::h1 "Checking for outdated Homebrew formula."
+    koopa::h1 'Checking for outdated Homebrew formula.'
     brew update &>/dev/null
-    koopa::h2 "Brews"
+    koopa::h2 'Brews'
     brew outdated
-    koopa::h2 "Casks"
+    koopa::h2 'Casks'
     koopa::brew_cask_outdated
     return 0
 }
@@ -82,20 +82,20 @@ koopa::brew_update() { # {{{1
     koopa::update_start "$name_fancy"
     brew analytics off
     brew update >/dev/null
-    koopa::h2 "Updating brews."
+    koopa::h2 'Updating brews.'
     brew upgrade --force-bottle || true
-    koopa::h2 "Updating casks."
+    koopa::h2 'Updating casks.'
     casks="$(koopa::brew_cask_outdated)"
     if [[ -n "$casks" ]]
     then
         koopa::info "${#casks[@]} outdated casks detected."
         koopa::print "${casks[@]}"
         koopa::print "${casks[@]}" \
-            | cut -d " " -f 1 \
+            | cut -d ' ' -f 1 \
             | xargs brew cask reinstall \
             || true
     fi
-    koopa::h2 "Running cleanup."
+    koopa::h2 'Running cleanup.'
     brew cleanup -s || true
     koopa::rm "$(brew --cache)"
     koopa::update_r_config
@@ -193,7 +193,7 @@ koopa::macos_uninstall_homebrew() { # {{{1
     # Note that macOS Catalina now uses Zsh instead of Bash by default.
     koopa::h2 'Changing default shell to system Zsh.'
     chsh -s '/bin/zsh' "$USER"
-    koopa::h2 'Resetting permissions in "/usr/local".'
+    koopa::h2 "Resetting permissions in '/usr/local'."
     sudo chown -Rhv "$USER" '/usr/local/'*
     tmp_dir="$(koopa::tmp_dir)"
     (

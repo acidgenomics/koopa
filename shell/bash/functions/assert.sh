@@ -29,7 +29,7 @@ koopa::assert_are_not_identical() { # {{{1
 koopa::assert_has_args() { # {{{1
     # """
     # Assert that non-zero arguments have been passed.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-20.
     # Does not check for empty strings.
     # """
     if [[ "$#" -ne 1 ]]
@@ -42,7 +42,7 @@ koopa::assert_has_args() { # {{{1
     then
         koopa::stop \
             'Required arguments missing.' \
-            'Run with "--help" flag for usage details.'
+            "Run with '--help' flag for usage details."
     fi
     return 0
 }
@@ -224,7 +224,7 @@ koopa::assert_has_no_args() { # {{{1
     then
         koopa::stop \
             'Arguments are not allowed.' \
-            'Run with "--help" flag for usage details.'
+            "Run with '--help' flag for usage details."
     fi
     return 0
 }

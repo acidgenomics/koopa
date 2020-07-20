@@ -31,7 +31,7 @@ koopa::rhel_install_base() { # {{{1
 
     if [[ "$dev" -eq 1 ]]
     then
-        koopa::h2 "Installing developer libraries."
+        koopa::h2 'Installing developer libraries.'
         pkgs=('libgit2' 'libssh2')
         sudo dnf -y install "${pkgs[@]}"
     fi
@@ -41,7 +41,7 @@ koopa::rhel_install_base() { # {{{1
 
     if [[ "$extra" -eq 1 ]]
     then
-        koopa::h2 "Installing extra recommended packages."
+        koopa::h2 'Installing extra recommended packages.'
         sudo dnf -y install python3
     fi
 

@@ -99,9 +99,9 @@ koopa::_kallisto_quant() { # {{{1
     fi
     koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
     bootstraps=30
-    koopa::dl "Bootstraps" "$bootstraps"
+    koopa::dl 'Bootstraps' "$bootstraps"
     threads="$(koopa::cpu_count)"
-    koopa::dl "Threads" "$threads"
+    koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/kallisto-quant.log"
     koopa::mkdir "$sample_output_dir"
     kallisto quant \
@@ -180,10 +180,10 @@ koopa::kallisto() { # {{{1
     done
     if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_file:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-file".'
+        koopa::stop "Specify 'fasta-file' or 'index-file'."
     elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_file:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-file", but not both.'
+        koopa::stop "Specify 'fasta-file' or 'index-file', but not both."
     elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
     then
         koopa::missing_arg

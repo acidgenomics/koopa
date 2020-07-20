@@ -189,10 +189,10 @@ koopa::bowtie2() { # {{{1
     done
     if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-dir".'
+        koopa::stop "Specify 'fasta-file' or 'index-dir'."
     elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
     then
-        koopa::stop 'Specify "fasta-file" or "index-dir", but not both.'
+        koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
     elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
     then
         koopa::missing_arg
