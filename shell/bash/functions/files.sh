@@ -253,7 +253,7 @@ koopa::file_count() { # {{{1
 koopa::file_ext() { # {{{1
     # """
     # Extract the file extension from input.
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-07-20.
     #
     # Examples:
     # koopa::file_ext "hello-world.txt"
@@ -272,7 +272,7 @@ koopa::file_ext() { # {{{1
         then
             x="${file##*.}"
         else
-            x=""
+            x=
         fi
         koopa::print "$x"
     done
@@ -282,7 +282,7 @@ koopa::file_ext() { # {{{1
 koopa::file_ext2() { # {{{1
     # """
     # Extract the file extension after any dots in the file name.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-20.
     #
     # This assumes file names are not in dotted case.
     #
@@ -300,7 +300,7 @@ koopa::file_ext2() { # {{{1
         then
             x="$(koopa::print "$file" | cut -d '.' -f 2-)"
         else
-            x=''
+            x=
         fi
         koopa::print "$x"
     done

@@ -122,7 +122,7 @@ _koopa_prompt_conda() { # {{{1
 _koopa_prompt_git() { # {{{1
     # """
     # Return the current git branch, if applicable.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-07-20.
     #
     # Also indicate status with "*" if dirty (i.e. has unstaged changes).
     # """
@@ -132,7 +132,7 @@ _koopa_prompt_git() { # {{{1
     git_branch="$(_koopa_git_branch)"
     if _koopa_is_git_clean
     then
-        git_status=''
+        git_status=
     else
         git_status='*'
     fi

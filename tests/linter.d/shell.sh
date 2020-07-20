@@ -47,9 +47,10 @@ test_all_illegal_strings() { # {{{1
     koopa::assert_has_args "$#"
     # shellcheck disable=SC2016
     array=(
+        "=''"
         ' \|\| exit'        # wrap in function and return instead
         ' path='            # zsh will freak out
-        '() {$'             # functions should include vim marker
+        '\(\) {$'             # functions should include vim marker
         '; do'              # newline instead
         '; then'            # newline instead
         '<  <'              # use '<<<' instead
