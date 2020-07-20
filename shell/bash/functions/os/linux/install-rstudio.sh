@@ -3,7 +3,7 @@
 koopa::_install_rstudio_server() {
     # """
     # Install RStudio Server.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-20.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -23,7 +23,6 @@ koopa::_install_rstudio_server() {
     # """
     local file file_ext file_stem install name name_fancy os_codename platform \
         pos pro reinstall server tmp_dir url version
-    koopa::assert_has_no_args "$#"
     koopa::assert_is_installed R
     pro=0
     reinstall=0
@@ -94,6 +93,7 @@ koopa::_install_rstudio_server() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_no_args "$#"
     name='rstudio-server'
     file_stem="$name"
     koopa::is_rhel && file_stem="${file_stem}-rhel"
