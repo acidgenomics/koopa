@@ -117,7 +117,7 @@ koopa::_install_rstudio_server() {
         koopa::cd "$tmp_dir"
         koopa::download "$url"
         file="$(basename "$url")"
-        install=("$install")
+        IFS=' ' read -r -a install <<< "$install"
         "${install[@]}" "$file"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
