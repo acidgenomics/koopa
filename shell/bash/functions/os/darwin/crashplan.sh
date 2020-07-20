@@ -24,14 +24,14 @@ koopa::macos_disable_crashplan() {
 koopa::macos_enable_crashplan() {  # {{{1
     # """
     # Enable CrashPlan.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-20.
     # """
     local system_plist user_plist
     system_plist='/Library/LaunchDaemons/com.crashplan.engine.plist'
     user_plist="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
     if [[ -f "${user_plist}.disabled" ]]
     then
-        mv -v "${user_plist}.disabled" "$user_plist"
+        koopa::mv "${user_plist}.disabled" "$user_plist"
     fi
     if [[ -f "$user_plist" ]]
     then
@@ -39,7 +39,7 @@ koopa::macos_enable_crashplan() {  # {{{1
     fi
     if [[ -f "${system_plist}.disabled" ]]
     then
-        sudo mv -v "${system_plist}.disabled" "$system_plist"
+        koopa::mv -S "${system_plist}.disabled" "$system_plist"
     fi
     if [[ -f "$system_plist" ]]
     then

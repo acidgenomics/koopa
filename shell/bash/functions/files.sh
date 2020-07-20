@@ -565,7 +565,7 @@ koopa::nfiletypes() {
 koopa::remove_broken_symlinks() { # {{{1
     # """
     # Remove broken symlinks.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-30.
     # """
     local file files
     koopa::assert_has_args "$#"
@@ -577,7 +577,7 @@ koopa::remove_broken_symlinks() { # {{{1
     do
         [[ -z "$file" ]] && continue
         koopa::info "Removing '${file}'."
-        rm -f "$file"
+        koopa::rm "$file"
     done
     return 0
 }

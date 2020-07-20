@@ -5,8 +5,12 @@ _koopa_cd() { # {{{1
     # Change directory quietly.
     # @note Updated 2020-07-20.
     # """
+    # shellcheck disable=SC2039
+    local cd
     unalias -a
-    cd "${1:?}" >/dev/null 2>&1 || return 1
+    [ "$#" -eq 1 ] || return 1
+    cd='cd'
+    "$cd" "${1:?}" >/dev/null 2>&1 || return 1
     return 0
 }
 
