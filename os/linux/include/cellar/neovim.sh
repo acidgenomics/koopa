@@ -25,7 +25,7 @@ file="v${version}.tar.gz"
 url="https://github.com/${name}/${name}/archive/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 make \
     --jobs="$jobs" \
     CMAKE_BUILD_TYPE=Release \

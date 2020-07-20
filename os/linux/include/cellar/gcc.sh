@@ -9,11 +9,9 @@
 # - https://gcc.gnu.org/wiki/InstallingGCC
 # - https://gcc.gnu.org/wiki/FAQ
 #
-#
 # Do not run './configure' from within the source directory.
 # Instead, you need to run configure from outside the source directory,
 # in a separate directory created for the build.
-#
 #
 # Prerequisites:
 #
@@ -54,34 +52,18 @@
 # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
 # """
 
-# Check if system GCC is recent enough that we can skip building from source.
-# Here we're requiring that that the major version always matches.
-# This speeds up Docker builds on Linux distros with relatively recent
-# configurations, such as Fedora.
-# > if koopa::is_installed "$name"
-# > then
-# >     current="$(koopa::get_version "$name")"
-# >     current="$(koopa::major_version "$current")"
-# >     expected="$(koopa::major_version "$version")"
-# >     if koopa::check_version "$current" "$expected"
-# >     then
-# >         koopa::note "${name} ${current} is installed."
-# >         exit 0
-# >     fi
-# > fi
-
 file="${name}-${version}.tar.xz"
 url="${gnu_mirror}/${name}/${name}-${version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
 # Need to build outside of source code directory.
-mkdir build
+koopa::mkdir build
 koopa::cd build
 flags=(
-    "--disable-multilib"
-    "--enable-languages=c,c++,fortran"
     "--prefix=${prefix}"
-    "-v"
+    '--disable-multilib'
+    '--enable-languages=c,c++,fortran'
+    '-v'
 )
 "../${name}-${version}/configure" "${flags[@]}"
 make --jobs="$jobs"

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# koopa nolint=coreutils
 
 # """
 # Ubuntu Linux header.

@@ -12,7 +12,7 @@ file="${name}-${version}.tar.gz"
 url="https://cache.ruby-lang.org/pub/${name}/${minor_version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 # This will fail on Ubuntu 18 otherwise.
 # https://github.com/rbenv/ruby-build/issues/156
 # https://github.com/rbenv/ruby-build/issues/729

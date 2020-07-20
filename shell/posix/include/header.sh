@@ -1,4 +1,5 @@
 #!/bin/sh
+# koopa nolint=coreutils
 
 # """
 # POSIX shell header.

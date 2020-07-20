@@ -7,7 +7,7 @@ file="${name}-${version}.tar.gz"
 url="ftp://ftp.unidata.ucar.edu/pub/${name}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./configure --prefix="$prefix"
 make --jobs="$jobs"
 # > make check

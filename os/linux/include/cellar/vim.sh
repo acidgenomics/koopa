@@ -14,7 +14,7 @@ file="v${version}.tar.gz"
 url="https://github.com/${name}/${name}/archive/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-cd "${name}-${version}" || exit 1
+koopa::cd "${name}-${version}"
 ./configure \
     --prefix="$prefix" \
     --enable-python3interp="yes" \
