@@ -17,7 +17,7 @@ koopa::update() { # {{{1
         koopa::note \
             "Stable release of koopa ${version} detected." \
             'To update, first run the "uninstall" script.' \
-            "Then run the default install command at \"${url}\"."
+            "Then run the default install command at '${url}'."
         return 1
     fi
     config_prefix="$(koopa::config_prefix)"
@@ -77,7 +77,7 @@ koopa::update() { # {{{1
     then
         user=1
     fi
-    koopa::h1 "Updating koopa at \"${koopa_prefix}\"."
+    koopa::h1 "Updating koopa at '${koopa_prefix}'."
     koopa::sys_set_permissions -r "$koopa_prefix"
     if [[ "$rsync" -eq 0 ]]
     then

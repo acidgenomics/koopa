@@ -9,7 +9,7 @@ koopa::apt_add_azure_cli_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/azure-cli.list'
     [[ -f "$file" ]] && return 0
-    koopa::info "Adding Microsoft Azure CLI repo at \"${file}\"."
+    koopa::info "Adding Microsoft Azure CLI repo at '${file}'."
     koopa::apt_add_microsoft_key
     os_codename="$(koopa::os_codename)"
     url='https://packages.microsoft.com/repos/azure-cli/'

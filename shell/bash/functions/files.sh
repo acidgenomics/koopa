@@ -94,10 +94,10 @@ koopa::basename_sans_ext() { # {{{1
     # @note Updated 2020-06-30.
     #
     # Examples:
-    # koopa::basename_sans_ext "dir/hello-world.txt"
+    # koopa::basename_sans_ext 'dir/hello-world.txt'
     # ## hello-world
     #
-    # koopa::basename_sans_ext "dir/hello-world.tar.gz"
+    # koopa::basename_sans_ext 'dir/hello-world.tar.gz'
     # ## hello-world.tar
     #
     # See also: koopa::file_ext
@@ -122,7 +122,7 @@ koopa::basename_sans_ext2() { # {{{1
     # @note Updated 2020-06-30.
     #
     # Examples:
-    # koopa::basename_sans_ext2 "dir/hello-world.tar.gz"
+    # koopa::basename_sans_ext2 'dir/hello-world.tar.gz'
     # ## hello-world
     #
     # See also: koopa::file_ext2
@@ -162,7 +162,7 @@ koopa::delete_adobe_bridge_cache() { # {{{1
     koopa::assert_is_installed find
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
-    koopa::h1 "Deleting Adobe Bridge cache in \"${dir}\"."
+    koopa::h1 "Deleting Adobe Bridge cache in '${dir}'."
     find "$dir" \
         -mindepth 1 \
         -type f \
@@ -256,10 +256,10 @@ koopa::file_ext() { # {{{1
     # @note Updated 2020-07-20.
     #
     # Examples:
-    # koopa::file_ext "hello-world.txt"
+    # koopa::file_ext 'hello-world.txt'
     # ## txt
     #
-    # koopa::file_ext "hello-world.tar.gz"
+    # koopa::file_ext 'hello-world.tar.gz'
     # ## gz
     #
     # See also: koopa::basename_sans_ext
@@ -330,7 +330,7 @@ koopa::find_and_replace_in_files() { # {{{1
         koopa::str_match "${to}" '/' && ! koopa::str_match "${to}" '\/'; \
     }
     then
-        koopa::stop "Unescaped slash detected."
+        koopa::stop 'Unescaped slash detected.'
     fi
     for file in "$@"
     do
@@ -596,7 +596,7 @@ koopa::remove_empty_dirs() { # {{{1
     for dir in "${dirs[@]}"
     do
         [[ -z "$dir" ]] && continue
-        koopa::info "Removing \"${dir}\"."
+        koopa::info "Removing '${dir}'."
         koopa::rm "$dir"
     done
     return 0

@@ -22,7 +22,7 @@ koopa::install_rbenv_ruby() { # {{{1
     ruby_build_dir="$(koopa::rbenv_prefix)/plugins/ruby-build"
     if [[ -d "$ruby_build_dir" ]]
     then
-        koopa::note "Updating ruby-build plugin: \"${ruby_build_dir}\"."
+        koopa::note "Updating ruby-build plugin: '${ruby_build_dir}'."
         (
             koopa::cd "$ruby_build_dir"
             git pull --quiet

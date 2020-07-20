@@ -185,7 +185,7 @@ koopa::install_bcbio_ensembl_genome() { # {{{1
     # Check for valid organism input.
     if ! koopa::str_match_regex "$organism" '^([A-Z][a-z]+)(\s|_)([a-z]+)$'
     then
-        koopa::stop "Invalid organism: \"${organism}\"."
+        koopa::stop "Invalid organism: '${organism}'."
     fi
     # Sanitize spaces into underscores.
     # Use bash built-in rather than sed, when possible.
