@@ -14,7 +14,7 @@ koopa::cd() { # {{{1
 koopa::cp() { # {{{1
     # """
     # Hardened version of coreutils copy.
-    # @note Updated 2020-07-08.
+    # @note Updated 2020-07-20.
     #
     # getopts info:
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
@@ -49,6 +49,8 @@ koopa::cp() { # {{{1
         rm=('koopa::rm' '-S')
     else
         cp=('cp')
+        mkdir=('koopa::mkdir')
+        rm=('koopa::rm')
     fi
     cp_flags=('-af')
     if [[ -n "$target_dir" ]]
@@ -62,12 +64,7 @@ koopa::cp() { # {{{1
         source_file="${1:?}"
         koopa::assert_is_existing "$source_file"
         target_file="${2:?}"
-        if [[ -e "$target_file" ]]
-        then
-            koopa::print "FIXME 1"
-            "${rm[@]}" "$target_file"
-            koopa::print "FIXME 2"
-        fi
+        [[ -e "$target_file" ]] && "${rm[@]}" "$target_file"
         target_parent="$(dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
