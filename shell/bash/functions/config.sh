@@ -75,7 +75,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
     koopa::info "Updating '${passwd_file}' to include '${user}'."
     if ! sudo grep -q "$user" "$passwd_file"
     then
-        sudo sh -c "printf \"%s\n\" '${user_string}' >> '${passwd_file}'"
+        sudo sh -c "printf '%s\n' '${user_string}' >> '${passwd_file}'"
     else
         koopa::note "$user already defined in '${passwd_file}'."
     fi
@@ -590,7 +590,7 @@ koopa::update_ldconfig() { # {{{1
     prefix="$(koopa::prefix)"
     conf_source="${prefix}/os/${os_id}/etc/ld.so.conf.d"
     [[ -d "$conf_source" ]] || return 0
-    # Create symlinks with "koopa-" prefix.
+    # Create symlinks with 'koopa-' prefix.
     # Note that we're using shell globbing here.
     # https://unix.stackexchange.com/questions/218816
     koopa::h2 "Updating ldconfig in '/etc/ld.so.conf.d/'."

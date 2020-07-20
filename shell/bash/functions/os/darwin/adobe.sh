@@ -20,13 +20,13 @@ koopa::macos_uninstall_adobe_creative_cloud_preferences() { # {{{1
         "${HOME}/Library/Preferences/com."{a,A}"dobe"* \
         "${HOME}/Library/Saved Application State/com."{a,A}"dobe"*
     koopa::rm -S \
-        "/Library/Application Support/Adobe"* \
-        "/Library/Application Support/regid."*".com.adobe" \
-        "/Library/Caches/com."{a,A}"dobe"* \
-        "/Library/Fonts/"{a,A}"dobe"* \
-        "/Library/Preferences/com."{a,A}"dobe"* \
-        "/Library/ScriptingAdditions/Adobe Unit Types.osax" \
-        "/Users/Shared/Adobe"
+        '/Library/Application Support/Adobe'* \
+        '/Library/Application Support/regid.'*'.com.adobe' \
+        '/Library/Caches/com.'{a,A}'dobe'* \
+        '/Library/Fonts/'{a,A}'dobe'* \
+        '/Library/Preferences/com.'{a,A}'dobe'* \
+        '/Library/ScriptingAdditions/Adobe Unit Types.osax' \
+        '/Users/Shared/Adobe'
     koopa::uninstall_success "$name_fancy"
     return 0
 }

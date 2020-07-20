@@ -62,7 +62,7 @@ koopa::current_ensembl_version() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed curl
     version="$( \
-        curl --silent "ftp://ftp.ensembl.org/pub/current_README" \
+        curl --silent 'ftp://ftp.ensembl.org/pub/current_README' \
         | sed -n 3p \
         | cut -d ' ' -f 3 \
     )"
@@ -171,7 +171,7 @@ koopa::current_wormbase_version() { # {{{1
 releases/current-production-release"
     version="$( \
         curl --list-only --silent "${url}/" | \
-        grep -Eo "letter.WS[0-9]+" | \
+        grep -Eo 'letter.WS[0-9]+' | \
         cut -d '.' -f 2 \
     )"
     koopa::print "$version"
@@ -204,9 +204,9 @@ koopa::github_latest_release() { # {{{1
     # @note Updated 2020-02-15.
     #
     # @examples
-    # koopa::github_latest_release "acidgenomics/koopa"
+    # koopa::github_latest_release 'acidgenomics/koopa'
     # # Expected failure:
-    # koopa::github_latest_release "acidgenomics/acidgenomics.github.io"
+    # koopa::github_latest_release 'acidgenomics/acidgenomics.github.io'
     # """
     local json repo url x
     koopa::assert_has_args "$#"
@@ -283,7 +283,7 @@ koopa::lmod_version() { # {{{1
     #
     # Alterate approach:
     # > module --version 2>&1 \
-    # >     | grep -Eo "Version [.0-9]+" \
+    # >     | grep -Eo 'Version [.0-9]+' \
     # >     | cut -d ' ' -f 2
     # """
     local x

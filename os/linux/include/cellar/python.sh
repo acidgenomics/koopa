@@ -59,6 +59,6 @@ make install
 # Symlink 'python3' to 'python'.
 if [[ ! -f "${prefix}/bin/python" ]]
 then
-    koopa::h2 "Symlinking \"python3\" to \"python\"."
+    koopa::h2 "Symlinking 'python3' to 'python'."
     kooopa::ln "${prefix}/bin/python3" "${prefix}/bin/python"
 fi

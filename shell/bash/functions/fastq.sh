@@ -179,7 +179,7 @@ koopa::fastq_to_fasta() { # {{{1
         paste - - - - < "$fastq_file" \
             | cut -f 1,2 \
             | sed 's/^@/>/' \
-            | tr "\t" "\n" > "$fasta_file"
+            | tr '\t' '\n' > "$fasta_file"
     done
     return 0
 }

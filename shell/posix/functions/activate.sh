@@ -165,7 +165,7 @@ _koopa_activate_conda() { # {{{1
     # shellcheck source=/dev/null
     . "$script"
     # Ensure base environment gets deactivated by default.
-    if [ "$name" = "base" ]
+    if [ "$name" = 'base' ]
     then
         # Don't use the full conda path here; will return config error.
         conda deactivate
@@ -179,8 +179,8 @@ _koopa_activate_coreutils() { # {{{1
     # Activate hardened interactive aliases for coreutils.
     # @note Updated 2020-07-03.
     #
-    # These aliases get "unaliased" inside of koopa scripts, and they should
-    # only apply to interactive use at the command prompt.
+    # These aliases get unaliased inside of koopa scripts, and they should only
+    # apply to interactive use at the command prompt.
     #
     # macOS ships with a very old version of GNU coreutils. Use Homebrew.
     # """

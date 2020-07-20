@@ -77,7 +77,7 @@ ${unique}/GPL/${file}"
     koopa::rm "$tmp_dir"
     (
         koopa::cd "$jdk_dir"
-        koopa::sys_ln "$version" "latest"
+        koopa::sys_ln "$version" 'latest'
     )
     koopa::sys_set_permissions -r "$jdk_dir"
     # This step will skip for non-shared install.

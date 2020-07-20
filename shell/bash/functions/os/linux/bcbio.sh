@@ -193,7 +193,7 @@ koopa::install_bcbio_ensembl_genome() { # {{{1
     source='Ensembl'
     bcbio_genome_name="${build}-${source}-${release}"
     koopa::install_start "$bcbio_genome_name"
-    # e.g. "Hsapiens".
+    # e.g. 'Hsapiens'.
     bcbio_species_dir="$( \
         koopa::print "$organism" \
             | sed -r 's/^([A-Z]).+_([a-z]+)$/\1\2/g' \
@@ -408,14 +408,14 @@ koopa::patch_bcbio() { # {{{1
     koopa::h2 'Removing Python cache and compiled pyc files in Git repo.'
     find "$git_dir" -name '*.pyc' -delete
     find "$git_dir" -name '__pycache__' -type d -exec rm -rv {} \;
-    koopa::h2 'Removing Python installer cruft inside "anaconda/lib/".'
+    koopa::h2 "Removing Python installer cruft inside 'anaconda/lib/'."
     koopa::rm "${install_dir}/anaconda/lib/python"*'/site-packages/bcbio'*
     # Install command must be run relative to our forked git repo.
     # Note the use of absolute path to bcbio_python here.
     (
         koopa::cd "$git_dir"
         koopa::rm 'tests/test_automated_output'
-        koopa::h2 'Patching installation via "setup.py" script.'
+        koopa::h2 "Patching installation via 'setup.py' script."
         "$bcbio_python" setup.py install
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::success "Patching of ${name_fancy} was successful."

@@ -215,8 +215,8 @@ _koopa_activate_export_prefix() { # {{{1
             # POSIX doesn't support file path resolution of sourced dot scripts.
             if [ ! -d "${KOOPA_PREFIX:?}" ] && _koopa_is_interactive
             then
-                printf "ERROR: Failed to locate koopa activation script.\n" >&2
-                printf "Required 'KOOPA_PREFIX' variable is unset.\n" >&2
+                printf 'ERROR: Failed to locate koopa activation script.\n' >&2
+                printf 'Required KOOPA_PREFIX variable is unset.\n' >&2
                 return 1
             fi
             KOOPA_ACTIVATE_SCRIPT="${KOOPA_PREFIX}/activate"

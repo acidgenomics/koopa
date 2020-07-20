@@ -96,7 +96,7 @@ koopa::disk_pct_used() { # {{{1
         df "$disk" \
             | head -n 2 \
             | sed -n '2p' \
-            | grep -Eo "([.0-9]+%)" \
+            | grep -Eo '([.0-9]+%)' \
             | head -n 1 \
             | sed 's/%$//' \
     )"

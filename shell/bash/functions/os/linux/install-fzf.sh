@@ -69,7 +69,7 @@ koopa::install_fzf() { # {{{1
     koopa::rm "$tmp_dir"
     (
         koopa::cd "$prefix_parent"
-        koopa::sys_ln "$version" "latest"
+        koopa::sys_ln "$version" 'latest'
     )
     koopa::sys_set_permissions -r "$prefix_parent"
     koopa::install_success "$name"

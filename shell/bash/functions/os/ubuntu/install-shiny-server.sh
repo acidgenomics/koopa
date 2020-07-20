@@ -42,7 +42,7 @@ koopa::ubuntu_install_shiny_server() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     if ! koopa::is_r_package_installed shiny
     then
-        koopa::h2 'Installing "shiny" R package.'
+        koopa::h2 'Installing shiny R package.'
         (
             Rscript -e 'install.packages("shiny")'
         ) 2>&1 | tee "$(koopa::tmp_log_file)"

@@ -16,7 +16,7 @@ koopa::update() { # {{{1
         url="$(koopa::url)"
         koopa::note \
             "Stable release of koopa ${version} detected." \
-            'To update, first run the "uninstall" script.' \
+            "To update, first run the 'uninstall' script." \
             "Then run the default install command at '${url}'."
         return 1
     fi

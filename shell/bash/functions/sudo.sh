@@ -19,7 +19,7 @@ koopa::enable_passwordless_sudo() { # {{{1
     fi
     koopa::info "Updating '${sudo_file}' to include '${group}'."
     string="%${group} ALL=(ALL) NOPASSWD: ALL"
-    sudo sh -c "printf \"%s\n\" '$string' >> '${sudo_file}'"
+    sudo sh -c "printf '%s\n' '$string' >> '${sudo_file}'"
     sudo chmod -v 0440 "$sudo_file"
     koopa::success "Passwordless sudo enabled for '${group}'."
     return 0
@@ -40,11 +40,11 @@ koopa::enable_shell() { # {{{1
     koopa::info "Updating '${etc_file}' to include '${cmd_path}'."
     if ! grep -q "$cmd_path" "$etc_file"
     then
-        sudo sh -c "printf \"%s\n\" '${cmd_path}' >> '${etc_file}'"
+        sudo sh -c "printf '%s\n' '${cmd_path}' >> '${etc_file}'"
     else
         koopa::success "'${cmd_path}' already defined in '${etc_file}'."
     fi
-    koopa::note "Run \"chsh -s ${cmd_path} ${USER}\" to change default shell."
+    koopa::note "Run 'chsh -s ${cmd_path} ${USER}' to change default shell."
     return 0
 }
 

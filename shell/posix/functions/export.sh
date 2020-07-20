@@ -74,7 +74,7 @@ _koopa_export_history() { # {{{1
         touch "$HISTFILE"
     fi
     # Don't keep duplicate lines in the history.
-    # Alternatively, set "ignoreboth" to also ignore lines starting with space.
+    # Alternatively, set 'ignoreboth' to also ignore lines starting with space.
     if [ -z "${HISTCONTROL:-}" ]
     then
         HISTCONTROL='ignoredups'

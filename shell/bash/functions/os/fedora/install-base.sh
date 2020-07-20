@@ -19,7 +19,7 @@ koopa::fedora_install_base() { # {{{1
 
     if [[ "$upgrade" -eq 1 ]]
     then
-        koopa::h2 'Upgrading install via "dnf update".'
+        koopa::h2 "Upgrading install via 'dnf update'."
         sudo dnf -y update
     fi
 

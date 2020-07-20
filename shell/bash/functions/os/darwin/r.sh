@@ -123,7 +123,7 @@ koopa::macos_install_r_devel() { # {{{1
         if [[ -d '/Library/Frameworks/R.framework' ]] &&
             [[ ! -L '/Library/Frameworks/R.framework' ]]
         then
-            koopa::note 'Backing up existing "R.framework".'
+            koopa::note "Backing up existing 'R.framework'."
             koopa::mv -S \
                 '/Library/Frameworks/R.framework' \
                 '/Library/Frameworks/R.framework.bak'
@@ -139,7 +139,7 @@ koopa::macos_install_r_devel() { # {{{1
         "/Library/Frameworks/R-${r_version}.framework" \
         '/Library/Frameworks/R.framework'
     koopa::install_success "$name_fancy"
-    koopa::note 'Ensure that "R_LIBS_USER" in "~/.Renviron" is correct.'
+    koopa::note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
     return 0
 }
 

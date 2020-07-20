@@ -196,7 +196,7 @@ koopa::bam_filter() { # {{{1
             -maxdepth 3 \
             -mindepth 1 \
             -type f \
-            -iname "*.sorted.bam" \
+            -iname '*.sorted.bam' \
             -print \
         | sort \
     )"
@@ -289,9 +289,9 @@ koopa::bam_sort() { # {{{1
             -maxdepth 3 \
             -mindepth 1 \
             -type f \
-            -iname "*.bam" \
-            -not -iname "*.filtered.*" \
-            -not -iname "*.sorted.*" \
+            -iname '*.bam' \
+            -not -iname '*.filtered.*' \
+            -not -iname '*.sorted.*' \
             -print \
         | sort \
     )"
@@ -326,9 +326,9 @@ koopa::copy_bam_files() { # {{{1
     find -L "$source_dir" \
         -maxdepth 4 \
         -type f \
-        \( -name "*.bam" -or -name "*.bam.bai" \) \
-        ! -name "*-transcriptome.bam" \
-        ! -path "*/work/*" \
+        \( -name '*.bam' -or -name '*.bam.bai' \) \
+        ! -name '*-transcriptome.bam' \
+        ! -path '*/work/*' \
         -print0 | xargs -0 -I {} \
             rsync --size-only --progress {} "${target_dir}/"
     return 0
@@ -383,7 +383,7 @@ koopa::sam_to_bam() { # {{{1
             -maxdepth 3 \
             -mindepth 1 \
             -type f \
-            -iname "*.sam" \
+            -iname '*.sam' \
             -print \
         | sort \
     )"
