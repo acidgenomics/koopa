@@ -27,9 +27,11 @@
 # """
 
 koopa::assert_is_installed pcre-config
+export PCRE_CFLAGS='/usr/include/x86_64-linux-gnu'
+export PCRE_LIBS='/usr/lib/x86_64-linux-gnu -lpcre'
 # Temporarily installing from master branch, which has bug fixes that aren't
 # yet available in tagged release, especially for GCC 10.
-version="master"
+version='master'
 name2="$(koopa::snake_case "$name")"
 file="${version}.tar.gz"
 url="https://github.com/ggreer/${name2}/archive/${file}"

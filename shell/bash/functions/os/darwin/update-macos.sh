@@ -1146,9 +1146,9 @@ koopa::update_macos_defaults() { # {{{1
     # > sudo chmod 600 \
     # >     '/System/Library/CoreServices/Search.bundle/Contents/MacOS/Search'
 
-    # Disable Spotlight indexing for any volume that gets mounted and has not yet
-    # been indexed before.
-    # Use 'sudo mdutil -i off /Volumes/foo' to stop indexing any volume.
+    # Disable Spotlight indexing for any volume that gets mounted and has not
+    # yet been indexed before. Use 'sudo mdutil -i off /Volumes/foo' to stop
+    # indexing any volume.
     # > sudo defaults write \
     # >     '/.Spotlight-V100/VolumeConfiguration' \
     # >     'Exclusions' \
@@ -1163,18 +1163,21 @@ koopa::update_macos_defaults() { # {{{1
     # Rebuild the index from scratch.
     # > sudo mdutil -E / > /dev/null
 
-    # Time Machine {{{1
-    # ==============================================================================
+    # Time Machine {{{2
+    # --------------------------------------------------------------------------
 
     # Prevent Time Machine from prompting to use new hard drives as backup volume.
-    defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+    defaults write \
+        'com.apple.TimeMachine' \
+        'DoNotOfferNewDisksForBackup' \
+        -bool true
 
     # Disable local Time Machine backups.
     # Note that this doesn't seem to be working in Catalina.
     # > hash tmutil &> /dev/null && sudo tmutil disablelocal
 
-    # Safari {{{1
-    # ==============================================================================
+    # Safari {{{2
+    # --------------------------------------------------------------------------
 
     # Check the defaults with 'defaults read -app Safari'.
 
