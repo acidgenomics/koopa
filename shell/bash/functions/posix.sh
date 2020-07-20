@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME MAKE ALL FUNCTIONS THAT REQUIRE THIS POSIX.
-koopa::_ansi_escape() {
-    __koopa_ansi_escape "$@"
-}
-
-# FIXME MAKE ALL FUNCTIONS THAT REQUIRE THIS POSIX.
-koopa::_msg() {
-    __koopa_msg "$@"
-}
-
 koopa::activate_openjdk() {
     _koopa_activate_openjdk "$@"
 }
@@ -82,6 +72,10 @@ koopa::cellar_prefix() {
     _koopa_cellar_prefix "$@"
 }
 
+koopa::coffee_time() {
+    _koopa_coffee_time "$@"
+}
+
 koopa::conda_env() {
     _koopa_conda_env "$@"
 }
@@ -140,6 +134,10 @@ koopa::emacs_prefix() {
 
 koopa::ensembl_perl_api_prefix() {
     _koopa_ensembl_perl_api_prefix "$@"
+}
+
+koopa::exit() {
+    _koopa_exit "$@"
 }
 
 koopa::expr() {
@@ -606,6 +604,10 @@ koopa::remove_from_path() {
     _koopa_remove_from_path "$@"
 }
 
+koopa::restart() {
+    _koopa_restart "$@"
+}
+
 koopa::ruby_api_version() {
     _koopa_ruby_api_version "$@"
 }
@@ -628,6 +630,18 @@ koopa::shell() {
 
 koopa::snake_case() {
     _koopa_snake_case "$@"
+}
+
+koopa::status_fail() {
+    _koopa_status_fail "$@"
+}
+
+koopa::status_note() {
+    _koopa_status_note "$@"
+}
+
+koopa::status_ok() {
+    _koopa_status_ok "$@"
 }
 
 koopa::stop() {
