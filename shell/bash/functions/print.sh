@@ -52,7 +52,7 @@ koopa::uninstall_start() { # {{{1
     prefix="${2:-}"
     if [[ -n "$prefix" ]]
     then
-        msg="Uninstalling ${name} at \"${prefix}\"."
+        msg="Uninstalling ${name} at '${prefix}'."
     else
         msg="Uninstalling ${name}."
     fi
@@ -81,7 +81,7 @@ koopa::update_start() { # {{{1
     prefix="${2:-}"
     if [[ -n "$prefix" ]]
     then
-        msg="Updating ${name} at \"${prefix}\"."
+        msg="Updating ${name} at '${prefix}'."
     else
         msg="Updating ${name}."
     fi

@@ -226,7 +226,7 @@ koopa::link_cellar() { # {{{1
     [[ -z "$version" ]] && version="$(koopa::find_cellar_version "$name")"
     cellar_prefix="${cellar_prefix}/${version}"
     koopa::assert_is_dir "$cellar_prefix"
-    koopa::h2 "Linking \"${cellar_prefix}\" in \"${make_prefix}\"."
+    koopa::h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
     koopa::sys_set_permissions -r "$cellar_prefix"
     koopa::remove_broken_symlinks "$cellar_prefix"
     koopa::remove_broken_symlinks "$make_prefix"

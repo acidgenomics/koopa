@@ -10,7 +10,7 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
     do
         if [[ ! -f "${id}.fastq.gz" ]] && [[ ! -f "${id}_1.fastq.gz" ]]
         then
-            koopa::h1 "SRA Accession ID: \"${id}\"."
+            koopa::h1 "SRA Accession ID: '${id}'."
             fastq-dump --gzip --split-files "${id}"
         fi
     done < "$filelist"

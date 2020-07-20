@@ -134,7 +134,7 @@ koopa::tldr_file() { # {{{1
     # Parse the JSON file.
     desc="$( \
         tr '{' '\n' < "$index_file" \
-        | grep "\"name\":\"${cmd}\"" \
+        | grep "\"name\":'${cmd}'" \
     )"
     # Use the platform-specific version of the tldr first.
     if koopa::str_match "$desc" "$platform"
@@ -144,7 +144,7 @@ koopa::tldr_file() { # {{{1
     then
         subdir='common'
     else
-        koopa::stop "Failed to locate tldr for \"${cmd}\"."
+        koopa::stop "Failed to locate tldr for '${cmd}'."
     fi
     file="${prefix}/${subdir}/${cmd}.md"
     koopa::assert_is_file "$file"

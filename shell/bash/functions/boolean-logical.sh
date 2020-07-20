@@ -363,7 +363,7 @@ koopa::is_r_package_installed() { # {{{1
     # Fast mode: checking the 'site-library' directory.
     #
     # Alternate, slow mode:
-    # > Rscript -e "\"${1}\" %in% rownames(utils::installed.packages())" \
+    # > Rscript -e "'${1}' %in% rownames(utils::installed.packages())" \
     # >     | grep -q 'TRUE'
     # """
     local pkg pos r

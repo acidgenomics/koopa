@@ -28,10 +28,10 @@ koopa::_kallisto_index() { # {{{1
     koopa::assert_is_file "$fasta_file"
     if [[ -f "$index_file" ]]
     then
-        koopa::note "Index exists at \"${index_file}\". Skipping."
+        koopa::note "Index exists at '${index_file}'. Skipping."
         return 0
     fi
-    koopa::h2 "Generating kallisto index at \"${index_file}\"."
+    koopa::h2 "Generating kallisto index at '${index_file}'."
     index_dir="$(dirname "$index_file")"
     log_file="${index_dir}/kallisto-index.log"
     koopa::mkdir "$index_dir"
@@ -94,10 +94,10 @@ koopa::_kallisto_quant() { # {{{1
     sample_output_dir="${output_dir}/${id}"
     if [[ -d "$sample_output_dir" ]]
     then
-        koopa::note "Skipping \"${id}\"."
+        koopa::note "Skipping '${id}'."
         return 0
     fi
-    koopa::h2 "Quantifying \"${id}\" into \"${sample_output_dir}\"."
+    koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
     bootstraps=30
     koopa::dl "Bootstraps" "$bootstraps"
     threads="$(koopa::cpu_count)"
@@ -213,7 +213,7 @@ koopa::kallisto() { # {{{1
     # Error on FASTQ match failure.
     if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No FASTQs in \"${fastq_dir}\" with \"${r1_tail}\"."
+        koopa::stop "No FASTQs in '${fastq_dir}' with '${r1_tail}'."
     fi
     koopa::info "${#fastq_r1_files[@]} samples detected."
     koopa::mkdir "$output_dir"

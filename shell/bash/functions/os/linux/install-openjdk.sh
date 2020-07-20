@@ -65,7 +65,7 @@ koopa::install_openjdk() { # {{{1
                 unique='664493ef4a6946b186ff29eb326336a2/7'
                 ;;
             *)
-                koopa::stop "Unsupported version: \"${version}\"."
+                koopa::stop "Unsupported version: '${version}'."
         esac
         file="${name}-${version}_linux-x64_bin.tar.gz"
         url="https://download.java.net/java/GA/jdk${version}/\

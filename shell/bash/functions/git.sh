@@ -95,7 +95,7 @@ koopa::git_pull_recursive() { # {{{1
     then
         koopa::stop 'Failed to detect any git repos.'
     fi
-    koopa::h1 "Pulling ${#repos[@]} git repos at \"${dir}\"."
+    koopa::h1 "Pulling ${#repos[@]} git repos at '${dir}'."
     for repo in "${repos[@]}"
     do
         repo="$(dirname "$repo")"
@@ -127,7 +127,7 @@ koopa::git_push_recursive() { # {{{1
     then
         koopa::stop 'Failed to detect any git repos.'
     fi
-    koopa::h1 "Pushing ${#repos[@]} git repos at \"${dir}\"."
+    koopa::h1 "Pushing ${#repos[@]} git repos at '${dir}'."
     for repo in "${repos[@]}"
     do
         repo="$(dirname "$repo")"
@@ -357,7 +357,7 @@ koopa::git_status_recursive() { # {{{1
     then
         koopa::stop 'Failed to detect any git repos.'
     fi
-    koopa::h1 "Checking status of ${#repos[@]} git repos at \"${dir}\"."
+    koopa::h1 "Checking status of ${#repos[@]} git repos at '${dir}'."
     for repo in "${repos[@]}"
     do
         repo="$(dirname "$repo")"

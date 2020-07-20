@@ -60,7 +60,7 @@ koopa::move_into_dated_dirs_by_filename() { # {{{1
             subdir="${year}/${month}/${day}"
             koopa::mv -t "$subdir" "$file"
         else
-            koopa::stop "Does not contain date: \"${file}\"."
+            koopa::stop "Does not contain date: '${file}'."
         fi
     done
     return 0

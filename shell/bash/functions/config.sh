@@ -3,7 +3,7 @@
 koopa::add_make_prefix_link() { # {{{1
     # """
     # Ensure 'koopa' is linked inside make prefix.
-    # @note Updated 2020-07-07.
+    # @note Updated 2020-07-20.
     #
     # This is particularly useful for external scripts that source koopa header.
     # This approach works nicely inside a hardened R environment.
@@ -17,7 +17,7 @@ koopa::add_make_prefix_link() { # {{{1
     [[ -d "$make_prefix" ]] || return 0
     target_link="${make_prefix}/bin/koopa"
     [[ -L "$target_link" ]] && return 0
-    koopa::info "Adding \"koopa\" link inside \"${make_prefix}\"."
+    koopa::info "Adding 'koopa' link inside '${make_prefix}'."
     source_link="${koopa_prefix}/bin/koopa"
     koopa::sys_ln "$source_link" "$target_link"
     return 0
@@ -72,12 +72,12 @@ koopa::add_user_to_etc_passwd() { # {{{1
     koopa::assert_is_file "$passwd_file"
     user="${1:-${USER:?}}"
     user_string="$(getent passwd "$user")"
-    koopa::info "Updating \"${passwd_file}\" to include \"${user}\"."
+    koopa::info "Updating '${passwd_file}' to include '${user}'."
     if ! sudo grep -q "$user" "$passwd_file"
     then
-        sudo sh -c "printf \"%s\n\" \"${user_string}\" >> \"${passwd_file}\""
+        sudo sh -c "printf \"%s\n\" '${user_string}' >> '${passwd_file}'"
     else
-        koopa::note "$user already defined in \"${passwd_file}\"."
+        koopa::note "$user already defined in '${passwd_file}'."
     fi
     return 0
 }
@@ -98,7 +98,7 @@ koopa::add_user_to_group() { # {{{1
     koopa::assert_is_installed gpasswd
     group="${1:?}"
     user="${2:-${USER:?}}"
-    koopa::info "Adding user \"${user}\" to group \"${group}\"."
+    koopa::info "Adding user '${user}' to group '${group}'."
     sudo gpasswd --add "$user" "$group"
     return 0
 }
@@ -116,11 +116,11 @@ koopa::delete_dotfile() { # {{{1
         filepath="${HOME:?}/.${name}"
         if [[ -L "$filepath" ]]
         then
-            koopa::info "Removing \"${filepath}\"."
+            koopa::info "Removing '${filepath}'."
             koopa::rm "$filepath"
         elif [[ -f "$filepath" ]] || [[ -d "$filepath" ]]
         then
-            koopa::warning "Not a symlink: \"${filepath}\"."
+            koopa::warning "Not a symlink: '${filepath}'."
         fi
     done
     return 0
@@ -468,7 +468,7 @@ koopa::link_dotfile() { # {{{1
         koopa::rm "$symlink_path"
     elif [[ -e "$symlink_path" ]]
     then
-        koopa::stop "Existing dotfile: \"${symlink_path}\"."
+        koopa::stop "Existing dotfile: '${symlink_path}'."
         return 1
     fi
     koopa::dl "$symlink_path" "$source_path"
@@ -495,7 +495,7 @@ koopa::remove_user_from_group() { # {{{1
     # @note Updated 2020-07-05.
     #
     # @examples
-    # koopa::remove_user_from_group "docker"
+    # koopa::remove_user_from_group 'docker'
     # """
     local group user
     koopa::assert_has_args_le "$#" 2
@@ -593,7 +593,7 @@ koopa::update_ldconfig() { # {{{1
     # Create symlinks with "koopa-" prefix.
     # Note that we're using shell globbing here.
     # https://unix.stackexchange.com/questions/218816
-    koopa::h2 'Updating ldconfig in "/etc/ld.so.conf.d/".'
+    koopa::h2 "Updating ldconfig in '/etc/ld.so.conf.d/'."
     for source_file in "${conf_source}/"*".conf"
     do
         dest_file="/etc/ld.so.conf.d/koopa-$(basename "$source_file")"

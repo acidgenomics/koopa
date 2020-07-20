@@ -161,7 +161,7 @@ koopa::configure_vm() { # {{{1
         fi
         if [[ -e "$data_disk" ]]
         then
-            koopa::info "Data disk detected at \"${data_disk}\"."
+            koopa::info "Data disk detected at '${data_disk}'."
         fi
     fi
     # Prepare app prefix on external disk for write access (e.g. '/n').

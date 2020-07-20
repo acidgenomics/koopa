@@ -33,7 +33,7 @@ koopa::install_rcheck() { # {{{1
     koopa::install_start "$name"
     if [[ ! -d "$target_dir" ]]
     then
-        koopa::h2 "Downloading ${name} to \"${target_dir}\"."
+        koopa::h2 "Downloading ${name} to '${target_dir}'."
         (
             koopa::mkdir "$target_dir"
             git clone "$source_repo" "$target_dir"

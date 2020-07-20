@@ -112,7 +112,7 @@ koopa::install_perlbrew() { # {{{1
         for perl in "${perls[@]}"
         do
             koopa::str_match "$installed" "$perl" && continue
-            koopa::h2 "Installing \"${perl}\"."
+            koopa::h2 "Installing '${perl}'."
             koopa::coffee_time
             perlbrew install "$perl"
             koopa::install_success "$perl"

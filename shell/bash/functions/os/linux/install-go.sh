@@ -57,7 +57,7 @@ koopa::install_go() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$app_prefix"
-    koopa::h2 "Linking from \"${app_prefix}\" into \"${cellar_prefix}\"."
+    koopa::h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
     koopa::cp -t "$cellar_prefix" "${app_prefix}/bin"
     if [[ "$link_cellar" -eq 1 ]]
     then
@@ -65,7 +65,7 @@ koopa::install_go() { # {{{1
         # Need to create directory expected by GOROOT environment variable.
         # If this doesn't exist, Go will currently error.
         goroot='/usr/local/go'
-        koopa::h2 "Linking GOROOT directory at \"${goroot}\"."
+        koopa::h2 "Linking GOROOT directory at '${goroot}'."
         koopa::ln "$app_prefix" "$goroot"
         # > go env GOROOT
     fi

@@ -40,10 +40,10 @@ koopa::_bam_filter() { # {{{1
     output_bam_bn="$(basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
-        koopa::note "Skipping \"${output_bam_bn}\"."
+        koopa::note "Skipping '${output_bam_bn}'."
         return 0
     fi
-    koopa::h2 "Filtering \"${input_bam_bn}\" to \"${output_bam_bn}\"."
+    koopa::h2 "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
     koopa::assert_is_file "$input_bam"
     koopa::dl 'Filter' "$filter"
     threads="$(koopa::cpu_count)"
@@ -116,10 +116,10 @@ koopa::_bam_sort() { # {{{1
     sorted_bam_bn="$(basename "$sorted_bam")"
     if [[ -f "$sorted_bam" ]]
     then
-        koopa::note "Skipping \"${sorted_bam_bn}\"."
+        koopa::note "Skipping '${sorted_bam_bn}'."
         return 0
     fi
-    koopa::h2 "Sorting \"${unsorted_bam_bn}\" to \"${sorted_bam_bn}\"."
+    koopa::h2 "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
     koopa::assert_is_file "$unsorted_bam"
     threads="$(koopa::cpu_count)"
     koopa::dl 'Threads' "${threads}"
@@ -163,10 +163,10 @@ koopa::_sam_to_bam() { # {{{1
     bam_bn="$(basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
-        koopa::note "Skipping \"${bam_bn}\"."
+        koopa::note "Skipping '${bam_bn}'."
         return 0
     fi
-    koopa::h2 "Converting \"${sam_bn}\" to \"${bam_bn}\"."
+    koopa::h2 "Converting '${sam_bn}' to '${bam_bn}'."
     koopa::assert_is_file "$input_sam"
     threads="$(koopa::cpu_count)"
     koopa::dl 'Threads' "$threads"
@@ -203,9 +203,9 @@ koopa::bam_filter() { # {{{1
     # Error if file array is empty.
     if ! koopa::is_array_non_empty "${bam_files[@]}"
     then
-        koopa::stop "No BAM files detected in \"${dir}\"."
+        koopa::stop "No BAM files detected in '${dir}'."
     fi
-    koopa::h1 "Filtering BAM files in \"${dir}\"."
+    koopa::h1 "Filtering BAM files in '${dir}'."
     koopa::activate_conda_env sambamba
     koopa::dl 'sambamba' "$(koopa::which_realpath sambamba)"
     # Performing filtering in multiple steps here.
@@ -263,7 +263,7 @@ koopa::bam_index() { # {{{1
     koopa::dl 'Threads' "$threads"
     for bam_file in "$@"
     do
-        koopa::info "Indexing \"${bam_file}\"."
+        koopa::info "Indexing '${bam_file}'."
         koopa::assert_is_file "$bam_file"
         sambamba index \
             --nthreads="$threads" \
@@ -298,9 +298,9 @@ koopa::bam_sort() { # {{{1
     # Error if file array is empty.
     if ! koopa::is_array_non_empty "${bam_files[@]}"
     then
-        koopa::stop "No BAM files detected in \"${dir}\"."
+        koopa::stop "No BAM files detected in '${dir}'."
     fi
-    koopa::h1 "Sorting BAM files in \"${dir}\"."
+    koopa::h1 "Sorting BAM files in '${dir}'."
     koopa::activate_conda_env sambamba
     koopa::dl 'sambamba' "$(koopa::which_realpath sambamba)"
     for bam_file in "${bam_files[@]}"
@@ -390,9 +390,9 @@ koopa::sam_to_bam() { # {{{1
     # Error if file array is empty.
     if ! koopa::is_array_non_empty "${sam_files[@]}"
     then
-        koopa::stop "No SAM files detected in \"${dir}\"."
+        koopa::stop "No SAM files detected in '${dir}'."
     fi
-    koopa::h1 "Converting SAM files in \"${dir}\" to BAM format."
+    koopa::h1 "Converting SAM files in '${dir}' to BAM format."
     koopa::activate_conda_env samtools
     koopa::dl 'samtools' "$(koopa::which_realpath samtools)"
     case "$keep_sam" in

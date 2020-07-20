@@ -284,7 +284,7 @@ _koopa_invalid_arg() { # {{{1
     local x
     if [ "$#" -gt 0 ]
     then
-        x="Invalid argument: \"${1:?}\"."
+        x="Invalid argument: '${1:?}'."
     else
         x='Invalid argument.'
     fi
