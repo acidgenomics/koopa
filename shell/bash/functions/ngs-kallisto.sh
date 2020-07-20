@@ -34,7 +34,7 @@ koopa::_kallisto_index() { # {{{1
     koopa::h2 "Generating kallisto index at \"${index_file}\"."
     index_dir="$(dirname "$index_file")"
     log_file="${index_dir}/kallisto-index.log"
-    mkdir -pv "$index_dir"
+    koopa::mkdir "$index_dir"
     kallisto index \
         -i "$index_file" \
         "$fasta_file" \
@@ -103,7 +103,7 @@ koopa::_kallisto_quant() { # {{{1
     threads="$(koopa::cpu_count)"
     koopa::dl "Threads" "$threads"
     log_file="${sample_output_dir}/kallisto-quant.log"
-    mkdir -pv "$sample_output_dir"
+    koopa::mkdir "$sample_output_dir"
     kallisto quant \
         --bootstrap-samples="$bootstraps" \
         --index="$index_file" \

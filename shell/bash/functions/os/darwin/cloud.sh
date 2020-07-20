@@ -27,8 +27,9 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     sudo killall bird
-    rm -fr "${HOME}/Library/Application Support/CloudDocs"
-    rm -fr "${HOME}/Library/Caches/"*
+    koopa::rm \
+        "${HOME}/Library/Application Support/CloudDocs" \
+        "${HOME}/Library/Caches/"*
     sudo reboot now
     return 0
 }

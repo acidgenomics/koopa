@@ -1,6 +1,7 @@
 #!/bin/sh
 # koopa nolint=coreutils
 
+# FIXME CAN WE MOVE THIS TO BASH?
 _koopa_add_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.

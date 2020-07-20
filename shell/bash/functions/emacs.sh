@@ -53,7 +53,7 @@ koopa::install_spacemacs() { # {{{1
 koopa::link_emacs() { # {{{1
     # """
     # Link Emacs.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-20.
     #
     # Currently supports Doom, Spacemacs, and minimal ESS config.
     # """
@@ -69,10 +69,10 @@ koopa::link_emacs() { # {{{1
     fi
     if [[ "$name" != 'minimal' ]]
     then
-        rm -fv "${HOME}/.emacs"
+        koopa::rm "${HOME}/.emacs"
     elif [[ "$name" != 'spacemacs' ]]
     then
-        rm -fv "${HOME}/.spacemacs"
+        koopa::rm "${HOME}/.spacemacs"
     fi
     case "$name" in
         doom)
@@ -97,7 +97,7 @@ koopa::link_emacs() { # {{{1
             koopa::stop 'Invalid Emacs config name.'
             ;;
     esac
-    ln -fnsv "$custom_prefix" "$default_prefix"
+    koopa::ln "$custom_prefix" "$default_prefix"
     return 0
 }
 

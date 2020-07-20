@@ -120,7 +120,7 @@ _koopa_export_hostname() { # {{{1
 _koopa_export_lesspipe() { # {{{
     # """
     # Export lesspipe settings.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-20.
     #
     # Preconfigured on some Linux systems at '/etc/profile.d/less.sh'.
     #
@@ -130,11 +130,12 @@ _koopa_export_lesspipe() { # {{{
     # See also:
     # - https://github.com/wofr06/lesspipe
     # """
-    if [ -n "${LESSOPEN:-}" ] &&
-        _koopa_is_installed "lesspipe.sh"
+    # shellcheck disable=SC2039
+    local lesspipe
+    lesspipe='lesspipe.sh'
+    if [ -n "${LESSOPEN:-}" ] && _koopa_is_installed "$lesspipe"
     then
-        lesspipe_exe="$(_koopa_which_realpath 'lesspipe.sh')"
-        export LESSOPEN="|${lesspipe_exe} %s"
+        export LESSOPEN="|${lesspipe} %s"
         export LESS_ADVANCED_PREPROCESSOR=1
     fi
     return 0
