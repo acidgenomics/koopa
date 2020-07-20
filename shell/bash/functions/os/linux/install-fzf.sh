@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_fzf() {
+koopa::install_fzf() { # {{{1
     # """
     # Install fzf.
     # @note Updated 2020-07-20.

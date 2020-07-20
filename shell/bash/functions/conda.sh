@@ -59,7 +59,7 @@ koopa::activate_conda_env() { # {{{1
     return 0
 }
 
-koopa::conda_create_bioinfo_envs() {
+koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
     # @note Updated 2020-07-14.
@@ -341,7 +341,7 @@ koopa::conda_remove_env() { # {{{1
     return 0
 }
 
-koopa::install_conda() {
+koopa::install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
     # @note Updated 2020-07-17.

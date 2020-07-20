@@ -14,7 +14,7 @@ _koopa_cd() { # {{{1
     return 0
 }
 
-_koopa_parent_dir() {
+_koopa_parent_dir() { # {{{1
     # """
     # Get the parent directory path.
     # @note Updated 2020-07-20.

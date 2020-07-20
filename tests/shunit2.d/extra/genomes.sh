@@ -7,7 +7,7 @@ then
     return 0
 fi
 
-test_download_ensembl_genome() {
+test_download_ensembl_genome() { # {{{1
     output_dir="${SHUNIT_TMPDIR}/ensembl"
     mkdir -p "$output_dir"
 
@@ -28,7 +28,7 @@ test_download_ensembl_genome() {
     assertTrue "[ -d \"${output_dir}/${basename}\" ]"
 }
 
-test_download_flybase_genome() {
+test_download_flybase_genome() { # {{{1
     output_dir="${SHUNIT_TMPDIR}/flybase"
     mkdir -p "$output_dir"
     download-flybase-genome \
@@ -38,7 +38,7 @@ test_download_flybase_genome() {
     assertTrue "[ -d \"${output_dir}/${basename}\" ]"
 }
 
-test_download_gencode_genome() {
+test_download_gencode_genome() { # {{{1
     output_dir="${SHUNIT_TMPDIR}/gencode"
     mkdir -p "$output_dir"
     download-gencode-genome \
@@ -56,7 +56,7 @@ test_download_gencode_genome() {
     assertTrue "[ -d \"${output_dir}/${basename}\" ]"
 }
 
-test_download_refseq_genome_bin() {
+test_download_refseq_genome_bin() { # {{{1
     output_dir="${SHUNIT_TMPDIR}/refseq"
     mkdir -p "$output_dir"
     download-refseq-genome \

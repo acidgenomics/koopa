@@ -405,7 +405,7 @@ koopa::is_r_package_installed() { # {{{1
     return 0
 }
 
-koopa::is_recent() {
+koopa::is_recent() { # {{{1
     # """
     # If the file exists and is more recent than 2 weeks old.
     #

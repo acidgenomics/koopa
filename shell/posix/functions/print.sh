@@ -121,7 +121,7 @@ __koopa_h() { # {{{1
     return 0
 }
 
-__koopa_msg() {
+__koopa_msg() { # {{{1
     # """
     # Koopa standard message.
     # @note Updated 2020-07-01.

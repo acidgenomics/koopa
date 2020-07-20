@@ -125,7 +125,7 @@ koopa::_bowtie2_index() { # {{{1
     return 0
 }
 
-koopa::bowtie2() {
+koopa::bowtie2() { # {{{1
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     fastq_dir='fastq'
     output_dir='bowtie2'

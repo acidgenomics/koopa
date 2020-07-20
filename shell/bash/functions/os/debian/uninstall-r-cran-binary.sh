@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_uninstall_r_cran_binary() {
+koopa::debian_uninstall_r_cran_binary() { # {{{1
     # """
     # Uninstall R CRAN binary.
     # @note Updated 2020-07-16.

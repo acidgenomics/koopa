@@ -104,16 +104,16 @@
 # ==============================================================================
 #
 # In this script:
-# > suite() {
+# > suite() { # {{{1
 # >     . ./tests/test1
 # > }
 # > . shunit2
 #
 # In the test files:
-# > example1_test() {
+# > example1_test() { # {{{1
 # >     ... # test body here
 # > }
-# > example2_test() {
+# > example2_test() { # {{{1
 # >     ... # test body here
 # > }
 # > suite_addTest example1_test
@@ -152,7 +152,7 @@ set +o errexit
 
 shunit2_dir="${script_dir}/shunit2.d"
 
-suite() {
+suite() { # {{{1
     for file in "${shunit2_dir}/"*".sh"
     do
         # shellcheck disable=SC1090

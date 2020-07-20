@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_install_wine() {
+koopa::debian_install_wine() { # {{{1
     # """
     # Install Wine.
     # @note Updated 2020-07-16.

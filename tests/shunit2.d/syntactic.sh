@@ -7,7 +7,7 @@ then
     return 0
 fi
 
-test_camel_case_bin() {
+test_camel_case_bin() { # {{{1
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
     MOCK_OUTPUT="$(dirname "${MOCK_INPUT}")/fooBar"
     touch "$MOCK_INPUT"
@@ -17,7 +17,7 @@ test_camel_case_bin() {
     assertTrue "[ -f \"${MOCK_OUTPUT}\" ]"
 }
 
-test_kebab_case_bin() {
+test_kebab_case_bin() { # {{{1
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
     MOCK_OUTPUT="$(dirname "${MOCK_INPUT}")/foo-bar"
     touch "$MOCK_INPUT"
@@ -27,7 +27,7 @@ test_kebab_case_bin() {
     assertTrue "[ -f \"${MOCK_OUTPUT}\" ]"
 }
 
-test_snake_case_bin() {
+test_snake_case_bin() { # {{{1
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
     MOCK_OUTPUT="$(dirname "${MOCK_INPUT}")/foo_bar"
     touch "$MOCK_INPUT"

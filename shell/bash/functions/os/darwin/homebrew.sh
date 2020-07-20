@@ -26,7 +26,7 @@ koopa::brew_cask_outdated() { # {{{
     return 0
 }
 
-koopa::brew_cask_quarantine_fix() {
+koopa::brew_cask_quarantine_fix() { # {{{1
     sudo xattr -r -d com.apple.quarantine /Applications/*.app
     return 0
 }
@@ -103,7 +103,7 @@ koopa::brew_update() { # {{{1
     return 0
 }
 
-koopa::macos_install_homebrew() {
+koopa::macos_install_homebrew() { # {{{1
     # """
     # Install Homebrew.
     # @note Updated 2020-07-17.
@@ -143,7 +143,7 @@ koopa::macos_install_homebrew() {
     return 0
 }
 
-koopa::macos_install_homebrew_little_snitch() {
+koopa::macos_install_homebrew_little_snitch() { # {{{1
     # """
     # Install Little Snitch via Homebrew Cask.
     # @note Updated 2020-07-17.
@@ -209,7 +209,7 @@ koopa::macos_uninstall_homebrew() { # {{{1
     return 0
 }
 
-koopa::macos_update_homebrew() {
+koopa::macos_update_homebrew() { # {{{1
     # """
     # Update Homebrew.
     # @note Updated 2020-07-17.
