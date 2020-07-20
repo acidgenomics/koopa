@@ -62,6 +62,7 @@ koopa::cp() { # {{{1
         source_file="${1:?}"
         koopa::assert_is_existing "$source_file"
         target_file="${2:?}"
+        # FIXME This step doesn't work for fzf install script.
         [[ -e "$target_file" ]] && "${rm[@]}" "$target_file"
         target_parent="$(dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
