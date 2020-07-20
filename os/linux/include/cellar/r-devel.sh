@@ -12,7 +12,7 @@ koopa::mkdir "${rtop}/r-devel/build"
 koopa::cd "$rtop"
 svn co "${repos}/trunk" 'r-devel/source'
 # Ensure that repo is up-to-date.
-# > cd "${rtop}/r-devel/source" || exit 1
+# > koopa::cd "${rtop}/r-devel/source"
 # > svn up
 # Get the sources of the recommended packages.
 koopa::cd "${rtop}/r-devel/source/tools"
