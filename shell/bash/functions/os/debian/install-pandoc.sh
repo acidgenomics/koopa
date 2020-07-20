@@ -16,7 +16,8 @@ koopa::debian_install_pandoc() { # {{{1
     (
         koopa::cd "$tmp_dir"
         file="${name}-${version}-1-amd64.deb"
-        url="https://github.com/jgm/${name}/releases/download/${version}/${file}"
+        url="https://github.com/jgm/${name}/releases/download/\
+${version}/${file}"
         koopa::download "$url"
         sudo dpkg -i "$file"
     )
