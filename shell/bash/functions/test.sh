@@ -3,7 +3,7 @@
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2020-07-08.
+    # @note Updated 2020-07-20.
     # Not sorting here can speed the function up.
     # """
     koopa::assert_has_no_args "$#"
@@ -14,6 +14,7 @@ koopa::test_find_files() { # {{{1
             -mindepth 1 \
             -type f \
             -not -name "$(basename "$0")" \
+            -not -name '*.1' \
             -not -name '*.md' \
             -not -name '.pylintrc' \
             -not -path "${prefix}/.git/*" \

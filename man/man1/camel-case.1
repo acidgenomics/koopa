@@ -11,15 +11,22 @@ Convert input into camel case
 .SH OPTIONS
 .TP
 .B \-\-rename
-Rename input files. Assumes we're renaming files in current working directory, but also supports explicit and/or mixed file paths. Doesn't work recursively.
+Rename input files.
+Assumes we're renaming files in current working directory, but also supports
+explicit and/or mixed file paths.
+Doesn't work recursively.
 .TP
 .B \-\-strict
-Enforce strict camel case output, coercing acronyms. For example, 'geneID' becomes 'geneId'.
+Enforce strict camel case output, coercing acronyms.
+For example, 'geneID' becomes 'geneId'.
 .TP
 .B \-\-prefix
-Include "x" prefix for names that are syntactically invalid in R. Note that this includes input beginning with a number. Disabled by default.
+Include "x" prefix for names that are syntactically invalid in R.
+Note that this includes input beginning with a number.
+Disabled by default.
 .SH DESCRIPTION
-Runs in string mode by default. File rename mode can be enabled by setting '--rename' flag.
+Runs in string mode by default.
+File rename mode can be enabled by setting '--rename' flag.
 .SH SEE ALSO
 .IP
 \(bu 'syntactic::camelCase()' in R.
@@ -40,4 +47,5 @@ Runs in string mode by default. File rename mode can be enabled by setting '--re
 ## ./x1ControlA.fastq.gz
 .fi
 .SH NOTE
-Bash script that calls Rscript internally. Requires the syntactic package to be installed.
+Bash script that calls Rscript internally.
+Requires the syntactic package to be installed.
