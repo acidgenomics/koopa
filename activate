@@ -62,6 +62,7 @@ _koopa_activate() { # {{{1
         _koopa_activate_gcc_colors
         _koopa_activate_emacs
         _koopa_activate_go
+        _koopa_activate_nextflow
         _koopa_activate_openjdk
         _koopa_activate_pipx
         _koopa_activate_ruby

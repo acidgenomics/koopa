@@ -121,6 +121,37 @@ _koopa_host_id() { # {{{1
     return 0
 }
 
+_koopa_mem_gb() { # {{{1
+    # """
+    # Get total system memory in GB.
+    # @note Updated 2020-07-21.
+    #
+    # - 1 GB / 1024 MB
+    # - 1 MB / 1024 KB
+    # - 1 KB / 1024 bytes
+    #
+    # Usage of 'int()' in awk rounds down.
+    # """
+    # shellcheck disable=SC2039
+    local denom mem
+    _koopa_is_installed awk || return 1
+    if _koopa_is_macos
+    then
+        mem="$(sysctl -n hw.memsize)"
+        denom=1073741824  # 1024^3; bytes
+
+    else
+        mem="$(awk '/MemTotal/ {print $2}' '/proc/meminfo')"
+        denom=1048576  # 1024^2; KB
+    fi
+    mem="$( \
+        awk -v denom="$denom" -v mem="$mem" \
+        'BEGIN{ printf "%.0f\n", mem / denom }' \
+    )"
+    _koopa_print "$mem"
+    return 0
+}
+
 _koopa_os_codename() { # {{{1
     # """
     # Operating system code name.

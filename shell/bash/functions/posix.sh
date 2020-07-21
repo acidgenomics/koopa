@@ -452,6 +452,10 @@ koopa::make_prefix() { # {{{1
     _koopa_make_prefix "$@"
 }
 
+koopa::mem_gb() { # {{{1
+    _koopa_mem_gb "$@"
+}
+
 koopa::missing_arg() { # {{{1
     _koopa_missing_arg "$@"
 }

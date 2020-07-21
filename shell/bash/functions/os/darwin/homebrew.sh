@@ -3,7 +3,7 @@
 koopa::brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-21.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
@@ -21,7 +21,7 @@ koopa::brew_cask_outdated() { # {{{
     tmp_file="$(koopa::tmp_file)"
     script -q "$tmp_file" brew cask outdated --greedy >/dev/null
     x="$(grep -v '(latest)' "$tmp_file")"
-    [[ -n "$x" ]] && return 0
+    [[ -n "$x" ]] || return 0
     koopa::print "$x"
     return 0
 }
@@ -61,7 +61,7 @@ koopa::brew_outdated() { # {{{
 koopa::brew_update() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-21.
     #
     # Alternative approaches:
     # > brew list \
@@ -85,8 +85,8 @@ koopa::brew_update() { # {{{1
     koopa::h2 'Updating brews.'
     brew upgrade --force-bottle || true
     koopa::h2 'Updating casks.'
-    casks="$(koopa::brew_cask_outdated)"
-    if [[ -n "$casks" ]]
+    readarray -t casks <<< "$(koopa::brew_cask_outdated)"
+    if koopa::is_array_non_empty "${casks[@]}"
     then
         koopa::info "${#casks[@]} outdated casks detected."
         koopa::print "${casks[@]}"
@@ -165,7 +165,7 @@ koopa::macos_install_homebrew_packages() { # {{{1
     # Install Homebrew packages using Bundle Brewfile.
     # @note Updated 2020-07-17.
     # """
-    local brewfile name_fancy
+    local brew brewfile name_fancy relink_brews remove_brews
     koopa::assert_has_no_args "$#"
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
@@ -174,7 +174,26 @@ koopa::macos_install_homebrew_packages() { # {{{1
     brewfile="$(koopa::brewfile)"
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
+    remove_brews=(
+        'osgeo-gdal'
+        'osgeo-hdf4'
+        'osgeo-libgeotiff'
+        'osgeo-libkml'
+        'osgeo-libspatialite'
+        'osgeo-netcdf'
+        'osgeo-postgresql'
+        'osgeo-proj'
+    )
+    for brew in "${remove_brews[@]}"
+    do
+        brew remove "$brew" &>/dev/null || true
+    done
     brew bundle install --file="$brewfile" --no-lock --no-upgrade
+    relink_brews=('gcc')
+    for brew in "${relink_brews[@]}"
+    do
+        brew link --overwrite "$brew" &>/dev/null || true
+    done
     return 0
 }
 
