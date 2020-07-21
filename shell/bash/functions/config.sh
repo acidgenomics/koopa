@@ -392,9 +392,10 @@ koopa::link_docker() { # {{{1
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2020-07-07.
+    # @note Updated 2020-07-21.
     # """
-    local config dot_dir dot_repo force pos private source_name symlink_name
+    local config dot_dir dot_repo force pos private source_name symlink_name \
+        xdg_config_home
     koopa::assert_has_args "$#"
     config=0
     force=0
@@ -457,7 +458,9 @@ koopa::link_dotfile() { # {{{1
     # Add link either in HOME (default) or XDG_CONFIG_HOME.
     if [[ "$config" -eq 1 ]]
     then
-        symlink_path="${XDG_CONFIG_HOME:?}/${symlink_name}"
+        xdg_config_home="${XDG_CONFIG_HOME:-}"
+        [[ -z "$xdg_config_home" ]] && xdg_config_home="${HOME:?}/.config"
+        symlink_path="${xdg_config_home}/${symlink_name}"
     else
         symlink_path="${HOME:?}/.${symlink_name}"
     fi
