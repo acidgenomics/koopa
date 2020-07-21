@@ -12,7 +12,7 @@ __koopa_id() { # {{{1
 _koopa_cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-21.
     #
     # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
     # """
@@ -32,15 +32,7 @@ _koopa_cpu_count() { # {{{1
         n=1
     fi
     # Subtract some cores for login use on powerful machines.
-    if [ "$n" -ge 17 ]
-    then
-        # For 17+ cores, use 'n-2'.
-        n=$((n - 2))
-    elif [ "$n" -ge 5 ] && [ "$n" -le 16 ]
-    then
-        # For 5-16 cores, use 'n-1'.
-        n=$((n - 1))
-    fi
+    [ "$n" -ge 17 ] && n=$((n - 2))
     _koopa_print "$n"
     return 0
 }
