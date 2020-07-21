@@ -121,6 +121,31 @@ _koopa_host_id() { # {{{1
     return 0
 }
 
+_koopa_mem_gb() { # {{{1
+    # """
+    # Get total system memory in GB.
+    # @note Updated 2020-07-21.
+    #
+    # - 1 GB / 1024 MB
+    # - 1 MB / 1024 KB
+    # - 1 KB / 1024 bytes
+    # """
+    # shellcheck disable=SC2039
+    local mem_bytes mem_gb
+    if _koopa_is_macos
+    then
+        _koopa_is_installed sysctl || return 1
+        mem_bytes="$(sysctl -n hw.memsize)"
+        mem_gb="$(( mem_bytes / 1073741824 ))"
+        mem_gb="$(_koopa_print "$mem_gb" | cut -d '.' -f 1)"
+    else
+        # FIXME ADD SUPPORT FOR THIS ON LINUX.
+        _koopa_stop 'Not supported yet'
+    fi
+    _koopa_print "$mem_gb"
+    return 0
+}
+
 _koopa_os_codename() { # {{{1
     # """
     # Operating system code name.
