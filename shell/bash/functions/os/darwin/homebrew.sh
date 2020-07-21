@@ -3,7 +3,7 @@
 koopa::brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-21.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
@@ -21,7 +21,7 @@ koopa::brew_cask_outdated() { # {{{
     tmp_file="$(koopa::tmp_file)"
     script -q "$tmp_file" brew cask outdated --greedy >/dev/null
     x="$(grep -v '(latest)' "$tmp_file")"
-    [[ -n "$x" ]] && return 0
+    [[ -n "$x" ]] || return 0
     koopa::print "$x"
     return 0
 }
@@ -61,7 +61,7 @@ koopa::brew_outdated() { # {{{
 koopa::brew_update() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-21.
     #
     # Alternative approaches:
     # > brew list \
@@ -85,8 +85,8 @@ koopa::brew_update() { # {{{1
     koopa::h2 'Updating brews.'
     brew upgrade --force-bottle || true
     koopa::h2 'Updating casks.'
-    casks="$(koopa::brew_cask_outdated)"
-    if [[ -n "$casks" ]]
+    readarray -t casks <<< "$(koopa::brew_cask_outdated)"
+    if koopa::is_array_non_empty "${casks[@]}"
     then
         koopa::info "${#casks[@]} outdated casks detected."
         koopa::print "${casks[@]}"
