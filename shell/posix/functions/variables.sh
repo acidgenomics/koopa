@@ -131,19 +131,22 @@ _koopa_mem_gb() { # {{{1
     # - 1 KB / 1024 bytes
     # """
     # shellcheck disable=SC2039
-    local mem_bytes mem_gb
+    local denom mem
     _koopa_is_installed awk || return 1
     if _koopa_is_macos
     then
-        mem_bytes="$(sysctl -n hw.memsize)"
+        mem="$(sysctl -n hw.memsize)"
+        denom=1073741824  # 1024^3; bytes
+
     else
-        mem_bytes="$(awk '/MemTotal/ {print $2}' '/proc/meminfo')"
+        mem="$(awk '/MemTotal/ {print $2}' '/proc/meminfo')"
+        denom=1048576  # 1024^2; KB
     fi
-    mem_gb="$( \
-        awk -v mem_bytes="$mem_bytes" \
-        'BEGIN { print int(mem_bytes / 1073741824) }' \
+    mem="$( \
+        awk -v denom="$denom" mem="$mem" \
+        'BEGIN { print int(mem / denom) }' \
     )"
-    _koopa_print "$mem_gb"
+    _koopa_print "$mem"
     return 0
 }
 
