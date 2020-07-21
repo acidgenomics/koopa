@@ -60,6 +60,7 @@ test_all_illegal_strings() { # {{{1
         '\(\) \{$'          # functions should include vim marker
         '\b(EOF|EOL)\b'     # Use 'END' instead.
         '^path='            # can mess up Zsh PATH
+        '_exe\b'
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
