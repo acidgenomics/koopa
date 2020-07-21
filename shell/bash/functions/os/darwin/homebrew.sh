@@ -165,7 +165,7 @@ koopa::macos_install_homebrew_packages() { # {{{1
     # Install Homebrew packages using Bundle Brewfile.
     # @note Updated 2020-07-17.
     # """
-    local brewfile name_fancy
+    local brew brewfile name_fancy relink_brews remove_brews
     koopa::assert_has_no_args "$#"
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
@@ -174,7 +174,26 @@ koopa::macos_install_homebrew_packages() { # {{{1
     brewfile="$(koopa::brewfile)"
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
+    remove_brews=(
+        'osgeo-gdal'
+        'osgeo-hdf4'
+        'osgeo-libgeotiff'
+        'osgeo-libkml'
+        'osgeo-libspatialite'
+        'osgeo-netcdf'
+        'osgeo-postgresql'
+        'osgeo-proj'
+    )
+    for brew in "${remove_brews[@]}"
+    do
+        brew remove "$brew" &>/dev/null || true
+    done
     brew bundle install --file="$brewfile" --no-lock --no-upgrade
+    relink_brews=('gcc')
+    for brew in "${relink_brews[@]}"
+    do
+        brew link --overwrite "$brew" &>/dev/null || true
+    done
     return 0
 }
 
