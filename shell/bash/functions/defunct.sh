@@ -18,6 +18,27 @@ koopa::defunct() { # {{{1
     koopa::stop "${msg}"
 }
 
+_koopa_activate_conda_create_env() { # {{{1
+    # """
+    # @note Updated 2020-07-20.
+    # """
+    koopa::defunct koopa::activate_conda_env
+}
+
+_koopa_conda_create_env() { # {{{1
+    # """
+    # @note Updated 2020-07-20.
+    # """
+    koopa::defunct koopa::conda_create_env
+}
+
+_koopa_conda_remove_env() { # {{{1
+    # """
+    # @note Updated 2020-07-20.
+    # """
+    koopa::defunct koopa::conda_remove_env
+}
+
 koopa::assert_is_darwin() { # {{{1
     # """
     # @note Updated 2020-01-14.
