@@ -143,7 +143,7 @@ _koopa_mem_gb() { # {{{1
         denom=1048576  # 1024^2; KB
     fi
     mem="$( \
-        awk -v denom="$denom" mem="$mem" \
+        awk -v denom="$denom" -v mem="$mem" \
         'BEGIN { print int(mem / denom) }' \
     )"
     _koopa_print "$mem"
