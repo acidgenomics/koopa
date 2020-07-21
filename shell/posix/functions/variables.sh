@@ -138,7 +138,6 @@ _koopa_mem_gb() { # {{{1
         mem_bytes="$(sysctl -n hw.memsize)"
     else
         mem_bytes="$(awk '/MemTotal/ {print $2}' '/proc/meminfo')"
-        _koopa_stop 'Not supported yet'
     fi
     mem_gb="$( \
         awk -v mem_bytes="$mem_bytes" \
