@@ -57,6 +57,10 @@ koopa::bcbio_run_tests() { # {{{1
 }
 
 koopa::install_bcbio() { # {{{1
+    # """
+    # Install bcbio-nextgen.
+    # @note Updated 2020-07-21.
+    # """
     local app_prefix current_version file install_dir name name_fancy prefix \
         python tmp_dir tools_dir url version
     name='bcbio'
@@ -120,9 +124,9 @@ koopa::install_bcbio() { # {{{1
             --upgrade="$version"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     # Clean up conda packages.
-    # > conda_exe="${install_dir}/anaconda/bin/conda"
-    # > conda_exe="${tools_dir}/bin/bcbio_conda"
-    # > "$conda_exe" clean --yes --tarballs
+    # > conda="${install_dir}/anaconda/bin/conda"
+    # > conda="${tools_dir}/bin/bcbio_conda"
+    # > "$conda" clean --yes --tarballs
     if [[ "$version" == 'stable' ]]
     then
         koopa::sys_ln "${app_prefix}/${current_version}" "${app_prefix}/stable"
