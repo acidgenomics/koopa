@@ -129,6 +129,8 @@ _koopa_mem_gb() { # {{{1
     # - 1 GB / 1024 MB
     # - 1 MB / 1024 KB
     # - 1 KB / 1024 bytes
+    #
+    # Usage of 'int()' in awk rounds down.
     # """
     # shellcheck disable=SC2039
     local denom mem
@@ -144,7 +146,7 @@ _koopa_mem_gb() { # {{{1
     fi
     mem="$( \
         awk -v denom="$denom" -v mem="$mem" \
-        'BEGIN { print int(mem / denom) }' \
+        'BEGIN{ printf "%.0f\n", mem / denom }' \
     )"
     _koopa_print "$mem"
     return 0
