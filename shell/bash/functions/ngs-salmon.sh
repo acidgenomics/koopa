@@ -110,11 +110,12 @@ koopa::_salmon_quant() { # {{{1
     salmon quant \
         --gcBias \
         --index="$index_dir" \
-        --libType="A" \
+        --libType='A' \
         --mates1="$fastq_r1" \
         --mates2="$fastq_r2" \
         --numBootstraps="$bootstraps" \
         --output="$sample_output_dir" \
+        --posBias \
         --seqBias \
         --threads="$threads" \
         2>&1 | tee "$log_file"
