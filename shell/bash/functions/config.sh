@@ -177,23 +177,23 @@ koopa::fix_rbenv_permissions() { # {{{1
 koopa::fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-21.
     # """
-    local cellar_prefix koopa_prefix make_prefix zsh_exe
+    local cellar_prefix koopa_prefix make_prefix zsh
     koopa::assert_has_no_args "$#"
     koopa::info 'Fixing Zsh permissions to pass compaudit checks.'
     koopa_prefix="$(koopa::prefix)"
-    koopa::sys_chmod -v g-w \
+    koopa::sys_chmod -v 'g-w' \
         "${koopa_prefix}/shell/zsh" \
         "${koopa_prefix}/shell/zsh/functions"
     koopa::is_installed zsh || return 0
-    zsh_exe="$(koopa::which_realpath zsh)"
+    zsh="$(koopa::which_realpath zsh)"
     make_prefix="$(koopa::make_prefix)"
     if [[ -d "${make_prefix}/share/zsh/site-functions" ]]
     then
-        if koopa::str_match_regex "$zsh_exe" "^${make_prefix}"
+        if koopa::str_match_regex "$zsh" "^${make_prefix}"
         then
-            koopa::sys_chmod -v g-w \
+            koopa::sys_chmod -v 'g-w' \
                 "${make_prefix}/share/zsh" \
                 "${make_prefix}/share/zsh/site-functions"
         fi
@@ -201,12 +201,12 @@ koopa::fix_zsh_permissions() { # {{{1
     cellar_prefix="$(koopa::cellar_prefix)"
     if [[ -d "$cellar_prefix" ]]
     then
-        if koopa::str_match_regex "$zsh_exe" "^${cellar_prefix}"
+        if koopa::str_match_regex "$zsh" "^${cellar_prefix}"
         then
-            koopa::sys_chmod -v g-w \
-                "${cellar_prefix}/zsh/"*"/share/zsh" \
-                "${cellar_prefix}/zsh/"*"/share/zsh/"* \
-                "${cellar_prefix}/zsh/"*"/share/zsh/"*"/functions"
+            koopa::sys_chmod -v 'g-w' \
+                "${cellar_prefix}/zsh/"*'/share/zsh' \
+                "${cellar_prefix}/zsh/"*'/share/zsh/'* \
+                "${cellar_prefix}/zsh/"*'/share/zsh/'*'/functions'
         fi
     fi
     return 0
