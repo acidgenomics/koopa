@@ -132,16 +132,18 @@ _koopa_mem_gb() { # {{{1
     # """
     # shellcheck disable=SC2039
     local mem_bytes mem_gb
+    _koopa_is_installed awk || return 1
     if _koopa_is_macos
     then
-        _koopa_is_installed sysctl || return 1
         mem_bytes="$(sysctl -n hw.memsize)"
-        mem_gb="$(( mem_bytes / 1073741824 ))"
-        mem_gb="$(_koopa_print "$mem_gb" | cut -d '.' -f 1)"
     else
-        # FIXME ADD SUPPORT FOR THIS ON LINUX.
+        mem_bytes="$(awk '/MemTotal/ {print $2}' '/proc/meminfo')"
         _koopa_stop 'Not supported yet'
     fi
+    mem_gb="$( \
+        awk -v mem_bytes="$mem_bytes" \
+        'BEGIN { print int(mem_bytes / 1073741824) }' \
+    )"
     _koopa_print "$mem_gb"
     return 0
 }
