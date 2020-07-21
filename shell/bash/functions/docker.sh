@@ -436,11 +436,11 @@ koopa::docker_run() { # {{{1
     workdir="$(koopa::strip_trailing_slash "$workdir")"
     docker pull "$image"
     flags=(
-        "$image"
         "--volume=${PWD}:${workdir}"
         "--workdir=${workdir}"
         '--interactive'
         '--tty'
+        "$image"
     )
     if [[ "$bash" -eq 1 ]]
     then
