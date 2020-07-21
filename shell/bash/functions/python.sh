@@ -7,11 +7,20 @@ koopa::install_pip() { # {{{1
     # """
     local file name pos python reinstall tmp_dir url
     name='pip'
+    python="$(koopa::python)"
     reinstall=0
     pos=()
     while (("$#"))
     do
         case "$1" in
+            --python=*)
+                python="${1#*=}"
+                shift 1
+                ;;
+            --python)
+                python="$2"
+                shift 2
+                ;;
             --reinstall)
                 reinstall=1
                 shift 1
@@ -33,8 +42,7 @@ koopa::install_pip() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args_le "$#" 1
-    python="${1:-python3}"
+    koopa::assert_has_no_args "$#"
     if ! koopa::is_installed "$python"
     then
         koopa::warning "Python ('${python}') is not installed."
@@ -66,8 +74,7 @@ koopa::install_pip() { # {{{1
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2020-07-10.
-    # These are used internally by koopa.
+    # @note Updated 2020-07-21.
     # """
     local install_flags name_fancy pkgs pos python
     python="$(koopa::python)"
@@ -76,8 +83,19 @@ koopa::install_python_packages() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            --python=*)
+                python="${1#*=}"
+                shift 1
+                ;;
+            --python)
+                python="$2"
+                shift 2
+                ;;
             --reinstall)
                 reinstall=1
+                shift 1
+                ;;
+            '')
                 shift 1
                 ;;
             --)
@@ -116,7 +134,7 @@ koopa::install_python_packages() { # {{{1
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
     koopa::dl 'Site library' "$(koopa::python_site_packages_prefix)"
-    install_flags=()
+    install_flags=("--python=${python}")
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
     koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
@@ -128,11 +146,11 @@ koopa::install_python_packages() { # {{{1
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-21.
     # """
     local pip_install_flags pos python reinstall
     koopa::assert_has_args "$#"
-    python='python3'
+    python="$(koopa::python)"
     reinstall=0
     pos=()
     while (("$#"))
@@ -229,30 +247,30 @@ koopa::python_remove_pycache() { # {{{1
 koopa::venv_create() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2020-07-20.
+    # @note Updated 2020-07-21.
     # """
-    local name prefix py_exe
+    local name prefix python venv_python
+    python="$(koopa::python)"
     koopa::assert_has_no_envs
-    koopa::assert_is_installed python3
-    koopa::assert_is_current_version python
+    koopa::assert_is_installed "$python"
     name="${1:?}"
     prefix="$(koopa::venv_prefix)/${name}"
     [[ -d "$prefix" ]] && return 0
     shift 1
     koopa::info "Installing Python '${name}' venv at '${prefix}'."
     koopa::mkdir "$prefix"
-    python3 -m venv "$prefix"
-    py_exe="${prefix}/bin/python3"
-    "$py_exe" -m pip install --upgrade pip setuptools wheel
+    "$python" -m venv "$prefix"
+    venv_python="${prefix}/bin/python3"
+    "$venv_python" -m pip install --upgrade pip setuptools wheel
     if [[ "$#" -gt 0 ]]
     then
-        "$py_exe" -m pip install --upgrade "$@"
+        "$venv_python" -m pip install --upgrade "$@"
     elif [[ "$name" != 'base' ]]
     then
-        "$py_exe" -m pip install "$name"
+        "$venv_python" -m pip install "$name"
     fi
     koopa::sys_set_permissions -r "$prefix"
-    "$py_exe" -m pip list
+    "$venv_python" -m pip list
     return 0
 }
 
