@@ -268,7 +268,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
-    # @note Updated 2020-07-14.
+    # @note Updated 2020-07-21.
     # """
     local conda_prefix force env env_name pos prefix
     koopa::assert_has_args "$#"
@@ -301,6 +301,7 @@ koopa::conda_create_env() { # {{{1
     conda_prefix="$(koopa::conda_prefix)"
     for env in "$@"
     do
+        env="${env//@/=}"
         # Get supported version.
         if ! koopa::str_match "$env" '='
         then
