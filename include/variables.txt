@@ -375,7 +375,9 @@ python-pyflakes="2.2.0"
 python-pylint="2.5.3"
 python-pytest="5.4.3"
 python-ranger-fm="1.9.3"
+python-setuptools="49.2.0"
 python-six="1.15.0"
+python-wheel="0.34.2"
 
 # Homebrew cask versions {{{1
 # ==============================================================================
