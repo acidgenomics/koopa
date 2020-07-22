@@ -3,7 +3,7 @@
 koopa::install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-22.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -63,6 +63,9 @@ koopa::install_openjdk() { # {{{1
                 ;;
             14.0.1)
                 unique='664493ef4a6946b186ff29eb326336a2/7'
+                ;;
+            14.0.2)
+                unique='205943a0976c4ed48cb16f1043c5c647/12'
                 ;;
             *)
                 koopa::stop "Unsupported version: '${version}'."
