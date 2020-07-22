@@ -117,6 +117,7 @@ koopa::install_python_packages() { # {{{1
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
+        # FIXME Create another loop here, simplifying code.
         pkgs=(
             "black==$(koopa::variable 'python-black')"
             "flake8==$(koopa::variable 'python-flake8')"
@@ -126,6 +127,7 @@ koopa::install_python_packages() { # {{{1
             "pyflakes==$(koopa::variable 'python-pyflakes')"
             "pylint==$(koopa::variable 'python-pylint')"
             "pytest==$(koopa::variable 'python-pytest')"
+            "ranger-fm==$(koopa::variable 'python-ranger-fm')"
             "six==$(koopa::variable 'python-six')"
             'setuptools'
             'wheel'

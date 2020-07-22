@@ -694,7 +694,8 @@ installed(
         "flake8",
         "pip3",
         "pylint",
-        "pytest"
+        "pytest",
+        "ranger"
     )
 )
 
