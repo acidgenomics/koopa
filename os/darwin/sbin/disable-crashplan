@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../include/header.sh"
+. "$(dirname "${BASH_SOURCE[0]}")/../../../shell/bash/include/header.sh"
 
 koopa::macos_disable_crashplan "$@"

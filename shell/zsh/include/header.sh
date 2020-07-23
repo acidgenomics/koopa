@@ -3,7 +3,7 @@
 
 # """
 # Zsh header.
-# @note Updated 2020-07-17.
+# @note Updated 2020-07-23.
 # """
 
 if [[ "$#" -gt 0 ]]
@@ -54,9 +54,9 @@ fi
 # These are not recommended to be set during koopa activation.
 if [[ "$shopts" -eq 1 ]]
 then
-    [[ "$verbose" -eq 1 ]] && setopt xtrace                                 # -x
-    setopt errexit                                                          # -e
-    setopt nounset                                                          # -u
+    [[ "$verbose" -eq 1 ]] && setopt xtrace # -x
+    setopt errexit # -e
+    setopt nounset # -u
     setopt pipefail
 fi
 
