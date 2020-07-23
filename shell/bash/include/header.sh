@@ -97,7 +97,7 @@ fi
 
 # Source POSIX header (which includes functions).
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
+. "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
 # Source Bash functions.
 _koopa_source_dir "${KOOPA_PREFIX}/shell/bash/functions"

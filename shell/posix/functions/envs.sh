@@ -50,7 +50,7 @@ _koopa_deactivate_venv() { # {{{1
     #
     # The standard approach currently messes up autojump path:
     # # shellcheck disable=SC1090
-    # > source "${VIRTUAL_ENV}/bin/activate"
+    # > . "${VIRTUAL_ENV}/bin/activate"
     # > deactivate
     # """
     [ -n "${VIRTUAL_ENV:-}" ] || return 0

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+. "$(koopa header bash)"
 
 # """
 # Conda environment test script.
