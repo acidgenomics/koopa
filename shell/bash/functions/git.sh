@@ -274,11 +274,10 @@ koopa::git_submodule_init() { # {{{1
     return 0
 }
 
-# FIXME This changes to master, which we don't want.
 koopa::git_pull() { # {{{1
     # """
     # Pull (update) a git repository.
-    # @note Updated 2020-07-22.
+    # @note Updated 2020-07-23.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
@@ -297,6 +296,7 @@ koopa::git_pull() { # {{{1
         git submodule --quiet update --init --recursive
         git submodule --quiet foreach --recursive \
             git fetch --all --quiet
+        # This will switch to master, which we don't want:
         # > git submodule --quiet foreach --recursive \
         # >     git checkout 'master' --quiet
         # > git submodule --quiet foreach --recursive \

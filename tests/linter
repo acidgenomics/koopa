@@ -14,7 +14,7 @@ koopa::test_linter() {
     koopa::git_clone_dotfiles &>/dev/null
     koopa::assert_is_symlink "${koopa_prefix}/."{'lintr','pylintrc'}
     linter_prefix="${koopa_prefix}/tests/linter.d"
-    koopa::source_dir "$linter_prefix"
+    koopa::exec_dir "$linter_prefix"
     return 0
 }
 
