@@ -12,7 +12,7 @@ koopa::activate_bash_aliases() { # {{{1
     if [[ -f "$user_aliases" ]]
     then
         # shellcheck source=/dev/null
-        source "$user_aliases"
+        . "$user_aliases"
     fi
     return 0
 }
@@ -43,7 +43,7 @@ koopa::activate_bash_completion() { # {{{1
         set +u
     fi
     # shellcheck source=/dev/null
-    source "$script"
+    . "$script"
     if [[ "$nounset" -eq 1 ]]
     then
         set -e

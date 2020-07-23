@@ -8,7 +8,7 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${koopa_prefix}/shell/bash/include/header.sh"
+. "${koopa_prefix}/shell/bash/include/header.sh"
 
 koopa::h1 'Running linter checks.'
 

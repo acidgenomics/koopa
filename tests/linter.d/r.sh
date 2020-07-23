@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
+. "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
 test() { # {{{1
     # """
