@@ -1,112 +1,109 @@
 #!/usr/bin/env bash
 
-# """
-# Check that all scripts support '--help' flag.
-# Updated 2020-06-24.
-# """
-
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
-koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-. "${koopa_prefix}/shell/bash/include/header.sh"
+. "$(koopa header bash)"
 
-status=0
+koopa::test_roff() { # {{{1
+    # """
+    # Check that all scripts support '--help' flag.
+    # Updated 2020-07-23.
+    # """
+    local bin_dirs dir file files koopa_prefix man_dirs status
+    koopa_prefix="$(koopa::prefix)"
+    status=0
+    koopa::h1 "Running manual file '--help' flag checks."
 
-koopa::h1 "Running manual file '--help' flag checks."
+    # man dirs {{{2
+    # --------------------------------------------------------------------------
 
-# man dirs {{{1
-# ==============================================================================
-
-# Put all 'man/' dirs into an array and loop.
-# Pipe GNU find into array.
-readarray -t man_dirs <<< "$( \
-    find "$koopa_prefix" \
-        -mindepth 1 \
-        -type d \
-        -name 'man' \
-        -not -path "${koopa_prefix}/.git/*" \
-        -not -path "${koopa_prefix}/dotfiles/*" \
-        -not -path "${koopa_prefix}/opt/*" \
-        -not -path "${koopa_prefix}/shunit2-*" \
-        -print \
-    | sort \
-)"
-
-for dir in "${man_dirs[@]}"
-do
-    koopa::add_to_manpath_start "$dir"
-done
-
-# man file formatting {{{1
-# ==============================================================================
-
-koopa::h2 'Checking troff man file formatting.'
-
-for dir in "${man_dirs[@]}"
-do
-    koopa::h3 "$dir"
-    readarray -t files <<< "$( \
-        find "$dir" \
-            -mindepth 2 \
-            -maxdepth 2 \
-            -type f \
-            -print \
-        | sort \
-    )"
-    if ! koopa::is_array_non_empty "${files[@]}"
-    then
-        koopa::stop "No files: '${dir}'."
-    fi
-    for file in "${files[@]}"
-    do
-        # > koopa::info "$file"
-        if ! koopa::str_match_regex "$(head -n 1 "$file")" '^\.TH '
-        then
-            koopa::note "ERROR: '${file}'."
-            status=1
-        fi
-    done
-done
-
-# '--help' flag support {{{1
-# ==============================================================================
-
-koopa::h2 "Running exported script '--help' flag checks."
-
-# Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
-readarray -t bin_dirs <<< "$( \
-    find "$koopa_prefix" \
-        -mindepth 1 \
-        -type d \
-        \( -name 'bin' -o -name 'sbin' \) \
-        -not -path "${koopa_prefix}/opt/*" \
-        -not -path "${koopa_prefix}/shunit2-*" \
-        -not -path '*/cellar/*' \
-        -not -path '*/dotfiles/*' \
-        -print \
-    | sort \
-)"
-
-for dir in "${bin_dirs[@]}"
-do
-    koopa::h3 "$dir"
-    readarray -t files <<< "$( \
-        find "$dir" \
+    # Put all 'man/' dirs into an array and loop.
+    # Pipe GNU find into array.
+    readarray -t man_dirs <<< "$( \
+        find "$koopa_prefix" \
             -mindepth 1 \
-            -maxdepth 1 \
-            -type f \
+            -type d \
+            -name 'man' \
+            -not -path "${koopa_prefix}/.git/*" \
+            -not -path "${koopa_prefix}/dotfiles/*" \
+            -not -path "${koopa_prefix}/opt/*" \
+            -not -path "${koopa_prefix}/shunit2-*" \
             -print \
         | sort \
     )"
-    for file in "${files[@]}"
+    for dir in "${man_dirs[@]}"
     do
-        # > koopa::info "$file"
-        if ! "$file" --help &>/dev/null
-        then
-            koopa::note "ERROR: '${file}'."
-            status=1
-        fi
+        koopa::add_to_manpath_start "$dir"
     done
-done
 
-exit "$status"
+    # man file formatting {{{2
+    # --------------------------------------------------------------------------
+
+    koopa::h2 'Checking troff man file formatting.'
+    for dir in "${man_dirs[@]}"
+    do
+        koopa::h3 "$dir"
+        readarray -t files <<< "$( \
+            find "$dir" \
+                -mindepth 2 \
+                -maxdepth 2 \
+                -type f \
+                -print \
+            | sort \
+        )"
+        if ! koopa::is_array_non_empty "${files[@]}"
+        then
+            koopa::stop "No files: '${dir}'."
+        fi
+        for file in "${files[@]}"
+        do
+            # > koopa::info "$file"
+            if ! koopa::str_match_regex "$(head -n 1 "$file")" '^\.TH '
+            then
+                koopa::note "ERROR: '${file}'."
+                status=1
+            fi
+        done
+    done
+
+    # '--help' flag support {{{2
+    # --------------------------------------------------------------------------
+
+    koopa::h2 "Running exported script '--help' flag checks."
+    # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
+    readarray -t bin_dirs <<< "$( \
+        find "$koopa_prefix" \
+            -mindepth 1 \
+            -type d \
+            \( -name 'bin' -o -name 'sbin' \) \
+            -not -path "${koopa_prefix}/opt/*" \
+            -not -path "${koopa_prefix}/shunit2-*" \
+            -not -path '*/cellar/*' \
+            -not -path '*/dotfiles/*' \
+            -print \
+        | sort \
+    )"
+    for dir in "${bin_dirs[@]}"
+    do
+        koopa::h3 "$dir"
+        readarray -t files <<< "$( \
+            find "$dir" \
+                -mindepth 1 \
+                -maxdepth 1 \
+                -type f \
+                -print \
+            | sort \
+        )"
+        for file in "${files[@]}"
+        do
+            # > koopa::info "$file"
+            if ! "$file" --help &>/dev/null
+            then
+                koopa::note "ERROR: '${file}'."
+                status=1
+            fi
+        done
+    done
+    return "$status"
+}
+
+koopa::test_roff "$@"

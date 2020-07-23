@@ -1,25 +1,21 @@
 #!/usr/bin/env bash
 
-# """
-# Check that scripts do not contain lints.
-# Updated 2020-07-07.
-# """
-
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
-koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-. "${koopa_prefix}/shell/bash/include/header.sh"
+. "$(koopa header bash)"
 
-koopa::h1 'Running linter checks.'
+koopa::test_linter() {
+    # """
+    # Check that scripts do not contain lints.
+    # Updated 2020-07-23.
+    # """
+    local koopa_prefix linter_prefix
+    koopa_prefix="$(koopa::prefix)"
+    koopa::h1 'Running linter checks.'
+    koopa::git_clone_dotfiles &>/dev/null
+    koopa::assert_is_symlink "${koopa_prefix}/."{'lintr','pylintrc'}
+    linter_prefix="${koopa_prefix}/tests/linter.d"
+    koopa::source_dir "$linter_prefix"
+    return 0
+}
 
-# Check that linter config files are linked correctly.
-# This step can error if dotfiles submodule hasn't cloned.
-koopa::git_clone_dotfiles >/dev/null
-koopa::assert_is_symlink "${koopa_prefix}/."{'lintr','pylintrc'}
-
-linter_dir="${script_dir}/linter.d"
-for file in "${linter_dir}/"*'.sh'
-do
-    # shellcheck source=/dev/null
-    [ -f "$file" ] && "$file"
-done
+koopa::test_linter "$@"

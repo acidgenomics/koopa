@@ -1,20 +1,26 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2034
-set -Eeu -o pipefail
 
-# """
-# Install and test koopa inside Docker.
-# Updated 2020-06-26.
-# """
+# shellcheck source=/dev/null
+. "$(koopa header bash)"
 
-image="${1:-debian}"
-image="acidgenomics/${image}:minimal"
+koopa::test_docker() {
+    # """
+    # Install and test koopa inside Docker.
+    # Updated 2020-07-23.
+    # """
+    local cmd image
+    image="${1:-debian}"
+    image="acidgenomics/${image}:minimal"
+    koopa::h1 "Running Docker install test in '${image}' image."
+    cmd="\
+        set -Eeu -o pipefail &&
+        rm -fr /usr/local/koopa && \
+        curl -sSL https://koopa.acidgenomics.com/install \
+            | bash -s -- --non-interactive --test"
+    docker pull "$image"
+    docker run -it "$image" bash -c "$cmd"
+    koopa::success 'Installation test was successful.'
+    return 0
+}
 
-cmd="\
-    set -Eeu -o pipefail &&
-    rm -fr /usr/local/koopa && \
-    curl -sSL https://koopa.acidgenomics.com/install \
-        | bash -s -- --non-interactive --test"
-
-docker pull "$image"
-docker run -it "$image" bash -c "$cmd"
+koopa::test_docker "$@"
