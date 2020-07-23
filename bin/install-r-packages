@@ -157,6 +157,7 @@ install(
         "available",
         "bookdown",
         "cgdsr",  # cBioPortal
+        "datapasta",
         "dbplyr",
         "dendextend",
         "dendsort",
@@ -175,6 +176,7 @@ install(
         "htmlwidgets",
         "janitor",
         "jsonlite",
+        "languageserver",
         "memoise",
         "openxlsx",
         "packrat",
@@ -288,7 +290,8 @@ install(
         "targetscan.Hs.eg.db",                      # miRNA
         "tximeta",                                  # RNASeq
         "tximport",                                 # RNASeq
-        "vsn"                                       # Visualization
+        "vsn",                                      # Visualization
+        "zinbwave"                                  # SingleCell
     ),
     reinstall = FALSE
 )
@@ -311,9 +314,11 @@ install(
         "acidgenomics/pointillism",                 # SingleCell
         "hbc/bcbioRNASeq",                          # RNASeq
         "hbc/bcbioSingleCell"                       # SingleCell
+        ## > "BaderLab/scClustViz"                  # SingleCell
         ## > "cole-trapnell-lab/monocle3"           # SingleCell
-        ## > "js229/Vennerable"                     # Visualization
         ## > "jonocarroll/DFplyr"                   # DataRepresentation
+        ## > "js229/Vennerable"                     # Visualization
+        ## > "kevinblighe/scDataviz"                # SingleCell
     ),
     reinstall = FALSE
 )
