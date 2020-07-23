@@ -69,7 +69,7 @@ koopa::macos_install_python_framework() { # {{{1
     return 0
 }
 
-koopa::macos_uninstall_python_framework() {
+koopa::macos_uninstall_python_framework() { # {{{1
     # """
     # Uninstall Python framework.
     # @note Updated 2020-07-21.

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-checks=0 source "${script_dir}/../shell/bash/include/header.sh"
+checks=0 . "$(dirname "${BASH_SOURCE[0]}")/../shell/bash/include/header.sh"
 
 koopa::generate_ssh_key "$@"
