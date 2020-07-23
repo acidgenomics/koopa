@@ -78,6 +78,43 @@ koopa::git_last_commit_remote() { # {{{1
     koopa::print "$x"
 }
 
+koopa::git_pull() { # {{{1
+    # """
+    # Pull (update) a git repository.
+    # @note Updated 2020-07-23.
+    #
+    # Can quiet down with 'git submodule --quiet' here.
+    # Note that git checkout, fetch, and pull also support '--quiet'.
+    #
+    # @seealso
+    # - https://git-scm.com/docs/git-submodule/2.10.2
+    # """
+    local branch
+    branch=
+    [[ "$#" -gt 0 ]] && branch="${*: -1}"
+    koopa::info "Pulling git repo at '${PWD:?}'."
+    koopa::assert_is_git
+    koopa::assert_is_installed git
+    git fetch --all
+    git pull "$@"
+    if [[ -s '.gitmodules' ]]
+    then
+        koopa::git_submodule_init
+        git submodule --quiet update --init --recursive
+        git submodule --quiet foreach --recursive \
+            git fetch --all --quiet
+        if [[ -n "$branch" ]]
+        then
+            git submodule --quiet foreach --recursive \
+                git checkout "$branch" --quiet
+            git submodule --quiet foreach --recursive \
+                git pull "$@"
+        fi
+    fi
+    koopa::success 'Pull was successful.'
+    return 0
+}
+
 koopa::git_pull_recursive() { # {{{1
     local dir repo repos
     koopa::assert_has_args_le "$#" 1
@@ -167,6 +204,41 @@ koopa::git_remote_url() { # {{{1
     return 0
 }
 
+koopa::git_reset() { # {{{1
+    # """
+    # Clean and reset a git repo and its submodules.
+    # @note Updated 2020-07-04.
+    #
+    # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
+    # directories better.
+    #
+    # Additional steps:
+    # # Ensure accidental swap files created by vim get nuked.
+    # > find . -type f -name '*.swp' -delete
+    # # Ensure invisible files get nuked on macOS.
+    # > if koopa::is_macos
+    # > then
+    # >     find . -type f -name '.DS_Store' -delete
+    # > fi
+    #
+    # See also:
+    # https://gist.github.com/nicktoumpelis/11214362
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::info "Resetting git repo at '${PWD:?}'."
+    koopa::assert_is_git
+    koopa::assert_is_installed git
+    git clean -dffx
+    if [[ -s '.gitmodules' ]]
+    then
+        koopa::git_submodule_init
+        git submodule --quiet foreach --recursive git clean -dffx
+        git reset --hard --quiet
+        git submodule --quiet foreach --recursive git reset --hard --quiet
+    fi
+    return 0
+}
+
 koopa::git_reset_fork_to_upstream() { # {{{1
     local dir
     koopa::assert_has_args_le "$#" 1
@@ -237,6 +309,36 @@ koopa::git_set_remote_url() { # {{{1
     return 0
 }
 
+koopa::git_status_recursive() { # {{{1
+    local dir repo repos
+    koopa::assert_has_args_le "$#" 1
+    dir="${1:-.}"
+    dir="$(realpath "$dir")"
+    # Using '-L' flag here in case git dir is a symlink.
+    readarray -t repos <<< "$( \
+        find -L "$dir" \
+            -mindepth 1 \
+            -maxdepth 2 \
+            -name '.git' \
+            -print \
+    )"
+    if ! koopa::is_array_non_empty "${repos[@]}"
+    then
+        koopa::stop 'Failed to detect any git repos.'
+    fi
+    koopa::h1 "Checking status of ${#repos[@]} git repos at '${dir}'."
+    for repo in "${repos[@]}"
+    do
+        repo="$(dirname "$repo")"
+        koopa::h2 "$repo"
+        (
+            koopa::cd "$repo"
+            git status
+        )
+    done
+    return 0
+}
+
 koopa::git_submodule_init() { # {{{1
     # """
     # Initialize git submodules.
@@ -273,101 +375,3 @@ koopa::git_submodule_init() { # {{{1
     done
     return 0
 }
-
-koopa::git_pull() { # {{{1
-    # """
-    # Pull (update) a git repository.
-    # @note Updated 2020-07-23.
-    #
-    # Can quiet down with 'git submodule --quiet' here.
-    # Note that git checkout, fetch, and pull also support '--quiet'.
-    #
-    # @seealso
-    # - https://git-scm.com/docs/git-submodule/2.10.2
-    # """
-    koopa::info "Pulling git repo at '${PWD:?}'."
-    koopa::assert_is_git
-    koopa::assert_is_installed git
-    git fetch --all
-    git pull "$@"
-    if [[ -s '.gitmodules' ]]
-    then
-        koopa::git_submodule_init
-        git submodule --quiet update --init --recursive
-        git submodule --quiet foreach --recursive \
-            git fetch --all --quiet
-        # This will switch to master, which we don't want:
-        # > git submodule --quiet foreach --recursive \
-        # >     git checkout 'master' --quiet
-        # > git submodule --quiet foreach --recursive \
-        # >     git pull 'origin' 'master'
-    fi
-    koopa::success 'Pull was successful.'
-    return 0
-}
-
-koopa::git_reset() { # {{{1
-    # """
-    # Clean and reset a git repo and its submodules.
-    # @note Updated 2020-07-04.
-    #
-    # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
-    # directories better.
-    #
-    # Additional steps:
-    # # Ensure accidental swap files created by vim get nuked.
-    # > find . -type f -name '*.swp' -delete
-    # # Ensure invisible files get nuked on macOS.
-    # > if koopa::is_macos
-    # > then
-    # >     find . -type f -name '.DS_Store' -delete
-    # > fi
-    #
-    # See also:
-    # https://gist.github.com/nicktoumpelis/11214362
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::info "Resetting git repo at '${PWD:?}'."
-    koopa::assert_is_git
-    koopa::assert_is_installed git
-    git clean -dffx
-    if [[ -s '.gitmodules' ]]
-    then
-        koopa::git_submodule_init
-        git submodule --quiet foreach --recursive git clean -dffx
-        git reset --hard --quiet
-        git submodule --quiet foreach --recursive git reset --hard --quiet
-    fi
-    return 0
-}
-
-koopa::git_status_recursive() { # {{{1
-    local dir repo repos
-    koopa::assert_has_args_le "$#" 1
-    dir="${1:-.}"
-    dir="$(realpath "$dir")"
-    # Using '-L' flag here in case git dir is a symlink.
-    readarray -t repos <<< "$( \
-        find -L "$dir" \
-            -mindepth 1 \
-            -maxdepth 2 \
-            -name '.git' \
-            -print \
-    )"
-    if ! koopa::is_array_non_empty "${repos[@]}"
-    then
-        koopa::stop 'Failed to detect any git repos.'
-    fi
-    koopa::h1 "Checking status of ${#repos[@]} git repos at '${dir}'."
-    for repo in "${repos[@]}"
-    do
-        repo="$(dirname "$repo")"
-        koopa::h2 "$repo"
-        (
-            koopa::cd "$repo"
-            git status
-        )
-    done
-    return 0
-}
-
