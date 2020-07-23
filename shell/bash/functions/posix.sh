@@ -417,11 +417,11 @@ koopa::is_ubuntu_18() { # {{{1
 }
 
 koopa::is_ubuntu_20() { # {{{1
-    _koopa_is_ubuntu_18 "$@"
+    _koopa_is_ubuntu_20 "$@"
 }
 
 koopa::is_venv_active() { # {{{1
-    _koopa_is_ubuntu_18 "$@"
+    _koopa_is_venv_active "$@"
 }
 
 koopa::java_prefix() { # {{{1
