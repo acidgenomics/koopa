@@ -136,6 +136,10 @@ koopa::ensembl_perl_api_prefix() { # {{{1
     _koopa_ensembl_perl_api_prefix "$@"
 }
 
+koopa::exec_dir() { # {{{1
+    _koopa_exec_dir "$@"
+}
+
 koopa::exit() { # {{{1
     _koopa_exit "$@"
 }

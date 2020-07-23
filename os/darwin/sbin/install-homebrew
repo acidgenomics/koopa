@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../../../shell/bash/include/header.sh" --no-header-checks
+checks=0 \
+    . "$(dirname "${BASH_SOURCE[0]}")/../../../shell/bash/include/header.sh"
 
 koopa::macos_install_homebrew "$@"
