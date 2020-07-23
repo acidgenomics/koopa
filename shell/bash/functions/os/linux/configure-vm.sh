@@ -228,6 +228,7 @@ koopa::configure_vm() { # {{{1
     koopa::run_if_installed install-llvm
     install-conda
     install-openjdk
+    install-python
     if [[ "$compact" -eq 0 ]]
     then
         install-curl
@@ -255,7 +256,6 @@ koopa::configure_vm() { # {{{1
         install-fish
         install-git
         install-openssh
-        install-python
         install-perl
         install-geos
         install-sqlite
