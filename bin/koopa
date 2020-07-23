@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-script_path="${BASH_SOURCE[0]}"
-if [[ -L "$script_path" ]]
+# Handle situation where 'koopa' is symlinked into '/usr/local'.
+bash_source="${BASH_SOURCE[0]}"
+if [[ -L "$bash_source" ]]
 then
     koopa::realpath() { # {{{1
         if [[ "$(uname -s)" == 'Darwin' ]]
@@ -12,10 +13,10 @@ then
             readlink -f "$@"
         fi
     }
-    script_path="$(koopa::realpath "$script_path")"
+    bash_source="$(koopa::realpath "$bash_source")"
 fi
-script_dir="$(cd "$(dirname "$script_path")" &>/dev/null && pwd -P)"
+
 # shellcheck source=/dev/null
-checks=0 source "${script_dir}/../shell/bash/include/header.sh"
+checks=0 source "$(dirname "$bash_source")/../shell/bash/include/header.sh"
 
 koopa::koopa "$@"
