@@ -83,7 +83,7 @@ koopa::check_system() { # {{{1
     export KOOPA_FORCE=1
     set +u
     # shellcheck disable=SC1090
-    source "${koopa_prefix}/activate"
+    . "${koopa_prefix}/activate"
     set -u
     Rscript --vanilla "$(koopa::include_prefix)/check-system.R"
     koopa::check_exports
