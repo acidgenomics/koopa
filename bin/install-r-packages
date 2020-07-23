@@ -157,6 +157,7 @@ install(
         "available",
         "bookdown",
         "cgdsr",  # cBioPortal
+        "datapasta",
         "dbplyr",
         "dendextend",
         "dendsort",
@@ -175,6 +176,7 @@ install(
         "htmlwidgets",
         "janitor",
         "jsonlite",
+        "languageserver",
         "memoise",
         "openxlsx",
         "packrat",
