@@ -12,7 +12,7 @@ __koopa_id() { # {{{1
 _koopa_cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-21.
     #
     # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
     # """
@@ -32,15 +32,7 @@ _koopa_cpu_count() { # {{{1
         n=1
     fi
     # Subtract some cores for login use on powerful machines.
-    if [ "$n" -ge 17 ]
-    then
-        # For 17+ cores, use 'n-2'.
-        n=$((n - 2))
-    elif [ "$n" -ge 5 ] && [ "$n" -le 16 ]
-    then
-        # For 5-16 cores, use 'n-1'.
-        n=$((n - 1))
-    fi
+    [ "$n" -ge 17 ] && n=$((n - 2))
     _koopa_print "$n"
     return 0
 }
@@ -118,6 +110,37 @@ _koopa_host_id() { # {{{1
             ;;
     esac
     _koopa_print "$id"
+    return 0
+}
+
+_koopa_mem_gb() { # {{{1
+    # """
+    # Get total system memory in GB.
+    # @note Updated 2020-07-21.
+    #
+    # - 1 GB / 1024 MB
+    # - 1 MB / 1024 KB
+    # - 1 KB / 1024 bytes
+    #
+    # Usage of 'int()' in awk rounds down.
+    # """
+    # shellcheck disable=SC2039
+    local denom mem
+    _koopa_is_installed awk || return 1
+    if _koopa_is_macos
+    then
+        mem="$(sysctl -n hw.memsize)"
+        denom=1073741824  # 1024^3; bytes
+
+    else
+        mem="$(awk '/MemTotal/ {print $2}' '/proc/meminfo')"
+        denom=1048576  # 1024^2; KB
+    fi
+    mem="$( \
+        awk -v denom="$denom" -v mem="$mem" \
+        'BEGIN{ printf "%.0f\n", mem / denom }' \
+    )"
+    _koopa_print "$mem"
     return 0
 }
 

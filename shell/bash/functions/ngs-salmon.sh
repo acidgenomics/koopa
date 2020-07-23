@@ -123,6 +123,10 @@ koopa::_salmon_quant() { # {{{1
 }
 
 koopa::salmon() { # {{{1
+    # """
+    # Run salmon on multiple samples.
+    # @note Updated 2020-07-21.
+    # """
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     koopa::assert_has_args "$#"
     fastq_dir='fastq'
@@ -214,6 +218,7 @@ koopa::salmon() { # {{{1
             -mindepth 1 \
             -type f \
             -name "*${r1_tail}" \
+            -not -name '._*' \
             -print \
         | sort \
     )"

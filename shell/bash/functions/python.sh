@@ -74,9 +74,9 @@ koopa::install_pip() { # {{{1
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2020-07-21.
+    # @note Updated 2020-07-22.
     # """
-    local install_flags name_fancy pkgs pos python
+    local install_flags name_fancy pkg pkgs pos python version
     python="$(koopa::python)"
     reinstall=0
     pos=()
@@ -118,18 +118,25 @@ koopa::install_python_packages() { # {{{1
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
-            "black==$(koopa::variable 'python-black')"
-            "flake8==$(koopa::variable 'python-flake8')"
-            "logbook==$(koopa::variable 'python-logbook')"
-            "pip==$(koopa::variable 'python-pip')"
-            "pipx==$(koopa::variable 'python-pipx')"
-            "pyflakes==$(koopa::variable 'python-pyflakes')"
-            "pylint==$(koopa::variable 'python-pylint')"
-            "pytest==$(koopa::variable 'python-pytest')"
-            "six==$(koopa::variable 'python-six')"
+            'black'
+            'flake8'
+            'logbook'
+            'pip'
+            'pipx'
+            'pyflakes'
+            'pylint'
+            'pytest'
+            'ranger-fm'
+            'six'
             'setuptools'
             'wheel'
         )
+        for i in "${!pkgs[@]}"
+        do
+            pkg="${pkgs[$i]}"
+            version="$(koopa::variable "python-${pkg}")"
+            pkgs[$i]="${pkg}==${version}"
+        done
     fi
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
