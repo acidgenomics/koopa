@@ -69,3 +69,19 @@ koopa::macos_install_python_framework() { # {{{1
     return 0
 }
 
+koopa::macos_uninstall_python_framework() {
+    # """
+    # Uninstall Python framework.
+    # @note Updated 2020-07-21.
+    # """
+    local name_fancy
+    name_fancy='Python framework'
+    koopa::uninstall_start "$name_fancy"
+    koopa::rm -S \
+        '/Library/Frameworks/Python.framework' \
+        '/Applications/Python'*
+    koopa::remove_broken_symlinks '/usr/local/bin'
+    koopa::uninstall_success "$name_fancy"
+    return 0
+}
+

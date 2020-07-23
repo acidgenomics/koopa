@@ -174,7 +174,7 @@ neovim="0.4.3"
 nextflow="20.04.1"
 
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="14.0.1"
+openjdk="14.0.2"
 
 # https://www.openssh.com/portable.html
 openssh="8.3p1"
@@ -374,7 +374,10 @@ python-pipx="0.15.4.0"
 python-pyflakes="2.2.0"
 python-pylint="2.5.3"
 python-pytest="5.4.3"
+python-ranger-fm="1.9.3"
+python-setuptools="49.2.0"
 python-six="1.15.0"
+python-wheel="0.34.2"
 
 # Homebrew cask versions {{{1
 # ==============================================================================
