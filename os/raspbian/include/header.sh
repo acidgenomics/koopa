@@ -3,7 +3,7 @@
 
 # """
 # Raspbian Linux header.
-# @note Updated 2020-07-17.
+# @note Updated 2020-07-23.
 # """
 
 if [[ -z "${KOOPA_PREFIX:-}" ]]
@@ -17,12 +17,6 @@ then
 fi
 
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/os/debian/include/header.sh"
-for file in "${KOOPA_PREFIX}/shell/bash/functions/os/raspbian/"*'.sh'
-do
-    # shellcheck source=/dev/null
-    [[ -f "$file" ]] && source "$file"
-done
-unset -v file
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 koopa::assert_is_raspbian
