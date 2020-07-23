@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
+. "$(koopa header bash)"
 
 test() { # {{{1
     # """

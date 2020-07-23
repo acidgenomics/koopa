@@ -136,6 +136,10 @@ koopa::ensembl_perl_api_prefix() { # {{{1
     _koopa_ensembl_perl_api_prefix "$@"
 }
 
+koopa::exec_dir() { # {{{1
+    _koopa_exec_dir "$@"
+}
+
 koopa::exit() { # {{{1
     _koopa_exit "$@"
 }
@@ -634,6 +638,10 @@ koopa::shell() { # {{{1
 
 koopa::snake_case() { # {{{1
     _koopa_snake_case "$@"
+}
+
+koopa::source_dir() { # {{{1
+    _koopa_source_dir "$@"
 }
 
 koopa::status_fail() { # {{{1
