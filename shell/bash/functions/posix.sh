@@ -636,6 +636,10 @@ koopa::snake_case() { # {{{1
     _koopa_snake_case "$@"
 }
 
+koopa::source_dir() { # {{{1
+    _koopa_source_dir "$@"
+}
+
 koopa::status_fail() { # {{{1
     _koopa_status_fail "$@"
 }
