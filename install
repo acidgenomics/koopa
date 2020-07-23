@@ -21,7 +21,7 @@ cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
-Updated 2020-07-20.
+Updated 2020-07-23.
 
 Optional arguments:
     --help, -h
@@ -58,7 +58,7 @@ END
 install() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2020-07-08.
+    # @note Updated 2020-07-23.
     # """
     local dotfiles interactive koopa_prefix passwordless profile shared test
     while (("$#"))
