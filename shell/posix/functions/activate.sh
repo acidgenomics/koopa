@@ -572,6 +572,18 @@ Versions/${minor_version}/bin"
     return 0
 }
 
+_koopa_activate_nextflow() { # {{{1
+    # """
+    # Activate Nextflow configuration.
+    # @note Updated 2020-07-21.
+    # @seealso
+    # - https://github.com/nf-core/smrnaseq/blob/master/docs/usage.md
+    # """
+    [ -z "${NXF_OPTS:-}" ] || return 0
+    export NXF_OPTS='-Xms1g -Xmx4g'
+    return 0
+}
+
 _koopa_activate_openjdk() { # {{{1
     # """
     # Activate OpenJDK.

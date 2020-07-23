@@ -50,7 +50,8 @@ install(
         "XML",
         "sf",
         "rgdal"
-    )
+    ),
+    reinstall = FALSE
 )
 
 h2("CRAN")
@@ -98,7 +99,8 @@ install(
         "viridis",
         "vroom",
         "xmlparsedata"
-    )
+    ),
+    reinstall = FALSE
 )
 
 ## https://www.bioconductor.org/packages/release/BiocViews.html#___Software
@@ -132,7 +134,8 @@ install(
         "ensembldb",
         "rtracklayer",
         "zlibbioc"
-    )
+    ),
+    reinstall = FALSE
 )
 
 if (!isTRUE(all)) {
@@ -189,7 +192,8 @@ install(
         "snakecase",
         "snow",
         "uwot"
-    )
+    ),
+    reinstall = FALSE
 )
 
 h2("Bioconductor")
@@ -285,7 +289,8 @@ install(
         "tximeta",                                  # RNASeq
         "tximport",                                 # RNASeq
         "vsn"                                       # Visualization
-    )
+    ),
+    reinstall = FALSE
 )
 
 ## GitHub packages.
@@ -309,7 +314,8 @@ install(
         ## > "cole-trapnell-lab/monocle3"           # SingleCell
         ## > "js229/Vennerable"                     # Visualization
         ## > "jonocarroll/DFplyr"                   # DataRepresentation
-    )
+    ),
+    reinstall = FALSE
 )
 
 message("Installation of R packages was successful.")

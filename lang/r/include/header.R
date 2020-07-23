@@ -1,9 +1,9 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-06-26.
+## @note Updated 2020-07-22.
 ## """
 
-stopifnot(packageVersion("base") >= "3.6")
+stopifnot(packageVersion("base") >= "4.0")
 
 options(
     ## Exit on any errors.
@@ -52,11 +52,11 @@ local({
     isPackageVersion <- .koopa[["isPackageVersion"]]
     ## GitHub dependencies.
     dependencies <- c(
-        "acidgenomics/acidbase" = "0.1.9",
-        "acidgenomics/acidgenerics" = "0.3.6",
+        "acidgenomics/acidbase" = "0.1.10",
+        "acidgenomics/acidgenerics" = "0.3.7",
         "acidgenomics/goalie" = "0.4.5",
-        "acidgenomics/syntactic" = "0.3.10",
-        "acidgenomics/bb8" = "0.2.14"
+        "acidgenomics/syntactic" = "0.4.1",
+        "acidgenomics/bb8" = "0.2.16"
     )
     ## Update dependencies, if necessary.
     ok <- isPackageVersion(dependencies)
