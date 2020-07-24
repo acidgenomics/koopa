@@ -664,6 +664,14 @@ koopa::str_match() { # {{{1
     _koopa_str_match "$@"
 }
 
+koopa::str_match_fixed() { # {{{1
+    _koopa_str_match_fixed "$@"
+}
+
+koopa::str_match_perl() { # {{{1
+    _koopa_str_match_perl "$@"
+}
+
 koopa::str_match_posix() { # {{{1
     _koopa_str_match_posix "$@"
 }
