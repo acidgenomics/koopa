@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME REWORK AND SUPPORT INTERNAL FLAG.
+# FIXME CONSOLIDATE CODE WITH _koopa_str_match_regex
 _koopa_str_match() { # {{{1
     # """
     # Does the input match a fixed string?
@@ -50,6 +52,7 @@ _koopa_str_match_posix() { # {{{1
     test "${1#*$2}" != "$1"
 }
 
+# FIXME CONSOLIDATE WITH STR_MATCH_FIXED
 _koopa_str_match_regex() { # {{{1
     # """
     # Does the input match a regular expression?
@@ -60,8 +63,9 @@ _koopa_str_match_regex() { # {{{1
     # * -G, --basic-regexp
     # * -P, --perl-regexp
     #
-    # Note that Perl-compatible regular expressions (PCREs) support negative
-    # lookaheads, which are often very useful.
+    # Perl-compatible regular expressions (PCREs) support negative
+    # lookaheads, which are often very useful. However, Perl regex isn't enabled
+    # by default for all installations of grep.
     # """
     # shellcheck disable=SC2039
     local string pattern
