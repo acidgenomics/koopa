@@ -19,7 +19,7 @@ then
     koopa::ln -S '/usr/bin/apr-1-config' '/usr/bin/apr-config'
     koopa::ln -S '/usr/bin/apu-1-config' '/usr/bin/apu-config'
 fi
-koopa::assert_is_installed 'apr-config' 'apu-config'
+koopa::assert_is_installed apr-config apu-config sqlite3
 file="${name}-${version}.tar.bz2"
 url="https://mirrors.ocf.berkeley.edu/apache/${name}/${file}"
 koopa::download "$url"
