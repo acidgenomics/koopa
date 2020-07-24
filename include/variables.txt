@@ -63,7 +63,7 @@ cellranger="3.1.0"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.17.3"
+cmake="3.18.0"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -190,7 +190,7 @@ oracle-instantclient="19.5.0.0.0-1"
 pandoc="2.10"
 
 # https://www.gnu.org/software/parallel/
-parallel="20200622"
+parallel="20200722"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
@@ -222,7 +222,7 @@ proj="7.1.0"
 pyenv="1.2.16"
 
 # https://www.python.org/downloads/
-python="3.8.4"
+python="3.8.5"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
