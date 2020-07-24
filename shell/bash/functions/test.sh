@@ -75,7 +75,9 @@ koopa::test_find_files_by_shebang() { # {{{1
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
-    # @note Updated 2020-07-20.
+    # @note Updated 2020-07-24.
+    #
+    # Requires Perl-compatible regular expression (PCRE) support (-P).
     # """
     local OPTIND failures file ignore name pattern x
     koopa::assert_has_args "$#"
@@ -101,6 +103,7 @@ koopa::test_grep() { # {{{1
     shift "$((OPTIND-1))"
     koopa::assert_has_args "$#"
     koopa::assert_is_set name pattern
+    koopa::assert_is_installed grep
     failures=()
     for file in "$@"
     do
