@@ -17,7 +17,7 @@
 if koopa::is_fedora
 then
     koopa::ln -S '/usr/bin/apr-1-config' '/usr/bin/apr-config'
-    koopa::ln -S /usr/bin/apu-1-config' /usr/bin/apu-config'
+    koopa::ln -S '/usr/bin/apu-1-config' '/usr/bin/apu-config'
 fi
 koopa::assert_is_installed 'apr-config' 'apu-config'
 file="${name}-${version}.tar.bz2"
