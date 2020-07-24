@@ -21,10 +21,6 @@ __koopa_str_match() { # {{{1
     # @seealso
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997
     # - https://unix.stackexchange.com/questions/233987
-    #
-    # @examples
-    # _koopa_str_match STRING PATTERN
-    # echo STRING | koopa_str_match PATTERN
     # """
     # shellcheck disable=SC2039
     local OPTIND flag pattern string
@@ -68,13 +64,17 @@ __koopa_str_match() { # {{{1
 }
 
 _koopa_str_match() { #{{{1
+    # """
+    # Does the input match a string?
+    # @note Updated 2020-07-24.
+    # """
     _koopa_str_match_fixed "$@"
 }
 
 _koopa_str_match_fixed() { # {{{1
     # """
     # Does the input match a fixed string?
-    # @note Updated 2020-05-05.
+    # @note Updated 2020-07-24.
     # """
     __koopa_str_match -F "$@"
 }
@@ -90,11 +90,7 @@ _koopa_str_match_perl() { # {{{
 _koopa_str_match_posix() { # {{{1
     # """
     # Evaluate whether a string contains a desired value.
-    # @note Updated 2020-04-29.
-    #
-    # POSIX-compliant function that mimics grepl functionality.
-    #
-    # @seealso grepl in R.
+    # @note Updated 2020-07-24.
     # """
     test "${1#*$2}" != "$1"
 }
