@@ -64,7 +64,7 @@ __koopa_str_match() { # {{{1
     else
         return 1
     fi
-    echo "$string" | grep "$flag" -q "$pattern" >/dev/null
+    _koopa_print "$string" | grep "$flag" -q "$pattern" >/dev/null
 }
 
 _koopa_str_match() { #{{{1
