@@ -254,6 +254,7 @@ install(
         "beachmat",                                 # SingleCell
         "biomaRt",                                  # Annotation
         "biovizBase",                               # Visualization
+        "cbaf",                                     # RNASeq
         "clusterProfiler",                          # Pathways
         "csaw",                                     # ChIPSeq
         "destiny",                                  # SingleCell
