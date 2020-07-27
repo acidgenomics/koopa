@@ -320,6 +320,7 @@ install(
         ## > "jonocarroll/DFplyr"                   # DataRepresentation
         ## > "js229/Vennerable"                     # Visualization
         ## > "kevinblighe/scDataviz"                # SingleCell
+        ## > "waldronlab/cBioPortalData"            # RNASeq
     ),
     reinstall = FALSE
 )
