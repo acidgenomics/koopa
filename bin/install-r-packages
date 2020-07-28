@@ -172,6 +172,7 @@ install(
         "ggrepel",
         "ggridges",
         "ggupset",
+        "gprofiler2",
         "hexbin",
         "htmlwidgets",
         "janitor",
