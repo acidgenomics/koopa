@@ -3,7 +3,7 @@ autopad-samples(1) -- autopad sample file names that begin with a number
 
 ## SYNOPSIS
 
-`autopad-samples` `--prefix`='sample' `--pad-width`=2 <file>...
+`autopad-samples` `--prefix`="sample" `--pad-width`=2 <file>...
 
 ## DESCRIPTION
 
