@@ -1,51 +1,52 @@
-.TH CAMEL-CASE 1 2019-11-09 Bash
-.SH NAME
-camel-case \-
-Convert input into camel case
-.SH SYNOPSIS
-.B camel-case
-[\fB\-\-rename\fP]
-[\fB\-\-strict\fP]
-[\fB\-\-prefix\fP]
-.I string|file ...
-.SH OPTIONS
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "CAMEL\-CASE" "1" "July 2020" "" ""
+.
+.SH "NAME"
+\fBcamel\-case\fR \- convert input into camel case
+.
+.SH "SYNOPSIS"
+\fBcamel\-case\fR [\-\-rename] [\-\-strict] [\-\-prefix] \fIstring\fR|\fIfile\fR\.\.\.
+.
+.SH "DESCRIPTION"
+Runs in string mode by default\. File rename mode can be enabled by setting \fB\-\-rename\fR flag\.
+.
+.SH "OPTIONS"
+.
 .TP
-.B \-\-rename
-Rename input files.
-Assumes we're renaming files in current working directory, but also supports
-explicit and/or mixed file paths.
-Doesn't work recursively.
+\fB\-\-rename\fR
+Rename input files\. Assumes we\'re renaming files in current working directory, but also supports explicit and/or mixed file paths\. Doesn\'t work recursively\.
+.
 .TP
-.B \-\-strict
-Enforce strict camel case output, coercing acronyms.
-For example, 'geneID' becomes 'geneId'.
+\fB\-\-strict\fR
+Enforce strict camel case output, coercing acronyms\. For example, \'geneID\' becomes \'geneId\'\.
+.
 .TP
-.B \-\-prefix
-Include "x" prefix for names that are syntactically invalid in R.
-Note that this includes input beginning with a number.
-Disabled by default.
-.SH DESCRIPTION
-Runs in string mode by default.
-File rename mode can be enabled by setting '--rename' flag.
-.SH SEE ALSO
-.IP
-\(bu 'syntactic::camelCase()' in R.
-.IP
-\(bu https://syntactic.acidgenomics.com/
-.SH EXAMPLES
+\fB\-\-prefix\fR
+Include \'x\' prefix for names that are syntactically invalid in R\. Note that this includes input beginning with a number\. Disabled by default\.
+.
+.SH "NOTE"
+Bash script that calls Rscript internally\. Requires the syntactic package to be installed\.
+.
+.SH "SEE ALSO"
+syntactic R package \fIhttps://syntactic\.acidgenomics\.com/\fR
+.
+.SH "EXAMPLES"
+.
 .nf
-.B camel-case "hello world" "foo bar"
+
+$ camel\-case \'hello world\' \'foo bar\'
 ## helloWorld fooBar
-.PP
-.B camel-case --strict "gene ID"
+
+$ camel\-case \-\-strict \'gene ID\'
 ## geneId
-.PP
-.B camel-case --rename "foo-bar.fastq.gz"
-## ./fooBar.fastq.gz
-.PP
-.B camel-case --rename --prefix 1-control-A.fastq.gz
-## ./x1ControlA.fastq.gz
+
+$ camel\-case \-\-rename \'foo\-bar\.fastq\.gz\'
+## \./fooBar\.fastq\.gz
+
+$ camel\-case \-\-rename \-\-prefix \'1\-control\-A\.fastq\.gz\'
+## \./x1ControlA\.fastq\.gz
+.
 .fi
-.SH NOTE
-Bash script that calls Rscript internally.
-Requires the syntactic package to be installed.
+
