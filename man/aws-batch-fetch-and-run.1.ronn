@@ -1,4 +1,4 @@
-aws-batch-fetch-and-run - aws batch fetch and run
+aws-batch-fetch-and-run(1) - aws batch fetch and run
 ================================================================================
 
 ## SYNOPSIS

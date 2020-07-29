@@ -1,9 +1,9 @@
-camel-case - convert input into camel case
+camel-case(1) - convert input into camel case
 ================================================================================
 
 ## SYNOPSIS
 
-`camel-case` [--rename] [--strict] [--prefix] <string>|<file>...
+`camel-case` [`--rename`] [`--strict`] [`--prefix`] <string>|<file>...
 
 ## DESCRIPTION
 
@@ -29,7 +29,7 @@ File rename mode can be enabled by setting `--rename` flag.
 
 ## NOTE
 
-Bash script that calls Rscript internally.
+Bash script that calls `Rscript` internally.
 Requires the syntactic package to be installed.
 
 ## SEE ALSO
