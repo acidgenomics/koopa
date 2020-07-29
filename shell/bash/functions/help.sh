@@ -22,7 +22,7 @@ koopa::help() { # {{{1
                 man_file="${prefix}/man/man1/${script_name}.1"
                 if [[ -s "$man_file" ]]
                 then
-                    head -n 1 "$man_file" \
+                    head -n 10 "$man_file" \
                         | koopa::str_match_regex '^\.TH ' \
                         || koopa::stop "Invalid documentation at '${man_file}'."
                 else
