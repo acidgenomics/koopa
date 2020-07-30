@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
 
-ronn --roff *.ronn
-mv -fv -t 'man1' *.1
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+koopa::roff() { # {{{1
+    koopa::assert_is_installed ronn
+    ronn --roff ./*.ronn
+    koopa::mv -t 'man1' ./*.1
+    return 0
+}
