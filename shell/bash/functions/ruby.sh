@@ -35,8 +35,12 @@ koopa::install_rbenv_ruby() { # {{{1
 }
 
 koopa::install_ruby_packages() { # {{{1
+    # """
+    # Install Ruby packages (gems).
+    # @note Updated 2020-07-30.
+    # """
     koopa::assert_has_no_envs
-    koopa::exit_if_not_installed gem
+    koopa::is_installed gem || return 0
     name_fancy='Ruby gems'
     koopa::install_start "$name_fancy"
     # > gemdir="$(gem environment gemdir)"
@@ -45,8 +49,8 @@ koopa::install_ruby_packages() { # {{{1
     then
         # > gem pristine --all --only-executables
         gems=(
-            bashcov
-            ronn
+            'bashcov'
+            'ronn'
         )
     else
         gems=("$@")

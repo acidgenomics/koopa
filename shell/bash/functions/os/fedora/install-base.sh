@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-30.
     # """
     local dev extra name_fancy pkgs upgrade
     koopa::assert_is_installed dnf sudo
@@ -134,6 +134,7 @@ koopa::fedora_install_base() { # {{{1
             # emacs
             # golang
             # zsh
+            'jq'
             'llvm'
             'texlive'
             'texlive-bera'

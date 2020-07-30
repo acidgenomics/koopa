@@ -3,11 +3,11 @@
 koopa::generate_ssh_key() { # {{{1
     # """
     # Generate SSH key.
-    # @note Updated 2020-07-10.
+    # @note Updated 2020-07-30.
     # This script is called inside 'configure-vm', so don't use assert here.
     # """
     local comment file key_name
-    koopa::exit_if_not_installed ssh-keygen
+    koopa::is_installed ssh-keygen || return 0
     comment="${USER}@${HOSTNAME}"
     key_name='id_rsa'
     while (("$#"))
@@ -35,7 +35,7 @@ koopa::generate_ssh_key() { # {{{1
         esac
     done
     file="${HOME}/.ssh/${key_name}"
-    koopa::exit_if_exists "$file"
+    [[ -f "$file" ]] && return 0
     ssh-keygen \
         -C "$comment" \
         -N "" \

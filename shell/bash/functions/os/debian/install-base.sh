@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-30.
     #
     # Check package source repo:
     # https://packages.ubuntu.com/
@@ -297,6 +297,7 @@ koopa::debian_install_base() { # {{{1
             'gtk-doc-tools'
             'imagemagick'
             'jags'
+            'jq'
             'keyboard-configuration'
             'mpi-default-bin'
             'openmpi-bin'

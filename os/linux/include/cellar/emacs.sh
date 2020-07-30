@@ -71,7 +71,11 @@
 # - https://github.com/moby/moby/issues/22801
 # """
 
-koopa::exit_if_docker
+if koopa::is_docker
+then
+    koopa::note 'Emacs currently fails to build inside Docker.'
+    return 0
+fi
 koopa::assert_is_installed tee
 file="emacs-${version}.tar.xz"
 url="${gnu_mirror}/emacs/${file}"

@@ -29,7 +29,7 @@ koopa::find_cellar_version() { # {{{1
 koopa::install_cellar() { # {{{1
     # """
     # Install cellar program.
-    # @note Updated 2020-07-20.
+    # @note Updated 2020-07-30.
     # """
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
         name_fancy pass_args prefix reinstall script_name script_path tmp_dir \
@@ -116,7 +116,7 @@ koopa::install_cellar() { # {{{1
         koopa::sys_rm "$prefix"
         koopa::remove_broken_symlinks "$make_prefix"
     fi
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     koopa::install_start "$name_fancy" "$version" "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
     (

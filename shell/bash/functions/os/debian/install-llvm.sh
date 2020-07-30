@@ -54,7 +54,7 @@ koopa::debian_install_llvm() { # {{{1
         if [[ "$current_major_version" == "$major_version" ]]
         then
             koopa::note "${name_fancy} is installed."
-            exit 0
+            return 0
         else
             koopa::dl 'LLVM config' "$LLVM_CONFIG"
             koopa::debian_uninstall_llvm

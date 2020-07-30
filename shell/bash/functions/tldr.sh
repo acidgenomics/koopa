@@ -20,11 +20,11 @@ koopa::tldr() { # {{{1
     case "$cmd" in
         -c|-u|--cache|--update)
             koopa::tldr_cache
-            exit 0
+            return 0
             ;;
         -l|--list)
             koopa::tldr_list_pages
-            exit 0
+            return 0
             ;;
     esac
     cmd="$(koopa::gsub ' ' '-' "$*")"
