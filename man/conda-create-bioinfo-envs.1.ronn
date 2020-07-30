@@ -1,5 +1,4 @@
-conda-create-bioinfo-envs(1) - create conda environments for bioinformatics
-================================================================================
+# conda-create-bioinfo-envs(1) - create conda environments for bioinformatics
 
 ## SYNOPSIS
 
