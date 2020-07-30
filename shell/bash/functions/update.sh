@@ -124,20 +124,20 @@ koopa::update() { # {{{1
         fi
         if [[ "$rsync" -eq 0 ]]
         then
-            koopa::update_perlbrew  # FIXME
-            koopa::update_python_packages  # FIXME
-            koopa::update_rust  # FIXME
-            koopa::update_rust_packages  # FIXME
+            koopa::update_perlbrew
+            koopa::update_python_packages
+            koopa::update_rust
+            koopa::update_rust_packages
             update-r-packages
             if koopa::is_linux
             then
-                koopa::update_google_cloud_sdk  # FIXME
-                koopa::update_pyenv  # FIXME
-                koopa::update_rbenv  # FIXME
+                koopa::update_google_cloud_sdk
+                koopa::update_pyenv
+                koopa::update_rbenv
             elif koopa::is_macos
             then
-                koopa::macos_update_homebrew  # FIXME
-                koopa::macos_update_microsoft_office  # FIXME
+                koopa::macos_update_homebrew
+                koopa::macos_update_microsoft_office
             fi
         fi
         koopa::fix_zsh_permissions
