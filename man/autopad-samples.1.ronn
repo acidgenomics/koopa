@@ -1,5 +1,4 @@
-autopad-samples(1) -- autopad sample file names that begin with a number
-================================================================================
+# autopad-samples(1) -- autopad sample file names that begin with a number
 
 ## SYNOPSIS
 

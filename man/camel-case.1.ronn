@@ -1,5 +1,4 @@
-camel-case(1) - convert input into camel case
-================================================================================
+# camel-case(1) - convert input into camel case
 
 ## SYNOPSIS
 

@@ -1,5 +1,4 @@
-conda-create-env(1) - create a conda environment
-================================================================================
+# conda-create-env(1) - create a conda environment
 
 ## SYNOPSIS
 
