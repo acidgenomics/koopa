@@ -19,7 +19,7 @@ koopa::macos_install_pytaglib() { # {{{1
 koopa::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-30.
     # """
     local file framework_dir name name_fancy pos reinstall url version
     reinstall=0
@@ -53,7 +53,7 @@ koopa::macos_install_python_framework() { # {{{1
     then
         koopa::sys_rm "$framework_dir"
     fi
-    koopa::exit_if_dir "$framework_dir"
+    [[ -d "$framework_dir" ]] && return 0
     koopa::install_start "$name_fancy" "$framework_dir"
     tmp_dir="$(koopa::tmp_dir)"
     (

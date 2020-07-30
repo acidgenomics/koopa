@@ -3,7 +3,7 @@
 koopa::fedora_install_azure_cli() { # {{{1
     # """
     # Install Azure CLI.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-30.
     #
     # Note that recommended 'yumdownloader' approach doesn't work for Amazon
     # Linux, so get the corresponding RHEL 7 RPM file from
@@ -14,7 +14,7 @@ koopa::fedora_install_azure_cli() { # {{{1
     # """
     local file name name_fancy tmp_dir url version
     koopa::assert_has_no_args "$#"
-    koopa::exit_if_installed az
+    koopa::is_installed az && return 0
     name='azure-cli'
     name_fancy='Azure CLI'
     koopa::install_start "$name_fancy"

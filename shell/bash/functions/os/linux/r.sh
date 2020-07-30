@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_r_geos() { # {{{1
+    # """
+    # Install R rgeos package.
+    # @note Updated 2020-07-30.
+    # """
+    koopa::is_r_package_installed rgeos && return 0
     koopa::assert_is_installed Rscript
-    koopa::exit_if_r_package_installed rgeos
     koopa::assert_is_not_file /usr/bin/geos-config
     Rscript --vanilla -e "\
         install.packages(
@@ -17,9 +21,13 @@ koopa::linux_install_r_geos() { # {{{1
 }
 
 koopa::linux_install_r_sf() { # {{{1
+    # """
+    # Install R sf package.
+    # @note Updated 2020-07-30.
+    # """
     local gdal_prefix geos_prefix make_prefix pkg_config_arr proj_prefix
+    koopa::is_r_package_installed sf && return 0
     koopa::assert_is_installed Rscript
-    koopa::exit_if_r_package_installed sf
     koopa::assert_is_not_file \
         '/usr/bin/gdal-config' \
         '/usr/bin/geos-config' \

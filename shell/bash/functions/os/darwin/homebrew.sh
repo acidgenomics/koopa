@@ -34,11 +34,11 @@ koopa::brew_cask_quarantine_fix() { # {{{1
 koopa::brewfile() { # {{{1
     # """
     # Homebrew Bundle Brewfile path.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-30.
     # """
     local file
     file="$(koopa::dotfiles_prefix)/os/macos/app/homebrew/Brewfile"
-    [[ -f "$file" ]] || return 1
+    [[ -f "$file" ]] || return 0
     koopa::print "$file"
     return 0
 }
@@ -106,7 +106,7 @@ koopa::brew_update() { # {{{1
 koopa::macos_install_homebrew() { # {{{1
     # """
     # Install Homebrew.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-30.
     #
     # @seealso
     # https://docs.brew.sh/Installation
@@ -123,7 +123,7 @@ koopa::macos_install_homebrew() { # {{{1
     # >     | tar xz --strip 1 -C homebrew
     # """
     koopa::assert_has_no_args "$#"
-    koopa::exit_if_installed brew
+    koopa::is_installed brew && return 0
     koopa::assert_is_installed xcode-select
     name_fancy='Homebrew'
     koopa::install_start "$name_fancy"
@@ -200,12 +200,12 @@ koopa::macos_install_homebrew_packages() { # {{{1
 koopa::macos_uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-30.
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
     local file name_fancy tmp_dir url
-    koopa::exit_if_not_installed brew
+    koopa::is_installed brew || return 0
     name_fancy='Homebrew'
     koopa::uninstall_start "$name_fancy"
     koopa::assert_has_no_args "$#"
@@ -231,9 +231,9 @@ koopa::macos_uninstall_homebrew() { # {{{1
 koopa::macos_update_homebrew() { # {{{1
     # """
     # Update Homebrew.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-30.
     # """
-    koopa::exit_if_not_installed brew
+    koopa::is_installed brew || return 0
     koopa::brew_update "$@"
     return 0
 }

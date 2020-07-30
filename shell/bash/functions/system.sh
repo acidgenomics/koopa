@@ -461,7 +461,7 @@ koopa::sys_git_pull() { # {{{1
         koopa::git_pull
         # Ensure other branches, such as develop, are rebased.
         [[ "$branch" != 'master' ]] && koopa::git_pull origin master
-        koopa::fix_zsh_permissions &>/dev/null
+        koopa::fix_zsh_permissions
     )
     return 0
 }

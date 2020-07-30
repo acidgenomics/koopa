@@ -130,7 +130,7 @@ koopa::configure_vm() { # {{{1
     if [[ "$minimal" -eq 1 ]]
     then
         koopa::success 'Configuration completed successfully.'
-        exit 0
+        return 0
     fi
 
     # Koopa paths {{{3
@@ -432,12 +432,13 @@ koopa::rsync_vm() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_is_set source_ip
     # Source check. Ensure that source and local (host) IP addresses are not
-    # identical. If they are, early exit without error, as this script is called
-    # inside 'configure-vm'.
+    # identical. If they are, early return without error, as this script is
+    # called inside 'configure-vm'.
     host_ip="$(koopa::local_ip_address)"
     if [[ "$source_ip" == "$host_ip" ]]
     then
-        koopa::exit "Skipping rsync because '${host_ip}' is source machine."
+        koopa::note "Skipping rsync because '${host_ip}' is source machine."
+        return 0
     fi
     # Allow user to input custom paths.
     if [[ "$#" -gt 0 ]]

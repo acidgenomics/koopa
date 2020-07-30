@@ -42,7 +42,7 @@ koopa::install_openjdk() { # {{{1
     jdk_dir="$(koopa::openjdk_prefix)"
     prefix="${jdk_dir}/${version}"
     [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$prefix"
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     koopa::install_start "$name_fancy" "$version" "$prefix"
     koopa::mkdir "$jdk_dir"
     tmp_dir="$(koopa::tmp_dir)"
