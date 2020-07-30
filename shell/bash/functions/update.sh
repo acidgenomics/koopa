@@ -125,7 +125,7 @@ koopa::update() { # {{{1
         if [[ "$rsync" -eq 0 ]]
         then
             koopa::update_perlbrew
-            koopa::update_python_packages
+            # > koopa::update_python_packages
             koopa::update_rust
             koopa::update_rust_packages
             update-r-packages
