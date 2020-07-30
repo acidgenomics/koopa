@@ -7,16 +7,16 @@
 \fBconda\-create\-env\fR \- create a conda environment
 .
 .SH "SYNOPSIS"
-\fBconda\-create\-env\fR \fIname\fR=\fIversion\fR\.\.\.
+\fBconda\-create\-env\fR \fIname\fR@\fIversion\fR\.\.\.
 .
 .SH "DESCRIPTION"
-Quickly create new conda environments based on recipe \fBname=version\fR key\-value pairs, without prompting\.
+Quickly create new conda environments based on recipe \fIname\fR@\fIversion\fR key\-value pairs, without prompting\.
 .
 .SH "OPTIONS"
 .
 .TP
-\fIname\fR=\fIversion\fR
-Environment name and version key\-value pair\.
+\fIname\fR@\fIversion\fR
+Environment name and version key\-value pair\. Alternatively, can use "=" instead of "@" here\. The resulting environment directory name will be \fIname\fR@\fIversion\fR\.
 .
 .SH "SEE ALSO"
 .
@@ -35,7 +35,7 @@ Create \fBkallisto@0\.42\.6\fR and \fBsalmon@1\.3\.0\fR environments:
 .
 .nf
 
-$ conda\-create\-env "kallisto=0\.42\.6" "salmon=1\.3\.0"
+$ conda\-create\-env "kallisto@0\.42\.6" "salmon@1\.3\.0"
 .
 .fi
 .

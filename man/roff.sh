@@ -9,3 +9,5 @@ koopa::roff() { # {{{1
     koopa::mv -t 'man1' ./*.1
     return 0
 }
+
+koopa::roff "$@"
