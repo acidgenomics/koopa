@@ -81,7 +81,7 @@ koopa::git_last_commit_remote() { # {{{1
 koopa::git_pull() { # {{{1
     # """
     # Pull (update) a git repository.
-    # @note Updated 2020-07-23.
+    # @note Updated 2020-07-30.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
@@ -111,7 +111,6 @@ koopa::git_pull() { # {{{1
                 git pull "$@"
         fi
     fi
-    koopa::success 'Pull was successful.'
     return 0
 }
 
