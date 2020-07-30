@@ -4,7 +4,7 @@ _koopa_activate() { # {{{1
     case "${1:-}" in
         --help|-h)
             _koopa_activate_usage
-            exit 0
+            return 0
             ;;
     esac
     _koopa_preflight_checks || return 1
