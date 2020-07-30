@@ -352,7 +352,7 @@ koopa::install_conda() { # {{{1
     # https://github.com/conda/conda/issues/9589
     # """
     local anaconda name_fancy ostype script tmp_dir url version
-    koopa::exit_if_installed conda
+    koopa::is_installed conda && return 0
     koopa::assert_has_no_envs
     ostype="${OSTYPE:?}"
     case "$ostype" in
@@ -389,7 +389,7 @@ koopa::install_conda() { # {{{1
         esac
     done
     prefix="$(koopa::conda_prefix)"
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     if [[ "$anaconda" -eq 1 ]]
     then
         [[ -z "$version" ]] && version="$(koopa::variable 'anaconda')"

@@ -222,15 +222,6 @@ _koopa_dl() { # {{{1
     return 0
 }
 
-_koopa_exit() { # {{{1
-    # """
-    # Exit showing note, without error.
-    # @note Updated 2020-07-20.
-    # """
-    _koopa_note "$@"
-    exit 0
-}
-
 _koopa_h1() { # {{{1
     __koopa_h 1 "$@"
     return 0

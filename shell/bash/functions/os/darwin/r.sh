@@ -3,13 +3,17 @@
 koopa::macos_install_r_cran_clang() { # {{{1
     # """
     # Install CRAN clang.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-30.
     # Only needed for R < 4.0.
     # """
-    local file major_version name prefix tmp_dir url version
+    local file major_version name prefix reinstall tmp_dir url version
     while (("$#"))
     do
         case "$1" in
+            --reinstall)
+                reinstall=1
+                shift 1
+                ;;
             --version=*)
                 version="${1#*=}"
                 shift 1
@@ -23,7 +27,8 @@ koopa::macos_install_r_cran_clang() { # {{{1
     name='clang'
     major_version="$(koopa::major_version "$version")"
     prefix="/usr/local/${name}${major_version}"
-    koopa::exit_if_dir "$prefix"
+    [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
+    [[ -d "$prefix" ]] && return 0
     koopa::h1 "Installing ${name} ${version} to '${prefix}'."
     tmp_dir="$(koopa::tmp_dir)"
     (
@@ -56,10 +61,15 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     # @seealso
     # - https://github.com/fxcoudert/gfortran-for-macOS
     # """
-    local file name pkg prefix stem tmp_dir url version
+    local file name pkg prefix reinstall stem tmp_dir url version
+    reinstall=0
     while (("$#"))
     do
         case "$1" in
+            --reinstall)
+                reinstall=1
+                shift 1
+                ;;
             --version=*)
                 version="${1#*=}"
                 shift 1
@@ -72,7 +82,8 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     koopa::assert_has_no_args "$#"
     name='gfortran'
     prefix="/usr/local/${name}"
-    koopa::exit_if_dir "$prefix"
+    [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
+    [[ -d "$prefix" ]] && return 0
     koopa::h1 "Installing ${name} ${version} to '${prefix}'."
     tmp_dir="$(koopa::tmp_dir)"
     (

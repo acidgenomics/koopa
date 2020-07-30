@@ -3,7 +3,7 @@
 koopa::ubuntu_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Ubuntu.
-    # @note Updated 2020-07-14.
+    # @note Updated 2020-07-30.
     # @seealso
     # https://rstudio.com/products/shiny/download-server/ubuntu/
     # """
@@ -37,7 +37,7 @@ koopa::ubuntu_install_shiny_server() { # {{{1
     version="$(koopa::variable "$name")"
     name_fancy="Shiny Server ${version}"
     ! koopa::is_current_version "$name" && reinstall=1
-    [[ "$reinstall" -eq 0 ]] && koopa::exit_if_installed "$name"
+    [[ "$reinstall" -eq 0 ]] && koopa::is_installed "$name" && return 0
     koopa::install_start "$name_fancy"
     tmp_dir="$(koopa::tmp_dir)"
     if ! koopa::is_r_package_installed shiny
