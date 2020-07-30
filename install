@@ -202,7 +202,7 @@ install() { # {{{1
     fi
     # Catch if the user is attempting to install into a shared space.
     if [[ "$shared" -eq 0 ]] && \
-        koopa::str_match_regex "$koopa_prefix" "^${HOME:?}"
+        ! koopa::str_match_regex "$koopa_prefix" "^${HOME:?}"
     then
         shared=1
     fi
