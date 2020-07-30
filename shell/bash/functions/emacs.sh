@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
 koopa::install_doom_emacs() { # {{{1
+    # """
+    # Install Doom Emacs.
+    # @note Updated 2020-07-30.
+    # """
     local doom emacs_prefix install_dir name repo
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed git tee
     name='doom'
     emacs_prefix="$(koopa::emacs_prefix)"
     install_dir="${emacs_prefix}-${name}"
-    koopa::exit_if_dir "$install_dir"
+    [[ -d "$install_dir" ]] && return 0
     koopa::install_start "$name" "$install_dir"
     (
         repo='https://github.com/hlissner/doom-emacs'
@@ -25,7 +29,7 @@ koopa::install_doom_emacs() { # {{{1
 koopa::install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.
-    # @note Updated 2020-07-10.
+    # @note Updated 2020-07-30.
     #
     # Note that master branch is ancient and way behind current codebase.
     # Switching to more recent code on develop branch.
@@ -34,7 +38,7 @@ koopa::install_spacemacs() { # {{{1
     name='spacemacs'
     emacs_prefix="$(koopa::emacs_prefix)"
     install_dir="${emacs_prefix}-${name}"
-    koopa::exit_if_dir "$install_dir"
+    [[ -d "$install_dir" ]] && return 0
     koopa::h1 "Installing ${name} at '${install_dir}."
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed emacs

@@ -3,14 +3,14 @@
 koopa::debian_install_r_cran_binary() { # {{{1
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-30.
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/README.html
     # """
     local name_fancy pkgs r version
     r='/usr/bin/R'
-    koopa::exit_if_installed "$r"
+    koopa::is_installed "$r" && return 0
     while (("$#"))
     do
         case "$1" in

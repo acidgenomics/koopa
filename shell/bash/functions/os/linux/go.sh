@@ -3,7 +3,7 @@
 koopa::install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-30.
     # """
     local app_prefix cellar_prefix goroot link_cellar name name_fancy \
         reinstall tmp_dir version
@@ -42,7 +42,8 @@ koopa::install_go() { # {{{1
     app_prefix="$(koopa::app_prefix)/${name}/${version}"
     cellar_prefix="$(koopa::cellar_prefix)/${name}/${version}"
     [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$app_prefix" "$cellar_prefix"
-    koopa::exit_if_dir "$app_prefix" "$cellar_prefix"
+    [[ -d "$app_prefix" ]] && return 0
+    [[ -d "$cellar_prefix" ]] && return 0
     koopa::install_start "$name_fancy" "$version" "$cellar_prefix"
     koopa::mkdir "$app_prefix"
     koopa::mkdir "$cellar_prefix"

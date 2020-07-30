@@ -149,41 +149,38 @@ koopa::find_user_profile() { # {{{1
 koopa::fix_pyenv_permissions() { # {{{1
     # """
     # Ensure Python pyenv shims have correct permissions.
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-07-30.
     # """
     local pyenv_prefix
     koopa::assert_has_no_args "$#"
     pyenv_prefix="$(koopa::pyenv_prefix)"
     [[ -d "${pyenv_prefix}/shims" ]] || return 0
-    koopa::info 'Fixing Python pyenv shim permissions.'
-    koopa::sys_chmod -v 0777 "${pyenv_prefix}/shims"
+    koopa::sys_chmod 0777 "${pyenv_prefix}/shims"
     return 0
 }
 
 koopa::fix_rbenv_permissions() { # {{{1
     # """
     # Ensure Ruby rbenv shims have correct permissions.
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-07-30.
     # """
     local rbenv_prefix
     koopa::assert_has_no_args "$#"
     rbenv_prefix="$(koopa::rbenv_prefix)"
     [[ -d "${rbenv_prefix}/shims" ]] || return 0
-    koopa::info 'Fixing Ruby rbenv shim permissions.'
-    koopa::sys_chmod -v 0777 "${rbenv_prefix}/shims"
+    koopa::sys_chmod 0777 "${rbenv_prefix}/shims"
     return 0
 }
 
 koopa::fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
-    # @note Updated 2020-07-21.
+    # @note Updated 2020-07-30.
     # """
     local cellar_prefix koopa_prefix make_prefix zsh
     koopa::assert_has_no_args "$#"
-    koopa::info 'Fixing Zsh permissions to pass compaudit checks.'
     koopa_prefix="$(koopa::prefix)"
-    koopa::sys_chmod -v 'g-w' \
+    koopa::sys_chmod 'g-w' \
         "${koopa_prefix}/shell/zsh" \
         "${koopa_prefix}/shell/zsh/functions"
     koopa::is_installed zsh || return 0
@@ -193,7 +190,7 @@ koopa::fix_zsh_permissions() { # {{{1
     then
         if koopa::str_match_regex "$zsh" "^${make_prefix}"
         then
-            koopa::sys_chmod -v 'g-w' \
+            koopa::sys_chmod 'g-w' \
                 "${make_prefix}/share/zsh" \
                 "${make_prefix}/share/zsh/site-functions"
         fi
@@ -203,7 +200,7 @@ koopa::fix_zsh_permissions() { # {{{1
     then
         if koopa::str_match_regex "$zsh" "^${cellar_prefix}"
         then
-            koopa::sys_chmod -v 'g-w' \
+            koopa::sys_chmod 'g-w' \
                 "${cellar_prefix}/zsh/"*'/share/zsh' \
                 "${cellar_prefix}/zsh/"*'/share/zsh/'* \
                 "${cellar_prefix}/zsh/"*'/share/zsh/'*'/functions'

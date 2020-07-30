@@ -82,10 +82,7 @@ koopa::update() { # {{{1
     if [[ "$rsync" -eq 0 ]]
     then
         # Update koopa.
-        if [[ "$core" -eq 1 ]]
-        then
-            koopa::sys_git_pull
-        fi
+        [[ "$core" -eq 1 ]] && koopa::sys_git_pull
         # Ensure dotfiles are current.
         if [[ "$dotfiles" -eq 1 ]]
         then
@@ -96,7 +93,7 @@ koopa::update() { # {{{1
                 koopa::git_set_remote_url \
                     'https://github.com/acidgenomics/dotfiles.git'
                 koopa::git_reset
-                koopa::git_pull origin master
+                koopa::git_pull
             )
         fi
         koopa::sys_set_permissions -r "$koopa_prefix"
@@ -105,9 +102,10 @@ koopa::update() { # {{{1
     then
         koopa::h2 'Updating system configuration.'
         koopa::assert_has_sudo
-        koopa::dl 'App prefix' "${app_prefix}"
-        koopa::dl 'Config prefix' "${config_prefix}"
-        koopa::dl 'Make prefix' "${make_prefix}"
+        koopa::dl \
+            'App prefix' "${app_prefix}" \
+            'Config prefix' "${config_prefix}" \
+            'Make prefix' "${make_prefix}"
         koopa::add_make_prefix_link
         if koopa::is_linux
         then
@@ -126,20 +124,20 @@ koopa::update() { # {{{1
         fi
         if [[ "$rsync" -eq 0 ]]
         then
-            koopa::update_perlbrew
-            koopa::update_python_packages
-            koopa::update_rust
-            koopa::update_rust_packages
+            koopa::update_perlbrew  # FIXME
+            koopa::update_python_packages  # FIXME
+            koopa::update_rust  # FIXME
+            koopa::update_rust_packages  # FIXME
             update-r-packages
             if koopa::is_linux
             then
-                koopa::update_google_cloud_sdk
-                koopa::update_pyenv
-                koopa::update_rbenv
+                koopa::update_google_cloud_sdk  # FIXME
+                koopa::update_pyenv  # FIXME
+                koopa::update_rbenv  # FIXME
             elif koopa::is_macos
             then
-                koopa::macos_update_homebrew
-                koopa::macos_update_microsoft_office
+                koopa::macos_update_homebrew  # FIXME
+                koopa::macos_update_microsoft_office  # FIXME
             fi
         fi
         koopa::fix_zsh_permissions
