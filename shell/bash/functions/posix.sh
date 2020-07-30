@@ -140,10 +140,6 @@ koopa::exec_dir() { # {{{1
     _koopa_exec_dir "$@"
 }
 
-koopa::exit() { # {{{1
-    _koopa_exit "$@"
-}
-
 koopa::expr() { # {{{1
     _koopa_expr "$@"
 }

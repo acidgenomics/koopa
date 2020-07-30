@@ -3,7 +3,7 @@
 koopa::install_aspera_connect() { # {{{1
     # """
     # Install Aspera Connect.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-30.
     #
     # Aspera Connect:
     # https://downloads.asperasoft.com/en/downloads/8?list
@@ -33,7 +33,7 @@ koopa::install_aspera_connect() { # {{{1
     version="$(koopa::major_minor_patch_version "$version_full")"
     aspera_dir="$(koopa::aspera_prefix)"
     prefix="${aspera_dir}/${version}"
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     name_fancy='Aspera Connect'
     koopa::install_start "$name_fancy" "$version" "$prefix"
     koopa::mkdir "$aspera_dir"

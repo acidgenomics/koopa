@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
 koopa::install_ensembl_perl_api() { # {{{1
+    # """
+    # Install Ensembl Perl API.
+    # @note Updated 2020-07-30.
+    # """
     local name_fancy prefix
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::app_prefix)/ensembl"
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     name_fancy='Ensembl Perl API'
     koopa::install_start "$name_fancy" "$prefix"
     koopa::mkdir "$prefix"
@@ -29,7 +33,7 @@ koopa::install_ensembl_perl_api() { # {{{1
 koopa::install_perlbrew() { # {{{1
     # """
     # Install Perlbrew.
-    # @note Updated 2020-07-10.
+    # @note Updated 2020-07-30.
     #
     # Available releases:
     # > perlbrew available
@@ -51,7 +55,7 @@ koopa::install_perlbrew() { # {{{1
     done
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::perlbrew_prefix)"
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     name_fancy='Perlbrew'
     koopa::install_start "$name_fancy" "$prefix"
     koopa::assert_has_no_envs
