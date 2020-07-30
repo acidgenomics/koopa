@@ -23,4 +23,4 @@ pairs, without prompting.
 
 Create `kallisto@0.42.6` and `salmon@1.3.0` environments:
 
-    conda-create-env "kallisto=0.42.6" "salmon=1.3.0"
+    $ conda-create-env "kallisto=0.42.6" "salmon=1.3.0"
