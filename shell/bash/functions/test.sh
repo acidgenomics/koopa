@@ -17,6 +17,7 @@ koopa::test_find_files() { # {{{1
             -not -name '*.1' \
             -not -name '*.md' \
             -not -name '*.ronn' \
+            -not -name '*.swp' \
             -not -name '.pylintrc' \
             -not -path "${prefix}/.git/*" \
             -not -path "${prefix}/cellar/*" \
@@ -55,7 +56,7 @@ koopa::test_find_files_by_ext() { # {{{1
 koopa::test_find_files_by_shebang() { # {{{1
     # """
     # Find relevant test files by shebang.
-    # @note Updated 2020-07-20.
+    # @note Updated 2020-07-30.
     # """
     local file files pattern shebang shebang_files x
     koopa::assert_has_args "$#"
@@ -65,7 +66,8 @@ koopa::test_find_files_by_shebang() { # {{{1
     for file in "${files[@]}"
     do
         [[ -s "$file" ]] || continue
-        shebang="$(head -n 1 "$file")"
+        # Avoid 'command substitution: ignored null byte in input' warning.
+        shebang="$(tr -d '\0' < "$file" | head -n 1)"
         [[ -n "$shebang" ]] || continue
         koopa::str_match_regex "$shebang" "$pattern" && shebang_files+=("$file")
     done
