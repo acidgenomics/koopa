@@ -345,7 +345,11 @@ koopa::conda_remove_env() { # {{{1
 koopa::install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-30.
+    #
+    # Python 3.8 is currently buggy for Miniconda.
+    # `conda env list` will return multiprocessing error.
+    # https://github.com/conda/conda/issues/9589
     # """
     local anaconda name_fancy ostype script tmp_dir url version
     koopa::exit_if_installed conda
@@ -395,7 +399,6 @@ koopa::install_conda() { # {{{1
     else
         [[ -z "$version" ]] && version="$(koopa::variable 'conda')"
         name_fancy='Miniconda'
-        # The py38 release is currently buggy.
         script="Miniconda3-py37_${version}-${ostype}-x86_64.sh"
         url="https://repo.continuum.io/miniconda/${script}"
     fi
