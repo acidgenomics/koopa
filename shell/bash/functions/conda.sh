@@ -62,7 +62,7 @@ koopa::activate_conda_env() { # {{{1
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2020-07-14.
+    # @note Updated 2020-07-30.
     # """
     local all aligners chipseq data_mining env envs file_formats methylation \
         quality_control rnaseq trimming variation version workflows
@@ -259,7 +259,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     do
         env="${envs[$i]}"
         version="$(koopa::variable "$env")"
-        envs[$i]="${env}=${version}"
+        envs[$i]="${env}@${version}"
     done
     koopa::conda_create_env "${envs[@]}"
     return 0
