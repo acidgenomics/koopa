@@ -22,7 +22,8 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
-anaconda="2020.07"
+# 2020.07 has buggy py38 conda 4.8.3.
+anaconda="2020.02"
 
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
