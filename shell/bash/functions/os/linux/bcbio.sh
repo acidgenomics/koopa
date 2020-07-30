@@ -98,7 +98,7 @@ koopa::install_bcbio() { # {{{1
     else
         prefix="${app_prefix}/${version}"
     fi
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     name_fancy='bcbio-nextgen'
     koopa::install_start "$name_fancy" "$prefix"
     koopa::coffee_time
@@ -296,14 +296,14 @@ koopa::install_bcbio_genome() { # {{{1
 koopa::install_bcbio_vm() { # {{{1
     # """
     # Install bcbio-vm.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-30.
     # """
     local bin_dir data_dir file name prefix tmp_dir url
     koopa::assert_has_no_envs
     koopa::assert_is_installed docker
     name='bcbio-vm'
     prefix="$(koopa::app_prefix)/${name}"
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     koopa::install_start "$name" "$prefix"
     bin_dir="${prefix}/anaconda/bin"
     tmp_dir="$(koopa::tmp_dir)"

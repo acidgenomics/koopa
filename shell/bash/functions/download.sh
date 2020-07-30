@@ -3,7 +3,7 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-30.
     #
     # Potentially useful curl flags:
     # * --connect-timeout <seconds>
@@ -83,12 +83,16 @@ koopa::download_github_latest() { # {{{1
 }
 
 koopa::download_refdata_scsig() { # {{{1
+    # """
+    # Download MSigDB SCSig reference data.
+    # @note Updated 2020-07-30.
+    # """
     local base_url prefix version
     koopa::assert_has_no_args "$#"
     version='1.0'
     prefix="$(koopa::refdata_prefix)/scsig/${version}"
     base_url='http://software.broadinstitute.org/gsea/msigdb/supplemental'
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     koopa::h1 "Downloading MSigDB SCSig ${version}."
     koopa::mkdir "$prefix"
     (

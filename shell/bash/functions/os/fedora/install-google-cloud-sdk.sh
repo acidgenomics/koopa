@@ -3,12 +3,12 @@
 koopa::fedora_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-07-30.
     # @seealso
     # - https://cloud.google.com/sdk/docs/downloads-yum
     # """
     local name_fancy
-    koopa::exit_if_installed gcloud
+    koopa::is_installed gcloud && return 0
     name_fancy='Google Cloud SDK'
     koopa::install_start "$name_fancy"
     koopa::yum_add_google_cloud_sdk_repo

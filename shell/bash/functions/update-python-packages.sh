@@ -3,7 +3,7 @@
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-07-30.
     # @seealso
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
@@ -12,7 +12,7 @@ koopa::update_python_packages() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     python="$(koopa::python)"
-    koopa::exit_if_not_installed "$python"
+    koopa::is_installed "$python" || return 0
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
     x="$("$python" -m pip list --outdated --format='freeze')"

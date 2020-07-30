@@ -4,7 +4,7 @@
 koopa::update_conda() { # {{{1
     # """
     # Update Conda.
-    # @note Updated 2020-07-11.
+    # @note Updated 2020-07-30.
     # """
     local force
     force=0
@@ -30,7 +30,7 @@ koopa::update_conda() { # {{{1
             koopa::note 'Update not supported for Anaconda.'
             return 0
         fi
-        koopa::exit_if_current_version conda
+        koopa::is_current_version conda && return 0
     fi
     koopa::h1 "Updating Conda at '${prefix}'."
     conda="${prefix}/condabin/conda"

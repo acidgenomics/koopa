@@ -3,7 +3,7 @@
 koopa::install_fzf() { # {{{1
     # """
     # Install fzf.
-    # @note Updated 2020-07-20.
+    # @note Updated 2020-07-30.
     #
     # This script will download files into '~/go'.
     #
@@ -39,7 +39,7 @@ koopa::install_fzf() { # {{{1
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::fzf_prefix)/${version}"
     [[ "$reinstall" -eq 1 ]] && koopa::rm "$prefix"
-    koopa::exit_if_dir "$prefix"
+    [[ -d "$prefix" ]] && return 0
     koopa::install_start "$name" "$version" "$prefix"
     koopa::activate_go
     koopa::assert_is_installed go

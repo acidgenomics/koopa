@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 koopa::install_rust() { # {{{1
+    # """
+    # Install Rust.
+    # @note Updated 2020-07-30.
+    # """
     local file name_fancy pos reinstall tmp_dir url
     reinstall=0
     pos=()
@@ -30,7 +34,8 @@ koopa::install_rust() { # {{{1
     RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
     export RUSTUP_HOME
     [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$CARGO_HOME" "$RUSTUP_HOME"
-    koopa::exit_if_dir "$CARGO_HOME" "$RUSTUP_HOME"
+    [[ -d "$CARGO_HOME" ]] && return 0
+    [[ -d "$RUSTUP_HOME" ]] && return 0
     name_fancy='Rust'
     koopa::install_start "$name_fancy"
     koopa::assert_has_no_args "$#"
@@ -57,7 +62,7 @@ koopa::install_rust() { # {{{1
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2020-07-10.
+    # @note Updated 2020-07-30.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -70,7 +75,7 @@ koopa::install_rust_packages() { # {{{1
     local crate crates name_fancy prefix
     koopa::assert_has_no_envs
     koopa::activate_rust
-    koopa::exit_if_not_installed cargo rustc rustup
+    koopa::is_installed cargo rustc rustup || return 0
     name_fancy='Rust cargo crates'
     prefix="${CARGO_HOME:?}"
     koopa::install_start "$name_fancy" "$prefix"
@@ -104,7 +109,7 @@ koopa::install_rust_packages() { # {{{1
 koopa::update_rust() { # {{{1
     # """
     # Install Rust.
-    # @note Updated 2020-07-20.
+    # @note Updated 2020-07-30.
     # """
     local force
     koopa::assert_has_no_envs
@@ -122,9 +127,9 @@ koopa::update_rust() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
-    [[ "$force" -eq 0 ]] && koopa::exit_if_current_version rust
+    [[ "$force" -eq 0 ]] && koopa::is_current_version rust && return 0
+    koopa::is_installed rustup || return 0
     koopa::h1 'Updating Rust via rustup.'
-    koopa::exit_if_not_installed rustup
     export RUST_BACKTRACE='full'
     # rustup v1.21.0 fix.
     # https://github.com/rust-lang/rustup/issues/2166

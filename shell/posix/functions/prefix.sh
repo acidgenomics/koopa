@@ -68,10 +68,10 @@ _koopa_autojump_prefix() { # {{{1
 _koopa_bcbio_prefix() { # {{{1
     # """
     # bcbio-nextgen prefix.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-30.
     # shellcheck disable=SC2039
     local host_id prefix
-    _koopa_is_linux || return 1
+    _koopa_is_linux || return 0
     host_id="$(_koopa_host_id)"
     if [ "$host_id" = 'harvard-o2' ]
     then
@@ -89,7 +89,7 @@ _koopa_bcbio_prefix() { # {{{1
 _koopa_cellar_prefix() { # {{{1
     # """
     # Cellar prefix.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-30.
     #
     # Currently only supported for Linux.
     # Use Homebrew on macOS instead.
@@ -98,7 +98,7 @@ _koopa_cellar_prefix() { # {{{1
     # """
     # shellcheck disable=SC2039
     local prefix
-    _koopa_is_linux || return 1
+    _koopa_is_linux || return 0
     if [ -n "${KOOPA_CELLAR_PREFIX:-}" ]
     then
         prefix="$KOOPA_CELLAR_PREFIX"
@@ -146,9 +146,9 @@ _koopa_config_prefix() { # {{{1
 _koopa_data_disk_link_prefix() { # {{{1
     # """
     # Data disk symlink prefix.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-30.
     # """
-    _koopa_is_linux || return 1
+    _koopa_is_linux || return 0
     _koopa_print '/n'
     return 0
 }
@@ -265,11 +265,11 @@ _koopa_homebrew_prefix() { # {{{1
 _koopa_homebrew_ruby_gems_prefix() { # {{{1
     # """
     # Homebrew Ruby gems prefix.
-    # @note Updated 2020-07-06.
+    # @note Updated 2020-07-30.
     # """
     # shellcheck disable=SC2039
     local api_version homebrew_prefix prefix
-    _koopa_is_installed ruby || return 1
+    _koopa_is_installed ruby || return 0
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     api_version="$(_koopa_ruby_api_version)"
     prefix="${homebrew_prefix}/lib/ruby/gems/${api_version}/bin"
@@ -280,13 +280,9 @@ _koopa_homebrew_ruby_gems_prefix() { # {{{1
 _koopa_include_prefix() { # {{{1
     # """
     # Koopa system includes prefix.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-30.
     # """
-    # shellcheck disable=SC2039
-    local prefix
-    prefix="$(_koopa_prefix)/include"
-    [ -d "$prefix" ] || return 1
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_prefix)/include"
     return 0
 }
 
@@ -417,12 +413,12 @@ _koopa_pyenv_prefix() { # {{{1
 _koopa_python_site_packages_prefix() { # {{{1
     # """
     # Python site packages library location.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-30.
     # """
     # shellcheck disable=SC2039
     local python x
     python="${1:-python3}"
-    _koopa_is_installed "$python" || return 1
+    _koopa_is_installed "$python" || return 0
     x="$("$python" -c 'import site; print(site.getsitepackages()[0])')"
     _koopa_print "$x"
     return 0

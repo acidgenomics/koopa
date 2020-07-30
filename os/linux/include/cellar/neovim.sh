@@ -4,7 +4,8 @@
 # Skip building on CentOS.
 if koopa::is_centos
 then
-    koopa::exit "'${name}' currently won't build on CentOS."
+    koopa::note "'${name}' currently won't build on CentOS."
+    return 0
 fi
 
 file="v${version}.tar.gz"

@@ -2,15 +2,19 @@
 
 koopa::debian_install_google_cloud_sdk() { # {{{1
     # """
-    # https://cloud.google.com/sdk/docs/downloads-apt-get
+    # Install Google Cloud SDK.
+    # @note Updated 2020-07-30.
     #
     # Required packages:
     # - apt-transport-https
     # - ca-certificates
     # - curl
+    #
+    # @seealso
+    # - https://cloud.google.com/sdk/docs/downloads-apt-get
     # """
     koopa::assert_has_no_args "$#"
-    koopa::exit_if_installed gcloud
+    koopa::is_installed gcloud && return 0
     name_fancy='Google Cloud SDK'
     koopa::install_start "$name_fancy"
     koopa::apt_add_google_cloud_sdk_repo
