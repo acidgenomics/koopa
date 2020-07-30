@@ -188,10 +188,10 @@ koopa::docker_build_all_batch_images() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-30.
     # """
-    local batch_arr batch_dirs extra force image images json nextflow_arr \
-        nextflow_dirs prefix prune pos timestamp today utc_timestamp
+    local batch_arr batch_dirs extra force image images json prefix prune pos \
+        timestamp today utc_timestamp
     koopa::assert_is_installed docker docker-build-all-tags
     extra=0
     force=0
@@ -226,8 +226,7 @@ koopa::docker_build_all_images() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    # Define images array.
-    # If empty, define default images.
+    # Define images array. If empty, define default images.
     if [[ "$#" -eq 0 ]]
     then
         prefix="$(koopa::docker_prefix)"
@@ -260,16 +259,6 @@ koopa::docker_build_all_images() { # {{{1
             'acidgenomics/r-rnaseq'
             'acidgenomics/r-singlecell'
         )
-        # Nextflow images.
-        nextflow_dirs="$( \
-            find "$prefix" \
-                -name 'nextflow-*' \
-                -type d \
-                | sort \
-        )"
-        nextflow_dirs="$(koopa::sub "${prefix}/" "" "$nextflow_dirs")"
-        readarray -t nextflow_arr <<< "$(koopa::print "$nextflow_dirs")"
-        images=("${images[@]}" "${nextflow_arr[@]}")
         # AWS batch images.
         # Ensure we build these after the other images.
         batch_dirs="$( \
