@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-07-24"
+koopa-date="2020-07-30"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.8.0a"
@@ -114,7 +114,7 @@ geos="3.8.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.27.0"
+git="2.28.0"
 
 # https://gnupg.org/download/index.html
 gnupg="2.2.21"
@@ -134,6 +134,9 @@ hdf5="1.12.0"
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
 htop="2.2.0"
+
+# https://github.com/stedolan/jq/releases
+jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
 julia="1.4.2"

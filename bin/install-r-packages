@@ -172,6 +172,7 @@ install(
         "ggrepel",
         "ggridges",
         "ggupset",
+        "gprofiler2",
         "hexbin",
         "htmlwidgets",
         "janitor",
@@ -254,6 +255,8 @@ install(
         "beachmat",                                 # SingleCell
         "biomaRt",                                  # Annotation
         "biovizBase",                               # Visualization
+        "cBioPortalData",                           # RNASeq
+        "cbaf",                                     # RNASeq
         "clusterProfiler",                          # Pathways
         "csaw",                                     # ChIPSeq
         "destiny",                                  # SingleCell
@@ -319,6 +322,7 @@ install(
         ## > "jonocarroll/DFplyr"                   # DataRepresentation
         ## > "js229/Vennerable"                     # Visualization
         ## > "kevinblighe/scDataviz"                # SingleCell
+        ## > "waldronlab/cBioPortalData"            # RNASeq
     ),
     reinstall = FALSE
 )

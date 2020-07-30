@@ -1,47 +1,56 @@
-.TH AUTOPAD-SAMPLES 1 2019-11-09 Bash
-.SH NAME
-autopad-samples \-
-Autopad sample file names that begin with a number
-.SH SYNOPSIS
-.B autopad-samples
-[\fB\-\-prefix\fP=\fI"sample"\fP]
-[\fB\-\-padwidth\fP=\fI2\fP]
-.I file ...
-.SH OPTIONS
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "AUTOPAD\-SAMPLES" "1" "July 2020" "" ""
+.
+.SH "NAME"
+\fBautopad\-samples\fR \- autopad sample file names that begin with a number
+.
+.SH "SYNOPSIS"
+\fBautopad\-samples\fR \fB\-\-prefix\fR="sample" \fB\-\-pad\-width\fR=2 \fIfile\fR\.\.\.
+.
+.SH "DESCRIPTION"
+Intended for quick sanitization of FASTQ files from a sequencing vendor that begin with numbers and aren\'t zero padded\.
+.
+.P
+Autopadding file names with leading zeros helps avoided unexpected downstream sorting issues due to differences in how shell environments and programming languages handle natural sorting\.
+.
+.P
+Here we are also renaming with a character string prefix by default, to avoid valid name issues in R\. See \'make\.names()\' for details\.
+.
+.SH "OPTIONS"
+.
 .TP
-.B \-\-prefix
-Prefix name.
+\fB\-\-prefix\fR
+Prefix name\.
+.
 .TP
-.B \-\-padwidth
-Zero padding width.
-Manually adjust this when working with >= 100 samples.
-.SH DESCRIPTION
-Intended for quick sanitization of FASTQ files from a sequencing vendor that
-begin with numbers and aren't zero padded.
-.PP
-Autopadding file names with leading zeros helps avoided unexpected downstream
-sorting issues due to differences in how shell environments and programming
-languages handle natural sorting.
-.PP
-Here we are also renaming with a character string prefix by default, to avoid
-valid name issues in R. See 'make.names()' for details.
-.SH EXAMPLE
+\fB\-\-pad\-width\fR
+Zero padding width\. Manually adjust this when working with >= 100 samples\.
+.
+.SH "EXAMPLES"
+.
 .nf
-.B autopad-samples *.fastq.gz
+
+$ autopad\-samples \-\-prefix=\'sample\' \-\-padwidth=2 *\.fastq\.gz
+
 Input:
-## 1-dmso-A-R1.fastq.qz
-## 1-dmso-A-R2.fastq.gz
-## 2-dmso-B-R1.fastq.gz
-## 2-dmso-B-R2.fastq.gz
-## ...
-## 10-compound-A-R1.fastq.gz
-## 10-compound-A-R2.fastq.gz
+## 1\-dmso\-A\-R1\.fastq\.qz
+## 1\-dmso\-A\-R2\.fastq\.gz
+## 2\-dmso\-B\-R1\.fastq\.gz
+## 2\-dmso\-B\-R2\.fastq\.gz
+## \.\.\.
+## 10\-compound\-A\-R1\.fastq\.gz
+## 10\-compound\-A\-R2\.fastq\.gz
+
 Output:
-## sample-01-dmso-A-R1.fastq.qz
-## sample-01-dmso-A-R2.fastq.gz
-## sample-02-dmso-B-R1.fastq.gz
-## sample-02-dmso-B-R2.fastq.gz
-## ...
-## sample-10-compound-A-R1.fastq.gz
-## sample-10-compound-A-R2.fastq.gz
+## sample\-01\-dmso\-A\-R1\.fastq\.qz
+## sample\-01\-dmso\-A\-R2\.fastq\.gz
+## sample\-02\-dmso\-B\-R1\.fastq\.gz
+## sample\-02\-dmso\-B\-R2\.fastq\.gz
+## \.\.\.
+## sample\-10\-compound\-A\-R1\.fastq\.gz
+## sample\-10\-compound\-A\-R2\.fastq\.gz
+.
 .fi
+

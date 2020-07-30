@@ -1,23 +1,43 @@
-.TH CONDA-CREATE-ENV 1 2019-11-09 Bash
-.SH NAME
-conda-create-env \-
-Create a Conda environment
-.SH SYNOPSIS
-.B conda-create-env
-.I name
-.SH OPTIONS
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "CONDA\-CREATE\-ENV" "1" "July 2020" "" ""
+.
+.SH "NAME"
+\fBconda\-create\-env\fR \- create a conda environment
+.
+.SH "SYNOPSIS"
+\fBconda\-create\-env\fR \fIname\fR=\fIversion\fR\.\.\.
+.
+.SH "DESCRIPTION"
+Quickly create new conda environments based on recipe \fBname=version\fR key\-value pairs, without prompting\.
+.
+.SH "OPTIONS"
+.
 .TP
-.B name
-Environment name.
-.SH DESCRIPTION
-Quickly create a new conda environment based on a single recipe NAME, without
-prompting.
-.SH EXAMPLE
+\fIname\fR=\fIversion\fR
+Environment name and version key\-value pair\.
+.
+.SH "SEE ALSO"
+.
+.IP "\(bu" 4
+\fBconda create \-\-help\fR
+.
+.IP "\(bu" 4
+Conda cheatsheet \fIhttps://steinbaugh\.com/posts/conda\.html\fR
+.
+.IP "" 0
+.
+.SH "EXAMPLES"
+Create \fBkallisto@0\.42\.6\fR and \fBsalmon@1\.3\.0\fR environments:
+.
+.IP "" 4
+.
 .nf
-.B conda-create-env kallisto
+
+$ conda\-create\-env "kallisto=0\.42\.6" "salmon=1\.3\.0"
+.
 .fi
-.SH SEE ALSO
-.IP
-\(bu conda create
-.IP
-\(bu https://steinbaugh.com/posts/conda.html
+.
+.IP "" 0
+
