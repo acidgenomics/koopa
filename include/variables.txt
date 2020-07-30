@@ -22,7 +22,7 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
-anaconda="2020.02"
+anaconda="2020.07"
 
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
