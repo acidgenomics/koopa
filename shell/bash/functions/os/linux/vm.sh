@@ -5,7 +5,7 @@ koopa::configure_vm() { # {{{1
     # Configure virtual machine.
     # @note Updated 2020-07-23.
     # """
-    local app_prefix app_prefix_bn app_prefix_real bioconductor check compact \
+    local app_prefix app_prefix_bn app_prefix_real bioconductor compact \
         data_disk data_disk_link data_disk_real docker gb_total \
         install_base_flags make_prefix \
         minimal pos r_version rsync source_ip
@@ -20,8 +20,6 @@ koopa::configure_vm() { # {{{1
     compact=0
     # Bioconductor mode, for continuous integration (CI) checks.
     bioconductor=0
-    # Perform version checks at end of install.
-    check=1
     # Used for app configuration.
     data_disk=
     # Skip rsync mode by default.
@@ -52,10 +50,6 @@ koopa::configure_vm() { # {{{1
                 ;;
             --minimal)
                 minimal=1
-                shift 1
-                ;;
-            --no-check)
-                check=0
                 shift 1
                 ;;
             --r-version=*)
@@ -95,10 +89,6 @@ koopa::configure_vm() { # {{{1
     koopa::is_docker && docker=1
     [[ "$bioconductor" -eq 1 ]] && compact=1
     [[ -n "$source_ip" ]] && rsync=1
-    if [[ "$compact" -eq 1 ]] || [[ "$minimal" -eq 1 ]]
-    then
-        check=0
-    fi
 
     # Initial configuration {{{2
     # --------------------------------------------------------------------------
@@ -388,10 +378,6 @@ koopa::configure_vm() { # {{{1
         fi
     fi
 
-    # Run system check and return {{{2
-    # --------------------------------------------------------------------------
-
-    [[ "$check" -eq 1 ]] && koopa check
     koopa::success 'Configuration completed successfully.'
     return 0
 }
