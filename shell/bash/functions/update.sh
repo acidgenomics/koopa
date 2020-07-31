@@ -137,7 +137,7 @@ koopa::update() { # {{{1
             elif koopa::is_macos
             then
                 koopa::macos_update_homebrew
-                koopa::macos_update_microsoft_office
+                koopa::macos_update_microsoft_office || true
             fi
         fi
         koopa::fix_zsh_permissions
