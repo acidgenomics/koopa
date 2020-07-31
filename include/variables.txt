@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-07-30"
+koopa-date="2020-07-31"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.8.0a"
@@ -153,7 +153,7 @@ llvm="10.0.0"
 # https://lmod.readthedocs.io/en/latest/030_installing.html
 # https://github.com/TACC/Lmod
 # Update every minor release (skip patch releases, which are too frequent).
-lmod="8.3"
+lmod="8.4"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
