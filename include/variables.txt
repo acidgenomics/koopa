@@ -169,7 +169,7 @@ make="4.3"
 ncurses="6.2"
 
 # https://github.com/dylanaraps/neofetch/releases
-neofetch="7.0.0"
+neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
 neovim="0.4.3"
