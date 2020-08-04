@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-07-30"
+koopa-date="2020-08-04"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.8.0a"
@@ -98,7 +98,7 @@ findutils="4.7.0"
 fish="3.1.2"
 
 # https://github.com/junegunn/fzf
-fzf="0.21.1"
+fzf="0.22.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.0"
@@ -140,7 +140,7 @@ htop="2.2.0"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.4.2"
+julia="1.5.0"
 
 # https://ftp.gnu.org/gnu/libtool/
 libtool="2.4.6"
@@ -153,7 +153,7 @@ llvm="10.0.0"
 # https://lmod.readthedocs.io/en/latest/030_installing.html
 # https://github.com/TACC/Lmod
 # Update every minor release (skip patch releases, which are too frequent).
-lmod="8.3"
+lmod="8.4"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
@@ -169,7 +169,7 @@ make="4.3"
 ncurses="6.2"
 
 # https://github.com/dylanaraps/neofetch/releases
-neofetch="7.0.0"
+neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
 neovim="0.4.3"
