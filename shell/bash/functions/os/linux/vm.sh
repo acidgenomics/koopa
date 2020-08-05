@@ -312,12 +312,12 @@ koopa::configure_vm() { # {{{1
 
     if [[ "$rsync" -eq 0 ]]
     then
+        install-python-packages
         if [[ "$bioconductor" -eq 1 ]] || [[ "$compact" -eq 0 ]]
         then
-            install-python-packages
             venv-create-r-reticulate
-            install-r-packages
         fi
+        install-r-packages
         if [[ "$compact" -eq 0 ]]
         then
             install-perl-packages
