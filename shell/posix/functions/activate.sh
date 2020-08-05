@@ -685,6 +685,9 @@ _koopa_activate_pkg_config() { # {{{1
     # building tricky pages from source, such as rgdal, sf and others  easier.
     #
     # This is necessary for rgdal, sf packages to install clean.
+    #
+    # @seealso
+    # - https://askubuntu.com/questions/210210/
     # """
     # shellcheck disable=SC2039
     local sys_pkg_config
