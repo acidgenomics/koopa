@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-05.
     # """
     local dev extra name_fancy pkgs upgrade
     koopa::assert_is_installed dnf sudo
@@ -28,6 +28,7 @@ koopa::fedora_install_base() { # {{{1
 
     koopa::h2 'Installing default packages.'
     pkgs=(
+        # 'coreutils' # This is erroring on RHEL 8.
         'autoconf'
         'automake'
         'bash'
@@ -35,7 +36,6 @@ koopa::fedora_install_base() { # {{{1
         'bzip2'
         'cmake'
         'convmv'
-        'coreutils'
         'cryptsetup'
         'curl'
         'diffutils'
