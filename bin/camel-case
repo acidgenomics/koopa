@@ -6,31 +6,32 @@ file <- args[whichFile]
 file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
-library(syntactic)
 
-prefix <- FALSE
-recursive <- FALSE
-strict <- FALSE
-
-args <- parseArgs(
-    positional = TRUE,
-    validFlags = c("prefix", "recursive", "strict")
-)
-
-if ("--prefix" %in% args) {
-    prefix <- TRUE
+.camelCase <- function() {
+    requireNamespaces("syntactic")
+    prefix <- FALSE
+    recursive <- FALSE
+    strict <- FALSE
+    args <- parseArgs(
+        positional = TRUE,
+        validFlags = c("prefix", "recursive", "strict")
+    )
+    if ("--prefix" %in% args) {
+        prefix <- TRUE
+    }
+    if ("--recursive" %in% args) {
+        recursive <- TRUE
+    }
+    if ("--strict" %in% args) {
+        strict <- TRUE
+    }
+    syntactic::camelCase(
+        object = positionalArgs(),
+        rename = TRUE,
+        recursive = recursive,
+        strict = strict,
+        prefix = prefix
+    )
 }
-if ("--recursive" %in% args) {
-    recursive <- TRUE
-}
-if ("--strict" %in% args) {
-    strict <- TRUE
-}
 
-camelCase(
-    object = positionalArgs(),
-    rename = TRUE,
-    recursive = recursive,
-    strict = strict,
-    prefix = prefix
-)
+.camelCase()
