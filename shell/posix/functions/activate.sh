@@ -690,18 +690,19 @@ _koopa_activate_pkg_config() { # {{{1
     # - https://askubuntu.com/questions/210210/
     # """
     # shellcheck disable=SC2039
-    local sys_pkg_config
+    local make_prefix sys_pkg_config
     [ -n "$PKG_CONFIG_PATH" ] && return 0
+    make_prefix="$(_koopa_make_prefix)"
     sys_pkg_config='/usr/bin/pkg-config'
     if _koopa_is_installed "$sys_pkg_config"
     then
         PKG_CONFIG_PATH="$("$sys_pkg_config" --variable pc_path pkg-config)"
     fi
     _koopa_force_add_to_pkg_config_path_start \
-        '/usr/local/share/pkgconfig' \
-        '/usr/local/lib/pkgconfig' \
-        '/usr/local/lib64/pkgconfig' \
-        '/usr/local/lib/x86_64-linux-gnu/pkgconfig'
+        "${make_prefix}/share/pkgconfig" \
+        "${make_prefix}/lib/pkgconfig" \
+        "${make_prefix}/lib64/pkgconfig" \
+        "${make_prefix}/lib/x86_64-linux-gnu/pkgconfig"
     return 0
 }
 
