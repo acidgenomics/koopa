@@ -168,14 +168,16 @@ _koopa_export_pager() { # {{{1
 
 _koopa_export_proj_lib() { # {{{1
     # """
-    # Export PROJ_LIB
-    # @note Updated 2020-06-30.
+    # Export PROJ_LIB.
+    # @note Updated 2020-08-05.
     # """
+    # shellcheck disable=SC2039
+    local make_prefix
     if [ -z "${PROJ_LIB:-}" ]
     then
-        if [ -e '/usr/local/share/proj' ]
+        if [ -e "${make_prefix}/share/proj" ]
         then
-            PROJ_LIB='/usr/local/share/proj'
+            PROJ_LIB="${make_prefix}/share/proj"
             export PROJ_LIB
         elif [ -e '/usr/share/proj' ]
         then

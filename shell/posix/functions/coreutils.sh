@@ -106,8 +106,6 @@ _koopa_which_realpath() { # {{{1
     #
     # @examples
     # koopa::which_realpath bash vim
-    # ## /usr/local/Cellar/bash/5.0.17/bin/bash
-    # ## /usr/local/Cellar/vim/8.2.1050/bin/vim
     # """
     # shellcheck disable=SC2039
     local cmd
