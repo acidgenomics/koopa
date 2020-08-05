@@ -486,20 +486,21 @@ _koopa_activate_koopa_paths() { # {{{1
 _koopa_activate_llvm() { # {{{1
     # """
     # Activate LLVM config.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-05.
     # """
     # shellcheck disable=SC2039
-    local config
+    local config make_prefix
     [ -x "${LLVM_CONFIG:-}" ] && return 0
+    make_prefix="$(_koopa_make_prefix)"
     if _koopa_is_macos
     then
-        config='/usr/local/opt/llvm/bin/llvm-config'
+        config="${make_prefix}/opt/llvm/bin/llvm-config"
     else
         # Note that findutils isn't installed on Linux distros by default
         # (e.g. Docker fedora image), and will error here otherwise.
         _koopa_is_installed find || return 0
         # Attempt to find the latest version automatically.
-        config="$(find /usr/bin -name 'llvm-config-*' | sort | tail -n 1)"
+        config="$(find '/usr/bin' -name 'llvm-config-*' | sort | tail -n 1)"
     fi
     [ -x "$config" ] && export LLVM_CONFIG="$config"
     return 0
@@ -508,7 +509,7 @@ _koopa_activate_llvm() { # {{{1
 _koopa_activate_local_etc_profile() { # {{{1
     # """
     # Source 'profile.d' scripts in '/usr/local/etc'.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-05.
     #
     # Currently only supported for Bash.
     #
@@ -516,7 +517,7 @@ _koopa_activate_local_etc_profile() { # {{{1
     # and Dash shells otherwise.
     # """
     # shellcheck disable=SC2039
-    local prefix
+    local make_prefix prefix
     case "$(_koopa_shell)" in
         bash)
             ;;
@@ -524,7 +525,8 @@ _koopa_activate_local_etc_profile() { # {{{1
             return 0
             ;;
     esac
-    prefix='/usr/local/etc/profile.d'
+    make_prefix="$(_koopa_make_prefix)"
+    prefix="${make_prefix}/etc/profile.d"
     [ -d "$prefix" ] || return 0
     for script in "${prefix}/"*'.sh'
     do
@@ -671,22 +673,38 @@ _koopa_activate_pipx() { # {{{1
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
-    # @note Updated 2020-07-19.
+    # @note Updated 2020-08-05.
+    #
+    # Typical priorities (e.g. on Debian):
+    # - /usr/local/lib/x86_64-linux-gnu/pkgconfig
+    # - /usr/local/lib/pkgconfig
+    # - /usr/local/share/pkgconfig
+    # - /usr/lib/x86_64-linux-gnu/pkgconfig
+    # - /usr/lib/pkgconfig
+    # - /usr/share/pkgconfig
     #
     # These are defined primarily for R environment. In particular these make
     # building tricky pages from source, such as rgdal, sf and others  easier.
     #
     # This is necessary for rgdal, sf packages to install clean.
+    #
+    # @seealso
+    # - https://askubuntu.com/questions/210210/
     # """
-    _koopa_add_to_pkg_config_path_start \
-        '/usr/share/pkgconfig' \
-        '/usr/lib/pkgconfig' \
-        '/usr/lib64/pkgconfig' \
-        '/usr/lib/x86_64-linux-gnu/pkgconfig' \
-        '/usr/local/share/pkgconfig' \
-        '/usr/local/lib/pkgconfig' \
-        '/usr/local/lib64/pkgconfig' \
-        '/usr/local/lib/x86_64-linux-gnu/pkgconfig'
+    # shellcheck disable=SC2039
+    local make_prefix sys_pkg_config
+    [ -n "$PKG_CONFIG_PATH" ] && return 0
+    make_prefix="$(_koopa_make_prefix)"
+    sys_pkg_config='/usr/bin/pkg-config'
+    if _koopa_is_installed "$sys_pkg_config"
+    then
+        PKG_CONFIG_PATH="$("$sys_pkg_config" --variable pc_path pkg-config)"
+    fi
+    _koopa_force_add_to_pkg_config_path_start \
+        "${make_prefix}/share/pkgconfig" \
+        "${make_prefix}/lib/pkgconfig" \
+        "${make_prefix}/lib64/pkgconfig" \
+        "${make_prefix}/lib/x86_64-linux-gnu/pkgconfig"
     return 0
 }
 
@@ -883,7 +901,7 @@ _koopa_activate_ssh_key() { # {{{1
 _koopa_activate_standard_paths() { # {{{1
     # """
     # Activate standard paths.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-05.
     #
     # Note that here we're making sure local binaries are included.
     # Inspect '/etc/profile' if system PATH appears misconfigured.
@@ -891,18 +909,21 @@ _koopa_activate_standard_paths() { # {{{1
     # @seealso
     # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
     # """
+    # shellcheck disable=SC2039
+    local make_prefix
+    make_prefix="$(_koopa_make_prefix)"
     _koopa_force_add_to_path_end \
         '/usr/bin' \
         '/bin' \
         '/usr/sbin' \
         '/sbin'
     _koopa_force_add_to_path_start \
-        '/usr/local/sbin' \
-        '/usr/local/bin' \
+        "${make_prefix}/sbin" \
+        "${make_prefix}/bin" \
         "${HOME}/.local/bin"
     _koopa_force_add_to_manpath_end '/usr/share/man'
     _koopa_force_add_to_manpath_start \
-        '/usr/local/share/man' \
+        "${make_prefix}/share/man" \
         "${HOME}/.local/share/man"
     return 0
 }
@@ -945,8 +966,8 @@ _koopa_activate_venv() { # {{{1
 
 _koopa_activate_xdg() { # {{{1
     # """
-    # Activate XDG base directory specification
-    # @note Updated 2020-06-30.
+    # Activate XDG base directory specification.
+    # @note Updated 2020-08-05.
     #
     # XDG_RUNTIME_DIR:
     # - Can only exist for the duration of the user's login.
@@ -964,6 +985,9 @@ _koopa_activate_xdg() { # {{{1
     # - https://developer.gnome.org/basedir-spec/
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
     # """
+    # shellcheck disable=SC2039
+    local make_prefix
+    make_prefix="$(_koopa_make_prefix)"
     if [ -z "${XDG_CACHE_HOME:-}" ]
     then
         XDG_CACHE_HOME="${HOME}/.cache"
@@ -986,13 +1010,16 @@ _koopa_activate_xdg() { # {{{1
     fi
     if [ -z "${XDG_DATA_DIRS:-}" ]
     then
-        XDG_DATA_DIRS='/usr/local/share:/usr/share'
+        XDG_DATA_DIRS="${make_prefix}/share:/usr/share"
     fi
     if [ -z "${XDG_CONFIG_DIRS:-}" ]
     then
         XDG_CONFIG_DIRS='/etc/xdg'
     fi
-    export XDG_CACHE_HOME XDG_CONFIG_DIRS XDG_CONFIG_HOME XDG_DATA_DIRS \
-        XDG_DATA_HOME XDG_RUNTIME_DIR
+    export \
+        XDG_CACHE_HOME \
+        XDG_CONFIG_DIRS XDG_CONFIG_HOME \
+        XDG_DATA_DIRS XDG_DATA_HOME \
+        XDG_RUNTIME_DIR
     return 0
 }
