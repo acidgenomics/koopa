@@ -3,23 +3,26 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-07-23.
+    # @note Updated 2020-08-05.
     # """
     local app_prefix app_prefix_bn app_prefix_real bioconductor compact \
-        data_disk data_disk_link data_disk_real docker gb_total \
-        install_base_flags make_prefix \
-        minimal pos r_version rsync source_ip
+        data_disk data_disk_link data_disk_real docker full gb_total \
+        install_base_flags make_prefix minimal pos prefixes r_version rsync \
+        source_ip
     koopa::assert_has_no_envs
-    # Assume we're not building inside Docker by default.
+    # Bioconductor mode, for continuous integration (CI) checks.
+    bioconductor=0
+    # Are we building from source inside Docker?
     docker=0
+    # Compact mode skips installation of GNU utils and other dependencies that
+    # can take a long time to build from source. Generally recommended inside
+    # of Docker images, but can be override with '--full' flag.
+    compact=0
+    # Full installation.
+    full=0
     # Minimal config used for lightweight Docker images. This mode skips all
     # program installation.
     minimal=0
-    # Compact mode skips installation of GNU utils and other dependencies that
-    # can take a long time to build from source.
-    compact=0
-    # Bioconductor mode, for continuous integration (CI) checks.
-    bioconductor=0
     # Used for app configuration.
     data_disk=
     # Skip rsync mode by default.
@@ -47,6 +50,10 @@ koopa::configure_vm() { # {{{1
             --data-disk)
                 data_disk="$2"
                 shift 2
+                ;;
+            --full)
+                full=1
+                shift 1
                 ;;
             --minimal)
                 minimal=1
@@ -86,9 +93,11 @@ koopa::configure_vm() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    koopa::is_docker && docker=1
-    [[ "$bioconductor" -eq 1 ]] && compact=1
     [[ -n "$source_ip" ]] && rsync=1
+    koopa::is_docker && docker=1
+    [[ "$docker" -eq 1 ]] && compact=1
+    [[ "$bioconductor" -eq 1 ]] && compact=1
+    [[ "$full" -eq 1 ]] && compact=0
 
     # Initial configuration {{{2
     # --------------------------------------------------------------------------
@@ -186,22 +195,21 @@ koopa::configure_vm() { # {{{1
     install_base_flags=()
     [[ "$compact" -eq 1 ]] && install_base_flags+=('--compact')
     install-base "${install_base_flags[@]:-}"
-    # Maybe include: tclsh
     koopa::assert_is_installed \
-        autoconf \
-        bc \
-        bzip2 \
-        g++ \
-        gcc \
-        gfortran \
-        gzip \
-        make \
-        man \
-        msgfmt \
-        tar \
-        unzip \
-        xml2-config \
-        xz
+        'autoconf' \
+        'bc' \
+        'bzip2' \
+        'g++' \
+        'gcc' \
+        'gfortran' \
+        'gzip' \
+        'make' \
+        'man' \
+        'msgfmt' \
+        'tar' \
+        'unzip' \
+        'xml2-config' \
+        'xz'
     koopa::assert_is_file \
         '/usr/bin/gcc' \
         '/usr/bin/g++'
@@ -258,7 +266,6 @@ koopa::configure_vm() { # {{{1
         install-go
         install-ruby
         install-rust
-        install-password-store
         install-neofetch
         install-fzf
         # > install-the-silver-searcher
@@ -268,12 +275,13 @@ koopa::configure_vm() { # {{{1
     install-shellcheck
     install-shunit2
     install-aws-cli
-    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+    if [[ "$compact" -eq 0 ]]
     then
         koopa::run_if_installed \
             install-azure-cli \
             install-docker \
             install-google-cloud-sdk
+        install-password-store
         install-docker-credential-pass
         install-neovim
         install-emacs
@@ -283,7 +291,7 @@ koopa::configure_vm() { # {{{1
         install-lmod
         install-htop
         install-autojump
-        install-gcc --cellar-only
+        # > install-gcc --cellar-only
     fi
     if [[ "$r_version" == 'devel' ]]
     then
@@ -297,16 +305,19 @@ koopa::configure_vm() { # {{{1
     koopa::run_if_installed install-rstudio-server install-shiny-server
     koopa::update_r_config
     koopa::update_lmod_config
+    sudo ldconfig
 
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------
 
-    sudo ldconfig
     if [[ "$rsync" -eq 0 ]]
     then
-        install-python-packages
-        venv-create-r-reticulate
-        install-r-packages
+        if [[ "$bioconductor" -eq 1 ]] || [[ "$compact" -eq 0 ]]
+        then
+            install-python-packages
+            venv-create-r-reticulate
+            install-r-packages
+        fi
         if [[ "$compact" -eq 0 ]]
         then
             install-perl-packages
@@ -318,7 +329,7 @@ koopa::configure_vm() { # {{{1
     # Bioinformatics tools {{{2
     # --------------------------------------------------------------------------
 
-    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
+    if [[ "$compact" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
     then
         install-aspera-connect
         conda-create-bioinfo-envs
@@ -345,25 +356,19 @@ koopa::configure_vm() { # {{{1
     # > koopa::fix_pyenv_permissions
     # > koopa::fix_rbenv_permissions
 
-    # Fix permissions {{{3
+    # Fix permissions and clean up {{{3
     # --------------------------------------------------------------------------
 
-    koopa::sys_set_permissions -r "$make_prefix"
-    koopa::sys_set_permissions -r "$app_prefix"
+    prefixes=("$make_prefix" "$app_prefix")
+    koopa::sys_set_permissions -r "${prefixes[@]}"
+    koopa::remove_broken_symlinks "${prefixes[@]}"
+    koopa::remove_empty_dirs "${prefixes[@]}"
     koopa::fix_zsh_permissions
-
-    # Remove symlinks and dirs {{{3
-    # --------------------------------------------------------------------------
-
-    koopa::remove_broken_symlinks "$make_prefix"
-    koopa::remove_broken_symlinks "$app_prefix"
-    koopa::remove_empty_dirs "$make_prefix"
-    koopa::remove_empty_dirs "$app_prefix"
 
     # Remove temporary files {{{3
     # --------------------------------------------------------------------------
 
-    if [[ "$compact" -eq 1 ]] || [[ "$docker" -eq 1 ]]
+    if [[ "$docker" -eq 1 ]]
     then
         koopa::h2 'Removing caches, logs, and temporary files.'
         # Don't clear '/var/log/' here, as this can mess with 'sshd'.
@@ -372,10 +377,7 @@ koopa::configure_vm() { # {{{1
             '/tmp/'* \
             '/var/backups/'* \
             '/var/cache/'*
-        if koopa::is_debian
-        then
-            koopa::rm -S '/var/lib/apt/lists/'*
-        fi
+        koopa::is_debian && koopa::rm -S '/var/lib/apt/lists/'*
     fi
 
     koopa::success 'Configuration completed successfully.'
