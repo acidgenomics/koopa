@@ -346,7 +346,6 @@ _koopa_which() { # {{{1
     #
     # Example:
     # koopa::which bash
-    # ## /usr/local/bin/bash
     # """
     # shellcheck disable=SC2039
     local cmd
