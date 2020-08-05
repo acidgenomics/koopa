@@ -671,18 +671,29 @@ _koopa_activate_pipx() { # {{{1
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
-    # @note Updated 2020-07-19.
+    # @note Updated 2020-08-05.
+    #
+    # Typical priorities (e.g. on Debian):
+    # - /usr/local/lib/x86_64-linux-gnu/pkgconfig
+    # - /usr/local/lib/pkgconfig
+    # - /usr/local/share/pkgconfig
+    # - /usr/lib/x86_64-linux-gnu/pkgconfig
+    # - /usr/lib/pkgconfig
+    # - /usr/share/pkgconfig
     #
     # These are defined primarily for R environment. In particular these make
     # building tricky pages from source, such as rgdal, sf and others  easier.
     #
     # This is necessary for rgdal, sf packages to install clean.
     # """
-    _koopa_add_to_pkg_config_path_start \
-        '/usr/share/pkgconfig' \
-        '/usr/lib/pkgconfig' \
-        '/usr/lib64/pkgconfig' \
-        '/usr/lib/x86_64-linux-gnu/pkgconfig' \
+    # shellcheck disable=SC2039
+    local sys_pkg_config
+    [ -n "$PKG_CONFIG_PATH" ] && return 0
+    if _koopa_is_installed "$sys_pkg_config"
+    then
+        PKG_CONFIG_PATH="$("$sys_pkg_config" --variable pc_path pkg-config)"
+    fi
+    _koopa_force_add_to_pkg_config_path_start \
         '/usr/local/share/pkgconfig' \
         '/usr/local/lib/pkgconfig' \
         '/usr/local/lib64/pkgconfig' \
