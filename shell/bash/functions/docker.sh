@@ -296,6 +296,8 @@ koopa::docker_build_all_images() { # {{{1
             # FIXME NEED TO MOVE THIS INTO R CODE INSTEAD.
             koopa::is_docker_build_today "$image" && continue
         fi
+        # FIXME THIS ALSO NEEDS TO SUPPORT FORCE FLAG.
+        # FIXME IF SET, NEED TO PASS HERE.
         docker-build-all-tags "$image"
     done
     [[ "$prune" -eq 1 ]] && koopa::docker_prune
@@ -492,6 +494,7 @@ koopa::docker_tag() { # {{{1
     return 0
 }
 
+# FIXME Convert this into an R function so we can use with docker-build-all-tags
 koopa::is_docker_build_today() { # {{{1
     # """
     # Check if a Docker image has been built today.
