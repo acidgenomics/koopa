@@ -689,6 +689,7 @@ _koopa_activate_pkg_config() { # {{{1
     # shellcheck disable=SC2039
     local sys_pkg_config
     [ -n "$PKG_CONFIG_PATH" ] && return 0
+    sys_pkg_config='/usr/bin/pkg-config'
     if _koopa_is_installed "$sys_pkg_config"
     then
         PKG_CONFIG_PATH="$("$sys_pkg_config" --variable pc_path pkg-config)"
