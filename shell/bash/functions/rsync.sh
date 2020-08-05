@@ -50,36 +50,13 @@ koopa::rsync_flags_macos() { # {{{1
 koopa::rsync_ignore() { # {{{1
     # """
     # Run rsync with automatic ignore.
-    # @note Updated 2020-07-10.
+    # @note Updated 2020-08-04.
     # @seealso
     # https://stackoverflow.com/questions/13713101/
     # """
-    local global ignore_global pos rsync_flags
+    local ignore_global rsync_flags
     koopa::assert_has_args "$#"
     koopa::assert_is_installed rsync
-    global=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --global)
-                global=1
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     rsync_flags=(
         # '--exclude=.*/'
         # '--exclude=/.git'
@@ -90,10 +67,9 @@ koopa::rsync_ignore() { # {{{1
         '--human-readable'
         '--progress'
     )
-    if [[ "$global" -eq 1 ]]
+    ignore_global="${HOME}/.gitignore"
+    if [[ -f "$ignore_global" ]]
     then
-        ignore_global="${HOME}/.gitignore"
-        koopa::assert_is_file "$ignore_global"
         rsync_flags+=("--filter=dir-merge,- ${ignore_global}")
     fi
     rsync "${rsync_flags[@]}" "$@"
