@@ -175,6 +175,7 @@ _koopa_export_proj_lib() { # {{{1
     local make_prefix
     if [ -z "${PROJ_LIB:-}" ]
     then
+        make_prefix="$(_koopa_make_prefix)"
         if [ -e "${make_prefix}/share/proj" ]
         then
             PROJ_LIB="${make_prefix}/share/proj"
