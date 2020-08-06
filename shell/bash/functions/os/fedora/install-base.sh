@@ -4,13 +4,51 @@ koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
     # @note Updated 2020-08-05.
+    #
+    # Refer to Debian install base script for more details on supported args.
     # """
-    local dev extra name_fancy pkgs upgrade
+    local compact dev extra name_fancy pkgs pos upgrade
     koopa::assert_is_installed dnf sudo
+    compact=0
     dev=1
     extra=1
+    full=0
     upgrade=1
-    koopa::is_docker && extra=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --compact)
+                compact=1
+                shift 1
+                ;;
+            --full)
+                full=1
+                shift 1
+                ;;
+            "")
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_no_args "$#"
+    if [[ "$compact" -eq 1 ]] && [[ "$full" -eq 1 ]]
+    then
+        koopa::stop "Set '--compact' or '--full' but not both."
+    fi
+    koopa::is_docker && [[ "$full" -eq 0 ]] && extra=0
     name_fancy='Fedora base system'
     koopa::install_start "$name_fancy"
 
@@ -79,6 +117,15 @@ koopa::fedora_install_base() { # {{{1
     then
         koopa::h2 'Installing developer libraries.'
         sudo dnf -y groupinstall 'Development Tools'
+        if [[ "$compact" -eq 1 ]]
+        then
+            pkgs+=(
+                # proj-bin?
+                'gdal-devel'
+                'geos-devel'
+                'proj-devel'
+            )
+        fi
         pkgs+=(
             'apr-devel'  # subversion
             'apr-util-devel'  # subversion
@@ -170,4 +217,3 @@ koopa::fedora_install_base() { # {{{1
     koopa::install_success "$name_fancy"
     return 0
 }
-
