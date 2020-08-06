@@ -39,7 +39,6 @@ koopa::debian_install_r_cran_binary() { # {{{1
     koopa::apt_add_r_repo "$version"
     pkgs=('r-base' 'r-base-dev')
     koopa::apt_install "${pkgs[@]}"
-    koopa::update_r_config "$r"
     # Ensure we don't have a duplicate site library.
     koopa::rm -S '/usr/local/lib/R'
     koopa::install_success "$name_fancy"
