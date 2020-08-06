@@ -3,7 +3,7 @@
 ## """
 ## Check that all scripts in `bin` and `sbin` directories have corresponding
 ## documentation in `man/man1`.
-## @note Updated 2020-07-07.
+## @note Updated 2020-08-06.
 ## """
 
 options(
