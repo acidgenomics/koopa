@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::yum_add_azure_cli_repo() { # {{{1
+koopa::fedora_add_azure_cli_repo() { # {{{1
     # """
-    # Add Microsoft Azure CLI yum repo.
-    # @note Updated 2020-06-30.
+    # Add Microsoft Azure CLI repo.
+    # @note Updated 2020-08-06.
     # """
     local file
     koopa::assert_has_no_args "$#"
@@ -20,10 +20,10 @@ END
     return 0
 }
 
-koopa::yum_add_google_cloud_sdk_repo() { # {{{1
+koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
     # """
-    # Add Google Cloud SDK yum repo.
-    # @note Updated 2020-06-30.
+    # Add Google Cloud SDK repo.
+    # @note Updated 2020-08-06.
     #
     # Spacing is important in the 'gpgkey' section.
     #
@@ -61,10 +61,10 @@ END
     return 0
 }
 
-koopa::yum_import_azure_cli_key() { # {{{1
+koopa::fedora_import_azure_cli_key() { # {{{1
     # """
     # Import the Microsoft Azure CLI public key.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-06.
     # """
     koopa::assert_has_no_args "$#"
     sudo rpm --import 'https://packages.microsoft.com/keys/microsoft.asc'

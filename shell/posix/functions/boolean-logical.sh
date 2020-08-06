@@ -1,50 +1,5 @@
 #!/bin/sh
 
-__koopa_is_os_id() { # {{{1
-    # """
-    # Is a specific OS ID?
-    # @note Updated 2020-08-06.
-    #
-    # This will match Debian but not Ubuntu for a Debian check.
-    # """
-    # shellcheck disable=SC2039
-    local file id
-    id="${1:?}"
-    file='/etc/os-release'
-    [ -f "$file" ] || return 1
-    grep 'ID=' "$file" | grep -q "$id"
-}
-
-__koopa_is_os_id_like() { # {{{1
-    # """
-    # Is a specific OS ID-like?
-    # @note Updated 2020-08-06.
-    #
-    # This will match Debian and Ubuntu for a Debian check.
-    # """
-    # shellcheck disable=SC2039
-    local file id
-    id="${1:?}"
-    file='/etc/os-release'
-    [ -f "$file" ] || return 1
-    grep 'ID=' "$file" | grep -q "$id" && return 0
-    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
-    return 0
-}
-
-__koopa_is_os_version() { # {{{1
-    # """
-    # Is a specific OS version?
-    # @note Updated 2020-08-06.
-    # """
-    # shellcheck disable=SC2039
-    local file version
-    version="${1:?}"
-    file='/etc/os-release'
-    [ -f "$file" ] || return 1
-    grep -q "VERSION_ID=\"${version}" "$file"
-}
-
 _koopa_expr() { # {{{1
     # """
     # Quiet regular expression matching that is POSIX compliant.
@@ -138,49 +93,57 @@ _koopa_is_alias() { # {{{1
 _koopa_is_alpine() { # {{{1
     # """
     # Is the operating system Alpine Linux?
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-08-06.
     # """
-    [ "$(_koopa_os_id)" = 'alpine' ]
+    _koopa_is_os 'alpine'
 }
 
 _koopa_is_amzn() { # {{{1
     # """
     # Is the operating system Amazon Linux?
-    # @note Updated 2020-01-21.
+    # @note Updated 2020-08-06.
     # """
-    [ "$(_koopa_os_id)" = 'amzn' ]
+    _koopa_is_os 'amzn'
 }
 
 _koopa_is_arch() { # {{{1
     # """
     # Is the operating system Arch Linux?
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-08-06.
     # """
-    [ "$(_koopa_os_id)" = 'arch' ]
+    _koopa_is_os 'arch'
 }
 
 _koopa_is_aws() { # {{{1
     # """
     # Is the current session running on AWS?
-    # @note Updated 2019-11-25.
+    # @note Updated 2020-08-06.
     # """
-    [ "$(_koopa_host_id)" = 'aws' ]
+    _koopa_is_host 'aws'
 }
 
 _koopa_is_azure() { # {{{1
     # """
     # Is the current session running on Microsoft Azure?
-    # @note Updated 2019-11-25.
+    # @note Updated 2020-08-06.
     # """
-    [ "$(_koopa_host_id)" = 'azure' ]
+    _koopa_is_host 'azure'
 }
 
 _koopa_is_centos() { # {{{1
     # """
     # Is the operating system CentOS?
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-08-06.
     # """
-    [ "$(_koopa_os_id)" = 'centos' ]
+    _koopa_is_os 'centos'
+}
+
+_koopa_is_centos_like() { # {{{1
+    # """
+    # Is the operating system CentOS-like?
+    # @note Updated 2020-08-06.
+    # """
+    _koopa_is_os_like 'centos'
 }
 
 _koopa_is_conda_active() { # {{{1
@@ -191,22 +154,36 @@ _koopa_is_conda_active() { # {{{1
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
-# FIXME REWORK THIS.
 _koopa_is_debian() { # {{{1
     # """
     # Is the operating system Debian?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-06.
     # """
-    __koopa_is_os_release debian
+    _koopa_is_os 'debian'
 }
 
-# FIXME REWORK THIS.
+_koopa_is_debian_like() { # {{{1
+    # """
+    # Is the operating system Debian-like?
+    # @note Updated 2020-08-06.
+    # """
+    _koopa_is_os_like 'debian'
+}
+
 _koopa_is_fedora() { # {{{1
     # """
     # Is the operating system Fedora?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-06.
     # """
-    __koopa_is_os_release fedora
+    _koopa_is_os 'fedora'
+}
+
+_koopa_is_fedora_like() { # {{{1
+    # """
+    # Is the operating system Fedora-like?
+    # @note Updated 2020-08-06.
+    # """
+    _koopa_is_os_like 'fedora'
 }
 
 _koopa_is_git() { # {{{1i
@@ -256,6 +233,14 @@ _koopa_is_git_toplevel() { # {{{1
     local dir
     dir="${1:-.}"
     [ -e "${dir}/.git" ]
+}
+
+_koopa_is_host() { # {{{1
+    # """
+    # Does the current host match?
+    # @note Updated 2020-08-06.
+    # """
+    [ "$(_koopa_host_id)" = "${1:?}" ]
 }
 
 _koopa_is_installed() { # {{{1
@@ -310,9 +295,51 @@ _koopa_is_macos() { # {{{1
 _koopa_is_opensuse() { # {{{1
     # """
     # Is the operating system openSUSE?
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-08-06.
     # """
-    [ "$(_koopa_os_id)" = 'opensuse' ]
+    _koopa_is_os 'opensuse'
+}
+
+_koopa_is_os() { # {{{1
+    # """
+    # Is a specific OS ID?
+    # @note Updated 2020-08-06.
+    #
+    # This will match Debian but not Ubuntu for a Debian check.
+    # """
+    # shellcheck disable=SC2039
+    [ "$(_koopa_os_id)" = "${1:?}" ]
+}
+
+_koopa_is_os_like() { # {{{1
+    # """
+    # Is a specific OS ID-like?
+    # @note Updated 2020-08-06.
+    #
+    # This will match Debian and Ubuntu for a Debian check.
+    # """
+    # shellcheck disable=SC2039
+    local file id
+    id="${1:?}"
+    _koopa_is_os_id "$id" && return 0
+    file='/etc/os-release'
+    [ -f "$file" ] || return 1
+    grep 'ID=' "$file" | grep -q "$id" && return 0
+    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
+    return 1
+}
+
+_koopa_is_os_version() { # {{{1
+    # """
+    # Is a specific OS version?
+    # @note Updated 2020-08-06.
+    # """
+    # shellcheck disable=SC2039
+    local file version
+    version="${1:?}"
+    file='/etc/os-release'
+    [ -f "$file" ] || return 1
+    grep -q "VERSION_ID=\"${version}" "$file"
 }
 
 _koopa_is_raspbian() { # {{{1
@@ -320,7 +347,7 @@ _koopa_is_raspbian() { # {{{1
     # Is the operating system Raspbian?
     # @note Updated 2020-08-06.
     # """
-    [ "$(_koopa_os_id)" = 'raspbian' ]
+    _koopa_is_os 'raspbian'
 }
 
 _koopa_is_remote() { # {{{1
@@ -331,22 +358,28 @@ _koopa_is_remote() { # {{{1
     [ -n "${SSH_CONNECTION:-}" ]
 }
 
-# FIXME REWORK THIS.
 _koopa_is_rhel() { # {{{1
     # """
     # Is the operating system RHEL?
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-08-06.
     # """
-    __koopa_is_os_release rhel
+    _koopa_is_os 'rhel'
 }
 
-# FIXME REWORK THIS.
-_koopa_is_rhel_8() { # {{{1
+_koopa_is_rhel_like() { # {{{1
     # """
-    # Is the operating system RHEL 8?
-    # @note Updated 2020-04-29.
+    # Is the operating system RHEL-like?
+    # @note Updated 2020-08-06.
     # """
-    __koopa_is_os_release rhel 8
+    _koopa_is_os_like 'rhel'
+}
+
+_koopa_is_rhel_8_like() { # {{{1
+    # """
+    # Is the operating system RHEL 8-like?
+    # @note Updated 2020-08-06.
+    # """
+    _koopa_is_rhel_like && _koopa_is_os_version 8
 }
 
 _koopa_is_root() { # {{{1
@@ -424,22 +457,20 @@ _koopa_is_tty() { # {{{1
     tty >/dev/null 2>&1 || false
 }
 
-# FIXME REWORK THIS.
 _koopa_is_ubuntu() { # {{{1
     # """
     # Is the operating system Ubuntu?
     # @note Updated 2020-04-29.
     # """
-    __koopa_is_os_release ubuntu
+    _koopa_is_os 'ubuntu'
 }
 
-# FIXME REWORK THIS.
-_koopa_is_ubuntu_20() { # {{{1
+_koopa_is_ubuntu_like() { # {{{1
     # """
-    # Is the operating system Ubuntu 20 LTS?
-    # @note Updated 2020-04-29.
+    # Is the operating system Ubuntu-like?
+    # @note Updated 2020-08-06.
     # """
-    __koopa_is_os_release ubuntu 20.04
+    _koopa_is_os_like 'ubuntu'
 }
 
 _koopa_is_venv_active() { # {{{1
