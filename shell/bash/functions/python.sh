@@ -137,7 +137,7 @@ koopa::install_python_packages() { # {{{1
     koopa::install_start "$name_fancy"
     install_flags=("--python=${python}")
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
-    # > koopa::install_pip "${install_flags[@]}"
+    koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
     koopa::is_cellar "$python" && koopa::link_cellar python
     koopa::install_success "$name_fancy"
@@ -187,6 +187,11 @@ koopa::pip_install() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_is_installed "$python"
+
+    # FIXME
+    echo "FIXME"
+    exit 0
+
     koopa::assert_is_python_package_installed --python="$python" 'pip'
     target="$(koopa::python_site_packages_prefix "$python")"
     koopa::sys_mkdir "$target"
