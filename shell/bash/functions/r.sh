@@ -259,7 +259,7 @@ koopa::update_r_config() { # {{{1
         koopa::sys_set_permissions -r "${r_prefix}/library"
     fi
     # Ensure HTML package index is writable.
-    koopa::h3 'Updating HTML package index.'
+    koopa::h2 'Updating HTML package index.'
     doc_dir="$("$rscript" -e 'cat(R.home("doc"))')"
     pkg_index="${doc_dir}/html/packages.html"
     koopa::dl 'HTML index' "$pkg_index"
