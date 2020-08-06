@@ -190,8 +190,8 @@ koopa::docker_build_all_images() { # {{{1
     # Build all Docker images.
     # @note Updated 2020-08-05.
     # """
-    local batch_arr batch_dirs build_flags extra force image images json prefix \
-        prune pos timestamp today utc_timestamp
+    local batch_arr batch_dirs build_flags extra force image images json \
+        prefix prune pos timestamp today utc_timestamp
     koopa::assert_is_installed docker docker-build-all-tags
     extra=0
     force=0
