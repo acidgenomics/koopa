@@ -321,7 +321,7 @@ _koopa_is_os_like() { # {{{1
     # shellcheck disable=SC2039
     local file id
     id="${1:?}"
-    _koopa_is_os_id "$id" && return 0
+    _koopa_is_os "$id" && return 0
     file='/etc/os-release'
     [ -f "$file" ] || return 1
     grep 'ID=' "$file" | grep -q "$id" && return 0
