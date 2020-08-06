@@ -3,9 +3,7 @@
 koopa::rhel_install_base() { # {{{1
     # """
     # Install Red Hat Enterprise Linux (RHEL) base system.
-    # @note Updated 2020-07-14.
-    #
-    # Note that RHEL 8+ now uses dnf instead of yum.
+    # @note Updated 2020-08-06.
     # """
     local dev extra name_fancy pkgs
     koopa::assert_is_installed dnf sudo

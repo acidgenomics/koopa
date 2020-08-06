@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rename all instances of 'yum' to 'dnf'.
 koopa::fedora_install_azure_cli() { # {{{1
     # """
     # Install Azure CLI.
@@ -15,8 +14,8 @@ koopa::fedora_install_azure_cli() { # {{{1
     name_fancy='Azure CLI'
     koopa::install_start "$name_fancy"
     koopa::assert_is_installed python3
-    koopa::yum_import_azure_cli_key
-    koopa::yum_add_azure_cli_repo
+    koopa::fedora_import_azure_cli_key
+    koopa::fedora_add_azure_cli_repo
     sudo dnf -y install azure-cli
     koopa::install_success "$name_fancy"
     return 0

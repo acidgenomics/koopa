@@ -39,10 +39,9 @@ koopa::rsync_flags() { # {{{1
 koopa::rsync_flags_macos() { # {{{1
     # """
     # macOS rsync flags.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-08-06.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_macos
     koopa::print "$(koopa::rsync_flags) --iconv=utf-8,utf-8-mac"
     return 0
 }

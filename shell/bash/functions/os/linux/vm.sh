@@ -291,7 +291,7 @@ koopa::configure_vm() { # {{{1
         install-lmod
         install-htop
         install-autojump
-        # > install-gcc --cellar-only
+        # > install-gcc
     fi
     if [[ "$r_version" == 'devel' ]]
     then
@@ -380,7 +380,8 @@ koopa::configure_vm() { # {{{1
             '/tmp/'* \
             '/var/backups/'* \
             '/var/cache/'*
-        koopa::is_debian && koopa::rm -S '/var/lib/apt/lists/'*
+        koopa::is_debian_like && \
+            koopa::rm -S '/var/lib/apt/lists/'*
     fi
 
     koopa::success 'Configuration completed successfully.'

@@ -38,7 +38,7 @@ make --jobs="$jobs"
 # > make check
 # > make test
 make install
-if koopa::is_debian
+if koopa::is_debian_like
 then
     koopa::info "Linking shared config scripts into '${etc_dir}'."
     koopa::ln \

@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-08-05.
+    # @note Updated 2020-08-06.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
@@ -66,7 +66,7 @@ koopa::fedora_install_base() { # {{{1
 
     koopa::h2 'Installing default packages.'
     pkgs=(
-        # 'coreutils' # This is erroring on RHEL 8.
+        # 'coreutils' # This can error on RHEL 8.
         'autoconf'
         'automake'
         'bash'
@@ -90,7 +90,7 @@ koopa::fedora_install_base() { # {{{1
         'man-db'
         'ncurses'
         'openssl'
-        'pkgconfig'  # note this is now pkgconf
+        'pkgconfig'  # This is now pkgconf wrapped.
         'qpdf'
         'readline'
         'squashfs-tools'
@@ -105,7 +105,7 @@ koopa::fedora_install_base() { # {{{1
         'yum-utils'
         'zip'
     )
-    if ! koopa::is_rhel
+    if koopa::is_fedora
     then
         pkgs+=('texinfo')
     fi
@@ -117,16 +117,6 @@ koopa::fedora_install_base() { # {{{1
     then
         koopa::h2 'Installing developer libraries.'
         sudo dnf -y groupinstall 'Development Tools'
-        if [[ "$compact" -eq 1 ]] && ! koopa::is_rhel
-        then
-            pkgs+=(
-                # proj-bin?
-                'gdal-devel'
-                'geos-devel'
-                'proj-devel'
-                'udunits2-devel'
-            )
-        fi
         pkgs+=(
             'apr-devel'  # subversion
             'apr-util-devel'  # subversion
@@ -158,7 +148,7 @@ koopa::fedora_install_base() { # {{{1
             'xz-devel'
             'zlib-devel'
         )
-        if ! koopa::is_rhel
+        if koopa::is_fedora
         then
             pkgs+=(
                 'bison-devel'
@@ -167,6 +157,16 @@ koopa::fedora_install_base() { # {{{1
                 'openblas-devel'
                 'openjpeg2-devel'  # GDAL
                 'xxhash-devel'  # rsync
+            )
+        fi
+        if [[ "$compact" -eq 1 ]] && koopa::is_fedora
+        then
+            pkgs+=(
+                # proj-bin?
+                'gdal-devel'
+                'geos-devel'
+                'proj-devel'
+                'udunits2-devel'
             )
         fi
     fi
