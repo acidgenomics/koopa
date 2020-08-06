@@ -415,18 +415,38 @@ _koopa_python_site_packages_prefix() { # {{{1
     # Python site packages library location.
     # @note Updated 2020-08-06.
     #
-    # Alternatives:
-    # > "$python" -c 'import site; print(site.getsitepackages()[0])'
+    # @seealso
     # > "$python" -m site
     # """
     # shellcheck disable=SC2039
-    local make_prefix python version x
-    python="$(_koopa_python)"
+    local python version x
+    python="${1:-}"
+    [ -z "$python" ] && python="$(_koopa_python)"
     _koopa_is_installed "$python" || return 0
-    make_prefix="$(_koopa_make_prefix)"
     version="$("$python" --version | head -n 1 | cut -d ' ' -f 2)"
     version="$(_koopa_major_minor_version "$version")"
-    x="${make_prefix}/lib/python${version}/site-packages"
+    if _koopa_is_linux
+    then
+        x="$(_koopa_app_prefix)/python/${version}/site-packages"
+    elif _koopa_is_macos
+    then
+        x="$(_koopa_make_prefix)/lib/python${version}/site-packages"
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_python_system_site_packages_prefix() { # {{{1
+    # """
+    # Python system site packages library location.
+    # @note Updated 2020-08-06.
+    # """
+    # shellcheck disable=SC2039
+    local python x
+    python="${1:-}"
+    [ -z "$python" ] && python="$(_koopa_python)"
+    _koopa_is_installed "$python" || return 0
+    x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
     _koopa_print "$x"
     return 0
 }

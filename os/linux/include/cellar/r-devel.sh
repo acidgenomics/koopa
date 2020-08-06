@@ -41,9 +41,3 @@ make check
 make pdf
 make info
 make install
-if [[ "$link_cellar" -eq 1 ]]
-then
-    # Update R configuration.
-    r="${prefix}/bin/R"
-    koopa::update_r_config "$r"
-fi

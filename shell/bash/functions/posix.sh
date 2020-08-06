@@ -396,6 +396,10 @@ koopa::is_rhel_like() { # {{{1
     _koopa_is_rhel_like "$@"
 }
 
+koopa::is_rhel_ubi() { # {{{1
+    _koopa_is_rhel_ubi "$@"
+}
+
 koopa::is_rhel_8_like() { # {{{1
     _koopa_is_rhel_8_like "$@"
 }
@@ -418,14 +422,6 @@ koopa::is_shared_install() { # {{{1
 
 koopa::is_subshell() { # {{{1
     _koopa_is_subshell "$@"
-}
-
-koopa::kebab_case() { # {{{1
-    _koopa_kebab_case "$@"
-}
-
-koopa::lowercase() { # {{{1
-    _koopa_lowercase "$@"
 }
 
 koopa::is_tmux() { # {{{1
@@ -452,8 +448,16 @@ koopa::java_prefix() { # {{{1
     _koopa_java_prefix "$@"
 }
 
+koopa::kebab_case() { # {{{1
+    _koopa_kebab_case "$@"
+}
+
 koopa::local_app_prefix() { # {{{1
     _koopa_local_app_prefix "$@"
+}
+
+koopa::lowercase() { # {{{1
+    _koopa_lowercase "$@"
 }
 
 koopa::macos_version() { # {{{1
@@ -614,6 +618,10 @@ koopa::python() { # {{{1
 
 koopa::python_site_packages_prefix() { # {{{1
     _koopa_python_site_packages_prefix "$@"
+}
+
+koopa::python_system_site_packages_prefix() { # {{{1
+    _koopa_python_system_site_packages_prefix "$@"
 }
 
 koopa::rbenv_prefix() { # {{{1
