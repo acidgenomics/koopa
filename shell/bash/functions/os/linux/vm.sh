@@ -226,7 +226,11 @@ koopa::configure_vm() { # {{{1
     koopa::run_if_installed install-llvm
     install-conda
     install-openjdk
-    install-python
+    # Python 3.8.5 built from source is currently breaking dnf on Fedora 32.
+    if ! koopa::is_fedora
+    then
+        install-python
+    fi
     if [[ "$compact" -eq 0 ]]
     then
         install-curl
@@ -315,6 +319,8 @@ koopa::configure_vm() { # {{{1
 
     if [[ "$rsync" -eq 0 ]]
     then
+        # FIXME REWORK WHERE WE INSTALL SITE LIBRARY.
+        # FIXME This will help avoid any issues with Fedora.
         install-python-packages
         if [[ "$bioconductor" -eq 1 ]] || [[ "$compact" -eq 0 ]]
         then
