@@ -232,6 +232,15 @@ _koopa_os_string() { # {{{1
     return 0
 }
 
+_koopa_python() { # {{{1
+    # """
+    # Python executable path.
+    # @note Updated 2020-08-06.
+    # """
+    _koopa_print 'python3'
+    return 0
+}
+
 _koopa_shell() { # {{{1
     # """
     # Current shell.

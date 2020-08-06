@@ -74,7 +74,7 @@ koopa::install_pip() { # {{{1
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2020-07-22.
+    # @note Updated 2020-08-06.
     # """
     local install_flags name_fancy pkg pkgs pos python version
     python="$(koopa::python)"
@@ -153,7 +153,7 @@ koopa::install_python_packages() { # {{{1
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2020-07-21.
+    # @note Updated 2020-08-05.
     # """
     local pip_install_flags pos python reinstall
     koopa::assert_has_args "$#"
@@ -207,42 +207,38 @@ koopa::pip_install() { # {{{1
     return 0
 }
 
-koopa::python() { # {{{1
-    # """
-    # Python executable path.
-    # @note Updated 2020-07-13.
-    # """
-    local python
-    python='python3'
-    koopa::is_installed "$python" || return 1
-    koopa::print "$python"
-    return 0
-}
-
 koopa::python_remove_pycache() { # {{{1
     # """
     # Remove Python '__pycache__/' from site packages.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-06.
     #
     # These directories can create permission issues when attempting to rsync
     # installation across multiple VMs.
     # """
-    local prefix python
+    local pos prefix python
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find
-    prefix="${1:-}"
-    if [[ -z "$prefix" ]]
-    then
-        # e.g. /usr/local/cellar/python/3.8.1
-        python="$(koopa::which_realpath 'python3')"
-        prefix="$(realpath "$(dirname "$python")/..")"
-    fi
+    python="$(koopa::python)"
+    while (("$#"))
+    do
+        case "$1" in
+            --python=*)
+                python="${1#*=}"
+                shift 1
+                ;;
+            --python)
+                python="$2"
+                shift 2
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_has_no_args "$#"
+    python="$(koopa::which_realpath "$python")"
+    prefix="$(koopa::parent_dir -n 2 "$python")"
     koopa::info "Removing pycache in '${prefix}'."
-    # > find "$prefix" \
-    # >     -type d \
-    # >     -name '__pycache__' \
-    # >     -print0 \
-    # >     -exec rm -frv '{}' \;
     find "$prefix" \
         -type d \
         -name '__pycache__' \
