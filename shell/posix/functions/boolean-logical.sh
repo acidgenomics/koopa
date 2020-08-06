@@ -1,25 +1,48 @@
 #!/bin/sh
 
-__koopa_is_os_release() { # {{{1
+__koopa_is_os_id() { # {{{1
     # """
-    # Is a specific OS release?
-    # @note Updated 2020-07-04.
+    # Is a specific OS ID?
+    # @note Updated 2020-08-06.
+    #
+    # This will match Debian but not Ubuntu for a Debian check.
     # """
     # shellcheck disable=SC2039
-    local file id version
+    local file id
     id="${1:?}"
-    version="${2:-}"
     file='/etc/os-release'
     [ -f "$file" ] || return 1
-    # Check identifier.
+    grep 'ID=' "$file" | grep -q "$id"
+}
+
+__koopa_is_os_id_like() { # {{{1
+    # """
+    # Is a specific OS ID-like?
+    # @note Updated 2020-08-06.
+    #
+    # This will match Debian and Ubuntu for a Debian check.
+    # """
+    # shellcheck disable=SC2039
+    local file id
+    id="${1:?}"
+    file='/etc/os-release'
+    [ -f "$file" ] || return 1
     grep 'ID=' "$file" | grep -q "$id" && return 0
     grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
-    # Check version.
-    if [ -n "$version" ]
-    then
-        grep -q "VERSION_ID=\"${version}" "$file" && return 0
-    fi
-    return 1
+    return 0
+}
+
+__koopa_is_os_version() { # {{{1
+    # """
+    # Is a specific OS version?
+    # @note Updated 2020-08-06.
+    # """
+    # shellcheck disable=SC2039
+    local file version
+    version="${1:?}"
+    file='/etc/os-release'
+    [ -f "$file" ] || return 1
+    grep -q "VERSION_ID=\"${version}" "$file"
 }
 
 _koopa_expr() { # {{{1
@@ -168,6 +191,7 @@ _koopa_is_conda_active() { # {{{1
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
+# FIXME REWORK THIS.
 _koopa_is_debian() { # {{{1
     # """
     # Is the operating system Debian?
@@ -176,6 +200,7 @@ _koopa_is_debian() { # {{{1
     __koopa_is_os_release debian
 }
 
+# FIXME REWORK THIS.
 _koopa_is_fedora() { # {{{1
     # """
     # Is the operating system Fedora?
@@ -293,9 +318,9 @@ _koopa_is_opensuse() { # {{{1
 _koopa_is_raspbian() { # {{{1
     # """
     # Is the operating system Raspbian?
-    # @note Updated 2020-05-12.
+    # @note Updated 2020-08-06.
     # """
-    __koopa_is_os_release raspbian
+    [ "$(_koopa_os_id)" = 'raspbian' ]
 }
 
 _koopa_is_remote() { # {{{1
@@ -306,6 +331,7 @@ _koopa_is_remote() { # {{{1
     [ -n "${SSH_CONNECTION:-}" ]
 }
 
+# FIXME REWORK THIS.
 _koopa_is_rhel() { # {{{1
     # """
     # Is the operating system RHEL?
@@ -314,15 +340,7 @@ _koopa_is_rhel() { # {{{1
     __koopa_is_os_release rhel
 }
 
-_koopa_is_rhel_7() { # {{{1
-    # """
-    # Is the operating system RHEL 7?
-    # @note Updated 2020-04-29.
-    # """
-    _koopa_is_amzn && return 0
-    __koopa_is_os_release rhel 7
-}
-
+# FIXME REWORK THIS.
 _koopa_is_rhel_8() { # {{{1
     # """
     # Is the operating system RHEL 8?
@@ -406,6 +424,7 @@ _koopa_is_tty() { # {{{1
     tty >/dev/null 2>&1 || false
 }
 
+# FIXME REWORK THIS.
 _koopa_is_ubuntu() { # {{{1
     # """
     # Is the operating system Ubuntu?
@@ -414,14 +433,7 @@ _koopa_is_ubuntu() { # {{{1
     __koopa_is_os_release ubuntu
 }
 
-_koopa_is_ubuntu_18() { # {{{1
-    # """
-    # Is the operating system Ubuntu 18 LTS?
-    # @note Updated 2020-04-29.
-    # """
-    __koopa_is_os_release ubuntu 18.04
-}
-
+# FIXME REWORK THIS.
 _koopa_is_ubuntu_20() { # {{{1
     # """
     # Is the operating system Ubuntu 20 LTS?
