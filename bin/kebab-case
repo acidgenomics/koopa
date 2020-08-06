@@ -7,26 +7,4 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-.kebabCase <- function() {
-    requireNamespaces("syntactic")
-    prefix <- FALSE
-    recursive <- FALSE
-    args <- parseArgs(
-        positional = TRUE,
-        validFlags = c("prefix", "recursive")
-    )
-    if ("--prefix" %in% args) {
-        prefix <- TRUE
-    }
-    if ("--recursive" %in% args) {
-        recursive <- TRUE
-    }
-    syntactic::kebabCase(
-        object = positionalArgs(),
-        rename = TRUE,
-        recursive = recursive,
-        prefix = prefix
-    )
-}
-
-.kebabCase()
+renameKebabCase()
