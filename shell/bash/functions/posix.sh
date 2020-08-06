@@ -444,10 +444,6 @@ koopa::is_ubuntu_like() { # {{{1
     _koopa_is_ubuntu_like "$@"
 }
 
-koopa::is_ubuntu_20() { # {{{1
-    _koopa_is_ubuntu_20 "$@"
-}
-
 koopa::is_venv_active() { # {{{1
     _koopa_is_venv_active "$@"
 }

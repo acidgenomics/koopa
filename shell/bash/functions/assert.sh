@@ -263,19 +263,6 @@ koopa::assert_has_sudo() { # {{{1
     return 0
 }
 
-koopa::assert_is_alpine() { # {{{1
-    # """
-    # Assert that platform is Alpine.
-    # @note Updated 2020-07-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_alpine
-    then
-        koopa::stop 'Alpine is required.'
-    fi
-    return 0
-}
-
 koopa::assert_is_array_non_empty() { # {{{1
     # """
     # Assert that array is non-empty.
@@ -284,19 +271,6 @@ koopa::assert_is_array_non_empty() { # {{{1
     if ! koopa::is_array_non_empty "$@"
     then
         koopa::stop 'Array is empty.'
-    fi
-    return 0
-}
-
-koopa::assert_is_arch() { # {{{1
-    # """
-    # Assert that platform is Arch.
-    # @note Updated 2020-07-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_arch
-    then
-        koopa::stop 'Arch is required.'
     fi
     return 0
 }
@@ -346,20 +320,6 @@ koopa::assert_is_current_version() { # {{{1
             koopa::stop "'${arg}' is not current; expecting '${expected}'."
         fi
     done
-    return 0
-}
-
-# FIXME REWORK THIS.
-koopa::assert_is_debian() { # {{{1
-    # """
-    # Assert that platform is Debian.
-    # @note Updated 2019-10-25.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_debian
-    then
-        koopa::stop 'Debian is required.'
-    fi
     return 0
 }
 
@@ -413,20 +373,6 @@ koopa::assert_is_existing() { # {{{1
             koopa::stop "Does not exist: '${arg}'."
         fi
     done
-    return 0
-}
-
-# FIXME REWORK THIS.
-koopa::assert_is_fedora() { # {{{1
-    # """
-    # Assert that platform is Fedora.
-    # @note Updated 2019-10-25.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_fedora
-    then
-        koopa::stop 'Fedora is required.'
-    fi
     return 0
 }
 
@@ -531,32 +477,6 @@ koopa::assert_is_installed() { # {{{1
             koopa::stop "Not installed: '${arg}'."
         fi
     done
-    return 0
-}
-
-koopa::assert_is_linux() { # {{{1
-    # """
-    # Assert that platform is Linux.
-    # @note Updated 2019-10-23.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_linux
-    then
-        koopa::stop 'Linux is required.'
-    fi
-    return 0
-}
-
-koopa::assert_is_macos() { # {{{1
-    # """
-    # Assert that platform is macOS (Darwin).
-    # @note Updated 2020-01-13.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_macos
-    then
-        koopa::stop 'macOS is required.'
-    fi
     return 0
 }
 
@@ -674,47 +594,6 @@ koopa::assert_is_not_installed() { # {{{1
             koopa::stop "Installed: '${arg}'."
         fi
     done
-    return 0
-}
-
-koopa::assert_is_opensuse() { # {{{1
-    # """
-    # Assert that platform is openSUSE.
-    # @note Updated 2020-02-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_opensuse
-    then
-        koopa::stop 'openSUSE is required.'
-    fi
-    return 0
-}
-
-# FIXME REWORK THIS.
-koopa::assert_is_rhel() { # {{{1
-    # """
-    # Assert that platform is RHEL.
-    # @note Updated 2020-01-14.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_rhel
-    then
-        koopa::stop 'RHEL is required.'
-    fi
-    return 0
-}
-
-# FIXME REWORK THIS.
-koopa::assert_is_rhel_8() { # {{{1
-    # """
-    # Assert that platform is RHEL 8.
-    # @note Updated 2020-01-14.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_rhel_8
-    then
-        koopa::stop 'RHEL 8 is required.'
-    fi
     return 0
 }
 
@@ -877,19 +756,5 @@ koopa::assert_is_writable() { # {{{1
             koopa::stop "Not writable: '${arg}'."
         fi
     done
-    return 0
-}
-
-# FIXME REWORK THIS.
-koopa::assert_is_ubuntu() { # {{{1
-    # """
-    # Assert that platform is Ubuntu.
-    # @note Updated 2020-01-14.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_ubuntu
-    then
-        koopa::stop 'Ubuntu is required.'
-    fi
     return 0
 }
