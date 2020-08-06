@@ -226,7 +226,7 @@ koopa::update_r_config() { # {{{1
     # https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
     #     make.packages.html.html
     # """
-    local doc_dir pkg_index r r_prefix
+    local doc_dir html_dir pkg_index r r_prefix
     koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     r="$(koopa::which_realpath "$r")"
@@ -261,13 +261,15 @@ koopa::update_r_config() { # {{{1
     # Ensure HTML package index is writable.
     koopa::h2 'Updating HTML package index.'
     doc_dir="$("$rscript" -e 'cat(R.home("doc"))')"
-    pkg_index="${doc_dir}/html/packages.html"
+    html_dir="${doc_dir}/html"
+    [[ ! -d "$html_dir" ]] && koopa::mkdir -S "$html_dir"
+    pkg_index="${html_dir}/packages.html"
     koopa::dl 'HTML index' "$pkg_index"
-    if [[ ! -f "$pkg_index" ]]
-    then
-        koopa::mkdir -S "$(dirname "$pkg_index")"
-        sudo touch "$pkg_index"
-    fi
+    [[ ! -f "$pkg_index" ]] && sudo touch "$pkg_index"
+    # Touch an empty 'R.css' file to eliminate additional package warnings.
+    # Currently we're seeing this inside Fedora Docker images.
+    r_css="${html_dir}/R.css"
+    [[ ! -f "$r_css" ]] && sudo touch "$r_css"
     koopa::sys_set_permissions "$pkg_index"
     "$rscript" -e 'utils::make.packages.html()'
     koopa::link_r_etc "$r"
