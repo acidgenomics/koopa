@@ -188,10 +188,10 @@ koopa::docker_build_all_batch_images() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-05.
     # """
-    local batch_arr batch_dirs extra force image images json prefix prune pos \
-        timestamp today utc_timestamp
+    local batch_arr batch_dirs build_flags extra force image images json prefix \
+        prune pos timestamp today utc_timestamp
     koopa::assert_is_installed docker docker-build-all-tags
     extra=0
     force=0
@@ -285,22 +285,24 @@ koopa::docker_build_all_images() { # {{{1
     fi
     koopa::h1 "Building ${#images[@]} Docker images."
     docker login
+    build_flags=()
+    [[ "$force" -eq 1 ]] && build_flags+=('--force')
     for image in "${images[@]}"
     do
-        # Force remove all images, if desired.
-        if [[ "$prune" -eq 1 ]]
-        then
-            koopa::docker_prune
-        fi
+        # This will force remove all images, if desired.
+        [[ "$prune" -eq 1 ]] && koopa::docker_prune
         # Skip image if pushed already today.
         if [[ "$force" -ne 1 ]]
         then
-            koopa::is_docker_build_today "$image" && continue
+            if koopa::is_docker_build_today "$image"
+            then
+                koopa::note "'${image}' was built today. Skipping."
+                continue
+            fi
         fi
-        # Build outdated images automatically.
-        docker-build-all-tags "$image"
+        docker-build-all-tags "${build_flags[@]}" "$image"
     done
-    docker system prune --all --force
+    [[ "$prune" -eq 1 ]] && koopa::docker_prune
     koopa::success 'All Docker images built successfully.'
     return 0
 }

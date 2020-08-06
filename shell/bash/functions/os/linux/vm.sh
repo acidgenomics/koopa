@@ -302,7 +302,10 @@ koopa::configure_vm() { # {{{1
     else
         install-r --version="$r_version"
     fi
-    koopa::run_if_installed install-rstudio-server install-shiny-server
+    if [[ "$compact" -eq 0 ]]
+    then
+        koopa::run_if_installed install-rstudio-server install-shiny-server
+    fi
     koopa::update_r_config
     koopa::update_lmod_config
     sudo ldconfig
