@@ -43,11 +43,7 @@ koopa::install_pip() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    if ! koopa::is_installed "$python"
-    then
-        koopa::warning "Python ('${python}') is not installed."
-        return 1
-    fi
+    koopa::assert_is_installed "$python"
     if [[ "$reinstall" -eq 0 ]]
     then
         if koopa::is_python_package_installed --python="$python" "$name"
@@ -67,7 +63,6 @@ koopa::install_pip() { # {{{1
     )
     koopa::rm "$tmp_dir"
     koopa::install_success "$name"
-    koopa::restart
     return 0
 }
 
@@ -199,8 +194,9 @@ koopa::pip_install() { # {{{1
         'Packages' "$(koopa::to_string "$@")" \
         'Target' "$target"
     pip_install_flags=(
-        '--no-warn-script-location'
         "--target=${target}"
+        '--no-warn-script-location'
+        '--upgrade'
     )
     if [[ "$reinstall" -eq 1 ]]
     then
