@@ -349,6 +349,7 @@ koopa::assert_is_current_version() { # {{{1
     return 0
 }
 
+# FIXME REWORK THIS.
 koopa::assert_is_debian() { # {{{1
     # """
     # Assert that platform is Debian.
@@ -415,6 +416,7 @@ koopa::assert_is_existing() { # {{{1
     return 0
 }
 
+# FIXME REWORK THIS.
 koopa::assert_is_fedora() { # {{{1
     # """
     # Assert that platform is Fedora.
@@ -558,6 +560,38 @@ koopa::assert_is_macos() { # {{{1
     return 0
 }
 
+koopa::assert_is_matching_fixed() { # {{{1
+    # """
+    # Assert that input matches a fixed pattern.
+    # @note Updated 2020-01-12.
+    # """
+    local pattern string
+    koopa::assert_has_args_eq "$#" 2
+    string="${1:?}"
+    pattern="${2:?}"
+    if ! koopa::str_match "$string" "$pattern"
+    then
+        koopa::stop "'${string}' doesn't match '${pattern}'."
+    fi
+    return 0
+}
+
+koopa::assert_is_matching_regex() { # {{{1
+    # """
+    # Assert that input matches a regular expression pattern.
+    # @note Updated 2020-01-12.
+    # """
+    local pattern string
+    koopa::assert_has_args_eq "$#" 2
+    string="${1:?}"
+    pattern="${2:?}"
+    if ! koopa::str_match_regex "$string" "$pattern"
+    then
+        koopa::stop "'${string}' doesn't match regex '${pattern}'."
+    fi
+    return 0
+}
+
 koopa::assert_is_non_existing() { # {{{1
     # """
     # Assert that input does not exist on disk.
@@ -656,6 +690,7 @@ koopa::assert_is_opensuse() { # {{{1
     return 0
 }
 
+# FIXME REWORK THIS.
 koopa::assert_is_rhel() { # {{{1
     # """
     # Assert that platform is RHEL.
@@ -669,19 +704,7 @@ koopa::assert_is_rhel() { # {{{1
     return 0
 }
 
-koopa::assert_is_rhel_7() { # {{{1
-    # """
-    # Assert that platform is RHEL 7.
-    # @note Updated 2020-01-14.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_rhel_7
-    then
-        koopa::stop 'RHEL 7 is required.'
-    fi
-    return 0
-}
-
+# FIXME REWORK THIS.
 koopa::assert_is_rhel_8() { # {{{1
     # """
     # Assert that platform is RHEL 8.
@@ -857,38 +880,7 @@ koopa::assert_is_writable() { # {{{1
     return 0
 }
 
-koopa::assert_is_matching_fixed() { # {{{1
-    # """
-    # Assert that input matches a fixed pattern.
-    # @note Updated 2020-01-12.
-    # """
-    local pattern string
-    koopa::assert_has_args_eq "$#" 2
-    string="${1:?}"
-    pattern="${2:?}"
-    if ! koopa::str_match "$string" "$pattern"
-    then
-        koopa::stop "'${string}' doesn't match '${pattern}'."
-    fi
-    return 0
-}
-
-koopa::assert_is_matching_regex() { # {{{1
-    # """
-    # Assert that input matches a regular expression pattern.
-    # @note Updated 2020-01-12.
-    # """
-    local pattern string
-    koopa::assert_has_args_eq "$#" 2
-    string="${1:?}"
-    pattern="${2:?}"
-    if ! koopa::str_match_regex "$string" "$pattern"
-    then
-        koopa::stop "'${string}' doesn't match regex '${pattern}'."
-    fi
-    return 0
-}
-
+# FIXME REWORK THIS.
 koopa::assert_is_ubuntu() { # {{{1
     # """
     # Assert that platform is Ubuntu.
