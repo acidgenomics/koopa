@@ -208,6 +208,29 @@ koopa::pip_install() { # {{{1
     return 0
 }
 
+koopa::python_add_site_packages_to_sys_path() { # {{{1
+    # """
+    # Add our custom site packages library to sys.path.
+    # @note Updated 2020-08-06.
+    #
+    # @seealso
+    # > "$python" -m site
+    # """
+    local file k_site_pkgs sys_site_pkgs
+    sys_site_pkgs="$(koopa::python_system_site_packages_prefix "$python")"
+    k_site_pkgs="$(koopa::python_site_packages_prefix "$python")"
+    file="${sys_site_pkgs}/koopa.pth"
+    [[ -f "$file" ]] && return 0
+    koopa::info "Adding '${file}' path file in '${sys_site_pkgs}'."
+    if koopa::is_cellar "$python"
+    then
+        write_string "$k_site_pkgs" "$file"
+    else
+        sudo_write_string "$k_site_pkgs" "$file"
+    fi
+    return 0
+}
+
 koopa::python_remove_pycache() { # {{{1
     # """
     # Remove Python '__pycache__/' from site packages.

@@ -30,9 +30,8 @@ koopa::cd "Python-${version}"
 make --jobs="$jobs"
 # > make test
 make install
-
-major_minor_version="$(koopa::major_minor_version "$version")"
-cellar_site_pkgs="${prefix}/lib/python${major_minor_version}/site-packages"
-koopa_site_pkgs="$(koopa::python_site_packages_prefix)"
-
-# FIXME HOW TO WRITE LINES TO FILE?
+if [[ "$link_cellar" -eq 1 ]]
+then
+    python="${prefix}/bin/python3"
+    koopa::python_add_site_packages_to_sys_path "$python"
+fi
