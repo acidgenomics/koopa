@@ -195,7 +195,7 @@ koopa::pip_install() { # {{{1
     pip_install_flags=(
         "--target=${target}"
         '--no-warn-script-location'
-        # '--upgrade'
+        '--upgrade'
     )
     if [[ "$reinstall" -eq 1 ]]
     then
