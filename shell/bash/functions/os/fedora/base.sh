@@ -109,6 +109,7 @@ koopa::fedora_install_base() { # {{{1
     then
         pkgs+=(
             'R'
+            'python3-devel'
             'texinfo'
         )
     fi
