@@ -2,6 +2,14 @@
 #' @note Updated 2020-08-05.
 #' @noRd
 dockerBuildAllTags <- function() {
+    force <- FALSE
+    args <- parseArgs(
+        positional = TRUE,
+        validFlags = c("force")
+    )
+    if ("--force" %in% args) {
+        force <- TRUE
+    }
     dockerDir <- file.path("~", ".config", "koopa", "docker")
     assert(isTRUE(dir.exists(dockerDir)))
     ## Enable parallelization if possible.
@@ -57,6 +65,9 @@ dockerBuildAllTags <- function() {
                             args = c(image, sourceTag, destTag)
                         )
                     } else {
+                        if (!isTRUE(force)) {
+                            if (isDockerBuildToday(image)) return()
+                        }
                         shell(
                             command = file.path(
                                 koopaPrefix,
@@ -92,4 +103,28 @@ dockerBuildAllTags <- function() {
             }
         }
     ))
+}
+
+#' Has the requested Docker image been built today?
+#' @note Updated 2020-08-05.
+#' @noRd
+isDockerBuildToday <- function(image) {
+    shell(
+        command = "docker",
+        args = c("pull", image),
+        stdout = FALSE,
+        stderr = FALSE
+    )
+    json <- shell(
+        command = "docker",
+        args = c(
+            "inspect",
+            "--format='{{json .Created}}'",
+            image
+        ),
+        stdout = TRUE
+    )
+    created <- as.Date(gsub("\"", "", json))
+    today <- Sys.Date()
+    identical(created, today)
 }

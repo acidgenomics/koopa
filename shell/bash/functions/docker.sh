@@ -190,8 +190,8 @@ koopa::docker_build_all_images() { # {{{1
     # Build all Docker images.
     # @note Updated 2020-08-05.
     # """
-    local batch_arr batch_dirs extra force image images json prefix prune pos \
-        timestamp today utc_timestamp
+    local batch_arr batch_dirs build_flags extra force image images json prefix \
+        prune pos timestamp today utc_timestamp
     koopa::assert_is_installed docker docker-build-all-tags
     extra=0
     force=0
@@ -285,6 +285,8 @@ koopa::docker_build_all_images() { # {{{1
     fi
     koopa::h1 "Building ${#images[@]} Docker images."
     docker login
+    build_flags=()
+    [[ "$force" -eq 1 ]] && build_flags+=('--force')
     for image in "${images[@]}"
     do
         # This will force remove all images, if desired.
@@ -292,13 +294,13 @@ koopa::docker_build_all_images() { # {{{1
         # Skip image if pushed already today.
         if [[ "$force" -ne 1 ]]
         then
-            # FIXME RETHINK THIS, CHECKING PER TAG INSTEAD.
-            # FIXME NEED TO MOVE THIS INTO R CODE INSTEAD.
-            koopa::is_docker_build_today "$image" && continue
+            if koopa::is_docker_build_today "$image"
+            then
+                koopa::note "'${image}' was built today. Skipping."
+                continue
+            fi
         fi
-        # FIXME THIS ALSO NEEDS TO SUPPORT FORCE FLAG.
-        # FIXME IF SET, NEED TO PASS HERE.
-        docker-build-all-tags "$image"
+        docker-build-all-tags "${build_flags[@]}" "$image"
     done
     [[ "$prune" -eq 1 ]] && koopa::docker_prune
     koopa::success 'All Docker images built successfully.'
@@ -494,7 +496,6 @@ koopa::docker_tag() { # {{{1
     return 0
 }
 
-# FIXME Convert this into an R function so we can use with docker-build-all-tags
 koopa::is_docker_build_today() { # {{{1
     # """
     # Check if a Docker image has been built today.
