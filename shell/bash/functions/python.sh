@@ -188,7 +188,7 @@ koopa::pip_install() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_is_installed "$python"
     koopa::assert_is_python_package_installed --python="$python" 'pip'
-    target="$(koopa::python_site_packages_prefix)"
+    target="$(koopa::python_site_packages_prefix "$python")"
     koopa::sys_mkdir "$target"
     koopa::dl \
         'Packages' "$(koopa::to_string "$@")" \
