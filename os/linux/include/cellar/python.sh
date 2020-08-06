@@ -52,11 +52,3 @@ koopa::cd "Python-${version}"
 make --jobs="$jobs"
 # > make test
 make install
-# Remove '__pycache__' directories, which can cause rsync issues.
-# > koopa::python_remove_pycache "$prefix"
-# Symlink 'python3' to 'python'.
-# > if [[ ! -f "${prefix}/bin/python" ]]
-# > then
-# >     koopa::h2 "Symlinking 'python3' to 'python'."
-# >     koopa::ln "${prefix}/bin/python3" "${prefix}/bin/python"
-# > fi
