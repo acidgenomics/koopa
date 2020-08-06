@@ -308,10 +308,12 @@ koopa::is_conda_active() { # {{{1
     _koopa_is_conda_active "$@"
 }
 
+# FIXME REWORK THIS.
 koopa::is_debian() { # {{{1
     _koopa_is_debian "$@"
 }
 
+# FIXME REWORK THIS.
 koopa::is_fedora() { # {{{1
     _koopa_is_fedora "$@"
 }
@@ -360,12 +362,9 @@ koopa::is_remote() { # {{{1
     _koopa_is_remote "$@"
 }
 
+# FIXME REWORK THIS.
 koopa::is_rhel() { # {{{1
     _koopa_is_rhel "$@"
-}
-
-koopa::is_rhel_7() { # {{{1
-    _koopa_is_rhel_7 "$@"
 }
 
 koopa::is_rhel_8() { # {{{1
@@ -408,12 +407,9 @@ koopa::is_tty() { # {{{1
     _koopa_is_tty "$@"
 }
 
+# FIXME REWORK THIS.
 koopa::is_ubuntu() { # {{{1
     _koopa_is_ubuntu "$@"
-}
-
-koopa::is_ubuntu_18() { # {{{1
-    _koopa_is_ubuntu_18 "$@"
 }
 
 koopa::is_ubuntu_20() { # {{{1
