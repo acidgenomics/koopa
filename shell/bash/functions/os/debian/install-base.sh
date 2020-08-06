@@ -3,13 +3,13 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-06.
     #
-    # Check package source repo:
-    # https://packages.ubuntu.com/
-    #
-    # How to replicate installed packages across machines:
-    # https://serverfault.com/questions/56848
+    # Flags:
+    # --compact
+    #     This is intended for compact mode configuration in 'configure-vm'
+    #     script, which when disabled builds a lot of GCC packages and other
+    #     programs from source, rather than relying on system binary packages.
     #
     # Backup:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -21,21 +21,21 @@ koopa::debian_install_base() { # {{{1
     #
     # Configure time zone:
     # > sudo dpkg-reconfigure tzdata
+    #
+    # @seealso:
+    # - Check package source repo.
+    #   https://packages.ubuntu.com/
+    # - How to replicate installed packages across machines.
+    #   https://serverfault.com/questions/56848
     # """
     local apt_installed compact dev enabled_repos extra legacy_pkgs name_fancy \
         pkg pkgs remove remove_pkgs upgrade
     koopa::assert_is_installed apt apt-get sed sudo
-    # This is intended for compact mode configuration in 'configure-vm' script,
-    # which when disabled builds a lot of GCC packages and other programs from
-    # source, rather than relying on system binary packages.
     compact=0
-    # Developer libraries.
     dev=1
-    # Include extra packages.
     extra=1
-    # Remove some system packages that can conflict with build from source.
+    full=0
     remove=1
-    # Upgrade the operating system.
     upgrade=1
     pos=()
     while (("$#"))
@@ -43,6 +43,14 @@ koopa::debian_install_base() { # {{{1
         case "$1" in
             --compact)
                 compact=1
+                shift 1
+                ;;
+            --full)
+                full=1
+                shift 1
+                ;;
+            --no-upgrade)
+                upgrade=0
                 shift 1
                 ;;
             "")
@@ -63,7 +71,11 @@ koopa::debian_install_base() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    koopa::is_docker && extra=0
+    if [[ "$compact" -eq 1 ]] && [[ "$full" -eq 1 ]]
+    then
+        koopa::stop "Set '--compact' or '--full' but not both."
+    fi
+    koopa::is_docker && [[ "$full" -eq 0 ]] && extra=0
     # Use system libraries for GDAL, etc. for these VM configs.
     [[ "$compact" -eq 1 ]] && remove=0
     name_fancy='Debian base system'
