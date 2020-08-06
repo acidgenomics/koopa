@@ -62,6 +62,7 @@ koopa::install_pip() { # {{{1
         "$python" "$file" --no-warn-script-location
     )
     koopa::rm "$tmp_dir"
+    koopa::is_cellar "$python" && koopa::link_cellar python
     koopa::install_success "$name"
     return 0
 }
