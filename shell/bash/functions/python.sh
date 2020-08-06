@@ -224,14 +224,17 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     k_site_pkgs="$(koopa::python_site_packages_prefix "$python")"
     [[ ! -d "$k_site_pkgs" ]] && koopa::sys_mkdir "$k_site_pkgs"
     file="${sys_site_pkgs}/koopa.pth"
-    [[ -f "$file" ]] && return 0
-    koopa::info "Adding '${file}' path file in '${sys_site_pkgs}'."
-    if koopa::is_cellar "$python"
+    if [[ ! -f "$file" ]]
     then
-        koopa::write_string "$k_site_pkgs" "$file"
-    else
-        koopa::sudo_write_string "$k_site_pkgs" "$file"
+        koopa::info "Adding '${file}' path file in '${sys_site_pkgs}'."
+        if koopa::is_cellar "$python"
+        then
+            koopa::write_string "$k_site_pkgs" "$file"
+        else
+            koopa::sudo_write_string "$k_site_pkgs" "$file"
+        fi
     fi
+    "$python" -m site
     return 0
 }
 
