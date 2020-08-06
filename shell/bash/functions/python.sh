@@ -230,6 +230,7 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
         if koopa::is_cellar "$python"
         then
             koopa::write_string "$k_site_pkgs" "$file"
+            koopa::link_cellar "$python"
         else
             koopa::sudo_write_string "$k_site_pkgs" "$file"
         fi
