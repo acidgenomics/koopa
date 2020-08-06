@@ -608,6 +608,10 @@ koopa::pyenv_prefix() { # {{{1
     _koopa_pyenv_prefix "$@"
 }
 
+koopa::python() { # {{{1
+    _koopa_python
+}
+
 koopa::python_site_packages_prefix() { # {{{1
     _koopa_python_site_packages_prefix "$@"
 }
