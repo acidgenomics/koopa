@@ -319,8 +319,6 @@ koopa::configure_vm() { # {{{1
 
     if [[ "$rsync" -eq 0 ]]
     then
-        # FIXME REWORK WHERE WE INSTALL SITE LIBRARY.
-        # FIXME This will help avoid any issues with Fedora.
         install-python-packages
         if [[ "$bioconductor" -eq 1 ]] || [[ "$compact" -eq 0 ]]
         then
