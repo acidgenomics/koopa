@@ -62,6 +62,7 @@ koopa::install_pip() { # {{{1
         "$python" "$file" --no-warn-script-location
     )
     koopa::rm "$tmp_dir"
+    koopa::is_cellar "$python" && koopa::link_cellar python
     koopa::install_success "$name"
     return 0
 }
@@ -137,9 +138,9 @@ koopa::install_python_packages() { # {{{1
     koopa::install_start "$name_fancy"
     install_flags=("--python=${python}")
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
+    koopa::python_add_site_packages_to_sys_path "$python"
     koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
-    koopa::is_cellar "$python" && koopa::link_cellar python
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -187,8 +188,7 @@ koopa::pip_install() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_is_installed "$python"
-    koopa::assert_is_python_package_installed --python="$python" 'pip'
-    target="$(koopa::python_site_packages_prefix)"
+    target="$(koopa::python_site_packages_prefix "$python")"
     koopa::sys_mkdir "$target"
     koopa::dl \
         'Packages' "$(koopa::to_string "$@")" \
@@ -206,6 +206,36 @@ koopa::pip_install() { # {{{1
         )
     fi
     "$python" -m pip install "${pip_install_flags[@]}" "$@"
+    return 0
+}
+
+koopa::python_add_site_packages_to_sys_path() { # {{{1
+    # """
+    # Add our custom site packages library to sys.path.
+    # @note Updated 2020-08-06.
+    #
+    # @seealso
+    # > "$python" -m site
+    # """
+    local file k_site_pkgs python sys_site_pkgs
+    python="${1:-}"
+    [[ -z "$python" ]] && python="$(koopa::python)"
+    sys_site_pkgs="$(koopa::python_system_site_packages_prefix "$python")"
+    k_site_pkgs="$(koopa::python_site_packages_prefix "$python")"
+    [[ ! -d "$k_site_pkgs" ]] && koopa::sys_mkdir "$k_site_pkgs"
+    file="${sys_site_pkgs}/koopa.pth"
+    if [[ ! -f "$file" ]]
+    then
+        koopa::info "Adding '${file}' path file in '${sys_site_pkgs}'."
+        if koopa::is_cellar "$python"
+        then
+            koopa::write_string "$k_site_pkgs" "$file"
+            koopa::link_cellar python
+        else
+            koopa::sudo_write_string "$k_site_pkgs" "$file"
+        fi
+    fi
+    "$python" -m site
     return 0
 }
 

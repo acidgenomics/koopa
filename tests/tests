@@ -10,9 +10,9 @@ koopa::run_tests() {
     tests_dir="$(dirname "${BASH_SOURCE[0]}")"
     (
         cd "$tests_dir" || exit 1
+        ./bin-man-consistency
         ./linter
         ./shunit2
-        ./bin-man-consistency
         # > ./roff
     )
     return 0

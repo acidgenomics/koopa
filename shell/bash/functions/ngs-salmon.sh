@@ -47,8 +47,38 @@ koopa::_salmon_index() { # {{{1
 
 koopa::_salmon_quant() { # {{{1
     # """
-    # Run salmon quant.
-    # @note Updated 2020-07-07.
+    # Run salmon quant (per sample).
+    # @note Updated 2020-08-06.
+    #
+    # Important options:
+    # * --libType='A': Enable ability to automatically infer (i.e. guess) the
+    #   library type based on how the first few thousand reads map to the
+    #   transcriptome.
+    # * --validateMappings: Enables selective alignment of the sequencing reads
+    #   when mapping them to the transcriptome. This can improve both the
+    #   sensitivity and specificity of mapping and, as a result, can improve
+    #   quantification accuracy.
+    # * --numBootstraps: Compute bootstrapped abundance estimates. This is done
+    #   by resampling (with replacement) from the counts assigned to the
+    #   fragment equivalence classes, and then re-running the optimization
+    #   procedure.
+    # * --seqBias: Enable salmon to learn and correct for sequence-specific
+    #   biases in the input data. Specifically, this model will attempt to
+    #   correct for random hexamer priming bias, which results in the
+    #   preferential sequencing of fragments starting with certain nucleotide
+    #   motifs.
+    # * --gcBias: Learn and correct for fragment-level GC biases in the input
+    #   data. Specifically, this model will attempt to correct for biases in how
+    #   likely a sequence is to be observed based on its internal GC content.
+    # * --posBias: Experimental. Enable modeling of a position-specific fragment
+    #   start distribution. This is meant to model non-uniform coverage biases
+    #   that are sometimes present in RNA-seq data (e.g. 5’ or 3’ positional
+    #   bias).
+    #
+    # Consider use of '--numGibbsSamples' instead of '--numBootstraps'.
+    #
+    # @seealso
+    # - https://salmon.readthedocs.io/en/latest/salmon.html
     # """
     local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_dir \
         log_file output_dir r1_tail r2_tail sample_output_dir threads
@@ -108,23 +138,24 @@ koopa::_salmon_quant() { # {{{1
     log_file="${sample_output_dir}/salmon-quant.log"
     koopa::mkdir "$sample_output_dir"
     salmon quant \
-        --gcBias \
         --index="$index_dir" \
+        --output="$sample_output_dir" \
         --libType='A' \
+        --validateMappings \
+        --seqBias \
+        --gcBias \
+        --posBias \
+        --numBootstraps="$bootstraps" \
+        --threads="$threads" \
         --mates1="$fastq_r1" \
         --mates2="$fastq_r2" \
-        --numBootstraps="$bootstraps" \
-        --output="$sample_output_dir" \
-        --posBias \
-        --seqBias \
-        --threads="$threads" \
         2>&1 | tee "$log_file"
     return 0
 }
 
 koopa::salmon() { # {{{1
     # """
-    # Run salmon on multiple samples.
+    # Run salmon on multiple samples (per FASTQ directory).
     # @note Updated 2020-07-21.
     # """
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
@@ -248,7 +279,7 @@ koopa::salmon() { # {{{1
     # Quantify {{{2
     # --------------------------------------------------------------------------
 
-    # Loop across the per-sample array and quantify with kallisto.
+    # Loop across the per-sample array and quantify with salmon.
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
