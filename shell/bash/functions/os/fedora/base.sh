@@ -107,7 +107,10 @@ koopa::fedora_install_base() { # {{{1
     )
     if koopa::is_fedora
     then
-        pkgs+=('texinfo')
+        pkgs+=(
+            'R'
+            'texinfo'
+        )
     fi
 
     # Developer {{{2
