@@ -252,7 +252,7 @@ koopa::debian_install_base() { # {{{1
             'liblzma-dev'
             'libmagick++-dev'
             # 'libmariadb-dev'
-            'libmysqlclient-dev'  # Conflicts with libmariadb-dev on Ubuntu
+            # 'libmysqlclient-dev'  # Conflicts with libmariadb-dev (Ubuntu)
             'libmodule-build-perl'
             'libmpc-dev'
             'libmpfr-dev'
