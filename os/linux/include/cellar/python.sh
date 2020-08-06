@@ -30,8 +30,3 @@ koopa::cd "Python-${version}"
 make --jobs="$jobs"
 # > make test
 make install
-if [[ "$link_cellar" -eq 1 ]]
-then
-    python="${prefix}/bin/python3"
-    koopa::python_add_site_packages_to_sys_path "$python"
-fi
