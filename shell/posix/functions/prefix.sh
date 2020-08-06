@@ -415,15 +415,13 @@ _koopa_python_site_packages_prefix() { # {{{1
     # Python site packages library location.
     # @note Updated 2020-08-06.
     #
-    # /usr/local/lib/python3.8/site-packages
-    #
     # Alternatives:
     # > "$python" -c 'import site; print(site.getsitepackages()[0])'
     # > "$python" -m site
     # """
     # shellcheck disable=SC2039
     local make_prefix python version x
-    python="${1:-python3}"
+    python="$(_koopa_python)"
     _koopa_is_installed "$python" || return 0
     make_prefix="$(_koopa_make_prefix)"
     version="$("$python" --version | head -n 1 | cut -d ' ' -f 2)"

@@ -298,7 +298,7 @@ koopa::is_powerful() { # {{{1
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-08-06.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -313,7 +313,7 @@ koopa::is_python_package_installed() { # {{{1
     # """
     local pkg pos prefix python
     koopa::assert_has_args "$#"
-    python='python3'
+    python="$(koopa::python)"
     pos=()
     while (("$#"))
     do

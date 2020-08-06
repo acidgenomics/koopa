@@ -134,7 +134,7 @@ koopa::return_version() { # {{{1
             cmd='pip3'
             ;;
         python)
-            cmd='python3'
+            cmd="$(_koopa_python)"
             ;;
         ripgrep)
             cmd='rg'
