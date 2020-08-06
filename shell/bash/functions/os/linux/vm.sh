@@ -365,7 +365,7 @@ koopa::configure_vm() { # {{{1
     prefixes=("$make_prefix" "$app_prefix")
     koopa::sys_set_permissions -r "${prefixes[@]}"
     koopa::remove_broken_symlinks "${prefixes[@]}"
-    koopa::remove_empty_dirs "${prefixes[@]}"
+    # > koopa::remove_empty_dirs "${prefixes[@]}"
     koopa::fix_zsh_permissions
 
     # Remove temporary files {{{3
