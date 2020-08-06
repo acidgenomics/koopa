@@ -124,6 +124,7 @@ koopa::fedora_install_base() { # {{{1
                 'gdal-devel'
                 'geos-devel'
                 'proj-devel'
+                'udunits2-devel'
             )
         fi
         pkgs+=(
@@ -160,7 +161,6 @@ koopa::fedora_install_base() { # {{{1
         if ! koopa::is_rhel
         then
             pkgs+=(
-                # udunits2-devel  # use 'install-udunits'.
                 'bison-devel'
                 'flex-devel'
                 'libmpc-devel'
