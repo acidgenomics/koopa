@@ -420,14 +420,18 @@ _koopa_python_site_packages_prefix() { # {{{1
     # > "$python" -m site
     # """
     # shellcheck disable=SC2039
-    local make_prefix python version x
+    local python version x
     python="${1:-}"
     [ -z "$python" ] && python="$(_koopa_python)"
     _koopa_is_installed "$python" || return 0
-    make_prefix="$(_koopa_make_prefix)"
     version="$("$python" --version | head -n 1 | cut -d ' ' -f 2)"
     version="$(_koopa_major_minor_version "$version")"
-    x="${make_prefix}/lib/python${version}/site-packages"
+    if koopa::is_cellar "$python"
+    then
+        x="$(_koopa_app_prefix)/python/${version}/site-packages"
+    else
+        x="$(_koopa_make_prefix)/lib/python${version}/site-packages"
+    fi
     _koopa_print "$x"
     return 0
 }
