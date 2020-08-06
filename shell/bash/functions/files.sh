@@ -565,19 +565,23 @@ koopa::nfiletypes() { # {{{1
 koopa::remove_broken_symlinks() { # {{{1
     # """
     # Remove broken symlinks.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-06.
     # """
-    local file files
+    local prefix file files
     koopa::assert_has_args "$#"
-    readarray -t files <<< "$(koopa::find_broken_symlinks "$@")"
-    koopa::is_array_non_empty "${files[@]}" || return 0
-    koopa::note "Removing ${#files[@]} broken symlinks."
-    # Don't pass single call to rm, as argument list can be too long.
-    for file in "${files[@]}"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
     do
-        [[ -z "$file" ]] && continue
-        koopa::info "Removing '${file}'."
-        koopa::rm "$file"
+        readarray -t files <<< "$(koopa::find_broken_symlinks "$prefix")"
+        koopa::is_array_non_empty "${files[@]}" || continue
+        koopa::note "Removing ${#files[@]} broken symlinks."
+        # Don't pass single call to rm, as argument list can be too long.
+        for file in "${files[@]}"
+        do
+            [[ -z "$file" ]] && continue
+            koopa::info "Removing '${file}'."
+            koopa::rm "$file"
+        done
     done
     return 0
 }
@@ -585,19 +589,23 @@ koopa::remove_broken_symlinks() { # {{{1
 koopa::remove_empty_dirs() { # {{{1
     # """
     # Remove empty directories.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-08-06.
     # """
-    local dirs
+    local dir dirs prefix
     koopa::assert_has_args "$#"
-    readarray -t dirs <<< "$(koopa::find_empty_dirs "$@")"
-    koopa::is_array_non_empty "${dirs[@]}" || return 0
-    koopa::note "Removing ${#dirs[@]} empty directories."
-    # Don't pass single call to rm, as argument list can be too long.
-    for dir in "${dirs[@]}"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
     do
-        [[ -z "$dir" ]] && continue
-        koopa::info "Removing '${dir}'."
-        koopa::rm "$dir"
+        readarray -t dirs <<< "$(koopa::find_empty_dirs "$prefix")"
+        koopa::is_array_non_empty "${dirs[@]}" || continue
+        koopa::note "Removing ${#dirs[@]} empty directories."
+        # Don't pass single call to rm, as argument list can be too long.
+        for dir in "${dirs[@]}"
+        do
+            [[ -z "$dir" ]] && continue
+            koopa::info "Removing '${dir}'."
+            koopa::rm "$dir"
+        done
     done
     return 0
 }

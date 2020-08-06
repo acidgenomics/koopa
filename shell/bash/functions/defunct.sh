@@ -39,13 +39,6 @@ _koopa_conda_remove_env() { # {{{1
     koopa::defunct koopa::conda_remove_env
 }
 
-koopa::assert_is_darwin() { # {{{1
-    # """
-    # @note Updated 2020-01-14.
-    # """
-    koopa::defunct koopa::assert_is_macos
-}
-
 koopa::is_darwin() { # {{{1
     # """
     # @note Updated 2020-01-14.
