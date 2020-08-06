@@ -112,6 +112,7 @@ koopa::fedora_install_base() { # {{{1
             'python3-devel'
             'texinfo'
         )
+        koopa::python_add_site_packages_to_sys_path
     fi
 
     # Developer {{{2
