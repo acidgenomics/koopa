@@ -448,7 +448,7 @@ _koopa_activate_homebrew_ruby_gems() { # {{{1
 _koopa_activate_koopa_paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-08-06.
     # """
     # shellcheck disable=SC2039
     local config_prefix host_id koopa_prefix os_id shell
@@ -463,16 +463,16 @@ _koopa_activate_koopa_paths() { # {{{1
     if _koopa_is_linux
     then
         _koopa_activate_prefix "${koopa_prefix}/os/linux"
-        if _koopa_is_debian
+        if _koopa_is_debian_like
         then
             _koopa_activate_prefix "${koopa_prefix}/os/debian"
-        elif _koopa_is_fedora
+            _koopa_is_ubuntu_like && \
+                _koopa_activate_prefix "${koopa_prefix}/os/ubuntu"
+        elif _koopa_is_fedora_like
         then
             _koopa_activate_prefix "${koopa_prefix}/os/fedora"
-        fi
-        if _koopa_is_rhel
-        then
-            _koopa_activate_prefix "${koopa_prefix}/os/rhel"
+            _koopa_is_rhel_like && \
+                _koopa_activate_prefix "${koopa_prefix}/os/rhel"
         fi
     fi
     _koopa_activate_prefix \
@@ -560,7 +560,7 @@ _koopa_activate_macos_extras() { # {{{1
 
 _koopa_activate_macos_python() { # {{{1
     # """
-    # Activate macOS Python install.
+    # Activate macOS Python binary install.
     # @note Updated 2020-07-03.
     # """
     # shellcheck disable=SC2039
@@ -749,6 +749,21 @@ _koopa_activate_pyenv() { # {{{1
     [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -u
+    return 0
+}
+
+_koopa_activate_python_site_packages() { # {{{1
+    # """
+    # Activate Python site packages library.
+    # @note Updated 2020-08-06.
+    #
+    # This ensures that 'bin' will be added to PATH, which is useful when
+    # installing via pip with '--target' flag.
+    # """
+    # shellcheck disable=SC2039
+    local prefix
+    prefix="$(_koopa_python_site_packages_prefix)"
+    _koopa_force_add_to_path_start "${prefix}/bin"
     return 0
 }
 

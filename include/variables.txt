@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-08-05"
+koopa-date="2020-08-06"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.8.0a"
@@ -373,7 +373,7 @@ vardict="2019.06.04"
 python-black="19.10b0"
 python-flake8="3.8.3"
 python-logbook="1.5.3"
-python-pip="20.1.1"
+python-pip="20.2.1"
 python-pipx="0.15.4.0"
 python-pyflakes="2.2.0"
 python-pylint="2.5.3"

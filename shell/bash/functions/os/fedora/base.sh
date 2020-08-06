@@ -3,14 +3,52 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-08-05.
+    # @note Updated 2020-08-06.
+    #
+    # Refer to Debian install base script for more details on supported args.
     # """
-    local dev extra name_fancy pkgs upgrade
+    local compact dev extra name_fancy pkgs pos upgrade
     koopa::assert_is_installed dnf sudo
+    compact=0
     dev=1
     extra=1
+    full=0
     upgrade=1
-    koopa::is_docker && extra=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --compact)
+                compact=1
+                shift 1
+                ;;
+            --full)
+                full=1
+                shift 1
+                ;;
+            "")
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_no_args "$#"
+    if [[ "$compact" -eq 1 ]] && [[ "$full" -eq 1 ]]
+    then
+        koopa::stop "Set '--compact' or '--full' but not both."
+    fi
+    koopa::is_docker && [[ "$full" -eq 0 ]] && extra=0
     name_fancy='Fedora base system'
     koopa::install_start "$name_fancy"
 
@@ -28,7 +66,7 @@ koopa::fedora_install_base() { # {{{1
 
     koopa::h2 'Installing default packages.'
     pkgs=(
-        # 'coreutils' # This is erroring on RHEL 8.
+        # 'coreutils' # This can error on RHEL 8.
         'autoconf'
         'automake'
         'bash'
@@ -52,7 +90,7 @@ koopa::fedora_install_base() { # {{{1
         'man-db'
         'ncurses'
         'openssl'
-        'pkgconfig'  # note this is now pkgconf
+        'pkgconfig'  # This is now pkgconf wrapped.
         'qpdf'
         'readline'
         'squashfs-tools'
@@ -67,9 +105,13 @@ koopa::fedora_install_base() { # {{{1
         'yum-utils'
         'zip'
     )
-    if ! koopa::is_rhel
+    if koopa::is_fedora
     then
-        pkgs+=('texinfo')
+        pkgs+=(
+            'R'
+            'python3-devel'
+            'texinfo'
+        )
     fi
 
     # Developer {{{2
@@ -110,16 +152,25 @@ koopa::fedora_install_base() { # {{{1
             'xz-devel'
             'zlib-devel'
         )
-        if ! koopa::is_rhel
+        if koopa::is_fedora
         then
             pkgs+=(
-                # udunits2-devel  # use 'install-udunits'.
                 'bison-devel'
                 'flex-devel'
                 'libmpc-devel'
                 'openblas-devel'
                 'openjpeg2-devel'  # GDAL
                 'xxhash-devel'  # rsync
+            )
+        fi
+        if [[ "$compact" -eq 1 ]] && koopa::is_fedora
+        then
+            pkgs+=(
+                # proj-bin?
+                'gdal-devel'
+                'geos-devel'
+                'proj-devel'
+                'udunits2-devel'
             )
         fi
     fi
@@ -170,4 +221,3 @@ koopa::fedora_install_base() { # {{{1
     koopa::install_success "$name_fancy"
     return 0
 }
-

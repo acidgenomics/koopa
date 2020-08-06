@@ -245,20 +245,6 @@ koopa::hdf5_version() { # {{{1
     return 0
 }
 
-koopa::linux_version() { # {{{1
-    # """
-    # Linux version.
-    # @note Updated 2020-07-03.
-    # """
-    local x
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_linux
-    x="$(uname -r)"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
-}
-
 koopa::llvm_version() { # {{{1
     # """
     # LLVM version.
@@ -271,24 +257,6 @@ koopa::llvm_version() { # {{{1
     x="${LLVM_CONFIG:-}"
     [[ -n "$x" ]] || return 1
     x="$(koopa::return_version "$LLVM_CONFIG")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
-}
-
-koopa::lmod_version() { # {{{1
-    # """
-    # Lmod version.
-    # @note Updated 2020-06-29.
-    #
-    # Alterate approach:
-    # > module --version 2>&1 \
-    # >     | grep -Eo 'Version [.0-9]+' \
-    # >     | cut -d ' ' -f 2
-    # """
-    local x
-    koopa::assert_has_no_args "$#"
-    x="${LMOD_VERSION:-}"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0

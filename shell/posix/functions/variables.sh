@@ -147,7 +147,7 @@ _koopa_mem_gb() { # {{{1
 _koopa_os_codename() { # {{{1
     # """
     # Operating system code name.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-06.
     #
     # Alternate approach:
     # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
@@ -155,8 +155,8 @@ _koopa_os_codename() { # {{{1
     # """
     # shellcheck disable=SC2039
     local os_codename
-    _koopa_is_debian || return 1
-    _koopa_is_installed lsb_release || return 1
+    _koopa_is_debian_like || return 0
+    _koopa_is_installed lsb_release || return 0
     os_codename="$(lsb_release -cs)"
     _koopa_print "$os_codename"
     return 0
@@ -229,6 +229,15 @@ _koopa_os_string() { # {{{1
         string="${string}-${version}"
     fi
     _koopa_print "$string"
+    return 0
+}
+
+_koopa_python() { # {{{1
+    # """
+    # Python executable path.
+    # @note Updated 2020-08-06.
+    # """
+    _koopa_print 'python3'
     return 0
 }
 

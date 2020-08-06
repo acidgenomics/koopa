@@ -41,7 +41,7 @@ flags=(
     '--with-x=no'
 )
 # Need to modify BLAS configuration handling specificallly on Debian.
-if ! koopa::is_debian
+if ! koopa::is_debian_like
 then
     flags+=('--enable-BLAS-shlib')
 fi

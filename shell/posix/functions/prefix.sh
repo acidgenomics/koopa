@@ -413,13 +413,20 @@ _koopa_pyenv_prefix() { # {{{1
 _koopa_python_site_packages_prefix() { # {{{1
     # """
     # Python site packages library location.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-06.
+    #
+    # Alternatives:
+    # > "$python" -c 'import site; print(site.getsitepackages()[0])'
+    # > "$python" -m site
     # """
     # shellcheck disable=SC2039
-    local python x
-    python="${1:-python3}"
+    local make_prefix python version x
+    python="$(_koopa_python)"
     _koopa_is_installed "$python" || return 0
-    x="$("$python" -c 'import site; print(site.getsitepackages()[0])')"
+    make_prefix="$(_koopa_make_prefix)"
+    version="$("$python" --version | head -n 1 | cut -d ' ' -f 2)"
+    version="$(_koopa_major_minor_version "$version")"
+    x="${make_prefix}/lib/python${version}/site-packages"
     _koopa_print "$x"
     return 0
 }
