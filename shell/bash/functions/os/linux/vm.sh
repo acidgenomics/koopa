@@ -297,7 +297,11 @@ koopa::configure_vm() { # {{{1
         install-autojump
         # > install-gcc
     fi
-    if [[ "$r_version" == 'devel' ]]
+    # Install R.
+    if koopa::is_fedora
+    then
+        koopa::assert_is_installed R
+    elif [[ "$r_version" == 'devel' ]]
     then
         install-r-devel
     elif koopa::is_installed install-r-cran-binary
@@ -310,6 +314,7 @@ koopa::configure_vm() { # {{{1
     then
         koopa::run_if_installed install-rstudio-server install-shiny-server
     fi
+    # Ensure configuration is current.
     koopa::update_r_config
     koopa::update_lmod_config
     sudo ldconfig
