@@ -218,11 +218,11 @@ koopa::r_javareconf() { # {{{1
 koopa::update_r_config() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-08-06.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
-    local r r_prefix
+    local pkg_index r r_prefix
     koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     r="$(koopa::which_realpath "$r")"
@@ -253,10 +253,8 @@ koopa::update_r_config() { # {{{1
         # Ensure system package library is writable.
         koopa::sys_set_permissions -r "${r_prefix}/library"
         # Need to ensure group write so package index gets updated.
-        if [[ -d '/usr/share/R' ]]
-        then
-            koopa::sys_set_permissions '/usr/share/R/doc/html/packages.html'
-        fi
+        pkg_index=='/usr/share/R/doc/html/packages.html'
+        [[ -f "$pkg_index" ]] && koopa::sys_set_permissions "$pkg_index"
     fi
     koopa::link_r_etc "$r"
     koopa::link_r_site_library "$r"
