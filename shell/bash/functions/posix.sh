@@ -620,6 +620,10 @@ koopa::python_site_packages_prefix() { # {{{1
     _koopa_python_site_packages_prefix "$@"
 }
 
+koopa::python_system_site_packages_prefix() { # {{{1
+    _koopa_python_system_site_packages_prefix "$@"
+}
+
 koopa::rbenv_prefix() { # {{{1
     _koopa_rbenv_prefix "$@"
 }
