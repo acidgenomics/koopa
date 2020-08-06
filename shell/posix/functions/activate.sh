@@ -560,7 +560,7 @@ _koopa_activate_macos_extras() { # {{{1
 
 _koopa_activate_macos_python() { # {{{1
     # """
-    # Activate macOS Python install.
+    # Activate macOS Python binary install.
     # @note Updated 2020-07-03.
     # """
     # shellcheck disable=SC2039
@@ -749,6 +749,21 @@ _koopa_activate_pyenv() { # {{{1
     [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -u
+    return 0
+}
+
+_koopa_activate_python_site_packages() { # {{{1
+    # """
+    # Activate Python site packages library.
+    # @note Updated 2020-08-06.
+    #
+    # This ensures that 'bin' will be added to PATH, which is useful when
+    # installing via pip with '--target' flag.
+    # """
+    # shellcheck disable=SC2039
+    local prefix
+    prefix="$(_koopa_python_site_packages_prefix)"
+    _koopa_force_add_to_path_start "$prefix"
     return 0
 }
 
