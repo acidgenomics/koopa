@@ -140,7 +140,6 @@ koopa::install_python_packages() { # {{{1
     fi
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
-    koopa::dl 'Site library' "$(koopa::python_site_packages_prefix)"
     install_flags=("--python=${python}")
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
     koopa::install_pip "${install_flags[@]}"
@@ -153,9 +152,9 @@ koopa::install_python_packages() { # {{{1
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2020-08-05.
+    # @note Updated 2020-08-06.
     # """
-    local pip_install_flags pos python reinstall
+    local pip_install_flags pos python reinstall target
     koopa::assert_has_args "$#"
     python="$(koopa::python)"
     reinstall=0
@@ -194,7 +193,15 @@ koopa::pip_install() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_is_installed "$python"
     koopa::assert_is_python_package_installed --python="$python" 'pip'
-    pip_install_flags=('--no-warn-script-location')
+    target="$(koopa::python_site_packages_prefix)"
+    koopa::sys_mkdir "$target"
+    koopa::dl \
+        'Packages' "$(koopa::to_string "$@")" \
+        'Target' "$target"
+    pip_install_flags=(
+        '--no-warn-script-location'
+        "--target=${target}"
+    )
     if [[ "$reinstall" -eq 1 ]]
     then
         pip_flags+=(
@@ -202,7 +209,6 @@ koopa::pip_install() { # {{{1
             '--ignore-installed'
         )
     fi
-    koopa::dl 'Packages' "$(koopa::to_string "$@")"
     "$python" -m pip install "${pip_install_flags[@]}" "$@"
     return 0
 }
