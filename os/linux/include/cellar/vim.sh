@@ -6,7 +6,7 @@
 # """
 
 make_prefix="$(koopa::make_prefix)"
-python3="${make_prefix}/bin/python3"
+python3='python3'
 python3_config="${python3}-config"
 koopa::assert_is_installed "$python3" "$python3_config"
 python3_config_dir="$("$python3_config" --configdir)"

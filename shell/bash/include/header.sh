@@ -43,7 +43,7 @@ fi
 [[ -z "${checks:-}" ]] && checks=1
 [[ -z "${shopts:-}" ]] && shopts=1
 [[ -z "${verbose:-}" ]] && verbose=0
-
+[[ "$verbose" -eq 1 ]] && export KOOPA_VERBOSE=1
 if [[ "$activate" -eq 1 ]]
 then
     checks=0
@@ -113,28 +113,28 @@ then
 elif koopa::is_linux
 then
     koopa::source_dir "${os_fun_dir}/linux"
-    os_id="$(koopa::os_id)"
     # Debian derivatives.
-    if koopa::is_debian
+    if koopa::is_debian_like
     then
-        [[ "$os_id" != 'debian' ]] && \
+        ! koopa::is_debian && \
             koopa::source_dir "${os_fun_dir}/debian"
-        koopa::is_ubuntu && \
-            [[ "$os_id" != 'ubuntu' ]] && \
+        koopa::is_ubuntu_like && \
+            ! koopa::is_ubuntu && \
             koopa::source_dir "${os_fun_dir}/ubuntu"
     # Fedora derivatives.
-    elif koopa::is_fedora
+    elif koopa::is_fedora_like
     then
-        [[ "$os_id" != 'fedora' ]] && \
+        ! koopa::is_fedora && \
             koopa::source_dir "${os_fun_dir}/fedora"
-        koopa::is_rhel && \
-            [[ "$os_id" != 'rhel' ]] && \
+        koopa::is_rhel_like && \
+            ! koopa::is_rhel && \
             koopa::source_dir "${os_fun_dir}/rhel"
-        koopa::is_centos && \
-            [[ "$os_id" != 'centos' ]] && \
+        koopa::is_centos_like && \
+            ! koopa::is_centos && \
             koopa::source_dir "${os_fun_dir}/centos"
     fi
     # Other Linux distros.
+    os_id="$(koopa::os_id)"
     koopa::source_dir "${os_fun_dir}/${os_id}"
 fi
 

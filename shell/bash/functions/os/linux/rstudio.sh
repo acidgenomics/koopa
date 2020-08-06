@@ -96,7 +96,7 @@ koopa::_install_rstudio_server() { # {{{1
     koopa::assert_has_no_args "$#"
     name='rstudio-server'
     file_stem="$name"
-    koopa::is_rhel && file_stem="${file_stem}-rhel"
+    koopa::is_rhel_like && file_stem="${file_stem}-rhel"
     name_fancy='RStudio Server'
     if [[ "$pro" -eq 1 ]]
     then
@@ -176,18 +176,18 @@ koopa::debian_install_rstudio_server_pro() { # {{{1
 koopa::rhel_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on RHEL / CentOS.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-08-06.
     # """
     local os_codename
-    if koopa::is_rhel_8
+    if koopa::is_rhel_8_like
     then
         os_codename='fedora28'
     else
-        koopa::stop 'Unsupported RHEL/CentOS version.'
+        koopa::stop 'Unsupported OS.'
     fi
     koopa::_install_rstudio_server \
         --file-ext='rpm' \
-        --install='sudo yum -y install' \
+        --install='sudo dnf -y install' \
         --os_codename="$os_codename" \
         --platform='x86_64' \
         "$@"

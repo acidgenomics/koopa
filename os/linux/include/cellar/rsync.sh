@@ -11,7 +11,7 @@ flags=(
     # '--without-included-zlib'
     '--disable-zstd'
 )
-if koopa::is_rhel
+if koopa::is_rhel_like
 then
     flags+=('--disable-xxhash')
 fi

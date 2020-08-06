@@ -226,7 +226,11 @@ koopa::configure_vm() { # {{{1
     koopa::run_if_installed install-llvm
     install-conda
     install-openjdk
-    install-python
+    # Python 3.8.5 built from source is currently breaking dnf on Fedora 32.
+    if ! koopa::is_fedora
+    then
+        install-python
+    fi
     if [[ "$compact" -eq 0 ]]
     then
         install-curl
@@ -291,9 +295,13 @@ koopa::configure_vm() { # {{{1
         install-lmod
         install-htop
         install-autojump
-        # > install-gcc --cellar-only
+        # > install-gcc
     fi
-    if [[ "$r_version" == 'devel' ]]
+    # Install R.
+    if koopa::is_fedora
+    then
+        koopa::assert_is_installed R
+    elif [[ "$r_version" == 'devel' ]]
     then
         install-r-devel
     elif koopa::is_installed install-r-cran-binary
@@ -306,6 +314,7 @@ koopa::configure_vm() { # {{{1
     then
         koopa::run_if_installed install-rstudio-server install-shiny-server
     fi
+    # Ensure configuration is current.
     koopa::update_r_config
     koopa::update_lmod_config
     sudo ldconfig
@@ -365,7 +374,7 @@ koopa::configure_vm() { # {{{1
     prefixes=("$make_prefix" "$app_prefix")
     koopa::sys_set_permissions -r "${prefixes[@]}"
     koopa::remove_broken_symlinks "${prefixes[@]}"
-    koopa::remove_empty_dirs "${prefixes[@]}"
+    # > koopa::remove_empty_dirs "${prefixes[@]}"
     koopa::fix_zsh_permissions
 
     # Remove temporary files {{{3
@@ -380,7 +389,8 @@ koopa::configure_vm() { # {{{1
             '/tmp/'* \
             '/var/backups/'* \
             '/var/cache/'*
-        koopa::is_debian && koopa::rm -S '/var/lib/apt/lists/'*
+        koopa::is_debian_like && \
+            koopa::rm -S '/var/lib/apt/lists/'*
     fi
 
     koopa::success 'Configuration completed successfully.'

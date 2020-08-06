@@ -22,7 +22,7 @@ koopa::add_local_bins_to_path() { # {{{1
 koopa::admin_group() { # {{{1
     # """
     # Return the administrator group.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-06.
     #
     # Usage of 'groups' here is terribly slow for domain users.
     # Currently seeing this with CPI AWS Ubuntu config.
@@ -35,10 +35,10 @@ koopa::admin_group() { # {{{1
     if koopa::is_root
     then
         group='root'
-    elif koopa::is_debian
+    elif koopa::is_debian_like
     then
         group='sudo'
-    elif koopa::is_fedora
+    elif koopa::is_fedora_like
     then
         group='wheel'
     elif koopa::is_macos

@@ -43,7 +43,7 @@ fi
 [[ -z "${checks:-}" ]] && local checks=1
 [[ -z "${shopts:-}" ]] && local shopts=1
 [[ -z "${verbose:-}" ]] && local verbose=0
-
+[[ "$verbose" -eq 1 ]] && export KOOPA_VERBOSE=1
 if [[ "$activate" -eq 1 ]]
 then
     checks=0
