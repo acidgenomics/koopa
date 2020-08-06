@@ -763,7 +763,7 @@ _koopa_activate_python_site_packages() { # {{{1
     # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_python_site_packages_prefix)"
-    _koopa_force_add_to_path_start "$prefix"
+    _koopa_force_add_to_path_start "${prefix}/bin"
     return 0
 }
 
