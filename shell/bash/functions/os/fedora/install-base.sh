@@ -117,7 +117,7 @@ koopa::fedora_install_base() { # {{{1
     then
         koopa::h2 'Installing developer libraries.'
         sudo dnf -y groupinstall 'Development Tools'
-        if [[ "$compact" -eq 1 ]]
+        if [[ "$compact" -eq 1 ]] && ! koopa::is_rhel
         then
             pkgs+=(
                 # proj-bin?
