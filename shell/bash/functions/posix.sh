@@ -304,18 +304,28 @@ koopa::is_centos() { # {{{1
     _koopa_is_centos "$@"
 }
 
+koopa::is_centos_like() { # {{{1
+    _koopa_is_centos_like "$@"
+}
+
 koopa::is_conda_active() { # {{{1
     _koopa_is_conda_active "$@"
 }
 
-# FIXME REWORK THIS.
 koopa::is_debian() { # {{{1
     _koopa_is_debian "$@"
 }
 
-# FIXME REWORK THIS.
+koopa::is_debian_like() { # {{{1
+    _koopa_is_debian_like "$@"
+}
+
 koopa::is_fedora() { # {{{1
     _koopa_is_fedora "$@"
+}
+
+koopa::is_fedora_like() { # {{{1
+    _koopa_is_fedora_like "$@"
 }
 
 koopa::is_git() { # {{{1
@@ -328,6 +338,10 @@ koopa::is_git_clean() { # {{{1
 
 koopa::is_git_toplevel() { # {{{1
     _koopa_is_git_toplevel "$@"
+}
+
+koopa::is_host() { # {{{1
+    _koopa_is_host "$@"
 }
 
 koopa::is_installed() { # {{{1
@@ -354,6 +368,18 @@ koopa::is_opensuse() { # {{{1
     _koopa_is_opensuse "$@"
 }
 
+koopa::is_os() { # {{{1
+    _koopa_is_os "$@"
+}
+
+koopa::is_os_like() { # {{{1
+    _koopa_is_os_like "$@"
+}
+
+koopa::is_os_version() { # {{{1
+    _koopa_is_os_version "$@"
+}
+
 koopa::is_raspbian() { # {{{1
     _koopa_is_raspbian "$@"
 }
@@ -362,13 +388,16 @@ koopa::is_remote() { # {{{1
     _koopa_is_remote "$@"
 }
 
-# FIXME REWORK THIS.
 koopa::is_rhel() { # {{{1
     _koopa_is_rhel "$@"
 }
 
-koopa::is_rhel_8() { # {{{1
-    _koopa_is_rhel_8 "$@"
+koopa::is_rhel_like() { # {{{1
+    _koopa_is_rhel_like "$@"
+}
+
+koopa::is_rhel_8_like() { # {{{1
+    _koopa_is_rhel_8_like "$@"
 }
 
 koopa::is_root() { # {{{1
@@ -407,9 +436,12 @@ koopa::is_tty() { # {{{1
     _koopa_is_tty "$@"
 }
 
-# FIXME REWORK THIS.
 koopa::is_ubuntu() { # {{{1
     _koopa_is_ubuntu "$@"
+}
+
+koopa::is_ubuntu_like() { # {{{1
+    _koopa_is_ubuntu_like "$@"
 }
 
 koopa::is_ubuntu_20() { # {{{1
