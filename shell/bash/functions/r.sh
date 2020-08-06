@@ -232,6 +232,7 @@ koopa::update_r_config() { # {{{1
     r="$(koopa::which_realpath "$r")"
     koopa::assert_is_installed "$r"
     r_prefix="$(koopa::r_prefix "$r")"
+    rscript="${r}script"
     koopa::h1 'Updating R configuration.'
     koopa::dl 'R home' "$r_prefix"
     koopa::dl 'R path' "$r"
@@ -256,20 +257,19 @@ koopa::update_r_config() { # {{{1
     else
         # Ensure system package library is writable.
         koopa::sys_set_permissions -r "${r_prefix}/library"
-        # Ensure HTML package index is writable.
-        if koopa::is_installed '/usr/bin/R'
-        then
-            doc_dir="$(Rscript -e 'cat(R.home("doc"))')"
-            pkg_index="${doc_dir}/html/packages.html"
-            if [[ ! -f "$pkg_index" ]]
-            then
-                koopa::mkdir -S "$(dirname "$pkg_index")"
-                sudo touch "$pkg_index"
-            fi
-            koopa::sys_set_permissions "$pkg_index"
-        fi
     fi
-    Rscript -e 'utils::make.packages.html()'
+    # Ensure HTML package index is writable.
+    koopa::h3 'Updating HTML package index.'
+    doc_dir="$("$rscript" -e 'cat(R.home("doc"))')"
+    pkg_index="${doc_dir}/html/packages.html"
+    koopa::dl 'HTML index' "$pkg_index"
+    if [[ ! -f "$pkg_index" ]]
+    then
+        koopa::mkdir -S "$(dirname "$pkg_index")"
+        sudo touch "$pkg_index"
+    fi
+    koopa::sys_set_permissions "$pkg_index"
+    "$rscript" -e 'utils::make.packages.html()'
     koopa::link_r_etc "$r"
     koopa::link_r_site_library "$r"
     koopa::r_javareconf "$r"
