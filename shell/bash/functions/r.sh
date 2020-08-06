@@ -221,8 +221,12 @@ koopa::update_r_config() { # {{{1
     # @note Updated 2020-08-06.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
+    #
+    # HTML package index configuration:
+    # https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
+    #     make.packages.html.html
     # """
-    local pkg_index r r_prefix
+    local doc_dir pkg_index r r_prefix
     koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     r="$(koopa::which_realpath "$r")"
@@ -252,10 +256,20 @@ koopa::update_r_config() { # {{{1
     else
         # Ensure system package library is writable.
         koopa::sys_set_permissions -r "${r_prefix}/library"
-        # Need to ensure group write so package index gets updated.
-        pkg_index=='/usr/share/R/doc/html/packages.html'
-        [[ -f "$pkg_index" ]] && koopa::sys_set_permissions "$pkg_index"
+        # Ensure HTML package index is writable.
+        if koopa::is_installed '/usr/bin/R'
+        then
+            doc_dir="$(Rscript -e 'cat(R.home("doc"))')"
+            pkg_index="${doc_dir}/html/packages.html"
+            if [[ ! -f "$pkg_index" ]]
+            then
+                koopa::mkdir -S "$(dirname "$pkg_index")"
+                sudo touch "$pkg_index"
+            fi
+            koopa::sys_set_permissions "$pkg_index"
+        fi
     fi
+    Rscript -e 'utils::make.packages.html()'
     koopa::link_r_etc "$r"
     koopa::link_r_site_library "$r"
     koopa::r_javareconf "$r"
