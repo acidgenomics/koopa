@@ -140,7 +140,6 @@ koopa::install_python_packages() { # {{{1
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
     koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
-    koopa::is_cellar "$python" && koopa::link_cellar python
     koopa::install_success "$name_fancy"
     return 0
 }
