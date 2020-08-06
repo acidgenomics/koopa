@@ -2,29 +2,6 @@
 # shellcheck disable=SC2154
 
 # """
-# The '--enable-optimizations' flag can boost Python performance by ~10% but
-# currently runs into build issues with old compilation chains (e.g. GCC 4),
-# which are common on RHEL and other conservative cluster/VM configurations.
-# Therefore, we are disabling this flag by default.
-#
-#
-# Multiprocessing tests can fail on very large multi-core VMs due to too many
-# open files, so disable tests if necessary.
-#
-#
-# Install libffi if you hit cryptic '_ctypes' module errors.
-#
-# See also:
-# - https://stackoverflow.com/questions/27022373
-#
-#
-# I'm seeing a 'generate-posix-vars' error pop up with 3.8.0 install on RHEL 7.
-# 
-# See also:
-# - https://bugs.python.org/issue33374
-# - https://github.com/pyenv/pyenv/issues/1388
-#
-#
 # Ubuntu 18 LTS requires LDFLAGS to be set, otherwise we hit:
 # python3: error while loading shared libraries: libpython3.8.so.1.0: cannot
 # open shared object file: No such file or directory
@@ -45,10 +22,17 @@ koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "Python-${version}"
 ./configure \
-    --prefix="$prefix" \
+    --enable-optimizations \
     --enable-shared \
+    --prefix="$prefix" \
     --without-ensurepip \
     LDFLAGS="-Wl,--rpath=${make_prefix}/lib"
 make --jobs="$jobs"
 # > make test
 make install
+
+major_minor_version="$(koopa::major_minor_version "$version")"
+cellar_site_pkgs="${prefix}/lib/python${major_minor_version}/site-packages"
+koopa_site_pkgs="$(koopa::python_site_packages_prefix)"
+
+# FIXME HOW TO WRITE LINES TO FILE?
