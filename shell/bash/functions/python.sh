@@ -138,6 +138,7 @@ koopa::install_python_packages() { # {{{1
     koopa::install_start "$name_fancy"
     install_flags=("--python=${python}")
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
+    koopa::python_add_site_packages_to_sys_path "$python"
     koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
     koopa::install_success "$name_fancy"
@@ -216,7 +217,9 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     # @seealso
     # > "$python" -m site
     # """
-    local file k_site_pkgs sys_site_pkgs
+    local file k_site_pkgs python sys_site_pkgs
+    python="${1:-}"
+    [[ -z "$python" ]] && python="$(koopa::python)"
     sys_site_pkgs="$(koopa::python_system_site_packages_prefix "$python")"
     k_site_pkgs="$(koopa::python_site_packages_prefix "$python")"
     [[ ! -d "$k_site_pkgs" ]] && koopa_sys_mkdir "$k_site_pkgs"
