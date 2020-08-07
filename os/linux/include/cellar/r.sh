@@ -36,10 +36,15 @@ flags=(
     '--with-cairo'
     '--with-jpeglib'
     '--with-lapack'
-    '--with-readline'
     '--with-tcltk'
     '--with-x=no'
 )
+if koopa::is_rhel_ubi
+then
+    flags+=('--with-readline=no')
+else
+    flags+=('--with-readline')
+fi
 # Need to modify BLAS configuration handling specificallly on Debian.
 if ! koopa::is_debian_like
 then

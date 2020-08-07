@@ -146,7 +146,7 @@ koopa::fedora_install_base() { # {{{1
                 'mpfr-devel'
                 'openblas-devel'
                 'openjpeg2-devel'  # GDAL
-                'readline-devel'
+                'readline-devel'  # R
             )
         fi
         pkgs+=(
