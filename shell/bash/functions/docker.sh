@@ -193,7 +193,8 @@ koopa::docker_build_all_images() { # {{{1
     koopa::assert_is_dir "${repos[@]}"
     [[ "$prune" -eq 1 ]] && koopa::docker_prune
     docker login
-    build_flags=()
+    # Ensure we always build images inside directory without of date 'latest'.
+    build_flags=('--force')
     for repo in "${repos[@]}"
     do
         repo_name="$(basename "$(realpath "$repo")")"
