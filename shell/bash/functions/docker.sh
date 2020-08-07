@@ -218,7 +218,7 @@ koopa::docker_build_all_images() { # {{{1
         koopa::assert_is_array_non_empty "${images[@]}"
         koopa::dl \
             "${#images[@]} images" \
-            "$(koopa::array_to_string "${images[@]}")"
+            "$(koopa::to_string "${images[@]}")"
         for image in "${images[@]}"
         do
             image="${repo_name}/${image}"
