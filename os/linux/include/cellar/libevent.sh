@@ -6,7 +6,7 @@ url="https://github.com/${name}/${name}/releases/download/\
 release-${version}-stable/${file}"
 koopa::download "$url"
 koopa::extract "$file"
-koopa::cd "${name}-${version}"
+koopa::cd "${name}-${version}-stable"
 ./configure --prefix="$prefix"
 make --jobs="$jobs"
 # > make check

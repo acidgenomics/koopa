@@ -256,6 +256,7 @@ koopa::configure_vm() { # {{{1
     fi
     if [[ "$compact" -eq 0 ]] || koopa::is_rhel_ubi
     then
+        install-libevent
         install-zsh
     fi
     if [[ "$compact" -eq 0 ]]
@@ -286,11 +287,7 @@ koopa::configure_vm() { # {{{1
         install-fzf
         # > install-the-silver-searcher
     fi
-    if ! koopa::is_rhel_ubi
-    then
-        # Requires libevent.
-        install-tmux
-    fi
+    install-tmux
     install-vim
     install-shellcheck
     install-shunit2
