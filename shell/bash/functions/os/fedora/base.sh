@@ -7,21 +7,15 @@ koopa::fedora_install_base() { # {{{1
     #
     # Refer to Debian install base script for more details on supported args.
     # """
-    local compact dev extra name_fancy pkgs pos upgrade
+    local dev full name_fancy pkgs pos upgrade
     koopa::assert_is_installed dnf sudo
-    compact=0
     dev=1
-    extra=1
     full=0
     upgrade=1
     pos=()
     while (("$#"))
     do
         case "$1" in
-            --compact)
-                compact=1
-                shift 1
-                ;;
             --full)
                 full=1
                 shift 1
@@ -44,11 +38,6 @@ koopa::fedora_install_base() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    if [[ "$compact" -eq 1 ]] && [[ "$full" -eq 1 ]]
-    then
-        koopa::stop "Set '--compact' or '--full' but not both."
-    fi
-    koopa::is_docker && [[ "$full" -eq 0 ]] && extra=0
     name_fancy='Fedora base system'
     koopa::install_start "$name_fancy"
 
@@ -174,7 +163,7 @@ koopa::fedora_install_base() { # {{{1
             'xz-devel'
             'zlib-devel'
         )
-        if [[ "$compact" -eq 1 ]]
+        if [[ "$full" -eq 0 ]]
         then
             if ! koopa::is_rhel_ubi
             then
@@ -194,7 +183,7 @@ koopa::fedora_install_base() { # {{{1
     # Extra {{{2
     # --------------------------------------------------------------------------
 
-    if [[ "$extra" -eq 1 ]]
+    if [[ "$full" -eq 1 ]]
     then
         koopa::h2 'Installing extra recommended packages.'
         pkgs+=(
