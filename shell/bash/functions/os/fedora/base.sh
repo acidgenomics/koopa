@@ -139,6 +139,7 @@ koopa::fedora_install_base() { # {{{1
                 'libgit2-devel'
                 'libmpc-devel'
                 'libzstd-devel'  # rsync
+                'llvm-devel'
                 'mariadb-devel'
                 'mpfr-devel'
                 'openblas-devel'
@@ -161,7 +162,6 @@ koopa::fedora_install_base() { # {{{1
             'libtiff-devel'
             'libuuid-devel'
             'libxml2-devel'
-            'llvm-devel'
             'lz4-devel'  # rsync
             'openssl-devel'
             'pcre-devel'  # ag
