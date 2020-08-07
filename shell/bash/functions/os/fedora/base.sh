@@ -66,15 +66,12 @@ koopa::fedora_install_base() { # {{{1
 
     koopa::h2 'Installing default packages.'
     pkgs=(
-        # 'coreutils' # This can error on RHEL 8.
+        # 'coreutils' # This can error on RHEL.
         'autoconf'
         'automake'
         'bash'
-        'byacc'
         'bzip2'
         'cmake'
-        'convmv'
-        'cryptsetup'
         'curl'
         'diffutils'
         'findutils'
@@ -91,20 +88,29 @@ koopa::fedora_install_base() { # {{{1
         'ncurses'
         'openssl'
         'pkgconfig'  # This is now pkgconf wrapped.
-        'qpdf'
         'readline'
-        'squashfs-tools'
         'systemd'
-        'tmux'
-        'tree'
         'util-linux'
         'vim'
         'wget'
-        'xmlto'
         'xz'
-        'yum-utils'
         'zip'
     )
+    if ! koopa::is_rhel_ubi
+    then
+        pkgs+=(
+            'byacc'
+            'convmv'
+            'cryptsetup'
+            'qpdf'
+            'squashfs-tools'
+            'tmux'
+            'tree'
+            'xmlto'
+            'yum-utils'
+            'zsh'
+        )
+    fi
     if koopa::is_fedora
     then
         pkgs+=(
@@ -123,42 +129,44 @@ koopa::fedora_install_base() { # {{{1
         if ! koopa::is_rhel_ubi
         then
             sudo dnf -y groupinstall 'Development Tools'
+            pkgs+=(
+                'bison-devel'
+                'flex-devel'
+                'gmp-devel'
+                'gnutls-devel'
+                'gsl-devel'
+                'libevent-devel'
+                'libgit2-devel'
+                'libmpc-devel'
+                'libzstd-devel'  # rsync
+                'mariadb-devel'
+                'mpfr-devel'
+                'openblas-devel'
+                'openjpeg2-devel'  # GDAL
+                'readline-devel'
+            )
         fi
         pkgs+=(
             'apr-devel'  # subversion
             'apr-util-devel'  # subversion
-            'bison-devel'
             'bzip2-devel'
             'expat-devel'  # udunits
-            'flex-devel'
             'glib2-devel'  # ag
-            'gmp-devel'
-            'gnutls-devel'
-            'gsl-devel'
             'hdf5-devel'
             'libcurl-devel'
-            'libevent-devel'
             'libffi-devel'
-            'libgit2-devel'
             'libicu-devel'  # rJava
-            'libmpc-devel'
             'libseccomp-devel'
             'libssh2-devel'
             'libtiff-devel'
             'libuuid-devel'
             'libxml2-devel'
-            'libzstd-devel'  # rsync
             'llvm-devel'
             'lz4-devel'  # rsync
-            'mariadb-devel'
-            'mpfr-devel'
-            'openblas-devel'
-            'openjpeg2-devel'  # GDAL
             'openssl-devel'
             'pcre-devel'  # ag
             'pcre2-devel'  # rJava
             'postgresql-devel'
-            'readline-devel'
             'unixODBC-devel'
             'xxhash-devel'  # rsync
             'xz-devel'
