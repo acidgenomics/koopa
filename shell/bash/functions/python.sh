@@ -117,14 +117,16 @@ koopa::install_python_packages() { # {{{1
             'black'
             'flake8'
             'logbook'
+            'numpy'
+            'pandas'
             'pip'
             'pipx'
             'pyflakes'
             'pylint'
             'pytest'
             'ranger-fm'
-            'six'
             'setuptools'
+            'six'
             'wheel'
         )
         for i in "${!pkgs[@]}"
