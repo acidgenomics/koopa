@@ -120,7 +120,10 @@ koopa::fedora_install_base() { # {{{1
     if [[ "$dev" -eq 1 ]]
     then
         koopa::h2 'Installing developer libraries.'
-        sudo dnf -y groupinstall 'Development Tools'
+        if ! koopa::is_rhel_ubi
+        then
+            sudo dnf -y groupinstall 'Development Tools'
+        fi
         pkgs+=(
             'apr-devel'  # subversion
             'apr-util-devel'  # subversion
