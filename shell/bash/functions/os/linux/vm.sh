@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-08-05.
+    # @note Updated 2020-08-07.
     # """
     local app_prefix app_prefix_bn app_prefix_real bioconductor compact \
         data_disk data_disk_link data_disk_real docker full gb_total \
@@ -253,7 +253,13 @@ koopa::configure_vm() { # {{{1
         install-parallel
         install-rsync
         install-sed
+    fi
+    if [[ "$compact" -eq 0 ]] || koopa::is_rhel_ubi
+    then
         install-zsh
+    fi
+    if [[ "$compact" -eq 0 ]]
+    then
         install-bash
         install-fish
         install-git
@@ -261,10 +267,16 @@ koopa::configure_vm() { # {{{1
         install-perl
         install-geos
         install-sqlite
+    fi
+    if [[ "$compact" -eq 0 ]] || koopa::is_rhel_ubi
+    then
         install-proj
         install-gdal
         install-hdf5
         install-gsl
+    fi
+    if [[ "$compact" -eq 0 ]]
+    then
         install-udunits
         install-subversion
         install-go
@@ -274,7 +286,11 @@ koopa::configure_vm() { # {{{1
         install-fzf
         # > install-the-silver-searcher
     fi
-    install-tmux
+    if ! koopa::is_rhel_ubi
+    then
+        # Requires libevent.
+        install-tmux
+    fi
     install-vim
     install-shellcheck
     install-shunit2
