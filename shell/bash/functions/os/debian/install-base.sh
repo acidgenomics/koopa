@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-08-07.
     #
     # Flags:
     # --compact
@@ -28,12 +28,10 @@ koopa::debian_install_base() { # {{{1
     # - How to replicate installed packages across machines.
     #   https://serverfault.com/questions/56848
     # """
-    local apt_installed compact dev enabled_repos extra legacy_pkgs name_fancy \
-        pkg pkgs remove remove_pkgs upgrade
+    local apt_installed dev enabled_repos full legacy_pkgs name_fancy pkg pkgs \
+        remove remove_pkgs upgrade
     koopa::assert_is_installed apt apt-get sed sudo
-    compact=0
     dev=1
-    extra=1
     full=0
     remove=1
     upgrade=1
@@ -41,16 +39,8 @@ koopa::debian_install_base() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --compact)
-                compact=1
-                shift 1
-                ;;
             --full)
                 full=1
-                shift 1
-                ;;
-            --no-upgrade)
-                upgrade=0
                 shift 1
                 ;;
             "")
@@ -71,13 +61,7 @@ koopa::debian_install_base() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    if [[ "$compact" -eq 1 ]] && [[ "$full" -eq 1 ]]
-    then
-        koopa::stop "Set '--compact' or '--full' but not both."
-    fi
-    koopa::is_docker && [[ "$full" -eq 0 ]] && extra=0
-    # Use system libraries for GDAL, etc. for these VM configs.
-    [[ "$compact" -eq 1 ]] && remove=0
+    [[ "$full" -eq 1 ]] && remove=1
     name_fancy='Debian base system'
     koopa::install_start "$name_fancy"
     # Nuke caches before installing packages.
@@ -210,7 +194,7 @@ koopa::debian_install_base() { # {{{1
     if [[ "$dev" -eq 1 ]]
     then
         koopa::h2 'Installing developer packages.'
-        if [[ "$compact" -eq 1 ]]
+        if [[ "$full" -eq 0 ]]
         then
             pkgs+=(
                 'libgdal-dev'
@@ -297,7 +281,7 @@ koopa::debian_install_base() { # {{{1
     # Extra {{{2
     # --------------------------------------------------------------------------
 
-    if [[ "$extra" -eq 1 ]]
+    if [[ "$full" -eq 1 ]]
     then
         koopa::h2 'Installing extra recommended packages.'
         pkgs+=(

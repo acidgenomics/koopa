@@ -5,8 +5,8 @@ koopa::configure_vm() { # {{{1
     # Configure virtual machine.
     # @note Updated 2020-08-07.
     # """
-    local app_prefix app_prefix_bn app_prefix_real bioconductor compact \
-        data_disk data_disk_link data_disk_real docker full gb_total \
+    local app_prefix app_prefix_bn app_prefix_real bioconductor data_disk \
+        data_disk_link data_disk_real docker full gb_total \
         install_base_flags make_prefix minimal pos prefixes r_version rsync \
         source_ip
     koopa::assert_has_no_envs
@@ -14,11 +14,10 @@ koopa::configure_vm() { # {{{1
     bioconductor=0
     # Are we building from source inside Docker?
     docker=0
-    # Compact mode skips installation of GNU utils and other dependencies that
-    # can take a long time to build from source. Generally recommended inside
-    # of Docker images, but can be override with '--full' flag.
-    compact=0
-    # Full installation.
+    # By default, this script skips installation of GNU utils and other
+    # dependencies that can take a long time to build from source. This works
+    # well for Docker builds but may not support additional software required on
+    # a full VM. Pass '--full' flag to enable more source builds.
     full=0
     # Minimal config used for lightweight Docker images. This mode skips all
     # program installation.
@@ -37,10 +36,6 @@ koopa::configure_vm() { # {{{1
         case "$1" in
             --bioconductor)
                 bioconductor=1
-                shift 1
-                ;;
-            --compact)
-                compact=1
                 shift 1
                 ;;
             --data-disk=*)
@@ -95,9 +90,6 @@ koopa::configure_vm() { # {{{1
     koopa::assert_has_no_args "$#"
     [[ -n "$source_ip" ]] && rsync=1
     koopa::is_docker && docker=1
-    [[ "$docker" -eq 1 ]] && compact=1
-    [[ "$bioconductor" -eq 1 ]] && compact=1
-    [[ "$full" -eq 1 ]] && compact=0
 
     # Initial configuration {{{2
     # --------------------------------------------------------------------------
@@ -149,9 +141,9 @@ koopa::configure_vm() { # {{{1
         koopa::info 'Checking available local disk space.'
         df -h '/'
         gb_total="$(koopa::disk_gb_total)"
-        [[ "$gb_total" -lt 16 ]] && compact=1
+        [[ "$gb_total" -lt 16 ]] && full=0
         # > gb_free="$(koopa::disk_gb_free)"
-        # > [[ "$gb_free" -lt 10 ]] && compact=1
+        # > [[ "$gb_free" -lt 10 ]] && full=0
         # Attempt to detect an attached disk automatically.
         if [[ ! -e "$data_disk" ]]
         then
@@ -193,7 +185,7 @@ koopa::configure_vm() { # {{{1
     koopa::mkdir "$make_prefix"
     koopa::assert_is_installed install-base
     install_base_flags=()
-    [[ "$compact" -eq 1 ]] && install_base_flags+=('--compact')
+    [[ "$full" -eq 1 ]] && install_base_flags+=('--full')
     install-base "${install_base_flags[@]:-}"
     koopa::assert_is_installed \
         'autoconf' \
@@ -231,7 +223,7 @@ koopa::configure_vm() { # {{{1
     then
         install-python
     fi
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$full" -eq 1 ]]
     then
         install-curl
         install-wget
@@ -254,12 +246,12 @@ koopa::configure_vm() { # {{{1
         install-rsync
         install-sed
     fi
-    if [[ "$compact" -eq 0 ]] || koopa::is_rhel_ubi
+    if [[ "$full" -eq 1 ]] || koopa::is_rhel_ubi
     then
         install-libevent
         install-zsh
     fi
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$full" -eq 1 ]]
     then
         install-bash
         install-fish
@@ -269,14 +261,14 @@ koopa::configure_vm() { # {{{1
         install-geos
         install-sqlite
     fi
-    if [[ "$compact" -eq 0 ]] || koopa::is_rhel_ubi
+    if [[ "$full" -eq 1 ]] || koopa::is_rhel_ubi
     then
         install-proj
         install-gdal
         install-hdf5
         install-gsl
     fi
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$full" -eq 1 ]]
     then
         install-udunits
         install-subversion
@@ -292,7 +284,7 @@ koopa::configure_vm() { # {{{1
     install-shellcheck
     install-shunit2
     install-aws-cli
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$full" -eq 1 ]]
     then
         koopa::run_if_installed \
             install-azure-cli \
@@ -323,7 +315,7 @@ koopa::configure_vm() { # {{{1
     else
         install-r --version="$r_version"
     fi
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$full" -eq 0 ]]
     then
         koopa::run_if_installed install-rstudio-server install-shiny-server
     fi
@@ -338,12 +330,12 @@ koopa::configure_vm() { # {{{1
     if [[ "$rsync" -eq 0 ]]
     then
         install-python-packages
-        if [[ "$bioconductor" -eq 1 ]] || [[ "$compact" -eq 0 ]]
+        if [[ "$bioconductor" -eq 1 ]] || [[ "$full" -eq 1 ]]
         then
             venv-create-r-reticulate
         fi
         install-r-packages
-        if [[ "$compact" -eq 0 ]]
+        if [[ "$full" -eq 1 ]]
         then
             install-perl-packages
             install-ruby-packages
@@ -354,7 +346,7 @@ koopa::configure_vm() { # {{{1
     # Bioinformatics tools {{{2
     # --------------------------------------------------------------------------
 
-    if [[ "$compact" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
+    if [[ "$full" -eq 1 ]] && [[ "$rsync" -eq 0 ]]
     then
         install-aspera-connect
         conda-create-bioinfo-envs
