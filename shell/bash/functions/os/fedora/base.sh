@@ -135,6 +135,7 @@ koopa::fedora_install_base() { # {{{1
                 'gmp-devel'
                 'gnutls-devel'
                 'gsl-devel'
+                'hdf5-devel'
                 'libevent-devel'
                 'libgit2-devel'
                 'libmpc-devel'
@@ -153,7 +154,6 @@ koopa::fedora_install_base() { # {{{1
             'bzip2-devel'
             'expat-devel'  # udunits
             'glib2-devel'  # ag
-            'hdf5-devel'
             'libcurl-devel'
             'libffi-devel'
             'libicu-devel'  # rJava
@@ -174,8 +174,13 @@ koopa::fedora_install_base() { # {{{1
         )
         if [[ "$compact" -eq 1 ]]
         then
+            if ! koopa::is_rhel_ubi
+            then
+                pkgs+=(
+                    'gdal-devel'
+                )
+            fi
             pkgs+=(
-                'gdal-devel'
                 'geos-devel'
                 'proj-devel'
                 'sqlite-devel'
