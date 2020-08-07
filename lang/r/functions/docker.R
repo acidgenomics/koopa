@@ -66,7 +66,13 @@ dockerBuildAllTags <- function() {
                         )
                     } else {
                         if (!isTRUE(force)) {
-                            if (isDockerBuildToday(image)) return()
+                            if (isTRUE(isDockerBuildRecent(image))) {
+                                message(sprintf(
+                                    "'%s:%s' was built recently. Skipping.",
+                                    image, tag
+                                ))
+                                return()
+                            }
                         }
                         shell(
                             command = file.path(
