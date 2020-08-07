@@ -137,7 +137,7 @@ koopa::fedora_install_base() { # {{{1
                 'gnutls-devel'
                 'gsl-devel'
                 'hdf5-devel'
-                'libevent-devel'
+                'libevent-devel'  # tmux
                 'libgit2-devel'
                 'libmpc-devel'
                 'libzstd-devel'  # rsync
