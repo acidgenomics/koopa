@@ -1,5 +1,5 @@
 #' Install recommended default R packages
-#' @note Updated 2020-08-05.
+#' @note Updated 2020-08-07.
 #' @noRd
 installDefaultPackages <- function() {
     requireNamespaces("bb8")
@@ -35,13 +35,14 @@ installDefaultPackages <- function() {
             "RcppAnnoy",
             "RcppArmadillo",
             "XML",
-            "sf"
-            # "rgdal"
+            "sf",
+            "rgdal"
         ),
         reinstall = FALSE
     )
-    # rgdal 1.5-15 is currently broken on CRAN for Debian (2020-08-05).
-    install("https://cran.r-project.org/src/contrib/rgdal_1.5-12.tar.gz")
+    ## rgdal 1.5-15 is currently broken on CRAN for Debian (2020-08-05).
+    ## Fixed with 1.5-16 (2020-08-07).
+    ## > install("https://cran.r-project.org/src/contrib/rgdal_1.5-12.tar.gz")
     h2("CRAN")
     install(
         pkgs = c(
