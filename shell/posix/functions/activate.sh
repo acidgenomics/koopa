@@ -916,7 +916,7 @@ _koopa_activate_ssh_key() { # {{{1
 _koopa_activate_standard_paths() { # {{{1
     # """
     # Activate standard paths.
-    # @note Updated 2020-08-05.
+    # @note Updated 2020-08-07.
     #
     # Note that here we're making sure local binaries are included.
     # Inspect '/etc/profile' if system PATH appears misconfigured.
@@ -927,7 +927,7 @@ _koopa_activate_standard_paths() { # {{{1
     # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
-    _koopa_force_add_to_path_end \
+    _koopa_add_to_path_end \
         '/usr/bin' \
         '/bin' \
         '/usr/sbin' \
