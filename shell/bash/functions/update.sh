@@ -3,7 +3,7 @@
 koopa::update() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2020-07-18.
+    # @note Updated 2020-08-07.
     # """
     local app_prefix config_prefix configure_flags core dotfiles \
         dotfiles_prefix fast koopa_prefix make_prefix repos repo source_ip \
@@ -124,11 +124,12 @@ koopa::update() { # {{{1
         fi
         if [[ "$rsync" -eq 0 ]]
         then
-            koopa::update_perlbrew
-            # > koopa::update_python_packages
-            koopa::update_rust
-            koopa::update_rust_packages
+            install-r-packages
             update-r-packages
+            koopa::install_python_packages
+            koopa::update_rust
+            koopa::install_rust_packages
+            koopa::update_perlbrew
             if koopa::is_linux
             then
                 koopa::update_google_cloud_sdk
