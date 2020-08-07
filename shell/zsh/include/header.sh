@@ -3,7 +3,7 @@
 
 # """
 # Zsh header.
-# @note Updated 2020-07-23.
+# @note Updated 2020-08-07.
 # """
 
 if [[ "$#" -gt 0 ]]
@@ -12,18 +12,6 @@ then
     for i in "$@"
     do
         case "$1" in
-            --activate)
-                activate=1
-                shift 1
-                ;;
-            --no-header-checks)
-                checks=0
-                shift 1
-                ;;
-            --no-set-opts)
-                shopts=0
-                shift 1
-                ;;
             --verbose)
                 verbose=1
                 shift 1
