@@ -253,7 +253,13 @@ koopa::configure_vm() { # {{{1
         install-parallel
         install-rsync
         install-sed
+    fi
+    if [[ "$compact" -eq 0 ]] || koopa::is_rhel_ubi
+    then
         install-zsh
+    fi
+    if [[ "$compact" -eq 0 ]]
+    then
         install-bash
         install-fish
         install-git
