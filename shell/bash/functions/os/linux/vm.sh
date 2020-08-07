@@ -286,7 +286,10 @@ koopa::configure_vm() { # {{{1
         install-fzf
         # > install-the-silver-searcher
     fi
-    install-tmux
+    if ! koopa::is_rhel_ubi
+    then
+        install-tmux
+    fi
     install-vim
     install-shellcheck
     install-shunit2
