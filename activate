@@ -228,7 +228,7 @@ _koopa_activate_export_prefix() { # {{{1
             KOOPA_ACTIVATE_SCRIPT="${KOOPA_PREFIX:?}/activate"
             ;;
     esac
-    if [ -x "$KOOPA_ACTIVATE_SCRIPT" ]
+    if [ ! -x "$KOOPA_ACTIVATE_SCRIPT" ]
     then
         printf 'ERROR: Failed locate koopa activate script.\n' >&2
         return 1
