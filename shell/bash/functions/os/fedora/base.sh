@@ -180,11 +180,11 @@ koopa::fedora_install_base() { # {{{1
             then
                 pkgs+=(
                     'gdal-devel'
+                    'proj-devel'
                 )
             fi
             pkgs+=(
                 'geos-devel'
-                'proj-devel'
                 'sqlite-devel'
                 'udunits2-devel'
             )
