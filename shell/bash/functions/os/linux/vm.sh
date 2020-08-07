@@ -315,7 +315,7 @@ koopa::configure_vm() { # {{{1
     else
         install-r --version="$r_version"
     fi
-    if [[ "$full" -eq 0 ]]
+    if [[ "$full" -eq 1 ]]
     then
         koopa::run_if_installed install-rstudio-server install-shiny-server
     fi
