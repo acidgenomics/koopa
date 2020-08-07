@@ -35,7 +35,7 @@ installDefaultPackages <- function() {
             "RcppAnnoy",
             "RcppArmadillo",
             "XML",
-            "sf"
+            "sf",
             "rgdal"
         ),
         reinstall = FALSE
