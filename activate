@@ -1,6 +1,10 @@
 #!/bin/sh
 
 _koopa_activate() { # {{{1
+    # """
+    # Activate koopa bootloader inside shell session.
+    # @note Updated 2020-08-07.
+    # """
     case "${1:-}" in
         --help|-h)
             _koopa_activate_usage
@@ -221,18 +225,21 @@ _koopa_activate_export_prefix() { # {{{1
                 printf 'Required KOOPA_PREFIX variable is unset.\n' >&2
                 return 1
             fi
-            KOOPA_ACTIVATE_SCRIPT="${KOOPA_PREFIX}/activate"
+            KOOPA_ACTIVATE_SCRIPT="${KOOPA_PREFIX:?}/activate"
             ;;
     esac
-    [ -x "$KOOPA_ACTIVATE_SCRIPT" ] || return 1
+    if [ -x "$KOOPA_ACTIVATE_SCRIPT" ]
+    then
+        printf 'ERROR: Failed locate koopa activate script.\n' >&2
+        return 1
+    fi
     # Note that running realpath on the file instead of the directory will
     # properly resolve '~/.config/koopa/activate' case.
     if [ -L "$KOOPA_ACTIVATE_SCRIPT" ]
     then
         KOOPA_ACTIVATE_SCRIPT="$(_koopa_realpath "$KOOPA_ACTIVATE_SCRIPT")"
     fi
-    KOOPA_PREFIX="$(dirname "$KOOPA_ACTIVATE_SCRIPT")"
-    [ -d "$KOOPA_PREFIX" ] || return 1
+    KOOPA_PREFIX="$(_koopa_realpath "$(dirname "$KOOPA_ACTIVATE_SCRIPT")")"
     export KOOPA_ACTIVATE_SCRIPT KOOPA_PREFIX
     return 0
 }
