@@ -544,10 +544,8 @@ koopa::sys_info() { # {{{
             '------------------'
             "OS: ${os}"
             "Shell: ${shell}"
-            ""
         )
     fi
-    array+=("Run 'koopa check' to verify installation.")
     cat "$(koopa::include_prefix)/ascii-turtle.txt"
     koopa::info_box "${array[@]}"
     return 0
