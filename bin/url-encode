@@ -5,7 +5,17 @@
 URL encode
 """
 
+import os
 import sys
-import urllib.parse
 
-print(urllib.parse.quote(sys.argv[1]))
+# pylint: disable=wrong-import-position
+
+KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
+PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
+sys.path.insert(0, PYTHON_PREFIX)
+
+from koopa.url import url_encode
+
+# pylint: enable=wrong-import-position
+
+print(url_encode(sys.argv[1]))
