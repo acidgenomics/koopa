@@ -136,9 +136,11 @@ koopa::fedora_install_base() { # {{{1
             'libcurl-devel'
             'libevent-devel'
             'libffi-devel'
+            'libgit2-devel'
             'libicu-devel'  # rJava
             'libmpc-devel'
             'libseccomp-devel'
+            'libssh2-devel'
             'libtiff-devel'
             'libuuid-devel'
             'libxml2-devel'
