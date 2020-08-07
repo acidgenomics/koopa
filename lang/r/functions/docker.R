@@ -66,7 +66,13 @@ dockerBuildAllTags <- function() {
                         )
                     } else {
                         if (!isTRUE(force)) {
-                            if (isDockerBuildToday(image)) return()
+                            if (isTRUE(isDockerBuildRecent(image))) {
+                                message(sprintf(
+                                    "'%s:%s' was built recently. Skipping.",
+                                    image, tag
+                                ))
+                                return()
+                            }
                         }
                         shell(
                             command = file.path(
@@ -105,17 +111,17 @@ dockerBuildAllTags <- function() {
     ))
 }
 
-#' Has the requested Docker image been built today?
-#' @note Updated 2020-08-05.
+#' Has the requested Docker image been built recently?
+#' @note Updated 2020-08-07.
 #' @noRd
-isDockerBuildToday <- function(image) {
+isDockerBuildRecent <- function(image, days = 2L) {
     shell(
         command = "docker",
         args = c("pull", image),
         stdout = FALSE,
         stderr = FALSE
     )
-    json <- shell(
+    x <- shell(
         command = "docker",
         args = c(
             "inspect",
@@ -124,7 +130,12 @@ isDockerBuildToday <- function(image) {
         ),
         stdout = TRUE
     )
-    created <- as.Date(gsub("\"", "", json))
-    today <- Sys.Date()
-    identical(created, today)
+    x <- gsub("\"", "", x)
+    x <- sub("\\.[0-9]+Z$", "", x)
+    diffDays <- difftime(
+        time1 = Sys.time(),
+        time2 = as.POSIXct(x, format = "%Y-%m-%dT%H:%M:%S"),
+        units = "days"
+    )
+    diffDays < days
 }
