@@ -12,7 +12,10 @@ koopa::rhel_install_base() { # {{{1
     name_fancy='Red Hat Enterprise Linux (RHEL) base system'
     koopa::install_start "$name_fancy"
     sudo dnf -y install 'dnf-plugins-core' 'util-linux-user'
-    sudo dnf config-manager --set-enabled 'PowerTools'
+    if ! koopa_is_rhel_ubi
+    then
+        sudo dnf config-manager --set-enabled 'PowerTools'
+    fi
     koopa::rhel_enable_epel
     koopa::fedora_install_base "$@"
     koopa::install_success "$name_fancy"
