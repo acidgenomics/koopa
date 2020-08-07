@@ -188,10 +188,10 @@ koopa::docker_build_all_batch_images() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2020-08-05.
+    # @note Updated 2020-08-07.
     # """
-    local batch_arr batch_dirs build_flags extra force image images json \
-        prefix prune pos timestamp today utc_timestamp
+    local batch_arr batch_dirs build_flags extra force image images prefix \
+        prune pos
     koopa::assert_is_installed docker docker-build-all-tags
     extra=0
     force=0
@@ -291,12 +291,12 @@ koopa::docker_build_all_images() { # {{{1
     do
         # This will force remove all images, if desired.
         [[ "$prune" -eq 1 ]] && koopa::docker_prune
-        # Skip image if pushed already today.
+        # Skip image if pushed recently.
         if [[ "$force" -ne 1 ]]
         then
-            if koopa::is_docker_build_today "$image"
+            if koopa::is_docker_build_recent "$image"
             then
-                koopa::note "'${image}' was built today. Skipping."
+                koopa::note "'${image}' was built recently. Skipping."
                 continue
             fi
         fi
@@ -496,32 +496,63 @@ koopa::docker_tag() { # {{{1
     return 0
 }
 
-koopa::is_docker_build_today() { # {{{1
+koopa::is_docker_build_recent() { # {{{1
     # """
-    # Check if a Docker image has been built today.
-    # @note Updated 2020-07-02.
+    # Has the requested Docker image been built recently?
+    # @note Updated 2020-08-07.
+    #
+    # @seealso
+    # - Corresponding 'isDockerBuildRecent()' R function.
+    # - https://stackoverflow.com/questions/8903239/
+    # - https://unix.stackexchange.com/questions/27013/
     # """
-    local image json timestamp today utc_timestamp
+    local created current days diff image json seconds
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    today="$(date '+%Y-%m-%d')"
+    days=2
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --days=*)
+                days="${1#*=}"
+                shift 1
+                ;;
+            --days)
+                days="$2"
+                shift 2
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    # 24 hours * 60 minutes * 60 seconds = 86400.
+    seconds=$((days * 86400))
+    current="$(date -u '+%s')"
     for image in "$@"
     do
         docker pull "$image" >/dev/null
-        json="$( \
-            docker inspect \
-            --format='{{json .Created}}' \
-            "$image" \
-        )"
-        # Note that we need to convert UTC to local time.
-        utc_timestamp="$( \
+        json="$(docker inspect --format='{{json .Created}}' "$image")"
+        created="$( \
             koopa::print "$json" \
                 | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
                 | sed 's/T/ /' \
                 | sed 's/\$/ UTC/'
         )"
-        timestamp="$(date -d "$utc_timestamp" '+%Y-%m-%d')"
-        [[ "$timestamp" != "$today" ]] && return 1
+        created="$(date -u -d "$created" '+%s')"
+        diff=$((current - created))
+        [[ "$diff" -gt "$seconds" ]] && return 1
     done
     return 0
 }
