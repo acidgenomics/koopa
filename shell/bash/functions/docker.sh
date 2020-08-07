@@ -3,7 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a docker image.
-    # Updated 2020-06-02.
+    # Updated 2020-08-07.
     #
     # Use '--no-cache' flag to disable build cache.
     #
@@ -105,7 +105,7 @@ koopa::docker_build() { # {{{1
     tagged_image="${image}:${tag}"
     # e.g. acidgenomics/debian:latest-20200101
     tagged_image_today="${tagged_image}-${today}"
-    koopa::h1 "Building '${tagged_image}' Docker image."
+    koopa::info "Building '${tagged_image}' Docker image."
     docker login "$server"
     # Force remove any existing local tagged images.
     if [[ "$delete" -eq 1 ]]
@@ -147,63 +147,20 @@ koopa::docker_build() { # {{{1
     return 0
 }
 
-koopa::docker_build_all_batch_images() { # {{{1
-    # """
-    # Build all AWS Batch Docker images.
-    # @note Updated 2020-07-20.
-    # """
-    local batch_dirs flags force images prefix
-    koopa::assert_is_installed docker-build-all-images
-    force=0
-    while (("$#"))
-    do
-        case "$1" in
-            --force)
-                force=1
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    flags=()
-    if [[ "$force" -eq 1 ]]
-    then
-        flags+=('--force')
-    fi
-    prefix="$(koopa::docker_prefix)"
-    batch_dirs="$( \
-        find "${prefix}/acidgenomics" \
-            -name 'aws-batch*' \
-            -type d \
-        | sort \
-    )"
-    batch_dirs="$(koopa::sub "${prefix}/" "" "$batch_dirs")"
-    readarray -t images <<< "$(koopa::print "$batch_dirs")"
-    docker-build-all-images "${flags[@]}" "${images[@]}"
-    return 0
-}
-
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
     # @note Updated 2020-08-07.
     # """
-    local batch_arr batch_dirs build_flags extra force image images prefix \
-        prune pos
+    local build_file build_flags force image images prune pos \
+        repo repos repo_name
     koopa::assert_is_installed docker docker-build-all-tags
-    extra=0
     force=0
     prune=0
     pos=()
     while (("$#"))
     do
         case "$1" in
-            --extra)
-                extra=1
-                shift 1
-                ;;
             --force)
                 force=1
                 shift 1
@@ -226,81 +183,56 @@ koopa::docker_build_all_images() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    # Define images array. If empty, define default images.
-    if [[ "$#" -eq 0 ]]
+    [[ "$force" -eq 1 ]] && build_flags+=('--force')
+    if [[ "$#" -gt 0 ]]
     then
-        prefix="$(koopa::docker_prefix)"
-        images=()
-        # Recommended Linux images.
-        images+=(
-            'acidgenomics/debian'
-            'acidgenomics/ubuntu'
-            'acidgenomics/fedora'
-            'acidgenomics/centos'
-        )
-        # Extra Linux images.
-        images+=(
-            'acidgenomics/alpine'
-            'acidgenomics/amzn'
-            'acidgenomics/arch'
-            'acidgenomics/opensuse'
-        )
-        # Minimal bioinformatics images.
-        images+=(
-            'acidgenomics/miniconda3'
-            'acidgenomics/biocontainers'
-        )
-        # R images.
-        images+=(
-            'acidgenomics/bioconductor'
-            'acidgenomics/r-basejump'
-            'acidgenomics/r-bcbiornaseq'
-            'acidgenomics/r-bcbiosinglecell'
-            'acidgenomics/r-rnaseq'
-            'acidgenomics/r-singlecell'
-        )
-        # AWS batch images.
-        # Ensure we build these after the other images.
-        batch_dirs="$( \
-            find "$prefix" \
-                -name 'aws-batch*' \
-                -type d \
-                | sort \
-        )"
-        batch_dirs="$(koopa::sub "${prefix}/" "" "$batch_dirs")"
-        readarray -t batch_arr <<< "$(koopa::print "$batch_dirs")"
-        images=("${images[@]}" "${batch_arr[@]}")
-        # Large bioinformatics images.
-        # These don't need to be updated frequently and can be built manually.
-        if [[ "$extra" -eq 1 ]]
-        then
-            images+=(
-                'acidgenomics/bcbio'
-                'acidgenomics/rnaeditingindexer'
-                'acidgenomics/maestro'
-            )
-    fi
+        repos=("$@")
     else
-        images=("$@")
+        repos=("$(koopa::docker_prefix)/acidgenomics")
     fi
-    koopa::h1 "Building ${#images[@]} Docker images."
+    koopa::assert_is_dir "${repos[@]}"
+    [[ "$prune" -eq 1 ]] && koopa::docker_prune
     docker login
     build_flags=()
-    [[ "$force" -eq 1 ]] && build_flags+=('--force')
-    for image in "${images[@]}"
+    for repo in "${repos[@]}"
     do
-        # This will force remove all images, if desired.
-        [[ "$prune" -eq 1 ]] && koopa::docker_prune
-        # Skip image if pushed recently.
-        if [[ "$force" -ne 1 ]]
+        repo_name="$(basename "$repo")"
+        koopa::h1 "Building '${repo_name}' images."
+        build_file="${repo}/build.txt"
+        if [[ -f "$build_file" ]]
         then
-            if koopa::is_docker_build_recent "$image"
-            then
-                koopa::note "'${image}' was built recently. Skipping."
-                continue
-            fi
+            readarray -t images <<< "$( \
+                grep -E '^[-_a-z0-9]+$' "$build_file" \
+            )"
+        else
+            readarray -t images <<< "$( \
+                find . \
+                    -mindepth 1 \
+                    -maxdepth 1 \
+                    -type d \
+                    -print0 \
+                | sort -z \
+                | xargs -0 -n1 basename \
+            )"
         fi
-        docker-build-all-tags "${build_flags[@]}" "$image"
+        koopa::assert_is_array_non_empty "${images[@]}"
+        koopa::dl \
+            "${#images[@]} images" \
+            "$(koopa::array_to_string "${images[@]}")"
+        for image in "${images[@]}"
+        do
+            image="${repo_name}/${image}"
+            # Skip image if pushed recently.
+            if [[ "$force" -ne 1 ]]
+            then
+                if koopa::is_docker_build_recent "$image"
+                then
+                    koopa::note "'${image}' was built recently. Skipping."
+                    continue
+                fi
+            fi
+            docker-build-all-tags "${build_flags[@]}" "$image"
+        done
     done
     [[ "$prune" -eq 1 ]] && koopa::docker_prune
     koopa::success 'All Docker images built successfully.'
