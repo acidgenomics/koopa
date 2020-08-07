@@ -41,6 +41,7 @@ flags=(
 )
 if koopa::is_rhel_ubi
 then
+    # Can't currently install 'readline-devel'.
     flags+=('--with-readline=no')
 else
     flags+=('--with-readline')
