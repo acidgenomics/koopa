@@ -54,11 +54,6 @@ _koopa_activate() { # {{{1
     _koopa_export_tmpdir
     _koopa_export_today
     _koopa_export_user
-    _koopa_activate_xdg
-    _koopa_activate_standard_paths
-    _koopa_activate_koopa_paths
-    _koopa_activate_pkg_config
-    _koopa_activate_python_site_packages
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
         _koopa_activate_homebrew

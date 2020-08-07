@@ -21,5 +21,8 @@ do
 done
 unset -v file
 
-# Ensure koopa scripts are in path.
+_koopa_activate_xdg
+_koopa_activate_standard_paths
 _koopa_activate_koopa_paths
+_koopa_activate_pkg_config
+_koopa_activate_python_site_packages

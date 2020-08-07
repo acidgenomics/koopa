@@ -176,7 +176,7 @@ koopa::debian_install_rstudio_server_pro() { # {{{1
 koopa::rhel_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on RHEL / CentOS.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-08-07.
     # """
     local os_codename
     if koopa::is_rhel_8_like
@@ -188,7 +188,7 @@ koopa::rhel_install_rstudio_server() { # {{{1
     koopa::_install_rstudio_server \
         --file-ext='rpm' \
         --install='sudo dnf -y install' \
-        --os_codename="$os_codename" \
+        --os-codename="$os_codename" \
         --platform='x86_64' \
         "$@"
     return 0

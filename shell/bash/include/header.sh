@@ -3,7 +3,7 @@
 
 # """
 # Bash header.
-# @note Updated 2020-07-23.
+# @note Updated 2020-08-07.
 # """
 
 if [[ "$#" -gt 0 ]]
@@ -12,18 +12,6 @@ then
     while (("$#"))
     do
         case "$1" in
-            --activate)
-                activate=1
-                shift 1
-                ;;
-            --no-header-checks)
-                checks=0
-                shift 1
-                ;;
-            --no-set-opts)
-                shopts=0
-                shift 1
-                ;;
             --verbose)
                 verbose=1
                 shift 1
@@ -102,9 +90,6 @@ fi
 # Source Bash functions.
 _koopa_source_dir "${KOOPA_PREFIX}/shell/bash/functions"
 
-# Check if we should display help.
-koopa::help "$@"
-
 # Source OS-specific functions.
 os_fun_dir="${KOOPA_PREFIX}/shell/bash/functions/os"
 if koopa::is_macos
@@ -144,8 +129,13 @@ then
     koopa::str_match "$0" '/sbin' && koopa::assert_has_sudo
 fi
 
-# Disable user-defined aliases.
-# Primarily intended to reset cp, mv, rf for use inside scripts.
-[[ "$activate" -eq 0 ]] && unalias -a
+if [[ "$activate" -eq 0 ]]
+then
+    # Disable user-defined aliases.
+    # Primarily intended to reset cp, mv, rf for use inside scripts.
+    unalias -a
+    # Check if we should display help.
+    koopa::help "$@"
+fi
 
 unset -v activate checks file os_fun_dir os_id shopts verbose
