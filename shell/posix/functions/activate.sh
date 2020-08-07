@@ -927,11 +927,7 @@ _koopa_activate_standard_paths() { # {{{1
     # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
-    _koopa_add_to_path_end \
-        '/usr/bin' \
-        '/bin' \
-        '/usr/sbin' \
-        '/sbin'
+    # > _koopa_add_to_path_end '/usr/bin' '/bin' '/usr/sbin' '/sbin'
     _koopa_force_add_to_path_start \
         "${make_prefix}/sbin" \
         "${make_prefix}/bin" \
