@@ -164,6 +164,7 @@ koopa::fedora_install_base() { # {{{1
             'libuuid-devel'
             'libxml2-devel'
             'lz4-devel'  # rsync
+            'ncurses-devel'
             'openssl-devel'
             'pcre-devel'  # ag
             'pcre2-devel'  # rJava

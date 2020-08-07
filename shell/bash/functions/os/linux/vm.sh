@@ -288,6 +288,7 @@ koopa::configure_vm() { # {{{1
     fi
     if ! koopa::is_rhel_ubi
     then
+        # Requires libevent.
         install-tmux
     fi
     install-vim
