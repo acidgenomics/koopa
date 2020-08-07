@@ -289,11 +289,11 @@ _koopa_remove_from_fpath() { # {{{1
 _koopa_remove_from_manpath() { # {{{1
     # """
     # Remove directory from MANPATH.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-08-07.
     # """
     # shellcheck disable=SC2039
     local dir
-    FPATH="${FPATH:-}"
+    MANPATH="${MANPATH:-}"
     for dir in "$@"
     do
         MANPATH="$(_koopa_print "$MANPATH" | sed "s|:${dir}||g")"
