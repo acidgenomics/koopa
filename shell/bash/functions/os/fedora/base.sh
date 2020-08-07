@@ -78,6 +78,7 @@ koopa::fedora_install_base() { # {{{1
         'gcc'
         'gcc-c++'
         'gcc-gfortran'
+        'gettext'
         'git'
         'gnupg2'
         'gnutls'
