@@ -755,7 +755,7 @@ _koopa_activate_pyenv() { # {{{1
 _koopa_activate_python_site_packages() { # {{{1
     # """
     # Activate Python site packages library.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-08-07.
     #
     # This ensures that 'bin' will be added to PATH, which is useful when
     # installing via pip with '--target' flag.
@@ -763,7 +763,8 @@ _koopa_activate_python_site_packages() { # {{{1
     # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_python_site_packages_prefix)"
-    _koopa_force_add_to_path_start "${prefix}/bin"
+    [ -d "$prefix" ] || return 0
+    _koopa_force_add_to_path_start "${prefix:?}/bin"
     return 0
 }
 
@@ -927,11 +928,7 @@ _koopa_activate_standard_paths() { # {{{1
     # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
-    _koopa_add_to_path_end \
-        '/usr/bin' \
-        '/bin' \
-        '/usr/sbin' \
-        '/sbin'
+    # > _koopa_add_to_path_end '/usr/bin' '/bin' '/usr/sbin' '/sbin'
     _koopa_force_add_to_path_start \
         "${make_prefix}/sbin" \
         "${make_prefix}/bin" \
