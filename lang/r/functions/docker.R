@@ -126,8 +126,10 @@ isDockerBuildRecent <- function(image, days = 2L) {
     )
     x <- gsub("\"", "", x)
     x <- sub("\\.[0-9]+Z$", "", x)
-    created <- as.POSIXct(x, format = "%Y-%m-%dT%H:%M:%S")
-    current <- Sys.time()
-    diffDays <- difftime(time1 = current, time2 = created, units = "days")
+    diffDays <- difftime(
+        time1 = Sys.time(),
+        time2 = as.POSIXct(x, format = "%Y-%m-%dT%H:%M:%S"),
+        units = "days"
+    )
     diffDays < days
 }
