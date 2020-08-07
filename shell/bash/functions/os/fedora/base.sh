@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-08-07.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
@@ -124,16 +124,20 @@ koopa::fedora_install_base() { # {{{1
         pkgs+=(
             'apr-devel'  # subversion
             'apr-util-devel'  # subversion
+            'bison-devel'
             'bzip2-devel'
             'expat-devel'  # udunits
+            'flex-devel'
             'glib2-devel'  # ag
             'gmp-devel'
             'gnutls-devel'
             'gsl-devel'
+            'hdf5-devel'
             'libcurl-devel'
             'libevent-devel'
             'libffi-devel'
             'libicu-devel'  # rJava
+            'libmpc-devel'
             'libseccomp-devel'
             'libtiff-devel'
             'libuuid-devel'
@@ -143,33 +147,25 @@ koopa::fedora_install_base() { # {{{1
             'lz4-devel'  # rsync
             'mariadb-devel'
             'mpfr-devel'
+            'openblas-devel'
+            'openjpeg2-devel'  # GDAL
             'openssl-devel'
             'pcre-devel'  # ag
             'pcre2-devel'  # rJava
             'postgresql-devel'
             'readline-devel'
             'unixODBC-devel'
+            'xxhash-devel'  # rsync
             'xz-devel'
             'zlib-devel'
         )
-        if koopa::is_fedora
+        if [[ "$compact" -eq 1 ]]
         then
             pkgs+=(
-                'bison-devel'
-                'flex-devel'
-                'libmpc-devel'
-                'openblas-devel'
-                'openjpeg2-devel'  # GDAL
-                'xxhash-devel'  # rsync
-            )
-        fi
-        if [[ "$compact" -eq 1 ]] && koopa::is_fedora
-        then
-            pkgs+=(
-                # proj-bin?
                 'gdal-devel'
                 'geos-devel'
                 'proj-devel'
+                'sqlite-devel'
                 'udunits2-devel'
             )
         fi
