@@ -196,7 +196,7 @@ koopa::docker_build_all_images() { # {{{1
     build_flags=()
     for repo in "${repos[@]}"
     do
-        repo_name="$(basename "$repo")"
+        repo_name="$(basename "$(realpath "$repo")")"
         koopa::h1 "Building '${repo_name}' images."
         build_file="${repo}/build.txt"
         if [[ -f "$build_file" ]]
