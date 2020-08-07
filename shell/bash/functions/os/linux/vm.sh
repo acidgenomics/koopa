@@ -266,11 +266,11 @@ koopa::configure_vm() { # {{{1
         install-openssh
         install-perl
         install-geos
+        install-sqlite
+        install-proj
     fi
     if [[ "$compact" -eq 0 ]] || koopa::is_rhel_ubi
     then
-        install-sqlite
-        install-proj
         install-gdal
         install-hdf5
         install-gsl
