@@ -72,7 +72,7 @@ koopa::_salmon_quant() { # {{{1
     #   likely a sequence is to be observed based on its internal GC content.
     # * --posBias: Experimental. Enable modeling of a position-specific fragment
     #   start distribution. This is meant to model non-uniform coverage biases
-    #   that are sometimes present in RNA-seq data (e.g. 5’ or 3’ positional
+    #   that are sometimes present in RNA-seq data (e.g. 5' or 3' positional
     #   bias).
     #
     # Consider use of '--numGibbsSamples' instead of '--numBootstraps'.
