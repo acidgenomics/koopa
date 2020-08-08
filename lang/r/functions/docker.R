@@ -71,7 +71,7 @@ dockerBuildAllTags <- function() {
                                     "'%s:%s' was built recently. Skipping.",
                                     image, tag
                                 ))
-                                return()
+                                return(0L)
                             }
                         }
                         shell(
@@ -87,7 +87,7 @@ dockerBuildAllTags <- function() {
                 USE.NAMES = FALSE,
                 SIMPLIFY = TRUE
             )
-            assert(all(status == 0L))
+            assert(all(as.integer(status) == 0L))
             ## Update "latest" tag, if necessary.
             latestFile <- file.path(imageDir, "latest")
             if (isAFile(latestFile) || isASymlink(latestFile)) {
