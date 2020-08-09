@@ -59,7 +59,7 @@ checkMacOSAppVersion <- function(name) {
 
 
 #' Check version
-#' @note Updated 2020-04-09.
+#' @note Updated 2020-08-09.
 #' @noRd
 checkVersion <- function(
     name,
@@ -69,10 +69,6 @@ checkVersion <- function(
     eval = c("==", ">="),
     required = TRUE
 ) {
-    stopifnot(
-        requireNamespace("goalie", quietly = TRUE),
-        requireNamespace("acidbase", quietly = TRUE)
-    )
     if (missing(whichName)) {
         whichName <- name
     }
@@ -80,16 +76,12 @@ checkVersion <- function(
         current <- NA_character_
     }
     stopifnot(
-        goalie::isString(name),
-        goalie::isString(whichName) ||
-            is.na(whichName),
-        is(current, "numeric_version") ||
-            goalie::isString(current) ||
-            is.na(current),
-        is(expected, "numeric_version") ||
-            goalie::isString(expected) ||
+        isString(name),
+        isString(whichName) || is.na(whichName),
+        is(current, "numeric_version") || isString(current) || is.na(current),
+        is(expected, "numeric_version") || isString(expected) || 
             is.na(expected),
-        goalie::isFlag(required)
+        isFlag(required)
     )
     eval <- match.arg(eval)
     statusList <- status()
@@ -119,11 +111,11 @@ checkVersion <- function(
     ## Sanitize the version for non-identical (e.g. GTE) comparisons.
     if (!identical(eval, "==")) {
         if (grepl("\\.", current)) {
-            current <- acidbase::sanitizeVersion(current)
+            current <- sanitizeVersion(current)
             current <- package_version(current)
         }
         if (grepl("\\.", expected)) {
-            expected <- acidbase::sanitizeVersion(expected)
+            expected <- sanitizeVersion(expected)
             expected <- package_version(expected)
         }
     }
@@ -163,7 +155,7 @@ checkVersion <- function(
 
 
 #' Program installation status
-#' @note Updated 2020-04-09.
+#' @note Updated 2020-08-09.
 #' @noRd
 installed <- function(
     which,
@@ -171,10 +163,9 @@ installed <- function(
     path = TRUE
 ) {
     stopifnot(
-        requireNamespace("goalie", quietly = TRUE),
-        goalie::isCharacter(which),
-        goalie::isFlag(required),
-        goalie::isFlag(path)
+        isCharacter(which),
+        isFlag(required),
+        isFlag(path)
     )
     statusList <- status()
     invisible(vapply(

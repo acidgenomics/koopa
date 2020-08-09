@@ -139,3 +139,4 @@ suppressPackageStartupMessages({
 })
 
 attach(.koopa)
+koopa <- .koopa[["koopa"]]
