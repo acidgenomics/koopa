@@ -13,7 +13,7 @@ dockerBuildAllTags <- function() {
     optionalArgs <- args[["optionalArgs"]]
     if (!is.null(optionalArgs)) {
         if (isSubset("days", names(optionalArgs))) {
-            days <- optionalArgs[["days"]]
+            days <- as.numeric(optionalArgs[["days"]])
         }
         if (isSubset("dir", names(optionalArgs))) {
             dockerDir <- optionalArgs[["dir"]]
