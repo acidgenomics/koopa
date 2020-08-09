@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-08-07.
+    # @note Updated 2020-08-09.
     # """
     local app_prefix app_prefix_bn app_prefix_real bioconductor data_disk \
         data_disk_link data_disk_real docker full gb_total \
@@ -215,7 +215,6 @@ koopa::configure_vm() { # {{{1
     # Programs {{{2
     # --------------------------------------------------------------------------
 
-    koopa::run_if_installed install-llvm
     install-conda
     install-openjdk
     # Python 3.8.5 built from source is currently breaking dnf on Fedora 32.
@@ -225,6 +224,7 @@ koopa::configure_vm() { # {{{1
     fi
     if [[ "$full" -eq 1 ]]
     then
+        koopa::run_if_installed install-llvm
         install-curl
         install-wget
         install-cmake
