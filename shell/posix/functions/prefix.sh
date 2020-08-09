@@ -318,18 +318,18 @@ _koopa_java_prefix() { # {{{1
 _koopa_local_app_prefix() { # {{{1
     # """
     # Local user application install prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-08-09.
     #
     # This is the default app path when koopa is installed per user.
     # """
-    _koopa_print "${XDG_DATA_HOME:?}"
+    _koopa_print "${XDG_DATA_HOME:-${HOME}/.local/share}"
     return 0
 }
 
 _koopa_make_prefix() { # {{{1
     # """
     # Return the installation prefix to use.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-08-09.
     # """
     # shellcheck disable=SC2039
     local prefix
@@ -340,7 +340,7 @@ _koopa_make_prefix() { # {{{1
     then
         prefix='/usr/local'
     else
-        prefix="$(dirname "${XDG_DATA_HOME:?}")"
+        prefix="${HOME}/.local"
     fi
     _koopa_print "$prefix"
     return 0
