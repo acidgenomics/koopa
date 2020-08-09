@@ -5,6 +5,7 @@ renameCamelCase <- function() {
     prefix <- FALSE
     recursive <- FALSE
     strict <- FALSE
+    ## FIXME REWORK THIS.
     args <- parseArgs(
         positional = TRUE,
         validFlags = c("prefix", "recursive", "strict")
