@@ -23,6 +23,7 @@ koopa::test_find_files() { # {{{1
             -not -path "${prefix}/cellar/*" \
             -not -path "${prefix}/coverage/*" \
             -not -path "${prefix}/dotfiles/*" \
+            -not -path "${prefix}/lang/r/.Rproj.user/*" \
             -not -path "${prefix}/opt/*" \
             -not -path "${prefix}/tests/*" \
             -not -path "${prefix}/workflows/*" \
