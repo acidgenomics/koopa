@@ -4,7 +4,7 @@
 dockerBuildAllTags <- function() {
     args <- parseArgs(
         optionalArgs = c("days", "dir"),
-        flags = "force"
+        flags = "force",
         positional = FALSE
     )
     force <- "force" %in% args[["flags"]]
