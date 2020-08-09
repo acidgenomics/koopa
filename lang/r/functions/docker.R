@@ -1,8 +1,11 @@
+## FIXME Add DAYS support.
+
 #' Build all tags for a specific image
 #' @note Updated 2020-08-05.
 #' @noRd
 dockerBuildAllTags <- function() {
     force <- FALSE
+    ## FIXME REWORK THIS.
     args <- parseArgs(
         positional = TRUE,
         validFlags = c("force")
