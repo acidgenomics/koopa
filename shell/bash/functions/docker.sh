@@ -147,6 +147,8 @@ koopa::docker_build() { # {{{1
     return 0
 }
 
+# FIXME ADD DAYS SUPPORT.
+
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
