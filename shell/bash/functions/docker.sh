@@ -147,22 +147,25 @@ koopa::docker_build() { # {{{1
     return 0
 }
 
-# FIXME ADD DAYS SUPPORT.
-
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2020-08-07.
+    # @note Updated 2020-08-09.
     # """
-    local build_file build_flags force image images prune pos \
+    local build_file build_args days force image images prune pos \
         repo repos repo_name
-    koopa::assert_is_installed docker docker-build-all-tags
+    koopa::assert_is_installed 'docker' 'docker-build-all-tags'
+    days=2
     force=0
     prune=0
     pos=()
     while (("$#"))
     do
         case "$1" in
+            --days=*)
+                days="${1#*=}"
+                shift 1
+                ;;
             --force)
                 force=1
                 shift 1
@@ -185,7 +188,7 @@ koopa::docker_build_all_images() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    [[ "$force" -eq 1 ]] && build_flags+=('--force')
+    [[ "$force" -eq 1 ]] && build_args+=('--force')
     if [[ "$#" -gt 0 ]]
     then
         repos=("$@")
@@ -195,9 +198,8 @@ koopa::docker_build_all_images() { # {{{1
     koopa::assert_is_dir "${repos[@]}"
     [[ "$prune" -eq 1 ]] && koopa::docker_prune
     docker login
-    # Ensure we always build images inside directory without of date 'latest'.
-    # > build_flags=('--force')
-    build_flags=()
+    build_args=("--days=${days}")
+    [[ "$force" -eq 1 ]] && build_args+=('--force')
     for repo in "${repos[@]}"
     do
         repo_name="$(basename "$(realpath "$repo")")"
@@ -227,7 +229,7 @@ koopa::docker_build_all_images() { # {{{1
         do
             image="${repo_name}/${image}"
             # Skip image if pushed recently.
-            if [[ "$force" -ne 1 ]]
+            if [[ "$force" -eq 0 ]]
             then
                 if koopa::is_docker_build_recent "$image"
                 then
@@ -235,7 +237,7 @@ koopa::docker_build_all_images() { # {{{1
                     continue
                 fi
             fi
-            docker-build-all-tags "${build_flags[@]}" "$image"
+            docker-build-all-tags "${build_args[@]}" "$image"
         done
     done
     [[ "$prune" -eq 1 ]] && koopa::docker_prune
