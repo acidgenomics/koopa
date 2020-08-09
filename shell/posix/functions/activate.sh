@@ -711,7 +711,7 @@ _koopa_activate_pkg_config() { # {{{1
 _koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-08-09.
     # """
     # shellcheck disable=SC2039
     local prefix
@@ -719,8 +719,8 @@ _koopa_activate_prefix() { # {{{1
     do
         [ -d "$prefix" ] || continue
         _koopa_add_to_path_start \
-            "${prefix}/sbin" \
-            "${prefix}/bin"
+            "${prefix}/bin" \
+            "${prefix}/sbin"
         _koopa_add_to_manpath_start \
             "${prefix}/man" \
             "${prefix}/share/man"
