@@ -431,9 +431,9 @@ installDefaultPackages <- function() {
 #'
 #' Handles CRAN removals and GitHub deprecations automatically.
 #'
-#' @note Updated 2020-08-05.
+#' @note Updated 2020-08-09.
 #' @noRd
-.updatePackages <- function() {
+updatePackages <- function() {
     requireNamespaces("bb8")
     suppressMessages({
         bb8::uninstall(

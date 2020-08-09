@@ -31,7 +31,7 @@ findAndMoveInSequence <- function() {
             ".", fileExt(sourceFiles)
         )
     )
-    stopifnot(identical(length(sourceFiles), length(targetFiles)))
+    assert(identical(length(sourceFiles), length(targetFiles)))
     invisible(mapply(
         from = sourceFiles,
         to = targetFiles,

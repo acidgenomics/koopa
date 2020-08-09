@@ -5,7 +5,7 @@
 .h <- function(x, level) {
     arrow <- paste0(paste0(rep("=", level), collapse = ""), ">")
     if (isTRUE(hasColor())) {
-        stopifnot(requireNamespace("crayon", quietly = TRUE))
+        requireNamespaces("crayon")
         arrow <- crayon::magenta(arrow)
     }
     cat(paste0(.koopaEmoji, " ", arrow, " ", x, "\n"))
@@ -79,7 +79,7 @@ h7 <- function(x) {
 
 
 #' Return status labels, with optional color support
-#' @note Updated 2020-04-09.
+#' @note Updated 2020-08-09.
 #' @noRd
 status <- function() {
     x <- list(
@@ -88,7 +88,7 @@ status <- function() {
         ok   = "  OK"
     )
     if (isTRUE(hasColor())) {
-        stopifnot(requireNamespace("crayon", quietly = TRUE))
+        requireNamespaces("crayon")
         x[["fail"]] <- crayon::red(x[["fail"]])
         x[["note"]] <- crayon::yellow(x[["note"]])
         x[["ok"]] <- crayon::green(x[["ok"]])
@@ -99,12 +99,12 @@ status <- function() {
 
 
 #' Unordered list
-#' @note Updated 2020-06-24.
+#' @note Updated 2020-08-09.
 #' @noRd
 ul <- function(x) {
     indent <- 4L
     if (isTRUE(hasCli())) {
-        stopifnot(requireNamespace("cli", quietly = TRUE))
+        requireNamespaces("cli")
         cli::cli_div(theme = list(body = list("margin-left" = indent)))
         cli::cli_ul(items = x)
         cli::cli_end()
