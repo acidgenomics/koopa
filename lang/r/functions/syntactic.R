@@ -1,5 +1,5 @@
 #' Rename files in camel case
-#' @note Updated 2020-08-05.
+#' @note Updated 2020-08-09.
 renameCamelCase <- function() {
     requireNamespaces("syntactic")
     prefix <- FALSE
@@ -8,7 +8,7 @@ renameCamelCase <- function() {
     ## FIXME REWORK THIS.
     args <- parseArgs(
         positional = TRUE,
-        validFlags = c("prefix", "recursive", "strict")
+        optionalFlags = c("prefix", "recursive", "strict")
     )
     if ("--prefix" %in% args) {
         prefix <- TRUE
@@ -20,7 +20,7 @@ renameCamelCase <- function() {
         strict <- TRUE
     }
     syntactic::camelCase(
-        object = positionalArgs(),
+        object = posArgs,
         rename = TRUE,
         recursive = recursive,
         strict = strict,

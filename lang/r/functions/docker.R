@@ -1,28 +1,22 @@
-## FIXME Add DAYS support.
-
 #' Build all tags for a specific image
-#' @note Updated 2020-08-05.
+#' @note Updated 2020-08-09.
 #' @noRd
 dockerBuildAllTags <- function() {
-    force <- FALSE
-    ## FIXME REWORK THIS.
     args <- parseArgs(
-        positional = TRUE,
-        validFlags = c("force")
+        optionalArgs = c("days", "dir", "force"),
+        positional = TRUE
     )
-    if ("--force" %in% args) {
-        force <- TRUE
-    }
-    dockerDir <- file.path("~", ".config", "koopa", "docker")
+    force <- "force" %in% args[["flags"]]
+    days <- args[["optionalArgs"]][["days"]]
+    if (is.null(days))
+        days <- 2L
+    dockerDir <- args[["optionalArgs"]][["dir"]]
+    if (is.null(dockerDir))
+        dockerDir <- file.path("~", ".config", "koopa", "docker")
     assert(isTRUE(dir.exists(dockerDir)))
-    ## Enable parallelization if possible.
-    ## > if (isTRUE(requireNamespace("BiocParallel", quietly = TRUE))) {
-    ## >     mapply <- BiocParallel::bpmapply
-    ## > }
-    images <- positionalArgs()
-    if (!any(grepl(pattern = "/", x = images))) {
+    images <- args[["positionalArgs"]]
+    if (!any(grepl(pattern = "/", x = images)))
         images <- file.path("acidgenomics", images)
-    }
     message(sprintf("Building all tags: %s", toString(images)))
     invisible(lapply(
         X = images,
@@ -69,7 +63,9 @@ dockerBuildAllTags <- function() {
                         )
                     } else {
                         if (!isTRUE(force)) {
-                            if (isTRUE(isDockerBuildRecent(image))) {
+                            if (isTRUE(
+                                isDockerBuildRecent(image, days = days)
+                            )) {
                                 message(sprintf(
                                     "'%s:%s' was built recently. Skipping.",
                                     image, tag
@@ -83,7 +79,10 @@ dockerBuildAllTags <- function() {
                                 "bin",
                                 "docker-build"
                             ),
-                            args = c(paste0("--tag=", tag), image)
+                            args = c(
+                                paste0("--tag=", tag),
+                                image
+                            )
                         )
                     }
                 },
