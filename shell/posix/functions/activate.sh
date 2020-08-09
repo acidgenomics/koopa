@@ -1000,38 +1000,27 @@ _koopa_activate_xdg() { # {{{1
     # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
-    if [ -z "${XDG_CACHE_HOME:-}" ]
-    then
+    [ -z "${XDG_CACHE_HOME:-}" ] && \
         XDG_CACHE_HOME="${HOME}/.cache"
-    fi
-    if [ -z "${XDG_CONFIG_HOME:-}" ]
-    then
+    [ -z "${XDG_CONFIG_DIRS:-}" ] && \
+        XDG_CONFIG_DIRS='/etc/xdg'
+    [ -z "${XDG_CONFIG_HOME:-}" ] && \
         XDG_CONFIG_HOME="${HOME}/.config"
-    fi
-    if [ -z "${XDG_DATA_HOME:-}" ]
-    then
+    [ -z "${XDG_DATA_DIRS:-}" ] && \
+        XDG_DATA_DIRS="${make_prefix}/share:/usr/share"
+    [ -z "${XDG_DATA_HOME:-}" ] && \
         XDG_DATA_HOME="${HOME}/.local/share"
-    fi
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
     then
         XDG_RUNTIME_DIR="/run/user/$(_koopa_user_id)"
-        if _koopa_is_macos
-        then
-            XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
-        fi
-    fi
-    if [ -z "${XDG_DATA_DIRS:-}" ]
-    then
-        XDG_DATA_DIRS="${make_prefix}/share:/usr/share"
-    fi
-    if [ -z "${XDG_CONFIG_DIRS:-}" ]
-    then
-        XDG_CONFIG_DIRS='/etc/xdg'
+        _koopa_is_macos && XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
     fi
     export \
         XDG_CACHE_HOME \
-        XDG_CONFIG_DIRS XDG_CONFIG_HOME \
-        XDG_DATA_DIRS XDG_DATA_HOME \
+        XDG_CONFIG_DIRS \
+        XDG_CONFIG_HOME \
+        XDG_DATA_DIRS \
+        XDG_DATA_HOME \
         XDG_RUNTIME_DIR
     return 0
 }
