@@ -1,25 +1,17 @@
 #' Rename files in camel case
-#' @note Updated 2020-08-05.
+#' @note Updated 2020-08-09.
 renameCamelCase <- function() {
     requireNamespaces("syntactic")
-    prefix <- FALSE
-    recursive <- FALSE
-    strict <- FALSE
     args <- parseArgs(
-        positional = TRUE,
-        validFlags = c("prefix", "recursive", "strict")
+        flags = c("prefix", "recursive", "strict"),
+        positionalArgs = TRUE
     )
-    if ("--prefix" %in% args) {
-        prefix <- TRUE
-    }
-    if ("--recursive" %in% args) {
-        recursive <- TRUE
-    }
-    if ("--strict" %in% args) {
-        strict <- TRUE
-    }
+    posArgs <- args[["positionalArgs"]]
+    prefix <- "prefix" %in% args[["flags"]]
+    recursive <- "recursive" %in% args[["flags"]]
+    strict <- "strict" %in% args[["flags"]]
     syntactic::camelCase(
-        object = positionalArgs(),
+        object = posArgs,
         rename = TRUE,
         recursive = recursive,
         strict = strict,
@@ -28,23 +20,18 @@ renameCamelCase <- function() {
 }
 
 #' Rename files in kebab case
-#' @note Updated 2020-08-05.
+#' @note Updated 2020-08-09.
 renameKebabCase <- function() {
     requireNamespaces("syntactic")
-    prefix <- FALSE
-    recursive <- FALSE
     args <- parseArgs(
-        positional = TRUE,
-        validFlags = c("prefix", "recursive")
+        flags = c("prefix", "recursive"),
+        positionalArgs = TRUE
     )
-    if ("--prefix" %in% args) {
-        prefix <- TRUE
-    }
-    if ("--recursive" %in% args) {
-        recursive <- TRUE
-    }
+    posArgs <- args[["positionalArgs"]]
+    prefix <- "prefix" %in% args[["flags"]]
+    recursive <- "recursive" %in% args[["flags"]]
     syntactic::kebabCase(
-        object = positionalArgs(),
+        object = posArgs,
         rename = TRUE,
         recursive = recursive,
         prefix = prefix
@@ -52,23 +39,18 @@ renameKebabCase <- function() {
 }
 
 #' Rename files in snake case
-#' @note Updated 2020-08-05.
+#' @note Updated 2020-08-09.
 renameSnakeCase <- function() {
     requireNamespaces("syntactic")
-    prefix <- FALSE
-    recursive <- FALSE
     args <- parseArgs(
-        positional = TRUE,
-        validFlags = c("prefix", "recursive")
+        flags = c("prefix", "recursive"),
+        positionalArgs = TRUE
     )
-    if ("--prefix" %in% args) {
-        prefix <- TRUE
-    }
-    if ("--recursive" %in% args) {
-        recursive <- TRUE
-    }
+    posArgs <- args[["positionalArgs"]]
+    prefix <- "prefix" %in% args[["flags"]]
+    recursive <- "recursive" %in% args[["flags"]]
     syntactic::snakeCase(
-        object = positionalArgs(),
+        object = posArgs,
         rename = TRUE,
         recursive = recursive,
         prefix = prefix

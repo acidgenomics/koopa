@@ -1,14 +1,14 @@
 #' Install recommended default R packages
-#' @note Updated 2020-08-07.
+#' @note Updated 2020-08-09.
 #' @noRd
 installDefaultPackages <- function() {
     requireNamespaces("bb8")
     install <- bb8::install
-    args <- parseArgs(positional = FALSE, validFlags = "all")
-    all <- FALSE
-    if ("--all" %in% args) {
-        all <- TRUE
-    }
+    args <- parseArgs(
+        flags = "all",
+        positionalArgs = FALSE
+    )
+    all <- "all" %in% args[["flags"]]
     ## These dependencies are required to install sf, etc.
     assert(allAreSystemCommands(c("gdal-config", "geos-config")))
     ## Check for GitHub PAT, if necessary.
@@ -428,12 +428,12 @@ installDefaultPackages <- function() {
 }
 
 #' Update R packages
-#' 
+#'
 #' Handles CRAN removals and GitHub deprecations automatically.
 #'
-#' @note Updated 2020-08-05.
+#' @note Updated 2020-08-09.
 #' @noRd
-.updatePackages <- function() {
+updatePackages <- function() {
     requireNamespaces("bb8")
     suppressMessages({
         bb8::uninstall(

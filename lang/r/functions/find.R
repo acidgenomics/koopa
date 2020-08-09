@@ -1,5 +1,5 @@
 #' Find and move files in sequence
-#' @note Updated 2020-08-05.
+#' @note Updated 2020-08-09.
 #' @noRd
 findAndMoveInSequence <- function() {
     requireNamespaces("syntactic")
@@ -31,7 +31,7 @@ findAndMoveInSequence <- function() {
             ".", fileExt(sourceFiles)
         )
     )
-    stopifnot(identical(length(sourceFiles), length(targetFiles)))
+    assert(identical(length(sourceFiles), length(targetFiles)))
     invisible(mapply(
         from = sourceFiles,
         to = targetFiles,
