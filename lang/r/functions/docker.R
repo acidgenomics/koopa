@@ -2,19 +2,28 @@
 #' @note Updated 2020-08-09.
 #' @noRd
 dockerBuildAllTags <- function() {
+    days <- 2L
+    dockerDir <- file.path("~", ".config", "koopa", "docker")
     args <- parseArgs(
         optionalArgs = c("days", "dir"),
         flags = "force",
         positional = TRUE
     )
     force <- "force" %in% args[["flags"]]
-    days <- args[["optionalArgs"]][["days"]]
-    if (is.null(days))
-        days <- 2L
-    dockerDir <- args[["optionalArgs"]][["dir"]]
-    if (is.null(dockerDir))
-        dockerDir <- file.path("~", ".config", "koopa", "docker")
-    assert(isTRUE(dir.exists(dockerDir)))
+    optionalArgs <- args[["optionalArgs"]]
+    if (!is.null(optionalArgs)) {
+        if (isSubset("days", names(optionalArgs))) {
+            days <- optionalArgs[["days"]]
+        }
+        if (isSubset("dir", names(optionalArgs))) {
+            dockerDir <- optionalArgs[["dir"]]
+        }
+    }
+    assert(
+        isNumber(days),
+        isADir(dockerDir),
+        isFlag(force)
+    )
     images <- args[["positionalArgs"]]
     if (!any(grepl(pattern = "/", x = images)))
         images <- file.path("acidgenomics", images)
