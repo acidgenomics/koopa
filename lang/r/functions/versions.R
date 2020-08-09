@@ -8,57 +8,54 @@ currentHomebrewCaskVersion <- function(name) {
 
 
 #' Current macOS app version
-#' @note Updated 2020-04-09.
+#'
+#' Ensures build information gets stripped.
+#' e.g. Tunnelblick: (build 5400).
+#' @note Updated 2020-08-09.
 #' @noRd
 currentMacOSAppVersion <- function(name) {
     x <- currentVersion(name = name, fun = "get-macos-app-version")
-    ## Ensure build information gets stripped.
-    ## e.g. Tunnelblick: (build 5400).
-    stopifnot(requireNamespace("acidbase", quietly = TRUE))
-    x <- acidbase::sanitizeVersion(x)
+    x <- sanitizeVersion(x)
     x
 }
 
 
 
 #' Current major version
-#' @note Updated 2020-04-09.
+#' @note Updated 2020-08-09.
 #' @noRd
 currentMajorVersion <- function(name) {
     x <- currentVersion(name)
     if (!isTRUE(nzchar(x))) return(character())
-    stopifnot(requireNamespace("acidbase", quietly = TRUE))
-    x <- acidbase::majorVersion(x)
+    x <- majorVersion(x)
     x
 }
 
 
 
 #' Current minor version
-#' @note Updated 2020-04-09.
+#' @note Updated 2020-08-09.
 #' @noRd
 currentMinorVersion <- function(name) {
     x <- currentVersion(name)
     if (!isTRUE(nzchar(x))) return(character())
-    stopifnot(requireNamespace("acidbase", quietly = TRUE))
-    x <- acidbase::minorVersion(x)
+    x <- minorVersion(x)
     x
 }
 
 
 
 #' Current version of installed program
-#' @note Updated 2020-04-12.
+#' @note Updated 2020-08-09.
 #' @noRd
 currentVersion <- function(name, fun = "get-version") {
-    # Ensure spaces are escaped.
-    name <- paste0("'", name, "'")
-    command <- get(x = "koopa", envir = .koopa, inherits = FALSE)
     tryCatch(
-        ## Note that `koopa` here is a global variable to koopa script path.
-        expr = system2(
-            command = command,
-            args = c(fun, name),
+        expr = shell(
+            command = koopa,
+            args = c(
+                fun,
+                paste0("'", name, "'")
+            ),
             stdout = TRUE,
             stderr = FALSE
         ),
@@ -92,34 +89,32 @@ expectedMacOSAppVersion <- function(x) {
 
 
 #' Expected major version
-#' @note Updated 2020-04-09.
+#' @note Updated 2020-08-09.
 #' @noRd
 expectedMajorVersion <- function(x) {
     x <- expectedVersion(x)
-    stopifnot(requireNamespace("acidbase", quietly = TRUE))
-    x <- acidbase::majorVersion(x)
+    x <- majorVersion(x)
     x
 }
 
 
 
 #' Expected minor version
-#' @note Updated 2020-04-09.
+#' @note Updated 2020-08-09.
 expectedMinorVersion <- function(x) {
     x <- expectedVersion(x)
-    stopifnot(isTRUE(grepl("\\.", x)))
-    stopifnot(requireNamespace("acidbase", quietly = TRUE))
-    x <- acidbase::minorVersion(x)
+    assert(isTRUE(grepl("\\.", x)))
+    x <- minorVersion(x)
     x
 }
 
 
 
 #' Expected version
-#' @note Updated 2020-07-02.
+#' @note Updated 2020-08-09.
 #' @noRd
 expectedVersion <- function(x) {
-    stopifnot(requireNamespace("syntactic", quietly = TRUE))
+    requireNamespaces("syntactic")
     x <- syntactic::kebabCase(x)
     variablesFile <- file.path(
         .koopa[["prefix"]],
@@ -128,9 +123,9 @@ expectedVersion <- function(x) {
     )
     variables <- readLines(variablesFile)
     keep <- grepl(pattern = paste0("^", x, "="), x = variables)
-    stopifnot(sum(keep, na.rm = TRUE) == 1L)
+    assert(sum(keep, na.rm = TRUE) == 1L)
     x <- variables[keep]
-    stopifnot(isTRUE(nzchar(x)))
+    assert(isTRUE(nzchar(x)))
     x <- sub(pattern = "^(.+)=\"(.+)\"$", replacement = "\\2", x = x)
     x
 }
