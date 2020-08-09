@@ -64,8 +64,7 @@ pruneCellar <- function() {
 #' @note Updated 2020-08-09.
 #' @noRd
 unlinkCellar <- function() {
-    args <- parseArgs(positionalArgs = TRUE)
-    posArgs <- args[["positionalArgs"]]
+    posArgs <- positionalArgs()
     app <- posArgs[[1L]]
     cellarPrefix <- shell(
         command = koopa,
