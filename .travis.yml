@@ -10,35 +10,35 @@ jobs:
     - stage: test
       name: "alpine"
       services: docker
-      script: image="alpine" ./tests/docker
+      script: ./tests/docker alpine
     - stage: test
       name: "arch"
       services: docker
-      script: image="arch" ./tests/docker
+      script: ./tests/docker arch
     - stage: test
       name: "biocontainers"
       services: docker
-      script: image="biocontainers" ./tests/docker
+      script: ./tests/docker biocontainers
     - stage: test
       name: "centos"
       services: docker
-      script: image="centos" ./tests/docker
+      script: ./tests/docker centos
     - stage: test
       name: "debian"
       services: docker
-      script: image="debian" ./tests/docker
+      script: ./tests/docker debian
     - stage: test
       name: "fedora"
       services: docker
-      script: image="fedora" ./tests/docker
+      script: ./tests/docker fedora
     - stage: test
       name: "opensuse"
       services: docker
-      script: image="opensuse" ./tests/docker
+      script: ./tests/docker opensuse
     - stage: test
       name: "ubuntu"
       services: docker
-      script: image="ubuntu" ./tests/docker
+      script: ./tests/docker ubuntu
   fast_finish: true
 
 notifications:
