@@ -141,6 +141,7 @@ koopa::debian_install_base() { # {{{1
         'apt-utils'
         'autoconf'
         'automake'
+        'bash'
         'bc'
         'build-essential'
         'byacc'
@@ -186,6 +187,7 @@ koopa::debian_install_base() { # {{{1
         'wget'
         'xz-utils'
         'zip'
+        'zsh'
     )
 
     # Developer {{{2
