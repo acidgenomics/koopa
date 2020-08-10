@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-. "$(koopa header bash)"
+. "$(dirname "${BASH_SOURCE[0]}")/../shell/bash/include/header.sh"
 
 koopa::test_linter() {
     # """
