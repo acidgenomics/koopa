@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-08-09"
+koopa-date="2020-08-10"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.8.0"
@@ -217,7 +217,7 @@ perl-file-rename="1.10"
 
 # https://www.php.net/downloads
 # https://github.com/php/php-src/releases
-php="7.4.8"
+php="7.4.9"
 
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
