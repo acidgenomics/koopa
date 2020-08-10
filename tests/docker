@@ -14,9 +14,9 @@ koopa::test_docker() {
     koopa::h1 "Running Docker install test in '${image}' image."
     cmd="\
         set -Eeu -o pipefail \
-        && rm -fr \
-            ${HOME}/.local/share/koopa \
+        && rm -frv \
             /usr/local/koopa \
+            ~/.local/share/koopa \
         && curl -sSL https://koopa.acidgenomics.com/install \
             | bash -s -- --non-interactive --test"
     docker pull "$image"
