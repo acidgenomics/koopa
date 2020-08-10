@@ -6,16 +6,18 @@
 koopa::test_docker() {
     # """
     # Install and test koopa inside Docker.
-    # Updated 2020-07-23.
+    # Updated 2020-08-10.
     # """
     local cmd image
     image="${1:-debian}"
     image="acidgenomics/${image}:minimal"
     koopa::h1 "Running Docker install test in '${image}' image."
     cmd="\
-        set -Eeu -o pipefail &&
-        rm -fr /usr/local/koopa && \
-        curl -sSL https://koopa.acidgenomics.com/install \
+        set -Eeu -o pipefail \
+        && rm -fr \
+            ${HOME}/.local/share/koopa \
+            /usr/local/koopa \
+        && curl -sSL https://koopa.acidgenomics.com/install \
             | bash -s -- --non-interactive --test"
     docker pull "$image"
     docker run -it "$image" bash -c "$cmd"
