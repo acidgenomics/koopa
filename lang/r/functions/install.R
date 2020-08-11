@@ -24,7 +24,11 @@ installDefaultPackages <- function() {
     biocVersion <- Sys.getenv("BIOC_VERSION")
     if (isString(biocVersion)) {
         message(sprintf("Installing Bioconductor %s.", biocVersion))
-        BiocManager::install(version = biocVersion, ask = FALSE)
+        BiocManager::install(
+            update = FALSE,
+            ask = FALSE,
+            version = biocVersion
+        )
     }
     h1("Install R packages")
     h2("Tricky packages")
