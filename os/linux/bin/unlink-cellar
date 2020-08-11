@@ -7,4 +7,5 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-unlinkCellar()
+x <- positionalArgs()
+unlinkCellar(x)
