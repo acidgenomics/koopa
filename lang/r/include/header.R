@@ -3,8 +3,6 @@
 ## @note Updated 2020-08-11.
 ## """
 
-stopifnot(packageVersion("base") >= "4.0")
-
 options(
     ## Exit on any errors.
     "error" = quote(quit(status = 1L)),
@@ -16,8 +14,19 @@ options(
     "warning" = quote(quit(status = 1L))
 )
 
-## Create an invisible koopa environment.
+stopifnot(packageVersion("base") >= "4.0")
+
 .koopa <- new.env()
+.koopa[["vanilla"]] <-
+    isTRUE("--vanilla" %in% commandArgs())
+.koopa[["dependencies"]] <-
+    c(
+        "acidgenomics/acidbase" = "0.1.12",
+        "acidgenomics/acidgenerics" = "0.3.9",
+        "acidgenomics/goalie" = "0.4.6",
+        "acidgenomics/syntactic" = "0.4.2",
+        "acidgenomics/bb8" = "0.2.23"
+    )
 
 ## Source shared function scripts {{{1
 ## =============================================================================
@@ -46,27 +55,27 @@ local({
 ## Check package dependencies {{{1
 ## =============================================================================
 
-## Check that required R package dependencies are installed.
 local({
+    vanilla <- .koopa[["vanilla"]]
+    dependencies <- .koopa[["dependencies"]]
     installGitHub <- .koopa[[".installGitHub"]]
+    isInstalled <- function(pkgs) {
+        basename(pkgs) %in% rownames(installed.packages())
+    }
     isPackageVersion <- .koopa[["isPackageVersion"]]
-    ## GitHub dependencies.
-    dependencies <- c(
-        "acidgenomics/acidbase" = "0.1.12",
-        "acidgenomics/acidgenerics" = "0.3.9",
-        "acidgenomics/goalie" = "0.4.6",
-        "acidgenomics/syntactic" = "0.4.2",
-        "acidgenomics/bb8" = "0.2.22"
-    )
-    ## Update dependencies, if necessary.
     ok <- isPackageVersion(dependencies)
     repos <- names(dependencies)[!ok]
     if (length(repos) > 0L) {
+        if (isTRUE(vanilla)) {
+            stop(paste0(
+                "koopa dependencies are outdated and ",
+                "cannot be updated in '--vanilla' mode."
+            ))
+        }
         message(sprintf(
             "Updating koopa dependencies: %s",
             toString(basename(repos))
         ))
-        stopifnot(requireNamespace("utils", quietly = TRUE))
         local({
             repos <- getOption("repos")
             repos[["CRAN"]] <- "https://cloud.r-project.org"
@@ -83,21 +92,23 @@ local({
                 "stringr"
             ),
             FUN = function(pkg) {
-                if (!isTRUE(pkg %in% rownames(utils::installed.packages()))) {
-                    utils::install.packages(pkg)
+                if (!isTRUE(isInstalled(pkg))) {
+                    install.packages(pkg)
                 }
             }
         ))
         if (isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))) {
-            Sys.setenv("R_REMOTES_UPGRADE" = "always")
-            remotes::install_github(repos)
+            remotes::install_github(repos, upgrade = "never")
         } else {
             installGitHub(repos, reinstall = TRUE)
         }
     }
-    stopifnot(all(isPackageVersion(dependencies)))
-    packages <- basename(names(dependencies))
+    stopifnot(
+        all(isPackageVersion(dependencies)),
+        bb8::isCleanSystemLibrary()
+    )
     ## Attach package libraries:
+    ## > packages <- basename(names(dependencies))
     ## > invisible(lapply(
     ## >     X = packages,
     ## >     FUN = library,
@@ -109,7 +120,6 @@ local({
     ## >     FUN = requireNamespace,
     ## >     quietly = TRUE
     ## > ))
-    assign(x = "dependencies", value = dependencies, envir = .koopa)
 })
 
 ## Help mode {{{1
