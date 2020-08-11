@@ -28,6 +28,10 @@ installDefaultPackages <- function() {
     }
     h1("Install R packages")
     h2("Tricky packages")
+    cranArchive <- "https://cran.r-project.org/src/contrib/Archive/"
+    ## cpp11 v0.2.0 update is breaking tidyr, at least on Fedora.
+    ## https://github.com/tidyverse/tidyr/issues/1024
+    install(paste0(cranArchive, "cpp11/cpp11_0.1.0.tar.gz"))
     install(
         pkgs = c(
             "rJava",
@@ -40,13 +44,9 @@ installDefaultPackages <- function() {
         ),
         reinstall = FALSE
     )
-    cranArchive <- "https://cran.r-project.org/src/contrib/Archive/"
     ## rgdal 1.5-15 is currently broken on CRAN for Debian (2020-08-05).
     ## Fixed with 1.5-16 (2020-08-07).
     ## > install(paste0(cranArchive", "rgdal/rgdal_1.5-12.tar.gz"))
-    ## cpp11 v0.2.0 update is breaking tidyr, at least on Fedora.
-    ## https://github.com/tidyverse/tidyr/issues/1024
-    install(paste0(cranArchive, "cpp11/cpp11_0.1.0.tar.gz"))
     h2("CRAN")
     install(
         pkgs = c(
