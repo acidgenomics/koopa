@@ -1,23 +1,14 @@
 #!/usr/bin/env python3
-# pylint: disable=invalid-name,redefined-outer-name
-# pylint: enable=invalid-name
 """
 Download FlyBase genome.
 """
 
 import argparse
 import os
-import sys
 
 from textwrap import dedent
 
-# pylint: disable=wrong-import-position
-
-KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
-PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
-sys.path.insert(0, PYTHON_PREFIX)
-
-from koopa.argparse import dir_path
+from koopa.arg import dir_path
 from koopa.genome import tx2gene_from_fasta
 from koopa.genome.flybase import (
     download_flybase_genome,
@@ -29,8 +20,6 @@ from koopa.genome.flybase import (
 )
 from koopa.syntactic import kebab_case
 from koopa.system import eprint, paste_url
-
-# pylint: enable=wrong-import-position
 
 DESCRIPTION = "Download FlyBase genome."
 EPILOG = """
@@ -48,8 +37,6 @@ note:
     Python script.
     Updated 2020-02-09.
 """
-
-# pylint: disable=invalid-name,protected-access,redefined-builtin
 
 parser = argparse.ArgumentParser(
     description=DESCRIPTION,
