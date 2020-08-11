@@ -7,4 +7,22 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-dockerBuildAllTags()
+parse <- parseArgs(
+    optionalArgs = c("days", "dir"),
+    flags = "force",
+    positional = TRUE
+)
+args <- list(
+    images = parse[["positionalArgs"]],
+    force = "force" %in% parse[["flags"]]
+)
+optionalArgs <- parse[["optionalArgs"]]
+if (!is.null(optionalArgs)) {
+    if (isSubset("days", names(optionalArgs))) {
+        args[["days"]] <- as.numeric(optionalArgs[["days"]])
+    }
+    if (isSubset("dir", names(optionalArgs))) {
+        args[["dir"]] <- optionalArgs[["dir"]]
+    }
+}
+do.call(what = dockerBuildAllImages, args = args)
