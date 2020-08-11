@@ -103,10 +103,14 @@ local({
             installGitHub(repos, reinstall = TRUE)
         }
     }
-    stopifnot(
-        all(isPackageVersion(dependencies)),
-        bb8::isCleanSystemLibrary()
-    )
+    ok <- isPackageVersion(dependencies)
+    if (!all(ok)) {
+        stop(sprintf(
+            "Dependency check failure:\n%s",
+            paste(capture.output(print(ok)), collapse = "\n")
+        ))
+    }
+    stopifnot(bb8::isCleanSystemLibrary())
     ## Attach package libraries:
     ## > packages <- basename(names(dependencies))
     ## > invisible(lapply(
