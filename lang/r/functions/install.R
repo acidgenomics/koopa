@@ -1,5 +1,5 @@
 #' Install recommended default R packages
-#' @note Updated 2020-08-09.
+#' @note Updated 2020-08-11.
 #' @noRd
 installDefaultPackages <- function() {
     requireNamespaces("bb8")
@@ -24,11 +24,7 @@ installDefaultPackages <- function() {
     biocVersion <- Sys.getenv("BIOC_VERSION")
     if (isString(biocVersion)) {
         message(sprintf("Installing Bioconductor %s.", biocVersion))
-        BiocManager::install(
-            update = FALSE,
-            ask = FALSE,
-            version = biocVersion
-        )
+        BiocManager::install(update = FALSE, ask = FALSE, version = biocVersion)
     }
     h1("Install R packages")
     h2("Tricky packages")
@@ -45,8 +41,8 @@ installDefaultPackages <- function() {
         reinstall = FALSE
     )
     cranArchive <- "https://cran.r-project.org/src/contrib/Archive/"
-    ## rgdal 1.5-15 is currently broken on CRAN for Debian (2020-08-05).
-    ## Fixed with 1.5-16 (2020-08-07).
+    ## rgdal 1.5-15 is broken on CRAN for Debian (2020-08-05).
+    ## Fixed with v1.5-16 (2020-08-07).
     ## > install(paste0(cranArchive", "rgdal/rgdal_1.5-12.tar.gz"))
     ## cpp11 v0.2.0 update is breaking tidyr, at least on Fedora.
     ## https://github.com/tidyverse/tidyr/issues/1024
