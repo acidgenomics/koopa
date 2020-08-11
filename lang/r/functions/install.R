@@ -40,7 +40,7 @@ installDefaultPackages <- function() {
         ),
         reinstall = FALSE
     )
-    cranArchive <- "https://cran.r-project.org/src/contrib/Archive/")
+    cranArchive <- "https://cran.r-project.org/src/contrib/Archive/"
     ## rgdal 1.5-15 is currently broken on CRAN for Debian (2020-08-05).
     ## Fixed with 1.5-16 (2020-08-07).
     ## > install(paste0(cranArchive", "rgdal/rgdal_1.5-12.tar.gz"))
