@@ -110,7 +110,6 @@ local({
             paste(capture.output(print(ok)), collapse = "\n")
         ))
     }
-    stopifnot(bb8::isCleanSystemLibrary())
     ## Attach package libraries:
     ## > packages <- basename(names(dependencies))
     ## > invisible(lapply(
@@ -151,6 +150,6 @@ suppressPackageStartupMessages({
     library(acidbase)
     library(goalie)
 })
-
+stopifnot(bb8::isCleanSystemLibrary())
 attach(.koopa)
 koopa <- .koopa[["koopa"]]
