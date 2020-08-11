@@ -34,13 +34,13 @@ installDefaultPackages <- function() {
     install(paste0(cranArchive, "cpp11/cpp11_0.1.0.tar.gz"))
     install(
         pkgs = c(
-            "rJava",
             "Rcpp",
-            "RcppAnnoy",
             "RcppArmadillo",
+            "RcppAnnoy",
             "XML",
-            "sf",
-            "rgdal"
+            "rJava",
+            "rgdal",
+            "sf"
         ),
         reinstall = FALSE
     )
