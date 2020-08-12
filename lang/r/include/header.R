@@ -1,62 +1,37 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-08-11.
+## @note Updated 2020-08-12.
 ## """
-
-.koopa <- new.env()
-.koopa[["minVersion"]] <- package_version("0.0.1")
-.koopa[["vanilla"]] <- isTRUE("--vanilla" %in% commandArgs())
-.koopa[["verbose"]] <- isTRUE("--verbose" %in% commandArgs())
 
 options(
     "error" = quote(quit(status = 1L)),
     "warn" = 2L,
     "warning" = quote(quit(status = 1L))
 )
-if (isTRUE(.koopa[["verbose"]])) {
+if (isTRUE("--verbose" %in% commandArgs())) {
     options("verbose" = TRUE)
 }
-
 stopifnot(packageVersion("base") >= "4.0")
 
+# Install koopa R package, if necessary.
 local({
-    .isInstalled <- function(pkgs) {
-        basename(pkgs) %in% rownames(installed.packages())
-    }
-    if (isTRUE(.isInstalled("koopa"))) {
-        ok <- packageVersion("koopa") >= .koopa[["minVersion"]]
-    } else {
-        ok <- FALSE
-    }
-    if (isTRUE(ok)) return()
-    if (isTRUE(.koopa[["vanilla"]])) {
-        stop(paste(
-            "R packages cannot be updated in '--vanilla' mode.",
-            "Try running 'install-r-packages' or 'update-r-packages'.",
-            sep = "\n"
-        ), call. = FALSE)
-    }
-    .install <- function(url) {
-        install.packages(pkgs = url, repos = NULL)
-    }
-    message("Installing koopa R package.")
-    .install("https://github.com/acidgenomics/koopa/archive/r.tar.gz")
-    stopifnot(packageVersion("koopa") >= .koopa[["minVersion"]])
+    suppressMessages({
+        source(file.path(koopaPrefix, "lang", "r", "include", "install.R"))
+    })
 })
 
+## Load dependencies.
 suppressPackageStartupMessages({
     library(koopa)
 })
+
+## Run additional header checks.
 stopifnot(isCleanSystemLibrary())
 
-attach(.koopa)
-koopa <- .koopa[["koopa"]]
-
+## Display help if `--help` flag is defined.
 local({
     args <- commandArgs()
-    if (!isTRUE(any(c("--help", "-h") %in% args))) {
-        return()
-    }
+    if (!isTRUE(any(c("--help", "-h") %in% args))) return()
     file <- grep(pattern = "--file", x = args)
     file <- args[file]
     file <- sub(pattern = "^--file=", replacement = "", x = file)
