@@ -11,17 +11,16 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 #'
 #' @note Updated 2020-08-11.
 #' @noRd
-camelCase <- function() {
-    requireNamespaces("syntactic")
+.camelCase <- function() {
     args <- parseArgs(
         flags = c("prefix", "recursive", "strict"),
-        positionalArgs = TRUE
+        positional = TRUE
     )
-    posArgs <- args[["positionalArgs"]]
+    posArgs <- args[["positional"]]
     prefix <- "prefix" %in% args[["flags"]]
     recursive <- "recursive" %in% args[["flags"]]
     strict <- "strict" %in% args[["flags"]]
-    syntactic::camelCase(
+    camelCase(
         object = posArgs,
         rename = TRUE,
         recursive = recursive,
@@ -30,4 +29,4 @@ camelCase <- function() {
     )
 }
 
-camelCase()
+.camelCase()
