@@ -120,6 +120,7 @@ koopa::tldr_download_cache() { # {{{1
     return 0
 }
 
+# FIXME This is now breaking in latest koopa version...
 koopa::tldr_file() { # {{{1
     # """
     # Get the tldr file path, using 'index.json' and platform key.

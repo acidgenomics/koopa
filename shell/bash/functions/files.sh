@@ -17,17 +17,9 @@ koopa::autopad_samples() { # {{{1
                 padwidth="${1#*=}"
                 shift 1
                 ;;
-            --padwidth)
-                padwidth="$2"
-                shift 2
-                ;;
             --prefix=*)
                 prefix="${1#*=}"
                 shift 1
-                ;;
-            --prefix)
-                prefix="$2"
-                shift 2
                 ;;
             --)
                 shift 1
