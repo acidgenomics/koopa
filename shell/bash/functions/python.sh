@@ -67,7 +67,7 @@ koopa::install_pip() { # {{{1
     return 0
 }
 
-koopa::install_pykoopa() { # {{{1
+koopa::install_py_koopa() { # {{{1
     # """
     # Install Python koopa package.
     # @note Updated 2020-08-12.
@@ -154,7 +154,7 @@ koopa::install_python_packages() { # {{{1
     koopa::python_add_site_packages_to_sys_path "$python"
     koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
-    koopa::install_pykoopa "${install_flags[@]}"
+    koopa::install_py_koopa "${install_flags[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }
