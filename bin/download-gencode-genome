@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
+# pylint: disable=protected-access,redefined-builtin
 """
 Download GENCODE genome.
 """
 
 import argparse
 import os
-
 from textwrap import dedent
-
 from koopa.arg import dir_path
 from koopa.genome import tx2gene_from_fasta
 from koopa.genome.gencode import (
@@ -97,114 +96,116 @@ optional.add_argument(
 parser._action_groups.append(optional)
 args = parser.parse_args()
 
-annotation = args.annotation
-build = args.build
-decompress = args.decompress
-organism = args.organism
-output_dir = args.output_dir
-release = args.release
-type = args.type
 
-if type == "none" and annotation == "none":
-    eprint("Error: 'type' or 'annotation' are required.")
+def main(
+    annotation, build, decompress, organism, output_dir, release, type,
+):
+    """
+    Download GENCODE genome.
+    """
+    if type == "none" and annotation == "none":
+        eprint("Error: 'type' or 'annotation' are required.")
+    if organism == "Homo sapiens":
+        organism_short = "human"
+        if build is None:
+            build = "GRCh38"
+    elif organism == "Mus musculus":
+        organism_short = "mouse"
+        if build is not None:
+            eprint("Error: 'build' is only supported for Homo sapiens.")
+        build = "GRCm38"
+    if release is None:
+        release = gencode_version(organism=organism)
+    base_url = paste_url(
+        "ftp://ftp.ebi.ac.uk",
+        "pub",
+        "databases",
+        "gencode/",
+        "Gencode_" + organism_short,
+        "release_" + release,
+    )
+    output_basename = kebab_case(
+        organism + " " + build + " " + "gencode" + " " + release
+    )
+    output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
+    if build == "GRCh37":
+        base_url = paste_url(base_url, "GRCh37_mapping")
+        transcriptome_fasta_url = paste_url(
+            base_url, "gencode.v" + release + "lift37.transcripts.fa.gz"
+        )
+        gtf_url = paste_url(
+            base_url, "gencode.v" + release + "lift37.annotation.gtf.gz"
+        )
+        gff_url = paste_url(
+            base_url, "gencode.v" + release + "lift37.annotation.gff3.gz"
+        )
+        readme_url = paste_url(base_url, "_README_GRCh37_mapping.txt")
+    else:
+        transcriptome_fasta_url = paste_url(
+            base_url, "gencode.v" + release + ".transcripts.fa.gz"
+        )
+        gtf_url = paste_url(
+            base_url, "gencode.v" + release + ".annotation.gtf.gz"
+        )
+        gff_url = paste_url(
+            base_url, "gencode.v" + release + ".annotation.gff3.gz"
+        )
+        readme_url = paste_url(base_url, "_README.TXT")
+    genome_fasta_url = paste_url(
+        base_url, build + ".primary_assembly.genome.fa.gz"
+    )
+    md5sums_url = paste_url(base_url, "MD5SUMS")
+    download(url=readme_url, output_dir=output_dir)
+    download(url=md5sums_url, output_dir=output_dir)
+    if type == "genome":
+        download_gencode_genome(
+            genome_fasta_url=genome_fasta_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+    elif type == "transcriptome":
+        download_gencode_transcriptome(
+            transcriptome_fasta_url=transcriptome_fasta_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+    elif type == "all":
+        download_gencode_genome(
+            genome_fasta_url=genome_fasta_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+        download_gencode_transcriptome(
+            transcriptome_fasta_url=transcriptome_fasta_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+    if annotation == "gtf":
+        download_gencode_gtf(
+            gtf_url=gtf_url, output_dir=output_dir, decompress=decompress
+        )
+    elif annotation == "gff":
+        download_gencode_gff(
+            gff_url=gff_url, output_dir=output_dir, decompress=decompress
+        )
+    elif annotation == "all":
+        download_gencode_gtf(
+            gtf_url=gtf_url, output_dir=output_dir, decompress=decompress
+        )
+        download_gencode_gff(
+            gff_url=gff_url, output_dir=output_dir, decompress=decompress
+        )
+    if type != "genome":
+        tx2gene_from_fasta(source_name="gencode", output_dir=output_dir)
+    print("Genome downloaded successfully to '" + output_dir + "'.")
 
-if organism == "Homo sapiens":
-    organism_short = "human"
-    if build is None:
-        build = "GRCh38"
-elif organism == "Mus musculus":
-    organism_short = "mouse"
-    if build is not None:
-        eprint("Error: 'build' is only supported for Homo sapiens.")
-    build = "GRCm38"
 
-if release is None:
-    release = gencode_version(organism=organism)
-
-base_url = paste_url(
-    "ftp://ftp.ebi.ac.uk",
-    "pub",
-    "databases",
-    "gencode/",
-    "Gencode_" + organism_short,
-    "release_" + release,
+main(
+    annotation=args.annotation,
+    build=args.build,
+    decompress=args.decompress,
+    organism=args.organism,
+    output_dir=args.output_dir,
+    release=args.release,
+    type=args.type,
 )
-output_basename = kebab_case(
-    organism + " " + build + " " + "gencode" + " " + release
-)
-output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
-
-if build == "GRCh37":
-    base_url = paste_url(base_url, "GRCh37_mapping")
-    transcriptome_fasta_url = paste_url(
-        base_url, "gencode.v" + release + "lift37.transcripts.fa.gz"
-    )
-    gtf_url = paste_url(
-        base_url, "gencode.v" + release + "lift37.annotation.gtf.gz"
-    )
-    gff_url = paste_url(
-        base_url, "gencode.v" + release + "lift37.annotation.gff3.gz"
-    )
-    readme_url = paste_url(base_url, "_README_GRCh37_mapping.txt")
-else:
-    transcriptome_fasta_url = paste_url(
-        base_url, "gencode.v" + release + ".transcripts.fa.gz"
-    )
-    gtf_url = paste_url(base_url, "gencode.v" + release + ".annotation.gtf.gz")
-    gff_url = paste_url(
-        base_url, "gencode.v" + release + ".annotation.gff3.gz"
-    )
-    readme_url = paste_url(base_url, "_README.TXT")
-
-genome_fasta_url = paste_url(
-    base_url, build + ".primary_assembly.genome.fa.gz"
-)
-md5sums_url = paste_url(base_url, "MD5SUMS")
-
-download(url=readme_url, output_dir=output_dir)
-download(url=md5sums_url, output_dir=output_dir)
-
-if type == "genome":
-    download_gencode_genome(
-        genome_fasta_url=genome_fasta_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-elif type == "transcriptome":
-    download_gencode_transcriptome(
-        transcriptome_fasta_url=transcriptome_fasta_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-elif type == "all":
-    download_gencode_genome(
-        genome_fasta_url=genome_fasta_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-    download_gencode_transcriptome(
-        transcriptome_fasta_url=transcriptome_fasta_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-
-if annotation == "gtf":
-    download_gencode_gtf(
-        gtf_url=gtf_url, output_dir=output_dir, decompress=decompress
-    )
-elif annotation == "gff":
-    download_gencode_gff(
-        gff_url=gff_url, output_dir=output_dir, decompress=decompress
-    )
-elif annotation == "all":
-    download_gencode_gtf(
-        gtf_url=gtf_url, output_dir=output_dir, decompress=decompress
-    )
-    download_gencode_gff(
-        gff_url=gff_url, output_dir=output_dir, decompress=decompress
-    )
-
-if type != "genome":
-    tx2gene_from_fasta(source_name="gencode", output_dir=output_dir)
-
-print("Genome downloaded successfully to '" + output_dir + "'.")

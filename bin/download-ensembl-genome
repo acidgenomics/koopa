@@ -6,9 +6,7 @@ Download Ensembl genome.
 
 import argparse
 import os
-
 from textwrap import dedent
-
 from koopa.arg import dir_path
 from koopa.genome import tx2gene_from_fasta
 from koopa.genome.ensembl import (
