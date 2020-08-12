@@ -71,27 +71,6 @@ koopa::check_exports() { # {{{1
     return 0
 }
 
-koopa::check_system() { # {{{1
-    # """
-    # Check system.
-    # @note Updated 2020-07-05.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed Rscript
-    local koopa_prefix
-    koopa_prefix="$(koopa::prefix)"
-    export KOOPA_FORCE=1
-    set +u
-    # shellcheck disable=SC1090
-    . "${koopa_prefix}/activate"
-    set -u
-    Rscript --vanilla "$(koopa::include_prefix)/check-system.R"
-    koopa::check_exports
-    koopa::check_disk
-    koopa::check_data_disk
-    return 0
-}
-
 koopa::date() { # {{{1
     # """
     # Koopa date.
@@ -238,17 +217,6 @@ koopa::info_box() { # {{{1
         printf '  ┃ %-68s ┃  \n' "${i::68}"
     done
     printf '  %s%s%s  \n\n' '┗' "$barpad" '┛'
-    return 0
-}
-
-koopa::list() { # {{{1
-    # """
-    # List exported koopa scripts.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed Rscript
-    Rscript --vanilla "$(koopa::include_prefix)/list.R"
     return 0
 }
 
@@ -778,15 +746,6 @@ koopa::sys_user() { # {{{1
         user="$(koopa::user)"
     fi
     koopa::print "$user"
-    return 0
-}
-
-koopa::test() { # {{{1
-    # """
-    # Run koopa unit tests.
-    # @note Updated 2020-06-26.
-    # """
-    "$(koopa::tests_prefix)/tests" "$@"
     return 0
 }
 
