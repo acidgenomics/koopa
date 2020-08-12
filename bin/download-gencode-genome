@@ -19,6 +19,7 @@ from koopa.genome.gencode import (
 from koopa.syntactic import kebab_case
 from koopa.system import download, eprint, paste_url
 
+
 DESCRIPTION = "Download GENCODE genome."
 EPILOG = """
 details:
