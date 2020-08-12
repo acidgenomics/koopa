@@ -8,6 +8,7 @@ import sys
 from koopa.url import url_encode
 
 # FIXME Need to add support for --help flag.
+# FIXME Can we source a shared Python header that detects --help flag?
 
 def main(x):
     """
