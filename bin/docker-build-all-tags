@@ -8,21 +8,21 @@ koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 parse <- parseArgs(
-    optionalArgs = c("days", "dir"),
+    optional = c("days", "dir"),
     flags = "force",
     positional = TRUE
 )
 args <- list(
-    images = parse[["positionalArgs"]],
+    images = parse[["positional"]],
     force = "force" %in% parse[["flags"]]
 )
-optionalArgs <- parse[["optionalArgs"]]
-if (!is.null(optionalArgs)) {
-    if (isSubset("days", names(optionalArgs))) {
-        args[["days"]] <- as.numeric(optionalArgs[["days"]])
+optional <- parse[["optional"]]
+if (!is.null(optional)) {
+    if (isSubset("days", names(optional))) {
+        args[["days"]] <- as.numeric(optional[["days"]])
     }
-    if (isSubset("dir", names(optionalArgs))) {
-        args[["dir"]] <- optionalArgs[["dir"]]
+    if (isSubset("dir", names(optional))) {
+        args[["dir"]] <- optional[["dir"]]
     }
 }
 do.call(what = dockerBuildAllImages, args = args)

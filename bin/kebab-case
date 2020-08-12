@@ -7,24 +7,17 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-#' Rename files in kebab case
-#'
-#' @note Updated 2020-08-11.
-#' @noRd
-.kebabCase <- function() {
-    args <- parseArgs(
-        flags = c("prefix", "recursive"),
-        positional = TRUE
-    )
-    posArgs <- args[["positional"]]
-    prefix <- "prefix" %in% args[["flags"]]
-    recursive <- "recursive" %in% args[["flags"]]
-    kebabCase(
-        object = posArgs,
-        rename = TRUE,
-        recursive = recursive,
-        prefix = prefix
-    )
-}
+args <- parseArgs(
+    flags = c("prefix", "recursive"),
+    positional = TRUE
+)
+positional <- args[["positional"]]
+prefix <- "prefix" %in% args[["flags"]]
+recursive <- "recursive" %in% args[["flags"]]
 
-.kebabCase()
+kebabCase(
+    object = positional,
+    rename = TRUE,
+    recursive = recursive,
+    prefix = prefix
+)
