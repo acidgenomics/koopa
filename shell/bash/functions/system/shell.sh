@@ -22,3 +22,10 @@ koopa::enable_shell() { # {{{1
     koopa::note "Run 'chsh -s ${cmd_path} ${USER}' to change default shell."
     return 0
 }
+
+koopa::reload_shell() { # {{{1
+    koopa::assert_has_no_args "$#"
+    # shellcheck disable=SC2093
+    exec "${SHELL:?}" -il
+    return 0
+}
