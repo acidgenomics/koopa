@@ -50,6 +50,8 @@ koopa::_salmon_quant() { # {{{1
     # Run salmon quant (per sample).
     # @note Updated 2020-08-06.
     #
+    # Quartz is currently using only '--validateMappings' and '--gcBias' flags.
+    #
     # Important options:
     # * --libType='A': Enable ability to automatically infer (i.e. guess) the
     #   library type based on how the first few thousand reads map to the
@@ -137,6 +139,7 @@ koopa::_salmon_quant() { # {{{1
     koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/salmon-quant.log"
     koopa::mkdir "$sample_output_dir"
+    # Experimental: --posBias
     salmon quant \
         --index="$index_dir" \
         --output="$sample_output_dir" \
@@ -144,7 +147,6 @@ koopa::_salmon_quant() { # {{{1
         --validateMappings \
         --seqBias \
         --gcBias \
-        --posBias \
         --numBootstraps="$bootstraps" \
         --threads="$threads" \
         --mates1="$fastq_r1" \
