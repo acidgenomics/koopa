@@ -26,5 +26,5 @@ local({
             args[["dir"]] <- optional[["dir"]]
         }
     }
-    do.call(what = dockerBuildAllImages, args = args)
+    do.call(what = dockerBuildAllTags, args = args)
 })
