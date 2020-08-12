@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-08-11"
+koopa-date="2020-08-12"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.8.0"
@@ -121,7 +121,7 @@ git="2.28.0"
 gnupg="2.2.21"
 
 # https://golang.org/dl/
-go="1.14.5"
+go="1.15"
 
 # https://www.gnu.org/software/grep/
 grep="3.4"
@@ -259,7 +259,7 @@ rust="1.44.1"
 rustup="1.21.1"
 
 # https://download.samba.org/pub/rsync/src/
-rsync="3.2.2"
+rsync="3.2.3"
 
 # http://rtomayko.github.io/ronn/
 ronn="0.7.3"

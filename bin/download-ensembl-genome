@@ -1,23 +1,13 @@
 #!/usr/bin/env python3
-# pylint: disable=invalid-name,redefined-outer-name
-# pylint: enable=invalid-name
+# pylint: disable=protected-access,redefined-builtin
 """
 Download Ensembl genome.
 """
 
 import argparse
 import os
-import sys
-
 from textwrap import dedent
-
-# pylint: disable=wrong-import-position
-
-KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
-PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
-sys.path.insert(0, PYTHON_PREFIX)
-
-from koopa.argparse import dir_path
+from koopa.arg import dir_path
 from koopa.genome import tx2gene_from_fasta
 from koopa.genome.ensembl import (
     download_ensembl_genome,
@@ -29,7 +19,6 @@ from koopa.genome.ensembl import (
 from koopa.syntactic import kebab_case
 from koopa.system import eprint, paste_url
 
-# pylint: enable=wrong-import-position
 
 DESCRIPTION = "Download Ensembl genome."
 EPILOG = """
@@ -88,10 +77,8 @@ see also:
 
 note:
     Python script.
-    Updated 2020-02-09.
+    Updated 2020-08-11.
 """
-
-# pylint: disable=invalid-name,protected-access,redefined-builtin
 
 parser = argparse.ArgumentParser(
     description=DESCRIPTION,
@@ -153,105 +140,104 @@ optional.add_argument(
 parser._action_groups.append(optional)
 args = parser.parse_args()
 
-annotation = args.annotation
-build = args.build
-decompress = args.decompress
-organism = args.organism
-output_dir = args.output_dir
-release = args.release
-type = args.type
 
-if type == "none" and annotation == "none":
-    eprint("Error: 'type' or 'annotation' are required.")
+def main(annotation, build, decompress, organism, output_dir, release, type):
+    """
+    Download Ensembl genome.
+    """
+    if type == "none" and annotation == "none":
+        eprint("Error: 'type' or 'annotation' are required.")
+    organism = organism.replace(" ", "_")
+    base_url = "ftp://ftp.ensembl.org/pub"
+    grch37_base_url = paste_url(base_url, "grch37")
+    grch37_release = "87"
+    if build == "GRCh37":
+        base_url = grch37_base_url
+        release = grch37_release
+    if release is None:
+        release = ensembl_version()
+    release_url = paste_url(base_url, "release-" + release)
+    output_basename = kebab_case(
+        organism + " " + build + " " + "ensembl" + " " + release
+    )
+    output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
+    if type == "genome":
+        download_ensembl_genome(
+            organism=organism,
+            build=build,
+            release_url=release_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+    elif type == "transcriptome":
+        download_ensembl_transcriptome(
+            organism=organism,
+            build=build,
+            release_url=release_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+    elif type == "all":
+        download_ensembl_genome(
+            organism=organism,
+            build=build,
+            release_url=release_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+        download_ensembl_transcriptome(
+            organism=organism,
+            build=build,
+            release_url=release_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+    if annotation == "gtf":
+        download_ensembl_gtf(
+            organism=organism,
+            build=build,
+            release=release,
+            release_url=release_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+    elif annotation == "gff":
+        download_ensembl_gff(
+            organism=organism,
+            build=build,
+            release=release,
+            release_url=release_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+    elif annotation == "all":
+        download_ensembl_gtf(
+            organism=organism,
+            build=build,
+            release=release,
+            release_url=release_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+        download_ensembl_gff(
+            organism=organism,
+            build=build,
+            release=release,
+            release_url=release_url,
+            output_dir=output_dir,
+            decompress=decompress,
+        )
+    if type != "genome":
+        tx2gene_from_fasta(source_name="ensembl", output_dir=output_dir)
+    print("Genome downloaded successfully to '" + output_dir + "'.")
 
-organism = organism.replace(" ", "_")
 
-base_url = "ftp://ftp.ensembl.org/pub"
-grch37_base_url = paste_url(base_url, "grch37")
-grch37_release = "87"
-
-if build == "GRCh37":
-    base_url = grch37_base_url
-    release = grch37_release
-if release is None:
-    release = ensembl_version()
-
-release_url = paste_url(base_url, "release-" + release)
-
-output_basename = kebab_case(
-    organism + " " + build + " " + "ensembl" + " " + release
+main(
+    annotation=args.annotation,
+    build=args.build,
+    decompress=args.decompress,
+    organism=args.organism,
+    output_dir=args.output_dir,
+    release=args.release,
+    type=args.type,
 )
-output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
-
-if type == "genome":
-    download_ensembl_genome(
-        organism=organism,
-        build=build,
-        release_url=release_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-elif type == "transcriptome":
-    download_ensembl_transcriptome(
-        organism=organism,
-        build=build,
-        release_url=release_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-elif type == "all":
-    download_ensembl_genome(
-        organism=organism,
-        build=build,
-        release_url=release_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-    download_ensembl_transcriptome(
-        organism=organism,
-        build=build,
-        release_url=release_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-
-if annotation == "gtf":
-    download_ensembl_gtf(
-        organism=organism,
-        build=build,
-        release=release,
-        release_url=release_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-elif annotation == "gff":
-    download_ensembl_gff(
-        organism=organism,
-        build=build,
-        release=release,
-        release_url=release_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-elif annotation == "all":
-    download_ensembl_gtf(
-        organism=organism,
-        build=build,
-        release=release,
-        release_url=release_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-    download_ensembl_gff(
-        organism=organism,
-        build=build,
-        release=release,
-        release_url=release_url,
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-
-if type != "genome":
-    tx2gene_from_fasta(source_name="ensembl", output_dir=output_dir)
-
-print("Genome downloaded successfully to '" + output_dir + "'.")

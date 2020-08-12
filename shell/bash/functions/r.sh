@@ -215,7 +215,7 @@ koopa::r_javareconf() { # {{{1
     return 0
 }
 
-koopa::r_rebuild_docs() {
+koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
     # @note Updated 2020-08-11.
