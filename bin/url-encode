@@ -7,6 +7,7 @@ Updated 2020-08-12.
 import sys
 from koopa.url import url_encode
 
+# FIXME Need to add support for --help flag.
 
 def main(x):
     """
