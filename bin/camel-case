@@ -7,26 +7,19 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-#' Rename files in camel case
-#'
-#' @note Updated 2020-08-11.
-#' @noRd
-.camelCase <- function() {
-    args <- parseArgs(
-        flags = c("prefix", "recursive", "strict"),
-        positional = TRUE
-    )
-    posArgs <- args[["positional"]]
-    prefix <- "prefix" %in% args[["flags"]]
-    recursive <- "recursive" %in% args[["flags"]]
-    strict <- "strict" %in% args[["flags"]]
-    camelCase(
-        object = posArgs,
-        rename = TRUE,
-        recursive = recursive,
-        strict = strict,
-        prefix = prefix
-    )
-}
+args <- parseArgs(
+    flags = c("prefix", "recursive", "strict"),
+    positional = TRUE
+)
+positional <- args[["positional"]]
+prefix <- "prefix" %in% args[["flags"]]
+recursive <- "recursive" %in% args[["flags"]]
+strict <- "strict" %in% args[["flags"]]
 
-.camelCase()
+camelCase(
+    object = positional,
+    rename = TRUE,
+    recursive = recursive,
+    strict = strict,
+    prefix = prefix
+)
