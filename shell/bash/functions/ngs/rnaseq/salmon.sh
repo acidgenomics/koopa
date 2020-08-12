@@ -215,7 +215,6 @@ koopa::run_salmon() { # {{{1
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running salmon.'
     koopa::activate_conda_env salmon
-    koopa::dl 'salmon' "$(koopa::which_realpath salmon)"
     fastq_dir="$(realpath "$fastq_dir")"
     koopa::dl 'fastq dir' "$fastq_dir"
 

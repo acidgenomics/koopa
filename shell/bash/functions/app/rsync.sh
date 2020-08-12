@@ -1,5 +1,30 @@
 #!/usr/bin/env bash
 
+koopa::rsync_cloud() { # {{{1
+    local flags
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed rsync
+    flags=(
+        # '--exclude=bam'
+        # '--exclude=cram'
+        # '--exclude=fastq'
+        # '--exclude=sam'
+        '--exclude=.Rproj.user'
+        '--exclude=.git'
+        '--exclude=.gitignore'
+        '--exclude=work'
+        '--human-readable'
+        '--no-links'
+        '--progress'
+        '--recursive'
+        '--size-only'
+        '--stats'
+        '--verbose'
+    )
+    rsync "${flags[@]}" --rsync-path='sudo rsync' "$@"
+    return 0
+}
+
 koopa::rsync_flags() { # {{{1
     # """
     # rsync flags.
