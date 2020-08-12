@@ -48,6 +48,19 @@ suppressPackageStartupMessages({
     library(koopa)
 })
 stopifnot(isCleanSystemLibrary())
-koopaHelp()
+
 attach(.koopa)
 koopa <- .koopa[["koopa"]]
+
+local({
+    args <- commandArgs()
+    if (!isTRUE(any(c("--help", "-h") %in% args))) {
+        return()
+    }
+    file <- grep(pattern = "--file", x = args)
+    file <- args[file]
+    file <- sub(pattern = "^--file=", replacement = "", x = file)
+    name <- basename(file)
+    shell(command = "man", args = name)
+    quit()
+})
