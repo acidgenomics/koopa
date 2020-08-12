@@ -30,7 +30,11 @@ local({
     }
     if (isTRUE(ok)) return()
     if (isTRUE(.koopa[["vanilla"]])) {
-        stop("Outdated R packages cannot be updated in '--vanilla' mode.")
+        stop(paste(
+            "R packages cannot be updated in '--vanilla' mode.",
+            "Try running 'install-r-packages' or 'update-r-packages'.",
+            sep = "\n"
+        ), call. = FALSE)
     }
     .install <- function(url) {
         install.packages(pkgs = url, repos = NULL)
