@@ -155,25 +155,13 @@ koopa::ftp_mirror() { # {{{1
                 dir="${1#*=}"
                 shift 1
                 ;;
-            --dir)
-                dir="$2"
-                shift 2
-                ;;
             --host=*)
                 host="${1#*=}"
                 shift 1
                 ;;
-            --host)
-                host="$2"
-                shift 2
-                ;;
             --user=*)
                 user="${1#*=}"
                 shift 1
-                ;;
-            --user)
-                user="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
