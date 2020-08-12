@@ -1,17 +1,64 @@
 #!/usr/bin/env bash
 
-koopa::_bowtie2() { # {{{1
+koopa::kallisto_index() { # {{{1
     # """
-    # Run bowtie2 on paired-end FASTQ files.
-    # @note Updated 2020-07-07.
+    # Generate kallisto index.
+    # @note Updated 2020-08-12.
     # """
-    local fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_prefix log_file \
-        output_dir r1_tail r2_tail sam_file sample_output_dir threads
+    local fasta_file index_dir index_file log_file
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed bowtie2
+    koopa::assert_is_installed kallisto
     while (("$#"))
     do
         case "$1" in
+            --fasta-file=*)
+                fasta_file="${1#*=}"
+                shift 1
+                ;;
+            --index-file=*)
+                index_file="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_set fasta_file index_file
+    koopa::assert_is_file "$fasta_file"
+    if [[ -f "$index_file" ]]
+    then
+        koopa::note "Index exists at '${index_file}'. Skipping."
+        return 0
+    fi
+    koopa::h2 "Generating kallisto index at '${index_file}'."
+    index_dir="$(dirname "$index_file")"
+    log_file="${index_dir}/kallisto-index.log"
+    koopa::mkdir "$index_dir"
+    kallisto index \
+        -i "$index_file" \
+        "$fasta_file" \
+        2>&1 | tee "$log_file"
+    return 0
+}
+
+koopa::kallisto_quant() { # {{{1
+    # """
+    # Run kallisto quant.
+    # @note Updated 2020-08-12.
+    # """
+    local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_file \
+        log_file output_dir r1_tail r2_tail sample_output_dir threads
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed kallisto
+    bootstraps=30
+    while (("$#"))
+    do
+        case "$1" in
+            --bootstraps=*)
+                bootstraps="${1#*=}"
+                shift 1
+                ;;
             --fastq-r1=*)
                 fastq_r1="${1#*=}"
                 shift 1
@@ -20,8 +67,8 @@ koopa::_bowtie2() { # {{{1
                 fastq_r2="${1#*=}"
                 shift 1
                 ;;
-            --index-prefix=*)
-                index_prefix="${1#*=}"
+            --index-file=*)
+                index_file="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
@@ -41,8 +88,7 @@ koopa::_bowtie2() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set fastq_r1 fastq_r2 index_prefix output_dir \
-        r1_tail r2_tail
+    koopa::assert_is_set fastq_r1 fastq_r2 index_file output_dir r1_tail r2_tail
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
     fastq_r1_bn="$(basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
@@ -56,79 +102,32 @@ koopa::_bowtie2() { # {{{1
         koopa::note "Skipping '${id}'."
         return 0
     fi
-    koopa::h2 "Aligning '${id}' into '${sample_output_dir}'."
+    koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
+    koopa::dl 'Bootstraps' "$bootstraps"
     threads="$(koopa::cpu_count)"
     koopa::dl 'Threads' "$threads"
-    sam_file="${sample_output_dir}/${id}.sam"
-    log_file="${sample_output_dir}/bowtie2.log"
+    log_file="${sample_output_dir}/kallisto-quant.log"
     koopa::mkdir "$sample_output_dir"
-    bowtie2 \
-        --local \
-        --sensitive-local \
-        --rg-id "$id" \
-        --rg 'PL:illumina' \
-        --rg "PU:${id}" \
-        --rg "SM:${id}" \
-        -1 "$fastq_r1" \
-        -2 "$fastq_r2" \
-        -S "$sam_file" \
-        -X 2000 \
-        -p "$threads" \
-        -q \
-        -x "$index_prefix" \
+    kallisto quant \
+        --bootstrap-samples="$bootstraps" \
+        --index="$index_file" \
+        --output-dir="$sample_output_dir" \
+        --threads="$threads" \
+        "$fastq_r1" \
+        "$fastq_r2" \
         2>&1 | tee "$log_file"
     return 0
 }
 
-koopa::_bowtie2_index() { # {{{1
+koopa::run_kallisto() { # {{{1
     # """
-    # Generate bowtie2 index.
-    # @note Updated 2020-02-05.
+    # Run kallisto on multiple samples.
+    # @note Updated 2020-08-12.
     # """
-    local fasta_file index_dir index_prefix threads
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed bowtie2-build
-    while (("$#"))
-    do
-        case "$1" in
-            --fasta-file=*)
-                fasta_file="${1#*=}"
-                shift 1
-                ;;
-            --index-dir=*)
-                index_dir="${1#*=}"
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::assert_is_set fasta_file index_dir
-    koopa::assert_is_file "$fasta_file"
-    if [[ -d "$index_dir" ]]
-    then
-        koopa::note "Index exists at '${index_dir}'. Skipping."
-        return 0
-    fi
-    koopa::h2 "Generating bowtie2 index at '${index_dir}'."
-    threads="$(koopa::cpu_count)"
-    koopa::dl 'Threads' "$threads"
-    # Note that this step adds 'bowtie2.*' to the file names created in the
-    # index directory.
-    index_prefix="${index_dir}/bowtie2"
-    koopa::mkdir "$index_dir"
-    bowtie2-build \
-        --threads="$threads" \
-        "$fasta_file" \
-        "$index_prefix"
-    return 0
-}
-
-koopa::bowtie2() { # {{{1
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
+    koopa::assert_has_args "$#"
     fastq_dir='fastq'
-    output_dir='bowtie2'
+    output_dir='kallisto'
     r1_tail='_R1_001.fastq.gz'
     r2_tail='_R2_001.fastq.gz'
     while (("$#"))
@@ -138,70 +137,43 @@ koopa::bowtie2() { # {{{1
                 fasta_file="${1#*=}"
                 shift 1
                 ;;
-            --fasta-file)
-                fasta_file="$2"
-                shift 2
-                ;;
             --fastq-dir=*)
                 fastq_dir="${1#*=}"
                 shift 1
                 ;;
-            --fastq-dir)
-                fastq_dir="$2"
-                shift 2
-                ;;
-            --index-dir=*)
-                index_dir="${1#*=}"
+            --index-file=*)
+                index_file="${1#*=}"
                 shift 1
-                ;;
-            --index-dir)
-                index_dir="$2"
-                shift 2
                 ;;
             --output-dir=*)
                 output_dir="${1#*=}"
                 shift 1
                 ;;
-            --output-dir)
-                output_dir="$2"
-                shift 2
-                ;;
             --r1-tail=*)
                 r1_tail="${1#*=}"
                 shift 1
                 ;;
-            --r1-tail)
-                r1_tail="$2"
-                shift 2
-                ;;
             --r2-tail=*)
                 r2_tail="${1#*=}"
                 shift 1
-                ;;
-            --r2-tail)
-                r2_tail="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
+    if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_file:-}" ]]
     then
-        koopa::stop "Specify 'fasta-file' or 'index-dir'."
-    elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
+        koopa::stop "Specify 'fasta-file' or 'index-file'."
+    elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_file:-}" ]]
     then
-        koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
-    elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
-    then
-        koopa::missing_arg
+        koopa::stop "Specify 'fasta-file' or 'index-file', but not both."
     fi
+    koopa::assert_is_set fastq_dir output_dir
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
-    koopa::h1 'Running bowtie2.'
-    koopa::activate_conda_env bowtie2
-    koopa::dl 'bowtie2' "$(koopa::which_realpath bowtie2)"
+    koopa::h1 'Running kallisto.'
+    koopa::activate_conda_env kallisto
     fastq_dir="$(realpath "$fastq_dir")"
     koopa::dl 'fastq dir' "$fastq_dir"
 
@@ -216,6 +188,7 @@ koopa::bowtie2() { # {{{1
             -mindepth 1 \
             -type f \
             -name "*${r1_tail}" \
+            -not -name '._*' \
             -print \
         | sort \
     )"
@@ -225,34 +198,34 @@ koopa::bowtie2() { # {{{1
         koopa::stop "No FASTQs in '${fastq_dir}' with '${r1_tail}'."
     fi
     koopa::info "${#fastq_r1_files[@]} samples detected."
+    koopa::mkdir "$output_dir"
 
     # Index {{{2
     # --------------------------------------------------------------------------
 
     # Generate the genome index on the fly, if necessary.
-    if [[ -n "${index_dir:-}" ]]
+    if [[ -n "${index_file:-}" ]]
     then
-        index_dir="$(realpath "$index_dir")"
+        index_file="$(realpath "$index_file")"
     else
-        index_dir="${output_dir}/bowtie2.idx"
-        koopa::_bowtie2_index \
+        index_file="${output_dir}/kallisto.idx"
+        koopa::kallisto_index \
             --fasta-file="$fasta_file" \
-            --index-dir="$index_dir"
+            --index-file="$index_file"
     fi
-    koopa::dl 'index' "$index_dir"
+    koopa::dl 'index' "$index_file"
 
-    # Alignment {{{2
+    # Quantify {{{2
     # --------------------------------------------------------------------------
 
-    # Loop across the per-sample array and align.
+    # Loop across the per-sample array and quantify.
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
-        index_prefix="${index_dir}/bowtie2"
-        koopa::_bowtie2 \
+        koopa::kallisto_quant \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
-            --index-prefix="$index_prefix" \
+            --index-file="$index_file" \
             --output-dir="$output_dir" \
             --r1-tail="$r1_tail" \
             --r2-tail="$r2_tail"
