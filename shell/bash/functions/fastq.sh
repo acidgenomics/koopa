@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 koopa::fastq_dump_from_sra_file_list() { # {{{1
+    # """
+    # Dump FASTQ files from SRA file list.
+    # @note Updated 2020-08-12.
+    # """
     local filelist id
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed fastq-dump
@@ -18,6 +22,10 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
 }
 
 koopa::fastq_lanepool() { # {{{1
+    # """
+    # Pool lane-split FASTQ files.
+    # @note Updated 2020-08-12.
+    # """
     local array basenames head i out prefix source_dir tail target_dir
     prefix='lanepool'
     source_dir='.'
@@ -29,25 +37,13 @@ koopa::fastq_lanepool() { # {{{1
                 prefix="${1#*=}"
                 shift 1
                 ;;
-            --prefix)
-                prefix="$2"
-                shift 2
-                ;;
             --source-dir=*)
                 source_dir="${1#*=}"
                 shift 1
                 ;;
-            --source-dir)
-                source_dir="$2"
-                shift 2
-                ;;
             --target-dir=*)
                 target_dir="${1#*=}"
                 shift 1
-                ;;
-            --target-dir)
-                target_dir="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
@@ -105,6 +101,10 @@ koopa::fastq_lanepool() { # {{{1
 }
 
 koopa::fastq_reads_per_file() { # {{{1
+    # """
+    # Determine the number of reads per FASTQ file.
+    # @note Updated 2020-08-12.
+    # """
     local dir
     koopa::assert_is_installed awk wc zcat
     dir="${1:-.}"
@@ -119,7 +119,7 @@ koopa::fastq_reads_per_file() { # {{{1
 koopa::fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.
-    # @note Updated 2020-07-11.
+    # @note Updated 2020-08-12.
     #
     # Alternate approaches:
     #
@@ -142,17 +142,9 @@ koopa::fastq_to_fasta() { # {{{1
                 source_dir="${1#*=}"
                 shift 1
                 ;;
-            --source-dir)
-                source_dir="$2"
-                shift 2
-                ;;
             --target-dir=*)
                 target_dir="${1#*=}"
                 shift 1
-                ;;
-            --target-dir)
-                target_dir="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
