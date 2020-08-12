@@ -16,7 +16,7 @@ test_r_parse_args() { # {{{1
                 'GGG' \
                 'HHH' \
         )" \
-        'requiredArgs'
+        'required'
     assertContains \
         "$("${rscript_dir}/positional-args" 'aaa' 'bbb')" \
         'aaa'

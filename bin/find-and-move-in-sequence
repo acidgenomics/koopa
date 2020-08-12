@@ -7,4 +7,12 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-findAndMoveInSequence()
+local({
+    posArgs <- positionalArgs()
+    sourceDir <- realpath(posArgs[[1L]])
+    targetDir <- realpath(posArgs[[2L]])
+    findAndMoveInSequence(
+        sourceDir = sourceDir,
+        targetDir = targetDir
+    )
+})

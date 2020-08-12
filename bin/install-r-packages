@@ -7,4 +7,8 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-installDefaultPackages()
+local({
+    args <- parseArgs(flags = "all", positional = FALSE)
+    all <- "all" %in% args[["flags"]]
+    installDefaultPackages(all = all)
+})
