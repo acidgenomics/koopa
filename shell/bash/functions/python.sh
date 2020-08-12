@@ -67,6 +67,17 @@ koopa::install_pip() { # {{{1
     return 0
 }
 
+koopa::install_pykoopa() { # {{{1
+    # """
+    # Install Python koopa package.
+    # @note Updated 2020-08-06.
+    # """
+    local url
+    url='https://github.com/acidgenomics/koopa/archive/python.tar.gz'
+    koopa::pip_install "$url"
+    return 0
+}
+
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
