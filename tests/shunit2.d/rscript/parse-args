@@ -8,8 +8,8 @@ koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 parseArgs(
-    requiredArgs = c("aaa", "bbb"),
-    optionalArgs = c("ccc", "ddd", "zzz"),
+    required = c("aaa", "bbb"),
+    optional = c("ccc", "ddd", "zzz"),
     flags = c("eee", "fff"),
-    positionalArgs = TRUE
+    positional = TRUE
 )
