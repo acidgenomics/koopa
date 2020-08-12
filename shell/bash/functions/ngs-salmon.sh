@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::_salmon_index() { # {{{1
+koopa::salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-08-12.
     # """
     local fasta_file index_dir log_file threads
     koopa::assert_has_args "$#"
@@ -45,10 +45,10 @@ koopa::_salmon_index() { # {{{1
     return 0
 }
 
-koopa::_salmon_quant() { # {{{1
+koopa::salmon_quant() { # {{{1
     # """
     # Run salmon quant (per sample).
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-08-12.
     #
     # Quartz is currently using only '--validateMappings' and '--gcBias' flags.
     #
@@ -81,14 +81,21 @@ koopa::_salmon_quant() { # {{{1
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
+    #       rnaseq/salmon.py
     # """
     local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_dir \
         log_file output_dir r1_tail r2_tail sample_output_dir threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed salmon
+    bootstraps=30
     while (("$#"))
     do
         case "$1" in
+            --bootstraps=*)
+                bootstraps="${1#*=}"
+                shift 1
+                ;;
             --fastq-r1=*)
                 fastq_r1="${1#*=}"
                 shift 1
@@ -133,13 +140,11 @@ koopa::_salmon_quant() { # {{{1
         return 0
     fi
     koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
-    bootstraps=30
     koopa::dl 'Bootstraps' "$bootstraps"
     threads="$(koopa::cpu_count)"
     koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/salmon-quant.log"
     koopa::mkdir "$sample_output_dir"
-    # Experimental: --posBias
     salmon quant \
         --index="$index_dir" \
         --output="$sample_output_dir" \
@@ -155,10 +160,10 @@ koopa::_salmon_quant() { # {{{1
     return 0
 }
 
-koopa::salmon() { # {{{1
+koopa::run_salmon() { # {{{1
     # """
     # Run salmon on multiple samples (per FASTQ directory).
-    # @note Updated 2020-07-21.
+    # @note Updated 2020-08-12.
     # """
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     koopa::assert_has_args "$#"
@@ -173,49 +178,25 @@ koopa::salmon() { # {{{1
                 fasta_file="${1#*=}"
                 shift 1
                 ;;
-            --fasta-file)
-                fasta_file="$2"
-                shift 2
-                ;;
             --fastq-dir=*)
                 fastq_dir="${1#*=}"
                 shift 1
-                ;;
-            --fastq-dir)
-                fastq_dir="$2"
-                shift 2
                 ;;
             --index-dir=*)
                 index_dir="${1#*=}"
                 shift 1
                 ;;
-            --index-dir)
-                index_dir="$2"
-                shift 2
-                ;;
             --output-dir=*)
                 output_dir="${1#*=}"
                 shift 1
-                ;;
-            --output-dir)
-                output_dir="$2"
-                shift 2
                 ;;
             --r1-tail=*)
                 r1_tail="${1#*=}"
                 shift 1
                 ;;
-            --r1-tail)
-                r1_tail="$2"
-                shift 2
-                ;;
             --r2-tail=*)
                 r2_tail="${1#*=}"
                 shift 1
-                ;;
-            --r2-tail)
-                r2_tail="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
@@ -228,10 +209,8 @@ koopa::salmon() { # {{{1
     elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
     then
         koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
-    elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
-    then
-        koopa::missing_arg
     fi
+    koopa::assert_is_set fastq_dir output_dir
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running salmon.'
@@ -272,7 +251,7 @@ koopa::salmon() { # {{{1
         index_dir="$(realpath "$index_dir")"
     else
         index_dir="${output_dir}/salmon.idx"
-        koopa::_salmon_index \
+        koopa::salmon_index \
             --fasta-file="$fasta_file" \
             --index-dir="$index_dir"
     fi
@@ -285,7 +264,7 @@ koopa::salmon() { # {{{1
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
-        koopa::_salmon_quant \
+        koopa::salmon_quant \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
             --index-dir="$index_dir" \
