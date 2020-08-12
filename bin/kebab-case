@@ -11,16 +11,15 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 #'
 #' @note Updated 2020-08-11.
 #' @noRd
-kebabCase <- function() {
-    requireNamespaces("syntactic")
+.kebabCase <- function() {
     args <- parseArgs(
         flags = c("prefix", "recursive"),
-        positionalArgs = TRUE
+        positional = TRUE
     )
-    posArgs <- args[["positionalArgs"]]
+    posArgs <- args[["positional"]]
     prefix <- "prefix" %in% args[["flags"]]
     recursive <- "recursive" %in% args[["flags"]]
-    syntactic::kebabCase(
+    kebabCase(
         object = posArgs,
         rename = TRUE,
         recursive = recursive,
@@ -28,4 +27,4 @@ kebabCase <- function() {
     )
 }
 
-kebabCase()
+.kebabCase()
