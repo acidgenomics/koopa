@@ -110,7 +110,7 @@ koopa::aws_s3_find() { # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-08-12.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
@@ -134,17 +134,9 @@ koopa::aws_s3_find() { # {{{1
                 exclude="${1#*=}"
                 shift 1
                 ;;
-            --exclude)
-                exclude="$2"
-                shift 2
-                ;;
             --include=*)
                 include="${1#*=}"
                 shift 1
-                ;;
-            --include)
-                include="$2"
-                shift 2
                 ;;
             --)
                 shift 1
@@ -214,10 +206,6 @@ koopa::aws_s3_ls() { # {{{1
             --type=*)
                 type="${1#*=}"
                 shift 1
-                ;;
-            --type)
-                type="$2"
-                shift 2
                 ;;
             --)
                 shift 1

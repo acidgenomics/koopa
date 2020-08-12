@@ -50,17 +50,9 @@ koopa::docker_build() { # {{{1
                 server="${1#*=}"
                 shift 1
                 ;;
-            --server)
-                server="$2"
-                shift 2
-                ;;
             --tag=*)
                 tag="${1#*=}"
                 shift 1
-                ;;
-            --tag)
-                tag="$2"
-                shift 2
                 ;;
             --)
                 shift 1
