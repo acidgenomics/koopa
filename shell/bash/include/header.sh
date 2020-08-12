@@ -3,7 +3,7 @@
 
 # """
 # Bash header.
-# @note Updated 2020-08-07.
+# @note Updated 2020-08-12.
 # """
 
 if [[ "$#" -gt 0 ]]
@@ -88,40 +88,20 @@ fi
 . "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
 # Source Bash functions.
-_koopa_source_dir "${KOOPA_PREFIX}/shell/bash/functions"
-
-# Source OS-specific functions.
-os_fun_dir="${KOOPA_PREFIX}/shell/bash/functions/os"
-if koopa::is_macos
-then
-    koopa::source_dir "${os_fun_dir}/macos"
-elif koopa::is_linux
-then
-    koopa::source_dir "${os_fun_dir}/linux"
-    # Debian derivatives.
-    if koopa::is_debian_like
-    then
-        ! koopa::is_debian && \
-            koopa::source_dir "${os_fun_dir}/debian"
-        koopa::is_ubuntu_like && \
-            ! koopa::is_ubuntu && \
-            koopa::source_dir "${os_fun_dir}/ubuntu"
-    # Fedora derivatives.
-    elif koopa::is_fedora_like
-    then
-        ! koopa::is_fedora && \
-            koopa::source_dir "${os_fun_dir}/fedora"
-        koopa::is_rhel_like && \
-            ! koopa::is_rhel && \
-            koopa::source_dir "${os_fun_dir}/rhel"
-        koopa::is_centos_like && \
-            ! koopa::is_centos && \
-            koopa::source_dir "${os_fun_dir}/centos"
-    fi
-    # Other Linux distros.
-    os_id="$(koopa::os_id)"
-    koopa::source_dir "${os_fun_dir}/${os_id}"
-fi
+readarray -t fun_scripts <<< "$( \
+    find "${KOOPA_PREFIX}/shell/bash/functions" \
+        -mindepth 1 \
+        -type f \
+        -name '*.sh' \
+        -print \
+    | sort \
+)"
+for fun_script in "${fun_scripts[@]}"
+do
+    # shellcheck source=/dev/null
+    . "$fun_script"
+done
+unset -v fun_script fun_scripts
 
 if [[ "$checks" -eq 1 ]]
 then
@@ -138,4 +118,4 @@ then
     koopa::help "$@"
 fi
 
-unset -v activate checks file os_fun_dir os_id shopts verbose
+unset -v activate checks shopts verbose
