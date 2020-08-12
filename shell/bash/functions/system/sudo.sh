@@ -24,3 +24,30 @@ koopa::enable_passwordless_sudo() { # {{{1
     koopa::success "Passwordless sudo enabled for '${group}'."
     return 0
 }
+
+koopa::fix_sudo_setrlimit_error() { # {{{1
+    # """
+    # Fix bug in recent version of sudo.
+    # @note Updated 2020-07-05.
+    #
+    # This is popping up on Docker builds:
+    # sudo: setrlimit(RLIMIT_CORE): Operation not permitted
+    #
+    # @seealso
+    # - https://ask.fedoraproject.org/t/
+    #       sudo-setrlimit-rlimit-core-operation-not-permitted/4223
+    # - https://bugzilla.redhat.com/show_bug.cgi?id=1773148
+    # """
+    koopa::assert_has_no_args "$#"
+    local source_file target_file
+    target_file='/etc/sudo.conf'
+    # Ensure we always overwrite for Docker images.
+    # Note that Fedora base image contains this file by default.
+    if ! koopa::is_docker
+    then
+        [[ -e "$target_file" ]] && return 0
+    fi
+    source_file="$(koopa::prefix)/os/linux/etc/sudo.conf"
+    sudo cp -v "$source_file" "$target_file"
+    return 0
+}
