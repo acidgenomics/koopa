@@ -3,7 +3,7 @@
 
 # """
 # Zsh header.
-# @note Updated 2020-08-07.
+# @note Updated 2020-08-12.
 # """
 
 if [[ "$#" -gt 0 ]]
