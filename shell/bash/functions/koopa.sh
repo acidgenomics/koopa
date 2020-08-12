@@ -23,6 +23,30 @@ koopa::check_system() { # {{{1
     return 0
 }
 
+koopa::header() { # {{{1
+    # """
+    # Source script header.
+    # @note Updated 2020-08-12.
+    #
+    # Useful for private scripts using koopa code outside of package.
+    # """
+    local file koopa_prefix shell
+    koopa::assert_has_args_eq "$#" 1
+    shell="${1:?}"
+    koopa_prefix="$(koopa::prefix)"
+    case "$shell" in
+        bash|posix|zsh)
+            ;;
+        *)
+            koopa::stop 'Supported shells: bash, zsh, posix.'
+            ;;
+    esac
+    file="${koopa_prefix}/shell/${shell}/include/header.sh"
+    koopa::assert_is_file "$file"
+    koopa::print "$file"
+    return 0
+}
+
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
