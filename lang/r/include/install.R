@@ -11,7 +11,10 @@ local({
         ok <- FALSE
     }
     if (isTRUE(ok)) {
-        message("koopa R package is already installed.")
+        message(sprintf(
+            "koopa R package %s is already installed.",
+            packageVersion("koopa")
+        ))
         return(invisible())
     }
     if (isTRUE("--vanilla" %in% commandArgs())) {
