@@ -7,24 +7,17 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-#' Rename files in snake case
-#'
-#' @note Updated 2020-08-09.
-#' @noRd
-.snakeCase <- function() {
-    args <- parseArgs(
-        flags = c("prefix", "recursive"),
-        positional = TRUE
-    )
-    posArgs <- args[["positionalArgs"]]
-    prefix <- "prefix" %in% args[["flags"]]
-    recursive <- "recursive" %in% args[["flags"]]
-    snakeCase(
-        object = posArgs,
-        rename = TRUE,
-        recursive = recursive,
-        prefix = prefix
-    )
-}
+args <- parseArgs(
+    flags = c("prefix", "recursive"),
+    positional = TRUE
+)
+positional <- args[["positional"]]
+prefix <- "prefix" %in% args[["flags"]]
+recursive <- "recursive" %in% args[["flags"]]
 
-.snakeCase()
+snakeCase(
+    object = positional,
+    rename = TRUE,
+    recursive = recursive,
+    prefix = prefix
+)
