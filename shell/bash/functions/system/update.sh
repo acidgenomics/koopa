@@ -3,7 +3,7 @@
 koopa::update() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2020-08-07.
+    # @note Updated 2020-08-13.
     # """
     local app_prefix config_prefix configure_flags core dotfiles \
         dotfiles_prefix fast koopa_prefix make_prefix repos repo source_ip \
@@ -39,10 +39,6 @@ koopa::update() { # {{{1
             --source-ip=*)
                 source_ip="${1#*=}"
                 shift 1
-                ;;
-            --source-ip)
-                source_ip="$2"
-                shift 2
                 ;;
             --system)
                 system=1
