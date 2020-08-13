@@ -1,21 +1,31 @@
 #!/usr/bin/env Rscript
 
-pkg <- commandArgs(trailingOnly = TRUE)[[1L]]
-stopifnot(is.dir(pkg))
+args <- commandArgs()
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-repodir <- "~/git/drat"
-stopifnot(is.dir(repodir))
-
-devtools::build(pkg)
-tarballs <- sort(list.files(
-    path = ".",
-    pattern = paste0(pkg, "_.*.tar.gz")
-))
-file <- tail(tarballs, n = 1L)
-drat::insertPackage(
-    file = file,
-    repodir = repodir,
-    commit = TRUE,
-    pullfirst = TRUE,
-    action = "archive"
-)
+local({
+    pkg <- positionalArgs()[[1L]]
+    repodir <- "~/git/drat"
+    assert(
+        is.dir(pkg),
+        is.dir(repodir)
+    )
+    devtools::build(pkg)
+    tarballs <- sort(list.files(
+        path = ".",
+        pattern = paste0(pkg, "_.*.tar.gz")
+    ))
+    file <- tail(tarballs, n = 1L)
+    assert(is.file(file))
+    drat::insertPackage(
+        file = file,
+        repodir = repodir,
+        commit = TRUE,
+        pullfirst = TRUE,
+        action = "archive"
+    )
+})
