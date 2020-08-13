@@ -120,11 +120,10 @@ koopa::tldr_download_cache() { # {{{1
     return 0
 }
 
-# FIXME This is now breaking in latest koopa version...
 koopa::tldr_file() { # {{{1
     # """
     # Get the tldr file path, using 'index.json' and platform key.
-    # @note Updated 2020-07-08.
+    # @note Updated 2020-08-13.
     # """
     local cmd desc file index_file platform prefix subdir
     koopa::assert_has_args_eq "$#" 1
@@ -132,10 +131,11 @@ koopa::tldr_file() { # {{{1
     platform="$(koopa::tldr_platform)"
     prefix="$(koopa::tldr_prefix)"
     index_file="$(koopa::tldr_index_file)"
+    koopa::assert_is_file "$index_file"
     # Parse the JSON file.
     desc="$( \
         tr '{' '\n' < "$index_file" \
-        | grep "\"name\":'${cmd}'" \
+        | grep "\"name\":\"${cmd}\"" \
     )"
     # Use the platform-specific version of the tldr first.
     if koopa::str_match "$desc" "$platform"
