@@ -272,11 +272,15 @@ _koopa_invalid_arg() { # {{{1
     # @note Updated 2020-08-13.
     # """
     # shellcheck disable=SC2039
-    local x
+    local arg x
     if [ "$#" -gt 0 ]
     then
-        _koopa_note "Use '--arg=VALUE' not '--arg VALUE' for arguments."
-        x="Invalid argument: '${1:?}'."
+        arg="${1:-}"
+        if _koopa_str_match_posix "$arg" '--'
+        then
+            _koopa_note "Use '--arg=VALUE' not '--arg VALUE' for arguments."
+        fi
+        x="Invalid argument: '${arg}'."
     else
         x='Invalid argument.'
     fi
