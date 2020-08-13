@@ -127,7 +127,7 @@ koopa::link_r_site_library() { # {{{1
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-08-13.
     #
     # The default Java path differs depending on the system.
     #
@@ -157,17 +157,9 @@ koopa::r_javareconf() { # {{{1
                 java_home="${1#*=}"
                 shift 1
                 ;;
-            --java-home)
-                java_home="$2"
-                shift 2
-                ;;
             --r=*)
                 r="${1#*=}"
                 shift 1
-                ;;
-            --r)
-                r="$2"
-                shift 2
                 ;;
             --)
                 shift 1

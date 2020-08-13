@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 koopa::find_cellar_symlinks() { # {{{1
+    # """
+    # Find cellar symlinks.
+    # @note Updated 2020-08-13.
+    # """
     local build_prefix cellar_prefix file links name version
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed find sort tail
@@ -131,25 +135,13 @@ koopa::install_cellar() { # {{{1
                 include_dirs="${1#*=}"
                 shift 1
                 ;;
-            --include-dirs)
-                include_dirs="$2"
-                shift 2
-                ;;
             --name=*)
                 name="${1#*=}"
                 shift 1
                 ;;
-            --name)
-                name="$2"
-                shift 2
-                ;;
             --name-fancy=*)
                 name_fancy="${1#*=}"
                 shift 1
-                ;;
-            --name-fancy)
-                name_fancy="$2"
-                shift 2
                 ;;
             --reinstall)
                 reinstall=1
@@ -160,17 +152,9 @@ koopa::install_cellar() { # {{{1
                 script_name="${1#*=}"
                 shift 1
                 ;;
-            --script-name)
-                script_name="$2"
-                shift 2
-                ;;
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             "")
                 shift 1
@@ -609,7 +593,7 @@ koopa::install_zsh() { # {{{1
 koopa::link_cellar() { # {{{1
     # """
     # Symlink cellar into build directory.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-08-13.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -639,25 +623,13 @@ koopa::link_cellar() { # {{{1
                 include_dirs="${1#*=}"
                 shift 1
                 ;;
-            --include-dirs)
-                include_dirs="$2"
-                shift 2
-                ;;
             --name=*)
                 name="${1#*=}"
                 shift 1
                 ;;
-            --name)
-                name="$2"
-                shift 2
-                ;;
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             --)
                 shift 1
