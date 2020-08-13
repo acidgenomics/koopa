@@ -3,7 +3,7 @@
 koopa::install_cellranger() { # {{{1
     # """
     # Install Cell Ranger.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-13.
     # """
     local file make_prefix name name_fancy prefix server tmp_dir url version
     version=
@@ -13,10 +13,6 @@ koopa::install_cellranger() { # {{{1
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
@@ -47,4 +43,3 @@ koopa::install_cellranger() { # {{{1
     koopa::install_success "$name_fancy"
     return 0
 }
-

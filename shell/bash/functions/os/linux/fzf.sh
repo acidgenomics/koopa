@@ -3,7 +3,7 @@
 koopa::install_fzf() { # {{{1
     # """
     # Install fzf.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-13.
     #
     # This script will download files into '~/go'.
     #
@@ -25,10 +25,6 @@ koopa::install_fzf() { # {{{1
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
@@ -76,4 +72,3 @@ koopa::install_fzf() { # {{{1
     koopa::note 'Reload the shell to complete activation.'
     return 0
 }
-
