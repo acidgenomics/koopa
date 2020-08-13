@@ -352,7 +352,7 @@ koopa::is_powerful() { # {{{1
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-08-13.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -375,10 +375,6 @@ koopa::is_python_package_installed() { # {{{1
             --python=*)
                 python="${1#*=}"
                 shift 1
-                ;;
-            --python)
-                python="$2"
-                shift 2
                 ;;
             --)
                 shift 1
@@ -410,7 +406,7 @@ koopa::is_python_package_installed() { # {{{1
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2020-07-06.
+    # @note Updated 2020-08-13.
     #
     # This will only return true for user-installed packages.
     #
@@ -430,10 +426,6 @@ koopa::is_r_package_installed() { # {{{1
             --r=*)
                 r="${1#*=}"
                 shift 1
-                ;;
-            --r)
-                r="$2"
-                shift 2
                 ;;
             --)
                 shift 1
