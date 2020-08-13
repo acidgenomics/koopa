@@ -120,7 +120,6 @@ koopa::sambamba_index() { # {{{1
     return 0
 }
 
-# FIXME Previously named _bam_sort
 koopa::sambamba_sort() { # {{{1
     # """
     # Sort a BAM file by genomic coordinates.
