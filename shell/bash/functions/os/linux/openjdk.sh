@@ -3,7 +3,7 @@
 koopa::install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
-    # @note Updated 2020-07-22.
+    # @note Updated 2020-08-13.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -27,10 +27,6 @@ koopa::install_openjdk() { # {{{1
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
