@@ -24,6 +24,7 @@ local({
     drat::insertPackage(
         file = file,
         repodir = repodir,
-        action = "archive"
+        action = "prune"
     )
+    invisible(file.remove(file))
 })
