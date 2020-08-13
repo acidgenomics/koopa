@@ -25,7 +25,6 @@ local({
         file = file,
         repodir = repodir,
         commit = TRUE,
-        pullfirst = TRUE,
         action = "archive"
     )
 })
