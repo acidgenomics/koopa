@@ -3,7 +3,7 @@
 koopa::install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-13.
     # """
     local app_prefix cellar_prefix goroot link_cellar name name_fancy \
         reinstall tmp_dir version
@@ -27,10 +27,6 @@ koopa::install_go() { # {{{1
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
