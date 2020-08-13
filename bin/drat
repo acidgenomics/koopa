@@ -24,7 +24,6 @@ local({
     drat::insertPackage(
         file = file,
         repodir = repodir,
-        commit = TRUE,
         action = "archive"
     )
 })
