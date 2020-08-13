@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-08-12.
+## @note Updated 2020-08-13.
 ## """
 
 options(
