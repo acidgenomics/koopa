@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-07-13.
+## Updated 2020-08-13.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -296,9 +296,10 @@ local({
 
     ## Fix file permissions. RStudio doesn't pick up the system umask.
     ## Note that we're allowing group write here by default.
-    if (isTRUE(.rprofile[["rstudio"]])) {
-        Sys.umask("0002")
-    }
+    ## > if (isTRUE(.rprofile[["rstudio"]])) {
+    ## >     Sys.umask("0002")
+    ## > }
+
     ## Inform user that session is running inside of RStudio.
     ## > if (isTRUE(rstudio) && isTRUE(interactive())) {
     ## >     message("RStudio detected.")
@@ -323,18 +324,26 @@ local({
     ## Package installation {{{2
     ## -------------------------------------------------------------------------
 
-    ## We set the cloud mirror, which is 'network-close' to everybody, as
-    ## default. Consider using a versioned MRAN snapshot for increased
-    ## reproducibility.
+    ## Using a versioned CRAN snapshot for increased reproducibility.
     ##
-    ## Alternatively, this lets you install Bioconductor packages using
-    ## `install.packages()`, but this causes a slight R session load delay.
-    ## > options(repos = BiocManager::repositories())
+    ## See also:
+    ## - https://packagemanager.rstudio.com/
+    ## - https://mran.microsoft.com/
+    ## - https://hub.docker.com/r/rocker/r-ver/dockerfile
+    ##
+    ## CRAN latest options:
+    ## - https://cloud.r-project.org
+    ## - https://cran.rstudio.com
+    ## - https://packagemanager.rstudio.com/all/latest
 
     local({
         repos <- getOption("repos")
-        ## RStudio alternate: https://cran.rstudio.com
-        repos[["CRAN"]] <- "https://cloud.r-project.org"
+        if (isInstalled("BiocManager")) {
+            repos <- BiocManager::repositories()
+        }
+        repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
+        ## Snapshot: 2020-09-09.
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/309"
         options("repos" = repos)
     })
 
