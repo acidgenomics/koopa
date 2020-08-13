@@ -125,6 +125,10 @@ koopa::bowtie2_index() { # {{{1
 }
 
 koopa::run_bowtie2() { # {{{1
+    # """
+    # Run bowtie2 on a directory containing multiple FASTQ files.
+    # @note Updated 2020-08-13.
+    # """
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     fastq_dir='fastq'
     output_dir='bowtie2'
@@ -137,49 +141,25 @@ koopa::run_bowtie2() { # {{{1
                 fasta_file="${1#*=}"
                 shift 1
                 ;;
-            --fasta-file)
-                fasta_file="$2"
-                shift 2
-                ;;
             --fastq-dir=*)
                 fastq_dir="${1#*=}"
                 shift 1
-                ;;
-            --fastq-dir)
-                fastq_dir="$2"
-                shift 2
                 ;;
             --index-dir=*)
                 index_dir="${1#*=}"
                 shift 1
                 ;;
-            --index-dir)
-                index_dir="$2"
-                shift 2
-                ;;
             --output-dir=*)
                 output_dir="${1#*=}"
                 shift 1
-                ;;
-            --output-dir)
-                output_dir="$2"
-                shift 2
                 ;;
             --r1-tail=*)
                 r1_tail="${1#*=}"
                 shift 1
                 ;;
-            --r1-tail)
-                r1_tail="$2"
-                shift 2
-                ;;
             --r2-tail=*)
                 r2_tail="${1#*=}"
                 shift 1
-                ;;
-            --r2-tail)
-                r2_tail="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
