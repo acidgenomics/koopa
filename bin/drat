@@ -11,8 +11,8 @@ local({
     pkg <- positionalArgs()[[1L]]
     repodir <- "~/git/drat"
     assert(
-        is.dir(pkg),
-        is.dir(repodir)
+        dir.exists(pkg),
+        dir.exists(repodir)
     )
     devtools::build(pkg)
     tarballs <- sort(list.files(
@@ -20,7 +20,7 @@ local({
         pattern = paste0(pkg, "_.*.tar.gz")
     ))
     file <- tail(tarballs, n = 1L)
-    assert(is.file(file))
+    assert(file.exists(file))
     drat::insertPackage(
         file = file,
         repodir = repodir,
