@@ -3,7 +3,7 @@
 koopa::bcbio_run_tests() { # {{{1
     # """
     # Run bcbio unit tests.
-    # @note Updated 2020-07-14.
+    # @note Updated 2020-08-13.
     # """
     local bcbio_prefix bin_dir git_dir tests_dir version
     bcbio_prefix="$(koopa::bcbio_prefix)"
@@ -15,17 +15,9 @@ koopa::bcbio_run_tests() { # {{{1
                 bcbio_prefix="${1#*=}"
                 shift 1
                 ;;
-            --bcbio-prefix)
-                bcbio_prefix="$2"
-                shift 2
-                ;;
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
@@ -59,7 +51,7 @@ koopa::bcbio_run_tests() { # {{{1
 koopa::install_bcbio() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2020-07-21.
+    # @note Updated 2020-08-13.
     # """
     local app_prefix current_version file install_dir name name_fancy prefix \
         python tmp_dir tools_dir url version
@@ -73,17 +65,9 @@ koopa::install_bcbio() { # {{{1
                 prefix="${1#*=}"
                 shift 1
                 ;;
-            --prefix)
-                prefix="$2"
-                shift 2
-                ;;
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
@@ -137,6 +121,10 @@ koopa::install_bcbio() { # {{{1
 }
 
 koopa::install_bcbio_ensembl_genome() { # {{{1
+    # """
+    # Install bcbio genome from Ensembl.
+    # @note Updated 2020-08-13.
+    # """
     local bcbio_genome_name bcbio_species_dir build cores fasta gtf indexes \
         organism release tmp_dir
     koopa::assert_has_args "$#"
@@ -149,33 +137,17 @@ koopa::install_bcbio_ensembl_genome() { # {{{1
                 build="${1#*=}"
                 shift 1
                 ;;
-            --build)
-                build="$2"
-                shift 2
-                ;;
             --indexes=*)
                 indexes="${1#*=}"
                 shift 1
-                ;;
-            --indexes)
-                indexes="$2"
-                shift 2
                 ;;
             --organism=*)
                 organism="${1#*=}"
                 shift 1
                 ;;
-            --organism)
-                organism="$2"
-                shift 2
-                ;;
             --release=*)
                 release="${1#*=}"
                 shift 1
-                ;;
-            --release)
-                release="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
@@ -349,7 +321,7 @@ koopa::install_bcbio_vm() { # {{{1
 koopa::patch_bcbio() { # {{{1
     # """
     # Patch bcbio.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-08-13.
     # """
     local bcbio_python git_dir install_dir name_fancy
     koopa::assert_is_installed tee
@@ -362,25 +334,13 @@ koopa::patch_bcbio() { # {{{1
                 bcbio_python="${1#*=}"
                 shift 1
                 ;;
-            --bcbio-python)
-                bcbio_python="$2"
-                shift 2
-                ;;
             --git-dir=*)
                 git_dir="${1#*=}"
                 shift 1
                 ;;
-            --git-dir)
-                git_dir="$2"
-                shift 2
-                ;;
             --install-dir=*)
                 install_dir="${1#*=}"
                 shift 1
-                ;;
-            --install-dir)
-                install_dir="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
