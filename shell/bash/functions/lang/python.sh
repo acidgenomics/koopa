@@ -3,7 +3,7 @@
 koopa::install_pip() { # {{{1
     # """
     # Install pip for Python.
-    # @note Updated 2020-07-10.
+    # @note Updated 2020-08-13.
     # """
     local file name pos python reinstall tmp_dir url
     name='pip'
@@ -16,10 +16,6 @@ koopa::install_pip() { # {{{1
             --python=*)
                 python="${1#*=}"
                 shift 1
-                ;;
-            --python)
-                python="$2"
-                shift 2
                 ;;
             --reinstall)
                 reinstall=1
@@ -70,7 +66,7 @@ koopa::install_pip() { # {{{1
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2020-08-12.
+    # @note Updated 2020-08-13.
     # """
     local install_flags name_fancy pkg pkgs pos python version
     python="$(koopa::python)"
@@ -82,10 +78,6 @@ koopa::install_python_packages() { # {{{1
             --python=*)
                 python="${1#*=}"
                 shift 1
-                ;;
-            --python)
-                python="$2"
-                shift 2
                 ;;
             --reinstall)
                 reinstall=1
@@ -151,7 +143,7 @@ koopa::install_python_packages() { # {{{1
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-08-13.
     # """
     local pip_install_flags pos python reinstall target
     koopa::assert_has_args "$#"
@@ -164,10 +156,6 @@ koopa::pip_install() { # {{{1
             --python=*)
                 python="${1#*=}"
                 shift 1
-                ;;
-            --python)
-                python="$2"
-                shift 2
                 ;;
             --reinstall)
                 reinstall=1
@@ -245,7 +233,7 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
 koopa::python_remove_pycache() { # {{{1
     # """
     # Remove Python '__pycache__/' from site packages.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-08-13.
     #
     # These directories can create permission issues when attempting to rsync
     # installation across multiple VMs.
@@ -260,10 +248,6 @@ koopa::python_remove_pycache() { # {{{1
             --python=*)
                 python="${1#*=}"
                 shift 1
-                ;;
-            --python)
-                python="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
