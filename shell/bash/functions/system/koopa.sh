@@ -50,7 +50,7 @@ koopa::header() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2020-08-12.
+    # @note Updated 2020-08-14.
     # """
     koopa::assert_has_args "$#"
     # Update corresponding Bash completion file, if necessary.
@@ -114,6 +114,7 @@ koopa::koopa() { # {{{1
         list-internal-functions | \
         make-prefix | \
         os-string | \
+        roff | \
         set-permissions | \
         variable | \
         variables | \

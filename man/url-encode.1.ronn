@@ -1,0 +1,13 @@
+# url-encode(1) - url encode
+
+## SYNOPSIS
+
+url-encode <string>...
+
+## DESCRIPTION
+
+Encode strings into URL friendly format.
+
+## NOTE
+
+Python script.

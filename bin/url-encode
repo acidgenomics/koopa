@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
 URL encode.
-Updated 2020-08-12.
+Updated 2020-08-13.
 """
 
 import sys
+
+from koopa.shell import koopa_help
 from koopa.url import url_encode
 
-# FIXME Need to add support for --help flag.
-# FIXME Can we source a shared Python header that detects --help flag?
+koopa_help()
+
 
 def main(x):
     """
