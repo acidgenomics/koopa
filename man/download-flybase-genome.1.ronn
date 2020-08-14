@@ -1,0 +1,45 @@
+# download-flybase-genome(1) - download flybase genome
+
+## DESCRIPTION
+
+Creates a new directory in the current working directory.
+Currently only supports Drosophila melanogaster genome.
+Support for this resource could be removed in the future, due to paywall.
+
+## OPTIONS
+
+  * `--type`:
+    Genome type:
+    `all`: Download all reference types.
+    `genome`: Primary assembly (DNA).
+    `transcriptome`: Transcripts (cDNA/RNA).
+    `none`: Skip download.
+
+  * `--annotation`:
+    Annotation type:
+    `all`: Download all annotation formats.
+    `gtf`: GTF (GFFv2).
+    `gff`: GFF3.
+    `none`: Skip download.
+
+
+--release
+flybase release version (e.g. 'FB2019_04')
+
+--dmel
+    help="drosophila melanogaster release version (e.g. 'r6.29')",
+
+--output-dir
+
+--decompress
+decompress, but keep the compressed file",
+
+## SEE ALSO
+
+- https://flybase.org/
+- ftp://ftp.flybase.net/releases
+- https://flybase.org/cgi-bin/get_static_page.pl?file=release_notes.html
+
+## NOTE
+
+Python script.
