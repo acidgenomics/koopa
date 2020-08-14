@@ -37,24 +37,12 @@ $ grep "$(sum *\.gz)" "CHECKSUMS"
 .SH "OPTIONS"
 .
 .TP
-\fB\-\-annotation\fR
-Annotation type: \fBall\fR (default): Download all annotation formats; \fBgtf\fR: GTF (GFFv2); \fBgff\fR: GFF3; \fBnone\fR: Skip download\.
-.
-.TP
-\fB\-\-build\fR=\fIbuild\fR
-Genome build (e\.g\. "GRCh38")\.
-.
-.TP
-\fB\-\-decompress\fR
-Decompress files (but keep the compressed originals)\.
-.
-.TP
 \fB\-\-organism\fR=\fIorganism\fR
 Latin name (e\.g\. "Homo sapiens")\.
 .
 .TP
-\fB\-\-output\-dir\fR=\fIoutput_dir\fR
-Output directory\. Defaults to working directory\.
+\fB\-\-build\fR=\fIbuild\fR
+Genome build (e\.g\. "GRCh38")\.
 .
 .TP
 \fB\-\-release\fR=\fIrelease\fR
@@ -63,6 +51,18 @@ Ensembl release version (e\.g\. 100)\. If left unset, defaults to current releas
 .TP
 \fB\-\-type\fR=\fItype\fR
 Genome type: \fBall\fR (default): Download all reference types; \fBgenome\fR: Primary assembly (DNA); \fBtranscriptome\fR: Transcripts (cDNA/RNA); \fBnone\fR: Skip download\.
+.
+.TP
+\fB\-\-annotation\fR=\fIannotation\fR
+Annotation type: \fBall\fR (default): Download all annotation formats; \fBgtf\fR: GTF (GFFv2); \fBgff\fR: GFF3; \fBnone\fR: Skip download\.
+.
+.TP
+\fB\-\-output\-dir\fR=\fIoutput_dir\fR
+Output directory\. Defaults to working directory\.
+.
+.TP
+\fB\-\-decompress\fR
+Decompress files (but keep the compressed originals)\.
 .
 .SH "SEE ALSO"
 .
