@@ -4,16 +4,19 @@
 .TH "DOWNLOAD\-ENSEMBL\-GENOME" "1" "August 2020" "" ""
 .
 .SH "NAME"
-\fBdownload\-ensembl\-genome\fR \- download ensembl genome
+\fBdownload\-ensembl\-genome\fR \- Download Ensembl genome
 .
 .SH "SYNOPSIS"
-\fBdownload\-ensembl\-genome\fR [\fB\-\-decompress\fR] \fB\-\-organism\fR=ORGANISM \fB\-\-build\fR=BUILD \fB\-\-type\fR=TYPE \fB\-\-annotation\fR=ANNOTATION [\fB\-\-release\fR=RELEASE] \fB\-\-output\-dir\fR="\."
+\fBdownload\-ensembl\-genome\fR \fB\-\-organism\fR=\fIorganism\fR \fB\-\-build\fR=\fIbuild\fR [\fB\-\-release\fR=\fIrelease\fR] \fB\-\-type\fR=\fItype\fR \fB\-\-annotation\fR=\fIannotation\fR [\fB\-\-output\-dir\fR=\fIoutput_dir\fR] [\fB\-\-decompress\fR]
 .
 .SH "DESCRIPTION"
-Creates a new directory in the current working directory\.
+Download Ensembl genome and corresponding annotation files\.
 .
 .P
-Important! When working in R, be sure to match the Ensembl release version to the latest version supported by AnnotationHub\.
+Creates a new directory in the current working directory by default\.
+.
+.P
+\fBImportant!\fR When working in R, be sure to match the Ensembl release version to the latest version supported by AnnotationHub\.
 .
 .P
 The legacy Homo sapiens GRCh37 (hg19) genome build is supported\. If requested, the release version is set internally automatically\.
@@ -31,63 +34,35 @@ $ grep "$(sum *\.gz)" "CHECKSUMS"
 .
 .IP "" 0
 .
-.SH "NOTE"
-Python script\.
-.
 .SH "OPTIONS"
 .
-.IP "\(bu" 4
-\fB\-\-organism\fR: Latin name (e\.g\. "Homo sapiens")\.
+.TP
+\fB\-\-annotation\fR
+Annotation type: \fBall\fR: Download all annotation formats; \fBgtf\fR: GTF (GFFv2); \fBgff\fR: GFF3; \fBnone\fR: Skip download\.
 .
-.IP "\(bu" 4
-\fB\-\-build\fR: Genome build (e\.g\. "GRCh38")\.
+.TP
+\fB\-\-build\fR=\fIbuild\fR
+Genome build (e\.g\. "GRCh38")\.
 .
-.IP "\(bu" 4
-\fB\-\-type\fR: Genome type:
+.TP
+\fB\-\-decompress\fR
+Decompress files (but keep the compressed originals)\.
 .
-.IP "\(bu" 4
-\fBall\fR: Download all reference types\.
+.TP
+\fB\-\-organism\fR=\fIorganism\fR
+Latin name (e\.g\. "Homo sapiens")\.
 .
-.IP "\(bu" 4
-\fBgenome\fR: Primary assembly (DNA)\.
+.TP
+\fB\-\-output\-dir\fR=\fIoutput_dir\fR
+Output directory\. Defaults to working directory\.
 .
-.IP "\(bu" 4
-\fBtranscriptome\fR: Transcripts (cDNA/RNA)\.
+.TP
+\fB\-\-release\fR=\fIrelease\fR
+Ensembl release version (e\.g\. 100)\. If left unset, defaults to current release\.
 .
-.IP "\(bu" 4
-\fBnone\fR: Skip download\.
-.
-.IP "" 0
-
-.
-.IP "\(bu" 4
-\fB\-\-annotation\fR: Annotatione type:
-.
-.IP "\(bu" 4
-\fBall\fR: Download all annotation formats\.
-.
-.IP "\(bu" 4
-\fBgtf\fR: GTF (GFFv2)\.
-.
-.IP "\(bu" 4
-\fBgff\fR: GFF3\.
-.
-.IP "\(bu" 4
-\fBnone\fR: Skip download\.
-.
-.IP "" 0
-
-.
-.IP "\(bu" 4
-\fB\-\-release\fR: Release version (e\.g\. 100)\.
-.
-.IP "\(bu" 4
-\fB\-\-output\-dir\fR: Output directory\. Defaults to working directory\.
-.
-.IP "\(bu" 4
-\fB\-\-decompress\fR: Decompress files (but keep the compressed originals)\.
-.
-.IP "" 0
+.TP
+\fB\-\-type\fR=\fItype\fR
+Genome type: \fBall\fR: Download all reference types; \fBgenome\fR: Primary assembly (DNA); \fBtranscriptome\fR: Transcripts (cDNA/RNA); \fBnone\fR: Skip download\.
 .
 .SH "SEE ALSO"
 .
@@ -100,7 +75,18 @@ ftp://ftp\.ensembl\.org/pub/
 .IP "" 0
 .
 .P
-Which Homo sapiens genome assembly FASTA to use? \- https://steinbaugh\.com/posts/bcbio\-homo\-sapiens\-genome\.html \- https://lh3\.github\.io/2017/11/13/which\-human\-reference\-genome\-to\-use \- https://bioinformatics\.stackexchange\.com/questions/540/
+Which Homo sapiens genome assembly FASTA to use?
+.
+.IP "\(bu" 4
+https://steinbaugh\.com/posts/bcbio\-homo\-sapiens\-genome\.html
+.
+.IP "\(bu" 4
+https://lh3\.github\.io/2017/11/13/which\-human\-reference\-genome\-to\-use
+.
+.IP "\(bu" 4
+https://bioinformatics\.stackexchange\.com/questions/540/
+.
+.IP "" 0
 .
 .P
 Using STAR aligner for RNA\-seq? Here\'s a relevant section from the manual: https://github\.com/alexdobin/STAR/blob/master/doc/STARmanual\.pdf
@@ -119,13 +105,43 @@ Using STAR aligner for RNA\-seq? Here\'s a relevant section from the manual: htt
 .IP "" 0
 .
 .P
-GRCh38 alternatives to Ensembl primary assembly: \- GENCODE assembly\. \- ftp://ftp\.ncbi\.nlm\.nih\.gov/genomes/all/GCA/000/001/405/ GCA_000001405\.15_GRCh38/ seqs_for_alignment_pipelines\.ucsc_ids/ GCA_000001405\.15_GRCh38_no_alt_analysis_set\.fna\.gz \- ftp://ftp\.ncbi\.nlm\.nih\.gov/genbank/genomes/Eukaryotes/ vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/ GCA_000001405\.15_GRCh38_full_plus_hs38d1_analysis_set\.fna \- http://ftp\.1000genomes\.ebi\.ac\.uk/vol1/ftp/technical/reference/ GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla\.fa
+GRCh38 alternatives to Ensembl primary assembly:
+.
+.IP "\(bu" 4
+GENCODE assembly\.
+.
+.IP "\(bu" 4
+ftp://ftp\.ncbi\.nlm\.nih\.gov/genomes/all/GCA/000/001/405/ GCA_000001405\.15_GRCh38/ seqs_for_alignment_pipelines\.ucsc_ids/ GCA_000001405\.15_GRCh38_no_alt_analysis_set\.fna\.gz
+.
+.IP "\(bu" 4
+ftp://ftp\.ncbi\.nlm\.nih\.gov/genbank/genomes/Eukaryotes/ vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/ GCA_000001405\.15_GRCh38_full_plus_hs38d1_analysis_set\.fna
+.
+.IP "\(bu" 4
+http://ftp\.1000genomes\.ebi\.ac\.uk/vol1/ftp/technical/reference/ GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla\.fa
+.
+.IP "" 0
 .
 .P
-GRCh37 alternatives to Ensembl primary assembly: \- ftp://ftp\-trace\.ncbi\.nih\.gov/1000genomes/ftp/technical/reference/ human_g1k_v37\.fasta\.gz
+GRCh37 alternatives to Ensembl primary assembly:
+.
+.IP "\(bu" 4
+ftp://ftp\-trace\.ncbi\.nih\.gov/1000genomes/ftp/technical/reference/ human_g1k_v37\.fasta\.gz
+.
+.IP "" 0
 .
 .P
 Note that Ensembl GTF is missing annotations for some transcripts defined in transcriptome FASTA (human and mouse)\. In this case, use \'*\.chr_patch_hapl_scaff\.gtf\.gz\' GTF file for annotations\.
 .
 .P
-See related issues: \- https://github\.com/COMBINE\-lab/salmon/issues/122 \- https://github\.com/COMBINE\-lab/salmon/issues/336
+See related issues:
+.
+.IP "\(bu" 4
+https://github\.com/COMBINE\-lab/salmon/issues/122
+.
+.IP "\(bu" 4
+https://github\.com/COMBINE\-lab/salmon/issues/336
+.
+.IP "" 0
+.
+.SH "NOTE"
+Python script\.
