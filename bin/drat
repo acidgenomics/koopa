@@ -9,6 +9,10 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 local({
     pkg <- positionalArgs()[[1L]]
+    ## Handle `r-koopa` edge case.
+    if (any(grepl("-", pkg)) {
+        pkg <- strsplit(pkg, "-")[[1L]][[2L]]
+    }
     repodir <- "~/git/drat"
     assert(
         dir.exists(pkg),
