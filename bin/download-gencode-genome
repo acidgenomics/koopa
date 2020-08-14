@@ -4,9 +4,9 @@
 Download GENCODE genome.
 """
 
-import argparse
-import os
-from textwrap import dedent
+from argparse import ArgumentParser
+from os.path import join, realpath
+
 from koopa.arg import dir_path
 from koopa.genome import tx2gene_from_fasta
 from koopa.genome.gencode import (
@@ -39,11 +39,7 @@ note:
     Updated 2020-02-09.
 """
 
-parser = argparse.ArgumentParser(
-    description=DESCRIPTION,
-    epilog=EPILOG,
-    formatter_class=argparse.RawTextHelpFormatter,
-)
+parser = ArgumentParser()
 optional = parser._action_groups.pop()
 required = parser.add_argument_group("required arguments")
 required.add_argument(

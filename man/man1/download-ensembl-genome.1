@@ -7,7 +7,7 @@
 \fBdownload\-ensembl\-genome\fR \- download ensembl genome
 .
 .SH "SYNOPSIS"
-\fBdownload\-ensembl\-genome\fR \fB\-\-organism\fR=\fIorganism\fR \fB\-\-build\fR=\fIbuild\fR [\fB\-\-release\fR=\fIrelease\fR] \fB\-\-type\fR=\fItype\fR \fB\-\-annotation\fR=\fIannotation\fR [\fB\-\-output\-dir\fR=\fIoutput_dir\fR] [\fB\-\-decompress\fR]
+\fBdownload\-ensembl\-genome\fR \fB\-\-organism\fR=\fIorganism\fR \fB\-\-build\fR=\fIbuild\fR [\fB\-\-release\fR=\fIrelease\fR] [\fB\-\-type\fR=\fItype\fR] [\fB\-\-annotation\fR=\fIannotation\fR] [\fB\-\-output\-dir\fR=\fIoutput_dir\fR] [\fB\-\-decompress\fR]
 .
 .SH "DESCRIPTION"
 Download Ensembl genome and corresponding annotation files\.
@@ -38,7 +38,7 @@ $ grep "$(sum *\.gz)" "CHECKSUMS"
 .
 .TP
 \fB\-\-annotation\fR
-Annotation type: \fBall\fR: Download all annotation formats; \fBgtf\fR: GTF (GFFv2); \fBgff\fR: GFF3; \fBnone\fR: Skip download\.
+Annotation type: \fBall\fR (default): Download all annotation formats; \fBgtf\fR: GTF (GFFv2); \fBgff\fR: GFF3; \fBnone\fR: Skip download\.
 .
 .TP
 \fB\-\-build\fR=\fIbuild\fR
@@ -62,7 +62,7 @@ Ensembl release version (e\.g\. 100)\. If left unset, defaults to current releas
 .
 .TP
 \fB\-\-type\fR=\fItype\fR
-Genome type: \fBall\fR: Download all reference types; \fBgenome\fR: Primary assembly (DNA); \fBtranscriptome\fR: Transcripts (cDNA/RNA); \fBnone\fR: Skip download\.
+Genome type: \fBall\fR (default): Download all reference types; \fBgenome\fR: Primary assembly (DNA); \fBtranscriptome\fR: Transcripts (cDNA/RNA); \fBnone\fR: Skip download\.
 .
 .SH "SEE ALSO"
 .
