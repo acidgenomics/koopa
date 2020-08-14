@@ -6,8 +6,8 @@
 `--organism`=<organism>
 `--build`=<build>
 [`--release`=<release>]
-`--type`=<type>
-`--annotation`=<annotation>
+[`--type`=<type>]
+[`--annotation`=<annotation>]
 [`--output-dir`=<output_dir>]
 [`--decompress`]
 
@@ -31,7 +31,7 @@ Verify checksums in shell with:
 
   * `--annotation`:
     Annotation type:
-    `all`: Download all annotation formats;
+    `all` (default): Download all annotation formats;
     `gtf`: GTF (GFFv2);
     `gff`: GFF3;
     `none`: Skip download.
@@ -55,7 +55,7 @@ Verify checksums in shell with:
 
   * `--type`=<type>:
     Genome type:
-    `all`: Download all reference types;
+    `all` (default): Download all reference types;
     `genome`: Primary assembly (DNA);
     `transcriptome`: Transcripts (cDNA/RNA);
     `none`: Skip download.

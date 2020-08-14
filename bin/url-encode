@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 URL encode.
-Updated 2020-08-13.
+Updated 2020-08-14.
 """
 
 import sys
@@ -11,6 +11,9 @@ from koopa.system import koopa_help
 
 koopa_help()
 
+
+# FIXME How to parameterize?
+# FIXME Need to error on unset positional arguments.
 
 def main(x):
     """
