@@ -36,6 +36,9 @@ local({
     file <- args[file]
     file <- sub(pattern = "^--file=", replacement = "", x = file)
     name <- basename(file)
-    shell(command = "man", args = name)
+    manFile <- normalizePath(file.path(
+        dirname(file), "..", "man", "man1", paste0(basename(file), ".1")
+    ))
+    shell(command = "man", args = manFile)
     quit()
 })
