@@ -1,4 +1,4 @@
-# download-ensembl-genome(1) - Download Ensembl genome
+# download-ensembl-genome(1) - download ensembl genome
 
 ## SYNOPSIS
 
