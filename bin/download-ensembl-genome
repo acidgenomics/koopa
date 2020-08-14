@@ -47,13 +47,8 @@ args = parser.parse_args()
 
 
 def main(
-        annotation,
-        build,
-        decompress,
-        genome_type,
-        organism,
-        output_dir,
-        release):
+    annotation, build, decompress, genome_type, organism, output_dir, release
+):
     """
     Download Ensembl genome.
     """
