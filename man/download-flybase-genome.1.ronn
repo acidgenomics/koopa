@@ -1,10 +1,10 @@
 # download-flybase-genome(1) - download flybase genome
 
 `download-flybase-genome`
-`--type`=<type>
-`--annotation`=<annotation>
-`--release`=<release>
-`--dmel`=<dmel>
+[`--release`=<release>]
+[`--dmel`=<dmel>]
+[`--type`=<type>]
+[`--annotation`=<annotation>]
 [`--output-dir`=<output_dir>]
 [`--decompress`]
 
@@ -18,32 +18,34 @@ Support for this resource could be removed in the future, due to paywall.
 
 ## OPTIONS
 
-  * `--annotation`:
+  * `--release`=<release>:
+    FlyBase release version (e.g. "FB2019_04").
+    Defaults to current version.
+
+  * `--dmel`=<dmel>:
+    *Drosophila melanogaster* release version (e.g. "r6.29").
+    Defaults to current version.
+
+  * `--type`=<type>:
+    Genome type:
+    `all` (default): Download all reference types;
+    `genome`: Primary assembly (DNA);
+    `transcriptome`: Transcripts (cDNA/RNA);
+    `none`: Skip download.
+
+  * `--annotation`=<annotation>:
     Annotation type:
     `all` (default): Download all annotation formats;
     `gtf`: GTF (GFFv2);
     `gff`: GFF3;
     `none`: Skip download.
 
-  * `--decompress`:
-    Decompress files (but keep the compressed originals).
-
-  * `--dmel`:
-    *Drosophila melanogaster* release version (e.g. "r6.29").
-
   * `--output-dir`=<output_dir>:
     Output directory.
     Defaults to working directory.
 
-  * `--release`:
-    FlyBase release version (e.g. "FB2019_04").
-
-  * `--type`:
-    Genome type:
-    `all` (default): Download all reference types;
-    `genome`: Primary assembly (DNA);
-    `transcriptome`: Transcripts (cDNA/RNA);
-    `none`: Skip download.
+  * `--decompress`:
+    Decompress files (but keep the compressed originals).
 
 ## SEE ALSO
 
