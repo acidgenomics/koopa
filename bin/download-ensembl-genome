@@ -26,6 +26,7 @@ koopa_help()
 parser = ArgumentParser()
 parser.add_argument("--organism", required=True, type=str)
 parser.add_argument("--build", required=True, type=str)
+parser.add_argument("--release", type=str)
 parser.add_argument(
     "--type",
     default="all",
@@ -40,7 +41,6 @@ parser.add_argument(
     nargs="?",
     choices=["all", "gtf", "gff", "none"],
 )
-parser.add_argument("--release", type=str)
 parser.add_argument("--output-dir", type=dir_path, default=".")
 parser.add_argument("--decompress", action="store_true")
 args = parser.parse_args()
