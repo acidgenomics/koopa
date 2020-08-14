@@ -20,7 +20,7 @@ Support for this resource could be removed in the future, due to paywall.
 
   * `--annotation`:
     Annotation type:
-    `all`: Download all annotation formats;
+    `all` (default): Download all annotation formats;
     `gtf`: GTF (GFFv2);
     `gff`: GFF3;
     `none`: Skip download.
@@ -40,7 +40,7 @@ Support for this resource could be removed in the future, due to paywall.
 
   * `--type`:
     Genome type:
-    `all`: Download all reference types;
+    `all` (default): Download all reference types;
     `genome`: Primary assembly (DNA);
     `transcriptome`: Transcripts (cDNA/RNA);
     `none`: Skip download.
