@@ -3,8 +3,8 @@
 Download Ensembl genome.
 """
 
-import argparse
-import os
+from argparse import ArgumentParser
+from os.path import join, realpath
 
 from koopa.arg import dir_path
 from koopa.genome import tx2gene_from_fasta
@@ -15,11 +15,15 @@ from koopa.genome.ensembl import (
     download_ensembl_transcriptome,
     ensembl_version,
 )
+from koopa.goalie import stop
+from koopa.strings import paste_url
 from koopa.syntactic import kebab_case
-from koopa.system import eprint, paste_url
+from koopa.system import koopa_help
+
+koopa_help()
 
 
-parser = argparse.ArgumentParser()
+parser = ArgumentParser()
 parser.add_argument("--organism", required=True, type=str)
 parser.add_argument("--build", required=True, type=str)
 parser.add_argument(
@@ -54,7 +58,7 @@ def main(
     Download Ensembl genome.
     """
     if genome_type == "none" and annotation == "none":
-        eprint("Error: 'genome_type' or 'annotation' are required.")
+        stop("'genome_type' or 'annotation' are required.")
     organism = organism.replace(" ", "_")
     base_url = "ftp://ftp.ensembl.org/pub"
     grch37_base_url = paste_url(base_url, "grch37")
@@ -68,7 +72,7 @@ def main(
     output_basename = kebab_case(
         organism + " " + build + " " + "ensembl" + " " + release
     )
-    output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
+    output_dir = join(realpath(output_dir), output_basename)
     if genome_type == "genome":
         download_ensembl_genome(
             organism=organism,

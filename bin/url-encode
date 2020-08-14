@@ -6,8 +6,8 @@ Updated 2020-08-13.
 
 import sys
 
-from koopa.shell import koopa_help
-from koopa.url import url_encode
+from koopa.strings import url_encode
+from koopa.system import koopa_help
 
 koopa_help()
 
