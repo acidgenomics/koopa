@@ -8,20 +8,22 @@ koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 local({
-    pkg <- positionalArgs()[[1L]]
+    pkgDir <- positionalArgs()[[1L]]
     ## Handle `r-koopa` edge case.
-    if (any(grepl("-", pkg))) {
-        pkg <- strsplit(pkg, "-")[[1L]][[2L]]
+    if (any(grepl("-", pkgDir))) {
+        pkgName <- strsplit(pkgDir, "-")[[1L]][[2L]]
+    } else {
+        pkgName <- pkgDir
     }
     repodir <- "~/git/drat"
     assert(
-        dir.exists(pkg),
+        dir.exists(pkgDir),
         dir.exists(repodir)
     )
-    devtools::build(pkg)
+    devtools::build(pkgDir)
     tarballs <- sort(list.files(
         path = ".",
-        pattern = paste0(pkg, "_.*.tar.gz")
+        pattern = paste0(pkgName, "_.*.tar.gz")
     ))
     file <- tail(tarballs, n = 1L)
     assert(file.exists(file))
