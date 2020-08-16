@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-# pylint: disable=protected-access,redefined-builtin
 """
 Download RefSeq genome.
 """
 
-import argparse
-import os
-from textwrap import dedent
+from argparse import ArgumentParser
+from os.path import join, realpath
+
 from koopa.arg import dir_path
+from koopa.files import download
 from koopa.genome.refseq import (
     download_refseq_genome,
     download_refseq_gff,
@@ -15,65 +15,20 @@ from koopa.genome.refseq import (
     download_refseq_transcriptome,
     refseq_version,
 )
+from koopa.strings import paste_url
 from koopa.syntactic import kebab_case
-from koopa.system import download, paste_url
+from koopa.system import koopa_help
+
+koopa_help()
 
 
-DESCRIPTION = "Download RefSeq genome."
-EPILOG = """
-details:
-    Creates a new directory in the current working directory.
-    Only Homo sapiens genome is supported.
-
-    Primary RefSeq URLs:
-    - https://www.ncbi.nlm.nih.gov/projects/genome/guide/human/
-    - ftp://ftp.ncbi.nlm.nih.gov/refseq/
-    - ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/
-
-    Current GRCh38 assembly:
-    ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/
-        GRCh38_latest/refseq_identifiers/
-        - DNA: GRCh38_latest_genomic.fna.gz
-        - RNA: GRCh38_latest_rna.fna.gz
-        - GTF: GRCh38_latest_genomic.gtf.gz
-        - GFF: GRCh38_latest_genomic.gff.gz
-
-    Preformatted for analysis pipelines (UCSC IDs):
-    ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/
-        GCA_000001405.15_GRCh38/seqs_for_alignment_pipelines.ucsc_ids/
-        - Full:   GCA_000001405.15_GRCh38_full_analysis_set.fna.gz
-        - No ALT: GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz
-
-    Full version information in URL:
-    ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/109.20190905/
-        GCF_000001405.39_GRCh38.p13/
-        - DNA: GCF_000001405.39_GRCh38.p13_genomic.fna.gz
-        - RNA: GCF_000001405.39_GRCh38.p13_rna.fna.gz
-        - GTF: GCF_000001405.39_GRCh38.p13_genomic.gtf.gz
-        - GFF: GCF_000001405.39_GRCh38.p13_genomic.gff.gz
-
-    Alternate paths:
-    - ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/
-    - ftp://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/
-          Homo_sapiens/
-
-note:
-    Python script.
-    Updated 2020-08-12.
-"""
-
-parser = argparse.ArgumentParser(
-    description=DESCRIPTION,
-    epilog=EPILOG,
-    formatter_class=argparse.RawTextHelpFormatter,
-)
+parser = ArgumentParser()
 parser.add_argument(
     "--build",
     default="GRCh38",
     const="GRCh38",
     nargs="?",
     choices=["GRCh38", "GRCh37"],
-    help="genome build (e.g. 'GRCh38')",
 )
 parser.add_argument(
     "--type",
@@ -81,14 +36,6 @@ parser.add_argument(
     const="all",
     nargs="?",
     choices=["all", "genome", "transcriptome", "none"],
-    help=dedent(
-        """\
-        'all': download all reference types
-        'genome': primary assembly (DNA)
-        'transcriptome': transcripts (cDNA/RNA)
-        'none': skip download
-    """
-    ),
 )
 parser.add_argument(
     "--annotation",
@@ -96,27 +43,13 @@ parser.add_argument(
     const="all",
     nargs="?",
     choices=["all", "gtf", "gff", "none"],
-    help=dedent(
-        """\
-        'all': download all annotation formats
-        'gtf': GTF (GFFv2)
-        'gff': GFF3
-        'none': skip download
-    """
-    ),
 )
-parser.add_argument(
-    "--output-dir", type=dir_path, default=".", help="output directory"
-)
-parser.add_argument(
-    "--decompress",
-    action="store_true",
-    help="decompress (but keep) the original file",
-)
+parser.add_argument("--output-dir", type=dir_path, default=".")
+parser.add_argument("--decompress", action="store_true")
 args = parser.parse_args()
 
 
-def main(annotation, build, decompress, output_dir, type):
+def main(annotation, build, decompress, genome_type, output_dir):
     """
     Download RefSeq genome.
     """
@@ -134,27 +67,27 @@ def main(annotation, build, decompress, output_dir, type):
     output_basename = kebab_case(
         organism + " " + build + " " + "refseq" + " " + release
     )
-    output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
+    output_dir = join(realpath(output_dir), output_basename)
     download(url=paste_url(release_url, "README.txt"), output_dir=output_dir)
     download(
         url=paste_url(release_url, build + "_latest_assembly_report.txt"),
         output_dir=output_dir,
     )
-    if type == "genome":
+    if genome_type == "genome":
         download_refseq_genome(
             build=build,
             release_url=release_url,
             output_dir=output_dir,
             decompress=decompress,
         )
-    elif type == "transcriptome":
+    elif genome_type == "transcriptome":
         download_refseq_transcriptome(
             build=build,
             release_url=release_url,
             output_dir=output_dir,
             decompress=decompress,
         )
-    elif type == "all":
+    elif genome_type == "all":
         download_refseq_genome(
             build=build,
             release_url=release_url,
@@ -201,6 +134,6 @@ main(
     annotation=args.annotation,
     build=args.build,
     decompress=args.decompress,
+    genome_type=args.type,
     output_dir=args.output_dir,
-    type=args.type,
 )
