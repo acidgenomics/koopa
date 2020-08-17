@@ -58,7 +58,7 @@ END
 install() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2020-07-23.
+    # @note Updated 2020-08-12.
     # """
     local dotfiles interactive koopa_prefix passwordless profile shared test
     while (("$#"))
@@ -111,10 +111,6 @@ install() { # {{{1
             --prefix=*)
                 koopa_prefix="${1#*=}"
                 shift 1
-                ;;
-            --prefix)
-                koopa_prefix="$2"
-                shift 2
                 ;;
             --shared)
                 shared=1

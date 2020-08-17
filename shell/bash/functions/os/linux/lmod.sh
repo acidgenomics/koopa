@@ -3,7 +3,7 @@
 koopa::install_lmod() { # {{{1
     # """
     # Install Lmod.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-13.
     # """
     local apps_dir data_dir file name name_fancy prefix tmp_dir url version
     koopa::assert_has_no_args "$#"
@@ -16,10 +16,6 @@ koopa::install_lmod() { # {{{1
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"

@@ -3,7 +3,7 @@
 koopa::_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-08-13.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -35,33 +35,17 @@ koopa::_install_rstudio_server() { # {{{1
                 file_ext="${1#*=}"
                 shift 1
                 ;;
-            --file-ext)
-                file_ext="$2"
-                shift 2
-                ;;
             --install=*)
                 install="${1#*=}"
                 shift 1
-                ;;
-            --install)
-                install="$2"
-                shift 2
                 ;;
             --os-codename=*)
                 os_codename="${1#*=}"
                 shift 1
                 ;;
-            --os-codename)
-                os_codename="$2"
-                shift 2
-                ;;
             --platform=*)
                 platform="${1#*=}"
                 shift 1
-                ;;
-            --platform)
-                platform="$2"
-                shift 2
                 ;;
             --pro)
                 pro=1
@@ -74,10 +58,6 @@ koopa::_install_rstudio_server() { # {{{1
             --version=*)
                 version="${1#*=}"
                 shift 1
-                ;;
-            --version)
-                version="$2"
-                shift 2
                 ;;
             --)
                 shift 1

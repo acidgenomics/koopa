@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
 """
 URL encode.
-Updated 2020-08-12.
+Updated 2020-08-17.
 """
 
 import sys
-from koopa.url import url_encode
+
+from koopa.strings import url_encode
+from koopa.system import koopa_help
+
+koopa_help()
 
 
-def main(x):
+def main():
     """
     URL encode.
     """
-    print(url_encode(x))
+    args = sys.argv[1:]
+    for arg in args:
+        print(url_encode(arg))
 
 
-main(sys.argv[1])
+main()
