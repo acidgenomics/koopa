@@ -254,7 +254,7 @@ _koopa_activate_ensembl_perl_api() { # {{{1
 _koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2020-05-05.
+    # @note Updated 2020-08-13.
     #
     # Currently Bash and Zsh are supported.
     #
@@ -262,9 +262,15 @@ _koopa_activate_fzf() { # {{{1
     #
     # @seealso
     # - https://github.com/junegunn/fzf
+    # Customization:
+    # - https://github.com/ngynLk/dotfiles/blob/master/.bashrc
+    # - Dracula palette:
+    #   https://gist.github.com/umayr/8875b44740702b340430b610b52cd182
     # """
     # shellcheck disable=SC2039
     local nounset prefix script shell
+    [ -z "${FZF_DEFAULT_OPTS:-}" ] && \
+        export FZF_DEFAULT_OPTS='--color bw --border'
     prefix="$(_koopa_fzf_prefix)/latest"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"

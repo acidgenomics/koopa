@@ -1,0 +1,36 @@
+#!/usr/bin/env Rscript
+
+args <- commandArgs()
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+
+local({
+    pkgDir <- positionalArgs()[[1L]]
+    ## Handle `r-koopa` edge case.
+    if (any(grepl("-", pkgDir))) {
+        pkgName <- strsplit(pkgDir, "-")[[1L]][[2L]]
+    } else {
+        pkgName <- pkgDir
+    }
+    repodir <- "~/git/drat"
+    assert(
+        dir.exists(pkgDir),
+        dir.exists(repodir)
+    )
+    devtools::build(pkgDir)
+    tarballs <- sort(list.files(
+        path = ".",
+        pattern = paste0(pkgName, "_.*.tar.gz")
+    ))
+    file <- tail(tarballs, n = 1L)
+    assert(file.exists(file))
+    drat::insertPackage(
+        file = file,
+        repodir = repodir,
+        action = "prune"
+    )
+    invisible(file.remove(file))
+})
