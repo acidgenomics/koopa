@@ -3,7 +3,7 @@
 ## SYNOPSIS
 
 `download-refseq-genome`
-`--build`=<build>
+[`--build`=<build>]
 [`--type`=<type>]
 [`--annotation`=<annotation>]
 [`--output-dir`=<output_dir>]
@@ -19,6 +19,7 @@ Only *Homo sapiens* genome is supported.
 
   * `--build`=<build>:
     Genome build (e.g. "GRCh38").
+    Defaults to GRCh38.
 
   * `--type`=<type>:
     Genome type:
