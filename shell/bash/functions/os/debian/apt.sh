@@ -63,7 +63,7 @@ koopa::apt_add_docker_repo() { # {{{1
 koopa::apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-08-17.
     # """
     local file url
     koopa::assert_has_no_args "$#"
@@ -73,7 +73,8 @@ koopa::apt_add_google_cloud_key() { # {{{1
     koopa::info "Adding Google Cloud keyring at '${file}'."
     curl -fsSL "$url" \
         | sudo apt-key --keyring "$file" add - \
-        >/dev/null 2>&1
+        >/dev/null 2>&1 \
+        || true
     return 0
 }
 
@@ -131,7 +132,7 @@ llvm-toolchain-${os_codename}-${version} main"
 koopa::apt_add_microsoft_key() {  #{{{1
     # """
     # Add the Microsoft Azure CLI key.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-08-17.
     # """
     local file url
     koopa::assert_has_no_args "$#"
@@ -142,14 +143,15 @@ koopa::apt_add_microsoft_key() {  #{{{1
     curl -fsSL "$url" \
         | gpg --dearmor \
         | sudo tee "$file" \
-        >/dev/null 2>&1
+        >/dev/null 2>&1 \
+        || true
     return 0
 }
 
 koopa::apt_add_r_key() { # {{{1
     # """
     # Add the R key.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-08-17.
     # """
     local key keyserver
     koopa::assert_has_no_args "$#"
@@ -168,7 +170,8 @@ koopa::apt_add_r_key() { # {{{1
     sudo apt-key adv \
         --keyserver "$keyserver" \
         --recv-key "$key" \
-        >/dev/null 2>&1
+        >/dev/null 2>&1 \
+        || true
     return 0
 }
 
@@ -496,7 +499,8 @@ koopa::apt_key_add() {  #{{{1
     koopa::info "Adding ${name} key."
     curl -fksSL "$url" \
         | sudo apt-key add - \
-        >/dev/null 2>&1
+        >/dev/null 2>&1 \
+        || true
     return 0
 }
 
@@ -517,8 +521,9 @@ koopa::apt_space_used_by() { # {{{1
     # Check installed apt package size, with dependencies.
     # @note Updated 2020-06-30.
     #
-    koopa::assert_has_args "$#"
     # Alternate approach that doesn't attempt to grep match.
+    # """
+    koopa::assert_has_args "$#"
     sudo apt-get --assume-no autoremove "$@"
     return 0
 }
