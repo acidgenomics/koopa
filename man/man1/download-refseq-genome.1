@@ -7,7 +7,7 @@
 \fBdownload\-refseq\-genome\fR \- download refseq genome
 .
 .SH "SYNOPSIS"
-\fBdownload\-refseq\-genome\fR \fB\-\-build\fR=\fIbuild\fR [\fB\-\-type\fR=\fItype\fR] [\fB\-\-annotation\fR=\fIannotation\fR] [\fB\-\-output\-dir\fR=\fIoutput_dir\fR] [\fB\-\-decompress\fR]
+\fBdownload\-refseq\-genome\fR [\fB\-\-build\fR=\fIbuild\fR] [\fB\-\-type\fR=\fItype\fR] [\fB\-\-annotation\fR=\fIannotation\fR] [\fB\-\-output\-dir\fR=\fIoutput_dir\fR] [\fB\-\-decompress\fR]
 .
 .SH "DESCRIPTION"
 Download RefSeq genome and corresponding annotation files\. Creates a new directory in the current working directory\. Only \fIHomo sapiens\fR genome is supported\.
@@ -15,7 +15,7 @@ Download RefSeq genome and corresponding annotation files\. Creates a new direct
 .SH "OPTIONS"
 .
 .IP "\(bu" 4
-\fB\-\-build\fR=\fIbuild\fR: Genome build (e\.g\. "GRCh38")\.
+\fB\-\-build\fR=\fIbuild\fR: Genome build (e\.g\. "GRCh38")\. Defaults to GRCh38\.
 .
 .IP "\(bu" 4
 \fB\-\-type\fR=\fItype\fR: Genome type: \fBall\fR (default): Download all reference types; \fBgenome\fR: Primary assembly (DNA); \fBtranscriptome\fR: Transcripts (cDNA/RNA); \fBnone\fR: Skip download\.
