@@ -24,10 +24,10 @@ local({
             sep = "\n"
         ), call. = FALSE)
     }
-    installURL <- function(url) {
-        install.packages(pkgs = url, repos = NULL)
-    }
     message("Installing koopa R package.")
-    installURL("https://github.com/acidgenomics/koopa/archive/r.tar.gz")
+    install.packages(
+        pkgs = "koopa",
+        repos = c("r.acidgenomics.com", getOption("repos"))
+    )
     stopifnot(packageVersion("koopa") >= minVersion)
 })
