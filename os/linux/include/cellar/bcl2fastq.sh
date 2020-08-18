@@ -11,7 +11,7 @@ koopa::download "$url"
 koopa::extract "$file"
 koopa::extract "bcl2fastq2-v${version}-Source.tar.gz"
 koopa::cd bcl2fastq
-mkdir bcl2fastq-build
+koopa::mkdir bcl2fastq-build
 koopa::cd bcl2fastq-build
 # Fix for missing '/usr/include/x86_64-linux-gnu/sys/stat.h'.
 export C_INCLUDE_PATH='/usr/include/x86_64-linux-gnu'
