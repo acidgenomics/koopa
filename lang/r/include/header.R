@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-08-13.
+## @note Updated 2020-08-18.
 ## """
 
 options(
@@ -15,6 +15,9 @@ stopifnot(packageVersion("base") >= "4.0")
 
 # Install koopa R package, if necessary.
 local({
+    koopaPrefix <- normalizePath(
+        file.path(dirname(sys.frame(1L)[["ofile"]]), "..", "..", "..")
+    )
     suppressMessages({
         source(file.path(koopaPrefix, "lang", "r", "include", "install.R"))
     })
