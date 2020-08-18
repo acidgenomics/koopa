@@ -63,6 +63,6 @@ koopa::install_bcl2fastq_rpm() { # {{{
         koopa::sys_ln -t "${make_prefix}/bin" "${prefix}/bin/bcl2fastq"
     )
     koopa::rm "$tmp_dir"
-    koopa::install_success "$name" "$prefix"
+    koopa::install_success "$name"
     return 0
 }
