@@ -5,7 +5,7 @@
 version2="$(koopa::sub '\.[0-9]+$' '' "$version")"
 version2="$(koopa::kebab_case "$version2")"
 file="bcl2fastq2-v${version2}-tar.zip"
-url_prefix="http://seq.cloud/install/bcl2fastq"
+url_prefix='http://seq.cloud/install/bcl2fastq'
 url="${url_prefix}/source/${file}"
 koopa::download "$url"
 koopa::extract "$file"
@@ -14,7 +14,7 @@ koopa::cd bcl2fastq
 mkdir bcl2fastq-build
 koopa::cd bcl2fastq-build
 # Fix for missing '/usr/include/x86_64-linux-gnu/sys/stat.h'.
-export C_INCLUDE_PATH="/usr/include/x86_64-linux-gnu"
+export C_INCLUDE_PATH='/usr/include/x86_64-linux-gnu'
 ../src/configure --prefix="$prefix"
 make --jobs="$jobs"
 make install
