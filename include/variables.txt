@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-08-17"
+koopa-date="2020-08-18"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.8.0"
@@ -56,7 +56,7 @@ binutils="2.34"
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
 #     pipelines/latest/installation
-cellranger="3.1.0"
+cellranger="4.0.0"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
