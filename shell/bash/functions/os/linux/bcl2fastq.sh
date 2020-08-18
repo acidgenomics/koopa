@@ -50,7 +50,7 @@ koopa::install_bcl2fastq_rpm() { # {{{
         version2="$(koopa::sub '\.[0-9]+$' '' "$version")"
         version2="$(koopa::kebab_case "$version2")"
         file="bcl2fastq2-v${version2}-linux-x86-64.zip"
-        url_prefix="http://seq.cloud/install/bcl2fastq"
+        url_prefix='http://seq.cloud/install/bcl2fastq'
         url="${url_prefix}/rpm/${file}"
         koopa::download "$url"
         koopa::extract "$file"
