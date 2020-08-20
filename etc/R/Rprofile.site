@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-08-13.
+## Updated 2020-08-20.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -338,8 +338,10 @@ local({
 
     local({
         repos <- getOption("repos")
-        if (isInstalled("BiocManager")) {
-            repos <- BiocManager::repositories()
+        if (all(isInstalled(c("BiocManager", "goalie")))) {
+            if (isTRUE(goalie::hasInternet())) {
+                repos <- BiocManager::repositories()
+            }
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
         ## Snapshot: 2020-09-09.
