@@ -338,7 +338,7 @@ local({
 
     local({
         repos <- getOption("repos")
-        if (isInstalled("BiocManager") {
+        if (isInstalled("BiocManager")) {
             repos <- BiocManager::repositories()
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
