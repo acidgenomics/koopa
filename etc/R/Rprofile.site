@@ -346,8 +346,9 @@ local({
             }
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-08-19.
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/312"
+        ## Snapshot: 2020-08-09.
+        ## Keeping at 309 because mgcv update to v1.8-32 fails on macOS.
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/309"
         options("repos" = repos)
     })
 
