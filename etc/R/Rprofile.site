@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-08-20.
+## Updated 2020-08-21.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -339,13 +339,15 @@ local({
     local({
         repos <- getOption("repos")
         if (all(isInstalled(c("BiocManager", "goalie")))) {
+            ## FIXME `hasInternet()` call below is causing
+            ## "closing unused connection" warning in RStudio. How to resolve?
             if (isTRUE(goalie::hasInternet())) {
                 repos <- BiocManager::repositories()
             }
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-09-09.
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/309"
+        ## Snapshot: 2020-08-19.
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/312"
         options("repos" = repos)
     })
 
