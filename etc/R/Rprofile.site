@@ -338,12 +338,8 @@ local({
 
     local({
         repos <- getOption("repos")
-        if (all(isInstalled(c("BiocManager", "goalie")))) {
-            ## FIXME `hasInternet()` call below is causing
-            ## "closing unused connection" warning in RStudio. How to resolve?
-            if (isTRUE(goalie::hasInternet())) {
-                repos <- BiocManager::repositories()
-            }
+        if (isInstalled("BiocManager")) {
+            repos <- BiocManager::repositories()
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
         ## Snapshot: 2020-08-09.
