@@ -1,14 +1,12 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2020-08-06.
+## Updated 2020-08-22.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 ## - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
 ##       Renviron.site
 ## """
-
-
 
 ## System path {{{1
 ## =============================================================================
@@ -25,15 +23,6 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 
 ## Note that CRAN is now using Xcode clang for R 4.0+.
 
-## Clang 8, for R 3.7+.
-## > PATH="/usr/local/clang8/bin:${PATH}"
-
-## Clang 7, for R 3.6.
-## > PATH="/usr/local/clang7/bin:${PATH}"
-
-## Clang 6, for R 3.5.
-## > PATH="/usr/local/clang6/bin:${PATH}"
-
 ## gfortran 8.2 (for R 4.0+).
 PATH="/usr/local/gfortran/bin:${PATH}"
 
@@ -48,15 +37,11 @@ PATH="/usr/local/lib/python3.8/site-packages/bin:${PATH}"
 ## Use RStudio bundled version of pandoc, for improved R Markdown stability.
 PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 
-
-
 ## Package library path {{{1
 ## =============================================================================
 
 R_LIBS_SITE="${R_HOME}/site-library"
 R_LIBS_USER="~/Library/R/%v/library"
-
-
 
 ## Package configuration {{{1
 ## =============================================================================
@@ -70,8 +55,6 @@ PKG_CONFIG_PATH="/usr/local/opt/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 ## imagemagick.
 PKG_CONFIG_PATH="/usr/local/opt/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
-
-
 ## Miscellaneous useful defaults {{{1
 ## =============================================================================
 
@@ -82,8 +65,6 @@ R_MAX_NUM_DLLS=153
 ## R can sometimes error due to time zone, unless this is set.
 ## This is particularly important to set on rocker Debian images.
 TZ="America/New_York"
-
-
 
 ## Package-specific {{{1
 ## =============================================================================
