@@ -15,7 +15,7 @@ local({
     } else {
         pkgName <- pkgDir
     }
-    repodir <- "~/git/drat"
+    repodir <- file.path("~", "monorepo", "drat")
     assert(
         dir.exists(pkgDir),
         dir.exists(repodir)

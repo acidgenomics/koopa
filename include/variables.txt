@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-08-18"
+koopa-date="2020-08-25"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.8.0"
+koopa-version="0.8.1"
 
 # Globals {{{1
 # ==============================================================================
@@ -64,7 +64,7 @@ cellranger="4.0.0"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.18.1"
+cmake="3.18.2"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -75,7 +75,7 @@ conda="4.8.3"
 coreutils="8.32"
 
 # https://curl.haxx.se/
-curl="7.71.1"
+curl="7.72.0"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -198,7 +198,7 @@ oracle-instantclient="19.5.0.0.0-1"
 pandoc="2.10"
 
 # https://www.gnu.org/software/parallel/
-parallel="20200722"
+parallel="20200822"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
@@ -378,10 +378,11 @@ python-flake8="3.8.3"
 python-logbook="1.5.3"
 python-numpy="1.19.1"
 python-pandas="1.1.0"
-python-pip="20.2.1"
+python-pip="20.2.2"
 python-pipx="0.15.4.0"
 python-pyflakes="2.2.0"
 python-pylint="2.5.3"
+python-pytaglib="1.4.6"
 python-pytest="5.4.3"
 python-ranger-fm="1.9.3"
 python-scipy="1.5.2"
