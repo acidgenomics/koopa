@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-08-07.
+    # @note Updated 2020-08-25.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
@@ -80,6 +80,7 @@ koopa::fedora_install_base() { # {{{1
         'pkgconfig'  # This is now pkgconf wrapped.
         'readline'
         'systemd'
+        'taglib'
         'util-linux'
         'vim'
         'wget'
