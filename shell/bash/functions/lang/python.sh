@@ -66,7 +66,7 @@ koopa::install_pip() { # {{{1
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-08-23.
     # """
     local install_flags name_fancy pkg pkgs pos python version
     python="$(koopa::python)"
@@ -115,6 +115,7 @@ koopa::install_python_packages() { # {{{1
             'pipx'
             'pyflakes'
             'pylint'
+            'pytaglib'
             'pytest'
             'ranger-fm'
             'setuptools'
