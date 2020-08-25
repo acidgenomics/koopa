@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 local({
-    minVersion <- package_version("0.0.1")
+    minVersion <- package_version("0.0.4")
     isInstalled <- function(pkgs) {
         basename(pkgs) %in% rownames(installed.packages())
     }
