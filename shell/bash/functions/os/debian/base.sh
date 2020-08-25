@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2020-08-07.
+    # @note Updated 2020-08-25.
     #
     # Flags:
     # --compact
@@ -178,6 +178,7 @@ koopa::debian_install_base() { # {{{1
         'software-properties-common'
         'subversion'
         'sudo'
+        'taglib'
         'texinfo'  # makeinfo
         'tmux'
         'tree'
