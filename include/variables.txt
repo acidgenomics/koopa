@@ -64,7 +64,7 @@ cellranger="4.0.0"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.18.1"
+cmake="3.18.2"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -75,7 +75,7 @@ conda="4.8.3"
 coreutils="8.32"
 
 # https://curl.haxx.se/
-curl="7.71.1"
+curl="7.72.0"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -140,7 +140,7 @@ htop="2.2.0"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.5.1"
+julia="1.5.0"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
@@ -198,7 +198,7 @@ oracle-instantclient="19.5.0.0.0-1"
 pandoc="2.10"
 
 # https://www.gnu.org/software/parallel/
-parallel="20200722"
+parallel="20200822"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
