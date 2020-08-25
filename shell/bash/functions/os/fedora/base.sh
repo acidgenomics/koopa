@@ -80,7 +80,6 @@ koopa::fedora_install_base() { # {{{1
         'pkgconfig'  # This is now pkgconf wrapped.
         'readline'
         'systemd'
-        'taglib'
         'util-linux'
         'vim'
         'wget'
@@ -159,6 +158,7 @@ koopa::fedora_install_base() { # {{{1
             'pcre-devel'  # ag
             'pcre2-devel'  # rJava
             'postgresql-devel'
+            'taglib-devel'
             'unixODBC-devel'
             'xxhash-devel'  # rsync
             'xz-devel'

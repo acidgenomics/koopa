@@ -178,7 +178,6 @@ koopa::debian_install_base() { # {{{1
         'software-properties-common'
         'subversion'
         'sudo'
-        'taglib'
         'texinfo'  # makeinfo
         'tmux'
         'tree'
@@ -264,6 +263,7 @@ koopa::debian_install_base() { # {{{1
             'libssh2-1-dev'
             'libssl-dev'
             'libstdc++6'
+            'libtag1-dev'
             'libtiff5-dev'
             'libudunits2-dev'
             'libv8-dev'
