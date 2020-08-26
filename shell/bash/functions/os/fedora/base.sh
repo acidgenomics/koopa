@@ -136,6 +136,7 @@ koopa::fedora_install_base() { # {{{1
                 'openblas-devel'
                 'openjpeg2-devel'  # GDAL
                 'readline-devel'  # R
+                'taglib-devel'
             )
         fi
         pkgs+=(
@@ -158,7 +159,6 @@ koopa::fedora_install_base() { # {{{1
             'pcre-devel'  # ag
             'pcre2-devel'  # rJava
             'postgresql-devel'
-            'taglib-devel'
             'unixODBC-devel'
             'xxhash-devel'  # rsync
             'xz-devel'
