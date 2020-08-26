@@ -544,6 +544,13 @@ koopa::install_subversion() { # {{{1
         "$@"
 }
 
+koopa::install_taglib() { # {{{1
+    koopa::install_cellar \
+        --name='taglib' \
+        --name-fancy='TagLib' \
+        "$@"
+}
+
 koopa::install_texinfo() { # {{{1
     koopa::install_cellar \
         --name='texinfo' \
