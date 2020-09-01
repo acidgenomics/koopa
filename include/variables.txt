@@ -226,7 +226,7 @@ php="7.4.9"
 pkg-config="0.29.2"
 
 # https://proj.org/
-proj="7.1.0"
+proj="7.1.1"
 
 # https://github.com/pyenv/pyenv
 pyenv="1.2.16"
