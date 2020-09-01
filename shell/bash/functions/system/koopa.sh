@@ -106,6 +106,7 @@ koopa::koopa() { # {{{1
         cellar-prefix | \
         conda-prefix | \
         config-prefix | \
+        fix-zsh-permissions | \
         get-homebrew-cask-version | \
         get-macos-app-version | \
         get-version | \
