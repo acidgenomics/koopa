@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-08-21.
+## Updated 2020-09-01.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -342,9 +342,8 @@ local({
             repos <- BiocManager::repositories()
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-08-24.
-        ## mgcv update to v1.8-32 fails to build from source on macOS.
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/313"
+        ## Snapshot: 2020-08-30.
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/316"
         options("repos" = repos)
     })
 
