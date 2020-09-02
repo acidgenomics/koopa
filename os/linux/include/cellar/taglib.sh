@@ -9,10 +9,17 @@
 # To build a static library, set the following two options with CMake:
 # -DBUILD_SHARED_LIBS=OFF -DENABLE_STATIC_RUNTIME=ON
 #
+# How to set '-fPIC' compiler flags?
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fpic")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpic")
+#
 # @seealso
-# - https://stackoverflow.com/questions/29200461/recompile-with-fpic-flag
+# - https://stackoverflow.com/questions/29200461
+# - https://stackoverflow.com/questions/38296756
 # - https://github.com/taglib/taglib/blob/master/INSTALL.md
 # - https://github.com/eplightning/audiothumbs-frameworks/issues/2
+# - https://cmake.org/pipermail/cmake/2012-June/050792.html
+# - https://github.com/gabime/spdlog/issues/1190
 # """
 
 file="${name}-${version}.tar.gz"
@@ -23,8 +30,8 @@ koopa::cd "${name}-${version}"
 cmake \
     -DBUILD_TESTS='on' \
     -DCMAKE_BUILD_TYPE='Release' \
-    -DCMAKE_INSTALL_PREFIX="${prefix}" \
-    -fPIC
+    -DCMAKE_CXX_FLAGS='-fpic' \
+    -DCMAKE_INSTALL_PREFIX="${prefix}"
 make --jobs="$jobs"
 make check
 make install
