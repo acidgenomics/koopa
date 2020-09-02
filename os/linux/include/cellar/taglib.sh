@@ -10,8 +10,7 @@
 # -DBUILD_SHARED_LIBS=OFF -DENABLE_STATIC_RUNTIME=ON
 #
 # How to set '-fPIC' compiler flags?
-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fpic")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpic")
+# -DCMAKE_CXX_FLAGS='-fpic'
 #
 # @seealso
 # - https://stackoverflow.com/questions/29200461
@@ -28,10 +27,11 @@ koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-${version}"
 cmake \
+    -DBUILD_SHARED_LIBS='off' \
     -DBUILD_TESTS='on' \
     -DCMAKE_BUILD_TYPE='Release' \
-    -DCMAKE_CXX_FLAGS='-fpic' \
-    -DCMAKE_INSTALL_PREFIX="${prefix}"
+    -DCMAKE_INSTALL_PREFIX="${prefix}" \
+    -DENABLE_STATIC_RUNTIME='on'
 make --jobs="$jobs"
 make check
 make install
