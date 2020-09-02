@@ -10,6 +10,7 @@ url="https://github.com/htop-dev/htop/archive/${file}"
 koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-${version}"
+./autogen.sh
 ./configure \
     --disable-unicode \
     --prefix="$prefix"
