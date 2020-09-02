@@ -12,6 +12,9 @@
 # How to set '-fPIC' compiler flags?
 # -DCMAKE_CXX_FLAGS='-fpic'
 #
+# Enable for unit tests with 'make check':
+# -DBUILD_TESTS='on'
+#
 # @seealso
 # - https://stackoverflow.com/questions/29200461
 # - https://stackoverflow.com/questions/38296756
@@ -27,11 +30,9 @@ koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-${version}"
 cmake \
-    -DBUILD_SHARED_LIBS='off' \
-    -DBUILD_TESTS='on' \
     -DCMAKE_BUILD_TYPE='Release' \
-    -DCMAKE_INSTALL_PREFIX="${prefix}" \
-    -DENABLE_STATIC_RUNTIME='on'
+    -DCMAKE_CXX_FLAGS='-fpic' \
+    -DCMAKE_INSTALL_PREFIX="${prefix}"
 make --jobs="$jobs"
-make check
+# > make check
 make install
