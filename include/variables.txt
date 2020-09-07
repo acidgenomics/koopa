@@ -118,7 +118,7 @@ geos="3.8.1"
 git="2.28.0"
 
 # https://gnupg.org/download/index.html
-gnupg="2.2.22"
+gnupg="2.2.23"
 
 # https://golang.org/dl/
 go="1.15"
