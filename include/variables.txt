@@ -28,7 +28,7 @@ anaconda="2020.02"
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
 # https://downloads.asperasoft.com/en/downloads/8?list
-aspera-connect="3.9.9.177872"
+aspera-connect="3.10.0.180973"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.69"
