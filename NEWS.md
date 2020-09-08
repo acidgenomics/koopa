@@ -1,4 +1,82 @@
-## koopa 0.7.0 (UNRELEASED)
+## koopa 0.8.3 (2020-09-08)
+
+### New software recipes
+
+- Added install support for bpytop.
+
+### Minor changes
+
+- Updated r-koopa dependency to 0.0.7 from 0.0.4.
+- Updated htop installer to use new
+  [htop-dev/htop](https://github.com/htop-dev/htop) forked repo.
+- Updated RStudio Package Manager (RSPM) snapshot to 2020-09-01.
+- Miscellaneous software version updates: Aspera Connect, GDAL, PROJ.
+
+## koopa 0.8.2 (2020-09-02)
+
+### New software recipes
+
+- Added taglib cellar recipe. Also added dependency support for Debian,
+  Fedora, and RHEL.
+
+### Minor changes
+
+- Added support for `koopa fix-zsh-permissions`.
+- Miscellaneous software dependency version updates.
+
+## koopa 0.8.1 (2020-08-25)
+
+### Minor changes
+
+- Updated r-koopa dependency from 0.0.1 to 0.0.4.
+- Use single quotes in shell when possilble, to pass lintr checks.
+- Cleaned up comments in `Rprofile.site` file.
+- Draft support for pytaglib installation.
+- `drat`: Switched default path to `~/monorepo/drat`.
+- Updated pinned `pip` dependency version.
+
+## koopa 0.8.0 (2020-08-18)
+
+This release migrates all internal Bash code to functions in a shared library.
+
+### Major changes
+
+- Repackaged all internal Bash code inside exported scripts to function library
+in `shell/bash`. Refer to scripts inside `bin` or `sbin` for examples.
+- Split out internal Python code into new separate Python package:
+  https://github.com/acidgenomics/koopa/tree/python
+- Split out internal R code into new separate R package:
+  https://github.com/acidgenomics/koopa/tree/r
+
+### New scripts
+
+- Now exporting: `convert-utf8-nfd-to-nfc`, `current-bcbio-version`,
+- `delete-adobe-bridge-cache`, `docker-remove`, `docker-run-wine`, `drat`,
+  `file-count`, `find-and-move-in-sequence`, `git-rm-submodule`, `install-pip`,
+  `install-ruby-packages`, `jekyll-serve`, `line-count`, `move-files-in-batch`,
+  `rename-snake-to-kebab`, `rsync-ignore`, `update-r-config`, `url-encode`,
+  `venv-create`, `youtube-mp3`, `youtube-thumbnail`.
+- New macOS scripts: `brew-outdated`, `clean-launch-services`, `ifactive`,
+  `install-pytaglib`, `list-launch-agents`, `merge-pdf`.
+- New Raspbian scripts: `install-pihole`, `install-pivpn`.
+
+### Removed scripts
+
+- Removed unnecessary exported scripts: `docker-build-all-batch-images`,
+  `emacs-vanilla`, `emacs24`, `install-chrohmm`, `nvim-vanilla`,
+  `rename-fq-to-fastq`, `sha256`, `tar-c`, `tar-x`, `update-google-cloud-sdk`,
+  `update-python-packages`, `vim-vanilla`.
+
+### Minor changes
+
+- Tightened up internal R code used for `koopa check-system` and `koopa list`.
+- Simplified version checks inside R header.
+- Working toward improving roff documentation (inside `man` directories) using
+  [ronn](https://github.com/rtomayko/ronn).
+- Improved Wine installer on Debian and Fedora.
+- Reorganized and reworked bcbio scripts for Linux.
+
+## koopa 0.7.0 (2020-07-15)
 
 This is a pretty major update, where a lot of the internal functions have been
 overhaluled and improved.
