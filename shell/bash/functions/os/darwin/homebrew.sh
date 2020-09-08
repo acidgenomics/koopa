@@ -3,11 +3,14 @@
 koopa::brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2020-07-21.
+    # @note Updated 2020-09-08.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
     # - https://unix.stackexchange.com/questions/253101/
+    #
+    # Syntax changed from 'brew cask outdated' to 'brew outdated --cask' in
+    # 2020-09.
     #
     # @seealso
     # - brew leaves
@@ -19,7 +22,7 @@ koopa::brew_cask_outdated() { # {{{
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
     tmp_file="$(koopa::tmp_file)"
-    script -q "$tmp_file" brew cask outdated --greedy >/dev/null
+    script -q "$tmp_file" brew outdated --cask --greedy >/dev/null
     x="$(grep -v '(latest)' "$tmp_file")"
     [[ -n "$x" ]] || return 0
     koopa::print "$x"
@@ -61,14 +64,14 @@ koopa::brew_outdated() { # {{{
 koopa::brew_update() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2020-07-21.
+    # @note Updated 2020-09-08.
     #
     # Alternative approaches:
     # > brew list \
     # >     | xargs brew reinstall --force-bottle --cleanup \
     # >     || true
-    # > brew cask outdated --greedy \
-    # >     | xargs brew cask reinstall \
+    # > brew outdated --cask --greedy \
+    # >     | xargs brew reinstall \
     # >     || true
     #
     # @seealso
@@ -92,7 +95,7 @@ koopa::brew_update() { # {{{1
         koopa::print "${casks[@]}"
         koopa::print "${casks[@]}" \
             | cut -d ' ' -f 1 \
-            | xargs brew cask reinstall \
+            | xargs brew reinstall \
             || true
     fi
     koopa::h2 'Running cleanup.'
