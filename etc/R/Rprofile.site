@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-09-01.
+## Updated 2020-09-08.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -342,8 +342,8 @@ local({
             repos <- BiocManager::repositories()
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-08-30.
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/316"
+        ## Snapshot: 2020-09-01.
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/318"
         options("repos" = repos)
     })
 
