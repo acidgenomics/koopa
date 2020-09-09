@@ -92,7 +92,7 @@ _koopa_activate_bcbio() { # {{{1
 _koopa_activate_broot() { # {{{1
     # """
     # Activate broot directory tree utility.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-09-09.
     #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
@@ -102,18 +102,24 @@ _koopa_activate_broot() { # {{{1
     # Note that for macOS, we're assuming installation via Homebrew.
     # If installed as crate, it will use the same path as for Linux.
     #
+    # Fish br launcher: launcher/fish/br.sh
+    # (not yet supported in koopa, but maybe in the future)
+    #
+    # @seealso
     # https://github.com/Canop/broot
     # """
     # shellcheck disable=SC2039
     local br_script config_dir nounset
     if _koopa_is_macos
     then
-        config_dir="${HOME}/Library/Preferences/org.dystroy.broot"
+        config_dir="${HOME}/Library/Application Support/org.dystroy.broot"
+        br_script='1'
     else
         config_dir="${HOME}/.config/broot"
+        br_script='br'
     fi
     [ -d "$config_dir" ] || return 0
-    br_script="${config_dir}/launcher/bash/br"
+    br_script="${config_dir}/launcher/bash/${br_script}"
     [ -f "$br_script" ] || return 0
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
