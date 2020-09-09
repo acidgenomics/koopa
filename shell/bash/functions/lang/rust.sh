@@ -62,7 +62,7 @@ koopa::install_rust() { # {{{1
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-09-09.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -72,15 +72,45 @@ koopa::install_rust_packages() { # {{{1
     # - https://github.com/rust-lang/cargo/pull/6798
     # - https://github.com/rust-lang/cargo/pull/7560
     # """
-    local crate crates name_fancy prefix
+    local cargo_flags crate crates default flags jobs name_fancy pos prefix \
+        reinstall version
+    default=0
+    reinstall=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --reinstall)
+                reinstall=1
+                shift 1
+                ;;
+            '')
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_envs
     koopa::activate_rust
     koopa::is_installed cargo rustc rustup || return 0
     name_fancy='Rust cargo crates'
     prefix="${CARGO_HOME:?}"
     koopa::install_start "$name_fancy" "$prefix"
-    if [[ "$#" -eq 0 ]]
+    crates=("$@")
+    if [[ "${#crates[@]}" -eq 0 ]]
     then
+        default=1
         crates=(
             'bat'
             'broot'
@@ -92,14 +122,24 @@ koopa::install_rust_packages() { # {{{1
             'tokei'
             'xsv'
         )
-    else
-        crates=("$@")
     fi
     koopa::dl 'Crates' "$(koopa::to_string "${crates[@]}")"
     koopa::sys_set_permissions -ru "$prefix"
+    jobs="$(koopa::cpu_count)"
+    cargo_flags=(
+        '--jobs' "${jobs}"
+        '--verbose'
+    )
+    [[ "$reinstall" -eq 1 ]] && cargo_flags+=('--force')
     for crate in "${crates[@]}"
     do
-        cargo install "$crate"
+        flags=("${cargo_flags[@]}")
+        if [[ "$default" -eq 1 ]]
+        then
+            version="$(koopa::variable "rust-${crate}")"
+            flags+=('--version' "${version}")
+        fi
+        cargo install "$crate" "${flags[@]}"
     done
     koopa::sys_set_permissions -r "$prefix"
     koopa::install_success "$name_fancy"
