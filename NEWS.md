@@ -1,3 +1,14 @@
+## koopa 0.8.4 (2020-09-09)
+
+### Minor changes
+
+- Improved `install-rust-packages`, pinning to specific Rust versions.
+  User can define custom packages to install as positional arguments, following
+  the conventions used for `install-python-packages`.
+- Activation fix for broot on macOS. The location of the br activation script
+  has changed recently.
+- broot configuration is now under Git in the dotfiles repo.
+
 ## koopa 0.8.3 (2020-09-08)
 
 ### New software recipes
