@@ -98,28 +98,20 @@ _koopa_activate_broot() { # {{{1
     # See 'broot --install' for details.
     #
     # Configuration file gets saved at '${prefs_dir}/conf.toml'.
+    # Fish: launcher/fish/br.sh (also saved in Fish functions)
     #
     # Note that for macOS, we're assuming installation via Homebrew.
     # If installed as crate, it will use the same path as for Linux.
-    #
-    # Fish br launcher: launcher/fish/br.sh
-    # (not yet supported in koopa, but maybe in the future)
     #
     # @seealso
     # https://github.com/Canop/broot
     # """
     # shellcheck disable=SC2039
     local br_script config_dir nounset
-    if _koopa_is_macos
-    then
-        config_dir="${HOME}/Library/Application Support/org.dystroy.broot"
-        br_script='1'
-    else
-        config_dir="${HOME}/.config/broot"
-        br_script='br'
-    fi
+    config_dir="${HOME}/.config/broot"
     [ -d "$config_dir" ] || return 0
-    br_script="${config_dir}/launcher/bash/${br_script}"
+    # This is supported for Bash and Zsh.
+    br_script="${config_dir}/launcher/bash/br"
     [ -f "$br_script" ] || return 0
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
