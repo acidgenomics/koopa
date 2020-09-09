@@ -397,6 +397,19 @@ python-setuptools="50.3.0"
 python-six="1.15.0"
 python-wheel="0.35.1"
 
+# Rust cargo crates {{{1
+# ==============================================================================
+
+rust-bat="0.15.4"
+rust-broot="1.0.0"
+rust-du-dust="0.5.3"
+rust-exa="0.9.0"
+rust-fd-find="8.1.1"
+rust-hyperfine="1.10.0"
+rust-ripgrep="12.1.1"
+rust-tokei="12.0.4"
+rust-xsv="0.13.0"
+
 # Homebrew cask versions {{{1
 # ==============================================================================
 
