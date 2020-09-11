@@ -1,3 +1,9 @@
+## koopa 0.8.5 (2020-09-11)
+
+### Minor changes
+
+- `koopa header`: Added support for R. Input is no longer case sensitive.
+
 ## koopa 0.8.4 (2020-09-09)
 
 ### Minor changes
