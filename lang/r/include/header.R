@@ -26,6 +26,8 @@ local({
 ## Load dependencies.
 suppressPackageStartupMessages({
     library(koopa)
+    library(acidbase)
+    library(goalie)
 })
 
 ## Run additional header checks.
