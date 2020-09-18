@@ -1,8 +1,12 @@
-## koopa 0.8.5 (2020-09-11)
+## koopa 0.8.5 (2020-09-18)
 
 ### Minor changes
 
 - `koopa header`: Added support for R. Input is no longer case sensitive.
+- Improved broot activation support on macOS.
+- Updated OpenJDK to 15.
+- Updated RStudio Package Manager (RSPM) snapshot to 2020-09-16.
+- Updated GDAL, Go, and htop versions.
 
 ## koopa 0.8.4 (2020-09-09)
 
