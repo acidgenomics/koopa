@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-08-25.
+    # @note Updated 2020-09-18.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
@@ -144,10 +144,13 @@ koopa::fedora_install_base() { # {{{1
             'apr-util-devel'  # subversion
             'bzip2-devel'
             'expat-devel'  # udunits
+            'freetype-devel'  # freetype / ragg
             'glib2-devel'  # ag
             'libcurl-devel'
             'libffi-devel'
             'libicu-devel'  # rJava
+            'libjpeg-turbo-devel'  # freetype / ragg
+            'libpng-devel'  # freetype / ragg
             'libseccomp-devel'
             'libssh2-devel'
             'libtiff-devel'
