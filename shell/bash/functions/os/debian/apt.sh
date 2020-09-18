@@ -170,7 +170,7 @@ koopa::apt_add_r_key() { # {{{1
         # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
         keys=(
             'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
-            'FCAE2A0E115C3D8A'
+            'FCAE2A0E115C3D8A'  # required as of 2020-09
         )
         # > keyserver='keys.gnupg.net'
         keyserver='keyserver.ubuntu.com'
