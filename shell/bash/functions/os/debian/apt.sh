@@ -157,7 +157,7 @@ koopa::apt_add_r_key() { # {{{1
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/
     # """
-    local keys keyserver
+    local key keys keyserver
     koopa::assert_has_no_args "$#"
     if koopa::is_ubuntu
     then
@@ -175,13 +175,16 @@ koopa::apt_add_r_key() { # {{{1
         # > keyserver='keys.gnupg.net'
         keyserver='keyserver.ubuntu.com'
     fi
-    koopa::apt_is_key_imported "$key" && return 0
-    koopa::info 'Adding R key.'
-    sudo apt-key adv \
-        --keyserver "$keyserver" \
-        --recv-keys "${keys[@]}" \
-        >/dev/null 2>&1 \
-        || true
+    for key in "${keys[@]}"
+    do
+        koopa::apt_is_key_imported "$key" && continue
+        koopa::info "Adding R key '${key}'."
+        sudo apt-key adv \
+            --keyserver "$keyserver" \
+            --recv-key "${keys[@]}" \
+            >/dev/null 2>&1 \
+            || true
+    done
     return 0
 }
 
