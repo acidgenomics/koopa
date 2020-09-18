@@ -144,6 +144,7 @@ koopa::fedora_install_base() { # {{{1
             'apr-util-devel'  # subversion
             'bzip2-devel'
             'expat-devel'  # udunits
+            'fontconfig-devel'
             'freetype-devel'  # freetype / ragg
             'glib2-devel'  # ag
             'libcurl-devel'
