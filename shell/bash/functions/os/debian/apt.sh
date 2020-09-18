@@ -181,7 +181,7 @@ koopa::apt_add_r_key() { # {{{1
         koopa::info "Adding R key '${key}'."
         sudo apt-key adv \
             --keyserver "$keyserver" \
-            --recv-key "${keys[@]}" \
+            --recv-key "$key" \
             >/dev/null 2>&1 \
             || true
     done
