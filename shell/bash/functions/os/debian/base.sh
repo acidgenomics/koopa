@@ -217,6 +217,7 @@ koopa::debian_install_base() { # {{{1
             'libevent-dev'
             'libffi-dev'
             'libfftw3-dev'
+            'libfontconfig1-dev'
             'libfreetype6-dev'
             'libgfortran5'  # R nlme
             'libgif-dev'
