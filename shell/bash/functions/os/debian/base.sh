@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2020-08-25.
+    # @note Updated 2020-09-18.
     #
     # Flags:
     # --compact
@@ -221,10 +221,10 @@ koopa::debian_install_base() { # {{{1
             'libgfortran5'  # R nlme
             'libgif-dev'
             'libgl1-mesa-dev'
+            'libglib2.0-dev'  # ag
             'libglu1-mesa-dev'
             'libgmp-dev'
             'libgnutls28-dev'
-            'libglib2.0-dev'  # ag
             'libgsl-dev'
             'libgtk-3-0'
             'libgtk-3-dev'
@@ -233,6 +233,7 @@ koopa::debian_install_base() { # {{{1
             'libgtkmm-2.4-dev'
             'libharfbuzz-dev'
             'libhdf5-dev'
+            'libjpeg-dev'
             'liblapack-dev'
             'liblz4-dev'  # rsync
             'liblzma-dev'
