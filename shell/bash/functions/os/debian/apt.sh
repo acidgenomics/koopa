@@ -151,27 +151,40 @@ koopa::apt_add_microsoft_key() {  #{{{1
 koopa::apt_add_r_key() { # {{{1
     # """
     # Add the R key.
-    # @note Updated 2020-08-17.
+    # @note Updated 2020-09-18.
+    #
+    # @seealso
+    # - https://cran.r-project.org/bin/linux/debian/
+    # - https://cran.r-project.org/bin/linux/ubuntu/
     # """
-    local key keyserver
+    local key keys keyserver
     koopa::assert_has_no_args "$#"
     if koopa::is_ubuntu
     then
         # Release is signed by Michael Rutter <marutter@gmail.com>.
-        key='E298A3A825C0D65DFD57CBB651716619E084DAB9'
+        keys=(
+            'E298A3A825C0D65DFD57CBB651716619E084DAB9'
+        )
         keyserver='keyserver.ubuntu.com'
     else
         # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
-        key='E19F5F87128899B192B1A2C2AD5F960A256A04AF'
-        keyserver='keys.gnupg.net'
+        keys=(
+            'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+            'FCAE2A0E115C3D8A'  # required as of 2020-09
+        )
+        # > keyserver='keys.gnupg.net'
+        keyserver='keyserver.ubuntu.com'
     fi
-    koopa::apt_is_key_imported "$key" && return 0
-    koopa::info 'Adding R key.'
-    sudo apt-key adv \
-        --keyserver "$keyserver" \
-        --recv-key "$key" \
-        >/dev/null 2>&1 \
-        || true
+    for key in "${keys[@]}"
+    do
+        koopa::apt_is_key_imported "$key" && continue
+        koopa::info "Adding R key '${key}'."
+        sudo apt-key adv \
+            --keyserver "$keyserver" \
+            --recv-key "$key" \
+            >/dev/null 2>&1 \
+            || true
+    done
     return 0
 }
 
