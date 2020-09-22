@@ -1,3 +1,9 @@
+## koopa 0.8.6 (2020-09-22)
+
+### Minor changes
+
+- Updated bcbio-nextgen version to 1.2.4.
+
 ## koopa 0.8.5 (2020-09-18)
 
 ### Minor changes
