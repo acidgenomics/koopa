@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-09-24"
+koopa-date="2020-09-29"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.8.5"
@@ -125,7 +125,7 @@ gnupg="2.2.23"
 go="1.15.2"
 
 # https://www.gnu.org/software/grep/
-grep="3.4"
+grep="3.5"
 
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
@@ -186,7 +186,7 @@ nextflow="20.04.1"
 openjdk="15"
 
 # https://www.openssh.com/portable.html
-openssh="8.3p1"
+openssh="8.4"
 
 # https://www.openssl.org/source/
 openssl="1.1.1d"
