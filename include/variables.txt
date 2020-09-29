@@ -186,7 +186,7 @@ nextflow="20.04.1"
 openjdk="15"
 
 # https://www.openssh.com/portable.html
-openssh="8.4"
+openssh="8.4p1"
 
 # https://www.openssl.org/source/
 openssl="1.1.1d"
