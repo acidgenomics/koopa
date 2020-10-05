@@ -1,3 +1,8 @@
+## koopa 0.8.7 (2020-10-05)
+
+- Updated RSPM to 2020-10-01 snapshot.
+- Updated check against Ruby version.
+
 ## koopa 0.8.6 (2020-09-22)
 
 ### Minor changes
