@@ -1,4 +1,13 @@
+## koopa 0.8.8 (2020-10-06)
+
+### Minor changes
+
+- Upgraded Python from 3.8.5 to 3.9.0.
+- Upgraded GDAL from 3.1.2 to 3.1.3.
+
 ## koopa 0.8.7 (2020-10-05)
+
+### Minor changes
 
 - Updated RSPM to 2020-10-01 snapshot.
 - Updated check against Ruby version.
