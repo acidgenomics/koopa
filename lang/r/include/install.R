@@ -1,7 +1,12 @@
 #!/usr/bin/env Rscript
 
+## """
+## Install koopa R dependencies.
+## @note Updated 2020-10-06.
+## """
+
 local({
-    minVersion <- package_version("0.0.7")
+    minVersion <- package_version("0.0.9")
     isInstalled <- function(pkgs) {
         basename(pkgs) %in% rownames(installed.packages())
     }
