@@ -4,11 +4,19 @@ __koopa_git_has_unstaged_changes() { # {{{1
     # """
     # Are there unstaged changes in current git repo?
     # @note Updated 2020-10-06.
+    #
+    # Don't use '--quiet' flag here, as it can cause shell to exit if 'set -e'
+    # mode is enabled.
+    #
     # @seealso
     # - https://stackoverflow.com/questions/3878624/
+    # - https://stackoverflow.com/questions/28296130/
     # """
+    # shellcheck disable=SC2039
+    local x
     git update-index --refresh >/dev/null 2>&1
-    git diff-index --quiet HEAD -- 2>/dev/null
+    x="$(git diff-index HEAD -- 2>/dev/null)"
+    [ -n "$x" ]
 }
 
 __koopa_git_needs_pull_or_push() { # {{{1
