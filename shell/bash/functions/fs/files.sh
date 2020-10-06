@@ -419,6 +419,21 @@ koopa::find_empty_dirs() { # {{{1
     return 0
 }
 
+koopa::find_files_without_line_ending() {
+    # """
+    # Find files without line ending.
+    # @note Updated 2020-10-06.
+    #
+    # Also referred to as EOL, newline, linefeed.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/4631068/
+    # """
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed pcregrep
+    pcregrep -LMr '\n$' "$@"
+}
+
 koopa::find_large_dirs() { # {{{1
     # """
     # Find large directories.
