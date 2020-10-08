@@ -64,7 +64,7 @@ cellranger="4.0.0"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.18.3"
+cmake="3.18.4"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -98,7 +98,7 @@ findutils="4.7.0"
 fish="3.1.2"
 
 # https://github.com/junegunn/fzf
-fzf="0.22.0"
+fzf="0.23.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.0"
@@ -257,7 +257,7 @@ ruby="2.7.2p137"
 rust="1.47.0"
 
 # https://rustup.rs/
-rustup="1.21.1"
+rustup="1.22.1"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
