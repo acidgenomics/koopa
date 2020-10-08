@@ -254,7 +254,7 @@ rstudio-server-pro="1.3.1073-1"
 ruby="2.7.2p137"
 
 # https://www.rust-lang.org/
-rust="1.44.1"
+rust="1.47.0"
 
 # https://rustup.rs/
 rustup="1.21.1"
@@ -400,8 +400,8 @@ python-wheel="0.35.1"
 # Rust cargo crates {{{1
 # ==============================================================================
 
-rust-bat="0.15.4"
-rust-broot="1.0.0"
+rust-bat="0.16.0"
+rust-broot="1.0.3"
 rust-du-dust="0.5.3"
 rust-exa="0.9.0"
 rust-fd-find="8.1.1"
