@@ -478,3 +478,37 @@ koopa::is_docker_build_recent() { # {{{1
     done
     return 0
 }
+
+koopa::ghcr_docker_login() { # {{{1
+    # """
+    # Log in to GitHub Container Registry.
+    # @note Updated 2020-10-08.
+    #
+    # User and PAT are defined by exported globals.
+    # """
+    local pat server user
+    koopa::assert_has_no_args
+    pat="${GHCR_PAT:?}"
+    server='ghcr.io'
+    user="${GHCR_USER:?}"
+    koopa::print "$pat" \
+        | docker login "$server" -u "$user" --password-stdin
+    return 0
+}
+
+koopa::ghcr_docker_push() { # {{{
+    # """
+    # Push an image to GitHub Container Registry.
+    # @note Updated 2020-10-08.
+    # """
+    local image_name owner server url version
+    koopa::assert_has_args_eq "$#" 3
+    server='ghcr.io'
+    owner="${1:?}"
+    image_name="${2:?}"
+    version="${3:?}"
+    koopa::ghcr_docker_login
+    url="${server}/${owner}/${image_name}:${version}"
+    docker push "$url"
+    return 0
+}
