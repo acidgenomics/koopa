@@ -1,5 +1,39 @@
 #!/bin/sh
 
+__koopa_git_has_unstaged_changes() { # {{{1
+    # """
+    # Are there unstaged changes in current git repo?
+    # @note Updated 2020-10-06.
+    #
+    # Don't use '--quiet' flag here, as it can cause shell to exit if 'set -e'
+    # mode is enabled.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/3878624/
+    # - https://stackoverflow.com/questions/28296130/
+    # """
+    # shellcheck disable=SC2039
+    local x
+    git update-index --refresh >/dev/null 2>&1
+    x="$(git diff-index HEAD -- 2>/dev/null)"
+    [ -n "$x" ]
+}
+
+__koopa_git_needs_pull_or_push() { # {{{1
+    # """
+    # Does the current git repo need a pull or push?
+    # @note Updated 2020-10-06.
+    #
+    # This will return an expected fatal warning when no upstream exists.
+    # We're handling this case by piping errors to '/dev/null'.
+    # """
+    # shellcheck disable=SC2039
+    local rev_1 rev_2
+    rev_1="$(git rev-parse HEAD 2>/dev/null)"
+    rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
+    [ "$rev_1" != "$rev_2" ]
+}
+
 _koopa_expr() { # {{{1
     # """
     # Quiet regular expression matching that is POSIX compliant.
@@ -202,7 +236,7 @@ _koopa_is_git() { # {{{1i
 _koopa_is_git_clean() { # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-10-06.
     #
     # This is used in prompt, so be careful with assert checks.
     #
@@ -210,17 +244,10 @@ _koopa_is_git_clean() { # {{{1
     # - https://stackoverflow.com/questions/3878624
     # - https://stackoverflow.com/questions/3258243
     # """
-    # shellcheck disable=SC2039
-    local rev_1 rev_2
     _koopa_is_git || return 1
     _koopa_is_installed git || return 1
-    # Are there unstaged changes?
-    git diff-index --quiet HEAD -- 2>/dev/null || return 1
-    # In need of a pull or push?
-    rev_1="$(git rev-parse HEAD 2>/dev/null)"
-    # Note that this step will return fatal warning on no upstream.
-    rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
-    [ "$rev_1" != "$rev_2" ] && return 1
+    __koopa_git_has_unstaged_changes && return 1
+    __koopa_git_needs_pull_or_push && return 1
     return 0
 }
 
