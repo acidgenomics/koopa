@@ -414,6 +414,7 @@ koopa::venv_create_r_reticulate() { # {{{1
     local name pkg pkg_lower pkgs
     koopa::assert_has_no_args "$#"
     name='r-reticulate'
+    # FIXME Selectively re-enable after we fix compilation issues on Debian.
     pkgs=(
         #'Cython'
         #'PyYAML'
