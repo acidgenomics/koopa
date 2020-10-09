@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-09-11.
+## @note Updated 2020-10-06.
 ## """
 
 options(
@@ -26,7 +26,6 @@ local({
 ## Load dependencies.
 suppressPackageStartupMessages({
     library(koopa)
-    library(acidbase)
     library(goalie)
 })
 
