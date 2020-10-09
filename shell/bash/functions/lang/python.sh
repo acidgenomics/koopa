@@ -419,7 +419,6 @@ koopa::venv_create_r_reticulate() { # {{{1
         #'Cython'
         #'PyYAML'
         #'cwltool'
-        'python-igraph'
         'louvain'
         #'numpy'
         #'pandas'
