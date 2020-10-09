@@ -106,10 +106,10 @@ koopa::install_python_packages() { # {{{1
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
+            'Logbook'
             'black'
             'bpytop'
             'flake8'
-            'logbook'
             'numpy'
             'pandas'
             'pip'
