@@ -12,6 +12,18 @@
 # Check config with:
 # > ldd /usr/local/bin/python3
 #
+#
+# To resolve this warning:
+#
+# > checking for g++... no
+# > configure:
+# >
+# >   By default, distutils will build C++ extension modules with "g++".
+# >   If this is not intended, then set CXX on the configure command line.
+#
+# Specify `CXX` environment variable or `--with-cxx-main=/usr/bin/g++`.
+#
+#
 # See also:
 # - https://stackoverflow.com/questions/43333207
 # """

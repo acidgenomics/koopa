@@ -8,7 +8,7 @@
 koopa-date="2020-10-09"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.8.9"
+koopa-version="0.8.10"
 
 # Globals {{{1
 # ==============================================================================
@@ -380,6 +380,8 @@ vardict="2019.06.04"
 
 python-black="20.8b1"
 python-bpytop="1.0.40"
+python-cwltool="3.0.20200807132242"
+python-cython="0.29.21"
 python-flake8="3.8.4"
 python-logbook="1.5.3"
 python-numpy="1.19.2"
@@ -391,10 +393,14 @@ python-pyflakes="2.2.0"
 python-pylint="2.6.0"
 python-pytaglib="1.4.6"
 python-pytest="6.1.1"
+python-python-igraph="0.8.3"
+python-pyyaml="5.3.1"
 python-ranger-fm="1.9.3"
+python-scikit-learn="0.23.2"
 python-scipy="1.5.2"
 python-setuptools="50.3.0"
 python-six="1.15.0"
+python-umap-learn="0.4.6"
 python-wheel="0.35.1"
 
 # Rust cargo crates {{{1

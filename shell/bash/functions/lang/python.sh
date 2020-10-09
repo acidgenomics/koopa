@@ -66,9 +66,9 @@ koopa::install_pip() { # {{{1
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2020-09-08.
+    # @note Updated 2020-10-09.
     # """
-    local install_flags name_fancy pkg pkgs pos python version
+    local install_flags name_fancy pkg pkg_lower pkgs pos python version
     python="$(koopa::python)"
     reinstall=0
     pos=()
@@ -127,7 +127,8 @@ koopa::install_python_packages() { # {{{1
         for i in "${!pkgs[@]}"
         do
             pkg="${pkgs[$i]}"
-            version="$(koopa::variable "python-${pkg}")"
+            pkg_lower="$(koopa::lowercase "$pkg")"
+            version="$(koopa::variable "python-${pkg_lower}")"
             pkgs[$i]="${pkg}==${version}"
         done
     fi
@@ -387,7 +388,7 @@ koopa::venv_create_base() { # {{{1
 koopa::venv_create_r_reticulate() { # {{{1
     # """
     # Create Python reticulate environment for R.
-    # @note Updated 2020-07-20.
+    # @note Updated 2020-10-09.
     #
     # Check that LLVM is configured correctly.
     # umap-learn > numba > llvmlite
@@ -405,28 +406,39 @@ koopa::venv_create_r_reticulate() { # {{{1
     # clang: error: unsupported option '-fopenmp'
     # brew info libomp
     #
+    # Note that 'louvain' package is now abandoned. Refer to 'leidenalg' or
+    # 'python-louvain' packages as potential alternatives. If you encounter
+    # clustering errors with Seurat, this could be the culprit.
+    #
     # @seealso
     # - http://llvmlite.pydata.org/
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
-    local name packages
+    local name pkg pkg_lower pkgs
     koopa::assert_has_no_args "$#"
     name='r-reticulate'
-    packages=(
+    pkgs=(
         'Cython'
+        'PyYAML'
         'cwltool'
-        'louvain'
         'numpy'
         'pandas'
         'pip'
-        'pyyaml'
+        'python-igraph'
         'scikit-learn'
         'scipy'
         'setuptools'
         'umap-learn'
         'wheel'
     )
+    for i in "${!pkgs[@]}"
+    do
+        pkg="${pkgs[$i]}"
+        pkg_lower="$(koopa::lowercase "$pkg")"
+        version="$(koopa::variable "python-${pkg_lower}")"
+        pkgs[$i]="${pkg}==${version}"
+    done
     if koopa::is_macos
     then
         export CC='/usr/bin/clang'
@@ -440,9 +452,7 @@ koopa::venv_create_r_reticulate() { # {{{1
     if [[ -n "${LLVM_CONFIG:-}" ]]
     then
         koopa::info "LLVM_CONFIG: '${LLVM_CONFIG}'."
-    else
-        koopa::note "Export 'LLVM_CONFIG' to locate LLVM llvm-config binary."
     fi
-    koopa::venv_create "$name" "${packages[@]}"
+    koopa::venv_create "$name" "${pkgs[@]}"
     return 0
 }
