@@ -16,6 +16,10 @@ koopa::activate_go() { # {{{1
     _koopa_activate_go "$@"
 }
 
+koopa::activate_llvm() { # {{{1
+    _koopa_activate_llvm "$@"
+}
+
 koopa::add_config_link() { # {{{1
     _koopa_add_config_link "$@"
 }
