@@ -415,8 +415,8 @@ koopa::venv_create_r_reticulate() { # {{{1
     # """
     local name pkg pkg_lower pkgs
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_set LLVM_CONFIG
     koopa::activate_llvm
+    koopa::assert_is_set LLVM_CONFIG
     koopa::dl 'LLVM_CONFIG' "${LLVM_CONFIG:?}"
     name='r-reticulate'
     pkgs=(
