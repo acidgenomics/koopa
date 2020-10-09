@@ -401,8 +401,6 @@ koopa::venv_create_r_reticulate() { # {{{1
     #
     # Ensure that we're using the correct Clang and LLVM settings.
     #
-    # Refer to 'system/activate/program.sh' for LLVM_CONFIG export.
-    #
     # clang: error: unsupported option '-fopenmp'
     # brew info libomp
     #
@@ -417,11 +415,15 @@ koopa::venv_create_r_reticulate() { # {{{1
     # """
     local name pkg pkg_lower pkgs
     koopa::assert_has_no_args "$#"
+    koopa::activate_llvm
+    koopa::assert_is_set LLVM_CONFIG
+    koopa::dl 'LLVM_CONFIG' "${LLVM_CONFIG:?}"
     name='r-reticulate'
     pkgs=(
         'Cython'
         'PyYAML'
         'cwltool'
+        'llvmlite'
         'numpy'
         'pandas'
         'pip'
@@ -448,10 +450,6 @@ koopa::venv_create_r_reticulate() { # {{{1
         export CXXFLAGS="${CXXFLAGS:-} -I/usr/local/opt/libomp/include"
         export DYLD_LIBRARY_PATH='/usr/local/opt/libomp/lib'
         export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
-    fi
-    if [[ -n "${LLVM_CONFIG:-}" ]]
-    then
-        koopa::info "LLVM_CONFIG: '${LLVM_CONFIG}'."
     fi
     koopa::venv_create "$name" "${pkgs[@]}"
     return 0
