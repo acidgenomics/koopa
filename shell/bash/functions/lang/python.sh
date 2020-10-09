@@ -415,18 +415,19 @@ koopa::venv_create_r_reticulate() { # {{{1
     koopa::assert_has_no_args "$#"
     name='r-reticulate'
     pkgs=(
-        'Cython'
-        'PyYAML'
-        'cwltool'
-        'louvain'
-        'numpy'
-        'pandas'
-        'pip'
-        'scikit-learn'
-        'scipy'
-        'setuptools'
-        'umap-learn'
-        'wheel'
+        #'Cython'
+        #'PyYAML'
+        #'cwltool'
+        #'louvain'
+        #'numpy'
+        #'pandas'
+        #'pip'
+        'python-igraph'
+        #'scikit-learn'
+        #'scipy'
+        #'setuptools'
+        #'umap-learn'
+        #'wheel'
     )
     for i in "${!pkgs[@]}"
     do
