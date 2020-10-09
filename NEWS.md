@@ -1,9 +1,10 @@
-## koopa 0.8.9 (2020-10-06)
+## koopa 0.8.9 (2020-10-09)
 
 ### Minor changes
 
 - Improved internal code that checks for unstaged changes in current Git repo.
 - Updated r-koopa dependencies.
+- Updated RSPM snapshot to 2020-10-06.
 
 ## koopa 0.8.8 (2020-10-06)
 
