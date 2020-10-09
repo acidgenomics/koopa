@@ -416,12 +416,12 @@ koopa::venv_create_r_reticulate() { # {{{1
     name='r-reticulate'
     pkgs=(
         'Cython'
+        'PyYAML'
         'cwltool'
         'louvain'
         'numpy'
         'pandas'
         'pip'
-        'pyyaml'
         'scikit-learn'
         'scipy'
         'setuptools'
