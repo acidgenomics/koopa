@@ -406,6 +406,10 @@ koopa::venv_create_r_reticulate() { # {{{1
     # clang: error: unsupported option '-fopenmp'
     # brew info libomp
     #
+    # Note that 'louvain' package is now abandoned. Refer to 'leidenalg' or
+    # 'python-louvain' packages as potential alternatives. If you encounter
+    # clustering errors with Seurat, this could be the culprit.
+    #
     # @seealso
     # - http://llvmlite.pydata.org/
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
@@ -414,20 +418,19 @@ koopa::venv_create_r_reticulate() { # {{{1
     local name pkg pkg_lower pkgs
     koopa::assert_has_no_args "$#"
     name='r-reticulate'
-    # FIXME Selectively re-enable after we fix compilation issues on Debian.
     pkgs=(
-        #'Cython'
-        #'PyYAML'
-        #'cwltool'
-        'louvain'
-        #'numpy'
-        #'pandas'
-        #'pip'
-        #'scikit-learn'
-        #'scipy'
-        #'setuptools'
-        #'umap-learn'
-        #'wheel'
+        'Cython'
+        'PyYAML'
+        'cwltool'
+        'numpy'
+        'pandas'
+        'pip'
+        'python-igraph'
+        'scikit-learn'
+        'scipy'
+        'setuptools'
+        'umap-learn'
+        'wheel'
     )
     for i in "${!pkgs[@]}"
     do
