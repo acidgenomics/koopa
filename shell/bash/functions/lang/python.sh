@@ -420,18 +420,19 @@ koopa::venv_create_r_reticulate() { # {{{1
     koopa::dl 'LLVM_CONFIG' "${LLVM_CONFIG:?}"
     name='r-reticulate'
     pkgs=(
-        'Cython'
-        'PyYAML'
-        'cwltool'
-        'numpy'
-        'pandas'
-        'pip'
-        'python-igraph'
-        'scikit-learn'
-        'scipy'
-        'setuptools'
-        'umap-learn'
-        'wheel'
+        #'Cython'
+        #'PyYAML'
+        #'cwltool'
+        'llvmlite'
+        #'numpy'
+        #'pandas'
+        #'pip'
+        #'python-igraph'
+        #'scikit-learn'
+        #'scipy'
+        #'setuptools'
+        #'umap-learn'
+        #'wheel'
     )
     for i in "${!pkgs[@]}"
     do
