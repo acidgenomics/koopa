@@ -419,7 +419,7 @@ koopa::venv_create_r_reticulate() { # {{{1
         #'Cython'
         #'PyYAML'
         #'cwltool'
-        #'louvain'
+        'louvain'
         #'numpy'
         #'pandas'
         #'pip'
