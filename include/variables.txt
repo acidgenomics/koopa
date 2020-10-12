@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-10-09"
+koopa-date="2020-10-12"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.8.11"
+koopa-version="0.8.12"
 
 # Globals {{{1
 # ==============================================================================
@@ -98,7 +98,7 @@ findutils="4.7.0"
 fish="3.1.2"
 
 # https://github.com/junegunn/fzf
-fzf="0.23.0"
+fzf="0.23.1"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.0"
@@ -151,7 +151,7 @@ libtool="2.4.6"
 
 # LLVM
 # https://releases.llvm.org/
-llvm="10.0.1"
+llvm="11.0.0"
 
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
@@ -219,7 +219,7 @@ perl-file-rename="1.10"
 
 # https://www.php.net/downloads
 # https://github.com/php/php-src/releases
-php="7.4.9"
+php="7.4.11"
 
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
@@ -232,11 +232,12 @@ proj="7.1.1"
 pyenv="1.2.16"
 
 # https://www.python.org/downloads/
+# numba v0.51.2 install warns on Python 3.9 currently.
 python="3.8.6"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
-r="4.0.2"
+r="4.0.3"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
