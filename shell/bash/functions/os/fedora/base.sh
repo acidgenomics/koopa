@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-09-18.
+    # @note Updated 2020-10-12.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
@@ -146,7 +146,9 @@ koopa::fedora_install_base() { # {{{1
             'expat-devel'  # udunits
             'fontconfig-devel'
             'freetype-devel'  # freetype / ragg
+            'fribidi-devel'  # textshaping
             'glib2-devel'  # ag
+            'harfbuzz-devel'  # textshaping
             'libcurl-devel'
             'libffi-devel'
             'libicu-devel'  # rJava
