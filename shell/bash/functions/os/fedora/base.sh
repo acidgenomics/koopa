@@ -122,9 +122,11 @@ koopa::fedora_install_base() { # {{{1
             pkgs+=(
                 'bison-devel'
                 'flex-devel'
+                'fribidi-devel'  # textshaping
                 'gmp-devel'
                 'gnutls-devel'
                 'gsl-devel'
+                'harfbuzz-devel'  # textshaping
                 'hdf5-devel'
                 'libevent-devel'  # tmux
                 'libgit2-devel'
@@ -146,9 +148,7 @@ koopa::fedora_install_base() { # {{{1
             'expat-devel'  # udunits
             'fontconfig-devel'
             'freetype-devel'  # freetype / ragg
-            'fribidi-devel'  # textshaping
             'glib2-devel'  # ag
-            'harfbuzz-devel'  # textshaping
             'libcurl-devel'
             'libffi-devel'
             'libicu-devel'  # rJava
