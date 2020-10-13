@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2020-09-18.
+    # @note Updated 2020-10-12.
     #
     # Flags:
     # --compact
@@ -219,6 +219,7 @@ koopa::debian_install_base() { # {{{1
             'libfftw3-dev'
             'libfontconfig1-dev'
             'libfreetype6-dev'
+            'libfribidi-dev'
             'libgfortran5'  # R nlme
             'libgif-dev'
             'libgl1-mesa-dev'
