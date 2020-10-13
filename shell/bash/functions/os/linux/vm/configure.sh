@@ -326,12 +326,7 @@ koopa::configure_vm() { # {{{1
         then
             venv-create-r-reticulate
         fi
-        # RHEL UBI is currently missing harfbuzz-devel, fribidi-devel, which are
-        # now required to build pkgdown, so skipping for the moment.
-        if ! koopa::is_rhel_ubi
-        then
-            install-r-packages
-        fi
+        install-r-packages
         if [[ "$full" -eq 1 ]]
         then
             install-perl-packages
