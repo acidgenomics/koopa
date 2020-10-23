@@ -342,8 +342,10 @@ local({
             repos <- BiocManager::repositories()
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-10-22.
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/352"
+        ## RcppArmadillo v0.10.1.0.0 (2020-10-20) breakins on macOS.
+        ## https://github.com/RcppCore/RcppArmadillo/issues/314
+        ## Snapshot: 2020-10-19.
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/349"
         options("repos" = repos)
     })
 
