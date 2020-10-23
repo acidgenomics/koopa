@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-10-12"
+koopa-date="2020-10-23"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.8.13"
+koopa-version="0.8.14"
 
 # Globals {{{1
 # ==============================================================================
@@ -75,7 +75,7 @@ conda="4.8.3"
 coreutils="8.32"
 
 # https://curl.haxx.se/
-curl="7.72.0"
+curl="7.73.0"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -115,13 +115,13 @@ geos="3.8.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.28.0"
+git="2.29.0"
 
 # https://gnupg.org/download/index.html
 gnupg="2.2.23"
 
 # https://golang.org/dl/
-go="1.15.2"
+go="1.15.3"
 
 # https://www.gnu.org/software/grep/
 grep="3.5"
@@ -409,7 +409,7 @@ python-wheel="0.35.1"
 # ==============================================================================
 
 rust-bat="0.16.0"
-rust-broot="1.0.3"
+rust-broot="1.0.4"
 rust-du-dust="0.5.3"
 rust-exa="0.9.0"
 rust-fd-find="8.1.1"

@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-10-09.
+    # @note Updated 2020-10-13.
     # """
     local app_prefix app_prefix_bn app_prefix_real bioconductor data_disk \
         data_disk_link data_disk_real docker full gb_total \
