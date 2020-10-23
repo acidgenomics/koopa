@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-10-20"
+koopa-date="2020-10-23"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.8.14"
@@ -409,7 +409,7 @@ python-wheel="0.35.1"
 # ==============================================================================
 
 rust-bat="0.16.0"
-rust-broot="1.0.3"
+rust-broot="1.0.4"
 rust-du-dust="0.5.3"
 rust-exa="0.9.0"
 rust-fd-find="8.1.1"
