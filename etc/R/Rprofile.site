@@ -342,8 +342,8 @@ local({
             repos <- BiocManager::repositories()
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-10-06.
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/342"
+        ## Snapshot: 2020-10-22.
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/352"
         options("repos" = repos)
     })
 
