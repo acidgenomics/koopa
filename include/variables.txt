@@ -115,7 +115,7 @@ geos="3.8.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.29.0"
+git="2.29.1"
 
 # https://gnupg.org/download/index.html
 gnupg="2.2.23"
