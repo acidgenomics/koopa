@@ -25,6 +25,9 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 # 2020.07 has buggy py38 conda 4.8.3.
 anaconda="2020.02"
 
+# http://arma.sourceforge.net/download.html
+armadillo="10.1.0"
+
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
 # https://downloads.asperasoft.com/en/downloads/8?list
