@@ -17,6 +17,17 @@ koopa::anaconda_version() { # {{{
     return 0
 }
 
+koopa::armadillo_version() { # {{{1
+    # """
+    # Armadillo: C++ library for linear algebra & scientific computing.
+    # @note Updated 2020-10-26.
+    # """
+    local x
+    x="$(pkg-config --modversion armadillo)"
+    koopa::print "$x"
+    return 0
+}
+
 koopa::current_bcbio_version() { # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.
