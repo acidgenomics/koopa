@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-10-23.
+## Updated 2020-10-26.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -344,8 +344,8 @@ local({
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
         ## RcppArmadillo v0.10.1.0.0 (2020-10-20) breakins on macOS.
         ## https://github.com/RcppCore/RcppArmadillo/issues/314
-        ## Snapshot: 2020-10-19.
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/349"
+        ## Snapshot: 2020-10-22.
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/352"
         options("repos" = repos)
     })
 
