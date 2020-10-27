@@ -210,6 +210,10 @@ koopa::configure_vm() { # {{{1
     else
         install-miniconda
     fi
+    if [[ "$bioconductor" -eq 1 ]]
+    then
+        conda-create-bioinfo-envs --reticulate
+    fi
     install-openjdk
     if [[ "$bioconductor" -eq 1 ]] || [[ "$full" -eq 1 ]]
     then

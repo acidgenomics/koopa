@@ -120,6 +120,10 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 quality_control=1
                 shift 1
                 ;;
+            --reticulate)
+                reticulate=1
+                shift 1
+                ;;
             --rnaseq|--rna-seq)
                 rnaseq=1
                 shift 1
