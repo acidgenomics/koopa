@@ -61,10 +61,10 @@ koopa::activate_conda_env() { # {{{1
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-10-27.
     # """
     local all aligners chipseq data_mining env envs file_formats methylation \
-        quality_control rnaseq trimming variation version workflows
+        quality_control reticulate rnaseq trimming variation version workflows
     koopa::assert_is_installed conda
     all=0
     aligners=0
@@ -73,6 +73,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     file_formats=0
     methylation=0
     quality_control=0
+    reticulate=0
     rnaseq=0
     trimming=0
     variation=0
@@ -84,6 +85,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         chipseq=1
         data_mining=1
         file_formats=1
+        reticulate=1
         rnaseq=1
         workflows=1
     fi
@@ -150,6 +152,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         methylation=1
         quality_control=1
         rnaseq=1
+        reticulate=1
         trimming=1
         variation=1
         workflows=1
@@ -221,6 +224,14 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     then
         # Consider: rapmap
         envs+=('kallisto' 'salmon')
+    fi
+    if [[ "$reticulate" -eq 1 ]]
+    then
+        envs+=(
+            'pandas'
+            'scikit-learn'
+            'umap-learn'
+        )
     fi
     if [[ "$trimming" -eq 1 ]]
     then
