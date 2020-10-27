@@ -331,7 +331,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-10-27.
     # """
     _koopa_is_installed brew || return 0
     HOMEBREW_PREFIX="$(brew --prefix)"
@@ -359,6 +359,7 @@ _koopa_activate_homebrew() { # {{{1
     _koopa_activate_homebrew_prefix sqlite
     _koopa_activate_homebrew_prefix texinfo
     _koopa_activate_homebrew_ruby_gems
+    _koopa_activate_homebrew_python
     return 0
 }
 
@@ -433,6 +434,18 @@ _koopa_activate_homebrew_prefix() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}"
+    return 0
+}
+
+_koopa_activate_homebrew_python() { # {{{1
+    # """
+    # Activate Homebrew Python.
+    # @note Updated 2020-10-27.
+    # """
+    # shellcheck disable=SC2039
+    local version
+    version="$(_koopa_major_minor_version "$(_koopa_variable 'python')")"
+    _koopa_activate_homebrew_prefix "python@${version}"
     return 0
 }
 
