@@ -375,7 +375,7 @@ snakemake="5.20.1"
 squid="1.5"
 sra-tools="2.10.1"
 star-fusion="1.9.0"
-star="2.7.5a"
+star="2.7.6a"
 trimmomatic="0.39"
 vardict="2019.06.04"
 
