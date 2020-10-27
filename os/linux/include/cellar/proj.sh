@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
-koopa::assert_is_not_file /usr/bin/proj
+[[ "$reinstall" -ne 1 ]] && koopa::assert_is_not_file '/usr/bin/proj'
 koopa::assert_is_installed sqlite3
 # Ensure we're using our custom build of SQLite, in '/usr/local'.
 export SQLITE3_CFLAGS="-I${make_prefix}/include"
