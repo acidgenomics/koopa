@@ -101,7 +101,7 @@ findutils="4.7.0"
 fish="3.1.2"
 
 # https://github.com/junegunn/fzf
-fzf="0.23.1"
+fzf="0.24.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.0"
