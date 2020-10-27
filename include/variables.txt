@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-10-23"
+koopa-date="2020-10-27"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.8.14"
+koopa-version="0.8.15"
 
 # Globals {{{1
 # ==============================================================================
@@ -24,6 +24,9 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 # https://repo.continuum.io/archive/
 # 2020.07 has buggy py38 conda 4.8.3.
 anaconda="2020.02"
+
+# http://arma.sourceforge.net/download.html
+armadillo="10.1.0"
 
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
@@ -98,7 +101,7 @@ findutils="4.7.0"
 fish="3.1.2"
 
 # https://github.com/junegunn/fzf
-fzf="0.23.1"
+fzf="0.24.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.0"
@@ -108,14 +111,14 @@ gcc="9.3.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.1.3"
+gdal="3.1.4"
 
 # https://github.com/libgeos/geos/releases
 geos="3.8.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.29.0"
+git="2.29.1"
 
 # https://gnupg.org/download/index.html
 gnupg="2.2.23"
@@ -200,7 +203,7 @@ pandoc="2.10"
 # https://www.gnu.org/software/parallel/
 # Note that 20200822 is considered beta on macOS.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/parallel.rb
-parallel="20200722"
+parallel="20201022"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
