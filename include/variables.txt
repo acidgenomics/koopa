@@ -464,7 +464,8 @@ conda-snakemake="5.26.1"
 conda-squid="1.5"
 
 # https://github.com/ncbi/sra-tools
-conda-sra-tools="2.10.8"
+# FIXME v2.10.8 available on Linux but not macOS.
+conda-sra-tools="2.10.1"
 
 # https://github.com/STAR-Fusion/STAR-Fusion
 conda-star-fusion="1.9.1"
