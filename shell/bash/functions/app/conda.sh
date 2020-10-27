@@ -386,10 +386,21 @@ koopa::conda_remove_env() { # {{{1
     return 0
 }
 
+koopa::install_anaconda() { # {{{1
+    # """
+    # Install Anaconda.
+    # @note Updated 2020-10-27.
+    # """
+    koopa::install_conda --anaconda "$@"
+    return 0
+}
+
 koopa::install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-10-27.
+    #
+    # Assuming installation of Miniconda by default.
     #
     # Python 3.8 is currently buggy for Miniconda.
     # `conda env list` will return multiprocessing error.
@@ -417,6 +428,10 @@ koopa::install_conda() { # {{{1
         case "$1" in
             --anaconda)
                 anaconda=1
+                shift 1
+                ;;
+            --miniconda)
+                anaconda=0
                 shift 1
                 ;;
             --version=*)
@@ -456,6 +471,15 @@ koopa::install_conda() { # {{{1
     koopa::sys_set_permissions -r "$prefix"
     koopa::install_success "$name_fancy"
     koopa::restart
+    return 0
+}
+
+koopa::install_miniconda() { # {{{1
+    # """
+    # Install Miniconda.
+    # @note Updated 2020-10-27.
+    # """
+    koopa::install_conda --miniconda "$@"
     return 0
 }
 
