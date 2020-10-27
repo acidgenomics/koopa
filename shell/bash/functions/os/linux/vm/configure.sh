@@ -211,7 +211,7 @@ koopa::configure_vm() { # {{{1
     then
         install-anaconda
     else
-        install-conda
+        install-miniconda
     fi
     install-openjdk
     # Python 3.8.5 built from source is currently breaking dnf on Fedora 32.
