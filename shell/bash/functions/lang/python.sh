@@ -207,7 +207,7 @@ koopa::pip_install() { # {{{1
 koopa::python_add_site_packages_to_sys_path() { # {{{1
     # """
     # Add our custom site packages library to sys.path.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-10-27.
     #
     # @seealso
     # > "$python" -m site
@@ -230,6 +230,7 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
             koopa::sudo_write_string "$k_site_pkgs" "$file"
         fi
     fi
+    # This step will print the site packages configuration.
     "$python" -m site
     return 0
 }
