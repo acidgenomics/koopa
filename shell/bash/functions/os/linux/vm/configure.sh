@@ -203,10 +203,7 @@ koopa::configure_vm() { # {{{1
     # Programs {{{2
     # --------------------------------------------------------------------------
 
-    if [[ "$bioconductor" -eq 1 ]] || [[ "$full" -eq 1 ]]
-    then
-        koopa::run_if_installed install-llvm
-    fi
+    install-python
     if [[ "$full" -eq 1 ]]
     then
         install-anaconda
@@ -214,10 +211,9 @@ koopa::configure_vm() { # {{{1
         install-miniconda
     fi
     install-openjdk
-    # Python 3.8.5 built from source is currently breaking dnf on Fedora 32.
-    if ! koopa::is_fedora
+    if [[ "$bioconductor" -eq 1 ]] || [[ "$full" -eq 1 ]]
     then
-        install-python
+        koopa::run_if_installed install-llvm
     fi
     if [[ "$full" -eq 1 ]]
     then
