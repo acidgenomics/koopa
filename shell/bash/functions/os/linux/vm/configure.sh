@@ -323,10 +323,6 @@ koopa::configure_vm() { # {{{1
     if [[ "$rsync" -eq 0 ]]
     then
         install-python-packages
-        if [[ "$bioconductor" -eq 1 ]] || [[ "$full" -eq 1 ]]
-        then
-            venv-create-r-reticulate
-        fi
         install-r-packages
         if [[ "$full" -eq 1 ]]
         then
