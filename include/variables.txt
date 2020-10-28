@@ -26,7 +26,7 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 anaconda="2020.02"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.1.0"
+armadillo="10.1.1"
 
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
