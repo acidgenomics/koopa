@@ -610,8 +610,6 @@ koopa::install_python_packages() { # {{{1
             'black'
             'bpytop'
             'flake8'
-            'numpy'
-            'pandas'
             'pip'
             'pipx'
             'psutil'
