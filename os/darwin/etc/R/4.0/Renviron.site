@@ -87,10 +87,6 @@ R_REMOTES_UPGRADE="always"
 
 ## Reticulate allows you to run Python code inside of R.
 
-## Here's how to force Python available for reticulate.
-## Instead, call `use_virtualenv()` or `use_condaenv()`.
-## > RETICULATE_PYTHON="~/miniconda3/envs/reticulate/bin/python"
-
 ## Default path to virtual environments.
 ## If left unset, defaults to `~/.virtualenvs`.
 ## Check with `virtualenv_list()`.

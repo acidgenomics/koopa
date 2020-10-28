@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-10-27.
+    # @note Updated 2020-10-28.
     # """
     local app_prefix app_prefix_bn app_prefix_real bioconductor data_disk \
         data_disk_link data_disk_real docker full gb_total \
@@ -210,6 +210,10 @@ koopa::configure_vm() { # {{{1
     else
         install-miniconda
     fi
+    # > if [[ "$bioconductor" -eq 1 ]]
+    # > then
+    # >     conda-create-bioinfo-envs --reticulate
+    # > fi
     install-openjdk
     if [[ "$bioconductor" -eq 1 ]] || [[ "$full" -eq 1 ]]
     then
@@ -323,10 +327,6 @@ koopa::configure_vm() { # {{{1
     if [[ "$rsync" -eq 0 ]]
     then
         install-python-packages
-        if [[ "$bioconductor" -eq 1 ]] || [[ "$full" -eq 1 ]]
-        then
-            venv-create-r-reticulate
-        fi
         install-r-packages
         if [[ "$full" -eq 1 ]]
         then
