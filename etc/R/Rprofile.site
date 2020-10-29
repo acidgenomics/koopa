@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-10-27.
+## Updated 2020-10-29.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -368,6 +368,12 @@ local({
     ## >     "install.packages.compile.from.source" = "binary",
     ## >     "pkgType" = "binary"
     ## > )
+
+    ## Specify internal download method.
+    ## This gets picked up by `install.packages()` and `BiocManager::install()`.
+    ## Use "libcurl" (default), "curl", or "wget" on Linux/macOS.
+    ## Can use "wininet" on Windows only.
+    options(download.file.method = "wget")
 
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
