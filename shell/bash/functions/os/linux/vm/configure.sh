@@ -326,12 +326,11 @@ koopa::configure_vm() { # {{{1
 
     if [[ "$rsync" -eq 0 ]]
     then
-        # Install Python and R packages, except for Bioconductor base image.
         if [[ "$bioconductor" -eq 0 ]]
         then
             install-python-packages
-            install-r-packages
         fi
+        install-r-packages
         if [[ "$full" -eq 1 ]]
         then
             install-perl-packages
