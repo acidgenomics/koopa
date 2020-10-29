@@ -330,7 +330,6 @@ koopa::configure_vm() { # {{{1
         if [[ "$bioconductor" -eq 0 ]]
         then
             install-python-packages
-            # FIXME This may not set up bb8 correctly on BioC images if skipped.
             install-r-packages
         fi
         if [[ "$full" -eq 1 ]]
