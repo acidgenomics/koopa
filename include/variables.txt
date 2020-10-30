@@ -308,7 +308,7 @@ texinfo="6.7"
 the-silver-searcher="2.2.0"
 
 # https://github.com/tmux/tmux/releases
-tmux="3.1b"
+tmux="3.1c"
 
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
