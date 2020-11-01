@@ -62,7 +62,7 @@ koopa::install_rust() { # {{{1
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2020-09-09.
+    # @note Updated 2020-11-01.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -121,6 +121,7 @@ koopa::install_rust_packages() { # {{{1
             'ripgrep'
             'tokei'
             'xsv'
+            'zoxide'
         )
     fi
     koopa::dl 'Crates' "$(koopa::to_string "${crates[@]}")"
