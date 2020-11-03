@@ -370,16 +370,46 @@ local({
     ## > )
 
     ## Specify internal download method.
+    ##
     ## This gets picked up by `install.packages()` and `BiocManager::install()`.
-    ## Use "libcurl" (default), "curl", or "wget" on Linux/macOS.
-    ## Can use "wininet" on Windows only.
-    ## https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
-    ##     download.file.html
-    options(
-        download.file.method = "curl",
-        ## Allow redirects with curl.
-        download.file.extra = "-L"
-    )
+    ##
+    ## Use "libcurl" (default), "curl", or "wget" on Linux/macOS; or can use
+    ## "wininet" on Windows only.
+    ##
+    ## See also:
+    ## - https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
+    ##       download.file.html
+    ## - https://github.com/wch/r-source/blob/master/src/library/utils/R/unix/
+    ##       download.file.R
+    ##
+    ## curl mode:
+    ##
+    ## > options(
+    ## >     "download.file.method" = "curl",
+    ## >     "download.file.extra" = c(
+    ## >         "--location"
+    ## >         "--retry", "5"
+    ## >     )
+    ## > )
+    ##
+    ## wget mode:
+    ##
+    ## This mode is a bit too verbose and shows HTTP redirect headers.
+    ##
+    ## Also shows this warning:
+    ## "WARNING: timestamping does nothing in combination with -0.
+    ## See the manual for details.
+    ##
+    ## See also:
+    ## - https://github.com/YuLab-SMU/wget/blob/master/R/wget.R
+    ## > options(
+    ## >     "download.file.method" = "wget",
+    ## >     "download.file.extra" = c(
+    ## >         "--continue",
+    ## >         "--max-redirect=20",
+    ## >         "--timeout=60"
+    ## >     )
+    ## > )
 
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
@@ -427,8 +457,9 @@ local({
         "deparse.max.lines" = 3L,
         "showErrorCalls" = TRUE,
         "showWarnCalls" = TRUE,
-        ## Timeouts default to 60 seconds, which is too long.
-        "timeout" = 5L,
+        ## Timeouts default to 60 seconds, which can be too long.
+        ## Note that this applies to `download.file()` calls as well.
+        "timeout" = 30L,
         "warn" = 1L,
         ## Set to maximum supported length.
         "warning.length" = 8170L
