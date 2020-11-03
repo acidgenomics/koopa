@@ -142,7 +142,7 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2020-08-09.
+    # @note Updated 2020-11-03.
     # """
     local build_file build_args days force image images prune pos \
         repo repos repo_name
@@ -188,7 +188,7 @@ koopa::docker_build_all_images() { # {{{1
         repos=("$(koopa::docker_prefix)/acidgenomics")
     fi
     koopa::assert_is_dir "${repos[@]}"
-    [[ "$prune" -eq 1 ]] && koopa::docker_prune
+    [[ "$prune" -eq 1 ]] && koopa::docker_prune_all
     docker login
     build_args=("--days=${days}")
     [[ "$force" -eq 1 ]] && build_args+=('--force')
@@ -232,19 +232,44 @@ koopa::docker_build_all_images() { # {{{1
             docker-build-all-tags "${build_args[@]}" "$image"
         done
     done
-    [[ "$prune" -eq 1 ]] && koopa::docker_prune
+    [[ "$prune" -eq 1 ]] && koopa::docker_prune_all
     koopa::success 'All Docker images built successfully.'
     return 0
 }
 
-koopa::docker_prune() { # {{{1
+koopa::docker_prune_all() { # {{{1
     # """
-    # Docker prune.
-    # @note Updated 2020-07-01.
+    # Prune all Docker images.
+    # @note Updated 2020-11-03.
+    #
+    # This is a nuclear option for resetting Docker.
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker
     docker system prune --all --force
+    return 0
+}
+
+koopa::docker_prune_old() { # {{{
+    # """
+    # Prune old Docker images.
+    # @note Updated 2020-11-03.
+    #
+    # 2160h = 24 hours/day * 30 days/month * 3 months.
+    #
+    # @seealso
+    # - https://docs.docker.com/config/pruning/#prune-images
+    # - https://docs.docker.com/engine/reference/commandline/image_prune/
+    # - https://stackoverflow.com/questions/32723111
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed docker
+    docker image prune \
+        --all \
+        --filter 'until=2160h' \
+        --force
+    # Clean any remaining dangling images.
+    docker image prune --force
     return 0
 }
 
