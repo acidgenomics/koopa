@@ -189,9 +189,9 @@ koopa::configure_vm() { # {{{1
             dict[install_aws_cli]=0
             dict[install_conda]=1
             dict[install_htop]=0
-            dict[install_llvm]=0  # consider re-enabling.
+            dict[install_llvm]=0  # enable?
             dict[install_openjdk]=1
-            dict[install_python]=1
+            dict[install_python]=0  # enable?
             dict[install_python_packages]=0
             dict[install_r]=0
             dict[install_r_packages]=0
@@ -199,8 +199,8 @@ koopa::configure_vm() { # {{{1
             dict[install_shellcheck]=0
             dict[install_shiny_server]=0
             dict[install_shunit2]=0
-            dict[install_tmux]=1
-            dict[install_vim]=1
+            dict[install_tmux]=0
+            dict[install_vim]=0
             ;;
         full)
             # > dict[install_gcc]=1
