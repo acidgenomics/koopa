@@ -1041,3 +1041,33 @@ _koopa_activate_xdg() { # {{{1
         XDG_RUNTIME_DIR
     return 0
 }
+
+_koopa_activate_zoxide() { # {{{1
+    # """
+    # Activate zoxide.
+    #
+    # @note Updated 2020-11-03.
+    # @seealso https://github.com/ajeetdsouza/zoxide
+    #
+    # Highly recommended to use along with fzf.
+    #
+    # POSIX option:
+    # eval "$(zoxide init posix --hook prompt)"
+    # """
+    # shellcheck disable=SC2039
+    local shell nounset
+    shell="$(_koopa_shell)"
+    case "$shell" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    _koopa_is_installed zoxide || return 0
+    nounset="$(_koopa_boolean_nounset)"
+    [ "$nounset" -eq 1 ] && set +u
+    eval "$(zoxide init "$shell")"
+    [ "$nounset" -eq 1 ] && set -u
+    return 0
+}
