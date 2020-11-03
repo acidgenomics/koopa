@@ -3,7 +3,7 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-03.
     #
     # Potentially useful curl flags:
     # * --connect-timeout <seconds>
