@@ -188,7 +188,7 @@ koopa::docker_build_all_images() { # {{{1
         repos=("$(koopa::docker_prefix)/acidgenomics")
     fi
     koopa::assert_is_dir "${repos[@]}"
-    [[ "$prune" -eq 1 ]] && koopa::docker_prune_all
+    [[ "$prune" -eq 1 ]] && koopa::docker_prune_all_images
     docker login
     build_args=("--days=${days}")
     [[ "$force" -eq 1 ]] && build_args+=('--force')
@@ -232,12 +232,12 @@ koopa::docker_build_all_images() { # {{{1
             docker-build-all-tags "${build_args[@]}" "$image"
         done
     done
-    [[ "$prune" -eq 1 ]] && koopa::docker_prune_all
+    [[ "$prune" -eq 1 ]] && koopa::docker_prune_all_images
     koopa::success 'All Docker images built successfully.'
     return 0
 }
 
-koopa::docker_prune_all() { # {{{1
+koopa::docker_prune_all_images() { # {{{1
     # """
     # Prune all Docker images.
     # @note Updated 2020-11-03.
@@ -251,7 +251,7 @@ koopa::docker_prune_all() { # {{{1
     return 0
 }
 
-koopa::docker_prune_old() { # {{{
+koopa::docker_prune_old_images() { # {{{
     # """
     # Prune old Docker images.
     # @note Updated 2020-11-03.
