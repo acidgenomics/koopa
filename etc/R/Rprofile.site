@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-10-29.
+## Updated 2020-11-03.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -342,9 +342,9 @@ local({
             repos <- BiocManager::repositories()
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-10-25.
+        ## Snapshot: 2020-11-01.
         ## https://packagemanager.rstudio.com/client/#/repos/1/overview
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/353"
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/357"
         options("repos" = repos)
     })
 
@@ -373,7 +373,13 @@ local({
     ## This gets picked up by `install.packages()` and `BiocManager::install()`.
     ## Use "libcurl" (default), "curl", or "wget" on Linux/macOS.
     ## Can use "wininet" on Windows only.
-    options(download.file.method = "wget")
+    ## https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
+    ##     download.file.html
+    options(
+        download.file.method = "curl",
+        ## Allow redirects with curl.
+        download.file.extra = "-L"
+    )
 
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
