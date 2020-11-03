@@ -11,23 +11,19 @@ koopa::configure_vm() { # {{{1
     # - "bioconductor": Bioconductor mode, for continuous integration (CI)
     #   checks. This flag is intended installing different R/BioC versions on
     #   top of the Bioconductor (Debian) base image.
+    # - "default": Install recommended packages (default).
     # - "full": By default, this script skips installation of GNU utils and
     #   other dependencies that can take a long time to build from source. This
     #   works well for Docker builds but may not support additional software
     #   required on a full interactive VM.
     # - "minimal": Minimal config used for lightweight Docker images. This mode
     #   skips all program installation.
-    # - "recommended": Install recommended packages (default).
-    mode='recommended'
+    mode='default'
     # Associative array dictionary of key-value pairs.
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
-        # Conda distribution type to install (miniconda or anaconda).
         [conda]='miniconda'
-        # Data disk prefix to use for app configuration (e.g. /mnt/data01).
-        # Intended for full AWS EC2 or Azure VM instances.
         [data_disk_prefix]=''
-        # Are we building inside a Docker container image?
         [docker]="$(
             if koopa::is_docker
             then
@@ -37,46 +33,89 @@ koopa::configure_vm() { # {{{1
             fi
         )"
         [install_aspera_connect]=0
+        [install_autoconf]=0
         [install_autojump]=0
+        [install_automake]=0
         [install_aws_cli]=1
         [install_azure_cli]=0
         [install_base_flags]=''
+        [install_bash]=0
+        [install_binutils]=0
+        [install_cmake]=0
         [install_conda]=1
         [install_conda_envs]=0
+        [install_coreutils]=0
+        [install_curl]=0
         [install_curl]=0
         [install_docker]=0
         [install_docker_credential_pass]=0
         [install_emacs]=0
+        [install_findutils]=0
+        [install_fish]=0
+        [install_fzf]=0
+        [install_gawk]=0
         [install_gcc]=0
+        [install_gdal]=0
+        [install_geos]=0
+        [install_git]=0
+        [install_gnupg]=0
+        [install_go]=0
         [install_google_cloud_sdk]=0
+        [install_grep]=0
+        [install_gsl]=0
+        [install_hdf5]=0
         [install_htop]=1
         [install_julia]=0
+        [install_libevent]=0
+        [install_libtool]=0
         [install_llvm]=0
         [install_lmod]=0
         [install_lmod]=0
         [install_lua]=0
         [install_luarocks]=0
+        [install_make]=0
+        [install_ncurses]=0
+        [install_neofetch]=0
         [install_neovim]=0
         [install_openjdk]=1
+        [install_openssh]=0
+        [install_parallel]=0
         [install_password_store]=0
+        [install_patch]=0
+        [install_perl]=0
         [install_perl_packages]=0
+        [install_pkg_config]=0
+        [install_proj]=0
         [install_python]=1
         [install_python_packages]=1
         [install_r]=1
         [install_r_packages]=1
         [install_rstudio_server]=1
+        [install_rsync]=0
+        [install_ruby]=0
         [install_ruby_packages]=0
+        [install_rust]=0
         [install_rust_packages]=0
+        [install_sed]=0
+        [install_shellcheck]=1
         [install_shiny_server]=0
+        [install_shunit2]=1
+        [install_sqlite]=0
+        [install_subversion]=0
+        [install_taglib]=0
+        [install_texinfo]=0
+        [install_tmux]=1
+        [install_udunits]=0
+        [install_vim]=1
+        [install_wget]=0
+        [install_zsh]=0
         [make_prefix]="$(koopa::make_prefix)"
         [passwordless_sudo]=1
         [python_version]="$(koopa::variable 'python')"
         [r_version]="$(koopa::variable 'r')"
         [remove_cache]=0
         [remove_skel]=1
-        # Rsync mode will enable sync from "source_ip" to "data_disk".
         [rsync]=0
-        # Source IP (for rsync mode).
         [source_ip]=''
         [ssh_key]=1
     )
@@ -92,16 +131,16 @@ koopa::configure_vm() { # {{{1
                 mode='bioconductor'
                 shift 1
                 ;;
+            --default|recommended)
+                mode='default'
+                shift 1
+                ;;
             --full)
                 mode='full'
                 shift 1
                 ;;
             --minimal)
                 mode='minimal'
-                shift 1
-                ;;
-            --recommended)
-                mode='recommended'
                 shift 1
                 ;;
             # Other variables --------------------------------------------------
@@ -149,10 +188,11 @@ koopa::configure_vm() { # {{{1
         bioconductor)
             dict[install_aws_cli]=0
             dict[install_llvm]=1
+            dict[install_python]=1
             dict[install_python_packages]=0
             dict[install_r]=0
             dict[install_r_packages]=0
-            dict[install_rstudio_server]=1
+            dict[install_rstudio_server]=0
             dict[install_shiny_server]=0
             ;;
         full)
@@ -160,32 +200,70 @@ koopa::configure_vm() { # {{{1
             # > dict[install_the_silver_searcher]=1
             dict[conda]='anaconda'
             dict[install_aspera_connect]=1
-            dict[install_base_flags]='--full'
-            dict[install_conda_envs]=1
-            dict[install_curl]=1
-            dict[install_llvm]=1
-            dict[install_lmod]=1
-            dict[install_perl_packages]=1
-            dict[install_rstudio_server]=1
-            dict[install_ruby_packages]=1
-            dict[install_rust_packages]=1
-            dict[install_shiny_server]=1
-
-            # FIXME These need to be set as defaults above.
+            dict[install_autoconf]=1
             dict[install_autojump]=1
+            dict[install_automake]=1
             dict[install_azure_cli]=1
+            dict[install_base_flags]='--full'
+            dict[install_bash]=1
+            dict[install_binutils]=1
+            dict[install_cmake]=1
+            dict[install_conda_envs]=1
+            dict[install_coreutils]=1
+            dict[install_curl]=1
+            dict[install_curl]=1
             dict[install_docker]=1
             dict[install_docker_credential_pass]=1
             dict[install_emacs]=1
+            dict[install_findutils]=1
+            dict[install_fish]=1
+            dict[install_fzf]=1
+            dict[install_gawk]=1
+            dict[install_gdal]=1
+            dict[install_geos]=1
+            dict[install_git]=1
+            dict[install_gnupg]=1
+            dict[install_go]=1
             dict[install_google_cloud_sdk]=1
+            dict[install_grep]=1
+            dict[install_gsl]=1
+            dict[install_hdf5]=1
             dict[install_julia]=1
+            dict[install_libevent]=1
+            dict[install_libtool]=1
+            dict[install_llvm]=1
             dict[install_lmod]=1
             dict[install_lua]=1
             dict[install_luarocks]=1
+            dict[install_make]=1
+            dict[install_ncurses]=1
+            dict[install_neofetch]=1
             dict[install_neovim]=1
+            dict[install_openssh]=1
+            dict[install_parallel]=1
             dict[install_password_store]=1
+            dict[install_patch]=1
+            dict[install_perl]=1
+            dict[install_perl_packages]=1
+            dict[install_pkg_config]=1
+            dict[install_proj]=1
+            dict[install_rstudio_server]=1
+            dict[install_rsync]=1
+            dict[install_ruby]=1
+            dict[install_ruby_packages]=1
+            dict[install_rust]=1
+            dict[install_rust_packages]=1
+            dict[install_sed]=1
+            dict[install_shiny_server]=1
+            dict[install_sqlite]=1
+            dict[install_subversion]=1
+            dict[install_taglib]=1
+            dict[install_texinfo]=1
+            dict[install_udunits]=1
+            dict[install_wget]=1
+            dict[install_zsh]=1
             ;;
-        minimal|recommended)
+        default|minimal)
             # No need to change any variables here.
             ;;
         *)
@@ -302,61 +380,100 @@ koopa::configure_vm() { # {{{1
         install-openjdk
     [[ "${dict[install_llvm]}" -eq 1 ]] && \
         koopa::run_if_installed install-llvm
-
-
-
-    # FIXME NEED TO MAKE THESE CONDITIONAL.
-    full='fixme'
-    if [[ "$full" -eq 1 ]]
-    then
+    [[ "${dict[install_gcc]}" -eq 1 ]] && \
+        install-gcc
+    [[ "${dict[install_curl]}" -eq 1 ]] && \
         install-curl
+    [[ "${dict[install_wget]}" -eq 1 ]] && \
         install-wget
+    [[ "${dict[install_cmake]}" -eq 1 ]] && \
         install-cmake
+    [[ "${dict[install_make]}" -eq 1 ]] && \
         install-make
+    [[ "${dict[install_autoconf]}" -eq 1 ]] && \
         install-autoconf
+    [[ "${dict[install_automake]}" -eq 1 ]] && \
         install-automake
+    [[ "${dict[install_libtool]}" -eq 1 ]] && \
         install-libtool
+    [[ "${dict[install_texinfo]}" -eq 1 ]] && \
         install-texinfo
+    [[ "${dict[install_binutils]}" -eq 1 ]] && \
         install-binutils
+    [[ "${dict[install_coreutils]}" -eq 1 ]] && \
         install-coreutils
+    [[ "${dict[install_findutils]}" -eq 1 ]] && \
         install-findutils
+    [[ "${dict[install_patch]}" -eq 1 ]] && \
         install-patch
+    [[ "${dict[install_pkg_config]}" -eq 1 ]] && \
         install-pkg-config
+    [[ "${dict[install_ncurses]}" -eq 1 ]] && \
         install-ncurses
+    [[ "${dict[install_gnupg]}" -eq 1 ]] && \
         install-gnupg
+    [[ "${dict[install_grep]}" -eq 1 ]] && \
         install-grep
+    [[ "${dict[install_gawk]}" -eq 1 ]] && \
         install-gawk
+    [[ "${dict[install_parallel]}" -eq 1 ]] && \
         install-parallel
+    [[ "${dict[install_rsync]}" -eq 1 ]] && \
         install-rsync
+    [[ "${dict[install_sed]}" -eq 1 ]] && \
         install-sed
+    [[ "${dict[install_libevent]}" -eq 1 ]] && \
         install-libevent
+    [[ "${dict[install_taglib]}" -eq 1 ]] && \
         install-taglib
+    [[ "${dict[install_zsh]}" -eq 1 ]] && \
         install-zsh
+    [[ "${dict[install_bash]}" -eq 1 ]] && \
         install-bash
+    [[ "${dict[install_fish]}" -eq 1 ]] && \
         install-fish
+    [[ "${dict[install_git]}" -eq 1 ]] && \
         install-git
+    [[ "${dict[install_openssh]}" -eq 1 ]] && \
         install-openssh
+    [[ "${dict[install_perl]}" -eq 1 ]] && \
         install-perl
+    [[ "${dict[install_geos]}" -eq 1 ]] && \
         install-geos
+    [[ "${dict[install_sqlite]}" -eq 1 ]] && \
         install-sqlite
+    [[ "${dict[install_proj]}" -eq 1 ]] && \
         install-proj
+    [[ "${dict[install_gdal]}" -eq 1 ]] && \
         install-gdal
+    [[ "${dict[install_hdf5]}" -eq 1 ]] && \
         install-hdf5
+    [[ "${dict[install_gsl]}" -eq 1 ]] && \
         install-gsl
+    [[ "${dict[install_udunits]}" -eq 1 ]] && \
         install-udunits
+    [[ "${dict[install_subversion]}" -eq 1 ]] && \
         install-subversion
+    [[ "${dict[install_go]}" -eq 1 ]] && \
         install-go
+    [[ "${dict[install_ruby]}" -eq 1 ]] && \
         install-ruby
+    [[ "${dict[install_rust]}" -eq 1 ]] && \
         install-rust
+    [[ "${dict[install_neofetch]}" -eq 1 ]] && \
         install-neofetch
+    [[ "${dict[install_fzf]}" -eq 1 ]] && \
         install-fzf
-    fi
     [[ "${dict[install_the_silver_searcher]}" -eq 1 ]] && \
         install-the-silver-searcher
-    install-tmux
-    install-vim
-    install-shellcheck
-    install-shunit2
+    [[ "${dict[install_tmux]}" -eq 1 ]] && \
+        install-tmux
+    [[ "${dict[install_vim]}" -eq 1 ]] && \
+        install-vim
+    [[ "${dict[install_shellcheck]}" -eq 1 ]] && \
+        install-shellcheck
+    [[ "${dict[install_shunit2]}" -eq 1 ]] && \
+        install-shunit2
     [[ "${dict[install_aws_cli]}" -eq 1 ]] && \
         install-aws-cli
     [[ "${dict[install_azure_cli]}" -eq 1 ]] && \
@@ -365,13 +482,19 @@ koopa::configure_vm() { # {{{1
         koopa::run_if_installed install-docker
     [[ "${dict[install_google_cloud_sdk]}" -eq 1 ]] && \
         koopa::run_if_installed install-google-cloud-sdk
-
+    [[ "${dict[install_password_store]}" -eq 1 ]] && \
         install-password-store
+    [[ "${dict[install_docker_credential_pass]}" -eq 1 ]] && \
         install-docker-credential-pass
+    [[ "${dict[install_neovim]}" -eq 1 ]] && \
         install-neovim
+    [[ "${dict[install_emacs]}" -eq 1 ]] && \
         install-emacs
+    [[ "${dict[install_julia]}" -eq 1 ]] && \
         install-julia
+    [[ "${dict[install_lua]}" -eq 1 ]] && \
         install-lua
+    [[ "${dict[install_luarocks]}" -eq 1 ]] && \
         install-luarocks
     [[ "${dict[install_lmod]}" -eq 1 ]] && \
         install-lmod
@@ -379,8 +502,6 @@ koopa::configure_vm() { # {{{1
         install-htop
     [[ "${dict[install_autojump]}" -eq 1 ]] && \
         install-autojump
-    [[ "${dict[install_gcc]}" -eq 1 ]] && \
-        install-gcc
     # Install R.
     if [[ "${dict[install_r]}" -eq 1 ]]
     then
