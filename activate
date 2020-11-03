@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2020-08-07.
+    # @note Updated 2020-11-03.
     # """
     case "${1:-}" in
         --help|-h)
@@ -80,6 +80,7 @@ _koopa_activate() { # {{{1
         _koopa_activate_autojump
         _koopa_activate_broot
         _koopa_activate_fzf
+        _koopa_activate_zoxide
     fi
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
