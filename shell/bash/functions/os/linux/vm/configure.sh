@@ -22,7 +22,6 @@ koopa::configure_vm() { # {{{1
     # Associative array dictionary of key-value pairs.
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
-        [conda]='miniconda'
         [data_disk_prefix]=''
         [docker]="$(
             if koopa::is_docker
@@ -118,6 +117,7 @@ koopa::configure_vm() { # {{{1
         [rsync]=0
         [source_ip]=''
         [ssh_key]=1
+        [which_conda]='miniconda'
     )
     while (("$#"))
     do
@@ -187,18 +187,24 @@ koopa::configure_vm() { # {{{1
     case "$mode" in
         bioconductor)
             dict[install_aws_cli]=0
-            dict[install_llvm]=1
-            dict[install_python]=1
+            dict[install_conda]=1
+            dict[install_htop]=0
+            dict[install_llvm]=0  # enable?
+            dict[install_openjdk]=1
+            dict[install_python]=0  # enable?
             dict[install_python_packages]=0
             dict[install_r]=0
             dict[install_r_packages]=0
             dict[install_rstudio_server]=0
+            dict[install_shellcheck]=0
             dict[install_shiny_server]=0
+            dict[install_shunit2]=0
+            dict[install_tmux]=0
+            dict[install_vim]=0
             ;;
         full)
             # > dict[install_gcc]=1
             # > dict[install_the_silver_searcher]=1
-            dict[conda]='anaconda'
             dict[install_aspera_connect]=1
             dict[install_autoconf]=1
             dict[install_autojump]=1
@@ -262,6 +268,7 @@ koopa::configure_vm() { # {{{1
             dict[install_udunits]=1
             dict[install_wget]=1
             dict[install_zsh]=1
+            dict[which_conda]='anaconda'
             ;;
         default|minimal)
             # No need to change any variables here.
@@ -372,14 +379,14 @@ koopa::configure_vm() { # {{{1
     # Programs {{{2
     # --------------------------------------------------------------------------
 
+    [[ "${dict[install_llvm]}" -eq 1 ]] && \
+        koopa::run_if_installed install-llvm
+    [[ "${dict[install_openjdk]}" -eq 1 ]] && \
+        install-openjdk
     [[ "${dict[install_python]}" -eq 1 ]] && \
         install-python --version="${dict[python_version]}"
     [[ "${dict[install_conda]}" -eq 1 ]] && \
-        "install-${dict[conda]}"
-    [[ "${dict[install_openjdk]}" -eq 1 ]] && \
-        install-openjdk
-    [[ "${dict[install_llvm]}" -eq 1 ]] && \
-        koopa::run_if_installed install-llvm
+        "install-${dict[which_conda]}"
     [[ "${dict[install_gcc]}" -eq 1 ]] && \
         install-gcc
     [[ "${dict[install_curl]}" -eq 1 ]] && \
