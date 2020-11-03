@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-10-27.
+## Updated 2020-11-03.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -342,9 +342,9 @@ local({
             repos <- BiocManager::repositories()
         }
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-10-25.
+        ## Snapshot: 2020-11-01.
         ## https://packagemanager.rstudio.com/client/#/repos/1/overview
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/353"
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/357"
         options("repos" = repos)
     })
 
@@ -367,6 +367,48 @@ local({
     ## >     "install.packages.check.source" = "no",
     ## >     "install.packages.compile.from.source" = "binary",
     ## >     "pkgType" = "binary"
+    ## > )
+
+    ## Specify internal download method.
+    ##
+    ## This gets picked up by `install.packages()` and `BiocManager::install()`.
+    ##
+    ## Use "libcurl" (default), "curl", or "wget" on Linux/macOS; or can use
+    ## "wininet" on Windows only.
+    ##
+    ## See also:
+    ## - https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
+    ##       download.file.html
+    ## - https://github.com/wch/r-source/blob/master/src/library/utils/R/unix/
+    ##       download.file.R
+    ##
+    ## curl mode:
+    ##
+    ## > options(
+    ## >     "download.file.method" = "curl",
+    ## >     "download.file.extra" = c(
+    ## >         "--location"
+    ## >         "--retry", "5"
+    ## >     )
+    ## > )
+    ##
+    ## wget mode:
+    ##
+    ## This mode is a bit too verbose and shows HTTP redirect headers.
+    ##
+    ## Also shows this warning:
+    ## "WARNING: timestamping does nothing in combination with -0.
+    ## See the manual for details.
+    ##
+    ## See also:
+    ## - https://github.com/YuLab-SMU/wget/blob/master/R/wget.R
+    ## > options(
+    ## >     "download.file.method" = "wget",
+    ## >     "download.file.extra" = c(
+    ## >         "--continue",
+    ## >         "--max-redirect=20",
+    ## >         "--timeout=60"
+    ## >     )
     ## > )
 
     ## Default packages {{{2
@@ -415,8 +457,9 @@ local({
         "deparse.max.lines" = 3L,
         "showErrorCalls" = TRUE,
         "showWarnCalls" = TRUE,
-        ## Timeouts default to 60 seconds, which is too long.
-        "timeout" = 5L,
+        ## Timeouts default to 60 seconds, which can be too long.
+        ## Note that this applies to `download.file()` calls as well.
+        "timeout" = 30L,
         "warn" = 1L,
         ## Set to maximum supported length.
         "warning.length" = 8170L
