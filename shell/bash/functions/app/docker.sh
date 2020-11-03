@@ -246,6 +246,7 @@ koopa::docker_prune_all() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker
+    koopa::info 'Pruning all Docker images.'
     docker system prune --all --force
     return 0
 }
@@ -264,6 +265,7 @@ koopa::docker_prune_old() { # {{{
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker
+    koopa::info 'Pruning Docker images older than 3 months.'
     docker image prune \
         --all \
         --filter 'until=2160h' \
