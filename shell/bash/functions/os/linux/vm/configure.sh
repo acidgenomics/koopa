@@ -189,7 +189,7 @@ koopa::configure_vm() { # {{{1
             dict[install_aws_cli]=0
             dict[install_conda]=1
             dict[install_htop]=0
-            dict[install_llvm]=1
+            dict[install_llvm]=0  # consider re-enabling.
             dict[install_openjdk]=1
             dict[install_python]=1
             dict[install_python_packages]=0
@@ -379,14 +379,14 @@ koopa::configure_vm() { # {{{1
     # Programs {{{2
     # --------------------------------------------------------------------------
 
+    [[ "${dict[install_llvm]}" -eq 1 ]] && \
+        koopa::run_if_installed install-llvm
+    [[ "${dict[install_openjdk]}" -eq 1 ]] && \
+        install-openjdk
     [[ "${dict[install_python]}" -eq 1 ]] && \
         install-python --version="${dict[python_version]}"
     [[ "${dict[install_conda]}" -eq 1 ]] && \
         "install-${dict[which_conda]}"
-    [[ "${dict[install_openjdk]}" -eq 1 ]] && \
-        install-openjdk
-    [[ "${dict[install_llvm]}" -eq 1 ]] && \
-        koopa::run_if_installed install-llvm
     [[ "${dict[install_gcc]}" -eq 1 ]] && \
         install-gcc
     [[ "${dict[install_curl]}" -eq 1 ]] && \
