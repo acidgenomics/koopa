@@ -16,7 +16,7 @@ local({
     optional <- parse[["optional"]]
     if (!is.null(optional)) {
         if (isSubset("version", names(optional))) {
-            args[["version"]] <- as.character(optional[["flags"]])
+            args[["version"]] <- as.character(optional[["version"]])
         }
     }
     do.call(what = installBioconductor, args = args)
