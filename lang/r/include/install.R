@@ -2,7 +2,7 @@
 
 ## """
 ## Install koopa R dependencies.
-## @note Updated 2020-10-06.
+## @note Updated 2020-11-04.
 ## """
 
 local({
@@ -32,7 +32,8 @@ local({
     message("Installing koopa R package.")
     install.packages(
         pkgs = "koopa",
-        repos = c("r.acidgenomics.com", getOption("repos"))
+        repos = c("r.acidgenomics.com", getOption("repos")),
+        dependencies = TRUE
     )
     stopifnot(packageVersion("koopa") >= minVersion)
 })
