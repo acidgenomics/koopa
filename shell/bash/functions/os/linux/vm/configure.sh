@@ -103,6 +103,7 @@ koopa::configure_vm() { # {{{1
         [install_subversion]=0
         [install_taglib]=0
         [install_texinfo]=0
+        [install_the_silver_searcher]=0
         [install_tmux]=1
         [install_udunits]=0
         [install_vim]=1
