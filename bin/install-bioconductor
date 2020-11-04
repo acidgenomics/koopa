@@ -4,6 +4,9 @@
 ## Bioconductor clean before installing any additional koopa dependencies.
 
 local({
+    ## Treat all warnings as errors.
+    warn <- getOption("warn")
+    options("warn" = 2L)
     posArgs <- commandArgs(trailingOnly = TRUE)
     if (!requireNamespace("BiocManager", quietly = TRUE)) {
         install.packages("BiocManager")
@@ -31,4 +34,6 @@ local({
         update = FALSE,
         ask = FALSE
     )
+    options("warn" = warn)
+    invisible(TRUE)
 })
