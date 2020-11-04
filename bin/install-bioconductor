@@ -1,23 +1,34 @@
 #!/usr/bin/env Rscript
 
-args <- commandArgs()
-whichFile <- grep(pattern = "--file", x = args)
-file <- args[whichFile]
-file <- sub(pattern = "^--file=", replacement = "", x = file)
-koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
-source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+## Intentionally not including koopa R header here, so we can install
+## Bioconductor clean before installing any additional koopa dependencies.
 
 local({
-    parse <- parseArgs(
-        optional = "version",
-        positional = FALSE
-    )
-    args <- list()
-    optional <- parse[["optional"]]
-    if (!is.null(optional)) {
-        if (isSubset("version", names(optional))) {
-            args[["version"]] <- as.character(optional[["version"]])
-        }
+    posArgs <- commandArgs(trailingOnly = TRUE)
+    if (!requireNamespace("BiocManager", quietly = TRUE)) {
+        install.packages("BiocManager")
     }
-    do.call(what = installBioconductor, args = args)
+    if (isTRUE(grepl(pattern = "^--version=", x = posArgs))) {
+        x <- grep(
+            pattern = "^--version=(.+)$",
+            x = posArgs,
+            value = TRUE
+        )
+        version <- strsplit(x = x, split = "=", fixed = TRUE)[[1L]][[2L]]
+    } else if (isTRUE(nzchar(Sys.getenv("BIOC_VERSION")))) {
+        version <- Sys.getenv("BIOC_VERSION")
+    } else {
+        version <- BiocManager::version()
+    }
+    message(sprintf("Installing Bioconductor %s.", version))
+    BiocManager::install(
+        update = FALSE,
+        ask = FALSE,
+        version = version
+    )
+    BiocManager::install(
+        pkgs = "BiocCheck",
+        update = FALSE,
+        ask = FALSE
+    )
 })
