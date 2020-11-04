@@ -30,9 +30,15 @@ local({
         ), call. = FALSE)
     }
     message("Installing koopa R package.")
+    if (!isTRUE(isInstalled("BiocManager"))) {
+        install.packages("BiocManager")
+    }
     install.packages(
         pkgs = "koopa",
-        repos = c("r.acidgenomics.com", getOption("repos")),
+        repos = c(
+            "r.acidgenomics.com",
+            BiocManager::repositories()
+        ),
         dependencies = TRUE
     )
     stopifnot(packageVersion("koopa") >= minVersion)
