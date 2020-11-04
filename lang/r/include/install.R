@@ -6,7 +6,7 @@
 ## """
 
 local({
-    minVersion <- package_version("0.0.9")
+    minVersion <- package_version("0.0.14")
     isInstalled <- function(pkgs) {
         basename(pkgs) %in% rownames(installed.packages())
     }
