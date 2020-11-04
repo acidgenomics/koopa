@@ -630,8 +630,7 @@ koopa::remove_linux_cache() { # {{{1
     #
     # Don't clear '/var/log/' here, as this can mess with 'sshd'.
     # """
-    koopa::assert_is_linux
-    koopa::h2 'Removing Linux caches, logs, and temporary files.'
+    koopa::h2 'Removing caches, logs, and temporary files.'
     koopa::rm -S \
         '/root/.cache' \
         '/tmp/'* \
