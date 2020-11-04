@@ -3,7 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a docker image.
-    # Updated 2020-08-07.
+    # Updated 2020-11-04.
     #
     # Use '--no-cache' flag to disable build cache.
     #
@@ -113,8 +113,9 @@ koopa::docker_build() { # {{{1
         fi
     fi
     # Build a local copy of the image.
+    # This can be useful for R packages:
+    # > --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"
     docker build \
-        --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}" \
         --no-cache \
         --tag="$tagged_image_today" \
         "$source_image"
