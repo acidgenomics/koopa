@@ -343,8 +343,8 @@ local({
         ## > if (isInstalled("BiocManager")) {
         ## >     repos <- BiocManager::repositories()
         ## > }
-        ## Including Acid Genomics repo inside `bb8::install()` call.
-        ## > repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
+        ## Always include Acid Genomics repo.
+        repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
         ## Snapshot: 2020-11-04.
         ## https://packagemanager.rstudio.com/client/#/repos/1/overview
         repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/360"
