@@ -115,10 +115,14 @@ koopa::docker_build() { # {{{1
     # Build a local copy of the image.
     # This can be useful for R packages:
     # > --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"
+    # NOTE This step doesn't error consistently on build failures.
+    # How to harden against this case?
+    # https://github.com/moby/moby/issues/1875
     docker build \
         --no-cache \
         --tag="$tagged_image_today" \
-        "$source_image"
+        "$source_image" \
+        || return 1
     docker tag "$tagged_image_today" "$tagged_image"
     if [[ -n "${symlink_tag:-}" ]]
     then
