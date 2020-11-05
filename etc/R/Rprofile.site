@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-11-03.
+## Updated 2020-11-05.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -338,13 +338,16 @@ local({
 
     local({
         repos <- getOption("repos")
-        if (isInstalled("BiocManager")) {
-            repos <- BiocManager::repositories()
-        }
-        repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-11-01.
+        ## 2020-11-05: Now calling this inside `bb8:install()` instead, to speed
+        ## up loading of R session, and avoid pings to the Bioconductor server.
+        ## > if (isInstalled("BiocManager")) {
+        ## >     repos <- BiocManager::repositories()
+        ## > }
+        ## Including Acid Genomics repo inside `bb8::install()` call.
+        ## > repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
+        ## Snapshot: 2020-11-04.
         ## https://packagemanager.rstudio.com/client/#/repos/1/overview
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/357"
+        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/360"
         options("repos" = repos)
     })
 
