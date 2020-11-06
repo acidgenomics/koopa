@@ -60,7 +60,7 @@ koopa::header() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2020-08-14.
+    # @note Updated 2020-11-05.
     # """
     koopa::assert_has_args "$#"
     # Update corresponding Bash completion file, if necessary.
@@ -91,6 +91,7 @@ koopa::koopa() { # {{{1
             esac
             ;;
         check-system | \
+        delete-cache | \
         header | \
         install-dotfiles | \
         list | \
