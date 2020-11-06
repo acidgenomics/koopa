@@ -16,10 +16,10 @@ jobs:
     # >   name: "arch"
     # >   services: docker
     # >   script: ./tests/docker arch
-    # > - stage: test
-    # >   name: "biocontainers"
-    # >   services: docker
-    # >   script: ./tests/docker biocontainers
+    - stage: test
+      name: "biocontainers"
+      services: docker
+      script: ./tests/docker biocontainers
     # > - stage: test
     # >   name: "centos"
     # >   services: docker
