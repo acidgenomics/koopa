@@ -415,7 +415,7 @@ koopa::install_anaconda() { # {{{1
 koopa::install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
-    # @note Updated 2020-10-27.
+    # @note Updated 2020-11-06.
     #
     # Assuming installation of Miniconda by default.
     #
@@ -424,7 +424,11 @@ koopa::install_conda() { # {{{1
     # https://github.com/conda/conda/issues/9589
     # """
     local anaconda name_fancy ostype script tmp_dir url version
-    koopa::is_installed conda && return 0
+    if koopa::is_installed conda
+    then
+        koopa::note 'Conda is already installed.'
+        return 0
+    fi
     koopa::assert_has_no_envs
     ostype="${OSTYPE:?}"
     case "$ostype" in
