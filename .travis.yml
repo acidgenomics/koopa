@@ -5,45 +5,46 @@ branches:
   only:
     - master
 
+# Reducing the number of jobs here, as to not max out Travis credits.
 jobs:
   include:
-    - stage: test
-      name: "alpine"
-      services: docker
-      script: ./tests/docker alpine
-    - stage: test
-      name: "arch"
-      services: docker
-      script: ./tests/docker arch
-    - stage: test
-      name: "biocontainers"
-      services: docker
-      script: ./tests/docker biocontainers
-    - stage: test
-      name: "centos"
-      services: docker
-      script: ./tests/docker centos
+    # > - stage: test
+    # >   name: "alpine"
+    # >   services: docker
+    # >   script: ./tests/docker alpine
+    # > - stage: test
+    # >   name: "arch"
+    # >   services: docker
+    # >   script: ./tests/docker arch
+    # > - stage: test
+    # >   name: "biocontainers"
+    # >   services: docker
+    # >   script: ./tests/docker biocontainers
+    # > - stage: test
+    # >   name: "centos"
+    # >   services: docker
+    # >   script: ./tests/docker centos
     - stage: test
       name: "debian"
       services: docker
       script: ./tests/docker debian
-    - stage: test
-      name: "fedora"
-      services: docker
-      script: ./tests/docker fedora
-    - stage: test
-      name: "opensuse"
-      services: docker
-      script: ./tests/docker opensuse
-    - stage: test
-      name: "ubuntu"
-      services: docker
-      script: ./tests/docker ubuntu
+    # > - stage: test
+    # >   name: "fedora"
+    # >   services: docker
+    # >   script: ./tests/docker fedora
+    # > - stage: test
+    # >   name: "opensuse"
+    # >   services: docker
+    # >   script: ./tests/docker opensuse
+    # > - stage: test
+    # >   name: "ubuntu"
+    # >   services: docker
+    # >   script: ./tests/docker ubuntu
   fast_finish: true
 
 notifications:
   email:
     recipients:
-      - mike@steinbaugh.com
+      - travis-ci@acidgenomics.com
     on_success: change
     on_failure: change
