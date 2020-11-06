@@ -179,6 +179,11 @@ koopa::delete_cache() { # {{{1
         koopa::note 'Cache removal only supported on Linux.'
         return 1
     fi
+    if ! koopa::is_docker
+    then
+        koopa::note 'Cache removal only supported inside Docker images.'
+        return 1
+    fi
     koopa::h2 'Removing caches, logs, and temporary files.'
     koopa::rm -S \
         '/root/.cache' \
