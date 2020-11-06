@@ -95,12 +95,9 @@ koopa::brew_update() { # {{{1
     then
         koopa::info "${#casks[@]} outdated casks detected."
         koopa::print "${casks[@]}"
-        casks=("$( \
-            koopa::print "${casks[@]}" \
-                | cut -d ' ' -f 1 \
-        )")
         for cask in "${casks[@]}"
         do
+            cask="$(koopa::print "${cask[@]}" | cut -d ' ' -f 1)"
             case "$cask" in
                 docker)
                     cask='homebrew/cask/docker'
