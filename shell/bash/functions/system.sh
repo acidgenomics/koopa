@@ -55,7 +55,6 @@ koopa::run_if_installed() { # {{{1
     return 0
 }
 
-
 koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
