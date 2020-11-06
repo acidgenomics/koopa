@@ -174,7 +174,11 @@ koopa::delete_cache() { # {{{1
     #
     # Don't clear '/var/log/' here, as this can mess with 'sshd'.
     # """
-    koopa::is_linux || return 1
+    if ! koopa::is_linux
+    then
+        koopa::note 'Cache removal only supported on Linux.'
+        return 1
+    fi
     koopa::h2 'Removing caches, logs, and temporary files.'
     koopa::rm -S \
         '/root/.cache' \
