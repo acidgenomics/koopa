@@ -64,7 +64,7 @@ koopa::brew_outdated() { # {{{
 koopa::brew_update() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2020-09-08.
+    # @note Updated 2020-11-06.
     #
     # Alternative approaches:
     # > brew list \
@@ -78,7 +78,7 @@ koopa::brew_update() { # {{{1
     # Refer to useful discussion regarding '--greedy' flag.
     # https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
     # """
-    local casks name_fancy
+    local casks name_fancy x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
     name_fancy='Homebrew'
@@ -86,17 +86,28 @@ koopa::brew_update() { # {{{1
     brew analytics off
     brew update >/dev/null
     koopa::h2 'Updating brews.'
-    brew upgrade --force-bottle || true
+    # Use of '--force-bottle' flag here can be helpful, but not all brews have
+    # bottles, so this can error.
+    brew upgrade || true
     koopa::h2 'Updating casks.'
     readarray -t casks <<< "$(koopa::brew_cask_outdated)"
     if koopa::is_array_non_empty "${casks[@]}"
     then
         koopa::info "${#casks[@]} outdated casks detected."
         koopa::print "${casks[@]}"
-        koopa::print "${casks[@]}" \
-            | cut -d ' ' -f 1 \
-            | xargs brew reinstall \
-            || true
+        casks=("$( \
+            koopa::print "${casks[@]}" \
+                | cut -d ' ' -f 1 \
+        )")
+        for cask in "${casks[@]}"
+        do
+            case "$cask" in
+                docker)
+                    cask='homebrew/cask/docker'
+                    ;;
+            esac
+            brew reinstall "$cask" || true
+        done
     fi
     koopa::h2 'Running cleanup.'
     brew cleanup -s || true
