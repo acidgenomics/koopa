@@ -10,5 +10,5 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 local({
     args <- parseArgs(flags = "all", positional = FALSE)
     all <- "all" %in% args[["flags"]]
-    installDefaultPackages(all = all)
+    installRecommendedPackages(all = all)
 })
