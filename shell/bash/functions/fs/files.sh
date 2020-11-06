@@ -167,6 +167,27 @@ koopa::delete_adobe_bridge_cache() { # {{{1
     return 0
 }
 
+koopa::delete_cache() { # {{{1
+    # """
+    # Delete cache files (on Linux).
+    # @note Updated 2020-11-03.
+    #
+    # Don't clear '/var/log/' here, as this can mess with 'sshd'.
+    # """
+    koopa::is_linux || return 1
+    koopa::h2 'Removing caches, logs, and temporary files.'
+    koopa::rm -S \
+        '/root/.cache' \
+        '/tmp/'* \
+        '/var/backups/'* \
+        '/var/cache/'*
+    if koopa::is_debian_like
+    then
+        koopa::rm -S '/var/lib/apt/lists/'*
+    fi
+    return 0
+}
+
 koopa::delete_file_system_cruft() { # {{{1
     # """
     # Delete file system cruft.
