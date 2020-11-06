@@ -24,22 +24,6 @@ PATH="/usr/local/lib/python3.8/site-packages/bin:${PATH}"
 
 
 
-## Temporary files {{{1
-## =============================================================================
-
-## RStudio doesn't inherit 'TMPDIR' from current shell session, so we need to
-## provide a fallback symlink for virtual machines using a temporary SSD.
-##
-## For example on Azure:
-## > sudo ln -fnsv /mnt/resource /tmp/rstudio-tmp
-##
-## If this symlink doesn't exist, RStudio will fall back to '/tmp'.
-##
-## Refer to 'tempdir()' in R for details.
-## > TMPDIR="${TMPDIR-/tmp/rstudio-tmp}"
-
-
-
 ## Miscellaneous {{{1
 ## =============================================================================
 
