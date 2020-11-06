@@ -23,6 +23,8 @@ koopa::configure_vm() { # {{{1
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
         [data_disk_prefix]=''
+        [delete_cache]=0
+        [delete_skel]=1
         [docker]="$(
             if koopa::is_docker
             then
@@ -113,8 +115,6 @@ koopa::configure_vm() { # {{{1
         [passwordless_sudo]=1
         [python_version]="$(koopa::variable 'python')"
         [r_version]="$(koopa::variable 'r')"
-        [remove_cache]=0
-        [remove_skel]=1
         [rsync]=0
         [source_ip]=''
         [ssh_key]=1
@@ -153,6 +153,10 @@ koopa::configure_vm() { # {{{1
                 dict[python_version]="${1#*=}"
                 shift 1
                 ;;
+            --no-delete-skel)
+                dict[delete_skel]=0
+                shift 1
+                ;;
             --no-passwordless-sudo)
                 dict[passwordless_sudo]=0
                 shift 1
@@ -164,10 +168,6 @@ koopa::configure_vm() { # {{{1
             --no-r)
                 dict[install_r]=0
                 dict[install_r_packages]=0
-                shift 1
-                ;;
-            --no-remove-skel)
-                dict[remove_skel]=0
                 shift 1
                 ;;
             --r-version=*)
@@ -284,7 +284,7 @@ koopa::configure_vm() { # {{{1
     fi
     if [[ "${dict[docker]}" -eq 1 ]]
     then
-        dict[remove_cache]=1
+        dict[delete_cache]=1
         dict[ssh_key]=0
     fi
     if [[ "${dict[rsync]}" -eq 1 ]]
@@ -318,13 +318,13 @@ koopa::configure_vm() { # {{{1
         koopa::fix_sudo_setrlimit_error
     fi
 
-    # Remove skeleton files {{{3
+    # Delete skeleton files {{{3
     # --------------------------------------------------------------------------
 
-    # Remove default user-specific skeleton configuration files. This in
+    # Delete default user-specific skeleton configuration files. This in
     # particular helps keep shell configuration consistent, especialy for
     # Ubuntu, which sets a lot of config in bashrc.
-    if [[ "${dict[remove_skel]}" -eq 1 ]]
+    if [[ "${dict[delete_skel]}" -eq 1 ]]
     then
         koopa::rm -S '/etc/skel'
     fi
@@ -580,9 +580,9 @@ koopa::configure_vm() { # {{{1
     # > koopa::fix_pyenv_permissions
     # > koopa::fix_rbenv_permissions
     koopa::fix_zsh_permissions
-    if [[ "${dict[remove_cache]}" -eq 1 ]]
+    if [[ "${dict[delete_cache]}" -eq 1 ]]
     then
-        koopa::remove_linux_cache
+        koopa::delete_cache
     fi
     koopa::success 'Configuration completed successfully.'
     return 0
@@ -620,25 +620,5 @@ koopa::link_data_disk() { # {{{1
     koopa::mkdir "$app_prefix_real"
     # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
     koopa::sys_ln "$app_prefix_real" "$app_prefix"
-    return 0
-}
-
-koopa::remove_linux_cache() { # {{{1
-    # """
-    # Remove cache files.
-    # @note Updated 2020-11-03.
-    #
-    # Don't clear '/var/log/' here, as this can mess with 'sshd'.
-    # """
-    koopa::h2 'Removing caches, logs, and temporary files.'
-    koopa::rm -S \
-        '/root/.cache' \
-        '/tmp/'* \
-        '/var/backups/'* \
-        '/var/cache/'*
-    if koopa::is_debian_like
-    then
-        koopa::rm -S '/var/lib/apt/lists/'*
-    fi
     return 0
 }
