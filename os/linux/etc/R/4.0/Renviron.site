@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2020-08-06.
+## Updated 2020-11-06.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -36,7 +36,7 @@ PATH="/usr/local/lib/python3.8/site-packages/bin:${PATH}"
 ## If this symlink doesn't exist, RStudio will fall back to '/tmp'.
 ##
 ## Refer to 'tempdir()' in R for details.
-TMPDIR="${TMPDIR-/tmp/rstudio-tmp}"
+## > TMPDIR="${TMPDIR-/tmp/rstudio-tmp}"
 
 
 
