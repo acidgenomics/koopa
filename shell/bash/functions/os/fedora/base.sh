@@ -121,6 +121,7 @@ koopa::fedora_install_base() { # {{{1
             sudo dnf -y groupinstall 'Development Tools'
             pkgs+=(
                 'bison-devel'
+                'cairo-devel'
                 'flex-devel'
                 'fribidi-devel'  # textshaping
                 'gmp-devel'
