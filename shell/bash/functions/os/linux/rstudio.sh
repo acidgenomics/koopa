@@ -153,18 +153,13 @@ koopa::debian_install_rstudio_server_pro() { # {{{1
     return 0
 }
 
-koopa::rhel_install_rstudio_server() { # {{{1
+koopa::fedora_install_rstudio_server() { # {{{1
     # """
-    # Install RStudio Server on RHEL / CentOS.
+    # Install RStudio Server on Fedora / RHEL / CentOS.
     # @note Updated 2020-11-07.
     # """
     local os_codename
-    if koopa::is_rhel_8_like
-    then
-        os_codename='centos8'
-    else
-        koopa::stop 'Unsupported OS.'
-    fi
+    os_codename='centos8'
     koopa::_install_rstudio_server \
         --file-ext='rpm' \
         --install='sudo dnf -y install' \
@@ -174,8 +169,8 @@ koopa::rhel_install_rstudio_server() { # {{{1
     return 0
 }
 
-koopa::rhel_install_rstudio_server_pro() { # {{{1
-    koopa::rhel_install_rstudio_server --pro "$@"
+koopa::fedora_install_rstudio_server_pro() { # {{{1
+    koopa::fedora_install_rstudio_server --pro "$@"
     return 0
 }
 
