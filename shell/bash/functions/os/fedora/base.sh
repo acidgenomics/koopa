@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-10-12.
+    # @note Updated 2020-11-07.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
@@ -40,6 +40,10 @@ koopa::fedora_install_base() { # {{{1
     koopa::assert_has_no_args "$#"
     name_fancy='Fedora base system'
     koopa::install_start "$name_fancy"
+    if [[ "$full" -eq 1 ]] && koopa::is_rhel_ubi
+    then
+        koopa::stop 'Base configuration not yet supported for RHEL UBI.'
+    fi
 
     # Upgrade {{{2
     # --------------------------------------------------------------------------
@@ -55,60 +59,51 @@ koopa::fedora_install_base() { # {{{1
 
     koopa::h2 'Installing default packages.'
     pkgs=(
-        # 'coreutils' # This can error on RHEL.
-        'autoconf'
-        'automake'
-        'bash'
-        'bzip2'
-        'cmake'
-        'curl'
-        'diffutils'
-        'findutils'
-        'gcc'
-        'gcc-c++'
-        'gcc-gfortran'
-        'gettext'
-        'git'
-        'gnupg2'
-        'gnutls'
-        'libtool'
-        'lua'
-        'make'
-        'man-db'
-        'ncurses'
-        'openssl'
-        'pkgconfig'  # This is now pkgconf wrapped.
-        'readline'
-        'systemd'
-        'util-linux'
-        'vim'
-        'wget'
-        'xz'
-        'zip'
+        #                                                           | RHEL UBI |
+        # ----------------------------------------------------------|----------|
+        # > 'coreutils'                                           # |       NO |
+        'R'                                                       # |       NO |
+        'autoconf'                                                # |      YES |
+        'automake'                                                # |      YES |
+        'bash'                                                    # |      YES |
+        'byacc'                                                   # |       NO |
+        'bzip2'                                                   # |      YES |
+        'cmake'                                                   # |      YES |
+        'convmv'                                                  # |       NO |
+        'cryptsetup'                                              # |       NO |
+        'curl'                                                    # |      YES |
+        'diffutils'                                               # |      YES |
+        'findutils'                                               # |      YES |
+        'gcc'                                                     # |      YES |
+        'gcc-c++'                                                 # |      YES |
+        'gcc-gfortran'                                            # |      YES |
+        'gettext'                                                 # |      YES |
+        'git'                                                     # |      YES |
+        'gnupg2'                                                  # |      YES |
+        'gnutls'                                                  # |      YES |
+        'libtool'                                                 # |      YES |
+        'lua'                                                     # |      YES |
+        'make'                                                    # |      YES |
+        'man-db'                                                  # |      YES |
+        'ncurses'                                                 # |      YES |
+        'openssl'                                                 # |      YES |
+        'pkgconfig'  # This is now pkgconf wrapped.               # |      YES |
+        'qpdf'                                                    # |       NO |
+        'readline'                                                # |      YES |
+        'squashfs-tools'                                          # |       NO |
+        'systemd'                                                 # |      YES |
+        'texinfo'                                                 # |       NO |
+        'tmux'                                                    # |       NO |
+        'tree'                                                    # |       NO |
+        'util-linux'                                              # |      YES |
+        'vim'                                                     # |      YES |
+        'wget'                                                    # |      YES |
+        'xmlto'                                                   # |       NO |
+        'xz'                                                      # |      YES |
+        'yum-utils'                                               # |       NO |
+        'zip'                                                     # |      YES |
+        'zsh'                                                     # |       NO |
     )
-    if ! koopa::is_rhel_ubi
-    then
-        pkgs+=(
-            'byacc'
-            'convmv'
-            'cryptsetup'
-            'qpdf'
-            'squashfs-tools'
-            'tmux'
-            'tree'
-            'xmlto'
-            'yum-utils'
-            'zsh'
-        )
-    fi
-    if koopa::is_fedora
-    then
-        pkgs+=(
-            'R'
-            'python3-devel'
-            'texinfo'
-        )
-    fi
 
     # Developer {{{2
     # --------------------------------------------------------------------------
@@ -116,73 +111,69 @@ koopa::fedora_install_base() { # {{{1
     if [[ "$dev" -eq 1 ]]
     then
         koopa::h2 'Installing developer libraries.'
-        if ! koopa::is_rhel_ubi
-        then
-            sudo dnf -y groupinstall 'Development Tools'
-            pkgs+=(
-                'bison-devel'
-                'flex-devel'
-                'fribidi-devel'  # textshaping
-                'gmp-devel'
-                'gnutls-devel'
-                'gsl-devel'
-                'harfbuzz-devel'  # textshaping
-                'hdf5-devel'
-                'libevent-devel'  # tmux
-                'libgit2-devel'
-                'libmpc-devel'
-                'libzstd-devel'  # rsync
-                'llvm-devel'
-                'mariadb-devel'
-                'mpfr-devel'
-                'openblas-devel'
-                'openjpeg2-devel'  # GDAL
-                'readline-devel'  # R
-                'taglib-devel'
-            )
-        fi
+        sudo dnf -y groupinstall 'Development Tools'
         pkgs+=(
-            'apr-devel'  # subversion
-            'apr-util-devel'  # subversion
-            'bzip2-devel'
-            'expat-devel'  # udunits
-            'fontconfig-devel'
-            'freetype-devel'  # freetype / ragg
-            'glib2-devel'  # ag
-            'libcurl-devel'
-            'libffi-devel'
-            'libicu-devel'  # rJava
-            'libjpeg-turbo-devel'  # freetype / ragg
-            'libpng-devel'  # freetype / ragg
-            'libseccomp-devel'
-            'libssh2-devel'
-            'libtiff-devel'
-            'libuuid-devel'
-            'libxml2-devel'
-            'lz4-devel'  # rsync
-            'ncurses-devel'
-            'openssl-devel'
-            'pcre-devel'  # ag
-            'pcre2-devel'  # rJava
-            'postgresql-devel'
-            'unixODBC-devel'
-            'xxhash-devel'  # rsync
-            'xz-devel'
-            'zlib-devel'
+            #                                                       | RHEL UBI |
+            # ------------------------------------------------------|----------|
+            'apr-devel'  # subversion                             # |      YES |
+            'apr-util-devel'  # subversion                        # |      YES |
+            'bison-devel'                                         # |       NO |
+            'bzip2-devel'                                         # |      YES |
+            'cairo-devel'                                         # |       NO |
+            'expat-devel'  # udunits                              # |      YES |
+            'flex-devel'                                          # |       NO |
+            'fontconfig-devel'                                    # |      YES |
+            'freetype-devel'  # freetype / ragg                   # |      YES |
+            'fribidi-devel'  # textshaping                        # |       NO |
+            'glib2-devel'  # ag                                   # |      YES |
+            'gmp-devel'                                           # |       NO |
+            'gnutls-devel'                                        # |       NO |
+            'gsl-devel'                                           # |       NO |
+            'harfbuzz-devel'  # textshaping                       # |       NO |
+            'hdf5-devel'                                          # |       NO |
+            'libcurl-devel'                                       # |      YES |
+            'libevent-devel'  # tmux                              # |       NO |
+            'libffi-devel'                                        # |      YES |
+            'libgit2-devel'                                       # |       NO |
+            'libicu-devel'  # rJava                               # |      YES |
+            'libjpeg-turbo-devel'  # freetype / ragg              # |      YES |
+            'libmpc-devel'                                        # |       NO |
+            'libpng-devel'  # freetype / ragg                     # |      YES |
+            'libseccomp-devel'                                    # |      YES |
+            'libssh2-devel'                                       # |      YES |
+            'libtiff-devel'                                       # |      YES |
+            'libuuid-devel'                                       # |      YES |
+            'libxml2-devel'                                       # |      YES |
+            'libzstd-devel'  # rsync                              # |       NO |
+            'llvm-devel'                                          # |       NO |
+            'lz4-devel'  # rsync                                  # |      YES |
+            'mariadb-devel'                                       # |       NO |
+            'mpfr-devel'                                          # |       NO |
+            'ncurses-devel'                                       # |      YES |
+            'openblas-devel'                                      # |       NO |
+            'openjpeg2-devel'  # GDAL                             # |       NO |
+            'openssl-devel'                                       # |      YES |
+            'pcre-devel'  # ag                                    # |      YES |
+            'pcre2-devel'  # rJava                                # |      YES |
+            'postgresql-devel'                                    # |      YES |
+            'python3-devel'                                       # |       NO |
+            'readline-devel'  # R                                 # |       NO |
+            'taglib-devel'                                        # |       NO |
+            'unixODBC-devel'                                      # |      YES |
+            'xxhash-devel'  # rsync                               # |      YES |
+            'xz-devel'                                            # |      YES |
+            'zlib-devel'                                          # |      YES |
         )
         if [[ "$full" -eq 0 ]]
         then
-            if ! koopa::is_rhel_ubi
-            then
-                pkgs+=(
-                    'gdal-devel'
-                    'proj-devel'
-                )
-            fi
             pkgs+=(
-                'geos-devel'
-                'sqlite-devel'
-                'udunits2-devel'
+                #                                                   | RHEL UBI |
+                # --------------------------------------------------|----------|
+                'gdal-devel'                                      # |       NO |
+                'geos-devel'                                      # |      YES |
+                'proj-devel'                                      # |       NO |
+                'sqlite-devel'                                    # |      YES |
+                'udunits2-devel'                                  # |      YES |
             )
         fi
     fi
@@ -194,9 +185,8 @@ koopa::fedora_install_base() { # {{{1
     then
         koopa::h2 'Installing extra recommended packages.'
         pkgs+=(
-            # emacs
-            # golang
-            # zsh
+            # > emacs
+            # > golang
             'jq'
             'llvm'
             'texlive'
