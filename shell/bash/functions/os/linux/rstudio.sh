@@ -160,7 +160,7 @@ koopa::fedora_install_rstudio_server() { # {{{1
     # """
     local os_codename
     os_codename='centos8'
-    koopa::mkdir -S '/etc/init.d/rstudio-server'
+    koopa::mkdir -S '/etc/init.d'
     koopa::_install_rstudio_server \
         --file-ext='rpm' \
         --install='sudo dnf -y install' \
