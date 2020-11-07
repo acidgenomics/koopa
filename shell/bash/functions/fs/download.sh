@@ -3,10 +3,11 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2020-11-03.
+    # @note Updated 2020-11-07.
     #
     # Potentially useful curl flags:
     # * --connect-timeout <seconds>
+    # * --progress-bar
     # * --silent
     # * --stderr
     #
@@ -36,7 +37,6 @@ koopa::download() { # {{{1
         --fail \
         --location \
         --output "$file" \
-        --progress-bar \
         --retry 5 \
         --show-error \
         "$url"
