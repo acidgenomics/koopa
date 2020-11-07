@@ -76,7 +76,6 @@ koopa::_install_rstudio_server() { # {{{1
     koopa::assert_has_no_args "$#"
     name='rstudio-server'
     file_stem="$name"
-    # FIXME NEED TO REWORK THIS.
     koopa::is_fedora_like && file_stem="${file_stem}-rhel"
     name_fancy='RStudio Server'
     if [[ "$pro" -eq 1 ]]
