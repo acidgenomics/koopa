@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-11-03.
+    # @note Updated 2020-11-08.
     # """
     local dict install_base_flags mode prefixes
     koopa::assert_has_no_envs
@@ -91,7 +91,7 @@ koopa::configure_vm() { # {{{1
         [install_python_packages]=1
         [install_r]=1
         [install_r_packages]=1
-        [install_rstudio_server]=1
+        [install_rstudio_server]=0
         [install_rsync]=0
         [install_ruby]=0
         [install_ruby_packages]=0
