@@ -298,6 +298,11 @@ koopa::configure_vm() { # {{{1
         dict[install_ruby_packages]=0
         dict[install_rust_packages]=0
     fi
+    # Building Python from source can break dnf on Fedora 32+.
+    if koopa::is_fedora
+    then
+        dict[install_python]=0
+    fi
 
     # Initial configuration {{{2
     # --------------------------------------------------------------------------
