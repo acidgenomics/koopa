@@ -68,6 +68,7 @@ koopa::fedora_install_base() { # {{{1
         'bash'                                                    # |      YES |
         'byacc'                                                   # |       NO |
         'bzip2'                                                   # |      YES |
+        'chkconfig'                                               # |        ? |
         'cmake'                                                   # |      YES |
         'convmv'                                                  # |       NO |
         'cryptsetup'                                              # |       NO |
