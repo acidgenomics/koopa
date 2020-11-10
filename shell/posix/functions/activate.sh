@@ -966,6 +966,7 @@ _koopa_activate_standard_paths() { # {{{1
         "${make_prefix}/sbin" \
         "${make_prefix}/bin" \
         "${HOME}/.local/bin"
+    echo "$PATH"
     echo "FIXME 3"
     _koopa_force_add_to_manpath_end '/usr/share/man'
     _koopa_force_add_to_manpath_start \
