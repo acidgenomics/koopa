@@ -3,13 +3,10 @@
 koopa::_list_path_priority() { # {{{1
     # """
     # Split PATH string by ':' delim into lines.
-    # @note Updated 2019-10-27.
+    # @note Updated 2020-11-10.
     #
-    # Note that we're using awk approach here because it is shell agnostic.
-    #
-    # Bash here string parsing approach (non-POSIX):
-    # Refer to heredoc format in 'man bash' for details.
-    # > tr ':' '\n' <<< "$str"
+    # Alternate approach using tr:
+    # > x="$(tr ':' '\n' <<< "$str")"
     #
     # Bash parameter expansion approach:
     # > koopa::print "${PATH//:/$'\n'}"
@@ -23,12 +20,8 @@ koopa::_list_path_priority() { # {{{1
     # """
     local str
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed awk
     str="${1:-$PATH}"
-    x="$( \
-        koopa::print "$str" \
-        | awk '{split($0,array,":")} END { for (i in array) print array[i] }' \
-    )"
+    x="$(koopa::print "${str//:/$'\n'}")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
