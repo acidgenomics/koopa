@@ -74,6 +74,7 @@ koopa::fedora_install_base() { # {{{1
         'cryptsetup'                                              # |       NO |
         'curl'                                                    # |      YES |
         'diffutils'                                               # |      YES |
+        'file'                                                    # |        ? |
         'findutils'                                               # |      YES |
         'gcc'                                                     # |      YES |
         'gcc-c++'                                                 # |      YES |
@@ -83,6 +84,7 @@ koopa::fedora_install_base() { # {{{1
         'gnupg2'                                                  # |      YES |
         'gnutls'                                                  # |      YES |
         'libtool'                                                 # |      YES |
+        'libxcrypt-compat'  # Homebrew                            # |        ? |
         'lua'                                                     # |      YES |
         'make'                                                    # |      YES |
         'man-db'                                                  # |      YES |
