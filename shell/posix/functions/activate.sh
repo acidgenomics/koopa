@@ -967,6 +967,29 @@ _koopa_activate_standard_paths() { # {{{1
     return 0
 }
 
+_koopa_activate_starship_prompt() { # {{{1
+    # """
+    # Activate starship prompt.
+    # @note Updated 2020-11-10.
+    #
+    # See also:
+    # https://starship.rs/
+    # """
+    # shellcheck disable=SC2039
+    local shell
+    _koopa_is_installed starship || return 0
+    shell="$(_koopa_shell)"
+    case "$(_koopa_shell)" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    eval "$(starship init "$shell")"
+    return 0
+}
+
 _koopa_activate_venv() { # {{{1
     # """
     # Activate Python default virtual environment.

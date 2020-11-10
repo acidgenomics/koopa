@@ -2,8 +2,8 @@
 
 _koopa_prompt() { # {{{1
     # """
-    # Prompt string.
-    # @note Updated 2020-07-13.
+    # Customize the interactive prompt.
+    # @note Updated 2020-11-10.
     #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
@@ -30,6 +30,11 @@ _koopa_prompt() { # {{{1
     local conda conda_color git git_color hostname newline prompt prompt_color \
         shell user user_color venv venv_color wd wd_color
     shell="$(_koopa_shell)"
+    if _koopa_is_installed starship
+    then
+        _koopa_activate_starship_prompt
+        return 0
+    fi
     hostname="$(_koopa_hostname)"
     # String replacement supported in Bash, Zsh.
     # shellcheck disable=SC2039
