@@ -600,7 +600,7 @@ koopa::install_zsh() { # {{{1
 koopa::link_cellar() { # {{{1
     # """
     # Symlink cellar into build directory.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-11-10.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -687,8 +687,13 @@ koopa::link_cellar() { # {{{1
         )"
     fi
     # Copy as symbolic links.
-    koopa::cp -s -t "${make_prefix}" "${cellar_subdirs[@]}"
+    koopa::cp \
+        -s \
+        -v \
+        -t "${make_prefix}" \
+        "${cellar_subdirs[@]}"
     koopa::is_shared_install && koopa::update_ldconfig
+    koopa::success "Successfully linked '${name}'."
     return 0
 }
 
