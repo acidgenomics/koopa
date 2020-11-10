@@ -967,7 +967,7 @@ _koopa_activate_standard_paths() { # {{{1
     return 0
 }
 
-_koopa_activate_starship_prompt() { # {{{1
+_koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
     # @note Updated 2020-11-10.
