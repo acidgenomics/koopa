@@ -354,7 +354,7 @@ koopa::configure_vm() { # {{{1
     koopa::info 'Checking available local disk space.'
     df -h '/'
     # Ensure essential target prefixes exist.
-    koopa::mkdir "${dict[make_prefix]}" "${dict[app_prefix]}"
+    koopa::mkdir -S "${dict[make_prefix]}" "${dict[app_prefix]}"
     # Set up secondary data disk, if applicable.
     if [[ -e "${dict[data_disk_prefix]}" ]]
     then
