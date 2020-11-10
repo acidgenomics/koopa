@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-11-07.
+    # @note Updated 2020-11-10.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
@@ -91,6 +91,7 @@ koopa::fedora_install_base() { # {{{1
         'pkgconfig'  # This is now pkgconf wrapped.               # |      YES |
         'qpdf'                                                    # |       NO |
         'readline'                                                # |      YES |
+        'ruby'                                                    # |        ? |
         'squashfs-tools'                                          # |       NO |
         'systemd'                                                 # |      YES |
         'texinfo'                                                 # |       NO |
