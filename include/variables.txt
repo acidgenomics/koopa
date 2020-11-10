@@ -420,19 +420,19 @@ python-wheel="0.35.1"
 # - tide
 #   https://github.com/http-rs/tide
 
-rust-bat="0.16.0"
-rust-broot="1.0.4"
-rust-dog="0.1.0"  # homebrew
-rust-du-dust="0.5.3"
-rust-exa="0.9.0"
-rust-fd-find="8.1.1"
-rust-hyperfine="1.11.0"
-rust-procs="0.10.7"
-rust-ripgrep="12.1.1"
-rust-starship="0.46.2"  # homebrew
-rust-tokei="12.0.4"
-rust-xsv="0.13.0"
-rust-zoxide="0.5.0"
+rust-bat="0.16.0"           # homebrew
+rust-broot="1.0.5"          # homebrew
+rust-dog="0.1.0"            # homebrew
+rust-du-dust="0.5.3"        # homebrew
+rust-exa="0.9.0"            # homebrew
+rust-fd-find="8.1.1"        # homebrew
+rust-hyperfine="1.11.0"     # homebrew
+rust-procs="0.10.7"         # homebrew
+rust-ripgrep="12.1.1"       # homebrew
+rust-starship="0.46.2"      # homebrew
+rust-tokei="12.0.4"         # homebrew
+rust-xsv="0.13.0"           # homebrew
+rust-zoxide="0.5.0"         # homebrew
 
 # Homebrew cask versions {{{1
 # ==============================================================================
