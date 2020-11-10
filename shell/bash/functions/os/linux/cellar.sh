@@ -687,6 +687,7 @@ koopa::link_cellar() { # {{{1
         )"
     fi
     echo "FIXME 1"
+    echo "${cellar_subdirs[@]}"
     # Copy as symbolic links.
     koopa::cp \
         -s \
