@@ -91,7 +91,7 @@ koopa::activate_zsh_extras() { # {{{1
 koopa::activate_zsh_fpath() { # {{{1
     # """
     # Activate Zsh FPATH.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-10.
     # """
     local koopa_fpath koopa_prefix
     koopa_prefix="$(koopa::prefix)"
@@ -101,7 +101,7 @@ koopa::activate_zsh_fpath() { # {{{1
         koopa::warning "FPATH directory is missing: '${koopa_fpath}'."
         return 1
     fi
-    koopa::force_add_to_fpath_start "$koopa_fpath"
+    koopa::add_to_fpath_start "$koopa_fpath"
     return 0
 }
 
