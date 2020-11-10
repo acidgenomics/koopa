@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::activate_openjdk() { # {{{1
-    _koopa_activate_openjdk "$@"
-}
-
-koopa::activate_rust() { # {{{1
-    _koopa_activate_rust "$@"
-}
-
 koopa::activate_conda() { # {{{1
     _koopa_activate_conda "$@"
 }
@@ -18,6 +10,18 @@ koopa::activate_go() { # {{{1
 
 koopa::activate_llvm() { # {{{1
     _koopa_activate_llvm "$@"
+}
+
+koopa::activate_openjdk() { # {{{1
+    _koopa_activate_openjdk "$@"
+}
+
+koopa::activate_rust() { # {{{1
+    _koopa_activate_rust "$@"
+}
+
+koopa::activate_starship() { # {{{1
+    _koopa_activate_starship "$@"
 }
 
 koopa::add_config_link() { # {{{1

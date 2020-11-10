@@ -114,32 +114,38 @@ koopa::brew_update() { # {{{1
     return 0
 }
 
-koopa::macos_install_homebrew() { # {{{1
+koopa::install_homebrew() { # {{{1
     # """
     # Install Homebrew.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-10.
     #
     # @seealso
-    # https://docs.brew.sh/Installation
+    # - https://docs.brew.sh/Installation
+    # - https://github.com/Homebrew/legacy-homebrew/issues/
+    #       46779#issuecomment-162819088
+    # - https://github.com/Linuxbrew/brew/issues/556
     #
+    # macOS:
     # This script installs Homebrew to '/usr/local' so that you don't need sudo
     # when you run 'brew install'. It is a careful script; it can be run even if
     # you have stuff installed to '/usr/local' already. It tells you exactly
     # what it will do before it does it too. You have to confirm everything it
     # will do before it starts.
     #
-    # Alternative install, supporting custom prefix (e.g. /usr/local/homebrew):
-    # > mkdir homebrew && \
-    # >     curl -L https://github.com/Homebrew/brew/tarball/master \
-    # >     | tar xz --strip 1 -C homebrew
+    # Linux:
+    # Creates a new linuxbrew user and installs to /home/linuxbrew/.linuxbrew.
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed brew && return 0
-    koopa::assert_is_installed xcode-select
+    koopa::assert_is_installed yes
     name_fancy='Homebrew'
     koopa::install_start "$name_fancy"
-    koopa::h2 'Installing Xcode command line tools (CLT).'
-    xcode-select --install &>/dev/null || true
+    if koopa::is_macos
+    then
+        koopa::assert_is_installed xcode-select
+        koopa::h2 'Installing Xcode command line tools (CLT).'
+        xcode-select --install &>/dev/null || true
+    fi
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -147,7 +153,7 @@ koopa::macos_install_homebrew() { # {{{1
         url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
         koopa::download "$url"
         chmod +x "$file"
-        "./${file}"
+        yes | "./${file}"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::install_success "$name_fancy"
@@ -208,21 +214,25 @@ koopa::macos_install_homebrew_packages() { # {{{1
     return 0
 }
 
-koopa::macos_uninstall_homebrew() { # {{{1
+koopa::uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-10.
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
     local file name_fancy tmp_dir url
     koopa::is_installed brew || return 0
+    koopa::assert_is_installed yes
     name_fancy='Homebrew'
     koopa::uninstall_start "$name_fancy"
     koopa::assert_has_no_args "$#"
     # Note that macOS Catalina now uses Zsh instead of Bash by default.
-    koopa::h2 'Changing default shell to system Zsh.'
-    chsh -s '/bin/zsh' "$USER"
+    if koopa::is_macos
+    then
+        koopa::h2 'Changing default shell to system Zsh.'
+        chsh -s '/bin/zsh' "$USER"
+    fi
     koopa::h2 "Resetting permissions in '/usr/local'."
     sudo chown -Rhv "$USER" '/usr/local/'*
     tmp_dir="$(koopa::tmp_dir)"
@@ -232,7 +242,7 @@ koopa::macos_uninstall_homebrew() { # {{{1
         url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
         koopa::download "$url"
         chmod +x "$file"
-        "./${file}"
+        yes | "./${file}"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::uninstall_success "$name_fancy"

@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2020-10-12.
+    # @note Updated 2020-11-10.
     #
     # Flags:
     # --compact
@@ -33,7 +33,7 @@ koopa::debian_install_base() { # {{{1
     koopa::assert_is_installed apt apt-get sed sudo
     dev=1
     full=0
-    remove=1
+    remove=0
     upgrade=1
     pos=()
     while (("$#"))
@@ -114,8 +114,6 @@ koopa::debian_install_base() { # {{{1
             'proj-bin'                # use 'install-proj'
             'proj-data'               # use 'install-proj'
             'runc'                    # docker legacy
-            'zsh'                     # use 'install-zsh'
-            'zsh-common'
         )
         remove_pkgs=()
         for pkg in "${legacy_pkgs[@]}"
@@ -152,6 +150,7 @@ koopa::debian_install_base() { # {{{1
         'curl'
         'diffutils'
         'dirmngr'
+        'file'
         'findutils'
         'fortran77-compiler'
         'g++'
@@ -173,6 +172,7 @@ koopa::debian_install_base() { # {{{1
         'nano'
         'parallel'
         'pkg-config'
+        'procps'  # ps
         'psmisc'  # RStudio Server
         'rsync'
         'software-properties-common'

@@ -2,8 +2,8 @@
 
 _koopa_prompt() { # {{{1
     # """
-    # Prompt string.
-    # @note Updated 2020-07-13.
+    # Customize the interactive prompt.
+    # @note Updated 2020-11-10.
     #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
