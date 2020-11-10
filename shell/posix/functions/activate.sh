@@ -338,9 +338,9 @@ _koopa_activate_homebrew() { # {{{1
         if [ -d "${HOME}/.linuxbrew" ]
         then
             eval "$("${HOME}/.linuxbrew/bin/brew" shellenv)"
-        elif [ -d '/home/linuxbrew/.linuxbrew' ]
+        elif [ -d /home/linuxbrew/.linuxbrew ]
         then
-            eval "$('/home/linuxbrew/.linuxbrew/bin/brew' shellenv)"
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
         fi
     fi
     _koopa_is_installed brew || return 0
