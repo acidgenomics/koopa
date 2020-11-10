@@ -354,7 +354,9 @@ koopa::configure_vm() { # {{{1
     koopa::info 'Checking available local disk space.'
     df -h '/'
     # Ensure essential target prefixes exist.
-    koopa::mkdir -S "${dict[make_prefix]}" "${dict[app_prefix]}"
+    prefixes=("${dict[make_prefix]}" "${dict[app_prefix]}")
+    koopa::sys_mkdir "${prefixes[@]}"
+    koopa::sys_set_permissions -r "${prefixes[@]}"
     # Set up secondary data disk, if applicable.
     if [[ -e "${dict[data_disk_prefix]}" ]]
     then
@@ -367,7 +369,6 @@ koopa::configure_vm() { # {{{1
     koopa::h2 'Installing base system.'
     koopa::update_etc_profile_d
     koopa::install_dotfiles
-    koopa::mkdir "${dict[make_prefix]}"
     koopa::assert_is_installed install-base
     install_base_flags=("${dict[install_base_flags]}")
     install-base "${install_base_flags[@]:-}"
@@ -588,7 +589,6 @@ koopa::configure_vm() { # {{{1
     # Clean up and fix permissions {{{3
     # --------------------------------------------------------------------------
 
-    prefixes=("${dict[make_prefix]}" "${dict[app_prefix]}")
     koopa::sys_set_permissions -r "${prefixes[@]}"
     koopa::remove_broken_symlinks "${prefixes[@]}"
     # > koopa::remove_empty_dirs "${prefixes[@]}"
@@ -606,7 +606,7 @@ koopa::configure_vm() { # {{{1
 koopa::link_data_disk() { # {{{1
     # """
     # Link a secondary data disk.
-    # @note Updated 2020-11-03.
+    # @note Updated 2020-11-10.
     # """
     local app_prefix dd_link_prefix dd_prefix dd_real_prefix
     dd_prefix="${1:?}"
@@ -632,7 +632,7 @@ koopa::link_data_disk() { # {{{1
     app_prefix_bn="$(basename "$app_prefix")"
     # e.g. '/mnt/data01/n/opt'
     app_prefix_real="${dd_real_prefix}/${app_prefix_bn}"
-    koopa::mkdir "$app_prefix_real"
+    koopa::sys_mkdir "$app_prefix_real"
     # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
     koopa::sys_ln "$app_prefix_real" "$app_prefix"
     return 0
