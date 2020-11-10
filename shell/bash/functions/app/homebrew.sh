@@ -114,10 +114,10 @@ koopa::brew_update() { # {{{1
     return 0
 }
 
-koopa::macos_install_homebrew() { # {{{1
+koopa::install_homebrew() { # {{{1
     # """
     # Install Homebrew.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-10.
     #
     # @seealso
     # https://docs.brew.sh/Installation
@@ -208,10 +208,10 @@ koopa::macos_install_homebrew_packages() { # {{{1
     return 0
 }
 
-koopa::macos_uninstall_homebrew() { # {{{1
+koopa::uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-10.
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
@@ -221,8 +221,11 @@ koopa::macos_uninstall_homebrew() { # {{{1
     koopa::uninstall_start "$name_fancy"
     koopa::assert_has_no_args "$#"
     # Note that macOS Catalina now uses Zsh instead of Bash by default.
-    koopa::h2 'Changing default shell to system Zsh.'
-    chsh -s '/bin/zsh' "$USER"
+    if koopa::is_macos
+    then
+        koopa::h2 'Changing default shell to system Zsh.'
+        chsh -s '/bin/zsh' "$USER"
+    fi
     koopa::h2 "Resetting permissions in '/usr/local'."
     sudo chown -Rhv "$USER" '/usr/local/'*
     tmp_dir="$(koopa::tmp_dir)"
