@@ -3,7 +3,7 @@
 koopa::install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
-    # @note Updated 2020-09-18.
+    # @note Updated 2020-11-10.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -40,7 +40,7 @@ koopa::install_openjdk() { # {{{1
     [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$prefix"
     [[ -d "$prefix" ]] && return 0
     koopa::install_start "$name_fancy" "$version" "$prefix"
-    koopa::mkdir "$jdk_dir"
+    koopa::sys_mkdir "$jdk_dir"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
