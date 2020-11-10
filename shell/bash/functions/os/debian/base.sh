@@ -166,6 +166,7 @@ koopa::debian_install_base() { # {{{1
         'less'
         'libtool'
         'libtool-bin'
+        'locales'
         'lsb-release'
         'make'
         'man-db'
