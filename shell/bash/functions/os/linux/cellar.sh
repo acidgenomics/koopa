@@ -689,7 +689,6 @@ koopa::link_cellar() { # {{{1
     # Copy as symbolic links.
     koopa::cp \
         -s \
-        -v \
         -t "${make_prefix}" \
         "${cellar_subdirs[@]}"
     koopa::is_shared_install && koopa::update_ldconfig
