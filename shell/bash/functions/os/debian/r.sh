@@ -3,7 +3,7 @@
 koopa::debian_install_r_cran_binary() { # {{{1
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-11-10.
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/README.html
@@ -37,6 +37,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
     koopa::apt_install "${pkgs[@]}"
     # Ensure we don't have a duplicate site library.
     koopa::rm -S '/usr/local/lib/R'
+    koopa::update_r_config
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -44,7 +45,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
 koopa::debian_install_r_devel() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
-    # @note Updated 2020-07-16.
+    # @note Updated 2020-11-10.
     #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
@@ -82,6 +83,7 @@ koopa::debian_install_r_devel() { # {{{1
         --version='devel' \
         --script-name='r-devel' \
         "$@"
+    koopa::update_r_config
     return 0
 }
 

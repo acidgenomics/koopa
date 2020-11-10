@@ -536,6 +536,7 @@ koopa::configure_vm() { # {{{1
         if koopa::is_fedora
         then
             koopa::assert_is_installed R
+            koopa::update_r_config
         elif [[ "${dict[r_version]}" == 'devel' ]]
         then
             install-r-devel
@@ -545,7 +546,6 @@ koopa::configure_vm() { # {{{1
         else
             install-r --version="${dict[r_version]}"
         fi
-        koopa::update_r_config
         koopa::install_r_koopa
     fi
     # Install RStudio software.

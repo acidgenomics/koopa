@@ -476,6 +476,7 @@ koopa::install_r() { # {{{1
         --name='r' \
         --name-fancy='R' \
         "$@"
+    koopa::update_r_config
 }
 
 koopa::install_rbenv() { # {{{1
