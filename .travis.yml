@@ -1,4 +1,5 @@
 os: linux
+arch: arm64-graviton2
 language: shell
 
 branches:
@@ -17,7 +18,7 @@ jobs:
     # >   services: docker
     # >   script: ./tests/docker arch
     - stage: test
-      name: "biocontainers"
+      name: "biocontainers (no sudo)"
       services: docker
       script: ./tests/docker biocontainers
     # > - stage: test
@@ -25,7 +26,7 @@ jobs:
     # >   services: docker
     # >   script: ./tests/docker centos
     - stage: test
-      name: "debian"
+      name: "debian (sudo)"
       services: docker
       script: ./tests/docker debian
     # > - stage: test
