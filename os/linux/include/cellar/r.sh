@@ -2,9 +2,11 @@
 # shellcheck disable=SC2154
 
 # """
-# Refer to the 'Installation + Administration' manual.
+# Updated 2020-11-10.
 #
 # See also:
+# - Refer to the 'Installation + Administration' manual.
+# - https://hub.docker.com/r/rocker/r-ver/dockerfile
 # - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
 # - https://support.rstudio.com/hc/en-us/articles/
 #       218004217-Building-R-from-source
@@ -29,6 +31,7 @@ unset -v R_HOME
 export TZ='America/New_York'
 flags=(
     "--prefix=${prefix}"
+    '--disable-nls'
     '--enable-R-profiling'
     '--enable-R-shlib'
     '--enable-memory-profiling'
@@ -36,16 +39,11 @@ flags=(
     '--with-cairo'
     '--with-jpeglib'
     '--with-lapack'
+    '--with-readline'
+    '--with-recommended-packages'
     '--with-tcltk'
     '--with-x=no'
 )
-if koopa::is_rhel_ubi
-then
-    # Can't currently install 'readline-devel'.
-    flags+=('--with-readline=no')
-else
-    flags+=('--with-readline')
-fi
 # Need to modify BLAS configuration handling specificallly on Debian.
 if ! koopa::is_debian_like
 then
