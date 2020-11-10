@@ -3,7 +3,7 @@
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2020-07-14.
+    # @note Updated 2020-11-09.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -220,6 +220,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         envs+=(
             'fastqc'
             'kraken'
+            'kraken2'
             'multiqc'
             'qualimap'
         )

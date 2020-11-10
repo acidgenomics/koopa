@@ -331,8 +331,18 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-10-27.
+    # @note Updated 2020-11-10.
     # """
+    if _koopa_is_linux && ! _koopa_is_installed brew
+    then
+        if [ -d "${HOME}/.linuxbrew" ]
+        then
+            eval "$("${HOME}/.linuxbrew/bin/brew" shellenv)"
+        elif [ -d /home/linuxbrew/.linuxbrew ]
+        then
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        fi
+    fi
     _koopa_is_installed brew || return 0
     HOMEBREW_PREFIX="$(brew --prefix)"
     HOMEBREW_REPOSITORY="$(brew --repo)"
@@ -954,6 +964,29 @@ _koopa_activate_standard_paths() { # {{{1
     _koopa_force_add_to_manpath_start \
         "${make_prefix}/share/man" \
         "${HOME}/.local/share/man"
+    return 0
+}
+
+_koopa_activate_starship() { # {{{1
+    # """
+    # Activate starship prompt.
+    # @note Updated 2020-11-10.
+    #
+    # See also:
+    # https://starship.rs/
+    # """
+    # shellcheck disable=SC2039
+    local shell
+    _koopa_is_installed starship || return 0
+    shell="$(_koopa_shell)"
+    case "$(_koopa_shell)" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    eval "$(starship init "$shell")"
     return 0
 }
 
