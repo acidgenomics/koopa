@@ -331,8 +331,18 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-10-27.
+    # @note Updated 2020-11-10.
     # """
+    if _koopa_is_linux
+    then
+        if [ -d "${HOME}/.linuxbrew" ]
+        then
+            eval "$("${HOME}/.linuxbrew/bin/brew" shellenv)"
+        elif [ -d '/home/linuxbrew/.linuxbrew' ]
+        then
+            eval "$('/home/linuxbrew/.linuxbrew/bin/brew' shellenv)"
+        fi
+    fi
     _koopa_is_installed brew || return 0
     HOMEBREW_PREFIX="$(brew --prefix)"
     HOMEBREW_REPOSITORY="$(brew --repo)"
