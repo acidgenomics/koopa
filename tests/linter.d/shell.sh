@@ -46,7 +46,7 @@ test_all_illegal_strings() { # {{{1
     koopa::assert_has_args "$#"
     # shellcheck disable=SC1112,SC2016
     array=(
-        "=''"
+        # "=''"             # now allowed, for arrays.
         ' \|\| exit'        # wrap in function and return instead
         ' path='            # zsh will freak out
         '; do'              # newline instead

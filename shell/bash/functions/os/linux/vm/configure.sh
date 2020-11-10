@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-11-08.
+    # @note Updated 2020-11-10.
     # """
     local dict install_base_flags mode prefixes
     koopa::assert_has_no_envs
@@ -65,6 +65,7 @@ koopa::configure_vm() { # {{{1
         [install_grep]=0
         [install_gsl]=0
         [install_hdf5]=0
+        [install_homebrew]=1
         [install_htop]=1
         [install_julia]=0
         [install_libevent]=0
@@ -88,9 +89,9 @@ koopa::configure_vm() { # {{{1
         [install_pkg_config]=0
         [install_proj]=0
         [install_python]=1
-        [install_python_packages]=1
+        [install_python_packages]=0
         [install_r]=1
-        [install_r_packages]=1
+        [install_r_packages]=0
         [install_rstudio_server]=0
         [install_rsync]=0
         [install_ruby]=0
@@ -189,6 +190,7 @@ koopa::configure_vm() { # {{{1
         bioconductor)
             dict[install_aws_cli]=0
             dict[install_conda]=1
+            dict[install_homebrew]=0
             dict[install_htop]=0
             dict[install_llvm]=0  # enable?
             dict[install_openjdk]=1
@@ -254,6 +256,8 @@ koopa::configure_vm() { # {{{1
             dict[install_perl_packages]=1
             dict[install_pkg_config]=1
             dict[install_proj]=1
+            dict[install_python_packages]=1
+            dict[install_r_packages]=1
             dict[install_rstudio_server]=1
             dict[install_rsync]=1
             dict[install_ruby]=1
@@ -385,12 +389,17 @@ koopa::configure_vm() { # {{{1
     # Programs {{{2
     # --------------------------------------------------------------------------
 
+    [[ "${dict[install_homebrew]}" -eq 1 ]] && \
+        install-homebrew
     [[ "${dict[install_llvm]}" -eq 1 ]] && \
         koopa::run_if_installed install-llvm
     [[ "${dict[install_openjdk]}" -eq 1 ]] && \
         install-openjdk
-    [[ "${dict[install_python]}" -eq 1 ]] && \
+    if [[ "${dict[install_python]}" -eq 1 ]]
+    then
         install-python --version="${dict[python_version]}"
+        koopa::install_py_koopa
+    fi
     [[ "${dict[install_conda]}" -eq 1 ]] && \
         "install-${dict[which_conda]}"
     [[ "${dict[install_gcc]}" -eq 1 ]] && \
@@ -531,6 +540,7 @@ koopa::configure_vm() { # {{{1
             install-r --version="${dict[r_version]}"
         fi
         koopa::update_r_config
+        koopa::install_r_koopa
     fi
     # Install RStudio software.
     [[ "${dict[install_rstudio_server]}" -eq 1 ]] && \
