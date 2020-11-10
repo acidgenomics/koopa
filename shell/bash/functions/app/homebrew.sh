@@ -223,6 +223,7 @@ koopa::uninstall_homebrew() { # {{{1
     # """
     local file name_fancy tmp_dir url
     koopa::is_installed brew || return 0
+    koopa::assert_is_installed yes
     name_fancy='Homebrew'
     koopa::uninstall_start "$name_fancy"
     koopa::assert_has_no_args "$#"
@@ -241,7 +242,7 @@ koopa::uninstall_homebrew() { # {{{1
         url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
         koopa::download "$url"
         chmod +x "$file"
-        "./${file}"
+        yes | "./${file}"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::uninstall_success "$name_fancy"
