@@ -143,7 +143,7 @@ htop="3.0.2"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.5.2"
+julia="1.5.3"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
