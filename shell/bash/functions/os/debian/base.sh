@@ -33,7 +33,7 @@ koopa::debian_install_base() { # {{{1
     koopa::assert_is_installed apt apt-get sed sudo
     dev=1
     full=0
-    remove=1
+    remove=0
     upgrade=1
     pos=()
     while (("$#"))
