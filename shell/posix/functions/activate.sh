@@ -70,7 +70,7 @@ _koopa_activate_autojump() { # {{{1
 _koopa_activate_bcbio() { # {{{1
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-10.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
@@ -84,7 +84,7 @@ _koopa_activate_bcbio() { # {{{1
     _koopa_is_installed bcbio_nextgen.py && return 0
     prefix="$(_koopa_bcbio_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_end "${prefix}/bin"
+    _koopa_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH
     return 0
 }
@@ -333,8 +333,6 @@ _koopa_activate_homebrew() { # {{{1
     # Activate Homebrew.
     # @note Updated 2020-11-10.
     # """
-    echo "FIXME"
-    return 0
     if _koopa_is_linux && ! _koopa_is_installed brew
     then
         if [ -d "${HOME}/.linuxbrew" ]
@@ -378,7 +376,7 @@ _koopa_activate_homebrew() { # {{{1
 _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # """
     # Activate a cellar-only Homebrew GNU program.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-10.
     #
     # Linked using 'g' prefix by default.
     #
@@ -401,8 +399,8 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     local prefix
     prefix="$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
     [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_start "${prefix}/gnubin"
-    _koopa_force_add_to_manpath_start "${prefix}/share/gnuman"
+    _koopa_add_to_path_start "${prefix}/gnubin"
+    _koopa_add_to_manpath_start "${prefix}/share/gnuman"
     return 0
 }
 
@@ -729,7 +727,7 @@ _koopa_activate_pkg_config() { # {{{1
     then
         PKG_CONFIG_PATH="$("$sys_pkg_config" --variable pc_path pkg-config)"
     fi
-    _koopa_force_add_to_pkg_config_path_start \
+    _koopa_add_to_pkg_config_path_start \
         "${make_prefix}/share/pkgconfig" \
         "${make_prefix}/lib/pkgconfig" \
         "${make_prefix}/lib64/pkgconfig" \
@@ -793,7 +791,7 @@ _koopa_activate_python_site_packages() { # {{{1
     local prefix
     prefix="$(_koopa_python_site_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_start "${prefix:?}/bin"
+    _koopa_add_to_path_start "${prefix:?}/bin"
     return 0
 }
 
@@ -957,17 +955,17 @@ _koopa_activate_standard_paths() { # {{{1
     # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
-    _koopa_add_to_path_end \
-        '/usr/bin' \
+    _koopa_add_to_path_start \
         '/bin' \
+        '/sbin' \
+        '/usr/bin' \
         '/usr/sbin' \
-        '/sbin'
-    _koopa_force_add_to_path_start \
-        "${make_prefix}/sbin" \
         "${make_prefix}/bin" \
+        "${make_prefix}/sbin" \
+        "${HOME}/bin" \
         "${HOME}/.local/bin"
-    _koopa_force_add_to_manpath_end '/usr/share/man'
-    _koopa_force_add_to_manpath_start \
+    _koopa_add_to_manpath_end '/usr/share/man'
+    _koopa_add_to_manpath_start \
         "${make_prefix}/share/man" \
         "${HOME}/.local/share/man"
     return 0

@@ -5,23 +5,15 @@ koopa::activate_starship() { # {{{
 }
 
 koopa::add_to_fpath_end() { # {{{1
-    _koopa_force_add_to_fpath_end "$@"
+    _koopa_add_to_fpath_end "$@"
 }
 
 koopa::add_to_fpath_start() { # {{{1
-    _koopa_force_add_to_fpath_start "$@"
+    _koopa_add_to_fpath_start "$@"
 }
 
 koopa::dotfiles_prefix() { # {{{1
     _koopa_dotfiles_prefix "$@"
-}
-
-koopa::force_add_to_fpath_end() { # {{{1
-    _koopa_force_add_to_fpath_end "$@"
-}
-
-koopa::force_add_to_fpath_start() { # {{{1
-    _koopa_force_add_to_fpath_start "$@"
 }
 
 koopa::is_installed() { # {{{1

@@ -57,8 +57,11 @@ _koopa_activate() { # {{{1
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
         _koopa_activate_homebrew
+        #echo "2: ${PATH}"
         _koopa_activate_coreutils
+        #echo "3: ${PATH}"
         _koopa_activate_dircolors
+        #echo "4: ${PATH}"
         _koopa_activate_gcc_colors
         _koopa_activate_emacs
         _koopa_activate_go
