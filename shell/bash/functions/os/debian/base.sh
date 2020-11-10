@@ -184,6 +184,7 @@ koopa::debian_install_base() { # {{{1
         'tmux'
         'tree'
         'tzdata'
+        'udunits-bin'
         'unzip'
         'vim'
         'wget'
