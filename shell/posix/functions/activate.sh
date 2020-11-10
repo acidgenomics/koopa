@@ -955,19 +955,15 @@ _koopa_activate_standard_paths() { # {{{1
     # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
-    echo "FIXME 1"
     _koopa_add_to_path_end \
         '/usr/bin' \
         '/bin' \
         '/usr/sbin' \
         '/sbin'
-    echo "FIXME 2"
     _koopa_force_add_to_path_start \
         "${make_prefix}/sbin" \
         "${make_prefix}/bin" \
         "${HOME}/.local/bin"
-    echo "$PATH"
-    echo "FIXME 3"
     _koopa_force_add_to_manpath_end '/usr/share/man'
     _koopa_force_add_to_manpath_start \
         "${make_prefix}/share/man" \
