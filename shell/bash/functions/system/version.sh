@@ -637,13 +637,13 @@ koopa::version_pattern() { # {{{1
 koopa::vim_version() { # {{{1
     # """
     # Vim version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-11-10.
     # """
-    local major patch version x
+    local major_minor patch version x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed vim
     x="$(vim --version 2>/dev/null)"
-    major="$( \
+    major_minor="$( \
         koopa::print "$x" \
             | head -n 1 \
             | cut -d ' ' -f 5 \
@@ -654,10 +654,11 @@ koopa::vim_version() { # {{{1
             koopa::print "$x" \
                 | grep 'Included patches:' \
                 | cut -d '-' -f 2 \
+                | cut -d ',' -f 1 \
         )"
-        version="${major}.${patch}"
+        version="${major_minor}.${patch}"
     else
-        version="$major"
+        version="$major_minor"
     fi
     koopa::print "$version"
     return 0
