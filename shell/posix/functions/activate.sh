@@ -333,6 +333,8 @@ _koopa_activate_homebrew() { # {{{1
     # Activate Homebrew.
     # @note Updated 2020-11-10.
     # """
+    echo "FIXME"
+    return 0
     if _koopa_is_linux && ! _koopa_is_installed brew
     then
         if [ -d "${HOME}/.linuxbrew" ]
