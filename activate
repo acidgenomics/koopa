@@ -87,13 +87,13 @@ _koopa_activate() { # {{{1
         case "${KOOPA_SHELL:?}" in
             bash)
                 koopa::activate_bash_extras
-            ;;
+                ;;
             dash)
                 export PS1='# '
-            ;;
+                ;;
             zsh)
                 koopa::activate_zsh_extras
-            ;;
+                ;;
         esac
         _koopa_is_macos && _koopa_activate_macos_extras
         _koopa_activate_completion
