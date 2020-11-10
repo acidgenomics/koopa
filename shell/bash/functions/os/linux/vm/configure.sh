@@ -22,6 +22,7 @@ koopa::configure_vm() { # {{{1
     # Associative array dictionary of key-value pairs.
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
+        [cellar_prefix]="$(koopa::cellar_prefix)"
         [data_disk_prefix]=''
         [delete_cache]=0
         [delete_skel]=1
@@ -354,7 +355,11 @@ koopa::configure_vm() { # {{{1
     koopa::info 'Checking available local disk space.'
     df -h '/'
     # Ensure essential target prefixes exist.
-    prefixes=("${dict[make_prefix]}" "${dict[app_prefix]}")
+    prefixes=(
+        "${dict[make_prefix]}"
+        "${dict[cellar_prefix]}"
+        "${dict[app_prefix]}"
+    )
     koopa::sys_mkdir "${prefixes[@]}"
     koopa::sys_set_permissions -r "${prefixes[@]}"
     # Set up secondary data disk, if applicable.
