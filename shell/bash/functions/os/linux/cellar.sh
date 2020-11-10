@@ -664,13 +664,9 @@ koopa::link_cellar() { # {{{1
     cellar_prefix="${cellar_prefix}/${version}"
     koopa::assert_is_dir "$cellar_prefix"
     koopa::h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
-    echo "FIXME 1"
     koopa::sys_set_permissions -r "$cellar_prefix"
-    echo "FIXME 2"
     koopa::remove_broken_symlinks "$cellar_prefix"
-    echo "FIXME 3"
     koopa::remove_broken_symlinks "$make_prefix"
-    echo "FIXME 4"
     cellar_subdirs=()
     if [[ -n "$include_dirs" ]]
     then
@@ -690,15 +686,14 @@ koopa::link_cellar() { # {{{1
             | sort \
         )"
     fi
-    echo "FIXME 5"
+    echo "FIXME 1"
     # Copy as symbolic links.
     koopa::cp \
         -s \
         -t "${make_prefix}" \
         "${cellar_subdirs[@]}"
-    echo "FIXME 6"
+    echo "FIXME 2"
     koopa::is_shared_install && koopa::update_ldconfig
-    echo "FIXME 7"
     koopa::success "Successfully linked '${name}'."
     return 0
 }
