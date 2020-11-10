@@ -117,7 +117,7 @@ koopa::macos_install_r_cran_gfortran_8() { # {{{1
 koopa::macos_install_r_devel() { # {{{1
     # """
     # Install R-devel on macOS.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-11-10.
     # """
     koopa::assert_has_no_args "$#"
     r_version='devel'
@@ -149,6 +149,7 @@ koopa::macos_install_r_devel() { # {{{1
     koopa::ln -S \
         "/Library/Frameworks/R-${r_version}.framework" \
         '/Library/Frameworks/R.framework'
+    koopa::update_r_config
     koopa::install_success "$name_fancy"
     koopa::note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
     return 0
