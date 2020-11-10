@@ -114,8 +114,6 @@ koopa::debian_install_base() { # {{{1
             'proj-bin'                # use 'install-proj'
             'proj-data'               # use 'install-proj'
             'runc'                    # docker legacy
-            'zsh'                     # use 'install-zsh'
-            'zsh-common'
         )
         remove_pkgs=()
         for pkg in "${legacy_pkgs[@]}"
