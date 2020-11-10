@@ -619,7 +619,8 @@ koopa::link_cellar() { # {{{1
     # @examples
     # koopa::link_cellar emacs 26.3
     # """
-    local cellar_prefix cellar_subdirs include_dirs make_prefix name pos version
+    local cellar_prefix cellar_subdirs cp_flags include_dirs make_prefix name \
+        pos version
     include_dirs=
     version=
     pos=()
@@ -686,14 +687,13 @@ koopa::link_cellar() { # {{{1
             | sort \
         )"
     fi
-    echo "FIXME 1"
-    echo "${cellar_subdirs[@]}"
     # Copy as symbolic links.
-    koopa::cp \
-        -s \
-        -t "${make_prefix}" \
-        "${cellar_subdirs[@]}"
-    echo "FIXME 2"
+    cp_flags=(
+        '-s'
+        '-t' "${make_prefix}"
+    )
+    koopa::is_shared_install && cp_flags+=('-S')
+    koopa::cp "${cp_flags[@]}" "${cellar_subdirs[@]}"
     koopa::is_shared_install && koopa::update_ldconfig
     koopa::success "Successfully linked '${name}'."
     return 0
