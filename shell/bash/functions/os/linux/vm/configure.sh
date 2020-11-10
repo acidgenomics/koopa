@@ -89,9 +89,9 @@ koopa::configure_vm() { # {{{1
         [install_pkg_config]=0
         [install_proj]=0
         [install_python]=1
-        [install_python_packages]=1
+        [install_python_packages]=0
         [install_r]=1
-        [install_r_packages]=1
+        [install_r_packages]=0
         [install_rstudio_server]=0
         [install_rsync]=0
         [install_ruby]=0
@@ -256,6 +256,8 @@ koopa::configure_vm() { # {{{1
             dict[install_perl_packages]=1
             dict[install_pkg_config]=1
             dict[install_proj]=1
+            dict[install_python_packages]=1
+            dict[install_r_packages]=1
             dict[install_rstudio_server]=1
             dict[install_rsync]=1
             dict[install_ruby]=1
