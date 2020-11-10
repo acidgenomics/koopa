@@ -404,6 +404,7 @@ koopa::configure_vm() { # {{{1
     if [[ "${dict[install_python]}" -eq 1 ]]
     then
         install-python --version="${dict[python_version]}"
+        koopa::install_pip
         koopa::install_py_koopa
     fi
     [[ "${dict[install_conda]}" -eq 1 ]] && \
