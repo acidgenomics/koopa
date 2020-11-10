@@ -175,6 +175,7 @@ koopa::debian_install_base() { # {{{1
         'procps'  # ps
         'psmisc'  # RStudio Server
         'rsync'
+        'ruby'  # Homebrew
         'software-properties-common'
         'subversion'
         'sudo'
