@@ -135,11 +135,14 @@ koopa::install_homebrew() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed brew && return 0
-    koopa::assert_is_installed xcode-select
     name_fancy='Homebrew'
     koopa::install_start "$name_fancy"
-    koopa::h2 'Installing Xcode command line tools (CLT).'
-    xcode-select --install &>/dev/null || true
+    if koopa::is_macos
+    then
+        koopa::assert_is_installed xcode-select
+        koopa::h2 'Installing Xcode command line tools (CLT).'
+        xcode-select --install &>/dev/null || true
+    fi
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
