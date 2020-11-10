@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-11-08.
+    # @note Updated 2020-11-10.
     # """
     local dict install_base_flags mode prefixes
     koopa::assert_has_no_envs
@@ -65,6 +65,7 @@ koopa::configure_vm() { # {{{1
         [install_grep]=0
         [install_gsl]=0
         [install_hdf5]=0
+        [install_homebrew]=1
         [install_htop]=1
         [install_julia]=0
         [install_libevent]=0
@@ -189,6 +190,7 @@ koopa::configure_vm() { # {{{1
         bioconductor)
             dict[install_aws_cli]=0
             dict[install_conda]=1
+            dict[install_homebrew]=0
             dict[install_htop]=0
             dict[install_llvm]=0  # enable?
             dict[install_openjdk]=1
@@ -385,6 +387,8 @@ koopa::configure_vm() { # {{{1
     # Programs {{{2
     # --------------------------------------------------------------------------
 
+    [[ "${dict[install_homebrew]}" -eq 1 ]] && \
+        install-homebrew
     [[ "${dict[install_llvm]}" -eq 1 ]] && \
         koopa::run_if_installed install-llvm
     [[ "${dict[install_openjdk]}" -eq 1 ]] && \
