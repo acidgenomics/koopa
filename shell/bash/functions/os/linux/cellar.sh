@@ -469,6 +469,7 @@ koopa::install_python() { # {{{1
         --name='python' \
         --name-fancy='Python' \
         "$@"
+    koopa::install_py_koopa
 }
 
 koopa::install_r() { # {{{1
