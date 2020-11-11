@@ -25,7 +25,7 @@ local({
     if (isTRUE("--vanilla" %in% commandArgs())) {
         stop(paste(
             "R packages cannot be installed in '--vanilla' mode.",
-            "Run 'koopa install r' to resolve.",
+            "Run 'koopa install r-koopa' to resolve.",
             sep = "\n"
         ), call. = FALSE)
     }

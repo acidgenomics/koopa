@@ -60,7 +60,7 @@ koopa::header() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2020-11-05.
+    # @note Updated 2020-11-11.
     # """
     koopa::assert_has_args "$#"
     # Update corresponding Bash completion file, if necessary.
@@ -82,10 +82,16 @@ koopa::koopa() { # {{{1
                 mike)
                     f='install-mike'
                     ;;
-                python)
+                py-koopa)
                     f='install-py-koopa'
                     ;;
+                python)
+                    koopa::stop 'Use "py-koopa" instead of "python".'
+                    ;;
                 r)
+                    koopa::stop 'Use "r-koopa" instead of "r".'
+                    ;;
+                r-koopa)
                     f='install-r-koopa'
                     ;;
             esac
