@@ -106,13 +106,6 @@ _koopa_activate() { # {{{1
             _koopa_tmux_sessions
         fi
     fi
-    # Harden against unwanted path reordering inside subshells.
-    # > if [ -n "${KOOPA_PATH:-}" ]
-    # > then
-    # >     PATH="${KOOPA_PATH:?}"
-    # > else
-    # >     export KOOPA_PATH="${PATH:?}"
-    # > fi
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
         set +o errexit
