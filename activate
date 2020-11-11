@@ -124,17 +124,17 @@ _koopa_activate() { # {{{1
     fi
     if [ -z "${KOOPA_PATH:-}" ]
     then
-        KOOPA_PATH="$PATH"
+        KOOPA_PATH="${PATH:-}"
         export KOOPA_PATH
     fi
     if [ -z "${KOOPA_INFOPATH:-}" ]
     then
-        KOOPA_INFOPATH="$INFOPATH"
+        KOOPA_INFOPATH="${INFOPATH:-}"
         export KOOPA_INFOPATH
     fi
     if [ -z "${KOOPA_MANPATH:-}" ]
     then
-        KOOPA_MANPATH="$MANPATH"
+        KOOPA_MANPATH="${MANPATH:-}"
         export KOOPA_MANPATH
     fi
     if [ "${KOOPA_TEST:?}" -eq 1 ]
