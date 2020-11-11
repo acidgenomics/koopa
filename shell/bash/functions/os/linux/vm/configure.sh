@@ -409,11 +409,8 @@ koopa::configure_vm() { # {{{1
         koopa::run_if_installed install-llvm
     [[ "${dict[install_openjdk]}" -eq 1 ]] && \
         install-openjdk
-    if [[ "${dict[install_python]}" -eq 1 ]]
-    then
+    [[ "${dict[install_python]}" -eq 1 ]] && \
         install-python --version="${dict[python_version]}"
-        koopa install python
-    fi
     [[ "${dict[install_conda]}" -eq 1 ]] && \
         "install-${dict[which_conda]}"
     [[ "${dict[install_gcc]}" -eq 1 ]] && \
@@ -554,7 +551,6 @@ koopa::configure_vm() { # {{{1
         else
             install-r --version="${dict[r_version]}"
         fi
-        koopa::install_r_koopa
     fi
     # Install RStudio software.
     [[ "${dict[install_rstudio_server]}" -eq 1 ]] && \
