@@ -378,7 +378,7 @@ _koopa_activate_homebrew() { # {{{1
 _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # """
     # Activate a cellar-only Homebrew GNU program.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-11-11.
     #
     # Linked using 'g' prefix by default.
     #
@@ -402,7 +402,7 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     prefix="$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
     [ -d "$prefix" ] || return 0
     _koopa_add_to_path_start "${prefix}/gnubin"
-    _koopa_add_to_manpath_start "${prefix}/share/gnuman"
+    _koopa_add_to_manpath_start "${prefix}/gnuman"
     return 0
 }
 
