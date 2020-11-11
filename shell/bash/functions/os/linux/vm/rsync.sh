@@ -64,10 +64,10 @@ koopa::_rsync_vm() { # {{{1
 koopa::rsync_vm() { # {{{1
     # """
     # rsync virtual machine configuration.
-    # @note Updated 2020-08-12.
+    # @note Updated 2020-11-10.
     # """
-    local app_prefix app_rsync_flags host_ip make_prefix pos prefix \
-        refdata_prefix refdata_rsync_flags source_ip
+    local app_prefix app_rsync_flags homebrew_prefix host_ip make_prefix pos \
+        prefix refdata_prefix refdata_rsync_flags source_ip
     koopa::assert_has_args "$#"
     pos=()
     while (("$#"))
@@ -161,6 +161,16 @@ koopa::rsync_vm() { # {{{1
             --source-ip="$source_ip"
     else
         koopa::note "Skipping '${refdata_prefix}'."
+    fi
+    # Sync Homebrew, if installed.
+    homebrew_prefix="$(koopa::homebrew_prefix)"
+    if [[ -d "$homebrew_prefix" ]]
+    then
+        koopa::_rsync_vm \
+            --prefix="$homebrew_prefix" \
+            --source-ip="$source_ip"
+    else
+        koopa::note "Skipping '${homebrew_prefix}'."
     fi
     koopa::success "rsync from ${source_ip} was successful."
     return 0
