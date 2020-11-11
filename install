@@ -2,6 +2,9 @@
 # shellcheck disable=SC1090,SC1091,SC2162
 set -Eeu -o pipefail
 
+# FIXME
+set -x
+
 # """
 # koopa shell
 # https://koopa.acidgenomics.com/
