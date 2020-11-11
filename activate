@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2020-11-03.
+    # @note Updated 2020-11-11.
     # """
     case "${1:-}" in
         --help|-h)
@@ -105,6 +105,15 @@ _koopa_activate() { # {{{1
             _koopa_today_bucket
             _koopa_tmux_sessions
         fi
+    fi
+    # Harden against PATH reordering inside subshells, including Tmux and Vim.
+    if [ -n "${KOOPA_PATH:-}" ]
+    then
+        PATH="$KOOPA_PATH"
+        export PATH
+    else
+        KOOPA_PATH="$PATH"
+        export KOOPA_PATH
     fi
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
