@@ -2,24 +2,58 @@
 
 # koopa {{{1
 # ==============================================================================
-words=(
-    '--help'
-    '--version'
-    'check-system'
-    'header'
-    'info'
-    'install-dotfiles'
-    'list'
-    'prefix'
-    'test'
-    'uninstall'
-    'update'
-    'version'
-)
-complete -W "${words[*]}" koopa
+
+_koopa_complete() {
+    local args cur prev
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+    if [ "$COMP_CWORD" -eq 1 ]
+    then
+        args=(
+            '--help'
+            '--version'
+            'check-system'
+            'get-version'
+            'header'
+            'info'
+            'install'
+            'list'
+            'prefix'
+            'test'
+            'uninstall'
+            'update'
+        )
+        COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+    elif [ "$COMP_CWORD" -eq 2 ]
+    then
+        case "$prev" in
+            'install')
+                args=(
+                    'dotfiles'
+                    'py-koopa'
+                    'r-koopa'
+                )
+                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+                ;;
+            'get-version')
+                args=(
+                    'emacs'
+                    'vim'
+                )
+                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+                ;;
+            *)
+                ;;
+        esac
+    fi
+    return 0
+}
+complete -F _koopa_complete koopa
 
 # syntactic {{{1
 # ==============================================================================
+
 words=(
     '--prefix'
     '--recursive'
