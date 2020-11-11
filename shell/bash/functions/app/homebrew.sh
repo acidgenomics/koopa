@@ -37,10 +37,16 @@ koopa::brew_cask_quarantine_fix() { # {{{1
 koopa::brewfile() { # {{{1
     # """
     # Homebrew Bundle Brewfile path.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-10.
     # """
-    local file
-    file="$(koopa::dotfiles_prefix)/os/macos/app/homebrew/Brewfile"
+    local file os
+    if koopa::is_macos
+    then
+        os='macos'
+    else
+        os='linux'
+    fi
+    file="$(koopa::dotfiles_prefix)/os/${os}/app/homebrew/Brewfile"
     [[ -f "$file" ]] || return 0
     koopa::print "$file"
     return 0
@@ -177,10 +183,10 @@ ${version}/LittleSnitch-${version}.dmg"
     return 0
 }
 
-koopa::macos_install_homebrew_packages() { # {{{1
+koopa::install_homebrew_packages() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-11-10.
     # """
     local brew brewfile name_fancy relink_brews remove_brews
     koopa::assert_has_no_args "$#"
@@ -205,12 +211,16 @@ koopa::macos_install_homebrew_packages() { # {{{1
     do
         brew remove "$brew" &>/dev/null || true
     done
-    brew bundle install --file="$brewfile" --no-lock --no-upgrade
-    relink_brews=('gcc')
-    for brew in "${relink_brews[@]}"
-    do
-        brew link --overwrite "$brew" &>/dev/null || true
-    done
+    brew bundle install \
+        --file="$brewfile" \
+        --no-lock \
+        --no-upgrade \
+        --verbose
+    # > relink_brews=('gcc')
+    # > for brew in "${relink_brews[@]}"
+    # > do
+    # >     brew link --overwrite "$brew" &>/dev/null || true
+    # > done
     return 0
 }
 
