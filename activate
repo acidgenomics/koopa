@@ -40,6 +40,11 @@ _koopa_activate() { # {{{1
         PATH="$KOOPA_PATH"
         export PATH
     fi
+    if [ -n "${KOOPA_INFOPATH:-}" ]
+    then
+        INFOPATH="$KOOPA_INFOPATH"
+        export INFOPATH
+    fi
     if [ -n "${KOOPA_MANPATH:-}" ]
     then
         MANPATH="$KOOPA_MANPATH"
@@ -121,6 +126,11 @@ _koopa_activate() { # {{{1
     then
         KOOPA_PATH="$PATH"
         export KOOPA_PATH
+    fi
+    if [ -z "${KOOPA_INFOPATH:-}" ]
+    then
+        KOOPA_INFOPATH="$INFOPATH"
+        export KOOPA_INFOPATH
     fi
     if [ -z "${KOOPA_MANPATH:-}" ]
     then
