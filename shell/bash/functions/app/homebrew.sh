@@ -186,9 +186,9 @@ ${version}/LittleSnitch-${version}.dmg"
 koopa::install_homebrew_packages() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-11-11.
     # """
-    local brew brewfile name_fancy relink_brews remove_brews
+    local brew brewfile name_fancy remove_brews
     koopa::assert_has_no_args "$#"
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
@@ -216,11 +216,6 @@ koopa::install_homebrew_packages() { # {{{1
         --no-lock \
         --no-upgrade \
         --verbose
-    # > relink_brews=('gcc')
-    # > for brew in "${relink_brews[@]}"
-    # > do
-    # >     brew link --overwrite "$brew" &>/dev/null || true
-    # > done
     return 0
 }
 
