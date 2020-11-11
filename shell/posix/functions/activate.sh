@@ -331,27 +331,28 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-11-11.
     # """
-    if _koopa_is_linux && ! _koopa_is_installed brew
+    # shellcheck disable=SC2039
+    local brew prefix
+    if ! _koopa_is_installed brew
     then
-        if [ -d "${HOME}/.linuxbrew" ]
+        prefix="$(_koopa_homebrew_prefix)"
+        if [ -d "$prefix" ]
         then
-            eval "$("${HOME}/.linuxbrew/bin/brew" shellenv)"
-        elif [ -d /home/linuxbrew/.linuxbrew ]
-        then
-            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+            brew="${prefix}/bin/brew"
+            if [ -x "$brew" ]
+            then
+                eval "$("$brew" shellenv)"
+            fi
         fi
     fi
     _koopa_is_installed brew || return 0
-    HOMEBREW_PREFIX="$(brew --prefix)"
-    HOMEBREW_REPOSITORY="$(brew --repo)"
+    prefix="$(brew --prefix)"
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
-    export HOMEBREW_PREFIX
-    export HOMEBREW_REPOSITORY
     # Stopgap fix for TLS SSL issues with some Homebrew casks.
-    if [ -x "${HOMEBREW_PREFIX}/opt/curl/bin/curl" ]
+    if [ -x "${prefix}/opt/curl/bin/curl" ]
     then
         export HOMEBREW_FORCE_BREWED_CURL=1
     fi
