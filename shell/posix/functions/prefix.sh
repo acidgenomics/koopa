@@ -3,22 +3,12 @@
 _koopa_app_prefix() { # {{{1
     # """
     # Custom application install prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-11-11.
     # """
     # shellcheck disable=SC2039
     local prefix
-    if [ -n "${KOOPA_APP_PREFIX:-}" ]
-    then
-        prefix="$KOOPA_APP_PREFIX"
-    elif _koopa_is_shared_install && _koopa_is_installed brew
-    then
-        prefix="$(_koopa_prefix)/opt"
-    elif _koopa_is_shared_install
-    then
-        prefix="$(_koopa_make_prefix)/opt"
-    else
-        prefix="$(_koopa_local_app_prefix)"
-    fi
+    prefix="${KOOPA_APP_PREFIX:-}"
+    [ -z "$prefix" ] && prefix="$(_koopa_prefix)/opt"
     _koopa_print "$prefix"
     return 0
 }

@@ -127,7 +127,7 @@ koopa::link_r_site_library() { # {{{1
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-11-11.
     #
     # The default Java path differs depending on the system.
     #
@@ -185,7 +185,10 @@ koopa::r_javareconf() { # {{{1
         java_home="$(koopa::java_prefix)"
         koopa::is_installed java || return 0
     fi
-    [[ -d "$java_home" ]] || return 1
+    if [[ ! -d "$java_home" ]]
+    then
+        koopa_stop 'Failed to locate JAVA_HOME.'
+    fi
     koopa::h2 'Updating R Java configuration.'
     koopa::dl 'R' "$r"
     koopa::dl 'Java home' "$java_home"
