@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-11-11.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
@@ -81,6 +81,8 @@ koopa::fedora_install_base() { # {{{1
         'gcc-gfortran'                                            # |      YES |
         'gettext'                                                 # |      YES |
         'git'                                                     # |      YES |
+        'glibc-langpack-en'                                       # |        ? |
+        'glibc-locale-source'                                     # |        ? |
         'gnupg2'                                                  # |      YES |
         'gnutls'                                                  # |      YES |
         'libtool'                                                 # |      YES |
