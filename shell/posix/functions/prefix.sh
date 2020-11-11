@@ -4,6 +4,8 @@ _koopa_app_prefix() { # {{{1
     # """
     # Custom application install prefix.
     # @note Updated 2020-11-11.
+    #
+    # OK to symlink this prefix to a secondary disk.
     # """
     # shellcheck disable=SC2039
     local prefix
@@ -79,25 +81,14 @@ _koopa_bcbio_prefix() { # {{{1
 _koopa_cellar_prefix() { # {{{1
     # """
     # Cellar prefix.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-11.
     #
-    # Currently only supported for Linux.
-    # Use Homebrew on macOS instead.
-    #
-    # Ensure this points to a local mount (e.g. '/usr/local').
+    # Recommended to keep on a local mount.
     # """
     # shellcheck disable=SC2039
     local prefix
-    _koopa_is_linux || return 0
-    if [ -n "${KOOPA_CELLAR_PREFIX:-}" ]
-    then
-        prefix="$KOOPA_CELLAR_PREFIX"
-    elif _koopa_is_shared_install && _koopa_is_installed brew
-    then
-        prefix="$(_koopa_prefix)/cellar"
-    else
-        prefix="$(_koopa_make_prefix)/cellar"
-    fi
+    prefix="${KOOPA_CELLAR_PREFIX:-}"
+    [ -z "$prefix" ] && prefix="$(_koopa_prefix)/cellar"
     _koopa_print "$prefix"
     return 0
 }
