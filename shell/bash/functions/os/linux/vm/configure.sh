@@ -67,6 +67,7 @@ koopa::configure_vm() { # {{{1
         [install_gsl]=0
         [install_hdf5]=0
         [install_homebrew]=0
+        [install_homebrew_packages]=0
         [install_htop]=1
         [install_julia]=0
         [install_libevent]=0
@@ -192,6 +193,7 @@ koopa::configure_vm() { # {{{1
             dict[install_aws_cli]=0
             dict[install_conda]=1
             dict[install_homebrew]=0
+            dict[install_homebrew_packages]=0
             dict[install_htop]=0
             dict[install_llvm]=0  # enable?
             dict[install_openjdk]=1
@@ -239,6 +241,7 @@ koopa::configure_vm() { # {{{1
             dict[install_gsl]=1
             dict[install_hdf5]=1
             dict[install_homebrew]=1
+            dict[install_homebrew_packages]=1
             dict[install_julia]=1
             dict[install_libevent]=1
             dict[install_libtool]=1
@@ -298,6 +301,8 @@ koopa::configure_vm() { # {{{1
         dict[install_aspera_connect]=0
         dict[install_conda]=0
         dict[install_conda_envs]=0
+        dict[install_homebrew]=0
+        dict[install_homebrew_packages]=0
         dict[install_perl_packages]=0
         dict[install_python_packages]=0
         dict[install_r_packages]=0
@@ -396,11 +401,10 @@ koopa::configure_vm() { # {{{1
     # Programs {{{2
     # --------------------------------------------------------------------------
 
-    if [[ "${dict[install_homebrew]}" -eq 1 ]]
-    then
+    [[ "${dict[install_homebrew]}" -eq 1 ]] && \
         install-homebrew
+    [[ "${dict[install_homebrew_packages]}" -eq 1 ]] && \
         install-homebrew-packages
-    fi
     [[ "${dict[install_llvm]}" -eq 1 ]] && \
         koopa::run_if_installed install-llvm
     [[ "${dict[install_openjdk]}" -eq 1 ]] && \
