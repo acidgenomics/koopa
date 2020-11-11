@@ -8,6 +8,12 @@
 ##       Renviron.site
 ## """
 
+
+HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/usr/local}"
+HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
+KOOPA_APP_PREFIX="${KOOPA_APP_PREFIX:-/usr/local/koopa/opt}"
+
+
 ## System path {{{1
 ## =============================================================================
 
@@ -29,7 +35,7 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 ## Python {{{2
 ## -----------------------------------------------------------------------------
 
-PATH="/usr/local/lib/python3.8/site-packages/bin:${PATH}"
+PATH="/usr/local/lib/python3.9/site-packages/bin:${PATH}"
 
 ## Pandoc {{{2
 ## -----------------------------------------------------------------------------
@@ -47,13 +53,13 @@ R_LIBS_USER="~/Library/R/%v/library"
 ## =============================================================================
 
 ## LAPACK.
-PKG_CONFIG_PATH="/usr/local/opt/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 ## OpenBLAS.
-PKG_CONFIG_PATH="/usr/local/opt/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 ## imagemagick.
-PKG_CONFIG_PATH="/usr/local/opt/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 ## Miscellaneous useful defaults {{{1
 ## =============================================================================
@@ -72,7 +78,7 @@ TZ="America/New_York"
 ## libxml2 {{{2
 ## -----------------------------------------------------------------------------
 
-XML_CONFIG="/usr/local/opt/libxml2/bin/xml2-config"
+XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
 
 ## remotes {{{2
 ## -----------------------------------------------------------------------------
@@ -91,7 +97,7 @@ R_REMOTES_UPGRADE="always"
 ## If left unset, defaults to `~/.virtualenvs`.
 ## Check with `virtualenv_list()`.
 ## https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-WORKON_HOME="/usr/local/koopa/opt/python/virtualenvs"
+WORKON_HOME="${KOOPA_APP_PREFIX}/python/virtualenvs"
 
 ## units / udunits {{{2
 ## -----------------------------------------------------------------------------

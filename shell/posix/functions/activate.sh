@@ -335,17 +335,18 @@ _koopa_activate_homebrew() { # {{{1
     # """
     # shellcheck disable=SC2039
     local brew prefix
-    if ! _koopa_is_installed brew
+    prefix="${HOMEBREW_PREFIX:-}"
+    if [ -d "$prefix" ] && _koopa_is_installed brew
+    then
+        return 0
+    fi
+    if [ ! -d "$prefix" ]
     then
         prefix="$(_koopa_homebrew_prefix)"
-        if [ -d "$prefix" ]
-        then
-            brew="${prefix}/bin/brew"
-            if [ -x "$brew" ]
-            then
-                eval "$("$brew" shellenv)"
-            fi
-        fi
+        [ -d "$prefix" ] || return 0
+        brew="${prefix}/bin/brew"
+        [ -x "$brew" ] || return 0
+        eval "$("$brew" shellenv)"
     fi
     _koopa_is_installed brew || return 0
     prefix="$(brew --prefix)"
