@@ -3,7 +3,7 @@
 koopa::check_system() { # {{{1
     # """
     # Check system.
-    # @note Updated 2020-08-12.
+    # @note Updated 2020-11-11.
     # """
     local koopa_prefix script
     koopa::assert_has_no_args "$#"
