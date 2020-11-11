@@ -86,7 +86,6 @@ koopa::fedora_install_base() { # {{{1
         'gnupg2'                                                  # |      YES |
         'gnutls'                                                  # |      YES |
         'libtool'                                                 # |      YES |
-        'libxcrypt-compat'  # Homebrew                            # |        ? |
         'lua'                                                     # |      YES |
         'make'                                                    # |      YES |
         'man-db'                                                  # |      YES |
@@ -110,6 +109,14 @@ koopa::fedora_install_base() { # {{{1
         'zip'                                                     # |      YES |
         'zsh'                                                     # |       NO |
     )
+    if koopa::is_fedora
+    then
+        pkgs+=(
+        #                                                           | RHEL UBI |
+        # ----------------------------------------------------------|----------|
+            'libxcrypt-compat'  # Homebrew                        # |        ? |
+        )
+    fi
 
     # Developer {{{2
     # --------------------------------------------------------------------------
