@@ -242,7 +242,7 @@ koopa::r_rebuild_docs() { # {{{1
 koopa::update_r_config() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2020-08-11.
+    # @note Updated 2020-11-11.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -278,6 +278,7 @@ koopa::update_r_config() { # {{{1
     koopa::link_r_site_library "$r"
     koopa::r_javareconf "$r"
     koopa::r_rebuild_docs "$r"
+    koopa::install_r_koopa
     koopa::success 'Update of R configuration was successful.'
     return 0
 }
