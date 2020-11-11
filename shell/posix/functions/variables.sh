@@ -67,7 +67,7 @@ _koopa_hostname() { # {{{1
 _koopa_host_id() { # {{{1
     # """
     # Simple host ID string to load up host-specific scripts.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-11-11.
     #
     # Currently intended to support AWS, Azure, and Harvard clusters.
     #
@@ -84,9 +84,11 @@ _koopa_host_id() { # {{{1
     if [ -r '/etc/hostname' ]
     then
         id="$(cat '/etc/hostname')"
-    else
-        _koopa_is_installed hostname || return 1
+    elif _koopa_is_installed hostname
+    then
         id="$(hostname -f)"
+    else
+        return 0
     fi
     case "$id" in
         # VMs {{{2
