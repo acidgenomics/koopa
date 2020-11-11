@@ -66,7 +66,7 @@ koopa::configure_vm() { # {{{1
         [install_grep]=0
         [install_gsl]=0
         [install_hdf5]=0
-        [install_homebrew]=0
+        [install_homebrew]=1
         [install_homebrew_packages]=0
         [install_htop]=1
         [install_julia]=0
