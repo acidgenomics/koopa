@@ -4,4 +4,4 @@
 checks=0 \
     . "$(dirname "${BASH_SOURCE[0]}")/../shell/bash/include/header.sh"
 
-koopa::macos_install_homebrew_packages "$@"
+koopa::install_homebrew_packages "$@"
