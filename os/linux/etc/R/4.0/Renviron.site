@@ -12,6 +12,8 @@
 ## """
 
 
+KOOPA_APP_PREFIX="${KOOPA_APP_PREFIX:-/usr/local/koopa/opt}"
+
 
 ## System path {{{1
 ## =============================================================================
@@ -20,7 +22,7 @@
 PATH="/usr/local/bin:/usr/bin:/bin"
 
 ## Include Python site packages.
-PATH="/usr/local/lib/python3.8/site-packages/bin:${PATH}"
+PATH="/usr/local/lib/python3.9/site-packages/bin:${PATH}"
 
 
 
@@ -232,4 +234,4 @@ PATH="${PATH}:${ORACLE_HOME}/bin"
 ## If left unset, defaults to `~/.virtualenvs`.
 ## Check with `virtualenv_list()`.
 ## https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-WORKON_HOME="/usr/local/koopa/opt/python/virtualenvs"
+WORKON_HOME="${KOOPA_APP_PREFIX}/python/virtualenvs"
