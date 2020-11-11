@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Multi-level bash completion:
+# - https://stackoverflow.com/questions/17879322/
+# - https://stackoverflow.com/questions/5302650/
+
 # koopa {{{1
 # ==============================================================================
 

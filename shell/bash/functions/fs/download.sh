@@ -222,14 +222,17 @@ koopa::wget_recursive() { # {{{1
 koopa::youtube_mp3() { # {{{1
     # """
     # Download MP3 audio from YouTube, Soundcloud, Mixcloud, etc.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-11-11.
     # """
     local url
     koopa::assert_has_args "$#"
     koopa::assert_is_installed youtube-dl
     for url in "$@"
     do
-        youtube-dl --extract-audio --audio-format mp3 "$url"
+        youtube-dl \
+            --extract-audio \
+            --audio-format mp3 \
+            "$url"
     done
     return 0
 }
