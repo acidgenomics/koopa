@@ -37,10 +37,16 @@ koopa::brew_cask_quarantine_fix() { # {{{1
 koopa::brewfile() { # {{{1
     # """
     # Homebrew Bundle Brewfile path.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-10.
     # """
-    local file
-    file="$(koopa::dotfiles_prefix)/os/macos/app/homebrew/Brewfile"
+    local file os
+    if koopa::is_macos
+    then
+        os='macos'
+    else
+        os='linux'
+    fi
+    file="$(koopa::dotfiles_prefix)/os/${os}/app/homebrew/Brewfile"
     [[ -f "$file" ]] || return 0
     koopa::print "$file"
     return 0
