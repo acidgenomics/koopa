@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2020-11-06.
+## Updated 2020-11-11.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -232,4 +232,4 @@ PATH="${PATH}:${ORACLE_HOME}/bin"
 ## If left unset, defaults to `~/.virtualenvs`.
 ## Check with `virtualenv_list()`.
 ## https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-WORKON_HOME="/usr/local/opt/python/virtualenvs"
+WORKON_HOME="/usr/local/koopa/opt/python/virtualenvs"
