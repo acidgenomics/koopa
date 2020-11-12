@@ -49,12 +49,11 @@ koopa::kill_r() { # {{{1
 koopa::link_r_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-07-06.
+    # @note Updated 2020-11-12.
     #
     # Don't copy Makevars file across machines.
     # """
-    local file files koopa_prefix os_id r r_etc_source r_etc_target \
-        r_prefix version
+    local distro_prefix file files r r_etc_source r_etc_target r_prefix version
     koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     koopa::is_installed "$r" || return 1
@@ -65,14 +64,8 @@ koopa::link_r_etc() { # {{{1
     then
         version="$(koopa::major_minor_version "$version")"
     fi
-    koopa_prefix="$(koopa::prefix)"
-    if koopa::is_linux && koopa::is_cellar "$r_prefix"
-    then
-        os_id='linux'
-    else
-        os_id="$(koopa::os_id)"
-    fi
-    r_etc_source="${koopa_prefix}/os/${os_id}/etc/R/${version}"
+    distro_prefix="$(koopa::distro_prefix)"
+    r_etc_source="${distro_prefix}/etc/R/${version}"
     if [[ ! -d "$r_etc_source" ]]
     then
         koopa::warning "Missing R etc source: '${r_etc_source}'."
