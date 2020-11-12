@@ -43,6 +43,6 @@ then
     koopa::info "Linking shared config scripts into '${etc_dir}'."
     koopa::ln \
         -t "${etc_dir}" \
-        "$(koopa::prefix)/os/$(koopa::os_id)/etc/zsh/"*
+        "$(koopa::distro_prefix)/etc/zsh/"*
 fi
 koopa::enable_shell "$name"
