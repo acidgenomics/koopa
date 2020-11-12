@@ -3,7 +3,7 @@
 koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-11-11.
+    # @note Updated 2020-11-12.
     # """
     local dict install_base_flags mode prefixes
     koopa::assert_has_no_envs
@@ -38,13 +38,13 @@ koopa::configure_vm() { # {{{1
         [install_autoconf]=0
         [install_autojump]=0
         [install_automake]=0
-        [install_aws_cli]=1
+        [install_aws_cli]=0
         [install_azure_cli]=0
         [install_base_flags]=''
         [install_bash]=0
         [install_binutils]=0
         [install_cmake]=0
-        [install_conda]=1
+        [install_conda]=0
         [install_conda_envs]=0
         [install_coreutils]=0
         [install_curl]=0
@@ -66,9 +66,9 @@ koopa::configure_vm() { # {{{1
         [install_grep]=0
         [install_gsl]=0
         [install_hdf5]=0
-        [install_homebrew]=1
+        [install_homebrew]=0
         [install_homebrew_packages]=0
-        [install_htop]=1
+        [install_htop]=0
         [install_julia]=0
         [install_libevent]=0
         [install_libtool]=0
@@ -81,7 +81,7 @@ koopa::configure_vm() { # {{{1
         [install_ncurses]=0
         [install_neofetch]=0
         [install_neovim]=0
-        [install_openjdk]=1
+        [install_openjdk]=0
         [install_openssh]=0
         [install_parallel]=0
         [install_password_store]=0
@@ -90,9 +90,9 @@ koopa::configure_vm() { # {{{1
         [install_perl_packages]=0
         [install_pkg_config]=0
         [install_proj]=0
-        [install_python]=1
+        [install_python]=0
         [install_python_packages]=0
-        [install_r]=1
+        [install_r]=0
         [install_r_packages]=0
         [install_rstudio_server]=0
         [install_rsync]=0
@@ -101,17 +101,17 @@ koopa::configure_vm() { # {{{1
         [install_rust]=0
         [install_rust_packages]=0
         [install_sed]=0
-        [install_shellcheck]=1
+        [install_shellcheck]=0
         [install_shiny_server]=0
-        [install_shunit2]=1
+        [install_shunit2]=0
         [install_sqlite]=0
         [install_subversion]=0
         [install_taglib]=0
         [install_texinfo]=0
         [install_the_silver_searcher]=0
-        [install_tmux]=1
+        [install_tmux]=0
         [install_udunits]=0
-        [install_vim]=1
+        [install_vim]=0
         [install_wget]=0
         [install_zsh]=0
         [make_prefix]="$(koopa::make_prefix)"
@@ -156,23 +156,6 @@ koopa::configure_vm() { # {{{1
                 dict[python_version]="${1#*=}"
                 shift 1
                 ;;
-            --no-delete-skel)
-                dict[delete_skel]=0
-                shift 1
-                ;;
-            --no-passwordless-sudo)
-                dict[passwordless_sudo]=0
-                shift 1
-                ;;
-            --no-python)
-                dict[install_python]=0
-                dict[install_python_packages]=0
-                ;;
-            --no-r)
-                dict[install_r]=0
-                dict[install_r_packages]=0
-                shift 1
-                ;;
             --r-version=*)
                 dict[r_version]="${1#*=}"
                 shift 1
@@ -189,28 +172,7 @@ koopa::configure_vm() { # {{{1
     done
     # Automatically set internal variables, based on user input.
     case "$mode" in
-        bioconductor)
-            dict[install_aws_cli]=0
-            dict[install_conda]=1
-            dict[install_homebrew]=0
-            dict[install_homebrew_packages]=0
-            dict[install_htop]=0
-            dict[install_llvm]=0  # enable?
-            dict[install_openjdk]=1
-            dict[install_python]=0  # enable?
-            dict[install_python_packages]=0
-            dict[install_r]=0
-            dict[install_r_packages]=0
-            dict[install_rstudio_server]=0
-            dict[install_shellcheck]=0
-            dict[install_shiny_server]=0
-            dict[install_shunit2]=0
-            dict[install_tmux]=0
-            dict[install_vim]=0
-            ;;
         full)
-            # > dict[install_gcc]=1
-            # > dict[install_the_silver_searcher]=1
             dict[install_aspera_connect]=1
             dict[install_autoconf]=1
             dict[install_autojump]=1
@@ -280,8 +242,20 @@ koopa::configure_vm() { # {{{1
             dict[install_zsh]=1
             dict[which_conda]='anaconda'
             ;;
-        default|minimal)
-            # No need to change any variables here.
+        recommended)
+            dict[install_aws_cli]=1
+            dict[install_conda]=1
+            dict[install_homebrew]=1
+            dict[install_htop]=1
+            dict[install_openjdk]=1
+            dict[install_python]=1
+            dict[install_r]=1
+            dict[install_shellcheck]=1
+            dict[install_shunit2]=1
+            dict[install_tmux]=1
+            dict[install_vim]=1
+            ;;
+        bioconductor|default|minimal)
             ;;
         *)
             koopa::stop 'Invalid mode.'
