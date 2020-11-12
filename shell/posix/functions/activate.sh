@@ -292,11 +292,10 @@ _koopa_activate_koopa_paths() { # {{{1
     # @note Updated 2020-11-12.
     # """
     # shellcheck disable=SC2039
-    local config_prefix distro_prefix koopa_prefix linux_prefix os_id shell
+    local config_prefix distro_prefix koopa_prefix linux_prefix shell
     koopa_prefix="$(_koopa_prefix)"
     _koopa_str_match "${PATH:-}" "$koopa_prefix" && return 0
     config_prefix="$(_koopa_config_prefix)"
-    os_id="$(_koopa_os_id)"
     shell="$(_koopa_shell)"
     _koopa_activate_prefix "$koopa_prefix"
     _koopa_activate_prefix "${koopa_prefix}/shell/${shell}"
@@ -316,10 +315,8 @@ _koopa_activate_koopa_paths() { # {{{1
             _koopa_is_rhel_like && \
                 _koopa_activate_prefix "${distro_prefix}/rhel"
         fi
-        _koopa_activate_prefix "${distro_prefix}/${os_id}"
-    else
-        _koopa_activate_prefix "${koopa_prefix}/os/${os_id}"
     fi
+    _koopa_activate_prefix "$(_koopa_distro_prefix)"
     _koopa_activate_prefix "${config_prefix}/scripts-private"
     return 0
 }
