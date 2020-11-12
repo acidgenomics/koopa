@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::bcbio_run_tests() { # {{{1
+koopa::linux_bcbio_run_tests() { # {{{1
     # """
     # Run bcbio unit tests.
     # @note Updated 2020-08-13.
@@ -48,7 +48,7 @@ koopa::bcbio_run_tests() { # {{{1
     return 0
 }
 
-koopa::install_bcbio() { # {{{1
+koopa::linux_install_bcbio() { # {{{1
     # """
     # Install bcbio-nextgen.
     # @note Updated 2020-08-13.
@@ -120,7 +120,7 @@ koopa::install_bcbio() { # {{{1
     return 0
 }
 
-koopa::install_bcbio_ensembl_genome() { # {{{1
+koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # """
     # Install bcbio genome from Ensembl.
     # @note Updated 2020-08-13.
@@ -233,7 +233,7 @@ koopa::install_bcbio_ensembl_genome() { # {{{1
     return 0
 }
 
-koopa::install_bcbio_genome() { # {{{1
+koopa::linux_install_bcbio_genome() { # {{{1
     local bcbio bcbio_dir cores flags genomes genomes_dir name_fancy tmp_dir
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
@@ -265,7 +265,7 @@ koopa::install_bcbio_genome() { # {{{1
     return 0
 }
 
-koopa::install_bcbio_vm() { # {{{1
+koopa::linux_install_bcbio_vm() { # {{{1
     # """
     # Install bcbio-vm.
     # @note Updated 2020-07-30.
@@ -318,7 +318,7 @@ koopa::install_bcbio_vm() { # {{{1
     return 0
 }
 
-koopa::patch_bcbio() { # {{{1
+koopa::linux_patch_bcbio() { # {{{1
     # """
     # Patch bcbio.
     # @note Updated 2020-08-13.
@@ -386,7 +386,7 @@ koopa::patch_bcbio() { # {{{1
     return 0
 }
 
-koopa::update_bcbio() { # {{{1
+koopa::linux_update_bcbio() { # {{{1
     local bcbio cores name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
