@@ -89,8 +89,12 @@ fi
 # shellcheck source=/dev/null
 . "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
+
+
+
 # FIXME RETHINK THIS APPROACH.
 # FIXME WE NEED TO SOURCE BY OPERATING SYSTEM HERE INSTEAD.
+
 
 # Source Bash functions.
 readarray -t fun_scripts <<< "$( \
