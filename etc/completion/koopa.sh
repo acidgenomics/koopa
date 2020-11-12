@@ -54,13 +54,15 @@ _koopa_complete() {
                 ;;
             install)
                 args=(
+                    ## > 'mike'
                     'dotfiles'
-                    'mike'
                     'py-koopa'
                     'r-koopa'
                 )
                 COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
+            # FIXME REWORK THIS.
+            # FIXME DROPPED TO SYSTEM.
             get-version)
                 args=(
                     'emacs'

@@ -77,22 +77,15 @@ koopa::koopa() { # {{{1
             ;;
         install)
             case "${2:-}" in
-                dotfiles | \
-                mike | \
-                py-koopa | \
-                r-koopa)
-                    f="${1}_${2}"
-                    shift 2
-                    ;;
-                # Defunct args.
-                python)
-                    koopa::defunct 'Use "py-koopa" instead of "python".'
-                    ;;
-                r)
-                    koopa::defunct 'Use "r-koopa" instead of "r".'
-                    ;;
                 *)
-                    koopa::invalid_arg "$*"
+                    f="${1}_${2}"
+                    if koopa::is_function "koopa::${f//-/_}"
+                    then
+                        shift 2
+                    else
+                        koopa::invalid_arg "$*"
+                    fi
+                    ;;
             esac
             ;;
         system)
@@ -106,6 +99,10 @@ koopa::koopa() { # {{{1
                         '')
                             f="$2"
                             shift 2
+                            ;;
+                        koopa)
+                            f="$2"
+                            shift 3
                             ;;
                         *)
                             f="${3}_${2}"
@@ -156,13 +153,13 @@ koopa::koopa() { # {{{1
             ;;
         update)
             case "${2:-}" in
-                '')
+                r-config)
+                    f="${1}_${2}"
+                    shift 2
+                    ;;
+                *)
                     f="$1"
                     shift 1
-                    ;;
-                r-config)
-                    f='update-r-config'
-                    shift 2
                     ;;
             esac
             ;;
@@ -179,6 +176,11 @@ koopa::koopa() { # {{{1
             f='check_system'
             shift 1
             ;;
+        home)
+            f='prefix'
+            shift 1
+            ;;
+        prefix | \
         version)
             f="$1"
             shift 1
@@ -197,30 +199,11 @@ koopa::koopa() { # {{{1
         config-prefix)
             koopa::defunct 'koopa system prefix config'
             ;;
-        make-prefix)
-            koopa::defunct 'koopa system prefix make'
-            ;;
-        host-id)
-            koopa::defunct 'koopa system host-id'
-            ;;
-        roff)
-            koopa::defunct 'koopa system roff'
-            ;;
-        set-permissions)
-            koopa::defunct 'koopa system set-permissions'
-            ;;
-
-        variable)
-            koopa::defunct 'koopa system variable'
-            ;;
         delete-cache)
             koopa::defunct 'koopa system delete-cache'
             ;;
         fix-zsh-permissions)
             koopa::defunct 'koopa system fix-zsh-permissions'
-            ;;
-        get-version)
-            koopa::defunct 'koopa system version'
             ;;
         get-homebrew-cask-version)
             koopa::defunct 'koopa system homebrew-cask-version'
@@ -228,23 +211,38 @@ koopa::koopa() { # {{{1
         get-macos-app-version)
             koopa::defunct 'koopa system macos-app-version'
             ;;
+        get-version)
+            koopa::defunct 'koopa system version'
+            ;;
         help)
             koopa::defunct 'koopa --help'
             ;;
-        home)
-            koopa::defunct 'koopa prefix'
+        host-id)
+            koopa::defunct 'koopa system host-id'
+            ;;
+        make-prefix)
+            koopa::defunct 'koopa system prefix make'
             ;;
         os-string)
             koopa::defunct 'koopa system os-string'
             ;;
+        r-home)
+            koopa::defunct 'koopa system prefix r'
+            ;;
+        roff)
+            koopa::defunct 'koopa system roff'
+            ;;
+        set-permissions)
+            koopa::defunct 'koopa system set-permissions'
+            ;;
         update-r-config)
             koopa::defunct 'koopa update r-config'
             ;;
-        r-home)
-            koopa::defunct 'koopa prefix r'
-            ;;
         upgrade)
             koopa::defunct 'koopa update'
+            ;;
+        variable)
+            koopa::defunct 'koopa system variable'
             ;;
         variables)
             koopa::defunct 'koopa system variables'
