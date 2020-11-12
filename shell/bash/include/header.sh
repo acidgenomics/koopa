@@ -100,7 +100,7 @@ source_dir() {
     readarray -t fun_scripts <<< "$( \
         find -L "$prefix" \
             -mindepth 1 \
-            -maxdepth 3 \
+            -maxdepth 2 \
             -type f \
             -name '*.sh' \
             -print \
@@ -117,7 +117,7 @@ source_dir() {
 source_dir 'base'
 if koopa::is_linux
 then
-    source_dir 'os/linux'
+    source_dir 'os/linux/common'
     distro_prefix='os/linux/distro'
     if koopa::is_debian_like
     then
