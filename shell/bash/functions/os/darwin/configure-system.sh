@@ -14,7 +14,7 @@ koopa::macos_configure_system() { # {{{1
     koopa::macos_install_r_cran_gfortran
     koopa::install_python_packages
     install-r-packages
-    koopa::update_macos_defaults
+    koopa::macos_update_defaults
     koopa::success 'macOS configuration was successful.'
     return 0
 }
