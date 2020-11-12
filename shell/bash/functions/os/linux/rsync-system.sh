@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::_linux_rsync_vm() { # {{{1
+koopa::_linux_rsync() { # {{{1
     # """
     # rsync a desired prefix across virtual machines.
-    # @note Updated 2020-08-12.
+    # @note Updated 2020-11-12.
     #
     # We're enforcing use of '/usr/bin/rsync' here in case we're syncing
     # '/usr/local', which may have an updated copy of rsync installed.
@@ -61,10 +61,10 @@ koopa::_linux_rsync_vm() { # {{{1
     return 0
 }
 
-koopa::linux_rsync_vm() { # {{{1
+koopa::linux_rsync_system() { # {{{1
     # """
     # rsync virtual machine configuration.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-11-12.
     # """
     local app_prefix app_rsync_flags homebrew_prefix host_ip make_prefix pos \
         prefix refdata_prefix refdata_rsync_flags source_ip
@@ -103,7 +103,7 @@ koopa::linux_rsync_vm() { # {{{1
     then
         for prefix in "$@"
         do
-            koopa::_linux_rsync_vm \
+            koopa::_linux_rsync \
                 --prefix="$prefix" \
                 --source-ip="$source_ip"
         done
@@ -125,7 +125,7 @@ koopa::linux_rsync_vm() { # {{{1
                 '--exclude=omicsoft'
             )
         fi
-        koopa::_linux_rsync_vm \
+        koopa::_linux_rsync \
             --prefix="$app_prefix" \
             --rsync-flags="${app_rsync_flags[*]}" \
             --source-ip="$source_ip"
@@ -135,7 +135,7 @@ koopa::linux_rsync_vm() { # {{{1
     make_prefix="$(koopa::make_prefix)"
     if [[ -d "$make_prefix" ]]
     then
-        koopa::_linux_rsync_vm \
+        koopa::_linux_rsync \
             --prefix="$make_prefix" \
             --source-ip="$source_ip"
     else
@@ -155,7 +155,7 @@ koopa::linux_rsync_vm() { # {{{1
                 '--exclude=gtex'
             )
         fi
-        koopa::_linux_rsync_vm \
+        koopa::_linux_rsync \
             --prefix="$refdata_prefix" \
             --rsync-flags="${refdata_rsync_flags[*]}" \
             --source-ip="$source_ip"
@@ -166,7 +166,7 @@ koopa::linux_rsync_vm() { # {{{1
     homebrew_prefix="$(koopa::homebrew_prefix)"
     if [[ -d "$homebrew_prefix" ]]
     then
-        koopa::_linux_rsync_vm \
+        koopa::_linux_rsync \
             --prefix="$homebrew_prefix" \
             --source-ip="$source_ip"
     else
