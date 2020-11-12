@@ -75,14 +75,23 @@ koopa::linux_install_bcbio() { # {{{1
         esac
     done
     app_prefix="$(koopa::strip_trailing_slash "$app_prefix")"
-    if [[ "$version" == 'stable' ]]
+    case "$version" in
+        stable)
+            current_version="$(koopa::current_bcbio_version)"
+            prefix="${app_prefix}/${current_version}"
+            ;;
+        development)
+            prefix="${app_prefix}/${version}"
+            ;;
+        *)
+            koopa::stop 'Unsuported version. Use "stable" or "development".'
+            ;;
+    esac
+    if [[ -d "$prefix" ]]
     then
-        current_version="$(koopa::current_bcbio_version)"
-        prefix="${app_prefix}/${current_version}"
-    else
-        prefix="${app_prefix}/${version}"
+        koopa::note "bcbio already installed at '${prefix}'."
+        return 0
     fi
-    [[ -d "$prefix" ]] && return 0
     name_fancy='bcbio-nextgen'
     koopa::install_start "$name_fancy" "$prefix"
     koopa::coffee_time
