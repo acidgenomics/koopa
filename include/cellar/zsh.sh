@@ -45,4 +45,7 @@ then
         -t "${etc_dir}" \
         "$(koopa::distro_prefix)/etc/zsh/"*
 fi
-koopa::enable_shell "$name"
+if [[ "${link_cellar:-0}" -eq 1 ]]
+then
+    koopa::enable_shell "$name"
+fi
