@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+# see also:
+# https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
+
 minor_version="$(koopa::major_minor_version "$version")"
 file="${name}-${minor_version}.tar.gz"
 url="${gnu_mirror}/${name}/${file}"
@@ -27,8 +30,29 @@ koopa::mkdir patches
         patch -p0 --ignore-whitespace --input="$file"
     done
 )
-./configure --prefix="$prefix"
+flags=('--prefix' "$prefix")
+if koopa::is_macos
+then
+    cflags=(
+        # When built with SSH_SOURCE_BASHRC, bash will source ~/.bashrc when
+        # it's non-interactively from sshd. This allows the user to set
+        # environment variables prior to running the command (e.g. PATH). The
+        # /bin/bash that ships with macOS defines this, and without it, some
+        # things (e.g. git+ssh) will break if the user sets their default shell
+        # to Homebrew's bash instead of /bin/bash.
+        '-DSSH_SOURCE_BASHRC'
+        # Work around configure issues with Xcode 12.
+        # https://savannah.gnu.org/patch/index.php?9991
+        # Remove for version 5.1.
+        '-Wno-implicit-function-declaration'
+    )
+    flags+=("CFLAGS=${cflags[*]}")
+fi
+./configure "${flags[@]}"
 make --jobs="$jobs"
 # > make test
 make install
-koopa::enable_shell "$name"
+if [[ "${link_cellar:-0}" -eq 1 ]]
+then
+    koopa::enable_shell "$name"
+fi

@@ -6,9 +6,12 @@
 # We're enforcing system GCC here to avoid libstdc++ errors.
 # """
 
-koopa::assert_is_file /usr/bin/gcc /usr/bin/g++
-export CC='/usr/bin/gcc'
-export CXX='/usr/bin/g++'
+if koopa::is_linux
+then
+    koopa::assert_is_file /usr/bin/gcc /usr/bin/g++
+    export CC='/usr/bin/gcc'
+    export CXX='/usr/bin/g++'
+fi
 file="cmake-${version}.tar.gz"
 url="https://github.com/Kitware/CMake/releases/download/v${version}/${file}"
 koopa::download "$url"

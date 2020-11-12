@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+koopa::assert_is_linux
 # e.g. 2.20.0.422 to 2-20-0.
 version2="$(koopa::sub '\.[0-9]+$' '' "$version")"
 version2="$(koopa::kebab_case "$version2")"
