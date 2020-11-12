@@ -114,7 +114,7 @@ source_dir() {
     return 0
 }
 
-source_dir 'base'
+source_dir 'common'
 if koopa::is_linux
 then
     source_dir 'os/linux/common'
