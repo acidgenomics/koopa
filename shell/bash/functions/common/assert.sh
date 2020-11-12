@@ -585,13 +585,14 @@ koopa::assert_is_not_installed() { # {{{1
     # Assert that programs are not installed.
     # @note Updated 2020-02-16.
     # """
-    local arg
+    local arg where
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
         if koopa::is_installed "$arg"
         then
-            koopa::stop "Installed: '${arg}'."
+            where="$(koopa::which_realpath "$arg")"
+            koopa::stop "'${arg}' is already installed at '${where}'."
         fi
     done
     return 0
