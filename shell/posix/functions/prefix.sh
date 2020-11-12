@@ -136,11 +136,18 @@ _koopa_data_disk_link_prefix() { # {{{1
 
 _koopa_distro_prefix() { # {{{1
     # """
-    # Linux distro prefix.
+    # Operating system distro prefix.
     # @note Updated 2020-11-12.
     # """
-    _koopa_is_linux || return 0
-    _koopa_print "$(_koopa_prefix)/os/linux/distro/$(_koopa_os_id)"
+    # shellcheck disable=SC2039
+    local prefix
+    if _koopa_is_linux
+    then
+        prefix="$(_koopa_prefix)/os/linux/distro/$(_koopa_os_id)"
+    else
+        prefix="$(_koopa_prefix)/os/$(_koopa_os_id)"
+    fi
+    _koopa_print "$prefix"
     return 0
 }
 
