@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../../../shell/bash/include/header.sh"
 
-koopa::bcbio_run_tests "$@"
+koopa::linux_bcbio_run_tests "$@"
