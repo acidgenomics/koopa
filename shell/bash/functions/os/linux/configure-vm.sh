@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::configure_vm() { # {{{1
+koopa::linux_configure_vm() { # {{{1
     # """
     # Configure virtual machine.
     # @note Updated 2020-11-12.
@@ -345,7 +345,7 @@ koopa::configure_vm() { # {{{1
     # Set up secondary data disk, if applicable.
     if [[ -e "${dict[data_disk_prefix]}" ]]
     then
-        koopa::link_data_disk "${dict[data_disk_prefix]}"
+        koopa::linux_link_data_disk "${dict[data_disk_prefix]}"
     fi
 
     # Base system {{{2
@@ -586,7 +586,7 @@ koopa::configure_vm() { # {{{1
     return 0
 }
 
-koopa::link_data_disk() { # {{{1
+koopa::linux_link_data_disk() { # {{{1
     # """
     # Link a secondary data disk.
     # @note Updated 2020-11-10.

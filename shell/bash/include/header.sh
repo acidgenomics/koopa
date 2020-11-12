@@ -89,16 +89,9 @@ fi
 # shellcheck source=/dev/null
 . "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
-
-
-
-# FIXME RETHINK THIS APPROACH.
-# FIXME WE NEED TO SOURCE BY OPERATING SYSTEM HERE INSTEAD.
-
-
-# Source Bash functions.
+# Source base Bash functions.
 readarray -t fun_scripts <<< "$( \
-    find "${KOOPA_PREFIX}/shell/bash/functions" \
+    find "${KOOPA_PREFIX}/shell/bash/functions/base" \
         -mindepth 1 \
         -type f \
         -name '*.sh' \
@@ -111,6 +104,16 @@ do
     . "$fun_script"
 done
 unset -v fun_script fun_scripts
+
+# Source OS-specific functions.
+#if koopa::is_linux
+#then
+#fi
+
+
+
+
+
 
 if [[ "$checks" -eq 1 ]]
 then
