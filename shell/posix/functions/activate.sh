@@ -124,8 +124,10 @@ _koopa_activate_broot() { # {{{1
 _koopa_activate_completion() { # {{{1
     # """
     # Activate completion (with TAB key).
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-12.
     # """
+    # shellcheck disable=SC2039
+    local file
     case "$(_koopa_shell)" in
         bash|zsh)
             ;;
@@ -133,8 +135,11 @@ _koopa_activate_completion() { # {{{1
             return 0
             ;;
     esac
-    # shellcheck source=/dev/null
-    . "$(_koopa_prefix)/etc/completion/"*
+    for file in "$(_koopa_prefix)/etc/completion/"*'.sh'
+    do
+        # shellcheck source=/dev/null
+        [ -f "$file" ] && . "$file"
+    done
     return 0
 }
 
