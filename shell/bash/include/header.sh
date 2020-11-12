@@ -89,7 +89,6 @@ fi
 # shellcheck source=/dev/null
 . "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
-
 source_dir() {
     # """
     # Source all scripts inside a directory.
@@ -97,6 +96,7 @@ source_dir() {
     # """
     local prefix fun_script fun_scripts
     prefix="${KOOPA_PREFIX}/shell/bash/functions/${1:?}"
+    [[ -d "$prefix" ]] || return 0
     readarray -t fun_scripts <<< "$( \
         find -L "$prefix" \
             -mindepth 1 \
@@ -118,10 +118,24 @@ source_dir 'base'
 if koopa::is_linux
 then
     source_dir 'os/linux'
-elif koopa::is_macos
-then
-    source_dir 'os/macos'
+    distro_prefix='os/linux/distro'
+    if koopa::is_debian_like
+    then
+        source_dir "${distro_prefix}/debian"
+        koopa::is_ubuntu_like && \
+            source_dir "${distro_prefix}/ubuntu"
+    elif _koopa_is_fedora_like
+    then
+        _koopa_activate_prefix "${distro_prefix}/fedora"
+        _koopa_is_rhel_like && \
+            _koopa_activate_prefix "${distro_prefix}/rhel"
+    fi
+    source_dir "${distro_prefix}/$(koopa::os_id)"
+    unset -v distro_prefix
+else
+    source_dir "os/$(koopa::os_id)"
 fi
+unset -f source_dir
 
 if [[ "$checks" -eq 1 ]]
 then
