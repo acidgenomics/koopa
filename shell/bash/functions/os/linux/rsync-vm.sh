@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_rsync_vm() { # {{{1
+koopa::_linux_rsync_vm() { # {{{1
     # """
     # rsync a desired prefix across virtual machines.
     # @note Updated 2020-08-12.
@@ -61,7 +61,7 @@ koopa::_rsync_vm() { # {{{1
     return 0
 }
 
-koopa::rsync_vm() { # {{{1
+koopa::linux_rsync_vm() { # {{{1
     # """
     # rsync virtual machine configuration.
     # @note Updated 2020-11-10.
@@ -103,7 +103,7 @@ koopa::rsync_vm() { # {{{1
     then
         for prefix in "$@"
         do
-            koopa::_rsync_vm \
+            koopa::_linux_rsync_vm \
                 --prefix="$prefix" \
                 --source-ip="$source_ip"
         done
@@ -125,7 +125,7 @@ koopa::rsync_vm() { # {{{1
                 '--exclude=omicsoft'
             )
         fi
-        koopa::_rsync_vm \
+        koopa::_linux_rsync_vm \
             --prefix="$app_prefix" \
             --rsync-flags="${app_rsync_flags[*]}" \
             --source-ip="$source_ip"
@@ -135,7 +135,7 @@ koopa::rsync_vm() { # {{{1
     make_prefix="$(koopa::make_prefix)"
     if [[ -d "$make_prefix" ]]
     then
-        koopa::_rsync_vm \
+        koopa::_linux_rsync_vm \
             --prefix="$make_prefix" \
             --source-ip="$source_ip"
     else
@@ -155,7 +155,7 @@ koopa::rsync_vm() { # {{{1
                 '--exclude=gtex'
             )
         fi
-        koopa::_rsync_vm \
+        koopa::_linux_rsync_vm \
             --prefix="$refdata_prefix" \
             --rsync-flags="${refdata_rsync_flags[*]}" \
             --source-ip="$source_ip"
@@ -166,7 +166,7 @@ koopa::rsync_vm() { # {{{1
     homebrew_prefix="$(koopa::homebrew_prefix)"
     if [[ -d "$homebrew_prefix" ]]
     then
-        koopa::_rsync_vm \
+        koopa::_linux_rsync_vm \
             --prefix="$homebrew_prefix" \
             --source-ip="$source_ip"
     else
