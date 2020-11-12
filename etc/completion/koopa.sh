@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
+# """
+# Bash/Zsh TAB completion.
+# Updated 2020-11-12.
+#
+# Keep all of these commands in a single file.
+# Sourcing multiple scripts doesn't work reliably.
+#
 # Multi-level bash completion:
 # - https://stackoverflow.com/questions/17879322/
 # - https://stackoverflow.com/questions/5302650/
-
-# koopa {{{1
-# ==============================================================================
+# """
 
 _koopa_complete() {
     local args cur prev
@@ -54,16 +59,3 @@ _koopa_complete() {
     return 0
 }
 complete -F _koopa_complete koopa
-
-# syntactic {{{1
-# ==============================================================================
-
-words=(
-    '--prefix'
-    '--recursive'
-    '--strict'
-)
-complete -W "${words[*]}" kebab-case snake-case
-words+=('--strict')
-complete -W "${words[*]}" camel-case
-
