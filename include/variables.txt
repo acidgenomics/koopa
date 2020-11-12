@@ -28,10 +28,8 @@ anaconda="2020.02"
 # http://arma.sourceforge.net/download.html
 armadillo="10.1.1"
 
-# https://www.ibm.com/products/aspera
-# https://downloads.asperasoft.com/connect2/
-# https://downloads.asperasoft.com/en/downloads/8?list
-aspera-connect="3.10.0.180973"
+# https://www.ibm.com/aspera/connect/
+aspera-connect="3.10.1.181943"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.69"

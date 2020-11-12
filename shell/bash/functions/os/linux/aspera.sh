@@ -5,23 +5,10 @@ koopa::linux_install_aspera_connect() { # {{{1
     # Install Aspera Connect.
     # @note Updated 2020-11-12.
     #
-    # Aspera Connect:
-    # https://downloads.asperasoft.com/en/downloads/8?list
-    # - Linux
-    #   https://download.asperasoft.com/download/sw/connect/3.9.9/
-    #       ibm-aspera-connect-3.9.9.177872-linux-g2.12-64.tar.gz
-    # - macOS
-    #   https://download.asperasoft.com/download/sw/connect/3.9.9/
-    #       IBMAsperaConnectInstaller-3.9.9.177872.dmg
+    # Use Homebrew Cask to install on macOS instead.
     #
-    # Aspera CLI:
-    # https://downloads.asperasoft.com/en/downloads/62
-    # - macOS
-    #   https://download.asperasoft.com/download/sw/cli/3.9.6/
-    #       ibm-aspera-cli-3.9.6.1467.159c5b1-mac-10.11-64-release.sh
-    # - Linux
-    #   https://download.asperasoft.com/download/sw/cli/3.9.6/
-    #       ibm-aspera-cli-3.9.6.1467.159c5b1-linux-64-release.sh
+    # @seealso
+    # - https://www.ibm.com/aspera/connect/
     # """
     local aspera_dir aspera_user file name name_fancy prefix script \
         script_target tmp_dir url version version_full
