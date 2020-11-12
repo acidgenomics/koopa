@@ -18,6 +18,7 @@
 # > python3 setup.py install
 # """
 
+koopa::assert_is_linux
 file='awscli-exe-linux-x86_64.zip'
 url="https://awscli.amazonaws.com/${file}"
 koopa::download "$url"
