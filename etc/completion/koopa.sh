@@ -46,6 +46,9 @@ _koopa_complete() {
             header)
                 args=(
                     'bash'
+                    'posix'
+                    'r'
+                    'zsh'
                 )
                 COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
