@@ -116,6 +116,10 @@ koopa::deactivate_venv() { # {{{1
     _koopa_deactivate_venv "$@"
 }
 
+koopa::distro_prefix() { # {{{
+    _koopa_distro_prefix "$@"
+}
+
 koopa::dl() { # {{{1
     _koopa_dl "$@"
 }

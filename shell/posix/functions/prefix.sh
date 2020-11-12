@@ -134,6 +134,16 @@ _koopa_data_disk_link_prefix() { # {{{1
     return 0
 }
 
+_koopa_distro_prefix() { # {{{1
+    # """
+    # Linux distro prefix.
+    # @note Updated 2020-11-12.
+    # """
+    _koopa_is_linux || return 0
+    _koopa_print "$(_koopa_prefix)/os/linux/distro/$(_koopa_os_id)"
+    return 0
+}
+
 _koopa_docker_prefix() { # {{{1
     # """
     # Docker prefix.
