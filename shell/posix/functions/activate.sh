@@ -1,69 +1,11 @@
 #!/bin/sh
 
-_koopa_activate_aliases() { # {{{1
-    # """
-    # Activate (non-shell-specific) aliases.
-    # @note Updated 2020-07-05.
-    # """
-    # shellcheck disable=SC2039
-    local file
-    file="${HOME}/.aliases"
-    [ -f "$file" ] || return 0
-    # shellcheck source=/dev/null
-    . "$file"
-    return 0
-}
-
 _koopa_activate_aspera() { # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
     # @note Updated 2020-06-30.
     # """
     _koopa_activate_prefix "$(_koopa_aspera_prefix)/latest"
-    return 0
-}
-
-_koopa_activate_autojump() { # {{{1
-    # """
-    # Activate autojump.
-    # @note Updated 2020-06-30.
-    #
-    # Currently supports Bash and Zsh.
-    # Skip activation on other POSIX shells, such as Dash.
-    #
-    # Purge install with 'j --purge'.
-    # Location: ~/.local/share/autojump/autojump.txt
-    #
-    # For bash users, autojump keeps track of directories by modifying
-    # '$PROMPT_COMMAND'. Do not overwrite '$PROMPT_COMMAND' in this case.
-    # > export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
-    #
-    # See also:
-    # - https://github.com/wting/autojump
-    # """
-    # shellcheck disable=SC2039
-    local prefix nounset script
-    case "$(_koopa_shell)" in
-        bash|zsh)
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    prefix="$(_koopa_autojump_prefix)"
-    [ -d "$prefix" ] || return 0
-    if [ -z "${PROMPT_COMMAND:-}" ]
-    then
-        export PROMPT_COMMAND='history -a'
-    fi
-    _koopa_activate_prefix "$prefix"
-    script="${prefix}/etc/profile.d/autojump.sh"
-    [ -r "$script" ] || return 0
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    # shellcheck source=/dev/null
-    . "$script"
-    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
@@ -86,60 +28,6 @@ _koopa_activate_bcbio() { # {{{1
     [ -d "$prefix" ] || return 0
     _koopa_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH
-    return 0
-}
-
-_koopa_activate_broot() { # {{{1
-    # """
-    # Activate broot directory tree utility.
-    # @note Updated 2020-09-09.
-    #
-    # The br function script must be sourced for activation.
-    # See 'broot --install' for details.
-    #
-    # Configuration file gets saved at '${prefs_dir}/conf.toml'.
-    # Fish: launcher/fish/br.sh (also saved in Fish functions)
-    #
-    # Note that for macOS, we're assuming installation via Homebrew.
-    # If installed as crate, it will use the same path as for Linux.
-    #
-    # @seealso
-    # https://github.com/Canop/broot
-    # """
-    # shellcheck disable=SC2039
-    local br_script config_dir nounset
-    config_dir="${HOME}/.config/broot"
-    [ -d "$config_dir" ] || return 0
-    # This is supported for Bash and Zsh.
-    br_script="${config_dir}/launcher/bash/br"
-    [ -f "$br_script" ] || return 0
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    # shellcheck source=/dev/null
-    . "$br_script"
-    [ "$nounset" -eq 1 ] && set -u
-    return 0
-}
-
-_koopa_activate_completion() { # {{{1
-    # """
-    # Activate completion (with TAB key).
-    # @note Updated 2020-11-12.
-    # """
-    # shellcheck disable=SC2039
-    local file
-    case "$(_koopa_shell)" in
-        bash|zsh)
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    for file in "$(_koopa_prefix)/etc/completion/"*'.sh'
-    do
-        # shellcheck source=/dev/null
-        [ -f "$file" ] && . "$file"
-    done
     return 0
 }
 
@@ -196,33 +84,6 @@ _koopa_activate_coreutils() { # {{{1
     return 0
 }
 
-_koopa_activate_dircolors() { # {{{1
-    # """
-    # Activate directory colors.
-    # @note Updated 2020-06-30.
-    # """
-    # shellcheck disable=SC2039
-    local dircolors_file dotfiles_prefix
-    _koopa_is_installed dircolors || return 0
-    dotfiles_prefix="$(_koopa_dotfiles_prefix)"
-    # This will set the 'LD_COLORS' environment variable.
-    dircolors_file="${dotfiles_prefix}/app/coreutils/dircolors"
-    if [ -f "$dircolors_file" ]
-    then
-        eval "$(dircolors "$dircolors_file")"
-    else
-        eval "$(dircolors -b)"
-    fi
-    unset -v dircolors_file
-    alias dir='dir --color=auto'
-    alias egrep='egrep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias grep='grep --color=auto'
-    alias ls='ls --color=auto'
-    alias vdir='vdir --color=auto'
-    return 0
-}
-
 _koopa_activate_emacs() { # {{{1
     # """
     # Activate Emacs.
@@ -251,60 +112,6 @@ _koopa_activate_ensembl_perl_api() { # {{{1
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-variation/modules"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-funcgen/modules"
     export PERL5LIB
-    return 0
-}
-
-_koopa_activate_fzf() { # {{{1
-    # """
-    # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2020-08-13.
-    #
-    # Currently Bash and Zsh are supported.
-    #
-    # Shell lockout has been observed on Ubuntu unless we disable 'set -e'.
-    #
-    # @seealso
-    # - https://github.com/junegunn/fzf
-    # Customization:
-    # - https://github.com/ngynLk/dotfiles/blob/master/.bashrc
-    # - Dracula palette:
-    #   https://gist.github.com/umayr/8875b44740702b340430b610b52cd182
-    # """
-    # shellcheck disable=SC2039
-    local nounset prefix script shell
-    [ -z "${FZF_DEFAULT_OPTS:-}" ] && \
-        export FZF_DEFAULT_OPTS='--color bw --border'
-    prefix="$(_koopa_fzf_prefix)/latest"
-    [ -d "$prefix" ] || return 0
-    _koopa_activate_prefix "$prefix"
-    nounset="$(_koopa_boolean_nounset)"
-    shell="$(_koopa_shell)"
-    # Relax hardened shell temporarily, if necessary.
-    if [ "$nounset" -eq 1 ]
-    then
-        set +e
-        set +u
-    fi
-    # Auto-completion.
-    script="${prefix}/shell/completion.${shell}"
-    if [ -f "$script" ]
-    then
-        # shellcheck source=/dev/null
-        . "$script"
-    fi
-    # Key bindings.
-    script="${prefix}/shell/key-bindings.${shell}"
-    if [ -f "$script" ]
-    then
-        # shellcheck source=/dev/null
-        . "$script"
-    fi
-    # Reset hardened shell, if necessary.
-    if [ "$nounset" -eq 1 ]
-    then
-        set -e
-        set -u
-    fi
     return 0
 }
 
@@ -978,29 +785,6 @@ _koopa_activate_standard_paths() { # {{{1
     return 0
 }
 
-_koopa_activate_starship() { # {{{1
-    # """
-    # Activate starship prompt.
-    # @note Updated 2020-11-10.
-    #
-    # See also:
-    # https://starship.rs/
-    # """
-    # shellcheck disable=SC2039
-    local shell
-    _koopa_is_installed starship || return 0
-    shell="$(_koopa_shell)"
-    case "$(_koopa_shell)" in
-        bash|zsh)
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    eval "$(starship init "$shell")"
-    return 0
-}
-
 _koopa_activate_venv() { # {{{1
     # """
     # Activate Python default virtual environment.
@@ -1083,35 +867,5 @@ _koopa_activate_xdg() { # {{{1
         XDG_DATA_DIRS \
         XDG_DATA_HOME \
         XDG_RUNTIME_DIR
-    return 0
-}
-
-_koopa_activate_zoxide() { # {{{1
-    # """
-    # Activate zoxide.
-    #
-    # @note Updated 2020-11-03.
-    # @seealso https://github.com/ajeetdsouza/zoxide
-    #
-    # Highly recommended to use along with fzf.
-    #
-    # POSIX option:
-    # eval "$(zoxide init posix --hook prompt)"
-    # """
-    # shellcheck disable=SC2039
-    local shell nounset
-    shell="$(_koopa_shell)"
-    case "$shell" in
-        bash|zsh)
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    _koopa_is_installed zoxide || return 0
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    eval "$(zoxide init "$shell")"
-    [ "$nounset" -eq 1 ] && set -u
     return 0
 }

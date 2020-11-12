@@ -60,13 +60,13 @@ koopa::header() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2020-11-11.
+    # @note Updated 2020-11-12.
+    #
+    # Need to update corresponding Bash completion file in
+    # 'etc/completion/koopa.sh'.
     # """
     koopa::assert_has_args "$#"
-    # Update corresponding Bash completion file, if necessary.
     case "$1" in
-        # Auto-completion {{{2
-        # ----------------------------------------------------------------------
         --version|-V)
             f='version'
             ;;
@@ -77,48 +77,69 @@ koopa::koopa() { # {{{1
             shift 1
             case "$1" in
                 dotfiles)
-                    f='install-dotfiles'
+                    f='install_dotfiles'
                     ;;
                 mike)
-                    f='install-mike'
+                    f='install_mike'
                     ;;
                 py-koopa)
-                    f='install-py-koopa'
-                    ;;
-                python)
-                    koopa::stop 'Use "py-koopa" instead of "python".'
-                    ;;
-                r)
-                    koopa::stop 'Use "r-koopa" instead of "r".'
+                    f='install_py_koopa'
                     ;;
                 r-koopa)
-                    f='install-r-koopa'
+                    f='install_r_koopa'
+                    ;;
+                # Defunct args.
+                python)
+                    koopa::defunct 'Use "py-koopa" instead of "python".'
+                    ;;
+                r)
+                    koopa::defunct 'Use "r-koopa" instead of "r".'
                     ;;
             esac
             ;;
-        check-system | \
+        system)
+            shift 1
+            case "$1" in
+                log)
+                    f='view-latest-tmp-log-file'
+                    ;;
+                pull)
+                    f='sys-git-pull'
+                    ;;
+                os-string | \
+                variables)
+                    f="$1"
+                    ;;
+            esac
+            ;;
+        update)
+            shift 1
+            case "$1" in
+                r-config)
+                    f='update-r-config'
+                    ;;
+            esac
+            ;;
+        which)
+            f='which_realpath'
+            ;;
+
+
+
+        check)
+            f='check_system'
+            ;;
         delete-cache | \
         header | \
-        install-dotfiles | \
         list | \
         prefix | \
         test | \
         uninstall | \
-        update | \
         version)
             f="$1"
             ;;
         # Supported, but hidden from user {{{2
         # ----------------------------------------------------------------------
-        check)
-            f='check-system'
-            ;;
-        log)
-            f='view-latest-tmp-log-file'
-            ;;
-        pull)
-            f='sys-git-pull'
-            ;;
         app-prefix | \
         cellar-prefix | \
         conda-prefix | \
@@ -128,18 +149,13 @@ koopa::koopa() { # {{{1
         get-macos-app-version | \
         get-version | \
         host-id | \
-        install-mike | \
-        list-internal-functions | \
         make-prefix | \
-        os-string | \
         roff | \
         set-permissions | \
-        variable | \
-        variables | \
-        which-realpath)
+        variable)
             f="$1"
             ;;
-        # Deprecated args / error catching {{{2
+        # Defunct args / error catching {{{2
         # ----------------------------------------------------------------------
         help)
             koopa::defunct 'koopa --help'
@@ -147,17 +163,26 @@ koopa::koopa() { # {{{1
         home)
             koopa::defunct 'koopa prefix'
             ;;
+        os-string)
+            koopa::defunct 'koopa system os-string'
+            ;;
         update-r-config)
-            koopa::defunct 'update-r-config (without koopa prefix)'
+            koopa::defunct 'koopa update r-config'
             ;;
         r-home)
-            koopa::defunct 'koopa which-realpath R'
+            koopa::defunct 'koopa prefix r'
             ;;
         upgrade)
             koopa::defunct 'koopa update'
             ;;
+        variables)
+            koopa::defunct 'koopa system variables'
+            ;;
+        which-realpath)
+            koopa::defunct 'koopa which'
+            ;;
         *)
-            koopa::invalid_arg "$1"
+            koopa::stop "Unsupported argument: '${*}'."
             ;;
     esac
     fun="koopa::${f//-/_}"
