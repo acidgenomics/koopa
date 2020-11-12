@@ -289,38 +289,38 @@ _koopa_activate_homebrew_ruby_gems() { # {{{1
 _koopa_activate_koopa_paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-11-12.
     # """
     # shellcheck disable=SC2039
-    local config_prefix host_id koopa_prefix os_id shell
+    local config_prefix distro_prefix koopa_prefix linux_prefix os_id shell
     koopa_prefix="$(_koopa_prefix)"
     _koopa_str_match "${PATH:-}" "$koopa_prefix" && return 0
     config_prefix="$(_koopa_config_prefix)"
-    host_id="$(_koopa_host_id)"
     os_id="$(_koopa_os_id)"
     shell="$(_koopa_shell)"
     _koopa_activate_prefix "$koopa_prefix"
     _koopa_activate_prefix "${koopa_prefix}/shell/${shell}"
     if _koopa_is_linux
     then
-        _koopa_activate_prefix "${koopa_prefix}/os/linux"
+        linux_prefix="${koopa_prefix}/os/linux"
+        distro_prefix="${linux_prefix}/distro"
+        _koopa_activate_prefix "$linux_prefix"
         if _koopa_is_debian_like
         then
-            _koopa_activate_prefix "${koopa_prefix}/os/debian"
+            _koopa_activate_prefix "${distro_prefix}/debian"
             _koopa_is_ubuntu_like && \
-                _koopa_activate_prefix "${koopa_prefix}/os/ubuntu"
+                _koopa_activate_prefix "${distro_prefix}/ubuntu"
         elif _koopa_is_fedora_like
         then
-            _koopa_activate_prefix "${koopa_prefix}/os/fedora"
+            _koopa_activate_prefix "${distro_prefix}/fedora"
             _koopa_is_rhel_like && \
-                _koopa_activate_prefix "${koopa_prefix}/os/rhel"
+                _koopa_activate_prefix "${distro_prefix}/rhel"
         fi
+        _koopa_activate_prefix "${distro_prefix}/${os_id}"
+    else
+        _koopa_activate_prefix "${koopa_prefix}/os/${os_id}"
     fi
-    _koopa_activate_prefix \
-        "${koopa_prefix}/os/${os_id}" \
-        "${koopa_prefix}/host/${host_id}" \
-        "${config_prefix}/docker" \
-        "${config_prefix}/scripts-private"
+    _koopa_activate_prefix "${config_prefix}/scripts-private"
     return 0
 }
 
