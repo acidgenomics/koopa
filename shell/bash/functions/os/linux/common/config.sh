@@ -98,9 +98,9 @@ koopa::java_update_alternatives() { # {{{1
 koopa::link_docker() { # {{{1
     # """
     # Link Docker library onto data disk for VM.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-11-12.
     # """
-    local dd_link_prefix etc_source lib_n lib_sys os_id
+    local dd_link_prefix distro_prefix etc_source lib_n lib_sys
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker || return 0
     koopa::assert_has_sudo
@@ -112,10 +112,10 @@ koopa::link_docker() { # {{{1
     koopa::note 'Stopping Docker.'
     sudo systemctl stop docker
     lib_sys='/var/lib/docker'
-    lib_n="${dd_link_prefix}/var/lib/docker"
-    os_id="$(koopa::os_id)"
+    lib_n="${dd_link_prefix}${lib_sys}"
+    distro_prefix="$(koopa::distro_prefix)"
     koopa::note "Moving Docker lib from '${lib_sys}' to '${lib_n}'."
-    etc_source="$(koopa::prefix)/os/${os_id}/etc/docker"
+    etc_source="${distro_prefix}/etc/docker"
     if [[ -d "$etc_source" ]]
     then
         koopa::ln -S -t '/etc/docker' "${etc_source}/"*
@@ -179,16 +179,15 @@ END
 koopa::update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-11-12.
     # """
-    local conf_source dest_file os_id prefix source_file
+    local conf_source dest_file distro_prefix prefix source_file
     koopa::assert_has_no_args "$#"
     [[ -d '/etc/ld.so.conf.d' ]] || return 0
     koopa::assert_is_installed ldconfig
     koopa::assert_has_sudo
-    os_id="$(koopa::os_id)"
-    prefix="$(koopa::prefix)"
-    conf_source="${prefix}/os/${os_id}/etc/ld.so.conf.d"
+    distro_prefix="$(koopa::distro_prefix)"
+    conf_source="${distro_prefix}/etc/ld.so.conf.d"
     [[ -d "$conf_source" ]] || return 0
     # Create symlinks with 'koopa-' prefix.
     # Note that we're using shell globbing here.
