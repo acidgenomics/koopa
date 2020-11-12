@@ -127,10 +127,11 @@ koopa::fix_rbenv_permissions() { # {{{1
 koopa::fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-12.
     # """
     local cellar_prefix koopa_prefix make_prefix zsh
     koopa::assert_has_no_args "$#"
+    koopa::info 'Fixing Zsh permissions.'
     koopa_prefix="$(koopa::prefix)"
     koopa::sys_chmod 'g-w' \
         "${koopa_prefix}/shell/zsh" \
@@ -158,6 +159,7 @@ koopa::fix_zsh_permissions() { # {{{1
                 "${cellar_prefix}/zsh/"*'/share/zsh/'*'/functions'
         fi
     fi
+    koopa::success 'Zsh permissions should pass compaudit checks.'
     return 0
 }
 

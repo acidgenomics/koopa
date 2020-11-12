@@ -69,24 +69,20 @@ koopa::koopa() { # {{{1
     case "$1" in
         --version|-V)
             f='version'
+            shift 1
             ;;
         info)
             f='sys_info'
+            shift 1
             ;;
         install)
-            shift 1
-            case "$1" in
-                dotfiles)
-                    f='install_dotfiles'
-                    ;;
-                mike)
-                    f='install_mike'
-                    ;;
-                py-koopa)
-                    f='install_py_koopa'
-                    ;;
+            case "${2:-}" in
+                dotfiles | \
+                mike | \
+                py-koopa | \
                 r-koopa)
-                    f='install_r_koopa'
+                    f="${1}_${2}"
+                    shift 2
                     ;;
                 # Defunct args.
                 python)
@@ -95,68 +91,143 @@ koopa::koopa() { # {{{1
                 r)
                     koopa::defunct 'Use "r-koopa" instead of "r".'
                     ;;
+                *)
+                    koopa::invalid_arg "$*"
             esac
             ;;
         system)
-            shift 1
-            case "$1" in
+            case "${2:-}" in
                 log)
-                    f='view-latest-tmp-log-file'
+                    f='view_latest_tmp_log_file'
+                    shift 2
+                    ;;
+                prefix)
+                    case "${3:-}" in
+                        '')
+                            f="$2"
+                            shift 2
+                            ;;
+                        *)
+                            f="${3}_${2}"
+                            if koopa::is_function "koopa::${f//-/_}"
+                            then
+                                shift 3
+                            else
+                                koopa::invalid_arg "$*"
+                            fi
+                            ;;
+                    esac
                     ;;
                 pull)
-                    f='sys-git-pull'
+                    f='sys_git_pull'
+                    shift 2
                     ;;
+                homebrew-cask-version)
+                    f='get_homebrew_cask_version'
+                    shift 2
+                    ;;
+                macos-app-version)
+                    f='get_macos_app_version'
+                    shift 2
+                    ;;
+                version)
+                    f='get_version'
+                    shift 2
+                    ;;
+                which)
+                    f='which_realpath'
+                    shift 2
+                    ;;
+                delete-cache | \
+                fix-zsh-permissions | \
+                host-id | \
                 os-string | \
+                roff | \
+                set-permissions | \
+                variable | \
                 variables)
-                    f="$1"
+                    f="$2"
+                    shift 2
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
                     ;;
             esac
             ;;
         update)
-            shift 1
-            case "$1" in
+            case "${2:-}" in
+                '')
+                    f="$1"
+                    shift 1
+                    ;;
                 r-config)
                     f='update-r-config'
+                    shift 2
                     ;;
             esac
             ;;
-        which)
-            f='which_realpath'
-            ;;
-
-
-
-        check)
-            f='check_system'
-            ;;
-        delete-cache | \
         header | \
         list | \
-        prefix | \
         test | \
-        uninstall | \
+        uninstall)
+            f="$1"
+            shift 1
+            ;;
+        # Soft deprecated args {{{2
+        # ----------------------------------------------------------------------
+        check)
+            f='check_system'
+            shift 1
+            ;;
         version)
             f="$1"
-            ;;
-        # Supported, but hidden from user {{{2
-        # ----------------------------------------------------------------------
-        app-prefix | \
-        cellar-prefix | \
-        conda-prefix | \
-        config-prefix | \
-        fix-zsh-permissions | \
-        get-homebrew-cask-version | \
-        get-macos-app-version | \
-        get-version | \
-        host-id | \
-        make-prefix | \
-        roff | \
-        set-permissions | \
-        variable)
-            f="$1"
+            shift 1
             ;;
         # Defunct args / error catching {{{2
         # ----------------------------------------------------------------------
+        app-prefix)
+            koopa::defunct 'koopa system prefix app'
+            ;;
+        cellar-prefix)
+            koopa::defunct 'koopa system prefix cellar'
+            ;;
+        conda-prefix)
+            koopa::defunct 'koopa system prefix conda'
+            ;;
+        config-prefix)
+            koopa::defunct 'koopa system prefix config'
+            ;;
+        make-prefix)
+            koopa::defunct 'koopa system prefix make'
+            ;;
+        host-id)
+            koopa::defunct 'koopa system host-id'
+            ;;
+        roff)
+            koopa::defunct 'koopa system roff'
+            ;;
+        set-permissions)
+            koopa::defunct 'koopa system set-permissions'
+            ;;
+
+        variable)
+            koopa::defunct 'koopa system variable'
+            ;;
+        delete-cache)
+            koopa::defunct 'koopa system delete-cache'
+            ;;
+        fix-zsh-permissions)
+            koopa::defunct 'koopa system fix-zsh-permissions'
+            ;;
+        get-version)
+            koopa::defunct 'koopa system version'
+            ;;
+        get-homebrew-cask-version)
+            koopa::defunct 'koopa system homebrew-cask-version'
+            ;;
+        get-macos-app-version)
+            koopa::defunct 'koopa system macos-app-version'
+            ;;
         help)
             koopa::defunct 'koopa --help'
             ;;
@@ -179,15 +250,14 @@ koopa::koopa() { # {{{1
             koopa::defunct 'koopa system variables'
             ;;
         which-realpath)
-            koopa::defunct 'koopa which'
+            koopa::defunct 'koopa system which'
             ;;
         *)
-            koopa::stop "Unsupported argument: '${*}'."
+            koopa::invalid_arg "$*"
             ;;
     esac
     fun="koopa::${f//-/_}"
     koopa::assert_is_function "$fun"
-    shift 1
     "$fun" "$@"
     return 0
 }
