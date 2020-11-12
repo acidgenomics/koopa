@@ -6,6 +6,7 @@ koopa::find_cellar_symlinks() { # {{{1
     # @note Updated 2020-08-13.
     # """
     local build_prefix cellar_prefix file links name version
+    koopa::assert_has_args "$#"
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed find sort tail
     name="${1:?}"
@@ -13,6 +14,7 @@ koopa::find_cellar_symlinks() { # {{{1
     build_prefix="$(koopa::make_prefix)"
     # Automatically detect version, if left unset.
     cellar_prefix="$(koopa::cellar_prefix)/${name}"
+    koopa::assert_is_dir "$cellar_prefix"
     if [[ -n "$version" ]]
     then
         cellar_prefix="${cellar_prefix}/${version}"
