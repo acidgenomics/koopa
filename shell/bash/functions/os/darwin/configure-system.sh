@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::configure_macos() { # {{{1
+koopa::macos_configure_system() { # {{{1
     # """
-    # Configure macOS.
-    # @note Updated 2020-07-18.
+    # Configure macOS system.
+    # @note Updated 2020-11-12.
     # """
     koopa::assert_has_no_args "$#"
     koopa::h1 'Configuring macOS system.'

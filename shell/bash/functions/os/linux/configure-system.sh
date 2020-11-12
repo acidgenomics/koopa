@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-koopa::linux_configure_vm() { # {{{1
+koopa::linux_configure_system() { # {{{1
     # """
-    # Configure virtual machine.
+    # Configure Linux system.
     # @note Updated 2020-11-12.
+    #
+    # Intended primarily for virtual machine and Docker image builds.
     # """
     local dict install_base_flags mode prefixes
     koopa::assert_has_no_envs
@@ -369,7 +371,7 @@ koopa::linux_configure_vm() { # {{{1
 
     if [[ "${dict[rsync]}" -eq 1 ]]
     then
-        koopa::rsync_vm --source-ip="${dict[source_ip]}"
+        koopa::linux_rsync_system --source-ip="${dict[source_ip]}"
     fi
 
     # Programs {{{2
