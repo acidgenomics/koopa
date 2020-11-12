@@ -33,22 +33,48 @@ _koopa_complete() {
             'uninstall'
             'update'
         )
+        if _koopa_is_linux
+        then
+            args+=(
+                'delete-cache'
+            )
+        fi
         COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
     elif [ "$COMP_CWORD" -eq 2 ]
     then
         case "$prev" in
-            'install')
+            header)
+                args=(
+                    'bash'
+                )
+                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+                ;;
+            install)
                 args=(
                     'dotfiles'
+                    'mike'
                     'py-koopa'
                     'r-koopa'
                 )
                 COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
-            'get-version')
+            get-version)
                 args=(
                     'emacs'
                     'vim'
+                )
+                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+                ;;
+            system)
+                args=(
+                    'log'
+                    'pull'
+                )
+                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+                ;;
+            update)
+                args=(
+                    '--fast'
                 )
                 COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
