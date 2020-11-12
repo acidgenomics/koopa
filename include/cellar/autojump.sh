@@ -26,7 +26,6 @@
 # Can uninstall with uninstall.py script.
 # """
 
-koopa::assert_is_not_installed autojump
 koopa::assert_is_not_dir "${HOME}/.autojump"
 koopa::assert_is_current_version python
 file="release-v${version}.tar.gz"
