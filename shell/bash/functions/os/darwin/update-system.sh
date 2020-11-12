@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::macos_update_macos() { # {{{1
+koopa::macos_update_system() { # {{{1
     # """
-    # Update macOS.
-    # @note Updated 2020-07-17.
+    # Update macOS system.
+    # @note Updated 2020-11-12.
     # """
     koopa::assert_has_no_args "$#"
     if koopa::is_installed mas
