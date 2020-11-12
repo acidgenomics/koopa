@@ -304,7 +304,7 @@ _koopa_activate_koopa_paths() { # {{{1
     then
         linux_prefix="${koopa_prefix}/os/linux"
         distro_prefix="${linux_prefix}/distro"
-        _koopa_activate_prefix "$linux_prefix"
+        _koopa_activate_prefix "${linux_prefix}/common"
         if _koopa_is_debian_like
         then
             _koopa_activate_prefix "${distro_prefix}/debian"

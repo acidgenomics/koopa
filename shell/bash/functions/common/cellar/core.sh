@@ -107,7 +107,7 @@ koopa::install_cellar() { # {{{1
                 name_fancy="${1#*=}"
                 shift 1
                 ;;
-            --reinstall)
+            --reinstall|--force)
                 reinstall=1
                 pass_args+=('--reinstall')
                 shift 1
