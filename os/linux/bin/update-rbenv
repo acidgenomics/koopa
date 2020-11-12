@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../../../shell/bash/include/header.sh"
 
-koopa::update_rbenv "$@"
+koopa::linux_update_rbenv "$@"
