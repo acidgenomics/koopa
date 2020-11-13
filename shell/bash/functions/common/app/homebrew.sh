@@ -85,9 +85,9 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_packages() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-11-11.
+    # @note Updated 2020-11-13.
     # """
-    local brew brewfile name_fancy remove_brews
+    local brewfile name_fancy
     koopa::assert_has_no_args "$#"
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
@@ -96,20 +96,22 @@ koopa::install_homebrew_packages() { # {{{1
     brewfile="$(koopa::brewfile)"
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
-    remove_brews=(
-        'osgeo-gdal'
-        'osgeo-hdf4'
-        'osgeo-libgeotiff'
-        'osgeo-libkml'
-        'osgeo-libspatialite'
-        'osgeo-netcdf'
-        'osgeo-postgresql'
-        'osgeo-proj'
-    )
-    for brew in "${remove_brews[@]}"
-    do
-        brew remove "$brew" &>/dev/null || true
-    done
+    # Remove unwanted brews, if necessary.
+    # > local brew remove_brews
+    # > remove_brews=(
+    # >     'osgeo-gdal'
+    # >     'osgeo-hdf4'
+    # >     'osgeo-libgeotiff'
+    # >     'osgeo-libkml'
+    # >     'osgeo-libspatialite'
+    # >     'osgeo-netcdf'
+    # >     'osgeo-postgresql'
+    # >     'osgeo-proj'
+    # > )
+    # > for brew in "${remove_brews[@]}"
+    # > do
+    # >     brew remove "$brew" &>/dev/null || true
+    # > done
     brew bundle install \
         --file="$brewfile" \
         --no-lock \
@@ -156,7 +158,7 @@ koopa::uninstall_homebrew() { # {{{1
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-13.
     #
     # Use of '--force-bottle' flag can be helpful, but not all brews have
     # bottles, so this can error.
@@ -199,13 +201,16 @@ koopa::update_homebrew() { # {{{1
                         ;;
                 esac
                 brew reinstall "$cask" || true
+                if [[ "$cask" == 'r' ]]
+                then
+                    koopa::update_r_config
+                fi
             done
         fi
     fi
     koopa::h2 'Running cleanup.'
     brew cleanup -s || true
     koopa::rm "$(brew --cache)"
-    koopa::update_r_config
     koopa::update_success "$name_fancy"
     return 0
 }
