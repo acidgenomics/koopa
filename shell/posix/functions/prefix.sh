@@ -62,19 +62,8 @@ _koopa_bcbio_tools_prefix() { # {{{1
     # bcbio-nextgen tools prefix.
     # @note Updated 2020-11-13.
     # shellcheck disable=SC2039
-    local host_id prefix
     _koopa_is_linux || return 0
-    host_id="$(_koopa_host_id)"
-    if [ "$host_id" = 'harvard-o2' ]
-    then
-        prefix='/n/app/bcbio/tools'
-    elif [ "$host_id" = 'harvard-odyssey' ]
-    then
-        prefix='/n/regal/hsph_bioinfo/bcbio_nextgen'
-    else
-        prefix="$(_koopa_app_prefix)/bcbio/stable/tools"
-    fi
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_app_prefix)/bcbio/stable/tools"
     return 0
 }
 
