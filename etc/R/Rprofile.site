@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-11-05.
+## Updated 2020-11-13.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -348,6 +348,15 @@ local({
         ## Snapshot: 2020-11-04.
         ## https://packagemanager.rstudio.com/client/#/repos/1/overview
         repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/360"
+        ## Enable missing R binaries for Homebrew on macOS.
+        ## See also:
+        ## - https://macos.rbind.io/
+        ## - https://github.com/yihui/homebrew-cran-extra
+        ## - https://github.com/yihui/homebrew-cran-extra/tree/
+        ##       gh-pages/bin/macosx
+        ## > if (isTRUE(.rprofile[["macos"]])) {
+        ## >     repos[["CRANextra"]] <- "https://macos.rbind.io"
+        ## > }
         options("repos" = repos)
     })
 
