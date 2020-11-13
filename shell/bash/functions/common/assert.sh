@@ -480,6 +480,30 @@ koopa::assert_is_installed() { # {{{1
     return 0
 }
 
+koopa::assert_is_linux() { # {{{1
+    # """
+    # Assert that operating system is Linux.
+    # @note Updated 2020-11-13.
+    # """
+    if ! koopa::is_linux
+    then
+        koopa::stop 'Linux is required.'
+    fi
+    return 0
+}
+
+koopa::assert_is_macos() { # {{{1
+    # """
+    # Assert that operating system is macOS.
+    # @note Updated 2020-11-13.
+    # """
+    if ! koopa::is_macos
+    then
+        koopa::stop 'macOS is required.'
+    fi
+    return 0
+}
+
 koopa::assert_is_matching_fixed() { # {{{1
     # """
     # Assert that input matches a fixed pattern.
