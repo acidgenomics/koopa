@@ -34,22 +34,6 @@ _koopa_activate() { # {{{1
         fi
         export KOOPA_MINIMAL=0
     fi
-    # Harden against path reordering inside subshells, including Tmux and Vim.
-    if [ -n "${KOOPA_PATH:-}" ]
-    then
-        PATH="$KOOPA_PATH"
-        export PATH
-    fi
-    if [ -n "${KOOPA_INFOPATH:-}" ]
-    then
-        INFOPATH="$KOOPA_INFOPATH"
-        export INFOPATH
-    fi
-    if [ -n "${KOOPA_MANPATH:-}" ]
-    then
-        MANPATH="$KOOPA_MANPATH"
-        export MANPATH
-    fi
     _koopa_activate_export_prefix || return 1
     _koopa_activate_duration_start
     # shellcheck source=/dev/null
@@ -121,21 +105,6 @@ _koopa_activate() { # {{{1
             _koopa_today_bucket
             _koopa_tmux_sessions
         fi
-    fi
-    if [ -z "${KOOPA_PATH:-}" ]
-    then
-        KOOPA_PATH="${PATH:-}"
-        export KOOPA_PATH
-    fi
-    if [ -z "${KOOPA_INFOPATH:-}" ]
-    then
-        KOOPA_INFOPATH="${INFOPATH:-}"
-        export KOOPA_INFOPATH
-    fi
-    if [ -z "${KOOPA_MANPATH:-}" ]
-    then
-        KOOPA_MANPATH="${MANPATH:-}"
-        export KOOPA_MANPATH
     fi
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
