@@ -64,8 +64,8 @@ koopa::autojump_prefix() { # {{{1
     _koopa_autojump_prefix "$@"
 }
 
-koopa::bcbio_prefix() { # {{{1
-    _koopa_bcbio_prefix "$@"
+koopa::bcbio_tools_prefix() { # {{{1
+    _koopa_bcbio_tools_prefix "$@"
 }
 
 koopa::boolean_nounset() { # {{{1
