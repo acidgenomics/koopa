@@ -354,6 +354,7 @@ local({
         ## - https://github.com/yihui/homebrew-cran-extra
         ## - https://github.com/yihui/homebrew-cran-extra/tree/
         ##       gh-pages/bin/macosx
+        ## - https://yihui.org/en/2018/06/homebrew-binary-r-packages/
         ## > if (isTRUE(.rprofile[["macos"]])) {
         ## >     repos[["CRANextra"]] <- "https://macos.rbind.io"
         ## > }
