@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME REWORK THIS, POINTING TO BCBIO TOOLS DIR AND GIT REPO.
+# FIXME NEED TO REWORK BCBIO PREFIX.
 koopa::linux_bcbio_run_tests() { # {{{1
     # """
     # Run bcbio unit tests.

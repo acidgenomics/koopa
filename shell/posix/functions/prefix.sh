@@ -57,10 +57,10 @@ _koopa_autojump_prefix() { # {{{1
     return 0
 }
 
-_koopa_bcbio_prefix() { # {{{1
+_koopa_bcbio_tools_prefix() { # {{{1
     # """
-    # bcbio-nextgen prefix.
-    # @note Updated 2020-07-30.
+    # bcbio-nextgen tools prefix.
+    # @note Updated 2020-11-13.
     # shellcheck disable=SC2039
     local host_id prefix
     _koopa_is_linux || return 0

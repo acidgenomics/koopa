@@ -12,7 +12,7 @@ _koopa_activate_aspera() { # {{{1
 _koopa_activate_bcbio() { # {{{1
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-11-13.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
@@ -22,11 +22,16 @@ _koopa_activate_bcbio() { # {{{1
     # """
     # shellcheck disable=SC2039
     local prefix
+    echo "FIXME 1"
     _koopa_is_linux || return 0
+    echo "FIXME 2"
     _koopa_is_installed bcbio_nextgen.py && return 0
-    prefix="$(_koopa_bcbio_prefix)"
+    echo "FIXME 3"
+    prefix="$(_koopa_bcbio_tools_prefix)"
     [ -d "$prefix" ] || return 0
+    echo "FIXME 4"
     _koopa_add_to_path_end "${prefix}/bin"
+    echo "FIXME 5"
     unset -v PYTHONHOME PYTHONPATH
     return 0
 }
