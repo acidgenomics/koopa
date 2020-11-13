@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME REWORK THIS, POINTING TO BCBIO TOOLS DIR AND GIT REPO.
-# FIXME NEED TO REWORK BCBIO PREFIX.
 koopa::linux_bcbio_run_tests() { # {{{1
     # """
     # Run bcbio unit tests.
@@ -11,7 +9,7 @@ koopa::linux_bcbio_run_tests() { # {{{1
     # - https://github.com/bcbio/bcbio-nextgen/issues/3371
     # - https://github.com/bcbio/bcbio-nextgen/issues/3372
     # """
-    local git_dir test tests tools_dir
+    local git_dir output_dir test tests tools_dir
     tests=(
         'fastrnaseq'
         'star'
@@ -21,13 +19,18 @@ koopa::linux_bcbio_run_tests() { # {{{1
         'chipseq'
         'scrnaseq'
     )
-    git_dir="${HOME}/git/bcbio-nextgen"
+    git_dir="${HOME:?}/git/bcbio-nextgen"
+    output_dir="${PWD:?}/bcbio-tests"
     tools_dir="$(koopa::bcbio_tools_prefix)"
     while (("$#"))
     do
         case "$1" in
             --git-dir=*)
                 git_dir="${1#*=}"
+                shift 1
+                ;;
+            --output-dir=*)
+                output_dir="${1#*=}"
                 shift 1
                 ;;
             --tools-dir=*)
@@ -39,19 +42,14 @@ koopa::linux_bcbio_run_tests() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_dir "$bcbio_prefix"
-    bin_dir="${bcbio_prefix}/${version}/tools/bin"
-    koopa::assert_is_dir "$bin_dir"
-    git_dir="${bcbio_prefix}/git"
-    koopa::assert_is_dir "$git_dir"
-    tests_dir="${git_dir}/tests"
-    koopa::assert_is_dir "$tests_dir"
+    koopa::assert_is_dir "$git_dir" "$tools_dir"
+    koopa::mkdir "$output_dir"
     (
-        export PATH="${bin_dir}:${PATH}"
-        koopa::cd "$tests_dir"
+        export PATH="${tools_dir}/bin:${PATH}"
+        koopa::cd "${git_dir}/tests"
         for test in "${tests[@]}"
         do
-            export BCBIO_TEST_DIR="/tmp/bcbio-test-${test}"
+            export BCBIO_TEST_DIR="${output_dir}/${test}"
             ./run_tests.sh "$test" --keep-test-dir
         done
     )
