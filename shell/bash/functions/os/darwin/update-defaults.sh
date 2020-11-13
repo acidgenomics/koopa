@@ -3,7 +3,7 @@
 koopa::macos_update_defaults() { # {{{1
     # """
     # Update macOS defaults.
-    # @note Updated 2020-07-20.
+    # @note Updated 2020-11-13.
     #
     # How to read current value:
     # defaults read com.apple.AppleMultitouchTrackpad
@@ -42,12 +42,20 @@ koopa::macos_update_defaults() { # {{{1
         'com.apple.universalaccess' \
         'reduceMotion' \
         -bool true
+
     # Reduce transparency.
+    #
+    # This makes the menu bar consistently dark on Big Sur but will add an
+    # annoying border to the Dock. Nothing you can do about that -- it's worth
+    # the trade off of avoiding a menu bar that switches to light mode depending
+    # on the desktop wallpaper.
+    #
     # > defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
     defaults write \
         'com.apple.universalaccess' \
         'reduceTransparency' \
         -bool true
+
     # Differentiate without color.
     defaults write \
         'com.apple.universalaccess' \
@@ -882,10 +890,11 @@ koopa::macos_update_defaults() { # {{{1
         -bool true
 
     # Display full POSIX path as Finder window title.
+    # This looks terrible now on Big Sur, so disable.
     defaults write \
         'com.apple.finder' \
         '_FXShowPosixPathInTitle' \
-        -bool true
+        -bool false
 
     # Keep folders on top when sorting by name.
     defaults write \
