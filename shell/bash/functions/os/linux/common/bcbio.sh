@@ -3,11 +3,24 @@
 koopa::linux_bcbio_run_tests() { # {{{1
     # """
     # Run bcbio unit tests.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-11-13.
+    #
+    # See issues regarding unit tests inside Docker images:
+    # - https://github.com/bcbio/bcbio-nextgen/issues/3371
+    # - https://github.com/bcbio/bcbio-nextgen/issues/3372
     # """
-    local bcbio_prefix bin_dir git_dir tests_dir version
+    local bcbio_prefix bin_dir git_dir test tests tests_dir version
+    tests=(
+        'fastrnaseq'
+        'star'
+        'hisat2'
+        'rnaseq'
+        'stranded'
+        'chipseq'
+        'scrnaseq'
+    )
     bcbio_prefix="$(koopa::bcbio_prefix)"
-    version='development'
+    version='stable'
     while (("$#"))
     do
         case "$1" in
@@ -34,15 +47,11 @@ koopa::linux_bcbio_run_tests() { # {{{1
     (
         export PATH="${bin_dir}:${PATH}"
         koopa::cd "$tests_dir"
-        koopa::rm test_automated_output
-        ./run_tests.sh fastrnaseq
-        ./run_tests.sh star
-        ./run_tests.sh hisat2
-        ./run_tests.sh rnaseq
-        ./run_tests.sh stranded
-        ./run_tests.sh chipseq
-        ./run_tests.sh scrnaseq
-        koopa::rm test_automated_output
+        for test in "${tests[@]}"
+        do
+            export BCBIO_TEST_DIR="/tmp/bcbio-${version}-${test}"
+            ./run_tests.sh "$test" --keep-test-dir
+        done
     )
     koopa::success 'All unit tests passed.'
     return 0
