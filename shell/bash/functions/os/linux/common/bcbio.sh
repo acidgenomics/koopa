@@ -11,7 +11,7 @@ koopa::linux_bcbio_run_tests() { # {{{1
     # - https://github.com/bcbio/bcbio-nextgen/issues/3371
     # - https://github.com/bcbio/bcbio-nextgen/issues/3372
     # """
-    local bcbio_prefix bin_dir git_dir test tests tests_dir version
+    local git_dir test tests tools_dir
     tests=(
         'fastrnaseq'
         'star'
@@ -21,17 +21,17 @@ koopa::linux_bcbio_run_tests() { # {{{1
         'chipseq'
         'scrnaseq'
     )
-    bcbio_prefix="$(koopa::bcbio_prefix)"
-    version='stable'
+    git_dir="${HOME}/git/bcbio-nextgen"
+    tools_dir="$(koopa::bcbio_tools_prefix)"
     while (("$#"))
     do
         case "$1" in
-            --bcbio-prefix=*)
-                bcbio_prefix="${1#*=}"
+            --git-dir=*)
+                git_dir="${1#*=}"
                 shift 1
                 ;;
-            --version=*)
-                version="${1#*=}"
+            --tools-dir=*)
+                tools_dir="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -51,7 +51,7 @@ koopa::linux_bcbio_run_tests() { # {{{1
         koopa::cd "$tests_dir"
         for test in "${tests[@]}"
         do
-            export BCBIO_TEST_DIR="/tmp/bcbio-${version}-${test}"
+            export BCBIO_TEST_DIR="/tmp/bcbio-test-${test}"
             ./run_tests.sh "$test" --keep-test-dir
         done
     )
