@@ -3,7 +3,7 @@
 
 # """
 # Bash header.
-# @note Updated 2020-11-12.
+# @note Updated 2020-11-14.
 # """
 
 if [[ "$#" -gt 0 ]]
@@ -36,9 +36,11 @@ if [[ "$activate" -eq 1 ]]
 then
     checks=0
     shopts=0
+    KOOPA_INTERACTIVE=1
 else
-    export KOOPA_SKIP_ACTIVATE=1
+    KOOPA_INTERACTIVE=0
 fi
+export KOOPA_INTERACTIVE
 
 # Customize optional shell behavior.
 # These are not recommended to be set during koopa activation.
