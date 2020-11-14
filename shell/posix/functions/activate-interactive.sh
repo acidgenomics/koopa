@@ -3,21 +3,24 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-11-14.
     # """
+    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local file
     file="${HOME}/.aliases"
-    [ -f "$file" ] || return 0
     # shellcheck source=/dev/null
-    . "$file"
+    [ -f "$file" ] && . "$file"
+    file="${HOME}/.aliases-private"
+    # shellcheck source=/dev/null
+    [ -f "$file" ] && . "$file"
     return 0
 }
 
 _koopa_activate_autojump() { # {{{1
     # """
     # Activate autojump.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-14.
     #
     # Currently supports Bash and Zsh.
     # Skip activation on other POSIX shells, such as Dash.
@@ -32,9 +35,9 @@ _koopa_activate_autojump() { # {{{1
     # See also:
     # - https://github.com/wting/autojump
     # """
+    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local prefix nounset script
-    [ -n "${KOOPA_SKIP_ACTIVATE:-}" ] && return 0
     case "$(_koopa_shell)" in
         bash|zsh)
             ;;
@@ -62,7 +65,7 @@ _koopa_activate_autojump() { # {{{1
 _koopa_activate_broot() { # {{{1
     # """
     # Activate broot directory tree utility.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-14.
     #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
@@ -76,9 +79,9 @@ _koopa_activate_broot() { # {{{1
     # @seealso
     # https://github.com/Canop/broot
     # """
+    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local br_script config_dir nounset
-    [ -n "${KOOPA_SKIP_ACTIVATE:-}" ] && return 0
     config_dir="${HOME}/.config/broot"
     [ -d "$config_dir" ] || return 0
     # This is supported for Bash and Zsh.
@@ -95,11 +98,11 @@ _koopa_activate_broot() { # {{{1
 _koopa_activate_completion() { # {{{1
     # """
     # Activate completion (with TAB key).
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-14.
     # """
+    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local file
-    [ -n "${KOOPA_SKIP_ACTIVATE:-}" ] && return 0
     case "$(_koopa_shell)" in
         bash|zsh)
             ;;
@@ -118,11 +121,11 @@ _koopa_activate_completion() { # {{{1
 _koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-14.
     # """
+    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local dircolors_file dotfiles_prefix
-    [ -n "${KOOPA_SKIP_ACTIVATE:-}" ] && return 0
     _koopa_is_installed dircolors || return 0
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
     # This will set the 'LD_COLORS' environment variable.
@@ -146,7 +149,7 @@ _koopa_activate_dircolors() { # {{{1
 _koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-14.
     #
     # Currently Bash and Zsh are supported.
     #
@@ -159,9 +162,9 @@ _koopa_activate_fzf() { # {{{1
     # - Dracula palette:
     #   https://gist.github.com/umayr/8875b44740702b340430b610b52cd182
     # """
+    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local nounset prefix script shell
-    [ -n "${KOOPA_SKIP_ACTIVATE:-}" ] && return 0
     [ -z "${FZF_DEFAULT_OPTS:-}" ] && \
         export FZF_DEFAULT_OPTS='--color bw --border'
     prefix="$(_koopa_fzf_prefix)/latest"
@@ -201,7 +204,7 @@ _koopa_activate_fzf() { # {{{1
 _koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-14.
     #
     # Note that 'starship.bash' script has unbound PREEXEC_READY.
     # https://github.com/starship/starship/blob/master/src/init/starship.bash
@@ -209,9 +212,9 @@ _koopa_activate_starship() { # {{{1
     # See also:
     # https://starship.rs/
     # """
+    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local nounset shell
-    [ -n "${KOOPA_SKIP_ACTIVATE:-}" ] && return 0
     _koopa_is_installed starship || return 0
     shell="$(_koopa_shell)"
     case "$(_koopa_shell)" in
@@ -231,18 +234,19 @@ _koopa_activate_starship() { # {{{1
 _koopa_activate_zoxide() { # {{{1
     # """
     # Activate zoxide.
-    #
-    # @note Updated 2020-11-12.
-    # @seealso https://github.com/ajeetdsouza/zoxide
+    # @note Updated 2020-11-14.
     #
     # Highly recommended to use along with fzf.
     #
     # POSIX option:
     # eval "$(zoxide init posix --hook prompt)"
+    #
+    # @seealso
+    # - https://github.com/ajeetdsouza/zoxide
     # """
+    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local shell nounset
-    [ -n "${KOOPA_SKIP_ACTIVATE:-}" ] && return 0
     shell="$(_koopa_shell)"
     case "$shell" in
         bash|zsh)
