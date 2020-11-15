@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2020-11-11.
+## Updated 2020-11-15.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -8,11 +8,9 @@
 ##       Renviron.site
 ## """
 
-
 HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/usr/local}"
 HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
 KOOPA_APP_PREFIX="${KOOPA_APP_PREFIX:-/usr/local/koopa/opt}"
-
 
 ## System path {{{1
 ## =============================================================================
@@ -52,14 +50,10 @@ R_LIBS_USER="~/Library/R/%v/library"
 ## Package configuration {{{1
 ## =============================================================================
 
-## LAPACK.
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-
-## OpenBLAS.
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
-
-## imagemagick.
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 ## Miscellaneous useful defaults {{{1
 ## =============================================================================
