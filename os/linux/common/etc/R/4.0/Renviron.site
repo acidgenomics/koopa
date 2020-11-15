@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2020-11-11.
+## Updated 2020-11-15.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -11,9 +11,7 @@
 ## - Debian example config file by Dirk Eddelbuettel.
 ## """
 
-
 KOOPA_APP_PREFIX="${KOOPA_APP_PREFIX:-/usr/local/koopa/opt}"
-
 
 ## System path {{{1
 ## =============================================================================
@@ -23,8 +21,6 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 
 ## Include Python site packages.
 PATH="/usr/local/lib/python3.9/site-packages/bin:${PATH}"
-
-
 
 ## Miscellaneous {{{1
 ## =============================================================================
@@ -46,8 +42,6 @@ R_PRINTCMD="${R_PRINTCMD:-/usr/bin/lpr}"
 ## R can sometimes error due to time zone, unless this is set.
 ## This is particularly important to set on rocker Debian images.
 TZ="America/New_York"
-
-
 
 ## R check {{{1
 ## =============================================================================
@@ -99,8 +93,6 @@ export _R_CHECK_EXECUTABLES_="false"
 export _R_CHECK_EXECUTABLES_EXCLUSIONS_="false"
 export _R_CHECK_S3_METHODS_NOT_REGISTERED_="true"
 
-
-
 ## GitHub remote installs {{{1
 ## =============================================================================
 
@@ -119,8 +111,6 @@ R_REMOTES_UPGRADE="always"
 ## standalone mode and use only its internal R implementations. This will allow
 ## successful installation of these packages.
 R_REMOTES_STANDALONE="true"
-
-
 
 ## Package library {{{1
 ## =============================================================================
@@ -177,8 +167,6 @@ R_LIBS_SITE="${R_HOME}/site-library"
 ## This loads the packages in the order given, so they appear on the search path
 ## in reverse order.
 # > R_DEFAULT_PACKAGES="utils,grDevices,graphics,stats"
-
-
 
 ## Package-specific {{{1
 ## =============================================================================
