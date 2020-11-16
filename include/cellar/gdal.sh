@@ -13,6 +13,7 @@
 # - https://github.com/OSGeo/gdal/issues/1708
 # """
 
+koopa::assert_is_linux
 [[ "$reinstall" -ne 1 ]] && koopa::assert_is_not_file '/usr/bin/gdal-config'
 koopa::assert_is_installed proj python3
 koopa::coffee_time
