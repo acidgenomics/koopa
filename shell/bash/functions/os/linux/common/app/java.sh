@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::install_openjdk() { # {{{1
+koopa::linux_install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-11-16.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -83,8 +83,55 @@ ${unique}/GPL/${file}"
     )
     koopa::sys_set_permissions -r "$jdk_dir"
     # This step will skip for non-shared install.
-    koopa::java_update_alternatives "$prefix"
+    koopa::linux_java_update_alternatives "$prefix"
     koopa::install_success "$name_fancy"
     return 0
 }
 
+koopa::linux_java_update_alternatives() { # {{{1
+    # """
+    # Update Java alternatives.
+    # @note Updated 2020-07-05.
+    #
+    # This step is intentionally skipped for non-admin installs, when calling
+    # from 'install-openjdk' script.
+    # """
+    local prefix priority
+    koopa::assert_has_args_eq "$#" 1
+    koopa::is_shared_install || return 0
+    koopa::is_installed update-alternatives || return 0
+    prefix="${1:?}"
+    prefix="$(realpath "$prefix")"
+    priority=100
+    sudo rm -fv /var/lib/alternatives/java
+    sudo update-alternatives --install \
+        '/usr/bin/java' \
+        'java' \
+        "${prefix}/bin/java" \
+        "$priority"
+    sudo update-alternatives --set \
+        'java' \
+        "${prefix}/bin/java"
+    sudo rm -fv /var/lib/alternatives/javac
+    sudo update-alternatives --install \
+        '/usr/bin/javac' \
+        'javac' \
+        "${prefix}/bin/javac" \
+        "$priority"
+    sudo update-alternatives --set \
+        'javac' \
+        "${prefix}/bin/javac"
+    sudo rm -fv /var/lib/alternatives/jar
+    sudo update-alternatives --install \
+        '/usr/bin/jar' \
+        'jar' \
+        "${prefix}/bin/jar" \
+        "$priority"
+    sudo update-alternatives --set \
+        'jar' \
+        "${prefix}/bin/jar"
+    update-alternatives --display java
+    update-alternatives --display javac
+    update-alternatives --display jar
+    return 0
+}
