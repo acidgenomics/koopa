@@ -12,7 +12,7 @@ _koopa_activate_aspera() { # {{{1
 _koopa_activate_bcbio() { # {{{1
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
-    # @note Updated 2020-11-13.
+    # @note Updated 2020-11-16.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
@@ -26,7 +26,7 @@ _koopa_activate_bcbio() { # {{{1
     _koopa_is_linux || return 0
     prefix="$(_koopa_bcbio_tools_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_end "${prefix}/bin"
+    _koopa_force_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH
     return 0
 }
@@ -96,7 +96,7 @@ _koopa_activate_emacs() { # {{{1
 _koopa_activate_ensembl_perl_api() { # {{{1
     # """
     # Activate Ensembl Perl API.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-16.
     #
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
@@ -105,7 +105,7 @@ _koopa_activate_ensembl_perl_api() { # {{{1
     local prefix
     prefix="$(_koopa_ensembl_perl_api_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix}/ensembl-git-tools/bin"
+    _koopa_force_add_to_path_start "${prefix}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl/modules"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-compara/modules"
@@ -158,7 +158,8 @@ _koopa_activate_homebrew() { # {{{1
         [ -d "$prefix" ] || return 0
         brew="${prefix}/bin/brew"
         [ -x "$brew" ] || return 0
-        eval "$("$brew" shellenv)"
+        # FIXME TURN THIS OFF TEMPORARILY.
+        # > eval "$("$brew" shellenv)"
     fi
     _koopa_is_installed brew || return 0
     prefix="$(brew --prefix)"
@@ -190,7 +191,7 @@ _koopa_activate_homebrew() { # {{{1
 _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # """
     # Activate a cellar-only Homebrew GNU program.
-    # @note Updated 2020-11-11.
+    # @note Updated 2020-11-16.
     #
     # Linked using 'g' prefix by default.
     #
@@ -213,8 +214,8 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     local prefix
     prefix="$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
     [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix}/gnubin"
-    _koopa_add_to_manpath_start "${prefix}/gnuman"
+    _koopa_force_add_to_path_start "${prefix}/gnubin"
+    _koopa_force_add_to_manpath_start "${prefix}/gnuman"
     return 0
 }
 
@@ -276,13 +277,13 @@ _koopa_activate_homebrew_python() { # {{{1
 _koopa_activate_homebrew_ruby_gems() { # {{{1
     # """
     # Activate Homebrew Ruby gems.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-16.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ruby.rb
     # - https://stackoverflow.com/questions/12287882/
     # """
-    _koopa_add_to_path_start "$(_koopa_homebrew_ruby_gems_prefix)"
+    _koopa_force_add_to_path_start "$(_koopa_homebrew_ruby_gems_prefix)"
     return 0
 }
 
@@ -350,9 +351,6 @@ _koopa_activate_local_etc_profile() { # {{{1
     # @note Updated 2020-08-05.
     #
     # Currently only supported for Bash.
-    #
-    # Can run into issues with autojump due to missing 'BASH' variable on Zsh
-    # and Dash shells otherwise.
     # """
     # shellcheck disable=SC2039
     local make_prefix prefix
@@ -399,7 +397,7 @@ _koopa_activate_macos_extras() { # {{{1
 _koopa_activate_macos_python() { # {{{1
     # """
     # Activate macOS Python binary install.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-11-16.
     # """
     # shellcheck disable=SC2039
     local minor_version version
@@ -407,8 +405,8 @@ _koopa_activate_macos_python() { # {{{1
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
     version="$(_koopa_variable 'python')"
     minor_version="$(_koopa_major_minor_version "$version")"
-    _koopa_add_to_path_start "/Library/Frameworks/Python.framework/\
-Versions/${minor_version}/bin"
+    _koopa_activate_prefix "/Library/Frameworks/Python.framework/\
+Versions/${minor_version}"
     return 0
 }
 
@@ -427,7 +425,7 @@ _koopa_activate_nextflow() { # {{{1
 _koopa_activate_openjdk() { # {{{1
     # """
     # Activate OpenJDK.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-16.
     #
     # Use Homebrew instead to manage on macOS.
     #
@@ -438,7 +436,7 @@ _koopa_activate_openjdk() { # {{{1
     _koopa_is_linux || return 0
     prefix="$(_koopa_openjdk_prefix)/latest"
     [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix}/bin"
+    _koopa_activate_prefix "$prefix"
     return 0
 }
 
@@ -474,7 +472,7 @@ _koopa_activate_perlbrew() { # {{{1
 _koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-16.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
@@ -504,7 +502,7 @@ _koopa_activate_pipx() { # {{{1
     fi
     export PIPX_HOME
     export PIPX_BIN_DIR
-    _koopa_add_to_path_start "$PIPX_BIN_DIR"
+    _koopa_force_add_to_path_start "$PIPX_BIN_DIR"
     return 0
 }
 
@@ -549,17 +547,17 @@ _koopa_activate_pkg_config() { # {{{1
 _koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
-    # @note Updated 2020-08-09.
+    # @note Updated 2020-11-16.
     # """
     # shellcheck disable=SC2039
     local prefix
     for prefix in "$@"
     do
         [ -d "$prefix" ] || continue
-        _koopa_add_to_path_start \
+        _koopa_force_add_to_path_start \
             "${prefix}/bin" \
             "${prefix}/sbin"
-        _koopa_add_to_manpath_start \
+        _koopa_force_add_to_manpath_start \
             "${prefix}/man" \
             "${prefix}/share/man"
     done
@@ -593,7 +591,7 @@ _koopa_activate_pyenv() { # {{{1
 _koopa_activate_python_site_packages() { # {{{1
     # """
     # Activate Python site packages library.
-    # @note Updated 2020-08-07.
+    # @note Updated 2020-11-16.
     #
     # This ensures that 'bin' will be added to PATH, which is useful when
     # installing via pip with '--target' flag.
@@ -602,7 +600,7 @@ _koopa_activate_python_site_packages() { # {{{1
     local prefix
     prefix="$(_koopa_python_site_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix:?}/bin"
+    _koopa_force_add_to_path_start "${prefix:?}/bin"
     return 0
 }
 
@@ -630,8 +628,8 @@ _koopa_activate_rbenv() { # {{{1
     # - https://github.com/rbenv/rbenv
     #
     # Alternate approaches:
-    # > _koopa_add_to_path_start "$(rbenv root)/shims"
-    # > _koopa_add_to_path_start "${HOME}/.rbenv/shims"
+    # > _koopa_force_add_to_path_start "$(rbenv root)/shims"
+    # > _koopa_force_add_to_path_start "${HOME}/.rbenv/shims"
     # """
     # shellcheck disable=SC2039
     local nounset prefix script
@@ -799,8 +797,6 @@ _koopa_activate_venv() { # {{{1
     # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
     #
     # Refer to 'declare -f deactivate' for function source code.
-    #
-    # Note that 'deactivate' is still messing up autojump path.
     # """
     # shellcheck disable=SC2039
     local name nounset prefix script
