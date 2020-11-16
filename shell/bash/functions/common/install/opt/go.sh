@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME CAN WE INSTALL THIS ON MACOS?
-
 koopa::install_go() { # {{{1
     # """
     # Install Go.
@@ -13,6 +11,7 @@ koopa::install_go() { # {{{1
     name='go'
     name_fancy='Go'
     link_cellar=1
+    koopa::is_macos && link_cellar=0
     reinstall=0
     version=
     while (("$#"))
@@ -62,10 +61,10 @@ koopa::install_go() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$app_prefix"
-    koopa::h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
-    koopa::cp -t "$cellar_prefix" "${app_prefix}/bin"
     if [[ "$link_cellar" -eq 1 ]]
     then
+        koopa::h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
+        koopa::cp -t "$cellar_prefix" "${app_prefix}/bin"
         koopa::link_cellar "$name" "$version"
         # Need to create directory expected by GOROOT environment variable.
         # If this doesn't exist, Go will currently error.
