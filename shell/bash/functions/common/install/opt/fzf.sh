@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Seeing this on macOS:
+# Makefile:14: *** Not on git repository; cannot determine $FZF_VERSION.  Stop.
+
 koopa::install_fzf() { # {{{1
     # """
     # Install fzf.

@@ -34,7 +34,7 @@ _koopa_activate_bcbio() { # {{{1
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-16.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
@@ -43,10 +43,7 @@ _koopa_activate_conda() { # {{{1
     # shellcheck disable=SC2039
     local name nounset prefix
     prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        prefix="$(_koopa_app_prefix)/conda"
-    fi
+    [ -z "$prefix" ] && prefix="$(_koopa_app_prefix)/conda"
     [ -d "$prefix" ] || return 0
     name="${2:-base}"
     script="${prefix}/bin/activate"
@@ -212,7 +209,7 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
 _koopa_activate_homebrew_google_cloud_sdk() { # {{{1
     # """
     # Activate Homebrew Google Cloud SDK.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-16.
     # """
     # shellcheck disable=SC2039
     local prefix shell
@@ -220,17 +217,12 @@ _koopa_activate_homebrew_google_cloud_sdk() { # {{{1
     prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
     [ -d "$prefix" ] || return 0
     shell="$(_koopa_shell)"
-    if [ -f "${prefix}/path.${shell}.inc" ]
-    then
-        # shellcheck source=/dev/null
+    # shellcheck source=/dev/null
+    [ -f "${prefix}/path.${shell}.inc" ] && \
         . "${prefix}/path.${shell}.inc"
-    fi
-    if [ -f "${prefix}/completion.${shell}.inc" ]
-    then
-        # shellcheck source=/dev/null
+    # shellcheck source=/dev/null
+    [ -f "${prefix}/completion.${shell}.inc" ] && \
         . "${prefix}/completion.${shell}.inc"
-
-    fi
     return 0
 }
 
@@ -659,7 +651,7 @@ _koopa_activate_ruby() { # {{{1
 _koopa_activate_rust() { # {{{1
     # """
     # Activate Rust programming language.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-16.
     #
     # Attempt to locate cargo home and source the env script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
