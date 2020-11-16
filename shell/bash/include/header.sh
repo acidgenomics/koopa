@@ -94,7 +94,7 @@ fi
 source_dir() {
     # """
     # Source all scripts inside a directory.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-16.
     # """
     local prefix fun_script fun_scripts
     prefix="${KOOPA_PREFIX}/shell/bash/functions/${1:?}"
@@ -102,7 +102,7 @@ source_dir() {
     readarray -t fun_scripts <<< "$( \
         find -L "$prefix" \
             -mindepth 1 \
-            -maxdepth 2 \
+            -maxdepth 3 \
             -type f \
             -name '*.sh' \
             -print \
