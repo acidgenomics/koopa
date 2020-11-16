@@ -37,13 +37,10 @@ koopa::install_go() { # {{{1
     koopa::assert_has_no_args "$#"
     [[ -z "$version" ]] && version="$(koopa::variable "$name")"
     app_prefix="$(koopa::app_prefix)/${name}/${version}"
-    cellar_prefix="$(koopa::cellar_prefix)/${name}/${version}"
     [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$app_prefix" "$cellar_prefix"
     [[ -d "$app_prefix" ]] && return 0
-    [[ -d "$cellar_prefix" ]] && return 0
-    koopa::install_start "$name_fancy" "$version" "$cellar_prefix"
+    koopa::install_start "$name_fancy" "$version" "$app_prefix"
     koopa::mkdir "$app_prefix"
-    koopa::mkdir "$cellar_prefix"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -63,7 +60,9 @@ koopa::install_go() { # {{{1
     koopa::sys_set_permissions -r "$app_prefix"
     if [[ "$link_cellar" -eq 1 ]]
     then
+        cellar_prefix="$(koopa::cellar_prefix)/${name}/${version}"
         koopa::h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
+        koopa::mkdir "$cellar_prefix"
         koopa::cp -t "$cellar_prefix" "${app_prefix}/bin"
         koopa::link_cellar "$name" "$version"
         # Need to create directory expected by GOROOT environment variable.
