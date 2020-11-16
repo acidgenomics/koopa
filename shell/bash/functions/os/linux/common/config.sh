@@ -47,54 +47,6 @@ koopa::add_user_to_group() { # {{{1
     return 0
 }
 
-koopa::java_update_alternatives() { # {{{1
-    # """
-    # Update Java alternatives.
-    # @note Updated 2020-07-05.
-    #
-    # This step is intentionally skipped for non-admin installs, when calling
-    # from 'install-openjdk' script.
-    # """
-    local prefix priority
-    koopa::assert_has_args_eq "$#" 1
-    koopa::is_shared_install || return 0
-    koopa::is_installed update-alternatives || return 0
-    prefix="${1:?}"
-    prefix="$(realpath "$prefix")"
-    priority=100
-    sudo rm -fv /var/lib/alternatives/java
-    sudo update-alternatives --install \
-        '/usr/bin/java' \
-        'java' \
-        "${prefix}/bin/java" \
-        "$priority"
-    sudo update-alternatives --set \
-        'java' \
-        "${prefix}/bin/java"
-    sudo rm -fv /var/lib/alternatives/javac
-    sudo update-alternatives --install \
-        '/usr/bin/javac' \
-        'javac' \
-        "${prefix}/bin/javac" \
-        "$priority"
-    sudo update-alternatives --set \
-        'javac' \
-        "${prefix}/bin/javac"
-    sudo rm -fv /var/lib/alternatives/jar
-    sudo update-alternatives --install \
-        '/usr/bin/jar' \
-        'jar' \
-        "${prefix}/bin/jar" \
-        "$priority"
-    sudo update-alternatives --set \
-        'jar' \
-        "${prefix}/bin/jar"
-    update-alternatives --display java
-    update-alternatives --display javac
-    update-alternatives --display jar
-    return 0
-}
-
 koopa::link_docker() { # {{{1
     # """
     # Link Docker library onto data disk for VM.
@@ -181,7 +133,7 @@ koopa::update_ldconfig() { # {{{1
     # Update dynamic linker (LD) configuration.
     # @note Updated 2020-11-12.
     # """
-    local conf_source dest_file distro_prefix prefix source_file
+    local conf_source dest_file distro_prefix source_file
     koopa::assert_has_no_args "$#"
     [[ -d '/etc/ld.so.conf.d' ]] || return 0
     koopa::assert_is_installed ldconfig
