@@ -18,7 +18,8 @@
 # > make check
 # """
 
-koopa::assert_is_not_file /usr/bin/geos-config
+koopa::assert_is_linux
+[[ "$reinstall" -ne 1 ]] && koopa::assert_is_not_file '/usr/bin/geos-config'
 file="${version}.tar.gz"
 url="https://github.com/libgeos/${name}/archive/${file}"
 koopa::download "$url"

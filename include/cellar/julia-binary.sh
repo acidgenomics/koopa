@@ -24,6 +24,7 @@
 #     problem-building-julia-version-jl-llvm-6-0-not-found/11545
 # """
 
+koopa::assert_is_linux
 minor_version="$(koopa::major_minor_version "$version")"
 file="${name}-${version}-linux-x86_64.tar.gz"
 url="https://julialang-s3.julialang.org/bin/linux/x64/${minor_version}/${file}"

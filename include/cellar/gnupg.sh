@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+# FIXME libgcrypt erroring on macOS:
+# gpg: Can't check signature: No public key
+
 # https://gnupg.org/download/index.html
 case "$version" in
     2.2.23)
