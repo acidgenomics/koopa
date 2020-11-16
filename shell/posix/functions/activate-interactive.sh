@@ -17,51 +17,6 @@ _koopa_activate_aliases() { # {{{1
     return 0
 }
 
-_koopa_activate_autojump() { # {{{1
-    # """
-    # Activate autojump.
-    # @note Updated 2020-11-14.
-    #
-    # Currently supports Bash and Zsh.
-    # Skip activation on other POSIX shells, such as Dash.
-    #
-    # Purge install with 'j --purge'.
-    # Location: ~/.local/share/autojump/autojump.txt
-    #
-    # For bash users, autojump keeps track of directories by modifying
-    # '$PROMPT_COMMAND'. Do not overwrite '$PROMPT_COMMAND' in this case.
-    # > export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
-    #
-    # See also:
-    # - https://github.com/wting/autojump
-    # """
-    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    # shellcheck disable=SC2039
-    local prefix nounset script
-    case "$(_koopa_shell)" in
-        bash|zsh)
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    prefix="$(_koopa_autojump_prefix)"
-    [ -d "$prefix" ] || return 0
-    if [ -z "${PROMPT_COMMAND:-}" ]
-    then
-        export PROMPT_COMMAND='history -a'
-    fi
-    _koopa_activate_prefix "$prefix"
-    script="${prefix}/etc/profile.d/autojump.sh"
-    [ -r "$script" ] || return 0
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    # shellcheck source=/dev/null
-    . "$script"
-    [ "$nounset" -eq 1 ] && set -u
-    return 0
-}
-
 _koopa_activate_broot() { # {{{1
     # """
     # Activate broot directory tree utility.
