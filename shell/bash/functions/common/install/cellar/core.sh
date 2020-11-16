@@ -268,7 +268,10 @@ koopa::link_cellar() { # {{{1
     )
     koopa::is_shared_install && cp_flags+=('-S')
     koopa::cp "${cp_flags[@]}" "${cellar_subdirs[@]}"
-    koopa::is_shared_install && koopa::update_ldconfig
+    if koopa::is_linux && koopa::is_shared_install
+    then
+        koopa::update_ldconfig
+    fi
     koopa::success "Successfully linked '${name}'."
     return 0
 }
