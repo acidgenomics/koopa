@@ -2,9 +2,10 @@
 # shellcheck disable=SC2154
 
 # https://gnupg.org/download/index.html
+
 case "$version" in
     2.2.23)
-        # 2020-09-03 / 2020-10-26
+        # 2020-09-03 / 2020-10-26.
         libgpg_error_version='1.39'
         libgcrypt_version='1.8.7'
         libksba_version='1.4.0'
@@ -13,7 +14,7 @@ case "$version" in
         pinentry_version='1.1.0'
         ;;
     2.2.21)
-        # 2020-07-09
+        # 2020-07-09.
         libgpg_error_version='1.38'
         libgcrypt_version='1.8.6'
         libksba_version='1.4.0'
@@ -22,7 +23,7 @@ case "$version" in
         pinentry_version='1.1.0'
         ;;
     2.2.20)
-        # 2020-03-20
+        # 2020-03-20.
         libgpg_error_version='1.38'
         libgcrypt_version='1.8.5'
         libksba_version='1.4.0'
@@ -31,7 +32,7 @@ case "$version" in
         pinentry_version='1.1.0'
         ;;
     2.2.19)
-        # 2019-12-07
+        # 2019-12-07.
         libgpg_error_version='1.37'
         libgcrypt_version='1.8.5'
         libksba_version='1.3.5'
@@ -43,7 +44,6 @@ case "$version" in
         koopa::stop 'Unsupported GnuPG version.'
         ;;
 esac
-
 # Download GnuPG release signing keys.
 # > if koopa::is_installed gpg-agent
 # > then
@@ -54,10 +54,8 @@ esac
 # >                     2071B08A33BD3F06 \
 # >                     8A861B1C7EFD60D9
 # > fi
-
 # shellcheck disable=SC2034
 gcrypt_url='https://gnupg.org/ftp/gcrypt'
-
 # Install dependencies.
 koopa::install_cellar \
     --name='libgpg-error' \
@@ -84,13 +82,16 @@ koopa::install_cellar \
     --version="$npth_version" \
     --script-name='gnupg-gcrypt' \
     "$@"
-koopa::install_cellar \
-    --name='pinentry' \
-    --version="$pinentry_version" \
-    --script-name='gnupg-pinentry' \
-    "$@"
-
-# Now ready to install GnuPG.
+if koopa::is_macos
+then
+    koopa::note 'Skipping installation of pinentry.'
+else
+    koopa::install_cellar \
+        --name='pinentry' \
+        --version="$pinentry_version" \
+        --script-name='gnupg-pinentry' \
+        "$@"
+fi
 koopa::install_cellar \
     --name='gnupg' \
     --version="$version" \
