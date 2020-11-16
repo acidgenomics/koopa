@@ -52,6 +52,7 @@
 # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
 # """
 
+koopa::assert_is_linux
 file="${name}-${version}.tar.xz"
 url="${gnu_mirror}/${name}/${name}-${version}/${file}"
 koopa::download "$url"
