@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME CAN WE INSTALL THIS ON MACOS?
+
 koopa::install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-11-16.
     # """
-    local app_prefix cellar_prefix goroot link_cellar name name_fancy \
+    local app_prefix cellar_prefix goroot link_cellar name name_fancy os_id \
         reinstall tmp_dir version
     koopa::assert_has_no_envs
     name='go'
@@ -46,7 +48,13 @@ koopa::install_go() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        file="go${version}.linux-amd64.tar.gz"
+        if koopa::is_macos
+        then
+            os_id='darwin'
+        else
+            os_id='linux'
+        fi
+        file="go${version}.${os_id}-amd64.tar.gz"
         url="https://dl.google.com/go/${file}"
         koopa::download "$url"
         koopa::extract "$file"
