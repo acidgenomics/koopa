@@ -6,24 +6,9 @@ koopa::install_autoconf() { # {{{1
         "$@"
 }
 
-koopa::install_autojump() { # {{{1
-    koopa::install_cellar \
-        --name='autojump' \
-        "$@"
-}
-
 koopa::install_automake() { # {{{1
     koopa::install_cellar \
         --name='automake' \
-        "$@"
-}
-
-koopa::install_aws_cli() { # {{{1
-    koopa::install_cellar \
-        --name='aws-cli' \
-        --name-fancy='AWS CLI' \
-        --version='latest' \
-        --include-dirs='bin' \
         "$@"
 }
 
@@ -60,12 +45,6 @@ koopa::install_curl() { # {{{1
         "$@"
 }
 
-koopa::install_docker_credential_pass() { # {{{1
-    koopa::install_cellar \
-        --name='docker-credential-pass' \
-        "$@"
-}
-
 koopa::install_emacs() { # {{{1
     koopa::install_cellar \
         --name='emacs' \
@@ -90,27 +69,6 @@ koopa::install_gawk() { # {{{1
     koopa::install_cellar \
         --name='gawk' \
         --name-fancy='GNU awk' \
-        "$@"
-}
-
-koopa::install_gcc() { # {{{1
-    koopa::install_cellar \
-        --name='gcc' \
-        --name-fancy='GCC' \
-        "$@"
-}
-
-koopa::install_gdal() { # {{{1
-    koopa::install_cellar \
-        --name='gdal' \
-        --name-fancy='GDAL' \
-        "$@"
-}
-
-koopa::install_geos() { # {{{1
-    koopa::install_cellar \
-        --name='geos' \
-        --name-fancy='GEOS' \
         "$@"
 }
 
@@ -154,35 +112,6 @@ koopa::install_hdf5() { # {{{1
 koopa::install_htop() { # {{{1
     koopa::install_cellar \
         --name='htop' \
-        "$@"
-}
-
-koopa::install_julia() { # {{{1
-    local install_type pos
-    install_type='binary'
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --binary)
-                install_type='binary'
-                shift 1
-                ;;
-            --source)
-                install_type='source'
-                shift 1
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::install_cellar \
-        --name='julia' \
-        --name-fancy='Julia' \
-        --script-name="julia-${install_type}" \
         "$@"
 }
 
@@ -256,16 +185,6 @@ koopa::install_parallel() { # {{{1
         "$@"
 }
 
-koopa::install_password_store() { # {{{1
-    # """
-    # https://www.passwordstore.org/
-    # https://git.zx2c4.com/password-store/
-    # """
-    koopa::install_cellar \
-        --name='password-store' \
-        "$@"
-}
-
 koopa::install_patch() { # {{{1
     koopa::install_cellar \
         --name='patch' \
@@ -282,13 +201,6 @@ koopa::install_perl() { # {{{1
 koopa::install_pkg_config() { # {{{1
     koopa::install_cellar \
         --name='pkg-config' \
-        "$@"
-}
-
-koopa::install_proj() { # {{{1
-    koopa::install_cellar \
-        --name='proj' \
-        --name-fancy='PROJ' \
         "$@"
 }
 

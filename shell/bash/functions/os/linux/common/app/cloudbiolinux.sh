@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::install_cloudbiolinux() { # {{{1
+koopa::linux_install_cloudbiolinux() { # {{{1
     # """
     # Install CloudBioLinux.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-16.
     # """
     local name_fancy prefix
     koopa::assert_has_args_le "$#" 1

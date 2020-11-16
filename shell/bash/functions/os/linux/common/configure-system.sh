@@ -38,7 +38,6 @@ koopa::linux_configure_system() { # {{{1
         )"
         [install_aspera_connect]=0
         [install_autoconf]=0
-        [install_autojump]=0
         [install_automake]=0
         [install_aws_cli]=0
         [install_azure_cli]=0
@@ -177,7 +176,6 @@ koopa::linux_configure_system() { # {{{1
         full)
             dict[install_aspera_connect]=1
             dict[install_autoconf]=1
-            dict[install_autojump]=1
             dict[install_automake]=1
             dict[install_azure_cli]=1
             dict[install_base_flags]='--full'
@@ -509,8 +507,6 @@ koopa::linux_configure_system() { # {{{1
         install-lmod
     [[ "${dict[install_htop]}" -eq 1 ]] && \
         install-htop
-    [[ "${dict[install_autojump]}" -eq 1 ]] && \
-        install-autojump
     # Install R.
     if [[ "${dict[install_r]}" -eq 1 ]]
     then

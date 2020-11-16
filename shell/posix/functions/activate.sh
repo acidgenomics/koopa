@@ -282,7 +282,6 @@ _koopa_activate_koopa_paths() { # {{{1
     # Automatically configure koopa PATH and MANPATH.
     # @note Updated 2020-11-16.
     # """
-    echo "FIXME KOOPA PATHS"
     # shellcheck disable=SC2039
     local config_prefix distro_prefix koopa_prefix linux_prefix shell
     koopa_prefix="$(_koopa_prefix)"
@@ -753,7 +752,6 @@ _koopa_activate_standard_paths() { # {{{1
     # """
     # shellcheck disable=SC2039
     local make_prefix
-    echo "FIXME STANDARD PATHS"
     make_prefix="$(_koopa_make_prefix)"
     _koopa_add_to_path_end \
         '/usr/sbin' \

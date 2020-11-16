@@ -154,7 +154,7 @@ koopa::update_koopa_user() { # {{{1
     koopa::h2 'Updating user configuration.'
     # Remove legacy directories from user config, if necessary.
     koopa::rm "${config_prefix}/"\
-{'Rcheck','autojump','oh-my-zsh','pyenv','rbenv','spacemacs'}
+{'Rcheck','oh-my-zsh','pyenv','rbenv','spacemacs'}
     # Update git repos.
     repos=(
         "${config_prefix}/docker"

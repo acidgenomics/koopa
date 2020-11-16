@@ -36,11 +36,13 @@ if [[ "$activate" -eq 1 ]]
 then
     checks=0
     shopts=0
+    KOOPA_ACTIVATE=1
     KOOPA_INTERACTIVE=1
 else
+    KOOPA_ACTIVATE=0
     KOOPA_INTERACTIVE=0
 fi
-export KOOPA_INTERACTIVE
+export KOOPA_ACTIVATE KOOPA_INTERACTIVE
 
 # Customize optional shell behavior.
 # These are not recommended to be set during koopa activation.
