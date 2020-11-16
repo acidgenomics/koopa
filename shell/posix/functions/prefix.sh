@@ -32,31 +32,6 @@ _koopa_aspera_prefix() { # {{{1
     return 0
 }
 
-_koopa_autojump_prefix() { # {{{1
-    # """
-    # autojump prefix.
-    # @note Updated 2020-07-01.
-    # """
-    # shellcheck disable=SC2039
-    local make_prefix prefix
-    make_prefix="$(_koopa_make_prefix)"
-    # Shared installation (Linux).
-    if [ -x "${make_prefix}/bin/autojump" ]
-    then
-        # This is the current target of cellar script.
-        prefix="$make_prefix"
-    elif [ -x '/usr/bin/autojump' ]
-    then
-        # Also support installation via package manager.
-        prefix='/usr'
-    else
-        # Local user installation (macOS).
-        prefix="${HOME:?}/.autojump"
-    fi
-    _koopa_print "$prefix"
-    return 0
-}
-
 _koopa_bcbio_tools_prefix() { # {{{1
     # """
     # bcbio-nextgen tools prefix.

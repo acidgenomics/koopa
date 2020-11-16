@@ -47,11 +47,6 @@ _koopa_deactivate_venv() { # {{{1
     # """
     # Deactivate Python virtual environment.
     # @note Updated 2020-06-30.
-    #
-    # The standard approach currently messes up autojump path:
-    # # shellcheck disable=SC1090
-    # > . "${VIRTUAL_ENV}/bin/activate"
-    # > deactivate
     # """
     [ -n "${VIRTUAL_ENV:-}" ] || return 0
     _koopa_remove_from_path "${VIRTUAL_ENV}/bin"
