@@ -37,9 +37,6 @@ autoconf="2.69"
 # https://ftp.gnu.org/gnu/automake/
 automake="1.16.2"
 
-# https://github.com/wting/autojump/releases
-autojump="22.5.3"
-
 # https://www.gnu.org/software/bash/
 bash="5.0.18"
 
@@ -105,7 +102,7 @@ fzf="0.24.3"
 gawk="5.1.0"
 
 # https://ftp.gnu.org/gnu/gcc/
-gcc="9.3.0"
+gcc="10.2.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
