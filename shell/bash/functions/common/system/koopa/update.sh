@@ -99,7 +99,8 @@ koopa::update_koopa() { # {{{1
     return 0
 }
 
-koopa::update_system() { # {{{1
+# FIXME REWORK.
+koopa::update_koopa_system() { # {{{1
     # """
     # Update system installation.
     # @note Updated 2020-11-16.
@@ -144,7 +145,8 @@ koopa::update_system() { # {{{1
     return 0
 }
 
-koopa::update_user() { # {{{1
+# FIXME REWORK.
+koopa::update_koopa_user() { # {{{1
     # """
     # Update koopa user configuration.
     # @note Updated 2020-11-16.
