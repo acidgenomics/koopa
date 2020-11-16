@@ -21,11 +21,14 @@ do
 done
 unset -v file
 
-_koopa_activate_xdg
-_koopa_activate_standard_paths
-_koopa_activate_koopa_paths
-_koopa_activate_pkg_config
-_koopa_activate_python_site_packages
+if [ "${KOOPA_ACTIVATE:-1}" -eq 1 ]
+then
+    _koopa_activate_xdg
+    _koopa_activate_standard_paths
+    _koopa_activate_koopa_paths
+    _koopa_activate_pkg_config
+    _koopa_activate_python_site_packages
+fi
 
 # This value is picked up in R configuration (for reticulate).
 KOOPA_APP_PREFIX="$(_koopa_app_prefix)"

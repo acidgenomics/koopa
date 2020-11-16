@@ -143,26 +143,16 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-11-11.
+    # @note Updated 2020-11-16.
     # """
     # shellcheck disable=SC2039
-    local brew prefix
-    prefix="${HOMEBREW_PREFIX:-}"
-    if [ -d "$prefix" ] && _koopa_is_installed brew
+    local prefix
+    prefix="$(_koopa_homebrew_prefix)"
+    if ! _koopa_is_installed brew
     then
-        return 0
-    fi
-    if [ ! -d "$prefix" ]
-    then
-        prefix="$(_koopa_homebrew_prefix)"
-        [ -d "$prefix" ] || return 0
-        brew="${prefix}/bin/brew"
-        [ -x "$brew" ] || return 0
-        # FIXME TURN THIS OFF TEMPORARILY.
-        # > eval "$("$brew" shellenv)"
+        _koopa_activate_prefix "$prefix"
     fi
     _koopa_is_installed brew || return 0
-    prefix="$(brew --prefix)"
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
     # Stopgap fix for TLS SSL issues with some Homebrew casks.
@@ -290,12 +280,12 @@ _koopa_activate_homebrew_ruby_gems() { # {{{1
 _koopa_activate_koopa_paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-16.
     # """
+    echo "FIXME KOOPA PATHS"
     # shellcheck disable=SC2039
     local config_prefix distro_prefix koopa_prefix linux_prefix shell
     koopa_prefix="$(_koopa_prefix)"
-    _koopa_str_match "${PATH:-}" "$koopa_prefix" && return 0
     config_prefix="$(_koopa_config_prefix)"
     shell="$(_koopa_shell)"
     _koopa_activate_prefix "$koopa_prefix"
@@ -763,18 +753,20 @@ _koopa_activate_standard_paths() { # {{{1
     # """
     # shellcheck disable=SC2039
     local make_prefix
+    echo "FIXME STANDARD PATHS"
     make_prefix="$(_koopa_make_prefix)"
-    _koopa_add_to_path_start \
-        '/bin' \
-        '/sbin' \
-        '/usr/bin' \
+    _koopa_add_to_path_end \
         '/usr/sbin' \
+        '/usr/bin' \
+        '/sbin' \
+        '/bin'
+    _koopa_force_add_to_path_start \
         "${make_prefix}/bin" \
         "${make_prefix}/sbin" \
         "${HOME}/bin" \
         "${HOME}/.local/bin"
     _koopa_add_to_manpath_end '/usr/share/man'
-    _koopa_add_to_manpath_start \
+    _koopa_force_add_to_manpath_start \
         "${make_prefix}/share/man" \
         "${HOME}/.local/share/man"
     return 0
