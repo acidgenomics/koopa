@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-koopa::clean_tmp() { # {{{1
+koopa::linux_clean_tmp() { # {{{1
+    # """
+    # Clean temporary directory.
+    # @note Updated 2020-11-16.
+    # """
     local dir dirs
     koopa::assert_has_no_args "$#"
     dirs=('/tmp')
