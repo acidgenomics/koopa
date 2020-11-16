@@ -102,7 +102,6 @@ source_dir() {
     readarray -t fun_scripts <<< "$( \
         find -L "$prefix" \
             -mindepth 1 \
-            -maxdepth 3 \
             -type f \
             -name '*.sh' \
             -print \
