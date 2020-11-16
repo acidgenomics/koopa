@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2020-11-11.
+    # @note Updated 2020-11-16.
     # """
     case "${1:-}" in
         --help|-h)
@@ -106,8 +106,6 @@ _koopa_activate() { # {{{1
             _koopa_tmux_sessions
         fi
     fi
-    # FIXME ADD CHECK TO WARN ON PATH FLIPPING.
-    # /usr/local needs to come before /usr/bin
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
         set +o errexit
