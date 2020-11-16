@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
-# FIXME libgcrypt erroring on macOS:
-# gpg: Can't check signature: No public key
-
 # https://gnupg.org/download/index.html
 case "$version" in
     2.2.23)
@@ -48,15 +45,15 @@ case "$version" in
 esac
 
 # Download GnuPG release signing keys.
-if koopa::is_installed gpg-agent
-then
-    gpg --list-keys
-    gpg --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv-keys 249B39D24F25E3B6 \
-                    04376F3EE0856959 \
-                    2071B08A33BD3F06 \
-                    8A861B1C7EFD60D9
-fi
+# > if koopa::is_installed gpg-agent
+# > then
+# >     gpg --list-keys
+# >     gpg --keyserver hkp://keyserver.ubuntu.com:80 \
+# >         --recv-keys 249B39D24F25E3B6 \
+# >                     04376F3EE0856959 \
+# >                     2071B08A33BD3F06 \
+# >                     8A861B1C7EFD60D9
+# > fi
 
 # shellcheck disable=SC2034
 gcrypt_url='https://gnupg.org/ftp/gcrypt'
