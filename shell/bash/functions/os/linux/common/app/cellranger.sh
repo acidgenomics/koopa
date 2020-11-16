@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::install_cellranger() { # {{{1
+koopa::linux_install_cellranger() { # {{{1
     # """
     # Install Cell Ranger.
-    # @note Updated 2020-08-18.
+    # @note Updated 2020-11-16.
     # """
     local file make_prefix name name_fancy prefix server tmp_dir url version
     version=

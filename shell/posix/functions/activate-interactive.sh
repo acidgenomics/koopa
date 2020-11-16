@@ -159,7 +159,7 @@ _koopa_activate_fzf() { # {{{1
 _koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
-    # @note Updated 2020-11-14.
+    # @note Updated 2020-11-16.
     #
     # Note that 'starship.bash' script has unbound PREEXEC_READY.
     # https://github.com/starship/starship/blob/master/src/init/starship.bash

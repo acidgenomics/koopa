@@ -60,10 +60,6 @@ koopa::aspera_prefix() { # {{{1
     _koopa_aspera_prefix "$@"
 }
 
-koopa::autojump_prefix() { # {{{1
-    _koopa_autojump_prefix "$@"
-}
-
 koopa::bcbio_tools_prefix() { # {{{1
     _koopa_bcbio_tools_prefix "$@"
 }
