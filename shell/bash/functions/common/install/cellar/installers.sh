@@ -209,13 +209,6 @@ koopa::install_rsync() { # {{{1
         "$@"
 }
 
-koopa::linux_install_ruby() { # {{{1
-    koopa::install_cellar \
-        --name='ruby' \
-        --name-fancy='Ruby' \
-        "$@"
-}
-
 koopa::install_sed() { # {{{1
     koopa::install_cellar \
         --name='sed' \
@@ -254,13 +247,6 @@ koopa::install_sqlite() { # {{{1
 koopa::install_subversion() { # {{{1
     koopa::install_cellar \
         --name='subversion' \
-        "$@"
-}
-
-koopa::install_taglib() { # {{{1
-    koopa::install_cellar \
-        --name='taglib' \
-        --name-fancy='TagLib' \
         "$@"
 }
 

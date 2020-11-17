@@ -130,3 +130,10 @@ koopa::linux_install_ruby() { # {{{1
         --name-fancy='Ruby' \
         "$@"
 }
+
+koopa::linux_install_taglib() { # {{{1
+    koopa::install_cellar \
+        --name='taglib' \
+        --name-fancy='TagLib' \
+        "$@"
+}

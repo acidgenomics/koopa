@@ -71,13 +71,14 @@ koopa::find_cellar_version() { # {{{1
 koopa::install_cellar() { # {{{1
     # """
     # Install cellarized application.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-17.
     # """
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
         name_fancy pass_args prefix reinstall script_name script_path tmp_dir \
         version
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
+    koopa::is_macos && koopa::assert_is_installed brew
     include_dirs=
     link_cellar=1
     # Disable linking into '/usr/local' for macOS at the moment.
