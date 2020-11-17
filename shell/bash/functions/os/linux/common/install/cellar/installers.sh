@@ -123,3 +123,10 @@ koopa::linux_install_r() { # {{{1
         "$@"
     koopa::update_r_config
 }
+
+koopa::linux_install_ruby() { # {{{1
+    koopa::install_cellar \
+        --name='ruby' \
+        --name-fancy='Ruby' \
+        "$@"
+}
