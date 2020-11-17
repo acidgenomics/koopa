@@ -127,11 +127,14 @@ quote=01:warning=01;35"
 _koopa_activate_go() { # {{{1
     # """
     # Activate Go.
-    # @note Updated 2020-07-19.
+    # @note Updated 2020-11-17.
     # """
+    # shellcheck disable=SC2039
+    local prefix
+    prefix="$(_koopa_go_prefix)/latest"
+    [ -d "$prefix" ] && _koopa_activate_prefix "$prefix"
     _koopa_is_installed go || return 0
-    [ -n "${GOPATH:-}" ] && return 0
-    GOPATH="$(_koopa_go_gopath)"
+    [ -z "${GOPATH:-}" ] && GOPATH="$(_koopa_go_gopath)"
     export GOPATH
     [ ! -d "$GOPATH" ] && mkdir -p "$GOPATH"
     return 0

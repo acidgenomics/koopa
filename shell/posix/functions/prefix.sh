@@ -181,7 +181,7 @@ _koopa_fzf_prefix() { # {{{1
 _koopa_go_gopath() { # {{{1
     # """
     # Go GOPATH, for building from source.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-11-17.
     #
     # This must be different from go root.
     #
@@ -197,9 +197,18 @@ _koopa_go_gopath() { # {{{1
     then
         prefix="$GOPATH"
     else
-        prefix="$(_koopa_app_prefix)/go/gopath"
+        prefix="$(_koopa_go_prefix)/gopath"
     fi
     _koopa_print "$prefix"
+    return 0
+}
+
+_koopa_go_prefix() { # {{{1
+    # """
+    # Go prefix.
+    # @note Updated 2020-11-17.
+    # """
+    _koopa_print "$(_koopa_app_prefix)/go"
     return 0
 }
 
