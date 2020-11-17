@@ -84,6 +84,21 @@ koopa::linux_install_neovim() { # {{{1
         "$@"
 }
 
+koopa::linux_install_openssh() { # {{{1
+    koopa::install_cellar \
+        --name='openssh' \
+        --name-fancy='OpenSSH' \
+        "$@"
+}
+
+koopa::linux_install_openssl() { # {{{1
+    koopa::install_cellar \
+        --name='openssl' \
+        --name-fancy='OpenSSL' \
+        --cellar-only \
+        "$@"
+}
+
 koopa::linux_install_password_store() { # {{{1
     # """
     # https://www.passwordstore.org/

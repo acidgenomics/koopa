@@ -151,21 +151,6 @@ koopa::install_neofetch() { # {{{1
         "$@"
 }
 
-koopa::install_openssh() { # {{{1
-    koopa::install_cellar \
-        --name='openssh' \
-        --name-fancy='OpenSSH' \
-        "$@"
-}
-
-koopa::install_openssl() { # {{{1
-    koopa::install_cellar \
-        --name='openssl' \
-        --name-fancy='OpenSSL' \
-        --cellar-only \
-        "$@"
-}
-
 koopa::install_parallel() { # {{{1
     koopa::install_cellar \
         --name='parallel' \
