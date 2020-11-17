@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 koopa::install_haskell_stack() { # {{{1
+    # """
+    # Install Haskell Stack (for current user).
+    # @note Updated 2020-11-17.
+    # """
     local file name_fancy tmp_dir url xdg_bin_dir
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
