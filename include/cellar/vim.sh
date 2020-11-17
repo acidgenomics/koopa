@@ -5,6 +5,7 @@
 # Installing with Python 3 configuration.
 # """
 
+koopa::assert_is_linux
 make_prefix="$(koopa::make_prefix)"
 python3='python3'
 python3_config="${python3}-config"
@@ -15,12 +16,27 @@ url="https://github.com/${name}/${name}/archive/${file}"
 koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-${version}"
-./configure \
-    --prefix="$prefix" \
-    --enable-python3interp='yes' \
-    --with-python3-command="$python3" \
-    --with-python3-config-dir="${python3_config_dir}" \
-    LDFLAGS="-Wl,--rpath=${make_prefix}/lib"
+flags=(
+    "--prefix=${prefix}"
+    "--with-python3-command=${python3}"
+    "--with-python3-config-dir=${python3_config_dir}"
+    '--enable-python3interp=yes'
+)
+if koopa::is_linux
+then
+    flags+=("LDFLAGS=-Wl,--rpath=${make_prefix}/lib")
+fi
+# This step still fails due to macOS SDK headers:
+# > if koopa::is_macos
+# > then
+# >     koopa::assert_is_installed brew
+# >     gcc_prefix="$(brew --prefix)/opt/gcc"
+# >     koopa::assert_is_dir "$gcc_prefix"
+# >     flags+=(
+# >         "CC=${gcc_prefix}/bin/gcc-10"
+# >     )
+# > fi
+./configure "${flags[@]}"
 make --jobs="$jobs"
 # > make test
 make install
