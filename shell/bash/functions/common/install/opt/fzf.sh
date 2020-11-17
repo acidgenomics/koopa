@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Seeing this on macOS:
-# Makefile:14: *** Not on git repository; cannot determine $FZF_VERSION.  Stop.
-
 koopa::install_fzf() { # {{{1
     # """
     # Install fzf.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-11-17.
     #
     # This script will download files into '~/go'.
     #
@@ -51,9 +48,12 @@ koopa::install_fzf() { # {{{1
     (
         koopa::cd "$tmp_dir"
         file="${version}.tar.gz"
-        koopa::download "https://github.com/junegunn/fzf/archive/${file}"
+        url="https://github.com/junegunn/fzf/archive/${file}"
+        koopa::download "$url"
         koopa::extract "$file"
         koopa::cd "${name}-${version}"
+        export FZF_VERSION="$version"
+        export FZF_REVISION='tarball'
         make --jobs="$jobs"
         # > make test
         # This will copy fzf binary from 'target/' to 'bin/' inside tmp dir.
