@@ -98,7 +98,13 @@ koopa::install_gsl() { # {{{1
     koopa::install_cellar \
         --name='gsl' \
         --name-fancy='GSL' \
-        --cellar-only \
+        "$@"
+}
+
+koopa::install_haskell_stack() { # {{{1
+    koopa::install_cellar \
+        --name='haskell-stack' \
+        --name-fancy='Haskell Stack' \
         "$@"
 }
 
