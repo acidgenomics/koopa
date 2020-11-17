@@ -190,13 +190,6 @@ koopa::install_python() { # {{{1
     koopa::install_py_koopa
 }
 
-koopa::linux_install_r() { # {{{1
-    koopa::install_cellar \
-        --name='r' \
-        --name-fancy='R' \
-        "$@"
-    koopa::update_r_config
-}
 
 koopa::install_rbenv() { # {{{1
     koopa::install_cellar \
@@ -216,7 +209,7 @@ koopa::install_rsync() { # {{{1
         "$@"
 }
 
-koopa::install_ruby() { # {{{1
+koopa::linux_install_ruby() { # {{{1
     koopa::install_cellar \
         --name='ruby' \
         --name-fancy='Ruby' \
