@@ -170,7 +170,11 @@ koopa::update_rust() { # {{{1
     done
     koopa::assert_has_no_args "$#"
     [[ "$force" -eq 0 ]] && koopa::is_current_version rust && return 0
-    koopa::is_installed rustup || return 0
+    if ! koopa::is_installed rustup
+    then
+        koopa::note 'rustup is not installed.'
+        return 0
+    fi
     koopa::h1 'Updating Rust via rustup.'
     export RUST_BACKTRACE='full'
     # rustup v1.21.0 fix.
