@@ -1,64 +1,64 @@
 #!/usr/bin/env bash
 
-koopa::install_autoconf() { # {{{1
+koopa::install_cellar_autoconf() { # {{{1
     koopa::install_cellar \
         --name='autoconf' \
         "$@"
 }
 
-koopa::install_automake() { # {{{1
+koopa::install_cellar_automake() { # {{{1
     koopa::install_cellar \
         --name='automake' \
         "$@"
 }
 
-koopa::install_bash() { # {{{1
+koopa::install_cellar_bash() { # {{{1
     koopa::install_cellar \
         --name='bash' \
         --name-fancy='Bash' \
         "$@"
 }
 
-koopa::install_binutils() { # {{{1
+koopa::install_cellar_binutils() { # {{{1
     koopa::install_cellar \
         --name='binutils' \
         "$@"
 }
 
-koopa::install_cmake() { # {{{1
+koopa::install_cellar_cmake() { # {{{1
     koopa::install_cellar \
         --name='cmake' \
         --name-fancy='CMake' \
         "$@"
 }
 
-koopa::install_coreutils() { # {{{1
+koopa::install_cellar_coreutils() { # {{{1
     koopa::install_cellar \
         --name='coreutils' \
         "$@"
 }
 
-koopa::install_curl() { # {{{1
+koopa::install_cellar_curl() { # {{{1
     koopa::install_cellar \
         --name='curl' \
         --name-fancy='cURL' \
         "$@"
 }
 
-koopa::install_emacs() { # {{{1
+koopa::install_cellar_emacs() { # {{{1
     koopa::install_cellar \
         --name='emacs' \
         --name-fancy='Emacs' \
         "$@"
 }
 
-koopa::install_findutils() { # {{{1
+koopa::install_cellar_findutils() { # {{{1
     koopa::install_cellar \
         --name='findutils' \
         "$@"
 }
 
-koopa::install_fish() { # {{{1
+koopa::install_cellar_fish() { # {{{1
     koopa::install_cellar \
         --name='fish' \
         --name-fancy='Fish' \
