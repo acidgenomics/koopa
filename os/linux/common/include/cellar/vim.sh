@@ -21,21 +21,8 @@ flags=(
     "--with-python3-command=${python3}"
     "--with-python3-config-dir=${python3_config_dir}"
     '--enable-python3interp=yes'
+    "LDFLAGS=-Wl,--rpath=${make_prefix}/lib"
 )
-if koopa::is_linux
-then
-    flags+=("LDFLAGS=-Wl,--rpath=${make_prefix}/lib")
-fi
-# This step still fails due to macOS SDK headers:
-# > if koopa::is_macos
-# > then
-# >     koopa::assert_is_installed brew
-# >     gcc_prefix="$(brew --prefix)/opt/gcc"
-# >     koopa::assert_is_dir "$gcc_prefix"
-# >     flags+=(
-# >         "CC=${gcc_prefix}/bin/gcc-10"
-# >     )
-# > fi
 ./configure "${flags[@]}"
 make --jobs="$jobs"
 # > make test
