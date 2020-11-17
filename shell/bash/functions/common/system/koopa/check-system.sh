@@ -3,18 +3,12 @@
 koopa::check_system() { # {{{1
     # """
     # Check system.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-11-17.
     # """
-    local koopa_prefix script
+    local script
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed Rscript
-    koopa_prefix="$(koopa::prefix)"
-    # > export KOOPA_FORCE=1
-    # > set +u
-    # shellcheck disable=SC1090
-    # > . "${koopa_prefix}/activate"
-    # > set -u
-    script="${koopa_prefix}/lang/r/include/check-system.R"
+    script="$(koopa::rscript_prefix)/check-system.R"
     koopa::assert_is_file "$script"
     Rscript --vanilla "$script"
     koopa::check_exports
