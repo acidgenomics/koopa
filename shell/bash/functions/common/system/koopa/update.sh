@@ -1,18 +1,58 @@
 #!/usr/bin/env bash
 
-## FIXME USER SYSTEM/USER INSTEAD OF FLAGS.
-## FIXME RETHINK THE SOURCE_IP IDEA HERE.
-
 koopa::update() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-11-17.
     # """
-    local app_prefix config_prefix configure_flags core dotfiles \
-        dotfiles_prefix fast koopa_prefix make_prefix repos repo source_ip \
-        system user
-    koopa_prefix="$(koopa::prefix)"
+    local f fun
+    case "$1" in
+        ''|koopa)
+            f='update_koopa'
+            shift 1
+            return 1
+            ;;
+        system)
+            f='update_koopa_system'
+            shift 1
+            ;;
+        user)
+            f='update_koopa_user'
+            shift 1
+            ;;
+        # Defunct ----------------------------------------------------------
+        --source-ip=*)
+            koopa::defunct 'koopa configure-vm --source-ip=SOURCE_IP'
+            ;;
+        --system)
+            koopa::defunct 'koopa update system'
+            ;;
+        --user)
+            koopa::defunct 'koopa update user'
+            ;;
+        *)
+            f="update_${1}"
+            shift 1
+            ;;
+    esac
+    fun="koopa::${f//-/_}"
+    if ! koopa::is_function "$fun"
+    then
+        koopa::invalid_arg "$*"
+    fi
+    "$fun" "$@"
+    return 0
+}
+
+koopa::update_koopa() { # {{{1
+    # """
+    # Update koopa installation.
+    # @note Updated 2020-11-17.
+    #
     # Note that stable releases are not git, and can't be updated.
+    # """
+    local dotfiles_prefix koopa_prefix
+    koopa_prefix="$(koopa::prefix)"
     if ! koopa::is_git_toplevel "$koopa_prefix"
     then
         version="$(koopa::version)"
@@ -23,67 +63,6 @@ koopa::update() { # {{{1
             "Then run the default install command at '${url}'."
         return 1
     fi
-    config_prefix="$(koopa::config_prefix)"
-    app_prefix="$(koopa::app_prefix)"
-    make_prefix="$(koopa::make_prefix)"
-    core=1
-    dotfiles=1
-    fast=0
-    system=0
-    user=0
-
-    # FIXME ONLY ALLOW ONE MODE HERE...
-    # FIXME NEED TO SUPPORT KOOPA UPDATE.
-    while (("$#"))
-    do
-        case "$1" in
-            system)
-                system=1
-                shift 1
-                ;;
-            user)
-                user=1
-                shift 1
-                ;;
-            # Defunct ----------------------------------------------------------
-            --source-ip=*)
-                koopa::defunct 'koopa configure-vm --source-ip=XXX'
-                ;;
-            --system)
-                koopa::defunct 'koopa update system'
-                ;;
-            --user)
-                koopa::defunct 'koopa update user'
-                ;;
-            # FIXME CHECK FOR SUPPORTED UPDATE FUNCTIONS.
-            *)
-                f="${1}_${2}"
-                shift 2
-                if koopa::is_function "koopa::${f//-/_}"
-                then
-                    shift 3
-                else
-                    koopa::invalid_arg "$*"
-                fi
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    [[ "$system" -eq 1 ]] && koopa::update_system
-    [[ "$user" -eq 1 ]] && koopa::update_user
-    koopa::success 'koopa update was successful.'
-    koopa::restart
-    [[ "$system" -eq 1 ]] && koopa::koopa check-system
-    return 0
-}
-
-koopa::update_koopa() { # {{{1
-    # """
-    # Update koopa installation.
-    # @note Updated 2020-11-16.
-    # """
-    local dotfiles_prefix koopa_prefix
-    koopa_prefix="$(koopa::prefix)"
     koopa::h1 "Updating koopa at '${koopa_prefix}'."
     koopa::sys_set_permissions -r "$koopa_prefix"
     koopa::sys_git_pull
@@ -103,11 +82,15 @@ koopa::update_koopa() { # {{{1
 koopa::update_koopa_system() { # {{{1
     # """
     # Update system installation.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-11-17.
     # """
+    local app_prefix config_prefix make_prefix
     koopa::update_koopa
     koopa::h2 'Updating system configuration.'
     koopa::assert_has_sudo
+    app_prefix="$(koopa::app_prefix)"
+    config_prefix="$(koopa::config_prefix)"
+    make_prefix="$(koopa::make_prefix)"
     koopa::dl \
         'App prefix' "${app_prefix}" \
         'Config prefix' "${config_prefix}" \
