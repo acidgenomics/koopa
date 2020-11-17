@@ -31,8 +31,8 @@ koopa::install_fzf() { # {{{1
                 ;;
         esac
     done
-    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
     koopa::assert_has_no_args "$#"
+    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
     prefix="$(koopa::fzf_prefix)/${version}"
     [[ "$reinstall" -eq 1 ]] && koopa::rm "$prefix"
     [[ -d "$prefix" ]] && return 0

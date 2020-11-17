@@ -188,6 +188,10 @@ koopa::go_gopath() { # {{{1
     _koopa_go_gopath "$@"
 }
 
+koopa::go_prefix() { # {{{1
+    _koopa_go_prefix "$@"
+}
+
 koopa::group() { # {{{1
     _koopa_group "$@"
 }
