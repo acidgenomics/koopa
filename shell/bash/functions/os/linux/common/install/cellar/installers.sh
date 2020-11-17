@@ -116,6 +116,14 @@ koopa::linux_install_proj() { # {{{1
         "$@"
 }
 
+koopa::linux_install_cellar_python() { # {{{1
+    koopa::install_cellar \
+        --name='python' \
+        --name-fancy='Python' \
+        "$@"
+    koopa::install_py_koopa
+}
+
 koopa::linux_install_r() { # {{{1
     koopa::install_cellar \
         --name='r' \
