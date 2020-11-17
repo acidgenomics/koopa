@@ -65,6 +65,19 @@ koopa::linux_install_julia() { # {{{1
         "$@"
 }
 
+koopa::linux_install_lua() { # {{{1
+    koopa::install_cellar \
+        --name='lua' \
+        --name-fancy='Lua' \
+        "$@"
+}
+
+koopa::linux_install_luarocks() { # {{{1
+    koopa::install_cellar \
+        --name='luarocks' \
+        "$@"
+}
+
 koopa::linux_install_password_store() { # {{{1
     # """
     # https://www.passwordstore.org/
