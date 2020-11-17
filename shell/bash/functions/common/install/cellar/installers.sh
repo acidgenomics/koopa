@@ -133,19 +133,6 @@ koopa::install_libtool() { # {{{1
         "$@"
 }
 
-koopa::install_lua() { # {{{1
-    koopa::install_cellar \
-        --name='lua' \
-        --name-fancy='Lua' \
-        "$@"
-}
-
-koopa::install_luarocks() { # {{{1
-    koopa::install_cellar \
-        --name='luarocks' \
-        "$@"
-}
-
 koopa::install_make() { # {{{1
     koopa::install_cellar \
         --name='make' \
