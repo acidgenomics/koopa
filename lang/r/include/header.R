@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 ## """
 ## Shared Rscript header.
 ## @note Updated 2020-10-06.
