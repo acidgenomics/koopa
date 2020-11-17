@@ -3,7 +3,7 @@
 
 # """
 # Install Subversion.
-# @note Updated 2020-07-24.
+# @note Updated 2020-11-17.
 #
 # @seealso
 # - https://svn.apache.org/repos/asf/subversion/trunk/INSTALL
@@ -14,21 +14,37 @@
 # Utility (APRUTIL) library.
 # """
 
-if koopa::is_fedora
+if koopa::is_linux
 then
-    koopa::ln -S '/usr/bin/apr-1-config' '/usr/bin/apr-config'
-    koopa::ln -S '/usr/bin/apu-1-config' '/usr/bin/apu-config'
-    koopa::force_add_to_pkg_config_path_start '/usr/lib64/pkgconfig'
+    if koopa::is_fedora
+    then
+        koopa::ln -S '/usr/bin/apr-1-config' '/usr/bin/apr-config'
+        koopa::ln -S '/usr/bin/apu-1-config' '/usr/bin/apu-config'
+        koopa::force_add_to_pkg_config_path_start '/usr/lib64/pkgconfig'
+    fi
+    koopa::assert_is_installed apr-config apu-config sqlite3
 fi
-koopa::assert_is_installed apr-config apu-config sqlite3
 file="${name}-${version}.tar.bz2"
 url="https://mirrors.ocf.berkeley.edu/apache/${name}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-${version}"
-./configure \
-    --prefix="$prefix" \
-    --with-lz4='internal' \
-    --with-utf8proc='internal'
+flags=("--prefix=${prefix}")
+if koopa::is_macos
+then
+    koopa::assert_is_installed brew
+    brew_prefix="$(brew --prefix)"
+    flags+=(
+        "--with-apr=${brew_prefix}/opt/apr"
+        "--with-apr-util=${brew_prefix}/opt/apr-util"
+    )
+elif koopa::is_linux
+then
+    flags+=(
+        '--with-lz4=internal'
+        '--with-utf8proc=internal'
+    )
+fi
+./configure "${flags[@]}"
 make --jobs="$jobs"
 make install
