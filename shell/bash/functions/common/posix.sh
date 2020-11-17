@@ -16,6 +16,10 @@ koopa::activate_openjdk() { # {{{1
     _koopa_activate_openjdk "$@"
 }
 
+koopa::activate_prefix() { # {{{1
+    _koopa_activate_prefix "$@"
+}
+
 koopa::activate_rust() { # {{{1
     _koopa_activate_rust "$@"
 }
