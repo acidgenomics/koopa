@@ -78,6 +78,12 @@ koopa::linux_install_luarocks() { # {{{1
         "$@"
 }
 
+koopa::linux_install_neovim() { # {{{1
+    koopa::install_cellar \
+        --name='neovim' \
+        "$@"
+}
+
 koopa::linux_install_password_store() { # {{{1
     # """
     # https://www.passwordstore.org/

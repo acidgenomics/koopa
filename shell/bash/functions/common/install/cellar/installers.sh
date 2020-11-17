@@ -151,12 +151,6 @@ koopa::install_neofetch() { # {{{1
         "$@"
 }
 
-koopa::install_neovim() { # {{{1
-    koopa::install_cellar \
-        --name='neovim' \
-        "$@"
-}
-
 koopa::install_openssh() { # {{{1
     koopa::install_cellar \
         --name='openssh' \
