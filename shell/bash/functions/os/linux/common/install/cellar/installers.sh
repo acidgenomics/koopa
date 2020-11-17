@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_aws_cli() { # {{{1
+# WRAP THESE WITH INTERNAL koopa::linux_install_cellar call.
+
+koopa::linux_install_cellar_aws_cli() { # {{{1
     koopa::install_cellar \
         --name='aws-cli' \
         --name-fancy='AWS CLI' \
@@ -9,34 +11,34 @@ koopa::linux_install_aws_cli() { # {{{1
         "$@"
 }
 
-koopa::linux_install_docker_credential_pass() { # {{{1
+koopa::linux_install_cellar_docker_credential_pass() { # {{{1
     koopa::install_cellar \
         --name='docker-credential-pass' \
         "$@"
 }
 
-koopa::linux_install_gcc() { # {{{1
+koopa::linux_install_cellar_gcc() { # {{{1
     koopa::install_cellar \
         --name='gcc' \
         --name-fancy='GCC' \
         "$@"
 }
 
-koopa::linux_install_gdal() { # {{{1
+koopa::linux_install_cellar_gdal() { # {{{1
     koopa::install_cellar \
         --name='gdal' \
         --name-fancy='GDAL' \
         "$@"
 }
 
-koopa::linux_install_geos() { # {{{1
+koopa::linux_install_cellar_geos() { # {{{1
     koopa::install_cellar \
         --name='geos' \
         --name-fancy='GEOS' \
         "$@"
 }
 
-koopa::linux_install_julia() { # {{{1
+koopa::linux_install_cellar_julia() { # {{{1
     local pos script_name
     script_name='julia'
     pos=()
@@ -65,33 +67,33 @@ koopa::linux_install_julia() { # {{{1
         "$@"
 }
 
-koopa::linux_install_lua() { # {{{1
+koopa::linux_install_cellar_lua() { # {{{1
     koopa::install_cellar \
         --name='lua' \
         --name-fancy='Lua' \
         "$@"
 }
 
-koopa::linux_install_luarocks() { # {{{1
+koopa::linux_install_cellar_luarocks() { # {{{1
     koopa::install_cellar \
         --name='luarocks' \
         "$@"
 }
 
-koopa::linux_install_neovim() { # {{{1
+koopa::linux_install_cellar_neovim() { # {{{1
     koopa::install_cellar \
         --name='neovim' \
         "$@"
 }
 
-koopa::linux_install_openssh() { # {{{1
+koopa::linux_install_cellar_openssh() { # {{{1
     koopa::install_cellar \
         --name='openssh' \
         --name-fancy='OpenSSH' \
         "$@"
 }
 
-koopa::linux_install_openssl() { # {{{1
+koopa::linux_install_cellar_openssl() { # {{{1
     koopa::install_cellar \
         --name='openssl' \
         --name-fancy='OpenSSL' \
@@ -124,7 +126,7 @@ koopa::linux_install_cellar_python() { # {{{1
     koopa::install_py_koopa
 }
 
-koopa::linux_install_r() { # {{{1
+koopa::linux_install_cellar_r() { # {{{1
     koopa::install_cellar \
         --name='r' \
         --name-fancy='R' \
@@ -132,27 +134,27 @@ koopa::linux_install_r() { # {{{1
     koopa::update_r_config
 }
 
-koopa::linux_install_ruby() { # {{{1
+koopa::linux_install_cellar_ruby() { # {{{1
     koopa::install_cellar \
         --name='ruby' \
         --name-fancy='Ruby' \
         "$@"
 }
 
-koopa::linux_install_taglib() { # {{{1
+koopa::linux_install_cellar_taglib() { # {{{1
     koopa::install_cellar \
         --name='taglib' \
         --name-fancy='TagLib' \
         "$@"
 }
 
-koopa::linux_install_udunits() { # {{{1
+koopa::linux_install_cellar_udunits() { # {{{1
     koopa::install_cellar \
         --name='udunits' \
         "$@"
 }
 
-koopa::linux_install_vim() { # {{{1
+koopa::linux_install_cellar_vim() { # {{{1
     koopa::install_cellar \
         --name='vim' \
         --name-fancy='Vim' \

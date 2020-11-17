@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../../../../shell/bash/include/header.sh"
 
-koopa::linux_install_vim "$@"
+koopa::linux_install_cellar_vim "$@"
