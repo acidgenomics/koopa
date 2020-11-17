@@ -59,3 +59,12 @@ koopa::r_system_library_prefix() { # {{{1
     koopa::print "$prefix"
     return 0
 }
+
+koopa::rscript_prefix() { # {{{1
+    # """
+    # Rscript file prefix.
+    # @note Updated 2020-11-17.
+    # """
+    koopa::print "$(koopa::prefix)/lang/r/include"
+    return 0
+}
