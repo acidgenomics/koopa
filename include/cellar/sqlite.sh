@@ -24,7 +24,7 @@ case "$version" in
         year='2020'
         ;;
     *)
-        koopa::stop 'Unsupported version.'
+        koopa::stop "Unsupported version: ${version}."
         ;;
 esac
 # e.g. 3.32.3 to 3320300.
