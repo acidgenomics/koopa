@@ -268,12 +268,6 @@ koopa::install_tmux() { # {{{1
         "$@"
 }
 
-koopa::install_udunits() { # {{{1
-    koopa::install_cellar \
-        --name='udunits' \
-        "$@"
-}
-
 koopa::install_vim() { # {{{1
     koopa::install_cellar \
         --name='vim' \

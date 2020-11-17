@@ -137,3 +137,9 @@ koopa::linux_install_taglib() { # {{{1
         --name-fancy='TagLib' \
         "$@"
 }
+
+koopa::linux_install_udunits() { # {{{1
+    koopa::install_cellar \
+        --name='udunits' \
+        "$@"
+}
