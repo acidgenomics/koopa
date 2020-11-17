@@ -196,6 +196,10 @@ koopa::link_cellar() { # {{{1
     # """
     local cellar_prefix cellar_subdirs cp_flags include_dirs make_prefix name \
         pos version
+    if koopa::is_macos
+    then
+        koopa::stop 'Cellar links are not supported on macOS.'
+    fi
     include_dirs=
     version=
     pos=()
