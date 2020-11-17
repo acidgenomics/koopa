@@ -8,7 +8,7 @@ koopa::list() { # {{{1
     local script
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed Rscript
-    script="$(koopa::prefix)/lang/r/include/list.R"
+    script="$(koopa::rscript_prefix)/list.R"
     koopa::assert_is_file "$script"
     Rscript --vanilla "$script"
     return 0
