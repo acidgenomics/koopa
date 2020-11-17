@@ -268,13 +268,6 @@ koopa::install_tmux() { # {{{1
         "$@"
 }
 
-koopa::install_vim() { # {{{1
-    koopa::install_cellar \
-        --name='vim' \
-        --name-fancy='Vim' \
-        "$@"
-}
-
 koopa::install_wget() { # {{{1
     koopa::install_cellar \
         --name='wget' \

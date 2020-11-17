@@ -143,3 +143,10 @@ koopa::linux_install_udunits() { # {{{1
         --name='udunits' \
         "$@"
 }
+
+koopa::linux_install_vim() { # {{{1
+    koopa::install_cellar \
+        --name='vim' \
+        --name-fancy='Vim' \
+        "$@"
+}
