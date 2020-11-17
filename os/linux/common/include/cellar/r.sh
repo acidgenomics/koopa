@@ -2,7 +2,7 @@
 # shellcheck disable=SC2154
 
 # """
-# Updated 2020-11-10.
+# Updated 2020-11-17.
 #
 # See also:
 # - Refer to the 'Installation + Administration' manual.
@@ -10,6 +10,8 @@
 # - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
 # - https://support.rstudio.com/hc/en-us/articles/
 #       218004217-Building-R-from-source
+# - Homebrew recipe:
+#   https://github.com/Homebrew/homebrew-core/blob/master/Formula/r.rb
 #
 # Using TeX Live 2013, we'll see this warning:
 #
@@ -17,6 +19,7 @@
 #     vignettes and package manuals will not be rendered optimally
 # """
 
+koopa::assert_is_linux
 koopa::activate_openjdk
 major_version="$(koopa::major_version "$version")"
 file="R-${version}.tar.gz"

@@ -115,3 +115,11 @@ koopa::linux_install_proj() { # {{{1
         --name-fancy='PROJ' \
         "$@"
 }
+
+koopa::linux_install_r() { # {{{1
+    koopa::install_cellar \
+        --name='r' \
+        --name-fancy='R' \
+        "$@"
+    koopa::update_r_config
+}
