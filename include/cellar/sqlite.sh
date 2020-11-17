@@ -17,6 +17,9 @@
 # """
 
 case "$version" in
+    3.33.*)
+        year='2020'
+        ;;
     3.32.*)
         year='2020'
         ;;
@@ -34,11 +37,13 @@ url="https://www.sqlite.org/${year}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-autoconf-${file_version}"
-# Potential flags:
-# --disable-dynamic-extensions
-# --disable-shared
-./configure \
-    --enable-static \
-    --prefix="$prefix"
+flags=(
+    # Potential flags:
+    # > '--disable-dynamic-extensions'
+    # > '--disable-shared'
+    "--prefix=${prefix}"
+    '--enable-static'
+)
+./configure "${flags[@]}"
 make --jobs="$jobs"
 make install
