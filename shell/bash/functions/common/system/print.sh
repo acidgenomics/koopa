@@ -34,10 +34,19 @@ koopa::install_start() { # {{{1
 koopa::install_success() { # {{{1
     # """
     # Installation success message.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-11-17.
     # """
-    koopa::assert_has_args_eq "$#" 1
-    koopa::success "Installation of ${1:?} was successful."
+    local msg name prefix
+    koopa::assert_has_args_le "$#" 2
+    name="${1:?}"
+    prefix="${2:-}"
+    if [[ -n "$prefix" ]]
+    then
+        msg="Installation of ${name} at '${prefix}' was successful."
+    else
+        msg="Installation of ${name} was successful."
+    fi
+    koopa::success "$msg"
     return 0
 }
 
@@ -63,10 +72,19 @@ koopa::uninstall_start() { # {{{1
 koopa::uninstall_success() { # {{{1
     # """
     # Uninstall success message.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-11-17.
     # """
-    koopa::assert_has_args_eq "$#" 1
-    koopa::success "Uninstallation of ${1:?} was successful."
+    local msg name prefix
+    koopa::assert_has_args_le "$#" 2
+    name="${1:?}"
+    prefix="${2:-}"
+    if [[ -n "$prefix" ]]
+    then
+        msg="Uninstallation of ${name} at '${prefix}' was successful."
+    else
+        msg="Uninstallation of ${name} was successful."
+    fi
+    koopa::success "$msg"
     return 0
 }
 
@@ -92,9 +110,18 @@ koopa::update_start() { # {{{1
 koopa::update_success() { # {{{1
     # """
     # Update success message.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-11-17.
     # """
-    koopa::assert_has_args_eq "$#" 1
-    koopa::success "Update of ${1:?} was successful."
+    local msg name prefix
+    koopa::assert_has_args_le "$#" 2
+    name="${1:?}"
+    prefix="${2:-}"
+    if [[ -n "$prefix" ]]
+    then
+        msg="Update of ${name} at '${prefix}' was successful."
+    else
+        msg="Update of ${name} was successful."
+    fi
+    koopa::success "$msg"
     return 0
 }

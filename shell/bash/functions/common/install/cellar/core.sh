@@ -126,7 +126,7 @@ koopa::install_cellar() { # {{{1
         fi
         koopa::link_cellar "${link_args[@]}"
     fi
-    koopa::install_success "$name_fancy"
+    koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
 
