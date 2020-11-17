@@ -190,7 +190,7 @@ koopa::install_python() { # {{{1
     koopa::install_py_koopa
 }
 
-koopa::install_r() { # {{{1
+koopa::linux_install_r() { # {{{1
     koopa::install_cellar \
         --name='r' \
         --name-fancy='R' \
