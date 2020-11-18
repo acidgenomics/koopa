@@ -3,7 +3,7 @@
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-18.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
@@ -14,25 +14,12 @@ koopa::koopa() { # {{{1
             f='version'
             shift 1
             ;;
-        info)
-            f='sys_info'
-            shift 1
-            ;;
-        install)
-            case "${2:-}" in
-                *)
-                    f="${1}_${2}"
-                    if koopa::is_function "koopa::${f//-/_}"
-                    then
-                        shift 2
-                    else
-                        koopa::invalid_arg "$*"
-                    fi
-                    ;;
-            esac
-            ;;
         system)
             case "${2:-}" in
+                info)
+                    f='sys_info'
+                    shift 2
+                    ;;
                 log)
                     f='view_latest_tmp_log_file'
                     shift 2
@@ -97,6 +84,7 @@ koopa::koopa() { # {{{1
         cellar | \
         check-system | \
         header | \
+        install | \
         list | \
         test | \
         uninstall | \
@@ -112,6 +100,10 @@ koopa::koopa() { # {{{1
             ;;
         home)
             f='prefix'
+            shift 1
+            ;;
+        info)
+            f='sys_info'
             shift 1
             ;;
         prefix | \
