@@ -55,6 +55,17 @@ koopa::linux_find_cellar_symlinks() { # {{{1
     return 0
 }
 
+koopa::linux_install_cellar() { # {{{1
+    # """
+    # Install Linux-specific cellar program.
+    # @note Updated 2020-11-18.
+    # """
+    local script_prefix
+    script_prefix="$(koopa::prefix)/os/linux/common/include/cellar"
+    koopa::install_cellar --script-prefix="$script_prefix" "$@"
+    return 0
+}
+
 koopa::linux_link_cellar() { # {{{1
     # """
     # Symlink cellar into build directory.
