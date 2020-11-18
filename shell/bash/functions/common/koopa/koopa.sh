@@ -66,6 +66,7 @@ koopa::koopa() { # {{{1
                     shift 2
                     ;;
                 delete-cache | \
+                enable-passwordless-sudo | \
                 fix-zsh-permissions | \
                 host-id | \
                 os-string | \
