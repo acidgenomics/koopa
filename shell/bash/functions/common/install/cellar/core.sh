@@ -268,6 +268,15 @@ koopa::list_cellar_versions() { # {{{1
     return 0
 }
 
+koopa::prune_cellar() { # {{{1
+    # """
+    # Prune cellar.
+    # @note Updated 2020-18.
+    # """
+    koopa::rscript 'prune-cellar' "$@"
+    return 0
+}
+
 koopa::unlink_cellar() { # {{{1
     # """
     # Unlink cellar symlinks.
