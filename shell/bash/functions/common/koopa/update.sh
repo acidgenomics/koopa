@@ -32,6 +32,9 @@ koopa::update() { # {{{1
     if koopa::is_macos && koopa::is_function "koopa::macos_${f}"
     then
         fun="koopa::macos_${f}"
+    elif koopa::is_linux && koopa::is_function "koopa::linux_${f}"
+    then
+        fun="koopa::linux_${f}"
     else
         fun="koopa::update_${name//-/_}"
     fi
