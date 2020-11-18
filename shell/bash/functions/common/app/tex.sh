@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
 koopa::install_tex_packages() { # {{{1
+    # """
+    # Install TeX packages.
+    # @note Updated 2020-11-18.
+    # """
     local package packages
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed tlmgr
+    koopa::assert_has_sudo
     koopa::h1 'Installing TeX packages recommended for RStudio.'
     sudo tlmgr update --self
     packages=(
@@ -47,8 +52,13 @@ koopa::install_tex_packages() { # {{{1
 }
 
 koopa::update_tex() { # {{{1
+    # """
+    # Update TeX
+    # @note Updated 2020-11-18.
+    # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed tlmgr
+    koopa::assert_has_sudo
     koopa::h1 'Updating TeX Live.'
     sudo tlmgr update --self
     sudo tlmgr update --list
