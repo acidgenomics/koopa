@@ -416,7 +416,7 @@ koopa::install_anaconda() { # {{{1
 koopa::install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
-    # @note Updated 2020-11-06.
+    # @note Updated 2020-11-18.
     #
     # Assuming installation of Miniconda by default.
     #
@@ -489,7 +489,7 @@ koopa::install_conda() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::ln "$(koopa::prefix)/os/linux/etc/conda/condarc" "${prefix}/.condarc"
-    koopa::remove_broken_symlinks "$prefix"
+    koopa::delete_broken_symlinks "$prefix"
     koopa::sys_set_permissions -r "$prefix"
     koopa::install_success "$name_fancy"
     koopa::restart
@@ -780,7 +780,7 @@ koopa::python_remove_pycache() { # {{{1
 koopa::update_conda() { # {{{1
     # """
     # Update Conda.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-18.
     # """
     local force
     force=0
@@ -816,7 +816,7 @@ koopa::update_conda() { # {{{1
         "$conda" update --yes --name='base' --channel='defaults' --all
         # > "$conda" clean --yes --tarballs
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::remove_broken_symlinks "$prefix"
+    koopa::delete_broken_symlinks "$prefix"
     koopa::sys_set_permissions -r "$prefix"
     return 0
 }

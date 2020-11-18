@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+koopa::linux_delete_broken_cellar_symlinks() { # {{{1
+    # """
+    # Delete broken cellar symlinks.
+    # @note Updated 2020-11-18.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_linux
+    koopa::delete_broken_symlinks "$(koopa::make_prefix)"
+    return 0
+}
+
 koopa::linux_find_cellar_symlinks() { # {{{1
     # """
     # Find cellar symlinks.
@@ -47,7 +58,7 @@ koopa::linux_find_cellar_symlinks() { # {{{1
 koopa::linux_link_cellar() { # {{{1
     # """
     # Symlink cellar into build directory.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-11-18.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -114,8 +125,8 @@ koopa::linux_link_cellar() { # {{{1
     koopa::assert_is_dir "$cellar_prefix"
     koopa::h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
     koopa::sys_set_permissions -r "$cellar_prefix"
-    koopa::remove_broken_symlinks "$cellar_prefix"
-    koopa::remove_broken_symlinks "$make_prefix"
+    koopa::delete_broken_symlinks "$cellar_prefix"
+    koopa::delete_broken_symlinks "$make_prefix"
     cellar_subdirs=()
     if [[ -n "$include_dirs" ]]
     then
@@ -145,16 +156,5 @@ koopa::linux_link_cellar() { # {{{1
     # Note that this step will fail on macOS.
     koopa::is_shared_install && koopa::update_ldconfig
     koopa::success "Successfully linked '${name}'."
-    return 0
-}
-
-koopa::linux_remove_broken_cellar_symlinks() { # {{{1
-    # """
-    # Remove broken cellar symlinks.
-    # @note Updated 2020-11-17.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_linux
-    koopa::remove_broken_symlinks "$(koopa::make_prefix)"
     return 0
 }

@@ -3,7 +3,7 @@
 koopa::_linux_rsync() { # {{{1
     # """
     # rsync a desired prefix across virtual machines.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-18.
     #
     # We're enforcing use of '/usr/bin/rsync' here in case we're syncing
     # '/usr/local', which may have an updated copy of rsync installed.
@@ -51,12 +51,12 @@ koopa::_linux_rsync() { # {{{1
     koopa::h1 "Syncing '${prefix}' from '${source_ip}'."
     koopa::dl 'Flags' "${rsync_flags[*]}"
     koopa::sys_mkdir "$prefix"
-    koopa::remove_broken_symlinks "$prefix"
+    koopa::delete_broken_symlinks "$prefix"
     koopa::sys_set_permissions -ru "$prefix"
     rsync "${rsync_flags[@]}" \
         "${user}@${source_ip}:${prefix}/" \
         "${prefix}/"
-    koopa::remove_broken_symlinks "$prefix"
+    koopa::delete_broken_symlinks "$prefix"
     koopa::sys_set_permissions -r "$prefix"
     return 0
 }

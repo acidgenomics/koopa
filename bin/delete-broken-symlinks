@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../shell/bash/include/header.sh"
 
-koopa::remove_empty_dirs "$@"
+koopa::delete_broken_symlinks "$@"
