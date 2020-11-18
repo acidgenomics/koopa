@@ -1,5 +1,61 @@
 #!/usr/bin/env bash
 
+koopa::_run_function() { # {{{1
+    # """
+    # Lookup and execute a koopa function automatically.
+    # @note Updated 2020-11-18.
+    # """
+    local name fun
+    koopa::assert_has_args "$#"
+    name="${1:?}"
+    fun="$(koopa::_which_function "$name")"
+    koopa::assert_is_function "$fun"
+    shift 1
+    "$fun" "$@"
+    return 0
+}
+
+koopa::_which_function() { # {{{1
+    # """
+    # Locate a koopa function automatically.
+    # @note Updated 2020-11-18.
+    # """
+    local f fun os_id
+    koopa::assert_has_args_eq "$#" 1
+    f="${1:?}"
+    f="${f//-/_}"
+    os_id="$(koopa::os_id)"
+    if koopa::is_function "koopa::${os_id}_${f}"
+    then
+        fun="koopa::${os_id}_${f}"
+    elif koopa::is_linux
+    then
+        if koopa::is_rhelish && \
+            koopa::is_function "koopa::rhel_${f}"
+        then
+            fun="koopa::rhel_${f}"
+        elif koopa::is_debianish && \
+            koopa::is_function "koopa::debian_${f}"
+        then
+            fun="koopa::debian_${f}"
+        elif koopa::is_fedoraish && \
+            koopa::is_function "koopa::fedora_${f}"
+        then
+            fun="koopa::fedora_${f}"
+        else
+            fun="koopa::linux_${f}"
+        fi
+    else
+        fun="koopa::${f}"
+    fi
+    if ! koopa::is_function "$fun"
+    then
+        koopa::stop "No script available for '${*}'."
+    fi
+    koopa::print "$fun"
+    return 0
+}
+
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.

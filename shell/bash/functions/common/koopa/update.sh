@@ -5,7 +5,7 @@ koopa::update() { # {{{1
     # Update koopa installation.
     # @note Updated 2020-11-18.
     # """
-    local f fun name
+    local name
     name="${1:-}"
     case "$name" in
         '')
@@ -28,31 +28,7 @@ koopa::update() { # {{{1
             koopa::defunct 'koopa update user'
             ;;
     esac
-    f="update_${name//-/_}"
-    # FIXME MAKE THIS A SHARED FUNCTION.
-    if koopa::is_macos && koopa::is_function "koopa::macos_${f}"
-    then
-        fun="koopa::macos_${f}"
-    elif koopa::is_linux
-    then
-        if koopa::is_debianish && koopa::is_function "koopa::debian_${f}"
-        then
-            fun="koopa::debian_${f}"
-        elif koopa::is_fedoraish && koopa::is_function "koopa::fedora_${f}"
-        then
-            fun="koopa::fedora_${f}"
-        else
-            fun="koopa::linux_${f}"
-        fi
-    else
-        fun="koopa::${f}"
-    fi
-    if ! koopa::is_function "$fun"
-    then
-        koopa::stop "No update script available for '${*}'."
-    fi
-    shift 1
-    "$fun" "$@"
+    koopa::_run_function "update_${name}"
     return 0
 }
 
