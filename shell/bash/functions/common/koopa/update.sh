@@ -3,14 +3,13 @@
 koopa::update() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-11-18.
     # """
     local f fun
-    case "$1" in
+    case "${1:-}" in
         ''|koopa)
             f='update_koopa'
             shift 1
-            return 1
             ;;
         system)
             f='update_koopa_system'
@@ -21,6 +20,9 @@ koopa::update() { # {{{1
             shift 1
             ;;
         # Defunct ----------------------------------------------------------
+        --fast)
+            koopa::defunct 'koopa update'
+            ;;
         --source-ip=*)
             koopa::defunct 'koopa configure-vm --source-ip=SOURCE_IP'
             ;;
@@ -35,7 +37,6 @@ koopa::update() { # {{{1
             shift 1
             ;;
     esac
-    # FIXME CONVERT THIS TO A FUNCTION.
     fun="koopa::${f//-/_}"
     if ! koopa::is_function "$fun"
     then
