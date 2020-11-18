@@ -5,19 +5,14 @@ koopa::update() { # {{{1
     # Update koopa installation.
     # @note Updated 2020-11-18.
     # """
-    local f fun
-    case "${1:-}" in
-        ''|koopa)
-            f='update_koopa'
-            shift 1
+    local fun name
+    name="${1:-}"
+    case "$name" in
+        '')
+            name='koopa'
             ;;
-        system)
-            f='update_koopa_system'
-            shift 1
-            ;;
-        user)
-            f='update_koopa_user'
-            shift 1
+        system|user)
+            name="koopa_${name}"
             ;;
         # Defunct ----------------------------------------------------------
         --fast)
@@ -32,16 +27,13 @@ koopa::update() { # {{{1
         --user)
             koopa::defunct 'koopa update user'
             ;;
-        *)
-            f="update_${1}"
-            shift 1
-            ;;
     esac
-    fun="koopa::${f//-/_}"
+    fun="koopa::update_${name//-/_}"
     if ! koopa::is_function "$fun"
     then
-        koopa::invalid_arg "$*"
+        koopa::stop "No update script available for '${*}'."
     fi
+    shift 1
     "$fun" "$@"
     return 0
 }
