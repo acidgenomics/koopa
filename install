@@ -304,7 +304,7 @@ END
 
     if koopa::is_bash_ok
     then
-        koopa::remove_broken_symlinks "$koopa_prefix"
+        koopa::delete_broken_symlinks "$koopa_prefix"
     else
         koopa::note 'Bash is very old and must be upgraded.'
     fi

@@ -29,7 +29,7 @@ koopa::find_cellar_version() { # {{{1
 koopa::install_cellar() { # {{{1
     # """
     # Install cellarized application.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-11-18.
     # """
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
         name_fancy pass_args prefix reinstall script_name script_path tmp_dir \
@@ -96,7 +96,7 @@ koopa::install_cellar() { # {{{1
     if [[ "$reinstall" -eq 1 ]]
     then
         koopa::sys_rm "$prefix"
-        koopa::remove_broken_symlinks "$make_prefix"
+        koopa::delete_broken_symlinks "$make_prefix"
     fi
     [[ -d "$prefix" ]] && return 0
     koopa::install_start "$name_fancy" "$version" "$prefix"

@@ -571,8 +571,8 @@ koopa::linux_configure_system() { # {{{1
     # --------------------------------------------------------------------------
 
     koopa::sys_set_permissions -r "${prefixes[@]}"
-    koopa::remove_broken_symlinks "${prefixes[@]}"
-    # > koopa::remove_empty_dirs "${prefixes[@]}"
+    koopa::delete_broken_symlinks "${prefixes[@]}"
+    # > koopa::delete_empty_dirs "${prefixes[@]}"
     # > koopa::fix_pyenv_permissions
     # > koopa::fix_rbenv_permissions
     koopa::fix_zsh_permissions
