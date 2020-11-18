@@ -273,6 +273,11 @@ koopa::prune_cellar() { # {{{1
     # Prune cellar.
     # @note Updated 2020-18.
     # """
+    if koopa::is_macos
+    then
+        koopa::note 'Cellar pruning not yet supported on macOS.'
+        return 0
+    fi
     koopa::rscript 'prune-cellar' "$@"
     return 0
 }
