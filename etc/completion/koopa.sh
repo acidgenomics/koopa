@@ -2,7 +2,7 @@
 
 # """
 # Bash/Zsh TAB completion.
-# Updated 2020-11-12.
+# Updated 2020-11-18.
 #
 # Keep all of these commands in a single file.
 # Sourcing multiple scripts doesn't work reliably.
@@ -22,6 +22,7 @@ _koopa_complete() {
         args=(
             '--help'
             '--version'
+            'cellar'
             'check-system'
             'get-version'
             'header'
@@ -43,6 +44,15 @@ _koopa_complete() {
     elif [ "$COMP_CWORD" -eq 2 ]
     then
         case "$prev" in
+            cellar)
+                args=(
+                    'clean'
+                    'list'
+                    'link'
+                    'unlink'
+                )
+                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+                ;;
             header)
                 args=(
                     'bash'
