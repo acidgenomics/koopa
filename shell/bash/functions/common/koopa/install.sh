@@ -14,7 +14,7 @@ koopa::install() { # {{{1
     fun="koopa::install_${name//-/_}"
     if ! koopa::is_function "$fun"
     then
-        koopa::stop "No install script available for '${name}'."
+        koopa::stop "No install script available for '${*}'."
     fi
     shift 1
     "$fun" "$@"
