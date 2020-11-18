@@ -14,7 +14,7 @@ koopa::update() { # {{{1
         system|user)
             name="koopa_${name}"
             ;;
-        # Defunct ----------------------------------------------------------
+        # Defunct --------------------------------------------------------------
         --fast)
             koopa::defunct 'koopa update'
             ;;

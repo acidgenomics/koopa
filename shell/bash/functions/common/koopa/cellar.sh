@@ -3,35 +3,24 @@
 koopa::cellar() { # {{{1
     # """
     # Cellar commands.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-11-18.
     # """
-    local f fun
-    case "$1" in
+    local name
+    name="${1:-}"
+    case "$name" in
         clean)
-            f='delete_broken_symlinks'
-            shift 1
+            name='delete_broken_symlinks'
             ;;
         list)
-            f='list_cellar_versions'
-            shift 1
+            name='list_cellar_versions'
             ;;
         link)
-            f='link_cellar'
-            shift 1
+            name='link_cellar'
             ;;
         unlink)
-            f='unlink_cellar'
-            shift 1
-            ;;
-        *)
-            koopa::invalid_arg "$*"
+            name='unlink_cellar'
             ;;
     esac
-    fun="koopa::${f//-/_}"
-    if ! koopa::is_function "$fun"
-    then
-        koopa::invalid_arg "$*"
-    fi
-    "$fun" "$@"
+    koopa::_run_function "$name"
     return 0
 }
