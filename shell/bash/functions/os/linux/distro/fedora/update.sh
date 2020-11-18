@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::update_fedora() { # {{{1
+koopa::fedora_update_system() { # {{{1
     # """
     # Update Fedora.
     # @note Updated 2020-07-16.
