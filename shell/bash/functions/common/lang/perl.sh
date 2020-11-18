@@ -33,7 +33,7 @@ koopa::install_ensembl_perl_api() { # {{{1
 koopa::install_perlbrew() { # {{{1
     # """
     # Install Perlbrew.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-18.
     #
     # Available releases:
     # > perlbrew available
@@ -55,7 +55,11 @@ koopa::install_perlbrew() { # {{{1
     done
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::perlbrew_prefix)"
-    [[ -d "$prefix" ]] && return 0
+    if [[ -d "$prefix" ]]
+    then
+        koopa::note "Perlbrew is installed at '${prefix}'."
+        return 0
+    fi
     name_fancy='Perlbrew'
     koopa::install_start "$name_fancy" "$prefix"
     koopa::assert_has_no_envs
@@ -153,9 +157,13 @@ koopa::install_perlbrew_perl() { # {{{1
 koopa::update_perlbrew() { # {{{1
     # """
     # Update Perlbrew.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-18.
     # """
-    koopa::is_installed perlbrew || return 0
+    if ! koopa::is_installed perlbrew
+    then
+        koopa::note 'Perlbrew is not installed.'
+        return 0
+    fi
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     koopa::h1 'Updating Perlbrew.'
