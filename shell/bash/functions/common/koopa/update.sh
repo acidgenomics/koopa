@@ -5,7 +5,7 @@ koopa::update() { # {{{1
     # Update koopa installation.
     # @note Updated 2020-11-18.
     # """
-    local fun name
+    local f fun name
     name="${1:-}"
     case "$name" in
         '')
@@ -28,7 +28,13 @@ koopa::update() { # {{{1
             koopa::defunct 'koopa update user'
             ;;
     esac
-    fun="koopa::update_${name//-/_}"
+    f="update_${name//-/_}"
+    if koopa::is_macos && koopa::is_function "koopa::macos_${f}"
+    then
+        fun="koopa::macos_${f}"
+    else
+        fun="koopa::update_${name//-/_}"
+    fi
     if ! koopa::is_function "$fun"
     then
         koopa::stop "No update script available for '${*}'."
