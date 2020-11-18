@@ -62,7 +62,7 @@ koopa::install_rust() { # {{{1
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-11-17.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -103,7 +103,11 @@ koopa::install_rust_packages() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_envs
     koopa::activate_rust
-    koopa::is_installed cargo rustc rustup || return 0
+    if ! koopa::is_installed cargo rustc rustup
+    then
+        koopa::note 'Required: cargo, rustc, rustup.'
+        return 0
+    fi
     name_fancy='Rust cargo crates'
     prefix="${CARGO_HOME:?}"
     koopa::install_start "$name_fancy" "$prefix"
@@ -151,7 +155,7 @@ koopa::install_rust_packages() { # {{{1
 koopa::update_rust() { # {{{1
     # """
     # Install Rust.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-17.
     # """
     local force
     koopa::assert_has_no_envs
@@ -170,7 +174,11 @@ koopa::update_rust() { # {{{1
     done
     koopa::assert_has_no_args "$#"
     [[ "$force" -eq 0 ]] && koopa::is_current_version rust && return 0
-    koopa::is_installed rustup || return 0
+    if ! koopa::is_installed rustup
+    then
+        koopa::note 'rustup is not installed.'
+        return 0
+    fi
     koopa::h1 'Updating Rust via rustup.'
     export RUST_BACKTRACE='full'
     # rustup v1.21.0 fix.

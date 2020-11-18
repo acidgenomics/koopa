@@ -806,7 +806,11 @@ koopa::update_conda() { # {{{1
             koopa::note 'Update not supported for Anaconda.'
             return 0
         fi
-        koopa::is_current_version conda && return 0
+        if koopa::is_current_version conda
+        then
+            koopa::note 'Conda is up to date.'
+            return 0
+        fi
     fi
     koopa::h1 "Updating Conda at '${prefix}'."
     conda="${prefix}/condabin/conda"
