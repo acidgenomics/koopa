@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-11-12"
+koopa-date="2020-11-18"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.8.23"
+koopa-version="0.9.0a"
 
 # Globals {{{1
 # ==============================================================================
