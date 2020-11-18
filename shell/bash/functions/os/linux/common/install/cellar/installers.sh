@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
-# WRAP THESE WITH INTERNAL koopa::linux_install_cellar call.
-
 koopa::linux_install_cellar_aws_cli() { # {{{1
     koopa::linux_install_cellar \
         --name='aws-cli' \
         --name-fancy='AWS CLI' \
         --version='latest' \
         --include-dirs='bin' \
+        "$@"
+}
+
+koopa::linux_install_cellar_bcl2fastq() { # {{{1
+    koopa::linux_install_cellar \
+        --name='bcl2fastq' \
         "$@"
 }
 
@@ -133,6 +137,8 @@ koopa::linux_install_cellar_r() { # {{{1
         "$@"
     koopa::update_r_config
 }
+
+# FIXME MISSING R-DEVEL.
 
 koopa::linux_install_cellar_ruby() { # {{{1
     koopa::linux_install_cellar \
