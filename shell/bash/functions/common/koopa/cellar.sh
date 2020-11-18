@@ -17,6 +17,9 @@ koopa::cellar() { # {{{1
         link)
             name='link_cellar'
             ;;
+        prune)
+            name='prune_cellar'
+            ;;
         unlink)
             name='unlink_cellar'
             ;;
