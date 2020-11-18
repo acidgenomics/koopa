@@ -39,8 +39,11 @@ koopa::install_cellar() { # {{{1
     koopa::is_macos && koopa::assert_is_installed brew
     include_dirs=
     link_cellar=1
-    # Disable linking into '/usr/local' for macOS at the moment.
-    koopa::is_macos && link_cellar=0
+    if koopa::is_macos
+    then
+        koopa::note 'Cellar links are not supported on macOS.'
+        link_cellar=0
+    fi
     name_fancy=
     reinstall=0
     script_name=
@@ -161,7 +164,7 @@ koopa::link_cellar() { # {{{1
         pos version
     if koopa::is_macos
     then
-        koopa::note 'Cellar links not yet supported on macOS.'
+        koopa::note 'Cellar links are not supported on macOS.'
         return 0
     fi
     include_dirs=
@@ -261,6 +264,11 @@ koopa::unlink_cellar() { # {{{1
     # Unlink cellar symlinks.
     # @note Updated 2020-11-18.
     # """
+    if koopa::is_macos
+    then
+        koopa::note 'Cellar links are not supported on macOS.'
+        return 0
+    fi
     koopa::rscript 'unlink-cellar' "$@"
     return 0
 }
