@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-# shellcheck source=/dev/null
-checks=0 \
-    . "$(dirname "${BASH_SOURCE[0]}")/../shell/bash/include/header.sh"
-
-koopa::install_homebrew "$@"

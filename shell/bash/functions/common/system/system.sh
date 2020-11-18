@@ -359,15 +359,6 @@ koopa::sys_user() { # {{{1
     return 0
 }
 
-koopa::uninstall() { # {{{1
-    # """
-    # Uninstall koopa.
-    # @note Updated 2020-06-24.
-    # """
-    "$(koopa::prefix)/uninstall" "$@"
-    return 0
-}
-
 koopa::url() { # {{{1
     # """
     # Koopa URL.
