@@ -249,13 +249,22 @@ koopa::link_cellar() { # {{{1
 }
 
 koopa::list_cellar_versions() { # {{{1
+    # """
+    # List cellar verisons.
+    # @note Updated 2020-11-18.
+    # """
     local prefix
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::cellar_prefix)"
-    (
-        koopa::cd "$prefix"
-        ls -1 -- *
-    )
+    if [[ ! -d "$prefix" ]]
+    then
+        koopa::note 'No cellar programs are installed.'
+        return 0
+    fi
+    # This approach doesn't work well when only a single cellar program
+    # is installed.
+    # > ls -1 -- "${prefix}/"*
+    find "$prefix" -mindepth 2 -maxdepth 2 -type d | sort
     return 0
 }
 

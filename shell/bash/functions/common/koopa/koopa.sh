@@ -94,6 +94,7 @@ koopa::koopa() { # {{{1
                     ;;
             esac
             ;;
+        cellar | \
         check-system | \
         header | \
         list | \
