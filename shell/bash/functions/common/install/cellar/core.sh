@@ -32,8 +32,8 @@ koopa::install_cellar() { # {{{1
     # @note Updated 2020-11-18.
     # """
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
-        name_fancy pass_args prefix reinstall script_name script_path tmp_dir \
-        version
+        name_fancy pass_args prefix reinstall script script_name script_prefix \
+        tmp_dir version
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     koopa::is_macos && koopa::assert_is_installed brew
@@ -44,6 +44,7 @@ koopa::install_cellar() { # {{{1
     name_fancy=
     reinstall=0
     script_name=
+    script_prefix="$(koopa::prefix)/include/cellar"
     version=
     pass_args=()
     while (("$#"))
@@ -73,6 +74,10 @@ koopa::install_cellar() { # {{{1
                 ;;
             --script-name=*)
                 script_name="${1#*=}"
+                shift 1
+                ;;
+            --script-prefix=*)
+                script_prefix="${1#*=}"
                 shift 1
                 ;;
             --version=*)
@@ -107,10 +112,10 @@ koopa::install_cellar() { # {{{1
         # shellcheck disable=SC2034
         jobs="$(koopa::cpu_count)"
         koopa::cd "$tmp_dir"
-        script_path="$(koopa::prefix)/include/cellar/${script_name}.sh"
-        koopa::assert_is_file "$script_path"
+        script="${script_prefix}/${script_name}.sh"
+        koopa::assert_is_file "$script"
         # shellcheck source=/dev/null
-        . "$script_path" "${pass_args[@]:-}"
+        . "$script" "${pass_args[@]:-}"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$prefix"
