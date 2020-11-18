@@ -26,6 +26,7 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
     # > sudo launchctl remove com.apple.bird
     # """
     koopa::assert_has_no_args "$#"
+    koopa::assert_has_sudo
     sudo killall bird
     koopa::rm \
         "${HOME}/Library/Application Support/CloudDocs" \
@@ -35,6 +36,11 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
 }
 
 koopa::macos_symlink_dropbox() { # {{{1
+    # """
+    # Symlink Dropbox.
+    # @note Updated 2020-11-18.
+    # """
+    koopa::assert_has_sudo
     koopa::rm -S "${HOME}/Desktop"
     koopa::ln "${HOME}/Dropbox/Desktop" "${HOME}/."
     koopa::rm -S "${HOME}/Documents"

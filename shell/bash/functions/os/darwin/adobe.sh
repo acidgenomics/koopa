@@ -7,6 +7,7 @@ koopa::macos_delete_adobe_creative_cloud_preferences() { # {{{1
     # """
     local name_fancy
     koopa::assert_has_no_args "$#"
+    koopa::assert_has_sudo
     name_fancy='Adobe Creative Cloud preferences'
     koopa::uninstall_start "$name_fancy"
     koopa::rm \

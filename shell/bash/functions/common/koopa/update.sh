@@ -29,6 +29,7 @@ koopa::update() { # {{{1
             ;;
     esac
     f="update_${name//-/_}"
+    # FIXME MAKE THIS A FUNCTION.
     if koopa::is_macos && koopa::is_function "koopa::macos_${f}"
     then
         fun="koopa::macos_${f}"
@@ -36,7 +37,7 @@ koopa::update() { # {{{1
     then
         fun="koopa::linux_${f}"
     else
-        fun="koopa::update_${name//-/_}"
+        fun="koopa::${f}"
     fi
     if ! koopa::is_function "$fun"
     then
