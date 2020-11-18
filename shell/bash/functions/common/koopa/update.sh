@@ -35,6 +35,7 @@ koopa::update() { # {{{1
             shift 1
             ;;
     esac
+    # FIXME CONVERT THIS TO A FUNCTION.
     fun="koopa::${f//-/_}"
     if ! koopa::is_function "$fun"
     then
