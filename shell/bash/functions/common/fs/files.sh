@@ -167,6 +167,30 @@ koopa::delete_adobe_bridge_cache() { # {{{1
     return 0
 }
 
+koopa::delete_broken_symlinks() { # {{{1
+    # """
+    # Delete broken symlinks.
+    # @note Updated 2020-11-18.
+    # """
+    local prefix file files
+    koopa::assert_has_args "$#"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        readarray -t files <<< "$(koopa::find_broken_symlinks "$prefix")"
+        koopa::is_array_non_empty "${files[@]}" || continue
+        koopa::note "Removing ${#files[@]} broken symlinks."
+        # Don't pass single call to rm, as argument list can be too long.
+        for file in "${files[@]}"
+        do
+            [[ -z "$file" ]] && continue
+            koopa::info "Removing '${file}'."
+            koopa::rm "$file"
+        done
+    done
+    return 0
+}
+
 koopa::delete_cache() { # {{{1
     # """
     # Delete cache files (on Linux).
@@ -192,6 +216,30 @@ koopa::delete_cache() { # {{{1
     then
         koopa::rm -S '/var/lib/apt/lists/'*
     fi
+    return 0
+}
+
+koopa::delete_empty_dirs() { # {{{1
+    # """
+    # Delete empty directories.
+    # @note Updated 2020-11-18.
+    # """
+    local dir dirs prefix
+    koopa::assert_has_args "$#"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        readarray -t dirs <<< "$(koopa::find_empty_dirs "$prefix")"
+        koopa::is_array_non_empty "${dirs[@]}" || continue
+        koopa::note "Removing ${#dirs[@]} empty directories."
+        # Don't pass single call to rm, as argument list can be too long.
+        for dir in "${dirs[@]}"
+        do
+            [[ -z "$dir" ]] && continue
+            koopa::info "Removing '${dir}'."
+            koopa::rm "$dir"
+        done
+    done
     return 0
 }
 
@@ -370,54 +418,6 @@ koopa::nfiletypes() { # {{{1
         | uniq -c \
         | sed 's/^ *//g' \
         | sed 's/ /\t/g'
-    return 0
-}
-
-koopa::remove_broken_symlinks() { # {{{1
-    # """
-    # Remove broken symlinks.
-    # @note Updated 2020-08-06.
-    # """
-    local prefix file files
-    koopa::assert_has_args "$#"
-    koopa::assert_is_dir "$@"
-    for prefix in "$@"
-    do
-        readarray -t files <<< "$(koopa::find_broken_symlinks "$prefix")"
-        koopa::is_array_non_empty "${files[@]}" || continue
-        koopa::note "Removing ${#files[@]} broken symlinks."
-        # Don't pass single call to rm, as argument list can be too long.
-        for file in "${files[@]}"
-        do
-            [[ -z "$file" ]] && continue
-            koopa::info "Removing '${file}'."
-            koopa::rm "$file"
-        done
-    done
-    return 0
-}
-
-koopa::remove_empty_dirs() { # {{{1
-    # """
-    # Remove empty directories.
-    # @note Updated 2020-08-06.
-    # """
-    local dir dirs prefix
-    koopa::assert_has_args "$#"
-    koopa::assert_is_dir "$@"
-    for prefix in "$@"
-    do
-        readarray -t dirs <<< "$(koopa::find_empty_dirs "$prefix")"
-        koopa::is_array_non_empty "${dirs[@]}" || continue
-        koopa::note "Removing ${#dirs[@]} empty directories."
-        # Don't pass single call to rm, as argument list can be too long.
-        for dir in "${dirs[@]}"
-        do
-            [[ -z "$dir" ]] && continue
-            koopa::info "Removing '${dir}'."
-            koopa::rm "$dir"
-        done
-    done
     return 0
 }
 
