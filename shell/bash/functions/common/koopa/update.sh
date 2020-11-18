@@ -29,13 +29,21 @@ koopa::update() { # {{{1
             ;;
     esac
     f="update_${name//-/_}"
-    # FIXME MAKE THIS A FUNCTION.
+    # FIXME MAKE THIS A SHARED FUNCTION.
     if koopa::is_macos && koopa::is_function "koopa::macos_${f}"
     then
         fun="koopa::macos_${f}"
-    elif koopa::is_linux && koopa::is_function "koopa::linux_${f}"
+    elif koopa::is_linux
     then
-        fun="koopa::linux_${f}"
+        if koopa::is_debianish && koopa::is_function "koopa::debian_${f}"
+        then
+            fun="koopa::debian_${f}"
+        elif koopa::is_fedoraish && koopa::is_function "koopa::fedora_${f}"
+        then
+            fun="koopa::fedora_${f}"
+        else
+            fun="koopa::linux_${f}"
+        fi
     else
         fun="koopa::${f}"
     fi
