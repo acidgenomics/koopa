@@ -1,3 +1,10 @@
+## koopa 0.9.0 (UNRELEASED)
+
+- Reworked organization of "cellar" and "app" prefixes. Removing the usage of
+  "cellar", since this is a Homebrew-specific idiom. Instead koopa will now
+  use "app" for versioned installed, and a nested "opt" directory for
+  unversioned symlinks, similar to the approach used by Homebrew.
+
 ## koopa 0.8.9 (2020-10-09)
 
 ### Minor changes
