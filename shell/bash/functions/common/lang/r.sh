@@ -28,13 +28,13 @@ koopa::drat() { # {{{
 koopa::install_rcheck() { # {{{1
     # """
     # Install Rcheck scripts for CI.
-    # @note Updated 2020-07-08.
+    # @note Updated 2020-11-19.
     # """
     local link_name name source_repo target_dir
     koopa::assert_has_no_args "$#"
     name='Rcheck'
     source_repo="https://github.com/acidgenomics/${name}.git"
-    target_dir="$(koopa::local_app_prefix)/${name}"
+    target_dir="$(koopa::local_data_prefix)/${name}"
     link_name=".${name}"
     koopa::install_start "$name"
     if [[ ! -d "$target_dir" ]]

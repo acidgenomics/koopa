@@ -468,8 +468,8 @@ koopa::kebab_case_simple() { # {{{1
     _koopa_kebab_case_simple "$@"
 }
 
-koopa::local_app_prefix() { # {{{1
-    _koopa_local_app_prefix "$@"
+koopa::local_data_prefix() { # {{{1
+    _koopa_local_data_prefix "$@"
 }
 
 koopa::lowercase() { # {{{1
