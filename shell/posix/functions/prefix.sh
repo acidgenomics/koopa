@@ -3,13 +3,13 @@
 _koopa_aspera_prefix() { # {{{1
     # """
     # Aspera Connect prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-11-19.
     # """
     # shellcheck disable=SC2039
     local prefix
     if _koopa_is_shared_install
     then
-        prefix="$(_koopa_app_prefix)/aspera-connect"
+        prefix="$(_koopa_opt_prefix)/aspera-connect"
     else
         prefix="${HOME:?}/.aspera/connect"
     fi
@@ -20,13 +20,14 @@ _koopa_aspera_prefix() { # {{{1
 _koopa_bcbio_tools_prefix() { # {{{1
     # """
     # bcbio-nextgen tools prefix.
-    # @note Updated 2020-11-13.
+    # @note Updated 2020-11-19.
     # shellcheck disable=SC2039
     _koopa_is_linux || return 0
-    _koopa_print "$(_koopa_app_prefix)/bcbio/stable/tools"
+    _koopa_print "$(_koopa_opt_prefix)/bcbio/stable/tools"
     return 0
 }
 
+# FIXME RENAME THIS TO APP?
 _koopa_cellar_prefix() { # {{{1
     # """
     # Cellar prefix.
@@ -45,7 +46,7 @@ _koopa_cellar_prefix() { # {{{1
 _koopa_conda_prefix() { # {{{1
     # """
     # Conda prefix.
-    # @note Updated 2020-07-20.
+    # @note Updated 2020-11-19.
     # @seealso conda info --base
     # """
     # shellcheck disable=SC2039
@@ -54,7 +55,7 @@ _koopa_conda_prefix() { # {{{1
     then
         prefix="$(_koopa_parent_dir -n 2 "$CONDA_EXE")"
     else
-        prefix="$(_koopa_app_prefix)/conda"
+        prefix="$(_koopa_opt_prefix)/conda"
     fi
     _koopa_print "$prefix"
     return 0
@@ -148,18 +149,18 @@ _koopa_emacs_prefix() { # {{{1
 _koopa_ensembl_perl_api_prefix() { # {{{1
     # """
     # Ensembl Perl API prefix.
-    # @note Updated 2019-11-15.
+    # @note Updated 2019-11-19.
     # """
-    _koopa_print "$(_koopa_app_prefix)/ensembl"
+    _koopa_print "$(_koopa_opt_prefix)/ensembl"
     return 0
 }
 
 _koopa_fzf_prefix() { # {{{1
     # """
     # fzf prefix.
-    # @note Updated 2020-03-16.
+    # @note Updated 2020-11-19.
     # """
-    _koopa_print "$(_koopa_app_prefix)/fzf"
+    _koopa_print "$(_koopa_opt_prefix)/fzf"
     return 0
 }
 
@@ -191,9 +192,9 @@ _koopa_go_gopath() { # {{{1
 _koopa_go_prefix() { # {{{1
     # """
     # Go prefix.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-11-19.
     # """
-    _koopa_print "$(_koopa_app_prefix)/go"
+    _koopa_print "$(_koopa_opt_prefix)/go"
     return 0
 }
 
@@ -209,7 +210,8 @@ _koopa_homebrew_cellar_prefix() { # {{{1
 _koopa_homebrew_prefix() { # {{{1
     # """
     # Homebrew prefix.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-11-19.
+    #
     # @seealso https://brew.sh/
     # """
     # shellcheck disable=SC2039
@@ -217,7 +219,10 @@ _koopa_homebrew_prefix() { # {{{1
     x="${HOMEBREW_PREFIX:-}"
     if [ -z "$x" ]
     then
-        if _koopa_is_macos
+        if _koopa_is_installed brew
+        then
+            x="$(brew --prefix)"
+        elif _koopa_is_macos
         then
             x='/usr/local'
         elif _koopa_is_linux
@@ -283,6 +288,7 @@ _koopa_java_prefix() { # {{{1
     return 0
 }
 
+# FIXME Consider renaming this?
 _koopa_local_app_prefix() { # {{{1
     # """
     # Local user application install prefix.
@@ -332,12 +338,13 @@ _koopa_monorepo_prefix() { # {{{1
     return 0
 }
 
+# FIXME THIS HAS BEEN REWORKED.
 _koopa_openjdk_prefix() { # {{{1
     # """
     # OpenJDK prefix.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-11-19.
     # """
-    _koopa_print "$(_koopa_app_prefix)/java/openjdk"
+    _koopa_print "$(_koopa_opt_prefix)/openjdk"
     return 0
 }
 
@@ -361,7 +368,7 @@ _koopa_opt_prefix() { # {{{1
 _koopa_perlbrew_prefix() { # {{{1
     # """
     # Perlbrew prefix.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-11-19.
     # """
     # shellcheck disable=SC2039
     local prefix
@@ -369,7 +376,8 @@ _koopa_perlbrew_prefix() { # {{{1
     then
         prefix="$PERLBREW_ROOT"
     else
-        prefix="$(_koopa_app_prefix)/perl/perlbrew"
+        # FIXME THIS HAS BEEN REWORKED.
+        prefix="$(_koopa_opt_prefix)/perlbrew"
     fi
     _koopa_print "$prefix"
     return 0
@@ -387,18 +395,18 @@ _koopa_prefix() { # {{{1
 _koopa_pyenv_prefix() { # {{{1
     # """
     # Python pyenv prefix.
-    # @note Updated 2020-05-05.
+    # @note Updated 2020-11-19.
     #
     # See also approach used for rbenv.
     # """
-    _koopa_print "$(_koopa_app_prefix)/python/pyenv"
+    _koopa_print "$(_koopa_opt_prefix)/pyenv"
     return 0
 }
 
 _koopa_python_site_packages_prefix() { # {{{1
     # """
     # Python site packages library location.
-    # @note Updated 2020-10-27.
+    # @note Updated 2020-11-19.
     #
     # macOS alternative:
     # > x="$(_koopa_make_prefix)/lib/python${version}/site-packages"
@@ -415,7 +423,7 @@ _koopa_python_site_packages_prefix() { # {{{1
     _koopa_is_installed "$python" || return 0
     version="$("$python" --version | head -n 1 | cut -d ' ' -f 2)"
     version="$(_koopa_major_minor_version "$version")"
-    x="$(_koopa_app_prefix)/python/${version}/site-packages"
+    x="$(_koopa_opt_prefix)/python/${version}/site-packages"
     _koopa_print "$x"
     return 0
 }
@@ -438,13 +446,13 @@ _koopa_python_system_site_packages_prefix() { # {{{1
 _koopa_rbenv_prefix() { # {{{1
     # """
     # Ruby rbenv prefix.
-    # @note Updated 2020-05-05.
+    # @note Updated 2020-11-19.
     #
     # See also:
     # - RBENV_ROOT
     # - https://gist.github.com/saegey/5499096
     # """
-    _koopa_print "$(_koopa_app_prefix)/ruby/rbenv"
+    _koopa_print "$(_koopa_opt_prefix)/rbenv"
     return 0
 }
 
@@ -460,7 +468,7 @@ _koopa_refdata_prefix() { # {{{1
 _koopa_rust_cargo_prefix() { # {{{1
     # """
     # Rust cargo install prefix.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-11-19.
     #
     # See also:
     # - https://github.com/rust-lang/rustup#environment-variables
@@ -471,7 +479,7 @@ _koopa_rust_cargo_prefix() { # {{{1
     local prefix
     if _koopa_is_shared_install
     then
-        prefix="$(_koopa_app_prefix)/rust/cargo"
+        prefix="$(_koopa_opt_prefix)/rust/cargo"
     else
         prefix="${HOME:?}/.cargo"
     fi
@@ -482,13 +490,13 @@ _koopa_rust_cargo_prefix() { # {{{1
 _koopa_rust_rustup_prefix() { # {{{1
     # """
     # Rust rustup install prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-19.
     # """
     # shellcheck disable=SC2039
     local prefix
     if _koopa_is_shared_install
     then
-        prefix="$(_koopa_app_prefix)/rust/rustup"
+        prefix="$(_koopa_opt_prefix)/rust/rustup"
     else
         prefix="${HOME:?}/.rustup"
     fi
@@ -517,8 +525,8 @@ _koopa_tests_prefix() { # {{{1
 _koopa_venv_prefix() { # {{{1
     # """
     # Python venv prefix.
-    # @note Updated 2020-05-05.
+    # @note Updated 2020-11-19.
     # """
-    _koopa_print "$(_koopa_app_prefix)/python/virtualenvs"
+    _koopa_print "$(_koopa_opt_prefix)/python/virtualenvs"
     return 0
 }
