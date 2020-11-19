@@ -34,7 +34,7 @@ _koopa_activate_bcbio() { # {{{1
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-11-19.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
@@ -43,7 +43,7 @@ _koopa_activate_conda() { # {{{1
     # shellcheck disable=SC2039
     local name nounset prefix
     prefix="${1:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_app_prefix)/conda"
+    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/conda"
     [ -d "$prefix" ] || return 0
     name="${2:-base}"
     script="${prefix}/bin/activate"
@@ -456,7 +456,7 @@ _koopa_activate_perlbrew() { # {{{1
 _koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-11-19.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
@@ -473,7 +473,7 @@ _koopa_activate_pipx() { # {{{1
     _koopa_is_installed pipx || return 0
     [ -n "${PIPX_HOME:-}" ] && return 0
     [ -n "${PIPX_BIN_DIR:-}" ] && return 0
-    shared_prefix="$(_koopa_app_prefix)/python/pipx"
+    shared_prefix="$(_koopa_opt_prefix)/python/pipx"
     if [ -d "$shared_prefix" ]
     then
         # Shared user installation.
@@ -654,7 +654,7 @@ _koopa_activate_ruby() { # {{{1
 _koopa_activate_rust() { # {{{1
     # """
     # Activate Rust programming language.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-11-19.
     #
     # Attempt to locate cargo home and source the env script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
@@ -666,7 +666,7 @@ _koopa_activate_rust() { # {{{1
         shared_rustup_prefix
     cargo_prefix="$(_koopa_rust_cargo_prefix)"
     [ -d "$cargo_prefix" ] || return 0
-    shared_rust_prefix="$(_koopa_app_prefix)/rust"
+    shared_rust_prefix="$(_koopa_opt_prefix)/rust"
     shared_cargo_prefix="${shared_rust_prefix}/cargo"
     if [ "$cargo_prefix" = "$shared_cargo_prefix" ]
     then
