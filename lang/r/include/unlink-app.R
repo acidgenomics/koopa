@@ -9,5 +9,5 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 local({
     x <- positionalArgs()
-    unlinkCellar(x)
+    unlinkApp(x)
 })
