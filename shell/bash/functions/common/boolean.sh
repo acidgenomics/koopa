@@ -183,6 +183,7 @@ koopa::is_bash_ok() { # {{{1
     [[ "$major_version" -ge 4 ]]
 }
 
+# FIXME REWORK THIS LANGUAGE.
 koopa::is_cellar() { # {{{1
     # """
     # Is a specific command or file cellarized?
