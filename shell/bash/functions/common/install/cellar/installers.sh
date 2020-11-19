@@ -94,13 +94,6 @@ koopa::install_grep() { # {{{1
         "$@"
 }
 
-koopa::install_groff() { # {{{1
-    koopa::install_cellar \
-        --name='groff' \
-        --name-fancy='GNU roff' \
-        "$@"
-}
-
 koopa::install_gsl() { # {{{1
     koopa::install_cellar \
         --name='gsl' \
