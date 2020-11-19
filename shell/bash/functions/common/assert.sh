@@ -275,23 +275,6 @@ koopa::assert_is_array_non_empty() { # {{{1
     return 0
 }
 
-koopa::assert_is_cellar() { # {{{1
-    # """
-    # Assert that input is a cellarized program.
-    # @note Updated 2020-02-16.
-    # """
-    local arg
-    koopa::assert_has_args "$#"
-    for arg in "$@"
-    do
-        if ! koopa::is_cellar "$arg"
-        then
-            koopa::stop "Not in cellar: '${arg}'."
-        fi
-    done
-    return 0
-}
-
 koopa::assert_is_conda_active() { # {{{1
     # """
     # Assert that a Conda environment is active.
@@ -748,6 +731,23 @@ koopa::assert_is_symlink() { # {{{1
         if [[ ! -L "$arg" ]]
         then
             koopa::stop "Not symlink: '${arg}'."
+        fi
+    done
+    return 0
+}
+
+koopa::assert_is_symlinked_app() { # {{{1
+    # """
+    # Assert that input is a symlinked application.
+    # @note Updated 2020-11-19.
+    # """
+    local arg
+    koopa::assert_has_args "$#"
+    for arg in "$@"
+    do
+        if ! koopa::is_symlinked_app "$arg"
+        then
+            koopa::stop "Not symlinked app: '${arg}'."
         fi
     done
     return 0
