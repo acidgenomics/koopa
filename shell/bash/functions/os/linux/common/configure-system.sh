@@ -584,6 +584,7 @@ koopa::linux_configure_system() { # {{{1
     return 0
 }
 
+# FIXME EXPERIMENTAL, CONSIDER REMOVING SUPPORT.
 koopa::linux_link_data_disk() { # {{{1
     # """
     # Link a secondary data disk.

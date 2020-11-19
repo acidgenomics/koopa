@@ -47,6 +47,7 @@ koopa::add_user_to_group() { # {{{1
     return 0
 }
 
+# FIXME EXPERIMENTAL...CONSIDER REMOVING SUPPORT.
 koopa::link_docker() { # {{{1
     # """
     # Link Docker library onto data disk for VM.
