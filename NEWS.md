@@ -1,5 +1,6 @@
 ## koopa 0.9.0 (UNRELEASED)
 
+- Installer now defaults to `/opt/koopa` instead of `/usr/local/koopa`.
 - Reworked organization of "cellar" and "app" prefixes. Removing the usage of
   "cellar", since this is a Homebrew-specific idiom. Instead koopa will now
   use "app" for versioned installed, and a nested "opt" directory for
