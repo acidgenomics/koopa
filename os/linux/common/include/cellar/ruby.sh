@@ -5,6 +5,7 @@
 # https://www.ruby-lang.org/en/downloads/
 # """
 
+koopa::assert_is_linux
 # Ensure '2.7.1p83' becomes '2.7.1' here, for example.
 version="$(koopa::sanitize_version "$version")"
 minor_version="$(koopa::major_minor_version "$version")"
