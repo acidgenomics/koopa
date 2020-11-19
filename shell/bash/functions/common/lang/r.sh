@@ -107,9 +107,9 @@ koopa::link_r_etc() { # {{{1
 koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-11-11.
+    # @note Updated 2020-11-19.
     # """
-    local app_prefix lib_source lib_target r r_prefix version
+    local lib_source lib_target opt_prefix r r_prefix version
     koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     r_prefix="$(koopa::r_prefix "$r")"
@@ -119,8 +119,8 @@ koopa::link_r_site_library() { # {{{1
     then
         version="$(koopa::major_minor_version "$version")"
     fi
-    app_prefix="$(koopa::app_prefix)"
-    lib_source="${app_prefix}/r/${version}/site-library"
+    opt_prefix="$(koopa::opt_prefix)"
+    lib_source="${opt_prefix}/r/${version}/site-library"
     lib_target="${r_prefix}/site-library"
     koopa::sys_mkdir "$lib_source"
     koopa::sys_ln "$lib_source" "$lib_target"

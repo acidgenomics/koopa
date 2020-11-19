@@ -66,22 +66,22 @@ koopa::check_access_octal() { # {{{1
 koopa::check_data_disk() { # {{{1
     # """
     # Check data disk configuration.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-11-19.
     # """
-    local app_prefix data_disk_link_prefix
+    local data_disk_link_prefix opt_prefix
     koopa::assert_has_no_args "$#"
     koopa::is_linux || return 0
     # e.g. '/n'.
     data_disk_link_prefix="$(koopa::data_disk_link_prefix)"
     if [[ -L "$data_disk_link_prefix" ]] && [[ ! -e "$data_disk_link_prefix" ]]
     then
-        koopa::warning "Data disk link error: '${data_disk_link_prefix}'."
+        koopa::warning "Invalid symlink: '${data_disk_link_prefix}'."
     fi
-    # e.g. '/usr/local/opt'.
-    app_prefix="$(koopa::app_prefix)"
-    if [[ -L "$app_prefix" ]] && [[ ! -e "$app_prefix" ]]
+    # e.g. '/opt/koopa/opt'; or previously '/usr/local/koopa/opt'.
+    opt_prefix="$(koopa::opt_prefix)"
+    if [[ -L "$opt_prefix" ]] && [[ ! -e "$opt_prefix" ]]
     then
-        koopa::warning "App prefix link error: '${app_prefix}'."
+        koopa::warning "Invalid symlink: '${opt_prefix}'."
     fi
     return 0
 }

@@ -7,9 +7,13 @@ koopa::install_ensembl_perl_api() { # {{{1
     # """
     local name_fancy prefix
     koopa::assert_has_no_args "$#"
-    prefix="$(koopa::app_prefix)/ensembl"
-    [[ -d "$prefix" ]] && return 0
     name_fancy='Ensembl Perl API'
+    prefix="$(koopa::ensembl_perl_api_prefix)"
+    if [[ -d "$prefix" ]]
+    then
+        koopa::note "${name_fancy} already installed at '${prefix}'."
+        return 0
+    fi
     koopa::install_start "$name_fancy" "$prefix"
     koopa::mkdir "$prefix"
     (
