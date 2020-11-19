@@ -15,6 +15,16 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
+koopa::drat() { # {{{
+    # """
+    # Add R package to drat repository.
+    # @note Updated 2020-11-19.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::rscript 'drat' "$@"
+    return 0
+}
+
 koopa::install_rcheck() { # {{{1
     # """
     # Install Rcheck scripts for CI.
