@@ -273,13 +273,6 @@ koopa::rscript() { # {{{1
                 vanilla=1
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
             *)
                 pos+=("$1")
                 shift 1
