@@ -4,21 +4,23 @@ args <- commandArgs()
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]
 file <- sub(pattern = "^--file=", replacement = "", x = file)
-koopaPrefix <- normalizePath(file.path(dirname(file), ".."))
+koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 local({
     args <- parseArgs(
-        flags = c("prefix", "recursive"),
+        flags = c("prefix", "recursive", "strict"),
         positional = TRUE
     )
     positional <- args[["positional"]]
     prefix <- "prefix" %in% args[["flags"]]
     recursive <- "recursive" %in% args[["flags"]]
-    snakeCase(
+    strict <- "strict" %in% args[["flags"]]
+    camelCase(
         object = positional,
         rename = TRUE,
         recursive = recursive,
+        strict = strict,
         prefix = prefix
     )
 })
