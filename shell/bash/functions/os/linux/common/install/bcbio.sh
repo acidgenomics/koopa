@@ -1,50 +1,24 @@
 #!/usr/bin/env bash
 
+# FIXME NEED A NEW FUNCTION HERE, SUCH AS KOOPA::ADD_OPT_LINK.
+# FIXME RENAME OPT BACK HERE TO APP AND REWORK...
+
 koopa::linux_install_bcbio() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-11-19.
     # """
-    local app_prefix current_version file install_dir name name_fancy prefix \
+    local file install_dir name name_fancy prefix \
         python tmp_dir tools_dir url version
     name='bcbio'
-    version='stable'
-    app_prefix="$(koopa::app_prefix)/${name}"
-    while (("$#"))
-    do
-        case "$1" in
-            --prefix=*)
-                prefix="${1#*=}"
-                shift 1
-                ;;
-            --version=*)
-                version="${1#*=}"
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    app_prefix="$(koopa::strip_trailing_slash "$app_prefix")"
-    case "$version" in
-        stable)
-            current_version="$(koopa::current_bcbio_version)"
-            prefix="${app_prefix}/${current_version}"
-            ;;
-        development)
-            prefix="${app_prefix}/${version}"
-            ;;
-        *)
-            koopa::stop 'Unsuported version. Use "stable" or "development".'
-            ;;
-    esac
+    name_fancy='bcbio-nextgen'
+    version="$(koopa::current_bcbio_version)"
+    prefix="$(koopa::opt_prefix)/${name}/${version}"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "bcbio already installed at '${prefix}'."
+        koopa::note "${name_fancy} already installed at '${prefix}'."
         return 0
     fi
-    name_fancy='bcbio-nextgen'
     koopa::install_start "$name_fancy" "$prefix"
     koopa::coffee_time
     koopa::assert_has_no_envs
@@ -66,21 +40,23 @@ koopa::linux_install_bcbio() { # {{{1
             --isolate \
             --nodata \
             --tooldir="$tools_dir" \
-            --upgrade="$version"
+            --upgrade='stable'
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    # Clean up conda packages.
-    # > conda="${install_dir}/anaconda/bin/conda"
-    # > conda="${tools_dir}/bin/bcbio_conda"
-    # > "$conda" clean --yes --tarballs
-    if [[ "$version" == 'stable' ]]
+    # Clean up conda packages inside Docker image.
+    if koopa::is_docker
     then
-        koopa::sys_ln "${app_prefix}/${current_version}" "${app_prefix}/stable"
+        # > conda="${install_dir}/anaconda/bin/conda"
+        conda="${tools_dir}/bin/bcbio_conda"
+        koopa::assert_is_file "$conda"
+        "$conda" clean --yes --tarballs
     fi
-    koopa::sys_set_permissions -r "$app_prefix"
+    koopa::sys_set_permissions -r "$prefix"
+    # FIXME NEED TO LINK THIS INTO OPT HERE.
     koopa::install_success "$name_fancy"
     return 0
 }
 
+# FIXME USE OPT PREFIX HERE...
 koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # """
     # Install bcbio genome from Ensembl.
@@ -226,16 +202,17 @@ koopa::linux_install_bcbio_genome() { # {{{1
     return 0
 }
 
+# FIXME RETHINK THIS ALSO, FOLLOWING BCBIO CHANGE ABOVE.
 koopa::linux_install_bcbio_vm() { # {{{1
     # """
     # Install bcbio-vm.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-19.
     # """
     local bin_dir data_dir file name prefix tmp_dir url
     koopa::assert_has_no_envs
     koopa::assert_is_installed docker
     name='bcbio-vm'
-    prefix="$(koopa::app_prefix)/${name}"
+    prefix="$(koopa::opt_prefix)/${name}"
     [[ -d "$prefix" ]] && return 0
     koopa::install_start "$name" "$prefix"
     bin_dir="${prefix}/anaconda/bin"

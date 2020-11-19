@@ -61,12 +61,13 @@ koopa::_linux_rsync() { # {{{1
     return 0
 }
 
+# FIXME REWORK APP, CELLAR, OPT HERE.
 koopa::linux_rsync_system() { # {{{1
     # """
     # rsync virtual machine configuration.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-19.
     # """
-    local app_prefix app_rsync_flags homebrew_prefix host_ip make_prefix pos \
+    local homebrew_prefix host_ip make_prefix opt_prefix opt_rsync_flags pos \
         prefix refdata_prefix refdata_rsync_flags source_ip
     koopa::assert_has_args "$#"
     pos=()
@@ -111,14 +112,14 @@ koopa::linux_rsync_system() { # {{{1
     fi
     # Otherwise, sync the default paths. Be sure to sync app prefix before make
     # prefix, otherwise some symlinks won't resolve as expected.
-    app_prefix="$(koopa::app_prefix)"
-    if [[ -d "$app_prefix" ]]
+    opt_prefix="$(koopa::opt_prefix)"
+    if [[ -d "$opt_prefix" ]]
     then
         # Skip programs that are specific to powerful multi-core VMs.
-        readarray -t app_rsync_flags <<< "$(koopa::rsync_flags)"
+        readarray -t opt_rsync_flags <<< "$(koopa::rsync_flags)"
         if ! koopa::is_powerful
         then
-            app_rsync_flags+=(
+            opt_rsync_flags+=(
                 '--exclude=bcbio'
                 '--exclude=cellranger'
                 '--exclude=cellranger-atac'
@@ -126,11 +127,11 @@ koopa::linux_rsync_system() { # {{{1
             )
         fi
         koopa::_linux_rsync \
-            --prefix="$app_prefix" \
-            --rsync-flags="${app_rsync_flags[*]}" \
+            --prefix="$opt_prefix" \
+            --rsync-flags="${opt_rsync_flags[*]}" \
             --source-ip="$source_ip"
     else
-        koopa::note "Skipping '${app_prefix}'."
+        koopa::note "Skipping '${opt_prefix}'."
     fi
     make_prefix="$(koopa::make_prefix)"
     if [[ -d "$make_prefix" ]]
