@@ -4,6 +4,7 @@
   "cellar", since this is a Homebrew-specific idiom. Instead koopa will now
   use "app" for versioned installed, and a nested "opt" directory for
   unversioned symlinks, similar to the approach used by Homebrew.
+- Removed autojump activation support in favor of zoxide, which is faster.
 
 ## koopa 0.8.9 (2020-10-09)
 
