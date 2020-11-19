@@ -36,6 +36,13 @@ koopa::linux_install_geos() { # {{{1
         "$@"
 }
 
+koopa::install_groff() { # {{{1
+    koopa::install_cellar \
+        --name='groff' \
+        --name-fancy='GNU roff' \
+        "$@"
+}
+
 koopa::linux_install_julia() { # {{{1
     local pos script_name
     script_name='julia'
