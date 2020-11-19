@@ -34,6 +34,7 @@
 # - https://stackoverflow.com/questions/43333207
 # """
 
+koopa::assert_is_linux
 file="Python-${version}.tar.xz"
 url="https://www.python.org/ftp/python/${version}/${file}"
 koopa::download "$url"

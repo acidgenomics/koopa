@@ -24,6 +24,7 @@
 # - https://github.com/gabime/spdlog/issues/1190
 # """
 
+koopa::assert_is_linux
 file="${name}-${version}.tar.gz"
 url="https://github.com/taglib/taglib/releases/download/v${version}/${file}"
 koopa::download "$url"

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+koopa::assert_is_linux
 koopa::assert_is_installed svn
 # Set the R source code repo URL.
 repos='https://svn.r-project.org/R'

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+koopa::assert_is_linux
 koopa::coffee_time
 # If set, this will interfere with internal LLVM build required for
 # Julia. See 'build.md' file for LLVM details.

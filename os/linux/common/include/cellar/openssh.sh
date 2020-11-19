@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+koopa::assert_is_linux
 file="${name}-${version}.tar.gz"
 url="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/${file}"
 koopa::download "$url"

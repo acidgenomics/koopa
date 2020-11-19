@@ -7,7 +7,7 @@ then
     koopa::note "'${name}' currently won't build on CentOS."
     return 0
 fi
-
+koopa::assert_is_linux
 file="v${version}.tar.gz"
 url="https://github.com/${name}/${name}/archive/${file}"
 koopa::download "$url"
