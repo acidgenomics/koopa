@@ -288,11 +288,10 @@ _koopa_java_prefix() { # {{{1
     return 0
 }
 
-# FIXME Consider renaming this?
-_koopa_local_app_prefix() { # {{{1
+_koopa_local_data_prefix() { # {{{1
     # """
-    # Local user application install prefix.
-    # @note Updated 2020-08-09.
+    # Local user application data prefix.
+    # @note Updated 2020-11-19.
     #
     # This is the default app path when koopa is installed per user.
     # """

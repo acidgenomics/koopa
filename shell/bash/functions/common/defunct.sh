@@ -39,6 +39,13 @@ koopa::is_matching_regex() {  #{{{1
     koopa::defunct 'koopa::str_match_regex'
 }
 
+koopa::local_app_prefix() { # {{{1
+    # """
+    # @note Updated 2020-11-19.
+    # """
+    koopa::defunct 'koopa::local_data_prefix'
+}
+
 koopa::prefix_mkdir() { # {{{1
     # """
     # @note Updated 2020-02-19.
