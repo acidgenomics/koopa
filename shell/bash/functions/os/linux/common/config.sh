@@ -131,7 +131,7 @@ END
 koopa::update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-19.
     # """
     local conf_source dest_file distro_prefix source_file
     koopa::assert_has_no_args "$#"
@@ -148,16 +148,17 @@ koopa::update_ldconfig() { # {{{1
     for source_file in "${conf_source}/"*".conf"
     do
         dest_file="/etc/ld.so.conf.d/koopa-$(basename "$source_file")"
-        sudo ln -fnsv "$source_file" "$dest_file"
+        koopa::ln -S "$source_file" "$dest_file"
     done
     sudo ldconfig
     return 0
 }
 
+# FIXME NEED TO RETHINK OUR APPROACH WITH OPT HERE.
 koopa::update_lmod_config() { # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
-    # @note Updated 2020-08-06.
+    # @note Updated 2020-11-19.
     #
     # Need to check for this case:
     # ln: failed to create symbolic link '/etc/fish/conf.d/z00_lmod.fish':
@@ -166,21 +167,21 @@ koopa::update_lmod_config() { # {{{1
     local etc_dir init_dir
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
-    init_dir="$(koopa::app_prefix)/lmod/apps/lmod/lmod/init"
+    init_dir="$(koopa::opt_prefix)/lmod/apps/lmod/lmod/init"
     [[ -d "$init_dir" ]] || return 0
     koopa::h2 'Updating Lmod init configuration.'
     etc_dir='/etc/profile.d'
-    sudo mkdir -pv "$etc_dir"
+    koopa::mkdir -S "$etc_dir"
     # bash, zsh
-    sudo ln -fnsv "${init_dir}/profile" "${etc_dir}/z00_lmod.sh"
+    koopa::ln -S "${init_dir}/profile" "${etc_dir}/z00_lmod.sh"
     # csh, tcsh
-    sudo ln -fnsv "${init_dir}/cshrc" "${etc_dir}/z00_lmod.csh"
+    koopa::ln -S "${init_dir}/cshrc" "${etc_dir}/z00_lmod.csh"
     # fish
     if koopa::is_installed fish
     then
         etc_dir='/etc/fish/conf.d'
-        sudo mkdir -pv "$etc_dir"
-        sudo ln -fnsv "${init_dir}/profile.fish" "${etc_dir}/z00_lmod.fish"
+        koopa::mkdir -S "$etc_dir"
+        koopa::ln -S "${init_dir}/profile.fish" "${etc_dir}/z00_lmod.fish"
     fi
     return 0
 }

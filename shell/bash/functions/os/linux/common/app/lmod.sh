@@ -3,7 +3,7 @@
 koopa::install_lmod() { # {{{1
     # """
     # Install Lmod.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-11-19.
     # """
     local apps_dir data_dir file name name_fancy prefix tmp_dir url version
     koopa::assert_has_no_args "$#"
@@ -23,10 +23,15 @@ koopa::install_lmod() { # {{{1
         esac
     done
     name='lmod'
-    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-    prefix="$(koopa::app_prefix)/${name}"
-    [[ -d "$prefix" ]] && return 0
     name_fancy='Lmod'
+    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
+    # FIXME RETHINK THIS.
+    prefix="$(koopa::opt_prefix)/${name}/${version}"
+    if [[ -d "$prefix" ]]
+    then
+        koopa::note "${name_fancy} is already installed at '${prefix}'."
+        return 0
+    fi
     koopa::install_start "$name_fancy" "$version" "$prefix"
     apps_dir="${prefix}/apps"
     data_dir="${prefix}/moduleData"
