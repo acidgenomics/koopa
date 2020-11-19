@@ -6,15 +6,21 @@ test_gsub() { # {{{1
         'aaa-aaa-ccc-ccc'
 }
 
+test_kebab_case_simple() { # {{{1
+    assertEquals \
+        "$(koopa::kebab_case_simple 'hello world')" \
+        'hello-world'
+}
+
 test_sanitize_version() { # {{{1
     assertEquals \
         "$(koopa::sanitize_version '2.7.1p83')" \
         '2.7.1'
 }
 
-test_snake_case() { # {{{1
+test_snake_case_simple() { # {{{1
     assertEquals \
-        "$(koopa::snake_case 'hello world')" \
+        "$(koopa::snake_case_simple 'hello world')" \
         'hello_world'
 }
 

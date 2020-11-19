@@ -30,7 +30,7 @@ koopa::assert_is_installed pcre-config
 # Temporarily installing from master branch, which has bug fixes that aren't
 # yet available in tagged release, especially for GCC 10.
 version='master'
-name2="$(koopa::snake_case "$name")"
+name2="$(koopa::snake_case_simple "$name")"
 file="${version}.tar.gz"
 url="https://github.com/ggreer/${name2}/archive/${file}"
 koopa::download "$url"

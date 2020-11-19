@@ -239,7 +239,7 @@ koopa::get_version() { # {{{1
     koopa::assert_has_args "$#"
     for cmd in "$@"
     do
-        fun="koopa::$(koopa::snake_case "$cmd")_version"
+        fun="koopa::$(koopa::snake_case_simple "$cmd")_version"
         if koopa::is_function "$fun"
         then
             x="$("$fun")"
