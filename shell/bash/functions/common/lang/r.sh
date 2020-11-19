@@ -246,12 +246,13 @@ koopa::r_rebuild_docs() { # {{{1
 
 koopa::rscript() { # {{{1
     # """
-    # Run Rscript.
+    # Execute an R script.
     # @note Updated 2020-11-19.
     #
     # This function allows passthrough of flags such as '--vanilla'.
     # """
     local args name pos prefix script vanilla
+    koopa::assert_is_installed Rscript
     prefix="$(koopa::rscript_prefix)"
     vanilla=0
     pos=()
@@ -277,7 +278,6 @@ koopa::rscript() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed Rscript
     name="${1:?}"
     shift 1
     script="${prefix}/${name}.R"
