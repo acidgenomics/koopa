@@ -26,6 +26,8 @@ koopa::find_cellar_version() { # {{{1
     return 0
 }
 
+# FIXME CREATE LINK INTO OPT PREFIX AND THEN SYMLINK INTO MAKE PREFIX FROM THERE.
+
 koopa::install_cellar() { # {{{1
     # """
     # Install cellarized application.
@@ -137,6 +139,8 @@ koopa::install_cellar() { # {{{1
     koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
+
+# FIXME REWORK, SYMLINKING FROM OPT (LIKE HOMEBREW) INSTEAD.
 
 koopa::link_cellar() { # {{{1
     # """
