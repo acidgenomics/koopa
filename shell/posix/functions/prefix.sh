@@ -1,20 +1,5 @@
 #!/bin/sh
 
-_koopa_app_prefix() { # {{{1
-    # """
-    # Custom application install prefix.
-    # @note Updated 2020-11-11.
-    #
-    # OK to symlink this prefix to a secondary disk.
-    # """
-    # shellcheck disable=SC2039
-    local prefix
-    prefix="${KOOPA_APP_PREFIX:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_prefix)/opt"
-    _koopa_print "$prefix"
-    return 0
-}
-
 _koopa_aspera_prefix() { # {{{1
     # """
     # Aspera Connect prefix.
@@ -353,6 +338,23 @@ _koopa_openjdk_prefix() { # {{{1
     # @note Updated 2020-02-27.
     # """
     _koopa_print "$(_koopa_app_prefix)/java/openjdk"
+    return 0
+}
+
+_koopa_opt_prefix() { # {{{1
+    # """
+    # Custom application install prefix.
+    # @note Updated 2020-11-19.
+    #
+    # OK to symlink this prefix to a secondary disk.
+    #
+    # This is where Python and R packages will install to by default.
+    # """
+    # shellcheck disable=SC2039
+    local prefix
+    prefix="${KOOPA_OPT_PREFIX:-}"
+    [ -z "$prefix" ] && prefix="$(_koopa_prefix)/opt"
+    _koopa_print "$prefix"
     return 0
 }
 
