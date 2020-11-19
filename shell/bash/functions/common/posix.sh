@@ -76,10 +76,6 @@ koopa::cd() { # {{{1
     _koopa_cd "$@"
 }
 
-koopa::cellar_prefix() { # {{{1
-    _koopa_cellar_prefix "$@"
-}
-
 koopa::coffee_time() { # {{{1
     _koopa_coffee_time "$@"
 }
