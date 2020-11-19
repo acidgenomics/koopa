@@ -3,7 +3,7 @@
 
 # """
 # POSIX shell header.
-# @note Updated 2020-11-11.
+# @note Updated 2020-11-19.
 # """
 
 if [ -z "${KOOPA_PREFIX:-}" ]
@@ -31,5 +31,5 @@ then
 fi
 
 # This value is picked up in R configuration (for reticulate).
-KOOPA_APP_PREFIX="$(_koopa_app_prefix)"
-export KOOPA_APP_PREFIX
+KOOPA_OPT_PREFIX="$(_koopa_opt_prefix)"
+export KOOPA_OPT_PREFIX
