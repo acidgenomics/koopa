@@ -32,6 +32,7 @@ koopa::update() { # {{{1
     return 0
 }
 
+# FIXME Ensure we run the dotfiles installers here.
 koopa::update_koopa() { # {{{1
     # """
     # Update koopa installation.
