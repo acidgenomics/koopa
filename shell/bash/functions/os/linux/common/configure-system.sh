@@ -585,6 +585,7 @@ koopa::linux_configure_system() { # {{{1
 }
 
 # FIXME EXPERIMENTAL, CONSIDER REMOVING SUPPORT.
+# FIXME NEED TO TEST THIS MORE CAREFULLY ON AWS EC2.
 koopa::linux_link_data_disk() { # {{{1
     # """
     # Link a secondary data disk.
