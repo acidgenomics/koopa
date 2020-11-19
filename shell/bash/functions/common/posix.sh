@@ -464,8 +464,8 @@ koopa::java_prefix() { # {{{1
     _koopa_java_prefix "$@"
 }
 
-koopa::kebab_case() { # {{{1
-    _koopa_kebab_case "$@"
+koopa::kebab_case_simple() { # {{{1
+    _koopa_kebab_case_simple "$@"
 }
 
 koopa::local_app_prefix() { # {{{1
@@ -684,8 +684,8 @@ koopa::shell() { # {{{1
     _koopa_shell "$@"
 }
 
-koopa::snake_case() { # {{{1
-    _koopa_snake_case "$@"
+koopa::snake_case_simple() { # {{{1
+    _koopa_snake_case_simple "$@"
 }
 
 koopa::source_dir() { # {{{1
