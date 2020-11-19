@@ -77,10 +77,9 @@ koopa::update_koopa_system() { # {{{1
     koopa::update_koopa
     koopa::h1 'Updating system configuration.'
     koopa::dl \
-        'App (cellar) prefix' "$(koopa::app_prefix)"    \
-        'Opt prefix'          "$(koopa::opt_prefix)"    \
-        'Config prefix'       "$(koopa::config_prefix)" \
-        'Make prefix'         "$(koopa::make_prefix)"
+        'Make prefix' "$(koopa::make_prefix)" \
+        'Opt prefix' "$(koopa::opt_prefix)" \
+        'User config prefix' "$(koopa::config_prefix)"
     koopa::add_make_prefix_link
     if koopa::is_linux
     then
