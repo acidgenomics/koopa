@@ -15,10 +15,6 @@
 # Source compile failure on Ubuntu 18 LTS.
 # The program is attempting to use system LLVM 6, even when we request not to.
 #
-# > julia --version
-# /usr/lib/x86_64-linux-gnu/libLLVM-6.0.so: version `JL_LLVM_6.0' not found
-# (required by /usr/local/cellar/julia/1.3.0/bin/../lib/libjulia.so.1)
-#
 # See also:
 # https://discourse.julialang.org/t/
 #     problem-building-julia-version-jl-llvm-6-0-not-found/11545

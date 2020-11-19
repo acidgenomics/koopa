@@ -563,7 +563,7 @@ koopa::install_pip() { # {{{1
         "$python" "$file" --no-warn-script-location
     )
     koopa::rm "$tmp_dir"
-    koopa::is_cellar "$python" && koopa::link_cellar python
+    koopa::is_symlinked_app "$python" && koopa::link_app python
     koopa::install_success "$name"
     return 0
 }
@@ -729,7 +729,7 @@ koopa::pyscript() { # {{{1
 koopa::python_add_site_packages_to_sys_path() { # {{{1
     # """
     # Add our custom site packages library to sys.path.
-    # @note Updated 2020-10-27.
+    # @note Updated 2020-11-19.
     #
     # @seealso
     # > "$python" -m site
@@ -744,10 +744,10 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     if [[ ! -f "$file" ]]
     then
         koopa::info "Adding '${file}' path file in '${sys_site_pkgs}'."
-        if koopa::is_cellar "$python"
+        if koopa::is_symlinked_app "$python"
         then
             koopa::write_string "$k_site_pkgs" "$file"
-            koopa::link_cellar python
+            koopa::link_app python
         else
             koopa::sudo_write_string "$k_site_pkgs" "$file"
         fi
@@ -895,7 +895,7 @@ koopa::update_pyenv() { # {{{1
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-19.
     # @seealso
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
@@ -919,7 +919,7 @@ koopa::update_python_packages() { # {{{1
     koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
     koopa::dl 'Prefix' "$prefix"
     "$python" -m pip install --no-warn-script-location --upgrade "${pkgs[@]}"
-    koopa::is_cellar "$python" && koopa::link_cellar python
+    koopa::is_symlinked_app "$python" && koopa::link_app python
     koopa::install_success "$name_fancy"
     return 0
 }

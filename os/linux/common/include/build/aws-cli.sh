@@ -5,8 +5,7 @@
 # Homebrew recipe, for reference:
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/awscli.rb
 #
-# Note that the AWS bundled installer isn't versioned in the file name, so we
-# need to detect and place in the cellar dynamically instead.
+# Note that the AWS bundled installer isn't versioned in the file name.
 #
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
 # https://github.com/aws/aws-cli
