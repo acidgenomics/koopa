@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2020-11-15.
+## Updated 2020-11-19.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -10,7 +10,9 @@
 
 HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/usr/local}"
 HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
-KOOPA_APP_PREFIX="${KOOPA_APP_PREFIX:-/usr/local/koopa/opt}"
+
+KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
+KOOPA_OPT_PREFIX="${KOOPA_OPT_PREFIX:-${KOOPA_PREFIX}/opt}"
 
 ## System path {{{1
 ## =============================================================================
@@ -91,7 +93,7 @@ R_REMOTES_UPGRADE="always"
 ## If left unset, defaults to `~/.virtualenvs`.
 ## Check with `virtualenv_list()`.
 ## https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-WORKON_HOME="${KOOPA_APP_PREFIX}/python/virtualenvs"
+WORKON_HOME="${KOOPA_OPT_PREFIX}/python/virtualenvs"
 
 ## units / udunits {{{2
 ## -----------------------------------------------------------------------------
