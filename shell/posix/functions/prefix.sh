@@ -1,5 +1,28 @@
 #!/bin/sh
 
+_koopa_app_prefix() { # {{{1
+    # """
+    # Application prefix.
+    # @note Updated 2020-11-19.
+    #
+    # Previously referred to as "cellar", prior to v0.9.
+    #
+    # Recommended to keep on a local mount.
+    # """
+    # shellcheck disable=SC2039
+    local prefix
+    prefix="${KOOPA_APP_PREFIX:-}"
+    # Provide fallback support for existing installs using "cellar".
+    [ -z "$prefix" ] && \
+        [ -d "$(_koopa_prefix)/cellar" ] && \
+        prefix="$(_koopa_prefix)/cellar"
+    # Otherwise, use "app" by default.
+    [ -z "$prefix" ] && \
+        prefix="$(_koopa_prefix)/app"
+    _koopa_print "$prefix"
+    return 0
+}
+
 _koopa_aspera_prefix() { # {{{1
     # """
     # Aspera Connect prefix.
@@ -24,22 +47,6 @@ _koopa_bcbio_tools_prefix() { # {{{1
     # shellcheck disable=SC2039
     _koopa_is_linux || return 0
     _koopa_print "$(_koopa_opt_prefix)/bcbio/stable/tools"
-    return 0
-}
-
-# FIXME RENAME THIS TO APP?
-_koopa_cellar_prefix() { # {{{1
-    # """
-    # Cellar prefix.
-    # @note Updated 2020-11-11.
-    #
-    # Recommended to keep on a local mount.
-    # """
-    # shellcheck disable=SC2039
-    local prefix
-    prefix="${KOOPA_CELLAR_PREFIX:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_prefix)/cellar"
-    _koopa_print "$prefix"
     return 0
 }
 

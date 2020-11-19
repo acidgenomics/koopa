@@ -56,6 +56,10 @@ koopa::add_to_pkg_config_path_start() { # {{{1
     _koopa_add_to_pkg_config_path_start "$@"
 }
 
+koopa::app_prefix() { # {{{1
+    _koopa_app_prefix "$@"
+}
+
 koopa::aspera_prefix() { # {{{1
     _koopa_aspera_prefix "$@"
 }
