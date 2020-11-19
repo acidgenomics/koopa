@@ -18,6 +18,13 @@ koopa::defunct() { # {{{1
     koopa::stop "${msg}"
 }
 
+koopa::cellar_prefix() { # {{{1
+    # """
+    # @note Updated 2020-11-19.
+    # """
+    koopa::defunct 'koopa::app_prefix'
+}
+
 koopa::is_darwin() { # {{{1
     # """
     # @note Updated 2020-01-14.
