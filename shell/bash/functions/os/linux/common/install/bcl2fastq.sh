@@ -3,7 +3,7 @@
 koopa::linux_install_bcl2fastq() { # {{{1
     # """
     # Install bcl2fastq.
-    # @note Updated 2020-11-18.
+    # @note Updated 2020-11-19.
     #
     # Using pre-built RPM package on Fedora / RHEL / CentOS.
     # Otherwise, build and install from source.
@@ -12,7 +12,9 @@ koopa::linux_install_bcl2fastq() { # {{{1
     then
         koopa::fedora_install_bcl2fastq_from_rpm "$@"
     else
-        koopa::linux_install_cellar_bcl2fastq "$@"
+        koopa::linux_install_cellar \
+            --name='bcl2fastq' \
+            "$@"
     fi
     return 0
 }
