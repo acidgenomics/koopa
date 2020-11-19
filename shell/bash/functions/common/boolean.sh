@@ -183,34 +183,6 @@ koopa::is_bash_ok() { # {{{1
     [[ "$major_version" -ge 4 ]]
 }
 
-# FIXME REWORK THIS LANGUAGE.
-koopa::is_cellar() { # {{{1
-    # """
-    # Is a specific command or file cellarized?
-    # @note Updated 2020-07-04.
-    #
-    # Currently only supported for Linux.
-    # """
-    local cellar_prefix str
-    koopa::assert_has_args "$#"
-    cellar_prefix="$(koopa::cellar_prefix)"
-    [[ -d "$cellar_prefix" ]] || return 1
-    for str in "$@"
-    do
-        if koopa::is_installed "$str"
-        then
-            str="$(koopa::which_realpath "$str")"
-        elif [[ -e "$str" ]]
-        then
-            str="$(realpath "$str")"
-        else
-            return 1
-        fi
-        koopa::str_match_regex "$str" "^${cellar_prefix}" || return 1
-    done
-    return 0
-}
-
 koopa::is_current_version() { # {{{1
     # """
     # Is the program version current?
@@ -540,4 +512,29 @@ koopa::is_ssh_enabled() { # {{{1
     )"
     [[ -n "$x" ]] || return 1
     koopa::str_match "$x" "$pattern"
+}
+
+koopa::is_symlinked_app() { # {{{1
+    # """
+    # Is a specific command or file symlinked?
+    # @note Updated 2020-11-19.
+    # """
+    local app_prefix str
+    koopa::assert_has_args "$#"
+    app_prefix="$(koopa::app_prefix)"
+    [[ -d "$app_prefix" ]] || return 1
+    for str in "$@"
+    do
+        if koopa::is_installed "$str"
+        then
+            str="$(koopa::which_realpath "$str")"
+        elif [[ -e "$str" ]]
+        then
+            str="$(realpath "$str")"
+        else
+            return 1
+        fi
+        koopa::str_match_regex "$str" "^${app_prefix}" || return 1
+    done
+    return 0
 }

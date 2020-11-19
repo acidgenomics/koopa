@@ -5,7 +5,7 @@
 # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
 # Note that RHEL 7 locates these to '/etc' by default instead.
 #
-# We're linking these in the cellar instead, at '/usr/local/etc/zsh'.
+# We're linking these instead, at '/usr/local/etc/zsh'.
 # There are some system config files for Zsh in Debian that don't play nice
 # with autocomplete otherwise.
 #
@@ -45,7 +45,7 @@ then
         -t "${etc_dir}" \
         "$(koopa::distro_prefix)/etc/zsh/"*
 fi
-if [[ "${link_cellar:-0}" -eq 1 ]]
+if [[ "${link_app:-0}" -eq 1 ]]
 then
     koopa::enable_shell "$name"
 fi

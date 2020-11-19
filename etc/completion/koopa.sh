@@ -22,7 +22,7 @@ _koopa_complete() {
         args=(
             '--help'
             '--version'
-            'cellar'
+            'app'
             'check-system'
             'get-version'
             'header'
@@ -44,7 +44,7 @@ _koopa_complete() {
     elif [ "$COMP_CWORD" -eq 2 ]
     then
         case "$prev" in
-            cellar)
+            app)
                 args=(
                     'clean'
                     'list'

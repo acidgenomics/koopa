@@ -8,5 +8,5 @@ koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 local({
-    pruneCellar()
+    pruneApps()
 })

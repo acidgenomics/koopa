@@ -57,27 +57,27 @@ esac
 # shellcheck disable=SC2034
 gcrypt_url='https://gnupg.org/ftp/gcrypt'
 # Install dependencies.
-koopa::install_cellar \
+koopa::install_app \
     --name='libgpg-error' \
     --version="$libgpg_error_version" \
     --script-name='gnupg-gcrypt' \
     "$@"
-koopa::install_cellar \
+koopa::install_app \
     --name='libgcrypt' \
     --version="$libgcrypt_version" \
     --script-name='gnupg-gcrypt' \
     "$@"
-koopa::install_cellar \
+koopa::install_app \
     --name='libassuan' \
     --version="$libassuan_version" \
     --script-name='gnupg-gcrypt' \
     "$@"
-koopa::install_cellar \
+koopa::install_app \
     --name='libksba' \
     --version="$libksba_version" \
     --script-name='gnupg-gcrypt' \
     "$@"
-koopa::install_cellar \
+koopa::install_app \
     --name='npth' \
     --version="$npth_version" \
     --script-name='gnupg-gcrypt' \
@@ -86,13 +86,13 @@ if koopa::is_macos
 then
     koopa::note 'Skipping installation of pinentry.'
 else
-    koopa::install_cellar \
+    koopa::install_app \
         --name='pinentry' \
         --version="$pinentry_version" \
         --script-name='gnupg-pinentry' \
         "$@"
 fi
-koopa::install_cellar \
+koopa::install_app \
     --name='gnupg' \
     --version="$version" \
     --script-name='gnupg-gcrypt' \

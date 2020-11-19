@@ -15,7 +15,7 @@ cmake -DCMAKE_INSTALL_PREFIX="$prefix"
 make --jobs="$jobs"
 # > make test
 make install
-if [[ "${link_cellar:-0}" -eq 1 ]]
+if [[ "${link_app:-0}" -eq 1 ]]
 then
     koopa::enable_shell "$name"
 fi

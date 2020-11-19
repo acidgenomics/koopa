@@ -82,7 +82,7 @@ koopa::link_r_etc() { # {{{1
         return 1
     fi
     if koopa::is_linux && \
-        ! koopa::is_cellar "$r" && \
+        ! koopa::is_symlinked_app "$r" && \
         [[ -d '/etc/R' ]]
     then
         # This applies to Debian/Ubuntu CRAN binary installs.
@@ -211,7 +211,7 @@ koopa::r_javareconf() { # {{{1
         "JAVAH=${java_home}/bin/javah"
         "JAR=${java_home}/bin/jar"
     )
-    if koopa::is_cellar "$r"
+    if koopa::is_symlinked_app "$r"
     then
         r2=("$r")
     else
@@ -318,7 +318,7 @@ koopa::update_r_config() { # {{{1
     koopa::dl \
         'R home' "$r_prefix" \
         'R path' "$r"
-    if koopa::is_cellar "$r"
+    if koopa::is_symlinked_app "$r"
     then
         make_prefix="$(koopa::make_prefix)"
         etc_prefix="${make_prefix}/lib/R/etc"
