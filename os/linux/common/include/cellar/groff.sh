@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
-file="${name}-${version}.tar.xz"
+file="${name}-${version}.tar.gz"
 url="${gnu_mirror}/${name}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
