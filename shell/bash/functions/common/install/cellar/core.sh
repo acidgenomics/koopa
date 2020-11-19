@@ -47,7 +47,7 @@ koopa::install_cellar() { # {{{1
     name_fancy=
     reinstall=0
     script_name=
-    script_prefix="$(koopa::prefix)/include/cellar"
+    script_prefix="$(koopa::prefix)/include/build"
     version=
     pass_args=()
     while (("$#"))

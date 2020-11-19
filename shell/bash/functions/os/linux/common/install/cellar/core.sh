@@ -61,7 +61,7 @@ koopa::linux_install_cellar() { # {{{1
     # @note Updated 2020-11-18.
     # """
     local script_prefix
-    script_prefix="$(koopa::prefix)/os/linux/common/include/cellar"
+    script_prefix="$(koopa::prefix)/os/linux/common/include/build"
     koopa::install_cellar --script-prefix="$script_prefix" "$@"
     return 0
 }
