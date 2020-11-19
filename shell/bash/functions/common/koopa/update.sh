@@ -35,7 +35,7 @@ koopa::update() { # {{{1
 koopa::update_koopa() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-11-19.
     #
     # Note that stable releases are not git, and can't be updated.
     # """
@@ -63,26 +63,24 @@ koopa::update_koopa() { # {{{1
         koopa::git_pull
     )
     koopa::sys_set_permissions -r "$koopa_prefix"
+    koopa::fix_zsh_permissions
+    koopa::update_success 'koopa' "$koopa_prefix"
     return 0
 }
 
-# FIXME REWORK.
 koopa::update_koopa_system() { # {{{1
     # """
     # Update system installation.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-11-19.
     # """
-    local app_prefix config_prefix make_prefix
-    koopa::update_koopa
-    koopa::h2 'Updating system configuration.'
     koopa::assert_has_sudo
-    app_prefix="$(koopa::app_prefix)"
-    config_prefix="$(koopa::config_prefix)"
-    make_prefix="$(koopa::make_prefix)"
+    koopa::update_koopa
+    koopa::h1 'Updating system configuration.'
     koopa::dl \
-        'App prefix' "${app_prefix}" \
-        'Config prefix' "${config_prefix}" \
-        'Make prefix' "${make_prefix}"
+        'App (cellar) prefix' "$(koopa::app_prefix)"    \
+        'Opt prefix'          "$(koopa::opt_prefix)"    \
+        'Config prefix'       "$(koopa::config_prefix)" \
+        'Make prefix'         "$(koopa::make_prefix)"
     koopa::add_make_prefix_link
     if koopa::is_linux
     then
@@ -95,37 +93,43 @@ koopa::update_koopa_system() { # {{{1
         configure_flags=('--no-check')
         koopa::configure_vm "${configure_flags[@]}"
     fi
-    koopa::update_homebrew
-    install-r-packages
-    update-r-packages
+    if koopa::is_installed brew
+    then
+        koopa::update_homebrew
+    else
+        koopa::update_google_cloud_sdk
+        koopa::update_perlbrew
+        koopa::update_pyenv
+        koopa::update_rbenv
+    fi
+    koopa::install_r_packages
+    koopa::update_r_packages
     koopa::install_python_packages
     koopa::update_rust
     koopa::install_rust_packages
-    koopa::update_perlbrew
-    # FIXME REWORK.
-    koopa::update_google_cloud_sdk
-    # FIXME REWORK.
-    koopa::update_pyenv
-    # FIXME REWORK.
-    koopa::update_rbenv
     if koopa::is_macos
     then
         koopa::macos_update_microsoft_office || true
     fi
-    koopa::fix_zsh_permissions
+    koopa::success 'System update was successful.'
     return 0
 }
 
-# FIXME REWORK.
 koopa::update_koopa_user() { # {{{1
     # """
     # Update koopa user configuration.
     # @note Updated 2020-11-16.
     # """
-    koopa::h2 'Updating user configuration.'
+    local config_prefix
+    config_prefix="$(koopa::config_prefix)"
+    koopa::h1 'Updating user configuration.'
     # Remove legacy directories from user config, if necessary.
-    koopa::rm "${config_prefix}/"\
-{'Rcheck','oh-my-zsh','pyenv','rbenv','spacemacs'}
+    koopa::rm \
+        "${config_prefix}/Rcheck" \
+        "${config_prefix}/oh-my-zsh" \
+        "${config_prefix}/pyenv" \
+        "${config_prefix}/rbenv" \
+        "${config_prefix}/spacemacs"
     # Update git repos.
     repos=(
         "${config_prefix}/docker"
@@ -145,6 +149,7 @@ koopa::update_koopa_user() { # {{{1
     done
     koopa::install_dotfiles
     koopa::install_dotfiles_private
-    koopa::update_spacemacs
+    # > koopa::update_spacemacs
+    koopa::success 'User configuration update was successful.'
     return 0
 }
