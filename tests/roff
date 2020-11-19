@@ -75,10 +75,11 @@ koopa::test_roff() { # {{{1
             -mindepth 1 \
             -type d \
             \( -name 'bin' -o -name 'sbin' \) \
+            -not -path "${koopa_prefix}/app/*" \
+            -not -path "${koopa_prefix}/cellar/*" \
+            -not -path "${koopa_prefix}/dotfiles/*" \
             -not -path "${koopa_prefix}/opt/*" \
             -not -path "${koopa_prefix}/shunit2-*" \
-            -not -path '*/cellar/*' \
-            -not -path '*/dotfiles/*' \
             -print \
         | sort \
     )"
