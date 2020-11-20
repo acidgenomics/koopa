@@ -276,6 +276,15 @@ _koopa_shell() { # {{{1
     return 0
 }
 
+_koopa_today() { # {{{1
+    # """
+    # Today string.
+    # @note Updated 2020-11-20.
+    # """
+    _koopa_print "$(date '+%Y-%m-%d')"
+    return 0
+}
+
 _koopa_user() { # {{{1
     # """
     # Current user name.

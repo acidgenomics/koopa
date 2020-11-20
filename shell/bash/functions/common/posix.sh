@@ -748,6 +748,10 @@ koopa::tests_prefix() { # {{{1
     _koopa_tests_prefix "$@"
 }
 
+koopa::today() { # {{{1
+    _koopa_today "$@"
+}
+
 koopa::trim_ws() { # {{{1
     _koopa_trim_ws "$@"
 }

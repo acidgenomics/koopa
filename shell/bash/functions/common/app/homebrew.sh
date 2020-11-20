@@ -18,7 +18,20 @@ koopa::brewfile() { # {{{1
     return 0
 }
 
-koopa::brew_outdated() { # {{{
+koopa::brew_dump_brewfile() { # {{{1
+    # """
+    # Dump a Homebrew Bundle Brewfile.
+    # @note Updated 2020-11-20.
+    # """
+    local today
+    today="$(koopa::today)"
+    brew bundle dump \
+        --file="brewfile-${today}" \
+        --force
+    return 0
+}
+
+koopa::brew_outdated() { # {{{1
     # """
     # Listed outdated Homebrew brews and casks, in a single call.
     # @note Updated 2020-07-01.
