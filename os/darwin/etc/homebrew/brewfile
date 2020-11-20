@@ -279,11 +279,13 @@ brew "vitorgalvao/tiny-scripts/cask-repair"
 # Mac App Store {{{1
 # ==============================================================================
 
+# Need to update these:
+# > mas "EasyFind", id: 411673888
+# > mas "Gapplin", id: 768053424
+# > mas "Instapaper", id: 1481302432
+
 mas "Calca", id: 635758264
 mas "Disk Speed Test", id: 425264550
-mas "EasyFind", id: 411673888
-mas "Gapplin", id: 768053424
-mas "Instapaper", id: 1481302432
 mas "Internet Access Policy Viewer", id: 1482630322
 mas "Keynote", id: 409183694
 mas "Name Mangler", id: 603637384

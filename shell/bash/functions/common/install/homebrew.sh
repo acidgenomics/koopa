@@ -54,9 +54,9 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_packages() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-11-18.
+    # @note Updated 2020-11-20.
     # """
-    local brewfile name_fancy
+    local brewfile flags name_fancy remove
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
     name_fancy='Homebrew Bundle'
@@ -66,27 +66,34 @@ koopa::install_homebrew_packages() { # {{{1
     brewfile="$(koopa::brewfile)"
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
-    # Remove unwanted brews, if necessary.
-    # > local brew remove_brews
-    # > remove_brews=(
-    # >     'osgeo-gdal'
-    # >     'osgeo-hdf4'
-    # >     'osgeo-libgeotiff'
-    # >     'osgeo-libkml'
-    # >     'osgeo-libspatialite'
-    # >     'osgeo-netcdf'
-    # >     'osgeo-postgresql'
-    # >     'osgeo-proj'
-    # > )
-    # > for brew in "${remove_brews[@]}"
-    # > do
-    # >     brew remove "$brew" &>/dev/null || true
-    # > done
-    brew bundle install \
-        --file="$brewfile" \
-        --no-lock \
-        --no-upgrade \
-        --verbose
+    # Remove any existing unwanted brews, if necessary.
+    remove=(
+        'osgeo-gdal'
+        'osgeo-hdf4'
+        'osgeo-libgeotiff'
+        'osgeo-libkml'
+        'osgeo-libspatialite'
+        'osgeo-netcdf'
+        'osgeo-postgresql'
+        'osgeo-proj'
+    )
+    if koopa::is_macos
+    then
+        remove+=(
+            'safari-technology-preview'
+        )
+    fi
+    for brew in "${remove[@]}"
+    do
+        brew remove "$brew" &>/dev/null || true
+    done
+    flags=(
+        # > --no-upgrade
+        "--file=${brewfile}"
+        '--no-lock'
+        '--verbose'
+    )
+    brew bundle install "${flags[@]}"
     return 0
 }
 
@@ -133,7 +140,7 @@ koopa::uninstall_homebrew() { # {{{1
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2020-11-18.
+    # @note Updated 2020-11-20.
     #
     # Use of '--force-bottle' flag can be helpful, but not all brews have
     # bottles, so this can error.
@@ -158,6 +165,7 @@ koopa::update_homebrew() { # {{{1
     koopa::update_start "$name_fancy"
     brew analytics off
     brew update >/dev/null
+    koopa::install_homebrew_packages
     koopa::h2 'Updating brews.'
     brew upgrade || true
     if koopa::is_macos
