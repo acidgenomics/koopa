@@ -80,6 +80,7 @@ koopa::install_homebrew_packages() { # {{{1
     if koopa::is_macos
     then
         remove_brews+=(
+            'google-chrome-canary'
             'little-snitch'
             'safari-technology-preview'
             'zoom'  # zoomus
