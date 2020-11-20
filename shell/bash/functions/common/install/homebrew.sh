@@ -56,7 +56,7 @@ koopa::install_homebrew_packages() { # {{{1
     # Install Homebrew packages using Bundle Brewfile.
     # @note Updated 2020-11-20.
     # """
-    local brewfile flags name_fancy remove
+    local brewfile flags name_fancy remove_brews remove_taps x
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
     name_fancy='Homebrew Bundle'
@@ -67,7 +67,7 @@ koopa::install_homebrew_packages() { # {{{1
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
     # Remove any existing unwanted brews, if necessary.
-    remove=(
+    remove_brews=(
         'osgeo-gdal'
         'osgeo-hdf4'
         'osgeo-libgeotiff'
@@ -79,14 +79,21 @@ koopa::install_homebrew_packages() { # {{{1
     )
     if koopa::is_macos
     then
-        remove+=(
+        remove_brews+=(
             'little-snitch'
             'safari-technology-preview'
         )
     fi
-    for brew in "${remove[@]}"
+    for x in "${remove_brews[@]}"
     do
-        brew remove "$brew" &>/dev/null || true
+        brew remove "$x" &>/dev/null || true
+    done
+    remove_taps=(
+        'muesli/tap'
+    )
+    for x in "${remove_taps[@]}"
+    do
+        brew untap "$x" &>/dev/null || true
     done
     flags=(
         # > --no-upgrade
