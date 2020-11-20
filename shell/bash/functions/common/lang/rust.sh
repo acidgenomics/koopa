@@ -3,9 +3,10 @@
 koopa::install_rust() { # {{{1
     # """
     # Install Rust.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-20.
     # """
     local file name_fancy pos reinstall tmp_dir url
+    name_fancy='Rust'
     reinstall=0
     pos=()
     while (("$#"))
@@ -34,9 +35,11 @@ koopa::install_rust() { # {{{1
     RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
     export RUSTUP_HOME
     [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$CARGO_HOME" "$RUSTUP_HOME"
-    [[ -d "$CARGO_HOME" ]] && return 0
-    [[ -d "$RUSTUP_HOME" ]] && return 0
-    name_fancy='Rust'
+    if [[ -d "$CARGO_HOME" ]] && [[ -d "$RUSTUP_HOME" ]]
+    then
+        koopa::note "${name_fancy} is already installed at '${CARGO_HOME}'."
+        return 0
+    fi
     koopa::install_start "$name_fancy"
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
