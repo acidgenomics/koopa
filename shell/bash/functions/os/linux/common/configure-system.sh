@@ -541,10 +541,6 @@ koopa::linux_configure_system() { # {{{1
         install-python-packages
     [[ "${dict[install_r_packages]}" -eq 1 ]] && \
         install-r-packages
-    [[ "${dict[install_python_packages]}" -eq 1 ]] && \
-        install-python-packages
-    [[ "${dict[install_r_packages]}" -eq 1 ]] && \
-        install-r-packages
     [[ "${dict[install_perl_packages]}" -eq 1 ]] && \
         install-perl-packages
     [[ "${dict[install_ruby_packages]}" -eq 1 ]] && \
