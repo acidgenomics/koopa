@@ -12,6 +12,8 @@
 # - https://stackoverflow.com/questions/5302650/
 # """
 
+# FIXME NEED TO PROVIDE AUTOCOMPLETE SUPPORT FOR INSTALL, UPDATE, UNINSTALL
+
 _koopa_complete() {
     local args cur prev
     COMPREPLY=()
