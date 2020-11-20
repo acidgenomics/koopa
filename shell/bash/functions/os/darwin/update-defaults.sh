@@ -3,7 +3,9 @@
 koopa::macos_update_defaults() { # {{{1
     # """
     # Update macOS defaults.
-    # @note Updated 2020-11-13.
+    # @note Updated 2020-11-20.
+    #
+    # Tested to work on macOS Big Sur.
     #
     # How to read current value:
     # defaults read com.apple.AppleMultitouchTrackpad
@@ -28,6 +30,8 @@ koopa::macos_update_defaults() { # {{{1
     # - https://johnkastler.net/2011/12/25/os-x-defaults/
     # - https://medium.com/@notrab/friendly-os-x-defaults-d7f0cc39f2b3
     # - https://apple.stackexchange.com/questions/14001/
+    # - https://github.com/tech-otaku/macos-config-big-sur/blob/
+    #       main/macos-config.sh
     # """
     local name_fancy
     koopa::assert_has_no_args "$#"
@@ -70,6 +74,12 @@ koopa::macos_update_defaults() { # {{{1
 
     # Accent color.
     #
+    # Currently seeing an issue with highlight / accent color not getting
+    # set correctly on Big Sur, so don't attempt to set here.
+    #
+    # Big Sur now supports multicolor highlight / accents similar to the
+    # behavior in iOS, so just use this by default.
+    #
     # This setting defines two properties:
     #  - AppleAccentColor
     #  - AppleAquaColorVariant
@@ -95,15 +105,15 @@ koopa::macos_update_defaults() { # {{{1
     # | Graphite |    6 | -1 | '0.847059 0.847059 0.862745 Graphite' |
     #
     # Here we're setting accent and highlight color to Orange by default.
-    defaults write \
-        -globalDomain 'AppleAquaColorVariant' \
-        -int 1
-    defaults write \
-        -globalDomain 'AccentColor' \
-        -int 1
-    defaults write \
-        -globalDomain 'AppleHighlightColor' \
-        -string '1.000000 0.874510 0.701961 Orange'
+    # > defaults write \
+    # >     -globalDomain 'AppleAquaColorVariant' \
+    # >     -int 1
+    # > defaults write \
+    # >     -globalDomain 'AccentColor' \
+    # >     -int 1
+    # > defaults write \
+    # >     -globalDomain 'AppleHighlightColor' \
+    # >     -string '1.000000 0.874510 0.701961 Orange'
 
     # Set sidebar icon size to medium.
     defaults write \
