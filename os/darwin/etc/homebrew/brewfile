@@ -1,0 +1,298 @@
+# """
+# Homebrew Bundle Brewfile.
+# Updated 2020-11-13.
+#
+# LLVM:
+# LLVM takes up 4 GB of disk space but is required for some Python packages.
+# In particular, if we want to install umap-learn, this is now required.
+#
+# Little Snitch:
+# 'little-snitch' cask currently requires manual follow-up installation:
+# /usr/local/Caskroom/little-snitch/*/LittleSnitch-*.dmg
+#
+# PROJ/GDAL:
+# Consider using 'osgeo-gdal' instead of regular 'gdal' brew. This one gets
+# updated more regularly. However, I've found that the newer version can
+# cause some R packages to fail to build from source.
+#
+# Rust:
+# Use cargo to manage packages instead.
+# Use the 'install-rust' script instead of Homebrew 'rustup-init'.
+# Don't install 'rust' alongside 'rustup-init'.
+#
+# See also:
+# - https://github.com/Homebrew/homebrew-bundle
+# - https://www.caseyliss.com/2019/10/8/brew-bundle
+# - https://gist.github.com/cliss/74782128b9a35366ecac44a7c4b45752
+# """
+
+# Taps {{{1
+# ==============================================================================
+
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-versions"
+tap "homebrew/core"
+tap "mongodb/brew"
+tap "vitorgalvao/tiny-scripts"
+
+# Casks {{{1
+# ==============================================================================
+
+# Consider:
+# - fiji  # latest
+# - onyx
+# - oracle-jdk
+# - wine-stable
+#
+# Requires authentication in 'Security & Privacy':
+# - box-drive
+# - virtualbox
+#
+# Removals:
+# - 'foobar2000' cask was removed due to url protection.
+# - 'macvim' cask overwrites 'vim' binary, so install manually instead.
+# - 'skype-for-business' is potentially useful but starts up at login.
+
+cask "1password"
+cask "adobe-acrobat-reader"
+cask "adoptopenjdk"  # igv
+cask "aerial"
+cask "alacritty"
+cask "alfred"
+cask "aspera-connect"
+cask "authy"
+cask "balenaetcher"
+cask "basictex"
+cask "bbedit"
+cask "bibdesk"
+cask "calibre"
+cask "carbon-copy-cloner"
+cask "coconutbattery"
+cask "coda"
+cask "darktable"
+cask "deluge"
+cask "docker"
+cask "emacs"
+cask "firefox"
+cask "github"
+cask "google-chrome"
+cask "google-cloud-sdk"  # latest
+cask "google-drive-file-stream"  # latest
+cask "gpg-suite"
+cask "handbrake"
+cask "hazel"
+cask "igv"
+cask "iterm2"
+cask "java"
+cask "julia"
+cask "keka"
+cask "kid3"
+cask "kitty"
+cask "libreoffice"
+cask "makemkv"
+cask "museeks"
+cask "netnewswire"
+cask "omnidisksweeper"
+cask "osxfuse"
+cask "pacifist"
+cask "photosweeper-x"
+cask "powershell"
+cask "pycharm-ce"
+cask "r"
+cask "rstudio"
+cask "scrivener"
+cask "skype"
+cask "spillo"
+cask "sublime-text"
+cask "superduper"
+cask "swinsian"
+cask "textmate"
+cask "tiny-player"
+cask "tor-browser"
+cask "tower"
+cask "transmission"
+cask "transmission-remote-gui"
+cask "transmit"
+cask "tunnelblick"
+cask "virtualbox"
+cask "visual-studio-code"
+cask "vlc"
+cask "xld"
+cask "xquartz"
+cask "zoomus"
+
+# Brews {{{1
+# ==============================================================================
+
+# Python: Can use official Framework binary install instead of Homebrew.
+# Use 'install-python-framework' from koopa to install.
+brew "python@3.9", link: false
+
+## > brew "rust"
+## > brew "rustup-init"  # rust
+brew "ack"
+brew "armadillo"
+brew "autoconf"
+brew "automake"
+brew "awscli"
+brew "azure-cli"
+brew "bandcamp-dl"
+brew "bash"
+brew "bash-completion"
+brew "bat"  # rust
+brew "bfg"
+brew "binutils"
+brew "black"  # python
+brew "broot"  # rust
+brew "ccache"
+brew "checkbashisms"
+brew "circleci"
+brew "cmake"
+brew "cmus"
+brew "convmv"
+brew "coreutils"
+brew "curl"
+brew "dash"
+brew "dog"  # rust
+brew "dust"  # rust
+brew "exa"  # rust
+brew "exiftool"
+brew "fd"  # rust
+brew "ffmpeg"
+brew "findutils"
+brew "fish"
+brew "flac"
+brew "flake8"  # python
+brew "fzf"
+brew "gawk"
+brew "gcc"
+brew "gdal"
+brew "git"
+brew "git-lfs"
+brew "gnu-sed"
+brew "gnu-tar"
+brew "gnu-time"
+brew "gnu-units"
+brew "gnu-which"
+brew "go"
+brew "gpatch"
+brew "grep"
+brew "groff"
+brew "gsl"
+brew "hadolint"
+brew "hdf5"
+brew "htop"
+brew "httpd"
+brew "hub"
+brew "hyperfine"
+brew "igraph"
+brew "imagemagick"
+brew "jq"
+brew "ksh"
+brew "lame"
+brew "lapack"
+brew "leiningen"
+brew "lesspipe"
+brew "libav"
+brew "libgit2"
+brew "libiconv"
+brew "libomp"
+brew "libressl"
+brew "librsvg"
+brew "libssh2"
+brew "libtool"
+brew "libxml2"
+brew "libxslt"
+brew "llvm"
+brew "lua"
+brew "luarocks"
+brew "make"
+brew "man-db"
+brew "mariadb-connector-c"
+brew "mas"
+brew "mkvtoolnix"
+brew "mp4v2"
+brew "mpc"
+brew "mpd"
+brew "ncmpcpp"
+brew "neofetch"
+brew "neovim"
+brew "nmap"
+brew "node"
+brew "open-mpi"
+brew "openblas"
+brew "openssh"
+brew "osx-cpu-temp"
+brew "pandoc"
+brew "pandoc-citeproc"
+brew "pandoc-crossref"
+brew "parallel"
+brew "pass"
+brew "pcre"
+brew "php"
+brew "pkg-config"
+brew "podofo"
+brew "procs"  # rust
+brew "proj"
+brew "protobuf"
+brew "pylint"  # python
+brew "ranger"  # python
+brew "rename"
+brew "ripgrep"  # rust
+brew "rsync"
+brew "ruby"
+brew "screen"
+brew "shellcheck"
+brew "shellharden"
+brew "shunit2"
+brew "sox"
+brew "sqlite"
+brew "sshfs"
+brew "starship"  # rust
+brew "subversion"
+brew "taglib"
+brew "tcl-tk"
+brew "tcsh"
+brew "tesseract"
+brew "texinfo"
+brew "the_silver_searcher"
+brew "tmux"
+brew "tokei"  # rust
+brew "udunits"
+brew "v8"
+brew "vim"
+brew "wget"
+brew "xsv"  # rust
+brew "youtube-dl"
+brew "zlib"
+brew "zoxide"  # rust
+brew "zsh"
+
+# External brews {{{2
+# ------------------------------------------------------------------------------
+
+brew "mongodb/brew/mongodb-community"
+# > brew "muesli/tap/duf"
+brew "vitorgalvao/tiny-scripts/cask-repair"
+
+# Mac App Store {{{1
+# ==============================================================================
+
+mas "Calca", id: 635758264
+mas "Disk Speed Test", id: 425264550
+mas "EasyFind", id: 411673888
+mas "Gapplin", id: 768053424
+mas "Instapaper", id: 1481302432
+mas "Internet Access Policy Viewer", id: 1482630322
+mas "Keynote", id: 409183694
+mas "Name Mangler", id: 603637384
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Pastebot", id: 1179623856
+mas "Reeder", id: 880001334
+mas "Soulver", id: 413965349
+mas "Table Tool", id: 1122008420
+mas "The Unarchiver", id: 425424353
+mas "Tweetbot", id: 1384080005
+mas "iA Writer", id: 775737590
