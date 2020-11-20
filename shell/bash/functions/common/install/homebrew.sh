@@ -80,6 +80,7 @@ koopa::install_homebrew_packages() { # {{{1
     if koopa::is_macos
     then
         remove+=(
+            'little-snitch'
             'safari-technology-preview'
         )
     fi
