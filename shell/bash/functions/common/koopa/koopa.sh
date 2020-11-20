@@ -121,6 +121,7 @@ koopa::koopa() { # {{{1
                     f='which_realpath'
                     shift 2
                     ;;
+                brew-dump-brewfile | \
                 delete-cache | \
                 enable-passwordless-sudo | \
                 fix-zsh-permissions | \
