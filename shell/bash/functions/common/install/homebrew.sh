@@ -62,7 +62,7 @@ koopa::install_homebrew_packages() { # {{{1
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
     koopa::assert_is_installed brew
-    export HOMEBREW_FORCE_BOTTLE=1
+    brew analytics off
     brewfile="$(koopa::brewfile)"
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
@@ -102,7 +102,9 @@ koopa::install_homebrew_packages() { # {{{1
         '--no-lock'
         '--verbose'
     )
+    # > export HOMEBREW_FORCE_BOTTLE=1
     brew bundle install "${flags[@]}"
+    koopa::brew_update
     return 0
 }
 
@@ -147,63 +149,6 @@ koopa::uninstall_homebrew() { # {{{1
 }
 
 koopa::update_homebrew() { # {{{1
-    # """
-    # Updated outdated Homebrew brews and casks.
-    # @note Updated 2020-11-20.
-    #
-    # Use of '--force-bottle' flag can be helpful, but not all brews have
-    # bottles, so this can error.
-    #
-    # Alternative approaches:
-    # > brew list \
-    # >     | xargs brew reinstall --force-bottle --cleanup \
-    # >     || true
-    # > brew outdated --cask --greedy \
-    # >     | xargs brew reinstall \
-    # >     || true
-    #
-    # @seealso
-    # - Refer to useful discussion regarding '--greedy' flag.
-    # - https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
-    # """
-    local casks name_fancy
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed brew
-    koopa::assert_has_sudo
-    name_fancy='Homebrew'
-    koopa::update_start "$name_fancy"
-    brew analytics off
-    brew update >/dev/null
-    koopa::install_homebrew_packages
-    koopa::h2 'Updating brews.'
-    brew upgrade || true
-    if koopa::is_macos
-    then
-        koopa::h2 'Updating casks.'
-        readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
-        if koopa::is_array_non_empty "${casks[@]}"
-        then
-            koopa::info "${#casks[@]} outdated casks detected."
-            koopa::print "${casks[@]}"
-            for cask in "${casks[@]}"
-            do
-                cask="$(koopa::print "${cask[@]}" | cut -d ' ' -f 1)"
-                case "$cask" in
-                    docker)
-                        cask='homebrew/cask/docker'
-                        ;;
-                esac
-                brew reinstall "$cask" || true
-                if [[ "$cask" == 'r' ]]
-                then
-                    koopa::update_r_config
-                fi
-            done
-        fi
-    fi
-    koopa::h2 'Running cleanup.'
-    brew cleanup -s || true
-    koopa::rm "$(brew --cache)"
-    koopa::update_success "$name_fancy"
+    koopa::install_homebrew_packages "$@"
     return 0
 }
