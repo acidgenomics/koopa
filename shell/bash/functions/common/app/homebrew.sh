@@ -3,16 +3,16 @@
 koopa::brewfile() { # {{{1
     # """
     # Homebrew Bundle Brewfile path.
-    # @note Updated 2020-11-13.
+    # @note Updated 2020-11-20.
     # """
-    local file os
+    local file subdir
     if koopa::is_macos
     then
-        os='macos'
+        subdir='macos'
     else
-        os='linux'
+        subdir='linux/common'
     fi
-    file="$(koopa::dotfiles_prefix)/os/${os}/app/homebrew/brewfile"
+    file="$(koopa::prefix)/os/${subdir}/etc/homebrew/brewfile"
     [[ -f "$file" ]] || return 0
     koopa::print "$file"
     return 0
