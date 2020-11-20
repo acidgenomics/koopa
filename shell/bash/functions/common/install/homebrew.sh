@@ -82,6 +82,7 @@ koopa::install_homebrew_packages() { # {{{1
         remove_brews+=(
             'little-snitch'
             'safari-technology-preview'
+            'zoom'  # zoomus
         )
     fi
     for x in "${remove_brews[@]}"
