@@ -226,11 +226,11 @@ _koopa_export_tmpdir() { # {{{1
 _koopa_export_today() { # {{{1
     # """
     # Export TODAY.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-11-20.
     #
     # Current date. Alternatively, can use '%F' shorthand.
     # """
-    [ -z "${TODAY:-}" ] && TODAY="$(date '+%Y-%m-%d')"
+    [ -z "${TODAY:-}" ] && TODAY="$(_koopa_today)"
     export TODAY
     return 0
 }
