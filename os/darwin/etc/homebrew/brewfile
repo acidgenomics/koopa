@@ -29,8 +29,6 @@
 # Taps {{{1
 # ==============================================================================
 
-# > untap muesli/tap
-
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-versions"
@@ -75,6 +73,7 @@ cask "coda"
 cask "darktable"
 cask "deluge"
 cask "docker"
+cask "easyfind"
 cask "emacs"
 cask "firefox"
 cask "github"
@@ -126,13 +125,15 @@ cask "zoomus"
 
 # Brews {{{1
 # ==============================================================================
+#
+# Install Rust directly instead.
+# > brew "rust"
+# > brew "rustup-init"  # rust
 
 # Python: Can use official Framework binary install instead of Homebrew.
 # Use 'install-python-framework' from koopa to install.
 brew "python@3.9", link: false
 
-## > brew "rust"
-## > brew "rustup-init"  # rust
 brew "ack"
 brew "armadillo"
 brew "autoconf"
@@ -224,6 +225,7 @@ brew "nmap"
 brew "node"
 brew "open-mpi"
 brew "openblas"
+brew "openjdk"
 brew "openssh"
 brew "osx-cpu-temp"
 brew "pandoc"
@@ -281,13 +283,10 @@ brew "vitorgalvao/tiny-scripts/cask-repair"
 # Mac App Store {{{1
 # ==============================================================================
 
-# Need to update these:
-# > mas "EasyFind", id: 411673888
-# > mas "Gapplin", id: 768053424
-# > mas "Instapaper", id: 1481302432
-
+mas "AdGuard for Safari", id: 1440147259
 mas "Calca", id: 635758264
 mas "Disk Speed Test", id: 425264550
+mas "Gapplin", id: 768053424
 mas "Internet Access Policy Viewer", id: 1482630322
 mas "Keynote", id: 409183694
 mas "Name Mangler", id: 603637384
