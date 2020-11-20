@@ -29,6 +29,8 @@
 # Taps {{{1
 # ==============================================================================
 
+# > untap muesli/tap
+
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-versions"
