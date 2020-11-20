@@ -150,6 +150,6 @@ koopa::uninstall_homebrew() { # {{{1
 }
 
 koopa::update_homebrew() { # {{{1
-    koopa::install_homebrew_packages "$@"
+    koopa::brew_update "$@"
     return 0
 }
