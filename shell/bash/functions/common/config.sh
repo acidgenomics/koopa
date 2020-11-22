@@ -127,9 +127,9 @@ koopa::fix_rbenv_permissions() { # {{{1
 koopa::fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
-    # @note Updated 2020-11-12.
+    # @note Updated 2020-11-22.
     # """
-    local cellar_prefix koopa_prefix make_prefix zsh
+    local app_prefix koopa_prefix make_prefix zsh
     koopa::assert_has_no_args "$#"
     koopa::info 'Fixing Zsh permissions.'
     koopa_prefix="$(koopa::prefix)"
@@ -148,15 +148,15 @@ koopa::fix_zsh_permissions() { # {{{1
                 "${make_prefix}/share/zsh/site-functions"
         fi
     fi
-    cellar_prefix="$(koopa::cellar_prefix)"
-    if [[ -d "$cellar_prefix" ]]
+    app_prefix="$(koopa::app_prefix)"
+    if [[ -d "$app_prefix" ]]
     then
-        if koopa::str_match_regex "$zsh" "^${cellar_prefix}"
+        if koopa::str_match_regex "$zsh" "^${app_prefix}"
         then
             koopa::sys_chmod 'g-w' \
-                "${cellar_prefix}/zsh/"*'/share/zsh' \
-                "${cellar_prefix}/zsh/"*'/share/zsh/'* \
-                "${cellar_prefix}/zsh/"*'/share/zsh/'*'/functions'
+                "${app_prefix}/zsh/"*'/share/zsh' \
+                "${app_prefix}/zsh/"*'/share/zsh/'* \
+                "${app_prefix}/zsh/"*'/share/zsh/'*'/functions'
         fi
     fi
     koopa::success 'Zsh permissions should pass compaudit checks.'
