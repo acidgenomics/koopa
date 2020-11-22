@@ -23,7 +23,7 @@ koopa::linux_install_r_geos() { # {{{1
 koopa::linux_install_r_sf() { # {{{1
     # """
     # Install R sf package.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-22.
     # """
     local gdal_prefix geos_prefix make_prefix pkg_config_arr proj_prefix
     koopa::is_r_package_installed sf && return 0
@@ -33,13 +33,14 @@ koopa::linux_install_r_sf() { # {{{1
         '/usr/bin/geos-config' \
         '/usr/bin/proj'
     # How to enable versioned support, if necessary.
-    # > cellar_prefix="$(koopa::cellar_prefix)"
+    # FIXME POINT THESE TO OPT INSTEAD.
+    # > app_prefix="$(koopa::app_prefix)"
     # > gdal_version="$(koopa::variable 'gdal')"
-    # > gdal_prefix="${cellar_prefix}/gdal/${gdal_version}"
+    # > gdal_prefix="${app_prefix}/gdal/${gdal_version}"
     # > geos_version="$(koopa::variable 'geos')"
-    # > geos_prefix="${cellar_prefix}/geos/${geos_version}"
+    # > geos_prefix="${app_prefix}/geos/${geos_version}"
     # > proj_version="$(koopa::variable 'proj')"
-    # > proj_prefix="${cellar_prefix}/proj/${proj_version}"
+    # > proj_prefix="${app_prefix}/proj/${proj_version}"
     make_prefix="$(koopa::make_prefix)"
     gdal_prefix="$make_prefix"
     geos_prefix="$make_prefix"
