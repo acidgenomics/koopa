@@ -26,12 +26,13 @@ koopa::find_cellar_version() { # {{{1
     return 0
 }
 
+# FIXME RENAME THIS TO INSTALL APP.
 # FIXME CREATE LINK INTO OPT PREFIX AND THEN SYMLINK INTO MAKE PREFIX FROM THERE.
 
 koopa::install_cellar() { # {{{1
     # """
-    # Install cellarized application.
-    # @note Updated 2020-11-18.
+    # Install application into a versioned directory structure.
+    # @note Updated 2020-11-22.
     # """
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
         name_fancy pass_args prefix reinstall script script_name script_prefix \
