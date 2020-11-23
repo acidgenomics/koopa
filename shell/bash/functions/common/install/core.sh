@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-koopa::find_cellar_version() { # {{{1
+koopa::find_app_version() { # {{{1
     # """
-    # Find cellar installation directory.
-    # @note Updated 2020-06-30.
+    # Find the latest application version.
+    # @note Updated 2020-11-22.
     # """
     local name prefix x
     koopa::assert_has_args "$#"
     name="${1:?}"
-    prefix="$(koopa::cellar_prefix)"
+    prefix="$(koopa::app_prefix)"
     koopa::assert_is_dir "$prefix"
     prefix="${prefix}/${name}"
     koopa::assert_is_dir "$prefix"
@@ -28,39 +28,35 @@ koopa::find_cellar_version() { # {{{1
 
 # FIXME RENAME THIS TO INSTALL APP.
 # FIXME CREATE LINK INTO OPT PREFIX AND THEN SYMLINK INTO MAKE PREFIX FROM THERE.
+# FIXME REAPPROACH THIS USING EXPORTED GLOBALS.
 
-koopa::install_cellar() { # {{{1
+koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2020-11-22.
+    # @note Updated 2020-11-23.
     # """
-    local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
-        name_fancy pass_args prefix reinstall script script_name script_prefix \
+    local gnu_mirror include_dirs jobs link_args link_app make_prefix name \
+        name_fancy prefix reinstall script script_name script_prefix \
         tmp_dir version
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     koopa::is_macos && koopa::assert_is_installed brew
     include_dirs=
-    link_cellar=1
+    # FIXME Simply rename to 'link' here?
+    link_app=1
     if koopa::is_macos
     then
-        koopa::note 'Cellar links are not supported on macOS.'
-        link_cellar=0
+        koopa::note 'App links are not supported on macOS.'
+        link_app=0
     fi
     name_fancy=
     reinstall=0
     script_name=
     script_prefix="$(koopa::prefix)/include/build"
     version=
-    pass_args=()
     while (("$#"))
     do
         case "$1" in
-            --cellar-only)
-                link_cellar=0
-                pass_args+=('--cellar-only')
-                shift 1
-                ;;
             --include-dirs=*)
                 include_dirs="${1#*=}"
                 shift 1
@@ -73,9 +69,12 @@ koopa::install_cellar() { # {{{1
                 name_fancy="${1#*=}"
                 shift 1
                 ;;
+            --no-link)
+                link_app=0
+                shift 1
+                ;;
             --reinstall|--force)
                 reinstall=1
-                pass_args+=('--reinstall')
                 shift 1
                 ;;
             --script-name=*)
@@ -102,7 +101,7 @@ koopa::install_cellar() { # {{{1
     [[ -z "$name_fancy" ]] && name_fancy="$name"
     [[ -z "$script_name" ]] && script_name="$name"
     [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-    prefix="$(koopa::cellar_prefix)/${name}/${version}"
+    prefix="$(koopa::app_prefix)/${name}/${version}"
     make_prefix="$(koopa::make_prefix)"
     if [[ "$reinstall" -eq 1 ]]
     then
@@ -121,11 +120,11 @@ koopa::install_cellar() { # {{{1
         script="${script_prefix}/${script_name}.sh"
         koopa::assert_is_file "$script"
         # shellcheck source=/dev/null
-        . "$script" "${pass_args[@]:-}"
+        . "$script"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$prefix"
-    if [[ "$link_cellar" -eq 1 ]]
+    if [[ "$link_app" -eq 1 ]]
     then
         link_args=(
             "--name=${name}"
@@ -135,7 +134,7 @@ koopa::install_cellar() { # {{{1
         then
             link_args+=("--include-dirs=${include_dirs}")
         fi
-        koopa::link_cellar "${link_args[@]}"
+        koopa::link_app "${link_args[@]}"
     fi
     koopa::install_success "$name_fancy" "$prefix"
     return 0
@@ -143,7 +142,7 @@ koopa::install_cellar() { # {{{1
 
 # FIXME REWORK, SYMLINKING FROM OPT (LIKE HOMEBREW) INSTEAD.
 
-koopa::link_cellar() { # {{{1
+koopa::link_app() { # {{{1
     # """
     # Symlink cellar into build directory.
     # @note Updated 2020-11-18.
@@ -212,7 +211,7 @@ koopa::link_cellar() { # {{{1
     koopa::assert_is_dir "$cellar_prefix"
     cellar_prefix="${cellar_prefix}/${name}"
     koopa::assert_is_dir "$cellar_prefix"
-    [[ -z "$version" ]] && version="$(koopa::find_cellar_version "$name")"
+    [[ -z "$version" ]] && version="$(koopa::find_app_version "$name")"
     cellar_prefix="${cellar_prefix}/${version}"
     koopa::assert_is_dir "$cellar_prefix"
     koopa::h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
@@ -253,10 +252,10 @@ koopa::link_cellar() { # {{{1
     return 0
 }
 
-koopa::list_cellar_versions() { # {{{1
+koopa::list_app_versions() { # {{{1
     # """
-    # List cellar verisons.
-    # @note Updated 2020-11-18.
+    # List installed application versions.
+    # @note Updated 2020-11-23.
     # """
     local prefix
     koopa::assert_has_no_args "$#"
@@ -273,30 +272,32 @@ koopa::list_cellar_versions() { # {{{1
     return 0
 }
 
-koopa::prune_cellar() { # {{{1
+# FIXME NEED TO UPDATE THIS IN R KOOPA.
+koopa::prune_apps() { # {{{1
     # """
-    # Prune cellar.
-    # @note Updated 2020-18.
+    # Prune applications.
+    # @note Updated 2020-11-22.
     # """
     if koopa::is_macos
     then
-        koopa::note 'Cellar pruning not yet supported on macOS.'
+        koopa::note 'App pruning not yet supported on macOS.'
         return 0
     fi
-    koopa::rscript 'prune-cellar' "$@"
+    koopa::rscript 'prune-apps' "$@"
     return 0
 }
 
-koopa::unlink_cellar() { # {{{1
+# FIXME NEED TO UPDATE R FUNCTION in R-KOOPA.
+koopa::unlink_app() { # {{{1
     # """
-    # Unlink cellar symlinks.
-    # @note Updated 2020-11-18.
+    # Unlink an application.
+    # @note Updated 2020-11-22.
     # """
     if koopa::is_macos
     then
-        koopa::note 'Cellar links are not supported on macOS.'
+        koopa::note 'App links are not supported on macOS.'
         return 0
     fi
-    koopa::rscript 'unlink-cellar' "$@"
+    koopa::rscript 'unlink-app' "$@"
     return 0
 }
