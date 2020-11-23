@@ -19,6 +19,7 @@ koopa::test_roff() { # {{{1
 
     # Put all 'man/' dirs into an array and loop.
     # Pipe GNU find into array.
+    # FIXME USE KOOPA PREFIXES HERE.
     readarray -t man_dirs <<< "$( \
         find "$koopa_prefix" \
             -mindepth 1 \
@@ -73,6 +74,7 @@ koopa::test_roff() { # {{{1
 
     koopa::h2 "Running exported script '--help' flag checks."
     # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
+    # FIXME USE KOOPA PREFIXES HERE.
     readarray -t bin_dirs <<< "$( \
         find "$koopa_prefix" \
             -mindepth 1 \
