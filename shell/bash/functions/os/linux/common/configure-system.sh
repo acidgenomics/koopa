@@ -3,7 +3,7 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-11-23.
     #
     # Intended primarily for virtual machine and Docker image builds.
     # """
@@ -23,7 +23,7 @@ koopa::linux_configure_system() { # {{{1
     mode='default'
     # Associative array dictionary of key-value pairs.
     declare -A dict=(
-        [cellar_prefix]="$(koopa::cellar_prefix)"
+        [app_prefix]="$(koopa::app_prefix)"
         [data_disk_prefix]=''
         [delete_cache]=0
         [delete_skel]=1
@@ -336,7 +336,7 @@ koopa::linux_configure_system() { # {{{1
     df -h '/'
     # Ensure essential target prefixes exist.
     prefixes=(
-        "${dict[cellar_prefix]}"
+        "${dict[app_prefix]}"
         "${dict[make_prefix]}"
         "${dict[opt_prefix]}"
     )
