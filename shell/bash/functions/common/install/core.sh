@@ -26,7 +26,7 @@ koopa::_install_app() { # {{{1
     name_fancy=
     reinstall=0
     script_name=
-    script_prefix="$(koopa::prefix)/include/build"
+    script_prefix="$(koopa::prefix)/include/install"
     version=
     while (("$#"))
     do
