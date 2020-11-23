@@ -28,29 +28,28 @@ koopa::_which_function() { # {{{1
     if koopa::is_function "koopa::${os_id}_${f}"
     then
         fun="koopa::${os_id}_${f}"
-    elif koopa::is_linux
+    elif koopa::is_rhel_like && \
+        koopa::is_function "koopa::rhel_${f}"
     then
-        if koopa::is_rhel_like && \
-            koopa::is_function "koopa::rhel_${f}"
-        then
-            fun="koopa::rhel_${f}"
-        elif koopa::is_debian_like && \
-            koopa::is_function "koopa::debian_${f}"
-        then
-            fun="koopa::debian_${f}"
-        elif koopa::is_fedora_like && \
-            koopa::is_function "koopa::fedora_${f}"
-        then
-            fun="koopa::fedora_${f}"
-        else
-            fun="koopa::linux_${f}"
-        fi
+        fun="koopa::rhel_${f}"
+    elif koopa::is_debian_like && \
+        koopa::is_function "koopa::debian_${f}"
+    then
+        fun="koopa::debian_${f}"
+    elif koopa::is_fedora_like && \
+        koopa::is_function "koopa::fedora_${f}"
+    then
+        fun="koopa::fedora_${f}"
+    elif koopa::is_linux && \
+        koopa::is_function "koopa::linux_${f}"
+    then
+        fun="koopa::linux_${f}"
     else
         fun="koopa::${f}"
     fi
     if ! koopa::is_function "$fun"
     then
-        koopa::stop "No script available for '${*}' (${fun})."
+        koopa::stop "Failed to locate script for '${*}'."
     fi
     koopa::print "$fun"
     return 0
