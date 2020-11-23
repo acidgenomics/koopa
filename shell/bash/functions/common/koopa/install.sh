@@ -32,6 +32,7 @@ koopa::install_r_koopa() { # {{{1
     # Install koopa R package.
     # @note Updated 2020-11-23.
     # """
-    koopa::rscript "install-r-koopa"
+    koopa::update_r_config
+    koopa::rscript 'install-r-koopa'
     return 0
 }
