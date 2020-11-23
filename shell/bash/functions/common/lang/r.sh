@@ -104,32 +104,38 @@ koopa::link_r_etc() { # {{{1
     return 0
 }
 
-# FIXME NEED TO RETHINK THIS WITH NEW OPT APPROACH?
 koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-11-23.
+    #
+    # R on Fedora won't pick up site library in '--vanilla' mode unless we
+    # symlink the site-library into '/usr/local/lib/R' as well.
+    # Refer to '/usr/lib64/R/etc/Renviron' for configuration details.
+    #
+    # Changed to unversioned library approach at opt prefix in koopa v0.9.
     # """
     local lib_source lib_target opt_prefix r r_prefix version
     koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     r_prefix="$(koopa::r_prefix "$r")"
-    [[ -d "$r_prefix" ]] || return 1
-    version="$(koopa::r_version "$r")"
-    if [[ "$version" != 'devel' ]]
-    then
-        version="$(koopa::major_minor_version "$version")"
-    fi
+    koopa::assert_is_dir "$r_prefix"
     opt_prefix="$(koopa::opt_prefix)"
-    lib_source="${opt_prefix}/r/${version}/site-library"
+    # > version="$(koopa::r_version "$r")"
+    # > if [[ "$version" != 'devel' ]]
+    # > then
+    # >     version="$(koopa::major_minor_version "$version")"
+    # > fi
+    # > lib_source="${opt_prefix}/r/${version}/site-library"
+    lib_source="${opt_prefix}/r/site-library"
     lib_target="${r_prefix}/site-library"
+    koopa::dl 'Site library' "$lib_source"
     koopa::sys_mkdir "$lib_source"
+    koopa::info "Linking '${lib_source}' into R install at '${lib_target}'."
     koopa::sys_ln "$lib_source" "$lib_target"
-    # R on Fedora won't pick up site library in '--vanilla' mode unless we
-    # symlink the site-library into '/usr/local/lib/R' as well.
-    # Refer to '/usr/lib64/R/etc/Renviron' for configuration details.
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then
+        koopa::note 'Fixing Fedora R configuration.'
         koopa::sys_ln \
             '/usr/lib64/R/site-library' \
             '/usr/local/lib/R/site-library'
@@ -140,7 +146,7 @@ koopa::link_r_site_library() { # {{{1
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2020-11-11.
+    # @note Updated 2020-11-23.
     #
     # The default Java path differs depending on the system.
     #
