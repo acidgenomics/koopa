@@ -25,14 +25,11 @@ koopa::_which_function() { # {{{1
     f="${1:?}"
     f="${f//-/_}"
     os_id="$(koopa::os_id)"
-    echo "FIXME 1"
     if koopa::is_function "koopa::${os_id}_${f}"
     then
-        echo "FIXME 2"
         fun="koopa::${os_id}_${f}"
     elif koopa::is_linux
     then
-        echo "FIXME 3"
         if koopa::is_rhel_like && \
             koopa::is_function "koopa::rhel_${f}"
         then
@@ -46,13 +43,13 @@ koopa::_which_function() { # {{{1
         then
             fun="koopa::fedora_${f}"
         else
-            echo "FIXME 4"
             fun="koopa::linux_${f}"
         fi
     else
-        echo "FIXME 5"
         fun="koopa::${f}"
     fi
+    echo "FIXME 1"
+    echo "$fun"
     if ! koopa::is_function "$fun"
     then
         koopa::stop "No script available for '${*}'."
