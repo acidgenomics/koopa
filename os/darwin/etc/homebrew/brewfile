@@ -39,26 +39,9 @@ tap "vitorgalvao/tiny-scripts"
 # Casks {{{1
 # ==============================================================================
 
-# Consider:
-# - fiji  # latest
-# - onyx
-# - oracle-jdk
-# - wine-stable
-#
-# Requires authentication in 'Security & Privacy':
-# - box-drive
-# - virtualbox
-#
-# Removals:
-# - 'foobar2000' cask was removed due to url protection.
-# - 'macvim' cask overwrites 'vim' binary, so install manually instead.
-# - 'powershell' installs into '/usr/local/microsoft'.
-# - 'skype-for-business' is potentially useful but starts up at login.
-
 cask "1password"
 cask "adobe-acrobat-reader"
 cask "adoptopenjdk"  # igv
-cask "aerial"
 cask "airfoil"
 cask "alacritty"
 cask "alfred"
@@ -68,12 +51,8 @@ cask "balenaetcher"
 cask "basictex"
 cask "bbedit"
 cask "bibdesk"
-cask "calibre"
 cask "carbon-copy-cloner"
-cask "coconutbattery"
 cask "coda"
-cask "darktable"
-cask "deluge"
 cask "docker"
 cask "easyfind"
 cask "emacs"
@@ -83,44 +62,27 @@ cask "google-chrome"
 cask "google-cloud-sdk"  # latest
 cask "google-drive-file-stream"  # latest
 cask "gpg-suite"
-cask "handbrake"
 cask "hazel"
 cask "igv"
 cask "iterm2"
 cask "java"
 cask "julia"
-cask "keka"
-cask "kid3"
-cask "kitty"
 cask "libreoffice"
-cask "makemkv"
-cask "museeks"
 cask "netnewswire"
 cask "omnidisksweeper"
 cask "osxfuse"
-cask "pacifist"
-cask "photosweeper-x"
 cask "pycharm-ce"
 cask "r"
 cask "rstudio"
-cask "scrivener"
 cask "skype"
-cask "spillo"
 cask "sublime-text"
 cask "superduper"
-cask "swinsian"
 cask "textmate"
-cask "tiny-player"
-cask "tor-browser"
-cask "tower"
-cask "transmission"
-cask "transmission-remote-gui"
 cask "transmit"
 cask "tunnelblick"
 cask "virtualbox"
 cask "visual-studio-code"
 cask "vlc"
-cask "xld"
 cask "xquartz"
 cask "zoomus"
 
