@@ -52,6 +52,7 @@ tap "vitorgalvao/tiny-scripts"
 # Removals:
 # - 'foobar2000' cask was removed due to url protection.
 # - 'macvim' cask overwrites 'vim' binary, so install manually instead.
+# - 'powershell' installs into '/usr/local/microsoft'.
 # - 'skype-for-business' is potentially useful but starts up at login.
 
 cask "1password"
@@ -99,7 +100,6 @@ cask "omnidisksweeper"
 cask "osxfuse"
 cask "pacifist"
 cask "photosweeper-x"
-cask "powershell"
 cask "pycharm-ce"
 cask "r"
 cask "rstudio"
