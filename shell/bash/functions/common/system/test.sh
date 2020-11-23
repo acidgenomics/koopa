@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME USE KOOPA PREFIXES HERE, INSTEAD OF HARD-CODING.
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.

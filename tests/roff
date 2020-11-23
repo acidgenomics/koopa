@@ -3,6 +3,7 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../shell/bash/include/header.sh"
 
+# FIXME USE KOOPA PREFIXES HERE, RATHER THAN HARD-CODING.
 koopa::test_roff() { # {{{1
     # """
     # Check that all scripts support '--help' flag.
@@ -24,6 +25,8 @@ koopa::test_roff() { # {{{1
             -type d \
             -name 'man' \
             -not -path "${koopa_prefix}/.git/*" \
+            -not -path "${koopa_prefix}/app/*" \
+            -not -path "${koopa_prefix}/cellar/*" \
             -not -path "${koopa_prefix}/dotfiles/*" \
             -not -path "${koopa_prefix}/opt/*" \
             -not -path "${koopa_prefix}/shunit2-*" \
