@@ -102,11 +102,9 @@ koopa::update_koopa_system() { # {{{1
         koopa::update_pyenv
         koopa::update_rbenv
     fi
-    koopa::install_r_packages
     koopa::update_r_packages
-    koopa::install_python_packages
     koopa::update_rust
-    koopa::install_rust_packages
+    koopa::update_rust_packages
     if koopa::is_macos
     then
         koopa::macos_update_microsoft_office || true
