@@ -1,36 +1,10 @@
 #!/usr/bin/env bash
 
-koopa::find_app_version() { # {{{1
-    # """
-    # Find the latest application version.
-    # @note Updated 2020-11-22.
-    # """
-    local name prefix x
-    koopa::assert_has_args "$#"
-    name="${1:?}"
-    prefix="$(koopa::app_prefix)"
-    koopa::assert_is_dir "$prefix"
-    prefix="${prefix}/${name}"
-    koopa::assert_is_dir "$prefix"
-    x="$( \
-        find "$prefix" \
-            -mindepth 1 \
-            -maxdepth 1 \
-            -type d \
-        | sort \
-        | tail -n 1 \
-    )"
-    koopa::assert_is_dir "$x"
-    x="$(basename "$x")"
-    koopa::print "$x"
-    return 0
-}
-
 # FIXME RENAME THIS TO INSTALL APP.
 # FIXME CREATE LINK INTO OPT PREFIX AND THEN SYMLINK INTO MAKE PREFIX FROM THERE.
 # FIXME REAPPROACH THIS USING EXPORTED GLOBALS.
 
-koopa::install_app() { # {{{1
+koopa::_install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
     # @note Updated 2020-11-23.
@@ -140,12 +114,38 @@ koopa::install_app() { # {{{1
     return 0
 }
 
+koopa::find_app_version() { # {{{1
+    # """
+    # Find the latest application version.
+    # @note Updated 2020-11-22.
+    # """
+    local name prefix x
+    koopa::assert_has_args "$#"
+    name="${1:?}"
+    prefix="$(koopa::app_prefix)"
+    koopa::assert_is_dir "$prefix"
+    prefix="${prefix}/${name}"
+    koopa::assert_is_dir "$prefix"
+    x="$( \
+        find "$prefix" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type d \
+        | sort \
+        | tail -n 1 \
+    )"
+    koopa::assert_is_dir "$x"
+    x="$(basename "$x")"
+    koopa::print "$x"
+    return 0
+}
+
 # FIXME REWORK, SYMLINKING FROM OPT (LIKE HOMEBREW) INSTEAD.
 
 koopa::link_app() { # {{{1
     # """
-    # Symlink cellar into build directory.
-    # @note Updated 2020-11-18.
+    # Symlink application into build directory.
+    # @note Updated 2020-11-23.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -162,13 +162,13 @@ koopa::link_app() { # {{{1
     # * -s, --symbolic-link
     #
     # @examples
-    # koopa::link_cellar emacs 26.3
+    # koopa::link_app emacs 26.3
     # """
-    local cellar_prefix cellar_subdirs cp_flags include_dirs make_prefix name \
+    local app_prefix app_subdirs cp_flags include_dirs make_prefix name \
         pos version
     if koopa::is_macos
     then
-        koopa::note 'Cellar links are not supported on macOS.'
+        koopa::note 'App links are not supported on macOS.'
         return 0
     fi
     include_dirs=
@@ -207,33 +207,30 @@ koopa::link_app() { # {{{1
     koopa::assert_has_no_envs
     make_prefix="$(koopa::make_prefix)"
     koopa::assert_is_dir "$make_prefix"
-    cellar_prefix="$(koopa::cellar_prefix)"
-    koopa::assert_is_dir "$cellar_prefix"
-    cellar_prefix="${cellar_prefix}/${name}"
-    koopa::assert_is_dir "$cellar_prefix"
+    app_prefix="$(koopa::app_prefix)"
+    koopa::assert_is_dir "$app_prefix"
+    app_prefix="${app_prefix}/${name}"
+    koopa::assert_is_dir "$app_prefix"
     [[ -z "$version" ]] && version="$(koopa::find_app_version "$name")"
-    cellar_prefix="${cellar_prefix}/${version}"
-    koopa::assert_is_dir "$cellar_prefix"
-    koopa::h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
-    koopa::sys_set_permissions -r "$cellar_prefix"
-    koopa::delete_broken_symlinks "$cellar_prefix"
+    app_prefix="${app_prefix}/${version}"
+    koopa::assert_is_dir "$app_prefix"
+    # FIXME REWORK THIS, LINKING INTO OPT FIRST.
+    koopa::h2 "Linking '${app_prefix}' in '${make_prefix}'."
+    koopa::sys_set_permissions -r "$app_prefix"
+    koopa::delete_broken_symlinks "$app_prefix"
     koopa::delete_broken_symlinks "$make_prefix"
-    cellar_subdirs=()
+    app_subdirs=()
     if [[ -n "$include_dirs" ]]
     then
-        IFS=',' read -r -a cellar_subdirs <<< "$include_dirs"
-        cellar_subdirs=("${cellar_subdirs[@]/^/${cellar_prefix}}")
-        for i in "${!cellar_subdirs[@]}"
+        IFS=',' read -r -a app_subdirs <<< "$include_dirs"
+        app_subdirs=("${app_subdirs[@]/^/${app_prefix}}")
+        for i in "${!app_subdirs[@]}"
         do
-            cellar_subdirs[$i]="${cellar_prefix}/${cellar_subdirs[$i]}"
+            app_subdirs[$i]="${app_prefix}/${app_subdirs[$i]}"
         done
     else
-        readarray -t cellar_subdirs <<< "$( \
-            find "$cellar_prefix" \
-                -mindepth 1 \
-                -maxdepth 1 \
-                -type d \
-                -print \
+        readarray -t app_subdirs <<< "$( \
+            find "$app_prefix" -mindepth 1 -maxdepth 1 -type d -print \
             | sort \
         )"
     fi
@@ -243,7 +240,7 @@ koopa::link_app() { # {{{1
         '-t' "${make_prefix}"
     )
     koopa::is_shared_install && cp_flags+=('-S')
-    koopa::cp "${cp_flags[@]}" "${cellar_subdirs[@]}"
+    koopa::cp "${cp_flags[@]}" "${app_subdirs[@]}"
     if koopa::is_linux && koopa::is_shared_install
     then
         koopa::update_ldconfig
@@ -259,14 +256,13 @@ koopa::list_app_versions() { # {{{1
     # """
     local prefix
     koopa::assert_has_no_args "$#"
-    prefix="$(koopa::cellar_prefix)"
+    prefix="$(koopa::app_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::note 'No cellar programs are installed.'
+        koopa::note "No applications are installed in '${prefix}'."
         return 0
     fi
-    # This approach doesn't work well when only a single cellar program
-    # is installed.
+    # This approach doesn't work well when only a single program is installed.
     # > ls -1 -- "${prefix}/"*
     find "$prefix" -mindepth 2 -maxdepth 2 -type d | sort
     return 0
