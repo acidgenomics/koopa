@@ -238,10 +238,10 @@ koopa::find_local_bin_dirs() { # {{{1
     return 0
 }
 
-koopa::find_non_cellar_make_files() { # {{{1
+koopa::find_non_symlinked_make_files() { # {{{1
     # """
-    # Find non-cellar make files.
-    # @note Updated 2020-06-30.
+    # Find non-symlinked make files.
+    # @note Updated 2020-11-23.
     #
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
