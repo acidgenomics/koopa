@@ -20,6 +20,7 @@ koopa::test_find_files() { # {{{1
             -not -name '*.swp' \
             -not -name '.pylintrc' \
             -not -path "${prefix}/.git/*" \
+            -not -path "${prefix}/app/*" \
             -not -path "${prefix}/cellar/*" \
             -not -path "${prefix}/coverage/*" \
             -not -path "${prefix}/dotfiles/*" \

@@ -175,7 +175,7 @@ koopa::koopa() { # {{{1
             koopa::defunct 'koopa system prefix app'
             ;;
         cellar-prefix)
-            koopa::defunct 'koopa system prefix cellar'
+            koopa::defunct 'koopa system prefix app'
             ;;
         conda-prefix)
             koopa::defunct 'koopa system prefix conda'
