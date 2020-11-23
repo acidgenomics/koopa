@@ -25,7 +25,7 @@ koopa::arch_install_base() { # {{{1
     name_fancy='Arch base system'
     koopa::install_start "$name_fancy"
     # Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
-    # is non-standard and can cause cellar link script to break.
+    # is non-standard and can cause koopa's application link script to break.
     [[ -L '/usr/local/share/man' ]] && koopa::rm -S /usr/local/share/man
     sudo pacman -Syyu --noconfirm
     sudo pacman-db-upgrade
