@@ -48,7 +48,7 @@ koopa::sys_git_pull() { # {{{1
 koopa::sys_info() { # {{{
     # """
     # System information.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-11-23.
     # """
     koopa::assert_has_no_args "$#"
     local array koopa_prefix nf origin shell shell_name shell_version
@@ -78,9 +78,10 @@ koopa::sys_info() { # {{{
         'Configuration'
         '-------------'
         "Koopa Prefix: ${koopa_prefix}"
-        "User Config Prefix: $(koopa::config_prefix)"
+        "App Prefix: $(koopa::app_prefix)"
         "Opt Prefix: $(koopa::opt_prefix)"
         "Make Prefix: $(koopa::make_prefix)"
+        "User Config Prefix: $(koopa::config_prefix)"
     )
     array+=("")
     # Show neofetch info, if installed.
