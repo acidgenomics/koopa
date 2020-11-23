@@ -255,6 +255,7 @@ koopa::find_non_symlinked_make_files() { # {{{1
             -xdev \
             -mindepth 1 \
             -type f \
+            -not -path "${prefix}/app/*" \
             -not -path "${prefix}/cellar/*" \
             -not -path "${prefix}/koopa/*" \
             -not -path "${prefix}/opt/*" \
