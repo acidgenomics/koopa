@@ -139,7 +139,7 @@ koopa::koopa() { # {{{1
                     ;;
             esac
             ;;
-        cellar | \
+        app | \
         check-system | \
         header | \
         install | \
