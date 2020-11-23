@@ -68,7 +68,8 @@ koopa::debian_install_base() { # {{{1
     koopa::rm -S '/var/cache/apt/'* '/var/lib/dpkg/available'
     sudo dpkg --clear-avail
     # Debian symlinks '/usr/local/man' to '/usr/local/share/man' by default,
-    # which is non-standard and can cause cellar link script to break.
+    # which is non-standard and can cause koopa's application link script
+    # to break.
     [[ -L '/usr/local/man' ]] && koopa::rm -S '/usr/local/man'
     # Requiring universe repo to be enabled on Ubuntu.
     enabled_repos="$(koopa::apt_enabled_repos)"
