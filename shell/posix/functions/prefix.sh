@@ -412,25 +412,14 @@ _koopa_pyenv_prefix() { # {{{1
 _koopa_python_site_packages_prefix() { # {{{1
     # """
     # Python site packages library location.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-11-23.
     #
-    # macOS alternative:
-    # > x="$(_koopa_make_prefix)/lib/python${version}/site-packages"
-    # This can cause compilation issues with Homebrew depencencies, such as
-    # NumPy / GDAL.
+    # This was changed to an unversioned approach in koopa v0.9.
     #
     # @seealso
     # > "$python" -m site
     # """
-    # shellcheck disable=SC2039
-    local python version x
-    python="${1:-}"
-    [ -z "$python" ] && python="$(_koopa_python)"
-    _koopa_is_installed "$python" || return 0
-    version="$("$python" --version | head -n 1 | cut -d ' ' -f 2)"
-    version="$(_koopa_major_minor_version "$version")"
-    x="$(_koopa_opt_prefix)/python/${version}/site-packages"
-    _koopa_print "$x"
+    _koopa_print "$(_koopa_opt_prefix)/python/site-packages"
     return 0
 }
 
