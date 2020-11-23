@@ -231,7 +231,7 @@ _koopa_activate_homebrew_google_cloud_sdk() { # {{{1
 
 _koopa_activate_homebrew_libexec_prefix() { # {{{1
     # """
-    # Activate a cellar-only Homebrew program.
+    # Activate a Homebrew cellar-only program.
     # @note Updated 2020-06-30.
     # """
     _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
@@ -240,7 +240,7 @@ _koopa_activate_homebrew_libexec_prefix() { # {{{1
 
 _koopa_activate_homebrew_prefix() { # {{{1
     # """
-    # Activate a cellar-only Homebrew program.
+    # Activate a Homebrew cellar-only program.
     # @note Updated 2020-06-30.
     # """
     _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}"

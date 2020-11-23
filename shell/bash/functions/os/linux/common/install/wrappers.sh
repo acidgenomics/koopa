@@ -78,7 +78,7 @@ koopa::linux_install_openssl() { # {{{1
     koopa::_linux_install_app \
         --name='openssl' \
         --name-fancy='OpenSSL' \
-        --cellar-only \
+        --no-link \
         "$@"
 }
 
