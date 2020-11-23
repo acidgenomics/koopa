@@ -54,9 +54,9 @@ koopa::tmp_file() { # {{{1
 koopa::tmp_log_file() { # {{{1
     # """
     # Create temporary log file.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-11-23.
     #
-    # Used primarily for debugging cellar make install scripts.
+    # Used primarily for debugging installation scripts.
     #
     # Note that mktemp on macOS and BusyBox doesn't support '--suffix' flag.
     # Otherwise, we can use:
