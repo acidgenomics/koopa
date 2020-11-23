@@ -15,6 +15,7 @@ koopa::install() { # {{{1
     return 0
 }
 
+# FIXME DONT ALLOW ARGUMENT PASSTHROUGH HERE.
 koopa::install_py_koopa() { # {{{1
     # """
     # Install Python koopa package.
@@ -22,6 +23,7 @@ koopa::install_py_koopa() { # {{{1
     # """
     local url
     url='https://github.com/acidgenomics/koopa/archive/python.tar.gz'
+    koopa::python_add_site_packages_to_sys_path
     koopa::pip_install "$@" "$url"
     return 0
 }

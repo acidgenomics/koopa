@@ -3,7 +3,7 @@
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2020-10-09.
+    # @note Updated 2020-11-23.
     # """
     local install_flags name_fancy pkg pkg_lower pkgs pos python version
     python="$(koopa::python)"
@@ -74,7 +74,6 @@ koopa::install_python_packages() { # {{{1
     koopa::python_add_site_packages_to_sys_path "$python"
     koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
-    koopa::install_py_koopa "${install_flags[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }
