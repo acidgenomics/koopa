@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
 
-koopa::linux_delete_broken_cellar_symlinks() { # {{{1
+koopa::_linux_install_app() { # {{{1
     # """
-    # Delete broken cellar symlinks.
+    # Install Linux-specific application.
     # @note Updated 2020-11-18.
+    # """
+    local script_prefix
+    script_prefix="$(koopa::prefix)/os/linux/common/include/install"
+    koopa::_install_app --script-prefix="$script_prefix" "$@"
+    return 0
+}
+
+koopa::linux_delete_broken_app_symlinks() { # {{{1
+    # """
+    # Delete broken application symlinks.
+    # @note Updated 2020-11-23.
     # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_linux
@@ -11,12 +22,12 @@ koopa::linux_delete_broken_cellar_symlinks() { # {{{1
     return 0
 }
 
-koopa::linux_find_cellar_symlinks() { # {{{1
+koopa::linux_find_app_symlinks() { # {{{1
     # """
-    # Find cellar symlinks.
-    # @note Updated 2020-11-17.
+    # Find application symlinks.
+    # @note Updated 2020-11-23.
     # """
-    local cellar_prefix koopa_prefix make_prefix file links name version
+    local app_prefix koopa_prefix make_prefix file links name version
     koopa::assert_has_args "$#"
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_linux
@@ -26,14 +37,15 @@ koopa::linux_find_cellar_symlinks() { # {{{1
     koopa_prefix="$(koopa::prefix)"
     make_prefix="$(koopa::make_prefix)"
     # Automatically detect version, if left unset.
-    cellar_prefix="$(koopa::cellar_prefix)/${name}"
-    koopa::assert_is_dir "$cellar_prefix"
+    app_prefix="$(koopa::app_prefix)/${name}"
+    koopa::assert_is_dir "$app_prefix"
+    # FIXME NEED TO MAKE THIS INTO A SHARED FUNCTION?
     if [[ -n "$version" ]]
     then
-        cellar_prefix="${cellar_prefix}/${version}"
+        app_prefix="${app_prefix}/${version}"
     else
-        cellar_prefix="$( \
-            find "$cellar_prefix" -maxdepth 1 -type d \
+        app_prefix="$( \
+            find "$app_prefix" -maxdepth 1 -type d \
             | sort \
             | tail -n 1 \
         )"
@@ -42,7 +54,7 @@ koopa::linux_find_cellar_symlinks() { # {{{1
     readarray -t links <<< "$( \
         find -L "$make_prefix" \
             -type f \
-            -path "${cellar_prefix}/*" \
+            -path "${app_prefix}/*" \
             ! -path "$koopa_prefix" \
             -print0 \
         | sort -z \
@@ -50,18 +62,7 @@ koopa::linux_find_cellar_symlinks() { # {{{1
     # Replace the cellar prefix with our build prefix.
     for file in "${links[@]}"
     do
-        koopa::print "${file//$cellar_prefix/$make_prefix}"
+        koopa::print "${file//$app_prefix/$make_prefix}"
     done
-    return 0
-}
-
-koopa::linux_install_cellar() { # {{{1
-    # """
-    # Install Linux-specific cellar program.
-    # @note Updated 2020-11-18.
-    # """
-    local script_prefix
-    script_prefix="$(koopa::prefix)/os/linux/common/include/build"
-    koopa::install_cellar --script-prefix="$script_prefix" "$@"
     return 0
 }

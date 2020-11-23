@@ -43,7 +43,7 @@ koopa::install_cellar() { # {{{1
     # """
     # @note Updated 2020-11-23.
     # """
-    koopa::defunct 'koopa::install_app'
+    koopa::defunct 'koopa::_install_app'
 }
 
 koopa::is_darwin() { # {{{1
@@ -72,6 +72,20 @@ koopa::link_cellar() { # {{{1
     # @note Updated 2020-11-23.
     # """
     koopa::defunct 'koopa::link_app'
+}
+
+koopa::linux_delete_broken_cellar_symlinks() { # {{{1
+    # """
+    # @note Updated 2020-11-23.
+    # """
+    koopa::defunct 'koopa::linux_delete_broken_app_symlinks'
+}
+
+koopa::linux_find_cellar_symlinks() { # {{{1
+    # """
+    # @note Updated 2020-11-23.
+    # """
+    koopa::defunct 'koopa::linux_find_app_symlinks'
 }
 
 koopa::list_cellar_versions() { # {{{1
