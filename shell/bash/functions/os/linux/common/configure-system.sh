@@ -537,6 +537,7 @@ koopa::linux_configure_system() { # {{{1
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------
 
+    # FIXME RETHINK THIS APPROACH HERE.
     [[ "${dict[install_python_packages]}" -eq 1 ]] && \
         install-python-packages
     [[ "${dict[install_r_packages]}" -eq 1 ]] && \
