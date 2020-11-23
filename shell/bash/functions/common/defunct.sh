@@ -25,6 +25,20 @@ koopa::cellar_prefix() { # {{{1
     koopa::defunct 'koopa::app_prefix'
 }
 
+koopa::find_cellar_version() { # {{{1
+    # """
+    # @note Updated 2020-11-22.
+    # """
+    koopa::defunct 'koopa::find_app_version'
+}
+
+koopa::install_cellar() { # {{{1
+    # """
+    # @note Updated 2020-11-23.
+    # """
+    koopa::defunct 'koopa::install_app'
+}
+
 koopa::is_darwin() { # {{{1
     # """
     # @note Updated 2020-01-14.
@@ -46,6 +60,20 @@ koopa::is_matching_regex() {  #{{{1
     koopa::defunct 'koopa::str_match_regex'
 }
 
+koopa::link_cellar() { # {{{1
+    # """
+    # @note Updated 2020-11-23.
+    # """
+    koopa::defunct 'koopa::link_app'
+}
+
+koopa::list_cellar_versions() { # {{{1
+    # """
+    # @note Updated 2020-11-23.
+    # """
+    koopa::defunct 'koopa::list_app_versions'
+}
+
 koopa::local_app_prefix() { # {{{1
     # """
     # @note Updated 2020-11-19.
@@ -60,6 +88,13 @@ koopa::prefix_mkdir() { # {{{1
     koopa::defunct 'koopa::mkdir'
 }
 
+koopa::prune_cellar() { # {{{1
+    # """
+    # @note Updated 2020-11-22.
+    # """
+    koopa::defunct 'koopa::prune_apps'
+}
+
 koopa::quiet_cd() { # {{{1
     # """
     # @note Updated 2020-02-16.
@@ -67,11 +102,12 @@ koopa::quiet_cd() { # {{{1
     koopa::defunct 'koopa::cd'
 }
 
+# FIXME REWORK THIS.
 koopa::remove_broken_cellar_symlinks() { # {{{1
     # """
     # @note Updated 2020-11-18.
     # """
-    koopa::defunct 'koopa::delete_broken_cellar_symlinks'
+    koopa::defunct 'koopa::delete_broken_app_symlinks'
 }
 
 koopa::remove_broken_symlinks() { # {{{1
@@ -86,6 +122,13 @@ koopa::remove_empty_dirs() { # {{{1
     # @note Updated 2020-11-18.
     # """
     koopa::defunct 'koopa::delete_empty_dirs'
+}
+
+koopa::unlink_cellar() { # {{{1
+    # """
+    # @note Updated 2020-11-11.
+    # """
+    koopa::defunct 'koopa::unlink_app'
 }
 
 koopa::update_profile() { # {{{1
