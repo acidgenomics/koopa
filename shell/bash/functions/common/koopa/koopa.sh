@@ -50,8 +50,7 @@ koopa::_which_function() { # {{{1
     fi
     if ! koopa::is_function "$fun"
     then
-        koopa::stop "ARGH"
-        koopa::stop "No script available for '${*}'."
+        koopa::stop "No script available for '${*}' (${fun})."
     fi
     koopa::print "$fun"
     return 0
