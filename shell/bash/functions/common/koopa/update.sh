@@ -113,10 +113,11 @@ koopa::update_koopa_system() { # {{{1
     return 0
 }
 
+# FIXME NEED TO ENSURE ACTIVATE PREFIX IS CORRECT HERE.
 koopa::update_koopa_user() { # {{{1
     # """
     # Update koopa user configuration.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-11-23.
     # """
     local config_prefix
     config_prefix="$(koopa::config_prefix)"
@@ -124,6 +125,7 @@ koopa::update_koopa_user() { # {{{1
     # Remove legacy directories from user config, if necessary.
     koopa::rm \
         "${config_prefix}/Rcheck" \
+        "${config_prefix}/home" \
         "${config_prefix}/oh-my-zsh" \
         "${config_prefix}/pyenv" \
         "${config_prefix}/rbenv" \
