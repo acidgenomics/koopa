@@ -35,7 +35,7 @@ aspera-connect="3.10.1.181943"
 autoconf="2.69"
 
 # https://ftp.gnu.org/gnu/automake/
-automake="1.16.2"
+automake="1.16.3"
 
 # https://www.gnu.org/software/bash/
 bash="5.0.18"
