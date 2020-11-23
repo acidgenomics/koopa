@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-11-13.
+## Updated 2020-11-23.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -345,9 +345,13 @@ local({
         ## > }
         ## Always include Acid Genomics repo.
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-11-04.
-        ## https://packagemanager.rstudio.com/client/#/repos/1/overview
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/360"
+        if (isTRUE(.rprofile[["macos"]])) {
+            repos[["CRAN"]] <- "https://cran.rstudio.com"
+        } else {
+            ## Snapshot: 2020-11-04.
+            ## https://packagemanager.rstudio.com/client/#/repos/1/overview
+            repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/360"
+        }
         ## Enable missing R binaries for Homebrew on macOS.
         ## See also:
         ## - https://macos.rbind.io/
