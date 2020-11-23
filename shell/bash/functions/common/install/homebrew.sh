@@ -54,56 +54,72 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_packages() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-11-20.
+    # @note Updated 2020-11-23.
     # """
-    local brewfile flags name_fancy remove_brews remove_taps x
+    local brewfile default flags name_fancy remove_brews remove_taps x
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
     koopa::assert_is_installed brew
-    brew analytics off
+    default=1
     brewfile="$(koopa::brewfile)"
+    while (("$#"))
+    do
+        case "$1" in
+            --brewfile=*)
+                brewfile="${1#*=}"
+                default=0
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
-    # Remove any existing unwanted brews, if necessary.
-    remove_brews=(
-        'osgeo-gdal'
-        'osgeo-hdf4'
-        'osgeo-libgeotiff'
-        'osgeo-libkml'
-        'osgeo-libspatialite'
-        'osgeo-netcdf'
-        'osgeo-postgresql'
-        'osgeo-proj'
-    )
-    if koopa::is_macos
+    brew analytics off
+    if [[ "$default" -eq 1 ]]
     then
-        remove_brews+=(
-            'google-chrome-canary'
-            'little-snitch'
-            'safari-technology-preview'
-            'zoom'  # zoomus
+        # Remove any existing unwanted brews, if necessary.
+        remove_brews=(
+            'osgeo-gdal'
+            'osgeo-hdf4'
+            'osgeo-libgeotiff'
+            'osgeo-libkml'
+            'osgeo-libspatialite'
+            'osgeo-netcdf'
+            'osgeo-postgresql'
+            'osgeo-proj'
+        )
+        if koopa::is_macos
+        then
+            remove_brews+=(
+                'google-chrome-canary'
+                'little-snitch'
+                'safari-technology-preview'
+                'zoom'  # zoomus
+            )
+        fi
+        for x in "${remove_brews[@]}"
+        do
+            brew remove "$x" &>/dev/null || true
+        done
+        remove_taps=(
+            'muesli/tap'
+        )
+        for x in "${remove_taps[@]}"
+        do
+            brew untap "$x" &>/dev/null || true
+        done
+        flags=(
+            # > --no-upgrade
+            "--file=${brewfile}"
+            '--no-lock'
+            '--verbose'
         )
     fi
-    for x in "${remove_brews[@]}"
-    do
-        brew remove "$x" &>/dev/null || true
-    done
-    remove_taps=(
-        'muesli/tap'
-    )
-    for x in "${remove_taps[@]}"
-    do
-        brew untap "$x" &>/dev/null || true
-    done
-    flags=(
-        # > --no-upgrade
-        "--file=${brewfile}"
-        '--no-lock'
-        '--verbose'
-    )
-    # > export HOMEBREW_FORCE_BOTTLE=1
     brew bundle install "${flags[@]}"
     koopa::brew_update
     return 0
