@@ -32,6 +32,13 @@ koopa::find_cellar_version() { # {{{1
     koopa::defunct 'koopa::find_app_version'
 }
 
+koopa::find_non_cellar_make_files() { # {{{1
+    # """
+    # @note Updated 2020-11-23.
+    # """
+    koopa::defunct 'koopa::find_non_symlinked_make_files'
+}
+
 koopa::install_cellar() { # {{{1
     # """
     # @note Updated 2020-11-23.
