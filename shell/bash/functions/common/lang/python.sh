@@ -486,7 +486,7 @@ koopa::pyscript() { # {{{1
 koopa::python_add_site_packages_to_sys_path() { # {{{1
     # """
     # Add our custom site packages library to sys.path.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-11-23.
     #
     # @seealso
     # > "$python" -m site
@@ -498,16 +498,13 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     k_site_pkgs="$(koopa::python_site_packages_prefix "$python")"
     [[ ! -d "$k_site_pkgs" ]] && koopa::sys_mkdir "$k_site_pkgs"
     file="${sys_site_pkgs}/koopa.pth"
-    if [[ ! -f "$file" ]]
+    koopa::info "Adding '${file}' path file in '${sys_site_pkgs}'."
+    if koopa::is_symlinked_app "$python"
     then
-        koopa::info "Adding '${file}' path file in '${sys_site_pkgs}'."
-        if koopa::is_symlinked_app "$python"
-        then
-            koopa::write_string "$k_site_pkgs" "$file"
-            koopa::link_app python
-        else
-            koopa::sudo_write_string "$k_site_pkgs" "$file"
-        fi
+        koopa::write_string "$k_site_pkgs" "$file"
+        koopa::link_app python
+    else
+        koopa::sudo_write_string "$k_site_pkgs" "$file"
     fi
     # This step will print the site packages configuration.
     "$python" -m site
