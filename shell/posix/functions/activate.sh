@@ -127,7 +127,7 @@ quote=01:warning=01;35"
 _koopa_activate_go() { # {{{1
     # """
     # Activate Go.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-11-23.
     # """
     # shellcheck disable=SC2039
     local prefix
@@ -136,7 +136,8 @@ _koopa_activate_go() { # {{{1
     _koopa_is_installed go || return 0
     [ -z "${GOPATH:-}" ] && GOPATH="$(_koopa_go_gopath)"
     export GOPATH
-    [ ! -d "$GOPATH" ] && mkdir -p "$GOPATH"
+    # This can error on shared installs, so skip.
+    # > [ ! -d "$GOPATH" ] && mkdir -p "$GOPATH"
     return 0
 }
 
