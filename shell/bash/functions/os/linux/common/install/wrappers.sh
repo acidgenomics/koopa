@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_aws_cli() { # {{{1
-    koopa::linux_install_cellar \
+    koopa::_linux_install_app \
         --name='aws-cli' \
         --name-fancy='AWS CLI' \
         --version='latest' \
@@ -10,37 +10,23 @@ koopa::linux_install_aws_cli() { # {{{1
 }
 
 koopa::linux_install_docker_credential_pass() { # {{{1
-    koopa::linux_install_cellar \
-        --name='docker-credential-pass' \
-        "$@"
+    koopa::_linux_install_app --name='docker-credential-pass' "$@"
 }
 
 koopa::linux_install_gcc() { # {{{1
-    koopa::linux_install_cellar \
-        --name='gcc' \
-        --name-fancy='GCC' \
-        "$@"
+    koopa::_linux_install_app --name='gcc' --name-fancy='GCC' "$@"
 }
 
 koopa::linux_install_gdal() { # {{{1
-    koopa::linux_install_cellar \
-        --name='gdal' \
-        --name-fancy='GDAL' \
-        "$@"
+    koopa::_linux_install_app --name='gdal' --name-fancy='GDAL' "$@"
 }
 
 koopa::linux_install_geos() { # {{{1
-    koopa::linux_install_cellar \
-        --name='geos' \
-        --name-fancy='GEOS' \
-        "$@"
+    koopa::linux_install_app --name='geos' --name-fancy='GEOS' "$@"
 }
 
-koopa::install_groff() { # {{{1
-    koopa::install_cellar \
-        --name='groff' \
-        --name-fancy='GNU roff' \
-        "$@"
+koopa::linux_install_groff() { # {{{1
+    koopa::_linux_install_app --name='groff' --name-fancy='GNU roff' "$@"
 }
 
 koopa::linux_install_julia() { # {{{1
@@ -65,7 +51,7 @@ koopa::linux_install_julia() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::linux_install_cellar \
+    koopa::_linux_install_app \
         --name='julia' \
         --name-fancy='Julia' \
         --script-name="$script_name" \
@@ -73,97 +59,66 @@ koopa::linux_install_julia() { # {{{1
 }
 
 koopa::linux_install_lua() { # {{{1
-    koopa::linux_install_cellar \
-        --name='lua' \
-        --name-fancy='Lua' \
-        "$@"
+    koopa::_linux_install_app --name='lua' --name-fancy='Lua' "$@"
 }
 
 koopa::linux_install_luarocks() { # {{{1
-    koopa::linux_install_cellar \
-        --name='luarocks' \
-        "$@"
+    koopa::_linux_install_app --name='luarocks' "$@"
 }
 
 koopa::linux_install_neovim() { # {{{1
-    koopa::linux_install_cellar \
-        --name='neovim' \
-        "$@"
+    koopa::_linux_install_app --name='neovim' "$@"
 }
 
 koopa::linux_install_openssh() { # {{{1
-    koopa::linux_install_cellar \
-        --name='openssh' \
-        --name-fancy='OpenSSH' \
-        "$@"
+    koopa::_linux_install_app --name='openssh' --name-fancy='OpenSSH' "$@"
 }
 
 koopa::linux_install_openssl() { # {{{1
-    koopa::linux_install_cellar \
+    koopa::_linux_install_app \
         --name='openssl' \
         --name-fancy='OpenSSL' \
         --cellar-only \
         "$@"
 }
 
+# FIXME MOVE COMMENTS TO INSTALL SCRIPT.
 koopa::linux_install_password_store() { # {{{1
     # """
     # https://www.passwordstore.org/
     # https://git.zx2c4.com/password-store/
     # """
-    koopa::linux_install_cellar \
-        --name='password-store' \
-        "$@"
+    koopa::_linux_install_app --name='password-store' "$@"
 }
 
 koopa::linux_install_proj() { # {{{1
-    koopa::linux_install_cellar \
-        --name='proj' \
-        --name-fancy='PROJ' \
-        "$@"
+    koopa::_linux_install_app --name='proj' --name-fancy='PROJ' "$@"
 }
 
 koopa::linux_install_python() { # {{{1
-    koopa::linux_install_cellar \
-        --name='python' \
-        --name-fancy='Python' \
-        "$@"
+    koopa::_linux_install_app --name='python' --name-fancy='Python' "$@"
     koopa::install_py_koopa
 }
 
 koopa::linux_install_r() { # {{{1
-    koopa::linux_install_cellar \
-        --name='r' \
-        --name-fancy='R' \
-        "$@"
+    koopa::_linux_install_app --name='r' --name-fancy='R' "$@"
     koopa::update_r_config
 }
 
-# FIXME MISSING R-DEVEL.
+# FIXME MISSING R-DEVEL HERE.
 
 koopa::linux_install_ruby() { # {{{1
-    koopa::linux_install_cellar \
-        --name='ruby' \
-        --name-fancy='Ruby' \
-        "$@"
+    koopa::_linux_install_app --name='ruby' --name-fancy='Ruby' "$@"
 }
 
 koopa::linux_install_taglib() { # {{{1
-    koopa::linux_install_cellar \
-        --name='taglib' \
-        --name-fancy='TagLib' \
-        "$@"
+    koopa::_linux_install_app --name='taglib' --name-fancy='TagLib' "$@"
 }
 
 koopa::linux_install_udunits() { # {{{1
-    koopa::linux_install_cellar \
-        --name='udunits' \
-        "$@"
+    koopa::_linux_install_app --name='udunits' "$@"
 }
 
 koopa::linux_install_vim() { # {{{1
-    koopa::linux_install_cellar \
-        --name='vim' \
-        --name-fancy='Vim' \
-        "$@"
+    koopa::_linux_install_app --name='vim' --name-fancy='Vim' "$@"
 }
