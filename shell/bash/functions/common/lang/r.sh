@@ -104,6 +104,7 @@ koopa::link_r_etc() { # {{{1
     return 0
 }
 
+# FIXME NEED TO RETHINK THIS WITH NEW OPT APPROACH?
 koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
