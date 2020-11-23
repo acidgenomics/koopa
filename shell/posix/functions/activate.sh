@@ -180,8 +180,8 @@ _koopa_activate_homebrew() { # {{{1
 
 _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # """
-    # Activate a cellar-only Homebrew GNU program.
-    # @note Updated 2020-11-16.
+    # Activate a Homebrew cellar-only GNU program.
+    # @note Updated 2020-11-23.
     #
     # Linked using 'g' prefix by default.
     #
