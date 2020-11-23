@@ -18,7 +18,7 @@ koopa::_run_function() { # {{{1
 koopa::_which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2020-11-18.
+    # @note Updated 2020-11-23.
     # """
     local f fun os_id
     koopa::assert_has_args_eq "$#" 1
@@ -30,15 +30,15 @@ koopa::_which_function() { # {{{1
         fun="koopa::${os_id}_${f}"
     elif koopa::is_linux
     then
-        if koopa::is_rhelish && \
+        if koopa::is_rhel_like && \
             koopa::is_function "koopa::rhel_${f}"
         then
             fun="koopa::rhel_${f}"
-        elif koopa::is_debianish && \
+        elif koopa::is_debian_like && \
             koopa::is_function "koopa::debian_${f}"
         then
             fun="koopa::debian_${f}"
-        elif koopa::is_fedoraish && \
+        elif koopa::is_fedora_like && \
             koopa::is_function "koopa::fedora_${f}"
         then
             fun="koopa::fedora_${f}"
