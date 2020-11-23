@@ -238,6 +238,7 @@ koopa::find_local_bin_dirs() { # {{{1
     return 0
 }
 
+# FIXME USE KOOPA PREFIXES HERE, RATHER THAN HARD-CODING.
 koopa::find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
