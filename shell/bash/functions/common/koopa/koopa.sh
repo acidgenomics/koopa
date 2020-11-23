@@ -48,10 +48,9 @@ koopa::_which_function() { # {{{1
     else
         fun="koopa::${f}"
     fi
-    echo "FIXME 1"
-    echo "$fun"
     if ! koopa::is_function "$fun"
     then
+        koopa::stop "ARGH"
         koopa::stop "No script available for '${*}'."
     fi
     koopa::print "$fun"
