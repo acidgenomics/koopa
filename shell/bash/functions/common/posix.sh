@@ -516,6 +516,10 @@ koopa::openjdk_prefix() { # {{{1
     _koopa_openjdk_prefix "$@"
 }
 
+koopa::opt_prefix() { # {{{1
+    _koopa_opt_prefix "$@"
+}
+
 koopa::os_codename() { # {{{1
     _koopa_os_codename "$@"
 }
