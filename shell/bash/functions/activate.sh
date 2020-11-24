@@ -101,3 +101,27 @@ _koopa_activate_bash_readline() { # {{{1
     export INPUTRC="${HOME}/.inputrc"
     return 0
 }
+
+_koopa_source_dir() { # {{{1
+    # """
+    # Source multiple Bash script files inside a directory.
+    # @note Updated 2020-11-24.
+    # """
+    local prefix fun_script fun_scripts
+    prefix="${KOOPA_PREFIX}/shell/bash/functions/${1:?}"
+    [[ -d "$prefix" ]] || return 0
+    readarray -t fun_scripts <<< "$( \
+        find -L "$prefix" \
+            -mindepth 1 \
+            -type f \
+            -name '*.sh' \
+            -print \
+        | sort \
+    )"
+    for fun_script in "${fun_scripts[@]}"
+    do
+        # shellcheck source=/dev/null
+        . "$fun_script"
+    done
+    return 0
+}
