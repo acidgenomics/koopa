@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME MOVE THIS TO UPDATE SECTION.
-
 koopa::update_rust() { # {{{1
     # """
     # Install Rust.
