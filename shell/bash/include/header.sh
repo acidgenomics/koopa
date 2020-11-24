@@ -6,13 +6,15 @@ _koopa_bash_header() { # {{{1
     # Bash header.
     # @note Updated 2020-11-24.
     # """
-    local activate checks distro_prefix major_version os_id shopts verbose
+    local activate checks dev distro_prefix major_version os_id shopts verbose
     activate=0
     checks=1
+    dev=0
     shopts=1
     verbose=0
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && activate="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && checks="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_DEV:-}" ]] && dev="$KOOPA_DEV"
     [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
     if [[ "$activate" -eq 1 ]]
     then
@@ -58,7 +60,7 @@ _koopa_bash_header() { # {{{1
     source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX}/shell/bash/functions/activate.sh"
-    if [[ "$activate" -eq 0 ]]
+    if [[ "$activate" -eq 0 ]] || [[ "$dev" -eq 1 ]]
     then
         _koopa_source_dir 'common'
         os_id="$(_koopa_os_id)"
@@ -89,6 +91,7 @@ _koopa_bash_header() { # {{{1
         # Primarily intended to reset cp, mv, rf for use inside scripts.
         unalias -a
     fi
+    return 0
 }
 
 _koopa_bash_header "$@"

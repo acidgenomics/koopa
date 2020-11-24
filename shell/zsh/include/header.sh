@@ -48,6 +48,7 @@ _koopa_zsh_header() { # {{{1
     fi
     source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
     source "${KOOPA_PREFIX}/shell/zsh/functions/activate.sh"
+    return 0
 }
 
 _koopa_zsh_header "$@"
