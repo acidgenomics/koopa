@@ -2,7 +2,7 @@
 
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-10-06.
+## @note Updated 2020-11-24.
 ## """
 
 options(
@@ -21,7 +21,9 @@ local({
         file.path(dirname(sys.frame(1L)[["ofile"]]), "..", "..", "..")
     )
     suppressMessages({
-        source(file.path(koopaPrefix, "lang", "r", "include", "install.R"))
+        source(file.path(
+            koopaPrefix, "lang", "r", "include", "install-r-koopa.R"
+        ))
     })
 })
 
