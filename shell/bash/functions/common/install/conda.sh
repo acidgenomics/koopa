@@ -12,11 +12,6 @@ koopa::_install_conda() { # {{{1
     # https://github.com/conda/conda/issues/9589
     # """
     local anaconda name name_fancy ostype prefix script tmp_dir url version
-    if koopa::is_installed conda
-    then
-        koopa::note 'Conda is already installed.'
-        return 0
-    fi
     koopa::assert_has_no_envs
     ostype="${OSTYPE:?}"
     case "$ostype" in
