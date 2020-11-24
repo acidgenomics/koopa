@@ -260,6 +260,8 @@ koopa::link_opt() { # {{{1
     source_dir="${1:?}"
     opt_prefix="$(koopa::opt_prefix)"
     target_dir="${opt_prefix}/${2:?}"
+    koopa::info "Linking '${source_dir}' into opt at '${opt_prefix}'."
+    koopa::rm "$target_dir"
     koopa::sys_set_permissions "$opt_prefix"
     koopa::ln "$source_dir" "$target_dir"
     return 0
