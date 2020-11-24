@@ -37,7 +37,7 @@ _koopa_activate() { # {{{1
     _koopa_activate_export_prefix || return 1
     _koopa_activate_duration_start
     # shellcheck source=/dev/null
-    activate=1 . "$(_koopa_activate_header)" || return 1
+    KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
     _koopa_add_config_link "$(_koopa_prefix)/activate"
     _koopa_export_cpu_count
     _koopa_export_editor
