@@ -201,9 +201,7 @@ oracle-instantclient="19.5.0.0.0-1"
 pandoc="2.10"
 
 # https://www.gnu.org/software/parallel/
-# Note that 20200822 is considered beta on macOS.
-# https://github.com/Homebrew/homebrew-core/blob/master/Formula/parallel.rb
-parallel="20201022"
+parallel="20201122"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
