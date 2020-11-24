@@ -7,15 +7,18 @@ _koopa_zsh_header() { # {{{1
     # """
     local activate checks file local major_version shopts verbose
     activate=0
-    checks=0
-    shopts=0
+    checks=1
+    shopts=1
     verbose=0
-    [[ -n "${KOOPA_ACTIVATE:-}" ]] && activate=1
-    [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose=1
-    if [[ "$activate" -eq 0 ]]
+    [[ -n "${KOOPA_ACTIVATE:-}" ]] && activate="$KOOPA_ACTIVATE"
+    [[ -n "${KOOPA_CHECKS:-}" ]] && checks="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
+    if [[ "$activate" -eq 1 ]]
     then
-        checks=1
-        shopts=1
+        checks=0
+        shopts=0
+        export KOOPA_ACTIVATE=1
+        export KOOPA_INTERACTIVE=1
     fi
     if [[ "$shopts" -eq 1 ]]
     then
@@ -29,8 +32,9 @@ _koopa_zsh_header() { # {{{1
         major_version="$(printf '%s\n' "${ZSH_VERSION:?}" | cut -d '.' -f 1)"
         if [[ ! "$major_version" -ge 5 ]]
         then
-            printf '%s\n' 'Zsh >= 5 is required.' >&2
-            exit 1
+            printf '%s\n' 'ERROR: Koopa requires Zsh >= 5.' >&2
+            printf '%s: %s\n' 'ZSH_VERSION' "$ZSH_VERSION" >&2
+            return 1
         fi
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]

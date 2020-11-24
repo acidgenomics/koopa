@@ -1,161 +1,94 @@
 #!/usr/bin/env bash
 # koopa nolint=coreutils
 
-# """
-# Bash header.
-# @note Updated 2020-11-14.
-# """
-
-# FIXME SPLIT OUT ACTIVATION INTO A SEPARATE SCRIPT?
-# FIXME ENSURE NOT ENTIRE BASH LIBRARY LOADS IN INTERACTIVE SHELL.
-
-if [[ "$#" -gt 0 ]]
-then
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --verbose)
-                verbose=1
-                shift 1
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    unset -v pos
-fi
-
-[[ -n "${KOOPA_VERBOSE:-}" ]] && verbose=1
-[[ -z "${activate:-}" ]] && activate=0
-[[ -z "${checks:-}" ]] && checks=1
-[[ -z "${shopts:-}" ]] && shopts=1
-[[ -z "${verbose:-}" ]] && verbose=0
-[[ "$verbose" -eq 1 ]] && export KOOPA_VERBOSE=1
-if [[ "$activate" -eq 1 ]]
-then
-    checks=0
-    shopts=0
-    KOOPA_ACTIVATE=1
-    KOOPA_INTERACTIVE=1
-else
-    KOOPA_ACTIVATE=0
-    KOOPA_INTERACTIVE=0
-fi
-export KOOPA_ACTIVATE KOOPA_INTERACTIVE
-
-# Customize optional shell behavior.
-# These are not recommended to be set during koopa activation.
-if [[ "$shopts" -eq 1 ]]
-then
-    [[ "$verbose" -eq 1 ]] && set -o xtrace # -x
-    # > set -o noglob # -f
-    set -o errexit # -e
-    set -o errtrace # -E
-    set -o nounset # -u
-    set -o pipefail
-fi
-
-# Requiring Bash >= 4. macOS ships with an ancient version of Bash, due to
-# licensing. If we're performing a clean install and loading up Homebrew,
-# this step will fail unless we skip checks.
-if [[ "$checks" -eq 1 ]]
-then
-    major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
-    if [[ ! "$major_version" -ge 4 ]]
-    then
-        printf '%s\n' 'ERROR: Bash >= 4 is required.' >&2
-        printf '%s: %s\n' 'BASH_VERSION' "$BASH_VERSION" >&2
-        exit 1
-    fi
-    # Check that user's Bash has readarray (mapfile) builtin defined.
-    # We use this a lot to handle arrays.
-    if [[ $(type -t readarray) != 'builtin' ]]
-    then
-        printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
-        exit 1
-    fi
-    unset -v major_version
-fi
-
-# Ensure koopa prefix is exported, if necessary.
-if [[ -z "${KOOPA_PREFIX:-}" ]]
-then
-    KOOPA_PREFIX="$( \
-        cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../.." \
-        &>/dev/null \
-        && pwd -P \
-    )"
-    export KOOPA_PREFIX
-fi
-
-# Source POSIX header (which includes functions).
-# shellcheck source=/dev/null
-. "${KOOPA_PREFIX}/shell/posix/include/header.sh"
-
-source_dir() {
+_koopa_bash_header() { # {{{1
     # """
-    # Source all scripts inside a directory.
-    # @note Updated 2020-11-16.
+    # Bash header.
+    # @note Updated 2020-11-24.
     # """
-    local prefix fun_script fun_scripts
-    prefix="${KOOPA_PREFIX}/shell/bash/functions/${1:?}"
-    [[ -d "$prefix" ]] || return 0
-    readarray -t fun_scripts <<< "$( \
-        find -L "$prefix" \
-            -mindepth 1 \
-            -type f \
-            -name '*.sh' \
-            -print \
-        | sort \
-    )"
-    for fun_script in "${fun_scripts[@]}"
-    do
-        # shellcheck source=/dev/null
-        . "$fun_script"
-    done
-    return 0
+    local activate checks distro_prefix major_version os_id shopts verbose
+    activate=0
+    checks=1
+    shopts=1
+    verbose=0
+    [[ -n "${KOOPA_ACTIVATE:-}" ]] && activate="$KOOPA_ACTIVATE"
+    [[ -n "${KOOPA_CHECKS:-}" ]] && checks="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
+    if [[ "$activate" -eq 1 ]]
+    then
+        checks=0
+        shopts=0
+        export KOOPA_ACTIVATE=1
+        export KOOPA_INTERACTIVE=1
+    fi
+    if [[ "$shopts" -eq 1 ]]
+    then
+        [[ "$verbose" -eq 1 ]] && set -o xtrace # -x
+        # > set -o noglob # -f
+        set -o errexit # -e
+        set -o errtrace # -E
+        set -o nounset # -u
+        set -o pipefail
+    fi
+    if [[ "$checks" -eq 1 ]]
+    then
+        major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
+        if [[ ! "$major_version" -ge 4 ]]
+        then
+            printf '%s\n' 'ERROR: Koopa requires Bash >= 4.' >&2
+            printf '%s: %s\n' 'BASH_VERSION' "$BASH_VERSION" >&2
+            return 1
+        fi
+        if [[ $(type -t readarray) != 'builtin' ]]
+        then
+            printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
+            return 1
+        fi
+    fi
+    if [[ -z "${KOOPA_PREFIX:-}" ]]
+    then
+        KOOPA_PREFIX="$( \
+            cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../.." \
+            &>/dev/null \
+            && pwd -P \
+        )"
+        export KOOPA_PREFIX
+    fi
+    # shellcheck source=/dev/null
+    source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
+    # shellcheck source=/dev/null
+    source "${KOOPA_PREFIX}/shell/bash/functions/activate.sh"
+    if [[ "$activate" -eq 0 ]]
+    then
+        _koopa_source_dir 'common'
+        os_id="$(_koopa_os_id)"
+        if _koopa_is_linux
+        then
+            _koopa_source_dir 'os/linux/common'
+            distro_prefix='os/linux/distro'
+            if _koopa_is_debian_like
+            then
+                _koopa_source_dir "${distro_prefix}/debian"
+                _koopa_is_ubuntu_like && \
+                    _koopa_source_dir "${distro_prefix}/ubuntu"
+            elif _koopa_is_fedora_like
+            then
+                _koopa_activate_prefix "${distro_prefix}/fedora"
+                _koopa_is_rhel_like && \
+                    _koopa_activate_prefix "${distro_prefix}/rhel"
+            fi
+            _koopa_source_dir "${distro_prefix}/${os_id}"
+        else
+            _koopa_source_dir "os/${os_id}"
+        fi
+        # Check if user is requesting help documentation.
+        koopa::help "$@"
+        # Require sudo permission to run 'sbin/' scripts.
+        koopa::str_match "$0" '/sbin' && koopa::assert_has_sudo
+        # Disable user-defined aliases.
+        # Primarily intended to reset cp, mv, rf for use inside scripts.
+        unalias -a
+    fi
 }
 
-source_dir 'common'
-if koopa::is_linux
-then
-    source_dir 'os/linux/common'
-    distro_prefix='os/linux/distro'
-    if koopa::is_debian_like
-    then
-        source_dir "${distro_prefix}/debian"
-        koopa::is_ubuntu_like && \
-            source_dir "${distro_prefix}/ubuntu"
-    elif _koopa_is_fedora_like
-    then
-        _koopa_activate_prefix "${distro_prefix}/fedora"
-        _koopa_is_rhel_like && \
-            _koopa_activate_prefix "${distro_prefix}/rhel"
-    fi
-    source_dir "${distro_prefix}/$(koopa::os_id)"
-    unset -v distro_prefix
-else
-    source_dir "os/$(koopa::os_id)"
-fi
-unset -f source_dir
-
-if [[ "$checks" -eq 1 ]]
-then
-    # Require sudo permission to run 'sbin/' scripts.
-    koopa::str_match "$0" '/sbin' && koopa::assert_has_sudo
-fi
-
-if [[ "$activate" -eq 0 ]]
-then
-    # Disable user-defined aliases.
-    # Primarily intended to reset cp, mv, rf for use inside scripts.
-    unalias -a
-    # Check if we should display help.
-    koopa::help "$@"
-fi
-
-unset -v activate checks shopts verbose
+_koopa_bash_header "$@"
