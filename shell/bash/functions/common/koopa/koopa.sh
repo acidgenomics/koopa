@@ -121,6 +121,7 @@ koopa::koopa() { # {{{1
                     shift 2
                     ;;
                 brew-dump-brewfile | \
+                brew-outdated | \
                 delete-cache | \
                 enable-passwordless-sudo | \
                 fix-zsh-permissions | \
