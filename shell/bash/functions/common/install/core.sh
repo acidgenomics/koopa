@@ -249,6 +249,22 @@ koopa::link_app() { # {{{1
     return 0
 }
 
+# FIXME CONSIDER REWORKING WITH LINK_APP.
+koopa::link_opt() { # {{{1
+    # """
+    # Link into koopa opt.
+    # @note Updated 2020-11-24.
+    # """
+    koopa::assert_has_args_eq "$#" 2
+    local opt_prefix source_dir target_dir
+    source_dir="${1:?}"
+    opt_prefix="$(koopa::opt_prefix)"
+    target_dir="${opt_prefix}/${2:?}"
+    koopa::sys_set_permissions "$opt_prefix"
+    koopa::ln "$source_dir" "$target_dir"
+    return 0
+}
+
 koopa::list_app_versions() { # {{{1
     # """
     # List installed application versions.
