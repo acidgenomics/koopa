@@ -1,6 +1,4 @@
 #!/usr/bin/env zsh
-# koopa nolint=coreutils
-
 
 _koopa_zsh_header() { # {{{1
     # """
@@ -44,13 +42,8 @@ _koopa_zsh_header() { # {{{1
         )"
         export KOOPA_PREFIX
     fi
-    # shellcheck source=/dev/null
     source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
-    for file in "${KOOPA_PREFIX}/shell/zsh/functions/"*'.sh'
-    do
-        # shellcheck source=/dev/null
-        [[ -f "$file" ]] && source "$file"
-    done
+    source "${KOOPA_PREFIX}/shell/zsh/functions/activate.sh"
 }
 
 _koopa_zsh_header "$@"
