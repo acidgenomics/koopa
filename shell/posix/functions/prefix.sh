@@ -26,17 +26,10 @@ _koopa_app_prefix() { # {{{1
 _koopa_aspera_prefix() { # {{{1
     # """
     # Aspera Connect prefix.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-11-24.
     # """
     # shellcheck disable=SC2039
-    local prefix
-    if _koopa_is_shared_install
-    then
-        prefix="$(_koopa_opt_prefix)/aspera-connect"
-    else
-        prefix="${HOME:?}/.aspera/connect"
-    fi
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/aspera-connect"
     return 0
 }
 
@@ -463,7 +456,7 @@ _koopa_refdata_prefix() { # {{{1
 _koopa_rust_cargo_prefix() { # {{{1
     # """
     # Rust cargo install prefix.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-11-24.
     #
     # See also:
     # - https://github.com/rust-lang/rustup#environment-variables
@@ -471,31 +464,17 @@ _koopa_rust_cargo_prefix() { # {{{1
     # - RUSTUP_HOME
     # """
     # shellcheck disable=SC2039
-    local prefix
-    if _koopa_is_shared_install
-    then
-        prefix="$(_koopa_opt_prefix)/rust/cargo"
-    else
-        prefix="${HOME:?}/.cargo"
-    fi
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/rust/cargo"
     return 0
 }
 
 _koopa_rust_rustup_prefix() { # {{{1
     # """
     # Rust rustup install prefix.
-    # @note Updated 2020-07-19.
+    # @note Updated 2020-11-24.
     # """
     # shellcheck disable=SC2039
-    local prefix
-    if _koopa_is_shared_install
-    then
-        prefix="$(_koopa_opt_prefix)/rust/rustup"
-    else
-        prefix="${HOME:?}/.rustup"
-    fi
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/rust/rustup"
     return 0
 }
 
