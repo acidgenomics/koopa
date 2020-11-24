@@ -1,12 +1,6 @@
 #!/usr/bin/env zsh
 # koopa nolint=coreutils
 
-[[ -n "${KOOPA_VERBOSE:-}" ]] && local verbose=1
-
-[[ -z "${activate:-}" ]] && local activate=0
-[[ -z "${checks:-}" ]] && local checks=1
-[[ -z "${shopts:-}" ]] && local shopts=1
-[[ -z "${verbose:-}" ]] && local verbose=0
 
 _koopa_zsh_header() { # {{{1
     # """
@@ -14,12 +8,17 @@ _koopa_zsh_header() { # {{{1
     # @note Updated 2020-11-24.
     # """
     local activate checks file local major_version shopts verbose
-    if [[ "${activate:-0}" -eq 1 ]]
+    activate=0
+    checks=0
+    shopts=0
+    verbose=0
+    [[ -n "${KOOPA_ACTIVATE:-}" ]] && activate=1
+    [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose=1
+    if [[ "$activate" -eq 0 ]]
     then
-        checks=0
-        shopts=0
+        checks=1
+        shopts=1
     fi
-    [[ "$verbose" -eq 1 ]] && export KOOPA_VERBOSE=1
     if [[ "$shopts" -eq 1 ]]
     then
         [[ "$verbose" -eq 1 ]] && setopt xtrace # -x
