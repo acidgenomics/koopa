@@ -65,7 +65,11 @@ koopa::install_spacemacs() { # {{{1
     name_fancy='Spacemacs'
     emacs_prefix="$(koopa::emacs_prefix)"
     install_dir="${emacs_prefix}-${name}"
-    [[ -d "$install_dir" ]] && return 0
+    if [[ -d "$install_dir" ]]
+    then
+        koopa::note "${name_fancy} is already installed at '${install_dir}'."
+        return 0
+    fi
     koopa::h1 "Installing ${name_fancy} at '${install_dir}."
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed emacs
