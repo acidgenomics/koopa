@@ -2,7 +2,7 @@
 
 # """
 # Koopa ZSH prompt.
-# @note Updated 2020-11-10.
+# @note Updated 2020-11-24.
 #
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
@@ -18,13 +18,13 @@
 # - %(?..) : prompt conditional - %(condition.true.false)
 # """
 
-koopa::prompt_setup() { # {{{1
-    if koopa::is_installed starship
+_koopa_prompt_setup() { # {{{1
+    if _koopa_is_installed starship
     then
-        koopa::activate_starship
+        _koopa_activate_starship
         return 0
     fi
-    PROMPT="$(koopa::prompt)"
+    PROMPT="$(_koopa_prompt)"
 }
 
-koopa::prompt_setup "$@"
+_koopa_prompt_setup "$@"

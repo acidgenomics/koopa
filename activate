@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-11-24.
     # """
     case "${1:-}" in
         --help|-h)
@@ -86,13 +86,13 @@ _koopa_activate() { # {{{1
     then
         case "${KOOPA_SHELL:?}" in
             bash)
-                koopa::activate_bash_extras
+                _koopa_activate_bash_extras
                 ;;
             dash)
                 export PS1='# '
                 ;;
             zsh)
-                koopa::activate_zsh_extras
+                _koopa_activate_zsh_extras
                 ;;
         esac
         _koopa_is_macos && _koopa_activate_macos_extras
