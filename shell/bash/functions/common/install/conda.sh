@@ -58,7 +58,7 @@ koopa::_install_conda() { # {{{1
         name='conda'
         name_fancy='Miniconda'
         [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-        script="Miniconda3-py37_${version}-${ostype}-x86_64.sh"
+        script="Miniconda3-py38_${version}-${ostype}-x86_64.sh"
         url="https://repo.continuum.io/miniconda/${script}"
     fi
     prefix="$(koopa::app_prefix)/${name}/${version}"
