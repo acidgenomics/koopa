@@ -433,4 +433,4 @@ rust-zoxide="0.5.0"         # homebrew
 # Homebrew cask versions {{{1
 # ==============================================================================
 
-homebrew-cask-gpg-suite="2020.1"
+homebrew-cask-gpg-suite="2020.2"
