@@ -32,7 +32,7 @@ koopa::install_doom_emacs() { # {{{1
         koopa::note "${name_fancy} already installed at '${install_dir}'."
         return 0
     fi
-    koopa::install_start "$name" "$install_dir"
+    koopa::install_start "$name_fancy" "$install_dir"
     (
         repo='https://github.com/hlissner/doom-emacs'
         git clone "$repo" "$install_dir"
@@ -44,26 +44,29 @@ koopa::install_doom_emacs() { # {{{1
             '--no-fonts'
         )
         "$doom" install "${flags[@]}"
+        "$doom" sync
+        "$doom" doctor
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::link_emacs "$name"
-    koopa::install_success "$name"
+    # > koopa::link_emacs "$name"
+    koopa::install_success "$name_fancy" "$install_dir"
     return 0
 }
 
 koopa::install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-11-24.
     #
     # Note that master branch is ancient and way behind current codebase.
     # Switching to more recent code on develop branch.
     # """
-    local emacs_prefix install_dir name
+    local emacs_prefix install_dir name name_fancy
     name='spacemacs'
+    name_fancy='Spacemacs'
     emacs_prefix="$(koopa::emacs_prefix)"
     install_dir="${emacs_prefix}-${name}"
     [[ -d "$install_dir" ]] && return 0
-    koopa::h1 "Installing ${name} at '${install_dir}."
+    koopa::h1 "Installing ${name_fancy} at '${install_dir}."
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed emacs
     (
@@ -72,8 +75,8 @@ koopa::install_spacemacs() { # {{{1
         koopa::cd "$install_dir"
         git checkout -b develop origin/develop
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::link_emacs "$name"
-    koopa::update_spacemacs
-    koopa::install_success "$name"
+    # > koopa::link_emacs "$name"
+    # > koopa::update_spacemacs
+    koopa::install_success "$name_fancy" "$install_dir"
     return 0
 }
