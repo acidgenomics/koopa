@@ -55,6 +55,7 @@ brew "curl"
 brew "dash"
 brew "dog"  # rust
 brew "dust"  # rust
+brew "editorconfig"
 brew "exa"  # rust
 brew "fd"  # rust
 brew "findutils"
