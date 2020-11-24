@@ -59,7 +59,7 @@ END
 install() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-11-24.
     # """
     local dotfiles interactive koopa_prefix passwordless profile shared test
     while (("$#"))
@@ -144,7 +144,8 @@ install() { # {{{1
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
     # Don't check for Bash version here, which will otherwise fail on macOS
     # clean install, which ships with ancient v3.
-    checks=0 . "${script_dir}/shell/bash/include/header.sh"
+    KOOPA_CHECKS=0 \
+        . "${script_dir}/shell/bash/include/header.sh"
     # Check that temporary activation was successful.
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
