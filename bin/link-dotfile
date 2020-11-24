@@ -4,4 +4,5 @@
 KOOPA_CHECKS=0 \
     . "$(dirname "${BASH_SOURCE[0]}")/../shell/bash/include/header.sh"
 
+# FIXME MOVE TO KOOPA LINK DOTFILE?
 koopa::link_dotfile "$@"
