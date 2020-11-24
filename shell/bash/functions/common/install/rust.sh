@@ -57,6 +57,7 @@ koopa::install_rust() { # {{{1
     koopa::mkdir "$CARGO_HOME" "$RUSTUP_HOME"
     tmp_dir="$(koopa::tmp_dir)"
     (
+        koopa::cd "$tmp_dir"
         url='https://sh.rustup.rs'
         file='rustup.sh'
         koopa::download "$url" "$file"
