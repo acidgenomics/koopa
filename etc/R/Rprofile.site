@@ -347,8 +347,8 @@ local({
     local({
         repos <- getOption("repos")
         if (isTRUE(.rprofile[["linux"]])) {
-            ## RSPM snapshot: 2020-11-04.
-            repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/360"
+            ## RSPM snapshot: 2020-11-23.
+            repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/373"
         } else {
             ## Alternatively, can use "https://cran.rstudio.com" here.
             repos[["CRAN"]] <- "https://cloud.r-project.org"
