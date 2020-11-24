@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2020-11-16.
+# Updated 2020-11-24.
 #
 # Problematic formulas:
 # - armadillo
@@ -95,6 +95,7 @@ brew "pandoc"
 brew "parallel"
 brew "pass"
 brew "pcre"
+brew "pipenv"  # python
 brew "pkg-config"
 brew "procs"  # rust
 brew "pylint"  # python
