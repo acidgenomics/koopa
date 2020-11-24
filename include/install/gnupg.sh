@@ -4,8 +4,9 @@
 # https://gnupg.org/download/index.html
 
 case "$version" in
-    2.2.24)
-        # 2020-11-17.
+    2.2.25|2.2.24)
+        # 2.2.25: 2020-11-24.
+        # 2.2.24: 2020-11-17.
         libgpg_error_version='1.39'
         libgcrypt_version='1.8.7'
         libksba_version='1.5.0'
@@ -14,7 +15,7 @@ case "$version" in
         pinentry_version='1.1.0'
         ;;
     2.2.23)
-        # 2020-09-03 / 2020-10-26.
+        # 2020-09-03.
         libgpg_error_version='1.39'
         libgcrypt_version='1.8.7'
         libksba_version='1.4.0'
