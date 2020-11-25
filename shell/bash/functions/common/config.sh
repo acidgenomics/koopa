@@ -323,15 +323,14 @@ koopa::link_dotfile() { # {{{1
 }
 
 # FIXME MOVE TO LIST.SH SCRIPT?
-# FIXME THIS SCRIPT SEEMS TO BE BROKEN.
-# FIXME THE FIND_DOTFILES SPRINTF CALL IS WEIRD.
 koopa::list_dotfiles() { # {{{1
     # """
     # List dotfiles.
-    # @note Updated 2020-07-10.
+    # @note Updated 2020-11-25.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::find_dotfiles l 'Symlinks'
-    koopa::find_dotfiles f 'Files'
+    koopa::h1 'Listing dotfiles.'
     koopa::find_dotfiles d 'Directories'
+    koopa::find_dotfiles f 'Files'
+    koopa::find_dotfiles l 'Symlinks'
 }
