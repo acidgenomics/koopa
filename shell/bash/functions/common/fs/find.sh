@@ -76,7 +76,7 @@ koopa::find_broken_symlinks() { # {{{1
 koopa::find_dotfiles() { # {{{1
     # """
     # Find dotfiles by type.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-11-25.
     #
     # This is used internally by 'list-dotfiles' script.
     #
@@ -97,9 +97,9 @@ koopa::find_dotfiles() { # {{{1
             -print0 \
             | xargs -0 -n1 basename \
             | sort \
-            | awk '{print "  ",$0}' \
+            | awk '{print "    -",$0}' \
     )"
-    koopa::print '\n%s:\n\n' "$header"
+    koopa::h2 "${header}:"
     koopa::print "$x"
     return 0
 }
