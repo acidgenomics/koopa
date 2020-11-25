@@ -2,7 +2,7 @@
 
 koopa::update_tex() { # {{{1
     # """
-    # Update TeX
+    # Update TeX.
     # @note Updated 2020-11-18.
     # """
     koopa::assert_has_no_args "$#"
