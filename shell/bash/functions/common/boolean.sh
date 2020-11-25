@@ -221,6 +221,21 @@ koopa::is_docker() { # {{{1
     koopa::file_match '/proc/1/cgroup' ':/docker/'
 }
 
+koopa::is_doom_emacs_installed() { # {{{1
+    # """
+    # Is Doom Emacs installed?
+    # @note Updated 2020-11-25.
+    # """
+    local init_file prefix
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed emacs || return 1
+    prefix="$(koopa::emacs_prefix)"
+    init_file="${prefix}/init.el"
+    [[ -s "$init_file" ]] || return 1
+    grep -q 'doom-emacs' "$init_file" || return 1
+    return 0
+}
+
 koopa::is_export() { # {{{1
     # """
     # Is a variable exported in the current shell session?
@@ -487,6 +502,21 @@ koopa::is_set() { # {{{1
         value="${!var}"
         [[ -n "$value" ]] || return 1
     done
+    return 0
+}
+
+koopa::is_spacemacs_installed() { # {{{1
+    # """
+    # Is Spacemacs installed?
+    # @note Updated 2020-11-25.
+    # """
+    local init_file prefix
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed emacs || return 1
+    prefix="$(koopa::emacs_prefix)"
+    init_file="${prefix}/init.el"
+    [[ -s "$init_file" ]] || return 1
+    grep -q 'Spacemacs' "$init_file" || return 1
     return 0
 }
 
