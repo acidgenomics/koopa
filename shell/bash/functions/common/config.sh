@@ -197,55 +197,6 @@ koopa::info_box() { # {{{1
     return 0
 }
 
-koopa::install_dotfiles() { # {{{1
-    # """
-    # Install dot files.
-    # @note Updated 2020-07-07.
-    # """
-    local prefix script
-    koopa::assert_has_no_args "$#"
-    prefix="$(koopa::dotfiles_prefix)"
-    [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles
-    koopa::add_config_link "$prefix"
-    script="${prefix}/install"
-    koopa::assert_is_file "$script"
-    "$script"
-    return 0
-}
-
-koopa::install_dotfiles_private() { # {{{1
-    # """
-    # Install private dot files.
-    # @note Updated 2020-07-07.
-    # """
-    local prefix script
-    koopa::assert_has_no_args "$#"
-    prefix="$(koopa::dotfiles_private_prefix)"
-    koopa::add_monorepo_config_link 'dotfiles-private'
-    [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles_private
-    script="${prefix}/install"
-    koopa::assert_is_file "$script"
-    "$script"
-    return 0
-}
-
-koopa::install_mike() { # {{{1
-    # """
-    # Install additional Mike-specific config files.
-    # @note Updated 2020-07-07.
-    #
-    # Note that these repos require SSH key to be set on GitHub.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::install_dotfiles
-    koopa::install_dotfiles_private
-    koopa::add_monorepo_config_link \
-        'docker' \
-        'dotfiles-private' \
-        'scripts-private'
-    return 0
-}
-
 koopa::ip_address() { # {{{1
     # """
     # IP address.
@@ -371,6 +322,9 @@ koopa::link_dotfile() { # {{{1
     return 0
 }
 
+# FIXME MOVE TO LIST.SH SCRIPT?
+# FIXME THIS SCRIPT SEEMS TO BE BROKEN.
+# FIXME THE FIND_DOTFILES SPRINTF CALL IS WEIRD.
 koopa::list_dotfiles() { # {{{1
     # """
     # List dotfiles.
@@ -380,42 +334,4 @@ koopa::list_dotfiles() { # {{{1
     koopa::find_dotfiles l 'Symlinks'
     koopa::find_dotfiles f 'Files'
     koopa::find_dotfiles d 'Directories'
-}
-
-koopa::uninstall_dotfiles() { # {{{1
-    # """
-    # Uninstall dot files.
-    # @note Updated 2020-07-05.
-    # """
-    local prefix script
-    koopa::assert_has_no_args "$#"
-    prefix="$(koopa::dotfiles_prefix)"
-    if [[ ! -d "$prefix" ]]
-    then
-        koopa::note "No dotfiles at '${prefix}'."
-        return 0
-    fi
-    script="${prefix}/uninstall"
-    koopa::assert_is_file "$script"
-    "$script"
-    return 0
-}
-
-koopa::uninstall_dotfiles_private() { # {{{1
-    # """
-    # Uninstall private dot files.
-    # @note Updated 2020-07-05.
-    # """
-    local prefix script
-    koopa::assert_has_no_args "$#"
-    prefix="$(koopa::dotfiles_private_prefix)"
-    if [[ ! -d "$prefix" ]]
-    then
-        koopa::note "No private dotfiles at '${prefix}'."
-        return 0
-    fi
-    script="${prefix}/uninstall"
-    koopa::assert_is_file "$script"
-    "$script"
-    return 0
 }
