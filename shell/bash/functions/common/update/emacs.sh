@@ -8,11 +8,14 @@ koopa::_update_doom_emacs() { # {{{1
     # @seealso
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/upgrade.el
     # """
+    local name_fancy
+    name_fancy='Doom Emacs'
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed doom
-    koopa::h1 'Updating Doom Emacs.'
+    koopa::update_start "$name_fancy"
     doom upgrade --force
     doom sync
+    koopa::update_success "$name_fancy"
     return 0
 }
 
@@ -23,9 +26,10 @@ koopa::_update_spacemacs() { # {{{1
     #
     # Potentially useful: 'emacs --no-window-system'
     # """
-    local prefix
+    local name_fancy prefix
     koopa::assert_has_no_args "$#"
-    koopa::h1 'Updating Spacemacs.'
+    name_fancy='Spacemacs'
+    koopa::update_start "$name_fancy"
     prefix="$(koopa::emacs_prefix)"
     (
         koopa::cd "$prefix"
@@ -34,6 +38,7 @@ koopa::_update_spacemacs() { # {{{1
     emacs \
         --batch -l "${prefix}/init.el" \
         --eval='(configuration-layer/update-packages t)'
+    koopa::update_success "$name_fancy"
     return 0
 }
 
