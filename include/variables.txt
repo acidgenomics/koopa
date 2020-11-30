@@ -61,7 +61,7 @@ cellranger="4.0.0"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.19.0"
+cmake="3.19.1"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
