@@ -18,7 +18,7 @@ koopa::_run_function() { # {{{1
 koopa::_which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2020-11-23.
+    # @note Updated 2020-11-30.
     # """
     local f fun os_id
     koopa::assert_has_args_eq "$#" 1
@@ -49,7 +49,7 @@ koopa::_which_function() { # {{{1
     fi
     if ! koopa::is_function "$fun"
     then
-        koopa::stop "Failed to locate script for '${*}'."
+        koopa::stop "Failed to locate script for '${f}'."
     fi
     koopa::print "$fun"
     return 0
