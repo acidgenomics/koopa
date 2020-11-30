@@ -84,7 +84,7 @@ cask "virtualbox"
 cask "visual-studio-code"
 cask "vlc"
 cask "xquartz"
-cask "zoomus"
+cask "zoom"  # renamed from zoomus
 
 # Brews {{{1
 # ==============================================================================
