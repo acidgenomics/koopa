@@ -99,7 +99,7 @@ koopa::install_homebrew_packages() { # {{{1
                 'google-chrome-canary'
                 'little-snitch'
                 'safari-technology-preview'
-                'zoom'  # zoomus
+                'zoomus'  # renamed to zoom
             )
         fi
         for x in "${remove_brews[@]}"
