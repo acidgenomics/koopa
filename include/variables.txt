@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-11-23"
+koopa-date="2020-11-30"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.0a"
@@ -363,7 +363,7 @@ conda-picard="2.23.8"
 conda-pizzly="0.37.3"
 conda-qualimap="2.2.2d"
 conda-rsem="1.3.3"
-conda-salmon="1.3.0"
+conda-salmon="1.4.0"
 conda-sambamba="0.7.1"
 conda-samblaster="0.1.26"
 conda-samtools="1.11"
