@@ -219,7 +219,7 @@ perl-file-rename="1.10"
 
 # https://www.php.net/downloads
 # https://github.com/php/php-src/releases
-php="7.4.12"
+php="8.0.0"
 
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
