@@ -38,7 +38,7 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 ## Python {{{2
 ## -----------------------------------------------------------------------------
 
-## > PATH="/usr/local/lib/python3.9/site-packages/bin:${PATH}"
+PATH="/usr/local/lib/python3.9/site-packages/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/python/site-packages/bin:${PATH}"
 
 ## Pandoc {{{2
