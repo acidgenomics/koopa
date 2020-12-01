@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-11-30"
+koopa-date="2020-12-01"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.0a"
@@ -385,12 +385,12 @@ conda-vardict="2019.06.04"
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
 # Otherwise, for heavy libraries, use a conda environment instead.
-# Updated 2020-11-03 from https://pypi.org/.
+# Updated 2020-12-01 from https://pypi.org/.
 python-black="20.8b1"           # homebrew
 python-bpytop="1.0.50"
 python-flake8="3.8.4"           # homebrew
 python-logbook="1.5.3"
-python-pip="20.2.4"
+python-pip="20.3"
 python-pipx="0.15.6.0"
 python-psutil="5.7.3"
 python-pyflakes="2.2.0"
@@ -401,7 +401,7 @@ python-pyyaml="5.3.1"
 python-ranger-fm="1.9.3"        # homebrew
 python-setuptools="50.3.2"
 python-six="1.15.0"
-python-wheel="0.35.1"
+python-wheel="0.36.0"
 
 # Rust cargo crates {{{1
 # ==============================================================================
