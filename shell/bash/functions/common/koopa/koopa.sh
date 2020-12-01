@@ -58,7 +58,7 @@ koopa::_which_function() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2020-11-18.
+    # @note Updated 2020-12-01.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
