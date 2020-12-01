@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2020-11-19.
+## Updated 2020-12-01.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -19,6 +19,9 @@ KOOPA_OPT_PREFIX="${KOOPA_OPT_PREFIX:-${KOOPA_PREFIX}/opt}"
 
 ## Restrict path, so we don't mask compiler binaries with conda or venv.
 PATH="/usr/local/bin:/usr/bin:/bin"
+
+## Include koopa.
+PATH="${KOOPA_PREFIX}/bin:${PATH}"
 
 ## Include Python site packages.
 PATH="/usr/local/lib/python3.9/site-packages/bin:${PATH}"
