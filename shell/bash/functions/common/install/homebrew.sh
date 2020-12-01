@@ -96,6 +96,7 @@ koopa::install_homebrew_packages() { # {{{1
         if koopa::is_macos
         then
             remove_brews+=(
+                'aspera-connect'  # renamed to ibm-aspera-connect
                 'google-chrome-canary'
                 'little-snitch'
                 'safari-technology-preview'
