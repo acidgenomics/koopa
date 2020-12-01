@@ -417,7 +417,7 @@ python-wheel="0.36.0"
 #   https://github.com/http-rs/tide
 
 rust-bat="0.16.0"           # homebrew
-rust-broot="1.0.5"          # homebrew
+rust-broot="1.0.8"          # homebrew
 rust-dog="0.1.0"            # homebrew
 rust-du-dust="0.5.3"        # homebrew
 rust-exa="0.9.0"            # homebrew
