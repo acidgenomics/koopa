@@ -51,10 +51,10 @@ koopa::install_homebrew() { # {{{1
     return 0
 }
 
-koopa::install_homebrew_packages() { # {{{1
+koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-11-23.
+    # @note Updated 2020-12-01.
     # """
     local brewfile default flags name_fancy remove_brews remove_taps x
     koopa::assert_has_no_args "$#"
@@ -123,6 +123,11 @@ koopa::install_homebrew_packages() { # {{{1
     fi
     brew bundle install "${flags[@]}"
     koopa::brew_update
+    return 0
+}
+
+koopa::install_homebrew_packages() { # {{{1
+    koopa::install_homebrew_bundle "$@"
     return 0
 }
 
