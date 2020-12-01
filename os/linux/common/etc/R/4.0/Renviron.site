@@ -12,7 +12,7 @@
 ## """
 
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
-KOOPA_OPT_PREFIX="${KOOPA_OPT_PREFIX:-${KOOPA_PREFIX}/opt}"
+KOOPA_OPT_PREFIX="${KOOPA_OPT_PREFIX:-/opt/koopa/opt}"
 
 ## System path {{{1
 ## =============================================================================
