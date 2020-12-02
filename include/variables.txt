@@ -406,7 +406,7 @@ python-wheel="0.36.0"
 # Rust cargo crates {{{1
 # ==============================================================================
 
-# Updated 2020-11-15 from https://crates.io/.
+# Updated 2020-12-02 from https://crates.io/.
 
 # Potentially interesting:
 # - starship

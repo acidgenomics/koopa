@@ -3,7 +3,7 @@
 koopa::install_rust() { # {{{1
     # """
     # Install Rust.
-    # @note Updated 2020-11-24.
+    # @note Updated 2020-12-02.
     # """
     local file name name_fancy pos prefix reinstall tmp_dir url
     name='rust'
@@ -67,6 +67,9 @@ koopa::install_rust() { # {{{1
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$CARGO_HOME" "$RUSTUP_HOME"
     koopa::install_success "$name_fancy"
+    # Clippy and rustfmt should be enabled by default.
+    # > rustup component add clippy-preview
+    # > rustup component add rustfmt
     koopa::restart
     return 0
 }
@@ -74,7 +77,7 @@ koopa::install_rust() { # {{{1
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-12-02.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -92,7 +95,7 @@ koopa::install_rust_packages() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --reinstall)
+            --force|--reinstall)
                 reinstall=1
                 shift 1
                 ;;

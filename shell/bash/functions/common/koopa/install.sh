@@ -3,7 +3,7 @@
 koopa::install() { # {{{1
     # """
     # Install commands.
-    # @note Updated 2020-11-18.
+    # @note Updated 2020-12-02.
     # """
     local name
     name="${1:-}"
@@ -11,7 +11,8 @@ koopa::install() { # {{{1
     then
         koopa::stop 'Program name to install is required.'
     fi
-    koopa::_run_function "install_${name}"
+    shift 1
+    koopa::_run_function "install_${name}" "$@"
     return 0
 }
 
