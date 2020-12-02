@@ -3,7 +3,7 @@
 koopa::linux_bcbio_run_tests() { # {{{1
     # """
     # Run bcbio unit tests.
-    # @note Updated 2020-11-13.
+    # @note Updated 2020-12-01.
     #
     # See issues regarding unit tests inside Docker images:
     # - https://github.com/bcbio/bcbio-nextgen/issues/3371
@@ -17,7 +17,8 @@ koopa::linux_bcbio_run_tests() { # {{{1
         'rnaseq'
         'stranded'
         'chipseq'
-        'scrnaseq'
+        'scrnaseq'  # single-cell RNA-seq
+        'srnaseq'  # small RNA-seq (hanging inside Docker image)
     )
     git_dir="${HOME:?}/git/bcbio-nextgen"
     output_dir="${PWD:?}/bcbio-tests"
