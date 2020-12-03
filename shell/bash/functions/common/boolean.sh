@@ -152,6 +152,14 @@ koopa::is_anaconda() { # {{{1
     [[ -x "$(koopa::conda_prefix)/bin/anaconda" ]]
 }
 
+koopa::is_array_empty() { # {{{1
+    # """
+    # Is the array input empty?
+    # @note Updated 2020-12-03.
+    # """
+    ! koopa::is_array_non_empty "$@"
+}
+
 koopa::is_array_non_empty() { # {{{1
     # """
     # Is the array non-empty?
