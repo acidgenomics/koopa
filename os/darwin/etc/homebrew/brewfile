@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2020-11-30.
+# Updated 2020-12-03.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -209,6 +209,7 @@ brew "pylint"  # python
 brew "ranger"  # python
 brew "rename"
 brew "ripgrep"  # rust
+brew "ripgrep-all"  # rust
 brew "rsync"
 brew "ruby"
 brew "screen"
