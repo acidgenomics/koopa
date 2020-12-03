@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-12-01"
+koopa-date="2020-12-03"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.0a"
@@ -258,7 +258,7 @@ ruby="2.7.2p137"
 rust="1.48.0"
 
 # https://rustup.rs/
-rustup="1.22.1"
+rustup="1.23.1"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
