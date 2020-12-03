@@ -42,8 +42,8 @@ koopa::git_checkout_recursive() { # {{{1
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
-                -mindepth 1 \
-                -maxdepth 2 \
+                -mindepth 2 \
+                -maxdepth 3 \
                 -name '.git' \
                 -print \
         )"
@@ -66,7 +66,7 @@ koopa::git_checkout_recursive() { # {{{1
                     if [[ "$branch" != "$default_branch" ]]
                     then
                         git checkout "$default_branch"
-                        git branch -D "$branch"
+                        git branch -D "$branch" || true
                     fi
                     git checkout -b "$branch" "$origin"
                 else
@@ -257,8 +257,8 @@ koopa::git_pull_recursive() { # {{{1
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
-                -mindepth 1 \
-                -maxdepth 2 \
+                -mindepth 2 \
+                -maxdepth 3 \
                 -name '.git' \
                 -print \
         )"
@@ -296,8 +296,8 @@ koopa::git_push_recursive() { # {{{1
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
-                -mindepth 1 \
-                -maxdepth 2 \
+                -mindepth 2 \
+                -maxdepth 3 \
                 -name '.git' \
                 -print \
         )"
@@ -467,7 +467,6 @@ koopa::git_set_remote_url() { # {{{1
     return 0
 }
 
-# FIXME REWORK THIS.
 koopa::git_status_recursive() { # {{{1
     # """
     # Get the status of multiple Git repos recursively.
@@ -482,8 +481,8 @@ koopa::git_status_recursive() { # {{{1
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
-                -mindepth 1 \
-                -maxdepth 2 \
+                -mindepth 2 \
+                -maxdepth 3 \
                 -name '.git' \
                 -print \
         )"
