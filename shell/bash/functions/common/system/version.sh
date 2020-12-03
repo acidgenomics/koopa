@@ -514,6 +514,9 @@ koopa::return_version() { # {{{1
         ripgrep)
             cmd='rg'
             ;;
+        ripgrep-all)
+            cmd='rga'
+            ;;
         rust)
             cmd='rustc'
             ;;
