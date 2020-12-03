@@ -13,6 +13,7 @@ koopa::list() { # {{{1
             # FIXME THIS NEEDS TO EXCLUDE 'APP' and 'OPT' BETTER.
             koopa::rscript_vanilla 'list'
             ;;
+        # FIXME SIMPLIFY THE ARGPARSING HERE.
         app-versions)
             shift 1
             koopa::list_app_versions "$@"
