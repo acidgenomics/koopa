@@ -425,6 +425,7 @@ rust-fd-find="8.1.1"        # homebrew
 rust-hyperfine="1.11.0"     # homebrew
 rust-procs="0.10.7"         # homebrew
 rust-ripgrep="12.1.1"       # homebrew
+rust-ripgrep-all="0.9.6"    # homebrew
 rust-starship="0.47.0"      # homebrew
 rust-tokei="12.0.4"         # homebrew
 rust-xsv="0.13.0"           # homebrew

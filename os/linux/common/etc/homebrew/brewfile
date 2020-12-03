@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2020-11-24.
+# Updated 2020-12-03.
 #
 # Problematic formulas:
 # - armadillo
@@ -102,6 +102,7 @@ brew "pylint"  # python
 brew "ranger"  # python
 brew "rename"
 brew "ripgrep"  # rust
+brew "ripgrep-all"  # rust
 brew "rsync"
 brew "ruby"
 brew "screen"
