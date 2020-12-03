@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME NEED TO SUPPORT:
-# path-priority
-# dotfiles
-
+# FIXME IMPROVE SUPPORT FOR ANY KOOPA::LIST_* FUNCTION.
 koopa::list() { # {{{1
     # """
     # List exported koopa scripts.
@@ -14,6 +11,10 @@ koopa::list() { # {{{1
     case "$name" in
         '')
             koopa::rscript_vanilla 'list'
+            ;;
+        app-versions)
+            shift 1
+            koopa::list_app_versions "$@"
             ;;
         dotfiles)
             shift 1
