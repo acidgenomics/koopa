@@ -62,6 +62,7 @@ koopa::git_checkout_recursive() { # {{{1
                 [[ -z "$branch" ]] && branch="$default_branch"
                 if [[ -n "$origin" ]]
                 then
+                    git fetch --all
                     if [[ "$branch" != "$default_branch" ]]
                     then
                         git checkout "$default_branch"
