@@ -2,7 +2,7 @@
 
 # """
 # Bash/Zsh TAB completion.
-# Updated 2020-11-18.
+# Updated 2020-12-03.
 #
 # Keep all of these commands in a single file.
 # Sourcing multiple scripts doesn't work reliably.
@@ -73,12 +73,11 @@ _koopa_complete() {
                 )
                 COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
-            # FIXME REWORK THIS.
-            # FIXME DROPPED TO SYSTEM.
-            get-version)
+            list)
                 args=(
-                    'emacs'
-                    'vim'
+                    'app-versions'
+                    'dotfiles'
+                    'path-priority'
                 )
                 COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
