@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2020-12-03.
+# Updated 2020-12-07.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -45,30 +45,24 @@ cask "adoptopenjdk"  # igv
 cask "airfoil"
 cask "alacritty"
 cask "alfred"
-cask "authy"
-cask "balenaetcher"
 cask "basictex"
 cask "bbedit"
 cask "bibdesk"
 cask "carbon-copy-cloner"
-cask "coda"
 cask "docker"
 cask "easyfind"
 cask "emacs"
 cask "firefox"
-cask "github"
 cask "google-chrome"
-cask "google-cloud-sdk"  # latest
-cask "google-drive-file-stream"  # latest
+cask "google-cloud-sdk"
 cask "gpg-suite"
 cask "hazel"
-cask "igv"
 cask "ibm-aspera-connect"  # renamed from aspera-connect
+cask "igv"
 cask "iterm2"
 cask "java"
 cask "julia"
 cask "libreoffice"
-cask "netnewswire"
 cask "omnidisksweeper"
 cask "osxfuse"
 cask "pycharm-ce"
