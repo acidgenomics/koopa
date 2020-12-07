@@ -2,11 +2,11 @@
 
 ## """
 ## Install koopa R dependencies.
-## @note Updated 2020-11-19.
+## @note Updated 2020-12-07.
 ## """
 
 local({
-    minVersion <- package_version("0.0.18")
+    minVersion <- package_version("0.0.20")
     isInstalled <- function(pkgs) {
         basename(pkgs) %in% rownames(installed.packages())
     }
