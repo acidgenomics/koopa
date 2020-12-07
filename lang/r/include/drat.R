@@ -12,33 +12,47 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 ## FIXME DONT ERROR IF USER DOESNT PASS POSITIONAL ARGS.
 ## FIXME NEED TO DEFINE hasPositionalArgs
 
+## FIXME Check that directory is a package.
+
 local({
-    pkgDir <- positionalArgs()[[1L]]
-    ## Handle `r-koopa` edge case.
-    if (any(grepl("-", pkgDir))) {
-        pkgName <- strsplit(pkgDir, "-")[[1L]][[2L]]
+    wd <- getwd()
+    if (hasPositionalArgs()) {
+        pkgDir <- positionalArgs()[[1L]]
     } else {
-        pkgName <- pkgDir
+        pkgDir <- "."
+    }
+    assert(isADir(pkgDir))
+    pkgDir <- realpath(pkgDir)
+    pkgName <- basename(pkgDir)
+    ## Handle `r-koopa` edge case.
+    if (any(grepl("-", pkgName))) {
+        pkgName <- strsplit(pkgName, "-")[[1L]][[2L]]
     }
     repoDir <- file.path("~", "monorepo", "drat")
-    assert(
-        dir.exists(pkgDir),
-        dir.exists(repoDir)
-    )
-    print(pkgDir)
-    return()  # FIXME
+    assert(isADir(repoDir))
+    setwd(dirname(pkgDir))
     devtools::build(pkgDir)
     tarballs <- sort(list.files(
         path = ".",
-        pattern = paste0(pkgName, "_.*.tar.gz")
+        pattern = paste0(pkgName, "_.*.tar.gz"),
+        recursive = FALSE
     ))
     file <- tail(tarballs, n = 1L)
-    assert(file.exists(file))
+    assert(isAFile(file))
     drat::insertPackage(
         file = file,
         repodir = repoDir,
-        action = "prune"
+        action = "archive"
     )
-    # FIXME SWITCH TO REPO DIR AND COMMIT.
     invisible(file.remove(file))
+    setwd(repoDir)
+    shell(command = "git", args = c("add", "./"))
+    shell(
+        command = "git",
+        args = c("commit", "-m", paste0("Add ", basename(file), "."))
+    )
+    shell(command = "git", args = "push")
+    setwd(wd)
+    message(sprintf("Successfully added '%s'.", basename(file)))
+    invisible(TRUE)
 })
