@@ -49,7 +49,8 @@ local({
     shell(command = "git", args = c("add", "./"))
     shell(
         command = "git",
-        args = c("commit", "-m", paste0("Add ", basename(file), "."))
+        ## FIXME NEED A FUNCTION FOR SHELL QUOTING HERE.
+        args = c("commit", "-m", paste0("'Add ", basename(file), ".'"))
     )
     shell(command = "git", args = "push")
     setwd(wd)
