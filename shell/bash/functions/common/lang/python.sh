@@ -391,16 +391,19 @@ koopa::conda_env_prefix() { # {{{1
 koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-12-08.
     # """
-    local arg
+    local arg nounset
     koopa::assert_has_args "$#"
     koopa::activate_conda
     koopa::assert_is_installed conda
+    nounset="$(koopa::boolean_nounset)"
+    [[ "$nounset" -eq 1 ]] && set +u
     for arg in "$@"
     do
         conda remove --yes --name="$arg" --all
     done
+    [[ "$nounset" -eq 1 ]] && set -u
     return 0
 }
 
