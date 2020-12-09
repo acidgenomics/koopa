@@ -1,0 +1,12 @@
+#!/usr/bin/env Rscript
+
+args <- commandArgs()
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+
+local({
+    installRecommendedPackages()
+})

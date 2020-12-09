@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-11-23.
+## Updated 2020-12-09.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -343,22 +343,36 @@ local({
     ## - https://github.com/yihui/homebrew-cran-extra/tree/
     ##       gh-pages/bin/macosx
     ## - https://yihui.org/en/2018/06/homebrew-binary-r-packages/
+    ##
+    ## CRAN snapshots for previous Bioconductor releases:
+    ## - Bioconductor 3.12 / R 4.0
+    ##   https://packagemanager.rstudio.com/cran/2020-10-28
+    ## - Bioconductor 3.11 / R 4.0
+    ##   https://packagemanager.rstudio.com/cran/2020-04-30
 
     local({
         repos <- getOption("repos")
         if (isTRUE(.rprofile[["linux"]])) {
-            ## RSPM snapshot: 2020-11-23.
-            repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/373"
+            ## > repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/36893"
+            repos[["CRAN"]] <- "https://packagemanager.rstudio.com/cran/2020-12-01"
         } else {
-            ## Alternatively, can use "https://cran.rstudio.com" here.
-            repos[["CRAN"]] <- "https://cloud.r-project.org"
+            ## Alternatively, can use:
+            ## - https://cloud.r-project.org
+            ## - https://cran.rstudio.com
+            ## - or "all" here instead of "cran"
+            repos[["CRAN"]] <- "https://packagemanager.rstudio.com/cran/latest"
         }
+        ## Configure the Bioconductor mirror repo.
+        options(BioC_mirror = "https://packagemanager.rstudio.com/bioconductor")
         ## Always include Acid Genomics repo.
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
         ## > if (isTRUE(.rprofile[["macos"]])) {
         ## >     repos[["CRANextra"]] <- "https://macos.rbind.io"
         ## > }
         options("repos" = repos)
+        ## Allow Bioconductor to work offline.
+        ## Note that this will warn when enabled.
+        ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
     })
 
     ## Always install from source on Linux.
