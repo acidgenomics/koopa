@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 
+# NOTE Work on converting these to Python functions.
+
 koopa::tx2gene_from_ensembl_fasta() { # {{{1
+    # """
+    # Transcript-to-gene mappings from Ensembl FASTA file.
+    # @note Updated 2020-12-09.
+    # """
     local count fasta_file fasta_file_bn output_file output_file_bn
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed awk cut grep gunzip sed tr
     fasta_file="${1:?}"
     koopa::assert_is_file "$fasta_file"
-    koopa::assert_is_matching_fixed "$fasta_file" '.cdna.all.fa.gz'
+    # Output file is now a merge of cDNA and ncRNA, in py-koopa 0.0.3.
+    koopa::assert_is_matching_fixed "$fasta_file" 'transcriptome.fa.gz'
     output_file="${2:-tx2gene.csv}"
     koopa::assert_is_not_file "$output_file"
     fasta_file_bn="$(basename "$fasta_file")"
@@ -25,6 +32,10 @@ koopa::tx2gene_from_ensembl_fasta() { # {{{1
 }
 
 koopa::tx2gene_from_flybase_fasta() { # {{{1
+    # """
+    # Transcript-to-gene mappings from FlyBase FASTA file.
+    # @note Updated 2020-12-09.
+    # """
     local count fasta_file fasta_file_bn output_file output_file_bn
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed awk cut grep gunzip sed tr
@@ -49,6 +60,10 @@ koopa::tx2gene_from_flybase_fasta() { # {{{1
 }
 
 koopa::tx2gene_from_gencode_fasta() { # {{{1
+    # """
+    # Transcript-to-gene mappings from GENCODE FASTA file.
+    # @note Updated 2020-12-09.
+    # """
     local fasta_file fasta_file_bn output_file output_file_bn
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed awk cut grep gunzip sed tr
@@ -73,6 +88,10 @@ koopa::tx2gene_from_gencode_fasta() { # {{{1
 }
 
 koopa::tx2gene_from_wormbase_fasta() { # {{{1
+    # """
+    # Transcript-to-gene mappings from WormBase FASTA file.
+    # @note Updated 2020-12-09.
+    # """
     local count fasta_file fasta_file_bn output_file output_file_bn
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed awk cut grep gunzip sed tr
