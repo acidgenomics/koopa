@@ -7,13 +7,6 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-## FIXME MOVE UP IF DRATTING IN CURRENT DIRECTORY.
-## FIXME GET THE DIRECTORY NAME AUTOMATICALLY.
-## FIXME DONT ERROR IF USER DOESNT PASS POSITIONAL ARGS.
-## FIXME NEED TO DEFINE hasPositionalArgs
-
-## FIXME Check that directory is a package.
-
 local({
     wd <- getwd()
     if (hasPositionalArgs()) {
@@ -21,7 +14,10 @@ local({
     } else {
         pkgDir <- "."
     }
-    assert(isADir(pkgDir))
+    assert(
+        isADir(pkgDir),
+        isAFile(file.path(pkgDir, "DESCRIPTION"))
+    )
     pkgDir <- realpath(pkgDir)
     pkgName <- basename(pkgDir)
     ## Handle `r-koopa` edge case.
@@ -46,6 +42,7 @@ local({
     )
     invisible(file.remove(file))
     setwd(repoDir)
+    shell(command = "git", args = c("checkout", "master"))
     shell(command = "git", args = c("add", "./"))
     shell(
         command = "git",
