@@ -486,7 +486,7 @@ local({
         "showWarnCalls" = TRUE,
         ## Timeouts default to 60 seconds, which can be too long.
         ## Note that this applies to `download.file()` calls as well.
-        "timeout" = 30L,
+        ## > "timeout" = 30L,
         "warn" = 1L,
         ## Set to maximum supported length.
         "warning.length" = 8170L
