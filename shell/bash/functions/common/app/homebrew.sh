@@ -52,7 +52,7 @@ koopa::brew_outdated() { # {{{1
 koopa::brew_update() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2020-11-20.
+    # @note Updated 2020-12-11.
     #
     # Use of '--force-bottle' flag can be helpful, but not all brews have
     # bottles, so this can error.
@@ -95,7 +95,7 @@ koopa::brew_update() { # {{{1
                         cask='homebrew/cask/docker'
                         ;;
                 esac
-                brew reinstall "$cask" || true
+                brew reinstall --no-quarantine "$cask" || true
                 if [[ "$cask" == 'r' ]]
                 then
                     koopa::update_r_config
