@@ -9,7 +9,7 @@ _koopa_add_config_link() { # {{{1
     # shellcheck disable=SC2039
     local config_prefix dest_file dest_name source_file
     source_file="${1:?}"
-    [ -e "$source_file" ] || return 1
+    [ -e "$source_file" ] || return 0
     source_file="$(realpath "$source_file")"
     dest_name="${2:-}"
     [ -z "$dest_name" ] && dest_name="$(basename "$source_file")"
@@ -20,9 +20,8 @@ _koopa_add_config_link() { # {{{1
     echo "$dest_file"
     echo ''
     [ -L "$dest_file" ] && return 0
-    # FIXME NEED TO REWORK THIS.
-    #/bin/mkdir -pv "$config_prefix"
-    #/bin/rm -frv "$dest_file"
+    /bin/mkdir -pv "$config_prefix"
+    /bin/rm -frv "$dest_file"
     #/bin/ln -fnsv "$source_file" "$dest_file"
     return 0
 }
