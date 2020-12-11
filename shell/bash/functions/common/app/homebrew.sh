@@ -97,6 +97,7 @@ koopa::brew_update() { # {{{1
                 esac
                 # Thread on stopping the quarantine madness:
                 # https://github.com/Homebrew/brew/issues/9139
+                export HOMEBREW_CASK_OPTS='--no-quarantine'
                 brew reinstall \
                     --debug \
                     --force \
