@@ -32,7 +32,6 @@ _koopa_bash_header() { # {{{1
         set -o nounset # -u
         set -o pipefail
     fi
-    echo "checks: $checks"  # FIXME
     if [[ "$checks" -eq 1 ]]
     then
         major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
