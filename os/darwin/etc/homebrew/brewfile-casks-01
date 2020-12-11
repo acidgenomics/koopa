@@ -1,0 +1,26 @@
+# """
+# Homebrew Cask Bundle Brewfile 01
+# Updated 2020-12-11.
+# """
+
+tap "homebrew/cask"
+tap "homebrew/cask-versions"
+
+cask "1password"
+cask "adobe-acrobat-reader"
+cask "bbedit"
+cask "carbon-copy-cloner"
+cask "little-snitch"
+cask "google-chrome"
+cask "hazel"
+cask "iterm2"
+cask "libreoffice"
+cask "microsoft-teams"
+cask "omnidisksweeper"
+cask "skype"
+cask "superduper"
+cask "transmit"
+cask "tunnelblick"
+cask "visual-studio-code"
+cask "vlc"
+cask "zoom"  # renamed from zoomus

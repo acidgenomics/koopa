@@ -1,0 +1,27 @@
+# """
+# Homebrew Cask Bundle Brewfile 02
+# Updated 2020-12-11.
+# """
+
+cask "adoptopenjdk"  # igv
+cask "alfred"
+cask "basictex"
+cask "bibdesk"
+cask "docker"
+cask "easyfind"
+cask "emacs"
+cask "firefox"
+cask "google-cloud-sdk"
+cask "gpg-suite"
+cask "ibm-aspera-connect"  # renamed from aspera-connect
+cask "igv"
+cask "java"
+cask "julia"
+cask "osxfuse"
+cask "pycharm-ce"
+cask "r"
+cask "rstudio"
+cask "sublime-text"
+cask "textmate"
+cask "virtualbox"
+cask "xquartz"
