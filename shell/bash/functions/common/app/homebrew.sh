@@ -95,7 +95,15 @@ koopa::brew_update() { # {{{1
                         cask='homebrew/cask/docker'
                         ;;
                 esac
-                brew reinstall --no-quarantine "$cask" || true
+                # Thread on stopping the quarantine madness:
+                # https://github.com/Homebrew/brew/issues/9139
+                brew reinstall \
+                    --debug \
+                    --force \
+                    --no-quarantine \
+                    --verbose \
+                    "$cask" \
+                || true
                 if [[ "$cask" == 'r' ]]
                 then
                     koopa::update_r_config
