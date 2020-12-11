@@ -77,6 +77,7 @@ koopa::install_homebrew_bundle() { # {{{1
         esac
     done
     koopa::assert_is_file "$brewfile"
+    brewfile="$(realpath "$brewfile")"
     koopa::dl 'Brewfile' "$brewfile"
     export HOMEBREW_CASK_OPTS='--no-quarantine'
     brew analytics off
