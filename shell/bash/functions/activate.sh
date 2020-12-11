@@ -110,6 +110,7 @@ _koopa_source_dir() { # {{{1
     local prefix fun_script fun_scripts
     prefix="${KOOPA_PREFIX}/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
+    # FIXME THIS STEP WILL ERROR WITH MACOS BASH VERSION THAT IS SUPER OLD.
     readarray -t fun_scripts <<< "$( \
         find -L "$prefix" \
             -mindepth 1 \
