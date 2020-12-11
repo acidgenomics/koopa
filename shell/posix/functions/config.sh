@@ -15,8 +15,8 @@ _koopa_add_config_link() { # {{{1
     config_prefix="$(_koopa_config_prefix)"
     dest_file="${config_prefix}/${dest_name}"
     [ -L "$dest_file" ] && return 0
-    mkdir -pv "$config_prefix"
-    rm -frv "$dest_file"
-    ln -fnsv "$source_file" "$dest_file"
+    mkdir -p "$config_prefix"
+    rm -fr "$dest_file"
+    ln -fns "$source_file" "$dest_file"
     return 0
 }
