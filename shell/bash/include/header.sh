@@ -7,6 +7,9 @@ _koopa_bash_header() { # {{{1
     # @note Updated 2020-12-11.
     # """
     local activate checks dev distro_prefix major_version os_id shopts verbose
+
+    echo "HELLO WORLD FIXME"
+
     activate=0
     checks=1
     dev=0
