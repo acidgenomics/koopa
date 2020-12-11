@@ -4,7 +4,7 @@
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2020-11-24.
+    # @note Updated 2020-12-11.
     # """
     local activate checks dev distro_prefix major_version os_id shopts verbose
     activate=0
@@ -18,7 +18,8 @@ _koopa_bash_header() { # {{{1
     [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
     if [[ "$activate" -eq 1 ]]
     then
-        checks=0
+        # FIXME DRAFT UPDATE TO SUPPORT OLD MACOS BASH.
+        # > checks=0
         shopts=0
         export KOOPA_ACTIVATE=1
         export KOOPA_INTERACTIVE=1
