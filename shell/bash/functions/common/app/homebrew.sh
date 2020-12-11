@@ -74,7 +74,7 @@ koopa::brew_update() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
     koopa::assert_has_sudo
-    export HOMEBREW_CASK_OPTS='--no-quarantine'
+    export HOMEBREW_CASK_OPTS='--force --no-quarantine'
     name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
     brew analytics off
