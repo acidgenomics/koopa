@@ -11,7 +11,7 @@ _koopa_add_config_link() { # {{{1
     source_file="${1:?}"
     [ -e "$source_file" ] || return 0
     # FIXME THIS STEP IS FAILING FOR MACOS WITHOUT GNU COREUTILS.
-    # > source_file="$(realpath "$source_file")"
+    source_file="$(_koopa_realpath "$source_file")"
     dest_name="${2:-}"
     [ -z "$dest_name" ] && dest_name="$(basename "$source_file")"
     config_prefix="$(_koopa_config_prefix)"
