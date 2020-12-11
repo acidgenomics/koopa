@@ -360,7 +360,8 @@ local({
             ## - https://cloud.r-project.org
             ## - https://cran.rstudio.com
             ## - or "all" here instead of "cran"
-            repos[["CRAN"]] <- "https://packagemanager.rstudio.com/cran/latest"
+            ## > repos[["CRAN"]] <- "https://packagemanager.rstudio.com/cran/latest"
+            repos[["CRAN"]] <- "https://cloud.r-project.org"
         }
         ## Always include Acid Genomics repo.
         repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
@@ -369,7 +370,7 @@ local({
         ## > }
         options("repos" = repos)
         ## Configure the Bioconductor mirror repo.
-        options("BioC_mirror" = "https://packagemanager.rstudio.com/bioconductor")
+        ## > options("BioC_mirror" = "https://packagemanager.rstudio.com/bioconductor")
         ## Allow Bioconductor to work offline.
         ## Note that this will warn when enabled.
         ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
