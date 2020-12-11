@@ -42,7 +42,8 @@ _koopa_activate() { # {{{1
     _koopa_activate_duration_start
     # shellcheck source=/dev/null
     KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
-    _koopa_add_config_link "$(_koopa_prefix)/activate"
+    # FIXME IS THIS CAUSING THE ISSUE?
+    # > _koopa_add_config_link "$(_koopa_prefix)/activate"
     _koopa_export_cpu_count
     _koopa_export_editor
     _koopa_export_git
