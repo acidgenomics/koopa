@@ -106,11 +106,18 @@ _koopa_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
     # @note Updated 2020-11-24.
+    #
+    # Note that macOS ships with an ancient version of Bash by default that
+    # doesn't support readarray/mapfile.
     # """
     local prefix fun_script fun_scripts
     prefix="${KOOPA_PREFIX}/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
-    # FIXME THIS STEP WILL ERROR WITH MACOS BASH VERSION THAT IS SUPER OLD.
+    if [[ $(type -t readarray) != 'builtin' ]]
+    then
+        printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
+        return 1
+    fi
     readarray -t fun_scripts <<< "$( \
         find -L "$prefix" \
             -mindepth 1 \
