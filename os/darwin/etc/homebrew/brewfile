@@ -1,14 +1,10 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2020-12-07.
+# Updated 2020-12-11.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
 # In particular, if we want to install umap-learn, this is now required.
-#
-# Little Snitch:
-# 'little-snitch' cask currently requires manual follow-up installation:
-# /usr/local/Caskroom/little-snitch/*/LittleSnitch-*.dmg
 #
 # PROJ/GDAL:
 # Consider using 'osgeo-gdal' instead of regular 'gdal' brew. This one gets
@@ -30,55 +26,9 @@
 # ==============================================================================
 
 tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "mongodb/brew"
 tap "vitorgalvao/tiny-scripts"
-
-# Casks {{{1
-# ==============================================================================
-
-cask "1password"
-cask "adobe-acrobat-reader"
-cask "adoptopenjdk"  # igv
-cask "airfoil"
-cask "alacritty"
-cask "alfred"
-cask "basictex"
-cask "bbedit"
-cask "bibdesk"
-cask "carbon-copy-cloner"
-cask "docker"
-cask "easyfind"
-cask "emacs"
-cask "firefox"
-cask "google-chrome"
-cask "google-cloud-sdk"
-cask "gpg-suite"
-cask "hazel"
-cask "ibm-aspera-connect"  # renamed from aspera-connect
-cask "igv"
-cask "iterm2"
-cask "java"
-cask "julia"
-cask "libreoffice"
-cask "omnidisksweeper"
-cask "osxfuse"
-cask "pycharm-ce"
-cask "r"
-cask "rstudio"
-cask "skype"
-cask "sublime-text"
-cask "superduper"
-cask "textmate"
-cask "transmit"
-cask "tunnelblick"
-cask "virtualbox"
-cask "visual-studio-code"
-cask "vlc"
-cask "xquartz"
-cask "zoom"  # renamed from zoomus
 
 # Brews {{{1
 # ==============================================================================
@@ -233,29 +183,9 @@ brew "zlib"
 brew "zoxide"  # rust
 brew "zsh"
 
-# External brews {{{2
-# ------------------------------------------------------------------------------
+# External brews {{{1
+# ==============================================================================
 
 brew "mongodb/brew/mongodb-community"
 # > brew "muesli/tap/duf"
 brew "vitorgalvao/tiny-scripts/cask-repair"
-
-# Mac App Store {{{1
-# ==============================================================================
-
-mas "AdGuard for Safari", id: 1440147259
-mas "Calca", id: 635758264
-mas "Disk Speed Test", id: 425264550
-mas "Gapplin", id: 768053424
-mas "Internet Access Policy Viewer", id: 1482630322
-mas "Keynote", id: 409183694
-mas "Name Mangler", id: 603637384
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-mas "Pastebot", id: 1179623856
-mas "Reeder", id: 880001334
-mas "Soulver", id: 413965349
-mas "Table Tool", id: 1122008420
-mas "The Unarchiver", id: 425424353
-mas "Tweetbot", id: 1384080005
-mas "iA Writer", id: 775737590
