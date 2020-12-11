@@ -79,7 +79,6 @@ koopa::install_homebrew_bundle() { # {{{1
     koopa::assert_is_file "$brewfile"
     brewfile="$(realpath "$brewfile")"
     koopa::dl 'Brewfile' "$brewfile"
-    export HOMEBREW_CASK_OPTS='--no-quarantine'
     brew analytics off
     if [[ "$default" -eq 1 ]]
     then
@@ -115,13 +114,14 @@ koopa::install_homebrew_bundle() { # {{{1
         do
             brew untap "$x" &>/dev/null || true
         done
-        flags=(
-            # > --no-upgrade
-            "--file=${brewfile}"
-            '--no-lock'
-            '--verbose'
-        )
     fi
+    flags=(
+        "--file=${brewfile}"
+        '--no-lock'
+        '--no-upgrade'
+        '--verbose'
+    )
+    export HOMEBREW_CASK_OPTS='--no-quarantine'
     brew bundle install "${flags[@]}"
     koopa::brew_update
     return 0
