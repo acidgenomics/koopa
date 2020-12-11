@@ -42,7 +42,7 @@ _koopa_activate() { # {{{1
     _koopa_activate_duration_start
     # shellcheck source=/dev/null
     KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
-    # FIXME IS THIS CAUSING THE ISSUE?
+    # FIXME THIS IS CAUSING AN ISSUE ON MACOS WITHOUT COREUTILS.
     # > _koopa_add_config_link "$(_koopa_prefix)/activate"
     _koopa_export_cpu_count
     _koopa_export_editor
