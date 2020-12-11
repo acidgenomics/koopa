@@ -144,8 +144,7 @@ install() { # {{{1
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
     # Don't check for Bash version here, which will otherwise fail on macOS
     # clean install, which ships with ancient v3.
-    KOOPA_CHECKS=0 \
-        . "${script_dir}/shell/bash/include/header.sh"
+    . "${script_dir}/shell/bash/include/header.sh"
     # Check that temporary activation was successful.
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then

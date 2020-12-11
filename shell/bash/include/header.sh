@@ -7,9 +7,6 @@ _koopa_bash_header() { # {{{1
     # @note Updated 2020-12-11.
     # """
     local activate checks dev distro_prefix major_version os_id shopts verbose
-
-    echo "HELLO WORLD FIXME"
-
     activate=0
     checks=1
     dev=0
@@ -21,8 +18,7 @@ _koopa_bash_header() { # {{{1
     [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
     if [[ "$activate" -eq 1 ]]
     then
-        # FIXME DRAFT UPDATE TO SUPPORT OLD MACOS BASH.
-        # > checks=0
+        checks=0
         shopts=0
         export KOOPA_ACTIVATE=1
         export KOOPA_INTERACTIVE=1
@@ -40,7 +36,6 @@ _koopa_bash_header() { # {{{1
     if [[ "$checks" -eq 1 ]]
     then
         major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
-        echo "$major_version"  # FIXME
         if [[ ! "$major_version" -ge 4 ]]
         then
             printf '%s\n' 'ERROR: Koopa requires Bash >= 4.' >&2
