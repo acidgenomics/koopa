@@ -54,10 +54,9 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-12-01.
+    # @note Updated 2020-12-11.
     # """
     local brewfile default flags name_fancy remove_brews remove_taps x
-    koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
@@ -79,6 +78,7 @@ koopa::install_homebrew_bundle() { # {{{1
     done
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
+    export HOMEBREW_CASK_OPTS='--no-quarantine'
     brew analytics off
     if [[ "$default" -eq 1 ]]
     then
