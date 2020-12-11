@@ -4,7 +4,7 @@
 _koopa_add_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
-    # @note Updated 2020-07-08.
+    # @note Updated 2020-12-11.
     # """
     # shellcheck disable=SC2039
     local config_prefix dest_file dest_name source_file
@@ -18,6 +18,6 @@ _koopa_add_config_link() { # {{{1
     [ -L "$dest_file" ] && return 0
     rm -fr "$dest_file"
     mkdir -p "$config_prefix"
-    ln -fns "$source_file" "$dest_file"
+    ln -fnsv "$source_file" "$dest_file"
     return 0
 }
