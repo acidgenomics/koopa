@@ -68,11 +68,13 @@ koopa::brew_update() { # {{{1
     # @seealso
     # - Refer to useful discussion regarding '--greedy' flag.
     # - https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
+    # - https://github.com/Homebrew/brew/issues/9139
     # """
     local casks name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
     koopa::assert_has_sudo
+    export HOMEBREW_CASK_OPTS='--no-quarantine'
     name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
     brew analytics off
@@ -95,9 +97,6 @@ koopa::brew_update() { # {{{1
                         cask='homebrew/cask/docker'
                         ;;
                 esac
-                # Thread on stopping the quarantine madness:
-                # https://github.com/Homebrew/brew/issues/9139
-                export HOMEBREW_CASK_OPTS='--no-quarantine'
                 brew reinstall \
                     --debug \
                     --force \
