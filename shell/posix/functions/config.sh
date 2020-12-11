@@ -16,12 +16,12 @@ _koopa_add_config_link() { # {{{1
     config_prefix="$(_koopa_config_prefix)"
     dest_file="${config_prefix}/${dest_name}"
     # FIXME NEED TO REWORK THIS.
-    echo "$source_file"
-    echo "$dest_file"
+    echo "source: $source_file"
+    echo "dest: $dest_file"
     echo ''
     [ -L "$dest_file" ] && return 0
     /bin/mkdir -pv "$config_prefix"
-    /bin/rm -frv "$dest_file"
+    # > /bin/rm -frv "$dest_file"
     #/bin/ln -fnsv "$source_file" "$dest_file"
     return 0
 }
