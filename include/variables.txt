@@ -230,7 +230,7 @@ pyenv="1.2.16"
 
 # https://www.python.org/downloads/
 # numba v0.51.2 install warns on Python 3.9 currently.
-python="3.9.0"
+python="3.9.1"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
