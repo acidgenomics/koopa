@@ -117,8 +117,8 @@ koopa::install_homebrew_bundle() { # {{{1
         done
     fi
     flags=(
+        # '--debug'
         "--file=${brewfile}"
-        '--debug'
         '--force'
         '--no-lock'
         '--no-upgrade'
