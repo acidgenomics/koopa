@@ -51,32 +51,19 @@ koopa::install_homebrew() { # {{{1
     return 0
 }
 
-# FIXME ALLOW BREWFILE AS POSITIONAL ARGUMENT.
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-12-11.
+    # @note Updated 2020-12-13.
     # """
     local brewfile default flags name_fancy remove_brews remove_taps x
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_has_sudo
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
     koopa::assert_is_installed brew
     default=1
     brewfile="$(koopa::brewfile)"
-    while (("$#"))
-    do
-        case "$1" in
-            --brewfile=*)
-                brewfile="${1#*=}"
-                default=0
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
     koopa::assert_is_file "$brewfile"
     brewfile="$(realpath "$brewfile")"
     koopa::dl 'Brewfile' "$brewfile"
@@ -124,6 +111,7 @@ koopa::install_homebrew_bundle() { # {{{1
         '--no-upgrade'
         '--verbose'
     )
+    # FIXME EXPORT THIS INTO SHELL SESSION.
     export HOMEBREW_CASK_OPTS='--no-quarantine'
     brew bundle install "${flags[@]}"
     koopa::brew_update
