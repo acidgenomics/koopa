@@ -144,7 +144,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-12-03.
     # """
     # shellcheck disable=SC2039
     local prefix
@@ -154,6 +154,7 @@ _koopa_activate_homebrew() { # {{{1
         _koopa_activate_prefix "$prefix"
     fi
     _koopa_is_installed brew || return 0
+    export HOMEBREW_CASK_OPTS='--no-quarantine'
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
     # Stopgap fix for TLS SSL issues with some Homebrew casks.
