@@ -7,31 +7,11 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-# required:
-# - organism
-# - genomeBuild
-
-# optional:
-# - release
-# - type
-# - annotation
-# - output-dir
-
-# flag
-# - decompress
-
-# required
-# optional
-# flags
-# positional
-
 local({
-    # FIXME THIS IS ERRORING WHEN ARGUMENT CONTAINS SPACES.
     input <- parseArgs(
         required = c(
-            "organism"
-            #"organism",
-            #"genome-build"
+            "organism",
+            "genome-build"
         ),
         optional = c(
             "release",
@@ -63,7 +43,7 @@ local({
     if (isSubset("decompress", names(input[["flags"]]))) {
         args[["decompress"]] <- TRUE
     }
-    library(AcidGenomes)
+    requireNamespaces("AcidGenomes", quietly = TRUE)
     do.call(
         what = AcidGenomes::downloadEnsemblGenome,
         args = args
