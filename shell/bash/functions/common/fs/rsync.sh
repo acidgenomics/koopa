@@ -28,7 +28,7 @@ koopa::rsync_cloud() { # {{{1
 koopa::rsync_flags() { # {{{1
     # """
     # rsync flags.
-    # @note Updated 2020-04-06.
+    # @note Updated 2020-12-14.
     #
     #     --delete-before         receiver deletes before xfer, not during
     #     --iconv=CONVERT_SPEC    request charset conversion of filenames
@@ -56,8 +56,16 @@ koopa::rsync_flags() { # {{{1
     # See also:
     # - https://unix.stackexchange.com/questions/165423
     # """
+    local flags
     koopa::assert_has_no_args "$#"
-    koopa::print '--archive --delete-before --human-readable --progress'
+    flags=(
+        '--archive'
+        '--delete-before'
+        '--human-readable'
+        '--progress'
+        '--protect-args'
+    )
+    koopa::print "${flags[@]}"
     return 0
 }
 
