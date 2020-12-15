@@ -52,7 +52,7 @@ koopa::brew_outdated() { # {{{1
 koopa::brew_update() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2020-12-11.
+    # @note Updated 2020-12-14.
     #
     # Use of '--force-bottle' flag can be helpful, but not all brews have
     # bottles, so this can error.
@@ -70,7 +70,7 @@ koopa::brew_update() { # {{{1
     # - https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
     # - https://github.com/Homebrew/brew/issues/9139
     # """
-    local casks name_fancy
+    local cask_flags casks name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
     koopa::assert_has_sudo
@@ -97,13 +97,13 @@ koopa::brew_update() { # {{{1
                         cask='homebrew/cask/docker'
                         ;;
                 esac
-                brew reinstall \
-                    --debug \
-                    --force \
-                    --no-quarantine \
-                    --verbose \
-                    "$cask" \
-                || true
+                cask_flags=(
+                    # --debug
+                    '--force'
+                    '--no-quarantine'
+                    '--verbose'
+                )
+                brew reinstall "${cask_flags[@]}" "$cask" || true
                 if [[ "$cask" == 'r' ]]
                 then
                     koopa::update_r_config
