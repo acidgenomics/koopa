@@ -2,7 +2,7 @@
 
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-11-24.
+## @note Updated 2020-12-14.
 ## """
 
 options(
@@ -29,12 +29,13 @@ local({
 
 ## Load dependencies.
 suppressPackageStartupMessages({
+    library(AcidBase)
     library(koopa)
     library(goalie)
 })
 
 ## Run additional header checks.
-stopifnot(isCleanSystemLibrary())
+assert(isCleanSystemLibrary())
 
 ## Display help if `--help` flag is defined.
 local({
