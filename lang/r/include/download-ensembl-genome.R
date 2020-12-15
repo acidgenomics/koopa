@@ -22,28 +22,25 @@ local({
         flags = "decompress",
         positional = FALSE
     )
-    return(input)
-
     args <- list()
-    args[["organism"]] <- input[["organism"]]
-    args[["genomeBuild"]] <- input[["genome-build"]]
-    if (isSubset("release", names(input[["release"]]))) {
-        args[["release"]] <- input[["release"]]
+    args[["organism"]] <- input[["required"]][["organism"]]
+    args[["genomeBuild"]] <- input[["required"]][["genome-build"]]
+    if (isSubset("release", names(input[["optional"]]))) {
+        args[["release"]] <- input[["optional"]][["release"]]
     }
-    if (isSubset("type", names(input[["type"]]))) {
-        args[["type"]] <- input[["type"]]
+    if (isSubset("type", names(input[["optional"]]))) {
+        args[["type"]] <- input[["optional"]][["type"]]
     }
-    if (isSubset("annotation", names(input[["annotation"]]))) {
-        args[["annotation"]] <- input[["annotation"]]
+    if (isSubset("annotation", names(input[["optional"]]))) {
+        args[["annotation"]] <- input[["optional"]][["annotation"]]
     }
-    ## FIXME Does this sanitize to camelCase?
-    if (isSubset("output-dir", names(input[["annotation"]]))) {
-        args[["outputDir"]] <- input[["output-dir"]]
+    if (isSubset("output-dir", names(input[["optional"]]))) {
+        args[["outputDir"]] <- input[["optional"]][["output-dir"]]
     }
     if (isSubset("decompress", names(input[["flags"]]))) {
         args[["decompress"]] <- TRUE
     }
-    requireNamespaces("AcidGenomes", quietly = TRUE)
+    requireNamespaces("AcidGenomes")
     do.call(
         what = AcidGenomes::downloadEnsemblGenome,
         args = args
