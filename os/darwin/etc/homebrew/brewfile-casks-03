@@ -1,6 +1,6 @@
 # """
 # Homebrew Cask Bundle Brewfile 03.
-# Updated 2020-12-11.
+# Updated 2020-12-17.
 #
 # Consider:
 # - fiji  # latest
@@ -50,3 +50,7 @@ cask "tower"
 cask "transmission"
 cask "transmission-remote-gui"
 cask "xld"
+
+# Draft update, adding drivers.
+tap "homebrew/cask-drivers"
+cask "homebrew/cask-drivers/fujitsu-scansnap-home"
