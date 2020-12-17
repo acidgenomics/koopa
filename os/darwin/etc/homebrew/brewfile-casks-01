@@ -4,11 +4,11 @@
 # """
 
 tap "homebrew/cask"
-tap "homebrew/cask-drivers"
 tap "homebrew/cask-versions"
 
+# > cask "adobe-acrobat-reader"
+
 cask "1password"
-#cask "adobe-acrobat-reader"
 cask "bbedit"
 cask "carbon-copy-cloner"
 cask "little-snitch"
@@ -24,6 +24,4 @@ cask "transmit"
 cask "tunnelblick"
 cask "visual-studio-code"
 cask "vlc"
-cask "zoom"  # renamed from zoomus
-
-cask "homebrew/cask-drivers/fujitsu-scansnap-home"
+cask "zoom"
