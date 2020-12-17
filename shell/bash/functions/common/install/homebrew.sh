@@ -54,7 +54,7 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-12-13.
+    # @note Updated 2020-12-17.
     # """
     local brewfile default flags name_fancy remove_brews remove_taps x
     koopa::assert_has_args_le "$#" 1
@@ -105,16 +105,15 @@ koopa::install_homebrew_bundle() { # {{{1
     fi
     flags=(
         # '--debug'
+        # '--verbose'
         "--file=${brewfile}"
         '--force'
         '--no-lock'
         '--no-upgrade'
-        '--verbose'
     )
-    # FIXME EXPORT THIS INTO SHELL SESSION.
     export HOMEBREW_CASK_OPTS='--no-quarantine'
     brew bundle install "${flags[@]}"
-    koopa::brew_update
+    koopa::update_homebrew
     return 0
 }
 
