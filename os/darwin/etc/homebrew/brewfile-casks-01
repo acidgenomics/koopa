@@ -7,7 +7,7 @@ tap "homebrew/cask"
 tap "homebrew/cask-versions"
 
 cask "1password"
-cask "adobe-acrobat-reader"
+#cask "adobe-acrobat-reader"
 cask "bbedit"
 cask "carbon-copy-cloner"
 cask "little-snitch"
