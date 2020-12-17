@@ -18,6 +18,13 @@ koopa::defunct() { # {{{1
     koopa::stop "${msg}"
 }
 
+koopa::brew_update() { # {{{1
+    # """
+    # @note Updated 2020-12-17.
+    # """
+    koopa::defunct 'koopa::update_homebrew'
+}
+
 koopa::cellar_prefix() { # {{{1
     # """
     # @note Updated 2020-11-19.
