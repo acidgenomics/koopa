@@ -35,12 +35,6 @@ tap "vitorgalvao/tiny-scripts"
 # Casks {{{1
 # ==============================================================================
 
-# Adobe installs launch agent garbage, so avoid unless absolutely necessary.
-# > cask "adobe-acrobat-reader"
-# > cask "microsoft-teams"
-# > cask "virtualbox"
-# > cask "little-snitch"
-
 cask "1password"
 cask "adoptopenjdk"
 cask "airfoil"
@@ -63,6 +57,7 @@ cask "iterm2"
 cask "java"
 cask "julia"
 cask "libreoffice"
+cask "macvim"
 cask "omnidisksweeper"
 cask "pycharm-ce"
 cask "r"
@@ -84,6 +79,12 @@ cask "zoom"
 # Install Rust directly instead.
 # > brew "rust"
 # > brew "rustup-init"  # rust
+
+# MacVim Cask conflicts with Vim.
+# > brew "vim"
+
+# sshfs requires osxfuse cask, which insecurely hooks into system.
+# > brew "sshfs"
 
 # Python: Can use official Framework binary install instead of Homebrew.
 # Use 'install-python-framework' from koopa to install.
@@ -153,7 +154,6 @@ brew "lame"
 brew "lapack"
 brew "leiningen"
 brew "lesspipe"
-## > brew "libav"
 brew "libgit2"
 brew "libiconv"
 brew "libomp"
@@ -210,7 +210,6 @@ brew "shellharden"
 brew "shunit2"
 brew "sox"
 brew "sqlite"
-brew "sshfs"
 brew "starship"  # rust
 brew "subversion"
 brew "taglib"
@@ -223,7 +222,6 @@ brew "tmux"
 brew "tokei"  # rust
 brew "udunits"
 brew "v8"
-brew "vim"
 brew "wget"
 brew "xsv"  # rust
 brew "youtube-dl"
