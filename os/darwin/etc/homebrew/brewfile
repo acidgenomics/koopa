@@ -35,6 +35,15 @@ tap "vitorgalvao/tiny-scripts"
 # Casks {{{1
 # ==============================================================================
 
+# Consider re-enabling, but using AWS primarily at the moment.
+# > cask "google-cloud-sdk"
+
+# Required for sshfs, but is insecure.
+# > cask "osxfuse"
+
+# Virtualbox is useful but installs a lot of garbage into the system.
+# > cask "virtualbox"
+
 cask "1password"
 cask "adoptopenjdk"
 cask "airfoil"
@@ -43,7 +52,7 @@ cask "alfred"
 cask "basictex"
 cask "bbedit"
 cask "bibdesk"
-cask "brave-browser"  # Avoids Keystone bloat with Google Chrome.
+cask "brave-browser"  # Avoid Keystone bloat from Google Chrome.
 cask "carbon-copy-cloner"
 cask "docker"
 cask "easyfind"
@@ -56,9 +65,12 @@ cask "igv"
 cask "iterm2"
 cask "java"
 cask "julia"
+cask "keka"
 cask "libreoffice"
 cask "macvim"
+cask "netnewswire"
 cask "omnidisksweeper"
+cask "pacifist"
 cask "pycharm-ce"
 cask "r"
 cask "rstudio"
