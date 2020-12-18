@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2020-12-11.
+# Updated 2020-12-18.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -26,9 +26,57 @@
 # ==============================================================================
 
 tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "mongodb/brew"
 tap "vitorgalvao/tiny-scripts"
+
+# Casks {{{1
+# ==============================================================================
+
+# Adobe installs launch agent garbage, so avoid unless absolutely necessary.
+# > cask "adobe-acrobat-reader"
+# > cask "microsoft-teams"
+# > cask "virtualbox"
+
+cask "1password"
+cask "adoptopenjdk"
+cask "airfoil"
+cask "alacritty"
+cask "alfred"
+cask "basictex"
+cask "bbedit"
+cask "bibdesk"
+cask "brave-browser"  # Avoids Keystone bloat with Google Chrome.
+cask "carbon-copy-cloner"
+cask "docker"
+cask "easyfind"
+cask "emacs"
+cask "firefox"
+cask "gpg-suite"
+cask "hazel"
+cask "ibm-aspera-connect"
+cask "igv"
+cask "iterm2"
+cask "java"
+cask "julia"
+cask "libreoffice"
+cask "little-snitch"
+cask "omnidisksweeper"
+cask "pycharm-ce"
+cask "r"
+cask "rstudio"
+cask "skype"
+cask "sublime-text"
+cask "superduper"
+cask "textmate"
+cask "transmit"
+cask "tunnelblick"
+cask "visual-studio-code"
+cask "vlc"
+cask "xquartz"
+cask "zoom"
 
 # Brews {{{1
 # ==============================================================================
