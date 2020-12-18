@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME MOVE THESE TO ACIDGENOMES R PACKAGE.
 # NOTE Work on converting these to Python functions.
 
 koopa::tx2gene_from_ensembl_fasta() { # {{{1
@@ -12,7 +13,6 @@ koopa::tx2gene_from_ensembl_fasta() { # {{{1
     koopa::assert_is_installed awk cut grep gunzip sed tr
     fasta_file="${1:?}"
     koopa::assert_is_file "$fasta_file"
-    # Output file is now a merge of cDNA and ncRNA, in py-koopa 0.0.3.
     koopa::assert_is_matching_fixed "$fasta_file" 'transcriptome.fa.gz'
     output_file="${2:-tx2gene.csv}"
     koopa::assert_is_not_file "$output_file"
