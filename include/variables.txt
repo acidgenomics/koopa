@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-12-18"
+koopa-date="2020-12-21"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.0a"
@@ -37,7 +37,7 @@ autoconf="2.69"
 automake="1.16.3"
 
 # https://www.gnu.org/software/bash/
-bash="5.0.18"
+bash="5.1.4"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
@@ -108,7 +108,7 @@ gcc="10.2.0"
 gdal="3.2.0"
 
 # https://github.com/libgeos/geos/releases
-geos="3.8.1"
+geos="3.9.0"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
@@ -118,7 +118,7 @@ git="2.29.2"
 gnupg="2.2.24"
 
 # https://golang.org/dl/
-go="1.15.5"
+go="1.15.6"
 
 # https://www.gnu.org/software/grep/
 grep="3.6"
@@ -414,7 +414,7 @@ python-wheel="0.36.0"
 #   https://github.com/http-rs/tide
 
 rust-bat="0.16.0"           # homebrew
-rust-broot="1.0.8"          # homebrew
+rust-broot="1.0.9"          # homebrew
 rust-dog="0.1.0"            # homebrew
 rust-du-dust="0.5.3"        # homebrew
 rust-exa="0.9.0"            # homebrew
