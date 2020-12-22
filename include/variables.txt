@@ -136,7 +136,7 @@ hdf5="1.12.0"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
-htop="3.0.2"
+htop="3.0.4"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
