@@ -115,7 +115,7 @@ geos="3.9.0"
 git="2.29.2"
 
 # https://gnupg.org/download/index.html
-gnupg="2.2.24"
+gnupg="2.2.26"
 
 # https://golang.org/dl/
 go="1.15.6"
