@@ -4,6 +4,14 @@
 # https://gnupg.org/download/index.html
 
 case "$version" in
+    2.2.26)
+        libgpg_error_version='1.41'
+        libgcrypt_version='1.8.7'
+        libksba_version='1.5.0'
+        libassuan_version='2.5.4'
+        npth_version='1.6'
+        pinentry_version='1.1.0'
+        ;;
     2.2.25|2.2.24)
         # 2.2.25: 2020-11-24.
         # 2.2.24: 2020-11-17.
