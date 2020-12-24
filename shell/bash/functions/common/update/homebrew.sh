@@ -47,6 +47,9 @@ koopa::update_homebrew() { # {{{1
                     docker)
                         cask='homebrew/cask/docker'
                         ;;
+                    macvim)
+                        cask='homebrew/cask/macvim'
+                        ;;
                 esac
                 cask_flags=(
                     # --debug
