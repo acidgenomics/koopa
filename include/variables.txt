@@ -249,7 +249,7 @@ rstudio-server="1.3.1093"
 rstudio-server-pro="1.3.1093-1"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="3.0.0"
+ruby="3.0.0p0"
 
 # https://www.rust-lang.org/
 rust="1.48.0"
