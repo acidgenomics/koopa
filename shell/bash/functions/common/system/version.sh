@@ -479,7 +479,8 @@ koopa::return_version() { # {{{1
             cmd='find'
             ;;
         gdal)
-            cmd='gdalinfo'
+            # Changed from 'gdalinfo' to 'gdal-config' in 3.2.0.
+            cmd='gdal-config'
             ;;
         geos)
             cmd='geos-config'
