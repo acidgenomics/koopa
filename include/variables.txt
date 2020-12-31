@@ -285,6 +285,9 @@ singularity="3.6.0"
 # https://www.sqlite.org/download.html
 sqlite="3.34.0"
 
+# https://www.gnu.org/software/stow/
+stow="2.3.1"
+
 # https://subversion.apache.org
 subversion="1.14.0"
 
