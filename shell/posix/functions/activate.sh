@@ -122,7 +122,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-12-03.
+    # @note Updated 2020-12-31.
     # """
     # shellcheck disable=SC2039
     local prefix
@@ -147,12 +147,12 @@ _koopa_activate_homebrew() { # {{{1
     _koopa_activate_homebrew_gnu_prefix gnu-units
     _koopa_activate_homebrew_gnu_prefix grep
     _koopa_activate_homebrew_gnu_prefix make
-    _koopa_activate_homebrew_google_cloud_sdk
     _koopa_activate_homebrew_libexec_prefix man-db
     _koopa_activate_homebrew_prefix curl
     _koopa_activate_homebrew_prefix ruby
     _koopa_activate_homebrew_prefix sqlite
     _koopa_activate_homebrew_prefix texinfo
+    _koopa_activate_homebrew_google_cloud_sdk
     _koopa_activate_homebrew_ruby_gems
     _koopa_activate_homebrew_python
     return 0
@@ -742,7 +742,7 @@ _koopa_activate_standard_paths() { # {{{1
 
 _koopa_activate_venv() { # {{{1
     # """
-    # Activate Python default virtual environment.
+    # Activate Python virtual environment.
     # @note Updated 2020-06-30.
     #
     # Note that we're using this instead of conda as our default interactive

@@ -79,6 +79,10 @@ koopa::koopa() { # {{{1
                     f='view_latest_tmp_log_file'
                     shift 2
                     ;;
+                path)
+                    koopa::print "$PATH"
+                    return 0
+                    ;;
                 prefix)
                     case "${3:-}" in
                         '')
