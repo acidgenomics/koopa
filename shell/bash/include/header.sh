@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# koopa nolint=coreutils
 
 _koopa_bash_header() { # {{{1
     # """
