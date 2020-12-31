@@ -87,6 +87,8 @@ koopa::add_local_bins_to_path() { # {{{1
     return 0
 }
 
+# FIXME WHEN THIS GETS LAUNCHED FROM KOOPA, A SUBSHELL GETS GENERATED ON MACOS
+# THAT CHANGES THE PATH STRING.... NEED TO RETHINK.
 koopa::list_path_priority() { # {{{1
     # """
     # List path priority.
