@@ -9,28 +9,6 @@ _koopa_activate_aspera() { # {{{1
     return 0
 }
 
-_koopa_activate_bcbio() { # {{{1
-    # """
-    # Include bcbio toolkit binaries in PATH, if defined.
-    # @note Updated 2020-11-16.
-    #
-    # Attempt to locate bcbio installation automatically on supported platforms.
-    #
-    # Exporting at the end of PATH so we don't mask gcc or R.
-    # This is particularly important to avoid unexpected compilation issues
-    # due to compilers in conda masking the system versions.
-    # """
-    # shellcheck disable=SC2039
-    local prefix
-    _koopa_is_installed bcbio_nextgen.py && return 0
-    _koopa_is_linux || return 0
-    prefix="$(_koopa_bcbio_tools_prefix)"
-    [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_end "${prefix}/bin"
-    unset -v PYTHONHOME PYTHONPATH
-    return 0
-}
-
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda.
@@ -261,6 +239,7 @@ _koopa_activate_homebrew_python() { # {{{1
     return 0
 }
 
+# FIXME RETHINK THIS STEP.
 _koopa_activate_homebrew_ruby_gems() { # {{{1
     # """
     # Activate Homebrew Ruby gems.
@@ -455,6 +434,7 @@ _koopa_activate_perlbrew() { # {{{1
     return 0
 }
 
+# FIXME RETHINK THIS?
 _koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
@@ -492,6 +472,7 @@ _koopa_activate_pipx() { # {{{1
     return 0
 }
 
+# FIXME RETHINK THIS? NEED TO USE FORCE?
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
@@ -574,6 +555,7 @@ _koopa_activate_pyenv() { # {{{1
     return 0
 }
 
+# FIXME RETHINK THIS?
 _koopa_activate_python_site_packages() { # {{{1
     # """
     # Activate Python site packages library.
@@ -730,7 +712,7 @@ _koopa_activate_ssh_key() { # {{{1
 _koopa_activate_standard_paths() { # {{{1
     # """
     # Activate standard paths.
-    # @note Updated 2020-11-10.
+    # @note Updated 2020-12-31.
     #
     # Note that here we're making sure local binaries are included.
     # Inspect '/etc/profile' if system PATH appears misconfigured.
@@ -751,7 +733,7 @@ _koopa_activate_standard_paths() { # {{{1
         "${make_prefix}/sbin" \
         "${HOME}/bin" \
         "${HOME}/.local/bin"
-    _koopa_add_to_manpath_end '/usr/share/man'
+    _koopa_force_add_to_manpath_end '/usr/share/man'
     _koopa_force_add_to_manpath_start \
         "${make_prefix}/share/man" \
         "${HOME}/.local/share/man"
