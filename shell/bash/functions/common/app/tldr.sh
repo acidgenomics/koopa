@@ -114,6 +114,7 @@ koopa::tldr_download_cache() { # {{{1
         file='master.tar.gz'
         koopa::download "$url" "$file"
         koopa::extract "$file"
+        # FIXME USE KOOPA WRAPPER HERE INSTEAD.
         rsync -a 'tldr-pages-tldr-'*'/pages/' "${prefix}/"
     )
     koopa::rm "$tmp_dir"
