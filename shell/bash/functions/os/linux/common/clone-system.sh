@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME RENAME THIS TO CLONE-SYSTEM ?
-
 koopa::_linux_rsync() { # {{{1
     # """
     # rsync a desired prefix across virtual machines.
-    # @note Updated 2020-11-18.
+    # @note Updated 2020-12-31.
     #
     # We're enforcing use of '/usr/bin/rsync' here in case we're syncing
     # '/usr/local', which may have an updated copy of rsync installed.
@@ -17,14 +15,19 @@ koopa::_linux_rsync() { # {{{1
     koopa::assert_has_args "$#"
     rsync='/usr/bin/rsync'
     koopa::assert_is_installed "$rsync"
-    # FIXME RETHINK THIS APPROACH, USING CLONE INSTEAD?
-    # FIXME RETHINK USING KOOPA::CLONE INTERNALLY.
-    rsync_flags="$(koopa::rsync_flags)"
+    rsync_flags=(
+        '--archive'
+        '--human-readable'
+        '--progress'
+        '--protect-args'
+        '--stats'
+        '--verbose'
+    )
     while (("$#"))
     do
         case "$1" in
             --rsync-flags=*)
-                rsync_flags="${1#*=}"
+                rsync_flags=("${1#*=}")
                 shift 1
                 ;;
             --prefix=*)
@@ -41,7 +44,7 @@ koopa::_linux_rsync() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_set flags prefix source_ip
+    koopa::assert_is_set prefix rsync_flags source_ip
     host_ip="$(koopa::local_ip_address)"
     # Check for accidental sync from source machine.
     if [[ "$source_ip" == "$host_ip" ]]
@@ -49,7 +52,6 @@ koopa::_linux_rsync() { # {{{1
         koopa::note "On source machine: '${source_ip}'."
         return 0
     fi
-    rsync_flags=("$rsync_flags")
     rsync_flags+=("--rsync-path=sudo ${rsync}")
     user="${USER:?}"
     koopa::h1 "Syncing '${prefix}' from '${source_ip}'."
@@ -57,8 +59,7 @@ koopa::_linux_rsync() { # {{{1
     koopa::sys_mkdir "$prefix"
     koopa::delete_broken_symlinks "$prefix"
     koopa::sys_set_permissions -ru "$prefix"
-    # FIXME NEED TO WRAP WITH KOOPA::RSYNC HERE.
-    rsync "${rsync_flags[@]}" \
+    "$rsync" "${rsync_flags[@]}" \
         "${user}@${source_ip}:${prefix}/" \
         "${prefix}/"
     koopa::delete_broken_symlinks "$prefix"
