@@ -239,6 +239,10 @@ koopa::koopa() { # {{{1
             ;;
         system)
             case "${2:-}" in
+                check)
+                    f='check'
+                    shift 2
+                    ;;
                 info)
                     f='sys_info'
                     shift 2
@@ -311,14 +315,14 @@ koopa::koopa() { # {{{1
                     ;;
             esac
             ;;
-        check-system | \
         test)
             f="$1"
             shift 1
             ;;
         # Soft deprecated args {{{2
         # ----------------------------------------------------------------------
-        check)
+        check | \
+        check-system)
             f='check_system'
             shift 1
             ;;

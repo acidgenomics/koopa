@@ -12,11 +12,10 @@ koopa::test() { # {{{1
     return 0
 }
 
-# FIXME USE KOOPA PREFIXES HERE, INSTEAD OF HARD-CODING.
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2020-07-30.
+    # @note Updated 2020-12-31.
     # Not sorting here can speed the function up.
     # """
     koopa::assert_has_no_args "$#"
@@ -32,13 +31,13 @@ koopa::test_find_files() { # {{{1
             -not -name '*.ronn' \
             -not -name '*.swp' \
             -not -name '.pylintrc' \
+            -not -path "$(koopa::app_prefix)/*" \
+            -not -path "$(koopa::opt_prefix)/*" \
             -not -path "${prefix}/.git/*" \
-            -not -path "${prefix}/app/*" \
             -not -path "${prefix}/cellar/*" \
             -not -path "${prefix}/coverage/*" \
             -not -path "${prefix}/dotfiles/*" \
             -not -path "${prefix}/lang/r/.Rproj.user/*" \
-            -not -path "${prefix}/opt/*" \
             -not -path "${prefix}/tests/*" \
             -not -path "${prefix}/workflows/*" \
             -not -path '*/etc/R/*' \
