@@ -263,6 +263,24 @@ Deactivate venv prior to conda, otherwise conda python may be left in PATH."
     return 0
 }
 
+koopa::assert_has_no_flags() { # {{{1
+    # """
+    # Assert that the user input does not contain flags.
+    # @note Updated 2020-12-31.
+    # """
+    while (("$#"))
+    do
+        case "$1" in
+            -*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                ;;
+        esac
+    done
+    return 0
+}
+
 koopa::assert_has_sudo() { # {{{1
     # """
     # Assert that current user has sudo (admin) permissions.
