@@ -45,6 +45,15 @@ koopa::_list_path_priority_unique() { # {{{1
     return 0
 }
 
+koopa::list() { # {{{1
+    # """
+    # List koopa programs available in PATH.
+    # @note Updated 2020-12-31.
+    # """
+    koopa::rscript_vanilla 'list'
+    return 0
+}
+
 koopa::list_app_versions() { # {{{1
     # """
     # List installed application versions.
