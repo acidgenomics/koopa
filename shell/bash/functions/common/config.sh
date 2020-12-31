@@ -321,16 +321,3 @@ koopa::link_dotfile() { # {{{1
     koopa::ln "$source_path" "$symlink_path"
     return 0
 }
-
-# FIXME MOVE TO LIST.SH SCRIPT?
-koopa::list_dotfiles() { # {{{1
-    # """
-    # List dotfiles.
-    # @note Updated 2020-11-25.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::h1 'Listing dotfiles.'
-    koopa::find_dotfiles d 'Directories'
-    koopa::find_dotfiles f 'Files'
-    koopa::find_dotfiles l 'Symlinks'
-}

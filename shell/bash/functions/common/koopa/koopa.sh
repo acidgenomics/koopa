@@ -1,5 +1,130 @@
 #!/usr/bin/env bash
 
+koopa::_koopa_app() { # {{{1
+    # """
+    # Application commands.
+    # @note Updated 2020-12-31.
+    # """
+    local name
+    name="${1:-}"
+    case "$name" in
+        clean)
+            name='delete_broken_app_symlinks'
+            ;;
+        list)
+            name='list_app_versions'
+            ;;
+        link)
+            name='link_app'
+            ;;
+        prune)
+            name='prune_apps'
+            ;;
+        unlink)
+            name='unlink_app'
+            ;;
+    esac
+    koopa::_run_function "$name"
+    return 0
+}
+
+koopa::_koopa_header() { # {{{1
+    # """
+    # Source script header.
+    # @note Updated 2020-09-11.
+    #
+    # Useful for private scripts using koopa code outside of package.
+    # """
+    local arg ext file koopa_prefix subdir
+    koopa::assert_has_args_eq "$#" 1
+    arg="$(koopa::lowercase "${1:?}")"
+    koopa_prefix="$(koopa::prefix)"
+    case "$arg" in
+        bash|posix|zsh)
+            subdir='shell'
+            ext='sh'
+            ;;
+        # > python)
+        # >     subdir='lang'
+        # >     ext='py'
+        # >     ;;
+        r)
+            subdir='lang'
+            ext='R'
+            ;;
+        *)
+            koopa::invalid_arg "$arg"
+            ;;
+    esac
+    file="${koopa_prefix}/${subdir}/${arg}/include/header.${ext}"
+    koopa::assert_is_file "$file"
+    koopa::print "$file"
+    return 0
+}
+
+koopa::_koopa_install() { # {{{1
+    # """
+    # Install commands.
+    # @note Updated 2020-12-02.
+    # """
+    local name
+    name="${1:-}"
+    if [[ -z "$name" ]]
+    then
+        koopa::stop 'Program name to install is required.'
+    fi
+    shift 1
+    koopa::_run_function "install_${name}" "$@"
+    return 0
+}
+
+# FIXME SIMPLIFY THE ARGPARSING HERE.
+koopa::_koopa_list() { # {{{1
+    # """
+    # List exported koopa scripts.
+    # @note Updated 2020-12-31.
+    # """
+    local name
+    name="${1:-}"
+    case "$name" in
+        '')
+            koopa::list
+            ;;
+        # FIXME SIMPLIFY THE ARGPARSING HERE.
+        app-versions)
+            shift 1
+            koopa::list_app_versions "$@"
+            ;;
+        dotfiles)
+            shift 1
+            koopa::list_dotfiles "$@"
+            ;;
+        path-priority)
+            shift 1
+            koopa::list_path_priority "$@"
+            ;;
+        *)
+            koopa::invalid_arg "$*"
+            ;;
+    esac
+    return 0
+}
+
+koopa::_koopa_uninstall() { # {{{1
+    # """
+    # Uninstall commands.
+    # @note Updated 2020-11-18.
+    # """
+    local name
+    name="${1:-}"
+    if [[ -z "$name" ]]
+    then
+        koopa::stop 'Program name to uninstall is required.'
+    fi
+    koopa::_run_function "uninstall_${name}"
+    return 0
+}
+
 koopa::_run_function() { # {{{1
     # """
     # Lookup and execute a koopa function automatically.
@@ -55,6 +180,8 @@ koopa::_which_function() { # {{{1
     return 0
 }
 
+# FIXME NEED TOP_LEVEL SUPPORT FOR LINK HERE.
+
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
@@ -67,6 +194,15 @@ koopa::koopa() { # {{{1
     case "$1" in
         --version|-V)
             f='version'
+            shift 1
+            ;;
+        app | \
+        header | \
+        install | \
+        link | \
+        list | \
+        uninstall)
+            f="_koopa_${1}"
             shift 1
             ;;
         system)
@@ -143,13 +279,8 @@ koopa::koopa() { # {{{1
                     ;;
             esac
             ;;
-        app | \
         check-system | \
-        header | \
-        install | \
-        list | \
         test | \
-        uninstall | \
         update)
             f="$1"
             shift 1
