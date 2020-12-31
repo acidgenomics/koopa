@@ -14,7 +14,7 @@ koopa::_linux_rsync() { # {{{1
     local host_ip prefix rsync rsync_flags source_ip user
     koopa::assert_has_args "$#"
     rsync='/usr/bin/rsync'
-    koopa::assert_is_installed "$rsync"
+    koopa::assert_is_gnu_rsync "$rsync"
     rsync_flags=(
         '--archive'
         '--human-readable'
