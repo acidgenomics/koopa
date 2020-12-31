@@ -45,6 +45,11 @@ _koopa_activate() { # {{{1
     _koopa_activate_duration_start
     # shellcheck source=/dev/null
     KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
+    _koopa_activate_xdg
+    _koopa_activate_standard_paths
+    _koopa_activate_koopa_paths
+    _koopa_activate_pkg_config
+    _koopa_activate_export_opt_prefix
     _koopa_add_config_link "$(_koopa_prefix)" 'home'
     _koopa_add_config_link "$(_koopa_prefix)/activate"
     _koopa_add_config_link "$(_koopa_dotfiles_prefix)"
@@ -69,24 +74,28 @@ _koopa_activate() { # {{{1
         _koopa_activate_coreutils
         _koopa_activate_dircolors
         _koopa_activate_gcc_colors
+        _koopa_activate_llvm
         _koopa_activate_emacs
         _koopa_activate_go
-        _koopa_activate_nextflow
         _koopa_activate_openjdk
-        _koopa_activate_pipx
-        _koopa_activate_ruby
-        _koopa_is_macos && _koopa_activate_macos_python
-        _koopa_activate_llvm
         _koopa_activate_aspera
+        _koopa_activate_nextflow
+        # Perl ------------------------------------------------------------ {{{2
         _koopa_activate_ensembl_perl_api
         _koopa_activate_perlbrew
-        _koopa_activate_rust
+        # Ruby ------------------------------------------------------------ {{{2
+        _koopa_activate_ruby
         _koopa_activate_rbenv
-        _koopa_activate_python_site_packages
+        # Python ---------------------------------------------------------- {{{2
+        _koopa_is_macos && _koopa_activate_macos_python
         _koopa_activate_python_startup
         _koopa_activate_pyenv
+        _koopa_activate_pipx
+        _koopa_activate_python_site_packages
         _koopa_activate_conda
-        _koopa_activate_venv
+        # > _koopa_activate_venv
+        # Rust ------------------------------------------------------------ {{{2
+        _koopa_activate_rust
         _koopa_activate_broot
         _koopa_activate_fzf
         _koopa_activate_zoxide
@@ -209,6 +218,12 @@ _koopa_activate_export_minimal() { # {{{1
     fi
     export KOOPA_MINIMAL
     return 0
+}
+
+_koopa_activate_export_opt_prefix() { # {{{1
+    # This value is picked up in R configuration (for reticulate).
+    KOOPA_OPT_PREFIX="$(_koopa_opt_prefix)"
+    export KOOPA_OPT_PREFIX
 }
 
 _koopa_activate_export_prefix() { # {{{1
