@@ -268,25 +268,6 @@ koopa::link_opt() { # {{{1
     return 0
 }
 
-koopa::list_app_versions() { # {{{1
-    # """
-    # List installed application versions.
-    # @note Updated 2020-11-23.
-    # """
-    local prefix
-    koopa::assert_has_no_args "$#"
-    prefix="$(koopa::app_prefix)"
-    if [[ ! -d "$prefix" ]]
-    then
-        koopa::note "No applications are installed in '${prefix}'."
-        return 0
-    fi
-    # This approach doesn't work well when only a single program is installed.
-    # > ls -1 -- "${prefix}/"*
-    find "$prefix" -mindepth 2 -maxdepth 2 -type d | sort
-    return 0
-}
-
 # FIXME NEED TO UPDATE THIS IN R KOOPA.
 koopa::prune_apps() { # {{{1
     # """

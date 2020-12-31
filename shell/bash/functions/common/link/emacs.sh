@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME MAKE THIS ACCESSIBLE UNDER KOOPA LINK-EMACS?
 koopa::link_emacs() { # {{{1
     # """
     # Link Emacs.
