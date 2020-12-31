@@ -6,6 +6,7 @@
 # FIXME TEST THIS OUT ON A CLEAN INSTALL MACHINE.
 
 # FIXME SYSTEM PYTHON LIBRARY IS MASKING KOOPA OPT IN PATH...
+# FIXME LOCAL PROGRAMS NEED TO GO ABOVE ALL...
 
 _koopa_activate() { # {{{1
     # """
@@ -47,7 +48,6 @@ _koopa_activate() { # {{{1
     KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
     _koopa_activate_xdg
     _koopa_activate_standard_paths
-    _koopa_activate_koopa_paths
     _koopa_activate_pkg_config
     _koopa_activate_export_opt_prefix
     _koopa_add_config_link "$(_koopa_prefix)" 'home'
@@ -100,6 +100,8 @@ _koopa_activate() { # {{{1
         _koopa_activate_fzf
         _koopa_activate_zoxide
     fi
+    _koopa_activate_koopa_paths
+    _koopa_activate_local_paths
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
         case "${KOOPA_SHELL:?}" in
