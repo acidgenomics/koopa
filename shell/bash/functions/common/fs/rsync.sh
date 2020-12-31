@@ -7,12 +7,22 @@ koopa::clone() { # {{{1
     # """
     koopa::assert_has_no_flags "$@"
     koopa::assert_has_args_eq "$#" 2
-    local flags
+    local flags source_dir target_dir
+    source_dir="$1"
+    target_dir="$2"
+    koopa::assert_is_dir "$source_dir" "$target_dir"
     flags=(
         '--archive'
         '--delete-before'
     )
-    koopa::rsync "${flags[@]}" "$@"
+    source_dir="$(koopa::realpath "$source_dir")"
+    source_dir="$(koopa::strip_trailing_slash "$source_dir")"
+    target_dir="$(koopa::realpath "$target_dir")"
+    target_dir="$(koopa::strip_trailing_slash "$target_dir")"
+    koopa::dl \
+        'Source' "$source_dir" \
+        'Target' "$target_dir"
+    koopa::rsync "${flags[@]}" "${source_dir}/" "${target_dir}/"
     return 0
 }
 

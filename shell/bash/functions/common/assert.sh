@@ -275,6 +275,7 @@ koopa::assert_has_no_flags() { # {{{1
                 koopa::invalid_arg "$1"
                 ;;
             *)
+                shift 1
                 ;;
         esac
     done
