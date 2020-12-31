@@ -611,12 +611,11 @@ _koopa_activate_rbenv() { # {{{1
 _koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2020-12-23.
+    # @note Updated 2020-12-31.
     # """
     # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_ruby_gems_prefix)"
-    [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$(_koopa_ruby_gems_prefix)"
     export GEM_HOME="$prefix"
     return 0
