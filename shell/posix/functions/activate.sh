@@ -132,8 +132,9 @@ _koopa_activate_homebrew() { # {{{1
         _koopa_activate_prefix "$prefix"
     fi
     _koopa_is_installed brew || return 0
-    export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_INSTALL_CLEANUP=1
+    export HOMEBREW_NO_ANALYTICS=1
+    export HOMEBREW_NO_AUTO_UPDATE=1
     # Stopgap fix for TLS SSL issues with some Homebrew casks.
     if [ -x "${prefix}/opt/curl/bin/curl" ]
     then
