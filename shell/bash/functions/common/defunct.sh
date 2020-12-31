@@ -130,7 +130,6 @@ koopa::quiet_cd() { # {{{1
     koopa::defunct 'koopa::cd'
 }
 
-# FIXME REWORK THIS.
 koopa::remove_broken_cellar_symlinks() { # {{{1
     # """
     # @note Updated 2020-11-18.
