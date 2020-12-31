@@ -3,7 +3,7 @@
 
 # """
 # POSIX shell header.
-# @note Updated 2020-11-24.
+# @note Updated 2020-12-31.
 # """
 
 if [ -z "${KOOPA_PREFIX:-}" ]
@@ -27,7 +27,6 @@ then
     _koopa_activate_standard_paths
     _koopa_activate_koopa_paths
     _koopa_activate_pkg_config
-    _koopa_activate_python_site_packages
 fi
 
 # This value is picked up in R configuration (for reticulate).
