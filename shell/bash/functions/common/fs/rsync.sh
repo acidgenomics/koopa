@@ -1,23 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME CREATE AN ASSERT CHECK FOR NO FLAGS.
-
-# FIXME CHECK FOR FLAGS AND DONT ALLOW HERE.
-koopa::clone() { # {{{1
-    # """
-    # Clone files using rsync (with saner defaults).
-    # @note Updated 2020-12-31.
-    # """
-    local flags
-    flags=(
-        '--archive'
-        '--delete-before'
-    )
-    koopa::rsync "${flags[@]}" "$@"
-    return 0
-}
-
-koopa::rsync() { # {{{1
+koopa::_rsync() { # {{{1
     # """
     # GNU rsync wrapper.
     # @note Updated 2020-12-31.
@@ -52,11 +35,12 @@ koopa::rsync() { # {{{1
     local flags
     koopa::assert_has_gnu_rsync
     flags=(
-        # > '--delete-before'
-        '--archive'
         '--human-readable'
         '--progress'
         '--protect-args'
+        '--recursive'
+        '--stats'
+        '--verbose'
     )
     if koopa::is_macos
     then
@@ -68,14 +52,30 @@ koopa::rsync() { # {{{1
     return 0
 }
 
+koopa::clone() { # {{{1
+    # """
+    # Clone files using rsync (with saner defaults).
+    # @note Updated 2020-12-31.
+    # """
+    koopa::assert_has_no_flags "$@"
+    koopa::assert_has_args_eq "$#" 2
+    local flags
+    flags=(
+        '--archive'
+        '--delete-before'
+    )
+    koopa::_rsync "${flags[@]}" "$@"
+    return 0
+}
+
 koopa::rsync_cloud() { # {{{1
     # """
     # Rsync to cloud object storage buckets, such as AWS.
     # @note Updated 2020-12-31.
     # """
     local flags
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed rsync
+    koopa::assert_has_no_flags "$@"
+    koopa::assert_has_args_eq "$#" 2
     flags=(
         # '--exclude=bam'
         # '--exclude=cram'
@@ -85,45 +85,38 @@ koopa::rsync_cloud() { # {{{1
         '--exclude=.git'
         '--exclude=.gitignore'
         '--exclude=work'
-        '--human-readable'
         '--no-links'
-        '--progress'
-        '--recursive'
         '--size-only'
-        '--stats'
-        '--verbose'
         '--rsync-path="sudo rsync"'
     )
-    rsync "${flags[@]}" "$@"
+    koopa::_rsync "${flags[@]}" "$@"
     return 0
 }
 
-# FIXME REWORK, WRAPPING KOOPA::RSYNC
 koopa::rsync_ignore() { # {{{1
     # """
     # Run rsync with automatic ignore.
-    # @note Updated 2020-08-04.
+    # @note Updated 2020-12-31.
+    #
     # @seealso
     # https://stackoverflow.com/questions/13713101/
     # """
-    local ignore_global rsync_flags
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed rsync
-    rsync_flags=(
+    local flags ignore_global
+    koopa::assert_has_no_flags "$@"
+    koopa::assert_has_args_eq "$#" 2
+    flags=(
         # '--exclude=.*/'
         # '--exclude=/.git'
         # '--filter=:- .gitignore'
         '--archive'
         '--exclude=.*'
         '--filter=dir-merge,- .gitignore'
-        '--human-readable'
-        '--progress'
     )
     ignore_global="${HOME}/.gitignore"
     if [[ -f "$ignore_global" ]]
     then
-        rsync_flags+=("--filter=dir-merge,- ${ignore_global}")
+        flags+=("--filter=dir-merge,- ${ignore_global}")
     fi
-    rsync "${rsync_flags[@]}" "$@"
+    koopa::_rsync "${flags[@]}" "$@"
     return 0
 }
