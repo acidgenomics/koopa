@@ -88,8 +88,8 @@ koopa::rsync_cloud() { # {{{1
         '--exclude=.gitignore'
         '--exclude=work'
         '--no-links'
+        '--rsync-path=sudo rsync'
         '--size-only'
-        '--rsync-path="sudo rsync"'
     )
     koopa::rsync "${flags[@]}" "$@"
     return 0
