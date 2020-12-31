@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# FIXME CONSIDER MIGRATING TO GNU STOW APPROACH HERE.
+# NOTE Consider migrating to GNU Stow approach here in future update.
 _koopa_app_prefix() { # {{{1
     # """
     # Application prefix.
@@ -473,7 +473,7 @@ _koopa_ruby_gems_prefix() { # {{{1
     # shellcheck disable=SC2039
     local prefix
     prefix="${GEM_HOME:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/ruby/gem"
+    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/ruby/gems"
     _koopa_print "$prefix"
     return 0
 }
