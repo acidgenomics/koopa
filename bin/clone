@@ -1,1 +1,7 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+. "$(dirname "${BASH_SOURCE[0]}")/../shell/bash/include/header.sh"
+
 # FIXME MAKE A FUNCTION THAT WRAPS RSYNC WITH SANER DEFAULTS
+koopa::clone "$@"
