@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME RENAME THIS TO CLONE-SYSTEM ?
+
 koopa::_linux_rsync() { # {{{1
     # """
     # rsync a desired prefix across virtual machines.
@@ -16,6 +18,7 @@ koopa::_linux_rsync() { # {{{1
     rsync='/usr/bin/rsync'
     koopa::assert_is_installed "$rsync"
     # FIXME RETHINK THIS APPROACH, USING CLONE INSTEAD?
+    # FIXME RETHINK USING KOOPA::CLONE INTERNALLY.
     rsync_flags="$(koopa::rsync_flags)"
     while (("$#"))
     do
