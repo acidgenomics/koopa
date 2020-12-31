@@ -220,6 +220,10 @@ koopa::has_gnu_findutils() { # {{{1
     _koopa_has_gnu_findutils "$@"
 }
 
+koopa::has_gnu_rsync() { # {{{1
+    _koopa_has_gnu_rsync "$@"
+}
+
 koopa::has_gnu_sed() { # {{{1
     _koopa_has_gnu_sed "$@"
 }

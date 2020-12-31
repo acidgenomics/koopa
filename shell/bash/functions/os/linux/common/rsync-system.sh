@@ -15,6 +15,7 @@ koopa::_linux_rsync() { # {{{1
     koopa::assert_has_args "$#"
     rsync='/usr/bin/rsync'
     koopa::assert_is_installed "$rsync"
+    # FIXME RETHINK THIS APPROACH, USING CLONE INSTEAD?
     rsync_flags="$(koopa::rsync_flags)"
     while (("$#"))
     do
@@ -53,6 +54,7 @@ koopa::_linux_rsync() { # {{{1
     koopa::sys_mkdir "$prefix"
     koopa::delete_broken_symlinks "$prefix"
     koopa::sys_set_permissions -ru "$prefix"
+    # FIXME NEED TO WRAP WITH KOOPA::RSYNC HERE.
     rsync "${rsync_flags[@]}" \
         "${user}@${source_ip}:${prefix}/" \
         "${prefix}/"

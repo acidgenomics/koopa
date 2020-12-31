@@ -170,6 +170,19 @@ koopa::assert_has_gnu_findutils() {  #{{{1
     return 0
 }
 
+koopa::assert_has_gnu_rsync() {  #{{{1
+    # """
+    # Assert that GNU rsync is installed.
+    # @note Updated 2020-12-31.
+    # """
+    koopa::assert_has_no_args "$#"
+    if ! koopa::has_gnu_rsync
+    then
+        koopa::stop 'GNU rsync is not installed.'
+    fi
+    return 0
+}
+
 koopa::assert_has_gnu_sed() {  #{{{1
     # """
     # Assert that GNU sed is installed.
