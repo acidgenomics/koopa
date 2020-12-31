@@ -71,16 +71,14 @@ koopa::test_roff() { # {{{1
 
     koopa::h2 "Running exported script '--help' flag checks."
     # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
-    # FIXME USE KOOPA PREFIXES HERE.
     readarray -t bin_dirs <<< "$( \
         find "$koopa_prefix" \
             -mindepth 1 \
             -type d \
             \( -name 'bin' -o -name 'sbin' \) \
-            -not -path "${koopa_prefix}/app/*" \
-            -not -path "${koopa_prefix}/cellar/*" \
-            -not -path "${koopa_prefix}/dotfiles/*" \
-            -not -path "${koopa_prefix}/opt/*" \
+            -not -path "$(koopa::app_prefix)/*" \
+            -not -path "$(koopa::dotfiles_prefix)/*" \
+            -not -path "$(koopa::opt_prefix)/*" \
             -not -path "${koopa_prefix}/shunit2-*" \
             -print \
         | sort \
