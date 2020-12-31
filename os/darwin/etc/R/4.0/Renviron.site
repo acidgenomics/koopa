@@ -56,8 +56,6 @@ R_LIBS_USER="~/Library/R/%v/library"
 ## Package configuration {{{1
 ## =============================================================================
 
-## FIXME MAKE KOOPA HANDLE THIS IN SHELL CONFIG INSTEAD?
-
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
@@ -79,8 +77,6 @@ TZ="America/New_York"
 
 ## libxml2 {{{2
 ## -----------------------------------------------------------------------------
-
-## FIXME HANDLE THIS IN SHELL CONFIG INSTEAD?
 
 XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
 

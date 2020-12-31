@@ -71,7 +71,7 @@ _koopa_activate_emacs() { # {{{1
 _koopa_activate_ensembl_perl_api() { # {{{1
     # """
     # Activate Ensembl Perl API.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-12-31.
     #
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
@@ -80,7 +80,7 @@ _koopa_activate_ensembl_perl_api() { # {{{1
     local prefix
     prefix="$(_koopa_ensembl_perl_api_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_start "${prefix}/ensembl-git-tools/bin"
+    _koopa_activate_prefix "${prefix}/ensembl-git-tools"
     PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl/modules"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-compara/modules"
@@ -132,13 +132,16 @@ _koopa_activate_homebrew() { # {{{1
         _koopa_activate_prefix "$prefix"
     fi
     _koopa_is_installed brew || return 0
-    export HOMEBREW_CASK_OPTS='--no-quarantine'
-    export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
+    export HOMEBREW_INSTALL_CLEANUP=1
     # Stopgap fix for TLS SSL issues with some Homebrew casks.
     if [ -x "${prefix}/opt/curl/bin/curl" ]
     then
         export HOMEBREW_FORCE_BREWED_CURL=1
+    fi
+    if _koopa_is_macos
+    then
+        export HOMEBREW_CASK_OPTS='--no-quarantine'
     fi
     _koopa_activate_homebrew_gnu_prefix coreutils
     _koopa_activate_homebrew_gnu_prefix findutils
@@ -239,17 +242,16 @@ _koopa_activate_homebrew_python() { # {{{1
     return 0
 }
 
-# FIXME RETHINK THIS STEP.
 _koopa_activate_homebrew_ruby_gems() { # {{{1
     # """
     # Activate Homebrew Ruby gems.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-12-31.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ruby.rb
     # - https://stackoverflow.com/questions/12287882/
     # """
-    _koopa_force_add_to_path_start "$(_koopa_homebrew_ruby_gems_prefix)"
+    _koopa_activate_prefix "$(_koopa_homebrew_ruby_gems_prefix)"
     return 0
 }
 
@@ -337,6 +339,19 @@ _koopa_activate_local_etc_profile() { # {{{1
             . "$script"
         fi
     done
+    return 0
+}
+
+_koopa_activate_local_paths() { # {{{1
+    # """
+    # Activate local user paths.
+    # @note Updated 2020-12-31.
+    # """
+    _koopa_force_add_to_path_start \
+        "${HOME}/bin" \
+        "${HOME}/.local/bin"
+    _koopa_force_add_to_manpath_start \
+        "${HOME}/.local/share/man"
     return 0
 }
 
@@ -434,45 +449,27 @@ _koopa_activate_perlbrew() { # {{{1
     return 0
 }
 
-# FIXME RETHINK THIS?
 _koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-12-31.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
-    #
-    # PIPX_HOME: The default virtual environment location is '~/.local/pipx'
-    # and can be overridden by setting the environment variable 'PIPX_HOME'.
-    # Virtual environments will be installed to '$PIPX_HOME/venvs').
-    #
-    # PIPX_BIN_DIR: The default app location is '~/.local/bin' and can be
-    # overridden by setting the environment variable 'PIPX_BIN_DIR'.
     # """
     # shellcheck disable=SC2039
-    local shared_prefix
+    local prefix
     _koopa_is_installed pipx || return 0
-    [ -n "${PIPX_HOME:-}" ] && return 0
-    [ -n "${PIPX_BIN_DIR:-}" ] && return 0
-    shared_prefix="$(_koopa_opt_prefix)/python/pipx"
-    if [ -d "$shared_prefix" ]
-    then
-        # Shared user installation.
-        PIPX_HOME="$shared_prefix"
-        PIPX_BIN_DIR="${shared_prefix}/bin"
-    else
-        # Local user installation.
-        PIPX_HOME="${HOME}/.local/pipx"
-        PIPX_BIN_DIR="${HOME}/.local/bin"
-    fi
+    prefix="$(_koopa_pipx_prefix)"
+    [ -d "$prefix" ] || return 0
+    PIPX_HOME="$prefix"
     export PIPX_HOME
+    PIPX_BIN_DIR="${prefix}/bin"
     export PIPX_BIN_DIR
     _koopa_force_add_to_path_start "$PIPX_BIN_DIR"
     return 0
 }
 
-# FIXME RETHINK THIS? NEED TO USE FORCE?
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
@@ -503,7 +500,7 @@ _koopa_activate_pkg_config() { # {{{1
     then
         PKG_CONFIG_PATH="$("$sys_pkg_config" --variable pc_path pkg-config)"
     fi
-    _koopa_add_to_pkg_config_path_start \
+    _koopa_force_add_to_pkg_config_path_start \
         "${make_prefix}/share/pkgconfig" \
         "${make_prefix}/lib/pkgconfig" \
         "${make_prefix}/lib64/pkgconfig" \
@@ -555,20 +552,15 @@ _koopa_activate_pyenv() { # {{{1
     return 0
 }
 
-# FIXME RETHINK THIS?
 _koopa_activate_python_site_packages() { # {{{1
     # """
     # Activate Python site packages library.
-    # @note Updated 2020-11-16.
+    # @note Updated 2020-12-31.
     #
     # This ensures that 'bin' will be added to PATH, which is useful when
     # installing via pip with '--target' flag.
     # """
-    # shellcheck disable=SC2039
-    local prefix
-    prefix="$(_koopa_python_site_packages_prefix)"
-    [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_start "${prefix:?}/bin"
+    _koopa_activate_prefix "$(_koopa_python_site_packages_prefix)"
     return 0
 }
 
@@ -594,10 +586,6 @@ _koopa_activate_rbenv() { # {{{1
     #
     # See also:
     # - https://github.com/rbenv/rbenv
-    #
-    # Alternate approaches:
-    # > _koopa_force_add_to_path_start "$(rbenv root)/shims"
-    # > _koopa_force_add_to_path_start "${HOME}/.rbenv/shims"
     # """
     # shellcheck disable=SC2039
     local nounset prefix script
@@ -623,15 +611,14 @@ _koopa_activate_rbenv() { # {{{1
 _koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2020-07-17.
+    # @note Updated 2020-12-23.
     # """
     # shellcheck disable=SC2039
-    local gem_home
-    gem_home="${GEM_HOME:-}"
-    [ -z "$gem_home" ] && gem_home="${HOME}/.gem"
-    [ -d "$gem_home" ] || return 0
-    _koopa_activate_prefix "$gem_home"
-    export GEM_HOME="$gem_home"
+    local prefix
+    prefix="$(_koopa_ruby_gems_prefix)"
+    [ -d "$prefix" ] || return 0
+    _koopa_activate_prefix "$(_koopa_ruby_gems_prefix)"
+    export GEM_HOME="$prefix"
     return 0
 }
 
@@ -728,15 +715,13 @@ _koopa_activate_standard_paths() { # {{{1
         '/usr/bin' \
         '/sbin' \
         '/bin'
+    _koopa_add_to_manpath_end \
+        '/usr/share/man'
     _koopa_force_add_to_path_start \
         "${make_prefix}/bin" \
         "${make_prefix}/sbin" \
-        "${HOME}/bin" \
-        "${HOME}/.local/bin"
-    _koopa_force_add_to_manpath_end '/usr/share/man'
     _koopa_force_add_to_manpath_start \
-        "${make_prefix}/share/man" \
-        "${HOME}/.local/share/man"
+        "${make_prefix}/share/man"
     return 0
 }
 
