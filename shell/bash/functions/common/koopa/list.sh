@@ -1,34 +1,13 @@
 #!/usr/bin/env bash
 
-# FIXME IMPROVE SUPPORT FOR ANY KOOPA::LIST_* FUNCTION.
+# FIXME REORGANIZE THIS SCRIPT?
+
+# FIXME THIS NEEDS TO EXCLUDE 'APP' and 'OPT' BETTER.
 koopa::list() { # {{{1
     # """
-    # List exported koopa scripts.
-    # @note Updated 2020-12-03.
+    # List koopa programs available in PATH.
+    # @note Updated 2020-12-31.
     # """
-    local name
-    name="${1:-}"
-    case "$name" in
-        '')
-            # FIXME THIS NEEDS TO EXCLUDE 'APP' and 'OPT' BETTER.
-            koopa::rscript_vanilla 'list'
-            ;;
-        # FIXME SIMPLIFY THE ARGPARSING HERE.
-        app-versions)
-            shift 1
-            koopa::list_app_versions "$@"
-            ;;
-        dotfiles)
-            shift 1
-            koopa::list_dotfiles "$@"
-            ;;
-        path-priority)
-            shift 1
-            koopa::list_path_priority "$@"
-            ;;
-        *)
-            koopa::invalid_arg "$*"
-            ;;
-    esac
+    koopa::rscript_vanilla 'list'
     return 0
 }
