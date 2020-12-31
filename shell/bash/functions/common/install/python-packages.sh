@@ -3,7 +3,7 @@
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2020-11-23.
+    # @note Updated 2020-12-31.
     # """
     local install_flags name_fancy pkg pkg_lower pkgs pos python version
     python="$(koopa::python)"
@@ -43,22 +43,26 @@ koopa::install_python_packages() { # {{{1
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
-            'Logbook'
-            'black'
-            'bpytop'
             'flake8'
             'pip'
-            'pipx'
             'psutil'
             'pyflakes'
             'pylint'
             'pytaglib'
             'pytest'
-            'ranger-fm'
             'setuptools'
             'six'
             'wheel'
         )
+        if ! koopa::is_installed brew
+        then
+            pkgs+=(
+                'black'
+                'bpytop'
+                'pipx'
+                'ranger-fm'
+            )
+        fi
         for i in "${!pkgs[@]}"
         do
             pkg="${pkgs[$i]}"
