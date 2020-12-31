@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+# FIXME THIS NEEDS TO BE DEFINED IN R-KOOPA.
+
 args <- commandArgs()
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]
@@ -14,11 +16,11 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 #'
 #' Check that all scripts in `bin` and `sbin` directories have corresponding
 #' documentation in `man/man1`.
-#' @note Updated 2020-08-06.
+#' @note Updated 2020-12-31.
 #'
 checkBinManConsistency <- function() {
     ## Exclude these directories from search.
-    exclude <- file.path(koopaPrefix, "(dotfiles|opt|system)", "")
+    exclude <- file.path(koopaPrefix, "(app|dotfiles|opt|system)", "")
     h1("Checking bin/man consistency.")
     status <- 0L
     ## Bin-to-man mapping {{{1
