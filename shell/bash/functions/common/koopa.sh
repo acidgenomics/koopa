@@ -78,6 +78,15 @@ koopa::_koopa_install() { # {{{1
     return 0
 }
 
+# FIXME REWORK THIS.
+koopa::_koopa_link() { # {{{1
+    # """
+    # Linker scripts.
+    # @note Updated 2020-12-31.
+    # """
+    return 0
+}
+
 # FIXME SIMPLIFY THE ARGPARSING HERE.
 koopa::_koopa_list() { # {{{1
     # """
