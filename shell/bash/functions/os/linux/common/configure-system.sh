@@ -3,7 +3,7 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2020-11-23.
+    # @note Updated 2020-12-31.
     #
     # Intended primarily for virtual machine and Docker image builds.
     # """
@@ -119,8 +119,6 @@ koopa::linux_configure_system() { # {{{1
         [passwordless_sudo]=1
         [python_version]="$(koopa::variable 'python')"
         [r_version]="$(koopa::variable 'r')"
-        [rsync]=0
-        [source_ip]=''
         [ssh_key]=1
         [which_conda]='miniconda'
     )
@@ -159,10 +157,6 @@ koopa::linux_configure_system() { # {{{1
                 ;;
             --r-version=*)
                 dict[r_version]="${1#*=}"
-                shift 1
-                ;;
-            --source-ip=*)
-                dict[source_ip]="${1#*=}"
                 shift 1
                 ;;
             # Invalid arg trap -------------------------------------------------
@@ -261,27 +255,10 @@ koopa::linux_configure_system() { # {{{1
             koopa::stop 'Invalid mode.'
             ;;
     esac
-    if [[ -n "${dict[source_ip]}" ]]
-    then
-        dict[rsync]=1
-    fi
     if [[ "${dict[docker]}" -eq 1 ]]
     then
         dict[delete_cache]=1
         dict[ssh_key]=0
-    fi
-    if [[ "${dict[rsync]}" -eq 1 ]]
-    then
-        dict[install_aspera_connect]=0
-        dict[install_conda]=0
-        dict[install_conda_envs]=0
-        dict[install_homebrew]=0
-        dict[install_homebrew_packages]=0
-        dict[install_perl_packages]=0
-        dict[install_python_packages]=0
-        dict[install_r_packages]=0
-        dict[install_ruby_packages]=0
-        dict[install_rust_packages]=0
     fi
     # Building Python from source can break dnf on Fedora 32+.
     if koopa::is_fedora
@@ -363,14 +340,6 @@ koopa::linux_configure_system() { # {{{1
         'xml2-config' 'xz'
     koopa::assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
     sudo ldconfig
-
-    # rsync mode {{{2
-    # --------------------------------------------------------------------------
-
-    if [[ "${dict[rsync]}" -eq 1 ]]
-    then
-        koopa::linux_rsync_system --source-ip="${dict[source_ip]}"
-    fi
 
     # Programs {{{2
     # --------------------------------------------------------------------------
