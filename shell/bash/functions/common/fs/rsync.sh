@@ -1,6 +1,23 @@
 #!/usr/bin/env bash
 
-koopa::_rsync() { # {{{1
+koopa::clone() { # {{{1
+    # """
+    # Clone files using rsync (with saner defaults).
+    # @note Updated 2020-12-31.
+    # """
+    koopa::assert_has_no_flags "$@"
+    koopa::assert_has_args_eq "$#" 2
+    local flags
+    flags=(
+        '--archive'
+        '--delete-before'
+    )
+    koopa::rsync "${flags[@]}" "$@"
+    return 0
+}
+
+# NOTE Consider checking for trailing slashes on directories.
+koopa::rsync() { # {{{1
     # """
     # GNU rsync wrapper.
     # @note Updated 2020-12-31.
@@ -34,6 +51,7 @@ koopa::_rsync() { # {{{1
     # """
     local flags
     koopa::assert_has_gnu_rsync
+    koopa::assert_has_args_ge "$#" 2
     flags=(
         '--human-readable'
         '--progress'
@@ -49,22 +67,6 @@ koopa::_rsync() { # {{{1
         )
     fi
     rsync "${flags[@]}" "$@"
-    return 0
-}
-
-koopa::clone() { # {{{1
-    # """
-    # Clone files using rsync (with saner defaults).
-    # @note Updated 2020-12-31.
-    # """
-    koopa::assert_has_no_flags "$@"
-    koopa::assert_has_args_eq "$#" 2
-    local flags
-    flags=(
-        '--archive'
-        '--delete-before'
-    )
-    koopa::_rsync "${flags[@]}" "$@"
     return 0
 }
 
@@ -89,7 +91,7 @@ koopa::rsync_cloud() { # {{{1
         '--size-only'
         '--rsync-path="sudo rsync"'
     )
-    koopa::_rsync "${flags[@]}" "$@"
+    koopa::rsync "${flags[@]}" "$@"
     return 0
 }
 
@@ -117,6 +119,6 @@ koopa::rsync_ignore() { # {{{1
     then
         flags+=("--filter=dir-merge,- ${ignore_global}")
     fi
-    koopa::_rsync "${flags[@]}" "$@"
+    koopa::rsync "${flags[@]}" "$@"
     return 0
 }

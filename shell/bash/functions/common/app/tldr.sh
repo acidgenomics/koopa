@@ -99,7 +99,7 @@ koopa::tldr_display() { # {{{1
 koopa::tldr_download_cache() { # {{{1
     # """
     # Cache a local copy of the tldr-pages repo.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-12-31.
     # """
     local file prefix tmp_dir url
     koopa::assert_has_no_args "$#"
@@ -114,8 +114,9 @@ koopa::tldr_download_cache() { # {{{1
         file='master.tar.gz'
         koopa::download "$url" "$file"
         koopa::extract "$file"
-        # FIXME USE KOOPA WRAPPER HERE INSTEAD.
-        rsync -a 'tldr-pages-tldr-'*'/pages/' "${prefix}/"
+        koopa::rsync --archive \
+            'tldr-pages-tldr-'*'/pages/' \
+            "${prefix}/"
     )
     koopa::rm "$tmp_dir"
     return 0
@@ -163,12 +164,13 @@ koopa::tldr_index_file() { # {{{1
 koopa::tldr_list_pages() { # {{{1
     # """
     # List locally cached tldr pages.
-    # @note Updated 2020-06-20.
+    # @note Updated 2020-12-31.
     # """
     local cmd pages prefix
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed fzf
     prefix="$(koopa::tldr_prefix)"
+    [[ ! -d "$prefix" ]] && koopa::mkdir "$prefix"
     readarray -t pages <<< "$( \
         find "$prefix" \
             -mindepth 1 \
