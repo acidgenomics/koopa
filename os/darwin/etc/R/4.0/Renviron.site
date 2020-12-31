@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2020-12-01.
+## Updated 2020-12-31.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -102,10 +102,8 @@ WORKON_HOME="${KOOPA_OPT_PREFIX}/python/virtualenvs"
 ## units / udunits {{{2
 ## -----------------------------------------------------------------------------
 
-## FIXME HANDLE THIS IN SHELL INSTEAD?
-
 ## The units package requires udunits to be installed.
 ## Use homebrew: brew install udunits
 
-UDUNITS2_INCLUDE="/usr/include/udunits2"
-UDUNITS2_LIBS="/usr/local/lib"
+UDUNITS2_INCLUDE="${HOMEBREW_OPT_PREFIX}/udunits/include"
+UDUNITS2_LIBS="${HOMEBREW_OPT_PREFIX}/udunits/lib"
