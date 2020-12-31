@@ -5,6 +5,8 @@
 # FIXME NEED TO ENSURE THAT 'HOME' SYMLINK EXISTS IN USER CONFIG.
 # FIXME TEST THIS OUT ON A CLEAN INSTALL MACHINE.
 
+# FIXME SYSTEM PYTHON LIBRARY IS MASKING KOOPA OPT IN PATH...
+
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
