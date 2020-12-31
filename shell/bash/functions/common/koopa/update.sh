@@ -1,37 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::update() { # {{{1
-    # """
-    # Update koopa installation.
-    # @note Updated 2020-11-18.
-    # """
-    local name
-    name="${1:-}"
-    case "$name" in
-        '')
-            name='koopa'
-            ;;
-        system|user)
-            name="koopa_${name}"
-            ;;
-        # Defunct --------------------------------------------------------------
-        --fast)
-            koopa::defunct 'koopa update'
-            ;;
-        --source-ip=*)
-            koopa::defunct 'koopa configure-vm --source-ip=SOURCE_IP'
-            ;;
-        --system)
-            koopa::defunct 'koopa update system'
-            ;;
-        --user)
-            koopa::defunct 'koopa update user'
-            ;;
-    esac
-    koopa::_run_function "update_${name}"
-    return 0
-}
-
 # FIXME Ensure we run the dotfiles installers here.
 koopa::update_koopa() { # {{{1
     # """

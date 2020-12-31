@@ -2,7 +2,7 @@
 
 koopa::_koopa_app() { # {{{1
     # """
-    # Application commands.
+    # Parse user input to 'koopa app'.
     # @note Updated 2020-12-31.
     # """
     local name
@@ -30,8 +30,8 @@ koopa::_koopa_app() { # {{{1
 
 koopa::_koopa_header() { # {{{1
     # """
-    # Source script header.
-    # @note Updated 2020-09-11.
+    # Parse user input to 'koopa header'.
+    # @note Updated 2020-12-31.
     #
     # Useful for private scripts using koopa code outside of package.
     # """
@@ -64,8 +64,8 @@ koopa::_koopa_header() { # {{{1
 
 koopa::_koopa_install() { # {{{1
     # """
-    # Install commands.
-    # @note Updated 2020-12-02.
+    # Parse user input to 'koopa install'.
+    # @note Updated 2020-12-31.
     # """
     local name
     name="${1:-}"
@@ -81,7 +81,7 @@ koopa::_koopa_install() { # {{{1
 # FIXME SIMPLIFY THE ARGPARSING HERE.
 koopa::_koopa_list() { # {{{1
     # """
-    # List exported koopa scripts.
+    # Parse user input to 'koopa list'.
     # @note Updated 2020-12-31.
     # """
     local name
@@ -112,8 +112,8 @@ koopa::_koopa_list() { # {{{1
 
 koopa::_koopa_uninstall() { # {{{1
     # """
-    # Uninstall commands.
-    # @note Updated 2020-11-18.
+    # Parse user input to 'koopa uninstall'.
+    # @note Updated 2020-12-31.
     # """
     local name
     name="${1:-}"
@@ -122,6 +122,39 @@ koopa::_koopa_uninstall() { # {{{1
         koopa::stop 'Program name to uninstall is required.'
     fi
     koopa::_run_function "uninstall_${name}"
+    return 0
+}
+
+koopa::_koopa_update() { # {{{1
+    # """
+    # Parse user input to 'koopa update'.
+    # @note Updated 2020-12-31.
+    # """
+    local name
+    name="${1:-}"
+    case "$name" in
+        '')
+            name='koopa'
+            ;;
+        system|user)
+            name="koopa_${name}"
+            ;;
+        # Defunct --------------------------------------------------------------
+        --fast)
+            koopa::defunct 'koopa update'
+            ;;
+        --source-ip=*)
+            koopa::defunct 'koopa configure-vm --source-ip=SOURCE_IP'
+            ;;
+        --system)
+            koopa::defunct 'koopa update system'
+            ;;
+        --user)
+            koopa::defunct 'koopa update user'
+            ;;
+    esac
+    shift 1
+    koopa::_run_function "update_${name}" "$@"
     return 0
 }
 
@@ -180,12 +213,11 @@ koopa::_which_function() { # {{{1
     return 0
 }
 
-# FIXME NEED TOP_LEVEL SUPPORT FOR LINK HERE.
-
+# FIXME NEED TO ADD SUPPORT FOR LINK HERE.
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2020-12-01.
+    # @note Updated 2020-12-31.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
@@ -201,7 +233,8 @@ koopa::koopa() { # {{{1
         install | \
         link | \
         list | \
-        uninstall)
+        uninstall | \
+        update)
             f="_koopa_${1}"
             shift 1
             ;;
@@ -280,8 +313,7 @@ koopa::koopa() { # {{{1
             esac
             ;;
         check-system | \
-        test | \
-        update)
+        test)
             f="$1"
             shift 1
             ;;

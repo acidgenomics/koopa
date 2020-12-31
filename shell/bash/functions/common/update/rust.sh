@@ -3,11 +3,12 @@
 koopa::update_rust() { # {{{1
     # """
     # Install Rust.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-12-31.
     # """
-    local force
+    local force name_fancy
     koopa::assert_has_no_envs
     force=0
+    name_fancy='Rust'
     while (("$#"))
     do
         case "$1" in
@@ -21,12 +22,12 @@ koopa::update_rust() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
-    [[ "$force" -eq 0 ]] && koopa::is_current_version rust && return 0
-    if ! koopa::is_installed rustup
+    if [[ "$force" -eq 0 ]] && koopa::is_current_version rust
     then
-        koopa::note 'rustup is not installed.'
+        koopa::note "${name_fancy} is up-to-date."
         return 0
     fi
+    koopa::assert_is_installed rustup
     koopa::h1 'Updating Rust via rustup.'
     export RUST_BACKTRACE='full'
     # rustup v1.21.0 fix.
@@ -36,6 +37,7 @@ koopa::update_rust() { # {{{1
     koopa::rm "${CARGO_HOME}/bin/"{'cargo-fmt','rustfmt'}
     # > rustup update stable
     rustup update
+    koopa::update_success "$name_fancy"
     return 0
 }
 
