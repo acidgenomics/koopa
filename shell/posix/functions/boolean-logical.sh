@@ -85,6 +85,14 @@ _koopa_has_gnu_findutils() { # {{{1
     _koopa_has_gnu find
 }
 
+_koopa_has_gnu_rsync() { # {{{1
+    # """
+    # Is GNU rsync installed?
+    # @note Updated 2020-12-31.
+    # """
+    _koopa_has_gnu rsync
+}
+
 _koopa_has_gnu_sed() { # {{{1
     # """
     # Is GNU tar installed?

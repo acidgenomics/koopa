@@ -4,4 +4,5 @@
 . "$(dirname "${BASH_SOURCE[0]}")/../shell/bash/include/header.sh"
 
 # FIXME MAKE A FUNCTION THAT WRAPS RSYNC WITH SANER DEFAULTS
+# FIXME ASSERT THAT GNU RSYNC IS INSTALLED.
 koopa::clone "$@"

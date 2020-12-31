@@ -1,6 +1,78 @@
 #!/usr/bin/env bash
 
+# FIXME CREATE AN ASSERT CHECK FOR NO FLAGS.
+
+# FIXME CHECK FOR FLAGS AND DONT ALLOW HERE.
+koopa::clone() { # {{{1
+    # """
+    # Clone files using rsync (with saner defaults).
+    # @note Updated 2020-12-31.
+    # """
+    local flags
+    flags=(
+        '--archive'
+        '--delete-before'
+    )
+    koopa::rsync "${flags[@]}" "$@"
+    return 0
+}
+
+koopa::rsync() { # {{{1
+    # """
+    # GNU rsync wrapper.
+    # @note Updated 2020-12-31.
+    #
+    # Useful flags:
+    #     --delete-before         receiver deletes before xfer, not during
+    #     --iconv=CONVERT_SPEC    request charset conversion of filenames
+    #     --numeric-ids           don't map uid/gid values by user/group name
+    #     --partial               keep partially transferred files
+    #     --progress              show progress during transfer
+    # -A, --acls                  preserve ACLs (implies -p)
+    # -H, --hard-links            preserve hard links
+    # -L, --copy-links            transform symlink into referent file/dir
+    # -O, --omit-dir-times        omit directories from --times
+    # -P                          same as --partial --progress
+    # -S, --sparse                handle sparse files efficiently
+    # -X, --xattrs                preserve extended attributes
+    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
+    # -g, --group                 preserve group
+    # -h, --human-readable        output numbers in a human-readable format
+    # -n, --dry-run               perform a trial run with no changes made
+    # -o, --owner                 preserve owner (super-user only)
+    # -r, --recursive             recurse into directories
+    # -x, --one-file-system       don't cross filesystem boundaries
+    # -z, --compress              compress file data during the transfer
+    #
+    # Use '--rsync-path="sudo rsync"' to sync across machines with sudo.
+    #
+    # See also:
+    # - https://unix.stackexchange.com/questions/165423
+    # """
+    local flags
+    koopa::assert_has_gnu_rsync
+    flags=(
+        # > '--delete-before'
+        '--archive'
+        '--human-readable'
+        '--progress'
+        '--protect-args'
+    )
+    if koopa::is_macos
+    then
+        flags+=(
+            '--iconv=utf-8,utf-8-mac'
+        )
+    fi
+    rsync "${flags[@]}" "$@"
+    return 0
+}
+
 koopa::rsync_cloud() { # {{{1
+    # """
+    # Rsync to cloud object storage buckets, such as AWS.
+    # @note Updated 2020-12-31.
+    # """
     local flags
     koopa::assert_has_args "$#"
     koopa::assert_is_installed rsync
@@ -20,65 +92,13 @@ koopa::rsync_cloud() { # {{{1
         '--size-only'
         '--stats'
         '--verbose'
+        '--rsync-path="sudo rsync"'
     )
-    rsync "${flags[@]}" --rsync-path='sudo rsync' "$@"
+    rsync "${flags[@]}" "$@"
     return 0
 }
 
-koopa::rsync_flags() { # {{{1
-    # """
-    # rsync flags.
-    # @note Updated 2020-12-14.
-    #
-    #     --delete-before         receiver deletes before xfer, not during
-    #     --iconv=CONVERT_SPEC    request charset conversion of filenames
-    #     --numeric-ids           don't map uid/gid values by user/group name
-    #     --partial               keep partially transferred files
-    #     --progress              show progress during transfer
-    # -A, --acls                  preserve ACLs (implies -p)
-    # -H, --hard-links            preserve hard links
-    # -L, --copy-links            transform symlink into referent file/dir
-    # -O, --omit-dir-times        omit directories from --times
-    # -P                          same as --partial --progress
-    # -S, --sparse                handle sparse files efficiently
-    # -X, --xattrs                preserve extended attributes
-    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
-    # -g, --group                 preserve group
-    # -h, --human-readable        output numbers in a human-readable format
-    # -n, --dry-run               perform a trial run with no changes made
-    # -o, --owner                 preserve owner (super-user only)
-    # -r, --recursive             recurse into directories
-    # -x, --one-file-system       don't cross filesystem boundaries    
-    # -z, --compress              compress file data during the transfer
-    #
-    # Use '--rsync-path="sudo rsync"' to sync across machines with sudo.
-    #
-    # See also:
-    # - https://unix.stackexchange.com/questions/165423
-    # """
-    local flags
-    koopa::assert_has_no_args "$#"
-    flags=(
-        '--archive'
-        '--delete-before'
-        '--human-readable'
-        '--progress'
-        '--protect-args'
-    )
-    koopa::print "${flags[@]}"
-    return 0
-}
-
-koopa::rsync_flags_macos() { # {{{1
-    # """
-    # macOS rsync flags.
-    # @note Updated 2020-08-06.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::print "$(koopa::rsync_flags) --iconv=utf-8,utf-8-mac"
-    return 0
-}
-
+# FIXME REWORK, WRAPPING KOOPA::RSYNC
 koopa::rsync_ignore() { # {{{1
     # """
     # Run rsync with automatic ignore.
