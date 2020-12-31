@@ -18,10 +18,10 @@ KOOPA_OPT_PREFIX="${KOOPA_OPT_PREFIX:-/opt/koopa/opt}"
 ## =============================================================================
 
 ## Restrict path, so we don't mask compiler binaries with conda or venv.
-PATH="/usr/local/bin:/usr/bin:/bin"
+## > PATH="/usr/local/bin:/usr/bin:/bin"
 
 ## Include koopa.
-PATH="${KOOPA_PREFIX}/bin:${PATH}"
+## > PATH="${KOOPA_PREFIX}/bin:${PATH}"
 
 ## CRAN developer tools {{{2
 ## -----------------------------------------------------------------------------
@@ -38,8 +38,8 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 ## Python {{{2
 ## -----------------------------------------------------------------------------
 
-PATH="/usr/local/lib/python3.9/site-packages/bin:${PATH}"
-PATH="${KOOPA_OPT_PREFIX}/python/site-packages/bin:${PATH}"
+## > PATH="/usr/local/lib/python3.9/site-packages/bin:${PATH}"
+## > PATH="${KOOPA_OPT_PREFIX}/python/site-packages/bin:${PATH}"
 
 ## Pandoc {{{2
 ## -----------------------------------------------------------------------------
@@ -55,6 +55,8 @@ R_LIBS_USER="~/Library/R/%v/library"
 
 ## Package configuration {{{1
 ## =============================================================================
+
+## FIXME MAKE KOOPA HANDLE THIS IN SHELL CONFIG INSTEAD?
 
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
@@ -77,6 +79,8 @@ TZ="America/New_York"
 
 ## libxml2 {{{2
 ## -----------------------------------------------------------------------------
+
+## FIXME HANDLE THIS IN SHELL CONFIG INSTEAD?
 
 XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
 
@@ -101,6 +105,8 @@ WORKON_HOME="${KOOPA_OPT_PREFIX}/python/virtualenvs"
 
 ## units / udunits {{{2
 ## -----------------------------------------------------------------------------
+
+## FIXME HANDLE THIS IN SHELL INSTEAD?
 
 ## The units package requires udunits to be installed.
 ## Use homebrew: brew install udunits
