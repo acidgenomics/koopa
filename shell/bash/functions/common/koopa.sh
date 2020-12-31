@@ -78,16 +78,19 @@ koopa::_koopa_install() { # {{{1
     return 0
 }
 
-# FIXME REWORK THIS.
 koopa::_koopa_link() { # {{{1
     # """
-    # Linker scripts.
+    # Parse user input to 'koopa link'.
     # @note Updated 2020-12-31.
     # """
+    local name
+    name="${1:-}"
+    [[ -z "$name" ]] && koopa::invalid_arg
+    shift 1
+    koopa::_run_function "link_${name}" "$@"
     return 0
 }
 
-# FIXME SIMPLIFY THE ARGPARSING HERE.
 koopa::_koopa_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
@@ -95,27 +98,14 @@ koopa::_koopa_list() { # {{{1
     # """
     local name
     name="${1:-}"
-    case "$name" in
-        '')
-            koopa::list
-            ;;
-        # FIXME SIMPLIFY THE ARGPARSING HERE.
-        app-versions)
-            shift 1
-            koopa::list_app_versions "$@"
-            ;;
-        dotfiles)
-            shift 1
-            koopa::list_dotfiles "$@"
-            ;;
-        path-priority)
-            shift 1
-            koopa::list_path_priority "$@"
-            ;;
-        *)
-            koopa::invalid_arg "$*"
-            ;;
-    esac
+    if [[ -z "$name" ]]
+    then
+        name='list'
+    else
+        name="list_${name}"
+        shift 1
+    fi
+    koopa::_run_function "$name" "$@"
     return 0
 }
 

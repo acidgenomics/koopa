@@ -3,7 +3,7 @@
 koopa::link_emacs() { # {{{1
     # """
     # Link Emacs.
-    # @note Updated 2020-11-24.
+    # @note Updated 2020-12-31.
     #
     # Currently supports Doom, Spacemacs, and minimal ESS config.
     # """
@@ -26,18 +26,18 @@ koopa::link_emacs() { # {{{1
     fi
     case "$name" in
         doom)
-            link-dotfile \
+            koopa::link_dotfile \
                 --force \
                 'app/emacs/doom' \
                 'doom.d'
             ;;
         minimal)
-            link-dotfile \
+            koopa::link_dotfile \
                 --force \
                 'app/emacs/minimal/emacs.el'
             ;;
         spacemacs)
-            link-dotfile \
+            koopa::link_dotfile \
                 --force \
                 'app/emacs/spacemacs/spacemacs.el' \
                 'spacemacs'
