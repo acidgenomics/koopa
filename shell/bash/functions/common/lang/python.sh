@@ -410,7 +410,7 @@ koopa::conda_remove_env() { # {{{1
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2020-08-13.
+    # @note Updated 2020-12-31.
     # """
     local pip_install_flags pos python reinstall target
     koopa::assert_has_args "$#"
@@ -455,6 +455,7 @@ koopa::pip_install() { # {{{1
         'Target' "$target"
     pip_install_flags=(
         "--target=${target}"
+        '--disable-pip-version-check'
         '--no-warn-script-location'
         '--upgrade'
     )
