@@ -10,7 +10,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2020-11-24.
+    # @note Updated 2020-12-31.
     # """
     case "${1:-}" in
         --help|-h)
@@ -82,10 +82,11 @@ _koopa_activate() { # {{{1
         _koopa_activate_perlbrew
         _koopa_activate_rust
         _koopa_activate_rbenv
+        _koopa_activate_python_site_packages
+        _koopa_activate_python_startup
         _koopa_activate_pyenv
         _koopa_activate_conda
         _koopa_activate_venv
-        _koopa_activate_python_startup
         _koopa_activate_broot
         _koopa_activate_fzf
         _koopa_activate_zoxide
