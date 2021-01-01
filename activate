@@ -35,6 +35,7 @@ _koopa_activate() { # {{{1
         export KOOPA_MINIMAL=0
     fi
     _koopa_activate_export_prefix || return 1
+    # FIXME ADD SUPPORT FOR THIS ON MACOS.
     _koopa_activate_duration_start
     # shellcheck source=/dev/null
     KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
@@ -62,6 +63,7 @@ _koopa_activate() { # {{{1
     _koopa_export_user
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
+        # FIXME THIS IS SLOW, SPEED UP.
         _koopa_activate_homebrew
         _koopa_activate_coreutils
         _koopa_activate_dircolors
@@ -130,12 +132,14 @@ _koopa_activate() { # {{{1
             # shellcheck disable=SC2039
             set +o pipefail
         fi
-        _koopa_info 'Shell options:'
+        _koopa_h1 'Shell options'
         set +o
-        _koopa_info 'Shell variables:'
-        _koopa_dl '-' "$-"
-        _koopa_dl '0' "$0"
-        _koopa_dl 'SHELL' "${SHELL:-}"
+        _koopa_h1 'Shell variables'
+        _koopa_dl \
+            '-' "$-" \
+            '0' "$0" \
+            'SHELL' "${SHELL:-}"
+        # FIXME NEED TO ADD SUPPORT FOR MACOS.
         _koopa_activate_duration_stop
         if [ -n "${KOOPA_DURATION:-}" ]
         then
@@ -144,12 +148,12 @@ _koopa_activate() { # {{{1
             _koopa_success 'Activation was successful.'
         fi
     fi
-    unset -f \
-        _koopa_activate_usage
+    unset -f _koopa_activate_usage
     unset -v KOOPA_ACTIVATE_SCRIPT
     return 0
 }
 
+# FIXME ADD MACOS SUPPORT.
 _koopa_activate_duration_start() { # {{{1
     [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
     _koopa_is_linux && _koopa_is_installed bc date || return 0
@@ -158,6 +162,7 @@ _koopa_activate_duration_start() { # {{{1
     return 0
 }
 
+# FIXME ADD MACOS SUPPORT.
 _koopa_activate_duration_stop() { # {{{1
     [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
     _koopa_is_linux && _koopa_is_installed bc date || return 0
@@ -348,7 +353,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-07-06.
+    Updated 2021-01-01.
 END
 }
 
@@ -367,6 +372,10 @@ _koopa_is_koopa_active() { # {{{1
 
 _koopa_is_linux() { # {{{1
     [ "$(uname -s)" = 'Linux' ]
+}
+
+_koopa_is_macos() { # {{{1
+    [ "$(uname -s)" = 'Darwin' ]
 }
 
 _koopa_is_subshell() { # {{{1

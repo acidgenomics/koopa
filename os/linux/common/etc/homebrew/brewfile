@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2020-12-31.
+# Updated 2021-01-01.
 #
 # Problematic formulas:
 # - armadillo
@@ -40,6 +40,7 @@ brew "azure-cli"
 brew "bash"
 brew "bash-completion"
 brew "bat"  # rust
+brew "bc"
 brew "bfg"
 brew "binutils"
 brew "black"  # python
