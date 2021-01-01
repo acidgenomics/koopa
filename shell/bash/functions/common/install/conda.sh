@@ -3,26 +3,24 @@
 koopa::_install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-01-01.
     #
     # Assuming installation of Miniconda by default.
-    #
-    # Python 3.8 is currently buggy for Miniconda.
-    # `conda env list` will return multiprocessing error.
-    # https://github.com/conda/conda/issues/9589
     # """
-    local anaconda name name_fancy ostype prefix script tmp_dir url version
+    local anaconda arch name name_fancy os_type prefix py_version script \
+        tmp_dir url version
     koopa::assert_has_no_envs
-    ostype="${OSTYPE:?}"
-    case "$ostype" in
+    arch="$(koopa::arch)"
+    os_type="$(koopa::os_type)"
+    case "$os_type" in
         darwin*)
-            ostype='MacOSX'
+            os_type='MacOSX'
             ;;
         linux*)
-            ostype='Linux'
+            os_type='Linux'
             ;;
         *)
-            koopa::stop "'${ostype}' is not supported."
+            koopa::stop "'${os_type}' is not supported."
             ;;
     esac
     anaconda=0
@@ -52,13 +50,16 @@ koopa::_install_conda() { # {{{1
         name='anaconda'
         name_fancy='Anaconda'
         [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-        script="Anaconda3-${version}-${ostype}-x86_64.sh"
+        script="Anaconda3-${version}-${os_type}-${arch}.sh"
         url="https://repo.anaconda.com/archive/${script}"
     else
         name='conda'
         name_fancy='Miniconda'
         [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-        script="Miniconda3-py38_${version}-${ostype}-x86_64.sh"
+        py_version="$(koopa::variable 'python')"
+        py_version="$(koopa::major_minor_version "$py_version")"
+        py_version="$(koopa::gsub '\.' '' "$py_version")"
+        script="Miniconda3-py${py_version}_${version}-${os_type}-${arch}.sh"
         url="https://repo.continuum.io/miniconda/${script}"
     fi
     prefix="$(koopa::app_prefix)/${name}/${version}"

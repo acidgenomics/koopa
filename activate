@@ -51,7 +51,6 @@ _koopa_activate() { # {{{1
     _koopa_export_history
     _koopa_export_hostname
     _koopa_export_lesspipe
-    _koopa_export_ostype
     _koopa_export_pager
     _koopa_export_proj_lib
     _koopa_export_python
