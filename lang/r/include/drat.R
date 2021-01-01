@@ -7,6 +7,8 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
+## FIXME NEED TO DEFINE THIS IN R-KOOPA.
+
 local({
     wd <- getwd()
     if (hasPositionalArgs()) {
@@ -46,7 +48,6 @@ local({
     shell(command = "git", args = c("add", "./"))
     shell(
         command = "git",
-        ## FIXME NEED A FUNCTION FOR SHELL QUOTING HERE.
         args = c("commit", "-m", paste0("'Add ", basename(file), ".'"))
     )
     shell(command = "git", args = "push")
