@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-01-01.
     # """
     case "${1:-}" in
         --help|-h)
@@ -21,10 +21,9 @@ _koopa_activate() { # {{{1
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
         printf '%s\n' 'Test mode enabled.'
-        printf '%s\n' 'Setting strict shell mode.'
         set -o errexit
         set -o nounset
-        set -o xtrace
+        # > set -o xtrace
         if [ "${KOOPA_SHELL:?}" = 'bash' ]
         then
             # shellcheck disable=SC2039
@@ -35,7 +34,6 @@ _koopa_activate() { # {{{1
         export KOOPA_MINIMAL=0
     fi
     _koopa_activate_export_prefix || return 1
-    # FIXME ADD SUPPORT FOR THIS ON MACOS.
     _koopa_activate_duration_start
     # shellcheck source=/dev/null
     KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
@@ -63,7 +61,6 @@ _koopa_activate() { # {{{1
     _koopa_export_user
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
-        # FIXME THIS IS SLOW, SPEED UP.
         _koopa_activate_homebrew
         _koopa_activate_coreutils
         _koopa_activate_dircolors
@@ -82,10 +79,10 @@ _koopa_activate() { # {{{1
         _koopa_activate_rbenv
         # Python ---------------------------------------------------------- {{{2
         _koopa_is_macos && _koopa_activate_macos_python
+        _koopa_activate_python_site_packages
         _koopa_activate_python_startup
         _koopa_activate_pyenv
         _koopa_activate_pipx
-        _koopa_activate_python_site_packages
         _koopa_activate_conda
         # > _koopa_activate_venv
         # Rust ------------------------------------------------------------ {{{2
@@ -99,14 +96,8 @@ _koopa_activate() { # {{{1
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
         case "${KOOPA_SHELL:?}" in
-            bash)
-                _koopa_activate_bash_extras
-                ;;
-            dash)
-                export PS1='# '
-                ;;
-            zsh)
-                _koopa_activate_zsh_extras
+            bash|dash|zsh)
+                "_koopa_activate_${KOOPA_SHELL}_extras"
                 ;;
         esac
         _koopa_is_macos && _koopa_activate_macos_extras
@@ -124,7 +115,7 @@ _koopa_activate() { # {{{1
     then
         set +o errexit
         set +o nounset
-        set +o xtrace
+        # > set +o xtrace
         if [ "${KOOPA_SHELL:?}" = 'bash' ]
         then
             # shellcheck disable=SC2039
@@ -139,8 +130,8 @@ _koopa_activate() { # {{{1
             '-' "$-" \
             '0' "$0" \
             'SHELL' "${SHELL:-}"
-        # FIXME NEED TO ADD SUPPORT FOR MACOS.
         _koopa_activate_duration_stop
+        _koopa_print ''
         if [ -n "${KOOPA_DURATION:-}" ]
         then
             _koopa_success "Activation was successful (${KOOPA_DURATION:?} ms)."
@@ -153,23 +144,65 @@ _koopa_activate() { # {{{1
     return 0
 }
 
-# FIXME ADD MACOS SUPPORT.
+_koopa_activate_dash_extras() { # {{{1
+    export PS1='# '
+    return 0
+}
+
 _koopa_activate_duration_start() { # {{{1
+    # shellcheck disable=SC2039
+    local bc date homebrew_prefix
     [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
-    _koopa_is_linux && _koopa_is_installed bc date || return 0
-    KOOPA_DURATION_START="$(date -u +%s%3N)"
+    if _koopa_is_macos
+    then
+        if [ -x '/opt/homebrew/bin/brew' ]
+        then
+            homebrew_prefix='/opt/homebrew'
+        elif [ -x '/usr/local/bin/brew' ]
+        then
+            homebrew_prefix='/usr/local'
+        else
+            exit 0
+            return 0
+        fi
+        bc="${homebrew_prefix}/opt/bc/bin/bc"
+        date="${homebrew_prefix}/opt/coreutils/libexec/gnubin/date"
+    else
+        bc='bc'
+        date='date'
+    fi
+    _koopa_is_installed "$bc" "$date" || return 0
+    KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
     export KOOPA_DURATION_START
     return 0
 }
 
-# FIXME ADD MACOS SUPPORT.
 _koopa_activate_duration_stop() { # {{{1
+    # shellcheck disable=SC2039
+    local bc date homebrew_prefix
     [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
-    _koopa_is_linux && _koopa_is_installed bc date || return 0
-    KOOPA_DURATION_STOP="$(date -u +%s%3N)"
+    if _koopa_is_macos
+    then
+        if [ -x '/opt/homebrew/bin/brew' ]
+        then
+            homebrew_prefix='/opt/homebrew'
+        elif [ -x '/usr/local/bin/brew' ]
+        then
+            homebrew_prefix='/usr/local'
+        else
+            return 0
+        fi
+        bc="${homebrew_prefix}/opt/bc/bin/bc"
+        date="${homebrew_prefix}/opt/coreutils/libexec/gnubin/date"
+    else
+        bc='bc'
+        date='date'
+    fi
+    _koopa_is_installed "$bc" "$date" || return 0
+    KOOPA_DURATION_STOP="$("$date" -u '+%s%3N')"
     KOOPA_DURATION="$( \
-        _koopa_print "${KOOPA_DURATION_STOP}-${KOOPA_DURATION_START}" \
-        | bc \
+        _koopa_print "${KOOPA_DURATION_STOP:?}-${KOOPA_DURATION_START:?}" \
+        | "$bc" \
     )"
     export KOOPA_DURATION
     unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
@@ -359,6 +392,16 @@ END
 
 _koopa_export_user() { # {{{1
     [ -z "${USER:-}" ] && USER="$(id -un)" && export USER
+    return 0
+}
+
+_koopa_is_installed() { # {{{1
+    # shellcheck disable=SC2039
+    local cmd
+    for cmd in "$@"
+    do
+        command -v "$cmd" >/dev/null || return 1
+    done
     return 0
 }
 
