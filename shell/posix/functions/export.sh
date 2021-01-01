@@ -141,21 +141,6 @@ _koopa_export_lesspipe() { # {{{
     return 0
 }
 
-_koopa_export_ostype() { # {{{1
-    # """
-    # Export OSTYPE.
-    # @note Updated 2020-06-30.
-    #
-    # Automatically set by bash and zsh.
-    # """
-    if [ -z "${OSTYPE:-}" ]
-    then
-        OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
-    fi
-    export OSTYPE
-    return 0
-}
-
 _koopa_export_pager() { # {{{1
     # """
     # Export PAGER.

@@ -32,6 +32,17 @@ koopa::admin_group() { # {{{1
     return 0
 }
 
+koopa::arch() { # {{{1
+    # """
+    # Platform architecture.
+    # @note Updated 2020-01-01.
+    # """
+    local x
+    x="$(uname -m)"
+    koopa::print "$x"
+    return 0
+}
+
 koopa::date() { # {{{1
     # """
     # Koopa date.
@@ -132,7 +143,7 @@ koopa::local_ip_address() { # {{{1
 koopa::make_build_string() { # {{{1
     # """
     # OS build string for 'make' configuration.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-01-01.
     #
     # Use this for 'configure --build' flag.
     #
@@ -140,16 +151,27 @@ koopa::make_build_string() { # {{{1
     # - Linux: x86_64-linux-gnu
     # """
     koopa::assert_has_no_args "$#"
-    local mach os_type string
-    if koopa::is_macos
+    local arch os_type string
+    arch="$(koopa::arch)"
+    if koopa::is_linux
     then
-        mach="$(uname -m)"
-        os_type="${OSTYPE:?}"
-        string="${mach}-${os_type}"
+        os_type='linux-gnu'
     else
-        string='x86_64-linux-gnu'
+        os_type="$(koopa::os_type)"
     fi
+    string="${arch}-${os_type}"
     koopa::print "$string"
+    return 0
+}
+
+koopa::os_type() { # {{{1
+    # """
+    # Operating system type.
+    # @note Updated 2021-01-01.
+    # """
+    local x
+    x="$(uname -s | tr '[:upper:]' '[:lower:]')"
+    koopa::print "$x"
     return 0
 }
 
