@@ -20,7 +20,7 @@ _koopa_activate_aliases() { # {{{1
 _koopa_activate_broot() { # {{{1
     # """
     # Activate broot directory tree utility.
-    # @note Updated 2020-11-14.
+    # @note Updated 2021-01-01.
     #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
@@ -37,6 +37,13 @@ _koopa_activate_broot() { # {{{1
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local br_script config_dir nounset
+    case "$(_koopa_shell)" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
     config_dir="${HOME}/.config/broot"
     [ -d "$config_dir" ] || return 0
     # This is supported for Bash and Zsh.
