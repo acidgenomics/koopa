@@ -3,17 +3,17 @@
 koopa::install_r_packages() { # {{{1
     # """
     # Install R packages.
-    # @note Updated 2020-12-08.
+    # @note Updated 2021-01-04.
     # """
-    koopa::rscript 'install-r-packages' "$@"
+    koopa::rscript 'installRPackages' "$@"
     return 0
 }
 
 koopa::update_r_packages() { # {{{1
     # """
     # Update R packages.
-    # @note Updated 2020-11-17.
+    # @note Updated 2021-01-04.
     # """
-    koopa::rscript 'update-r-packages' "$@"
+    koopa::rscript 'updateRPackages' "$@"
     return 0
 }
