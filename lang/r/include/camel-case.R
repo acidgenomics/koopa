@@ -16,7 +16,7 @@ local({
     prefix <- "prefix" %in% args[["flags"]]
     recursive <- "recursive" %in% args[["flags"]]
     strict <- "strict" %in% args[["flags"]]
-    camelCase(
+    syntactic::camelCase(
         object = positional,
         rename = TRUE,
         recursive = recursive,
