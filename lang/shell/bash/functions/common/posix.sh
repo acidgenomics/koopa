@@ -72,6 +72,10 @@ koopa::boolean_nounset() { # {{{1
     _koopa_boolean_nounset "$@"
 }
 
+koopa::camel_case_simple() { # {{{1
+    _koopa_camel_case_simple "$@"
+}
+
 koopa::cd() { # {{{1
     _koopa_cd "$@"
 }
