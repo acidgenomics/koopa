@@ -75,10 +75,12 @@ __koopa_ansi_escape() { # {{{1
 
 __koopa_emoji() { # {{{1
     # """
-    # Koopa turtle emoji.
-    # @note Updated 2020-06-30.
+    # Koopa emoji.
+    # @note Updated 2021-01-04.
+    #
+    # Previous versions defaulted to using the '🐢' turtle.
     # """
-    _koopa_print '🐢'
+    _koopa_print '🧪'
 }
 
 __koopa_h() { # {{{1
