@@ -1,5 +1,20 @@
 #!/bin/sh
 
+_koopa_camel_case_simple() { # {{{1
+    # """
+    # Simple camel case function.
+    # @note Updated 2020-01-04.
+    #
+    # @seealso
+    # https://stackoverflow.com/questions/34420091/
+    # """
+    for string in "$@"
+    do
+        _koopa_print "$string" | sed -E 's/([ -_])([a-z])/\U\2/g'
+    done
+    return 0
+}
+
 _koopa_gsub() { # {{{1
     # """
     # Global substitution.
