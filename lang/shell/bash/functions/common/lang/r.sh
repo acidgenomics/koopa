@@ -263,20 +263,17 @@ koopa::r_rebuild_docs() { # {{{1
 koopa::rscript() { # {{{1
     # """
     # Execute an R script.
-    # @note Updated 2020-11-19.
-    #
-    # This function allows passthrough of flags such as '--vanilla'.
+    # @note Updated 2021-01-04.
     # """
-    local args name pos prefix script vanilla
+    local header_file flags fun pos
     koopa::assert_is_installed Rscript
-    prefix="$(koopa::rscript_prefix)"
-    vanilla=0
+    flags=()
     pos=()
     while (("$#"))
     do
         case "$1" in
             --vanilla)
-                vanilla=1
+                flags+=('--vanilla')
                 shift 1
                 ;;
             *)
@@ -287,14 +284,18 @@ koopa::rscript() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    name="${1:?}"
+    fun="${1:?}"
     shift 1
-    script="${prefix}/${name}.R"
-    koopa::assert_is_file "$script"
-    args=()
-    [[ "$vanilla" -eq 1 ]] && args+=('--vanilla')
-    args+=("$script" "$@")
-    Rscript "${args[@]}"
+    header_file="$(koopa::prefix)/lang/r/include/header.R"
+    koopa::assert_is_file "$header_file"
+    rscript="source('${header_file}')"
+    # The 'header' variable is currently used to simply load the shared R
+    # script header and check that the koopa R package is installed cleanly.
+    if [[ "$fun" != 'header' ]]
+    then
+        rscript="${rscript}; koopa::${fun}()"
+    fi
+    Rscript "${flags[@]}" -e "$rscript" "$@"
     return 0
 }
 

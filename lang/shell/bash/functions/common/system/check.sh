@@ -86,6 +86,7 @@ koopa::check_data_disk() { # {{{1
     return 0
 }
 
+# shellcheck disable=SC2120
 koopa::check_disk() { # {{{1
     # """
     # Check that disk has enough free space.
@@ -162,13 +163,14 @@ koopa::check_mount() { # {{{1
     return 0
 }
 
+# shellcheck disable=SC2119
 koopa::check_system() { # {{{1
     # """
     # Check system.
-    # @note Updated 2020-11-17.
+    # @note Updated 2020-01-04.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::rscript_vanilla 'check-system'
+    koopa::rscript_vanilla 'checkSystem'
     koopa::check_exports
     koopa::check_disk
     koopa::check_data_disk

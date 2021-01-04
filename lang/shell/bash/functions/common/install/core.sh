@@ -268,32 +268,30 @@ koopa::link_opt() { # {{{1
     return 0
 }
 
-# FIXME NEED TO UPDATE THIS IN R KOOPA.
 koopa::prune_apps() { # {{{1
     # """
     # Prune applications.
-    # @note Updated 2020-11-22.
+    # @note Updated 2021-01-04.
     # """
     if koopa::is_macos
     then
         koopa::note 'App pruning not yet supported on macOS.'
         return 0
     fi
-    koopa::rscript 'prune-apps' "$@"
+    koopa::rscript 'pruneApps' "$@"
     return 0
 }
 
-# FIXME NEED TO UPDATE R FUNCTION in R-KOOPA.
 koopa::unlink_app() { # {{{1
     # """
     # Unlink an application.
-    # @note Updated 2020-11-22.
+    # @note Updated 2021-01-04.
     # """
     if koopa::is_macos
     then
         koopa::note 'App links are not supported on macOS.'
         return 0
     fi
-    koopa::rscript 'unlink-app' "$@"
+    koopa::rscript 'unlinkApp' "$@"
     return 0
 }

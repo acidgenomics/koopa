@@ -245,10 +245,10 @@ koopa::docker_build_all_images() { # {{{1
 koopa::docker_build_all_tags() { # {{{1
     # """
     # Build all Docker tags.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-01-04.
     # """
     koopa::assert_has_args "$#"
-    koopa::rscript 'docker-build-all-tags' "$@"
+    koopa::rscript 'dockerBuildAllTags' "$@"
     return 0
 }
 
