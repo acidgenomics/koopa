@@ -45,17 +45,19 @@ koopa::salmon_index() { # {{{1
     return 0
 }
 
+# FIXME ALLOW MANUAL OVERRIDE OF LIBTYPE HERE.
 koopa::salmon_quant() { # {{{1
     # """
     # Run salmon quant (per sample).
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-01-04.
     #
     # Quartz is currently using only '--validateMappings' and '--gcBias' flags.
     #
     # Important options:
     # * --libType='A': Enable ability to automatically infer (i.e. guess) the
     #   library type based on how the first few thousand reads map to the
-    #   transcriptome.
+    #   transcriptome. Note that most commercial vendors use Illumina TruSeq,
+    #   which is dUTP, corresponding to 'ISR' for salmon.
     # * --validateMappings: Enables selective alignment of the sequencing reads
     #   when mapping them to the transcriptome. This can improve both the
     #   sensitivity and specificity of mapping and, as a result, can improve
@@ -85,10 +87,9 @@ koopa::salmon_quant() { # {{{1
     #       rnaseq/salmon.py
     # """
     local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_dir \
-        log_file output_dir r1_tail r2_tail sample_output_dir threads
+        lib_type log_file output_dir r1_tail r2_tail sample_output_dir threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed salmon
-    bootstraps=30
     while (("$#"))
     do
         case "$1" in
@@ -108,6 +109,10 @@ koopa::salmon_quant() { # {{{1
                 index_dir="${1#*=}"
                 shift 1
                 ;;
+            --lib-type=*)
+                lib_type="${1#*=}"
+                shift 1
+                ;;
             --output-dir=*)
                 output_dir="${1#*=}"
                 shift 1
@@ -125,7 +130,8 @@ koopa::salmon_quant() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set fastq_r1 fastq_r2 index_dir output_dir r1_tail r2_tail
+    koopa::assert_is_set bootstraps fastq_r1 fastq_r2 index_dir lib_type \
+        output_dir r1_tail r2_tail
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
     fastq_r1_bn="$(basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
@@ -148,7 +154,7 @@ koopa::salmon_quant() { # {{{1
     salmon quant \
         --index="$index_dir" \
         --output="$sample_output_dir" \
-        --libType='A' \
+        --libType="$lib_type" \
         --validateMappings \
         --seqBias \
         --gcBias \
@@ -163,17 +169,26 @@ koopa::salmon_quant() { # {{{1
 koopa::run_salmon() { # {{{1
     # """
     # Run salmon on multiple samples (per FASTQ directory).
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-01-04.
     # """
-    local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
+    local bootstraps fastq_dir fastq_r1_files lib_type output_dir \
+        r1_tail r2_tail
     koopa::assert_has_args "$#"
+    # This matches the current recommended default in bcbio-nextgen.
+    bootstraps=30
     fastq_dir='fastq'
+    # Attempt to detect library type (strandedness) automatically by default.
+    lib_type='A'
     output_dir='salmon'
     r1_tail='_R1_001.fastq.gz'
     r2_tail='_R2_001.fastq.gz'
     while (("$#"))
     do
         case "$1" in
+            --bootstraps=*)
+                bootstraps="${1#*=}"
+                shift 1
+                ;;
             --fasta-file=*)
                 fasta_file="${1#*=}"
                 shift 1
@@ -264,9 +279,11 @@ koopa::run_salmon() { # {{{1
     do
         fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
         koopa::salmon_quant \
+            --bootstraps="$bootstraps" \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
             --index-dir="$index_dir" \
+            --lib-type="$lib_type" \
             --output-dir="$output_dir" \
             --r1-tail="$r1_tail" \
             --r2-tail="$r2_tail"
