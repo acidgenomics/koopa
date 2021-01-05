@@ -388,6 +388,7 @@ koopa::conda_env_prefix() { # {{{1
     return 0
 }
 
+# FIXME NEED TO ENSURE THE EMPTY DIRECTORY IS ALSO REMOVED.
 koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
