@@ -3,7 +3,7 @@
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
-    # @note Updated 2020-12-03.
+    # @note Updated 2021-01-06.
     # """
     local branch default_branch dir dirs origin pos repo repos
     branch=
@@ -46,6 +46,7 @@ koopa::git_checkout_recursive() { # {{{1
                 -maxdepth 3 \
                 -name '.git' \
                 -print \
+            | sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]}"
         then
@@ -246,7 +247,7 @@ koopa::git_pull() { # {{{1
 koopa::git_pull_recursive() { # {{{1
     # """
     # Pull multiple Git repositories recursively.
-    # @note Updated 2020-12-03.
+    # @note Updated 2021-01-06.
     # """
     local dir dirs repo repos
     dirs=("$@")
@@ -261,6 +262,7 @@ koopa::git_pull_recursive() { # {{{1
                 -maxdepth 3 \
                 -name '.git' \
                 -print \
+            | sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]}"
         then
@@ -285,7 +287,7 @@ koopa::git_pull_recursive() { # {{{1
 koopa::git_push_recursive() { # {{{1
     # """
     # Push multiple Git repositories recursively.
-    # @note Updated 2020-12-03.
+    # @note Updated 2021-01-06.
     # """
     local dir dirs repo repos
     dirs=("$@")
@@ -300,6 +302,7 @@ koopa::git_push_recursive() { # {{{1
                 -maxdepth 3 \
                 -name '.git' \
                 -print \
+            | sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]}"
         then
@@ -470,7 +473,7 @@ koopa::git_set_remote_url() { # {{{1
 koopa::git_status_recursive() { # {{{1
     # """
     # Get the status of multiple Git repos recursively.
-    # @note Updated 2020-12-03.
+    # @note Updated 2021-01-06.
     # """
     local dir dirs repo repos
     dirs=("$@")
@@ -485,6 +488,7 @@ koopa::git_status_recursive() { # {{{1
                 -maxdepth 3 \
                 -name '.git' \
                 -print \
+            | sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]}"
         then
