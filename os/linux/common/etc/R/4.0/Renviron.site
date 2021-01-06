@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2021-01-04.
+## Updated 2021-01-06.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -18,7 +18,8 @@ KOOPA_OPT_PREFIX="${KOOPA_OPT_PREFIX:-/opt/koopa/opt}"
 ## =============================================================================
 
 ## Restrict path, so we don't mask compiler binaries with conda or venv.
-## > PATH="/usr/local/bin:/usr/bin:/bin"
+## This also greatly improves consistency when running inside RStudio Server.
+PATH="/usr/local/bin:/usr/bin:/bin"
 
 ## Include koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
