@@ -263,7 +263,7 @@ koopa::r_rebuild_docs() { # {{{1
 koopa::rscript() { # {{{1
     # """
     # Execute an R script.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-01-06.
     # """
     local header_file flags fun pos
     koopa::assert_is_installed Rscript
@@ -289,13 +289,25 @@ koopa::rscript() { # {{{1
     header_file="$(koopa::prefix)/lang/r/include/header.R"
     koopa::assert_is_file "$header_file"
     rscript="source('${header_file}')"
+    # Enable this for Bash-to-R handoff debugging.
+    # > rscript="commandArgs()"
     # The 'header' variable is currently used to simply load the shared R
     # script header and check that the koopa R package is installed cleanly.
     if [[ "$fun" != 'header' ]]
     then
         rscript="${rscript}; koopa::${fun}()"
     fi
-    Rscript "${flags[@]}" -e "$rscript" "$@"
+    # Ensure positional arguments get properly quoted (escaped) before handing
+    # off to Rscript call.
+    pos=("$@")
+    # Argh, this printf method doesn't work.
+    # > pos2=()
+    # > for i in "${!pos[@]}"
+    # > do
+    # >     pos2+=("$(printf '%q\n' "${pos[$i]}")")
+    # > done 
+    # Alternate Bash 4.4 quoting approach: "${pos1[@]@Q}"
+    Rscript "${flags[@]}" -e "$rscript" "${pos[@]@Q}"
     return 0
 }
 
