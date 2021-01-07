@@ -1,5 +1,40 @@
 #!/usr/bin/env bash
 
+koopa::jekyll_deploy_to_aws() {
+    # """
+    # Deploy Jekyll website to AWS S3 and CloudFront.
+    # @note Updated 20201-01-07.
+    # """
+    local bucket_prefix distribution_id local_prefix
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed aws jekyll
+    local_prefix='_site'
+    while (("$#"))
+    do
+        case "$1" in
+            --bucket=*)
+                bucket_prefix="${1#*=}"
+                shift 1
+                ;;
+            --distribution-id=*)
+                distribution_id="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_set bucket_prefix distribution_id local_prefix
+    jekyll build
+    koopa::aws_s3_sync "${local_prefix}/" "${bucket_prefix}/"
+    aws cloudfront create-invalidation \
+        --distribution-id="$distribution_id" \
+        --profile='default' \
+        --paths '/'
+    return 0
+}
+
 koopa::jekyll_serve() { # {{{1
     # """
     # Render Jekyll website.
@@ -17,4 +52,3 @@ koopa::jekyll_serve() { # {{{1
     )
     return 0
 }
-
