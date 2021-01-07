@@ -26,7 +26,8 @@ koopa::jekyll_deploy_to_aws() {
         esac
     done
     koopa::assert_is_set bucket_prefix distribution_id local_prefix
-    koopa::rm 'Gemfile.lock'
+    bucket_prefix="$(koopa::strip_trailing_slash "$bucket_prefix")"
+    local_prefix="$(koopa::strip_trailing_slash "$local_prefix")"
     bundle update --bundler
     bundle install
     jekyll build
@@ -49,7 +50,6 @@ koopa::jekyll_serve() { # {{{1
     dir="${1:-.}"
     (
         koopa::cd "$dir"
-        koopa::rm 'Gemfile.lock'
         bundle update --bundler
         bundle install
         bundle exec jekyll serve
