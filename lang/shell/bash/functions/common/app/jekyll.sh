@@ -7,7 +7,8 @@ koopa::jekyll_deploy_to_aws() {
     # """
     local bucket_prefix distribution_id local_prefix
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed aws jekyll
+    koopa::assert_is_installed aws bundle
+    koopa::assert_is_file 'Gemfile'
     local_prefix='_site'
     while (("$#"))
     do
@@ -28,9 +29,9 @@ koopa::jekyll_deploy_to_aws() {
     koopa::assert_is_set bucket_prefix distribution_id local_prefix
     bucket_prefix="$(koopa::strip_trailing_slash "$bucket_prefix")"
     local_prefix="$(koopa::strip_trailing_slash "$local_prefix")"
-    bundle update --bundler
+    [[ -f 'Gemfile.lock' ]] && bundle update --bundler
     bundle install
-    jekyll build
+    bundle exec jekyll build
     koopa::aws_s3_sync "${local_prefix}/" "${bucket_prefix}/"
     aws cloudfront create-invalidation \
         --distribution-id="$distribution_id" \
@@ -46,11 +47,12 @@ koopa::jekyll_serve() { # {{{1
     # """
     local dir
     koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_file 'Gemfile'
     koopa::assert_is_installed bundle
     dir="${1:-.}"
     (
         koopa::cd "$dir"
-        bundle update --bundler
+        [[ -f 'Gemfile.lock' ]] && bundle update --bundler
         bundle install
         bundle exec jekyll serve
     )
