@@ -51,12 +51,13 @@ _koopa_activate_coreutils() { # {{{1
     # macOS ships with a very old version of GNU coreutils. Use Homebrew.
     # """
     _koopa_has_gnu_coreutils || return 0
-    # The '--archive' flag seems to have issues on some file systems.
-    alias cp='cp --interactive' # -ai
+    # The '--archive/-a' flag seems to have issues on some file systems.
+    alias cp='cp --interactive' # -i
     alias ln='ln --interactive --no-dereference --symbolic' # -ins
     alias mkdir='mkdir --parents' # -p
     alias mv='mv --interactive' # -i
-    alias rm='rm --dir --interactive=once --preserve-root' # -I
+    # Problematic on some file systems: --dir --preserve-root
+    alias rm='rm --interactive=once' # -I
     return 0
 }
 
