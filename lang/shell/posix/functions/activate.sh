@@ -43,7 +43,7 @@ _koopa_activate_conda() { # {{{1
 _koopa_activate_coreutils() { # {{{1
     # """
     # Activate hardened interactive aliases for coreutils.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-01-07.
     #
     # These aliases get unaliased inside of koopa scripts, and they should only
     # apply to interactive use at the command prompt.
@@ -51,7 +51,8 @@ _koopa_activate_coreutils() { # {{{1
     # macOS ships with a very old version of GNU coreutils. Use Homebrew.
     # """
     _koopa_has_gnu_coreutils || return 0
-    alias cp='cp --archive --interactive' # -ai
+    # The '--archive' flag seems to have issues on some file systems.
+    alias cp='cp --interactive' # -ai
     alias ln='ln --interactive --no-dereference --symbolic' # -ins
     alias mkdir='mkdir --parents' # -p
     alias mv='mv --interactive' # -i
