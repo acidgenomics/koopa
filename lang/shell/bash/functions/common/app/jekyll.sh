@@ -26,6 +26,9 @@ koopa::jekyll_deploy_to_aws() {
         esac
     done
     koopa::assert_is_set bucket_prefix distribution_id local_prefix
+    koopa::rm 'Gemfile.lock'
+    bundle update --bundler
+    bundle install
     jekyll build
     koopa::aws_s3_sync "${local_prefix}/" "${bucket_prefix}/"
     aws cloudfront create-invalidation \
@@ -38,7 +41,7 @@ koopa::jekyll_deploy_to_aws() {
 koopa::jekyll_serve() { # {{{1
     # """
     # Render Jekyll website.
-    # Updated 2020-07-08.
+    # Updated 2021-01-07.
     # """
     local dir
     koopa::assert_has_args_le "$#" 1
@@ -46,6 +49,7 @@ koopa::jekyll_serve() { # {{{1
     dir="${1:-.}"
     (
         koopa::cd "$dir"
+        koopa::rm 'Gemfile.lock'
         bundle update --bundler
         bundle install
         bundle exec jekyll serve
