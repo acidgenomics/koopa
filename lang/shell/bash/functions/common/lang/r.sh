@@ -228,6 +228,21 @@ koopa::r_javareconf() { # {{{1
     return 0
 }
 
+koopa::r_pkgdown_deploy_to_aws() { # {{{1
+    # """
+    # Deploy pkgdown website to AWS.
+    # @note Updated 2021-01-08.
+    # """
+    local bucket_prefix pkg_name
+    koopa::assert_has_no_args "$#"
+    pkg_name="$(dirname "${PWD:?}")"
+    local_prefix='./docs'
+    bucket_prefix="s3://r.acidgenomics.com/packages/${pkg_name}"
+    Rscript -e 'pkgdown::build_site()'
+    koopa::aws_s3_sync "$local_prefix" "$bucket_prefix"
+    return 0
+}
+
 koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
