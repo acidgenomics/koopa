@@ -3,7 +3,7 @@
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-01-08.
     # """
     local install_flags name_fancy pkg pkg_lower pkgs pos python version
     python="$(koopa::python)"
@@ -45,6 +45,7 @@ koopa::install_python_packages() { # {{{1
         pkgs=(
             'flake8'
             'pip'
+            'pip2pi'
             'psutil'
             'pyflakes'
             'pylint'
