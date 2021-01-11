@@ -34,7 +34,7 @@ koopa::update_homebrew() { # {{{1
         user="$(koopa::user)"
         group="$(koopa::admin_group)"
         prefix="$(koopa::homebrew_prefix)"
-        sudo chown -Rh "${user}:${group}" "$prefix"
+        sudo chown -Rh "${user}:${group}" "${prefix}/"*
     fi
     brew analytics off
     brew update >/dev/null
@@ -79,7 +79,7 @@ koopa::update_homebrew() { # {{{1
     if koopa::has_sudo
     then
         koopa::h2 'Resetting file ownership.'
-        sudo chown -Rh "${user}:${group}" "$prefix"
+        sudo chown -Rh "${user}:${group}" "${prefix}/"*
     fi
     koopa::update_success "$name_fancy"
     return 0
