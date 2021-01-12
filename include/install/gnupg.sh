@@ -4,7 +4,7 @@
 # https://gnupg.org/download/index.html
 
 case "$version" in
-    2.2.26)
+    2.2.26|2.2.27)
         libgpg_error_version='1.41'
         libgcrypt_version='1.8.7'
         libksba_version='1.5.0'
