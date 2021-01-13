@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-12-11.
+## Updated 2021-01-13.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -411,14 +411,16 @@ local({
     ##       download.file.R
     ##
     ## curl mode:
-    ##
-    ## > options(
-    ## >     "download.file.method" = "curl",
-    ## >     "download.file.extra" = c(
-    ## >         "--location"
-    ## >         "--retry", "5"
+    ## This is buggy, try to use wget mode instead.
+    ## > if (isTRUE(nzchar(Sys.which("curl")))) {
+    ## >     options(
+    ## >         "download.file.method" = "curl",
+    ## >         "download.file.extra" = c(
+    ## >             "--location",
+    ## >             "--retry", "5"
+    ## >         )
     ## >     )
-    ## > )
+    ## > }
     ##
     ## wget mode:
     ##
@@ -428,16 +430,23 @@ local({
     ## "WARNING: timestamping does nothing in combination with -0.
     ## See the manual for details.
     ##
+    ## Can hit this cryptic error with BiocManager:
+    ## Error in readRDS(dest) : error reading from connection
+    ## Calls: install ... tryCatchList -> tryCatchOne -> 
+    ##     <Anonymous> -> .inet_error
+    ##
     ## See also:
     ## - https://github.com/YuLab-SMU/wget/blob/master/R/wget.R
-    ## > options(
-    ## >     "download.file.method" = "wget",
-    ## >     "download.file.extra" = c(
-    ## >         "--continue",
-    ## >         "--max-redirect=20",
-    ## >         "--timeout=60"
+    ## > if (isTRUE(nzchar(Sys.which("wget")))) {
+    ## >     options(
+    ## >         "download.file.method" = "wget",
+    ## >         "download.file.extra" = c(
+    ## >             "--continue",
+    ## >             "--max-redirect=20",
+    ## >             "--timeout=60"
+    ## >         )
     ## >     )
-    ## > )
+    ## > }
 
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
