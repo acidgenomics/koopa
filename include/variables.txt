@@ -378,7 +378,7 @@ conda-sra-tools="2.10.9"  # linux
 conda-star-fusion="1.9.1"
 conda-star="2.7.7a"
 conda-trimmomatic="0.39"
-conda-umap-learn="0.4.6"
+conda-umap-learn="0.5.0"
 conda-vardict="2019.06.04"
 
 # Python packages {{{1
