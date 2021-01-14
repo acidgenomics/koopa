@@ -555,39 +555,113 @@ koopa::python_remove_pycache() { # {{{1
 koopa::venv_create() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2020-07-21.
+    # @note Updated 2021-01-14.
     # """
-    local name prefix python venv_python
-    python="$(koopa::python)"
+    local name name_fancy default_pkgs prefix pos python venv_python
     koopa::assert_has_no_envs
+    name_fancy='Python virtual environment'
+    python="$(koopa::python)"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --name=*)
+                name="${1#*=}"
+                shift 1
+                ;;
+            --python=*)
+                python="${1#*=}"
+                shift 1
+                ;;
+            '')
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_is_set name python
     koopa::assert_is_installed "$python"
-    name="${1:?}"
     prefix="$(koopa::venv_prefix)/${name}"
-    [[ -d "$prefix" ]] && return 0
-    shift 1
-    koopa::info "Installing Python '${name}' venv at '${prefix}'."
-    koopa::mkdir "$prefix"
+    if [[ -d "$prefix" ]]
+    then
+        koopa::note "Environment already exists at '${prefix}'."
+        return 0
+    fi
+    koopa::install_start "$name_fancy" "$prefix"
+    koopa::sys_mkdir "$prefix"
     "$python" -m venv "$prefix"
     venv_python="${prefix}/bin/python3"
-    "$venv_python" -m pip install --upgrade pip setuptools wheel
+    default_pkgs=('pip' 'setuptools' 'wheel')
+    "$venv_python" -m pip install --upgrade "${default_pkgs[@]}"
     if [[ "$#" -gt 0 ]]
     then
         "$venv_python" -m pip install --upgrade "$@"
-    elif [[ "$name" != 'base' ]]
-    then
-        "$venv_python" -m pip install "$name"
     fi
     koopa::sys_set_permissions -r "$prefix"
     "$venv_python" -m pip list
+    koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
 
 koopa::venv_create_base() { # {{{1
     # """
     # Create base Python virtual environment.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-01-14.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::venv_create 'base'
+    koopa::venv_create --name='base'
+    return 0
+}
+
+koopa::venv_create_r_reticulate() { # {{{1
+    # """
+    # Create Python virtual environment for reticulate in R.
+    # @note Updated 2021-01-14.
+    # """
+    local name packages
+    koopa::assert_has_no_args "$#"
+    name='r-reticulate'
+    packages=(
+        'Cython'
+        'cwltool'
+        'louvain'
+        'numpy'
+        'pandas'
+        'pip'
+        'pyyaml'
+        'scikit-learn'
+        'scipy'
+        'setuptools'
+        'umap-learn'
+        'wheel'
+    )
+    if koopa::is_macos
+    then
+        export CC='/usr/bin/clang'
+        export CXX='/usr/bin/clang++'
+        export CFLAGS="${CFLAGS:-} -I/usr/local/opt/libomp/include"
+        export CPPFLAGS="${CPPFLAGS:-} -Xpreprocessor -fopenmp"
+        export CXXFLAGS="${CXXFLAGS:-} -I/usr/local/opt/libomp/include"
+        export DYLD_LIBRARY_PATH='/usr/local/opt/libomp/lib'
+        export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
+    fi
+    if [[ -n "${LLVM_CONFIG:-}" ]]
+    then
+        koopa::info "LLVM_CONFIG: '${LLVM_CONFIG}'."
+    else
+        koopa::note "Export 'LLVM_CONFIG' to locate LLVM llvm-config binary."
+    fi
+    koopa::venv_create --name="$name" "${packages[@]}"
     return 0
 }
