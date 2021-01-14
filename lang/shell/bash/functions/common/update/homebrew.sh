@@ -3,7 +3,7 @@
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-01-11.
+    # @note Updated 2021-01-14.
     #
     # Use of '--force-bottle' flag can be helpful, but not all brews have
     # bottles, so this can error.
@@ -30,10 +30,10 @@ koopa::update_homebrew() { # {{{1
     koopa::update_start "$name_fancy"
     if koopa::has_sudo
     then
-        koopa::h2 'Resetting file ownership.'
         user="$(koopa::user)"
         group="$(koopa::admin_group)"
         prefix="$(koopa::homebrew_prefix)"
+        koopa::h2 "Resetting ownership at '${prefix}' to '${user}:${group}'."
         sudo chown -Rh "${user}:${group}" "${prefix}/"*
     fi
     brew analytics off
@@ -78,7 +78,7 @@ koopa::update_homebrew() { # {{{1
     koopa::rm "$(brew --cache)"
     if koopa::has_sudo
     then
-        koopa::h2 'Resetting file ownership.'
+        koopa::h2 "Resetting ownership at '${prefix}' to '${user}:${group}'."
         sudo chown -Rh "${user}:${group}" "${prefix}/"*
     fi
     koopa::update_success "$name_fancy"
