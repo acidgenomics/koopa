@@ -679,9 +679,7 @@ koopa::venv_create_r_reticulate() { # {{{1
     fi
     if [[ -n "${LLVM_CONFIG:-}" ]]
     then
-        koopa::info "LLVM_CONFIG: '${LLVM_CONFIG}'."
-    else
-        koopa::note "Export 'LLVM_CONFIG' to locate LLVM llvm-config binary."
+        koopa::stop 'Export "LLVM_CONFIG" to locate LLVM llvm-config binary.'
     fi
     koopa::venv_create --name="$name" "${packages[@]}"
     return 0
