@@ -3,7 +3,7 @@
 koopa::_install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
-    # @note Updated 2021-01-01.
+    # @note Updated 2021-01-14.
     #
     # Assuming installation of Miniconda by default.
     # """
@@ -11,6 +11,10 @@ koopa::_install_conda() { # {{{1
         tmp_dir url version
     koopa::assert_has_no_envs
     arch="$(koopa::arch)"
+    anaconda=0
+    # Match Bioconda recommendation by default here.
+    # This only applies to Miniconda, not full Anaconda.
+    py_version='3.8'
     os_type="$(koopa::os_type)"
     case "$os_type" in
         darwin*)
@@ -23,8 +27,6 @@ koopa::_install_conda() { # {{{1
             koopa::stop "'${os_type}' is not supported."
             ;;
     esac
-    anaconda=0
-    version=
     while (("$#"))
     do
         case "$1" in
@@ -34,6 +36,10 @@ koopa::_install_conda() { # {{{1
                 ;;
             --miniconda)
                 anaconda=0
+                shift 1
+                ;;
+            --py-version=*)
+                py_version="${1#*=}"
                 shift 1
                 ;;
             --version=*)
@@ -49,14 +55,13 @@ koopa::_install_conda() { # {{{1
     then
         name='anaconda'
         name_fancy='Anaconda'
-        [[ -z "$version" ]] && version="$(koopa::variable "$name")"
+        [[ -z "${version:-}" ]] && version="$(koopa::variable "$name")"
         script="Anaconda3-${version}-${os_type}-${arch}.sh"
         url="https://repo.anaconda.com/archive/${script}"
     else
         name='conda'
         name_fancy='Miniconda'
-        [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-        py_version="$(koopa::variable 'python')"
+        [[ -z "${version:-}" ]] && version="$(koopa::variable "$name")"
         py_version="$(koopa::major_minor_version "$py_version")"
         py_version="$(koopa::gsub '\.' '' "$py_version")"
         script="Miniconda3-py${py_version}_${version}-${os_type}-${arch}.sh"
