@@ -378,7 +378,11 @@ conda-sra-tools="2.10.9"  # linux
 conda-star-fusion="1.9.1"
 conda-star="2.7.7a"
 conda-trimmomatic="0.39"
-conda-umap-learn="0.5.0"
+# umap-learn 0.5.0 currently has issues with ParametricUMAP not being available
+# in R via reticulate. This requires tensorflow, which isn't included in the
+# recipe because v2.2+ isn't available yet and is required for Python 3.8.
+# https://github.com/conda-forge/umap-learn-feedstock/issues/29
+conda-umap-learn="0.4.6"
 conda-vardict="2019.06.04"
 
 # Python packages {{{1
