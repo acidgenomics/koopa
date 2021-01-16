@@ -228,6 +228,7 @@ koopa::r_javareconf() { # {{{1
     return 0
 }
 
+# FIXME MIGRATE THIS CODE TO R-KOOPA.
 # FIXME Ensure we delete existing files, and adjust sync setting to delete on
 # server as well?
 koopa::r_pkgdown_deploy_to_aws() { # {{{1
