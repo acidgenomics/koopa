@@ -324,7 +324,7 @@ koopa::debian_install_base() { # {{{1
         )
         if koopa::is_ubuntu
         then
-            koopa::info 'Installing Ubuntu-specific packages.'
+            koopa::alert 'Installing Ubuntu-specific packages.'
             pkgs+=('firefox')
         fi
     fi

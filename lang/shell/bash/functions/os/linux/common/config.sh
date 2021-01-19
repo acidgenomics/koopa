@@ -16,7 +16,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
     koopa::assert_is_file "$passwd_file"
     user="${1:-${USER:?}}"
     user_string="$(getent passwd "$user")"
-    koopa::info "Updating '${passwd_file}' to include '${user}'."
+    koopa::alert "Updating '${passwd_file}' to include '${user}'."
     if ! sudo grep -q "$user" "$passwd_file"
     then
         sudo sh -c "printf '%s\n' '${user_string}' >> '${passwd_file}'"
@@ -42,7 +42,7 @@ koopa::add_user_to_group() { # {{{1
     koopa::assert_is_installed gpasswd
     group="${1:?}"
     user="${2:-${USER:?}}"
-    koopa::info "Adding user '${user}' to group '${group}'."
+    koopa::alert "Adding user '${user}' to group '${group}'."
     sudo gpasswd --add "$user" "$group"
     return 0
 }
@@ -60,7 +60,7 @@ koopa::link_docker() { # {{{1
     # e.g. '/mnt/data01/n' to '/n' for AWS.
     dd_link_prefix="$(koopa::data_disk_link_prefix)"
     [[ -d "$dd_link_prefix" ]] || return 0
-    koopa::info 'Updating Docker configuration.'
+    koopa::alert 'Updating Docker configuration.'
     koopa::assert_is_installed systemctl
     koopa::note 'Stopping Docker.'
     sudo systemctl stop docker

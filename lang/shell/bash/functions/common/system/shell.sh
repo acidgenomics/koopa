@@ -12,7 +12,7 @@ koopa::enable_shell() { # {{{1
     cmd_path="$(koopa::make_prefix)/bin/${cmd_name}"
     etc_file='/etc/shells'
     [[ -f "$etc_file" ]] || return 0
-    koopa::info "Updating '${etc_file}' to include '${cmd_path}'."
+    koopa::alert "Updating '${etc_file}' to include '${cmd_path}'."
     if ! grep -q "$cmd_path" "$etc_file"
     then
         sudo sh -c "printf '%s\n' '${cmd_path}' >> '${etc_file}'"

@@ -18,7 +18,7 @@ koopa::install_perl_packages() { # {{{1
     export PERL_MM_USE_DEFAULT=1
     if ! koopa::is_installed cpanm
     then
-        koopa::info 'CPAN Minus'
+        koopa::install_start 'CPAN Minus'
         cpan -i 'App::cpanminus' &>/dev/null
     fi
     [[ "$link" -eq 1 ]] && koopa::link_app perl
@@ -34,7 +34,7 @@ koopa::install_perl_packages() { # {{{1
     fi
     for module in "${modules[@]}"
     do
-        koopa::info "${module}"
+        koopa::install_start "${module}"
         cpanm "$module" &>/dev/null
     done
     [[ "$link" -eq 1 ]] && koopa::link_app perl

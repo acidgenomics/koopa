@@ -130,7 +130,7 @@ koopa::link_r_site_library() { # {{{1
     lib_target="${r_prefix}/site-library"
     koopa::dl 'Site library' "$lib_source"
     koopa::sys_mkdir "$lib_source"
-    koopa::info "Linking '${lib_source}' into R install at '${lib_target}'."
+    koopa::alert "Linking '${lib_source}' into R install at '${lib_target}'."
     koopa::sys_ln "$lib_source" "$lib_target"
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then

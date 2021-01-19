@@ -337,7 +337,7 @@ koopa::conda_create_env() { # {{{1
                 continue
             fi
         fi
-        koopa::info "Creating '${env_name}' conda environment."
+        koopa::alert "Creating '${env_name}' conda environment."
         conda create --name="$env_name" --quiet --yes "$env"
         koopa::sys_set_permissions -r "$prefix"
     done
@@ -503,7 +503,7 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     k_site_pkgs="$(koopa::python_site_packages_prefix "$python")"
     [[ ! -d "$k_site_pkgs" ]] && koopa::sys_mkdir "$k_site_pkgs"
     file="${sys_site_pkgs}/koopa.pth"
-    koopa::info "Adding '${file}' path file in '${sys_site_pkgs}'."
+    koopa::alert "Adding '${file}' path file in '${sys_site_pkgs}'."
     if koopa::is_symlinked_app "$python"
     then
         koopa::write_string "$k_site_pkgs" "$file"
@@ -543,7 +543,7 @@ koopa::python_remove_pycache() { # {{{1
     koopa::assert_has_no_args "$#"
     python="$(koopa::which_realpath "$python")"
     prefix="$(koopa::parent_dir -n 2 "$python")"
-    koopa::info "Removing pycache in '${prefix}'."
+    koopa::alert "Removing pycache in '${prefix}'."
     find "$prefix" \
         -type d \
         -name '__pycache__' \

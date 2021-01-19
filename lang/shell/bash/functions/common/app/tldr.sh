@@ -105,7 +105,7 @@ koopa::tldr_download_cache() { # {{{1
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::tldr_prefix)"
     [[ -d "$prefix" ]] && return 0
-    koopa::info 'Caching tldr pages from GitHub.'
+    koopa::alert 'Caching tldr pages from GitHub.'
     koopa::mkdir "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
     (

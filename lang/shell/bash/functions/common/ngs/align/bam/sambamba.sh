@@ -110,7 +110,7 @@ koopa::sambamba_index() { # {{{1
     koopa::dl 'Threads' "$threads"
     for bam_file in "$@"
     do
-        koopa::info "Indexing '${bam_file}'."
+        koopa::alert "Indexing '${bam_file}'."
         koopa::assert_is_file "$bam_file"
         sambamba index \
             --nthreads="$threads" \

@@ -184,7 +184,7 @@ koopa::delete_broken_symlinks() { # {{{1
         for file in "${files[@]}"
         do
             [[ -z "$file" ]] && continue
-            koopa::info "Removing '${file}'."
+            koopa::alert "Removing '${file}'."
             koopa::rm "$file"
         done
     done
@@ -236,7 +236,7 @@ koopa::delete_empty_dirs() { # {{{1
         for dir in "${dirs[@]}"
         do
             [[ -z "$dir" ]] && continue
-            koopa::info "Removing '${dir}'."
+            koopa::alert "Removing '${dir}'."
             koopa::rm "$dir"
         done
     done
