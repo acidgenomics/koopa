@@ -3,7 +3,7 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-01-19.
     # """
     # shellcheck disable=SC2039
     local file
@@ -14,7 +14,7 @@ _koopa_posix_header() { # {{{1
     fi
     # Source POSIX functions.
     # Use shell globbing instead of 'find', which doesn't support source.
-    for file in "${KOOPA_PREFIX}/shell/posix/functions/"*'.sh'
+    for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'.sh'
     do
         # shellcheck source=/dev/null
         [ -f "$file" ] && . "$file"

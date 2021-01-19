@@ -42,12 +42,12 @@ koopa::add_monorepo_config_link() { # {{{1
 koopa::add_to_user_profile() { # {{{1
     # """
     # Add koopa configuration to user profile.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-01-19.
     # """
     local source_file target_file
     koopa::assert_has_args "$#"
     target_file="$(koopa::find_user_profile)"
-    source_file="$(koopa::prefix)/shell/posix/include/profile.sh"
+    source_file="$(koopa::prefix)/lang/shell/posix/include/profile.sh"
     koopa::assert_is_file "$source_file"
     koopa::alert "Adding koopa activation to '${target_file}'."
     touch "$target_file"
