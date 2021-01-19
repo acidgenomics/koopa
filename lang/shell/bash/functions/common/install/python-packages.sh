@@ -43,6 +43,7 @@ koopa::install_python_packages() { # {{{1
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
+            # pynvim
             'flake8'
             'pip'
             'pip2pi'
