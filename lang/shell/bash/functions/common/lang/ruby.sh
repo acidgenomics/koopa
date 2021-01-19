@@ -49,6 +49,7 @@ koopa::install_ruby_packages() { # {{{1
     then
         # > gem pristine --all --only-executables
         gems=(
+            # neovim
             'bashcov'
             'ronn'
         )
