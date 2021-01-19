@@ -238,32 +238,33 @@ koopa::find_local_bin_dirs() { # {{{1
     return 0
 }
 
-# FIXME USE KOOPA PREFIXES HERE, RATHER THAN HARD-CODING.
 koopa::find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-01-19.
     #
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
     # """
-    local prefix x
+    local app_prefix koopa_prefix make_prefix opt_prefix x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed find || return 1
-    prefix="$(koopa::make_prefix)"
+    app_prefix="$(koopa::app_prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
+    opt_prefix="$(koopa::opt_prefix)"
+    make_prefix="$(koopa::make_prefix)"
     x="$( \
-        find "$prefix" \
+        find "$make_prefix" \
             -xdev \
             -mindepth 1 \
             -type f \
-            -not -path "${prefix}/app/*" \
-            -not -path "${prefix}/cellar/*" \
-            -not -path "${prefix}/koopa/*" \
-            -not -path "${prefix}/opt/*" \
-            -not -path "${prefix}/share/applications/mimeinfo.cache" \
-            -not -path "${prefix}/share/emacs/site-lisp/*" \
-            -not -path "${prefix}/share/zsh/site-functions/*" \
-            | sort \
+            -not -path "${app_prefix}/*" \
+            -not -path "${koopa_prefix}/*" \
+            -not -path "${opt_prefix}/*" \
+            -not -path "${make_prefix}/share/applications/mimeinfo.cache" \
+            -not -path "${make_prefix}/share/emacs/site-lisp/*" \
+            -not -path "${make_prefix}/share/zsh/site-functions/*" \
+        | sort \
     )"
     koopa::print "$x"
     return 0
