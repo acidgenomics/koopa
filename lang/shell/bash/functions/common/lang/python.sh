@@ -30,6 +30,7 @@ koopa::activate_conda_env() { # {{{1
     if ! koopa::str_match "$env" '@'
     then
         koopa::assert_is_installed find
+        # FIXME REWORK THIS USING CONDA_ENV_PREFIX FUNCTION (SEE BELOW).
         env_dir="$( \
             find "${conda_prefix}/envs" \
                 -mindepth 1 \
@@ -48,7 +49,7 @@ koopa::activate_conda_env() { # {{{1
     fi
     nounset="$(koopa::boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +u
-    if ! type conda | grep -q conda.sh
+    if ! type conda | grep -q 'conda.sh'
     then
         # shellcheck source=/dev/null
         . "${conda_prefix}/etc/profile.d/conda.sh"
@@ -360,41 +361,62 @@ koopa::conda_env_list() { # {{{1
 koopa::conda_env_prefix() { # {{{1
     # """
     # Return prefix for a specified conda environment.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-01-19.
+    #
+    # Attempt to locate by default path first, which is the fastest approach.
     #
     # Note that we're allowing env_list passthrough as second positional
     # variable, to speed up loading upon activation.
     #
     # Example: koopa::conda_env_prefix 'deeptools'
+    #
+    # @seealso
+    # - conda env list --verbose
+    # - conda env list --json
+    # - conda info --envs
+    # - conda info --json
     # """
-    local env_dir env_list env_name x
+    local conda_prefix env_dir env_list env_name x
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed conda
     env_name="${1:?}"
     [[ -n "$env_name" ]] || return 1
-    env_list="${2:-$(koopa::conda_env_list)}"
-    env_list="$(koopa::print "$env_list" | grep "$env_name")"
+    env_list="${2:-}"
     if [[ -z "$env_list" ]]
     then
-        koopa::stop "Failed to detect prefix for '${env_name}'."
+        conda_prefix="$(koopa::conda_prefix)"
+        x="${conda_prefix}/envs/${env_name}"
+        if [[ -d "$x" ]]
+        then
+            koopa::print "$x"
+            return 0
+        fi
+        env_list="$(koopa::conda_env_list)"
     fi
+    env_list="$(koopa::print "$env_list" | grep "$env_name")"
+    [[ -n "$env_list" ]] || return 1
+    # Note that this step attempts to automatically match the latest version.
     env_dir="$( \
         koopa::print "$env_list" \
-        | grep "/envs/${env_name}" \
-        | head -n 1 \
+        | grep -E "/${env_name}(@[.0-9]+)?\"" \
+        | tail -n 1 \
     )"
     x="$(koopa::print "$env_dir" | sed -E 's/^.*"(.+)".*$/\1/')"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
 
-# FIXME NEED TO ENSURE THE EMPTY DIRECTORY IS ALSO REMOVED.
 koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
-    # @note Updated 2020-12-08.
+    # @note Updated 2021-01-19.
+    #
+    # @seealso
+    # - conda env list --verbose
+    # - conda env list --json
     # """
-    local arg nounset
+    local arg env_prefix nounset
     koopa::assert_has_args "$#"
     koopa::activate_conda
     koopa::assert_is_installed conda
@@ -402,7 +424,9 @@ koopa::conda_remove_env() { # {{{1
     [[ "$nounset" -eq 1 ]] && set +u
     for arg in "$@"
     do
+        env_prefix="$(koopa::conda_env_prefix "$arg")"
         conda remove --yes --name="$arg" --all
+        [[ -d "$env_prefix" ]] && koopa::rm "$env_prefix"
     done
     [[ "$nounset" -eq 1 ]] && set -u
     return 0
