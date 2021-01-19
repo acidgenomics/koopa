@@ -334,11 +334,11 @@ _koopa_activate_header() { # {{{1
     # shellcheck disable=SC2039
     local header
     # Load shell header file, which will source required functions.
-    if [ -f "${KOOPA_PREFIX:?}/shell/${KOOPA_SHELL:?}/include/header.sh" ]
+    if [ -f "${KOOPA_PREFIX:?}/lang/shell/${KOOPA_SHELL:?}/include/header.sh" ]
     then
-        header="${KOOPA_PREFIX:?}/shell/${KOOPA_SHELL:?}/include/header.sh"
+        header="${KOOPA_PREFIX:?}/lang/shell/${KOOPA_SHELL:?}/include/header.sh"
     else
-        header="${KOOPA_PREFIX:?}/shell/posix/include/header.sh"
+        header="${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     fi
     printf '%s\n' "$header"
     return 0

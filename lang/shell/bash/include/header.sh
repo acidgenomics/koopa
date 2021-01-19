@@ -3,7 +3,7 @@
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2020-12-11.
+    # @note Updated 2021-01-19.
     # """
     local activate checks dev distro_prefix major_version os_id shopts verbose
     activate=0
@@ -49,7 +49,7 @@ _koopa_bash_header() { # {{{1
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
         KOOPA_PREFIX="$( \
-            cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../.." \
+            cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../../.." \
             &>/dev/null \
             && pwd -P \
         )"

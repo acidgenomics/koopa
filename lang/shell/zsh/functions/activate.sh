@@ -88,11 +88,11 @@ _koopa_activate_zsh_extras() { # {{{1
 _koopa_activate_zsh_fpath() { # {{{1
     # """
     # Activate Zsh FPATH.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-01-19.
     # """
     local koopa_fpath koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
-    koopa_fpath="${koopa_prefix}/shell/zsh/functions"
+    koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
     then
         _koopa_warning "FPATH directory is missing: '${koopa_fpath}'."

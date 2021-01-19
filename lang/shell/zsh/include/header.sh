@@ -3,7 +3,7 @@
 _koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-01-19.
     # """
     local activate checks file local major_version shopts verbose
     activate=0
@@ -40,14 +40,14 @@ _koopa_zsh_header() { # {{{1
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
         KOOPA_PREFIX="$( \
-            cd "$(dirname "$(realpath "${(%):-%N}")")/../../.." \
+            cd "$(dirname "$(realpath "${(%):-%N}")")/../../../.." \
             >/dev/null 2>&1 \
             && pwd -P \
         )"
         export KOOPA_PREFIX
     fi
-    source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
-    source "${KOOPA_PREFIX}/shell/zsh/functions/activate.sh"
+    source "${KOOPA_PREFIX}/lang/shell/posix/include/header.sh"
+    source "${KOOPA_PREFIX}/lang/shell/zsh/functions/activate.sh"
     return 0
 }
 
