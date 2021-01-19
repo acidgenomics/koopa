@@ -56,9 +56,9 @@ _koopa_bash_header() { # {{{1
         export KOOPA_PREFIX
     fi
     # shellcheck source=/dev/null
-    source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
+    source "${KOOPA_PREFIX}/lang/shell/posix/include/header.sh"
     # shellcheck source=/dev/null
-    source "${KOOPA_PREFIX}/shell/bash/functions/activate.sh"
+    source "${KOOPA_PREFIX}/lang/shell/bash/functions/activate.sh"
     if [[ "$activate" -eq 0 ]] || [[ "$dev" -eq 1 ]]
     then
         _koopa_source_dir 'common'

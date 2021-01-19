@@ -17,6 +17,6 @@ then
 fi
 
 # shellcheck source=/dev/null
-. "$(dirname "$bash_source")/../shell/bash/include/header.sh"
+. "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
 
 koopa::koopa "$@"
