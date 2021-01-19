@@ -9,7 +9,7 @@ koopa::apt_add_azure_cli_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/azure-cli.list'
     [[ -f "$file" ]] && return 0
-    koopa::info "Adding Microsoft Azure CLI repo at '${file}'."
+    koopa::alert "Adding Microsoft Azure CLI repo at '${file}'."
     koopa::apt_add_microsoft_key
     os_codename="$(koopa::os_codename)"
     url='https://packages.microsoft.com/repos/azure-cli/'
@@ -44,7 +44,7 @@ koopa::apt_add_docker_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/docker.list'
     [[ -f "$file" ]] && return 0
-    koopa::info "Adding Docker repo at '${file}'."
+    koopa::alert "Adding Docker repo at '${file}'."
     koopa::apt_add_docker_key
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
@@ -70,7 +70,7 @@ koopa::apt_add_google_cloud_key() { # {{{1
     url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     file='/usr/share/keyrings/cloud.google.gpg'
     [[ -e "$file" ]] && return 0
-    koopa::info "Adding Google Cloud keyring at '${file}'."
+    koopa::alert "Adding Google Cloud keyring at '${file}'."
     curl -fsSL "$url" \
         | sudo apt-key --keyring "$file" add - \
         >/dev/null 2>&1 \
@@ -87,7 +87,7 @@ koopa::apt_add_google_cloud_sdk_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/google-cloud-sdk.list'
     [[ -f "$file" ]] && return 0
-    koopa::info "Adding Google Cloud SDK repo at '${file}'."
+    koopa::alert "Adding Google Cloud SDK repo at '${file}'."
     koopa::apt_add_google_cloud_key
     string="deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
 https://packages.cloud.google.com/apt cloud-sdk main"
@@ -118,7 +118,7 @@ koopa::apt_add_llvm_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/llvm.list'
     [[ -f "$file" ]] && return 0
-    koopa::info "Adding LLVM repo at '${file}'."
+    koopa::alert "Adding LLVM repo at '${file}'."
     koopa::apt_add_llvm_key
     os_codename="$(koopa::os_codename)"
     version="$(koopa::variable 'llvm')"
@@ -139,7 +139,7 @@ koopa::apt_add_microsoft_key() {  #{{{1
     url='https://packages.microsoft.com/keys/microsoft.asc'
     file='/etc/apt/trusted.gpg.d/microsoft.asc.gpg'
     [[ -e "$file" ]] && return 0
-    koopa::info "Adding Microsoft key at '${file}'."
+    koopa::alert "Adding Microsoft key at '${file}'."
     curl -fsSL "$url" \
         | gpg --dearmor \
         | sudo tee "$file" \
@@ -178,7 +178,7 @@ koopa::apt_add_r_key() { # {{{1
     for key in "${keys[@]}"
     do
         koopa::apt_is_key_imported "$key" && continue
-        koopa::info "Adding R key '${key}'."
+        koopa::alert "Adding R key '${key}'."
         sudo apt-key adv \
             --keyserver "$keyserver" \
             --recv-key "$key" \
@@ -221,7 +221,7 @@ koopa::apt_add_r_repo() { # {{{1
             sudo rm -frv "$file"
         fi
     fi
-    koopa::info "Adding R repo at '${file}'."
+    koopa::alert "Adding R repo at '${file}'."
     koopa::apt_add_r_key
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
@@ -278,7 +278,7 @@ koopa::apt_add_wine_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/wine.list'
     [[ -f "$file" ]] && return 0
-    koopa::info "Adding Wine repo at '${file}'."
+    koopa::alert "Adding Wine repo at '${file}'."
     koopa::apt_add_wine_key
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
@@ -334,7 +334,7 @@ koopa::apt_add_wine_obs_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/wine-obs.list'
     [[ -f "$file" ]] && return 0
-    koopa::info "Adding Wine OBS repo at '${file}'."
+    koopa::alert "Adding Wine OBS repo at '${file}'."
     koopa::apt_add_wine_obs_key
     base_url="https://download.opensuse.org/repositories/\
 Emulators:/Wine:/Debian"
@@ -397,7 +397,7 @@ koopa::apt_disable_deb_src() { # {{{1
     koopa::assert_has_args_le "$#" 1
     file="${1:-/etc/apt/sources.list}"
     file="$(realpath "$file")"
-    koopa::info "Disabling Debian sources in '${file}'."
+    koopa::alert "Disabling Debian sources in '${file}'."
     if ! grep -Eq '^deb-src ' "$file"
     then
         koopa::note "No 'deb-src' lines to comment in '${file}'."
@@ -417,7 +417,7 @@ koopa::apt_enable_deb_src() { # {{{1
     koopa::assert_has_args_le "$#" 1
     file="${1:-/etc/apt/sources.list}"
     file="$(realpath "$file")"
-    koopa::info "Enabling Debian sources in '${file}'."
+    koopa::alert "Enabling Debian sources in '${file}'."
     if ! grep -Eq '^# deb-src ' "$file"
     then
         koopa::note "No '# deb-src' lines to uncomment in '${file}'."
@@ -495,7 +495,7 @@ koopa::apt_is_key_imported() { # {{{1
 koopa::apt_key_add() {  #{{{1
     # """
     # Add an apt key.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-01-19.
     #
     # Using '-k/--insecure' flag here to handle some servers
     # (e.g. download.opensuse.org) that will fail otherwise.
@@ -509,7 +509,7 @@ koopa::apt_key_add() {  #{{{1
     then
         koopa::apt_is_key_imported "$key" && return 0
     fi
-    koopa::info "Adding ${name} key."
+    koopa::alert "Adding '${name}' key to apt."
     curl -fksSL "$url" \
         | sudo apt-key add - \
         >/dev/null 2>&1 \
