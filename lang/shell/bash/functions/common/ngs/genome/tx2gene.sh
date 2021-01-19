@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME MOVE THESE TO ACIDGENOMES R PACKAGE.
-# NOTE Work on converting these to Python functions.
+# NOTE Consider deprecating and removing these Bash functions in favor of
+# improved and hardened R versions defined in AcidGenomes package.
 
 koopa::tx2gene_from_ensembl_fasta() { # {{{1
     # """
