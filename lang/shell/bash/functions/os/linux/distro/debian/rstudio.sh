@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::ubuntu_install_shiny_server() { # {{{1
+koopa::debian_install_shiny_server() { # {{{1
     # """
-    # Install Shiny Server for Ubuntu.
-    # @note Updated 2020-07-30.
+    # Install Shiny Server for Debian/Ubuntu.
+    # @note Updated 2021-01-19.
     # @seealso
     # https://rstudio.com/products/shiny/download-server/ubuntu/
     # """
@@ -50,7 +50,6 @@ koopa::ubuntu_install_shiny_server() { # {{{1
     (
         koopa::cd "$tmp_dir"
         file="shiny-server-${version}-amd64.deb"
-        # Support for Ubuntu 14.04 LTS+ with this fixed URL.
         url="https://download3.rstudio.org/ubuntu-14.04/x86_64/${file}"
         koopa::download "$url"
         sudo gdebi --non-interactive "$file"
