@@ -1,39 +1,34 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure we run the dotfiles installers here.
 koopa::update_koopa() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-01-19.
     #
     # Note that stable releases are not git, and can't be updated.
     # """
-    local dotfiles_prefix koopa_prefix
+    local koopa_prefix name_fancy url version
+    name_fancy='koopa'
     koopa_prefix="$(koopa::prefix)"
     if ! koopa::is_git_toplevel "$koopa_prefix"
     then
         version="$(koopa::version)"
         url="$(koopa::url)"
         koopa::note \
-            "Stable release of koopa ${version} detected." \
+            "Stable release of ${name_fancy} ${version} detected." \
             "To update, first run the 'uninstall' script." \
             "Then run the default install command at '${url}'."
         return 1
     fi
-    koopa::h1 "Updating koopa at '${koopa_prefix}'."
+    koopa::update_start "$name_fancy" "${koopa_prefix}"
     koopa::sys_set_permissions -r "$koopa_prefix"
     koopa::sys_git_pull
-    (
-        dotfiles_prefix="$(koopa::dotfiles_prefix)"
-        koopa::cd "$dotfiles_prefix"
-        koopa::git_set_remote_url \
-            'https://github.com/acidgenomics/dotfiles.git'
-        koopa::git_reset
-        koopa::git_pull
-    )
+    koopa::update_dotfiles \
+        "$(koopa::dotfiles_prefix)" \
+        "$(koopa::dotfiles_private_prefix)"
     koopa::sys_set_permissions -r "$koopa_prefix"
     koopa::fix_zsh_permissions
-    koopa::update_success 'koopa' "$koopa_prefix"
+    koopa::update_success "$name_fancy" "$koopa_prefix"
     return 0
 }
 
@@ -81,14 +76,14 @@ koopa::update_koopa_system() { # {{{1
     return 0
 }
 
-# FIXME NEED TO ENSURE ACTIVATE PREFIX IS CORRECT HERE.
 koopa::update_koopa_user() { # {{{1
     # """
     # Update koopa user configuration.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-01-19.
     # """
-    local config_prefix
+    local config_prefix local_data_prefix
     config_prefix="$(koopa::config_prefix)"
+    local_data_prefix="$(koopa::local_data_prefix)"
     koopa::h1 'Updating user configuration.'
     # Remove legacy directories from user config, if necessary.
     koopa::rm \
@@ -104,8 +99,7 @@ koopa::update_koopa_user() { # {{{1
         "${config_prefix}/docker-private"
         "${config_prefix}/dotfiles-private"
         "${config_prefix}/scripts-private"
-        "${XDG_DATA_HOME}/Rcheck"
-        "${HOME}/.emacs.d-doom"
+        "${local_data_prefix}/Rcheck"
     )
     for repo in "${repos[@]}"
     do
@@ -115,9 +109,10 @@ koopa::update_koopa_user() { # {{{1
             koopa::git_pull
         )
     done
-    koopa::install_dotfiles
-    koopa::install_dotfiles_private
-    # > koopa::update_spacemacs
+    ! koopa::is_shared_install && \
+        koopa::update_dotfiles "$(koopa::dotfiles_prefix)"
+    koopa::update_dotfiles "$(koopa::dotfiles_private_prefix)"
+    # > koopa::update_emacs
     koopa::success 'User configuration update was successful.'
     return 0
 }

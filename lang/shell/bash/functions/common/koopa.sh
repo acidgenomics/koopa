@@ -3,10 +3,14 @@
 koopa::_koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-01-19.
     # """
     local name
     name="${1:-}"
+    if [[ -z "$name" ]]
+    then
+        koopa::stop "Missing argument: 'koopa app <ARG>...'."
+    fi
     case "$name" in
         clean)
             name='delete_broken_app_symlinks'
@@ -24,7 +28,8 @@ koopa::_koopa_app() { # {{{1
             name='unlink_app'
             ;;
     esac
-    koopa::_run_function "$name"
+    shift 1
+    koopa::_run_function "$name" "$@"
     return 0
 }
 
@@ -71,7 +76,7 @@ koopa::_koopa_install() { # {{{1
     name="${1:-}"
     if [[ -z "$name" ]]
     then
-        koopa::stop 'Program name to install is required.'
+        koopa::stop "Missing argument: 'koopa install <ARG>...'."
     fi
     shift 1
     koopa::_run_function "install_${name}" "$@"
@@ -127,7 +132,7 @@ koopa::_koopa_uninstall() { # {{{1
 koopa::_koopa_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-01-19.
     # """
     local name
     name="${1:-}"
@@ -152,7 +157,7 @@ koopa::_koopa_update() { # {{{1
             koopa::defunct 'koopa update user'
             ;;
     esac
-    shift 1
+    [[ "$#" -gt 0 ]] && shift 1
     koopa::_run_function "update_${name}" "$@"
     return 0
 }
