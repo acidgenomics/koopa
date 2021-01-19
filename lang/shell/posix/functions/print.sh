@@ -206,7 +206,7 @@ _koopa_alert() { # {{{1
     # Alert message.
     # @note Updated 2021-01-19.
     # """
-    __koopa_msg 'default' 'default' '→' "$@"
+    __koopa_msg 'default' 'default' ' →' "$@"
     return 0
 }
 
@@ -273,7 +273,7 @@ _koopa_info() { # {{{1
     # General info.
     # @note Updated 2021-01-19.
     # """
-    __koopa_msg 'default' 'default' 'ℹ' "$@"
+    __koopa_msg 'default' 'default' ' ℹ' "$@"
     return 0
 }
 
@@ -471,7 +471,7 @@ _koopa_stop() { # {{{1
     # Stop with an error message, and exit.
     # @note Updated 2021-01-19.
     # """
-    __koopa_msg 'red-bold' 'red' '! Error:' "$@" >&2
+    __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
     exit 1
 }
 
@@ -489,6 +489,6 @@ _koopa_warning() { # {{{1
     # Warning message.
     # @note Updated 2021-01-19.
     # """
-    __koopa_msg 'magenta-bold' 'magenta' '! Warning:' "$@" >&2
+    __koopa_msg 'magenta-bold' 'magenta' '!! Warning:' "$@" >&2
     return 0
 }
