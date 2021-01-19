@@ -3,7 +3,7 @@
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-01-14.
+    # @note Updated 2021-01-19.
     #
     # Use of '--force-bottle' flag can be helpful, but not all brews have
     # bottles, so this can error.
@@ -33,16 +33,16 @@ koopa::update_homebrew() { # {{{1
         user="$(koopa::user)"
         group="$(koopa::admin_group)"
         prefix="$(koopa::homebrew_prefix)"
-        koopa::h2 "Resetting ownership at '${prefix}' to '${user}:${group}'."
+        koopa::alert "Resetting ownership at '${prefix}' to '${user}:${group}'."
         sudo chown -Rh "${user}:${group}" "${prefix}/"*
     fi
     brew analytics off
     brew update >/dev/null
-    koopa::h2 'Updating brews.'
+    koopa::alert 'Updating brews.'
     brew upgrade || true
     if koopa::is_macos
     then
-        koopa::h2 'Updating casks.'
+        koopa::alert 'Updating casks.'
         readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
         if koopa::is_array_non_empty "${casks[@]}"
         then
@@ -73,12 +73,12 @@ koopa::update_homebrew() { # {{{1
             done
         fi
     fi
-    koopa::h2 'Running cleanup.'
+    koopa::alert 'Running cleanup.'
     brew cleanup -s || true
     koopa::rm "$(brew --cache)"
     if koopa::has_sudo
     then
-        koopa::h2 "Resetting ownership at '${prefix}' to '${user}:${group}'."
+        koopa::alert "Resetting ownership at '${prefix}' to '${user}:${group}'."
         sudo chown -Rh "${user}:${group}" "${prefix}/"*
     fi
     koopa::update_success "$name_fancy"
