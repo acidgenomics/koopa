@@ -161,7 +161,7 @@ _koopa_activate_homebrew() { # {{{1
     _koopa_activate_homebrew_prefix texinfo
     _koopa_activate_homebrew_google_cloud_sdk
     _koopa_activate_homebrew_ruby_gems
-    _koopa_activate_homebrew_python
+    # > _koopa_activate_homebrew_python
     return 0
 }
 
