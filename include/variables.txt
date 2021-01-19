@@ -181,7 +181,7 @@ neofetch="7.1.0"
 neovim="0.4.4"
 
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="15.0.2"
+openjdk="15.0.1"
 
 # https://www.openssh.com/portable.html
 openssh="8.4p1"

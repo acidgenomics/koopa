@@ -9,6 +9,7 @@ koopa::linux_install_openjdk() { # {{{1
     # We need to ensure alternatives code runs (see below).
     #
     # @seealso
+    # - https://jdk.java.net/archive/
     # - https://jdk.java.net/15/
     # - https://openjdk.java.net/
     # """
@@ -47,6 +48,9 @@ koopa::linux_install_openjdk() { # {{{1
         case "$version" in
             15.0.2)
                 unique='0d1cfde4252546c6931946de8db48ee2/7'
+                ;;
+            15.0.1)
+                unique='51f4f36ad4ef43e39d0dfdbaf6549e32/9'
                 ;;
             15)
                 unique='779bf45e88a44cbd9ea6621d33e33db1/36'
