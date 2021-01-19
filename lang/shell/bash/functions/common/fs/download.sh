@@ -31,7 +31,7 @@ koopa::download() { # {{{1
         file="${wd}/${bn}"
     fi
     file="$(realpath "$file")"
-    koopa::info "Downloading '${url}' to '${file}'."
+    koopa::alert "Downloading '${url}' to '${file}'."
     curl \
         --create-dirs \
         --fail \

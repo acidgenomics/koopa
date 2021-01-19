@@ -86,7 +86,7 @@ koopa::view_latest_tmp_log_file() { # {{{1
             | tail -n 1 \
     )"
     [[ -f "$log_file" ]] || return 1
-    koopa::info "Viewing '${log_file}'."
+    koopa::alert "Viewing '${log_file}'."
     # Note that this will skip to the end automatically.
     koopa::pager +G "$log_file"
     return 0

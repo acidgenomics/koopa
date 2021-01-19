@@ -309,7 +309,7 @@ koopa::linux_configure_system() { # {{{1
     # --------------------------------------------------------------------------
 
     # Show available disk space.
-    koopa::info 'Checking available local disk space.'
+    koopa::alert 'Checking available local disk space.'
     df -h '/'
     # Ensure essential target prefixes exist.
     prefixes=(

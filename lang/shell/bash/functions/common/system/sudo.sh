@@ -17,7 +17,7 @@ koopa::enable_passwordless_sudo() { # {{{1
         koopa::success "Passwordless sudo enabled for '${group}' group."
         return 0
     fi
-    koopa::info "Updating '${sudo_file}' to include '${group}'."
+    koopa::alert "Updating '${sudo_file}' to include '${group}'."
     string="%${group} ALL=(ALL) NOPASSWD: ALL"
     sudo sh -c "printf '%s\n' '$string' >> '${sudo_file}'"
     sudo chmod -v 0440 "$sudo_file"

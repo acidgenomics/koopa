@@ -97,7 +97,7 @@ koopa::docker_build() { # {{{1
     tagged_image="${image}:${tag}"
     # e.g. acidgenomics/debian:latest-20200101
     tagged_image_today="${tagged_image}-${today}"
-    koopa::info "Building '${tagged_image}' Docker image."
+    koopa::alert "Building '${tagged_image}' Docker image."
     docker login "$server"
     # Force remove any existing local tagged images.
     if [[ "$delete" -eq 1 ]]
@@ -261,7 +261,7 @@ koopa::docker_prune_all_images() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker
-    koopa::info 'Pruning all Docker images.'
+    koopa::alert 'Pruning all Docker images.'
     docker system prune --all --force
     return 0
 }
@@ -280,7 +280,7 @@ koopa::docker_prune_old_images() { # {{{
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker
-    koopa::info 'Pruning Docker images older than 3 months.'
+    koopa::alert 'Pruning Docker images older than 3 months.'
     docker image prune \
         --all \
         --filter 'until=2160h' \
