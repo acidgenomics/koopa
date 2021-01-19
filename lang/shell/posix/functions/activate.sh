@@ -262,7 +262,7 @@ _koopa_activate_homebrew_ruby_gems() { # {{{1
 _koopa_activate_koopa_paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2020-11-16.
+    # @note Updated 2021-01-19.
     # """
     # shellcheck disable=SC2039
     local config_prefix distro_prefix koopa_prefix linux_prefix shell
@@ -270,7 +270,7 @@ _koopa_activate_koopa_paths() { # {{{1
     config_prefix="$(_koopa_config_prefix)"
     shell="$(_koopa_shell)"
     _koopa_activate_prefix "$koopa_prefix"
-    _koopa_activate_prefix "${koopa_prefix}/shell/${shell}"
+    _koopa_activate_prefix "${koopa_prefix}/lang/shell/${shell}"
     if _koopa_is_linux
     then
         linux_prefix="${koopa_prefix}/os/linux"

@@ -23,7 +23,7 @@ koopa::run_if_installed() { # {{{1
 koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-01-19.
     #
     # Intended for use with 'koopa pull'.
     #
@@ -35,7 +35,7 @@ koopa::sys_git_pull() { # {{{1
     (
         prefix="$(koopa::prefix)"
         koopa::cd "$prefix"
-        koopa::sys_set_permissions -r "${prefix}/shell/zsh" &>/dev/null
+        koopa::sys_set_permissions -r "${prefix}/lang/shell/zsh" &>/dev/null
         branch="$(koopa::git_branch)"
         koopa::git_pull
         # Ensure other branches, such as develop, are rebased.
