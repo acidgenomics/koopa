@@ -167,7 +167,7 @@ koopa::git_init() { # {{{1
         git remote add 'origin' "$origin"
         git remote -v
         git fetch --all
-        koopa::info "Checking out '${branch}' branch."
+        koopa::alert "Checking out '${branch}' branch."
         git branch --set-upstream-to="origin/${branch}" "$branch"
         git pull 'origin' "$branch" --allow-unrelated-histories
     fi
@@ -224,7 +224,7 @@ koopa::git_pull() { # {{{1
     [[ "$#" -gt 0 ]] && branch="${*: -1}"
     koopa::assert_is_git
     koopa::assert_is_installed git
-    koopa::info "Pulling git repo at '${PWD:?}'."
+    koopa::alert "Pulling git repo at '${PWD:?}'."
     git fetch --all
     git pull "$@"
     if [[ -s '.gitmodules' ]]
@@ -380,7 +380,7 @@ koopa::git_reset() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_git
     koopa::assert_is_installed git
-    koopa::info "Resetting git repo at '${PWD:?}'."
+    koopa::alert "Resetting git repo at '${PWD:?}'."
     git clean -dffx
     if [[ -s '.gitmodules' ]]
     then
@@ -515,7 +515,7 @@ koopa::git_submodule_init() { # {{{1
     # """
     local array lines string target target_key url url_key
     koopa::assert_has_no_args "$#"
-    koopa::info "Initializing submodules in '${PWD:?}'."
+    koopa::alert "Initializing submodules in '${PWD:?}'."
     koopa::assert_is_git
     koopa::assert_is_nonzero_file '.gitmodules'
     koopa::assert_is_installed git
