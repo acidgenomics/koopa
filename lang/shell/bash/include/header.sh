@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME TURN THIS OFF
-set -x
-
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
