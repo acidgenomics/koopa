@@ -1,20 +1,35 @@
 #!/usr/bin/env bash
 
+# NOTE Can consider not linking gdal, geos, and proj into '/usr/local' as
+# an alternative install approach that will work here. Can link using the
+# opt prefix instead.
+
 koopa::linux_install_r_geos() { # {{{1
     # """
     # Install R rgeos package.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-01-20.
     # """
-    koopa::is_r_package_installed rgeos && return 0
+    local geos_prefix make_prefix
+    if koopa::is_r_package_installed rgeos
+    then
+        koopa::note 'rgeos is already installed.'
+        return 0
+    fi
     koopa::assert_is_installed Rscript
-    koopa::assert_is_not_file /usr/bin/geos-config
-    Rscript --vanilla -e "\
+    koopa::assert_is_not_file '/usr/bin/geos-config'
+    # How to enable versioned support, if necessary.
+    # > app_prefix="$(koopa::app_prefix)"
+    # > geos_version="$(koopa::variable 'geos')"
+    # > geos_prefix="${app_prefix}/geos/${geos_version}"
+    make_prefix="$(koopa::make_prefix)"
+    geos_prefix="$make_prefix"
+    Rscript -e "\
         install.packages(
             pkgs = \"rgeos\",
             type = \"source\",
             repos = \"https://cran.rstudio.com\",
             configure.args = paste(
-                \"--with-geos-config=/usr/local/bin/geos-config\"
+                \"--with-geos-config=${geos_prefix}/bin/geos-config\"
             )
         )"
     return 0
@@ -23,17 +38,20 @@ koopa::linux_install_r_geos() { # {{{1
 koopa::linux_install_r_sf() { # {{{1
     # """
     # Install R sf package.
-    # @note Updated 2020-11-22.
+    # @note Updated 2021-01-20.
     # """
     local gdal_prefix geos_prefix make_prefix pkg_config_arr proj_prefix
-    koopa::is_r_package_installed sf && return 0
+    if koopa::is_r_package_installed sf
+    then
+        koopa::note 'sf is already installed.'
+        return 0
+    fi
     koopa::assert_is_installed Rscript
     koopa::assert_is_not_file \
         '/usr/bin/gdal-config' \
         '/usr/bin/geos-config' \
         '/usr/bin/proj'
     # How to enable versioned support, if necessary.
-    # FIXME POINT THESE TO OPT INSTEAD.
     # > app_prefix="$(koopa::app_prefix)"
     # > gdal_version="$(koopa::variable 'gdal')"
     # > gdal_prefix="${app_prefix}/gdal/${gdal_version}"
@@ -56,7 +74,7 @@ koopa::linux_install_r_sf() { # {{{1
     koopa::dl 'gdal config' "$(pkg-config --libs gdal)"
     koopa::dl 'geos config' "$(geos-config --libs)"
     koopa::dl 'proj config' "$(pkg-config --libs proj)"
-    Rscript --vanilla -e "\
+    Rscript -e "\
         install.packages(
             pkgs = \"sf\",
             type = \"source\",
@@ -72,4 +90,3 @@ koopa::linux_install_r_sf() { # {{{1
         )"
     return 0
 }
-
