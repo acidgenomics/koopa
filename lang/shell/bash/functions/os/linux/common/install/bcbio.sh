@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 
-# FIXME NEED A NEW FUNCTION HERE, SUCH AS KOOPA::ADD_OPT_LINK.
-# FIXME RENAME OPT BACK HERE TO APP AND REWORK...
-
 koopa::linux_install_bcbio() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-01-20.
     # """
     local file install_dir name name_fancy prefix \
         python tmp_dir tools_dir url version
     name='bcbio'
     name_fancy='bcbio-nextgen'
     version="$(koopa::current_bcbio_version)"
-    prefix="$(koopa::opt_prefix)/${name}/${version}"
+    prefix="$(koopa::app_prefix)/${name}/${version}"
     if [[ -d "$prefix" ]]
     then
         koopa::note "${name_fancy} already installed at '${prefix}'."
@@ -51,12 +48,11 @@ koopa::linux_install_bcbio() { # {{{1
         "$conda" clean --yes --tarballs
     fi
     koopa::sys_set_permissions -r "$prefix"
-    # FIXME NEED TO LINK THIS INTO OPT HERE.
+    koopa::link_opt "$prefix" "$name"
     koopa::install_success "$name_fancy"
     return 0
 }
 
-# FIXME USE OPT PREFIX HERE...
 koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # """
     # Install bcbio genome from Ensembl.
@@ -115,21 +111,23 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     cores="$(koopa::cpu_count)"
     (
         koopa::cd "$tmp_dir"
+        # FIXME NEED TO REWORK TO USE STANDARDIZED FILE NAMES HERE, THAT
+        # WE CAN EASILY LOCATE IN THE SCRIPT.
+        # FIXME Our genome download script needs to create symlinks that make
+        # this location step easier. Rework to organize GTF files under
+        # "annotation" instead of "gtf".
         download-ensembl-genome \
-            --organism "$organism" \
-            --build "$build" \
-            --release "$release" \
-            --type 'genome' \
-            --annotation 'gtf' \
-            --decompress
-        # Automatically locate the largest FASTA and GTF files.
-        # e.g. homo-sapiens-grch38-ensembl-100/genome/
-        #          Homo_sapiens.GRCh38.dna.primary_assembly.fa
+            --organism="$organism" \
+            --build="$build" \
+            --release="$release" \
+            --type='genome' \
+            --annotation='gtf'
+        # FIXME RETHINK THIS.
         fasta="$(\
             find '.' \
                 -mindepth 3 \
                 -maxdepth 3 \
-                -name '*.fa' \
+                -name 'genome.fa.gz' \
                 -print0 \
             | xargs -0 du -sk \
             | sort -nr  \
@@ -138,13 +136,12 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         )"
         koopa::assert_is_file "$fasta"
         fasta="$(realpath "$fasta")"
-        # e.g. homo-sapiens-grch38-ensembl-100/gtf/
-        #          Homo_sapiens.GRCh38.100.chr_patch_hapl_scaff.gtf
+        # FIXME RETHINK THIS.
         gtf="$( \
             find . \
                 -mindepth 3 \
                 -maxdepth 3 \
-                -name '*.gtf' \
+                -name 'annotation.gtf.gz' \
                 -type f \
                 -print0 \
             | xargs -0 du -sk \
@@ -202,19 +199,24 @@ koopa::linux_install_bcbio_genome() { # {{{1
     return 0
 }
 
-# FIXME RETHINK THIS ALSO, FOLLOWING BCBIO CHANGE ABOVE.
 koopa::linux_install_bcbio_vm() { # {{{1
     # """
     # Install bcbio-vm.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-01-20.
     # """
-    local bin_dir data_dir file name prefix tmp_dir url
+    local bin_dir data_dir file name name_fancy prefix tmp_dir url
     koopa::assert_has_no_envs
     koopa::assert_is_installed docker
     name='bcbio-vm'
-    prefix="$(koopa::opt_prefix)/${name}"
-    [[ -d "$prefix" ]] && return 0
-    koopa::install_start "$name" "$prefix"
+    name_fancy='bcbio-nextgen-vm'
+    version='rolling'
+    prefix="$(koopa::app_prefix)/${version}/${name}"
+    if [[ -d "$prefix" ]]
+    then
+        koopa::note "'${name_fancy}' already installed at '${prefix}'."
+        return 0
+    fi
+    koopa::install_start "$name_fancy" "$prefix"
     bin_dir="${prefix}/anaconda/bin"
     tmp_dir="$(koopa::tmp_dir)"
     # Configure Docker, if necessary.
@@ -252,7 +254,8 @@ koopa::linux_install_bcbio_vm() { # {{{1
     # > image='quay.io/bcbio/bcbio-vc'
     "${bin_dir}/bcbio_vm.py" --datadir="$data_dir" saveconfig
     # > "${bin_dir}/bcbio_vm.py" install --tools --image "$image"
-    koopa::install_success "$name"
+    koopa::link_opt "$prefix" "$name"
+    koopa::install_success "$name_fancy"
     return 0
 }
 
