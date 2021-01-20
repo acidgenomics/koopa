@@ -328,7 +328,7 @@ koopa::linux_configure_system() { # {{{1
     # Base system {{{2
     # --------------------------------------------------------------------------
 
-    koopa::h2 'Installing base system.'
+    koopa::alert 'Installing base system.'
     koopa::update_etc_profile_d
     koopa::install_dotfiles
     koopa::assert_is_installed install-base
@@ -506,7 +506,6 @@ koopa::linux_configure_system() { # {{{1
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------
 
-    # FIXME RETHINK THIS APPROACH HERE.
     [[ "${dict[install_python_packages]}" -eq 1 ]] && \
         install-python-packages
     [[ "${dict[install_r_packages]}" -eq 1 ]] && \
@@ -550,8 +549,6 @@ koopa::linux_configure_system() { # {{{1
     return 0
 }
 
-# FIXME EXPERIMENTAL, CONSIDER REMOVING SUPPORT.
-# FIXME NEED TO TEST THIS MORE CAREFULLY ON AWS EC2.
 koopa::linux_link_data_disk() { # {{{1
     # """
     # Link a secondary data disk.
@@ -572,7 +569,7 @@ koopa::linux_link_data_disk() { # {{{1
     then
         return 0
     fi
-    koopa::h2 "Symlinking '${dd_link_prefix}' on '${dd_prefix}'."
+    koopa::alert "Symlinking '${dd_link_prefix}' on '${dd_prefix}'."
     koopa::sys_rm "$dd_link_prefix" "$opt_prefix"
     # e.g. '/mnt/data01/n'.
     dd_real_prefix="${dd_prefix}${dd_link_prefix}"
