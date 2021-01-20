@@ -3,7 +3,7 @@
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2020-11-09.
+    # @note Updated 2021-01-20.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -22,39 +22,23 @@ koopa::activate_conda_env() { # {{{1
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    local conda_prefix env env_dir nounset
+    local conda_prefix env_name env_prefix nounset script
     koopa::assert_has_args_eq "$#" 1
-    env="${1:?}"
-    conda_prefix="$(koopa::conda_prefix)"
-    # Locate latest version automatically, if necessary.
-    if ! koopa::str_match "$env" '@'
-    then
-        koopa::assert_is_installed find
-        # FIXME REWORK THIS USING CONDA_ENV_PREFIX FUNCTION (SEE BELOW).
-        env_dir="$( \
-            find "${conda_prefix}/envs" \
-                -mindepth 1 \
-                -maxdepth 1 \
-                -type d \
-                -name "${env}@*" \
-                -print \
-            | sort \
-            | tail -n 1 \
-        )"
-        if [[ ! -d "$env_dir" ]]
-        then
-            koopa::stop "Failed to locate '${env}' conda environment."
-        fi
-        env="$(basename "$env_dir")"
-    fi
+    koopa::assert_is_installed conda
+    env_prefix="$(koopa::conda_env_prefix "${1:?}")"
+    [[ -n "$env_prefix" ]] || return 1
+    env_name="$(basename "$env_prefix")"
     nounset="$(koopa::boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +u
     if ! type conda | grep -q 'conda.sh'
     then
+        conda_prefix="$(koopa::conda_prefix)"
+        script="${conda_prefix}/etc/profile.d/conda.sh"
+        koopa::assert_is_file "$script"
         # shellcheck source=/dev/null
-        . "${conda_prefix}/etc/profile.d/conda.sh"
+        . "$script"
     fi
-    conda activate "$env"
+    conda activate "$env_name"
     [[ "$nounset" -eq 1 ]] && set -u
     return 0
 }
