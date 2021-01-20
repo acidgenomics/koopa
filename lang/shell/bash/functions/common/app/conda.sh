@@ -268,12 +268,12 @@ koopa::conda_create_bioinfo_envs() { # {{{1
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
-    # @note Updated 2020-07-21.#
+    # @note Updated 2021-01-20.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
     # """
-    local conda_prefix force env env_name pos prefix
+    local conda_prefix force env_name env_string env_version pos prefix
     koopa::assert_has_args "$#"
     force=0
     pos=()
@@ -302,15 +302,19 @@ koopa::conda_create_env() { # {{{1
     koopa::activate_conda
     koopa::assert_is_installed conda
     conda_prefix="$(koopa::conda_prefix)"
-    for env in "$@"
+    for env_string in "$@"
     do
-        env="${env//@/=}"
-        # Get supported version.
-        if ! koopa::str_match "$env" '='
+        # Note that we're using 'salmon@1.4.0' for the environment name but
+        # must use 'salmon=1.4.0' in the call to conda below.
+        env_string="${env_string//@/=}"
+        # If the version isn't specified, fetch the latest one automatically.
+        if ! koopa::str_match "$env_string" '='
         then
-            koopa::stop "Version is required. Specify as 'NAME=VERSION'."
+            env_version="$(koopa::conda_env_latest_version "$env_string")"
+            [[ -n "$env_version" ]] || return 1
+            env_string="${env_string}=${env_version}"
         fi
-        env_name="${env//=/@}"
+        env_name="${env_string//=/@}"
         prefix="${conda_prefix}/envs/${env_name}"
         if [[ -d "$prefix" ]]
         then
@@ -323,9 +327,28 @@ koopa::conda_create_env() { # {{{1
             fi
         fi
         koopa::alert "Creating '${env_name}' conda environment."
-        conda create --name="$env_name" --quiet --yes "$env"
+        conda create --name="$env_name" --quiet --yes "$env_string"
         koopa::sys_set_permissions -r "$prefix"
     done
+    return 0
+}
+
+koopa::conda_env_latest_version() { # {{{1
+    # """
+    # Get the latest version of a conda environment available.
+    # @note Updated 2021-01-20.
+    # """
+    local env_name
+    koopa::assert_has_args_eq "$#" 1
+    koopa::assert_is_installed awk conda
+    env_name="${1:?}"
+    x="$( \
+        conda search "$env_name" \
+            | tail -n 1 \
+            | awk '{print $2}'
+    )"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
     return 0
 }
 
