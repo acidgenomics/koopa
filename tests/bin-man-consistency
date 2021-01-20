@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# FIXME THIS NEEDS TO BE DEFINED IN R-KOOPA.
+# NOTE Consider moving this to r-koopa in a future update.
 
 args <- commandArgs()
 whichFile <- grep(pattern = "--file", x = args)
