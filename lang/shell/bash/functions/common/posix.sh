@@ -476,6 +476,10 @@ koopa::kebab_case_simple() { # {{{1
     _koopa_kebab_case_simple "$@"
 }
 
+koopa::lmod_prefix() { # {{{1
+    _koopa_lmod_prefix "$@"
+}
+
 koopa::local_data_prefix() { # {{{1
     _koopa_local_data_prefix "$@"
 }
