@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::salmon_index() { # {{{1
+koopa::_salmon_index() { # {{{1
     # """
     # Generate salmon index.
     # @note Updated 2020-08-12.
@@ -45,8 +45,7 @@ koopa::salmon_index() { # {{{1
     return 0
 }
 
-# FIXME ALLOW MANUAL OVERRIDE OF LIBTYPE HERE.
-koopa::salmon_quant() { # {{{1
+koopa::_salmon_quant() { # {{{1
     # """
     # Run salmon quant (per sample).
     # @note Updated 2021-01-04.
@@ -169,15 +168,16 @@ koopa::salmon_quant() { # {{{1
 koopa::run_salmon() { # {{{1
     # """
     # Run salmon on multiple samples (per FASTQ directory).
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-01-20.
+    #
+    # Number of bootstraps matches the current recommendation in bcbio-nextgen.
+    # Attempting to detect library type (strandedness) automatically by default.
     # """
     local bootstraps fastq_dir fastq_r1_files lib_type output_dir \
         r1_tail r2_tail
     koopa::assert_has_args "$#"
-    # This matches the current recommended default in bcbio-nextgen.
     bootstraps=30
     fastq_dir='fastq'
-    # Attempt to detect library type (strandedness) automatically by default.
     lib_type='A'
     output_dir='salmon'
     r1_tail='_R1_001.fastq.gz'
@@ -232,10 +232,8 @@ koopa::run_salmon() { # {{{1
     koopa::activate_conda_env salmon
     fastq_dir="$(realpath "$fastq_dir")"
     koopa::dl 'fastq dir' "$fastq_dir"
-
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
-
     # Create a per-sample array from the R1 FASTQ files.
     # Pipe GNU find into array.
     readarray -t fastq_r1_files <<< "$( \
@@ -255,30 +253,26 @@ koopa::run_salmon() { # {{{1
     fi
     koopa::info "${#fastq_r1_files[@]} samples detected."
     koopa::mkdir "$output_dir"
-
     # Index {{{2
     # --------------------------------------------------------------------------
-
     # Generate the genome index on the fly, if necessary.
     if [[ -n "${index_dir:-}" ]]
     then
         index_dir="$(realpath "$index_dir")"
     else
         index_dir="${output_dir}/salmon.idx"
-        koopa::salmon_index \
+        koopa::_salmon_index \
             --fasta-file="$fasta_file" \
             --index-dir="$index_dir"
     fi
     koopa::dl 'index' "$index_dir"
-
     # Quantify {{{2
     # --------------------------------------------------------------------------
-
     # Loop across the per-sample array and quantify with salmon.
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
-        koopa::salmon_quant \
+        koopa::_salmon_quant \
             --bootstraps="$bootstraps" \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
