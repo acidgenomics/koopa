@@ -1,0 +1,12 @@
+#+TITLE: koopa
+#+STARTUP: content
+* Development
+** TODO Ensure koopa installs clean on a macOS system without Homebrew.
+** TODO dotfiles installer needs to locate koopa install better?
+** TODO Today bucket activation needs to relink if link is broken.
+** TODO Add support for `r-devel` installation on Fedora.
+** TODO Add support for Shiny Server installation on Fedora.
+** TODO Work on Fix macOS install script for Catalina.
+* Documentation
+** TODO Need to explain which programs are automatically supported and get
+        activated by default more clearly.
