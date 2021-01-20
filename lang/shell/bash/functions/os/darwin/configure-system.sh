@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME INSTALL R_KOOPA, PY_KOOPA.
 koopa::macos_configure_system() { # {{{1
     # """
     # Configure macOS system.
