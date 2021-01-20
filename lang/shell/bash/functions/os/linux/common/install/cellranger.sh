@@ -44,7 +44,7 @@ koopa::linux_install_cellranger() { # {{{1
     # Link main 'cellranger' binary into make prefix (e.g. '/usr/local').
     make_prefix="$(koopa::make_prefix)"
     koopa::sys_ln -t "${make_prefix}/bin" "${prefix}/cellranger"
-    koopa::link_opt "$prefix" 'cellranger'
+    koopa::link_opt "$prefix" "$name"
     koopa::install_success "$name_fancy"
     return 0
 }
