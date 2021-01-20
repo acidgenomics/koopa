@@ -285,6 +285,15 @@ _koopa_java_prefix() { # {{{1
     return 0
 }
 
+_koopa_lmod_prefix() { # {{{1
+    # """
+    # Lmod prefix.
+    # @note Updated 2021-01-20.
+    # """
+    _koopa_print "$(_koopa_opt_prefix)/lmod"
+    return 0
+}
+
 _koopa_local_data_prefix() { # {{{1
     # """
     # Local user application data prefix.
