@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Move website and installer from GitHub pages to Cloudfront.
 ** TODO Ensure koopa installs clean on a macOS system without Homebrew.
 ** TODO dotfiles installer needs to locate koopa install better?
 ** TODO Today bucket activation needs to relink if link is broken.
