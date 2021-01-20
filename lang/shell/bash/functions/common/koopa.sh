@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Need to add support for 'link' here in a future release.
+
 koopa::_koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
@@ -213,7 +215,6 @@ koopa::_which_function() { # {{{1
     return 0
 }
 
-# FIXME NEED TO ADD SUPPORT FOR LINK HERE.
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
