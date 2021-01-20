@@ -47,7 +47,6 @@ koopa::add_user_to_group() { # {{{1
     return 0
 }
 
-# FIXME EXPERIMENTAL...CONSIDER REMOVING SUPPORT.
 koopa::link_docker() { # {{{1
     # """
     # Link Docker library onto data disk for VM.
@@ -156,6 +155,7 @@ koopa::update_ldconfig() { # {{{1
 }
 
 # FIXME NEED TO RETHINK OUR APPROACH WITH OPT HERE.
+# FIXME DEFINE USING LMOD PREFIX INSTEAD.
 koopa::update_lmod_config() { # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
@@ -169,7 +169,7 @@ koopa::update_lmod_config() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
     init_dir="$(koopa::opt_prefix)/lmod/apps/lmod/lmod/init"
-    [[ -d "$init_dir" ]] || return 0
+    if [[ ! -d "$init_dir" ]] || return 0
     koopa::h2 'Updating Lmod init configuration.'
     etc_dir='/etc/profile.d'
     koopa::mkdir -S "$etc_dir"
