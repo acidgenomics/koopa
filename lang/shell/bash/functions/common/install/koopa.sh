@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME NEED TO UPDATE THE URL HERE.
 koopa::install_py_koopa() { # {{{1
     # """
     # Install Python koopa package.
