@@ -3,7 +3,7 @@
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2020-12-11.
+    # @note Updated 2021-01-19.
     # """
     local activate checks dev distro_prefix major_version os_id shopts verbose
     activate=0
@@ -49,16 +49,16 @@ _koopa_bash_header() { # {{{1
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
         KOOPA_PREFIX="$( \
-            cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../.." \
+            cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../../.." \
             &>/dev/null \
             && pwd -P \
         )"
         export KOOPA_PREFIX
     fi
     # shellcheck source=/dev/null
-    source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
+    source "${KOOPA_PREFIX}/lang/shell/posix/include/header.sh"
     # shellcheck source=/dev/null
-    source "${KOOPA_PREFIX}/shell/bash/functions/activate.sh"
+    source "${KOOPA_PREFIX}/lang/shell/bash/functions/activate.sh"
     if [[ "$activate" -eq 0 ]] || [[ "$dev" -eq 1 ]]
     then
         _koopa_source_dir 'common'
