@@ -53,7 +53,7 @@ binutils="2.34"
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
 #     pipelines/latest/installation
-cellranger="4.0.0"
+cellranger="5.0.1"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/

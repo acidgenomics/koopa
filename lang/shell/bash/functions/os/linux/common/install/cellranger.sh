@@ -3,7 +3,11 @@
 koopa::linux_install_cellranger() { # {{{1
     # """
     # Install Cell Ranger.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-01-20.
+    #
+    # Refdata is accessible here:
+    # https://support.10xgenomics.com/single-cell-gene-expression/
+    #     software/downloads/latest
     # """
     local file make_prefix name name_fancy prefix server tmp_dir url version
     version=
@@ -23,8 +27,7 @@ koopa::linux_install_cellranger() { # {{{1
     name='cellranger'
     name_fancy='Cell Ranger'
     [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-    # FIXME REWORK THIS.
-    prefix="$(koopa::opt_prefix)/${name}/${version}"
+    prefix="$(koopa::app_prefix)/${name}/${version}"
     [[ -d "$prefix" ]] && return 0
     koopa::install_start "$name_fancy" "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
@@ -41,6 +44,7 @@ koopa::linux_install_cellranger() { # {{{1
     # Link main 'cellranger' binary into make prefix (e.g. '/usr/local').
     make_prefix="$(koopa::make_prefix)"
     koopa::sys_ln -t "${make_prefix}/bin" "${prefix}/cellranger"
+    koopa::link_opt "$prefix" 'cellranger'
     koopa::install_success "$name_fancy"
     return 0
 }
