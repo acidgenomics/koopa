@@ -36,7 +36,7 @@ koopa::_koopa_app() { # {{{1
 koopa::_koopa_header() { # {{{1
     # """
     # Parse user input to 'koopa header'.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-01-19.
     #
     # Useful for private scripts using koopa code outside of package.
     # """
@@ -44,17 +44,13 @@ koopa::_koopa_header() { # {{{1
     koopa::assert_has_args_eq "$#" 1
     arg="$(koopa::lowercase "${1:?}")"
     koopa_prefix="$(koopa::prefix)"
+    subdir='lang'
     case "$arg" in
         bash|posix|zsh)
-            subdir='shell'
+            subdir="${subdir}/shell"
             ext='sh'
             ;;
-        # > python)
-        # >     subdir='lang'
-        # >     ext='py'
-        # >     ;;
         r)
-            subdir='lang'
             ext='R'
             ;;
         *)

@@ -105,13 +105,14 @@ _koopa_activate_bash_readline() { # {{{1
 _koopa_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-01-19.
     #
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
     # """
-    local prefix fun_script fun_scripts
-    prefix="${KOOPA_PREFIX}/shell/bash/functions/${1:?}"
+    local prefix fun_script fun_scripts koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
     if [[ $(type -t readarray) != 'builtin' ]]
     then
