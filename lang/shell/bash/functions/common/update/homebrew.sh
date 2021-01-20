@@ -3,7 +3,7 @@
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-01-20.
     #
     # Use of '--force-bottle' flag can be helpful, but not all brews have
     # bottles, so this can error.
@@ -36,9 +36,20 @@ koopa::update_homebrew() { # {{{1
         koopa::alert "Resetting ownership at '${prefix}' to '${user}:${group}'."
         sudo chown -Rh "${user}:${group}" "${prefix}/"*
     fi
-    brew analytics off
-    brew update >/dev/null
+    koopa::alert "Ensuring internal 'homebrew-core' repo is clean."
+    # See also:
+    # - https://thecoatlessprofessor.com/programming/
+    #       macos/updating-a-homebrew-formula/
+    (
+        koopa::cd "$(brew --repo 'homebrew/core')"
+        git checkout -q 'master'
+        git branch -q 'master' -u 'origin/master'
+        git reset -q --hard 'origin/master'
+        # > git branch -vv
+    )
     koopa::alert 'Updating brews.'
+    brew analytics off
+    brew update # >/dev/null
     brew upgrade || true
     if koopa::is_macos
     then
