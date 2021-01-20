@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-## FIXME KOOPA INSTALL R-KOOPA SHOULD CALL THIS HEADER SCRIPT.
-
 local({
     ## Wrapping in a local call here, so functions don't persist downstream.
 
