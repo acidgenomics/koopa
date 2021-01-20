@@ -3,7 +3,7 @@
 koopa::_fedora_install_bcl2fastq_from_rpm() { # {{{
     # """
     # Install bcl2fastq from Fedora/RHEL RPM file.
-    # @note Updated 2020-11-19.
+    # @note Updated 2020-01-20.
     #
     # This gets called inside 'koopa::linux_install_bcl2fastq'.
     # """
@@ -25,8 +25,7 @@ koopa::_fedora_install_bcl2fastq_from_rpm() { # {{{
     koopa::assert_has_no_args "$#"
     name='bcl2fastq'
     [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-    # FIXME REWORK THIS AND LINK USING OPT INSTEAD.
-    prefix="$(koopa::opt_prefix)/${name}/${version}"
+    prefix="$(koopa::app_prefix)/${name}/${version}"
     [[ -d "$prefix" ]] && return 0
     koopa::install_start "$name" "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
@@ -49,7 +48,7 @@ koopa::_fedora_install_bcl2fastq_from_rpm() { # {{{
         koopa::sys_ln -t "${make_prefix}/bin" "${prefix}/bin/bcl2fastq"
     )
     koopa::rm "$tmp_dir"
-    # FIXME NEED TO LINK INTO OPT HERE.
+    koopa::link_opt "$prefix" "$name"
     koopa::install_success "$name"
     return 0
 }
