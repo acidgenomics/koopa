@@ -151,16 +151,16 @@ koopa::_salmon_quant() { # {{{1
     log_file="${sample_output_dir}/salmon-quant.log"
     koopa::mkdir "$sample_output_dir"
     salmon quant \
-        --index="$index_dir" \
-        --output="$sample_output_dir" \
-        --libType="$lib_type" \
-        --validateMappings \
-        --seqBias \
         --gcBias \
-        --numBootstraps="$bootstraps" \
-        --threads="$threads" \
+        --index="$index_dir" \
+        --libType="$lib_type" \
         --mates1="$fastq_r1" \
         --mates2="$fastq_r2" \
+        --numBootstraps="$bootstraps" \
+        --output="$sample_output_dir" \
+        --seqBias \
+        --threads="$threads" \
+        --validateMappings \
         2>&1 | tee "$log_file"
     return 0
 }

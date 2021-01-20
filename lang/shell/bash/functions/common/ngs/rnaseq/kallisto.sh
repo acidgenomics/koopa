@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::kallisto_index() { # {{{1
+koopa::_kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
     # @note Updated 2020-08-12.
@@ -42,16 +42,15 @@ koopa::kallisto_index() { # {{{1
     return 0
 }
 
-koopa::kallisto_quant() { # {{{1
+koopa::_kallisto_quant() { # {{{1
     # """
     # Run kallisto quant.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-01-20.
     # """
     local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_file \
         log_file output_dir r1_tail r2_tail sample_output_dir threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed kallisto
-    bootstraps=30
     while (("$#"))
     do
         case "$1" in
@@ -88,7 +87,8 @@ koopa::kallisto_quant() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set fastq_r1 fastq_r2 index_file output_dir r1_tail r2_tail
+    koopa::assert_is_set bootstraps fastq_r1 fastq_r2 index_file output_dir \
+        r1_tail r2_tail
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
     fastq_r1_bn="$(basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
@@ -119,13 +119,17 @@ koopa::kallisto_quant() { # {{{1
     return 0
 }
 
+# NOTE Consider adding '--lib-type' flag here in a future update.
 koopa::run_kallisto() { # {{{1
     # """
     # Run kallisto on multiple samples.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-01-20.
+    #
+    # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # """
-    local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
+    local bootstraps fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     koopa::assert_has_args "$#"
+    bootstraps=30
     fastq_dir='fastq'
     output_dir='kallisto'
     r1_tail='_R1_001.fastq.gz'
@@ -133,6 +137,10 @@ koopa::run_kallisto() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            --bootstraps=*)
+                bootstraps="${1#*=}"
+                shift 1
+                ;;
             --fasta-file=*)
                 fasta_file="${1#*=}"
                 shift 1
@@ -176,10 +184,8 @@ koopa::run_kallisto() { # {{{1
     koopa::activate_conda_env kallisto
     fastq_dir="$(realpath "$fastq_dir")"
     koopa::dl 'fastq dir' "$fastq_dir"
-
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
-
     # Create a per-sample array from the R1 FASTQ files.
     # Pipe GNU find into array.
     readarray -t fastq_r1_files <<< "$( \
@@ -199,30 +205,27 @@ koopa::run_kallisto() { # {{{1
     fi
     koopa::info "${#fastq_r1_files[@]} samples detected."
     koopa::mkdir "$output_dir"
-
     # Index {{{2
     # --------------------------------------------------------------------------
-
     # Generate the genome index on the fly, if necessary.
     if [[ -n "${index_file:-}" ]]
     then
         index_file="$(realpath "$index_file")"
     else
         index_file="${output_dir}/kallisto.idx"
-        koopa::kallisto_index \
+        koopa::_kallisto_index \
             --fasta-file="$fasta_file" \
             --index-file="$index_file"
     fi
     koopa::dl 'index' "$index_file"
-
     # Quantify {{{2
     # --------------------------------------------------------------------------
-
     # Loop across the per-sample array and quantify.
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
-        koopa::kallisto_quant \
+        koopa::_kallisto_quant \
+            --bootstraps="$bootstraps" \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
             --index-file="$index_file" \
