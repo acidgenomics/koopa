@@ -82,12 +82,7 @@ koopa::linux_install_openssl() { # {{{1
         "$@"
 }
 
-# FIXME MOVE COMMENTS TO INSTALL SCRIPT.
 koopa::linux_install_password_store() { # {{{1
-    # """
-    # https://www.passwordstore.org/
-    # https://git.zx2c4.com/password-store/
-    # """
     koopa::_linux_install_app --name='password-store' "$@"
 }
 
@@ -97,7 +92,6 @@ koopa::linux_install_proj() { # {{{1
 
 koopa::linux_install_python() { # {{{1
     koopa::_linux_install_app --name='python' --name-fancy='Python' "$@"
-    koopa::install_py_koopa
 }
 
 koopa::linux_install_r() { # {{{1
