@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME ADD HOMEBREW EXCEPTION FOR SOME PACKAGES.
-# FIXME ADD crossbeam, rayon
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
@@ -53,33 +51,31 @@ koopa::install_rust_packages() { # {{{1
         return 0
     fi
     prefix="${CARGO_HOME:?}"
-    koopa::install_start "$name_fancy" "$prefix"
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         default=1
-        pkgs=(
-            'crossbeam'
-            'rayon'
-        )
-        if ! koopa::is_installed brew
+        if koopa::is_installed brew
         then
-            pkgs+=(
-                'bat'
-                'broot'
-                'du-dust'
-                'exa'
-                'fd-find'
-                'hyperfine'
-                'procs'
-                'ripgrep'
-                'ripgrep-all'
-                'tokei'
-                'xsv'
-                'zoxide'
-            )
+            koopa::note 'Use Homebrew to manage Rust binaries.'
+            return 0
         fi
+        pkgs=(
+            'bat'
+            'broot'
+            'du-dust'
+            'exa'
+            'fd-find'
+            'hyperfine'
+            'procs'
+            'ripgrep'
+            'ripgrep-all'
+            'tokei'
+            'xsv'
+            'zoxide'
+        )
     fi
+    koopa::install_start "$name_fancy" "$prefix"
     koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
     koopa::sys_set_permissions -ru "$prefix"
     jobs="$(koopa::cpu_count)"
