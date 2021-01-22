@@ -423,20 +423,24 @@ python-wheel="0.36.2"
 
 rust-bat="0.16.0"           # homebrew
 rust-broot="1.0.9"          # homebrew
-rust-crossbeam="0.8.0"
 rust-dog="0.1.0"            # homebrew
 rust-du-dust="0.5.3"        # homebrew
 rust-exa="0.9.0"            # homebrew
 rust-fd-find="8.1.1"        # homebrew
 rust-hyperfine="1.11.0"     # homebrew
 rust-procs="0.10.7"         # homebrew
-rust-rayon="1.5.0"
 rust-ripgrep="12.1.1"       # homebrew
 rust-ripgrep-all="0.9.6"    # homebrew
 rust-starship="0.48.0"      # homebrew
 rust-tokei="12.0.4"         # homebrew
 rust-xsv="0.13.0"           # homebrew
 rust-zoxide="0.5.0"         # homebrew
+
+# Rust libraries (without binaries) {{{1
+# ==============================================================================
+
+rust-crossbeam="0.8.0"
+rust-rayon="1.5.0"
 
 # Homebrew cask versions {{{1
 # ==============================================================================
