@@ -74,10 +74,12 @@ koopa::install_rust() { # {{{1
     return 0
 }
 
+# FIXME ADD HOMEBREW EXCEPTION FOR SOME PACKAGES.
+# FIXME ADD crossbeam, rayon
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2020-12-03.
+    # @note Updated 2021-01-22.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
