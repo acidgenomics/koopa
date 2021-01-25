@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-01-20"
+koopa-date="2020-01-22"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.0a"
@@ -118,7 +118,7 @@ git="2.30.0"
 gnupg="2.2.27"
 
 # https://golang.org/dl/
-go="1.15.6"
+go="1.15.7"
 
 # https://www.gnu.org/software/grep/
 grep="3.6"
@@ -435,6 +435,12 @@ rust-starship="0.48.0"      # homebrew
 rust-tokei="12.0.4"         # homebrew
 rust-xsv="0.13.0"           # homebrew
 rust-zoxide="0.5.0"         # homebrew
+
+# Rust libraries (without binaries) {{{1
+# ==============================================================================
+
+rust-crossbeam="0.8.0"
+rust-rayon="1.5.0"
 
 # Homebrew cask versions {{{1
 # ==============================================================================
