@@ -392,7 +392,7 @@ conda-vardict="2019.06.04"
 # Updated 2021-01-03 from https://pypi.org/.
 
 python-black="20.8b1"           # homebrew
-python-bpytop="1.0.59"          # homebrew
+python-bpytop="1.0.60"          # homebrew
 python-flake8="3.8.4"           # homebrew
 python-pip2pi="0.8.0"
 python-pip="20.3.3"
