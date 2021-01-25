@@ -6,6 +6,7 @@ koopa::install_python_packages() { # {{{1
     # @note Updated 2021-01-08.
     # """
     local install_flags name_fancy pkg pkg_lower pkgs pos python version
+    name_fancy='Python packages'
     python="$(koopa::python)"
     reinstall=0
     pos=()
@@ -73,7 +74,6 @@ koopa::install_python_packages() { # {{{1
             pkgs[$i]="${pkg}==${version}"
         done
     fi
-    name_fancy='Python packages'
     koopa::install_start "$name_fancy"
     install_flags=("--python=${python}")
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
