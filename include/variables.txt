@@ -205,7 +205,7 @@ password-store="1.7.3"
 patch="2.7.6"
 
 # https://www.perl.org/get.html
-perl="5.32.0"
+perl="5.32.1"
 
 # https://perlbrew.pl/
 perlbrew="0.88"
