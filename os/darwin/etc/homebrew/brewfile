@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-01-06.
+# Updated 2021-01-27.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -27,6 +27,7 @@
 
 tap "homebrew/bundle"
 tap "homebrew/cask"
+tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "mongodb/brew"
@@ -60,6 +61,31 @@ cask "easyfind"
 cask "eloston-chromium"
 cask "emacs"
 cask "firefox"
+cask "font-cascadia-code"
+cask "font-cascadia-mono"
+cask "font-courier-prime"
+cask "font-courier-prime-code"
+cask "font-courier-prime-sans"
+cask "font-fira-code"
+cask "font-fira-code-nerd-font"
+cask "font-fira-mono"
+cask "font-fira-mono-nerd-font"
+cask "font-hack"
+cask "font-hack-nerd-font"
+cask "font-ibm-plex"
+cask "font-ibm-plex-mono"
+cask "font-ibm-plex-sans"
+cask "font-inconsolata"
+cask "font-input"
+cask "font-inter"
+cask "font-jetbrains-mono"
+cask "font-jetbrains-mono-nerd-font"
+cask "font-open-sans"
+cask "font-roboto"
+cask "font-roboto-mono"
+cask "font-source-code-pro"
+cask "font-source-sans-pro"
+cask "font-source-serif"
 cask "github"
 cask "google-cloud-sdk"
 cask "gpg-suite"
