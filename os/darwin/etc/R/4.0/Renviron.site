@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2021-01-14.
+## Updated 2021-01-28.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -80,6 +80,12 @@ TZ="America/New_York"
 ## -----------------------------------------------------------------------------
 
 XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
+
+## rappdirs {{{2
+## -----------------------------------------------------------------------------
+
+## Note that this setting is inherited by BiocFileCache.
+R_USER_CACHE_DIR="${KOOPA_OPT_PREFIX}/r/cache"
 
 ## remotes {{{2
 ## -----------------------------------------------------------------------------

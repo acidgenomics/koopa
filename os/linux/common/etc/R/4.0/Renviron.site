@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2021-01-14.
+## Updated 2021-01-28.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -152,6 +152,12 @@ TZ="America/New_York"
 ## > OCI_LIB="${ORACLE_HOME}/lib"
 ## > TNS_ADMIN="${ORACLE_HOME}/network/admin"
 ## > PATH="${PATH}:${ORACLE_HOME}/bin"
+
+## rappdirs {{{2
+## -----------------------------------------------------------------------------
+
+## Note that this setting is inherited by BiocFileCache.
+R_USER_CACHE_DIR="${KOOPA_OPT_PREFIX}/r/cache"
 
 ## remotes {{{2
 ## -----------------------------------------------------------------------------
