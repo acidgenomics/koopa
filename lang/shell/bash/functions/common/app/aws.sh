@@ -4,7 +4,7 @@
 # > aws s3api list-buckets --output json
 # > aws s3api list-objects \
 # >     --output json \
-# >     --bucket tests.acidgenomics.com
+# >     --bucket koopa.acidgenomics.com
 
 koopa::aws_batch_fetch_and_run() { # {{{1
     # """
