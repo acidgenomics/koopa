@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-01-13.
+## Updated 2021-01-28.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -361,6 +361,7 @@ local({
             ## - https://cran.rstudio.com
             ## - or "all" here instead of "cran"
             ## > repos[["CRAN"]] <- "https://packagemanager.rstudio.com/cran/latest"
+            ## > repos[["CRAN"]] <- "https://cran.rstudio.com"
             repos[["CRAN"]] <- "https://cloud.r-project.org"
         }
         ## Always include Acid Genomics repo.
