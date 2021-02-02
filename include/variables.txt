@@ -61,7 +61,7 @@ cellranger="5.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.19.3"
+cmake="3.19.4"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -179,8 +179,9 @@ neofetch="7.1.0"
 # https://github.com/neovim/neovim/releases
 neovim="0.4.4"
 
+# https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="15.0.1"
+openjdk="15.0.2"
 
 # https://www.openssh.com/portable.html
 openssh="8.4p1"
@@ -315,7 +316,7 @@ udunits="2.2.26"
 vim="8.2.0"
 
 # https://www.gnu.org/software/wget/
-wget="1.21"
+wget="1.21.1"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8"
