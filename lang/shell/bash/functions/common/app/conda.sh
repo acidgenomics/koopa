@@ -218,6 +218,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     if [[ "$reticulate" -eq 1 ]]
     then
         envs+=(
+            'numpy'
             'pandas'
             'scikit-learn'
             'umap-learn'
