@@ -88,7 +88,7 @@ emacs="27.1"
 ensembl-perl="5.26.3"
 
 # https://www.gnu.org/software/findutils/
-findutils="4.7.0"
+findutils="4.8.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
