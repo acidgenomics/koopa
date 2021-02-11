@@ -476,6 +476,12 @@ koopa::return_version() { # {{{1
         coreutils)
             cmd='env'
             ;;
+        du-dust)
+            cmd='dust'
+            ;;
+        fd-find)
+            cmd='fd'
+            ;;
         findutils)
             cmd='find'
             ;;
@@ -512,6 +518,9 @@ koopa::return_version() { # {{{1
             ;;
         python)
             cmd="$(_koopa_python)"
+            ;;
+        ranger-fm)
+            cmd='ranger'
             ;;
         ripgrep)
             cmd='rg'
