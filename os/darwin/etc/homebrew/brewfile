@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-01-27.
+# Updated 2021-02-11.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -258,6 +258,7 @@ brew "shunit2"
 brew "sox"
 brew "sqlite"
 brew "starship"  # rust
+brew "stow"
 brew "subversion"
 brew "taglib"
 brew "tcl-tk"
