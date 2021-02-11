@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-02-05"
+koopa-date="2021-02-11"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.0a"
@@ -48,7 +48,7 @@ bcbio-nextgen="1.2.5"
 bcl2fastq="2.20.0.422"
 
 # https://ftp.gnu.org/gnu/binutils/
-binutils="2.34"
+binutils="2.36.1"
 
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
@@ -112,7 +112,7 @@ geos="3.9.0"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.30.0"
+git="2.30.1"
 
 # https://gnupg.org/download/index.html
 gnupg="2.2.27"
@@ -355,6 +355,7 @@ conda-kallisto="0.46.2"
 conda-kraken2="2.1.1"
 conda-kraken="1.1.1"
 conda-macs2="2.2.7.1"
+conda-miniwdl="1.0.0"
 conda-multiqc="1.9"
 conda-nextflow="20.10.0"
 conda-numpy="1.20.1"
