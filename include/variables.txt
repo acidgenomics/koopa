@@ -108,7 +108,7 @@ gcc="10.2.0"
 gdal="3.2.1"
 
 # https://github.com/libgeos/geos/releases
-geos="3.9.0"
+geos="3.9.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
@@ -288,7 +288,7 @@ sqlite="3.34.0"
 stow="2.3.1"
 
 # https://subversion.apache.org
-subversion="1.14.0"
+subversion="1.14.1"
 
 # https://github.com/taglib/taglib/
 taglib="1.11.1"
