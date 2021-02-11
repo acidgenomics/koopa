@@ -470,7 +470,8 @@ koopa::return_version() { # {{{1
             cmd='bcbio_nextgen.py'
             ;;
         binutils)
-            cmd='ld'
+            # > cmd='ld'  # doesn't work on macOS with Homebrew.
+            cmd='dlltool'
             ;;
         coreutils)
             cmd='env'
