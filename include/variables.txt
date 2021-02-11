@@ -134,6 +134,9 @@ haskell-stack="rolling"
 # https://www.hdfgroup.org/downloads/hdf5
 hdf5="1.12.0"
 
+# https://brew.sh/
+homebrew="3.0.1"
+
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
 htop="3.0.5"
@@ -323,8 +326,7 @@ zsh="5.8"
 
 # Conda environments {{{1
 # ==============================================================================
-
-# Updated conda recipes on 2020-12-31.
+# Updated 2020-12-31.
 
 conda-arriba="2.0.0"
 conda-atropos="1.1.29"
@@ -386,66 +388,96 @@ conda-trimmomatic="0.39"
 conda-umap-learn="0.4.6"
 conda-vardict="2019.06.04"
 
-# Python packages {{{1
-# ==============================================================================
-
-# Python pip pinned versions.
-# These are essential Python tools that should always be available.
-# Otherwise, for heavy libraries, use a conda environment instead.
-# Updated 2021-01-03 from https://pypi.org/.
-
-python-black="20.8b1"           # homebrew
-python-bpytop="1.0.60"          # homebrew
-python-flake8="3.8.4"           # homebrew
-python-pip2pi="0.8.0"
-python-pip="20.3.3"
-python-pipx="0.16.0.0"          # homebrew
-python-psutil="5.8.0"
-python-pyflakes="2.2.0"
-python-pylint="2.6.0"           # homebrew
-python-pytaglib="1.4.6"
-python-pytest="6.2.1"
-python-pyyaml="5.3.1"
-python-ranger-fm="1.9.3"        # homebrew
-python-setuptools="51.1.1"
-python-six="1.15.0"
-python-wheel="0.36.2"
-
-# Rust cargo crates {{{1
-# ==============================================================================
-
-# Updated 2020-01-03 from https://crates.io/.
-
-# Potentially interesting:
-# - starship
-#   https://github.com/starship/starship
-# - hyper
-#   https://github.com/hyperium/hyper
-# - tide
-#   https://github.com/http-rs/tide
-
-rust-bat="0.16.0"           # homebrew
-rust-broot="1.0.9"          # homebrew
-rust-dog="0.1.0"            # homebrew
-rust-du-dust="0.5.3"        # homebrew
-rust-exa="0.9.0"            # homebrew
-rust-fd-find="8.1.1"        # homebrew
-rust-hyperfine="1.11.0"     # homebrew
-rust-procs="0.10.7"         # homebrew
-rust-ripgrep="12.1.1"       # homebrew
-rust-ripgrep-all="0.9.6"    # homebrew
-rust-starship="0.50.0"      # homebrew
-rust-tokei="12.0.4"         # homebrew
-rust-xsv="0.13.0"           # homebrew
-rust-zoxide="0.5.0"         # homebrew
-
-# Rust libraries (without binaries) {{{1
-# ==============================================================================
-
-rust-crossbeam="0.8.0"
-rust-rayon="1.5.0"
-
 # Homebrew cask versions {{{1
 # ==============================================================================
 
 homebrew-cask-gpg-suite="2020.2"
+
+# Python packages {{{1
+# ==============================================================================
+# Updated 2021-02-11 from https://pypi.org/.
+
+# Python pip pinned versions.
+# These are essential Python tools that should always be available.
+# Otherwise, for heavy libraries, use a conda environment instead.
+
+# Packages with binaries {{{2
+# ------------------------------------------------------------------------------
+
+python-pip="21.0.1"
+
+python-black="20.8b1"     # homebrew
+python-bpytop="1.0.61"    # homebrew
+python-flake8="3.8.4"     # homebrew
+python-pipx="0.16.0.0"    # homebrew
+python-pylint="2.6.0"     # homebrew
+python-ranger-fm="1.9.3"  # homebrew
+
+# Libraries without binaries {{{2
+# ------------------------------------------------------------------------------
+
+python-pip2pi="0.8.1"
+python-psutil="5.8.0"
+python-pyflakes="2.2.0"
+python-pytaglib="1.4.6"
+python-pytest="6.2.2"
+python-pyyaml="5.4.1"
+python-setuptools="53.0.0"
+python-six="1.15.0"
+python-wheel="0.36.2"
+
+# Ruby packages (gems) {{{1
+# ==============================================================================
+# Updated 2021-02-11.
+
+# NOTE Need to improve automatic updates of these Ruby dependencies.
+
+# https://rubygems.org/gems/bundler/versions/
+# NOTE Consider renaming to 'bundler' here.
+# Update with 'gem install bundler'.
+ruby-bundle="2.2.9"
+
+# https://rubygems.org/pages/download/
+# NOTE Consider renaming to 'rubygems' here.
+# Update with 'gem update --system'.
+ruby-gem="3.2.9"
+
+# Last updated 2010-06-24...
+ruby-ronn="0.7.3"
+
+# Rust packages {{{1
+# ==============================================================================
+# Updated 2021-02-11 from https://crates.io/.
+
+# Packages with binaries {{{2
+# ------------------------------------------------------------------------------
+
+rust-bat="0.17.1"         # homebrew
+rust-broot="1.2.3"        # homebrew; br
+rust-dog="0.1.0"          # homebrew
+rust-du-dust="0.5.4"      # homebrew; dust
+rust-exa="0.9.0"          # homebrew
+rust-fd-find="8.2.1"      # homebrew; fd
+rust-hyperfine="1.11.0"   # homebrew
+rust-procs="0.11.3"       # homebrew
+rust-ripgrep-all="0.9.6"  # homebrew; rga
+rust-ripgrep="12.1.1"     # homebrew; rg
+rust-starship="0.50.0"    # homebrew
+rust-tokei="12.1.2"       # homebrew
+rust-xsv="0.13.0"         # homebrew
+rust-zoxide="0.5.0"       # homebrew; z
+
+# Libraries without binaries {{{2
+# ------------------------------------------------------------------------------
+
+# https://github.com/crossbeam-rs/crossbeam/
+rust-crossbeam="0.8.0"
+
+# https://hyper.rs/
+rust-hyper="0.14.4"
+
+# https://github.com/rayon-rs/rayon/
+rust-rayon="1.5.0"
+
+# https://docs.rs/tide/
+rust-tide="0.16.0"
