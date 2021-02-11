@@ -146,7 +146,7 @@ _koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_CASK_OPTS='--no-quarantine'
     fi
-    _koopa_activate_homebrew_gnu_prefix binutils
+    _koopa_activate_homebrew_prefix binutils
     _koopa_activate_homebrew_gnu_prefix coreutils
     _koopa_activate_homebrew_gnu_prefix findutils
     _koopa_activate_homebrew_gnu_prefix gnu-sed
