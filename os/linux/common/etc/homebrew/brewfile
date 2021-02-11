@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-01-01.
+# Updated 2021-02-11.
 #
 # Problematic formulas:
 # - armadillo
@@ -113,6 +113,7 @@ brew "shellharden"
 brew "shunit2"
 brew "sqlite"
 brew "starship"  # rust
+brew "stow"
 brew "subversion"
 brew "taglib"
 brew "tcl-tk"
