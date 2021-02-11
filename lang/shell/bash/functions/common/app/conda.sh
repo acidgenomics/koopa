@@ -3,7 +3,7 @@
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2021-01-20.
+    # @note Updated 2021-02-11.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -251,6 +251,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             'fgbio'
             'gatk4'
             'jupyterlab'
+            'miniwdl'
             'nextflow'
             'picard'
             'snakemake'
