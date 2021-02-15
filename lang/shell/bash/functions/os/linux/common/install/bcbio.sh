@@ -134,7 +134,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
     # FIXME This is generating an unbound variable error now:
     # lang/shell/bash/functions/common/boolean.sh: line 510: !var: unbound variable
-    # > koopa::assert_is_set build fasta gtf indexes organism release
+    koopa::assert_is_set build fasta gtf indexes organism release
     koopa::assert_is_file "$fasta" "$gtf"
     fasta="$(realpath "$fasta")"
     gtf="$(realpath "$gtf")"
