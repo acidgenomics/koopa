@@ -43,14 +43,18 @@ koopa::test_find_files() { # {{{1
             -not -path "$(koopa::app_prefix)/*" \
             -not -path "$(koopa::opt_prefix)/*" \
             -not -path "${prefix}/.git/*" \
+            -not -path "${prefix}/app/*" \
             -not -path "${prefix}/cellar/*" \
             -not -path "${prefix}/coverage/*" \
             -not -path "${prefix}/dotfiles/*" \
             -not -path "${prefix}/lang/r/.Rproj.user/*" \
+            -not -path "${prefix}/opt/*" \
             -not -path "${prefix}/tests/*" \
             -not -path "${prefix}/workflows/*" \
             -not -path '*/etc/R/*' \
             -print \
+        2>&1 \
+        | grep -v 'Permission denied' \
         | sort \
     )"
     koopa::print "$x"
