@@ -1,12 +1,10 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
-** TODO Need to improve support for updating Ruby gem, bundler, and packages.
+** TODO Consider moving dotfiles under opt in a futur eupdate.
 ** TODO Add support for activation in fish shell.
 ** TODO Add support for activation in oil shell.
-** TODO Add install support for GNU tar.
 ** TODO Move website and installer from GitHub pages to Cloudfront.
-** TODO Improve support for manual relinking of programs in main koopa program.
 ** TODO Ensure koopa installs clean on a macOS system without Homebrew.
 ** TODO dotfiles installer needs to locate koopa install better?
 ** TODO Today bucket activation needs to relink if link is broken.
