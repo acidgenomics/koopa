@@ -172,7 +172,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         koopa::dl 'Indexes' "${indexes[*]}"
         # Note that '--buildversion' was added in 2021 and is now required.
         "$script" \
-            --build "$build" \
+            --build "$bcbio_genome_name" \
             --buildversion "${provider}_${release}" \
             --cores "$cores" \
             --fasta "$fasta" \
