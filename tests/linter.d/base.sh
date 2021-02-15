@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# > set -x
+
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
