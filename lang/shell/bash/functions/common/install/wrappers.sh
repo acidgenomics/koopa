@@ -152,6 +152,10 @@ koopa::install_subversion() { # {{{1
     koopa::_install_app --name='subversion' "$@"
 }
 
+koopa::install_tar() { # {{{1
+    koopa::_install_app --name='tar' --name-fancy='GNU tar' "$@"
+}
+
 koopa::install_texinfo() { # {{{1
     koopa::_install_app --name='texinfo' "$@"
 }
