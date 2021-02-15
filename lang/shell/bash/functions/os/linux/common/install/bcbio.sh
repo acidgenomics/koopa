@@ -56,13 +56,16 @@ koopa::linux_install_bcbio() { # {{{1
 koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # """
     # Install bcbio genome from Ensembl.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-02-15.
     # """
-    local bcbio_genome_name bcbio_species_dir build cores fasta gtf indexes \
-        organism release tmp_dir
+    local bcbio_genome_name bcbio_species_dir build cores fasta \
+        genome_downloader genome_installer gtf indexes organism release \
+        tmp_dir tmp_genome_dir
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed awk bcbio_setup_genome.py \
-        download-ensembl-genome du find head sort xargs
+    genome_downloader='download-ensembl-genome'
+    genome_installer='bcbio_setup_genome.py'
+    koopa::assert_is_installed "$genome_downloader" "$genome_installer" \
+        'awk' 'du' 'find' 'head' 'sort' 'xargs'
     while (("$#"))
     do
         case "$1" in
@@ -111,50 +114,24 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     cores="$(koopa::cpu_count)"
     (
         koopa::cd "$tmp_dir"
-        # FIXME NEED TO REWORK TO USE STANDARDIZED FILE NAMES HERE, THAT
-        # WE CAN EASILY LOCATE IN THE SCRIPT.
-        # FIXME Our genome download script needs to create symlinks that make
-        # this location step easier. Rework to organize GTF files under
-        # "annotation" instead of "gtf".
-        download-ensembl-genome \
+        tmp_genome_dir='ensembl-genome'
+        # FIXME ENSURE THIS WORKS, ONCE WE INSTALL BCBIO.
+        "$genome_downloader" \
             --organism="$organism" \
             --build="$build" \
             --release="$release" \
             --type='genome' \
-            --annotation='gtf'
-        # FIXME RETHINK THIS.
-        fasta="$(\
-            find '.' \
-                -mindepth 3 \
-                -maxdepth 3 \
-                -name 'genome.fa.gz' \
-                -print0 \
-            | xargs -0 du -sk \
-            | sort -nr  \
-            | head -n 1 \
-            | awk '{print $2}' \
-        )"
-        koopa::assert_is_file "$fasta"
+            --annotation='gtf' \
+            --output-dir="$tmp_genome_dir"
+        fasta="${tmp_genome_dir}/genome.fa.gz"
+        gtf="${tmp_genome_dir}/annotation.gtf.gz"
+        koopa::assert_is_file "$fasta" "$gtf"
         fasta="$(realpath "$fasta")"
-        # FIXME RETHINK THIS.
-        gtf="$( \
-            find . \
-                -mindepth 3 \
-                -maxdepth 3 \
-                -name 'annotation.gtf.gz' \
-                -type f \
-                -print0 \
-            | xargs -0 du -sk \
-            | sort -nr  \
-            | head -n 1 \
-            | awk '{print $2}' \
-        )"
-        koopa::assert_is_file "$gtf"
         gtf="$(realpath "$gtf")"
-        koopa::dl 'FASTA' "$(basename "$fasta")"
-        koopa::dl 'GTF' "$(basename "$gtf")"
+        koopa::dl 'FASTA file' "$(basename "$fasta")"
+        koopa::dl 'GTF file' "$(basename "$gtf")"
         koopa::dl 'Indexes' "${indexes[*]}"
-        bcbio_setup_genome.py \
+        "$genome_installer" \
             --name "$bcbio_species_dir" \
             --build "$bcbio_genome_name" \
             --cores "$cores" \
@@ -168,11 +145,16 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
 }
 
 koopa::linux_install_bcbio_genome() { # {{{1
+    # """
+    # Install a natively supported bcbio genome (e.g. hg38).
+    # @note Updated 2021-02-15.
+    # """
     local bcbio bcbio_dir cores flags genomes genomes_dir name_fancy tmp_dir
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
-    koopa::assert_is_installed bcbio_nextgen.py
-    bcbio="$(koopa::which_realpath bcbio_nextgen.py)"
+    bcbio='bcbio_nextgen.py'
+    koopa::assert_is_installed "$bcbio"
+    bcbio="$(koopa::which_realpath "$bcbio")"
     bcbio_dir="$(cd "$(dirname "$bcbio")/../.." && pwd -P)"
     genomes=("$@")
     genomes_dir="${bcbio_dir}/genomes"
