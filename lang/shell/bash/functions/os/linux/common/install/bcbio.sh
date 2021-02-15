@@ -95,7 +95,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     #     --organism="$organism" \
     #     --release="$release"
     # """
-    local bcbio_genome_name bcbio_species_dir build cores fasta \
+    local bcbio_genome_name bcbio_prefix bcbio_species_dir build cores fasta \
         gtf indexes organism provider release script tmp_dir
     koopa::assert_has_args "$#"
     script='bcbio_setup_genome.py'
@@ -138,8 +138,10 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     koopa::assert_is_file "$fasta" "$gtf"
     script="$(koopa::which_realpath "$script")"
     echo "$script"
-    return 0
 
+    bcbio_prefix="$(realpath "${script}/../../.."
+    echo "$bcbio_prefix"
+    return 0
     # FIXME NEED TO ENSURE GALAXY IS STRUCTURED CORRECTLY.
     ## koopa::mkdir install/galaxy/tool-data
     ## touch install/galaxy/tool-data/sam_fa_indices.loc
