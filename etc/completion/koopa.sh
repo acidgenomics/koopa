@@ -2,7 +2,7 @@
 
 # """
 # Bash/Zsh TAB completion.
-# Updated 2020-12-03.
+# Updated 2021-02-15.
 #
 # Keep all of these commands in a single file.
 # Sourcing multiple scripts doesn't work reliably.
@@ -11,9 +11,6 @@
 # - https://stackoverflow.com/questions/17879322/
 # - https://stackoverflow.com/questions/5302650/
 # """
-
-# FIXME NEED TO PROVIDE AUTOCOMPLETE SUPPORT FOR INSTALL, UPDATE, UNINSTALL
-# FIXME ADD AUTOCOMPLETION FOR 'LINK' FUNCTIONS.
 
 _koopa_complete() {
     local args cur prev
@@ -68,8 +65,8 @@ _koopa_complete() {
             install)
                 args=(
                     ## > 'mike'
+                    ## > 'py-koopa'
                     'dotfiles'
-                    'py-koopa'
                     'r-koopa'
                 )
                 COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")

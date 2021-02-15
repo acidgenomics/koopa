@@ -10,7 +10,6 @@ koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.0a"
 
-# FIXME NEED TO UPDATE HEADER AND CHECK SYSTEM SCRIPT TO RESOLVE THIS.
 r-koopa="0.1.4"
 
 # Globals {{{1
