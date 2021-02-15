@@ -135,7 +135,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     koopa::assert_is_file "$fasta" "$gtf"
     fasta="$(realpath "$fasta")"
     gtf="$(realpath "$gtf")"
-    # Convert string to array.
+    # Convert space-delimited string to array.
     IFS=" " read -r -a indexes <<< "$indexes"
     # Check for valid organism input.
     if ! koopa::str_match_regex "$organism" '^([A-Z][a-z]+)(\s|_)([a-z]+)$'
