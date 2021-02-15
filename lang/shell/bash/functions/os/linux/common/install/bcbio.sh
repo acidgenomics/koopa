@@ -136,7 +136,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     fasta="$(realpath "$fasta")"
     gtf="$(realpath "$gtf")"
     # Convert string to array.
-    mapfile -t indexes <<< "$indexes"
+    IFS=" " read -r -a indexes <<< "$indexes"
     # Check for valid organism input.
     if ! koopa::str_match_regex "$organism" '^([A-Z][a-z]+)(\s|_)([a-z]+)$'
     then
