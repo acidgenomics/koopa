@@ -99,7 +99,6 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     genome_installer='bcbio_setup_genome.py'
     koopa::assert_is_installed "$genome_installer" \
         'awk' 'du' 'find' 'head' 'sort' 'xargs'
-    echo "FIXME 1"
     while (("$#"))
     do
         case "$1" in
@@ -107,14 +106,12 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
                 build="${1#*=}"
                 shift 1
                 ;;
-            --fasta)
+            --fasta=*)
                 fasta="${1#*=}"
                 shift 1
                 ;;
-            --gtf)
-                echo "OK"
+            --gtf=*)
                 gtf="${1#*=}"
-                echo "$gtf"
                 shift 1
                 ;;
             --indexes=*)
@@ -130,12 +127,10 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
                 shift 1
                 ;;
             *)
-                echo "ARGH"
                 koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    echo "FIXME 2"
     [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
     koopa::assert_is_set build fasta gtf indexes organism release
     koopa::assert_is_file "$fasta" "$gtf"
