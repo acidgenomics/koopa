@@ -136,7 +136,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
     koopa::assert_is_set build fasta gtf indexes organism release
     koopa::assert_is_file "$fasta" "$gtf"
-    script=koopa::which_realpath "$script"
+    script="$(koopa::which_realpath "$script")"
     echo "$script"
     return 0
 
