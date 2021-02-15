@@ -499,17 +499,20 @@ koopa::is_set() { # {{{1
     # - https://www.gnu.org/software/bash/manual/html_node/
     #       Shell-Parameter-Expansion.html
     # """
-    local value var x
+    local nounset value var x
     koopa::assert_has_args "$#"
+    nounset="$(_koopa_boolean_nounset)"
+    [ "$nounset" -eq 1 ] && set +u
     for var
     do
         # Check if variable is defined.
         x="$(declare -p "$var" 2>/dev/null || true)"
         [[ -n "${x:-}" ]] || return 1
         # Check if variable contains non-empty value.
-        value="${!var}" || return 1
+        value="${!var}"
         [[ -n "${value:-}" ]] || return 1
     done
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
