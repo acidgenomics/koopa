@@ -118,7 +118,7 @@ git="2.30.1"
 gnupg="2.2.27"
 
 # https://golang.org/dl/
-go="1.15.7"
+go="1.15.8"
 
 # https://www.gnu.org/software/grep/
 grep="3.6"
