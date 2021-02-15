@@ -167,9 +167,16 @@ koopa::check_mount() { # {{{1
 koopa::check_system() { # {{{1
     # """
     # Check system.
-    # @note Updated 2020-01-04.
+    # @note Updated 2021-02-15.
     # """
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed R
+    if ! koopa::is_r_package_installed koopa
+    then
+        koopa::stop \
+            'koopa R package is not installed.' \
+            "Run 'koopa install r-koopa' to resolve."
+    fi
     koopa::rscript_vanilla 'checkSystem'
     koopa::check_exports
     koopa::check_disk
