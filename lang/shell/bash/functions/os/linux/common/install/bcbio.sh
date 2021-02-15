@@ -95,8 +95,8 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     #     --organism="$organism" \
     #     --release="$release"
     # """
-    local bcbio_genome_name bcbio_prefix bcbio_species_dir build cores fasta \
-        gtf indexes organism provider release script tmp_dir
+    local bcbio_genome_name bcbio_species_dir build cores fasta gtf indexes \
+        install_prefix organism provider release script tmp_dir
     koopa::assert_has_args "$#"
     script='bcbio_setup_genome.py'
     koopa::assert_is_installed "$script" \
@@ -139,8 +139,9 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     script="$(koopa::which_realpath "$script")"
     echo "$script"
 
-    bcbio_prefix="$(koopa::parent_dir -n 3 "$script")"
-    echo "$bcbio_prefix"
+    # Recursive up from 'install/anaconda/bin/bcbio_setup_genome.py'.
+    install_prefix="$(koopa::parent_dir -n 3 "$script")"
+    echo "$install_prefix"
     return 0
     # FIXME NEED TO ENSURE GALAXY IS STRUCTURED CORRECTLY.
     ## koopa::mkdir install/galaxy/tool-data
