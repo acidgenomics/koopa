@@ -64,6 +64,7 @@ _koopa_bash_header() { # {{{1
     echo "FIXME 3"
     if [[ "$activate" -eq 0 ]] || [[ "$dev" -eq 1 ]]
     then
+        echo "FIXME 4"
         _koopa_source_dir 'common'
         os_id="$(_koopa_os_id)"
         if _koopa_is_linux
@@ -85,6 +86,7 @@ _koopa_bash_header() { # {{{1
         else
             _koopa_source_dir "os/${os_id}"
         fi
+        echo "FIXME 5"
         # Check if user is requesting help documentation.
         koopa::help "$@"
         # Require sudo permission to run 'sbin/' scripts.
@@ -93,7 +95,7 @@ _koopa_bash_header() { # {{{1
         # Primarily intended to reset cp, mv, rf for use inside scripts.
         unalias -a
     fi
-    echo "FIXME 4"
+    echo "FIXME 6"
     return 0
 }
 
