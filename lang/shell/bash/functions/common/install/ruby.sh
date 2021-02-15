@@ -40,7 +40,11 @@ koopa::install_ruby_packages() { # {{{1
     # @note Updated 2021-02-15.
     # """
     koopa::assert_has_no_envs
-    koopa::is_installed gem || return 0
+    koopa::is_installed gem
+    then
+        koopa::note 'gem is not installed.'
+        return 0
+    fi
     name_fancy='Ruby gems'
     koopa::install_start "$name_fancy"
     gemdir="$(gem environment gemdir)"
