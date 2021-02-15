@@ -112,7 +112,9 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
                 shift 1
                 ;;
             --gtf)
+                echo "OK"
                 gtf="${1#*=}"
+                echo "$gtf"
                 shift 1
                 ;;
             --indexes=*)
