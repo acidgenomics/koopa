@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# NOTE Consider migrating to GNU Stow approach here in future update.
+# NOTE Consider migrating to GNU Stow approach here in a future update.
 _koopa_app_prefix() { # {{{1
     # """
     # Application prefix.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-02-15.
     #
     # Previously referred to as "cellar", prior to v0.9.
     #
@@ -13,6 +13,10 @@ _koopa_app_prefix() { # {{{1
     # shellcheck disable=SC2039
     local prefix
     prefix="${KOOPA_APP_PREFIX:-}"
+    # Don't allow this to match opt prefix.
+    [ -n "$prefix" ] && \
+        [ "$prefix" = "$(_koopa_opt_prefix)" ] && \
+        prefix=
     # Provide fallback support for existing installs using "cellar".
     [ -z "$prefix" ] && \
         [ -d "$(_koopa_prefix)/cellar" ] && \
