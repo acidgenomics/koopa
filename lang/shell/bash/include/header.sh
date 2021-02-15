@@ -5,7 +5,8 @@ _koopa_bash_header() { # {{{1
     # Bash header.
     # @note Updated 2021-02-15.
     # """
-    local activate checks dev distro_prefix major_version os_id shopts verbose
+    local activate checks dev distro_prefix header_path major_version os_id \
+        shopts verbose
     activate=0
     checks=1
     dev=0
@@ -48,8 +49,13 @@ _koopa_bash_header() { # {{{1
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
+        header_path="${BASH_SOURCE[0]}"
+        if [ -L "$header_path" ]
+        then
+            header_path="$(_koopa_realpath "$header_path")"
+        fi
         KOOPA_PREFIX="$( \
-            cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../../../.." \
+            cd "$(dirname "$header_path")/../../../.." \
             &>/dev/null \
             && pwd -P \
         )"
@@ -91,6 +97,15 @@ _koopa_bash_header() { # {{{1
         unalias -a
     fi
     return 0
+}
+
+_koopa_realpath() { # {{{1
+    if [ "$(uname -s)" = 'Darwin' ]
+    then
+        perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+    else
+        readlink -f "$@"
+    fi
 }
 
 _koopa_bash_header "$@"

@@ -3,9 +3,9 @@
 _koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-02-15.
     # """
-    local activate checks file local major_version shopts verbose
+    local activate checks file header_path local major_version shopts verbose
     activate=0
     checks=1
     shopts=1
@@ -39,8 +39,13 @@ _koopa_zsh_header() { # {{{1
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
+        header_path="${(%):-%N}"
+        if [ -L "$header_path" ]
+        then
+            header_path="$(_koopa_realpath "$header_path")"
+        fi
         KOOPA_PREFIX="$( \
-            cd "$(dirname "$(realpath "${(%):-%N}")")/../../../.." \
+            cd "$(dirname "$header_path")/../../../.." \
             >/dev/null 2>&1 \
             && pwd -P \
         )"
@@ -49,6 +54,15 @@ _koopa_zsh_header() { # {{{1
     source "${KOOPA_PREFIX}/lang/shell/posix/include/header.sh"
     source "${KOOPA_PREFIX}/lang/shell/zsh/functions/activate.sh"
     return 0
+}
+
+_koopa_realpath() { # {{{1
+    if [ "$(uname -s)" = 'Darwin' ]
+    then
+        perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+    else
+        readlink -f "$@"
+    fi
 }
 
 _koopa_zsh_header "$@"
