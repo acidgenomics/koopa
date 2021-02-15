@@ -139,7 +139,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     script="$(koopa::which_realpath "$script")"
     echo "$script"
 
-    bcbio_prefix="$(realpath "${script}/../../.."
+    bcbio_prefix="$(realpath "${script}/../../..")"
     echo "$bcbio_prefix"
     return 0
     # FIXME NEED TO ENSURE GALAXY IS STRUCTURED CORRECTLY.
