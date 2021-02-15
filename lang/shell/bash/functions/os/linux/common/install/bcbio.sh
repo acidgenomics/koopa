@@ -93,7 +93,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     #     --release="$release"
     # """
     local bcbio_genome_name bcbio_species_dir build cores fasta \
-        genome_installer gtf indexes organism release tmp_dir
+        genome_installer gtf indexes organism provider release tmp_dir
     koopa::assert_has_args "$#"
     genome_installer='bcbio_setup_genome.py'
     koopa::assert_is_installed "$genome_installer" \
@@ -142,21 +142,17 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     then
         koopa::stop "Invalid organism: '${organism}'."
     fi
-    # Sanitize spaces into underscores.
-    # Use bash built-in rather than sed, when possible.
-    organism="${organism// /_}"
-    # > source='Ensembl'
-    # > bcbio_genome_name="${build}-${source}-${release}"
-    # > koopa::install_start "$bcbio_genome_name"
+    provider='Ensembl'
+    bcbio_genome_name="${build} ${provider} ${release}"
+    bcbio_genome_name="${bcbio_genome_name// /_}"
+    koopa::install_start "$bcbio_genome_name"
     # e.g. 'Hsapiens'.
     bcbio_species_dir="$( \
-        koopa::print "$organism" \
-            | sed -r 's/^([A-Z]).+_([a-z]+)$/\1\2/g' \
+        koopa::print "${organism// /_}" \
+            | sed -r 's/^([A-Z])[a-z]+_([a-z]+)$/\1\2/g' \
     )"
     tmp_dir="$(koopa::tmp_dir)"
     cores="$(koopa::cpu_count)"
-    bcbio_genome_name="${organism} Ensembl ${build} ${release}"
-    koopa::install_start "$bcbio_genome_name"
     (
         set -x
         koopa::cd "$tmp_dir"
@@ -165,7 +161,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         koopa::dl 'Indexes' "${indexes[*]}"
         "$genome_installer" \
             --build "$build" \
-            --buildversion "Ensembl_${release}" \
+            --buildversion "${provider}_${release}" \
             --cores "$cores" \
             --fasta "$fasta" \
             --gtf "$gtf" \
