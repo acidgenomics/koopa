@@ -20,12 +20,12 @@ _koopa_activate() { # {{{1
     _koopa_activate_export_test || return 1
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
-        printf '%s\n' 'Test mode enabled.'
-        # NOTE These 'set' calls currently cause oil shell to error.
+        # NOTE These 'set -o' calls currently can cause oil shell to error.
         # Oil still seems to be a bit rough around the edges supporting POSIX.
+        printf '%s\n' 'Test mode enabled.'
         set -o errexit
         set -o nounset
-        # > set -o xtrace
+        set -o xtrace
         if [ "${KOOPA_SHELL:?}" = 'bash' ]
         then
             # shellcheck disable=SC2039
