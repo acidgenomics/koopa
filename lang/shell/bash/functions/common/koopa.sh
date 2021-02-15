@@ -65,6 +65,7 @@ koopa::_koopa_header() { # {{{1
     return 0
 }
 
+# NOTE Consider hardening against 'koopa::install_app' here.
 koopa::_koopa_install() { # {{{1
     # """
     # Parse user input to 'koopa install'.
