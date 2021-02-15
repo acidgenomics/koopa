@@ -1,0 +1,27 @@
+# """
+# Conda configuration.
+# Updated 2020-07-21.
+#
+# See also:
+# - conda config --set
+# - https://bioconda.github.io/#set-up-channels
+# - https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/
+#       admin-multi-user-install.html
+# - https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/
+#       manage-conda.html
+#
+# Change default environment directory path.
+# > envs_dirs:
+# >   - /n/app/conda/envs
+# """
+
+allow_other_channels: false
+
+changeps1: false
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+notify_outdated_conda: false

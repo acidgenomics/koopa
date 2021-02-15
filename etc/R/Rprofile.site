@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-05-14.
+## Updated 2021-02-15.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -296,9 +296,10 @@ local({
 
     ## Fix file permissions. RStudio doesn't pick up the system umask.
     ## Note that we're allowing group write here by default.
-    if (isTRUE(.rprofile[["rstudio"]])) {
-        Sys.umask("0002")
-    }
+    ## > if (isTRUE(.rprofile[["rstudio"]])) {
+    ## >     Sys.umask("0002")
+    ## > }
+
     ## Inform user that session is running inside of RStudio.
     ## > if (isTRUE(rstudio) && isTRUE(interactive())) {
     ## >     message("RStudio detected.")
@@ -323,19 +324,63 @@ local({
     ## Package installation {{{2
     ## -------------------------------------------------------------------------
 
-    ## We set the cloud mirror, which is 'network-close' to everybody, as
-    ## default. Consider using a versioned MRAN snapshot for increased
-    ## reproducibility.
+    ## Using a versioned CRAN snapshot on Linux for increased reproducibility.
     ##
-    ## Alternatively, this lets you install Bioconductor packages using
-    ## `install.packages()`, but this causes a slight R session load delay.
-    ## > options(repos = BiocManager::repositories())
+    ## See also:
+    ## - https://packagemanager.rstudio.com/
+    ## - https://mran.microsoft.com/
+    ## - https://hub.docker.com/r/rocker/r-ver/dockerfile
+    ##
+    ## CRAN latest options:
+    ## - https://cloud.r-project.org
+    ## - https://cran.rstudio.com
+    ## - https://packagemanager.rstudio.com/all/latest
+    ##
+    ## Can enable missing R binaries for Homebrew on macOS.
+    ## See also:
+    ## - https://macos.rbind.io/
+    ## - https://github.com/yihui/homebrew-cran-extra
+    ## - https://github.com/yihui/homebrew-cran-extra/tree/gh-pages/bin/macosx
+    ## - https://yihui.org/en/2018/06/homebrew-binary-r-packages/
+    ##
+    ## CRAN snapshots for previous Bioconductor releases:
+    ## - Bioconductor 3.12 / R 4.0
+    ##   https://packagemanager.rstudio.com/cran/2020-10-28
+    ## - Bioconductor 3.11 / R 4.0
+    ##   https://packagemanager.rstudio.com/cran/2020-04-30
 
     local({
         repos <- getOption("repos")
-        ## RStudio alternate: https://cran.rstudio.com
-        repos[["CRAN"]] <- "https://cloud.r-project.org"
+        if (isTRUE(.rprofile[["linux"]])) {
+            ## Configure the RSPM CRAN snapshot.
+            repos[["CRAN"]] <-
+                "https://packagemanager.rstudio.com/cran/2021-02-10"
+            ## Configure the RSPM Bioconductor mirror repo.
+            options(
+               "BioC_mirror" =
+                   "https://packagemanager.rstudio.com/bioconductor"
+            )
+        } else {
+            ## Alternatively, can use:
+            ## > repos[["CRAN"]] <-
+            ## >     "https://cran.rstudio.com"
+            ## > repos[["CRAN"]] <-
+            ## >     "https://packagemanager.rstudio.com/cran/latest"
+            repos[["CRAN"]] <-
+                "https://cloud.r-project.org"
+        }
+        ## Always include our Acid Genomics repo.
+        repos[["AcidGenomics"]] <-
+            "https://r.acidgenomics.com"
+        ## Yihui Xie's repo has some extra binary builds for macOS.
+        ## > if (isTRUE(.rprofile[["macos"]])) {
+        ## >    repos[["CRANextra"]] <-
+        ## >        "https://macos.rbind.io"
+        ## > }
         options("repos" = repos)
+        ## Allow Bioconductor to work offline.
+        ## Note that this will warn when enabled.
+        ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
     })
 
     ## Always install from source on Linux.
@@ -358,6 +403,52 @@ local({
     ## >     "install.packages.compile.from.source" = "binary",
     ## >     "pkgType" = "binary"
     ## > )
+
+    ## Specify internal download method.
+    ##
+    ## This gets picked up by `install.packages()` and `BiocManager::install()`.
+    ##
+    ## Use "libcurl" (default), "curl", or "wget" on Linux/macOS; or can use
+    ## "wininet" on Windows only.
+    ##
+    ## See also:
+    ## - https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
+    ##       download.file.html
+    ## - https://github.com/wch/r-source/blob/master/src/library/utils/R/unix/
+    ##       download.file.R
+    ##
+    ## curl mode:
+    ## This is buggy, try to use wget mode instead.
+    ## > if (isTRUE(nzchar(Sys.which("curl")))) {
+    ## >     options(
+    ## >         "download.file.method" = "curl",
+    ## >         "download.file.extra" = c(
+    ## >             "--location",
+    ## >             "--retry", "5"
+    ## >         )
+    ## >     )
+    ## > }
+    ##
+    ## wget mode:
+    ##
+    ## This mode is a bit too verbose and shows HTTP redirect headers.
+    ##
+    ## Also shows this warning:
+    ## "WARNING: timestamping does nothing in combination with -0.
+    ## See the manual for details.
+    ##
+    ## See also:
+    ## - https://github.com/YuLab-SMU/wget/blob/master/R/wget.R
+    ## > if (isTRUE(nzchar(Sys.which("wget")))) {
+    ## >     options(
+    ## >         "download.file.method" = "wget",
+    ## >         "download.file.extra" = c(
+    ## >             "--continue",
+    ## >             "--max-redirect=20",
+    ## >             "--timeout=60"
+    ## >         )
+    ## >     )
+    ## > }
 
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
@@ -383,11 +474,14 @@ local({
         "continue" = " ",
         "max.print" = 1000L,
         "menu.graphics" = FALSE,
-        "prompt" = "> ",
         "show.signif.stars" = FALSE,
         "verbose" = FALSE,
         "width" = 80L
     )
+
+    if (!isTRUE(.rprofile[["rstudio"]])) {
+        options("prompt" = "> ")
+    }
 
     ## Turn on auto-completion of installed package names.
     if (isTRUE(interactive())) {
@@ -402,8 +496,9 @@ local({
         "deparse.max.lines" = 3L,
         "showErrorCalls" = TRUE,
         "showWarnCalls" = TRUE,
-        ## Timeouts default to 60 seconds, which is too long.
-        "timeout" = 5L,
+        ## Timeouts default to 60 seconds, which can be too long.
+        ## Note that this applies to `download.file()` calls as well.
+        ## > "timeout" = 30L,
         "warn" = 1L,
         ## Set to maximum supported length.
         "warning.length" = 8170L
@@ -508,56 +603,20 @@ local({
     ## Session info {{{2
     ## -------------------------------------------------------------------------
 
-    if (isTRUE(interactive())) {
+    if (isTRUE(interactive()) && !isTRUE(.rprofile[["rstudio"]])) {
         local({
             pathString <- paste0("  %.", getOption("width") - 2L, "s")
             msg <- sprintf(
                 fmt = paste(
-                    "",
                     "%s",
-                    "",
-                    "R Home:", pathString,
-                    sep = "\n"
-                ),
-                R.version[["version.string"]],
-                normalizePath(R.home(), mustWork = TRUE)
-            )
-            ## > if (isTRUE(.rprofile[["macos"]])) {
-            ## >     msg <- sprintf(
-            ## >         fmt = paste(
-            ## >             msg,
-            ## >             "Clang:", pathString,
-            ## >             sep = "\n"
-            ## >         ),
-            ## >         Sys.which("clang")
-            ## >     )
-            ## > } else if (isTRUE(.rprofile[["linux"]])) {
-            ## >     msg <- sprintf(
-            ## >         fmt = paste(
-            ## >             msg,
-            ## >             "GCC:", pathString,
-            ## >             sep = "\n"
-            ## >         ),
-            ## >         Sys.which("gcc")
-            ## >     )
-            ## > }
-            ## > msg <- sprintf(
-            ## >     fmt = paste(
-            ## >         msg,
-            ## >         "GNU Fortran:", pathString,
-            ## >         sep = "\n"
-            ## >     ),
-            ## >     Sys.which("gfortran")
-            ## > )
-            msg <- sprintf(
-                fmt = paste(
-                    msg,
+                    "Home:", pathString,
                     "Package Library:", pathString,
                     "Working Directory:", pathString,
                     "",
-                    "",
                     sep = "\n"
                 ),
+                R.version[["version.string"]],
+                normalizePath(R.home(), mustWork = TRUE),
                 normalizePath(.libPaths()[[1L]], mustWork = TRUE),
                 normalizePath(getwd(), mustWork = TRUE)
             )

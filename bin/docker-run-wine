@@ -1,22 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../shell/bash/include/header.sh"
-_koopa_assert_has_no_args "$@"
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-# Allow access from localhost.
-# > xhost + "$HOSTNAME"
-xhost + 127.0.0.1
-
-image="acidgenomics/wine-mp3tag"
-workdir="/mnt/work"
-
-docker run \
-    --privileged \
-    -e DISPLAY=host.docker.internal:0 \
-    --interactive \
-    --tty \
-    --volume="${PWD}:${workdir}" \
-    --workdir="${workdir}" \
-    "$image"
+koopa::docker_run_wine "$@"

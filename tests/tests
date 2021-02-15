@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
-# """
-# Continuous integration (CI) tests.
-# @note Updated 2020-06-24.
-#
-# Need to navigate to koopa prefix to load '.pylintrc' file correctly.
-# """
+# shellcheck source=/dev/null
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-tests_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+koopa::run_tests() {
+    # """
+    # Continuous integration (CI) tests.
+    # @note Updated 2020-07-23.
+    # """
+    local tests_dir
+    tests_dir="$(dirname "${BASH_SOURCE[0]}")"
+    (
+        cd "$tests_dir" || exit 1
+        ./bin-man-consistency
+        ./linter
+        ./shunit2
+        # > ./roff
+    )
+    return 0
+}
 
-(
-    cd "$tests_dir" || exit 1
-    ./bin-man-consistency
-    # > ./roff
-    ./linter
-    ./shunit2
-    # > ./bashcov
-)
+koopa::run_tests "$@"

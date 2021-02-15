@@ -1,0 +1,20 @@
+usage: koopa [-h] [-V] COMMAND
+
+commands:
+    check
+        Run system dependency version checks.
+  info
+        Show system information.
+  list
+        List programs accessible in '$PATH'.
+  update
+        Update koopa installation to latest version.
+  variable
+        Get internal koopa::variable.
+        For example, get recommended 'vim' version.
+
+optional arguments:
+  -h, --help
+        Show this help message and exit.
+  -V, --version
+        Version information.

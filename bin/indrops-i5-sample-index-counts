@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../shell/bash/include/header.sh"
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-dir="${1:-"."}"
-dir="$(_koopa_strip_trailing_slash "$dir")"
-
-gzip -cd "${dir}/"*"_R3.fastq.gz" | \
-    head -n -1000000 | \
-    awk 'NR == 2 || NR % 4 == 2' | \
-    grep -v N | \
-    sort | \
-    uniq -c | \
-    sort -nr | \
-    head -n 24 > \
-    sample-barcodes.log
+koopa::indrops_i5_sample_index_counts "$@"

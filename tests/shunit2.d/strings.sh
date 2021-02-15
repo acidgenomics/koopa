@@ -1,43 +1,55 @@
 #!/usr/bin/env bash
 
-test_gsub() {
+test_gsub() { # {{{1
     assertEquals \
-        "$(_koopa_gsub "aaa-aaa-bbb-bbb" "bbb" "ccc")" \
-        "aaa-aaa-ccc-ccc"
+        "$(koopa::gsub 'bbb' 'ccc' 'aaa-aaa-bbb-bbb')" \
+        'aaa-aaa-ccc-ccc'
 }
 
-test_snake_case() {
+test_kebab_case_simple() { # {{{1
     assertEquals \
-        "$(_koopa_snake_case "hello world")" \
-        "hello_world"
+        "$(koopa::kebab_case_simple 'hello world')" \
+        'hello-world'
 }
 
-test_strip_left() {
+test_sanitize_version() { # {{{1
     assertEquals \
-        "$(_koopa_strip_left "The Quick Brown Fox" "The ")" \
-        "Quick Brown Fox"
+        "$(koopa::sanitize_version '2.7.1p83')" \
+        '2.7.1'
 }
 
-test_strip_right() {
+test_snake_case_simple() { # {{{1
     assertEquals \
-        "$(_koopa_strip_right "The Quick Brown Fox" " Fox")" \
-        "The Quick Brown"
+        "$(koopa::snake_case_simple 'hello world')" \
+        'hello_world'
 }
 
-_test_strip_trailing_slash() {
+test_strip_left() { # {{{1
     assertEquals \
-        "$(_koopa_strip_trailing_slash "https://acidgenomics.com/")" \
-        "https://acidgenomics.com"
+        "$(koopa::strip_left 'The ' 'The Quick Brown Fox')" \
+        'Quick Brown Fox'
 }
 
-test_sub() {
+test_strip_right() { # {{{1
     assertEquals \
-        "$(_koopa_sub "aaa-aaa-bbb-bbb" "bbb" "ccc")" \
-        "aaa-aaa-ccc-bbb"
+        "$(koopa::strip_right ' Fox' 'The Quick Brown Fox')" \
+        'The Quick Brown'
 }
 
-test_trim_ws() {
+_test_strip_trailing_slash() { # {{{1
     assertEquals \
-        "$(_koopa_trim_ws "    Hello,  World    ")" \
-        "Hello,  World"
+        "$(koopa::strip_trailing_slash 'https://acidgenomics.com/')" \
+        'https://acidgenomics.com'
+}
+
+test_sub() { # {{{1
+    assertEquals \
+        "$(koopa::sub 'bbb' 'ccc' 'aaa-aaa-bbb-bbb')" \
+        'aaa-aaa-ccc-bbb'
+}
+
+test_trim_ws() { # {{{1
+    assertEquals \
+        "$(koopa::trim_ws '    Hello,  World    ')" \
+        'Hello,  World'
 }
