@@ -37,7 +37,7 @@ koopa::install_rbenv_ruby() { # {{{1
 koopa::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-02-15.
     # """
     koopa::assert_has_no_envs
     koopa::is_installed gem || return 0
@@ -50,6 +50,7 @@ koopa::install_ruby_packages() { # {{{1
         # > gem pristine --all --only-executables
         gems=(
             # neovim
+            'bundler'
             'bashcov'
             'ronn'
         )
