@@ -7,7 +7,7 @@ _koopa_bash_header() { # {{{1
     # @note Updated 2021-02-15.
     # """
     local activate checks dev distro_prefix header_path major_version os_id \
-        pos shopts verbose
+        shopts verbose
     activate=0
     checks=1
     dev=0
@@ -23,23 +23,6 @@ _koopa_bash_header() { # {{{1
         shopts=0
         export KOOPA_ACTIVATE=1
         export KOOPA_INTERACTIVE=1
-    else
-        # Globally support '--verbose' flag.
-        pos=()
-        while (("$#"))
-        do
-            case "$1" in
-                --verbose)
-                    verbose=1
-                    shift 1
-                    ;;
-                *)
-                    pos+=("$1")
-                    shift 1
-                    ;;
-            esac
-        done
-        [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     fi
     if [[ "$shopts" -eq 1 ]]
     then

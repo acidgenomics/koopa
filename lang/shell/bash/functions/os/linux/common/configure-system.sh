@@ -3,7 +3,7 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-02-15.
     #
     # Intended primarily for virtual machine and Docker image builds.
     # """
@@ -125,6 +125,10 @@ koopa::linux_configure_system() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            --verbose)
+                set -o xtrace
+                shift 1
+                ;;
             # Mode -------------------------------------------------------------
             --mode=*)
                 mode="${1#*=}"
