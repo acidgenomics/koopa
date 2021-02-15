@@ -19,6 +19,9 @@ _koopa_app_prefix() { # {{{1
         prefix=
     # Provide fallback support for existing installs using "cellar".
     [ -z "$prefix" ] && \
+        [ -d "$(_make_prefix)/cellar" ] && \
+        prefix="$(_make_prefix)/cellar"
+    [ -z "$prefix" ] && \
         [ -d "$(_koopa_prefix)/cellar" ] && \
         prefix="$(_koopa_prefix)/cellar"
     # Otherwise, use "app" by default.
