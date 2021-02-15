@@ -3,7 +3,7 @@
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-02-15.
     # """
     local activate checks dev distro_prefix major_version os_id shopts verbose
     activate=0
@@ -55,10 +55,13 @@ _koopa_bash_header() { # {{{1
         )"
         export KOOPA_PREFIX
     fi
+    echo "FIXME 1"
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX}/lang/shell/posix/include/header.sh"
+    echo "FIXME 2"
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX}/lang/shell/bash/functions/activate.sh"
+    echo "FIXME 3"
     if [[ "$activate" -eq 0 ]] || [[ "$dev" -eq 1 ]]
     then
         _koopa_source_dir 'common'
@@ -90,6 +93,7 @@ _koopa_bash_header() { # {{{1
         # Primarily intended to reset cp, mv, rf for use inside scripts.
         unalias -a
     fi
+    echo "FIXME 4"
     return 0
 }
 
