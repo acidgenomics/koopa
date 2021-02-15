@@ -483,10 +483,11 @@ koopa::is_recent() { # {{{1
     return 0
 }
 
+# FIXME NEED TO IMPROVE THE ERROR MESSAGE HERE ON UNBOUND VARIABLES.
 koopa::is_set() { # {{{1
     # """
     # Is the variable set and non-empty?
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-02-15.
     #
     # Passthrough of empty strings is bad practice in shell scripting.
     #
