@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
-koopa::assert_is_installed tar xz
-file="${name}-${version}.tar.xz"
+koopa::assert_is_installed tar
+## Note that xz file is also available.
+file="${name}-${version}.tar.gz"
 url="${gnu_mirror}/${name}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
