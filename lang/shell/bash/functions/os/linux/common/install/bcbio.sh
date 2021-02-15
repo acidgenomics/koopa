@@ -147,6 +147,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         koopa::stop "Invalid organism: '${organism}'."
     fi
     provider='Ensembl'
+    # e.g. "GRCh38_Ensembl_102".
     bcbio_genome_name="${build} ${provider} ${release}"
     bcbio_genome_name="${bcbio_genome_name// /_}"
     koopa::install_start "$bcbio_genome_name"
