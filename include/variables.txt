@@ -5,10 +5,13 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-11-11"
+koopa-date="2021-02-15"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.8.22"
+koopa-version="0.9.0"
+
+# Also update this value in 'lang/r/include/header.R'.
+r-koopa="0.1.5"
 
 # Globals {{{1
 # ==============================================================================
@@ -22,44 +25,38 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
-# 2020.07 has buggy py38 conda 4.8.3.
-anaconda="2020.02"
+anaconda="2020.11"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.1.1"
+armadillo="10.2.1"
 
-# https://www.ibm.com/products/aspera
-# https://downloads.asperasoft.com/connect2/
-# https://downloads.asperasoft.com/en/downloads/8?list
-aspera-connect="3.10.0.180973"
+# https://www.ibm.com/aspera/connect/
+aspera-connect="3.10.1.181943"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.69"
 
 # https://ftp.gnu.org/gnu/automake/
-automake="1.16.2"
-
-# https://github.com/wting/autojump/releases
-autojump="22.5.3"
+automake="1.16.3"
 
 # https://www.gnu.org/software/bash/
-bash="5.0.18"
+bash="5.1.4"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-bcbio-nextgen="1.2.4"
+bcbio-nextgen="1.2.6"
 
 # https://support.illumina.com/sequencing/sequencing_software/
 #     bcl2fastq-conversion-software.html
 bcl2fastq="2.20.0.422"
 
 # https://ftp.gnu.org/gnu/binutils/
-binutils="2.34"
+binutils="2.36.1"
 
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
 #     pipelines/latest/installation
-cellranger="4.0.0"
+cellranger="5.0.1"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
@@ -67,18 +64,18 @@ cellranger="4.0.0"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.18.4"
+cmake="3.19.5"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
 # https://docs.conda.io/projects/conda/en/latest/user-guide/install/
-conda="4.8.3"
+conda="4.9.2"
 
 # https://www.gnu.org/software/coreutils/
 coreutils="8.32"
 
 # https://curl.haxx.se/
-curl="7.73.0"
+curl="7.75.0"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -94,50 +91,58 @@ emacs="27.1"
 ensembl-perl="5.26.3"
 
 # https://www.gnu.org/software/findutils/
-findutils="4.7.0"
+findutils="4.8.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
 fish="3.1.2"
 
 # https://github.com/junegunn/fzf
-fzf="0.24.3"
+fzf="0.25.1"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.0"
 
 # https://ftp.gnu.org/gnu/gcc/
-gcc="9.3.0"
+gcc="10.2.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.2.0"
+gdal="3.2.1"
 
 # https://github.com/libgeos/geos/releases
-geos="3.8.1"
+geos="3.9.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.29.2"
+git="2.30.1"
 
 # https://gnupg.org/download/index.html
-gnupg="2.2.23"
+gnupg="2.2.27"
 
 # https://golang.org/dl/
-go="1.15.4"
+go="1.15.8"
 
 # https://www.gnu.org/software/grep/
 grep="3.6"
 
+# https://ftp.gnu.org/gnu/groff/
+groff="1.22.4"
+
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
+
+haskell-stack="rolling"
 
 # https://www.hdfgroup.org/downloads/hdf5
 hdf5="1.12.0"
 
+# https://brew.sh/
+homebrew="3.0.1"
+
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
-htop="3.0.2"
+htop="3.0.5"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -154,13 +159,12 @@ libtool="2.4.6"
 
 # LLVM
 # https://releases.llvm.org/
-llvm="11.0.0"
+llvm="11.0.1"
 
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
 # https://github.com/TACC/Lmod
-# Update every minor release (skip patch releases, which are too frequent).
-lmod="8.4"
+lmod="8.4.20"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
@@ -181,11 +185,9 @@ neofetch="7.1.0"
 # https://github.com/neovim/neovim/releases
 neovim="0.4.4"
 
-# https://github.com/nextflow-io/nextflow/releases
-nextflow="20.04.1"
-
+# https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="15"
+openjdk="15.0.2"
 
 # https://www.openssh.com/portable.html
 openssh="8.4p1"
@@ -201,9 +203,7 @@ oracle-instantclient="19.5.0.0.0-1"
 pandoc="2.10"
 
 # https://www.gnu.org/software/parallel/
-# Note that 20200822 is considered beta on macOS.
-# https://github.com/Homebrew/homebrew-core/blob/master/Formula/parallel.rb
-parallel="20201022"
+parallel="20201122"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
@@ -212,7 +212,7 @@ password-store="1.7.3"
 patch="2.7.6"
 
 # https://www.perl.org/get.html
-perl="5.32.0"
+perl="5.32.1"
 
 # https://perlbrew.pl/
 perlbrew="0.88"
@@ -222,21 +222,21 @@ perl-file-rename="1.10"
 
 # https://www.php.net/downloads
 # https://github.com/php/php-src/releases
-php="7.4.12"
+php="8.0.0"
 
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
 
 # https://proj.org/
-proj="7.2.0"
+proj="7.2.1"
 
 # https://github.com/pyenv/pyenv
 pyenv="1.2.16"
 
 # https://www.python.org/downloads/
 # numba v0.51.2 install warns on Python 3.9 currently.
-python="3.9.0"
+python="3.9.1"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
@@ -249,19 +249,19 @@ rbenv="1.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="1.3.1093"
+rstudio-server="1.4.1103"
 
 # https://www.rstudio.com/products/rstudio/download-commercial/
-rstudio-server-pro="1.3.1093-1"
+rstudio-server-pro="1.4.1103-3"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="2.7.2p137"
+ruby="3.0.0p0"
 
 # https://www.rust-lang.org/
-rust="1.47.0"
+rust="1.50.0"
 
 # https://rustup.rs/
-rustup="1.22.1"
+rustup="1.23.1"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
@@ -279,8 +279,7 @@ sed="4.8"
 shellcheck="0.7.1"
 
 # https://www.rstudio.com/products/shiny/download-server/
-# previous stable: 1.5.13.944
-shiny-server="1.5.14.948"
+shiny-server="1.5.16.958"
 
 # https://github.com/kward/shunit2/releases
 shunit2="2.1.7"
@@ -289,13 +288,19 @@ shunit2="2.1.7"
 singularity="3.6.0"
 
 # https://www.sqlite.org/download.html
-sqlite="3.33.0"
+sqlite="3.34.0"
+
+# https://www.gnu.org/software/stow/
+stow="2.3.1"
 
 # https://subversion.apache.org
-subversion="1.14.0"
+subversion="1.14.1"
 
 # https://github.com/taglib/taglib/
 taglib="1.11.1"
+
+# https://www.gnu.org/software/tar/
+tar="1.34"
 
 # https://www.latex-project.org/get/
 tex="2020"
@@ -317,30 +322,30 @@ udunits="2.2.26"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on on multiples of 50.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-# For cellar scripts, let's pin to the stable release instead.
 vim="8.2.0"
 
 # https://www.gnu.org/software/wget/
-wget="1.20.3"
+wget="1.21.1"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8"
 
-# Bioinformatics tools / Conda environments {{{1
+# Conda environments {{{1
 # ==============================================================================
+# Updated 2020-12-31.
 
 conda-arriba="2.0.0"
-conda-atropos="1.1.28"
+conda-atropos="1.1.29"
 conda-bamtools="2.5.1"
 conda-bcftools="1.11"
 conda-bedtools="2.29.2"
 conda-bioawk="1.0"
-conda-biobambam="2.0.87"  # NOTE Recipe needs update.
-conda-bismark="0.22.3"
+conda-biobambam="2.0.87"  # linux  # NOTE Recipe needs update to 2.0.146.
+conda-bismark="0.23.0"
 conda-bowtie2="2.4.2"
 conda-bwa-mem2="2.1"
 conda-bwa="0.7.17"
-conda-chromhmm="1.21"  # NOTE Update to 1.22.
+conda-chromhmm="1.21"  # NOTE Needs update to 1.22.
 conda-deeptools="3.5.0"
 conda-entrez-direct="13.9"
 conda-ericscript="0.5.5"
@@ -353,88 +358,132 @@ conda-hisat2="2.2.1"
 conda-homer="4.11"
 conda-htslib="1.11"
 conda-igvtools="2.5.3"
-conda-jupyterlab="2.2.9"
+conda-jupyterlab="3.0.0"
 conda-kallisto="0.46.2"
-conda-kraken2="2.1.0"
+conda-kraken2="2.1.1"
 conda-kraken="1.1.1"
 conda-macs2="2.2.7.1"
+conda-miniwdl="1.0.0"
 conda-multiqc="1.9"
-conda-nextflow="20.07.1"
+conda-nextflow="20.10.0"
+conda-numpy="1.20.1"
 conda-oncofuse="1.1.1"
-conda-pandas="1.1.3"
+conda-pandas="1.2.0"
 conda-peddy="0.4.7"
-conda-picard="2.23.8"
+conda-picard="2.23.9"
 conda-pizzly="0.37.3"
 conda-qualimap="2.2.2d"
 conda-rsem="1.3.3"
-conda-salmon="1.3.0"
+conda-salmon="1.4.0"
 conda-sambamba="0.7.1"
 conda-samblaster="0.1.26"
 conda-samtools="1.11"
-conda-scikit-learn="0.23.2"
+conda-scikit-learn="0.24.0"
 conda-seqtk="1.3"
-conda-sicer2="1.0.2"
-conda-snakemake="5.26.1"
+conda-sicer2="1.0.3"
+conda-snakemake="5.31.1"
 conda-squid="1.5"
-conda-sra-tools="2.10.1"  # NOTE 2.10.8 is Linux only.
+conda-sra-tools="2.10.9"  # linux
 conda-star-fusion="1.9.1"
-conda-star="2.7.6a"
+conda-star="2.7.7a"
 conda-trimmomatic="0.39"
+# umap-learn 0.5.0 currently has issues with ParametricUMAP not being available
+# in R via reticulate. This requires tensorflow, which isn't included in the
+# recipe because v2.2+ isn't available yet and is required for Python 3.8.
+# https://github.com/conda-forge/umap-learn-feedstock/issues/29
 conda-umap-learn="0.4.6"
 conda-vardict="2019.06.04"
-
-# Python packages {{{1
-# ==============================================================================
-
-# Python pip pinned versions.
-# These are essential Python tools that should always be available.
-# Otherwise, for heavy libraries, use a conda environment instead.
-# Updated 2020-11-03 from https://pypi.org/.
-python-black="20.8b1"           # homebrew
-python-bpytop="1.0.50"
-python-flake8="3.8.4"           # homebrew
-python-logbook="1.5.3"
-python-pip="20.2.4"
-python-pipx="0.15.6.0"
-python-psutil="5.7.3"
-python-pyflakes="2.2.0"
-python-pylint="2.6.0"           # homebrew
-python-pytaglib="1.4.6"
-python-pytest="6.1.2"
-python-pyyaml="5.3.1"
-python-ranger-fm="1.9.3"        # homebrew
-python-setuptools="50.3.2"
-python-six="1.15.0"
-python-wheel="0.35.1"
-
-# Rust cargo crates {{{1
-# ==============================================================================
-
-# Updated 2020-11-10 from https://crates.io/.
-
-# Potentially interesting:
-# - starship
-#   https://github.com/starship/starship
-# - hyper
-#   https://github.com/hyperium/hyper
-# - tide
-#   https://github.com/http-rs/tide
-
-rust-bat="0.16.0"           # homebrew
-rust-broot="1.0.5"          # homebrew
-rust-dog="0.1.0"            # homebrew
-rust-du-dust="0.5.3"        # homebrew
-rust-exa="0.9.0"            # homebrew
-rust-fd-find="8.1.1"        # homebrew
-rust-hyperfine="1.11.0"     # homebrew
-rust-procs="0.10.7"         # homebrew
-rust-ripgrep="12.1.1"       # homebrew
-rust-starship="0.46.2"      # homebrew
-rust-tokei="12.0.4"         # homebrew
-rust-xsv="0.13.0"           # homebrew
-rust-zoxide="0.5.0"         # homebrew
 
 # Homebrew cask versions {{{1
 # ==============================================================================
 
-homebrew-cask-gpg-suite="2020.1"
+homebrew-cask-gpg-suite="2020.2"
+
+# Python packages {{{1
+# ==============================================================================
+# Updated 2021-02-11 from https://pypi.org/.
+
+# Python pip pinned versions.
+# These are essential Python tools that should always be available.
+# Otherwise, for heavy libraries, use a conda environment instead.
+
+# Packages with binaries {{{2
+# ------------------------------------------------------------------------------
+
+python-pip="21.0.1"
+
+python-black="20.8b1"     # homebrew
+python-bpytop="1.0.62"    # homebrew
+python-flake8="3.8.4"     # homebrew
+python-pipx="0.16.0.0"    # homebrew
+python-pylint="2.6.0"     # homebrew
+python-ranger-fm="1.9.3"  # homebrew
+
+# Libraries without binaries {{{2
+# ------------------------------------------------------------------------------
+
+python-pip2pi="0.8.1"
+python-psutil="5.8.0"
+python-pyflakes="2.2.0"
+python-pytaglib="1.4.6"
+python-pytest="6.2.2"
+python-pyyaml="5.4.1"
+python-setuptools="53.0.0"
+python-six="1.15.0"
+python-wheel="0.36.2"
+
+# Ruby packages (gems) {{{1
+# ==============================================================================
+# Updated 2021-02-11.
+
+# NOTE Need to improve automatic updates of these Ruby dependencies.
+
+# https://rubygems.org/gems/bundler/versions/
+# NOTE Consider renaming to 'bundler' here.
+# Update with 'gem install bundler'.
+ruby-bundle="2.2.9"
+
+# https://rubygems.org/pages/download/
+# NOTE Consider renaming to 'rubygems' here.
+# Update with 'gem update --system'.
+ruby-gem="3.2.9"
+
+# Last updated 2010-06-24...
+ruby-ronn="0.7.3"
+
+# Rust packages {{{1
+# ==============================================================================
+# Updated 2021-02-11 from https://crates.io/.
+
+# Packages with binaries {{{2
+# ------------------------------------------------------------------------------
+
+rust-bat="0.17.1"         # homebrew
+rust-broot="1.2.4"        # homebrew; br
+rust-dog="0.1.0"          # homebrew
+rust-du-dust="0.5.4"      # homebrew; dust
+rust-exa="0.9.0"          # homebrew
+rust-fd-find="8.2.1"      # homebrew; fd
+rust-hyperfine="1.11.0"   # homebrew
+rust-procs="0.11.3"       # homebrew
+rust-ripgrep-all="0.9.6"  # homebrew; rga
+rust-ripgrep="12.1.1"     # homebrew; rg
+rust-starship="0.50.0"    # homebrew
+rust-tokei="12.1.2"       # homebrew
+rust-xsv="0.13.0"         # homebrew
+rust-zoxide="0.5.0"       # homebrew; z
+
+# Libraries without binaries {{{2
+# ------------------------------------------------------------------------------
+
+# https://github.com/crossbeam-rs/crossbeam/
+rust-crossbeam="0.8.0"
+
+# https://hyper.rs/
+rust-hyper="0.14.4"
+
+# https://github.com/rayon-rs/rayon/
+rust-rayon="1.5.0"
+
+# https://docs.rs/tide/
+rust-tide="0.16.0"

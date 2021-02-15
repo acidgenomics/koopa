@@ -1,3 +1,16 @@
+## koopa 0.9.0 (2021-02-15)
+
+- Installer now defaults to `/opt/koopa` instead of `/usr/local/koopa`.
+- Reworked organization of "cellar" and "app" prefixes. Removing the usage of
+  "cellar", since this is a Homebrew-specific idiom. Instead koopa will now
+  use "app" for versioned installed, and a nested "opt" directory for
+  unversioned symlinks, similar to the approach used by Homebrew.
+- Removed autojump activation support in favor of zoxide, which is faster.
+- Massive rework of internal shell script function library, which is now
+  defined inside `lang/shell` (see `bash` and `posix` subdirectories).
+- Offloaded some functionality to koopa R package, which can be installed
+  if necessary with `koopa install r-koopa`.
+
 ## koopa 0.8.9 (2020-10-09)
 
 ### Minor changes

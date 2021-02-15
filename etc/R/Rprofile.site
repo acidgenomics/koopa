@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-11-05.
+## Updated 2021-02-15.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -324,7 +324,7 @@ local({
     ## Package installation {{{2
     ## -------------------------------------------------------------------------
 
-    ## Using a versioned CRAN snapshot for increased reproducibility.
+    ## Using a versioned CRAN snapshot on Linux for increased reproducibility.
     ##
     ## See also:
     ## - https://packagemanager.rstudio.com/
@@ -335,20 +335,52 @@ local({
     ## - https://cloud.r-project.org
     ## - https://cran.rstudio.com
     ## - https://packagemanager.rstudio.com/all/latest
+    ##
+    ## Can enable missing R binaries for Homebrew on macOS.
+    ## See also:
+    ## - https://macos.rbind.io/
+    ## - https://github.com/yihui/homebrew-cran-extra
+    ## - https://github.com/yihui/homebrew-cran-extra/tree/gh-pages/bin/macosx
+    ## - https://yihui.org/en/2018/06/homebrew-binary-r-packages/
+    ##
+    ## CRAN snapshots for previous Bioconductor releases:
+    ## - Bioconductor 3.12 / R 4.0
+    ##   https://packagemanager.rstudio.com/cran/2020-10-28
+    ## - Bioconductor 3.11 / R 4.0
+    ##   https://packagemanager.rstudio.com/cran/2020-04-30
 
     local({
         repos <- getOption("repos")
-        ## 2020-11-05: Now calling this inside `bb8:install()` instead, to speed
-        ## up loading of R session, and avoid pings to the Bioconductor server.
-        ## > if (isInstalled("BiocManager")) {
-        ## >     repos <- BiocManager::repositories()
+        if (isTRUE(.rprofile[["linux"]])) {
+            ## Configure the RSPM CRAN snapshot.
+            repos[["CRAN"]] <-
+                "https://packagemanager.rstudio.com/cran/2021-02-10"
+            ## Configure the RSPM Bioconductor mirror repo.
+            options(
+               "BioC_mirror" =
+                   "https://packagemanager.rstudio.com/bioconductor"
+            )
+        } else {
+            ## Alternatively, can use:
+            ## > repos[["CRAN"]] <-
+            ## >     "https://cran.rstudio.com"
+            ## > repos[["CRAN"]] <-
+            ## >     "https://packagemanager.rstudio.com/cran/latest"
+            repos[["CRAN"]] <-
+                "https://cloud.r-project.org"
+        }
+        ## Always include our Acid Genomics repo.
+        repos[["AcidGenomics"]] <-
+            "https://r.acidgenomics.com"
+        ## Yihui Xie's repo has some extra binary builds for macOS.
+        ## > if (isTRUE(.rprofile[["macos"]])) {
+        ## >    repos[["CRANextra"]] <-
+        ## >        "https://macos.rbind.io"
         ## > }
-        ## Always include Acid Genomics repo.
-        repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-        ## Snapshot: 2020-11-04.
-        ## https://packagemanager.rstudio.com/client/#/repos/1/overview
-        repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/360"
         options("repos" = repos)
+        ## Allow Bioconductor to work offline.
+        ## Note that this will warn when enabled.
+        ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
     })
 
     ## Always install from source on Linux.
@@ -386,14 +418,16 @@ local({
     ##       download.file.R
     ##
     ## curl mode:
-    ##
-    ## > options(
-    ## >     "download.file.method" = "curl",
-    ## >     "download.file.extra" = c(
-    ## >         "--location"
-    ## >         "--retry", "5"
+    ## This is buggy, try to use wget mode instead.
+    ## > if (isTRUE(nzchar(Sys.which("curl")))) {
+    ## >     options(
+    ## >         "download.file.method" = "curl",
+    ## >         "download.file.extra" = c(
+    ## >             "--location",
+    ## >             "--retry", "5"
+    ## >         )
     ## >     )
-    ## > )
+    ## > }
     ##
     ## wget mode:
     ##
@@ -405,14 +439,16 @@ local({
     ##
     ## See also:
     ## - https://github.com/YuLab-SMU/wget/blob/master/R/wget.R
-    ## > options(
-    ## >     "download.file.method" = "wget",
-    ## >     "download.file.extra" = c(
-    ## >         "--continue",
-    ## >         "--max-redirect=20",
-    ## >         "--timeout=60"
+    ## > if (isTRUE(nzchar(Sys.which("wget")))) {
+    ## >     options(
+    ## >         "download.file.method" = "wget",
+    ## >         "download.file.extra" = c(
+    ## >             "--continue",
+    ## >             "--max-redirect=20",
+    ## >             "--timeout=60"
+    ## >         )
     ## >     )
-    ## > )
+    ## > }
 
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
@@ -462,7 +498,7 @@ local({
         "showWarnCalls" = TRUE,
         ## Timeouts default to 60 seconds, which can be too long.
         ## Note that this applies to `download.file()` calls as well.
-        "timeout" = 30L,
+        ## > "timeout" = 30L,
         "warn" = 1L,
         ## Set to maximum supported length.
         "warning.length" = 8170L
