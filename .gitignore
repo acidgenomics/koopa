@@ -1,4 +1,5 @@
-cellar/
-coverage/
-dotfiles/
-opt/
+/app/
+/cellar/
+/coverage/
+/dotfiles/
+/opt/
