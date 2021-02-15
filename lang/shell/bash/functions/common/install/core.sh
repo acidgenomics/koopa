@@ -5,7 +5,7 @@
 # FIXME CREATE LINK INTO OPT PREFIX AND THEN SYMLINK INTO MAKE PREFIX FROM THERE.
 # FIXME REAPPROACH THIS USING EXPORTED GLOBALS FOR THE PATHS?.
 
-koopa::_install_app() { # {{{1
+koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
     # @note Updated 2020-11-23.
