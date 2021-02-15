@@ -58,6 +58,10 @@ koopa::install_ruby_packages() { # {{{1
         gems=("$@")
     fi
     koopa::dl 'Gems' "$(koopa::to_string "${gems[@]}")"
+    if koopa::is_shared_install
+    then
+        gem update --system
+    fi
     for gem in "${gems[@]}"
     do
         gem install "$gem"
