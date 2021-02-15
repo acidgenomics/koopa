@@ -507,7 +507,7 @@ koopa::is_set() { # {{{1
         x="$(declare -p "$var" 2>/dev/null || true)"
         [[ -n "${x:-}" ]] || return 1
         # Check if variable contains non-empty value.
-        value="${!var}"
+        value="${!var}" || return 1
         [[ -n "${value:-}" ]] || return 1
     done
     return 0
