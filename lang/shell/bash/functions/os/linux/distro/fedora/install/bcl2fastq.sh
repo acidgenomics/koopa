@@ -48,7 +48,7 @@ koopa::_fedora_install_bcl2fastq_from_rpm() { # {{{
         koopa::sys_ln -t "${make_prefix}/bin" "${prefix}/bin/bcl2fastq"
     )
     koopa::rm "$tmp_dir"
-    koopa::link_opt "$prefix" "$name"
+    koopa::link_into_opt "$prefix" "$name"
     koopa::install_success "$name"
     return 0
 }

@@ -87,7 +87,7 @@ koopa::_install_conda() { # {{{1
         "${prefix}/.condarc"
     koopa::delete_broken_symlinks "$prefix"
     koopa::sys_set_permissions -r "$prefix"
-    koopa::link_opt "$prefix" 'conda'
+    koopa::link_into_opt "$prefix" 'conda'
     koopa::install_success "$name_fancy"
     koopa::restart
     return 0

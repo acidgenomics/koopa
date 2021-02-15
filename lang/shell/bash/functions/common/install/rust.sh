@@ -38,7 +38,7 @@ koopa::install_rust() { # {{{1
         koopa::note "${name_fancy} is already installed at '${prefix}'."
         return 0
     fi
-    koopa::link_opt "$prefix" "$name"
+    koopa::link_into_opt "$prefix" "$name"
     CARGO_HOME="$(koopa::rust_cargo_prefix)"
     RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
     export CARGO_HOME
