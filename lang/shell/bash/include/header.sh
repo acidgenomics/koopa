@@ -23,6 +23,19 @@ _koopa_bash_header() { # {{{1
         shopts=0
         export KOOPA_ACTIVATE=1
         export KOOPA_INTERACTIVE=1
+    else
+        # Globally support '--verbose' flag.
+        while (("$#"))
+        do
+            case "$1" in
+                --verbose)
+                    verbose=1
+                    shift 1
+                    ;;
+                *)
+                    ;;
+            esac
+        done
     fi
     if [[ "$shopts" -eq 1 ]]
     then
