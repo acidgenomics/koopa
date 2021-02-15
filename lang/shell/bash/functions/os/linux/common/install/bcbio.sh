@@ -128,6 +128,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
                 shift 1
                 ;;
             *)
+                echo "ARGH"
                 koopa::invalid_arg "$1"
                 ;;
         esac
