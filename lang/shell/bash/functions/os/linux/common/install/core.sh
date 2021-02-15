@@ -39,7 +39,7 @@ koopa::linux_find_app_symlinks() { # {{{1
     # Automatically detect version, if left unset.
     app_prefix="$(koopa::app_prefix)/${name}"
     koopa::assert_is_dir "$app_prefix"
-    # FIXME NEED TO MAKE THIS INTO A SHARED FUNCTION?
+    # NOTE Consider making this in a function that we can share on macOS.
     if [[ -n "$version" ]]
     then
         app_prefix="${app_prefix}/${version}"

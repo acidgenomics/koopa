@@ -2,7 +2,7 @@
 
 # FIXME RENAME THIS TO INSTALL APP.
 # FIXME CREATE LINK INTO OPT PREFIX AND THEN SYMLINK INTO MAKE PREFIX FROM THERE.
-# FIXME REAPPROACH THIS USING EXPORTED GLOBALS.
+# FIXME REAPPROACH THIS USING EXPORTED GLOBALS FOR THE PATHS?.
 
 koopa::_install_app() { # {{{1
     # """
@@ -18,6 +18,7 @@ koopa::_install_app() { # {{{1
     include_dirs=
     # FIXME Simply rename to 'link' here?
     link_app=1
+    # FIXME REWORK THIS AND ALLOW LINKS INTO OPT ON MACOS?
     if koopa::is_macos
     then
         koopa::note 'App links are not supported on macOS.'
@@ -140,8 +141,7 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
-# FIXME REWORK, SYMLINKING FROM OPT (LIKE HOMEBREW) INSTEAD.
-
+# FIXME REWORK, SYMLINKING INTO USR/LOCAL FROM OPT (LIKE HOMEBREW) INSTEAD.
 koopa::link_app() { # {{{1
     # """
     # Symlink application into build directory.
