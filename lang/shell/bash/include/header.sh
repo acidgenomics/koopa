@@ -51,7 +51,7 @@ _koopa_bash_header() { # {{{1
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
         header_path="${BASH_SOURCE[0]}"
-        if [ -L "$header_path" ]
+        if [[ -L "$header_path" ]]
         then
             header_path="$(_koopa_realpath "$header_path")"
         fi
@@ -101,7 +101,7 @@ _koopa_bash_header() { # {{{1
 }
 
 _koopa_realpath() { # {{{1
-    if [ "$(uname -s)" = 'Darwin' ]
+    if [[ "$(uname -s)" = 'Darwin' ]]
     then
         perl -MCwd -e 'print Cwd::abs_path shift' "$1"
     else
