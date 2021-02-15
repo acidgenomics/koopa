@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# NOTE Consider just installing RNA-seq and not variant calling by default,
+# to speed up the installation.
 koopa::linux_install_bcbio() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2021-01-20.
+    # @note Updated 2021-02-15.
     # """
     local file install_dir name name_fancy prefix \
         python tmp_dir tools_dir url version
