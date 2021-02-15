@@ -54,7 +54,7 @@ koopa::install_lmod() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::update_lmod_config
-    koopa::link_opt "$prefix" "$name"
+    koopa::link_into_opt "$prefix" "$name"
     koopa::install_success "$name_fancy"
     return 0
 }
