@@ -40,7 +40,7 @@ koopa::install_ruby_packages() { # {{{1
     # @note Updated 2021-02-15.
     # """
     koopa::assert_has_no_envs
-    koopa::is_installed gem
+    if ! koopa::is_installed gem
     then
         koopa::note 'gem is not installed.'
         return 0
