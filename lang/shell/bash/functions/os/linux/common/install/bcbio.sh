@@ -60,20 +60,56 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # """
     # Install bcbio genome from Ensembl.
     # @note Updated 2021-02-15.
+    #
+    # @section Genome download:
+    #
+    # Use the 'download-ensembl-genome' script to simplify this step.
+    # This script prepares top-level standardized files named "genome.fa.gz"
+    # (FASTA) and "annotation.gtf.gz" (GTF) that we can pass to bcbio script.
+    #
+    # @examples
+    # organism='Homo sapiens'
+    # build='GRCh38'
+    # release='102'
+    # download-ensembl-genome \
+    #     --organism="$organism" \
+    #     --build="$build" \
+    #     --release="$release"
+    # genome_dir='homo-sapiens-grch38-ensembl-102'
+    # # bcbio expects the genome FASTA, not the transcriptome.
+    # # e.g. "Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz".
+    # fasta="${genome_dir}/genome.fa.gz"
+    # # GTF is easier to parse than GFF3.
+    # # e.g. "Homo_sapiens.GRCh38.102.gtf.gz".
+    # gtf="${genome_dir}/annotation.gtf.gz"
+    # # Now we're ready to call the install script.
+    # install-bcbio-ensembl-genome \
+    #     --build="$build" \
+    #     --fasta="$fasta" \
+    #     --gtf="$gtf" \
+    #     --indexes="bowtie2 seq star" \
+    #     --organism="$organism" \
+    #     --release="$release"
     # """
     local bcbio_genome_name bcbio_species_dir build cores fasta \
-        genome_downloader genome_installer gtf indexes organism release \
-        tmp_dir tmp_genome_dir
+        genome_installer gtf indexes organism release tmp_dir
     koopa::assert_has_args "$#"
-    genome_downloader='download-ensembl-genome'
     genome_installer='bcbio_setup_genome.py'
-    koopa::assert_is_installed "$genome_downloader" "$genome_installer" \
+    koopa::assert_is_installed "$genome_installer" \
         'awk' 'du' 'find' 'head' 'sort' 'xargs'
     while (("$#"))
     do
         case "$1" in
             --build=*)
                 build="${1#*=}"
+                shift 1
+                ;;
+            --fasta)
+                fasta="${1#*=}"
+                shift 1
+                ;;
+            --gtf)
+                gtf="${1#*=}"
                 shift 1
                 ;;
             --indexes=*)
@@ -93,7 +129,10 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set build organism release
+    koopa::assert_is_set build fasta gtf organism release
+    koopa::assert_is_file "$fasta" "$gtf"
+    fasta="$(realpath "$fasta")"
+    gtf="$(realpath "$gtf")"
     [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
     # Convert string to array.
     indexes=("$indexes")
@@ -117,30 +156,16 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     cores="$(koopa::cpu_count)"
     (
         koopa::cd "$tmp_dir"
-        tmp_genome_dir='ensembl-genome'
-        # FIXME ENSURE THIS WORKS, ONCE WE INSTALL BCBIO.
-        "$genome_downloader" \
-            --organism="$organism" \
-            --build="$build" \
-            --release="$release" \
-            --type='genome' \
-            --annotation='gtf' \
-            --output-dir="$tmp_genome_dir"
-        fasta="${tmp_genome_dir}/genome.fa.gz"
-        gtf="${tmp_genome_dir}/annotation.gtf.gz"
-        koopa::assert_is_file "$fasta" "$gtf"
-        fasta="$(realpath "$fasta")"
-        gtf="$(realpath "$gtf")"
-        koopa::dl 'FASTA file' "$(basename "$fasta")"
-        koopa::dl 'GTF file' "$(basename "$gtf")"
+        koopa::dl 'FASTA file' "$fasta"
+        koopa::dl 'GTF file' "$gtf"
         koopa::dl 'Indexes' "${indexes[*]}"
         "$genome_installer" \
-            --name "$bcbio_species_dir" \
             --build "$bcbio_genome_name" \
             --cores "$cores" \
             --fasta "$fasta" \
             --gtf "$gtf" \
-            --indexes "${indexes[@]}"
+            --indexes "${indexes[@]}" \
+            --name "$bcbio_species_dir"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::install_success "$bcbio_genome_name"
