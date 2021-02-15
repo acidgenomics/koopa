@@ -165,6 +165,8 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     koopa::mkdir "$tool_data_prefix"
     touch "${tool_data_prefix}/sam_fa_indices.log"
     (
+        # This step will download cloudbiolinux, so migrating to a temporary
+        # directory is helpful, to avoid clutter.
         set -x
         koopa::cd "$tmp_dir"
         koopa::dl 'FASTA file' "$fasta"
