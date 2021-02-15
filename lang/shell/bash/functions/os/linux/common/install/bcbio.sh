@@ -170,6 +170,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         koopa::dl 'FASTA file' "$fasta"
         koopa::dl 'GTF file' "$gtf"
         koopa::dl 'Indexes' "${indexes[*]}"
+        # Note that '--buildversion' was added in 2021 and is now required.
         "$script" \
             --build "$build" \
             --buildversion "${provider}_${release}" \
