@@ -138,7 +138,7 @@ koopa::linux_configure_system() { # {{{1
                 mode='bioconductor'
                 shift 1
                 ;;
-            --default|--recommended)
+            --default)
                 mode='default'
                 shift 1
                 ;;
@@ -148,6 +148,10 @@ koopa::linux_configure_system() { # {{{1
                 ;;
             --minimal)
                 mode='minimal'
+                shift 1
+                ;;
+            --recommended)
+                mode='default'
                 shift 1
                 ;;
             # Other variables --------------------------------------------------
