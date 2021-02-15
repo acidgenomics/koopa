@@ -155,6 +155,8 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     )"
     tmp_dir="$(koopa::tmp_dir)"
     cores="$(koopa::cpu_count)"
+    bcbio_genome_name="${organism} Ensembl ${build} ${release}"
+    koopa::install_start "$bcbio_genome_name"
     (
         set -x
         koopa::cd "$tmp_dir"
