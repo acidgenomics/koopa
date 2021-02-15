@@ -68,6 +68,8 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # (FASTA) and "annotation.gtf.gz" (GTF) that we can pass to bcbio script.
     #
     # @examples
+    # Ensure bcbio is in PATH.
+    # export PATH="/opt/koopa/opt/bcbio-nextgen/tools/bin:${PATH}"
     # organism='Homo sapiens'
     # build='GRCh38'
     # release='102'
@@ -83,7 +85,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # # e.g. "Homo_sapiens.GRCh38.102.gtf.gz".
     # gtf="${genome_dir}/annotation.gtf.gz"
     # # Now we're ready to call the install script.
-    # install-bcbio-ensembl-genome \
+    # koopa install bcbio-ensembl-genome \
     #     --build="$build" \
     #     --fasta="$fasta" \
     #     --gtf="$gtf" \
@@ -129,11 +131,11 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set build fasta gtf organism release
+    [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
+    koopa::assert_is_set build fasta gtf indexes organism release
     koopa::assert_is_file "$fasta" "$gtf"
     fasta="$(realpath "$fasta")"
     gtf="$(realpath "$gtf")"
-    [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
     # Convert string to array.
     indexes=("$indexes")
     # Check for valid organism input.
