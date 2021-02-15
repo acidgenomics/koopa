@@ -12,7 +12,7 @@
 # - https://stackoverflow.com/questions/5302650/
 # """
 
-_koopa_complete() {
+_koopa_complete() { # {{{1
     local args cur prev
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
