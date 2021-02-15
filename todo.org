@@ -12,5 +12,6 @@
 ** TODO Add support for Shiny Server installation on Fedora.
 ** TODO Work on Fix macOS install script for Catalina.
 * Documentation
+** TODO Need to systematically check all exported scripts for documentation.
 ** TODO Need to explain which programs are automatically supported and get
         activated by default more clearly.
