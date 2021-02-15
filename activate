@@ -21,6 +21,8 @@ _koopa_activate() { # {{{1
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
         printf '%s\n' 'Test mode enabled.'
+        # NOTE These 'set' calls currently cause oil shell to error.
+        # Oil still seems to be a bit rough around the edges supporting POSIX.
         set -o errexit
         set -o nounset
         # > set -o xtrace
