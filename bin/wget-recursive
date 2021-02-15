@@ -1,30 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-_koopa_assert_is_installed wget
-
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_file="wget-${timestamp}.log"
-
-url="$1"
-user="$2"
-
-# Note that we need to escape the wildcards in the password.
-# For direct input, can just use single quotes to escape.
-# See also: https://unix.stackexchange.com/questions/379181
-password="$3"
-password="${password@Q}"
-
-wget \
-    --user="$user" \
-    --password="$password" \
-    --recursive \
-    --no-parent \
-    --continue \
-    --debug \
-    --output-file="$log_file" \
-    "$url"/*
+koopa::wget_recursive "$@"

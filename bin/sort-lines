@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../shell/bash/include/header.sh"
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
-_koopa_assert_is_installed vim
-
-vim -c :sort -c :wq -E -s "$1"
+koopa::sort_lines "$@"

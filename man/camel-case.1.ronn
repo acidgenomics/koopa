@@ -1,0 +1,50 @@
+# camel-case(1) - convert input into camel case
+
+## SYNOPSIS
+
+`camel-case` [`--rename`] [`--strict`] [`--prefix`] <string>|<file>...
+
+## DESCRIPTION
+
+Runs in string mode by default.
+File rename mode can be enabled by setting `--rename` flag.
+
+## OPTIONS
+
+  * `--rename`:
+    Rename input files.
+    Assumes we're renaming files in current working directory, but also supports
+    explicit and/or mixed file paths.
+    Doesn't work recursively.
+
+  * `--strict`:
+    Enforce strict camel case output, coercing acronyms.
+    For example, 'geneID' becomes 'geneId'.
+
+  * `--prefix`:
+    Include 'x' prefix for names that are syntactically invalid in R.
+    Note that this includes input beginning with a number.
+    Disabled by default.
+
+## NOTE
+
+Bash script that calls `Rscript` internally.
+Requires the syntactic package to be installed.
+
+## SEE ALSO
+
+[syntactic R package](https://syntactic.acidgenomics.com/)
+
+## EXAMPLES
+
+    $ camel-case 'hello world' 'foo bar'
+    ## helloWorld fooBar
+
+    $ camel-case --strict 'gene ID'
+    ## geneId
+
+    $ camel-case --rename 'foo-bar.fastq.gz'
+    ## ./fooBar.fastq.gz
+
+    $ camel-case --rename --prefix '1-control-A.fastq.gz'
+    ## ./x1ControlA.fastq.gz

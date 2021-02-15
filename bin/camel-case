@@ -1,36 +1,6 @@
-#!/usr/bin/env Rscript
+#!/usr/bin/env bash
 
-args <- commandArgs()
-whichFile <- grep(pattern = "--file", x = args)
-file <- args[whichFile]
-file <- sub(pattern = "^--file=", replacement = "", x = file)
-koopaPrefix <- normalizePath(dirname(dirname(file)))
-source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
-library(syntactic)
+# shellcheck source=/dev/null
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-prefix <- FALSE
-recursive <- FALSE
-strict <- FALSE
-
-args <- parseArgs(
-    positional = TRUE,
-    validFlags = c("prefix", "recursive", "strict")
-)
-
-if ("--prefix" %in% args) {
-    prefix <- TRUE
-}
-if ("--recursive" %in% args) {
-    recursive <- TRUE
-}
-if ("--strict" %in% args) {
-    strict <- TRUE
-}
-
-camelCase(
-    object = positionalArgs(),
-    rename = TRUE,
-    recursive = recursive,
-    strict = strict,
-    prefix = prefix
-)
+koopa::camel_case "$@"

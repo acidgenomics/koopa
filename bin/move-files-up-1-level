@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../shell/bash/include/header.sh"
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-dir="${1:-"."}"
-
-(
-    cd "$dir" || exit 1
-    find . -type f -mindepth 2 -exec mv {} . \;
-    find . -mindepth 2
-    find . -type d -delete -print
-)
+koopa::move_files_up_1_level "$@"
