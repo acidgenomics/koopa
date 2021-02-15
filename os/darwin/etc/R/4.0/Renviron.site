@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2021-01-28.
+## Updated 2021-02-15.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -39,7 +39,8 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 ## gfortran 8.2 (for R 4.0+).
 PATH="/usr/local/gfortran/bin:${PATH}"
 
-## Python site packages.
+## Python binaries and site packages.
+PATH="${HOMEBREW_OPT_PREFIX}/python@3.9/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/python/site-packages/bin:${PATH}"
 
 ## Conda binary.
