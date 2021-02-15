@@ -1,15 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../shell/bash/include/header.sh"
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed "curl"
-
-version="$( \
-    curl --silent "ftp://ftp.ensembl.org/pub/current_README" \
-    | sed -n 3p \
-    | cut -d ' ' -f 3 \
-)"
-_koopa_print "$version"
+koopa::current_ensembl_version "$@"

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
+
+koopa::test_conda() {
+    # """
+    # Conda environment test script.
+    # @note Updated 2021-02-17.
+    # """
+    local kallisto_version salmon_version
+    kallisto_version="$(koopa::variable 'conda-kallisto')"
+    salmon_version="$(koopa::variable 'conda-salmon')"
+    koopa::h1 'Testing conda environment loading.'
+    koopa::conda_create_env \
+        "kallisto@${kallisto_version}" \
+        "salmon@${salmon_version}"
+    koopa::activate_conda_env 'kallisto'
+    kallisto version
+    koopa::deactivate_conda
+    koopa::activate_conda_env "kallisto@${kallisto_version}"
+    kallisto version
+    koopa::deactivate_conda
+    koopa::activate_conda_env 'salmon'
+    salmon --version
+    koopa::deactivate_conda
+    koopa::activate_conda_env "salmon@${salmon_version}"
+    salmon --version
+    koopa::deactivate_conda
+    koopa::success 'Conda environments loaded successfully.'
+    return 0
+}
+
+koopa::test_conda "$@"

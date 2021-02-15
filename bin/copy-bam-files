@@ -1,29 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../shell/bash/include/header.sh"
+. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
-
-source_dir="$1"
-_koopa_assert_is_dir "$source_dir"
-source_dir="$(realpath "$source_dir")"
-
-target_dir="$2"
-_koopa_assert_is_dir "$target_dir"
-target_dir="$(realpath "$target_dir")"
-
-_koopa_h1 "\
-Source: '${source_dir}'
-Target: '${target_dir}'\
-"
-
-find -L "$source_dir" \
-    -maxdepth 4 \
-    -type f \
-    \( -name "*.bam" -or -name "*.bam.bai" \) \
-    ! -name "*-transcriptome.bam" \
-    ! -path "*/work/*" \
-    -print0 | xargs -0 -I {} \
-        rsync --size-only --progress {} "${target_dir}/"
+koopa::copy_bam_files "$@"

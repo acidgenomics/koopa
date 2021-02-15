@@ -1,5 +1,5 @@
-app/
-coverage/
-dotfiles/
-opt/
-.Rproj.user
+/app/
+/cellar/
+/coverage/
+/dotfiles/
+/opt/
