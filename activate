@@ -247,8 +247,7 @@ _koopa_activate_export_minimal() { # {{{1
     unset -v minimal
     if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
     then
-        # Previously used '\b' in grep match, but this errors for oil shell.
-        if printf '%s\n' "${KOOPA_USERS_MINIMAL:?}" | grep -Eq "${USER:?}"
+        if printf '%s\n' "${KOOPA_USERS_MINIMAL:?}" | grep -Eq "\b${USER:?}\b"
         then
             KOOPA_MINIMAL=1
         fi
@@ -452,8 +451,7 @@ _koopa_is_user_named_admin() { # {{{1
 
 _koopa_is_user_skip() { # {{{1
     [ -z "${KOOPA_USERS_SKIP:-}" ] && return 1
-    # NOTE Previously used '\b' in grep match, but this errors for oil shell.
-    printf '%s\n' "${KOOPA_USERS_SKIP:?}" | grep -Eq "${USER:?}"
+    printf '%s\n' "${KOOPA_USERS_SKIP:?}" | grep -Eq "\b${USER:?}\b"
 }
 
 _koopa_preflight_checks() { # {{{1
