@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME OIL SHELL IS HITTING INVALID LOCAL FOR LCCTYPE.
+
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
@@ -23,16 +25,16 @@ _koopa_activate() { # {{{1
         # NOTE These 'set -o' calls currently can cause oil shell to error.
         # Oil still seems to be a bit rough around the edges supporting POSIX.
         printf '%s\n' 'Test mode enabled.'
-        set -o errexit
-        set -o nounset
-        set -o xtrace
-        if [ "${KOOPA_SHELL:?}" = 'bash' ]
-        then
+        # > set -o errexit  # FIXME oil
+        # > set -o nounset  # FIXME oil
+        # > set -o xtrace  # FIXME oil
+        # > if [ "${KOOPA_SHELL:?}" = 'bash' ]
+        # > then
             # shellcheck disable=SC2039
-            set -o errtrace
+            # > set -o errtrace  # FIXME oil
             # shellcheck disable=SC2039
-            set -o pipefail
-        fi
+            # > set -o pipefail  # FIXME oil
+        # > fi
         export KOOPA_MINIMAL=0
     fi
     _koopa_activate_export_prefix || return 1
@@ -114,18 +116,18 @@ _koopa_activate() { # {{{1
     fi
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
-        set +o errexit
-        set +o nounset
-        # > set +o xtrace
-        if [ "${KOOPA_SHELL:?}" = 'bash' ]
-        then
+        # > set +o errexit  # FIXME oil
+        # > set +o nounset  # FIXME oil
+        # > set +o xtrace  # FIXME oil
+        # > if [ "${KOOPA_SHELL:?}" = 'bash' ]
+        # > then
             # shellcheck disable=SC2039
-            set +o errtrace
+            # > set +o errtrace  # FIXME oil
             # shellcheck disable=SC2039
-            set +o pipefail
-        fi
-        _koopa_h1 'Shell options'
-        set +o
+            # > set +o pipefail  # FIXME oil
+        # > fi
+        # > _koopa_h1 'Shell options'
+        # > set +o  # FIXME
         _koopa_h1 'Shell variables'
         _koopa_dl \
             '-' "$-" \
@@ -244,7 +246,8 @@ _koopa_activate_export_minimal() { # {{{1
     unset -v minimal
     if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
     then
-        if printf '%s\n' "${KOOPA_USERS_MINIMAL:?}" | grep -Eq "\b${USER:?}\b"
+        # Previously used '\b' in grep match, but this errors for oil shell.
+        if printf '%s\n' "${KOOPA_USERS_MINIMAL:?}" | grep -Eq "${USER:?}"
         then
             KOOPA_MINIMAL=1
         fi
@@ -257,28 +260,19 @@ _koopa_activate_export_opt_prefix() { # {{{1
     # This value is picked up in R configuration (for reticulate).
     KOOPA_OPT_PREFIX="$(_koopa_opt_prefix)"
     export KOOPA_OPT_PREFIX
+    return 0
 }
 
 _koopa_activate_export_prefix() { # {{{1
     case "${KOOPA_SHELL:?}" in
         bash)
-            # shellcheck disable=SC2039
-            KOOPA_ACTIVATE_SCRIPT="${BASH_SOURCE[0]}"
+            KOOPA_ACTIVATE_SCRIPT="$(_koopa_activate_source_bash)"
             ;;
         zsh)
-            # Use '%x' not '%N' when called inside function.
-            # https://stackoverflow.com/a/23259585/3911732
-            KOOPA_ACTIVATE_SCRIPT="${(%):-%x}"
+            KOOPA_ACTIVATE_SCRIPT="$(_koopa_activate_source_zsh)"
             ;;
         *)
-            # POSIX doesn't support file path resolution of sourced dot scripts.
-            if [ ! -d "${KOOPA_PREFIX:?}" ] && _koopa_is_interactive
-            then
-                printf 'ERROR: Failed to locate koopa activation script.\n' >&2
-                printf 'Required KOOPA_PREFIX variable is unset.\n' >&2
-                return 1
-            fi
-            KOOPA_ACTIVATE_SCRIPT="${KOOPA_PREFIX:?}/activate"
+            KOOPA_ACTIVATE_SCRIPT="$(_koopa_activate_source_posix)"
             ;;
     esac
     if [ ! -x "$KOOPA_ACTIVATE_SCRIPT" ]
@@ -322,16 +316,6 @@ _koopa_activate_export_test() { # {{{1
     return 0
 }
 
-_koopa_activate_skip_check() { # {{{1
-    [ -n "${KOOPA_FORCE:-}" ] && return 0
-    [ -n "${KOOPA_SKIP:-}" ] || return 1
-    _koopa_is_interactive || return 1
-    _koopa_is_user_named_admin && return 1
-    _koopa_is_user_skip && return 1
-    _koopa_is_koopa_active && return 1
-    return 0
-}
-
 _koopa_activate_header() { # {{{1
     # shellcheck disable=SC2039
     local header
@@ -343,6 +327,42 @@ _koopa_activate_header() { # {{{1
         header="${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     fi
     printf '%s\n' "$header"
+    return 0
+}
+
+_koopa_activate_skip_check() { # {{{1
+    [ -n "${KOOPA_FORCE:-}" ] && return 0
+    [ -n "${KOOPA_SKIP:-}" ] || return 1
+    _koopa_is_interactive || return 1
+    _koopa_is_user_named_admin && return 1
+    _koopa_is_user_skip && return 1
+    _koopa_is_koopa_active && return 1
+    return 0
+}
+
+_koopa_activate_source_bash() { # {{{1
+    # shellcheck disable=SC2039
+    printf '%s\n' "${BASH_SOURCE[0]}"
+    return 0
+}
+
+_koopa_activate_source_posix() { # {{{1
+    # POSIX doesn't support file path resolution of sourced dot scripts.
+    if [ ! -d "${KOOPA_PREFIX:?}" ] && _koopa_is_interactive
+    then
+        printf 'ERROR: Failed to locate koopa activation script.\n' >&2
+        printf 'Required KOOPA_PREFIX variable is unset.\n' >&2
+        return 1
+    fi
+    printf '%s\n' "${KOOPA_PREFIX:?}/activate"
+    return 0
+}
+
+_koopa_activate_source_zsh() { # {{{1
+    # FIXME THIS ERRORS FOR OIL SHELL PARSER.
+    # Use '%x' not '%N' when called inside function.
+    # https://stackoverflow.com/a/23259585/3911732
+    printf '%s\n' "${(%):-%x}"
     return 0
 }
 
@@ -432,7 +452,8 @@ _koopa_is_user_named_admin() { # {{{1
 
 _koopa_is_user_skip() { # {{{1
     [ -z "${KOOPA_USERS_SKIP:-}" ] && return 1
-    printf '%s\n' "${KOOPA_USERS_SKIP:?}" | grep -Eq "\b${USER:?}\b"
+    # NOTE Previously used '\b' in grep match, but this errors for oil shell.
+    printf '%s\n' "${KOOPA_USERS_SKIP:?}" | grep -Eq "${USER:?}"
 }
 
 _koopa_preflight_checks() { # {{{1
