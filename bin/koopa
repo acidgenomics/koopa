@@ -16,8 +16,8 @@ then
     bash_source="$(koopa::realpath "$bash_source")"
 fi
 
-unset KOOPA_ACTIVATE
 # shellcheck source=/dev/null
-. "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
+KOOPA_ACTIVATE=0 \
+    . "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
 
 koopa::koopa "$@"
