@@ -145,9 +145,9 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # Sanitize spaces into underscores.
     # Use bash built-in rather than sed, when possible.
     organism="${organism// /_}"
-    source='Ensembl'
-    bcbio_genome_name="${build}-${source}-${release}"
-    koopa::install_start "$bcbio_genome_name"
+    # > source='Ensembl'
+    # > bcbio_genome_name="${build}-${source}-${release}"
+    # > koopa::install_start "$bcbio_genome_name"
     # e.g. 'Hsapiens'.
     bcbio_species_dir="$( \
         koopa::print "$organism" \
@@ -162,7 +162,8 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         koopa::dl 'GTF file' "$gtf"
         koopa::dl 'Indexes' "${indexes[*]}"
         "$genome_installer" \
-            --build "$bcbio_genome_name" \
+            --build "$build" \
+            --buildversion "Ensembl_${release}" \
             --cores "$cores" \
             --fasta "$fasta" \
             --gtf "$gtf" \
