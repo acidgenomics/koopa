@@ -50,7 +50,7 @@ koopa::install_cellar() { # {{{1
     # """
     # @note Updated 2020-11-23.
     # """
-    koopa::defunct 'koopa::_install_app'
+    koopa::defunct 'koopa::install_app'
 }
 
 koopa::is_darwin() { # {{{1

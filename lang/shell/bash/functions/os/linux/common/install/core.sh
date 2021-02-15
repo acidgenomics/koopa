@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::_linux_install_app() { # {{{1
-    # """
-    # Install Linux-specific application.
-    # @note Updated 2020-11-18.
-    # """
-    local script_prefix
-    script_prefix="$(koopa::prefix)/os/linux/common/include/install"
-    koopa::_install_app --script-prefix="$script_prefix" "$@"
-    return 0
-}
-
 koopa::linux_delete_broken_app_symlinks() { # {{{1
     # """
     # Delete broken application symlinks.
@@ -22,6 +11,7 @@ koopa::linux_delete_broken_app_symlinks() { # {{{1
     return 0
 }
 
+# NOTE Consider making this in a function that we can share on macOS.
 koopa::linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
@@ -39,7 +29,6 @@ koopa::linux_find_app_symlinks() { # {{{1
     # Automatically detect version, if left unset.
     app_prefix="$(koopa::app_prefix)/${name}"
     koopa::assert_is_dir "$app_prefix"
-    # NOTE Consider making this in a function that we can share on macOS.
     if [[ -n "$version" ]]
     then
         app_prefix="${app_prefix}/${version}"
@@ -64,5 +53,16 @@ koopa::linux_find_app_symlinks() { # {{{1
     do
         koopa::print "${file//$app_prefix/$make_prefix}"
     done
+    return 0
+}
+
+koopa::linux_install_app() { # {{{1
+    # """
+    # Install Linux-specific application.
+    # @note Updated 2021-02-15.
+    # """
+    local script_prefix
+    script_prefix="$(koopa::prefix)/os/linux/common/include/install"
+    koopa::install_app --script-prefix="$script_prefix" "$@"
     return 0
 }
