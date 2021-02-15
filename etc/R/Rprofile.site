@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-01-28.
+## Updated 2021-02-15.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -352,35 +352,32 @@ local({
     local({
         repos <- getOption("repos")
         if (isTRUE(.rprofile[["linux"]])) {
-            ## > repos[["CRAN"]] <-
-            ## >     "https://packagemanager.rstudio.com/all/36893"
+            ## Configure the RSPM CRAN snapshot.
             repos[["CRAN"]] <-
-                "https://packagemanager.rstudio.com/cran/2020-12-01"
+                "https://packagemanager.rstudio.com/cran/2021-02-10"
+            ## Configure the RSPM Bioconductor mirror repo.
+            options(
+               "BioC_mirror" =
+                   "https://packagemanager.rstudio.com/bioconductor"
+            )
         } else {
             ## Alternatively, can use:
-            ## - https://cloud.r-project.org
-            ## - https://cran.rstudio.com
-            ## - or "all" here instead of "cran"
-            ## > repos[["CRAN"]] <-
-            ## >     "https://packagemanager.rstudio.com/cran/latest"
             ## > repos[["CRAN"]] <-
             ## >     "https://cran.rstudio.com"
+            ## > repos[["CRAN"]] <-
+            ## >     "https://packagemanager.rstudio.com/cran/latest"
             repos[["CRAN"]] <-
                 "https://cloud.r-project.org"
         }
-        ## Always include Acid Genomics repo.
+        ## Always include our Acid Genomics repo.
         repos[["AcidGenomics"]] <-
             "https://r.acidgenomics.com"
+        ## Yihui Xie's repo has some extra binary builds for macOS.
         ## > if (isTRUE(.rprofile[["macos"]])) {
         ## >    repos[["CRANextra"]] <-
         ## >        "https://macos.rbind.io"
         ## > }
         options("repos" = repos)
-        ## Configure the Bioconductor mirror repo.
-        ## > options(
-        ## >    "BioC_mirror" =
-        ## >        "https://packagemanager.rstudio.com/bioconductor"
-        ## > )
         ## Allow Bioconductor to work offline.
         ## Note that this will warn when enabled.
         ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
