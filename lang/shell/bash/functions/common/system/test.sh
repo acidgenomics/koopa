@@ -42,6 +42,7 @@ koopa::test_find_files() { # {{{1
             -not -name '.pylintrc' \
             -not -path "$(koopa::app_prefix)/*" \
             -not -path "$(koopa::opt_prefix)/*" \
+            -not -path "${prefix}/.*" \
             -not -path "${prefix}/.git/*" \
             -not -path "${prefix}/app/*" \
             -not -path "${prefix}/cellar/*" \
@@ -50,6 +51,7 @@ koopa::test_find_files() { # {{{1
             -not -path "${prefix}/lang/r/.Rproj.user/*" \
             -not -path "${prefix}/opt/*" \
             -not -path "${prefix}/tests/*" \
+            -not -path "${prefix}/todo.org" \
             -not -path "${prefix}/workflows/*" \
             -not -path '*/etc/R/*' \
             -print \
@@ -105,7 +107,7 @@ koopa::test_find_files_by_shebang() { # {{{1
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
-    # @note Updated 2020-07-24.
+    # @note Updated 2021-02-15.
     #
     # Requires Perl-compatible regular expression (PCRE) support (-P).
     # """
@@ -132,7 +134,6 @@ koopa::test_grep() { # {{{1
     done
     shift "$((OPTIND-1))"
     koopa::assert_has_args "$#"
-    koopa::assert_is_set name pattern
     koopa::assert_is_installed grep
     failures=()
     for file in "$@"
