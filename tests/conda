@@ -6,22 +6,25 @@
 koopa::test_conda() {
     # """
     # Conda environment test script.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-02-17.
     # """
+    local kallisto_version salmon_version
+    kallisto_version="$(koopa::variable 'conda-kallisto')"
+    salmon_version="$(koopa::variable 'conda-salmon')"
     koopa::h1 'Testing conda environment loading.'
     koopa::conda_create_env \
-        'kallisto@0.46.2' \
-        'salmon@1.3.0'
+        "kallisto@${kallisto_version}" \
+        "salmon@${salmon_version}"
     koopa::activate_conda_env 'kallisto'
     kallisto version
     koopa::deactivate_conda
-    koopa::activate_conda_env 'kallisto@0.46.2'
+    koopa::activate_conda_env "kallisto@${kallisto_version}"
     kallisto version
     koopa::deactivate_conda
     koopa::activate_conda_env 'salmon'
     salmon --version
     koopa::deactivate_conda
-    koopa::activate_conda_env 'salmon@1.3.0'
+    koopa::activate_conda_env "salmon@${salmon_version}"
     salmon --version
     koopa::deactivate_conda
     koopa::success 'Conda environments loaded successfully.'
