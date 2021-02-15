@@ -340,8 +340,7 @@ local({
     ## See also:
     ## - https://macos.rbind.io/
     ## - https://github.com/yihui/homebrew-cran-extra
-    ## - https://github.com/yihui/homebrew-cran-extra/tree/
-    ##       gh-pages/bin/macosx
+    ## - https://github.com/yihui/homebrew-cran-extra/tree/gh-pages/bin/macosx
     ## - https://yihui.org/en/2018/06/homebrew-binary-r-packages/
     ##
     ## CRAN snapshots for previous Bioconductor releases:
@@ -353,25 +352,35 @@ local({
     local({
         repos <- getOption("repos")
         if (isTRUE(.rprofile[["linux"]])) {
-            ## > repos[["CRAN"]] <- "https://packagemanager.rstudio.com/all/36893"
-            repos[["CRAN"]] <- "https://packagemanager.rstudio.com/cran/2020-12-01"
+            ## > repos[["CRAN"]] <-
+            ## >     "https://packagemanager.rstudio.com/all/36893"
+            repos[["CRAN"]] <-
+                "https://packagemanager.rstudio.com/cran/2020-12-01"
         } else {
             ## Alternatively, can use:
             ## - https://cloud.r-project.org
             ## - https://cran.rstudio.com
             ## - or "all" here instead of "cran"
-            ## > repos[["CRAN"]] <- "https://packagemanager.rstudio.com/cran/latest"
-            ## > repos[["CRAN"]] <- "https://cran.rstudio.com"
-            repos[["CRAN"]] <- "https://cloud.r-project.org"
+            ## > repos[["CRAN"]] <-
+            ## >     "https://packagemanager.rstudio.com/cran/latest"
+            ## > repos[["CRAN"]] <-
+            ## >     "https://cran.rstudio.com"
+            repos[["CRAN"]] <-
+                "https://cloud.r-project.org"
         }
         ## Always include Acid Genomics repo.
-        repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
+        repos[["AcidGenomics"]] <-
+            "https://r.acidgenomics.com"
         ## > if (isTRUE(.rprofile[["macos"]])) {
-        ## >     repos[["CRANextra"]] <- "https://macos.rbind.io"
+        ## >    repos[["CRANextra"]] <-
+        ## >        "https://macos.rbind.io"
         ## > }
         options("repos" = repos)
         ## Configure the Bioconductor mirror repo.
-        ## > options("BioC_mirror" = "https://packagemanager.rstudio.com/bioconductor")
+        ## > options(
+        ## >    "BioC_mirror" =
+        ## >        "https://packagemanager.rstudio.com/bioconductor"
+        ## > )
         ## Allow Bioconductor to work offline.
         ## Note that this will warn when enabled.
         ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
@@ -430,11 +439,6 @@ local({
     ## Also shows this warning:
     ## "WARNING: timestamping does nothing in combination with -0.
     ## See the manual for details.
-    ##
-    ## Can hit this cryptic error with BiocManager:
-    ## Error in readRDS(dest) : error reading from connection
-    ## Calls: install ... tryCatchList -> tryCatchOne -> 
-    ##     <Anonymous> -> .inet_error
     ##
     ## See also:
     ## - https://github.com/YuLab-SMU/wget/blob/master/R/wget.R

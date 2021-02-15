@@ -74,7 +74,7 @@ local({
     }
 
     #' R script header
-    #' 
+    #'
     #' @note Updated 2021-01-04.
     #' @noRd
     header <- function() {
