@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# FIXME OIL SHELL IS HITTING INVALID LOCAL FOR LCCTYPE.
-
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
@@ -22,19 +20,17 @@ _koopa_activate() { # {{{1
     _koopa_activate_export_test || return 1
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
-        # NOTE These 'set -o' calls currently can cause oil shell to error.
-        # Oil still seems to be a bit rough around the edges supporting POSIX.
         printf '%s\n' 'Test mode enabled.'
-        # > set -o errexit  # FIXME oil
-        # > set -o nounset  # FIXME oil
-        # > set -o xtrace  # FIXME oil
-        # > if [ "${KOOPA_SHELL:?}" = 'bash' ]
-        # > then
+        set -o errexit
+        set -o nounset
+        set -o xtrace
+        if [ "${KOOPA_SHELL:?}" = 'bash' ]
+        then
             # shellcheck disable=SC2039
-            # > set -o errtrace  # FIXME oil
+            set -o errtrace
             # shellcheck disable=SC2039
-            # > set -o pipefail  # FIXME oil
-        # > fi
+            set -o pipefail
+        fi
         export KOOPA_MINIMAL=0
     fi
     _koopa_activate_export_prefix || return 1
@@ -116,23 +112,28 @@ _koopa_activate() { # {{{1
     fi
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
-        # > set +o errexit  # FIXME oil
-        # > set +o nounset  # FIXME oil
-        # > set +o xtrace  # FIXME oil
-        # > if [ "${KOOPA_SHELL:?}" = 'bash' ]
-        # > then
+        set +o errexit
+        set +o nounset
+        set +o xtrace
+        if [ "${KOOPA_SHELL:?}" = 'bash' ]
+        then
             # shellcheck disable=SC2039
-            # > set +o errtrace  # FIXME oil
+            set +o errtrace
             # shellcheck disable=SC2039
-            # > set +o pipefail  # FIXME oil
-        # > fi
-        # > _koopa_h1 'Shell options'
-        # > set +o  # FIXME
+            set +o pipefail
+        fi
+        _koopa_h1 'Shell options'
+        set +o
         _koopa_h1 'Shell variables'
         _koopa_dl \
             '-' "$-" \
             '0' "$0" \
             'SHELL' "${SHELL:-}"
+        if _koopa_is_installed locale
+        then
+            _koopa_h1 'Locale'
+            locale
+        fi
         _koopa_activate_duration_stop
         _koopa_print ''
         if [ -n "${KOOPA_DURATION:-}" ]
@@ -359,7 +360,6 @@ _koopa_activate_source_posix() { # {{{1
 }
 
 _koopa_activate_source_zsh() { # {{{1
-    # FIXME THIS ERRORS FOR OIL SHELL PARSER.
     # Use '%x' not '%N' when called inside function.
     # https://stackoverflow.com/a/23259585/3911732
     printf '%s\n' "${(%):-%x}"
@@ -407,7 +407,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2021-01-01.
+    Updated 2021-02-15.
 END
 }
 
