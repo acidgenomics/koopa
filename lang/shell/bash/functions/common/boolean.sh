@@ -483,7 +483,6 @@ koopa::is_recent() { # {{{1
     return 0
 }
 
-# FIXME NEED TO IMPROVE THE ERROR MESSAGE HERE ON UNBOUND VARIABLES.
 koopa::is_set() { # {{{1
     # """
     # Is the variable set and non-empty?
@@ -506,10 +505,10 @@ koopa::is_set() { # {{{1
     do
         # Check if variable is defined.
         x="$(declare -p "$var" 2>/dev/null || true)"
-        [[ -n "$x" ]] || return 1
+        [[ -n "${x:-}" ]] || return 1
         # Check if variable contains non-empty value.
         value="${!var}"
-        [[ -n "$value" ]] || return 1
+        [[ -n "${value:-}" ]] || return 1
     done
     return 0
 }
