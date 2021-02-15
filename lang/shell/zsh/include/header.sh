@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+# koopa nolint=coreutils
 
 _koopa_zsh_header() { # {{{1
     # """
