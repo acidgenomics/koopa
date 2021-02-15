@@ -289,8 +289,6 @@ koopa::rscript() { # {{{1
     header_file="$(koopa::prefix)/lang/r/include/header.R"
     koopa::assert_is_file "$header_file"
     rscript="source('${header_file}')"
-    # Enable this for Bash-to-R handoff debugging.
-    # > rscript="commandArgs()"
     # The 'header' variable is currently used to simply load the shared R
     # script header and check that the koopa R package is installed cleanly.
     if [[ "$fun" != 'header' ]]
