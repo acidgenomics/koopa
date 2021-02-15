@@ -67,8 +67,8 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # @section Genome download:
     #
     # Use the 'download-ensembl-genome' script to simplify this step.
-    # This script prepares top-level standardized files named "genome.fa.gz"
-    # (FASTA) and "annotation.gtf.gz" (GTF) that we can pass to bcbio script.
+    # This script prepares top-level standardized files named 'genome.fa.gz'
+    # (FASTA) and 'annotation.gtf.gz' (GTF) that we can pass to bcbio script.
     #
     # @examples
     # Ensure bcbio is in PATH.
