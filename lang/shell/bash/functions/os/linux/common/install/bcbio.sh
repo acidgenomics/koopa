@@ -48,7 +48,7 @@ koopa::linux_install_bcbio() { # {{{1
         "$conda" clean --yes --tarballs
     fi
     koopa::sys_set_permissions -r "$prefix"
-    koopa::link_opt "$prefix" "$name"
+    koopa::link_into_opt "$prefix" "$name"
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -257,7 +257,7 @@ koopa::linux_install_bcbio_vm() { # {{{1
     # > image='quay.io/bcbio/bcbio-vc:latest'
     # > "${bin_dir}/bcbio_vm.py" --datadir="$data_dir" saveconfig
     # > "${bin_dir}/bcbio_vm.py" install --tools --image "$image"
-    koopa::link_opt "$prefix" "$name"
+    koopa::link_into_opt "$prefix" "$name"
     koopa::install_success "$name_fancy"
     return 0
 }
