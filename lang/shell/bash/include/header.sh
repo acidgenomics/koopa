@@ -55,13 +55,11 @@ _koopa_bash_header() { # {{{1
         )"
         export KOOPA_PREFIX
     fi
-    echo "FIXME 1"
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX}/lang/shell/posix/include/header.sh"
-    echo "FIXME 2"
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX}/lang/shell/bash/functions/activate.sh"
-    echo "FIXME 3"
+    # FIXME THIS DOESNT GET SET CORRECTLY INSIDE KOOPA CALL...
     if [[ "$activate" -eq 0 ]] || [[ "$dev" -eq 1 ]]
     then
         echo "FIXME 4"
