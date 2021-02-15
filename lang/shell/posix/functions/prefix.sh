@@ -14,12 +14,13 @@ _koopa_app_prefix() { # {{{1
     local prefix
     prefix="${KOOPA_APP_PREFIX:-}"
     # Don't allow this prefix to match the opt prefix.
-    [ -n "$prefix" ] && \
-        [ "$prefix" = "$(_koopa_opt_prefix)" ] && \
+    if [ -n "$prefix" ] && [ "$prefix" = "$(_koopa_opt_prefix)" ]
+    then
         prefix=
+    fi
     # Provide fallback support for existing installs using "cellar".
     # Otherwise, use "app" by default.
-    if [ -z "$prefix" ]
+    if [ -z "$prefix" ] && _koopa_is_linux
     then
         if [ -d "$(_koopa_make_prefix)/cellar" ]
         then
@@ -27,10 +28,9 @@ _koopa_app_prefix() { # {{{1
         elif [ -d "$(_koopa_prefix)/cellar" ]
         then
             prefix="$(_koopa_prefix)/cellar"
-        else
-            prefix="$(_koopa_prefix)/app"
         fi
     fi
+    [ -z "$prefix" ] && prefix="$(_koopa_prefix)/app"
     _koopa_print "$prefix"
     return 0
 }

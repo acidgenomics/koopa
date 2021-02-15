@@ -24,7 +24,7 @@ koopa::test() { # {{{1
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-02-15.
     # Not sorting here can speed the function up.
     # """
     koopa::assert_has_no_args "$#"
