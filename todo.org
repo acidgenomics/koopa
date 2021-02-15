@@ -1,0 +1,17 @@
+#+TITLE: koopa
+#+STARTUP: content
+* Development
+** TODO Consider moving dotfiles under opt in a futur eupdate.
+** TODO Add support for activation in fish shell.
+** TODO Add support for activation in oil shell.
+** TODO Move website and installer from GitHub pages to Cloudfront.
+** TODO Ensure koopa installs clean on a macOS system without Homebrew.
+** TODO dotfiles installer needs to locate koopa install better?
+** TODO Today bucket activation needs to relink if link is broken.
+** TODO Add support for `r-devel` installation on Fedora.
+** TODO Add support for Shiny Server installation on Fedora.
+** TODO Work on Fix macOS install script for Catalina.
+* Documentation
+** TODO Need to systematically check all exported scripts for documentation.
+** TODO Need to explain which programs are automatically supported and get
+        activated by default more clearly.

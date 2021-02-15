@@ -21,7 +21,7 @@ cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
-Updated 2020-07-23.
+Updated 2020-11-19.
 
 Optional arguments:
     --help, -h
@@ -29,10 +29,11 @@ Optional arguments:
     --non-interactive
         Don't prompt about configuration variables.
     --prefix=PREFIX
-        Set the installation path prefix. Defaults to '/usr/local' for shared
-        installs, and XDG_DATA_HOME for current user only. Note that attempting
-        to install into '/usr' or '/opt' requires administrator (sudo)
-        permissions.
+        Set the installation path prefix.
+        Defaults to '/opt/koopa' for shared installs,
+        and '\${XDG_DATA_HOME}/koopa' when installing for current user only.
+        Note that attempting to install into /opt' or '/usr/local' requires
+        administrator (sudo) permissions.
     --verbose; or --test
         Verbose (test) mode.
         Recommended for Travis CI checks and building Docker images.
@@ -58,7 +59,7 @@ END
 install() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2020-08-12.
+    # @note Updated 2020-11-24.
     # """
     local dotfiles interactive koopa_prefix passwordless profile shared test
     while (("$#"))
@@ -143,7 +144,7 @@ install() { # {{{1
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
     # Don't check for Bash version here, which will otherwise fail on macOS
     # clean install, which ships with ancient v3.
-    checks=0 . "${script_dir}/shell/bash/include/header.sh"
+    . "${script_dir}/shell/bash/include/header.sh"
     # Check that temporary activation was successful.
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
@@ -184,7 +185,7 @@ install() { # {{{1
         # Set the default install prefix.
         if [[ "$shared" -eq 1 ]]
         then
-            prefix='/usr/local'
+            prefix='/opt'
         else
             XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME:?}/.local/share}"
             prefix="${XDG_DATA_HOME}"
@@ -304,7 +305,7 @@ END
 
     if koopa::is_bash_ok
     then
-        koopa::remove_broken_symlinks "$koopa_prefix"
+        koopa::delete_broken_symlinks "$koopa_prefix"
     else
         koopa::note 'Bash is very old and must be upgraded.'
     fi

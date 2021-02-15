@@ -61,7 +61,7 @@
     Defaults to `XDG_DATA_HOME` on most machines.
 
   * `make-prefix`:
-    Prefix for cellarized `make` scripts.
+    Prefix for `make` application build scripts.
     Defaults to "/usr/local" on most machines.
 
   * `os-string`:
