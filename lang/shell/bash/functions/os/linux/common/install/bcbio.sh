@@ -61,6 +61,9 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # Install bcbio genome from Ensembl.
     # @note Updated 2021-02-15.
     #
+    # This script can fail on a clean bcbio install if this file is missing:
+    # 'install/galaxy/tool-data/sam_fa_indices.loc'.
+    #
     # @section Genome download:
     #
     # Use the 'download-ensembl-genome' script to simplify this step.
@@ -93,10 +96,10 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     #     --release="$release"
     # """
     local bcbio_genome_name bcbio_species_dir build cores fasta \
-        genome_installer gtf indexes organism provider release tmp_dir
+        gtf indexes organism provider release script tmp_dir
     koopa::assert_has_args "$#"
-    genome_installer='bcbio_setup_genome.py'
-    koopa::assert_is_installed "$genome_installer" \
+    script='bcbio_setup_genome.py'
+    koopa::assert_is_installed "$script" \
         'awk' 'du' 'find' 'head' 'sort' 'xargs'
     while (("$#"))
     do
@@ -133,6 +136,14 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
     koopa::assert_is_set build fasta gtf indexes organism release
     koopa::assert_is_file "$fasta" "$gtf"
+    script=koopa::which_realpath "$script"
+    echo "$script"
+    return 0
+
+    # FIXME NEED TO ENSURE GALAXY IS STRUCTURED CORRECTLY.
+    ## koopa::mkdir install/galaxy/tool-data
+    ## touch install/galaxy/tool-data/sam_fa_indices.loc
+
     fasta="$(realpath "$fasta")"
     gtf="$(realpath "$gtf")"
     # Convert space-delimited string to array.
@@ -159,7 +170,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         koopa::dl 'FASTA file' "$fasta"
         koopa::dl 'GTF file' "$gtf"
         koopa::dl 'Indexes' "${indexes[*]}"
-        "$genome_installer" \
+        "$script" \
             --build "$build" \
             --buildversion "${provider}_${release}" \
             --cores "$cores" \
