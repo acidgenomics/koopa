@@ -79,11 +79,10 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     #     --release="$release"
     # genome_dir='homo-sapiens-grch38-ensembl-102'
     # # bcbio expects the genome FASTA, not the transcriptome.
-    # # e.g. "Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz".
-    # fasta="${genome_dir}/genome.fa.gz"
+    # fasta="${genome_dir}/genome/
+    #     Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
     # # GTF is easier to parse than GFF3.
-    # # e.g. "Homo_sapiens.GRCh38.102.gtf.gz".
-    # gtf="${genome_dir}/annotation.gtf.gz"
+    # gtf="${genome_dir}/annotation/gtf/Homo_sapiens.GRCh38.102.gtf.gz"
     # # Now we're ready to call the install script.
     # koopa install bcbio-ensembl-genome \
     #     --build="$build" \
@@ -132,13 +131,12 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         esac
     done
     [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
-    # FIXME This is generating an unbound variable error now:
-    # lang/shell/bash/functions/common/boolean.sh: line 510: !var: unbound variable
     koopa::assert_is_set build fasta gtf indexes organism release
     koopa::assert_is_file "$fasta" "$gtf"
     fasta="$(realpath "$fasta")"
     gtf="$(realpath "$gtf")"
     # Convert string to array.
+    # FIXME IS THIS NOT WORKING TO SPLIT INTO ARRAY?
     indexes=("$indexes")
     # Check for valid organism input.
     if ! koopa::str_match_regex "$organism" '^([A-Z][a-z]+)(\s|_)([a-z]+)$'
@@ -159,6 +157,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     cores="$(koopa::cpu_count)"
     (
+        set -x
         koopa::cd "$tmp_dir"
         koopa::dl 'FASTA file' "$fasta"
         koopa::dl 'GTF file' "$gtf"
@@ -170,6 +169,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
             --gtf "$gtf" \
             --indexes "${indexes[@]}" \
             --name "$bcbio_species_dir"
+        set +x
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::install_success "$bcbio_genome_name"
