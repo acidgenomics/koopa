@@ -36,8 +36,15 @@ local({
     #' @note Updated 2021-02-15.
     #' @noRd
     installIfNecessary <- function() {
-        # Minimum version of koopa R package.
-        minVersion <- package_version("0.1.4")
+        ## Minimum version of koopa R package.
+        minVersion <- "0.1.4"
+        ## This approach spawns a Bash subshell, which is slower.
+        ## > minVersion <- system2(
+        ## >     command = "koopa",
+        ## >     args = c("system", "variable", "r-koopa"),
+        ## >     stdout = TRUE
+        ## > )
+        minVersion <- package_version(minVersion)
         stopifnot(requireNamespace("utils", quietly = TRUE))
         isInstalled <- function(pkgs) {
             basename(pkgs) %in% rownames(utils::installed.packages())
