@@ -336,6 +336,9 @@ koopa::linux_configure_system() { # {{{1
     koopa::update_etc_profile_d
     koopa::install_dotfiles
     # FIXME This isn't picking up correctly in Docker image...
+    echo "$PATH"
+    env | sort
+    return 1
     koopa::assert_is_installed install-base
     install_base_flags=("${dict[install_base_flags]}")
     install-base "${install_base_flags[@]:-}"
