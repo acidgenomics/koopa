@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Add install support for GNU tar.
 ** TODO Move website and installer from GitHub pages to Cloudfront.
 ** TODO Improve support for manual relinking of programs in main koopa program.
 ** TODO Ensure koopa installs clean on a macOS system without Homebrew.
