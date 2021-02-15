@@ -96,7 +96,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     #     --release="$release"
     # """
     local bcbio_genome_name bcbio_species_dir build cores fasta gtf indexes \
-        install_prefix organism provider release script tmp_dir
+        install_prefix organism provider release script tmp_dir tool_data_prefix
     koopa::assert_has_args "$#"
     script='bcbio_setup_genome.py'
     koopa::assert_is_installed "$script" \
@@ -137,16 +137,6 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     koopa::assert_is_set build fasta gtf indexes organism release
     koopa::assert_is_file "$fasta" "$gtf"
     script="$(koopa::which_realpath "$script")"
-    echo "$script"
-
-    # Recursive up from 'install/anaconda/bin/bcbio_setup_genome.py'.
-    install_prefix="$(koopa::parent_dir -n 3 "$script")"
-    echo "$install_prefix"
-    return 0
-    # FIXME NEED TO ENSURE GALAXY IS STRUCTURED CORRECTLY.
-    ## koopa::mkdir install/galaxy/tool-data
-    ## touch install/galaxy/tool-data/sam_fa_indices.loc
-
     fasta="$(realpath "$fasta")"
     gtf="$(realpath "$gtf")"
     # Convert space-delimited string to array.
@@ -167,6 +157,13 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     )"
     tmp_dir="$(koopa::tmp_dir)"
     cores="$(koopa::cpu_count)"
+    # Ensure Galaxy is configured correctly for a clean bcbio install.
+    # Recursive up from 'install/anaconda/bin/bcbio_setup_genome.py'.
+    install_prefix="$(koopa::parent_dir -n 3 "$script")"
+    # If the 'sam_fa_indices.loc' file is missing, the script will error.
+    tool_data_prefix="${install_prefix}/galaxy/tool-data"
+    koopa::mkdir "$tool_data_prefix"
+    touch "${tool_data_prefix}/sam_fa_indices.log"
     (
         set -x
         koopa::cd "$tmp_dir"
