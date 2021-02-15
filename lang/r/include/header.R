@@ -33,11 +33,11 @@ local({
 
     #' Install R koopa package, if necessary
     #'
-    #' @note Updated 2021-02-11.
+    #' @note Updated 2021-02-15.
     #' @noRd
     installIfNecessary <- function() {
         # Minimum version of koopa R package.
-        minVersion <- package_version("0.1.3")
+        minVersion <- package_version("0.1.4")
         stopifnot(requireNamespace("utils", quietly = TRUE))
         isInstalled <- function(pkgs) {
             basename(pkgs) %in% rownames(utils::installed.packages())
