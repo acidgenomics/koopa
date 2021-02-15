@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-02-11.
+# Updated 2021-02-15.
 #
 # Problematic formulas:
 # - armadillo
@@ -91,6 +91,7 @@ brew "make"
 brew "man-db"
 brew "neofetch"
 brew "neovim"
+brew "oil"
 brew "open-mpi"
 brew "openblas"
 brew "pandoc"

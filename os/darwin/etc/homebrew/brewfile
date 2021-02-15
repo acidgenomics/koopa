@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-02-11.
+# Updated 2021-02-15.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -226,6 +226,7 @@ brew "neofetch"
 brew "neovim"
 brew "nmap"
 brew "node"
+brew "oil"
 brew "open-mpi"
 brew "openblas"
 brew "openjdk"
