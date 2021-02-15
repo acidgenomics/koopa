@@ -169,13 +169,19 @@ koopa::check_system() { # {{{1
     # Check system.
     # @note Updated 2021-02-15.
     # """
+    local current expected
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed R
     if ! koopa::is_r_package_installed koopa
     then
-        koopa::stop \
-            'koopa R package is not installed.' \
-            "Run 'koopa install r-koopa' to resolve."
+        koopa::install_r_koopa
+    else
+        current="$(koopa::r_package_version 'koopa')"
+        expected="$(koopa::variable 'r-koopa')"
+        if [[ "$current" != "$expected" ]]
+        then
+            koopa::install_r_koopa
+        fi
     fi
     koopa::rscript_vanilla 'checkSystem'
     koopa::check_exports
