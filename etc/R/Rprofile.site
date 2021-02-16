@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-02-15.
+## Updated 2021-02-16.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -197,10 +197,12 @@ local({
                     "SDKs",
                     "MacOSX.sdk"
                 )))) {
-                    stop(
-                        "Failed to detect Xcode CLT.\n",
-                        "Run `xcode-select --install` to install."
-                    )
+                    stop(paste(
+                        "Failed to detect Xcode CLT.",
+                        "This can happen after a macOS system update.",
+                        "Run 'xcode-select --install' to install.",
+                        sep = "\n"
+                    ))
                 }
                 ## Use recommended CRAN compiler settings.
                 clangVersion <- switch(
@@ -249,6 +251,9 @@ local({
                         "Install development tools and libraries from:",
                         "  - http://mac.r-project.org/tools/",
                         "  - https://cran.r-project.org/bin/macosx/tools/",
+                        "",
+                        "This issue can happen after a system update.",
+                        "Running 'koopa update r-config' may resolve."
                         sep = "\n"
                     ))
                 }
