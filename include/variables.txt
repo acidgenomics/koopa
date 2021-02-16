@@ -297,7 +297,7 @@ stow="2.3.1"
 subversion="1.14.1"
 
 # https://github.com/taglib/taglib/
-taglib="1.11.1"
+taglib="1.12"
 
 # https://www.gnu.org/software/tar/
 tar="1.34"
