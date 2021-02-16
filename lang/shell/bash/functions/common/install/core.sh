@@ -237,12 +237,13 @@ koopa::link_app() { # {{{1
 koopa::link_into_opt() { # {{{1
     # """
     # Link into koopa opt prefix.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-02-15.
     # """
     koopa::assert_has_args_eq "$#" 2
     local opt_prefix source_dir target_dir
     source_dir="${1:?}"
     opt_prefix="$(koopa::opt_prefix)"
+    [[ ! -d "$opt_prefix" ]] && koopa::mkdir "$opt_prefix"
     target_dir="${opt_prefix}/${2:?}"
     koopa::alert "Linking '${source_dir}' into opt at '${target_dir}'."
     [[ ! -d "$source_dir" ]] && koopa::mkdir "$source_dir"
