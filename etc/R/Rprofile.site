@@ -253,7 +253,7 @@ local({
                         "  - https://cran.r-project.org/bin/macosx/tools/",
                         "",
                         "This issue can happen after a system update.",
-                        "Running 'koopa update r-config' may resolve."
+                        "Running 'koopa update r-config' may resolve.",
                         sep = "\n"
                     ))
                 }
