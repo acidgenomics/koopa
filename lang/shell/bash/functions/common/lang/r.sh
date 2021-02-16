@@ -205,7 +205,7 @@ koopa::r_javareconf() { # {{{1
     fi
     if [[ ! -d "$java_home" ]]
     then
-        koopa_stop 'Failed to locate JAVA_HOME.'
+        koopa::stop 'Failed to locate JAVA_HOME.'
     fi
     koopa::h2 'Updating R Java configuration.'
     koopa::dl 'R' "$r"
