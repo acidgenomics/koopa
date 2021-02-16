@@ -218,6 +218,7 @@ koopa::debian_install_base() { # {{{1
             'libc-dev'
             'libcairo2-dev'
             'libcurl4-gnutls-dev'
+            'libeigen3-dev'  # RcppEigen
             'libevent-dev'
             'libffi-dev'
             'libfftw3-dev'
