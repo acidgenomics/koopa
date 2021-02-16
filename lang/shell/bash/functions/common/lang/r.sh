@@ -206,7 +206,7 @@ koopa::r_javareconf() { # {{{1
     # This step can happen with r-devel in Docker images.
     if [[ ! -d "$java_home" ]]
     then
-        koopa::warning "Failed to locate 'JAVA_HOME'."
+        koopa::note "Failed to locate 'JAVA_HOME'."
         return 0
     fi
     koopa::alert 'Updating R Java configuration.'
