@@ -38,7 +38,7 @@ koopa::install_rcheck() { # {{{1
     koopa::install_start "$name"
     if [[ ! -d "$target_dir" ]]
     then
-        koopa::h2 "Downloading ${name} to '${target_dir}'."
+        koopa::alert "Downloading ${name} to '${target_dir}'."
         (
             koopa::mkdir "$target_dir"
             git clone "$source_repo" "$target_dir"
@@ -203,11 +203,13 @@ koopa::r_javareconf() { # {{{1
         java_home="$(koopa::java_prefix)"
         koopa::is_installed java || return 0
     fi
+    # This step can happen with r-devel in Docker images.
     if [[ ! -d "$java_home" ]]
     then
-        koopa::stop 'Failed to locate JAVA_HOME.'
+        koopa::warning "Failed to locate 'JAVA_HOME'."
+        return 0
     fi
-    koopa::h2 'Updating R Java configuration.'
+    koopa::alert 'Updating R Java configuration.'
     koopa::dl 'R' "$r"
     koopa::dl 'Java home' "$java_home"
     java_flags=(
@@ -247,7 +249,7 @@ koopa::r_rebuild_docs() { # {{{1
     rscript="${r}script"
     rscript_flags=('--vanilla')
     koopa::assert_is_installed "$r" "$rscript"
-    koopa::h2 'Updating HTML package index.'
+    koopa::alert 'Updating HTML package index.'
     doc_dir="$("$rscript" "${rscript_flags[@]}" -e 'cat(R.home("doc"))')"
     html_dir="${doc_dir}/html"
     [[ ! -d "$html_dir" ]] && koopa::mkdir -S "$html_dir"
