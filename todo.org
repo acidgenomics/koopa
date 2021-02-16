@@ -2,6 +2,7 @@
 #+STARTUP: content
 * Development
 ** TODO Consider moving dotfiles under opt in a futur eupdate.
+** TODO koopa install base should work on CentOS.
 ** TODO Add support for activation in fish shell.
 ** TODO Add support for activation in oil shell.
 ** TODO Move website and installer from GitHub pages to Cloudfront.
