@@ -359,7 +359,7 @@ local({
         if (isTRUE(.rprofile[["linux"]])) {
             ## Configure the RSPM CRAN snapshot.
             repos[["CRAN"]] <-
-                "https://packagemanager.rstudio.com/cran/2021-02-10"
+                "https://packagemanager.rstudio.com/cran/2021-02-16"
             ## Configure the RSPM Bioconductor mirror repo.
             options(
                "BioC_mirror" =
