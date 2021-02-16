@@ -1,4 +1,4 @@
-## koopa 0.9.0 (2021-02-15)
+## koopa 0.9.0 (2021-02-16)
 
 - Installer now defaults to `/opt/koopa` instead of `/usr/local/koopa`.
 - Reworked organization of "cellar" and "app" prefixes. Removing the usage of
