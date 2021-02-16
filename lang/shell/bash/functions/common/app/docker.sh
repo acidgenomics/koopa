@@ -359,9 +359,6 @@ koopa::docker_run() { # {{{1
     # """
     # Run Docker image.
     # @note Updated 2021-02-16.
-    # @seealso
-    # - Regarding "priviledged" and Arch Linux:
-    #   https://serverfault.com/questions/1052963/
     # """
     local bash flags image pos workdir
     koopa::assert_has_args "$#"
@@ -398,10 +395,10 @@ koopa::docker_run() { # {{{1
     workdir="$(koopa::strip_trailing_slash "$workdir")"
     docker pull "$image"
     flags=(
+        # > '--privileged=true'
         "--volume=${PWD}:${workdir}"
         "--workdir=${workdir}"
         '--interactive'
-        '--privileged=true'  # Useful for Arch builds.
         '--tty'
         "$image"
     )
