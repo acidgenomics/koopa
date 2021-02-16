@@ -4,7 +4,7 @@
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-02-16.
     # """
     local activate checks dev distro_prefix header_path major_version os_id \
         shopts verbose
@@ -81,9 +81,9 @@ _koopa_bash_header() { # {{{1
                     _koopa_source_dir "${distro_prefix}/ubuntu"
             elif _koopa_is_fedora_like
             then
-                _koopa_activate_prefix "${distro_prefix}/fedora"
+                _koopa_source_dir "${distro_prefix}/fedora"
                 _koopa_is_rhel_like && \
-                    _koopa_activate_prefix "${distro_prefix}/rhel"
+                    _koopa_source_dir "${distro_prefix}/rhel"
             fi
             _koopa_source_dir "${distro_prefix}/${os_id}"
         else
