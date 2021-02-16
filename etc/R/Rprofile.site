@@ -278,22 +278,9 @@ local({
     ## Library path {{{2
     ## -------------------------------------------------------------------------
 
-    ## Check that library matches R version.
     local({
-        if (!isTRUE(.rprofile[["conda"]])) {
-            libs <- .libPaths()
-            if (!isTRUE(any(grepl(
-                pattern = .rprofile[["rVersionShort"]],
-                x = libs
-            )))) {
-                stop(sprintf(
-                    "R %s library configuration error:\n%s",
-                    .rprofile[["rVersionShort"]],
-                    paste(libs, collapse = "\n")
-                ))
-            }
-            assign(x = "libs", value = libs, envir = .rprofile)
-        }
+        libs <- .libPaths()
+        assign(x = "libs", value = libs, envir = .rprofile)
     })
 
     ## RStudio {{{2
