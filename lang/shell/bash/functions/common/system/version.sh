@@ -189,6 +189,20 @@ releases/current-production-release"
     return 0
 }
 
+koopa::eigen_version() { # {{{1
+    # """
+    # Eigen (libeigen) version.
+    # @note Updated 2021-02-17.
+    # @seealso
+    # - https://stackoverflow.com/a/48598029
+    # """
+    local x
+    x="$(pkg-config --modversion eigen3)"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
+}
+
 koopa::extract_version() { # {{{1
     # """
     # Extract version number.
