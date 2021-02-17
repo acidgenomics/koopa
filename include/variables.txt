@@ -416,7 +416,7 @@ python-black="20.8b1"     # homebrew
 python-bpytop="1.0.62"    # homebrew
 python-flake8="3.8.4"     # homebrew
 python-pipx="0.16.0.0"    # homebrew
-python-pylint="2.6.0"     # homebrew
+python-pylint="2.6.2"     # homebrew
 python-ranger-fm="1.9.3"  # homebrew
 
 # Libraries without binaries {{{2
