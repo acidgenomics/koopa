@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# NOTE Most version functions should go in:
+# 'shell/bash/functions/common/system/version.sh'.
+
 _koopa_macos_version() { # {{{1
     # """
     # macOS version.
