@@ -235,7 +235,6 @@ proj="7.2.1"
 pyenv="1.2.16"
 
 # https://www.python.org/downloads/
-# numba v0.51.2 install warns on Python 3.9 currently.
 python="3.9.2"
 
 # https://www.r-project.org/
