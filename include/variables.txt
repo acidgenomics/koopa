@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-02-20"
+koopa-date="2021-02-22"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.1a"
@@ -235,8 +235,7 @@ proj="7.2.1"
 pyenv="1.2.16"
 
 # https://www.python.org/downloads/
-# numba v0.51.2 install warns on Python 3.9 currently.
-python="3.9.1"
+python="3.9.2"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
@@ -413,10 +412,10 @@ homebrew-cask-gpg-suite="2020.2"
 python-pip="21.0.1"
 
 python-black="20.8b1"     # homebrew
-python-bpytop="1.0.62"    # homebrew
+python-bpytop="1.0.63"    # homebrew
 python-flake8="3.8.4"     # homebrew
 python-pipx="0.16.0.0"    # homebrew
-python-pylint="2.6.2"     # homebrew
+python-pylint="2.7.0"     # homebrew
 python-ranger-fm="1.9.3"  # homebrew
 
 # Libraries without binaries {{{2
