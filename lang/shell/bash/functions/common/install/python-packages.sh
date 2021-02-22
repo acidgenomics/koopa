@@ -45,12 +45,10 @@ koopa::install_python_packages() { # {{{1
     then
         pkgs=(
             # pynvim
-            'flake8'
             'pip'
             'pip2pi'
             'psutil'
             'pyflakes'
-            'pylint'
             'pytaglib'
             'pytest'
             'setuptools'
@@ -62,7 +60,9 @@ koopa::install_python_packages() { # {{{1
             pkgs+=(
                 'black'
                 'bpytop'
+                'flake8'
                 'pipx'
+                'pylint'
                 'ranger-fm'
             )
         fi
