@@ -544,6 +544,19 @@ local({
         )
     }
 
+    if (isInstalled("future")) {
+        ## If we have a large dataset, then we might need to adjust the limit
+        ## for allowable object sizes within R.
+        ##
+        ## (Default is 500 * 1024 ^ 2 = 500 Mb)
+        ##
+        ## https://hbctraining.github.io/scRNA-seq/lessons/
+        ##     06_SC_SCT_and_integration.html
+        ##
+        ## Increase default limit to 4 GB.
+        options("future.globals.maxSize" = 4000L * (1024L ^ 2L))
+    }
+
     if (isInstalled("httr")) {
         ## Enable OAuth token generation using httr on a remote R server.
         ## This is used by googlesheets, for example.
@@ -551,16 +564,6 @@ local({
             "httr_oob_default" = TRUE
         )
     }
-
-    if (isInstalled("readr")) {
-        options(
-            "readr.num_columns" = 0L,
-            "readr.show_progress" = FALSE
-        )
-    }
-
-    ## Parallelization {{{2
-    ## -------------------------------------------------------------------------
 
     if (isInstalled("parallel")) {
         local({
@@ -579,17 +582,17 @@ local({
         })
     }
 
-    if (isInstalled("future")) {
-        ## If we have a large dataset, then we might need to adjust the limit
-        ## for allowable object sizes within R.
-        ##
-        ## (Default is 500 * 1024 ^ 2 = 500 Mb)
-        ##
-        ## https://hbctraining.github.io/scRNA-seq/lessons/
-        ##     06_SC_SCT_and_integration.html
-        ##
-        ## Increase default limit to 4 GB.
-        options("future.globals.maxSize" = 4000L * (1024L ^ 2L))
+    if (isInstalled("readr")) {
+        options(
+            "readr.num_columns" = 0L,
+            "readr.show_progress" = FALSE
+        )
+    }
+
+    if (isInstalled("testthat")) {
+        options(
+            "testthat.progress.max_fails" = 1L
+        )
     }
 
     ## Session info {{{2
