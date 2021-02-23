@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-02-16.
+## Updated 2021-02-23.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -346,7 +346,7 @@ local({
         if (isTRUE(.rprofile[["linux"]])) {
             ## Configure the RSPM CRAN snapshot.
             repos[["CRAN"]] <-
-                "https://packagemanager.rstudio.com/cran/2021-02-16"
+                "https://packagemanager.rstudio.com/cran/2021-02-22"
             ## Configure the RSPM Bioconductor mirror repo.
             options(
                "BioC_mirror" =
