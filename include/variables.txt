@@ -159,7 +159,7 @@ libtool="2.4.6"
 
 # LLVM
 # https://releases.llvm.org/
-llvm="11.0.1"
+llvm="11.1.0"
 
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
