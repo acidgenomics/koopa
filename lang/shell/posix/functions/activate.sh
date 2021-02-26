@@ -512,6 +512,8 @@ _koopa_activate_pkg_config() { # {{{1
     then
         homebrew_prefix="$(_koopa_homebrew_prefix)"
         # This is useful for getting Ruby jekyll gem (requires ffi) to install.
+        # Alternatively, this works but is annoying:
+        # > gem install ffi -- --disable-system-libffi
         _koopa_force_add_to_pkg_config_path_start \
             "${homebrew_prefix}/opt/libffi/lib/pkgconfig"
     fi
