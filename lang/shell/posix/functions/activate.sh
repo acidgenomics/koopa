@@ -511,7 +511,7 @@ _koopa_activate_pkg_config() { # {{{1
     if _koopa_is_macos && _koopa_is_installed brew
     then
         homebrew_prefix="$(_koopa_homebrew_prefix)"
-        # This is useful for getting Ruby ffi gem to install clean.
+        # This is useful for getting Ruby jekyll gem (requires ffi) to install.
         _koopa_force_add_to_pkg_config_path_start \
             "${homebrew_prefix}/opt/libffi/lib/pkgconfig"
     fi
