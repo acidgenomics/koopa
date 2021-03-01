@@ -17,6 +17,8 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
         return 0
     fi
     koopa::alert "Disabling Touch ID for sudo, defined at '${target_file}'."
+    # NOTE Don't use 'koopa::cp' here, as it will remove the target file
+    # and can cause system lockout in this case.
     sudo cp -v "$source_file" "$target_file"
     sudo chmod 0444 "$target_file"
     koopa::success 'Touch ID disabled for sudo.'
