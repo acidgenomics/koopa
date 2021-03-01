@@ -45,7 +45,9 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     fi
     koopa::alert "Enabling Touch ID for sudo in '${target_file}'."
     koopa::assert_is_file "$source_file"
-    koopa::cp -S "$source_file" "$target_file"
+    # NOTE Don't use 'koopa::cp' here, as it will remove the target file
+    # and can cause system lockout in this case.
+    sudo cp -v "$source_file" "$target_file"
     sudo chmod 0444 "$target_file"
     koopa::success 'Touch ID enabled for sudo.'
     return 0
