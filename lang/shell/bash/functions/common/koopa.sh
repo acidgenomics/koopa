@@ -303,7 +303,10 @@ koopa::koopa() { # {{{1
                 brew-outdated | \
                 delete-cache | \
                 disable-passwordless-sudo | \
+                disable-touch-id-sudo | \
                 enable-passwordless-sudo | \
+                enable-touch-id-sudo | \
+                fix-sudo-setrlimit-error | \
                 fix-zsh-permissions | \
                 host-id | \
                 os-string | \
