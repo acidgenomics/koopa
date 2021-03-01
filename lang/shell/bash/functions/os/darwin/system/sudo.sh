@@ -1,28 +1,28 @@
 #!/usr/bin/env bash
 
-# FIXME DONT DELETE THIS FILE...NEED TO APPEND.
-# FIXME Replace this with 'sudo~orig' file.
 koopa::macos_disable_touch_id_sudo() { # {{{1
     # """
     # Disable sudo authentication via Touch ID PAM.
     # @note Updated 2021-03-01.
     # """
-    local file
+    local source_file target_file
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
-    file='/etc/pam.d/sudo'
-    if [[ ! -f "$file" ]]
+    source_file="$(koopa::prefix)/os/macos/etc/pam.d/sudo~orig"
+    target_file='/etc/pam.d/sudo'
+    if [[ -f "$target_file" ]] && \
+        ! grep -q 'pam_tid.so' "$target_file"
     then
-        koopa::note "sudo via Touch ID is not enabled."
+        koopa::note "Touch ID not enabled for sudo in '${target_file}'."
         return 0
     fi
-    koopa::alert "Disabling sudo using Touch ID, defined at '${file}'."
-    koopa::rm -S "$file"
+    koopa::alert "Disabling Touch ID for sudo, defined at '${target_file}'."
+    koopa::cp -S "$source_file" "$target_file"
+    sudo chmod 0444 "$target_file"
+    koopa::success 'Touch ID disabled for sudo.'
     return 0
 }
 
-# FIXME COPY OUR MODIFIED CONFIG FILE INSTEAD...
-# FIXME NEED TO APPEND NOT WRITE...
 koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     # Enable sudo authentication via Touch ID PAM.
@@ -31,19 +31,20 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     # - https://davidwalsh.name/touch-sudo
     # - https://news.ycombinator.com/item?id=26302139
     # """
-    local file
+    local source_file target_file
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
-    string='auth sufficient pam_tid.so'
-    file="/etc/pam.d/sudo"
-    # FIXME NEED TO SUDO GREP IN HERE FOR STRING...
-    if [[ -f "$file" ]]
+    source_file="$(koopa::prefix)/os/macos/etc/pam.d/sudo"
+    target_file='/etc/pam.d/sudo'
+    if [[ -f "$target_file" ]] && grep -q 'pam_tid.so' "$target_file"
     then
-        koopa::success "sudo using Touch ID is already enabled via '${file}'."
+        koopa::note "Touch ID already enabled for sudo in '${target_file}'."
         return 0
     fi
-    koopa::sudo_append_string "$string" "$file"
-    # FIXME NEED TO SET PERMISSIONS TO 0444.
-    koopa::success "sudo using Touch ID is enabled via '${file}'."
+    koopa::alert "Enabling Touch ID for sudo in '${target_file}'."
+    koopa::assert_is_file "$source_file"
+    koopa::cp -S "$source_file" "$target_file"
+    sudo chmod 0444 "$target_file"
+    koopa::success 'Touch ID enabled for sudo.'
     return 0
 }
