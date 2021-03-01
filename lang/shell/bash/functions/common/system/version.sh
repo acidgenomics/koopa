@@ -1,11 +1,28 @@
 #!/usr/bin/env bash
 
+koopa::_pkg_config_version() {
+    # """
+    # Get a library version via pkg-config.
+    # @note Updated 2021-03-01.
+    # """
+    local pkg x
+    koopa::assert_has_args_eq "$#" 1
+    pkg="${1:?}"
+    koopa::is_installed pkg-config || return 1
+    x="$(pkg-config --modversion "$pkg")"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
+
+}
+
 koopa::anaconda_version() { # {{{
     # """
     # Anaconda verison.
     # @note Updated 2020-07-08.
     # """
     local x
+    koopa::assert_has_no_args "$#"
     koopa::is_anaconda || return 1
     koopa::assert_is_installed awk grep
     x="$( \
@@ -20,12 +37,28 @@ koopa::anaconda_version() { # {{{
 koopa::armadillo_version() { # {{{1
     # """
     # Armadillo: C++ library for linear algebra & scientific computing.
-    # @note Updated 2020-10-26.
+    # @note Updated 2021-03-01.
     # """
-    local x
-    x="$(pkg-config --modversion armadillo)"
-    koopa::print "$x"
-    return 0
+    koopa::assert_has_no_args "$#"
+    koopa::_pkg_config_version 'armadillo'
+}
+
+koopa::boost_version() { # {{{1
+    # """
+    # Boost (libboost) version.
+    # @note Updated 2021-03-01.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::_pkg_config_version 'boost'
+}
+
+koopa::cairo_version() { # {{{1
+    # """
+    # Cairo (libcairo) version.
+    # @note Updated 2021-03-01.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::_pkg_config_version 'cairo'
 }
 
 koopa::current_bcbio_version() { # {{{1
@@ -192,15 +225,10 @@ releases/current-production-release"
 koopa::eigen_version() { # {{{1
     # """
     # Eigen (libeigen) version.
-    # @note Updated 2021-02-17.
-    # @seealso
-    # - https://stackoverflow.com/a/48598029
+    # @note Updated 2021-03-01.
     # """
-    local x
-    x="$(pkg-config --modversion eigen3)"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
+    koopa::assert_has_no_args "$#"
+    koopa::_pkg_config_version 'eigen3'
 }
 
 koopa::extract_version() { # {{{1
@@ -293,6 +321,15 @@ koopa::github_latest_release() { # {{{1
     return 0
 }
 
+koopa::harfbuzz_version() { # {{{1
+    # """
+    # Harfbuzz (libharfbuzz) version.
+    # @note Updated 2021-03-01.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::_pkg_config_version 'harfbuzz'
+}
+
 koopa::hdf5_version() { # {{{1
     # """
     # HDF5 version.
@@ -311,6 +348,25 @@ koopa::hdf5_version() { # {{{1
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
+}
+
+koopa::icu4c_version() { # {{{1
+    # """
+    # ICU version.
+    # C/C++ and Java libraries for Unicode and globalization.
+    # @note Updated 2021-03-01.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::_pkg_config_version 'icu4c'
+}
+
+koopa::imagemagick_version() { # {{{1
+    # """
+    # ImageMagick version.
+    # @note Updated 2021-03-01.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::_pkg_config_version 'imagemagick'
 }
 
 koopa::llvm_version() { # {{{1
@@ -447,9 +503,10 @@ koopa::r_package_version() { # {{{1
 koopa::r_version() { # {{{1
     # """
     # R version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-03-01.
     # """
     local r x
+    koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
     x="$("$r" --version 2>/dev/null | head -n 1)"
     if koopa::str_match "$x" 'R Under development (unstable)'
@@ -458,7 +515,9 @@ koopa::r_version() { # {{{1
     else
         x="$(koopa::extract_version "$x")"
     fi
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
+    return 0
 }
 
 koopa::return_version() { # {{{1
