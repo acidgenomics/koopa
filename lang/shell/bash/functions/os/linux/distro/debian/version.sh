@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::debian_version() {
+koopa::debian_version() { # {{{1
     # """
     # Debian version (including minor version).
     # @note Updated 2021-02-16.

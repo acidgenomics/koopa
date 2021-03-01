@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_pkg_config_version() {
+koopa::_pkg_config_version() { # {{{1
     # """
     # Get a library version via pkg-config.
     # @note Updated 2021-03-01.
