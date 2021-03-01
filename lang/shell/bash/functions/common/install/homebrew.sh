@@ -125,7 +125,7 @@ koopa::install_homebrew_packages() { # {{{1
 koopa::uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
-    # @note Updated 2020-11-18.
+    # @note Updated 2021-03-01.
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
@@ -143,11 +143,11 @@ koopa::uninstall_homebrew() { # {{{1
     # Note that macOS Catalina now uses Zsh instead of Bash by default.
     if koopa::is_macos
     then
-        koopa::h2 'Changing default shell to system Zsh.'
+        koopa::alert 'Changing default shell to system Zsh.'
         chsh -s '/bin/zsh' "$USER"
     fi
-    koopa::h2 "Resetting permissions in '/usr/local'."
-    sudo chown -Rhv "$USER" '/usr/local/'*
+    # > koopa::alert "Resetting permissions in '/usr/local'."
+    # > sudo chown -Rhv "$USER" '/usr/local/'*
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -165,7 +165,7 @@ koopa::uninstall_homebrew() { # {{{1
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-01-20.
+    # @note Updated 2021-03-01.
     #
     # Use of '--force-bottle' flag can be helpful, but not all brews have
     # bottles, so this can error.
@@ -190,7 +190,7 @@ koopa::update_homebrew() { # {{{1
     export HOMEBREW_CASK_OPTS='--force --no-quarantine'
     name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
-    if koopa::has_sudo
+    if koopa::has_passwordless_sudo
     then
         user="$(koopa::user)"
         group="$(koopa::admin_group)"
@@ -249,7 +249,7 @@ koopa::update_homebrew() { # {{{1
     koopa::alert 'Running cleanup.'
     brew cleanup -s || true
     koopa::rm "$(brew --cache)"
-    if koopa::has_sudo
+    if koopa::has_passwordless_sudo
     then
         koopa::alert "Resetting ownership at '${prefix}' to '${user}:${group}'."
         sudo chown -Rh "${user}:${group}" "${prefix}/"*
