@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME NEED CORRESPONDING DISABLE PASSWORDLESS SUDO...
+
 koopa::enable_passwordless_sudo() { # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
