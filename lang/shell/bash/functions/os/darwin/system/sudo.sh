@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_disable_sudo_touch_id() { # {{{1
+koopa::macos_disable_touch_id_sudo() { # {{{1
     # """
     # Disable sudo authentication via Touch ID PAM.
     # @note Updated 2021-03-01.
@@ -19,7 +19,7 @@ koopa::macos_disable_sudo_touch_id() { # {{{1
     return 0
 }
 
-koopa::macos_enable_sudo_touch_id() { # {{{1
+koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     # Enable sudo authentication via Touch ID PAM.
     # @note Updated 2021-03-01.
