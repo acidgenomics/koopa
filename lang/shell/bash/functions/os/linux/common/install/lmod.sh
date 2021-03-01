@@ -59,3 +59,34 @@ koopa::install_lmod() { # {{{1
     return 0
 }
 
+koopa::update_lmod_config() { # {{{1
+    # """
+    # Link lmod configuration files in '/etc/profile.d/'.
+    # @note Updated 2021-01-20.
+    #
+    # Need to check for this case:
+    # ln: failed to create symbolic link '/etc/fish/conf.d/z00_lmod.fish':
+    # No suchfile or directory
+    # """
+    local etc_dir init_dir
+    koopa::assert_has_no_args "$#"
+    koopa::assert_has_sudo
+    init_dir="$(koopa::lmod_prefix)/apps/lmod/lmod/init"
+    [[ -d "$init_dir" ]] || return 0
+    etc_dir='/etc/profile.d'
+    koopa::alert "Updating Lmod configuration in ${etc_dir}."
+    koopa::mkdir -S "$etc_dir"
+    # bash, zsh
+    koopa::ln -S "${init_dir}/profile" "${etc_dir}/z00_lmod.sh"
+    # csh, tcsh
+    koopa::ln -S "${init_dir}/cshrc" "${etc_dir}/z00_lmod.csh"
+    # fish
+    if koopa::is_installed fish
+    then
+        etc_dir='/etc/fish/conf.d'
+        koopa::alert "Updating Fish Lmod configuration in ${etc_dir}."
+        koopa::mkdir -S "$etc_dir"
+        koopa::ln -S "${init_dir}/profile.fish" "${etc_dir}/z00_lmod.fish"
+    fi
+    return 0
+}

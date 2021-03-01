@@ -24,28 +24,33 @@ koopa::drat() { # {{{
     return 0
 }
 
-koopa::install_rcheck() { # {{{1
+koopa::download_ensembl_genome() { # {{{1
     # """
-    # Install Rcheck scripts for CI.
-    # @note Updated 2020-11-19.
+    # Download Ensembl genome.
+    # @note Updated 2021-01-04.
     # """
-    local link_name name source_repo target_dir
-    koopa::assert_has_no_args "$#"
-    name='Rcheck'
-    source_repo="https://github.com/acidgenomics/${name}.git"
-    target_dir="$(koopa::local_data_prefix)/${name}"
-    link_name=".${name}"
-    koopa::install_start "$name"
-    if [[ ! -d "$target_dir" ]]
-    then
-        koopa::alert "Downloading ${name} to '${target_dir}'."
-        (
-            koopa::mkdir "$target_dir"
-            git clone "$source_repo" "$target_dir"
-        )
-    fi
-    koopa::ln "$target_dir" "$link_name"
-    koopa::install_success "$name"
+    koopa::assert_has_args "$#"
+    koopa::rscript 'downloadEnsemblGenome' "$@"
+    return 0
+}
+
+koopa::download_gencode_genome() { # {{{1
+    # """
+    # Download GENCODE genome.
+    # @note Updated 2021-01-04.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::rscript 'downloadGencodeGenome' "$@"
+    return 0
+}
+
+koopa::download_refseq_genome() { # {{{1
+    # """
+    # Download RefSeq genome.
+    # @note Updated 2021-01-04.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::rscript 'downloadRefseqGenome' "$@"
     return 0
 }
 
@@ -139,6 +144,16 @@ koopa::link_r_site_library() { # {{{1
             '/usr/lib64/R/site-library' \
             '/usr/local/lib/R/site-library'
     fi
+    return 0
+}
+
+koopa::pkgdown_deploy_to_aws() { # {{{1
+    # """
+    # Deploy a pkgdown website to AWS.
+    # @note Updated 2021-03-01.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::rscript 'pkgdownDeployToAWS' "$@"
     return 0
 }
 

@@ -302,6 +302,7 @@ koopa::koopa() { # {{{1
                 brew-dump-brewfile | \
                 brew-outdated | \
                 delete-cache | \
+                disable-passwordless-sudo | \
                 enable-passwordless-sudo | \
                 fix-zsh-permissions | \
                 host-id | \
