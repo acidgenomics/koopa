@@ -476,7 +476,7 @@ _koopa_activate_pipx() { # {{{1
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
-    # @note Updated 2020-08-05.
+    # @note Updated 2021-02-26.
     #
     # Typical priorities (e.g. on Debian):
     # - /usr/local/lib/x86_64-linux-gnu/pkgconfig
@@ -495,7 +495,7 @@ _koopa_activate_pkg_config() { # {{{1
     # - https://askubuntu.com/questions/210210/
     # """
     # shellcheck disable=SC2039
-    local make_prefix sys_pkg_config
+    local homebrew_prefix make_prefix sys_pkg_config
     [ -n "${PKG_CONFIG_PATH:-}" ] && return 0
     make_prefix="$(_koopa_make_prefix)"
     sys_pkg_config='/usr/bin/pkg-config'
@@ -508,6 +508,15 @@ _koopa_activate_pkg_config() { # {{{1
         "${make_prefix}/lib/pkgconfig" \
         "${make_prefix}/lib64/pkgconfig" \
         "${make_prefix}/lib/x86_64-linux-gnu/pkgconfig"
+    if _koopa_is_macos && _koopa_is_installed brew
+    then
+        homebrew_prefix="$(_koopa_homebrew_prefix)"
+        # This is useful for getting Ruby jekyll gem (requires ffi) to install.
+        # Alternatively, this works but is annoying:
+        # > gem install ffi -- --disable-system-libffi
+        _koopa_force_add_to_pkg_config_path_start \
+            "${homebrew_prefix}/opt/libffi/lib/pkgconfig"
+    fi
     return 0
 }
 
