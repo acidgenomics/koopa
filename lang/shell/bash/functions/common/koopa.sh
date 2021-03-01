@@ -5,7 +5,7 @@
 koopa::_koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-03-01.
     # """
     local name
     name="${1:-}"
@@ -15,19 +15,19 @@ koopa::_koopa_app() { # {{{1
     fi
     case "$name" in
         clean)
-            name='delete_broken_app_symlinks'
+            name='delete-broken-app-symlinks'
             ;;
         list)
-            name='list_app_versions'
+            name='list-app-versions'
             ;;
         link)
-            name='link_app'
+            name='link-app'
             ;;
         prune)
-            name='prune_apps'
+            name='prune-apps'
             ;;
         unlink)
-            name='unlink_app'
+            name='unlink-app'
             ;;
     esac
     shift 1
@@ -69,7 +69,7 @@ koopa::_koopa_header() { # {{{1
 koopa::_koopa_install() { # {{{1
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-03-01.
     # """
     local name
     name="${1:-}"
@@ -78,27 +78,30 @@ koopa::_koopa_install() { # {{{1
         koopa::stop "Missing argument: 'koopa install <ARG>...'."
     fi
     shift 1
-    koopa::_run_function "install_${name}" "$@"
+    koopa::_run_function "install-${name}" "$@"
     return 0
 }
 
 koopa::_koopa_link() { # {{{1
     # """
     # Parse user input to 'koopa link'.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-03-01.
     # """
     local name
     name="${1:-}"
-    [[ -z "$name" ]] && koopa::invalid_arg
+    if [[ -z "$name" ]]
+    then
+        koopa::stop "Missing argument: 'koopa link <ARG>...'."
+    fi
     shift 1
-    koopa::_run_function "link_${name}" "$@"
+    koopa::_run_function "link-${name}" "$@"
     return 0
 }
 
 koopa::_koopa_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-03-01.
     # """
     local name
     name="${1:-}"
@@ -106,17 +109,97 @@ koopa::_koopa_list() { # {{{1
     then
         name='list'
     else
-        name="list_${name}"
+        name="list-${name}"
         shift 1
     fi
     koopa::_run_function "$name" "$@"
     return 0
 }
 
+koopa::_koopa_system() { # {{{1
+    # """
+    # Parse user input to 'koopa system'.
+    # @note Updated 2021-03-01.
+    # """
+    local f
+    f="${1:-}"
+    if [[ -z "$f" ]]
+    then
+        koopa::stop "Missing argument: 'koopa system <ARG>...'."
+    fi
+    case "$f" in
+        check)
+            f='check-system'
+            ;;
+        info)
+            f='sys-info'
+            ;;
+        log)
+            f='view-latest-tmp-log-file'
+            ;;
+        path)
+            koopa::print "$PATH"
+            return 0
+            ;;
+        prefix)
+            case "${2:-}" in
+                '')
+                    f='prefix'
+                    ;;
+                koopa)
+                    f='prefix'
+                    shift 1
+                    ;;
+                *)
+                    f="${2}-prefix"
+                    shift 1
+                    ;;
+            esac
+            ;;
+        pull)
+            f='sys-git-pull'
+            ;;
+        homebrew-cask-version)
+            f='get-homebrew-cask-version'
+            ;;
+        macos-app-version)
+            f='get-macos-app-version'
+            ;;
+        version)
+            f='get-version'
+            ;;
+        which)
+            f='which-realpath'
+            ;;
+        brew-dump-brewfile | \
+        brew-outdated | \
+        delete-cache | \
+        disable-passwordless-sudo | \
+        disable-touch-id-sudo | \
+        enable-passwordless-sudo | \
+        enable-touch-id-sudo | \
+        fix-sudo-setrlimit-error | \
+        fix-zsh-permissions | \
+        host-id | \
+        os-string | \
+        roff | \
+        set-permissions | \
+        variable | \
+        variables)
+            ;;
+        *)
+            koopa::invalid_arg "$*"
+            ;;
+    esac
+    shift 1
+    koopa::_run_function "$f" "$@"
+    return 0
+}
+
 koopa::_koopa_uninstall() { # {{{1
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-03-01.
     # """
     local name
     name="${1:-}"
@@ -124,14 +207,14 @@ koopa::_koopa_uninstall() { # {{{1
     then
         koopa::stop 'Program name to uninstall is required.'
     fi
-    koopa::_run_function "uninstall_${name}"
+    koopa::_run_function "uninstall-${name}"
     return 0
 }
 
 koopa::_koopa_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-03-01.
     # """
     local name
     name="${1:-}"
@@ -140,7 +223,7 @@ koopa::_koopa_update() { # {{{1
             name='koopa'
             ;;
         system|user)
-            name="koopa_${name}"
+            name="koopa-${name}"
             ;;
         # Defunct --------------------------------------------------------------
         --fast)
@@ -157,7 +240,7 @@ koopa::_koopa_update() { # {{{1
             ;;
     esac
     [[ "$#" -gt 0 ]] && shift 1
-    koopa::_run_function "update_${name}" "$@"
+    koopa::_run_function "update-${name}" "$@"
     return 0
 }
 
@@ -235,92 +318,11 @@ koopa::koopa() { # {{{1
         install | \
         link | \
         list | \
+        system | \
         uninstall | \
         update)
             f="_koopa_${1}"
             shift 1
-            ;;
-        system)
-            case "${2:-}" in
-                check)
-                    f='check'
-                    shift 2
-                    ;;
-                info)
-                    f='sys_info'
-                    shift 2
-                    ;;
-                log)
-                    f='view_latest_tmp_log_file'
-                    shift 2
-                    ;;
-                path)
-                    koopa::print "$PATH"
-                    return 0
-                    ;;
-                prefix)
-                    case "${3:-}" in
-                        '')
-                            f="$2"
-                            shift 2
-                            ;;
-                        koopa)
-                            f="$2"
-                            shift 3
-                            ;;
-                        *)
-                            f="${3}_${2}"
-                            if koopa::is_function "koopa::${f//-/_}"
-                            then
-                                shift 3
-                            else
-                                koopa::invalid_arg "$*"
-                            fi
-                            ;;
-                    esac
-                    ;;
-                pull)
-                    f='sys_git_pull'
-                    shift 2
-                    ;;
-                homebrew-cask-version)
-                    f='get_homebrew_cask_version'
-                    shift 2
-                    ;;
-                macos-app-version)
-                    f='get_macos_app_version'
-                    shift 2
-                    ;;
-                version)
-                    f='get_version'
-                    shift 2
-                    ;;
-                which)
-                    f='which_realpath'
-                    shift 2
-                    ;;
-                brew-dump-brewfile | \
-                brew-outdated | \
-                delete-cache | \
-                disable-passwordless-sudo | \
-                disable-touch-id-sudo | \
-                enable-passwordless-sudo | \
-                enable-touch-id-sudo | \
-                fix-sudo-setrlimit-error | \
-                fix-zsh-permissions | \
-                host-id | \
-                os-string | \
-                roff | \
-                set-permissions | \
-                variable | \
-                variables)
-                    f="$2"
-                    shift 2
-                    ;;
-                *)
-                    koopa::invalid_arg "$*"
-                    ;;
-            esac
             ;;
         test)
             f="$1"
@@ -330,7 +332,7 @@ koopa::koopa() { # {{{1
         # ----------------------------------------------------------------------
         check | \
         check-system)
-            f='check_system'
+            f='check-system'
             shift 1
             ;;
         home)
@@ -338,7 +340,7 @@ koopa::koopa() { # {{{1
             shift 1
             ;;
         info)
-            f='sys_info'
+            f='sys-info'
             shift 1
             ;;
         prefix | \
