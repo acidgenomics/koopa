@@ -282,7 +282,7 @@ koopa::linux_configure_system() { # {{{1
     if [[ "${dict[passwordless_sudo]}" -eq 1 ]]
     then
         koopa::enable_passwordless_sudo
-        koopa::fix_sudo_setrlimit_error
+        koopa::linux_fix_sudo_setrlimit_error
     fi
     # Delete skeleton files {{{3
     # --------------------------------------------------------------------------
