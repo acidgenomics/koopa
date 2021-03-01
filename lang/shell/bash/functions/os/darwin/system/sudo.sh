@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME DONT DELETE THIS FILE...NEED TO APPEND.
+# FIXME Replace this with 'sudo~orig' file.
 koopa::macos_disable_touch_id_sudo() { # {{{1
     # """
     # Disable sudo authentication via Touch ID PAM.
@@ -19,6 +21,8 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     return 0
 }
 
+# FIXME COPY OUR MODIFIED CONFIG FILE INSTEAD...
+# FIXME NEED TO APPEND NOT WRITE...
 koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     # Enable sudo authentication via Touch ID PAM.
@@ -32,12 +36,14 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     koopa::assert_has_sudo
     string='auth sufficient pam_tid.so'
     file="/etc/pam.d/sudo"
+    # FIXME NEED TO SUDO GREP IN HERE FOR STRING...
     if [[ -f "$file" ]]
     then
         koopa::success "sudo using Touch ID is already enabled via '${file}'."
         return 0
     fi
-    koopa::sudo_write_string "$string" "$file"
+    koopa::sudo_append_string "$string" "$file"
+    # FIXME NEED TO SET PERMISSIONS TO 0444.
     koopa::success "sudo using Touch ID is enabled via '${file}'."
     return 0
 }
