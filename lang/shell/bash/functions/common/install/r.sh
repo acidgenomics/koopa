@@ -10,7 +10,7 @@ koopa::install_r_cmd_check() { # {{{1
     name='r-cmd-check'
     source_repo="https://github.com/acidgenomics/${name}.git"
     target_dir="$(koopa::local_data_prefix)/${name}"
-    link_name=".Rcheck"
+    link_name='.Rcheck'
     koopa::install_start "$name"
     if [[ ! -d "$target_dir" ]]
     then
