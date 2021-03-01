@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-02-25"
+koopa-date="2021-03-01"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.1a"
@@ -28,7 +28,7 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 anaconda="2020.11"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.2.1"
+armadillo="10.2.2"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="3.10.1.181943"
@@ -50,8 +50,17 @@ bcbio-nextgen="1.2.6"
 #     bcl2fastq-conversion-software.html
 bcl2fastq="2.20.0.422"
 
+# https://rtyley.github.io/bfg-repo-cleaner/
+bfg="0.14.0"
+
 # https://ftp.gnu.org/gnu/binutils/
 binutils="2.36.1"
+
+# https://www.boost.org/
+boost="1.75.0"
+
+# https://cairographics.org/
+cairo="1.16.0"
 
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
@@ -95,7 +104,7 @@ findutils="4.8.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
-fish="3.1.2"
+fish="3.2.0"
 
 # https://github.com/junegunn/fzf
 fzf="0.25.1"
@@ -131,6 +140,8 @@ groff="1.22.4"
 
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
+i
+harfbuzz="2.7.4"
 
 haskell-stack="rolling"
 
@@ -138,11 +149,14 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.0.2"
+homebrew="3.0.3"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
 htop="3.0.5"
+
+# http://site.icu-project.org/
+icu4c="68.2"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -184,6 +198,9 @@ neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
 neovim="0.4.4"
+
+# https://nodejs.org/
+node="15.10.0"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -229,7 +246,7 @@ php="8.0.0"
 pkg-config="0.29.2"
 
 # https://proj.org/
-proj="7.2.1"
+proj="8.0.0"
 
 # https://github.com/pyenv/pyenv
 pyenv="1.2.16"
@@ -414,8 +431,8 @@ python-pip="21.0.1"
 python-black="20.8b1"     # homebrew
 python-bpytop="1.0.63"    # homebrew
 python-flake8="3.8.4"     # homebrew
-python-pipx="0.16.0.0"    # homebrew
-python-pylint="2.7.1"     # homebrew
+python-pipx="0.16.1"      # homebrew
+python-pylint="2.7.2"     # homebrew
 python-ranger-fm="1.9.3"  # homebrew
 
 # Libraries without binaries {{{2
@@ -457,8 +474,8 @@ ruby-ronn="0.7.3"
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-rust-bat="0.17.1"         # homebrew
-rust-broot="1.2.4"        # homebrew; br
+rust-bat="0.18.0"         # homebrew
+rust-broot="1.2.7"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.5.4"      # homebrew; dust
 rust-exa="0.9.0"          # homebrew
