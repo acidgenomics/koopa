@@ -21,7 +21,7 @@ cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
-Updated 2020-11-19.
+Updated 2021-03-01.
 
 Optional arguments:
     --help, -h
@@ -258,14 +258,14 @@ END
     # ==========================================================================
 
     # Prompt if the user wants to enable passwordless sudo.
-    if koopa::is_linux && \
-        [[ "$interactive" -eq 1 ]] && \
-        [[ "$shared" -eq 1 ]]
-    then
-        passwordless="$( \
-            koopa::read_yn 'Enable passwordless sudo' "$passwordless" \
-        )"
-    fi
+    # > if koopa::is_linux && \
+    # >     [[ "$interactive" -eq 1 ]] && \
+    # >     [[ "$shared" -eq 1 ]]
+    # > then
+    # >     passwordless="$( \
+    # >         koopa::read_yn 'Enable passwordless sudo' "$passwordless" \
+    # >     )"
+    # > fi
     [[ "$passwordless" -eq 1 ]] && koopa::enable_passwordless_sudo
 
     # Dot files {{{1
