@@ -61,8 +61,8 @@ local({
             repos = c(
                 "r.acidgenomics.com",
                 BiocManager::repositories()
-            )
-            ## > dependencies = TRUE
+            ),
+            dependencies = TRUE
         )
         stopifnot(packageVersion("koopa") >= minVersion)
         invisible(TRUE)
