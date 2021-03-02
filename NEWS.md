@@ -1,3 +1,13 @@
+## koopa 0.9.1 (2021-03-01)
+
+### Minor changes
+
+- Reorganized some internal Bash functions.
+- Improved and hardened functions that can enable passwordless sudo or sudo
+  via Touch ID on macOS.
+- Updated package version checks to support more libraries, such as cairo,
+  harfbuzz, and imagemagick. These checks are defined in the r-koopa package.
+
 ## koopa 0.9.0 (2021-02-16)
 
 - Installer now defaults to `/opt/koopa` instead of `/usr/local/koopa`.
