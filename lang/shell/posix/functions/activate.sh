@@ -9,6 +9,28 @@ _koopa_activate_aspera() { # {{{1
     return 0
 }
 
+_koopa_activate_bcbio() { # {{{1
+    # """
+    # Activate bcbio-nextgen tool binaries.
+    # @note Updated 2021-03-02.
+    #
+    # Attempt to locate bcbio installation automatically on supported platforms.
+    #
+    # Exporting at the end of PATH so we don't mask gcc or R.
+    # This is particularly important to avoid unexpected compilation issues
+    # due to compilers in conda masking the system versions.
+    # """
+    # shellcheck disable=SC2039
+    local prefix
+    _koopa_is_linux || return 0
+    _koopa_is_installed bcbio_nextgen.py && return 0
+    prefix="$(_koopa_bcbio_tools_prefix)"
+    [ -d "$prefix" ] || return 0
+    _koopa_force_add_to_path_end "${prefix}/bin"
+    unset -v PYTHONHOME PYTHONPATH
+    return 0
+}
+
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda.
