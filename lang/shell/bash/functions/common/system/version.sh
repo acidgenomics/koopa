@@ -595,6 +595,9 @@ koopa::return_version() { # {{{1
         homebrew)
             cmd='brew'
             ;;
+        icu)
+            cmd='icu-config'
+            ;;
         ncurses)
             cmd='ncurses6-config'
             ;;
