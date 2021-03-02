@@ -156,7 +156,7 @@ homebrew="3.0.3"
 htop="3.0.5"
 
 # http://site.icu-project.org/
-icu4c="68.2"
+icu="68.2"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
