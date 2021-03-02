@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-03-02.
     # """
     case "${1:-}" in
         --help|-h)
@@ -76,6 +76,12 @@ _koopa_activate() { # {{{1
         # Ruby ------------------------------------------------------------ {{{2
         _koopa_activate_ruby
         _koopa_activate_rbenv
+        # > _koopa_activate_venv
+        # Rust ------------------------------------------------------------ {{{2
+        _koopa_activate_rust
+        _koopa_activate_broot
+        _koopa_activate_fzf
+        _koopa_activate_zoxide
         # Python ---------------------------------------------------------- {{{2
         _koopa_is_macos && _koopa_activate_macos_python
         _koopa_activate_python_site_packages
@@ -83,12 +89,7 @@ _koopa_activate() { # {{{1
         _koopa_activate_pyenv
         _koopa_activate_pipx
         _koopa_activate_conda
-        # > _koopa_activate_venv
-        # Rust ------------------------------------------------------------ {{{2
-        _koopa_activate_rust
-        _koopa_activate_broot
-        _koopa_activate_fzf
-        _koopa_activate_zoxide
+        _koopa_is_linux && _koopa_activate_bcbio
     fi
     _koopa_activate_koopa_paths
     _koopa_activate_local_paths
