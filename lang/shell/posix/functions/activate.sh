@@ -157,6 +157,7 @@ _koopa_activate_homebrew() { # {{{1
     _koopa_activate_homebrew_libexec_prefix man-db
     _koopa_activate_homebrew_prefix bc
     _koopa_activate_homebrew_prefix curl
+    _koopa_activate_homebrew_prefix icu4c
     _koopa_activate_homebrew_prefix ncurses
     _koopa_activate_homebrew_prefix ruby
     _koopa_activate_homebrew_prefix sqlite
