@@ -15,7 +15,6 @@ koopa::linux_fix_sudo_setrlimit_error() { # {{{1
     # """
     local file
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_docker
     string='Set disable_coredump false'
     file='/etc/sudo.conf'
     koopa::sudo_append_string "$string" "$file"
