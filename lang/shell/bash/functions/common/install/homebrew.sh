@@ -165,7 +165,7 @@ koopa::uninstall_homebrew() { # {{{1
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-03-02.
     #
     # Use of '--force-bottle' flag can be helpful, but not all brews have
     # bottles, so this can error.
@@ -183,21 +183,22 @@ koopa::update_homebrew() { # {{{1
     # - https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
     # - https://github.com/Homebrew/brew/issues/9139
     # """
-    local cask_flags casks group name_fancy prefix user
+    local cask_flags casks name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
     koopa::assert_has_sudo
     export HOMEBREW_CASK_OPTS='--force --no-quarantine'
     name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
-    if koopa::has_passwordless_sudo
-    then
-        user="$(koopa::user)"
-        group="$(koopa::admin_group)"
-        prefix="$(koopa::homebrew_prefix)"
-        koopa::alert "Resetting ownership at '${prefix}' to '${user}:${group}'."
-        sudo chown -Rh "${user}:${group}" "${prefix}/"*
-    fi
+    # > if koopa::has_sudo
+    # > then
+    # >     local group prefix user
+    # >     user="$(koopa::user)"
+    # >     group="$(koopa::admin_group)"
+    # >     prefix="$(koopa::homebrew_prefix)"
+    # >     koopa::alert "Resetting '${prefix}' to '${user}:${group}'."
+    # >     sudo chown -Rh "${user}:${group}" "${prefix}/"*
+    # > fi
     koopa::alert "Ensuring internal 'homebrew-core' repo is clean."
     # See also:
     # - https://thecoatlessprofessor.com/programming/
@@ -249,11 +250,11 @@ koopa::update_homebrew() { # {{{1
     koopa::alert 'Running cleanup.'
     brew cleanup -s || true
     koopa::rm "$(brew --cache)"
-    if koopa::has_passwordless_sudo
-    then
-        koopa::alert "Resetting ownership at '${prefix}' to '${user}:${group}'."
-        sudo chown -Rh "${user}:${group}" "${prefix}/"*
-    fi
+    # > if koopa::has_sudo
+    # > then
+    # >     koopa::alert "Resetting '${prefix}' to '${user}:${group}'."
+    # >     sudo chown -Rh "${user}:${group}" "${prefix}/"*
+    # > fi
     koopa::update_success "$name_fancy"
     return 0
 }
