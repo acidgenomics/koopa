@@ -46,10 +46,28 @@ koopa::armadillo_version() { # {{{1
 koopa::boost_version() { # {{{1
     # """
     # Boost (libboost) version.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-03-02.
+    # @seealso
+    # - https://stackoverflow.com/questions/3708706/
+    # - https://stackoverflow.com/questions/4518584/
     # """
+    local major minor patch x
     koopa::assert_has_no_args "$#"
-    koopa::_pkg_config_version 'boost'
+    koopa::assert_is_installed bc gcc grep
+    # Extract the Boost library version using GCC preprocessing. This approach
+    # is nice because it doesn't hardcode to a specific file path.
+    x="$( \
+        koopa::print '#include <boost/version.hpp>\nBOOST_VERSION' \
+        | gcc -x c++ -E - \
+        | grep -E '^[0-9]+$' \
+    )"
+    [[ -n "$x" ]] || return 1
+    # Convert '107500' to '1.75.0', for example.
+    major="$(koopa::print "$x / 100000" | bc)"
+    minor="$(koopa::print "$x / 100 % 1000" | bc)"
+    patch="$(koopa::print "$x % 100" | bc)"
+    koopa::print "${major}.${minor}.${patch}"
+    return 0
 }
 
 koopa::cairo_version() { # {{{1
