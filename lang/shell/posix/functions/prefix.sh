@@ -40,7 +40,6 @@ _koopa_aspera_prefix() { # {{{1
     # Aspera Connect prefix.
     # @note Updated 2020-11-24.
     # """
-    # shellcheck disable=SC2039
     _koopa_print "$(_koopa_opt_prefix)/aspera-connect"
     return 0
 }
@@ -48,10 +47,10 @@ _koopa_aspera_prefix() { # {{{1
 _koopa_bcbio_tools_prefix() { # {{{1
     # """
     # bcbio-nextgen tools prefix.
-    # @note Updated 2020-11-19.
-    # shellcheck disable=SC2039
+    # @note Updated 2021-03-02.
+    # """
     _koopa_is_linux || return 0
-    _koopa_print "$(_koopa_opt_prefix)/bcbio/stable/tools"
+    _koopa_print "$(_koopa_opt_prefix)/bcbio/tools"
     return 0
 }
 
