@@ -290,6 +290,16 @@ koopa::docker_prune_old_images() { # {{{
     return 0
 }
 
+koopa::docker_prune_stale_tags() { # {{{1
+    # """
+    # Prune (delete) all stale tags on DockerHub for a specific image.
+    # @note Updated 2020-03-02.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::rscript 'dockerPruneStaleTags' "$@"
+    return 0
+}
+
 koopa::docker_push() { # {{{1
     # """
     # Push a local Docker build.
