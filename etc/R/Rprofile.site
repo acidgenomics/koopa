@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-02-23.
+## Updated 2021-03-05.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -382,18 +382,21 @@ local({
     } else if (isTRUE(.rprofile[["macos"]])) {
         options("pkgType" = "both")
     }
+    ## Stop nagging about whether to compile in an interactive session.
+    ## https://stackoverflow.com/a/51530225
+    options("install.packages.compile.from.source" = "always")
+    
+    ## How to set binary-only package mode, which doesn't work on Linux.
+    ## > options(
+    ## >     "install.packages.check.source" = "no",
+    ## >     "install.packages.compile.from.source" = "binary",
+    ## >     "pkgType" = "binary"
+    ## > )
 
     ## Set custom compiler options.
     ## > options(
     ## >     "configure.args" = NULL,
     ## >     "configure.vars" = NULL
-    ## > )
-
-    ## Binary package mode. Doesn't work on Linux.
-    ## > options(
-    ## >     "install.packages.check.source" = "no",
-    ## >     "install.packages.compile.from.source" = "binary",
-    ## >     "pkgType" = "binary"
     ## > )
 
     ## Specify internal download method.
