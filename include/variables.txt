@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-03-02"
+koopa-date="2021-03-05"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.1"
@@ -149,7 +149,7 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.0.3"
+homebrew="3.0.4"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -203,14 +203,14 @@ neofetch="7.1.0"
 neovim="0.4.4"
 
 # https://nodejs.org/
-node="15.10.0"
+node="15.11.0"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
 openjdk="15.0.2"
 
 # https://www.openssh.com/portable.html
-openssh="8.4p1"
+openssh="8.5p1"
 
 # https://www.openssl.org/source/
 openssl="1.1.1d"
