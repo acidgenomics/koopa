@@ -149,7 +149,7 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.0.4"
+homebrew="3.0.5"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -220,7 +220,7 @@ openssl="1.1.1d"
 oracle-instantclient="19.5.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.10"
+pandoc="2.12"
 
 # https://www.gnu.org/software/parallel/
 parallel="20201122"
