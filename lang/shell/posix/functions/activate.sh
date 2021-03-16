@@ -795,6 +795,19 @@ _koopa_activate_venv() { # {{{1
     return 0
 }
 
+_koopa_activate_visual_studio_code() { # {{{1
+    # """
+    # Activate Visual Studio Code.
+    # @note Updated 2021-03-16.
+    # """
+    # shellcheck disable=SC2039
+    local prefix
+    _koopa_is_macos || return 0
+    prefix='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
+    _koopa_force_add_to_path_start "$prefix"
+    return 0
+}
+
 _koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
