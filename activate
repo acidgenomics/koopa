@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2021-03-02.
+    # @note Updated 2021-03-16.
     # """
     case "${1:-}" in
         --help|-h)
@@ -60,6 +60,7 @@ _koopa_activate() { # {{{1
     _koopa_export_user
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
+        _koopa_is_macos && _koopa_activate_visual_studio_code
         _koopa_activate_homebrew
         _koopa_activate_coreutils
         _koopa_activate_dircolors
