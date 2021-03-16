@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-02-25.
+# Updated 2021-03-16.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -179,6 +179,7 @@ brew "gcc"
 brew "gdal"
 brew "git"
 brew "git-lfs"
+brew "gitui"
 brew "gnu-sed"
 brew "gnu-tar"
 brew "gnu-time"
