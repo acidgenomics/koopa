@@ -60,6 +60,10 @@ koopa::alert() { # {{{1
     _koopa_alert "$@"
 }
 
+koopa::alert_info() { # {{{1
+    _koopa_alert_info "$@"
+}
+
 koopa::app_prefix() { # {{{1
     _koopa_app_prefix "$@"
 }

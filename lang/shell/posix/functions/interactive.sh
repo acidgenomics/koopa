@@ -30,7 +30,7 @@ _koopa_git_branch() { # {{{1
 _koopa_tmux_sessions() { # {{{1
     # """
     # Show active tmux sessions.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-03-17.
     # """
     # shellcheck disable=SC2039
     local x
@@ -39,7 +39,8 @@ _koopa_tmux_sessions() { # {{{1
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
     x="$(_koopa_print "$x" | cut -d ':' -f 1 | tr '\n' ' ')"
-    _koopa_dl 'tmux sessions' "$x"
+    # FIXME NEED TO ADD THIS FUNCTION.
+    _koopa_alert_info "tmux: ${x}"
     return 0
 }
 
