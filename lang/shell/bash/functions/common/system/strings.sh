@@ -3,7 +3,7 @@
 koopa::admin_group() { # {{{1
     # """
     # Return the administrator group.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-03-17.
     #
     # Usage of 'groups' here is terribly slow for domain users.
     # Currently seeing this with CPI AWS Ubuntu config.
@@ -16,6 +16,9 @@ koopa::admin_group() { # {{{1
     if koopa::is_root
     then
         group='root'
+    elif koopa::is_alpine
+    then
+        group='wheel'
     elif koopa::is_debian_like
     then
         group='sudo'
