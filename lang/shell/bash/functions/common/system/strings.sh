@@ -19,6 +19,9 @@ koopa::admin_group() { # {{{1
     elif koopa::is_alpine
     then
         group='wheel'
+    elif koopa::is_arch
+    then
+        group='wheel'
     elif koopa::is_debian_like
     then
         group='sudo'
