@@ -210,6 +210,15 @@ _koopa_alert() { # {{{1
     return 0
 }
 
+_koopa_alert_info() { # {{{1
+    # """
+    # Alert info message.
+    # @note Updated 2021-03-17.
+    # """
+    __koopa_msg 'cyan' 'default' ' ℹ︎' "$@"
+    return 0
+}
+
 _koopa_coffee_time() { # {{{1
     # """
     # Coffee time.
