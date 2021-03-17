@@ -368,7 +368,14 @@ koopa::docker_remove() { # {{{1
 koopa::docker_run() { # {{{1
     # """
     # Run Docker image.
-    # @note Updated 2021-02-16.
+    # @note Updated 2021-03-17.
+    #
+    # No longer using bind mounts by default.
+    # Use named volumes, which have better cross-platform compatiblity, instead.
+    #
+    # @seealso
+    # - https://docs.docker.com/storage/volumes/
+    # - https://docs.docker.com/storage/bind-mounts/
     # """
     local bash flags image pos workdir
     koopa::assert_has_args "$#"
@@ -405,8 +412,9 @@ koopa::docker_run() { # {{{1
     workdir="$(koopa::strip_trailing_slash "$workdir")"
     docker pull "$image"
     flags=(
-        "--volume=${PWD}:${workdir}"
-        "--workdir=${workdir}"
+        # Legacy bind mounts approach:
+        # > "--volume=${PWD}:${workdir}"
+        # > "--workdir=${workdir}"
         '--interactive'
         '--tty'
         "$image"
@@ -416,31 +424,6 @@ koopa::docker_run() { # {{{1
         flags+=('bash' '-il')
     fi
     docker run "${flags[@]}"
-    return 0
-}
-
-koopa::docker_run_wine() { # {{{1
-    # """
-    # Run Wine Docker image.
-    # @note Updated 2020-07-20.
-    #
-    # Allow access from localhost.
-    # > xhost + "$HOSTNAME"
-    # """
-    local image workdir
-    koopa::assert_is_installed docker xhost
-    image='acidgenomics/wine'
-    workdir='/mnt/work'
-    xhost + '127.0.0.1'
-    docker run \
-        --interactive \
-        --privileged \
-        --tty \
-        --volume="${PWD}:${workdir}" \
-        --workdir="${workdir}" \
-        -e 'DISPLAY=host.docker.internal:0' \
-        "$image" \
-        "$@"
     return 0
 }
 
