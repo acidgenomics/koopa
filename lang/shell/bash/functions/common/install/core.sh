@@ -31,7 +31,6 @@ koopa::install_app() { # {{{1
     # Install application into a versioned directory structure.
     # @note Updated 2021-03-18.
     # """
-    set -x  # FIXME
     local gnu_mirror include_dirs jobs link_args link_app make_prefix name \
         name_fancy prefix reinstall script script_name script_prefix \
         tmp_dir version
@@ -77,6 +76,10 @@ koopa::install_app() { # {{{1
                 ;;
             --version=*)
                 version="${1#*=}"
+                shift 1
+                ;;
+            --verbose)
+                set -x
                 shift 1
                 ;;
             "")
@@ -130,13 +133,7 @@ koopa::install_app() { # {{{1
         then
             link_args+=("--include-dirs=${include_dirs}")
         fi
-        # FIXME This step is erroring out on Arch.
-        # Problematic command:
-        # sudo cp -af -s \
-        #     -t /usr/local \
-        #     /opt/koopa/app/zsh/5.8/bin \
-        #     /opt/koopa/app/zsh/5.8/lib \
-        #     /opt/koopa/app/zsh/5.8/share
+        # We're including the 'true' catch here to avoid cp issues on Arch.
         koopa::link_app "${link_args[@]}" || true
     fi
     koopa::install_success "$name_fancy" "$prefix"
