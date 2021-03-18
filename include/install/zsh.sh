@@ -45,6 +45,8 @@ then
         -t "${etc_dir}" \
         "$(koopa::distro_prefix)/etc/zsh/"*
 fi
+# Ensure install passes compaudit checks.
+koopa::fix_zsh_permissions
 if [[ "${link_app:-0}" -eq 1 ]]
 then
     koopa::enable_shell "$name"
