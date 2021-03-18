@@ -464,12 +464,12 @@ python-wheel="0.36.2"
 # https://rubygems.org/gems/bundler/versions/
 # NOTE Consider renaming to 'bundler' here.
 # Update with 'gem install bundler'.
-ruby-bundle="2.2.9"
+ruby-bundler="2.2.14"
 
 # https://rubygems.org/pages/download/
 # NOTE Consider renaming to 'rubygems' here.
 # Update with 'gem update --system'.
-ruby-gem="3.2.9"
+ruby-gem="3.2.14"
 
 # Last updated 2010-06-24...
 ruby-ronn="0.7.3"

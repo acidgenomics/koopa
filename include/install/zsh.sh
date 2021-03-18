@@ -26,7 +26,9 @@
 
 etc_dir="${prefix}/etc/${name}"
 file="${name}-${version}.tar.xz"
-url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
+# > url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
+url="https://downloads.sourceforge.net/project/\
+${name}/${name}/${version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-${version}"
