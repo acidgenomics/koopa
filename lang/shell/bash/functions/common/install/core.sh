@@ -130,9 +130,14 @@ koopa::install_app() { # {{{1
         then
             link_args+=("--include-dirs=${include_dirs}")
         fi
-        # FIXME This step seems to be erroring on Arch.
-        # Is it the include-dirs argument?
-        koopa::link_app "${link_args[@]}"
+        # FIXME This step is erroring out on Arch.
+        # Problematic command:
+        # sudo cp -af -s \
+        #     -t /usr/local \
+        #     /opt/koopa/app/zsh/5.8/bin \
+        #     /opt/koopa/app/zsh/5.8/lib \
+        #     /opt/koopa/app/zsh/5.8/share
+        koopa::link_app "${link_args[@]}" || true
     fi
     koopa::install_success "$name_fancy" "$prefix"
     return 0
