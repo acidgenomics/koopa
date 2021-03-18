@@ -128,11 +128,10 @@ END
     koopa::sudo_write_string "$string" "$file"
 }
 
-# FIXME This function seems to be erroring on Arch.
 koopa::update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-03-18.
     # """
     local conf_source dest_file distro_prefix source_file
     koopa::assert_has_no_args "$#"
@@ -141,6 +140,7 @@ koopa::update_ldconfig() { # {{{1
     koopa::assert_has_sudo
     distro_prefix="$(koopa::distro_prefix)"
     conf_source="${distro_prefix}/etc/ld.so.conf.d"
+    # Intentionally early return for distros that don't need configuration.
     [[ -d "$conf_source" ]] || return 0
     # Create symlinks with 'koopa-' prefix.
     # Note that we're using shell globbing here.
