@@ -3,9 +3,9 @@
 koopa::enable_shell() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2020-07-07.
+    # @note Updated 2021-03-18.
     # """
-    local cmd_name cmd_path etc_file
+    local cmd_name cmd_path etc_file user
     koopa::assert_has_args "$#"
     koopa::has_sudo || return 0
     cmd_name="${1:?}"
@@ -19,11 +19,16 @@ koopa::enable_shell() { # {{{1
     else
         koopa::success "'${cmd_path}' already defined in '${etc_file}'."
     fi
-    koopa::note "Run 'chsh -s ${cmd_path} ${USER}' to change default shell."
+    user="$(koopa::user)"
+    koopa::note "Run 'chsh -s ${cmd_path} ${user}' to change default shell."
     return 0
 }
 
 koopa::reload_shell() { # {{{1
+    # """
+    # Reload the current shell.
+    # @note Updated 2021-03-18.
+    # """
     koopa::assert_has_no_args "$#"
     # shellcheck disable=SC2093
     exec "${SHELL:?}" -il

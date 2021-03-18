@@ -3,7 +3,7 @@
 koopa::add_user_to_etc_passwd() { # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-03-18.
     #
     # Necessary for running 'chsh' with a Kerberos / Active Directory domain
     # account, on AWS or Azure for example.
@@ -14,7 +14,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
     koopa::assert_has_args_le "$#" 1
     passwd_file='/etc/passwd'
     koopa::assert_is_file "$passwd_file"
-    user="${1:-${USER:?}}"
+    user="${1:-$(koopa::user)}"
     user_string="$(getent passwd "$user")"
     koopa::alert "Updating '${passwd_file}' to include '${user}'."
     if ! sudo grep -q "$user" "$passwd_file"
@@ -29,7 +29,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
 koopa::add_user_to_group() { # {{{1
     # """
     # Add user to group.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-03-18.
     #
     # Alternate approach:
     # > usermod -a -G group user
@@ -41,7 +41,7 @@ koopa::add_user_to_group() { # {{{1
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed gpasswd
     group="${1:?}"
-    user="${2:-${USER:?}}"
+    user="${2:-$(koopa::user)}"
     koopa::alert "Adding user '${user}' to group '${group}'."
     sudo gpasswd --add "$user" "$group"
     return 0
@@ -84,7 +84,7 @@ koopa::link_docker() { # {{{1
 koopa::remove_user_from_group() { # {{{1
     # """
     # Remove user from group.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-03-18.
     #
     # @examples
     # koopa::remove_user_from_group 'docker'
@@ -94,7 +94,7 @@ koopa::remove_user_from_group() { # {{{1
     koopa::assert_is_installed gpasswd sudo
     koopa::assert_has_sudo
     group="${1:?}"
-    user="${2:-${USER}}"
+    user="${2:-$(koopa::user)}"
     sudo gpasswd --delete "$user" "$group"
     return 0
 }

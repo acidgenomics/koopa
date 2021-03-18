@@ -223,11 +223,9 @@ _koopa_export_today() { # {{{1
 _koopa_export_user() { # {{{1
     # """
     # Export USER.
-    # @note Updated 2020-06-30.
-    #
-    # Alternatively, can use 'whoami' here.
+    # @note Updated 2021-03-18.
     # """
-    [ -z "${USER:-}" ] && USER="$(id -un)"
+    [ -z "${USER:-}" ] && USER="$(_koopa_user)"
     export USER
     return 0
 }

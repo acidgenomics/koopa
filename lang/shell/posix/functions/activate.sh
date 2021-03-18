@@ -811,19 +811,12 @@ _koopa_activate_visual_studio_code() { # {{{1
 _koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
-    # @note Updated 2020-08-05.
+    # @note Updated 2021-03-18.
     #
     # XDG_RUNTIME_DIR:
     # - Can only exist for the duration of the user's login.
     # - Updated every 6 hours or set sticky bit if persistence is desired.
     # - Should not store large files as it may be mounted as a tmpfs.
-    #
-    # > if [ ! -d "$XDG_RUNTIME_DIR" ]
-    # > then
-    # >     mkdir -pv "$XDG_RUNTIME_DIR"
-    # >     chown "$USER" "$XDG_RUNTIME_DIR"
-    # >     chmod 0700 "$XDG_RUNTIME_DIR"
-    # > fi
     #
     # @seealso
     # - https://developer.gnome.org/basedir-spec/
@@ -833,15 +826,15 @@ _koopa_activate_xdg() { # {{{1
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
     [ -z "${XDG_CACHE_HOME:-}" ] && \
-        XDG_CACHE_HOME="${HOME}/.cache"
+        XDG_CACHE_HOME="${HOME:?}/.cache"
     [ -z "${XDG_CONFIG_DIRS:-}" ] && \
         XDG_CONFIG_DIRS='/etc/xdg'
     [ -z "${XDG_CONFIG_HOME:-}" ] && \
-        XDG_CONFIG_HOME="${HOME}/.config"
+        XDG_CONFIG_HOME="${HOME:?}/.config"
     [ -z "${XDG_DATA_DIRS:-}" ] && \
         XDG_DATA_DIRS="${make_prefix}/share:/usr/share"
     [ -z "${XDG_DATA_HOME:-}" ] && \
-        XDG_DATA_HOME="${HOME}/.local/share"
+        XDG_DATA_HOME="${HOME:?}/.local/share"
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
     then
         XDG_RUNTIME_DIR="/run/user/$(_koopa_user_id)"

@@ -167,7 +167,7 @@ koopa::sys_set_permissions() { # {{{1
             user="$(koopa::sys_user)"
             ;;
         1)
-            user="${USER:?}"
+            user="$(koopa::user)"
             ;;
     esac
     group="$(koopa::sys_group)"
