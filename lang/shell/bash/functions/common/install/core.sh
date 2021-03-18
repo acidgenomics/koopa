@@ -29,8 +29,9 @@ koopa::find_app_version() { # {{{1
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-03-18.
     # """
+    set -x  # FIXME
     local gnu_mirror include_dirs jobs link_args link_app make_prefix name \
         name_fancy prefix reinstall script script_name script_prefix \
         tmp_dir version
@@ -129,6 +130,8 @@ koopa::install_app() { # {{{1
         then
             link_args+=("--include-dirs=${include_dirs}")
         fi
+        # FIXME This step seems to be erroring on Arch.
+        # Is it the include-dirs argument?
         koopa::link_app "${link_args[@]}"
     fi
     koopa::install_success "$name_fancy" "$prefix"
