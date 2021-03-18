@@ -125,11 +125,11 @@ koopa::install_homebrew_packages() { # {{{1
 koopa::uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-03-18.
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
-    local file name_fancy tmp_dir url
+    local file name_fancy tmp_dir url user
     if ! koopa::is_installed brew
     then
         koopa::note 'Homebrew is not installed.'
@@ -138,16 +138,17 @@ koopa::uninstall_homebrew() { # {{{1
     koopa::assert_has_sudo
     koopa::assert_is_installed yes
     name_fancy='Homebrew'
+    user="$(koopa::user)"
     koopa::uninstall_start "$name_fancy"
     koopa::assert_has_no_args "$#"
     # Note that macOS Catalina now uses Zsh instead of Bash by default.
     if koopa::is_macos
     then
         koopa::alert 'Changing default shell to system Zsh.'
-        chsh -s '/bin/zsh' "$USER"
+        chsh -s '/bin/zsh' "$user"
     fi
     # > koopa::alert "Resetting permissions in '/usr/local'."
-    # > sudo chown -Rhv "$USER" '/usr/local/'*
+    # > sudo chown -Rhv "$user" '/usr/local/'*
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"

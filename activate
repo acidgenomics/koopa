@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2021-03-16.
+    # @note Updated 2021-03-18.
     # """
     case "${1:-}" in
         --help|-h)
