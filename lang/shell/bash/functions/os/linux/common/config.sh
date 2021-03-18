@@ -128,6 +128,7 @@ END
     koopa::sudo_write_string "$string" "$file"
 }
 
+# FIXME This function seems to be erroring on Arch.
 koopa::update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
