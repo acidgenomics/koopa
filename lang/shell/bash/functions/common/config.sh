@@ -127,9 +127,9 @@ koopa::fix_rbenv_permissions() { # {{{1
 koopa::fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-03-18.
     # """
-    local app_prefix koopa_prefix make_prefix zsh
+    local app_prefix koopa_prefix make_prefix
     koopa::assert_has_no_args "$#"
     koopa::alert 'Fixing Zsh permissions.'
     koopa_prefix="$(koopa::prefix)"
@@ -137,11 +137,11 @@ koopa::fix_zsh_permissions() { # {{{1
         "${koopa_prefix}/lang/shell/zsh" \
         "${koopa_prefix}/lang/shell/zsh/functions"
     koopa::is_installed zsh || return 0
-    zsh="$(koopa::which_realpath zsh)"
     make_prefix="$(koopa::make_prefix)"
     if [[ -d "${make_prefix}/share/zsh/site-functions" ]]
     then
-        if koopa::str_match_regex "$zsh" "^${make_prefix}"
+        if koopa::str_match_regex \
+            "$(koopa::which zsh)" "^${make_prefix}"
         then
             koopa::sys_chmod 'g-w' \
                 "${make_prefix}/share/zsh" \
@@ -151,7 +151,8 @@ koopa::fix_zsh_permissions() { # {{{1
     app_prefix="$(koopa::app_prefix)"
     if [[ -d "$app_prefix" ]]
     then
-        if koopa::str_match_regex "$zsh" "^${app_prefix}"
+        if koopa::str_match_regex \
+            "$(koopa::which_realpath zsh)" "^${app_prefix}"
         then
             koopa::sys_chmod 'g-w' \
                 "${app_prefix}/zsh/"*'/share/zsh' \
