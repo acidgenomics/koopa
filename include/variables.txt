@@ -468,7 +468,7 @@ ruby-bundler="2.2.14"
 
 # https://rubygems.org/pages/download/
 # NOTE Consider renaming to 'rubygems' here.
-# Update with 'gem update --system'.
+# Update with 'gem update --system', but don't do this with Homebrew Ruby.
 ruby-gem="3.2.14"
 
 # Last updated 2010-06-24...
