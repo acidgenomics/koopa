@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-03-05.
+## Updated 2021-03-18.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -345,8 +345,19 @@ local({
         repos <- getOption("repos")
         if (isTRUE(.rprofile[["linux"]])) {
             ## Configure the RSPM CRAN snapshot.
-            repos[["CRAN"]] <-
-                "https://packagemanager.rstudio.com/cran/2021-02-22"
+            snapshot <- "2021-03-18"
+            cran <- "https://packagemanager.rstudio.com/cran"
+            ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
+            if (isTRUE(grepl(
+                pattern = "Ubuntu 20.04",
+                x = utils::osVersion,
+                fixed = TRUE
+            ))) {
+                distro <- "focal"
+                cran <- paste(cran, "__linux__", distro, sep = "/")
+            }
+            cran <- paste(cran, snapshot, sep = "/")
+            repos[["CRAN"]] <- cran
             ## Configure the RSPM Bioconductor mirror repo.
             options(
                "BioC_mirror" =
