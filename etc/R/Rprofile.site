@@ -316,7 +316,10 @@ local({
     ## Package installation {{{2
     ## -------------------------------------------------------------------------
 
-    ## Using a versioned CRAN snapshot on Linux for increased reproducibility.
+    ## Using a versioned RStudio Package Manager (RSPM) CRAN snapshot on Linux
+    ## for increased reproducibility.
+    ##
+    ## Note that RSPM does not support binary packages for macOS.
     ##
     ## See also:
     ## - https://packagemanager.rstudio.com/
