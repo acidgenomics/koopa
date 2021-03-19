@@ -3,7 +3,7 @@
 koopa::macos_update_defaults() { # {{{1
     # """
     # Update macOS defaults.
-    # @note Updated 2020-11-20.
+    # @note Updated 2021-03-19.
     #
     # Tested to work on macOS Big Sur.
     #
@@ -40,6 +40,18 @@ koopa::macos_update_defaults() { # {{{1
 
     # General UI/UX {{{2
     # --------------------------------------------------------------------------
+
+    # For reference, here's how to set computer name automatically.
+    # > local comp_name
+    # > sudo scutil --set ComputerName "$comp_name"
+    # > sudo scutil --set HostName "$comp_name"
+    # > sudo scutil --set LocalHostName "$comp_name"
+    # > sudo defaults write \
+    # >     /Library/Preferences/SystemConfiguration/com.apple.smb.server \
+    # >     NetBIOSName -string "$comp_name"
+
+    # Disable the chime on boot.
+    sudo nvram SystemAudioVolume=' '
 
     # Reduce motion.
     defaults write \
@@ -172,7 +184,7 @@ koopa::macos_update_defaults() { # {{{1
         'LSQuarantine' \
         -bool false
 
-    # Disable Resume system-wide.
+    # Disable resume system-wide.
     defaults write \
         'com.apple.systempreferences' \
         'NSQuitAlwaysKeepsWindows' \
@@ -189,6 +201,18 @@ koopa::macos_update_defaults() { # {{{1
         'com.apple.helpviewer' \
         'DevMode' \
         -bool true
+
+    # Reveal IP address, hostname, OS version, etc. when clicking the clock
+    # in the login window.
+    sudo defaults write \
+        '/Library/Preferences/com.apple.loginwindow' \
+        'AdminHostInfo'\
+        'HostName'
+
+    # Disable Notification Center and remove the menu bar icon
+    # > launchctl unload -w \
+    # >   '/System/Library/LaunchAgents/com.apple.notificationcenterui.plist' \
+    # >   2>/dev/null
 
     # Disable automatic capitalization as it's annoying when typing code.
     defaults write \
