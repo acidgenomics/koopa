@@ -3,7 +3,7 @@
 koopa::linux_install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-01-22.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -46,6 +46,9 @@ koopa::linux_install_openjdk() { # {{{1
     (
         koopa::cd "$tmp_dir"
         case "$version" in
+            16)
+                unique='7863447f0ab643c585b9bdebf67c69db/36'
+                ;;
             15.0.2)
                 unique='0d1cfde4252546c6931946de8db48ee2/7'
                 ;;
@@ -76,6 +79,10 @@ koopa::linux_install_openjdk() { # {{{1
             *)
                 koopa::stop "Unsupported version: '${version}'."
         esac
+        # Platform suffixes:
+        # - Linux/AArch64: 'linux-aarch64'
+        # - Linux/x64: 'linux-x64'
+        # - macOS/x64: 'osx-x64'
         file="${name}-${version}_linux-x64_bin.tar.gz"
         url="https://download.java.net/java/GA/jdk${version}/\
 ${unique}/GPL/${file}"
