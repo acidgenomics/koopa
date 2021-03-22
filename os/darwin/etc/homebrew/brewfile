@@ -233,6 +233,7 @@ brew "oil"
 brew "open-mpi"
 brew "openblas"
 brew "openjdk"
+brew "openjdk@8"  # for nextflow
 brew "openssh"
 brew "osx-cpu-temp"
 brew "pandoc"
