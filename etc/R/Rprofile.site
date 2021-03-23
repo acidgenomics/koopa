@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-03-18.
+## Updated 2021-03-23.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -267,6 +267,8 @@ local({
                     value = clangVersion,
                     envir = .rprofile
                 )
+                ## Ensure that everything, including X11, is enabled.
+                stopifnot(all(capabilities()))
             } else if (isTRUE(.rprofile[["linux"]])) {
                 which <- c("g++", "gcc", "gfortran")
                 current <- Sys.which(which)
