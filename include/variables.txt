@@ -225,7 +225,7 @@ pandoc="2.13"
 pandoc-citeproc="0.17.0.2"
 
 # https://www.gnu.org/software/parallel/
-parallel="20201122"
+parallel="20210322"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
