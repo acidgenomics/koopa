@@ -269,15 +269,14 @@ local({
                 )
                 ## Ensure that everything, including X11, is enabled.
                 ## Note that 'cledit' will return false when non-interactive.
-                if (
-                    isTRUE(interactive()) &&
-                    !all(capabilities())
-                ) {
+                if (isTRUE(interactive())) {
                     x <- capabilities()
-                    stop(sprintf(
-                        "Capability failure: %s.",
-                        toString(names(x)[!x])
-                    ))
+                    if (!all(x)) {
+                        stop(sprintf(
+                            "Capability failure: %s.",
+                            toString(names(x)[!x])
+                        ))
+                    }
                 }
             } else if (isTRUE(.rprofile[["linux"]])) {
                 which <- c("g++", "gcc", "gfortran")
