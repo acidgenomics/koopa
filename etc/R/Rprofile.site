@@ -268,7 +268,17 @@ local({
                     envir = .rprofile
                 )
                 ## Ensure that everything, including X11, is enabled.
-                stopifnot(all(capabilities()))
+                ## Note that 'cledit' will return false when non-interactive.
+                if (
+                    isTRUE(interactive()) &&
+                    !all(capabilities())
+                ) {
+                    x <- capabilities()
+                    stop(sprintf(
+                        "Capability failure: %s.",
+                        toString(names(x)[!x])
+                    ))
+                }
             } else if (isTRUE(.rprofile[["linux"]])) {
                 which <- c("g++", "gcc", "gfortran")
                 current <- Sys.which(which)
