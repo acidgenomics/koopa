@@ -66,7 +66,7 @@ koopa::update_koopa() { # {{{1
 koopa::update_koopa_system() { # {{{1
     # """
     # Update system installation.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-03-24.
     # """
     koopa::assert_has_sudo
     koopa::update_koopa
@@ -83,9 +83,8 @@ koopa::update_koopa_system() { # {{{1
     fi
     if koopa::is_linux
     then
-        # Allow passthrough of specific arguments to 'configure-vm' script.
         configure_flags=('--no-check')
-        koopa::configure_vm "${configure_flags[@]}"
+        koopa::linux_configure_system "${configure_flags[@]}"
     fi
     if koopa::is_installed brew
     then
