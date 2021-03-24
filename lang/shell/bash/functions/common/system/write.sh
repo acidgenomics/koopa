@@ -3,21 +3,25 @@
 koopa::append_string() { # {{{1
     # """
     # Append a string at end of file.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-03-24.
     # """
     local file string
     koopa::assert_has_args_eq "$#" 2
+    koopa::assert_is_installed grep
     string="${1:?}"
     file="${2:?}"
     koopa::mkdir "$(dirname "$file")"
-    koopa::print "$string" >> "$file"
+    if ! grep -Eq "^${string}$" "$file"
+    then
+        koopa::print "$string" >> "$file"
+    fi
     return 0
 }
 
 koopa::sudo_append_string() { # {{{1
     # """
     # Append a string at end of file as root user.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-03-24.
     #
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' >> '${file}'"
@@ -25,14 +29,17 @@ koopa::sudo_append_string() { # {{{1
     local file string
     koopa::assert_has_args_eq "$#" 2
     koopa::assert_has_sudo
-    koopa::assert_is_installed tee
+    koopa::assert_is_installed grep tee
     string="${1:?}"
     file="${2:?}"
     if [[ ! -d "$(dirname "$file")" ]]
     then
         koopa::mkdir -S "$(dirname "$file")"
     fi
-    koopa::print "$string" | sudo tee -a "$file" >/dev/null
+    if ! sudo grep -Eq "^${string}$" "$file"
+    then
+        koopa::print "$string" | sudo tee -a "$file" >/dev/null
+    fi
     return 0
 }
 
