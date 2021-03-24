@@ -131,7 +131,7 @@ END
 koopa::update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-03-24.
     # """
     local conf_source dest_file distro_prefix source_file
     koopa::assert_has_no_args "$#"
@@ -145,12 +145,12 @@ koopa::update_ldconfig() { # {{{1
     # Create symlinks with 'koopa-' prefix.
     # Note that we're using shell globbing here.
     # https://unix.stackexchange.com/questions/218816
-    koopa::h2 "Updating ldconfig in '/etc/ld.so.conf.d/'."
+    koopa::alert "Updating ldconfig in '/etc/ld.so.conf.d/'."
     for source_file in "${conf_source}/"*".conf"
     do
         dest_file="/etc/ld.so.conf.d/koopa-$(basename "$source_file")"
         koopa::ln -S "$source_file" "$dest_file"
     done
-    sudo ldconfig
+    sudo ldconfig || true
     return 0
 }

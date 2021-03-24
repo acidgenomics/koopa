@@ -338,7 +338,7 @@ koopa::linux_configure_system() { # {{{1
     koopa::assert_is_installed autoconf bc bzip2 g++ gcc gzip ldconfig make \
         man msgfmt tar unzip xz
     koopa::assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
-    sudo ldconfig
+    koopa::update_ldconfig
     # Programs {{{2
     # --------------------------------------------------------------------------
     [[ "${dict[install_homebrew]}" -eq 1 ]] && \
@@ -500,7 +500,7 @@ koopa::linux_configure_system() { # {{{1
     # Ensure shared library configuration is current.
     [[ "${dict[install_lmod]}" -eq 1 ]] && \
         koopa::update_lmod_config
-    sudo ldconfig
+    koopa::update_ldconfig
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------
     [[ "${dict[install_python_packages]}" -eq 1 ]] && \
