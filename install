@@ -136,11 +136,12 @@ install() { # {{{1
     # ==========================================================================
 
     # Before we proceed, ensure that koopa isn't already installed.
-    if [[ -n "${KOOPA_PREFIX:-}" ]]
+    if [[ -d "${KOOPA_PREFIX:-}" ]]
     then
         printf "ERROR: koopa is installed: '%s'.\n" "$KOOPA_PREFIX" >&2
         return 1
     fi
+    unset KOOPA_PREFIX
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
     # Don't check for Bash version here, which will otherwise fail on macOS
     # clean install, which ships with ancient v3.
