@@ -31,7 +31,13 @@ koopa::mkdir patches
     done
 )
 flags=('--prefix' "$prefix")
-if koopa::is_macos
+if koopa::is_alpine
+then
+    # musl does not implement brk/sbrk (they simply return -ENOMEM).
+    # Otherwise will see this error:
+    # bash: xmalloc: locale.c:81: cannot allocate 18 bytes (0 bytes allocated)
+    flags+=('--without-bash-malloc')
+elif koopa::is_macos
 then
     cflags=(
         # When built with SSH_SOURCE_BASHRC, bash will source ~/.bashrc when
