@@ -7,14 +7,19 @@ koopa::debian_set_locale() { # {{{1
     #
     # Refer to '/usr/share/i18n/SUPPORTED' for supported locales.
     # """
-    local charset charset2 country lang file string
-    koopa::assert_is_installed grep locale-gen update-locale
+    local charset charset2 country lang lang_string file string
+    koopa::assert_has_sudo
+    koopa::assert_is_installed grep locale locale-gen update-locale
     # Consider allowing the user to change these in a future release.
     lang='en'
     country='US'
     charset='UTF-8'
+    # Inform the user about the locale that will be set.
+    # e.g. 'en_US.UTF-8'.
+    lang_string="${lang}_${country}.${charset}"
+    koopa::alert "Setting locale to '${lang_string}'."
     # e.g. 'en_US.UTF-8 UTF-8'.
-    string="${lang}_${country}.${charset} ${charset}"
+    string="${lang_string} ${charset}"
     file='/etc/locale.gen'
     koopa::assert_is_file "$file"
     if ! grep -q "$string" "$file"
@@ -26,10 +31,12 @@ koopa::debian_set_locale() { # {{{1
     charset2="$(koopa::lowercase "$charset")"
     charset2="$(koopa::gsub '-' '' "$charset2")"
     # e.g. 'en_US.utf8'.
-    string="${lang}_${country}.${charset2}".
-    locale-gen "$string"
+    string="${lang}_${country}.${charset2}"
+    sudo locale-gen "$string"
     # e.g. 'en_US.UTF-8'.
     string="${lang}_${country}.${charset}"
-    update-locale LANG="$string"
+    sudo update-locale LANG="$string"
+    locale
+    koopa::success "Locale is defined as '${lang_string}'."
     return 0
 }
