@@ -22,11 +22,7 @@ koopa::debian_set_locale() { # {{{1
     string="${lang_string} ${charset}"
     file='/etc/locale.gen'
     koopa::assert_is_file "$file"
-    if ! grep -q "$string" "$file"
-    then
-        koopa::alert "Adding '${string}' to '${file}'."
-        koopa::sudo_append_string "$string" "$file"
-    fi
+    koopa::sudo_append_string "$string" "$file"
     # e.g. convert 'UTF-8' to 'utf8'.
     charset2="$(koopa::lowercase "$charset")"
     charset2="$(koopa::gsub '-' '' "$charset2")"

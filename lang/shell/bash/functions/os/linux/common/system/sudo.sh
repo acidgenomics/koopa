@@ -3,7 +3,7 @@
 koopa::linux_fix_sudo_setrlimit_error() { # {{{1
     # """
     # Fix bug in recent version of sudo.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-03-24.
     #
     # This is popping up on Docker builds:
     # sudo: setrlimit(RLIMIT_CORE): Operation not permitted
