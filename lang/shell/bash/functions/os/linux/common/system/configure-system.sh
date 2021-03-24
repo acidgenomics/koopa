@@ -134,8 +134,12 @@ koopa::linux_configure_system() { # {{{1
                 mode="${1#*=}"
                 shift 1
                 ;;
-            --base|--minimal)
-                mode='minimal'
+            --all|--full)
+                mode='full'
+                shift 1
+                ;;
+            --base-image)
+                mode='base-image'
                 shift 1
                 ;;
             --bioconductor)
@@ -146,8 +150,8 @@ koopa::linux_configure_system() { # {{{1
                 mode='default'
                 shift 1
                 ;;
-            --full)
-                mode='full'
+            --minimal)
+                mode='minimal'
                 shift 1
                 ;;
             # Other variables --------------------------------------------------
@@ -171,6 +175,11 @@ koopa::linux_configure_system() { # {{{1
     done
     # Automatically set internal variables, based on user input.
     case "$mode" in
+        base-image)
+            dict[install_base_flags]='--base-image'
+            dict[install_bash]=1
+            dict[install_zsh]=1
+            ;;
         full)
             dict[install_aspera_connect]=1
             dict[install_autoconf]=1
@@ -325,10 +334,8 @@ koopa::linux_configure_system() { # {{{1
     koopa::install_dotfiles
     install_base_flags=("${dict[install_base_flags]}")
     koopa install base "${install_base_flags[@]:-}"
-    koopa::assert_is_installed \
-        'autoconf'    'bc'   'bzip2' 'g++'    'gcc' 'gfortran' \
-        'gzip'        'make' 'man'   'msgfmt' 'tar' 'unzip' \
-        'xml2-config' 'xz'
+    koopa::assert_is_installed autoconf bc bzip2 g++ gcc gfortran gzip \
+        ldconfig make man msgfmt tar unzip xml2-config xz
     koopa::assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
     sudo ldconfig
     # Programs {{{2
