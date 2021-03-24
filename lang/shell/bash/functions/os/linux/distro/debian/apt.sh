@@ -355,6 +355,19 @@ Emulators:/Wine:/Debian"
     return 0
 }
 
+koopa::apt_clean() { # {{{1
+    # """
+    # Clean up apt after an install/uninstall call.
+    # @note Updated 2021-03-24.
+    # @seealso
+    # - https://github.com/hadolint/hadolint/wiki/DL3009
+    # """
+    sudo apt-get --yes clean
+    sudo apt-get --yes autoremove
+    koopa::rm -S '/var/lib/apt/lists/'*
+    return 0
+}
+
 koopa::apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
@@ -517,15 +530,18 @@ koopa::apt_key_add() {  #{{{1
     return 0
 }
 
+
+
+
+
 koopa::apt_remove() { # {{{1
     # """
     # Remove Debian apt package.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-03-24.
     # """
     koopa::assert_has_args "$#"
     sudo apt-get --yes remove --purge "$@"
-    sudo apt-get --yes clean
-    sudo apt-get --yes autoremove
+    koopa::apt_clean
     return 0
 }
 
