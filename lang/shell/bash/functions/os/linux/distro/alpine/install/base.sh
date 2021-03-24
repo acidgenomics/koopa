@@ -85,6 +85,7 @@ koopa::alpine_install_base() { # {{{1
             'binutils'
             'build-base'
             'dpkg'
+            'gettext'  # msgfmt
             'man-db'
             'zsh'
         )
