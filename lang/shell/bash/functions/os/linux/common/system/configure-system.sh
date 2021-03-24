@@ -3,7 +3,7 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-03-24.
     #
     # Intended primarily for virtual machine and Docker image builds.
     # """
@@ -134,6 +134,10 @@ koopa::linux_configure_system() { # {{{1
                 mode="${1#*=}"
                 shift 1
                 ;;
+            --base|--minimal)
+                mode='minimal'
+                shift 1
+                ;;
             --bioconductor)
                 mode='bioconductor'
                 shift 1
@@ -144,10 +148,6 @@ koopa::linux_configure_system() { # {{{1
                 ;;
             --full)
                 mode='full'
-                shift 1
-                ;;
-            --minimal)
-                mode='minimal'
                 shift 1
                 ;;
             # Other variables --------------------------------------------------
