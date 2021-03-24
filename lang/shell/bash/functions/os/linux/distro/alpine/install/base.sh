@@ -87,7 +87,7 @@ koopa::alpine_install_base() { # {{{1
             'dpkg'
             'gettext'  # msgfmt
             'man-db'
-            'ncurses'  # zsh
+            'ncurses-dev'  # zsh
             'zsh'
         )
     fi
@@ -116,6 +116,7 @@ koopa::alpine_install_base() { # {{{1
             'libevent-dev'
             'libffi-dev'
             'libxml2-dev'
+            'ncurses-dev'
         )
     fi
     sudo apk --no-cache add "${pkgs[@]}"
