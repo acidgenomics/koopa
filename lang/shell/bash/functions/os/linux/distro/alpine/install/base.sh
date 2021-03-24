@@ -83,11 +83,21 @@ koopa::alpine_install_base() { # {{{1
             'autoconf'
             'bash-completion'
             'binutils'
+            'bison'
             'build-base'
             'dpkg'
+            'dpkg'
+            'dpkg-dev'
+            'gcc'
             'gettext'  # msgfmt
+            'gnupg'
+            'libc-dev'
+            'make'
             'man-db'
             'ncurses-dev'  # zsh
+            'openssl'
+            'patch'
+            'tar'
             'zsh'
         )
     fi
@@ -102,9 +112,7 @@ koopa::alpine_install_base() { # {{{1
             # > pandoc-citeproc
             # > texlive
             'R'
-            'gettext'
             'mdocml'
-            'openssl'
             'tcl'
             'tree'
             'wget'
