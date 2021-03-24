@@ -22,7 +22,7 @@ koopa::debian_install_base() { # {{{1
     # - How to replicate installed packages across machines.
     #   https://serverfault.com/questions/56848
     # """
-    local apt_installed legacy_pkgs name_fancy pkg pkgs pos remove_pkgs
+    local dict legacy_pkgs name_fancy pkg pkgs pos remove_pkgs
     koopa::assert_is_installed apt apt-get sed sudo
     declare -A dict=(
         [apt_enabled_repos]="$(koopa::apt_enabled_repos)"
@@ -44,6 +44,7 @@ koopa::debian_install_base() { # {{{1
                 dict[extra]=0
                 dict[recommended]=0
                 dict[upgrade]=0
+                shift 1
                 ;;
             --full)
                 dict[base]=1
@@ -96,7 +97,7 @@ koopa::debian_install_base() { # {{{1
     fi
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        koopa::h2 "Upgrading install via 'dist-upgrade'."
+        koopa::alert "Upgrading system via 'dist-upgrade'."
         koopa::apt_get dist-upgrade
     fi
     if [[ "${dict[remove_legacy]}" -eq 1 ]]
@@ -143,6 +144,7 @@ koopa::debian_install_base() { # {{{1
         'findutils'
         'git'
         'lsb-release'
+        'shadow'
         'sudo'
     )
     # These packages should be included in the Docker base image.
