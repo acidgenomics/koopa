@@ -272,10 +272,12 @@ rbenv="1.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="1.4.1103"
+# 2021-03-02
+rstudio-server="1.4.1106"
 
 # https://www.rstudio.com/products/rstudio/download-commercial/
-rstudio-server-pro="1.4.1103-3"
+# 2021-03-02
+rstudio-server-pro="1.4.1106-5"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.0.0p0"
@@ -302,6 +304,7 @@ sed="4.8"
 shellcheck="0.7.1"
 
 # https://www.rstudio.com/products/shiny/download-server/
+# 2021-01-11
 shiny-server="1.5.16.958"
 
 # https://github.com/kward/shunit2/releases
