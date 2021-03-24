@@ -87,6 +87,7 @@ koopa::alpine_install_base() { # {{{1
             'dpkg'
             'gettext'  # msgfmt
             'man-db'
+            'ncurses'  # zsh
             'zsh'
         )
     fi
