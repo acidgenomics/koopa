@@ -334,8 +334,9 @@ koopa::linux_configure_system() { # {{{1
     koopa::install_dotfiles
     install_base_flags=("${dict[install_base_flags]}")
     koopa install base "${install_base_flags[@]:-}"
-    koopa::assert_is_installed autoconf bc bzip2 g++ gcc gfortran gzip \
-        ldconfig make man msgfmt tar unzip xml2-config xz
+    # Consider requiring: gfortran, xml2-config.
+    koopa::assert_is_installed autoconf bc bzip2 g++ gcc gzip ldconfig make \
+        man msgfmt tar unzip xz
     koopa::assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
     sudo ldconfig
     # Programs {{{2
