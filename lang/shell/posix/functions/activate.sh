@@ -501,7 +501,7 @@ _koopa_activate_pipx() { # {{{1
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
-    # @note Updated 2021-02-26.
+    # @note Updated 2021-03-25.
     #
     # Typical priorities (e.g. on Debian):
     # - /usr/local/lib/x86_64-linux-gnu/pkgconfig
@@ -520,7 +520,7 @@ _koopa_activate_pkg_config() { # {{{1
     # - https://askubuntu.com/questions/210210/
     # """
     # shellcheck disable=SC2039
-    local homebrew_prefix make_prefix sys_pkg_config
+    local arch homebrew_prefix make_prefix sys_pkg_config
     [ -n "${PKG_CONFIG_PATH:-}" ] && return 0
     make_prefix="$(_koopa_make_prefix)"
     sys_pkg_config='/usr/bin/pkg-config'
@@ -531,8 +531,13 @@ _koopa_activate_pkg_config() { # {{{1
     _koopa_force_add_to_pkg_config_path_start \
         "${make_prefix}/share/pkgconfig" \
         "${make_prefix}/lib/pkgconfig" \
-        "${make_prefix}/lib64/pkgconfig" \
-        "${make_prefix}/lib/x86_64-linux-gnu/pkgconfig"
+        "${make_prefix}/lib64/pkgconfig"
+    if _koopa_is_linux
+    then
+        arch="$(_koopa_arch)"
+        _koopa_force_add_to_pkg_config_path_start \
+            "${make_prefix}/lib/${arch}-linux-gnu/pkgconfig"
+    fi
     if _koopa_is_macos && _koopa_is_installed brew
     then
         homebrew_prefix="$(_koopa_homebrew_prefix)"
