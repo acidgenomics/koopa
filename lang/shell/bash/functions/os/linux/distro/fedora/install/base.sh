@@ -88,6 +88,7 @@ koopa::fedora_install_base() { # {{{1
             'make'
             'man-db'
             'ncurses-devel'  # zsh
+            'patch'  # bash
             'sudo'
             'unzip'
             'xz'
