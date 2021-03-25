@@ -7,7 +7,8 @@ then
 else
     os_id='linux'
 fi
-file="${name}-v${version}.${os_id}.x86_64.tar.xz"
+arch="$(koopa::arch)"
+file="${name}-v${version}.${os_id}.${arch}.tar.xz"
 url="https://github.com/koalaman/${name}/releases/download/\
 v${version}/${file}"
 koopa::download "$url"
