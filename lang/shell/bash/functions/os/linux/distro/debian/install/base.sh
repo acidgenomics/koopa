@@ -150,14 +150,18 @@ koopa::debian_install_base() { # {{{1
     if [[ "${dict[base]}" -eq 1 ]]
     then
         pkgs+=(
+            # > 'bison'
+            'autoconf'
             # The 'build-essential' package includes: dpkg-dev, g++, gcc,
             # libc-dev, and make, which are required to build packages.
             'build-essential'
             'bzip2'
+            'gettext'
             'gnupg'
             'less'
             'libncurses-dev'  # zsh
             'locales'
+            'man-db'
             'tzdata'
             'unzip'
             'wget'
@@ -172,7 +176,6 @@ koopa::debian_install_base() { # {{{1
             'apt-listchanges'
             'apt-transport-https'
             'apt-utils'
-            'autoconf'
             'automake'
             'byacc'
             'cmake'
@@ -180,18 +183,13 @@ koopa::debian_install_base() { # {{{1
             'dirmngr'
             'file'
             'fortran77-compiler'
-            'g++'
-            'gcc'
             'gdb'
             'gdebi-core'
-            'gettext'
             'gfortran'
             'gpg-agent'
             'htop'
             'libtool'
             'libtool-bin'
-            'make'
-            'man-db'
             'nano'
             'parallel'
             'pkg-config'
@@ -201,7 +199,6 @@ koopa::debian_install_base() { # {{{1
             'ruby'  # Homebrew
             'software-properties-common'
             'subversion'
-            'sudo'
             'texinfo'  # makeinfo
             'tmux'
             'tree'
@@ -224,13 +221,11 @@ koopa::debian_install_base() { # {{{1
     if [[ "${dict[dev]}" -eq 1 ]]
     then
         pkgs+=(
-            'dpkg-dev'
             'libacl1-dev'
             'libapparmor-dev'
             'libapr1-dev'  # subversion
             'libaprutil1-dev'  # subversion
             'libbz2-dev'
-            'libc-dev'
             'libcairo2-dev'
             'libcurl4-gnutls-dev'
             'libevent-dev'
