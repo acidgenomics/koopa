@@ -1,23 +1,33 @@
 #!/usr/bin/env bash
 
+# FIXME NEED TO LOOK FOR 'PLATFORMS.TXT' FILE AND LOAD IF FOUND.
+# OTHERWISE ASSUME 'linux/amd64'.
 koopa::docker_build() { # {{{1
     # """
-    # Build and push a docker image.
-    # Updated 2020-11-04.
+    # Build and push a multi-architecture Docker image using buildx.
+    # Updated 2021-03-25.
     #
     # Use '--no-cache' flag to disable build cache.
     #
     # Examples:
-    # docker-build-image bioconductor release
-    # docker-build fedora
+    # > docker-build-image bioconductor release
+    # > docker-build fedora
+    #
+    # This can be useful for R packages:
+    # '--build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"'
     #
     # See also:
     # - docker build --help
     # - https://docs.docker.com/engine/reference/builder/#arg
+    #
+    # buildx-specific tips:
+    # - https://github.com/docker/buildx/issues/396
+    # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
+    #       on-an-m1-mac/
     # """
-    local delete docker_dir image image_ids pos push server source_image \
-        symlink_tag symlink_tagged_image symlink_tagged_image_today tag \
-        tagged_image tagged_image_today today
+    local delete docker_dir image image_ids platforms platforms_file \
+        platforms_string pos push server source_image symlink_tag \
+        symlink_tagged_image tag tagged_image tagged_image_today today
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
     docker_dir="$(koopa::docker_prefix)"
@@ -88,7 +98,6 @@ koopa::docker_build() { # {{{1
     then
         symlink_tag="$(basename "$source_image")"
         symlink_tagged_image="${image}:${symlink_tag}"
-        symlink_tagged_image_today="${symlink_tagged_image}-${today}"
         # Now resolve the symlink to real path.
         source_image="$(realpath "$source_image")"
         tag="$(basename "$source_image")"
@@ -99,6 +108,7 @@ koopa::docker_build() { # {{{1
     tagged_image_today="${tagged_image}-${today}"
     koopa::alert "Building '${tagged_image}' Docker image."
     docker login "$server"
+    docker buildx create --use
     # Force remove any existing local tagged images.
     if [[ "$delete" -eq 1 ]]
     then
@@ -112,33 +122,28 @@ koopa::docker_build() { # {{{1
             docker image rm --force "${image_ids[@]}"
         fi
     fi
-    # Build a local copy of the image.
-    # This can be useful for R packages:
-    # > --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"
-    # NOTE This step doesn't error consistently on build failures.
-    # How to harden against this case?
-    # https://github.com/moby/moby/issues/1875
-    docker build \
-        --no-cache \
-        --tag="$tagged_image_today" \
-        "$source_image" \
-        || return 1
-    docker tag "$tagged_image_today" "$tagged_image"
+    args=('--no-cache' '--pull')
+    [[ "$push" -eq 1 ]] && args+=('--push')
+    # Tags.
+    args+=("--tag=${tagged_image_today}")
     if [[ -n "${symlink_tag:-}" ]]
     then
-        docker tag "$tagged_image_today" "$symlink_tagged_image_today"
-        docker tag "$symlink_tagged_image_today" "$symlink_tagged_image"
+        args+=("--tag=${symlink_tagged_image}")
     fi
-    if [[ "$push" -eq 1 ]]
+    # Platforms.
+    platforms_file="$(dirname "${source_image}")/platforms.txt"
+    if [[ -f "$platforms_file" ]]
     then
-        docker push "${server}/${tagged_image_today}"
-        docker push "${server}/${tagged_image}"
-        if [[ -n "${symlink_tag:-}" ]]
-        then
-            docker push "${server}/${symlink_tagged_image_today}"
-            docker push "${server}/${symlink_tagged_image}"
-        fi
+        readarray -t platforms < "$platforms_file"
+    else
+        # Assume x86 by default.
+        platforms=('linux/amd64')
     fi
+    # e.g. 'linux/amd64,linux/arm64'.
+    platforms_string="$(koopa::paste0 ',' "${platforms[@]}")"
+    args+=("--platform=${platforms_string}")
+    args+=("$source_image")
+    docker buildx build "${args[@]}" || return 1
     docker image ls --filter reference="$tagged_image"
     koopa::success "Build of '${tagged_image}' was successful."
     return 0
