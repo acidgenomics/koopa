@@ -9,8 +9,13 @@ koopa::fedora_install_base() { # {{{1
     #
     # Refer to Debian install base script for more details on supported args.
     # """
-    local dict name_fancy pkgs pos
-    koopa::assert_is_installed dnf sudo
+    local dict dnf name_fancy pkgs pos
+    dnf='dnf'
+    if ! koopa::is_installed dnf && koopa::is_installed yum
+    then
+        dnf='yum'
+    fi
+    koopa::assert_is_installed "$dnf" sudo
     declare -A dict=(
         [base]=1
         [dev]=1
@@ -68,7 +73,7 @@ koopa::fedora_install_base() { # {{{1
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
         koopa::alert "Upgrading install via 'dnf update'."
-        sudo dnf -y update
+        sudo "$dnf" -y update
     fi
     pkgs=()
     if [[ "${dict[base]}" -eq 1 ]]
@@ -148,7 +153,7 @@ koopa::fedora_install_base() { # {{{1
     if [[ "${dict[dev]}" -eq 1 ]]
     then
         koopa::alert 'Installing developer libraries.'
-        sudo dnf -y groupinstall 'Development Tools'
+        sudo "$dnf" -y groupinstall 'Development Tools'
         pkgs+=(
             #                                                       | RHEL UBI |
             # ------------------------------------------------------|----------|
@@ -247,8 +252,8 @@ koopa::fedora_install_base() { # {{{1
             'texlive-xstring'
         )
     fi
-    sudo dnf -y install "${pkgs[@]}"
-    sudo dnf clean all
+    sudo "$dnf" -y install "${pkgs[@]}"
+    sudo "$dnf" clean all
     koopa::fedora_set_locale
     koopa::install_success "$name_fancy"
     return 0
