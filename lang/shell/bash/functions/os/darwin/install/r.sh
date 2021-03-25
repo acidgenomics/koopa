@@ -117,9 +117,11 @@ koopa::macos_install_r_cran_gfortran_8() { # {{{1
 koopa::macos_install_r_devel() { # {{{1
     # """
     # Install R-devel on macOS.
-    # @note Updated 2020-11-10.
+    # @note Updated 2021-03-25.
     # """
+    local arch file macos_version name_fancy r_version tmp_dir url
     koopa::assert_has_no_args "$#"
+    arch="$(koopa::arch)"
     r_version='devel'
     macos_version='el-capitan'
     tmp_dir="$(koopa::tmp_dir)"
@@ -128,7 +130,7 @@ koopa::macos_install_r_devel() { # {{{1
     koopa::note 'Debian r-devel inside a Docker container is preferred.'
     (
         koopa::cd "$tmp_dir"
-        file="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
+        file="R-${r_version}-${macos_version}-sa-${arch}.tar.gz"
         url="https://mac.r-project.org/${macos_version}/R-${r_version}/${file}"
         koopa::download "$url"
         if [[ -d '/Library/Frameworks/R.framework' ]] &&

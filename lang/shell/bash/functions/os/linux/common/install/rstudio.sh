@@ -153,10 +153,11 @@ koopa::debian_install_rstudio_server_pro() { # {{{1
     return 0
 }
 
+# NOTE ARM is not yet supported for this.
 koopa::fedora_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Fedora / RHEL / CentOS.
-    # @note Updated 2020-11-07.
+    # @note Updated 2021-03-25.
     # """
     local os_codename
     os_codename='centos8'
@@ -165,7 +166,7 @@ koopa::fedora_install_rstudio_server() { # {{{1
         --file-ext='rpm' \
         --install='sudo dnf -y install' \
         --os-codename="$os_codename" \
-        --platform='x86_64' \
+        --platform="$(koopa::arch)" \
         "$@"
     return 0
 }

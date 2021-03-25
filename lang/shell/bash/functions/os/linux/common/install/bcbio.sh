@@ -226,6 +226,7 @@ koopa::linux_install_bcbio_genome() { # {{{1
     return 0
 }
 
+# NOTE ARM is not yet support for this.
 koopa::linux_install_bcbio_vm() { # {{{1
     # """
     # Install bcbio-vm.

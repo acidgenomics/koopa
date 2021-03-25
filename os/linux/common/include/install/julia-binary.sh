@@ -22,8 +22,18 @@
 
 koopa::assert_is_linux
 minor_version="$(koopa::major_minor_version "$version")"
-file="${name}-${version}-linux-x86_64.tar.gz"
-url="https://julialang-s3.julialang.org/bin/linux/x64/${minor_version}/${file}"
+arch="$(koopa::arch)"
+file="${name}-${version}-linux-${arch}.tar.gz"
+case "$arch" in
+    x86*)
+        subdir='x86'
+        ;;
+    *)
+        subdir="$arch"
+        ;;
+esac
+url="https://julialang-s3.julialang.org/bin/linux/${subdir}/\
+${minor_version}/${file}"
 koopa::download "$url"
 koopa::extract "$file"
 koopa::cd "${name}-${version}"
