@@ -10,7 +10,10 @@ koopa::rhel_install_base() { # {{{1
     local name_fancy powertools
     koopa::fedora_install_base "$@"
     # Early return for legacy RHEL 7 configs (e.g. Amazon Linux 2).
-    koopa::is_rhel_7_like && return 0
+    if koopa::is_amzn || koopa::is_rhel_7_like
+    then
+        return 0
+    fi
     koopa::assert_is_installed dnf sudo
     name_fancy='Red Hat Enterprise Linux (RHEL) base system'
     koopa::install_start "$name_fancy"
