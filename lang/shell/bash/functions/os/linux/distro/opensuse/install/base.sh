@@ -77,6 +77,7 @@ koopa::opensuse_install_base() { # {{{1
             'gcc'
             'gcc-c++'
             'gcc-fortran'
+            'gettext'
             'git'
             'glibc-i18ndata'
             'gzip'
