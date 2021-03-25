@@ -134,39 +134,35 @@ koopa::debian_install_base() { # {{{1
             sudo apt-get --yes remove "${remove_pkgs[@]}"
         fi
     fi
-    # These packages are required to install koopa.
-    pkgs=(
-        'bash'
-        'bc'
-        'ca-certificates'
-        'coreutils'
-        'curl'
-        'findutils'
-        'git'
-        'lsb-release'
-        'sudo'
-    )
+    pkgs=()
     # These packages should be included in the Docker base image.
     if [[ "${dict[base]}" -eq 1 ]]
     then
         pkgs+=(
-            # > 'bison'
-            'autoconf'
             # The 'build-essential' package includes: dpkg-dev, g++, gcc,
             # libc-dev, and make, which are required to build packages.
             'build-essential'
+            'autoconf'
+            'bash'
+            'bc'
             'bzip2'
+            'ca-certificates'
+            'coreutils'
+            'curl'
+            'findutils'
             'gettext'
+            'git'
             'gnupg'
             'less'
             'libncurses-dev'  # zsh
             'locales'
+            'lsb-release'
             'man-db'
+            'sudo'
             'tzdata'
             'unzip'
             'wget'
             'xz-utils'
-            'zsh'
         )
     fi
     # These packages will be installed in the Docker recommended image.
@@ -205,6 +201,7 @@ koopa::debian_install_base() { # {{{1
             'udunits-bin'
             'vim'
             'zip'
+            'zsh'
         )
     fi
     # Only include these when not building GDAL, GEOS, and PROJ from source,
@@ -225,6 +222,7 @@ koopa::debian_install_base() { # {{{1
             'libapparmor-dev'
             'libapr1-dev'  # subversion
             'libaprutil1-dev'  # subversion
+            'libbison-dev'
             'libbz2-dev'
             'libcairo2-dev'
             'libcurl4-gnutls-dev'

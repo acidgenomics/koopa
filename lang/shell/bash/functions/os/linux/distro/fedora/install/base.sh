@@ -5,6 +5,8 @@ koopa::fedora_install_base() { # {{{1
     # Install Fedora base system.
     # @note Updated 2021-03-25.
     #
+    # Use '<pkg>-<version>' to pin package versions.
+    #
     # Refer to Debian install base script for more details on supported args.
     # """
     local dict name_fancy pkgs pos
@@ -90,14 +92,14 @@ koopa::fedora_install_base() { # {{{1
             'ncurses-devel'  # zsh
             'patch'  # bash
             'sudo'
+            'tar'
             'unzip'
             'xz'
-            'zsh'
         )
     fi
     if [[ "${dict[recommended]}" -eq 1 ]]
     then
-        pkgs=(
+        pkgs+=(
             #                                                       | RHEL UBI |
             # ------------------------------------------------------|----------|
             # > 'coreutils'                                       # |       NO |
