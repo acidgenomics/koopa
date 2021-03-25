@@ -41,17 +41,6 @@ koopa::admin_group() { # {{{1
     return 0
 }
 
-koopa::arch() { # {{{1
-    # """
-    # Platform architecture.
-    # @note Updated 2020-01-01.
-    # """
-    local x
-    x="$(uname -m)"
-    koopa::print "$x"
-    return 0
-}
-
 koopa::date() { # {{{1
     # """
     # Koopa date.

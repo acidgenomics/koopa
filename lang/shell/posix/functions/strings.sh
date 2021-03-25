@@ -1,5 +1,17 @@
 #!/bin/sh
 
+_koopa_arch() { # {{{1
+    # """
+    # Platform architecture.
+    # @note Updated 2021-03-25.
+    # """
+    # shellcheck disable=SC2039
+    local x
+    x="$(uname -m)"
+    _koopa_print "$x"
+    return 0
+}
+
 _koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.

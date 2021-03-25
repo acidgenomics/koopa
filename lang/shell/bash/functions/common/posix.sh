@@ -68,6 +68,10 @@ koopa::app_prefix() { # {{{1
     _koopa_app_prefix "$@"
 }
 
+koopa::arch() { # {{{1
+    _koopa_arch "$@"
+}
+
 koopa::aspera_prefix() { # {{{1
     _koopa_aspera_prefix "$@"
 }
