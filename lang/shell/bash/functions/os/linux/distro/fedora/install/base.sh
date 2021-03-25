@@ -75,14 +75,18 @@ koopa::fedora_install_base() { # {{{1
             'autoconf'
             'bash'
             'bc'
+            'bzip2'
             'curl'
             'findutils'
             'gcc'
+            'gcc-c++'
+            'gettext'
             'git'
             'glibc-langpack-en'
             'glibc-locale-source'
             'less'
             'make'
+            'man-db'
             'ncurses-devel'  # zsh
             'sudo'
             'unzip'
@@ -98,9 +102,7 @@ koopa::fedora_install_base() { # {{{1
             # > 'coreutils'                                       # |       NO |
             'R'                                                   # |       NO |
             'automake'                                            # |      YES |
-            'bash'                                                # |      YES |
             'byacc'                                               # |       NO |
-            'bzip2'                                               # |      YES |
             'chkconfig'                                           # |        ? |
             'cmake'                                               # |      YES |
             'convmv'                                              # |       NO |
@@ -108,20 +110,11 @@ koopa::fedora_install_base() { # {{{1
             'curl'                                                # |      YES |
             'diffutils'                                           # |      YES |
             'file'                                                # |        ? |
-            'findutils'                                           # |      YES |
-            'gcc'                                                 # |      YES |
-            'gcc-c++'                                             # |      YES |
-            'gcc-gfortran'                                        # |      YES |
-            'gettext'                                             # |      YES |
-            'git'                                                 # |      YES |
-            'glibc-langpack-en'                                   # |        ? |
-            'glibc-locale-source'                                 # |        ? |
+            'gcc-gfortran'
             'gnupg2'                                              # |      YES |
             'gnutls'                                              # |      YES |
             'libtool'                                             # |      YES |
             'lua'                                                 # |      YES |
-            'make'                                                # |      YES |
-            'man-db'                                              # |      YES |
             'openssl'                                             # |      YES |
             'pkgconfig'  # This is now pkgconf wrapped.           # |      YES |
             'qpdf'                                                # |       NO |
@@ -253,6 +246,7 @@ koopa::fedora_install_base() { # {{{1
     fi
     sudo dnf -y install "${pkgs[@]}"
     sudo dnf clean all
+    koopa::fedora_set_locale
     koopa::install_success "$name_fancy"
     return 0
 }
