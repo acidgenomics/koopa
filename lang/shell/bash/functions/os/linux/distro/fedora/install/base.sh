@@ -3,21 +3,29 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2020-11-11.
+    # @note Updated 2021-03-25.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
-    local dev full name_fancy pkgs pos upgrade
+    local dict name_fancy pkgs pos
     koopa::assert_is_installed dnf sudo
-    dev=1
-    full=0
-    upgrade=1
+    declare -A dict=(
+        [base]=1
+        [dev]=1
+        [extra]=0
+        [recommended]=1
+        [upgrade]=1
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
             --full)
-                full=1
+                dict[base]=1
+                dict[dev]=1
+                dict[extra]=1
+                dict[recommended]=1
+                dict[upgrade]=1
                 shift 1
                 ;;
             "")
@@ -40,105 +48,99 @@ koopa::fedora_install_base() { # {{{1
     koopa::assert_has_no_args "$#"
     name_fancy='Fedora base system'
     koopa::install_start "$name_fancy"
-    if [[ "$full" -eq 1 ]] && koopa::is_rhel_ubi
+    if [[ "${dict[recommended]}" -eq 1 ]] && koopa::is_rhel_ubi
     then
-        koopa::stop 'Base configuration not yet supported for RHEL UBI.'
+        koopa::stop 'Recommended configuration not yet supported for RHEL UBI.'
     fi
-
-    # Upgrade {{{2
-    # --------------------------------------------------------------------------
-
-    if [[ "$upgrade" -eq 1 ]]
+    if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        koopa::h2 "Upgrading install via 'dnf update'."
+        koopa::alert "Upgrading install via 'dnf update'."
         sudo dnf -y update
     fi
-
-    # Default {{{2
-    # --------------------------------------------------------------------------
-
-    koopa::h2 'Installing default packages.'
-    # FIXME From centos base image:
-    # - bash
-    # - bc
-    # - curl
-    # - findutils
-    # - gcc
-    # - git
-    # - glibc-langpack-en
-    # - glibc-locale-source
-    # - less
-    # - make
-    # - ncurses-devel  # zsh
-    # - sudo
-    # - unzip
-    # - zsh
-    pkgs=(
-        #                                                           | RHEL UBI |
-        # ----------------------------------------------------------|----------|
-        # > 'coreutils'                                           # |       NO |
-        'R'                                                       # |       NO |
-        'autoconf'                                                # |      YES |
-        'automake'                                                # |      YES |
-        'bash'                                                    # |      YES |
-        'byacc'                                                   # |       NO |
-        'bzip2'                                                   # |      YES |
-        'chkconfig'                                               # |        ? |
-        'cmake'                                                   # |      YES |
-        'convmv'                                                  # |       NO |
-        'cryptsetup'                                              # |       NO |
-        'curl'                                                    # |      YES |
-        'diffutils'                                               # |      YES |
-        'file'                                                    # |        ? |
-        'findutils'                                               # |      YES |
-        'gcc'                                                     # |      YES |
-        'gcc-c++'                                                 # |      YES |
-        'gcc-gfortran'                                            # |      YES |
-        'gettext'                                                 # |      YES |
-        'git'                                                     # |      YES |
-        'glibc-langpack-en'                                       # |        ? |
-        'glibc-locale-source'                                     # |        ? |
-        'gnupg2'                                                  # |      YES |
-        'gnutls'                                                  # |      YES |
-        'libtool'                                                 # |      YES |
-        'lua'                                                     # |      YES |
-        'make'                                                    # |      YES |
-        'man-db'                                                  # |      YES |
-        'ncurses'                                                 # |      YES |
-        'openssl'                                                 # |      YES |
-        'pkgconfig'  # This is now pkgconf wrapped.               # |      YES |
-        'qpdf'                                                    # |       NO |
-        'readline'                                                # |      YES |
-        'ruby'                                                    # |        ? |
-        'squashfs-tools'                                          # |       NO |
-        'systemd'                                                 # |      YES |
-        'texinfo'                                                 # |       NO |
-        'tmux'                                                    # |       NO |
-        'tree'                                                    # |       NO |
-        'util-linux'                                              # |      YES |
-        'vim'                                                     # |      YES |
-        'wget'                                                    # |      YES |
-        'xmlto'                                                   # |       NO |
-        'xz'                                                      # |      YES |
-        'yum-utils'                                               # |       NO |
-        'zip'                                                     # |      YES |
-        'zsh'                                                     # |       NO |
-    )
-    if koopa::is_fedora
+    pkgs=()
+    if [[ "${dict[base]}" -eq 1 ]]
     then
         pkgs+=(
-        #                                                           | RHEL UBI |
-        # ----------------------------------------------------------|----------|
-            'libxcrypt-compat'  # Homebrew                        # |        ? |
+            'autoconf'
+            'bash'
+            'bc'
+            'curl'
+            'findutils'
+            'gcc'
+            'git'
+            'glibc-langpack-en'
+            'glibc-locale-source'
+            'less'
+            'make'
+            'ncurses-devel'  # zsh
+            'sudo'
+            'unzip'
+            'xz'
+            'zsh'
         )
     fi
-
-    # Developer {{{2
-    # --------------------------------------------------------------------------
-
-    if [[ "$dev" -eq 1 ]]
+    if [[ "${dict[recommended]}" -eq 1 ]]
     then
-        koopa::h2 'Installing developer libraries.'
+        pkgs=(
+            #                                                       | RHEL UBI |
+            # ------------------------------------------------------|----------|
+            # > 'coreutils'                                       # |       NO |
+            'R'                                                   # |       NO |
+            'automake'                                            # |      YES |
+            'bash'                                                # |      YES |
+            'byacc'                                               # |       NO |
+            'bzip2'                                               # |      YES |
+            'chkconfig'                                           # |        ? |
+            'cmake'                                               # |      YES |
+            'convmv'                                              # |       NO |
+            'cryptsetup'                                          # |       NO |
+            'curl'                                                # |      YES |
+            'diffutils'                                           # |      YES |
+            'file'                                                # |        ? |
+            'findutils'                                           # |      YES |
+            'gcc'                                                 # |      YES |
+            'gcc-c++'                                             # |      YES |
+            'gcc-gfortran'                                        # |      YES |
+            'gettext'                                             # |      YES |
+            'git'                                                 # |      YES |
+            'glibc-langpack-en'                                   # |        ? |
+            'glibc-locale-source'                                 # |        ? |
+            'gnupg2'                                              # |      YES |
+            'gnutls'                                              # |      YES |
+            'libtool'                                             # |      YES |
+            'lua'                                                 # |      YES |
+            'make'                                                # |      YES |
+            'man-db'                                              # |      YES |
+            'openssl'                                             # |      YES |
+            'pkgconfig'  # This is now pkgconf wrapped.           # |      YES |
+            'qpdf'                                                # |       NO |
+            'readline'                                            # |      YES |
+            'ruby'                                                # |        ? |
+            'squashfs-tools'                                      # |       NO |
+            'systemd'                                             # |      YES |
+            'texinfo'                                             # |       NO |
+            'tmux'                                                # |       NO |
+            'tree'                                                # |       NO |
+            'util-linux'                                          # |      YES |
+            'vim'                                                 # |      YES |
+            'wget'                                                # |      YES |
+            'xmlto'                                               # |       NO |
+            'yum-utils'                                           # |       NO |
+            'zip'                                                 # |      YES |
+            'zsh'                                                 # |       NO |
+        )
+        if koopa::is_fedora
+        then
+            pkgs+=(
+            #                                                       | RHEL UBI |
+            # ------------------------------------------------------|----------|
+                'libxcrypt-compat'  # Homebrew                    # |        ? |
+            )
+        fi
+    fi
+    if [[ "${dict[dev]}" -eq 1 ]]
+    then
+        koopa::alert 'Installing developer libraries.'
         sudo dnf -y groupinstall 'Development Tools'
         pkgs+=(
             #                                                       | RHEL UBI |
@@ -192,7 +194,7 @@ koopa::fedora_install_base() { # {{{1
             'xz-devel'                                            # |      YES |
             'zlib-devel'                                          # |      YES |
         )
-        if [[ "$full" -eq 0 ]]
+        if [[ "${dict[extra]}" -eq 0 ]]
         then
             pkgs+=(
                 #                                                   | RHEL UBI |
@@ -205,13 +207,8 @@ koopa::fedora_install_base() { # {{{1
             )
         fi
     fi
-
-    # Extra {{{2
-    # --------------------------------------------------------------------------
-
-    if [[ "$full" -eq 1 ]]
+    if [[ "${dict[extra]}" -eq 1 ]]
     then
-        koopa::h2 'Installing extra recommended packages.'
         pkgs+=(
             # > emacs
             # > golang
@@ -243,11 +240,8 @@ koopa::fedora_install_base() { # {{{1
             'texlive-xstring'
         )
     fi
-
-    # Install packages {{{2
-    # --------------------------------------------------------------------------
-
     sudo dnf -y install "${pkgs[@]}"
+    sudo dnf clean all
     koopa::install_success "$name_fancy"
     return 0
 }
