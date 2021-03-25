@@ -5,12 +5,13 @@ koopa::alpine_install_base() { # {{{1
     # Install Alpine Linux base system.
     # @note Updated 2021-03-25.
     #
+    # Use '<pkg>=~<version>' to pin package versions.
+    #
     # Potentially useful flags:
     # > apk add --no-cache --virtual .build-dependencies
     # """
     local dict name_fancy pkgs
     koopa::assert_is_installed apk sudo
-
     declare -A dict=(
         [base]=1
         [dev]=1
@@ -64,6 +65,7 @@ koopa::alpine_install_base() { # {{{1
         koopa::alert 'Upgrading system.'
         sudo apk --no-cache upgrade
     fi
+    pkgs=()
     # These packages should be included in base image.
     if [[ "${dict[base]}" -eq 1 ]]
     then
@@ -93,7 +95,6 @@ koopa::alpine_install_base() { # {{{1
             'tar'
             'unzip'
             'xz'
-            'zsh'
         )
     fi
     # These packages will be installed in the Docker recommended image.
@@ -111,6 +112,7 @@ koopa::alpine_install_base() { # {{{1
             'tcl'
             'tree'
             'wget'
+            'zsh'
         )
     fi
     if [[ "${dict[dev]}" -eq 1 ]]

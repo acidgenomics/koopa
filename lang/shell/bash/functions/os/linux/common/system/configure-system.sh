@@ -3,7 +3,7 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-03-25.
     #
     # Intended primarily for virtual machine and Docker image builds.
     # """
@@ -176,9 +176,9 @@ koopa::linux_configure_system() { # {{{1
     # Automatically set internal variables, based on user input.
     case "$mode" in
         base-image)
+            # > dict[install_bash]=1
+            # > dict[install_zsh]=1
             dict[install_base_flags]='--base-image'
-            dict[install_bash]=1
-            dict[install_zsh]=1
             ;;
         full)
             dict[install_aspera_connect]=1

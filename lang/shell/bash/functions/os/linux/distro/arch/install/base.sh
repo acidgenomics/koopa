@@ -84,7 +84,6 @@ koopa::arch_install_base() { # {{{1
             'man'
             'unzip'
             'xz'
-            'zsh'
         )
     fi
     if [[ "${dict[recommended]}" -eq 1 ]]
@@ -105,6 +104,7 @@ koopa::arch_install_base() { # {{{1
             'texlive-core'
             'tree'
             'wget'
+            'zsh'
         )
     fi
     sudo pacman -Syy --noconfirm
