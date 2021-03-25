@@ -7,7 +7,8 @@ koopa::docker_build() { # {{{1
     #
     #
     # Potentially useful arguments:
-    # - '--label'
+    # - '--label=XXX'
+    # - '--rm'
     # - '--squash'
     # - This can be useful for R packages:
     #   '--build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"'
@@ -133,12 +134,13 @@ koopa::docker_build() { # {{{1
         '--no-cache'
         '--progress=auto'
         '--pull'
-        # Remove intermediate containers.
-        '--rm'
     )
     [[ "$push" -eq 1 ]] && args+=('--push')
     # Tags.
-    args+=("--tag=${tagged_image_today}")
+    args+=(
+        "--tag=${tagged_image_today}"
+        "--tag=${tagged_image}"
+    )
     if [[ -n "${symlink_tag:-}" ]]
     then
         args+=("--tag=${symlink_tagged_image}")
