@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME REWORK THIS WITH BASE IMAGE SUPPORT.
 koopa::opensuse_install_base() { # {{{1
     # """
     # Install openSUSE base system.
-    # @note Updated 2020-07-02.
+    # @note Updated 2021-03-25.
     #
     # zypper cheat sheet:
     # https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
