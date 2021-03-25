@@ -428,6 +428,10 @@ koopa::is_rhel_ubi() { # {{{1
     _koopa_is_rhel_ubi "$@"
 }
 
+koopa::is_rhel_7_like() { # {{{1
+    _koopa_is_rhel_7_like "$@"
+}
+
 koopa::is_rhel_8_like() { # {{{1
     _koopa_is_rhel_8_like "$@"
 }

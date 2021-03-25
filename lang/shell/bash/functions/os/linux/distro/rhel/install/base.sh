@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 
+# FIXME SIMPLIFY THIS STEP FOR RHEL7...
+
 koopa::rhel_install_base() { # {{{1
     # """
     # Install Red Hat Enterprise Linux (RHEL) base system.
-    # @note Updated 2021-02-16.
+    # @note Updated 2021-03-25.
     #
     # 'dnf-plugins-core' installs 'config-manager'.
     # """
     local name_fancy powertools
+    koopa::fedora_install_base "$@"
+    # Early return for legacy RHEL 7 configs (e.g. Amazon Linux 2).
+    koopa::is_rhel_7_like && return 0
     koopa::assert_is_installed dnf sudo
     name_fancy='Red Hat Enterprise Linux (RHEL) base system'
     koopa::install_start "$name_fancy"
@@ -23,7 +28,6 @@ koopa::rhel_install_base() { # {{{1
     then
         sudo dnf config-manager --set-enabled "$powertools"
     fi
-    koopa::fedora_install_base "$@"
     koopa::install_success "$name_fancy"
     return 0
 }
