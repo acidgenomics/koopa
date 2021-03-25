@@ -16,6 +16,7 @@ koopa::docker_build() { # {{{1
     #
     # See also:
     # - docker build --help
+    # - https://docs.docker.com/config/containers/resource_constraints/
     # - https://docs.docker.com/engine/reference/builder/#arg
     # - https://docs.docker.com/engine/reference/commandline/buildx_build/
     # - https://docs.docker.com/engine/reference/commandline/builder_build/
@@ -121,12 +122,14 @@ koopa::docker_build() { # {{{1
             docker image rm --force "${image_ids[@]}"
         fi
     fi
+    # Harden against buildx blowing up memory on a local machine.
+    # Consider raising this when we deploy a more powerful build machine.
     memory='8g'
     args=(
         # If you don't want to use swap, give '--memory' and '--memory-swap'
-        # the same values.
+        # the same values. Don't set '--memory-swap' to 0.
         "--memory=${memory}"
-        # Alternatively, set to '-1' to enable unlimited swap.
+        # Alternatively, set '--memory-swap' to '-1' for unlimited swap.
         "--memory-swap=${memory}"
         # Disable build caching.
         '--no-cache'
@@ -155,6 +158,7 @@ koopa::docker_build() { # {{{1
     platforms_string="$(koopa::paste0 ',' "${platforms[@]}")"
     args+=("--platform=${platforms_string}")
     args+=("$source_image")
+    koopa::dl 'Build args' "${args[*]}"
     docker buildx build "${args[@]}" || return 1
     docker image ls --filter reference="$tagged_image"
     koopa::success "Build of '${tagged_image}' was successful."
