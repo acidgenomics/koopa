@@ -24,7 +24,7 @@ koopa::docker_build() { # {{{1
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
     # """
-    local delete docker_dir image image_ids memory platforms platforms_file \
+    local delete docker_dir image image_ids platforms platforms_file \
         platforms_string pos push server source_image symlink_tag \
         symlink_tagged_image tag tagged_image tagged_image_today today
     koopa::assert_has_args "$#"
@@ -123,13 +123,14 @@ koopa::docker_build() { # {{{1
     fi
     # Harden against buildx blowing up memory on a local machine.
     # Consider raising this when we deploy a more powerful build machine.
-    memory='8g'
+    # > local memory
+    # > memory='8g'
     args=(
         # If you don't want to use swap, give '--memory' and '--memory-swap'
         # the same values. Don't set '--memory-swap' to 0.
-        "--memory=${memory}"
+        # > "--memory=${memory}"
         # Alternatively, set '--memory-swap' to '-1' for unlimited swap.
-        "--memory-swap=${memory}"
+        # > "--memory-swap=${memory}"
         # Disable build caching.
         '--no-cache'
         '--progress=auto'
