@@ -3,7 +3,7 @@
 koopa::alpine_install_base() { # {{{1
     # """
     # Install Alpine Linux base system.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-03-25.
     #
     # Potentially useful flags:
     # > apk add --no-cache --virtual .build-dependencies
@@ -64,39 +64,32 @@ koopa::alpine_install_base() { # {{{1
         koopa::alert 'Upgrading system.'
         sudo apk --no-cache upgrade
     fi
-    # These packages are required to install koopa.
-    pkgs=(
-        'bash'
-        'bc'
-        'ca-certificates'
-        'coreutils'
-        'curl'
-        'findutils'
-        'git'
-        'shadow'
-        'sudo'
-    )
-    # These packages should be included in the Docker base image.
+    # These packages should be included in base image.
     if [[ "${dict[base]}" -eq 1 ]]
     then
         pkgs+=(
+            # > dpkg-dev
             'autoconf'
+            'bash'
             'bash-completion'
-            'binutils'
-            'bison'
+            'bc'
+            # Meta package containing: binutils, file, fortify-headers, g++,
+            # gcc, libc-dev, path, and remake-make.
             'build-base'
-            'dpkg'
-            'dpkg'
-            'dpkg-dev'
+            'ca-certificates'
+            'coreutils'
+            'curl'
+            'findutils'
             'gcc'
             'gettext'  # msgfmt
+            'git'
             'gnupg'
-            'libc-dev'
-            'make'
             'man-db'
             'ncurses-dev'  # zsh
             'openssl'
             'patch'
+            'shadow'
+            'sudo'
             'tar'
             'zsh'
         )

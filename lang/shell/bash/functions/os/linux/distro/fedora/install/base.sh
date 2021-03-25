@@ -58,6 +58,21 @@ koopa::fedora_install_base() { # {{{1
     # --------------------------------------------------------------------------
 
     koopa::h2 'Installing default packages.'
+    # FIXME From centos base image:
+    # - bash
+    # - bc
+    # - curl
+    # - findutils
+    # - gcc
+    # - git
+    # - glibc-langpack-en
+    # - glibc-locale-source
+    # - less
+    # - make
+    # - ncurses-devel  # zsh
+    # - sudo
+    # - unzip
+    # - zsh
     pkgs=(
         #                                                           | RHEL UBI |
         # ----------------------------------------------------------|----------|
