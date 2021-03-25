@@ -7,25 +7,24 @@ koopa::docker_build() { # {{{1
     # Build and push a multi-architecture Docker image using buildx.
     # Updated 2021-03-25.
     #
-    # Use '--no-cache' flag to disable build cache.
     #
-    # Examples:
-    # > docker-build-image bioconductor release
-    # > docker-build fedora
-    #
-    # This can be useful for R packages:
-    # '--build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"'
+    # Potentially useful arguments:
+    # - '--label'
+    # - '--squash'
+    # - This can be useful for R packages:
+    #   '--build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"'
     #
     # See also:
     # - docker build --help
     # - https://docs.docker.com/engine/reference/builder/#arg
-    #
-    # buildx-specific tips:
+    # - https://docs.docker.com/engine/reference/commandline/buildx_build/
+    # - https://docs.docker.com/engine/reference/commandline/builder_build/
     # - https://github.com/docker/buildx/issues/396
+    # - https://phoenixnap.com/kb/docker-memory-and-cpu-limit
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
     # """
-    local delete docker_dir image image_ids platforms platforms_file \
+    local delete docker_dir image image_ids memory platforms platforms_file \
         platforms_string pos push server source_image symlink_tag \
         symlink_tagged_image tag tagged_image tagged_image_today today
     koopa::assert_has_args "$#"
@@ -122,7 +121,20 @@ koopa::docker_build() { # {{{1
             docker image rm --force "${image_ids[@]}"
         fi
     fi
-    args=('--no-cache' '--pull')
+    memory='8g'
+    args=(
+        # If you don't want to use swap, give '--memory' and '--memory-swap'
+        # the same values.
+        "--memory=${memory}"
+        # Alternatively, set to '-1' to enable unlimited swap.
+        "--memory-swap=${memory}"
+        # Disable build caching.
+        '--no-cache'
+        '--progress=auto'
+        '--pull'
+        # Remove intermediate containers.
+        '--rm'
+    )
     [[ "$push" -eq 1 ]] && args+=('--push')
     # Tags.
     args+=("--tag=${tagged_image_today}")
