@@ -7,11 +7,11 @@ koopa::docker_build() { # {{{1
     #
     #
     # Potentially useful arguments:
-    # - '--label=XXX'
-    # - '--rm'
-    # - '--squash'
-    # - This can be useful for R packages:
-    #   '--build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"'
+    # * --label='Descriptive metadata about the image'"
+    # * --rm
+    # * --squash
+    # * This can be useful for R packages:
+    #   --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"
     #
     # See also:
     # - docker build --help
@@ -24,9 +24,8 @@ koopa::docker_build() { # {{{1
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
     # """
-    local delete docker_dir image image_ids platforms platforms_file \
-        platforms_string pos push server source_image symlink_tag \
-        symlink_tagged_image tag tagged_image tagged_image_today today
+    local delete docker_dir image image_ids memory platforms platforms_file \
+        platforms_string pos push server source_image tag tags tags_file
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
     docker_dir="$(koopa::docker_prefix)"
@@ -41,6 +40,11 @@ koopa::docker_build() { # {{{1
         case "$1" in
             --delete)
                 delete=1
+                shift 1
+                ;;
+            --memory=*)
+                # e.g. use '8g' for 8 GB limit.
+                memory="${1#*=}"
                 shift 1
                 ;;
             --no-delete)
@@ -77,7 +81,7 @@ koopa::docker_build() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    # e.g. acidgenomics/debian
+    # e.g. 'acidgenomics/debian'.
     image="${1:?}"
     # Assume acidgenomics recipe by default.
     if ! koopa::str_match "$image" '/'
@@ -87,33 +91,65 @@ koopa::docker_build() { # {{{1
     # Handle tag support, if necessary.
     if koopa::str_match "$image" ':'
     then
-        tag="$(koopa::print "$image" | cut -d ':' -f 2)"
+        if [[ -n "${tag:-}" ]]
+        then
+            koopa::stop "Don't declare image with ':' and use '--tag' flag."
+        fi
         image="$(koopa::print "$image" | cut -d ':' -f 1)"
+        tag="$(koopa::print "$image" | cut -d ':' -f 2)"
     fi
     source_image="${docker_dir}/${image}/${tag}"
     koopa::assert_is_dir "$source_image"
-    today="$(date '+%Y%m%d')"
+    args=()
+    # Tags.
+    tags=()
+    tags_file="${source_image}/tags.txt"
+    [[ -f "$tags_file" ]] && readarray -t tags < "$tags_file"
     if [[ -L "$source_image" ]]
     then
-        symlink_tag="$(basename "$source_image")"
-        symlink_tagged_image="${image}:${symlink_tag}"
-        # Now resolve the symlink to real path.
+        tags+=("$tag")
         source_image="$(realpath "$source_image")"
         tag="$(basename "$source_image")"
     fi
-    # e.g. acidgenomics/debian:latest
-    tagged_image="${image}:${tag}"
-    # e.g. acidgenomics/debian:latest-20200101
-    tagged_image_today="${tagged_image}-${today}"
-    koopa::alert "Building '${tagged_image}' Docker image."
-    docker login "$server"
-    docker buildx create --use
-    # Force remove any existing local tagged images.
+    tags+=("$tag" "${tag}-$(date '+%Y%m%d')")
+    # Ensure tags are sorted and unique.
+    readarray -t tags <<< "$(koopa::print "${tags[@]}" | sort -u)"
+    for tag in "${tags[@]}"
+    do
+        args+=("--tag=${image}:${tag}")
+    done
+    # Platforms.
+    # Assume x86 by default.
+    platforms=('linux/amd64')
+    platforms_file="${source_image}/platforms.txt"
+    [[ -f "$platforms_file" ]] && readarray -t platforms < "$platforms_file"
+    # e.g. 'linux/amd64,linux/arm64'.
+    platforms_string="$(koopa::paste0 ',' "${platforms[@]}")"
+    args+=("--platform=${platforms_string}")
+    # Harden against buildx blowing up memory on a local machine.
+    # Consider raising this when we deploy a more powerful build machine.
+    # > local memory
+    if [[ -n "${memory:-}" ]]
+    then
+        # If you don't want to use swap, give '--memory' and '--memory-swap'
+        # the same values. Don't set '--memory-swap' to 0. Alternatively,
+        # set '--memory-swap' to '-1' for unlimited swap.
+        args+=("--memory=${memory}" "--memory-swap=${memory}")
+    fi
+    args+=(
+        '--no-cache'
+        '--progress=auto'
+        '--pull'
+    )
+    [[ "$push" -eq 1 ]] && args+=('--push')
+    args+=("$source_image")
+    # Force remove any existing locally tagged images before building.
     if [[ "$delete" -eq 1 ]]
     then
+        koopa::alert "Pruning images matching '${image}:${tag}'."
         readarray -t image_ids <<< "$( \
             docker image ls \
-                --filter reference="$tagged_image" \
+                --filter reference="${image}:${tag}" \
                 --quiet \
         )"
         if koopa::is_array_non_empty "${image_ids[@]}"
@@ -121,48 +157,13 @@ koopa::docker_build() { # {{{1
             docker image rm --force "${image_ids[@]}"
         fi
     fi
-    # Harden against buildx blowing up memory on a local machine.
-    # Consider raising this when we deploy a more powerful build machine.
-    # > local memory
-    # > memory='8g'
-    args=(
-        # If you don't want to use swap, give '--memory' and '--memory-swap'
-        # the same values. Don't set '--memory-swap' to 0.
-        # > "--memory=${memory}"
-        # Alternatively, set '--memory-swap' to '-1' for unlimited swap.
-        # > "--memory-swap=${memory}"
-        # Disable build caching.
-        '--no-cache'
-        '--progress=auto'
-        '--pull'
-    )
-    [[ "$push" -eq 1 ]] && args+=('--push')
-    # Tags.
-    args+=(
-        "--tag=${tagged_image_today}"
-        "--tag=${tagged_image}"
-    )
-    if [[ -n "${symlink_tag:-}" ]]
-    then
-        args+=("--tag=${symlink_tagged_image}")
-    fi
-    # Platforms.
-    platforms_file="$(dirname "${source_image}")/platforms.txt"
-    if [[ -f "$platforms_file" ]]
-    then
-        readarray -t platforms < "$platforms_file"
-    else
-        # Assume x86 by default.
-        platforms=('linux/amd64')
-    fi
-    # e.g. 'linux/amd64,linux/arm64'.
-    platforms_string="$(koopa::paste0 ',' "${platforms[@]}")"
-    args+=("--platform=${platforms_string}")
-    args+=("$source_image")
+    koopa::alert "Building '${source_image}' Docker image."
     koopa::dl 'Build args' "${args[*]}"
+    docker login "$server" || return 1
+    docker buildx create --use || return 1
     docker buildx build "${args[@]}" || return 1
-    docker image ls --filter reference="$tagged_image"
-    koopa::success "Build of '${tagged_image}' was successful."
+    docker image ls --filter reference="${image}:${tag}"
+    koopa::success "Build of '${source_image}' was successful."
     return 0
 }
 
@@ -325,7 +326,7 @@ koopa::docker_prune_stale_tags() { # {{{1
 koopa::docker_push() { # {{{1
     # """
     # Push a local Docker build.
-    # Updated 2020-02-18.
+    # Updated 2021-03-25.
     #
     # Useful if GPG agent causes push failure.
     #
@@ -341,7 +342,7 @@ koopa::docker_push() { # {{{1
     server='docker.io'
     for pattern in "$@"
     do
-        koopa::h1 "Pushing images matching '${pattern}' to ${server}."
+        koopa::alert "Pushing images matching '${pattern}' to ${server}."
         koopa::assert_is_matching_regex "$pattern" '^.+/.+$'
         json="$(docker inspect --format="{{json .RepoTags}}" "$pattern")"
         # Convert JSON to lines.
@@ -362,7 +363,7 @@ koopa::docker_push() { # {{{1
         fi
         for image in "${images[@]}"
         do
-            koopa::h2 "Pushing '${image}'."
+            koopa::alert "Pushing '${image}'."
             docker push "${server}/${image}"
         done
     done
@@ -452,7 +453,7 @@ koopa::docker_run() { # {{{1
 koopa::docker_tag() { # {{{1
     # """
     # Add Docker tag.
-    # Updated 2020-02-18.
+    # Updated 2021-03-25.
     # """
     local dest_tag image server source_tag
     koopa::assert_has_args "$#"
@@ -471,7 +472,7 @@ koopa::docker_tag() { # {{{1
         koopa::print "Source tag identical to destination ('${source_tag}')."
         return 0
     fi
-    koopa::h1 "Tagging '${image}' image tag '${source_tag}' as '${dest_tag}'."
+    koopa::alert "Tagging '${image}:${source_tag}' as '${dest_tag}'."
     docker login "$server"
     docker pull "${server}/${image}:${source_tag}"
     docker tag "${image}:${source_tag}" "${image}:${dest_tag}"
