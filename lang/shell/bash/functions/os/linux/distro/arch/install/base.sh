@@ -3,7 +3,7 @@
 koopa::arch_install_base() { # {{{1
     # """
     # Install Arch Linux base system.
-    # @note Updated 2020-07-02.
+    # @note Updated 2021-03-25.
     #
     # base-devel:
     # 1) autoconf  2) automake  3) binutils  4) bison  5) fakeroot  6) file
@@ -20,38 +20,94 @@ koopa::arch_install_base() { # {{{1
     # Note that Arch is currently overwriting PS1 for root.
     # This is due to configuration in '/etc/profile'.
     # """
-    local name_fancy packages
+    local dict name_fancy pkgs
     koopa::assert_is_installed pacman sudo
+    declare -A dict=(
+        [base]=1
+        [recommended]=1
+        [upgrade]=1
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --base-image)
+                dict[base]=1
+                dict[recommended]=0
+                dict[upgrade]=0
+                shift 1
+                ;;
+            --full)
+                dict[base]=1
+                dict[recommended]=1
+                dict[upgrade]=1
+                shift 1
+                ;;
+            --default|--recommended)
+                shift 1
+                ;;
+            "")
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_no_args "$#"
     name_fancy='Arch base system'
     koopa::install_start "$name_fancy"
     # Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
     # is non-standard and can cause koopa's application link script to break.
     [[ -L '/usr/local/share/man' ]] && koopa::rm -S /usr/local/share/man
-    sudo pacman -Syyu --noconfirm
+    if [[ "${dict[upgrade]}" -eq 1 ]]
+    then
+        sudo pacman -Syyu --noconfirm
+    fi
+    pkgs=()
+    if [[ "${dict[base]}" -eq 1 ]]
+    then
+        pkgs+=(
+            'base-devel'
+            'bash'
+            'bc'
+            'git'
+            'man'
+            'zsh'
+        )
+    fi
+    if [[ "${dict[recommended]}" -eq 1 ]]
+    then
+        pkgs+=(
+            'awk'
+            'cmake'
+            'gcc-fortran'
+            'gmp'
+            'libevent'
+            'libffi'
+            'mpc'
+            'mpfr'
+            'pandoc'
+            'pandoc-citeproc'
+            'r'
+            'tcl'
+            'texlive-core'
+            'tree'
+            'wget'
+        )
+    fi
+    sudo pacman -Syy --noconfirm
     sudo pacman-db-upgrade
-    packages=(
-        # pandoc
-        # pandoc-citeproc
-        # texlive-core
-        awk
-        base-devel
-        bash
-        bc
-        cmake
-        gcc-fortran
-        git
-        gmp
-        libevent
-        libffi
-        man
-        mpc
-        mpfr
-        r
-        tcl
-        tree
-        wget
-    )
-    sudo pacman -S --noconfirm "${packages[@]}"
+    sudo pacman -S --noconfirm "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }
