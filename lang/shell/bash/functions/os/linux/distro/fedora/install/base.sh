@@ -72,7 +72,7 @@ koopa::fedora_install_base() { # {{{1
     fi
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        koopa::alert "Upgrading install via 'dnf update'."
+        koopa::alert "Upgrading install via '${dnf} update'."
         sudo "$dnf" -y update
     fi
     pkgs=()
