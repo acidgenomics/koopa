@@ -144,7 +144,6 @@ koopa::debian_install_base() { # {{{1
         'findutils'
         'git'
         'lsb-release'
-        'shadow'
         'sudo'
     )
     # These packages should be included in the Docker base image.
