@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME NEED TO LOOK FOR 'PLATFORMS.TXT' FILE AND LOAD IF FOUND.
-# OTHERWISE ASSUME 'linux/amd64'.
 koopa::docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
