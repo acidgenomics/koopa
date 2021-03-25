@@ -82,6 +82,8 @@ koopa::arch_install_base() { # {{{1
             'bc'
             'git'
             'man'
+            'unzip'
+            'xz'
             'zsh'
         )
     fi
