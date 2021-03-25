@@ -91,6 +91,8 @@ koopa::alpine_install_base() { # {{{1
             'shadow'
             'sudo'
             'tar'
+            'unzip'
+            'xz'
             'zsh'
         )
     fi
