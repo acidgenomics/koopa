@@ -20,6 +20,17 @@ koopa::fedora_install_base() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            --base-image)
+                dict[base]=1
+                dict[dev]=0
+                dict[extra]=0
+                dict[recommended]=0
+                dict[upgrade]=0
+                shift 1
+                ;;
+            --default|--recommended)
+                shift 1
+                ;;
             --full)
                 dict[base]=1
                 dict[dev]=1
