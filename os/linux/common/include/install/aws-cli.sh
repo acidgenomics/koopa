@@ -18,7 +18,9 @@
 # """
 
 koopa::assert_is_linux
-file='awscli-exe-linux-x86_64.zip'
+# e.g. x86_64 for amd64, aarch64 for arm64.
+arch="$(koopa::arch)"
+file="awscli-exe-linux-${arch}.zip"
 url="https://awscli.amazonaws.com/${file}"
 koopa::download "$url"
 koopa::extract "$file"
