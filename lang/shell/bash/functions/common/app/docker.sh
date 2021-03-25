@@ -278,13 +278,14 @@ koopa::docker_build_all_tags() { # {{{1
 koopa::docker_prune_all_images() { # {{{1
     # """
     # Prune all Docker images.
-    # @note Updated 2020-11-03.
+    # @note Updated 2021-03-25.
     #
     # This is a nuclear option for resetting Docker.
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker
     koopa::alert 'Pruning all Docker images.'
+    docker buildx prune --all --force
     docker system prune --all --force
     return 0
 }
