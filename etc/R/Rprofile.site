@@ -270,15 +270,15 @@ local({
                 ## Ensure that everything, including X11, is enabled.
                 ## Note that 'cledit' will return false when non-interactive.
                 ## This will launch XQuartz when running R directly.
-                if (isTRUE(interactive())) {
-                    x <- capabilities()
-                    if (!all(x)) {
-                        stop(sprintf(
-                            "Capability failure: %s.",
-                            toString(names(x)[!x])
-                        ))
-                    }
-                }
+                ## > if (isTRUE(interactive())) {
+                ## >     x <- capabilities()
+                ## >     if (!all(x)) {
+                ## >         stop(sprintf(
+                ## >             "Capability failure: %s.",
+                ## >             toString(names(x)[!x])
+                ## >         ))
+                ## >     }
+                ## > }
             } else if (isTRUE(.rprofile[["linux"]])) {
                 which <- c("g++", "gcc", "gfortran")
                 current <- Sys.which(which)
