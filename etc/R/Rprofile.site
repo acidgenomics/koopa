@@ -269,6 +269,7 @@ local({
                 )
                 ## Ensure that everything, including X11, is enabled.
                 ## Note that 'cledit' will return false when non-interactive.
+                ## This will launch XQuartz when running R directly.
                 if (isTRUE(interactive())) {
                     x <- capabilities()
                     if (!all(x)) {
