@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-03-23.
+## Updated 2021-03-26.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -589,9 +589,7 @@ local({
     if (isInstalled("httr")) {
         ## Enable OAuth token generation using httr on a remote R server.
         ## This is used by googlesheets, for example.
-        options(
-            "httr_oob_default" = TRUE
-        )
+        options("httr_oob_default" = TRUE)
     }
 
     if (isInstalled("parallel")) {
@@ -619,9 +617,13 @@ local({
     }
 
     if (isInstalled("testthat")) {
-        options(
-            "testthat.progress.max_fails" = 1L
-        )
+        ## Stop on the first check failure.
+        options("testthat.progress.max_fails" = 1L)
+    }
+
+    if (isInstalled("tidyverse")) {
+        ## Suppress annoying tidyverse startup message.
+        options("tidyverse.quiet" = TRUE)
     }
 
     ## Session info {{{2
