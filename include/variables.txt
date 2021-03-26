@@ -283,7 +283,7 @@ rstudio-server-pro="1.4.1106-5"
 ruby="3.0.0p0"
 
 # https://www.rust-lang.org/
-rust="1.50.0"
+rust="1.51.0"
 
 # https://rustup.rs/
 rustup="1.23.1"
