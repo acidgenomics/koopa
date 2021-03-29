@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-03-25"
+koopa-date="2021-03-29"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.2a"
@@ -34,7 +34,7 @@ armadillo="10.3.0"
 aspera-connect="3.10.1.181943"
 
 # https://ftp.gnu.org/gnu/autoconf/
-autoconf="2.69"
+autoconf="2.71"
 
 # https://ftp.gnu.org/gnu/automake/
 automake="1.16.3"
@@ -93,7 +93,7 @@ docker="19.03.8"
 docker-credential-pass="0.6.3"
 
 # https://www.gnu.org/software/emacs/
-emacs="27.1"
+emacs="27.2"
 
 # Latest version compatible with Ensembl Perl API.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
@@ -124,7 +124,7 @@ geos="3.9.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.31.0"
+git="2.31.1"
 
 # https://gnupg.org/download/index.html
 gnupg="2.2.27"
@@ -149,7 +149,7 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.0.9"
+homebrew="3.0.10"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -283,6 +283,7 @@ rstudio-server-pro="1.4.1106-5"
 ruby="3.0.0p0"
 
 # https://www.rust-lang.org/
+# Use 'koopa update rust' to resolve.
 rust="1.51.0"
 
 # https://rustup.rs/
@@ -314,7 +315,7 @@ shunit2="2.1.7"
 singularity="3.6.0"
 
 # https://www.sqlite.org/download.html
-sqlite="3.35.2"
+sqlite="3.35.3"
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
