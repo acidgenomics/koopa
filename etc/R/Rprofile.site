@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-03-26.
+## Updated 2021-03-30.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -565,6 +565,16 @@ local({
 
     ## Package-specific options {{{2
     ## -------------------------------------------------------------------------
+
+    if (isInstalled("BiocManager")) {
+        ## Overriding the annoying message about manual CRAN configuration.
+        ## Check BiocManager repo config with `BiocManager::repositories()`.
+        ##
+        ## See also:
+        ## https://github.com/Bioconductor/BiocManager/blob/master/
+        ##     R/repositories.R
+        options("BiocManager.check_repositories" = FALSE)
+    }
 
     if (isInstalled("crayon")) {
         options(
