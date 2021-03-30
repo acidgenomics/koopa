@@ -3,17 +3,18 @@
 koopa::apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-03-30.
     # """
-    local file os_codename string url
+    local arch file os_codename string url
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/azure-cli.list'
     [[ -f "$file" ]] && return 0
     koopa::alert "Adding Microsoft Azure CLI repo at '${file}'."
     koopa::apt_add_microsoft_key
     os_codename="$(koopa::os_codename)"
+    arch="$(koopa::arch)"
     url='https://packages.microsoft.com/repos/azure-cli/'
-    string="deb [arch=amd64] ${url} ${os_codename} main"
+    string="deb [arch=${arch}] ${url} ${os_codename} main"
     koopa::sudo_write_string "$string" "$file"
     return 0
 }
@@ -35,12 +36,12 @@ koopa::apt_add_docker_key() { # {{{1
 koopa::apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-03-30.
     #
     # Ubuntu 20 (Focal Fossa) not yet supported:
     # https://download.docker.com/linux/
     # """
-    local file os_codename os_id string url
+    local arch file os_codename os_id string url
     koopa::assert_has_no_args "$#"
     file='/etc/apt/sources.list.d/docker.list'
     [[ -f "$file" ]] && return 0
@@ -48,6 +49,7 @@ koopa::apt_add_docker_repo() { # {{{1
     koopa::apt_add_docker_key
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
+    arch="$(koopa::arch)"
     # Remap 20.04 LTS to 19.10.
     case "$os_codename" in
         focal)
@@ -55,7 +57,7 @@ koopa::apt_add_docker_repo() { # {{{1
             ;;
     esac
     url="https://download.docker.com/linux/${os_id}"
-    string="deb [arch=amd64] ${url} ${os_codename} stable"
+    string="deb [arch=${arch}] ${url} ${os_codename} stable"
     koopa::sudo_write_string "$string" "$file"
     return 0
 }
@@ -369,34 +371,69 @@ koopa::apt_clean() { # {{{1
 }
 
 koopa::apt_configure_sources() { # {{{1
+
     # """
     # Configure apt sources.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-03-30.
     #
-    # Previously, we used a symlink approach here until 2020-02-24.
+    # Debian Docker images can also use snapshots:
+    # http://snapshot.debian.org/archive/debian/20210326T030000Z
     # """
-    local os_codename repos sources_list sources_list_d
+    local arch codenames os_codename os_id repos sources_list \
+        sources_list_d urls
     koopa::assert_has_no_args "$#"
     sources_list='/etc/apt/sources.list'
+    koopa::alert "Configuring apt sources in '${sources_list}'."
     [[ -L "$sources_list" ]] && koopa::sys_rm "$sources_list"
     sources_list_d='/etc/apt/sources.list.d'
     [[ -L "$sources_list_d" ]] && koopa::sys_rm "$sources_list_d"
-    sudo mkdir -pv "$sources_list_d"
+    [[ ! -d "$sources_list_d" ]] && sudo mkdir -pv "$sources_list_d"
+    os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
-    if koopa::is_ubuntu
+    arch="$(koopa::arch)"
+    declare -A codenames
+    declare -A urls
+    case "$os_id" in
+        debian)
+            repos=('main')
+            codenames[main]="$os_codename"
+            codenames[security]="${os_codename}/updates"
+            codenames[updates]="${os_codename}-updates"
+            urls[main]="http://deb.debian.org/debian/"
+            urls[security]="http://security.debian.org/debian-security/"
+            urls[updates]="http://deb.debian.org/debian/"
+            ;;
+        ubuntu)
+            # Can consider including 'multiverse' here as well.
+            repos=('main' 'restricted' 'universe')
+            codenames[main]="${os_codename}"
+            codenames[security]="${os_codename}-security"
+            codenames[updates]="${os_codename}-updates"
+            case "$arch" in
+                aarch64)
+                    urls[main]="http://ports.ubuntu.com/ubuntu-ports/"
+                    urls[security]="http://ports.ubuntu.com/ubuntu-ports/"
+                    urls[updates]="http://ports.ubuntu.com/ubuntu-ports/"
+                    ;;
+                *)
+                    urls[main]="http://archive.ubuntu.com/ubuntu/"
+                    urls[security]="http://security.ubuntu.com/ubuntu/"
+                    urls[updates]="http://archive.ubuntu.com/ubuntu/"
+                    ;;
+            esac
+            ;;
+        *)
+            koopa::stop "Unsupported OS: '${os_id}'."
+            ;;
+    esac
+    sudo tee "$sources_list" >/dev/null << END
+deb ${urls[main]} ${codenames[main]} ${repos[*]}
+deb ${urls[security]} ${codenames[security]} ${repos[*]}
+deb ${urls[updates]} ${codenames[updates]} ${repos[*]}
+END
+    if koopa::is_installed cat
     then
-        repos=('main' 'restricted' 'universe')
-        sudo tee "$sources_list" >/dev/null << END
-deb http://archive.ubuntu.com/ubuntu/ ${os_codename} ${repos[*]}
-deb http://archive.ubuntu.com/ubuntu/ ${os_codename}-updates ${repos[*]}
-deb http://security.ubuntu.com/ubuntu/ ${os_codename}-security ${repos[*]}
-END
-    else
-        sudo tee "$sources_list" >/dev/null << END
-deb http://deb.debian.org/debian ${os_codename} main
-deb http://deb.debian.org/debian ${os_codename}-updates main
-deb http://security.debian.org/debian-security ${os_codename}/updates main
-END
+        cat "$sources_list"
     fi
     return 0
 }
@@ -529,10 +566,6 @@ koopa::apt_key_add() {  #{{{1
         || true
     return 0
 }
-
-
-
-
 
 koopa::apt_remove() { # {{{1
     # """
