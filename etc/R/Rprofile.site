@@ -411,7 +411,7 @@ local({
     ## Stop nagging about whether to compile in an interactive session.
     ## https://stackoverflow.com/a/51530225
     options("install.packages.compile.from.source" = "always")
-    
+
     ## How to set binary-only package mode, which doesn't work on Linux.
     ## > options(
     ## >     "install.packages.check.source" = "no",
@@ -569,10 +569,6 @@ local({
     if (isInstalled("BiocManager")) {
         ## Overriding the annoying message about manual CRAN configuration.
         ## Check BiocManager repo config with `BiocManager::repositories()`.
-        ##
-        ## See also:
-        ## https://github.com/Bioconductor/BiocManager/blob/master/
-        ##     R/repositories.R
         options("BiocManager.check_repositories" = FALSE)
     }
 
