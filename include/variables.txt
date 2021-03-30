@@ -265,6 +265,10 @@ python="3.9.2"
 # https://cloud.r-project.org/src/base/R-4/
 r="4.0.4"
 
+# https://svn.r-project.org/R/
+# This is the SVN revision number.
+r-devel="80130"
+
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
 
