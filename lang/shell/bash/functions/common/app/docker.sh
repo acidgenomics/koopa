@@ -91,10 +91,10 @@ koopa::docker_build() { # {{{1
     # Handle tag support, if necessary.
     if koopa::str_match "$image" ':'
     then
-        if [[ -n "${tag:-}" ]]
-        then
-            koopa::stop "Don't declare image with ':' and use '--tag' flag."
-        fi
+        # > if [[ -n "${tag:-}" ]]
+        # > then
+        # >     koopa::stop "Don't declare image with ':' and use '--tag' flag."
+        # > fi
         image="$(koopa::print "$image" | cut -d ':' -f 1)"
         tag="$(koopa::print "$image" | cut -d ':' -f 2)"
     fi
