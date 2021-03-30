@@ -1,3 +1,18 @@
+## koopa 0.9.2 (2021-03-30)
+
+### Major changes
+
+- Improved support for 64-bit ARM (AArch) in addition to x86. Installers and
+  other platform-specific scripts now use `koopa::arch` function internally
+  when applicable. Note that ARM is still not well supported in some
+  bioinformatic workflows, RStudio installers, and conda.
+
+### Minor changes
+
+- Updated package versions supported by installers.
+- Improved shared R profile configuration to suppress messages regarding manual
+  CRAN configuration that now pop up with the BiocManager update.
+
 ## koopa 0.9.1 (2021-03-01)
 
 ### Minor changes
