@@ -399,9 +399,9 @@ koopa::apt_configure_sources() { # {{{1
             codenames[main]="$os_codename"
             codenames[security]="${os_codename}/updates"
             codenames[updates]="${os_codename}-updates"
-            urls[main]="http://deb.debian.org/debian/"
-            urls[security]="http://security.debian.org/debian-security/"
-            urls[updates]="http://deb.debian.org/debian/"
+            urls[main]='http://deb.debian.org/debian/'
+            urls[security]='http://security.debian.org/debian-security/'
+            urls[updates]='http://deb.debian.org/debian/'
             ;;
         ubuntu)
             # Can consider including 'multiverse' here as well.
@@ -411,14 +411,14 @@ koopa::apt_configure_sources() { # {{{1
             codenames[updates]="${os_codename}-updates"
             case "$arch" in
                 aarch64)
-                    urls[main]="http://ports.ubuntu.com/ubuntu-ports/"
-                    urls[security]="http://ports.ubuntu.com/ubuntu-ports/"
-                    urls[updates]="http://ports.ubuntu.com/ubuntu-ports/"
+                    urls[main]='http://ports.ubuntu.com/ubuntu-ports/'
+                    urls[security]='http://ports.ubuntu.com/ubuntu-ports/'
+                    urls[updates]='http://ports.ubuntu.com/ubuntu-ports/'
                     ;;
                 *)
-                    urls[main]="http://archive.ubuntu.com/ubuntu/"
-                    urls[security]="http://security.ubuntu.com/ubuntu/"
-                    urls[updates]="http://archive.ubuntu.com/ubuntu/"
+                    urls[main]='http://archive.ubuntu.com/ubuntu/'
+                    urls[security]='http://security.ubuntu.com/ubuntu/'
+                    urls[updates]='http://archive.ubuntu.com/ubuntu/'
                     ;;
             esac
             ;;

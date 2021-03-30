@@ -3,7 +3,7 @@
 koopa::linux_install_bcbio() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2021-03-02.
+    # @note Updated 2021-03-30.
     #
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
@@ -11,7 +11,7 @@ koopa::linux_install_bcbio() { # {{{1
     local file install_dir name name_fancy prefix \
         python tmp_dir tools_dir url version
     name='bcbio'
-    name_fancy="bcbio-nextgen"
+    name_fancy='bcbio-nextgen'
     version="$(koopa::current_bcbio_version)"
     prefix="$(koopa::app_prefix)/${name}/${version}"
     if [[ -d "$prefix" ]]
@@ -230,13 +230,13 @@ koopa::linux_install_bcbio_genome() { # {{{1
 koopa::linux_install_bcbio_vm() { # {{{1
     # """
     # Install bcbio-vm.
-    # @note Updated 2021-03-02.
+    # @note Updated 2021-03-30.
     # """
     local bin_dir conda file make_bin_dir make_prefix name name_fancy prefix url
     koopa::assert_has_no_envs
     koopa::assert_is_installed conda docker
     name='bcbio-vm'
-    name_fancy="bcbio-nextgen-vm"
+    name_fancy='bcbio-nextgen-vm'
     version="$(koopa::conda_env_latest_version "$name")"
     prefix="$(koopa::app_prefix)/${version}/${name}"
     if [[ -d "$prefix" ]]
