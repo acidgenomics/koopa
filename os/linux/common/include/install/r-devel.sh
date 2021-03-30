@@ -3,18 +3,23 @@
 
 koopa::assert_is_linux
 koopa::assert_is_installed svn
+# Subversion revision number (e.g. 80130).
+revision="$(koopa::variable 'r-devel')"
 # Set the R source code repo URL.
-repos='https://svn.r-project.org/R'
+repo_url='https://svn.r-project.org/R'
 # Set the desired top-level directory structure.
 rtop="${PWD}/svn/r"
 # Create necessary build directories.
 koopa::mkdir "${rtop}/r-devel/build"
 # Check out the latest revision of R-devel.
 koopa::cd "$rtop"
-svn co "${repos}/trunk" 'r-devel/source'
+svn checkout \
+    --revision="$revision" \
+    "${repo_url}/trunk" \
+    'r-devel/source'
 # Ensure that repo is up-to-date.
 # > koopa::cd "${rtop}/r-devel/source"
-# > svn up
+# > svn update
 # Get the sources of the recommended packages.
 koopa::cd "${rtop}/r-devel/source/tools"
 ./rsync-recommended
