@@ -119,7 +119,7 @@ END
 koopa::debian_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
-    # @note Updated 2020-07-16.
+    # @note Updated 2021-03-30.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -127,7 +127,8 @@ koopa::debian_install_rstudio_server() { # {{{1
     # > sudo rstudio-server start
     # > sudo rstudio-server status
     # """
-    local os_codename
+    local arch os_codename
+    arch="$(koopa::arch)"
     os_codename="$(koopa::os_codename)"
     case "$os_codename" in
         buster|focal)
@@ -143,7 +144,7 @@ koopa::debian_install_rstudio_server() { # {{{1
         --file-ext='deb' \
         --install='sudo gdebi --non-interactive' \
         --os-codename="$os_codename" \
-        --platform='amd64' \
+        --platform="$arch" \
         "$@"
     return 0
 }
@@ -157,16 +158,17 @@ koopa::debian_install_rstudio_server_pro() { # {{{1
 koopa::fedora_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Fedora / RHEL / CentOS.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-03-30.
     # """
-    local os_codename
+    local arch os_codename
+    arch="$(koopa::arch)"
     os_codename='centos8'
     koopa::mkdir -S '/etc/init.d'
     koopa::_install_rstudio_server \
         --file-ext='rpm' \
         --install='sudo dnf -y install' \
         --os-codename="$os_codename" \
-        --platform="$(koopa::arch)" \
+        --platform="$arch" \
         "$@"
     return 0
 }

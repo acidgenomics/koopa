@@ -3,11 +3,11 @@
 koopa::debian_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Debian/Ubuntu.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-03-30.
     # @seealso
     # https://rstudio.com/products/shiny/download-server/ubuntu/
     # """
-    local name name_fancy pos reinstall version
+    local arch name name_fancy pos reinstall version
     reinstall=0
     pos=()
     while (("$#"))
@@ -49,7 +49,9 @@ koopa::debian_install_shiny_server() { # {{{1
     fi
     (
         koopa::cd "$tmp_dir"
-        file="shiny-server-${version}-amd64.deb"
+        # Currently only "amd64" (x86) is supported here.
+        arch="$(koopa::arch)"
+        file="shiny-server-${version}-${arch}.deb"
         url="https://download3.rstudio.org/ubuntu-14.04/x86_64/${file}"
         koopa::download "$url"
         sudo gdebi --non-interactive "$file"
