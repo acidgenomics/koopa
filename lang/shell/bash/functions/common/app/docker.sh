@@ -291,7 +291,7 @@ koopa::docker_prune_all_stale_tags() { # {{{1
     # Prune (delete) all stale tags on DockerHub for all images.
     # @note Updated 2021-03-30.
     # """
-    koopa::assert_has_args "$#"
+    koopa::assert_has_no_args "$#"
     koopa::rscript 'dockerPruneAllStaleTags' "$@"
     return 0
 }

@@ -48,7 +48,7 @@ koopa::sys_git_pull() { # {{{1
 koopa::sys_info() { # {{{
     # """
     # System information.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-03-30.
     # """
     koopa::assert_has_no_args "$#"
     local array koopa_prefix nf origin shell shell_name shell_version
@@ -119,6 +119,7 @@ koopa::sys_info() { # {{{
             '------------------'
             "OS: ${os}"
             "Shell: ${shell}"
+            "Architecture: $(koopa::arch)"
         )
     fi
     cat "$(koopa::include_prefix)/ascii-turtle.txt"
