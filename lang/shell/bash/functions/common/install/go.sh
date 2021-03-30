@@ -3,9 +3,10 @@
 koopa::install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2020-11-17.
+    # @note Updated 2021-03-30.
     # """
-    local name name_fancy os_id prefix prefix_parent reinstall tmp_dir version
+    local arch name name_fancy os_id prefix prefix_parent reinstall \
+        tmp_dir version
     koopa::assert_has_no_envs
     name='go'
     name_fancy='Go'
@@ -44,7 +45,8 @@ koopa::install_go() { # {{{1
         else
             os_id='linux'
         fi
-        file="go${version}.${os_id}-amd64.tar.gz"
+        arch="$(koopa::arch)"
+        file="go${version}.${os_id}-${arch}.tar.gz"
         url="https://dl.google.com/go/${file}"
         koopa::download "$url"
         koopa::extract "$file"

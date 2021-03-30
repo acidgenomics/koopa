@@ -2,7 +2,8 @@
 # shellcheck disable=SC2154
 
 koopa::assert_is_linux
-file="docker-credential-pass-v${version}-amd64.tar.gz"
+arch="$(koopa::arch)"
+file="docker-credential-pass-v${version}-${arch}.tar.gz"
 url="https://github.com/docker/docker-credential-helpers/releases/\
 download/v${version}/${file}"
 koopa::download "$url"
