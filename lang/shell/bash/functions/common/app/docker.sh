@@ -247,7 +247,12 @@ koopa::docker_build_all_images() { # {{{1
             # Skip image if pushed recently.
             if [[ "$force" -eq 0 ]]
             then
-                if koopa::is_docker_build_recent "$image"
+                # NOTE This step currently pulls the image and checks the
+                # timestamp locally. We likely can speed this step up
+                # significantly by querying the DockerHub API directly instead.
+                # Refer to 'docker-prune-stale-tags' approach for example code,
+                # which is currently written in R instead of Bash.
+                if koopa::is_docker_build_recent --days="$days" "$image"
                 then
                     koopa::note "'${image}' was built recently. Skipping."
                     continue
