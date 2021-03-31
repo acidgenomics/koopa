@@ -16,7 +16,7 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
     minor_version="$(koopa::major_minor_version "$version")"
     arch="$(koopa::arch)"
     koopa::install_start "$name_fancy"
-    koopa::note 'Removing previous version, if applicable.'
+    koopa::alert_note 'Removing previous version, if applicable.'
     sudo dnf -y remove 'oracle-instantclient*'
     koopa::rm -S '/etc/ld.so.conf.d/oracle-instantclient.conf'
     url_prefix="https://download.oracle.com/otn_software/linux/\

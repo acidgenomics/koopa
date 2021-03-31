@@ -254,7 +254,7 @@ koopa::docker_build_all_images() { # {{{1
                 # which is currently written in R instead of Bash.
                 if koopa::is_docker_build_recent --days="$days" "$image"
                 then
-                    koopa::note "'${image}' was built recently. Skipping."
+                    koopa::alert_note "'${image}' was built recently. Skipping."
                     continue
                 fi
             fi

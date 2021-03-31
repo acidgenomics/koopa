@@ -16,7 +16,7 @@ koopa::linux_install_bcbio() { # {{{1
     prefix="$(koopa::app_prefix)/${name}/${version}"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "${name_fancy} already installed at '${prefix}'."
+        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$prefix"
@@ -241,7 +241,7 @@ koopa::linux_install_bcbio_vm() { # {{{1
     prefix="$(koopa::app_prefix)/${version}/${name}"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "'${name_fancy}' already installed at '${prefix}'."
+        koopa::alert_note "'${name_fancy}' already installed at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$prefix"

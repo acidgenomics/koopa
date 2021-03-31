@@ -324,7 +324,7 @@ koopa::conda_create_env() { # {{{1
             then
                 conda remove --name "$env_name" --all
             else
-                koopa::note "Conda environment '${env_name}' exists."
+                koopa::alert_note "Conda environment '${env_name}' exists."
                 continue
             fi
         fi
