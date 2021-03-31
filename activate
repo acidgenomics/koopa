@@ -144,13 +144,11 @@ _koopa_activate() { # {{{1
             locale
         fi
         _koopa_activate_duration_stop
-        _koopa_print ''
         if [ -n "${KOOPA_DURATION:-}" ]
         then
-            _koopa_success "Activation was successful (${KOOPA_DURATION:?} ms)."
-        else
-            _koopa_success 'Activation was successful.'
+            _koopa_dl 'duration' "${KOOPA_DURATION:?} ms"
         fi
+        _koopa_alert_success 'Activation was successful.'
     fi
     unset -f _koopa_activate_usage
     unset -v KOOPA_ACTIVATE KOOPA_ACTIVATE_SCRIPT
