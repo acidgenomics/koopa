@@ -5,13 +5,13 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-03-30"
+koopa-date="2021-03-31"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.9.2"
+koopa-version="0.9.3"
 
 # Also update this value in 'lang/r/include/header.R'.
-r-koopa="0.1.10"
+r-koopa="0.1.12"
 
 # Globals {{{1
 # ==============================================================================
@@ -84,7 +84,7 @@ conda="4.9.2"
 coreutils="8.32"
 
 # https://curl.haxx.se/
-curl="7.75.0"
+curl="7.76.0"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -264,6 +264,10 @@ python="3.9.2"
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
 r="4.0.4"
+
+# https://svn.r-project.org/R/
+# This is the SVN revision number.
+r-devel="80130"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"

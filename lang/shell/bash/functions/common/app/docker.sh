@@ -166,12 +166,12 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-03-31.
     # """
     local build_file build_args days force image images prune pos \
         repo repos repo_name
     koopa::assert_is_installed docker
-    days=2
+    days=30
     force=0
     prune=0
     pos=()
@@ -247,7 +247,12 @@ koopa::docker_build_all_images() { # {{{1
             # Skip image if pushed recently.
             if [[ "$force" -eq 0 ]]
             then
-                if koopa::is_docker_build_recent "$image"
+                # NOTE This step currently pulls the image and checks the
+                # timestamp locally. We likely can speed this step up
+                # significantly by querying the DockerHub API directly instead.
+                # Refer to 'docker-prune-stale-tags' approach for example code,
+                # which is currently written in R instead of Bash.
+                if koopa::is_docker_build_recent --days="$days" "$image"
                 then
                     koopa::note "'${image}' was built recently. Skipping."
                     continue
@@ -283,6 +288,16 @@ koopa::docker_prune_all_images() { # {{{1
     koopa::alert 'Pruning all Docker images.'
     docker buildx prune --all --force
     docker system prune --all --force
+    return 0
+}
+
+koopa::docker_prune_all_stale_tags() { # {{{1
+    # """
+    # Prune (delete) all stale tags on DockerHub for all images.
+    # @note Updated 2021-03-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::rscript 'dockerPruneAllStaleTags' "$@"
     return 0
 }
 

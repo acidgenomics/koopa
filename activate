@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-03-31.
     # """
     case "${1:-}" in
         --help|-h)
@@ -60,37 +60,44 @@ _koopa_activate() { # {{{1
     _koopa_export_user
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
-        _koopa_is_macos && _koopa_activate_visual_studio_code
+        # Run OS-specific activation steps at the beginning here.
+        if _koopa_is_linux
+        then
+            _koopa_activate_bcbio
+        elif _koopa_is_macos
+        then
+            _koopa_activate_macos_python
+            _koopa_activate_visual_studio_code
+        fi
         _koopa_activate_homebrew
         _koopa_activate_coreutils
         _koopa_activate_dircolors
         _koopa_activate_gcc_colors
-        _koopa_activate_llvm
         _koopa_activate_emacs
         _koopa_activate_go
+        _koopa_activate_llvm
         _koopa_activate_openjdk
         _koopa_activate_aspera
         _koopa_activate_nextflow
         # Perl ------------------------------------------------------------ {{{2
-        _koopa_activate_ensembl_perl_api
-        _koopa_activate_perlbrew
+        # > _koopa_activate_ensembl_perl_api
+        # > _koopa_activate_perlbrew
         # Ruby ------------------------------------------------------------ {{{2
         _koopa_activate_ruby
-        _koopa_activate_rbenv
-        # > _koopa_activate_venv
+        # > _koopa_activate_rbenv
         # Rust ------------------------------------------------------------ {{{2
         _koopa_activate_rust
+        # Now can activate useful Rust packages.
         _koopa_activate_broot
         _koopa_activate_fzf
         _koopa_activate_zoxide
         # Python ---------------------------------------------------------- {{{2
-        _koopa_is_macos && _koopa_activate_macos_python
         _koopa_activate_python_site_packages
         _koopa_activate_python_startup
-        _koopa_activate_pyenv
-        _koopa_activate_pipx
+        # > _koopa_activate_pipx
+        # > _koopa_activate_pyenv
+        # > _koopa_activate_venv
         _koopa_activate_conda
-        _koopa_is_linux && _koopa_activate_bcbio
     fi
     _koopa_activate_koopa_paths
     _koopa_activate_local_paths
