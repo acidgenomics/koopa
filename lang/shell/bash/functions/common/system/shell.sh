@@ -17,7 +17,7 @@ koopa::enable_shell() { # {{{1
     then
         sudo sh -c "printf '%s\n' '${cmd_path}' >> '${etc_file}'"
     else
-        koopa::success "'${cmd_path}' already defined in '${etc_file}'."
+        koopa::alert_success "'${cmd_path}' already defined in '${etc_file}'."
     fi
     user="$(koopa::user)"
     koopa::alert_note "Run 'chsh -s ${cmd_path} ${user}' to change default shell."

@@ -21,7 +21,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     # and can cause system lockout in this case.
     sudo cp -v "$source_file" "$target_file"
     sudo chmod 0444 "$target_file"
-    koopa::success 'Touch ID disabled for sudo.'
+    koopa::alert_success 'Touch ID disabled for sudo.'
     return 0
 }
 
@@ -49,6 +49,6 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     # and can cause system lockout in this case.
     sudo cp -v "$source_file" "$target_file"
     sudo chmod 0444 "$target_file"
-    koopa::success 'Touch ID enabled for sudo.'
+    koopa::alert_success 'Touch ID enabled for sudo.'
     return 0
 }

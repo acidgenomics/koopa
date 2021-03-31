@@ -54,6 +54,6 @@ koopa::linux_bcbio_run_tests() { # {{{1
             ./run_tests.sh "$test" --keep-test-dir
         done
     )
-    koopa::success 'All unit tests passed.'
+    koopa::alert_success 'All unit tests passed.'
     return 0
 }

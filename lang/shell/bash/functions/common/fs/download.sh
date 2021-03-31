@@ -103,7 +103,7 @@ koopa::download_refdata_scsig() { # {{{1
         koopa::download "${base_url}/scsig.v${version}.metadata.txt"
     )
     koopa::sys_set_permissions -r "$prefix"
-    koopa::success 'Download of SCSig was successful.'
+    koopa::alert_success 'Download of SCSig was successful.'
     return 0
 }
 
