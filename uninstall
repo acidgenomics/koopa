@@ -17,7 +17,7 @@ uninstall() { # {{{1
     koopa::uninstall_dotfiles
     koopa::uninstall_dotfiles_private
     koopa::rm "$(koopa::config_prefix)" "$koopa_prefix"
-    koopa::success 'Uninstallation of koopa was successful.'
+    koopa::alert_success 'Uninstallation of koopa was successful.'
     koopa::alert_note 'Restart the shell.'
     return 0
 }

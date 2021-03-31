@@ -102,7 +102,7 @@ koopa::update_koopa_system() { # {{{1
     then
         koopa::macos_update_microsoft_office || true
     fi
-    koopa::success 'System update was successful.'
+    koopa::alert_success 'System update was successful.'
     return 0
 }
 
@@ -143,6 +143,6 @@ koopa::update_koopa_user() { # {{{1
         koopa::update_dotfiles "$(koopa::dotfiles_prefix)"
     koopa::update_dotfiles "$(koopa::dotfiles_private_prefix)"
     # > koopa::update_emacs
-    koopa::success 'User configuration update was successful.'
+    koopa::alert_success 'User configuration update was successful.'
     return 0
 }
