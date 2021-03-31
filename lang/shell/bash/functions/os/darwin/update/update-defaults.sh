@@ -1666,6 +1666,6 @@ LaunchServices.framework/Support/lsregister" \
     done
 
     koopa::update_success "$name_fancy"
-    koopa::alert_note 'Some of these changes require a logout/restart to take effect.'
+    koopa::alert_note 'Some of these changes require logout to take effect.'
     return 0
 }
