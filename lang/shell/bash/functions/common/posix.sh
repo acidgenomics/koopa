@@ -72,6 +72,10 @@ koopa::alert_note() { # {{{1
     _koopa_alert_note "$@"
 }
 
+koopa::alert_restart() { # {{{1
+    _koopa_alert_restart "$@"
+}
+
 koopa::alert_success() { # {{{1
     _koopa_alert_success "$@"
 }
@@ -686,10 +690,6 @@ koopa::remove_from_manpath() { # {{{1
 
 koopa::remove_from_path() { # {{{1
     _koopa_remove_from_path "$@"
-}
-
-koopa::restart() { # {{{1
-    _koopa_restart "$@"
 }
 
 koopa::ruby_api_version() { # {{{1

@@ -40,7 +40,7 @@ koopa::macos_install_r_cran_clang() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::install_success "$name"
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 
@@ -100,7 +100,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::install_success "$name"
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 

@@ -237,8 +237,7 @@ _koopa_alert_note() { # {{{1
     return 0
 }
 
-# FIXME RENAME TO ALERT_RESTART.
-_koopa_restart() { # {{{1
+_koopa_alert_restart() { # {{{1
     # """
     # Inform the user that they should restart shell.
     # @note Updated 2021-03-31.

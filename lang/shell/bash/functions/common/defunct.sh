@@ -165,6 +165,13 @@ koopa::remove_empty_dirs() { # {{{1
     koopa::defunct 'koopa::delete_empty_dirs'
 }
 
+koopa::restart() { # {{{1
+    # """
+    # @note Updated 2021-03-31.
+    # """
+    koopa::defunct 'koopa::alert_restart'
+}
+
 koopa::success() { # {{{1
     # """
     # @note Updated 2021-03-31.

@@ -65,7 +65,7 @@ koopa::macos_install_python_framework() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::install_success "$name_fancy"
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 

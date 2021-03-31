@@ -89,7 +89,7 @@ koopa::_install_conda() { # {{{1
     koopa::sys_set_permissions -r "$prefix"
     koopa::link_into_opt "$prefix" 'conda'
     koopa::install_success "$name_fancy"
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 

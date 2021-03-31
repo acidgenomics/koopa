@@ -313,7 +313,7 @@ END
     koopa::update_etc_profile_d
     koopa::fix_zsh_permissions
     koopa::install_success 'koopa'
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 
