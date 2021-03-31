@@ -306,7 +306,7 @@ koopa::linux_configure_system() { # {{{1
     # --------------------------------------------------------------------------
     if [[ "$mode" == "minimal" ]]
     then
-        koopa::success 'Minimal configuration was successful.'
+        koopa::alert_success 'Minimal configuration was successful.'
         return 0
     fi
     # Disk configuration {{{3
@@ -536,7 +536,7 @@ koopa::linux_configure_system() { # {{{1
     then
         koopa::delete_cache
     fi
-    koopa::success 'Configuration completed successfully.'
+    koopa::alert_success 'Configuration completed successfully.'
     return 0
 }
 

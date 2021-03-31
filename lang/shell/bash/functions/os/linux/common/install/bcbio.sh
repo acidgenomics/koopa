@@ -354,7 +354,7 @@ koopa::linux_patch_bcbio() { # {{{1
         koopa::h2 "Patching installation via 'setup.py' script."
         "$bcbio_python" setup.py install
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::success "Patching of ${name_fancy} was successful."
+    koopa::alert_success "Patching of ${name_fancy} was successful."
     return 0
 }
 

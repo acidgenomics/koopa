@@ -4,7 +4,7 @@ koopa::rhel_enable_epel() { # {{{1
     koopa::assert_has_no_args "$#"
     if sudo dnf repolist | grep -q 'epel/'
     then
-        koopa::success 'EPEL is already enabled.'
+        koopa::alert_success 'EPEL is already enabled.'
         return 0
     fi
     sudo dnf install -y \

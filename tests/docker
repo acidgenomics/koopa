@@ -20,7 +20,7 @@ koopa::test_docker() {
             | bash -s -- --non-interactive --test"
     docker pull "$image"
     docker run -it "$image" bash -c "$cmd"
-    koopa::success 'Installation test was successful.'
+    koopa::alert_success 'Installation test was successful.'
     return 0
 }
 

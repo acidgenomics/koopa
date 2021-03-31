@@ -13,6 +13,6 @@ koopa::macos_configure_system() { # {{{1
     koopa::install_homebrew_packages
     koopa::install_conda
     koopa::macos_update_defaults
-    koopa::success 'macOS configuration was successful.'
+    koopa::alert_success 'macOS configuration was successful.'
     return 0
 }

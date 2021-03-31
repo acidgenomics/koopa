@@ -159,7 +159,7 @@ koopa::docker_build() { # {{{1
     docker buildx create --use || return 1
     docker buildx build "${args[@]}" || return 1
     docker image ls --filter reference="${image}:${tag}"
-    koopa::success "Build of '${source_image}' was successful."
+    koopa::alert_success "Build of '${source_image}' was successful."
     return 0
 }
 
@@ -262,7 +262,7 @@ koopa::docker_build_all_images() { # {{{1
         done
     done
     [[ "$prune" -eq 1 ]] && koopa::docker_prune_all_images
-    koopa::success 'All Docker images built successfully.'
+    koopa::alert_success 'All Docker images built successfully.'
     return 0
 }
 

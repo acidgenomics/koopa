@@ -376,6 +376,6 @@ koopa::update_r_config() { # {{{1
     koopa::r_rebuild_docs "$r"
     # Skip this, to keep our Bioconductor Docker images light.
     # > koopa::install_r_koopa
-    koopa::success 'Update of R configuration was successful.'
+    koopa::alert_success 'Update of R configuration was successful.'
     return 0
 }

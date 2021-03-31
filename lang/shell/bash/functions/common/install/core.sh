@@ -235,7 +235,7 @@ koopa::link_app() { # {{{1
     then
         koopa::update_ldconfig
     fi
-    koopa::success "Successfully linked '${name}'."
+    koopa::alert_success "Successfully linked '${name}'."
     return 0
 }
 

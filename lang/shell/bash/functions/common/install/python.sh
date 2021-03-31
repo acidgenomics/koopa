@@ -166,7 +166,7 @@ koopa::update_python_packages() { # {{{1
     x="$(koopa::print "$x" | grep -v '^\-e')"
     if [[ -z "$x" ]]
     then
-        koopa::success 'All Python packages are current.'
+        koopa::alert_success 'All Python packages are current.'
         return 0
     fi
     prefix="$(koopa::python_site_packages_prefix)"

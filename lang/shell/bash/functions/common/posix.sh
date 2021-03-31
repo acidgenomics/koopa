@@ -72,6 +72,10 @@ koopa::alert_note() { # {{{1
     _koopa_alert_note "$@"
 }
 
+koopa::alert_success() { # {{{1
+    _koopa_alert_success "$@"
+}
+
 koopa::app_prefix() { # {{{1
     _koopa_app_prefix "$@"
 }
@@ -766,10 +770,6 @@ koopa::strip_trailing_slash() { # {{{1
 
 koopa::sub() { # {{{1
     _koopa_sub "$@"
-}
-
-koopa::success() { # {{{1
-    _koopa_success "$@"
 }
 
 koopa::tests_prefix() { # {{{1

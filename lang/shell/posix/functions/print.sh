@@ -215,7 +215,7 @@ _koopa_alert_coffee_time() { # {{{1
     # Alert that it's coffee time.
     # @note Updated 2021-03-31.
     # """
-    _koopa_alert_note 'This step takes a while. Time for a coffee break! ☕☕'
+    _koopa_alert_note 'This step takes a while. Time for a coffee break! ☕'
     return 0
 }
 
@@ -247,10 +247,9 @@ _koopa_restart() { # {{{1
     return 0
 }
 
-# FIXME RENAME TO ALERT_SUCCESS.
-_koopa_success() { # {{{1
+_koopa_alert_success() { # {{{1
     # """
-    # Success message.
+    # Alert success message.
     # @note Updated 2021-03-31.
     # """
     __koopa_msg 'green-bold' 'green' '✓' "$@"
