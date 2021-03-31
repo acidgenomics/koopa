@@ -60,6 +60,10 @@ koopa::alert() { # {{{1
     _koopa_alert "$@"
 }
 
+koopa::alert_coffee_time() { # {{{1
+    _koopa_alert_coffee_time "$@"
+}
+
 koopa::alert_info() { # {{{1
     _koopa_alert_info "$@"
 }
@@ -94,10 +98,6 @@ koopa::camel_case_simple() { # {{{1
 
 koopa::cd() { # {{{1
     _koopa_cd "$@"
-}
-
-koopa::coffee_time() { # {{{1
-    _koopa_coffee_time "$@"
 }
 
 koopa::conda_env() { # {{{1
