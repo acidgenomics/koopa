@@ -70,7 +70,7 @@ koopa::install_rust() { # {{{1
     # Clippy and rustfmt should be enabled by default.
     # > rustup component add clippy-preview
     # > rustup component add rustfmt
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 

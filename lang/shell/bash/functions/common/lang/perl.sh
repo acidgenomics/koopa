@@ -30,7 +30,7 @@ koopa::install_ensembl_perl_api() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::sys_set_permissions -r "$prefix"
     koopa::install_success "$name_fancy"
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 
@@ -131,7 +131,7 @@ koopa::install_perlbrew() { # {{{1
         done
     fi
     koopa::install_success "$name_fancy"
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 
