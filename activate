@@ -60,15 +60,22 @@ _koopa_activate() { # {{{1
     _koopa_export_user
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
-        # FIXME Need to optimize this activation step.
-        # Consider taking out assert checks etc to optimize this...
+        # Run OS-specific activation steps at the beginning here.
+        if _koopa_is_linux
+        then
+            _koopa_activate_bcbio
+        elif _koopa_is_macos
+        then
+            _koopa_activate_macos_python
+            _koopa_activate_visual_studio_code
+        fi
         _koopa_activate_homebrew
         _koopa_activate_coreutils
         _koopa_activate_dircolors
         _koopa_activate_gcc_colors
-        _koopa_activate_llvm
         _koopa_activate_emacs
         _koopa_activate_go
+        _koopa_activate_llvm
         _koopa_activate_openjdk
         _koopa_activate_aspera
         _koopa_activate_nextflow
@@ -80,24 +87,17 @@ _koopa_activate() { # {{{1
         # > _koopa_activate_rbenv
         # Rust ------------------------------------------------------------ {{{2
         _koopa_activate_rust
+        # Now can activate useful Rust packages.
         _koopa_activate_broot
         _koopa_activate_fzf
         _koopa_activate_zoxide
         # Python ---------------------------------------------------------- {{{2
         _koopa_activate_python_site_packages
         _koopa_activate_python_startup
-        # > _koopa_activate_pyenv
         # > _koopa_activate_pipx
+        # > _koopa_activate_pyenv
         # > _koopa_activate_venv
         _koopa_activate_conda
-        if _koopa_is_macos
-        then
-            _koopa_activate_macos_python
-            _koopa_activate_visual_studio_code
-        elif _koopa_is_linux
-        then
-            _koopa_activate_bcbio
-        fi
     fi
     _koopa_activate_koopa_paths
     _koopa_activate_local_paths
