@@ -28,7 +28,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
 koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     # Enable sudo authentication via Touch ID PAM.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-03-31.
     # @seealso
     # - https://davidwalsh.name/touch-sudo
     # - https://news.ycombinator.com/item?id=26302139
@@ -40,7 +40,8 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     target_file='/etc/pam.d/sudo'
     if [[ -f "$target_file" ]] && grep -q 'pam_tid.so' "$target_file"
     then
-        koopa::alert_note "Touch ID already enabled for sudo in '${target_file}'."
+        koopa::alert_note "Touch ID already enabled for sudo \
+in '${target_file}'."
         return 0
     fi
     koopa::alert "Enabling Touch ID for sudo in '${target_file}'."

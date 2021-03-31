@@ -55,7 +55,7 @@ koopa::install_doom_emacs() { # {{{1
 koopa::install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-03-31.
     #
     # Note that master branch is ancient and way behind current codebase.
     # Switching to more recent code on develop branch.
@@ -67,7 +67,8 @@ koopa::install_spacemacs() { # {{{1
     install_dir="${emacs_prefix}-${name}"
     if [[ -d "$install_dir" ]]
     then
-        koopa::alert_note "${name_fancy} is already installed at '${install_dir}'."
+        koopa::alert_note "${name_fancy} is already installed \
+at '${install_dir}'."
         return 0
     fi
     koopa::h1 "Installing ${name_fancy} at '${install_dir}."
