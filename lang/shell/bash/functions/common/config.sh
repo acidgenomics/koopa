@@ -179,7 +179,7 @@ koopa::git_clone_dotfiles() { # {{{1
 koopa::info_box() { # {{{1
     # """
     # Configuration information box.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-03-30.
     #
     # Using unicode box drawings here.
     # Note that we're truncating lines inside the box to 68 characters.
