@@ -32,7 +32,7 @@ koopa::bam_filter() { # {{{1
         final_output_bam="${bam_file%.bam}.${final_output_tail}.bam"
         if [[ -f "$final_output_bam" ]]
         then
-            koopa::note "Skipping '$(basename "$final_output_bam")'."
+            koopa::alert_note "Skipping '$(basename "$final_output_bam")'."
             continue
         fi
         # 1. Filter duplicate reads.

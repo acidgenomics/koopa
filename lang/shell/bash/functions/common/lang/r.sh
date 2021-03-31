@@ -139,7 +139,7 @@ koopa::link_r_site_library() { # {{{1
     koopa::sys_ln "$lib_source" "$lib_target"
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then
-        koopa::note 'Fixing Fedora R configuration.'
+        koopa::alert_note 'Fixing Fedora R configuration.'
         koopa::sys_ln \
             '/usr/lib64/R/site-library' \
             '/usr/local/lib/R/site-library'
@@ -221,7 +221,7 @@ koopa::r_javareconf() { # {{{1
     # This step can happen with r-devel in Docker images.
     if [[ ! -d "$java_home" ]]
     then
-        koopa::note "Failed to locate 'JAVA_HOME'."
+        koopa::alert_note "Failed to locate 'JAVA_HOME'."
         return 0
     fi
     koopa::alert 'Updating R Java configuration.'

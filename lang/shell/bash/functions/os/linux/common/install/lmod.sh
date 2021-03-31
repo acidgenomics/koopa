@@ -28,7 +28,7 @@ koopa::install_lmod() { # {{{1
     prefix="$(koopa::app_prefix)/${name}/${version}"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "${name_fancy} is already installed at '${prefix}'."
+        koopa::alert_note "${name_fancy} is already installed at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$version" "$prefix"

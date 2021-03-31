@@ -49,10 +49,10 @@ koopa::sam_to_bam() { # {{{1
     koopa::activate_conda_env samtools
     case "$keep_sam" in
         0)
-            koopa::note 'SAM files will be deleted.'
+            koopa::alert_note 'SAM files will be deleted.'
             ;;
         1)
-            koopa::note 'SAM files will be preserved.'
+            koopa::alert_note 'SAM files will be preserved.'
             ;;
     esac
     for sam_file in "${sam_files[@]}"

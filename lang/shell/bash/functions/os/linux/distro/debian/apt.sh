@@ -450,7 +450,7 @@ koopa::apt_disable_deb_src() { # {{{1
     koopa::alert "Disabling Debian sources in '${file}'."
     if ! grep -Eq '^deb-src ' "$file"
     then
-        koopa::note "No 'deb-src' lines to comment in '${file}'."
+        koopa::alert_note "No 'deb-src' lines to comment in '${file}'."
         return 0
     fi
     sed -Ei 's/^deb-src /# deb-src /' "$file"
@@ -470,7 +470,7 @@ koopa::apt_enable_deb_src() { # {{{1
     koopa::alert "Enabling Debian sources in '${file}'."
     if ! grep -Eq '^# deb-src ' "$file"
     then
-        koopa::note "No '# deb-src' lines to uncomment in '${file}'."
+        koopa::alert_note "No '# deb-src' lines to uncomment in '${file}'."
         return 0
     fi
     sudo sed -Ei 's/^# deb-src /deb-src /' "$file"

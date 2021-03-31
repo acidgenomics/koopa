@@ -38,7 +38,7 @@ koopa::find_and_replace_in_files() { # {{{1
     for file in "$@"
     do
         [[ -f "$file" ]] || return 1
-        koopa::info "$file"
+        koopa::alert_info "$file"
         sed -i "s/${from}/${to}/g" "$file"
     done
     return 0

@@ -53,7 +53,7 @@ koopa::autopad_samples() { # {{{1
             newname="${prefix}_${num}${stem}"
             koopa::mv "$oldname" "$newname"
         else
-            koopa::note "Skipping '${file}'."
+            koopa::alert_note "Skipping '${file}'."
         fi
     done
     return 0
@@ -179,7 +179,7 @@ koopa::delete_broken_symlinks() { # {{{1
     do
         readarray -t files <<< "$(koopa::find_broken_symlinks "$prefix")"
         koopa::is_array_non_empty "${files[@]}" || continue
-        koopa::note "Removing ${#files[@]} broken symlinks."
+        koopa::alert_note "Removing ${#files[@]} broken symlinks."
         # Don't pass single call to rm, as argument list can be too long.
         for file in "${files[@]}"
         do
@@ -231,7 +231,7 @@ koopa::delete_empty_dirs() { # {{{1
     do
         readarray -t dirs <<< "$(koopa::find_empty_dirs "$prefix")"
         koopa::is_array_non_empty "${dirs[@]}" || continue
-        koopa::note "Removing ${#dirs[@]} empty directories."
+        koopa::alert_note "Removing ${#dirs[@]} empty directories."
         # Don't pass single call to rm, as argument list can be too long.
         for dir in "${dirs[@]}"
         do

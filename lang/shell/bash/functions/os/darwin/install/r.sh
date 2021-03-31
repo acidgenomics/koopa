@@ -127,7 +127,7 @@ koopa::macos_install_r_devel() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     name_fancy="R-${r_version} for ${macos_version}."
     koopa::install_start "$name_fancy"
-    koopa::note 'Debian r-devel inside a Docker container is preferred.'
+    koopa::alert_note 'Debian r-devel inside a Docker container is preferred.'
     (
         koopa::cd "$tmp_dir"
         file="R-${r_version}-${macos_version}-sa-${arch}.tar.gz"
@@ -136,7 +136,7 @@ koopa::macos_install_r_devel() { # {{{1
         if [[ -d '/Library/Frameworks/R.framework' ]] &&
             [[ ! -L '/Library/Frameworks/R.framework' ]]
         then
-            koopa::note "Backing up existing 'R.framework'."
+            koopa::alert_note "Backing up existing 'R.framework'."
             koopa::mv -S \
                 '/Library/Frameworks/R.framework' \
                 '/Library/Frameworks/R.framework.bak'
@@ -153,7 +153,7 @@ koopa::macos_install_r_devel() { # {{{1
         '/Library/Frameworks/R.framework'
     koopa::update_r_config
     koopa::install_success "$name_fancy"
-    koopa::note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
+    koopa::alert_note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
     return 0
 }
 

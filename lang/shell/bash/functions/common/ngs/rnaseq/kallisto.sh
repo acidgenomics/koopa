@@ -28,7 +28,7 @@ koopa::_kallisto_index() { # {{{1
     koopa::assert_is_file "$fasta_file"
     if [[ -f "$index_file" ]]
     then
-        koopa::note "Index exists at '${index_file}'. Skipping."
+        koopa::alert_note "Index exists at '${index_file}'. Skipping."
         return 0
     fi
     koopa::h2 "Generating kallisto index at '${index_file}'."
@@ -99,7 +99,7 @@ koopa::_kallisto_quant() { # {{{1
     sample_output_dir="${output_dir}/${id}"
     if [[ -d "$sample_output_dir" ]]
     then
-        koopa::note "Skipping '${id}'."
+        koopa::alert_note "Skipping '${id}'."
         return 0
     fi
     koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
@@ -203,7 +203,7 @@ koopa::run_kallisto() { # {{{1
     then
         koopa::stop "No FASTQs in '${fastq_dir}' with '${r1_tail}'."
     fi
-    koopa::info "${#fastq_r1_files[@]} samples detected."
+    koopa::alert_info "${#fastq_r1_files[@]} samples detected."
     koopa::mkdir "$output_dir"
     # Index {{{2
     # --------------------------------------------------------------------------

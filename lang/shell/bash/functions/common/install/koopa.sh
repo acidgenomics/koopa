@@ -45,7 +45,7 @@ koopa::update_koopa() { # {{{1
     then
         version="$(koopa::version)"
         url="$(koopa::url)"
-        koopa::note \
+        koopa::alert_note \
             "Stable release of ${name_fancy} ${version} detected." \
             "To update, first run the 'uninstall' script." \
             "Then run the default install command at '${url}'."

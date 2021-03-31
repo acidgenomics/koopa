@@ -46,6 +46,13 @@ koopa::find_non_cellar_make_files() { # {{{1
     koopa::defunct 'koopa::find_non_symlinked_make_files'
 }
 
+koopa::info() { # {{{1
+    # """
+    # @note Updated 2021-03-31.
+    # """
+    koopa::defunct 'koopa::alert_info'
+}
+
 koopa::install_cellar() { # {{{1
     # """
     # @note Updated 2020-11-23.
@@ -107,6 +114,13 @@ koopa::local_app_prefix() { # {{{1
     # @note Updated 2020-11-19.
     # """
     koopa::defunct 'koopa::local_data_prefix'
+}
+
+koopa::note() { # {{{1
+    # """
+    # @note Updated 2021-03-31.
+    # """
+    koopa::defunct 'koopa::alert_note'
 }
 
 koopa::prefix_mkdir() { # {{{1
