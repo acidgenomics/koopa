@@ -10,7 +10,7 @@ koopa::run_if_installed() { # {{{1
     do
         if ! koopa::is_installed "$arg"
         then
-            koopa::note "Skipping '${arg}'."
+            koopa::alert_note "Skipping '${arg}'."
             continue
         fi
         local exe

@@ -4,7 +4,7 @@
 # Skip building on CentOS.
 if koopa::is_centos
 then
-    koopa::note "'${name}' currently won't build on CentOS."
+    koopa::alert_note "'${name}' currently won't build on CentOS."
     return 0
 fi
 koopa::assert_is_linux

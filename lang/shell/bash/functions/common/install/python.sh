@@ -44,7 +44,7 @@ koopa::install_pip() { # {{{1
     then
         if koopa::is_python_package_installed --python="$python" "$name"
         then
-            koopa::note "Python package '${name}' is already installed."
+            koopa::alert_note "Python package '${name}' is already installed."
             return 0
         fi
     fi

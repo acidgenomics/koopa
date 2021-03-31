@@ -83,14 +83,13 @@ __koopa_ansi_escape() { # {{{1
     return 0
 }
 
-# FIXME POSIX WAY TO REPEAT X NUMBER OF TIMES?
 __koopa_h() { # {{{1
     # """
     # Koopa header.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-03-31.
     # """
     # shellcheck disable=SC2039
-    local emoji level prefix
+    local emoji level prefix x
     level="${1:?}"
     shift 1
     case "$level" in
@@ -211,6 +210,16 @@ _koopa_alert() { # {{{1
     return 0
 }
 
+# FIXME INCLUDE ALERT HERE.
+_koopa_coffee_time() { # {{{1
+    # """
+    # Coffee time.
+    # @note Updated 2021-03-31.
+    # """
+    _koopa_alert_note 'This step takes a while. Time for a coffee break! ☕☕'
+    return 0
+}
+
 _koopa_alert_info() { # {{{1
     # """
     # Alert info message.
@@ -220,28 +229,7 @@ _koopa_alert_info() { # {{{1
     return 0
 }
 
-# FIXME REWORK THIS USING ALERT_INFO INSTEAD.
-_koopa_info() { # {{{1
-    # """
-    # General info.
-    # @note Updated 2021-01-19.
-    # """
-    __koopa_msg 'default' 'default' 'ℹ' "$@"
-    return 0
-}
-
-# FIXME INCLUDE ALERT HERE.
-_koopa_coffee_time() { # {{{1
-    # """
-    # Coffee time.
-    # @note Updated 2020-07-20.
-    # """
-    _koopa_note 'This step takes a while. Time for a coffee break! ☕☕'
-    return 0
-}
-
-# FIXME RENAME TO ALERT NOTE?
-_koopa_note() { # {{{1
+_koopa_alert_note() { # {{{1
     # """
     # General note.
     # @note Updated 2020-07-01.
@@ -250,17 +238,17 @@ _koopa_note() { # {{{1
     return 0
 }
 
-# FIXME RENAME TO ALERT_RESTART?
+# FIXME RENAME TO ALERT_RESTART.
 _koopa_restart() { # {{{1
     # """
     # Inform the user that they should restart shell.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-03-31.
     # """
-    _koopa_note 'Restart the shell.'
+    _koopa_alert_note 'Restart the shell.'
     return 0
 }
 
-# FIXME RENAME TO ALERT_SUCCESS ?
+# FIXME RENAME TO ALERT_SUCCESS.
 _koopa_success() { # {{{1
     # """
     # Success message.
@@ -322,7 +310,7 @@ _koopa_h7() { # {{{1
 _koopa_invalid_arg() { # {{{1
     # """
     # Error on invalid argument.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-03-31.
     # """
     # shellcheck disable=SC2039
     local arg x
@@ -331,7 +319,7 @@ _koopa_invalid_arg() { # {{{1
         arg="${1:-}"
         if _koopa_str_match_posix "$arg" '--'
         then
-            _koopa_note "Use '--arg=VALUE' not '--arg VALUE' for arguments."
+            _koopa_alert_warning "Use '--arg=VALUE' not '--arg VALUE'."
         fi
         x="Invalid argument: '${arg}'."
     else

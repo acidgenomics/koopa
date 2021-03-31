@@ -12,7 +12,7 @@ koopa::linux_install_r_geos() { # {{{1
     local geos_prefix make_prefix
     if koopa::is_r_package_installed rgeos
     then
-        koopa::note 'rgeos is already installed.'
+        koopa::alert_note 'rgeos is already installed.'
         return 0
     fi
     koopa::assert_is_installed Rscript
@@ -43,7 +43,7 @@ koopa::linux_install_r_sf() { # {{{1
     local gdal_prefix geos_prefix make_prefix pkg_config_arr proj_prefix
     if koopa::is_r_package_installed sf
     then
-        koopa::note 'sf is already installed.'
+        koopa::alert_note 'sf is already installed.'
         return 0
     fi
     koopa::assert_is_installed Rscript

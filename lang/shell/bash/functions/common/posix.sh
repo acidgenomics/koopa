@@ -64,6 +64,10 @@ koopa::alert_info() { # {{{1
     _koopa_alert_info "$@"
 }
 
+koopa::alert_note() { # {{{1
+    _koopa_alert_note "$@"
+}
+
 koopa::app_prefix() { # {{{1
     _koopa_app_prefix "$@"
 }
@@ -300,10 +304,6 @@ koopa::include_prefix() { # {{{1
     _koopa_include_prefix "$@"
 }
 
-koopa::info() { # {{{1
-    _koopa_info "$@"
-}
-
 koopa::invalid_arg() { # {{{1
     _koopa_invalid_arg "$@"
 }
@@ -534,10 +534,6 @@ koopa::msigdb_prefix() { # {{{1
 
 koopa::monorepo_prefix() { # {{{1
     _koopa_monorepo_prefix "$@"
-}
-
-koopa::note() { # {{{1
-    _koopa_note "$@"
 }
 
 koopa::openjdk_prefix() { # {{{1

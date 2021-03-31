@@ -11,7 +11,7 @@ koopa::install_ensembl_perl_api() { # {{{1
     prefix="$(koopa::ensembl_perl_api_prefix)"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "${name_fancy} already installed at '${prefix}'."
+        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$prefix"
@@ -61,7 +61,7 @@ koopa::install_perlbrew() { # {{{1
     prefix="$(koopa::perlbrew_prefix)"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "Perlbrew is installed at '${prefix}'."
+        koopa::alert_note "Perlbrew is installed at '${prefix}'."
         return 0
     fi
     name_fancy='Perlbrew'
@@ -165,7 +165,7 @@ koopa::update_perlbrew() { # {{{1
     # """
     if ! koopa::is_installed perlbrew
     then
-        koopa::note 'Perlbrew is not installed.'
+        koopa::alert_note 'Perlbrew is not installed.'
         return 0
     fi
     koopa::assert_has_no_args "$#"
