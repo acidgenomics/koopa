@@ -33,7 +33,7 @@
 # the current session.
 # """
 
-koopa::coffee_time
+koopa::alert_coffee_time
 file="${name}-${version}.tar.gz"
 url="https://www.cpan.org/src/5.0/${file}"
 koopa::download "$url"

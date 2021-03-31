@@ -210,10 +210,9 @@ _koopa_alert() { # {{{1
     return 0
 }
 
-# FIXME INCLUDE ALERT HERE.
-_koopa_coffee_time() { # {{{1
+_koopa_alert_coffee_time() { # {{{1
     # """
-    # Coffee time.
+    # Alert that it's coffee time.
     # @note Updated 2021-03-31.
     # """
     _koopa_alert_note 'This step takes a while. Time for a coffee break! ☕☕'
