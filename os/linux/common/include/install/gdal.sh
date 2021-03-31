@@ -16,7 +16,7 @@
 koopa::assert_is_linux
 [[ "$reinstall" -ne 1 ]] && koopa::assert_is_not_file '/usr/bin/gdal-config'
 koopa::assert_is_installed proj python3
-koopa::coffee_time
+koopa::alert_coffee_time
 file="${name}-${version}.tar.gz"
 url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
 koopa::download "$url"

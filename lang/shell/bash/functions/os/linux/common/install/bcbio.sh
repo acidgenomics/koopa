@@ -20,7 +20,7 @@ koopa::linux_install_bcbio() { # {{{1
         return 0
     fi
     koopa::install_start "$name_fancy" "$prefix"
-    koopa::coffee_time
+    koopa::alert_coffee_time
     koopa::assert_has_no_envs
     python="$(koopa::python)"
     koopa::mkdir "$prefix"
