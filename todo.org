@@ -1,7 +1,10 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
-** TODO Consider moving dotfiles under opt in a futur eupdate.
+** TODO Consider installing latest stable release by default for Docker images.
+** TODO Minimal Linux base images should not include '.git' directories.
+** TODO Need to run bfg to make dotfiles more compact?
+** TODO Consider moving dotfiles under opt in a future update.
 ** TODO koopa install base should work on CentOS.
 ** TODO Add support for activation in fish shell.
 ** TODO Add support for activation in oil shell.

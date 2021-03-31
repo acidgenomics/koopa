@@ -1,3 +1,10 @@
+## koopa 0.9.3 (2021-03-31)
+
+### Minor changes
+
+- Improved activation speed of Homebrew GNU utilities on macOS.
+- Updated dependency versions.
+
 ## koopa 0.9.2 (2021-03-30)
 
 ### Major changes

@@ -146,11 +146,17 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-03-16.
+    # @note Updated 2021-03-31.
     # """
     # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_homebrew_prefix)"
+    # Enable these lines when debugging duration.
+    # shellcheck disable=SC2039
+    # > local bc date duration duration_start duration_stop
+    # > bc="${prefix}/opt/bc/bin/bc"
+    # > date="${prefix}/opt/coreutils/libexec/gnubin/date"
+    # > duration_start="$("$date" -u '+%s%3N')"
     if ! _koopa_is_installed brew
     then
         _koopa_activate_prefix "$prefix"
@@ -168,33 +174,41 @@ _koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_CASK_OPTS='--no-quarantine'
     fi
-    _koopa_activate_homebrew_prefix binutils
-    _koopa_activate_homebrew_gnu_prefix coreutils
-    _koopa_activate_homebrew_gnu_prefix findutils
-    _koopa_activate_homebrew_gnu_prefix gnu-sed
-    _koopa_activate_homebrew_gnu_prefix gnu-tar
-    _koopa_activate_homebrew_gnu_prefix gnu-units
-    _koopa_activate_homebrew_gnu_prefix grep
-    _koopa_activate_homebrew_gnu_prefix make
-    _koopa_activate_homebrew_libexec_prefix man-db
-    _koopa_activate_homebrew_prefix bc
-    _koopa_activate_homebrew_prefix curl
-    _koopa_activate_homebrew_prefix icu4c
-    _koopa_activate_homebrew_prefix ncurses
-    _koopa_activate_homebrew_prefix ruby
-    _koopa_activate_homebrew_prefix sqlite
-    _koopa_activate_homebrew_prefix texinfo
+    _koopa_activate_homebrew_gnu_prefix \
+        coreutils \
+        findutils \
+        gnu-sed \
+        gnu-tar \
+        gnu-units \
+        grep \
+        make
+    _koopa_activate_homebrew_libexec_prefix \
+        man-db
+    _koopa_activate_homebrew_prefix \
+        bc \
+        binutils \
+        curl \
+        icu4c \
+        ncurses \
+        ruby \
+        sqlite \
+        texinfo
     _koopa_activate_homebrew_google_cloud_sdk
-    _koopa_activate_homebrew_ruby_gems
-    # Use Python Framework on macOS instead.
-    # > _koopa_activate_homebrew_python
+    # > _koopa_activate_homebrew_ruby_gems
+    # Enable these lines when debugging duration.
+    # > duration_stop="$("$date" -u '+%s%3N')"
+    # > duration="$( \
+    # >     _koopa_print "${duration_stop}-${duration_start}" \
+    # >     | "$bc" \
+    # > )"
+    # > _koopa_print "Homebrew (${duration} ms)"
     return 0
 }
 
 _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # """
     # Activate a Homebrew cellar-only GNU program.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-03-31.
     #
     # Linked using 'g' prefix by default.
     #
@@ -214,11 +228,15 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # - brew info make
     # """
     # shellcheck disable=SC2039
-    local prefix
-    prefix="$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
-    [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_start "${prefix}/gnubin"
-    _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    local homebrew_prefix name prefix
+    homebrew_prefix="$(_koopa_homebrew_prefix)"
+    for name in "$@"
+    do
+        prefix="${homebrew_prefix}/opt/${name}/libexec"
+        [ -d "$prefix" ] || continue
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    done
     return 0
 }
 
@@ -245,18 +263,34 @@ _koopa_activate_homebrew_google_cloud_sdk() { # {{{1
 _koopa_activate_homebrew_libexec_prefix() { # {{{1
     # """
     # Activate a Homebrew cellar-only program.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-03-31.
     # """
-    _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
+    # shellcheck disable=SC2039
+    local homebrew_prefix name prefix
+    homebrew_prefix="$(_koopa_homebrew_prefix)"
+    for name in "$@"
+    do
+        prefix="${homebrew_prefix}/opt/${name}/libexec"
+        [ -d "$prefix" ] || continue
+        _koopa_activate_prefix "$prefix"
+    done
     return 0
 }
 
 _koopa_activate_homebrew_prefix() { # {{{1
     # """
     # Activate a Homebrew cellar-only program.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-03-31.
     # """
-    _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}"
+    # shellcheck disable=SC2039
+    local homebrew_prefix name prefix
+    homebrew_prefix="$(_koopa_homebrew_prefix)"
+    for name in "$@"
+    do
+        prefix="${homebrew_prefix}/opt/${name}"
+        [ -d "$prefix" ] || continue
+        _koopa_activate_prefix "$prefix"
+    done
     return 0
 }
 
