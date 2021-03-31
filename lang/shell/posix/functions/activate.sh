@@ -143,8 +143,6 @@ _koopa_activate_go() { # {{{1
     return 0
 }
 
-# FIXME This step is too slow.
-# FIXME Need to speed up by removing asserts?
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
@@ -586,7 +584,6 @@ _koopa_activate_pkg_config() { # {{{1
     return 0
 }
 
-# FIXME NEED TO SPEED THIS STEP UP?
 _koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
