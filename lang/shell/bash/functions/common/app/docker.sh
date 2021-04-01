@@ -29,8 +29,9 @@ koopa::docker_build() { # {{{1
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
     # """
-    local delete docker_dir image image_ids memory platforms platforms_file \
-        platforms_string pos push server source_image tag tags tags_file
+    local build_name delete docker_dir image image_ids memory platforms \
+        platforms_file platforms_string pos push server source_image tag \
+        tags tags_file
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
     docker_dir="$(koopa::docker_prefix)"
@@ -161,9 +162,10 @@ koopa::docker_build() { # {{{1
     koopa::alert "Building '${source_image}' Docker image."
     koopa::dl 'Build args' "${args[*]}"
     docker login "$server" || return 1
-    docker buildx create --name="$image" --use || return 1
+    build_name="$(basename "$image")"
+    docker buildx create --name="$build_name" --use || return 1
     docker buildx build "${args[@]}" || return 1
-    docker buildx rm "$image" || return 1
+    docker buildx rm "$build_name" || return 1
     docker image ls --filter reference="${image}:${tag}"
     koopa::alert_success "Build of '${source_image}' was successful."
     return 0
