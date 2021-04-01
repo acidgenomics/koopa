@@ -161,11 +161,11 @@ koopa::docker_build() { # {{{1
     fi
     koopa::alert "Building '${source_image}' Docker image."
     koopa::dl 'Build args' "${args[*]}"
-    docker login "$server" || return 1
+    docker login "$server" >/dev/null || return 1
     build_name="$(basename "$image")"
-    docker buildx create --name="$build_name" --use || return 1
+    docker buildx create --name="$build_name" --use >/dev/null
     docker buildx build "${args[@]}" || return 1
-    docker buildx rm "$build_name" || return 1
+    docker buildx rm "$build_name"
     docker image ls --filter reference="${image}:${tag}"
     koopa::alert_success "Build of '${source_image}' was successful."
     return 0
