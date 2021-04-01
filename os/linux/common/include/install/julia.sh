@@ -2,7 +2,7 @@
 # shellcheck disable=SC2154
 
 koopa::assert_is_linux
-koopa::coffee_time
+koopa::alert_coffee_time
 # If set, this will interfere with internal LLVM build required for
 # Julia. See 'build.md' file for LLVM details.
 unset LLVM_CONFIG

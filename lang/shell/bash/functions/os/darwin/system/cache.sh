@@ -16,7 +16,7 @@ LaunchServices.framework/Support/lsregister" \
         -domain 'system' \
         -domain 'user'
     killall Finder
-    koopa::success 'Clean up was successful.'
+    koopa::alert_success 'Clean up was successful.'
     return 0
 }
 
@@ -30,6 +30,6 @@ koopa::macos_flush_dns() { # {{{1
     koopa::h1 'Flushing DNS.'
     sudo dscacheutil -flushcache
     sudo killall -HUP mDNSResponder
-    koopa::success 'DNS flush was successful.'
+    koopa::alert_success 'DNS flush was successful.'
     return 0
 }

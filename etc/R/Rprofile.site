@@ -374,10 +374,11 @@ local({
             cran <- paste(cran, snapshot, sep = "/")
             repos[["CRAN"]] <- cran
             ## Configure the RSPM Bioconductor mirror repo.
-            options(
-               "BioC_mirror" =
-                   "https://packagemanager.rstudio.com/bioconductor"
-            )
+            ## This is currently warning about new books repo, so disabled.
+            ## > options(
+            ## >    "BioC_mirror" =
+            ## >        "https://packagemanager.rstudio.com/bioconductor"
+            ## > )
         } else {
             ## Alternatively, can use:
             ## > repos[["CRAN"]] <-
@@ -512,15 +513,21 @@ local({
     ## Debugging {{{2
     ## -------------------------------------------------------------------------
 
-    ## Improve the warnings and include backtrace of call stack.
+    ## warn: sets the handling of warning messages. If warn is negative, all
+    ## warnings are ignored. If warn is 0 (the default), warnings are stored
+    ## until the top–level function returns. If fewer than 10 warnings were
+    ## signalled, they will be printed, otherwise a message saying how many
+    ## (max 50) were signalled. An object called `last.warning` is created, and
+    ## can be printed through the function warnings. If warn is 1, warnings are
+    ## printed as they occur. If warn is 2 or larger, all warnings are turned
+    ## into errors.
+    options("warn" = 1L)
+
+    ## Improve the verbosity of errors and/or warnings.
     options(
         "deparse.max.lines" = 3L,
         "showErrorCalls" = TRUE,
         "showWarnCalls" = TRUE,
-        ## Timeouts default to 60 seconds, which can be too long.
-        ## Note that this applies to `download.file()` calls as well.
-        ## > "timeout" = 30L,
-        "warn" = 1L,
         ## Set to maximum supported length.
         "warning.length" = 8170L
     )
@@ -530,6 +537,10 @@ local({
         "warnPartialMatchAttr" = TRUE,
         "warnPartialMatchDollar" = TRUE
     )
+
+    ## Timeouts default to 60 seconds, which can be too long.
+    ## Note that this applies to `download.file()` calls as well.
+    ## > options("timeout" = 30L)
 
     ## Improve stack traces for error messages.
     ##
@@ -554,6 +565,8 @@ local({
             "rlang_backtrace_on_error" = "full",
             "rstudio.errors.suppressed" = FALSE
         )
+    } else {
+        options("error" = utils::recover)
     }
 
     ## Quiet down about registered S3 method collisons.

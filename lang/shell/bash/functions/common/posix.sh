@@ -60,8 +60,24 @@ koopa::alert() { # {{{1
     _koopa_alert "$@"
 }
 
+koopa::alert_coffee_time() { # {{{1
+    _koopa_alert_coffee_time "$@"
+}
+
 koopa::alert_info() { # {{{1
     _koopa_alert_info "$@"
+}
+
+koopa::alert_note() { # {{{1
+    _koopa_alert_note "$@"
+}
+
+koopa::alert_restart() { # {{{1
+    _koopa_alert_restart "$@"
+}
+
+koopa::alert_success() { # {{{1
+    _koopa_alert_success "$@"
 }
 
 koopa::app_prefix() { # {{{1
@@ -90,10 +106,6 @@ koopa::camel_case_simple() { # {{{1
 
 koopa::cd() { # {{{1
     _koopa_cd "$@"
-}
-
-koopa::coffee_time() { # {{{1
-    _koopa_coffee_time "$@"
 }
 
 koopa::conda_env() { # {{{1
@@ -298,10 +310,6 @@ koopa::host_id() { # {{{1
 
 koopa::include_prefix() { # {{{1
     _koopa_include_prefix "$@"
-}
-
-koopa::info() { # {{{1
-    _koopa_info "$@"
 }
 
 koopa::invalid_arg() { # {{{1
@@ -536,10 +544,6 @@ koopa::monorepo_prefix() { # {{{1
     _koopa_monorepo_prefix "$@"
 }
 
-koopa::note() { # {{{1
-    _koopa_note "$@"
-}
-
 koopa::openjdk_prefix() { # {{{1
     _koopa_openjdk_prefix "$@"
 }
@@ -688,10 +692,6 @@ koopa::remove_from_path() { # {{{1
     _koopa_remove_from_path "$@"
 }
 
-koopa::restart() { # {{{1
-    _koopa_restart "$@"
-}
-
 koopa::ruby_api_version() { # {{{1
     _koopa_ruby_api_version "$@"
 }
@@ -770,10 +770,6 @@ koopa::strip_trailing_slash() { # {{{1
 
 koopa::sub() { # {{{1
     _koopa_sub "$@"
-}
-
-koopa::success() { # {{{1
-    _koopa_success "$@"
 }
 
 koopa::tests_prefix() { # {{{1

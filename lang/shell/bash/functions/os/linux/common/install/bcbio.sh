@@ -16,11 +16,11 @@ koopa::linux_install_bcbio() { # {{{1
     prefix="$(koopa::app_prefix)/${name}/${version}"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "${name_fancy} already installed at '${prefix}'."
+        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$prefix"
-    koopa::coffee_time
+    koopa::alert_coffee_time
     koopa::assert_has_no_envs
     python="$(koopa::python)"
     koopa::mkdir "$prefix"
@@ -241,7 +241,7 @@ koopa::linux_install_bcbio_vm() { # {{{1
     prefix="$(koopa::app_prefix)/${version}/${name}"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "'${name_fancy}' already installed at '${prefix}'."
+        koopa::alert_note "'${name_fancy}' already installed at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$prefix"
@@ -354,7 +354,7 @@ koopa::linux_patch_bcbio() { # {{{1
         koopa::h2 "Patching installation via 'setup.py' script."
         "$bcbio_python" setup.py install
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::success "Patching of ${name_fancy} was successful."
+    koopa::alert_success "Patching of ${name_fancy} was successful."
     return 0
 }
 

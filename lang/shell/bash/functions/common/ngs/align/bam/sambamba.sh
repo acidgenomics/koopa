@@ -43,7 +43,7 @@ koopa::sambamba_filter() { # {{{1
     output_bam_bn="$(basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
-        koopa::note "Skipping '${output_bam_bn}'."
+        koopa::alert_note "Skipping '${output_bam_bn}'."
         return 0
     fi
     koopa::h2 "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
@@ -140,7 +140,7 @@ koopa::sambamba_sort() { # {{{1
     sorted_bam_bn="$(basename "$sorted_bam")"
     if [[ -f "$sorted_bam" ]]
     then
-        koopa::note "Skipping '${sorted_bam_bn}'."
+        koopa::alert_note "Skipping '${sorted_bam_bn}'."
         return 0
     fi
     koopa::h2 "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."

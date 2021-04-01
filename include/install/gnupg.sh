@@ -102,7 +102,7 @@ koopa::install_app \
     "$@"
 if koopa::is_macos
 then
-    koopa::note 'Skipping installation of pinentry.'
+    koopa::alert_note 'Skipping installation of pinentry.'
 else
     koopa::install_app \
         --name='pinentry' \

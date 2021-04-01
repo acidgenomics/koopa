@@ -46,6 +46,13 @@ koopa::find_non_cellar_make_files() { # {{{1
     koopa::defunct 'koopa::find_non_symlinked_make_files'
 }
 
+koopa::info() { # {{{1
+    # """
+    # @note Updated 2021-03-31.
+    # """
+    koopa::defunct 'koopa::alert_info'
+}
+
 koopa::install_cellar() { # {{{1
     # """
     # @note Updated 2020-11-23.
@@ -109,6 +116,13 @@ koopa::local_app_prefix() { # {{{1
     koopa::defunct 'koopa::local_data_prefix'
 }
 
+koopa::note() { # {{{1
+    # """
+    # @note Updated 2021-03-31.
+    # """
+    koopa::defunct 'koopa::alert_note'
+}
+
 koopa::prefix_mkdir() { # {{{1
     # """
     # @note Updated 2020-02-19.
@@ -149,6 +163,20 @@ koopa::remove_empty_dirs() { # {{{1
     # @note Updated 2020-11-18.
     # """
     koopa::defunct 'koopa::delete_empty_dirs'
+}
+
+koopa::restart() { # {{{1
+    # """
+    # @note Updated 2021-03-31.
+    # """
+    koopa::defunct 'koopa::alert_restart'
+}
+
+koopa::success() { # {{{1
+    # """
+    # @note Updated 2021-03-31.
+    # """
+    koopa::defunct 'koopa::alert_success'
 }
 
 koopa::unlink_cellar() { # {{{1

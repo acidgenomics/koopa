@@ -3,7 +3,7 @@
 koopa::install_rust() { # {{{1
     # """
     # Install Rust.
-    # @note Updated 2020-12-02.
+    # @note Updated 2021-03-31.
     # """
     local file name name_fancy pos prefix reinstall tmp_dir url
     name='rust'
@@ -35,7 +35,7 @@ koopa::install_rust() { # {{{1
     [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$prefix"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "${name_fancy} is already installed at '${prefix}'."
+        koopa::alert_note "${name_fancy} is already installed at '${prefix}'."
         return 0
     fi
     koopa::link_into_opt "$prefix" "$name"
@@ -45,7 +45,8 @@ koopa::install_rust() { # {{{1
     export RUSTUP_HOME
     if [[ -d "$CARGO_HOME" ]] && [[ -d "$RUSTUP_HOME" ]]
     then
-        koopa::note "${name_fancy} is already installed at '${CARGO_HOME}'."
+        koopa::alert_note "${name_fancy} is already installed \
+at '${CARGO_HOME}'."
         return 0
     fi
     koopa::install_start "$name_fancy"
@@ -70,7 +71,7 @@ koopa::install_rust() { # {{{1
     # Clippy and rustfmt should be enabled by default.
     # > rustup component add clippy-preview
     # > rustup component add rustfmt
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 
@@ -121,7 +122,7 @@ koopa::install_rust_packages() { # {{{1
     koopa::activate_rust
     if ! koopa::is_installed cargo rustc rustup
     then
-        koopa::note 'Required: cargo, rustc, rustup.'
+        koopa::alert_note 'Required: cargo, rustc, rustup.'
         return 0
     fi
     prefix="${CARGO_HOME:?}"
@@ -131,7 +132,7 @@ koopa::install_rust_packages() { # {{{1
         default=1
         if koopa::is_installed brew
         then
-            koopa::note 'Use Homebrew to manage Rust binaries.'
+            koopa::alert_note 'Use Homebrew to manage Rust binaries.'
             return 0
         fi
         pkgs=(
@@ -197,7 +198,7 @@ koopa::update_rust() { # {{{1
     koopa::assert_has_no_args "$#"
     if [[ "$force" -eq 0 ]] && koopa::is_current_version rust
     then
-        koopa::note "${name_fancy} is up-to-date."
+        koopa::alert_note "${name_fancy} is up-to-date."
         return 0
     fi
     koopa::assert_is_installed rustup

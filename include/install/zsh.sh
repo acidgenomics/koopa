@@ -42,7 +42,7 @@ make --jobs="$jobs"
 make install
 if koopa::is_debian_like
 then
-    koopa::info "Linking shared config scripts into '${etc_dir}'."
+    koopa::alert "Linking shared config scripts into '${etc_dir}'."
     koopa::ln \
         -t "${etc_dir}" \
         "$(koopa::distro_prefix)/etc/zsh/"*

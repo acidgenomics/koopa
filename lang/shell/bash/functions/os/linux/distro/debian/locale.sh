@@ -33,6 +33,6 @@ koopa::debian_set_locale() { # {{{1
     string="${lang}_${country}.${charset}"
     sudo update-locale LANG="$string"
     locale
-    koopa::success "Locale is defined as '${lang_string}'."
+    koopa::alert_success "Locale is defined as '${lang_string}'."
     return 0
 }

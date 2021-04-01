@@ -32,6 +32,6 @@ koopa::debian_install_docker() { # {{{1
     # Move '/var/lib/docker' to '/n/var/lib/docker'.
     koopa::link_docker
     koopa::install_success "$name_fancy"
-    koopa::restart
+    koopa::alert_restart
     return 0
 }

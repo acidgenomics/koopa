@@ -104,7 +104,7 @@ koopa::install_app() { # {{{1
     [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$prefix"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "${name_fancy} already installed at '${prefix}'."
+        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$version" "$prefix"
@@ -235,7 +235,7 @@ koopa::link_app() { # {{{1
     then
         koopa::update_ldconfig
     fi
-    koopa::success "Successfully linked '${name}'."
+    koopa::alert_success "Successfully linked '${name}'."
     return 0
 }
 
@@ -265,7 +265,7 @@ koopa::prune_apps() { # {{{1
     # """
     if koopa::is_macos
     then
-        koopa::note 'App pruning not yet supported on macOS.'
+        koopa::alert_note 'App pruning not yet supported on macOS.'
         return 0
     fi
     koopa::rscript 'pruneApps' "$@"
@@ -279,7 +279,7 @@ koopa::unlink_app() { # {{{1
     # """
     if koopa::is_macos
     then
-        koopa::note 'App links are not supported on macOS.'
+        koopa::alert_note 'App links are not supported on macOS.'
         return 0
     fi
     koopa::rscript 'unlinkApp' "$@"

@@ -24,7 +24,7 @@ koopa::install_homebrew() { # {{{1
     koopa::assert_has_no_args "$#"
     if koopa::is_installed brew
     then
-        koopa::note 'Homebrew is already installed.'
+        koopa::alert_note 'Homebrew is already installed.'
         return 0
     fi
     koopa::assert_has_sudo
@@ -132,7 +132,7 @@ koopa::uninstall_homebrew() { # {{{1
     local file name_fancy tmp_dir url user
     if ! koopa::is_installed brew
     then
-        koopa::note 'Homebrew is not installed.'
+        koopa::alert_note 'Homebrew is not installed.'
         return 0
     fi
     koopa::assert_has_sudo
@@ -221,7 +221,7 @@ koopa::update_homebrew() { # {{{1
         readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
         if koopa::is_array_non_empty "${casks[@]}"
         then
-            koopa::info "${#casks[@]} outdated casks detected."
+            koopa::alert_info "${#casks[@]} outdated casks detected."
             koopa::print "${casks[@]}"
             for cask in "${casks[@]}"
             do

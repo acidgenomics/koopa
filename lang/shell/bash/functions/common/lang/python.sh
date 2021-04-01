@@ -187,7 +187,7 @@ koopa::venv_create() { # {{{1
     prefix="$(koopa::venv_prefix)/${name}"
     if [[ -d "$prefix" ]]
     then
-        koopa::note "Environment already exists at '${prefix}'."
+        koopa::alert_note "Environment already exists at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$prefix"

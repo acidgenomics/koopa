@@ -53,7 +53,7 @@ koopa::bowtie2() { # {{{1
     sample_output_dir="${output_dir}/${id}"
     if [[ -d "$sample_output_dir" ]]
     then
-        koopa::note "Skipping '${id}'."
+        koopa::alert_note "Skipping '${id}'."
         return 0
     fi
     koopa::h2 "Aligning '${id}' into '${sample_output_dir}'."
@@ -108,7 +108,7 @@ koopa::bowtie2_index() { # {{{1
     koopa::assert_is_file "$fasta_file"
     if [[ -d "$index_dir" ]]
     then
-        koopa::note "Index exists at '${index_dir}'. Skipping."
+        koopa::alert_note "Index exists at '${index_dir}'. Skipping."
         return 0
     fi
     koopa::h2 "Generating bowtie2 index at '${index_dir}'."
@@ -200,7 +200,7 @@ koopa::run_bowtie2() { # {{{1
     then
         koopa::stop "No FASTQs in '${fastq_dir}' with '${r1_tail}'."
     fi
-    koopa::info "${#fastq_r1_files[@]} samples detected."
+    koopa::alert_info "${#fastq_r1_files[@]} samples detected."
 
     # Index {{{2
     # --------------------------------------------------------------------------

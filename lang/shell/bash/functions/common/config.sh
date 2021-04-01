@@ -160,7 +160,7 @@ koopa::fix_zsh_permissions() { # {{{1
                 "${app_prefix}/zsh/"*'/share/zsh/'*'/functions'
         fi
     fi
-    koopa::success 'Zsh permissions should pass compaudit checks.'
+    koopa::alert_success 'Zsh permissions should pass compaudit checks.'
     return 0
 }
 

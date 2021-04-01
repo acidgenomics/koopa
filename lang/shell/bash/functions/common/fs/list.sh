@@ -64,7 +64,7 @@ koopa::list_app_versions() { # {{{1
     prefix="$(koopa::app_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::note "No applications are installed in '${prefix}'."
+        koopa::alert_note "No applications are installed in '${prefix}'."
         return 0
     fi
     # This approach doesn't work well when only a single program is installed.
@@ -101,7 +101,7 @@ koopa::list_path_priority() { # {{{1
     n_dupes="$((n_all-n_unique))"
     if [[ "$n_dupes" -gt 0 ]]
     then
-        koopa::note "${n_dupes} duplicate(s) detected."
+        koopa::alert_note "${n_dupes} duplicate(s) detected."
     fi
     koopa::print "$all"
     return 0

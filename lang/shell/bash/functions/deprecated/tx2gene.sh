@@ -27,7 +27,7 @@ koopa::tx2gene_from_ensembl_fasta() { # {{{1
         | sed -E 's/ [a-z]+:/,/g' \
         > "$output_file"
     count="$(koopa::line_count "$output_file")"
-    koopa::info "${count} transcripts detected."
+    koopa::alert_info "${count} transcripts detected."
     return 0
 }
 
@@ -55,7 +55,7 @@ koopa::tx2gene_from_flybase_fasta() { # {{{1
         | awk '!a[$0]++' \
         > "$output_file"
     count="$(koopa::line_count "$output_file")"
-    koopa::info "${count} transcripts detected."
+    koopa::alert_info "${count} transcripts detected."
     return 0
 }
 
@@ -83,7 +83,7 @@ koopa::tx2gene_from_gencode_fasta() { # {{{1
         | sed 's/|/,/g' \
         > "$output_file"
     count="$(koopa::line_count "$output_file")"
-    koopa::info "${count} transcripts detected."
+    koopa::alert_info "${count} transcripts detected."
     return 0
 }
 
@@ -111,7 +111,7 @@ koopa::tx2gene_from_wormbase_fasta() { # {{{1
         | sed -E 's/ [a-z]+=/,/g' \
         > "$output_file"
     count="$(koopa::line_count "$output_file")"
-    koopa::info "${count} transcripts detected."
+    koopa::alert_info "${count} transcripts detected."
     return 0
 }
 

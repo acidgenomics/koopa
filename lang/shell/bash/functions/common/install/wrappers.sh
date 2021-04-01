@@ -144,7 +144,7 @@ koopa::install_singularity() { # {{{1
 
 koopa::install_sqlite() { # {{{1
     koopa::install_app --name='sqlite' --name-fancy='SQLite' "$@"
-    koopa::note 'Reinstall PROJ and GDAL, if built from source.'
+    koopa::alert_note 'Reinstall PROJ and GDAL, if built from source.'
     return 0
 }
 
