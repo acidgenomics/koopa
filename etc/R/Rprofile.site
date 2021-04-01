@@ -374,10 +374,11 @@ local({
             cran <- paste(cran, snapshot, sep = "/")
             repos[["CRAN"]] <- cran
             ## Configure the RSPM Bioconductor mirror repo.
-            options(
-               "BioC_mirror" =
-                   "https://packagemanager.rstudio.com/bioconductor"
-            )
+            ## This is currently warning about new books repo, so disabled.
+            ## > options(
+            ## >    "BioC_mirror" =
+            ## >        "https://packagemanager.rstudio.com/bioconductor"
+            ## > )
         } else {
             ## Alternatively, can use:
             ## > repos[["CRAN"]] <-
