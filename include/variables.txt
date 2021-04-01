@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-03-31"
+koopa-date="2021-04-01"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.4a"
@@ -203,7 +203,7 @@ neofetch="7.1.0"
 neovim="0.4.4"
 
 # https://nodejs.org/
-node="15.12.0"
+node="15.13.0"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -447,7 +447,7 @@ python-black="20.8b1"     # homebrew
 python-bpytop="1.0.63"    # homebrew
 python-flake8="3.9.0"     # homebrew
 python-pipx="0.16.1"      # homebrew
-python-pylint="2.7.2"     # homebrew
+python-pylint="2.7.4"     # homebrew
 python-ranger-fm="1.9.3"  # homebrew
 
 # Libraries without binaries {{{2
