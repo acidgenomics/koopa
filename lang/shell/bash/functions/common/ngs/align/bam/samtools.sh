@@ -40,7 +40,7 @@ koopa::samtools_convert_sam_to_bam() { # {{{1
     bam_bn="$(basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
-        koopa::note "Skipping '${bam_bn}'."
+        koopa::alert_note "Skipping '${bam_bn}'."
         return 0
     fi
     koopa::h2 "Converting '${sam_bn}' to '${bam_bn}'."

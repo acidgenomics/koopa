@@ -27,7 +27,7 @@ koopa::test_conda() {
     koopa::activate_conda_env "salmon@${salmon_version}"
     salmon --version
     koopa::deactivate_conda
-    koopa::success 'Conda environments loaded successfully.'
+    koopa::alert_success 'Conda environments loaded successfully.'
     return 0
 }
 

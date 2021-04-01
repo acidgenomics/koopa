@@ -213,8 +213,8 @@ install() { # {{{1
     koopa::assert_is_non_existing "$koopa_prefix"
     if [[ "$shared" -eq 1 ]]
     then
-        koopa::info 'Shared installation detected.'
-        koopa::note 'sudo permissions are required.'
+        koopa::alert_info 'Shared installation detected.'
+        koopa::alert_note 'sudo permissions are required.'
         koopa::assert_has_sudo
         koopa::rm -S "$koopa_prefix"
         koopa::cp -S "$script_dir" "$koopa_prefix"
@@ -279,7 +279,7 @@ END
         file="$(koopa::find_user_profile)"
         if [[ -e "$file" ]]
         then
-            koopa::note \
+            koopa::alert_note \
                 "User profile exists: '${file}'." \
                 'This will be overwritten if dot files are linked.'
         fi
@@ -295,7 +295,7 @@ END
     then
         if [[ "$interactive" -eq 1 ]]
         then
-            koopa::note "Koopa activation should be added to '${file}'."
+            koopa::alert_note "Koopa activation should be added to '${file}'."
             profile="$(koopa::read_yn "Modify '${file}'" "$profile")"
         fi
         [[ "$profile" -eq 1 ]] && koopa::add_to_user_profile
@@ -308,12 +308,12 @@ END
     then
         koopa::delete_broken_symlinks "$koopa_prefix"
     else
-        koopa::note 'Bash is very old and must be upgraded.'
+        koopa::alert_note 'Bash is very old and must be upgraded.'
     fi
     koopa::update_etc_profile_d
     koopa::fix_zsh_permissions
     koopa::install_success 'koopa'
-    koopa::restart
+    koopa::alert_restart
     return 0
 }
 

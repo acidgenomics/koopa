@@ -3,7 +3,7 @@
 koopa::enable_shell() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-03-31.
     # """
     local cmd_name cmd_path etc_file user
     koopa::assert_has_args "$#"
@@ -17,10 +17,11 @@ koopa::enable_shell() { # {{{1
     then
         sudo sh -c "printf '%s\n' '${cmd_path}' >> '${etc_file}'"
     else
-        koopa::success "'${cmd_path}' already defined in '${etc_file}'."
+        koopa::alert_success "'${cmd_path}' already defined in '${etc_file}'."
     fi
     user="$(koopa::user)"
-    koopa::note "Run 'chsh -s ${cmd_path} ${user}' to change default shell."
+    koopa::alert_note "Run 'chsh -s ${cmd_path} ${user}' to change the \
+default shell."
     return 0
 }
 

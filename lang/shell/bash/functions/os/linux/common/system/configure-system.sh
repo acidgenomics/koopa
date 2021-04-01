@@ -306,7 +306,7 @@ koopa::linux_configure_system() { # {{{1
     # --------------------------------------------------------------------------
     if [[ "$mode" == "minimal" ]]
     then
-        koopa::success 'Minimal configuration was successful.'
+        koopa::alert_success 'Minimal configuration was successful.'
         return 0
     fi
     # Disk configuration {{{3
@@ -536,7 +536,7 @@ koopa::linux_configure_system() { # {{{1
     then
         koopa::delete_cache
     fi
-    koopa::success 'Configuration completed successfully.'
+    koopa::alert_success 'Configuration completed successfully.'
     return 0
 }
 
@@ -551,7 +551,7 @@ koopa::linux_link_data_disk() { # {{{1
     opt_prefix="$(koopa::opt_prefix)"
     if [[ -e "$dd_prefix" ]]
     then
-        koopa::info "Data disk detected at '${dd_prefix}'."
+        koopa::alert_info "Data disk detected at '${dd_prefix}'."
     else
         koopa::stop "Failed to detect data disk at '${dd_prefix}'."
     fi

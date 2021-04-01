@@ -45,7 +45,7 @@ koopa::update_koopa() { # {{{1
     then
         version="$(koopa::version)"
         url="$(koopa::url)"
-        koopa::note \
+        koopa::alert_note \
             "Stable release of ${name_fancy} ${version} detected." \
             "To update, first run the 'uninstall' script." \
             "Then run the default install command at '${url}'."
@@ -102,7 +102,7 @@ koopa::update_koopa_system() { # {{{1
     then
         koopa::macos_update_microsoft_office || true
     fi
-    koopa::success 'System update was successful.'
+    koopa::alert_success 'System update was successful.'
     return 0
 }
 
@@ -143,6 +143,6 @@ koopa::update_koopa_user() { # {{{1
         koopa::update_dotfiles "$(koopa::dotfiles_prefix)"
     koopa::update_dotfiles "$(koopa::dotfiles_private_prefix)"
     # > koopa::update_emacs
-    koopa::success 'User configuration update was successful.'
+    koopa::alert_success 'User configuration update was successful.'
     return 0
 }

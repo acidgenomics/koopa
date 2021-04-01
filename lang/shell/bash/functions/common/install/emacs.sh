@@ -29,7 +29,7 @@ koopa::install_doom_emacs() { # {{{1
     install_dir="${emacs_prefix}-${name}"
     if [[ -d "$install_dir" ]]
     then
-        koopa::note "${name_fancy} already installed at '${install_dir}'."
+        koopa::alert_note "${name_fancy} already installed at '${install_dir}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$install_dir"
@@ -55,7 +55,7 @@ koopa::install_doom_emacs() { # {{{1
 koopa::install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-03-31.
     #
     # Note that master branch is ancient and way behind current codebase.
     # Switching to more recent code on develop branch.
@@ -67,7 +67,8 @@ koopa::install_spacemacs() { # {{{1
     install_dir="${emacs_prefix}-${name}"
     if [[ -d "$install_dir" ]]
     then
-        koopa::note "${name_fancy} is already installed at '${install_dir}'."
+        koopa::alert_note "${name_fancy} is already installed \
+at '${install_dir}'."
         return 0
     fi
     koopa::h1 "Installing ${name_fancy} at '${install_dir}."
@@ -135,7 +136,7 @@ koopa::update_emacs() { # {{{1
     koopa::assert_has_no_args "$#"
     if ! koopa::is_installed emacs
     then
-        koopa::note 'Emacs is not installed.'
+        koopa::alert_note 'Emacs is not installed.'
         return 0
     fi
     if koopa::is_spacemacs_installed
@@ -145,7 +146,7 @@ koopa::update_emacs() { # {{{1
     then
         koopa::_update_doom_emacs
     else
-        koopa::note 'Emacs configuration cannot be updated.'
+        koopa::alert_note 'Emacs configuration cannot be updated.'
         return 0
     fi
     return 0

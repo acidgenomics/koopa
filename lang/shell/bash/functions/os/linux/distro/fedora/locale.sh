@@ -18,6 +18,6 @@ koopa::fedora_set_locale() { # {{{1
         -f "$charset" \
         "$lang_string"
     locale
-    koopa::success "Locale is defined as '${lang_string}'."
+    koopa::alert_success "Locale is defined as '${lang_string}'."
     return 0
 }

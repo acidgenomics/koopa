@@ -3,8 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2021-03-25.
-    #
+    # Updated 2021-04-01.
     #
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
@@ -13,8 +12,14 @@ koopa::docker_build() { # {{{1
     # * This can be useful for R packages:
     #   --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"
     #
+    # Running the command 'docker buildx install' sets up docker builder
+    # command as an alias to 'docker buildx'. This results in the ability to
+    # have 'docker build' use the current buildx builder. To remove this
+    # alias, run 'docker buildx uninstall'.
+    #
     # See also:
     # - docker build --help
+    # - https://docs.docker.com/buildx/working-with-buildx/
     # - https://docs.docker.com/config/containers/resource_constraints/
     # - https://docs.docker.com/engine/reference/builder/#arg
     # - https://docs.docker.com/engine/reference/commandline/buildx_build/
@@ -156,10 +161,11 @@ koopa::docker_build() { # {{{1
     koopa::alert "Building '${source_image}' Docker image."
     koopa::dl 'Build args' "${args[*]}"
     docker login "$server" || return 1
-    docker buildx create --use || return 1
+    docker buildx create --name="$image" --use || return 1
     docker buildx build "${args[@]}" || return 1
+    docker buildx rm "$image" || return 1
     docker image ls --filter reference="${image}:${tag}"
-    koopa::success "Build of '${source_image}' was successful."
+    koopa::alert_success "Build of '${source_image}' was successful."
     return 0
 }
 
@@ -254,7 +260,7 @@ koopa::docker_build_all_images() { # {{{1
                 # which is currently written in R instead of Bash.
                 if koopa::is_docker_build_recent --days="$days" "$image"
                 then
-                    koopa::note "'${image}' was built recently. Skipping."
+                    koopa::alert_note "'${image}' was built recently. Skipping."
                     continue
                 fi
             fi
@@ -262,7 +268,7 @@ koopa::docker_build_all_images() { # {{{1
         done
     done
     [[ "$prune" -eq 1 ]] && koopa::docker_prune_all_images
-    koopa::success 'All Docker images built successfully.'
+    koopa::alert_success 'All Docker images built successfully.'
     return 0
 }
 
@@ -279,15 +285,18 @@ koopa::docker_build_all_tags() { # {{{1
 koopa::docker_prune_all_images() { # {{{1
     # """
     # Prune all Docker images.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-04-01.
     #
     # This is a nuclear option for resetting Docker.
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker
-    koopa::alert 'Pruning all Docker images.'
-    docker buildx prune --all --force
+    koopa::alert 'Pruning Docker images.'
     docker system prune --all --force
+    docker images
+    koopa::alert 'Pruning Docker buildx.'
+    docker buildx prune --all --force || true
+    docker buildx ls
     return 0
 }
 

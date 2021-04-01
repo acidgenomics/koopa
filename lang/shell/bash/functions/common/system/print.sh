@@ -46,7 +46,7 @@ koopa::install_success() { # {{{1
     else
         msg="Installation of ${name} was successful."
     fi
-    koopa::success "$msg"
+    koopa::alert_success "$msg"
     return 0
 }
 
@@ -84,7 +84,7 @@ koopa::uninstall_success() { # {{{1
     else
         msg="Uninstallation of ${name} was successful."
     fi
-    koopa::success "$msg"
+    koopa::alert_success "$msg"
     return 0
 }
 
@@ -122,6 +122,6 @@ koopa::update_success() { # {{{1
     else
         msg="Update of ${name} was successful."
     fi
-    koopa::success "$msg"
+    koopa::alert_success "$msg"
     return 0
 }
