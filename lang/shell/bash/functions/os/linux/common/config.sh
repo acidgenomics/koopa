@@ -21,7 +21,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
     then
         sudo sh -c "printf '%s\n' '${user_string}' >> '${passwd_file}'"
     else
-        koopa::note "$user already defined in '${passwd_file}'."
+        koopa::alert_note "$user already defined in '${passwd_file}'."
     fi
     return 0
 }
@@ -61,12 +61,12 @@ koopa::link_docker() { # {{{1
     [[ -d "$dd_link_prefix" ]] || return 0
     koopa::alert 'Updating Docker configuration.'
     koopa::assert_is_installed systemctl
-    koopa::note 'Stopping Docker.'
+    koopa::alert_note 'Stopping Docker.'
     sudo systemctl stop docker
     lib_sys='/var/lib/docker'
     lib_n="${dd_link_prefix}${lib_sys}"
     distro_prefix="$(koopa::distro_prefix)"
-    koopa::note "Moving Docker lib from '${lib_sys}' to '${lib_n}'."
+    koopa::alert_note "Moving Docker lib from '${lib_sys}' to '${lib_n}'."
     etc_source="${distro_prefix}/etc/docker"
     if [[ -d "$etc_source" ]]
     then
@@ -75,7 +75,7 @@ koopa::link_docker() { # {{{1
     sudo rm -frv "$lib_sys"
     sudo mkdir -pv "$lib_n"
     sudo ln -fnsv "$lib_n" "$lib_sys"
-    koopa::note 'Restarting Docker.'
+    koopa::alert_note 'Restarting Docker.'
     sudo systemctl enable docker
     sudo systemctl start docker
     return 0

@@ -12,7 +12,7 @@ koopa::macos_update_system() { # {{{1
         mas upgrade
     fi
     koopa::h1 "Updating macOS via 'softwareupdate'."
-    koopa::note 'Restart may be required.'
+    koopa::alert_note 'Restart may be required.'
     sudo softwareupdate --install --recommended --restart
     return 0
 }

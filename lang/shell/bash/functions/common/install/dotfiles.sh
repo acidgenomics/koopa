@@ -42,7 +42,7 @@ koopa::uninstall_dotfiles() { # {{{1
     prefix="$(koopa::dotfiles_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::note "No dotfiles at '${prefix}'."
+        koopa::alert_note "No dotfiles at '${prefix}'."
         return 0
     fi
     script="${prefix}/uninstall"
@@ -61,7 +61,7 @@ koopa::uninstall_dotfiles_private() { # {{{1
     prefix="$(koopa::dotfiles_private_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::note "No private dotfiles at '${prefix}'."
+        koopa::alert_note "No private dotfiles at '${prefix}'."
         return 0
     fi
     script="${prefix}/uninstall"

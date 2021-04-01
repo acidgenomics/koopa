@@ -22,7 +22,7 @@ koopa::install_rbenv_ruby() { # {{{1
     ruby_build_dir="$(koopa::rbenv_prefix)/plugins/ruby-build"
     if [[ -d "$ruby_build_dir" ]]
     then
-        koopa::note "Updating ruby-build plugin: '${ruby_build_dir}'."
+        koopa::alert_note "Updating ruby-build plugin: '${ruby_build_dir}'."
         (
             koopa::cd "$ruby_build_dir"
             git pull --quiet
@@ -42,7 +42,7 @@ koopa::install_ruby_packages() { # {{{1
     koopa::assert_has_no_envs
     if ! koopa::is_installed gem
     then
-        koopa::note 'gem is not installed.'
+        koopa::alert_note 'gem is not installed.'
         return 0
     fi
     name_fancy='Ruby gems'

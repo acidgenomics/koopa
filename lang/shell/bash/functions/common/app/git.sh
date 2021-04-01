@@ -92,7 +92,7 @@ koopa::git_clone() { # {{{1
     target="${2:?}"
     if [[ -d "$target" ]]
     then
-        koopa::note "Already cloned: '${target}'."
+        koopa::alert_note "Already cloned: '${target}'."
         return 0
     fi
     # Check if user has sufficient permissions.

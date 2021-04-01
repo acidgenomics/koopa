@@ -72,6 +72,6 @@ koopa::install_fzf() { # {{{1
     )
     koopa::sys_set_permissions -r "$prefix_parent"
     koopa::install_success "$name"
-    koopa::note 'Reload the shell to complete activation.'
+    koopa::alert_note 'Reload the shell to complete activation.'
     return 0
 }

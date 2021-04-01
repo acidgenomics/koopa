@@ -1,5 +1,15 @@
 #!/bin/sh
 
+__koopa_acid_emoji() { # {{{1
+    # """
+    # Acid Genomics test tube emoji.
+    # @note Updated 2021-03-31.
+    #
+    # Previous versions defaulted to using the '🐢' turtle.
+    # """
+    _koopa_print '🧪'
+}
+
 __koopa_ansi_escape() { # {{{1
     # """
     # ANSI escape codes.
@@ -73,64 +83,54 @@ __koopa_ansi_escape() { # {{{1
     return 0
 }
 
-__koopa_emoji() { # {{{1
-    # """
-    # Koopa emoji.
-    # @note Updated 2021-01-04.
-    #
-    # Previous versions defaulted to using the '🐢' turtle.
-    # """
-    _koopa_print '🧪'
-}
-
 __koopa_h() { # {{{1
     # """
     # Koopa header.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-03-31.
     # """
     # shellcheck disable=SC2039
-    local level prefix
+    local emoji level prefix x
     level="${1:?}"
     shift 1
     case "$level" in
         1)
             _koopa_print ''
-            prefix='='
+            prefix='#'
             ;;
         2)
-            prefix='=='
+            prefix='##'
             ;;
         3)
-            prefix='==='
+            prefix='###'
             ;;
         4)
-            prefix='===='
+            prefix='####'
             ;;
         5)
-            prefix='====='
+            prefix='#####'
             ;;
         6)
-            prefix='======'
+            prefix='######'
             ;;
         7)
-            prefix='======='
+            prefix='#######'
             ;;
         *)
             _koopa_invalid_arg "$1"
             ;;
     esac
-    __koopa_msg 'magenta' 'default' "${prefix}>" "$@"
+    emoji="$(__koopa_acid_emoji)"
+    __koopa_msg 'magenta' 'default' "${emoji} ${prefix}" "$@"
     return 0
 }
 
 __koopa_msg() { # {{{1
     # """
     # Koopa standard message.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-03-31.
     # """
     # shellcheck disable=SC2039
     local c1 c2 emoji nc prefix string x
-    emoji="$(__koopa_emoji)"
     c1="$(__koopa_ansi_escape "${1:?}")"
     c2="$(__koopa_ansi_escape "${2:?}")"
     nc="$(__koopa_ansi_escape 'nocolor')"
@@ -138,7 +138,7 @@ __koopa_msg() { # {{{1
     shift 3
     for string in "$@"
     do
-        x="${emoji} ${c1}${prefix}${nc} ${c2}${string}${nc}"
+        x="${c1}${prefix}${nc} ${c2}${string}${nc}"
         _koopa_print "$x"
     done
     return 0
@@ -204,27 +204,54 @@ __koopa_status() { # {{{1
 _koopa_alert() { # {{{1
     # """
     # Alert message.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-03-31.
     # """
-    __koopa_msg 'default' 'default' ' →' "$@"
+    __koopa_msg 'default' 'default' '→' "$@"
+    return 0
+}
+
+_koopa_alert_coffee_time() { # {{{1
+    # """
+    # Alert that it's coffee time.
+    # @note Updated 2021-03-31.
+    # """
+    _koopa_alert_note 'This step takes a while. Time for a coffee break! ☕'
     return 0
 }
 
 _koopa_alert_info() { # {{{1
     # """
     # Alert info message.
-    # @note Updated 2021-03-17.
+    # @note Updated 2021-03-30.
     # """
-    __koopa_msg 'cyan' 'default' ' ℹ︎' "$@"
+    __koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
     return 0
 }
 
-_koopa_coffee_time() { # {{{1
+_koopa_alert_note() { # {{{1
     # """
-    # Coffee time.
-    # @note Updated 2020-07-20.
+    # General note.
+    # @note Updated 2020-07-01.
     # """
-    _koopa_note 'This step takes a while. Time for a coffee break! ☕☕'
+    __koopa_msg 'yellow' 'default' '**' "$@"
+    return 0
+}
+
+_koopa_alert_restart() { # {{{1
+    # """
+    # Inform the user that they should restart shell.
+    # @note Updated 2021-03-31.
+    # """
+    _koopa_alert_note 'Restart the shell.'
+    return 0
+}
+
+_koopa_alert_success() { # {{{1
+    # """
+    # Alert success message.
+    # @note Updated 2021-03-31.
+    # """
+    __koopa_msg 'green-bold' 'green' '✓' "$@"
     return 0
 }
 
@@ -277,19 +304,10 @@ _koopa_h7() { # {{{1
     return 0
 }
 
-_koopa_info() { # {{{1
-    # """
-    # General info.
-    # @note Updated 2021-01-19.
-    # """
-    __koopa_msg 'default' 'default' ' ℹ' "$@"
-    return 0
-}
-
 _koopa_invalid_arg() { # {{{1
     # """
     # Error on invalid argument.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-03-31.
     # """
     # shellcheck disable=SC2039
     local arg x
@@ -298,7 +316,7 @@ _koopa_invalid_arg() { # {{{1
         arg="${1:-}"
         if _koopa_str_match_posix "$arg" '--'
         then
-            _koopa_note "Use '--arg=VALUE' not '--arg VALUE' for arguments."
+            _koopa_alert_warning "Use '--arg=VALUE' not '--arg VALUE'."
         fi
         x="Invalid argument: '${arg}'."
     else
@@ -313,15 +331,6 @@ _koopa_missing_arg() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_stop 'Missing required argument.'
-}
-
-_koopa_note() { # {{{1
-    # """
-    # General note.
-    # @note Updated 2020-07-01.
-    # """
-    __koopa_msg 'yellow' 'default' '**' "$@"
-    return 0
 }
 
 _koopa_print() { # {{{1
@@ -439,15 +448,6 @@ _koopa_print_white_bold() { # {{{1
     return 0
 }
 
-_koopa_restart() { # {{{1
-    # """
-    # Inform the user that they should restart shell.
-    # @note Updated 2020-07-20.
-    # """
-    _koopa_note 'Restart the shell.'
-    return 0
-}
-
 _koopa_status_fail() { # {{{1
     # """
     # FAIL status.
@@ -482,15 +482,6 @@ _koopa_stop() { # {{{1
     # """
     __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
     exit 1
-}
-
-_koopa_success() { # {{{1
-    # """
-    # Success message.
-    # @note Updated 2020-07-01.
-    # """
-    __koopa_msg 'green-bold' 'green' 'OK' "$@"
-    return 0
 }
 
 _koopa_warning() { # {{{1
