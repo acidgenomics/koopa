@@ -3,8 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2021-03-25.
-    #
+    # Updated 2021-04-01.
     #
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
@@ -13,8 +12,14 @@ koopa::docker_build() { # {{{1
     # * This can be useful for R packages:
     #   --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}"
     #
+    # Running the command 'docker buildx install' sets up docker builder
+    # command as an alias to 'docker buildx'. This results in the ability to
+    # have 'docker build' use the current buildx builder. To remove this
+    # alias, run 'docker buildx uninstall'.
+    #
     # See also:
     # - docker build --help
+    # - https://docs.docker.com/buildx/working-with-buildx/
     # - https://docs.docker.com/config/containers/resource_constraints/
     # - https://docs.docker.com/engine/reference/builder/#arg
     # - https://docs.docker.com/engine/reference/commandline/buildx_build/
@@ -156,8 +161,9 @@ koopa::docker_build() { # {{{1
     koopa::alert "Building '${source_image}' Docker image."
     koopa::dl 'Build args' "${args[*]}"
     docker login "$server" || return 1
-    docker buildx create --use || return 1
+    docker buildx create --name="$image" --use || return 1
     docker buildx build "${args[@]}" || return 1
+    docker buildx rm "$image" || return 1
     docker image ls --filter reference="${image}:${tag}"
     koopa::alert_success "Build of '${source_image}' was successful."
     return 0
