@@ -263,7 +263,7 @@ python="3.9.2"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
-r="4.0.4"
+r="4.0.5"
 
 # https://svn.r-project.org/R/
 # This is the SVN revision number.
