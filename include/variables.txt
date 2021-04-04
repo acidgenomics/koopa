@@ -28,7 +28,7 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 anaconda="2020.11"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.3.0"
+armadillo="10.3.1"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="3.10.1.181943"
@@ -334,7 +334,7 @@ taglib="1.12"
 tar="1.34"
 
 # https://www.latex-project.org/get/
-tex="2020"
+tex="2021"
 
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.7"
@@ -493,7 +493,7 @@ rust-bat="0.18.0"         # homebrew
 rust-broot="1.2.9"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.5.4"      # homebrew; dust
-rust-exa="0.9.0"          # homebrew
+rust-exa="0.10.0"         # homebrew
 rust-fd-find="8.2.1"      # homebrew; fd
 rust-hyperfine="1.11.0"   # homebrew
 rust-procs="0.11.4"       # homebrew
