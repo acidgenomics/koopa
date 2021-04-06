@@ -284,7 +284,7 @@ rstudio-server="1.4.1106"
 rstudio-server-pro="1.4.1106-5"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="3.0.1p0"
+ruby="3.0.1p64"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
