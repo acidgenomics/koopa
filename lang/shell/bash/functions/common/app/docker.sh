@@ -3,7 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2021-04-01.
+    # Updated 2021-04-06.
     #
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
@@ -163,6 +163,8 @@ koopa::docker_build() { # {{{1
     koopa::dl 'Build args' "${args[*]}"
     docker login "$server" >/dev/null || return 1
     build_name="$(basename "$image")"
+    # Ensure any previous build failres are removed.
+    docker buildx rm "$build_name" || true
     docker buildx create --name="$build_name" --use >/dev/null
     docker buildx build "${args[@]}" || return 1
     docker buildx rm "$build_name"
