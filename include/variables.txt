@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-04-01"
+koopa-date="2021-04-06"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.4a"
@@ -28,7 +28,7 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 anaconda="2020.11"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.3.1"
+armadillo="10.4.0"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="3.10.1.181943"
@@ -284,7 +284,7 @@ rstudio-server="1.4.1106"
 rstudio-server-pro="1.4.1106-5"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="3.0.0p0"
+ruby="3.0.1p0"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
