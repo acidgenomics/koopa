@@ -239,7 +239,7 @@ patch="2.7.6"
 perl="5.32.1"
 
 # https://perlbrew.pl/
-perlbrew="0.88"
+perlbrew="0.91"
 
 # https://metacpan.org/release/File-Rename
 perl-file-rename="1.10"
@@ -258,7 +258,7 @@ pkg-config="0.29.2"
 proj="7.2.1"
 
 # https://github.com/pyenv/pyenv
-pyenv="1.2.16"
+pyenv="1.2.26"
 
 # https://www.python.org/downloads/
 python="3.9.4"
