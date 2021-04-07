@@ -16,12 +16,6 @@ koopa::macos_install_pytaglib() { # {{{1
     return 0
 }
 
-# FIXME Need to improve support for macOS 11.
-# macos big sur:
-# https://www.python.org/ftp/python/3.9.4/python-3.9.4-macos11.pkg
-#
-# macos catalina:
-# https://www.python.org/ftp/python/3.9.4/python-3.9.4-macosx10.9.pkg
 koopa::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
@@ -55,7 +49,7 @@ koopa::macos_install_python_framework() { # {{{1
     name_fancy='Python'
     name='python'
     version="$(koopa::variable "$name")"
-    macos_string="$(koopa::macos_version)"
+    macos_version="$(koopa::macos_version)"
     case "$macos_version" in
         11*)
             macos_string='macos11'
