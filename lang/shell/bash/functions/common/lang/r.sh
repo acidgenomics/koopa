@@ -335,6 +335,18 @@ koopa::rscript_vanilla() { # {{{1
     return 0
 }
 
+koopa::run_shiny_app() { # {{{1
+    # """
+    # Run Shiny application.
+    # @note Updated 2021-04-07.
+    # """
+    local dir
+    dir="${1:-.}"
+    koopa::assert_is_installed R
+    R -e "shiny::runApp('${dir}')"
+    return 0
+}
+
 koopa::update_r_config() { # {{{1
     # """
     # Update R configuration.
