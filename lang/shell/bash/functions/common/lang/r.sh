@@ -343,7 +343,13 @@ koopa::run_shiny_app() { # {{{1
     local dir
     dir="${1:-.}"
     koopa::assert_is_installed R
-    R -e "shiny::runApp('${dir}')"
+    koopa::assert_is_dir "$dir"
+    dir="$(koopa::realpath "$dir")"
+    R \
+        --no-restore \
+        --no-save \
+        --quiet \
+        -e "shiny::runApp('${dir}')"
     return 0
 }
 
