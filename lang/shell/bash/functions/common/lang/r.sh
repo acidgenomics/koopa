@@ -29,7 +29,10 @@ koopa::deploy_shiny_app() { # {{{
         --no-restore \
         --no-save \
         --quiet \
-        -e "rsconnect::deployApp('${dir}')"
+        -e " \
+            options(repos = BiocManager::repositories()); \
+            rsconnect::deployApp('${dir}') \
+        "
     return 0
 }
 
