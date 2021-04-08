@@ -15,6 +15,24 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
+koopa::deploy_shiny_app() { # {{{
+    # """
+    # Deploy a Shiny app to shinyapps.io
+    # @note Updated 2021-04-08.
+    # """
+    local dir
+    dir="${1:-.}"
+    koopa::assert_is_installed R
+    koopa::assert_is_dir "$dir"
+    dir="$(koopa::realpath "$dir")"
+    R \
+        --no-restore \
+        --no-save \
+        --quiet \
+        -e "rsconnect::deployApp('${dir}')"
+    return 0
+}
+
 koopa::drat() { # {{{
     # """
     # Add R package to drat repository.
