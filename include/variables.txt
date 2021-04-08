@@ -83,6 +83,9 @@ conda="4.9.2"
 # https://www.gnu.org/software/coreutils/
 coreutils="8.32"
 
+# https://github.com/Dr-Noob/cpufetch/releases
+cpufetch="0.94"
+
 # https://curl.haxx.se/
 curl="7.76.0"
 
