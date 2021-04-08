@@ -63,6 +63,9 @@ koopa::install_pip() { # {{{1
     return 0
 }
 
+# NOTE Latest version of pip isn't getting installed correctly here.
+# May need to manually resolve with 'python3 -m pip install -U pip'.
+# However, this does resolve correctly with 'koopa update python-packages'.
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
