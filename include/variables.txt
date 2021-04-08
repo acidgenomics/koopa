@@ -84,7 +84,8 @@ conda="4.9.2"
 coreutils="8.32"
 
 # https://github.com/Dr-Noob/cpufetch/releases
-cpufetch="0.94"
+# Currently this is master branch, without a release.
+cpufetch="0.96"
 
 # https://curl.haxx.se/
 curl="7.76.0"
