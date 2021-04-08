@@ -20,5 +20,6 @@ case "$version" in
         koopa::cd "${name}-${version}"
         ;;
 esac
+# Installer doesn't currently support 'configure' script.
 PREFIX="$prefix" make --jobs="$jobs"
 PREFIX="$prefix" make install
