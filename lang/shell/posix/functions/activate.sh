@@ -62,57 +62,6 @@ _koopa_activate_conda() { # {{{1
     return 0
 }
 
-_koopa_activate_coreutils() { # {{{1
-    # """
-    # Activate hardened interactive aliases for GNU coreutils.
-    # @note Updated 2021-04-09.
-    #
-    # These aliases get unaliased inside of koopa scripts, and they should only
-    # apply to interactive use at the command prompt.
-    #
-    # macOS ships with a very old version of GNU coreutils. Use Homebrew.
-    # """
-    # shellcheck disable=SC2039
-    local cp ln mkdir mv rm
-    cp='cp'
-    ln='ln'
-    mkdir='mkdir'
-    mv='mv'
-    rm='rm'
-    if _koopa_is_macos && _koopa_is_installed brew
-    then
-        alias bsdchmod='/bin/chmod'
-        alias bsdchown='/usr/sbin/chown'
-        alias bsdcp='/bin/cp'
-        alias bsddu='/usr/bin/du'
-        alias bsdmkdir='/bin/mkdir'
-        alias bsdrm='/bin/rm'
-        alias chmod='gchmod'
-        alias chown='gchown'
-        alias du='gdu'
-        cp='gcp'
-        ln='gln'
-        mkdir='gmkdir'
-        mv='gmv'
-        rm='grm'
-    fi
-    # The '--archive' flag seems to have issues on some file systems.
-    # shellcheck disable=SC2139
-    alias cp="${cp} --interactive --recursive" # -i
-    # shellcheck disable=SC2139
-    alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
-    # shellcheck disable=SC2139
-    alias mkdir="${mkdir} --parents" # -p
-    # shellcheck disable=SC2139
-    alias mv="${mv} --interactive" # -i
-    # Problematic on some file systems: --dir --preserve-root
-    # Don't enable '--recursive' here by default, so we don't accidentally
-    # nuke an important directory.
-    # shellcheck disable=SC2139
-    alias rm="${rm} --interactive=once" # -I
-    return 0
-}
-
 _koopa_activate_emacs() { # {{{1
     # """
     # Activate Emacs.
@@ -153,6 +102,59 @@ _koopa_activate_gcc_colors() { # {{{1
     [ -n "${GCC_COLORS:-}" ] && return 0
     export GCC_COLORS="caret=01;32:error=01;31:locus=01:note=01;36:\
 quote=01:warning=01;35"
+    return 0
+}
+
+_koopa_activate_gnu() { # {{{1
+    # """
+    # Activate GNU utilities.
+    # @note Updated 2021-04-09.
+    #
+    # Creates hardened interactive aliases for GNU coreutils.
+    #
+    # These aliases get unaliased inside of koopa scripts, and they should only
+    # apply to interactive use at the command prompt.
+    #
+    # macOS ships with BSD coreutils, which don't support all GNU options.
+    # """
+    # shellcheck disable=SC2039
+    local cp ln mkdir mv rm
+    cp='cp'
+    ln='ln'
+    mkdir='mkdir'
+    mv='mv'
+    rm='rm'
+    if _koopa_is_macos && _koopa_is_installed brew
+    then
+        alias bsdchmod='/bin/chmod'
+        alias bsdchown='/usr/sbin/chown'
+        alias bsdcp='/bin/cp'
+        alias bsddu='/usr/bin/du'
+        alias bsdmkdir='/bin/mkdir'
+        alias bsdrm='/bin/rm'
+        alias chmod='gchmod'
+        alias chown='gchown'
+        alias du='gdu'
+        cp='gcp'
+        ln='gln'
+        mkdir='gmkdir'
+        mv='gmv'
+        rm='grm'
+    fi
+    # The '--archive' flag seems to have issues on some file systems.
+    # shellcheck disable=SC2139
+    alias cp="${cp} --interactive --recursive" # -i
+    # shellcheck disable=SC2139
+    alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
+    # shellcheck disable=SC2139
+    alias mkdir="${mkdir} --parents" # -p
+    # shellcheck disable=SC2139
+    alias mv="${mv} --interactive" # -i
+    # Problematic on some file systems: --dir --preserve-root
+    # Don't enable '--recursive' here by default, so we don't accidentally
+    # nuke an important directory.
+    # shellcheck disable=SC2139
+    alias rm="${rm} --interactive=once" # -I
     return 0
 }
 
