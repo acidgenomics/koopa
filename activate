@@ -70,7 +70,7 @@ _koopa_activate() { # {{{1
             _koopa_activate_visual_studio_code
         fi
         _koopa_activate_homebrew
-        _koopa_activate_coreutils
+        _koopa_activate_gnu
         _koopa_activate_dircolors
         _koopa_activate_gcc_colors
         _koopa_activate_emacs
