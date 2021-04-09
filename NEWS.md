@@ -12,6 +12,8 @@
 
 - Updated system dependency checks. Now intentionally errors when attempting
   to run inside a Docker image.
+- Shared `Rprofile.site` configuration is now respectful of quiet mode,
+  defined with either '--quiet', '-q', or '--silent' flags.
 
 ## koopa 0.9.3 (2021-03-31)
 
