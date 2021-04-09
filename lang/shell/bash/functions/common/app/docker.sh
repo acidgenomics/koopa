@@ -3,7 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2021-04-01.
+    # Updated 2021-04-06.
     #
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
@@ -29,8 +29,9 @@ koopa::docker_build() { # {{{1
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
     # """
-    local delete docker_dir image image_ids memory platforms platforms_file \
-        platforms_string pos push server source_image tag tags tags_file
+    local build_name delete docker_dir image image_ids memory platforms \
+        platforms_file platforms_string pos push server source_image tag \
+        tags tags_file
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
     docker_dir="$(koopa::docker_prefix)"
@@ -160,10 +161,13 @@ koopa::docker_build() { # {{{1
     fi
     koopa::alert "Building '${source_image}' Docker image."
     koopa::dl 'Build args' "${args[*]}"
-    docker login "$server" || return 1
-    docker buildx create --name="$image" --use || return 1
+    docker login "$server" >/dev/null || return 1
+    build_name="$(basename "$image")"
+    # Ensure any previous build failres are removed.
+    docker buildx rm "$build_name" || true
+    docker buildx create --name="$build_name" --use >/dev/null
     docker buildx build "${args[@]}" || return 1
-    docker buildx rm "$image" || return 1
+    docker buildx rm "$build_name"
     docker image ls --filter reference="${image}:${tag}"
     koopa::alert_success "Build of '${source_image}' was successful."
     return 0

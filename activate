@@ -3,7 +3,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-04-09.
     # """
     case "${1:-}" in
         --help|-h)
@@ -70,7 +70,7 @@ _koopa_activate() { # {{{1
             _koopa_activate_visual_studio_code
         fi
         _koopa_activate_homebrew
-        _koopa_activate_coreutils
+        _koopa_activate_gnu
         _koopa_activate_dircolors
         _koopa_activate_gcc_colors
         _koopa_activate_emacs
@@ -131,16 +131,16 @@ _koopa_activate() { # {{{1
             # shellcheck disable=SC2039
             set +o pipefail
         fi
-        _koopa_h1 'Shell options'
+        _koopa_alert_info 'Shell options'
         set +o
-        _koopa_h1 'Shell variables'
+        _koopa_alert_info 'Shell variables'
         _koopa_dl \
             '-' "$-" \
             '0' "$0" \
             'SHELL' "${SHELL:-}"
         if _koopa_is_installed locale
         then
-            _koopa_h1 'Locale'
+            _koopa_alert_info 'Locale'
             locale
         fi
         _koopa_activate_duration_stop
