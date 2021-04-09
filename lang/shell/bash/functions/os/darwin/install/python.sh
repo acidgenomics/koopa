@@ -19,9 +19,10 @@ koopa::macos_install_pytaglib() { # {{{1
 koopa::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-04-07.
     # """
-    local file framework_dir name name_fancy pos reinstall url version
+    local file framework_dir macos_string macos_version name name_fancy pos \
+        reinstall url version
     reinstall=0
     pos=()
     while (("$#"))
@@ -48,6 +49,18 @@ koopa::macos_install_python_framework() { # {{{1
     name_fancy='Python'
     name='python'
     version="$(koopa::variable "$name")"
+    macos_version="$(koopa::macos_version)"
+    case "$macos_version" in
+        11*)
+            macos_string='macos11'
+            ;;
+        10*)
+            macos_string='macosx10.9'
+            ;;
+        *)
+            koopa::stop "Unsupported macOS version: '${version}'."
+            ;;
+    esac
     framework_dir='/Library/Frameworks/Python.framework'
     if ! koopa::is_current_version "$name" || [[ "$reinstall" -eq 1 ]]
     then
@@ -58,7 +71,7 @@ koopa::macos_install_python_framework() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        file="python-${version}-macosx10.9.pkg"
+        file="python-${version}-${macos_string}.pkg"
         url="https://www.python.org/ftp/python/${version}/${file}"
         koopa::download "$url"
         sudo installer -pkg "$file" -target /

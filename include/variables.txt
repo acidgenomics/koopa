@@ -5,13 +5,13 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-04-01"
+koopa-date="2021-04-09"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.9.4a"
+koopa-version="0.9.4"
 
 # Also update this value in 'lang/r/include/header.R'.
-r-koopa="0.1.12"
+r-koopa="0.1.14"
 
 # Globals {{{1
 # ==============================================================================
@@ -28,7 +28,7 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 anaconda="2020.11"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.3.0"
+armadillo="10.4.0"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="3.10.1.181943"
@@ -73,7 +73,7 @@ cellranger="5.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.20.0"
+cmake="3.20.1"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -82,6 +82,10 @@ conda="4.9.2"
 
 # https://www.gnu.org/software/coreutils/
 coreutils="8.32"
+
+# https://github.com/Dr-Noob/cpufetch/releases
+# Currently this is master branch, without a release.
+cpufetch="0.96"
 
 # https://curl.haxx.se/
 curl="7.76.0"
@@ -104,10 +108,10 @@ findutils="4.8.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
-fish="3.2.1"
+fish="3.2.2"
 
 # https://github.com/junegunn/fzf
-fzf="0.25.1"
+fzf="0.27.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.0"
@@ -130,7 +134,7 @@ git="2.31.1"
 gnupg="2.2.27"
 
 # https://golang.org/dl/
-go="1.16.2"
+go="1.16.3"
 
 # https://www.gnu.org/software/grep/
 grep="3.6"
@@ -141,6 +145,8 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
 
+hadolint="2.1.0"
+
 harfbuzz="2.8.0"
 
 haskell-stack="rolling"
@@ -149,7 +155,7 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.0.10"
+homebrew="3.0.11"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -203,7 +209,7 @@ neofetch="7.1.0"
 neovim="0.4.4"
 
 # https://nodejs.org/
-node="15.13.0"
+node="15.14.0"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -237,7 +243,7 @@ patch="2.7.6"
 perl="5.32.1"
 
 # https://perlbrew.pl/
-perlbrew="0.88"
+perlbrew="0.91"
 
 # https://metacpan.org/release/File-Rename
 perl-file-rename="1.10"
@@ -256,14 +262,14 @@ pkg-config="0.29.2"
 proj="7.2.1"
 
 # https://github.com/pyenv/pyenv
-pyenv="1.2.16"
+pyenv="1.2.26"
 
 # https://www.python.org/downloads/
-python="3.9.2"
+python="3.9.4"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
-r="4.0.4"
+r="4.0.5"
 
 # https://svn.r-project.org/R/
 # This is the SVN revision number.
@@ -284,7 +290,7 @@ rstudio-server="1.4.1106"
 rstudio-server-pro="1.4.1106-5"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="3.0.0p0"
+ruby="3.0.1p64"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
@@ -334,7 +340,7 @@ taglib="1.12"
 tar="1.34"
 
 # https://www.latex-project.org/get/
-tex="2020"
+tex="2021"
 
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.7"
@@ -472,7 +478,7 @@ python-wheel="0.36.2"
 # https://rubygems.org/gems/bundler/versions/
 # NOTE Consider renaming to 'bundler' here.
 # Update with 'gem install bundler'.
-ruby-bundler="2.2.14"
+ruby-bundler="2.2.15"
 
 # https://rubygems.org/pages/download/
 # NOTE Consider renaming to 'rubygems' here.
@@ -493,7 +499,7 @@ rust-bat="0.18.0"         # homebrew
 rust-broot="1.2.9"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.5.4"      # homebrew; dust
-rust-exa="0.9.0"          # homebrew
+rust-exa="0.10.0"         # homebrew
 rust-fd-find="8.2.1"      # homebrew; fd
 rust-hyperfine="1.11.0"   # homebrew
 rust-procs="0.11.4"       # homebrew
@@ -502,7 +508,7 @@ rust-ripgrep="12.1.1"     # homebrew; rg
 rust-starship="0.51.0"    # homebrew
 rust-tokei="12.1.2"       # homebrew
 rust-xsv="0.13.0"         # homebrew
-rust-zoxide="0.5.0"       # homebrew; z
+rust-zoxide="0.6.0"       # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
