@@ -121,6 +121,10 @@ koopa::_update_spacemacs() { # {{{1
         koopa::cd "$prefix"
         git pull
     )
+    # Need to run this twice for updates to complete successfully.
+    emacs \
+        --batch -l "${prefix}/init.el" \
+        --eval='(configuration-layer/update-packages t)'
     emacs \
         --batch -l "${prefix}/init.el" \
         --eval='(configuration-layer/update-packages t)'
