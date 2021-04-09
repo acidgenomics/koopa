@@ -2,6 +2,8 @@
 # shellcheck disable=SC1090,SC1091,SC2162
 set -Eeu -o pipefail
 
+set -x  # FIXME
+
 # """
 # koopa shell
 # https://koopa.acidgenomics.com/
@@ -21,7 +23,7 @@ cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
-Updated 2021-03-01.
+Updated 2021-04-09.
 
 Optional arguments:
     --help, -h
@@ -59,7 +61,7 @@ END
 install() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-04-09.
     # """
     local dotfiles interactive koopa_prefix passwordless profile shared test
     while (("$#"))
