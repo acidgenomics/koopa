@@ -62,6 +62,7 @@ _koopa_activate_conda() { # {{{1
     return 0
 }
 
+# FIXME USE gcp gln etc on macOS if available...
 _koopa_activate_coreutils() { # {{{1
     # """
     # Activate hardened interactive aliases for coreutils.
@@ -74,7 +75,7 @@ _koopa_activate_coreutils() { # {{{1
     # """
     _koopa_has_gnu_coreutils || return 0
     # The '--archive/-a' flag seems to have issues on some file systems.
-    alias cp='cp --interactive' # -i
+    alias cp='cp --interactive --recursive' # -i
     alias ln='ln --interactive --no-dereference --symbolic' # -ins
     alias mkdir='mkdir --parents' # -p
     alias mv='mv --interactive' # -i
@@ -174,25 +175,28 @@ _koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_CASK_OPTS='--no-quarantine'
     fi
-    _koopa_activate_homebrew_gnu_prefix \
-        coreutils \
-        findutils \
-        gnu-sed \
-        gnu-tar \
-        gnu-units \
-        grep \
-        make
-    _koopa_activate_homebrew_libexec_prefix \
-        man-db
-    _koopa_activate_homebrew_prefix \
-        bc \
-        binutils \
-        curl \
-        icu4c \
-        ncurses \
-        ruby \
-        sqlite \
-        texinfo
+    # NOTE Consider activating this inside Bash activation, so these are
+    # accessible to functions on macOS. May need to rework this approach.
+    # Disabling here to see if we can speed up shell activation.
+    # > _koopa_activate_homebrew_gnu_prefix \
+    # >     coreutils \
+    # >     findutils \
+    # >     gnu-sed \
+    # >     gnu-tar \
+    # >     gnu-units \
+    # >     grep \
+    # >     make
+    # > _koopa_activate_homebrew_libexec_prefix \
+    # >     man-db
+    # > _koopa_activate_homebrew_prefix \
+    # >     bc \
+    # >     binutils \
+    # >     curl \
+    # >     icu4c \
+    # >     ncurses \
+    # >     ruby \
+    # >     sqlite \
+    # >     texinfo
     _koopa_activate_homebrew_google_cloud_sdk
     # > _koopa_activate_homebrew_ruby_gems
     # Enable these lines when debugging duration.
