@@ -147,7 +147,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-04-09.
     # """
     # shellcheck disable=SC2039
     local prefix
