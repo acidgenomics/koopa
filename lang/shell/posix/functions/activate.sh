@@ -217,15 +217,16 @@ _koopa_activate_homebrew() { # {{{1
     # >     make
     # > _koopa_activate_homebrew_libexec_prefix \
     # >     man-db
-    # > _koopa_activate_homebrew_prefix \
-    # >     bc \
-    # >     binutils \
-    # >     curl \
-    # >     icu4c \
-    # >     ncurses \
-    # >     ruby \
-    # >     sqlite \
-    # >     texinfo
+    # Consider including here:
+    # - bc
+    # - binutils
+    # - icu4c
+    # - ncurses
+    # - sqlite
+    # - texinfo
+    _koopa_activate_homebrew_prefix \
+        curl \
+        ruby
     _koopa_activate_homebrew_google_cloud_sdk
     # > _koopa_activate_homebrew_ruby_gems
     # Enable these lines when debugging duration.
