@@ -208,6 +208,21 @@ koopa::git_last_commit_remote() { # {{{1
     koopa::print "$x"
 }
 
+koopa::git_master_to_main() { # {{{1
+    # """
+    # Change default branch from "master" to "main".
+    # @note Updated 2021-04-08.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::is_git || return 1
+    koopa::is_installed git || return 1
+    git branch -m master main
+    git fetch origin
+    git branch -u origin/main main
+    git remote set-head origin -a
+    return 0
+}
+
 koopa::git_pull() { # {{{1
     # """
     # Pull (update) a git repository.
