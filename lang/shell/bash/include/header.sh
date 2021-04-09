@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # koopa nolint=coreutils
 
+
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-02-16.
+    # @note Updated 2021-04-09.
     # """
     local activate checks dev distro_prefix header_path major_version os_id \
         shopts verbose
@@ -89,6 +90,9 @@ _koopa_bash_header() { # {{{1
         else
             _koopa_source_dir "os/${os_id}"
         fi
+        # Ensure we activate GNU coreutils and other tools that are keg-only
+        # for Homebrew but preferred default for our Bash scripts.
+        _koopa_activate_homebrew_keg_only
         # Check if user is requesting help documentation.
         koopa::help "$@"
         # Require sudo permission to run 'sbin/' scripts.
