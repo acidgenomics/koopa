@@ -164,7 +164,7 @@ koopa::docker_build() { # {{{1
     docker login "$server" >/dev/null || return 1
     build_name="$(basename "$image")"
     # Ensure any previous build failres are removed.
-    docker buildx rm "$build_name" || true
+    docker buildx rm "$build_name" &>/dev/null || true
     docker buildx create --name="$build_name" --use >/dev/null
     docker buildx build "${args[@]}" || return 1
     docker buildx rm "$build_name"
