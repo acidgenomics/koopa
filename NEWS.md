@@ -1,3 +1,18 @@
+## koopa 0.9.4 (2021-04-09)
+
+### Major changes
+
+- Reworked activation of GNU coreutils on macOS, significantly speeding up
+  the loading time.
+- Useful GNU utitiles on macOS from Homebrew are now defined as aliases
+  (e.g. 'gcp' is aliased to 'cp'). The original BSD variants are consistently
+  prefixed with 'bsd' (e.g. 'bsdcp' for 'cp').
+
+### Minor changes
+
+- Updated system dependency checks. Now intentionally errors when attempting
+  to run inside a Docker image.
+
 ## koopa 0.9.3 (2021-03-31)
 
 ### Minor changes
