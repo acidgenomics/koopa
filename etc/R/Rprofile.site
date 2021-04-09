@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-03-31.
+## Updated 2021-04-09.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -652,7 +652,15 @@ local({
     ## Session info {{{2
     ## -------------------------------------------------------------------------
 
-    if (isTRUE(interactive()) && !isTRUE(.rprofile[["rstudio"]])) {
+    ## Only display session information when R is running interactively
+    ## and not in quiet mode.
+    if (
+        isTRUE(interactive()) &&
+        isFALSE(length(intersect(
+            x = commandArgs(),
+            y = c("-q", "--quiet", "--silent")
+        )) > 0L)
+    ) {
         local({
             pathString <- paste0("  %.", getOption("width") - 2L, "s")
             msg <- sprintf(
