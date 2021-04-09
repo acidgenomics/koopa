@@ -108,7 +108,7 @@ koopa::_update_doom_emacs() { # {{{1
 koopa::_update_spacemacs() { # {{{1
     # """
     # Update spacemacs non-interatively.
-    # @note Updated 2020-11-25.
+    # @note Updated 2021-04-09.
     #
     # Potentially useful: 'emacs --no-window-system'
     # """
