@@ -218,29 +218,10 @@ _koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_CASK_OPTS='--no-quarantine'
     fi
-    # NOTE Consider activating this inside Bash activation, so these are
-    # accessible to functions on macOS. May need to rework this approach.
-    # Disabling here to see if we can speed up shell activation.
-    # > _koopa_activate_homebrew_gnu_prefix \
-    # >     coreutils \
-    # >     findutils \
-    # >     gnu-sed \
-    # >     gnu-tar \
-    # >     gnu-units \
-    # >     grep \
-    # >     make
-    # > _koopa_activate_homebrew_libexec_prefix \
-    # >     man-db
-    # Consider including here:
-    # - bc
-    # - binutils
-    # - icu4c
-    # - ncurses
-    # - sqlite
-    # - texinfo
-    _koopa_activate_homebrew_prefix \
-        curl \
-        ruby
+    # These programs are keg-only but we want to include them in the system
+    # path by default. Refer to '_koopa_activate_homebrew_keg_only' for other
+    # packages that we are only sourcing inside Bash scripts.
+    _koopa_activate_homebrew_prefix curl ruby
     _koopa_activate_homebrew_google_cloud_sdk
     # > _koopa_activate_homebrew_ruby_gems
     # Enable these lines when debugging duration.
@@ -285,6 +266,38 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
         _koopa_force_add_to_path_start "${prefix}/gnubin"
         _koopa_force_add_to_manpath_start "${prefix}/gnuman"
     done
+    return 0
+}
+
+_koopa_activate_homebrew_keg_only() { # {{{1
+    # """
+    # Activate Homebrew GNU utilities.
+    # @note Updated 2021-04-09.
+    #
+    # Note that these mask some macOS system utilities and are not recommended
+    # to be included in system shell activation. These are OK to activate
+    # inside of Bash scripts.
+    #
+    # Consider including here:
+    # - icu4c
+    # - ncurses
+    # - sqlite
+    # - texinfo
+    # """
+    _koopa_is_installed brew || return 0
+    _koopa_activate_homebrew_gnu_prefix \
+        coreutils \
+        findutils \
+        gnu-sed \
+        gnu-tar \
+        gnu-units \
+        grep \
+        make
+    _koopa_activate_homebrew_prefix \
+        bc \
+        binutils \
+        curl
+    _koopa_activate_homebrew_libexec_prefix man-db
     return 0
 }
 
