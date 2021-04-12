@@ -23,7 +23,7 @@ koopa::run_if_installed() { # {{{1
 koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-04-12.
     #
     # Intended for use with 'koopa pull'.
     #
@@ -31,15 +31,19 @@ koopa::sys_git_pull() { # {{{1
     # non-writable permissions, so Zsh passes 'compaudit' checks.
     # """
     koopa::assert_has_no_args "$#"
-    local branch prefix
+    local current_branch default_branch prefix
     (
         prefix="$(koopa::prefix)"
         koopa::cd "$prefix"
         koopa::sys_set_permissions -r "${prefix}/lang/shell/zsh" &>/dev/null
-        branch="$(koopa::git_branch)"
+        current_branch="$(koopa::git_branch)"
+        default_branch="$(koopa::git_default_branch)"
         koopa::git_pull
-        # Ensure other branches, such as develop, are rebased.
-        [[ "$branch" != 'master' ]] && koopa::git_pull origin master
+        # Ensure other branches, such as develop, are rebased to main branch.
+        if [[ "$current_branch" != "$default_branch" ]]
+        then
+            koopa::git_pull origin "$default_branch"
+        fi
         koopa::fix_zsh_permissions
     )
     return 0
