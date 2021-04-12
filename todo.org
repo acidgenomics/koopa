@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Improve support for Void Linux.
+        Detect admin group.
+        Add support for configure-system.
 ** TODO Consider installing latest stable release by default for Docker images.
 ** TODO Minimal Linux base images should not include '.git' directories.
 ** TODO Need to run bfg to make dotfiles more compact?
