@@ -111,7 +111,7 @@ _koopa_activate_dircolors() { # {{{1
 _koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2020-11-14.
+    # @note Updated 2021-04-12.
     #
     # Currently Bash and Zsh are supported.
     #
@@ -119,6 +119,7 @@ _koopa_activate_fzf() { # {{{1
     #
     # @seealso
     # - https://github.com/junegunn/fzf
+    # - https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko
     # Customization:
     # - https://github.com/ngynLk/dotfiles/blob/master/.bashrc
     # - Dracula palette:
@@ -127,8 +128,16 @@ _koopa_activate_fzf() { # {{{1
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     # shellcheck disable=SC2039
     local nounset prefix script shell
-    [ -z "${FZF_DEFAULT_OPTS:-}" ] && \
-        export FZF_DEFAULT_OPTS='--color bw --border'
+    if [ -z "${FZF_DEFAULT_COMMAND:-}" ]
+    then
+        export FZF_DEFAULT_COMMAND='rg --files'
+    fi
+    if [ -z "${FZF_DEFAULT_OPTS:-}" ]
+    then
+        # On multi-select mode (-m/--multi), TAB and Shift-TAB to mark
+        # multiple items.
+        export FZF_DEFAULT_OPTS='--border --color bw --multi'
+    fi
     prefix="$(_koopa_fzf_prefix)/latest"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
