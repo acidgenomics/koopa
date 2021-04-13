@@ -350,7 +350,7 @@ texinfo="6.7"
 the-silver-searcher="2.2.0"
 
 # https://github.com/tmux/tmux/releases
-tmux="3.1c"
+tmux="3.2"
 
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
@@ -499,7 +499,7 @@ rust-bat="0.18.0"         # homebrew
 rust-broot="1.2.9"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.5.4"      # homebrew; dust
-rust-exa="0.10.0"         # homebrew
+rust-exa="0.10.1"         # homebrew
 rust-fd-find="8.2.1"      # homebrew; fd
 rust-hyperfine="1.11.0"   # homebrew
 rust-procs="0.11.4"       # homebrew
