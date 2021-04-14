@@ -147,13 +147,13 @@ _koopa_activate_gnu() { # {{{1
         alias make='gmake'
         alias man='gman'
         alias sed='gsed'
+        alias stat='gstat'
         alias tar='gtar'
         cp='gcp'
         ln='gln'
         mkdir='gmkdir'
         mv='gmv'
         rm='grm'
-        stat='gstat'
     fi
     # The '--archive' flag seems to have issues on some file systems.
     # shellcheck disable=SC2139
