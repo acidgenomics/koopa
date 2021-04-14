@@ -108,7 +108,7 @@ quote=01:warning=01;35"
 _koopa_activate_gnu() { # {{{1
     # """
     # Activate GNU utilities.
-    # @note Updated 2021-04-09.
+    # @note Updated 2021-04-14.
     #
     # Creates hardened interactive aliases for GNU coreutils.
     #
@@ -137,6 +137,7 @@ _koopa_activate_gnu() { # {{{1
         alias bsdmkdir='/bin/mkdir'
         alias bsdrm='/bin/rm'
         alias bsdsed='/usr/bin/sed'
+        alias bsdstat='/usr/bin/stat'
         alias bsdtar='/usr/bin/tar'
         alias chmod='gchmod'
         alias chown='gchown'
@@ -152,6 +153,7 @@ _koopa_activate_gnu() { # {{{1
         mkdir='gmkdir'
         mv='gmv'
         rm='grm'
+        stat='gstat'
     fi
     # The '--archive' flag seems to have issues on some file systems.
     # shellcheck disable=SC2139
