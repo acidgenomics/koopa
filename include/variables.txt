@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-04-12"
+koopa-date="2021-04-19"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.5a"
@@ -145,7 +145,7 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
 
-hadolint="2.1.0"
+hadolint="2.2.0"
 
 harfbuzz="2.8.0"
 
@@ -216,7 +216,7 @@ node="15.14.0"
 openjdk="16"
 
 # https://www.openssh.com/portable.html
-openssh="8.5p1"
+openssh="8.6p1"
 
 # https://www.openssl.org/source/
 openssl="1.1.1d"
@@ -451,7 +451,7 @@ python-pip="21.0.1"
 
 python-black="20.8b1"     # homebrew
 python-bpytop="1.0.63"    # homebrew
-python-flake8="3.9.0"     # homebrew
+python-flake8="3.9.1"     # homebrew
 python-pipx="0.16.1"      # homebrew
 python-pylint="2.7.4"     # homebrew
 python-ranger-fm="1.9.3"  # homebrew
