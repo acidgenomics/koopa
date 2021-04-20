@@ -6,7 +6,7 @@ koopa::install_spacevim() {
     # @note Updated 2021-04-20.
     # https://spacevim.org
     # """
-    local name_fancy
+    local name_fancy vimproc_prefix
     name_fancy="SpaceVim"
     if [[ -d "${HOME}/.SpaceVim" ]]
     then
@@ -15,6 +15,13 @@ koopa::install_spacevim() {
     fi
     koopa::install_start "$name_fancy"
     curl -sLf https://spacevim.org/install.sh | bash
+    # Bug fix for vimproc error.
+    # https://github.com/SpaceVim/SpaceVim/issues/435
+    vimproc_prefix="${HOME}/.SpaceVim/bundle/vimproc.vim"
+    (
+        koopa::cd "$vimproc_prefix"
+        make
+    )
     koopa::install_success "$name_fancy"
     return 0
 }
