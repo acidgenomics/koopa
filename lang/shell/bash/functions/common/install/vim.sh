@@ -10,3 +10,14 @@ koopa::install_spacevim() {
     return 0
 }
 
+koopa::uninstall_spacevim() { # {{{1
+    # """
+    # Uninstall SpaceVim.
+    # @note Updated 2021-04-20.
+    # """
+    koopa::rm \
+        "${HOME}/.SpaceVim" \
+        "${HOME}/.SpaceVim.d" \
+        "${HOME}/.cache/SpaceVim"
+    return 0
+}
