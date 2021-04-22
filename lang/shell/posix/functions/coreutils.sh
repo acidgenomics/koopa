@@ -57,7 +57,7 @@ _koopa_parent_dir() { # {{{1
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-04-22.
     #
     # Note that 'readlink -f' doesn't work on macOS.
     #
@@ -68,7 +68,7 @@ _koopa_realpath() { # {{{1
     [ "$#" -gt 0 ] || return 1
     if _koopa_is_installed realpath
     then
-        x="$(_koopa_realpath "$@")"
+        x="$(realpath "$@")"
         _koopa_print "$x"
     elif _koopa_has_gnu readlink
     then
@@ -84,6 +84,24 @@ _koopa_realpath() { # {{{1
     else
         return 1
     fi
+    return 0
+}
+
+_koopa_which() { # {{{1
+    # """
+    # Locate which program.
+    # @note Updated 2021-04-22.
+    #
+    # Example:
+    # koopa::which bash
+    # """
+    local cmd
+    for cmd in "$@"
+    do
+        _koopa_is_alias "$cmd" && unalias "$cmd"
+        cmd="$(command -v "$cmd")"
+        _koopa_print "$cmd"
+    done
     return 0
 }
 
