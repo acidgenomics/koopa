@@ -16,7 +16,6 @@ _koopa_cpu_count() { # {{{1
     #
     # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
     # """
-    # shellcheck disable=2039
     local n
     if _koopa_is_installed nproc
     then
@@ -251,7 +250,6 @@ _koopa_shell() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/3327013
     # """
-    # shellcheck disable=SC2039
     local shell
     if [ -n "${BASH_VERSION:-}" ]
     then

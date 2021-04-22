@@ -5,7 +5,6 @@ _koopa_posix_header() { # {{{1
     # POSIX shell header.
     # @note Updated 2021-01-19.
     # """
-    # shellcheck disable=SC2039
     local file
     if [ -z "${KOOPA_PREFIX:-}" ]
     then

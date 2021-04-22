@@ -71,7 +71,6 @@ esac
 # >                     2071B08A33BD3F06 \
 # >                     8A861B1C7EFD60D9
 # > fi
-# shellcheck disable=SC2034
 gcrypt_url='https://gnupg.org/ftp/gcrypt'
 # Install dependencies.
 koopa::install_app \
