@@ -146,6 +146,9 @@ cask "zoom"
 # sshfs requires osxfuse cask, which insecurely hooks into system.
 # > brew "sshfs"
 
+# Use MacGPG (gpg-suite) cask instead.
+brew "gpg", link: false
+
 # Python: Use official Framework binary install instead of Homebrew.
 # Use 'koopa install python-framework' to install.
 brew "python@3.9", link: false
