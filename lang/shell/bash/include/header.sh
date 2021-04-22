@@ -18,6 +18,9 @@ _koopa_bash_header() { # {{{1
     [[ -n "${KOOPA_DEV:-}" ]] && dev="$KOOPA_DEV"
     [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
     # Disable header checks for any 'koopa install XXX' calls.
+    # FIXME REWORK THIS.
+    echo "$#"
+    echo "$*"
     [[ "${1:-}" == 'koopa' ]] && [[ "${2:-}" == 'install' ]] && checks=0
     if [[ "$activate" -eq 1 ]]
     then
