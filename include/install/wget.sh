@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 if koopa::is_macos
 then
     koopa::assert_is_installed brew

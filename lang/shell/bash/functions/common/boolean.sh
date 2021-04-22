@@ -179,7 +179,7 @@ koopa::is_bash_ok() { # {{{1
     # """
     # Is the current version of Bash OK (or super old)?
     # @note Updated 2020-07-05.
-    # 
+    #
     # Older versions (< 4; e.g. shipping version on macOS) have issues with
     # 'read' that we have to handle with special care here.
     # """

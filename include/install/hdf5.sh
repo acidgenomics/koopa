@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 if koopa::is_macos
 then
     koopa::add_to_path_start '/usr/local/gfortran/bin'

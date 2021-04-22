@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 koopa::mkdir "$prefix"
 git clone \
     'https://github.com/sstephenson/rbenv.git' \

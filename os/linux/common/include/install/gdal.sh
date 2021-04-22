@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # Use 'configure --help' for build options.
 #

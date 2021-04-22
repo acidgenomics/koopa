@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # Updated 2020-11-17.
 #

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # Install the generic binaries by default, when possible.
 # https://julialang.org/downloads/

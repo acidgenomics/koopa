@@ -1,10 +1,10 @@
 # """
 # pylint configuration.
 # Updated 2020-08-12.
-# 
+#
 # Create skeleton:
 # pylint --generate-rcfile > pylintrc
-# 
+#
 # Error codes (for messages control) are described in:
 # https://docs.pylint.org/en/1.6.0/features.html
 # """
