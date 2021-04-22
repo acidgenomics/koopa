@@ -66,6 +66,8 @@ _koopa_activate() { # {{{1
             _koopa_activate_bcbio
         elif _koopa_is_macos
         then
+            _koopa_activate_homebrew_cask_gpg_suite
+            _koopa_activate_homebrew_cask_r
             _koopa_activate_macos_python
             _koopa_activate_visual_studio_code
         fi
