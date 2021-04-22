@@ -68,7 +68,6 @@ koopa::install_homebrew_bundle() { # {{{1
     default=1
     brewfile="$(koopa::brewfile)"
     koopa::assert_is_file "$brewfile"
-    brewfile="$(koopa::realpath "$brewfile")"
     koopa::dl 'Brewfile' "$brewfile"
     brew analytics off
     if [[ "$default" -eq 1 ]]
