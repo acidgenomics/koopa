@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # If system doesn't have gettext (msgfmt) installed:
 # Note that this doesn't work on Ubuntu 18 LTS.

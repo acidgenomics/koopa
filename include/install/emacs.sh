@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
 
 # Seeing this error on macOS:

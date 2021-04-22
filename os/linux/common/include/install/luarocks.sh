@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 koopa::assert_is_linux
 koopa::assert_is_installed lua
 lua_version="$(koopa::get_version lua)"

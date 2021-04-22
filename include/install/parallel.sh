@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 file="${name}-${version}.tar.bz2"
 url="${gnu_mirror}/${name}/${file}"
 koopa::download "$url"

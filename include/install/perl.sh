@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # https://www.cpan.org/src/
 # https://metacpan.org/pod/distribution/perl/INSTALL

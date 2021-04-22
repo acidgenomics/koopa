@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # https://github.com/WayneD/rsync/blob/master/INSTALL.md
 # """

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # Skip building on CentOS.
 if koopa::is_centos
 then

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 koopa::assert_is_installed makeinfo  # texinfo
 file="${name}-${version}.tar.xz"
 url="${gnu_mirror}/${name}/${file}"

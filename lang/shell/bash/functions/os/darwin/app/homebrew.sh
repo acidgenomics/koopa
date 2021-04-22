@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2120
 koopa::macos_brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2020-11-12.
+    # @note Updated 2021-04-22.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
@@ -23,8 +24,10 @@ koopa::macos_brew_cask_outdated() { # {{{
     koopa::assert_is_macos
     koopa::assert_is_installed brew
     tmp_file="$(koopa::tmp_file)"
-    script -q "$tmp_file" brew outdated --cask --greedy >/dev/null
+    script -q "$tmp_file" \
+        brew outdated --cask --greedy >/dev/null
     x="$(grep -v '(latest)' "$tmp_file")"
+    koopa::rm "$tmp_file"
     [[ -n "$x" ]] || return 0
     koopa::print "$x"
     return 0
@@ -39,5 +42,40 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
     koopa::assert_is_macos
     koopa::assert_has_sudo
     sudo xattr -r -d com.apple.quarantine /Applications/*.app
+    return 0
+}
+
+koopa::macos_brew_upgrade_casks() { # {{{1
+    # """
+    # Upgrade Homebrew casks.
+    # @note Updated 2021-04-22.
+    # """
+    local cask casks
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_macos
+    koopa::assert_is_installed brew
+    readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
+    if koopa::is_array_non_empty "${casks[@]}"
+    then
+        koopa::alert_info "${#casks[@]} outdated casks detected."
+        koopa::print "${casks[@]}"
+        for cask in "${casks[@]}"
+        do
+            cask="$(koopa::print "${cask[@]}" | cut -d ' ' -f 1)"
+            case "$cask" in
+                docker)
+                    cask='homebrew/cask/docker'
+                    ;;
+                macvim)
+                    cask='homebrew/cask/macvim'
+                    ;;
+            esac
+            # Note that additional flags are set globally using the
+            # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew
+            # activation function.
+            brew reinstall --cask --force "$cask" || true
+            [[ "$cask" == 'r' ]] && koopa::update_r_config
+        done
+    fi
     return 0
 }

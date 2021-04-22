@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # Official GCC links:
 # - https://ftp.gnu.org/gnu/gcc/

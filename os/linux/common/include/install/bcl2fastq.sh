@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # NOTE ARM is not yet supported for this.
 koopa::assert_is_linux
 # e.g. 2.20.0.422 to 2-20-0.

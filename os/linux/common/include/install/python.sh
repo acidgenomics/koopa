@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # Warning: 'make install' can overwrite or masquerade the python3 binary.
 # 'make altinstall' is therefore recommended instead of make install since it

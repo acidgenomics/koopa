@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 koopa::assert_has_sudo
 koopa::assert_is_installed go
 file="${name}-${version}.tar.gz"

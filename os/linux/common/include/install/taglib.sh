@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # To build a static library, set the following two options with CMake:
 # -DBUILD_SHARED_LIBS=OFF -DENABLE_STATIC_RUNTIME=ON

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # https://github.com/Kitware/CMake
 # We're enforcing system GCC here to avoid libstdc++ errors.

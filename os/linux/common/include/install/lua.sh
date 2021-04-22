@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # See also:
 # - http://www.lua.org/manual/5.3/readme.html

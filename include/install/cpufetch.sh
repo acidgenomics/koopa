@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # NOTE v0.94 stable release fails to compile on macOS.
 # use of undeclared identifier 'cpu_set_t'
 # https://github.com/Dr-Noob/cpufetch/issues/38
