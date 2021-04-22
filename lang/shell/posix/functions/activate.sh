@@ -1,8 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC3043
 
-# FIXME Consider consolidating all of these functions into a single script.
-
 _koopa_activate_aspera() { # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
@@ -105,7 +103,6 @@ quote=01:warning=01;35"
     return 0
 }
 
-# FIXME THIS APPROACH IS FLAWED AND CAN LEAD TO ISSUES...
 _koopa_activate_gnu() { # {{{1
     # """
     # Activate GNU utilities.
@@ -118,18 +115,22 @@ _koopa_activate_gnu() { # {{{1
     #
     # macOS ships with BSD coreutils, which don't support all GNU options.
     # """
-    local cp ln mkdir mv opt_prefix rm
-    cp='cp'
-    ln='ln'
-    mkdir='mkdir'
-    mv='mv'
-    rm='rm'
-    if _koopa_is_macos && _koopa_is_installed brew
+    local cp harden_coreutils ln mkdir mv opt_prefix rm
+    if _koopa_is_linux
     then
+        harden_coreutils=1
+        cp='cp'
+        ln='ln'
+        mkdir='mkdir'
+        mv='mv'
+        rm='rm'
+    elif _koopa_is_macos
+    then
+        _koopa_is_installed brew || return 0
         opt_prefix="$(_koopa_homebrew_prefix)/opt"
-        [ -d "$opt_prefix" ] || return 1
         if [ -d "${opt_prefix}/coreutils" ]
         then
+            harden_coreutils=1
             alias bsdchmod='/bin/chmod'
             alias bsdchown='/usr/sbin/chown'
             alias bsdcp='/bin/cp'
@@ -148,52 +149,70 @@ _koopa_activate_gnu() { # {{{1
             mkdir='gmkdir'
             mv='gmv'
             rm='grm'
+        else
+            _koopa_alert_note "Homebrew 'coreutils' is not installed."
+            harden_coreutils=0
         fi
         if [ -d "${opt_prefix}/findutils" ]
         then
             alias bsdfind='/usr/bin/find'
             alias find='gfind'
+        else
+            _koopa_alert_note "Homebrew 'findutils' is not installed."
         fi
         if [ -d "${opt_prefix}/gnu-sed" ]
         then
             alias bsdsed='/usr/bin/sed'
             alias sed='gsed'
+        else
+            _koopa_alert_note "Homebrew 'gnu-sed' is not installed."
         fi
         if [ -d "${opt_prefix}/gnu-tar" ]
         then
             alias bsdtar='/usr/bin/tar'
             alias tar='gtar'
+        else
+            _koopa_alert_note "Homebrew 'gnu-tar' is not installed."
         fi
         if [ -d "${opt_prefix}/grep" ]
         then
             alias bsdgrep='/usr/bin/grep'
             alias grep='ggrep'
+        else
+            _koopa_alert_note "Homebrew 'grep' is not installed."
         fi
         if [ -d "${opt_prefix}/make" ]
         then
             alias bsdmake='/usr/bin/make'
             alias make='gmake'
+        else
+            _koopa_alert_note "Homebrew 'make' is not installed."
         fi
         if [ -d "${opt_prefix}/man-db" ]
         then
             alias bsdman='/usr/bin/man'
             alias man='gman'
+        else
+            _koopa_alert_note "Homebrew 'man-db' is not installed."
         fi
     fi
-    # The '--archive' flag seems to have issues on some file systems.
-    # shellcheck disable=SC2139
-    alias cp="${cp} --interactive --recursive" # -i
-    # shellcheck disable=SC2139
-    alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
-    # shellcheck disable=SC2139
-    alias mkdir="${mkdir} --parents" # -p
-    # shellcheck disable=SC2139
-    alias mv="${mv} --interactive" # -i
-    # Problematic on some file systems: --dir --preserve-root
-    # Don't enable '--recursive' here by default, so we don't accidentally
-    # nuke an important directory.
-    # shellcheck disable=SC2139
-    alias rm="${rm} --interactive=once" # -I
+    if [ "$harden_coreutils" -eq 1 ]
+    then
+        # The '--archive' flag seems to have issues on some file systems.
+        # shellcheck disable=SC2139
+        alias cp="${cp} --interactive --recursive" # -i
+        # shellcheck disable=SC2139
+        alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
+        # shellcheck disable=SC2139
+        alias mkdir="${mkdir} --parents" # -p
+        # shellcheck disable=SC2139
+        alias mv="${mv} --interactive" # -i
+        # Problematic on some file systems: --dir --preserve-root
+        # Don't enable '--recursive' here by default, so we don't accidentally
+        # nuke an important directory.
+        # shellcheck disable=SC2139
+        alias rm="${rm} --interactive=once" # -I
+    fi
     return 0
 }
 
