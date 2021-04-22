@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME koopa install XXX should skip header check for bash version.
-# NOTE Need to add support for 'link' here in a future release.
-
 koopa::_koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
