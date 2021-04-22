@@ -220,7 +220,6 @@ _koopa_activate_go() { # {{{1
     # Activate Go.
     # @note Updated 2020-11-23.
     # """
-    # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_go_prefix)/latest"
     [ -d "$prefix" ] && _koopa_activate_prefix "$prefix"
@@ -237,11 +236,9 @@ _koopa_activate_homebrew() { # {{{1
     # Activate Homebrew.
     # @note Updated 2021-04-22.
     # """
-    # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_homebrew_prefix)"
     # Enable these lines when debugging duration.
-    # shellcheck disable=SC2039
     # > local bc date duration duration_start duration_stop
     # > bc="${prefix}/opt/bc/bin/bc"
     # > date="${prefix}/opt/coreutils/libexec/gnubin/date"
@@ -301,7 +298,6 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # - brew info libtool
     # - brew info make
     # """
-    # shellcheck disable=SC2039
     local homebrew_prefix name prefix
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     for name in "$@"
@@ -351,7 +347,6 @@ _koopa_activate_homebrew_google_cloud_sdk() { # {{{1
     # Activate Homebrew Google Cloud SDK.
     # @note Updated 2020-11-16.
     # """
-    # shellcheck disable=SC2039
     local prefix shell
     prefix="$(_koopa_homebrew_prefix)"
     prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
@@ -371,7 +366,6 @@ _koopa_activate_homebrew_libexec_prefix() { # {{{1
     # Activate a Homebrew cellar-only program.
     # @note Updated 2021-03-31.
     # """
-    # shellcheck disable=SC2039
     local homebrew_prefix name prefix
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     for name in "$@"
@@ -388,7 +382,6 @@ _koopa_activate_homebrew_prefix() { # {{{1
     # Activate a Homebrew cellar-only program.
     # @note Updated 2021-03-31.
     # """
-    # shellcheck disable=SC2039
     local homebrew_prefix name prefix
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     for name in "$@"
@@ -405,7 +398,6 @@ _koopa_activate_homebrew_python() { # {{{1
     # Activate Homebrew Python.
     # @note Updated 2020-10-27.
     # """
-    # shellcheck disable=SC2039
     local version
     version="$(_koopa_major_minor_version "$(_koopa_variable 'python')")"
     _koopa_activate_homebrew_prefix "python@${version}"
@@ -430,7 +422,6 @@ _koopa_activate_koopa_paths() { # {{{1
     # Automatically configure koopa PATH and MANPATH.
     # @note Updated 2021-01-19.
     # """
-    # shellcheck disable=SC2039
     local config_prefix distro_prefix koopa_prefix linux_prefix shell
     koopa_prefix="$(_koopa_prefix)"
     config_prefix="$(_koopa_config_prefix)"
@@ -464,7 +455,6 @@ _koopa_activate_llvm() { # {{{1
     # Activate LLVM config.
     # @note Updated 2020-08-05.
     # """
-    # shellcheck disable=SC2039
     local config make_prefix
     [ -x "${LLVM_CONFIG:-}" ] && return 0
     make_prefix="$(_koopa_make_prefix)"
@@ -489,7 +479,6 @@ _koopa_activate_local_etc_profile() { # {{{1
     #
     # Currently only supported for Bash.
     # """
-    # shellcheck disable=SC2039
     local make_prefix prefix
     case "$(_koopa_shell)" in
         bash)
@@ -549,7 +538,6 @@ _koopa_activate_macos_python() { # {{{1
     # Activate macOS Python binary install.
     # @note Updated 2020-11-16.
     # """
-    # shellcheck disable=SC2039
     local minor_version version
     _koopa_is_macos || return 1
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
@@ -581,7 +569,6 @@ _koopa_activate_openjdk() { # {{{1
     #
     # We're using a symlink approach here to manage versions.
     # """
-    # shellcheck disable=SC2039
     local prefix
     _koopa_is_linux || return 0
     prefix="$(_koopa_openjdk_prefix)/latest"
@@ -601,7 +588,6 @@ _koopa_activate_perlbrew() { # {{{1
     # See also:
     # - https://perlbrew.pl
     # """
-    # shellcheck disable=SC2039
     local nounset prefix script
     [ -n "${PERLBREW_ROOT:-}" ] && return 0
     ! _koopa_is_installed perlbrew || return 0
@@ -627,7 +613,6 @@ _koopa_activate_pipx() { # {{{1
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
     # """
-    # shellcheck disable=SC2039
     local prefix
     _koopa_is_installed pipx || return 0
     prefix="$(_koopa_pipx_prefix)"
@@ -659,7 +644,6 @@ _koopa_activate_pkg_config() { # {{{1
     # @seealso
     # - https://askubuntu.com/questions/210210/
     # """
-    # shellcheck disable=SC2039
     local arch homebrew_prefix make_prefix sys_pkg_config
     [ -n "${PKG_CONFIG_PATH:-}" ] && return 0
     make_prefix="$(_koopa_make_prefix)"
@@ -695,7 +679,6 @@ _koopa_activate_prefix() { # {{{1
     # Automatically configure PATH and MANPATH for a specified prefix.
     # @note Updated 2020-11-16.
     # """
-    # shellcheck disable=SC2039
     local prefix
     for prefix in "$@"
     do
@@ -717,7 +700,6 @@ _koopa_activate_pyenv() { # {{{1
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
-    # shellcheck disable=SC2039
     local nounset prefix script
     _koopa_is_installed pyenv && return 0
     [ -n "${PYENV_ROOT:-}" ] && return 0
@@ -753,7 +735,6 @@ _koopa_activate_python_startup() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/33683744/
     # """
-    # shellcheck disable=SC2039
     local file
     file="${HOME}/.pyrc"
     [ -f "$file" ] || return 0
@@ -769,7 +750,6 @@ _koopa_activate_rbenv() { # {{{1
     # See also:
     # - https://github.com/rbenv/rbenv
     # """
-    # shellcheck disable=SC2039
     local nounset prefix script
     if _koopa_is_installed rbenv
     then
@@ -795,7 +775,6 @@ _koopa_activate_ruby() { # {{{1
     # Activate Ruby gems.
     # @note Updated 2020-12-31.
     # """
-    # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_ruby_gems_prefix)"
     _koopa_activate_prefix "$(_koopa_ruby_gems_prefix)"
@@ -813,7 +792,6 @@ _koopa_activate_rust() { # {{{1
     #
     # Alternatively, can just add '${cargo_home}/bin' to PATH.
     # """
-    # shellcheck disable=SC2039
     local cargo_prefix nounset script rustup_prefix
     cargo_prefix="$(_koopa_rust_cargo_prefix)"
     rustup_prefix="$(_koopa_rust_rustup_prefix)"
@@ -836,7 +814,6 @@ _koopa_activate_secrets() { # {{{1
     # Source secrets file.
     # @note Updated 2020-07-07.
     # """
-    # shellcheck disable=SC2039
     local file
     file="${1:-}"
     [ -z "$file" ] && file="${HOME}/.secrets"
@@ -860,7 +837,6 @@ _koopa_activate_ssh_key() { # {{{1
     # List currently loaded keys:
     # > ssh-add -L
     # """
-    # shellcheck disable=SC2039
     local key
     _koopa_is_linux || return 0
     _koopa_is_interactive || return 0
@@ -888,7 +864,6 @@ _koopa_activate_standard_paths() { # {{{1
     # @seealso
     # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
     # """
-    # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
     _koopa_add_to_path_end \
@@ -924,7 +899,6 @@ _koopa_activate_venv() { # {{{1
     #
     # Refer to 'declare -f deactivate' for function source code.
     # """
-    # shellcheck disable=SC2039
     local name nounset prefix script
     [ -n "${VIRTUAL_ENV:-}" ] && return 0
     _koopa_str_match_regex "$(_koopa_shell)" '^(bash|zsh)$' || return 0
@@ -945,7 +919,6 @@ _koopa_activate_visual_studio_code() { # {{{1
     # Activate Visual Studio Code.
     # @note Updated 2021-03-16.
     # """
-    # shellcheck disable=SC2039
     local prefix
     _koopa_is_macos || return 0
     prefix='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
@@ -967,7 +940,6 @@ _koopa_activate_xdg() { # {{{1
     # - https://developer.gnome.org/basedir-spec/
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
     # """
-    # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
     [ -z "${XDG_CACHE_HOME:-}" ] && \

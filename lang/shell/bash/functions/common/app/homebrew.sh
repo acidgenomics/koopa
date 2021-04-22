@@ -43,8 +43,6 @@ koopa::brew_dump_brewfile() { # {{{1
     return 0
 }
 
-# FIXME Can we take this out and it won't warn??
-# shellcheck disable=SC2120
 koopa::brew_outdated() { # {{{1
     # """
     # Listed outdated Homebrew brews and casks, in a single call.

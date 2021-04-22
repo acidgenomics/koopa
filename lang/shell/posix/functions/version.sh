@@ -8,7 +8,6 @@ _koopa_macos_version() { # {{{1
     # macOS version.
     # @note Updated 2020-07-05.
     # """
-    # shellcheck disable=SC2039
     local x
     _koopa_is_macos || return 1
     x="$(sw_vers -productVersion)"
@@ -24,7 +23,6 @@ _koopa_major_version() { # {{{1
     #
     # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
-    # shellcheck disable=SC2039
     local version x
     for version in "$@"
     do
@@ -40,7 +38,6 @@ _koopa_major_minor_version() { # {{{1
     # Program 'MAJOR.MINOR' version.
     # @note Updated 2020-07-04.
     # """
-    # shellcheck disable=SC2039
     local version x
     for version in "$@"
     do
@@ -56,7 +53,6 @@ _koopa_major_minor_patch_version() { # {{{1
     # Program 'MAJOR.MINOR.PATCH' version.
     # @note Updated 2020-07-04.
     # """
-    # shellcheck disable=SC2039
     local version x
     for version in "$@"
     do
@@ -75,7 +71,6 @@ _koopa_ruby_api_version() { # {{{1
     # Used by Homebrew Ruby for default gem installation path.
     # See 'brew info ruby' for details.
     # """
-    # shellcheck disable=SC2039
     local x
     _koopa_is_installed ruby || return 1
     x="$(ruby -e 'print Gem.ruby_api_version')"
