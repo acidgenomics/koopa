@@ -114,7 +114,9 @@ cask "julia"
 cask "keka"
 cask "libreoffice"
 cask "little-snitch"
-cask "macvim", args: { no-binaries }
+# This syntax doesn't work...how to fix?
+# > cask "macvim", args: { no-binaries }
+cask "macvim"
 cask "netnewswire"
 cask "omnidisksweeper"
 cask "pacifist"
