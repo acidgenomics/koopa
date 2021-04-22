@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # Can build with autotools or cmake.
 # See 'INSTALL' file for details.

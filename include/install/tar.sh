@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 koopa::assert_is_installed gcc tar
 ## Note that xz file is also available.
 file="${name}-${version}.tar.gz"

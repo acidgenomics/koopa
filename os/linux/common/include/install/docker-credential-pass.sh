@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 koopa::assert_is_linux
 arch="$(koopa::arch)"
 file="docker-credential-pass-v${version}-${arch}.tar.gz"

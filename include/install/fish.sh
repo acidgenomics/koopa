@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # https://github.com/fish-shell/fish-shell/#building
 # """

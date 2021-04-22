@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # See also:
 # - http://www.lua.org/manual/5.3/readme.html

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 koopa::assert_is_linux
 koopa::assert_is_installed lua
 lua_version="$(koopa::get_version lua)"

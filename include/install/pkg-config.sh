@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # https://www.freedesktop.org/wiki/Software/pkg-config/
 # https://pkg-config.freedesktop.org/releases/

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # https://github.com/Kitware/CMake
 # We're enforcing system GCC here to avoid libstdc++ errors.

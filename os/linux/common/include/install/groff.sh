@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 koopa::assert_is_linux
 file="${name}-${version}.tar.gz"
 url="${gnu_mirror}/${name}/${file}"

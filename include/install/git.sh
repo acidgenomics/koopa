@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # If system doesn't have gettext (msgfmt) installed:
 # Note that this doesn't work on Ubuntu 18 LTS.

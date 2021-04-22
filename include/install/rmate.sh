@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 file="v${version}.tar.gz"
 url="https://github.com/aurora/${name}/archive/${file}"
 koopa::download "$url"

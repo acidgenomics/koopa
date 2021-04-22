@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # https://github.com/WayneD/rsync/blob/master/INSTALL.md
 # """

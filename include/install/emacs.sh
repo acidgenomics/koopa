@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
 
 # Seeing this error on macOS:

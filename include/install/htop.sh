@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # Repo transferred from https://github.com/hishamhm/htop to 
 # https://github.com/htop-dev/htop in 2020-08.
 

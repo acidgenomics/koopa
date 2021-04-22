@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 koopa::assert_is_linux
 koopa::assert_is_installed svn
 # Subversion revision number (e.g. 80130).

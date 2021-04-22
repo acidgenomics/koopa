@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 if koopa::is_macos
 then
     os_id='darwin'

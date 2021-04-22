@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 koopa::assert_is_linux
 koopa::alert_coffee_time
 # If set, this will interfere with internal LLVM build required for

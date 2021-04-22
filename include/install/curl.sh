@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # https://curl.haxx.se/docs/install.html
 # """

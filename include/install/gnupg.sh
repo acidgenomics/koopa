@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # https://gnupg.org/download/index.html
 
 case "$version" in

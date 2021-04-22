@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # Skip building on CentOS.
 if koopa::is_centos
 then

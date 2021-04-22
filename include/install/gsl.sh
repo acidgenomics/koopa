@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 file="${name}-${version}.tar.gz"
 url="${gnu_mirror}/${name}/${file}"
 koopa::download "$url"

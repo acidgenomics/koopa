@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # NOTE ARM is not yet supported for this.
 koopa::assert_is_linux
 # e.g. 2.20.0.422 to 2-20-0.
