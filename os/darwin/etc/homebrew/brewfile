@@ -36,6 +36,12 @@ tap "vitorgalvao/tiny-scripts"
 # Casks {{{1
 # ==============================================================================
 
+# Previously installed applications not managed by Homebrew intentionally error
+# here, and there's no supported method in 'brew bundle install' to force
+# an overwrite. Instead, per app run this command manually:
+# > brew install --cask --force XXX
+# https://github.com/Homebrew/homebrew-bundle/issues/446
+
 # Consider re-enabling, but using AWS primarily at the moment.
 # > cask "google-cloud-sdk"
 
@@ -45,17 +51,10 @@ tap "vitorgalvao/tiny-scripts"
 # Virtualbox is useful but installs a lot of garbage into the system.
 # > cask "virtualbox"
 
-# /Applications {{{2
-# ------------------------------------------------------------------------------
-
 cask "1password"
+cask "adoptopenjdk"
 cask "airfoil"
 cask "alacritty"
-
-# Other locations {{{2
-# ------------------------------------------------------------------------------
-
-cask "adoptopenjdk"
 cask "alfred"
 cask "audio-hijack"
 cask "basictex"
