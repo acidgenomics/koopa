@@ -45,8 +45,8 @@ tap "vitorgalvao/tiny-scripts"
 # Virtualbox is useful but installs a lot of garbage into the system.
 # > cask "virtualbox"
 
-cask "1password"
-cask "adoptopenjdk"
+cask "1password", force: true
+cask "adoptopenjdk", force: true
 cask "airfoil"
 cask "alacritty"
 cask "alfred"
