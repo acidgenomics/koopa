@@ -30,7 +30,6 @@ test_all() { # {{{1
 test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
-    # shellcheck disable=SC2016
     array=('^([ ]+)?(cd|cp|ln|mkdir|mv|rm) ')
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
@@ -44,7 +43,6 @@ test_all_coreutils() { # {{{1
 test_all_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
-    # shellcheck disable=SC1112,SC2016
     array=(
         # "=''"             # now allowed, for arrays.
         ' \|\| exit'        # wrap in function and return instead
@@ -73,7 +71,6 @@ test_all_illegal_strings() { # {{{1
 test_all_quoting() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
-    # shellcheck disable=SC2016
     array=(
         "'\$.+'"
         ":-['\"]"
