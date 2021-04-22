@@ -343,6 +343,7 @@ _koopa_activate_skip_check() { # {{{1
 }
 
 _koopa_activate_source_bash() { # {{{1
+    # shellcheck disable=SC3028,SC3054
     printf '%s\n' "${BASH_SOURCE[0]}"
     return 0
 }
