@@ -113,7 +113,7 @@ koopa::install_homebrew_bundle() { # {{{1
         '--no-lock'
         '--no-upgrade'
     )
-    export HOMEBREW_CASK_OPTS='--force --no-quarantine'
+    export HOMEBREW_CASK_OPTS='--no-quarantine'
     brew bundle install "${flags[@]}"
     koopa::update_homebrew
     return 0
