@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 koopa::assert_is_linux
 file="${name}-${version}.tar.gz"
 # HTTP alternative:

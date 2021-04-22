@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # Can build with autotools or cmake.
 # See 'INSTALL' file for details.

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # https://docs.haskellstack.org/en/stable/install_and_upgrade/
 # """

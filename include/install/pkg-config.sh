@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # https://www.freedesktop.org/wiki/Software/pkg-config/
 # https://pkg-config.freedesktop.org/releases/

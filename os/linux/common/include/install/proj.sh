@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 koopa::assert_is_linux
 [[ "$reinstall" -ne 1 ]] && koopa::assert_is_not_file '/usr/bin/proj'
 koopa::assert_is_installed sqlite3

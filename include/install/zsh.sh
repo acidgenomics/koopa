@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
 # Note that RHEL 7 locates these to '/etc' by default instead.

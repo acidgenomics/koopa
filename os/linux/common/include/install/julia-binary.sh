@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # Install the generic binaries by default, when possible.
 # https://julialang.org/downloads/
