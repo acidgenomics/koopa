@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # koopa nolint=coreutils
 
-
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-04-09.
+    # @note Updated 2021-04-22.
     # """
     local activate checks dev distro_prefix header_path major_version os_id \
         shopts verbose
@@ -18,6 +17,8 @@ _koopa_bash_header() { # {{{1
     [[ -n "${KOOPA_CHECKS:-}" ]] && checks="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dev="$KOOPA_DEV"
     [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
+    # Disable header checks for any 'koopa install XXX' calls.
+    [[ "${1:-}" == 'koopa' ]] && [[ "${2:-}" == 'install' ]] && checks=0
     if [[ "$activate" -eq 1 ]]
     then
         checks=0
