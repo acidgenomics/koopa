@@ -318,21 +318,3 @@ _koopa_remove_from_pkg_config_path() { # {{{1
     export PKG_CONFIG_PATH
     return 0
 }
-
-_koopa_which() { # {{{1
-    # """
-    # Locate which program.
-    # @note Updated 2020-07-18.
-    #
-    # Example:
-    # koopa::which bash
-    # """
-    local cmd
-    for cmd in "$@"
-    do
-        _koopa_is_alias "$cmd" && cmd="$(unalias "$cmd")"
-        cmd="$(command -v "$cmd")"
-        _koopa_print "$cmd"
-    done
-    return 0
-}
