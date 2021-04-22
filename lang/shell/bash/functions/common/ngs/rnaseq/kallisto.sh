@@ -182,7 +182,7 @@ koopa::run_kallisto() { # {{{1
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running kallisto.'
     koopa::activate_conda_env kallisto
-    fastq_dir="$(realpath "$fastq_dir")"
+    fastq_dir="$(koopa::realpath "$fastq_dir")"
     koopa::dl 'fastq dir' "$fastq_dir"
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
@@ -210,7 +210,7 @@ koopa::run_kallisto() { # {{{1
     # Generate the genome index on the fly, if necessary.
     if [[ -n "${index_file:-}" ]]
     then
-        index_file="$(realpath "$index_file")"
+        index_file="$(koopa::realpath "$index_file")"
     else
         index_file="${output_dir}/kallisto.idx"
         koopa::_kallisto_index \

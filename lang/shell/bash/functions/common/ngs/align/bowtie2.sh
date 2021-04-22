@@ -178,7 +178,7 @@ koopa::run_bowtie2() { # {{{1
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running bowtie2.'
     koopa::activate_conda_env bowtie2
-    fastq_dir="$(realpath "$fastq_dir")"
+    fastq_dir="$(koopa::realpath "$fastq_dir")"
     koopa::dl 'fastq dir' "$fastq_dir"
 
     # Sample array from FASTQ files {{{2
@@ -208,7 +208,7 @@ koopa::run_bowtie2() { # {{{1
     # Generate the genome index on the fly, if necessary.
     if [[ -n "${index_dir:-}" ]]
     then
-        index_dir="$(realpath "$index_dir")"
+        index_dir="$(koopa::realpath "$index_dir")"
     else
         index_dir="${output_dir}/bowtie2.idx"
         koopa::bowtie2_index \

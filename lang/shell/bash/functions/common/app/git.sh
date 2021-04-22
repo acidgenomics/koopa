@@ -38,7 +38,7 @@ koopa::git_checkout_recursive() { # {{{1
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
-        dir="$(realpath "$dir")"
+        dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
@@ -269,7 +269,7 @@ koopa::git_pull_recursive() { # {{{1
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
-        dir="$(realpath "$dir")"
+        dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
@@ -309,7 +309,7 @@ koopa::git_push_recursive() { # {{{1
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
-        dir="$(realpath "$dir")"
+        dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
@@ -495,7 +495,7 @@ koopa::git_status_recursive() { # {{{1
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
-        dir="$(realpath "$dir")"
+        dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \

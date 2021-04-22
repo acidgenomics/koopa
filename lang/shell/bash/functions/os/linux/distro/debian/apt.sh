@@ -446,7 +446,7 @@ koopa::apt_disable_deb_src() { # {{{1
     local file
     koopa::assert_has_args_le "$#" 1
     file="${1:-/etc/apt/sources.list}"
-    file="$(realpath "$file")"
+    file="$(koopa::realpath "$file")"
     koopa::alert "Disabling Debian sources in '${file}'."
     if ! grep -Eq '^deb-src ' "$file"
     then
@@ -466,7 +466,7 @@ koopa::apt_enable_deb_src() { # {{{1
     local file
     koopa::assert_has_args_le "$#" 1
     file="${1:-/etc/apt/sources.list}"
-    file="$(realpath "$file")"
+    file="$(koopa::realpath "$file")"
     koopa::alert "Enabling Debian sources in '${file}'."
     if ! grep -Eq '^# deb-src ' "$file"
     then

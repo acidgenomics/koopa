@@ -1,11 +1,11 @@
 #!/bin/sh
+# shellcheck disable=SC3043
 
 _koopa_cd() { # {{{1
     # """
     # Change directory quietly.
     # @note Updated 2020-07-20.
     # """
-    # shellcheck disable=SC2039
     local cd
     unalias -a
     [ "$#" -eq 1 ] || return 1
@@ -21,7 +21,6 @@ _koopa_parent_dir() { # {{{1
     #
     # This requires file to exist and resolves symlinks.
     # """
-    # shellcheck disable=SC2039
     local OPTIND cd_tail file n parent
     _koopa_is_installed dirname printf pwd sed || return 1
     cd_tail=
@@ -66,12 +65,11 @@ _koopa_realpath() { # {{{1
     # @seealso
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
-    # shellcheck disable=SC2039
     local arg x
     [ "$#" -gt 0 ] || return 1
     if _koopa_is_installed realpath
     then
-        x="$(realpath "$@")"
+        x="$(_koopa_realpath "$@")"
         _koopa_print "$x"
     elif _koopa_has_gnu readlink
     then
@@ -107,7 +105,6 @@ _koopa_which_realpath() { # {{{1
     # @examples
     # koopa::which_realpath bash vim
     # """
-    # shellcheck disable=SC2039
     local cmd
     [ "$#" -gt 0 ] || return 1
     for cmd in "$@"
