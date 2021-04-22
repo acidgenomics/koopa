@@ -284,9 +284,19 @@ _koopa_activate_homebrew_cask_gpg_suite() { # {{{1
     # This code shouldn't be necessary to run at startup, since MacGPG2
     # should be configured at '/private/etc/paths.d/MacGPG2' automatically.
     # """
-    local prefix
-    prefix="$(_koopa_homebrew_prefix)"
-    _koopa_activate_prefix "${prefix}/MacGPG2"
+    _koopa_activate_prefix '/usr/local/MacGPG2'
+    return 0
+}
+
+_koopa_activate_homebrew_cask_r() { # {{{1
+    # """
+    # Activate R Homebrew cask.
+    # @note Updated 2021-04-22.
+    # """
+    local prefix version
+    version='Current'
+    prefix="/Library/Frameworks/R.framework/Versions/${version}/Resources"
+    _koopa_activate_prefix "$prefix"
     return 0
 }
 
