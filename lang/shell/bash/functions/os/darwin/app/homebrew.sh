@@ -57,14 +57,16 @@ koopa::macos_brew_upgrade_casks() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
     koopa::assert_is_installed brew
+    # FIXME DO WE NEED TO CUT BEFORE FIRST SPACE HERE?
+    # FIXME Previously in the loop:
+    # > cask="$(koopa::print "${cask[@]}" | cut -d ' ' -f 1)"
     readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
     koopa::is_array_non_empty "${casks[@]}" || return 0
-    koopa::alert_info "${#casks[@]} outdated casks detected."
-    koopa::print "${casks[@]}"
+    koopa::dl \
+        "${#casks[@]} outdated casks" \
+        "$(koopa::to_string "${casks[@]}")"
     for cask in "${casks[@]}"
     do
-        # FIXME Is this step necessary? Can we take out?
-        cask="$(koopa::print "${cask[@]}" | cut -d ' ' -f 1)"
         case "$cask" in
             docker)
                 cask='homebrew/cask/docker'

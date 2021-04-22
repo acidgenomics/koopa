@@ -98,8 +98,9 @@ koopa::brew_upgrade_brews() { # {{{1
     local brew brews
     readarray -t brews <<< "$(koopa::brew_outdated)"
     koopa::is_array_non_empty "${brews[@]}" || return 0
-    koopa::alert_info "${#brews[@]} outdated brews detected."
-    koopa::print "${brews[@]}"
+    koopa::dl \
+        "${#brews[@]} outdated brews" \
+        "$(koopa::to_string "${brews[@]}")"
     for brew in "${brews[@]}"
     do
         brew reinstall --force "$brew" || true

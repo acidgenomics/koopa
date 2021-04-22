@@ -105,7 +105,7 @@ cask "font-victor-mono"
 cask "font-victor-mono-nerd-font"
 cask "github"
 cask "google-cloud-sdk"
-cask "gpg-suite"
+cask "gpg-suite"  # no-binaries
 cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
@@ -114,9 +114,7 @@ cask "julia"
 cask "keka"
 cask "libreoffice"
 cask "little-snitch"
-# This syntax doesn't work...how to fix?
-# > cask "macvim", args: { no-binaries }
-cask "macvim"
+cask "macvim"  # no-binaries
 cask "netnewswire"
 cask "omnidisksweeper"
 cask "pacifist"
