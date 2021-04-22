@@ -1,4 +1,7 @@
 #!/bin/sh
+# shellcheck disable=SC3043
+
+# FIXME Consider consolidating all of these functions into a single script.
 
 _koopa_activate_aspera() { # {{{1
     # """
@@ -20,7 +23,6 @@ _koopa_activate_bcbio() { # {{{1
     # This is particularly important to avoid unexpected compilation issues
     # due to compilers in conda masking the system versions.
     # """
-    # shellcheck disable=SC2039
     local prefix
     _koopa_is_linux || return 0
     _koopa_is_installed bcbio_nextgen.py && return 0
@@ -40,7 +42,6 @@ _koopa_activate_conda() { # {{{1
     # Instead source the 'activate' script.
     # This must be reloaded inside of subshells to work correctly.
     # """
-    # shellcheck disable=SC2039
     local name nounset prefix
     prefix="${1:-}"
     [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/conda"
@@ -79,7 +80,6 @@ _koopa_activate_ensembl_perl_api() { # {{{1
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
     # """
-    # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_ensembl_perl_api_prefix)"
     [ -d "$prefix" ] || return 0
@@ -108,7 +108,7 @@ quote=01:warning=01;35"
 _koopa_activate_gnu() { # {{{1
     # """
     # Activate GNU utilities.
-    # @note Updated 2021-04-14.
+    # @note Updated 2021-04-22.
     #
     # Creates hardened interactive aliases for GNU coreutils.
     #
@@ -117,8 +117,7 @@ _koopa_activate_gnu() { # {{{1
     #
     # macOS ships with BSD coreutils, which don't support all GNU options.
     # """
-    # shellcheck disable=SC2039
-    local cp ln mkdir mv rm
+    local cp ln mkdir mv opt_prefix rm
     cp='cp'
     ln='ln'
     mkdir='mkdir'
@@ -126,34 +125,59 @@ _koopa_activate_gnu() { # {{{1
     rm='rm'
     if _koopa_is_macos && _koopa_is_installed brew
     then
-        alias bsdchmod='/bin/chmod'
-        alias bsdchown='/usr/sbin/chown'
-        alias bsdcp='/bin/cp'
-        alias bsddu='/usr/bin/du'
-        alias bsdfind='/usr/bin/find'
-        alias bsdgrep='/usr/bin/grep'
-        alias bsdmake='/usr/bin/make'
-        alias bsdman='/usr/bin/man'
-        alias bsdmkdir='/bin/mkdir'
-        alias bsdrm='/bin/rm'
-        alias bsdsed='/usr/bin/sed'
-        alias bsdstat='/usr/bin/stat'
-        alias bsdtar='/usr/bin/tar'
-        alias chmod='gchmod'
-        alias chown='gchown'
-        alias du='gdu'
-        alias find='gfind'
-        alias grep='ggrep'
-        alias make='gmake'
-        alias man='gman'
-        alias sed='gsed'
-        alias stat='gstat'
-        alias tar='gtar'
-        cp='gcp'
-        ln='gln'
-        mkdir='gmkdir'
-        mv='gmv'
-        rm='grm'
+        opt_prefix="$(_koopa_homebrew_prefix)/opt"
+        [ -d "$opt_prefix" ] || return 1
+        if [ -d "${opt_prefix}/coreutils" ]
+        then
+            alias bsdchmod='/bin/chmod'
+            alias bsdchown='/usr/sbin/chown'
+            alias bsdcp='/bin/cp'
+            alias bsddu='/usr/bin/du'
+            alias bsdln='/bin/ln'
+            alias bsdmkdir='/bin/mkdir'
+            alias bsdmv='/bin/mv'
+            alias bsdrm='/bin/rm'
+            alias bsdstat='/usr/bin/stat'
+            alias chmod='gchmod'
+            alias chown='gchown'
+            alias du='gdu'
+            alias stat='gstat'
+            cp='gcp'
+            ln='gln'
+            mkdir='gmkdir'
+            mv='gmv'
+            rm='grm'
+        fi
+        if [ -d "${opt_prefix}/findutils" ]
+        then
+            alias bsdfind='/usr/bin/find'
+            alias find='gfind'
+        fi
+        if [ -d "${opt_prefix}/gnu-sed" ]
+        then
+            alias bsdsed='/usr/bin/sed'
+            alias sed='gsed'
+        fi
+        if [ -d "${opt_prefix}/gnu-tar" ]
+        then
+            alias bsdtar='/usr/bin/tar'
+            alias tar='gtar'
+        fi
+        if [ -d "${opt_prefix}/grep" ]
+        then
+            alias bsdgrep='/usr/bin/grep'
+            alias grep='ggrep'
+        fi
+        if [ -d "${opt_prefix}/make" ]
+        then
+            alias bsdmake='/usr/bin/make'
+            alias make='gmake'
+        fi
+        if [ -d "${opt_prefix}/man-db" ]
+        then
+            alias bsdman='/usr/bin/man'
+            alias man='gman'
+        fi
     fi
     # The '--archive' flag seems to have issues on some file systems.
     # shellcheck disable=SC2139
