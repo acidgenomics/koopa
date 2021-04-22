@@ -114,7 +114,7 @@ cask "julia"
 cask "keka"
 cask "libreoffice"
 cask "little-snitch"
-cask "macvim"
+cask "macvim", args: { no-binaries }
 cask "netnewswire"
 cask "omnidisksweeper"
 cask "pacifist"
