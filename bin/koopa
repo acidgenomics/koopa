@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# FIXME 'koopa install XXX' should disable header check here...
-
 # Handle situation where 'koopa' is symlinked into '/usr/local'.
 bash_source="${BASH_SOURCE[0]}"
 if [[ -L "$bash_source" ]]
