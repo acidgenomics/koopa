@@ -73,7 +73,6 @@ _koopa_prompt() { # {{{1
             wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
             ;;
         zsh)
-            # shellcheck disable=SC2039,SC2154
             conda_color="${fg[yellow]}"
                     git_color="${fg[green]}"
                     prompt_color="${fg[magenta]}"
