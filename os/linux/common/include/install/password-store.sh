@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # https://www.passwordstore.org/
 # https://git.zx2c4.com/password-store/

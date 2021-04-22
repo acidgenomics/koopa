@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # Install Subversion.
 # @note Updated 2020-11-17.

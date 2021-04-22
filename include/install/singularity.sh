@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 koopa::assert_has_sudo
 koopa::assert_is_installed go
 file="${name}-${version}.tar.gz"

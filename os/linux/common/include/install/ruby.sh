@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # https://www.ruby-lang.org/en/downloads/
 # """

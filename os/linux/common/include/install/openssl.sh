@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 koopa::assert_is_linux
 name='openssl'
 file="${name}-${version}.tar.gz"

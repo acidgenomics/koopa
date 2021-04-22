@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # Homebrew recipe, for reference:
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/awscli.rb

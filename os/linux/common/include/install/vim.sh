@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+#
 # """
 # Installing with Python 3 configuration.
 # """

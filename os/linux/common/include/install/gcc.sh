@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+
 # """
 # Official GCC links:
 # - https://ftp.gnu.org/gnu/gcc/
