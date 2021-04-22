@@ -9,8 +9,8 @@ koopa::copy_bam_files() { # {{{1
     # """
     local source_dir target_dir
     koopa::assert_has_args "$#"
-    source_dir="$(realpath "${1:?}")"
-    target_dir="$(realpath "${2:?}")"
+    source_dir="$(koopa::realpath "${1:?}")"
+    target_dir="$(koopa::realpath "${2:?}")"
     koopa::dl 'Source' "${source_dir}"
     koopa::dl 'Target' "${target_dir}"
     find -L "$source_dir" \

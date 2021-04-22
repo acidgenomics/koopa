@@ -15,7 +15,7 @@ koopa::extract() { # {{{1
     for file in "$@"
     do
         koopa::assert_is_file "$file"
-        file="$(realpath "$file")"
+        file="$(koopa::realpath "$file")"
         koopa::alert "Extracting '${file}'."
         case "$file" in
             *.tar.bz2)

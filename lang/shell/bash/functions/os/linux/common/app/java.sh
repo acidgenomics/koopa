@@ -13,7 +13,7 @@ koopa::linux_java_update_alternatives() { # {{{1
     koopa::is_shared_install || return 0
     koopa::is_installed update-alternatives || return 0
     prefix="${1:?}"
-    prefix="$(realpath "$prefix")"
+    prefix="$(koopa::realpath "$prefix")"
     priority=100
     sudo rm -fv /var/lib/alternatives/java
     sudo update-alternatives --install \

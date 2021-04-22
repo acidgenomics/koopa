@@ -137,8 +137,8 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     koopa::assert_is_set build fasta gtf indexes organism release
     koopa::assert_is_file "$fasta" "$gtf"
     script="$(koopa::which_realpath "$script")"
-    fasta="$(realpath "$fasta")"
-    gtf="$(realpath "$gtf")"
+    fasta="$(koopa::realpath "$fasta")"
+    gtf="$(koopa::realpath "$gtf")"
     # Convert space-delimited string to array.
     IFS=" " read -r -a indexes <<< "$indexes"
     # Check for valid organism input.
