@@ -9,7 +9,7 @@ koopa::bam_sort() { # {{{1
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     readarray -t bam_files <<< "$( \
         find "$dir" \
             -maxdepth 3 \

@@ -110,8 +110,8 @@ koopa::docker_build() { # {{{1
     if [[ -L "$source_image" ]]
     then
         tags+=("$tag")
-        source_image="$(realpath "$source_image")"
-        tag="$(basename "$source_image")"
+        source_image="$(koopa::realpath "$source_image")"
+        tag="$(koopa::basename "$source_image")"
     fi
     tags+=("$tag" "${tag}-$(date '+%Y%m%d')")
     # Ensure tags are sorted and unique.

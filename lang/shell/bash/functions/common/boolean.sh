@@ -571,7 +571,7 @@ koopa::is_symlinked_app() { # {{{1
             str="$(koopa::which_realpath "$str")"
         elif [[ -e "$str" ]]
         then
-            str="$(realpath "$str")"
+            str="$(koopa::realpath "$str")"
         else
             return 1
         fi

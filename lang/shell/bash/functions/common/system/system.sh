@@ -180,7 +180,7 @@ koopa::sys_set_permissions() { # {{{1
     for arg in "$@"
     do
         # Ensure we resolve symlinks here.
-        arg="$(realpath "$arg")"
+        arg="$(koopa::realpath "$arg")"
         "${chmod[@]}" "$arg"
         "${chown[@]}" "$arg"
     done

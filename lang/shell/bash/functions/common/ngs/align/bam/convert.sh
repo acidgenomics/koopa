@@ -31,7 +31,7 @@ koopa::sam_to_bam() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     readarray -t sam_files <<< "$( \
         find "$dir" \
             -maxdepth 3 \

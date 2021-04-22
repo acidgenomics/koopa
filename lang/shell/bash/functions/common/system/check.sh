@@ -203,7 +203,7 @@ koopa::check_user() { # {{{1
         koopa::warning "'${file}' does not exist on disk."
         return 1
     fi
-    file="$(realpath "$file")"
+    file="$(koopa::realpath "$file")"
     expected_user="${2:?}"
     current_user="$(koopa::stat_user "$file")"
     if [[ "$current_user" != "$expected_user" ]]

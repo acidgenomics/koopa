@@ -230,7 +230,7 @@ koopa::run_salmon() { # {{{1
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running salmon.'
     koopa::activate_conda_env salmon
-    fastq_dir="$(realpath "$fastq_dir")"
+    fastq_dir="$(koopa::realpath "$fastq_dir")"
     koopa::dl 'fastq dir' "$fastq_dir"
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
@@ -258,7 +258,7 @@ koopa::run_salmon() { # {{{1
     # Generate the genome index on the fly, if necessary.
     if [[ -n "${index_dir:-}" ]]
     then
-        index_dir="$(realpath "$index_dir")"
+        index_dir="$(koopa::realpath "$index_dir")"
     else
         index_dir="${output_dir}/salmon.idx"
         koopa::_salmon_index \

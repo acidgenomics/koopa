@@ -57,7 +57,7 @@ koopa::find_broken_symlinks() { # {{{1
     koopa::assert_is_installed find grep
     dir="${1:-.}"
     [[ -d "$dir" ]] || return 0
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     local x
     x="$( \
         find "$dir" \
@@ -113,7 +113,7 @@ koopa::find_empty_dirs() { # {{{1
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find grep
     dir="${1:-.}"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     x="$( \
         find "$dir" \
             -xdev \
@@ -152,7 +152,7 @@ koopa::find_large_dirs() { # {{{1
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed du
     dir="${1:-.}"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     x="$( \
         du \
             --max-depth=20 \
@@ -183,7 +183,7 @@ koopa::find_large_files() { # {{{1
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find grep
     dir="${1:-.}"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     x="$( \
         find "$dir" \
             -xdev \
