@@ -236,7 +236,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-04-09.
+    # @note Updated 2021-04-22.
     # """
     # shellcheck disable=SC2039
     local prefix
@@ -262,7 +262,7 @@ _koopa_activate_homebrew() { # {{{1
     fi
     if _koopa_is_macos
     then
-        export HOMEBREW_CASK_OPTS='--no-quarantine'
+        export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
     fi
     # These programs are keg-only but we want to include them in the system
     # path by default. Refer to '_koopa_activate_homebrew_keg_only' for other

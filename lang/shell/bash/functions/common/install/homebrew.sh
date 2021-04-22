@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This function won't run on macOS due to very old Bash.
-# FIXME Need to run zsh compaudit here.
-
 koopa::install_homebrew() { # {{{1
     # """
     # Install Homebrew.
-    # @note Updated 2020-11-18.
+    # @note Updated 2021-04-22.
     #
     # @seealso
     # - https://docs.brew.sh/Installation
@@ -15,11 +12,8 @@ koopa::install_homebrew() { # {{{1
     # - https://github.com/Linuxbrew/brew/issues/556
     #
     # macOS:
-    # This script installs Homebrew to '/usr/local' so that you don't need sudo
-    # when you run 'brew install'. It is a careful script; it can be run even if
-    # you have stuff installed to '/usr/local' already. It tells you exactly
-    # what it will do before it does it too. You have to confirm everything it
-    # will do before it starts.
+    # NOTE This function won't run on macOS clean install due to very old Bash.
+    # Installs to '/usr/local' on Intel and '/opt/homebrew' on Apple Silicon.
     #
     # Linux:
     # Creates a new linuxbrew user and installs to /home/linuxbrew/.linuxbrew.
@@ -37,7 +31,7 @@ koopa::install_homebrew() { # {{{1
     if koopa::is_macos
     then
         koopa::assert_is_installed xcode-select
-        koopa::h2 'Installing Xcode command line tools (CLT).'
+        koopa::alert 'Installing Xcode command line tools (CLT).'
         xcode-select --install &>/dev/null || true
     fi
     tmp_dir="$(koopa::tmp_dir)"
@@ -57,65 +51,29 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-12-17.
+    # @note Updated 2021-04-22.
     # """
-    local brewfile default flags name_fancy remove_brews remove_taps x
-    koopa::assert_has_args_le "$#" 1
+    local brewfile cask_flags flags name_fancy
+    koopa::assert_has_no_args_le "$#" 1
     koopa::assert_has_sudo
+    brewfile="${1:-$(koopa::brewfile)}"
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
     koopa::assert_is_installed brew
-    default=1
-    brewfile="$(koopa::brewfile)"
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
     brew analytics off
-    if [[ "$default" -eq 1 ]]
-    then
-        # Remove any existing unwanted brews, if necessary.
-        remove_brews=(
-            'osgeo-gdal'
-            'osgeo-hdf4'
-            'osgeo-libgeotiff'
-            'osgeo-libkml'
-            'osgeo-libspatialite'
-            'osgeo-netcdf'
-            'osgeo-postgresql'
-            'osgeo-proj'
-        )
-        if koopa::is_macos
-        then
-            remove_brews+=(
-                'aspera-connect'  # renamed to ibm-aspera-connect
-                'google-chrome-canary'
-                'little-snitch'
-                'safari-technology-preview'
-                'zoomus'  # renamed to zoom
-            )
-        fi
-        for x in "${remove_brews[@]}"
-        do
-            brew remove "$x" &>/dev/null || true
-        done
-        remove_taps=(
-            'muesli/tap'
-        )
-        for x in "${remove_taps[@]}"
-        do
-            brew untap "$x" &>/dev/null || true
-        done
-    fi
     flags=(
-        # '--debug'
-        # '--verbose'
+        # > '--debug'
+        # > '--verbose'
         "--file=${brewfile}"
         '--force'
         '--no-lock'
         '--no-upgrade'
     )
-    export HOMEBREW_CASK_OPTS='--no-quarantine'
+    cask_flags=('--no-binaries' '--no-quarantine')
+    export HOMEBREW_CASK_OPTS="${cask_flags[*]}"
     brew bundle install "${flags[@]}"
-    koopa::update_homebrew
     return 0
 }
 
@@ -168,14 +126,11 @@ koopa::uninstall_homebrew() { # {{{1
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-03-02.
-    #
-    # Use of '--force-bottle' flag can be helpful, but not all brews have
-    # bottles, so this can error.
+    # @note Updated 2021-04-22.
     #
     # Alternative approaches:
     # > brew list \
-    # >     | xargs brew reinstall --force-bottle --cleanup \
+    # >     | xargs brew reinstall --cleanup \
     # >     || true
     # > brew outdated --cask --greedy \
     # >     | xargs brew reinstall \
@@ -190,9 +145,19 @@ koopa::update_homebrew() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
     koopa::assert_has_sudo
-    export HOMEBREW_CASK_OPTS='--force --no-quarantine'
     name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
+    if koopa::is_macos
+    then
+        cask_flags=(
+            # > '--debug'
+            # > '--verbose'
+            '--force'
+            '--no-binaries'
+            '--no-quarantine'
+        )
+        export HOMEBREW_CASK_OPTS="${cask_flags[*]}"
+    fi
     # > if koopa::has_sudo
     # > then
     # >     local group prefix user
@@ -208,6 +173,7 @@ koopa::update_homebrew() { # {{{1
     #       macos/updating-a-homebrew-formula/
     (
         koopa::cd "$(brew --repo 'homebrew/core')"
+        # FIXME USE A DEFAULT BRANCH RATHER THAN MASTER HARD CODE HERE.
         git checkout -q 'master'
         git branch -q 'master' -u 'origin/master'
         git reset -q --hard 'origin/master'
@@ -215,7 +181,7 @@ koopa::update_homebrew() { # {{{1
     )
     koopa::alert 'Updating brews.'
     brew analytics off
-    brew update # >/dev/null
+    brew update
     brew upgrade || true
     if koopa::is_macos
     then
@@ -236,17 +202,8 @@ koopa::update_homebrew() { # {{{1
                         cask='homebrew/cask/macvim'
                         ;;
                 esac
-                cask_flags=(
-                    # --debug
-                    # '--verbose'
-                    '--force'
-                    '--no-quarantine'
-                )
-                brew reinstall "${cask_flags[@]}" "$cask" || true
-                if [[ "$cask" == 'r' ]]
-                then
-                    koopa::update_r_config
-                fi
+                brew reinstall --cask --force "${cask_flags[@]}" "$cask" || true
+                [[ "$cask" == 'r' ]] && koopa::update_r_config
             done
         fi
     fi
