@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This function won't run on macOS due to very old Bash.
+# FIXME Need to run zsh compaudit here.
+
 koopa::install_homebrew() { # {{{1
     # """
     # Install Homebrew.
