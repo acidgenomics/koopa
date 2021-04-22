@@ -18,14 +18,27 @@ koopa::macos_brew_cask_outdated() { # {{{
     # - brew list --versions
     # - brew info
     # """
-    local tmp_file x
+    local keep_latest tmp_file x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
     koopa::assert_is_installed brew
+    # Whether we want to keep unversioned 'latest' casks returned with
+    # '--greedy'. This tends to include font casks and the Google Cloud SDK,
+    # which are annoying to have reinstall with each update, so disabling
+    # here by default.
+    keep_latest=0
+    # This approach keeps the version information, which we can parse.
     tmp_file="$(koopa::tmp_file)"
-    script -q "$tmp_file" \
-        brew outdated --cask --greedy >/dev/null
-    x="$(grep -v '(latest)' "$tmp_file")"
+    script -q "$tmp_file" brew outdated --cask --greedy >/dev/null
+    if [[ "$keep_latest" -eq 1 ]]
+    then
+        x="$(cut -d ' ' -f 1 < "$tmp_file")"
+    else
+        x="$( \
+            grep -v '(latest)' "$tmp_file" \
+            | cut -d ' ' -f 1 \
+        )"
+    fi
     koopa::rm "$tmp_file"
     [[ -n "$x" ]] || return 0
     koopa::print "$x"
@@ -57,9 +70,6 @@ koopa::macos_brew_upgrade_casks() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
     koopa::assert_is_installed brew
-    # FIXME DO WE NEED TO CUT BEFORE FIRST SPACE HERE?
-    # FIXME Previously in the loop:
-    # > cask="$(koopa::print "${cask[@]}" | cut -d ' ' -f 1)"
     readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
     koopa::is_array_non_empty "${casks[@]}" || return 0
     koopa::dl \
