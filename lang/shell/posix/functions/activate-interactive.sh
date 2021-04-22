@@ -6,7 +6,6 @@ _koopa_activate_aliases() { # {{{1
     # @note Updated 2020-11-14.
     # """
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    # shellcheck disable=SC2039
     local file
     file="${HOME}/.aliases"
     # shellcheck source=/dev/null
@@ -35,7 +34,6 @@ _koopa_activate_broot() { # {{{1
     # https://github.com/Canop/broot
     # """
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    # shellcheck disable=SC2039
     local br_script config_dir nounset
     case "$(_koopa_shell)" in
         bash|zsh)
@@ -63,7 +61,6 @@ _koopa_activate_completion() { # {{{1
     # @note Updated 2020-11-14.
     # """
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    # shellcheck disable=SC2039
     local file
     case "$(_koopa_shell)" in
         bash|zsh)
@@ -86,7 +83,6 @@ _koopa_activate_dircolors() { # {{{1
     # @note Updated 2020-11-14.
     # """
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    # shellcheck disable=SC2039
     local dircolors_file dotfiles_prefix
     _koopa_is_installed dircolors || return 0
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
@@ -126,7 +122,6 @@ _koopa_activate_fzf() { # {{{1
     #   https://gist.github.com/umayr/8875b44740702b340430b610b52cd182
     # """
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    # shellcheck disable=SC2039
     local nounset prefix script shell
     if [ -z "${FZF_DEFAULT_COMMAND:-}" ]
     then
@@ -184,7 +179,6 @@ _koopa_activate_starship() { # {{{1
     # https://starship.rs/
     # """
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    # shellcheck disable=SC2039
     local nounset shell
     _koopa_is_installed starship || return 0
     shell="$(_koopa_shell)"
@@ -216,7 +210,6 @@ _koopa_activate_zoxide() { # {{{1
     # - https://github.com/ajeetdsouza/zoxide
     # """
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    # shellcheck disable=SC2039
     local shell nounset
     shell="$(_koopa_shell)"
     case "$shell" in

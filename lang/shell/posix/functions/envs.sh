@@ -22,7 +22,6 @@ _koopa_deactivate_conda() { # {{{1
     # Deactivate Conda environment.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local nounset
     [ -n "${CONDA_DEFAULT_ENV:-}" ] || return 0
     # Avoid exit on unbound PS1 in conda script.
@@ -59,7 +58,6 @@ _koopa_venv() { # {{{1
     # Python virtual environment name.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local env
     env="${VIRTUAL_ENV:-}"
     [ -n "$env" ] || return 1

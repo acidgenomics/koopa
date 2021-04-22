@@ -78,7 +78,6 @@ _koopa_host_id() { # {{{1
     #
     # Alternatively, can use 'hostname -d' for reverse lookups.
     # """
-    # shellcheck disable=SC2039
     local id
     if [ -r '/etc/hostname' ]
     then
@@ -125,7 +124,6 @@ _koopa_mem_gb() { # {{{1
     #
     # Usage of 'int()' in awk rounds down.
     # """
-    # shellcheck disable=SC2039
     local denom mem
     _koopa_is_installed awk || return 1
     if _koopa_is_macos
@@ -154,7 +152,6 @@ _koopa_os_codename() { # {{{1
     # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
     # >     | tr -d '"'
     # """
-    # shellcheck disable=SC2039
     local os_codename
     _koopa_is_debian_like || return 0
     _koopa_is_installed lsb_release || return 0
@@ -170,7 +167,6 @@ _koopa_os_id() { # {{{1
     #
     # Just return the OS platform ID (e.g. debian).
     # """
-    # shellcheck disable=SC2039
     local os_id
     os_id="$(_koopa_os_string | cut -d '-' -f 1)"
     _koopa_print "$os_id"
@@ -190,7 +186,6 @@ _koopa_os_string() { # {{{1
     # Alternatively, use hostnamectl.
     # https://linuxize.com/post/how-to-check-linux-version/
     # """
-    # shellcheck disable=SC2039
     local id release_file string version
     _koopa_is_installed awk || return 1
     if _koopa_is_macos
@@ -310,7 +305,6 @@ _koopa_variable() { # {{{1
     #
     # This approach handles inline comments.
     # """
-    # shellcheck disable=SC2039
     local file key value
     key="${1:?}"
     file="$(_koopa_include_prefix)/variables.txt"

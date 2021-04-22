@@ -130,7 +130,6 @@ _koopa_export_lesspipe() { # {{{
     # See also:
     # - https://github.com/wofr06/lesspipe
     # """
-    # shellcheck disable=SC2039
     local lesspipe
     lesspipe='lesspipe.sh'
     if [ -n "${LESSOPEN:-}" ] && _koopa_is_installed "$lesspipe"
@@ -156,7 +155,6 @@ _koopa_export_proj_lib() { # {{{1
     # Export PROJ_LIB.
     # @note Updated 2020-08-05.
     # """
-    # shellcheck disable=SC2039
     local make_prefix
     if [ -z "${PROJ_LIB:-}" ]
     then
