@@ -280,6 +280,9 @@ _koopa_activate_homebrew_cask_gpg_suite() { # {{{1
     # """
     # Activate MacGPG (gpg-suite) Homebrew cask.
     # @note Updated 2021-04-22.
+    #
+    # This code shouldn't be necessary to run at startup, since MacGPG2
+    # should be configured at '/private/etc/paths.d/MacGPG2' automatically.
     # """
     local prefix
     prefix="$(_koopa_homebrew_prefix)"
