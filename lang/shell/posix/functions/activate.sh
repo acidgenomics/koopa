@@ -198,13 +198,18 @@ _koopa_activate_gnu() { # {{{1
     if [ "$harden_coreutils" -eq 1 ]
     then
         # The '--archive' flag seems to have issues on some file systems.
+        # shellcheck disable=SC2139
         alias cp="${cp} --interactive --recursive" # -i
+        # shellcheck disable=SC2139
         alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
+        # shellcheck disable=SC2139
         alias mkdir="${mkdir} --parents" # -p
+        # shellcheck disable=SC2139
         alias mv="${mv} --interactive" # -i
         # Problematic on some file systems: --dir --preserve-root
         # Don't enable '--recursive' here by default, so we don't accidentally
         # nuke an important directory.
+        # shellcheck disable=SC2139
         alias rm="${rm} --interactive=once" # -I
     fi
     return 0
@@ -268,6 +273,17 @@ _koopa_activate_homebrew() { # {{{1
     # >     | "$bc" \
     # > )"
     # > _koopa_print "Homebrew (${duration} ms)"
+    return 0
+}
+
+_koopa_activate_homebrew_cask_gpg_suite() { # {{{1
+    # """
+    # Activate MacGPG (gpg-suite) Homebrew cask.
+    # @note Updated 2021-04-22.
+    # """
+    local prefix
+    prefix="$(_koopa_homebrew_prefix)"
+    _koopa_activate_prefix "${prefix}/MacGPG2"
     return 0
 }
 
