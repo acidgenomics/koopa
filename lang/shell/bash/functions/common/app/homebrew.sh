@@ -85,7 +85,7 @@ koopa::brew_reset_permissions() { # {{{1
     user="$(koopa::user)"
     group="$(koopa::admin_group)"
     prefix="$(koopa::homebrew_prefix)"
-    koopa::alert "Resetting '${prefix}' to '${user}:${group}'."
+    koopa::alert "Resetting ownership of '${prefix}' to '${user}:${group}'."
     sudo chown -Rh "${user}:${group}" "${prefix}/"*
     return 0
 }
