@@ -33,6 +33,13 @@ tap "homebrew/core"
 tap "mongodb/brew"
 tap "vitorgalvao/tiny-scripts"
 
+# Priority brews {{{1
+# ==============================================================================
+
+brew "git"
+# SVN is required for some font casks to install correctly.
+brew "subversion"
+
 # Casks {{{1
 # ==============================================================================
 
@@ -183,7 +190,6 @@ brew "fzf"
 brew "gawk"
 brew "gcc"
 brew "gdal"
-brew "git"
 brew "git-lfs"
 brew "gitui"
 brew "gnu-sed"
@@ -271,7 +277,6 @@ brew "sox"
 brew "sqlite"
 brew "starship"  # rust
 brew "stow"
-brew "subversion"
 brew "taglib"
 brew "tcl-tk"
 brew "tcsh"
