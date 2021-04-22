@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # """
 # https://www.passwordstore.org/
 # https://git.zx2c4.com/password-store/

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 koopa::assert_is_linux
 koopa::assert_is_installed svn
 # Subversion revision number (e.g. 80130).

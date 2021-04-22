@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # see also:
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
 

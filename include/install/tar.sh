@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 koopa::assert_is_installed gcc tar
 ## Note that xz file is also available.
 file="${name}-${version}.tar.gz"

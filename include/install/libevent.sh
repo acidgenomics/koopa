@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 if koopa::is_macos
 then
     koopa::assert_is_installed brew

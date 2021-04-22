@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 # https://gnupg.org/download/index.html
 
 case "$version" in

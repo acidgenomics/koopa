@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2154
-
+# 
 koopa::assert_is_linux
 name='openssl'
 file="${name}-${version}.tar.gz"
