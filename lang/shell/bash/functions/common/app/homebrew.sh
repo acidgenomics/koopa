@@ -90,19 +90,19 @@ koopa::brew_reset_permissions() { # {{{1
     return 0
 }
 
-# FIXME HOW TO GET OUTDATED FORMULA SPECIFICALLY??
-# FIXME DONT RUN THIS...CANT CUSTOMIZE...
-# FIXME ONLY RETURN BREWS HERE, NOT CASKS!!!
-
 koopa::brew_upgrade_brews() { # {{{1
     # """
     # Upgrade outdated Homebrew brews.
     # @note Updated 2021-04-22.
     # """
+    local brew brews
     readarray -t brews <<< "$(koopa::brew_outdated)"
+    koopa::is_array_non_empty "${brews[@]}" || return 0
+    koopa::alert_info "${#brews[@]} outdated brews detected."
+    koopa::print "${brews[@]}"
     for brew in "${brews[@]}"
     do
-        echo "$brew"  # FIXME
+        brew reinstall --force "$brew" || true
     done
     return 0
 }

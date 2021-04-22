@@ -48,33 +48,33 @@ koopa::macos_brew_upgrade_casks() { # {{{1
     # """
     # Upgrade Homebrew casks.
     # @note Updated 2021-04-22.
+    #
+    # Note that additional cask flags are set globally using the
+    # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
+    # function.
     # """
     local cask casks
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
     koopa::assert_is_installed brew
     readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
-    if koopa::is_array_non_empty "${casks[@]}"
-    then
-        koopa::alert_info "${#casks[@]} outdated casks detected."
-        koopa::print "${casks[@]}"
-        for cask in "${casks[@]}"
-        do
-            cask="$(koopa::print "${cask[@]}" | cut -d ' ' -f 1)"
-            case "$cask" in
-                docker)
-                    cask='homebrew/cask/docker'
-                    ;;
-                macvim)
-                    cask='homebrew/cask/macvim'
-                    ;;
-            esac
-            # Note that additional flags are set globally using the
-            # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew
-            # activation function.
-            brew reinstall --cask --force "$cask" || true
-            [[ "$cask" == 'r' ]] && koopa::update_r_config
-        done
-    fi
+    koopa::is_array_non_empty "${casks[@]}" || return 0
+    koopa::alert_info "${#casks[@]} outdated casks detected."
+    koopa::print "${casks[@]}"
+    for cask in "${casks[@]}"
+    do
+        # FIXME Is this step necessary? Can we take out?
+        cask="$(koopa::print "${cask[@]}" | cut -d ' ' -f 1)"
+        case "$cask" in
+            docker)
+                cask='homebrew/cask/docker'
+                ;;
+            macvim)
+                cask='homebrew/cask/macvim'
+                ;;
+        esac
+        brew reinstall --cask --force "$cask" || true
+        [[ "$cask" == 'r' ]] && koopa::update_r_config
+    done
     return 0
 }
