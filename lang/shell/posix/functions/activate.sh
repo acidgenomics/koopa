@@ -105,6 +105,7 @@ quote=01:warning=01;35"
     return 0
 }
 
+# FIXME THIS APPROACH IS FLAWED AND CAN LEAD TO ISSUES...
 _koopa_activate_gnu() { # {{{1
     # """
     # Activate GNU utilities.
