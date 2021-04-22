@@ -45,10 +45,17 @@ tap "vitorgalvao/tiny-scripts"
 # Virtualbox is useful but installs a lot of garbage into the system.
 # > cask "virtualbox"
 
+# /Applications {{{2
+# ------------------------------------------------------------------------------
+
 cask "1password"
-cask "adoptopenjdk"
 cask "airfoil"
 cask "alacritty"
+
+# Other locations {{{2
+# ------------------------------------------------------------------------------
+
+cask "adoptopenjdk"
 cask "alfred"
 cask "audio-hijack"
 cask "basictex"
@@ -97,7 +104,6 @@ cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
 cask "iterm2"
-cask "java"
 cask "julia"
 cask "keka"
 cask "libreoffice"
