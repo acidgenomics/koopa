@@ -5,7 +5,6 @@ koopa::add_conda_env_to_path() { # {{{1
     # Add conda environment(s) to PATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local bin_dir name
     koopa::assert_has_args "$#"
     koopa::assert_is_installed conda

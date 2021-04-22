@@ -183,7 +183,6 @@ koopa::is_bash_ok() { # {{{1
     # Older versions (< 4; e.g. shipping version on macOS) have issues with
     # 'read' that we have to handle with special care here.
     # """
-    # shellcheck disable=SC2039
     local major_version version
     koopa::is_installed bash || return 1
     version="$(koopa::get_version 'bash')"

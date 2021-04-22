@@ -12,7 +12,6 @@ __koopa_git_has_unstaged_changes() { # {{{1
     # - https://stackoverflow.com/questions/3878624/
     # - https://stackoverflow.com/questions/28296130/
     # """
-    # shellcheck disable=SC2039
     local x
     git update-index --refresh >/dev/null 2>&1
     x="$(git diff-index HEAD -- 2>/dev/null)"
@@ -27,7 +26,6 @@ __koopa_git_needs_pull_or_push() { # {{{1
     # This will return an expected fatal warning when no upstream exists.
     # We're handling this case by piping errors to '/dev/null'.
     # """
-    # shellcheck disable=SC2039
     local rev_1 rev_2
     rev_1="$(git rev-parse HEAD 2>/dev/null)"
     rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
@@ -53,7 +51,6 @@ _koopa_has_gnu() { # {{{1
     # Is a GNU program installed?
     # @note Updated 2020-07-20.
     # """
-    # shellcheck disable=SC2039
     local cmd str
     cmd="${1:?}"
     _koopa_is_installed "$cmd" || return 1
@@ -120,7 +117,6 @@ _koopa_is_alias() { # {{{1
     # @example
     # koopa::is_alias R
     # """
-    # shellcheck disable=SC2039
     local cmd str
     for cmd in "$@"
     do
@@ -264,7 +260,6 @@ _koopa_is_git_toplevel() { # {{{1
     # Is the working directory the top level of a git repository?
     # @note Updated 2020-07-04.
     # """
-    # shellcheck disable=SC2039
     local dir
     dir="${1:-.}"
     [ -e "${dir}/.git" ]
@@ -283,7 +278,6 @@ _koopa_is_installed() { # {{{1
     # Is the requested program name installed?
     # @note Updated 2020-07-05.
     # """
-    # shellcheck disable=SC2039
     local cmd
     for cmd in "$@"
     do
@@ -342,7 +336,6 @@ _koopa_is_os() { # {{{1
     #
     # This will match Debian but not Ubuntu for a Debian check.
     # """
-    # shellcheck disable=SC2039
     [ "$(_koopa_os_id)" = "${1:?}" ]
 }
 
@@ -353,7 +346,6 @@ _koopa_is_os_like() { # {{{1
     #
     # This will match Debian and Ubuntu for a Debian check.
     # """
-    # shellcheck disable=SC2039
     local file id
     id="${1:?}"
     _koopa_is_os "$id" && return 0
@@ -369,7 +361,6 @@ _koopa_is_os_version() { # {{{1
     # Is a specific OS version?
     # @note Updated 2020-08-06.
     # """
-    # shellcheck disable=SC2039
     local file version
     version="${1:?}"
     file='/etc/os-release'

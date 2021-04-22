@@ -110,9 +110,7 @@ koopa::install_app() { # {{{1
     koopa::install_start "$name_fancy" "$version" "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
     (
-        # shellcheck disable=SC2034
         gnu_mirror="$(koopa::gnu_mirror)"
-        # shellcheck disable=SC2034
         jobs="$(koopa::cpu_count)"
         koopa::cd "$tmp_dir"
         script="${script_prefix}/${script_name}.sh"

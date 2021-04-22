@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# shellcheck disable=SC2120
 koopa::macos_brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.

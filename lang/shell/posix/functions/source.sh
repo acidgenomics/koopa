@@ -5,7 +5,6 @@ _koopa_exec_dir() { # {{{1
     # Execute multiple shell scripts in a directory.
     # @note Updated 2020-07-23.
     # """
-    # shellcheck disable=SC2039
     local dir file
     dir="${1:?}"
     [ -d "$dir" ] || return 0
@@ -23,7 +22,6 @@ _koopa_source_dir() { # {{{1
     # Source multiple shell scripts in a directory.
     # @note Updated 2020-07-23.
     # """
-    # shellcheck disable=SC2039
     local dir file
     dir="${1:?}"
     [ -d "$dir" ] || return 0

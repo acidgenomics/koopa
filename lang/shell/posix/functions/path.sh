@@ -5,7 +5,6 @@ _koopa_add_to_fpath_end() { # {{{1
     # Add directory to end of FPATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     FPATH="${FPATH:-}"
     for dir in "$@"
@@ -23,7 +22,6 @@ _koopa_add_to_fpath_start() { # {{{1
     # Add directory to start of FPATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     FPATH="${FPATH:-}"
     for dir in "$@"
@@ -41,7 +39,6 @@ _koopa_add_to_manpath_end() { # {{{1
     # Add directory to end of MANPATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     MANPATH="${MANPATH:-}"
     for dir in "$@"
@@ -59,7 +56,6 @@ _koopa_add_to_manpath_start() { # {{{1
     # Add directory to start of MANPATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     MANPATH="${MANPATH:-}"
     for dir in "$@"
@@ -77,7 +73,6 @@ _koopa_add_to_path_end() { # {{{1
     # Add directory to end of PATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     PATH="${PATH:-}"
     for dir in "$@"
@@ -95,7 +90,6 @@ _koopa_add_to_path_start() { # {{{1
     # Add directory to start of PATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     PATH="${PATH:-}"
     for dir in "$@"
@@ -113,7 +107,6 @@ _koopa_add_to_pkg_config_path_end() { # {{{1
     # Add directory to end of PKG_CONFIG_PATH.
     # @note Updated 2020-07-19.
     # """
-    # shellcheck disable=SC2039
     local dir
     PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for dir in "$@"
@@ -131,7 +124,6 @@ _koopa_add_to_pkg_config_path_start() { # {{{1
     # Add directory to start of PKG_CONFIG_PATH.
     # @note Updated 2020-07-19.
     # """
-    # shellcheck disable=SC2039
     local dir
     PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for dir in "$@"
@@ -149,7 +141,6 @@ _koopa_force_add_to_fpath_end() { # {{{1
     # Force add to FPATH end.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     for dir in "$@"
     do
@@ -165,7 +156,6 @@ _koopa_force_add_to_fpath_start() { # {{{1
     # Force add to FPATH start.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     for dir in "$@"
     do
@@ -181,7 +171,6 @@ _koopa_force_add_to_manpath_end() { # {{{1
     # Force add to MANPATH end.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     for dir in "$@"
     do
@@ -197,7 +186,6 @@ _koopa_force_add_to_manpath_start() { # {{{1
     # Force add to MANPATH start.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     for dir in "$@"
     do
@@ -213,7 +201,6 @@ _koopa_force_add_to_path_end() { # {{{1
     # Force add to end of PATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     for dir in "$@"
     do
@@ -229,7 +216,6 @@ _koopa_force_add_to_path_start() { # {{{1
     # Force add to start of PATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     for dir in "$@"
     do
@@ -244,7 +230,6 @@ _koopa_force_add_to_pkg_config_path_end() { # {{{1
     # Force add to end of PKG_CONFIG_PATH.
     # @note Updated 2020-07-19.
     # """
-    # shellcheck disable=SC2039
     local dir
     for dir in "$@"
     do
@@ -260,7 +245,6 @@ _koopa_force_add_to_pkg_config_path_start() { # {{{1
     # Force add to start of PKG_CONFIG_PATH.
     # @note Updated 2020-07-19.
     # """
-    # shellcheck disable=SC2039
     local dir
     for dir in "$@"
     do
@@ -275,7 +259,6 @@ _koopa_remove_from_fpath() { # {{{1
     # Remove directory from FPATH.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local dir
     FPATH="${FPATH:-}"
     for dir in "$@"
@@ -291,7 +274,6 @@ _koopa_remove_from_manpath() { # {{{1
     # Remove directory from MANPATH.
     # @note Updated 2020-08-07.
     # """
-    # shellcheck disable=SC2039
     local dir
     MANPATH="${MANPATH:-}"
     for dir in "$@"
@@ -310,7 +292,6 @@ _koopa_remove_from_path() { # {{{1
     # Alternative non-POSIX approach that works on Bash and Zsh:
     # > PATH="${PATH//:$dir/}"
     # """
-    # shellcheck disable=SC2039
     local dir
     PATH="${PATH:-}"
     for dir in "$@"
@@ -326,7 +307,6 @@ _koopa_remove_from_pkg_config_path() { # {{{1
     # Remove directory from PKG_CONFIG_PATH.
     # @note Updated 2020-07-19.
     # """
-    # shellcheck disable=SC2039
     local dir
     PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for dir in "$@"
@@ -347,7 +327,6 @@ _koopa_which() { # {{{1
     # Example:
     # koopa::which bash
     # """
-    # shellcheck disable=SC2039
     local cmd
     for cmd in "$@"
     do

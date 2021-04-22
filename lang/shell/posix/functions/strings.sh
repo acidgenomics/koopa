@@ -5,7 +5,6 @@ _koopa_arch() { # {{{1
     # Platform architecture.
     # @note Updated 2021-03-25.
     # """
-    # shellcheck disable=SC2039
     local x
     x="$(uname -m)"
     _koopa_print "$x"
@@ -39,7 +38,6 @@ _koopa_gsub() { # {{{1
     # ## bb
     # ## cc
     # """
-    # shellcheck disable=SC2039
     local pattern replacement string
     _koopa_is_installed sed || return 1
     pattern="${1:?}"
@@ -82,7 +80,6 @@ _koopa_lowercase() { # {{{1
     # @seealso
     # https://stackoverflow.com/questions/2264428
     # """
-    # shellcheck disable=SC2039
     local string
     _koopa_is_installed tr || return 1
     for string in "$@"
@@ -123,7 +120,6 @@ _koopa_strip_left() { # {{{1
     # ## Quick Brown Fox
     # ## White Lady
     # """
-    # shellcheck disable=SC2039
     local pattern string
     pattern="${1:?}"
     shift 1
@@ -146,7 +142,6 @@ _koopa_strip_right() { # {{{1
     # ## The Quick Brown
     # ## Michael J.
     # """
-    # shellcheck disable=SC2039
     local pattern string
     pattern="${1:?}"
     shift 1
@@ -187,7 +182,6 @@ _koopa_sub() { # {{{1
     # ## aa
     # ## aa
     # """
-    # shellcheck disable=SC2039
     local pattern replacement string
     _koopa_is_installed sed || return 1
     pattern="${1:?}"
@@ -214,7 +208,6 @@ _koopa_trim_ws() { # {{{1
     # @examples
     # _koopa_trim_ws '  hello world  ' ' foo bar '
     # """
-    # shellcheck disable=SC2039
     local string
     for string in "$@"
     do

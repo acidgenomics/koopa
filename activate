@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC3028,SC3054
 
 _koopa_activate() { # {{{1
     # """

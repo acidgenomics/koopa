@@ -15,7 +15,6 @@ __koopa_ansi_escape() { # {{{1
     # ANSI escape codes.
     # @note Updated 2020-07-05.
     # """
-    # shellcheck disable=SC2039
     local escape
     case "${1:?}" in
         nocolor)
@@ -88,7 +87,6 @@ __koopa_h() { # {{{1
     # Koopa header.
     # @note Updated 2021-03-31.
     # """
-    # shellcheck disable=SC2039
     local emoji level prefix x
     level="${1:?}"
     shift 1
@@ -129,7 +127,6 @@ __koopa_msg() { # {{{1
     # Koopa standard message.
     # @note Updated 2021-03-31.
     # """
-    # shellcheck disable=SC2039
     local c1 c2 emoji nc prefix string x
     c1="$(__koopa_ansi_escape "${1:?}")"
     c2="$(__koopa_ansi_escape "${2:?}")"
@@ -169,7 +166,6 @@ __koopa_print_ansi() { # {{{1
     # - https://stackoverflow.com/questions/15736223
     # - https://bixense.com/clicolors/
     # """
-    # shellcheck disable=SC2039
     local color nocolor string
     color="$(__koopa_ansi_escape "${1:?}")"
     nocolor="$(__koopa_ansi_escape 'nocolor')"
@@ -186,7 +182,6 @@ __koopa_status() { # {{{1
     # Koopa status.
     # @note Updated 2020-07-20.
     # """
-    # shellcheck disable=SC2039
     local color nocolor label string x
     [ "$#" -ge 3 ] || return 1
     label="$(printf '%10s\n' "${1:?}")"
@@ -309,7 +304,6 @@ _koopa_invalid_arg() { # {{{1
     # Error on invalid argument.
     # @note Updated 2021-03-31.
     # """
-    # shellcheck disable=SC2039
     local arg x
     if [ "$#" -gt 0 ]
     then
@@ -344,7 +338,6 @@ _koopa_print() { # {{{1
     # - https://www.freecodecamp.org/news/
     #       how-print-newlines-command-line-output/
     # """
-    # shellcheck disable=SC2039
     local string
     if [ "$#" -eq 0 ]
     then
