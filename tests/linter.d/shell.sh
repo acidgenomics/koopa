@@ -43,6 +43,7 @@ test_all_coreutils() { # {{{1
 test_all_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
+    # shellcheck disable=SC2016,SC1112
     array=(
         # "=''"             # now allowed, for arrays.
         ' \|\| exit'        # wrap in function and return instead
@@ -189,6 +190,8 @@ test_zsh_illegal_strings() { # {{{1
     return 0
 }
 
+# FIXME NEED TO DEFINE WHICH OPTIONS TO IGNORE HERE
+# FIXME CAN USE THE '-e flag here correct'?
 test_shellcheck() { # {{{1
     # """
     # Run ShellCheck.
