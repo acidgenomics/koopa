@@ -58,6 +58,10 @@ brew "subversion"
 # Virtualbox is useful but installs a lot of garbage into the system.
 # > cask "virtualbox"
 
+# FIXME RETHINK THIS APPROACH.
+# > cask "adobe-acrobat-reader"
+# > cask "google-drive-file-stream"
+
 cask "1password"
 cask "adoptopenjdk"
 cask "airfoil"
@@ -128,6 +132,7 @@ cask "superduper"
 cask "textmate"
 cask "transmit"
 cask "tunnelblick"
+cask "virtualbox"
 cask "visual-studio-code"
 cask "vlc"
 cask "xquartz"
@@ -301,12 +306,16 @@ brew "zsh"
 # External brews {{{1
 # ==============================================================================
 
-brew "mongodb/brew/mongodb-community"
 # > brew "muesli/tap/duf"
+brew "mongodb/brew/mongodb-community"
 brew "vitorgalvao/tiny-scripts/cask-repair"
 
 # App Store {{{1
 # ==============================================================================
+
+# > mas "Keynote", id: 409183694
+# > mas "Numbers", id: 409203825
+# > mas "Pages", id: 409201541
 
 mas "AdGuard for Safari", id: 1440147259
 mas "Calca", id: 635758264
