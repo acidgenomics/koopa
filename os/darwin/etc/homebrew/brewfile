@@ -58,7 +58,6 @@ brew "subversion"
 # Virtualbox is useful but installs a lot of garbage into the system.
 # > cask "virtualbox"
 
-# FIXME RETHINK THIS APPROACH.
 # > cask "adobe-acrobat-reader"
 # > cask "google-drive-file-stream"
 
