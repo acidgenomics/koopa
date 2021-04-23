@@ -271,6 +271,9 @@ python="3.9.4"
 # https://cloud.r-project.org/src/base/R-4/
 r="4.0.5"
 
+# https://mac.r-project.org/
+r-cran-gfortran="8.2"
+
 # https://svn.r-project.org/R/
 # Updated 2021-04-20.
 # This is the SVN revision number.

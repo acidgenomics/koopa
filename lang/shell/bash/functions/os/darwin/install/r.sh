@@ -1,74 +1,19 @@
 #!/usr/bin/env bash
 
-# FIXME MAKE THIS MORE GENERAL AND JUST REQUIRE THE VERSION HERE...
-koopa::macos_install_r_cran_clang() { # {{{1
-    # """
-    # Install CRAN clang.
-    # @note Updated 2020-07-30.
-    # Only needed for R < 4.0.
-    # """
-    local file major_version name prefix reinstall tmp_dir url version
-    while (("$#"))
-    do
-        case "$1" in
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            --version=*)
-                version="${1#*=}"
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::assert_is_set version
-    koopa::assert_has_no_args "$#"
-    name='clang'
-    major_version="$(koopa::major_version "$version")"
-    prefix="/usr/local/${name}${major_version}"
-    [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
-    [[ -d "$prefix" ]] && return 0
-    koopa::h1 "Installing ${name} ${version} to '${prefix}'."
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        file="${name}-${version}.pkg"
-        url="https://cran.r-project.org/bin/macosx/tools/${file}"
-        koopa::download "$url"
-        sudo installer -pkg "$file" -target '/'
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    koopa::install_success "$name"
-    koopa::alert_restart
-    return 0
-}
-
-# FIXME MAKE THIS SUPPORTED FLAGS ABOVE.
-koopa::macos_install_r_cran_clang_7() { # {{{1
-    koopa::macos_install_r_cran_clang --version='7.0.0'
-    return 0
-}
-
-# FIXME MAKE THIS SUPPORTED FLAGS ABOVE.
-koopa::macos_install_r_cran_clang_8() { # {{{1
-    koopa::macos_install_r_cran_clang --version='8.0.0'
-    return 0
-}
-
-# FIXME MATCH THIS TO THE R VERSION INSTEAD.
-# FIXME NEED TO RETHINK THE VERSION HANDLING HERE.
 koopa::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
     # @note Updated 2021-04-22.
     # @seealso
-    # - https://github.com/fxcoudert/gfortran-for-macOS
+    # - https://mac.r-project.org/tools/
+    # - https://github.com/fxcoudert/gfortran-for-macOS/
     # """
-    local file name pkg prefix reinstall stem tmp_dir url version
+    local file name os_codename pkg prefix reinstall stem tmp_dir url version
+    # This is compatible with Catalina and Big Sur for 8.2. May need to rework
+    # the variable handling for this in a future update.
+    os_codename='Mojave'
     reinstall=0
+    version="$(koopa::variable 'r-cran-gfortran')"
     while (("$#"))
     do
         case "$1" in
@@ -89,14 +34,16 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     name='gfortran'
     prefix="/usr/local/${name}"
     [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
-    [[ -d "$prefix" ]] && return 0
-    # FIXME THIS IS NOW RETURNING AN UNBOUND VARIABLE.
-    koopa::h1 "Installing ${name} ${version} to '${prefix}'."
+    if [[ -d "$prefix" ]]
+    then
+        koopa::alert_note "${name} already installed at '${prefix}'."
+        return 0
+    fi
+    koopa::install_start "$name" "$version" "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        # This is compatible with Catalina.
-        stem="${name}-${version}-Mojave"
+        stem="${name}-${version}-${os_codename}"
         file="${stem}.dmg"
         url="https://mac.r-project.org/tools/${file}"
         koopa::download "$url"
@@ -106,19 +53,8 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
         hdiutil unmount "/Volumes/${stem}"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
-    koopa::install_success "$name"
+    koopa::install_success "$name" "$prefix"
     koopa::alert_restart
-    return 0
-}
-
-# FIXME TAKE THESE OUT AND MATCH TO THE R VERSION INSTEAD...
-koopa::macos_install_r_cran_gfortran_6() { # {{{1
-    koopa::macos_install_r_cran_gfortran --version='6.1'
-    return 0
-}
-
-koopa::macos_install_r_cran_gfortran_8() { # {{{1
-    koopa::macos_install_r_cran_gfortran --version='8.2'
     return 0
 }
 
