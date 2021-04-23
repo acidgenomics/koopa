@@ -1,9 +1,10 @@
 #!/bin/sh
+# shellcheck disable=SC2154,SC3003,SC3054,SC3060
 
 _koopa_prompt() { # {{{1
     # """
     # Customize the interactive prompt.
-    # @note Updated 2020-11-10.
+    # @note Updated 2021-04-22.
     #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
@@ -74,11 +75,11 @@ _koopa_prompt() { # {{{1
             ;;
         zsh)
             conda_color="${fg[yellow]}"
-                    git_color="${fg[green]}"
-                    prompt_color="${fg[magenta]}"
-                    user_color="${fg[cyan]}"
-                    venv_color="${fg[yellow]}"
-                    wd_color="${fg[blue]}"
+            git_color="${fg[green]}"
+            prompt_color="${fg[magenta]}"
+            user_color="${fg[cyan]}"
+            venv_color="${fg[yellow]}"
+            wd_color="${fg[blue]}"
             conda="%F%{${conda_color}%}${conda}%f"
             git="%F%{${git_color}%}${git}%f"
             prompt="%F%{${prompt_color}%}${prompt}%f"
