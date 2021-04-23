@@ -12,19 +12,19 @@ _koopa_activate() { # {{{1
             return 0
             ;;
     esac
-    _koopa_preflight_checks
-    _koopa_export_user
-    _koopa_activate_export_force
-    _koopa_activate_skip_check
-    _koopa_activate_export_subshell
-    _koopa_activate_export_minimal
-    _koopa_activate_export_test
+    _koopa_preflight_checks || return 1
+    _koopa_export_user || return 1
+    _koopa_activate_export_force || return 1
+    _koopa_activate_skip_check || return 1
+    _koopa_activate_export_subshell || return 1
+    _koopa_activate_export_minimal || return 1
+    _koopa_activate_export_test || return 1
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
-        _koopa_print 'Test mode enabled.'
+        _koopa_print '[koopa] Test mode enabled.'
         set -o errexit
         set -o nounset
-        set -o xtrace
+        # > set -o xtrace
         if [ "${KOOPA_SHELL:?}" = 'bash' ]
         then
             set -o errtrace
@@ -32,76 +32,76 @@ _koopa_activate() { # {{{1
         fi
         export KOOPA_MINIMAL=0
     fi
-    _koopa_activate_export_koopa_prefix
-    _koopa_activate_duration_start
+    _koopa_activate_export_koopa_prefix || return 1
+    _koopa_activate_duration_start || return 1
     # shellcheck source=/dev/null
-    KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)"
-    _koopa_activate_xdg
-    _koopa_activate_standard_paths
-    _koopa_activate_pkg_config
-    _koopa_activate_export_opt_prefix
-    _koopa_add_config_link "$(_koopa_prefix)" 'home'
-    _koopa_add_config_link "$(_koopa_prefix)/activate"
-    _koopa_add_config_link "$(_koopa_dotfiles_prefix)"
-    _koopa_export_cpu_count
-    _koopa_export_editor
-    _koopa_export_git
-    _koopa_export_gnupg
-    _koopa_export_history
-    _koopa_export_hostname
-    _koopa_export_lesspipe
-    _koopa_export_pager
-    _koopa_export_proj_lib
-    _koopa_export_python
-    _koopa_export_shell
-    _koopa_export_tmpdir
-    _koopa_export_today
-    _koopa_export_user
+    KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
+    _koopa_activate_xdg || return 1
+    _koopa_activate_standard_paths || return 1
+    _koopa_activate_pkg_config || return 1
+    _koopa_activate_export_opt_prefix || return 1
+    _koopa_add_config_link "$(_koopa_prefix)" 'home' || return 1
+    _koopa_add_config_link "$(_koopa_prefix)/activate" || return 1
+    _koopa_add_config_link "$(_koopa_dotfiles_prefix)" || return 1
+    _koopa_export_cpu_count || return 1
+    _koopa_export_editor || return 1
+    _koopa_export_git || return 1
+    _koopa_export_gnupg || return 1
+    _koopa_export_history || return 1
+    _koopa_export_hostname || return 1
+    _koopa_export_lesspipe || return 1
+    _koopa_export_pager || return 1
+    _koopa_export_proj_lib || return 1
+    _koopa_export_python || return 1
+    _koopa_export_shell || return 1
+    _koopa_export_tmpdir || return 1
+    _koopa_export_today || return 1
+    _koopa_export_user || return 1
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
         # Run OS-specific activation steps at the beginning here.
         if _koopa_is_linux
         then
-            _koopa_activate_bcbio
+            _koopa_activate_bcbio || return 1
         elif _koopa_is_macos
         then
-            _koopa_activate_homebrew_cask_gpg_suite
-            _koopa_activate_homebrew_cask_r
-            _koopa_activate_macos_python
-            _koopa_activate_visual_studio_code
+            _koopa_activate_homebrew_cask_gpg_suite || return 1
+            _koopa_activate_homebrew_cask_r || return 1
+            _koopa_activate_macos_python || return 1
+            _koopa_activate_visual_studio_code || return 1
         fi
-        _koopa_activate_homebrew
-        _koopa_activate_gnu
-        _koopa_activate_dircolors
-        _koopa_activate_gcc_colors
-        _koopa_activate_emacs
-        _koopa_activate_go
-        _koopa_activate_llvm
-        _koopa_activate_openjdk
-        _koopa_activate_aspera
-        _koopa_activate_nextflow
+        _koopa_activate_homebrew || return 1
+        _koopa_activate_gnu || return 1
+        _koopa_activate_dircolors || return 1
+        _koopa_activate_gcc_colors || return 1
+        _koopa_activate_emacs || return 1
+        _koopa_activate_go || return 1
+        _koopa_activate_llvm || return 1
+        _koopa_activate_openjdk || return 1
+        _koopa_activate_aspera || return 1
+        _koopa_activate_nextflow || return 1
         # Perl ------------------------------------------------------------ {{{2
-        # > _koopa_activate_ensembl_perl_api
-        # > _koopa_activate_perlbrew
+        # > _koopa_activate_ensembl_perl_api || return 1
+        # > _koopa_activate_perlbrew || return 1
         # Ruby ------------------------------------------------------------ {{{2
-        _koopa_activate_ruby
-        # > _koopa_activate_rbenv
+        _koopa_activate_ruby || return 1
+        # > _koopa_activate_rbenv || return 1
         # Rust ------------------------------------------------------------ {{{2
-        _koopa_activate_rust
+        _koopa_activate_rust || return 1
         # Now can activate useful Rust packages.
-        _koopa_activate_broot
-        _koopa_activate_fzf
-        _koopa_activate_zoxide
+        _koopa_activate_broot || return 1
+        _koopa_activate_fzf || return 1
+        _koopa_activate_zoxide || return 1
         # Python ---------------------------------------------------------- {{{2
-        _koopa_activate_python_site_packages
-        _koopa_activate_python_startup
-        # > _koopa_activate_pipx
-        # > _koopa_activate_pyenv
-        # > _koopa_activate_venv
-        _koopa_activate_conda
+        _koopa_activate_python_site_packages || return 1
+        _koopa_activate_python_startup || return 1
+        # > _koopa_activate_pipx || return 1
+        # > _koopa_activate_pyenv || return 1
+        # > _koopa_activate_venv || return 1
+        _koopa_activate_conda || return 1
     fi
-    _koopa_activate_koopa_paths
-    _koopa_activate_local_paths
+    _koopa_activate_koopa_paths || return 1
+    _koopa_activate_local_paths || return 1
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
         case "${KOOPA_SHELL:?}" in
@@ -109,22 +109,22 @@ _koopa_activate() { # {{{1
                 "_koopa_activate_${KOOPA_SHELL}_extras"
                 ;;
         esac
-        _koopa_is_macos && _koopa_activate_macos_extras
-        _koopa_activate_completion
-        _koopa_activate_aliases
-        _koopa_activate_secrets
-        _koopa_activate_ssh_key
+        _koopa_is_macos && _koopa_activate_macos_extras || return 1
+        _koopa_activate_completion || return 1
+        _koopa_activate_aliases || return 1
+        _koopa_activate_secrets || return 1
+        _koopa_activate_ssh_key || return 1
         if ! _koopa_is_subshell
         then
-            _koopa_today_bucket
-            _koopa_tmux_sessions
+            _koopa_today_bucket || return 1
+            _koopa_tmux_sessions || return 1
         fi
     fi
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
         set +o errexit
         set +o nounset
-        set +o xtrace
+        # > set +o xtrace
         if [ "${KOOPA_SHELL:?}" = 'bash' ]
         then
             set +o errtrace
@@ -142,7 +142,7 @@ _koopa_activate() { # {{{1
             _koopa_alert_info 'Locale'
             locale
         fi
-        _koopa_activate_duration_stop
+        _koopa_activate_duration_stop || return 1
         if [ -n "${KOOPA_DURATION:-}" ]
         then
             _koopa_dl 'duration' "${KOOPA_DURATION:?} ms"
@@ -251,7 +251,7 @@ _koopa_activate_export_minimal() { # {{{1
     unset -v minimal
     if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
     then
-        if _koopa_print "${KOOPA_USERS_MINIMAL:?}" | grep -Eq "\b${USER:?}\b"
+        if _koopa_str_match_regex "${KOOPA_USERS_MINIMAL:?}" "\b${USER:?}\b"
         then
             KOOPA_MINIMAL=1
         fi
@@ -429,11 +429,13 @@ _koopa_is_installed() { # {{{1
 }
 
 _koopa_is_interactive() { # {{{1
-    _koopa_print "$-" | grep -q 'i'
+    _koopa_str_match_fixed "$-" 'i'
 }
 
 _koopa_is_koopa_active() { # {{{1
-    type '_koopa_prefix' 2>/dev/null | grep -q 'function'
+    local x
+    x="$(type '_koopa_prefix' 2>/dev/null)"
+   _koopa_str_match_fixed "$x" 'function'
 }
 
 _koopa_is_linux() { # {{{1
@@ -449,18 +451,33 @@ _koopa_is_subshell() { # {{{1
 }
 
 _koopa_is_user_named_admin() { # {{{1
-    _koopa_print "${USER:?}" | grep -Eq '^admin'
+    _koopa_str_match_regex "${USER:?}" '^admin'
 }
 
 _koopa_is_user_skip() { # {{{1
     [ -z "${KOOPA_USERS_SKIP:-}" ] && return 1
-    _koopa_print "${KOOPA_USERS_SKIP:?}" | grep -Eq "\b${USER:?}\b"
+    _koopa_str_match_regex "${KOOPA_USERS_SKIP:?}" "\b${USER:?}\b"
 }
 
 _koopa_preflight_checks() { # {{{1
     _koopa_preflight_os_check || return 1
     _koopa_preflight_shell_check || return 1
     _koopa_preflight_zsh_check || return 1
+    _koopa_preflight_coreutils_check \
+        'basename' \
+        'dirname' \
+        'grep' \
+        || return 1
+    return 0
+}
+
+_koopa_preflight_coreutils_check() { # {{{1
+    [ "$#" -gt 0 ] || return 1
+    if ! _koopa_is_installed "$@"
+    then
+        _koopa_warning "Not all required programs are installed: ${*}."
+        return 1
+    fi
     return 0
 }
 
@@ -499,7 +516,7 @@ _koopa_preflight_shell_check() { # {{{1
             if _koopa_is_interactive
             then
                 >&2 cat << END
-WARNING: Failed to activate koopa in the current shell.
+[koopa] WARNING: Failed to activate koopa in the current shell.
 
 Supported POSIX shells: Bash, Dash, Zsh.
 
@@ -580,6 +597,13 @@ _koopa_realpath() { # {{{1
     return 0
 }
 
+_koopa_str_match_fixed() { # {{{1
+    local string pattern
+    string="${1:?}"
+    pattern="${2:?}"
+    _koopa_print "$string" | grep -q "$pattern"
+}
+
 _koopa_str_match_regex() { # {{{1
     local string pattern
     string="${1:?}"
@@ -592,7 +616,7 @@ _koopa_warning() { # {{{1
     [ "$#" -gt 0 ] || return 1
     for string in "$@"
     do
-        printf 'WARNING: %b\n' "$string" >&2
+        printf '%s: %b\n' '[koopa] WARNING' "$string" >&2
     done
     return 0
 }
