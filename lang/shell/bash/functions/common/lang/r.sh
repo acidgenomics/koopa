@@ -397,8 +397,6 @@ koopa::update_r_config() { # {{{1
     local etc_prefix make_prefix pkg_index r r_prefix
     koopa::assert_has_args_le "$#" 1
     r="${1:-R}"
-    # FIXME THIS STEP IS ERRORING OUT NOW...
-    # FIXME NEED TO RESOLVE THIS FUNCTION IN GENERAL ARGH...
     r="$(koopa::which_realpath "$r")"
     koopa::assert_is_installed "$r"
     r_prefix="$(koopa::r_prefix "$r")"

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2119
 
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
@@ -190,19 +191,20 @@ test_zsh_illegal_strings() { # {{{1
     return 0
 }
 
-# FIXME NEED TO DEFINE WHICH OPTIONS TO IGNORE HERE
-# FIXME CAN USE THE '-e flag here correct'?
 test_shellcheck() { # {{{1
     # """
     # Run ShellCheck.
-    # @note Updated 2020-07-08.
+    # @note Updated 2021-04-22.
     # Only Bash and POSIX (but not Zsh) are supported.
     # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed shellcheck
     readarray -t files <<< \
         "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh)$')"
-    shellcheck -x "${files[@]}"
+    shellcheck \
+        --exclude='SC2119,SC3043' \
+        --external-sources \
+        "${files[@]}"
     koopa::status_ok "shell | shellcheck [${#files[@]}]"
     return 0
 }
