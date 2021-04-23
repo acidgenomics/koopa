@@ -707,7 +707,6 @@ _koopa_activate_prefix() { # {{{1
     [ "$#" -gt 0 ] || return 1
     for prefix in "$@"
     do
-        echo "$prefix"
         [ -d "$prefix" ] || continue
         _koopa_add_to_path_start \
             "${prefix}/bin" \
