@@ -54,14 +54,23 @@ _koopa_parent_dir() { # {{{1
     return 0
 }
 
+# FIXME USE CD APPROACH.
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-04-23.
     #
-    # Note that 'readlink -f' doesn't work on macOS.
+    # Note that 'readlink -f' only works with GNU coreutils but not BSD
+    # (i.e. macOS) variant.
+    #
+    # Python option:
+    # > x="(python -c "import os; print(os.path.realpath('$1'))")"
+    #
+    # Perl option:
+    # > x="$(perl -MCwd -e 'print Cwd::abs_path shift' "$1")"
     #
     # @seealso
+    # - https://stackoverflow.com/questions/3572030/
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
     local arg x
@@ -69,21 +78,22 @@ _koopa_realpath() { # {{{1
     if _koopa_is_installed realpath
     then
         x="$(realpath "$@")"
-        _koopa_print "$x"
+    elif _koopa_is_installed grealpath
+    then
+        x="$(grealpath "$@")"
     elif _koopa_has_gnu readlink
     then
         x="$(readlink -f "$@")"
-        _koopa_print "$x"
-    elif _koopa_is_installed perl
-    then
+    else
         for arg in "$@"
         do
-            x="$(perl -MCwd -e 'print Cwd::abs_path shift' "$arg")"
+            x="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
             _koopa_print "$x"
         done
-    else
-        return 1
+        return 0
     fi
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 

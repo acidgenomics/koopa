@@ -21,7 +21,7 @@ _koopa_activate() { # {{{1
     _koopa_activate_export_test
     if [ "${KOOPA_TEST:?}" -eq 1 ]
     then
-        printf '%s\n' 'Test mode enabled.'
+        _koopa_print 'Test mode enabled.'
         set -o errexit
         set -o nounset
         set -o xtrace
@@ -251,7 +251,7 @@ _koopa_activate_export_minimal() { # {{{1
     unset -v minimal
     if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
     then
-        if printf '%s\n' "${KOOPA_USERS_MINIMAL:?}" | grep -Eq "\b${USER:?}\b"
+        if _koopa_print "${KOOPA_USERS_MINIMAL:?}" | grep -Eq "\b${USER:?}\b"
         then
             KOOPA_MINIMAL=1
         fi
@@ -281,7 +281,7 @@ _koopa_activate_export_koopa_prefix() { # {{{1
     esac
     if [ ! -x "$KOOPA_ACTIVATE_SCRIPT" ]
     then
-        printf 'ERROR: Failed locate koopa activate script.\n' >&2
+        _koopa_warning 'Failed to locate koopa activate script.'
         return 1
     fi
     # Note that running realpath on the file instead of the directory will
@@ -321,15 +321,15 @@ _koopa_activate_export_test() { # {{{1
 }
 
 _koopa_activate_header() { # {{{1
-    local header
-    # Load shell header file, which will source required functions.
+    local x
     if [ -f "${KOOPA_PREFIX:?}/lang/shell/${KOOPA_SHELL:?}/include/header.sh" ]
     then
-        header="${KOOPA_PREFIX:?}/lang/shell/${KOOPA_SHELL:?}/include/header.sh"
+        x="${KOOPA_PREFIX:?}/lang/shell/${KOOPA_SHELL:?}/include/header.sh"
     else
-        header="${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
+        x="${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     fi
-    printf '%s\n' "$header"
+    [ -f "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
@@ -345,7 +345,7 @@ _koopa_activate_skip_check() { # {{{1
 
 _koopa_activate_source_bash() { # {{{1
     # shellcheck disable=SC3028,SC3054
-    printf '%s\n' "${BASH_SOURCE[0]}"
+    _koopa_print "${BASH_SOURCE[0]}"
     return 0
 }
 
@@ -353,18 +353,19 @@ _koopa_activate_source_posix() { # {{{1
     # POSIX doesn't support file path resolution of sourced dot scripts.
     if [ ! -d "${KOOPA_PREFIX:?}" ] && _koopa_is_interactive
     then
-        printf 'ERROR: Failed to locate koopa activation script.\n' >&2
-        printf 'Required KOOPA_PREFIX variable is unset.\n' >&2
+        _koopa_warning \
+            'Failed to locate koopa activation script.' \
+            "Required 'KOOPA_PREFIX' variable is unset."
         return 1
     fi
-    printf '%s\n' "${KOOPA_PREFIX:?}/activate"
+    _koopa_print "${KOOPA_PREFIX:?}/activate"
     return 0
 }
 
 _koopa_activate_source_zsh() { # {{{1
     # Use '%x' not '%N' when called inside function.
     # https://stackoverflow.com/a/23259585/3911732
-    printf '%s\n' "${(%):-%x}"
+    _koopa_print "${(%):-%x}"
     return 0
 }
 
@@ -409,7 +410,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2021-02-15.
+    Updated 2021-04-23.
 END
 }
 
@@ -428,7 +429,7 @@ _koopa_is_installed() { # {{{1
 }
 
 _koopa_is_interactive() { # {{{1
-    printf '%s\n' "$-" | grep -q 'i'
+    _koopa_print "$-" | grep -q 'i'
 }
 
 _koopa_is_koopa_active() { # {{{1
@@ -448,12 +449,12 @@ _koopa_is_subshell() { # {{{1
 }
 
 _koopa_is_user_named_admin() { # {{{1
-    printf '%s\n' "${USER:?}" | grep -Eq '^admin'
+    _koopa_print "${USER:?}" | grep -Eq '^admin'
 }
 
 _koopa_is_user_skip() { # {{{1
     [ -z "${KOOPA_USERS_SKIP:-}" ] && return 1
-    printf '%s\n' "${KOOPA_USERS_SKIP:?}" | grep -Eq "\b${USER:?}\b"
+    _koopa_print "${KOOPA_USERS_SKIP:?}" | grep -Eq "\b${USER:?}\b"
 }
 
 _koopa_preflight_checks() { # {{{1
@@ -470,7 +471,7 @@ _koopa_preflight_os_check() { # {{{1
         Linux)
             ;;
         *)
-            printf 'ERROR: Unsupported operating system.\n' >&2
+            _koopa_warning 'Unsupported operating system.'
             return 1
             ;;
     esac
@@ -498,7 +499,7 @@ _koopa_preflight_shell_check() { # {{{1
             if _koopa_is_interactive
             then
                 >&2 cat << END
-ERROR: Failed to activate koopa in the current shell.
+WARNING: Failed to activate koopa in the current shell.
 
 Supported POSIX shells: Bash, Dash, Zsh.
 
@@ -544,20 +545,55 @@ _koopa_preflight_zsh_check() { # {{{1
     return 0
 }
 
+_koopa_print() { # {{{1
+    local string
+    [ "$#" -gt 0 ] || return 1
+    for string in "$@"
+    do
+        printf '%b\n' "$string"
+    done
+    return 0
+}
+
 _koopa_realpath() { # {{{1
-    local x
-    [ "$#" -eq 1 ] || return 1
+    local arg x
+    [ "$#" -gt 0 ] || return 1
     if _koopa_is_installed realpath
     then
-        x="$(realpath "$1")"
-    elif [ "$(uname -s)" = 'Darwin' ]
+        x="$(realpath "$@")"
+    elif _koopa_is_installed grealpath
     then
-        x="$(perl -MCwd -e 'print Cwd::abs_path shift' "$1")"
+        x="$(grealpath "$@")"
+    elif _koopa_is_macos
+    then
+        for arg in "$@"
+        do
+            x="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
+            _koopa_print "$x"
+        done
+        return 0
     else
-        x="$(readlink -f "$1")"
+        x="$(readlink -f "$@")"
     fi
     [ -n "$x" ] || return 1
-    printf '%s\n' "$x"
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_str_match_regex() { # {{{1
+    local string pattern
+    string="${1:?}"
+    pattern="${2:?}"
+    _koopa_print "$string" | grep -Eq "$pattern"
+}
+
+_koopa_warning() { # {{{1
+    local string
+    [ "$#" -gt 0 ] || return 1
+    for string in "$@"
+    do
+        printf 'WARNING: %b\n' "$string" >&2
+    done
     return 0
 }
 
