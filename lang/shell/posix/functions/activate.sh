@@ -25,7 +25,7 @@ _koopa_activate_bcbio() { # {{{1
     _koopa_is_installed bcbio_nextgen.py && return 0
     prefix="$(_koopa_bcbio_tools_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_end "${prefix}/bin"
+    _koopa_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH
     return 0
 }
@@ -328,8 +328,8 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     do
         prefix="${homebrew_prefix}/opt/${name}/libexec"
         [ -d "$prefix" ] || continue
-        _koopa_force_add_to_path_start "${prefix}/gnubin"
-        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+        _koopa_add_to_path_start "${prefix}/gnubin"
+        _koopa_add_to_manpath_start "${prefix}/gnuman"
     done
     return 0
 }
@@ -528,12 +528,12 @@ _koopa_activate_local_etc_profile() { # {{{1
 _koopa_activate_local_paths() { # {{{1
     # """
     # Activate local user paths.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-04-23.
     # """
-    _koopa_force_add_to_path_start \
+    _koopa_add_to_path_start \
         "${HOME}/bin" \
         "${HOME}/.local/bin"
-    _koopa_force_add_to_manpath_start \
+    _koopa_add_to_manpath_start \
         "${HOME}/.local/share/man"
     return 0
 }
@@ -632,7 +632,7 @@ _koopa_activate_perlbrew() { # {{{1
 _koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
-    # @note Updated 2021-01-01.
+    # @note Updated 2021-04-23.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
@@ -642,7 +642,7 @@ _koopa_activate_pipx() { # {{{1
     prefix="$(_koopa_pipx_prefix)"
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
-    _koopa_force_add_to_path_start "$PIPX_BIN_DIR"
+    _koopa_add_to_path_start "$PIPX_BIN_DIR"
     export PIPX_HOME PIPX_BIN_DIR
     return 0
 }
@@ -676,14 +676,14 @@ _koopa_activate_pkg_config() { # {{{1
     then
         PKG_CONFIG_PATH="$("$sys_pkg_config" --variable pc_path pkg-config)"
     fi
-    _koopa_force_add_to_pkg_config_path_start \
+    _koopa_add_to_pkg_config_path_start \
         "${make_prefix}/share/pkgconfig" \
         "${make_prefix}/lib/pkgconfig" \
         "${make_prefix}/lib64/pkgconfig"
     if _koopa_is_linux
     then
         arch="$(_koopa_arch)"
-        _koopa_force_add_to_pkg_config_path_start \
+        _koopa_add_to_pkg_config_path_start \
             "${make_prefix}/lib/${arch}-linux-gnu/pkgconfig"
     fi
     if _koopa_is_macos && _koopa_is_installed brew
@@ -692,7 +692,7 @@ _koopa_activate_pkg_config() { # {{{1
         # This is useful for getting Ruby jekyll gem (requires ffi) to install.
         # Alternatively, this works but is annoying:
         # > gem install ffi -- --disable-system-libffi
-        _koopa_force_add_to_pkg_config_path_start \
+        _koopa_add_to_pkg_config_path_start \
             "${homebrew_prefix}/opt/libffi/lib/pkgconfig"
     fi
     return 0
@@ -701,18 +701,20 @@ _koopa_activate_pkg_config() { # {{{1
 _koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
-    # @note Updated 2020-11-16.
+    # @note Updated 2021-04-23.
     # """
     local prefix
+    [ "$#" -gt 0 ] || return 1
     for prefix in "$@"
     do
+        echo "$prefix"
         [ -d "$prefix" ] || continue
-        _koopa_force_add_to_path_start \
+        _koopa_add_to_path_start \
             "${prefix}/bin" \
             "${prefix}/sbin"
-        _koopa_force_add_to_manpath_start \
-            "${prefix}/man" \
-            "${prefix}/share/man"
+        _koopa_add_to_manpath_start \
+            "${prefix}/man"
+            # > "${prefix}/share/man"
     done
     return 0
 }
@@ -880,7 +882,7 @@ _koopa_activate_ssh_key() { # {{{1
 _koopa_activate_standard_paths() { # {{{1
     # """
     # Activate standard paths.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-04-23.
     #
     # Note that here we're making sure local binaries are included.
     # Inspect '/etc/profile' if system PATH appears misconfigured.
@@ -890,17 +892,11 @@ _koopa_activate_standard_paths() { # {{{1
     # """
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
-    _koopa_add_to_path_end \
-        '/usr/sbin' \
-        '/usr/bin' \
-        '/sbin' \
-        '/bin'
-    _koopa_add_to_manpath_end \
-        '/usr/share/man'
-    _koopa_force_add_to_path_start \
+    _koopa_add_to_path_start \
         "${make_prefix}/bin" \
-        "${make_prefix}/sbin" \
-    _koopa_force_add_to_manpath_start \
+        "${make_prefix}/sbin"
+    _koopa_add_to_manpath_start \
+        "${make_prefix}/man" \
         "${make_prefix}/share/man"
     return 0
 }
@@ -946,7 +942,7 @@ _koopa_activate_visual_studio_code() { # {{{1
     local prefix
     _koopa_is_macos || return 0
     prefix='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
-    _koopa_force_add_to_path_start "$prefix"
+    _koopa_add_to_path_start "$prefix"
     return 0
 }
 
