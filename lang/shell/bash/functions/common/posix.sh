@@ -180,30 +180,6 @@ koopa::expr() { # {{{1
     _koopa_expr "$@"
 }
 
-koopa::force_add_to_manpath_end() { # {{{1
-    _koopa_force_add_to_manpath_end "$@"
-}
-
-koopa::force_add_to_manpath_start() { # {{{1
-    _koopa_force_add_to_manpath_start "$@"
-}
-
-koopa::force_add_to_path_end() { # {{{1
-    _koopa_force_add_to_path_end "$@"
-}
-
-koopa::force_add_to_path_start() { # {{{1
-    _koopa_force_add_to_path_start "$@"
-}
-
-koopa::force_add_to_pkg_config_path_end() { # {{{1
-    _koopa_force_add_to_pkg_config_path_end "$@"
-}
-
-koopa::force_add_to_pkg_config_path_start() { # {{{1
-    _koopa_force_add_to_pkg_config_path_start "$@"
-}
-
 koopa::fzf_prefix() { # {{{1
     _koopa_fzf_prefix "$@"
 }
