@@ -32,9 +32,7 @@ _koopa_activate() { # {{{1
         fi
         export KOOPA_MINIMAL=0
     fi
-    # FIXME THIS STEP IS ERRORING OUT FOR EMACS TERMINAL.
-    #       SEEMS TO BE ESSENTIAL FOR OTHER ACTIVATION STEPS TO WORK THOUGH...
-    _koopa_activate_export_prefix
+    _koopa_activate_export_koopa_prefix
     _koopa_activate_duration_start
     # shellcheck source=/dev/null
     KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)"
@@ -269,9 +267,7 @@ _koopa_activate_export_opt_prefix() { # {{{1
     return 0
 }
 
-# FIXME This step is messing up inside Emacs GUI terminal...
-_koopa_activate_export_prefix() { # {{{1
-    echo "FIXME 1"
+_koopa_activate_export_koopa_prefix() { # {{{1
     case "${KOOPA_SHELL:?}" in
         bash)
             KOOPA_ACTIVATE_SCRIPT="$(_koopa_activate_source_bash)"
@@ -283,7 +279,6 @@ _koopa_activate_export_prefix() { # {{{1
             KOOPA_ACTIVATE_SCRIPT="$(_koopa_activate_source_posix)"
             ;;
     esac
-    echo "FIXME 2"
     if [ ! -x "$KOOPA_ACTIVATE_SCRIPT" ]
     then
         printf 'ERROR: Failed locate koopa activate script.\n' >&2
@@ -295,10 +290,8 @@ _koopa_activate_export_prefix() { # {{{1
     then
         KOOPA_ACTIVATE_SCRIPT="$(_koopa_realpath "$KOOPA_ACTIVATE_SCRIPT")"
     fi
-    echo "FIXME 3"
     KOOPA_PREFIX="$(_koopa_realpath "$(dirname "$KOOPA_ACTIVATE_SCRIPT")")"
     export KOOPA_ACTIVATE_SCRIPT KOOPA_PREFIX
-    echo "FIXME 4"
     return 0
 }
 
@@ -552,12 +545,20 @@ _koopa_preflight_zsh_check() { # {{{1
 }
 
 _koopa_realpath() { # {{{1
-    if [ "$(uname -s)" = 'Darwin' ]
+    local x
+    [ "$#" -eq 1 ] || return 1
+    if _koopa_is_installed realpath
     then
-        perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+        x="$(realpath "$1")"
+    elif [ "$(uname -s)" = 'Darwin' ]
+    then
+        x="$(perl -MCwd -e 'print Cwd::abs_path shift' "$1")"
     else
-        readlink -f "$@"
+        x="$(readlink -f "$1")"
     fi
+    [ -n "$x" ] || return 1
+    printf '%s\n' "$x"
+    return 0
 }
 
 _koopa_activate "$@"
