@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME MAKE THIS MORE GENERAL AND JUST REQUIRE THE VERSION HERE...
 koopa::macos_install_r_cran_clang() { # {{{1
     # """
     # Install CRAN clang.
@@ -23,6 +24,7 @@ koopa::macos_install_r_cran_clang() { # {{{1
                 ;;
         esac
     done
+    koopa::assert_is_set version
     koopa::assert_has_no_args "$#"
     name='clang'
     major_version="$(koopa::major_version "$version")"
@@ -44,20 +46,24 @@ koopa::macos_install_r_cran_clang() { # {{{1
     return 0
 }
 
+# FIXME MAKE THIS SUPPORTED FLAGS ABOVE.
 koopa::macos_install_r_cran_clang_7() { # {{{1
     koopa::macos_install_r_cran_clang --version='7.0.0'
     return 0
 }
 
+# FIXME MAKE THIS SUPPORTED FLAGS ABOVE.
 koopa::macos_install_r_cran_clang_8() { # {{{1
     koopa::macos_install_r_cran_clang --version='8.0.0'
     return 0
 }
 
+# FIXME MATCH THIS TO THE R VERSION INSTEAD.
+# FIXME NEED TO RETHINK THE VERSION HANDLING HERE.
 koopa::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
-    # @note Updated 2020-07-17.
+    # @note Updated 2021-04-22.
     # @seealso
     # - https://github.com/fxcoudert/gfortran-for-macOS
     # """
@@ -84,6 +90,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     prefix="/usr/local/${name}"
     [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
     [[ -d "$prefix" ]] && return 0
+    # FIXME THIS IS NOW RETURNING AN UNBOUND VARIABLE.
     koopa::h1 "Installing ${name} ${version} to '${prefix}'."
     tmp_dir="$(koopa::tmp_dir)"
     (
@@ -104,7 +111,8 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     return 0
 }
 
-koopa::macos_install_r_cran_gfortran_8() { # {{{1
+# FIXME TAKE THESE OUT AND MATCH TO THE R VERSION INSTEAD...
+koopa::macos_install_r_cran_gfortran_6() { # {{{1
     koopa::macos_install_r_cran_gfortran --version='6.1'
     return 0
 }
