@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework the variable handling in these install scripts.
+
 gnu_mirror="${INSTALL_GNU_MIRROR:?}"
 jobs="${INSTALL_JOBS:?}"
 name="${INSTALL_NAME:?}"
