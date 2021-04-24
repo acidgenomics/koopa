@@ -707,14 +707,13 @@ _koopa_activate_prefix() { # {{{1
     [ "$#" -gt 0 ] || return 1
     for prefix in "$@"
     do
-        echo "$prefix"
         [ -d "$prefix" ] || continue
         _koopa_add_to_path_start \
             "${prefix}/bin" \
             "${prefix}/sbin"
         _koopa_add_to_manpath_start \
-            "${prefix}/man"
-            # > "${prefix}/share/man"
+            "${prefix}/man" \
+            "${prefix}/share/man"
     done
     return 0
 }
