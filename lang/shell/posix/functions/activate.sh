@@ -252,12 +252,33 @@ _koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
         _koopa_activate_homebrew_prefix curl ruby
-        # > _koopa_activate_homebrew_google_cloud_sdk
-        # > _koopa_activate_homebrew_ruby_gems
+        _koopa_activate_homebrew_cask_google_cloud_sdk
         _koopa_activate_homebrew_cask_gpg_suite
         _koopa_activate_homebrew_cask_julia
         _koopa_activate_homebrew_cask_r
     fi
+    return 0
+}
+
+_koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
+    # """
+    # Activate Homebrew Google Cloud SDK.
+    # @note Updated 2021-04-25.
+    # """
+    local prefix
+    prefix="$(_koopa_homebrew_prefix)"
+    prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
+    _koopa_activate_prefix "$prefix"
+    # Alternate (slower) approach that enables autocompletion.
+    # > [ -d "$prefix" ] || return 0
+    # > local shell
+    # > shell="$(_koopa_shell)"
+    # > # shellcheck source=/dev/null
+    # > [ -f "${prefix}/path.${shell}.inc" ] && \
+    # >     . "${prefix}/path.${shell}.inc"
+    # > # shellcheck source=/dev/null
+    # > [ -f "${prefix}/completion.${shell}.inc" ] && \
+    # >     . "${prefix}/completion.${shell}.inc"
     return 0
 }
 
@@ -273,18 +294,6 @@ _koopa_activate_homebrew_cask_gpg_suite() { # {{{1
     return 0
 }
 
-_koopa_activate_homebrew_cask_r() { # {{{1
-    # """
-    # Activate R Homebrew cask.
-    # @note Updated 2021-04-22.
-    # """
-    local prefix version
-    version='Current'
-    prefix="/Library/Frameworks/R.framework/Versions/${version}/Resources"
-    _koopa_activate_prefix "$prefix"
-    return 0
-}
-
 _koopa_activate_homebrew_cask_julia() { # {{{1
     # """
     # Activate Julia Homebrew cask.
@@ -294,6 +303,18 @@ _koopa_activate_homebrew_cask_julia() { # {{{1
     version="$(_koopa_variable 'julia')"
     version="$(_koopa_major_minor_version "$version")"
     prefix="/Applications/Julia-${version}.app/Contents/Resources/julia"
+    _koopa_activate_prefix "$prefix"
+    return 0
+}
+
+_koopa_activate_homebrew_cask_r() { # {{{1
+    # """
+    # Activate R Homebrew cask.
+    # @note Updated 2021-04-22.
+    # """
+    local prefix version
+    version='Current'
+    prefix="/Library/Frameworks/R.framework/Versions/${version}/Resources"
     _koopa_activate_prefix "$prefix"
     return 0
 }
@@ -361,25 +382,6 @@ _koopa_activate_homebrew_keg_only() { # {{{1
         binutils \
         curl
     _koopa_activate_homebrew_libexec_prefix man-db
-    return 0
-}
-
-_koopa_activate_homebrew_google_cloud_sdk() { # {{{1
-    # """
-    # Activate Homebrew Google Cloud SDK.
-    # @note Updated 2020-11-16.
-    # """
-    local prefix shell
-    prefix="$(_koopa_homebrew_prefix)"
-    prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
-    [ -d "$prefix" ] || return 0
-    shell="$(_koopa_shell)"
-    # shellcheck source=/dev/null
-    [ -f "${prefix}/path.${shell}.inc" ] && \
-        . "${prefix}/path.${shell}.inc"
-    # shellcheck source=/dev/null
-    [ -f "${prefix}/completion.${shell}.inc" ] && \
-        . "${prefix}/completion.${shell}.inc"
     return 0
 }
 
