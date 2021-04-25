@@ -3,10 +3,19 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2020-11-14.
+    # @note Updated 2021-04-25.
     # """
-    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     local file
+    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
+    alias activate-broot='_koopa_activate_broot'
+    alias activate-conda='_koopa_activate_conda'
+    alias activate-ensembl-perl-api='_koopa_activate_ensembl_perl_api'
+    alias activate-google-cloud-sdk='_koopa_activate_homebrew_google_cloud_sdk'
+    alias activate-perlbrew='_koopa_activate_perlbrew'
+    alias activate-pipx='_koopa_activate_pipx'
+    alias activate-pyenv='_koopa_activate_pyenv'
+    alias activate-rbenv='_koopa_activate_rbenv'
+    alias activate-venv='_koopa_activate_venv'
     file="${HOME}/.aliases"
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
