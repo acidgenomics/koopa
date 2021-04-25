@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-04-20"
+koopa-date="2021-04-25"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.9.5a"
@@ -28,7 +28,7 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 anaconda="2020.11"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.4.0"
+armadillo="10.4.1"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="3.10.1.181943"
@@ -145,7 +145,7 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
 
-hadolint="2.2.0"
+hadolint="2.3.0"
 
 harfbuzz="2.8.0"
 
@@ -171,7 +171,7 @@ imagemagick="7.0.11"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.6.0"
+julia="1.6.1"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
@@ -209,11 +209,11 @@ neofetch="7.1.0"
 neovim="0.4.4"
 
 # https://nodejs.org/
-node="15.14.0"
+node="16.0.0"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="16"
+openjdk="16.0.1"
 
 # https://www.openssh.com/portable.html
 openssh="8.6p1"
@@ -229,7 +229,7 @@ oracle-instantclient="19.5.0.0.0-1"
 pandoc="2.13"
 
 # https://www.gnu.org/software/parallel/
-parallel="20210322"
+parallel="20210422"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
@@ -452,10 +452,10 @@ homebrew-cask-gpg-suite="2020.2"
 python-pip="21.0.1"
 
 python-black="20.8b1"     # homebrew
-python-bpytop="1.0.63"    # homebrew
+python-bpytop="1.0.64"    # homebrew
 python-flake8="3.9.1"     # homebrew
 python-pipx="0.16.1"      # homebrew
-python-pylint="2.7.4"     # homebrew
+python-pylint="2.8.1"     # homebrew
 python-ranger-fm="1.9.3"  # homebrew
 
 # Libraries without binaries {{{2
@@ -507,7 +507,7 @@ rust-hyperfine="1.11.0"   # homebrew
 rust-procs="0.11.4"       # homebrew
 rust-ripgrep-all="0.9.6"  # homebrew; rga
 rust-ripgrep="12.1.1"     # homebrew; rg
-rust-starship="0.51.0"    # homebrew
+rust-starship="0.52.1"    # homebrew
 rust-tokei="12.1.2"       # homebrew
 rust-xsv="0.13.0"         # homebrew
 rust-zoxide="0.6.0"       # homebrew; z
