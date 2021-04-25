@@ -4,7 +4,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2021-04-23.
+    # @note Updated 2021-04-25.
     # """
     case "${1:-}" in
         --help|-h)
@@ -59,14 +59,11 @@ _koopa_activate() { # {{{1
     _koopa_export_user || return 1
     if [ "${KOOPA_MINIMAL:?}" -eq 0 ]
     then
-        # Run OS-specific activation steps at the beginning here.
         if _koopa_is_linux
         then
             _koopa_activate_bcbio || return 1
         elif _koopa_is_macos
         then
-            _koopa_activate_homebrew_cask_gpg_suite || return 1
-            _koopa_activate_homebrew_cask_r || return 1
             _koopa_activate_macos_python || return 1
             _koopa_activate_visual_studio_code || return 1
         fi
@@ -80,25 +77,13 @@ _koopa_activate() { # {{{1
         _koopa_activate_openjdk || return 1
         _koopa_activate_aspera || return 1
         _koopa_activate_nextflow || return 1
-        # Perl ------------------------------------------------------------ {{{2
-        # > _koopa_activate_ensembl_perl_api || return 1
-        # > _koopa_activate_perlbrew || return 1
-        # Ruby ------------------------------------------------------------ {{{2
         _koopa_activate_ruby || return 1
-        # > _koopa_activate_rbenv || return 1
-        # Rust ------------------------------------------------------------ {{{2
         _koopa_activate_rust || return 1
-        # Now can activate useful Rust packages.
-        _koopa_activate_broot || return 1
         _koopa_activate_fzf || return 1
         _koopa_activate_zoxide || return 1
-        # Python ---------------------------------------------------------- {{{2
         _koopa_activate_python_site_packages || return 1
         _koopa_activate_python_startup || return 1
-        # > _koopa_activate_pipx || return 1
-        # > _koopa_activate_pyenv || return 1
-        # > _koopa_activate_venv || return 1
-        _koopa_activate_conda || return 1
+        # > _koopa_activate_conda || return 1
     fi
     _koopa_activate_koopa_paths || return 1
     _koopa_activate_local_paths || return 1
@@ -109,7 +94,10 @@ _koopa_activate() { # {{{1
                 "_koopa_activate_${KOOPA_SHELL}_extras"
                 ;;
         esac
-        _koopa_is_macos && _koopa_activate_macos_extras || return 1
+        if _koopa_is_macos
+        then
+            _koopa_activate_macos_extras || return 1
+        fi
         _koopa_activate_completion || return 1
         _koopa_activate_aliases || return 1
         _koopa_activate_secrets || return 1
@@ -410,7 +398,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2021-04-23.
+    Updated 2021-04-25.
 END
 }
 
@@ -463,11 +451,11 @@ _koopa_preflight_checks() { # {{{1
     _koopa_preflight_os_check || return 1
     _koopa_preflight_shell_check || return 1
     _koopa_preflight_zsh_check || return 1
-    _koopa_preflight_coreutils_check \
-        'basename' \
-        'dirname' \
-        'grep' \
-        || return 1
+    # > _koopa_preflight_coreutils_check \
+    # >     'basename' \
+    # >     'dirname' \
+    # >     'grep' \
+    # >     || return 1
     return 0
 }
 
