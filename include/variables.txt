@@ -480,7 +480,7 @@ python-wheel="0.36.2"
 # https://rubygems.org/gems/bundler/versions/
 # NOTE Consider renaming to 'bundler' here.
 # Update with 'gem install bundler'.
-ruby-bundler="2.2.15"
+ruby-bundler="2.2.16"
 
 # https://rubygems.org/pages/download/
 # NOTE Consider renaming to 'rubygems' here.
