@@ -10,7 +10,6 @@ _koopa_activate_aliases() { # {{{1
     alias activate-broot='_koopa_activate_broot'
     alias activate-conda='_koopa_activate_conda'
     alias activate-ensembl-perl-api='_koopa_activate_ensembl_perl_api'
-    alias activate-google-cloud-sdk='_koopa_activate_homebrew_google_cloud_sdk'
     alias activate-perlbrew='_koopa_activate_perlbrew'
     alias activate-pipx='_koopa_activate_pipx'
     alias activate-pyenv='_koopa_activate_pyenv'
