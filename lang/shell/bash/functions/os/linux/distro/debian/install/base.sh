@@ -314,7 +314,6 @@ koopa::debian_install_base() { # {{{1
             'openmpi-common'
             'openmpi-doc'
             'pandoc'
-            'pandoc-citeproc'
             'pass'
             'protobuf-compiler'
             'systemd'

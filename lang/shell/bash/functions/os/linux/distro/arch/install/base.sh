@@ -98,7 +98,6 @@ koopa::arch_install_base() { # {{{1
             'mpc'
             'mpfr'
             'pandoc'
-            'pandoc-citeproc'
             'r'
             'tcl'
             'texlive-core'

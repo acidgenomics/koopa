@@ -105,7 +105,6 @@ koopa::alpine_install_base() { # {{{1
             # > R-doc
             # > fish
             # > pandoc
-            # > pandoc-citeproc
             # > texlive
             'R'
             'mdocml'
