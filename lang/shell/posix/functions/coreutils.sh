@@ -54,7 +54,6 @@ _koopa_parent_dir() { # {{{1
     return 0
 }
 
-# FIXME USE CD APPROACH.
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
