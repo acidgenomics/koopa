@@ -234,19 +234,11 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-04-25.
     # """
     local prefix
     prefix="$(_koopa_homebrew_prefix)"
-    # Enable these lines when debugging duration.
-    # > local bc date duration duration_start duration_stop
-    # > bc="${prefix}/opt/bc/bin/bc"
-    # > date="${prefix}/opt/coreutils/libexec/gnubin/date"
-    # > duration_start="$("$date" -u '+%s%3N')"
-    if ! _koopa_is_installed brew
-    then
-        _koopa_activate_prefix "$prefix"
-    fi
+    ! _koopa_is_installed brew && _koopa_activate_prefix "$prefix"
     _koopa_is_installed brew || return 0
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
@@ -259,20 +251,12 @@ _koopa_activate_homebrew() { # {{{1
     if _koopa_is_macos
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
+        _koopa_activate_homebrew_prefix curl ruby
+        _koopa_activate_homebrew_cask_gpg_suite
+        _koopa_activate_homebrew_cask_r
+        # > _koopa_activate_homebrew_ruby_gems
+        # > _koopa_activate_homebrew_google_cloud_sdk
     fi
-    # These programs are keg-only but we want to include them in the system
-    # path by default. Refer to '_koopa_activate_homebrew_keg_only' for other
-    # packages that we are only sourcing inside Bash scripts.
-    _koopa_activate_homebrew_prefix curl ruby
-    _koopa_activate_homebrew_google_cloud_sdk
-    # > _koopa_activate_homebrew_ruby_gems
-    # Enable these lines when debugging duration.
-    # > duration_stop="$("$date" -u '+%s%3N')"
-    # > duration="$( \
-    # >     _koopa_print "${duration_stop}-${duration_start}" \
-    # >     | "$bc" \
-    # > )"
-    # > _koopa_print "Homebrew (${duration} ms)"
     return 0
 }
 
