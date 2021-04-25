@@ -252,10 +252,11 @@ _koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
         _koopa_activate_homebrew_prefix curl ruby
-        _koopa_activate_homebrew_cask_gpg_suite
-        _koopa_activate_homebrew_cask_r
-        # > _koopa_activate_homebrew_ruby_gems
         # > _koopa_activate_homebrew_google_cloud_sdk
+        # > _koopa_activate_homebrew_ruby_gems
+        _koopa_activate_homebrew_cask_gpg_suite
+        _koopa_activate_homebrew_cask_julia
+        _koopa_activate_homebrew_cask_r
     fi
     return 0
 }
@@ -280,6 +281,19 @@ _koopa_activate_homebrew_cask_r() { # {{{1
     local prefix version
     version='Current'
     prefix="/Library/Frameworks/R.framework/Versions/${version}/Resources"
+    _koopa_activate_prefix "$prefix"
+    return 0
+}
+
+_koopa_activate_homebrew_cask_julia() { # {{{1
+    # """
+    # Activate Julia Homebrew cask.
+    # @note Updated 2021-04-25.
+    # """
+    local prefix version
+    version="$(_koopa_variable 'julia')"
+    version="$(_koopa_major_minor_version "$version")"
+    prefix="/Applications/Julia-${version}.app/Contents/Resources/julia"
     _koopa_activate_prefix "$prefix"
     return 0
 }
