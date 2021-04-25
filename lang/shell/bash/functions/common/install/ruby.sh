@@ -37,8 +37,12 @@ koopa::install_rbenv_ruby() { # {{{1
 koopa::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-04-25.
+    # @seealso
+    # - https://bundler.io/man/bundle-pristine.1.html
+    # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
     # """
+    local default gemdir gem gems name_fancy
     koopa::assert_has_no_envs
     if ! koopa::is_installed gem
     then
@@ -51,25 +55,35 @@ koopa::install_ruby_packages() { # {{{1
     koopa::dl 'Target' "$gemdir"
     if [[ "$#" -eq 0 ]]
     then
-        # > gem pristine --all --only-executables
+        default=1
         gems=(
-            # neovim
+            # > 'neovim'
             'bundler'
             'bashcov'
             'ronn'
         )
     else
+        default=0
         gems=("$@")
     fi
     koopa::dl 'Gems' "$(koopa::to_string "${gems[@]}")"
-    if koopa::is_shared_install
+    if [[ "$default" -eq 1 ]]
     then
-        gem update --system
+        gem cleanup
+        gem pristine --all
+        if koopa::is_shared_install
+        then
+            gem update --system
+        fi
     fi
     for gem in "${gems[@]}"
     do
         gem install "$gem"
     done
+    if [[ "$default" -eq 1 ]]
+    then
+        gem cleanup
+    fi
     koopa::install_success "$name_fancy"
     return 0
 }
