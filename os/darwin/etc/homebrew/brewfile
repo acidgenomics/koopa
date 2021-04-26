@@ -108,7 +108,7 @@ cask "font-victor-mono"
 cask "font-victor-mono-nerd-font"
 cask "github"
 cask "google-cloud-sdk"
-cask "gpg-suite"  # no-binaries
+cask "gpg-suite-no-mail"  # no-binaries
 cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
