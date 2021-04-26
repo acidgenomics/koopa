@@ -116,6 +116,7 @@ END
     return 0
 }
 
+# FIXME arch needs to return amd64 instead of x86_64
 koopa::debian_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
@@ -129,6 +130,11 @@ koopa::debian_install_rstudio_server() { # {{{1
     # """
     local arch os_codename
     arch="$(koopa::arch)"
+    case "$arch" in
+        x86_64)
+            arch='amd64'
+            ;;
+    esac
     os_codename="$(koopa::os_codename)"
     case "$os_codename" in
         buster|focal)
