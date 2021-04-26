@@ -113,11 +113,11 @@ koopa::install_app() { # {{{1
         koopa::cd "$tmp_dir"
         gnu_mirror="$(koopa::gnu_mirror)"
         jobs="$(koopa::cpu_count)"
-        # FIXME name
-        # FIXME prefix
-        # FIXME version
         export INSTALL_GNU_MIRROR="$gnu_mirror"
         export INSTALL_JOBS="$jobs"
+        export INSTALL_NAME="$name"
+        export INSTALL_PREFIX="$prefix"
+        export INSTALL_VERSION="$version"
         script="${script_prefix}/${script_name}.sh"
         koopa::assert_is_file "$script"
         # shellcheck source=/dev/null

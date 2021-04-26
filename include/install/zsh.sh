@@ -23,6 +23,11 @@
 # - https://github.com/TACC/Lmod/issues/434
 # """
 
+jobs="${INSTALL_JOBS:?}"
+name="${INSTALL_NAME:?}"
+prefix="${INSTALL_PREFIX:?}"
+version="${INSTALL_VERSION:?}"
+
 etc_dir="${prefix}/etc/${name}"
 file="${name}-${version}.tar.xz"
 # > url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
