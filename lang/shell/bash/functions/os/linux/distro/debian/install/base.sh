@@ -175,6 +175,7 @@ koopa::debian_install_base() { # {{{1
             'automake'
             'byacc'
             'cmake'
+            'default-jdk'
             'diffutils'
             'dirmngr'
             'file'
@@ -299,7 +300,6 @@ koopa::debian_install_base() { # {{{1
     if [[ "${dict[extra]}" -eq 1 ]]
     then
         pkgs+=(
-            # > default-jdk
             'alien'
             'biber'
             'ggobi'

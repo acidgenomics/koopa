@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
 
+# FIXME the java.net website is down at the moment.
+# FIXME Need to add support for 16.0.1 release.
 koopa::linux_install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
-    # @note Updated 2021-01-22.
+    # @note Updated 2021-04-26.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
     #
     # @seealso
+    # - https://www.oracle.com/java/technologies/javase-downloads.html#JDK16
+    #
+    # Legacy java.net links (now down):
     # - https://jdk.java.net/archive/
     # - https://jdk.java.net/15/
     # - https://openjdk.java.net/
@@ -46,6 +51,9 @@ koopa::linux_install_openjdk() { # {{{1
     (
         koopa::cd "$tmp_dir"
         case "$version" in
+            16.0.1)
+                unique='FIXME'
+                ;;
             16)
                 unique='7863447f0ab643c585b9bdebf67c69db/36'
                 ;;
