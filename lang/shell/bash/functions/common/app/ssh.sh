@@ -40,3 +40,17 @@ koopa::generate_ssh_key() { # {{{1
     koopa::alert_success "Generated SSH key at '${file}'."
     return 0
 }
+
+koopa::ssh_key_info() { # {{{1
+    # """
+    # Get SSH key information.
+    # @note Updated 2021-04-26.
+    # @seealso
+    # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
+    # """
+    for keyfile in ~/.ssh/id_*
+    do
+        ssh-keygen -l -f "${keyfile}"
+    done | uniq
+    return 0
+}
