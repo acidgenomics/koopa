@@ -520,6 +520,10 @@ koopa::monorepo_prefix() { # {{{1
     _koopa_monorepo_prefix "$@"
 }
 
+koopa::ngettext() { # {{{1
+    _koopa_ngettext "$@"
+}
+
 koopa::openjdk_prefix() { # {{{1
     _koopa_openjdk_prefix "$@"
 }
