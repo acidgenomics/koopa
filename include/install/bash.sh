@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
-# see also:
+# """
+# @seealso
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
+# """
+
+gnu_mirror="${INSTALL_GNU_MIRROR:?}"
+jobs="${INSTALL_JOBS:?}"
+name="${INSTALL_NAME:?}"
+version="${INSTALL_VERSION:?}"
 
 minor_version="$(koopa::major_minor_version "$version")"
 file="${name}-${minor_version}.tar.gz"
