@@ -127,6 +127,7 @@ koopa::install_app() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$prefix"
+    koopa::link_into_opt "$prefix" "$name"
     if [[ "$link_app" -eq 1 ]]
     then
         koopa::delete_broken_symlinks "$make_prefix"
