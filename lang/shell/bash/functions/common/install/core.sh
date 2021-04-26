@@ -241,7 +241,6 @@ koopa::link_app() { # {{{1
     then
         koopa::update_ldconfig
     fi
-    koopa::alert_success "Successfully linked '${name}' in '${make_prefix}'."
     return 0
 }
 
@@ -256,7 +255,7 @@ koopa::link_into_opt() { # {{{1
     opt_prefix="$(koopa::opt_prefix)"
     [[ ! -d "$opt_prefix" ]] && koopa::mkdir "$opt_prefix"
     target_dir="${opt_prefix}/${2:?}"
-    koopa::alert "Linking '${source_dir}' into opt at '${target_dir}'."
+    koopa::alert "Linking '${source_dir}' in '${target_dir}'."
     [[ ! -d "$source_dir" ]] && koopa::mkdir "$source_dir"
     koopa::rm "$target_dir"
     koopa::sys_set_permissions "$opt_prefix"
