@@ -54,7 +54,8 @@ __koopa_str_match() { # {{{1
         pattern="${1:?}"
         shift 1
         # Handle string with line breaks '\n'.
-            read -r -d '' string
+        # shellcheck disable=SC3045
+        read -r -d '' string
     else
         return 1
     fi
