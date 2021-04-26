@@ -63,6 +63,7 @@ koopa::read() { # {{{1
     then
         flags+=(-e -i "${koopa_prefix}")
     fi
+    # shellcheck disable=SC2162
     read "${flags[@]}" choice
     choice="${choice:-$default}"
     koopa::print "$choice"
@@ -86,6 +87,7 @@ koopa::read_yn() { # {{{1
     then
         flags+=(-e -i "$default")
     fi
+    # shellcheck disable=SC2162
     read "${flags[@]}" choice
     choice="${choice:-$default}"
     case "$choice" in

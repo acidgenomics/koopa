@@ -53,6 +53,7 @@ koopa::tldr_display() { # {{{1
             | sed "s/{{/${italic_start}/g;s/}}/${italic_end}/g" \
     )"
     code() { # {{{1
+        # shellcheck disable=SC2016
         koopa::print_blue_bold "$( \
             koopa::print "${1:?}" \
                 | sed 's/\`\([^\`]*\)\`/  \1/g' \
