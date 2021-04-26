@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-04-26.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -225,6 +225,7 @@ koopa::debian_install_base() { # {{{1
             'libbison-dev'
             'libbz2-dev'
             'libcairo2-dev'
+            'libclang-dev'  # rstudio-server
             'libcurl4-gnutls-dev'
             'libevent-dev'
             'libffi-dev'
