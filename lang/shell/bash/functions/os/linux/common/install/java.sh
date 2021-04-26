@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME the java.net website is down at the moment.
-# FIXME Need to add support for 16.0.1 release.
 koopa::linux_install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
@@ -52,7 +50,7 @@ koopa::linux_install_openjdk() { # {{{1
         koopa::cd "$tmp_dir"
         case "$version" in
             16.0.1)
-                unique='FIXME'
+                unique='7147401fd7354114ac51ef3e1328291f/9'
                 ;;
             16)
                 unique='7863447f0ab643c585b9bdebf67c69db/36'
