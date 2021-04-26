@@ -3,11 +3,21 @@
 koopa::debian_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Debian/Ubuntu.
-    # @note Updated 2021-03-30.
+    # @note Updated 2021-04-26.
     # @seealso
     # https://rstudio.com/products/shiny/download-server/ubuntu/
     # """
-    local arch name name_fancy pos reinstall version
+    local arch arch2 name name_fancy pos reinstall version
+    # Currently only "amd64" (x86) is supported here.
+    arch="$(koopa::arch)"
+    case "$arch" in
+        x86_64)
+            arch2='amd64'
+            ;;
+        *)
+            arch2="$arch"
+            ;;
+    esac
     reinstall=0
     pos=()
     while (("$#"))
@@ -42,17 +52,15 @@ koopa::debian_install_shiny_server() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     if ! koopa::is_r_package_installed shiny
     then
-        koopa::h2 'Installing shiny R package.'
+        koopa::alert 'Installing shiny R package.'
         (
             Rscript -e 'install.packages("shiny")'
         ) 2>&1 | tee "$(koopa::tmp_log_file)"
     fi
     (
         koopa::cd "$tmp_dir"
-        # Currently only "amd64" (x86) is supported here.
-        arch="$(koopa::arch)"
-        file="shiny-server-${version}-${arch}.deb"
-        url="https://download3.rstudio.org/ubuntu-14.04/x86_64/${file}"
+        file="shiny-server-${version}-${arch2}.deb"
+        url="https://download3.rstudio.org/ubuntu-14.04/${arch}/${file}"
         koopa::download "$url"
         sudo gdebi --non-interactive "$file"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
