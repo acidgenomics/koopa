@@ -149,7 +149,7 @@ koopa::install_app() { # {{{1
 koopa::link_app() { # {{{1
     # """
     # Symlink application into build directory.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-04-26.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -241,7 +241,7 @@ koopa::link_app() { # {{{1
     then
         koopa::update_ldconfig
     fi
-    koopa::alert_success "Successfully linked '${name}'."
+    koopa::alert_success "Successfully linked '${name}' in '${make_prefix}'."
     return 0
 }
 
