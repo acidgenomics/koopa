@@ -32,7 +32,7 @@ koopa::debian_install_shiny_server() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed R gdebi
+    koopa::assert_is_installed R gdebi sudo
     name='shiny-server'
     version="$(koopa::variable "$name")"
     name_fancy="Shiny Server ${version}"
