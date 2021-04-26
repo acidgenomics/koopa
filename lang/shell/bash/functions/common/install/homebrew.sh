@@ -145,7 +145,7 @@ koopa::update_homebrew() { # {{{1
     # > koopa::brew_reset_permissions
     koopa::brew_reset_core_repo
     brew analytics off
-    brew update
+    brew update >/dev/null
     koopa::is_macos && koopa::macos_brew_upgrade_casks
     koopa::brew_upgrade_brews
     koopa::brew_cleanup
