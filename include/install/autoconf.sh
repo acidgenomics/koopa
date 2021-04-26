@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 install_autoconf() { # {{{1
+    # """
+    # Install autoconf.
+    # @note Updated 2021-04-26.
+    # """
     local file gnu_mirror jobs name prefix url version
     gnu_mirror="${INSTALL_GNU_MIRROR:?}"
     jobs="${INSTALL_JOBS:?}"
