@@ -29,7 +29,7 @@ koopa::find_app_version() { # {{{1
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-04-26.
     # """
     local gnu_mirror include_dirs jobs link_args link_app make_prefix name \
         name_fancy prefix reinstall script script_name script_prefix \
@@ -110,9 +110,14 @@ koopa::install_app() { # {{{1
     koopa::install_start "$name_fancy" "$version" "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
     (
+        koopa::cd "$tmp_dir"
         gnu_mirror="$(koopa::gnu_mirror)"
         jobs="$(koopa::cpu_count)"
-        koopa::cd "$tmp_dir"
+        # FIXME name
+        # FIXME prefix
+        # FIXME version
+        export INSTALL_GNU_MIRROR="$gnu_mirror"
+        export INSTALL_JOBS="$jobs"
         script="${script_prefix}/${script_name}.sh"
         koopa::assert_is_file "$script"
         # shellcheck source=/dev/null
