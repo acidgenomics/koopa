@@ -26,6 +26,7 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
+# FIXME THIS NEEDS AN LDCONFIG UPDATE CALL AT THE END.
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -140,6 +141,11 @@ koopa::install_app() { # {{{1
         fi
         # We're including the 'true' catch here to avoid cp issues on Arch.
         koopa::link_app "${link_args[@]}" || true
+    fi
+    # Ensure ldconfig is current, if necessary.
+    if [[ "$make_prefix" == '/usr/local' ]]
+    then
+        sudo ldconfig
     fi
     koopa::install_success "$name_fancy" "$prefix"
     return 0
