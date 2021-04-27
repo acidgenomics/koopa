@@ -16,10 +16,14 @@ r-koopa="0.1.14"
 # Globals {{{1
 # ==============================================================================
 
-# GNU FTP server mirror
+# GnuPG FTP URL.
+gcrypt-url='https://gnupg.org/ftp/gcrypt'
+
+# GNU FTP server mirror.
 # https://www.gnu.org/prep/ftp.en.html
-# > gnu-mirror="https://ftpmirror.gnu.org"
-gnu-mirror="https://mirrors.tripadvisor.com/gnu"
+# > gnu-mirror-url="https://ftpmirror.gnu.org"
+gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
+
 
 # Program versions {{{1
 # ==============================================================================
