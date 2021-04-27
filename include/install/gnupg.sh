@@ -6,10 +6,21 @@ install_gnupg() { # {{{1
     # @note Updated 2021-04-27.
     # @seealso
     # - https://gnupg.org/download/index.html
+    # - https://gnupg.org/signature_key.html
+    # - https://gnupg.org/download/integrity_check.html
     # """
-    local version
+    local gpg gpg_agent version
     version="${INSTALL_VERSION:?}"
     case "$version" in
+        2.3.1)
+            # 2021-04-20.
+            libgpg_error_version='1.42'
+            libgcrypt_version='1.9.3'
+            libksba_version='1.5.1'
+            libassuan_version='2.5.5'
+            npth_version='1.6'
+            pinentry_version='1.1.1'
+            ;;
         2.2.26|2.2.27)
             libgpg_error_version='1.41'
             libgcrypt_version='1.8.7'
@@ -68,15 +79,35 @@ install_gnupg() { # {{{1
             koopa::stop 'Unsupported GnuPG version.'
             ;;
     esac
-    # Download GnuPG release signing keys.
-    if koopa::is_installed gpg-agent
+    gpg='/usr/bin/gpg'
+    gpg_agent='/usr/bin/gpg-agent'
+    if koopa::is_installed "$gpg_agent"
     then
-        gpg --list-keys
-        gpg --keyserver hkp://keyserver.ubuntu.com:80 \
+        # Current releases are signed by one or more of these keys:
+        #
+        # pub   rsa2048 2011-01-12 [expires: 2021-12-31]
+        #       D869 2123 C406 5DEA 5E0F  3AB5 249B 39D2 4F25 E3B6
+        # uid   Werner Koch (dist sig)
+        #
+        # pub   rsa2048 2014-10-29 [expires: 2020-10-30]
+        #       031E C253 6E58 0D8E A286  A9F2 2071 B08A 33BD 3F06
+        # uid   NIIBE Yutaka (GnuPG Release Key) <gniibe 'at' fsij.org>
+        #
+        # pub   rsa3072 2017-03-17 [expires: 2027-03-15]
+        #       5B80 C575 4298 F0CB 55D8  ED6A BCEF 7E29 4B09 2E28
+        # uid   Andre Heinecke (Release Signing Key)
+        #
+        # pub   ed25519 2020-08-24 [expires: 2030-06-30]
+        #       6DAA 6E64 A76D 2840 571B  4902 5288 97B8 2640 3ADA
+        # uid   Werner Koch (dist signing 2020)
+        #
+        # Use the last 4 elements per key in the '--rev-keys' call.
+        "$gpg" --list-keys
+        "$gpg" --keyserver hkp://keyserver.ubuntu.com:80 \
             --recv-keys 249B39D24F25E3B6 \
-                        04376F3EE0856959 \
                         2071B08A33BD3F06 \
-                        8A861B1C7EFD60D9
+                        BCEF7E294B092E28 \
+                        528897B826403ADA
     fi
     # Install dependencies.
     koopa::install_app \

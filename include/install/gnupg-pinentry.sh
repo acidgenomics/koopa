@@ -5,7 +5,7 @@ install_gnupg_pinentry() { # {{{1
     # Install GnuPG pinentry library.
     # @note Updated 2021-04-27.
     # """
-    local base_url gcrypt_url jobs name prefix sig_file sig_url \
+    local base_url gcrypt_url gpg gpg_agent jobs name prefix sig_file sig_url \
         tar_file tar_url version
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
@@ -16,12 +16,14 @@ install_gnupg_pinentry() { # {{{1
     tar_file="${name}-${version}.tar.bz2"
     tar_url="${base_url}/${tar_file}"
     koopa::download "$tar_url"
-    if koopa::is_installed gpg-agent
+    gpg='/usr/bin/gpg'
+    gpg_agent='/usr/bin/gpg-agent'
+    if koopa::is_installed "$gpg_agent"
     then
         sig_file="${tar_file}.sig"
         sig_url="${base_url}/${sig_file}"
         koopa::download "$sig_url"
-        gpg --verify "$sig_file" || return 1
+        "$gpg" --verify "$sig_file" || return 1
     fi
     koopa::extract "$tar_file"
     koopa::cd "${name}-${version}"
