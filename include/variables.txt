@@ -456,7 +456,7 @@ homebrew-cask-gpg-suite="2020.2"
 
 python-pip="21.0.1"
 
-python-black="20.8b1"     # homebrew
+python-black="21.4b0"     # homebrew
 python-bpytop="1.0.64"    # homebrew
 python-flake8="3.9.1"     # homebrew
 python-pipx="0.16.1"      # homebrew
