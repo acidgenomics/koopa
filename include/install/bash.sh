@@ -26,7 +26,8 @@ install_bash() { # {{{1
     (
         koopa::cd patches
         # Note that GNU mirror doesn't seem to work correctly here.
-        base_url="https://ftp.gnu.org/gnu/${name}/${name}-${minor_version}-patches"
+        base_url="https://ftp.gnu.org/gnu/${name}/\
+${name}-${minor_version}-patches"
         mv_tr="$(koopa::print "$minor_version" | tr -d '.')"
         range="$(printf '%03d-%03d' '1' "$patches")"
         request="${base_url}/${name}${mv_tr}-[${range}]"
