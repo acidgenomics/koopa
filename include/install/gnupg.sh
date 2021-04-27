@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME The '--force' flag doesn't propagate here.
+
 install_gnupg() { # {{{1
     # """
     # Install GnuPG.
