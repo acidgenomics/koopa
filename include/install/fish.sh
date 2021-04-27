@@ -8,11 +8,11 @@ install_fish() { # {{{1
     # - https://github.com/fish-shell/fish-shell/#building
     # """
     local file jobs link_app name prefix url version
-    jobs="${INSTALL_JOBS:?}"
     link_app="${INSTALL_LINK_APP:?}"
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.gz"
     url="https://github.com/fish-shell/fish-shell/releases/download/\
 ${version}/${file}"
