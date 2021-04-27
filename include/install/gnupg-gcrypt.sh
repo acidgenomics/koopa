@@ -7,11 +7,11 @@ install_gnupg_gcrypt() { # {{{1
     # """
     local base_url gcrypt_url jobs name prefix sig_file sig_url \
         tar_file tar_url version
-    gcrypt_url="${INSTALL_GCRYPT_URL:?}"
     jobs="${INSTALL_JOBS:?}"
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    gcrypt_url="$(koopa::gcrypt_url)"
     base_url="${gcrypt_url}/${name}"
     tar_file="${name}-${version}.tar.bz2"
     tar_url="${base_url}/${tar_file}"
