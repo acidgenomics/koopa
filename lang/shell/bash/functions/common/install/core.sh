@@ -29,11 +29,10 @@ koopa::find_app_version() { # {{{1
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-04-26.
+    # @note Updated 2021-04-27.
     # """
-    local gnu_mirror include_dirs jobs link_args link_app make_prefix name \
-        name_fancy prefix reinstall script script_name script_prefix \
-        tmp_dir version
+    local include_dirs jobs link_args link_app make_prefix name name_fancy \
+        prefix reinstall script script_name script_prefix tmp_dir version
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     include_dirs=
@@ -111,9 +110,8 @@ koopa::install_app() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        gnu_mirror="$(koopa::gnu_mirror)"
+        # FIXME REWORK THIS, DEFINING PER SCRIPT INSTEAD.
         jobs="$(koopa::cpu_count)"
-        export INSTALL_GNU_MIRROR="$gnu_mirror"
         export INSTALL_JOBS="$jobs"
         export INSTALL_LINK_APP="$link_app"
         export INSTALL_NAME="$name"
@@ -128,7 +126,6 @@ koopa::install_app() { # {{{1
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$prefix"
     # FIXME This will cause issues with r, python?
-    # Need to rethink this approach?
     koopa::link_into_opt "$prefix" "$name"
     if [[ "$link_app" -eq 1 ]]
     then
