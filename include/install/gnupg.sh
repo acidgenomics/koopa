@@ -2,10 +2,19 @@
 
 # FIXME The '--force' flag doesn't propagate here.
 
+# FIXME Seeing this error at end of install:
+# gpgconf: symbol lookup error: gpgconf: undefined symbol: gpgrt_set_confdir,
+# version GPG_ERROR_1.0
+
+# FIXME gpg --version is failing with 2.3.1 release...
+
 install_gnupg() { # {{{1
     # """
     # Install GnuPG.
     # @note Updated 2021-04-27.
+    #
+    # 2.2.27 is current LTS release.
+    #
     # @seealso
     # - https://gnupg.org/download/index.html
     # - https://gnupg.org/signature_key.html
