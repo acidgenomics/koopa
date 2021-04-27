@@ -127,7 +127,7 @@ koopa::uninstall_homebrew() { # {{{1
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-04-23.
+    # @note Updated 2021-04-27.
     #
     # @seealso
     # - Refer to useful discussion regarding '--greedy' flag.
@@ -149,7 +149,7 @@ koopa::update_homebrew() { # {{{1
     koopa::is_macos && koopa::macos_brew_upgrade_casks
     koopa::brew_upgrade_brews
     koopa::brew_cleanup
-    koopa::brew_reset_permissions
+    # > koopa::brew_reset_permissions
     koopa::update_success "$name_fancy"
     return 0
 }
