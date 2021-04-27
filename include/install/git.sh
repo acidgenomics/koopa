@@ -14,10 +14,10 @@ install_git() { # {{{1
     # > url="https://github.com/git/${name}/archive/${file}"
     # """
     local file jobs name openssl prefix url version
-    jobs="${INSTALL_JOBS:?}"
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.gz"
     url="https://mirrors.edge.kernel.org/pub/software/scm/${name}/${file}"
     openssl='/bin/openssl'

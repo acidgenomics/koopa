@@ -12,11 +12,11 @@ install_emacs() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # """
     local file gnu_mirror jobs name prefix url version
-    gnu_mirror="${INSTALL_GNU_MIRROR:?}"
-    jobs="${INSTALL_JOBS:?}"
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    gnu_mirror="$(koopa::gnu_mirror_url)"
+    jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.xz"
     url="${gnu_mirror}/${name}/${file}"
     koopa::download "$url"
