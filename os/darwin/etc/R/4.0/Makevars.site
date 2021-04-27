@@ -10,6 +10,9 @@
 # 
 # Download and install GNU Fortran complier from CRAN, which contains full GCC.
 # CRAN recommends official GNU Fortran 8.2 from fxcoudert.
+# 
+# Seeing this ld warning with the data.table recommended config?
+# > ld: warning: argument missing after -rpath
 #
 # See also:
 # - https://github.com/Rdatatable/data.table/wiki/
@@ -19,17 +22,43 @@
 #     r-compiler-tools-for-rcpp-on-macos/
 # """
 
-LOC = /usr/local/gfortran
-CC=$(LOC)/bin/gcc -fopenmp
-CXX=$(LOC)/bin/g++ -fopenmp
-CXX11 = $(LOC)/bin/g++ -fopenmp # for fst package
 
+
+# Homebrew LLVM configuration {{{1
+# ==============================================================================
+
+LLVM_LOC = /usr/local/opt/llvm
+CC=$(LLVM_LOC)/bin/clang -fopenmp
+CXX=$(LLVM_LOC)/bin/clang++ -fopenmp
+# -O3 should be faster than -O2 (default) level optimisation ..
 CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
 CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-LDFLAGS=-L$(LOC)/lib -Wl,-rpath,-I$(LOC)/lib
-CPPFLAGS=-I$(LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+LDFLAGS=-L/usr/local/opt/gettext/lib -L$(LLVM_LOC)/lib -Wl,-rpath,$(LLVM_LOC)/lib
+# > CPPFLAGS=-I/usr/local/opt/gettext/include -I$(LLVM_LOC)/include
+CPPFLAGS=-I/usr/local/opt/gettext/include -I$(LLVM_LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
 
-# Previous configuration, prior to 2021-04-27:
+
+
+# GCC (Official GNU fortran) configuration {{{1
+# ==============================================================================
+
+# NOTE Seeing this pop up with this configuration currently (2021-04-27):
+# ## ld: warning: argument missing after -rpath
+
+# > LOC = /usr/local/gfortran
+# > CC=$(LOC)/bin/gcc -fopenmp
+# > CXX=$(LOC)/bin/g++ -fopenmp
+# > CXX11 = $(LOC)/bin/g++ -fopenmp # for fst package
+# > CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
+# > CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
+# > LDFLAGS=-L$(LOC)/lib -Wl,-rpath,-I$(LOC)/lib
+# > CPPFLAGS=-I$(LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+
+
+
+# Previous configuration (prior to 2021-04-27) {{{1
+# ==============================================================================
+
 # > CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 # > CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 # > CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
