@@ -98,6 +98,7 @@ koopa::brew_upgrade_brews() { # {{{1
     local brew brews
     readarray -t brews <<< "$(koopa::brew_outdated)"
     koopa::is_array_non_empty "${brews[@]}" || return 0
+    # FIXME NEED TO USE NGETTEXT HERE.
     koopa::dl \
         "${#brews[@]} outdated brews" \
         "$(koopa::to_string "${brews[@]}")"
