@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Seeing this issue for 2.2.27 and 2.3.1 argh...
+# FIXME I thinkt the underlying issue is that these aren't getting linked
+# in the system configuration correctly...
 # gpgconf: symbol lookup error: gpgconf: undefined symbol: gpgrt_set_confdir,
 # version GPG_ERROR_1.0
 
@@ -125,31 +127,37 @@ install_gnupg() { # {{{1
         "$gpg" --list-keys
     fi
     # Install dependencies.
+    # FIXME THESE DONT PICK UP THE SYSTEM LIBRARIES CORRECTLY...
     koopa::install_app \
         --name='libgpg-error' \
         --version="$libgpg_error_version" \
         --script-name='gnupg-gcrypt' \
         "$@"
+    sudo ldconfig  # FIXME
     koopa::install_app \
         --name='libgcrypt' \
         --version="$libgcrypt_version" \
         --script-name='gnupg-gcrypt' \
         "$@"
+    sudo ldconfig  # FIXME
     koopa::install_app \
         --name='libassuan' \
         --version="$libassuan_version" \
         --script-name='gnupg-gcrypt' \
         "$@"
+    sudo ldconfig  # FIXME
     koopa::install_app \
         --name='libksba' \
         --version="$libksba_version" \
         --script-name='gnupg-gcrypt' \
         "$@"
+    sudo ldconfig  # FIXME
     koopa::install_app \
         --name='npth' \
         --version="$npth_version" \
         --script-name='gnupg-gcrypt' \
         "$@"
+    sudo ldconfig  # FIXME
     if koopa::is_macos
     then
         koopa::alert_note 'Skipping installation of pinentry.'
@@ -159,12 +167,14 @@ install_gnupg() { # {{{1
             --version="$pinentry_version" \
             --script-name='gnupg-pinentry' \
             "$@"
+        sudo ldconfig  # FIXME
     fi
     koopa::install_app \
         --name='gnupg' \
         --version="$version" \
         --script-name='gnupg-gcrypt' \
         "$@"
+    sudo ldconfig  # FIXME
     return 0
 }
 
