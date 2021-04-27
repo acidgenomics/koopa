@@ -3,7 +3,7 @@
 install_autoconf() { # {{{1
     # """
     # Install autoconf.
-    # @note Updated 2021-04-26.
+    # @note Updated 2021-04-27.
     # """
     local file gnu_mirror jobs name prefix url version
     name="${INSTALL_NAME:?}"
