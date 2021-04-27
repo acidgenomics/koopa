@@ -17,7 +17,7 @@ r-koopa="0.1.14"
 # ==============================================================================
 
 # GnuPG FTP URL.
-gcrypt-url='https://gnupg.org/ftp/gcrypt'
+gcrypt-url="https://gnupg.org/ftp/gcrypt"
 
 # GNU FTP server mirror.
 # https://www.gnu.org/prep/ftp.en.html
