@@ -93,14 +93,14 @@ koopa::brew_reset_permissions() { # {{{1
 koopa::brew_upgrade_brews() { # {{{1
     # """
     # Upgrade outdated Homebrew brews.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-04-27.
     # """
-    local brew brews
+    local brew brews str
     readarray -t brews <<< "$(koopa::brew_outdated)"
     koopa::is_array_non_empty "${brews[@]}" || return 0
-    # FIXME NEED TO USE NGETTEXT HERE.
+    str="$(koopa::ngettext "${#brews[@]}" 'brew' 'brews')"
     koopa::dl \
-        "${#brews[@]} outdated brews" \
+        "${#brews[@]} outdated ${str}" \
         "$(koopa::to_string "${brews[@]}")"
     for brew in "${brews[@]}"
     do
