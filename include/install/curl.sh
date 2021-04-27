@@ -12,7 +12,6 @@ install_curl() { # {{{1
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-
     file="${name}-${version}.tar.xz"
     version2="${version//./_}"
     url="https://github.com/${name}/${name}/releases/download/\
