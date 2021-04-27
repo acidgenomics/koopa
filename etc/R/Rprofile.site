@@ -205,10 +205,10 @@ local({
                     ))
                 }
             } else if (isTRUE(.rprofile[["linux"]])) {
-                which <- c("g++", "gcc", "gfortran")
-                current <- Sys.which(which)
+                stopifnot(all(nzchar(Sys.which(c(
+                    "g++", "gcc", "gfortran"
+                )))))
             }
-            stopifnot(all(nzchar(current)))
         }
     })
 
