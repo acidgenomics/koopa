@@ -1,9 +1,36 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2020-04-26.
+# Updated 2021-04-27.
+#
+# This configuration is intended for data.table to run in parallel properly,
+# with proper OpenMP support.
+#
+# Assuming we're using GCC install from GNU Fortran complier
+# (tested on macOS Big Sur).
+# 
+# Download and install GNU Fortran complier from CRAN, which contains full GCC.
+# CRAN recommends official GNU Fortran 8.2 from fxcoudert.
+#
+# See also:
+# - https://github.com/Rdatatable/data.table/wiki/
+#     Installation#openmp-enabled-compiler-for-mac
+# - https://mac.r-project.org/openmp/
+# - https://thecoatlessprofessor.com/programming/cpp/
+#     r-compiler-tools-for-rcpp-on-macos/
 # """
 
-CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
-CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+LOC = /usr/local/gfortran
+CC=$(LOC)/bin/gcc -fopenmp
+CXX=$(LOC)/bin/g++ -fopenmp
+CXX11 = $(LOC)/bin/g++ -fopenmp # for fst package
+
+CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
+CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
+LDFLAGS=-L$(LOC)/lib -Wl,-rpath,-I$(LOC)/lib
+CPPFLAGS=-I$(LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+
+# Previous configuration, prior to 2021-04-27:
+# > CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+# > CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+# > CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
+# > CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
