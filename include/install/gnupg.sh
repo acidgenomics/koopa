@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# NOTE The '--reinstall' flag doesn't propagate here currently.
-
-# NOTE Seeing this error at end of install for Ubuntu 20 LTS:
+# FIXME Seeing this issue for 2.2.27 and 2.3.1 argh...
 # gpgconf: symbol lookup error: gpgconf: undefined symbol: gpgrt_set_confdir,
 # version GPG_ERROR_1.0
+
+# NOTE The '--reinstall' flag doesn't propagate here currently.
 
 install_gnupg() { # {{{1
     # """
