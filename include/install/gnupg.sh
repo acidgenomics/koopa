@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME NEED TO EXPORT gcrypt_url as a global here...
+
 # https://gnupg.org/download/index.html
 
 case "$version" in
