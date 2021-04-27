@@ -142,8 +142,7 @@ koopa::install_app() { # {{{1
         # We're including the 'true' catch here to avoid cp issues on Arch.
         koopa::link_app "${link_args[@]}" || true
     fi
-    # Ensure ldconfig is current, if necessary.
-    if [[ "$make_prefix" == '/usr/local' ]]
+    if koopa::is_shared_install
     then
         sudo ldconfig
     fi
