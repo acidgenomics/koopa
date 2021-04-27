@@ -6,12 +6,11 @@ install_autoconf() { # {{{1
     # @note Updated 2021-04-26.
     # """
     local file gnu_mirror jobs name prefix url version
-    # FIXME USE A KOOPA FUNCTION FOR THIS INSTEAD...
-    gnu_mirror="${INSTALL_GNU_MIRROR:?}"
-    jobs="${INSTALL_JOBS:?}"
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    gnu_mirror="$(koopa::gnu_mirror_url)"
+    jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.xz"
     url="${gnu_mirror}/${name}/${file}"
     koopa::download "$url"

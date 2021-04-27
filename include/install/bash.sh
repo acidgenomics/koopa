@@ -9,12 +9,12 @@ install_bash() { # {{{1
     # """
     local base_url cflags file flags gnu_mirror jobs link_app minor_version \
         mv_tr name patches range request url version
-    gnu_mirror="${INSTALL_GNU_MIRROR:?}"
-    jobs="${INSTALL_JOBS:?}"
     link_app="${INSTALL_LINK_APP:?}"
     name="${INSTALL_NAME:?}"
     version="${INSTALL_VERSION:?}"
     minor_version="$(koopa::major_minor_version "$version")"
+    gnu_mirror="$(koopa::gnu_mirror_url)"
+    jobs="$(koopa::cpu_count)"
     file="${name}-${minor_version}.tar.gz"
     url="${gnu_mirror}/${name}/${file}"
     koopa::download "$url"
