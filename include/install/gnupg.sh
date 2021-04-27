@@ -9,17 +9,17 @@ install_gnupg() { # {{{1
     # - https://gnupg.org/signature_key.html
     # - https://gnupg.org/download/integrity_check.html
     # """
-    local gpg gpg_agent version
+    local gpg gpg_agent gpg_keys version
     version="${INSTALL_VERSION:?}"
     case "$version" in
         2.3.1)
             # 2021-04-20.
-            libgpg_error_version='1.42'
-            libgcrypt_version='1.9.3'
-            libksba_version='1.5.1'
-            libassuan_version='2.5.5'
-            npth_version='1.6'
-            pinentry_version='1.1.1'
+            libgpg_error_version='1.42'     # 2021-03-22
+            libgcrypt_version='1.9.3'       # 2021-04-19
+            libksba_version='1.5.1'         # 2021-04-06
+            libassuan_version='2.5.5'       # 2021-03-22
+            npth_version='1.6'              # 2018-07-16
+            pinentry_version='1.1.1'        # 2021-01-22
             ;;
         2.2.26|2.2.27)
             libgpg_error_version='1.41'
@@ -101,13 +101,19 @@ install_gnupg() { # {{{1
         #       6DAA 6E64 A76D 2840 571B  4902 5288 97B8 2640 3ADA
         # uid   Werner Koch (dist signing 2020)
         #
-        # Use the last 4 elements per key in the '--rev-keys' call.
+        # Can use the last 4 elements per key in the '--rev-keys' call.
+        gpg_keys=(
+            'D8692123C4065DEA5E0F3AB5249B39D24F25E3B6'
+            '031EC2536E580D8EA286A9F22071B08A33BD3F06'
+            '5B80C5754298F0CB55D8ED6ABCEF7E294B092E28'
+            '6DAA6E64A76D2840571B4902528897B826403ADA'
+            # Extra key needed for pinentry 1.1.1.
+            '80CC1B8D04C262DDFEE1980C6F7F0F91D138FC7B'
+        )
+        "$gpg" \
+            --keyserver 'hkp://keyserver.ubuntu.com:80' \
+            --recv-keys "${gpg_keys[@]}"
         "$gpg" --list-keys
-        "$gpg" --keyserver hkp://keyserver.ubuntu.com:80 \
-            --recv-keys 249B39D24F25E3B6 \
-                        2071B08A33BD3F06 \
-                        BCEF7E294B092E28 \
-                        528897B826403ADA
     fi
     # Install dependencies.
     koopa::install_app \
