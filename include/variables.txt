@@ -135,7 +135,9 @@ geos="3.9.1"
 git="2.31.1"
 
 # https://gnupg.org/download/index.html
-gnupg="2.3.1"
+# Using the LTS release (2021-01-11). 2.3.1 seems to have issues on Ubuntu 20.
+# > gnupg="2.3.1"
+gnupg="2.2.27"
 
 # https://golang.org/dl/
 go="1.16.3"

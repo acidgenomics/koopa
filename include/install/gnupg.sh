@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# FIXME The '--force' flag doesn't propagate here.
+# NOTE The '--reinstall' flag doesn't propagate here currently.
 
-# FIXME Seeing this error at end of install:
+# NOTE Seeing this error at end of install for Ubuntu 20 LTS:
 # gpgconf: symbol lookup error: gpgconf: undefined symbol: gpgrt_set_confdir,
 # version GPG_ERROR_1.0
-
-# FIXME gpg --version is failing with 2.3.1 release...
 
 install_gnupg() { # {{{1
     # """
