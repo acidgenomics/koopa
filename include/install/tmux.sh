@@ -11,7 +11,7 @@ install_tmux() { # {{{1
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.gz"
-    url="https://github.com/${name}/${name}/releases/download/
+    url="https://github.com/${name}/${name}/releases/download/\
 ${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
