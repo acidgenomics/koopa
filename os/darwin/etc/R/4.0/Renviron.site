@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2021-03-16.
+## Updated 2021-04-27.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -36,8 +36,8 @@ R_LIBS_USER="~/Library/R/%v/library"
 ## This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-## gfortran 8.2 (for R 4.0+).
-PATH="/usr/local/gfortran/bin:${PATH}"
+## fxcoudert gfortran 8.2 (for R 4.0+).
+## > PATH="/usr/local/gfortran/bin:${PATH}"
 
 ## Homebrew curl.
 PATH="/usr/local/opt/curl/bin:${PATH}"
