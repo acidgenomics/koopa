@@ -26,7 +26,6 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
-# FIXME THIS NEEDS AN LDCONFIG UPDATE CALL AT THE END.
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -111,7 +110,6 @@ koopa::install_app() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        # FIXME REWORK THIS, DEFINING PER SCRIPT INSTEAD.
         jobs="$(koopa::cpu_count)"
         export INSTALL_JOBS="$jobs"
         export INSTALL_LINK_APP="$link_app"
@@ -126,7 +124,8 @@ koopa::install_app() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$prefix"
-    # FIXME This will cause issues with r, python?
+    # FIXME This will cause library issues with python, r, ruby unless
+    # we reconfigure the paths correct?
     koopa::link_into_opt "$prefix" "$name"
     if [[ "$link_app" -eq 1 ]]
     then
