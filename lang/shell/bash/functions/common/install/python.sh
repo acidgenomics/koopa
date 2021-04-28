@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME THIS IS INSTALLING INTO OUR SYSTEM, WHICH WE DONT WANT....ARGH
 koopa::install_pip() { # {{{1
     # """
     # Install pip for Python.
@@ -155,7 +156,8 @@ koopa::install_python_packages() { # {{{1
     install_flags=("--python=${python}")
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
     koopa::python_add_site_packages_to_sys_path "$python"
-    koopa::install_pip "${install_flags[@]}"
+    # FIXME RETHINK THIS APPROACH.
+    # > koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
