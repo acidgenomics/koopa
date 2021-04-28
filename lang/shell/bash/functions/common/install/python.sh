@@ -1,19 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Latest version of pip isn't getting installed correctly here.
-# May need to manually resolve with 'python3 -m pip install -U pip'.
-# However, this does resolve correctly with 'koopa update python-packages'.
-
-# NOTE Seeing this warning popping up with pip 21.1:
-# WARNING: Value for scheme.headers does not match.
-# Please report this to <https://github.com/pypa/pip/issues/9617>
-# distutils: /opt/koopa/app/python/3.9.4/include/python3.9/UNKNOWN
-# sysconfig: /opt/koopa/app/python/3.9.4/include/python3.9
-# WARNING: Additional context:
-# user = False
-# home = None
-# root = None
-# prefix = None
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
@@ -58,8 +44,7 @@ koopa::install_python_packages() { # {{{1
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
-            # pynvim
-            'pip'
+            # > 'pynvim'
             'pip2pi'
             'psutil'
             'pyflakes'
@@ -112,6 +97,7 @@ koopa::update_python_packages() { # {{{1
     koopa::is_installed "$python" || return 0
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
+    # FIXME MAKE THIS A FUNCTION.
     x="$("$python" -m pip list --outdated --format='freeze')"
     x="$(koopa::print "$x" | grep -v '^\-e')"
     if [[ -z "$x" ]]
