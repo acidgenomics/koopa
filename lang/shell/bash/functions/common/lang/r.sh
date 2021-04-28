@@ -165,6 +165,7 @@ koopa::link_r_site_library() { # {{{1
     # >     version="$(koopa::major_minor_version "$version")"
     # > fi
     # > lib_source="${opt_prefix}/r/${version}/site-library"
+    # FIXME NEED TO RETHINK THIS PATH.
     lib_source="${opt_prefix}/r/site-library"
     lib_target="${r_prefix}/site-library"
     koopa::dl 'Site library' "$lib_source"

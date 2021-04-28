@@ -15,10 +15,9 @@ install_gdal() { # {{{1
     # - https://github.com/OSGeo/gdal/issues/2402
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
-    local file jobs make_prefix name opt_prefix prefix reinstall url version
+    local file jobs make_prefix name prefix url version
     koopa::assert_is_linux
-    koopa::activate_opt_prefix geos proj
-    koopa::assert_is_installed proj python3
+    koopa::activate_opt_prefix geos proj python
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
