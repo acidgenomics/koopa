@@ -14,6 +14,7 @@ install_proj() { # {{{1
     version="${INSTALL_VERSION:?}"
     arch="$(koopa::arch)"
     jobs="$(koopa::cpu_count)"
+    make_prefix="$(koopa::make_prefix)"
     # Ensure we're using our custom build of SQLite, in '/usr/local'.
     export SQLITE3_CFLAGS="-I${make_prefix}/include"
     export SQLITE3_LIBS="-L${make_prefix}/lib -lsqlite3"
