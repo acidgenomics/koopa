@@ -1,5 +1,26 @@
 #!/usr/bin/env bash
 
+koopa::capitalize() { # {{{1
+    # """
+    # Capitalize the first letter (only) of a string.
+    # @note Updated 2021-04-28.
+    #
+    # @examples
+    # koopa::capitalize 'hello world' 'foo bar'
+    # ## 'Hello world' 'Foo bar'
+    # @seealso
+    # - https://stackoverflow.com/a/12487465
+    # """
+    koopa::assert_has_args "$#"
+    local str
+    for str in "$@"
+    do
+        str="$(tr '[:lower:]' '[:upper:]' <<< "${str:0:1}")${str:1}"
+        koopa::print "$str"
+    done
+    return 0
+}
+
 koopa::paste0() { # {{{1
     # """
     # Paste arguments (e.g. from an array) into a string separated by delimiter
