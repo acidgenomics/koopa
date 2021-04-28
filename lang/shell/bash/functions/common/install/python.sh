@@ -3,7 +3,7 @@
 koopa::install_pip() { # {{{1
     # """
     # Install pip for Python.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-04-28.
     # """
     local file name pos python reinstall tmp_dir url
     name='pip'
@@ -67,7 +67,7 @@ koopa::install_pip() { # {{{1
 # May need to manually resolve with 'python3 -m pip install -U pip'.
 # However, this does resolve correctly with 'koopa update python-packages'.
 
-# NOTE Seeing this warning popping up with pip on Ubuntu install from source:
+# NOTE Seeing this warning popping up with pip 21.1:
 # WARNING: Value for scheme.headers does not match.
 # Please report this to <https://github.com/pypa/pip/issues/9617>
 # distutils: /opt/koopa/app/python/3.9.4/include/python3.9/UNKNOWN
