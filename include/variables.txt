@@ -445,7 +445,7 @@ homebrew-cask-gpg-suite="2020.2"
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2021-02-11 from https://pypi.org/.
+# Updated 2021-04-28 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
@@ -454,13 +454,13 @@ homebrew-cask-gpg-suite="2020.2"
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-python-pip="21.0.1"
+python-pip="21.1"
 
-python-black="21.4b0"     # homebrew
+python-black="21.4b1"     # homebrew
 python-bpytop="1.0.64"    # homebrew
 python-flake8="3.9.1"     # homebrew
-python-pipx="0.16.1"      # homebrew
-python-pylint="2.8.1"     # homebrew
+python-pipx="0.16.2.0"    # homebrew
+python-pylint="2.8.2"     # homebrew
 python-ranger-fm="1.9.3"  # homebrew
 
 # Libraries without binaries {{{2
@@ -468,11 +468,11 @@ python-ranger-fm="1.9.3"  # homebrew
 
 python-pip2pi="0.8.1"
 python-psutil="5.8.0"
-python-pyflakes="2.2.0"
+python-pyflakes="2.3.1"
 python-pytaglib="1.4.6"
-python-pytest="6.2.2"
+python-pytest="6.2.3"
 python-pyyaml="5.4.1"
-python-setuptools="53.0.0"
+python-setuptools="56.0.0"
 python-six="1.15.0"
 python-wheel="0.36.2"
 
