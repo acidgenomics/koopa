@@ -438,7 +438,7 @@ _koopa_python_site_packages_prefix() { # {{{1
         # Legacy support for previous path until 2021-04-28.
         prefix="${opt_prefix}/python/site-packages"
     else
-        prefix="${opt_prefix}/python-packages"
+        prefix="${opt_prefix}/python-lib"
     fi
     _koopa_print "$prefix"
     return 0
@@ -455,6 +455,28 @@ _koopa_python_system_site_packages_prefix() { # {{{1
     _koopa_is_installed "$python" || return 0
     x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
     _koopa_print "$x"
+    return 0
+}
+
+# FIXME NEED TO CREATE PREFIX FOR _koopa_r_cache_prefix ?
+# FIXME Currently goes into /opt/koopa/opt/r/cache.
+
+_koopa_r_site_library_prefix() { # {{{1
+    # """
+    # R site library prefix.
+    # @note Updated 2021-04-28.
+    # """
+    local opt_prefix prefix
+    opt_prefix="$(_koopa_opt_prefix)"
+    if [ -d "${opt_prefix}/r/site-library" ]
+    then
+        # Legacy support for previous path until 2021-04-28.
+        prefix="${opt_prefix}/r/site-library"
+    else
+        prefix="${opt_prefix}/r-lib"
+    fi
+    _koopa_print "$prefix"
+
     return 0
 }
 
@@ -494,12 +516,13 @@ _koopa_ruby_gems_prefix() { # {{{1
         # Legacy support for previous path until 2021-04-28.
         prefix="${opt_prefix}/ruby/gems"
     else
-        prefix="${opt_prefix}/ruby-gems"
+        prefix="${opt_prefix}/ruby-lib"
     fi
     _koopa_print "$prefix"
     return 0
 }
 
+# FIXME REWORK THIS USING 'rust-lib' ?
 _koopa_rust_cargo_prefix() { # {{{1
     # """
     # Rust cargo install prefix.
@@ -517,6 +540,7 @@ _koopa_rust_cargo_prefix() { # {{{1
     return 0
 }
 
+# FIXME MOVE THIS TO TOP LEVEL?
 _koopa_rust_rustup_prefix() { # {{{1
     # """
     # Rust rustup install prefix.
