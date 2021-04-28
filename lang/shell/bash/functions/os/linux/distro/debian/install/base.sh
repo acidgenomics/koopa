@@ -165,20 +165,12 @@ koopa::debian_install_base() { # {{{1
             'zsh'
         )
     fi
-    # Only include these when not building GDAL, GEOS, and PROJ from source,
-    # which are enabled in full mode.
-    if [[ "${dict[dev]}" -eq 1 ]] && [[ "${dict[extra]}" -eq 0 ]]
-    then
-        pkgs+=(
-            'libgdal-dev'
-            'libgeos-dev'
-            'libproj-dev'
-            'proj-bin'
-        )
-    fi
     if [[ "${dict[dev]}" -eq 1 ]]
     then
         pkgs+=(
+            # > 'libmariadb-dev'
+            # > 'libmysqlclient-dev'  # Conflicts with libmariadb-dev (Ubuntu)
+            # > 'proj-bin'
             'libacl1-dev'
             'libapparmor-dev'
             'libapr1-dev'  # subversion
@@ -194,6 +186,8 @@ koopa::debian_install_base() { # {{{1
             'libfontconfig1-dev'
             'libfreetype6-dev'
             'libfribidi-dev'
+            'libgdal-dev'
+            'libgeos-dev'
             'libgfortran5'  # R nlme
             'libgif-dev'
             'libgl1-mesa-dev'
@@ -214,8 +208,6 @@ koopa::debian_install_base() { # {{{1
             'liblz4-dev'  # rsync
             'liblzma-dev'
             'libmagick++-dev'
-            # > 'libmariadb-dev'
-            # > 'libmysqlclient-dev'  # Conflicts with libmariadb-dev (Ubuntu)
             'libmodule-build-perl'
             'libmpc-dev'
             'libmpfr-dev'
@@ -232,6 +224,7 @@ koopa::debian_install_base() { # {{{1
             'libpng-dev'
             'libpoppler-cpp-dev'
             'libpq-dev'
+            'libproj-dev'
             'libprotobuf-dev'
             'libprotoc-dev'
             'librdf0-dev'
