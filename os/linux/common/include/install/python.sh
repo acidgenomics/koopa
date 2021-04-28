@@ -41,9 +41,12 @@ install_python() { # {{{1
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    minor_version="$(koopa::major_minor_version "$version")"
     jobs="$(koopa::cpu_count)"
+    make_prefix="$(koopa::make_prefix)"
+    # FIXME CONVERT THIS TO UPPER.
     file="Python-${version}.tar.xz"
-    url="https://www.python.org/ftp/python/${version}/${file}"
+    url="https://www.${name}.org/ftp/${name}/${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "Python-${version}"
@@ -57,6 +60,9 @@ install_python() { # {{{1
     # > make test
     # > Use 'make altinstall' here instead?
     make install
+
+    python="${prefix}/bin/${name}${minor_version}"
+    koopa::python_add_site_packages_to_sys_path "$python"
     return 0
 }
 
