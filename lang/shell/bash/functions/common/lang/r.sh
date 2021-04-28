@@ -142,6 +142,8 @@ koopa::link_r_etc() { # {{{1
     return 0
 }
 
+# FIXME REWORK THE PATH HERE.
+# FIXME CONSIDER LINKING TO '/opt/koopa/opt/r-packages'
 koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
