@@ -17,10 +17,12 @@ koopa::linux_install_gcc() { # {{{1
     koopa::linux_install_app --name='gcc' --name-fancy='GCC' "$@"
 }
 
+# FIXME Consider not linking if system GDAL is installed.
 koopa::linux_install_gdal() { # {{{1
     koopa::linux_install_app --name='gdal' --name-fancy='GDAL' "$@"
 }
 
+# FIXME Consider not linking if system GEOS is installed.
 koopa::linux_install_geos() { # {{{1
     koopa::linux_install_app --name='geos' --name-fancy='GEOS' "$@"
 }
@@ -86,6 +88,7 @@ koopa::linux_install_password_store() { # {{{1
     koopa::linux_install_app --name='password-store' "$@"
 }
 
+# FIXME Consider not linking if '/usr/bin/proj' exists.
 koopa::linux_install_proj() { # {{{1
     koopa::linux_install_app --name='proj' --name-fancy='PROJ' "$@"
 }
