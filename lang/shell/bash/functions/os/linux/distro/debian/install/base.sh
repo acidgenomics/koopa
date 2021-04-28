@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-04-26.
+    # @note Updated 2021-04-28.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -22,16 +22,14 @@ koopa::debian_install_base() { # {{{1
     # - How to replicate installed packages across machines.
     #   https://serverfault.com/questions/56848
     # """
-    local dict legacy_pkgs name_fancy pkg pkgs pos remove_pkgs
+    local dict name_fancy pkgs pos
     koopa::assert_is_installed apt apt-get sed sudo
     declare -A dict=(
         [apt_enabled_repos]="$(koopa::apt_enabled_repos)"
-        [apt_installed]="$(sudo apt list --installed 2>/dev/null)"
         [base]=1
         [dev]=1
         [extra]=0
         [recommended]=1
-        [remove_legacy]=0
         [upgrade]=1
     )
     pos=()
@@ -52,10 +50,6 @@ koopa::debian_install_base() { # {{{1
                 dict[extra]=1
                 dict[recommended]=1
                 dict[upgrade]=1
-                shift 1
-                ;;
-            --remove-legacy)
-                dict[remove_legacy]=1
                 shift 1
                 ;;
             "")
@@ -99,40 +93,6 @@ koopa::debian_install_base() { # {{{1
     then
         koopa::alert "Upgrading system via 'dist-upgrade'."
         koopa::apt_get dist-upgrade
-    fi
-    if [[ "${dict[remove_legacy]}" -eq 1 ]]
-    then
-        # This step is only recommended when cleaning up a persistent virtual
-        # machine that may have a number of old packages installed.
-        koopa::alert 'Removing legacy packages (not generally recommended).'
-        legacy_pkgs=(
-            'cargo'                   # use 'install-rust'
-            'containerd'              # docker legacy
-            'docker'                  # docker legacy
-            'docker-engine'           # docker legacy
-            'docker.io'               # docker legacy
-            'emacs'                   # use 'install-emacs'
-            'emacs25'                 # gets installed by zsh
-            'fish'                    # use 'install-fish'
-            'libgdal-dev'             # use 'install-gdal'
-            'libgeos-dev'             # use 'install-geos'
-            'libproj-dev'             # use 'install-proj'
-            'proj-bin'                # use 'install-proj'
-            'proj-data'               # use 'install-proj'
-            'runc'                    # docker legacy
-        )
-        remove_pkgs=()
-        for pkg in "${legacy_pkgs[@]}"
-        do
-            if koopa::str_match_regex "${dict[apt_installed]}" "^${pkg}/"
-            then
-                remove_pkgs+=("$pkg")
-            fi
-        done
-        if koopa::is_array_non_empty "${remove_pkgs[@]}"
-        then
-            sudo apt-get --yes remove "${remove_pkgs[@]}"
-        fi
     fi
     pkgs=()
     # These packages should be included in the Docker base image.
