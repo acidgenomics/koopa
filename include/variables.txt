@@ -456,7 +456,8 @@ homebrew-cask-gpg-suite="2020.2"
 
 # 21.1 is generating annoying warnings about distutils and sysconfig mismatch.
 # https://stackoverflow.com/questions/67244301/
-python-pip="21.0.1"
+# > python-pip="21.0.1"
+python-pip="21.1"
 
 python-black="21.4b1"     # homebrew
 python-bpytop="1.0.64"    # homebrew
