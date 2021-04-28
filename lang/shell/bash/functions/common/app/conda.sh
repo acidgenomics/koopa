@@ -43,6 +43,7 @@ koopa::activate_conda_env() { # {{{1
     return 0
 }
 
+# NOTE Consider reworking the variables as an array here.
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
@@ -52,7 +53,6 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         quality_control reticulate riboseq rnaseq trimming variation \
         version workflows
     koopa::assert_is_installed conda
-    # FIXME Rework this as an array...
     all=0
     aligners=0
     chipseq=0
@@ -183,7 +183,10 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     fi
     if [[ "$data_mining" -eq 1 ]]
     then
-        envs+=('entrez-direct' 'sra-tools')
+        envs+=(
+            'entrez-direct'
+            'sra-tools'
+        )
     fi
     if [[ "$file_formats" -eq 1 ]]
     then
@@ -221,8 +224,15 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     if [[ "$riboseq" -eq 1 ]]
     then
         envs+=(
+            'ribocode'
             'ribodiff'
         )
+        if koopa::is_linux
+        then
+            envs+=(
+                'ribotaper'
+            )
+        fi
     fi
     if [[ "$rnaseq" -eq 1 ]]
     then
