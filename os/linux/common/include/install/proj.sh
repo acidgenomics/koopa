@@ -7,7 +7,7 @@ install_proj() { # {{{1
     # """
     local arch file make_prefix name prefix url version
     koopa::assert_is_linux
-    koopa::assert_is_not_file '/usr/bin/proj'
+    # > koopa::assert_is_not_file '/usr/bin/proj'
     koopa::assert_is_installed sqlite3
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
