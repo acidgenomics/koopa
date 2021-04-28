@@ -607,18 +607,21 @@ _koopa_activate_opt_prefix() { # {{{1
     # @note Updated 2021-04-28.
     #
     # @examples
-    # _koopa_activate_opt_prefix proj
+    # _koopa_activate_opt_prefix proj gdal
     # """
-    local name prefix
-    [ "$#" -eq 1 ] || return 1
-    name="${1:?}"
-    prefix="$(_koopa_opt_prefix)/${name}"
-    if [ ! -d "$prefix" ]
-    then
-        _koopa_warning "Not installed: '${prefix}'."
-        return 1
-    fi
-    _koopa_activate_prefix "$prefix"
+    local name opt_prefix prefix
+    [ "$#" -gt 0 ] || return 1
+    opt_prefix="$(_koopa_opt_prefix)"
+    for name in "$@"
+    do
+        prefix="${opt_prefix}/${name}"
+        if [ ! -d "$prefix" ]
+        then
+            _koopa_warning "Not installed: '${prefix}'."
+            return 1
+        fi
+        _koopa_activate_prefix "$prefix"
+    done
     return 0
 }
 
