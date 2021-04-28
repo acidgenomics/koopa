@@ -601,6 +601,27 @@ _koopa_activate_openjdk() { # {{{1
     return 0
 }
 
+_koopa_activate_opt_prefix() { # {{{1
+    # """
+    # Activate koopa opt prefix.
+    # @note Updated 2021-04-28.
+    #
+    # @examples
+    # _koopa_activate_opt_prefix proj
+    # """
+    local name prefix
+    [ "$#" -eq 1 ] || return 1
+    name="${1:?}"
+    prefix="$(_koopa_opt_prefix)/${name}"
+    if [ ! -d "$prefix" ]
+    then
+        _koopa_warning "Not installed: '${prefix}'."
+        return 1
+    fi
+    _koopa_activate_prefix "$prefix"
+    return 0
+}
+
 _koopa_activate_perlbrew() { # {{{1
     # """
     # Activate Perlbrew.
