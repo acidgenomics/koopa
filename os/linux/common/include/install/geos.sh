@@ -22,7 +22,6 @@ install_geos() { # {{{1
     # """
     local file jobs name prefix url version
     koopa::assert_is_linux
-    koopa::assert_is_not_file '/usr/bin/geos-config'
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"

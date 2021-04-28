@@ -17,7 +17,7 @@ install_gdal() { # {{{1
     # """
     local file jobs make_prefix name opt_prefix prefix reinstall url version
     koopa::assert_is_linux
-    koopa::activate_opt_prefix proj
+    koopa::activate_opt_prefix geos proj
     koopa::assert_is_installed proj python3
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
