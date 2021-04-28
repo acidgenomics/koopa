@@ -3,7 +3,7 @@
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-04-28.
     # """
     local pip_install_flags pos python reinstall target
     koopa::assert_has_args "$#"
@@ -39,8 +39,6 @@ koopa::pip_install() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::is_installed "$python" || return 0
-    # Install pip automatically, if necessary.
-    ! koopa::is_python_package_installed pip && koopa::install_pip
     target="$(koopa::python_site_packages_prefix "$python")"
     koopa::sys_mkdir "$target"
     koopa::dl \
