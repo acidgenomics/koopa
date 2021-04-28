@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for 'koopa configure system'.
+# NOTE May want to rework 'koopa update r-config' as 'koopa configure r'.
+
 koopa::_koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
