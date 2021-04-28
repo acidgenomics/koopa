@@ -46,11 +46,13 @@ koopa::activate_conda_env() { # {{{1
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2020-10-27.
+    # @note Updated 2021-04-28.
     # """
     local all aligners chipseq data_mining env envs file_formats methylation \
-        quality_control reticulate rnaseq trimming variation version workflows
+        quality_control reticulate riboseq rnaseq trimming variation \
+        version workflows
     koopa::assert_is_installed conda
+    # FIXME Rework this as an array...
     all=0
     aligners=0
     chipseq=0
@@ -59,6 +61,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     methylation=0
     quality_control=0
     reticulate=0
+    riboseq=0
     rnaseq=0
     trimming=0
     variation=0
@@ -109,6 +112,10 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 reticulate=1
                 shift 1
                 ;;
+            --riboseq|--ribo-seq)
+                riboseq=1
+                shift 1
+                ;;
             --rnaseq|--rna-seq)
                 rnaseq=1
                 shift 1
@@ -140,8 +147,9 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         file_formats=1
         methylation=1
         quality_control=1
-        rnaseq=1
         reticulate=1
+        riboseq=1
+        rnaseq=1
         trimming=1
         variation=1
         workflows=1
@@ -208,6 +216,12 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             'kraken2'
             'multiqc'
             'qualimap'
+        )
+    fi
+    if [[ "$riboseq" -eq 1 ]]
+    then
+        envs+=(
+            'ribodiff'
         )
     fi
     if [[ "$rnaseq" -eq 1 ]]
