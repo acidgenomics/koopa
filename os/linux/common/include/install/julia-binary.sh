@@ -22,13 +22,13 @@ install_julia_binary() { # {{{1
     # https://discourse.julialang.org/t/
     #     problem-building-julia-version-jl-llvm-6-0-not-found/11545
     # """
-    local arch file minor_version name prefix url version
+    local arch file minor_version name prefix subdir url version
     koopa::assert_is_linux
-    
-    
-    
-    minor_version="$(koopa::major_minor_version "$version")"
+    name="${INSTALL_NAME:?}"
+    prefix="${INSTALL_PREFIX:?}"
+    version="${INSTALL_VERSION:?}"
     arch="$(koopa::arch)"
+    minor_version="$(koopa::major_minor_version "$version")"
     file="${name}-${version}-linux-${arch}.tar.gz"
     case "$arch" in
         x86*)
