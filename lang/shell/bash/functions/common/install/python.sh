@@ -66,10 +66,21 @@ koopa::install_pip() { # {{{1
 # NOTE Latest version of pip isn't getting installed correctly here.
 # May need to manually resolve with 'python3 -m pip install -U pip'.
 # However, this does resolve correctly with 'koopa update python-packages'.
+
+# NOTE Seeing this warning popping up with pip on Ubuntu install from source:
+# WARNING: Value for scheme.headers does not match.
+# Please report this to <https://github.com/pypa/pip/issues/9617>
+# distutils: /opt/koopa/app/python/3.9.4/include/python3.9/UNKNOWN
+# sysconfig: /opt/koopa/app/python/3.9.4/include/python3.9
+# WARNING: Additional context:
+# user = False
+# home = None
+# root = None
+# prefix = None
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-01-08.
+    # @note Updated 2021-04-28.
     # """
     local install_flags name_fancy pkg pkg_lower pkgs pos python version
     name_fancy='Python packages'
