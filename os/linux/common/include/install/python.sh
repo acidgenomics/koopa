@@ -25,7 +25,7 @@ install_python() { # {{{1
     # - https://docs.python.org/3/using/unix.html
     # - https://stackoverflow.com/questions/43333207
     # """
-    local file jobs name name2 prefix url version
+    local file flags jobs name name2 prefix url version
     koopa::assert_is_linux
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
@@ -39,18 +39,21 @@ install_python() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name2}-${version}"
-    ./configure \
-        --enable-optimizations \
-        --enable-shared \
-        --prefix="$prefix" \
-        --without-ensurepip \
-        LDFLAGS="-Wl,--rpath=${make_prefix}/lib"
+    flags=(
+        # Disable automatic pip install with:
+        # > '--without-ensurepip'
+        "--prefix=${prefix}"
+        "LDFLAGS=-Wl,--rpath=${make_prefix}/lib"
+        '--enable-optimizations'
+        '--enable-shared'
+    )
+    ./configure "${flags[@]}"
     make --jobs="$jobs"
     # > make test
     # > Use 'make altinstall' here instead?
     make install
-
     python="${prefix}/bin/${name}${minor_version}"
+    koopa::assert_is_file "$python"
     koopa::python_add_site_packages_to_sys_path "$python"
     return 0
 }
