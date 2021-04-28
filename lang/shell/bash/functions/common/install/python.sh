@@ -1,69 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME THIS IS INSTALLING INTO OUR SYSTEM, WHICH WE DONT WANT....ARGH
-koopa::install_pip() { # {{{1
-    # """
-    # Install pip for Python.
-    # @note Updated 2021-04-28.
-    # """
-    local file name pos python reinstall tmp_dir url
-    name='pip'
-    python="$(koopa::python)"
-    reinstall=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --python=*)
-                python="${1#*=}"
-                shift 1
-                ;;
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            '')
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed "$python"
-    if [[ "$reinstall" -eq 0 ]]
-    then
-        if koopa::is_python_package_installed --python="$python" "$name"
-        then
-            koopa::alert_note "Python package '${name}' is already installed."
-            return 0
-        fi
-    fi
-    koopa::install_start "$name"
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        file='get-pip.py'
-        url="https://bootstrap.pypa.io/${file}"
-        koopa::download "$url"
-        "$python" "$file" --no-warn-script-location
-    )
-    koopa::rm "$tmp_dir"
-    koopa::is_symlinked_app "$python" && koopa::link_app python
-    koopa::install_success "$name"
-    return 0
-}
-
 # NOTE Latest version of pip isn't getting installed correctly here.
 # May need to manually resolve with 'python3 -m pip install -U pip'.
 # However, this does resolve correctly with 'koopa update python-packages'.
@@ -156,8 +92,6 @@ koopa::install_python_packages() { # {{{1
     install_flags=("--python=${python}")
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
     koopa::python_add_site_packages_to_sys_path "$python"
-    # FIXME RETHINK THIS APPROACH.
-    # > koopa::install_pip "${install_flags[@]}"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
