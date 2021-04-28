@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Need to improve support for '_koopa_r_site_packages_prefix' ?
+
 # NOTE Consider migrating to GNU Stow approach here in a future update.
 _koopa_app_prefix() { # {{{1
     # """
@@ -422,14 +424,23 @@ _koopa_pyenv_prefix() { # {{{1
 _koopa_python_site_packages_prefix() { # {{{1
     # """
     # Python site packages library location.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-04-28.
     #
     # This was changed to an unversioned approach in koopa v0.9.
     #
     # @seealso
     # > "$python" -m site
     # """
-    _koopa_print "$(_koopa_opt_prefix)/python/site-packages"
+    local opt_prefix prefix
+    opt_prefix="$(_koopa_opt_prefix)"
+    if [ -d "${opt_prefix}/python/site-packages" ]
+    then
+        # Legacy support for previous path until 2021-04-28.
+        prefix="${opt_prefix}/python/site-packages"
+    else
+        prefix="${opt_prefix}/python-packages"
+    fi
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -471,11 +482,20 @@ _koopa_refdata_prefix() { # {{{1
 _koopa_ruby_gems_prefix() { # {{{1
     # """
     # Ruby gems prefix.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-04-28.
     # """
-    local prefix
-    prefix="${GEM_HOME:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/ruby/gems"
+    local opt_prefix prefix
+    opt_prefix="$(_koopa_opt_prefix)"
+    if [ -d "${GEM_HOME:-}" ]
+    then
+        prefix="${GEM_HOME:-}"
+    elif [ -d "${opt_prefix}/ruby/gems" ]
+    then
+        # Legacy support for previous path until 2021-04-28.
+        prefix="${opt_prefix}/ruby/gems"
+    else
+        prefix="${opt_prefix}/ruby-gems"
+    fi
     _koopa_print "$prefix"
     return 0
 }
@@ -530,8 +550,17 @@ _koopa_tests_prefix() { # {{{1
 _koopa_venv_prefix() { # {{{1
     # """
     # Python venv prefix.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-04-28.
     # """
-    _koopa_print "$(_koopa_opt_prefix)/python/virtualenvs"
+    local opt_prefix prefix
+    opt_prefix="$(_koopa_opt_prefix)"
+    if [ -d "${opt_prefix}/python/virtualenvs" ]
+    then
+        # Legacy support for previous path until 2021-04-28.
+        prefix="${opt_prefix}/python/virtualenvs"
+    else
+        prefix="${opt_prefix}/virtualenvs"
+    fi
+    _koopa_print "$prefix"
     return 0
 }
