@@ -15,8 +15,6 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
-# FIXME NEED TO SUPPORT '--r=' flag here.
-# FIXME ERROR IF R IS NOT INSTALLED.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
@@ -26,11 +24,12 @@ koopa::configure_r() { # {{{1
     # """
     local etc_prefix make_prefix pkg_index r r_prefix
     koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
-    r="$(koopa::which_realpath "$r")"
+    r="${1:-$(koopa::r)}"
     koopa::assert_is_installed "$r"
+    r="$(koopa::which_realpath "$r")"
     r_prefix="$(koopa::r_prefix "$r")"
-    koopa::h1 'Updating R configuration.'
+    koopa::assert_is_dir "$r_prefix"
+    koopa::alert 'Updating R configuration.'
     koopa::dl \
         'R home' "$r_prefix" \
         'R path' "$r"
@@ -52,11 +51,10 @@ koopa::configure_r() { # {{{1
     else
         koopa::sys_set_permissions -r "${r_prefix}/library"
     fi
-    # FIXME THESE NEED TO REQUIRE '--r=XXX' argument.
-    koopa::link_r_etc --r="$r"
-    koopa::link_r_site_library --r="$r"
-    koopa::r_javareconf --r="$r"
-    koopa::r_rebuild_docs --r="$r"
+    koopa::link_r_etc "$r"
+    koopa::link_r_site_library "$r"
+    koopa::r_javareconf "$r"
+    koopa::r_rebuild_docs "$r"
     koopa::alert_success 'Update of R configuration was successful.'
     return 0
 }
@@ -140,20 +138,20 @@ koopa::kill_r() { # {{{1
     pkill rsession
 }
 
-# FIXME REQUIRE '--r=XXX' argument.
 koopa::link_r_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-11-12.
+    # @note Updated 2021-04-29.
     #
     # Don't copy Makevars file across machines.
     # """
     local distro_prefix file files r r_etc_source r_etc_target r_prefix version
     koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
-    koopa::is_installed "$r" || return 1
+    r="${1:-$(koopa::r)}"
+    koopa::assert_is_installed "$r"
+    r="$(koopa::which_realpath "$r")"
     r_prefix="$(koopa::r_prefix "$r")"
-    [[ -d "$r_prefix" ]] || return 1
+    koopa::assert_is_dir "$r_prefix"
     version="$(koopa::r_version "$r")"
     if [[ "$version" != 'devel' ]]
     then
@@ -195,7 +193,7 @@ koopa::link_r_etc() { # {{{1
 koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-04-29.
     #
     # R on Fedora won't pick up site library in '--vanilla' mode unless we
     # symlink the site-library into '/usr/local/lib/R' as well.
@@ -205,16 +203,16 @@ koopa::link_r_site_library() { # {{{1
     # """
     local lib_source lib_target opt_prefix r r_prefix version
     koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
+    r="${1:-$(koopa::r)}"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
+
+    # FIXME RETHINK THIS APPROACH.
+    # CREATE THE LIBRARY IN OPT, AND SYMLINK INTO R INSTALL.
+
     opt_prefix="$(koopa::opt_prefix)"
-    # > version="$(koopa::r_version "$r")"
-    # > if [[ "$version" != 'devel' ]]
-    # > then
-    # >     version="$(koopa::major_minor_version "$version")"
-    # > fi
-    # > lib_source="${opt_prefix}/r/${version}/site-library"
+
+
     # FIXME NEED TO RETHINK THIS PATH.
     lib_source="${opt_prefix}/r/site-library"
     lib_target="${r_prefix}/site-library"
@@ -242,7 +240,6 @@ koopa::pkgdown_deploy_to_aws() { # {{{1
     return 0
 }
 
-# FIXME REQUIRE '--r=XXX' argument.
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
@@ -267,10 +264,10 @@ koopa::r_javareconf() { # {{{1
     # > library(rJava)
     # > .jinit()
     # """
-    local java_flags java_home r r2
+    local java_flags java_home r r_cmd
     koopa::assert_has_args_le "$#" 1
     r="${1:-$(koopa::r)}"
-    koopa::is_installed "$r" || return 0
+    koopa::assert_is_installed "$r"
     r="$(koopa::which_realpath "$r")"
     if [[ -z "${java_home:-}" ]]
     then
@@ -296,20 +293,19 @@ koopa::r_javareconf() { # {{{1
     )
     if koopa::is_symlinked_app "$r"
     then
-        r2=("$r")
+        r_cmd=("$r")
     else
         koopa::assert_has_sudo
-        r2=('sudo' "$r")
+        r_cmd=('sudo' "$r")
     fi
-    "${r2[@]}" --vanilla CMD javareconf "${java_flags[@]}"
+    "${r_cmd[@]}" --vanilla CMD javareconf "${java_flags[@]}"
     return 0
 }
 
-# FIXME REQUIRE '--r=XXX' argument.
 koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
-    # @note Updated 2020-08-11.
+    # @note Updated 2021-04-29.
     #
     # 1. Ensure HTML package index is writable.
     # 2. Touch an empty 'R.css' file to eliminate additional package warnings.
@@ -321,8 +317,9 @@ koopa::r_rebuild_docs() { # {{{1
     #     make.packages.html.html
     # """
     local doc_dir html_dir pkg_index r rscript rscript_flags
-    r="${1:-R}"
+    r="${1:-$(koopa::r)}"
     rscript="${r}script"
+    koopa::assert_is_installed "$r" "$rscript"
     rscript_flags=('--vanilla')
     koopa::assert_is_installed "$r" "$rscript"
     koopa::alert 'Updating HTML package index.'
