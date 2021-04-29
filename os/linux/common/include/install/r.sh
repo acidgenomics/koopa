@@ -3,13 +3,7 @@
 install_r() { # {{{1
     # """
     # Install R.
-    # @note Updated 2020-11-17.
-    #
-    # Using TeX Live 2013, we'll see this warning:
-    #
-    #     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF
-    #     vignettes and package manuals will not be rendered optimally
-    #
+    # @note Updated 2021-04-29.
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
     # - https://hub.docker.com/r/rocker/r-ver/dockerfile
@@ -19,7 +13,7 @@ install_r() { # {{{1
     # - Homebrew recipe:
     #   https://github.com/Homebrew/homebrew-core/blob/master/Formula/r.rb
     # """
-    local file flags jobs major_version prefix url version
+    local file flags jobs major_version prefix r url version
     koopa::assert_is_linux
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
@@ -62,6 +56,9 @@ install_r() { # {{{1
     make pdf
     make info
     make install
+    r="${prefix}/bin/R"
+    koopa::assert_is_file "$r"
+    koopa::configure_r "$r"
     return 0
 }
 

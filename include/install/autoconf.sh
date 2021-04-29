@@ -6,6 +6,7 @@ install_autoconf() { # {{{1
     # @note Updated 2021-04-27.
     # """
     local file gnu_mirror jobs name prefix url version
+    # FIXME AVOID THE USE OF NAME HERE.
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
