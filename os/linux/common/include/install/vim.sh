@@ -3,14 +3,11 @@
 install_vim() { # {{{1
     # """
     # Install Vim.
-    # @note Updated 2021-04-28.
-    #
-    # Installing with Python 3 configuration.
+    # @note Updated 2021-04-29.
     # """
-    local file flags jobs make_prefix name prefix python3 python3_config_dir \
+    local file flags jobs make_prefix prefix python3 python3_config_dir \
         url version
     koopa::assert_is_linux
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
@@ -20,10 +17,10 @@ install_vim() { # {{{1
     koopa::assert_is_installed "$python3" "$python3_config"
     python3_config_dir="$("$python3_config" --configdir)"
     file="v${version}.tar.gz"
-    url="https://github.com/${name}/${name}/archive/${file}"
+    url="https://github.com/vim/vim/archive/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cd "${name}-${version}"
+    koopa::cd "vim-${version}"
     flags=(
         "--prefix=${prefix}"
         "--with-python3-command=${python3}"
