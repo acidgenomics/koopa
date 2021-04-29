@@ -74,7 +74,6 @@ koopa::pip_outdated() { # {{{1
     return 0
 }
 
-# FIXME Rename this to 'koopa::py_script'?
 koopa::pyscript() { # {{{1
     # """
     # Execute a Python script.
