@@ -58,6 +58,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     return 0
 }
 
+# FIXME NEED TO REWORK AND TEST THIS FUNCTION.
 koopa::macos_install_r_devel() { # {{{1
     # """
     # Install R-devel on macOS.
@@ -95,12 +96,14 @@ koopa::macos_install_r_devel() { # {{{1
     koopa::ln -S \
         "/Library/Frameworks/R-${r_version}.framework" \
         '/Library/Frameworks/R.framework'
+    # FIXME Need to define '--r' here.
     koopa::configure_r
     koopa::install_success "$name_fancy"
     koopa::alert_note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
     return 0
 }
 
+# FIXME Define this in r-aciddevtools instead.
 koopa::macos_install_r_sf() { # {{{1
     # """
     # Install R sf package.
@@ -125,6 +128,7 @@ koopa::macos_install_r_sf() { # {{{1
     return 0
 }
 
+# FIXME Define this in r-aciddevtools instead.
 koopa::macos_install_r_units() { # {{{1
     # """
     # Install R units package.
@@ -145,6 +149,7 @@ koopa::macos_install_r_units() { # {{{1
     return 0
 }
 
+# FIXME Define this in r-aciddevtools instead.
 koopa::macos_install_r_xml() { # {{{1
     # """
     # Install R XML package.
