@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 
-install_automake() { # {{{1
+install_gnu() { # {{{1
     # """
-    # Install automake.
+    # Install GNU package.
     # @note Updated 2021-04-29.
     # """
-    local file gnu_mirror jobs prefix url version
+    local file gnu_mirror jobs name prefix url version
+    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
-    file="automake-${version}.tar.xz"
-    url="${gnu_mirror}/automake/${file}"
+    file="${name}-${version}.tar.xz"
+    url="${gnu_mirror}/${name}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cd "automake-${version}"
+    koopa::cd "${name}-${version}"
     ./configure --prefix="$prefix"
     make --jobs="$jobs"
     # > make check
@@ -22,4 +23,4 @@ install_automake() { # {{{1
     return 0
 }
 
-install_automake "$@"
+install_gnu "$@"

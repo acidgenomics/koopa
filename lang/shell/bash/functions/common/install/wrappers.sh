@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 
 koopa::install_autoconf() { # {{{1
-    koopa::install_app --name='autoconf' "$@"
+    koopa::install_app \
+        --name='autoconf' \
+        --script-name='gnu' \
+        "$@"
 }
 
 koopa::install_automake() { # {{{1
-    koopa::install_app --name='automake' "$@"
+    koopa::install_app \
+        --name='automake' \
+        --script-name='gnu' \
+        "$@"
 }
 
 koopa::install_bash() { # {{{1
@@ -54,6 +60,7 @@ koopa::install_git() { # {{{1
 
 koopa::install_gnupg() { # {{{1
     koopa::install_app --name='gnupg' --name-fancy='GnuPG suite' "$@"
+    # FIXME MOVE THIS TO THE SCRIPT?
     koopa::is_installed gpg-agent && gpgconf --kill gpg-agent
     return 0
 }
@@ -148,6 +155,7 @@ koopa::install_singularity() { # {{{1
 
 koopa::install_sqlite() { # {{{1
     koopa::install_app --name='sqlite' --name-fancy='SQLite' "$@"
+    # FIXME MOVE THIS TO THE SCRIPT?
     koopa::alert_note 'Reinstall PROJ and GDAL, if built from source.'
     return 0
 }
@@ -178,6 +186,7 @@ koopa::install_wget() { # {{{1
 
 koopa::install_zsh() { # {{{1
     koopa::install_app --name='zsh' --name-fancy='Zsh' "$@"
+    # FIXME MOVE THIS TO THE SCRIPT?
     koopa::fix_zsh_permissions
     return 0
 }

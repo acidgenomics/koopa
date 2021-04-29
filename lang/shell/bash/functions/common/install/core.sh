@@ -29,7 +29,7 @@ koopa::find_app_version() { # {{{1
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-04-29.
     # """
     local include_dirs link_args link_app make_prefix name name_fancy \
         prefix reinstall script script_name script_prefix tmp_dir version
@@ -112,6 +112,7 @@ koopa::install_app() { # {{{1
         koopa::cd "$tmp_dir"
         # This is intended primarily for Bash, Fish, Zsh install scripts.
         export INSTALL_LINK_APP="$link_app"
+        export INSTALL_NAME="$name"
         export INSTALL_PREFIX="$prefix"
         export INSTALL_VERSION="$version"
         script="${script_prefix}/${script_name}.sh"
@@ -137,7 +138,7 @@ koopa::install_app() { # {{{1
         # We're including the 'true' catch here to avoid cp issues on Arch.
         koopa::link_app "${link_args[@]}" || true
     fi
-    if koopa::is_shared_install
+    if koopa::is_shared_install && koopa::is_installed ldconfig
     then
         sudo ldconfig
     fi

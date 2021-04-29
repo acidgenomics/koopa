@@ -3,15 +3,12 @@
 install_cmake() { # {{{1
     # """
     # Install CMake.
-    # @note Updated 2021-04-27.
-    #
-    # We're enforcing system GCC here to avoid libstdc++ errors.
+    # @note Updated 2021-04-29.
     #
     # @seealso
     # - https://github.com/Kitware/CMake
     # """
-    local cc cxx file jobs name prefix url version
-    name="${INSTALL_NAME:?}"
+    local cc cxx file jobs prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
@@ -23,11 +20,11 @@ install_cmake() { # {{{1
         export CC="$cc"
         export CXX="$cxx"
     fi
-    file="${name}-${version}.tar.gz"
+    file="cmake-${version}.tar.gz"
     url="https://github.com/Kitware/CMake/releases/download/v${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cd "${name}-${version}"
+    koopa::cd "cmake-${version}"
     # Note that the './configure' script is just a wrapper for './bootstrap'.
     # > ./bootstrap --help
     ./bootstrap \
