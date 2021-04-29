@@ -645,7 +645,7 @@ koopa::pyenv_prefix() { # {{{1
 }
 
 koopa::python() { # {{{1
-    _koopa_python
+    _koopa_python "$@"
 }
 
 koopa::python_site_packages_prefix() { # {{{1
@@ -654,6 +654,10 @@ koopa::python_site_packages_prefix() { # {{{1
 
 koopa::python_system_site_packages_prefix() { # {{{1
     _koopa_python_system_site_packages_prefix "$@"
+}
+
+koopa::r() { # {{{1
+    _koopa_r "$@"
 }
 
 koopa::rbenv_prefix() { # {{{1

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME DONT ALLOW THE USER TO SET PYTHON PATH HERE...
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
