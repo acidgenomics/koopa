@@ -49,6 +49,7 @@ install_sqlite() { # {{{1
     ./configure "${flags[@]}"
     make --jobs="$jobs"
     make install
+    koopa::alert_note 'Reinstall PROJ and GDAL, if built from source.'
     return 0
 }
 

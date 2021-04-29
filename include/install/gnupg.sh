@@ -3,7 +3,7 @@
 install_gnupg() { # {{{1
     # """
     # Install GnuPG.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-04-29.
     #
     # 2.2.27 is current LTS release.
     #
@@ -159,6 +159,10 @@ install_gnupg() { # {{{1
         --version="$version" \
         --script-name='gnupg-gcrypt' \
         "$@"
+    if koopa::is_installed gpg-agent
+    then
+        gpgconf --kill gpg-agent
+    fi
     return 0
 }
 
