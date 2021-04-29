@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2021-01-28.
+## Updated 2021-04-29.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -157,7 +157,7 @@ TZ="America/New_York"
 ## -----------------------------------------------------------------------------
 
 ## Note that this setting is inherited by BiocFileCache.
-R_USER_CACHE_DIR="${KOOPA_OPT_PREFIX}/r/cache"
+R_USER_CACHE_DIR="${KOOPA_OPT_PREFIX}/r-cache"
 
 ## remotes {{{2
 ## -----------------------------------------------------------------------------
