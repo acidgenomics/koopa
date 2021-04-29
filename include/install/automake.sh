@@ -3,20 +3,18 @@
 install_automake() { # {{{1
     # """
     # Install automake.
-    # @note Updated 2021-04-26.
+    # @note Updated 2021-04-29.
     # """
-    local file gnu_mirror jobs name prefix url version
-    # FIXME AVOID THE USE OF NAME HERE.
-    name="${INSTALL_NAME:?}"
+    local file gnu_mirror jobs prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
-    file="${name}-${version}.tar.xz"
-    url="${gnu_mirror}/${name}/${file}"
+    file="automake-${version}.tar.xz"
+    url="${gnu_mirror}/automake/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cd "${name}-${version}"
+    koopa::cd "automake-${version}"
     ./configure --prefix="$prefix"
     make --jobs="$jobs"
     # > make check
