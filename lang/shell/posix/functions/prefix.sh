@@ -447,7 +447,6 @@ _koopa_python_system_site_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME NEED TO CREATE THIS LINK IN THE SITE LIBRARY SETUP...
 _koopa_r_site_library_prefix() { # {{{1
     # """
     # R site library prefix.

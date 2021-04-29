@@ -199,13 +199,12 @@ koopa::link_r_site_library() { # {{{1
     #
     # Changed to unversioned library approach at opt prefix in koopa v0.9.
     # """
-    local lib_source lib_target opt_prefix r r_prefix version
+    local lib_source lib_target r r_prefix version
     koopa::assert_has_args_le "$#" 1
     r="${1:-$(koopa::r)}"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
-    opt_prefix="$(koopa::opt_prefix)"
-    lib_source="${opt_prefix}/r-packages"
+    lib_source="$(koopa::r_site_library_prefix)"
     lib_target="${r_prefix}/site-library"
     koopa::dl 'Site library' "$lib_source"
     koopa::sys_mkdir "$lib_source"
