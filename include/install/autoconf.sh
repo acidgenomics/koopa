@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME MAKE THIS A SHARED FUNCTION.
 install_autoconf() { # {{{1
     # """
     # Install autoconf.
