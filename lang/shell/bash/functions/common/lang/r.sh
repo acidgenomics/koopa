@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME REWORK 'KOOPA::UPDATE_R_CONFIG' TO 'KOOPA_CONFIGURE_R'.
+
 koopa::array_to_r_vector() { # {{{1
     # """
     # Convert a bash array to an R vector string.
