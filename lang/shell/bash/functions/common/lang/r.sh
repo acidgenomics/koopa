@@ -15,6 +15,8 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
+# FIXME NEED TO SUPPORT '--r=' flag here.
+# FIXME ERROR IF R IS NOT INSTALLED.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
@@ -50,12 +52,11 @@ koopa::configure_r() { # {{{1
     else
         koopa::sys_set_permissions -r "${r_prefix}/library"
     fi
-    koopa::link_r_etc "$r"
-    koopa::link_r_site_library "$r"
-    koopa::r_javareconf "$r"
-    koopa::r_rebuild_docs "$r"
-    # Skip this, to keep our Bioconductor Docker images light.
-    # > koopa::install_r_koopa
+    # FIXME THESE NEED TO REQUIRE '--r=XXX' argument.
+    koopa::link_r_etc --r="$r"
+    koopa::link_r_site_library --r="$r"
+    koopa::r_javareconf --r="$r"
+    koopa::r_rebuild_docs --r="$r"
     koopa::alert_success 'Update of R configuration was successful.'
     return 0
 }
@@ -139,6 +140,7 @@ koopa::kill_r() { # {{{1
     pkill rsession
 }
 
+# FIXME REQUIRE '--r=XXX' argument.
 koopa::link_r_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
@@ -187,6 +189,7 @@ koopa::link_r_etc() { # {{{1
     return 0
 }
 
+# FIXME REQUIRE '--r=XXX' argument.
 # FIXME REWORK THE PATH HERE.
 # FIXME CONSIDER LINKING TO '/opt/koopa/opt/r-packages'
 koopa::link_r_site_library() { # {{{1
@@ -239,6 +242,7 @@ koopa::pkgdown_deploy_to_aws() { # {{{1
     return 0
 }
 
+# FIXME REQUIRE '--r=XXX' argument.
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
@@ -301,6 +305,7 @@ koopa::r_javareconf() { # {{{1
     return 0
 }
 
+# FIXME REQUIRE '--r=XXX' argument.
 koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
@@ -333,13 +338,15 @@ koopa::r_rebuild_docs() { # {{{1
     "$rscript" "${rscript_flags[@]}" -e 'utils::make.packages.html()'
 }
 
+# FIXME RENAME TO 'koopa::r_script' to match python?
 koopa::rscript() { # {{{1
     # """
     # Execute an R script.
-    # @note Updated 2021-01-06.
+    # @note Updated 2021-04-29.
     # """
-    local header_file flags fun pos
-    koopa::assert_is_installed Rscript
+    local code header_file flags fun pos rscript
+    rscript="$(koopa::r)script"
+    koopa::assert_is_installed "$rscript"
     flags=()
     pos=()
     while (("$#"))
@@ -361,24 +368,16 @@ koopa::rscript() { # {{{1
     shift 1
     header_file="$(koopa::prefix)/lang/r/include/header.R"
     koopa::assert_is_file "$header_file"
-    rscript="source('${header_file}')"
+    code="source('${header_file}')"
     # The 'header' variable is currently used to simply load the shared R
     # script header and check that the koopa R package is installed cleanly.
     if [[ "$fun" != 'header' ]]
     then
-        rscript="${rscript}; koopa::${fun}()"
+        code="${rscript}; koopa::${fun}()"
     fi
-    # Ensure positional arguments get properly quoted (escaped) before handing
-    # off to Rscript call.
+    # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
-    # Argh, this printf method doesn't work.
-    # > pos2=()
-    # > for i in "${!pos[@]}"
-    # > do
-    # >     pos2+=("$(printf '%q\n' "${pos[$i]}")")
-    # > done 
-    # Alternate Bash 4.4 quoting approach: "${pos1[@]@Q}"
-    Rscript "${flags[@]}" -e "$rscript" "${pos[@]@Q}"
+    "$rscript" "${flags[@]}" -e "$code" "${pos[@]@Q}"
     return 0
 }
 
@@ -394,14 +393,15 @@ koopa::rscript_vanilla() { # {{{1
 koopa::run_shiny_app() { # {{{1
     # """
     # Run Shiny application.
-    # @note Updated 2021-04-07.
+    # @note Updated 2021-04-29.
     # """
-    local dir
+    local dir r
     dir="${1:-.}"
-    koopa::assert_is_installed R
+    r="$(koopa::r)"
+    koopa::assert_is_installed "$r"
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
-    R \
+    "$r" \
         --no-restore \
         --no-save \
         --quiet \
