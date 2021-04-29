@@ -90,17 +90,15 @@ koopa::update_python_packages() { # {{{1
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
     # """
-    local name_fancy pkgs prefix python x
+    local name_fancy outdated_pkgs pkgs prefix python x
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     python="$(koopa::python)"
     koopa::is_installed "$python" || return 0
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
-    # FIXME MAKE THIS A FUNCTION.
-    x="$("$python" -m pip list --outdated --format='freeze')"
-    x="$(koopa::print "$x" | grep -v '^\-e')"
-    if [[ -z "$x" ]]
+    outdated_pkgs="$(koopa::pip_outdated)"
+    if [[ -z "$outdated_pkgs" ]]
     then
         koopa::alert_success 'All Python packages are current.'
         return 0
