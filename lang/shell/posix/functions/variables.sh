@@ -231,9 +231,18 @@ _koopa_os_string() { # {{{1
 _koopa_python() { # {{{1
     # """
     # Python executable path.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-04-29.
     # """
     _koopa_print 'python3'
+    return 0
+}
+
+_koopa_r() { # {{{1
+    # """
+    # R executable path.
+    # @note Updated 2021-04-29.
+    # """
+    _koopa_print 'R'
     return 0
 }
 
