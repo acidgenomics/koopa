@@ -347,7 +347,7 @@ koopa::is_powerful() { # {{{1
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-04-29.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -360,32 +360,9 @@ koopa::is_python_package_installed() { # {{{1
     # - https://stackoverflow.com/questions/1051254
     # - https://askubuntu.com/questions/588390
     # """
-    local pkg pos prefix python
+    local pkg prefix python
     koopa::assert_has_args "$#"
     python="$(koopa::python)"
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --python=*)
-                python="${1#*=}"
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
     koopa::is_installed "$python" || return 1
     prefix="$(koopa::python_site_packages_prefix "$python")"
     for pkg in "$@"
@@ -401,7 +378,7 @@ koopa::is_python_package_installed() { # {{{1
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-04-29.
     #
     # This will only return true for user-installed packages.
     #
@@ -411,32 +388,9 @@ koopa::is_r_package_installed() { # {{{1
     # > Rscript -e "'${1}' %in% rownames(utils::installed.packages())" \
     # >     | grep -q 'TRUE'
     # """
-    local pkg pos r
+    local pkg r
     koopa::assert_has_args "$#"
-    r='R'
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --r=*)
-                r="${1#*=}"
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    r="$(koopa::r)"
     koopa::is_installed "$r" || return 1
     prefix="$(koopa::r_library_prefix "$r")"
     for pkg in "$@"
