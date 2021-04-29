@@ -3,7 +3,7 @@
 install_python() { # {{{1
     # """
     # Install Python.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-04-29.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -25,20 +25,18 @@ install_python() { # {{{1
     # - https://docs.python.org/3/using/unix.html
     # - https://stackoverflow.com/questions/43333207
     # """
-    local file flags jobs name name2 prefix url version
+    local file flags jobs prefix url version
     koopa::assert_is_linux
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     minor_version="$(koopa::major_minor_version "$version")"
     jobs="$(koopa::cpu_count)"
     make_prefix="$(koopa::make_prefix)"
-    name2="$(koopa::capitalize "$name")"
-    file="${name2}-${version}.tar.xz"
-    url="https://www.${name}.org/ftp/${name}/${version}/${file}"
+    file="Python-${version}.tar.xz"
+    url="https://www.python.org/ftp/python/${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cd "${name2}-${version}"
+    koopa::cd "Python-${version}"
     flags=(
         # Disable automatic pip install with:
         # > '--without-ensurepip'
@@ -52,7 +50,7 @@ install_python() { # {{{1
     # > make test
     # > Use 'make altinstall' here instead?
     make install
-    python="${prefix}/bin/${name}${minor_version}"
+    python="${prefix}/bin/python${minor_version}"
     koopa::assert_is_file "$python"
     koopa::python_add_site_packages_to_sys_path "$python"
     return 0
