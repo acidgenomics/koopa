@@ -31,7 +31,7 @@ koopa::install_app() { # {{{1
     # Install application into a versioned directory structure.
     # @note Updated 2021-04-27.
     # """
-    local include_dirs jobs link_args link_app make_prefix name name_fancy \
+    local include_dirs link_args link_app make_prefix name name_fancy \
         prefix reinstall script script_name script_prefix tmp_dir version
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
@@ -110,12 +110,9 @@ koopa::install_app() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        jobs="$(koopa::cpu_count)"
-        export INSTALL_JOBS="$jobs"
+        # This is intended primarily for Bash, Fish, Zsh install scripts.
         export INSTALL_LINK_APP="$link_app"
-        export INSTALL_NAME="$name"
         export INSTALL_PREFIX="$prefix"
-        export INSTALL_REINSTALL="$reinstall"
         export INSTALL_VERSION="$version"
         script="${script_prefix}/${script_name}.sh"
         koopa::assert_is_file "$script"
