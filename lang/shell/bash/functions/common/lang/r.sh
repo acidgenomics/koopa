@@ -188,9 +188,6 @@ koopa::link_r_etc() { # {{{1
     return 0
 }
 
-# FIXME REQUIRE '--r=XXX' argument.
-# FIXME REWORK THE PATH HERE.
-# FIXME CONSIDER LINKING TO '/opt/koopa/opt/r-packages'
 koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
@@ -207,16 +204,8 @@ koopa::link_r_site_library() { # {{{1
     r="${1:-$(koopa::r)}"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
-
-
-    # FIXME RETHINK THIS APPROACH.
-    # CREATE THE LIBRARY IN OPT, AND SYMLINK INTO R INSTALL.
-
     opt_prefix="$(koopa::opt_prefix)"
-
-
-    # FIXME NEED TO RETHINK THIS PATH.
-    lib_source="${opt_prefix}/r/site-library"
+    lib_source="${opt_prefix}/r-packages"
     lib_target="${r_prefix}/site-library"
     koopa::dl 'Site library' "$lib_source"
     koopa::sys_mkdir "$lib_source"
