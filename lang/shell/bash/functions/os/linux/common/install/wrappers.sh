@@ -96,8 +96,6 @@ koopa::linux_install_python() { # {{{1
 
 koopa::linux_install_r() { # {{{1
     koopa::linux_install_app --name='r' --name-fancy='R' "$@"
-    # FIXME MOVE THIS INTO THE INSTALER.
-    koopa::configure_r
 }
 
 koopa::linux_install_r_devel() { # {{{1

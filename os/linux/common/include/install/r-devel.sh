@@ -54,6 +54,9 @@ install_r_devel() { # {{{1
     make pdf
     make info
     make install
+    r="${prefix}/bin/R"
+    koopa::assert_is_file "$r"
+    koopa::configure_r "$r"
     return 0
 }
 
