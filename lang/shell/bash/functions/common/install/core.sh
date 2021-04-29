@@ -124,8 +124,7 @@ koopa::install_app() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$prefix"
-    # FIXME This will cause library issues with python, r, ruby unless
-    # we reconfigure the paths correct?
+    # FIXME Need to rethink approach for perl, ruby, and rust here.
     koopa::link_into_opt "$prefix" "$name"
     if [[ "$link_app" -eq 1 ]]
     then

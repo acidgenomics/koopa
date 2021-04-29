@@ -660,6 +660,10 @@ koopa::r() { # {{{1
     _koopa_r "$@"
 }
 
+koopa::r_site_library_prefix() { # {{{1
+    _koopa_r_site_library_prefix "$@"
+}
+
 koopa::rbenv_prefix() { # {{{1
     _koopa_rbenv_prefix "$@"
 }
