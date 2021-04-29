@@ -1,18 +1,13 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2021-04-27.
+# Updated 2021-04-29.
 #
-# This configuration is intended for data.table to run in parallel properly,
-# with proper OpenMP support.
 #
 # Assuming we're using GCC install from GNU Fortran complier
 # (tested on macOS Big Sur).
 # 
 # Download and install GNU Fortran complier from CRAN, which contains full GCC.
 # CRAN recommends official GNU Fortran 8.2 from fxcoudert.
-# 
-# Seeing this ld warning with the data.table recommended config?
-# > ld: warning: argument missing after -rpath
 #
 # See also:
 # - https://github.com/Rdatatable/data.table/wiki/
@@ -24,25 +19,25 @@
 
 
 
-# Homebrew LLVM configuration {{{1
+# Apple Clang configuration {{{1
 # ==============================================================================
 
-LLVM_LOC = /usr/local/opt/llvm
-CC=$(LLVM_LOC)/bin/clang -fopenmp
-CXX=$(LLVM_LOC)/bin/clang++ -fopenmp
-# -O3 should be faster than -O2 (default) level optimisation ..
-CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
-CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-LDFLAGS=-L/usr/local/opt/gettext/lib -L$(LLVM_LOC)/lib -Wl,-rpath,$(LLVM_LOC)/lib
-# > CPPFLAGS=-I/usr/local/opt/gettext/include -I$(LLVM_LOC)/include
-CPPFLAGS=-I/usr/local/opt/gettext/include -I$(LLVM_LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+# Note that this doesn't support OpenMP currently, which is required to build
+# data.table with parallel thread support.
+
+CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
+CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 
 
 
 # GCC (Official GNU fortran) configuration {{{1
 # ==============================================================================
 
-# NOTE Seeing this pop up with this configuration currently (2021-04-27):
+# This config successfully builds rJava.
+
+# NOTE Seeing this warning pop up (2021-04-29):
 # ## ld: warning: argument missing after -rpath
 
 # > LOC = /usr/local/gfortran
@@ -50,18 +45,24 @@ CPPFLAGS=-I/usr/local/opt/gettext/include -I$(LLVM_LOC)/include -I/Library/Devel
 # > CXX=$(LOC)/bin/g++ -fopenmp
 # > CXX11 = $(LOC)/bin/g++ -fopenmp # for fst package
 # > CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
+# > CPPFLAGS=-I$(LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
 # > CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
 # > LDFLAGS=-L$(LOC)/lib -Wl,-rpath,-I$(LOC)/lib
-# > CPPFLAGS=-I$(LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
 
 
 
-# Apple Clang configuration (prior to 2021-04-27) {{{1
+# Homebrew LLVM configuration {{{1
 # ==============================================================================
 
-# Note that this doesn't support OpenMP currently.
+# This configuration is intended for data.table to run in parallel properly,
+# with proper OpenMP support. It works nicely for data.table but currently
+# errors for rJava.
 
-# > CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-# > CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-# > CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
-# > CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+# > LLVM_LOC = /usr/local/opt/llvm
+# > CC=$(LLVM_LOC)/bin/clang -fopenmp
+# > CXX=$(LLVM_LOC)/bin/clang++ -fopenmp
+# > # -O3 should be faster than -O2 (default) level optimisation ..
+# > CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
+# > CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
+# > LDFLAGS=-L/usr/local/opt/gettext/lib -L$(LLVM_LOC)/lib -Wl,-rpath,$(LLVM_LOC)/lib
+# > CPPFLAGS=-I/usr/local/opt/gettext/include -I$(LLVM_LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
