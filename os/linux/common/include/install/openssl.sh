@@ -3,19 +3,18 @@
 install_openssl() { # {{{1
     # """
     # Install OpenSSL.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-04-29.
     # """
-    local file name prefix url version
+    local file prefix url version
     koopa::assert_is_linux
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
-    file="${name}-${version}.tar.gz"
-    url="https://www.${name}.org/source/${file}"
+    file="openssl-${version}.tar.gz"
+    url="https://www.openssl.org/source/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cd "${name}-${version}"
+    koopa::cd "openssl-${version}"
     ./config \
         --prefix="$prefix" \
         --openssldir="$prefix" \
