@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for 'koopa configure system'.
-# NOTE May want to rework 'koopa update r-config' as 'koopa configure r'.
-
 koopa::_koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
@@ -33,6 +30,22 @@ koopa::_koopa_app() { # {{{1
     esac
     shift 1
     koopa::_run_function "$name" "$@"
+    return 0
+}
+
+koopa::_koopa_configure() { # {{{1
+    # """
+    # Parse user input to 'koopa configure'.
+    # @note Updated 2021-04-29.
+    # """
+    local name
+    name="${1:-}"
+    if [[ -z "$name" ]]
+    then
+        koopa::stop "Missing argument: 'koopa configure <ARG>...'."
+    fi
+    shift 1
+    koopa::_run_function "configure-${name}" "$@"
     return 0
 }
 
@@ -315,6 +328,7 @@ koopa::koopa() { # {{{1
             shift 1
             ;;
         app | \
+        configure | \
         header | \
         install | \
         link | \
