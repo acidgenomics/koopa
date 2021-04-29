@@ -242,7 +242,7 @@ koopa::pkgdown_deploy_to_aws() { # {{{1
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-04-29.
     #
     # The default Java path differs depending on the system.
     #
@@ -263,35 +263,9 @@ koopa::r_javareconf() { # {{{1
     # > library(rJava)
     # > .jinit()
     # """
-    local java_flags java_home pos r r2
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --java-home=*)
-                java_home="${1#*=}"
-                shift 1
-                ;;
-            --r=*)
-                r="${1#*=}"
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    local java_flags java_home r r2
     koopa::assert_has_args_le "$#" 1
-    [[ -n "${1:-}" ]] && r="$1"
+    r="${1:-$(koopa::r)}"
     koopa::is_installed "$r" || return 0
     r="$(koopa::which_realpath "$r")"
     if [[ -z "${java_home:-}" ]]
