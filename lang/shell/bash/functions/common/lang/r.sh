@@ -59,23 +59,24 @@ koopa::configure_r() { # {{{1
     return 0
 }
 
-# NOTE This step currently doesn't work because custom drat repos (e.g. our
-# Acid Genomics repo) are not currently supported on shinyapps.io.
-# GitHub packages are supported.
 koopa::deploy_shiny_app() { # {{{
     # """
     # Deploy a Shiny app to shinyapps.io
-    # @note Updated 2021-04-08.
+    # @note Updated 2021-04-29.
+    #
+    # This step currently doesn't support custom drat repos
+    # (e.g. our Acid Genomics repo) on shinyapps.io.
     # """
-    local app_dir
+    local app_dir r
     app_dir="${1:-.}"
-    koopa::assert_is_installed R
+    r="$(koopa::r)"
+    koopa::assert_is_installed "$r"
     koopa::assert_is_dir "$app_dir"
     app_dir="$(koopa::realpath "$app_dir")"
     app_name="$(koopa::basename "$app_dir")"
     app_name="$(koopa::sub 'r-shiny' '' "$app_name")"
     koopa::h1 "Deploying '${app_name}' from '${app_dir}'."
-    R \
+    "$r" \
         --no-restore \
         --no-save \
         --quiet \
@@ -206,6 +207,7 @@ koopa::link_r_site_library() { # {{{1
     r="${1:-$(koopa::r)}"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
+
 
     # FIXME RETHINK THIS APPROACH.
     # CREATE THE LIBRARY IN OPT, AND SYMLINK INTO R INSTALL.
