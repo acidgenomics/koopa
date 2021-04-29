@@ -89,7 +89,7 @@ koopa::macos_brew_upgrade_casks() { # {{{1
         brew reinstall --cask --force "$cask" || true
         case "$cask" in
             adoptopenjdk|r)
-                koopa::update_r_config
+                koopa::configure_r
                 ;;
         esac
     done

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME REWORK 'KOOPA::UPDATE_R_CONFIG' TO 'KOOPA_CONFIGURE_R'.
-
 koopa::array_to_r_vector() { # {{{1
     # """
     # Convert a bash array to an R vector string.
@@ -14,6 +12,51 @@ koopa::array_to_r_vector() { # {{{1
     x="$(printf 'c(%s)\n' "$x")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
+    return 0
+}
+
+koopa::configure_r() { # {{{1
+    # """
+    # Update R configuration.
+    # @note Updated 2021-04-29.
+    #
+    # Add shared R configuration symlinks in '${R_HOME}/etc'.
+    # """
+    local etc_prefix make_prefix pkg_index r r_prefix
+    koopa::assert_has_args_le "$#" 1
+    r="${1:-R}"
+    r="$(koopa::which_realpath "$r")"
+    koopa::assert_is_installed "$r"
+    r_prefix="$(koopa::r_prefix "$r")"
+    koopa::h1 'Updating R configuration.'
+    koopa::dl \
+        'R home' "$r_prefix" \
+        'R path' "$r"
+    if koopa::is_symlinked_app "$r"
+    then
+        make_prefix="$(koopa::make_prefix)"
+        etc_prefix="${make_prefix}/lib/R/etc"
+        koopa::sys_set_permissions -r "$r_prefix"
+        # Ensure that (Debian) system 'etc' directories are removed.
+        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        then
+            koopa::sys_rm "$etc_prefix"
+        fi
+        etc_prefix="${make_prefix}/lib64/R/etc"
+        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        then
+            koopa::sys_rm "$etc_prefix"
+        fi
+    else
+        koopa::sys_set_permissions -r "${r_prefix}/library"
+    fi
+    koopa::link_r_etc "$r"
+    koopa::link_r_site_library "$r"
+    koopa::r_javareconf "$r"
+    koopa::r_rebuild_docs "$r"
+    # Skip this, to keep our Bioconductor Docker images light.
+    # > koopa::install_r_koopa
+    koopa::alert_success 'Update of R configuration was successful.'
     return 0
 }
 
@@ -389,50 +432,5 @@ koopa::run_shiny_app() { # {{{1
         --no-save \
         --quiet \
         -e "shiny::runApp('${dir}')"
-    return 0
-}
-
-koopa::update_r_config() { # {{{1
-    # """
-    # Update R configuration.
-    # @note Updated 2020-11-11.
-    #
-    # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # """
-    local etc_prefix make_prefix pkg_index r r_prefix
-    koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
-    r="$(koopa::which_realpath "$r")"
-    koopa::assert_is_installed "$r"
-    r_prefix="$(koopa::r_prefix "$r")"
-    koopa::h1 'Updating R configuration.'
-    koopa::dl \
-        'R home' "$r_prefix" \
-        'R path' "$r"
-    if koopa::is_symlinked_app "$r"
-    then
-        make_prefix="$(koopa::make_prefix)"
-        etc_prefix="${make_prefix}/lib/R/etc"
-        koopa::sys_set_permissions -r "$r_prefix"
-        # Ensure that (Debian) system 'etc' directories are removed.
-        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
-        then
-            koopa::sys_rm "$etc_prefix"
-        fi
-        etc_prefix="${make_prefix}/lib64/R/etc"
-        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
-        then
-            koopa::sys_rm "$etc_prefix"
-        fi
-    else
-        koopa::sys_set_permissions -r "${r_prefix}/library"
-    fi
-    koopa::link_r_etc "$r"
-    koopa::link_r_site_library "$r"
-    koopa::r_javareconf "$r"
-    koopa::r_rebuild_docs "$r"
-    # Skip this, to keep our Bioconductor Docker images light.
-    # > koopa::install_r_koopa
-    koopa::alert_success 'Update of R configuration was successful.'
     return 0
 }

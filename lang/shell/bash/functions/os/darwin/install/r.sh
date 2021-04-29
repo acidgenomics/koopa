@@ -95,7 +95,7 @@ koopa::macos_install_r_devel() { # {{{1
     koopa::ln -S \
         "/Library/Frameworks/R-${r_version}.framework" \
         '/Library/Frameworks/R.framework'
-    koopa::update_r_config
+    koopa::configure_r
     koopa::install_success "$name_fancy"
     koopa::alert_note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
     return 0
