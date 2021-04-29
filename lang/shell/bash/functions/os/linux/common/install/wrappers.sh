@@ -96,7 +96,8 @@ koopa::linux_install_python() { # {{{1
 
 koopa::linux_install_r() { # {{{1
     koopa::linux_install_app --name='r' --name-fancy='R' "$@"
-    koopa::update_r_config
+    # FIXME MOVE THIS INTO THE INSTALER?
+    koopa::configure_r
 }
 
 koopa::linux_install_r_devel() { # {{{1
@@ -106,7 +107,8 @@ koopa::linux_install_r_devel() { # {{{1
         --version='devel' \
         --script-name='r-devel' \
         "$@"
-    koopa::update_r_config
+    # FIXME MOVE THIS INTO INSTALLER?
+    koopa::configure_r
 }
 
 koopa::linux_install_ruby() { # {{{1

@@ -486,7 +486,7 @@ koopa::linux_configure_system() { # {{{1
             elif koopa::is_fedora
             then
                 koopa::assert_is_installed R
-                koopa::update_r_config
+                koopa::configure_r
             else
                 koopa install r --version="${dict[r_version]}"
             fi
@@ -499,7 +499,7 @@ koopa::linux_configure_system() { # {{{1
         koopa install shiny-server
     # Ensure shared library configuration is current.
     [[ "${dict[install_lmod]}" -eq 1 ]] && \
-        koopa::update_lmod_config
+        koopa::configure_lmod
     koopa::update_ldconfig
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------

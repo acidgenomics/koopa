@@ -53,16 +53,16 @@ koopa::install_lmod() { # {{{1
         sudo make install
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
-    koopa::update_lmod_config
+    koopa::configure_lmod
     koopa::link_into_opt "$prefix" "$name"
     koopa::install_success "$name_fancy"
     return 0
 }
 
-koopa::update_lmod_config() { # {{{1
+koopa::configure_lmod() { # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
-    # @note Updated 2021-01-20.
+    # @note Updated 2021-04-29.
     #
     # Need to check for this case:
     # ln: failed to create symbolic link '/etc/fish/conf.d/z00_lmod.fish':
