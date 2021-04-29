@@ -325,7 +325,6 @@ koopa::r_rebuild_docs() { # {{{1
     "$rscript" "${rscript_flags[@]}" -e 'utils::make.packages.html()'
 }
 
-# FIXME RENAME TO 'koopa::r_script' to match python?
 koopa::rscript() { # {{{1
     # """
     # Execute an R script.
