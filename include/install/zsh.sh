@@ -55,10 +55,8 @@ ${name}/${name}/${version}/${file}"
             -t "${etc_dir}" \
             "$(koopa::distro_prefix)/etc/zsh/"*
     fi
-    if [[ "${link_app:-0}" -eq 1 ]]
-    then
-        koopa::enable_shell "$name"
-    fi
+    [[ "${link_app:-0}" -eq 1 ]] && koopa::enable_shell "$name"
+    koopa::fix_zsh_permissions
     return 0
 }
 
