@@ -3,7 +3,7 @@
 install_taglib() { # {{{1
     # """
     # Install TagLib.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-04-29.
     #
     # To build a static library, set the following two options with CMake:
     # -DBUILD_SHARED_LIBS=OFF -DENABLE_STATIC_RUNTIME=ON
@@ -22,17 +22,16 @@ install_taglib() { # {{{1
     # - https://cmake.org/pipermail/cmake/2012-June/050792.html
     # - https://github.com/gabime/spdlog/issues/1190
     # """
-    local file jobs name prefix url version
+    local file jobs prefix url version
     koopa::assert_is_linux
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
-    file="${name}-${version}.tar.gz"
+    file="taglib-${version}.tar.gz"
     url="https://github.com/taglib/taglib/releases/download/v${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cd "${name}-${version}"
+    koopa::cd "taglib-${version}"
     cmake \
         -DCMAKE_BUILD_TYPE='Release' \
         -DCMAKE_CXX_FLAGS='-fpic' \
