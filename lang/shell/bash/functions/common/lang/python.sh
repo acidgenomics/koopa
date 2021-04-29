@@ -78,8 +78,6 @@ koopa::pyscript() { # {{{1
     return 0
 }
 
-# FIXME Is this getting called when we install Python from source?
-# Because it should...very useful.
 koopa::python_add_site_packages_to_sys_path() { # {{{1
     # """
     # Add our custom site packages library to sys.path.
