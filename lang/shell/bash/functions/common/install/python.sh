@@ -85,7 +85,7 @@ koopa::install_python_packages() { # {{{1
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-04-29.
     # @seealso
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
@@ -97,6 +97,16 @@ koopa::update_python_packages() { # {{{1
     koopa::is_installed "$python" || return 0
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
+    # FIXME This will return outdated for any system packages.
+    # FIXME HOW TO OVERRIDE THIS HERE?
+    # e.g. for clean install on macos:
+    # decorator==4.4.2
+    # ipykernel==5.5.0
+    # ipython==7.21.0
+    # parso==0.8.1
+    # pip==20.2.3
+    # prompt-toolkit==3.0.17
+    # setuptools==49.2.1
     outdated_pkgs="$(koopa::pip_outdated)"
     if [[ -z "$outdated_pkgs" ]]
     then
