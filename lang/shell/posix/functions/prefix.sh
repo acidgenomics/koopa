@@ -477,21 +477,22 @@ _koopa_refdata_prefix() { # {{{1
     return 0
 }
 
-# FIXME NEED TO CHECK THIS.
 _koopa_ruby_gems_prefix() { # {{{1
     # """
     # Ruby gems prefix.
     # @note Updated 2021-04-28.
     # """
-    _koopa_print "$(_koopa_opt_prefix)/ruby-packages"
+    local prefix
+    prefix="${GEM_HOME:-}"
+    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/ruby-packages"
+    _koopa_print "$prefix"
     return 0
 }
 
-# FIXME REWORK THIS USING 'rust-packages' ?
 _koopa_rust_cargo_prefix() { # {{{1
     # """
     # Rust cargo install prefix.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-04-29.
     #
     # See also:
     # - https://github.com/rust-lang/rustup#environment-variables
@@ -500,7 +501,7 @@ _koopa_rust_cargo_prefix() { # {{{1
     # """
     local prefix
     prefix="${CARGO_HOME:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/rust/cargo"
+    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/rust-packages"
     _koopa_print "$prefix"
     return 0
 }
