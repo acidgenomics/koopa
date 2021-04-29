@@ -15,58 +15,97 @@ koopa::install_automake() { # {{{1
 }
 
 koopa::install_bash() { # {{{1
-    koopa::install_app --name='bash' --name-fancy='Bash' "$@"
+    koopa::install_app \
+        --name='bash' \
+        --name-fancy='Bash' \
+        "$@"
 }
 
 koopa::install_binutils() { # {{{1
-    koopa::install_app --name='binutils' "$@"
+    koopa::install_app \
+        --name='binutils' \
+        --script-name='gnu' \
+        "$@"
 }
 
 koopa::install_cmake() { # {{{1
-    koopa::install_app --name='cmake' --name-fancy='CMake' "$@"
+    koopa::install_app \
+        --name='cmake' \
+        --name-fancy='CMake' \
+        "$@"
 }
 
 koopa::install_coreutils() { # {{{1
-    koopa::install_app --name='coreutils' "$@"
+    koopa::install_app \
+        --name='coreutils' \
+        --script-name='gnu' \
+        "$@"
 }
 
 koopa::install_cpufetch() { # {{{1
-    koopa::install_app --name='cpufetch' "$@"
+    koopa::install_app \
+        --name='cpufetch' \
+        "$@"
 }
 
 koopa::install_curl() { # {{{1
-    koopa::install_app --name='curl' --name-fancy='cURL' "$@"
+    koopa::install_app \
+        --name='curl' \
+        --name-fancy='cURL' \
+        "$@"
 }
 
 koopa::install_emacs() { # {{{1
-    koopa::install_app --name='emacs' --name-fancy='Emacs' "$@"
+    koopa::install_app \
+        --name='emacs' \
+        --name-fancy='Emacs' \
+        "$@"
 }
 
 koopa::install_findutils() { # {{{1
-    koopa::install_app --name='findutils' "$@"
+    koopa::install_app \
+        --name='findutils' \
+        --script-name='gnu' \
+        "$@"
 }
 
 koopa::install_fish() { # {{{1
-    koopa::install_app --name='fish' --name-fancy='Fish' "$@"
+    koopa::install_app \
+        --name='fish' \
+        --name-fancy='Fish' \
+        "$@"
 }
 
 koopa::install_gawk() { # {{{1
-    koopa::install_app --name='gawk' --name-fancy='GNU awk' "$@"
+    koopa::install_app \
+        --name='gawk' \
+        --name-fancy='GNU awk' \
+        --script-name='gnu' \
+        "$@"
 }
 
 koopa::install_git() { # {{{1
-    koopa::install_app --name='git' --name-fancy='Git' "$@"
+    koopa::install_app \
+        --name='git' \
+        --name-fancy='Git' \
+        "$@"
 }
 
 koopa::install_gnupg() { # {{{1
-    koopa::install_app --name='gnupg' --name-fancy='GnuPG suite' "$@"
+    koopa::install_app \
+        --name='gnupg' \
+        --name-fancy='GnuPG suite' \
+        "$@"
     # FIXME MOVE THIS TO THE SCRIPT?
     koopa::is_installed gpg-agent && gpgconf --kill gpg-agent
     return 0
 }
 
 koopa::install_grep() { # {{{1
-    koopa::install_app --name='grep' "$@"
+    koopa::install_app \
+        --name='grep' \
+        --script-name='gnu' \
+        "$@"
 }
 
 koopa::install_gsl() { # {{{1
