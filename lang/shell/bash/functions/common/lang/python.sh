@@ -61,6 +61,19 @@ koopa::pip_install() { # {{{1
     return 0
 }
 
+koopa::pip_outdated() { # {{{1
+    # """
+    # List oudated pip packages.
+    # @note Updated 2021-04-29.
+    # """
+    local python x
+    python="$(koopa::python)"
+    x="$("$python" -m pip list --outdated --format='freeze')"
+    x="$(koopa::print "$x" | grep -v '^\-e')"
+    koopa::print "$x"
+    return 0
+}
+
 koopa::pyscript() { # {{{1
     # """
     # Execute a Python script.
