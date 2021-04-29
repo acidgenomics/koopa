@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE The '--reinstall' flag doesn't propagate here currently.
-
 install_gnupg() { # {{{1
     # """
     # Install GnuPG.
