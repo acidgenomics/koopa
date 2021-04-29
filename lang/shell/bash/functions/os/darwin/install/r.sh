@@ -58,51 +58,6 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     return 0
 }
 
-# FIXME NEED TO REWORK AND TEST THIS FUNCTION.
-koopa::macos_install_r_devel() { # {{{1
-    # """
-    # Install R-devel on macOS.
-    # @note Updated 2021-03-25.
-    # """
-    local arch file macos_version name_fancy r_version tmp_dir url
-    koopa::assert_has_no_args "$#"
-    arch="$(koopa::arch)"
-    r_version='devel'
-    macos_version='el-capitan'
-    tmp_dir="$(koopa::tmp_dir)"
-    name_fancy="R-${r_version} for ${macos_version}."
-    koopa::install_start "$name_fancy"
-    koopa::alert_note 'Debian r-devel inside a Docker container is preferred.'
-    (
-        koopa::cd "$tmp_dir"
-        file="R-${r_version}-${macos_version}-sa-${arch}.tar.gz"
-        url="https://mac.r-project.org/${macos_version}/R-${r_version}/${file}"
-        koopa::download "$url"
-        if [[ -d '/Library/Frameworks/R.framework' ]] &&
-            [[ ! -L '/Library/Frameworks/R.framework' ]]
-        then
-            koopa::alert_note "Backing up existing 'R.framework'."
-            koopa::mv -S \
-                '/Library/Frameworks/R.framework' \
-                '/Library/Frameworks/R.framework.bak'
-        fi
-        sudo tar -xzvf "$file" -C /
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    # Create versioned symlinks.
-    koopa::mv -S \
-        '/Library/Frameworks/R.framework' \
-        "/Library/Frameworks/R-${r_version}.framework"
-    koopa::ln -S \
-        "/Library/Frameworks/R-${r_version}.framework" \
-        '/Library/Frameworks/R.framework'
-    # FIXME Need to define '--r' here.
-    koopa::configure_r
-    koopa::install_success "$name_fancy"
-    koopa::alert_note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
-    return 0
-}
-
 # FIXME Define this in r-aciddevtools instead.
 koopa::macos_install_r_sf() { # {{{1
     # """
