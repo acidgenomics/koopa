@@ -2,12 +2,7 @@
 # R for macOS Makevars configuration.
 # Updated 2021-04-29.
 #
-#
-# Assuming we're using GCC install from GNU Fortran complier
-# (tested on macOS Big Sur).
-# 
-# Download and install GNU Fortran complier from CRAN, which contains full GCC.
-# CRAN recommends official GNU Fortran 8.2 from fxcoudert.
+# '-O3' should be faster than '-O2' (default) level optimization.
 #
 # See also:
 # - https://github.com/Rdatatable/data.table/wiki/
@@ -25,29 +20,37 @@
 # Note that this doesn't support OpenMP currently, which is required to build
 # data.table with parallel thread support.
 
-CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
-CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+# > SDK_LOC=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+# >
+# > CCFLAGS=-isysroot $(SDK_LOC)
+# > CFLAGS=-isysroot $(SDK_LOC)
+# > CPPFLAGS=-isysroot $(SDK_LOC) -I/usr/local/include
+# > CXXFLAGS=-isysroot $(SDK_LOC)
 
 
 
 # GCC (Official GNU fortran) configuration {{{1
 # ==============================================================================
 
+# Download and install GNU Fortran complier from CRAN, which contains full GCC.
+# CRAN recommends official GNU Fortran 8.2 from fxcoudert.
+#
 # This config successfully builds rJava.
-
+#
 # NOTE Seeing this warning pop up (2021-04-29):
 # ## ld: warning: argument missing after -rpath
 
-# > LOC = /usr/local/gfortran
-# > CC=$(LOC)/bin/gcc -fopenmp
-# > CXX=$(LOC)/bin/g++ -fopenmp
-# > CXX11 = $(LOC)/bin/g++ -fopenmp # for fst package
+# > C_LOC=/usr/local/gfortran
+# > SDK_LOC=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+# >
+# > CC=$(C_LOC)/bin/gcc -fopenmp
+# > CXX11=$(C_LOC)/bin/g++ -fopenmp
+# > CXX=$(C_LOC)/bin/g++ -fopenmp
+# >
 # > CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
-# > CPPFLAGS=-I$(LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+# > CPPFLAGS=-I$(C_LOC)/include -I$(SDK_LOC)/usr/include
 # > CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-# > LDFLAGS=-L$(LOC)/lib -Wl,-rpath,-I$(LOC)/lib
+# > LDFLAGS=-L$(C_LOC)/lib -Wl,-rpath,-I$(C_LOC)/lib
 
 
 
@@ -58,11 +61,18 @@ CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 # with proper OpenMP support. It works nicely for data.table but currently
 # errors for rJava.
 
-# > LLVM_LOC = /usr/local/opt/llvm
+
+# > HOMEBREW_OPT_LOC=/usr/local/opt
+# > SDK_LOC=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+# >
+# > LLVM_LOC=$(HOMEBREW_OPT_LOC)/llvm
+# > GETTEXT_LOC="$(HOMEBREW_OPT_LOC)/gettext
+# >
 # > CC=$(LLVM_LOC)/bin/clang -fopenmp
+# > CXX11=$(LLVM_LOC)/bin/clang++ -fopenmp
 # > CXX=$(LLVM_LOC)/bin/clang++ -fopenmp
-# > # -O3 should be faster than -O2 (default) level optimisation ..
+#
 # > CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
+# > CPPFLAGS=-I$(GETTEXT_LOC)/include -I$(LLVM_LOC)/include -I$(SDK_LOC)/usr/include
 # > CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-# > LDFLAGS=-L/usr/local/opt/gettext/lib -L$(LLVM_LOC)/lib -Wl,-rpath,$(LLVM_LOC)/lib
-# > CPPFLAGS=-I/usr/local/opt/gettext/include -I$(LLVM_LOC)/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+# > LDFLAGS=-L$(GETTEXT_LOC)/lib -L$(LLVM_LOC)/lib -Wl,-rpath,$(LLVM_LOC)/lib
