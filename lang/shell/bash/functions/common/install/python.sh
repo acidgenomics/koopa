@@ -86,7 +86,7 @@ koopa::update_python_packages() { # {{{1
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
     # """
-    local name_fancy outdated_pkgs pkgs prefix python
+    local name_fancy pkgs python
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     python="$(koopa::python)"
@@ -103,26 +103,17 @@ koopa::update_python_packages() { # {{{1
     # pip==20.2.3
     # prompt-toolkit==3.0.17
     # setuptools==49.2.1
-    outdated_pkgs="$(koopa::pip_outdated)"
-    if [[ -z "$outdated_pkgs" ]]
+    pkgs="$(koopa::pip_outdated)"
+    if [[ -z "$pkgs" ]]
     then
         koopa::alert_success 'All Python packages are current.'
         return 0
     fi
-    prefix="$(koopa::python_site_packages_prefix)"
-    # FIXME NEED TO TAKE OUT SYSTEM PACKAGES HERE... HOW?
     readarray -t pkgs <<< "$( \
-        koopa::print "$outdated_pkgs" \
+        koopa::print "$pkgs" \
         | cut -d '=' -f 1 \
     )"
-    koopa::dl \
-        'Packages' "$(koopa::to_string "${pkgs[@]}")" \
-        'Prefix' "$prefix"
-    "$python" -m pip install \
-        --no-warn-script-location \
-        --upgrade \
-        "${pkgs[@]}"
-    # > koopa::is_symlinked_app "$python" && koopa::link_app python
+    koopa::pip_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }
