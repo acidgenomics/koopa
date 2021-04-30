@@ -3,7 +3,7 @@
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2021-02-11.
+    # @note Updated 2021-04-30.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -47,16 +47,17 @@ koopa::activate_conda_env() { # {{{1
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-04-30.
     # """
-    local all aligners chipseq data_mining env envs file_formats methylation \
-        quality_control reticulate riboseq rnaseq trimming variation \
-        version workflows
+    local all aligners chipseq data_mining enrichment env envs file_formats \
+        methylation quality_control reticulate riboseq rnaseq trimming \
+        variation version workflows
     koopa::assert_is_installed conda
     all=0
     aligners=0
     chipseq=0
     data_mining=0
+    enrichment=0
     file_formats=0
     methylation=0
     quality_control=0
@@ -144,6 +145,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         aligners=1
         chipseq=1
         data_mining=1
+        enrichment=1
         file_formats=1
         methylation=1
         quality_control=1
@@ -186,6 +188,12 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         envs+=(
             'entrez-direct'
             'sra-tools'
+        )
+    fi
+    if [[ "$enrichment" -eq 1 ]]
+    then
+        envs+=(
+            'meme'  # MEME Suite
         )
     fi
     if [[ "$file_formats" -eq 1 ]]
