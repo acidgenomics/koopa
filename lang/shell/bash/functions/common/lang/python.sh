@@ -2,6 +2,8 @@
 
 # FIXME TAKE OUT SUPPORT FOR WHICH PYTHON HERE?
 # FIXME DO WE NEED AN UPGRADE FLAG HERE?
+# FIXME ENSURE WE ONLY INSTALL INTO OUR SITE PACKAGES LIBRARY.
+#       DOES THIS USE PATH?
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
@@ -67,12 +69,21 @@ koopa::pip_outdated() { # {{{1
     # """
     # List oudated pip packages.
     # @note Updated 2021-04-30.
+    #
+    # Requesting 'freeze' format will return '<pkg>==<version>'.
+    #
+    # @seealso
+    # - https://pip.pypa.io/en/stable/cli/pip_list/
     # """
-    local python x
+    local prefix python x
     python="$(koopa::python)"
-    x="$("$python" -m pip list --outdated --format='freeze')"
-    # FIXME Is this additional step necessary?
-    # > x="$(koopa::print "$x" | grep -v '^\-e')"
+    prefix="$(koopa::python_site_packages_prefix)"
+    x="$( \
+        "$python" -m pip list \
+            --format 'freeze' \
+            --outdated \
+            --path "$prefix" \
+    )"
     koopa::print "$x"
     return 0
 }
