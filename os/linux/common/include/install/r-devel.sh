@@ -3,7 +3,7 @@
 install_r_devel() { # {{{1
     # """
     # Install R-devel.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-04-30.
     # """
     local flags jobs prefix repo_url revision rtop
     koopa::assert_is_linux
