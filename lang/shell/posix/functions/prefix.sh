@@ -212,11 +212,11 @@ _koopa_homebrew_cellar_prefix() { # {{{1
 _koopa_homebrew_prefix() { # {{{1
     # """
     # Homebrew prefix.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-04-30.
     #
     # @seealso https://brew.sh/
     # """
-    local x
+    local arch x
     x="${HOMEBREW_PREFIX:-}"
     if [ -z "$x" ]
     then
@@ -225,7 +225,15 @@ _koopa_homebrew_prefix() { # {{{1
             x="$(brew --prefix)"
         elif _koopa_is_macos
         then
-            x='/usr/local'
+            arch="$(_koopa_arch)"
+            case "$arch" in
+                arm*)
+                    x='/opt/homebrew'
+                    ;;
+                x86*)
+                    x='/usr/local'
+                    ;;
+            esac
         elif _koopa_is_linux
         then
             x='/home/linuxbrew/.linuxbrew'

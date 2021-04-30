@@ -234,7 +234,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-04-25.
+    # @note Updated 2021-04-30.
     # """
     local prefix
     prefix="$(_koopa_homebrew_prefix)"
@@ -243,6 +243,7 @@ _koopa_activate_homebrew() { # {{{1
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_NO_AUTO_UPDATE=1
+    export HOMEBREW_PREFIX="$prefix"
     # Stopgap fix for TLS SSL issues with some Homebrew casks.
     if [ -x "${prefix}/opt/curl/bin/curl" ]
     then
