@@ -4,6 +4,7 @@
 # an alternative install approach that will work here. Can link using the
 # opt prefix instead.
 
+# FIXME MOVE THESE TO ACIDDEVTOOLS.
 koopa::linux_install_r_geos() { # {{{1
     # """
     # Install R rgeos package.
@@ -35,6 +36,7 @@ koopa::linux_install_r_geos() { # {{{1
     return 0
 }
 
+# FIXME MOVE THESE TO ACIDDEVTOOLS.
 koopa::linux_install_r_sf() { # {{{1
     # """
     # Install R sf package.
