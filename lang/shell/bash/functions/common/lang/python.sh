@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME TAKE OUT SUPPORT FOR WHICH PYTHON HERE?
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.

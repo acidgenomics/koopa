@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME DONT ALLOW THE USER TO SET PYTHON PATH HERE...
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-04-30.
     # """
     local install_flags name_fancy pkg pkg_lower pkgs pos python version
+    install_flags=()
     name_fancy='Python packages'
     python="$(koopa::python)"
     reinstall=0
@@ -14,10 +14,6 @@ koopa::install_python_packages() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --python=*)
-                python="${1#*=}"
-                shift 1
-                ;;
             --reinstall)
                 reinstall=1
                 shift 1
@@ -75,7 +71,6 @@ koopa::install_python_packages() { # {{{1
         done
     fi
     koopa::install_start "$name_fancy"
-    install_flags=("--python=${python}")
     [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
     koopa::python_add_site_packages_to_sys_path "$python"
     koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
@@ -86,20 +81,20 @@ koopa::install_python_packages() { # {{{1
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-04-30.
     # @seealso
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
     # """
-    local name_fancy outdated_pkgs pkgs prefix python x
+    local name_fancy outdated_pkgs pkgs prefix python
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     python="$(koopa::python)"
     koopa::is_installed "$python" || return 0
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
-    # FIXME This will return outdated for any system packages.
-    # FIXME HOW TO OVERRIDE THIS HERE?
+    # FIXME This is currently never empty due to outdated system packages?
+    # How to resolve this?
     # e.g. for clean install on macos:
     # decorator==4.4.2
     # ipykernel==5.5.0
@@ -115,11 +110,19 @@ koopa::update_python_packages() { # {{{1
         return 0
     fi
     prefix="$(koopa::python_site_packages_prefix)"
-    readarray -t pkgs <<< "$(koopa::print "$x" | cut -d '=' -f 1)"
-    koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
-    koopa::dl 'Prefix' "$prefix"
-    "$python" -m pip install --no-warn-script-location --upgrade "${pkgs[@]}"
-    koopa::is_symlinked_app "$python" && koopa::link_app python
+    # FIXME NEED TO TAKE OUT SYSTEM PACKAGES HERE... HOW?
+    readarray -t pkgs <<< "$( \
+        koopa::print "$outdated_pkgs" \
+        | cut -d '=' -f 1 \
+    )"
+    koopa::dl \
+        'Packages' "$(koopa::to_string "${pkgs[@]}")" \
+        'Prefix' "$prefix"
+    "$python" -m pip install \
+        --no-warn-script-location \
+        --upgrade \
+        "${pkgs[@]}"
+    # > koopa::is_symlinked_app "$python" && koopa::link_app python
     koopa::install_success "$name_fancy"
     return 0
 }
