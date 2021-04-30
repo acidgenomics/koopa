@@ -5,38 +5,11 @@ koopa::install_python_packages() { # {{{1
     # Install Python packages.
     # @note Updated 2021-04-30.
     # """
-    local install_flags name_fancy pkg pkg_lower pkgs pos python version
-    install_flags=()
-    name_fancy='Python packages'
+    local name_fancy pkg pkg_lower pkgs python version
     python="$(koopa::python)"
-    reinstall=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            '')
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_envs
     koopa::assert_is_installed "$python"
+    name_fancy='Python packages'
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
@@ -71,9 +44,8 @@ koopa::install_python_packages() { # {{{1
         done
     fi
     koopa::install_start "$name_fancy"
-    [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
     koopa::python_add_site_packages_to_sys_path "$python"
-    koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
+    koopa::pip_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -93,16 +65,6 @@ koopa::update_python_packages() { # {{{1
     koopa::is_installed "$python" || return 0
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
-    # FIXME This is currently never empty due to outdated system packages?
-    # How to resolve this?
-    # e.g. for clean install on macos:
-    # decorator==4.4.2
-    # ipykernel==5.5.0
-    # ipython==7.21.0
-    # parso==0.8.1
-    # pip==20.2.3
-    # prompt-toolkit==3.0.17
-    # setuptools==49.2.1
     pkgs="$(koopa::pip_outdated)"
     if [[ -z "$pkgs" ]]
     then
