@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME TAKE OUT SUPPORT FOR WHICH PYTHON HERE?
-# FIXME DO WE NEED AN UPGRADE FLAG HERE?
 # FIXME ENSURE WE ONLY INSTALL INTO OUR SITE PACKAGES LIBRARY.
 #       DOES THIS USE PATH?
 koopa::pip_install() { # {{{1
@@ -43,8 +41,8 @@ koopa::pip_install() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::is_installed "$python" || return 0
+    koopa::python_add_site_packages_to_sys_path "$python"
     target="$(koopa::python_site_packages_prefix "$python")"
-    koopa::sys_mkdir "$target"
     koopa::dl \
         'Packages' "$(koopa::to_string "$@")" \
         'Target' "$target"
@@ -108,7 +106,7 @@ koopa::pyscript() { # {{{1
 koopa::python_add_site_packages_to_sys_path() { # {{{1
     # """
     # Add our custom site packages library to sys.path.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-04-30.
     #
     # @seealso
     # > "$python" -m site
@@ -129,7 +127,7 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
         koopa::sudo_write_string "$k_site_pkgs" "$file"
     fi
     # This step will print the site packages configuration.
-    "$python" -m site
+    # > "$python" -m site
     return 0
 }
 
