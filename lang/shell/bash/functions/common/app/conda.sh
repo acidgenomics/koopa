@@ -97,6 +97,10 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 data_mining=1
                 shift 1
                 ;;
+            --enrichment)
+                enrichment=1
+                shift 1
+                ;;
             --file-formats)
                 file_formats=1
                 shift 1
