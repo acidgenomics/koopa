@@ -5,7 +5,7 @@ koopa::install_python_packages() { # {{{1
     # Install Python packages.
     # @note Updated 2021-04-30.
     # """
-    local name_fancy pkg pkg_lower pkgs python version
+    local name_fancy pkg pkg_lower pkgs version
     python="$(koopa::python)"
     koopa::assert_has_no_envs
     koopa::assert_is_installed "$python"
@@ -44,7 +44,6 @@ koopa::install_python_packages() { # {{{1
         done
     fi
     koopa::install_start "$name_fancy"
-    koopa::python_add_site_packages_to_sys_path "$python"
     koopa::pip_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
