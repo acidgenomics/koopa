@@ -328,7 +328,7 @@ koopa::r_rebuild_docs() { # {{{1
 koopa::rscript() { # {{{1
     # """
     # Execute an R script.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-04-30.
     # """
     local code header_file flags fun pos rscript
     rscript="$(koopa::r)script"
@@ -359,7 +359,7 @@ koopa::rscript() { # {{{1
     # script header and check that the koopa R package is installed cleanly.
     if [[ "$fun" != 'header' ]]
     then
-        code="${rscript}; koopa::${fun}()"
+        code="${code}; koopa::${fun}()"
     fi
     # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
