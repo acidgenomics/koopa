@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 # FIXME TAKE OUT SUPPORT FOR WHICH PYTHON HERE?
+# FIXME DO WE NEED AN UPGRADE FLAG HERE?
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-04-30.
     # """
-    local pip_install_flags pos python reinstall target
+    local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
     python="$(koopa::python)"
     reinstall=0
@@ -45,7 +46,7 @@ koopa::pip_install() { # {{{1
     koopa::dl \
         'Packages' "$(koopa::to_string "$@")" \
         'Target' "$target"
-    pip_install_flags=(
+    install_flags=(
         "--target=${target}"
         '--disable-pip-version-check'
         '--no-warn-script-location'
@@ -58,19 +59,20 @@ koopa::pip_install() { # {{{1
             '--ignore-installed'
         )
     fi
-    "$python" -m pip install "${pip_install_flags[@]}" "$@"
+    "$python" -m pip install "${install_flags[@]}" "$@"
     return 0
 }
 
 koopa::pip_outdated() { # {{{1
     # """
     # List oudated pip packages.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-04-30.
     # """
     local python x
     python="$(koopa::python)"
     x="$("$python" -m pip list --outdated --format='freeze')"
-    x="$(koopa::print "$x" | grep -v '^\-e')"
+    # FIXME Is this additional step necessary?
+    # > x="$(koopa::print "$x" | grep -v '^\-e')"
     koopa::print "$x"
     return 0
 }
