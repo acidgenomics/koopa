@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME ENSURE WE ONLY INSTALL INTO OUR SITE PACKAGES LIBRARY.
-#       DOES THIS USE PATH?
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2021-04-30.
+    # @note Updated 2021-05-02.
+    # @seealso
+    # - https://pip.pypa.io/en/stable/cli/pip_install/
     # """
     local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
@@ -46,10 +46,12 @@ koopa::pip_install() { # {{{1
     koopa::dl \
         'Packages' "$(koopa::to_string "$@")" \
         'Target' "$target"
+    # See also rules defined in '~/.config/pip/pip.conf'.
     install_flags=(
         "--target=${target}"
         '--disable-pip-version-check'
         '--no-warn-script-location'
+        '--progress-bar=pretty'
         '--upgrade'
     )
     if [[ "$reinstall" -eq 1 ]]
