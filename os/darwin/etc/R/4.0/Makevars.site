@@ -1,10 +1,12 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2021-04-29.
+# Updated 2021-05-02.
 #
 # '-O3' should be faster than '-O2' (default) level optimization.
 #
 # See also:
+# - https://cran.r-project.org/doc/manuals/r-release/
+#     R-admin.html#macOS-packages
 # - https://github.com/Rdatatable/data.table/wiki/
 #     Installation#openmp-enabled-compiler-for-mac
 # - https://mac.r-project.org/openmp/
