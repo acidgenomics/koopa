@@ -125,7 +125,7 @@ gcc="11.1"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.2.2"
+gdal="3.3.0"
 
 # https://github.com/libgeos/geos/releases
 geos="3.9.1"
