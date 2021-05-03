@@ -38,7 +38,7 @@
 # Download and install GNU Fortran complier from CRAN, which contains full GCC.
 # CRAN recommends official GNU Fortran 8.2 from fxcoudert.
 
-# FIXME Only use this to compile data.table at the moment...
+# These compiler settings work nicely for compiling data.table.
 
 # > C_LOC=/usr/local/gfortran
 # > SDK_LOC=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
