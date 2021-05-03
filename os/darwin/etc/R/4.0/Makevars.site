@@ -89,12 +89,12 @@
 # Rcpp flags {{{1
 # ==============================================================================
 
-# FIXME Move this into r-aciddevtools `install()` command.
-# FIXME Are these also required for the raster package to install?
+# Otherwise will see this warning:
+# # unused variable 'data' [-Wunused-variable]
 
 # See also:
 # - https://stackoverflow.com/questions/65987522/
 # - https://stackoverflow.com/a/37234225
 
-# > CXXFLAGS+=-O3 -Wall -pipe -Wno-unused
-# > CXX11FLAGS+=-O3 -Wall -pipe -Wno-unused
+CXXFLAGS+=-O3 -Wall -pipe -Wno-unused
+CXX11FLAGS+=-O3 -Wall -pipe -Wno-unused
