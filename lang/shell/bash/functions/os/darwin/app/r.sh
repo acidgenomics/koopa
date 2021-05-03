@@ -22,6 +22,7 @@ koopa::macos_install_r_data_table() { # {{{1
     then
         koopa::stop "Makevars already defined at '${makevars_file}'."
     fi
+    koopa::install_start "$name"
     cat << EOF > "$makevars_file"
 C_LOC=/usr/local/gfortran
 SDK_LOC=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
@@ -45,5 +46,6 @@ EOF
         R CMD INSTALL .
     )
     koopa::rm "$makevars_file"
+    koopa::install_success "$name"
     return 0
 }
