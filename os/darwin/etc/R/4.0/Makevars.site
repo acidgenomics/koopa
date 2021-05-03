@@ -8,6 +8,7 @@
 # - /Library/Frameworks/R.framework/Resources/etc/Makeconf
 # - https://cran.r-project.org/doc/manuals/r-release/
 #     R-admin.html#macOS-packages
+# - https://cran.r-project.org/doc/manuals/r-devel/R-exts.html#Using-Makevars
 # - https://github.com/Rdatatable/data.table/wiki/
 #     Installation#openmp-enabled-compiler-for-mac
 # - https://mac.r-project.org/openmp/
