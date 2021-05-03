@@ -37,7 +37,7 @@ R_LIBS_USER="~/Library/R/%v/library"
 PATH="/usr/local/bin:/usr/bin:/bin"
 
 ## fxcoudert gfortran 8.2 (for R 4.0+).
-PATH="/usr/local/gfortran/bin:${PATH}"
+## > PATH="/usr/local/gfortran/bin:${PATH}"
 
 ## Homebrew curl.
 PATH="/usr/local/opt/curl/bin:${PATH}"
