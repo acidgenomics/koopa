@@ -101,6 +101,6 @@
 # - https://stackoverflow.com/a/37234225
 # - https://stackoverflow.com/a/23414789
 
-CFLAGS+=-O3 -Wall -pipe -pedantic -std=gnu99
-CXXFLAGS+=-O3 -Wall -pipe -Wno-unused -pedantic
-CXX11FLAGS+=-O3 -Wall -pipe -Wno-unused -pedantic
+CFLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=gnu99
+CXXFLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=c++11 -Wno-unused
+CXX11FLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=c++11 -Wno-unused
