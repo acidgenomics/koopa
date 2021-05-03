@@ -13,6 +13,7 @@
 # - https://mac.r-project.org/openmp/
 # - https://thecoatlessprofessor.com/programming/cpp/
 #     r-compiler-tools-for-rcpp-on-macos/
+# https://stackoverflow.com/questions/23414448/
 # """
 
 
@@ -89,12 +90,16 @@
 # Rcpp flags {{{1
 # ==============================================================================
 
+# These compiler options are recommended by Dirk Eddelbuettel.
+#
 # Otherwise will see this warning:
 # # unused variable 'data' [-Wunused-variable]
-
+#
 # See also:
 # - https://stackoverflow.com/questions/65987522/
 # - https://stackoverflow.com/a/37234225
+# - https://stackoverflow.com/a/23414789
 
-CXXFLAGS+=-O3 -Wall -pipe -Wno-unused
-CXX11FLAGS+=-O3 -Wall -pipe -Wno-unused
+CFLAGS+=-O3 -Wall -pipe -pedantic -std=gnu99
+CXXFLAGS+=-O3 -Wall -pipe -Wno-unused -pedantic
+CXX11FLAGS+=-O3 -Wall -pipe -Wno-unused -pedantic
