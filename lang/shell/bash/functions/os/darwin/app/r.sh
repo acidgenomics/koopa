@@ -8,6 +8,9 @@ koopa::macos_install_r_data_table() { # {{{1
     #
     # Configuration via '<pkg>/src/Makevars' doesn't work, so using user R
     # Makevars file as an override here instead.
+    #
+    # @seealso
+    # - https://github.com/Rdatatable/data.table/wiki/Installation
     # """
     local c_prefix makevars_file name sdk_prefix tmp_dir
     name='data.table'
@@ -31,7 +34,7 @@ CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
 CXX11FLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
 LDFLAGS=-L\$(C_LOC)/lib -Wl,-rpath,\$(C_LOC)/lib
 EOF
-    koopa::mkdir "$(koopa::dirname "$makevars_file")"
+    koopa::mkdir "$(dirname "$makevars_file")"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
