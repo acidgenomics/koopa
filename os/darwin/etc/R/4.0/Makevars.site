@@ -1,6 +1,6 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2021-05-02.
+# Updated 2021-05-03.
 #
 # '-O3' should be faster than '-O2' (default) level optimization.
 #
@@ -83,3 +83,18 @@
 # > CPPFLAGS=-I$(GETTEXT_LOC)/include -I$(LLVM_LOC)/include -I$(SDK_LOC)/usr/include
 # > CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
 # > LDFLAGS=-L$(GETTEXT_LOC)/lib -L$(LLVM_LOC)/lib -Wl,-rpath,$(LLVM_LOC)/lib
+
+
+
+# Rcpp flags {{{1
+# ==============================================================================
+
+# FIXME Move this into r-aciddevtools `install()` command.
+# FIXME Are these also required for the raster package to install?
+
+# See also:
+# - https://stackoverflow.com/questions/65987522/
+# - https://stackoverflow.com/a/37234225
+
+# > CXXFLAGS+=-O3 -Wall -pipe -Wno-unused
+# > CXX11FLAGS+=-O3 -Wall -pipe -Wno-unused
