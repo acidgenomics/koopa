@@ -3,12 +3,12 @@
 install_libevent() { # {{{1
     # """
     # Install libevent.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-04.
     # """
     local file jobs name openssl_pkgconfig prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='libevent'
     jobs="$(koopa::cpu_count)"
     if koopa::is_macos
     then

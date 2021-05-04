@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Create 'koopa::install_gnu_app' that handles these more consistently.
+# Check for anything that calls "--script-name='gnu'".
+
 koopa::install_autoconf() { # {{{1
     koopa::install_app \
         --name='autoconf' \
@@ -106,7 +109,6 @@ koopa::install_grep() { # {{{1
         "$@"
 }
 
-# FIXME NEED TO HANDLE GZ INSTEAD OF XZ HERE.
 koopa::install_gsl() { # {{{1
     koopa::install_app \
         --name='gsl' \
@@ -144,12 +146,14 @@ koopa::install_libevent() { # {{{1
 koopa::install_libtool() { # {{{1
     koopa::install_app \
         --name='libtool' \
+        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_make() { # {{{1
     koopa::install_app \
         --name='make' \
+        --script-name='gnu' \
         "$@"
 }
 
