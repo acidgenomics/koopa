@@ -485,8 +485,7 @@ _koopa_refdata_prefix() { # {{{1
     return 0
 }
 
-# FIXME Rename this to '_koopa_ruby_packages_prefix'.
-_koopa_ruby_gems_prefix() { # {{{1
+_koopa_ruby_packages_prefix() { # {{{1
     # """
     # Ruby packags (gems) prefix.
     # @note Updated 2021-05-04.
