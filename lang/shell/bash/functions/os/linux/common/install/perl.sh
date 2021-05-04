@@ -2,6 +2,7 @@
 
 # FIXME Need to allow user to install in custom target 'opt/perl-packages'.
 # FIXME THIS SHOULD ALSO WORK ON MACOS.
+# FIXME NEED TO ADD KOOPA_ACTIVATE_PERL SCRIPT.
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
