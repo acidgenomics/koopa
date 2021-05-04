@@ -156,9 +156,9 @@ _koopa_emacs_prefix() { # {{{1
 _koopa_ensembl_perl_api_prefix() { # {{{1
     # """
     # Ensembl Perl API prefix.
-    # @note Updated 2019-11-19.
+    # @note Updated 2021-05-04.
     # """
-    _koopa_print "$(_koopa_opt_prefix)/ensembl"
+    _koopa_print "$(_koopa_opt_prefix)/ensembl-perl-api"
     return 0
 }
 
@@ -244,10 +244,11 @@ _koopa_homebrew_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rename this to '_koopa_homebrew_ruby_packages_prefix'.
 _koopa_homebrew_ruby_gems_prefix() { # {{{1
     # """
-    # Homebrew Ruby gems prefix.
-    # @note Updated 2020-12-31.
+    # Homebrew Ruby packages (gems) prefix.
+    # @note Updated 2021-05-04.
     # """
     local api_version homebrew_prefix prefix
     _koopa_is_installed brew ruby || return 0
@@ -427,6 +428,7 @@ _koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rename this simply to '_koopa_python_packages_prefix'.
 _koopa_python_site_packages_prefix() { # {{{1
     # """
     # Python site packages library location.
@@ -441,6 +443,7 @@ _koopa_python_site_packages_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rename this to simply '_koopa_python_system_packages_prefix'.
 _koopa_python_system_site_packages_prefix() { # {{{1
     # """
     # Python system site packages library location.
@@ -455,6 +458,7 @@ _koopa_python_system_site_packages_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rename this to '_koopa_r_packages_prefix'.
 _koopa_r_site_library_prefix() { # {{{1
     # """
     # R site library prefix.
@@ -485,10 +489,11 @@ _koopa_refdata_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rename this to '_koopa_ruby_packages_prefix'.
 _koopa_ruby_gems_prefix() { # {{{1
     # """
-    # Ruby gems prefix.
-    # @note Updated 2021-04-28.
+    # Ruby packags (gems) prefix.
+    # @note Updated 2021-05-04.
     # """
     local prefix
     prefix="${GEM_HOME:-}"
@@ -497,6 +502,7 @@ _koopa_ruby_gems_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rename this to '_koopa_rust_packages_prefix'.
 _koopa_rust_cargo_prefix() { # {{{1
     # """
     # Rust cargo install prefix.
@@ -514,6 +520,7 @@ _koopa_rust_cargo_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rename this to '_koopa_rustup_prefix'.
 _koopa_rust_rustup_prefix() { # {{{1
     # """
     # Rust rustup install prefix.
