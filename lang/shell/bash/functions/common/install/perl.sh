@@ -35,7 +35,7 @@ koopa::install_perl_packages() { # {{{1
     else
         modules=(
             'App::Ack'
-            'File::Rename'
+            'File::Rename'  # Also managed by Homebrew.
         )
     fi
     for module in "${modules[@]}"
