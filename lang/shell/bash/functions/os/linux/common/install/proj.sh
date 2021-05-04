@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
-install_proj() { # {{{1
+koopa::linux_install_proj() { # {{{1
+    koopa::linux_install_app \
+        --name='proj' \
+        --name-fancy='PROJ' \
+        "$@"
+}
+
+koopa:::linux_install_proj() { # {{{1
     # """
     # Install PROJ.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-04.
     # """
     local arch file make_prefix prefix url version
     koopa::assert_is_linux
     koopa::assert_is_installed sqlite3
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='proj'
     arch="$(koopa::arch)"
     jobs="$(koopa::cpu_count)"
     make_prefix="$(koopa::make_prefix)"
@@ -29,11 +37,11 @@ install_proj() { # {{{1
         export TIFF_CFLAGS='/usr/include'
         export TIFF_LIBS='/usr/lib64 -ltiff'
     fi
-    file="proj-${version}.tar.gz"
+    file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/PROJ/releases/download/${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cd "proj-${version}"
+    koopa::cd "${name}-${version}"
     ./configure \
         --prefix="$prefix" \
         CFLAGS="-I${make_prefix}/include" \
@@ -42,5 +50,3 @@ install_proj() { # {{{1
     make install
     return 0
 }
-
-install_proj "$@"

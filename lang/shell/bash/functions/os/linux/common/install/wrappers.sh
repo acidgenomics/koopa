@@ -1,40 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_openssh() { # {{{1
-    koopa::linux_install_app \
-        --name='openssh' \
-        --name-fancy='OpenSSH' \
-        "$@"
-}
-
-koopa::linux_install_openssl() { # {{{1
-    koopa::linux_install_app \
-        --name='openssl' \
-        --name-fancy='OpenSSL' \
-        --no-link \
-        "$@"
-}
-
-koopa::linux_install_password_store() { # {{{1
-    koopa::linux_install_app \
-        --name='password-store' \
-        "$@"
-}
-
-koopa::linux_install_proj() { # {{{1
-    koopa::linux_install_app \
-        --name='proj' \
-        --name-fancy='PROJ' \
-        "$@"
-}
-
-koopa::linux_install_python() { # {{{1
-    koopa::linux_install_app \
-        --name='python' \
-        --name-fancy='Python' \
-        "$@"
-}
-
 koopa::linux_install_r() { # {{{1
     koopa::linux_install_app \
         --name='r' \
