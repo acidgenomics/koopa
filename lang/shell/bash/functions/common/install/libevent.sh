@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_libevent() { # {{{1
+koopa::install_libevent() { # {{{1
+    koopa::install_app \
+        --name='libevent' \
+        "$@"
+}
+
+koopa:::install_libevent() { # {{{1
     # """
     # Install libevent.
     # @note Updated 2021-05-04.
@@ -30,5 +36,3 @@ release-${version}-stable/${file}"
     make install
     return 0
 }
-
-install_libevent "$@"

@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_rbenv() { # {{{1
+koopa::install_rbenv() { # {{{1
+    koopa::install_app \
+        --name='rbenv' \
+        "$@"
+}
+
+koopa:::install_rbenv() { # {{{1
     # """
     # Install rbenv.
     # @note Updated 2021-04-27.
@@ -17,5 +23,3 @@ install_rbenv() { # {{{1
         "${prefix}/plugins/ruby-build"
     return 0
 }
-
-install_rbenv "$@"

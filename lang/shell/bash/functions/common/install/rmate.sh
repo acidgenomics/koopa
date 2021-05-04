@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_rmate() { # {{{1
+koopa::install_rmate() { # {{{1
+    koopa::install_app \
+        --name='rmate' \
+        "$@"
+}
+
+koopa:::install_rmate() { # {{{1
     # """
     # Install rmate.
     # @note Updated 2021-04-27.
@@ -19,5 +25,3 @@ install_rmate() { # {{{1
     koopa::cp -t "${prefix}/bin" 'rmate'
     return 0
 }
-
-install_rmate "$@"
