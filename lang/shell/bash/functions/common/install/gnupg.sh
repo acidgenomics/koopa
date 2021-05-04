@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_gnupg() { # {{{1
+koopa::install_gnupg() { # {{{1
+    koopa::install_app \
+        --name='gnupg' \
+        --name-fancy='GnuPG suite' \
+        "$@"
+}
+
+koopa:::install_gnupg() { # {{{1
     # """
     # Install GnuPG.
     # @note Updated 2021-04-29.
@@ -119,6 +126,7 @@ install_gnupg() { # {{{1
         "$gpg" --list-keys
     fi
     # Install dependencies.
+    # FIXME Rethink the '--script-name' approach here.
     koopa::install_app \
         --name='libgpg-error' \
         --version="$libgpg_error_version" \
@@ -166,4 +174,82 @@ install_gnupg() { # {{{1
     return 0
 }
 
-install_gnupg "$@"
+koopa:::install_gnupg_gcrypt() { # {{{1
+    # """
+    # Install GnuPG gcrypt library.
+    # @note Updated 2021-04-27.
+    # """
+    local base_url gcrypt_url gpg gpg_agent jobs name prefix sig_file sig_url \
+        tar_file tar_url version
+    name="${INSTALL_NAME:?}"
+    prefix="${INSTALL_PREFIX:?}"
+    version="${INSTALL_VERSION:?}"
+    gcrypt_url="$(koopa::gcrypt_url)"
+    jobs="$(koopa::cpu_count)"
+    base_url="${gcrypt_url}/${name}"
+    tar_file="${name}-${version}.tar.bz2"
+    tar_url="${base_url}/${tar_file}"
+    koopa::download "$tar_url"
+    gpg='/usr/bin/gpg'
+    gpg_agent='/usr/bin/gpg-agent'
+    if koopa::is_installed "$gpg_agent"
+    then
+        sig_file="${tar_file}.sig"
+        sig_url="${base_url}/${sig_file}"
+        koopa::download "$sig_url"
+        "$gpg" --verify "$sig_file" || return 1
+    fi
+    koopa::extract "$tar_file"
+    koopa::cd "${name}-${version}"
+    ./configure --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+    return 0
+}
+
+koopa:::install_gnupg_pinentry() { # {{{1
+    # """
+    # Install GnuPG pinentry library.
+    # @note Updated 2021-04-27.
+    # """
+    local base_url gcrypt_url gpg gpg_agent jobs name prefix sig_file sig_url \
+        tar_file tar_url version
+    name="${INSTALL_NAME:?}"
+    prefix="${INSTALL_PREFIX:?}"
+    version="${INSTALL_VERSION:?}"
+    gcrypt_url="$(koopa::gcrypt_url)"
+    jobs="$(koopa::cpu_count)"
+    base_url="${gcrypt_url}/${name}"
+    tar_file="${name}-${version}.tar.bz2"
+    tar_url="${base_url}/${tar_file}"
+    koopa::download "$tar_url"
+    gpg='/usr/bin/gpg'
+    gpg_agent='/usr/bin/gpg-agent'
+    if koopa::is_installed "$gpg_agent"
+    then
+        sig_file="${tar_file}.sig"
+        sig_url="${base_url}/${sig_file}"
+        koopa::download "$sig_url"
+        "$gpg" --verify "$sig_file" || return 1
+    fi
+    koopa::extract "$tar_file"
+    koopa::cd "${name}-${version}"
+    flags=("--prefix=${prefix}")
+    if koopa::is_opensuse
+    then
+        # Build with ncurses is currently failing on openSUSE, due to
+        # hard-coded link to '/usr/include/ncursesw' that isn't easy to resolve.
+        # Falling back to using 'pinentry-tty' instead in this case.
+        flags+=(
+            '--disable-fallback-curses'
+            '--disable-pinentry-curses'
+            '--enable-pinentry-tty'
+        )
+    else
+        flags+=('--enable-pinentry-curses')
+    fi
+    ./configure "${flags[@]}"
+    make --jobs="$jobs"
+    make install
+    return 0
+}
