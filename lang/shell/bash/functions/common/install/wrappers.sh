@@ -99,7 +99,6 @@ koopa::install_gnupg() { # {{{1
         --name='gnupg' \
         --name-fancy='GnuPG suite' \
         "$@"
-    return 0
 }
 
 koopa::install_grep() { # {{{1
@@ -160,6 +159,7 @@ koopa::install_make() { # {{{1
 koopa::install_ncurses() { # {{{1
     koopa::install_app \
         --name='ncurses' \
+        --script-name='gnu' \
         "$@"
 }
 
@@ -172,12 +172,14 @@ koopa::install_neofetch() { # {{{1
 koopa::install_parallel() { # {{{1
     koopa::install_app \
         --name='parallel' \
+        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_patch() { # {{{1
     koopa::install_app \
         --name='patch' \
+        --script-name='gnu' \
         "$@"
 }
 
@@ -219,19 +221,30 @@ koopa::install_rsync() { # {{{1
 }
 
 koopa::install_sed() { # {{{1
-    koopa::install_app --name='sed' "$@"
+    koopa::install_app \
+        --name='sed' \
+        --script-name='gnu' \
+        "$@"
 }
 
 koopa::install_shellcheck() { # {{{1
-    koopa::install_app --name='shellcheck' --name-fancy='ShellCheck' "$@"
+    koopa::install_app \
+        --name='shellcheck' \
+        --name-fancy='ShellCheck' \
+        "$@"
 }
 
 koopa::install_shunit2() { # {{{1
-    koopa::install_app --name='shunit2' --name-fancy='shUnit2' "$@"
+    koopa::install_app \
+        --name='shunit2' \
+        --name-fancy='shUnit2' \
+        "$@"
 }
 
 koopa::install_singularity() { # {{{1
-    koopa::install_app --name='singularity' "$@"
+    koopa::install_app \
+        --name='singularity' \
+        "$@"
 }
 
 koopa::install_sqlite() { # {{{1
@@ -239,7 +252,6 @@ koopa::install_sqlite() { # {{{1
         --name='sqlite' \
         --name-fancy='SQLite' \
         "$@"
-    return 0
 }
 
 koopa::install_subversion() { # {{{1
@@ -252,12 +264,14 @@ koopa::install_tar() { # {{{1
     koopa::install_app \
         --name='tar' \
         --name-fancy='GNU tar' \
+        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_texinfo() { # {{{1
     koopa::install_app \
         --name='texinfo' \
+        --script-name='gnu' \
         "$@"
 }
 
@@ -284,5 +298,4 @@ koopa::install_zsh() { # {{{1
         --name='zsh' \
         --name-fancy='Zsh' \
         "$@"
-    return 0
 }
