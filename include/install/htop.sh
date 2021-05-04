@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_htop() { # {{{1
+koopa::install_htop() { # {{{1
+    koopa::install_app \
+        --name='htop' \
+        "$@"
+}
+
+koopa:::install_htop() { # {{{1
     # """
     # Install htop.
     # @note Updated 2021-04-27.
@@ -28,5 +34,3 @@ install_htop() { # {{{1
     make install
     return 0
 }
-
-install_htop "$@"
