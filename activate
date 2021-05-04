@@ -79,6 +79,7 @@ _koopa_activate() { # {{{1
         _koopa_activate_nextflow || return 1
         _koopa_activate_ruby || return 1
         _koopa_activate_rust || return 1
+        _koopa_activate_perl_packages || return 1
         _koopa_activate_python_packages || return 1
         _koopa_activate_python_startup || return 1
         # These are now handled in '_koopa_activate_aliases' call:
