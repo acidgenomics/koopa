@@ -692,8 +692,8 @@ koopa::rust_packages_prefix() { # {{{1
     _koopa_rust_packages_prefix "$@"
 }
 
-koopa::rust_rustup_prefix() { # {{{1
-    _koopa_rust_rustup_prefix "$@"
+koopa::rustup_prefix() { # {{{1
+    _koopa_rustup_prefix "$@"
 }
 
 koopa::scripts_private_prefix() { # {{{1
