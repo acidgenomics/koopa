@@ -20,6 +20,10 @@ koopa::activate_opt_prefix() { # {{{1
     _koopa_activate_opt_prefix "$@"
 }
 
+koopa::activate_perl_packages() { # {{{1
+    _koopa_activate_perl_packages "$@"
+}
+
 koopa::activate_prefix() { # {{{1
     _koopa_activate_prefix "$@"
 }

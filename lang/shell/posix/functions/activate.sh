@@ -638,6 +638,7 @@ _koopa_activate_perl_packages() { # {{{1
     [ -d "$prefix" ] || return 0
     _koopa_is_installed perl || return 0
     eval "$(perl "-I${prefix}/lib/perl5" "-Mlocal::lib=${prefix}")"
+    _koopa_activate_prefix "$prefix"
     return 0
 }
 
