@@ -42,7 +42,7 @@ koopa::pip_install() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::is_installed "$python" || return 0
     koopa::python_add_site_packages_to_sys_path "$python"
-    target="$(koopa::python_site_packages_prefix "$python")"
+    target="$(koopa::python_packages_prefix "$python")"
     koopa::dl \
         'Packages' "$(koopa::to_string "$@")" \
         'Target' "$target"
@@ -68,7 +68,7 @@ koopa::pip_install() { # {{{1
 koopa::pip_outdated() { # {{{1
     # """
     # List oudated pip packages.
-    # @note Updated 2021-04-30.
+    # @note Updated 2021-05-04.
     #
     # Requesting 'freeze' format will return '<pkg>==<version>'.
     #
@@ -77,7 +77,7 @@ koopa::pip_outdated() { # {{{1
     # """
     local prefix python x
     python="$(koopa::python)"
-    prefix="$(koopa::python_site_packages_prefix)"
+    prefix="$(koopa::python_packages_prefix)"
     x="$( \
         "$python" -m pip list \
             --format 'freeze' \
@@ -108,7 +108,7 @@ koopa::pyscript() { # {{{1
 koopa::python_add_site_packages_to_sys_path() { # {{{1
     # """
     # Add our custom site packages library to sys.path.
-    # @note Updated 2021-04-30.
+    # @note Updated 2021-05-04.
     #
     # @seealso
     # > "$python" -m site
@@ -116,8 +116,8 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     local file k_site_pkgs python sys_site_pkgs
     python="${1:-}"
     [[ -z "$python" ]] && python="$(koopa::python)"
-    sys_site_pkgs="$(koopa::python_system_site_packages_prefix "$python")"
-    k_site_pkgs="$(koopa::python_site_packages_prefix "$python")"
+    sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
+    k_site_pkgs="$(koopa::python_packages_prefix "$python")"
     [[ ! -d "$k_site_pkgs" ]] && koopa::sys_mkdir "$k_site_pkgs"
     file="${sys_site_pkgs}/koopa.pth"
     koopa::alert "Adding '${file}' path file in '${sys_site_pkgs}'."

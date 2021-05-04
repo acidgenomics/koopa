@@ -766,15 +766,15 @@ _koopa_activate_pyenv() { # {{{1
     return 0
 }
 
-_koopa_activate_python_site_packages() { # {{{1
+_koopa_activate_python_packages() { # {{{1
     # """
     # Activate Python site packages library.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-04.
     #
     # This ensures that 'bin' will be added to PATH, which is useful when
     # installing via pip with '--target' flag.
     # """
-    _koopa_activate_prefix "$(_koopa_python_site_packages_prefix)"
+    _koopa_activate_prefix "$(_koopa_python_packages_prefix)"
     return 0
 }
 

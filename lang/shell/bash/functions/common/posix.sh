@@ -648,12 +648,12 @@ koopa::python() { # {{{1
     _koopa_python "$@"
 }
 
-koopa::python_site_packages_prefix() { # {{{1
-    _koopa_python_site_packages_prefix "$@"
+koopa::python_packages_prefix() { # {{{1
+    _koopa_python_packages_prefix "$@"
 }
 
-koopa::python_system_site_packages_prefix() { # {{{1
-    _koopa_python_system_site_packages_prefix "$@"
+koopa::python_system_packages_prefix() { # {{{1
+    _koopa_python_system_packages_prefix "$@"
 }
 
 koopa::r() { # {{{1

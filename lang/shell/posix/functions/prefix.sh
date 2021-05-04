@@ -427,11 +427,10 @@ _koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
-# FIXME Rename this simply to '_koopa_python_packages_prefix'.
-_koopa_python_site_packages_prefix() { # {{{1
+_koopa_python_packages_prefix() { # {{{1
     # """
-    # Python site packages library location.
-    # @note Updated 2021-04-28.
+    # Python site packages library prefix.
+    # @note Updated 2021-05-04.
     #
     # This was changed to an unversioned approach in koopa v0.9.
     #
@@ -442,11 +441,10 @@ _koopa_python_site_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME Rename this to simply '_koopa_python_system_packages_prefix'.
-_koopa_python_system_site_packages_prefix() { # {{{1
+_koopa_python_system_packages_prefix() { # {{{1
     # """
-    # Python system site packages library location.
-    # @note Updated 2020-08-06.
+    # Python system site packages library prefix.
+    # @note Updated 2021-05-04.
     # """
     local python x
     python="${1:-}"
