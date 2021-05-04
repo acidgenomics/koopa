@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_neovim() { # {{{1
+koopa::linux_install_neovim() { # {{{1
+    koopa::linux_install_app \
+        --name='neovim' \
+        "$@"
+}
+
+koopa:::install_neovim() { # {{{1
     # """
     # Install Neovim.
     # @note Updated 2021-04-28.
@@ -23,5 +29,3 @@ install_neovim() { # {{{1
     make install
     return 0
 }
-
-install_neovim "$@"
