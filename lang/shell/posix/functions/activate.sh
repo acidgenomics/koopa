@@ -823,11 +823,11 @@ _koopa_activate_rbenv() { # {{{1
 _koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-04.
     # """
     local prefix
-    prefix="$(_koopa_ruby_gems_prefix)"
-    _koopa_activate_prefix "$(_koopa_ruby_gems_prefix)"
+    prefix="$(_koopa_ruby_packages_prefix)"
+    _koopa_activate_prefix "$prefix"
     export GEM_HOME="$prefix"
     return 0
 }
