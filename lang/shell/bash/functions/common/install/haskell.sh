@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_haskell_stack() { # {{{1
+koopa::install_haskell_stack() { # {{{1
+    koopa::install_app \
+        --name='haskell-stack' \
+        --name-fancy='Haskell Stack' \
+        "$@"
+}
+
+koopa:::install_haskell_stack() { # {{{1
     # """
     # Install Haskell Stack.
     # @note Updated 2021-04-27.
@@ -19,5 +26,3 @@ install_haskell_stack() { # {{{1
     ./"${file}" -f -d "$prefix"
     return 0
 }
-
-install_haskell_stack "$@"

@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_hdf5() { # {{{1
+koopa::install_hdf5() { # {{{1
+    koopa::install_app \
+        --name='hdf5' \
+        --name-fancy='HDF5' \
+        "$@"
+}
+
+koopa:::install_hdf5() { # {{{1
     # """
     # Install HDF5.
     # @note Updated 2021-05-04.
@@ -33,5 +40,3 @@ ${name}-${minor_version}/${name}-${version}/src/${file}"
     make install
     return 0
 }
-
-install_hdf5 "$@"
