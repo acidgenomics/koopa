@@ -15,12 +15,10 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
-# FIXME TAKE OUT SUPPORT FOR WHICH R HER.
-# SIMPLIFY ENSURE THIS IS ADDED TO PATH BEFORE PROCEEDING.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-03.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
