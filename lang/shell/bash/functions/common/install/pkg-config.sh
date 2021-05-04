@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_pkg_config() { # {{{1
+koopa::install_pkg_config() { # {{{1
+    koopa::install_app \
+        --name='pkg-config' \
+        "$@"
+}
+
+koopa:::install_pkg_config() { # {{{1
     # """
     # Install pkg-config.
     # @note Updated 2021-04-27.
@@ -24,5 +30,3 @@ install_pkg_config() { # {{{1
     make install
     return 0
 }
-
-install_pkg_config "$@"

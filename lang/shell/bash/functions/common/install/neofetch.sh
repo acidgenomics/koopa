@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_neofetch() { # {{{1
+koopa::install_neofetch() { # {{{1
+    koopa::install_app \
+        --name='neofetch' \
+        "$@"
+}
+
+koopa:::install_neofetch() { # {{{1
     # """
     # Install neofetch.
     # @note Updated 2021-04-27.
@@ -18,5 +24,3 @@ install_neofetch() { # {{{1
     make PREFIX="$prefix" install
     return 0
 }
-
-install_neofetch "$@"
