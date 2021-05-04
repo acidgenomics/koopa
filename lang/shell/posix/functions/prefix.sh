@@ -497,11 +497,10 @@ _koopa_ruby_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME Rename this to '_koopa_rust_packages_prefix'.
-_koopa_rust_cargo_prefix() { # {{{1
+_koopa_rust_packages_prefix() { # {{{1
     # """
-    # Rust cargo install prefix.
-    # @note Updated 2021-04-29.
+    # Rust packages (cargo) install prefix.
+    # @note Updated 2021-05-04.
     #
     # See also:
     # - https://github.com/rust-lang/rustup#environment-variables
