@@ -429,16 +429,16 @@ _koopa_activate_homebrew_python() { # {{{1
     return 0
 }
 
-_koopa_activate_homebrew_ruby_gems() { # {{{1
+_koopa_activate_homebrew_ruby_packages() { # {{{1
     # """
-    # Activate Homebrew Ruby gems.
+    # Activate Homebrew Ruby packages (gems).
     # @note Updated 2020-12-31.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ruby.rb
     # - https://stackoverflow.com/questions/12287882/
     # """
-    _koopa_activate_prefix "$(_koopa_homebrew_ruby_gems_prefix)"
+    _koopa_activate_prefix "$(_koopa_homebrew_ruby_packages_prefix)"
     return 0
 }
 
