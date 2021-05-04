@@ -347,7 +347,7 @@ koopa::is_powerful() { # {{{1
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-04.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -364,7 +364,7 @@ koopa::is_python_package_installed() { # {{{1
     koopa::assert_has_args "$#"
     python="$(koopa::python)"
     koopa::is_installed "$python" || return 1
-    prefix="$(koopa::python_site_packages_prefix "$python")"
+    prefix="$(koopa::python_packages_prefix "$python")"
     for pkg in "$@"
     do
         if [[ ! -d "${prefix}/${pkg}" ]] && [[ ! -f "${prefix}/${pkg}.py" ]]
