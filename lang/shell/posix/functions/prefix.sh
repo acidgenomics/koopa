@@ -380,6 +380,19 @@ _koopa_opt_prefix() { # {{{1
     return 0
 }
 
+_koopa_perl_packages_prefix() { # {{{1
+    # """
+    # Perl site library prefix.
+    # @note Updated 2021-05-04.
+    #
+    # @seealso
+    # > perl -V
+    # # Inspect the '@INC' variable.
+    # """
+    _koopa_print "$(_koopa_opt_prefix)/perl-packages"
+    return 0
+}
+
 _koopa_perlbrew_prefix() { # {{{1
     # """
     # Perlbrew prefix.
