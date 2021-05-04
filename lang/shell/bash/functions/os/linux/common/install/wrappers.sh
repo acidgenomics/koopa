@@ -1,20 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_aws_cli() { # {{{1
-    koopa::linux_install_app \
-        --name='aws-cli' \
-        --name-fancy='AWS CLI' \
-        --version='latest' \
-        --include-dirs='bin' \
-        "$@"
-}
-
-koopa::linux_install_docker_credential_pass() { # {{{1
-    koopa::linux_install_app \
-        --name='docker-credential-pass' \
-        "$@"
-}
-
 koopa::linux_install_gcc() { # {{{1
     koopa::linux_install_app \
         --name='gcc' \

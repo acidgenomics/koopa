@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
-install_aws_cli() { # {{{1
+koopa::linux_install_aws_cli() { # {{{1
+    koopa::linux_install_app \
+        --name='aws-cli' \
+        --name-fancy='AWS CLI' \
+        --version='latest' \
+        --include-dirs='bin' \
+        "$@"
+}
+
+koopa:::linux_install_aws_cli() { # {{{1
     # """
     # Install AWS CLI.
     # @note Updated 2021-04-28.
@@ -38,5 +47,3 @@ install_aws_cli() { # {{{1
     koopa::sys_cp "$version" "$prefix"
     return 0
 }
-
-install_aws_cli "$@"
