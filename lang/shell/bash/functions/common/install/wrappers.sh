@@ -24,23 +24,9 @@ koopa::install_coreutils() { # {{{1
         "$@"
 }
 
-koopa::install_emacs() { # {{{1
-    koopa::install_app \
-        --name='emacs' \
-        --name-fancy='Emacs' \
-        "$@"
-}
-
 koopa::install_findutils() { # {{{1
     koopa::install_gnu_app \
         --name='findutils' \
-        "$@"
-}
-
-koopa::install_fish() { # {{{1
-    koopa::install_app \
-        --name='fish' \
-        --name-fancy='Fish' \
         "$@"
 }
 
