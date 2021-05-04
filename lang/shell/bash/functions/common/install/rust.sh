@@ -3,7 +3,7 @@
 koopa::install_rust() { # {{{1
     # """
     # Install Rust (via rustup).
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-04.
     # """
     local cargo_prefix file name_fancy pos prefix reinstall rustup_prefix \
         tmp_dir url
@@ -32,7 +32,7 @@ koopa::install_rust() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    cargo_prefix="$(koopa::rust_cargo_prefix)"
+    cargo_prefix="$(koopa::rust_packages_prefix)"
     rustup_prefix="$(koopa::app_prefix)/rustup/rolling"
     [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$cargo_prefix" "$rustup_prefix"
     if [[ -d "$cargo_prefix" ]] || [[ -d "$rustup_prefix" ]]
