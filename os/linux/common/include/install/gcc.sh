@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can we get this to build from source on macOS?
+
 install_gcc() { # {{{1
     # """
     # Install GCC.
