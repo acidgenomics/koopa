@@ -552,6 +552,10 @@ koopa::parent_dir() { # {{{1
     _koopa_parent_dir "$@"
 }
 
+koopa::perl_packages_prefix() { # {{{1
+    _koopa_perl_packages_prefix "$@"
+}
+
 koopa::perlbrew_prefix() { # {{{1
     _koopa_perlbrew_prefix "$@"
 }
