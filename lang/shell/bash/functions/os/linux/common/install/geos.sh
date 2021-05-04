@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_geos() { # {{{1
+koopa::linux_install_geos() { # {{{1
+    koopa::linux_install_app \
+        --name='geos' \
+        --name-fancy='GEOS' \
+        "$@"
+}
+
+koopa:::linux_install_geos() { # {{{1
     # """
     # Install GEOS.
     # @note Updated 2021-04-28.
@@ -34,11 +41,9 @@ install_geos() { # {{{1
     koopa::cd build
     cmake "../${name}-${version}" \
         -DCMAKE_INSTALL_PREFIX="$prefix"
-        # -DGEOS_ENABLE_TESTS=OFF
+        # -DGEOS_ENABLE_TESTS='OFF'
     make --jobs="$jobs"
     # > make test
     make install
     return 0
 }
-
-install_geos "$@"
