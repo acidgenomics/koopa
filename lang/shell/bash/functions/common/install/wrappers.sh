@@ -12,36 +12,15 @@ koopa::install_automake() { # {{{1
         "$@"
 }
 
-
 koopa::install_binutils() { # {{{1
     koopa::install_gnu_app \
         --name='binutils' \
         "$@"
 }
 
-koopa::install_cmake() { # {{{1
-    koopa::install_app \
-        --name='cmake' \
-        --name-fancy='CMake' \
-        "$@"
-}
-
 koopa::install_coreutils() { # {{{1
     koopa::install_gnu_app \
         --name='coreutils' \
-        "$@"
-}
-
-koopa::install_cpufetch() { # {{{1
-    koopa::install_app \
-        --name='cpufetch' \
-        "$@"
-}
-
-koopa::install_curl() { # {{{1
-    koopa::install_app \
-        --name='curl' \
-        --name-fancy='cURL' \
         "$@"
 }
 

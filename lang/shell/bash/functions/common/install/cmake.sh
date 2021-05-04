@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_cmake() { # {{{1
+koopa::install_cmake() { # {{{1
+    koopa::install_app \
+        --name='cmake' \
+        --name-fancy='CMake' \
+        "$@"
+}
+
+koopa:::install_cmake() { # {{{1
     # """
     # Install CMake.
     # @note Updated 2021-05-04.
@@ -35,5 +42,3 @@ install_cmake() { # {{{1
     make install
     return 0
 }
-
-install_cmake "$@"
