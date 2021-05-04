@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_docker_credential_pass() { # {{{1
+koopa::linux_install_docker_credential_pass() { # {{{1
+    koopa::linux_install_app \
+        --name='docker-credential-pass' \
+        "$@"
+}
+
+koopa:::install_docker_credential_pass() { # {{{1
     # """
     # Install docker-credential-pass.
     # @note Updated 2021-04-28.
@@ -22,5 +28,3 @@ install_docker_credential_pass() { # {{{1
     koopa::cp -t "${prefix}/bin" "$name"
     return 0
 }
-
-install_docker_credential_pass "$@"
