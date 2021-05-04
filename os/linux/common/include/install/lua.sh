@@ -9,9 +9,9 @@ install_lua() { # {{{1
     # """
     local file name prefix url version
     koopa::assert_is_linux
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='lua'
     file="${name}-${version}.tar.gz"
     url="http://www.lua.org/ftp/${file}"
     koopa::download "$url"

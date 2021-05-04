@@ -6,9 +6,9 @@ install_neofetch() { # {{{1
     # @note Updated 2021-04-27.
     # """
     local file name prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='neofetch'
     file="${version}.tar.gz"
     url="https://github.com/dylanaraps/${name}/archive/${file}"
     koopa::download "$url"

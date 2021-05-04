@@ -14,11 +14,10 @@ install_subversion() { # {{{1
     # - https://subversion.apache.org/source-code.html
     # """
     local file jobs name prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='subversion'
     jobs="$(koopa::cpu_count)"
-
     if koopa::is_linux
     then
         if koopa::is_fedora

@@ -18,9 +18,9 @@ install_gdal() { # {{{1
     local file jobs make_prefix name prefix url version
     koopa::assert_is_linux
     koopa::activate_opt_prefix geos proj python
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='gdal'
     jobs="$(koopa::cpu_count)"    
     make_prefix="$(koopa::make_prefix)"
     file="${name}-${version}.tar.gz"

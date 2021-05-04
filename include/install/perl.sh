@@ -10,9 +10,9 @@ install_perl() { # {{{1
     # - https://perlmaven.com/how-to-build-perl-from-source-code
     # """
     local file jobs name prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='perl'
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.gz"
     url="https://www.cpan.org/src/5.0/${file}"

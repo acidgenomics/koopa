@@ -22,9 +22,9 @@ install_geos() { # {{{1
     # """
     local file jobs name prefix url version
     koopa::assert_is_linux
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='geos'
     jobs="$(koopa::cpu_count)"
     file="${version}.tar.gz"
     url="https://github.com/libgeos/${name}/archive/${file}"

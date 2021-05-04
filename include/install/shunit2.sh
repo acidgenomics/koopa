@@ -6,9 +6,9 @@ install_shunit2() { # {{{1
     # @note Updated 2021-04-27.
     # """
     local file name prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='shunit2'
     file="v${version}.tar.gz"
     url="https://github.com/kward/${name}/archive/${file}"
     koopa::download "$url"

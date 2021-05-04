@@ -24,9 +24,9 @@ install_julia_binary() { # {{{1
     # """
     local arch file minor_version name prefix subdir url version
     koopa::assert_is_linux
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='julia'
     arch="$(koopa::arch)"
     minor_version="$(koopa::major_minor_version "$version")"
     file="${name}-${version}-linux-${arch}.tar.gz"

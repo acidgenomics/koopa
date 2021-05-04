@@ -31,9 +31,9 @@ install_the_silver_searcher() { # {{{1
     # """
     local file jobs name name2 prefix url version
     koopa::assert_is_installed pcre-config
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='the-silver-searcher'
     jobs="$(koopa::cpu_count)"
     # Temporarily installing from master branch, which has bug fixes that aren't
     # yet available in tagged release, especially for GCC 10.

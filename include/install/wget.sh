@@ -7,9 +7,9 @@ install_wget() { # {{{1
     # @note Updated 2021-04-28.
     # """
     local file gnu_mirror jobs name openssl_pkgconfig prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='wget'
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
     if koopa::is_macos
