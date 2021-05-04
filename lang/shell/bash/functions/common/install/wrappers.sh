@@ -7,26 +7,6 @@ koopa::install_gnupg() { # {{{1
         "$@"
 }
 
-koopa::install_haskell_stack() { # {{{1
-    koopa::install_app \
-        --name='haskell-stack' \
-        --name-fancy='Haskell Stack' \
-        "$@"
-}
-
-koopa::install_hdf5() { # {{{1
-    koopa::install_app \
-        --name='hdf5' \
-        --name-fancy='HDF5' \
-        "$@"
-}
-
-koopa::install_htop() { # {{{1
-    koopa::install_app \
-        --name='htop' \
-        "$@"
-}
-
 koopa::install_libevent() { # {{{1
     koopa::install_app \
         --name='libevent' \
