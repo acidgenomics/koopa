@@ -316,7 +316,7 @@ koopa:::which_function() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-04.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
@@ -336,7 +336,9 @@ koopa::koopa() { # {{{1
         system | \
         uninstall | \
         update)
-            f="_koopa_${1}"
+            # Note that the ':' is necessary here to call the internal functions
+            # defined above.
+            f=":koopa_${1}"
             shift 1
             ;;
         test)
