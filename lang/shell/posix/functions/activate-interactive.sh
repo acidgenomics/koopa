@@ -3,19 +3,17 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-04.
     # """
     local file
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    alias activate-ensembl-perl-api='_koopa_activate_ensembl_perl_api'
-    alias activate-perlbrew='_koopa_activate_perlbrew'
-    alias activate-pipx='_koopa_activate_pipx'
-    alias activate-pyenv='_koopa_activate_pyenv'
-    alias activate-rbenv='_koopa_activate_rbenv'
-    alias activate-venv='_koopa_activate_venv'
     alias br='unalias br && _koopa_activate_broot && br'
     alias conda='unalias conda && _koopa_activate_conda && conda'
     alias fzf='unalias fzf && _koopa_activate_fzf && fzf'
+    alias perlbrew='unalias perlbrew && _koopa_activate_perlbrew && perlbrew'
+    alias pipx='unalias pipx && _koopa_activate_pipx && pipx'
+    alias pyenv='unalias pyenv && _koopa_activate_pyenv && pyenv'
+    alias rbenv='unalias rbenv && _koopa_activate_rbenv && rbenv'
     alias z='unalias z && _koopa_activate_zoxide && z'
     file="${HOME}/.aliases"
     # shellcheck source=/dev/null

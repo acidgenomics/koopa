@@ -626,6 +626,21 @@ _koopa_activate_opt_prefix() { # {{{1
     return 0
 }
 
+_koopa_activate_perl_packages() { # {{{1
+    # """
+    # Activate Perl local library.
+    # @note Updated 2021-05-04.
+    # @seealso
+    # - brew info perl
+    # """
+    local prefix
+    prefix="$(_koopa_perl_packages_prefix)"
+    [ -d "$prefix" ] || return 0
+    _koopa_is_installed perl || return 0
+    eval "$(perl "-I${prefix}/lib/perl5" "-Mlocal::lib=${prefix}")"
+    return 0
+}
+
 _koopa_activate_perlbrew() { # {{{1
     # """
     # Activate Perlbrew.
