@@ -34,7 +34,6 @@ install_the_silver_searcher() { # {{{1
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
     # Temporarily installing from master branch, which has bug fixes that aren't
     # yet available in tagged release, especially for GCC 10.
