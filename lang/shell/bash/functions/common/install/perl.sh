@@ -40,7 +40,7 @@ koopa::install_perl_packages() { # {{{1
     fi
     for module in "${modules[@]}"
     do
-        koopa::install_start "${module}"
+        koopa::alert "${module}"
         cpanm "$module" &>/dev/null
     done
     koopa::install_success "$name_fancy"
