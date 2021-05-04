@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_curl() { # {{{1
+koopa::install_curl() { # {{{1
+    koopa::install_app \
+        --name='curl' \
+        --name-fancy='cURL' \
+        "$@"
+}
+
+koopa:::install_curl() { # {{{1
     # """
     # Install cURL.
     # @note Updated 2021-05-04.
@@ -25,5 +32,3 @@ ${name}-${version2}/${file}"
     make install
     return 0
 }
-
-install_curl "$@"
