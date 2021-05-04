@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_fedora_install_bcl2fastq_from_rpm() { # {{{
+koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     # """
     # Install bcl2fastq from Fedora/RHEL RPM file.
     # @note Updated 2020-01-20.

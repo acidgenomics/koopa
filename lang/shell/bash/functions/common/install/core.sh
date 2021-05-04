@@ -145,8 +145,6 @@ koopa::install_app() { # {{{1
     return 0
 }
 
-# FIXME INTERCEPT THE '--name' flag and set '--name-fancy' here automatically?
-# e.g. binutils becomes 'GNU binutils' for name fancy?
 koopa::install_gnu_app() { # {{{1
     # """
     # Build and install a GNU package from source.

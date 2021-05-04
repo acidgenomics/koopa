@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_kallisto_index() { # {{{1
+koopa:::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
     # @note Updated 2020-08-12.
@@ -42,7 +42,7 @@ koopa::_kallisto_index() { # {{{1
     return 0
 }
 
-koopa::_kallisto_quant() { # {{{1
+koopa:::kallisto_quant() { # {{{1
     # """
     # Run kallisto quant.
     # @note Updated 2021-01-20.
@@ -213,7 +213,7 @@ koopa::run_kallisto() { # {{{1
         index_file="$(koopa::realpath "$index_file")"
     else
         index_file="${output_dir}/kallisto.idx"
-        koopa::_kallisto_index \
+        koopa:::kallisto_index \
             --fasta-file="$fasta_file" \
             --index-file="$index_file"
     fi
@@ -224,7 +224,7 @@ koopa::run_kallisto() { # {{{1
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
-        koopa::_kallisto_quant \
+        koopa:::kallisto_quant \
             --bootstraps="$bootstraps" \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \

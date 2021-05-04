@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_install_conda() { # {{{1
+koopa:::install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
     # @note Updated 2021-01-14.
@@ -98,7 +98,7 @@ koopa::install_anaconda() { # {{{1
     # Install Anaconda.
     # @note Updated 2020-10-27.
     # """
-    koopa::_install_conda --anaconda "$@"
+    koopa:::install_conda --anaconda "$@"
     return 0
 }
 
@@ -118,6 +118,6 @@ koopa::install_miniconda() { # {{{1
     # Install Miniconda.
     # @note Updated 2020-10-27.
     # """
-    koopa::_install_conda --miniconda "$@"
+    koopa:::install_conda --miniconda "$@"
     return 0
 }

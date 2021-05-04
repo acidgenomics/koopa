@@ -86,7 +86,7 @@ at '${install_dir}'."
     return 0
 }
 
-koopa::_update_doom_emacs() { # {{{1
+koopa:::update_doom_emacs() { # {{{1
     # """
     # Update Doom Emacs.
     # @note Updated 2020-11-25.
@@ -105,7 +105,7 @@ koopa::_update_doom_emacs() { # {{{1
     return 0
 }
 
-koopa::_update_spacemacs() { # {{{1
+koopa:::update_spacemacs() { # {{{1
     # """
     # Update spacemacs non-interatively.
     # @note Updated 2021-04-09.
@@ -145,10 +145,10 @@ koopa::update_emacs() { # {{{1
     fi
     if koopa::is_spacemacs_installed
     then
-        koopa::_update_spacemacs
+        koopa:::update_spacemacs
     elif koopa::is_doom_emacs_installed
     then
-        koopa::_update_doom_emacs
+        koopa:::update_doom_emacs
     else
         koopa::alert_note 'Emacs configuration cannot be updated.'
         return 0
