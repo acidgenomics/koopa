@@ -12,12 +12,6 @@ koopa::install_automake() { # {{{1
         "$@"
 }
 
-koopa::install_bash() { # {{{1
-    koopa::install_app \
-        --name='bash' \
-        --name-fancy='Bash' \
-        "$@"
-}
 
 koopa::install_binutils() { # {{{1
     koopa::install_gnu_app \

@@ -115,6 +115,9 @@ koopa::install_app() { # {{{1
         export INSTALL_NAME="$name"
         export INSTALL_PREFIX="$prefix"
         export INSTALL_VERSION="$version"
+        # FIXME SWITCH TO RUNNING 'koopa:::install_XXX' instead of sourcing
+        # an external script file.
+        koopa::stop 'FIXME'
         script="${script_prefix}/${script_name}.sh"
         koopa::assert_is_file "$script"
         # shellcheck source=/dev/null
