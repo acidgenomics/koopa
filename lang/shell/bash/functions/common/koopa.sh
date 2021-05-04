@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_koopa_app() { # {{{1
+koopa:::koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
     # @note Updated 2021-03-01.
@@ -29,11 +29,11 @@ koopa::_koopa_app() { # {{{1
             ;;
     esac
     shift 1
-    koopa::_run_function "$name" "$@"
+    koopa:::run_function "$name" "$@"
     return 0
 }
 
-koopa::_koopa_configure() { # {{{1
+koopa:::koopa_configure() { # {{{1
     # """
     # Parse user input to 'koopa configure'.
     # @note Updated 2021-04-29.
@@ -45,11 +45,11 @@ koopa::_koopa_configure() { # {{{1
         koopa::stop "Missing argument: 'koopa configure <ARG>...'."
     fi
     shift 1
-    koopa::_run_function "configure-${name}" "$@"
+    koopa:::run_function "configure-${name}" "$@"
     return 0
 }
 
-koopa::_koopa_header() { # {{{1
+koopa:::koopa_header() { # {{{1
     # """
     # Parse user input to 'koopa header'.
     # @note Updated 2021-01-19.
@@ -80,7 +80,7 @@ koopa::_koopa_header() { # {{{1
 }
 
 # NOTE Consider hardening against 'koopa::install_app' here.
-koopa::_koopa_install() { # {{{1
+koopa:::koopa_install() { # {{{1
     # """
     # Parse user input to 'koopa install'.
     # @note Updated 2021-03-01.
@@ -92,11 +92,11 @@ koopa::_koopa_install() { # {{{1
         koopa::stop "Missing argument: 'koopa install <ARG>...'."
     fi
     shift 1
-    koopa::_run_function "install-${name}" "$@"
+    koopa:::run_function "install-${name}" "$@"
     return 0
 }
 
-koopa::_koopa_link() { # {{{1
+koopa:::koopa_link() { # {{{1
     # """
     # Parse user input to 'koopa link'.
     # @note Updated 2021-03-01.
@@ -108,11 +108,11 @@ koopa::_koopa_link() { # {{{1
         koopa::stop "Missing argument: 'koopa link <ARG>...'."
     fi
     shift 1
-    koopa::_run_function "link-${name}" "$@"
+    koopa:::run_function "link-${name}" "$@"
     return 0
 }
 
-koopa::_koopa_list() { # {{{1
+koopa:::koopa_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
     # @note Updated 2021-03-01.
@@ -126,11 +126,11 @@ koopa::_koopa_list() { # {{{1
         name="list-${name}"
         shift 1
     fi
-    koopa::_run_function "$name" "$@"
+    koopa:::run_function "$name" "$@"
     return 0
 }
 
-koopa::_koopa_system() { # {{{1
+koopa:::koopa_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
     # @note Updated 2021-03-01.
@@ -206,11 +206,11 @@ koopa::_koopa_system() { # {{{1
             ;;
     esac
     shift 1
-    koopa::_run_function "$f" "$@"
+    koopa:::run_function "$f" "$@"
     return 0
 }
 
-koopa::_koopa_uninstall() { # {{{1
+koopa:::koopa_uninstall() { # {{{1
     # """
     # Parse user input to 'koopa uninstall'.
     # @note Updated 2021-03-01.
@@ -221,11 +221,11 @@ koopa::_koopa_uninstall() { # {{{1
     then
         koopa::stop 'Program name to uninstall is required.'
     fi
-    koopa::_run_function "uninstall-${name}"
+    koopa:::run_function "uninstall-${name}"
     return 0
 }
 
-koopa::_koopa_update() { # {{{1
+koopa:::koopa_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
     # @note Updated 2021-03-01.
@@ -254,11 +254,11 @@ koopa::_koopa_update() { # {{{1
             ;;
     esac
     [[ "$#" -gt 0 ]] && shift 1
-    koopa::_run_function "update-${name}" "$@"
+    koopa:::run_function "update-${name}" "$@"
     return 0
 }
 
-koopa::_run_function() { # {{{1
+koopa:::run_function() { # {{{1
     # """
     # Lookup and execute a koopa function automatically.
     # @note Updated 2020-11-18.
@@ -266,14 +266,14 @@ koopa::_run_function() { # {{{1
     local name fun
     koopa::assert_has_args "$#"
     name="${1:?}"
-    fun="$(koopa::_which_function "$name")"
+    fun="$(koopa:::which_function "$name")"
     koopa::assert_is_function "$fun"
     shift 1
     "$fun" "$@"
     return 0
 }
 
-koopa::_which_function() { # {{{1
+koopa:::which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
     # @note Updated 2020-11-30.

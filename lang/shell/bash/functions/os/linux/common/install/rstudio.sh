@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_install_rstudio_server() { # {{{1
+koopa:::install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
     # @note Updated 2020-08-13.
@@ -146,7 +146,7 @@ koopa::debian_install_rstudio_server() { # {{{1
             koopa::stop "Unsupported OS version: '${os_codename}'."
             ;;
     esac
-    koopa::_install_rstudio_server \
+    koopa:::install_rstudio_server \
         --file-ext='deb' \
         --install='sudo gdebi --non-interactive' \
         --os-codename="$os_codename" \
@@ -170,7 +170,7 @@ koopa::fedora_install_rstudio_server() { # {{{1
     arch="$(koopa::arch)"
     os_codename='centos8'
     koopa::mkdir -S '/etc/init.d'
-    koopa::_install_rstudio_server \
+    koopa:::install_rstudio_server \
         --file-ext='rpm' \
         --install='sudo dnf -y install' \
         --os-codename="$os_codename" \
