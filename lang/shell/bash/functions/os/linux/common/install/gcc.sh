@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Can we get this to build from source on macOS?
+koopa::linux_install_gcc() { # {{{1
+    koopa::linux_install_app \
+        --name='gcc' \
+        --name-fancy='GCC' "$@"
+}
 
-install_gcc() { # {{{1
+koopa:::linux_install_gcc() { # {{{1
     # """
     # Install GCC.
     # @note Updated 2021-05-04.
@@ -80,5 +84,3 @@ install_gcc() { # {{{1
     make install
     return 0
 }
-
-install_gcc "$@"

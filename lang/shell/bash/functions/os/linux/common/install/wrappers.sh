@@ -1,24 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_gcc() { # {{{1
-    koopa::linux_install_app \
-        --name='gcc' \
-        --name-fancy='GCC' "$@"
-}
-
-koopa::linux_install_gdal() { # {{{1
-    koopa::linux_install_app \
-        --name='gdal' \
-        --name-fancy='GDAL' "$@"
-}
-
-koopa::linux_install_geos() { # {{{1
-    koopa::linux_install_app \
-        --name='geos' \
-        --name-fancy='GEOS' \
-        "$@"
-}
-
 koopa::linux_install_julia() { # {{{1
     local pos script_name
     script_name='julia'
