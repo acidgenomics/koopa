@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_the_silver_searcher() { # {{{1
+koopa::install_the_silver_searcher() { # {{{1
+    koopa::install_app \
+        --name='the-silver-searcher' \
+        "$@"
+}
+
+koopa:::install_the_silver_searcher() { # {{{1
     # """
     # Install the silver searcher.
     # @note Updated 2021-04-27.
@@ -51,5 +57,3 @@ install_the_silver_searcher() { # {{{1
     make install
     return 0
 }
-
-install_the_silver_searcher "$@"

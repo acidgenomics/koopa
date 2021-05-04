@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_rsync() { # {{{1
+koopa::install_rsync() { # {{{1
+    koopa::install_app \
+        --name='rsync' \
+        "$@"
+}
+
+koopa:::install_rsync() { # {{{1
     # """
     # Install rsync.
     # @note Updated 2021-04-27.
@@ -39,5 +45,3 @@ install_rsync() { # {{{1
     make install
     return 0
 }
-
-install_rsync "$@"
