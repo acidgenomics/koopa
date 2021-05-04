@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-04.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -118,6 +118,8 @@ koopa::debian_install_base() { # {{{1
             'locales'
             'lsb-release'
             'man-db'
+            'python3'
+            'python3-venv'
             'sudo'
             'tzdata'
             'unzip'
@@ -244,6 +246,7 @@ koopa::debian_install_base() { # {{{1
             'libxxhash-dev'  # rsync; not available on Ubuntu 18
             'libz-dev'
             'libzstd-dev'  # rsync
+            'python3-dev'
             'sqlite3'
             'tcl-dev'
             'tk-dev'
