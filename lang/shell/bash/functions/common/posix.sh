@@ -688,8 +688,8 @@ koopa::ruby_api_version() { # {{{1
     _koopa_ruby_api_version "$@"
 }
 
-koopa::rust_cargo_prefix() { # {{{1
-    _koopa_rust_cargo_prefix "$@"
+koopa::rust_packages_prefix() { # {{{1
+    _koopa_rust_packages_prefix "$@"
 }
 
 koopa::rust_rustup_prefix() { # {{{1
