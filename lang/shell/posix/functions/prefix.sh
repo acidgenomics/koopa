@@ -244,8 +244,7 @@ _koopa_homebrew_prefix() { # {{{1
     return 0
 }
 
-# FIXME Rename this to '_koopa_homebrew_ruby_packages_prefix'.
-_koopa_homebrew_ruby_gems_prefix() { # {{{1
+_koopa_homebrew_ruby_packages_prefix() { # {{{1
     # """
     # Homebrew Ruby packages (gems) prefix.
     # @note Updated 2021-05-04.
