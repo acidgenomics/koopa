@@ -7,49 +7,6 @@ koopa::install_gnupg() { # {{{1
         "$@"
 }
 
-koopa::install_libevent() { # {{{1
-    koopa::install_app \
-        --name='libevent' \
-        "$@"
-}
-
-koopa::install_neofetch() { # {{{1
-    koopa::install_app \
-        --name='neofetch' \
-        "$@"
-}
-
-koopa::install_perl() { # {{{1
-    koopa::install_app \
-        --name='perl' \
-        --name-fancy='Perl' \
-        "$@"
-}
-
-koopa::install_pkg_config() { # {{{1
-    koopa::install_app \
-        --name='pkg-config' \
-        "$@"
-}
-
-koopa::install_pyenv() { # {{{1
-    koopa::install_app \
-        --name='pyenv' \
-        "$@"
-}
-
-koopa::install_rbenv() { # {{{1
-    koopa::install_app \
-        --name='rbenv' \
-        "$@"
-}
-
-koopa::install_rmate() { # {{{1
-    koopa::install_app \
-        --name='rmate' \
-        "$@"
-}
-
 koopa::install_rsync() { # {{{1
     koopa::install_app \
         --name='rsync' \
