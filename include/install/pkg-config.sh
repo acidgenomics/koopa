@@ -10,9 +10,9 @@ install_pkg_config() { # {{{1
     # """
     local file jobs name prefix url version
     koopa::assert_is_installed cmp diff
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='pkg-config'
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.gz"
     url="https://${name}.freedesktop.org/releases/${file}"

@@ -6,9 +6,9 @@ install_tmux() { # {{{1
     # @note Updated 2021-04-27.
     # """
     local file jobs name prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='tmux'
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.gz"
     url="https://github.com/${name}/${name}/releases/download/\

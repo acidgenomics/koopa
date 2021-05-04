@@ -9,17 +9,10 @@ install_rsync() { # {{{1
     # - https://github.com/WayneD/rsync/blob/master/INSTALL.md
     # """
     local file flags jobs name prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='rsync'
     jobs="$(koopa::cpu_count)"
-    # > if koopa::is_macos
-    # > then
-    # >     koopa::assert_is_installed brew
-    # >     openssl_prefix="$(koopa::homebrew_prefix)/opt/openssl@1.1"
-    # >     koopa::assert_is_dir "$openssl_prefix"
-    # >     koopa::activate_prefix "$openssl_prefix"
-    # > fi
     file="${name}-${version}.tar.gz"
     url="https://download.samba.org/pub/${name}/src/${file}"
     koopa::download "$url"
