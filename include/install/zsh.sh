@@ -3,7 +3,7 @@
 install_zsh() { # {{{1
     # """
     # Install Zsh.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-04.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -28,9 +28,9 @@ install_zsh() { # {{{1
     # """
     local etc_dir file jobs link_app name prefix url version
     link_app="${INSTALL_LINK_APP:?}"
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='zsh'
     jobs="$(koopa::cpu_count)"
     etc_dir="${prefix}/etc/${name}"
     file="${name}-${version}.tar.xz"

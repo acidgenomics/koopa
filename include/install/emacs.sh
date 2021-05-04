@@ -3,7 +3,7 @@
 install_emacs() { # {{{1
     # """
     # Install Emacs.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-04.
     #
     # Seeing this error on macOS:
     # Nothing to be done for 'maybe-blessmail'.
@@ -12,9 +12,9 @@ install_emacs() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # """
     local file gnu_mirror jobs name prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='emacs'
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.xz"
