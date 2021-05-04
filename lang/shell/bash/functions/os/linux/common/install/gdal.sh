@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_gdal() { # {{{1
+koopa::linux_install_gdal() { # {{{1
+    koopa::linux_install_app \
+        --name='gdal' \
+        --name-fancy='GDAL' "$@"
+}
+
+koopa:::install_gdal() { # {{{1
     # """
     # Install GDAL.
     # @note Updated 2021-04-28.
@@ -44,5 +50,3 @@ install_gdal() { # {{{1
     make install
     return 0
 }
-
-install_gdal "$@"
