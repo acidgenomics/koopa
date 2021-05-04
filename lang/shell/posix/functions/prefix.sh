@@ -514,8 +514,7 @@ _koopa_rust_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME Rename this to '_koopa_rustup_prefix'.
-_koopa_rust_rustup_prefix() { # {{{1
+_koopa_rustup_prefix() { # {{{1
     # """
     # Rust rustup install prefix.
     # @note Updated 2021-04-28.

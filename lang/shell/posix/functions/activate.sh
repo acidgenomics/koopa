@@ -844,7 +844,7 @@ _koopa_activate_rust() { # {{{1
     # """
     local cargo_prefix nounset script rustup_prefix
     cargo_prefix="$(_koopa_rust_packages_prefix)"
-    rustup_prefix="$(_koopa_rust_rustup_prefix)"
+    rustup_prefix="$(_koopa_rustup_prefix)"
     [ -d "$cargo_prefix" ] || return 0
     [ -d "$rustup_prefix" ] || return 0
     script="${cargo_prefix}/env"
