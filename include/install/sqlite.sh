@@ -14,9 +14,9 @@ install_sqlite() { # {{{1
     # https://askubuntu.com/questions/443379
     # """
     local file file_version flags jobs name prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='sqlite'
     jobs="$(koopa::cpu_count)"
     case "$version" in
         3.33.*)

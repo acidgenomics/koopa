@@ -7,9 +7,9 @@ install_julia() { # {{{1
     # """
     local file jobs name prefix version url
     koopa::assert_is_linux
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='julia'
     jobs="$(koopa::cpu_count)"
     # > file="v${version}.tar.gz"
     # > url="https://github.com/JuliaLang/julia/archive/${file}"

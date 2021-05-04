@@ -8,9 +8,9 @@ install_singularity() { # {{{1
     local file name prefix url version
     koopa::assert_has_sudo
     koopa::assert_is_installed go
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='singularity'
     file="${name}-${version}.tar.gz"
     url="https://github.com/sylabs/${name}/releases/download/\
 v${version}/${file}"

@@ -6,9 +6,9 @@ install_shellcheck() { # {{{1
     # @note Updated 2021-04-27.
     # """
     local arch file name os_id prefix url version
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='shellcheck'
     if koopa::is_macos
     then
         os_id='darwin'
