@@ -1,71 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::install_autoconf() { # {{{1
-    koopa::install_gnu_app \
-        --name='autoconf' \
-        "$@"
-}
-
-koopa::install_automake() { # {{{1
-    koopa::install_gnu_app \
-        --name='automake' \
-        "$@"
-}
-
-koopa::install_binutils() { # {{{1
-    koopa::install_gnu_app \
-        --name='binutils' \
-        "$@"
-}
-
-koopa::install_coreutils() { # {{{1
-    koopa::install_gnu_app \
-        --name='coreutils' \
-        "$@"
-}
-
-koopa::install_findutils() { # {{{1
-    koopa::install_gnu_app \
-        --name='findutils' \
-        "$@"
-}
-
-koopa::install_gawk() { # {{{1
-    koopa::install_gnu_app \
-        --name='gawk' \
-        "$@"
-}
-
-koopa::install_git() { # {{{1
-    koopa::install_app \
-        --name='git' \
-        --name-fancy='Git' \
-        "$@"
-}
-
 koopa::install_gnupg() { # {{{1
     koopa::install_app \
         --name='gnupg' \
         --name-fancy='GnuPG suite' \
-        "$@"
-}
-
-koopa::install_grep() { # {{{1
-    koopa::install_gnu_app \
-        --name='grep' \
-        "$@"
-}
-
-koopa::install_groff() { # {{{1
-    koopa::install_gnu_app \
-        --name='groff' \
-        "$@"
-}
-
-koopa::install_gsl() { # {{{1
-    koopa::install_gnu_app \
-        --name='gsl' \
-        --name-fancy='GSL' \
         "$@"
 }
 
@@ -95,39 +33,9 @@ koopa::install_libevent() { # {{{1
         "$@"
 }
 
-koopa::install_libtool() { # {{{1
-    koopa::install_gnu_app \
-        --name='libtool' \
-        "$@"
-}
-
-koopa::install_make() { # {{{1
-    koopa::install_gnu_app \
-        --name='make' \
-        "$@"
-}
-
-koopa::install_ncurses() { # {{{1
-    koopa::install_gnu_app \
-        --name='ncurses' \
-        "$@"
-}
-
 koopa::install_neofetch() { # {{{1
     koopa::install_app \
         --name='neofetch' \
-        "$@"
-}
-
-koopa::install_parallel() { # {{{1
-    koopa::install_gnu_app \
-        --name='parallel' \
-        "$@"
-}
-
-koopa::install_patch() { # {{{1
-    koopa::install_gnu_app \
-        --name='patch' \
         "$@"
 }
 
@@ -168,12 +76,6 @@ koopa::install_rsync() { # {{{1
         "$@"
 }
 
-koopa::install_sed() { # {{{1
-    koopa::install_gnu_app \
-        --name='sed' \
-        "$@"
-}
-
 koopa::install_shellcheck() { # {{{1
     koopa::install_app \
         --name='shellcheck' \
@@ -204,18 +106,6 @@ koopa::install_sqlite() { # {{{1
 koopa::install_subversion() { # {{{1
     koopa::install_app \
         --name='subversion' \
-        "$@"
-}
-
-koopa::install_tar() { # {{{1
-    koopa::install_gnu_app \
-        --name='tar' \
-        "$@"
-}
-
-koopa::install_texinfo() { # {{{1
-    koopa::install_gnu_app \
-        --name='texinfo' \
         "$@"
 }
 
