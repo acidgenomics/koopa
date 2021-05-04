@@ -16,6 +16,7 @@ koopa::install_perl_packages() { # {{{1
     name_fancy='Perl packages'
     koopa::install_start "$name_fancy"
     prefix="$(koopa::perl_packages_prefix)"
+    # NOTE Consider also checking for '~/.cpan' here also.
     if [[ ! -d "$prefix" ]]
     then
         PERL_MM_OPT="INSTALL_BASE=$prefix" \
