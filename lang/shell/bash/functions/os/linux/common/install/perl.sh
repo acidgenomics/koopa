@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to allow user to install in custom target 'opt/perl-packages'.
+# FIXME THIS SHOULD ALSO WORK ON MACOS.
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-05-05.
     #
     # CPAN Minus (cpanm) mirror options:
     # * --mirror http://cpan.cpantesters.org/  # use the fast-syncing mirror
