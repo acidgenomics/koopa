@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME WE SHOULD CALL THE GNU INSTALLER AFTER DEFINING OPENSSL HERE.
 install_wget() { # {{{1
     # """
     # Install wget.
