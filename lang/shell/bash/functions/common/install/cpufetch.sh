@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_cpufetch() { # {{{1
+koopa::install_cpufetch() { # {{{1
+    koopa::install_app \
+        --name='cpufetch' \
+        "$@"
+}
+
+koopa:::install_cpufetch() { # {{{1
     # """
     # Install cpufetch.
     # @note Updated 2021-05-04.
@@ -34,5 +40,3 @@ install_cpufetch() { # {{{1
     PREFIX="$prefix" make install
     return 0
 }
-
-install_cpufetch "$@"
