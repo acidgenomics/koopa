@@ -276,8 +276,8 @@ koopa::homebrew_prefix() { # {{{1
     _koopa_homebrew_prefix "$@"
 }
 
-koopa::homebrew_ruby_gems_prefix() { # {{{1
-    _koopa_homebrew_ruby_gems_prefix "$@"
+koopa::homebrew_ruby_packages_prefix() { # {{{1
+    _koopa_homebrew_ruby_packages_prefix "$@"
 }
 
 koopa::hostname() { # {{{1
