@@ -12,7 +12,7 @@ install_gnu() { # {{{1
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
     case "$name" in
-        gsl|make|ncurses|patch|tar)
+        groff|gsl|make|ncurses|patch|tar)
             suffix='gz'
             ;;
         parallel)

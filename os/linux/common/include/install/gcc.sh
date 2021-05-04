@@ -3,7 +3,7 @@
 install_gcc() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-04.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -55,9 +55,9 @@ install_gcc() { # {{{1
     # """
     local file flags gnu_mirror jobs name prefix url version
     koopa::assert_is_linux
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='gcc'
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.xz"

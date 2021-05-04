@@ -108,6 +108,14 @@ koopa::install_grep() { # {{{1
         "$@"
 }
 
+koopa::install_groff() { # {{{1
+    koopa::linux_install_app \
+        --name='groff' \
+        --name-fancy='GNU roff' \
+        --script-name='gnu' \
+        "$@"
+}
+
 koopa::install_gsl() { # {{{1
     koopa::install_app \
         --name='gsl' \
