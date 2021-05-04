@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME JUST DEFINE THIS AS A FUNCTION INSIDE MAIN KOOPA LIBRARY...
+
 install_bash() { # {{{1
     # """
     # Install Bash.
