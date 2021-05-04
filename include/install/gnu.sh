@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME GSL requires 'tar.gz'.
+
 install_gnu() { # {{{1
     # """
     # Install GNU package.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-04.
     # """
     local file gnu_mirror jobs name prefix url version
     name="${INSTALL_NAME:?}"

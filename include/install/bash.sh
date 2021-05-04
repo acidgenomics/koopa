@@ -3,7 +3,7 @@
 install_bash() { # {{{1
     # """
     # Install Bash.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-04.
     # @seealso
     # https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
     # """
@@ -12,24 +12,26 @@ install_bash() { # {{{1
     link_app="${INSTALL_LINK_APP:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='bash'
     minor_version="$(koopa::major_minor_version "$version")"
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
-    file="bash-${minor_version}.tar.gz"
-    url="${gnu_mirror}/bash/${file}"
+    file="${name}-${minor_version}.tar.gz"
+    url="${gnu_mirror}/${name}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cd "bash-${minor_version}"
+    koopa::cd "${name}-${minor_version}"
     # Apply patches. 
     patches="$(koopa::print "$version" | cut -d '.' -f 3)"
     koopa::mkdir patches
     (
         koopa::cd patches
         # Note that GNU mirror doesn't seem to work correctly here.
-        base_url="https://ftp.gnu.org/gnu/bash/bash-${minor_version}-patches"
+        base_url="https://ftp.gnu.org/gnu/${name}/\
+${name}-${minor_version}-patches"
         mv_tr="$(koopa::print "$minor_version" | tr -d '.')"
         range="$(printf '%03d-%03d' '1' "$patches")"
-        request="${base_url}/bash${mv_tr}-[${range}]"
+        request="${base_url}/${name}${mv_tr}-[${range}]"
         curl "$request" -O
         koopa::cd ..
         for file in 'patches/'*
@@ -45,8 +47,7 @@ install_bash() { # {{{1
     then
         # musl does not implement brk/sbrk (they simply return -ENOMEM).
         # Otherwise will see this error:
-        # bash: xmalloc: locale.c:81: cannot allocate 18 bytes
-        # (0 bytes allocated)
+        # xmalloc: locale.c:81: cannot allocate 18 bytes (0 bytes allocated)
         flags+=('--without-bash-malloc')
     elif koopa::is_macos
     then
@@ -69,7 +70,7 @@ install_bash() { # {{{1
     make --jobs="$jobs"
     # > make test
     make install
-    [[ "${link_app:-0}" -eq 1 ]] && koopa::enable_shell 'bash'
+    [[ "${link_app:-0}" -eq 1 ]] && koopa::enable_shell "$name"
     return 0
 }
 

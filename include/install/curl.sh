@@ -3,19 +3,19 @@
 install_curl() { # {{{1
     # """
     # Install cURL.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-04.
     # @seealso
     # - https://curl.haxx.se/docs/install.html
     # """
     local file jobs name prefix url version version2
-    name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='curl'
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.xz"
     version2="${version//./_}"
     url="https://github.com/${name}/${name}/releases/download/\
-    ${name}-${version2}/${file}"
+${name}-${version2}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"

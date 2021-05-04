@@ -3,14 +3,12 @@
 install_hdf5() { # {{{1
     # """
     # Install HDF5.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-04.
     # """
-    local file gfortran_prefix gnu_mirror jobs minor_version prefix \
-        name url version
-    name="${INSTALL_NAME:?}"
+    local file gfortran_prefix jobs minor_version name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    gnu_mirror="$(koopa::gnu_mirror_url)"
+    name='hdf5'
     jobs="$(koopa::cpu_count)"
     if koopa::is_macos
     then
