@@ -1,19 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME Create 'koopa::install_gnu_app' that handles these more consistently.
-# Check for anything that calls "--script-name='gnu'".
-
 koopa::install_autoconf() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='autoconf' \
-        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_automake() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='automake' \
-        --script-name='gnu' \
         "$@"
 }
 
@@ -25,9 +20,8 @@ koopa::install_bash() { # {{{1
 }
 
 koopa::install_binutils() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='binutils' \
-        --script-name='gnu' \
         "$@"
 }
 
@@ -39,9 +33,8 @@ koopa::install_cmake() { # {{{1
 }
 
 koopa::install_coreutils() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='coreutils' \
-        --script-name='gnu' \
         "$@"
 }
 
@@ -66,9 +59,8 @@ koopa::install_emacs() { # {{{1
 }
 
 koopa::install_findutils() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='findutils' \
-        --script-name='gnu' \
         "$@"
 }
 
@@ -80,10 +72,8 @@ koopa::install_fish() { # {{{1
 }
 
 koopa::install_gawk() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='gawk' \
-        --name-fancy='GNU awk' \
-        --script-name='gnu' \
         "$@"
 }
 
@@ -102,25 +92,21 @@ koopa::install_gnupg() { # {{{1
 }
 
 koopa::install_grep() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='grep' \
-        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_groff() { # {{{1
-    koopa::linux_install_app \
+    koopa::install_gnu_app \
         --name='groff' \
-        --name-fancy='GNU roff' \
-        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_gsl() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='gsl' \
         --name-fancy='GSL' \
-        --script-name='gnu' \
         "$@"
 }
 
@@ -151,23 +137,20 @@ koopa::install_libevent() { # {{{1
 }
 
 koopa::install_libtool() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='libtool' \
-        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_make() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='make' \
-        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_ncurses() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='ncurses' \
-        --script-name='gnu' \
         "$@"
 }
 
@@ -178,16 +161,14 @@ koopa::install_neofetch() { # {{{1
 }
 
 koopa::install_parallel() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='parallel' \
-        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_patch() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='patch' \
-        --script-name='gnu' \
         "$@"
 }
 
@@ -229,9 +210,8 @@ koopa::install_rsync() { # {{{1
 }
 
 koopa::install_sed() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='sed' \
-        --script-name='gnu' \
         "$@"
 }
 
@@ -269,17 +249,14 @@ koopa::install_subversion() { # {{{1
 }
 
 koopa::install_tar() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='tar' \
-        --name-fancy='GNU tar' \
-        --script-name='gnu' \
         "$@"
 }
 
 koopa::install_texinfo() { # {{{1
-    koopa::install_app \
+    koopa::install_gnu_app \
         --name='texinfo' \
-        --script-name='gnu' \
         "$@"
 }
 
