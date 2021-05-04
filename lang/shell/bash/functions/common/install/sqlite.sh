@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_sqlite() { # {{{1
+koopa::install_sqlite() { # {{{1
+    koopa::install_app \
+        --name='sqlite' \
+        --name-fancy='SQLite' \
+        "$@"
+}
+
+koopa:::install_sqlite() { # {{{1
     # """
     # Install SQLite.
     # @note Updated 2021-04-27.
@@ -52,5 +59,3 @@ install_sqlite() { # {{{1
     koopa::alert_note 'Reinstall PROJ and GDAL, if built from source.'
     return 0
 }
-
-install_sqlite "$@"

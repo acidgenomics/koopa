@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_singularity() { # {{{1
+koopa::install_singularity() { # {{{1
+    koopa::install_app \
+        --name='singularity' \
+        "$@"
+}
+
+koopa:::install_singularity() { # {{{1
     # """
     # Install Singularity.
     # @note Updated 2021-04-27.
@@ -22,5 +28,3 @@ v${version}/${file}"
     sudo make -C builddir install
     return 0
 }
-
-install_singularity "$@"

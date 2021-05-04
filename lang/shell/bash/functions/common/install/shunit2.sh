@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_shunit2() { # {{{1
+koopa::install_shunit2() { # {{{1
+    koopa::install_app \
+        --name='shunit2' \
+        --name-fancy='shUnit2' \
+        "$@"
+}
+
+koopa:::install_shunit2() { # {{{1
     # """
     # Install shUnit2.
     # @note Updated 2021-04-27.
@@ -17,5 +24,3 @@ install_shunit2() { # {{{1
     koopa::cp -t "${prefix}/bin" "$name"
     return 0
 }
-
-install_shunit2 "$@"
