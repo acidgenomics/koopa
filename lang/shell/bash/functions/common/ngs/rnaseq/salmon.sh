@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_salmon_index() { # {{{1
+koopa:::salmon_index() { # {{{1
     # """
     # Generate salmon index.
     # @note Updated 2020-08-12.
@@ -45,7 +45,7 @@ koopa::_salmon_index() { # {{{1
     return 0
 }
 
-koopa::_salmon_quant() { # {{{1
+koopa:::salmon_quant() { # {{{1
     # """
     # Run salmon quant (per sample).
     # @note Updated 2021-01-04.
@@ -261,7 +261,7 @@ koopa::run_salmon() { # {{{1
         index_dir="$(koopa::realpath "$index_dir")"
     else
         index_dir="${output_dir}/salmon.idx"
-        koopa::_salmon_index \
+        koopa:::salmon_index \
             --fasta-file="$fasta_file" \
             --index-dir="$index_dir"
     fi
@@ -272,7 +272,7 @@ koopa::run_salmon() { # {{{1
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
-        koopa::_salmon_quant \
+        koopa:::salmon_quant \
             --bootstraps="$bootstraps" \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
