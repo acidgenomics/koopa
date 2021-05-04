@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-install_tmux() { # {{{1
+koopa::install_tmux() { # {{{1
+    koopa::install_app \
+        --name='tmux' \
+        "$@"
+}
+
+koopa:::install_tmux() { # {{{1
     # """
     # Install Tmux.
     # @note Updated 2021-04-27.
@@ -21,5 +27,3 @@ ${version}/${file}"
     make install
     return 0
 }
-
-install_tmux "$@"

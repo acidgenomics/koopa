@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_zsh() { # {{{1
+koopa::install_zsh() { # {{{1
+    koopa::install_app \
+        --name='zsh' \
+        --name-fancy='Zsh' \
+        "$@"
+}
+
+koopa:::install_zsh() { # {{{1
     # """
     # Install Zsh.
     # @note Updated 2021-05-04.
@@ -59,5 +66,3 @@ ${name}/${name}/${version}/${file}"
     koopa::fix_zsh_permissions
     return 0
 }
-
-install_zsh "$@"

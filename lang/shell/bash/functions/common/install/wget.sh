@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
+koopa::install_wget() { # {{{1
+    koopa::install_app \
+        --name='wget' \
+        "$@"
+}
+
 # FIXME WE SHOULD CALL THE GNU INSTALLER AFTER DEFINING OPENSSL HERE.
-install_wget() { # {{{1
+koopa:::install_wget() { # {{{1
     # """
     # Install wget.
     # @note Updated 2021-04-28.
@@ -31,5 +37,3 @@ install_wget() { # {{{1
     make install
     return 0
 }
-
-install_wget "$@"
