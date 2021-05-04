@@ -7,10 +7,10 @@ _koopa_activate_aliases() { # {{{1
     # """
     local file
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
+    # > alias perl='unalias perl && _koopa_activate_perl_packages && perl'
     alias br='unalias br && _koopa_activate_broot && br'
     alias conda='unalias conda && _koopa_activate_conda && conda'
     alias fzf='unalias fzf && _koopa_activate_fzf && fzf'
-    alias perl='unalias perl && _koopa_activate_perl_packages && perl'
     alias perlbrew='unalias perlbrew && _koopa_activate_perlbrew && perlbrew'
     alias pipx='unalias pipx && _koopa_activate_pipx && pipx'
     alias pyenv='unalias pyenv && _koopa_activate_pyenv && pyenv'
