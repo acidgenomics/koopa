@@ -455,11 +455,10 @@ _koopa_python_system_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME Rename this to '_koopa_r_packages_prefix'.
-_koopa_r_site_library_prefix() { # {{{1
+_koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-04.
     # """
     _koopa_print "$(_koopa_opt_prefix)/r-packages"
     return 0
