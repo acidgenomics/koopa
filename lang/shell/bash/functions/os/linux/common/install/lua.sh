@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_lua() { # {{{1
+koopa::linux_install_lua() { # {{{1
+    koopa::linux_install_app \
+        --name='lua' \
+        --name-fancy='Lua' \
+        "$@"
+}
+
+koopa:::linux_install_lua() { # {{{1
     # """
     # Install Lua.
     # @note Updated 2021-04-28.
@@ -22,5 +29,3 @@ install_lua() { # {{{1
     make install INSTALL_TOP="$prefix"
     return 0
 }
-
-install_lua "$@"
