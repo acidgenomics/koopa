@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-install_git() { # {{{1
+koopa::install_git() { # {{{1
+    koopa::install_app \
+        --name='git' \
+        --name-fancy='Git' \
+        "$@"
+}
+
+koopa:::install_git() { # {{{1
     # """
     # Install Git.
     # @note Updated 2021-05-04.
@@ -34,5 +41,3 @@ install_git() { # {{{1
     make install
     return 0
 }
-
-install_git "$@"

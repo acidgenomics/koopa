@@ -148,18 +148,6 @@ koopa::install_app() { # {{{1
     return 0
 }
 
-koopa::install_gnu_app() { # {{{1
-    # """
-    # Build and install a GNU package from source.
-    # @note Updated 2021-05-04.
-    # """
-    koopa::assert_has_args "$#"
-    koopa::install_app \
-        --script-name='gnu' \
-        "$@"
-    return 0
-}
-
 koopa::link_app() { # {{{1
     # """
     # Symlink application into build directory.
