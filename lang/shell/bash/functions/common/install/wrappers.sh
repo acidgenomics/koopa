@@ -106,10 +106,12 @@ koopa::install_grep() { # {{{1
         "$@"
 }
 
+# FIXME NEED TO HANDLE GZ INSTEAD OF XZ HERE.
 koopa::install_gsl() { # {{{1
     koopa::install_app \
         --name='gsl' \
         --name-fancy='GSL' \
+        --script-name='gnu' \
         "$@"
 }
 

@@ -14,7 +14,8 @@ install_aws_cli() { # {{{1
     # > python3 setup.py install
     #
     # @seealso
-    # - https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
+    # - https://docs.aws.amazon.com/cli/latest/userguide/
+    #     install-cliv2-linux.html
     # - https://github.com/aws/aws-cli
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/awscli.rb
     # """
