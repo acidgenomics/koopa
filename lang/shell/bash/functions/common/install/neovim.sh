@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_neovim() { # {{{1
-    koopa::linux_install_app \
+    koopa::install_app \
         --name='neovim' \
         "$@"
 }
