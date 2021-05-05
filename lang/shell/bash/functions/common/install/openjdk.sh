@@ -1,20 +1,25 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_openjdk() { # {{{1
-    koopa::linux_install_app \
+koopa::install_openjdk() { # {{{1
+    koopa::install_app \
         --name='openjdk' \
         --name-fancy='OpenJDK' \
         --no-link \
         "$@"
 }
 
-koopa:::linux_install_openjdk() { # {{{1
+koopa:::install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
     # @note Updated 2021-05-05.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
+    #
+    # Platform suffix examples:
+    # - Linux/AArch64: 'linux-aarch64'
+    # - Linux/x64: 'linux-x64'
+    # - macOS/x64: 'osx-x64'
     #
     # @seealso
     # - https://www.oracle.com/java/technologies/javase-downloads.html#JDK16
@@ -24,7 +29,7 @@ koopa:::linux_install_openjdk() { # {{{1
     # - https://jdk.java.net/15/
     # - https://openjdk.java.net/
     # """
-    local file name prefix version unique url
+    local arch arch2 file name platform prefix version unique url
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='openjdk'
@@ -65,16 +70,30 @@ koopa:::linux_install_openjdk() { # {{{1
         *)
             koopa::stop "Unsupported version: '${version}'."
     esac
-    # Platform suffixes:
-    # - Linux/AArch64: 'linux-aarch64'
-    # - Linux/x64: 'linux-x64'
-    # - macOS/x64: 'osx-x64'
-    file="${name}-${version}_linux-x64_bin.tar.gz"
+    if koopa::is_macos
+    then
+        platform='osx'
+    else
+        platform='linux'
+    fi
+    arch="$(koopa::arch)"
+    case "$arch" in
+        arm64)
+            arch2='aarch64'
+            ;;
+        x86_64)
+            arch2='x64'
+            ;;
+    esac
+    file="${name}-${version}_${platform}-${arch2}_bin.tar.gz"
     url="https://download.java.net/java/GA/jdk${version}/\
 ${unique}/GPL/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::mv "jdk-${version}" "$prefix"
-    # This step will skip for non-shared install.
-    koopa::linux_java_update_alternatives "$prefix"
+    if koopa::is_linux
+    then
+        # This step will skip for non-shared install.
+        koopa::linux_java_update_alternatives "$prefix"
+    fi
 }
