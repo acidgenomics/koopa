@@ -24,7 +24,7 @@ koopa:::install_gnu_app() { # {{{1
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
     case "$name" in
-        groff|gsl|make|ncurses|patch|tar)
+        groff|gsl|make|ncurses|patch|tar|wget)
             suffix='gz'
             ;;
         parallel)
