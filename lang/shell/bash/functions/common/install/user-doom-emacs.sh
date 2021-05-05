@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename the 'flags' variable.
+
 koopa::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.

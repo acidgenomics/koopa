@@ -5,6 +5,8 @@
 # FIXME Split out rustup install into a separate script, then call first?
 # FIXME This should pick up and use rustup variable correct? Set to rolling.
 
+# FIXME Rename the 'flags' variable.
+
 koopa::install_rust() { # {{{1
     # """
     # Install Rust (via rustup).

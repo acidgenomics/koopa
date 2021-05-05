@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE Currently failing to build on macOS.
+# FIXME Rename the 'flags' variable.
 
 koopa::install_bash() { # {{{1
     koopa::install_app \

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename the 'flags' variable.
+
 koopa::install_sqlite() { # {{{1
     koopa::install_app \
         --name='sqlite' \
