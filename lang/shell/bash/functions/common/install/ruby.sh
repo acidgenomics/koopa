@@ -15,7 +15,6 @@ koopa:::install_ruby() { # {{{1
     # - https://www.ruby-lang.org/en/downloads/
     # """
     local file jobs name prefix url version
-    koopa::assert_is_linux
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='ruby'
