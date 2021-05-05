@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Currently failing to build on macOS.
+
 koopa::install_vim() { # {{{1
     koopa::install_app \
         --name='vim' \
