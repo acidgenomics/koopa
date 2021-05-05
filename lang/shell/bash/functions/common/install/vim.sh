@@ -35,16 +35,22 @@ koopa:::install_vim() { # {{{1
         "--prefix=${prefix}"
         "--with-python3-command=${python}"
         "--with-python3-config-dir=${python_config_dir}"
+        '--enable-cscope'
+        '--enable-gui=no'
+        '--enable-multibyte'
         '--enable-python3interp=yes'
+        '--enable-terminal'
+        # NOTE Need to define path to ncurses on macOS.
+        '--with-tlib=ncurses'
+        '--without-x'
     )
     # Setting 'LDFLAGS' here doesn't work on macOS.
     if koopa::is_linux
     then
-        conf_args+=(
-            "LDFLAGS=-Wl,-rpath=${prefix}/lib"
-        )
+        conf_args+=("LDFLAGS=-Wl,-rpath=${prefix}/lib")
     fi
     koopa::is_macos && koopa::reset_minimal_path
+    echo "${conf_args[@]}"
     ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     # > make test
