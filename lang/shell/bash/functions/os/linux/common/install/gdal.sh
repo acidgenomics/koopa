@@ -3,7 +3,8 @@
 koopa::linux_install_gdal() { # {{{1
     koopa::linux_install_app \
         --name='gdal' \
-        --name-fancy='GDAL' "$@"
+        --name-fancy='GDAL' \
+        "$@"
 }
 
 koopa:::install_gdal() { # {{{1

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can we get this to install on macOS?
+
 koopa::linux_install_python() { # {{{1
     koopa::linux_install_app \
         --name='python' \

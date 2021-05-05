@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to call 'install_linux_app'.
+
 koopa::linux_install_bcbio() { # {{{1
     # """
     # Install bcbio-nextgen.
