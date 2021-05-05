@@ -42,6 +42,7 @@ koopa::install_app() { # {{{1
         [link_app]=1
         [link_include_dirs]=''
         [name_fancy]=''
+        [platform]=''
         [reinstall]=0
         [version]=''
     )
@@ -67,6 +68,10 @@ koopa::install_app() { # {{{1
                 ;;
             --no-link)
                 dict[link_app]=0
+                shift 1
+                ;;
+            --platform=*)
+                dict[platform]="${1#*=}"
                 shift 1
                 ;;
             --reinstall|--force)
@@ -120,6 +125,8 @@ at '${dict[prefix]}'."
         export INSTALL_NAME="${dict[name]}"
         export INSTALL_PREFIX="${dict[prefix]}"
         export INSTALL_VERSION="${dict[version]}"
+        # FIXME REWORK THIS AND CHECK FOR 'koopa:::linux_install_XXX'.
+        # FIXME Use '${dict[platform]}" to handle this.
         koopa:::run_function "${dict[installer]}" "$@"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "${dict[tmp_dir]}"

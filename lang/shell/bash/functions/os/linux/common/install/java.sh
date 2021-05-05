@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Should we install into app and then link into opt and system?
+
 koopa::linux_install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
