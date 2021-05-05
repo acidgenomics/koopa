@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # NOTE Currently failing to build on macOS.
-# FIXME Rename the 'flags' variable.
 
 koopa::install_bash() { # {{{1
     koopa::install_app \
@@ -13,12 +12,12 @@ koopa::install_bash() { # {{{1
 koopa:::install_bash() { # {{{1
     # """
     # Install Bash.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-05.
     # @seealso
     # https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
     # """
-    local base_url cflags file flags gnu_mirror jobs link_app minor_version \
-        mv_tr patches range request url version
+    local base_url cflags conf_args file gnu_mirror jobs link_app \
+        minor_version mv_tr patches range request url version
     link_app="${INSTALL_LINK_APP:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
@@ -52,13 +51,13 @@ ${name}-${minor_version}-patches"
             patch -p0 --ignore-whitespace --input="$file"
         done
     )
-    flags=('--prefix' "$prefix")
+    conf_args=("--prefix=${prefix}")
     if koopa::is_alpine
     then
         # musl does not implement brk/sbrk (they simply return -ENOMEM).
         # Otherwise will see this error:
         # xmalloc: locale.c:81: cannot allocate 18 bytes (0 bytes allocated)
-        flags+=('--without-bash-malloc')
+        conf_args+=('--without-bash-malloc')
     elif koopa::is_macos
     then
         cflags=(
@@ -74,9 +73,9 @@ ${name}-${minor_version}-patches"
             # Safe to remove for version 5.1.
             # > '-Wno-implicit-function-declaration'
         )
-        flags+=("CFLAGS=${cflags[*]}")
+        conf_args+=("CFLAGS=${cflags[*]}")
     fi
-    ./configure "${flags[@]}"
+    ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     # > make test
     make install
