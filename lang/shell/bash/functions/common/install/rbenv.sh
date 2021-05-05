@@ -58,3 +58,28 @@ koopa::install_rbenv_ruby() { # {{{1
     koopa::install_success "$name_fancy"
     return 0
 }
+
+koopa::update_rbenv() { # {{{1
+    # """
+    # Update rbenv.
+    # @note Updated 2021-05-05.
+    # """
+    local exe name name_fancy prefix
+    koopa::assert_has_no_args "$#"
+    name='rbenv'
+    name_fancy="$name"
+    prefix="$(koopa::rbenv_prefix)"
+    exe="${prefix}/bin/${name}"
+    if ! koopa::is_installed "$exe"
+    then
+        koopa::alert_note "${name_fancy} is not installed at '${prefix}'."
+        return 0
+    fi
+    koopa::update_start "$name_fancy"
+    (
+        koopa::cd "$prefix"
+        git pull
+    )
+    koopa::update_success "$name_fancy"
+    return 0
+}
