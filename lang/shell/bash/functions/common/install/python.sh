@@ -51,7 +51,7 @@ koopa:::install_python() { # {{{1
     # Setting 'LDFLAGS' here doesn't work on macOS.
     if koopa::is_linux
     then
-        conf_args+("LDFLAGS=-Wl,-rpath=${prefix}/lib")
+        conf_args+=("LDFLAGS=-Wl,-rpath=${prefix}/lib")
     fi
     ./configure "${conf_args[@]}"
     make --jobs="$jobs"
