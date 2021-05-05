@@ -43,6 +43,8 @@ koopa::install_homebrew() { # {{{1
     return 0
 }
 
+# FIXME Rename the 'flags' variable.
+
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.

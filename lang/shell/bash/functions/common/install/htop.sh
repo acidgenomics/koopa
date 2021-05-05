@@ -6,6 +6,8 @@ koopa::install_htop() { # {{{1
         "$@"
 }
 
+# FIXME Rename the 'flags' variable.
+
 koopa:::install_htop() { # {{{1
     # """
     # Install htop.
