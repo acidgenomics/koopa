@@ -6,7 +6,6 @@ _koopa_cd() { # {{{1
     # @note Updated 2020-07-20.
     # """
     local cd
-    unalias cd
     [ "$#" -eq 1 ] || return 1
     cd='cd'
     "$cd" "${1:?}" >/dev/null 2>&1 || return 1
