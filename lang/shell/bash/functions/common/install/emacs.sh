@@ -20,6 +20,14 @@
 #make: *** [Makefile:411: lib-src] Error 2
 
 koopa::install_emacs() { # {{{1
+    # """
+    # Install Emacs.
+    # @note Updated 2021-05-05.
+    #
+    # Consider defining '--enable-locallisppath' and '--infodir' args.
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
+    # """
     local conf_args
     if koopa::is_macos
     then
@@ -31,6 +39,7 @@ koopa::install_emacs() { # {{{1
             '--without-dbus'
             '--without-imagemagick'
             '--without-ns'
+            '--without-selinux'
             '--without-x'
         )
     else
