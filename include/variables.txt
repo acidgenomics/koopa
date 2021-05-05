@@ -262,7 +262,7 @@ pkg-config="0.29.2"
 # https://proj.org/
 # 8.0.0 release is having build issues with Homebrew.
 # https://github.com/Homebrew/homebrew-core/pull/72680
-proj="8.0.0"
+proj="8.0.1"
 
 # https://github.com/pyenv/pyenv
 pyenv="1.2.26"
