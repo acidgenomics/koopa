@@ -3,13 +3,14 @@
 koopa::install_tex_packages() { # {{{1
     # """
     # Install TeX packages.
-    # @note Updated 2020-11-25.
+    # @note Updated 2021-05-05.
     # """
-    local package packages
+    local name_fancy package packages
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed tlmgr
     koopa::assert_has_sudo
-    koopa::h1 'Installing TeX packages recommended for RStudio.'
+    name_fancy='TeX packages'
+    koopa::install_start "$name_fancy"
     sudo tlmgr update --self
     packages=(
         # Priority ----
@@ -50,20 +51,24 @@ koopa::install_tex_packages() { # {{{1
     do
         sudo tlmgr install "$package"
     done
+    koopa::install_success "$name_fancy"
     return 0
 }
 
 koopa::update_tex() { # {{{1
     # """
     # Update TeX.
-    # @note Updated 2020-11-18.
+    # @note Updated 2021-05-05.
     # """
+    local name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed tlmgr
     koopa::assert_has_sudo
-    koopa::h1 'Updating TeX Live.'
+    name_fancy='TeX packages'
+    koopa::update_start "$name_fancy"
     sudo tlmgr update --self
     sudo tlmgr update --list
     sudo tlmgr update --all
+    koopa::update_success "$name_fancy"
     return 0
 }
