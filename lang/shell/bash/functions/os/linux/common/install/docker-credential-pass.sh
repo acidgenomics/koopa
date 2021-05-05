@@ -6,7 +6,7 @@ koopa::linux_install_docker_credential_pass() { # {{{1
         "$@"
 }
 
-koopa:::install_docker_credential_pass() { # {{{1
+koopa:::linux_install_docker_credential_pass() { # {{{1
     # """
     # Install docker-credential-pass.
     # @note Updated 2021-04-28.
