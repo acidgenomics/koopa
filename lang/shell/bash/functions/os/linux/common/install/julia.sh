@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 
-# FIXME Rethink the '--script-name' approach.
 koopa::linux_install_julia() { # {{{1
-    local pos script_name
-    script_name='julia'
+    local installer pos
+    installer='julia'
     pos=()
     while (("$#"))
     do
         case "$1" in
             --binary)
-                script_name='julia-binary'
+                installer='julia-binary'
                 shift 1
                 ;;
             --source)
-                script_name='julia'
+                installer='julia'
                 shift 1
                 ;;
             *)
@@ -26,7 +25,7 @@ koopa::linux_install_julia() { # {{{1
     koopa::linux_install_app \
         --name='julia' \
         --name-fancy='Julia' \
-        --script-name="$script_name" \
+        --installer="$installer" \
         "$@"
 }
 

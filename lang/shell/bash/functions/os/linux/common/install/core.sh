@@ -56,6 +56,7 @@ koopa::linux_find_app_symlinks() { # {{{1
     return 0
 }
 
+# FIXME Need to rethink the script prefix...just use ':::linux_install_XXX'.
 koopa::linux_install_app() { # {{{1
     # """
     # Install Linux-specific application.

@@ -33,7 +33,7 @@ koopa::install_app() { # {{{1
     # Install application into a versioned directory structure.
     # @note Updated 2021-05-05.
     # """
-    local dict
+    local dict pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
 
@@ -41,67 +41,72 @@ koopa::install_app() { # {{{1
     local include_dirs link_args link_app make_prefix name name_fancy \
         pos prefix reinstall script script_name script_prefix tmp_dir version
 
+    # This approach also has the benefit of avoiding passing local variables
+    # to the internal installer function call below.
     declare -A dict=(
-        [include_dirs]=''
+        [installer]=''
         [link_app]=1
+        [link_include_dirs]=''
         [name_fancy]=''
         [reinstall]=0
-        # FIXME REWORK THIS.
-        [script_name]=''
         [version]=''
     )
-
-
+    pos=()
     while (("$#"))
     do
         case "$1" in
-            --include-dirs=*)
-                include_dirs="${1#*=}"
+            --installer=*)
+                dict[installer]="${1#*=}"
+                shift 1
+                ;;
+            --link-include-dirs=*)
+                dict[link_include_dirs]="${1#*=}"
                 shift 1
                 ;;
             --name=*)
-                name="${1#*=}"
+                dict[name]="${1#*=}"
                 shift 1
                 ;;
             --name-fancy=*)
-                name_fancy="${1#*=}"
+                dict[name_fancy]="${1#*=}"
                 shift 1
                 ;;
             --no-link)
-                link_app=0
+                dict[link_app]=0
                 shift 1
                 ;;
             --reinstall|--force)
-                reinstall=1
-                shift 1
-                ;;
-            --script-name=*)
-                script_name="${1#*=}"
-                shift 1
-                ;;
-            --script-prefix=*)
-                script_prefix="${1#*=}"
+                dict[reinstall]=1
                 shift 1
                 ;;
             --version=*)
-                version="${1#*=}"
+                dict[version]="${1#*=}"
                 shift 1
                 ;;
             --verbose)
                 set -x
                 shift 1
                 ;;
-            "")
-                shift 1
-                ;;
+            # Legacy approach until 2021-05-05:
+            # > "")
+            # >     shift 1
+            # >     ;;
+            # > *)
+            # >     koopa::invalid_arg "$1"
+            # >     ;;
             *)
-                koopa::invalid_arg "$1"
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    koopa::assert_has_no_args "$#"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    # FIXME Use dict here.
     [[ -z "$name_fancy" ]] && name_fancy="$name"
-    [[ -z "$script_name" ]] && script_name="$name"
+    # FIXME Rename to 'installer'.
+    # FIXME Ensure we convert to snake_case.
+    # FIXME NEED TO CONVERT 'r-devel' to 'r_devel'.
+    [[ -z "$installer" ]] && installer="$name"
     [[ -z "$version" ]] && version="$(koopa::variable "$name")"
     if koopa::is_macos
     then
@@ -128,6 +133,7 @@ koopa::install_app() { # {{{1
         # FIXME SWITCH TO RUNNING 'koopa:::install_XXX' instead of sourcing
         # an external script file.
         koopa::stop 'FIXME'
+        # FIXME Call the installer function here rather than sourcing a script.
         script="${script_prefix}/${script_name}.sh"
         koopa::assert_is_file "$script"
         # shellcheck source=/dev/null
@@ -140,12 +146,12 @@ koopa::install_app() { # {{{1
     then
         koopa::delete_broken_symlinks "$make_prefix"
         link_args=(
-            "--name=${name}"
-            "--version=${version}"
+            "--name=${dict[name]}"
+            "--version=${dict[version]}"
         )
-        if [[ -n "$include_dirs" ]]
+        if [[ -n "${dict[link_include_dirs]}" ]]
         then
-            link_args+=("--include-dirs=${include_dirs}")
+            link_args+=("--include-dirs=${dict[link_include_dirs]}")
         fi
         # We're including the 'true' catch here to avoid cp issues on Arch.
         koopa::link_app "${link_args[@]}" || true

@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Need to call 'koopa:::install_gnu_app' internally.
 koopa::install_gnu_app() { # {{{1
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-05.
     # """
     koopa::assert_has_args "$#"
-    koopa::install_app --script-name='gnu' "$@"
+    koopa::install_app --function='gnu-app' "$@"
     return 0
 }
 

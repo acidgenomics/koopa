@@ -5,7 +5,7 @@ koopa::linux_install_aws_cli() { # {{{1
         --name='aws-cli' \
         --name-fancy='AWS CLI' \
         --version='latest' \
-        --include-dirs='bin' \
+        --link-include-dirs='bin' \
         "$@"
 }
 
