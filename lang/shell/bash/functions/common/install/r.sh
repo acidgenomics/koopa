@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME 'koopa install r' should point to 'koopa install r-framework' on
+# macOS.
+
 koopa::install_r_cmd_check() { # {{{1
     # """
     # Install R CMD check (Rcheck) scripts for CI.
@@ -28,19 +31,25 @@ koopa::install_r_cmd_check() { # {{{1
 koopa::install_r_packages() { # {{{1
     # """
     # Install R packages.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-05-05.
     # """
-    koopa::h1 'Installing R packages.'
+    local name_fancy
+    name_fancy='R packages'
+    koopa::install_start "$name_fancy"
     koopa::rscript 'installRPackages' "$@"
+    koopa::install_success "$name_fancy"
     return 0
 }
 
 koopa::update_r_packages() { # {{{1
     # """
     # Update R packages.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-05-05.
     # """
-    koopa::h1 'Updating R packages.'
+    local name_fancy
+    name_fancy='R packages'
+    koopa::update_start "$name_fancy"
     koopa::rscript 'updateRPackages' "$@"
+    koopa::update_success "$name_fancy"
     return 0
 }
