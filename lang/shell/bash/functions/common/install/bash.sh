@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Currently failing to build on macOS.
+# NOTE Currently failing to build on macOS.
 
 koopa::install_bash() { # {{{1
     koopa::install_app \
