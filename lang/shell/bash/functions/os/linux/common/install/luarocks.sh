@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can we install on macOS?
+
 koopa::linux_install_luarocks() { # {{{1
     koopa::linux_install_app \
         --name='luarocks' \

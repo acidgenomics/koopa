@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Reconsider this approach, so we can install on macOS from source.
+
 koopa::linux_install_julia() { # {{{1
     local installer pos
     installer='julia'
