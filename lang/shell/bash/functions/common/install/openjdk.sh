@@ -29,7 +29,7 @@ koopa:::install_openjdk() { # {{{1
     # - https://jdk.java.net/15/
     # - https://openjdk.java.net/
     # """
-    local arch arch2 file name platform prefix version unique url
+    local arch arch2 file jdk_dirname name platform prefix version unique url
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='openjdk'
@@ -90,7 +90,12 @@ koopa:::install_openjdk() { # {{{1
 ${unique}/GPL/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::mv "jdk-${version}" "$prefix"
+    jdk_dirname="jdk-${version}"
+    if koopa::is_macos
+    then
+        jdk_dirname="${jdk_dirname}.jdk"
+    fi
+    koopa::mv "$jdk_dirname" "$prefix"
     if koopa::is_linux
     then
         # This step will skip for non-shared install.
