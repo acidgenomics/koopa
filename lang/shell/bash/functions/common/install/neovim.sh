@@ -15,7 +15,7 @@ koopa:::install_neovim() { # {{{1
     koopa::assert_is_linux
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='neovom'
+    name='neovim'
     jobs="$(koopa::cpu_count)"
     file="v${version}.tar.gz"
     url="https://github.com/${name}/${name}/archive/${file}"
