@@ -19,7 +19,7 @@ koopa::install_spacemacs() { # {{{1
 at '${install_dir}'."
         return 0
     fi
-    koopa::h1 "Installing ${name_fancy} at '${install_dir}."
+    koopa::install_start "$name_fancy" "$install_dir"
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed emacs
     (
@@ -29,7 +29,6 @@ at '${install_dir}'."
         git checkout -b develop origin/develop
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     # > koopa::link_emacs "$name"
-    # > koopa::update_spacemacs
     koopa::install_success "$name_fancy" "$install_dir"
     return 0
 }

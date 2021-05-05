@@ -3,14 +3,16 @@
 koopa::install_spacevim() {
     # """
     # Install SpaceVim.
-    # @note Updated 2021-04-21.
+    # @note Updated 2021-05-05.
     # https://spacevim.org
     # """
-    local name_fancy script_file script_url tmp_dir vimproc_prefix
-    name_fancy="SpaceVim"
-    if [[ -d "${HOME}/.SpaceVim" ]]
+    local name name_fancy prefix script_file script_url tmp_dir vimproc_prefix
+    name='spacevim'
+    name_fancy='SpaceVim'
+    prefix="${HOME}/.SpaceVim"
+    if [[ -d "$prefix" ]]
     then
-        koopa::alert_note "${name_fancy} is already installed."
+        koopa::alert_note "${name_fancy} is already installed at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy"
@@ -20,7 +22,7 @@ koopa::install_spacevim() {
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        script_url="https://spacevim.org/install.sh"
+        script_url="https://${name}.org/install.sh"
         script_file="$(koopa::basename "$script_url")"
         koopa::download "$script_url" "$script_file"
         chmod +x "$script_file"
@@ -28,7 +30,7 @@ koopa::install_spacevim() {
     )
     # Bug fix for vimproc error.
     # https://github.com/SpaceVim/SpaceVim/issues/435
-    vimproc_prefix="${HOME}/.SpaceVim/bundle/vimproc.vim"
+    vimproc_prefix="${prefix}/bundle/vimproc.vim"
     koopa::alert "Fixing vimproc at '${vimproc_prefix}'."
     (
         koopa::cd "$vimproc_prefix"
@@ -41,19 +43,19 @@ koopa::install_spacevim() {
 koopa::uninstall_spacevim() { # {{{1
     # """
     # Uninstall SpaceVim.
-    # @note Updated 2021-04-21.
+    # @note Updated 2021-05-05.
     # """
-    local name_fancy
+    local name_fancy prefix
     name_fancy="SpaceVim"
-    if [[ ! -d "${HOME}/.SpaceVim" ]]
+    prefix="${HOME}/.SpaceVim"
+    if [[ ! -d "$prefix" ]]
     then
-        koopa::alert_note "${name_fancy} is not installed."
+        koopa::alert_note "${name_fancy} is not installed at '${prefix}'."
         return 0
     fi
     koopa::uninstall_start "$name_fancy"
     koopa::rm \
-        "${HOME}/.SpaceVim" \
-        "${HOME}/.SpaceVim.d" \
+        "$prefix" "${prefix}.d" \
         "${HOME}/.cache/SpaceVim"
     if [[ -d "${HOME}/.vim_back" ]]
     then

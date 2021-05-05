@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 
+# FIXME This should call to koopa::install_app as rustup first.
+
+# FIXME Split out rustup install into a separate script, then call first?
+# FIXME This should pick up and use rustup variable correct? Set to rolling.
+
 koopa::install_rust() { # {{{1
     # """
     # Install Rust (via rustup).
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-05.
     # """
     local cargo_prefix file name_fancy pos prefix reinstall rustup_prefix \
-        tmp_dir url
+        tmp_dir url version
     name_fancy='Rust'
+    version='rolling'
     reinstall=0
     pos=()
     while (("$#"))
