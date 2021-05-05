@@ -12,7 +12,6 @@ koopa:::install_neovim() { # {{{1
     # @note Updated 2021-04-28.
     # """
     local file jobs name prefix url version
-    koopa::assert_is_linux
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='neovim'
