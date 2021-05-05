@@ -17,7 +17,7 @@ koopa:::linux_install_aspera_connect() { # {{{1
     # @seealso
     # - https://www.ibm.com/aspera/connect/
     # """
-    local file name platform prefix script url version
+    local aspera_user file name platform prefix script script_target url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='ibm-aspera-connect'
@@ -40,4 +40,3 @@ koopa:::linux_install_aspera_connect() { # {{{1
     koopa::assert_is_file "${prefix}/bin/ascp"
     return 0
 }
-
