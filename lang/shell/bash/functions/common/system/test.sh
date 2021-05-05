@@ -52,7 +52,6 @@ koopa::test_find_files() { # {{{1
             -not -path "${prefix}/opt/*" \
             -not -path "${prefix}/tests/*" \
             -not -path "${prefix}/todo.org" \
-            -not -path "${prefix}/workflows/*" \
             -not -path '*/etc/R/*' \
             -print \
         2>&1 \
