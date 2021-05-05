@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_vim() { # {{{1
-    koopa::linux_install_app \
+koopa::install_vim() { # {{{1
+    koopa::install_app \
         --name='vim' \
         --name-fancy='Vim' \
         "$@"
 }
 
-koopa:::linux_install_vim() { # {{{1
+koopa:::install_vim() { # {{{1
     # """
     # Install Vim.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-05.
     # """
     local file flags jobs make_prefix name prefix python python_config \
         python_config_dir url version
-    koopa::assert_is_linux
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='vim'
