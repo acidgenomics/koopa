@@ -24,14 +24,8 @@ koopa:::install_python() { # {{{1
     # 'make altinstall' is therefore recommended instead of make install since
     # it only installs 'exec_prefix/bin/pythonversion'.
     #
-    # Ubuntu 18 LTS requires LDFLAGS to be set, otherwise we hit:
-    # ## python3: error while loading shared libraries: libpython3.8.so.1.0:
-    # ## cannot open shared object file: No such file or directory
-    # This alone works, but I've set other paths, as recommended.
-    # # > LDFLAGS="-Wl,-rpath ${prefix}/lib"
-    #
-    # To customize g++ path, specify `CXX` environment variable
-    # or use `--with-cxx-main=/usr/bin/g++`.
+    # To customize g++ path, specify 'CXX' environment variable
+    # or use '--with-cxx-main=/usr/bin/g++'.
     #
     # See also:
     # - https://docs.python.org/3/using/unix.html
