@@ -7,6 +7,7 @@ koopa::linux_install_bcbio() { # {{{1
         --name='bcbio' \
         --name-fancy='bcbio-nextgen' \
         --version="$version" \
+        --no-link \
         "$@"
 }
 
