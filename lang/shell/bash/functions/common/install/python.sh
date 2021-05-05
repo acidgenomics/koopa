@@ -12,10 +12,23 @@ koopa::install_python() { # {{{1
         "$@"
 }
 
+# FIXME Seeing this install error now on Ubuntu 20:
+# Looking in links: /tmp/tmpxosyzu70
+# Processing /tmp/tmpxosyzu70/setuptools-56.0.0-py3-none-any.whl
+# Processing /tmp/tmpxosyzu70/pip-21.1.1-py3-none-any.whl
+# Installing collected packages: setuptools, pip
+#   WARNING: The scripts pip3 and pip3.9 are installed in '/opt/koopa/app/python/3.9.5/bin' which is not on PATH.
+#   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+# Successfully installed pip-21.1.1 setuptools-56.0.0
+# /opt/koopa/app/python/3.9.5/bin/python3.9: error while loading shared libraries: libpython3.9.so.1.0: cannot open shared object file: No such file or directory
+# → Adding '/koopa.pth' path file in ''.
+# /opt/koopa/lang/shell/bash/functions/common/system/write.sh: line 78: /koopa.pth: Permission denied
+
+
 koopa:::install_python() { # {{{1
     # """
     # Install Python.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-05.
     #
     # Check config with:
     # > ldd /usr/local/bin/python3
@@ -37,34 +50,32 @@ koopa:::install_python() { # {{{1
     # - https://docs.python.org/3/using/unix.html
     # - https://stackoverflow.com/questions/43333207
     # """
-    local file flags jobs name name2 prefix url version
+    local conf_args file jobs name name2 prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='python'
     name2="$(koopa::capitalize "$name")"
     minor_version="$(koopa::major_minor_version "$version")"
     jobs="$(koopa::cpu_count)"
-    make_prefix="$(koopa::make_prefix)"
     file="${name2}-${version}.tar.xz"
     url="https://www.${name}.org/ftp/${name}/${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name2}-${version}"
-    flags=(
-        # Disable automatic pip install with:
-        # > '--without-ensurepip'
+    conf_args=(
         "--prefix=${prefix}"
-        "LDFLAGS=-Wl,--rpath=${make_prefix}/lib"
-        '--enable-optimizations'
-        '--enable-shared'
+        #"LDFLAGS=-Wl,-rpath=${prefix}/lib"
+        #'--enable-optimizations'
+        #'--enable-shared'
     )
-    ./configure "${flags[@]}"
+    ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     # > make test
     # > Use 'make altinstall' here instead?
     make install
     python="${prefix}/bin/${name}${minor_version}"
     koopa::assert_is_file "$python"
+    # FIXME This step is erroring out on Ubuntu 20.
     koopa::python_add_site_packages_to_sys_path "$python"
     return 0
 }
