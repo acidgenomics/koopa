@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_ruby() { # {{{1
-    koopa::linux_install_app \
+    koopa::install_app \
         --name='ruby' \
         --name-fancy='Ruby' \
         "$@"
