@@ -231,18 +231,26 @@ _koopa_os_string() { # {{{1
 _koopa_python() { # {{{1
     # """
     # Python executable path.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-05.
     # """
-    _koopa_print 'python3'
+    local x
+    x='python3'
+    x="$(_koopa_which "$x")"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_r() { # {{{1
     # """
     # R executable path.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-05.
     # """
-    _koopa_print 'R'
+    local x
+    x='R'
+    x="$(_koopa_which "$x")"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
