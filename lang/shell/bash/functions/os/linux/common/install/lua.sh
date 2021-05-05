@@ -20,7 +20,7 @@ koopa:::linux_install_lua() { # {{{1
     version="${INSTALL_VERSION:?}"
     name='lua'
     file="${name}-${version}.tar.gz"
-    url="http://www.lua.org/ftp/${file}"
+    url="http://www.${name}.org/ftp/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"

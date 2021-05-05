@@ -7,7 +7,7 @@ koopa::linux_install_gdal() { # {{{1
         "$@"
 }
 
-koopa:::install_gdal() { # {{{1
+koopa:::linux_install_gdal() { # {{{1
     # """
     # Install GDAL.
     # @note Updated 2021-04-28.

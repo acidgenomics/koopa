@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to call 'koopa::install_linux_app'.
+
 koopa::linux_configure_lmod() { # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
@@ -31,8 +33,6 @@ koopa::linux_configure_lmod() { # {{{1
     fi
     return 0
 }
-
-# FIXME Need to call 'koopa::install_linux_app'.
 
 koopa::linux_install_lmod() { # {{{1
     # """
