@@ -12,19 +12,6 @@ koopa::install_python() { # {{{1
         "$@"
 }
 
-# FIXME Seeing this install error now on Ubuntu 20:
-# Looking in links: /tmp/tmpxosyzu70
-# Processing /tmp/tmpxosyzu70/setuptools-56.0.0-py3-none-any.whl
-# Processing /tmp/tmpxosyzu70/pip-21.1.1-py3-none-any.whl
-# Installing collected packages: setuptools, pip
-#   WARNING: The scripts pip3 and pip3.9 are installed in '/opt/koopa/app/python/3.9.5/bin' which is not on PATH.
-#   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
-# Successfully installed pip-21.1.1 setuptools-56.0.0
-# /opt/koopa/app/python/3.9.5/bin/python3.9: error while loading shared libraries: libpython3.9.so.1.0: cannot open shared object file: No such file or directory
-# → Adding '/koopa.pth' path file in ''.
-# /opt/koopa/lang/shell/bash/functions/common/system/write.sh: line 78: /koopa.pth: Permission denied
-
-
 koopa:::install_python() { # {{{1
     # """
     # Install Python.
@@ -64,9 +51,9 @@ koopa:::install_python() { # {{{1
     koopa::cd "${name2}-${version}"
     conf_args=(
         "--prefix=${prefix}"
-        #"LDFLAGS=-Wl,-rpath=${prefix}/lib"
-        #'--enable-optimizations'
-        #'--enable-shared'
+        '--enable-optimizations'
+        '--enable-shared'
+        "LDFLAGS=-Wl,-rpath=${prefix}/lib"
     )
     ./configure "${conf_args[@]}"
     make --jobs="$jobs"
@@ -75,7 +62,6 @@ koopa:::install_python() { # {{{1
     make install
     python="${prefix}/bin/${name}${minor_version}"
     koopa::assert_is_file "$python"
-    # FIXME This step is erroring out on Ubuntu 20.
     koopa::python_add_site_packages_to_sys_path "$python"
     return 0
 }
