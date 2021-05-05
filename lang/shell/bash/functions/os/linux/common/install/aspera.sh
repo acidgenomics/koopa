@@ -4,6 +4,7 @@ koopa::linux_install_aspera_connect() { # {{{1
     koopa::linux_install_app \
         --name='aspera-connect' \
         --name-fancy='Aspera Connect' \
+        --no-link \
         "$@"
 }
 
