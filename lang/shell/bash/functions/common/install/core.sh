@@ -93,13 +93,25 @@ koopa::install_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    [[ -z "${dict[name_fancy]}" ]] && \
-        dict[name_fancy]="${dict[name]}"
     [[ -z "${dict[installer]}" ]] && \
         dict[installer]="${dict[name]}"
-    dict[installer]="$(koopa::snake_case_simple "${dict[installer]}")"
-    # e.g. call to 'koopa:::install_bash'.
-    dict[installer]=":install-${dict[installer]}"
+    # e.g. 'r-devel' to 'r_devel'.
+    dict[function]="$(koopa::snake_case_simple "${dict[installer]}")"
+    # e.g. 'r_devel' to 'install_r_devel'.
+    dict[function]="install_${dict[function]}"
+    if [[ -n "${dict[platform]}" ]]
+    then
+        # e.g. 'install_r_devel' to 'linux_install_r_devel'.
+        dict[function]="${dict[platform]}_${dict[function]}"
+    fi
+    # e.g. 'koopa:::linux_install_r_devel'.
+    dict[function]="koopa:::${dict[function]}"
+    if ! koopa::is_function "${dict[function]}"
+    then
+        koopa::stop 'Unsupported command.'
+    fi
+    [[ -z "${dict[name_fancy]}" ]] && \
+        dict[name_fancy]="${dict[name]}"
     [[ -z "${dict[version]}" ]] && \
         dict[version]="$(koopa::variable "${dict[name]}")"
     if koopa::is_macos
@@ -125,9 +137,7 @@ at '${dict[prefix]}'."
         export INSTALL_NAME="${dict[name]}"
         export INSTALL_PREFIX="${dict[prefix]}"
         export INSTALL_VERSION="${dict[version]}"
-        # FIXME REWORK THIS AND CHECK FOR 'koopa:::linux_install_XXX'.
-        # FIXME Use '${dict[platform]}" to handle this.
-        koopa:::run_function "${dict[installer]}" "$@"
+        "${dict[function]}" "$@"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "${dict[tmp_dir]}"
     koopa::sys_set_permissions -r "${dict[prefix]}"
