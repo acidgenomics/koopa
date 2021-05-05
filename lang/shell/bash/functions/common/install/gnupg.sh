@@ -126,31 +126,30 @@ koopa:::install_gnupg() { # {{{1
         "$gpg" --list-keys
     fi
     # Install dependencies.
-    # FIXME Rethink the '--script-name' approach here.
     koopa::install_app \
         --name='libgpg-error' \
         --version="$libgpg_error_version" \
-        --script-name='gnupg-gcrypt' \
+        --function='gnupg-gcrypt' \
         "$@"
     koopa::install_app \
         --name='libgcrypt' \
         --version="$libgcrypt_version" \
-        --script-name='gnupg-gcrypt' \
+        --function='gnupg-gcrypt' \
         "$@"
     koopa::install_app \
         --name='libassuan' \
         --version="$libassuan_version" \
-        --script-name='gnupg-gcrypt' \
+        --function='gnupg-gcrypt' \
         "$@"
     koopa::install_app \
         --name='libksba' \
         --version="$libksba_version" \
-        --script-name='gnupg-gcrypt' \
+        --function='gnupg-gcrypt' \
         "$@"
     koopa::install_app \
         --name='npth' \
         --version="$npth_version" \
-        --script-name='gnupg-gcrypt' \
+        --function='gnupg-gcrypt' \
         "$@"
     if koopa::is_macos
     then
@@ -159,13 +158,13 @@ koopa:::install_gnupg() { # {{{1
         koopa::install_app \
             --name='pinentry' \
             --version="$pinentry_version" \
-            --script-name='gnupg-pinentry' \
+            --function='gnupg-pinentry' \
             "$@"
     fi
     koopa::install_app \
         --name='gnupg' \
         --version="$version" \
-        --script-name='gnupg-gcrypt' \
+        --function='gnupg-gcrypt' \
         "$@"
     if koopa::is_installed gpg-agent
     then
