@@ -12,7 +12,7 @@ koopa::linux_install_aws_cli() { # {{{1
 koopa:::linux_install_aws_cli() { # {{{1
     # """
     # Install AWS CLI.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-05.
     #
     # Note that the AWS bundled installer isn't versioned in the file name.
     #
