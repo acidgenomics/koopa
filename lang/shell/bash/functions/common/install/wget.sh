@@ -7,6 +7,7 @@ koopa::install_wget() { # {{{1
 }
 
 # FIXME WE SHOULD CALL THE GNU INSTALLER AFTER DEFINING OPENSSL HERE.
+# FIXME Need to pass the flags to 'install_gnu_app' here.
 koopa:::install_wget() { # {{{1
     # """
     # Install wget.
@@ -18,6 +19,7 @@ koopa:::install_wget() { # {{{1
     name='wget'
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
+    # FIXME We should make this a shared function that we can call.
     if koopa::is_macos
     then
         koopa::assert_is_installed brew

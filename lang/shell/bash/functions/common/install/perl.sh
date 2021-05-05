@@ -17,6 +17,7 @@ koopa:::install_perl() { # {{{1
     # - https://perlmaven.com/how-to-build-perl-from-source-code
     # """
     local file jobs name prefix url version
+    koopa::alert_coffee_time
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='perl'
@@ -26,7 +27,6 @@ koopa:::install_perl() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    koopa::alert_coffee_time
     ./Configure -des -Dprefix="$prefix"
     make --jobs="$jobs"
     # The installer will warn when you skip this step.

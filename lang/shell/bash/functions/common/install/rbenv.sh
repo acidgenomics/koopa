@@ -9,13 +9,14 @@ koopa::install_rbenv() { # {{{1
 koopa:::install_rbenv() { # {{{1
     # """
     # Install rbenv.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-05.
     # """
-    local prefix
+    local name prefix
     prefix="${INSTALL_PREFIX:?}"
+    name='rbenv'
     koopa::mkdir "$prefix"
     git clone \
-        'https://github.com/sstephenson/rbenv.git' \
+        "https://github.com/sstephenson/${name}.git" \
         "$prefix"
     koopa::mkdir "${prefix}/plugins"
     git clone \

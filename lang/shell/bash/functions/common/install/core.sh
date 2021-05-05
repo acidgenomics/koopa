@@ -26,6 +26,7 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
+# FIXME NEED TO REWORK THE FUNCTION FETCHER HERE...
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.

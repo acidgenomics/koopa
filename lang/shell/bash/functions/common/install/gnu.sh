@@ -1,10 +1,21 @@
 #!/usr/bin/env bash
 
-# FIXME Rename this to ':::install_gnu_app'?
-koopa:::install_gnu() { # {{{1
+# FIXME Need to call 'koopa:::install_gnu_app' internally.
+koopa::install_gnu_app() { # {{{1
+    # """
+    # Build and install a GNU package from source.
+    # @note Updated 2021-05-04.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::install_app --script-name='gnu' "$@"
+    return 0
+}
+
+# FIXME Positional arguments should be passed to configure.
+koopa:::install_gnu_app() { # {{{1
     # """
     # Install GNU package.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-05.
     # """
     local file gnu_mirror jobs name prefix suffix url version
     name="${INSTALL_NAME:?}"
@@ -32,20 +43,6 @@ koopa:::install_gnu() { # {{{1
     make --jobs="$jobs"
     # > make check
     make install
-    return 0
-}
-
-# FIXME Rethink this approach...don't pass to script-name.
-koopa::install_gnu_app() { # {{{1
-    # """
-    # Build and install a GNU package from source.
-    # @note Updated 2021-05-04.
-    # """
-    koopa::assert_has_args "$#"
-    # FIXME Rethink the '--script-name' approach here.
-    koopa::install_app \
-        --script-name='gnu' \
-        "$@"
     return 0
 }
 

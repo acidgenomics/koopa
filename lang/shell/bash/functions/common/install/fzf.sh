@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
 
 koopa::install_fzf() { # {{{1
+    koopa::install_app \
+        --name='fzf' \
+        --name-fancy='FZF' \
+        "$@"
+}
+
+# FIXME This needs to call 'install_app'.
+# FIXME This needs to install into app, not opt.
+# FIXME Need to inform the user better about go configuration, sudo prompt.
+koopa:::install_fzf() { # {{{1
     # """
     # Install fzf.
-    # @note Updated 2020-11-17.
-    #
-    # This script will download files into '~/go'.
-    #
+    # @note Updated 2021-05-05.
     # @seealso
     # - https://github.com/junegunn/fzf/blob/master/BUILD.md
     # """
     local goroot jobs name prefix prefix_parent reinstall tmp_dir version
-    koopa::assert_has_no_envs
     name='fzf'
     reinstall=0
     version=

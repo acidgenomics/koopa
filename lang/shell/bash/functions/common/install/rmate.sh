@@ -9,7 +9,7 @@ koopa::install_rmate() { # {{{1
 koopa:::install_rmate() { # {{{1
     # """
     # Install rmate.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-05.
     # """
     local file name prefix url version
     prefix="${INSTALL_PREFIX:?}"
@@ -20,8 +20,8 @@ koopa:::install_rmate() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    chmod a+x rmate
+    chmod a+x "$name"
     koopa::mkdir "${prefix}/bin"
-    koopa::cp -t "${prefix}/bin" 'rmate'
+    koopa::cp -t "${prefix}/bin" "$name"
     return 0
 }

@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Should be able to build Python from source on macOS...
+# FIXME Alternatively on macOS, 'koopa install python' should point to
+# 'koopa install python-framework'.
+
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
