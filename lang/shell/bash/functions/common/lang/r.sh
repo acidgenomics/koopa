@@ -53,7 +53,6 @@ koopa::configure_r() { # {{{1
     fi
     koopa::link_r_etc "$r"
     koopa::link_r_site_library "$r"
-    # FIXME This doesn't seem to be picking up the new OpenJDK config correctly.
     koopa::r_javareconf "$r"
     koopa::r_rebuild_docs "$r"
     koopa::alert_success 'Update of R configuration was successful.'
@@ -231,7 +230,6 @@ koopa::pkgdown_deploy_to_aws() { # {{{1
     return 0
 }
 
-# FIXME This doesn't seem to be working on Shiny Server now.
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
