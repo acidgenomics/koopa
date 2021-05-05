@@ -16,8 +16,6 @@ koopa::install_r_devel() { # {{{1
         "$@"
 }
 
-# FIXME Rename the 'flags' variable.
-
 koopa:::install_r() { # {{{1
     # """
     # Install R.
