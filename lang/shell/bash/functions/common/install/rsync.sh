@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rename internal 'flags' variable to 'conf_args'.
-
 koopa::install_rsync() { # {{{1
     koopa::install_app \
         --name='rsync' \
@@ -11,12 +9,12 @@ koopa::install_rsync() { # {{{1
 koopa:::install_rsync() { # {{{1
     # """
     # Install rsync.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-05.
     #
     # @seealso
     # - https://github.com/WayneD/rsync/blob/master/INSTALL.md
     # """
-    local file flags jobs name prefix url version
+    local conf_args file jobs name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='rsync'
@@ -26,23 +24,23 @@ koopa:::install_rsync() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    flags=("--prefix=${prefix}")
+    conf_args=("--prefix=${prefix}")
     if koopa::is_macos
     then
         # Even though Homebrew provides OpenSSL, hard to link.
-        flags+=('--disable-openssl')
+        conf_args+=('--disable-openssl')
     elif koopa::is_linux
     then
-        flags+=(
+        conf_args+=(
             # > '--without-included-zlib'
             '--disable-zstd'
         )
         if koopa::is_rhel_like
         then
-            flags+=('--disable-xxhash')
+            conf_args+=('--disable-xxhash')
         fi
     fi
-    ./configure "${flags[@]}"
+    ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     make install
     return 0
