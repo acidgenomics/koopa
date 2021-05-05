@@ -27,22 +27,31 @@ koopa::find_app_version() { # {{{1
 }
 
 # FIXME NEED TO REWORK THE FUNCTION FETCHER HERE...
+# FIXME Allow positional args to pass to internal function.
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-05.
     # """
-    local include_dirs link_args link_app make_prefix name name_fancy \
-        prefix reinstall script script_name script_prefix tmp_dir version
+    local dict
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
-    include_dirs=
-    link_app=1
-    name_fancy=
-    reinstall=0
-    script_name=
-    script_prefix="$(koopa::prefix)/include/install"
-    version=
+
+    # FIXME Clean this up.
+    local include_dirs link_args link_app make_prefix name name_fancy \
+        pos prefix reinstall script script_name script_prefix tmp_dir version
+
+    declare -A dict=(
+        [include_dirs]=''
+        [link_app]=1
+        [name_fancy]=''
+        [reinstall]=0
+        # FIXME REWORK THIS.
+        [script_name]=''
+        [version]=''
+    )
+
+
     while (("$#"))
     do
         case "$1" in
@@ -143,7 +152,7 @@ koopa::install_app() { # {{{1
     fi
     if koopa::is_shared_install && koopa::is_installed ldconfig
     then
-        sudo ldconfig
+        sudo ldconfig || return 1
     fi
     koopa::install_success "$name_fancy" "$prefix"
     return 0

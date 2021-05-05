@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to call 'install_linux_app'.
+
 # FIXME This needs to link into opt right?
 koopa::linux_install_aspera_connect() { # {{{1
     # """
