@@ -63,6 +63,8 @@ koopa::update_koopa() { # {{{1
     return 0
 }
 
+# FIXME Rename the 'flags' variable.
+
 koopa::update_koopa_system() { # {{{1
     # """
     # Update system installation.
