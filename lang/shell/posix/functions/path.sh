@@ -7,8 +7,7 @@ __koopa_add_to_path_string_end() { # {{{1
     # """
     local string dir
     [ "$#" -eq 2 ] || return 1
-    [ -n "${1:-}" ] || return 0
-    string="${1:?}"
+    string="${1:-}"
     dir="${2:?}"
     if _koopa_str_match_posix "$string" ":${dir}"
     then
@@ -26,8 +25,7 @@ __koopa_add_to_path_string_start() { # {{{1
     # """
     local string dir
     [ "$#" -eq 2 ] || return 1
-    [ -n "${1:-}" ] || return 0
-    string="${1:?}"
+    string="${1:-}"
     dir="${2:?}"
     if _koopa_str_match_posix "$string" ":${dir}"
     then
