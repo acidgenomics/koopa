@@ -26,23 +26,17 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
-# FIXME NEED TO REWORK THE FUNCTION FETCHER HERE...
-# FIXME Allow positional args to pass to internal function.
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
     # @note Updated 2021-05-05.
+    #
+    # The 'dict' array approach has the benefit of avoiding passing unwanted
+    # local variables to the internal installer function call below.
     # """
-    local dict pos
+    local dict link_args pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
-
-    # FIXME Clean this up.
-    local include_dirs link_args link_app make_prefix name name_fancy \
-        pos prefix reinstall script script_name script_prefix tmp_dir version
-
-    # This approach also has the benefit of avoiding passing local variables
-    # to the internal installer function call below.
     declare -A dict=(
         [installer]=''
         [link_app]=1
@@ -87,13 +81,6 @@ koopa::install_app() { # {{{1
                 set -x
                 shift 1
                 ;;
-            # Legacy approach until 2021-05-05:
-            # > "")
-            # >     shift 1
-            # >     ;;
-            # > *)
-            # >     koopa::invalid_arg "$1"
-            # >     ;;
             *)
                 pos+=("$1")
                 shift 1
@@ -101,48 +88,44 @@ koopa::install_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    # FIXME Use dict here.
-    [[ -z "$name_fancy" ]] && name_fancy="$name"
-    # FIXME Rename to 'installer'.
-    # FIXME Ensure we convert to snake_case.
-    # FIXME NEED TO CONVERT 'r-devel' to 'r_devel'.
-    [[ -z "$installer" ]] && installer="$name"
-    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
+    [[ -z "${dict[name_fancy]}" ]] && \
+        dict[name_fancy]="${dict[name]}"
+    [[ -z "${dict[installer]}" ]] && \
+        dict[installer]="${dict[name]}"
+    dict[installer]="$(koopa::snake_case_simple "${dict[installer]}")"
+    # e.g. call to 'koopa:::install_bash'.
+    dict[installer]=":install-${dict[installer]}"
+    [[ -z "${dict[version]}" ]] && \
+        dict[version]="$(koopa::variable "${dict[name]}")"
     if koopa::is_macos
     then
         koopa::assert_is_installed brew
-        link_app=0
+        dict[link_app]=0
     fi
-    prefix="$(koopa::app_prefix)/${name}/${version}"
-    make_prefix="$(koopa::make_prefix)"
-    [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$prefix"
-    if [[ -d "$prefix" ]]
+    dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
+    dict[make_prefix]="$(koopa::make_prefix)"
+    [[ "${dict[reinstall]}" -eq 1 ]] && koopa::sys_rm "${dict[prefix]}"
+    if [[ -d "${dict[prefix]}" ]]
     then
-        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
+        koopa::alert_note "${dict[name_fancy]} is already installed \
+at '${dict[prefix]}'."
         return 0
     fi
-    koopa::install_start "$name_fancy" "$version" "$prefix"
-    tmp_dir="$(koopa::tmp_dir)"
+    koopa::install_start "${dict[name_fancy]}" "${dict[version]}" \
+        "${dict[prefix]}"
+    dict[tmp_dir]="$(koopa::tmp_dir)"
     (
-        koopa::cd "$tmp_dir"
-        # This is intended primarily for Bash, Fish, Zsh install scripts.
-        export INSTALL_LINK_APP="$link_app"
-        export INSTALL_NAME="$name"
-        export INSTALL_PREFIX="$prefix"
-        export INSTALL_VERSION="$version"
-        # FIXME SWITCH TO RUNNING 'koopa:::install_XXX' instead of sourcing
-        # an external script file.
-        koopa::stop 'FIXME'
-        # FIXME Call the installer function here rather than sourcing a script.
-        script="${script_prefix}/${script_name}.sh"
-        koopa::assert_is_file "$script"
-        # shellcheck source=/dev/null
-        . "$script"
+        koopa::cd "${dict[tmp_dir]}"
+        export INSTALL_LINK_APP="${dict[link_app]}"
+        export INSTALL_NAME="${dict[name]}"
+        export INSTALL_PREFIX="${dict[prefix]}"
+        export INSTALL_VERSION="${dict[version]}"
+        koopa:::run_function "${dict[installer]}" "$@"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    koopa::sys_set_permissions -r "$prefix"
-    koopa::link_into_opt "$prefix" "$name"
-    if [[ "$link_app" -eq 1 ]]
+    koopa::rm "${dict[tmp_dir]}"
+    koopa::sys_set_permissions -r "${dict[prefix]}"
+    koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
+    if [[ "${dict[link_app]}" -eq 1 ]]
     then
         koopa::delete_broken_symlinks "$make_prefix"
         link_args=(
@@ -153,14 +136,14 @@ koopa::install_app() { # {{{1
         then
             link_args+=("--include-dirs=${dict[link_include_dirs]}")
         fi
-        # We're including the 'true' catch here to avoid cp issues on Arch.
+        # Including the 'true' catch here to avoid 'cp' issues on Arch Linux.
         koopa::link_app "${link_args[@]}" || true
     fi
     if koopa::is_shared_install && koopa::is_installed ldconfig
     then
         sudo ldconfig || return 1
     fi
-    koopa::install_success "$name_fancy" "$prefix"
+    koopa::install_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
 }
 
