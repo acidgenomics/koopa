@@ -3,7 +3,8 @@
 koopa::linux_install_gcc() { # {{{1
     koopa::linux_install_app \
         --name='gcc' \
-        --name-fancy='GCC' "$@"
+        --name-fancy='GCC' \
+        "$@"
 }
 
 koopa:::linux_install_gcc() { # {{{1
