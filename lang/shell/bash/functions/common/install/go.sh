@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Need to wrap in install_app call.
+
 koopa::install_go() { # {{{1
     # """
     # Install Go.
