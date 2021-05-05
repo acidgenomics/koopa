@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_password_store() { # {{{1
-    koopa::linux_install_app \
+koopa::install_password_store() { # {{{1
+    koopa::install_app \
         --name='password-store' \
         "$@"
 }
 
-koopa:::linux_install_password_store() { # {{{1
+koopa:::install_password_store() { # {{{1
     # """
     # Install Password Store.
     # @note Updated 2021-05-04.
@@ -15,7 +15,6 @@ koopa:::linux_install_password_store() { # {{{1
     # - https://git.zx2c4.com/password-store/
     # """
     local file prefix url version
-    koopa::assert_is_linux
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='password-store'
