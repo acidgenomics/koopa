@@ -53,6 +53,7 @@ koopa::configure_r() { # {{{1
     fi
     koopa::link_r_etc "$r"
     koopa::link_r_site_library "$r"
+    # FIXME This doesn't seem to be picking up the new OpenJDK config correctly.
     koopa::r_javareconf "$r"
     koopa::r_rebuild_docs "$r"
     koopa::alert_success 'Update of R configuration was successful.'
@@ -230,10 +231,11 @@ koopa::pkgdown_deploy_to_aws() { # {{{1
     return 0
 }
 
+# FIXME This doesn't seem to be working on Shiny Server now.
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-05.
     #
     # The default Java path differs depending on the system.
     #
@@ -263,7 +265,11 @@ koopa::r_javareconf() { # {{{1
     then
         koopa::activate_openjdk
         java_home="$(koopa::java_prefix)"
-        koopa::is_installed java || return 0
+        if ! koopa::is_installed java
+        then
+            koopa::alert_note "Failed to locate 'java'."
+            return 0
+        fi
     fi
     # This step can happen with r-devel in Docker images.
     if [[ ! -d "$java_home" ]]
