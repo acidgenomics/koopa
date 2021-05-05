@@ -35,7 +35,7 @@ anaconda="2020.11"
 armadillo="10.4.1"
 
 # https://www.ibm.com/aspera/connect/
-aspera-connect="3.10.1.181943"
+aspera-connect="3.11.2.63"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.71"

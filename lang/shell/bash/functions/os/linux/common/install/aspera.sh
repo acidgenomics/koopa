@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
 # FIXME This needs to call 'install_linux_app'.
+# FIXME NEED TO IMPROVE THE VERSION HANDLING.
 
-# FIXME This needs to link into opt right?
+# Current Linux version:
+# https://d3gcli72yxqn2z.cloudfront.net/connect_latest/v4/bin/ibm-aspera-connect-3.11.2.63-linux-g2.12-64.tar.gz
+
+# NOTE Not yet supported for ARM correct?
 koopa::linux_install_aspera_connect() { # {{{1
     # """
     # Install Aspera Connect.
@@ -17,8 +21,10 @@ koopa::linux_install_aspera_connect() { # {{{1
         script_target tmp_dir url version version_full
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
+
     name='aspera-connect'
     version_full="$(koopa::variable "$name")"
+
     # Standardize version as MAJOR.MINOR.PATCH only.
     version="$(koopa::major_minor_patch_version "$version_full")"
     aspera_dir="$(koopa::aspera_prefix)"
