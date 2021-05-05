@@ -302,7 +302,7 @@ _koopa_h7() { # {{{1
 _koopa_invalid_arg() { # {{{1
     # """
     # Error on invalid argument.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-05-05.
     # """
     local arg x
     if [ "$#" -gt 0 ]
@@ -310,7 +310,7 @@ _koopa_invalid_arg() { # {{{1
         arg="${1:-}"
         if _koopa_str_match_posix "$arg" '--'
         then
-            _koopa_alert_warning "Use '--arg=VALUE' not '--arg VALUE'."
+            _koopa_warning "Use '--arg=VALUE' not '--arg VALUE'."
         fi
         x="Invalid argument: '${arg}'."
     else
