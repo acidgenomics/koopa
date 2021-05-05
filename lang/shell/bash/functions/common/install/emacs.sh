@@ -1,41 +1,29 @@
 #!/usr/bin/env bash
 
-koopa::install_emacs() { # {{{1
-    koopa::install_app \
-        --name='emacs' \
-        --name-fancy='Emacs' \
-        "$@"
-}
+# FIXME Failing to build on macOS:
+#ld: symbol(s) not found for architecture x86_64
+#clang: error: linker command failed with exit code 1 (use -v to see invocation)
+#make[1]: *** [Makefile:368: etags] Error 1
+#ld: warning: ignoring file ../lib/libgnu.a, building for macOS-x86_64 but attempting to link with file built for unknown-unsupported file format ( 0x21 0x3C 0x61 0x72 0x63 0x68 0x3E 0x0A 0x2F 0x20 0x20 0x20 0x20 0x20 0x20 0x20 )
+#Undefined symbols for architecture x86_64:
+#  "_c_isalnum", referenced from:
+#      _Asm_labels in ctags-8ff984.o
+#      _Cobol_paragraphs in ctags-8ff984.o
+#      _Erlang_functions in ctags-8ff984.o
+#      _Perl_functions in ctags-8ff984.o
+#      _Prolog_functions in ctags-8ff984.o
+# [...]
+#ld: symbol(s) not found for architecture x86_64
+#clang: error: linker command failed with exit code 1 (use -v to see invocation)
+#make[1]: *** [Makefile:375: ctags] Error 1
+#make[1]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20210505-101830-U2nZJYYypo/emacs-27.2/lib-src'
+#make: *** [Makefile:411: lib-src] Error 2
 
-# FIXME Can we pass to GNU function with the flags set?
-# FIXME install_gnu_app should just pass the remaining positional args to
-# configure script.
-koopa:::install_emacs() { # {{{1
-    # """
-    # Install Emacs.
-    # @note Updated 2021-05-04.
-    #
-    # Seeing this error on macOS:
-    # Nothing to be done for 'maybe-blessmail'.
-    #
-    # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
-    # """
-    local file gnu_mirror jobs name prefix url version
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    name='emacs'
-    gnu_mirror="$(koopa::gnu_mirror_url)"
-    jobs="$(koopa::cpu_count)"
-    file="${name}-${version}.tar.xz"
-    url="${gnu_mirror}/${name}/${file}"
-    koopa::download "$url"
-    koopa::extract "$file"
-    koopa::cd "${name}-${version}"
-    flags=("--prefix=${prefix}")
+koopa::install_emacs() { # {{{1
+    local conf_args
     if koopa::is_macos
     then
-        flags+=(
+        conf_args=(
             '--disable-silent-rules'
             '--with-gnutls'
             '--with-modules'
@@ -46,15 +34,16 @@ koopa:::install_emacs() { # {{{1
             '--without-x'
         )
     else
-        flags+=(
+        conf_args=(
             '--with-x-toolkit=no'
             '--with-xpm=no'
         )
     fi
-    ./configure "${flags[@]}"
-    make --jobs="$jobs"
-    make install
-    return 0
+    koopa::install_gnu_app \
+        --name='emacs' \
+        --name-fancy='Emacs' \
+        "${conf_args[@]}"
+        "$@"
 }
 
 koopa::update_emacs() { # {{{1
