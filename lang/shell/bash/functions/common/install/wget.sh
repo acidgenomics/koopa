@@ -1,41 +1,11 @@
 #!/usr/bin/env bash
 
 koopa::install_wget() { # {{{1
-    koopa::install_app \
+    local conf_args
+    koopa::is_macos && koopa::activate_homebrew_pkg_config 'openssl@1.1'
+    conf_args=('--with-ssl=openssl')
+    koopa::install_gnu_app \
         --name='wget' \
+        "${conf_args[@]}" \
         "$@"
-}
-
-# FIXME WE SHOULD CALL THE GNU INSTALLER AFTER DEFINING OPENSSL HERE.
-# FIXME Need to pass the flags to 'install_gnu_app' here.
-koopa:::install_wget() { # {{{1
-    # """
-    # Install wget.
-    # @note Updated 2021-04-28.
-    # """
-    local file gnu_mirror jobs name openssl_pkgconfig prefix url version
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    name='wget'
-    gnu_mirror="$(koopa::gnu_mirror_url)"
-    jobs="$(koopa::cpu_count)"
-    # FIXME We should make this a shared function that we can call.
-    if koopa::is_macos
-    then
-        koopa::assert_is_installed brew
-        openssl_pkgconfig="$(brew --prefix)/opt/openssl@1.1/lib/pkgconfig"
-        koopa::assert_is_dir "$openssl_pkgconfig"
-        koopa::add_to_pkg_config_path_start "$openssl_pkgconfig"
-    fi
-    file="${name}-${version}.tar.gz"
-    url="${gnu_mirror}/${name}/${file}"
-    koopa::download "$url"
-    koopa::extract "$file"
-    koopa::cd "${name}-${version}"
-    ./configure \
-        --prefix="$prefix" \
-        --with-ssl='openssl'
-    make --jobs="$jobs"
-    make install
-    return 0
 }
