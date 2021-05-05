@@ -919,6 +919,7 @@ _koopa_activate_ssh_key() { # {{{1
     return 0
 }
 
+# FIXME '/usr/local/bin' is now duplicated on macOS! How to resolve?
 _koopa_activate_standard_paths() { # {{{1
     # """
     # Activate standard paths.

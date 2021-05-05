@@ -40,3 +40,16 @@ koopa::add_local_bins_to_path() { # {{{1
     done
     return 0
 }
+
+koopa::reset_minimal_path() {
+    # """
+    # Reset 'PATH' to minimal system default.
+    # @note Updated 2021-05-05.
+    #
+    # Particularly useful for building some programs from source on macOS.
+    # """
+    PATH='/usr/bin:/bin:/usr/sbin:/sbin'
+    export PATH
+    unset -v PKG_CONFIG_PATH
+    return 0
+}
