@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Hard code this to koopa managed rbenv, so we can install on macOS.
 koopa::linux_update_rbenv() { # {{{1
     # """
     # Update rbenv.
