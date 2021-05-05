@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename internal 'flags' variable to 'conf_args'.
+
 koopa::install_rsync() { # {{{1
     koopa::install_app \
         --name='rsync' \
