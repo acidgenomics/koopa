@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_gcc() { # {{{1
-    koopa::linux_install_app \
+koopa::install_gcc() { # {{{1
+    koopa::install_app \
         --name='gcc' \
         --name-fancy='GCC' \
         "$@"
 }
 
-koopa:::linux_install_gcc() { # {{{1
+koopa:::install_gcc() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-05.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -61,7 +61,6 @@ koopa:::linux_install_gcc() { # {{{1
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
     # """
     local file flags gnu_mirror jobs name prefix url version
-    koopa::assert_is_linux
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='gcc'

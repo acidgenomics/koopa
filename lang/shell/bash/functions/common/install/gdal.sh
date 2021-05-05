@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_gdal() { # {{{1
-    koopa::linux_install_app \
+koopa::install_gdal() { # {{{1
+    koopa::install_app \
         --name='gdal' \
         --name-fancy='GDAL' \
         "$@"
 }
 
-koopa:::linux_install_gdal() { # {{{1
+koopa:::install_gdal() { # {{{1
     # """
     # Install GDAL.
     # @note Updated 2021-04-28.
@@ -23,7 +23,6 @@ koopa:::linux_install_gdal() { # {{{1
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
     local file jobs make_prefix name prefix url version
-    koopa::assert_is_linux
     koopa::activate_opt_prefix geos proj python
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
