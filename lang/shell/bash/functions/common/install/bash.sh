@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Currently failing to build on macOS.
-
 koopa::install_bash() { # {{{1
     koopa::install_app \
         --name='bash' \

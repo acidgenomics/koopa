@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # NOTE Currently failing to build on macOS.
-# FIXME Rename the 'flags' variable.
+# checking uint32_t is 32 bits...
+# configure: error: WRONG!  uint32_t not defined correctly.
 
 koopa::install_vim() { # {{{1
     koopa::install_app \
@@ -15,13 +16,12 @@ koopa:::install_vim() { # {{{1
     # Install Vim.
     # @note Updated 2021-05-05.
     # """
-    local file flags jobs make_prefix name prefix python python_config \
+    local conf_args file jobs name prefix python python_config \
         python_config_dir url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='vim'
     jobs="$(koopa::cpu_count)"
-    make_prefix="$(koopa::make_prefix)"
     python="$(koopa::python)"
     python_config="${python}-config"
     koopa::assert_is_installed "$python" "$python_config"
@@ -31,14 +31,21 @@ koopa:::install_vim() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    flags=(
+    conf_args=(
         "--prefix=${prefix}"
         "--with-python3-command=${python}"
         "--with-python3-config-dir=${python_config_dir}"
         '--enable-python3interp=yes'
-        "LDFLAGS=-Wl,--rpath=${make_prefix}/lib"
     )
-    ./configure "${flags[@]}"
+    # Setting 'LDFLAGS' here doesn't work on macOS.
+    if koopa::is_linux
+    then
+        conf_args+=(
+            "LDFLAGS=-Wl,-rpath=${prefix}/lib"
+        )
+    fi
+    koopa::is_macos && koopa::reset_minimal_path
+    ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     # > make test
     make install
