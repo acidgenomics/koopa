@@ -14,7 +14,6 @@ koopa::activate_homebrew_pkg_config() { # {{{1
     do
         pkgconfig="${opt_prefix}/${name}/lib/pkgconfig"
         koopa::assert_is_dir "$pkgconfig"
-        # FIXME THIS FUNCTION ISNT WORKING...NEED TO CHECK.
         koopa::add_to_pkg_config_path_start "$pkgconfig"
     done
     return 0
