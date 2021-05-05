@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Rethink this approach.
+# FIXME Can we wrap in 'linux_install_app' call?
+# Need to check in Docker image.
+
 koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     # """
     # Install bcl2fastq from Fedora/RHEL RPM file.

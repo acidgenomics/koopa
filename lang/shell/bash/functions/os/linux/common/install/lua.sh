@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can we install on macOS?
+
 koopa::linux_install_lua() { # {{{1
     koopa::linux_install_app \
         --name='lua' \
