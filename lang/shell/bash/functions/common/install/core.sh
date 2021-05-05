@@ -144,7 +144,7 @@ at '${dict[prefix]}'."
     koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
-        koopa::delete_broken_symlinks "$make_prefix"
+        koopa::delete_broken_symlinks "${dict[make_prefix]}"
         link_args=(
             "--name=${dict[name]}"
             "--version=${dict[version]}"
