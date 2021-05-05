@@ -75,23 +75,37 @@ koopa::uninstall_dotfiles_private() { # {{{1
     return 0
 }
 
-# FIXME Should we define the dotfiles prefix here?
 koopa::update_dotfiles() { # {{{1
     # """
     # Update dotfiles repo and run install script, if defined.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-05-05.
     # """
-    local repo repos script
-    koopa::assert_has_args "$#"
-    repos=("$@")
+    local config_prefix repo repos script
+    if [[ "$#" -eq 0 ]]
+    then
+        config_prefix="$(koopa::config_prefix)"
+        repos=(
+            "${config_prefix}/dotfiles"
+            "${config_prefix}/dotfiles-private"
+        )
+    else
+        repos=("$@")
+    fi
     for repo in "${repos[@]}"
     do
         [[ -d "$repo" ]] || continue
         (
             koopa::update_start "$repo"
             koopa::cd "$repo"
-            koopa::git_reset
-            koopa::git_pull
+            # Run the updater script, if defined.
+            script="${repo}/update"
+            if [[ -x "$script" ]]
+            then
+                "$script"
+            else
+                koopa::git_reset
+                koopa::git_pull
+            fi
             # Run the install script, if defined.
             script="${repo}/install"
             [[ -x "$script" ]] && "$script"
