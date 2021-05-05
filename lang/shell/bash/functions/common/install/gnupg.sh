@@ -129,27 +129,27 @@ koopa:::install_gnupg() { # {{{1
     koopa::install_app \
         --name='libgpg-error' \
         --version="$libgpg_error_version" \
-        --function='gnupg-gcrypt' \
+        --installer='gnupg-gcrypt' \
         "$@"
     koopa::install_app \
         --name='libgcrypt' \
         --version="$libgcrypt_version" \
-        --function='gnupg-gcrypt' \
+        --installer='gnupg-gcrypt' \
         "$@"
     koopa::install_app \
         --name='libassuan' \
         --version="$libassuan_version" \
-        --function='gnupg-gcrypt' \
+        --installer='gnupg-gcrypt' \
         "$@"
     koopa::install_app \
         --name='libksba' \
         --version="$libksba_version" \
-        --function='gnupg-gcrypt' \
+        --installer='gnupg-gcrypt' \
         "$@"
     koopa::install_app \
         --name='npth' \
         --version="$npth_version" \
-        --function='gnupg-gcrypt' \
+        --installer='gnupg-gcrypt' \
         "$@"
     if koopa::is_macos
     then
@@ -158,13 +158,13 @@ koopa:::install_gnupg() { # {{{1
         koopa::install_app \
             --name='pinentry' \
             --version="$pinentry_version" \
-            --function='gnupg-pinentry' \
+            --installer='gnupg-pinentry' \
             "$@"
     fi
     koopa::install_app \
         --name='gnupg' \
         --version="$version" \
-        --function='gnupg-gcrypt' \
+        --installer='gnupg-gcrypt' \
         "$@"
     if koopa::is_installed gpg-agent
     then
