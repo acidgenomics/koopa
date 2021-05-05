@@ -16,6 +16,7 @@ koopa:::install_libevent() { # {{{1
     version="${INSTALL_VERSION:?}"
     name='libevent'
     jobs="$(koopa::cpu_count)"
+    # FIXME Need to make this a shared function.
     if koopa::is_macos
     then
         koopa::assert_is_installed brew

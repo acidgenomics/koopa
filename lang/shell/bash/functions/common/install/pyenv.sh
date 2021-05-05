@@ -22,15 +22,18 @@ koopa:::install_pyenv() { # {{{1
 koopa::update_pyenv() { # {{{1
     # """
     # Update pyenv.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-05-05.
     # """
+    local name_fancy
     koopa::is_installed pyenv || return 0
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
-    koopa::h1 'Updating pyenv.'
+    name_fancy='pyenv'
+    koopa::update_start "$name_fancy"
     (
         koopa::cd "$(pyenv root)"
         git pull
     )
+    koopa::update_success "$name_fancy"
     return 0
 }

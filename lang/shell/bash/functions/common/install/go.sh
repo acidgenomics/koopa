@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap in install_app call.
 koopa::install_go() { # {{{1
     # """
     # Install Go.
@@ -7,7 +8,6 @@ koopa::install_go() { # {{{1
     # """
     local arch name name_fancy os_id prefix prefix_parent reinstall \
         tmp_dir version
-    koopa::assert_has_no_envs
     name='go'
     name_fancy='Go'
     reinstall=0

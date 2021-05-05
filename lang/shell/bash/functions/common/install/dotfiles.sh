@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Install this into opt?
 koopa::install_dotfiles() { # {{{1
     # """
     # Install dot files.
@@ -70,6 +71,7 @@ koopa::uninstall_dotfiles_private() { # {{{1
     return 0
 }
 
+# FIXME Should we define the dotfiles prefix here?
 koopa::update_dotfiles() { # {{{1
     # """
     # Update dotfiles repo and run install script, if defined.
