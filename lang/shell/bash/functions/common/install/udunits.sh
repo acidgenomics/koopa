@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_udunits() { # {{{1
-    koopa::linux_install_app \
+koopa::install_udunits() { # {{{1
+    koopa::install_app \
         --name='udunits' \
         "$@"
 }
 
-koopa:::linux_install_udunits() { # {{{1
+koopa:::install_udunits() { # {{{1
     # """
     # Install udunits.
     # @note Updated 2021-05-04.
     # """
     local file jobs name prefix url version
-    koopa::assert_is_linux
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='udunits'
