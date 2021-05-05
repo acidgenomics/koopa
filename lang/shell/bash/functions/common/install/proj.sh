@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_proj() { # {{{1
-    koopa::linux_install_app \
+koopa::install_proj() { # {{{1
+    koopa::install_app \
         --name='proj' \
         --name-fancy='PROJ' \
         "$@"
 }
 
-koopa:::linux_install_proj() { # {{{1
+koopa:::install_proj() { # {{{1
     # """
     # Install PROJ.
     # @note Updated 2021-05-04.
     # """
     local arch file make_prefix prefix url version
-    koopa::assert_is_linux
     koopa::assert_is_installed sqlite3
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"

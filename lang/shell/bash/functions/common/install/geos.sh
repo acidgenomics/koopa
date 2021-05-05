@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_geos() { # {{{1
-    koopa::linux_install_app \
+koopa::install_geos() { # {{{1
+    koopa::install_app \
         --name='geos' \
         --name-fancy='GEOS' \
         "$@"
 }
 
-koopa:::linux_install_geos() { # {{{1
+koopa:::install_geos() { # {{{1
     # """
     # Install GEOS.
     # @note Updated 2021-04-28.
@@ -28,7 +28,6 @@ koopa:::linux_install_geos() { # {{{1
     # > make check
     # """
     local file jobs name prefix url version
-    koopa::assert_is_linux
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='geos'
