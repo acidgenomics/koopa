@@ -6,17 +6,18 @@ koopa::install_gnu_app() { # {{{1
     # @note Updated 2021-05-05.
     # """
     koopa::assert_has_args "$#"
-    koopa::install_app --function='gnu-app' "$@"
+    koopa::install_app --installer='gnu-app' "$@"
     return 0
 }
 
-# FIXME Positional arguments should be passed to configure.
 koopa:::install_gnu_app() { # {{{1
     # """
     # Install GNU package.
     # @note Updated 2021-05-05.
+    #
+    # Positional arguments are passed to 'conf_args' array.
     # """
-    local file gnu_mirror jobs name prefix suffix url version
+    local conf_args file gnu_mirror jobs name prefix suffix url version
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
@@ -38,7 +39,8 @@ koopa:::install_gnu_app() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    ./configure --prefix="$prefix"
+    conf_args=("--prefix=${prefix}" "$@")
+    ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     # > make check
     make install
