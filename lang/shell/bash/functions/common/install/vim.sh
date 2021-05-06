@@ -44,12 +44,13 @@ koopa:::install_vim() { # {{{1
         '--with-tlib=ncurses'
         '--without-x'
     )
-    # Setting 'LDFLAGS' here doesn't work on macOS.
     if koopa::is_linux
     then
         conf_args+=("LDFLAGS=-Wl,-rpath=${prefix}/lib")
+    elif koopa::is_macos
+    then
+        koopa::reset_minimal_path
     fi
-    koopa::is_macos && koopa::reset_minimal_path
     echo "${conf_args[@]}"
     ./configure "${conf_args[@]}"
     make --jobs="$jobs"
