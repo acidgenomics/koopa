@@ -26,7 +26,7 @@ koopa:::linux_install_rstudio_server() { # {{{1
     koopa::assert_is_installed R
     pro=0
     reinstall=0
-    version=
+    version=''
     pos=()
     while (("$#"))
     do

@@ -98,7 +98,7 @@ koopa::install_perlbrew() { # {{{1
     then
         bin_dir='/usr/bin'
     else
-        bin_dir=
+        bin_dir=''
     fi
     if [[ -d "$bin_dir" ]]
     then

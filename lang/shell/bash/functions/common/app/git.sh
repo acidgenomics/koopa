@@ -6,8 +6,8 @@ koopa::git_checkout_recursive() { # {{{1
     # @note Updated 2021-01-06.
     # """
     local branch default_branch dir dirs origin pos repo repos
-    branch=
-    origin=
+    branch=''
+    origin=''
     pos=()
     while (("$#"))
     do
@@ -143,7 +143,7 @@ koopa::git_init() { # {{{1
     # """
     local branch origin
     branch='master'  # switch to 'main' eventually.
-    origin=
+    origin=''
     while (("$#"))
     do
         case "$1" in
@@ -235,7 +235,7 @@ koopa::git_pull() { # {{{1
     # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
     local branch
-    branch=
+    branch=''
     [[ "$#" -gt 0 ]] && branch="${*: -1}"
     koopa::assert_is_git
     koopa::assert_is_installed git

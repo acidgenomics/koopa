@@ -15,7 +15,7 @@ _koopa_app_prefix() { # {{{1
     # Don't allow this prefix to match the opt prefix.
     if [ -n "$prefix" ] && [ "$prefix" = "$(_koopa_opt_prefix)" ]
     then
-        prefix=
+        prefix=''
     fi
     # Provide fallback support for existing installs using "cellar".
     # Otherwise, use "app" by default.

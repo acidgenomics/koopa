@@ -340,7 +340,7 @@ koopa::file_ext() { # {{{1
         then
             x="${file##*.}"
         else
-            x=
+            x=''
         fi
         koopa::print "$x"
     done
@@ -368,7 +368,7 @@ koopa::file_ext2() { # {{{1
         then
             x="$(koopa::print "$file" | cut -d '.' -f 2-)"
         else
-            x=
+            x=''
         fi
         koopa::print "$x"
     done
