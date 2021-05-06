@@ -6,17 +6,15 @@ koopa::install_htop() { # {{{1
         "$@"
 }
 
-# FIXME Rename the 'flags' variable.
-
 koopa:::install_htop() { # {{{1
     # """
     # Install htop.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-06.
     #
     # Repo transferred from https://github.com/hishamhm/htop to 
     # https://github.com/htop-dev/htop in 2020-08.
     # """
-    local file flags jobs name prefix url version
+    local conf_args file jobs name prefix url version
     koopa::assert_is_installed python3
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
@@ -28,11 +26,11 @@ koopa:::install_htop() { # {{{1
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./autogen.sh
-    flags=(
+    conf_args=(
         "--prefix=${prefix}"
         '--disable-unicode'
     )
-    ./configure "${flags[@]}"
+    ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     # > make check
     make install
