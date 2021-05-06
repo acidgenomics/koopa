@@ -73,7 +73,6 @@ ${name}-${minor_version}-patches"
         )
         conf_args+=("CFLAGS=${cflags[*]}")
     fi
-    koopa::is_macos && koopa::reset_minimal_path
     ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     # > make test

@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Currently failing to build on macOS.
-# checking uint32_t is 32 bits...
-# configure: error: WRONG!  uint32_t not defined correctly.
-
 koopa::install_vim() { # {{{1
     koopa::install_app \
         --name='vim' \
@@ -14,7 +10,7 @@ koopa::install_vim() { # {{{1
 koopa:::install_vim() { # {{{1
     # """
     # Install Vim.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-06.
     # """
     local conf_args file jobs name prefix python python_config \
         python_config_dir url version
@@ -37,19 +33,19 @@ koopa:::install_vim() { # {{{1
         "--with-python3-config-dir=${python_config_dir}"
         '--enable-cscope'
         '--enable-gui=no'
+        '--enable-luainterp'
         '--enable-multibyte'
+        '--enable-perlinterp'
+        '--enable-python3interp'
         '--enable-python3interp=yes'
+        '--enable-rubyinterp'
         '--enable-terminal'
-        # NOTE Need to define path to ncurses on macOS.
         '--with-tlib=ncurses'
         '--without-x'
     )
     if koopa::is_linux
     then
         conf_args+=("LDFLAGS=-Wl,-rpath=${prefix}/lib")
-    elif koopa::is_macos
-    then
-        koopa::reset_minimal_path
     fi
     echo "${conf_args[@]}"
     ./configure "${conf_args[@]}"

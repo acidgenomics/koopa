@@ -29,7 +29,7 @@ koopa::find_app_version() { # {{{1
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-06.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -37,6 +37,7 @@ koopa::install_app() { # {{{1
     local dict link_args pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
+    koopa::is_macos && koopa::reset_minimal_path
     declare -A dict=(
         [installer]=''
         [link_app]=1
