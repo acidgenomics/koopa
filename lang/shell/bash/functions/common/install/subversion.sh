@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rename the 'flags' variable.
-
 koopa::install_subversion() { # {{{1
     koopa::install_app \
         --name='subversion' \
@@ -11,7 +9,7 @@ koopa::install_subversion() { # {{{1
 koopa:::install_subversion() { # {{{1
     # """
     # Install Subversion.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-06.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -21,11 +19,13 @@ koopa:::install_subversion() { # {{{1
     # - https://subversion.apache.org/download.cgi
     # - https://subversion.apache.org/source-code.html
     # """
-    local file jobs name prefix url version
+    local brew_apr brew_apr_util brew_prefix conf_args file jobs name prefix \
+        url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='subversion'
     jobs="$(koopa::cpu_count)"
+    conf_args=("--prefix=${prefix}")
     if koopa::is_linux
     then
         if koopa::is_fedora
@@ -35,29 +35,27 @@ koopa:::install_subversion() { # {{{1
             koopa::add_to_pkg_config_path_start '/usr/lib64/pkgconfig'
         fi
         koopa::assert_is_installed apr-config apu-config sqlite3
+        conf_args+=(
+            '--with-lz4=internal'
+            '--with-utf8proc=internal'
+        )
+    elif koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        brew_apr="${brew_prefix}/opt/apr"
+        brew_apr_util="${brew_prefix}/opt/apr-util"
+        koopa::assert_is_dir "$brew_prefix" "$brew_apr" "$brew_apr_util"
+        conf_args+=(
+            "--with-apr=${brew_apr}"
+            "--with-apr-util=${brew_apr_util}"
+        )
     fi
     file="${name}-${version}.tar.bz2"
     url="https://mirrors.ocf.berkeley.edu/apache/${name}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    flags=("--prefix=${prefix}")
-    if koopa::is_macos
-    then
-        koopa::assert_is_installed brew
-        brew_prefix="$(koopa::homebrew_prefix)"
-        flags+=(
-            "--with-apr=${brew_prefix}/opt/apr"
-            "--with-apr-util=${brew_prefix}/opt/apr-util"
-        )
-    elif koopa::is_linux
-    then
-        flags+=(
-            '--with-lz4=internal'
-            '--with-utf8proc=internal'
-        )
-    fi
-    ./configure "${flags[@]}"
+    ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     make install
     return 0
