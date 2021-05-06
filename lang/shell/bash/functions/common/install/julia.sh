@@ -33,7 +33,7 @@ koopa:::install_julia() { # {{{1
     local file jobs name prefix version url
     if koopa::is_macos
     then
-        koopa::activate_homebrew_opt_prefix gcc
+        koopa::activate_homebrew_opt_prefix gcc git
     fi
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
