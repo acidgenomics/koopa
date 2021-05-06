@@ -527,14 +527,14 @@ _koopa_rust_packages_prefix() { # {{{1
     return 0
 }
 
-_koopa_rustup_prefix() { # {{{1
+_koopa_rust_prefix() { # {{{1
     # """
-    # Rust rustup install prefix.
-    # @note Updated 2021-04-28.
+    # Rust (rustup) install prefix.
+    # @note Updated 2021-05-06.
     # """
     local prefix
     prefix="${RUSTUP_HOME:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/rustup"
+    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/rust"
     _koopa_print "$prefix"
     return 0
 }
