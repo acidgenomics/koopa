@@ -44,7 +44,7 @@ autoconf="2.71"
 automake="1.16.3"
 
 # https://www.gnu.org/software/bash/
-bash="5.1.4"
+bash="5.1.8"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
