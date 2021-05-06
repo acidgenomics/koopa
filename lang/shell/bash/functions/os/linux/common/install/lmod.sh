@@ -34,6 +34,8 @@ koopa::linux_configure_lmod() { # {{{1
     return 0
 }
 
+# FIXME Rework the installation step here.
+
 koopa::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
