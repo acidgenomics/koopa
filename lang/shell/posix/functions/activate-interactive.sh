@@ -86,6 +86,7 @@ _koopa_activate_completion() { # {{{1
     return 0
 }
 
+# NOTE May need to rethink this for dynamic dark/light mode support.
 _koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
