@@ -287,10 +287,16 @@ _koopa_macos_activate_iterm() { # {{{1
     # @seealso
     # - https://apas.gr/2018/11/dark-mode-macos-safari-iterm-vim/
     # """
-    [ -z "${ITERM_PROFILE:-}" ] || return 0
     [ "${TERM_PROGRAM:-}" = 'iTerm.app' ] || return 0
     [ -n "${KOOPA_COLOR_MODE:-}" ] || return 0
-    ITERM_PROFILE="$KOOPA_COLOR_MODE"
+    if [ "${ITERM_PROFILE:-}" != "${KOOPA_COLOR_MODE:-}" ]
+    then
+        _koopa_alert "Switching iTerm profile to \
+non-default '${KOOPA_COLOR_MODE}' theme."
+        # This will change the iTerm profile to match.
+        _koopa_print "\033]50;SetProfile=${KOOPA_COLOR_MODE}\a"
+        ITERM_PROFILE="$KOOPA_COLOR_MODE"
+    fi
     export ITERM_PROFILE
     return 0
 }
