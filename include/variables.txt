@@ -364,9 +364,9 @@ tmux="3.2"
 udunits="2.2.26"
 
 # https://github.com/vim/vim/releases
-# Homebrew updates every '*.0000' patch release on on multiples of 50.
+# Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.0"
+vim="8.2.2825"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.1"
