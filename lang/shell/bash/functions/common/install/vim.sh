@@ -23,7 +23,7 @@ koopa:::install_vim() { # {{{1
         koopa::activate_opt_prefix python
     elif koopa::is_macos
     then
-        koopa::activate_macos_python
+        koopa::macos_activate_python
     fi
     python="$(koopa::python)"
     python_config="${python}-config"
