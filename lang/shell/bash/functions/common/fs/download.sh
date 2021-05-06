@@ -3,7 +3,7 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2020-11-07.
+    # @note Updated 2021-05-06.
     #
     # Potentially useful curl flags:
     # * --connect-timeout <seconds>
@@ -19,9 +19,8 @@ koopa::download() { # {{{1
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # """
-    local bn file url wd
+    local bn brew_curl brew_prefix curl curl_args file url wd
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed curl
     url="${1:?}"
     file="${2:-}"
     if [[ -z "$file" ]]
@@ -31,15 +30,26 @@ koopa::download() { # {{{1
         file="${wd}/${bn}"
     fi
     file="$(koopa::realpath "$file")"
+    curl='curl'
+    # Switch to Homebrew cURL on macOS, if possible.
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        brew_curl="${brew_prefix}/opt/curl/bin/curl"
+        [[ -x "$brew_curl" ]] && curl="$brew_curl"
+    fi
+    koopa::assert_is_installed "$curl"
+    curl_args=(
+        '--create-dirs'
+        '--fail'
+        '--location'
+        '--output' "$file"
+        '--retry' 5
+        '--show-error'
+    )
+    curl_args+=("$url")
     koopa::alert "Downloading '${url}' to '${file}'."
-    curl \
-        --create-dirs \
-        --fail \
-        --location \
-        --output "$file" \
-        --retry 5 \
-        --show-error \
-        "$url"
+    "$curl" "${curl_args[@]}"
     return 0
 }
 
