@@ -18,15 +18,14 @@ koopa:::install_vim() { # {{{1
     version="${INSTALL_VERSION:?}"
     name='vim'
     jobs="$(koopa::cpu_count)"
+    if koopa::is_macos
+    then
+        koopa::activate_macos_python
+    fi
     python="$(koopa::python)"
     python_config="${python}-config"
     koopa::assert_is_installed "$python" "$python_config"
     python_config_dir="$("$python_config" --configdir)"
-    file="v${version}.tar.gz"
-    url="https://github.com/${name}/${name}/archive/${file}"
-    koopa::download "$url"
-    koopa::extract "$file"
-    koopa::cd "${name}-${version}"
     conf_args=(
         "--prefix=${prefix}"
         "--with-python3-command=${python}"
@@ -47,7 +46,11 @@ koopa:::install_vim() { # {{{1
     then
         conf_args+=("LDFLAGS=-Wl,-rpath=${prefix}/lib")
     fi
-    echo "${conf_args[@]}"
+    file="v${version}.tar.gz"
+    url="https://github.com/${name}/${name}/archive/${file}"
+    koopa::download "$url"
+    koopa::extract "$file"
+    koopa::cd "${name}-${version}"
     ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     # > make test
