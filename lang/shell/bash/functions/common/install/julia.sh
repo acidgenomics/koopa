@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Seeing this pop up on macOS:
-# Warning: git information unavailable; versioning information limited
-
 koopa::install_julia() { # {{{1
     if koopa::is_linux
     then
@@ -33,7 +30,10 @@ koopa:::install_julia() { # {{{1
     local file jobs name prefix version url
     if koopa::is_macos
     then
-        koopa::activate_homebrew_opt_prefix gcc git
+        # NOTE Seeing this pop up on macOS:
+        # # Warning: git information unavailable; versioning information limited
+        # Including 'git' here makes no difference.
+        koopa::activate_homebrew_opt_prefix gcc
     fi
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
