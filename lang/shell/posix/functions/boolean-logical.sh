@@ -477,7 +477,7 @@ _koopa_is_shared_install() { # {{{1
 _koopa_is_subshell() { # {{{1
     # """
     # Is koopa running inside a subshell?
-    # @note Updated 2020-02-26.
+    # @note Updated 2021-05-06.
     # """
     [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
 }

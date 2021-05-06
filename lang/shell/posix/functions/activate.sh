@@ -586,7 +586,7 @@ _koopa_activate_nextflow() { # {{{1
 _koopa_activate_openjdk() { # {{{1
     # """
     # Activate OpenJDK.
-    # @note Updated 2020-11-16.
+    # @note Updated 2021-05-06.
     #
     # Use Homebrew instead to manage on macOS.
     #
@@ -594,7 +594,7 @@ _koopa_activate_openjdk() { # {{{1
     # """
     local prefix
     _koopa_is_linux || return 0
-    prefix="$(_koopa_openjdk_prefix)/latest"
+    prefix="$(_koopa_openjdk_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
     return 0
@@ -603,7 +603,7 @@ _koopa_activate_openjdk() { # {{{1
 _koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-06.
     #
     # @examples
     # _koopa_activate_opt_prefix proj gdal
@@ -616,8 +616,7 @@ _koopa_activate_opt_prefix() { # {{{1
         prefix="${opt_prefix}/${name}"
         if [ ! -d "$prefix" ]
         then
-            _koopa_warning "Not installed: '${prefix}'."
-            return 1
+            _koopa_stop "Not installed: '${prefix}'."
         fi
         _koopa_activate_prefix "$prefix"
     done
@@ -917,14 +916,17 @@ _koopa_activate_ssh_key() { # {{{1
     return 0
 }
 
-# FIXME '/usr/local/bin' is now duplicated on macOS! How to resolve?
 _koopa_activate_standard_paths() { # {{{1
     # """
     # Activate standard paths.
-    # @note Updated 2021-04-23.
+    # @note Updated 2021-05-06.
     #
     # Note that here we're making sure local binaries are included.
     # Inspect '/etc/profile' if system PATH appears misconfigured.
+    #
+    # Note that macOS Big Sur includes '/usr/local/bin' automatically now,
+    # resulting in a duplication. This is OK.
+    # Refer to '/etc/paths.d' for other system paths.
     #
     # @seealso
     # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
