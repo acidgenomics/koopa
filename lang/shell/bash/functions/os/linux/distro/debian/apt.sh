@@ -390,6 +390,8 @@ koopa::apt_configure_sources() { # {{{1
     [[ ! -d "$sources_list_d" ]] && sudo mkdir -pv "$sources_list_d"
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
+    # FIXME Is this the correct return for uname -m?
+    # FIXME Does this return 'arm64' or 'aarch64' for Arm Docker image?
     arch="$(koopa::arch)"
     declare -A codenames
     declare -A urls

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# NOTE Seeing this pop up on macOS.
+# # tar: Ignoring unknown extended header keyword
+
+# FIXME Do we have to rethink our GOROOT config?
+
 koopa::install_go() { # {{{1
     koopa::install_app \
         --name='go' \
@@ -16,7 +21,7 @@ koopa:::install_go() { # {{{1
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='go'
-    arch="$(koopa::arch)"
+    arch="$(koopa::arch2)"
     if koopa::is_macos
     then
         os_id='darwin'
