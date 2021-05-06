@@ -287,8 +287,8 @@ _koopa_activate_export_koopa_prefix() { # {{{1
 }
 
 _koopa_activate_export_subshell() { # {{{1
-    [ -n "${KOOPA_SUBSHELL:-}" ] && return 0
-    KOOPA_SUBSHELL=0
+    [ -z "${KOOPA_PREFIX:-}" ] && return 0
+    KOOPA_SUBSHELL=1
     export KOOPA_SUBSHELL
     return 0
 }
