@@ -13,7 +13,7 @@ koopa::cp() { # {{{1
     koopa::assert_is_installed cp
     sudo=0
     symlink=0
-    target_dir=
+    target_dir=''
     OPTIND=1
     while getopts 'Sst:' opt
     do
@@ -89,7 +89,7 @@ koopa::ln() { # {{{1
         target_parent
     koopa::assert_is_installed ln
     sudo=0
-    target_dir=
+    target_dir=''
     OPTIND=1
     while getopts 'St:' opt
     do
@@ -181,7 +181,7 @@ koopa::mv() { # {{{1
     # """
     local OPTIND mkdir mv mv_flags rm source_file sudo target_file target_parent
     sudo=0
-    target_dir=
+    target_dir=''
     OPTIND=1
     while getopts 'St:' opt
     do

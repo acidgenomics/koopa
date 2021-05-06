@@ -122,7 +122,7 @@ _koopa_prompt_git() { # {{{1
     git_branch="$(_koopa_git_branch)"
     if _koopa_is_git_clean
     then
-        git_status=
+        git_status=''
     else
         git_status='*'
     fi

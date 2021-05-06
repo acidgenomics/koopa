@@ -157,7 +157,7 @@ koopa::ftp_mirror() { # {{{1
     local dir host user
     koopa::assert_has_args "$#"
     koopa::assert_is_installed wget
-    dir=
+    dir=''
     while (("$#"))
     do
         case "$1" in
