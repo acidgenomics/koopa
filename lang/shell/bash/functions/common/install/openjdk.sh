@@ -76,14 +76,15 @@ koopa:::install_openjdk() { # {{{1
     else
         platform='linux'
     fi
+    # ARM will return 'aarch64' here, which is what we want.
+    # Need to handle x86 edge case.
     arch="$(koopa::arch)"
     case "$arch" in
-        arm64)
-            arch2='aarch64'
-            ;;
         x86_64)
             arch2='x64'
             ;;
+        *)
+            arch2="$arch"
     esac
     file="${name}-${version}_${platform}-${arch2}_bin.tar.gz"
     url="https://download.java.net/java/GA/jdk${version}/\
