@@ -30,7 +30,7 @@ koopa:::install_julia() { # {{{1
     local file jobs name prefix version url
     if koopa::is_macos
     then
-        koopa::activate_opt_prefix gfortran
+        koopa::activate_homebrew_opt_prefix gfortran
     fi
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
