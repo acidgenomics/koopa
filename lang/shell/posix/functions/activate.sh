@@ -218,16 +218,14 @@ _koopa_activate_gnu() { # {{{1
 _koopa_activate_go() { # {{{1
     # """
     # Activate Go.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-05-05.
     # """
     local prefix
-    prefix="$(_koopa_go_prefix)/latest"
+    prefix="$(_koopa_go_prefix)"
     [ -d "$prefix" ] && _koopa_activate_prefix "$prefix"
     _koopa_is_installed go || return 0
-    [ -z "${GOPATH:-}" ] && GOPATH="$(_koopa_go_gopath)"
+    [ -z "${GOPATH:-}" ] && GOPATH="$(_koopa_go_packages_prefix)"
     export GOPATH
-    # This can error on shared installs, so skip.
-    # > [ ! -d "$GOPATH" ] && mkdir -p "$GOPATH"
     return 0
 }
 

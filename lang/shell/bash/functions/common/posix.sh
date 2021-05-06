@@ -96,6 +96,10 @@ koopa::arch() { # {{{1
     _koopa_arch "$@"
 }
 
+koopa::arch2() { # {{{1
+    _koopa_arch2 "$@"
+}
+
 koopa::aspera_prefix() { # {{{1
     _koopa_aspera_prefix "$@"
 }
@@ -196,8 +200,8 @@ koopa::git_branch() { # {{{1
     _koopa_git_branch "$@"
 }
 
-koopa::go_gopath() { # {{{1
-    _koopa_go_gopath "$@"
+koopa::go_packages() { # {{{1
+    _koopa_go_packages "$@"
 }
 
 koopa::go_prefix() { # {{{1

@@ -1,12 +1,45 @@
 #!/bin/sh
 
+# FIXME Does this return 'arm64' or 'aarch64' inside ARM Docker image?
 _koopa_arch() { # {{{1
     # """
     # Platform architecture.
     # @note Updated 2021-03-25.
+    #
+    # e.g. Intel: x86_64; ARM: arm64.
     # """
     local x
     x="$(uname -m)"
+    _koopa_print "$x"
+    return 0
+}
+
+# FIXME Rethink this approach??
+_koopa_arch2() { # {{{1
+    # """
+    # Alternative platform architecture.
+    # @note Updated 2021-05-05.
+    #
+    # e.g. Intel: amd64; ARM: aarch64.
+    #
+    # @seealso
+    # - https://wiki.debian.org/ArchitectureSpecificsMemo
+    # """
+    local x
+    x="$(_koopa_arch)"
+    case "$x" in
+        x86_64)
+            x='amd64'
+            ;;
+        arm64)
+            # FIXME Should we flip the logic for this?
+            # FIXME Should this return arm64 instead?
+            x='aarch64'
+            ;;
+        *)
+            _koopa_stop "Unsupported architecture: '${x}'."
+            ;;
+    esac
     _koopa_print "$x"
     return 0
 }

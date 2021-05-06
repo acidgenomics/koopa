@@ -171,12 +171,12 @@ _koopa_fzf_prefix() { # {{{1
     return 0
 }
 
-_koopa_go_gopath() { # {{{1
+_koopa_go_packages_prefix() { # {{{1
     # """
-    # Go GOPATH, for building from source.
-    # @note Updated 2020-12-31.
+    # Go packages 'GOPATH', for building from source.
+    # @note Updated 2021-05-05.
     #
-    # This must be different from go root.
+    # This must be different from 'go root' value.
     #
     # @seealso
     # - go help gopath
@@ -186,7 +186,7 @@ _koopa_go_gopath() { # {{{1
     # """
     local prefix
     prefix="${GOPATH:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_go_prefix)/gopath"
+    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/go-packages"
     _koopa_print "$prefix"
     return 0
 }
