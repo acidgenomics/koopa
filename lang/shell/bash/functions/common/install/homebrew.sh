@@ -43,16 +43,14 @@ koopa::install_homebrew() { # {{{1
     return 0
 }
 
-# FIXME Rename the 'flags' variable.
-
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-05-06.
     #
     # Custom brewfile is supported using a positional argument.
     # """
-    local brewfile flags name_fancy
+    local brewfile install_args name_fancy
     koopa::assert_has_no_args_le "$#" 1
     koopa::assert_has_sudo
     brewfile="${1:-$(koopa::brew_brewfile)}"
@@ -62,7 +60,7 @@ koopa::install_homebrew_bundle() { # {{{1
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
     brew analytics off
-    flags=(
+    install_args=(
         # > '--debug'
         # > '--verbose'
         "--file=${brewfile}"
@@ -70,9 +68,9 @@ koopa::install_homebrew_bundle() { # {{{1
         '--no-lock'
         '--no-upgrade'
     )
-    # Note that cask specific flags are handled by 'HOMEBREW_CASK_OPTS' global
+    # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
     # variable, which is defined in our main Homebrew activation function.
-    brew bundle install "${flags[@]}"
+    brew bundle install "${install_args[@]}"
     return 0
 }
 

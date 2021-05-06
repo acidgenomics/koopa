@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rename the 'flags' variable.
-
 koopa::install_gcc() { # {{{1
     koopa::install_app \
         --name='gcc' \
@@ -12,7 +10,7 @@ koopa::install_gcc() { # {{{1
 koopa:::install_gcc() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-06.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -62,7 +60,7 @@ koopa:::install_gcc() { # {{{1
     # - https://solarianprogrammer.com/2016/10/07/building-gcc-ubuntu-linux/
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
     # """
-    local file flags gnu_mirror jobs name prefix url version
+    local conf_args file gnu_mirror jobs name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='gcc'
@@ -75,13 +73,13 @@ koopa:::install_gcc() { # {{{1
     # Need to build outside of source code directory.
     koopa::mkdir build
     koopa::cd build
-    flags=(
+    conf_args=(
         "--prefix=${prefix}"
         '--disable-multilib'
         '--enable-languages=c,c++,fortran'
         '-v'
     )
-    "../${name}-${version}/configure" "${flags[@]}"
+    "../${name}-${version}/configure" "${conf_args[@]}"
     make --jobs="$jobs"
     make install
     return 0
