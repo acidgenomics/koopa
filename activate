@@ -564,7 +564,7 @@ _koopa_print() { # {{{1
 }
 
 _koopa_realpath() { # {{{1
-    local arg x
+    local arg bn dn x
     [ "$#" -gt 0 ] || return 1
     if _koopa_is_installed realpath
     then
@@ -576,7 +576,9 @@ _koopa_realpath() { # {{{1
     then
         for arg in "$@"
         do
-            x="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
+            bn="$(basename "$arg")"
+            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
+            x="${dn}/${bn}"
             _koopa_print "$x"
         done
         return 0
