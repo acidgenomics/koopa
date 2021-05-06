@@ -122,7 +122,11 @@ koopa::install_app() { # {{{1
     koopa::is_macos && dict[link_app]=0
     dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     dict[make_prefix]="$(koopa::make_prefix)"
-    [[ "${dict[reinstall]}" -eq 1 ]] && koopa::sys_rm "${dict[prefix]}"
+    if [[ "${dict[reinstall]}" -eq 1 ]] && [[ -d "${dict[prefix]}" ]]
+    then
+        koopa::alert_note "Removing previous install at '${dict[prefix]}'."
+        koopa::sys_rm "${dict[prefix]}"
+    fi
     if [[ -d "${dict[prefix]}" ]]
     then
         koopa::alert_note "${dict[name_fancy]} is already installed \
