@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't creating a directory correctly now???
 koopa::mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.
@@ -23,19 +22,24 @@ koopa::mktemp() { # {{{1
     # - https://stackoverflow.com/a/10983009/3911732
     # - https://gist.github.com/earthgecko/3089509
     # """
-    local brew_prefix date_id mktemp template user_id
+    local brew_mktemp brew_prefix date_id mktemp mktemp_args template user_id
     mktemp='mktemp'
-    # Ensure we're using GNU instead of BSD mktemp on macOS.
     if koopa::is_macos
     then
         brew_prefix="$(koopa::homebrew_prefix)"
-        mktemp="${brew_prefix}/bin/gmktemp"
+        brew_mktemp="${brew_prefix}/bin/gmktemp"
+        [[ -x "$brew_mktemp" ]] && mktemp="$brew_mktemp"
     fi
     koopa::assert_is_installed "$mktemp"
-    user_id="$(koopa::user_id)"
-    date_id="$(koopa::datetime)"
-    template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
-    x="$("$mktemp" "$@" -t "$template")"
+    mktemp_args=("$@")
+    if koopa::has_gnu "$mktemp"
+    then
+        user_id="$(koopa::user_id)"
+        date_id="$(koopa::datetime)"
+        template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
+        mktemp_args+=('-t' "$template")
+    fi
+    x="$("$mktemp" "${mktemp_args[@]}")"
     koopa::print "$x"
     return 0
 }
