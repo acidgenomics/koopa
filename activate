@@ -94,6 +94,7 @@ _koopa_activate() { # {{{1
         esac
         if _koopa_is_macos
         then
+            _koopa_macos_activate_color_mode || return 1
             _koopa_macos_activate_iterm || return 1
             _koopa_macos_activate_cli_colors || return 1
         fi
