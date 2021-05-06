@@ -44,6 +44,7 @@ koopa::download() { # {{{1
         '--fail'
         '--location'
         '--output' "$file"
+        '--progress-bar'
         '--retry' 5
         '--show-error'
     )
