@@ -5,6 +5,7 @@ koopa::install_rust() { # {{{1
         --name='rust' \
         --name-fancy='Rust' \
         --version='rolling' \
+        --no-link \
         "$@"
 }
 
