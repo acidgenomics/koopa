@@ -284,18 +284,24 @@ _koopa_macos_activate_iterm() { # {{{1
     # """
     # Activate iTerm2 configuration.
     # @note Updated 2021-05-06.
+    #
+    # Only attempt to dynamically set dark/light theme if the current iTerm2
+    # theme is named either 'dark' or 'light'.
+    #
     # @seealso
     # - https://apas.gr/2018/11/dark-mode-macos-safari-iterm-vim/
     # """
+    local theme
     [ "${TERM_PROGRAM:-}" = 'iTerm.app' ] || return 0
-    [ -n "${KOOPA_COLOR_MODE:-}" ] || return 0
-    if [ "${ITERM_PROFILE:-}" != "${KOOPA_COLOR_MODE:-}" ]
+    theme="${KOOPA_COLOR_MODE:-}"
+    [ -n "$theme" ] || return 0
+    if [ "${ITERM_PROFILE:-}" != "$theme" ] && \
+        { [ "$theme" = 'dark' ] || [ "$theme" = 'light' ]; }
     then
-        _koopa_alert "Switching iTerm profile to \
-non-default '${KOOPA_COLOR_MODE}' theme."
+        _koopa_alert "Switching iTerm profile to non-default '${theme}' theme."
         # This will change the iTerm profile to match.
-        _koopa_print "\033]50;SetProfile=${KOOPA_COLOR_MODE}\a"
-        ITERM_PROFILE="$KOOPA_COLOR_MODE"
+        _koopa_print "\033]50;SetProfile=${theme}\a"
+        ITERM_PROFILE="$theme"
     fi
     export ITERM_PROFILE
     return 0
