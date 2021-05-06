@@ -197,8 +197,8 @@ koopa::link_app() { # {{{1
     # """
     local app_prefix app_subdirs cp_flags include_dirs make_prefix name \
         pos version
-    include_dirs=
-    version=
+    include_dirs=''
+    version=''
     pos=()
     while (("$#"))
     do

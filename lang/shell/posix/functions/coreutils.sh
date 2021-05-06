@@ -3,11 +3,12 @@
 _koopa_cd() { # {{{1
     # """
     # Change directory quietly.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-05-06.
     # """
     local cd
     [ "$#" -eq 1 ] || return 1
     cd='cd'
+    _koopa_is_alias "$cd" && unalias "$cd"
     "$cd" "${1:?}" >/dev/null 2>&1 || return 1
     return 0
 }
@@ -15,13 +16,13 @@ _koopa_cd() { # {{{1
 _koopa_parent_dir() { # {{{1
     # """
     # Get the parent directory path.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-05-06.
     #
     # This requires file to exist and resolves symlinks.
     # """
     local OPTIND cd_tail file n parent
     _koopa_is_installed dirname printf pwd sed || return 1
-    cd_tail=
+    cd_tail=''
     n=1
     OPTIND=1
     while getopts 'n:' opt
@@ -53,7 +54,6 @@ _koopa_parent_dir() { # {{{1
     return 0
 }
 
-# FIXME This step is still messing up on macOS with BSD...
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.

@@ -13,7 +13,7 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     # """
     local make_prefix name version version2
     koopa::assert_is_installed rpm
-    version=
+    version=''
     while (("$#"))
     do
         case "$1" in

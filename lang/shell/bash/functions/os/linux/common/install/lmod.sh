@@ -37,13 +37,13 @@ koopa::linux_configure_lmod() { # {{{1
 koopa::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-06.
     # """
     local apps_dir data_dir file name name_fancy prefix tmp_dir url version
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     koopa::assert_is_installed lua luarocks
-    version=
+    version=''
     while (("$#"))
     do
         case "$1" in
