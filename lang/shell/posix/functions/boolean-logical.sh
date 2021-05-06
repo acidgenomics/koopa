@@ -522,3 +522,21 @@ _koopa_is_venv_active() { # {{{1
     # """
     [ -n "${VIRTUAL_ENV:-}" ]
 }
+
+_koopa_macos_is_dark_mode() { # {{{1
+    # """
+    # Is the current macOS terminal running in dark mode?
+    # @note Updated 2021-05-05.
+    # """
+    local x
+    x=$(defaults read -g 'AppleInterfaceStyle' 2>/dev/null)
+    [ "$x" = 'Dark' ]
+}
+
+_koopa_macos_is_light_mode() { # {{{1
+    # """
+    # Is the current terminal running in light mode?
+    # @note Updated 2021-05-05.
+    # """
+    ! _koopa_macos_is_dark_mode
+}

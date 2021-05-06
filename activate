@@ -4,7 +4,7 @@
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-06.
     # """
     case "${1:-}" in
         --help|-h)
@@ -64,8 +64,8 @@ _koopa_activate() { # {{{1
             _koopa_activate_bcbio || return 1
         elif _koopa_is_macos
         then
-            _koopa_activate_macos_python || return 1
-            _koopa_activate_visual_studio_code || return 1
+            _koopa_macos_activate_python || return 1
+            _koopa_macos_activate_visual_studio_code || return 1
         fi
         _koopa_activate_homebrew || return 1
         _koopa_activate_gnu || return 1
@@ -82,11 +82,6 @@ _koopa_activate() { # {{{1
         _koopa_activate_perl_packages || return 1
         _koopa_activate_python_packages || return 1
         _koopa_activate_python_startup || return 1
-        # These are now handled in '_koopa_activate_aliases' call:
-        # > _koopa_activate_conda || return 1
-        # > _koopa_activate_broot || return 1
-        # > _koopa_activate_fzf || return 1
-        # > _koopa_activate_zoxide || return 1
     fi
     _koopa_activate_koopa_paths || return 1
     _koopa_activate_local_paths || return 1
@@ -99,7 +94,8 @@ _koopa_activate() { # {{{1
         esac
         if _koopa_is_macos
         then
-            _koopa_activate_macos_extras || return 1
+            _koopa_macos_activate_iterm || return 1
+            _koopa_macos_activate_cli_colors || return 1
         fi
         _koopa_activate_completion || return 1
         _koopa_activate_aliases || return 1
@@ -401,7 +397,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2021-04-25.
+    Updated 2021-05-06.
 END
 }
 
