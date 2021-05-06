@@ -12,7 +12,7 @@ koopa::install_sqlite() { # {{{1
 koopa:::install_sqlite() { # {{{1
     # """
     # Install SQLite.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-06.
     #
     # Use autoconf instead of amalgamation.
     #
@@ -22,7 +22,7 @@ koopa:::install_sqlite() { # {{{1
     # ## SQLite header and source version mismatch
     # https://askubuntu.com/questions/443379
     # """
-    local file file_version flags jobs name prefix url version
+    local conf_args file file_version jobs name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='sqlite'
@@ -38,7 +38,7 @@ koopa:::install_sqlite() { # {{{1
             koopa::stop "Unsupported version: ${version}."
             ;;
     esac
-    # e.g. 3.32.3 to 3320300.
+    # e.g. '3.32.3' to '3320300'.
     file_version="$( \
         koopa::print "$version" \
         | sed -E 's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
@@ -48,14 +48,13 @@ koopa:::install_sqlite() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-autoconf-${file_version}"
-    flags=(
-        # Potential flags:
+    conf_args=(
         # > '--disable-dynamic-extensions'
         # > '--disable-shared'
         "--prefix=${prefix}"
         '--enable-static'
     )
-    ./configure "${flags[@]}"
+    ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     make install
     koopa::alert_note 'Reinstall PROJ and GDAL, if built from source.'
