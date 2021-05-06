@@ -14,6 +14,7 @@ koopa::activate_homebrew_pkg_config() { # {{{1
     do
         pkgconfig="${opt_prefix}/${name}/lib/pkgconfig"
         koopa::assert_is_dir "$pkgconfig"
+        koopa::alert "Activating pkgconfig at '${pkgconfig}'."
         koopa::add_to_pkg_config_path_start "$pkgconfig"
     done
     return 0
@@ -31,6 +32,7 @@ koopa::activate_homebrew_opt_prefix() { # {{{1
     do
         prefix="${opt_prefix}/${name}"
         koopa::assert_is_dir "$prefix"
+        koopa::alert "Activating prefix at '${prefix}'."
         koopa::activate_prefix "$prefix"
     done
     return 0
@@ -51,6 +53,7 @@ koopa::activate_opt_prefix() { # {{{1
     do
         prefix="${opt_prefix}/${name}"
         koopa::assert_is_dir "$prefix"
+        koopa::alert "Activating prefix at '${prefix}'."
         koopa::activate_prefix "$prefix"
     done
     return 0
