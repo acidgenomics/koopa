@@ -42,7 +42,7 @@ koopa::download() { # {{{1
     koopa::assert_is_installed "$curl"
     curl_args=(
         '--create-dirs'
-        '--disable'  # Ignore '~/.curlrc' file.
+        '--disable'  # Ignore the '~/.curlrc' file.
         '--fail'
         '--location'
         '--output' "$file"
