@@ -314,8 +314,8 @@ _koopa_macos_activate_iterm() { # {{{1
     if [ "$iterm_theme" != "$koopa_theme" ] && \
         { [ "$iterm_theme" = 'dark' ] || [ "$iterm_theme" = 'light' ]; }
     then
-        _koopa_alert "Attempting to switch iTerm profile from \
-'${iterm_theme}' to non-default '${koopa_theme}'."
+        _koopa_alert "Attempting to switch iTerm '${iterm_theme}' \
+to non-default '${koopa_theme}' profile."
         _koopa_print "\033]50;SetProfile=${koopa_theme}\a"
         ITERM_PROFILE="$koopa_theme"
     fi
