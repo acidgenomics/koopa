@@ -94,32 +94,21 @@ koopa::install_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    [[ -z "${dict[installer]}" ]] && \
-        dict[installer]="${dict[name]}"
-    # e.g. 'r-devel' to 'r_devel'.
+    [[ -z "${dict[installer]}" ]] && dict[installer]="${dict[name]}"
     dict[function]="$(koopa::snake_case_simple "${dict[installer]}")"
-    # e.g. 'r_devel' to 'install_r_devel'.
     dict[function]="install_${dict[function]}"
-    if [[ -n "${dict[platform]}" ]]
-    then
-        # e.g. 'install_r_devel' to 'linux_install_r_devel'.
+    [[ -n "${dict[platform]}" ]] && \
         dict[function]="${dict[platform]}_${dict[function]}"
-    fi
-    # e.g. 'koopa:::linux_install_r_devel'.
     dict[function]="koopa:::${dict[function]}"
     if ! koopa::is_function "${dict[function]}"
     then
         koopa::stop 'Unsupported command.'
     fi
-    [[ -z "${dict[name_fancy]}" ]] && \
-        dict[name_fancy]="${dict[name]}"
+    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     [[ -z "${dict[version]}" ]] && \
         dict[version]="$(koopa::variable "${dict[name]}")"
-    if koopa::is_macos
-    then
-        koopa::assert_is_installed brew
-        dict[link_app]=0
-    fi
+    # Never link apps into make prefix on macOS.
+    koopa::is_macos && dict[link_app]=0
     dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     dict[make_prefix]="$(koopa::make_prefix)"
     [[ "${dict[reinstall]}" -eq 1 ]] && koopa::sys_rm "${dict[prefix]}"
@@ -129,7 +118,9 @@ koopa::install_app() { # {{{1
 at '${dict[prefix]}'."
         return 0
     fi
-    koopa::install_start "${dict[name_fancy]}" "${dict[version]}" \
+    koopa::install_start \
+        "${dict[name_fancy]}" \
+        "${dict[version]}" \
         "${dict[prefix]}"
     dict[tmp_dir]="$(koopa::tmp_dir)"
     (
