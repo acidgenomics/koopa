@@ -537,40 +537,6 @@ _koopa_activate_local_paths() { # {{{1
     return 0
 }
 
-_koopa_activate_macos_extras() { # {{{1
-    # """
-    # Activate macOS-specific extra settings.
-    # @note Updated 2020-07-05.
-    # """
-    # Improve terminal colors.
-    if [ -z "${CLICOLOR:-}" ]
-    then
-        export CLICOLOR=1
-    fi
-    # Refer to 'man ls' for 'LSCOLORS' section on color designators. #Note that
-    # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
-    if [ -z "${LSCOLORS:-}" ]
-    then
-        export LSCOLORS='Gxfxcxdxbxegedabagacad'
-    fi
-    return 0
-}
-
-_koopa_activate_macos_python() { # {{{1
-    # """
-    # Activate macOS Python binary install.
-    # @note Updated 2020-11-16.
-    # """
-    local minor_version version
-    _koopa_is_macos || return 1
-    [ -z "${VIRTUAL_ENV:-}" ] || return 0
-    version="$(_koopa_variable 'python')"
-    minor_version="$(_koopa_major_minor_version "$version")"
-    _koopa_activate_prefix "/Library/Frameworks/Python.framework/\
-Versions/${minor_version}"
-    return 0
-}
-
 _koopa_activate_nextflow() { # {{{1
     # """
     # Activate Nextflow configuration.
@@ -978,18 +944,6 @@ _koopa_activate_venv() { # {{{1
     return 0
 }
 
-_koopa_activate_visual_studio_code() { # {{{1
-    # """
-    # Activate Visual Studio Code.
-    # @note Updated 2021-03-16.
-    # """
-    local prefix
-    _koopa_is_macos || return 0
-    prefix='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
-    _koopa_add_to_path_start "$prefix"
-    return 0
-}
-
 _koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
@@ -1028,5 +982,30 @@ _koopa_activate_xdg() { # {{{1
         XDG_DATA_DIRS \
         XDG_DATA_HOME \
         XDG_RUNTIME_DIR
+    return 0
+}
+
+_koopa_macos_activate_python() { # {{{1
+    # """
+    # Activate macOS Python binary install.
+    # @note Updated 2020-11-16.
+    # """
+    local minor_version version
+    [ -z "${VIRTUAL_ENV:-}" ] || return 0
+    version="$(_koopa_variable 'python')"
+    minor_version="$(_koopa_major_minor_version "$version")"
+    _koopa_activate_prefix "/Library/Frameworks/Python.framework/\
+Versions/${minor_version}"
+    return 0
+}
+
+_koopa_macos_activate_visual_studio_code() { # {{{1
+    # """
+    # Activate Visual Studio Code.
+    # @note Updated 2021-03-16.
+    # """
+    local prefix
+    prefix='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
+    _koopa_add_to_path_start "$prefix"
     return 0
 }

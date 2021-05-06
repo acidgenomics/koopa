@@ -235,3 +235,41 @@ _koopa_activate_zoxide() { # {{{1
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
+
+_koopa_macos_activate_cli_colors() { # {{{1
+    # """
+    # Activate macOS-specific extra settings.
+    # @note Updated 2020-07-05.
+    # """
+    # Improve terminal colors.
+    if [ -z "${CLICOLOR:-}" ]
+    then
+        export CLICOLOR=1
+    fi
+    # Refer to 'man ls' for 'LSCOLORS' section on color designators. #Note that
+    # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
+    if [ -z "${LSCOLORS:-}" ]
+    then
+        export LSCOLORS='Gxfxcxdxbxegedabagacad'
+    fi
+    return 0
+}
+
+_koopa_macos_activate_iterm() { # {{{1
+    # """
+    # Activate iTerm2 configuration.
+    # @note Updated 2021-05-06.
+    # @seealso
+    # - https://apas.gr/2018/11/dark-mode-macos-safari-iterm-vim/
+    # """
+    [ -z "${ITERM_PROFILE:-}" ] || return 0
+    [ "${TERM_PROGRAM:-}" = 'iTerm.app' ] || return 0
+    if _koopa_macos_is_dark_mode
+    then
+        ITERM_PROFILE='dark'
+    else
+        ITERM_PROFILE='light'
+    fi
+    export ITERM_PROFILE
+    return 0
+}
