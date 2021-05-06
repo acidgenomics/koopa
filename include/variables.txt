@@ -150,7 +150,7 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
 
-hadolint="2.3.0"
+hadolint="2.4.0"
 
 harfbuzz="2.8.1"
 
