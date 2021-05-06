@@ -616,7 +616,10 @@ _koopa_activate_opt_prefix() { # {{{1
         prefix="${opt_prefix}/${name}"
         if [ ! -d "$prefix" ]
         then
-            _koopa_stop "Not installed: '${prefix}'."
+            # NOTE Intentionally not using 'stop' here, to avoid accidental
+            # shell lockout on a remote SSH instance.
+            _koopa_warning "Not installed: '${prefix}'."
+            return 1
         fi
         _koopa_activate_prefix "$prefix"
     done
