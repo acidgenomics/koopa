@@ -1,24 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::activate_homebrew_pkg_config() { # {{{1
-    # """
-    # Activate Homebrew pkg-config for install script.
-    # @note Updated 2021-05-05.
-    # """
-    local name opt_prefix pkgconfig
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed brew
-    opt_prefix="$(koopa::homebrew_prefix)/opt"
-    koopa::assert_is_dir "$opt_prefix"
-    for name in "$@"
-    do
-        pkgconfig="${opt_prefix}/${name}/lib/pkgconfig"
-        koopa::assert_is_dir "$pkgconfig"
-        koopa::add_to_pkg_config_path_start "$pkgconfig"
-    done
-    return 0
-}
-
 koopa::brew_brewfile() { # {{{1
     # """
     # Homebrew Bundle Brewfile path.

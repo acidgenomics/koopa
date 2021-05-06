@@ -28,6 +28,10 @@ koopa:::install_julia() { # {{{1
     # - https://github.com/JuliaLang/julia/blob/master/Make.inc
     # """
     local file jobs name prefix version url
+    if koopa::is_macos
+    then
+        koopa::activate_opt_prefix gfortran
+    fi
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='julia'
@@ -37,10 +41,10 @@ koopa:::install_julia() { # {{{1
     file="${name}-${version}-full.tar.gz"
     url="https://github.com/JuliaLang/${name}/releases/download/\
 v${version}/${file}"
+    koopa::alert_coffee_time
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    koopa::alert_coffee_time
     # If set, this will interfere with internal LLVM build required for
     # Julia. See 'build.md' file for LLVM details.
     unset LLVM_CONFIG
