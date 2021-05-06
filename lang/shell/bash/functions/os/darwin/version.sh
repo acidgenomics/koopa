@@ -30,13 +30,13 @@ koopa::get_macos_app_version() { # {{{1
 koopa::get_homebrew_cask_version() { # {{{1
     # """
     # Get Homebrew Cask version.
-    # @note Updated 2020-12-24.
+    # @note Updated 2021-05-06.
     #
     # @examples koopa::get_homebrew_cask_version gpg-suite
     # # 2019.2
     # """
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed brew
+    koopa::is_installed brew || return 1
     local cask x
     for cask in "$@"
     do

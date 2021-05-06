@@ -53,6 +53,7 @@ _koopa_parent_dir() { # {{{1
     return 0
 }
 
+# FIXME This step is still messing up on macOS with BSD...
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
@@ -71,7 +72,7 @@ _koopa_realpath() { # {{{1
     # - https://stackoverflow.com/questions/3572030/
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
-    local arg x
+    local arg bn dn x
     [ "$#" -gt 0 ] || return 1
     if _koopa_is_installed realpath
     then
@@ -85,7 +86,9 @@ _koopa_realpath() { # {{{1
     else
         for arg in "$@"
         do
-            x="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
+            bn="$(basename "$arg")"
+            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
+            x="${dn}/${bn}"
             _koopa_print "$x"
         done
         return 0
