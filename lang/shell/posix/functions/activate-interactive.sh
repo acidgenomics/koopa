@@ -115,7 +115,6 @@ _koopa_activate_dircolors() { # {{{1
     fi
     if [ -f "$dircolors_file" ]
     then
-        echo "$dircolors_file"  # FIXME
         eval "$("$dircolors" "$dircolors_file")"
     else
         eval "$("$dircolors" -b)"
