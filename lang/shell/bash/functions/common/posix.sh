@@ -504,6 +504,14 @@ koopa::lowercase() { # {{{1
     _koopa_lowercase "$@"
 }
 
+koopa::macos_is_dark_mode() { # {{{1
+    _koopa_macos_is_dark_mode "$@"
+}
+
+koopa::macos_is_light_mode() { # {{{1
+    _koopa_macos_is_light_mode "$@"
+}
+
 koopa::macos_version() { # {{{1
     _koopa_macos_version "$@"
 }
