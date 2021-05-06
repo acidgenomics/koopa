@@ -90,21 +90,36 @@ _koopa_activate_completion() { # {{{1
 _koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2020-11-14.
+    # @note Updated 2021-05-06.
+    #
+    # This will set the 'LD_COLORS' environment variable.
     # """
     [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
-    local dircolors_file dotfiles_prefix
-    _koopa_is_installed dircolors || return 0
+    local dircolors dircolors_file dotfiles_prefix
+    dircolors='dircolors'
+    _koopa_is_macos && _koopa_is_installed gdircolors && dircolors='gdircolors'
+    _koopa_is_installed "$dircolors" || return 0
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
-    # This will set the 'LD_COLORS' environment variable.
     dircolors_file="${dotfiles_prefix}/app/coreutils/dircolors"
+    if _koopa_is_macos
+    then
+        if _koopa_macos_is_dark_mode
+        then
+            # e.g. dracula
+            dircolors_file="${dircolors_file}-dark"
+        elif _koopa_macos_is_light_mode
+        then
+            # e.g. solarized light
+            dircolors_file="${dircolors_file}-light"
+        fi
+    fi
     if [ -f "$dircolors_file" ]
     then
-        eval "$(dircolors "$dircolors_file")"
+        echo "$dircolors_file"  # FIXME
+        eval "$("$dircolors" "$dircolors_file")"
     else
-        eval "$(dircolors -b)"
+        eval "$("$dircolors" -b)"
     fi
-    unset -v dircolors_file
     alias dir='dir --color=auto'
     alias egrep='egrep --color=auto'
     alias fgrep='fgrep --color=auto'
