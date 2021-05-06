@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rename the 'flags' variable.
-
 koopa::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-05-06.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -22,7 +20,7 @@ koopa::install_doom_emacs() { # {{{1
     # - octicons.ttf
     # - weathericons.ttf
     # """
-    local doom emacs_prefix flags install_dir name name_fancy repo
+    local doom emacs_prefix install_args install_dir name name_fancy repo
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed git tee
     name='doom'
@@ -39,13 +37,13 @@ koopa::install_doom_emacs() { # {{{1
         repo='https://github.com/hlissner/doom-emacs'
         git clone "$repo" "$install_dir"
         doom="${install_dir}/bin/doom"
-        flags=(
+        install_args=(
             # > '--no-config'
             # > '--no-install'
             '--no-env'
             '--no-fonts'
         )
-        "$doom" install "${flags[@]}"
+        "$doom" install "${install_args[@]}"
         "$doom" sync
         "$doom" doctor
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
