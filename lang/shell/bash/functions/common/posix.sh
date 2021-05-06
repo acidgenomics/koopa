@@ -8,8 +8,16 @@ koopa::activate_go() { # {{{1
     _koopa_activate_go "$@"
 }
 
+koopa::activate_homebrew_cask_r() { # {{{1
+    _koopa_activate_homebrew_cask_r "$@"
+}
+
 koopa::activate_llvm() { # {{{1
     _koopa_activate_llvm "$@"
+}
+
+koopa::activate_macos_python() { # {{{1
+    _koopa_activate_macos_python "$@"
 }
 
 koopa::activate_openjdk() { # {{{1

@@ -26,6 +26,7 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
+# FIXME Need to inform the user better about sudo password prompt...
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -37,7 +38,15 @@ koopa::install_app() { # {{{1
     local dict link_args pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
-    koopa::is_macos && koopa::reset_minimal_path
+    # Ensure configuration is minimal before proceeding.
+    declare -A conf_bak=(
+        [PATH]="${PATH:-}"
+        [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
+    )
+    PATH='/usr/bin:/bin:/usr/sbin:/sbin'
+    export PATH
+    unset -v PKG_CONFIG_PATH
+    # Use a dictionary approach for storing configuration variables.
     declare -A dict=(
         [installer]=''
         [link_app]=1
@@ -47,6 +56,8 @@ koopa::install_app() { # {{{1
         [reinstall]=0
         [version]=''
     )
+    # Any additional configuration variables (positional arguments) are passed
+    # to the internal installer function below.
     pos=()
     while (("$#"))
     do
@@ -152,6 +163,9 @@ at '${dict[prefix]}'."
     then
         sudo ldconfig || return 1
     fi
+    PATH="${conf_bak[PATH]}"
+    PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
+    export PATH PKG_CONFIG_PATH
     koopa::install_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
 }
