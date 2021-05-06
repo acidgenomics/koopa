@@ -255,6 +255,31 @@ _koopa_macos_activate_cli_colors() { # {{{1
     return 0
 }
 
+_koopa_macos_color_mode() { # {{{1
+    # """
+    # Return the color mode (dark/light) value.
+    # @note Updated 2021-05-06.
+    # """
+    local x
+    if _koopa_macos_is_dark_mode
+    then
+        x='dark'
+    else
+        x='light'
+    fi
+    _koopa_print "$x"
+}
+
+_koopa_macos_activate_color_mode() { # {{{1
+    # """
+    # Activate macOS color mode.
+    # @note Updated 2021-05-06.
+    # """
+    KOOPA_COLOR_MODE="$(_koopa_macos_color_mode)"
+    export KOOPA_COLOR_MODE
+    return 0
+}
+
 _koopa_macos_activate_iterm() { # {{{1
     # """
     # Activate iTerm2 configuration.
@@ -264,12 +289,8 @@ _koopa_macos_activate_iterm() { # {{{1
     # """
     [ -z "${ITERM_PROFILE:-}" ] || return 0
     [ "${TERM_PROGRAM:-}" = 'iTerm.app' ] || return 0
-    if _koopa_macos_is_dark_mode
-    then
-        ITERM_PROFILE='dark'
-    else
-        ITERM_PROFILE='light'
-    fi
+    [ -n "${KOOPA_COLOR_MODE:-}" ] || return 0
+    ITERM_PROFILE="$KOOPA_COLOR_MODE"
     export ITERM_PROFILE
     return 0
 }
