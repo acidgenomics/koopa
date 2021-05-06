@@ -18,7 +18,10 @@ koopa:::install_vim() { # {{{1
     version="${INSTALL_VERSION:?}"
     name='vim'
     jobs="$(koopa::cpu_count)"
-    if koopa::is_macos
+    if koopa::is_linux
+    then
+        koopa::activate_opt_prefix python
+    elif koopa::is_macos
     then
         koopa::activate_macos_python
     fi
