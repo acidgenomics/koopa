@@ -4,7 +4,7 @@
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-05-07.
     # """
     local activate checks dev distro_prefix header_path major_version os_id \
         shopts verbose
@@ -26,7 +26,6 @@ _koopa_bash_header() { # {{{1
         checks=0
         shopts=0
         export KOOPA_ACTIVATE=1
-        export KOOPA_INTERACTIVE=1
     fi
     if [[ "$shopts" -eq 1 ]]
     then

@@ -289,7 +289,7 @@ _koopa_is_installed() { # {{{1
 _koopa_is_interactive() { # {{{1
     # """
     # Is the current shell interactive?
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-07.
     # Consider checking for tmux or subshell here.
     # """
     [ "${KOOPA_INTERACTIVE:-0}" -eq 1 ] && return 0

@@ -93,12 +93,24 @@ _koopa_activate_dircolors() { # {{{1
     #
     # This will set the 'LD_COLORS' environment variable.
     # """
-    local dircolors dircolors_file dotfiles_prefix
+    local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
     _koopa_is_interactive || return 0
+    dir='dir'
     dircolors='dircolors'
+    egrep='egrep'
+    fgrep='fgrep'
+    grep='grep'
+    ls='ls'
+    vdir='vdir'
     if _koopa_is_macos && _koopa_is_installed gdircolors
     then
+        dir='gdir'
         dircolors='gdircolors'
+        egrep='gegrep'
+        fgrep='gfgrep'
+        grep='ggrep'
+        ls='gls'
+        vdir='gvdir'
     fi
     _koopa_is_installed "$dircolors" || return 0
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
@@ -121,12 +133,18 @@ _koopa_activate_dircolors() { # {{{1
     else
         eval "$("$dircolors" -b)"
     fi
-    alias dir='dir --color=auto'
-    alias egrep='egrep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias grep='grep --color=auto'
-    alias ls='ls --color=auto'
-    alias vdir='vdir --color=auto'
+    # shellcheck disable=SC2139
+    alias dir="${dir} --color=auto"
+    # shellcheck disable=SC2139
+    alias egrep="${egrep} --color=auto"
+    # shellcheck disable=SC2139
+    alias fgrep="${fgrep} --color=auto"
+    # shellcheck disable=SC2139
+    alias grep="${grep} --color=auto"
+    # shellcheck disable=SC2139
+    alias ls="${ls} --color=auto"
+    # shellcheck disable=SC2139
+    alias vdir="${vdir} --color=auto"
     return 0
 }
 
