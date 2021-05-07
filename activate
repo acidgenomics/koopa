@@ -398,7 +398,7 @@ __koopa_is_koopa_active() { # {{{1
     # """
     local x
     x="$(type '_koopa_prefix' 2>/dev/null)"
-   __koopa_str_match_fixed "$x" 'function'
+    __koopa_str_match_fixed "$x" 'function'
 }
 
 __koopa_is_linux() { # {{{1
@@ -533,7 +533,7 @@ __koopa_str_match_fixed() { # {{{1
     # @note Updated 2021-05-07.
     # """
     local string pattern
-    string="${1:?}"
+    string="${1:-}"
     pattern="${2:?}"
     __koopa_print "$string" | grep -q "$pattern"
 }
@@ -544,7 +544,7 @@ __koopa_str_match_regex() { # {{{1
     # @note Updated 2021-05-07.
     # """
     local string pattern
-    string="${1:?}"
+    string="${1:-}"
     pattern="${2:?}"
     __koopa_print "$string" | grep -Eq "$pattern"
 }
