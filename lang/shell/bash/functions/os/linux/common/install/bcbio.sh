@@ -3,11 +3,12 @@
 koopa::linux_install_bcbio() { # {{{1
     local version
     version="$(koopa::current_bcbio_version)"
-    koopa::linux_install_app \
+    koopa::install_app \
         --name='bcbio' \
         --name-fancy='bcbio-nextgen' \
-        --version="$version" \
         --no-link \
+        --platform='linux' \
+        --version="$version" \
         "$@"
 }
 

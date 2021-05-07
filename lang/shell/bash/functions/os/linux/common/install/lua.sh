@@ -3,9 +3,10 @@
 # FIXME Can we install on macOS?
 
 koopa::linux_install_lua() { # {{{1
-    koopa::linux_install_app \
+    koopa::install_app \
         --name='lua' \
         --name-fancy='Lua' \
+        --platform='linux' \
         "$@"
 }
 
