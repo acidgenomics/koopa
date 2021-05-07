@@ -3,10 +3,10 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-07.
     # """
     local file
-    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
+    _koopa_is_interactive || return 0
     # > alias perl='unalias perl && _koopa_activate_perl_packages && perl'
     alias br='unalias br && _koopa_activate_broot && br'
     alias conda='unalias conda && _koopa_activate_conda && conda'
@@ -28,7 +28,7 @@ _koopa_activate_aliases() { # {{{1
 _koopa_activate_broot() { # {{{1
     # """
     # Activate broot directory tree utility.
-    # @note Updated 2021-01-01.
+    # @note Updated 2021-05-07.
     #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
@@ -42,8 +42,8 @@ _koopa_activate_broot() { # {{{1
     # @seealso
     # https://github.com/Canop/broot
     # """
-    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     local br_script config_dir nounset
+    _koopa_is_interactive || return 0
     case "$(_koopa_shell)" in
         bash|zsh)
             ;;
@@ -67,10 +67,10 @@ _koopa_activate_broot() { # {{{1
 _koopa_activate_completion() { # {{{1
     # """
     # Activate completion (with TAB key).
-    # @note Updated 2020-11-14.
+    # @note Updated 2021-05-06.
     # """
-    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     local file
+    _koopa_is_interactive || return 0
     case "$(_koopa_shell)" in
         bash|zsh)
             ;;
@@ -86,18 +86,20 @@ _koopa_activate_completion() { # {{{1
     return 0
 }
 
-# NOTE May need to rethink this for dynamic dark/light mode support.
 _koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-07.
     #
     # This will set the 'LD_COLORS' environment variable.
     # """
-    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     local dircolors dircolors_file dotfiles_prefix
+    _koopa_is_interactive || return 0
     dircolors='dircolors'
-    _koopa_is_macos && _koopa_is_installed gdircolors && dircolors='gdircolors'
+    if _koopa_is_macos && _koopa_is_installed gdircolors
+    then
+        dircolors='gdircolors'
+    fi
     _koopa_is_installed "$dircolors" || return 0
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
     dircolors_file="${dotfiles_prefix}/app/coreutils/dircolors"
@@ -131,7 +133,7 @@ _koopa_activate_dircolors() { # {{{1
 _koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2021-04-12.
+    # @note Updated 2021-05-07.
     #
     # Currently Bash and Zsh are supported.
     #
@@ -145,8 +147,8 @@ _koopa_activate_fzf() { # {{{1
     # - Dracula palette:
     #   https://gist.github.com/umayr/8875b44740702b340430b610b52cd182
     # """
-    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     local nounset prefix script shell
+    _koopa_is_interactive || return 0
     if [ -z "${FZF_DEFAULT_COMMAND:-}" ]
     then
         export FZF_DEFAULT_COMMAND='rg --files'
@@ -194,7 +196,7 @@ _koopa_activate_fzf() { # {{{1
 _koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
-    # @note Updated 2020-11-16.
+    # @note Updated 2021-05-07.
     #
     # Note that 'starship.bash' script has unbound PREEXEC_READY.
     # https://github.com/starship/starship/blob/master/src/init/starship.bash
@@ -202,8 +204,8 @@ _koopa_activate_starship() { # {{{1
     # See also:
     # https://starship.rs/
     # """
-    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     local nounset shell
+    _koopa_is_interactive || return 0
     _koopa_is_installed starship || return 0
     shell="$(_koopa_shell)"
     case "$(_koopa_shell)" in
@@ -223,7 +225,7 @@ _koopa_activate_starship() { # {{{1
 _koopa_activate_zoxide() { # {{{1
     # """
     # Activate zoxide.
-    # @note Updated 2020-11-14.
+    # @note Updated 2021-05-07.
     #
     # Highly recommended to use along with fzf.
     #
@@ -233,8 +235,8 @@ _koopa_activate_zoxide() { # {{{1
     # @seealso
     # - https://github.com/ajeetdsouza/zoxide
     # """
-    [ "${KOOPA_INTERACTIVE:-1}" -eq 1 ] || return 0
     local shell nounset
+    _koopa_is_interactive || return 0
     shell="$(_koopa_shell)"
     case "$shell" in
         bash|zsh)
@@ -253,43 +255,24 @@ _koopa_activate_zoxide() { # {{{1
 
 _koopa_macos_activate_cli_colors() { # {{{1
     # """
-    # Activate macOS-specific extra settings.
+    # Activate macOS-specific terminal color settings.
     # @note Updated 2020-07-05.
-    # """
-    # Improve terminal colors.
-    if [ -z "${CLICOLOR:-}" ]
-    then
-        export CLICOLOR=1
-    fi
-    # Refer to 'man ls' for 'LSCOLORS' section on color designators. #Note that
+    #
+    # Refer to 'man ls' for 'LSCOLORS' section on color designators. Note that
     # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
-    if [ -z "${LSCOLORS:-}" ]
-    then
-        export LSCOLORS='Gxfxcxdxbxegedabagacad'
-    fi
+    # """
+    _koopa_is_interactive || return 0
+    [ -z "${CLICOLOR:-}" ] && export CLICOLOR=1
+    [ -z "${LSCOLORS:-}" ] && export LSCOLORS='Gxfxcxdxbxegedabagacad'
     return 0
-}
-
-_koopa_macos_color_mode() { # {{{1
-    # """
-    # Return the color mode (dark/light) value.
-    # @note Updated 2021-05-06.
-    # """
-    local x
-    if _koopa_macos_is_dark_mode
-    then
-        x='dark'
-    else
-        x='light'
-    fi
-    _koopa_print "$x"
 }
 
 _koopa_macos_activate_color_mode() { # {{{1
     # """
     # Activate macOS color mode.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-07.
     # """
+    _koopa_is_interactive || return 0
     KOOPA_COLOR_MODE="$(_koopa_macos_color_mode)"
     export KOOPA_COLOR_MODE
     return 0
@@ -298,7 +281,7 @@ _koopa_macos_activate_color_mode() { # {{{1
 _koopa_macos_activate_iterm() { # {{{1
     # """
     # Activate iTerm2 configuration.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-07.
     #
     # Only attempt to dynamically set dark/light theme if the current iTerm2
     # theme is named either 'dark' or 'light'.
@@ -307,6 +290,7 @@ _koopa_macos_activate_iterm() { # {{{1
     # - https://apas.gr/2018/11/dark-mode-macos-safari-iterm-vim/
     # """
     local iterm_theme koopa_theme
+    _koopa_is_interactive || return 0
     [ "${TERM_PROGRAM:-}" = 'iTerm.app' ] || return 0
     iterm_theme="${ITERM_PROFILE:-}"
     koopa_theme="${KOOPA_COLOR_MODE:-}"

@@ -1,6 +1,8 @@
 #!/bin/sh
 # shellcheck disable=SC3040
 
+# FIXME Should export KOOPA_INTERACTIVE=1 here.
+
 _koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
