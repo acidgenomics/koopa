@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE It appears that ARM support is coming:
+# Anaconda3-2021.04-Linux-aarch64.sh
+
 koopa::install_anaconda() { # {{{1
     # """
     # Install Anaconda.
