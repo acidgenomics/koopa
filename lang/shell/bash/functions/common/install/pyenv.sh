@@ -22,10 +22,14 @@ koopa:::install_pyenv() { # {{{1
 koopa::update_pyenv() { # {{{1
     # """
     # Update pyenv.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-07.
     # """
     local name_fancy
-    koopa::is_installed pyenv || return 0
+    if ! koopa::is_installed pyenv
+    then
+        koopa::alert_not_installed 'pyenv'
+        return 0
+    fi
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     name_fancy='pyenv'

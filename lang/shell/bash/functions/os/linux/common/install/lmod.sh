@@ -9,19 +9,20 @@ koopa::linux_configure_lmod() { # {{{1
     # ln: failed to create symbolic link '/etc/fish/conf.d/z00_lmod.fish':
     # No suchfile or directory
     # """
-    local etc_dir init_dir
+    local etc_dir init_dir name_fancy
     koopa::assert_has_args_le "$#" 1
     koopa::assert_has_sudo
     prefix="${1:-}"
     [[ -z "$prefix" ]] && prefix="$(koopa::lmod_prefix)"
     init_dir="${prefix}/apps/lmod/lmod/init"
+    name_fancy='Lmod'
     if [[ ! -d "$init_dir" ]]
     then
-        koopa::alert_note "Lmod is not installed at '${init_dir}'."
+        koopa::alert_not_installed "$name_fancy" "$init_dir"
         return 0
     fi
     etc_dir='/etc/profile.d'
-    koopa::alert "Updating Lmod configuration in ${etc_dir}."
+    koopa::alert "Updating ${name_fancy} configuration in '${etc_dir}'."
     koopa::mkdir -S "$etc_dir"
     # bash, zsh
     koopa::ln -S "${init_dir}/profile" "${etc_dir}/z00_lmod.sh"
@@ -31,11 +32,11 @@ koopa::linux_configure_lmod() { # {{{1
     if koopa::is_installed fish
     then
         etc_dir='/etc/fish/conf.d'
-        koopa::alert "Updating Fish Lmod configuration in ${etc_dir}."
+        koopa::alert "Updating Fish configuration in '${etc_dir}'."
         koopa::mkdir -S "$etc_dir"
         koopa::ln -S "${init_dir}/profile.fish" "${etc_dir}/z00_lmod.fish"
     fi
-    koopa::alert_success 'Lmod configuration was updated successfully.'
+    koopa::alert_success "${name_fancy} configuration was updated successfully."
     return 0
 }
 

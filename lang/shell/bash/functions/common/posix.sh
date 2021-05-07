@@ -76,6 +76,10 @@ koopa::alert_info() { # {{{1
     _koopa_alert_info "$@"
 }
 
+koopa::alert_not_installed() { # {{{1
+    _koopa_alert_not_installed "$@"
+}
+
 koopa::alert_note() { # {{{1
     _koopa_alert_note "$@"
 }

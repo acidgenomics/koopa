@@ -161,11 +161,11 @@ koopa::install_perlbrew_perl() { # {{{1
 koopa::update_perlbrew() { # {{{1
     # """
     # Update Perlbrew.
-    # @note Updated 2020-11-18.
+    # @note Updated 2021-05-07.
     # """
     if ! koopa::is_installed perlbrew
     then
-        koopa::alert_note 'Perlbrew is not installed.'
+        koopa::alert_not_installed 'perlbrew'
         return 0
     fi
     koopa::assert_has_no_args "$#"
