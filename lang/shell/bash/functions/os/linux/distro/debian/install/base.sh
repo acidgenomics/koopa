@@ -178,9 +178,10 @@ koopa::debian_install_base() { # {{{1
             'libapr1-dev'  # subversion
             'libaprutil1-dev'  # subversion
             'libbison-dev'
-            'libboost-chrono-dev'  # bcl2fastq > cmake
-            'libboost-date-time-dev'  # bcl2fastq > cmake
-            'libboost-dev'
+            'libboost-chrono-dev'  # bcl2fastq
+            'libboost-date-time-dev'  # bcl2fastq
+            'libboost-dev'  # bcl2fastq
+            'libboost-filesystem-dev'  # bcl2fastq
             'libbz2-dev'
             'libcairo2-dev'
             'libclang-dev'  # rstudio-server
