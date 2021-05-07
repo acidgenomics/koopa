@@ -29,6 +29,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
+# 2021.04 is being uploaded on 2021-05-07.
 anaconda="2020.11"
 
 # http://arma.sourceforge.net/download.html
