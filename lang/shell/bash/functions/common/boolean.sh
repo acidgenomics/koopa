@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+koopa::contains() { # {{{1
+    # """
+    # Does an array contain a specific element?
+    # @note Updated 2021-05-07.
+    #
+    # @examples
+    # string='foo'
+    # array=('foo' 'bar')
+    # koopa::contains "$string" "${array[@]}"
+    #
+    # @seealso
+    # https://stackoverflow.com/questions/3685970/
+    # """
+    local string x
+    koopa::assert_has_args_ge "$#" 2
+    string="${1:?}"
+    shift 1
+    for x
+    do
+        [[ "$x" == "$string" ]] && return 0
+    done
+    return 1
+}
+
 koopa::file_match() { # {{{1
     # """
     # Is a string defined in a file?

@@ -79,20 +79,45 @@ koopa:::koopa_header() { # {{{1
     return 0
 }
 
-# NOTE Consider hardening against 'koopa::install_app' here.
 koopa:::koopa_install() { # {{{1
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-05-07.
     # """
-    local name
-    name="${1:-}"
-    if [[ -z "$name" ]]
+    local app app_args apps denylist pos
+    app_args=()
+    pos=()
+    denylist=('app' 'start' 'success')
+    while (("$#"))
+    do
+        case "$1" in
+            --*|-*)
+                app_args+=("$1")
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -eq 0 ]]
     then
         koopa::stop "Missing argument: 'koopa install <ARG>...'."
     fi
-    shift 1
-    koopa:::run_function "install-${name}" "$@"
+    apps=("$@")
+    for app in "${apps[@]}"
+    do
+        if koopa::contains "$app" "${denylist[@]}"
+        then
+            koopa::stop "Invalid argument: '${app}'."
+        fi
+    done
+    for app in "${apps[@]}"
+    do
+        koopa:::run_function "install-${app}" "${app_args[@]}"
+    done
     return 0
 }
 
