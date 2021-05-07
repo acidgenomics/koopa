@@ -52,14 +52,18 @@ koopa::install_lmod() { # {{{1
         "$@"
 }
 
+# FIXME This failed to detect Lua 5.3.
+# To check if it is available for other Lua versions, use --check-oua-versions.
+
 koopa:::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
     # @note Updated 2021-05-07.
     # """
+    set -x
     local apps_dir data_dir file name name2 prefix url version
     koopa::activate_opt_prefix lua luarocks
-    koopa::assert_is_installed luarocks
+    koopa::assert_is_installed lua luarocks
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='lmod'
