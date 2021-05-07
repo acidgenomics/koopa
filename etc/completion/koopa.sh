@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2207
 
 # """
 # Bash/Zsh TAB completion.
@@ -12,7 +13,7 @@
 # - https://stackoverflow.com/questions/5302650/
 # """
 
-koopa::complete() { # {{{1
+_koopa_complete() { # {{{1
     local args cur prev
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -40,7 +41,7 @@ koopa::complete() { # {{{1
                 'delete-cache'
             )
         fi
-        COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+        COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
     elif [[ "$COMP_CWORD" -eq 2 ]]
     then
         case "$prev" in
@@ -51,7 +52,6 @@ koopa::complete() { # {{{1
                     'link'
                     'unlink'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             header)
                 args=(
@@ -60,19 +60,124 @@ koopa::complete() { # {{{1
                     'r'
                     'zsh'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             install)
-                # FIXME DOES THIS WORK INSIDE ZSH?
-
-                # FIXME CALCULATE THE LIST DYNAMICALLY HERE.
                 args=(
-                    ## > 'mike'
-                    ## > 'py-koopa'
+                    'anaconda'
+                    'autoconf'
+                    'automake'
+                    'bash'
+                    'binutils'
+                    'cmake'
+                    'conda'
+                    'coreutils'
+                    'cpufetch'
+                    'curl'
+                    'doom-emacs'
                     'dotfiles'
+                    'emacs'
+                    'ensembl-perl-api'
+                    'findutils'
+                    'fish'
+                    'fzf'
+                    'gawk'
+                    'gcc'
+                    'gdal'
+                    'geos'
+                    'git'
+                    'gnupg'
+                    'go'
+                    'grep'
+                    'groff'
+                    'gsl'
+                    'haskell-stack'
+                    'hdf5'
+                    'homebrew'
+                    'homebrew-bundle'
+                    'homebrew-packages'
+                    'htop'
+                    'julia'
+                    'libevent'
+                    'libtool'
+                    'lua'
+                    'luarocks'
+                    'make'
+                    'miniconda'
+                    'ncurses'
+                    'neofetch'
+                    'neovim'
+                    'openjdk'
+                    'openssh'
+                    'openssl'
+                    'parallel'
+                    'password-store'
+                    'patch'
+                    'perl'
+                    'perl-packages'
+                    'perlbrew'
+                    'perlbrew-perl'
+                    'pkg-config'
+                    'proj'
+                    'pyenv'
+                    'python'
+                    'python-packages'
+                    'r'
+                    'r-cmd-check'
+                    'r-devel'
                     'r-koopa'
+                    'r-packages'
+                    'rbenv'
+                    'rbenv-ruby'
+                    'rmate'
+                    'rsync'
+                    'ruby'
+                    'ruby-packages'
+                    'rust'
+                    'rust-packages'
+                    'sed'
+                    'shellcheck'
+                    'shunit2'
+                    'singularity'
+                    'spacemacs'
+                    'spacevim'
+                    'sqlite'
+                    'subversion'
+                    'taglib'
+                    'tar'
+                    'tex-packages'
+                    'texinfo'
+                    'the-silver-searcher'
+                    'tmux'
+                    'udunits'
+                    'vim'
+                    'wget'
+                    'zsh'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+                if _koopa_is_linux
+                then
+                    args+=(
+                        'aspera-connect'
+                        'aws-cli'
+                        'bcbio'
+                        'bcl2fastq'
+                        'cellranger'
+                        'cloudbiolinux'
+                        'docker-credential-pass'
+                        'julia'
+                        'lmod'
+                        'rstudio-server'
+                        'shiny-server'
+                    )
+                fi
+                if _koopa_is_macos
+                then
+                    args+=(
+                        'homebrew-little-snitch'
+                        'python-framework'
+                        'r-cran-gfortran'
+                        'xcode-clt'
+                    )
+                fi
                 ;;
             list)
                 args=(
@@ -80,26 +185,30 @@ koopa::complete() { # {{{1
                     'dotfiles'
                     'path-priority'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             system)
                 args=(
                     'log'
                     'pull'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             update)
                 args=(
                     '--fast'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             *)
                 ;;
         esac
+        COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
     fi
     return 0
 }
 
-complete -F koopa::complete koopa
+# @seealso
+# - https://github.com/scop/bash-completion/
+# - https://www.gnu.org/software/bash/manual/html_node/
+#     A-Programmable-Completion-Example.html
+
+
+complete -F _koopa_complete koopa
