@@ -16,16 +16,8 @@ koopa::activate_llvm() { # {{{1
     _koopa_activate_llvm "$@"
 }
 
-koopa::activate_macos_python() { # {{{1
-    _koopa_activate_macos_python "$@"
-}
-
 koopa::activate_openjdk() { # {{{1
     _koopa_activate_openjdk "$@"
-}
-
-koopa::activate_opt_prefix() { # {{{1
-    _koopa_activate_opt_prefix "$@"
 }
 
 koopa::activate_perl_packages() { # {{{1
@@ -502,6 +494,10 @@ koopa::local_data_prefix() { # {{{1
 
 koopa::lowercase() { # {{{1
     _koopa_lowercase "$@"
+}
+
+koopa::macos_activate_python() { # {{{1
+    _koopa_macos_activate_python "$@"
 }
 
 koopa::macos_is_dark_mode() { # {{{1

@@ -10,6 +10,7 @@ koopa::download() { # {{{1
     # * --progress-bar
     # * --silent
     # * --stderr
+    # * -q, --disable: Disable '.curlrc' file.
     #
     # Note that '--fail-early' flag is useful, but not supported on old versions
     # of curl (e.g. 7.29.0; RHEL 7).
@@ -41,6 +42,7 @@ koopa::download() { # {{{1
     koopa::assert_is_installed "$curl"
     curl_args=(
         '--create-dirs'
+        '--disable'  # Ignore the '~/.curlrc' file.
         '--fail'
         '--location'
         '--output' "$file"

@@ -27,7 +27,7 @@ koopa:::install_gdal() { # {{{1
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='gdal'
-    jobs="$(koopa::cpu_count)"    
+    jobs="$(koopa::cpu_count)"
     make_prefix="$(koopa::make_prefix)"
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"

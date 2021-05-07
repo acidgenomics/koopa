@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_cloudbiolinux() { # {{{1
-    koopa::linux_install_app \
+    koopa::install_app \
         --name='cloudbiolinux' \
         --name-fancy='CloudBioLinux' \
-        --version='rolling' \
         --no-link \
+        --platform='linux' \
+        --version='rolling' \
         "$@"
 }
 

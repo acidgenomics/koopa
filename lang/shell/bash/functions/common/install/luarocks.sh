@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
 
-# FIXME Can we install on macOS?
-
-koopa::linux_install_luarocks() { # {{{1
-    koopa::linux_install_app \
+koopa::install_luarocks() { # {{{1
+    koopa::install_app \
         --name='luarocks' \
         "$@"
 }
 
-koopa:::linux_install_luarocks() { # {{{1
+koopa:::install_luarocks() { # {{{1
     # """
     # Install Luarocks.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-06.
     # """
     local file name lua_version prefix url version
-    koopa::assert_is_linux
+    if koopa::is_macos
+    then
+        koopa::activate_opt_prefix lua
+    fi
     koopa::assert_is_installed lua
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"

@@ -14,8 +14,13 @@ koopa::linux_configure_lmod() { # {{{1
     local etc_dir init_dir
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
+    # FIXME Rework the init config here??
     init_dir="$(koopa::lmod_prefix)/apps/lmod/lmod/init"
-    [[ -d "$init_dir" ]] || return 0
+    if [[ ! -d "$init_dir" ]]
+    then
+        koopa::alert_note "Lmod is not installed at '${init_dir}'."
+        return 0
+    fi
     etc_dir='/etc/profile.d'
     koopa::alert "Updating Lmod configuration in ${etc_dir}."
     koopa::mkdir -S "$etc_dir"
@@ -33,6 +38,8 @@ koopa::linux_configure_lmod() { # {{{1
     fi
     return 0
 }
+
+# FIXME Rework the installation step here.
 
 koopa::linux_install_lmod() { # {{{1
     # """
