@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rethink this approach.
-
 koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     # """
     # Install bcl2fastq from Fedora/RHEL RPM file.
@@ -21,7 +19,7 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     # e.g. 2.20.0.422 to 2-20-0.
     version2="$(koopa::sub '\.[0-9]+$' '' "$version")"
     version2="$(koopa::kebab_case_simple "$version2")"
-    file="bcl2fastq2-v${version2}-${platform}-${arch2}.zip"
+    file="${name}${major_version}-v${version2}-${platform}-${arch2}.zip"
     url_prefix="http://seq.cloud/install/${name}"
     url="${url_prefix}/rpm/${file}"
     koopa::download "$url"
