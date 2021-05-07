@@ -54,7 +54,6 @@ _koopa_activate() { # {{{1
     _koopa_export_history || return 1
     _koopa_export_hostname || return 1
     _koopa_export_pager || return 1
-    _koopa_export_proj_lib || return 1
     _koopa_export_python || return 1
     _koopa_export_shell || return 1
     _koopa_export_tmpdir || return 1
