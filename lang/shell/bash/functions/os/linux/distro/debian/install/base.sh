@@ -183,6 +183,7 @@ koopa::debian_install_base() { # {{{1
             'libboost-dev'  # bcl2fastq
             'libboost-filesystem-dev'  # bcl2fastq
             'libboost-iostreams-dev'  # bcl2fastq
+            'libboost-program-options-dev'  # bcl2fastq
             'libbz2-dev'
             'libcairo2-dev'
             'libclang-dev'  # rstudio-server
