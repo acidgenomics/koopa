@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# FIXME RETHINK THIS.
 _koopa_export_cpu_count() { # {{{1
     # """
     # Export CPU_COUNT.
@@ -10,6 +11,7 @@ _koopa_export_cpu_count() { # {{{1
     return 0
 }
 
+# FIXME RETHINK THIS.
 _koopa_export_editor() { # {{{1
     # """
     # Export EDITOR.
@@ -22,6 +24,7 @@ _koopa_export_editor() { # {{{1
     return 0
 }
 
+# FIXME RETHINK THIS.
 _koopa_export_git() { # {{{1
     # """
     # Export git configuration.
@@ -35,6 +38,7 @@ _koopa_export_git() { # {{{1
     return 0
 }
 
+# FIXME RETHINK THIS.
 _koopa_export_gnupg() { # {{{1
     # """
     # Export GnuPG settings.
