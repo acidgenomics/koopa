@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_spacevim() {
+koopa::install_spacevim() { # {{{1
     # """
     # Install SpaceVim.
     # @note Updated 2021-05-05.

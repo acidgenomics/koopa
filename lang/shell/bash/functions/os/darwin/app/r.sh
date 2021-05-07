@@ -23,7 +23,7 @@ koopa::macos_install_r_data_table() { # {{{1
         koopa::stop "Makevars already defined at '${makevars_file}'."
     fi
     koopa::install_start "$name"
-    cat << EOF > "$makevars_file"
+    cat << END > "$makevars_file"
 C_LOC=/usr/local/gfortran
 SDK_LOC=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 CC=\$(C_LOC)/bin/gcc -fopenmp
@@ -34,7 +34,7 @@ CPPFLAGS=-I\$(C_LOC)/include -I\$(SDK_LOC)/usr/include
 CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
 CXX11FLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
 LDFLAGS=-L\$(C_LOC)/lib -Wl,-rpath,\$(C_LOC)/lib
-EOF
+END
     koopa::mkdir "$(dirname "$makevars_file")"
     tmp_dir="$(koopa::tmp_dir)"
     (

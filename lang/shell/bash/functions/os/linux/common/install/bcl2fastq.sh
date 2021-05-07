@@ -31,6 +31,7 @@ koopa:::linux_install_bcl2fastq() { # {{{1
     # Install bcl2fastq.
     # @note Updated 2021-05-07.
     #
+    # This uses CMake to install.
     # ARM is not yet supported for this.
     # """
     local arch file jobs major_version name platform prefix url version version2
