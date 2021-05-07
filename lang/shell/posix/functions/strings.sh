@@ -118,6 +118,21 @@ _koopa_lowercase() { # {{{1
     return 0
 }
 
+_koopa_macos_color_mode() { # {{{1
+    # """
+    # Return the color mode (dark/light) value.
+    # @note Updated 2021-05-07.
+    # """
+    local x
+    if _koopa_macos_is_dark_mode
+    then
+        x='dark'
+    else
+        x='light'
+    fi
+    _koopa_print "$x"
+}
+
 _koopa_ngettext() { # {{{1
     # """
     # Translate a text message.
