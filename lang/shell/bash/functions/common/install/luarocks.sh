@@ -12,6 +12,10 @@ koopa:::install_luarocks() { # {{{1
     # @note Updated 2021-05-06.
     # """
     local file name lua_version prefix url version
+    if koopa::is_macos
+    then
+        koopa::activate_opt_prefix lua
+    fi
     koopa::assert_is_installed lua
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
