@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 # NOTE Currently failing to install on Ubuntu 20.
+# # include could not find load file:
+# # CMakeFindDependencyMacro
+# # Unknown CMake command "find_dependency".
 
 koopa::linux_install_bcl2fastq() { # {{{1
     # """
@@ -35,7 +38,6 @@ koopa:::linux_install_bcl2fastq() { # {{{1
     # ARM is not yet supported for this.
     # """
     local arch file jobs major_version name platform prefix url version version2
-    koopa::activate_opt_prefix cmake
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='bcl2fastq'
