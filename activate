@@ -46,13 +46,67 @@ examples:
 END
 }
 
+__koopa_bash_source() { # {{{1
+    # """
+    # Bash source file location.
+    # @note Updated 2021-05-07.
+    # """
+    # shellcheck disable=SC3028,SC3054
+    __koopa_print "${BASH_SOURCE[0]}"
+    return 0
+}
+
+__koopa_check_os() { # {{{1
+    # """
+    # Check that operating system is supported.
+    # @note Updated 2021-05-07.
+    # """
+    case "$(uname -s)" in
+        Darwin|Linux)
+            ;;
+        *)
+            __koopa_warning 'Unsupported operating system.'
+            return 1
+            ;;
+    esac
+    return 0
+}
+
+__koopa_check_zsh() { # {{{1
+    # """
+    # Check that current Zsh configuration is supported.
+    # @note Updated 2021-05-07.
+    #
+    # Zsh currently requires presence of '~/.zshrc' for clean activation.
+    #
+    # Note that sourcing in '/etc/profile' doesn't return script path in
+    # '0', which is commonly recommended online in place of 'BASH_SOURCE'.
+    # '0' in this case instead returns '_src_etc_profile'.
+    #
+    # This approach covers both '_src_etc_profile' and '_src_etc_profile_d'.
+    #
+    # @seealso
+    # - https://stackoverflow.com/a/23259585/3911732
+    [ "${KOOPA_SHELL:?}" = 'zsh' ] || return 0
+    case "$0" in
+        _src_etc_profile*)
+            # Early return when sourced from '/etc/profile.d'.
+            return 1
+            ;;
+        *)
+            export KOOPA_ZSHRC=1
+            ;;
+    esac
+    return 0
+}
+
 __koopa_duration_start() { # {{{1
     # """
     # Start duration timer.
     # @note Updated 2021-05-07.
     # """
     local bc date brew_prefix
-    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
+    [ -z "${KOOPA_TEST:-}" ] || return 0
     if __koopa_is_macos
     then
         if [ -x '/opt/homebrew/bin/brew' ]
@@ -83,7 +137,7 @@ __koopa_duration_stop() { # {{{1
     # @note Updated 2021-05-07.
     # """
     local bc date brew_prefix
-    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
+    [ -z "${KOOPA_TEST:-}" ] || return 0
     if __koopa_is_macos
     then
         if [ -x '/opt/homebrew/bin/brew' ]
@@ -112,12 +166,12 @@ __koopa_duration_stop() { # {{{1
     return 0
 }
 
-__koopa_export_force() { # {{{1
+__koopa_export_koopa_force() { # {{{1
     # """
     # Export 'KOOPA_FORCE' variable.
     # @note Updated 2021-05-07.
     # """
-    [ -z "${KOOPA_FORCE:-}" ] || return 0
+    [ "${KOOPA_FORCE:-0}" -eq 0 ] || return 0
     case "${force:-}" in
         0|false)
             KOOPA_FORCE=0
@@ -134,38 +188,20 @@ __koopa_export_force() { # {{{1
     return 0
 }
 
-__koopa_export_koopa_prefix() { # {{{1
+__koopa_export_koopa_interactive() { # {{{1
     # """
-    # Export 'KOOPA_PREFIX' variable.
+    # Export 'KOOPA_INTERACTIVE' variable.
     # @note Updated 2021-05-07.
     # """
-    local shell
-    case "${KOOPA_SHELL:?}" in
-        bash|zsh)
-            shell="${KOOPA_SHELL:?}"
-            ;;
-        *)
-            shell='posix'
-            ;;
-    esac
-    KOOPA_ACTIVATE_SCRIPT="$("_koopa_activate_source_${shell}")"
-    if [ ! -x "$KOOPA_ACTIVATE_SCRIPT" ]
+    if __koopa_is_interactive || [ "${KOOPA_FORCE:-0}" -eq 1 ]
     then
-        __koopa_warning 'Failed to locate koopa activate script.'
-        return 1
+        KOOPA_INTERACTIVE=1
+        export KOOPA_INTERACTIVE
     fi
-    # Note that running realpath on the file instead of the directory will
-    # properly resolve '~/.config/koopa/activate' symlink case.
-    if [ -L "$KOOPA_ACTIVATE_SCRIPT" ]
-    then
-        KOOPA_ACTIVATE_SCRIPT="$(__koopa_realpath "$KOOPA_ACTIVATE_SCRIPT")"
-    fi
-    KOOPA_PREFIX="$(__koopa_realpath "$(dirname "$KOOPA_ACTIVATE_SCRIPT")")"
-    export KOOPA_ACTIVATE_SCRIPT KOOPA_PREFIX
     return 0
 }
 
-__koopa_export_minimal() { # {{{1
+__koopa_export_koopa_minimal() { # {{{1
     # """
     # Export 'KOOPA_MINIMAL' variable.
     # @note Updated 2021-05-07.
@@ -194,10 +230,91 @@ __koopa_export_minimal() { # {{{1
     return 0
 }
 
-__koopa_export_subshell() { # {{{1
+__koopa_export_koopa_prefix() { # {{{1
+    # """
+    # Export 'KOOPA_PREFIX' variable.
+    # @note Updated 2021-05-07.
+    # """
+    local shell
+    case "${KOOPA_SHELL:?}" in
+        bash|zsh)
+            shell="${KOOPA_SHELL:?}"
+            ;;
+        *)
+            shell='posix'
+            ;;
+    esac
+    KOOPA_ACTIVATE_SCRIPT="$("__koopa_${shell}_source")"
+    if [ ! -x "$KOOPA_ACTIVATE_SCRIPT" ]
+    then
+        __koopa_warning 'Failed to locate koopa activate script.'
+        return 1
+    fi
+    # Note that running realpath on the file instead of the directory will
+    # properly resolve '~/.config/koopa/activate' symlink case.
+    if [ -L "$KOOPA_ACTIVATE_SCRIPT" ]
+    then
+        KOOPA_ACTIVATE_SCRIPT="$(__koopa_realpath "$KOOPA_ACTIVATE_SCRIPT")"
+    fi
+    KOOPA_PREFIX="$(__koopa_realpath "$(dirname "$KOOPA_ACTIVATE_SCRIPT")")"
+    export KOOPA_ACTIVATE_SCRIPT KOOPA_PREFIX
+    return 0
+}
+
+__koopa_export_koopa_shell() { # {{{1
+    # """
+    # Check that current shell is supported, and export 'KOOPA_SHELL' variable.
+    # @note Updated 2021-05-07.
+    # """
+    if [ -n "${BASH_VERSION:-}" ]
+    then
+        KOOPA_SHELL='bash'
+    elif [ -n "${ZSH_VERSION:-}" ]
+    then
+        KOOPA_SHELL='zsh'
+    elif [ -d '/proc' ]
+    then
+        KOOPA_SHELL="$(basename "$(readlink "/proc/${$}/exe")")"
+    else
+        KOOPA_SHELL="$(basename "$(ps -p "${$}" -o 'comm=' | sed 's/^-//g')")"
+    fi
+    case "${KOOPA_SHELL:?}" in
+        bash|dash|zsh)
+            ;;
+        *)
+            if __koopa_is_interactive
+            then
+                >&2 cat << END
+[koopa] WARNING: Failed to activate koopa in the current shell.
+
+Supported POSIX shells: Bash, Dash, Zsh.
+
+  KOOPA_SHELL : ${KOOPA_SHELL:-}
+        SHELL : ${SHELL:-}
+            - : ${-}
+            0 : ${0}
+            \$ : ${$}
+
+Consider switching to Bash:
+> chsh -s /bin/bash ${USER:-}
+or Zsh:
+> chsh -s /bin/zsh ${USER:-}
+END
+            fi
+            return 1
+            ;;
+    esac
+    export KOOPA_SHELL
+    return 0
+}
+
+__koopa_export_koopa_subshell() { # {{{1
     # """
     # Export 'KOOPA_SUBSHELL' variable.
     # @note Updated 2021-05-07.
+    #
+    # This function evaluates whether 'KOOPA_PREFIX' is defined, which should be
+    # the case only inside a subshell.
     # """
     [ -z "${KOOPA_PREFIX:-}" ] && return 0
     KOOPA_SUBSHELL=1
@@ -205,21 +322,258 @@ __koopa_export_subshell() { # {{{1
     return 0
 }
 
-__koopa_skip_check() { # {{{1
+__koopa_export_koopa_test() { # {{{1
     # """
-    # Check whether koopa activation should be skipped.
+    # Export 'KOOPA_TEST' variable.
     # @note Updated 2021-05-07.
     # """
-    [ -z "${KOOPA_FORCE:-}" ] || return 0
-    [ -z "${KOOPA_SKIP:-}" ] || return 1
-    __koopa_is_interactive || return 1
-    __koopa_is_user_named_admin && return 1
-    __koopa_is_user_skip && return 1
-    __koopa_is_koopa_active && return 1
+    [ "${KOOPA_TEST:-0}" -eq 0 ] || return 0
+    case "${test:-}" in
+        0|false)
+            KOOPA_TEST=0
+            ;;
+        1|true)
+            KOOPA_TEST=1
+            ;;
+        *)
+            KOOPA_TEST=0
+            ;;
+    esac
+    export KOOPA_TEST
+    unset -v test
     return 0
 }
 
+__koopa_export_user() { # {{{1
+    # """
+    # Export 'USER' variable.
+    # @note Updated 2021-05-07.
+    # """
+    [ -z "${USER:-}" ] || return 0
+    USER="$(id -un)"
+    export USER
+    return 0
+}
 
+__koopa_header() { # {{{1
+    # """
+    # Shared shell header file location.
+    # @note Updated 2021-05-07.
+    # """
+    local file prefix shell
+    prefix="${KOOPA_PREFIX:?}/lang/shell"
+    shell="${KOOPA_SHELL:?}"
+    [ -d "${prefix}/${shell}" ] || shell='posix'
+    file="${prefix}/${shell}/include/header.sh"
+    [ -f "$file" ] || return 1
+    __koopa_print "$file"
+    return 0
+}
+
+__koopa_is_installed() { # {{{1
+    # """
+    # Are all of the requested programs installed?
+    # @note Updated 2021-05-07.
+    # """
+    local cmd
+    for cmd in "$@"
+    do
+        command -v "$cmd" >/dev/null || return 1
+    done
+    return 0
+}
+
+__koopa_is_interactive() { # {{{1
+    # """
+    # Is the current shell interactive?
+    # @note Updated 2021-05-07.
+    # """
+    __koopa_str_match_fixed "$-" 'i'
+}
+
+__koopa_is_koopa_active() { # {{{1
+    # """
+    # Is koopa active in the current shell session?
+    # @note Updated 2021-05-07.
+    # """
+    local x
+    x="$(type '_koopa_prefix' 2>/dev/null)"
+   __koopa_str_match_fixed "$x" 'function'
+}
+
+__koopa_is_linux() { # {{{1
+    # """
+    # Is the operating system Linux?
+    # @note Updated 2021-05-07.
+    # """
+    [ "$(uname -s)" = 'Linux' ]
+}
+
+__koopa_is_macos() { # {{{1
+    # """
+    # Is the operating system macOS?
+    # @note Updated 2021-05-07.
+    # """
+    [ "$(uname -s)" = 'Darwin' ]
+}
+
+__koopa_is_subshell() { # {{{1
+    # """
+    # Is koopa running inside of a subshell?
+    # @note Updated 2021-05-07.
+    # """
+    [ "${KOOPA_SUBSHELL:-0}" -eq 1 ]
+}
+
+__koopa_is_user_named_admin() { # {{{1
+    # """
+    # Is the current user named 'admin' or begin with 'admin'?
+    # @note Updated 2021-05-07.
+    # """
+    __koopa_str_match_regex "${USER:?}" '^admin'
+}
+
+__koopa_is_user_manual_skip() { # {{{1
+    # """
+    # Should activation be manually skipped for the current user?
+    # @note Updated 2021-05-07?
+    # """
+    [ -n "${KOOPA_USERS_SKIP:-}" ] || return 1
+    __koopa_str_match_regex "${KOOPA_USERS_SKIP:?}" "\b${USER:?}\b"
+}
+
+__koopa_posix_source() { # {{{1
+    # """
+    # POSIX source file location.
+    # @note Updated 2021-05-07.
+    #
+    # POSIX doesn't support file path resolution of sourced dot scripts.
+    # """
+    if [ ! -d "${KOOPA_PREFIX:?}" ] && __koopa_is_interactive
+    then
+        __koopa_warning \
+            'Failed to locate koopa activation script.' \
+            "Required 'KOOPA_PREFIX' variable is unset."
+        return 1
+    fi
+    __koopa_print "${KOOPA_PREFIX:?}/activate"
+    return 0
+}
+
+__koopa_preflight() { # {{{1
+    # """
+    # Run pre-flight checks.
+    # @note Updated 2021-05-07.
+    #
+    # Determine whether koopa activation should proceed in the current shell.
+    # """
+    __koopa_export_user || return 1
+    __koopa_export_koopa_force || return 1
+    [ "${KOOPA_FORCE:-0}" -eq 0 ] || return 0
+    [ "${KOOPA_SKIP:-0}" -eq 0 ] || return 1
+    __koopa_export_koopa_shell || return 1
+    __koopa_is_koopa_active && return 1
+    __koopa_is_interactive || return 1
+    __koopa_is_user_named_admin && return 1
+    __koopa_is_user_manual_skip && return 1
+    __koopa_check_os || return 1
+    # This will intentionally skip for non-Zsh shells.
+    __koopa_check_zsh || return 1
+    return 0
+}
+
+__koopa_print() { # {{{1
+    # """
+    # Print a string.
+    # @note Updated 2021-05-07.
+    # """
+    local string
+    [ "$#" -gt 0 ] || return 1
+    for string in "$@"
+    do
+        printf '%b\n' "$string"
+    done
+    return 0
+}
+
+__koopa_realpath() { # {{{1
+    # """
+    # Resolve file path.
+    # @note Updated 2021-05-07.
+    # """
+    local arg bn dn x
+    [ "$#" -gt 0 ] || return 1
+    if __koopa_is_installed realpath
+    then
+        x="$(realpath "$@")"
+    elif __koopa_is_installed grealpath
+    then
+        x="$(grealpath "$@")"
+    elif __koopa_is_macos
+    then
+        for arg in "$@"
+        do
+            bn="$(basename "$arg")"
+            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
+            x="${dn}/${bn}"
+            __koopa_print "$x"
+        done
+        return 0
+    else
+        x="$(readlink -f "$@")"
+    fi
+    [ -n "$x" ] || return 1
+    __koopa_print "$x"
+    return 0
+}
+
+__koopa_str_match_fixed() { # {{{1
+    # """
+    # Match a fixed pattern in a string.
+    # @note Updated 2021-05-07.
+    # """
+    local string pattern
+    string="${1:?}"
+    pattern="${2:?}"
+    __koopa_print "$string" | grep -q "$pattern"
+}
+
+__koopa_str_match_regex() { # {{{1
+    # """
+    # Match a regular expression pattern in a string.
+    # @note Updated 2021-05-07.
+    # """
+    local string pattern
+    string="${1:?}"
+    pattern="${2:?}"
+    __koopa_print "$string" | grep -Eq "$pattern"
+}
+
+__koopa_warning() { # {{{1
+    # """
+    # Print a warning message to the console.
+    # @note Updated 2021-05-07.
+    # """
+    local string
+    [ "$#" -gt 0 ] || return 1
+    for string in "$@"
+    do
+        printf '%s: %b\n' '[koopa] WARNING' "$string" >&2
+    done
+    return 0
+}
+
+__koopa_zsh_source() { # {{{1
+    # """
+    # Zsh source file location.
+    # @note Updated 2021-05-07.
+    #
+    # Use '%x' not '%N' when called inside function.
+    # https://stackoverflow.com/a/23259585/3911732
+    # """
+    __koopa_print "${(%):-%x}"
+    return 0
+}
 
 
 
@@ -241,13 +595,10 @@ _koopa_activate() { # {{{1
             return 0
             ;;
     esac
-    _koopa_preflight_checks || return 1
-    _koopa_export_user || return 1
-    __koopa_export_force || return 1
-    _koopa_skip_check || return 0
-    __koopa_export_subshell || return 1
-    __koopa_export_minimal || return 1
-    _koopa_export_test || return 1
+    __koopa_preflight || return 0
+    __koopa_export_koopa_minimal || return 1
+    __koopa_export_koopa_subshell || return 1
+    __koopa_export_koopa_test || return 1
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         __koopa_print '[koopa] Test mode enabled.'
@@ -263,7 +614,7 @@ _koopa_activate() { # {{{1
     __koopa_duration_start || return 1
     __koopa_export_koopa_prefix || return 1
     # shellcheck source=/dev/null
-    KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
+    KOOPA_ACTIVATE=1 . "$(__koopa_header)" || return 1
     _koopa_activate_xdg || return 1
     _koopa_activate_standard_paths || return 1
     _koopa_activate_pkg_config || return 1
@@ -362,287 +713,7 @@ _koopa_activate() { # {{{1
         fi
         _koopa_alert_success 'Activation was successful.'
     fi
-    unset -f _koopa_activate_usage
-    unset -v KOOPA_ACTIVATE KOOPA_ACTIVATE_SCRIPT
-    return 0
-}
-
-
-
-
-
-
-
-
-# FIXME RETHINK THIS.
-_koopa_export_test() { # {{{1
-    [ -z "${KOOPA_TEST:-}" ] || return 0
-    case "${test:-}" in
-        0|false)
-            KOOPA_TEST=0
-            ;;
-        1|true)
-            KOOPA_TEST=1
-            ;;
-        *)
-            KOOPA_TEST=0
-            ;;
-    esac
-    export KOOPA_TEST
-    unset -v test
-    return 0
-}
-
-_koopa_activate_header() { # {{{1
-    local x
-    if [ -f "${KOOPA_PREFIX:?}/lang/shell/${KOOPA_SHELL:?}/include/header.sh" ]
-    then
-        x="${KOOPA_PREFIX:?}/lang/shell/${KOOPA_SHELL:?}/include/header.sh"
-    else
-        x="${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
-    fi
-    [ -f "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
-
-_koopa_activate_source_bash() { # {{{1
-    # shellcheck disable=SC3028,SC3054
-    _koopa_print "${BASH_SOURCE[0]}"
-    return 0
-}
-
-_koopa_activate_source_posix() { # {{{1
-    # POSIX doesn't support file path resolution of sourced dot scripts.
-    if [ ! -d "${KOOPA_PREFIX:?}" ] && _koopa_is_interactive
-    then
-        _koopa_warning \
-            'Failed to locate koopa activation script.' \
-            "Required 'KOOPA_PREFIX' variable is unset."
-        return 1
-    fi
-    _koopa_print "${KOOPA_PREFIX:?}/activate"
-    return 0
-}
-
-_koopa_activate_source_zsh() { # {{{1
-    # Use '%x' not '%N' when called inside function.
-    # https://stackoverflow.com/a/23259585/3911732
-    _koopa_print "${(%):-%x}"
-    return 0
-}
-
-
-_koopa_export_user() { # {{{1
-    [ -z "${USER:-}" ] || return 0
-    USER="$(id -un)"
-    export USER
-    return 0
-}
-
-_koopa_is_installed() { # {{{1
-    local cmd
-    for cmd in "$@"
-    do
-        command -v "$cmd" >/dev/null || return 1
-    done
-    return 0
-}
-
-# FIXME RETHINK THIS CHECK.
-_koopa_is_interactive() { # {{{1
-    _koopa_str_match_fixed "$-" 'i'
-}
-
-_koopa_is_koopa_active() { # {{{1
-    local x
-    x="$(type '_koopa_prefix' 2>/dev/null)"
-   _koopa_str_match_fixed "$x" 'function'
-}
-
-_koopa_is_linux() { # {{{1
-    [ "$(uname -s)" = 'Linux' ]
-}
-
-_koopa_is_macos() { # {{{1
-    [ "$(uname -s)" = 'Darwin' ]
-}
-
-_koopa_is_subshell() { # {{{1
-    [ "${KOOPA_SUBSHELL:-0}" -eq 1 ]
-}
-
-_koopa_is_user_named_admin() { # {{{1
-    _koopa_str_match_regex "${USER:?}" '^admin'
-}
-
-_koopa_is_user_skip() { # {{{1
-    [ -z "${KOOPA_USERS_SKIP:-}" ] && return 1
-    _koopa_str_match_regex "${KOOPA_USERS_SKIP:?}" "\b${USER:?}\b"
-}
-
-_koopa_preflight_checks() { # {{{1
-    _koopa_preflight_os_check || return 1
-    _koopa_preflight_shell_check || return 1
-    _koopa_preflight_zsh_check || return 1
-    # > _koopa_preflight_coreutils_check \
-    # >     'basename' \
-    # >     'dirname' \
-    # >     'grep' \
-    # >     || return 1
-    return 0
-}
-
-_koopa_preflight_coreutils_check() { # {{{1
-    [ "$#" -gt 0 ] || return 1
-    if ! _koopa_is_installed "$@"
-    then
-        _koopa_warning "Not all required programs are installed: ${*}."
-        return 1
-    fi
-    return 0
-}
-
-_koopa_preflight_os_check() { # {{{1
-    case "$(uname -s)" in
-        Darwin)
-            ;;
-        Linux)
-            ;;
-        *)
-            _koopa_warning 'Unsupported operating system.'
-            return 1
-            ;;
-    esac
-    return 0
-}
-
-_koopa_preflight_shell_check() { # {{{1
-    # Refer to '_koopa_shell' function for additional details.
-    if [ -n "${BASH_VERSION:-}" ]
-    then
-        KOOPA_SHELL='bash'
-    elif [ -n "${ZSH_VERSION:-}" ]
-    then
-        KOOPA_SHELL='zsh'
-    elif [ -d '/proc' ]
-    then
-        KOOPA_SHELL="$(basename "$(readlink /proc/$$/exe)")"
-    else
-        KOOPA_SHELL="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
-    fi
-    case "$KOOPA_SHELL" in
-        bash|dash|zsh)
-            ;;
-        *)
-            if _koopa_is_interactive
-            then
-                >&2 cat << END
-[koopa] WARNING: Failed to activate koopa in the current shell.
-
-Supported POSIX shells: Bash, Dash, Zsh.
-
-  KOOPA_SHELL : ${KOOPA_SHELL}
-        SHELL : ${SHELL:-}
-            - : ${-}
-            0 : ${0}
-
-Consider switching to bash:
-> chsh -s /bin/bash
-or zsh:
-> chsh -s /bin/zsh
-END
-            fi
-            return 1
-            ;;
-    esac
-    export KOOPA_SHELL
-    return 0
-}
-
-_koopa_preflight_zsh_check() { # {{{1
-    # Zsh currently requires presence of '~/.zshrc' for clean activation.
-    #
-    # Note that sourcing in '/etc/profile' doesn't return script path in
-    # '0', which is commonly recommended online in place of 'BASH_SOURCE'.
-    # '0' in this case instead returns '_src_etc_profile'.
-    #
-    # This approach covers both '_src_etc_profile' and '_src_etc_profile_d'.
-    #
-    # See also:
-    # - https://stackoverflow.com/a/23259585/3911732
-    [ "${KOOPA_SHELL:?}" = 'zsh' ] || return 0
-    case "$0" in
-        _src_etc_profile*)
-            # Early return when sourced from '/etc/profile.d'.
-            return 1
-            ;;
-        *)
-            export KOOPA_ZSHRC=1
-            ;;
-    esac
-    return 0
-}
-
-_koopa_print() { # {{{1
-    local string
-    [ "$#" -gt 0 ] || return 1
-    for string in "$@"
-    do
-        printf '%b\n' "$string"
-    done
-    return 0
-}
-
-_koopa_realpath() { # {{{1
-    local arg bn dn x
-    [ "$#" -gt 0 ] || return 1
-    if _koopa_is_installed realpath
-    then
-        x="$(realpath "$@")"
-    elif _koopa_is_installed grealpath
-    then
-        x="$(grealpath "$@")"
-    elif _koopa_is_macos
-    then
-        for arg in "$@"
-        do
-            bn="$(basename "$arg")"
-            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
-            x="${dn}/${bn}"
-            _koopa_print "$x"
-        done
-        return 0
-    else
-        x="$(readlink -f "$@")"
-    fi
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
-
-
-_koopa_str_match_fixed() { # {{{1
-    local string pattern
-    string="${1:?}"
-    pattern="${2:?}"
-    _koopa_print "$string" | grep -q "$pattern"
-}
-
-_koopa_str_match_regex() { # {{{1
-    local string pattern
-    string="${1:?}"
-    pattern="${2:?}"
-    _koopa_print "$string" | grep -Eq "$pattern"
-}
-
-_koopa_warning() { # {{{1
-    local string
-    [ "$#" -gt 0 ] || return 1
-    for string in "$@"
-    do
-        printf '%s: %b\n' '[koopa] WARNING' "$string" >&2
-    done
+    unset -v KOOPA_ACTIVATE KOOPA_ACTIVATE_SCRIPT KOOPA_INTERACTIVE
     return 0
 }
 
