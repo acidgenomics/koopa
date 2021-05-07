@@ -35,7 +35,7 @@ koopa::linux_configure_lmod() { # {{{1
         koopa::mkdir -S "$etc_dir"
         koopa::ln -S "${init_dir}/profile.fish" "${etc_dir}/z00_lmod.fish"
     fi
-    koopa::alert_success "Lmod configuration was updated successfully."
+    koopa::alert_success 'Lmod configuration was updated successfully.'
     return 0
 }
 

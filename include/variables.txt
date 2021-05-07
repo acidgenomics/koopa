@@ -214,7 +214,7 @@ neofetch="7.1.0"
 neovim="0.4.4"
 
 # https://nodejs.org/
-node="16.0.0"
+node="16.1.0"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -301,7 +301,7 @@ ruby="3.0.1p64"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
-rust="1.51.0"
+rust="1.52.0"
 
 # https://rustup.rs/
 rustup="1.24.1"
