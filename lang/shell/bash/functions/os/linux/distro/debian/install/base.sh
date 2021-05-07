@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-07.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -179,6 +179,8 @@ koopa::debian_install_base() { # {{{1
             'libaprutil1-dev'  # subversion
             'libbison-dev'
             'libboost-chrono-dev'  # bcl2fastq > cmake
+            'libboost-date-time-dev'  # bcl2fastq > cmake
+            'libboost-dev'
             'libbz2-dev'
             'libcairo2-dev'
             'libclang-dev'  # rstudio-server
