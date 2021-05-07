@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME '--reinstall' is not supported.
+
 koopa::install_dotfiles() { # {{{1
     # """
     # Install dot files.

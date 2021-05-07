@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME '--reinstall' is not supported.
+
 koopa::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
