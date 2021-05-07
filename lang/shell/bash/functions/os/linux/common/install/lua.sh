@@ -1,33 +1,36 @@
 #!/usr/bin/env bash
 
-# FIXME Can we install on macOS?
-
-koopa::linux_install_lua() { # {{{1
+koopa::install_lua() { # {{{1
     koopa::install_app \
         --name='lua' \
         --name-fancy='Lua' \
-        --platform='linux' \
         "$@"
 }
 
-koopa:::linux_install_lua() { # {{{1
+koopa:::install_lua() { # {{{1
     # """
     # Install Lua.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-06.
     # @seealso
     # - http://www.lua.org/manual/5.3/readme.html
     # """
-    local file name prefix url version
-    koopa::assert_is_linux
+    local file name platform prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='lua'
     file="${name}-${version}.tar.gz"
     url="http://www.${name}.org/ftp/${file}"
+    if koopa::is_macos
+    then
+        platform='macosx'
+    elif koopa::is_linux
+    then
+        platform='linux'
+    fi
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    make linux
+    make "$platform"
     make test
     make install INSTALL_TOP="$prefix"
     return 0
