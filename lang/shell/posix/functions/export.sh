@@ -14,7 +14,7 @@ _koopa_export_cpu_count() { # {{{1
 _koopa_export_editor() { # {{{1
     # """
     # Export EDITOR.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-07.
     # """
     [ -z "${EDITOR:-}" ] && EDITOR='vim'
     VISUAL="$EDITOR"
@@ -122,32 +122,11 @@ _koopa_export_hostname() { # {{{1
 _koopa_export_pager() { # {{{1
     # """
     # Export PAGER.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-07.
     # """
-    [ -z "${PAGER:-}" ] && PAGER='less'
+    [ -z "${PAGER:-}" ] || return 0
+    PAGER='less'
     export PAGER
-    return 0
-}
-
-_koopa_export_proj_lib() { # {{{1
-    # """
-    # Export PROJ_LIB.
-    # @note Updated 2020-08-05.
-    # """
-    local make_prefix
-    if [ -z "${PROJ_LIB:-}" ]
-    then
-        make_prefix="$(_koopa_make_prefix)"
-        if [ -e "${make_prefix}/share/proj" ]
-        then
-            PROJ_LIB="${make_prefix}/share/proj"
-            export PROJ_LIB
-        elif [ -e '/usr/share/proj' ]
-        then
-            PROJ_LIB='/usr/share/proj'
-            export PROJ_LIB
-        fi
-    fi
     return 0
 }
 
@@ -165,12 +144,13 @@ _koopa_export_python() { # {{{1
 _koopa_export_shell() { # {{{1
     # """
     # Export SHELL.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-07.
     #
     # Some POSIX shells, such as Dash, don't export this by default.
     # Note that this doesn't currently get set by RStudio terminal.
     # """
-    [ -z "${SHELL:-}" ] && SHELL="$(_koopa_which "$(_koopa_shell)")"
+    [ -z "${SHELL:-}" ] || return 0
+    SHELL="$(_koopa_which "$(_koopa_shell)")"
     export SHELL
     return 0
 }
@@ -178,9 +158,10 @@ _koopa_export_shell() { # {{{1
 _koopa_export_tmpdir() { # {{{1
     # """
     # Export TMPDIR.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-07.
     # """
-    [ -z "${TMPDIR:-}" ] && TMPDIR='/tmp'
+    [ -z "${TMPDIR:-}" ] || return 0
+    TMPDIR='/tmp'
     export TMPDIR
     return 0
 }
@@ -188,11 +169,12 @@ _koopa_export_tmpdir() { # {{{1
 _koopa_export_today() { # {{{1
     # """
     # Export TODAY.
-    # @note Updated 2020-11-20.
+    # @note Updated 2021-05-07.
     #
     # Current date. Alternatively, can use '%F' shorthand.
     # """
-    [ -z "${TODAY:-}" ] && TODAY="$(_koopa_today)"
+    [ -z "${TODAY:-}" ] || return 0
+    TODAY="$(_koopa_today)"
     export TODAY
     return 0
 }
@@ -200,9 +182,10 @@ _koopa_export_today() { # {{{1
 _koopa_export_user() { # {{{1
     # """
     # Export USER.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-05-07.
     # """
-    [ -z "${USER:-}" ] && USER="$(_koopa_user)"
+    [ -z "${USER:-}" ] || return 0
+    USER="$(_koopa_user)"
     export USER
     return 0
 }
