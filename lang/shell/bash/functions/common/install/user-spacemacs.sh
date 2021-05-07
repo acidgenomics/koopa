@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE '--reinstall' is not supported.
+
 koopa::install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.
