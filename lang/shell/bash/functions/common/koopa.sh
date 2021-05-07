@@ -253,16 +253,56 @@ koopa:::koopa_system() { # {{{1
 koopa:::koopa_uninstall() { # {{{1
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-05-07.
     # """
-    local name
-    name="${1:-}"
-    if [[ -z "$name" ]]
+    local app app_args apps denylist pos
+    app_args=()
+    pos=()
+    readarray -t denylist <<< "$(koopa:::koopa_uninstall_denylist)"
+    while (("$#"))
+    do
+        case "$1" in
+            --*|-*)
+                app_args+=("$1")
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -eq 0 ]]
     then
-        koopa::stop 'Program name to uninstall is required.'
+        koopa::stop "Missing argument: 'koopa uminstall <ARG>...'."
     fi
-    koopa:::run_function "uninstall-${name}"
+    apps=("$@")
+    for app in "${apps[@]}"
+    do
+        if koopa::contains "$app" "${denylist[@]}"
+        then
+            koopa::stop "Invalid argument: '${app}'."
+        fi
+    done
+    for app in "${apps[@]}"
+    do
+        koopa:::run_function "uninstall-${app}" "${app_args[@]}"
+    done
     return 0
+}
+
+koopa:::koopa_uninstall_denylist() {
+    # """
+    # App names that are intentionally not supported.
+    # @note Updated 2021-05-07.
+    # """
+    local names
+    names=(
+        'start'
+        'success'
+    )
+    koopa::print "${names[@]}"
 }
 
 koopa:::koopa_update() { # {{{1
@@ -270,32 +310,74 @@ koopa:::koopa_update() { # {{{1
     # Parse user input to 'koopa update'.
     # @note Updated 2021-03-01.
     # """
-    local name
-    name="${1:-}"
-    case "$name" in
-        '')
-            name='koopa'
-            ;;
-        system|user)
-            name="koopa-${name}"
-            ;;
-        # Defunct --------------------------------------------------------------
-        --fast)
-            koopa::defunct 'koopa update'
-            ;;
-        --source-ip=*)
-            koopa::defunct 'koopa configure-vm --source-ip=SOURCE_IP'
-            ;;
-        --system)
-            koopa::defunct 'koopa update system'
-            ;;
-        --user)
-            koopa::defunct 'koopa update user'
-            ;;
-    esac
-    [[ "$#" -gt 0 ]] && shift 1
-    koopa:::run_function "update-${name}" "$@"
+    local app app_args apps denylist pos
+    app_args=()
+    pos=()
+    readarray -t denylist <<< "$(koopa:::koopa_update_denylist)"
+    while (("$#"))
+    do
+        case "$1" in
+            # Renamers ---------------------------------------------------------
+            system|user)
+                pos+=("koopa-${name}")
+                ;;
+            # Defunct ----------------------------------------------------------
+            --fast)
+                koopa::defunct 'koopa update'
+                ;;
+            --source-ip=*)
+                koopa::defunct 'koopa configure system --source-ip=SOURCE_IP'
+                ;;
+            --system)
+                koopa::defunct 'koopa update system'
+                ;;
+            --user)
+                koopa::defunct 'koopa update user'
+                ;;
+            # General catchers -------------------------------------------------
+            --*|-*)
+                app_args+=("$1")
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    # Pass to 'koopa::update_koopa' by default.
+    [[ "${#pos[@]}" -eq 0 ]] && pos=('koopa')
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -eq 0 ]]
+    then
+        koopa::stop "Missing argument: 'koopa update <ARG>...'."
+    fi
+    apps=("$@")
+    for app in "${apps[@]}"
+    do
+        if koopa::contains "$app" "${denylist[@]}"
+        then
+            koopa::stop "Invalid argument: '${app}'."
+        fi
+    done
+    for app in "${apps[@]}"
+    do
+        koopa:::run_function "update-${app}" "${app_args[@]}"
+    done
     return 0
+}
+
+koopa:::koopa_update_denylist() {
+    # """
+    # App names that are intentionally not supported.
+    # @note Updated 2021-05-07.
+    # """
+    local names
+    names=(
+        'start'
+        'success'
+    )
+    koopa::print "${names[@]}"
 }
 
 koopa:::run_function() { # {{{1

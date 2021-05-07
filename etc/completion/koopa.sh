@@ -41,6 +41,7 @@ _koopa_complete() { # {{{1
                 'delete-cache'
             )
         fi
+        # Quoting inside the array doesn't work on Bash.
         COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
     elif [[ "$COMP_CWORD" -eq 2 ]]
     then
@@ -192,19 +193,38 @@ _koopa_complete() { # {{{1
                     'pull'
                 )
                 ;;
+            uninstall)
+                args=(
+                    'dotfiles'
+                    'homebrew'
+                    'koopa'
+                    'spacevim'
+                )
+                ;;
             update)
                 args=(
-                    '--fast'
+                    # koopa:
+                    'system'
+                    'user'
+                    # packages:
                     'dotfiles'
                     'emacs'
                     'google-cloud-sdk'
                     'homebrew'
                     'pyenv'
+                    'python-packages'
+                    'r-packages'
+                    'rbenv'
+                    'ruby-packages'
+                    'rust'
+                    'rust-packages'
+                    'tex'
                 )
                 ;;
             *)
                 ;;
         esac
+        # Quoting inside the array doesn't work on Bash.
         COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
     fi
     return 0
