@@ -53,7 +53,6 @@ _koopa_activate() { # {{{1
     _koopa_export_gnupg || return 1
     _koopa_export_history || return 1
     _koopa_export_hostname || return 1
-    _koopa_export_lesspipe || return 1
     _koopa_export_pager || return 1
     _koopa_export_proj_lib || return 1
     _koopa_export_python || return 1
@@ -408,8 +407,11 @@ note:
 END
 }
 
+# FIXME RETHINK THIS.
 _koopa_export_user() { # {{{1
-    [ -z "${USER:-}" ] && USER="$(id -un)" && export USER
+    [ -n "${USER:-}" ] && return 0
+    USER="$(id -un)"
+    export USER
     return 0
 }
 
