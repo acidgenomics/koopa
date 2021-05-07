@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE '--reinstall' is not supported.
+
 koopa::install_spacevim() { # {{{1
     # """
     # Install SpaceVim.
