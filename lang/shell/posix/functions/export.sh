@@ -119,6 +119,19 @@ _koopa_export_hostname() { # {{{1
     return 0
 }
 
+_koopa_export_koopa_opt_prefix() { # {{{1
+    # """
+    # Export 'KOOPA_OPT_PREFIX' variable.
+    # @note Updated 2021-05-07.
+    #
+    # This value is picked up in R configuration (for reticulate).
+    # """
+    [ -z "${KOOPA_OPT_PREFIX:-}" ] || return 0
+    KOOPA_OPT_PREFIX="$(_koopa_opt_prefix)"
+    export KOOPA_OPT_PREFIX
+    return 0
+}
+
 _koopa_export_pager() { # {{{1
     # """
     # Export PAGER.
