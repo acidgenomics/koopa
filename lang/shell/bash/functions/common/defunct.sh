@@ -53,13 +53,6 @@ koopa::info() { # {{{1
     koopa::defunct 'koopa::alert_info'
 }
 
-koopa::install_cellar() { # {{{1
-    # """
-    # @note Updated 2020-11-23.
-    # """
-    koopa::defunct 'koopa::install_app'
-}
-
 koopa::is_darwin() { # {{{1
     # """
     # @note Updated 2020-01-14.
