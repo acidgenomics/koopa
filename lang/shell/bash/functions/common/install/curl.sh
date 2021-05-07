@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Seeing this issue on Ubuntu 20 Docker:
+# FIXME Seeing this issue on Debian 10 Docker:
 # /usr/local/lib/libcurl.so.4: no version information available
 
 koopa::install_curl() { # {{{1
