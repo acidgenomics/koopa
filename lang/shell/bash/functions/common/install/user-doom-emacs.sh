@@ -3,7 +3,7 @@
 koopa::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-07.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -22,7 +22,7 @@ koopa::install_doom_emacs() { # {{{1
     # """
     local doom emacs_prefix install_args install_dir name name_fancy repo
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed git tee
+    koopa::assert_is_installed emacs git tee
     name='doom'
     name_fancy='Doom Emacs'
     emacs_prefix="$(koopa::emacs_prefix)"

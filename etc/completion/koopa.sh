@@ -2,7 +2,7 @@
 
 # """
 # Bash/Zsh TAB completion.
-# Updated 2021-02-15.
+# Updated 2021-05-07.
 #
 # Keep all of these commands in a single file.
 # Sourcing multiple scripts doesn't work reliably.
@@ -12,7 +12,7 @@
 # - https://stackoverflow.com/questions/5302650/
 # """
 
-_koopa_complete() { # {{{1
+koopa::complete() { # {{{1
     local args cur prev
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -63,6 +63,9 @@ _koopa_complete() { # {{{1
                 COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             install)
+                # FIXME DOES THIS WORK INSIDE ZSH?
+
+                # FIXME CALCULATE THE LIST DYNAMICALLY HERE.
                 args=(
                     ## > 'mike'
                     ## > 'py-koopa'
@@ -98,4 +101,5 @@ _koopa_complete() { # {{{1
     fi
     return 0
 }
-complete -F _koopa_complete koopa
+
+complete -F koopa::complete koopa
