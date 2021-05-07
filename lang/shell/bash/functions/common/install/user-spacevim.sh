@@ -43,10 +43,10 @@ koopa::install_spacevim() {
 koopa::uninstall_spacevim() { # {{{1
     # """
     # Uninstall SpaceVim.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-07.
     # """
     local name_fancy prefix
-    name_fancy="SpaceVim"
+    name_fancy='SpaceVim'
     prefix="${HOME}/.SpaceVim"
     if [[ ! -d "$prefix" ]]
     then
