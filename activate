@@ -1,6 +1,230 @@
 #!/bin/sh
 # shellcheck disable=SC3040
 
+__koopa_activate_usage() { # {{{1
+    # """
+    # Koopa activation usage triggered by '--help' flag.
+    # @note Updated 2021-05-07.
+    # """
+    cat << END
+usage: activate [--help|-h]
+
+Activate koopa.
+
+optional variables:
+    force=0 [false]
+        Force activation inside of non-interactive shells.
+        Not generally recommended, but used by koopa installer.
+    minimal=0 [false]
+        Minimal mode.
+        Simply load koopa programs into PATH.
+        Skips additional program and shell configuration.
+        Can enable per user with 'KOOPA_USERS_MINIMAL=user1 user2'.
+    test=0 [false]
+        Enable verbose test mode.
+        Used for Travis CI checks.
+
+details:
+    Currently supports Bash, Zsh, and Dash shells.
+
+    For system-wide configuration on Linux, this should be called inside
+    '/etc/profile.d/zzz-koopa.sh', owned by root.
+
+    Activation of specific users can be skipped via:
+    > export KOOPA_USERS_SKIP='user1 user2'
+
+    Sourcing of POSIX shell scripts via '.' (POSIX) or 'source' (bash, zsh)
+    requires that arguments are passed in at the beginning of the call, rather
+    than as positional arguments or flags. Refer to the working examples.
+
+examples:
+    # Default mode.
+    . /usr/local/koopa/activate
+
+    # Minimal mode.
+    minimal=1 . /usr/local/koopa/activate
+END
+}
+
+__koopa_duration_start() { # {{{1
+    # """
+    # Start duration timer.
+    # @note Updated 2021-05-07.
+    # """
+    local bc date brew_prefix
+    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
+    if __koopa_is_macos
+    then
+        if [ -x '/opt/homebrew/bin/brew' ]
+        then
+            brew_prefix='/opt/homebrew'
+        elif [ -x '/usr/local/bin/brew' ]
+        then
+            brew_prefix='/usr/local'
+        else
+            exit 0
+            return 0
+        fi
+        bc="${brew_prefix}/opt/bc/bin/bc"
+        date="${brew_prefix}/opt/coreutils/libexec/gnubin/date"
+    else
+        bc='bc'
+        date='date'
+    fi
+    __koopa_is_installed "$bc" "$date" || return 0
+    KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
+    export KOOPA_DURATION_START
+    return 0
+}
+
+__koopa_duration_stop() { # {{{1
+    # """
+    # Stop duration timer.
+    # @note Updated 2021-05-07.
+    # """
+    local bc date brew_prefix
+    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
+    if __koopa_is_macos
+    then
+        if [ -x '/opt/homebrew/bin/brew' ]
+        then
+            brew_prefix='/opt/homebrew'
+        elif [ -x '/usr/local/bin/brew' ]
+        then
+            brew_prefix='/usr/local'
+        else
+            return 0
+        fi
+        bc="${brew_prefix}/opt/bc/bin/bc"
+        date="${brew_prefix}/opt/coreutils/libexec/gnubin/date"
+    else
+        bc='bc'
+        date='date'
+    fi
+    __koopa_is_installed "$bc" "$date" || return 0
+    KOOPA_DURATION_STOP="$("$date" -u '+%s%3N')"
+    KOOPA_DURATION="$( \
+        __koopa_print "${KOOPA_DURATION_STOP:?}-${KOOPA_DURATION_START:?}" \
+        | "$bc" \
+    )"
+    export KOOPA_DURATION
+    unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
+    return 0
+}
+
+__koopa_export_force() { # {{{1
+    # """
+    # Export 'KOOPA_FORCE' variable.
+    # @note Updated 2021-05-07.
+    # """
+    [ -z "${KOOPA_FORCE:-}" ] || return 0
+    case "${force:-}" in
+        0|false)
+            KOOPA_FORCE=0
+            ;;
+        1|true)
+            KOOPA_FORCE=1
+            ;;
+        *)
+            KOOPA_FORCE=0
+            ;;
+    esac
+    export KOOPA_FORCE
+    unset -v force
+    return 0
+}
+
+__koopa_export_koopa_prefix() { # {{{1
+    # """
+    # Export 'KOOPA_PREFIX' variable.
+    # @note Updated 2021-05-07.
+    # """
+    local shell
+    case "${KOOPA_SHELL:?}" in
+        bash|zsh)
+            shell="${KOOPA_SHELL:?}"
+            ;;
+        *)
+            shell='posix'
+            ;;
+    esac
+    KOOPA_ACTIVATE_SCRIPT="$("_koopa_activate_source_${shell}")"
+    if [ ! -x "$KOOPA_ACTIVATE_SCRIPT" ]
+    then
+        __koopa_warning 'Failed to locate koopa activate script.'
+        return 1
+    fi
+    # Note that running realpath on the file instead of the directory will
+    # properly resolve '~/.config/koopa/activate' symlink case.
+    if [ -L "$KOOPA_ACTIVATE_SCRIPT" ]
+    then
+        KOOPA_ACTIVATE_SCRIPT="$(__koopa_realpath "$KOOPA_ACTIVATE_SCRIPT")"
+    fi
+    KOOPA_PREFIX="$(__koopa_realpath "$(dirname "$KOOPA_ACTIVATE_SCRIPT")")"
+    export KOOPA_ACTIVATE_SCRIPT KOOPA_PREFIX
+    return 0
+}
+
+__koopa_export_minimal() { # {{{1
+    # """
+    # Export 'KOOPA_MINIMAL' variable.
+    # @note Updated 2021-05-07.
+    # """
+    [ -z "${KOOPA_MINIMAL:-}" ] || return 0
+    case "${minimal:-}" in
+        0|false)
+            KOOPA_MINIMAL=0
+            ;;
+        1|true)
+            KOOPA_MINIMAL=1
+            ;;
+        *)
+            KOOPA_MINIMAL=0
+            ;;
+    esac
+    unset -v minimal
+    if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
+    then
+        if __koopa_str_match_regex "${KOOPA_USERS_MINIMAL:?}" "\b${USER:?}\b"
+        then
+            KOOPA_MINIMAL=1
+        fi
+    fi
+    export KOOPA_MINIMAL
+    return 0
+}
+
+__koopa_export_subshell() { # {{{1
+    # """
+    # Export 'KOOPA_SUBSHELL' variable.
+    # @note Updated 2021-05-07.
+    # """
+    [ -z "${KOOPA_PREFIX:-}" ] && return 0
+    KOOPA_SUBSHELL=1
+    export KOOPA_SUBSHELL
+    return 0
+}
+
+__koopa_skip_check() { # {{{1
+    # """
+    # Check whether koopa activation should be skipped.
+    # @note Updated 2021-05-07.
+    # """
+    [ -z "${KOOPA_FORCE:-}" ] || return 0
+    [ -z "${KOOPA_SKIP:-}" ] || return 1
+    __koopa_is_interactive || return 1
+    __koopa_is_user_named_admin && return 1
+    __koopa_is_user_skip && return 1
+    __koopa_is_koopa_active && return 1
+    return 0
+}
+
+
+
+
+
+
+
 # FIXME Should export KOOPA_INTERACTIVE=1 here.
 # FIXME Need to unset KOOPA_INTERACTIVE in non-interactive subshells...
 #       check that this is working correctly...
@@ -13,20 +237,20 @@ _koopa_activate() { # {{{1
     # """
     case "${1:-}" in
         --help|-h)
-            _koopa_activate_usage
+            __koopa_activate_usage
             return 0
             ;;
     esac
     _koopa_preflight_checks || return 1
     _koopa_export_user || return 1
-    _koopa_activate_export_force || return 1
-    _koopa_activate_skip_check || return 1
-    _koopa_activate_export_subshell || return 1
-    _koopa_activate_export_minimal || return 1
-    _koopa_activate_export_test || return 1
+    __koopa_export_force || return 1
+    _koopa_skip_check || return 0
+    __koopa_export_subshell || return 1
+    __koopa_export_minimal || return 1
+    _koopa_export_test || return 1
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
-        _koopa_print '[koopa] Test mode enabled.'
+        __koopa_print '[koopa] Test mode enabled.'
         set -o errexit
         set -o nounset
         # > set -o xtrace
@@ -36,14 +260,13 @@ _koopa_activate() { # {{{1
             set -o pipefail
         fi
     fi
-    _koopa_activate_export_koopa_prefix || return 1
-    _koopa_activate_duration_start || return 1
+    __koopa_duration_start || return 1
+    __koopa_export_koopa_prefix || return 1
     # shellcheck source=/dev/null
     KOOPA_ACTIVATE=1 . "$(_koopa_activate_header)" || return 1
     _koopa_activate_xdg || return 1
     _koopa_activate_standard_paths || return 1
     _koopa_activate_pkg_config || return 1
-    _koopa_activate_export_opt_prefix || return 1
     _koopa_add_config_link "$(_koopa_prefix)" 'home' || return 1
     _koopa_add_config_link "$(_koopa_prefix)/activate" || return 1
     _koopa_add_config_link "$(_koopa_dotfiles_prefix)" || return 1
@@ -53,12 +276,12 @@ _koopa_activate() { # {{{1
     _koopa_export_gnupg || return 1
     _koopa_export_history || return 1
     _koopa_export_hostname || return 1
+    _koopa_export_koopa_opt_prefix || return 1
     _koopa_export_pager || return 1
     _koopa_export_python || return 1
     _koopa_export_shell || return 1
     _koopa_export_tmpdir || return 1
     _koopa_export_today || return 1
-    _koopa_export_user || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         if _koopa_is_linux
@@ -132,7 +355,7 @@ _koopa_activate() { # {{{1
             _koopa_alert_info 'Locale'
             locale
         fi
-        _koopa_activate_duration_stop || return 1
+        __koopa_duration_stop || return 1
         if [ -n "${KOOPA_DURATION:-}" ]
         then
             _koopa_dl 'duration' "${KOOPA_DURATION:?} ms"
@@ -144,158 +367,16 @@ _koopa_activate() { # {{{1
     return 0
 }
 
-_koopa_activate_dash_extras() { # {{{1
-    export PS1='# '
-    return 0
-}
 
-_koopa_activate_duration_start() { # {{{1
-    local bc date homebrew_prefix
-    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
-    if _koopa_is_macos
-    then
-        if [ -x '/opt/homebrew/bin/brew' ]
-        then
-            homebrew_prefix='/opt/homebrew'
-        elif [ -x '/usr/local/bin/brew' ]
-        then
-            homebrew_prefix='/usr/local'
-        else
-            exit 0
-            return 0
-        fi
-        bc="${homebrew_prefix}/opt/bc/bin/bc"
-        date="${homebrew_prefix}/opt/coreutils/libexec/gnubin/date"
-    else
-        bc='bc'
-        date='date'
-    fi
-    _koopa_is_installed "$bc" "$date" || return 0
-    KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
-    export KOOPA_DURATION_START
-    return 0
-}
 
-_koopa_activate_duration_stop() { # {{{1
-    local bc date homebrew_prefix
-    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
-    if _koopa_is_macos
-    then
-        if [ -x '/opt/homebrew/bin/brew' ]
-        then
-            homebrew_prefix='/opt/homebrew'
-        elif [ -x '/usr/local/bin/brew' ]
-        then
-            homebrew_prefix='/usr/local'
-        else
-            return 0
-        fi
-        bc="${homebrew_prefix}/opt/bc/bin/bc"
-        date="${homebrew_prefix}/opt/coreutils/libexec/gnubin/date"
-    else
-        bc='bc'
-        date='date'
-    fi
-    _koopa_is_installed "$bc" "$date" || return 0
-    KOOPA_DURATION_STOP="$("$date" -u '+%s%3N')"
-    KOOPA_DURATION="$( \
-        _koopa_print "${KOOPA_DURATION_STOP:?}-${KOOPA_DURATION_START:?}" \
-        | "$bc" \
-    )"
-    export KOOPA_DURATION
-    unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
-    return 0
-}
 
-_koopa_activate_export_force() { # {{{1
-    [ -n "${KOOPA_FORCE:-}" ] && return 0
-    case "${force:-}" in
-        0|false)
-            KOOPA_FORCE=0
-            ;;
-        1|true)
-            KOOPA_FORCE=1
-            ;;
-        *)
-            KOOPA_FORCE=0
-            ;;
-    esac
-    export KOOPA_FORCE
-    unset -v force
-    return 0
-}
 
-# FIXME Rethink this.
-_koopa_activate_export_minimal() { # {{{1
-    [ -n "${KOOPA_MINIMAL:-}" ] && return 0
-    case "${minimal:-}" in
-        0|false)
-            KOOPA_MINIMAL=0
-            ;;
-        1|true)
-            KOOPA_MINIMAL=1
-            ;;
-        *)
-            KOOPA_MINIMAL=0
-            ;;
-    esac
-    unset -v minimal
-    if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
-    then
-        if _koopa_str_match_regex "${KOOPA_USERS_MINIMAL:?}" "\b${USER:?}\b"
-        then
-            KOOPA_MINIMAL=1
-        fi
-    fi
-    export KOOPA_MINIMAL
-    return 0
-}
 
-_koopa_activate_export_opt_prefix() { # {{{1
-    # This value is picked up in R configuration (for reticulate).
-    KOOPA_OPT_PREFIX="$(_koopa_opt_prefix)"
-    export KOOPA_OPT_PREFIX
-    return 0
-}
 
-_koopa_activate_export_koopa_prefix() { # {{{1
-    case "${KOOPA_SHELL:?}" in
-        bash)
-            KOOPA_ACTIVATE_SCRIPT="$(_koopa_activate_source_bash)"
-            ;;
-        zsh)
-            KOOPA_ACTIVATE_SCRIPT="$(_koopa_activate_source_zsh)"
-            ;;
-        *)
-            KOOPA_ACTIVATE_SCRIPT="$(_koopa_activate_source_posix)"
-            ;;
-    esac
-    if [ ! -x "$KOOPA_ACTIVATE_SCRIPT" ]
-    then
-        _koopa_warning 'Failed to locate koopa activate script.'
-        return 1
-    fi
-    # Note that running realpath on the file instead of the directory will
-    # properly resolve '~/.config/koopa/activate' case.
-    if [ -L "$KOOPA_ACTIVATE_SCRIPT" ]
-    then
-        KOOPA_ACTIVATE_SCRIPT="$(_koopa_realpath "$KOOPA_ACTIVATE_SCRIPT")"
-    fi
-    KOOPA_PREFIX="$(_koopa_realpath "$(dirname "$KOOPA_ACTIVATE_SCRIPT")")"
-    export KOOPA_ACTIVATE_SCRIPT KOOPA_PREFIX
-    return 0
-}
-
-_koopa_activate_export_subshell() { # {{{1
-    [ -z "${KOOPA_PREFIX:-}" ] && return 0
-    KOOPA_SUBSHELL=1
-    export KOOPA_SUBSHELL
-    return 0
-}
 
 # FIXME RETHINK THIS.
-_koopa_activate_export_test() { # {{{1
-    [ -n "${KOOPA_TEST:-}" ] && return 0
+_koopa_export_test() { # {{{1
+    [ -z "${KOOPA_TEST:-}" ] || return 0
     case "${test:-}" in
         0|false)
             KOOPA_TEST=0
@@ -325,16 +406,6 @@ _koopa_activate_header() { # {{{1
     return 0
 }
 
-_koopa_activate_skip_check() { # {{{1
-    [ -n "${KOOPA_FORCE:-}" ] && return 0
-    [ -n "${KOOPA_SKIP:-}" ] || return 1
-    _koopa_is_interactive || return 1
-    _koopa_is_user_named_admin && return 1
-    _koopa_is_user_skip && return 1
-    _koopa_is_koopa_active && return 1
-    return 0
-}
-
 _koopa_activate_source_bash() { # {{{1
     # shellcheck disable=SC3028,SC3054
     _koopa_print "${BASH_SOURCE[0]}"
@@ -361,54 +432,9 @@ _koopa_activate_source_zsh() { # {{{1
     return 0
 }
 
-_koopa_activate_usage() { # {{{1
-    cat << END
-usage: activate [--help|-h]
 
-Activate koopa.
-
-optional variables:
-    force=0 [false]
-        Force activation inside of non-interactive shells.
-        Not generally recommended, but used by koopa installer.
-    minimal=0 [false]
-        Minimal mode.
-        Simply load koopa programs into PATH.
-        Skips additional program and shell configuration.
-        Can enable per user with 'KOOPA_USERS_MINIMAL=user1 user2'.
-    test=0 [false]
-        Enable verbose test mode.
-        Used for Travis CI checks.
-
-details:
-    Currently supports Bash, Zsh, and Dash shells.
-
-    For system-wide configuration on Linux, this should be called inside
-    '/etc/profile.d/zzz-koopa.sh', owned by root.
-
-    Activation of specific users can be skipped via:
-    > export KOOPA_USERS_SKIP='user1 user2'
-
-    Sourcing of POSIX shell scripts via '.' (POSIX) or 'source' (bash, zsh)
-    requires that arguments are passed in at the beginning of the call, rather
-    than as positional arguments or flags. Refer to the working examples.
-
-examples:
-    # Default mode
-    . /usr/local/koopa/activate
-
-    # Minimal mode
-    minimal=1 . /usr/local/koopa/activate
-
-note:
-    POSIX shell script.
-    Updated 2021-05-07.
-END
-}
-
-# FIXME RETHINK THIS.
 _koopa_export_user() { # {{{1
-    [ -n "${USER:-}" ] && return 0
+    [ -z "${USER:-}" ] || return 0
     USER="$(id -un)"
     export USER
     return 0
@@ -594,6 +620,7 @@ _koopa_realpath() { # {{{1
     _koopa_print "$x"
     return 0
 }
+
 
 _koopa_str_match_fixed() { # {{{1
     local string pattern

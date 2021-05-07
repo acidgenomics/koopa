@@ -60,6 +60,15 @@ _koopa_activate_conda() { # {{{1
     return 0
 }
 
+_koopa_activate_dash_extras() { # {{{1
+    # """
+    # Extra configuration options for Dash shell.
+    # @note Updated 2021-05-07.
+    # """
+    export PS1='# '
+    return 0
+}
+
 _koopa_activate_emacs() { # {{{1
     # """
     # Activate Emacs.
