@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_cellranger() { # {{{1
-    koopa::linux_install_app \
+    koopa::install_app \
         --name='cellranger' \
         --name-fancy='CellRanger' \
         --no-link \
+        --platform='linux' \
         "$@"
 }
 
