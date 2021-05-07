@@ -43,8 +43,14 @@ koopa::linux_configure_lmod() { # {{{1
     return 0
 }
 
-# FIXME Rework the installation step here.
-# FIXME Need to call 'koopa::install_linux_app'.
+koopa::install_lmod() { # {{{1
+    koopa::install_app \
+        --name='lmod' \
+        --name-fancy='Lmod' \
+        --no-link \
+        --platform='linux' \
+        "$@"
+}
 
 koopa:::linux_install_lmod() { # {{{1
     # """
