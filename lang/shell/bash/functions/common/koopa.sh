@@ -91,6 +91,9 @@ koopa:::koopa_install() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            '')
+                shift 1
+                ;;
             --*|-*)
                 app_args+=("$1")
                 shift 1
@@ -262,6 +265,9 @@ koopa:::koopa_uninstall() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            '')
+                shift 1
+                ;;
             --*|-*)
                 app_args+=("$1")
                 shift 1
@@ -335,6 +341,9 @@ koopa:::koopa_update() { # {{{1
                 koopa::defunct 'koopa update user'
                 ;;
             # General catchers -------------------------------------------------
+            '')
+                shift 1
+                ;;
             --*|-*)
                 app_args+=("$1")
                 shift 1
