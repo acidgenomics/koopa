@@ -3,7 +3,7 @@
 koopa::get_macos_app_version() { # {{{1
     # """
     # Extract the version of a macOS application.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-05-07.
     # """
     koopa::assert_has_args "$#"
     koopa::assert_is_installed plutil
@@ -11,10 +11,7 @@ koopa::get_macos_app_version() { # {{{1
     for app in "$@"
     do
         plist="/Applications/${app}.app/Contents/Info.plist"
-        if [[ ! -f "$plist" ]]
-        then
-            koopa::stop "'${app}' is not installed."
-        fi
+        [[ -f "$plist" ]] || return 1
         x="$( \
             plutil -p "$plist" \
                 | grep 'CFBundleShortVersionString' \

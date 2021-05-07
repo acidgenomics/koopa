@@ -223,6 +223,25 @@ _koopa_alert_info() { # {{{1
     return 0
 }
 
+_koopa_alert_not_installed() { # {{{1
+    # """
+    # Note that program is not installed.
+    # @note Updated 2021-05-07.
+    # """
+    local name prefix
+    [ "$#" -gt 0 ] || return 1
+    name="${1:?}"
+    prefix="${2:-}"
+    x="${name} is not installed"
+    if [ -n "$prefix" ]
+    then
+        x="${x} at '${prefix}'"
+    fi
+    x="${x}."
+    _koopa_alert_note "$x"
+    return 0
+}
+
 _koopa_alert_note() { # {{{1
     # """
     # General note.

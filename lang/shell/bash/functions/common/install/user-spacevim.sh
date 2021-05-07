@@ -50,7 +50,7 @@ koopa::uninstall_spacevim() { # {{{1
     prefix="${HOME}/.SpaceVim"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::alert_note "${name_fancy} is not installed at '${prefix}'."
+        koopa::alert_not_installed "$name_fancy" "$prefix"
         return 0
     fi
     koopa::uninstall_start "$name_fancy"

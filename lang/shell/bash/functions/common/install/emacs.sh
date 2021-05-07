@@ -46,7 +46,7 @@ koopa::update_emacs() { # {{{1
     koopa::assert_has_no_args "$#"
     if ! koopa::is_installed emacs
     then
-        koopa::alert_note 'Emacs is not installed.'
+        koopa::alert_not_installed 'emacs'
         return 0
     fi
     if koopa::is_spacemacs_installed

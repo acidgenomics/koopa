@@ -86,14 +86,14 @@ koopa::install_homebrew_packages() { # {{{1
 koopa::uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-05-07.
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
     local file name_fancy tmp_dir url user
     if ! koopa::is_installed brew
     then
-        koopa::alert_note 'Homebrew is not installed.'
+        koopa::alert_not_installed 'Homebrew'
         return 0
     fi
     koopa::assert_has_sudo
