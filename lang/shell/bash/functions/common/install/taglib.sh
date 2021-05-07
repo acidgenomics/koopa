@@ -7,7 +7,7 @@ koopa::install_taglib() { # {{{1
         "$@"
 }
 
-koopa:::install_taglib() {
+koopa:::install_taglib() { # {{{1
     # """
     # Install TagLib.
     # @note Updated 2021-05-05.
