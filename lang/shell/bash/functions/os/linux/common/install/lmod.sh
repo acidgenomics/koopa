@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to call 'koopa::install_linux_app'.
-
+# FIXME Allow the user to pass in the install prefix here...
 koopa::linux_configure_lmod() { # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
@@ -12,8 +11,13 @@ koopa::linux_configure_lmod() { # {{{1
     # No suchfile or directory
     # """
     local etc_dir init_dir
-    koopa::assert_has_no_args "$#"
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_has_sudo
+
+    prefix="${1:-}"
+    [[ -z "$prefix" ]] && prefix="$(koopa::lmod_prefix)"
+
+
     # FIXME Rework the init config here??
     init_dir="$(koopa::lmod_prefix)/apps/lmod/lmod/init"
     if [[ ! -d "$init_dir" ]]
@@ -40,62 +44,36 @@ koopa::linux_configure_lmod() { # {{{1
 }
 
 # FIXME Rework the installation step here.
+# FIXME Need to call 'koopa::install_linux_app'.
 
-koopa::linux_install_lmod() { # {{{1
+koopa:::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-07.
     # """
-    local apps_dir data_dir file name name_fancy prefix tmp_dir url version
-    koopa::assert_has_no_args "$#"
-    koopa::assert_has_no_envs
-    koopa::assert_is_installed lua luarocks
-    version=''
-    while (("$#"))
-    do
-        case "$1" in
-            --version=*)
-                version="${1#*=}"
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
+    local apps_dir data_dir file name name2 prefix url version
+    koopa::activate_opt_prefix lua luarocks
+    koopa::assert_is_installed luarocks
+    prefix="${INSTALL_PREFIX:?}"
+    version="${INSTALL_VERSION:?}"
     name='lmod'
-    name_fancy='Lmod'
-    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-    prefix="$(koopa::app_prefix)/${name}/${version}"
-    if [[ -d "$prefix" ]]
-    then
-        koopa::alert_note "${name_fancy} is already installed at '${prefix}'."
-        return 0
-    fi
-    koopa::install_start "$name_fancy" "$version" "$prefix"
+    name2="$(koopa::capitalize "$name")"
     apps_dir="${prefix}/apps"
     data_dir="${prefix}/moduleData"
-    # Install luarocks dependencies.
+    # Ensure luarocks dependencies are installed.
     eval "$(luarocks path)"
-    luarocks install luaposix
-    luarocks install luafilesystem
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        file="${version}.tar.gz"
-        url="https://github.com/TACC/Lmod/archive/${file}"
-        koopa::download "$url"
-        koopa::extract "$file"
-        koopa::cd "Lmod-${version}"
-        ./configure \
-            --prefix="$apps_dir" \
-            --with-spiderCacheDir="${data_dir}/cacheDir" \
-            --with-updateSystemFn="${data_dir}/system.txt"
-        sudo make install
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    koopa::linux_configure_lmod
-    koopa::link_into_opt "$prefix" "$name"
-    koopa::install_success "$name_fancy"
+    luarocks install luaposix luafilesystem
+    file="${version}.tar.gz"
+    url="https://github.com/TACC/${name2}/archive/${file}"
+    koopa::download "$url"
+    koopa::extract "$file"
+    koopa::cd "${name2}-${version}"
+    ./configure \
+        --prefix="$apps_dir" \
+        --with-spiderCacheDir="${data_dir}/cacheDir" \
+        --with-updateSystemFn="${data_dir}/system.txt"
+    make
+    make install
+    koopa::linux_configure_lmod "$prefix"
     return 0
 }
