@@ -87,7 +87,7 @@ koopa:::koopa_install() { # {{{1
     local app app_args apps denylist pos
     app_args=()
     pos=()
-    denylist=('app' 'start' 'success')
+    readarray -t denylist <<< "$(koopa:::koopa_install_denylist)"
     while (("$#"))
     do
         case "$1" in
@@ -119,6 +119,21 @@ koopa:::koopa_install() { # {{{1
         koopa:::run_function "install-${app}" "${app_args[@]}"
     done
     return 0
+}
+
+koopa:::koopa_install_denylist() {
+    # """
+    # App names that are intentionally not supported.
+    # @note Updated 2021-05-07.
+    # """
+    local names
+    names=(
+        'app'
+        'gnu-app'
+        'start'
+        'success'
+    )
+    koopa::print "${names[@]}"
 }
 
 koopa:::koopa_link() { # {{{1
