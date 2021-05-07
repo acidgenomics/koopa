@@ -72,7 +72,8 @@ koopa:::linux_install_lmod() { # {{{1
     data_dir="${prefix}/moduleData"
     # Ensure luarocks dependencies are installed.
     eval "$(luarocks path)"
-    luarocks install luaposix luafilesystem
+    luarocks install luaposix
+    luarocks install luafilesystem
     file="${version}.tar.gz"
     url="https://github.com/TACC/${name2}/archive/${file}"
     koopa::download "$url"
