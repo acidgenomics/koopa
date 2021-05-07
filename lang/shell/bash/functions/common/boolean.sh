@@ -15,8 +15,6 @@ koopa::contains() { # {{{1
     # """
     local string x
     koopa::assert_has_args_ge "$#" 2
-    # FIXME Seeing an error for configure system at the end of dotfiles
-    # inside Debian 10 docker image? Why is this?
     string="${1:?}"
     shift 1
     for x
