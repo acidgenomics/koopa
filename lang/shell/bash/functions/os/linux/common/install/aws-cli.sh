@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_aws_cli() { # {{{1
-    koopa::linux_install_app \
+    koopa::install_app \
         --name='aws-cli' \
         --name-fancy='AWS CLI' \
-        --version='rolling' \
         --link-include-dirs='bin' \
+        --platform='linux' \
+        --version='rolling' \
         "$@"
 }
 
