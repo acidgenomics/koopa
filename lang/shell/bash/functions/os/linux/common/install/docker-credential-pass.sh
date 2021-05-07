@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_docker_credential_pass() { # {{{1
-    koopa::linux_install_app \
+    koopa::install_app \
         --name='docker-credential-pass' \
+        --platform='linux' \
         "$@"
 }
 

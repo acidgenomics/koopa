@@ -3,9 +3,10 @@
 koopa::install_julia() { # {{{1
     if koopa::is_linux
     then
-        koopa::linux_install_app \
+        koopa::install_app \
             --name='julia' \
             --name-fancy='Julia' \
+            --platform='linux' \
             --installer="julia-binary" \
             "$@"
     else
