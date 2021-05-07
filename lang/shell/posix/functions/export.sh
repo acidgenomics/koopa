@@ -1,17 +1,16 @@
 #!/bin/sh
 
-# FIXME RETHINK THIS.
 _koopa_export_cpu_count() { # {{{1
     # """
     # Export CPU_COUNT.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-07.
     # """
-    [ -z "${CPU_COUNT:-}" ] && CPU_COUNT="$(_koopa_cpu_count)"
+    [ -z "${CPU_COUNT:-}" ] || return 0
+    CPU_COUNT="$(_koopa_cpu_count)"
     export CPU_COUNT
     return 0
 }
 
-# FIXME RETHINK THIS.
 _koopa_export_editor() { # {{{1
     # """
     # Export EDITOR.
@@ -24,35 +23,33 @@ _koopa_export_editor() { # {{{1
     return 0
 }
 
-# FIXME RETHINK THIS.
 _koopa_export_git() { # {{{1
     # """
     # Export git configuration.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-07.
     #
     # @seealso
     # https://git-scm.com/docs/merge-options
     # """
-    [ -z "${GIT_MERGE_AUTOEDIT:-}" ] && GIT_MERGE_AUTOEDIT='no'
+    [ -z "${GIT_MERGE_AUTOEDIT:-}" ] || return 0
+    GIT_MERGE_AUTOEDIT='no'
     export GIT_MERGE_AUTOEDIT
     return 0
 }
 
-# FIXME RETHINK THIS.
 _koopa_export_gnupg() { # {{{1
     # """
     # Export GnuPG settings.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-07.
     #
     # Enable passphrase prompting in terminal.
     # Useful for getting Docker credential store to work.
     # https://github.com/docker/docker-credential-helpers/issues/118
     # """
-    if [ -z "${GPG_TTY:-}" ] && _koopa_is_tty
-    then
-        GPG_TTY="$(tty || true)"
-        export GPG_TTY
-    fi
+    [ -z "${GPG_TTY:-}" ] || return 0
+    _koopa_is_tty || return 0
+    GPG_TTY="$(tty || true)"
+    export GPG_TTY
     return 0
 }
 
@@ -114,33 +111,11 @@ _koopa_export_history() { # {{{1
 _koopa_export_hostname() { # {{{1
     # """
     # Export HOSTNAME.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-07-05.
     # """
-    [ -z "${HOSTNAME:-}" ] && HOSTNAME="$(_koopa_hostname)"
+    [ -z "${HOSTNAME:-}" ] || return 0
+    HOSTNAME="$(_koopa_hostname)"
     export HOSTNAME
-    return 0
-}
-
-_koopa_export_lesspipe() { # {{{
-    # """
-    # Export lesspipe settings.
-    # @note Updated 2020-07-20.
-    #
-    # Preconfigured on some Linux systems at '/etc/profile.d/less.sh'.
-    #
-    # On some older Linux distros:
-    # > eval $(/usr/bin/lesspipe)
-    #
-    # See also:
-    # - https://github.com/wofr06/lesspipe
-    # """
-    local lesspipe
-    lesspipe='lesspipe.sh'
-    if [ -n "${LESSOPEN:-}" ] && _koopa_is_installed "$lesspipe"
-    then
-        export LESSOPEN="|${lesspipe} %s"
-        export LESS_ADVANCED_PREPROCESSOR=1
-    fi
     return 0
 }
 
