@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Currently hitting this error on Ubuntu 20:
-# CMake Error at /usr/lib/x86_64-linux-gnu/cmake/Boost-1.71.0/
-#   BoostConfig.cmake:117 (find_package):
-#   Could not find a package configuration file provided by "boost_chrono"
-#   (requested version 1.71.0) with any of the following names:
-#
-#     boost_chronoConfig.cmake
-#     boost_chrono-config.cmake
-#
-#   Add the installation prefix of "boost_chrono" to CMAKE_PREFIX_PATH or set
-#   "boost_chrono_DIR" to a directory containing one of the above files.  If
-#   "boost_chrono" provides a separate development package or SDK, be sure it
-#   has been installed.
+# NOTE Currently failing to install on Ubuntu 20.
 
 koopa::linux_install_bcl2fastq() { # {{{1
     # """

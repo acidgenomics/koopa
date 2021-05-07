@@ -800,7 +800,7 @@ _koopa_activate_ruby() { # {{{1
 _koopa_activate_rust() { # {{{1
     # """
     # Activate Rust programming language.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-07.
     #
     # Attempt to locate cargo home and source the env script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
