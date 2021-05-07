@@ -3,12 +3,14 @@
 koopa::install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-05-07.
     #
     # Note that master branch is ancient and way behind current codebase.
     # Switching to more recent code on develop branch.
     # """
     local emacs_prefix install_dir name name_fancy
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed emacs git
     name='spacemacs'
     name_fancy='Spacemacs'
     emacs_prefix="$(koopa::emacs_prefix)"
@@ -20,8 +22,6 @@ at '${install_dir}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$install_dir"
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed emacs
     (
         repo="https://github.com/syl20bnr/${name}.git"
         git clone "$repo" "$install_dir"
