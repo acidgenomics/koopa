@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Allow the user to pass in the install prefix here...
 koopa::linux_configure_lmod() { # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-07.
     #
     # Need to check for this case:
     # ln: failed to create symbolic link '/etc/fish/conf.d/z00_lmod.fish':
@@ -13,13 +12,9 @@ koopa::linux_configure_lmod() { # {{{1
     local etc_dir init_dir
     koopa::assert_has_args_le "$#" 1
     koopa::assert_has_sudo
-
     prefix="${1:-}"
     [[ -z "$prefix" ]] && prefix="$(koopa::lmod_prefix)"
-
-
-    # FIXME Rework the init config here??
-    init_dir="$(koopa::lmod_prefix)/apps/lmod/lmod/init"
+    init_dir="${prefix}/apps/lmod/lmod/init"
     if [[ ! -d "$init_dir" ]]
     then
         koopa::alert_note "Lmod is not installed at '${init_dir}'."
@@ -40,6 +35,7 @@ koopa::linux_configure_lmod() { # {{{1
         koopa::mkdir -S "$etc_dir"
         koopa::ln -S "${init_dir}/profile.fish" "${etc_dir}/z00_lmod.fish"
     fi
+    koopa::alert_success "Lmod configuration was updated successfully."
     return 0
 }
 
@@ -51,9 +47,6 @@ koopa::install_lmod() { # {{{1
         --platform='linux' \
         "$@"
 }
-
-# FIXME This failed to detect Lua 5.3.
-# To check if it is available for other Lua versions, use --check-oua-versions.
 
 koopa:::linux_install_lmod() { # {{{1
     # """
@@ -70,7 +63,6 @@ koopa:::linux_install_lmod() { # {{{1
     name2="$(koopa::capitalize "$name")"
     apps_dir="${prefix}/apps"
     data_dir="${prefix}/moduleData"
-    # Ensure luarocks dependencies are installed.
     eval "$(luarocks path)"
     luarocks install luaposix
     luarocks install luafilesystem
@@ -85,6 +77,9 @@ koopa:::linux_install_lmod() { # {{{1
         --with-updateSystemFn="${data_dir}/system.txt"
     make
     make install
-    koopa::linux_configure_lmod "$prefix"
+    if koopa::has_sudo
+    then
+        koopa::linux_configure_lmod "$prefix"
+    fi
     return 0
 }
