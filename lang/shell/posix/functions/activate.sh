@@ -158,7 +158,7 @@ _koopa_activate_gnu() { # {{{1
             mv='gmv'
             rm='grm'
         else
-            _koopa_alert_note "Homebrew 'coreutils' is not installed."
+            _koopa_alert_not_installed 'Homebrew coreutils'
             harden_coreutils=0
         fi
         if [ -d "${opt_prefix}/findutils" ]
@@ -166,42 +166,42 @@ _koopa_activate_gnu() { # {{{1
             alias bsdfind='/usr/bin/find'
             alias find='gfind'
         else
-            _koopa_alert_note "Homebrew 'findutils' is not installed."
+            _koopa_alert_not_installed 'Homebrew findutils'
         fi
         if [ -d "${opt_prefix}/gnu-sed" ]
         then
             alias bsdsed='/usr/bin/sed'
             alias sed='gsed'
         else
-            _koopa_alert_note "Homebrew 'gnu-sed' is not installed."
+            _koopa_alert_not_installed 'Homebrew gnu-sed'
         fi
         if [ -d "${opt_prefix}/gnu-tar" ]
         then
             alias bsdtar='/usr/bin/tar'
             alias tar='gtar'
         else
-            _koopa_alert_note "Homebrew 'gnu-tar' is not installed."
+            _koopa_alert_not_installed 'Homebrew gnu-tar'
         fi
         if [ -d "${opt_prefix}/grep" ]
         then
             alias bsdgrep='/usr/bin/grep'
             alias grep='ggrep'
         else
-            _koopa_alert_note "Homebrew 'grep' is not installed."
+            _koopa_alert_not_installed 'Homebrew grep'
         fi
         if [ -d "${opt_prefix}/make" ]
         then
             alias bsdmake='/usr/bin/make'
             alias make='gmake'
         else
-            _koopa_alert_note "Homebrew 'make' is not installed."
+            _koopa_alert_not_installed 'Homebrew make'
         fi
         if [ -d "${opt_prefix}/man-db" ]
         then
             alias bsdman='/usr/bin/man'
             alias man='gman'
         else
-            _koopa_alert_note "Homebrew 'man-db' is not installed."
+            _koopa_alert_not_installed 'Homebrew man-db'
         fi
     fi
     if [ "$harden_coreutils" -eq 1 ]

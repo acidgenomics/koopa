@@ -195,6 +195,11 @@ _koopa_complete() { # {{{1
             update)
                 args=(
                     '--fast'
+                    'dotfiles'
+                    'emacs'
+                    'google-cloud-sdk'
+                    'homebrew'
+                    'pyenv'
                 )
                 ;;
             *)
