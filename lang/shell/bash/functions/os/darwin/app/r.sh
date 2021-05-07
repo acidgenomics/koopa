@@ -41,7 +41,7 @@ END
         koopa::cd "$tmp_dir"
         koopa::download_cran_latest "$name"
         tar -xzvf "${name}_"*'.tar.gz'
-        cd "$name" || return 1
+        koopa::cd "$name" || return 1
         cat "$makevars_file"
         R CMD INSTALL .
     )
