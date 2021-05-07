@@ -566,32 +566,6 @@ _koopa_activate_openjdk() { # {{{1
     return 0
 }
 
-_koopa_activate_opt_prefix() { # {{{1
-    # """
-    # Activate koopa opt prefix.
-    # @note Updated 2021-05-06.
-    #
-    # @examples
-    # _koopa_activate_opt_prefix proj gdal
-    # """
-    local name opt_prefix prefix
-    [ "$#" -gt 0 ] || return 1
-    opt_prefix="$(_koopa_opt_prefix)"
-    for name in "$@"
-    do
-        prefix="${opt_prefix}/${name}"
-        if [ ! -d "$prefix" ]
-        then
-            # NOTE Intentionally not using 'stop' here, to avoid accidental
-            # shell lockout on a remote SSH instance.
-            _koopa_warning "Not installed: '${prefix}'."
-            return 1
-        fi
-        _koopa_activate_prefix "$prefix"
-    done
-    return 0
-}
-
 _koopa_activate_perl_packages() { # {{{1
     # """
     # Activate Perl local library.

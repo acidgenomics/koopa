@@ -55,13 +55,3 @@ koopa::linux_find_app_symlinks() { # {{{1
     done
     return 0
 }
-
-koopa::linux_install_app() { # {{{1
-    # """
-    # Install a Linux-specific application.
-    # @note Updated 2021-05-05.
-    # """
-    koopa::install_app --platform='linux' "$@"
-    return 0
-}
-
