@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::sam_to_bam() { # {{{1
+koopa::convert_sam_to_bam() { # {{{1
     # """
     # Convert multiple SAM files in a directory to BAM files.
     # @note Updated 2020-08-13.
