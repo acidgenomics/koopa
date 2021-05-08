@@ -68,15 +68,14 @@ koopa::cp() { # {{{1
 koopa::df() { # {{{1
     # """
     # Human friendlier version of df.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-08.
     # """
     koopa::assert_is_installed df
     df \
         --portability \
         --print-type \
         --si \
-        "$@" \
-        | sort
+        "$@"
     return 0
 }
 
