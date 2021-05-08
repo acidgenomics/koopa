@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::autopad_samples() { # {{{1
+koopa::autopad_zeros() { # {{{1
     # """
-    # Autopad samples.
-    # @note Updated 2020-07-08.
+    # Autopad zeroes in sample names.
+    # @note Updated 2021-05-08.
     # """
     local files newname num padwidth oldname pos prefix stem
     koopa::assert_has_args "$#"

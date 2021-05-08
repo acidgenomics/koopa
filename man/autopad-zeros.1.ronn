@@ -1,8 +1,8 @@
-# autopad-samples(1) -- autopad sample file names that begin with a number
+# autopad-zeros(1) -- autopad sample file names that begin with a number
 
 ## SYNOPSIS
 
-`autopad-samples` `--prefix`="sample" `--pad-width`=2 <file>...
+`autopad-zeros` `--prefix`="sample" `--pad-width`=2 <file>...
 
 ## DESCRIPTION
 
@@ -27,7 +27,7 @@ valid name issues in R. See 'make.names()' for details.
 
 ## EXAMPLES
 
-    $ autopad-samples --prefix='sample' --padwidth=2 *.fastq.gz
+    $ autopad-zeros --prefix='sample' --padwidth=2 *.fastq.gz
 
     Input:
     ## 1-dmso-A-R1.fastq.qz
