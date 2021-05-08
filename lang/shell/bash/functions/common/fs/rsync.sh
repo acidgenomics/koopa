@@ -83,16 +83,17 @@ koopa::rsync() { # {{{1
 koopa::rsync_cloud() { # {{{1
     # """
     # Rsync to cloud object storage buckets, such as AWS.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-08.
     # """
     local flags
     koopa::assert_has_no_flags "$@"
     koopa::assert_has_args_eq "$#" 2
+    koopa::assert_has_sudo
     flags=(
-        # '--exclude=bam'
-        # '--exclude=cram'
-        # '--exclude=fastq'
-        # '--exclude=sam'
+        # > '--exclude=bam'
+        # > '--exclude=cram'
+        # > '--exclude=fastq'
+        # > '--exclude=sam'
         '--exclude=.Rproj.user'
         '--exclude=.git'
         '--exclude=.gitignore'
@@ -108,7 +109,7 @@ koopa::rsync_cloud() { # {{{1
 koopa::rsync_ignore() { # {{{1
     # """
     # Run rsync with automatic ignore.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-08.
     #
     # @seealso
     # https://stackoverflow.com/questions/13713101/
@@ -117,9 +118,9 @@ koopa::rsync_ignore() { # {{{1
     koopa::assert_has_no_flags "$@"
     koopa::assert_has_args_eq "$#" 2
     flags=(
-        # '--exclude=.*/'
-        # '--exclude=/.git'
-        # '--filter=:- .gitignore'
+        # > '--exclude=.*/'
+        # > '--exclude=/.git'
+        # > '--filter=:- .gitignore'
         '--archive'
         '--exclude=.*'
         '--filter=dir-merge,- .gitignore'
