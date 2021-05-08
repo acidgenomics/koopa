@@ -59,41 +59,6 @@ koopa::configure_r() { # {{{1
     return 0
 }
 
-koopa::deploy_shiny_app() { # {{{
-    # """
-    # Deploy a Shiny app to shinyapps.io
-    # @note Updated 2021-04-29.
-    #
-    # This step currently doesn't support custom drat repos
-    # (e.g. our Acid Genomics repo) on shinyapps.io.
-    # """
-    local app_dir r
-    app_dir="${1:-.}"
-    r="$(koopa::r)"
-    koopa::assert_is_installed "$r"
-    koopa::assert_is_dir "$app_dir"
-    app_dir="$(koopa::realpath "$app_dir")"
-    app_name="$(koopa::basename "$app_dir")"
-    app_name="$(koopa::sub 'r-shiny' '' "$app_name")"
-    koopa::h1 "Deploying '${app_name}' from '${app_dir}'."
-    "$r" \
-        --no-restore \
-        --no-save \
-        --quiet \
-        -e " \
-            options(repos = append( \
-                x = BiocManager::repositories(), \
-                values = c('AcidGenomics' = 'https://r.acidgenomics.com') \
-            )); \
-            print(getOption('repos')); \
-            rsconnect::deployApp( \
-                appDir = '${app_dir}', \
-                appName = '${app_name}' \
-            ) \
-        "
-    return 0
-}
-
 koopa::drat() { # {{{
     # """
     # Add R package to drat repository.
