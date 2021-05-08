@@ -208,18 +208,22 @@ koopa::git_last_commit_remote() { # {{{1
     koopa::print "$x"
 }
 
-koopa::git_master_to_main() { # {{{1
+koopa::git_rename_master_to_main() { # {{{1
     # """
-    # Change default branch from "master" to "main".
-    # @note Updated 2021-04-08.
+    # Rename default branch from "master" to "main".
+    # @note Updated 2021-05-08.
     # """
+    local new old origin
     koopa::assert_has_no_args "$#"
     koopa::is_git || return 1
     koopa::is_installed git || return 1
-    git branch -m master main
-    git fetch origin
-    git branch -u origin/main main
-    git remote set-head origin -a
+    origin='origin'
+    old='master'
+    new='main'
+    git branch -m "$old" "$new"
+    git fetch "$origin"
+    git branch -u "${origin}/${new}" "$new"
+    git remote set-head "$origin" -a
     return 0
 }
 
