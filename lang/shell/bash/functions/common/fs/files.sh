@@ -305,15 +305,38 @@ koopa::ensure_newline_at_end_of_file() { # {{{1
 koopa::file_count() { # {{{1
     # """
     # Return number of files.
-    # @note Updated 2020-07-11.
+    # @note Updated 2021-05-08.
+    #
+    # Intentionally doesn't perform this search recursively.
     #
     # Alternate approach:
     # > ls -1 "$prefix" | wc -l
     # """
     local prefix x
     koopa::assert_is_installed find wc
-    prefix="${1:?}"
-    x="$(find "$prefix" -mindepth 1 -type f -printf '.' | wc -c)"
+    prefix="${1:-.}"
+    koopa::assert_is_dir "$prefix"
+    if koopa::is_installed fd
+    then
+        x="$( \
+            fd \
+                --max-depth 1 \
+                --min-depth 1 \
+                --no-ignore-vcs \
+                --type f \
+                "$prefix" \
+            | wc -l \
+        )"
+    else
+        x="$( \
+            find "$prefix" \
+                -maxdepth 1 \
+                -mindepth 1 \
+                -type f \
+                -printf '.' \
+            | wc -c \
+        )"
+    fi
     koopa::print "$x"
     return 0
 }
