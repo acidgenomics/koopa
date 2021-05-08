@@ -29,7 +29,7 @@ koopa::find_app_version() { # {{{1
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-08.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -37,14 +37,6 @@ koopa::install_app() { # {{{1
     local dict link_args pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
-    # Ensure configuration is minimal before proceeding.
-    declare -A conf_bak=(
-        [PATH]="${PATH:-}"
-        [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
-    )
-    PATH='/usr/bin:/bin:/usr/sbin:/sbin'
-    export PATH
-    unset -v PKG_CONFIG_PATH
     # Use a dictionary approach for storing configuration variables.
     declare -A dict=(
         [installer]=''
@@ -136,6 +128,18 @@ at '${dict[prefix]}'."
         "${dict[name_fancy]}" \
         "${dict[version]}" \
         "${dict[prefix]}"
+    # Ensure configuration is minimal before proceeding.
+    declare -A conf_bak=(
+        [PATH]="${PATH:-}"
+        [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
+    )
+    PATH='/usr/bin:/bin:/usr/sbin:/sbin'
+    export PATH
+    unset -v PKG_CONFIG_PATH
+    if koopa::is_shared_install && koopa::is_installed ldconfig
+    then
+        sudo ldconfig || return 1
+    fi
     dict[tmp_dir]="$(koopa::tmp_dir)"
     (
         koopa::cd "${dict[tmp_dir]}"
