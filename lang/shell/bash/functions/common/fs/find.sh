@@ -10,10 +10,11 @@ koopa::find_and_move_in_sequence() { # {{{1
     return 0
 }
 
+# FIXME NEED TO ENSURE WE'RE USING GNU SED HERE...
 koopa::find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-08.
     #
     # Parameterized, supporting multiple files.
     #
@@ -21,16 +22,21 @@ koopa::find_and_replace_in_files() { # {{{1
     # by default on macOS.
     # https://stackoverflow.com/questions/4247068/
     # """
-    local file from to
+    local file from sed to
     koopa::assert_has_args_ge "$#" 3
     from="${1:?}"
     to="${2:?}"
     shift 2
-    koopa::h1 "Replacing '${from}' with '${to}' in ${#} files."
+    sed='sed'
+    koopa::is_macos && sed='gsed'
+    koopa::assert_is_installed "$sed"
+    koopa::alert "Replacing '${from}' with '${to}' in ${#} files."
     if { \
-        koopa::str_match "${from}" '/' && ! koopa::str_match "${from}" '\/'; \
+        koopa::str_match "${from}" '/' && \
+        ! koopa::str_match "${from}" '\/'; \
     } || { \
-        koopa::str_match "${to}" '/' && ! koopa::str_match "${to}" '\/'; \
+        koopa::str_match "${to}" '/' && \
+        ! koopa::str_match "${to}" '\/'; \
     }
     then
         koopa::stop 'Unescaped slash detected.'
@@ -39,7 +45,7 @@ koopa::find_and_replace_in_files() { # {{{1
     do
         [[ -f "$file" ]] || return 1
         koopa::alert_info "$file"
-        sed -i "s/${from}/${to}/g" "$file"
+        "$sed" -i "s/${from}/${to}/g" "$file"
     done
     return 0
 }
