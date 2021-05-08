@@ -397,6 +397,10 @@ koopa::line_count() { # {{{1
 }
 
 koopa::md5sum_check_to_new_md5_file() { # {{{1
+    # """
+    # Perform md5sum check on specified files to a new log file.
+    # @note Updated 2021-05-08.
+    # """
     local datetime log_file
     koopa::assert_has_args "$#"
     datetime="$(koopa::datetime)"
@@ -406,8 +410,12 @@ koopa::md5sum_check_to_new_md5_file() { # {{{1
 }
 
 koopa::nfiletypes() { # {{{1
+    # """
+    # Return the number of file types in a specific directory.
+    # @note Updated 2021-05-08.
+    # """
     local dir
-    koopa::assert_has_args_ne "$#" 1
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find
     dir="${1:-.}"
     find "$dir" \
@@ -422,6 +430,10 @@ koopa::nfiletypes() { # {{{1
 }
 
 koopa::reset_permissions() { # {{{1
+    # """
+    # Reset default permissions on a specified directory recursively.
+    # @note Updated 2021-05-08.
+    # """
     local dir group user
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
