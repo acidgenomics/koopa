@@ -136,14 +136,14 @@ koopa::git_default_branch() { # {{{1
     return 0
 }
 
-koopa::git_init() { # {{{1
+koopa::git_init_remote() { # {{{1
     # """
-    # Initialize a Git repository.
-    # @note Updated 2020-12-03.
+    # Initialize a remote Git repository.
+    # @note Updated 2021-05-08.
     # """
     local branch origin
-    branch='master'  # switch to 'main' eventually.
-    origin=''
+    branch='main'
+    origin='origin'
     while (("$#"))
     do
         case "$1" in
@@ -161,16 +161,14 @@ koopa::git_init() { # {{{1
         esac
     done
     koopa::assert_is_installed git
+    koopa::assert_is_set branch origin
     git init
-    if [[ -n "$origin" ]]
-    then
-        git remote add 'origin' "$origin"
-        git remote -v
-        git fetch --all
-        koopa::alert "Checking out '${branch}' branch."
-        git branch --set-upstream-to="origin/${branch}" "$branch"
-        git pull 'origin' "$branch" --allow-unrelated-histories
-    fi
+    git remote add "$origin" "$origin"
+    git remote -vv
+    git fetch --all
+    koopa::alert "Checking out '${origin}/${branch}' branch."
+    git branch --set-upstream-to="${origin}/${branch}" "$branch"
+    git pull "$origin" "$branch" --allow-unrelated-histories
     git status
     return 0
 }

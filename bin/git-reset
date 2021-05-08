@@ -3,4 +3,5 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
+# FIXME Is this too vague? Rethink?
 koopa::git_reset "$@"
