@@ -10,7 +10,6 @@ koopa::find_and_move_in_sequence() { # {{{1
     return 0
 }
 
-# FIXME NEED TO ENSURE WE'RE USING GNU SED HERE...
 koopa::find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
