@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# koopa nolint=illegal-strings
 
 koopa::rg_fixme() { # {{{1
     # """
