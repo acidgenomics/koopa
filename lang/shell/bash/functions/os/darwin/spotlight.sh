@@ -6,10 +6,16 @@ koopa::macos_spotlight_find() { # {{{1
     # @note Updated 2021-05-08.
     # """
     local pattern x
-    koopa::assert_has_args_eq "$#" 1
+    koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed mdfind
     pattern="${1:?}"
-    x="$(mdfind -name "$pattern")"
+    dir="${2:-.}"
+    koopa::assert_is_dir "$dir"
+    x="$( \
+        mdfind \
+        -name "$pattern" \
+        -onlyin "$dir" \
+    )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
