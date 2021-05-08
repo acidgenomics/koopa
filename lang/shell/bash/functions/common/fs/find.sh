@@ -22,14 +22,12 @@ koopa::find_and_replace_in_files() { # {{{1
     # by default on macOS.
     # https://stackoverflow.com/questions/4247068/
     # """
-    local file from sed to
+    local file from to
     koopa::assert_has_args_ge "$#" 3
+    koopa::assert_has_gnu_sed
     from="${1:?}"
     to="${2:?}"
     shift 2
-    sed='sed'
-    koopa::is_macos && sed='gsed'
-    koopa::assert_is_installed "$sed"
     koopa::alert "Replacing '${from}' with '${to}' in ${#} files."
     if { \
         koopa::str_match "${from}" '/' && \
@@ -45,7 +43,7 @@ koopa::find_and_replace_in_files() { # {{{1
     do
         [[ -f "$file" ]] || return 1
         koopa::alert_info "$file"
-        "$sed" -i "s/${from}/${to}/g" "$file"
+        sed -i "s/${from}/${to}/g" "$file"
     done
     return 0
 }
@@ -139,20 +137,32 @@ koopa::find_empty_dirs() { # {{{1
 koopa::find_files_without_line_ending() { # {{{1
     # """
     # Find files without line ending.
-    # @note Updated 2020-10-06.
+    # @note Updated 2021-05-08.
     #
     # @seealso
     # - https://stackoverflow.com/questions/4631068/
     # """
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed pcregrep
-    pcregrep -LMr '\n$' "$@"
+    local files prefix
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_installed find pcregrep
+    prefix="${1:-.}"
+    koopa::assert_is_dir "$prefix"
+    readarray -t files <<< "$(
+        find "$prefix" \
+            -mindepth 1 \
+            -type f \
+    )"
+    koopa::is_array_non_empty "${files[@]}" || return 1
+    x="$(pcregrep -LMr '\n$' "${files[@]}")"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
 }
 
 koopa::find_large_dirs() { # {{{1
     # """
     # Find large directories.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-08.
     # """
     local dir x
     koopa::assert_has_args_le "$#" 1
@@ -169,6 +179,7 @@ koopa::find_large_dirs() { # {{{1
         | head -n 100 \
         || true \
     )"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
