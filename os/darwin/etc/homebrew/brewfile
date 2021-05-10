@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-05-09.
+# Updated 2021-05-10.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -230,6 +230,7 @@ brew "lesspipe"
 brew "libgit2"
 brew "libiconv"
 brew "libomp"
+brew "libpsl"
 brew "libressl"
 brew "librsvg"
 brew "libssh2"

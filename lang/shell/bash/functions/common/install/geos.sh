@@ -10,7 +10,7 @@ koopa::install_geos() { # {{{1
 koopa:::install_geos() { # {{{1
     # """
     # Install GEOS.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-10.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.
@@ -27,20 +27,27 @@ koopa:::install_geos() { # {{{1
     # > make --jobs="$jobs"
     # > make check
     # """
-    local file jobs name prefix url version
+    local cmake_args file jobs name prefix url version
+    if koopa::is_macos
+    then
+        koopa::activate_homebrew_opt_prefix cmake
+    fi
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='geos'
     jobs="$(koopa::cpu_count)"
     file="${version}.tar.gz"
-    url="https://github.com/libgeos/${name}/archive/${file}"
+    url="https://github.com/lib${name}/${name}/archive/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::mkdir build
     koopa::cd build
-    cmake "../${name}-${version}" \
-        -DCMAKE_INSTALL_PREFIX="$prefix"
-        # -DGEOS_ENABLE_TESTS='OFF'
+    cmake_args=(
+        "../${name}-${version}"
+        "-DCMAKE_INSTALL_PREFIX=${prefix}"
+        # > '-DGEOS_ENABLE_TESTS=OFF'
+    )
+    cmake "${cmake_args[@]}"
     make --jobs="$jobs"
     # > make test
     make install
