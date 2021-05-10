@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# NOTE '--reinstall' is not supported.
+# FIXME This needs to skip if installed by default.
+# FIXME '--reinstall' is not supported.
 
 koopa::install_dotfiles() { # {{{1
     # """
@@ -22,6 +23,9 @@ koopa::install_dotfiles() { # {{{1
     koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
+
+# FIXME This needs to skip if installed by default.
+# FIXME '--reinstall' is not supported.
 
 koopa::install_dotfiles_private() { # {{{1
     # """
