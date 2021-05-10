@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Currently failing to build on macOS.
+# NOTE This is failing to build on macOS.
 
 koopa::install_wget() { # {{{1
     # """
@@ -8,11 +8,17 @@ koopa::install_wget() { # {{{1
     # @note Updated 2021-05-10.
     # """
     local conf_args
-    if koopa::is_macos
+    conf_args=()
+    if koopa::is_linux
     then
-        koopa::activate_homebrew_opt_prefix 'openssl@1.1'
+        conf_args+=('--with-ssl=openssl')
+    elif koopa::is_macos
+    then
+        koopa::activate_homebrew_opt_prefix \
+            pkg-config \
+            gnutls \
+            openssl
     fi
-    conf_args=('--with-ssl=openssl')
     koopa::install_gnu_app \
         --name='wget' \
         "${conf_args[@]}" \
