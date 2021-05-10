@@ -20,6 +20,7 @@ koopa:::install_gdal() { # {{{1
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gdal.rb
     # - https://trac.osgeo.org/gdal/wiki/BuildingOnUnixGDAL25dev
+    # - https://github.com/OSGeo/gdal/issues/1259
     # - https://github.com/OSGeo/gdal/issues/2402
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
