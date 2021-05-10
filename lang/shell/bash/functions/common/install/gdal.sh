@@ -18,6 +18,9 @@ koopa:::install_gdal() { # {{{1
     # This is particularly important for CentOS builds.
     # - https://github.com/OSGeo/gdal/issues/2402
     # - https://github.com/OSGeo/gdal/issues/1708
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gdal.rb
     # """
     local brew_opt_pkgs conf_args file jobs name opt_pkgs prefix url version
     prefix="${INSTALL_PREFIX:?}"
