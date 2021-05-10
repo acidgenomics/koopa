@@ -9,7 +9,7 @@ koopa::install_emacs() { # {{{1
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # """
-    local conf_args gcc_version install_args
+    local conf_args gcc_version install_args pkgs pkgs_string
     install_args=()
     conf_args=()
     if koopa::is_linux
@@ -22,9 +22,14 @@ koopa::install_emacs() { # {{{1
     then
         gcc_version="$(koopa::variable 'gcc')"
         gcc_version="$(koopa::major_version "$gcc_version")"
-        # clang currently fails to build this, so use GCC instead.
+        pkgs=(
+            "gcc@${gcc_version}"
+            'gnutls'
+            'pkg-config'
+        )
+        pkgs_string="$(koopa::paste0 ',' "${pkgs[@]}")"
         install_args+=(
-            "--homebrew-opt=gcc@${gcc_version},gnutls,pkg-config"
+            "--homebrew-opt=${pkgs_string}"
         )
         conf_args+=(
             "CC=gcc-${gcc_version}"

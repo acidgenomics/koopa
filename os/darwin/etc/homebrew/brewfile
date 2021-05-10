@@ -229,8 +229,9 @@ brew "leiningen"
 brew "lesspipe"
 brew "libgit2"
 brew "libiconv"
+brew "libidn2"  # wget
 brew "libomp"
-brew "libpsl"
+brew "libpsl"  # wget
 brew "libressl"
 brew "librsvg"
 brew "libssh2"
