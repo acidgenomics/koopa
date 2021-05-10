@@ -10,9 +10,12 @@ koopa::install_sqlite() { # {{{1
 koopa:::install_sqlite() { # {{{1
     # """
     # Install SQLite.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-10.
     #
     # Use autoconf instead of amalgamation.
+    #
+    # Year mappings for installers are here:
+    # https://www.sqlite.org/chronology.html
     #
     # The '--enable-static' flag is required, otherwise you'll hit a version
     # mismatch error:
