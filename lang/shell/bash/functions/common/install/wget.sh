@@ -1,5 +1,25 @@
 #!/usr/bin/env bash
 
+# NOTE Failing to install on macOS with GCC 11.
+# # utimens.c: In function 'fdutimens':
+# # utimens.c:399:17: warning: 'update_timespec' accessing 16 bytes in a region of size 8 [-Wstringop-overflow=]
+# #   399 |       if (ts && update_timespec (&st, &ts))
+# #       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+# # utimens.c:399:17: note: referencing argument 2 of type 'struct timespec **'
+# # utimens.c:136:1: note: in a call to function 'update_timespec'
+# #   136 | update_timespec (struct stat const *statbuf, struct timespec *ts[2])
+# #       | ^~~~~~~~~~~~~~~
+# #   CC       chdir-long.o
+# #   CC       error.o
+# # utimens.c: In function 'lutimens':
+# # utimens.c:612:17: warning: 'update_timespec' accessing 16 bytes in a region of size 8 [-Wstringop-overflow=]
+# #   612 |       if (ts && update_timespec (&st, &ts))
+# #       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+# # utimens.c:612:17: note: referencing argument 2 of type 'struct timespec **'
+# # utimens.c:136:1: note: in a call to function 'update_timespec'
+# #   136 | update_timespec (struct stat const *statbuf, struct timespec *ts[2])
+# #       | ^~~~~~~~~~~~~~~
+
 koopa::install_wget() { # {{{1
     # """
     # Install wget.
