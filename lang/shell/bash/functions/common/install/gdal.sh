@@ -16,11 +16,12 @@ koopa:::install_gdal() { # {{{1
     #
     # Use OpenJPEG instead of Jasper.
     # This is particularly important for CentOS builds.
-    # - https://github.com/OSGeo/gdal/issues/2402
-    # - https://github.com/OSGeo/gdal/issues/1708
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gdal.rb
+    # - https://trac.osgeo.org/gdal/wiki/BuildingOnUnixGDAL25dev
+    # - https://github.com/OSGeo/gdal/issues/2402
+    # - https://github.com/OSGeo/gdal/issues/1708
     # """
     local brew_opt_pkgs conf_args file jobs make_prefix name opt_pkgs \
         prefix url version
