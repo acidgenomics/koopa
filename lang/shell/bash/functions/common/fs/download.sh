@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Inform the user about which curl, for temporary debugging.
 koopa::download() { # {{{1
     # """
     # Download a file.
@@ -40,6 +41,7 @@ koopa::download() { # {{{1
         [[ -x "$brew_curl" ]] && curl="$brew_curl"
     fi
     koopa::assert_is_installed "$curl"
+    curl="$(koopa::which_realpath "$curl")"
     curl_args=(
         '--disable'  # Ignore the '~/.curlrc' file. Must come first!
         '--create-dirs'
@@ -51,6 +53,7 @@ koopa::download() { # {{{1
     )
     curl_args+=("$url")
     koopa::alert "Downloading '${url}' to '${file}'."
+    koopa::dl 'curl' "$curl"  # FIXME Take this out?
     "$curl" "${curl_args[@]}"
     return 0
 }
