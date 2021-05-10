@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Failing to install on macOS.
+
 koopa::install_wget() { # {{{1
     # """
     # Install wget.

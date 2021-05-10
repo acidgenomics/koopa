@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Failing to install on macOS.
+
 koopa::install_emacs() { # {{{1
     # """
     # Install Emacs.
