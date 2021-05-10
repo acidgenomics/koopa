@@ -131,6 +131,7 @@ at '${dict[prefix]}'."
         "${dict[version]}" \
         "${dict[prefix]}"
     # Ensure configuration is minimal before proceeding.
+    # FIXME Should we only do this on macOS?
     declare -A conf_bak=(
         [PATH]="${PATH:-}"
         [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
