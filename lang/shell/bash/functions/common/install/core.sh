@@ -130,12 +130,13 @@ at '${dict[prefix]}'."
         "${dict[prefix]}"
     # Ensure configuration is minimal before proceeding.
     declare -A conf_bak=(
+        [LD_LIBRARY_PATH]="${LD_LIBRARY_PATH:-}"
         [PATH]="${PATH:-}"
         [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
     )
     PATH='/usr/bin:/bin:/usr/sbin:/sbin'
     export PATH
-    unset -v PKG_CONFIG_PATH
+    unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
     if koopa::is_shared_install && koopa::is_installed ldconfig
     then
         sudo ldconfig || return 1
@@ -170,9 +171,10 @@ at '${dict[prefix]}'."
     then
         sudo ldconfig || return 1
     fi
+    LD_LIBRARY_PATH="${conf_bak[LD_LIBRARY_PATH]}"
     PATH="${conf_bak[PATH]}"
     PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
-    export PATH PKG_CONFIG_PATH
+    export LD_LIBRARY_PATH PATH PKG_CONFIG_PATH
     koopa::install_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
 }
