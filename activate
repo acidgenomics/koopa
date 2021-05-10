@@ -449,14 +449,20 @@ __koopa_posix_source() { # {{{1
     #
     # POSIX doesn't support file path resolution of sourced dot scripts.
     # """
-    if [ ! -d "${KOOPA_PREFIX:-}" ] && __koopa_is_interactive
+    local prefix
+    prefix="${KOOPA_PREFIX:-}"
+    if [ ! "$prefix" ] && [ -d '/opt/koopa' ]
+    then
+        prefix='/opt/koopa'
+    fi
+    if [ ! -d "$prefix" ] && __koopa_is_interactive
     then
         __koopa_warning \
             'Failed to locate koopa activation script.' \
             "Required 'KOOPA_PREFIX' variable is unset."
         return 1
     fi
-    __koopa_print "${KOOPA_PREFIX:?}/activate"
+    __koopa_print "${prefix:?}/activate"
     return 0
 }
 
