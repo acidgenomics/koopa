@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rethink this for macOS...
-
 koopa::install_proj() { # {{{1
     koopa::install_app \
         --name='proj' \
@@ -14,7 +12,7 @@ koopa:::install_proj() { # {{{1
     # Install PROJ.
     # @note Updated 2021-05-10.
     # """
-    local arch brew_prefix conf_args file make_prefix prefix url version
+    local arch conf_args file make_prefix prefix url version
     koopa::assert_is_installed sqlite3
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
@@ -24,16 +22,7 @@ koopa:::install_proj() { # {{{1
     conf_args=("--prefix=${prefix}")
     if koopa::is_macos
     then
-        # FIXME DO WE NEED TO SET MORE VALUES IN THE SHELL?
-        brew_prefix="$(koopa::homebrew_prefix)"
-        # FIXME This needs to activate pkg-config path correctly...
-        koopa::activate_homebrew_opt_prefix libtiff sqlite3
-        # FIXME Add sqlite to these variables.
-        # Set TIFF variables.
-        # FIXME This isn't picking up sqlite3 in pkg-config.
-        # need to echo the value here?
-        echo "${PKG_CONFIG_PATH:-}"
-        koopa::stop 'FIXME'
+        koopa::activate_homebrew_opt_prefix pkg-config libtiff sqlite3
     elif koopa_is_linux
     then
         make_prefix="$(koopa::make_prefix)"
@@ -57,7 +46,6 @@ koopa:::install_proj() { # {{{1
             TIFF_CFLAGS='/usr/include'
             TIFF_LIBS='/usr/lib64 -ltiff'
         fi
-        # FIXME Do these values persist in the shell session after install?
         export SQLITE3_CFLAGS SQLITE3_LIBS TIFF_CFLAGS TIFF_LIBS
     fi
     file="${name}-${version}.tar.gz"
