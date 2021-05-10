@@ -26,12 +26,10 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
-# FIXME This is failing on Debian Docker image when curl is built from source
-# and then attempting to call 'koopa::download' (e.g. fish install).
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-05-08.
+    # @note Updated 2021-05-10.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -131,7 +129,6 @@ at '${dict[prefix]}'."
         "${dict[version]}" \
         "${dict[prefix]}"
     # Ensure configuration is minimal before proceeding.
-    # FIXME Should we only do this on macOS?
     declare -A conf_bak=(
         [PATH]="${PATH:-}"
         [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
@@ -139,7 +136,6 @@ at '${dict[prefix]}'."
     PATH='/usr/bin:/bin:/usr/sbin:/sbin'
     export PATH
     unset -v PKG_CONFIG_PATH
-    # FIXME Isn't fixing the minimal path issue with curl built from source.
     if koopa::is_shared_install && koopa::is_installed ldconfig
     then
         sudo ldconfig || return 1
