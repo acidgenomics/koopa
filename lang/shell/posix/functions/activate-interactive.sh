@@ -94,13 +94,7 @@ _koopa_activate_dircolors() { # {{{1
     # This will set the 'LD_COLORS' environment variable.
     # """
     local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
-    echo 'FIXME RSTUDIO'
     _koopa_is_interactive || return 0
-    [ -n "${SHELL:-}" ] || return 0
-
-    echo 'FIXME RSTUDIO 2'
-    echo "shell: ${SHELL:-}"
-
     dir='dir'
     dircolors='dircolors'
     egrep='egrep'
@@ -137,6 +131,7 @@ _koopa_activate_dircolors() { # {{{1
     then
         eval "$("$dircolors" "$dircolors_file")"
     else
+        echo 'NOOOO THIS IS NO GOOD'
         eval "$("$dircolors" -b)"
     fi
     # shellcheck disable=SC2139
