@@ -26,6 +26,8 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
+# FIXME This is failing on Debian Docker image when curl is built from source
+# and then attempting to call 'koopa::download' (e.g. fish install).
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -136,6 +138,7 @@ at '${dict[prefix]}'."
     PATH='/usr/bin:/bin:/usr/sbin:/sbin'
     export PATH
     unset -v PKG_CONFIG_PATH
+    # FIXME Isn't fixing the minimal path issue with curl built from source.
     if koopa::is_shared_install && koopa::is_installed ldconfig
     then
         sudo ldconfig || return 1
