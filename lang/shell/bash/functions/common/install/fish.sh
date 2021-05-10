@@ -10,7 +10,7 @@ koopa::install_fish() { # {{{1
 koopa:::install_fish() { # {{{1
     # """
     # Install Fish shell.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-10.
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
     # """
@@ -20,7 +20,7 @@ koopa:::install_fish() { # {{{1
     version="${INSTALL_VERSION:?}"
     name='fish'
     jobs="$(koopa::cpu_count)"
-    file="${name}-${version}.tar.gz"
+    file="${name}-${version}.tar.xz"
     url="https://github.com/${name}-shell/${name}-shell/releases/download/\
 ${version}/${file}"
     koopa::download "$url"
