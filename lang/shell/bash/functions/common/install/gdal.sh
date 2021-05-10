@@ -22,14 +22,14 @@ koopa:::install_gdal() { # {{{1
     # - https://github.com/OSGeo/gdal/issues/2402
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
-    local brew_opt_pkgs conf_args file jobs name opt_pkgs prefix url version
+    local brew_opt_pkgs conf_args file jobs name opt_pkgs prefix python \
+        url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='gdal'
     conf_args=(
         "--prefix=${prefix}"
         '--with-openjpeg'
-        '--with-python=python3'
         '--without-jasper'
     )
     opt_pkgs=('geos' 'proj')
@@ -54,6 +54,8 @@ koopa:::install_gdal() { # {{{1
         koopa::macos_activate_python
     fi
     koopa::activate_opt_prefix "${opt_pkgs[@]}"
+    python="$(koopa::python)"
+    conf_args+=("--with-python=${python}")
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
