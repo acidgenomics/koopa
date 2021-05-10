@@ -21,11 +21,11 @@ koopa::install_dotfiles() { # {{{1
                 ;;
         esac
     done
-    if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 0 ]]
-    then
-        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
-        return 0
-    fi
+    # > if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 0 ]]
+    # > then
+    # >     koopa::alert_note "${name_fancy} already installed at '${prefix}'."
+    # >     return 0
+    # > fi
     koopa::install_start "$name_fancy" "$prefix"
     koopa_prefix="$(koopa::prefix)"
     koopa::add_to_path_start "${koopa_prefix}/bin"
@@ -59,11 +59,11 @@ koopa::install_dotfiles_private() { # {{{1
                 ;;
         esac
     done
-    if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 0 ]]
-    then
-        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
-        return 0
-    fi
+    # > if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 0 ]]
+    # > then
+    # >     koopa::alert_note "${name_fancy} already installed at '${prefix}'."
+    # >     return 0
+    # > fi
     koopa::install_start "$name_fancy" "$prefix"
     koopa::add_monorepo_config_link 'dotfiles-private'
     [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles_private
