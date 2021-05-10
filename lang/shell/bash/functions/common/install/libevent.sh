@@ -9,14 +9,17 @@ koopa::install_libevent() { # {{{1
 koopa:::install_libevent() { # {{{1
     # """
     # Install libevent.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-10.
     # """
     local file jobs name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='libevent'
     jobs="$(koopa::cpu_count)"
-    koopa::is_macos && koopa::activate_homebrew_pkg_config 'openssl@1.1'
+    if koopa::is_macos
+    then
+        koopa::activate_homebrew_opt_prefix 'openssl@1.1'
+    fi
     file="${name}-${version}-stable.tar.gz"
     url="https://github.com/${name}/${name}/releases/download/\
 release-${version}-stable/${file}"
