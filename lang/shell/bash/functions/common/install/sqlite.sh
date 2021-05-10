@@ -26,6 +26,11 @@ koopa:::install_sqlite() { # {{{1
     name='sqlite'
     jobs="$(koopa::cpu_count)"
     case "$version" in
+        3.35.* | \
+        3.34.1)
+            year='2021'
+            ;;
+        3.34.0 | \
         3.33.*)
             year='2020'
             ;;
