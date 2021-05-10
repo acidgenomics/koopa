@@ -14,48 +14,57 @@ koopa:::install_gdal() { # {{{1
     #
     # Use 'configure --help' for build options.
     #
-    # If you don't need python support you can suppress it at configure using
-    # '--without-python'.
-    #
     # Use OpenJPEG instead of Jasper.
     # This is particularly important for CentOS builds.
     # - https://github.com/OSGeo/gdal/issues/2402
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
-    local brew_opt_pkgs conf_args file jobs name opt_pkgs prefix python \
-        url version
+    local brew_opt_pkgs conf_args file jobs name opt_pkgs prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='gdal'
     conf_args=(
         "--prefix=${prefix}"
+        '--with-armadillo=no'
         '--with-openjpeg'
+        '--with-qhull=no'
+        '--without-ecw'
+        '--without-exr'
+        '--without-fgdb'
+        '--without-fme'
+        '--without-grass'
+        '--without-gta'
+        '--without-hdf4'
+        '--without-idb'
+        '--without-ingres'
         '--without-jasper'
+        '--without-jp2mrsid'
+        '--without-jpeg12'
+        '--without-kakadu'
+        '--without-libgrass'
+        '--without-mrsid'
+        '--without-mrsid_lidar'
+        '--without-msg'
+        '--without-mysql'
+        '--without-oci'
+        '--without-ogdi'
+        '--without-perl'
+        '--without-podofo'
+        '--without-python'
+        '--without-rasdaman'
+        '--without-sde'
+        '--without-sosi'
     )
     opt_pkgs=('geos' 'proj')
     if koopa::is_linux
     then
-        # This approach assumes that geos, proj, python, and sqlite are
-        # symlinked into the make prefix.
-        opt_pkgs+=('python' 'sqlite')
-        # > local make_prefix
-        # > make_prefix="$(koopa::make_prefix)"
-        # > conf_args+=(
-        # >    --with-proj="$make_prefix" \
-        # >    --with-sqlite3="$make_prefix" \
-        # >    CFLAGS="-I${make_prefix}/include" \
-        # >    CPPFLAGS="-I${make_prefix}/include" \
-        # >    LDFLAGS="-L${make_prefix}/lib"
-        # > )
+        opt_pkgs+=('sqlite')
     elif koopa::is_macos
     then
         brew_opt_pkgs=('sqlite')
         koopa::activate_homebrew_opt_prefix "${brew_opt_pkgs[@]}"
-        koopa::macos_activate_python
     fi
     koopa::activate_opt_prefix "${opt_pkgs[@]}"
-    python="$(koopa::python)"
-    conf_args+=("--with-python=${python}")
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
