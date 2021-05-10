@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-04-27.
+## Updated 2021-05-10.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -285,7 +285,7 @@ local({
         repos <- getOption("repos")
         if (isTRUE(.rprofile[["linux"]])) {
             ## Configure the RSPM CRAN snapshot.
-            snapshot <- "2021-04-23"
+            snapshot <- "2021-05-03"
             cran <- "https://packagemanager.rstudio.com/cran"
             ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
             if (isTRUE(grepl(
