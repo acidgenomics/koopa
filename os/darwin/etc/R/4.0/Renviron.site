@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2021-04-30.
+## Updated 2021-05-10.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -21,7 +21,7 @@ KOOPA_OPT_PREFIX="${KOOPA_OPT_PREFIX:-/opt/koopa/opt}"
 ## =============================================================================
 
 R_LIBS_SITE="${R_HOME}/site-library"
-R_LIBS_USER="~/Library/R/%v/library"
+R_LIBS_USER="${R_LIBS_SITE}"
 
 ## System path {{{1
 ## =============================================================================
