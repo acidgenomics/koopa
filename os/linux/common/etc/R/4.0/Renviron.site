@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2021-04-29.
+## Updated 2021-05-10.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -64,6 +64,8 @@ R_LIBS_SITE="${R_HOME}/site-library"
 ## `@MAJ_MIN_VERSION@` is likely something like '3.6'.
 ## Set this per-user via `%p` and `%v` for platform and version.
 ## > R_LIBS_USER="${R_LIBS_USER-'~/R/@R_PLATFORM@-library/@MAJ_MIN_VERSION@'}"
+
+R_LIBS_USER="${R_LIBS_SITE}"
 
 ## Default packages {{{2
 ## -----------------------------------------------------------------------------
