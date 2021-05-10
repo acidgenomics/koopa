@@ -127,15 +127,14 @@ _koopa_activate_dircolors() { # {{{1
             dircolors_file="${dircolors_file}-light"
         fi
     fi
-    echo 'FIXME RSTUDIO 1'
     if [ -f "$dircolors_file" ]
     then
-        echo 'NOOOO THIS IS NO GOOD'
+        echo 'FIXME RSTUDIO 1'
         eval "$("$dircolors" "$dircolors_file")"
+        echo 'FIXME RSTUDIO 2'
     else
         eval "$("$dircolors" -b)"
     fi
-    echo 'FIXME RSTUDIO 2'
     # shellcheck disable=SC2139
     alias dir="${dir} --color=auto"
     # shellcheck disable=SC2139
