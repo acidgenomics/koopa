@@ -97,6 +97,10 @@ _koopa_activate_dircolors() { # {{{1
     echo 'FIXME RSTUDIO'
     _koopa_is_interactive || return 0
     [ -n "${SHELL:-}" ] || return 0
+
+    echo 'FIXME RSTUDIO 2'
+    echo "shell: ${SHELL:-}"
+
     dir='dir'
     dircolors='dircolors'
     egrep='egrep'
