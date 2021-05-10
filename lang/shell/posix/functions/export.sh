@@ -162,8 +162,7 @@ _koopa_export_shell() { # {{{1
     # Some POSIX shells, such as Dash, don't export this by default.
     # Note that this doesn't currently get set by RStudio terminal.
     # """
-    [ -z "${SHELL:-}" ] || return 0
-    SHELL="$(_koopa_which "$(_koopa_shell)")"
+    [ -z "${SHELL:-}" ] && SHELL="$(_koopa_which "$(_koopa_shell)")"
     export SHELL
     return 0
 }
@@ -171,10 +170,9 @@ _koopa_export_shell() { # {{{1
 _koopa_export_tmpdir() { # {{{1
     # """
     # Export TMPDIR.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-10.
     # """
-    [ -z "${TMPDIR:-}" ] || return 0
-    TMPDIR='/tmp'
+    [ -z "${TMPDIR:-}" ] && TMPDIR='/tmp'
     export TMPDIR
     return 0
 }
