@@ -445,11 +445,11 @@ __koopa_is_user_manual_skip() { # {{{1
 __koopa_posix_source() { # {{{1
     # """
     # POSIX source file location.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-10.
     #
     # POSIX doesn't support file path resolution of sourced dot scripts.
     # """
-    if [ ! -d "${KOOPA_PREFIX:?}" ] && __koopa_is_interactive
+    if [ ! -d "${KOOPA_PREFIX:-}" ] && __koopa_is_interactive
     then
         __koopa_warning \
             'Failed to locate koopa activation script.' \
