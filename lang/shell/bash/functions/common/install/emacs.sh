@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Failing to build on macOS.
-# # checking for gnutls >= 2.12.2... no
-
 koopa::install_emacs() { # {{{1
     # """
     # Install Emacs.
@@ -12,18 +9,20 @@ koopa::install_emacs() { # {{{1
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # """
-    local conf_args
+    local conf_args install_args
+    install_args=()
+    conf_args=()
     if koopa::is_linux
     then
-        conf_args=(
+        conf_args+=(
             '--with-x-toolkit=no'
             '--with-xpm=no'
         )
     elif koopa::is_macos
     then
-        koopa::activate_homebrew_opt_prefix \
-            pkg-config \
-            gnutls
+        install_args+=(
+            '--homebrew-opt=gnutls,pkg-config'
+        )
         conf_args=(
             '--disable-silent-rules'
             '--with-gnutls'
@@ -39,6 +38,7 @@ koopa::install_emacs() { # {{{1
     koopa::install_gnu_app \
         --name='emacs' \
         --name-fancy='Emacs' \
+        "${install_args[@]}" \
         "${conf_args[@]}"
         "$@"
 }
