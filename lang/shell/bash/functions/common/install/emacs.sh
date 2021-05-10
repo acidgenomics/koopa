@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Failing to install on macOS.
-
 koopa::install_emacs() { # {{{1
     # """
     # Install Emacs.
@@ -11,7 +9,7 @@ koopa::install_emacs() { # {{{1
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # """
-    local conf_args install_args
+    local conf_args gcc_version install_args
     install_args=()
     conf_args=()
     if koopa::is_linux
@@ -22,10 +20,14 @@ koopa::install_emacs() { # {{{1
         )
     elif koopa::is_macos
     then
+        gcc_version="$(koopa::variable 'gcc')"
+        gcc_version="$(koopa::major_version "$gcc_version")"
+        # clang currently fails to build this, so use GCC instead.
         install_args+=(
-            '--homebrew-opt=gnutls,pkg-config'
+            "--homebrew-opt=gcc@${gcc_version},gnutls,pkg-config"
         )
-        conf_args=(
+        conf_args+=(
+            "CC=gcc-${gcc_version}"
             '--disable-silent-rules'
             '--with-gnutls'
             '--with-modules'
@@ -41,7 +43,7 @@ koopa::install_emacs() { # {{{1
         --name='emacs' \
         --name-fancy='Emacs' \
         "${install_args[@]}" \
-        "${conf_args[@]}"
+        "${conf_args[@]}" \
         "$@"
 }
 
