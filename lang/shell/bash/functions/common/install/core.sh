@@ -171,10 +171,22 @@ at '${dict[prefix]}'."
     then
         sudo ldconfig || return 1
     fi
-    LD_LIBRARY_PATH="${conf_bak[LD_LIBRARY_PATH]}"
-    PATH="${conf_bak[PATH]}"
-    PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
-    export LD_LIBRARY_PATH PATH PKG_CONFIG_PATH
+    # Reset global variables, if applicable.
+    if [[ -n "${conf_bak[LD_LIBRARY_PATH]}" ]]
+    then
+        LD_LIBRARY_PATH="${conf_bak[LD_LIBRARY_PATH]}"
+        export LD_LIBRARY_PATH
+    fi
+    if [[ -n "${conf_bak[PATH]}" ]]
+    then
+        PATH="${conf_bak[PATH]}"
+        export PATH
+    fi
+    if [[ -n "${conf_bak[PKG_CONFIG_PATH]}" ]]
+    then
+        PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
+        export PKG_CONFIG_PATH
+    fi
     koopa::install_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
 }
