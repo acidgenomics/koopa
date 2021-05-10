@@ -95,6 +95,8 @@ _koopa_activate_dircolors() { # {{{1
     # """
     local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
     _koopa_is_interactive || return 0
+    [ -n "${SHELL:-}" ] || return 0
+    export SHELL  # RStudio shell config edge case.
     dir='dir'
     dircolors='dircolors'
     egrep='egrep'
@@ -129,9 +131,7 @@ _koopa_activate_dircolors() { # {{{1
     fi
     if [ -f "$dircolors_file" ]
     then
-        echo 'FIXME RSTUDIO 1'
         eval "$("$dircolors" "$dircolors_file")"
-        echo 'FIXME RSTUDIO 2'
     else
         eval "$("$dircolors" -b)"
     fi
