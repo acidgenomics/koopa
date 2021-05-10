@@ -34,15 +34,18 @@ koopa::install_app() { # {{{1
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
     # """
-    local dict link_args pos
+    local dict link_args pkgs pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     # Use a dictionary approach for storing configuration variables.
     declare -A dict=(
+        [homebrew_opt]=''
         [installer]=''
         [link_app]=1
         [link_include_dirs]=''
         [name_fancy]=''
+        [opt]=''
+        [path_harden]=1
         [platform]=''
         [reinstall]=0
         [version]=''
@@ -53,6 +56,10 @@ koopa::install_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            --homebrew-opt=*)
+                dict[homebrew_opt]="${1#*=}"
+                shift 1
+                ;;
             --installer=*)
                 dict[installer]="${1#*=}"
                 shift 1
@@ -71,6 +78,14 @@ koopa::install_app() { # {{{1
                 ;;
             --no-link)
                 dict[link_app]=0
+                shift 1
+                ;;
+            --no-path-harden)
+                dict[path_harden]=0
+                shift 1
+                ;;
+            --opt=*)
+                dict[opt]="${1#*=}"
                 shift 1
                 ;;
             --platform=*)
@@ -128,15 +143,30 @@ at '${dict[prefix]}'."
         "${dict[name_fancy]}" \
         "${dict[version]}" \
         "${dict[prefix]}"
-    # Ensure configuration is minimal before proceeding.
-    declare -A conf_bak=(
-        [LD_LIBRARY_PATH]="${LD_LIBRARY_PATH:-}"
-        [PATH]="${PATH:-}"
-        [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
-    )
-    PATH='/usr/bin:/bin:/usr/sbin:/sbin'
-    export PATH
-    unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
+    # Ensure configuration is minimal before proceeding, when desirable.
+    if [[ "${dict[path_harden]}" -eq 1 ]]
+    then
+        declare -A conf_bak=(
+            [LD_LIBRARY_PATH]="${LD_LIBRARY_PATH:-}"
+            [PATH]="${PATH:-}"
+            [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
+        )
+        PATH='/usr/bin:/bin:/usr/sbin:/sbin'
+        export PATH
+        unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
+    fi
+    # Activate packages installed in Homebrew opt.
+    if [[ -n "${dict[homebrew_opt]}" ]]
+    then
+        IFS=',' read -r -a pkgs <<< "${dict[homebrew_opt]}"
+        koopa::activate_homebrew_opt_prefix "${pkgs[@]}"
+    fi
+    # Activate packages installed in Koopa opt.
+    if [[ -n "${dict[opt]}" ]]
+    then
+        IFS=',' read -r -a pkgs <<< "${dict[opt]}"
+        koopa::activate_opt_prefix "${pkgs[@]}"
+    fi
     if koopa::is_shared_install && koopa::is_installed ldconfig
     then
         sudo ldconfig || return 1
@@ -172,20 +202,23 @@ at '${dict[prefix]}'."
         sudo ldconfig || return 1
     fi
     # Reset global variables, if applicable.
-    if [[ -n "${conf_bak[LD_LIBRARY_PATH]}" ]]
+    if [[ "${dict[path_harden]}" -eq 1 ]]
     then
-        LD_LIBRARY_PATH="${conf_bak[LD_LIBRARY_PATH]}"
-        export LD_LIBRARY_PATH
-    fi
-    if [[ -n "${conf_bak[PATH]}" ]]
-    then
-        PATH="${conf_bak[PATH]}"
-        export PATH
-    fi
-    if [[ -n "${conf_bak[PKG_CONFIG_PATH]}" ]]
-    then
-        PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
-        export PKG_CONFIG_PATH
+        if [[ -n "${conf_bak[LD_LIBRARY_PATH]}" ]]
+        then
+            LD_LIBRARY_PATH="${conf_bak[LD_LIBRARY_PATH]}"
+            export LD_LIBRARY_PATH
+        fi
+        if [[ -n "${conf_bak[PATH]}" ]]
+        then
+            PATH="${conf_bak[PATH]}"
+            export PATH
+        fi
+        if [[ -n "${conf_bak[PKG_CONFIG_PATH]}" ]]
+        then
+            PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
+            export PKG_CONFIG_PATH
+        fi
     fi
     koopa::install_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
