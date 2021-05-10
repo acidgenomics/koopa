@@ -124,7 +124,7 @@ koopa:::koopa_install() { # {{{1
     return 0
 }
 
-koopa:::koopa_install_denylist() {
+koopa:::koopa_install_denylist() { # {{{1
     # """
     # App names that are intentionally not supported.
     # @note Updated 2021-05-07.
@@ -298,7 +298,7 @@ koopa:::koopa_uninstall() { # {{{1
     return 0
 }
 
-koopa:::koopa_uninstall_denylist() {
+koopa:::koopa_uninstall_denylist() { # {{{1
     # """
     # App names that are intentionally not supported.
     # @note Updated 2021-05-07.
@@ -376,7 +376,7 @@ koopa:::koopa_update() { # {{{1
     return 0
 }
 
-koopa:::koopa_update_denylist() {
+koopa:::koopa_update_denylist() { # {{{1
     # """
     # App names that are intentionally not supported.
     # @note Updated 2021-05-07.
