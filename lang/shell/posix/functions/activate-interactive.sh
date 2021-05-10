@@ -94,6 +94,7 @@ _koopa_activate_dircolors() { # {{{1
     # This will set the 'LD_COLORS' environment variable.
     # """
     local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
+    echo 'FIXME RSTUDIO'
     _koopa_is_interactive || return 0
     [ -n "${SHELL:-}" ] || return 0
     dir='dir'
