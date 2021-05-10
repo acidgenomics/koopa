@@ -22,7 +22,8 @@ koopa:::install_gdal() { # {{{1
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gdal.rb
     # """
-    local brew_opt_pkgs conf_args file jobs name opt_pkgs prefix url version
+    local brew_opt_pkgs conf_args file jobs make_prefix name opt_pkgs \
+        prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='gdal'
@@ -62,6 +63,12 @@ koopa:::install_gdal() { # {{{1
     if koopa::is_linux
     then
         opt_pkgs+=('sqlite')
+        make_prefix="$(koopa::make_prefix)"
+        conf_args+=(
+            "CFLAGS=-I${make_prefix}/include"
+            "CPPFLAGS=-I${make_prefix}/include"
+            "LDFLAGS=-L${make_prefix}/lib"
+        )
     elif koopa::is_macos
     then
         brew_opt_pkgs=('sqlite')
