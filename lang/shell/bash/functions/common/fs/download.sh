@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Inform the user about which curl, for temporary debugging.
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-10.
     #
     # Potentially useful curl flags:
     # * --connect-timeout <seconds>
@@ -53,7 +52,6 @@ koopa::download() { # {{{1
     )
     curl_args+=("$url")
     koopa::alert "Downloading '${url}' to '${file}'."
-    koopa::dl 'curl' "$curl"  # FIXME Take this out?
     "$curl" "${curl_args[@]}"
     return 0
 }
