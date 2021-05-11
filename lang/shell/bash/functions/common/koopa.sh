@@ -436,13 +436,12 @@ koopa:::which_function() { # {{{1
         koopa::stop 'FIXME 4'
         fun="koopa::fedora_${fun}"
     elif koopa::is_linux && \
-        koopa::stop 'FIXME 5'
         koopa::is_function "koopa::linux_${fun}"
     then
-        koopa::stop 'FIXME 6'
+        koopa::stop 'FIXME 5'
         fun="koopa::linux_${fun}"
     else
-        koopa::stop 'FIXME 7'
+        koopa::stop 'FIXME 6'
         fun="koopa::${fun}"
     fi
     if ! koopa::is_function "$fun"
