@@ -331,7 +331,7 @@ koopa::is_function() { # {{{1
     koopa::assert_has_args "$#"
     for fun in "$@"
     do
-        str="$(type "$fun" 2>/dev/null)"
+        str="$(type "$fun" | head -n 1 2>/dev/null)"
         # Harden against empty string return.
         [[ -z "$str" ]] && str='no'
         echo "$str"  # FIXME
