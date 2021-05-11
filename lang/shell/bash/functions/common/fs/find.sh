@@ -13,7 +13,7 @@ koopa::find_and_move_in_sequence() { # {{{1
 koopa::find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-08.
     #
     # Parameterized, supporting multiple files.
     #
@@ -23,14 +23,17 @@ koopa::find_and_replace_in_files() { # {{{1
     # """
     local file from to
     koopa::assert_has_args_ge "$#" 3
+    koopa::assert_has_gnu_sed
     from="${1:?}"
     to="${2:?}"
     shift 2
-    koopa::h1 "Replacing '${from}' with '${to}' in ${#} files."
+    koopa::alert "Replacing '${from}' with '${to}' in ${#} files."
     if { \
-        koopa::str_match "${from}" '/' && ! koopa::str_match "${from}" '\/'; \
+        koopa::str_match "${from}" '/' && \
+        ! koopa::str_match "${from}" '\/'; \
     } || { \
-        koopa::str_match "${to}" '/' && ! koopa::str_match "${to}" '\/'; \
+        koopa::str_match "${to}" '/' && \
+        ! koopa::str_match "${to}" '\/'; \
     }
     then
         koopa::stop 'Unescaped slash detected.'
@@ -57,7 +60,7 @@ koopa::find_broken_symlinks() { # {{{1
     koopa::assert_is_installed find grep
     dir="${1:-.}"
     [[ -d "$dir" ]] || return 0
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     local x
     x="$( \
         find "$dir" \
@@ -113,7 +116,7 @@ koopa::find_empty_dirs() { # {{{1
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find grep
     dir="${1:-.}"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     x="$( \
         find "$dir" \
             -xdev \
@@ -133,26 +136,38 @@ koopa::find_empty_dirs() { # {{{1
 koopa::find_files_without_line_ending() { # {{{1
     # """
     # Find files without line ending.
-    # @note Updated 2020-10-06.
+    # @note Updated 2021-05-08.
     #
     # @seealso
     # - https://stackoverflow.com/questions/4631068/
     # """
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed pcregrep
-    pcregrep -LMr '\n$' "$@"
+    local files prefix
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_installed find pcregrep
+    prefix="${1:-.}"
+    koopa::assert_is_dir "$prefix"
+    readarray -t files <<< "$(
+        find "$prefix" \
+            -mindepth 1 \
+            -type f \
+    )"
+    koopa::is_array_non_empty "${files[@]}" || return 1
+    x="$(pcregrep -LMr '\n$' "${files[@]}")"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
 }
 
 koopa::find_large_dirs() { # {{{1
     # """
     # Find large directories.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-08.
     # """
     local dir x
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed du
     dir="${1:-.}"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     x="$( \
         du \
             --max-depth=20 \
@@ -163,6 +178,7 @@ koopa::find_large_dirs() { # {{{1
         | head -n 100 \
         || true \
     )"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
@@ -183,7 +199,7 @@ koopa::find_large_files() { # {{{1
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find grep
     dir="${1:-.}"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     x="$( \
         find "$dir" \
             -xdev \

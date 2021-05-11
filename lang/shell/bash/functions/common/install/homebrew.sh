@@ -3,7 +3,7 @@
 koopa::install_homebrew() { # {{{1
     # """
     # Install Homebrew.
-    # @note Updated 2020-11-18.
+    # @note Updated 2021-04-22.
     #
     # @seealso
     # - https://docs.brew.sh/Installation
@@ -12,11 +12,8 @@ koopa::install_homebrew() { # {{{1
     # - https://github.com/Linuxbrew/brew/issues/556
     #
     # macOS:
-    # This script installs Homebrew to '/usr/local' so that you don't need sudo
-    # when you run 'brew install'. It is a careful script; it can be run even if
-    # you have stuff installed to '/usr/local' already. It tells you exactly
-    # what it will do before it does it too. You have to confirm everything it
-    # will do before it starts.
+    # NOTE This function won't run on macOS clean install due to very old Bash.
+    # Installs to '/usr/local' on Intel and '/opt/homebrew' on Apple Silicon.
     #
     # Linux:
     # Creates a new linuxbrew user and installs to /home/linuxbrew/.linuxbrew.
@@ -31,12 +28,7 @@ koopa::install_homebrew() { # {{{1
     koopa::assert_is_installed yes
     name_fancy='Homebrew'
     koopa::install_start "$name_fancy"
-    if koopa::is_macos
-    then
-        koopa::assert_is_installed xcode-select
-        koopa::h2 'Installing Xcode command line tools (CLT).'
-        xcode-select --install &>/dev/null || true
-    fi
+    koopa::is_macos && koopa::macos_install_xcode_clt
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -54,70 +46,39 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2020-12-17.
+    # @note Updated 2021-05-06.
+    #
+    # Custom brewfile is supported using a positional argument.
     # """
-    local brewfile default flags name_fancy remove_brews remove_taps x
-    koopa::assert_has_args_le "$#" 1
+    local brewfile install_args name_fancy
+    koopa::assert_has_no_args_le "$#" 1
     koopa::assert_has_sudo
+    brewfile="${1:-$(koopa::brew_brewfile)}"
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
     koopa::assert_is_installed brew
-    default=1
-    brewfile="$(koopa::brewfile)"
     koopa::assert_is_file "$brewfile"
-    brewfile="$(realpath "$brewfile")"
     koopa::dl 'Brewfile' "$brewfile"
     brew analytics off
-    if [[ "$default" -eq 1 ]]
-    then
-        # Remove any existing unwanted brews, if necessary.
-        remove_brews=(
-            'osgeo-gdal'
-            'osgeo-hdf4'
-            'osgeo-libgeotiff'
-            'osgeo-libkml'
-            'osgeo-libspatialite'
-            'osgeo-netcdf'
-            'osgeo-postgresql'
-            'osgeo-proj'
-        )
-        if koopa::is_macos
-        then
-            remove_brews+=(
-                'aspera-connect'  # renamed to ibm-aspera-connect
-                'google-chrome-canary'
-                'little-snitch'
-                'safari-technology-preview'
-                'zoomus'  # renamed to zoom
-            )
-        fi
-        for x in "${remove_brews[@]}"
-        do
-            brew remove "$x" &>/dev/null || true
-        done
-        remove_taps=(
-            'muesli/tap'
-        )
-        for x in "${remove_taps[@]}"
-        do
-            brew untap "$x" &>/dev/null || true
-        done
-    fi
-    flags=(
-        # '--debug'
-        # '--verbose'
+    install_args=(
+        # > '--debug'
+        # > '--verbose'
         "--file=${brewfile}"
         '--force'
         '--no-lock'
         '--no-upgrade'
     )
-    export HOMEBREW_CASK_OPTS='--no-quarantine'
-    brew bundle install "${flags[@]}"
-    koopa::update_homebrew
+    # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
+    # variable, which is defined in our main Homebrew activation function.
+    brew bundle install "${install_args[@]}"
     return 0
 }
 
 koopa::install_homebrew_packages() { # {{{1
+    # """
+    # Install Homebrew packages via bundle (user-friendly alias).
+    # @note Updated 2021-04-22.
+    # """
     koopa::install_homebrew_bundle "$@"
     return 0
 }
@@ -125,14 +86,14 @@ koopa::install_homebrew_packages() { # {{{1
 koopa::uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-05-07.
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
     local file name_fancy tmp_dir url user
     if ! koopa::is_installed brew
     then
-        koopa::alert_note 'Homebrew is not installed.'
+        koopa::alert_not_installed 'Homebrew'
         return 0
     fi
     koopa::assert_has_sudo
@@ -166,96 +127,29 @@ koopa::uninstall_homebrew() { # {{{1
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-03-02.
-    #
-    # Use of '--force-bottle' flag can be helpful, but not all brews have
-    # bottles, so this can error.
-    #
-    # Alternative approaches:
-    # > brew list \
-    # >     | xargs brew reinstall --force-bottle --cleanup \
-    # >     || true
-    # > brew outdated --cask --greedy \
-    # >     | xargs brew reinstall \
-    # >     || true
+    # @note Updated 2021-04-27.
     #
     # @seealso
     # - Refer to useful discussion regarding '--greedy' flag.
     # - https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
     # - https://github.com/Homebrew/brew/issues/9139
+    # - https://thecoatlessprofessor.com/programming/
+    #       macos/updating-a-homebrew-formula/
     # """
-    local cask_flags casks name_fancy
+    local name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
     koopa::assert_has_sudo
-    export HOMEBREW_CASK_OPTS='--force --no-quarantine'
     name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
-    # > if koopa::has_sudo
-    # > then
-    # >     local group prefix user
-    # >     user="$(koopa::user)"
-    # >     group="$(koopa::admin_group)"
-    # >     prefix="$(koopa::homebrew_prefix)"
-    # >     koopa::alert "Resetting '${prefix}' to '${user}:${group}'."
-    # >     sudo chown -Rh "${user}:${group}" "${prefix}/"*
-    # > fi
-    koopa::alert "Ensuring internal 'homebrew-core' repo is clean."
-    # See also:
-    # - https://thecoatlessprofessor.com/programming/
-    #       macos/updating-a-homebrew-formula/
-    (
-        koopa::cd "$(brew --repo 'homebrew/core')"
-        git checkout -q 'master'
-        git branch -q 'master' -u 'origin/master'
-        git reset -q --hard 'origin/master'
-        # > git branch -vv
-    )
-    koopa::alert 'Updating brews.'
+    # > koopa::brew_reset_permissions
+    koopa::brew_reset_core_repo
     brew analytics off
-    brew update # >/dev/null
-    brew upgrade || true
-    if koopa::is_macos
-    then
-        koopa::alert 'Updating casks.'
-        readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
-        if koopa::is_array_non_empty "${casks[@]}"
-        then
-            koopa::alert_info "${#casks[@]} outdated casks detected."
-            koopa::print "${casks[@]}"
-            for cask in "${casks[@]}"
-            do
-                cask="$(koopa::print "${cask[@]}" | cut -d ' ' -f 1)"
-                case "$cask" in
-                    docker)
-                        cask='homebrew/cask/docker'
-                        ;;
-                    macvim)
-                        cask='homebrew/cask/macvim'
-                        ;;
-                esac
-                cask_flags=(
-                    # --debug
-                    # '--verbose'
-                    '--force'
-                    '--no-quarantine'
-                )
-                brew reinstall "${cask_flags[@]}" "$cask" || true
-                if [[ "$cask" == 'r' ]]
-                then
-                    koopa::update_r_config
-                fi
-            done
-        fi
-    fi
-    koopa::alert 'Running cleanup.'
-    brew cleanup -s || true
-    koopa::rm "$(brew --cache)"
-    # > if koopa::has_sudo
-    # > then
-    # >     koopa::alert "Resetting '${prefix}' to '${user}:${group}'."
-    # >     sudo chown -Rh "${user}:${group}" "${prefix}/"*
-    # > fi
+    brew update &>/dev/null
+    koopa::is_macos && koopa::macos_brew_upgrade_casks
+    koopa::brew_upgrade_brews
+    koopa::brew_cleanup
+    # > koopa::brew_reset_permissions
     koopa::update_success "$name_fancy"
     return 0
 }

@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-03-30.
+# Updated 2021-05-10.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -33,8 +33,21 @@ tap "homebrew/core"
 tap "mongodb/brew"
 tap "vitorgalvao/tiny-scripts"
 
+# Priority brews {{{1
+# ==============================================================================
+
+brew "git"
+# SVN is required for some font casks to install correctly.
+brew "subversion"
+
 # Casks {{{1
 # ==============================================================================
+
+# Previously installed applications not managed by Homebrew intentionally error
+# here, and there's no supported method in 'brew bundle install' to force
+# an overwrite. Instead, per app run this command manually:
+# > brew install --cask --force XXX
+# https://github.com/Homebrew/homebrew-bundle/issues/446
 
 # Consider re-enabling, but using AWS primarily at the moment.
 # > cask "google-cloud-sdk"
@@ -44,6 +57,9 @@ tap "vitorgalvao/tiny-scripts"
 
 # Virtualbox is useful but installs a lot of garbage into the system.
 # > cask "virtualbox"
+
+# > cask "adobe-acrobat-reader"
+# > cask "google-drive-file-stream"
 
 cask "1password"
 cask "adoptopenjdk"
@@ -92,16 +108,16 @@ cask "font-victor-mono"
 cask "font-victor-mono-nerd-font"
 cask "github"
 cask "google-cloud-sdk"
-cask "gpg-suite"
+cask "gpg-suite-no-mail"  # no-binaries
 cask "hazel"
 cask "ibm-aspera-connect"
 cask "igv"
 cask "iterm2"
-cask "java"
 cask "julia"
 cask "keka"
 cask "libreoffice"
-cask "macvim"
+cask "little-snitch"
+cask "macvim"  # no-binaries
 cask "netnewswire"
 cask "omnidisksweeper"
 cask "pacifist"
@@ -115,6 +131,7 @@ cask "superduper"
 cask "textmate"
 cask "transmit"
 cask "tunnelblick"
+cask "virtualbox"
 cask "visual-studio-code"
 cask "vlc"
 cask "xquartz"
@@ -132,6 +149,13 @@ cask "zoom"
 
 # sshfs requires osxfuse cask, which insecurely hooks into system.
 # > brew "sshfs"
+
+# CRAN gfortran installs into '/usr/local/gfortran' and links into
+# '/usr/local/bin', without an override option.
+brew "gcc", link: false
+
+# Use MacGPG (gpg-suite) cask instead.
+brew "gpg", link: false
 
 # Python: Use official Framework binary install instead of Homebrew.
 # Use 'koopa install python-framework' to install.
@@ -175,9 +199,7 @@ brew "flac"
 brew "flake8"  # python
 brew "fzf"
 brew "gawk"
-brew "gcc"
 brew "gdal"
-brew "git"
 brew "git-lfs"
 brew "gitui"
 brew "gnu-sed"
@@ -207,7 +229,9 @@ brew "leiningen"
 brew "lesspipe"
 brew "libgit2"
 brew "libiconv"
+brew "libidn2"  # wget
 brew "libomp"
+brew "libpsl"  # wget
 brew "libressl"
 brew "librsvg"
 brew "libssh2"
@@ -238,7 +262,6 @@ brew "openjdk@8"  # for nextflow
 brew "openssh"
 brew "osx-cpu-temp"
 brew "pandoc"
-brew "pandoc-citeproc"
 brew "pandoc-crossref"
 brew "parallel"
 brew "pass"
@@ -265,7 +288,6 @@ brew "sox"
 brew "sqlite"
 brew "starship"  # rust
 brew "stow"
-brew "subversion"
 brew "taglib"
 brew "tcl-tk"
 brew "tcsh"
@@ -276,6 +298,7 @@ brew "tmux"
 brew "tokei"  # rust
 brew "udunits"
 brew "v8"
+brew "vim"
 brew "wget"
 brew "xsv"  # rust
 brew "youtube-dl"
@@ -286,12 +309,16 @@ brew "zsh"
 # External brews {{{1
 # ==============================================================================
 
-brew "mongodb/brew/mongodb-community"
 # > brew "muesli/tap/duf"
+brew "mongodb/brew/mongodb-community"
 brew "vitorgalvao/tiny-scripts/cask-repair"
 
 # App Store {{{1
 # ==============================================================================
+
+# > mas "Keynote", id: 409183694
+# > mas "Numbers", id: 409203825
+# > mas "Pages", id: 409201541
 
 mas "AdGuard for Safari", id: 1440147259
 mas "Calca", id: 635758264

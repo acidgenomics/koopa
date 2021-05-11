@@ -1,6 +1,38 @@
 #!/usr/bin/env bash
 
-koopa::_install_conda() { # {{{1
+# NOTE It appears that ARM support is coming:
+# Anaconda3-2021.04-Linux-aarch64.sh
+
+koopa::install_anaconda() { # {{{1
+    # """
+    # Install Anaconda.
+    # @note Updated 2020-10-27.
+    # """
+    koopa:::install_conda --anaconda "$@"
+    return 0
+}
+
+koopa::install_conda() { # {{{1
+    # """
+    # Install Conda.
+    # @note Updated 2020-11-24.
+    #
+    # Assuming user wants Miniconda by default.
+    # """
+    koopa::install_miniconda "$@"
+    return 0
+}
+
+koopa::install_miniconda() { # {{{1
+    # """
+    # Install Miniconda.
+    # @note Updated 2020-10-27.
+    # """
+    koopa:::install_conda --miniconda "$@"
+    return 0
+}
+
+koopa:::install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
     # @note Updated 2021-01-14.
@@ -90,34 +122,5 @@ koopa::_install_conda() { # {{{1
     koopa::link_into_opt "$prefix" 'conda'
     koopa::install_success "$name_fancy"
     koopa::alert_restart
-    return 0
-}
-
-koopa::install_anaconda() { # {{{1
-    # """
-    # Install Anaconda.
-    # @note Updated 2020-10-27.
-    # """
-    koopa::_install_conda --anaconda "$@"
-    return 0
-}
-
-koopa::install_conda() { # {{{1
-    # """
-    # Install Conda.
-    # @note Updated 2020-11-24.
-    #
-    # Assuming user wants Miniconda by default.
-    # """
-    koopa::install_miniconda "$@"
-    return 0
-}
-
-koopa::install_miniconda() { # {{{1
-    # """
-    # Install Miniconda.
-    # @note Updated 2020-10-27.
-    # """
-    koopa::_install_conda --miniconda "$@"
     return 0
 }

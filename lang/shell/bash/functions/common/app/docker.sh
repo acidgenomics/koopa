@@ -110,8 +110,8 @@ koopa::docker_build() { # {{{1
     if [[ -L "$source_image" ]]
     then
         tags+=("$tag")
-        source_image="$(realpath "$source_image")"
-        tag="$(basename "$source_image")"
+        source_image="$(koopa::realpath "$source_image")"
+        tag="$(koopa::basename "$source_image")"
     fi
     tags+=("$tag" "${tag}-$(date '+%Y%m%d')")
     # Ensure tags are sorted and unique.
@@ -371,7 +371,6 @@ koopa::docker_push() { # {{{1
         koopa::assert_is_matching_regex "$pattern" '^.+/.+$'
         json="$(docker inspect --format="{{json .RepoTags}}" "$pattern")"
         # Convert JSON to lines.
-        # shellcheck disable=SC2001
         readarray -t images <<< "$( \
             koopa::print "$json" \
                 | tr ',' '\n' \
