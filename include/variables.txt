@@ -162,7 +162,7 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.1.5"
+homebrew="3.1.6"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -456,7 +456,7 @@ homebrew-cask-gpg-suite="2020.2"
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-python-black="21.5b0"     # homebrew
+python-black="21.5b1"     # homebrew
 python-bpytop="1.0.65"    # homebrew
 python-flake8="3.9.2"     # homebrew
 python-pipx="0.16.2.0"    # homebrew
