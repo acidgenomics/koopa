@@ -3,7 +3,7 @@
 koopa::install_dotfiles() { # {{{1
     # """
     # Install dot files.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-05-11.
     # """
     local koopa_prefix name_fancy prefix reinstall script
     name_fancy='dotfiles'
@@ -21,11 +21,11 @@ koopa::install_dotfiles() { # {{{1
                 ;;
         esac
     done
-    # > if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 0 ]]
-    # > then
-    # >     koopa::alert_note "${name_fancy} already installed at '${prefix}'."
-    # >     return 0
-    # > fi
+    if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 1 ]]
+    then
+        koopa::alert_note "Removing ${name_fancy} at '${prefix}'."
+        koopa::rm "$prefix"
+    fi
     koopa::install_start "$name_fancy" "$prefix"
     koopa_prefix="$(koopa::prefix)"
     koopa::add_to_path_start "${koopa_prefix}/bin"
@@ -41,10 +41,10 @@ koopa::install_dotfiles() { # {{{1
 koopa::install_dotfiles_private() { # {{{1
     # """
     # Install private dot files.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-05-11.
     # """
     local name_fancy prefix reinstall script
-    name_fancy='Private dotfiles'
+    name_fancy='private dotfiles'
     prefix="$(koopa::dotfiles_private_prefix)"
     reinstall=0
     while (("$#"))
@@ -59,11 +59,11 @@ koopa::install_dotfiles_private() { # {{{1
                 ;;
         esac
     done
-    # > if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 0 ]]
-    # > then
-    # >     koopa::alert_note "${name_fancy} already installed at '${prefix}'."
-    # >     return 0
-    # > fi
+    if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 1 ]]
+    then
+        koopa::alert_note "Removing ${name_fancy} at '${prefix}'."
+        koopa::rm "$prefix"
+    fi
     koopa::install_start "$name_fancy" "$prefix"
     koopa::add_monorepo_config_link 'dotfiles-private'
     [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles_private
