@@ -1,8 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC3040
 
-# FIXME Set KOOPA_VERBOSE global here, so we can do extra things.
-
 __koopa_activate_usage() { # {{{1
     # """
     # Koopa activation usage triggered by '--help' flag.
