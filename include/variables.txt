@@ -2,8 +2,6 @@
 # Koopa internal variables.
 # """
 
-# FIXME check aws-cli, azure-cli, google-cloud-sdk versions.
-
 # koopa {{{1
 # ==============================================================================
 
@@ -13,7 +11,7 @@ koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.10.0a"
 
 # Also update this value in 'lang/r/include/header.R'.
-r-koopa="0.1.14"
+r-koopa="0.1.18"
 
 # Globals {{{1
 # ==============================================================================
