@@ -411,35 +411,32 @@ koopa:::which_function() { # {{{1
     # Locate a koopa function automatically.
     # @note Updated 2021-05-11.
     # """
-    local f fun os_id
+    local fun os_id
     koopa::assert_has_args_eq "$#" 1
-    f="${1:?}"
-    f="${f//-/_}"
-
-    koopa::stop "FIXME: ${f}"
-
+    fun="${1:?}"
+    fun="${fun//-/_}"
     os_id="$(koopa::os_id)"
-    if koopa::is_function "koopa::${os_id}_${f}"
+    if koopa::is_function "koopa::${os_id}_${fun}"
     then
-        fun="koopa::${os_id}_${f}"
+        fun="koopa::${os_id}_${fun}"
     elif koopa::is_rhel_like && \
-        koopa::is_function "koopa::rhel_${f}"
+        koopa::is_function "koopa::rhel_${fun}"
     then
-        fun="koopa::rhel_${f}"
+        fun="koopa::rhel_${fun}"
     elif koopa::is_debian_like && \
-        koopa::is_function "koopa::debian_${f}"
+        koopa::is_function "koopa::debian_${fun}"
     then
-        fun="koopa::debian_${f}"
+        fun="koopa::debian_${fun}"
     elif koopa::is_fedora_like && \
-        koopa::is_function "koopa::fedora_${f}"
+        koopa::is_function "koopa::fedora_${fun}"
     then
-        fun="koopa::fedora_${f}"
+        fun="koopa::fedora_${fun}"
     elif koopa::is_linux && \
-        koopa::is_function "koopa::linux_${f}"
+        koopa::is_function "koopa::linux_${fun}"
     then
-        fun="koopa::linux_${f}"
+        fun="koopa::linux_${fun}"
     else
-        fun="koopa::${f}"
+        fun="koopa::${fun}"
     fi
     if ! koopa::is_function "$fun"
     then
