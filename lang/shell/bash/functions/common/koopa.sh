@@ -422,9 +422,6 @@ koopa:::which_function() { # {{{1
     fun="${1:?}"
     fun="${fun//-/_}"
     os_id="$(koopa::os_id)"
-
-    koopa::stop "FIXME ${fun}"
-
     if koopa::is_function "koopa::${os_id}_${fun}"
     then
         fun="koopa::${os_id}_${fun}"
@@ -447,6 +444,7 @@ koopa:::which_function() { # {{{1
     else
         fun="koopa::${fun}"
     fi
+    koopa::stop "FIXME ${fun}"
     if ! koopa::is_function "$fun"
     then
         koopa::stop "Unsupported command."
