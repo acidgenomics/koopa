@@ -154,7 +154,7 @@ koopa::docker_build() { # {{{1
                 --filter reference="${image}:${tag}" \
                 --quiet \
         )"
-        if koopa::is_array_non_empty "${image_ids[@]}"
+        if koopa::is_array_non_empty "${image_ids[@]:-}"
         then
             docker image rm --force "${image_ids[@]}"
         fi
@@ -247,7 +247,7 @@ koopa::docker_build_all_images() { # {{{1
                 | xargs -0 -n1 basename \
             )"
         fi
-        koopa::assert_is_array_non_empty "${images[@]}"
+        koopa::assert_is_array_non_empty "${images[@]:-}"
         koopa::dl \
             "${#images[@]} images" \
             "$(koopa::to_string "${images[@]}")"
@@ -380,7 +380,7 @@ koopa::docker_push() { # {{{1
                 | sed 's/\"$//g' \
                 | sort \
         )"
-        if ! koopa::is_array_non_empty "${images[@]}"
+        if ! koopa::is_array_non_empty "${images[@]:-}"
         then
             docker image ls
             koopa::stop "'${image}' failed to match any images."
