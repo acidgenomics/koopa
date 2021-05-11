@@ -1,10 +1,76 @@
 #!/usr/bin/env zsh
 # koopa nolint=coreutils
 
-_koopa_zsh_header() { # {{{1
+koopa:::is_installed() { # {{{1
+    # """
+    # Are all of the requested programs installed?
+    # @note Updated 2021-05-07.
+    # """
+    local cmd
+    for cmd in "$@"
+    do
+        command -v "$cmd" >/dev/null || return 1
+    done
+    return 0
+}
+
+koopa:::is_macos() { # {{{1
+    # """
+    # Is the operating system macOS?
+    # @note Updated 2021-05-07.
+    # """
+    [ "$(uname -s)" = 'Darwin' ]
+}
+
+koopa:::print() { # {{{1
+    # """
+    # Print a string.
+    # @note Updated 2021-05-07.
+    # """
+    local string
+    [ "$#" -gt 0 ] || return 1
+    for string in "$@"
+    do
+        printf '%b\n' "$string"
+    done
+    return 0
+}
+
+koopa:::realpath() { # {{{1
+    # """
+    # Resolve file path.
+    # @note Updated 2021-05-11.
+    # """
+    local arg bn dn x
+    [ "$#" -gt 0 ] || return 1
+    if koopa:::is_installed realpath
+    then
+        x="$(realpath "$@")"
+    elif koopa:::is_installed grealpath
+    then
+        x="$(grealpath "$@")"
+    elif koopa:::is_macos
+    then
+        for arg in "$@"
+        do
+            bn="$(basename "$arg")"
+            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
+            x="${dn}/${bn}"
+            koopa:::print "$x"
+        done
+        return 0
+    else
+        x="$(readlink -f "$@")"
+    fi
+    [ -n "$x" ] || return 1
+    koopa:::print "$x"
+    return 0
+}
+
+koopa:::zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-11.
     # """
     local activate checks file header_path local major_version shopts verbose
     activate=0
@@ -42,7 +108,7 @@ _koopa_zsh_header() { # {{{1
         header_path="${(%):-%N}"
         if [[ -L "$header_path" ]]
         then
-            header_path="$(_koopa_realpath "$header_path")"
+            header_path="$(koopa:::realpath "$header_path")"
         fi
         KOOPA_PREFIX="$( \
             cd "$(dirname "$header_path")/../../../.." \
@@ -56,13 +122,4 @@ _koopa_zsh_header() { # {{{1
     return 0
 }
 
-_koopa_realpath() { # {{{1
-    if [[ "$(uname -s)" == 'Darwin' ]]
-    then
-        perl -MCwd -e 'print Cwd::abs_path shift' "$1"
-    else
-        readlink -f "$@"
-    fi
-}
-
-_koopa_zsh_header "$@"
+koopa:::zsh_header "$@"
