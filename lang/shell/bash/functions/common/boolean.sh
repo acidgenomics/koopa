@@ -305,6 +305,7 @@ koopa::is_file_system_case_sensitive() { # {{{1
     [[ "$count" -eq 2 ]]
 }
 
+# FIXME This doesn't seem to be returning the way we want for Bash 4.
 koopa::is_function() { # {{{1
     # """
     # Check if variable is a function.
@@ -333,6 +334,9 @@ koopa::is_function() { # {{{1
         str="$(type "$fun" 2>/dev/null)"
         # Harden against empty string return.
         [[ -z "$str" ]] && str='no'
+
+        koopa::stop "str: ${str}"  # FIXME
+
         koopa::str_match "$str" 'function' || return 1
     done
     return 0
