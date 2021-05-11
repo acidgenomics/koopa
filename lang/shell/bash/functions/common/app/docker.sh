@@ -176,12 +176,12 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-05-11.
     # """
     local build_file build_args days force image images prune pos \
         repo repos repo_name
     koopa::assert_is_installed docker
-    days=30
+    days=7
     force=0
     prune=0
     pos=()
