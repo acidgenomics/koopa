@@ -30,6 +30,7 @@
   and Vim configurations. We currently recommend using Dracula for dark mode
   and Solarized Light for light mode where possible. This currently applies to
   our Vim and Spacemacs (Emacs) configurations.
+- Reworked main activation script.
 
 ### Minor changes
 
