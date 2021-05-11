@@ -410,8 +410,6 @@ koopa:::run_function() { # {{{1
     return 0
 }
 
-# NOTE This is currently failing to work in the Alpine and Amazon Linux base
-# images for Docker consistently.
 koopa:::which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
@@ -440,20 +438,10 @@ koopa:::which_function() { # {{{1
     elif koopa::is_linux && \
         koopa::is_function "koopa::linux_${fun}"
     then
-        # FIXME This is flipping between success and failure for Alpine
-        # and Amazon Docker images....
         fun="koopa::linux_${fun}"
     else
         fun="koopa::${fun}"
     fi
-
-    # FIXME Something isn't activating correctly here, inside a subshell
-    # or something....
-    # FIXME This is bouncing between 'koopa::linux_configure_system' and
-    # 'koopa::configure_system' in Alpine and AWS docker images...
-    # Attempt to debug with 'declare -F' here.
-    # > koopa::stop "FIXME ${fun}"
-
     if ! koopa::is_function "$fun"
     then
         koopa::stop "Unsupported command (${fun})."
