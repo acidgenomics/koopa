@@ -603,7 +603,6 @@ _koopa_activate() { # {{{1
         set -o errexit
         set -o nounset
         # > set -o xtrace
-        # FIXME This isn't defined and is erroring out in koopa installer.
         if [ "${KOOPA_SHELL:?}" = 'bash' ]
         then
             set -o errtrace
