@@ -21,7 +21,7 @@ koopa::bam_sort() { # {{{1
             -print \
         | sort \
     )"
-    if ! koopa::is_array_non_empty "${bam_files[@]}"
+    if ! koopa::is_array_non_empty "${bam_files[@]:-}"
     then
         koopa::stop "No BAM files detected in '${dir}'."
     fi

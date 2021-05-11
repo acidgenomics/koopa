@@ -71,7 +71,7 @@ koopa::macos_brew_upgrade_casks() { # {{{1
     koopa::assert_is_macos
     koopa::assert_is_installed brew
     readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
-    koopa::is_array_non_empty "${casks[@]}" || return 0
+    koopa::is_array_non_empty "${casks[@]:-}" || return 0
     str="$(koopa::ngettext "${#casks[@]}" 'cask' 'casks')"
     koopa::dl \
         "${#casks[@]} outdated ${str}" \

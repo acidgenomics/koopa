@@ -51,7 +51,7 @@ koopa::test_roff() { # {{{1
                 -print \
             | sort \
         )"
-        if ! koopa::is_array_non_empty "${files[@]}"
+        if ! koopa::is_array_non_empty "${files[@]:-}"
         then
             koopa::stop "No files: '${dir}'."
         fi
