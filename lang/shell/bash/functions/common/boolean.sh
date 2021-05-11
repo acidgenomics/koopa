@@ -334,10 +334,7 @@ koopa::is_function() { # {{{1
         str="$(type "$fun" 2>/dev/null)"
         # Harden against empty string return.
         [[ -z "$str" ]] && str='no'
-
-        koopa::stop "str: ${str}"  # FIXME
-
-        koopa::str_match "$str" 'function' || return 1
+        koopa::str_match "$str" 'function' || koopa::stop "FIXME: ${str}"  # return 1
     done
     return 0
 }
