@@ -288,9 +288,9 @@ r="4.0.5"
 r-cran-gfortran="8.2"
 
 # https://svn.r-project.org/R/
-# Updated 2021-04-20.
+# Updated 2021-05-11.
 # This is the SVN revision number.
-r-devel="80202"
+r-devel="80283"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
