@@ -101,36 +101,3 @@ _koopa_activate_bash_readline() { # {{{1
     export INPUTRC="${HOME}/.inputrc"
     return 0
 }
-
-_koopa_source_dir() { # {{{1
-    # """
-    # Source multiple Bash script files inside a directory.
-    # @note Updated 2021-01-19.
-    #
-    # Note that macOS ships with an ancient version of Bash by default that
-    # doesn't support readarray/mapfile.
-    # """
-    local prefix fun_script fun_scripts koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
-    prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
-    [[ -d "$prefix" ]] || return 0
-    if [[ $(type -t readarray) != 'builtin' ]]
-    then
-        printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
-        return 1
-    fi
-    readarray -t fun_scripts <<< "$( \
-        find -L "$prefix" \
-            -mindepth 1 \
-            -type f \
-            -name '*.sh' \
-            -print \
-        | sort \
-    )"
-    for fun_script in "${fun_scripts[@]}"
-    do
-        # shellcheck source=/dev/null
-        . "$fun_script"
-    done
-    return 0
-}
