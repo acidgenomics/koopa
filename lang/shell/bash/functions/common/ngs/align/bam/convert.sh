@@ -41,7 +41,7 @@ koopa::convert_sam_to_bam() { # {{{1
             -print \
         | sort \
     )"
-    if ! koopa::is_array_non_empty "${sam_files[@]}"
+    if ! koopa::is_array_non_empty "${sam_files[@]:-}"
     then
         koopa::stop "No SAM files detected in '${dir}'."
     fi

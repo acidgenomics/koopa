@@ -151,7 +151,7 @@ koopa::find_files_without_line_ending() { # {{{1
             -mindepth 1 \
             -type f \
     )"
-    koopa::is_array_non_empty "${files[@]}" || return 1
+    koopa::is_array_non_empty "${files[@]:-}" || return 1
     x="$(pcregrep -LMr '\n$' "${files[@]}")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
