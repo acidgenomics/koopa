@@ -439,8 +439,8 @@ koopa:::which_function() { # {{{1
         fun="koopa::${fun}"
     fi
 
-    koopa::is_function "$fun" || koopa::stop 'FIXME 1'
-    koopa::is_function "$fun" || koopa::stop 'FIXME 2'
+    koopa::is_function "$fun" || koopa::stop "FIXME 1 ${fun}"
+    koopa::is_function "$fun" || koopa::stop "FIXME 2 ${fun}"
 
     if ! koopa::is_function "$fun"
     then
