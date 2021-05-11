@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::sam_to_bam() { # {{{1
+koopa::convert_sam_to_bam() { # {{{1
     # """
     # Convert multiple SAM files in a directory to BAM files.
     # @note Updated 2020-08-13.
@@ -31,7 +31,7 @@ koopa::sam_to_bam() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     readarray -t sam_files <<< "$( \
         find "$dir" \
             -maxdepth 3 \

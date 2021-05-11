@@ -3,9 +3,11 @@
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-02.
+    # @seealso
+    # - https://pip.pypa.io/en/stable/cli/pip_install/
     # """
-    local pip_install_flags pos python reinstall target
+    local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
     python="$(koopa::python)"
     reinstall=0
@@ -39,17 +41,17 @@ koopa::pip_install() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::is_installed "$python" || return 0
-    # Install pip automatically, if necessary.
-    ! koopa::is_python_package_installed pip && koopa::install_pip
-    target="$(koopa::python_site_packages_prefix "$python")"
-    koopa::sys_mkdir "$target"
+    koopa::python_add_site_packages_to_sys_path "$python"
+    target="$(koopa::python_packages_prefix "$python")"
     koopa::dl \
         'Packages' "$(koopa::to_string "$@")" \
         'Target' "$target"
-    pip_install_flags=(
+    # See also rules defined in '~/.config/pip/pip.conf'.
+    install_flags=(
         "--target=${target}"
         '--disable-pip-version-check'
         '--no-warn-script-location'
+        '--progress-bar=pretty'
         '--upgrade'
     )
     if [[ "$reinstall" -eq 1 ]]
@@ -59,7 +61,30 @@ koopa::pip_install() { # {{{1
             '--ignore-installed'
         )
     fi
-    "$python" -m pip install "${pip_install_flags[@]}" "$@"
+    "$python" -m pip install "${install_flags[@]}" "$@"
+    return 0
+}
+
+koopa::pip_outdated() { # {{{1
+    # """
+    # List oudated pip packages.
+    # @note Updated 2021-05-04.
+    #
+    # Requesting 'freeze' format will return '<pkg>==<version>'.
+    #
+    # @seealso
+    # - https://pip.pypa.io/en/stable/cli/pip_list/
+    # """
+    local prefix python x
+    python="$(koopa::python)"
+    prefix="$(koopa::python_packages_prefix)"
+    x="$( \
+        "$python" -m pip list \
+            --format 'freeze' \
+            --outdated \
+            --path "$prefix" \
+    )"
+    koopa::print "$x"
     return 0
 }
 
@@ -83,7 +108,7 @@ koopa::pyscript() { # {{{1
 koopa::python_add_site_packages_to_sys_path() { # {{{1
     # """
     # Add our custom site packages library to sys.path.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-05-05.
     #
     # @seealso
     # > "$python" -m site
@@ -91,10 +116,10 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     local file k_site_pkgs python sys_site_pkgs
     python="${1:-}"
     [[ -z "$python" ]] && python="$(koopa::python)"
-    sys_site_pkgs="$(koopa::python_system_site_packages_prefix "$python")"
-    k_site_pkgs="$(koopa::python_site_packages_prefix "$python")"
-    [[ ! -d "$k_site_pkgs" ]] && koopa::sys_mkdir "$k_site_pkgs"
-    file="${sys_site_pkgs}/koopa.pth"
+    sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
+    k_site_pkgs="$(koopa::python_packages_prefix "$python")"
+    [[ ! -d "${k_site_pkgs:?}" ]] && koopa::sys_mkdir "$k_site_pkgs"
+    file="${sys_site_pkgs:?}/koopa.pth"
     koopa::alert "Adding '${file}' path file in '${sys_site_pkgs}'."
     if koopa::is_symlinked_app "$python"
     then
@@ -103,7 +128,6 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     else
         koopa::sudo_write_string "$k_site_pkgs" "$file"
     fi
-    # This step will print the site packages configuration.
     "$python" -m site
     return 0
 }

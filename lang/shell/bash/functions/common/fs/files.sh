@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::autopad_samples() { # {{{1
+koopa::autopad_zeros() { # {{{1
     # """
-    # Autopad samples.
-    # @note Updated 2020-07-08.
+    # Autopad zeroes in sample names.
+    # @note Updated 2021-05-08.
     # """
     local files newname num padwidth oldname pos prefix stem
     koopa::assert_has_args "$#"
@@ -305,15 +305,38 @@ koopa::ensure_newline_at_end_of_file() { # {{{1
 koopa::file_count() { # {{{1
     # """
     # Return number of files.
-    # @note Updated 2020-07-11.
+    # @note Updated 2021-05-08.
+    #
+    # Intentionally doesn't perform this search recursively.
     #
     # Alternate approach:
     # > ls -1 "$prefix" | wc -l
     # """
     local prefix x
     koopa::assert_is_installed find wc
-    prefix="${1:?}"
-    x="$(find "$prefix" -mindepth 1 -type f -printf '.' | wc -c)"
+    prefix="${1:-.}"
+    koopa::assert_is_dir "$prefix"
+    if koopa::is_installed fd
+    then
+        x="$( \
+            fd \
+                --max-depth 1 \
+                --min-depth 1 \
+                --no-ignore-vcs \
+                --type f \
+                "$prefix" \
+            | wc -l \
+        )"
+    else
+        x="$( \
+            find "$prefix" \
+                -maxdepth 1 \
+                -mindepth 1 \
+                -type f \
+                -printf '.' \
+            | wc -c \
+        )"
+    fi
     koopa::print "$x"
     return 0
 }
@@ -340,7 +363,7 @@ koopa::file_ext() { # {{{1
         then
             x="${file##*.}"
         else
-            x=
+            x=''
         fi
         koopa::print "$x"
     done
@@ -368,7 +391,7 @@ koopa::file_ext2() { # {{{1
         then
             x="$(koopa::print "$file" | cut -d '.' -f 2-)"
         else
-            x=
+            x=''
         fi
         koopa::print "$x"
     done
@@ -397,6 +420,10 @@ koopa::line_count() { # {{{1
 }
 
 koopa::md5sum_check_to_new_md5_file() { # {{{1
+    # """
+    # Perform md5sum check on specified files to a new log file.
+    # @note Updated 2021-05-08.
+    # """
     local datetime log_file
     koopa::assert_has_args "$#"
     datetime="$(koopa::datetime)"
@@ -406,8 +433,12 @@ koopa::md5sum_check_to_new_md5_file() { # {{{1
 }
 
 koopa::nfiletypes() { # {{{1
+    # """
+    # Return the number of file types in a specific directory.
+    # @note Updated 2021-05-08.
+    # """
     local dir
-    koopa::assert_has_args_ne "$#" 1
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find
     dir="${1:-.}"
     find "$dir" \
@@ -422,6 +453,10 @@ koopa::nfiletypes() { # {{{1
 }
 
 koopa::reset_permissions() { # {{{1
+    # """
+    # Reset default permissions on a specified directory recursively.
+    # @note Updated 2021-05-08.
+    # """
     local dir group user
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"

@@ -8,12 +8,20 @@ koopa::activate_go() { # {{{1
     _koopa_activate_go "$@"
 }
 
+koopa::activate_homebrew_cask_r() { # {{{1
+    _koopa_activate_homebrew_cask_r "$@"
+}
+
 koopa::activate_llvm() { # {{{1
     _koopa_activate_llvm "$@"
 }
 
 koopa::activate_openjdk() { # {{{1
     _koopa_activate_openjdk "$@"
+}
+
+koopa::activate_perl_packages() { # {{{1
+    _koopa_activate_perl_packages "$@"
 }
 
 koopa::activate_prefix() { # {{{1
@@ -68,6 +76,10 @@ koopa::alert_info() { # {{{1
     _koopa_alert_info "$@"
 }
 
+koopa::alert_not_installed() { # {{{1
+    _koopa_alert_not_installed "$@"
+}
+
 koopa::alert_note() { # {{{1
     _koopa_alert_note "$@"
 }
@@ -86,6 +98,10 @@ koopa::app_prefix() { # {{{1
 
 koopa::arch() { # {{{1
     _koopa_arch "$@"
+}
+
+koopa::arch2() { # {{{1
+    _koopa_arch2 "$@"
 }
 
 koopa::aspera_prefix() { # {{{1
@@ -180,30 +196,6 @@ koopa::expr() { # {{{1
     _koopa_expr "$@"
 }
 
-koopa::force_add_to_manpath_end() { # {{{1
-    _koopa_force_add_to_manpath_end "$@"
-}
-
-koopa::force_add_to_manpath_start() { # {{{1
-    _koopa_force_add_to_manpath_start "$@"
-}
-
-koopa::force_add_to_path_end() { # {{{1
-    _koopa_force_add_to_path_end "$@"
-}
-
-koopa::force_add_to_path_start() { # {{{1
-    _koopa_force_add_to_path_start "$@"
-}
-
-koopa::force_add_to_pkg_config_path_end() { # {{{1
-    _koopa_force_add_to_pkg_config_path_end "$@"
-}
-
-koopa::force_add_to_pkg_config_path_start() { # {{{1
-    _koopa_force_add_to_pkg_config_path_start "$@"
-}
-
 koopa::fzf_prefix() { # {{{1
     _koopa_fzf_prefix "$@"
 }
@@ -212,8 +204,8 @@ koopa::git_branch() { # {{{1
     _koopa_git_branch "$@"
 }
 
-koopa::go_gopath() { # {{{1
-    _koopa_go_gopath "$@"
+koopa::go_packages() { # {{{1
+    _koopa_go_packages "$@"
 }
 
 koopa::go_prefix() { # {{{1
@@ -296,8 +288,8 @@ koopa::homebrew_prefix() { # {{{1
     _koopa_homebrew_prefix "$@"
 }
 
-koopa::homebrew_ruby_gems_prefix() { # {{{1
-    _koopa_homebrew_ruby_gems_prefix "$@"
+koopa::homebrew_ruby_packages_prefix() { # {{{1
+    _koopa_homebrew_ruby_packages_prefix "$@"
 }
 
 koopa::hostname() { # {{{1
@@ -508,6 +500,18 @@ koopa::lowercase() { # {{{1
     _koopa_lowercase "$@"
 }
 
+koopa::macos_activate_python() { # {{{1
+    _koopa_macos_activate_python "$@"
+}
+
+koopa::macos_is_dark_mode() { # {{{1
+    _koopa_macos_is_dark_mode "$@"
+}
+
+koopa::macos_is_light_mode() { # {{{1
+    _koopa_macos_is_light_mode "$@"
+}
+
 koopa::macos_version() { # {{{1
     _koopa_macos_version "$@"
 }
@@ -544,6 +548,10 @@ koopa::monorepo_prefix() { # {{{1
     _koopa_monorepo_prefix "$@"
 }
 
+koopa::ngettext() { # {{{1
+    _koopa_ngettext "$@"
+}
+
 koopa::openjdk_prefix() { # {{{1
     _koopa_openjdk_prefix "$@"
 }
@@ -566,6 +574,10 @@ koopa::os_string() { # {{{1
 
 koopa::parent_dir() { # {{{1
     _koopa_parent_dir "$@"
+}
+
+koopa::perl_packages_prefix() { # {{{1
+    _koopa_perl_packages_prefix "$@"
 }
 
 koopa::perlbrew_prefix() { # {{{1
@@ -661,15 +673,23 @@ koopa::pyenv_prefix() { # {{{1
 }
 
 koopa::python() { # {{{1
-    _koopa_python
+    _koopa_python "$@"
 }
 
-koopa::python_site_packages_prefix() { # {{{1
-    _koopa_python_site_packages_prefix "$@"
+koopa::python_packages_prefix() { # {{{1
+    _koopa_python_packages_prefix "$@"
 }
 
-koopa::python_system_site_packages_prefix() { # {{{1
-    _koopa_python_system_site_packages_prefix "$@"
+koopa::python_system_packages_prefix() { # {{{1
+    _koopa_python_system_packages_prefix "$@"
+}
+
+koopa::r() { # {{{1
+    _koopa_r "$@"
+}
+
+koopa::r_packages_prefix() { # {{{1
+    _koopa_r_packages_prefix "$@"
 }
 
 koopa::rbenv_prefix() { # {{{1
@@ -696,12 +716,12 @@ koopa::ruby_api_version() { # {{{1
     _koopa_ruby_api_version "$@"
 }
 
-koopa::rust_cargo_prefix() { # {{{1
-    _koopa_rust_cargo_prefix "$@"
+koopa::rust_packages_prefix() { # {{{1
+    _koopa_rust_packages_prefix "$@"
 }
 
-koopa::rust_rustup_prefix() { # {{{1
-    _koopa_rust_rustup_prefix "$@"
+koopa::rust_prefix() { # {{{1
+    _koopa_rust_prefix "$@"
 }
 
 koopa::scripts_private_prefix() { # {{{1

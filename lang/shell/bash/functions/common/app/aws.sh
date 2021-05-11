@@ -110,7 +110,7 @@ koopa::aws_s3_find() { # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-05-06.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
@@ -124,8 +124,8 @@ koopa::aws_s3_find() { # {{{1
     local exclude include pos x
     koopa::assert_has_args "$#"
     koopa::assert_is_installed aws
-    exclude=
-    include=
+    exclude=''
+    include=''
     pos=()
     while (("$#"))
     do
@@ -173,7 +173,7 @@ koopa::aws_s3_find() { # {{{1
 koopa::aws_s3_ls() { # {{{1
     # """
     # List an AWS S3 bucket.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-06.
     #
     # @seealso
     # - aws s3 ls help
@@ -193,7 +193,7 @@ koopa::aws_s3_ls() { # {{{1
     fi
     flags=()
     recursive=0
-    type=
+    type=''
     pos=()
     while (("$#"))
     do

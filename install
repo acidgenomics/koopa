@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090,SC1091,SC2162
 set -Eeu -o pipefail
 
 # """
@@ -145,6 +144,7 @@ install() { # {{{1
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
     # Don't check for Bash version here, which will otherwise fail on macOS
     # clean install, which ships with ancient v3.
+    # shellcheck source=/dev/null
     . "${script_dir}/lang/shell/bash/include/header.sh"
     # Check that temporary activation was successful.
     if [[ -z "${KOOPA_PREFIX:-}" ]]
@@ -160,7 +160,7 @@ install() { # {{{1
 
     [[ -z "${dotfiles:-}" ]] && dotfiles=1
     [[ -z "${interactive:-}" ]] && interactive=1
-    [[ -z "${koopa_prefix:-}" ]] && koopa_prefix=
+    [[ -z "${koopa_prefix:-}" ]] && koopa_prefix=''
     [[ -z "${passwordless:-}" ]] && passwordless=0
     [[ -z "${profile:-}" ]] && profile=1
     if [[ -z "${shared:-}" ]]
@@ -230,6 +230,7 @@ install() { # {{{1
 
     koopa::h2 'Activating koopa.'
     set +u
+    # shellcheck source=/dev/null
     force=1 test="$test" . "${koopa_prefix}/activate"
     set -u
     # Check that prefix is set correctly.

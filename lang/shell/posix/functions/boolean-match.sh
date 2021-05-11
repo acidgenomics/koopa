@@ -22,7 +22,6 @@ __koopa_str_match() { # {{{1
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997
     # - https://unix.stackexchange.com/questions/233987
     # """
-    # shellcheck disable=SC2039
     local OPTIND flag pattern string
     OPTIND=1
     while getopts 'EFP' opt
@@ -55,7 +54,7 @@ __koopa_str_match() { # {{{1
         pattern="${1:?}"
         shift 1
         # Handle string with line breaks '\n'.
-        # shellcheck disable=SC2039
+        # shellcheck disable=SC3045
         read -r -d '' string
     else
         return 1

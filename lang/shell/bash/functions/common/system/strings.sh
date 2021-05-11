@@ -96,13 +96,23 @@ koopa::github_url() { # {{{1
     return 0
 }
 
-koopa::gnu_mirror() { # {{{1
+koopa::gcrypt_url() { # {{{1
+    # """
+    # Get GnuPG FTP URL.
+    # @note Updated 2021-04-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::variable 'gcrypt-url'
+    return 0
+}
+
+koopa::gnu_mirror_url() { # {{{1
     # """
     # Get GNU FTP mirror URL.
     # @note Updated 2020-04-16.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::variable 'gnu-mirror'
+    koopa::variable 'gnu-mirror-url'
     return 0
 }
 

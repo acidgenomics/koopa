@@ -8,8 +8,8 @@ koopa::install_start() { # {{{1
     local msg name version prefix
     koopa::assert_has_args_le "$#" 3
     name="${1:?}"
-    version=
-    prefix=
+    version=''
+    prefix=''
     if [[ "$#" -eq 2 ]]
     then
         prefix="${2:?}"

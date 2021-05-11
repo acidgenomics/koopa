@@ -5,33 +5,37 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-04-12"
+koopa-date="2021-05-11"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.9.5a"
+koopa-version="0.10.0"
 
 # Also update this value in 'lang/r/include/header.R'.
-r-koopa="0.1.14"
+r-koopa="0.1.18"
 
 # Globals {{{1
 # ==============================================================================
 
-# GNU FTP server mirror
+# GnuPG FTP URL.
+gcrypt-url="https://gnupg.org/ftp/gcrypt"
+
+# GNU FTP server mirror.
 # https://www.gnu.org/prep/ftp.en.html
-# > gnu-mirror="https://ftpmirror.gnu.org"
-gnu-mirror="https://mirrors.tripadvisor.com/gnu"
+# > gnu-mirror-url="https://ftpmirror.gnu.org"
+gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
+
 
 # Program versions {{{1
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
-anaconda="2020.11"
+anaconda="2021.04"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.4.0"
+armadillo="10.4.1"
 
 # https://www.ibm.com/aspera/connect/
-aspera-connect="3.10.1.181943"
+aspera-connect="3.11.2.63"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.71"
@@ -39,8 +43,15 @@ autoconf="2.71"
 # https://ftp.gnu.org/gnu/automake/
 automake="1.16.3"
 
+# https://aws.amazon.com/cli/
+# https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
+aws-cli="2.2.3"
+
+# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+azure-cli="2.23.0"
+
 # https://www.gnu.org/software/bash/
-bash="5.1.4"
+bash="5.1.8"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
@@ -73,7 +84,7 @@ cellranger="5.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.20.1"
+cmake="3.20.2"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -88,7 +99,7 @@ coreutils="8.32"
 cpufetch="0.96"
 
 # https://curl.haxx.se/
-curl="7.76.0"
+curl="7.76.1"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -117,11 +128,11 @@ fzf="0.27.0"
 gawk="5.1.0"
 
 # https://ftp.gnu.org/gnu/gcc/
-gcc="10.2.0"
+gcc="11.1"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.2.2"
+gdal="3.3.0"
 
 # https://github.com/libgeos/geos/releases
 geos="3.9.1"
@@ -131,10 +142,14 @@ geos="3.9.1"
 git="2.31.1"
 
 # https://gnupg.org/download/index.html
-gnupg="2.2.27"
+# LTS: 2.2.27 (2021-01-11).
+gnupg="2.3.1"
 
 # https://golang.org/dl/
 go="1.16.3"
+
+# https://cloud.google.com/sdk/docs/install
+google-cloud-sdk="339.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.6"
@@ -145,9 +160,9 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
 
-hadolint="2.1.0"
+hadolint="2.4.0"
 
-harfbuzz="2.8.0"
+harfbuzz="2.8.1"
 
 haskell-stack="rolling"
 
@@ -155,7 +170,7 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.1.0"
+homebrew="3.1.6"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -171,7 +186,7 @@ imagemagick="7.0.11"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.6.0"
+julia="1.6.1"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
@@ -182,12 +197,12 @@ libtool="2.4.6"
 
 # LLVM
 # https://releases.llvm.org/
-llvm="11.1.0"
+llvm="12.0.0"
 
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
 # https://github.com/TACC/Lmod
-lmod="8.4.20"
+lmod="8.4.31"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
@@ -209,14 +224,14 @@ neofetch="7.1.0"
 neovim="0.4.4"
 
 # https://nodejs.org/
-node="15.14.0"
+node="16.1.0"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="16"
+openjdk="16.0.1"
 
 # https://www.openssh.com/portable.html
-openssh="8.5p1"
+openssh="8.6p1"
 
 # https://www.openssl.org/source/
 openssl="1.1.1d"
@@ -228,10 +243,8 @@ oracle-instantclient="19.5.0.0.0-1"
 # https://pandoc.org/releases.html
 pandoc="2.13"
 
-pandoc-citeproc="0.17.0.2"
-
 # https://www.gnu.org/software/parallel/
-parallel="20210322"
+parallel="20210422"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
@@ -250,7 +263,7 @@ perl-file-rename="1.10"
 
 # https://www.php.net/downloads
 # https://github.com/php/php-src/releases
-php="8.0.3"
+php="8.0.5"
 
 # Note that Fedora now masks this with pkgconf.
 # https://pkg-config.freedesktop.org/releases/
@@ -259,21 +272,25 @@ pkg-config="0.29.2"
 # https://proj.org/
 # 8.0.0 release is having build issues with Homebrew.
 # https://github.com/Homebrew/homebrew-core/pull/72680
-proj="7.2.1"
+proj="8.0.1"
 
 # https://github.com/pyenv/pyenv
 pyenv="1.2.26"
 
 # https://www.python.org/downloads/
-python="3.9.4"
+python="3.9.5"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
 r="4.0.5"
 
+# https://mac.r-project.org/
+r-cran-gfortran="8.2"
+
 # https://svn.r-project.org/R/
+# Updated 2021-04-20.
 # This is the SVN revision number.
-r-devel="80130"
+r-devel="80202"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
@@ -294,10 +311,10 @@ ruby="3.0.1p64"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
-rust="1.51.0"
+rust="1.52.0"
 
 # https://rustup.rs/
-rustup="1.23.1"
+rustup="1.24.1"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
@@ -312,7 +329,7 @@ screen="4.8.0"
 sed="4.8"
 
 # https://github.com/koalaman/shellcheck/releases
-shellcheck="0.7.1"
+shellcheck="0.7.2"
 
 # https://www.rstudio.com/products/shiny/download-server/
 # 2021-01-11
@@ -350,16 +367,16 @@ texinfo="6.7"
 the-silver-searcher="2.2.0"
 
 # https://github.com/tmux/tmux/releases
-tmux="3.1c"
+tmux="3.2"
 
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
 udunits="2.2.26"
 
 # https://github.com/vim/vim/releases
-# Homebrew updates every '*.0000' patch release on on multiples of 50.
+# Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.0"
+vim="8.2.2825"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.1"
@@ -438,7 +455,7 @@ homebrew-cask-gpg-suite="2020.2"
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2021-02-11 from https://pypi.org/.
+# Updated 2021-04-28 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
@@ -447,13 +464,11 @@ homebrew-cask-gpg-suite="2020.2"
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-python-pip="21.0.1"
-
-python-black="20.8b1"     # homebrew
-python-bpytop="1.0.63"    # homebrew
-python-flake8="3.9.0"     # homebrew
-python-pipx="0.16.1"      # homebrew
-python-pylint="2.7.4"     # homebrew
+python-black="21.5b1"     # homebrew
+python-bpytop="1.0.65"    # homebrew
+python-flake8="3.9.2"     # homebrew
+python-pipx="0.16.2.0"    # homebrew
+python-pylint="2.8.2"     # homebrew
 python-ranger-fm="1.9.3"  # homebrew
 
 # Libraries without binaries {{{2
@@ -461,11 +476,11 @@ python-ranger-fm="1.9.3"  # homebrew
 
 python-pip2pi="0.8.1"
 python-psutil="5.8.0"
-python-pyflakes="2.2.0"
+python-pyflakes="2.3.1"
 python-pytaglib="1.4.6"
-python-pytest="6.2.2"
+python-pytest="6.2.3"
 python-pyyaml="5.4.1"
-python-setuptools="53.0.0"
+python-setuptools="56.0.0"
 python-six="1.15.0"
 python-wheel="0.36.2"
 
@@ -478,7 +493,7 @@ python-wheel="0.36.2"
 # https://rubygems.org/gems/bundler/versions/
 # NOTE Consider renaming to 'bundler' here.
 # Update with 'gem install bundler'.
-ruby-bundler="2.2.15"
+ruby-bundler="2.2.16"
 
 # https://rubygems.org/pages/download/
 # NOTE Consider renaming to 'rubygems' here.
@@ -496,19 +511,19 @@ ruby-ronn="0.7.3"
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.0"         # homebrew
-rust-broot="1.2.9"        # homebrew; br
+rust-broot="1.4.0"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.5.4"      # homebrew; dust
-rust-exa="0.10.0"         # homebrew
+rust-exa="0.10.1"         # homebrew
 rust-fd-find="8.2.1"      # homebrew; fd
 rust-hyperfine="1.11.0"   # homebrew
-rust-procs="0.11.4"       # homebrew
+rust-procs="0.11.5"       # homebrew
 rust-ripgrep-all="0.9.6"  # homebrew; rga
 rust-ripgrep="12.1.1"     # homebrew; rg
-rust-starship="0.51.0"    # homebrew
+rust-starship="0.53.0"    # homebrew
 rust-tokei="12.1.2"       # homebrew
 rust-xsv="0.13.0"         # homebrew
-rust-zoxide="0.6.0"       # homebrew; z
+rust-zoxide="0.7.0"       # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------

@@ -1,9 +1,10 @@
 #!/bin/sh
+# shellcheck disable=SC2154,SC3003,SC3054,SC3060
 
 _koopa_prompt() { # {{{1
     # """
     # Customize the interactive prompt.
-    # @note Updated 2020-11-10.
+    # @note Updated 2021-04-22.
     #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
@@ -26,13 +27,11 @@ _koopa_prompt() { # {{{1
     #       howto-linux-unix-bash-shell-setup-prompt.html
     # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
     # """
-    # shellcheck disable=SC2039
     local conda conda_color git git_color hostname newline prompt prompt_color \
         shell user user_color venv venv_color wd wd_color
     shell="$(_koopa_shell)"
     hostname="$(_koopa_hostname)"
     # String replacement supported in Bash, Zsh.
-    # shellcheck disable=SC2039
     hostname="${hostname//.local/}"
     user="$(_koopa_user)"
     user="${user}@${hostname}"
@@ -46,8 +45,7 @@ _koopa_prompt() { # {{{1
             wd='\w'
             ;;
         zsh)
-            # shellcheck disable=SC2039
-            newline=$'\n'
+                    newline=$'\n'
             # Note that Zsh uses '%' by default.
             # > prompt='%%'
             # Inspired by Pure prompt.
@@ -76,17 +74,11 @@ _koopa_prompt() { # {{{1
             wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
             ;;
         zsh)
-            # shellcheck disable=SC2039,SC2154
             conda_color="${fg[yellow]}"
-            # shellcheck disable=SC2039
             git_color="${fg[green]}"
-            # shellcheck disable=SC2039
             prompt_color="${fg[magenta]}"
-            # shellcheck disable=SC2039
             user_color="${fg[cyan]}"
-            # shellcheck disable=SC2039
             venv_color="${fg[yellow]}"
-            # shellcheck disable=SC2039
             wd_color="${fg[blue]}"
             conda="%F%{${conda_color}%}${conda}%f"
             git="%F%{${git_color}%}${git}%f"
@@ -111,7 +103,6 @@ _koopa_prompt_conda() { # {{{1
     # Get conda environment name for prompt string.
     # @note Updated 2020-06-30.
     # """
-    # shellcheck disable=SC2039
     local env
     env="$(_koopa_conda_env)"
     [ -n "$env" ] || return 0
@@ -126,13 +117,12 @@ _koopa_prompt_git() { # {{{1
     #
     # Also indicate status with '*' if dirty (i.e. has unstaged changes).
     # """
-    # shellcheck disable=SC2039
     local git_branch git_status
     _koopa_is_git || return 0
     git_branch="$(_koopa_git_branch)"
     if _koopa_is_git_clean
     then
-        git_status=
+        git_status=''
     else
         git_status='*'
     fi
@@ -147,7 +137,6 @@ _koopa_prompt_venv() { # {{{1
     #
     # See also: https://stackoverflow.com/questions/10406926
     # """
-    # shellcheck disable=SC2039
     local env
     env="$(_koopa_venv)"
     [ -n "$env" ] || return 0

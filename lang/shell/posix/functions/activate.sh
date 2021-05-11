@@ -20,13 +20,12 @@ _koopa_activate_bcbio() { # {{{1
     # This is particularly important to avoid unexpected compilation issues
     # due to compilers in conda masking the system versions.
     # """
-    # shellcheck disable=SC2039
     local prefix
     _koopa_is_linux || return 0
     _koopa_is_installed bcbio_nextgen.py && return 0
     prefix="$(_koopa_bcbio_tools_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_end "${prefix}/bin"
+    _koopa_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH
     return 0
 }
@@ -40,7 +39,6 @@ _koopa_activate_conda() { # {{{1
     # Instead source the 'activate' script.
     # This must be reloaded inside of subshells to work correctly.
     # """
-    # shellcheck disable=SC2039
     local name nounset prefix
     prefix="${1:-}"
     [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/conda"
@@ -62,6 +60,15 @@ _koopa_activate_conda() { # {{{1
     return 0
 }
 
+_koopa_activate_dash_extras() { # {{{1
+    # """
+    # Extra configuration options for Dash shell.
+    # @note Updated 2021-05-07.
+    # """
+    export PS1='# '
+    return 0
+}
+
 _koopa_activate_emacs() { # {{{1
     # """
     # Activate Emacs.
@@ -79,7 +86,6 @@ _koopa_activate_ensembl_perl_api() { # {{{1
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
     # """
-    # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_ensembl_perl_api_prefix)"
     [ -d "$prefix" ] || return 0
@@ -108,7 +114,7 @@ quote=01:warning=01;35"
 _koopa_activate_gnu() { # {{{1
     # """
     # Activate GNU utilities.
-    # @note Updated 2021-04-09.
+    # @note Updated 2021-04-22.
     #
     # Creates hardened interactive aliases for GNU coreutils.
     #
@@ -117,98 +123,134 @@ _koopa_activate_gnu() { # {{{1
     #
     # macOS ships with BSD coreutils, which don't support all GNU options.
     # """
-    # shellcheck disable=SC2039
-    local cp ln mkdir mv rm
-    cp='cp'
-    ln='ln'
-    mkdir='mkdir'
-    mv='mv'
-    rm='rm'
-    if _koopa_is_macos && _koopa_is_installed brew
+    local cp harden_coreutils ln mkdir mv opt_prefix rm
+    if _koopa_is_linux
     then
-        alias bsdchmod='/bin/chmod'
-        alias bsdchown='/usr/sbin/chown'
-        alias bsdcp='/bin/cp'
-        alias bsddu='/usr/bin/du'
-        alias bsdfind='/usr/bin/find'
-        alias bsdgrep='/usr/bin/grep'
-        alias bsdmake='/usr/bin/make'
-        alias bsdman='/usr/bin/man'
-        alias bsdmkdir='/bin/mkdir'
-        alias bsdrm='/bin/rm'
-        alias bsdsed='/usr/bin/sed'
-        alias bsdtar='/usr/bin/tar'
-        alias chmod='gchmod'
-        alias chown='gchown'
-        alias du='gdu'
-        alias find='gfind'
-        alias grep='ggrep'
-        alias make='gmake'
-        alias man='gman'
-        alias sed='gsed'
-        alias tar='gtar'
-        cp='gcp'
-        ln='gln'
-        mkdir='gmkdir'
-        mv='gmv'
-        rm='grm'
+        harden_coreutils=1
+        cp='cp'
+        ln='ln'
+        mkdir='mkdir'
+        mv='mv'
+        rm='rm'
+    elif _koopa_is_macos
+    then
+        _koopa_is_installed brew || return 0
+        opt_prefix="$(_koopa_homebrew_prefix)/opt"
+        if [ -d "${opt_prefix}/coreutils" ]
+        then
+            harden_coreutils=1
+            alias bsdchmod='/bin/chmod'
+            alias bsdchown='/usr/sbin/chown'
+            alias bsdcp='/bin/cp'
+            alias bsddu='/usr/bin/du'
+            alias bsdln='/bin/ln'
+            alias bsdmkdir='/bin/mkdir'
+            alias bsdmv='/bin/mv'
+            alias bsdrm='/bin/rm'
+            alias bsdstat='/usr/bin/stat'
+            alias chmod='gchmod'
+            alias chown='gchown'
+            alias du='gdu'
+            alias stat='gstat'
+            cp='gcp'
+            ln='gln'
+            mkdir='gmkdir'
+            mv='gmv'
+            rm='grm'
+        else
+            _koopa_alert_not_installed 'Homebrew coreutils'
+            harden_coreutils=0
+        fi
+        if [ -d "${opt_prefix}/findutils" ]
+        then
+            alias bsdfind='/usr/bin/find'
+            alias find='gfind'
+        else
+            _koopa_alert_not_installed 'Homebrew findutils'
+        fi
+        if [ -d "${opt_prefix}/gnu-sed" ]
+        then
+            alias bsdsed='/usr/bin/sed'
+            alias sed='gsed'
+        else
+            _koopa_alert_not_installed 'Homebrew gnu-sed'
+        fi
+        if [ -d "${opt_prefix}/gnu-tar" ]
+        then
+            alias bsdtar='/usr/bin/tar'
+            alias tar='gtar'
+        else
+            _koopa_alert_not_installed 'Homebrew gnu-tar'
+        fi
+        if [ -d "${opt_prefix}/grep" ]
+        then
+            alias bsdgrep='/usr/bin/grep'
+            alias grep='ggrep'
+        else
+            _koopa_alert_not_installed 'Homebrew grep'
+        fi
+        if [ -d "${opt_prefix}/make" ]
+        then
+            alias bsdmake='/usr/bin/make'
+            alias make='gmake'
+        else
+            _koopa_alert_not_installed 'Homebrew make'
+        fi
+        if [ -d "${opt_prefix}/man-db" ]
+        then
+            alias bsdman='/usr/bin/man'
+            alias man='gman'
+        else
+            _koopa_alert_not_installed 'Homebrew man-db'
+        fi
     fi
-    # The '--archive' flag seems to have issues on some file systems.
-    # shellcheck disable=SC2139
-    alias cp="${cp} --interactive --recursive" # -i
-    # shellcheck disable=SC2139
-    alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
-    # shellcheck disable=SC2139
-    alias mkdir="${mkdir} --parents" # -p
-    # shellcheck disable=SC2139
-    alias mv="${mv} --interactive" # -i
-    # Problematic on some file systems: --dir --preserve-root
-    # Don't enable '--recursive' here by default, so we don't accidentally
-    # nuke an important directory.
-    # shellcheck disable=SC2139
-    alias rm="${rm} --interactive=once" # -I
+    if [ "$harden_coreutils" -eq 1 ]
+    then
+        # The '--archive' flag seems to have issues on some file systems.
+        # shellcheck disable=SC2139
+        alias cp="${cp} --interactive --recursive" # -i
+        # shellcheck disable=SC2139
+        alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
+        # shellcheck disable=SC2139
+        alias mkdir="${mkdir} --parents" # -p
+        # shellcheck disable=SC2139
+        alias mv="${mv} --interactive" # -i
+        # Problematic on some file systems: --dir --preserve-root
+        # Don't enable '--recursive' here by default, so we don't accidentally
+        # nuke an important directory.
+        # shellcheck disable=SC2139
+        alias rm="${rm} --interactive=once" # -I
+    fi
     return 0
 }
 
 _koopa_activate_go() { # {{{1
     # """
     # Activate Go.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-05-05.
     # """
-    # shellcheck disable=SC2039
     local prefix
-    prefix="$(_koopa_go_prefix)/latest"
+    prefix="$(_koopa_go_prefix)"
     [ -d "$prefix" ] && _koopa_activate_prefix "$prefix"
     _koopa_is_installed go || return 0
-    [ -z "${GOPATH:-}" ] && GOPATH="$(_koopa_go_gopath)"
+    [ -z "${GOPATH:-}" ] && GOPATH="$(_koopa_go_packages_prefix)"
     export GOPATH
-    # This can error on shared installs, so skip.
-    # > [ ! -d "$GOPATH" ] && mkdir -p "$GOPATH"
     return 0
 }
 
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-04-09.
+    # @note Updated 2021-04-30.
     # """
-    # shellcheck disable=SC2039
     local prefix
     prefix="$(_koopa_homebrew_prefix)"
-    # Enable these lines when debugging duration.
-    # shellcheck disable=SC2039
-    # > local bc date duration duration_start duration_stop
-    # > bc="${prefix}/opt/bc/bin/bc"
-    # > date="${prefix}/opt/coreutils/libexec/gnubin/date"
-    # > duration_start="$("$date" -u '+%s%3N')"
-    if ! _koopa_is_installed brew
-    then
-        _koopa_activate_prefix "$prefix"
-    fi
+    ! _koopa_is_installed brew && _koopa_activate_prefix "$prefix"
     _koopa_is_installed brew || return 0
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_NO_AUTO_UPDATE=1
+    export HOMEBREW_PREFIX="$prefix"
     # Stopgap fix for TLS SSL issues with some Homebrew casks.
     if [ -x "${prefix}/opt/curl/bin/curl" ]
     then
@@ -216,21 +258,72 @@ _koopa_activate_homebrew() { # {{{1
     fi
     if _koopa_is_macos
     then
-        export HOMEBREW_CASK_OPTS='--no-quarantine'
+        export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
+        _koopa_activate_homebrew_prefix curl ruby
+        _koopa_activate_homebrew_cask_google_cloud_sdk
+        _koopa_activate_homebrew_cask_gpg_suite
+        _koopa_activate_homebrew_cask_julia
+        _koopa_activate_homebrew_cask_r
     fi
-    # These programs are keg-only but we want to include them in the system
-    # path by default. Refer to '_koopa_activate_homebrew_keg_only' for other
-    # packages that we are only sourcing inside Bash scripts.
-    _koopa_activate_homebrew_prefix curl ruby
-    _koopa_activate_homebrew_google_cloud_sdk
-    # > _koopa_activate_homebrew_ruby_gems
-    # Enable these lines when debugging duration.
-    # > duration_stop="$("$date" -u '+%s%3N')"
-    # > duration="$( \
-    # >     _koopa_print "${duration_stop}-${duration_start}" \
-    # >     | "$bc" \
-    # > )"
-    # > _koopa_print "Homebrew (${duration} ms)"
+    return 0
+}
+
+_koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
+    # """
+    # Activate Homebrew Google Cloud SDK.
+    # @note Updated 2021-04-25.
+    # """
+    local prefix
+    prefix="$(_koopa_homebrew_prefix)"
+    prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
+    _koopa_activate_prefix "$prefix"
+    # Alternate (slower) approach that enables autocompletion.
+    # > [ -d "$prefix" ] || return 0
+    # > local shell
+    # > shell="$(_koopa_shell)"
+    # > # shellcheck source=/dev/null
+    # > [ -f "${prefix}/path.${shell}.inc" ] && \
+    # >     . "${prefix}/path.${shell}.inc"
+    # > # shellcheck source=/dev/null
+    # > [ -f "${prefix}/completion.${shell}.inc" ] && \
+    # >     . "${prefix}/completion.${shell}.inc"
+    return 0
+}
+
+_koopa_activate_homebrew_cask_gpg_suite() { # {{{1
+    # """
+    # Activate MacGPG (gpg-suite) Homebrew cask.
+    # @note Updated 2021-04-22.
+    #
+    # This code shouldn't be necessary to run at startup, since MacGPG2
+    # should be configured at '/private/etc/paths.d/MacGPG2' automatically.
+    # """
+    _koopa_activate_prefix '/usr/local/MacGPG2'
+    return 0
+}
+
+_koopa_activate_homebrew_cask_julia() { # {{{1
+    # """
+    # Activate Julia Homebrew cask.
+    # @note Updated 2021-04-25.
+    # """
+    local prefix version
+    version="$(_koopa_variable 'julia')"
+    version="$(_koopa_major_minor_version "$version")"
+    prefix="/Applications/Julia-${version}.app/Contents/Resources/julia"
+    _koopa_activate_prefix "$prefix"
+    return 0
+}
+
+_koopa_activate_homebrew_cask_r() { # {{{1
+    # """
+    # Activate R Homebrew cask.
+    # @note Updated 2021-04-22.
+    # """
+    local prefix version
+    version='Current'
+    prefix="/Library/Frameworks/R.framework/Versions/${version}/Resources"
+    _koopa_activate_prefix "$prefix"
     return 0
 }
 
@@ -256,15 +349,14 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # - brew info libtool
     # - brew info make
     # """
-    # shellcheck disable=SC2039
     local homebrew_prefix name prefix
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     for name in "$@"
     do
         prefix="${homebrew_prefix}/opt/${name}/libexec"
         [ -d "$prefix" ] || continue
-        _koopa_force_add_to_path_start "${prefix}/gnubin"
-        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+        _koopa_add_to_path_start "${prefix}/gnubin"
+        _koopa_add_to_manpath_start "${prefix}/gnuman"
     done
     return 0
 }
@@ -301,32 +393,11 @@ _koopa_activate_homebrew_keg_only() { # {{{1
     return 0
 }
 
-_koopa_activate_homebrew_google_cloud_sdk() { # {{{1
-    # """
-    # Activate Homebrew Google Cloud SDK.
-    # @note Updated 2020-11-16.
-    # """
-    # shellcheck disable=SC2039
-    local prefix shell
-    prefix="$(_koopa_homebrew_prefix)"
-    prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
-    [ -d "$prefix" ] || return 0
-    shell="$(_koopa_shell)"
-    # shellcheck source=/dev/null
-    [ -f "${prefix}/path.${shell}.inc" ] && \
-        . "${prefix}/path.${shell}.inc"
-    # shellcheck source=/dev/null
-    [ -f "${prefix}/completion.${shell}.inc" ] && \
-        . "${prefix}/completion.${shell}.inc"
-    return 0
-}
-
 _koopa_activate_homebrew_libexec_prefix() { # {{{1
     # """
     # Activate a Homebrew cellar-only program.
     # @note Updated 2021-03-31.
     # """
-    # shellcheck disable=SC2039
     local homebrew_prefix name prefix
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     for name in "$@"
@@ -343,7 +414,6 @@ _koopa_activate_homebrew_prefix() { # {{{1
     # Activate a Homebrew cellar-only program.
     # @note Updated 2021-03-31.
     # """
-    # shellcheck disable=SC2039
     local homebrew_prefix name prefix
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     for name in "$@"
@@ -360,23 +430,22 @@ _koopa_activate_homebrew_python() { # {{{1
     # Activate Homebrew Python.
     # @note Updated 2020-10-27.
     # """
-    # shellcheck disable=SC2039
     local version
     version="$(_koopa_major_minor_version "$(_koopa_variable 'python')")"
     _koopa_activate_homebrew_prefix "python@${version}"
     return 0
 }
 
-_koopa_activate_homebrew_ruby_gems() { # {{{1
+_koopa_activate_homebrew_ruby_packages() { # {{{1
     # """
-    # Activate Homebrew Ruby gems.
+    # Activate Homebrew Ruby packages (gems).
     # @note Updated 2020-12-31.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ruby.rb
     # - https://stackoverflow.com/questions/12287882/
     # """
-    _koopa_activate_prefix "$(_koopa_homebrew_ruby_gems_prefix)"
+    _koopa_activate_prefix "$(_koopa_homebrew_ruby_packages_prefix)"
     return 0
 }
 
@@ -385,7 +454,6 @@ _koopa_activate_koopa_paths() { # {{{1
     # Automatically configure koopa PATH and MANPATH.
     # @note Updated 2021-01-19.
     # """
-    # shellcheck disable=SC2039
     local config_prefix distro_prefix koopa_prefix linux_prefix shell
     koopa_prefix="$(_koopa_prefix)"
     config_prefix="$(_koopa_config_prefix)"
@@ -419,7 +487,6 @@ _koopa_activate_llvm() { # {{{1
     # Activate LLVM config.
     # @note Updated 2020-08-05.
     # """
-    # shellcheck disable=SC2039
     local config make_prefix
     [ -x "${LLVM_CONFIG:-}" ] && return 0
     make_prefix="$(_koopa_make_prefix)"
@@ -444,7 +511,6 @@ _koopa_activate_local_etc_profile() { # {{{1
     #
     # Currently only supported for Bash.
     # """
-    # shellcheck disable=SC2039
     local make_prefix prefix
     case "$(_koopa_shell)" in
         bash)
@@ -470,48 +536,13 @@ _koopa_activate_local_etc_profile() { # {{{1
 _koopa_activate_local_paths() { # {{{1
     # """
     # Activate local user paths.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-04-23.
     # """
-    _koopa_force_add_to_path_start \
+    _koopa_add_to_path_start \
         "${HOME}/bin" \
         "${HOME}/.local/bin"
-    _koopa_force_add_to_manpath_start \
+    _koopa_add_to_manpath_start \
         "${HOME}/.local/share/man"
-    return 0
-}
-
-_koopa_activate_macos_extras() { # {{{1
-    # """
-    # Activate macOS-specific extra settings.
-    # @note Updated 2020-07-05.
-    # """
-    # Improve terminal colors.
-    if [ -z "${CLICOLOR:-}" ]
-    then
-        export CLICOLOR=1
-    fi
-    # Refer to 'man ls' for 'LSCOLORS' section on color designators. #Note that
-    # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
-    if [ -z "${LSCOLORS:-}" ]
-    then
-        export LSCOLORS='Gxfxcxdxbxegedabagacad'
-    fi
-    return 0
-}
-
-_koopa_activate_macos_python() { # {{{1
-    # """
-    # Activate macOS Python binary install.
-    # @note Updated 2020-11-16.
-    # """
-    # shellcheck disable=SC2039
-    local minor_version version
-    _koopa_is_macos || return 1
-    [ -z "${VIRTUAL_ENV:-}" ] || return 0
-    version="$(_koopa_variable 'python')"
-    minor_version="$(_koopa_major_minor_version "$version")"
-    _koopa_activate_prefix "/Library/Frameworks/Python.framework/\
-Versions/${minor_version}"
     return 0
 }
 
@@ -530,17 +561,32 @@ _koopa_activate_nextflow() { # {{{1
 _koopa_activate_openjdk() { # {{{1
     # """
     # Activate OpenJDK.
-    # @note Updated 2020-11-16.
+    # @note Updated 2021-05-06.
     #
     # Use Homebrew instead to manage on macOS.
     #
     # We're using a symlink approach here to manage versions.
     # """
-    # shellcheck disable=SC2039
     local prefix
     _koopa_is_linux || return 0
-    prefix="$(_koopa_openjdk_prefix)/latest"
+    prefix="$(_koopa_openjdk_prefix)"
     [ -d "$prefix" ] || return 0
+    _koopa_activate_prefix "$prefix"
+    return 0
+}
+
+_koopa_activate_perl_packages() { # {{{1
+    # """
+    # Activate Perl local library.
+    # @note Updated 2021-05-04.
+    # @seealso
+    # - brew info perl
+    # """
+    local prefix
+    prefix="$(_koopa_perl_packages_prefix)"
+    [ -d "$prefix" ] || return 0
+    _koopa_is_installed perl || return 0
+    eval "$(perl "-I${prefix}/lib/perl5" "-Mlocal::lib=${prefix}")"
     _koopa_activate_prefix "$prefix"
     return 0
 }
@@ -556,7 +602,6 @@ _koopa_activate_perlbrew() { # {{{1
     # See also:
     # - https://perlbrew.pl
     # """
-    # shellcheck disable=SC2039
     local nounset prefix script
     [ -n "${PERLBREW_ROOT:-}" ] && return 0
     ! _koopa_is_installed perlbrew || return 0
@@ -577,18 +622,17 @@ _koopa_activate_perlbrew() { # {{{1
 _koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
-    # @note Updated 2021-01-01.
+    # @note Updated 2021-04-23.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
     # """
-    # shellcheck disable=SC2039
     local prefix
     _koopa_is_installed pipx || return 0
     prefix="$(_koopa_pipx_prefix)"
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
-    _koopa_force_add_to_path_start "$PIPX_BIN_DIR"
+    _koopa_add_to_path_start "$PIPX_BIN_DIR"
     export PIPX_HOME PIPX_BIN_DIR
     return 0
 }
@@ -614,7 +658,6 @@ _koopa_activate_pkg_config() { # {{{1
     # @seealso
     # - https://askubuntu.com/questions/210210/
     # """
-    # shellcheck disable=SC2039
     local arch homebrew_prefix make_prefix sys_pkg_config
     [ -n "${PKG_CONFIG_PATH:-}" ] && return 0
     make_prefix="$(_koopa_make_prefix)"
@@ -623,14 +666,14 @@ _koopa_activate_pkg_config() { # {{{1
     then
         PKG_CONFIG_PATH="$("$sys_pkg_config" --variable pc_path pkg-config)"
     fi
-    _koopa_force_add_to_pkg_config_path_start \
+    _koopa_add_to_pkg_config_path_start \
         "${make_prefix}/share/pkgconfig" \
         "${make_prefix}/lib/pkgconfig" \
         "${make_prefix}/lib64/pkgconfig"
     if _koopa_is_linux
     then
         arch="$(_koopa_arch)"
-        _koopa_force_add_to_pkg_config_path_start \
+        _koopa_add_to_pkg_config_path_start \
             "${make_prefix}/lib/${arch}-linux-gnu/pkgconfig"
     fi
     if _koopa_is_macos && _koopa_is_installed brew
@@ -639,7 +682,7 @@ _koopa_activate_pkg_config() { # {{{1
         # This is useful for getting Ruby jekyll gem (requires ffi) to install.
         # Alternatively, this works but is annoying:
         # > gem install ffi -- --disable-system-libffi
-        _koopa_force_add_to_pkg_config_path_start \
+        _koopa_add_to_pkg_config_path_start \
             "${homebrew_prefix}/opt/libffi/lib/pkgconfig"
     fi
     return 0
@@ -647,20 +690,23 @@ _koopa_activate_pkg_config() { # {{{1
 
 _koopa_activate_prefix() { # {{{1
     # """
-    # Automatically configure PATH and MANPATH for a specified prefix.
-    # @note Updated 2020-11-16.
+    # Automatically configure 'PATH', 'PKG_CONFIG_PATH' and 'MANPATH' for a
+    # specified prefix.
+    # @note Updated 2021-05-10.
     # """
-    # shellcheck disable=SC2039
     local prefix
+    [ "$#" -gt 0 ] || return 1
     for prefix in "$@"
     do
         [ -d "$prefix" ] || continue
-        _koopa_force_add_to_path_start \
+        _koopa_add_to_path_start \
             "${prefix}/bin" \
             "${prefix}/sbin"
-        _koopa_force_add_to_manpath_start \
+        _koopa_add_to_manpath_start \
             "${prefix}/man" \
             "${prefix}/share/man"
+        _koopa_add_to_pkg_config_path_start \
+            "${prefix}/lib/pkgconfig"
     done
     return 0
 }
@@ -672,7 +718,6 @@ _koopa_activate_pyenv() { # {{{1
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
-    # shellcheck disable=SC2039
     local nounset prefix script
     _koopa_is_installed pyenv && return 0
     [ -n "${PYENV_ROOT:-}" ] && return 0
@@ -689,15 +734,15 @@ _koopa_activate_pyenv() { # {{{1
     return 0
 }
 
-_koopa_activate_python_site_packages() { # {{{1
+_koopa_activate_python_packages() { # {{{1
     # """
     # Activate Python site packages library.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-04.
     #
     # This ensures that 'bin' will be added to PATH, which is useful when
     # installing via pip with '--target' flag.
     # """
-    _koopa_activate_prefix "$(_koopa_python_site_packages_prefix)"
+    _koopa_activate_prefix "$(_koopa_python_packages_prefix)"
     return 0
 }
 
@@ -708,7 +753,6 @@ _koopa_activate_python_startup() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/33683744/
     # """
-    # shellcheck disable=SC2039
     local file
     file="${HOME}/.pyrc"
     [ -f "$file" ] || return 0
@@ -724,7 +768,6 @@ _koopa_activate_rbenv() { # {{{1
     # See also:
     # - https://github.com/rbenv/rbenv
     # """
-    # shellcheck disable=SC2039
     local nounset prefix script
     if _koopa_is_installed rbenv
     then
@@ -748,12 +791,11 @@ _koopa_activate_rbenv() { # {{{1
 _koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-04.
     # """
-    # shellcheck disable=SC2039
     local prefix
-    prefix="$(_koopa_ruby_gems_prefix)"
-    _koopa_activate_prefix "$(_koopa_ruby_gems_prefix)"
+    prefix="$(_koopa_ruby_packages_prefix)"
+    _koopa_activate_prefix "$prefix"
     export GEM_HOME="$prefix"
     return 0
 }
@@ -761,17 +803,16 @@ _koopa_activate_ruby() { # {{{1
 _koopa_activate_rust() { # {{{1
     # """
     # Activate Rust programming language.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-05-07.
     #
     # Attempt to locate cargo home and source the env script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
     #
     # Alternatively, can just add '${cargo_home}/bin' to PATH.
     # """
-    # shellcheck disable=SC2039
     local cargo_prefix nounset script rustup_prefix
-    cargo_prefix="$(_koopa_rust_cargo_prefix)"
-    rustup_prefix="$(_koopa_rust_rustup_prefix)"
+    cargo_prefix="$(_koopa_rust_packages_prefix)"
+    rustup_prefix="$(_koopa_rust_prefix)"
     [ -d "$cargo_prefix" ] || return 0
     [ -d "$rustup_prefix" ] || return 0
     script="${cargo_prefix}/env"
@@ -791,7 +832,6 @@ _koopa_activate_secrets() { # {{{1
     # Source secrets file.
     # @note Updated 2020-07-07.
     # """
-    # shellcheck disable=SC2039
     local file
     file="${1:-}"
     [ -z "$file" ] && file="${HOME}/.secrets"
@@ -815,7 +855,6 @@ _koopa_activate_ssh_key() { # {{{1
     # List currently loaded keys:
     # > ssh-add -L
     # """
-    # shellcheck disable=SC2039
     local key
     _koopa_is_linux || return 0
     _koopa_is_interactive || return 0
@@ -835,28 +874,25 @@ _koopa_activate_ssh_key() { # {{{1
 _koopa_activate_standard_paths() { # {{{1
     # """
     # Activate standard paths.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-06.
     #
     # Note that here we're making sure local binaries are included.
     # Inspect '/etc/profile' if system PATH appears misconfigured.
     #
+    # Note that macOS Big Sur includes '/usr/local/bin' automatically now,
+    # resulting in a duplication. This is OK.
+    # Refer to '/etc/paths.d' for other system paths.
+    #
     # @seealso
     # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
     # """
-    # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
-    _koopa_add_to_path_end \
-        '/usr/sbin' \
-        '/usr/bin' \
-        '/sbin' \
-        '/bin'
-    _koopa_add_to_manpath_end \
-        '/usr/share/man'
-    _koopa_force_add_to_path_start \
+    _koopa_add_to_path_start \
         "${make_prefix}/bin" \
-        "${make_prefix}/sbin" \
-    _koopa_force_add_to_manpath_start \
+        "${make_prefix}/sbin"
+    _koopa_add_to_manpath_start \
+        "${make_prefix}/man" \
         "${make_prefix}/share/man"
     return 0
 }
@@ -879,7 +915,6 @@ _koopa_activate_venv() { # {{{1
     #
     # Refer to 'declare -f deactivate' for function source code.
     # """
-    # shellcheck disable=SC2039
     local name nounset prefix script
     [ -n "${VIRTUAL_ENV:-}" ] && return 0
     _koopa_str_match_regex "$(_koopa_shell)" '^(bash|zsh)$' || return 0
@@ -892,19 +927,6 @@ _koopa_activate_venv() { # {{{1
     # shellcheck source=/dev/null
     . "$script"
     [ "$nounset" -eq 1 ] && set -u
-    return 0
-}
-
-_koopa_activate_visual_studio_code() { # {{{1
-    # """
-    # Activate Visual Studio Code.
-    # @note Updated 2021-03-16.
-    # """
-    # shellcheck disable=SC2039
-    local prefix
-    _koopa_is_macos || return 0
-    prefix='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
-    _koopa_force_add_to_path_start "$prefix"
     return 0
 }
 
@@ -922,7 +944,6 @@ _koopa_activate_xdg() { # {{{1
     # - https://developer.gnome.org/basedir-spec/
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
     # """
-    # shellcheck disable=SC2039
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
     [ -z "${XDG_CACHE_HOME:-}" ] && \
@@ -947,5 +968,30 @@ _koopa_activate_xdg() { # {{{1
         XDG_DATA_DIRS \
         XDG_DATA_HOME \
         XDG_RUNTIME_DIR
+    return 0
+}
+
+_koopa_macos_activate_python() { # {{{1
+    # """
+    # Activate macOS Python binary install.
+    # @note Updated 2020-11-16.
+    # """
+    local minor_version version
+    [ -z "${VIRTUAL_ENV:-}" ] || return 0
+    version="$(_koopa_variable 'python')"
+    minor_version="$(_koopa_major_minor_version "$version")"
+    _koopa_activate_prefix "/Library/Frameworks/Python.framework/\
+Versions/${minor_version}"
+    return 0
+}
+
+_koopa_macos_activate_visual_studio_code() { # {{{1
+    # """
+    # Activate Visual Studio Code.
+    # @note Updated 2021-03-16.
+    # """
+    local prefix
+    prefix='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
+    _koopa_add_to_path_start "$prefix"
     return 0
 }

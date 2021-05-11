@@ -3,7 +3,7 @@
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2021-02-11.
+    # @note Updated 2021-04-30.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -43,22 +43,26 @@ koopa::activate_conda_env() { # {{{1
     return 0
 }
 
+# NOTE Consider reworking the variables as an array here.
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2020-10-27.
+    # @note Updated 2021-04-30.
     # """
-    local all aligners chipseq data_mining env envs file_formats methylation \
-        quality_control reticulate rnaseq trimming variation version workflows
+    local all aligners chipseq data_mining enrichment env envs file_formats \
+        methylation quality_control reticulate riboseq rnaseq trimming \
+        variation version workflows
     koopa::assert_is_installed conda
     all=0
     aligners=0
     chipseq=0
     data_mining=0
+    enrichment=0
     file_formats=0
     methylation=0
     quality_control=0
     reticulate=0
+    riboseq=0
     rnaseq=0
     trimming=0
     variation=0
@@ -93,6 +97,10 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 data_mining=1
                 shift 1
                 ;;
+            --enrichment)
+                enrichment=1
+                shift 1
+                ;;
             --file-formats)
                 file_formats=1
                 shift 1
@@ -107,6 +115,10 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 ;;
             --reticulate)
                 reticulate=1
+                shift 1
+                ;;
+            --riboseq|--ribo-seq)
+                riboseq=1
                 shift 1
                 ;;
             --rnaseq|--rna-seq)
@@ -137,11 +149,13 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         aligners=1
         chipseq=1
         data_mining=1
+        enrichment=1
         file_formats=1
         methylation=1
         quality_control=1
-        rnaseq=1
         reticulate=1
+        riboseq=1
+        rnaseq=1
         trimming=1
         variation=1
         workflows=1
@@ -175,7 +189,16 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     fi
     if [[ "$data_mining" -eq 1 ]]
     then
-        envs+=('entrez-direct' 'sra-tools')
+        envs+=(
+            'entrez-direct'
+            'sra-tools'
+        )
+    fi
+    if [[ "$enrichment" -eq 1 ]]
+    then
+        envs+=(
+            'meme'  # MEME Suite
+        )
     fi
     if [[ "$file_formats" -eq 1 ]]
     then
@@ -209,6 +232,19 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             'multiqc'
             'qualimap'
         )
+    fi
+    if [[ "$riboseq" -eq 1 ]]
+    then
+        envs+=(
+            'ribocode'
+            'ribodiff'
+        )
+        if koopa::is_linux
+        then
+            envs+=(
+                'ribotaper'
+            )
+        fi
     fi
     if [[ "$rnaseq" -eq 1 ]]
     then

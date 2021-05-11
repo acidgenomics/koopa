@@ -18,7 +18,6 @@ _koopa_git_branch() { # {{{1
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
-    # shellcheck disable=SC2039
     local branch
     _koopa_is_git || return 0
     _koopa_is_installed git || return 0
@@ -32,7 +31,6 @@ _koopa_tmux_sessions() { # {{{1
     # Show active tmux sessions.
     # @note Updated 2021-03-18.
     # """
-    # shellcheck disable=SC2039
     local x
     _koopa_is_installed tmux || return 0
     _koopa_is_tmux && return 0
@@ -62,7 +60,6 @@ _koopa_today_bucket() { # {{{1
     # -s, --symbolic
     #        make symbolic links instead of hard links
     # """
-    # shellcheck disable=SC2039
     local bucket_dir today_bucket today_link
     bucket_dir="${KOOPA_BUCKET:-}"
     [ -z "$bucket_dir" ] && bucket_dir="${HOME:?}/bucket"

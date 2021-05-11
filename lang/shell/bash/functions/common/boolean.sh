@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+koopa::contains() { # {{{1
+    # """
+    # Does an array contain a specific element?
+    # @note Updated 2021-05-07.
+    #
+    # @examples
+    # string='foo'
+    # array=('foo' 'bar')
+    # koopa::contains "$string" "${array[@]}"
+    #
+    # @seealso
+    # https://stackoverflow.com/questions/3685970/
+    # """
+    local string x
+    koopa::assert_has_args_ge "$#" 2
+    string="${1:?}"
+    shift 1
+    for x
+    do
+        [[ "$x" == "$string" ]] && return 0
+    done
+    return 1
+}
+
 koopa::file_match() { # {{{1
     # """
     # Is a string defined in a file?
@@ -179,11 +203,10 @@ koopa::is_bash_ok() { # {{{1
     # """
     # Is the current version of Bash OK (or super old)?
     # @note Updated 2020-07-05.
-    # 
+    #
     # Older versions (< 4; e.g. shipping version on macOS) have issues with
     # 'read' that we have to handle with special care here.
     # """
-    # shellcheck disable=SC2039
     local major_version version
     koopa::is_installed bash || return 1
     version="$(koopa::get_version 'bash')"
@@ -348,7 +371,7 @@ koopa::is_powerful() { # {{{1
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-05-04.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -361,34 +384,11 @@ koopa::is_python_package_installed() { # {{{1
     # - https://stackoverflow.com/questions/1051254
     # - https://askubuntu.com/questions/588390
     # """
-    local pkg pos prefix python
+    local pkg prefix python
     koopa::assert_has_args "$#"
     python="$(koopa::python)"
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --python=*)
-                python="${1#*=}"
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
     koopa::is_installed "$python" || return 1
-    prefix="$(koopa::python_site_packages_prefix "$python")"
+    prefix="$(koopa::python_packages_prefix "$python")"
     for pkg in "$@"
     do
         if [[ ! -d "${prefix}/${pkg}" ]] && [[ ! -f "${prefix}/${pkg}.py" ]]
@@ -402,7 +402,7 @@ koopa::is_python_package_installed() { # {{{1
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-04-29.
     #
     # This will only return true for user-installed packages.
     #
@@ -412,32 +412,9 @@ koopa::is_r_package_installed() { # {{{1
     # > Rscript -e "'${1}' %in% rownames(utils::installed.packages())" \
     # >     | grep -q 'TRUE'
     # """
-    local pkg pos r
+    local pkg r
     koopa::assert_has_args "$#"
-    r='R'
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --r=*)
-                r="${1#*=}"
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    r="$(koopa::r)"
     koopa::is_installed "$r" || return 1
     prefix="$(koopa::r_library_prefix "$r")"
     for pkg in "$@"
@@ -571,7 +548,7 @@ koopa::is_symlinked_app() { # {{{1
             str="$(koopa::which_realpath "$str")"
         elif [[ -e "$str" ]]
         then
-            str="$(realpath "$str")"
+            str="$(koopa::realpath "$str")"
         else
             return 1
         fi

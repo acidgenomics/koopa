@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_pkg_config_version() { # {{{1
+koopa:::pkg_config_version() { # {{{1
     # """
     # Get a library version via pkg-config.
     # @note Updated 2021-03-01.
@@ -40,7 +40,7 @@ koopa::armadillo_version() { # {{{1
     # @note Updated 2021-03-01.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::_pkg_config_version 'armadillo'
+    koopa:::pkg_config_version 'armadillo'
 }
 
 koopa::boost_version() { # {{{1
@@ -76,7 +76,7 @@ koopa::cairo_version() { # {{{1
     # @note Updated 2021-03-01.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::_pkg_config_version 'cairo'
+    koopa:::pkg_config_version 'cairo'
 }
 
 koopa::current_bcbio_version() { # {{{1
@@ -246,7 +246,7 @@ koopa::eigen_version() { # {{{1
     # @note Updated 2021-03-01.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::_pkg_config_version 'eigen3'
+    koopa:::pkg_config_version 'eigen3'
 }
 
 koopa::extract_version() { # {{{1
@@ -345,7 +345,7 @@ koopa::harfbuzz_version() { # {{{1
     # @note Updated 2021-03-01.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::_pkg_config_version 'harfbuzz'
+    koopa:::pkg_config_version 'harfbuzz'
 }
 
 koopa::hdf5_version() { # {{{1
@@ -375,7 +375,7 @@ koopa::icu4c_version() { # {{{1
     # @note Updated 2021-03-01.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::_pkg_config_version 'icu4c'
+    koopa:::pkg_config_version 'icu4c'
 }
 
 koopa::imagemagick_version() { # {{{1
@@ -384,7 +384,7 @@ koopa::imagemagick_version() { # {{{1
     # @note Updated 2021-03-01.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::_pkg_config_version 'imagemagick'
+    koopa:::pkg_config_version 'imagemagick'
 }
 
 koopa::llvm_version() { # {{{1

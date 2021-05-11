@@ -67,22 +67,3 @@ koopa::rename_lowercase() { # {{{1
     fi
     return 0
 }
-
-koopa::rename_snake_to_kebab() { # {{{1
-    # """
-    # Quickly rename files formatted in snake case to kebab.
-    # @note Updated 2020-07-04.
-    # """
-    local dir
-    dir="${1:-.}"
-    koopa::assert_is_installed find rename
-    koopa::assert_is_dir "$dir"
-    find "$dir" \
-        -type f \
-        -not -name '._*' \
-        -name '*_*' \
-        -print0 \
-        | xargs -0 -I {} rename --verbose 's/_/-/g' {}
-    return 0
-}
-

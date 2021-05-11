@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-05-07.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -22,16 +22,14 @@ koopa::debian_install_base() { # {{{1
     # - How to replicate installed packages across machines.
     #   https://serverfault.com/questions/56848
     # """
-    local dict legacy_pkgs name_fancy pkg pkgs pos remove_pkgs
+    local dict name_fancy pkgs pos
     koopa::assert_is_installed apt apt-get sed sudo
     declare -A dict=(
         [apt_enabled_repos]="$(koopa::apt_enabled_repos)"
-        [apt_installed]="$(sudo apt list --installed 2>/dev/null)"
         [base]=1
         [dev]=1
         [extra]=0
         [recommended]=1
-        [remove_legacy]=0
         [upgrade]=1
     )
     pos=()
@@ -52,10 +50,6 @@ koopa::debian_install_base() { # {{{1
                 dict[extra]=1
                 dict[recommended]=1
                 dict[upgrade]=1
-                shift 1
-                ;;
-            --remove-legacy)
-                dict[remove_legacy]=1
                 shift 1
                 ;;
             "")
@@ -100,40 +94,6 @@ koopa::debian_install_base() { # {{{1
         koopa::alert "Upgrading system via 'dist-upgrade'."
         koopa::apt_get dist-upgrade
     fi
-    if [[ "${dict[remove_legacy]}" -eq 1 ]]
-    then
-        # This step is only recommended when cleaning up a persistent virtual
-        # machine that may have a number of old packages installed.
-        koopa::alert 'Removing legacy packages (not generally recommended).'
-        legacy_pkgs=(
-            'cargo'                   # use 'install-rust'
-            'containerd'              # docker legacy
-            'docker'                  # docker legacy
-            'docker-engine'           # docker legacy
-            'docker.io'               # docker legacy
-            'emacs'                   # use 'install-emacs'
-            'emacs25'                 # gets installed by zsh
-            'fish'                    # use 'install-fish'
-            'libgdal-dev'             # use 'install-gdal'
-            'libgeos-dev'             # use 'install-geos'
-            'libproj-dev'             # use 'install-proj'
-            'proj-bin'                # use 'install-proj'
-            'proj-data'               # use 'install-proj'
-            'runc'                    # docker legacy
-        )
-        remove_pkgs=()
-        for pkg in "${legacy_pkgs[@]}"
-        do
-            if koopa::str_match_regex "${dict[apt_installed]}" "^${pkg}/"
-            then
-                remove_pkgs+=("$pkg")
-            fi
-        done
-        if koopa::is_array_non_empty "${remove_pkgs[@]}"
-        then
-            sudo apt-get --yes remove "${remove_pkgs[@]}"
-        fi
-    fi
     pkgs=()
     # These packages should be included in the Docker base image.
     if [[ "${dict[base]}" -eq 1 ]]
@@ -158,6 +118,8 @@ koopa::debian_install_base() { # {{{1
             'locales'
             'lsb-release'
             'man-db'
+            'python3'
+            'python3-venv'
             'sudo'
             'tzdata'
             'unzip'
@@ -175,6 +137,7 @@ koopa::debian_install_base() { # {{{1
             'automake'
             'byacc'
             'cmake'
+            'default-jdk'
             'diffutils'
             'dirmngr'
             'file'
@@ -204,27 +167,28 @@ koopa::debian_install_base() { # {{{1
             'zsh'
         )
     fi
-    # Only include these when not building GDAL, GEOS, and PROJ from source,
-    # which are enabled in full mode.
-    if [[ "${dict[dev]}" -eq 1 ]] && [[ "${dict[extra]}" -eq 0 ]]
-    then
-        pkgs+=(
-            'libgdal-dev'
-            'libgeos-dev'
-            'libproj-dev'
-            'proj-bin'
-        )
-    fi
     if [[ "${dict[dev]}" -eq 1 ]]
     then
         pkgs+=(
+            # > 'libmariadb-dev'
+            # > 'libmysqlclient-dev'  # Conflicts with libmariadb-dev (Ubuntu)
+            # > 'proj-bin'
             'libacl1-dev'
             'libapparmor-dev'
             'libapr1-dev'  # subversion
             'libaprutil1-dev'  # subversion
             'libbison-dev'
+            'libboost-chrono-dev'  # bcl2fastq
+            'libboost-date-time-dev'  # bcl2fastq
+            'libboost-dev'  # bcl2fastq
+            'libboost-filesystem-dev'  # bcl2fastq
+            'libboost-iostreams-dev'  # bcl2fastq
+            'libboost-program-options-dev'  # bcl2fastq
+            'libboost-thread-dev'  # bcl2fastq
+            'libboost-timer-dev'  # bcl2fastq
             'libbz2-dev'
             'libcairo2-dev'
+            'libclang-dev'  # rstudio-server
             'libcurl4-gnutls-dev'
             'libevent-dev'
             'libffi-dev'
@@ -232,6 +196,8 @@ koopa::debian_install_base() { # {{{1
             'libfontconfig1-dev'
             'libfreetype6-dev'
             'libfribidi-dev'
+            'libgdal-dev'
+            'libgeos-dev'
             'libgfortran5'  # R nlme
             'libgif-dev'
             'libgl1-mesa-dev'
@@ -252,8 +218,6 @@ koopa::debian_install_base() { # {{{1
             'liblz4-dev'  # rsync
             'liblzma-dev'
             'libmagick++-dev'
-            # > 'libmariadb-dev'
-            # > 'libmysqlclient-dev'  # Conflicts with libmariadb-dev (Ubuntu)
             'libmodule-build-perl'
             'libmpc-dev'
             'libmpfr-dev'
@@ -270,6 +234,7 @@ koopa::debian_install_base() { # {{{1
             'libpng-dev'
             'libpoppler-cpp-dev'
             'libpq-dev'
+            'libproj-dev'
             'libprotobuf-dev'
             'libprotoc-dev'
             'librdf0-dev'
@@ -289,6 +254,7 @@ koopa::debian_install_base() { # {{{1
             'libxxhash-dev'  # rsync; not available on Ubuntu 18
             'libz-dev'
             'libzstd-dev'  # rsync
+            'python3-dev'
             'sqlite3'
             'tcl-dev'
             'tk-dev'
@@ -298,7 +264,6 @@ koopa::debian_install_base() { # {{{1
     if [[ "${dict[extra]}" -eq 1 ]]
     then
         pkgs+=(
-            # > default-jdk
             'alien'
             'biber'
             'ggobi'
@@ -314,7 +279,6 @@ koopa::debian_install_base() { # {{{1
             'openmpi-common'
             'openmpi-doc'
             'pandoc'
-            'pandoc-citeproc'
             'pass'
             'protobuf-compiler'
             'systemd'

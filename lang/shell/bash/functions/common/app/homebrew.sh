@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::brewfile() { # {{{1
+koopa::brew_brewfile() { # {{{1
     # """
     # Homebrew Bundle Brewfile path.
     # @note Updated 2020-11-20.
@@ -15,6 +15,18 @@ koopa::brewfile() { # {{{1
     file="$(koopa::prefix)/os/${subdir}/etc/homebrew/brewfile"
     [[ -f "$file" ]] || return 0
     koopa::print "$file"
+    return 0
+}
+
+koopa::brew_cleanup() { # {{{1
+    # """
+    # Clean up Homebrew.
+    # @note Updated 2021-04-22.
+    # """
+    koopa::assert_is_installed brew
+    koopa::alert 'Cleaning up Homebrew install.'
+    brew cleanup -s || true
+    koopa::rm "$(brew --cache)"
     return 0
 }
 
@@ -34,17 +46,65 @@ koopa::brew_dump_brewfile() { # {{{1
 koopa::brew_outdated() { # {{{1
     # """
     # Listed outdated Homebrew brews and casks, in a single call.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-04-22.
     # """
+    local x
     koopa::assert_has_no_args "$#"
-    koopa::h1 'Checking for outdated Homebrew formula.'
-    brew update &>/dev/null
-    koopa::h2 'Brews'
-    brew outdated
-    if koopa::is_macos
-    then
-        koopa::h2 'Casks'
-        koopa::macos_brew_cask_outdated
-    fi
+    x="$(brew outdated --quiet)"
+    koopa::print "$x"
+    return 0
+}
+
+koopa::brew_reset_core_repo() { # {{{1
+    # """
+    # Ensure internal 'homebrew-core' repo is clean.
+    # @note Updated 2021-04-22.
+    # """
+    local branch origin
+    koopa::assert_is_installed brew
+    (
+        koopa::cd "$(brew --repo 'homebrew/core')"
+        origin='origin'
+        branch="$(koopa::git_default_branch)"
+        git checkout -q "$branch"
+        git branch -q "$branch" -u "${origin}/${branch}"
+        git reset -q --hard "${origin}/${branch}"
+        # > git branch -vv
+    )
+    return 0
+}
+
+koopa::brew_reset_permissions() { # {{{1
+    # """
+    # Reset permissions on Homebrew installation.
+    # @note Updated 2021-04-22.
+    # """
+    local group prefix user
+    koopa::assert_is_installed brew
+    koopa::assert_has_sudo
+    user="$(koopa::user)"
+    group="$(koopa::admin_group)"
+    prefix="$(koopa::homebrew_prefix)"
+    koopa::alert "Resetting ownership of '${prefix}' to '${user}:${group}'."
+    sudo chown -Rh "${user}:${group}" "${prefix}/"*
+    return 0
+}
+
+koopa::brew_upgrade_brews() { # {{{1
+    # """
+    # Upgrade outdated Homebrew brews.
+    # @note Updated 2021-04-27.
+    # """
+    local brew brews str
+    readarray -t brews <<< "$(koopa::brew_outdated)"
+    koopa::is_array_non_empty "${brews[@]}" || return 0
+    str="$(koopa::ngettext "${#brews[@]}" 'brew' 'brews')"
+    koopa::dl \
+        "${#brews[@]} outdated ${str}" \
+        "$(koopa::to_string "${brews[@]}")"
+    for brew in "${brews[@]}"
+    do
+        brew reinstall --force "$brew" || true
+    done
     return 0
 }

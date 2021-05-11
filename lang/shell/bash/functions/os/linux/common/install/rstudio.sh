@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_install_rstudio_server() { # {{{1
+koopa:::linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
     # @note Updated 2020-08-13.
@@ -26,7 +26,7 @@ koopa::_install_rstudio_server() { # {{{1
     koopa::assert_is_installed R
     pro=0
     reinstall=0
-    version=
+    version=''
     pos=()
     while (("$#"))
     do
@@ -113,67 +113,5 @@ first deactivate it on the old system with the command:
 END
     fi
     koopa::install_success "$name_fancy"
-    return 0
-}
-
-koopa::debian_install_rstudio_server() { # {{{1
-    # """
-    # Install RStudio Server on Debian / Ubuntu.
-    # @note Updated 2021-03-30.
-    #
-    # Verify install:
-    # > sudo rstudio-server stop
-    # > sudo rstudio-server verify-installation
-    # > sudo rstudio-server start
-    # > sudo rstudio-server status
-    # """
-    local arch os_codename
-    arch="$(koopa::arch)"
-    os_codename="$(koopa::os_codename)"
-    case "$os_codename" in
-        buster|focal)
-            os_codename='bionic'
-            ;;
-        bionic)
-            ;;
-        *)
-            koopa::stop "Unsupported OS version: '${os_codename}'."
-            ;;
-    esac
-    koopa::_install_rstudio_server \
-        --file-ext='deb' \
-        --install='sudo gdebi --non-interactive' \
-        --os-codename="$os_codename" \
-        --platform="$arch" \
-        "$@"
-    return 0
-}
-
-koopa::debian_install_rstudio_server_pro() { # {{{1
-    koopa::debian_install_rstudio_server --pro "$@"
-    return 0
-}
-
-# NOTE ARM is not yet supported for this.
-koopa::fedora_install_rstudio_server() { # {{{1
-    # """
-    # Install RStudio Server on Fedora / RHEL / CentOS.
-    # @note Updated 2021-03-30.
-    # """
-    local arch os_codename
-    arch="$(koopa::arch)"
-    os_codename='centos8'
-    koopa::mkdir -S '/etc/init.d'
-    koopa::_install_rstudio_server \
-        --file-ext='rpm' \
-        --install='sudo dnf -y install' \
-        --os-codename="$os_codename" \
-        --platform="$arch" \
-        "$@"
-    return 0
-}
-
-koopa::fedora_install_rstudio_server_pro() { # {{{1
-    koopa::fedora_install_rstudio_server --pro "$@"
     return 0
 }

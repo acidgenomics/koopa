@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2021-03-16.
+## Updated 2021-05-10.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -21,7 +21,7 @@ KOOPA_OPT_PREFIX="${KOOPA_OPT_PREFIX:-/opt/koopa/opt}"
 ## =============================================================================
 
 R_LIBS_SITE="${R_HOME}/site-library"
-R_LIBS_USER="~/Library/R/%v/library"
+R_LIBS_USER="${R_LIBS_SITE}"
 
 ## System path {{{1
 ## =============================================================================
@@ -36,8 +36,8 @@ R_LIBS_USER="~/Library/R/%v/library"
 ## This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-## gfortran 8.2 (for R 4.0+).
-PATH="/usr/local/gfortran/bin:${PATH}"
+## fxcoudert gfortran 8.2 (for R 4.0+).
+## > PATH="/usr/local/gfortran/bin:${PATH}"
 
 ## Homebrew curl.
 PATH="/usr/local/opt/curl/bin:${PATH}"
@@ -93,7 +93,7 @@ XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
 ## -----------------------------------------------------------------------------
 
 ## Note that this setting is inherited by BiocFileCache.
-R_USER_CACHE_DIR="${KOOPA_OPT_PREFIX}/r/cache"
+R_USER_CACHE_DIR="${KOOPA_OPT_PREFIX}/r-cache"
 
 ## remotes {{{2
 ## -----------------------------------------------------------------------------

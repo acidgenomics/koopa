@@ -11,12 +11,12 @@ _koopa_umask() { # {{{1
     #
     # Use 'umask -S' to return 'u,g,o' values.
     #
-    # - 0022: u=rwx,g=rx,o=rx
+    # - 0022: 'u=rwx,g=rx,o=rx'.
     #         User can write, others can read. Usually default.
-    # - 0002: u=rwx,g=rwx,o=rx
+    # - 0002: 'u=rwx,g=rwx,o=rx'.
     #         User and group can write, others can read.
     #         Recommended setting in a shared coding environment.
-    # - 0077: u=rwx,g=,o=
+    # - 0077: 'u=rwx,g=,o='.
     #         User alone can read/write. More secure.
     #
     # Access control lists (ACLs) are sometimes preferable to umask.

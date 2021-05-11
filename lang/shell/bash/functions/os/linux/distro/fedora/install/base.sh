@@ -167,6 +167,8 @@ koopa::fedora_install_base() { # {{{1
             'fontconfig-devel'                                    # |      YES |
             'freetype-devel'  # freetype / ragg                   # |      YES |
             'fribidi-devel'  # textshaping                        # |       NO |
+            'gdal-devel'                                          # |       NO |
+            'geos-devel'                                          # |      YES |
             'glib2-devel'  # ag                                   # |      YES |
             'gmp-devel'                                           # |       NO |
             'gnutls-devel'                                        # |       NO |
@@ -198,26 +200,17 @@ koopa::fedora_install_base() { # {{{1
             'pcre-devel'  # ag                                    # |      YES |
             'pcre2-devel'  # rJava                                # |      YES |
             'postgresql-devel'                                    # |      YES |
+            'proj-devel'                                          # |       NO |
             'python3-devel'                                       # |       NO |
             'readline-devel'  # R                                 # |       NO |
+            'sqlite-devel'                                        # |      YES |
             'taglib-devel'                                        # |       NO |
+            'udunits2-devel'                                      # |      YES |
             'unixODBC-devel'                                      # |      YES |
             'xxhash-devel'  # rsync                               # |      YES |
             'xz-devel'                                            # |      YES |
             'zlib-devel'                                          # |      YES |
         )
-        if [[ "${dict[extra]}" -eq 0 ]]
-        then
-            pkgs+=(
-                #                                                   | RHEL UBI |
-                # --------------------------------------------------|----------|
-                'gdal-devel'                                      # |       NO |
-                'geos-devel'                                      # |      YES |
-                'proj-devel'                                      # |       NO |
-                'sqlite-devel'                                    # |      YES |
-                'udunits2-devel'                                  # |      YES |
-            )
-        fi
     fi
     if [[ "${dict[extra]}" -eq 1 ]]
     then

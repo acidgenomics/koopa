@@ -15,37 +15,47 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
-# NOTE This step currently doesn't work because custom drat repos (e.g. our
-# Acid Genomics repo) are not currently supported on shinyapps.io.
-# GitHub packages are supported.
-koopa::deploy_shiny_app() { # {{{
+koopa::configure_r() { # {{{1
     # """
-    # Deploy a Shiny app to shinyapps.io
-    # @note Updated 2021-04-08.
+    # Update R configuration.
+    # @note Updated 2021-05-03.
+    #
+    # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
-    local app_dir
-    app_dir="${1:-.}"
-    koopa::assert_is_installed R
-    koopa::assert_is_dir "$app_dir"
-    app_dir="$(koopa::realpath "$app_dir")"
-    app_name="$(koopa::basename "$app_dir")"
-    app_name="$(koopa::sub 'r-shiny' '' "$app_name")"
-    koopa::h1 "Deploying '${app_name}' from '${app_dir}'."
-    R \
-        --no-restore \
-        --no-save \
-        --quiet \
-        -e " \
-            options(repos = append( \
-                x = BiocManager::repositories(), \
-                values = c('AcidGenomics' = 'https://r.acidgenomics.com') \
-            )); \
-            print(getOption('repos')); \
-            rsconnect::deployApp( \
-                appDir = '${app_dir}', \
-                appName = '${app_name}' \
-            ) \
-        "
+    local etc_prefix make_prefix pkg_index r r_prefix
+    koopa::assert_has_args_le "$#" 1
+    r="${1:-$(koopa::r)}"
+    koopa::assert_is_installed "$r"
+    r="$(koopa::which_realpath "$r")"
+    r_prefix="$(koopa::r_prefix "$r")"
+    koopa::assert_is_dir "$r_prefix"
+    koopa::alert 'Updating R configuration.'
+    koopa::dl \
+        'R home' "$r_prefix" \
+        'R path' "$r"
+    if koopa::is_symlinked_app "$r"
+    then
+        make_prefix="$(koopa::make_prefix)"
+        etc_prefix="${make_prefix}/lib/R/etc"
+        koopa::sys_set_permissions -r "$r_prefix"
+        # Ensure that (Debian) system 'etc' directories are removed.
+        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        then
+            koopa::sys_rm "$etc_prefix"
+        fi
+        etc_prefix="${make_prefix}/lib64/R/etc"
+        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        then
+            koopa::sys_rm "$etc_prefix"
+        fi
+    else
+        koopa::sys_set_permissions -r "${r_prefix}/library"
+    fi
+    koopa::link_r_etc "$r"
+    koopa::link_r_site_library "$r"
+    koopa::r_javareconf "$r"
+    koopa::r_rebuild_docs "$r"
+    koopa::alert_success 'Update of R configuration was successful.'
     return 0
 }
 
@@ -97,16 +107,17 @@ koopa::kill_r() { # {{{1
 koopa::link_r_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-11-12.
+    # @note Updated 2021-04-29.
     #
     # Don't copy Makevars file across machines.
     # """
     local distro_prefix file files r r_etc_source r_etc_target r_prefix version
     koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
-    koopa::is_installed "$r" || return 1
+    r="${1:-$(koopa::r)}"
+    koopa::assert_is_installed "$r"
+    r="$(koopa::which_realpath "$r")"
     r_prefix="$(koopa::r_prefix "$r")"
-    [[ -d "$r_prefix" ]] || return 1
+    koopa::assert_is_dir "$r_prefix"
     version="$(koopa::r_version "$r")"
     if [[ "$version" != 'devel' ]]
     then
@@ -145,7 +156,7 @@ koopa::link_r_etc() { # {{{1
 koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-05-04.
     #
     # R on Fedora won't pick up site library in '--vanilla' mode unless we
     # symlink the site-library into '/usr/local/lib/R' as well.
@@ -153,19 +164,12 @@ koopa::link_r_site_library() { # {{{1
     #
     # Changed to unversioned library approach at opt prefix in koopa v0.9.
     # """
-    local lib_source lib_target opt_prefix r r_prefix version
+    local lib_source lib_target r r_prefix version
     koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
+    r="${1:-$(koopa::r)}"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
-    opt_prefix="$(koopa::opt_prefix)"
-    # > version="$(koopa::r_version "$r")"
-    # > if [[ "$version" != 'devel' ]]
-    # > then
-    # >     version="$(koopa::major_minor_version "$version")"
-    # > fi
-    # > lib_source="${opt_prefix}/r/${version}/site-library"
-    lib_source="${opt_prefix}/r/site-library"
+    lib_source="$(koopa::r_packages_prefix)"
     lib_target="${r_prefix}/site-library"
     koopa::dl 'Site library' "$lib_source"
     koopa::sys_mkdir "$lib_source"
@@ -194,7 +198,7 @@ koopa::pkgdown_deploy_to_aws() { # {{{1
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-05-05.
     #
     # The default Java path differs depending on the system.
     #
@@ -215,42 +219,20 @@ koopa::r_javareconf() { # {{{1
     # > library(rJava)
     # > .jinit()
     # """
-    local java_flags java_home pos r r2
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --java-home=*)
-                java_home="${1#*=}"
-                shift 1
-                ;;
-            --r=*)
-                r="${1#*=}"
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    local java_flags java_home r r_cmd
     koopa::assert_has_args_le "$#" 1
-    [[ -n "${1:-}" ]] && r="$1"
-    koopa::is_installed "$r" || return 0
+    r="${1:-$(koopa::r)}"
+    koopa::assert_is_installed "$r"
     r="$(koopa::which_realpath "$r")"
     if [[ -z "${java_home:-}" ]]
     then
         koopa::activate_openjdk
         java_home="$(koopa::java_prefix)"
-        koopa::is_installed java || return 0
+        if ! koopa::is_installed java
+        then
+            koopa::alert_note "Failed to locate 'java'."
+            return 0
+        fi
     fi
     # This step can happen with r-devel in Docker images.
     if [[ ! -d "$java_home" ]]
@@ -270,19 +252,19 @@ koopa::r_javareconf() { # {{{1
     )
     if koopa::is_symlinked_app "$r"
     then
-        r2=("$r")
+        r_cmd=("$r")
     else
         koopa::assert_has_sudo
-        r2=('sudo' "$r")
+        r_cmd=('sudo' "$r")
     fi
-    "${r2[@]}" --vanilla CMD javareconf "${java_flags[@]}"
+    "${r_cmd[@]}" --vanilla CMD javareconf "${java_flags[@]}"
     return 0
 }
 
 koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
-    # @note Updated 2020-08-11.
+    # @note Updated 2021-04-29.
     #
     # 1. Ensure HTML package index is writable.
     # 2. Touch an empty 'R.css' file to eliminate additional package warnings.
@@ -294,8 +276,9 @@ koopa::r_rebuild_docs() { # {{{1
     #     make.packages.html.html
     # """
     local doc_dir html_dir pkg_index r rscript rscript_flags
-    r="${1:-R}"
+    r="${1:-$(koopa::r)}"
     rscript="${r}script"
+    koopa::assert_is_installed "$r" "$rscript"
     rscript_flags=('--vanilla')
     koopa::assert_is_installed "$r" "$rscript"
     koopa::alert 'Updating HTML package index.'
@@ -314,10 +297,11 @@ koopa::r_rebuild_docs() { # {{{1
 koopa::rscript() { # {{{1
     # """
     # Execute an R script.
-    # @note Updated 2021-01-06.
+    # @note Updated 2021-04-30.
     # """
-    local header_file flags fun pos
-    koopa::assert_is_installed Rscript
+    local code header_file flags fun pos rscript
+    rscript="$(koopa::r)script"
+    koopa::assert_is_installed "$rscript"
     flags=()
     pos=()
     while (("$#"))
@@ -339,24 +323,16 @@ koopa::rscript() { # {{{1
     shift 1
     header_file="$(koopa::prefix)/lang/r/include/header.R"
     koopa::assert_is_file "$header_file"
-    rscript="source('${header_file}')"
+    code="source('${header_file}')"
     # The 'header' variable is currently used to simply load the shared R
     # script header and check that the koopa R package is installed cleanly.
     if [[ "$fun" != 'header' ]]
     then
-        rscript="${rscript}; koopa::${fun}()"
+        code="${code}; koopa::${fun}()"
     fi
-    # Ensure positional arguments get properly quoted (escaped) before handing
-    # off to Rscript call.
+    # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
-    # Argh, this printf method doesn't work.
-    # > pos2=()
-    # > for i in "${!pos[@]}"
-    # > do
-    # >     pos2+=("$(printf '%q\n' "${pos[$i]}")")
-    # > done 
-    # Alternate Bash 4.4 quoting approach: "${pos1[@]@Q}"
-    Rscript "${flags[@]}" -e "$rscript" "${pos[@]@Q}"
+    "$rscript" "${flags[@]}" -e "$code" "${pos[@]@Q}"
     return 0
 }
 
@@ -372,62 +348,18 @@ koopa::rscript_vanilla() { # {{{1
 koopa::run_shiny_app() { # {{{1
     # """
     # Run Shiny application.
-    # @note Updated 2021-04-07.
+    # @note Updated 2021-04-29.
     # """
-    local dir
+    local dir r
     dir="${1:-.}"
-    koopa::assert_is_installed R
+    r="$(koopa::r)"
+    koopa::assert_is_installed "$r"
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
-    R \
+    "$r" \
         --no-restore \
         --no-save \
         --quiet \
         -e "shiny::runApp('${dir}')"
-    return 0
-}
-
-koopa::update_r_config() { # {{{1
-    # """
-    # Update R configuration.
-    # @note Updated 2020-11-11.
-    #
-    # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # """
-    local etc_prefix make_prefix pkg_index r r_prefix
-    koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
-    r="$(koopa::which_realpath "$r")"
-    koopa::assert_is_installed "$r"
-    r_prefix="$(koopa::r_prefix "$r")"
-    koopa::h1 'Updating R configuration.'
-    koopa::dl \
-        'R home' "$r_prefix" \
-        'R path' "$r"
-    if koopa::is_symlinked_app "$r"
-    then
-        make_prefix="$(koopa::make_prefix)"
-        etc_prefix="${make_prefix}/lib/R/etc"
-        koopa::sys_set_permissions -r "$r_prefix"
-        # Ensure that (Debian) system 'etc' directories are removed.
-        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
-        then
-            koopa::sys_rm "$etc_prefix"
-        fi
-        etc_prefix="${make_prefix}/lib64/R/etc"
-        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
-        then
-            koopa::sys_rm "$etc_prefix"
-        fi
-    else
-        koopa::sys_set_permissions -r "${r_prefix}/library"
-    fi
-    koopa::link_r_etc "$r"
-    koopa::link_r_site_library "$r"
-    koopa::r_javareconf "$r"
-    koopa::r_rebuild_docs "$r"
-    # Skip this, to keep our Bioconductor Docker images light.
-    # > koopa::install_r_koopa
-    koopa::alert_success 'Update of R configuration was successful.'
     return 0
 }
