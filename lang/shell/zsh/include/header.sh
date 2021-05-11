@@ -19,7 +19,7 @@ __koopa_is_linux() { # {{{1
     # is the operating system linux?
     # @note updated 2021-05-07.
     # """
-    [ "$(uname -s)" = 'linux' ]
+    [[ "$(uname -s)" = 'linux' ]]
 }
 
 __koopa_is_macos() { # {{{1
@@ -27,7 +27,7 @@ __koopa_is_macos() { # {{{1
     # is the operating system macos?
     # @note updated 2021-05-07.
     # """
-    [ "$(uname -s)" = 'darwin' ]
+    [[ "$(uname -s)" = 'darwin' ]]
 }
 
 __koopa_print() { # {{{1
@@ -36,7 +36,7 @@ __koopa_print() { # {{{1
     # @note updated 2021-05-07.
     # """
     local string
-    [ "$#" -gt 0 ] || return 1
+    [[ "$#" -gt 0 ]] || return 1
     for string in "$@"
     do
         printf '%b\n' "$string"
@@ -50,7 +50,7 @@ __koopa_realpath() { # {{{1
     # @note updated 2021-05-11.
     # """
     local arg bn dn x
-    [ "$#" -gt 0 ] || return 1
+    [[ "$#" -gt 0 ]] || return 1
     if __koopa_is_installed realpath
     then
         x="$(realpath "$@")"
@@ -70,7 +70,7 @@ __koopa_realpath() { # {{{1
     else
         x="$(readlink -f "$@")"
     fi
-    [ -n "$x" ] || return 1
+    [[ -n "$x" ]] || return 1
     __koopa_print "$x"
     return 0
 }
