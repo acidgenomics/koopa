@@ -410,6 +410,8 @@ koopa:::run_function() { # {{{1
     return 0
 }
 
+# NOTE This is currently failing to work in the Alpine and Amazon Linux base
+# images for Docker consistently.
 koopa:::which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
@@ -420,6 +422,9 @@ koopa:::which_function() { # {{{1
     fun="${1:?}"
     fun="${fun//-/_}"
     os_id="$(koopa::os_id)"
+
+    koopa::stop "FIXME ${fun}"
+
     if koopa::is_function "koopa::${os_id}_${fun}"
     then
         fun="koopa::${os_id}_${fun}"
