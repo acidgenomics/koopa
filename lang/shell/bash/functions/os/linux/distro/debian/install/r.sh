@@ -45,7 +45,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
 koopa::debian_install_r_devel() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-05-11.
     #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
@@ -77,7 +77,7 @@ koopa::debian_install_r_devel() { # {{{1
     # """
     koopa::apt_add_r_repo
     koopa::apt_get build-dep r-base
-    koopa::linux_install_r_devel "$@"
+    koopa::install_r_devel "$@"
     return 0
 }
 
