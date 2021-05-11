@@ -119,7 +119,12 @@ koopa:::koopa_install() { # {{{1
     done
     for app in "${apps[@]}"
     do
-        koopa:::run_function "install-${app}" "${app_args[@]}"
+        if koopa::is_array_non_empty "${app_args[@]}"
+        then
+            koopa:::run_function "install-${app}" "${app_args[@]}"
+        else
+            koopa:::run_function "install-${app}"
+        fi
     done
     return 0
 }
@@ -404,8 +409,6 @@ koopa:::run_function() { # {{{1
     return 0
 }
 
-# NOTE This is having weird detection issues inside Alpine Docker image.
-# Seems to have to do with 'koopa::is_function' returning inconsistently.
 koopa:::which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
