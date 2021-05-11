@@ -10,11 +10,10 @@ koopa::cp() { # {{{1
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
     local OPTIND cp cp_flags mkdir rm sudo symlink target_dir target_parent
-    unalias -a
     koopa::assert_is_installed cp
     sudo=0
     symlink=0
-    target_dir=
+    target_dir=''
     OPTIND=1
     while getopts 'Sst:' opt
     do
@@ -69,16 +68,14 @@ koopa::cp() { # {{{1
 koopa::df() { # {{{1
     # """
     # Human friendlier version of df.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-08.
     # """
-    unalias -a
     koopa::assert_is_installed df
     df \
         --portability \
         --print-type \
         --si \
-        "$@" \
-        | sort
+        "$@"
     return 0
 }
 
@@ -89,10 +86,9 @@ koopa::ln() { # {{{1
     # """
     local OPTIND ln ln_flags mkdir rm source_file target_file target_dir \
         target_parent
-    unalias -a
     koopa::assert_is_installed ln
     sudo=0
-    target_dir=
+    target_dir=''
     OPTIND=1
     while getopts 'St:' opt
     do
@@ -145,7 +141,6 @@ koopa::mkdir() { # {{{1
     # Create directories with parents automatically.
     # @note Updated 2020-07-08.
     local OPTIND mkdir sudo
-    unalias -a
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -184,9 +179,8 @@ koopa::mv() { # {{{1
     # - --strip-trailing-slashes
     # """
     local OPTIND mkdir mv mv_flags rm source_file sudo target_file target_parent
-    unalias -a
     sudo=0
-    target_dir=
+    target_dir=''
     OPTIND=1
     while getopts 'St:' opt
     do
@@ -240,7 +234,6 @@ koopa::relink() { # {{{1
     # @note Updated 2020-07-07.
     # """
     local OPTIND dest_file ln rm source_file sudo
-    unalias -a
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -280,7 +273,6 @@ koopa::rm() { # {{{1
     # @note Updated 2020-07-06.
     # """
     local OPTIND rm sudo
-    unalias -a
     sudo=0
     OPTIND=1
     while getopts 'S' opt

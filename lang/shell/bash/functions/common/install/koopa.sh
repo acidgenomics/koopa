@@ -66,8 +66,9 @@ koopa::update_koopa() { # {{{1
 koopa::update_koopa_system() { # {{{1
     # """
     # Update system installation.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-05-06.
     # """
+    local conf_args
     koopa::assert_has_sudo
     koopa::update_koopa
     koopa::h1 'Updating system configuration.'
@@ -83,8 +84,8 @@ koopa::update_koopa_system() { # {{{1
     fi
     if koopa::is_linux
     then
-        configure_flags=('--no-check')
-        koopa::linux_configure_system "${configure_flags[@]}"
+        conf_args=('--no-check')
+        koopa::linux_configure_system "${conf_args[@]}"
     fi
     if koopa::is_installed brew
     then

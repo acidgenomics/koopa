@@ -1,47 +1,54 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_bcbio() { # {{{1
+    local version
+    version="$(koopa::current_bcbio_version)"
+    koopa::install_app \
+        --name='bcbio' \
+        --name-fancy='bcbio-nextgen' \
+        --no-link \
+        --platform='linux' \
+        --version="$version" \
+        "$@"
+}
+
+koopa:::linux_install_bcbio() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2021-03-30.
+    # @note Updated 2021-05-05.
     #
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
     # """
-    local file install_dir name name_fancy prefix \
-        python tmp_dir tools_dir url version
-    name='bcbio'
-    name_fancy='bcbio-nextgen'
-    version="$(koopa::current_bcbio_version)"
-    prefix="$(koopa::app_prefix)/${name}/${version}"
-    if [[ -d "$prefix" ]]
-    then
-        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
-        return 0
-    fi
-    koopa::install_start "$name_fancy" "$prefix"
-    koopa::alert_coffee_time
-    koopa::assert_has_no_envs
+    local conda file install_dir prefix python tools_dir upgrade url version
+    prefix="${INSTALL_PREFIX:?}"
+    version="${INSTALL_VERSION:?}"
     python="$(koopa::python)"
-    koopa::mkdir "$prefix"
+    koopa::assert_is_installed "$python"
+    koopa::alert_coffee_time
     install_dir="${prefix}/install"
     tools_dir="${prefix}/tools"
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        file='bcbio_nextgen_install.py'
-        url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
-        koopa::download "$url"
-        "$python" \
-            "$file" \
-            "$install_dir" \
-            --datatarget='rnaseq' \
-            --datatarget='variation' \
-            --isolate \
-            --nodata \
-            --tooldir="$tools_dir" \
-            --upgrade='stable'
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    case "$version" in
+        development)
+            upgrade='development'
+            ;;
+        *)
+            upgrade='stable'
+            ;;
+    esac
+    file='bcbio_nextgen_install.py'
+    url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
+    koopa::download "$url"
+    koopa::mkdir "$prefix"
+    "$python" \
+        "$file" \
+        "$install_dir" \
+        --datatarget='rnaseq' \
+        --datatarget='variation' \
+        --isolate \
+        --nodata \
+        --tooldir="$tools_dir" \
+        --upgrade="$upgrade"
     # Clean up conda packages inside Docker image.
     if koopa::is_docker
     then
@@ -50,9 +57,6 @@ koopa::linux_install_bcbio() { # {{{1
         koopa::assert_is_file "$conda"
         "$conda" clean --yes --tarballs
     fi
-    koopa::sys_set_permissions -r "$prefix"
-    koopa::link_into_opt "$prefix" "$name"
-    koopa::install_success "$name_fancy"
     return 0
 }
 
@@ -137,8 +141,8 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     koopa::assert_is_set build fasta gtf indexes organism release
     koopa::assert_is_file "$fasta" "$gtf"
     script="$(koopa::which_realpath "$script")"
-    fasta="$(realpath "$fasta")"
-    gtf="$(realpath "$gtf")"
+    fasta="$(koopa::realpath "$fasta")"
+    gtf="$(koopa::realpath "$gtf")"
     # Convert space-delimited string to array.
     IFS=" " read -r -a indexes <<< "$indexes"
     # Check for valid organism input.

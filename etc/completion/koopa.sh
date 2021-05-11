@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2207
 
 # """
 # Bash/Zsh TAB completion.
-# Updated 2021-02-15.
+# Updated 2021-05-07.
 #
 # Keep all of these commands in a single file.
 # Sourcing multiple scripts doesn't work reliably.
@@ -40,7 +41,8 @@ _koopa_complete() { # {{{1
                 'delete-cache'
             )
         fi
-        COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+        # Quoting inside the array doesn't work on Bash.
+        COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
     elif [[ "$COMP_CWORD" -eq 2 ]]
     then
         case "$prev" in
@@ -51,7 +53,6 @@ _koopa_complete() { # {{{1
                     'link'
                     'unlink'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             header)
                 args=(
@@ -60,16 +61,124 @@ _koopa_complete() { # {{{1
                     'r'
                     'zsh'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             install)
                 args=(
-                    ## > 'mike'
-                    ## > 'py-koopa'
+                    'anaconda'
+                    'autoconf'
+                    'automake'
+                    'bash'
+                    'binutils'
+                    'cmake'
+                    'conda'
+                    'coreutils'
+                    'cpufetch'
+                    'curl'
+                    'doom-emacs'
                     'dotfiles'
+                    'emacs'
+                    'ensembl-perl-api'
+                    'findutils'
+                    'fish'
+                    'fzf'
+                    'gawk'
+                    'gcc'
+                    'gdal'
+                    'geos'
+                    'git'
+                    'gnupg'
+                    'go'
+                    'grep'
+                    'groff'
+                    'gsl'
+                    'haskell-stack'
+                    'hdf5'
+                    'homebrew'
+                    'homebrew-bundle'
+                    'homebrew-packages'
+                    'htop'
+                    'julia'
+                    'libevent'
+                    'libtool'
+                    'lua'
+                    'luarocks'
+                    'make'
+                    'miniconda'
+                    'ncurses'
+                    'neofetch'
+                    'neovim'
+                    'openjdk'
+                    'openssh'
+                    'openssl'
+                    'parallel'
+                    'password-store'
+                    'patch'
+                    'perl'
+                    'perl-packages'
+                    'perlbrew'
+                    'perlbrew-perl'
+                    'pkg-config'
+                    'proj'
+                    'pyenv'
+                    'python'
+                    'python-packages'
+                    'r'
+                    'r-cmd-check'
+                    'r-devel'
                     'r-koopa'
+                    'r-packages'
+                    'rbenv'
+                    'rbenv-ruby'
+                    'rmate'
+                    'rsync'
+                    'ruby'
+                    'ruby-packages'
+                    'rust'
+                    'rust-packages'
+                    'sed'
+                    'shellcheck'
+                    'shunit2'
+                    'singularity'
+                    'spacemacs'
+                    'spacevim'
+                    'sqlite'
+                    'subversion'
+                    'taglib'
+                    'tar'
+                    'tex-packages'
+                    'texinfo'
+                    'the-silver-searcher'
+                    'tmux'
+                    'udunits'
+                    'vim'
+                    'wget'
+                    'zsh'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+                if _koopa_is_linux
+                then
+                    args+=(
+                        'aspera-connect'
+                        'aws-cli'
+                        'bcbio'
+                        'bcl2fastq'
+                        'cellranger'
+                        'cloudbiolinux'
+                        'docker-credential-pass'
+                        'julia'
+                        'lmod'
+                        'rstudio-server'
+                        'shiny-server'
+                    )
+                fi
+                if _koopa_is_macos
+                then
+                    args+=(
+                        'homebrew-little-snitch'
+                        'python-framework'
+                        'r-cran-gfortran'
+                        'xcode-clt'
+                    )
+                fi
                 ;;
             list)
                 args=(
@@ -77,25 +186,54 @@ _koopa_complete() { # {{{1
                     'dotfiles'
                     'path-priority'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             system)
                 args=(
                     'log'
                     'pull'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
+                ;;
+            uninstall)
+                args=(
+                    'dotfiles'
+                    'homebrew'
+                    'koopa'
+                    'spacevim'
+                )
                 ;;
             update)
                 args=(
-                    '--fast'
+                    # koopa:
+                    'system'
+                    'user'
+                    # packages:
+                    'dotfiles'
+                    'emacs'
+                    'google-cloud-sdk'
+                    'homebrew'
+                    'pyenv'
+                    'python-packages'
+                    'r-packages'
+                    'rbenv'
+                    'ruby-packages'
+                    'rust'
+                    'rust-packages'
+                    'tex'
                 )
-                COMPREPLY=("$(compgen -W "${args[*]}" -- "$cur")")
                 ;;
             *)
                 ;;
         esac
+        # Quoting inside the array doesn't work on Bash.
+        COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
     fi
     return 0
 }
+
+# @seealso
+# - https://github.com/scop/bash-completion/
+# - https://www.gnu.org/software/bash/manual/html_node/
+#     A-Programmable-Completion-Example.html
+
+
 complete -F _koopa_complete koopa

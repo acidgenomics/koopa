@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::_list_path_priority() { # {{{1
+koopa:::list_path_priority() { # {{{1
     # """
     # Split PATH string by ':' delim into lines.
     # @note Updated 2020-11-10.
@@ -27,7 +27,7 @@ koopa::_list_path_priority() { # {{{1
     return 0
 }
 
-koopa::_list_path_priority_unique() { # {{{1
+koopa:::list_path_priority_unique() { # {{{1
     # """
     # Split PATH string by ':' delim into lines but only return uniques.
     # @note Updated 2020-07-03.
@@ -35,7 +35,7 @@ koopa::_list_path_priority_unique() { # {{{1
     local x
     koopa::assert_is_installed awk tac
     x="$( \
-        koopa::_list_path_priority "$@" \
+        koopa:::list_path_priority "$@" \
             | tac \
             | awk '!a[$0]++' \
             | tac \
@@ -92,7 +92,7 @@ koopa::list_path_priority() { # {{{1
     # """
     local all all_arr n_all n_dupes n_unique unique
     koopa::assert_is_installed awk
-    all="$(koopa::_list_path_priority "$@")"
+    all="$(koopa:::list_path_priority "$@")"
     readarray -t all_arr <<< "$(koopa::print "$all")"
     unique="$(koopa::print "$all" | awk '!a[$0]++')"
     readarray -t unique_arr <<< "$(koopa::print "$unique")"

@@ -4,7 +4,7 @@
 _koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-05-07.
     # """
     local activate checks file header_path local major_version shopts verbose
     activate=0
@@ -19,7 +19,6 @@ _koopa_zsh_header() { # {{{1
         checks=0
         shopts=0
         export KOOPA_ACTIVATE=1
-        export KOOPA_INTERACTIVE=1
     fi
     if [[ "$shopts" -eq 1 ]]
     then

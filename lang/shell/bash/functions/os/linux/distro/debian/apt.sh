@@ -411,6 +411,7 @@ koopa::apt_configure_sources() { # {{{1
             codenames[updates]="${os_codename}-updates"
             case "$arch" in
                 aarch64)
+                    # ARM (e.g. Raspberry Pi).
                     urls[main]='http://ports.ubuntu.com/ubuntu-ports/'
                     urls[security]='http://ports.ubuntu.com/ubuntu-ports/'
                     urls[updates]='http://ports.ubuntu.com/ubuntu-ports/'
@@ -446,7 +447,7 @@ koopa::apt_disable_deb_src() { # {{{1
     local file
     koopa::assert_has_args_le "$#" 1
     file="${1:-/etc/apt/sources.list}"
-    file="$(realpath "$file")"
+    file="$(koopa::realpath "$file")"
     koopa::alert "Disabling Debian sources in '${file}'."
     if ! grep -Eq '^deb-src ' "$file"
     then
@@ -466,7 +467,7 @@ koopa::apt_enable_deb_src() { # {{{1
     local file
     koopa::assert_has_args_le "$#" 1
     file="${1:-/etc/apt/sources.list}"
-    file="$(realpath "$file")"
+    file="$(koopa::realpath "$file")"
     koopa::alert "Enabling Debian sources in '${file}'."
     if ! grep -Eq '^# deb-src ' "$file"
     then

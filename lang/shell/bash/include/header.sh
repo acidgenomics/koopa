@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # koopa nolint=coreutils
 
-
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-04-09.
+    # @note Updated 2021-05-07.
     # """
     local activate checks dev distro_prefix header_path major_version os_id \
         shopts verbose
@@ -18,12 +17,15 @@ _koopa_bash_header() { # {{{1
     [[ -n "${KOOPA_CHECKS:-}" ]] && checks="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dev="$KOOPA_DEV"
     [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
+    # Disable header checks for any 'koopa install XXX' calls.
+    # This step won't work unless we upgrade Bash manually, due to downstream
+    # mapfile (readarray) check.
+    # > [[ "${1:-}" == 'install' ]] && checks=0
     if [[ "$activate" -eq 1 ]]
     then
         checks=0
         shopts=0
         export KOOPA_ACTIVATE=1
-        export KOOPA_INTERACTIVE=1
     fi
     if [[ "$shopts" -eq 1 ]]
     then

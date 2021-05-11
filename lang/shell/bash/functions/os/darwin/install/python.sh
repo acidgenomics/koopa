@@ -1,28 +1,12 @@
 #!/usr/bin/env bash
 
-koopa::macos_install_pytaglib() { # {{{1
-    # """
-    # Install pytaglib.
-    # @note Updated 2020-07-16.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed brew pip
-    brew install taglib &>/dev/null
-    pip install \
-        --global-option='build_ext' \
-        --global-option='-I/usr/local/include/' \
-        --global-option='-L/usr/local/lib' \
-        pytaglib
-    return 0
-}
-
 koopa::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
-    # @note Updated 2021-04-07.
+    # @note Updated 2021-04-28.
     # """
-    local file framework_dir macos_string macos_version name name_fancy pos \
-        reinstall url version
+    local file framework_dir macos_string macos_version major_version \
+        name name_fancy pos reinstall url version
     reinstall=0
     pos=()
     while (("$#"))
@@ -49,6 +33,7 @@ koopa::macos_install_python_framework() { # {{{1
     name_fancy='Python'
     name='python'
     version="$(koopa::variable "$name")"
+    major_version="$(koopa::major_version "$version")"
     macos_version="$(koopa::macos_version)"
     case "$macos_version" in
         11*)
@@ -71,12 +56,16 @@ koopa::macos_install_python_framework() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        file="python-${version}-${macos_string}.pkg"
-        url="https://www.python.org/ftp/python/${version}/${file}"
+        file="${name}-${version}-${macos_string}.pkg"
+        url="https://www.${name}.org/ftp/${name}/${version}/${file}"
         koopa::download "$url"
         sudo installer -pkg "$file" -target /
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
+    python="${name}${major_version}"
+    python="${framework_dir}/Versions/Current/bin/${python}"
+    koopa::assert_is_file "$python"
+    koopa::python_add_site_packages_to_sys_path "$python"
     koopa::install_success "$name_fancy"
     koopa::alert_restart
     return 0

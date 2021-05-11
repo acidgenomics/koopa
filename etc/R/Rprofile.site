@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2021-04-09.
+## Updated 2021-05-10.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -204,86 +204,11 @@ local({
                         sep = "\n"
                     ))
                 }
-                ## Use recommended CRAN compiler settings.
-                clangVersion <- switch(
-                    EXPR = as.character(.rprofile[["rVersionShort"]]),
-                    "3.5" = "6",  # CRAN
-                    "3.6" = "7",  # CRAN
-                    "4.0" = "11"  # Xcode
-                )
-                clangVersion <- numeric_version(clangVersion)
-                if (isTRUE(clangVersion >= 11L)) {
-                    clangBinDir <- file.path("", "usr", "bin")
-                } else {
-                    clangBinDir <- file.path(
-                        "", "usr", "local",
-                        paste0("clang", clangVersion), "bin"
-                    )
-                }
-                which <- c("clang", "clang++", "gfortran")
-                current <- Sys.which(which)
-                expected <- c(
-                        "clang"    = file.path(clangBinDir, "clang"),
-                        "clang++"  = file.path(clangBinDir, "clang++"),
-                        "gfortran" = file.path(
-                            "", "usr", "local",
-                            "gfortran", "bin", "gfortran"
-                        )
-                    )
-                if (!identical(current, expected)) {
-                    stop(paste(
-                        "Failed to detect CRAN clang and gfortran.",
-                        "",
-                        "Current:",
-                        paste(
-                            utils::capture.output(print(current)),
-                            collapse = "\n"
-                        ),
-                        "",
-                        "Expected:",
-                        paste(
-                            utils::capture.output(print(expected)),
-                            collapse = "\n"
-                        ),
-                        "",
-                        "Symlink of 'etc' may be required in R_HOME.",
-                        "",
-                        "Install development tools and libraries from:",
-                        "  - http://mac.r-project.org/tools/",
-                        "  - https://cran.r-project.org/bin/macosx/tools/",
-                        "",
-                        "This issue can happen after a system update.",
-                        "Running 'koopa update r-config' may resolve.",
-                        sep = "\n"
-                    ))
-                }
-                assign(
-                    x = "clangBinDir",
-                    value = clangBinDir,
-                    envir = .rprofile
-                )
-                assign(
-                    x = "clangVersion",
-                    value = clangVersion,
-                    envir = .rprofile
-                )
-                ## Ensure that everything, including X11, is enabled.
-                ## Note that 'cledit' will return false when non-interactive.
-                ## This will launch XQuartz when running R directly.
-                ## > if (isTRUE(interactive())) {
-                ## >     x <- capabilities()
-                ## >     if (!all(x)) {
-                ## >         stop(sprintf(
-                ## >             "Capability failure: %s.",
-                ## >             toString(names(x)[!x])
-                ## >         ))
-                ## >     }
-                ## > }
             } else if (isTRUE(.rprofile[["linux"]])) {
-                which <- c("g++", "gcc", "gfortran")
-                current <- Sys.which(which)
+                stopifnot(all(nzchar(Sys.which(c(
+                    "g++", "gcc", "gfortran"
+                )))))
             }
-            stopifnot(all(nzchar(current)))
         }
     })
 
@@ -360,7 +285,7 @@ local({
         repos <- getOption("repos")
         if (isTRUE(.rprofile[["linux"]])) {
             ## Configure the RSPM CRAN snapshot.
-            snapshot <- "2021-03-31"
+            snapshot <- "2021-05-03"
             cran <- "https://packagemanager.rstudio.com/cran"
             ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
             if (isTRUE(grepl(
