@@ -19,7 +19,7 @@ __koopa_is_linux() { # {{{1
     # is the operating system linux?
     # @note updated 2021-05-07.
     # """
-    [[ "$(uname -s)" = 'linux' ]]
+    [[ "$(uname -s)" == 'Linux' ]]
 }
 
 __koopa_is_macos() { # {{{1
@@ -27,7 +27,7 @@ __koopa_is_macos() { # {{{1
     # is the operating system macos?
     # @note updated 2021-05-07.
     # """
-    [[ "$(uname -s)" = 'darwin' ]]
+    [[ "$(uname -s)" == 'Darwin' ]]
 }
 
 __koopa_print() { # {{{1
