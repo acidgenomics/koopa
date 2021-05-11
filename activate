@@ -594,7 +594,9 @@ _koopa_activate() { # {{{1
             return 0
             ;;
     esac
+    echo 'OK 1'  # FIXME
     __koopa_preflight || return 0
+    echo 'OK 2'  # FIXME
     __koopa_export_koopa_interactive || return 1
     __koopa_export_koopa_minimal || return 1
     __koopa_export_koopa_subshell || return 1
@@ -612,9 +614,7 @@ _koopa_activate() { # {{{1
         fi
     fi
     __koopa_duration_start || return 1
-    echo 'OK 1'  # FIXME
     __koopa_export_koopa_prefix || return 1
-    echo 'OK 2'  # FIXME
     # shellcheck source=/dev/null
     KOOPA_ACTIVATE=1 . "$(__koopa_header)" || return 1
     echo 'OK 3'  # FIXME
