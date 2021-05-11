@@ -418,32 +418,30 @@ koopa:::which_function() { # {{{1
     os_id="$(koopa::os_id)"
     if koopa::is_function "koopa::${os_id}_${fun}"
     then
-        koopa::stop 'FIXME 1'
         fun="koopa::${os_id}_${fun}"
     elif koopa::is_rhel_like && \
         koopa::is_function "koopa::rhel_${fun}"
     then
-        koopa::stop 'FIXME 2'
         fun="koopa::rhel_${fun}"
     elif koopa::is_debian_like && \
         koopa::is_function "koopa::debian_${fun}"
     then
-        koopa::stop 'FIXME 3'
         fun="koopa::debian_${fun}"
     elif koopa::is_fedora_like && \
         koopa::is_function "koopa::fedora_${fun}"
     then
-        koopa::stop 'FIXME 4'
         fun="koopa::fedora_${fun}"
     elif koopa::is_linux && \
         koopa::is_function "koopa::linux_${fun}"
     then
-        koopa::stop 'FIXME 5'
         fun="koopa::linux_${fun}"
     else
-        koopa::stop 'FIXME 6'
         fun="koopa::${fun}"
     fi
+
+    koopa::is_function "$fun" || koopa::stop 'FIXME 1'
+    koopa::is_function "$fun" || koopa::stop 'FIXME 2'
+
     if ! koopa::is_function "$fun"
     then
         koopa::stop "Unsupported command (${fun})."  # FIXME
