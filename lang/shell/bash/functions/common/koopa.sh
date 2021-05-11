@@ -404,8 +404,6 @@ koopa:::run_function() { # {{{1
     return 0
 }
 
-# NOTE This is having weird detection issues inside Alpine Docker image.
-# Seems to have to do with 'koopa::is_function' returning inconsistently.
 koopa:::which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
