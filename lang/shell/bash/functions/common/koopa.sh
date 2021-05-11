@@ -404,8 +404,8 @@ koopa:::run_function() { # {{{1
     return 0
 }
 
-# FIXME This is failing to detect 'koopa::linux_configure_system' correctly
-# in clean Alpine Docker install.
+# NOTE This is having weird detection issues inside Alpine Docker image.
+# Seems to have to do with 'koopa::is_function' returning inconsistently.
 koopa:::which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
@@ -438,13 +438,9 @@ koopa:::which_function() { # {{{1
     else
         fun="koopa::${fun}"
     fi
-
-    koopa::is_function "$fun" || koopa::stop "FIXME 1 ${fun}"
-    koopa::is_function "$fun" || koopa::stop "FIXME 2 ${fun}"
-
     if ! koopa::is_function "$fun"
     then
-        koopa::stop "Unsupported command (${fun})."  # FIXME
+        koopa::stop "Unsupported command."
     fi
     koopa::print "$fun"
     return 0
