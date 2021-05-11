@@ -416,7 +416,7 @@ koopa:::which_function() { # {{{1
     f="${1:?}"
     f="${f//-/_}"
 
-    echo "$f"
+    echo "fun: ${f}"
     koopa::stop 'FIXME'
 
     os_id="$(koopa::os_id)"
