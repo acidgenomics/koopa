@@ -122,7 +122,7 @@ koopa:::koopa_install() { # {{{1
         # FIXME THIS IS ERRORING IN THE AMZN DOCKER IMAGE ARGH...
         # NEED TO FIGURE OUT HOW TO ADDRESS THIS...
         # FIXME Can we pass "${app_args[@]-}"  here instead?
-        if koopa::is_array_non_empty "${app_args[@]}"
+        if koopa::is_array_non_empty "${app_args[@]:-}"
         then
             echo 'FIXME 1'
             koopa:::run_function "install-${app}" "${app_args[@]}"
