@@ -187,7 +187,7 @@ __koopa_bash_header() { # {{{1
             then
                 __koopa_bash_source_dir "${distro_prefix}/debian"
                 koopa::is_ubuntu_like && \
-                    __koopa_koopa_bash_source_dir "${distro_prefix}/ubuntu"
+                    __koopa_bash_source_dir "${distro_prefix}/ubuntu"
             elif koopa::is_fedora_like
             then
                 __koopa_bash_source_dir "${distro_prefix}/fedora"
