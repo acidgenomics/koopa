@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 # koopa nolint=coreutils
 
-koopa:::is_installed() { # {{{1
+__koopa_is_installed() { # {{{1
     # """
-    # Are all of the requested programs installed?
-    # @note Updated 2021-05-07.
+    # are all of the requested programs installed?
+    # @note updated 2021-05-07.
     # """
     local cmd
     for cmd in "$@"
@@ -14,18 +14,26 @@ koopa:::is_installed() { # {{{1
     return 0
 }
 
-koopa:::is_macos() { # {{{1
+__koopa_is_linux() { # {{{1
     # """
-    # Is the operating system macOS?
-    # @note Updated 2021-05-07.
+    # is the operating system linux?
+    # @note updated 2021-05-07.
     # """
-    [ "$(uname -s)" = 'Darwin' ]
+    [ "$(uname -s)" = 'linux' ]
 }
 
-koopa:::print() { # {{{1
+__koopa_is_macos() { # {{{1
     # """
-    # Print a string.
-    # @note Updated 2021-05-07.
+    # is the operating system macos?
+    # @note updated 2021-05-07.
+    # """
+    [ "$(uname -s)" = 'darwin' ]
+}
+
+__koopa_print() { # {{{1
+    # """
+    # print a string.
+    # @note updated 2021-05-07.
     # """
     local string
     [ "$#" -gt 0 ] || return 1
@@ -36,38 +44,38 @@ koopa:::print() { # {{{1
     return 0
 }
 
-koopa:::realpath() { # {{{1
+__koopa_realpath() { # {{{1
     # """
-    # Resolve file path.
-    # @note Updated 2021-05-11.
+    # resolve file path.
+    # @note updated 2021-05-11.
     # """
     local arg bn dn x
     [ "$#" -gt 0 ] || return 1
-    if koopa:::is_installed realpath
+    if __koopa_is_installed realpath
     then
         x="$(realpath "$@")"
-    elif koopa:::is_installed grealpath
+    elif __koopa_is_installed grealpath
     then
         x="$(grealpath "$@")"
-    elif koopa:::is_macos
+    elif __koopa_is_macos
     then
         for arg in "$@"
         do
             bn="$(basename "$arg")"
-            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
+            dn="$(cd "$(dirname "$arg")" || return 1; pwd -p)"
             x="${dn}/${bn}"
-            koopa:::print "$x"
+            __koopa_print "$x"
         done
         return 0
     else
         x="$(readlink -f "$@")"
     fi
     [ -n "$x" ] || return 1
-    koopa:::print "$x"
+    __koopa_print "$x"
     return 0
 }
 
-koopa:::zsh_header() { # {{{1
+__koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
     # @note Updated 2021-05-11.
@@ -108,7 +116,7 @@ koopa:::zsh_header() { # {{{1
         header_path="${(%):-%N}"
         if [[ -L "$header_path" ]]
         then
-            header_path="$(koopa:::realpath "$header_path")"
+            header_path="$(__koopa_realpath "$header_path")"
         fi
         KOOPA_PREFIX="$( \
             cd "$(dirname "$header_path")/../../../.." \
@@ -118,8 +126,11 @@ koopa:::zsh_header() { # {{{1
         export KOOPA_PREFIX
     fi
     source "${KOOPA_PREFIX}/lang/shell/posix/include/header.sh"
-    source "${KOOPA_PREFIX}/lang/shell/zsh/functions/activate.sh"
+    if [[ "$activate" -eq 1 ]]
+    then
+        source "${KOOPA_PREFIX}/lang/shell/zsh/functions/activate.sh"
+    fi
     return 0
 }
 
-koopa:::zsh_header "$@"
+__koopa_zsh_header "$@"

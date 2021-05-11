@@ -1,10 +1,117 @@
 #!/usr/bin/env bash
 # koopa nolint=coreutils
 
-_koopa_bash_header() { # {{{1
+__koopa_bash_source_dir() { # {{{1
+    # """
+    # Source multiple Bash script files inside a directory.
+    # @note Updated 2021-05-11.
+    #
+    # Note that macOS ships with an ancient version of Bash by default that
+    # doesn't support readarray/mapfile.
+    # """
+    local prefix fun_script fun_scripts koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
+    [[ -d "$prefix" ]] || return 0
+    if [[ $(type -t readarray) != 'builtin' ]]
+    then
+        printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
+        return 1
+    fi
+    readarray -t fun_scripts <<< "$( \
+        find -L "$prefix" \
+            -mindepth 1 \
+            -type f \
+            -name '*.sh' \
+            -print \
+        | sort \
+    )"
+    for fun_script in "${fun_scripts[@]}"
+    do
+        # shellcheck source=/dev/null
+        . "$fun_script"
+    done
+    return 0
+}
+
+__koopa_is_installed() { # {{{1
+    # """
+    # are all of the requested programs installed?
+    # @note updated 2021-05-07.
+    # """
+    local cmd
+    for cmd in "$@"
+    do
+        command -v "$cmd" >/dev/null || return 1
+    done
+    return 0
+}
+
+__koopa_is_linux() { # {{{1
+    # """
+    # is the operating system linux?
+    # @note updated 2021-05-07.
+    # """
+    [ "$(uname -s)" = 'linux' ]
+}
+
+__koopa_is_macos() { # {{{1
+    # """
+    # is the operating system macos?
+    # @note updated 2021-05-07.
+    # """
+    [ "$(uname -s)" = 'darwin' ]
+}
+
+__koopa_print() { # {{{1
+    # """
+    # print a string.
+    # @note updated 2021-05-07.
+    # """
+    local string
+    [ "$#" -gt 0 ] || return 1
+    for string in "$@"
+    do
+        printf '%b\n' "$string"
+    done
+    return 0
+}
+
+__koopa_realpath() { # {{{1
+    # """
+    # resolve file path.
+    # @note updated 2021-05-11.
+    # """
+    local arg bn dn x
+    [ "$#" -gt 0 ] || return 1
+    if __koopa_is_installed realpath
+    then
+        x="$(realpath "$@")"
+    elif __koopa_is_installed grealpath
+    then
+        x="$(grealpath "$@")"
+    elif __koopa_is_macos
+    then
+        for arg in "$@"
+        do
+            bn="$(basename "$arg")"
+            dn="$(cd "$(dirname "$arg")" || return 1; pwd -p)"
+            x="${dn}/${bn}"
+            __koopa_print "$x"
+        done
+        return 0
+    else
+        x="$(readlink -f "$@")"
+    fi
+    [ -n "$x" ] || return 1
+    __koopa_print "$x"
+    return 0
+}
+
+__koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-11.
     # """
     local activate checks dev distro_prefix header_path major_version os_id \
         shopts verbose
@@ -17,10 +124,6 @@ _koopa_bash_header() { # {{{1
     [[ -n "${KOOPA_CHECKS:-}" ]] && checks="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dev="$KOOPA_DEV"
     [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
-    # Disable header checks for any 'koopa install XXX' calls.
-    # This step won't work unless we upgrade Bash manually, due to downstream
-    # mapfile (readarray) check.
-    # > [[ "${1:-}" == 'install' ]] && checks=0
     if [[ "$activate" -eq 1 ]]
     then
         checks=0
@@ -56,7 +159,7 @@ _koopa_bash_header() { # {{{1
         header_path="${BASH_SOURCE[0]}"
         if [[ -L "$header_path" ]]
         then
-            header_path="$(_koopa_realpath "$header_path")"
+            header_path="$(__koopa_realpath "$header_path")"
         fi
         KOOPA_PREFIX="$( \
             cd "$(dirname "$header_path")/../../../.." \
@@ -67,34 +170,37 @@ _koopa_bash_header() { # {{{1
     fi
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX}/lang/shell/posix/include/header.sh"
-    # shellcheck source=/dev/null
-    source "${KOOPA_PREFIX}/lang/shell/bash/functions/activate.sh"
+    if [[ "$activate" -eq 1 ]]
+    then
+        # shellcheck source=/dev/null
+        source "${KOOPA_PREFIX}/lang/shell/bash/functions/activate.sh"
+    fi
     if [[ "$activate" -eq 0 ]] || [[ "$dev" -eq 1 ]]
     then
-        _koopa_source_dir 'common'
-        os_id="$(_koopa_os_id)"
-        if _koopa_is_linux
+        __koopa_bash_source_dir 'common'
+        os_id="$(koopa::os_id)"
+        if koopa::is_linux
         then
-            _koopa_source_dir 'os/linux/common'
+            __koopa_bash_source_dir 'os/linux/common'
             distro_prefix='os/linux/distro'
-            if _koopa_is_debian_like
+            if koopa::is_debian_like
             then
-                _koopa_source_dir "${distro_prefix}/debian"
-                _koopa_is_ubuntu_like && \
-                    _koopa_source_dir "${distro_prefix}/ubuntu"
-            elif _koopa_is_fedora_like
+                __koopa_bash_source_dir "${distro_prefix}/debian"
+                koopa::is_ubuntu_like && \
+                    __koopa_koopa_bash_source_dir "${distro_prefix}/ubuntu"
+            elif koopa::is_fedora_like
             then
-                _koopa_source_dir "${distro_prefix}/fedora"
-                _koopa_is_rhel_like && \
-                    _koopa_source_dir "${distro_prefix}/rhel"
+                __koopa_bash_source_dir "${distro_prefix}/fedora"
+                koopa::is_rhel_like && \
+                    __koopa_bash_source_dir "${distro_prefix}/rhel"
             fi
-            _koopa_source_dir "${distro_prefix}/${os_id}"
+            __koopa_bash_source_dir "${distro_prefix}/${os_id}"
         else
-            _koopa_source_dir "os/${os_id}"
+            __koopa_bash_source_dir "os/${os_id}"
         fi
         # Ensure we activate GNU coreutils and other tools that are keg-only
         # for Homebrew but preferred default for our Bash scripts.
-        _koopa_activate_homebrew_keg_only
+        koopa::activate_homebrew_keg_only
         # Check if user is requesting help documentation.
         koopa::help "$@"
         # Require sudo permission to run 'sbin/' scripts.
@@ -106,13 +212,4 @@ _koopa_bash_header() { # {{{1
     return 0
 }
 
-_koopa_realpath() { # {{{1
-    if [[ "$(uname -s)" == 'Darwin' ]]
-    then
-        perl -MCwd -e 'print Cwd::abs_path shift' "$1"
-    else
-        readlink -f "$@"
-    fi
-}
-
-_koopa_bash_header "$@"
+__koopa_bash_header "$@"
