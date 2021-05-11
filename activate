@@ -469,15 +469,15 @@ __koopa_posix_source() { # {{{1
 __koopa_preflight() { # {{{1
     # """
     # Run pre-flight checks.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-11.
     #
     # Determine whether koopa activation should proceed in the current shell.
     # """
     __koopa_export_user || return 1
     __koopa_export_koopa_force || return 1
+    __koopa_export_koopa_shell || return 1
     [ "${KOOPA_FORCE:-0}" -eq 0 ] || return 0
     [ "${KOOPA_SKIP:-0}" -eq 0 ] || return 1
-    __koopa_export_koopa_shell || return 1
     __koopa_is_koopa_active && return 1
     __koopa_is_interactive || return 1
     __koopa_is_user_named_admin && return 1
@@ -603,6 +603,7 @@ _koopa_activate() { # {{{1
         set -o errexit
         set -o nounset
         # > set -o xtrace
+        # FIXME This isn't defined and is erroring out in koopa installer.
         if [ "${KOOPA_SHELL:?}" = 'bash' ]
         then
             set -o errtrace
