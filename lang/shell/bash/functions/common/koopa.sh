@@ -435,6 +435,7 @@ koopa:::which_function() { # {{{1
         koopa::is_function "koopa::linux_${fun}"
     then
         fun="koopa::linux_${fun}"
+        koopa::stop "FIXME HELLO THERE: ${fun}."
     else
         fun="koopa::${fun}"
     fi
