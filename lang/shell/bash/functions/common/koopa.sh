@@ -119,11 +119,12 @@ koopa:::koopa_install() { # {{{1
     done
     for app in "${apps[@]}"
     do
-        if koopa::is_array_non_empty "${app_args[@]}"
+        app="install-${app}"
+        if koopa::is_array_non_empty "${app_args[@]:-}"
         then
-            koopa:::run_function "install-${app}" "${app_args[@]}"
+            koopa:::run_function "$app" "${app_args[@]}"
         else
-            koopa:::run_function "install-${app}"
+            koopa:::run_function "$app"
         fi
     done
     return 0
