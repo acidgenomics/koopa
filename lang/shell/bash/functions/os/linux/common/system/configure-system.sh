@@ -280,7 +280,7 @@ koopa::linux_configure_system() { # {{{1
     fi
     # Initial configuration {{{2
     # --------------------------------------------------------------------------
-    koopa::h1 'Configuring virtual machine.'
+    koopa::h1 'Configuring system.'
     # Enable useful global variables that make configuration easier.
     # > export GPG_TTY=/dev/null
     export FORCE_UNSAFE_CONFIGURE=1

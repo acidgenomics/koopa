@@ -404,15 +404,21 @@ koopa:::run_function() { # {{{1
     return 0
 }
 
+# FIXME This is failing to detect 'koopa::linux_configure_system' correctly
+# in clean Alpine Docker install.
 koopa:::which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2020-11-30.
+    # @note Updated 2021-05-11.
     # """
     local f fun os_id
     koopa::assert_has_args_eq "$#" 1
     f="${1:?}"
     f="${f//-/_}"
+
+    echo "$f"
+    koopa::stop 'FIXME'
+
     os_id="$(koopa::os_id)"
     if koopa::is_function "koopa::${os_id}_${f}"
     then
