@@ -305,11 +305,10 @@ koopa::is_file_system_case_sensitive() { # {{{1
     [[ "$count" -eq 2 ]]
 }
 
-# FIXME This doesn't seem to be returning the way we want for Bash 4.
 koopa::is_function() { # {{{1
     # """
     # Check if variable is a function.
-    # @note Updated 2020-07-07.
+    # @note Updated 2021-05-11.
     #
     # Note that 'declare' and 'typeset' are bashisms, and not POSIX.
     # Checking against 'type' works consistently across POSIX shells.
@@ -327,15 +326,11 @@ koopa::is_function() { # {{{1
     # - https://stackoverflow.com/questions/11478673/
     # - https://stackoverflow.com/questions/85880/
     # """
-    local fun str
+    local fun
     koopa::assert_has_args "$#"
     for fun in "$@"
     do
-        str="$(type "$fun" | head -n 1 2>/dev/null)"
-        # Harden against empty string return.
-        [[ -z "$str" ]] && str='no'
-        echo "$str"  # FIXME
-        koopa::str_match "$str" 'function' || return 1
+        [[ "$(type -t "$fun")" == 'function' ]] || return 1
     done
     return 0
 }
