@@ -48,7 +48,7 @@ koopa::git_checkout_recursive() { # {{{1
                 -print \
             | sort \
         )"
-        if ! koopa::is_array_non_empty "${repos[@]}"
+        if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
             koopa::stop "Failed to detect any git repos in '${dir}'."
         fi
@@ -281,7 +281,7 @@ koopa::git_pull_recursive() { # {{{1
                 -print \
             | sort \
         )"
-        if ! koopa::is_array_non_empty "${repos[@]}"
+        if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
             koopa::stop "Failed to detect any git repos in '${dir}'."
         fi
@@ -321,7 +321,7 @@ koopa::git_push_recursive() { # {{{1
                 -print \
             | sort \
         )"
-        if ! koopa::is_array_non_empty "${repos[@]}"
+        if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
             koopa::stop 'Failed to detect any git repos.'
         fi
@@ -507,7 +507,7 @@ koopa::git_status_recursive() { # {{{1
                 -print \
             | sort \
         )"
-        if ! koopa::is_array_non_empty "${repos[@]}"
+        if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
             koopa::stop 'Failed to detect any git repos.'
         fi
@@ -543,7 +543,7 @@ koopa::git_submodule_init() { # {{{1
             --get-regexp '^submodule\..*\.path$' \
     )"
     readarray -t array <<< "$lines"
-    if ! koopa::is_array_non_empty "${array[@]}"
+    if ! koopa::is_array_non_empty "${array[@]:-}"
     then
         koopa::stop "Failed to detect submodules in '${PWD}'."
     fi
