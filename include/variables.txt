@@ -2,10 +2,12 @@
 # Koopa internal variables.
 # """
 
+# FIXME check aws-cli, azure-cli, google-cloud-sdk versions.
+
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-05-09"
+koopa-date="2021-05-11"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.10.0a"
