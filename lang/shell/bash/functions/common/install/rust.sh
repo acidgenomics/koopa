@@ -39,7 +39,7 @@ koopa:::install_rust() { # {{{1
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-11.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -128,6 +128,12 @@ koopa::install_rust_packages() { # {{{1
             version="$(koopa::variable "rust-${pkg}")"
             args+=('--version' "${version}")
         fi
+        # Edge case handling for package name variants on crates.io.
+        case "$pkg" in
+            ripgrep-all)
+                pkg='ripgrep_all'
+                ;;
+        esac
         cargo install "$pkg" "${args[@]}"
     done
     koopa::sys_set_permissions -r "$prefix"
