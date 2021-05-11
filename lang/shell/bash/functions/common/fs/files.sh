@@ -36,7 +36,7 @@ koopa::autopad_zeros() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     files=("$@")
-    if ! koopa::is_array_non_empty "${files[@]}"
+    if ! koopa::is_array_non_empty "${files[@]:-}"
     then
         koopa::stop 'No files.'
     fi
@@ -178,7 +178,7 @@ koopa::delete_broken_symlinks() { # {{{1
     for prefix in "$@"
     do
         readarray -t files <<< "$(koopa::find_broken_symlinks "$prefix")"
-        koopa::is_array_non_empty "${files[@]}" || continue
+        koopa::is_array_non_empty "${files[@]:-}" || continue
         koopa::alert_note "Removing ${#files[@]} broken symlinks."
         # Don't pass single call to rm, as argument list can be too long.
         for file in "${files[@]}"
@@ -230,7 +230,7 @@ koopa::delete_empty_dirs() { # {{{1
     for prefix in "$@"
     do
         readarray -t dirs <<< "$(koopa::find_empty_dirs "$prefix")"
-        koopa::is_array_non_empty "${dirs[@]}" || continue
+        koopa::is_array_non_empty "${dirs[@]:-}" || continue
         koopa::alert_note "Removing ${#dirs[@]} empty directories."
         # Don't pass single call to rm, as argument list can be too long.
         for dir in "${dirs[@]}"
