@@ -424,6 +424,9 @@ koopa::assert_is_file_type() { # {{{1
     koopa::assert_is_matching_regex "$file" "\.${ext}\$"
 }
 
+# FIXME This is passing through and erroring for Alpine and Amazon Docker
+# images. Something about the Shell configuration is weird here.
+# Need to make activate more verbose to debug.
 koopa::assert_is_function() { # {{{1
     # """
     # Assert that variable is a function.
