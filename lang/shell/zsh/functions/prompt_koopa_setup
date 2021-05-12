@@ -19,8 +19,10 @@
 # """
 
 _koopa_prompt_setup() { # {{{1
+    echo "FIXME STARSHIP 1"
     if _koopa_is_installed starship
     then
+        echo "FIXME STARSHIP 2"
         _koopa_activate_starship
         return 0
     fi
