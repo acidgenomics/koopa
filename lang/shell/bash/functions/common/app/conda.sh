@@ -268,9 +268,15 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     fi
     if [[ "$single_cell" -eq 1 ]]
     then
-        # FIXME Consider adding VeloViz, scClustViz, loomR here too.
-        # FIXME Is loomR already available?
-        envs+=('r-monocle3')
+        envs+=(
+            # FIXME 'r-veloviz'  (need to submit)
+            # FIXME 'r-scclustviz'  (need to submit)
+            # > 'r-loomr'  # FIXME is this already defined in r-seurat?
+            'r-monocle3'
+            'r-seurat'
+            'scanpy'
+            # FIXME dana peer tools?
+        )
     fi
     if [[ "$trimming" -eq 1 ]]
     then
