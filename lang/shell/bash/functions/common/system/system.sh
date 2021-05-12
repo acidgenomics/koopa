@@ -52,7 +52,7 @@ koopa::sys_git_pull() { # {{{1
 koopa::sys_info() { # {{{
     # """
     # System information.
-    # @note Updated 2021-03-30.
+    # @note Updated 2021-05-12.
     # """
     koopa::assert_has_no_args "$#"
     local array koopa_prefix nf origin shell shell_name shell_version
@@ -115,7 +115,7 @@ koopa::sys_info() { # {{{
                 os="$(uname --all)"
             fi
         fi
-        shell_name="$KOOPA_SHELL"
+        shell_name="$(koopa::shell)"
         shell_version="$(koopa::get_version "${shell_name}")"
         shell="${shell_name} ${shell_version}"
         array+=(
