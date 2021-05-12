@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-12.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -240,6 +240,7 @@ koopa::debian_install_base() { # {{{1
             'librdf0-dev'
             'libreadline-dev'
             'libsasl2-dev'
+            'libsodium-dev'
             'libssh2-1-dev'
             'libssl-dev'
             'libstdc++6'
