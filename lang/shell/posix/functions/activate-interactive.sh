@@ -225,8 +225,11 @@ _koopa_activate_starship() { # {{{1
     # https://starship.rs/
     # """
     local nounset shell
+    echo "FIXME STARSHIP 3"
     _koopa_is_interactive || return 0
+    echo "FIXME STARSHIP 4"
     _koopa_is_installed starship || return 0
+    echo "FIXME STARSHIP 5"
     shell="$(_koopa_shell)"
     case "$(_koopa_shell)" in
         bash|zsh)
@@ -239,6 +242,7 @@ _koopa_activate_starship() { # {{{1
     [ "$nounset" -eq 1 ] && set +u
     eval "$(starship init "$shell")"
     [ "$nounset" -eq 1 ] && set -u
+    echo "FIXME STARSHIP 6"
     return 0
 }
 
