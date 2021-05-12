@@ -288,6 +288,7 @@ r="4.0.5"
 r-cran-gfortran="8.2"
 
 # https://svn.r-project.org/R/
+# https://stat.ethz.ch/R/daily/
 # Updated 2021-05-11.
 # This is the SVN revision number.
 r-devel="80283"
