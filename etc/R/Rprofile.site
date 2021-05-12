@@ -45,7 +45,7 @@
 ## Initialization at start of an R session {{{1
 ## =============================================================================
 
-.First <- function() { local({  # nolint
+local({  # nolint
     Sys.setenv("KOOPA_RPROFILE_SITE" = 1L)
     stopifnot(requireNamespace("utils", quietly = TRUE))
 
@@ -537,7 +537,7 @@
         )
         cat(msg)
     }
-}) }
+})
 
 
 
