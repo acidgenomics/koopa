@@ -1,114 +1,89 @@
-## """
-## Shared R profile configuration.
-## Updated 2021-05-10.
-##
-## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
-## """
+#!/usr/bin/env R
+
+#' Shared R profile configuration.
+#' @note Updated 2021-05-12.
+#'
+#' @section Restarting R:
+#'
+#' Restart with a clean R session inside RStudio:
+#' Session -> Restart R (Ctrl + Shift + F10).
+#'
+#' `.rs.restartR()` will reload but not detach packages, which isn't helpful.
+#'
+#' @section Checking configuration:
+#'
+#' Don't set `options(stringsAsFactors = FALSE)` here.
+#' Code will be non-portable.
+#'
+#' Check floating point (decimal) handling with `str(.Machine)`.
+#'
+#' @section Base environment locking:
+#'
+#' Starting with R 4.1, the base environment and its namespace are now locked
+#' (so one can no longer add bindings to these or remove from these).
+#'
+#' @section Example configurations:
+#'
+#' - Stephen Turner's profile
+#'   http://gettinggeneticsdone.blogspot.com/2013/07/customize-rprofile.html
+#' - Jim Hester's profile
+#'   https://github.com/jimhester/dotfiles/blob/master/R/Rprofile
+#' - Mike Love's profile
+#'   https://gist.github.com/mikelove/c3f7ff05ce18541b8b92
+#' - Efficient R programming
+#'   https://csgillespie.github.io/efficientR/set-up.html
+#' - Debian example config file by Dirk Eddelbuettel.
+#'
+#' @seealso
+#' - `help(topic = "Rprofile")`
+#' - `help(topic = "Startup")`
+#' - `.libPaths()`
+#' - https://cran.r-project.org/doc/manuals/r-devel/NEWS.html
 
 
 
-## Notes {{{1
+## Initialization at start of an R session {{{1
 ## =============================================================================
 
-## Tested on Linux and macOS.
+.First <- function() { local({  # nolint
+    Sys.setenv("KOOPA_RPROFILE_SITE" = 1L)
+    stopifnot(requireNamespace("utils", quietly = TRUE))
 
-## > help(topic = "Rprofile")
+    ## Functions {{{2
+    ## ---------------------------------------------------------------------
 
-## Never set `options(stringsAsFactors = FALSE)`.
-## Code will be non-portable.
-
-## Restart R clean inside RStudio project with:
-##     Session -> Restart R (Ctrl + Shift + F10).
-##
-## `.rs.restartR()` will reload but not detach packages, which isn't helpful.
-##
-## See also:
-## - https://stackoverflow.com/questions/6313079
-## - https://support.rstudio.com/hc/en-us/community/posts/200653076
-
-## If devtools runs into an unzip error, set option: `unzip = "/usr/bin/unzip"`.
-
-## Check floating point (decimal) handling with `str(.Machine)`.
-## https://twitter.com/MazdakS/status/1201937547116589062
-
-
-
-## Examples {{{1
-## =============================================================================
-
-## - Stephen Turner's profile
-##   http://gettinggeneticsdone.blogspot.com/2013/07/customize-rprofile.html
-## - Jim Hester's profile
-##   https://github.com/jimhester/dotfiles/blob/master/R/Rprofile
-## - Mike Love's profile
-##   https://gist.github.com/mikelove/c3f7ff05ce18541b8b92
-## - Efficient R programming
-##   https://csgillespie.github.io/efficientR/set-up.html
-## - Debian example config file by Dirk Eddelbuettel.
-
-
-
-## Pre-flight {{{1
-## =============================================================================
-
-## Run these configuration options outside of `.First()` call, so user-specific
-## `~/.Rprofile` file will pick them up.
-
-## Hidden environment {{{2
-## -----------------------------------------------------------------------------
-
-.rprofile <- new.env()
-
-## Seed value {{{3
-## -----------------------------------------------------------------------------
-
-## Set seed for reproducibility. Using Fibonacci sequence.
-assign(x = "seed", value = 1123581321L, envir = .rprofile)
-set.seed(.rprofile[["seed"]])
-
-## Functions {{{3
-## -----------------------------------------------------------------------------
-
-## Check if a package is installed.
-assign(
-    x = "isInstalled",
-    value = function(pkg) {
+    isInstalled <- function(pkg) {
         stopifnot(requireNamespace("utils", quietly = TRUE))
         pkg %in% rownames(utils::installed.packages())
-    },
-    envir = .rprofile
-)
+    }
 
-## Platform {{{3
-## -----------------------------------------------------------------------------
+    ## Seed value {{{2
+    ## ---------------------------------------------------------------------
 
-## Linux and macOS (Darwin) are currently supported.
-local({
+    ## Set seed for reproducibility. Using Fibonacci sequence.
+    set.seed(1123581321L)
+
+    ## Platform {{{3
+    ## ---------------------------------------------------------------------
+
+    ## Linux and macOS (but not Windows) are currently supported.
     os <- R.Version()[["os"]]
     sysname <- Sys.info()[["sysname"]]
     linux <- identical(sysname, "Linux")
     macos <- identical(sysname, "Darwin")
-    assign(x = "linux", value = linux, envir = .rprofile)
-    assign(x = "macos", value = macos, envir = .rprofile)
-    assign(x = "os", value = os, envir = .rprofile)
-})
 
-## R version strings {{{3
-## -----------------------------------------------------------------------------
+    ## R version strings {{{3
+    ## ---------------------------------------------------------------------
 
-## Get the full R version, including patch (e.g. 3.6.1).
-local({
+    ## Get the full R version, including patch (e.g. 3.6.1).
     rVersionFull <- numeric_version(paste(
         R.version[["major"]],
         R.version[["minor"]],
         sep = "."
     ))
-    assign(x = "rVersionFull", value = rVersionFull, envir = .rprofile)
-})
 
-## Get the short R version without patch (e.g. 3.6).
-## Use "devel" instead for development release.
-local({
+    ## Get the short R version without patch (e.g. 3.6).
+    ## Use "devel" instead for development release.
     if (identical(R.version[["status"]], "Under development (unstable)")) {
         rVersionShort <- "devel"
     } else {
@@ -118,45 +93,24 @@ local({
             sep = "."
         ))
     }
-    assign(x = "rVersionShort", value = rVersionShort, envir = .rprofile)
-})
 
-## Conda {{{3
-## -----------------------------------------------------------------------------
+    ## Conda {{{3
+    ## ---------------------------------------------------------------------
 
-local({
     if (isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV")))) {
         conda <- TRUE
     } else {
         conda <- FALSE
     }
-    assign(x = "conda", value = conda, envir = .rprofile)
-})
 
-## RStudio {{{3
-## -----------------------------------------------------------------------------
+    ## RStudio {{{3
+    ## ---------------------------------------------------------------------
 
-local({
     if (isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))) {
         rstudio <- TRUE
     } else {
         rstudio <- FALSE
     }
-    assign(x = "rstudio", value = rstudio, envir = .rprofile)
-})
-
-## No longer attaching hidden environment into search path.
-## > attach(.rprofile)
-
-
-
-## Initialization at start of an R session {{{1
-## =============================================================================
-
-## > help(topic = "Startup", package = "base")
-
-.First <- function() {  # nolint
-    isInstalled <- .rprofile[["isInstalled"]]
 
     ## Compiler settings {{{2
     ## -------------------------------------------------------------------------
@@ -164,18 +118,16 @@ local({
     ## Warn on active conda environment.
     ## Conda can cause compilation issues due to GCC version mismatch.
 
-    local({
-        if (isTRUE(interactive()) && isTRUE(.rprofile[["conda"]])) {
-            message(sprintf(
-                fmt = paste(
-                    "conda '%s' environment detected.",
-                    "Don't install packages from source with conda active.",
-                    sep = "\n"
-                ),
-                Sys.getenv("CONDA_DEFAULT_ENV")
-            ))
-        }
-    })
+    if (isTRUE(interactive()) && isTRUE(conda)) {
+        message(sprintf(
+            fmt = paste(
+                "conda '%s' environment detected.",
+                "Don't install packages from source with conda active.",
+                sep = "\n"
+            ),
+            Sys.getenv("CONDA_DEFAULT_ENV")
+        ))
+    }
 
     ## Check that the compiler is expected GCC version on Linux or expected
     ## Clang version on macOS.
@@ -185,47 +137,37 @@ local({
     ## Instead, install specific Clang and GNU Fortran binaries:
     ## https://cran.r-project.org/bin/macosx/tools/
 
-    local({
-        if (!isTRUE(.rprofile[["conda"]])) {
-            if (isTRUE(.rprofile[["macos"]])) {
-                ## Check that Xcode command line tools (CLT) are installed.
-                if (!isTRUE(dir.exists(file.path(
-                    "/",
-                    "Library",
-                    "Developer",
-                    "CommandLineTools",
-                    "SDKs",
-                    "MacOSX.sdk"
-                )))) {
-                    stop(paste(
-                        "Failed to detect Xcode CLT.",
-                        "This can happen after a macOS system update.",
-                        "Run 'xcode-select --install' to install.",
-                        sep = "\n"
-                    ))
-                }
-            } else if (isTRUE(.rprofile[["linux"]])) {
-                stopifnot(all(nzchar(Sys.which(c(
-                    "g++", "gcc", "gfortran"
-                )))))
+    if (!isTRUE(conda)) {
+        if (isTRUE(macos)) {
+            ## Check that Xcode command line tools (CLT) are installed.
+            if (!isTRUE(dir.exists(file.path(
+                "/",
+                "Library",
+                "Developer",
+                "CommandLineTools",
+                "SDKs",
+                "MacOSX.sdk"
+            )))) {
+                stop(paste(
+                    "Failed to detect Xcode CLT.",
+                    "This can happen after a macOS system update.",
+                    "Run 'xcode-select --install' to install.",
+                    sep = "\n"
+                ))
             }
+        } else if (isTRUE(linux)) {
+            stopifnot(all(nzchar(Sys.which(c(
+                "g++", "gcc", "gfortran"
+            )))))
         }
-    })
-
-    ## Library path {{{2
-    ## -------------------------------------------------------------------------
-
-    local({
-        libs <- .libPaths()
-        assign(x = "libs", value = libs, envir = .rprofile)
-    })
+    }
 
     ## RStudio {{{2
     ## -------------------------------------------------------------------------
 
     ## Fix file permissions. RStudio doesn't pick up the system umask.
     ## Note that we're allowing group write here by default.
-    ## > if (isTRUE(.rprofile[["rstudio"]])) {
+    ## > if (isTRUE(rstudio)) {
     ## >     Sys.umask("0002")
     ## > }
 
@@ -238,17 +180,13 @@ local({
     ## -------------------------------------------------------------------------
 
     ## Load per-user secrets that we don't want to save in a shared Renviron.
-    local({
-        secretsFile <- file.path("~", ".Rsecrets")
-        if (file.exists(secretsFile)) {
-            source(secretsFile)
-            ## > if (isTRUE(interactive())) {
-            ## >     message(sprintf("Loaded '%s' file.", secretsFile))
-            ## > }
-            secretsFile <- normalizePath(secretsFile)
-            assign(x = "secretsFile", value = secretsFile, envir = .rprofile)
-        }
-    })
+    secretsFile <- file.path("~", ".Rsecrets")
+    if (file.exists(secretsFile)) {
+        source(secretsFile)
+        ## > if (isTRUE(interactive())) {
+        ## >     message(sprintf("Loaded '%s' file.", secretsFile))
+        ## > }
+    }
 
     ## Package installation {{{2
     ## -------------------------------------------------------------------------
@@ -281,57 +219,55 @@ local({
     ## - Bioconductor 3.11 / R 4.0
     ##   https://packagemanager.rstudio.com/cran/2020-04-30
 
-    local({
-        repos <- getOption("repos")
-        if (isTRUE(.rprofile[["linux"]])) {
-            ## Configure the RSPM CRAN snapshot.
-            snapshot <- "2021-05-03"
-            cran <- "https://packagemanager.rstudio.com/cran"
-            ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
-            if (isTRUE(grepl(
-                pattern = "Ubuntu 20.04",
-                x = utils::osVersion,
-                fixed = TRUE
-            ))) {
-                distro <- "focal"
-                cran <- paste(cran, "__linux__", distro, sep = "/")
-            }
-            cran <- paste(cran, snapshot, sep = "/")
-            repos[["CRAN"]] <- cran
-            ## Configure the RSPM Bioconductor mirror repo.
-            ## This is currently warning about new books repo, so disabled.
-            ## > options(
-            ## >    "BioC_mirror" =
-            ## >        "https://packagemanager.rstudio.com/bioconductor"
-            ## > )
-        } else {
-            ## Alternatively, can use:
-            ## > repos[["CRAN"]] <-
-            ## >     "https://cran.rstudio.com"
-            ## > repos[["CRAN"]] <-
-            ## >     "https://packagemanager.rstudio.com/cran/latest"
-            repos[["CRAN"]] <-
-                "https://cloud.r-project.org"
+    repos <- getOption("repos")
+    if (isTRUE(linux)) {
+        ## Configure the RSPM CRAN snapshot.
+        snapshot <- "2021-05-03"
+        cran <- "https://packagemanager.rstudio.com/cran"
+        ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
+        if (isTRUE(grepl(
+            pattern = "Ubuntu 20.04",
+            x = utils::osVersion,
+            fixed = TRUE
+        ))) {
+            distro <- "focal"
+            cran <- paste(cran, "__linux__", distro, sep = "/")
         }
-        ## Always include our Acid Genomics repo.
-        repos[["AcidGenomics"]] <-
-            "https://r.acidgenomics.com"
-        ## Yihui Xie's repo has some extra binary builds for macOS.
-        ## > if (isTRUE(.rprofile[["macos"]])) {
-        ## >    repos[["CRANextra"]] <-
-        ## >        "https://macos.rbind.io"
-        ## > }
-        options("repos" = repos)
-        ## Allow Bioconductor to work offline.
-        ## Note that this will warn when enabled.
-        ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
-    })
+        cran <- paste(cran, snapshot, sep = "/")
+        repos[["CRAN"]] <- cran
+        ## Configure the RSPM Bioconductor mirror repo.
+        ## This is currently warning about new books repo, so disabled.
+        ## > options(
+        ## >    "BioC_mirror" =
+        ## >        "https://packagemanager.rstudio.com/bioconductor"
+        ## > )
+    } else {
+        ## Alternatively, can use:
+        ## > repos[["CRAN"]] <-
+        ## >     "https://cran.rstudio.com"
+        ## > repos[["CRAN"]] <-
+        ## >     "https://packagemanager.rstudio.com/cran/latest"
+        repos[["CRAN"]] <-
+            "https://cloud.r-project.org"
+    }
+    ## Always include our Acid Genomics repo.
+    repos[["AcidGenomics"]] <-
+        "https://r.acidgenomics.com"
+    ## Yihui Xie's repo has some extra binary builds for macOS.
+    ## > if (isTRUE(macos)) {
+    ## >    repos[["CRANextra"]] <-
+    ## >        "https://macos.rbind.io"
+    ## > }
+    options("repos" = repos)
+    ## Allow Bioconductor to work offline.
+    ## Note that this will warn when enabled.
+    ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
 
     ## Always install from source on Linux.
     ## Allow binary install on macOS.
-    if (isTRUE(.rprofile[["linux"]])) {
+    if (isTRUE(linux)) {
         options("pkgType" = "source")
-    } else if (isTRUE(.rprofile[["macos"]])) {
+    } else if (isTRUE(macos)) {
         options("pkgType" = "both")
     }
     ## Stop nagging about whether to compile in an interactive session.
@@ -426,7 +362,7 @@ local({
         "width" = 80L
     )
 
-    if (!isTRUE(.rprofile[["rstudio"]])) {
+    if (!isTRUE(rstudio)) {
         options("prompt" = "> ")
     }
 
@@ -541,20 +477,18 @@ local({
     }
 
     if (isInstalled("parallel")) {
-        local({
-            ## Improve the default multi-core settings.
-            ## `BiocParallel::MulticoreParam()` should inherit this setting.
-            cores <- Sys.getenv("CPU_COUNT")
-            if (!isTRUE(nzchar(cores))) {
-                cores <- max(1L, parallel::detectCores() - 1L)
-            }
-            cores <- as.integer(cores)
-            ## `install.packages()` looks for "Ncpus" global.
-            options(
-                "Ncpus" = cores,
-                "mc.cores" = cores
-            )
-        })
+        ## Improve the default multi-core settings.
+        ## `BiocParallel::MulticoreParam()` should inherit this setting.
+        cores <- Sys.getenv("CPU_COUNT")
+        if (!isTRUE(nzchar(cores))) {
+            cores <- max(1L, parallel::detectCores() - 1L)
+        }
+        cores <- as.integer(cores)
+        ## `install.packages()` looks for "Ncpus" global.
+        options(
+            "Ncpus" = cores,
+            "mc.cores" = cores
+        )
     }
 
     if (isInstalled("readr")) {
@@ -586,36 +520,32 @@ local({
             y = c("-q", "--quiet", "--silent")
         )) > 0L)
     ) {
-        local({
-            pathString <- paste0("  %.", getOption("width") - 2L, "s")
-            msg <- sprintf(
-                fmt = paste(
-                    "%s",
-                    "Home:", pathString,
-                    "Package Library:", pathString,
-                    "Working Directory:", pathString,
-                    "",
-                    sep = "\n"
-                ),
-                R.version[["version.string"]],
-                normalizePath(R.home(), mustWork = TRUE),
-                normalizePath(.libPaths()[[1L]], mustWork = TRUE),
-                normalizePath(getwd(), mustWork = TRUE)
-            )
-            cat(msg)
-        })
+        pathString <- paste0("  %.", getOption("width") - 2L, "s")
+        msg <- sprintf(
+            fmt = paste(
+                "%s",
+                "Home:", pathString,
+                "Package Library:", pathString,
+                "Working Directory:", pathString,
+                "",
+                sep = "\n"
+            ),
+            R.version[["version.string"]],
+            normalizePath(R.home(), mustWork = TRUE),
+            normalizePath(.libPaths()[[1L]], mustWork = TRUE),
+            normalizePath(getwd(), mustWork = TRUE)
+        )
+        cat(msg)
     }
-
-    rm(isInstalled)
-}
+}) }
 
 
 
 ## Initialization at end of an R session {{{1
 ## =============================================================================
 
-.Last <- function() {  # nolint
+.Last <- function() { local({  # nolint
     if (interactive()) {
         message(sprintf("Goodbye at %s.", date()))
     }
-}
+}) }
