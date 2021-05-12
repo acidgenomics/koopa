@@ -226,9 +226,7 @@ _koopa_activate_starship() { # {{{1
     # """
     local nounset shell
     _koopa_is_interactive || return 0
-    echo "FIXME 1"
     _koopa_is_installed starship || return 0
-    echo "FIXME 2"
     shell="$(_koopa_shell)"
     case "$(_koopa_shell)" in
         bash|zsh)
