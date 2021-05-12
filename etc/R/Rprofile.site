@@ -538,14 +538,3 @@ local({  # nolint
         cat(msg)
     }
 })
-
-
-
-## Initialization at end of an R session {{{1
-## =============================================================================
-
-.Last <- function() { local({  # nolint
-    if (interactive()) {
-        message(sprintf("Goodbye at %s.", date()))
-    }
-}) }
