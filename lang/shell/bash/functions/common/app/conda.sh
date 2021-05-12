@@ -43,15 +43,15 @@ koopa::activate_conda_env() { # {{{1
     return 0
 }
 
-# NOTE Consider reworking the variables as an array here.
+# FIXME Rework the variables as a dictionary here instead.
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
     # @note Updated 2021-04-30.
     # """
     local all aligners chipseq data_mining enrichment env envs file_formats \
-        methylation quality_control reticulate riboseq rnaseq trimming \
-        variation version workflows
+        methylation quality_control reticulate riboseq rnaseq single_cell \
+        trimming variation version workflows
     koopa::assert_is_installed conda
     all=0
     aligners=0
@@ -64,6 +64,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     reticulate=0
     riboseq=0
     rnaseq=0
+    single_cell=0
     trimming=0
     variation=0
     workflows=0
@@ -125,6 +126,10 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 rnaseq=1
                 shift 1
                 ;;
+            --singlecell|--single-cell)
+                single_cell=1
+                shift 1
+                ;;
             --trimming)
                 trimming=1
                 shift 1
@@ -156,6 +161,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         reticulate=1
         riboseq=1
         rnaseq=1
+        single_cell=1
         trimming=1
         variation=1
         workflows=1
@@ -259,6 +265,12 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             'scikit-learn'
             'umap-learn'
         )
+    fi
+    if [[ "$single_cell" -eq 1 ]]
+    then
+        # FIXME Consider adding VeloViz, scClustViz, loomR here too.
+        # FIXME Is loomR already available?
+        envs+=('r-monocle3')
     fi
     if [[ "$trimming" -eq 1 ]]
     then
