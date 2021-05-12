@@ -108,6 +108,7 @@ koopa::install_rust_packages() { # {{{1
             # Currently failing to build due to cachedir constraint.
             # https://github.com/phiresky/ripgrep-all/issues/88
             # > 'ripgrep-all'
+            'starship'
             'tokei'
             'xsv'
             'zoxide'
