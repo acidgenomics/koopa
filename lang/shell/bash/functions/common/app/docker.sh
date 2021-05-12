@@ -173,6 +173,9 @@ koopa::docker_build() { # {{{1
     return 0
 }
 
+# FIXME The mamba image is failing to return recent.
+# FIXME Can we check for recent image by calling the API instead of pulling
+# the image down locally first? Need to rethink this.
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
