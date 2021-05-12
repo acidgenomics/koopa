@@ -173,9 +173,6 @@ koopa::docker_build() { # {{{1
     return 0
 }
 
-# FIXME The mamba image is failing to return recent.
-# FIXME Can we check for recent image by calling the API instead of pulling
-# the image down locally first? Need to rethink this.
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
@@ -510,7 +507,7 @@ koopa::docker_tag() { # {{{1
 koopa::is_docker_build_recent() { # {{{1
     # """
     # Has the requested Docker image been built recently?
-    # @note Updated 2020-08-07.
+    # @note Updated 2021-05-12.
     #
     # @seealso
     # - Corresponding 'isDockerBuildRecent()' R function.
@@ -520,7 +517,7 @@ koopa::is_docker_build_recent() { # {{{1
     local created current days diff image json seconds
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    days=2
+    days=7
     pos=()
     while (("$#"))
     do
@@ -545,7 +542,7 @@ koopa::is_docker_build_recent() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     # 24 hours * 60 minutes * 60 seconds = 86400.
-    seconds=$((days * 86400))
+    seconds="$((days * 86400))"
     current="$(date -u '+%s')"
     for image in "$@"
     do
