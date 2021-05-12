@@ -99,6 +99,7 @@ koopa::install_rust_packages() { # {{{1
         pkgs=(
             'bat'
             'broot'
+            'dog'
             'du-dust'
             'exa'
             'fd-find'
