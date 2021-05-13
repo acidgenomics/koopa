@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-05-12"
+koopa-date="2021-05-13"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.10.0"
+koopa-version="0.10.1a"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.1.18"
