@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.3"
+aws-cli="2.2.4"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.23.0"
@@ -456,7 +456,7 @@ homebrew-cask-gpg-suite="2020.2"
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2021-04-28 from https://pypi.org/.
+# Updated 2021-05-13 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
@@ -479,39 +479,32 @@ python-pip2pi="0.8.1"
 python-psutil="5.8.0"
 python-pyflakes="2.3.1"
 python-pytaglib="1.4.6"
-python-pytest="6.2.3"
+python-pytest="6.2.4"
 python-pyyaml="5.4.1"
-python-setuptools="56.0.0"
-python-six="1.15.0"
+python-setuptools="56.2.0"
+python-six="1.16.0"
 python-wheel="0.36.2"
 
 # Ruby packages (gems) {{{1
 # ==============================================================================
-# Updated 2021-02-11.
+# Updated 2021-05-13.
 
-# NOTE Need to improve automatic updates of these Ruby dependencies.
+# Update with 'gem update' or 'gem install <name>'.
 
 # https://rubygems.org/gems/bundler/versions/
-# NOTE Consider renaming to 'bundler' here.
-# Update with 'gem install bundler'.
-ruby-bundler="2.2.16"
-
-# https://rubygems.org/pages/download/
-# NOTE Consider renaming to 'rubygems' here.
-# Update with 'gem update --system', but don't do this with Homebrew Ruby.
-ruby-gem="3.2.14"
+ruby-bundler="2.2.17"
 
 # Last updated 2010-06-24...
 ruby-ronn="0.7.3"
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2021-02-11 from https://crates.io/.
+# Updated 2021-05-13 from https://crates.io/.
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-rust-bat="0.18.0"         # homebrew
+rust-bat="0.18.1"         # homebrew
 rust-broot="1.4.0"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.5.4"      # homebrew; dust
@@ -529,14 +522,7 @@ rust-zoxide="0.7.0"       # homebrew; z
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
 
-# https://github.com/crossbeam-rs/crossbeam/
 rust-crossbeam="0.8.0"
-
-# https://hyper.rs/
-rust-hyper="0.14.4"
-
-# https://github.com/rayon-rs/rayon/
+rust-hyper="0.14.7"
 rust-rayon="1.5.0"
-
-# https://docs.rs/tide/
 rust-tide="0.16.0"
