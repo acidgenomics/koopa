@@ -15,12 +15,12 @@ set -Eeu -o pipefail
 # removing the directory right before creation.
 # """
 
-usage() { # {{{1
+koopa:::install_koopa_usage() { # {{{1
 cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
-Updated 2021-04-09.
+Updated 2021-05-14.
 
 Optional arguments:
     --help, -h
@@ -55,17 +55,17 @@ Non-interactive configuration arguments:
 END
 }
 
-install() { # {{{1
+koopa::install_koopa() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2021-04-09.
+    # @note Updated 2021-05-14.
     # """
     local dotfiles interactive koopa_prefix passwordless profile shared test
     while (("$#"))
     do
         case "$1" in
             --help|-h)
-                usage
+                koopa:::install_koopa_usage
                 return 0
                 ;;
             --dotfiles)
@@ -230,14 +230,18 @@ install() { # {{{1
 
     koopa::h2 'Activating koopa.'
     set +u
+    # These variables will be picked up by the main 'activate' script below.
+    KOOPA_FORCE=1
+    KOOPA_TEST="$test"
+    export KOOPA_FORCE KOOPA_TEST
     # shellcheck source=/dev/null
-    force=1 test="$test" . "${koopa_prefix}/activate"
+    . "${koopa_prefix}/activate"
     set -u
     # Check that prefix is set correctly.
     if [[ "${koopa_prefix:?}" != "${KOOPA_PREFIX:?}" ]]
     then
         >&2 cat << END
-ERROR: Installer failed to set KOOPA_PREFIX correctly.
+ERROR: Installer failed to set 'KOOPA_PREFIX' correctly.
     Expected: "$koopa_prefix"
     Actual: "$KOOPA_PREFIX"
     PWD: "$PWD"
@@ -249,7 +253,7 @@ END
     if ! koopa::is_installed koopa
     then
         >&2 cat << END
-ERROR: Installer failed to set PATH correctly.
+ERROR: Installer failed to set 'PATH' correctly.
     KOOPA_PREFIX: "$KOOPA_PREFIX"
     PATH: "$PATH"
 END
@@ -318,4 +322,4 @@ END
     return 0
 }
 
-install "$@"
+koopa::install_koopa "$@"
