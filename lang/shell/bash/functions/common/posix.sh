@@ -128,6 +128,10 @@ koopa::cd() { # {{{1
     _koopa_cd "$@"
 }
 
+koopa::conda() { # {{{1
+    _koopa_conda "$@"
+}
+
 koopa::conda_env() { # {{{1
     _koopa_conda_env "$@"
 }
@@ -734,6 +738,10 @@ koopa::scripts_private_prefix() { # {{{1
 
 koopa::shell() { # {{{1
     _koopa_shell "$@"
+}
+
+koopa::shell_name() { # {{{1
+    _koopa_shell_name "$@"
 }
 
 koopa::snake_case_simple() { # {{{1

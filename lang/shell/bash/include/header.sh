@@ -4,29 +4,30 @@
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
-    # @note Updated 2021-05-11.
+    # @note Updated 2021-05-14.
     #
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
     # """
-    local prefix fun_script fun_scripts koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
-    prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
-    [[ -d "$prefix" ]] || return 0
+    local prefix fun_script fun_scripts fun_scripts_arr koopa_prefix
     if [[ $(type -t readarray) != 'builtin' ]]
     then
         printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
         return 1
     fi
-    readarray -t fun_scripts <<< "$( \
+    koopa_prefix="$(_koopa_prefix)"
+    prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
+    [[ -d "$prefix" ]] || return 0
+    # Can add a sort step here, but it is slower and unecessary.
+    fun_scripts="$( \
         find -L "$prefix" \
             -mindepth 1 \
             -type f \
             -name '*.sh' \
             -print \
-        | sort \
     )"
-    for fun_script in "${fun_scripts[@]}"
+    readarray -t fun_scripts_arr <<< "$fun_scripts"
+    for fun_script in "${fun_scripts_arr[@]}"
     do
         # shellcheck source=/dev/null
         . "$fun_script"
@@ -108,6 +109,22 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
+__koopa_warning() { # {{{1
+    # """
+    # Print a warning message to the console.
+    # @note Updated 2021-05-14.
+    # """
+    local string
+    [[ "$#" -gt 0 ]] || return 1
+    for string in "$@"
+    do
+        printf '%b\n' "$string" >&2
+    done
+    return 0
+}
+
+
+
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
@@ -144,8 +161,16 @@ __koopa_bash_header() { # {{{1
         major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
         if [[ ! "$major_version" -ge 4 ]]
         then
-            printf '%s\n' 'ERROR: Koopa requires Bash >= 4.' >&2
-            printf '%s: %s\n' 'BASH_VERSION' "$BASH_VERSION" >&2
+            __koopa_warning \
+                'Koopa requires Bash >= 4.' \
+                "Current Bash version: '${BASH_VERSION}'."
+            if [[ "$(uname -s)" == "Darwin" ]]
+            then
+                __koopa_warning \
+                    "On macOS, we recommend installing Homebrew." \
+                    "Refer to 'https://brew.sh' for instructions." \
+                    "Then install Bash with 'brew install bash'."
+            fi
             return 1
         fi
         if [[ $(type -t readarray) != 'builtin' ]]
@@ -204,7 +229,7 @@ __koopa_bash_header() { # {{{1
         # Check if user is requesting help documentation.
         koopa::help "$@"
         # Require sudo permission to run 'sbin/' scripts.
-        koopa::str_match "$0" '/sbin' && koopa::assert_has_sudo
+        koopa::str_match "$0" '/sbin' && koopa::assert_is_admin
         # Disable user-defined aliases.
         # Primarily intended to reset cp, mv, rf for use inside scripts.
         unalias -a

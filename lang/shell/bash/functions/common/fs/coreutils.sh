@@ -36,6 +36,7 @@ koopa::cp() { # {{{1
     koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
+        # NOTE Don't run sudo check here, can slow down functions.
         cp=('sudo' 'cp')
         mkdir=('koopa::mkdir' '-S')
         rm=('koopa::rm' '-S')
@@ -108,6 +109,7 @@ koopa::ln() { # {{{1
     koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
+        # NOTE Don't run sudo check here, can slow down functions.
         ln=('sudo' 'ln')
         mkdir=('koopa::mkdir' '-S')
         rm=('koopa::rm' '-S')
@@ -158,6 +160,7 @@ koopa::mkdir() { # {{{1
     koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
+        # NOTE Don't run sudo check here, can slow down functions.
         mkdir=('sudo' 'mkdir')
     else
         mkdir=('mkdir')
@@ -200,6 +203,7 @@ koopa::mv() { # {{{1
     koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
+        # NOTE Don't run sudo check here, can slow down functions.
         mkdir=('koopa::mkdir' '-S')
         mv=('sudo' 'mv')
         rm=('koopa::rm' '-S')
@@ -290,6 +294,7 @@ koopa::rm() { # {{{1
     koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
+        # NOTE Don't run sudo check here, can slow down functions.
         rm=('sudo' 'rm')
     else
         rm=('rm')

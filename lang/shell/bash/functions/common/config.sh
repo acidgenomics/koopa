@@ -85,7 +85,7 @@ koopa::find_user_profile() { # {{{1
     # """
     local file shell
     koopa::assert_has_no_args "$#"
-    shell="$(koopa::shell)"
+    shell="$(koopa::shell_name)"
     case "$shell" in
         bash)
             file="${HOME}/.bashrc"

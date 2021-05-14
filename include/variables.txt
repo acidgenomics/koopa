@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-05-11"
+koopa-date="2021-05-14"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.10.0"
+koopa-version="0.10.1"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.1.18"
@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.3"
+aws-cli="2.2.4"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.23.0"
@@ -170,7 +170,7 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.1.6"
+homebrew="3.1.7"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -200,9 +200,8 @@ libtool="2.4.6"
 llvm="12.0.0"
 
 # https://lmod.readthedocs.io/
-# https://lmod.readthedocs.io/en/latest/030_installing.html
 # https://github.com/TACC/Lmod
-lmod="8.4.31"
+lmod="8.5"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
@@ -289,9 +288,8 @@ r-cran-gfortran="8.2"
 
 # https://svn.r-project.org/R/
 # https://stat.ethz.ch/R/daily/
-# Updated 2021-05-11.
 # This is the SVN revision number.
-r-devel="80283"
+r-devel="80190"  # R 4.1 RC.
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
@@ -387,67 +385,81 @@ zsh="5.8"
 
 # Conda environments {{{1
 # ==============================================================================
-# Updated 2020-12-31.
+# Updated 2021-05-14.
+# Use 'conda search --info <name>' to retrieve timestamp and dependency info.
+# Consider removing very old packages from our workflows.
 
-conda-arriba="2.0.0"
-conda-atropos="1.1.29"
-conda-bamtools="2.5.1"
-conda-bcftools="1.11"
-conda-bedtools="2.29.2"
-conda-bioawk="1.0"
-conda-biobambam="2.0.87"  # linux  # NOTE Recipe needs update to 2.0.146.
-conda-bismark="0.23.0"
-conda-bowtie2="2.4.2"
-conda-bwa-mem2="2.1"
-conda-bwa="0.7.17"
-conda-chromhmm="1.21"  # NOTE Needs update to 1.22.
-conda-deeptools="3.5.0"
-conda-entrez-direct="13.9"
-conda-ericscript="0.5.5"
-conda-fastqc="0.11.9"
-conda-fgbio="1.3.0"
-conda-gatk4="4.1.9.0"
-conda-genrich="0.6"
-conda-gffutils="0.10.1"
-conda-hisat2="2.2.1"
-conda-homer="4.11"
-conda-htslib="1.11"
-conda-igvtools="2.5.3"
-conda-jupyterlab="3.0.0"
-conda-kallisto="0.46.2"
-conda-kraken2="2.1.1"
-conda-kraken="1.1.1"
-conda-macs2="2.2.7.1"
-conda-miniwdl="1.0.0"
-conda-multiqc="1.9"
-conda-nextflow="20.10.0"
-conda-numpy="1.20.1"
-conda-oncofuse="1.1.1"
-conda-pandas="1.2.0"
-conda-peddy="0.4.7"
-conda-picard="2.23.9"
-conda-pizzly="0.37.3"
-conda-qualimap="2.2.2d"
-conda-rsem="1.3.3"
-conda-salmon="1.4.0"
-conda-sambamba="0.7.1"
-conda-samblaster="0.1.26"
-conda-samtools="1.11"
-conda-scikit-learn="0.24.0"
-conda-seqtk="1.3"
-conda-sicer2="1.0.3"
-conda-snakemake="6.0.0"
-conda-squid="1.5"
-conda-sra-tools="2.10.9"  # linux
-conda-star-fusion="1.9.1"
-conda-star="2.7.7a"
-conda-trimmomatic="0.39"
-# umap-learn 0.5.0 currently has issues with ParametricUMAP not being available
-# in R via reticulate. This requires tensorflow, which isn't included in the
-# recipe because v2.2+ isn't available yet and is required for Python 3.8.
+conda-arriba="2.1.0"                    # 2021-01-24 bioconda
+conda-atropos="1.1.29"                  # 2020-12-07 bioconda
+conda-bamtools="2.5.1"                  # 2018-07-04 bioconda
+conda-bcftools="1.12"                   # 2021-03-27 bioconda
+conda-bedtools="2.30.0"                 # 2021-01-23 bioconda
+conda-bioawk="1.0"                      # 2019-10-26 bioconda
+conda-biobambam="2.0.182"               # 2021-04-21 bioconda linux
+conda-bismark="0.23.0"                  # 2021-03-25 bioconda
+conda-bowtie2="2.4.2"                   # 2021-03-23 bioconda (2.4.3*)
+conda-bustools="0.40.0"                 # 2021-03-24 bioconda
+conda-bwa-mem2="2.2.1"                  # 2021-03-17 bioconda
+conda-bwa="0.7.17"                      # 2019-12-19 bioconda
+conda-chromhmm="1.21"                   # 2021-03-24 bioconda (1.22*)
+conda-cellrank=""
+conda-deeptools="3.5.1"                 # 2021-03-17 bioconda
+conda-entrez-direct="13.9"              # 2021-02-01 bioconda
+conda-ericscript="0.5.5"                # 2021-03-26 bioconda
+conda-fastqc="0.11.9"                   # 2021-03-25 bioconda
+conda-fgbio="1.3.0"                     # 2021-03-25 bioconda
+conda-gatk4="4.2.0.0"                   # 2021-03-27 bioconda
+conda-genrich="0.6.1"                   # 2021-03-17 bioconda
+conda-gffutils="0.10.1"                 # 2020-07-26 bioconda
+conda-hisat2="2.2.1"                    # 2020-07-24 bioconda
+conda-homer="4.11"                      # 2020-07-10 bioconda
+conda-htslib="1.12"                     # 2021-03-17 bioconda
+conda-igvtools="2.5.3"                  # 2021-03-25 bioconda
+conda-jupyterlab="3.0.15"               # 2021-05-11 conda-forge
+conda-kallisto="0.46.2"                 # 2021-03-26 bioconda
+conda-kraken2="2.1.2"                   # 2021-05-10 bioconda
+conda-macs2="2.2.7.1"                   # 2021-03-26 bioconda
+conda-mamba="0.13.0"                    # 2021-05-12 conda-forge
+conda-meme="5.3.0"                      # 2021-04-12 bioconda
+conda-merfishtools="1.5.0"              # 2018-10-24 bioconda
+conda-miniwdl="1.1.5"                   # 2021-05-08 conda-forge
+conda-multiqc="1.10.1"                  # 2021-05-05 bioconda
+conda-nextflow="21.04.0"                # 2021-05-04 bioconda
+conda-numpy="1.20.2"                    # 2021-03-28 conda-forge
+conda-oncofuse="1.1.1"                  # 2021-03-27 bioconda
+conda-pandas="1.2.4"                    # 2021-04-12 conda-forge
+conda-peddy="0.4.7"                     # 2020-07-06 bioconda
+conda-picard="2.25.4"                   # 2021-05-04 bioconda
+conda-pizzly="0.37.3"                   # 2019-01-17 bioconda
+conda-qualimap="2.2.2d"                 # 2021-03-28 bioconda
+conda-r-monocle3="1.0.0"                # 2021-04-07 bioconda
+conda-r-seurat="4.0.1"                  # 2021-03-18 conda-forge
+conda-ribocode="1.2.11"                 # 2018-12-20 bioconda
+conda-ribodiff="0.2.2"                  # 2019-10-27 bioconda
+conda-ribotaper="1.3.1"                 # 2020-07-13 bioconda
+conda-rsem="1.3.3"                      # 2020-07-26 bioconda
+conda-salmon="1.5.0"                    # 2021-05-12 bioconda
+conda-sambamba="0.8.0"                  # 2021-01-02 bioconda
+conda-samblaster="0.1.26"               # 2020-06-04 bioconda
+conda-samtools="1.12"                   # 2021-03-17 bioconda
+conda-scanpy="1.7.2"                    # 2021-04-07bioconda
+conda-scikit-learn="0.24.2"             # 2021-04-28 conda-forge
+conda-seqtk="1.3"                       # 2019-07-31 bioconda
+conda-sicer2="1.0.3"                    # 2021-03-26 bioconda
+conda-snakemake="6.3.0"                 # 2021-05-05 bioconda
+conda-squid="1.5"                       # 2021-03-27 bioconda
+conda-sra-tools="2.11.0"                # 2021-04-27 bioconda linux
+conda-star-fusion="1.10.0"              # 2021-04-15 bioconda
+conda-star="2.7.9a"                     # 2021-05-11 bioconda
+conda-trimmomatic="0.39"                # 2021-03-27 bioconda
+# NOTE umap-learn 0.5.0 currently has issues with ParametricUMAP not being
+# available in R via reticulate. This requires tensorflow, which isn't included
+# in the recipe because v2.2+ isn't available yet, and is required for
+# Python 3.8. The 0.4.6 release is confirmed to work with Seurat in R. It looks
+# like this issue is persisting in the 0.5.1 recipe update...
 # https://github.com/conda-forge/umap-learn-feedstock/issues/29
-conda-umap-learn="0.4.6"
-conda-vardict="2019.06.04"
+conda-umap-learn="0.4.6"                # 2020-07-03 bioconda (0.5.1*)
+conda-vardict="2019.06.04"              # 2019-06-05 bioconda
 
 # Homebrew cask versions {{{1
 # ==============================================================================
@@ -456,7 +468,7 @@ homebrew-cask-gpg-suite="2020.2"
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2021-04-28 from https://pypi.org/.
+# Updated 2021-05-13 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
@@ -479,39 +491,32 @@ python-pip2pi="0.8.1"
 python-psutil="5.8.0"
 python-pyflakes="2.3.1"
 python-pytaglib="1.4.6"
-python-pytest="6.2.3"
+python-pytest="6.2.4"
 python-pyyaml="5.4.1"
-python-setuptools="56.0.0"
-python-six="1.15.0"
+python-setuptools="56.2.0"
+python-six="1.16.0"
 python-wheel="0.36.2"
 
 # Ruby packages (gems) {{{1
 # ==============================================================================
-# Updated 2021-02-11.
+# Updated 2021-05-13.
 
-# NOTE Need to improve automatic updates of these Ruby dependencies.
+# Update with 'gem update' or 'gem install <name>'.
 
 # https://rubygems.org/gems/bundler/versions/
-# NOTE Consider renaming to 'bundler' here.
-# Update with 'gem install bundler'.
-ruby-bundler="2.2.16"
-
-# https://rubygems.org/pages/download/
-# NOTE Consider renaming to 'rubygems' here.
-# Update with 'gem update --system', but don't do this with Homebrew Ruby.
-ruby-gem="3.2.14"
+ruby-bundler="2.2.17"
 
 # Last updated 2010-06-24...
 ruby-ronn="0.7.3"
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2021-02-11 from https://crates.io/.
+# Updated 2021-05-13 from https://crates.io/.
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-rust-bat="0.18.0"         # homebrew
+rust-bat="0.18.1"         # homebrew
 rust-broot="1.4.0"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.5.4"      # homebrew; dust
@@ -529,14 +534,7 @@ rust-zoxide="0.7.0"       # homebrew; z
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
 
-# https://github.com/crossbeam-rs/crossbeam/
 rust-crossbeam="0.8.0"
-
-# https://hyper.rs/
-rust-hyper="0.14.4"
-
-# https://github.com/rayon-rs/rayon/
+rust-hyper="0.14.7"
 rust-rayon="1.5.0"
-
-# https://docs.rs/tide/
 rust-tide="0.16.0"
