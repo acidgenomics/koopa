@@ -169,6 +169,7 @@ at '${dict[prefix]}'."
     fi
     if koopa::is_shared_install && koopa::is_installed ldconfig
     then
+        koopa::assert_is_admin
         sudo ldconfig || return 1
     fi
     dict[tmp_dir]="$(koopa::tmp_dir)"

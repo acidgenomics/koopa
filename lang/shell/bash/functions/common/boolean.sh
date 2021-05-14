@@ -117,13 +117,14 @@ koopa::has_no_environments() { # {{{1
 koopa::has_passwordless_sudo() { # {{{1
     # """
     # Check if sudo is active or doesn't require a password.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-05-14.
     #
     # See also:
     # https://askubuntu.com/questions/357220
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed sudo || return 1
+    koopa::is_root && return 0
     sudo -n true 2>/dev/null && return 0
     return 1
 }
