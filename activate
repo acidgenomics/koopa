@@ -90,7 +90,7 @@ __koopa_check_zsh() { # {{{1
     # @seealso
     # - https://stackoverflow.com/a/23259585/3911732
     local shell
-    shell="$(basename "${KOOPA_SHELL:?}")"
+    shell="$(__koopa_shell_name)"
     [ "$shell" = 'zsh' ] || return 0
     case "$0" in
         _src_etc_profile*)
@@ -110,7 +110,7 @@ __koopa_duration_start() { # {{{1
     # @note Updated 2021-05-07.
     # """
     local bc date brew_prefix
-    [ -z "${KOOPA_TEST:-}" ] || return 0
+    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
     if __koopa_is_macos
     then
         if [ -x '/opt/homebrew/bin/brew' ]
@@ -141,7 +141,7 @@ __koopa_duration_stop() { # {{{1
     # @note Updated 2021-05-07.
     # """
     local bc date brew_prefix
-    [ -z "${KOOPA_TEST:-}" ] || return 0
+    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
     if __koopa_is_macos
     then
         if [ -x '/opt/homebrew/bin/brew' ]
@@ -239,7 +239,8 @@ __koopa_export_koopa_prefix() { # {{{1
     # @note Updated 2021-05-14.
     # """
     local prefix script shell
-    shell="$(basename "${KOOPA_SHELL:?}")"
+    unset -v KOOPA_PREFIX
+    shell="$(basename "$(__koopa_shell)")"
     case "$shell" in
         bash|zsh)
             ;;
@@ -347,10 +348,12 @@ __koopa_export_koopa_test() { # {{{1
 __koopa_export_user() { # {{{1
     # """
     # Export 'USER' variable.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-14.
     # """
-    [ -z "${USER:-}" ] || return 0
-    USER="$(id -un)"
+    if [ -z "${USER:-}" ]
+    then
+        USER="$(id -un)"
+    fi
     export USER
     return 0
 }
@@ -362,7 +365,7 @@ __koopa_header() { # {{{1
     # """
     local file prefix shell
     prefix="${KOOPA_PREFIX:?}/lang/shell"
-    shell="$(basename "${KOOPA_SHELL:?}")"
+    shell="$(__koopa_shell_name)"
     [ -d "${prefix}/${shell}" ] || shell='posix'
     file="${prefix}/${shell}/include/header.sh"
     [ -f "$file" ] || return 1
@@ -566,6 +569,17 @@ __koopa_shell() { # {{{1
     return 0
 }
 
+__koopa_shell_name() { # {{{1
+    # """
+    # Current shell name.
+    # @note Updated 2021-05-14.
+    # """
+    str="$(basename "$(__koopa_shell)")"
+    [ -n "$str" ] || return 1
+    __koopa_print "$str"
+    return 0
+}
+
 __koopa_str_match_fixed() { # {{{1
     # """
     # Match a fixed pattern in a string.
@@ -634,9 +648,9 @@ __koopa_activate() { # {{{1
     __koopa_export_koopa_test || return 1
     export KOOPA_ACTIVATE=1
     local minimal shell test
+    shell="$(__koopa_shell)"
     minimal="${KOOPA_MINIMAL:-0}"
     test="${KOOPA_TEST:-0}"
-    shell="$(basename "${KOOPA_SHELL:?}")"
     if [ "$test" -eq 1 ]
     then
         __koopa_print 'Test mode enabled.'

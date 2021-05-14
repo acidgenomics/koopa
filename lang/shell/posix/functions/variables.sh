@@ -254,7 +254,6 @@ _koopa_r() { # {{{1
     return 0
 }
 
-# FIXME RETURN FASTER IF KOOPA_SHELL IS DEFINED...
 _koopa_shell() { # {{{1
     # """
     # Full path to the current shell binary.
@@ -321,6 +320,7 @@ _koopa_shell_name() { # {{{1
     # @note Updated 2021-05-14.
     # """
     str="$(basename "$(_koopa_shell)")"
+    [ -n "$str" ] || return 1
     _koopa_print "$str"
     return 0
 }
