@@ -254,10 +254,11 @@ _koopa_r() { # {{{1
     return 0
 }
 
+# FIXME NEED TO IMPROVE CONSISTENCY WITH ACTIVATE SCRIPT.
 _koopa_shell() { # {{{1
     # """
     # Current shell.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-15.
     #
     # @seealso
     # - https://stackoverflow.com/questions/3327013
