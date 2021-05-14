@@ -471,7 +471,6 @@ koopa::docker_run() { # {{{1
             koopa::stop "Do not set '--bind' when running from home directory."
         fi
         workdir='/mnt/work'
-        # > workdir="$(koopa::strip_trailing_slash "$workdir")"
         run_args+=(
             "--volume=${PWD:?}:${workdir}"
             "--workdir=${workdir}"
