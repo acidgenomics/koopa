@@ -82,7 +82,7 @@ koopa:::install_r() { # {{{1
 koopa:::install_r_devel() { # {{{1
     # """
     # Install R-devel.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-14.
     # """
     local flags jobs name prefix repo_url revision rtop
     koopa::assert_is_installed svn
@@ -103,9 +103,16 @@ koopa:::install_r_devel() { # {{{1
         --revision="$revision" \
         "${repo_url}/trunk" \
         "${name}/source"
-    # Ensure that repo is up-to-date.
     # > koopa::cd "${rtop}/${name}/source"
+    # Draft version information is located in 'VERSION' file.
+    # How to ensure that repo is up-to-date.
     # > svn update
+    # Here's how to switch to a different revision inside the source trunk.
+    # Somewhere between 80100 and 80200 the version was changed.
+    # > svn checkout \
+    # >     --revision='80190' \
+    # >     "${repo_url}/trunk" \
+    # >     .
     # Get the sources of the recommended packages.
     koopa::cd "${rtop}/${name}/source/tools"
     ./rsync-recommended

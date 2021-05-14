@@ -286,12 +286,10 @@ r="4.0.5"
 # https://mac.r-project.org/
 r-cran-gfortran="8.2"
 
-# FIXME Need to pin to suitable R 4.1 release...
 # https://svn.r-project.org/R/
 # https://stat.ethz.ch/R/daily/
-# Updated 2021-05-11.
 # This is the SVN revision number.
-r-devel="80283"
+r-devel="80190"  # R 4.1 RC.
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
