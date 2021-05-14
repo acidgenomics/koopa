@@ -200,9 +200,8 @@ libtool="2.4.6"
 llvm="12.0.0"
 
 # https://lmod.readthedocs.io/
-# https://lmod.readthedocs.io/en/latest/030_installing.html
 # https://github.com/TACC/Lmod
-lmod="8.4.31"
+lmod="8.5"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
