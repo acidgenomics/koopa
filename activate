@@ -270,16 +270,20 @@ __koopa_export_koopa_shell() { # {{{1
     # """
     local shell
     shell="$(__koopa_shell)"
-    # FIXME add support for ash, busybox...
     case "$(basename "$shell")" in
-        bash|dash|zsh)
+        ash | \
+        bash | \
+        busybox | \
+        dash | \
+        zsh)
             ;;
         *)
             if __koopa_is_interactive
             then
                 >&2 cat << END
 [koopa] WARNING: Failed to activate koopa in the current shell.
-        Supported POSIX shells: Bash, Dash, Zsh.
+        Recommended: Bash or Zsh.
+        Also supported: Ash, Busybox, Dash.
 
   KOOPA_SHELL : '${shell}'
         SHELL : '${SHELL:-}'
