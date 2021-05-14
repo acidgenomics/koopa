@@ -9,6 +9,19 @@ __koopa_id() { # {{{1
     return 0
 }
 
+# FIXME Need to see if mamba is installed.
+# FIXME Rework this in our internal code.
+_koopa_conda() { # {{{1
+    # """
+    # Conda (or mamba) to use.
+    # @note Updated 2021-05-14.
+    # """
+    local x
+    x='conda'
+    _koopa_print "$x"
+    return 0
+}
+
 _koopa_cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
