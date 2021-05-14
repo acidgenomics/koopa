@@ -5,7 +5,7 @@ koopa::macos_disable_crashplan() { # {{{1
     # Disable CrashPlan.
     # @note Updated 2020-07-20.
     # """
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     system_plist='/Library/LaunchDaemons/com.crashplan.engine.plist'
     user_plist="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
     if [[ -f "$user_plist" ]]
@@ -28,7 +28,7 @@ koopa::macos_enable_crashplan() {  # {{{1
     # @note Updated 2020-07-20.
     # """
     local system_plist user_plist
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     system_plist='/Library/LaunchDaemons/com.crashplan.engine.plist'
     user_plist="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
     if [[ -f "${user_plist}.disabled" ]]

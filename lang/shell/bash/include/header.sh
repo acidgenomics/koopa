@@ -204,7 +204,7 @@ __koopa_bash_header() { # {{{1
         # Check if user is requesting help documentation.
         koopa::help "$@"
         # Require sudo permission to run 'sbin/' scripts.
-        koopa::str_match "$0" '/sbin' && koopa::assert_has_sudo
+        koopa::str_match "$0" '/sbin' && koopa::assert_is_admin
         # Disable user-defined aliases.
         # Primarily intended to reset cp, mv, rf for use inside scripts.
         unalias -a

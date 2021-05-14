@@ -254,7 +254,7 @@ koopa::r_javareconf() { # {{{1
     then
         r_cmd=("$r")
     else
-        koopa::assert_has_sudo
+        koopa::assert_is_admin
         r_cmd=('sudo' "$r")
     fi
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_flags[@]}"
