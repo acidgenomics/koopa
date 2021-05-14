@@ -282,15 +282,15 @@ koopa::assert_has_no_flags() { # {{{1
     return 0
 }
 
-koopa::assert_has_sudo() { # {{{1
+koopa::assert_is_admin() { # {{{1
     # """
-    # Assert that current user has sudo (admin) permissions.
-    # @note Updated 2020-07-30.
+    # Assert that current user has admin permissions.
+    # @note Updated 2021-05-14.
     # """
     koopa::assert_has_no_args "$#"
-    if ! koopa::has_sudo
+    if ! koopa::is_admin
     then
-        koopa::stop 'sudo is required.'
+        koopa::stop 'Administrator account is required.'
     fi
     return 0
 }

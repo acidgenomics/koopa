@@ -7,7 +7,7 @@ koopa::enable_shell() { # {{{1
     # """
     local cmd_name cmd_path etc_file user
     koopa::assert_has_args "$#"
-    koopa::has_sudo || return 0
+    koopa::is_admin || return 0
     cmd_name="${1:?}"
     cmd_path="$(koopa::make_prefix)/bin/${cmd_name}"
     etc_file='/etc/shells'
@@ -31,6 +31,7 @@ koopa::reload_shell() { # {{{1
     # @note Updated 2021-03-18.
     # """
     koopa::assert_has_no_args "$#"
+    # shellcheck disable=SC2093
     exec "${SHELL:?}" -il
     return 0
 }

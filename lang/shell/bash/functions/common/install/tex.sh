@@ -8,7 +8,7 @@ koopa::install_tex_packages() { # {{{1
     local name_fancy package packages
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed tlmgr
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     name_fancy='TeX packages'
     koopa::install_start "$name_fancy"
     sudo tlmgr update --self
@@ -63,7 +63,7 @@ koopa::update_tex() { # {{{1
     local name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed tlmgr
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     name_fancy='TeX packages'
     koopa::update_start "$name_fancy"
     sudo tlmgr update --self

@@ -28,7 +28,7 @@ koopa::sudo_append_string() { # {{{1
     # """
     local file string
     koopa::assert_has_args_eq "$#" 2
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     koopa::assert_is_installed grep tee
     string="${1:?}"
     file="${2:?}"
@@ -53,7 +53,7 @@ koopa::sudo_write_string() { # {{{1
     # """
     local file string
     koopa::assert_has_args_eq "$#" 2
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     koopa::assert_is_installed tee
     string="${1:?}"
     file="${2:?}"

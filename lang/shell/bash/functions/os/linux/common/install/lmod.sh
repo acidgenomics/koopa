@@ -11,7 +11,7 @@ koopa::linux_configure_lmod() { # {{{1
     # """
     local etc_dir init_dir name_fancy
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     prefix="${1:-}"
     [[ -z "$prefix" ]] && prefix="$(koopa::lmod_prefix)"
     init_dir="${prefix}/apps/lmod/lmod/init"
@@ -78,7 +78,7 @@ koopa:::linux_install_lmod() { # {{{1
         --with-updateSystemFn="${data_dir}/system.txt"
     make
     make install
-    if koopa::has_sudo
+    if koopa::is_admin
     then
         koopa::linux_configure_lmod "$prefix"
     fi
