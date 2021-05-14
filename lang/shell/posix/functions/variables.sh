@@ -9,12 +9,21 @@ __koopa_id() { # {{{1
     return 0
 }
 
-# FIXME Need to see if mamba is installed.
-# FIXME Rework this in our internal code.
 _koopa_conda() { # {{{1
     # """
     # Conda (or mamba) to use.
     # @note Updated 2021-05-14.
+    #
+    # NOTE Consider adding dynamic detection of mamba and/or miniforge install
+    # in a future update.
+    #
+    # Mamba currently installs into base environment, which can cause issues
+    # with other recipes already installed.
+    # > conda install mamba -n base -c conda-forge
+    #
+    # @seealso
+    # - https://github.com/mamba-org/mamba
+    # - https://github.com/conda-forge/miniforge
     # """
     local x
     x='conda'
