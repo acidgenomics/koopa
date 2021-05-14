@@ -300,18 +300,21 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         # - Fabian Theis Lab
         # - Cole Trapnell Lab
         # - Jean Fan Lab
+        # - r-harmony
+        #   https://github.com/immunogenomics/harmony
+        # - harmonypy
+        #   https://github.com/slowkow/harmonypy
         # - harmony-pytorch
         #   https://github.com/lilab-bcb/harmony-pytorch
-        # - palantir
+        # - palantir*
         #   https://github.com/dpeerlab/Palantir
-        # - r-scclustviz
+        # - r-scclustviz*
         #   https://github.com/BaderLab/scClustViz
-        # - r-veloviz
+        # - r-veloviz*
         #   https://jef.works/veloviz/
         envs+=(
             'bustools'
             'cellrank'  # 1.3.1
-            'r-harmony'  # 0.1
             'r-monocle3'
             'r-seurat'
             'scanpy'
@@ -320,7 +323,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     if [[ "${dict[spatial]}" -eq 1 ]]
     then
         # Consider:
-        # - squidpy
+        # - squidpy*
         envs+=(
             'merfishtools'
         )
