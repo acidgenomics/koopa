@@ -270,6 +270,7 @@ __koopa_export_koopa_shell() { # {{{1
     # """
     local shell
     shell="$(__koopa_shell)"
+    # FIXME add support for ash, busybox...
     case "$(basename "$shell")" in
         bash|dash|zsh)
             ;;
@@ -278,8 +279,7 @@ __koopa_export_koopa_shell() { # {{{1
             then
                 >&2 cat << END
 [koopa] WARNING: Failed to activate koopa in the current shell.
-
-Supported POSIX shells: Bash, Dash, Zsh.
+        Supported POSIX shells: Bash, Dash, Zsh.
 
   KOOPA_SHELL : '${shell}'
         SHELL : '${SHELL:-}'
@@ -287,10 +287,11 @@ Supported POSIX shells: Bash, Dash, Zsh.
             0 : '${0}'
             \$ : '${$}'
 
-Consider switching to Bash:
+Change to Bash:
 > chsh -s /bin/bash
-or Zsh:
+Change to Zsh:
 > chsh -s /bin/zsh
+
 END
             fi
             return 1
@@ -523,6 +524,8 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
+# FIXME This seems to be erroring for Alpine Docker image with ash...
+# This should return '/bin/busybox'.
 __koopa_shell() { # {{{1
     # """
     # Get the full path to current shell.
@@ -555,7 +558,7 @@ __koopa_shell() { # {{{1
     # - https://unix.stackexchange.com/questions/182590/
     # """
     local str
-    if __koopa_is_macos
+    if __koopa_is_macos && \
         __koopa_is_installed lsof sed
     then
         str="$( \
