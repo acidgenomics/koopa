@@ -6,7 +6,7 @@ koopa::fedora_set_locale() { # {{{1
     # @note Updated 2021-03-25.
     # """
     local charset country lang lang_string
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     koopa::assert_is_installed locale localedef
     lang='en'
     country='US'

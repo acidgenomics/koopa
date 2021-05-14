@@ -128,10 +128,10 @@ koopa::has_passwordless_sudo() { # {{{1
     return 1
 }
 
-koopa::has_sudo() { # {{{1
+koopa::is_admin() { # {{{1
     # """
-    # Check that current user has administrator (sudo) permission.
-    # @note Updated 2020-06-30.
+    # Check that current user has administrator permissions.
+    # @note Updated 2021-05-14.
     #
     # This check is hanging on an CPI AWS Ubuntu EC2 instance, I think due to
     # 'groups' can lag on systems for domain user accounts.
@@ -165,7 +165,8 @@ koopa::has_sudo() { # {{{1
     koopa::has_passwordless_sudo && return 0
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.
-    koopa::str_match_regex "$(groups)" '\b(admin|root|sudo|wheel)\b'
+    koopa::str_match_regex "$(groups)" '\b(admin|root|sudo|wheel)\b' && return 0
+    return 1
 }
 
 koopa::is_anaconda() { # {{{1

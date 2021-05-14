@@ -69,7 +69,7 @@ koopa::update_koopa_system() { # {{{1
     # @note Updated 2021-05-06.
     # """
     local conf_args
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     koopa::update_koopa
     koopa::h1 'Updating system configuration.'
     koopa::dl \

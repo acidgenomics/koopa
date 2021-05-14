@@ -52,7 +52,7 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     sudo xattr -r -d com.apple.quarantine /Applications/*.app
     return 0
 }
