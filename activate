@@ -272,7 +272,6 @@ __koopa_export_koopa_shell() { # {{{1
     # @note Updated 2021-05-14.
     # """
     local shell
-    unset -v KOOPA_SHELL
     shell="$(__koopa_shell)"
     case "$(basename "$shell")" in
         ash | \
@@ -648,7 +647,7 @@ __koopa_activate() { # {{{1
     __koopa_export_koopa_test || return 1
     export KOOPA_ACTIVATE=1
     local minimal shell test
-    shell="$(__koopa_shell)"
+    shell="$(__koopa_shell_name)"
     minimal="${KOOPA_MINIMAL:-0}"
     test="${KOOPA_TEST:-0}"
     if [ "$test" -eq 1 ]
