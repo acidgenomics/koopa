@@ -254,7 +254,6 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     then
         envs+=(
             'fastqc'
-            'kraken'
             'kraken2'
             'multiqc'
             'qualimap'
@@ -309,6 +308,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         # - r-veloviz
         #   https://jef.works/veloviz/
         envs+=(
+            'bustools'
             'cellrank'  # 1.3.1
             'r-harmony'  # 0.1
             'r-monocle3'

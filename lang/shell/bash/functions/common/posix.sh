@@ -128,6 +128,10 @@ koopa::cd() { # {{{1
     _koopa_cd "$@"
 }
 
+koopa::conda() { # {{{1
+    _koopa_conda "$@"
+}
+
 koopa::conda_env() { # {{{1
     _koopa_conda_env "$@"
 }

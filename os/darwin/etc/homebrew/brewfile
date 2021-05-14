@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-05-10.
+# Updated 2021-05-14.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -139,7 +139,11 @@ cask "zoom"
 
 # Brews {{{1
 # ==============================================================================
-#
+
+# Consider:
+# - miniforge
+#   https://github.com/conda-forge/miniforge
+
 # Install Rust directly instead.
 # > brew "rust"
 # > brew "rustup-init"  # rust
