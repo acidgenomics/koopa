@@ -254,45 +254,86 @@ _koopa_r() { # {{{1
     return 0
 }
 
-# FIXME NEED TO IMPROVE CONSISTENCY WITH ACTIVATE SCRIPT.
+# FIXME RETURN FASTER IF KOOPA_SHELL IS DEFINED...
 _koopa_shell() { # {{{1
     # """
-    # Current shell.
-    # @note Updated 2021-05-15.
+    # Full path to the current shell binary.
+    # @note Updated 2021-05-14.
+    #
+    # Useful variables:
+    # - Bash: 'BASH_VERSION'
+    # - Zsh: 'ZSH_VERSION'
+    #
+    # When '/proc' exists:
+    # - Shell invocation:
+    #   > cat "/proc/${$}/cmdline"
+    #   ## bash-il
+    # - Shell path:
+    #   > readlink "/proc/${$}/exe"
+    #   ## /usr/bin/bash
+    #
+    # How to resolve shell name when ps is installed:
+    # > shell_name="$( \
+    # >     ps -p "${$}" -o 'comm=' \
+    # >     | sed 's/^-//' \
+    # > )"
     #
     # @seealso
     # - https://stackoverflow.com/questions/3327013
+    # - http://opensourceforgeeks.blogspot.com/2013/05/
+    #     how-to-find-current-shell-in-linux.html
+    # - https://superuser.com/questions/103309/
+    # - https://unix.stackexchange.com/questions/87061/
+    # - https://unix.stackexchange.com/questions/182590/
     # """
-    local shell
-    if [ -n "${BASH_VERSION:-}" ]
+    local str
+    if [ -n "${KOOPA_SHELL:-}" ]
     then
-        shell='bash'
-    elif [ -n "${ZSH_VERSION:-}" ]
+        str="$KOOPA_SHELL"
+    elif __koopa_is_linux && \
+        __koopa_is_installed readlink && \
+        [ -x "/proc/${$}/exe" ]
     then
-        shell='zsh'
-    elif [ -d '/proc' ]
+        str="$(readlink "/proc/${$}/exe")"
+    elif __koopa_is_macos && \
+        __koopa_is_installed lsof sed
     then
-        # Standard approach on Linux.
-        _koopa_is_installed basename readlink || return 1
-        shell="$(basename "$(readlink /proc/$$/exe)")"
+        str="$( \
+            lsof \
+                -a \
+                -F 'n' \
+                -d 'txt' \
+                -p "${$}" \
+            | sed -n '3p' \
+            | sed 's/^n//' \
+        )"
     else
-        # This approach works on macOS.
-        # The sed step converts '-zsh' to 'zsh', for example.
-        # The basename step handles the case when ps returns full path.
-        # This can happen inside of editors, such as vim.
-        _koopa_is_installed basename ps sed || return 1
-        shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
+        return 1
     fi
-    _koopa_print "$shell"
+    [ -n "$str" ] || return 1
+    __koopa_print "$str"
+    return 0
+}
+
+_koopa_shell_name() { # {{{1
+    # """
+    # Current shell name.
+    # @note Updated 2021-05-14.
+    # """
+    str="$(basename "$(_koopa_shell)")"
+    _koopa_print "$str"
     return 0
 }
 
 _koopa_today() { # {{{1
     # """
     # Today string.
-    # @note Updated 2020-11-20.
+    # @note Updated 2021-05-14.
     # """
-    _koopa_print "$(date '+%Y-%m-%d')"
+    local str
+    str="$(date '+%Y-%m-%d')"
+    [ -n "$str" ] || return 1
+    _koopa_print "$str"
     return 0
 }
 
