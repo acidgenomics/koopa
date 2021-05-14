@@ -240,7 +240,6 @@ __koopa_export_koopa_prefix() { # {{{1
     # @note Updated 2021-05-14.
     # """
     local prefix script shell
-    unset -v KOOPA_PREFIX
     shell="$(basename "$(__koopa_shell)")"
     case "$shell" in
         bash|zsh)
