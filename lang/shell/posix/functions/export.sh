@@ -2,37 +2,43 @@
 
 _koopa_export_cpu_count() { # {{{1
     # """
-    # Export CPU_COUNT.
-    # @note Updated 2021-05-07.
+    # Export 'CPU_COUNT' variable.
+    # @note Updated 2021-05-14.
     # """
-    [ -z "${CPU_COUNT:-}" ] || return 0
-    CPU_COUNT="$(_koopa_cpu_count)"
+    if [ -z "${CPU_COUNT:-}" ]
+    then
+        CPU_COUNT="$(_koopa_cpu_count)"
+    fi
     export CPU_COUNT
     return 0
 }
 
 _koopa_export_editor() { # {{{1
     # """
-    # Export EDITOR.
+    # Export 'EDITOR' variable.
     # @note Updated 2021-05-07.
     # """
-    [ -z "${EDITOR:-}" ] && EDITOR='vim'
+    if [ -z "${EDITOR:-}" ]
+    then
+        EDITOR='vim'
+    fi
     VISUAL="$EDITOR"
-    export EDITOR
-    export VISUAL
+    export EDITOR VISUAL
     return 0
 }
 
 _koopa_export_git() { # {{{1
     # """
     # Export git configuration.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-14.
     #
     # @seealso
     # https://git-scm.com/docs/merge-options
     # """
-    [ -z "${GIT_MERGE_AUTOEDIT:-}" ] || return 0
-    GIT_MERGE_AUTOEDIT='no'
+    if [ -z "${GIT_MERGE_AUTOEDIT:-}" ]
+    then
+        GIT_MERGE_AUTOEDIT='no'
+    fi
     export GIT_MERGE_AUTOEDIT
     return 0
 }
@@ -61,11 +67,13 @@ _koopa_export_history() { # {{{1
     # See bash(1) for more options.
     # For setting history length, see HISTSIZE and HISTFILESIZE.
     # """
+    local shell
+    shell="$(_koopa_shell_name)"
     # Standardize the history file name across shells.
     # Note that snake case is commonly used here across platforms.
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME}/.$(_koopa_shell)_history"
+        HISTFILE="${HOME}/.${shell}_history"
     fi
     export HISTFILE
     # Create the history file, if necessary.
@@ -110,11 +118,13 @@ _koopa_export_history() { # {{{1
 
 _koopa_export_hostname() { # {{{1
     # """
-    # Export HOSTNAME.
-    # @note Updated 2021-07-05.
+    # Export 'HOSTNAME' variable.
+    # @note Updated 2021-05-14.
     # """
-    [ -z "${HOSTNAME:-}" ] || return 0
-    HOSTNAME="$(_koopa_hostname)"
+    if [ -z "${HOSTNAME:-}" ]
+    then
+        HOSTNAME="$(_koopa_hostname)"
+    fi
     export HOSTNAME
     return 0
 }
@@ -122,23 +132,27 @@ _koopa_export_hostname() { # {{{1
 _koopa_export_koopa_opt_prefix() { # {{{1
     # """
     # Export 'KOOPA_OPT_PREFIX' variable.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-14.
     #
     # This value is picked up in R configuration (for reticulate).
     # """
-    [ -z "${KOOPA_OPT_PREFIX:-}" ] || return 0
-    KOOPA_OPT_PREFIX="$(_koopa_opt_prefix)"
+    if [ -z "${KOOPA_OPT_PREFIX:-}" ]
+    then
+        KOOPA_OPT_PREFIX="$(_koopa_opt_prefix)"
+    fi
     export KOOPA_OPT_PREFIX
     return 0
 }
 
 _koopa_export_pager() { # {{{1
     # """
-    # Export PAGER.
-    # @note Updated 2021-05-07.
+    # Export 'PAGER' variable.
+    # @note Updated 2021-05-14.
     # """
-    [ -z "${PAGER:-}" ] || return 0
-    PAGER='less'
+    if [ -z "${PAGER:-}" ]
+    then
+        PAGER='less'
+    fi
     export PAGER
     return 0
 }
@@ -149,54 +163,69 @@ _koopa_export_python() { # {{{1
     # @note Updated 2020-06-30.
     # """
     # Don't allow Python to change the prompt string by default.
-    [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] && VIRTUAL_ENV_DISABLE_PROMPT=1
+    if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
+    then
+        VIRTUAL_ENV_DISABLE_PROMPT=1
+    fi
     export VIRTUAL_ENV_DISABLE_PROMPT
     return 0
 }
 
 _koopa_export_shell() { # {{{1
     # """
-    # Export SHELL.
-    # @note Updated 2021-05-07.
+    # Export 'SHELL' variable.
+    # @note Updated 2021-05-14.
     #
     # Some POSIX shells, such as Dash, don't export this by default.
-    # Note that this doesn't currently get set by RStudio terminal.
+    #
+    # RStudio Server terminal also doesn't export this, and can cause a
+    # warning to occur with dircolors.
+    #
+    # We are ensuring reexport here so that subshells contain the correct
+    # value, e.g. running 'bash -il' inside a Zsh login shell.
     # """
-    [ -z "${SHELL:-}" ] && SHELL="$(_koopa_which "$(_koopa_shell)")"
+    SHELL="$(_koopa_shell)"
     export SHELL
     return 0
 }
 
 _koopa_export_tmpdir() { # {{{1
     # """
-    # Export TMPDIR.
-    # @note Updated 2021-05-10.
+    # Export 'TMPDIR' variable.
+    # @note Updated 2021-05-14.
     # """
-    [ -z "${TMPDIR:-}" ] && TMPDIR='/tmp'
+    if [ -z "${TMPDIR:-}" ]
+    then
+        TMPDIR='/tmp'
+    fi
     export TMPDIR
     return 0
 }
 
 _koopa_export_today() { # {{{1
     # """
-    # Export TODAY.
-    # @note Updated 2021-05-07.
+    # Export 'TODAY' variable.
+    # @note Updated 2021-05-14.
     #
     # Current date. Alternatively, can use '%F' shorthand.
     # """
-    [ -z "${TODAY:-}" ] || return 0
-    TODAY="$(_koopa_today)"
+    if [ -z "${TODAY:-}" ]
+    then
+        TODAY="$(_koopa_today)"
+    fi
     export TODAY
     return 0
 }
 
 _koopa_export_user() { # {{{1
     # """
-    # Export USER.
-    # @note Updated 2021-05-07.
+    # Export 'USER' variable.
+    # @note Updated 2021-05-14.
     # """
-    [ -z "${USER:-}" ] || return 0
-    USER="$(_koopa_user)"
+    if [ -z "${USER:-}" ]
+    then
+        USER="$(_koopa_user)"
+    fi
     export USER
     return 0
 }
