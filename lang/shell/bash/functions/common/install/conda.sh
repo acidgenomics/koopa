@@ -35,18 +35,23 @@ koopa::install_miniconda() { # {{{1
 koopa:::install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
-    # @note Updated 2021-01-14.
+    # @note Updated 2021-05-14.
     #
     # Assuming installation of Miniconda by default.
+    #
+    # NOTE Consider adding install support for mamba into base environment.
+    # This currently can cause dependency changes, so avoid for the moment.
+    # > conda install mamba -n base -c conda-forge
     # """
     local anaconda arch name name_fancy os_type prefix py_version script \
         tmp_dir url version
     koopa::assert_has_no_envs
+    # Support for aarch64 (ARM) was added in 2021 Q1.
     arch="$(koopa::arch)"
     anaconda=0
     # Match Bioconda recommendation by default here.
     # This only applies to Miniconda, not full Anaconda.
-    py_version='3.8'
+    py_version='3.9'
     os_type="$(koopa::os_type)"
     case "$os_type" in
         darwin*)

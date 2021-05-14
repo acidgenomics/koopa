@@ -24,7 +24,7 @@ koopa::install_homebrew() { # {{{1
         koopa::alert_note 'Homebrew is already installed.'
         return 0
     fi
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     koopa::assert_is_installed yes
     name_fancy='Homebrew'
     koopa::install_start "$name_fancy"
@@ -52,7 +52,7 @@ koopa::install_homebrew_bundle() { # {{{1
     # """
     local brewfile install_args name_fancy
     koopa::assert_has_no_args_le "$#" 1
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     brewfile="${1:-$(koopa::brew_brewfile)}"
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
@@ -96,7 +96,7 @@ koopa::uninstall_homebrew() { # {{{1
         koopa::alert_not_installed 'Homebrew'
         return 0
     fi
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     koopa::assert_is_installed yes
     name_fancy='Homebrew'
     user="$(koopa::user)"
@@ -108,8 +108,6 @@ koopa::uninstall_homebrew() { # {{{1
         koopa::alert 'Changing default shell to system Zsh.'
         chsh -s '/bin/zsh' "$user"
     fi
-    # > koopa::alert "Resetting permissions in '/usr/local'."
-    # > sudo chown -Rhv "$user" '/usr/local/'*
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -139,7 +137,7 @@ koopa::update_homebrew() { # {{{1
     local name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed brew
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
     # > koopa::brew_reset_permissions
