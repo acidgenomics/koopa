@@ -12,8 +12,8 @@ koopa:::install_singularity() { # {{{1
     # @note Updated 2021-04-27.
     # """
     local file name prefix url version
-    koopa::assert_has_sudo
     koopa::assert_is_installed go
+    koopa::assert_is_admin
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='singularity'

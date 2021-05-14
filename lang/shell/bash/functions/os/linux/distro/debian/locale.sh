@@ -8,7 +8,7 @@ koopa::debian_set_locale() { # {{{1
     # Refer to '/usr/share/i18n/SUPPORTED' for supported locales.
     # """
     local charset charset2 country lang lang_string file string
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     koopa::assert_is_installed grep locale locale-gen update-locale
     # Consider allowing the user to change these in a future release.
     lang='en'

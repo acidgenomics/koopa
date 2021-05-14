@@ -88,7 +88,7 @@ koopa::rsync_cloud() { # {{{1
     local flags
     koopa::assert_has_no_flags "$@"
     koopa::assert_has_args_eq "$#" 2
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     flags=(
         # > '--exclude=bam'
         # > '--exclude=cram'

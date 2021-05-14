@@ -81,7 +81,7 @@ koopa::brew_reset_permissions() { # {{{1
     # """
     local group prefix user
     koopa::assert_is_installed brew
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     user="$(koopa::user)"
     group="$(koopa::admin_group)"
     prefix="$(koopa::homebrew_prefix)"

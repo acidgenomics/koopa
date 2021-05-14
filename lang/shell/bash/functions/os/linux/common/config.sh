@@ -55,7 +55,7 @@ koopa::link_docker() { # {{{1
     local dd_link_prefix distro_prefix etc_source lib_n lib_sys
     koopa::assert_has_no_args "$#"
     koopa::is_installed docker || return 0
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     # e.g. '/mnt/data01/n' to '/n' for AWS.
     dd_link_prefix="$(koopa::data_disk_link_prefix)"
     [[ -d "$dd_link_prefix" ]] || return 0
@@ -92,7 +92,7 @@ koopa::remove_user_from_group() { # {{{1
     local group user
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_installed gpasswd sudo
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     group="${1:?}"
     user="${2:-$(koopa::user)}"
     sudo gpasswd --delete "$user" "$group"
@@ -107,7 +107,7 @@ koopa::update_etc_profile_d() { # {{{1
     local file koopa_prefix string
     koopa::assert_has_no_args "$#"
     koopa::is_shared_install || return 0
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     file='/etc/profile.d/zzz-koopa.sh'
     # Early return if file exists and is not a symlink.
     # Previous verisons of koopa prior to 2020-05-09 created a symlink here.
@@ -137,7 +137,7 @@ koopa::update_ldconfig() { # {{{1
     koopa::assert_has_no_args "$#"
     [[ -d '/etc/ld.so.conf.d' ]] || return 0
     koopa::assert_is_installed ldconfig
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     distro_prefix="$(koopa::distro_prefix)"
     conf_source="${distro_prefix}/etc/ld.so.conf.d"
     # Intentionally early return for distros that don't need configuration.

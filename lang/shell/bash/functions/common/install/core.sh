@@ -29,7 +29,7 @@ koopa::find_app_version() { # {{{1
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-05-14.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -37,6 +37,7 @@ koopa::install_app() { # {{{1
     local dict link_args pkgs pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
+    koopa::is_shared_install && koopa::assert_is_admin
     # Use a dictionary approach for storing configuration variables.
     declare -A dict=(
         [homebrew_opt]=''

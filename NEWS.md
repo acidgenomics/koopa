@@ -1,3 +1,32 @@
+## koopa 0.10.1 (2021-05-14)
+
+### Major changes
+
+- Reworked shell detection and export of `KOOPA_SHELL`, `SHELL` variables
+  during activation. This now should consistently return the full path to the
+  current shell application, including in subshells.
+
+### Minor changes
+
+- Updated the dependency versions for recommended conda bioinfo environments.
+- Reworked the `conda_create_bioinfo_envs` function to use a dictionary
+  approach, which better supports a lot of variables in use. Added some more
+  tools potentially useful for enrichment (i.e. MIME Suite) and for single-cell
+  and spatial analysis.
+- Now wrapping calls to `conda` in a variable, in case we want to dynamically
+  switch to using mamba when mamba is installed.
+- Potentially empty arrays have been appended with `:-`, to avoid some potential
+  issues with Bash running in `-u` (no unbound variable) mode.
+- Reverted Docker builds to check for builds older than 7 days instead of 30
+  by default.
+- The `docker_run` function now supports a `--bind` argument, enabling bind
+  mode of the current working directory.
+- Internal `*has_sudo` functions have been renamed to `*is_admin` instead,
+  which makes more sense for a root user.
+- Improved error message when attempting to install on macOS with ancient Bash.
+- Updated Conda installer to use Python 3.9, which now also provides initial
+  support for aarch64 (ARM) platform in addition to x86.
+
 ## koopa 0.10.0 (2021-05-11)
 
 ### Major changes

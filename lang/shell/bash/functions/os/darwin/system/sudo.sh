@@ -7,7 +7,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     # """
     local source_file target_file
     koopa::assert_has_no_args "$#"
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     source_file="$(koopa::prefix)/os/macos/etc/pam.d/sudo~orig"
     target_file='/etc/pam.d/sudo'
     if [[ -f "$target_file" ]] && \
@@ -35,7 +35,7 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     local source_file target_file
     koopa::assert_has_no_args "$#"
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     source_file="$(koopa::prefix)/os/macos/etc/pam.d/sudo"
     target_file='/etc/pam.d/sudo'
     if [[ -f "$target_file" ]] && grep -q 'pam_tid.so' "$target_file"
