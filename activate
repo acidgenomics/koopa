@@ -46,6 +46,8 @@ examples:
 END
 }
 
+
+
 __koopa_bash_source() { # {{{1
     # """
     # Bash source file location.
@@ -269,6 +271,7 @@ __koopa_export_koopa_shell() { # {{{1
     # @note Updated 2021-05-14.
     # """
     local shell
+    unset -v KOOPA_SHELL
     shell="$(__koopa_shell)"
     case "$(basename "$shell")" in
         ash | \
@@ -281,20 +284,22 @@ __koopa_export_koopa_shell() { # {{{1
             if __koopa_is_interactive
             then
                 >&2 cat << END
-[koopa] WARNING: Failed to activate koopa in the current shell.
-        Recommended: Bash or Zsh.
-        Also supported: Ash, Busybox, Dash.
+WARNING: Failed to activate koopa in the current shell.
 
-  KOOPA_SHELL : '${shell}'
-        SHELL : '${SHELL:-}'
-            - : '${-}'
-            0 : '${0}'
-            \$ : '${$}'
+    Recommended: Bash or Zsh.
+    Also supported: Ash, Busybox, Dash.
 
-Change to Bash:
-> chsh -s /bin/bash
-Change to Zsh:
-> chsh -s /bin/zsh
+    KOOPA_SHELL : '${shell}'
+          SHELL : '${SHELL:-}'
+              - : '${-}'
+              0 : '${0}'
+              \$ : '${$}'
+
+    Change to Bash:
+        > chsh -s /bin/bash
+
+    Change to Zsh:
+        > chsh -s /bin/zsh
 
 END
             fi
@@ -528,41 +533,21 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
-# FIXME This seems to be erroring for Alpine Docker image with ash...
-# This should return '/bin/busybox'.
 __koopa_shell() { # {{{1
     # """
-    # Get the full path to current shell.
+    # Full path to the current shell binary.
     # @note Updated 2021-05-14.
-    #
-    # Useful variables:
-    # - Bash: 'BASH_VERSION'
-    # - Zsh: 'ZSH_VERSION'
-    #
-    # When '/proc' exists:
-    # - Shell invocation:
-    #   > cat "/proc/${$}/cmdline"
-    #   ## bash-il
-    # - Shell path:
-    #   > readlink "/proc/${$}/exe"
-    #   ## /usr/bin/bash
-    #
-    # How to resolve shell name when ps is installed:
-    # > shell_name="$( \
-    # >     ps -p "${$}" -o 'comm=' \
-    # >     | sed 's/^-//' \
-    # > )"
-    #
-    # @seealso
-    # - https://stackoverflow.com/questions/3327013
-    # - http://opensourceforgeeks.blogspot.com/2013/05/
-    #     how-to-find-current-shell-in-linux.html
-    # - https://superuser.com/questions/103309/
-    # - https://unix.stackexchange.com/questions/87061/
-    # - https://unix.stackexchange.com/questions/182590/
     # """
     local str
-    if __koopa_is_macos && \
+    if [ -n "${KOOPA_SHELL:-}" ]
+    then
+        str="$KOOPA_SHELL"
+    elif __koopa_is_linux && \
+        __koopa_is_installed readlink && \
+        [ -x "/proc/${$}/exe" ]
+    then
+        str="$(readlink "/proc/${$}/exe")"
+    elif __koopa_is_macos && \
         __koopa_is_installed lsof sed
     then
         str="$( \
@@ -574,11 +559,6 @@ __koopa_shell() { # {{{1
             | sed -n '3p' \
             | sed 's/^n//' \
         )"
-    elif __koopa_is_linux && \
-        __koopa_is_installed readlink && \
-        [ -x "/proc/${$}/exe" ]
-    then
-        str="$(readlink "/proc/${$}/exe")"
     else
         return 1
     fi
@@ -611,13 +591,13 @@ __koopa_str_match_regex() { # {{{1
 __koopa_warning() { # {{{1
     # """
     # Print a warning message to the console.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-14.
     # """
     local string
     [ "$#" -gt 0 ] || return 1
     for string in "$@"
     do
-        printf '%s: %b\n' '[koopa] WARNING' "$string" >&2
+        printf '%b\n' "$string" >&2
     done
     return 0
 }
@@ -633,6 +613,8 @@ __koopa_zsh_source() { # {{{1
     __koopa_print "${(%):-%x}"
     return 0
 }
+
+
 
 __koopa_activate() { # {{{1
     # """
@@ -657,7 +639,7 @@ __koopa_activate() { # {{{1
     shell="$(basename "${KOOPA_SHELL:?}")"
     if [ "$test" -eq 1 ]
     then
-        __koopa_print '[koopa] Test mode enabled.'
+        __koopa_print 'Test mode enabled.'
         set -o errexit
         set -o nounset
         # > set -o xtrace

@@ -29,7 +29,7 @@ _koopa_prompt() { # {{{1
     # """
     local conda conda_color git git_color hostname newline prompt prompt_color \
         shell user user_color venv venv_color wd wd_color
-    shell="$(_koopa_shell)"
+    shell="$(_koopa_shell_name)"
     hostname="$(_koopa_hostname)"
     # String replacement supported in Bash, Zsh.
     hostname="${hostname//.local/}"

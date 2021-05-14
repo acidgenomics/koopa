@@ -42,9 +42,10 @@ _koopa_activate_broot() { # {{{1
     # @seealso
     # https://github.com/Canop/broot
     # """
-    local br_script config_dir nounset
+    local br_script config_dir nounset shell
     _koopa_is_interactive || return 0
-    case "$(_koopa_shell)" in
+    shell="$(_koopa_shell_name)"
+    case "$shell" in
         bash|zsh)
             ;;
         *)
@@ -69,16 +70,18 @@ _koopa_activate_completion() { # {{{1
     # Activate completion (with TAB key).
     # @note Updated 2021-05-06.
     # """
-    local file
+    local file koopa_prefix shell
     _koopa_is_interactive || return 0
-    case "$(_koopa_shell)" in
+    shell="$(_koopa_shell_name)"
+    case "$shell" in
         bash|zsh)
             ;;
         *)
             return 0
             ;;
     esac
-    for file in "$(_koopa_prefix)/etc/completion/"*'.sh'
+    koopa_prefix="$(_koopa_prefix)"
+    for file in "${koopa_prefix}/etc/completion/"*'.sh'
     do
         # shellcheck source=/dev/null
         [ -f "$file" ] && . "$file"
@@ -183,7 +186,7 @@ _koopa_activate_fzf() { # {{{1
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
     nounset="$(_koopa_boolean_nounset)"
-    shell="$(_koopa_shell)"
+    shell="$(_koopa_shell_name)"
     # Relax hardened shell temporarily, if necessary.
     if [ "$nounset" -eq 1 ]
     then
@@ -227,8 +230,8 @@ _koopa_activate_starship() { # {{{1
     local nounset shell
     _koopa_is_interactive || return 0
     _koopa_is_installed starship || return 0
-    shell="$(_koopa_shell)"
-    case "$(_koopa_shell)" in
+    shell="$(_koopa_shell_name)"
+    case "$shell" in
         bash|zsh)
             ;;
         *)
@@ -255,9 +258,9 @@ _koopa_activate_zoxide() { # {{{1
     # @seealso
     # - https://github.com/ajeetdsouza/zoxide
     # """
-    local shell nounset
+    local nounset shell
     _koopa_is_interactive || return 0
-    shell="$(_koopa_shell)"
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         bash|zsh)
             ;;

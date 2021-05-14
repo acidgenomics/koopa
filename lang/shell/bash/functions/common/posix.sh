@@ -736,6 +736,10 @@ koopa::shell() { # {{{1
     _koopa_shell "$@"
 }
 
+koopa::shell_name() { # {{{1
+    _koopa_shell_name "$@"
+}
+
 koopa::snake_case_simple() { # {{{1
     _koopa_snake_case_simple "$@"
 }
