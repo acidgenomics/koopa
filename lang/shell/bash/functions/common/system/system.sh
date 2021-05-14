@@ -115,7 +115,7 @@ koopa::sys_info() { # {{{
                 os="$(uname --all)"
             fi
         fi
-        shell_name="$(koopa::shell)"
+        shell_name="$(koopa::shell_name)"
         shell_version="$(koopa::get_version "${shell_name}")"
         shell="${shell_name} ${shell_version}"
         array+=(

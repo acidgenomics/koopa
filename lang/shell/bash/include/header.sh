@@ -109,6 +109,22 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
+__koopa_warning() { # {{{1
+    # """
+    # Print a warning message to the console.
+    # @note Updated 2021-05-14.
+    # """
+    local string
+    [ "$#" -gt 0 ] || return 1
+    for string in "$@"
+    do
+        printf '%b\n' "$string" >&2
+    done
+    return 0
+}
+
+
+
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
@@ -145,8 +161,16 @@ __koopa_bash_header() { # {{{1
         major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
         if [[ ! "$major_version" -ge 4 ]]
         then
-            printf '%s\n' 'ERROR: Koopa requires Bash >= 4.' >&2
-            printf '%s: %s\n' 'BASH_VERSION' "$BASH_VERSION" >&2
+            __koopa_warning \
+                'Koopa requires Bash >= 4.' \
+                "Current Bash version: '${BASH_VERSION}'."
+            if [[ "$(uname -s)" == "Darwin" ]]
+            then
+                __koopa_warning \
+                    "On macOS, we recommend installing Homebrew." \
+                    "Refer to 'https://brew.sh' for instructions." \
+                    "Then install Bash with 'brew install bash'."
+            fi
             return 1
         fi
         if [[ $(type -t readarray) != 'builtin' ]]

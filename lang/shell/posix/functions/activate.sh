@@ -280,7 +280,7 @@ _koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
     # Alternate (slower) approach that enables autocompletion.
     # > [ -d "$prefix" ] || return 0
     # > local shell
-    # > shell="$(_koopa_shell)"
+    # > shell="$(_koopa_shell_name)"
     # > # shellcheck source=/dev/null
     # > [ -f "${prefix}/path.${shell}.inc" ] && \
     # >     . "${prefix}/path.${shell}.inc"
@@ -457,7 +457,7 @@ _koopa_activate_koopa_paths() { # {{{1
     local config_prefix distro_prefix koopa_prefix linux_prefix shell
     koopa_prefix="$(_koopa_prefix)"
     config_prefix="$(_koopa_config_prefix)"
-    shell="$(_koopa_shell)"
+    shell="$(_koopa_shell_name)"
     _koopa_activate_prefix "$koopa_prefix"
     _koopa_activate_prefix "${koopa_prefix}/lang/shell/${shell}"
     if _koopa_is_linux
@@ -511,8 +511,9 @@ _koopa_activate_local_etc_profile() { # {{{1
     #
     # Currently only supported for Bash.
     # """
-    local make_prefix prefix
-    case "$(_koopa_shell)" in
+    local make_prefix prefix shell
+    shell="$(_koopa_shell_name)"
+    case "$shell" in
         bash)
             ;;
         *)
@@ -602,10 +603,17 @@ _koopa_activate_perlbrew() { # {{{1
     # See also:
     # - https://perlbrew.pl
     # """
-    local nounset prefix script
+    local nounset prefix script shell
     [ -n "${PERLBREW_ROOT:-}" ] && return 0
     ! _koopa_is_installed perlbrew || return 0
-    _koopa_shell | grep -Eq '^(bash|zsh)$' || return 0
+    shell="$(_koopa_shell_name)"
+    case "$shell" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
     prefix="$(_koopa_perlbrew_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/etc/bashrc"
@@ -915,9 +923,16 @@ _koopa_activate_venv() { # {{{1
     #
     # Refer to 'declare -f deactivate' for function source code.
     # """
-    local name nounset prefix script
+    local name nounset prefix script shell
     [ -n "${VIRTUAL_ENV:-}" ] && return 0
-    _koopa_str_match_regex "$(_koopa_shell)" '^(bash|zsh)$' || return 0
+    shell="$(_koopa_shell_name)"
+    case "$shell" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
     name="${1:-base}"
     prefix="$(_koopa_venv_prefix)"
     script="${prefix}/${name}/bin/activate"
