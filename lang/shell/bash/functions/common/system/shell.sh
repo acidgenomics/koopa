@@ -3,7 +3,7 @@
 koopa::enable_shell() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-05-14.
     # """
     local cmd_name cmd_path etc_file user
     koopa::assert_has_args "$#"
@@ -15,6 +15,7 @@ koopa::enable_shell() { # {{{1
     koopa::alert "Updating '${etc_file}' to include '${cmd_path}'."
     if ! grep -q "$cmd_path" "$etc_file"
     then
+        # FIXME Switch to our append string approach...
         sudo sh -c "printf '%s\n' '${cmd_path}' >> '${etc_file}'"
     else
         koopa::alert_success "'${cmd_path}' already defined in '${etc_file}'."

@@ -108,8 +108,6 @@ koopa::uninstall_homebrew() { # {{{1
         koopa::alert 'Changing default shell to system Zsh.'
         chsh -s '/bin/zsh' "$user"
     fi
-    # > koopa::alert "Resetting permissions in '/usr/local'."
-    # > sudo chown -Rhv "$user" '/usr/local/'*
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
