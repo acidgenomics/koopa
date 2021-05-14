@@ -43,103 +43,112 @@ koopa::activate_conda_env() { # {{{1
     return 0
 }
 
-# FIXME Rework the variables as a dictionary here instead.
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2021-04-30.
+    # @note Updated 2021-05-14.
     # """
-    local all aligners chipseq data_mining enrichment env envs file_formats \
-        methylation quality_control reticulate riboseq rnaseq single_cell \
-        trimming variation version workflows
+    local dict env envs
     koopa::assert_is_installed conda
-    all=0
-    aligners=0
-    chipseq=0
-    data_mining=0
-    enrichment=0
-    file_formats=0
-    methylation=0
-    quality_control=0
-    reticulate=0
-    riboseq=0
-    rnaseq=0
-    single_cell=0
-    trimming=0
-    variation=0
-    workflows=0
+    declare -A dict=(
+        [all]=0
+        [aligners]=0
+        [chipseq]=0
+        [data_mining]=0
+        [enrichment]=0
+        [file_formats]=0
+        [methylation]=0
+        [quality_control]=0
+        [reticulate]=0
+        [riboseq]=0
+        [rnaseq]=0
+        [singlecell]=0
+        [spatial]=0
+        [trimming]=0
+        [variation]=0
+        [workflows]=0
+    )
     # Set recommended defaults, if necessary.
     if [[ "$#" -eq 0 ]]
     then
-        aligners=1
-        chipseq=1
-        data_mining=1
-        file_formats=1
-        reticulate=1
-        rnaseq=1
-        workflows=1
+        dict[aligners]=1
+        dict[chipseq]=1
+        dict[data_mining]=1
+        dict[file_formats]=1
+        dict[reticulate]=1
+        dict[rnaseq]=1
+        dict[workflows]=1
     fi
     while (("$#"))
     do
         case "$1" in
             --all)
-                all=1
+                dict[all]=1
                 shift 1
                 ;;
             --aligners)
-                aligners=1
+                dict[aligners]=1
                 shift 1
                 ;;
-            --chipseq|--chip-seq)
-                chipseq=1
+            --chipseq | \
+            --chip-seq)
+                dict[chipseq]=1
                 shift 1
                 ;;
             --data-mining)
-                data_mining=1
+                dict[data_mining]=1
                 shift 1
                 ;;
             --enrichment)
-                enrichment=1
+                dict[enrichment]=1
                 shift 1
                 ;;
             --file-formats)
-                file_formats=1
+                dict[file_formats]=1
                 shift 1
                 ;;
             --methylation)
-                methylation=1
+                dict[methylation]=1
                 shift 1
                 ;;
-            --qc|quality-control)
-                quality_control=1
+            --qc | \
+            --quality-control)
+                dict[quality_control]=1
                 shift 1
                 ;;
             --reticulate)
-                reticulate=1
+                dict[reticulate]=1
                 shift 1
                 ;;
-            --riboseq|--ribo-seq)
-                riboseq=1
+            --riboseq | \
+            --ribo-seq)
+                dict[riboseq]=1
                 shift 1
                 ;;
-            --rnaseq|--rna-seq)
-                rnaseq=1
+            --rnaseq | \
+            --rna-seq)
+                dict[rnaseq]=1
                 shift 1
                 ;;
-            --singlecell|--single-cell)
-                single_cell=1
+            --singlecell | \
+            --single-cell)
+                dict[singlecell]=1
+                shift 1
+                ;;
+            --spatial)
+                dict[spatial]=1
                 shift 1
                 ;;
             --trimming)
-                trimming=1
+                dict[trimming]=1
                 shift 1
                 ;;
             --variation)
-                variation=1
+                dict[variation]=1
                 shift 1
                 ;;
             --workflows)
-                workflows=1
+                dict[workflows]=1
                 shift 1
                 ;;
             *)
@@ -149,27 +158,33 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     done
     koopa::h1 'Installing conda environments for bioinformatics.'
     envs=()
-    if [[ "$all" -eq 1 ]]
+    if [[ "${dict[all]}" -eq 1 ]]
     then
-        aligners=1
-        chipseq=1
-        data_mining=1
-        enrichment=1
-        file_formats=1
-        methylation=1
-        quality_control=1
-        reticulate=1
-        riboseq=1
-        rnaseq=1
-        single_cell=1
-        trimming=1
-        variation=1
-        workflows=1
-        envs+=('igvtools')
+        dict[aligners]=1
+        dict[chipseq]=1
+        dict[data_mining]=1
+        dict[enrichment]=1
+        dict[file_formats]=1
+        dict[methylation]=1
+        dict[quality_control]=1
+        dict[reticulate]=1
+        dict[riboseq]=1
+        dict[rnaseq]=1
+        dict[singlecell]=1
+        dict[spatial]=1
+        dict[trimming]=1
+        dict[variation]=1
+        dict[workflows]=1
+        # Everything else that doesn't have a clear category should go here.
+        envs+=(
+            'igvtools'
+        )
     fi
-    if [[ "$aligners" -eq 1 ]]
+    if [[ "${dict[aligners]}" -eq 1 ]]
     then
-        # Consider: minimap2, novoalign
+        # Consider:
+        # - minimap2
+        # - novoalign
         envs+=(
             'bowtie2'
             'bwa'
@@ -179,10 +194,12 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         )
         if koopa::is_linux
         then
-            envs+=('bwa-mem2')
+            envs+=(
+                'bwa-mem2'
+            )
         fi
     fi
-    if [[ "$chipseq" -eq 1 ]]
+    if [[ "${dict[chipseq]}" -eq 1 ]]
     then
         envs+=(
             'chromhmm'
@@ -193,20 +210,20 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             'sicer2'
         )
     fi
-    if [[ "$data_mining" -eq 1 ]]
+    if [[ "${dict[data_mining]}" -eq 1 ]]
     then
         envs+=(
             'entrez-direct'
             'sra-tools'
         )
     fi
-    if [[ "$enrichment" -eq 1 ]]
+    if [[ "${dict[enrichment]}" -eq 1 ]]
     then
         envs+=(
             'meme'  # MEME Suite
         )
     fi
-    if [[ "$file_formats" -eq 1 ]]
+    if [[ "${dict[file_formats]}" -eq 1 ]]
     then
         envs+=(
             'bamtools'
@@ -222,14 +239,18 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         )
         if koopa::is_linux
         then
-            envs+=('biobambam')
+            envs+=(
+                'biobambam'
+            )
         fi
     fi
-    if [[ "$methylation" -eq 1 ]]
+    if [[ "${dict[methylation]}" -eq 1 ]]
     then
-        envs+=('bismark')
+        envs+=(
+            'bismark'
+        )
     fi
-    if [[ "$quality_control" -eq 1 ]]
+    if [[ "${dict[quality_control]}" -eq 1 ]]
     then
         envs+=(
             'fastqc'
@@ -239,7 +260,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             'qualimap'
         )
     fi
-    if [[ "$riboseq" -eq 1 ]]
+    if [[ "${dict[riboseq]}" -eq 1 ]]
     then
         envs+=(
             'ribocode'
@@ -252,12 +273,17 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             )
         fi
     fi
-    if [[ "$rnaseq" -eq 1 ]]
+    if [[ "${dict[rnaseq]}" -eq 1 ]]
     then
-        # Consider: rapmap
-        envs+=('kallisto' 'salmon')
+        # Consider:
+        # - rapmap
+        envs+=(
+            'kallisto'
+            'salmon'
+        )
     fi
-    if [[ "$reticulate" -eq 1 ]]
+    # NOTE Consider renaming this? Useful outside of reticulate...
+    if [[ "${dict[reticulate]}" -eq 1 ]]
     then
         envs+=(
             'numpy'
@@ -266,23 +292,46 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             'umap-learn'
         )
     fi
-    if [[ "$single_cell" -eq 1 ]]
+    if [[ "${dict[singlecell]}" -eq 1 ]]
     then
+        # Consider:
+        # - Rahul Satija Lab
+        # - Dana Pe'er Lab
+        # - Fabian Theis Lab
+        # - Cole Trapnell Lab
+        # - Jean Fan Lab
+        # - harmony-pytorch
+        #   https://github.com/lilab-bcb/harmony-pytorch
+        # - palantir
+        #   https://github.com/dpeerlab/Palantir
+        # - r-scclustviz
+        #   https://github.com/BaderLab/scClustViz
+        # - r-veloviz
+        #   https://jef.works/veloviz/
         envs+=(
-            # FIXME 'r-veloviz'  (need to submit)
-            # FIXME 'r-scclustviz'  (need to submit)
-            # > 'r-loomr'  # FIXME is this already defined in r-seurat?
+            'cellrank'  # 1.3.1
+            'r-harmony'  # 0.1
             'r-monocle3'
             'r-seurat'
             'scanpy'
-            # FIXME dana peer tools?
         )
     fi
-    if [[ "$trimming" -eq 1 ]]
+    if [[ "${dict[spatial]}" -eq 1 ]]
     then
-        envs+=('atropos' 'trimmomatic')
+        # Consider:
+        # - squidpy
+        envs+=(
+            'merfishtools'
+        )
     fi
-    if [[ "$variation" -eq 1 ]]
+    if [[ "${dict[trimming]}" -eq 1 ]]
+    then
+        envs+=(
+            'atropos'
+            'trimmomatic'
+        )
+    fi
+    if [[ "${dict[variation]}" -eq 1 ]]
     then
         envs+=(
             'ericscript'
@@ -295,12 +344,15 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         )
         if koopa::is_linux
         then
-            envs+=('arriba')
+            envs+=(
+                'arriba'
+            )
         fi
     fi
-    if [[ "$workflows" -eq 1 ]]
+    if [[ "${dict[workflows]}" -eq 1 ]]
     then
-        # Consider: cromwell
+        # Consider:
+        # - cromwell
         envs+=(
             'fgbio'
             'gatk4'
