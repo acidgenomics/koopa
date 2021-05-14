@@ -4,29 +4,30 @@
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
-    # @note Updated 2021-05-11.
+    # @note Updated 2021-05-14.
     #
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
     # """
-    local prefix fun_script fun_scripts koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
-    prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
-    [[ -d "$prefix" ]] || return 0
+    local prefix fun_script fun_scripts fun_scripts_arr koopa_prefix
     if [[ $(type -t readarray) != 'builtin' ]]
     then
         printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
         return 1
     fi
-    readarray -t fun_scripts <<< "$( \
+    koopa_prefix="$(_koopa_prefix)"
+    prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
+    [[ -d "$prefix" ]] || return 0
+    # Can add a sort step here, but it is slower and unecessary.
+    fun_scripts="$( \
         find -L "$prefix" \
             -mindepth 1 \
             -type f \
             -name '*.sh' \
             -print \
-        | sort \
     )"
-    for fun_script in "${fun_scripts[@]}"
+    readarray -t fun_scripts_arr <<< "$fun_scripts"
+    for fun_script in "${fun_scripts_arr[@]}"
     do
         # shellcheck source=/dev/null
         . "$fun_script"
