@@ -1,5 +1,11 @@
 ## koopa 0.10.1 (2021-05-14)
 
+### Major changes
+
+- Reworked shell detection and export of `KOOPA_SHELL`, `SHELL` variables
+  during activation. This now should consistently return the full path to the
+  current shell application, including in subshells.
+
 ### Minor changes
 
 - Updated the dependency versions for recommended conda bioinfo environments.
