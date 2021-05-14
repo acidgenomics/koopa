@@ -420,6 +420,7 @@ conda-jupyterlab="3.0.15"               # 2021-05-11 conda-forge
 conda-kallisto="0.46.2"                 # 2021-03-26 bioconda
 conda-kraken2="2.1.2"                   # 2021-05-10 bioconda
 conda-macs2="2.2.7.1"                   # 2021-03-26 bioconda
+conda-mamba="0.13.0"                    # 2021-05-12 conda-forge
 conda-miniwdl="1.1.5"                   # 2021-05-08 conda-forge
 conda-multiqc="1.10.1"                  # 2021-05-05 bioconda
 conda-nextflow="21.04.0"                # 2021-05-04 bioconda
