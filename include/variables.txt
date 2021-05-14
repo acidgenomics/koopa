@@ -8,7 +8,7 @@
 koopa-date="2021-05-14"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.10.1a"
+koopa-version="0.10.1"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.1.18"
@@ -287,6 +287,7 @@ r="4.0.5"
 # https://mac.r-project.org/
 r-cran-gfortran="8.2"
 
+# FIXME Need to pin to suitable R 4.1 release...
 # https://svn.r-project.org/R/
 # https://stat.ethz.ch/R/daily/
 # Updated 2021-05-11.
