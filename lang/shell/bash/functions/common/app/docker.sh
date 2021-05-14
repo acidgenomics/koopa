@@ -456,7 +456,6 @@ koopa::docker_run() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     image="$1"
-    workdir="$(koopa::strip_trailing_slash "$workdir")"
     docker pull "$image"
     run_args=(
         '--interactive'
@@ -472,6 +471,7 @@ koopa::docker_run() { # {{{1
             koopa::stop "Do not set '--bind' when running from home directory."
         fi
         workdir='/mnt/work'
+        # > workdir="$(koopa::strip_trailing_slash "$workdir")"
         run_args+=(
             "--volume=${PWD:?}:${workdir}"
             "--workdir=${workdir}"
