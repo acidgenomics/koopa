@@ -192,8 +192,9 @@ __koopa_export_koopa_force() { # {{{1
 __koopa_export_koopa_interactive() { # {{{1
     # """
     # Export 'KOOPA_INTERACTIVE' variable.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-14.
     # """
+    unset -v KOOPA_INTERACTIVE
     if __koopa_is_interactive || \
         [ "${KOOPA_FORCE:-0}" -eq 1 ]
     then
@@ -634,6 +635,11 @@ __koopa_activate() { # {{{1
     # Activate koopa bootloader inside shell session.
     # @note Updated 2021-05-14.
     # """
+    unset -v \
+        KOOPA_INTERACTIVE \
+        KOOPA_PREFIX \
+        KOOPA_SHELL \
+        KOOPA_SUBSHELL
     case "${1:-}" in
         --help|-h)
             __koopa_activate_usage
