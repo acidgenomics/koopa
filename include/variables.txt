@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-05-13"
+koopa-date="2021-05-14"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.10.1a"
@@ -387,21 +387,23 @@ zsh="5.8"
 
 # Conda environments {{{1
 # ==============================================================================
-# Updated 2020-12-31.
+# Updated 2021-05-14.
 
-conda-arriba="2.0.0"
+conda-arriba="2.1.0"
 conda-atropos="1.1.29"
 conda-bamtools="2.5.1"
-conda-bcftools="1.11"
-conda-bedtools="2.29.2"
+conda-bcftools="1.12"
+conda-bedtools="2.30.0"
 conda-bioawk="1.0"
-conda-biobambam="2.0.87"  # linux  # NOTE Recipe needs update to 2.0.146.
+# NOTE Recipe needs update to 2.0.146.
+conda-biobambam="2.0.182"  # linux
 conda-bismark="0.23.0"
-conda-bowtie2="2.4.2"
+conda-bowtie2="2.4.3"
 conda-bwa-mem2="2.1"
 conda-bwa="0.7.17"
-conda-chromhmm="1.21"  # NOTE Needs update to 1.22.
-conda-deeptools="3.5.0"
+# NOTE Recipe needs update to 1.22.
+conda-chromhmm="1.21"
+conda-deeptools="3.5.1"
 conda-entrez-direct="13.9"
 conda-ericscript="0.5.5"
 conda-fastqc="0.11.9"
