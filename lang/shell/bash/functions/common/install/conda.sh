@@ -35,7 +35,7 @@ koopa::install_miniconda() { # {{{1
 koopa:::install_conda() { # {{{1
     # """
     # Install Conda (or Anaconda).
-    # @note Updated 2021-01-14.
+    # @note Updated 2021-05-14.
     #
     # Assuming installation of Miniconda by default.
     # """
@@ -46,7 +46,7 @@ koopa:::install_conda() { # {{{1
     anaconda=0
     # Match Bioconda recommendation by default here.
     # This only applies to Miniconda, not full Anaconda.
-    py_version='3.8'
+    py_version='3.9'
     os_type="$(koopa::os_type)"
     case "$os_type" in
         darwin*)
