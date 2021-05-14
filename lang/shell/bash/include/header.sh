@@ -115,7 +115,7 @@ __koopa_warning() { # {{{1
     # @note Updated 2021-05-14.
     # """
     local string
-    [ "$#" -gt 0 ] || return 1
+    [[ "$#" -gt 0 ]] || return 1
     for string in "$@"
     do
         printf '%b\n' "$string" >&2
