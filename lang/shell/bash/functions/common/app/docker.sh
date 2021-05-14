@@ -424,11 +424,11 @@ koopa::docker_run() { # {{{1
     # - https://docs.docker.com/storage/volumes/
     # - https://docs.docker.com/storage/bind-mounts/
     # """
-    local bash flags image pos workdir
+    local bash bind image pos run_args workdir
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
     bash=0
-    workdir='/mnt/work'
+    bind=0
     pos=()
     while (("$#"))
     do
@@ -437,8 +437,8 @@ koopa::docker_run() { # {{{1
                 bash=1
                 shift 1
                 ;;
-            --workdir=*)
-                workdir="${1#*=}"
+            --bind)
+                bind=1
                 shift 1
                 ;;
             --)
@@ -458,19 +458,32 @@ koopa::docker_run() { # {{{1
     image="$1"
     workdir="$(koopa::strip_trailing_slash "$workdir")"
     docker pull "$image"
-    flags=(
-        # Legacy bind mounts approach:
-        # > "--volume=${PWD}:${workdir}"
-        # > "--workdir=${workdir}"
+    run_args=(
         '--interactive'
         '--tty'
-        "$image"
     )
+    # Legacy bind mounts approach, now disabled by default.
+    # Useful for quickly checking whether a local script will run.
+    if [[ "$bind" -eq 1 ]]
+    then
+        # This check helps prevent Docker from chewing up a bunch of CPU.
+        if [[ "${HOME:?}" == "${PWD:?}" ]]
+        then
+            koopa::stop "Do not set '--bind' when running from home directory."
+        fi
+        workdir='/mnt/work'
+        run_args+=(
+            "--volume=${PWD:?}:${workdir}"
+            "--workdir=${workdir}"
+        )
+    fi
+    run_args+=("$image")
+    # Enable an interactive Bash login session, if desired.
     if [[ "$bash" -eq 1 ]]
     then
-        flags+=('bash' '-il')
+        run_args+=('bash' '-il')
     fi
-    docker run "${flags[@]}"
+    docker run "${run_args[@]}"
     return 0
 }
 
