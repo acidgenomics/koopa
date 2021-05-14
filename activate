@@ -634,17 +634,16 @@ __koopa_activate() { # {{{1
     # Activate koopa bootloader inside shell session.
     # @note Updated 2021-05-14.
     # """
-    # FIXME Unsetting KOOPA_PREFIX here causes the installer to fail.
-    unset -v \
-        KOOPA_INTERACTIVE \
-        KOOPA_SHELL \
-        KOOPA_SUBSHELL
     case "${1:-}" in
         --help|-h)
             __koopa_activate_usage
             return 0
             ;;
     esac
+    unset -v \
+        KOOPA_INTERACTIVE \
+        KOOPA_SHELL \
+        KOOPA_SUBSHELL
     __koopa_preflight || return 0
     __koopa_export_koopa_interactive || return 1
     __koopa_export_koopa_minimal || return 1
