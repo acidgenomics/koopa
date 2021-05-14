@@ -235,7 +235,7 @@ koopa::install_koopa() { # {{{1
     KOOPA_TEST="$test"
     export KOOPA_FORCE KOOPA_TEST
     # shellcheck source=/dev/null
-    . "${koopa_prefix}/activate"
+    . "${koopa_prefix}/activate" || return 1
     set -u
     # Check that prefix is set correctly.
     if [[ "${koopa_prefix:?}" != "${KOOPA_PREFIX:?}" ]]
