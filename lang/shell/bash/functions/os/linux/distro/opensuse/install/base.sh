@@ -3,7 +3,7 @@
 koopa::opensuse_install_base() { # {{{1
     # """
     # Install openSUSE base system.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-05-15.
     #
     # zypper cheat sheet:
     # https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
@@ -83,6 +83,7 @@ koopa::opensuse_install_base() { # {{{1
             'gzip'
             'make'
             'man'
+            'procps'  # ps
             'sudo'
             'tar'
             'unzip'
