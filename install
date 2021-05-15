@@ -16,11 +16,14 @@ set -Eeu -o pipefail
 # """
 
 koopa:::install_koopa_usage() { # {{{1
+    # """
+    # Help usage for koopa installer.
+    # @note Updated 2021-05-15.
+    # """
 cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
-Updated 2021-05-14.
 
 Optional arguments:
     --help, -h
@@ -78,7 +81,7 @@ koopa::install_koopa() { # {{{1
         [dotfiles]=1
         [interactive]=1
         [koopa_prefix]=''
-        [modify_user_profile]=1
+        [modify_user_profile]=0
         [passwordless]=0
         [test]=0
     )
