@@ -138,14 +138,10 @@ __koopa_bash_header() { # {{{1
         [shopts]=1
         [verbose]=0
     )
-    [[ -n "${KOOPA_ACTIVATE:-}" ]] && \
-        dict[activate]="$KOOPA_ACTIVATE"
-    [[ -n "${KOOPA_CHECKS:-}" ]] && \
-        dict[checks]="$KOOPA_CHECKS"
-    [[ -n "${KOOPA_DEV:-}" ]] && \
-        dict[dev]="$KOOPA_DEV"
-    [[ -n "${KOOPA_VERBOSE:-}" ]] && \
-        dict[verbose]="$KOOPA_VERBOSE"
+    [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
+    [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_DEV:-}" ]] && dict[dev]="$KOOPA_DEV"
+    [[ -n "${KOOPA_VERBOSE:-}" ]] && dict[verbose]="$KOOPA_VERBOSE"
     if [[ "${dict[activate]}" -eq 1 ]]
     then
         dict[checks]=0
@@ -194,7 +190,7 @@ __koopa_bash_header() { # {{{1
         dict[header_path]="${BASH_SOURCE[0]}"
         if [[ -L "${dict[header_path]}" ]]
         then
-            dict[header_path]="$(__koopa_realpath "$header_path")"
+            dict[header_path]="$(__koopa_realpath "${dict[header_path]}")"
         fi
         KOOPA_PREFIX="$( \
             cd "$(dirname "${dict[header_path]}")/../../../.." \
