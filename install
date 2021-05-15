@@ -106,7 +106,7 @@ koopa::install_koopa() { # {{{1
                 shift 1
                 ;;
             --no-profile)
-                dict[profile]=0
+                dict[modify_user_profile]=0
                 shift 1
                 ;;
             --no-shared)
@@ -350,7 +350,7 @@ END
     then
         koopa::install_dotfiles
     fi
-    if [[ "${dict[profile]}" -eq 1 ]]
+    if [[ "${dict[modify_user_profile]}" -eq 1 ]]
     then
         koopa::add_to_user_profile
     fi
