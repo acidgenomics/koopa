@@ -23,7 +23,7 @@ koopa::run_if_installed() { # {{{1
 koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-04-12.
     #
     # Intended for use with 'koopa pull'.
     #
@@ -31,15 +31,19 @@ koopa::sys_git_pull() { # {{{1
     # non-writable permissions, so Zsh passes 'compaudit' checks.
     # """
     koopa::assert_has_no_args "$#"
-    local branch prefix
+    local current_branch default_branch prefix
     (
         prefix="$(koopa::prefix)"
         koopa::cd "$prefix"
         koopa::sys_set_permissions -r "${prefix}/lang/shell/zsh" &>/dev/null
-        branch="$(koopa::git_branch)"
+        current_branch="$(koopa::git_branch)"
+        default_branch="$(koopa::git_default_branch)"
         koopa::git_pull
-        # Ensure other branches, such as develop, are rebased.
-        [[ "$branch" != 'master' ]] && koopa::git_pull origin master
+        # Ensure other branches, such as develop, are rebased to main branch.
+        if [[ "$current_branch" != "$default_branch" ]]
+        then
+            koopa::git_pull origin "$default_branch"
+        fi
         koopa::fix_zsh_permissions
     )
     return 0
@@ -48,7 +52,7 @@ koopa::sys_git_pull() { # {{{1
 koopa::sys_info() { # {{{
     # """
     # System information.
-    # @note Updated 2021-03-30.
+    # @note Updated 2021-05-12.
     # """
     koopa::assert_has_no_args "$#"
     local array koopa_prefix nf origin shell shell_name shell_version
@@ -111,7 +115,7 @@ koopa::sys_info() { # {{{
                 os="$(uname --all)"
             fi
         fi
-        shell_name="$KOOPA_SHELL"
+        shell_name="$(koopa::shell_name)"
         shell_version="$(koopa::get_version "${shell_name}")"
         shell="${shell_name} ${shell_version}"
         array+=(
@@ -176,7 +180,7 @@ koopa::sys_set_permissions() { # {{{1
     for arg in "$@"
     do
         # Ensure we resolve symlinks here.
-        arg="$(realpath "$arg")"
+        arg="$(koopa::realpath "$arg")"
         "${chmod[@]}" "$arg"
         "${chown[@]}" "$arg"
     done
@@ -193,6 +197,7 @@ koopa::sys_chgrp() { # {{{1
     group="$(koopa::sys_group)"
     if koopa::is_shared_install
     then
+        # NOTE Don't check for admin access here, can slow down functions.
         chgrp=('sudo' 'chgrp')
     else
         chgrp=('chgrp')
@@ -210,6 +215,7 @@ koopa::sys_chmod() { # {{{1
     koopa::assert_has_args "$#"
     if koopa::is_shared_install
     then
+    # NOTE Don't check for admin access here, can slow down functions.
         chmod=('sudo' 'chmod')
     else
         chmod=('chmod')
@@ -244,6 +250,7 @@ koopa::sys_chown() { # {{{1
     koopa::assert_has_args "$#"
     if koopa::is_shared_install
     then
+        # NOTE Don't check for admin access here, can slow down functions.
         chown=('sudo' 'chown')
     else
         chown=('chown')
@@ -260,7 +267,11 @@ koopa::sys_cp() { # {{{1
     local cp
     koopa::assert_has_args "$#"
     cp=('koopa::cp')
-    koopa::is_shared_install && cp+=('-S')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        cp+=('-S')
+    fi
     "${cp[@]}" "$@"
     return 0
 }
@@ -295,7 +306,11 @@ koopa::sys_ln() { # {{{1
     local ln
     koopa::assert_has_args "$#"
     ln=('koopa::ln')
-    koopa::is_shared_install && ln+=('-S')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        ln+=('-S')
+    fi
     "${ln[@]}" "$@"
     return 0
 }
@@ -308,7 +323,11 @@ koopa::sys_mkdir() { # {{{1
     local mkdir
     koopa::assert_has_args "$#"
     mkdir=('koopa::mkdir')
-    koopa::is_shared_install && mkdir+=('-S')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        mkdir+=('-S')
+    fi
     "${mkdir[@]}" "$@"
     koopa::sys_set_permissions "$@"
     return 0
@@ -322,7 +341,11 @@ koopa::sys_mv() { # {{{1
     local mv
     koopa::assert_has_args "$#"
     mv=('koopa::mv')
-    koopa::is_shared_install && mv+=('-S')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        mv+=('-S')
+    fi
     "${mv[@]}" "$@"
     return 0
 }
@@ -335,7 +358,11 @@ koopa::sys_rm() { # {{{1
     local rm
     koopa::assert_has_args "$#"
     rm=('koopa::rm')
-    koopa::is_shared_install && rm+=('-S')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        rm+=('-S')
+    fi
     "${rm[@]}" "$@"
     return 0
 }

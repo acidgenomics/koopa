@@ -3,7 +3,7 @@
 koopa::macos_brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2020-11-12.
+    # @note Updated 2021-04-22.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
@@ -18,13 +18,28 @@ koopa::macos_brew_cask_outdated() { # {{{
     # - brew list --versions
     # - brew info
     # """
-    local tmp_file x
+    local keep_latest tmp_file x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
     koopa::assert_is_installed brew
+    # Whether we want to keep unversioned 'latest' casks returned with
+    # '--greedy'. This tends to include font casks and the Google Cloud SDK,
+    # which are annoying to have reinstall with each update, so disabling
+    # here by default.
+    keep_latest=0
+    # This approach keeps the version information, which we can parse.
     tmp_file="$(koopa::tmp_file)"
     script -q "$tmp_file" brew outdated --cask --greedy >/dev/null
-    x="$(grep -v '(latest)' "$tmp_file")"
+    if [[ "$keep_latest" -eq 1 ]]
+    then
+        x="$(cut -d ' ' -f 1 < "$tmp_file")"
+    else
+        x="$( \
+            grep -v '(latest)' "$tmp_file" \
+            | cut -d ' ' -f 1 \
+        )"
+    fi
+    koopa::rm "$tmp_file"
     [[ -n "$x" ]] || return 0
     koopa::print "$x"
     return 0
@@ -37,7 +52,46 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     sudo xattr -r -d com.apple.quarantine /Applications/*.app
+    return 0
+}
+
+koopa::macos_brew_upgrade_casks() { # {{{1
+    # """
+    # Upgrade Homebrew casks.
+    # @note Updated 2021-04-27.
+    #
+    # Note that additional cask flags are set globally using the
+    # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
+    # function.
+    # """
+    local cask casks str
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_macos
+    koopa::assert_is_installed brew
+    readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
+    koopa::is_array_non_empty "${casks[@]:-}" || return 0
+    str="$(koopa::ngettext "${#casks[@]}" 'cask' 'casks')"
+    koopa::dl \
+        "${#casks[@]} outdated ${str}" \
+        "$(koopa::to_string "${casks[@]}")"
+    for cask in "${casks[@]}"
+    do
+        case "$cask" in
+            docker)
+                cask='homebrew/cask/docker'
+                ;;
+            macvim)
+                cask='homebrew/cask/macvim'
+                ;;
+        esac
+        brew reinstall --cask --force "$cask" || true
+        case "$cask" in
+            adoptopenjdk|r)
+                koopa::configure_r
+                ;;
+        esac
+    done
     return 0
 }

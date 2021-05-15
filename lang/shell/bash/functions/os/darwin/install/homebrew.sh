@@ -8,7 +8,7 @@ koopa::macos_install_homebrew_little_snitch() { # {{{1
     local dmg_file version
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     koopa::assert_is_installed hdiutil open
     version="$(koopa::extract_version "$(brew info --cask little-snitch)")"
     dmg_file="$(koopa::homebrew_prefix)/Caskroom/little-snitch/\

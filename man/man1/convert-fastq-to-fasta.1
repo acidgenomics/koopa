@@ -1,0 +1,33 @@
+.TH CONVERT-FASTQ-TO-FASTA 1 2019-10-26 Bash
+.SH NAME
+convert-fastq-to-fasta \-
+Convert FASTQ files to FASTA format
+.SH SYNOPSIS
+.B convert-fastq-to-fasta
+[\fB\-\-source-dir\fP=\fI"."\fP]
+[\fB\-\-target-dir\fP=\fI"."\fP]
+.SH OPTIONS
+.TP
+.B \-\-source-dir
+Source directory, containing decompressed FASTQ files.
+Requiring that files contain 'FASTQ' extension, not 'FQ'.
+.TP
+.B \-\-target-dir
+Target directory, returning FASTA files.
+.SH DESCRIPTION
+Convert FASTQ files to FASTA format.
+.PP
+.nr step 1 1
+Processing steps:
+.IP \n[step] 4
+paste converts the input FASTQ into a 4-column file.
+.IP \n+[step]
+cut command extracts out just column 1 (the ID) and column 2 (the sequence).
+.IP \n+[step]
+sed replaces the FASTQ ID prefix '@' with the FASTA ID prefix '>'.
+.IP \n+[step]
+tr conversts the 2 columns back into 2 lines.
+.SH EXAMPLE
+.nf
+.B convert-fastq-to-fasta --source-dir="fastq/" --target-dir="fasta/"
+.fi

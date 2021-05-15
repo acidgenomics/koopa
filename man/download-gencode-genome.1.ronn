@@ -62,4 +62,4 @@ The legacy Homo sapiens GRCh37 (hg19) genome build is supported.
 
 ## NOTE
 
-Python script.
+R function, defined in r-koopa package.
