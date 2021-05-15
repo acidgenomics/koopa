@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-05-15.
     #
     # Use '<pkg>-<version>' to pin package versions.
     #
@@ -96,6 +96,7 @@ koopa::fedora_install_base() { # {{{1
             'man-db'
             'ncurses-devel'  # zsh
             'patch'  # bash
+            'procps'  # ps
             'sudo'
             'tar'
             'unzip'
