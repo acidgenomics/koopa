@@ -128,38 +128,48 @@ __koopa_warning() { # {{{1
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-05-11.
+    # @note Updated 2021-05-14.
     # """
-    local activate checks dev distro_prefix header_path major_version os_id \
-        shopts verbose
-    activate=0
-    checks=1
-    dev=0
-    shopts=1
-    verbose=0
-    [[ -n "${KOOPA_ACTIVATE:-}" ]] && activate="$KOOPA_ACTIVATE"
-    [[ -n "${KOOPA_CHECKS:-}" ]] && checks="$KOOPA_CHECKS"
-    [[ -n "${KOOPA_DEV:-}" ]] && dev="$KOOPA_DEV"
-    [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose="$KOOPA_VERBOSE"
-    if [[ "$activate" -eq 1 ]]
+    local dict
+    declare -A dict=(
+        [activate]=0
+        [checks]=1
+        [dev]=0
+        [shopts]=1
+        [verbose]=0
+    )
+    [[ -n "${KOOPA_ACTIVATE:-}" ]] && \
+        dict[activate]="$KOOPA_ACTIVATE"
+    [[ -n "${KOOPA_CHECKS:-}" ]] && \
+        dict[checks]="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_DEV:-}" ]] && \
+        dict[dev]="$KOOPA_DEV"
+    [[ -n "${KOOPA_VERBOSE:-}" ]] && \
+        dict[verbose]="$KOOPA_VERBOSE"
+    if [[ "${dict[activate]}" -eq 1 ]]
     then
-        checks=0
-        shopts=0
-        export KOOPA_ACTIVATE=1
+        dict[checks]=0
+        dict[shopts]=0
     fi
-    if [[ "$shopts" -eq 1 ]]
+    if [[ "${dict[shopts]}" -eq 1 ]]
     then
-        [[ "$verbose" -eq 1 ]] && set -o xtrace # -x
+        if [[ "${dict[verbose]}" -eq 1 ]]
+        then
+            set -o xtrace # -x
+        fi
         # > set -o noglob # -f
         set -o errexit # -e
         set -o errtrace # -E
         set -o nounset # -u
         set -o pipefail
     fi
-    if [[ "$checks" -eq 1 ]]
+    if [[ "${dict[checks]}" -eq 1 ]]
     then
-        major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
-        if [[ ! "$major_version" -ge 4 ]]
+        dict[major_version]="$( \
+            printf '%s\n' "${BASH_VERSION}" \
+            | cut -d '.' -f 1 \
+        )"
+        if [[ ! "${dict[major_version]}" -ge 4 ]]
         then
             __koopa_warning \
                 'Koopa requires Bash >= 4.' \
@@ -181,47 +191,48 @@ __koopa_bash_header() { # {{{1
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        header_path="${BASH_SOURCE[0]}"
-        if [[ -L "$header_path" ]]
+        dict[header_path]="${BASH_SOURCE[0]}"
+        if [[ -L "${dict[header_path]}" ]]
         then
-            header_path="$(__koopa_realpath "$header_path")"
+            dict[header_path]="$(__koopa_realpath "$header_path")"
         fi
         KOOPA_PREFIX="$( \
-            cd "$(dirname "$header_path")/../../../.." \
+            cd "$(dirname "${dict[header_path]}")/../../../.." \
             &>/dev/null \
             && pwd -P \
         )"
         export KOOPA_PREFIX
     fi
     # shellcheck source=/dev/null
-    source "${KOOPA_PREFIX}/lang/shell/posix/include/header.sh"
-    if [[ "$activate" -eq 1 ]]
+    source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
+    if [[ "${dict[activate]}" -eq 1 ]]
     then
         # shellcheck source=/dev/null
-        source "${KOOPA_PREFIX}/lang/shell/bash/functions/activate.sh"
+        source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
     fi
-    if [[ "$activate" -eq 0 ]] || [[ "$dev" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 0 ]] || \
+        [[ "${dict[dev]}" -eq 1 ]]
     then
         __koopa_bash_source_dir 'common'
-        os_id="$(koopa::os_id)"
+        dict[os_id]="$(koopa::os_id)"
         if koopa::is_linux
         then
             __koopa_bash_source_dir 'os/linux/common'
-            distro_prefix='os/linux/distro'
+            dict[distro_prefix]='os/linux/distro'
             if koopa::is_debian_like
             then
-                __koopa_bash_source_dir "${distro_prefix}/debian"
+                __koopa_bash_source_dir "${dict[distro_prefix]}/debian"
                 koopa::is_ubuntu_like && \
-                    __koopa_bash_source_dir "${distro_prefix}/ubuntu"
+                    __koopa_bash_source_dir "${dict[distro_prefix]}/ubuntu"
             elif koopa::is_fedora_like
             then
-                __koopa_bash_source_dir "${distro_prefix}/fedora"
+                __koopa_bash_source_dir "${dict[distro_prefix]}/fedora"
                 koopa::is_rhel_like && \
-                    __koopa_bash_source_dir "${distro_prefix}/rhel"
+                    __koopa_bash_source_dir "${dict[distro_prefix]}/rhel"
             fi
-            __koopa_bash_source_dir "${distro_prefix}/${os_id}"
+            __koopa_bash_source_dir "${dict[distro_prefix]}/${dict[os_id]}"
         else
-            __koopa_bash_source_dir "os/${os_id}"
+            __koopa_bash_source_dir "os/${dict[os_id]}"
         fi
         # Ensure we activate GNU coreutils and other tools that are keg-only
         # for Homebrew but preferred default for our Bash scripts.
