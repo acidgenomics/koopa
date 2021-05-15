@@ -546,6 +546,15 @@ __koopa_shell() { # {{{1
     then
         str="$KOOPA_SHELL"
     elif __koopa_is_linux && \
+        __koopa_is_installed ps sed
+    then
+        # This approach will return correct shell for ARM running via emulation
+        # on x86 (e.g. Docker).
+        str="$( \
+            ps -p "${$}" -o 'comm=' \
+            | sed 's/^-//' \
+        )"
+    elif __koopa_is_linux && \
         __koopa_is_installed readlink && \
         [ -x "/proc/${$}/exe" ]
     then
