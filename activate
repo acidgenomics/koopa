@@ -42,7 +42,8 @@ examples:
     . /usr/local/koopa/activate
 
     # Minimal mode.
-    minimal=1 . /usr/local/koopa/activate
+    export KOOPA_MINIMAL=1
+    . /usr/local/koopa/activate
 END
 }
 
