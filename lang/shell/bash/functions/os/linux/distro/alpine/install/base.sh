@@ -3,7 +3,7 @@
 koopa::alpine_install_base() { # {{{1
     # """
     # Install Alpine Linux base system.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-05-15.
     #
     # Use '<pkg>=~<version>' to pin package versions.
     #
@@ -90,6 +90,7 @@ koopa::alpine_install_base() { # {{{1
             'ncurses-dev'  # zsh
             'openssl'
             'patch'
+            'procps'  # ps
             'shadow'
             'sudo'
             'tar'
