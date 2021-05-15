@@ -108,8 +108,8 @@ __koopa_zsh_header() { # {{{1
     [[ -n "${KOOPA_VERBOSE:-}" ]] && dict[verbose]="$KOOPA_VERBOSE"
     if [[ "${dict[activate]}" -eq 1 ]]
     then
-        checks=0
-        shopts=0
+        dict[checks]=0
+        dict[shopts]=0
     fi
     if [[ "${dict[shopts]}" -eq 1 ]]
     then
