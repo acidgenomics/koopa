@@ -78,6 +78,8 @@ koopa::delete_dotfile() { # {{{1
     return 0
 }
 
+# FIXME This is erroring out for debian slim arm...something about
+# koopa shell name is incorrect?
 koopa::find_user_profile() { # {{{1
     # """
     # Find current user's shell profile configuration file.
@@ -93,7 +95,11 @@ koopa::find_user_profile() { # {{{1
         zsh)
             file="${HOME}/.zshrc"
             ;;
+        *)
+            file=''
+            ;;
     esac
+    [[ -n "$file" ]] || return 1
     koopa::print "$file"
     return 0
 }
