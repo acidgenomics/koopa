@@ -96,7 +96,7 @@ koopa::find_user_profile() { # {{{1
             file="${HOME}/.zshrc"
             ;;
         *)
-            file=''
+            file="${HOME}/.profile"
             ;;
     esac
     [[ -n "$file" ]] || return 1
