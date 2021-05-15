@@ -273,6 +273,7 @@ _koopa_r() { # {{{1
     return 0
 }
 
+# FIXME Need to rework this for aarch64 ARM, which is messed up.
 _koopa_shell() { # {{{1
     # """
     # Full path to the current shell binary.
@@ -309,9 +310,20 @@ _koopa_shell() { # {{{1
     then
         str="$KOOPA_SHELL"
     elif __koopa_is_linux && \
+        __koopa_is_installed ps sed
+    then
+        # This approach will return correct shell for ARM running via emulation
+        # on x86 (e.g. Docker).
+        str="$( \
+            ps -p "${$}" -o 'comm=' \
+            | sed 's/^-//' \
+        )"
+    elif __koopa_is_linux && \
         __koopa_is_installed readlink && \
         [ -x "/proc/${$}/exe" ]
     then
+        # ARM running via emulation on x86 (e.g. Docker) will return
+        # '/usr/bin/qemu-aarch64' here, rather than the shell we want.
         str="$(readlink "/proc/${$}/exe")"
     elif __koopa_is_macos && \
         __koopa_is_installed lsof sed
