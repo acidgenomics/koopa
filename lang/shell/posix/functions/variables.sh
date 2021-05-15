@@ -273,11 +273,16 @@ _koopa_r() { # {{{1
     return 0
 }
 
-# FIXME Need to rework this for aarch64 ARM, which is messed up.
 _koopa_shell() { # {{{1
     # """
     # Full path to the current shell binary.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-15.
+    #
+    # Detection issues with qemu ARM emulation on x86:
+    # - The 'ps' approach will return correct shell for ARM running via
+    #   emulation on x86 (e.g. Docker).
+    # - ARM running via emulation on x86 (e.g. Docker) will return
+    #   '/usr/bin/qemu-aarch64' here, rather than the shell we want.
     #
     # Useful variables:
     # - Bash: 'BASH_VERSION'
@@ -306,39 +311,37 @@ _koopa_shell() { # {{{1
     # - https://unix.stackexchange.com/questions/182590/
     # """
     local str
+    str=''
     if [ -n "${KOOPA_SHELL:-}" ]
     then
         str="$KOOPA_SHELL"
-    elif __koopa_is_linux && \
-        __koopa_is_installed ps sed
+    elif __koopa_is_linux
     then
-        # This approach will return correct shell for ARM running via emulation
-        # on x86 (e.g. Docker).
-        str="$( \
-            ps -p "${$}" -o 'comm=' \
-            | sed 's/^-//' \
-        )"
-    elif __koopa_is_linux && \
-        __koopa_is_installed readlink && \
-        [ -x "/proc/${$}/exe" ]
+        if __koopa_is_installed ps sed
+        then
+            str="$( \
+                ps -p "${$}" -o 'comm=' \
+                | sed 's/^-//' \
+            )"
+        elif [ -x "/proc/${$}/exe" ] && \
+            __koopa_is_installed readlink
+        then
+            str="$(readlink "/proc/${$}/exe")"
+        fi
+    elif __koopa_is_macos
     then
-        # ARM running via emulation on x86 (e.g. Docker) will return
-        # '/usr/bin/qemu-aarch64' here, rather than the shell we want.
-        str="$(readlink "/proc/${$}/exe")"
-    elif __koopa_is_macos && \
-        __koopa_is_installed lsof sed
-    then
-        str="$( \
-            lsof \
-                -a \
-                -F 'n' \
-                -d 'txt' \
-                -p "${$}" \
-            | sed -n '3p' \
-            | sed 's/^n//' \
-        )"
-    else
-        return 1
+        if __koopa_is_installed lsof sed
+        then
+            str="$( \
+                lsof \
+                    -a \
+                    -F 'n' \
+                    -d 'txt' \
+                    -p "${$}" \
+                | sed -n '3p' \
+                | sed 's/^n//' \
+            )"
+        fi
     fi
     [ -n "$str" ] || return 1
     __koopa_print "$str"
