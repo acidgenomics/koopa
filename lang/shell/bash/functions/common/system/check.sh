@@ -86,7 +86,6 @@ koopa::check_data_disk() { # {{{1
     return 0
 }
 
-# shellcheck disable=SC2120
 koopa::check_disk() { # {{{1
     # """
     # Check that disk has enough free space.
@@ -163,7 +162,6 @@ koopa::check_mount() { # {{{1
     return 0
 }
 
-# shellcheck disable=SC2119
 koopa::check_system() { # {{{1
     # """
     # Check system.
@@ -203,7 +201,7 @@ koopa::check_user() { # {{{1
         koopa::warning "'${file}' does not exist on disk."
         return 1
     fi
-    file="$(realpath "$file")"
+    file="$(koopa::realpath "$file")"
     expected_user="${2:?}"
     current_user="$(koopa::stat_user "$file")"
     if [[ "$current_user" != "$expected_user" ]]

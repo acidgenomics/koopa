@@ -81,11 +81,11 @@ koopa::delete_dotfile() { # {{{1
 koopa::find_user_profile() { # {{{1
     # """
     # Find current user's shell profile configuration file.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-15.
     # """
     local file shell
     koopa::assert_has_no_args "$#"
-    shell="$(koopa::shell)"
+    shell="$(koopa::shell_name)"
     case "$shell" in
         bash)
             file="${HOME}/.bashrc"
@@ -93,7 +93,11 @@ koopa::find_user_profile() { # {{{1
         zsh)
             file="${HOME}/.zshrc"
             ;;
+        *)
+            file="${HOME}/.profile"
+            ;;
     esac
+    [[ -n "$file" ]] || return 1
     koopa::print "$file"
     return 0
 }

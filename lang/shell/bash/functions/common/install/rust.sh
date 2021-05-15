@@ -1,84 +1,45 @@
 #!/usr/bin/env bash
 
 koopa::install_rust() { # {{{1
+    koopa::install_app \
+        --name='rust' \
+        --name-fancy='Rust' \
+        --version='rolling' \
+        --no-link \
+        "$@"
+}
+
+koopa:::install_rust() { # {{{1
     # """
-    # Install Rust.
-    # @note Updated 2021-03-31.
+    # Install Rust (via rustup).
+    # @note Updated 2021-05-05.
     # """
-    local file name name_fancy pos prefix reinstall tmp_dir url
-    name='rust'
-    name_fancy='Rust'
-    reinstall=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    prefix="$(koopa::app_prefix)/${name}/rolling"
-    [[ "$reinstall" -eq 1 ]] && koopa::sys_rm "$prefix"
-    if [[ -d "$prefix" ]]
-    then
-        koopa::alert_note "${name_fancy} is already installed at '${prefix}'."
-        return 0
-    fi
-    koopa::link_into_opt "$prefix" "$name"
-    CARGO_HOME="$(koopa::rust_cargo_prefix)"
-    RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
-    export CARGO_HOME
-    export RUSTUP_HOME
-    if [[ -d "$CARGO_HOME" ]] && [[ -d "$RUSTUP_HOME" ]]
-    then
-        koopa::alert_note "${name_fancy} is already installed \
-at '${CARGO_HOME}'."
-        return 0
-    fi
-    koopa::install_start "$name_fancy"
-    koopa::assert_has_no_args "$#"
-    koopa::assert_has_no_envs
-    koopa::assert_is_not_installed rustup-init
-    koopa::dl 'CARGO_HOME' "$CARGO_HOME"
-    koopa::dl 'RUSTUP_HOME' "$RUSTUP_HOME"
-    koopa::mkdir "$CARGO_HOME" "$RUSTUP_HOME"
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        url='https://sh.rustup.rs'
-        file='rustup.sh'
-        koopa::download "$url" "$file"
-        chmod +x "$file"
-        "./${file}" --no-modify-path -v -y
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    koopa::sys_set_permissions -r "$CARGO_HOME" "$RUSTUP_HOME"
-    koopa::install_success "$name_fancy"
-    # Clippy and rustfmt should be enabled by default.
-    # > rustup component add clippy-preview
-    # > rustup component add rustfmt
-    koopa::alert_restart
+    local cargo_prefix file prefix rustup_prefix url version
+    # > koopa::assert_is_not_installed rustup-init
+    prefix="${INSTALL_PREFIX:?}"
+    version="${INSTALL_VERSION:?}"
+    rustup_prefix="$prefix"
+    cargo_prefix="$(koopa::rust_packages_prefix)"
+    koopa::mkdir "$cargo_prefix" "$rustup_prefix"
+    CARGO_HOME="$cargo_prefix"
+    RUSTUP_HOME="$rustup_prefix"
+    export CARGO_HOME RUSTUP_HOME
+    koopa::dl \
+        'CARGO_HOME' "$CARGO_HOME" \
+        'RUSTUP_HOME' "$RUSTUP_HOME"
+    url='https://sh.rustup.rs'
+    file='rustup.sh'
+    koopa::download "$url" "$file"
+    chmod +x "$file"
+    # Can check the version of install script with '--version'.
+    "./${file}" --no-modify-path -v -y
     return 0
 }
 
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2021-01-22.
+    # @note Updated 2021-05-11.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -88,7 +49,7 @@ koopa::install_rust_packages() { # {{{1
     # - https://github.com/rust-lang/cargo/pull/6798
     # - https://github.com/rust-lang/cargo/pull/7560
     # """
-    local default flags jobs name_fancy pkg pkgs pkg_flags pos prefix \
+    local args default jobs name_fancy pkg pkgs pkg_args pos prefix \
         reinstall version
     name_fancy='Rust packages (cargo crates)'
     default=0
@@ -132,19 +93,23 @@ koopa::install_rust_packages() { # {{{1
         default=1
         if koopa::is_installed brew
         then
-            koopa::alert_note 'Use Homebrew to manage Rust binaries.'
+            koopa::alert_note 'Use Homebrew to manage Rust binaries instead.'
             return 0
         fi
         pkgs=(
             'bat'
             'broot'
+            'dog'
             'du-dust'
             'exa'
             'fd-find'
             'hyperfine'
             'procs'
             'ripgrep'
-            'ripgrep-all'
+            # Currently failing to build due to cachedir constraint.
+            # https://github.com/phiresky/ripgrep-all/issues/88
+            # > 'ripgrep-all'
+            'starship'
             'tokei'
             'xsv'
             'zoxide'
@@ -154,20 +119,26 @@ koopa::install_rust_packages() { # {{{1
     koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
     koopa::sys_set_permissions -ru "$prefix"
     jobs="$(koopa::cpu_count)"
-    pkg_flags=(
+    pkg_args=(
         '--jobs' "${jobs}"
         '--verbose'
     )
     [[ "$reinstall" -eq 1 ]] && pkg_flags+=('--force')
     for pkg in "${pkgs[@]}"
     do
-        flags=("${pkg_flags[@]}")
+        args=("${pkg_args[@]}")
         if [[ "$default" -eq 1 ]]
         then
             version="$(koopa::variable "rust-${pkg}")"
-            flags+=('--version' "${version}")
+            args+=('--version' "${version}")
         fi
-        cargo install "$pkg" "${flags[@]}"
+        # Edge case handling for package name variants on crates.io.
+        case "$pkg" in
+            ripgrep-all)
+                pkg='ripgrep_all'
+                ;;
+        esac
+        cargo install "$pkg" "${args[@]}"
     done
     koopa::sys_set_permissions -r "$prefix"
     koopa::install_success "$name_fancy"

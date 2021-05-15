@@ -6,7 +6,7 @@ koopa::macos_configure_system() { # {{{1
     # @note Updated 2020-11-23.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     koopa::h1 'Configuring macOS system.'
     koopa::enable_passwordless_sudo
     koopa::install_homebrew

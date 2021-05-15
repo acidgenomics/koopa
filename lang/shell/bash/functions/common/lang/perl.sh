@@ -1,36 +1,41 @@
 #!/usr/bin/env bash
 
 koopa::install_ensembl_perl_api() { # {{{1
+    koopa::install_app \
+        --name='ensembl-perl-api' \
+        --name-fancy='Ensembl Perl API' \
+        --no-link \
+        --prefix="$(koopa::ensembl_perl_api_prefix)" \
+        --version='rolling'
+}
+
+koopa:::install_ensembl_perl_api() { # {{{1
     # """
     # Install Ensembl Perl API.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-05-07.
     # """
-    local name_fancy prefix
-    koopa::assert_has_no_args "$#"
-    name_fancy='Ensembl Perl API'
-    prefix="$(koopa::ensembl_perl_api_prefix)"
-    if [[ -d "$prefix" ]]
-    then
-        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
-        return 0
-    fi
-    koopa::install_start "$name_fancy" "$prefix"
-    koopa::mkdir "$prefix"
-    (
-        koopa::cd "$prefix"
-        # Install BioPerl.
-        git clone -b release-1-6-924 --depth 1 \
-            'https://github.com/bioperl/bioperl-live.git'
-        git clone 'https://github.com/Ensembl/ensembl-git-tools.git'
-        git clone 'https://github.com/Ensembl/ensembl.git'
-        git clone 'https://github.com/Ensembl/ensembl-variation.git'
-        git clone 'https://github.com/Ensembl/ensembl-funcgen.git'
-        git clone 'https://github.com/Ensembl/ensembl-compara.git'
-        git clone 'https://github.com/Ensembl/ensembl-io.git'
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    koopa::sys_set_permissions -r "$prefix"
-    koopa::install_success "$name_fancy"
-    koopa::alert_restart
+    local repo repos prefix
+    prefix="${INSTALL_PREFIX:?}"
+    # Install BioPerl.
+    git clone -b release-1-6-924 --depth 1 \
+        'https://github.com/bioperl/bioperl-live.git' \
+        "${prefix}/bioperl-live" \
+        || return 1
+    repos=(
+        'ensembl'
+        'ensembl-compara'
+        'ensembl-funcgen'
+        'ensembl-git-tools'
+        'ensembl-io'
+        'ensembl-variation'
+    )
+    for repo in "${repos[@]}"
+    do
+        git clone \
+            "https://github.com/Ensembl/${repo}.git" \
+            "${prefix}/${repo}" \
+            || return 1
+    done
     return 0
 }
 
@@ -98,7 +103,7 @@ koopa::install_perlbrew() { # {{{1
     then
         bin_dir='/usr/bin'
     else
-        bin_dir=
+        bin_dir=''
     fi
     if [[ -d "$bin_dir" ]]
     then
@@ -161,11 +166,11 @@ koopa::install_perlbrew_perl() { # {{{1
 koopa::update_perlbrew() { # {{{1
     # """
     # Update Perlbrew.
-    # @note Updated 2020-11-18.
+    # @note Updated 2021-05-07.
     # """
     if ! koopa::is_installed perlbrew
     then
-        koopa::alert_note 'Perlbrew is not installed.'
+        koopa::alert_not_installed 'perlbrew'
         return 0
     fi
     koopa::assert_has_no_args "$#"

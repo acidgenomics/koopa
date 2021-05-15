@@ -109,7 +109,7 @@ _koopa_activate_zsh_plugins() { # {{{1
     #
     # Debug plugins via:
     # > zsh -df
-    # 
+    #
     # Lines to array in Zsh:
     # https://unix.stackexchange.com/questions/29724/
     # Alternatively, can use '<<<' herestring, which also works in Bash.

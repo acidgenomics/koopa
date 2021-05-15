@@ -10,7 +10,6 @@ _koopa_boolean_nounset() { # {{{1
     # This approach is the opposite of POSIX shell status codes, where 0 is
     # true and 1 is false.
     # """
-    # shellcheck disable=SC2039
     local bool
     if _koopa_is_set_nounset
     then

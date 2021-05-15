@@ -3,7 +3,7 @@
 koopa::mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-06.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -22,32 +22,51 @@ koopa::mktemp() { # {{{1
     # - https://stackoverflow.com/a/10983009/3911732
     # - https://gist.github.com/earthgecko/3089509
     # """
-    koopa::assert_is_installed mktemp
-    local date_id template user_id
-    user_id="$(koopa::user_id)"
-    date_id="$(koopa::datetime)"
-    template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
-    mktemp "$@" -t "$template"
+    local brew_mktemp brew_prefix date_id mktemp mktemp_args template user_id
+    mktemp='mktemp'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        brew_mktemp="${brew_prefix}/bin/gmktemp"
+        [[ -x "$brew_mktemp" ]] && mktemp="$brew_mktemp"
+    fi
+    koopa::assert_is_installed "$mktemp"
+    mktemp_args=("$@")
+    if koopa::has_gnu "$mktemp"
+    then
+        user_id="$(koopa::user_id)"
+        date_id="$(koopa::datetime)"
+        template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
+        mktemp_args+=('-t' "$template")
+    fi
+    x="$("$mktemp" "${mktemp_args[@]}")"
+    koopa::print "$x"
     return 0
 }
 
 koopa::tmp_dir() { # {{{1
     # """
     # Create temporary directory.
-    # @note Updated 2020-02-06.
+    # @note Updated 2020-05-06.
     # """
+    local x
     koopa::assert_has_no_args "$#"
-    koopa::mktemp -d
+    x="$(koopa::mktemp -d)"
+    koopa::assert_is_dir "$x"
+    koopa::print "$x"
     return 0
 }
 
 koopa::tmp_file() { # {{{1
     # """
     # Create temporary file.
-    # @note Updated 2020-02-06.
+    # @note Updated 2021-05-06.
     # """
+    local x
     koopa::assert_has_no_args "$#"
-    koopa::mktemp
+    x="$(koopa::mktemp)"
+    koopa::assert_is_file "$x"
+    koopa::print "$x"
     return 0
 }
 

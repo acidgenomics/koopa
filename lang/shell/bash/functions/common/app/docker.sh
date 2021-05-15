@@ -110,8 +110,8 @@ koopa::docker_build() { # {{{1
     if [[ -L "$source_image" ]]
     then
         tags+=("$tag")
-        source_image="$(realpath "$source_image")"
-        tag="$(basename "$source_image")"
+        source_image="$(koopa::realpath "$source_image")"
+        tag="$(koopa::basename "$source_image")"
     fi
     tags+=("$tag" "${tag}-$(date '+%Y%m%d')")
     # Ensure tags are sorted and unique.
@@ -154,7 +154,7 @@ koopa::docker_build() { # {{{1
                 --filter reference="${image}:${tag}" \
                 --quiet \
         )"
-        if koopa::is_array_non_empty "${image_ids[@]}"
+        if koopa::is_array_non_empty "${image_ids[@]:-}"
         then
             docker image rm --force "${image_ids[@]}"
         fi
@@ -176,12 +176,12 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-05-11.
     # """
     local build_file build_args days force image images prune pos \
         repo repos repo_name
     koopa::assert_is_installed docker
-    days=30
+    days=7
     force=0
     prune=0
     pos=()
@@ -247,7 +247,7 @@ koopa::docker_build_all_images() { # {{{1
                 | xargs -0 -n1 basename \
             )"
         fi
-        koopa::assert_is_array_non_empty "${images[@]}"
+        koopa::assert_is_array_non_empty "${images[@]:-}"
         koopa::dl \
             "${#images[@]} images" \
             "$(koopa::to_string "${images[@]}")"
@@ -371,7 +371,6 @@ koopa::docker_push() { # {{{1
         koopa::assert_is_matching_regex "$pattern" '^.+/.+$'
         json="$(docker inspect --format="{{json .RepoTags}}" "$pattern")"
         # Convert JSON to lines.
-        # shellcheck disable=SC2001
         readarray -t images <<< "$( \
             koopa::print "$json" \
                 | tr ',' '\n' \
@@ -381,7 +380,7 @@ koopa::docker_push() { # {{{1
                 | sed 's/\"$//g' \
                 | sort \
         )"
-        if ! koopa::is_array_non_empty "${images[@]}"
+        if ! koopa::is_array_non_empty "${images[@]:-}"
         then
             docker image ls
             koopa::stop "'${image}' failed to match any images."
@@ -425,21 +424,33 @@ koopa::docker_run() { # {{{1
     # - https://docs.docker.com/storage/volumes/
     # - https://docs.docker.com/storage/bind-mounts/
     # """
-    local bash flags image pos workdir
+    local dict image pos run_args workdir
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    bash=0
-    workdir='/mnt/work'
+    declare -A dict=(
+        [arm]=0
+        [bash]=0
+        [bind]=0
+        [x86]=0
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
-            --bash)
-                bash=1
+            --arm)
+                dict[arm]=1
                 shift 1
                 ;;
-            --workdir=*)
-                workdir="${1#*=}"
+            --bash)
+                dict[bash]=1
+                shift 1
+                ;;
+            --bind)
+                dict[bind]=1
+                shift 1
+                ;;
+            --x86)
+                dict[x86]=1
                 shift 1
                 ;;
             --)
@@ -456,22 +467,43 @@ koopa::docker_run() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    image="$1"
-    workdir="$(koopa::strip_trailing_slash "$workdir")"
+    koopa::assert_has_args_eq "$#" 1
+    image="${1:?}"
     docker pull "$image"
-    flags=(
-        # Legacy bind mounts approach:
-        # > "--volume=${PWD}:${workdir}"
-        # > "--workdir=${workdir}"
+    run_args=(
         '--interactive'
         '--tty'
-        "$image"
     )
-    if [[ "$bash" -eq 1 ]]
+    # Legacy bind mounts approach, now disabled by default.
+    # Useful for quickly checking whether a local script will run.
+    if [[ "${dict[bind]}" -eq 1 ]]
     then
-        flags+=('bash' '-il')
+        # This check helps prevent Docker from chewing up a bunch of CPU.
+        if [[ "${HOME:?}" == "${PWD:?}" ]]
+        then
+            koopa::stop "Do not set '--bind' when running at HOME."
+        fi
+        workdir='/mnt/work'
+        run_args+=(
+            "--volume=${PWD:?}:${workdir}"
+            "--workdir=${workdir}"
+        )
     fi
-    docker run "${flags[@]}"
+    # Manually override the platform, if desired.
+    if [[ "${dict[arm]}" -eq 1 ]]
+    then
+        run_args+=('--platform=linux/arm64')
+    elif [[ "${dict[x86]}" -eq 1 ]]
+    then
+        run_args+=('--platform=linux/amd64')
+    fi
+    run_args+=("$image")
+    # Enable an interactive Bash login session, if desired.
+    if [[ "${dict[bash]}" -eq 1 ]]
+    then
+        run_args+=('bash' '-il')
+    fi
+    docker run "${run_args[@]}"
     return 0
 }
 
@@ -508,7 +540,7 @@ koopa::docker_tag() { # {{{1
 koopa::is_docker_build_recent() { # {{{1
     # """
     # Has the requested Docker image been built recently?
-    # @note Updated 2020-08-07.
+    # @note Updated 2021-05-12.
     #
     # @seealso
     # - Corresponding 'isDockerBuildRecent()' R function.
@@ -518,7 +550,7 @@ koopa::is_docker_build_recent() { # {{{1
     local created current days diff image json seconds
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
-    days=2
+    days=7
     pos=()
     while (("$#"))
     do
@@ -543,7 +575,7 @@ koopa::is_docker_build_recent() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     # 24 hours * 60 minutes * 60 seconds = 86400.
-    seconds=$((days * 86400))
+    seconds="$((days * 86400))"
     current="$(date -u '+%s')"
     for image in "$@"
     do
