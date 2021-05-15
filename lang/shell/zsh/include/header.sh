@@ -123,7 +123,7 @@ __koopa_zsh_header() { # {{{1
     fi
     if [[ "${dict[checks]}" -eq 1 ]]
     then
-        major_version="$( \
+        dict[major_version]="$( \
             printf '%s\n' "${ZSH_VERSION:?}" \
             | cut -d '.' -f 1 \
         )"
