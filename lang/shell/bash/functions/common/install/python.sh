@@ -1,117 +1,84 @@
 #!/usr/bin/env bash
 
-koopa::install_pip() { # {{{1
-    # """
-    # Install pip for Python.
-    # @note Updated 2020-08-13.
-    # """
-    local file name pos python reinstall tmp_dir url
-    name='pip'
-    python="$(koopa::python)"
-    reinstall=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --python=*)
-                python="${1#*=}"
-                shift 1
-                ;;
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            '')
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed "$python"
-    if [[ "$reinstall" -eq 0 ]]
+koopa::install_python() { # {{{1
+    if koopa::is_macos
     then
-        if koopa::is_python_package_installed --python="$python" "$name"
-        then
-            koopa::alert_note "Python package '${name}' is already installed."
-            return 0
-        fi
+        koopa::macos_install_python_framework
+        return 0
     fi
-    koopa::install_start "$name"
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        file='get-pip.py'
-        url="https://bootstrap.pypa.io/${file}"
-        koopa::download "$url"
-        "$python" "$file" --no-warn-script-location
+    koopa::install_app \
+        --name='python' \
+        --name-fancy='Python' \
+        "$@"
+}
+
+koopa:::install_python() { # {{{1
+    # """
+    # Install Python.
+    # @note Updated 2021-05-05.
+    #
+    # Check config with:
+    # > ldd /usr/local/bin/python3
+    #
+    # Warning: 'make install' can overwrite or masquerade the python3 binary.
+    # 'make altinstall' is therefore recommended instead of make install since
+    # it only installs 'exec_prefix/bin/pythonversion'.
+    #
+    # To customize g++ path, specify 'CXX' environment variable
+    # or use '--with-cxx-main=/usr/bin/g++'.
+    #
+    # See also:
+    # - https://docs.python.org/3/using/unix.html
+    # - https://stackoverflow.com/questions/43333207
+    # """
+    local conf_args file jobs name name2 prefix url version
+    prefix="${INSTALL_PREFIX:?}"
+    version="${INSTALL_VERSION:?}"
+    name='python'
+    name2="$(koopa::capitalize "$name")"
+    minor_version="$(koopa::major_minor_version "$version")"
+    jobs="$(koopa::cpu_count)"
+    file="${name2}-${version}.tar.xz"
+    url="https://www.${name}.org/ftp/${name}/${version}/${file}"
+    koopa::download "$url"
+    koopa::extract "$file"
+    koopa::cd "${name2}-${version}"
+    conf_args=(
+        "--prefix=${prefix}"
+        '--enable-optimizations'
+        '--enable-shared'
     )
-    koopa::rm "$tmp_dir"
-    koopa::is_symlinked_app "$python" && koopa::link_app python
-    koopa::install_success "$name"
+    # Setting 'LDFLAGS' here doesn't work on macOS.
+    if koopa::is_linux
+    then
+        conf_args+=("LDFLAGS=-Wl,-rpath=${prefix}/lib")
+    fi
+    ./configure "${conf_args[@]}"
+    make --jobs="$jobs"
+    # > make test
+    # > Use 'make altinstall' here instead?
+    make install
+    python="${prefix}/bin/${name}${minor_version}"
+    koopa::assert_is_file "$python"
+    koopa::python_add_site_packages_to_sys_path "$python"
     return 0
 }
 
-# NOTE Latest version of pip isn't getting installed correctly here.
-# May need to manually resolve with 'python3 -m pip install -U pip'.
-# However, this does resolve correctly with 'koopa update python-packages'.
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-01-08.
+    # @note Updated 2021-04-30.
     # """
-    local install_flags name_fancy pkg pkg_lower pkgs pos python version
-    name_fancy='Python packages'
+    local name_fancy pkg pkg_lower pkgs version
     python="$(koopa::python)"
-    reinstall=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --python=*)
-                python="${1#*=}"
-                shift 1
-                ;;
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            '')
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_envs
     koopa::assert_is_installed "$python"
+    name_fancy='Python packages'
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
-            # pynvim
-            'pip'
+            # > 'pynvim'
             'pip2pi'
             'psutil'
             'pyflakes'
@@ -141,11 +108,7 @@ koopa::install_python_packages() { # {{{1
         done
     fi
     koopa::install_start "$name_fancy"
-    install_flags=("--python=${python}")
-    [[ "$reinstall" -eq 1 ]] && install_flags+=('--reinstall')
-    koopa::python_add_site_packages_to_sys_path "$python"
-    koopa::install_pip "${install_flags[@]}"
-    koopa::pip_install "${install_flags[@]}" "${pkgs[@]}"
+    koopa::pip_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -153,31 +116,29 @@ koopa::install_python_packages() { # {{{1
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-04-30.
     # @seealso
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
     # """
-    local name_fancy pkgs prefix python x
+    local name_fancy pkgs python
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     python="$(koopa::python)"
     koopa::is_installed "$python" || return 0
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
-    x="$("$python" -m pip list --outdated --format='freeze')"
-    x="$(koopa::print "$x" | grep -v '^\-e')"
-    if [[ -z "$x" ]]
+    pkgs="$(koopa::pip_outdated)"
+    if [[ -z "$pkgs" ]]
     then
         koopa::alert_success 'All Python packages are current.'
         return 0
     fi
-    prefix="$(koopa::python_site_packages_prefix)"
-    readarray -t pkgs <<< "$(koopa::print "$x" | cut -d '=' -f 1)"
-    koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
-    koopa::dl 'Prefix' "$prefix"
-    "$python" -m pip install --no-warn-script-location --upgrade "${pkgs[@]}"
-    koopa::is_symlinked_app "$python" && koopa::link_app python
+    readarray -t pkgs <<< "$( \
+        koopa::print "$pkgs" \
+        | cut -d '=' -f 1 \
+    )"
+    koopa::pip_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }

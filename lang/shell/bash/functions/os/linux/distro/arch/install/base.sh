@@ -3,7 +3,7 @@
 koopa::arch_install_base() { # {{{1
     # """
     # Install Arch Linux base system.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-05-15.
     #
     # base-devel:
     # 1) autoconf  2) automake  3) binutils  4) bison  5) fakeroot  6) file
@@ -82,6 +82,7 @@ koopa::arch_install_base() { # {{{1
             'bc'
             'git'
             'man'
+            'procps'  # ps
             'unzip'
             'xz'
         )
@@ -98,7 +99,6 @@ koopa::arch_install_base() { # {{{1
             'mpc'
             'mpfr'
             'pandoc'
-            'pandoc-citeproc'
             'r'
             'tcl'
             'texlive-core'

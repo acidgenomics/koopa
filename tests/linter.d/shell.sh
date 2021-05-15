@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2119
 
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
@@ -30,7 +31,6 @@ test_all() { # {{{1
 test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
-    # shellcheck disable=SC2016
     array=('^([ ]+)?(cd|cp|ln|mkdir|mv|rm) ')
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
@@ -44,7 +44,7 @@ test_all_coreutils() { # {{{1
 test_all_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
-    # shellcheck disable=SC1112,SC2016
+    # shellcheck disable=SC2016,SC1112
     array=(
         # "=''"             # now allowed, for arrays.
         ' \|\| exit'        # wrap in function and return instead
@@ -73,7 +73,6 @@ test_all_illegal_strings() { # {{{1
 test_all_quoting() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
-    # shellcheck disable=SC2016
     array=(
         "'\$.+'"
         ":-['\"]"
@@ -195,14 +194,17 @@ test_zsh_illegal_strings() { # {{{1
 test_shellcheck() { # {{{1
     # """
     # Run ShellCheck.
-    # @note Updated 2020-07-08.
+    # @note Updated 2021-04-22.
     # Only Bash and POSIX (but not Zsh) are supported.
     # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed shellcheck
     readarray -t files <<< \
         "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh)$')"
-    shellcheck -x "${files[@]}"
+    shellcheck \
+        --exclude='SC2119,SC2120,SC3043' \
+        --external-sources \
+        "${files[@]}"
     koopa::status_ok "shell | shellcheck [${#files[@]}]"
     return 0
 }

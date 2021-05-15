@@ -20,9 +20,6 @@
 # - mariadb-connector-c
 # - openssh
 #
-# Deprecated:
-# - pandoc-citeproc
-#
 # GCC warnings:
 # - protobuf
 #

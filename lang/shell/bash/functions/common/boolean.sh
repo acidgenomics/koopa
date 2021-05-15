@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+koopa::contains() { # {{{1
+    # """
+    # Does an array contain a specific element?
+    # @note Updated 2021-05-07.
+    #
+    # @examples
+    # string='foo'
+    # array=('foo' 'bar')
+    # koopa::contains "$string" "${array[@]}"
+    #
+    # @seealso
+    # https://stackoverflow.com/questions/3685970/
+    # """
+    local string x
+    koopa::assert_has_args_ge "$#" 2
+    string="${1:?}"
+    shift 1
+    for x
+    do
+        [[ "$x" == "$string" ]] && return 0
+    done
+    return 1
+}
+
 koopa::file_match() { # {{{1
     # """
     # Is a string defined in a file?
@@ -93,21 +117,22 @@ koopa::has_no_environments() { # {{{1
 koopa::has_passwordless_sudo() { # {{{1
     # """
     # Check if sudo is active or doesn't require a password.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-05-14.
     #
     # See also:
     # https://askubuntu.com/questions/357220
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_installed sudo || return 1
+    koopa::is_root && return 0
     sudo -n true 2>/dev/null && return 0
     return 1
 }
 
-koopa::has_sudo() { # {{{1
+koopa::is_admin() { # {{{1
     # """
-    # Check that current user has administrator (sudo) permission.
-    # @note Updated 2020-06-30.
+    # Check that current user has administrator permissions.
+    # @note Updated 2021-05-14.
     #
     # This check is hanging on an CPI AWS Ubuntu EC2 instance, I think due to
     # 'groups' can lag on systems for domain user accounts.
@@ -141,7 +166,8 @@ koopa::has_sudo() { # {{{1
     koopa::has_passwordless_sudo && return 0
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.
-    koopa::str_match_regex "$(groups)" '\b(admin|root|sudo|wheel)\b'
+    koopa::str_match_regex "$(groups)" '\b(admin|root|sudo|wheel)\b' && return 0
+    return 1
 }
 
 koopa::is_anaconda() { # {{{1
@@ -179,11 +205,10 @@ koopa::is_bash_ok() { # {{{1
     # """
     # Is the current version of Bash OK (or super old)?
     # @note Updated 2020-07-05.
-    # 
+    #
     # Older versions (< 4; e.g. shipping version on macOS) have issues with
     # 'read' that we have to handle with special care here.
     # """
-    # shellcheck disable=SC2039
     local major_version version
     koopa::is_installed bash || return 1
     version="$(koopa::get_version 'bash')"
@@ -285,7 +310,7 @@ koopa::is_file_system_case_sensitive() { # {{{1
 koopa::is_function() { # {{{1
     # """
     # Check if variable is a function.
-    # @note Updated 2020-07-07.
+    # @note Updated 2021-05-11.
     #
     # Note that 'declare' and 'typeset' are bashisms, and not POSIX.
     # Checking against 'type' works consistently across POSIX shells.
@@ -303,14 +328,11 @@ koopa::is_function() { # {{{1
     # - https://stackoverflow.com/questions/11478673/
     # - https://stackoverflow.com/questions/85880/
     # """
-    local fun str
+    local fun
     koopa::assert_has_args "$#"
     for fun in "$@"
     do
-        str="$(type "$fun" 2>/dev/null)"
-        # Harden against empty string return.
-        [[ -z "$str" ]] && str='no'
-        koopa::str_match "$str" 'function' || return 1
+        [[ "$(type -t "$fun")" == 'function' ]] || return 1
     done
     return 0
 }
@@ -348,7 +370,7 @@ koopa::is_powerful() { # {{{1
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-05-04.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -361,34 +383,11 @@ koopa::is_python_package_installed() { # {{{1
     # - https://stackoverflow.com/questions/1051254
     # - https://askubuntu.com/questions/588390
     # """
-    local pkg pos prefix python
+    local pkg prefix python
     koopa::assert_has_args "$#"
     python="$(koopa::python)"
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --python=*)
-                python="${1#*=}"
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
     koopa::is_installed "$python" || return 1
-    prefix="$(koopa::python_site_packages_prefix "$python")"
+    prefix="$(koopa::python_packages_prefix "$python")"
     for pkg in "$@"
     do
         if [[ ! -d "${prefix}/${pkg}" ]] && [[ ! -f "${prefix}/${pkg}.py" ]]
@@ -402,7 +401,7 @@ koopa::is_python_package_installed() { # {{{1
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-04-29.
     #
     # This will only return true for user-installed packages.
     #
@@ -412,32 +411,9 @@ koopa::is_r_package_installed() { # {{{1
     # > Rscript -e "'${1}' %in% rownames(utils::installed.packages())" \
     # >     | grep -q 'TRUE'
     # """
-    local pkg pos r
+    local pkg r
     koopa::assert_has_args "$#"
-    r='R'
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --r=*)
-                r="${1#*=}"
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    r="$(koopa::r)"
     koopa::is_installed "$r" || return 1
     prefix="$(koopa::r_library_prefix "$r")"
     for pkg in "$@"
@@ -571,7 +547,7 @@ koopa::is_symlinked_app() { # {{{1
             str="$(koopa::which_realpath "$str")"
         elif [[ -e "$str" ]]
         then
-            str="$(realpath "$str")"
+            str="$(koopa::realpath "$str")"
         else
             return 1
         fi

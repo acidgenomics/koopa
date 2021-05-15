@@ -47,7 +47,6 @@ koopa::test_shunit2() {
             suite_addTest "$test"
         done
     }
-    # shellcheck disable=SC1091
     . shunit2
     return 0
 }

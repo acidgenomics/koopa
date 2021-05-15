@@ -10,7 +10,7 @@ koopa::macos_create_dmg() { # {{{1
     koopa::assert_is_installed hdiutil
     dir="${1:?}"
     koopa::assert_is_dir "$dir"
-    dir="$(realpath "$dir")"
+    dir="$(koopa::realpath "$dir")"
     name="$(basename "$dir")"
     hdiutil create -volname "$name" -srcfolder "$dir" -ov "${name}.dmg"
     return 0

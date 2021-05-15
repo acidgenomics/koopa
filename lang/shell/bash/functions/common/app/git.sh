@@ -6,8 +6,8 @@ koopa::git_checkout_recursive() { # {{{1
     # @note Updated 2021-01-06.
     # """
     local branch default_branch dir dirs origin pos repo repos
-    branch=
-    origin=
+    branch=''
+    origin=''
     pos=()
     while (("$#"))
     do
@@ -38,7 +38,7 @@ koopa::git_checkout_recursive() { # {{{1
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
-        dir="$(realpath "$dir")"
+        dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
@@ -48,7 +48,7 @@ koopa::git_checkout_recursive() { # {{{1
                 -print \
             | sort \
         )"
-        if ! koopa::is_array_non_empty "${repos[@]}"
+        if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
             koopa::stop "Failed to detect any git repos in '${dir}'."
         fi
@@ -136,14 +136,14 @@ koopa::git_default_branch() { # {{{1
     return 0
 }
 
-koopa::git_init() { # {{{1
+koopa::git_init_remote() { # {{{1
     # """
-    # Initialize a Git repository.
-    # @note Updated 2020-12-03.
+    # Initialize a remote Git repository.
+    # @note Updated 2021-05-08.
     # """
     local branch origin
-    branch='master'  # switch to 'main' eventually.
-    origin=
+    branch='main'
+    origin='origin'
     while (("$#"))
     do
         case "$1" in
@@ -161,16 +161,14 @@ koopa::git_init() { # {{{1
         esac
     done
     koopa::assert_is_installed git
+    koopa::assert_is_set branch origin
     git init
-    if [[ -n "$origin" ]]
-    then
-        git remote add 'origin' "$origin"
-        git remote -v
-        git fetch --all
-        koopa::alert "Checking out '${branch}' branch."
-        git branch --set-upstream-to="origin/${branch}" "$branch"
-        git pull 'origin' "$branch" --allow-unrelated-histories
-    fi
+    git remote add "$origin" "$origin"
+    git remote -vv
+    git fetch --all
+    koopa::alert "Checking out '${origin}/${branch}' branch."
+    git branch --set-upstream-to="${origin}/${branch}" "$branch"
+    git pull "$origin" "$branch" --allow-unrelated-histories
     git status
     return 0
 }
@@ -208,18 +206,22 @@ koopa::git_last_commit_remote() { # {{{1
     koopa::print "$x"
 }
 
-koopa::git_master_to_main() { # {{{1
+koopa::git_rename_master_to_main() { # {{{1
     # """
-    # Change default branch from "master" to "main".
-    # @note Updated 2021-04-08.
+    # Rename default branch from "master" to "main".
+    # @note Updated 2021-05-08.
     # """
+    local new old origin
     koopa::assert_has_no_args "$#"
     koopa::is_git || return 1
     koopa::is_installed git || return 1
-    git branch -m master main
-    git fetch origin
-    git branch -u origin/main main
-    git remote set-head origin -a
+    origin='origin'
+    old='master'
+    new='main'
+    git branch -m "$old" "$new"
+    git fetch "$origin"
+    git branch -u "${origin}/${new}" "$new"
+    git remote set-head "$origin" -a
     return 0
 }
 
@@ -235,7 +237,7 @@ koopa::git_pull() { # {{{1
     # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
     local branch
-    branch=
+    branch=''
     [[ "$#" -gt 0 ]] && branch="${*: -1}"
     koopa::assert_is_git
     koopa::assert_is_installed git
@@ -269,7 +271,7 @@ koopa::git_pull_recursive() { # {{{1
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
-        dir="$(realpath "$dir")"
+        dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
@@ -279,7 +281,7 @@ koopa::git_pull_recursive() { # {{{1
                 -print \
             | sort \
         )"
-        if ! koopa::is_array_non_empty "${repos[@]}"
+        if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
             koopa::stop "Failed to detect any git repos in '${dir}'."
         fi
@@ -309,7 +311,7 @@ koopa::git_push_recursive() { # {{{1
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
-        dir="$(realpath "$dir")"
+        dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
@@ -319,7 +321,7 @@ koopa::git_push_recursive() { # {{{1
                 -print \
             | sort \
         )"
-        if ! koopa::is_array_non_empty "${repos[@]}"
+        if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
             koopa::stop 'Failed to detect any git repos.'
         fi
@@ -495,7 +497,7 @@ koopa::git_status_recursive() { # {{{1
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
-        dir="$(realpath "$dir")"
+        dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
             find -L "$dir" \
@@ -505,7 +507,7 @@ koopa::git_status_recursive() { # {{{1
                 -print \
             | sort \
         )"
-        if ! koopa::is_array_non_empty "${repos[@]}"
+        if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
             koopa::stop 'Failed to detect any git repos.'
         fi
@@ -541,7 +543,7 @@ koopa::git_submodule_init() { # {{{1
             --get-regexp '^submodule\..*\.path$' \
     )"
     readarray -t array <<< "$lines"
-    if ! koopa::is_array_non_empty "${array[@]}"
+    if ! koopa::is_array_non_empty "${array[@]:-}"
     then
         koopa::stop "Failed to detect submodules in '${PWD}'."
     fi

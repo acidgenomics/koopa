@@ -3,11 +3,39 @@
 _koopa_arch() { # {{{1
     # """
     # Platform architecture.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-05-06.
+    #
+    # e.g. Intel: x86_64; ARM: aarch64.
     # """
-    # shellcheck disable=SC2039
     local x
     x="$(uname -m)"
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_arch2() { # {{{1
+    # """
+    # Alternative platform architecture.
+    # @note Updated 2021-05-06.
+    #
+    # e.g. Intel: amd64; ARM: arm64.
+    #
+    # @seealso
+    # - https://wiki.debian.org/ArchitectureSpecificsMemo
+    # """
+    local x
+    x="$(_koopa_arch)"
+    case "$x" in
+        aarch64)
+            x='arm64'
+            ;;
+        x86_64)
+            x='amd64'
+            ;;
+        *)
+            _koopa_stop "Unsupported architecture: '${x}'."
+            ;;
+    esac
     _koopa_print "$x"
     return 0
 }
@@ -39,7 +67,6 @@ _koopa_gsub() { # {{{1
     # ## bb
     # ## cc
     # """
-    # shellcheck disable=SC2039
     local pattern replacement string
     _koopa_is_installed sed || return 1
     pattern="${1:?}"
@@ -82,13 +109,61 @@ _koopa_lowercase() { # {{{1
     # @seealso
     # https://stackoverflow.com/questions/2264428
     # """
-    # shellcheck disable=SC2039
     local string
     _koopa_is_installed tr || return 1
     for string in "$@"
     do
         _koopa_print "$string" | tr '[:upper:]' '[:lower:]'
     done
+    return 0
+}
+
+_koopa_macos_color_mode() { # {{{1
+    # """
+    # Return the color mode (dark/light) value.
+    # @note Updated 2021-05-07.
+    # """
+    local x
+    if _koopa_macos_is_dark_mode
+    then
+        x='dark'
+    else
+        x='light'
+    fi
+    _koopa_print "$x"
+}
+
+_koopa_ngettext() { # {{{1
+    # """
+    # Translate a text message.
+    # @note Updated 2021-04-26.
+    #
+    # A function to dynamically handle singular/plural words.
+    #
+    # @examples
+    # _koopa_ngettext 1 sample samples
+    # ## sample
+    # _koopa_ngettext 2 sample samples
+    # ## samples
+    #
+    # @seealso
+    # - https://stat.ethz.ch/R-manual/R-devel/library/base/html/gettext.html
+    # - https://www.php.net/manual/en/function.ngettext.php
+    # - https://www.oreilly.com/library/view/bash-cookbook/
+    #       0596526784/ch13s08.html
+    # """
+    [ "$#" -eq 3 ] || return 1
+    local msg1 msg2 n x
+    n="${1:?}"
+    msg1="${2:?}"
+    msg2="${3:?}"
+    if [ "$n" -eq 1 ]
+    then
+        x="$msg1"
+    else
+        x="$msg2"
+    fi
+    _koopa_print "$x"
     return 0
 }
 
@@ -123,7 +198,6 @@ _koopa_strip_left() { # {{{1
     # ## Quick Brown Fox
     # ## White Lady
     # """
-    # shellcheck disable=SC2039
     local pattern string
     pattern="${1:?}"
     shift 1
@@ -146,7 +220,6 @@ _koopa_strip_right() { # {{{1
     # ## The Quick Brown
     # ## Michael J.
     # """
-    # shellcheck disable=SC2039
     local pattern string
     pattern="${1:?}"
     shift 1
@@ -187,7 +260,6 @@ _koopa_sub() { # {{{1
     # ## aa
     # ## aa
     # """
-    # shellcheck disable=SC2039
     local pattern replacement string
     _koopa_is_installed sed || return 1
     pattern="${1:?}"
@@ -214,7 +286,6 @@ _koopa_trim_ws() { # {{{1
     # @examples
     # _koopa_trim_ws '  hello world  ' ' foo bar '
     # """
-    # shellcheck disable=SC2039
     local string
     for string in "$@"
     do

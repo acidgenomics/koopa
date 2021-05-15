@@ -55,14 +55,3 @@ koopa::linux_find_app_symlinks() { # {{{1
     done
     return 0
 }
-
-koopa::linux_install_app() { # {{{1
-    # """
-    # Install Linux-specific application.
-    # @note Updated 2021-02-15.
-    # """
-    local script_prefix
-    script_prefix="$(koopa::prefix)/os/linux/common/include/install"
-    koopa::install_app --script-prefix="$script_prefix" "$@"
-    return 0
-}

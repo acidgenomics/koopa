@@ -3,19 +3,20 @@
 koopa::enable_shell() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-05-14.
     # """
-    local cmd_name cmd_path etc_file user
+    local cmd_name cmd_path etc_file make_prefix user
     koopa::assert_has_args "$#"
-    koopa::has_sudo || return 0
+    koopa::is_admin || return 0
     cmd_name="${1:?}"
-    cmd_path="$(koopa::make_prefix)/bin/${cmd_name}"
+    make_prefix="$(koopa::make_prefix)"
+    cmd_path="${make_prefix}/bin/${cmd_name}"
     etc_file='/etc/shells'
     [[ -f "$etc_file" ]] || return 0
     koopa::alert "Updating '${etc_file}' to include '${cmd_path}'."
     if ! grep -q "$cmd_path" "$etc_file"
     then
-        sudo sh -c "printf '%s\n' '${cmd_path}' >> '${etc_file}'"
+        koopa::sudo_append_string "$cmd_path" "$etc_file"
     else
         koopa::alert_success "'${cmd_path}' already defined in '${etc_file}'."
     fi

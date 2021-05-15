@@ -9,6 +9,25 @@ __koopa_id() { # {{{1
     return 0
 }
 
+_koopa_conda() { # {{{1
+    # """
+    # Which conda (or mamba) to use.
+    # @note Updated 2021-05-14.
+    #
+    # @seealso
+    # - https://github.com/mamba-org/mamba
+    # - https://github.com/conda-forge/miniforge
+    # """
+    local x
+    x='conda'
+    if _koopa_is_installed mamba
+    then
+        x='mamba'
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
 _koopa_cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
@@ -16,7 +35,6 @@ _koopa_cpu_count() { # {{{1
     #
     # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
     # """
-    # shellcheck disable=2039
     local n
     if _koopa_is_installed nproc
     then
@@ -79,7 +97,6 @@ _koopa_host_id() { # {{{1
     #
     # Alternatively, can use 'hostname -d' for reverse lookups.
     # """
-    # shellcheck disable=SC2039
     local id
     if [ -r '/etc/hostname' ]
     then
@@ -126,7 +143,6 @@ _koopa_mem_gb() { # {{{1
     #
     # Usage of 'int()' in awk rounds down.
     # """
-    # shellcheck disable=SC2039
     local denom mem
     _koopa_is_installed awk || return 1
     if _koopa_is_macos
@@ -155,7 +171,6 @@ _koopa_os_codename() { # {{{1
     # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
     # >     | tr -d '"'
     # """
-    # shellcheck disable=SC2039
     local os_codename
     _koopa_is_debian_like || return 0
     _koopa_is_installed lsb_release || return 0
@@ -171,7 +186,6 @@ _koopa_os_id() { # {{{1
     #
     # Just return the OS platform ID (e.g. debian).
     # """
-    # shellcheck disable=SC2039
     local os_id
     os_id="$(_koopa_os_string | cut -d '-' -f 1)"
     _koopa_print "$os_id"
@@ -191,7 +205,6 @@ _koopa_os_string() { # {{{1
     # Alternatively, use hostnamectl.
     # https://linuxize.com/post/how-to-check-linux-version/
     # """
-    # shellcheck disable=SC2039
     local id release_file string version
     _koopa_is_installed awk || return 1
     if _koopa_is_macos
@@ -237,51 +250,124 @@ _koopa_os_string() { # {{{1
 _koopa_python() { # {{{1
     # """
     # Python executable path.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-05-05.
     # """
-    _koopa_print 'python3'
+    local x
+    x='python3'
+    x="$(_koopa_which "$x")"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_r() { # {{{1
+    # """
+    # R executable path.
+    # @note Updated 2021-05-05.
+    # """
+    local x
+    x='R'
+    x="$(_koopa_which "$x")"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_shell() { # {{{1
     # """
-    # Current shell.
-    # @note Updated 2020-07-05.
+    # Full path to the current shell binary.
+    # @note Updated 2021-05-15.
+    #
+    # Detection issues with qemu ARM emulation on x86:
+    # - The 'ps' approach will return correct shell for ARM running via
+    #   emulation on x86 (e.g. Docker).
+    # - ARM running via emulation on x86 (e.g. Docker) will return
+    #   '/usr/bin/qemu-aarch64' here, rather than the shell we want.
+    #
+    # Useful variables:
+    # - Bash: 'BASH_VERSION'
+    # - Zsh: 'ZSH_VERSION'
+    #
+    # When '/proc' exists:
+    # - Shell invocation:
+    #   > cat "/proc/${$}/cmdline"
+    #   ## bash-il
+    # - Shell path:
+    #   > readlink "/proc/${$}/exe"
+    #   ## /usr/bin/bash
+    #
+    # How to resolve shell name when ps is installed:
+    # > shell_name="$( \
+    # >     ps -p "${$}" -o 'comm=' \
+    # >     | sed 's/^-//' \
+    # > )"
     #
     # @seealso
     # - https://stackoverflow.com/questions/3327013
+    # - http://opensourceforgeeks.blogspot.com/2013/05/
+    #     how-to-find-current-shell-in-linux.html
+    # - https://superuser.com/questions/103309/
+    # - https://unix.stackexchange.com/questions/87061/
+    # - https://unix.stackexchange.com/questions/182590/
     # """
-    # shellcheck disable=SC2039
-    local shell
-    if [ -n "${BASH_VERSION:-}" ]
+    local str
+    str=''
+    if [ -n "${KOOPA_SHELL:-}" ]
     then
-        shell='bash'
-    elif [ -n "${ZSH_VERSION:-}" ]
+        str="$KOOPA_SHELL"
+    elif __koopa_is_linux
     then
-        shell='zsh'
-    elif [ -d '/proc' ]
+        if __koopa_is_installed ps sed
+        then
+            str="$( \
+                ps -p "${$}" -o 'comm=' \
+                | sed 's/^-//' \
+            )"
+        elif [ -x "/proc/${$}/exe" ] && \
+            __koopa_is_installed readlink
+        then
+            str="$(readlink "/proc/${$}/exe")"
+        fi
+    elif __koopa_is_macos
     then
-        # Standard approach on Linux.
-        _koopa_is_installed basename readlink || return 1
-        shell="$(basename "$(readlink /proc/$$/exe)")"
-    else
-        # This approach works on macOS.
-        # The sed step converts '-zsh' to 'zsh', for example.
-        # The basename step handles the case when ps returns full path.
-        # This can happen inside of editors, such as vim.
-        _koopa_is_installed basename ps sed || return 1
-        shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
+        if __koopa_is_installed lsof sed
+        then
+            str="$( \
+                lsof \
+                    -a \
+                    -F 'n' \
+                    -d 'txt' \
+                    -p "${$}" \
+                | sed -n '3p' \
+                | sed 's/^n//' \
+            )"
+        fi
     fi
-    _koopa_print "$shell"
+    [ -n "$str" ] || return 1
+    __koopa_print "$str"
+    return 0
+}
+
+_koopa_shell_name() { # {{{1
+    # """
+    # Current shell name.
+    # @note Updated 2021-05-14.
+    # """
+    str="$(basename "$(_koopa_shell)")"
+    [ -n "$str" ] || return 1
+    _koopa_print "$str"
     return 0
 }
 
 _koopa_today() { # {{{1
     # """
     # Today string.
-    # @note Updated 2020-11-20.
+    # @note Updated 2021-05-14.
     # """
-    _koopa_print "$(date '+%Y-%m-%d')"
+    local str
+    str="$(date '+%Y-%m-%d')"
+    [ -n "$str" ] || return 1
+    _koopa_print "$str"
     return 0
 }
 
@@ -312,7 +398,6 @@ _koopa_variable() { # {{{1
     #
     # This approach handles inline comments.
     # """
-    # shellcheck disable=SC2039
     local file key value
     key="${1:?}"
     file="$(_koopa_include_prefix)/variables.txt"

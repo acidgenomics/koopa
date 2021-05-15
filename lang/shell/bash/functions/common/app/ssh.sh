@@ -3,15 +3,26 @@
 koopa::generate_ssh_key() { # {{{1
     # """
     # Generate SSH key.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-04-26.
+    #
     # This script is called inside 'configure-vm', so don't use assert here.
+    #
+    # With ssh-keygen use the '-o' option for the new RFC4716 key format and the
+    # use of a modern key derivation function powered by bcrypt. Use the
+    # '-a <num>' option for <num> amount of rounds.
+    #
+    # Actually, it appears that when creating a Ed25519, key the '-o' option
+    # is implied.
+    #
+    # @seealso
+    # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
     # """
-    local comment file hostname key_name user
+    local comment file flags hostname key_name user
     koopa::is_installed ssh-keygen || return 0
     user="$(koopa::user)"
     hostname="$(koopa::hostname)"
     comment="${user}@${hostname}"
-    key_name='id_rsa'
+    key_name='id_ed25519'
     while (("$#"))
     do
         case "$1" in
@@ -30,13 +41,43 @@ koopa::generate_ssh_key() { # {{{1
     done
     file="${HOME:?}/.ssh/${key_name}"
     [[ -f "$file" ]] && return 0
-    ssh-keygen \
-        -C "$comment" \
-        -N "" \
-        -b 4096 \
-        -f "$file" \
-        -q \
-        -t rsa
+    flags=(
+        '-C' "$comment"
+        '-N' ''
+        '-f' "$file"
+        '-q'
+    )
+    if koopa::str_match_fixed "$file" '_rsa'
+    then
+        # RSA 4096.
+        flags+=(
+            '-b' 4096
+            '-t' 'rsa'
+        )
+    else
+        # Ed25519 (now recommended).
+        flags+=(
+            '-a' 100
+            '-o'
+            '-t' 'ed25519'
+        )
+    fi
+    koopa::dl 'Flags' "${flags[*]}"
+    ssh-keygen "${flags[@]}"
     koopa::alert_success "Generated SSH key at '${file}'."
+    return 0
+}
+
+koopa::ssh_key_info() { # {{{1
+    # """
+    # Get SSH key information.
+    # @note Updated 2021-04-26.
+    # @seealso
+    # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
+    # """
+    for keyfile in ~/.ssh/id_*
+    do
+        ssh-keygen -l -f "${keyfile}"
+    done | uniq
     return 0
 }

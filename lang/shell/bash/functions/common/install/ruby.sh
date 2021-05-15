@@ -1,44 +1,51 @@
 #!/usr/bin/env bash
 
-koopa::install_rbenv_ruby() { # {{{1
+koopa::install_ruby() { # {{{1
+    koopa::install_app \
+        --name='ruby' \
+        --name-fancy='Ruby' \
+        "$@"
+}
+
+koopa:::install_ruby() { # {{{1
     # """
-    # Install latest verison of Ruby in rbenv.
-    # @note Updated 2020-07-08.
-    #
-    # > rbenv install -l
-    # > rbenv versions
-    #
-    # Ensure installation uses system OpenSSL.
-    # > export RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
+    # Install Ruby.
+    # @note Updated 2021-05-04.
+    # @seealso
+    # - https://www.ruby-lang.org/en/downloads/
     # """
-    local name_fancy version
-    koopa::assert_is_installed rbenv
-    version="$(koopa::variable ruby)"
-    # Ensure '2.6.5p' becomes '2.6.5', for example.
+    local file jobs name prefix url version
+    prefix="${INSTALL_PREFIX:?}"
+    version="${INSTALL_VERSION:?}"
+    name='ruby'
+    jobs="$(koopa::cpu_count)"
+    # Ensure '2.7.1p83' becomes '2.7.1' here, for example.
     version="$(koopa::sanitize_version "$version")"
-    name_fancy="Ruby ${version}"
-    koopa::install_start "$name_fancy"
-    # Ensure ruby-build is current.
-    ruby_build_dir="$(koopa::rbenv_prefix)/plugins/ruby-build"
-    if [[ -d "$ruby_build_dir" ]]
-    then
-        koopa::alert_note "Updating ruby-build plugin: '${ruby_build_dir}'."
-        (
-            koopa::cd "$ruby_build_dir"
-            git pull --quiet
-        )
-    fi
-    rbenv install "$version"
-    rbenv global "$version"
-    koopa::install_success "$name_fancy"
+    minor_version="$(koopa::major_minor_version "$version")"
+    file="${name}-${version}.tar.gz"
+    url="https://cache.ruby-lang.org/pub/${name}/${minor_version}/${file}"
+    koopa::download "$url"
+    koopa::extract "$file"
+    koopa::cd "${name}-${version}"
+    # This will fail on Ubuntu 18 otherwise.
+    # https://github.com/rbenv/ruby-build/issues/156
+    # https://github.com/rbenv/ruby-build/issues/729
+    export RUBY_CONFIGURE_OPTS='--disable-install-doc'
+    ./configure --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
     return 0
 }
 
 koopa::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-04-25.
+    # @seealso
+    # - https://bundler.io/man/bundle-pristine.1.html
+    # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
     # """
+    local default gemdir gem gems name_fancy
     koopa::assert_has_no_envs
     if ! koopa::is_installed gem
     then
@@ -51,25 +58,35 @@ koopa::install_ruby_packages() { # {{{1
     koopa::dl 'Target' "$gemdir"
     if [[ "$#" -eq 0 ]]
     then
-        # > gem pristine --all --only-executables
+        default=1
         gems=(
-            # neovim
+            # > 'neovim'
             'bundler'
             'bashcov'
             'ronn'
         )
     else
+        default=0
         gems=("$@")
     fi
     koopa::dl 'Gems' "$(koopa::to_string "${gems[@]}")"
-    if koopa::is_shared_install
+    if [[ "$default" -eq 1 ]]
     then
-        gem update --system
+        gem cleanup
+        gem pristine --all
+        if koopa::is_shared_install
+        then
+            gem update --system
+        fi
     fi
     for gem in "${gems[@]}"
     do
         gem install "$gem"
     done
+    if [[ "$default" -eq 1 ]]
+    then
+        gem cleanup
+    fi
     koopa::install_success "$name_fancy"
     return 0
 }

@@ -3,9 +3,13 @@
 koopa::macos_install_xcode_clt() { # {{{1
     # """
     # Install Xcode CLT.
-    # @note Updated 2020-07-17.
+    # @note Updated 2021-04-22.
+    #
     # @seealso
     # - https://apple.stackexchange.com/questions/93573/
+    #
+    # Alternative minimal approach (used previously for Homebrew):
+    # > xcode-select --install &>/dev/null || true
     # """
     local name_fancy prefix
     koopa::assert_has_no_args "$#"
@@ -20,4 +24,3 @@ koopa::macos_install_xcode_clt() { # {{{1
     koopa::install_success "$name_fancy"
     return 0
 }
-

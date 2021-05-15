@@ -1,3 +1,80 @@
+## koopa 0.10.1 (2021-05-14)
+
+### Major changes
+
+- Reworked shell detection and export of `KOOPA_SHELL`, `SHELL` variables
+  during activation. This now should consistently return the full path to the
+  current shell application, including in subshells.
+
+### Minor changes
+
+- Updated the dependency versions for recommended conda bioinfo environments.
+- Reworked the `conda_create_bioinfo_envs` function to use a dictionary
+  approach, which better supports a lot of variables in use. Added some more
+  tools potentially useful for enrichment (i.e. MIME Suite) and for single-cell
+  and spatial analysis.
+- Now wrapping calls to `conda` in a variable, in case we want to dynamically
+  switch to using mamba when mamba is installed.
+- Potentially empty arrays have been appended with `:-`, to avoid some potential
+  issues with Bash running in `-u` (no unbound variable) mode.
+- Reverted Docker builds to check for builds older than 7 days instead of 30
+  by default.
+- The `docker_run` function now supports a `--bind` argument, enabling bind
+  mode of the current working directory.
+- Internal `*has_sudo` functions have been renamed to `*is_admin` instead,
+  which makes more sense for a root user.
+- Improved error message when attempting to install on macOS with ancient Bash.
+- Updated Conda installer to use Python 3.9, which now also provides initial
+  support for aarch64 (ARM) platform in addition to x86.
+
+## koopa 0.10.0 (2021-05-11)
+
+### Major changes
+
+- This release introduces a overhaul to the internal app install engine defined
+  in the `koopa::install_app` function. Primarily this helps improve app
+  installation consistency into `app/<version>/<name>` with subsequent
+  unversioned links in `opt/<name>`, similar to the current approach used in
+  the Homebrew package manager.
+- Migrated all app installer code from `include/install` into the main Bash
+  function library. These get defined internally (as `koopa:::install_bash`,
+  for example). Then they are called from `koopa::install_bash`, which
+  subsequently hand off to `koopa::install_app` for improved linkage and
+  permission consistency.
+- The main `koopa::install_app` installer function now hardens `PATH`,
+  `PKG_CONFIG_PATH` and other variables for improved installation handling.
+- App installs now rely on koopa opt (e.g. `/opt/koopa/opt/<name>`) and
+  Homebrew opt (e.g. `/usr/local/opt/<name>`) for app installs. This really
+  helps improve installation recipes to build successfully on macOS.
+- Reworked the Perl, Python, R, Ruby, and Rust package configuration. Now all
+  of these link consistently into koopa opt (e.g. `/opt/koopa/opt/r-packages`
+  for R; `/opt/koopa/opt/python-packages` for Python). Packages should never
+  get installed into the system site libraries and/or inside Homebrew.
+- R site configuration has been updated to use the same path for `R_LIBS_SITE`
+  and `R_LIBS_USER`. If `R_LIBS_USER` is not the same, RStudio Server will now
+  create an unwanted user package directory. This is not the case with base R
+  or the RStudio app on macOS.
+- Added macOS dark/light mode detection support. The shell session now sets
+  the `KOOPA_COLOR_MODE` variable, which can get picked up in supported iTerm2
+  and Vim configurations. We currently recommend using Dracula for dark mode
+  and Solarized Light for light mode where possible. This currently applies to
+  our Vim and Spacemacs (Emacs) configurations.
+- Reworked main activation script.
+- Improved completion handling support for Bash.
+
+### Minor changes
+
+- Multiple updates to dependency package versions.
+- Updated r-koopa check to v0.1.18.
+- Improved consistency of `--reinstall` flag handling for app installs.
+- Improved dircolors handling on macOS.
+- Removed some exported apps in `PATH` that are not frequently used.
+- Improved architecture support (i.e. x86, ARM) in some install scripts.
+- GDAL installer no longer attempts to install Python code, which links into
+  system site library, no matter the Python configuration.
+- Hardened internal downloader function (`koopa::download`) to ignore manual
+  user cURL configuration defined in `~/.curlrc`.
+
 ## koopa 0.9.4 (2021-04-09)
 
 ### Major changes

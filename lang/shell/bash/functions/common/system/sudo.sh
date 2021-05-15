@@ -7,7 +7,7 @@ koopa::disable_passwordless_sudo() { # {{{1
     # Consider using 'has_passwordless_sudo' as a check step here.
     # """
     local file
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     file='/etc/sudoers.d/sudo'
     if [[ -f "$file" ]]
     then
@@ -26,7 +26,7 @@ koopa::enable_passwordless_sudo() { # {{{1
     local file group string
     koopa::assert_has_no_args "$#"
     koopa::is_root && return 0
-    koopa::assert_has_sudo
+    koopa::assert_is_admin
     file='/etc/sudoers.d/sudo'
     group="$(koopa::admin_group)"
     if [[ -f "$file" ]] && sudo grep -q "$group" "$file"

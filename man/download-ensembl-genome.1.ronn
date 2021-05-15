@@ -109,4 +109,4 @@ See related issues:
 
 ## NOTE
 
-Python script.
+R function, defined in r-koopa package.

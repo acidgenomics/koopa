@@ -7,7 +7,7 @@ local({
     #'
     #' Display help if `--help` flag is defined.
     #'
-    #' @note Updated 2021-02-11.
+    #' @note Updated 2021-05-11.
     #' @noRd
     getHelpIfNecessary <- function() {
         args <- commandArgs()
@@ -33,12 +33,12 @@ local({
 
     #' Install R koopa package, if necessary
     #'
-    #' @note Updated 2021-04-09.
+    #' @note Updated 2021-05-11.
     #' @noRd
     installIfNecessary <- function() {
         ## Minimum version of koopa R package.
         ## Ensure that this also gets updated in `koopa system variables`.
-        minVersion <- "0.1.14"
+        minVersion <- "0.1.18"
         minVersion <- package_version(minVersion)
         stopifnot(requireNamespace("utils", quietly = TRUE))
         isInstalled <- function(pkgs) {

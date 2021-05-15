@@ -3,13 +3,14 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2020-11-07.
+    # @note Updated 2021-05-10.
     #
     # Potentially useful curl flags:
     # * --connect-timeout <seconds>
     # * --progress-bar
     # * --silent
     # * --stderr
+    # * -q, --disable: Disable '.curlrc' file.
     #
     # Note that '--fail-early' flag is useful, but not supported on old versions
     # of curl (e.g. 7.29.0; RHEL 7).
@@ -19,9 +20,8 @@ koopa::download() { # {{{1
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # """
-    local bn file url wd
+    local bn brew_curl brew_prefix curl curl_args file url wd
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed curl
     url="${1:?}"
     file="${2:-}"
     if [[ -z "$file" ]]
@@ -30,16 +30,29 @@ koopa::download() { # {{{1
         bn="$(basename "$url")"
         file="${wd}/${bn}"
     fi
-    file="$(realpath "$file")"
+    file="$(koopa::realpath "$file")"
+    curl='curl'
+    # Switch to Homebrew cURL on macOS, if possible.
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        brew_curl="${brew_prefix}/opt/curl/bin/curl"
+        [[ -x "$brew_curl" ]] && curl="$brew_curl"
+    fi
+    koopa::assert_is_installed "$curl"
+    curl="$(koopa::which_realpath "$curl")"
+    curl_args=(
+        '--disable'  # Ignore the '~/.curlrc' file. Must come first!
+        '--create-dirs'
+        '--fail'
+        '--location'
+        '--output' "$file"
+        '--retry' 5
+        '--show-error'
+    )
+    curl_args+=("$url")
     koopa::alert "Downloading '${url}' to '${file}'."
-    curl \
-        --create-dirs \
-        --fail \
-        --location \
-        --output "$file" \
-        --retry 5 \
-        --show-error \
-        "$url"
+    "$curl" "${curl_args[@]}"
     return 0
 }
 
@@ -147,7 +160,7 @@ koopa::ftp_mirror() { # {{{1
     local dir host user
     koopa::assert_has_args "$#"
     koopa::assert_is_installed wget
-    dir=
+    dir=''
     while (("$#"))
     do
         case "$1" in

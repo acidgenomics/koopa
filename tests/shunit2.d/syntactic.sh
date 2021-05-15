@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-## shellcheck disable=SC2016
 
 koopa::assert_is_r_package_installed syntactic
 

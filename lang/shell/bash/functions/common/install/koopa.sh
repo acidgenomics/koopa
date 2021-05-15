@@ -8,7 +8,7 @@
 # >     # """
 # >     local url
 # >     koopa::python_add_site_packages_to_sys_path
-# >     url='https://github.com/acidgenomics/py-koopa/archive/master.zip'
+# >     url='https://github.com/acidgenomics/py-koopa/archive/main.zip'
 # >     koopa::pip_install "$url"
 # >     return 0
 # > }
@@ -66,9 +66,10 @@ koopa::update_koopa() { # {{{1
 koopa::update_koopa_system() { # {{{1
     # """
     # Update system installation.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-05-06.
     # """
-    koopa::assert_has_sudo
+    local conf_args
+    koopa::assert_is_admin
     koopa::update_koopa
     koopa::h1 'Updating system configuration.'
     koopa::dl \
@@ -83,8 +84,8 @@ koopa::update_koopa_system() { # {{{1
     fi
     if koopa::is_linux
     then
-        configure_flags=('--no-check')
-        koopa::linux_configure_system "${configure_flags[@]}"
+        conf_args=('--no-check')
+        koopa::linux_configure_system "${conf_args[@]}"
     fi
     if koopa::is_installed brew
     then

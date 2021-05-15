@@ -52,7 +52,6 @@ koopa::test_find_files() { # {{{1
             -not -path "${prefix}/opt/*" \
             -not -path "${prefix}/tests/*" \
             -not -path "${prefix}/todo.org" \
-            -not -path "${prefix}/workflows/*" \
             -not -path '*/etc/R/*' \
             -print \
         2>&1 \
@@ -113,7 +112,7 @@ koopa::test_grep() { # {{{1
     # """
     local OPTIND failures file ignore name pattern x
     koopa::assert_has_args "$#"
-    ignore=
+    ignore=''
     OPTIND=1
     while getopts 'i:n:p:' opt
     do

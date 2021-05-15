@@ -280,7 +280,7 @@ koopa::linux_configure_system() { # {{{1
     fi
     # Initial configuration {{{2
     # --------------------------------------------------------------------------
-    koopa::h1 'Configuring virtual machine.'
+    koopa::h1 'Configuring system.'
     # Enable useful global variables that make configuration easier.
     # > export GPG_TTY=/dev/null
     export FORCE_UNSAFE_CONFIGURE=1
@@ -486,7 +486,7 @@ koopa::linux_configure_system() { # {{{1
             elif koopa::is_fedora
             then
                 koopa::assert_is_installed R
-                koopa::update_r_config
+                koopa::configure_r
             else
                 koopa install r --version="${dict[r_version]}"
             fi
@@ -499,7 +499,7 @@ koopa::linux_configure_system() { # {{{1
         koopa install shiny-server
     # Ensure shared library configuration is current.
     [[ "${dict[install_lmod]}" -eq 1 ]] && \
-        koopa::update_lmod_config
+        koopa::configure_lmod
     koopa::update_ldconfig
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------
