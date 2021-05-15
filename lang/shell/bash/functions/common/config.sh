@@ -78,12 +78,10 @@ koopa::delete_dotfile() { # {{{1
     return 0
 }
 
-# FIXME This is erroring out for debian slim arm...something about
-# koopa shell name is incorrect?
 koopa::find_user_profile() { # {{{1
     # """
     # Find current user's shell profile configuration file.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-15.
     # """
     local file shell
     koopa::assert_has_no_args "$#"

@@ -542,38 +542,39 @@ __koopa_shell() { # {{{1
     # @note Updated 2021-05-14.
     # """
     local str
+    str=''
     if [ -n "${KOOPA_SHELL:-}" ]
     then
         str="$KOOPA_SHELL"
-    elif __koopa_is_linux && \
-        __koopa_is_installed ps sed
+    elif __koopa_is_linux
     then
-        # This approach will return correct shell for ARM running via emulation
-        # on x86 (e.g. Docker).
-        str="$( \
-            ps -p "${$}" -o 'comm=' \
-            | sed 's/^-//' \
-        )"
-    elif __koopa_is_linux && \
-        __koopa_is_installed readlink && \
-        [ -x "/proc/${$}/exe" ]
+        if __koopa_is_installed ps sed
+        then
+            str="$( \
+                ps -p "${$}" -o 'comm=' \
+                | sed 's/^-//' \
+            )"
+        elif [ -x "/proc/${$}/exe" ] && \
+            __koopa_is_installed readlink
+        then
+            str="$(readlink "/proc/${$}/exe")"
+        fi
+    elif __koopa_is_macos
     then
-        str="$(readlink "/proc/${$}/exe")"
-    elif __koopa_is_macos && \
-        __koopa_is_installed lsof sed
-    then
-        str="$( \
-            lsof \
-                -a \
-                -F 'n' \
-                -d 'txt' \
-                -p "${$}" \
-            | sed -n '3p' \
-            | sed 's/^n//' \
-        )"
-    else
-        return 1
+        if __koopa_is_installed lsof sed
+        then
+            str="$( \
+                lsof \
+                    -a \
+                    -F 'n' \
+                    -d 'txt' \
+                    -p "${$}" \
+                | sed -n '3p' \
+                | sed 's/^n//' \
+            )"
+        fi
     fi
+    [ -n "$str" ] || return 1
     __koopa_print "$str"
     return 0
 }
