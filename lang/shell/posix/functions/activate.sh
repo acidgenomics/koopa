@@ -33,15 +33,23 @@ _koopa_activate_bcbio() { # {{{1
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda.
-    # @note Updated 2020-11-19.
-    #
-    # It's no longer recommended to directly export conda in '$PATH'.
-    # Instead source the 'activate' script.
-    # This must be reloaded inside of subshells to work correctly.
+    # @note Updated 2021-05-16.
     # """
-    local name nounset prefix
+    local anaconda_prefix conda_prefix name nounset prefix
     prefix="${1:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/conda"
+    # Prefer Miniconda over Anaconda by default, if both are installed.
+    if [ -z "$prefix" ]
+    then
+        anaconda_prefix="$(_koopa_anaconda_prefix)"
+        conda_prefix="$(_koopa_conda_prefix)"
+        if [ -d "$conda_prefix" ]
+        then
+            prefix="$conda_prefix"
+        elif [ -d "$anaconda_prefix" ]
+        then
+            prefix="$anaconda_prefix"
+        fi
+    fi
     [ -d "$prefix" ] || return 0
     name="${2:-base}"
     script="${prefix}/bin/activate"
@@ -252,10 +260,11 @@ _koopa_activate_homebrew() { # {{{1
     export HOMEBREW_NO_AUTO_UPDATE=1
     export HOMEBREW_PREFIX="$prefix"
     # Stopgap fix for TLS SSL issues with some Homebrew casks.
-    if [ -x "${prefix}/opt/curl/bin/curl" ]
-    then
-        export HOMEBREW_FORCE_BREWED_CURL=1
-    fi
+    # This can error when updating libidn2.
+    # > if [ -x "${prefix}/opt/curl/bin/curl" ]
+    # > then
+    # >     export HOMEBREW_FORCE_BREWED_CURL=1
+    # > fi
     if _koopa_is_macos
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'

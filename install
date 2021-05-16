@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# koopa nolint=coreutils
 set -Eeu -o pipefail
 
 # """
@@ -280,7 +281,7 @@ koopa::install_koopa() { # {{{1
         if ! koopa::is_defined_in_user_profile && \
             [[ ! -L "${dict[user_profile]}" ]]
         then
-            koopa::alert_note "Koopa activation missing in user profile."
+            koopa::alert_note 'Koopa activation missing in user profile.'
             dict[modify_user_profile]="$( \
                 koopa::read_yn \
                     "Modify '${dict[user_profile]}'" \
