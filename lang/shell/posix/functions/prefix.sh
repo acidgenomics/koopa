@@ -1,6 +1,14 @@
 #!/bin/sh
 
-# NOTE Consider migrating to GNU Stow approach here in a future update.
+_koopa_anaconda_prefix() { # {{{1
+    # """
+    # Anaconda prefix.
+    # @note Updated 2021-05-16.
+    # """
+    _koopa_print "$(_koopa_opt_prefix)/conda"
+    return 0
+}
+
 _koopa_app_prefix() { # {{{1
     # """
     # Application prefix.
