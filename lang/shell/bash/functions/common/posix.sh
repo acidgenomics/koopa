@@ -96,6 +96,10 @@ koopa::alert_success() { # {{{1
     _koopa_alert_success "$@"
 }
 
+koopa::anaconda_prefix() { # {{{1
+    _koopa_anaconda_prefix "$@"
+}
+
 koopa::app_prefix() { # {{{1
     _koopa_app_prefix "$@"
 }
