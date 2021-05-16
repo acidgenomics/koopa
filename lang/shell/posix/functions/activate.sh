@@ -252,10 +252,11 @@ _koopa_activate_homebrew() { # {{{1
     export HOMEBREW_NO_AUTO_UPDATE=1
     export HOMEBREW_PREFIX="$prefix"
     # Stopgap fix for TLS SSL issues with some Homebrew casks.
-    if [ -x "${prefix}/opt/curl/bin/curl" ]
-    then
-        export HOMEBREW_FORCE_BREWED_CURL=1
-    fi
+    # This can error when updating libidn2.
+    # > if [ -x "${prefix}/opt/curl/bin/curl" ]
+    # > then
+    # >     export HOMEBREW_FORCE_BREWED_CURL=1
+    # > fi
     if _koopa_is_macos
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
