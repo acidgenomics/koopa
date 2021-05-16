@@ -420,6 +420,10 @@ koopa::is_os_version() { # {{{1
     _koopa_is_os_version "$@"
 }
 
+koopa::is_qemu() { # {{{1
+    _koopa_is_qemu "$@"
+}
+
 koopa::is_raspbian() { # {{{1
     _koopa_is_raspbian "$@"
 }
