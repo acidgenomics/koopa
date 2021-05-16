@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME Under QEMU emulation, we need to switch to wget instead of curl, to
+# avoid issues with some downloads not working (e.g. repo.anaconda.com).
+
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-05-16.
     #
-    # Potentially useful curl flags:
+    # @section curl:
+    #
+    # Potentially useful arguments:
     # * --connect-timeout <seconds>
     # * --progress-bar
     # * --silent
@@ -15,12 +20,14 @@ koopa::download() { # {{{1
     # Note that '--fail-early' flag is useful, but not supported on old versions
     # of curl (e.g. 7.29.0; RHEL 7).
     #
+    # @section wget:
+    #
     # Alternatively, can use wget instead of curl:
     # > wget -O file url
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # """
-    local bn brew_curl brew_prefix curl curl_args file url wd
+    local bn brew_curl brew_prefix dl dl_args file url wd
     koopa::assert_has_args "$#"
     url="${1:?}"
     file="${2:-}"
@@ -31,28 +38,38 @@ koopa::download() { # {{{1
         file="${wd}/${bn}"
     fi
     file="$(koopa::realpath "$file")"
-    curl='curl'
-    # Switch to Homebrew cURL on macOS, if possible.
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        brew_curl="${brew_prefix}/opt/curl/bin/curl"
-        [[ -x "$brew_curl" ]] && curl="$brew_curl"
-    fi
-    koopa::assert_is_installed "$curl"
-    curl="$(koopa::which_realpath "$curl")"
-    curl_args=(
-        '--disable'  # Ignore the '~/.curlrc' file. Must come first!
-        '--create-dirs'
-        '--fail'
-        '--location'
-        '--output' "$file"
-        '--retry' 5
-        '--show-error'
-    )
-    curl_args+=("$url")
+    dl='curl'
+    koopa::is_qemu && dl='wget'
+    dl_args=()
+    case "$dl" in
+        curl)
+            # Switch to Homebrew cURL on macOS, if possible.
+            if koopa::is_macos
+            then
+                brew_prefix="$(koopa::homebrew_prefix)"
+                brew_curl="${brew_prefix}/opt/curl/bin/curl"
+                [[ -x "$brew_curl" ]] && dl="$brew_curl"
+            fi
+            dl_args+=(
+                '--disable'  # Ignore the '~/.curlrc' file. Must come first!
+                '--create-dirs'
+                '--fail'
+                '--location'
+                '--output' "$file"
+                '--retry' 5
+                '--show-error'
+            )
+            ;;
+        wget)
+            dl_args+=(
+                "--output-document=${file}"
+            )
+            ;;
+    esac
     koopa::alert "Downloading '${url}' to '${file}'."
-    "$curl" "${curl_args[@]}"
+    koopa::assert_is_installed "$dl"
+    dl_args+=("$url")
+    "$dl" "${dl_args[@]}"
     return 0
 }
 
