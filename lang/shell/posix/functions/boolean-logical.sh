@@ -377,12 +377,12 @@ _koopa_is_qemu() { # {{{1
     # This can be the case for ARM Docker images running on an x86 Intel
     # machine, and vice versa.
     # """
-    local exe real_exe
-    exe="/proc/${$}/exe"
-    [ -L "$exe" ] || return 1
+    local cmd real_cmd
+    cmd="/proc/${$}/exe"
+    [ -L "$cmd" ] || return 1
     _koopa_is_installed readlink || return 1
-    real_exe="$(readlink "$exe")"
-    case "$(basename "$real_exe")" in
+    real_cmd="$(readlink "$cmd")"
+    case "$(basename "$real_cmd")" in
         qemu-*)
             return 0
             ;;
