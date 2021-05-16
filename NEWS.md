@@ -1,10 +1,17 @@
-## koopa 0.10.1 (2021-05-14)
+## koopa 0.10.1 (2021-05-16)
 
 ### Major changes
 
 - Reworked shell detection and export of `KOOPA_SHELL`, `SHELL` variables
   during activation. This now should consistently return the full path to the
   current shell application, including in subshells.
+- Improved consistency of Miniconda (default) and Anaconda installs.
+- The `koopa::downloader` function now calls `wget` instead of `curl` when
+  under qemu emulation (e.g. ARM Docker image running on x86 Intel machine).
+  This is not common but helps avoid edge case issues with curl currently
+  crashing with a segfault for some HTTPS URLs that fail specifically when
+  called in qemu emulation environment. This was noted to happen with the
+  `repo.anaconda.com` server, for example.
 
 ### Minor changes
 
