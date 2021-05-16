@@ -96,6 +96,10 @@ koopa::alert_success() { # {{{1
     _koopa_alert_success "$@"
 }
 
+koopa::anaconda_prefix() { # {{{1
+    _koopa_anaconda_prefix "$@"
+}
+
 koopa::app_prefix() { # {{{1
     _koopa_app_prefix "$@"
 }
@@ -418,6 +422,10 @@ koopa::is_os_like() { # {{{1
 
 koopa::is_os_version() { # {{{1
     _koopa_is_os_version "$@"
+}
+
+koopa::is_qemu() { # {{{1
+    _koopa_is_qemu "$@"
 }
 
 koopa::is_raspbian() { # {{{1
