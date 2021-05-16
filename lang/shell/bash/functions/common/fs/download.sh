@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Under QEMU emulation, we need to switch to wget instead of curl, to
-# avoid issues with some downloads not working (e.g. repo.anaconda.com).
-
 koopa::download() { # {{{1
     # """
     # Download a file.
@@ -63,6 +60,7 @@ koopa::download() { # {{{1
         wget)
             dl_args+=(
                 "--output-document=${file}"
+                '--no-verbose'
             )
             ;;
     esac
