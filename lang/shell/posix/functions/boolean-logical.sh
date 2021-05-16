@@ -369,6 +369,28 @@ _koopa_is_os_version() { # {{{1
     grep -q "VERSION_ID=\"${version}" "$file"
 }
 
+_koopa_is_qemu() { # {{{1
+    # """
+    # Is the current shell running inside of QEMU emulation?
+    # @note Updated 2021-05-16.
+    #
+    # This can be the case for ARM Docker images running on an x86 Intel
+    # machine, and vice versa.
+    # """
+    local exe real_exe
+    exe="/proc/${$}/exe"
+    [ -L "$exe" ] || return 1
+    _koopa_is_installed readlink || return 1
+    real_exe="$(readlink "$exe")"
+    case "$(basename "$real_exe")" in
+        qemu-*)
+            return 0
+            ;;
+    esac
+    return 1
+}
+
+
 _koopa_is_raspbian() { # {{{1
     # """
     # Is the operating system Raspbian?
