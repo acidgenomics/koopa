@@ -375,16 +375,9 @@ _koopa_openjdk_prefix() { # {{{1
 _koopa_opt_prefix() { # {{{1
     # """
     # Custom application install prefix.
-    # @note Updated 2020-11-19.
-    #
-    # OK to symlink this prefix to a secondary disk.
-    #
-    # This is where Python and R packages will install to by default.
+    # @note Updated 2021-05-17.
     # """
-    local prefix
-    prefix="${KOOPA_OPT_PREFIX:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_prefix)/opt"
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_prefix)/opt"
     return 0
 }
 
