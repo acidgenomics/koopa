@@ -439,10 +439,13 @@ __koopa_is_user_named_admin() { # {{{1
 __koopa_is_user_manual_skip() { # {{{1
     # """
     # Should activation be manually skipped for the current user?
-    # @note Updated 2021-05-07?
+    # @note Updated 2021-05-17.
     # """
+    local pattern string
     [ -n "${KOOPA_USERS_SKIP:-}" ] || return 1
-    __koopa_str_match_regex "${KOOPA_USERS_SKIP:?}" "\b${USER:?}\b"
+    string="${KOOPA_USERS_SKIP:?}"
+    pattern="\b${USER:?}\b"
+    __koopa_str_match_regex "$string" "$pattern"
 }
 
 __koopa_posix_source() { # {{{1
