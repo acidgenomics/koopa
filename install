@@ -75,7 +75,7 @@ koopa:::stop() { # {{{1
 koopa::install_koopa() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-17.
     # """
     local dict
     declare -A dict=(
@@ -84,6 +84,7 @@ koopa::install_koopa() { # {{{1
         [koopa_prefix]=''
         [modify_user_profile]=0
         [passwordless]=0
+        [shared]=0
         [test]=0
     )
     while (("$#"))
@@ -173,48 +174,25 @@ koopa::install_koopa() { # {{{1
     then
         koopa:::stop "Installer failed to set 'KOOPA_PREFIX'."
     fi
-    # Ensure existing user configuration gets removed.
+
+    # Non-interactive configuration {{{1
+    # ==========================================================================
+
     dict[config_prefix]="$(koopa::config_prefix)"
-    koopa::rm "${dict[config_prefix]}"
-
-    # Additional non-interactive pre-configuration {{{1
-    # ==========================================================================
-
-    # Locate the user configuration profile (e.g. '~/.bashrc').
     dict[user_profile]="$(koopa::find_user_profile)"
-    # Set the default install prefix.
-    if [[ -z "${dict[koopa_prefix]:-}" ]]
-    then
-        dict[xdg_data_home]="${XDG_DATA_HOME:-${HOME:?}/.local/share}"
-        dict[koopa_prefix_user]="${dict[xdg_data_home]}/koopa"
-        dict[koopa_prefix_system]='/opt/koopa'
-        if [[ "${dict[shared]}" -eq 1 ]]
-        then
-            dict[koopa_prefix]="${dict[koopa_prefix_system]}"
-        else
-            dict[koopa_prefix]="${dict[koopa_prefix_user]}"
-        fi
-    fi
-    # Set whether we want to install for all users.
-    if [[ -z "${dict[shared]:-}" ]]
-    then
-        if koopa::is_admin
-        then
-            dict[shared]=1
-        else
-            dict[shared]=0
-        fi
-    fi
+    dict[xdg_data_home]="${XDG_DATA_HOME:-${HOME:?}/.local/share}"
+    dict[koopa_prefix_user]="${dict[xdg_data_home]}/koopa"
+    dict[koopa_prefix_system]='/opt/koopa'
 
-    # Interactive configuration {{{1
+    # Configuration {{{1
     # ==========================================================================
-
+    
     if [[ "${dict[interactive]}" -eq 1 ]]
     then
         # Install for all users? {{{2
         # ----------------------------------------------------------------------
 
-        if [[ "${dict[shared]}" -eq 1 ]] && \
+        if koopa::is_admin && \
             [[ -z "${dict[koopa_prefix]}" ]]
         then
             dict[shared]="$( \
@@ -222,6 +200,13 @@ koopa::install_koopa() { # {{{1
                     'Install for all users' \
                     "${dict[shared]}" \
             )"
+        fi
+
+        # Install prefix {{{2
+        # ----------------------------------------------------------------------
+
+        if [[ -z "${dict[koopa_prefix]}" ]]
+        then
             if [[ "${dict[shared]}" -eq 1 ]]
             then
                 dict[koopa_prefix]="${dict[koopa_prefix_system]}"
@@ -229,26 +214,21 @@ koopa::install_koopa() { # {{{1
                 dict[koopa_prefix]="${dict[koopa_prefix_user]}"
             fi
         fi
-
-        # Target installation prefix {{{2
-        # ----------------------------------------------------------------------
-
         dict[koopa_prefix]="$( \
             koopa::read \
                 'Install prefix' \
                 "${dict[koopa_prefix]}" \
         )"
-        # Catch if the user is attempting to install into a shared space.
-        if [[ "${dict[shared]}" -eq 0 ]] && \
-            ! koopa::str_match_regex "${dict[koopa_prefix]}" "^${HOME:?}"
+        if koopa::str_match_regex "${dict[koopa_prefix]}" "^${HOME:?}"
         then
+            dict[shared]=0
+        else
             dict[shared]=1
         fi
 
-        # Passwordless sudo {{{2
+        # Enable passwordless sudo? {{{2
         # ----------------------------------------------------------------------
 
-        # Prompt if the user wants to enable passwordless sudo.
         if [[ "${dict[shared]}" -eq 1 ]]
         then
             dict[passwordless]="$( \
@@ -258,24 +238,22 @@ koopa::install_koopa() { # {{{1
             )"
         fi
 
-        # Dotfiles {{{2
+        # Install dotfiles? {{{2
         # ----------------------------------------------------------------------
 
-        # Check if a user profile already exists, and alert.
         if [[ -e "${dict[user_profile]}" ]]
         then
             koopa::alert_note \
                 "User profile exists: '${dict[user_profile]}'." \
                 'This will be overwritten if dotfiles are linked.'
         fi
-        # Prompt the user if we want to link dot files.
         dict[dotfiles]="$( \
             koopa::read_yn \
                 'Install and link dotfiles' \
                 "${dict[dotfiles]}" \
         )"
 
-        # User profile {{{2
+        # Modify user profile? {{{2
         # ----------------------------------------------------------------------
 
         if ! koopa::is_defined_in_user_profile && \
@@ -288,10 +266,25 @@ koopa::install_koopa() { # {{{1
                     "${dict[modify_user_profile]}" \
             )"
         fi
+    else
+        # Non-interactive configuration. Intended for building Docker images.
+        koopa::is_admin && dict[shared]=1
+        if [[ -z "${dict[koopa_prefix]}" ]]
+        then
+            if [[ "${dict[shared]}" -eq 1 ]]
+            then
+                dict[koopa_prefix]="${dict[koopa_prefix_system]}"
+            else
+                dict[koopa_prefix]="${dict[koopa_prefix_user]}"
+            fi
+        fi
     fi
 
     # Perform installation {{{1
     # ==========================================================================
+
+    # Ensure existing user configuration gets removed.
+    koopa::rm "${dict[config_prefix]}"
 
     # Copy files from temporary directory {{{2
     # --------------------------------------------------------------------------
