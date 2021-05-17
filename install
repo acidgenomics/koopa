@@ -175,7 +175,7 @@ koopa::install_koopa() { # {{{1
         koopa:::stop "Installer failed to set 'KOOPA_PREFIX'."
     fi
 
-    # Non-interactive configuration {{{1
+    # Configuration {{{1
     # ==========================================================================
 
     dict[config_prefix]="$(koopa::config_prefix)"
@@ -183,10 +183,8 @@ koopa::install_koopa() { # {{{1
     dict[xdg_data_home]="${XDG_DATA_HOME:-${HOME:?}/.local/share}"
     dict[koopa_prefix_user]="${dict[xdg_data_home]}/koopa"
     dict[koopa_prefix_system]='/opt/koopa'
+    koopa::is_admin && dict[shared]=1
 
-    # Configuration {{{1
-    # ==========================================================================
-    
     if [[ "${dict[interactive]}" -eq 1 ]]
     then
         # Install for all users? {{{2
@@ -256,7 +254,8 @@ koopa::install_koopa() { # {{{1
         # Modify user profile? {{{2
         # ----------------------------------------------------------------------
 
-        if ! koopa::is_defined_in_user_profile && \
+        if [[ "${dict[dotfiles]}" -eq 0 ]] && \
+            ! koopa::is_defined_in_user_profile && \
             [[ ! -L "${dict[user_profile]}" ]]
         then
             koopa::alert_note 'Koopa activation missing in user profile.'
@@ -267,8 +266,6 @@ koopa::install_koopa() { # {{{1
             )"
         fi
     else
-        # Non-interactive configuration. Intended for building Docker images.
-        koopa::is_admin && dict[shared]=1
         if [[ -z "${dict[koopa_prefix]}" ]]
         then
             if [[ "${dict[shared]}" -eq 1 ]]
