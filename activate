@@ -653,6 +653,7 @@ __koopa_activate() { # {{{1
             return 0
             ;;
     esac
+    [ -n "${KSH_VERSION:-}" ] && return 0
     unset -v \
         KOOPA_INTERACTIVE \
         KOOPA_SHELL \
