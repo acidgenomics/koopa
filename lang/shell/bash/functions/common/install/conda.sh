@@ -66,7 +66,7 @@ koopa:::install_anaconda() { # {{{1
     koopa::download "$url"
     bash "$script" -bf -p "$prefix"
     koopa::ln \
-        "${koopa_prefix}/os/linux/etc/conda/condarc" \
+        "${koopa_prefix}/etc/conda/condarc" \
         "${prefix}/.condarc"
     return 0
 }
@@ -122,7 +122,7 @@ ${os_type}-${arch}.sh"
     koopa::download "$url"
     bash "$script" -bf -p "$prefix"
     koopa::ln \
-        "${koopa_prefix}/os/linux/etc/conda/condarc" \
+        "${koopa_prefix}/etc/conda/condarc" \
         "${prefix}/.condarc"
     return 0
 }
