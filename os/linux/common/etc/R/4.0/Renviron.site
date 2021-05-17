@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2021-05-10.
+## Updated 2021-05-17.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -15,7 +15,7 @@
 ## =============================================================================
 
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
-KOOPA_OPT_PREFIX="${KOOPA_OPT_PREFIX:-/opt/koopa/opt}"
+KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
 
 ## Package libraries {{{1
 ## =============================================================================
