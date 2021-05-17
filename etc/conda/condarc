@@ -1,18 +1,14 @@
 # """
 # Conda configuration.
-# Updated 2020-07-21.
+# Updated 2021-05-17.
 #
 # See also:
-# - conda config --set
+# - 'conda config --set'
 # - https://bioconda.github.io/#set-up-channels
 # - https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/
 #       admin-multi-user-install.html
 # - https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/
 #       manage-conda.html
-#
-# Change default environment directory path.
-# > envs_dirs:
-# >   - /n/app/conda/envs
 # """
 
 allow_other_channels: false
@@ -24,4 +20,10 @@ channels:
   - bioconda
   - defaults
 
+# Change default environment directory path.
+# > envs_dirs:
+# >   - /opt/koopa/opt/conda/envs
+
 notify_outdated_conda: false
+
+report_errors: true
