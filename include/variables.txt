@@ -385,9 +385,17 @@ zsh="5.8"
 
 # Conda environments {{{1
 # ==============================================================================
-# Updated 2021-05-14.
+# Updated 2021-05-17.
+#
 # Use 'conda search --info <name>' to retrieve timestamp and dependency info.
 # Consider removing very old packages from our workflows.
+#
+# NOTE umap-learn 0.5.0 currently has issues with ParametricUMAP not being
+# available in R via reticulate. This requires tensorflow, which isn't included
+# in the recipe because v2.2+ isn't available yet, and is required for
+# Python 3.8. The 0.4.6 release is confirmed to work with Seurat in R. It looks
+# like this issue is persisting in the 0.5.1 recipe update...
+# https://github.com/conda-forge/umap-learn-feedstock/issues/29
 
 conda-arriba="2.1.0"                    # 2021-01-24 bioconda
 conda-atropos="1.1.29"                  # 2020-12-07 bioconda
@@ -402,7 +410,7 @@ conda-bustools="0.40.0"                 # 2021-03-24 bioconda
 conda-bwa-mem2="2.2.1"                  # 2021-03-17 bioconda
 conda-bwa="0.7.17"                      # 2019-12-19 bioconda
 conda-chromhmm="1.21"                   # 2021-03-24 bioconda (1.22*)
-conda-cellrank=""
+conda-cellrank="1.3.1"                  # 2021-04-09 bioconda
 conda-deeptools="3.5.1"                 # 2021-03-17 bioconda
 conda-entrez-direct="13.9"              # 2021-02-01 bioconda
 conda-ericscript="0.5.5"                # 2021-03-26 bioconda
@@ -452,12 +460,6 @@ conda-sra-tools="2.11.0"                # 2021-04-27 bioconda linux
 conda-star-fusion="1.10.0"              # 2021-04-15 bioconda
 conda-star="2.7.9a"                     # 2021-05-11 bioconda
 conda-trimmomatic="0.39"                # 2021-03-27 bioconda
-# NOTE umap-learn 0.5.0 currently has issues with ParametricUMAP not being
-# available in R via reticulate. This requires tensorflow, which isn't included
-# in the recipe because v2.2+ isn't available yet, and is required for
-# Python 3.8. The 0.4.6 release is confirmed to work with Seurat in R. It looks
-# like this issue is persisting in the 0.5.1 recipe update...
-# https://github.com/conda-forge/umap-learn-feedstock/issues/29
 conda-umap-learn="0.4.6"                # 2020-07-03 bioconda (0.5.1*)
 conda-vardict="2019.06.04"              # 2019-06-05 bioconda
 
