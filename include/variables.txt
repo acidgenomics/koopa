@@ -8,7 +8,7 @@
 koopa-date="2021-05-18"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.10.1"
+koopa-version="0.10.2"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.1.18"
