@@ -102,7 +102,7 @@ koopa::remove_user_from_group() { # {{{1
 koopa::update_etc_profile_d() { # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-05-17.
     # """
     local file koopa_prefix string
     koopa::assert_has_no_args "$#"
@@ -120,10 +120,18 @@ koopa::update_etc_profile_d() { # {{{1
     read -r -d '' string << END || true
 #!/bin/sh
 
-# koopa shell
-# https://koopa.acidgenomics.com/
-# shellcheck source=/dev/null
-. "${koopa_prefix}/activate"
+__koopa_activate_shared_profile() { # {{{1
+    # """
+    # Activate koopa shell for all users.
+    # @note Updated 2021-05-17.
+    # @seealso https://koopa.acidgenomics.com/
+    # """
+    # shellcheck source=/dev/null
+    . "${koopa_prefix}/activate"
+    return 0
+}
+
+__koopa_activate_shared_profile
 END
     koopa::sudo_write_string "$string" "$file"
 }
