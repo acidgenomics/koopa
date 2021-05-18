@@ -16,11 +16,6 @@ koopa::install_r_devel() { # {{{1
         "$@"
 }
 
-# FIXME Hitting this error on macOS:
-# # checking whether mixed C/Fortran code can be run...
-# # configure: WARNING: cannot run mixed C/Fortran code
-# # configure: error: Maybe check LDFLAGS for paths to Fortran libraries?
-
 koopa:::install_r() { # {{{1
     # """
     # Install R.
@@ -42,6 +37,7 @@ koopa:::install_r() { # {{{1
         "--prefix=${prefix}"
         '--enable-R-shlib'
         '--enable-memory-profiling'
+        '--with-x=no'
     )
     if koopa::is_linux
     then
@@ -55,7 +51,6 @@ koopa:::install_r() { # {{{1
             '--with-readline'
             '--with-recommended-packages'
             '--with-tcltk'
-            '--with-x=no'
         )
         # Need to modify BLAS configuration handling specificallly on Debian.
         if ! koopa::is_debian_like
@@ -68,6 +63,9 @@ koopa:::install_r() { # {{{1
         # See also:
         # - https://mac.r-project.org
         # - https://github.com/fxcoudert/gfortran-for-macOS/releases
+        # - https://developer.r-project.org/Blog/public/2020/11/02/
+        #     will-r-work-on-apple-silicon/index.html
+        # - https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
         brew_prefix="$(koopa::homebrew_prefix)"
         brew_opt="${brew_prefix}/opt"
         koopa::activate_homebrew_opt_prefix \
@@ -82,17 +80,14 @@ koopa:::install_r() { # {{{1
             'xz'
         koopa::activate_prefix '/usr/local/gfortran'
         conf_args+=(
+            # > '--disable-java'
+            # > '--with-aqua'
             "--with-blas=-L${brew_opt}/openblas/lib -lopenblas"
             "--with-tcl-config=${brew_opt}/tcl-tk/lib/tclConfig.sh"
             "--with-tk-config=${brew_opt}/tcl-tk/lib/tkConfig.sh"
-            '--disable-java'  # Take this out?
-            '--with-aqua'
             '--without-cairo'
-            '--without-x'
         )
-        # BLAS detection fails with Xcode 12 due to missing prototype.
-        # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
-        export CFLAGS='-Wno-implicit-function-declaration'
+        export CFLAGS='-Wno-error=implicit-function-declaration'
     fi
     name='r'
     name2="$(koopa::capitalize "$name")"
