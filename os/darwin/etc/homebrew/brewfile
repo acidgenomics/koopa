@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-05-14.
+# Updated 2021-05-18.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -160,6 +160,9 @@ brew "gcc", link: false
 
 # Use MacGPG (gpg-suite) cask instead.
 brew "gpg", link: false
+
+# This conflicts with 'imath' and 'openexr' recipes.
+brew "ilmbase", link: false  # neofetch
 
 # Python: Use official Framework binary install instead of Homebrew.
 # Use 'koopa install python-framework' to install.
