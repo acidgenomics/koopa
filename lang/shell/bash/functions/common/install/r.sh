@@ -33,6 +33,10 @@ koopa:::install_r() { # {{{1
         prefix r url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    name='r'
+    name2="$(koopa::capitalize "$name")"
+    jobs="$(koopa::cpu_count)"
+    major_version="$(koopa::major_version "$version")"
     conf_args=(
         "--prefix=${prefix}"
         '--enable-R-shlib'
@@ -80,29 +84,20 @@ koopa:::install_r() { # {{{1
             'xz'
         koopa::activate_prefix '/usr/local/gfortran'
         conf_args+=(
-            # > '--disable-java'
-            # > '--with-aqua'
             "--with-blas=-L${brew_opt}/openblas/lib -lopenblas"
             "--with-tcl-config=${brew_opt}/tcl-tk/lib/tclConfig.sh"
             "--with-tk-config=${brew_opt}/tcl-tk/lib/tkConfig.sh"
-            '--without-cairo'
+            '--without-aqua'
         )
         export CFLAGS='-Wno-error=implicit-function-declaration'
     fi
-    name='r'
-    name2="$(koopa::capitalize "$name")"
-    jobs="$(koopa::cpu_count)"
-    major_version="$(koopa::major_version "$version")"
     file="${name2}-${version}.tar.gz"
     url="https://cloud.r-project.org/src/base/${name2}-${major_version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name2}-${version}"
     koopa::activate_openjdk
-    # R will warn if R_HOME environment variable is set.
     unset -v R_HOME
-    # Fix for reg-tests-1d.R error, due to unset TZ variable.
-    # https://stackoverflow.com/questions/46413691
     export TZ='America/New_York'
     ./configure "${conf_args[@]}"
     make --jobs="$jobs"
