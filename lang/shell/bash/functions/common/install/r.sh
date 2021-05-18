@@ -16,10 +16,15 @@ koopa::install_r_devel() { # {{{1
         "$@"
 }
 
+# FIXME Hitting this error on macOS:
+# # checking whether mixed C/Fortran code can be run...
+# # configure: WARNING: cannot run mixed C/Fortran code
+# # configure: error: Maybe check LDFLAGS for paths to Fortran libraries?
+
 koopa:::install_r() { # {{{1
     # """
     # Install R.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-18.
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
     # - https://hub.docker.com/r/rocker/r-ver/dockerfile
@@ -29,9 +34,66 @@ koopa:::install_r() { # {{{1
     # - Homebrew recipe:
     #   https://github.com/Homebrew/homebrew-core/blob/master/Formula/r.rb
     # """
-    local file flags jobs major_version name name2 prefix r url version
+    local brew_opt brew_prefix conf_args file jobs major_version name name2 \
+        prefix r url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    conf_args=(
+        "--prefix=${prefix}"
+        '--enable-R-shlib'
+        '--enable-memory-profiling'
+    )
+    if koopa::is_linux
+    then
+        conf_args+=(
+            '--disable-nls'
+            '--enable-R-profiling'
+            '--with-blas'
+            '--with-cairo'
+            '--with-jpeglib'
+            '--with-lapack'
+            '--with-readline'
+            '--with-recommended-packages'
+            '--with-tcltk'
+            '--with-x=no'
+        )
+        # Need to modify BLAS configuration handling specificallly on Debian.
+        if ! koopa::is_debian_like
+        then
+            conf_args+=('--enable-BLAS-shlib')
+        fi
+    elif koopa::is_macos
+    then
+        # fxcoudert's gfortran works more reliably than using Homebrew gcc
+        # See also:
+        # - https://mac.r-project.org
+        # - https://github.com/fxcoudert/gfortran-for-macOS/releases
+        brew_prefix="$(koopa::homebrew_prefix)"
+        brew_opt="${brew_prefix}/opt"
+        koopa::activate_homebrew_opt_prefix \
+            'gettext' \
+            'jpeg' \
+            'libpng' \
+            'openblas' \
+            'pcre2' \
+            'pkg-config' \
+            'readline' \
+            'tcl-tk' \
+            'xz'
+        koopa::activate_prefix '/usr/local/gfortran'
+        conf_args+=(
+            "--with-blas=-L${brew_opt}/openblas/lib -lopenblas"
+            "--with-tcl-config=${brew_opt}/tcl-tk/lib/tclConfig.sh"
+            "--with-tk-config=${brew_opt}/tcl-tk/lib/tkConfig.sh"
+            '--disable-java'  # Take this out?
+            '--with-aqua'
+            '--without-cairo'
+            '--without-x'
+        )
+        # BLAS detection fails with Xcode 12 due to missing prototype.
+        # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=18024
+        export CFLAGS='-Wno-implicit-function-declaration'
+    fi
     name='r'
     name2="$(koopa::capitalize "$name")"
     jobs="$(koopa::cpu_count)"
@@ -47,27 +109,7 @@ koopa:::install_r() { # {{{1
     # Fix for reg-tests-1d.R error, due to unset TZ variable.
     # https://stackoverflow.com/questions/46413691
     export TZ='America/New_York'
-    flags=(
-        "--prefix=${prefix}"
-        '--disable-nls'
-        '--enable-R-profiling'
-        '--enable-R-shlib'
-        '--enable-memory-profiling'
-        '--with-blas'
-        '--with-cairo'
-        '--with-jpeglib'
-        '--with-lapack'
-        '--with-readline'
-        '--with-recommended-packages'
-        '--with-tcltk'
-        '--with-x=no'
-    )
-    # Need to modify BLAS configuration handling specificallly on Debian.
-    if ! koopa::is_debian_like
-    then
-        flags+=('--enable-BLAS-shlib')
-    fi
-    ./configure "${flags[@]}"
+    ./configure "${conf_args[@]}"
     make --jobs="$jobs"
     # > make check
     make pdf
