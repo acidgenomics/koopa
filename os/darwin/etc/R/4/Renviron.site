@@ -38,7 +38,7 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-# fxcoudert gfortran 8.2 (for R 4.0+).
+# fxcoudert gfortran.
 # > PATH="/usr/local/gfortran/bin:${PATH}"
 
 # Homebrew curl.
