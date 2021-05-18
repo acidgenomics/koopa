@@ -1,0 +1,132 @@
+#!/bin/sh
+# shellcheck disable=SC2034
+
+# """
+# Shared R environment configuration for macOS.
+# @note Updated 2021-05-18.
+# @seealso
+# - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
+# - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
+#       Renviron.site
+# """
+
+# Global variables {{{1
+# ==============================================================================
+
+HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/usr/local}"
+HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
+
+KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
+KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
+
+# Package libraries {{{1
+# ==============================================================================
+
+R_LIBS_SITE="${R_HOME}/site-library"
+R_LIBS_USER="${R_LIBS_SITE}"
+
+# System path {{{1
+# ==============================================================================
+
+# Refer to CRAN website for details:
+# - http://mac.r-project.org/tools/
+# - https://cran.r-project.org/bin/macosx/tools/
+
+# Note that CRAN is now using Xcode clang for R 4.0+.
+
+# Restrict path, so we don't mask compiler binaries with conda or venv.
+# This also greatly improves path consistency when running inside RStudio.
+PATH="/usr/local/bin:/usr/bin:/bin"
+
+# fxcoudert gfortran 8.2 (for R 4.0+).
+# > PATH="/usr/local/gfortran/bin:${PATH}"
+
+# Homebrew curl.
+PATH="/usr/local/opt/curl/bin:${PATH}"
+
+# Python binaries and site packages.
+# > PATH="${HOMEBREW_OPT_PREFIX}/python@3.9/bin:${PATH}"
+PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/python/site-packages/bin:${PATH}"
+
+# Rust packages.
+PATH="${KOOPA_OPT_PREFIX}/rust/cargo/bin:${PATH}"
+
+# Conda binary.
+PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
+
+# Koopa.
+PATH="${KOOPA_PREFIX}/bin:${PATH}"
+
+# RStudio {{{2
+# ------------------------------------------------------------------------------
+
+# Use RStudio bundled version of pandoc, for improved R Markdown stability.
+PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
+
+# Package configuration {{{2
+# ------------------------------------------------------------------------------
+
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
+
+# Miscellaneous {{{1
+# ==============================================================================
+
+# Increase this for large single-cell RNA-seq projects.
+# Note that 153 is the current limit for macOS.
+R_MAX_NUM_DLLS=153
+
+# R can sometimes error due to time zone, unless this is set.
+# This is particularly important to set on rocker Debian images.
+TZ="America/New_York"
+
+# Avoid issue with file timestamp check:
+# # N  checking for future file timestamps (1.3s)
+# #    unable to verify current time
+# https://stackoverflow.com/questions/63613301/
+_R_CHECK_SYSTEM_CLOCK_=0
+
+# Package-specific {{{1
+# ==============================================================================
+
+# libxml2 {{{2
+# ------------------------------------------------------------------------------
+
+XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
+
+# rappdirs {{{2
+# ------------------------------------------------------------------------------
+
+## Note that this setting is inherited by BiocFileCache.
+R_USER_CACHE_DIR="${KOOPA_OPT_PREFIX}/r-cache"
+
+# remotes {{{2
+# ------------------------------------------------------------------------------
+
+# GitHub remote installs.
+# Always upgrade GitHub R packages, without prompting.
+# See `remotes::update_packages()` for details.
+R_REMOTES_UPGRADE="always"
+
+# reticulate {{{2
+# ------------------------------------------------------------------------------
+
+# Reticulate allows you to run Python code inside of R.
+
+# Default path to virtual environments.
+# If left unset, defaults to `~/.virtualenvs`.
+# Check with `virtualenv_list()`.
+# https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
+WORKON_HOME="${KOOPA_OPT_PREFIX}/python/virtualenvs"
+
+# units / udunits {{{2
+# ------------------------------------------------------------------------------
+
+# The units package requires udunits to be installed.
+# Use homebrew: brew install udunits
+
+UDUNITS2_INCLUDE="${HOMEBREW_OPT_PREFIX}/udunits/include"
+UDUNITS2_LIBS="${HOMEBREW_OPT_PREFIX}/udunits/lib"
