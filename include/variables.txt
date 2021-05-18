@@ -268,8 +268,6 @@ php="8.0.5"
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
 
-procps="0.11.6"
-
 # https://proj.org/
 # 8.0.0 release is having build issues with Homebrew.
 # https://github.com/Homebrew/homebrew-core/pull/72680
@@ -527,7 +525,7 @@ rust-du-dust="0.5.4"      # homebrew; dust
 rust-exa="0.10.1"         # homebrew
 rust-fd-find="8.2.1"      # homebrew; fd
 rust-hyperfine="1.11.0"   # homebrew
-rust-procs="0.11.5"       # homebrew
+rust-procs="0.11.6"       # homebrew
 rust-ripgrep-all="0.9.6"  # homebrew; rga
 rust-ripgrep="12.1.1"     # homebrew; rg
 rust-starship="0.54.0"    # homebrew
