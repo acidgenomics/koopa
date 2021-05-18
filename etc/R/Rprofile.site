@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-05-12.
+#' @note Updated 2021-05-18.
 #'
 #' @section Restarting R:
 #'
@@ -263,13 +263,20 @@ local({  # nolint
     ## Note that this will warn when enabled.
     ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
 
-    ## Always install from source on Linux.
-    ## Allow binary install on macOS.
-    if (isTRUE(linux)) {
-        options("pkgType" = "source")
-    } else if (isTRUE(macos)) {
+    ## Allow binary install on macOS for CRAN R.
+    ## Otherwise default to installing from source.
+    if (
+        isTRUE(macos) &&
+        isTRUE(grepl(
+            pattern = "^/Library/Frameworks/R.framework/Resources",
+            x = Sys.getenv("R_HOME")
+        ))
+    ) {
         options("pkgType" = "both")
+    } else {
+        options("pkgType" = "source")
     }
+
     ## Stop nagging about whether to compile in an interactive session.
     ## https://stackoverflow.com/a/51530225
     options("install.packages.compile.from.source" = "always")
