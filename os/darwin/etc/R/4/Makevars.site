@@ -1,6 +1,6 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2021-05-03.
+# Updated 2021-05-18.
 #
 # '-O3' should be faster than '-O2' (default) level optimization.
 #
@@ -104,3 +104,15 @@
 CFLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=gnu99
 CXXFLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=c++11 -Wno-unused
 CXX11FLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=c++11 -Wno-unused
+
+
+
+# OpenMP support {{{1
+# ==============================================================================
+
+# See also:
+# - https://stackoverflow.com/questions/40904488/openmp-r-and-macos
+# - https://iscinumpy.gitlab.io/post/omp-on-high-sierra/
+
+SHLIB_OPENMP_CFLAGS=-Xpreprocessor -fopenmp -lomp
+SHLIB_OPENMP_CXXFLAGS=-Xpreprocessor -fopenmp -lomp
