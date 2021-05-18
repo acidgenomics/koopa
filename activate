@@ -78,9 +78,11 @@ __koopa_check_os() { # {{{1
 __koopa_check_zsh() { # {{{1
     # """
     # Check that current Zsh configuration is supported.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-17.
     #
     # Zsh currently requires presence of '~/.zshrc' for clean activation.
+    # This check will intentionally force early return when activation is
+    # attempted from '/etc/profile.d'.
     #
     # Note that sourcing in '/etc/profile' doesn't return script path in
     # '0', which is commonly recommended online in place of 'BASH_SOURCE'.
@@ -90,12 +92,9 @@ __koopa_check_zsh() { # {{{1
     #
     # @seealso
     # - https://stackoverflow.com/a/23259585/3911732
-    local shell
-    shell="$(__koopa_shell_name)"
-    [ "$shell" = 'zsh' ] || return 0
+    [ -n "${ZSH_VERSION:-}" ] || return 0
     case "$0" in
         _src_etc_profile*)
-            # Early return when sourced from '/etc/profile.d'.
             return 1
             ;;
         *)
@@ -439,10 +438,13 @@ __koopa_is_user_named_admin() { # {{{1
 __koopa_is_user_manual_skip() { # {{{1
     # """
     # Should activation be manually skipped for the current user?
-    # @note Updated 2021-05-07?
+    # @note Updated 2021-05-17.
     # """
+    local pattern string
     [ -n "${KOOPA_USERS_SKIP:-}" ] || return 1
-    __koopa_str_match_regex "${KOOPA_USERS_SKIP:?}" "\b${USER:?}\b"
+    string="${KOOPA_USERS_SKIP:?}"
+    pattern="\b${USER:?}\b"
+    __koopa_str_match_regex "$string" "$pattern"
 }
 
 __koopa_posix_source() { # {{{1
@@ -472,10 +474,10 @@ __koopa_posix_source() { # {{{1
 __koopa_preflight() { # {{{1
     # """
     # Run pre-flight checks.
-    # @note Updated 2021-05-11.
-    #
-    # Determine whether koopa activation should proceed in the current shell.
+    # @note Updated 2021-05-17.
     # """
+    # Ksh is not supported due to lack of support for 'local' variables.
+    [ -n "${KSH_VERSION:-}" ] && return 1
     __koopa_export_user || return 1
     __koopa_export_koopa_force || return 1
     __koopa_export_koopa_shell || return 1

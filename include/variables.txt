@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-05-16"
+koopa-date="2021-05-18"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.10.1"
+koopa-version="0.10.2"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.1.18"
@@ -281,7 +281,7 @@ python="3.9.5"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
-r="4.0.5"
+r="4.1.0"
 
 # https://mac.r-project.org/
 r-cran-gfortran="8.2"
@@ -525,7 +525,7 @@ rust-du-dust="0.5.4"      # homebrew; dust
 rust-exa="0.10.1"         # homebrew
 rust-fd-find="8.2.1"      # homebrew; fd
 rust-hyperfine="1.11.0"   # homebrew
-rust-procs="0.11.5"       # homebrew
+rust-procs="0.11.6"       # homebrew
 rust-ripgrep-all="0.9.6"  # homebrew; rga
 rust-ripgrep="12.1.1"     # homebrew; rg
 rust-starship="0.54.0"    # homebrew
