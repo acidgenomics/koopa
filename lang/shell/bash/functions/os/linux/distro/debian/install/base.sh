@@ -150,6 +150,7 @@ koopa::debian_install_base() { # {{{1
             'libtool'
             'libtool-bin'
             'nano'
+            'pandoc'  # R Markdown and URL checks
             'parallel'
             'pkg-config'
             'procps'  # ps
@@ -279,7 +280,6 @@ koopa::debian_install_base() { # {{{1
             'openmpi-bin'
             'openmpi-common'
             'openmpi-doc'
-            'pandoc'
             'pass'
             'protobuf-compiler'
             'systemd'
