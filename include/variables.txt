@@ -281,7 +281,7 @@ python="3.9.5"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
-r="4.0.5"
+r="4.1.0"
 
 # https://mac.r-project.org/
 r-cran-gfortran="8.2"
