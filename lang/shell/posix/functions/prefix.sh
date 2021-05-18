@@ -179,7 +179,7 @@ _koopa_fzf_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to version this? Or just use rolling?
+# NOTE Consider versioning this.
 _koopa_go_packages_prefix() { # {{{1
     # """
     # Go packages 'GOPATH', for building from source.
@@ -382,7 +382,7 @@ _koopa_opt_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to version this.
+# NOTE Consider versioning this.
 _koopa_perl_packages_prefix() { # {{{1
     # """
     # Perl site library prefix.
@@ -443,7 +443,7 @@ _koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to version this, e.g. 3.8, 3.9.
+# NOTE Consider versioning this.
 _koopa_python_packages_prefix() { # {{{1
     # """
     # Python site packages library prefix.
@@ -472,7 +472,7 @@ _koopa_python_system_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to version this, e.g. 4.0, 4.1, devel.
+# NOTE Consider versioning this.
 _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
@@ -503,7 +503,7 @@ _koopa_refdata_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to version this.
+# NOTE Consider versioning this.
 _koopa_ruby_packages_prefix() { # {{{1
     # """
     # Ruby packags (gems) prefix.
@@ -516,7 +516,7 @@ _koopa_ruby_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to version this? Or just use rolling?
+# NOTE Consider versioning this.
 _koopa_rust_packages_prefix() { # {{{1
     # """
     # Rust packages (cargo) install prefix.
