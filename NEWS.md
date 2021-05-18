@@ -1,3 +1,12 @@
+## koopa 0.10.2 (2021-05-18)
+
+### Minor changes
+
+- R configuration updates to provide compatibility with R 4.1. Refer to
+  `Renviron.site` files for configuration changes. Note that R configuration
+  defined in `etc/` is now versioned to support 4.1 in addition to 4.0, 3.6,
+  and devel releases.
+
 ## koopa 0.10.1 (2021-05-16)
 
 ### Major changes
