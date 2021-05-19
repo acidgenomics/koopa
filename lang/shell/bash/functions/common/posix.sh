@@ -252,14 +252,17 @@ koopa::has_gnu_findutils() { # {{{1
     _koopa_has_gnu_findutils "$@"
 }
 
+# FIXME Remove this.
 koopa::has_gnu_rsync() { # {{{1
     _koopa_has_gnu_rsync "$@"
 }
 
+# FIXME Remove this.
 koopa::has_gnu_sed() { # {{{1
     _koopa_has_gnu_sed "$@"
 }
 
+# FIXME Remove this.
 koopa::has_gnu_tar() { # {{{1
     _koopa_has_gnu_tar "$@"
 }
