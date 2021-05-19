@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-
-# FIXME Need to get ARM or Intel.
+# FIXME Need to test 8.2 and 10.2 URL update support.
 
 koopa::macos_install_r_cran_gfortran() { # {{{1
     # """
