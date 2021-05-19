@@ -179,11 +179,10 @@ _koopa_fzf_prefix() { # {{{1
     return 0
 }
 
-# NOTE Consider versioning this.
 _koopa_go_packages_prefix() { # {{{1
     # """
     # Go packages 'GOPATH', for building from source.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-19.
     #
     # This must be different from 'go root' value.
     #
@@ -193,9 +192,17 @@ _koopa_go_packages_prefix() { # {{{1
     # - go env GOROOT
     # - https://golang.org/wiki/SettingGOPATH to set a custom GOPATH
     # """
-    local prefix
+    local prefix version
     prefix="${GOPATH:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/go-packages"
+    version="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        if [ -z "$version" ]
+        then
+            version='rolling'
+        fi
+        prefix="$(_koopa_opt_prefix)/go-packages/${version}"
+    fi
     _koopa_print "$prefix"
     return 0
 }
@@ -382,17 +389,24 @@ _koopa_opt_prefix() { # {{{1
     return 0
 }
 
-# NOTE Consider versioning this.
+# FIXME Need to check that this works for Perl installers.
 _koopa_perl_packages_prefix() { # {{{1
     # """
     # Perl site library prefix.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-19.
     #
     # @seealso
     # > perl -V
     # # Inspect the '@INC' variable.
     # """
-    _koopa_print "$(_koopa_opt_prefix)/perl-packages"
+    local major_minor_version version
+    version="${1:-}"
+    if [ -z "$version" ]
+    then
+        version="$(_koopa_variable 'perl')"
+    fi
+    major_minor_version="$(_koopa_major_minor_version "$version")"
+    _koopa_print "$(_koopa_opt_prefix)/perl-packages/${major_minor_version}"
     return 0
 }
 
@@ -443,18 +457,25 @@ _koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
-# NOTE Consider versioning this.
+# FIXME Need to ensure that this works with Python installers.
 _koopa_python_packages_prefix() { # {{{1
     # """
     # Python site packages library prefix.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-19.
     #
     # This was changed to an unversioned approach in koopa v0.9.
     #
     # @seealso
     # > "$python" -m site
     # """
-    _koopa_print "$(_koopa_opt_prefix)/python-packages"
+    local version
+    version="${1:-}"
+    if [ -z "$version" ]
+    then
+        version="$(_koopa_variable 'python')"
+    fi
+    major_minor_version="$(_koopa_major_minor_version "$version")"
+    _koopa_print "$(_koopa_opt_prefix)/python-packages/${major_minor_version}"
     return 0
 }
 
@@ -472,13 +493,20 @@ _koopa_python_system_packages_prefix() { # {{{1
     return 0
 }
 
-# NOTE Consider versioning this.
+# FIXME Need to update this approach with R installers.
 _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-19.
     # """
-    _koopa_print "$(_koopa_opt_prefix)/r-packages"
+    local major_minor_version version
+    version="${1:?}"
+    if [ -z "$version" ]
+    then
+        version="$(_koopa_variable 'r')"
+    fi
+    major_minor_version="$(_koopa_major_minor_version)"
+    _koopa_print "$(_koopa_opt_prefix)/r-packages/${major_minor_version}"
     return 0
 }
 
@@ -503,33 +531,48 @@ _koopa_refdata_prefix() { # {{{1
     return 0
 }
 
-# NOTE Consider versioning this.
 _koopa_ruby_packages_prefix() { # {{{1
     # """
     # Ruby packags (gems) prefix.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-19.
     # """
-    local prefix
+    local major_minor_version prefix version
     prefix="${GEM_HOME:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/ruby-packages"
+    version="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        if [ -z "$version" ]
+        then
+            version="$(_koopa_variable 'ruby')"
+        fi
+        major_minor_version="$(_koopa_major_minor_version "$version")"
+        prefix="$(_koopa_opt_prefix)/ruby-packages/${major_minor_version}"
+    fi
     _koopa_print "$prefix"
     return 0
 }
 
-# NOTE Consider versioning this.
 _koopa_rust_packages_prefix() { # {{{1
     # """
     # Rust packages (cargo) install prefix.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-19.
     #
     # See also:
     # - https://github.com/rust-lang/rustup#environment-variables
     # - CARGO_HOME
     # - RUSTUP_HOME
     # """
-    local prefix
+    local prefix version
     prefix="${CARGO_HOME:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/rust-packages"
+    version="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        if [ -z "$version" ]
+        then
+            version='rolling'
+        fi
+        prefix="$(_koopa_opt_prefix)/rust-packages/${version}"
+    fi
     _koopa_print "$prefix"
     return 0
 }
