@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Harden to GNU find here...
+
 koopa::find_and_move_in_sequence() { # {{{1
     # """
     # Find and move files in sequence.
@@ -10,6 +12,7 @@ koopa::find_and_move_in_sequence() { # {{{1
     return 0
 }
 
+# FIXME Need to harden to GNU sed on macOS...
 koopa::find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
@@ -23,7 +26,7 @@ koopa::find_and_replace_in_files() { # {{{1
     # """
     local file from to
     koopa::assert_has_args_ge "$#" 3
-    koopa::assert_has_gnu_sed
+    koopa::assert_has_gnu sed  # FIXME Rework this.
     from="${1:?}"
     to="${2:?}"
     shift 2
@@ -47,6 +50,7 @@ koopa::find_and_replace_in_files() { # {{{1
     return 0
 }
 
+# FIXME Harden this to GNU find on macOS...
 koopa::find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
@@ -76,6 +80,7 @@ koopa::find_broken_symlinks() { # {{{1
     return 0
 }
 
+# FIXME Harden this to GNU find on macOS...
 koopa::find_dotfiles() { # {{{1
     # """
     # Find dotfiles by type.
