@@ -26,6 +26,7 @@ koopa::clone() { # {{{1
     return 0
 }
 
+# FIXME Harden this to Homebrew rsync on macOS...
 # NOTE Consider checking for trailing slashes on directories.
 koopa::rsync() { # {{{1
     # """
@@ -60,7 +61,10 @@ koopa::rsync() { # {{{1
     # - https://unix.stackexchange.com/questions/165423
     # """
     local flags
-    koopa::assert_has_gnu_rsync
+
+    # FIXME Set this to Homebrew rsync on macOS.
+
+    koopa::assert_has_gnu rsync
     koopa::assert_has_args_ge "$#" 2
     flags=(
         '--human-readable'

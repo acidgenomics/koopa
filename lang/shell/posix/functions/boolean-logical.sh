@@ -82,33 +82,6 @@ _koopa_has_gnu_findutils() { # {{{1
     _koopa_has_gnu find
 }
 
-# FIXME Remove this.
-_koopa_has_gnu_rsync() { # {{{1
-    # """
-    # Is GNU rsync installed?
-    # @note Updated 2020-12-31.
-    # """
-    _koopa_has_gnu rsync
-}
-
-# FIXME Remove this.
-_koopa_has_gnu_sed() { # {{{1
-    # """
-    # Is GNU tar installed?
-    # @note Updated 2020-04-27.
-    # """
-    _koopa_has_gnu sed
-}
-
-# FIXME Remove this.
-_koopa_has_gnu_tar() { # {{{1
-    # """
-    # Is GNU tar installed?
-    # @note Updated 2020-04-27.
-    # """
-    _koopa_has_gnu tar
-}
-
 _koopa_is_alias() { # {{{1
     # """
     # Is the specified argument an alias?

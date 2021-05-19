@@ -187,48 +187,6 @@ koopa::assert_has_gnu_findutils() {  #{{{1
     return 0
 }
 
-# FIXME Remove this.
-koopa::assert_has_gnu_rsync() {  #{{{1
-    # """
-    # Assert that GNU rsync is installed.
-    # @note Updated 2020-12-31.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_rsync
-    then
-        koopa::stop 'GNU rsync is not installed.'
-    fi
-    return 0
-}
-
-# FIXME Remove this.
-koopa::assert_has_gnu_sed() {  #{{{1
-    # """
-    # Assert that GNU sed is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_sed
-    then
-        koopa::stop 'GNU sed is not installed.'
-    fi
-    return 0
-}
-
-# FIXME Remove this.
-koopa::assert_has_gnu_tar() {  #{{{1
-    # """
-    # Assert that GNU tar is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_tar
-    then
-        koopa::stop 'GNU tar is not installed.'
-    fi
-    return 0
-}
-
 koopa::assert_has_monorepo() { # {{{1
     # """
     # Assert that the user has a git monorepo.
