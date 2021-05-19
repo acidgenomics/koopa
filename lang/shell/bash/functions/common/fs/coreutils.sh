@@ -2,23 +2,23 @@
 
 koopa::cp() { # {{{1
     # """
-    # Hardened version of coreutils copy.
-    # @note Updated 2020-07-20.
+    # Hardened version of GNU coreutils copy.
+    # @note Updated 2021-05-19.
     #
     # getopts info:
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
-    local OPTIND cp cp_cmd cp_flags mkdir rm sudo symlink \
-        target_dir target_parent
-    cp_cmd='cp'
+    local OPTIND brew_prefix cp cp_flags mkdir rm sudo symlink \
+        target_dir target_parent which_cp
+    which_cp='cp'
     if koopa::is_macos
     then
         brew_prefix="$(koopa::homebrew_prefix)"
-        cp_cmd="${brew_prefix}/bin/gcp"
+        which_cp="${brew_prefix}/bin/gcp"
     fi
-    koopa::assert_is_installed "$cp_cmd"
-    koopa::assert_has_gnu "$cp_cmd"
+    koopa::assert_is_installed "$which_cp"
+    koopa::assert_has_gnu "$which_cp"
     sudo=0
     symlink=0
     target_dir=''
@@ -45,11 +45,11 @@ koopa::cp() { # {{{1
     if [[ "$sudo" -eq 1 ]]
     then
         # NOTE Don't run sudo check here, can slow down functions.
-        cp=('sudo' "$cp_cmd")
+        cp=('sudo' "$which_cp")
         mkdir=('koopa::mkdir' '-S')
         rm=('koopa::rm' '-S')
     else
-        cp=("$cp_cmd")
+        cp=("$which_cp")
         mkdir=('koopa::mkdir')
         rm=('koopa::rm')
     fi
@@ -76,12 +76,19 @@ koopa::cp() { # {{{1
 
 koopa::df() { # {{{1
     # """
-    # Human friendlier version of df.
-    # @note Updated 2021-05-08.
+    # Human friendlier version of GNU df.
+    # @note Updated 2021-05-19.
     # """
-    koopa::assert_is_installed df
-    koopa::assert_has_gnu df
-    df \
+    local brew_prefix df
+    df='df'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        df="${brew_prefix}/bin/gdf"
+    fi
+    koopa::assert_is_installed "$df"
+    koopa::assert_has_gnu "$df"
+    "$df" \
         --portability \
         --print-type \
         --si \
@@ -91,13 +98,19 @@ koopa::df() { # {{{1
 
 koopa::ln() { # {{{1
     # """
-    # Create a symlink quietly.
-    # @note Updated 2020-07-20.
+    # Create a symlink quietly with GNU ln.
+    # @note Updated 2021-05-19.
     # """
-    local OPTIND ln ln_flags mkdir rm source_file target_file target_dir \
-        target_parent
-    koopa::assert_is_installed ln
-    koopa::assert_has_gnu ln
+    local OPTIND brew_prefix ln ln_flags mkdir rm source_file target_file \
+        target_dir target_parent which_ln
+    which_ln='ln'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        which_ln="${brew_prefix}/bin/gln"
+    fi
+    koopa::assert_is_installed "$which_ln"
+    koopa::assert_has_gnu "$which_ln"
     sudo=0
     target_dir=''
     OPTIND=1
@@ -120,11 +133,11 @@ koopa::ln() { # {{{1
     if [[ "$sudo" -eq 1 ]]
     then
         # NOTE Don't run sudo check here, can slow down functions.
-        ln=('sudo' 'ln')
+        ln=('sudo' "$which_ln")
         mkdir=('koopa::mkdir' '-S')
         rm=('koopa::rm' '-S')
     else
-        ln=('ln')
+        ln=("$which_ln")
         mkdir=('koopa::mkdir')
         rm=('koopa::rm')
     fi
@@ -151,10 +164,16 @@ koopa::ln() { # {{{1
 koopa::mkdir() { # {{{1
     # """
     # Create directories with parents automatically.
-    # @note Updated 2020-07-08.
-    local OPTIND mkdir sudo
-    koopa::assert_is_installed mkdir
-    koopa::assert_has_gnu mkdir
+    # @note Updated 2021-05-19.
+    local OPTIND brew_prefix mkdir sudo which_mkdir
+    which_mkdir='mkdir'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        which_mkdir="${brew_prefix}/bin/gmkdir"
+    fi
+    koopa::assert_is_installed "$which_mkdir"
+    koopa::assert_has_gnu "$which_mkdir"
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -173,9 +192,9 @@ koopa::mkdir() { # {{{1
     if [[ "$sudo" -eq 1 ]]
     then
         # NOTE Don't run sudo check here, can slow down functions.
-        mkdir=('sudo' 'mkdir')
+        mkdir=('sudo' "$which_mkdir")
     else
-        mkdir=('mkdir')
+        mkdir=("$which_mkdir")
     fi
     "${mkdir[@]}" -p "$@"
     return 0
@@ -183,8 +202,8 @@ koopa::mkdir() { # {{{1
 
 koopa::mv() { # {{{1
     # """
-    # Move a file or directory.
-    # @note Updated 2020-07-08.
+    # Move a file or directory with GNU mv.
+    # @note Updated 2021-05-19.
     #
     # This function works on 1 file or directory at a time.
     # It ensures that the target parent directory exists automatically.
@@ -193,9 +212,16 @@ koopa::mv() { # {{{1
     # - -T: no-target-directory
     # - --strip-trailing-slashes
     # """
-    local OPTIND mkdir mv mv_flags rm source_file sudo target_file target_parent
-    koopa::assert_is_installed mv
-    koopa::assert_has_gnu mv
+    local OPTIND brew_prefix mkdir mv mv_flags rm source_file sudo \
+        target_file target_parent which_mv
+    which_mv='mv'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        which_mv="${brew_prefix}/bin/gmv"
+    fi
+    koopa::assert_is_installed "$which_mv"
+    koopa::assert_has_gnu "$which_mv"
     sudo=0
     target_dir=''
     OPTIND=1
@@ -219,11 +245,11 @@ koopa::mv() { # {{{1
     then
         # NOTE Don't run sudo check here, can slow down functions.
         mkdir=('koopa::mkdir' '-S')
-        mv=('sudo' 'mv')
+        mv=('sudo' "$which_mv")
         rm=('koopa::rm' '-S')
     else
         mkdir=('koopa::mkdir')
-        mv=('mv')
+        mv=("$which_mv")
         rm=('koopa::rm')
     fi
     mv_flags=('-f')
@@ -287,12 +313,18 @@ koopa::relink() { # {{{1
 
 koopa::rm() { # {{{1
     # """
-    # Remove files/directories quietly.
-    # @note Updated 2020-07-06.
+    # Remove files/directories quietly with GNU rm.
+    # @note Updated 2021-05-19.
     # """
-    local OPTIND rm sudo
-    koopa::assert_is_installed rm
-    koopa::assert_has_gnu rm
+    local OPTIND brew_prefix rm sudo which_rm
+    which_rm='rm'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        which_rm="${brew_prefix}/bin/grm"
+    fi
+    koopa::assert_is_installed "$which_rm"
+    koopa::assert_has_gnu "$which_rm"
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -311,9 +343,9 @@ koopa::rm() { # {{{1
     if [[ "$sudo" -eq 1 ]]
     then
         # NOTE Don't run sudo check here, can slow down functions.
-        rm=('sudo' 'rm')
+        rm=('sudo' "$which_rm")
     else
-        rm=('rm')
+        rm=("$which_rm")
     fi
     "${rm[@]}" -fr "$@"
     return 0
