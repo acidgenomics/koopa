@@ -1,14 +1,25 @@
 #!/bin/sh
 # shellcheck disable=SC3040
 
+# Csh is not supported, primarily due to lack of functions.
+# > csh -l or csh -i
+[ "$0" = 'csh' ] && \
+    printf '%s\n' 'koopa does not support csh.' && \
+    exit 1
+
 # Tcsh is not supported, primarily due to lack of functions.
 # > tcsh -l or tcsh -i
-[ "$0" = 'tcsh' ] && exit 0
+[ "$0" = 'tcsh' ] && \
+    printf '%s\n' 'koopa does not support tcsh.' && \
+    exit 1
 
 # Ksh is not supported, primarily due to lack of 'local' variables.
 # > ksh -il
-[ "$0" = 'ksh' ] && return 0
-[ -n "${KSH_VERSION:-}" ] && return 0
+if [ "$0" = 'ksh' ] || [ -n "${KSH_VERSION:-}" ]
+then
+    printf '%s\n' 'koopa does not support ksh.'
+    return 1
+fi
 
 
 
