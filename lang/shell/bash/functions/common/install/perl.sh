@@ -49,8 +49,8 @@ koopa::install_perl_packages() { # {{{1
     local module modules name_fancy prefix
     koopa::assert_is_installed cpan perl
     name_fancy='Perl packages'
-    koopa::install_start "$name_fancy"
     prefix="$(koopa::perl_packages_prefix)"
+    koopa::install_start "$name_fancy" "$prefix"
     # NOTE Consider also checking for '~/.cpan' here also.
     if [[ ! -d "$prefix" ]]
     then
@@ -79,7 +79,7 @@ koopa::install_perl_packages() { # {{{1
         koopa::alert "${module}"
         cpanm "$module" &>/dev/null
     done
-    koopa::install_success "$name_fancy"
+    koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
 

@@ -389,7 +389,6 @@ _koopa_opt_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to check that this works for Perl installers.
 _koopa_perl_packages_prefix() { # {{{1
     # """
     # Perl site library prefix.
