@@ -131,6 +131,23 @@ koopa::assert_has_file_ext() { # {{{1
     return 0
 }
 
+koopa::assert_has_gnu() {  #{{{1
+    # """
+    # Assert that GNU version of a program is installed.
+    # @note Updated 2021-05-19.
+    # """
+    local arg
+    koopa::assert_has_args "$#"
+    for arg in "$@"
+    do
+        if ! koopa::has_gnu "$arg"
+        then
+            koopa::stop "GNU ${arg} is not installed."
+        fi
+    done
+    return 0
+}
+
 koopa::assert_has_gnu_binutils() {  #{{{1
     # """
     # Assert that GNU binutils is installed.
@@ -170,6 +187,7 @@ koopa::assert_has_gnu_findutils() {  #{{{1
     return 0
 }
 
+# FIXME Remove this.
 koopa::assert_has_gnu_rsync() {  #{{{1
     # """
     # Assert that GNU rsync is installed.
@@ -183,6 +201,7 @@ koopa::assert_has_gnu_rsync() {  #{{{1
     return 0
 }
 
+# FIXME Remove this.
 koopa::assert_has_gnu_sed() {  #{{{1
     # """
     # Assert that GNU sed is installed.
@@ -196,6 +215,7 @@ koopa::assert_has_gnu_sed() {  #{{{1
     return 0
 }
 
+# FIXME Remove this.
 koopa::assert_has_gnu_tar() {  #{{{1
     # """
     # Assert that GNU tar is installed.

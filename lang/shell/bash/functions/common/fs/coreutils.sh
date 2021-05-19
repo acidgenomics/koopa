@@ -9,8 +9,16 @@ koopa::cp() { # {{{1
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
-    local OPTIND cp cp_flags mkdir rm sudo symlink target_dir target_parent
-    koopa::assert_is_installed cp
+    local OPTIND cp cp_cmd cp_flags mkdir rm sudo symlink \
+        target_dir target_parent
+    cp_cmd='cp'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        cp_cmd="${brew_prefix}/bin/gcp"
+    fi
+    koopa::assert_is_installed "$cp_cmd"
+    koopa::assert_has_gnu "$cp_cmd"
     sudo=0
     symlink=0
     target_dir=''
@@ -37,11 +45,11 @@ koopa::cp() { # {{{1
     if [[ "$sudo" -eq 1 ]]
     then
         # NOTE Don't run sudo check here, can slow down functions.
-        cp=('sudo' 'cp')
+        cp=('sudo' "$cp_cmd")
         mkdir=('koopa::mkdir' '-S')
         rm=('koopa::rm' '-S')
     else
-        cp=('cp')
+        cp=("$cp_cmd")
         mkdir=('koopa::mkdir')
         rm=('koopa::rm')
     fi
@@ -62,7 +70,7 @@ koopa::cp() { # {{{1
         target_parent="$(dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
-    "${cp[@]}" "${cp_flags[@]}" "$@" &>/dev/null
+    "${cp[@]}" "${cp_flags[@]}" "$@"
     return 0
 }
 
@@ -72,6 +80,7 @@ koopa::df() { # {{{1
     # @note Updated 2021-05-08.
     # """
     koopa::assert_is_installed df
+    koopa::assert_has_gnu df
     df \
         --portability \
         --print-type \
@@ -88,6 +97,7 @@ koopa::ln() { # {{{1
     local OPTIND ln ln_flags mkdir rm source_file target_file target_dir \
         target_parent
     koopa::assert_is_installed ln
+    koopa::assert_has_gnu ln
     sudo=0
     target_dir=''
     OPTIND=1
@@ -134,7 +144,7 @@ koopa::ln() { # {{{1
         target_parent="$(dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
-    "${ln[@]}" "${ln_flags[@]}" "$@" &>/dev/null
+    "${ln[@]}" "${ln_flags[@]}" "$@"
     return 0
 }
 
@@ -143,6 +153,8 @@ koopa::mkdir() { # {{{1
     # Create directories with parents automatically.
     # @note Updated 2020-07-08.
     local OPTIND mkdir sudo
+    koopa::assert_is_installed mkdir
+    koopa::assert_has_gnu mkdir
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -165,7 +177,7 @@ koopa::mkdir() { # {{{1
     else
         mkdir=('mkdir')
     fi
-    "${mkdir[@]}" -p "$@" &>/dev/null
+    "${mkdir[@]}" -p "$@"
     return 0
 }
 
@@ -182,6 +194,8 @@ koopa::mv() { # {{{1
     # - --strip-trailing-slashes
     # """
     local OPTIND mkdir mv mv_flags rm source_file sudo target_file target_parent
+    koopa::assert_is_installed mv
+    koopa::assert_has_gnu mv
     sudo=0
     target_dir=''
     OPTIND=1
@@ -228,7 +242,7 @@ koopa::mv() { # {{{1
         target_parent="$(dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
-    "${mv[@]}" "${mv_flags[@]}" "$@" &>/dev/null
+    "${mv[@]}" "${mv_flags[@]}" "$@"
     return 0
 }
 
@@ -277,6 +291,8 @@ koopa::rm() { # {{{1
     # @note Updated 2020-07-06.
     # """
     local OPTIND rm sudo
+    koopa::assert_is_installed rm
+    koopa::assert_has_gnu rm
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -299,7 +315,7 @@ koopa::rm() { # {{{1
     else
         rm=('rm')
     fi
-    "${rm[@]}" -fr "$@" &>/dev/null
+    "${rm[@]}" -fr "$@"
     return 0
 }
 
