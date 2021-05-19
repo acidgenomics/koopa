@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Installer now isn't working on macOS...
+# FIXME How to activate Go packages?
+
 # NOTE Seeing this pop up on macOS.
 # # tar: Ignoring unknown extended header keyword
 

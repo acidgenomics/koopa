@@ -387,7 +387,9 @@ koopa::is_python_package_installed() { # {{{1
     koopa::assert_has_args "$#"
     python="$(koopa::python)"
     koopa::is_installed "$python" || return 1
-    prefix="$(koopa::python_packages_prefix "$python")"
+
+    # FIXME Need to pass the version here...
+    prefix="$(koopa::python_packages_prefix "$python")"  # FIXME
     for pkg in "$@"
     do
         if [[ ! -d "${prefix}/${pkg}" ]] && [[ ! -f "${prefix}/${pkg}.py" ]]
@@ -395,6 +397,7 @@ koopa::is_python_package_installed() { # {{{1
             return 1
         fi
     done
+
     return 0
 }
 

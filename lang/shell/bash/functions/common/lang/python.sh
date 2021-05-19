@@ -41,8 +41,10 @@ koopa::pip_install() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::is_installed "$python" || return 0
+    # FIXME Need to rework the version handling here...
     koopa::python_add_site_packages_to_sys_path "$python"
-    target="$(koopa::python_packages_prefix "$python")"
+    # FIXME Need to pass the version here instead...
+    target="$(koopa::python_packages_prefix "$python")"  # FIXME
     koopa::dl \
         'Packages' "$(koopa::to_string "$@")" \
         'Target' "$target"
@@ -77,7 +79,7 @@ koopa::pip_outdated() { # {{{1
     # """
     local prefix python x
     python="$(koopa::python)"
-    prefix="$(koopa::python_packages_prefix)"
+    prefix="$(koopa::python_packages_prefix)"  # FIXME
     x="$( \
         "$python" -m pip list \
             --format 'freeze' \
@@ -117,7 +119,8 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     python="${1:-}"
     [[ -z "$python" ]] && python="$(koopa::python)"
     sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
-    k_site_pkgs="$(koopa::python_packages_prefix "$python")"
+    # FIXME Need to rework this.
+    k_site_pkgs="$(koopa::python_packages_prefix "$python")"  # FIXME
     [[ ! -d "${k_site_pkgs:?}" ]] && koopa::sys_mkdir "$k_site_pkgs"
     file="${sys_site_pkgs:?}/koopa.pth"
     koopa::alert "Adding '${file}' path file in '${sys_site_pkgs}'."
