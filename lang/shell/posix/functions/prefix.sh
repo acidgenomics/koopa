@@ -192,16 +192,17 @@ _koopa_go_packages_prefix() { # {{{1
     # - go env GOROOT
     # - https://golang.org/wiki/SettingGOPATH to set a custom GOPATH
     # """
-    local prefix version
+    local major_minor_version prefix version
     prefix="${GOPATH:-}"
     version="${1:-}"
     if [ -z "$prefix" ]
     then
         if [ -z "$version" ]
         then
-            version='rolling'
+            version="$(_koopa_variable 'go')"
         fi
-        prefix="$(_koopa_opt_prefix)/go-packages/${version}"
+        major_minor_version="$(_koopa_major_minor_version "$version")"
+        prefix="$(_koopa_opt_prefix)/go-packages/${major_minor_version}"
     fi
     _koopa_print "$prefix"
     return 0
