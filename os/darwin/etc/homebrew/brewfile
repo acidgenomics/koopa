@@ -168,6 +168,10 @@ brew "ilmbase", link: false  # neofetch
 # Use 'koopa install python-framework' to install.
 brew "python@3.9", link: false
 
+# This will conflict with R igraph install from source if linked.
+# https://github.com/igraph/rigraph/issues/135
+brew "suite-sparse", link: false
+
 brew "ack"
 brew "armadillo"
 brew "autoconf"
