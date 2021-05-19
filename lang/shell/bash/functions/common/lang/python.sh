@@ -3,7 +3,7 @@
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2021-05-02.
+    # @note Updated 2021-05-19.
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
     # """
@@ -40,11 +40,14 @@ koopa::pip_install() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::is_installed "$python" || return 0
-    # FIXME Need to rework the version handling here...
+    if ! koopa::is_installed "$python"
+    then
+        koopa::alert_note "Not installed: '${python}'."
+        return 0
+    fi
     koopa::python_add_site_packages_to_sys_path "$python"
-    # FIXME Need to pass the version here instead...
-    target="$(koopa::python_packages_prefix "$python")"  # FIXME
+    version="$(koopa::get_version "$python")"
+    target="$(koopa::python_packages_prefix "$version")"
     koopa::dl \
         'Packages' "$(koopa::to_string "$@")" \
         'Target' "$target"
@@ -115,13 +118,13 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     # @seealso
     # > "$python" -m site
     # """
-    local file k_site_pkgs major_minor_version python sys_site_pkgs version
+    local file k_site_pkgs python sys_site_pkgs version
     python="${1:-}"
     [[ -z "$python" ]] && python="$(koopa::python)"
+    koopa::assert_is_installed "$python"
     version="$(koopa::get_version "$python")"
-    major_minor_version="$(koopa::major_minor_version "$version")"
     sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
-    k_site_pkgs="$(koopa::python_packages_prefix "$major_minor_version")"
+    k_site_pkgs="$(koopa::python_packages_prefix "$version")"
     [[ ! -d "${k_site_pkgs:?}" ]] && koopa::sys_mkdir "$k_site_pkgs"
     file="${sys_site_pkgs:?}/koopa.pth"
     koopa::alert "Adding '${file}' path file in '${sys_site_pkgs}'."
