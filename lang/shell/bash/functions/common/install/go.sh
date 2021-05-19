@@ -16,7 +16,7 @@ koopa::install_go() { # {{{1
 koopa:::install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-19.
     # """
     local arch file name os_id prefix url version
     prefix="${INSTALL_PREFIX:?}"
@@ -34,6 +34,7 @@ koopa:::install_go() { # {{{1
     url="https://dl.google.com/${name}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
+    # FIXME This step is failing because we need to rethink coreutils...
     koopa::cp -t "$prefix" "${name}/"*
     return 0
 }
