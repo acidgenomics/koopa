@@ -4,7 +4,7 @@ koopa::macos_install_r_data_table() { # {{{1
     # """
     # Install R data.table package on macOS with OpenMP for parallel thread
     # support.
-    # @note Updated 2021-05-03.
+    # @note Updated 2021-05-19.
     #
     # Configuration via '<pkg>/src/Makevars' doesn't work, so using user R
     # Makevars file as an override here instead.
@@ -40,7 +40,7 @@ END
     (
         koopa::cd "$tmp_dir"
         koopa::download_cran_latest "$name"
-        tar -xzvf "${name}_"*'.tar.gz'
+        koopa::extract "${name}_"*'.tar.gz'
         koopa::cd "$name" || return 1
         cat "$makevars_file"
         R CMD INSTALL .

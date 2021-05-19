@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Harden this by using GNU tar on macOS when possible.
 koopa::extract() { # {{{1
     # """
     # Extract compressed files automatically.
