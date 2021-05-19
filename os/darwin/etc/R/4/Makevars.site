@@ -88,7 +88,7 @@
 
 
 
-# Rcpp flags {{{1
+# Rcpp {{{1
 # ==============================================================================
 
 # These compiler options are recommended by Dirk Eddelbuettel.
@@ -107,7 +107,18 @@ CXX11FLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=c++11 -Wno-unused
 
 
 
-# OpenMP support {{{1
+# Fortran {{{1
+# ==============================================================================
+
+# See also:
+# - https://thecoatlessprofessor.com/programming/cpp/
+#     rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error/
+
+FLIBS=-L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/gfortran/lib -lgfortran -lquadmath -lm
+
+
+
+# OpenMP {{{1
 # ==============================================================================
 
 # See also:
