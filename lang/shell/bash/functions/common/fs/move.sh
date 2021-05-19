@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden this by using GNU mv ... koopa::mv
 koopa::move_files_in_batch() { # {{{1
     # Batch move a limited number of files.
     # @note Updated 2020-07-08.
