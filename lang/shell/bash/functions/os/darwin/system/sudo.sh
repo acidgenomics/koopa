@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add autocompletion support for this.
 koopa::macos_disable_touch_id_sudo() { # {{{1
     # """
     # Disable sudo authentication via Touch ID PAM.
@@ -25,6 +26,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     return 0
 }
 
+# FIXME Need to add autocompletion support for this.
 koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     # Enable sudo authentication via Touch ID PAM.
