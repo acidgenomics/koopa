@@ -491,7 +491,6 @@ _koopa_python_system_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to update this approach with R installers.
 _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
@@ -503,7 +502,7 @@ _koopa_r_packages_prefix() { # {{{1
     then
         version="$(_koopa_variable 'r')"
     fi
-    major_minor_version="$(_koopa_major_minor_version)"
+    major_minor_version="$(_koopa_major_minor_version "$version")"
     _koopa_print "$(_koopa_opt_prefix)/r-packages/${major_minor_version}"
     return 0
 }
