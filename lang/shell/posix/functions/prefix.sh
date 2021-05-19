@@ -457,7 +457,6 @@ _koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to ensure that this works with Python installers.
 _koopa_python_packages_prefix() { # {{{1
     # """
     # Python site packages library prefix.
