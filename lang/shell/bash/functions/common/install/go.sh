@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Installer now isn't working on macOS...
-# FIXME How to activate Go packages?
-
-# NOTE Seeing this pop up on macOS.
-# # tar: Ignoring unknown extended header keyword
-
 koopa::install_go() { # {{{1
     koopa::install_app \
         --name='go' \
@@ -34,7 +28,6 @@ koopa:::install_go() { # {{{1
     url="https://dl.google.com/${name}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    # FIXME This step is failing because we need to rethink coreutils...
     koopa::cp -t "$prefix" "${name}/"*
     return 0
 }
