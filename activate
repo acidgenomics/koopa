@@ -23,6 +23,7 @@ fi
 
 
 
+
 __koopa_activate_usage() { # {{{1
     # """
     # Koopa activation usage triggered by '--help' flag.
