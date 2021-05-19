@@ -245,7 +245,7 @@ brew "libssh2"
 brew "libtool"
 brew "libxml2"
 brew "libxslt"
-brew "libxt"
+brew "libxt"  # R Cairo
 brew "llvm"
 brew "lua"
 brew "luarocks"
