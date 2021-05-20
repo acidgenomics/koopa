@@ -83,22 +83,14 @@ __koopa_realpath() { # {{{1
     # Resolve file path.
     # @note Updated 2021-05-20.
     # """
-    local platform readlink x
+    local readlink x
     readlink='readlink'
-    platform="$(uname -s)"
-    case "$platform" in
-        Darwin)
-            readlink='greadlink'
-            ;;
-    esac
+    __koopa_is_macos && readlink='greadlink'
     if ! __koopa_is_installed "$readlink"
     then
         __koopa_warning "Not installed: '${readlink}'."
-        case "$platform" in
-            Darwin)
-                __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
-                ;;
-        esac
+        __koopa_is_macos && \
+            __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
         return 1
     fi
     x="$("$readlink" -f "$@")"
