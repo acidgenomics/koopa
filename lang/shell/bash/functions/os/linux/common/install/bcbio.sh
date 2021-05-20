@@ -234,11 +234,11 @@ koopa::linux_install_bcbio_genome() { # {{{1
 koopa::linux_install_bcbio_vm() { # {{{1
     # """
     # Install bcbio-vm.
-    # @note Updated 2021-03-30.
+    # @note Updated 2021-05-20.
     # """
     local bin_dir conda file make_bin_dir make_prefix name name_fancy prefix url
     koopa::assert_has_no_envs
-    koopa::assert_is_installed conda docker
+    koopa::assert_is_installed 'conda' 'docker'
     name='bcbio-vm'
     name_fancy='bcbio-nextgen-vm'
     version="$(koopa::conda_env_latest_version "$name")"
@@ -252,10 +252,10 @@ koopa::linux_install_bcbio_vm() { # {{{1
     # Configure Docker, if necessary.
     if ! koopa::str_match "$(groups)" 'docker'
     then
-        sudo groupadd docker
+        sudo groupadd 'docker'
         sudo service docker restart
-        sudo gpasswd -a "$(whoami)" docker
-        newgrp docker
+        sudo gpasswd -a "$(whoami)" 'docker'
+        newgrp 'docker'
     fi
     # Download and install Conda.
     tmp_dir="$(koopa::tmp_dir)"
@@ -279,8 +279,9 @@ koopa::linux_install_bcbio_vm() { # {{{1
     make_prefix="$(koopa::make_prefix)"
     make_bin_dir="${make_prefix}/bin"
     koopa::ln -S "${bin_dir}/bcbio_vm.py" "${make_bin_dir}/bcbio_vm.py"
+    # FIXME Need to use GNU chgrp.
     sudo chgrp docker "${make_bin_dir}/bcbio_vm.py"
-    sudo chmod g+s "${make_bin_dir}/bcbio_vm.py"
+    koopa::chmod -S g+s "${make_bin_dir}/bcbio_vm.py"
     # Install pinned bcbio-nextgen v1.2.4:
     # > data_dir="${prefix}/v1.2.4"
     # > image='quay.io/bcbio/bcbio-vc:1.2.4-517bb34'

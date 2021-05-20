@@ -30,7 +30,7 @@ koopa::install_spacevim() { # {{{1
         script_url="https://${name}.org/install.sh"
         script_file="$(koopa::basename "$script_url")"
         koopa::download "$script_url" "$script_file"
-        chmod +x "$script_file"
+        koopa::chmod +x "$script_file"
         "./${script_file}"
     )
     # Bug fix for vimproc error.

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# FIXME '--help' flag isn't working here...
+
 __koopa_is_installed() { # {{{1
     # """
     # Are all of the requested programs installed?

@@ -4,7 +4,7 @@
 koopa::macos_disable_touch_id_sudo() { # {{{1
     # """
     # Disable sudo authentication via Touch ID PAM.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-05-20.
     # """
     local source_file target_file
     koopa::assert_has_no_args "$#"
@@ -21,7 +21,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     # NOTE Don't use 'koopa::cp' here, as it will remove the target file
     # and can cause system lockout in this case.
     sudo cp -v "$source_file" "$target_file"
-    sudo chmod 0444 "$target_file"
+    koopa::chmod -S 0444 "$target_file"
     koopa::alert_success 'Touch ID disabled for sudo.'
     return 0
 }
@@ -30,7 +30,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
 koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     # Enable sudo authentication via Touch ID PAM.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-05-20.
     # @seealso
     # - https://davidwalsh.name/touch-sudo
     # - https://news.ycombinator.com/item?id=26302139
@@ -51,7 +51,7 @@ in '${target_file}'."
     # NOTE Don't use 'koopa::cp' here, as it will remove the target file
     # and can cause system lockout in this case.
     sudo cp -v "$source_file" "$target_file"
-    sudo chmod 0444 "$target_file"
+    koopa::chmod -S 0444 "$target_file"
     koopa::alert_success 'Touch ID enabled for sudo.'
     return 0
 }
