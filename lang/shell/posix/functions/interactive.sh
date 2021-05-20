@@ -26,17 +26,30 @@ _koopa_git_branch() { # {{{1
     return 0
 }
 
-_koopa_tmux_sessions() { # {{{1
+_koopa_tmux_session() { # {{{1
     # """
     # Show active tmux sessions.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-05-20.
     # """
     local x
     _koopa_is_installed tmux || return 0
     _koopa_is_tmux && return 0
+    cut='cut'
+    tr='tr'
+    if _koopa_is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        cut="${brew_prefix}/bin/gcut"
+        tr="${brew_prefix}/bin/gtr"
+    fi
+    _koopa_is_gnu "$cut" "$tr" || return 0
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
-    x="$(_koopa_print "$x" | cut -d ':' -f 1 | tr '\n' ' ')"
+    x="$( \
+        _koopa_print "$x" \
+        | "$cut" -d ':' -f 1 \
+        | "$tr" '\n' ' ' \
+    )"
     _koopa_dl 'tmux' "$x"
     return 0
 }
