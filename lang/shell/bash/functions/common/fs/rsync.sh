@@ -7,11 +7,11 @@ koopa::clone() { # {{{1
     # """
     koopa::assert_has_no_flags "$@"
     koopa::assert_has_args_eq "$#" 2
-    local flags source_dir target_dir
-    source_dir="$1"
-    target_dir="$2"
+    local rsync_args source_dir target_dir
+    source_dir="${1:?}"
+    target_dir="${2:?}"
     koopa::assert_is_dir "$source_dir" "$target_dir"
-    flags=(
+    rsync_args=(
         '--archive'
         '--delete-before'
     )
@@ -22,18 +22,17 @@ koopa::clone() { # {{{1
     koopa::dl \
         'Source' "$source_dir" \
         'Target' "$target_dir"
-    koopa::rsync "${flags[@]}" "${source_dir}/" "${target_dir}/"
+    koopa::rsync "${rsync_args[@]}" "${source_dir}/" "${target_dir}/"
     return 0
 }
 
-# FIXME Harden this to Homebrew rsync on macOS...
 # NOTE Consider checking for trailing slashes on directories.
 koopa::rsync() { # {{{1
     # """
     # GNU rsync wrapper.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-20.
     #
-    # Useful flags:
+    # Useful arguments:
     #     --delete-before         receiver deletes before xfer, not during
     #     --iconv=CONVERT_SPEC    request charset conversion of filenames
     #     --numeric-ids           don't map uid/gid values by user/group name
@@ -60,13 +59,16 @@ koopa::rsync() { # {{{1
     # See also:
     # - https://unix.stackexchange.com/questions/165423
     # """
-    local flags
-
-    # FIXME Set this to Homebrew rsync on macOS.
-
-    koopa::assert_has_gnu rsync
+    local brew_prefix rsync rsync_args
     koopa::assert_has_args_ge "$#" 2
-    flags=(
+    rsync='rsync'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        rsync="${brew_prefix}/bin/rsync"
+    fi
+    koopa::assert_is_gnu "$rsync"
+    rsync_args=(
         '--human-readable'
         '--progress'
         '--protect-args'
@@ -76,11 +78,11 @@ koopa::rsync() { # {{{1
     )
     if koopa::is_macos
     then
-        flags+=(
+        rsync_args+=(
             '--iconv=utf-8,utf-8-mac'
         )
     fi
-    rsync "${flags[@]}" "$@"
+    "$rsync" "${rsync_args[@]}" "$@"
     return 0
 }
 
@@ -89,11 +91,11 @@ koopa::rsync_cloud() { # {{{1
     # Rsync to cloud object storage buckets, such as AWS.
     # @note Updated 2021-05-08.
     # """
-    local flags
+    local rsync_args
     koopa::assert_has_no_flags "$@"
     koopa::assert_has_args_eq "$#" 2
     koopa::assert_is_admin
-    flags=(
+    rsync_args=(
         # > '--exclude=bam'
         # > '--exclude=cram'
         # > '--exclude=fastq'
@@ -106,7 +108,7 @@ koopa::rsync_cloud() { # {{{1
         '--rsync-path=sudo rsync'
         '--size-only'
     )
-    koopa::rsync "${flags[@]}" "$@"
+    koopa::rsync "${rsync_args[@]}" "$@"
     return 0
 }
 
@@ -118,10 +120,10 @@ koopa::rsync_ignore() { # {{{1
     # @seealso
     # https://stackoverflow.com/questions/13713101/
     # """
-    local flags ignore_global
+    local ignore_global rsync_args
     koopa::assert_has_no_flags "$@"
     koopa::assert_has_args_eq "$#" 2
-    flags=(
+    rsync_args=(
         # > '--exclude=.*/'
         # > '--exclude=/.git'
         # > '--filter=:- .gitignore'
@@ -132,8 +134,8 @@ koopa::rsync_ignore() { # {{{1
     ignore_global="${HOME}/.gitignore"
     if [[ -f "$ignore_global" ]]
     then
-        flags+=("--filter=dir-merge,- ${ignore_global}")
+        rsync_args+=("--filter=dir-merge,- ${ignore_global}")
     fi
-    koopa::rsync "${flags[@]}" "$@"
+    koopa::rsync "${rsync_args[@]}" "$@"
     return 0
 }
