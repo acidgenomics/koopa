@@ -44,6 +44,7 @@ __koopa_print() { # {{{1
     return 0
 }
 
+# FIXME Need to update with Bash header variant.
 __koopa_realpath() { # {{{1
     # """
     # resolve file path.
@@ -62,7 +63,7 @@ __koopa_realpath() { # {{{1
         for arg in "$@"
         do
             bn="$(basename "$arg")"
-            dn="$(cd "$(dirname "$arg")" || return 1; pwd -p)"
+            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
             x="${dn}/${bn}"
             __koopa_print "$x"
         done
