@@ -299,17 +299,26 @@ koopa::is_file_system_case_sensitive() { # {{{1
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
+    local brew_prefix find wc
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_gnu 'find'
+    find='find'
+    wc='wc'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        find="${brew_prefix}/bin/gfind"
+        wc="${brew_prefix}/bin/gwc"
+    fi
+    koopa::assert_is_gnu "$find" "$wc"
     touch '.tmp.checkcase' '.tmp.checkCase'
     count="$( \
-        find . \
+        "$find" . \
             -maxdepth 1 \
             -mindepth 1 \
             -iname '.tmp.checkcase' \
-        | wc -l \
+        | "$wc" -l \
     )"
-    koopa::quiet_rm '.tmp.check'*
+    koopa::rm '.tmp.check'*
     [[ "$count" -eq 2 ]]
 }
 

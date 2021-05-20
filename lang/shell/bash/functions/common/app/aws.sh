@@ -117,7 +117,7 @@ koopa::aws_s3_find() { # {{{1
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
     #
     # @examples
-    # aws-s3-find \
+    # koopa::aws_s3_find \
     #     --include="*.bw$" \
     #     --exclude="antisense" \
     #     s3://bioinfo/igv/
@@ -183,7 +183,7 @@ koopa::aws_s3_ls() { # {{{1
     # koopa::aws_s3_ls s3://cpi-bioinfo01/
     # koopa::aws_s3_ls cpi-bioinfo01/
     # # Directories only:
-    # aws-s3-ls --type=f s3://cpi-bioinfo01/datasets/
+    # koopa::aws_s3_ls --type='f' s3://cpi-bioinfo01/datasets/
     # """
     local bucket_prefix dirs files flags pos prefix recursive type x
     koopa::assert_is_installed 'aws'
