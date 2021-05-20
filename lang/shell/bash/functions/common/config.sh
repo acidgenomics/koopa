@@ -235,6 +235,7 @@ koopa::ip_address() { # {{{1
     return 0
 }
 
+# FIXME Use internal 'koopa::xdg_config_home' variables for this...
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.

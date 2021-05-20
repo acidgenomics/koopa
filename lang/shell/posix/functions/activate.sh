@@ -985,10 +985,11 @@ _koopa_activate_venv() { # {{{1
     return 0
 }
 
+# FIXME Make koopa function variants of these and call here...
 _koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-05-20.
     #
     # XDG_RUNTIME_DIR:
     # - Can only exist for the duration of the user's login.
@@ -999,16 +1000,24 @@ _koopa_activate_xdg() { # {{{1
     # - https://developer.gnome.org/basedir-spec/
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
     # """
-    local make_prefix
-    make_prefix="$(_koopa_make_prefix)"
-    [ -z "${XDG_CACHE_HOME:-}" ] && \
-        XDG_CACHE_HOME="${HOME:?}/.cache"
-    [ -z "${XDG_CONFIG_DIRS:-}" ] && \
-        XDG_CONFIG_DIRS='/etc/xdg'
-    [ -z "${XDG_CONFIG_HOME:-}" ] && \
-        XDG_CONFIG_HOME="${HOME:?}/.config"
-    [ -z "${XDG_DATA_DIRS:-}" ] && \
-        XDG_DATA_DIRS="${make_prefix}/share:/usr/share"
+    if [ -z "${XDG_CACHE_HOME:-}" ]
+    then
+        XDG_CACHE_HOME="$(_koopa_xdg_cache_home)"
+    fi
+    if [ -z "${XDG_CONFIG_DIRS:-}" ]
+    then
+        XDG_CONFIG_DIRS="$(_koopa_xdg_config_dirs)"
+    fi
+    if [ -z "${XDG_CONFIG_HOME:-}" ]
+    then
+        XDG_CONFIG_HOME="$(_koopa_xdg_config_home)"
+    fi
+    if [ -z "${XDG_DATA_DIRS:-}" ]
+    then
+        XDG_DATA_DIRS="$(_koopa_xdg_data_dirs)"
+    fi
+
+
     [ -z "${XDG_DATA_HOME:-}" ] && \
         XDG_DATA_HOME="${HOME:?}/.local/share"
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
