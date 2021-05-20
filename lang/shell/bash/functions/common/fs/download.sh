@@ -211,8 +211,8 @@ koopa::sra_prefetch_parallel() { # {{{1
     # Prefetch files from SRA in parallel.
     # @note Updated 2021-05-20.
     # """
-    koopa::assert_is_installed 'ascp' 'find' 'parallel' 'prefetch'
-    koopa::assert_has_gnu 'find'
+    koopa::assert_is_gnu 'find' 'parallel'
+    koopa::assert_is_installed 'ascp' 'prefetch'
     file="${1:-}"
     [ -z "$file" ] && file='SraAccList.txt'
     koopa::assert_is_file "$file"

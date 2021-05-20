@@ -433,3 +433,19 @@ koopa::rm() { # {{{1
     return 0
 }
 
+koopa::sed() { # {{{1
+    # """
+    # GNU sed.
+    # @note Updated 2021-05-20.
+    # """
+    koopa::assert_has_args "$#"
+    sed='sed'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        sed="${brew_prefix}/bin/gsed"
+    fi
+    koopa::assert_is_installed "$sed"
+    "$sed" "$@"
+    return 0
+}

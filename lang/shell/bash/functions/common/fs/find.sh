@@ -98,19 +98,6 @@ koopa::find() { # {{{1
     return 0
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 koopa::find_and_move_in_sequence() { # {{{1
     # """
     # Find and move files in sequence.
@@ -121,7 +108,6 @@ koopa::find_and_move_in_sequence() { # {{{1
     return 0
 }
 
-# FIXME Need to harden to GNU sed on macOS...
 koopa::find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
@@ -135,7 +121,6 @@ koopa::find_and_replace_in_files() { # {{{1
     # """
     local file from to
     koopa::assert_has_args_ge "$#" 3
-    koopa::assert_has_gnu sed  # FIXME Rework this.
     from="${1:?}"
     to="${2:?}"
     shift 2
@@ -154,13 +139,11 @@ koopa::find_and_replace_in_files() { # {{{1
     do
         [[ -f "$file" ]] || return 1
         koopa::alert_info "$file"
-        sed -i "s/${from}/${to}/g" "$file"
+        koopa::sed -i "s/${from}/${to}/g" "$file"
     done
     return 0
 }
 
-# FIXME Harden this to GNU find on macOS...
-# FIXME Can we use fd for this?
 koopa::find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
@@ -171,7 +154,7 @@ koopa::find_broken_symlinks() { # {{{1
     # """
     local dir
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed find grep
+    koopa::assert_has_gnu 'find' 'grep' 'sort'
     dir="${1:-.}"
     [[ -d "$dir" ]] || return 0
     dir="$(koopa::realpath "$dir")"
@@ -183,8 +166,8 @@ koopa::find_broken_symlinks() { # {{{1
             -xtype l \
             -print \
             2>&1 \
-            | grep -v 'Permission denied' \
-            | sort \
+        | grep -v 'Permission denied' \
+        | sort \
     )"
     koopa::print "$x"
     return 0

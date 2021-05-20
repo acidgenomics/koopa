@@ -300,8 +300,7 @@ koopa::is_file_system_case_sensitive() { # {{{1
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'find'
-    koopa::assert_has_gnu 'find'
+    koopa::assert_is_gnu 'find'
     touch '.tmp.checkcase' '.tmp.checkCase'
     count="$( \
         find . \
@@ -452,8 +451,7 @@ koopa::is_recent() { # {{{1
     # """
     local days exists file
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed find
-    koopa::assert_has_gnu find
+    koopa::assert_is_gnu 'find'
     days=14
     for file in "$@"
     do
