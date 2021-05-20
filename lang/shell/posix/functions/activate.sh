@@ -166,23 +166,6 @@ _koopa_activate_gnu() { # {{{1
             alias stat='gstat'
             alias tail='gtail'
             alias tr='gtr'
-            # Also set BSD (macOS system) aliases, for convenience.
-            alias bsdbasename='/usr/bin/basename'
-            alias bsdchmod='/bin/chmod'
-            alias bsdchown='/usr/sbin/chown'
-            alias bsdcp='/bin/cp'
-            alias bsdcut='/usr/bin/cut'
-            alias bsddirname='/usr/bin/dirname'
-            alias bsddu='/usr/bin/du'
-            alias bsdhead='/usr/bin/head'
-            alias bsdln='/bin/ln'
-            alias bsdmkdir='/bin/mkdir'
-            alias bsdmv='/bin/mv'
-            alias bsdreadlink='/usr/bin/readlink'
-            alias bsdrm='/bin/rm'
-            alias bsdstat='/usr/bin/stat'
-            alias bsdtail='/usr/bin/tail'
-            alias bsdtr='/bin/tr'
         else
             _koopa_alert_not_installed 'Homebrew coreutils'
             harden_coreutils=0
@@ -191,57 +174,42 @@ _koopa_activate_gnu() { # {{{1
         then
             alias find='gfind'
             alias xargs='gxargs'
-            alias bsdfind='/usr/bin/find'
-            alias bsdxargs='/usr/bin/xargs'
         else
             _koopa_alert_not_installed 'Homebrew findutils'
         fi
         if [ -d "${opt_prefix}/gawk" ]
         then
             alias awk='gawk'
-            alias bsdawk='/usr/bin/awk'
         else
             _koopa_alert_not_installed 'Homebrew gawk'
         fi
         if [ -d "${opt_prefix}/gnu-sed" ]
         then
             alias sed='gsed'
-            alias bsdsed='/usr/bin/sed'
         else
             _koopa_alert_not_installed 'Homebrew gnu-sed'
         fi
         if [ -d "${opt_prefix}/gnu-tar" ]
         then
             alias tar='gtar'
-            alias bsdtar='/usr/bin/tar'
         else
             _koopa_alert_not_installed 'Homebrew gnu-tar'
         fi
-        # > if [ -d "${opt_prefix}/gnu-which" ]
-        # > then
-        # >     alias which='gwhich'
-        # >     alias bsdwhich='/usr/bin/which'
-        # > else
-        # >     _koopa_alert_not_installed 'Homebrew gnu-which'
-        # > fi
         if [ -d "${opt_prefix}/grep" ]
         then
             alias grep='ggrep'
-            alias bsdgrep='/usr/bin/grep'
         else
             _koopa_alert_not_installed 'Homebrew grep'
         fi
         if [ -d "${opt_prefix}/make" ]
         then
             alias make='gmake'
-            alias bsdmake='/usr/bin/make'
         else
             _koopa_alert_not_installed 'Homebrew make'
         fi
         if [ -d "${opt_prefix}/man-db" ]
         then
             alias man='gman'
-            alias bsdman='/usr/bin/man'
         else
             _koopa_alert_not_installed 'Homebrew man-db'
         fi
