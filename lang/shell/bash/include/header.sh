@@ -288,7 +288,7 @@ __koopa_bash_header() { # {{{1
         fi
         # Ensure we activate GNU coreutils and other tools that are keg-only
         # for Homebrew but preferred default for our Bash scripts.
-        koopa::activate_homebrew_keg_only
+        # > koopa::activate_homebrew_keg_only
         # Check if user is requesting help documentation.
         koopa::help "$@"
         # Require sudo permission to run 'sbin/' scripts.
