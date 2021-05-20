@@ -217,13 +217,13 @@ _koopa_activate_gnu() { # {{{1
         else
             _koopa_alert_not_installed 'Homebrew gnu-tar'
         fi
-        if [ -d "${opt_prefix}/gnu-which" ]
-        then
-            alias which='gwhich'
-            alias bsdwhich='/usr/bin/which'
-        else
-            _koopa_alert_not_installed 'Homebrew gnu-which'
-        fi
+        # > if [ -d "${opt_prefix}/gnu-which" ]
+        # > then
+        # >     alias which='gwhich'
+        # >     alias bsdwhich='/usr/bin/which'
+        # > else
+        # >     _koopa_alert_not_installed 'Homebrew gnu-which'
+        # > fi
         if [ -d "${opt_prefix}/grep" ]
         then
             alias grep='ggrep'
