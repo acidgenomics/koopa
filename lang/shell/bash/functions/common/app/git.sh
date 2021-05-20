@@ -380,15 +380,6 @@ koopa::git_reset() { # {{{1
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
     #
-    # Consider these additional steps:
-    # # Ensure accidental swap files created by vim get nuked.
-    # > find . -type f -name '*.swp' -delete
-    # # Ensure invisible files get nuked on macOS.
-    # > if koopa::is_macos
-    # > then
-    # >     find . -type f -name '.DS_Store' -delete
-    # > fi
-    #
     # See also:
     # https://gist.github.com/nicktoumpelis/11214362
     # """
