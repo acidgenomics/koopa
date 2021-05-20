@@ -62,14 +62,11 @@ FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/
 # - https://stackoverflow.com/questions/40904488/openmp-r-and-macos
 # - https://iscinumpy.gitlab.io/post/omp-on-high-sierra/
 
-# Recommended settings from mac.r-project.org.
 CPPFLAGS += -Xclang -fopenmp
+LDFLAGS += -lomp
 LIBS += -lomp
 
 # May need to enable:
-# > LDFLAGS += -lomp
-
-# These additional arguments are required for data.table to build.
-SHLIB_OPENMP_CFLAGS += -Xpreprocessor -fopenmp
-SHLIB_OPENMP_CPPFLAGS += -Xpreprocessor -fopenmp
-SHLIB_OPENMP_CXXFLAGS += -Xpreprocessor -fopenmp
+# > SHLIB_OPENMP_CFLAGS += -Xpreprocessor -fopenmp
+# > SHLIB_OPENMP_CPPFLAGS += -Xpreprocessor -fopenmp
+# > SHLIB_OPENMP_CXXFLAGS += -Xpreprocessor -fopenmp
