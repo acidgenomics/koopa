@@ -206,49 +206,39 @@ koopa::ftp_mirror() { # {{{1
     return 0
 }
 
-koopa::sra_prefetch_parallel() { # {{{1
-    # """
-    # Prefetch files from SRA in parallel.
-    # @note Updated 2021-05-20.
-    # """
-    koopa::assert_is_gnu 'find' 'parallel'
-    koopa::assert_is_installed 'ascp' 'prefetch'
-    file="${1:-}"
-    [ -z "$file" ] && file='SraAccList.txt'
-    koopa::assert_is_file "$file"
-    jobs="$(koopa::cpu_count)"
-    # Delete any temporary files that may have been created by previous run.
-    find . \(-name '*.lock' -o -name '*.tmp'\) -delete
-    sort -u "$file" | parallel -j "$jobs" 'prefetch --verbose {}'
-    return 0
-}
-
 koopa::wget_recursive() { # {{{1
     # """
     # Download files with wget recursively.
-    # @note Updated 2020-07-13.
+    # @note Updated 2021-05-20.
     #
     # Note that we need to escape the wildcards in the password.
     # For direct input, can just use single quotes to escape.
     # See also: https://unix.stackexchange.com/questions/379181
     # """
-    local datetime log_file password url user
+    local brew_prefix datetime log_file name password url user wget wget_args
     koopa::assert_has_args_eq "$#" 3
-    koopa::assert_is_installed wget
+    wget='wget'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        wget="${brew_prefix}/bin/wget"
+    fi
+    koopa::assert_is_installed "$wget"
     url="${1:?}"
     user="${2:?}"
     password="${3:?}"
     password="${password@Q}"
     datetime="$(koopa::datetime)"
     log_file="wget-${datetime}.log"
-    wget \
-        --continue \
-        --debug \
-        --no-parent \
-        --output-file="$log_file" \
-        --password="$password" \
-        --recursive \
-        --user="$user" \
-        "$url"/*
+    wget_args=(
+        "--output-file=${log_file}"
+        "--password=${password}"
+        "--user=${user}"
+        '--continue'
+        '--debug'
+        '--no-parent'
+        '--recursive'
+    )
+    "$wget" "${wget_args[@]}" "$url"/*
     return 0
 }
