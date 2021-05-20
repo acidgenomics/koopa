@@ -458,15 +458,21 @@ koopa::is_recent() { # {{{1
     # @examples
     # koopa::is_recent ~/hello-world.txt
     # """
-    local days exists file
+    local brew_prefix days exists file find
     koopa::assert_has_args "$#"
-    koopa::assert_is_gnu 'find'
+    find='find'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        find="${brew_prefix}/bin/gfind"
+    fi
+    koopa::assert_is_gnu "$find"
     days=14
     for file in "$@"
     do
         [[ -e "$file" ]] || return 1
         exists="$( \
-            find "$file" \
+            "$find" "$file" \
                 -mindepth 0 \
                 -maxdepth 0 \
                 -mtime "-${days}" \
