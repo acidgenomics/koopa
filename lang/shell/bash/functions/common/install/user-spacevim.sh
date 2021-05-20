@@ -5,13 +5,16 @@
 koopa::install_spacevim() { # {{{1
     # """
     # Install SpaceVim.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-20.
     # https://spacevim.org
     # """
-    local name name_fancy prefix script_file script_url tmp_dir vimproc_prefix
+    local name name_fancy prefix script_file script_url tmp_dir \
+        vimproc_prefix xdg_data_home
     name='spacevim'
     name_fancy='SpaceVim'
-    prefix="${HOME}/.SpaceVim"
+    # FIXME We need to define this in the package...
+    prefix="${HOME:?}/.SpaceVim"
+    xdg_data_home="$(_koopa_xdg_data_home)"
     if [[ -d "$prefix" ]]
     then
         koopa::alert_note "${name_fancy} is already installed at '${prefix}'."
@@ -19,8 +22,8 @@ koopa::install_spacevim() { # {{{1
     fi
     koopa::install_start "$name_fancy"
     # Symlink the font cache, to avoid unnecessary copy step.
-    koopa::rm "${XDG_DATA_HOME:?}/fonts"
-    koopa::ln "${HOME}/Library/Fonts" "${XDG_DATA_HOME:?}/fonts"
+    koopa::rm "${xdg_data_home}/fonts"
+    koopa::ln "${HOME:?}/Library/Fonts" "${xdg_data_home}/fonts"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -45,11 +48,12 @@ koopa::install_spacevim() { # {{{1
 koopa::uninstall_spacevim() { # {{{1
     # """
     # Uninstall SpaceVim.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-20.
     # """
     local name_fancy prefix
     name_fancy='SpaceVim'
-    prefix="${HOME}/.SpaceVim"
+    # FIXME We need to define this in the package as a function.
+    prefix="${HOME:?}/.SpaceVim"
     if [[ ! -d "$prefix" ]]
     then
         koopa::alert_not_installed "$name_fancy" "$prefix"
@@ -58,16 +62,16 @@ koopa::uninstall_spacevim() { # {{{1
     koopa::uninstall_start "$name_fancy"
     koopa::rm \
         "$prefix" "${prefix}.d" \
-        "${HOME}/.cache/SpaceVim"
-    if [[ -d "${HOME}/.vim_back" ]]
+        "${HOME:?}/.cache/SpaceVim"
+    if [[ -d "${HOME:?}/.vim_back" ]]
     then
-        koopa::rm "${HOME}/.vim"
-        koopa::mv "${HOME}/.vim_back" "${HOME}/.vim"
+        koopa::rm "${HOME:?}/.vim"
+        koopa::mv "${HOME:?}/.vim_back" "${HOME:?}/.vim"
     fi
-    if [[ -f "${HOME}/.vimrc_back" ]]
+    if [[ -f "${HOME:?}/.vimrc_back" ]]
     then
-        koopa::rm "${HOME}/.vimrc"
-        koopa::mv "${HOME}/.vimrc_back" "${HOME}/.vimrc"
+        koopa::rm "${HOME:?}/.vimrc"
+        koopa::mv "${HOME:?}/.vimrc_back" "${HOME:?}/.vimrc"
     fi
     koopa::uninstall_success "$name_fancy"
     return 0
