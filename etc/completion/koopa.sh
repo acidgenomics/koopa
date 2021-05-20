@@ -3,7 +3,7 @@
 
 # """
 # Bash/Zsh TAB completion.
-# Updated 2021-05-07.
+# Updated 2021-05-20.
 #
 # Keep all of these commands in a single file.
 # Sourcing multiple scripts doesn't work reliably.
@@ -24,23 +24,14 @@ _koopa_complete() { # {{{1
             '--help'
             '--version'
             'app'
-            'check-system'
-            'get-version'
             'header'
-            'info'
             'install'
             'list'
-            'prefix'
+            'system'
             'test'
             'uninstall'
             'update'
         )
-        if _koopa_is_linux
-        then
-            args+=(
-                'delete-cache'
-            )
-        fi
         # Quoting inside the array doesn't work on Bash.
         COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
     elif [[ "$COMP_CWORD" -eq 2 ]]
@@ -189,9 +180,37 @@ _koopa_complete() { # {{{1
                 ;;
             system)
                 args=(
+                    'brew-dump-brewfile'
+                    'brew-outdated'
+                    'check'
+                    'delete-cache'
+                    'disable-passwordless-sudo'
+                    'enable-passwordless-sudo'
+                    'fix-sudo-setrlimit-error'
+                    'fix-zsh-permissions'
+                    'host-id'
+                    'info'
                     'log'
+                    'os-string'
+                    'path'
+                    'prefix'
                     'pull'
+                    'roff'
+                    'set-permissions'
+                    'variable'
+                    'variables'
+                    'version'
+                    'which'
                 )
+                if _koopa_is_macos
+                then
+                    args+=(
+                        'disable-touch-id-sudo'
+                        'enable-touch-id-sudo'
+                        'homebrew-cask-version'
+                        'macos-app-version'
+                    )
+                fi
                 ;;
             uninstall)
                 args=(
