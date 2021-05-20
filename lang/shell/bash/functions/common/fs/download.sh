@@ -3,7 +3,7 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2021-05-16.
+    # @note Updated 2021-05-20.
     #
     # @section curl:
     #
@@ -34,7 +34,6 @@ koopa::download() { # {{{1
         bn="$(basename "$url")"
         file="${wd}/${bn}"
     fi
-    file="$(koopa::realpath "$file")"
     dl='curl'
     koopa::is_qemu && dl='wget'
     dl_args=()

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Harden this by using GNU tar on macOS when possible.
+# FIXME Harden this by using Homebrew / GNU versions on macOS when possible.
 koopa::extract() { # {{{1
     # """
     # Extract compressed files automatically.
@@ -15,6 +15,7 @@ koopa::extract() { # {{{1
     koopa::assert_has_args "$#"
     for file in "$@"
     do
+        pwd
         koopa::assert_is_file "$file"
         file="$(koopa::realpath "$file")"
         koopa::alert "Extracting '${file}'."
