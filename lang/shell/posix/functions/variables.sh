@@ -276,8 +276,8 @@ _koopa_r() { # {{{1
 
 _koopa_shell() { # {{{1
     # """
-    # Full path to the current shell binary.
-    # @note Updated 2021-05-15.
+    # Current shell executable.
+    # @note Updated 2021-05-20.
     #
     # Detection issues with qemu ARM emulation on x86:
     # - The 'ps' approach will return correct shell for ARM running via
@@ -316,22 +316,21 @@ _koopa_shell() { # {{{1
     if [ -n "${KOOPA_SHELL:-}" ]
     then
         str="$KOOPA_SHELL"
-    elif __koopa_is_linux
+    elif _koopa_is_linux
     then
-        if __koopa_is_installed ps sed
+        if _koopa_is_installed ps sed
         then
             str="$( \
                 ps -p "${$}" -o 'comm=' \
                 | sed 's/^-//' \
             )"
-        elif [ -x "/proc/${$}/exe" ] && \
-            __koopa_is_installed readlink
+        elif [ -x "/proc/${$}/exe" ]
         then
-            str="$(readlink "/proc/${$}/exe")"
+            str="$(_koopa_realpath "/proc/${$}/exe")"
         fi
-    elif __koopa_is_macos
+    elif _koopa_is_macos
     then
-        if __koopa_is_installed lsof sed
+        if _koopa_is_installed lsof sed
         then
             str="$( \
                 lsof \
@@ -345,7 +344,7 @@ _koopa_shell() { # {{{1
         fi
     fi
     [ -n "$str" ] || return 1
-    __koopa_print "$str"
+    _koopa_print "$str"
     return 0
 }
 
