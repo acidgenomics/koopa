@@ -552,8 +552,8 @@ __koopa_realpath() { # {{{1
 
 __koopa_shell() { # {{{1
     # """
-    # Full path to the current shell binary.
-    # @note Updated 2021-05-14.
+    # Current shell executable.
+    # @note Updated 2021-05-20.
     # """
     local str
     str=''
@@ -562,21 +562,18 @@ __koopa_shell() { # {{{1
         str="$KOOPA_SHELL"
     elif __koopa_is_linux
     then
-        # FIXME Consider using _koopa_sed here?
         if __koopa_is_installed ps sed
         then
             str="$( \
                 ps -p "${$}" -o 'comm=' \
                 | sed 's/^-//' \
             )"
-        elif [ -x "/proc/${$}/exe" ] && \
-            __koopa_is_installed readlink
+        elif [ -x "/proc/${$}/exe" ]
         then
-            str="$(readlink "/proc/${$}/exe")"                 # FIXME coreutils
+            str="$(__koopa_realpath "/proc/${$}/exe")"
         fi
     elif __koopa_is_macos
     then
-        # FIXME Consider using _koopa_sed here?
         if __koopa_is_installed lsof sed
         then
             str="$( \
