@@ -72,9 +72,13 @@ _koopa_realpath() { # {{{1
     # - https://stackoverflow.com/questions/3572030/
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
-    local readlink x
+    local brew_prefix readlink x
     readlink='readlink'
-    _koopa_is_macos && readlink='greadlink'
+    if _koopa_is_macos
+    then
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        readlink="${brew_prefix}/bin/greadlink"
+    fi
     _koopa_is_installed "$readlink" || return 1
     x="$("$readlink" -f "$@")"
     [ -n "$x" ] || return 1
