@@ -577,13 +577,10 @@ _koopa_activate_local_etc_profile() { # {{{1
 _koopa_activate_local_paths() { # {{{1
     # """
     # Activate local user paths.
-    # @note Updated 2021-04-23.
+    # @note Updated 2021-05-20.
     # """
-    _koopa_add_to_path_start \
-        "${HOME}/bin" \
-        "${HOME}/.local/bin"
-    _koopa_add_to_manpath_start \
-        "${HOME}/.local/share/man"
+    _koopa_activate_prefix "$(_koopa_xdg_local_home)"
+    _koopa_add_to_path_start "${HOME:?}/bin"
     return 0
 }
 
