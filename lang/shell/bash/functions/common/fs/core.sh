@@ -99,8 +99,7 @@ koopa::cp() { # {{{1
         brew_prefix="$(koopa::homebrew_prefix)"
         which_cp="${brew_prefix}/bin/gcp"
     fi
-    koopa::assert_is_installed "$which_cp"
-    koopa::assert_has_gnu "$which_cp"
+    koopa::assert_is_gnu "$which_cp"
     sudo=0
     symlink=0
     target_dir=''
@@ -168,8 +167,7 @@ koopa::df() { # {{{1
         brew_prefix="$(koopa::homebrew_prefix)"
         df="${brew_prefix}/bin/gdf"
     fi
-    koopa::assert_is_installed "$df"
-    koopa::assert_has_gnu "$df"
+    koopa::assert_is_gnu "$df"
     "$df" \
         --portability \
         --print-type \
@@ -191,8 +189,7 @@ koopa::ln() { # {{{1
         brew_prefix="$(koopa::homebrew_prefix)"
         which_ln="${brew_prefix}/bin/gln"
     fi
-    koopa::assert_is_installed "$which_ln"
-    koopa::assert_has_gnu "$which_ln"
+    koopa::assert_is_gnu "$which_ln"
     sudo=0
     target_dir=''
     OPTIND=1
@@ -254,8 +251,7 @@ koopa::mkdir() { # {{{1
         brew_prefix="$(koopa::homebrew_prefix)"
         which_mkdir="${brew_prefix}/bin/gmkdir"
     fi
-    koopa::assert_is_installed "$which_mkdir"
-    koopa::assert_has_gnu "$which_mkdir"
+    koopa::assert_is_gnu "$which_mkdir"
     sudo=0
     OPTIND=1
     while getopts 'S' opt
@@ -302,8 +298,7 @@ koopa::mv() { # {{{1
         brew_prefix="$(koopa::homebrew_prefix)"
         which_mv="${brew_prefix}/bin/gmv"
     fi
-    koopa::assert_is_installed "$which_mv"
-    koopa::assert_has_gnu "$which_mv"
+    koopa::assert_is_gnu "$which_mv"
     sudo=0
     target_dir=''
     OPTIND=1
@@ -405,8 +400,7 @@ koopa::rm() { # {{{1
         brew_prefix="$(koopa::homebrew_prefix)"
         which_rm="${brew_prefix}/bin/grm"
     fi
-    koopa::assert_is_installed "$which_rm"
-    koopa::assert_has_gnu "$which_rm"
+    koopa::assert_is_gnu "$which_rm"
     sudo=0
     OPTIND=1
     while getopts 'S' opt
