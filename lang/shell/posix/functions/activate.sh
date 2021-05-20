@@ -500,20 +500,24 @@ _koopa_activate_koopa_paths() { # {{{1
 _koopa_activate_llvm() { # {{{1
     # """
     # Activate LLVM config.
-    # @note Updated 2020-08-05.
+    # @note Updated 2021-05-20.
     # """
-    local config make_prefix
+    local brew_prefix config
     [ -x "${LLVM_CONFIG:-}" ] && return 0
-    make_prefix="$(_koopa_make_prefix)"
     if _koopa_is_macos
     then
-        config="${make_prefix}/opt/llvm/bin/llvm-config"
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        config="${brew_prefix}/opt/llvm/bin/llvm-config"
     else
         # Note that findutils isn't installed on Linux distros by default
         # (e.g. Docker fedora image), and will error here otherwise.
         _koopa_is_installed find || return 0
         # Attempt to find the latest version automatically.
-        config="$(find '/usr/bin' -name 'llvm-config-*' | sort | tail -n 1)"
+        config="$( \
+            find '/usr/bin' -name 'llvm-config-*' \
+            | sort \
+            | tail -n 1 \
+        )"
     fi
     [ -x "$config" ] && export LLVM_CONFIG="$config"
     return 0
