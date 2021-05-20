@@ -86,7 +86,7 @@ koopa::install_perlbrew() { # {{{1
         file='install.sh'
         url='https://install.perlbrew.pl'
         koopa::download "$url" "$file"
-        chmod +x "$file"
+        koopa::chmod +x "$file"
         "./${file}"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"

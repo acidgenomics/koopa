@@ -31,7 +31,7 @@ koopa:::linux_install_docker_credential_pass() { # {{{1
 download/v${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    chmod 0775 "$name"
+    koopa::chmod 0775 "$name"
     koopa::mkdir "${prefix}/bin"
     koopa::sys_set_permissions -r "$prefix"
     koopa::cp -t "${prefix}/bin" "$name"

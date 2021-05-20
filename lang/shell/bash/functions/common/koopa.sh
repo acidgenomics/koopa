@@ -201,7 +201,7 @@ koopa:::koopa_system() { # {{{1
             f='view-latest-tmp-log-file'
             ;;
         path)
-            koopa::print "$PATH"
+            koopa::print "${PATH:-}"
             return 0
             ;;
         prefix)

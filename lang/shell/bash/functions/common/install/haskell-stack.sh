@@ -22,7 +22,7 @@ koopa:::install_haskell_stack() { # {{{1
     file='stack.sh'
     url='https://get.haskellstack.org/'
     koopa::download "$url" "$file"
-    chmod +x "$file"
+    koopa::chmod +x "$file"
     ./"${file}" -f -d "$prefix"
     return 0
 }

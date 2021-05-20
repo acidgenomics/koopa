@@ -1,5 +1,87 @@
 #!/usr/bin/env bash
 
+koopa::chmod() { # {{{1
+    # """
+    # GNU chmod.
+    # @note Updated 2021-05-20.
+    # """
+    local brew_prefix chmod pos sudo which_chmod
+    which_chmod='chmod'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        which_chmod="${brew_prefix}/bin/gchmod"
+    fi
+    koopa::assert_is_installed "$which_chmod"
+    koopa::assert_is_gnu "$which_chmod"
+    sudo=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            -S)
+                sudo=1
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_no_args "$#"
+    if [[ "$sudo" -eq 1 ]]
+    then
+        chmod=('sudo' "$which_chmod")
+    else
+        chmod=("$which_chmod")
+    fi
+    "${chmod[@]}" "$@"
+    return 0
+}
+
+koopa::chown() { # {{{1
+    # """
+    # GNU chown.
+    # @note Updated 2021-05-20.
+    # """
+    local brew_prefix chown pos sudo which_chown
+    which_chown='chown'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        which_chown="${brew_prefix}/bin/gchown"
+    fi
+    koopa::assert_is_installed "$which_chown"
+    koopa::assert_is_gnu "$which_chown"
+    sudo=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            -S)
+                sudo=1
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_no_args "$#"
+    if [[ "$sudo" -eq 1 ]]
+    then
+        chown=('sudo' "$which_chown")
+    else
+        chown=("$which_chown")
+    fi
+    "${chown[@]}" "$@"
+    return 0
+}
+
 koopa::cp() { # {{{1
     # """
     # Hardened version of GNU coreutils copy.
@@ -9,7 +91,7 @@ koopa::cp() { # {{{1
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
-    local OPTIND brew_prefix cp cp_flags mkdir rm sudo symlink \
+    local OPTIND brew_prefix cp cp_args mkdir rm sudo symlink \
         target_dir target_parent which_cp
     which_cp='cp'
     if koopa::is_macos
@@ -53,13 +135,13 @@ koopa::cp() { # {{{1
         mkdir=('koopa::mkdir')
         rm=('koopa::rm')
     fi
-    cp_flags=('-af')
-    [[ "$symlink" -eq 1 ]] && cp_flags+=('-s')
+    cp_args=('-af')
+    [[ "$symlink" -eq 1 ]] && cp_args+=('-s')
     if [[ -n "$target_dir" ]]
     then
         koopa::assert_is_existing "$@"
         target_dir="$(koopa::strip_trailing_slash "$target_dir")"
-        cp_flags+=('-t' "$target_dir")
+        cp_args+=('-t' "$target_dir")
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
     else
         koopa::assert_has_args_eq "$#" 2
@@ -70,7 +152,7 @@ koopa::cp() { # {{{1
         target_parent="$(dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
-    "${cp[@]}" "${cp_flags[@]}" "$@"
+    "${cp[@]}" "${cp_args[@]}" "$@"
     return 0
 }
 
@@ -99,9 +181,9 @@ koopa::df() { # {{{1
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly with GNU ln.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-20.
     # """
-    local OPTIND brew_prefix ln ln_flags mkdir rm source_file target_file \
+    local OPTIND brew_prefix ln ln_args mkdir rm source_file target_file \
         target_dir target_parent which_ln
     which_ln='ln'
     if koopa::is_macos
@@ -141,12 +223,12 @@ koopa::ln() { # {{{1
         mkdir=('koopa::mkdir')
         rm=('koopa::rm')
     fi
-    ln_flags=('-fns')
+    ln_args=('-fns')
     if [[ -n "$target_dir" ]]
     then
         koopa::assert_is_existing "$@"
         target_dir="$(koopa::strip_trailing_slash "$target_dir")"
-        ln_flags+=('-t' "$target_dir")
+        ln_args+=('-t' "$target_dir")
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
     else
         koopa::assert_has_args_eq "$#" 2
@@ -157,7 +239,7 @@ koopa::ln() { # {{{1
         target_parent="$(dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
-    "${ln[@]}" "${ln_flags[@]}" "$@"
+    "${ln[@]}" "${ln_args[@]}" "$@"
     return 0
 }
 
@@ -208,11 +290,11 @@ koopa::mv() { # {{{1
     # This function works on 1 file or directory at a time.
     # It ensures that the target parent directory exists automatically.
     #
-    # Useful GNU cp flags, for reference (non-POSIX):
+    # Useful GNU mv args, for reference (non-POSIX):
     # - -T: no-target-directory
     # - --strip-trailing-slashes
     # """
-    local OPTIND brew_prefix mkdir mv mv_flags rm source_file sudo \
+    local OPTIND brew_prefix mkdir mv mv_args rm source_file sudo \
         target_file target_parent which_mv
     which_mv='mv'
     if koopa::is_macos
@@ -252,12 +334,12 @@ koopa::mv() { # {{{1
         mv=("$which_mv")
         rm=('koopa::rm')
     fi
-    mv_flags=('-f')
+    mv_args=('-f')
     if [[ -n "$target_dir" ]]
     then
         koopa::assert_is_existing "$@"
         target_dir="$(koopa::strip_trailing_slash "$target_dir")"
-        mv_flags+=('-t' "$target_dir")
+        mv_args+=('-t' "$target_dir")
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
     else
         koopa::assert_has_args_eq "$#" 2
@@ -268,7 +350,7 @@ koopa::mv() { # {{{1
         target_parent="$(dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
-    "${mv[@]}" "${mv_flags[@]}" "$@"
+    "${mv[@]}" "${mv_args[@]}" "$@"
     return 0
 }
 
