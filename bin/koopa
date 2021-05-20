@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# FIXME Need to make this simpler and rework.
+
 # Handle situation where 'koopa' is symlinked into '/usr/local'.
 bash_source="${BASH_SOURCE[0]}"
 if [[ -L "$bash_source" ]]
@@ -8,6 +10,7 @@ then
     koopa::realpath() { # {{{1
         if [[ "$(uname -s)" == 'Darwin' ]]
         then
+            # FIXME Take this out and make simpler...
             perl -MCwd -e 'print Cwd::abs_path shift' "$1"
         else
             readlink -f "$@"
