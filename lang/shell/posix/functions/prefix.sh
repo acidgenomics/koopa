@@ -615,3 +615,104 @@ _koopa_venv_prefix() { # {{{1
     _koopa_print "$(_koopa_opt_prefix)/virtualenvs"
     return 0
 }
+
+_koopa_xdg_cache_home() { # {{{1
+    # """
+    # XDG cache home.
+    # @note Updated 2021-05-20.
+    # """
+    local x
+    x="${XDG_CACHE_HOME:-}"
+    if [ -z "$x" ]
+    then
+        x="${HOME:?}/.cache"
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_config_dirs() { # {{{1
+    # """
+    # XDG config dirs.
+    # @note Updated 2021-05-20.
+    # """
+    local x
+    x="${XDG_CONFIG_DIRS:-}"
+    if [ -z "$x" ] 
+    then
+        x='/etc/xdg'
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_config_home() { # {{{1
+    # """
+    # XDG config home.
+    # @note Updated 2021-05-20.
+    # """
+    local x
+    x="${XDG_CONFIG_HOME:-}"
+    if [ -z "$x" ]
+    then
+        x="${HOME:?}/.config"
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_data_dirs() { # {{{1
+    # """
+    # XDG data dirs.
+    # @note Updated 2021-05-20.
+    # """
+    local make_prefix x
+    x="${XDG_DATA_DIRS:-}"
+    if [ -z "$x" ]
+    then
+        make_prefix="$(_koopa_make_prefix)"
+        x="${make_prefix}/share:/usr/share"
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_data_home() { # {{{1
+    # """
+    # XDG data home.
+    # @note Updated 2021-05-20.
+    # """
+    local x
+    x="${XDG_DATA_HOME:-}"
+    if [ -z "$x" ]
+    then
+        x="${HOME:?}/.local/share"
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_runtime_dir() { # {{{1
+    # """
+    # XDG runtime dir.
+    # @note Updated 2021-05-20.
+    #
+    # Specification:
+    # - Can only exist for the duration of the user's login.
+    # - Updated every 6 hours or set sticky bit if persistence is desired.
+    # - Should not store large files as it may be mounted as a tmpfs.
+    # """
+    local user_id x
+    x="${XDG_RUNTIME_DIR:-}"
+    if [ -z "$x" ]
+    then
+        user_id="$(_koopa_user_id)"
+        x="/run/user/${user_id}"
+        if _koopa_is_macos
+        then
+            x="/tmp${x}"
+        fi
+    fi
+    _koopa_print "$x"
+    return 0
+}

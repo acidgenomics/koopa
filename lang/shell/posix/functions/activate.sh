@@ -990,12 +990,6 @@ _koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
     # @note Updated 2021-05-20.
-    #
-    # XDG_RUNTIME_DIR:
-    # - Can only exist for the duration of the user's login.
-    # - Updated every 6 hours or set sticky bit if persistence is desired.
-    # - Should not store large files as it may be mounted as a tmpfs.
-    #
     # @seealso
     # - https://developer.gnome.org/basedir-spec/
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
@@ -1016,14 +1010,13 @@ _koopa_activate_xdg() { # {{{1
     then
         XDG_DATA_DIRS="$(_koopa_xdg_data_dirs)"
     fi
-
-
-    [ -z "${XDG_DATA_HOME:-}" ] && \
-        XDG_DATA_HOME="${HOME:?}/.local/share"
+    if [ -z "${XDG_DATA_HOME:-}" ]
+    then
+        XDG_DATA_HOME="$(_koopa_xdg_data_home)"
+    fi
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
     then
-        XDG_RUNTIME_DIR="/run/user/$(_koopa_user_id)"
-        _koopa_is_macos && XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
+        XDG_RUNTIME_DIR="$(_koopa_xdg_runtime_dir)"
     fi
     export \
         XDG_CACHE_HOME \
