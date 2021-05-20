@@ -131,62 +131,6 @@ koopa::assert_has_file_ext() { # {{{1
     return 0
 }
 
-koopa::assert_has_gnu() {  #{{{1
-    # """
-    # Assert that GNU version of a program is installed.
-    # @note Updated 2021-05-19.
-    # """
-    local arg
-    koopa::assert_has_args "$#"
-    for arg in "$@"
-    do
-        if ! koopa::has_gnu "$arg"
-        then
-            koopa::stop "GNU ${arg} is not installed."
-        fi
-    done
-    return 0
-}
-
-koopa::assert_has_gnu_binutils() {  #{{{1
-    # """
-    # Assert that GNU binutils is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_binutils
-    then
-        koopa::stop 'GNU binutils is not installed.'
-    fi
-    return 0
-}
-
-koopa::assert_has_gnu_coreutils() {  #{{{1
-    # """
-    # Assert that GNU coreutils is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_coreutils
-    then
-        koopa::stop 'GNU coreutils is not installed.'
-    fi
-    return 0
-}
-
-koopa::assert_has_gnu_findutils() {  #{{{1
-    # """
-    # Assert that GNU findutils is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_findutils
-    then
-        koopa::stop 'GNU findutils is not installed.'
-    fi
-    return 0
-}
-
 koopa::assert_has_monorepo() { # {{{1
     # """
     # Assert that the user has a git monorepo.
@@ -453,6 +397,23 @@ koopa::assert_is_gitlab_ssh_enabled() { # {{{1
     then
         koopa::stop 'GitLab SSH access is not configured correctly.'
     fi
+    return 0
+}
+
+koopa::assert_is_gnu() {  #{{{1
+    # """
+    # Assert that GNU version of a program is installed.
+    # @note Updated 2021-05-20.
+    # """
+    local arg
+    koopa::assert_has_args "$#"
+    for arg in "$@"
+    do
+        if ! koopa::is_gnu "$arg"
+        then
+            koopa::stop "GNU ${arg} is not installed."
+        fi
+    done
     return 0
 }
 

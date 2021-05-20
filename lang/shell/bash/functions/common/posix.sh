@@ -236,22 +236,6 @@ koopa::gsub() { # {{{1
     _koopa_gsub "$@"
 }
 
-koopa::has_gnu() { # {{{1
-    _koopa_has_gnu "$@"
-}
-
-koopa::has_gnu_binutils() { # {{{1
-    _koopa_has_gnu_binutils "$@"
-}
-
-koopa::has_gnu_coreutils() { # {{{1
-    _koopa_has_gnu_coreutils "$@"
-}
-
-koopa::has_gnu_findutils() { # {{{1
-    _koopa_has_gnu_findutils "$@"
-}
-
 koopa::h1() { # {{{1
     _koopa_h1 "$@"
 }
@@ -370,6 +354,10 @@ koopa::is_git_clean() { # {{{1
 
 koopa::is_git_toplevel() { # {{{1
     _koopa_is_git_toplevel "$@"
+}
+
+koopa::is_gnu() { # {{{1
+    _koopa_is_gnu "$@"
 }
 
 koopa::is_host() { # {{{1

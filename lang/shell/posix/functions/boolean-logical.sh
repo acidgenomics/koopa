@@ -47,42 +47,6 @@ _koopa_expr() { # {{{1
     expr "${1:?}" : "${2:?}" 1>/dev/null
 }
 
-_koopa_has_gnu() { # {{{1
-    # """
-    # Is a GNU program installed?
-    # @note Updated 2020-07-20.
-    # """
-    local cmd str
-    cmd="${1:?}"
-    _koopa_is_installed "$cmd" || return 1
-    str="$("$cmd" --version 2>&1 || true)"
-    _koopa_str_match_posix "$str" 'GNU'
-}
-
-_koopa_has_gnu_binutils() { # {{{1
-    # """
-    # Is GNU binutils installed?
-    # @note Updated 2020-04-27.
-    # """
-    _koopa_has_gnu ld
-}
-
-_koopa_has_gnu_coreutils() { # {{{1
-    # """
-    # Is GNU coreutils installed?
-    # @note Updated 2020-04-27.
-    # """
-    _koopa_has_gnu env
-}
-
-_koopa_has_gnu_findutils() { # {{{1
-    # """
-    # Is GNU findutils installed?
-    # @note Updated 2020-04-27.
-    # """
-    _koopa_has_gnu find
-}
-
 _koopa_is_alias() { # {{{1
     # """
     # Is the specified argument an alias?
@@ -240,6 +204,21 @@ _koopa_is_git_toplevel() { # {{{1
     local dir
     dir="${1:-.}"
     [ -e "${dir}/.git" ]
+}
+
+_koopa_is_gnu() { # {{{1
+    # """
+    # Is a GNU program installed?
+    # @note Updated 2020-07-20.
+    # """
+    local cmd str
+    for cmd in "$@"
+    do
+        _koopa_is_installed "$cmd" || return 1
+        str="$("$cmd" --version 2>&1 || true)"
+        _koopa_str_match_posix "$str" 'GNU' || return 1
+    done
+    return 0
 }
 
 _koopa_is_host() { # {{{1
