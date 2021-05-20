@@ -429,8 +429,7 @@ koopa::is_r_package_installed() { # {{{1
 koopa::is_recent() { # {{{1
     # """
     # If the file exists and is more recent than 2 weeks old.
-    #
-    # @note Updated 2020-06-03.
+    # @note Updated 2021-05-20.
     #
     # Current approach uses GNU find to filter based on modification date.
     #
@@ -439,6 +438,7 @@ koopa::is_recent() { # {{{1
     #
     # @seealso
     # - https://stackoverflow.com/a/32019461
+    # - fd using '--changed-before <DAYS>d' argument.
     #
     # @examples
     # koopa::is_recent ~/hello-world.txt
@@ -446,6 +446,7 @@ koopa::is_recent() { # {{{1
     local days exists file
     koopa::assert_has_args "$#"
     koopa::assert_is_installed find
+    koopa::assert_has_gnu find
     days=14
     for file in "$@"
     do
