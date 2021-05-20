@@ -176,7 +176,7 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2021-05-11.
+    # @note Updated 2021-05-20.
     # """
     local build_file build_args days force image images prune pos \
         repo repos repo_name
@@ -228,7 +228,7 @@ koopa::docker_build_all_images() { # {{{1
     [[ "$force" -eq 1 ]] && build_args+=('--force')
     for repo in "${repos[@]}"
     do
-        repo_name="$(basename "$(realpath "$repo")")"
+        repo_name="$(basename "$(koopa::realpath "$repo")")"
         koopa::h1 "Building '${repo_name}' images."
         build_file="${repo}/build.txt"
         if [[ -f "$build_file" ]]
@@ -238,11 +238,12 @@ koopa::docker_build_all_images() { # {{{1
             )"
         else
             readarray -t images <<< "$( \
-                find . \
-                    -mindepth 1 \
-                    -maxdepth 1 \
-                    -type d \
-                    -print0 \
+                koopa::find \
+                    --max-depth=1 \
+                    --min-depth=1 \
+                    --prefix='.' \
+                    --print0 \
+                    --type='d' \
                 | sort -z \
                 | xargs -0 -n1 basename \
             )"
