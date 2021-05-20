@@ -101,7 +101,7 @@ _koopa_kebab_case_simple() { # {{{1
 _koopa_lowercase() { # {{{1
     # """
     # Transform string to lowercase.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-20.
     #
     # awk alternative:
     # _koopa_print "$string" | awk '{print tolower($0)}'
@@ -109,11 +109,18 @@ _koopa_lowercase() { # {{{1
     # @seealso
     # https://stackoverflow.com/questions/2264428
     # """
-    local string
-    _koopa_is_installed tr || return 1
+    local brew_prefix string tr
+    tr='tr'
+    if _koopa_is_macos
+    then
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        tr="${brew_prefix}/bin/gtr"
+    fi
+    _koopa_is_gnu "$tr" || return 1
     for string in "$@"
     do
-        _koopa_print "$string" | tr '[:upper:]' '[:lower:]'
+        _koopa_print "$string" \
+            | "$tr" '[:upper:]' '[:lower:]'
     done
     return 0
 }
