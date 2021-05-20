@@ -119,18 +119,6 @@ quote=01:warning=01;35"
     return 0
 }
 
-# FIXME Ensure these are hardened:
-# - awk
-# - basename
-# - dirname
-# - grep
-# - realpath
-# - rsync
-# - sed
-# - tr
-# - which
-# - xargs
-
 _koopa_activate_gnu() { # {{{1
     # """
     # Activate GNU utilities.

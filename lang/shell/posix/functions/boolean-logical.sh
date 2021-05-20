@@ -1,4 +1,5 @@
 #!/bin/sh
+# koopa nolint=coreutils
 
 __koopa_git_has_unstaged_changes() { # {{{1
     # """
@@ -328,8 +329,8 @@ _koopa_is_os_like() { # {{{1
     _koopa_is_os "$id" && return 0
     file='/etc/os-release'
     [ -f "$file" ] || return 1
-    grep 'ID=' "$file" | grep -q "$id" && return 0             # FIXME coreutils
-    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0        # FIXME coreutils
+    grep 'ID=' "$file" | grep -q "$id" && return 0
+    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
     return 1
 }
 
@@ -342,13 +343,13 @@ _koopa_is_os_version() { # {{{1
     version="${1:?}"
     file='/etc/os-release'
     [ -f "$file" ] || return 1
-    grep -q "VERSION_ID=\"${version}" "$file"                  # FIXME coreutils
+    grep -q "VERSION_ID=\"${version}" "$file"
 }
 
 _koopa_is_qemu() { # {{{1
     # """
     # Is the current shell running inside of QEMU emulation?
-    # @note Updated 2021-05-16.
+    # @note Updated 2021-05-20.
     #
     # This can be the case for ARM Docker images running on an x86 Intel
     # machine, and vice versa.
@@ -365,7 +366,6 @@ _koopa_is_qemu() { # {{{1
     esac
     return 1
 }
-
 
 _koopa_is_raspbian() { # {{{1
     # """
