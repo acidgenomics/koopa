@@ -26,7 +26,7 @@ _koopa_git_branch() { # {{{1
     return 0
 }
 
-_koopa_tmux_session() { # {{{1
+_koopa_tmux_sessions() { # {{{1
     # """
     # Show active tmux sessions.
     # @note Updated 2021-05-20.
@@ -38,7 +38,7 @@ _koopa_tmux_session() { # {{{1
     tr='tr'
     if _koopa_is_macos
     then
-        brew_prefix="$(koopa::homebrew_prefix)"
+        brew_prefix="$(_koopa_homebrew_prefix)"
         cut="${brew_prefix}/bin/gcut"
         tr="${brew_prefix}/bin/gtr"
     fi
