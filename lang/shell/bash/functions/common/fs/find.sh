@@ -190,8 +190,6 @@ koopa::find_broken_symlinks() { # {{{1
     return 0
 }
 
-# FIXME Harden this to GNU find on macOS...
-# FIXME Need to use koopa::basename here...
 koopa::find_dotfiles() { # {{{1
     # """
     # Find dotfiles by type.

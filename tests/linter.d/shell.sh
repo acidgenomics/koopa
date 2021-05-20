@@ -35,6 +35,7 @@ test_all_coreutils() { # {{{1
         # > 'awk'  # FIXME
         # > 'grep'  # FIXME
         # > 'xargs'  # FIXME
+        # > 'tee'
         'basename'
         'cd'
         'chgrp'
@@ -55,7 +56,6 @@ test_all_coreutils() { # {{{1
         'sed'
         'sort'
         'stat'
-        'tee'
         'tr'
         'which'
     )
