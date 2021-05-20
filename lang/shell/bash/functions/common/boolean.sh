@@ -295,14 +295,21 @@ koopa::is_export() { # {{{1
 koopa::is_file_system_case_sensitive() { # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-20.
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed find
+    koopa::assert_is_installed 'find'
+    koopa::assert_has_gnu 'find'
     touch '.tmp.checkcase' '.tmp.checkCase'
-    count="$(find . -maxdepth 1 -iname '.tmp.checkcase' | wc -l)"
+    count="$( \
+        find . \
+            -maxdepth 1 \
+            -mindepth 1 \
+            -iname '.tmp.checkcase' \
+        | wc -l \
+    )"
     koopa::quiet_rm '.tmp.check'*
     [[ "$count" -eq 2 ]]
 }
