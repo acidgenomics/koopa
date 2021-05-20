@@ -31,8 +31,32 @@ test_all() { # {{{1
 test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
-    array=('^([ ]+)?(cd|cp|ln|mkdir|mv|rm) ')
+    array=(
+        'awk'
+        'basename'
+        'cd'
+        'chmod'
+        'chown'
+        'cp'
+        'cut'
+        'dirname'
+        'du'
+        'find'
+        'grep'
+        'ln'
+        'mkdir'
+        'mv'
+        'realpath'
+        'rm'
+        'rsync'
+        'sed'
+        'stat'
+        'tr'
+        'which'
+        'xargs'
+    )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
+    pattern="^([ ]+)?(${pattern}) "
     koopa::test_grep \
         -i 'coreutils' \
         -n 'shell | all | coreutils' \

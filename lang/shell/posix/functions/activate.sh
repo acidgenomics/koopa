@@ -119,10 +119,22 @@ quote=01:warning=01;35"
     return 0
 }
 
+# FIXME Ensure these are hardened:
+# - awk
+# - basename
+# - dirname
+# - grep
+# - realpath
+# - rsync
+# - sed
+# - tr
+# - which
+# - xargs
+
 _koopa_activate_gnu() { # {{{1
     # """
     # Activate GNU utilities.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-05-20.
     #
     # Creates hardened interactive aliases for GNU coreutils.
     #
@@ -147,67 +159,95 @@ _koopa_activate_gnu() { # {{{1
         if [ -d "${opt_prefix}/coreutils" ]
         then
             harden_coreutils=1
+            # These are hardened utils where we are changing default args.
+            cp='gcp'
+            ln='gln'
+            mkdir='gmkdir'
+            mv='gmv'
+            rm='grm'
+            # Standardize using GNU variants by default.
+            alias basename='gbasename'
+            alias chmod='gchmod'
+            alias chown='gchown'
+            alias cut='gcut'
+            alias dirname='gdirname'
+            alias du='gdu'
+            alias realpath='grealpath'
+            alias stat='gstat'
+            alias tr='gtr'
+            # Also set BSD (macOS system) aliases, for convenience.
+            alias bsdbasename='/usr/bin/basename'
             alias bsdchmod='/bin/chmod'
             alias bsdchown='/usr/sbin/chown'
             alias bsdcp='/bin/cp'
+            alias bsdcut='/usr/bin/cut'
+            alias bsddirname='/usr/bin/dirname'
             alias bsddu='/usr/bin/du'
             alias bsdln='/bin/ln'
             alias bsdmkdir='/bin/mkdir'
             alias bsdmv='/bin/mv'
             alias bsdrm='/bin/rm'
             alias bsdstat='/usr/bin/stat'
-            alias chmod='gchmod'
-            alias chown='gchown'
-            alias du='gdu'
-            alias stat='gstat'
-            cp='gcp'
-            ln='gln'
-            mkdir='gmkdir'
-            mv='gmv'
-            rm='grm'
+            alias bsdtr='/bin/tr'
         else
             _koopa_alert_not_installed 'Homebrew coreutils'
             harden_coreutils=0
         fi
         if [ -d "${opt_prefix}/findutils" ]
         then
-            alias bsdfind='/usr/bin/find'
             alias find='gfind'
+            alias xargs='gxargs'
+            alias bsdfind='/usr/bin/find'
+            alias bsdxargs='/usr/bin/xargs'
         else
             _koopa_alert_not_installed 'Homebrew findutils'
         fi
+        if [ -d "${opt_prefix}/gawk" ]
+        then
+            alias awk='gawk'
+            alias bsdawk='/usr/bin/awk'
+        else
+            _koopa_alert_not_installed 'Homebrew gawk'
+        fi
         if [ -d "${opt_prefix}/gnu-sed" ]
         then
-            alias bsdsed='/usr/bin/sed'
             alias sed='gsed'
+            alias bsdsed='/usr/bin/sed'
         else
             _koopa_alert_not_installed 'Homebrew gnu-sed'
         fi
         if [ -d "${opt_prefix}/gnu-tar" ]
         then
-            alias bsdtar='/usr/bin/tar'
             alias tar='gtar'
+            alias bsdtar='/usr/bin/tar'
         else
             _koopa_alert_not_installed 'Homebrew gnu-tar'
         fi
+        if [ -d "${opt_prefix}/gnu-which" ]
+        then
+            alias which='gwhich'
+            alias bsdwhich='/usr/bin/which'
+        else
+            _koopa_alert_not_installed 'Homebrew gnu-which'
+        fi
         if [ -d "${opt_prefix}/grep" ]
         then
-            alias bsdgrep='/usr/bin/grep'
             alias grep='ggrep'
+            alias bsdgrep='/usr/bin/grep'
         else
             _koopa_alert_not_installed 'Homebrew grep'
         fi
         if [ -d "${opt_prefix}/make" ]
         then
-            alias bsdmake='/usr/bin/make'
             alias make='gmake'
+            alias bsdmake='/usr/bin/make'
         else
             _koopa_alert_not_installed 'Homebrew make'
         fi
         if [ -d "${opt_prefix}/man-db" ]
         then
-            alias bsdman='/usr/bin/man'
             alias man='gman'
+            alias bsdman='/usr/bin/man'
         else
             _koopa_alert_not_installed 'Homebrew man-db'
         fi
