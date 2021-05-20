@@ -24,14 +24,25 @@ koopa::test() { # {{{1
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-05-20.
     # Not sorting here can speed the function up.
     # """
+    local brew_prefix find grep prefix sort x
     koopa::assert_has_no_args "$#"
-    local prefix x
+    find='find'
+    grep='grep'
+    sort='sort'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        find="${brew_prefix}/bin/gfind"
+        grep="${brew_prefix}/bin/ggrep"
+        sort="${brew_prefix}/bin/gsort"
+    fi
+    koopa::assert_is_gnu "$find" "$grep" "$sort"
     prefix="$(koopa::prefix)"
     x="$( \
-        find "$prefix" \
+        "$find" "$prefix" \
             -mindepth 1 \
             -type f \
             -not -name "$(basename "$0")" \
@@ -49,14 +60,15 @@ koopa::test_find_files() { # {{{1
             -not -path "${prefix}/coverage/*" \
             -not -path "${prefix}/dotfiles/*" \
             -not -path "${prefix}/lang/r/.Rproj.user/*" \
+            -not -path "${prefix}/lang/shell/bash/functions/deprecated/*" \
             -not -path "${prefix}/opt/*" \
             -not -path "${prefix}/tests/*" \
             -not -path "${prefix}/todo.org" \
             -not -path '*/etc/R/*' \
             -print \
         2>&1 \
-        | grep -v 'Permission denied' \
-        | sort \
+        | "$grep" -v 'Permission denied' \
+        | "$sort" \
     )"
     koopa::print "$x"
 }
