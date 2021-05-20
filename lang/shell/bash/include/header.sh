@@ -9,10 +9,17 @@ __koopa_bash_source_dir() { # {{{1
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
     # """
-    local prefix fun_script fun_scripts fun_scripts_arr koopa_prefix
+    local find prefix fun_script fun_scripts fun_scripts_arr koopa_prefix
     if [[ $(type -t readarray) != 'builtin' ]]
     then
-        printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
+        __koopa_warning 'Bash is missing readarray (mapfile).'
+        return 1
+    fi
+    find='find'
+    __koopa_is_installed 'gfind' && find='gfind'
+    if ! __koopa_is_installed "$find"
+    then
+        __koopa_warning "Not installed: '${find}'."
         return 1
     fi
     koopa_prefix="$(_koopa_prefix)"
@@ -20,7 +27,7 @@ __koopa_bash_source_dir() { # {{{1
     [[ -d "$prefix" ]] || return 0
     # Can add a sort step here, but it is slower and unecessary.
     fun_scripts="$( \
-        find -L "$prefix" \
+        "$find" -L "$prefix" \
             -mindepth 1 \
             -type f \
             -name '*.sh' \
