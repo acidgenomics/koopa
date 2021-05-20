@@ -36,10 +36,11 @@ __koopa_bash_source_dir() { # {{{1
 
 __koopa_find() { # {{{1
     # """
-    # Find files using Rust fd (preferred) or GNU find (slower).
+    # Find files using Rust fd (faster) or GNU findutils (slower).
     # @note Updated 2021-05-20.
     # """
-    local find find_args glob prefix type
+    local find find_args glob min_depth prefix type
+    min_depth=1
     while (("$#"))
     do
         case "$1" in
@@ -65,7 +66,7 @@ __koopa_find() { # {{{1
             '--base-directory' "$prefix"
             '--follow'
             '--glob' "$glob"
-            '--min-depth' 1
+            '--min-depth' "$min_depth"
             '--no-ignore'
             '--one-file-system'
             '--type' "$type"
@@ -76,7 +77,7 @@ __koopa_find() { # {{{1
         find_args=(
             '-L'
             "$prefix"
-            '-mindepth' 1
+            '-mindepth' "$min_depth"
             '-type' "$type"
             '-name' "$glob"
             '-print'

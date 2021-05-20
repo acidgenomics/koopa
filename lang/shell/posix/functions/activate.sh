@@ -164,6 +164,7 @@ _koopa_activate_gnu() { # {{{1
             alias head='ghead'
             alias readlink='greadlink'
             alias realpath='grealpath'
+            alias sort='gsort'
             alias stat='gstat'
             alias tail='gtail'
             alias tee='gtee'

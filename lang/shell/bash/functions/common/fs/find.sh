@@ -1,6 +1,115 @@
 #!/usr/bin/env bash
 
-# FIXME Harden to GNU find here...
+# FIXME Think about how we want to handle regex option here...
+# FIXME Need to add a sort option here...
+koopa::find() { # {{{1
+    # """
+    # Find files using Rust fd (faster) or GNU findutils (slower).
+    # @note Updated 2021-05-20.
+    #
+    # Consider updating the variant defined in the Bash header upon any
+    # changes to this function.
+    # """
+    local find find_args glob min_depth prefix print0 type
+    min_depth=1
+    max_depth=0
+    print0=0
+    while (("$#"))
+    do
+        case "$1" in
+            --glob=*)
+                glob="${1#*=}"
+                shift 1
+                ;;
+            --max-depth=*)
+                max_depth="${1#*=}"
+                shift 1
+                ;;
+            --min-depth=*)
+                min_depth="${1#*=}"
+                shift 1
+                ;;
+            --prefix=*)
+                prefix="${1#*=}"
+                shift 1
+                ;;
+            --print0)
+                print0=1
+                shift 1
+                ;;
+            --type=*)
+                type="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_has_no_args "$#"
+    if __koopa_is_installed 'fd'
+    then
+        find='fd'
+        find_args=(
+            '--absolute-path'
+            '--base-directory' "$prefix"
+            '--case-sensitive'
+            '--glob' "$glob"
+            '--hidden'
+            '--min-depth' "$min_depth"
+            '--no-ignore'
+            '--one-file-system'
+            '--type' "$type"
+        )
+        if [[ "$max_depth" -gt 0 ]]
+        then
+            find_args+=('--max-depth' "$max_depth")
+        fi
+        if [[ "$print0" -eq 1 ]]
+        then
+            find_args+=('--print0')
+        fi
+    else
+        find='find'
+        __koopa_is_installed 'gfind' && find='gfind'
+        find_args=('-L' "$prefix")
+        if [[ "$max_depth" -gt 0 ]]
+        then
+            find_args+=('-maxdepth' "$max_depth")
+        fi
+        find_args+=(
+            '-mindepth' "$min_depth"
+            '-type' "$type"
+            '-name' "$glob"
+        )
+        if [[ "$print0" -eq 1 ]]
+        then
+            find_args+=('--print0')
+        else
+            find_args+=('--print')
+        fi
+    fi
+    if ! __koopa_is_installed "$find"
+    then
+        __koopa_warning "Not installed: '${find}'."
+        return 1
+    fi
+    "${find[@]}" "${find_args[@]}"
+    return 0
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 koopa::find_and_move_in_sequence() { # {{{1
     # """
@@ -51,6 +160,7 @@ koopa::find_and_replace_in_files() { # {{{1
 }
 
 # FIXME Harden this to GNU find on macOS...
+# FIXME Can we use fd for this?
 koopa::find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
@@ -81,12 +191,13 @@ koopa::find_broken_symlinks() { # {{{1
 }
 
 # FIXME Harden this to GNU find on macOS...
+# FIXME Need to use koopa::basename here...
 koopa::find_dotfiles() { # {{{1
     # """
     # Find dotfiles by type.
-    # @note Updated 2020-11-25.
+    # @note Updated 2021-05-20.
     #
-    # This is used internally by 'list-dotfiles' script.
+    # This is used internally by 'koopa::list_dotfiles' script.
     #
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. 'Files')
@@ -97,15 +208,15 @@ koopa::find_dotfiles() { # {{{1
     type="${1:?}"
     header="${2:?}"
     x="$( \
-        find "$HOME" \
-            -mindepth 1 \
-            -maxdepth 1 \
-            -name '.*' \
-            -type "$type" \
-            -print0 \
-            | xargs -0 -n1 basename \
-            | sort \
-            | awk '{print "    -",$0}' \
+        koopa::find \
+            --glob='.*' \
+            --max-depth=1 \
+            --prefix="${HOME:?}" \
+            --print0 \
+            --type="$type" \
+        | xargs -0 -n1 basename \
+        | sort \
+        | awk '{print "    -",$0}' \
     )"
     koopa::h2 "${header}:"
     koopa::print "$x"
