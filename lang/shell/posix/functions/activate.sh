@@ -172,6 +172,7 @@ _koopa_activate_gnu() { # {{{1
             alias cut='gcut'
             alias dirname='gdirname'
             alias du='gdu'
+            alias readlink='greadlink'
             alias realpath='grealpath'
             alias stat='gstat'
             alias tr='gtr'
@@ -186,6 +187,7 @@ _koopa_activate_gnu() { # {{{1
             alias bsdln='/bin/ln'
             alias bsdmkdir='/bin/mkdir'
             alias bsdmv='/bin/mv'
+            alias bsdreadlink='/usr/bin/readlink'
             alias bsdrm='/bin/rm'
             alias bsdstat='/usr/bin/stat'
             alias bsdtr='/bin/tr'
@@ -413,7 +415,7 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
 _koopa_activate_homebrew_keg_only() { # {{{1
     # """
     # Activate Homebrew GNU utilities.
-    # @note Updated 2021-04-09.
+    # @note Updated 2021-05-20.
     #
     # Note that these mask some macOS system utilities and are not recommended
     # to be included in system shell activation. These are OK to activate
@@ -425,20 +427,21 @@ _koopa_activate_homebrew_keg_only() { # {{{1
     # - sqlite
     # - texinfo
     # """
-    _koopa_is_installed brew || return 0
+    _koopa_is_installed 'brew' || return 0
     _koopa_activate_homebrew_gnu_prefix \
-        coreutils \
-        findutils \
-        gnu-sed \
-        gnu-tar \
-        gnu-units \
-        grep \
-        make
+        'coreutils' \
+        'findutils' \
+        'gnu-sed' \
+        'gnu-tar' \
+        'gnu-units' \
+        'gnu-which' \
+        'grep' \
+        'make'
     _koopa_activate_homebrew_prefix \
-        bc \
-        binutils \
-        curl
-    _koopa_activate_homebrew_libexec_prefix man-db
+        'bc' \
+        'binutils' \
+        'curl'
+    _koopa_activate_homebrew_libexec_prefix 'man-db'
     return 0
 }
 

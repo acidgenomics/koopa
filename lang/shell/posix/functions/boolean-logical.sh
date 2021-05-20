@@ -328,8 +328,8 @@ _koopa_is_os_like() { # {{{1
     _koopa_is_os "$id" && return 0
     file='/etc/os-release'
     [ -f "$file" ] || return 1
-    grep 'ID=' "$file" | grep -q "$id" && return 0
-    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
+    grep 'ID=' "$file" | grep -q "$id" && return 0             # FIXME coreutils
+    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0        # FIXME coreutils
     return 1
 }
 
@@ -342,7 +342,7 @@ _koopa_is_os_version() { # {{{1
     version="${1:?}"
     file='/etc/os-release'
     [ -f "$file" ] || return 1
-    grep -q "VERSION_ID=\"${version}" "$file"
+    grep -q "VERSION_ID=\"${version}" "$file"                  # FIXME coreutils
 }
 
 _koopa_is_qemu() { # {{{1

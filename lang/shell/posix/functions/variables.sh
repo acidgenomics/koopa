@@ -151,9 +151,11 @@ _koopa_mem_gb() { # {{{1
         denom=1073741824  # 1024^3; bytes
 
     else
+        # FIXME coreutils
         mem="$(awk '/MemTotal/ {print $2}' '/proc/meminfo')"
         denom=1048576  # 1024^2; KB
     fi
+    # FIXME coreutils
     mem="$( \
         awk -v denom="$denom" -v mem="$mem" \
         'BEGIN{ printf "%.0f\n", mem / denom }' \
@@ -217,11 +219,13 @@ _koopa_os_string() { # {{{1
         release_file='/etc/os-release'
         if [ -r "$release_file" ]
         then
+            # FIXME coreutils
             id="$( \
                 awk -F= '$1=="ID" { print $2 ;}' "$release_file" \
                 | tr -d '"' \
             )"
             # Include the major release version.
+            # FIXME coreutils
             version="$( \
                 awk -F= '$1=="VERSION_ID" { print $2 ;}' "$release_file" \
                 | tr -d '"'
