@@ -32,10 +32,7 @@ test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
     array=(
-        # > 'awk'  # FIXME
-        # > 'grep'  # FIXME
-        # > 'xargs'  # FIXME
-        # > 'tee'
+        'awk'
         'basename'
         'cd'
         'chgrp'
@@ -46,6 +43,7 @@ test_all_coreutils() { # {{{1
         'dirname'
         'du'
         'find'
+        'grep'
         'ln'
         'mkdir'
         'mv'
@@ -56,8 +54,10 @@ test_all_coreutils() { # {{{1
         'sed'
         'sort'
         'stat'
+        'tee'
         'tr'
         'which'
+        'xargs'
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     pattern="^([ ]+)?(${pattern}) "
