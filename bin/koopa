@@ -14,30 +14,61 @@ __koopa_is_installed() { # {{{1
     return 0
 }
 
+__koopa_is_macos() { # {{{1
+    # """
+    # Is the operating system macOS?
+    # @note Updated 2021-05-07.
+    # """
+    [[ "$(uname -s)" = 'Darwin' ]]
+}
+
+__koopa_print() { # {{{1
+    # """
+    # Print a string.
+    # @note Updated 2021-05-07.
+    # """
+    local string
+    [ "$#" -gt 0 ] || return 1
+    for string in "$@"
+    do
+        printf '%b\n' "$string"
+    done
+    return 0
+}
+
 __koopa_realpath() { # {{{1
     # """
     # Resolve file path.
     # @note Updated 2021-05-20.
     # """
-    local platform readlink
+    local readlink x
     readlink='readlink'
-    platform="$(uname -s)"
-    case "$platform" in
-        Darwin)
-            readlink='greadlink'
-            ;;
-    esac
+    __koopa_is_macos && readlink='greadlink'
     if ! __koopa_is_installed "$readlink"
     then
-        printf "Not installed: '%s'.\n" "$readlink" >&2
-        case "$platform" in
-            Darwin)
-                printf 'Install Homebrew and GNU coreutils to resolve.\n' >&2
-                ;;
-        esac
+        __koopa_warning "Not installed: '${readlink}'."
+        __koopa_is_macos && \
+            __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
         return 1
     fi
-    "$readlink" -f "$@"
+    x="$("$readlink" -f "$@")"
+    [[ -n "$x" ]] || return 1
+    __koopa_print "$x"
+    return 0
+}
+
+__koopa_warning() { # {{{1
+    # """
+    # Print a warning message to the console.
+    # @note Updated 2021-05-14.
+    # """
+    local string
+    [ "$#" -gt 0 ] || return 1
+    for string in "$@"
+    do
+        printf '%b\n' "$string" >&2
+    done
+    return 0
 }
 
 __koopa_source_bash_header() { # {{{1
