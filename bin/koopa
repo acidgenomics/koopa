@@ -1,26 +1,63 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# FIXME Need to make this simpler and rework.
+__koopa_is_installed() { # {{{1
+    # """
+    # Are all of the requested programs installed?
+    # @note Updated 2021-05-07.
+    # """
+    local cmd
+    for cmd in "$@"
+    do
+        command -v "$cmd" >/dev/null || return 1
+    done
+    return 0
+}
 
-# Handle situation where 'koopa' is symlinked into '/usr/local'.
-bash_source="${BASH_SOURCE[0]}"
-if [[ -L "$bash_source" ]]
-then
-    koopa::realpath() { # {{{1
-        if [[ "$(uname -s)" == 'Darwin' ]]
-        then
-            # FIXME Take this out and make simpler...
-            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
-        else
-            readlink -f "$@"
-        fi
-    }
-    bash_source="$(koopa::realpath "$bash_source")"
-fi
+__koopa_realpath() { # {{{1
+    # """
+    # Resolve file path.
+    # @note Updated 2021-05-20.
+    # """
+    local platform readlink
+    readlink='readlink'
+    platform="$(uname -s)"
+    case "$platform" in
+        Darwin)
+            readlink='greadlink'
+            ;;
+    esac
+    if ! __koopa_is_installed "$readlink"
+    then
+        printf "Not installed: '%s'.\n" "$readlink" >&2
+        case "$platform" in
+            Darwin)
+                printf 'Install Homebrew and GNU coreutils to resolve.\n' >&2
+                ;;
+        esac
+        return 1
+    fi
+    "$readlink" -f "$@"
+}
 
-# shellcheck source=/dev/null
-KOOPA_ACTIVATE=0 \
+__koopa_source_bash_header() { # {{{1
+    # """
+    # Source the Koopa Bash header.
+    # @note Updated 2021-05-20.
+    # """
+    local bash_source
+    # Handle situation where 'koopa' is symlinked into '/usr/local'.
+    bash_source="${BASH_SOURCE[0]}"
+    if [[ -L "$bash_source" ]]
+    then
+        bash_source="$(__koopa_realpath "$bash_source")"
+    fi
+    [[ -x "$bash_source" ]] || return 1
+    export KOOPA_ACTIVATE=0
+    # shellcheck source=/dev/null
     . "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
+    return 0
+}
 
+__koopa_source_bash_header
 koopa::koopa "$@"
