@@ -147,18 +147,17 @@ koopa::find_and_replace_in_files() { # {{{1
 koopa::find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-05-20.
     #
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
-    local dir
+    local dir x
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_has_gnu 'find' 'grep' 'sort'
+    koopa::assert_is_gnu 'find' 'grep' 'sort'
     dir="${1:-.}"
-    [[ -d "$dir" ]] || return 0
     dir="$(koopa::realpath "$dir")"
-    local x
+    koopa::assert_is_dir "$dir"
     x="$( \
         find "$dir" \
             -xdev \
@@ -214,6 +213,7 @@ koopa::find_empty_dirs() { # {{{1
     koopa::assert_is_installed find grep
     dir="${1:-.}"
     dir="$(koopa::realpath "$dir")"
+    koopa::assert_is_dir "$dir"
     x="$( \
         find "$dir" \
             -xdev \
@@ -326,8 +326,7 @@ koopa::find_non_symlinked_make_files() { # {{{1
     # """
     local app_prefix koopa_prefix make_prefix opt_prefix x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'find'
-    koopa::assert_has_gnu 'find'
+    koopa::assert_is_gnu 'find'
     app_prefix="$(koopa::app_prefix)"
     koopa_prefix="$(koopa::koopa_prefix)"
     opt_prefix="$(koopa::opt_prefix)"

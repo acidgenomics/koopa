@@ -32,7 +32,7 @@ koopa::mktemp() { # {{{1
     fi
     koopa::assert_is_installed "$mktemp"
     mktemp_args=("$@")
-    if koopa::has_gnu "$mktemp"
+    if koopa::is_gnu "$mktemp"
     then
         user_id="$(koopa::user_id)"
         date_id="$(koopa::datetime)"
