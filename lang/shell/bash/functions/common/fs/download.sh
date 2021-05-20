@@ -91,17 +91,32 @@ koopa::download_cran_latest() { # {{{1
 koopa::download_github_latest() { # {{{1
     # """
     # Download GitHub latest release.
-    # @note Updated 2020-07-11.
+    # @note Updated 2021-05-20.
     # """
-    local repo tag tarball_url
+    local api_url curl cut grep repo tag tarball_url tr
     koopa::assert_has_args "$#"
+    curl='curl'
+    cut='cut'
+    grep='grep'
+    tr='tr'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        curl="${brew_prefix}/opt/curl/bin/curl"
+        cut="${brew_prefix}/bin/gcut"
+        grep="${brew_prefix}/bin/ggrep"
+        tr="${brew_prefix}/bin/gtr"
+    fi
+    koopa::assert_is_gnu "$cut" "$grep" "$tr"
+    koopa::assert_is_installed "$curl"
     for repo in "$@"
     do
+        api_url="https://api.github.com/repos/${repo}/releases/latest"
         tarball_url="$( \
-            curl -s "https://api.github.com/repos/${repo}/releases/latest" \
-            | grep 'tarball_url' \
-            | cut -d ':' -f 2,3 \
-            | tr -d ' ,"' \
+            "$curl" -s "$api_url" \
+            | "$grep" 'tarball_url' \
+            | "$cut" -d ':' -f 2,3 \
+            | "$tr" -d ' ,"' \
         )"
         tag="$(basename "$tarball_url")"
         koopa::download "$tarball_url" "${tag}.tar.gz"
