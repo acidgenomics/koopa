@@ -30,7 +30,7 @@ koopa:::install_rust() { # {{{1
     url='https://sh.rustup.rs'
     file='rustup.sh'
     koopa::download "$url" "$file"
-    chmod +x "$file"
+    koopa::chmod +x "$file"
     # Can check the version of install script with '--version'.
     "./${file}" --no-modify-path -v -y
     return 0

@@ -155,6 +155,7 @@ _koopa_activate_gnu() { # {{{1
             rm='grm'
             # Standardize using GNU variants by default.
             alias basename='gbasename'
+            alias chgrp='gchgrp'
             alias chmod='gchmod'
             alias chown='gchown'
             alias cut='gcut'
@@ -165,6 +166,7 @@ _koopa_activate_gnu() { # {{{1
             alias realpath='grealpath'
             alias stat='gstat'
             alias tail='gtail'
+            alias tee='gtee'
             alias tr='gtr'
         else
             _koopa_alert_not_installed 'Homebrew coreutils'

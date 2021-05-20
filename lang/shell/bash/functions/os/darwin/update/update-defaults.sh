@@ -1187,7 +1187,7 @@ koopa::macos_update_defaults() { # {{{1
     # --------------------------------------------------------------------------
 
     # Hide Spotlight tray-icon (and subsequent helper).
-    # > sudo chmod 600 \
+    # > koopa::chmod -S 600 \
     # >     '/System/Library/CoreServices/Search.bundle/Contents/MacOS/Search'
 
     # Disable Spotlight indexing for any volume that gets mounted and has not
