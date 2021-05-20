@@ -83,7 +83,6 @@ koopa:::install_r() { # {{{1
             'tcl-tk' \
             'xz'
         koopa::activate_prefix '/usr/local/gfortran'
-        # FIXME Can I specify which gfortran here?
         conf_args+=(
             "--with-blas=-L${brew_opt}/openblas/lib -lopenblas"
             "--with-tcl-config=${brew_opt}/tcl-tk/lib/tclConfig.sh"

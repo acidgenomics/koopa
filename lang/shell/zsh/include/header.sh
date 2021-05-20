@@ -44,34 +44,23 @@ __koopa_print() { # {{{1
     return 0
 }
 
-# FIXME Need to update with Bash header variant.
 __koopa_realpath() { # {{{1
     # """
-    # resolve file path.
-    # @note updated 2021-05-11.
+    # Resolve file path.
+    # @note Updated 2021-05-20.
     # """
-    local arg bn dn x
-    [[ "$#" -gt 0 ]] || return 1
-    if __koopa_is_installed realpath
+    local readlink x
+    readlink='readlink'
+    __koopa_is_macos && readlink='greadlink'
+    if ! __koopa_is_installed "$readlink"
     then
-        x="$(realpath "$@")"
-    elif __koopa_is_installed grealpath
-    then
-        x="$(grealpath "$@")"
-    elif __koopa_is_macos
-    then
-        for arg in "$@"
-        do
-            bn="$(basename "$arg")"
-            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
-            x="${dn}/${bn}"
-            __koopa_print "$x"
-        done
-        return 0
-    else
-        x="$(readlink -f "$@")"                                # FIXME coreutils
+        __koopa_warning "Not installed: '${readlink}'."
+        __koopa_is_macos && \
+            __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
+        return 1
     fi
-    [[ -n "$x" ]] || return 1
+    x="$("$readlink" -f "$@")"
+    [ -n "$x" ] || return 1
     __koopa_print "$x"
     return 0
 }
