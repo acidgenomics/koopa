@@ -455,14 +455,15 @@ koopa::nfiletypes() { # {{{1
 koopa::reset_permissions() { # {{{1
     # """
     # Reset default permissions on a specified directory recursively.
-    # @note Updated 2021-05-08.
+    # @note Updated 2021-05-20.
     # """
     local dir group user
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
     user="$(koopa::user)"
     group="$(koopa::group)"
-    chown -R "${user}:${group}" "$dir"
+    koopa::chown -R "${user}:${group}" "$dir"
+    # FIXME Need to use GNU find, xargs, chmod here?
     find "$dir" -type d -print0 \
         | xargs -0 -I {} chmod 'u=rwx,g=rwx,o=rx' {}
     find "$dir" -type f -print0 \

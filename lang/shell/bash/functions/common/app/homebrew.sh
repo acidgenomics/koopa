@@ -77,7 +77,7 @@ koopa::brew_reset_core_repo() { # {{{1
 koopa::brew_reset_permissions() { # {{{1
     # """
     # Reset permissions on Homebrew installation.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-05-20.
     # """
     local group prefix user
     koopa::assert_is_installed brew
@@ -86,7 +86,7 @@ koopa::brew_reset_permissions() { # {{{1
     group="$(koopa::admin_group)"
     prefix="$(koopa::homebrew_prefix)"
     koopa::alert "Resetting ownership of '${prefix}' to '${user}:${group}'."
-    sudo chown -Rh "${user}:${group}" "${prefix}/"*
+    koopa::chown -S -Rh "${user}:${group}" "${prefix}/"*
     return 0
 }
 
