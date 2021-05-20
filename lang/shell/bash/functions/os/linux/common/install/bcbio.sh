@@ -103,8 +103,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         install_prefix organism provider release script tmp_dir tool_data_prefix
     koopa::assert_has_args "$#"
     script='bcbio_setup_genome.py'
-    koopa::assert_is_installed "$script" \
-        'awk' 'du' 'find' 'head' 'sort' 'xargs'
+    koopa::assert_is_installed "$script" 'awk' 'du' 'find' 'head' 'sort' 'xargs'
     while (("$#"))
     do
         case "$1" in
@@ -298,9 +297,9 @@ koopa::linux_install_bcbio_vm() { # {{{1
 koopa::linux_patch_bcbio() { # {{{1
     # """
     # Patch bcbio.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-05-20.
     # """
-    local bcbio_python git_dir install_dir name_fancy
+    local bcbio_python cache_files git_dir install_dir name_fancy
     koopa::assert_is_installed tee
     koopa::assert_has_no_envs
     name_fancy='bcbio-nextgen'
@@ -346,9 +345,21 @@ koopa::linux_patch_bcbio() { # {{{1
     koopa::dl 'git_dir' "$git_dir"
     koopa::dl 'bcbio_python' "$bcbio_python"
     koopa::dl 'install_dir' "$install_dir"
-    koopa::h2 'Removing Python cache and compiled pyc files in Git repo.'
-    find "$git_dir" -name '*.pyc' -delete
-    find "$git_dir" -name '__pycache__' -type d -exec rm -rv {} \;
+    koopa::alert 'Removing Python cache and compiled pyc files in Git repo.'
+    readarray -t cache_files <<< "$( \
+        koopa::find \
+            --glob='*.pyc' \
+            --prefix="$git_dir" \
+            --type='f'
+    )"
+    koopa::rm "${cache_files[@]}"
+    readarray -t cache_files <<< "$( \
+        koopa::find \
+            --glob='__pycache__' \
+            --prefix="$git_dir" \
+            --type='d'
+    )"
+    koopa::rm "${cache_files[@]}"
     koopa::h2 "Removing Python installer cruft inside 'anaconda/lib/'."
     koopa::rm "${install_dir}/anaconda/lib/python"*'/site-packages/bcbio'*
     # Install command must be run relative to our forked git repo.
@@ -356,7 +367,7 @@ koopa::linux_patch_bcbio() { # {{{1
     (
         koopa::cd "$git_dir"
         koopa::rm 'tests/test_automated_output'
-        koopa::h2 "Patching installation via 'setup.py' script."
+        koopa::alert "Patching installation via 'setup.py' script."
         "$bcbio_python" setup.py install
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::alert_success "Patching of ${name_fancy} was successful."
