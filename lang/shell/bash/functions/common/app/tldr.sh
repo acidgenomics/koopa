@@ -129,6 +129,15 @@ koopa::tldr_file() { # {{{1
     # """
     local cmd desc file index_file platform prefix subdir
     koopa::assert_has_args_eq "$#" 1
+    grep='grep'
+    tr='tr'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        grep="${brew_prefix}/bin/ggrep"
+        tr="${brew_prefix}/bin/gtr"
+    fi
+    koopa::assert_is_gnu "$grep" "$tr"
     cmd="${1:?}"
     platform="$(koopa::tldr_platform)"
     prefix="$(koopa::tldr_prefix)"
@@ -136,8 +145,8 @@ koopa::tldr_file() { # {{{1
     koopa::assert_is_file "$index_file"
     # Parse the JSON file.
     desc="$( \
-        tr '{' '\n' < "$index_file" \
-        | grep "\"name\":\"${cmd}\"" \
+        "$tr" '{' '\n' < "$index_file" \
+        | "$grep" "\"name\":\"${cmd}\"" \
     )"
     # Use the platform-specific version of the tldr first.
     if koopa::str_match "$desc" "$platform"
