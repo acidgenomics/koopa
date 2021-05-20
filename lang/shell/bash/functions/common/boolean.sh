@@ -370,7 +370,7 @@ koopa::is_powerful() { # {{{1
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-20.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -383,13 +383,13 @@ koopa::is_python_package_installed() { # {{{1
     # - https://stackoverflow.com/questions/1051254
     # - https://askubuntu.com/questions/588390
     # """
-    local pkg prefix python
+    local pkg prefix python version
     koopa::assert_has_args "$#"
     python="$(koopa::python)"
     koopa::is_installed "$python" || return 1
-
-    # FIXME Need to pass the version here...
-    prefix="$(koopa::python_packages_prefix "$python")"  # FIXME
+    version="$(koopa::get_version "$python")"
+    prefix="$(koopa::python_packages_prefix "$version")"
+    [[ -d "$prefix" ]] || return 1
     for pkg in "$@"
     do
         if [[ ! -d "${prefix}/${pkg}" ]] && [[ ! -f "${prefix}/${pkg}.py" ]]
