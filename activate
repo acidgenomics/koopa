@@ -552,7 +552,7 @@ __koopa_realpath() { # {{{1
         done
         return 0
     else
-        x="$(readlink -f "$@")"
+        x="$(readlink -f "$@")"                                # FIXME coreutils
     fi
     [ -n "$x" ] || return 1
     __koopa_print "$x"
@@ -571,6 +571,7 @@ __koopa_shell() { # {{{1
         str="$KOOPA_SHELL"
     elif __koopa_is_linux
     then
+        # FIXME Consider using _koopa_sed here?
         if __koopa_is_installed ps sed
         then
             str="$( \
@@ -580,10 +581,11 @@ __koopa_shell() { # {{{1
         elif [ -x "/proc/${$}/exe" ] && \
             __koopa_is_installed readlink
         then
-            str="$(readlink "/proc/${$}/exe")"
+            str="$(readlink "/proc/${$}/exe")"                 # FIXME coreutils
         fi
     elif __koopa_is_macos
     then
+        # FIXME Consider using _koopa_sed here?
         if __koopa_is_installed lsof sed
         then
             str="$( \
