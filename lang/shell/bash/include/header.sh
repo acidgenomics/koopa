@@ -9,17 +9,10 @@ __koopa_bash_source_dir() { # {{{1
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
     # """
-    local find prefix fun_script fun_scripts fun_scripts_arr koopa_prefix
+    local fun_script fun_scripts fun_scripts_arr koopa_prefix prefix
     if [[ $(type -t readarray) != 'builtin' ]]
     then
         __koopa_warning 'Bash is missing readarray (mapfile).'
-        return 1
-    fi
-    find='find'
-    __koopa_is_installed 'gfind' && find='gfind'
-    if ! __koopa_is_installed "$find"
-    then
-        __koopa_warning "Not installed: '${find}'."
         return 1
     fi
     koopa_prefix="$(_koopa_prefix)"
@@ -27,11 +20,10 @@ __koopa_bash_source_dir() { # {{{1
     [[ -d "$prefix" ]] || return 0
     # Can add a sort step here, but it is slower and unecessary.
     fun_scripts="$( \
-        "$find" -L "$prefix" \
-            -mindepth 1 \
-            -type f \
-            -name '*.sh' \
-            -print \
+        __koopa_find \
+            --glob='*.sh' \
+            --prefix="$prefix" \
+            --type='f' \
     )"
     readarray -t fun_scripts_arr <<< "$fun_scripts"
     for fun_script in "${fun_scripts_arr[@]}"
@@ -39,6 +31,65 @@ __koopa_bash_source_dir() { # {{{1
         # shellcheck source=/dev/null
         . "$fun_script"
     done
+    return 0
+}
+
+__koopa_find() { # {{{1
+    # """
+    # Find files using Rust fd (preferred) or GNU find (slower).
+    # @note Updated 2021-05-20.
+    # """
+    local find find_args glob prefix type
+    while (("$#"))
+    do
+        case "$1" in
+            --glob=*)
+                glob="${1#*=}"
+                shift 1
+                ;;
+            --prefix=*)
+                prefix="${1#*=}"
+                shift 1
+                ;;
+            --type=*)
+                type="${1#*=}"
+                shift 1
+                ;;
+        esac
+    done
+    if __koopa_is_installed 'fd'
+    then
+        find='fd'
+        find_args=(
+            '--absolute-path'
+            '--base-directory' "$prefix"
+            '--follow'
+            '--glob' "$glob"
+            '--min-depth' 1
+            '--no-ignore'
+            '--one-file-system'
+            '--type' "$type"
+        )
+    else
+        find='find'
+        __koopa_is_installed 'gfind' && find='gfind'
+        find_args=(
+            '-L'
+            "$prefix"
+            '-mindepth' 1
+            '-type' "$type"
+            '-name' "$glob"
+            '-print'
+        )
+    fi
+    if ! __koopa_is_installed "$find"
+    then
+        __koopa_warning "Not installed: '${find}'."
+        return 1
+    fi
+    x="$("${find[@]}" "${find_args[@]}")"
+    [[ -n "$x" ]] || return 1
+    __koopa_print "$x"
     return 0
 }
 
@@ -125,7 +176,7 @@ __koopa_warning() { # {{{1
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-20.
     # """
     local dict
     declare -A dict=(
@@ -155,6 +206,13 @@ __koopa_bash_header() { # {{{1
         set -o errtrace # -E
         set -o nounset # -u
         set -o pipefail
+    fi
+    if [[ "${dict[activate]}" -eq 0 ]] || \
+        [[ "${dict[dev]}" -eq 1 ]]
+    then
+        # Disable user-defined aliases.
+        # Primarily intended to reset cp, mv, rf for use inside scripts.
+        unalias -a
     fi
     if [[ "${dict[checks]}" -eq 1 ]]
     then
