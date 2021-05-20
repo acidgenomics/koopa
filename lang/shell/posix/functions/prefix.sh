@@ -134,6 +134,7 @@ _koopa_docker_private_prefix() { # {{{1
     return 0
 }
 
+# FIXME Koopa install needs to link this into 'XDG_CONFIG_HOME'.
 _koopa_dotfiles_prefix() { # {{{1
     # """
     # Koopa system dotfiles prefix.
@@ -143,6 +144,7 @@ _koopa_dotfiles_prefix() { # {{{1
     return 0
 }
 
+# FIXME REWORK PUTTING INTO 'XDG_CONFIG_HOME' instead.
 _koopa_dotfiles_private_prefix() { # {{{1
     # """
     # Private user dotfiles prefix.
