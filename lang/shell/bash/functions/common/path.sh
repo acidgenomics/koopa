@@ -21,22 +21,3 @@ koopa::add_conda_env_to_path() { # {{{1
     done
     return 0
 }
-
-koopa::add_local_bins_to_path() { # {{{1
-    # """
-    # Add local build bins to PATH (e.g. '/usr/local').
-    # @note Updated 2020-07-06.
-    #
-    # This will recurse through the local library and find 'bin/' subdirs.
-    # Note: read '-a' flag doesn't work on macOS.
-    # """
-    local dir dirs
-    koopa::assert_has_no_args "$#"
-    koopa::add_to_path_start "$(koopa::make_prefix)/bin"
-    readarray -t dirs <<< "$(koopa::find_local_bin_dirs)"
-    for dir in "${dirs[@]}"
-    do
-        koopa::add_to_path_start "$dir"
-    done
-    return 0
-}

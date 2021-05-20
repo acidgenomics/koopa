@@ -333,41 +333,6 @@ koopa::find_large_files() { # {{{1
     return 0
 }
 
-koopa::find_local_bin_dirs() { # {{{1
-    # """
-    # Find local bin directories.
-    # @note Updated 2020-07-05.
-    #
-    # Should we exclude koopa from this search?
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/23356779
-    # - https://stackoverflow.com/questions/7442417
-    # """
-    koopa::assert_has_no_args "$#"
-    local prefix x
-    prefix="$(koopa::make_prefix)"
-    x="$( \
-        find "$prefix" \
-            -mindepth 2 \
-            -maxdepth 3 \
-            -type d \
-            -name 'bin' \
-            -not -path '*/Caskroom/*' \
-            -not -path '*/Cellar/*' \
-            -not -path '*/Homebrew/*' \
-            -not -path '*/anaconda3/*' \
-            -not -path '*/bcbio/*' \
-            -not -path '*/conda/*' \
-            -not -path '*/lib/*' \
-            -not -path '*/miniconda3/*' \
-            -not -path '*/opt/*' \
-            -print | sort \
-    )"
-    koopa::print "$x"
-    return 0
-}
-
 koopa::find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
