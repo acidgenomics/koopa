@@ -1,6 +1,8 @@
 #!/bin/sh
 # shellcheck disable=SC3040
 
+
+
 # Csh is not supported, primarily due to lack of functions.
 # > csh -l or csh -i
 [ "$0" = 'csh' ] && \
@@ -20,7 +22,6 @@ then
     printf '%s\n' 'koopa does not support ksh.'
     return 1
 fi
-
 
 
 
@@ -533,27 +534,17 @@ __koopa_realpath() { # {{{1
     # Resolve file path.
     # @note Updated 2021-05-20.
     # """
-    local arg bn dn x
-    [ "$#" -gt 0 ] || return 1
-    if __koopa_is_installed realpath
+    local readlink x
+    readlink='readlink'
+    __koopa_is_macos && readlink='greadlink'
+    if ! __koopa_is_installed "$readlink"
     then
-        x="$(realpath "$@")"
-    elif __koopa_is_installed grealpath
-    then
-        x="$(grealpath "$@")"
-    elif __koopa_is_linux
-    then
-        x="$(readlink -f "$@")"
-    else
-        for arg in "$@"
-        do
-            bn="$(basename "$arg")"
-            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
-            x="${dn}/${bn}"
-            __koopa_print "$x"
-        done
-        return 0
+        __koopa_warning "Not installed: '${readlink}'."
+        __koopa_is_macos && \
+            __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
+        return 1
     fi
+    x="$("$readlink" -f "$@")"
     [ -n "$x" ] || return 1
     __koopa_print "$x"
     return 0

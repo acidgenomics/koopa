@@ -37,8 +37,8 @@ __koopa_bash_source_dir() { # {{{1
 
 __koopa_is_installed() { # {{{1
     # """
-    # are all of the requested programs installed?
-    # @note updated 2021-05-07.
+    # Are all of the requested programs installed?
+    # @note Updated 2021-05-07.
     # """
     local cmd
     for cmd in "$@"
@@ -51,7 +51,7 @@ __koopa_is_installed() { # {{{1
 __koopa_is_linux() { # {{{1
     # """
     # Is the operating system linux?
-    # @note updated 2021-05-07.
+    # @note Updated 2021-05-07.
     # """
     [[ "$(uname -s)" == 'Linux' ]]
 }
@@ -59,7 +59,7 @@ __koopa_is_linux() { # {{{1
 __koopa_is_macos() { # {{{1
     # """
     # Is the operating system macos?
-    # @note updated 2021-05-07.
+    # @note Updated 2021-05-07.
     # """
     [[ "$(uname -s)" == 'Darwin' ]]
 }
@@ -67,7 +67,7 @@ __koopa_is_macos() { # {{{1
 __koopa_print() { # {{{1
     # """
     # Print a string.
-    # @note updated 2021-05-07.
+    # @note Updated 2021-05-07.
     # """
     local string
     [[ "$#" -gt 0 ]] || return 1
@@ -78,34 +78,31 @@ __koopa_print() { # {{{1
     return 0
 }
 
-# FIXME RETHINK THIS AND KEEP IT SUPER SIMPLE.
 __koopa_realpath() { # {{{1
     # """
     # Resolve file path.
-    # @note updated 2021-05-11.
+    # @note Updated 2021-05-20.
     # """
-    local arg bn dn x
-    [[ "$#" -gt 0 ]] || return 1
-    if __koopa_is_installed realpath
+    local platform readlink x
+    readlink='readlink'
+    platform="$(uname -s)"
+    case "$platform" in
+        Darwin)
+            readlink='greadlink'
+            ;;
+    esac
+    if ! __koopa_is_installed "$readlink"
     then
-        x="$(realpath "$@")"
-    elif __koopa_is_installed grealpath
-    then
-        x="$(grealpath "$@")"
-    elif __koopa_is_macos
-    then
-        for arg in "$@"
-        do
-            bn="$(basename "$arg")"
-            dn="$(cd "$(dirname "$arg")" || return 1; pwd -p)"
-            x="${dn}/${bn}"
-            __koopa_print "$x"
-        done
-        return 0
-    else
-        x="$(readlink -f "$@")"
+        __koopa_warning "Not installed: '${readlink}'."
+        case "$platform" in
+            Darwin)
+                __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
+                ;;
+        esac
+        return 1
     fi
-    [[ -n "$x" ]] || return 1
+    x="$("$readlink" -f "$@")"
+    [ -n "$x" ] || return 1
     __koopa_print "$x"
     return 0
 }

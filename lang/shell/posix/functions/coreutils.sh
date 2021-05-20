@@ -72,27 +72,11 @@ _koopa_realpath() { # {{{1
     # - https://stackoverflow.com/questions/3572030/
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
-    local arg bn dn x
-    [ "$#" -gt 0 ] || return 1
-    if _koopa_is_installed realpath
-    then
-        x="$(realpath "$@")"
-    elif _koopa_is_installed grealpath
-    then
-        x="$(grealpath "$@")"
-    elif _koopa_has_gnu readlink
-    then
-        x="$(readlink -f "$@")"
-    else
-        for arg in "$@"
-        do
-            bn="$(basename "$arg")"
-            dn="$(cd "$(dirname "$arg")" || return 1; pwd -P)"
-            x="${dn}/${bn}"
-            _koopa_print "$x"
-        done
-        return 0
-    fi
+    local readlink x
+    readlink='readlink'
+    _koopa_is_macos && readlink='greadlink'
+    _koopa_is_installed "$readlink" || return 1
+    x="$("$readlink" -f "$@")"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
