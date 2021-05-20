@@ -57,7 +57,7 @@ _koopa_parent_dir() { # {{{1
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
-    # @note Updated 2021-04-23.
+    # @note Updated 2021-05-20.
     #
     # Note that 'readlink -f' only works with GNU coreutils but not BSD
     # (i.e. macOS) variant.

@@ -50,7 +50,7 @@ __koopa_is_installed() { # {{{1
 
 __koopa_is_linux() { # {{{1
     # """
-    # is the operating system linux?
+    # Is the operating system linux?
     # @note updated 2021-05-07.
     # """
     [[ "$(uname -s)" == 'Linux' ]]
@@ -58,7 +58,7 @@ __koopa_is_linux() { # {{{1
 
 __koopa_is_macos() { # {{{1
     # """
-    # is the operating system macos?
+    # Is the operating system macos?
     # @note updated 2021-05-07.
     # """
     [[ "$(uname -s)" == 'Darwin' ]]
@@ -66,7 +66,7 @@ __koopa_is_macos() { # {{{1
 
 __koopa_print() { # {{{1
     # """
-    # print a string.
+    # Print a string.
     # @note updated 2021-05-07.
     # """
     local string
@@ -78,9 +78,10 @@ __koopa_print() { # {{{1
     return 0
 }
 
+# FIXME RETHINK THIS AND KEEP IT SUPER SIMPLE.
 __koopa_realpath() { # {{{1
     # """
-    # resolve file path.
+    # Resolve file path.
     # @note updated 2021-05-11.
     # """
     local arg bn dn x
