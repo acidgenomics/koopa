@@ -118,6 +118,7 @@ _koopa_activate_zsh_plugins() { # {{{1
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
     zsh_plugins_dir="${dotfiles_prefix}/shell/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
+    # FIXME Need to use 'koopa::find' here instead.
     plugins=("${(@f)$( \
         find "$zsh_plugins_dir" \
             -mindepth 1 \
