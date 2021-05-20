@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Think about how we want to handle regex option here...
-# FIXME Need to add a sort option here...
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
@@ -14,6 +12,7 @@ koopa::find() { # {{{1
     min_depth=1
     max_depth=0
     print0=0
+    type='f'
     while (("$#"))
     do
         case "$1" in
@@ -46,6 +45,7 @@ koopa::find() { # {{{1
                 ;;
         esac
     done
+    koopa::assert_is_set 'glob' 'prefix'
     koopa::assert_has_no_args "$#"
     if __koopa_is_installed 'fd'
     then

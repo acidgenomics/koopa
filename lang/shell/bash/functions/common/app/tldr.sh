@@ -164,7 +164,7 @@ koopa::tldr_index_file() { # {{{1
 koopa::tldr_list_pages() { # {{{1
     # """
     # List locally cached tldr pages.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-20.
     # """
     local cmd pages prefix
     koopa::assert_has_no_args "$#"
@@ -172,11 +172,10 @@ koopa::tldr_list_pages() { # {{{1
     prefix="$(koopa::tldr_prefix)"
     [[ ! -d "$prefix" ]] && koopa::mkdir "$prefix"
     readarray -t pages <<< "$( \
-        find "$prefix" \
-            -mindepth 1 \
-            -type f \
-            -iname '*.md' \
-            -print \
+        koopa::find \
+            --glob='*.md' \
+            --prefix="$prefix" \
+            --type='f' \
         | sort -u \
     )"
     cmd="$(koopa::basename_sans_ext "${pages[@]}" | fzf || true)"

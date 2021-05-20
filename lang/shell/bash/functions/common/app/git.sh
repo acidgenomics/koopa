@@ -3,7 +3,7 @@
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
-    # @note Updated 2021-01-06.
+    # @note Updated 2021-05-20.
     # """
     local branch default_branch dir dirs origin pos repo repos
     branch=''
@@ -39,13 +39,12 @@ koopa::git_checkout_recursive() { # {{{1
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
-        # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
-            find -L "$dir" \
-                -mindepth 2 \
-                -maxdepth 3 \
-                -name '.git' \
-                -print \
+            koopa::find \
+                --glob='.git' \
+                --max-depth=3 \
+                --min-depth=2 \
+                --prefix="$dir" \
             | sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
@@ -264,7 +263,7 @@ koopa::git_pull() { # {{{1
 koopa::git_pull_recursive() { # {{{1
     # """
     # Pull multiple Git repositories recursively.
-    # @note Updated 2021-01-06.
+    # @note Updated 2021-05-20.
     # """
     local dir dirs repo repos
     dirs=("$@")
@@ -272,13 +271,12 @@ koopa::git_pull_recursive() { # {{{1
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
-        # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
-            find -L "$dir" \
-                -mindepth 2 \
-                -maxdepth 3 \
-                -name '.git' \
-                -print \
+            koopa::find \
+                --glob='.git' \
+                --max-depth=3 \
+                --min-depth=2 \
+                --prefix="$dir" \
             | sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
@@ -314,11 +312,11 @@ koopa::git_push_recursive() { # {{{1
         dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
-            find -L "$dir" \
-                -mindepth 2 \
-                -maxdepth 3 \
-                -name '.git' \
-                -print \
+            koopa::find \
+                --glob='.git' \
+                --max-depth=3 \
+                --min-depth=2 \
+                --prefix="$dir" \
             | sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
@@ -382,7 +380,7 @@ koopa::git_reset() { # {{{1
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
     #
-    # Additional steps:
+    # Consider these additional steps:
     # # Ensure accidental swap files created by vim get nuked.
     # > find . -type f -name '*.swp' -delete
     # # Ensure invisible files get nuked on macOS.
@@ -500,11 +498,11 @@ koopa::git_status_recursive() { # {{{1
         dir="$(koopa::realpath "$dir")"
         # Using '-L' flag here in case git dir is a symlink.
         readarray -t repos <<< "$( \
-            find -L "$dir" \
-                -mindepth 2 \
-                -maxdepth 3 \
-                -name '.git' \
-                -print \
+            koopa::find \
+                --glob='.git' \
+                --max-depth=3 \
+                --min-depth=2 \
+                --prefix="$dir" \
             | sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
