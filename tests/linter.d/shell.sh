@@ -46,6 +46,7 @@ test_all_coreutils() { # {{{1
         'ln'
         'mkdir'
         'mv'
+        'readlink'
         'realpath'
         'rm'
         'rsync'

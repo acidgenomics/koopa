@@ -68,7 +68,7 @@ __koopa_realpath() { # {{{1
         done
         return 0
     else
-        x="$(readlink -f "$@")"
+        x="$(readlink -f "$@")"                                # FIXME coreutils
     fi
     [[ -n "$x" ]] || return 1
     __koopa_print "$x"
