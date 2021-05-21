@@ -352,7 +352,7 @@ koopa::docker_prune_stale_tags() { # {{{1
 koopa::docker_push() { # {{{1
     # """
     # Push a local Docker build.
-    # Updated 2021-03-25.
+    # Updated 2021-05-20.
     #
     # Useful if GPG agent causes push failure.
     #
@@ -362,9 +362,21 @@ koopa::docker_push() { # {{{1
     # @examples
     # docker-push acidgenomics/debian:latest
     # """
-    local image images json pattern server
+    local brew_prefix image images json pattern sed server sort tr
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    sed='sed'
+    sort='sort'
+    tr='tr'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        sed="${brew_prefix}/bin/gsed"
+        sort="${brew_prefix}/bin/gsort"
+        tr="${brew_prefix}/bin/gtr"
+    fi
+    koopa::assert_is_gnu "$sed" "$sort" "$tr"
+    koopa::assert_is_installed 'docker'
+    # Consider allowing user to define, so we can support quay.io, for example.
     server='docker.io'
     for pattern in "$@"
     do
@@ -374,12 +386,12 @@ koopa::docker_push() { # {{{1
         # Convert JSON to lines.
         readarray -t images <<< "$( \
             koopa::print "$json" \
-                | tr ',' '\n' \
-                | sed 's/^\[//' \
-                | sed 's/\]$//' \
-                | sed 's/^\"//g' \
-                | sed 's/\"$//g' \
-                | sort \
+                | "$tr" ',' '\n' \
+                | "$sed" 's/^\[//' \
+                | "$sed" 's/\]$//' \
+                | "$sed" 's/^\"//g' \
+                | "$sed" 's/\"$//g' \
+                | "$sort" \
         )"
         if ! koopa::is_array_non_empty "${images[@]:-}"
         then
@@ -398,17 +410,26 @@ koopa::docker_push() { # {{{1
 koopa::docker_remove() { # {{{1
     # """
     # Remove docker images by pattern.
-    # Updated 2020-07-01.
+    # Updated 2021-05-20.
     # """
-    local pattern
+    local awk brew_prefix grep pattern xargs
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        awk="${brew_prefix}/bin/gawk"
+        grep="${brew_prefix}/bin/ggrep"
+        xargs="${brew_prefix}/bin/xargs"
+    fi
+    koopa::assert_is_gnu "$awk" "$grep" "$xargs"
+    koopa::assert_is_installed 'docker'
     for pattern in "$@"
     do
+        # shellcheck disable=SC2016
         docker images \
-            | grep "$pattern" \
-            | awk '{print $1 ":" $2}' \
-            | xargs docker rmi
+            | "$grep" "$pattern" \
+            | "$awk" '{print $1 ":" $2}' \
+            | "$xargs" docker rmi
     done
     return 0
 }
@@ -541,16 +562,27 @@ koopa::docker_tag() { # {{{1
 koopa::is_docker_build_recent() { # {{{1
     # """
     # Has the requested Docker image been built recently?
-    # @note Updated 2021-05-12.
+    # @note Updated 2021-05-20.
     #
     # @seealso
     # - Corresponding 'isDockerBuildRecent()' R function.
     # - https://stackoverflow.com/questions/8903239/
     # - https://unix.stackexchange.com/questions/27013/
     # """
-    local created current days diff image json seconds
+    local created current days diff grep image json seconds sed
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    date='date'
+    grep='grep'
+    sed='sed'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        date="${brew_prefix}/bin/gdate"
+        grep="${brew_prefix}/bin/ggrep"
+        sed="${brew_prefix}/bin/gsed"
+    fi
+    koopa::assert_is_gnu "$date" "$grep" "$sed"
+    koopa::assert_is_installed 'docker'
     days=7
     pos=()
     while (("$#"))
@@ -577,18 +609,18 @@ koopa::is_docker_build_recent() { # {{{1
     koopa::assert_has_args "$#"
     # 24 hours * 60 minutes * 60 seconds = 86400.
     seconds="$((days * 86400))"
-    current="$(date -u '+%s')"
+    current="$("$date" -u '+%s')"
     for image in "$@"
     do
         docker pull "$image" >/dev/null
         json="$(docker inspect --format='{{json .Created}}' "$image")"
         created="$( \
             koopa::print "$json" \
-                | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
-                | sed 's/T/ /' \
-                | sed 's/\$/ UTC/'
+                | "$grep" -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
+                | "$sed" 's/T/ /' \
+                | "$sed" 's/\$/ UTC/'
         )"
-        created="$(date -u -d "$created" '+%s')"
+        created="$("$date" -u -d "$created" '+%s')"
         diff=$((current - created))
         [[ "$diff" -gt "$seconds" ]] && return 1
     done
