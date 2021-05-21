@@ -5,7 +5,6 @@ __koopa_locate_app() { # {{{1
     # Locate file system path to an application.
     # @note Updated 2021-05-21.
     # """
-    local cmd
     local app_name brew_name brew_prefix file
     [ "$#" -eq 2 ] || return 1
     brew_name="${1:?}"
@@ -91,6 +90,22 @@ _koopa_locate_conda() { # {{{1
     return 0
 }
 
+_koopa_locate_python() { # {{{1
+    # """
+    # Python executable path.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app_simple 'python3'
+}
+
+_koopa_locate_r() { # {{{1
+    # """
+    # R executable path.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app_simple 'R'
+}
+
 _koopa_locate_unzip() { # {{{1
     # """
     # Locate unzip.
@@ -102,6 +117,9 @@ _koopa_locate_unzip() { # {{{1
 
 
 
+
+
+# FIXME Need to rename these in our functions...
 
 _koopa_gnu_awk() { # {{{1
     # """
@@ -408,33 +426,26 @@ _koopa_gnu_xargs() { # {{{1
     return 0
 }
 
-# FIXME Rename with locate...
-_koopa_python() { # {{{1
+
+
+
+
+__koopa_locate_app_simple() { # {{{1
     # """
-    # Python executable path.
+    # Simpler app location fetcher that doesn't attempt to use Homebrew.
     # @note Updated 2021-05-21.
     # """
-    local x
-    x='python3'
-    x="$(_koopa_which "$x")"
-    [ -x "$x" ] || return 1
-    _koopa_print "$x"
+    local app_name file
+    [ "$#" -eq 1 ] || return 1
+    app_name="${1:?}"
+    file="$(_koopa_which_realpath "$app_name")"
+    [ -x "$file" ] || return 1
+    _koopa_print "$file"
     return 0
 }
 
-# FIXME Rename with locate...
-_koopa_r() { # {{{1
-    # """
-    # R executable path.
-    # @note Updated 2021-05-21.
-    # """
-    local x
-    x='R'
-    x="$(_koopa_which "$x")"
-    [ -x "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
+
+
 
 _koopa_locate_shell() { # {{{1
     # """
