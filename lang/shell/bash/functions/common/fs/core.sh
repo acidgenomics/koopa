@@ -349,7 +349,7 @@ koopa::rm() { # {{{1
     # Remove files/directories quietly with GNU rm.
     # @note Updated 2021-05-21.
     # """
-    local OPTIND brew_prefix rm sudo which_rm
+    local OPTIND rm sudo which_rm
     sudo=0
     OPTIND=1
     while getopts 'S' opt

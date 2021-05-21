@@ -1,5 +1,28 @@
 #!/usr/bin/env bash
 
+koopa:::is_ssh_enabled() { # {{{1
+    # """
+    # Is SSH key enabled (e.g. for git)?
+    # @note Updated 2021-05-21.
+    #
+    # @seealso
+    # - https://help.github.com/en/github/authenticating-to-github/
+    #       testing-your-ssh-connection
+    # """
+    local pattern ssh url x
+    koopa::assert_has_args_eq "$#" 2
+    ssh="$(koopa::locate_ssh)"
+    url="${1:?}"
+    pattern="${2:?}"
+    x="$( \
+        "$ssh" -T \
+            -o StrictHostKeyChecking='no' \
+            "$url" 2>&1 \
+    )"
+    [[ -n "$x" ]] || return 1
+    koopa::str_match "$x" "$pattern"
+}
+
 koopa::contains() { # {{{1
     # """
     # Does an array contain a specific element?
@@ -24,17 +47,16 @@ koopa::contains() { # {{{1
     return 1
 }
 
-# FIXME Need to harden the grep used here...
 koopa::file_match() { # {{{1
     # """
     # Is a string defined in a file?
-    # @note Updated 2020-04-30.
+    # @note Updated 2021-05-21.
     #
     # @examples
     # koopa::file_match FILE PATTERN
     # echo FILE | koopa::file_match PATTERN
     # """
-    local file pattern
+    local file grep pattern
     koopa::assert_has_args "$#"
     if [[ "$#" -eq 2 ]]
     then
@@ -51,7 +73,8 @@ koopa::file_match() { # {{{1
         return 1
     fi
     [[ -f "$file" ]] || return 1
-    grep -Fq "$pattern" "$file" >/dev/null
+    grep="$(koopa::locate_grep)"
+    "$grep" -Fq "$pattern" "$file" >/dev/null
 }
 
 koopa::file_match_regex() { # {{{1
@@ -59,7 +82,7 @@ koopa::file_match_regex() { # {{{1
     # Is a string defined in a file?
     # @note Updated 2020-04-30.
     # """
-    local file pattern
+    local file grep pattern
     koopa::assert_has_args "$#"
     if [[ "$#" -eq 2 ]]
     then
@@ -76,7 +99,8 @@ koopa::file_match_regex() { # {{{1
         return 1
     fi
     [[ -f "$file" ]] || return 1
-    grep -Eq "$pattern" "$file" >/dev/null
+    grep="$(koopa::locate_grep)"
+    "$grep" -Eq "$pattern" "$file" >/dev/null
 }
 
 koopa::has_file_ext() { # {{{1
@@ -244,11 +268,10 @@ koopa::is_defined_in_user_profile() { # {{{1
     koopa::file_match "$file" 'koopa'
 }
 
-# FIXME Need to harden grep here...
 koopa::is_doom_emacs_installed() { # {{{1
     # """
     # Is Doom Emacs installed?
-    # @note Updated 2020-11-25.
+    # @note Updated 2021-05-21.
     # """
     local init_file prefix
     koopa::assert_has_no_args "$#"
@@ -256,8 +279,7 @@ koopa::is_doom_emacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
-    grep -q 'doom-emacs' "$init_file" || return 1
-    return 0
+    koopa::file_match "$init_file" 'doom-emacs'
 }
 
 koopa::is_export() { # {{{1
@@ -342,7 +364,7 @@ koopa::is_github_ssh_enabled() { # {{{1
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::is_ssh_enabled 'git@github.com' 'successfully authenticated'
+    koopa:::is_ssh_enabled 'git@github.com' 'successfully authenticated'
 }
 
 koopa::is_gitlab_ssh_enabled() { # {{{1
@@ -351,7 +373,7 @@ koopa::is_gitlab_ssh_enabled() { # {{{1
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
+    koopa:::is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
 }
 
 koopa::is_powerful() { # {{{1
@@ -495,7 +517,7 @@ koopa::is_set() { # {{{1
 koopa::is_spacemacs_installed() { # {{{1
     # """
     # Is Spacemacs installed?
-    # @note Updated 2020-11-25.
+    # @note Updated 2021-05-21.
     # """
     local init_file prefix
     koopa::assert_has_no_args "$#"
@@ -503,32 +525,7 @@ koopa::is_spacemacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
-    grep -q 'Spacemacs' "$init_file" || return 1
-    return 0
-}
-
-koopa::is_ssh_enabled() { # {{{1
-    # """
-    # Is SSH key enabled (e.g. for git)?
-    # @note Updated 2020-07-04.
-    #
-    # @seealso
-    # - https://help.github.com/en/github/authenticating-to-github/
-    #       testing-your-ssh-connection
-    # """
-    local pattern url x
-    koopa::assert_has_args_eq "$#" 2
-
-    url="${1:?}"
-    pattern="${2:?}"
-    koopa::is_installed ssh || return 1
-    x="$( \
-        ssh -T \
-            -o StrictHostKeyChecking=no \
-            "$url" 2>&1 \
-    )"
-    [[ -n "$x" ]] || return 1
-    koopa::str_match "$x" "$pattern"
+    koopa::file_match "$init_file" 'Spacemacs'
 }
 
 koopa::is_symlinked_app() { # {{{1

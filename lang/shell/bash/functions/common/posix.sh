@@ -656,6 +656,10 @@ koopa::locate_sort() { # {{{1
     _koopa_locate_sort "$@"
 }
 
+koopa::locate_ssh() { # {{{1
+    _koopa_locate_ssh "$@"
+}
+
 koopa::locate_stat() { # {{{1
     _koopa_locate_stat "$@"
 }
