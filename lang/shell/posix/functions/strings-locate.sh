@@ -23,9 +23,23 @@ __koopa_locate_app() { # {{{1
     return 0
 }
 
+__koopa_locate_app_simple() { # {{{1
+    # """
+    # Simpler app location fetcher that doesn't attempt to use Homebrew.
+    # @note Updated 2021-05-21.
+    # """
+    local app_name file
+    [ "$#" -eq 1 ] || return 1
+    app_name="${1:?}"
+    file="$(_koopa_which_realpath "$app_name")"
+    [ -x "$file" ] || return 1
+    _koopa_print "$file"
+    return 0
+}
+
 __koopa_locate_gnu_app() { # {{{1
     # """
-    # Locate GNU app.
+    # Locate a GNU application.
     # @note Updated 2021-05-21.
     # """
     local app_name brew_name brew_prefix file
@@ -60,7 +74,31 @@ _koopa_locate_7z() { # {{{1
     # Locate 7z.
     # @note Updated 2021-05-21.
     # """
-    __koopa_locate_app 'p7zip' '7z'
+    __koopa_locate_app 'p7zip' '7z' "$@"
+}
+
+_koopa_locate_awk() { # {{{1
+    # """
+    # Locate GNU awk.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'gawk' 'awk' "$@"
+}
+
+_koopa_locate_basename() { # {{{1
+    # """
+    # Locate GNU basename.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'basename' "$@"
+}
+
+_koopa_locate_bc() { # {{{1
+    # """
+    # Locate GNU bc.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'bc' 'bc' "$@"
 }
 
 _koopa_locate_bunzip2() { # {{{1
@@ -71,15 +109,40 @@ _koopa_locate_bunzip2() { # {{{1
     __koopa_locate_app 'bzip2' 'bunzip2'
 }
 
+_koopa_locate_chgrp() { # {{{1
+    # """
+    # Locate GNU chgrp.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'chgrp' "$@"
+}
+
+_koopa_locate_chmod() { # {{{1
+    # """
+    # Locate GNU chmod.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'chmod' "$@"
+}
+
+_koopa_locate_chown() { # {{{1
+    # """
+    # Locate GNU chown.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'chown' "$@"
+}
+
 _koopa_locate_conda() { # {{{1
     # """
-    # Which conda (or mamba) to use.
+    # Locate conda (or mamba).
     # @note Updated 2021-05-21.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba
     # - https://github.com/conda-forge/miniforge
     # """
+    [ "$#" -eq 0 ] || return 1
     if _koopa_is_installed 'mamba'
     then
         x='mamba'
@@ -90,362 +153,175 @@ _koopa_locate_conda() { # {{{1
     return 0
 }
 
+_koopa_locate_cp() { # {{{1
+    # """
+    # Locate GNU cp.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'cp' "$@"
+}
+
+_koopa_locate_cut() { # {{{1
+    # """
+    # Locate GNU cut.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'cut' "$@"
+}
+
+_koopa_locate_date() { # {{{1
+    # """
+    # Locate GNU date.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'date' "$@"
+}
+
+_koopa_locate_dirname() { # {{{1
+    # """
+    # Locate GNU dirname.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'dirname' "$@"
+}
+
+_koopa_gnu_du() { # {{{1
+    # """
+    # Locate GNU du.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'du' "$@"
+}
+
+_koopa_locate_find() { # {{{1
+    # """
+    # Locate GNU find.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'findutils' 'find' "$@"
+}
+
+_koopa_locate_grep() { # {{{1
+    # """
+    # Locate GNU grep.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'grep' 'grep' "$@"
+}
+
+_koopa_locate_gunzip() { # {{{1
+    # """
+    # Locate GNU gunzip.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'gzip' 'gunzip' "$@"
+}
+
+_koopa_locate_head() { # {{{1
+    # """
+    # Locate GNU du.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'head' "$@"
+}
+
+_koopa_locate_ln() { # {{{1
+    # """
+    # Locate GNU ls.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'ln' "$@"
+}
+
+_koopa_locate_ls() { # {{{1
+    # """
+    # Locate GNU ls.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'ls' "$@"
+}
+
+_koopa_locate_make() { # {{{1
+    # """
+    # Locate GNU make.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'make' 'make' "$@"
+}
+
+_koopa_locate_man() { # {{{1
+    # """
+    # Locate GNU man-db.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'man-db' 'man' "$@"
+}
+
+_koopa_locate_mkdir() { # {{{1
+    # """
+    # Locate GNU mkdir.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'mkdir' "$@"
+}
+
+_koopa_locate_mv() { # {{{1
+    # """
+    # Locate GNU mv.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'mv' "$@"
+}
+
+# FIXME Need to replace in other functions.
 _koopa_locate_python() { # {{{1
     # """
-    # Python executable path.
+    # Locate Python.
     # @note Updated 2021-05-21.
     # """
     __koopa_locate_app_simple 'python3'
 }
 
+# FIXME Need to replace in other functions.
 _koopa_locate_r() { # {{{1
     # """
-    # R executable path.
+    # Locate R.
     # @note Updated 2021-05-21.
     # """
     __koopa_locate_app_simple 'R'
 }
 
-_koopa_locate_unzip() { # {{{1
+_koopa_locate_readlink() { # {{{1
     # """
-    # Locate unzip.
+    # Locate GNU readlink.
     # @note Updated 2021-05-21.
     # """
-    __koopa_locate_app 'unzip' 'unzip'
-    return 0
+    __koopa_locate_gnu_app 'coreutils' 'readlink' "$@"
 }
 
-
-
-
-
-# FIXME Need to rename these in our functions...
-
-_koopa_gnu_awk() { # {{{1
+_koopa_locate_realpath() { # {{{1
     # """
-    # GNU awk.
+    # Locate GNU realpath.
     # @note Updated 2021-05-21.
     # """
-    __koopa_gnu_app 'gawk' 'awk' "$@"
-    return 0
+    __koopa_locate_gnu_app 'coreutils' 'realpath' "$@"
 }
 
-_koopa_gnu_basename() { # {{{1
+_koopa_locate_rm() { # {{{1
     # """
-    # GNU basename.
+    # Locate GNU rm.
     # @note Updated 2021-05-21.
     # """
-    __koopa_gnu_app 'coreutils' 'basename' "$@"
-    return 0
+    __koopa_locate_gnu_app 'coreutils' 'rm' "$@"
 }
 
-_koopa_gnu_bc() { # {{{1
+_koopa_locate_sed() { # {{{1
     # """
-    # GNU bc.
+    # Locate GNU sed.
     # @note Updated 2021-05-21.
     # """
-    __koopa_gnu_app 'bc' 'bc' "$@"
-    return 0
+    __koopa_locate_gnu_app 'gnu-sed' 'sed' "$@"
 }
-
-_koopa_gnu_chgrp() { # {{{1
-    # """
-    # GNU chgrp.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'chgrp' "$@"
-    return 0
-}
-
-_koopa_gnu_chmod() { # {{{1
-    # """
-    # GNU chmod.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'chmod' "$@"
-    return 0
-}
-
-_koopa_gnu_chown() { # {{{1
-    # """
-    # GNU chown.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'chown' "$@"
-    return 0
-}
-
-_koopa_gnu_cp() { # {{{1
-    # """
-    # GNU cp.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'cp' "$@"
-    return 0
-}
-
-_koopa_gnu_cut() { # {{{1
-    # """
-    # GNU cut.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'cut' "$@"
-    return 0
-}
-
-_koopa_gnu_date() { # {{{1
-    # """
-    # GNU date.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'date' "$@"
-    return 0
-}
-
-_koopa_gnu_dirname() { # {{{1
-    # """
-    # GNU dirname.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'dirname' "$@"
-    return 0
-}
-
-_koopa_gnu_du() { # {{{1
-    # """
-    # GNU du.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'du' "$@"
-    return 0
-}
-
-_koopa_gnu_find() { # {{{1
-    # """
-    # GNU find.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'findutils' 'find' "$@"
-    return 0
-}
-
-_koopa_gnu_grep() { # {{{1
-    # """
-    # GNU grep.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'grep' 'grep' "$@"
-    return 0
-}
-
-_koopa_gnu_gunzip() { # {{{1
-    __koopa_gnu_app 'gzip' 'gunzip' "$@"
-}
-
-_koopa_gnu_head() { # {{{1
-    # """
-    # GNU du.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'head' "$@"
-    return 0
-}
-
-_koopa_gnu_ln() { # {{{1
-    # """
-    # GNU ls.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'ln' "$@"
-    return 0
-}
-
-_koopa_gnu_ls() { # {{{1
-    # """
-    # GNU ls.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'ls' "$@"
-    return 0
-}
-
-_koopa_gnu_make() { # {{{1
-    # """
-    # GNU make.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'make' 'make' "$@"
-    return 0
-}
-
-_koopa_gnu_man() { # {{{1
-    # """
-    # GNU man-db.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'man-db' 'man' "$@"
-    return 0
-}
-
-_koopa_gnu_mkdir() { # {{{1
-    # """
-    # GNU mkdir.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'mkdir' "$@"
-    return 0
-}
-
-_koopa_gnu_mv() { # {{{1
-    # """
-    # GNU mv.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'mv' "$@"
-    return 0
-}
-
-_koopa_gnu_readlink() { # {{{1
-    # """
-    # GNU readlink.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'readlink' "$@"
-    return 0
-}
-
-_koopa_gnu_realpath() { # {{{1
-    # """
-    # GNU realpath.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'realpath' "$@"
-    return 0
-}
-
-_koopa_gnu_rm() { # {{{1
-    # """
-    # GNU rm.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'rm' "$@"
-    return 0
-}
-
-_koopa_gnu_sed() { # {{{1
-    # """
-    # GNU sed.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'gnu-sed' 'sed' "$@"
-    return 0
-}
-
-_koopa_gnu_sort() { # {{{1
-    # """
-    # GNU sort.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'sort' "$@"
-    return 0
-}
-
-_koopa_gnu_stat() { # {{{1
-    # """
-    # GNU stat.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'stat' "$@"
-    return 0
-}
-
-_koopa_gnu_tail() { # {{{1
-    # """
-    # GNU tail.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'tail' "$@"
-    return 0
-}
-
-_koopa_gnu_tar() { # {{{1
-    # """
-    # GNU tar.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'gnu-tar' 'tar' "$@"
-    return 0
-}
-
-_koopa_gnu_tee() { # {{{1
-    # """
-    # GNU tr.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'tee' "$@"
-    return 0
-}
-
-_koopa_gnu_tr() { # {{{1
-    # """
-    # GNU tr.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'tr' "$@"
-    return 0
-}
-
-_koopa_gnu_uncompress() { # {{{1
-    __koopa_gnu_app 'gzip' 'uncompress' "$@"
-}
-
-_koopa_gnu_uname() { # {{{1
-    # """
-    # GNU uname.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'uname' "$@"
-    return 0
-}
-
-_koopa_gnu_wc() { # {{{1
-    # """
-    # GNU wc.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'coreutils' 'wc' "$@"
-    return 0
-}
-
-_koopa_gnu_xargs() { # {{{1
-    # """
-    # GNU xargs.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_gnu_app 'findutils' 'xargs' "$@"
-    return 0
-}
-
-
-
-
-
-__koopa_locate_app_simple() { # {{{1
-    # """
-    # Simpler app location fetcher that doesn't attempt to use Homebrew.
-    # @note Updated 2021-05-21.
-    # """
-    local app_name file
-    [ "$#" -eq 1 ] || return 1
-    app_name="${1:?}"
-    file="$(_koopa_which_realpath "$app_name")"
-    [ -x "$file" ] || return 1
-    _koopa_print "$file"
-    return 0
-}
-
-
-
 
 _koopa_locate_shell() { # {{{1
     # """
@@ -526,4 +402,92 @@ _koopa_locate_shell() { # {{{1
     [ -x "$shell" ] || return 1
     _koopa_print "$shell"
     return 0
+}
+
+_koopa_locate_sort() { # {{{1
+    # """
+    # Locate GNU sort.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'sort' "$@"
+}
+
+_koopa_locate_stat() { # {{{1
+    # """
+    # Locate GNU stat.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'stat' "$@"
+}
+
+_koopa_locate_tail() { # {{{1
+    # """
+    # Locate GNU tail.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'tail' "$@"
+}
+
+_koopa_locate_tar() { # {{{1
+    # """
+    # Locate GNU tar.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'gnu-tar' 'tar' "$@"
+}
+
+_koopa_locate_tee() { # {{{1
+    # """
+    # Locate GNU tr.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'tee' "$@"
+}
+
+_koopa_locate_tr() { # {{{1
+    # """
+    # Locate GNU tr.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'tr' "$@"
+}
+
+_koopa_locate_uncompress() { # {{{1
+    # """
+    # Locate GNU uncompress.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'gzip' 'uncompress' "$@"
+}
+
+_koopa_locate_uname() { # {{{1
+    # """
+    # Locate GNU uname.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'uname' "$@"
+}
+
+_koopa_locate_unzip() { # {{{1
+    # """
+    # Locate unzip.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app 'unzip' 'unzip'
+}
+
+_koopa_locate_wc() { # {{{1
+    # """
+    # Locate GNU wc.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'wc' "$@"
+}
+
+_koopa_locate_xargs() { # {{{1
+    # """
+    # Locate GNU xargs.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'findutils' 'xargs' "$@"
 }
