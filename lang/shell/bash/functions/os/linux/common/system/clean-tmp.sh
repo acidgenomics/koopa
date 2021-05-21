@@ -3,12 +3,12 @@
 koopa::linux_clean_tmp() { # {{{1
     # """
     # Clean temporary directory.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     # """
-    local dir dirs
+    local dir dirs find matches
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
-    koopa::assert_is_gnu 'find'
+    find="$(koopa::gnu_find)"
     dirs=('/tmp')
     if [[ "${TMPDIR:-}" != '/tmp' ]]
     then
@@ -16,11 +16,14 @@ koopa::linux_clean_tmp() { # {{{1
     fi
     for dir in "${dirs[@]}"
     do
-        sudo find "$dir" \
+        readarray -t matches <<< "$( \
+        sudo "$find" "$dir" \
             -mindepth 1 \
             -maxdepth 1 \
             -ctime +30 \
-            -exec rm -frv {} \;
+            -print \
+        )"
+        koopa::rm -S "${matches[@]}"
     done
     return 0
 }
