@@ -1,5 +1,4 @@
 #!/bin/sh
-# koopa nolint=coreutils
 
 __koopa_git_has_unstaged_changes() { # {{{1
     # """

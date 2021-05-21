@@ -312,7 +312,10 @@ _koopa_shell_name() { # {{{1
     # Current shell name.
     # @note Updated 2021-05-14.
     # """
-    str="$(basename "$(_koopa_shell)")"
+    local shell
+    shell="$(_koopa_shell)"
+    # FIXME Need to harden basename here..
+    str="$(basename "$shell")"
     [ -n "$str" ] || return 1
     _koopa_print "$str"
     return 0
