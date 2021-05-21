@@ -41,46 +41,47 @@ koopa::extract() { # {{{1
                 cmd_args=(-xz -f "$file")
                 ;;
             *.tar.xz)
-                koopa::assert_is_installed tar
-                tar -xJ -f "$file"
+                cmd="$(koopa::gnu_tar)"
+                cmd_args=(-xJ -f "$file")
                 ;;
             # Single extension.
             *.bz2)
-                koopa::assert_is_installed bunzip2
-                bunzip2 "$file"
+                cmd="$(koopa::bunzip2)"
+                cmd_args=("$file")
                 ;;
             *.gz)
-                koopa::assert_is_installed gunzip
-                gunzip "$file"
+                cmd="$(koopa::gnu_gunzip)"
+                cmd_args=("$file")
                 ;;
             *.rar)
+                # Commercial.
                 cmd='unrar'
-                koopa::assert_is_installed "$cmd"
-                "$cmd" -x "$file"
+                cmd_args=(-x "$file")
                 ;;
             *.tar)
-                koopa::assert_is_installed tar
-                tar -x -f "$file"
+                cmd="$(koopa::gnu_tar)"
+                cmd_args=(-x -f "$file")
                 ;;
             *.tbz2)
-                koopa::assert_is_installed tar
-                tar -xj -f "$file"
+                cmd="$(koopa::gnu_tar)"
+                cmd_args=(-xj -f "$file")
                 ;;
             *.tgz)
-                koopa::assert_is_installed tar
-                tar -xz -f "$file"
+                cmd="$(koopa::gnu_tar)"
+                cmd_args=(-xz -f "$file")
                 ;;
             *.xz)
-                koopa::assert_is_installed xz
-                xz --decompress "$file"
+                cmd="$(koopa::xz)"  # FIXME Need to define this.
+                cmd_args=(--decompress "$file")
                 ;;
             *.zip)
+                cmd="$(koopa::unzip)"  # FIXME Need to define this.
                 koopa::assert_is_installed unzip
                 unzip -qq "$file"
                 ;;
             *.Z)
-                koopa::assert_is_installed uncompress
-                uncompress "$file"
+                cmd="$(koopa::gnu_uncompress)"
+                cmd_args=("$file")
                 ;;
             *.7z)
                 cmd="$(koopa::locate_7z)"

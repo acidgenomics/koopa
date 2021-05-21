@@ -311,6 +311,7 @@ brew "the_silver_searcher"
 brew "tmux"
 brew "tokei"  # rust
 brew "udunits"
+brew "unzip"
 brew "v8"
 brew "vim"
 brew "wget"
