@@ -24,6 +24,7 @@ koopa::contains() { # {{{1
     return 1
 }
 
+# FIXME Need to harden the grep used here...
 koopa::file_match() { # {{{1
     # """
     # Is a string defined in a file?
@@ -243,18 +244,7 @@ koopa::is_defined_in_user_profile() { # {{{1
     koopa::file_match "$file" 'koopa'
 }
 
-# FIXME Can we make this POSIX so we can add to our Shell checker??
-koopa::is_docker() { # {{{1
-    # """
-    # Is the current shell running inside Docker?
-    # @note Updated 2020-07-04.
-    #
-    # https://stackoverflow.com/questions/23513045
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::file_match '/proc/1/cgroup' ':/docker/'
-}
-
+# FIXME Need to harden grep here...
 koopa::is_doom_emacs_installed() { # {{{1
     # """
     # Is Doom Emacs installed?

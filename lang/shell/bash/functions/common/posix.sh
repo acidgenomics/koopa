@@ -476,6 +476,10 @@ koopa::is_debian_like() { # {{{1
     _koopa_is_debian_like "$@"
 }
 
+koopa::is_docker() { # {{{1
+    _koopa_is_docker "$@"
+}
+
 koopa::is_fedora() { # {{{1
     _koopa_is_fedora "$@"
 }
