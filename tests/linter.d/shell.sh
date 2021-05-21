@@ -28,6 +28,7 @@ test_all() { # {{{1
     return 0
 }
 
+# FIXME Need to update this and exclude comments
 test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"

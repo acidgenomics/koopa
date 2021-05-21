@@ -167,10 +167,6 @@ _koopa_os_codename() { # {{{1
     # """
     # Operating system code name.
     # @note Updated 2020-08-06.
-    #
-    # Alternate approach:
-    # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
-    # >     | tr -d '"'
     # """
     local os_codename
     _koopa_is_debian_like || return 0
@@ -196,18 +192,12 @@ _koopa_os_id() { # {{{1
 _koopa_os_string() { # {{{1
     # """
     # Operating system string.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-20.
     #
-    # Returns 'ID' and major 'VERSION_ID' separated by a '-'.
-    #
-    # Always returns lowercase, with unique names for Linux distros
-    # (e.g. 'rhel-8').
-    #
-    # Alternatively, use hostnamectl.
+    # Alternatively, use 'hostnamectl'.
     # https://linuxize.com/post/how-to-check-linux-version/
     # """
-    local id release_file string version
-    _koopa_is_installed awk || return 1
+    local awk id release_file string tr version
     if _koopa_is_macos
     then
         id='macos'
@@ -215,17 +205,22 @@ _koopa_os_string() { # {{{1
         version="$(_koopa_major_minor_version "$version")"
     elif _koopa_is_linux
     then
+        awk='awk'
+        tr='tr'
+        _koopa_is_gnu "$awk" "$tr" || return 1
         release_file='/etc/os-release'
         if [ -r "$release_file" ]
         then
+            # shellcheck disable=SC2016
             id="$( \
-                awk -F= '$1=="ID" { print $2 ;}' "$release_file" \
-                | tr -d '"' \
+                "$awk" -F= '$1=="ID" { print $2 ;}' "$release_file" \
+                | "$tr" -d '"' \
             )"
             # Include the major release version.
+            # shellcheck disable=SC2016
             version="$( \
-                awk -F= '$1=="VERSION_ID" { print $2 ;}' "$release_file" \
-                | tr -d '"'
+                "$awk" -F= '$1=="VERSION_ID" { print $2 ;}' "$release_file" \
+                | "$tr" -d '"'
             )"
             if [ -n "$version" ]
             then

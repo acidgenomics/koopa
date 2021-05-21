@@ -3,7 +3,7 @@
 koopa::convert_fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-05-20.
     #
     # Alternate approaches:
     #
@@ -14,9 +14,22 @@ koopa::convert_fastq_to_fasta() { # {{{1
     # >     | awk -v FS="\t" '{print $1"\n"$2}' \
     # >     > "$fasta_file"
     # """
-    local array fasta_file fastq_file source_dir target_dir 
+    local array brew_prefix cut fasta_file fastq_file paste sed source_dir \
+        target_dir tr
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed cut find paste sed sort tr
+    cut='cut'
+    paste='paste'
+    sed='sed'
+    tr='tr'
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        cut="${brew_prefix}/bin/gcut"
+        paste="${brew_prefix}/bin/gpaste"
+        sed="${brew_prefix}/bin/gsed"
+        tr="${brew_prefix}/bin/gtr"
+    fi
+    koopa::assert_is_gnu "$cut" "$paste" "$sed" "$tr"
     source_dir='.'
     target_dir='.'
     while (("$#"))
@@ -35,16 +48,17 @@ koopa::convert_fastq_to_fasta() { # {{{1
                 ;;
         esac
     done
+    koopa::assert_is_dir "$source_dir"
     source_dir="$(koopa::strip_trailing_slash "$source_dir")"
     target_dir="$(koopa::strip_trailing_slash "$target_dir")"
     # Pipe GNU find into array.
     readarray -t array <<< "$( \
-        find "$source_dir" \
-            -maxdepth 1 \
-            -mindepth 1 \
-            -type f \
-            -iname '*.fastq' \
-            -print \
+        koopa::find \
+            --glob='*.fastq' \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="$source_dir" \
+            --type='f' \
         | sort \
     )"
     [[ "${#array[@]}" -eq 0 ]] && koopa::stop 'No FASTQ files detected.'
@@ -52,7 +66,7 @@ koopa::convert_fastq_to_fasta() { # {{{1
     for fastq_file in "${array[@]}"
     do
         fasta_file="${fastq_file%.fastq}.fasta"
-        paste - - - - < "$fastq_file" \
+        "$paste" - - - - < "$fastq_file" \
             | cut -f 1,2 \
             | sed 's/^@/>/' \
             | tr '\t' '\n' > "$fasta_file"
