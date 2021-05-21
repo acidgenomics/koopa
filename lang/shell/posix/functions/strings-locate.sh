@@ -184,7 +184,7 @@ _koopa_locate_dirname() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'dirname' "$@"
 }
 
-_koopa_gnu_du() { # {{{1
+_koopa_locate_du() { # {{{1
     # """
     # Locate GNU du.
     # @note Updated 2021-05-21.
@@ -272,6 +272,14 @@ _koopa_locate_mv() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'mv' "$@"
 }
 
+_koopa_locate_paste() { # {{{1
+    # """
+    # Locate GNU paste.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'paste' "$@"
+}
+
 _koopa_locate_patch() { # {{{1
     # """
     # Locate GNU patch.
@@ -280,12 +288,12 @@ _koopa_locate_patch() { # {{{1
     __koopa_locate_app 'gpatch' 'patch' "$@"
 }
 
-_koopa_locate_paste() { # {{{1
+_koopa_locate_pcregrep() { # {{{1
     # """
-    # Locate GNU paste.
+    # Locate pcregrep.
     # @note Updated 2021-05-21.
     # """
-    __koopa_locate_gnu_app 'coreutils' 'paste' "$@"
+    __koopa_locate_app 'pcre' 'pcregrep' "$@"
 }
 
 # FIXME Need to replace in other functions.
