@@ -60,6 +60,7 @@ test_all_coreutils() { # {{{1
         'stat'
         'tee'
         'tr'
+        'uname'
         'wget'
         'which'
         'xargs'
