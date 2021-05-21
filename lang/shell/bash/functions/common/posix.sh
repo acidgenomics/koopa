@@ -228,6 +228,10 @@ koopa::gnu_grep() { # {{{1
     _koopa_gnu_grep "$@"
 }
 
+koopa::gnu_sort() { # {{{1
+    _koopa_gnu_sort "$@"
+}
+
 koopa::gnu_tr() { # {{{1
     _koopa_gnu_tr "$@"
 }

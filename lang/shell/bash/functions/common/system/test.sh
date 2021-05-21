@@ -24,22 +24,14 @@ koopa::test() { # {{{1
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     # Not sorting here can speed the function up.
     # """
-    local brew_prefix find grep prefix sort x
+    local find grep prefix sort x
     koopa::assert_has_no_args "$#"
-    find='find'
-    grep='grep'
-    sort='sort'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        find="${brew_prefix}/bin/gfind"
-        grep="${brew_prefix}/bin/ggrep"
-        sort="${brew_prefix}/bin/gsort"
-    fi
-    koopa::assert_is_gnu "$find" "$grep" "$sort"
+    find="$(koopa::gnu_find)"
+    grep="$(koopa::gnu_grep)"
+    sort="$(koopa::gnu_sort)"
     prefix="$(koopa::prefix)"
     x="$( \
         "$find" "$prefix" \
@@ -118,11 +110,11 @@ koopa::test_find_files_by_shebang() { # {{{1
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-05-21.
     #
     # Requires Perl-compatible regular expression (PCRE) support (-P).
     # """
-    local OPTIND failures file ignore name pattern x
+    local OPTIND failures file grep ignore name pattern x
     koopa::assert_has_args "$#"
     ignore=''
     OPTIND=1
@@ -145,14 +137,14 @@ koopa::test_grep() { # {{{1
     done
     shift "$((OPTIND-1))"
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed grep
+    grep="$(koopa::gnu_grep)"
     failures=()
     for file in "$@"
     do
         # Skip ignored files.
         if [[ -n "$ignore" ]]
         then
-            if grep -Pq \
+            if "$grep" -Pq \
                 --binary-files='without-match' \
                 "^# koopa nolint=${ignore}$" \
                 "$file"
@@ -161,7 +153,7 @@ koopa::test_grep() { # {{{1
             fi
         fi
         x="$(
-            grep -HPn \
+            "$grep" -HPn \
                 --binary-files='without-match' \
                 "$pattern" \
                 "$file" \

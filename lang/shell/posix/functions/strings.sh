@@ -3,12 +3,13 @@
 _koopa_arch() { # {{{1
     # """
     # Platform architecture.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-21.
     #
     # e.g. Intel: x86_64; ARM: aarch64.
     # """
-    local x
-    x="$(uname -m)"
+    local uname x
+    uname="$(_koopa_gnu_uname)"
+    x="$("$uname" -m)"
     _koopa_print "$x"
     return 0
 }
@@ -43,14 +44,17 @@ _koopa_arch2() { # {{{1
 _koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
-    # @note Updated 2020-01-04.
+    # @note Updated 2021-05-21.
     #
     # @seealso
     # https://stackoverflow.com/questions/34420091/
     # """
+    local sed string
+    sed="$(_koopa_gnu_sed)"
     for string in "$@"
     do
-        _koopa_print "$string" | sed -E 's/([ -_])([a-z])/\U\2/g'
+        _koopa_print "$string" \
+            | "$sed" -E 's/([ -_])([a-z])/\U\2/g'
     done
     return 0
 }
@@ -58,7 +62,7 @@ _koopa_camel_case_simple() { # {{{1
 _koopa_gsub() { # {{{1
     # """
     # Global substitution.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-21.
     #
     # Instead of using '|' in sed here, we can also escape '/'.
     #
@@ -67,14 +71,15 @@ _koopa_gsub() { # {{{1
     # ## bb
     # ## cc
     # """
-    local pattern replacement string
-    _koopa_is_installed sed || return 1
+    local pattern replacement sed string
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
+    sed="$(_koopa_gnu_sed)"
     for string in "$@"
     do
-        _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|g"
+        _koopa_print "$string" \
+            | "$sed" -E "s|${pattern}|${replacement}|g"
     done
     return 0
 }
@@ -101,22 +106,17 @@ _koopa_kebab_case_simple() { # {{{1
 _koopa_lowercase() { # {{{1
     # """
     # Transform string to lowercase.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # awk alternative:
-    # _koopa_print "$string" | awk '{print tolower($0)}'
+    # awk="$(_koopa_gnu_awk)"
+    # _koopa_print "$string" | "$awk" '{print tolower($0)}'
     #
     # @seealso
     # https://stackoverflow.com/questions/2264428
     # """
-    local brew_prefix string tr
-    tr='tr'
-    if _koopa_is_macos
-    then
-        brew_prefix="$(_koopa_homebrew_prefix)"
-        tr="${brew_prefix}/bin/gtr"
-    fi
-    _koopa_is_gnu "$tr" || return 1
+    local string tr
+    tr="$(_koopa_gnu_tr)"
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -257,7 +257,7 @@ _koopa_strip_trailing_slash() { # {{{1
 _koopa_sub() { # {{{1
     # """
     # Substitution.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-21.
     #
     # Instead of using '|' in sed here, we can also escape '/'.
     #
@@ -267,14 +267,15 @@ _koopa_sub() { # {{{1
     # ## aa
     # ## aa
     # """
-    local pattern replacement string
-    _koopa_is_installed sed || return 1
+    local pattern replacement sed string
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
+    sed="$(_koopa_gnu_sed)"
     for string in "$@"
     do
-        _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|"
+        _koopa_print "$string" \
+            | "$sed" -E "s|${pattern}|${replacement}|"
     done
     return 0
 }
