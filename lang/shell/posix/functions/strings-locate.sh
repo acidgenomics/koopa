@@ -232,6 +232,14 @@ _koopa_locate_head() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'head' "$@"
 }
 
+_koopa_locate_id() { # {{{1
+    # """
+    # Locate GNU id.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'id' "$@"
+}
+
 _koopa_locate_ln() { # {{{1
     # """
     # Locate GNU ls.
