@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
+# koopa nolint=coreutils
 
+
+
+# FIXME Can we just source some scripts relative to this first???
+# FIXME No functions should be defined here....
+
+
+
+# FIXME Define this in the core functions...
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-21.
     #
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
@@ -17,13 +26,12 @@ __koopa_bash_source_dir() { # {{{1
     koopa_prefix="$(_koopa_prefix)"
     prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
-    # Can add a sort step here, but it is slower and unecessary.
-    # FIXME Revert back to calling GNU find here...simpler.
     fun_scripts="$( \
-        __koopa_find \
-            --glob='*.sh' \
-            --prefix="$prefix" \
-            --type='f' \
+        find -L "$prefix" \
+            -mindepth 1 \
+            -type f \
+            -name '*.sh' \
+            -print \
     )"
     readarray -t fun_scripts_arr <<< "$fun_scripts"
     for fun_script in "${fun_scripts_arr[@]}"
@@ -31,67 +39,6 @@ __koopa_bash_source_dir() { # {{{1
         # shellcheck source=/dev/null
         . "$fun_script"
     done
-    return 0
-}
-
-# FIXME Need to simplify this...too much duplication...
-__koopa_find() { # {{{1
-    # """
-    # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2021-05-20.
-    # """
-    local find find_args glob min_depth prefix type
-    min_depth=1
-    while (("$#"))
-    do
-        case "$1" in
-            --glob=*)
-                glob="${1#*=}"
-                shift 1
-                ;;
-            --prefix=*)
-                prefix="${1#*=}"
-                shift 1
-                ;;
-            --type=*)
-                type="${1#*=}"
-                shift 1
-                ;;
-        esac
-    done
-    if __koopa_is_installed 'fd'
-    then
-        find='fd'
-        find_args=(
-            '--absolute-path'
-            '--base-directory' "$prefix"
-            '--follow'
-            '--glob' "$glob"
-            '--min-depth' "$min_depth"
-            '--no-ignore'
-            '--one-file-system'
-            '--type' "$type"
-        )
-    else
-        find='find'
-        __koopa_is_installed 'gfind' && find='gfind'
-        find_args=(
-            '-L'
-            "$prefix"
-            '-mindepth' "$min_depth"
-            '-type' "$type"
-            '-name' "$glob"
-            '-print'
-        )
-    fi
-    if ! __koopa_is_installed "$find"
-    then
-        __koopa_warning "Not installed: '${find}'."
-        return 1
-    fi
-    x="$("${find[@]}" "${find_args[@]}")"
-    [[ -n "$x" ]] || return 1
-    __koopa_print "$x"
     return 0
 }
 
