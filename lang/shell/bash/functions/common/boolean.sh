@@ -444,7 +444,7 @@ koopa::is_recent() { # {{{1
     # """
     local days exists file find
     koopa::assert_has_args "$#"
-    find="$(koopa::gnu_find)"
+    find="$(koopa::locate_find)"
     days=14
     for file in "$@"
     do

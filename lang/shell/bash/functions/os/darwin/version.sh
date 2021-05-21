@@ -7,10 +7,10 @@ koopa::get_macos_app_version() { # {{{1
     # """
     local app awk grep plist tr x
     koopa::assert_has_args "$#"
-    awk="$(koopa::gnu_awk)"
-    grep="$(koopa::gnu_grep)"
-    tr="$(koopa::gnu_tr)"
     koopa::assert_is_installed 'plutil'
+    awk="$(koopa::locate_awk)"
+    grep="$(koopa::locate_grep)"
+    tr="$(koopa::locate_tr)"
     for app in "$@"
     do
         plist="/Applications/${app}.app/Contents/Info.plist"
@@ -37,7 +37,7 @@ koopa::get_homebrew_cask_version() { # {{{1
     # # 2019.2
     # """
     koopa::assert_has_args "$#"
-    koopa::is_installed brew || return 1
+    koopa::assert_is_installed brew
     local cask x
     for cask in "$@"
     do

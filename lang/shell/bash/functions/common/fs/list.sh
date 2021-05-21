@@ -6,7 +6,8 @@ koopa:::list_path_priority() { # {{{1
     # @note Updated 2020-11-10.
     #
     # Alternate approach using tr:
-    # > x="$(tr ':' '\n' <<< "$str")"
+    # > tr="$(koopa::locate_tr)"
+    # > x="$("$tr" ':' '\n' <<< "$str")"
     #
     # Bash parameter expansion approach:
     # > koopa::print "${PATH//:/$'\n'}"
