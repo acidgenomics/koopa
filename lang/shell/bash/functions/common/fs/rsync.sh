@@ -59,15 +59,9 @@ koopa::rsync() { # {{{1
     # See also:
     # - https://unix.stackexchange.com/questions/165423
     # """
-    local brew_prefix rsync rsync_args
+    local rsync rsync_args
     koopa::assert_has_args_ge "$#" 2
-    rsync='rsync'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        rsync="${brew_prefix}/bin/rsync"
-    fi
-    koopa::assert_is_gnu "$rsync"
+    rsync="$(koopa::locate_rsync)"
     rsync_args=(
         '--human-readable'
         '--progress'
