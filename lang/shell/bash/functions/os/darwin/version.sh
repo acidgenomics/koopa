@@ -3,22 +3,13 @@
 koopa::get_macos_app_version() { # {{{1
     # """
     # Extract the version of a macOS application.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     # """
-    local app awk brew_prefix grep plist tr x
+    local app awk grep plist tr x
     koopa::assert_has_args "$#"
-    awk='awk'
-    grep='grep'
-    tr='tr'
-    if koopa::is_macos
-    then
-        # FIXME Use the opt locations here instead...
-        brew_prefix="$(koopa::homebrew_prefix)"
-        awk="${brew_prefix}/bin/gawk"
-        grep="${brew_prefix}/bin/ggrep"
-        tr="${brew_prefix}/bin/gtr"
-    fi
-    koopa::assert_is_gnu "$awk" "$grep" "$tr"
+    awk="$(koopa::gnu_awk)"
+    grep="$(koopa::gnu_grep)"
+    tr="$(koopa::gnu_tr)"
     koopa::assert_is_installed 'plutil'
     for app in "$@"
     do

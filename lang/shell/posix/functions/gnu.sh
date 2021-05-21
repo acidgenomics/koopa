@@ -9,8 +9,8 @@ __koopa_gnu_app() { # {{{1
     brew_opt="${1:?}"
     cmd="${2:?}"
     shift 2
-    koopa::assert_has_args "$#"
-    if koopa::is_macos
+    [ "$#" -gt 0 ] || return 1
+    if _koopa_is_macos
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
         # > cmd="${brew_prefix}/opt/${brew_opt}/bin/g${cmd}"
@@ -25,12 +25,30 @@ __koopa_gnu_app() { # {{{1
     return 0
 }
 
+_koopa_gnu_awk() { # {{{1
+    # """
+    # GNU awk.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_gnu_app 'gawk' 'awk' "$@"
+    return 0
+}
+
 _koopa_gnu_find() { # {{{1
     # """
-    # GNU tr.
+    # GNU find.
     # @note Updated 2021-05-21.
     # """
     __koopa_gnu_app 'findutils' 'find' "$@"
+    return 0
+}
+
+_koopa_gnu_grep() { # {{{1
+    # """
+    # GNU grep.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_gnu_app 'grep' 'grep' "$@"
     return 0
 }
 
