@@ -9,7 +9,7 @@ koopa::pip_install() { # {{{1
     # """
     local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
-    python="$(koopa::python)"
+    python="$(koopa::locate_python)"
     reinstall=0
     pos=()
     while (("$#"))
@@ -40,11 +40,6 @@ koopa::pip_install() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if ! koopa::is_installed "$python"
-    then
-        koopa::alert_note "Not installed: '${python}'."
-        return 0
-    fi
     koopa::python_add_site_packages_to_sys_path "$python"
     version="$(koopa::get_version "$python")"
     target="$(koopa::python_packages_prefix "$version")"
@@ -73,16 +68,17 @@ koopa::pip_install() { # {{{1
 koopa::pip_outdated() { # {{{1
     # """
     # List oudated pip packages.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-21.
     #
     # Requesting 'freeze' format will return '<pkg>==<version>'.
     #
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_list/
     # """
-    local prefix python x
-    python="$(koopa::python)"
-    prefix="$(koopa::python_packages_prefix)"  # FIXME
+    local prefix python version x
+    python="$(koopa::locate_python)"
+    version="$(koopa::get_version "$python")"
+    prefix="$(koopa::python_packages_prefix "$version")"
     x="$( \
         "$python" -m pip list \
             --format 'freeze' \
