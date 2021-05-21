@@ -67,9 +67,9 @@ koopa::convert_fastq_to_fasta() { # {{{1
     do
         fasta_file="${fastq_file%.fastq}.fasta"
         "$paste" - - - - < "$fastq_file" \
-            | cut -f 1,2 \
-            | sed 's/^@/>/' \
-            | tr '\t' '\n' > "$fasta_file"
+            | "$cut" -f 1,2 \
+            | "$sed" 's/^@/>/' \
+            | "$tr" '\t' '\n' > "$fasta_file"
     done
     return 0
 }
