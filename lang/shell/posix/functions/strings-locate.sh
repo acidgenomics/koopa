@@ -1,105 +1,106 @@
 #!/usr/bin/env bash
 
-# FIXME Rename this to include 'locate_' for better consistency.
-
-__koopa_gnu_app() { # {{{1
+__koopa_locate_app() { # {{{1
     # """
-    # GNU app.
+    # Locate file system path to an application.
     # @note Updated 2021-05-21.
     # """
-    local brew_name brew_prefix cmd
+    local cmd
+    local app_name brew_name brew_prefix file
     [ "$#" -eq 2 ] || return 1
     brew_name="${1:?}"
-    cmd="${2:?}"
-    if _koopa_is_macos
+    app_name="${2:?}"
+    if _koopa_is_linux
+    then
+        file="$(_koopa_which_realpath "$app_name")"
+    elif _koopa_is_macos
+    then
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        file="${brew_prefix}/opt/${brew_name}/bin/${app_name}"
+        file="$(_koopa_realpath "$file")"
+    fi
+    [ -x "$file" ] || return 1
+    _koopa_print "$file"
+    return 0
+}
+
+__koopa_locate_gnu_app() { # {{{1
+    # """
+    # Locate GNU app.
+    # @note Updated 2021-05-21.
+    # """
+    local app_name brew_name brew_prefix file
+    [ "$#" -eq 2 ] || return 1
+    brew_name="${1:?}"
+    app_name="${2:?}"
+    if _koopa_is_linux
+    then
+        file="$(_koopa_which_realpath "$app_name")"
+    elif _koopa_is_macos
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
         case "$brew_name" in
             bc | \
             gzip)
-                cmd="bin/${cmd}"
+                file="bin/${app_name}"
                 ;;
             *)
-                cmd="libexec/gnubin/${cmd}"
+                file="libexec/gnubin/${app_name}"
                 ;;
         esac
-        cmd="${brew_prefix}/opt/${brew_name}/${cmd}"
+        file="${brew_prefix}/opt/${brew_name}/${file}"
+        file="$(_koopa_realpath "$file")"
     fi
-    [ -x "$cmd" ] || return 1
-    _koopa_print "$cmd"
+    [ -x "$file" ] || return 1
+    _koopa_print "$file"
     return 0
 }
 
-# FIXME Standardize the Homebrew approach...
 _koopa_locate_7z() { # {{{1
     # """
     # Locate 7z.
     # @note Updated 2021-05-21.
     # """
-    local brew_prefix cmd
-    cmd='7z'
-    if _koopa_is_macos
-    then
-        brew_prefix="$(_koopa_homebrew_prefix)"
-        cmd="${brew_prefix}/opt/p7zip/bin/${cmd}"
-    fi
-    [ -x "$cmd" ] || return 1
-    _koopa_print "$cmd"
-    return 0
+    __koopa_locate_app 'p7zip' '7z'
 }
 
-# FIXME Standardize the Homebrew approach...
 _koopa_locate_bunzip2() { # {{{1
     # """
     # Locate bunzip2.
     # @note Updated 2021-05-21.
     # """
-    local brew_prefix cmd
-    cmd='bunzip2'
-    if _koopa_is_macos
-    then
-        brew_prefix="$(_koopa_homebrew_prefix)"
-        cmd="${brew_prefix}/opt/bzip2/bin/${cmd}"
-    fi
-    [ -x "$cmd" ] || return 1
-    _koopa_print "$cmd"
-    return 0
+    __koopa_locate_app 'bzip2' 'bunzip2'
 }
 
-# FIXME Can we standardize the homebrew approach here a little better???
-# See also approach for 7z and bunzip2, which is duplicated...
-_koopa_locate_unzip() { # {{{1
-    # """
-    # Locate unzip.
-    # @note Updated 2021-05-21.
-    # """
-    return 0
-}
-
-
-
-
-
-# FIXME Need to rename this...
-# FIXME Return the full path...
-_koopa_conda() { # {{{1
+_koopa_locate_conda() { # {{{1
     # """
     # Which conda (or mamba) to use.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-21.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba
     # - https://github.com/conda-forge/miniforge
     # """
-    local x
-    x='conda'
-    if _koopa_is_installed mamba
+    if _koopa_is_installed 'mamba'
     then
         x='mamba'
+    else
+        x='conda'
     fi
     _koopa_print "$x"
     return 0
 }
+
+_koopa_locate_unzip() { # {{{1
+    # """
+    # Locate unzip.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app 'unzip' 'unzip'
+    return 0
+}
+
+
 
 
 _koopa_gnu_awk() { # {{{1
@@ -438,7 +439,7 @@ _koopa_r() { # {{{1
 _koopa_locate_shell() { # {{{1
     # """
     # Locate the current shell executable.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # Detection issues with qemu ARM emulation on x86:
     # - The 'ps' approach will return correct shell for ARM running via
@@ -472,43 +473,46 @@ _koopa_locate_shell() { # {{{1
     # - https://unix.stackexchange.com/questions/87061/
     # - https://unix.stackexchange.com/questions/182590/
     # """
-    local str
-    str=''
-    if [ -n "${KOOPA_SHELL:-}" ]
+    local proc_file pid ps sed shell
+    shell="${KOOPA_SHELL:-}"
+    if [ -x "$shell" ]
     then
-        str="$KOOPA_SHELL"
-    elif _koopa_is_linux
+        _koopa_print "$shell"
+        return 0
+    fi
+    pid="${$}"
+    sed="$(_koopa_locate_gnu_sed)"
+    if _koopa_is_linux
     then
-        # FIXME The proc approach returns the full path.
-        # This errors in Docker because it returns qemu...but it should NOT
-        # be the default. We need to use this as a fallback in case system
-        # is Docker...
-        if _koopa_is_installed ps sed
+        proc_file="/proc/${pid}/exe"
+        if [ -x "$proc_file" ] && ! _koopa_is_docker
         then
-            str="$( \
-                ps -p "${$}" -o 'comm=' \
-                | sed 's/^-//' \
+            shell="$(_koopa_realpath "$proc_file")"
+        elif _koopa_is_installed ps sed
+        then
+            ps="$(_koopa_locate_ps)"  # FIXME Need to add this.
+            shell="$( \
+                "$ps" -p "$pid" -o 'comm=' \
+                | "$sed" 's/^-//' \
             )"
-        elif [ -x "/proc/${$}/exe" ]
-        then
-            str="$(_koopa_realpath "/proc/${$}/exe")"
+            shell="$(_koopa_which_realpath "$shell")"
         fi
     elif _koopa_is_macos
     then
         if _koopa_is_installed lsof sed
         then
-            str="$( \
+            shell="$( \
                 lsof \
                     -a \
                     -F 'n' \
                     -d 'txt' \
-                    -p "${$}" \
-                | sed -n '3p' \
-                | sed 's/^n//' \
+                    -p "$pid" \
+                | "$sed" -n '3p' \
+                | "$sed" 's/^n//' \
             )"
         fi
     fi
-    [ -n "$str" ] || return 1
-    _koopa_print "$str"
+    [ -x "$shell" ] || return 1
+    _koopa_print "$shell"
     return 0
 }

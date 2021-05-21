@@ -38,7 +38,7 @@ koopa::activate_conda_env() { # {{{1
         # shellcheck source=/dev/null
         . "$script"
     fi
-    conda="$(koopa::conda)"
+    conda="$(koopa::locate_conda)"
     "$conda" activate "$env_name"
     [[ "$nounset" -eq 1 ]] && set -u
     return 0
@@ -413,7 +413,7 @@ koopa::conda_create_env() { # {{{1
     koopa::assert_has_args "$#"
     koopa::activate_conda
     koopa::assert_is_installed conda
-    conda="$(koopa::conda)"
+    conda="$(koopa::locate_conda)"
     conda_prefix="$(koopa::conda_prefix)"
     for env_string in "$@"
     do
@@ -460,7 +460,7 @@ koopa::conda_env_latest_version() { # {{{1
     local conda env_name
     koopa::assert_has_args_eq "$#" 1
     koopa::assert_is_installed awk conda
-    conda="$(koopa::conda)"
+    conda="$(koopa::locate_conda)"
     env_name="${1:?}"
     x="$( \
         "$conda" search "$env_name" \
@@ -480,7 +480,7 @@ koopa::conda_env_list() { # {{{1
     local conda x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed conda
-    conda="$(koopa::conda)"
+    conda="$(koopa::locate_conda)"
     x="$("$conda" env list --json)"
     koopa::print "$x"
     return 0
@@ -538,7 +538,7 @@ koopa::conda_env_prefix() { # {{{1
 koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-21.
     #
     # @seealso
     # - conda env list --verbose
@@ -548,7 +548,7 @@ koopa::conda_remove_env() { # {{{1
     koopa::assert_has_args "$#"
     koopa::activate_conda
     koopa::assert_is_installed conda
-    conda="$(koopa::conda)"
+    conda="$(koopa::locate_conda)"
     nounset="$(koopa::boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +u
     for arg in "$@"
