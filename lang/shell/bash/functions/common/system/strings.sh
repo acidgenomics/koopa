@@ -54,11 +54,12 @@ koopa::date() { # {{{1
 koopa::datetime() { # {{{
     # """
     # Datetime string.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-21.
+    local date x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed date
-    local x
-    x="$(date '+%Y%m%d-%H%M%S')"
+    date="$(koopa::locate_date)"
+    x="$("$date" '+%Y%m%d-%H%M%S')"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
@@ -119,28 +120,36 @@ koopa::gnu_mirror_url() { # {{{1
 koopa::local_ip_address() { # {{{1
     # """
     # Local IP address.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-21.
     #
     # Some systems (e.g. macOS) will return multiple IP address matches for
     # Ethernet and WiFi. Here we're simplying returning the first match, which
     # corresponds to the default on macOS.
     # """
+    local awk grep head tail x
     koopa::assert_has_no_args "$#"
-    local x
+    awk="$(koopa::locate_awk)"
+    grep="$(koopa::locate_grep)"
+    head="$(koopa::locate_head)"
+    tail="$(koopa::locate_tail)"
     if koopa::is_macos
     then
+        koopa::assert_is_installed ifconfig
+        # shellcheck disable=SC2016
         x="$( \
             ifconfig \
-            | grep 'inet ' \
-            | grep 'broadcast' \
-            | awk '{print $2}' \
-            | tail -n 1
+            | "$grep" 'inet ' \
+            | "$grep" 'broadcast' \
+            | "$awk" '{print $2}' \
+            | "$tail" -n 1
         )"
     else
+        koopa::assert_is_installed hostname
+        # shellcheck disable=SC2016
         x="$( \
             hostname -I \
-            | awk '{print $1}' \
-            | head -n 1
+            | "$awk" '{print $1}' \
+            | "$head" -n 1
         )"
     fi
     [[ -n "$x" ]] || return 1
@@ -177,14 +186,9 @@ koopa::os_type() { # {{{1
     # Operating system type.
     # @note Updated 2021-05-21.
     # """
-    local brew_prefix tr uname x
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        # FIXME Create GNU wrappers for these...
-        tr="${brew_prefix}/bin/gtr"
-        uname="${brew_prefix}/bin/guname"
-    fi
+    local tr uname x
+    tr="$(_koopa_locate_tr)"
+    uname="$(_koopa_locate_uname)"
     x="$( \
         "$uname" -s \
         | "$tr" '[:upper:]' '[:lower:]' \
@@ -196,21 +200,21 @@ koopa::os_type() { # {{{1
 koopa::public_ip_address() { # {{{1
     # """
     # Public (remote) IP address.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-21.
     #
     # @seealso
-    # https://www.cyberciti.biz/faq/
+    # - https://www.cyberciti.biz/faq/
     #     how-to-find-my-public-ip-address-from-command-line-on-a-linux/
     # """
+    local curl x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed curl dig
-    local x
-    x="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    koopa::assert_is_installed dig
+    x="$(dig +short 'myip.opendns.com' '@resolver1.opendns.com')"
     # Fallback in case dig approach doesn't work.
     if [[ -z "$x" ]]
     then
-        koopa::assert_is_installed curl
-        x="$(curl -s ipecho.net/plain)"
+        curl="$(koopa::locate_curl)"
+        x="$("$curl" -s 'ipecho.net/plain')"
     fi
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -220,16 +224,18 @@ koopa::public_ip_address() { # {{{1
 koopa::script_name() { # {{{1
     # """
     # Get the calling script name.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-21.
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """
+    local cut file head x
     koopa::assert_has_no_args "$#"
-    local file x
+    cut="$(koopa::locate_cut)"
+    head="$(koopa::locate_head)"
     file="$( \
         caller \
-        | head -n 1 \
-        | cut -d ' ' -f 2 \
+        | "$head" -n 1 \
+        | "$cut" -d ' ' -f 2 \
     )"
     x="$(koopa::basename "$file")"
     [[ -n "$x" ]] || return 0
