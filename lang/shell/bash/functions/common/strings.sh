@@ -3,7 +3,7 @@
 koopa::capitalize() { # {{{1
     # """
     # Capitalize the first letter (only) of a string.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-21.
     #
     # @examples
     # koopa::capitalize 'hello world' 'foo bar'
@@ -11,11 +11,12 @@ koopa::capitalize() { # {{{1
     # @seealso
     # - https://stackoverflow.com/a/12487465
     # """
+    local str tr
     koopa::assert_has_args "$#"
-    local str
+    tr="$(koopa::locate_tr)"
     for str in "$@"
     do
-        str="$(tr '[:lower:]' '[:upper:]' <<< "${str:0:1}")${str:1}"
+        str="$("$tr" '[:lower:]' '[:upper:]' <<< "${str:0:1}")${str:1}"
         koopa::print "$str"
     done
     return 0
@@ -25,7 +26,7 @@ koopa::paste0() { # {{{1
     # """
     # Paste arguments (e.g. from an array) into a string separated by delimiter
     # defined in the first positional argument.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-21.
     #
     # Note that the 'paste0' name is a reference to the R function.
     #
@@ -49,7 +50,7 @@ koopa::paste0() { # {{{1
     str="${*/#/$delim}"
     # Print without the first delimiter.
     str="${str:${#delim}}"
-    printf '%s\n' "$str"
+    koopa::print "$str"
     return 0
 }
 

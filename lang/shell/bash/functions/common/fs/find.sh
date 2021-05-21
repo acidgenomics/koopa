@@ -71,7 +71,7 @@ koopa::find() { # {{{1
             find_args+=('--print0')
         fi
     else
-        find="$(koopa::gnu_find)"
+        find="$(koopa::locate_find)"
         find_args=('-L' "$prefix")
         if [[ "$max_depth" -gt 0 ]]
         then

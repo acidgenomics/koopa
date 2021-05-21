@@ -130,8 +130,8 @@ koopa::tldr_file() { # {{{1
     local cmd desc file grep index_file platform prefix subdir tr
     koopa::assert_has_args_eq "$#" 1
     cmd="${1:?}"
-    grep="$(koopa::gnu_grep)"
-    tr="$(koopa::gnu_tr)"
+    grep="$(koopa::locate_grep)"
+    tr="$(koopa::locate_tr)"
     platform="$(koopa::tldr_platform)"
     prefix="$(koopa::tldr_prefix)"
     index_file="$(koopa::tldr_index_file)"

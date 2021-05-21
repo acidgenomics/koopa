@@ -8,7 +8,7 @@ koopa::linux_clean_tmp() { # {{{1
     local dir dirs find matches
     koopa::assert_has_no_args "$#"
     koopa::assert_has_sudo
-    find="$(koopa::gnu_find)"
+    find="$(koopa::locate_find)"
     dirs=('/tmp')
     if [[ "${TMPDIR:-}" != '/tmp' ]]
     then
