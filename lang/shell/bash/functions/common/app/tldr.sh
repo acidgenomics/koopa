@@ -125,20 +125,13 @@ koopa::tldr_download_cache() { # {{{1
 koopa::tldr_file() { # {{{1
     # """
     # Get the tldr file path, using 'index.json' and platform key.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-05-21.
     # """
-    local cmd desc file index_file platform prefix subdir
+    local cmd desc file grep index_file platform prefix subdir tr
     koopa::assert_has_args_eq "$#" 1
-    grep='grep'
-    tr='tr'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        grep="${brew_prefix}/bin/ggrep"
-        tr="${brew_prefix}/bin/gtr"
-    fi
-    koopa::assert_is_gnu "$grep" "$tr"
     cmd="${1:?}"
+    grep="$(koopa::gnu_grep)"
+    tr="$(koopa::gnu_tr)"
     platform="$(koopa::tldr_platform)"
     prefix="$(koopa::tldr_prefix)"
     index_file="$(koopa::tldr_index_file)"
@@ -196,22 +189,17 @@ koopa::tldr_list_pages() { # {{{1
 koopa::tldr_platform() { # {{{1
     # """
     # Convert the local platorm name to tldr's version.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-05-21.
     # """
-    local str
+    local os_id str
     koopa::assert_has_no_args "$#"
-    case "$(uname -s)" in
-        Darwin)
+    os_id="$(koopa::os_id)"
+    case "$os_id" in
+        linux)
+            str="$os_id"
+            ;;
+        macos)
             str='osx'
-            ;;
-        Linux)
-            str='linux'
-            ;;
-        SunOS)
-            str='sunos'
-            ;;
-        CYGWIN*|MINGW32*|MSYS*)
-            str='windows'
             ;;
         *)
             str='common'

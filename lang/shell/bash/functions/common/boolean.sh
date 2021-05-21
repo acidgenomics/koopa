@@ -437,7 +437,7 @@ koopa::is_r_package_installed() { # {{{1
 koopa::is_recent() { # {{{1
     # """
     # If the file exists and is more recent than 2 weeks old.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # Current approach uses GNU find to filter based on modification date.
     #
@@ -451,15 +451,9 @@ koopa::is_recent() { # {{{1
     # @examples
     # koopa::is_recent ~/hello-world.txt
     # """
-    local brew_prefix days exists file find
+    local days exists file find
     koopa::assert_has_args "$#"
-    find='find'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        find="${brew_prefix}/bin/gfind"
-    fi
-    koopa::assert_is_gnu "$find"
+    find="$(koopa::gnu_find)"
     days=14
     for file in "$@"
     do

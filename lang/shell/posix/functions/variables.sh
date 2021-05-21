@@ -192,10 +192,12 @@ _koopa_os_id() { # {{{1
 _koopa_os_string() { # {{{1
     # """
     # Operating system string.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # Alternatively, use 'hostnamectl'.
     # https://linuxize.com/post/how-to-check-linux-version/
+    #
+    # If we ever add Windows support, look for: cygwin, mingw32*, msys*.
     # """
     local awk id release_file string tr version
     if _koopa_is_macos

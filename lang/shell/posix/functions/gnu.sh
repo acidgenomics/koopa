@@ -6,10 +6,9 @@ __koopa_gnu_app() { # {{{1
     # @note Updated 2021-05-21.
     # """
     local brew_opt brew_prefix cmd
+    [ "$#" -eq 2 ] || return 1
     brew_opt="${1:?}"
     cmd="${2:?}"
-    shift 2
-    [ "$#" -gt 0 ] || return 1
     if _koopa_is_macos
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
@@ -21,7 +20,7 @@ __koopa_gnu_app() { # {{{1
         _koopa_warning "Missing GNU app: '${cmd}'."
         return 1
     fi
-    "$cmd" "$@"
+    _koopa_print "$cmd"
     return 0
 }
 
