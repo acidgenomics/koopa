@@ -48,6 +48,7 @@ test_all_coreutils() { # {{{1
         'du'
         'find'
         'grep'
+        'id'
         'ln'
         'ls'
         'mkdir'

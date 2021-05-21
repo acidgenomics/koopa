@@ -268,6 +268,10 @@ koopa::gnu_grep() { # {{{1
     _koopa_gnu_grep "$@"
 }
 
+koopa::gnu_gunzip() { # {{{1
+    _koopa_gnu_gunzip "$@"
+}
+
 koopa::gnu_head() { # {{{1
     _koopa_gnu_head "$@"
 }
@@ -334,6 +338,10 @@ koopa::gnu_tee() { # {{{1
 
 koopa::gnu_tr() { # {{{1
     _koopa_gnu_tr "$@"
+}
+
+koopa::gnu_uncompress() { # {{{1
+    _koopa_gnu_uncompress "$@"
 }
 
 koopa::gnu_uname() { # {{{1

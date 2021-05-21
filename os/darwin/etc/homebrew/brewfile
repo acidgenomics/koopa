@@ -274,6 +274,7 @@ brew "openjdk"
 brew "openjdk@8"  # for nextflow
 brew "openssh"
 brew "osx-cpu-temp"
+brew "p7zip"
 brew "pandoc"
 brew "pandoc-crossref"
 brew "parallel"

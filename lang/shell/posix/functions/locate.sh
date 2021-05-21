@@ -13,25 +13,74 @@ __koopa_gnu_app() { # {{{1
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
         case "$brew_name" in
-            bc)
+            bc | \
+            gzip)
                 cmd="bin/${cmd}"
                 ;;
             *)
-                # Alternatively, can use:
-                # > cmd="libexec/gnubin/${cmd}"
-                cmd="bin/g${cmd}"
+                cmd="libexec/gnubin/${cmd}"
                 ;;
         esac
+        cmd="${brew_prefix}/opt/${brew_name}/${cmd}"
     fi
-    cmd="${brew_prefix}/opt/${brew_name}/${cmd}"
-    if [ ! -x "$cmd" ]
-    then
-        _koopa_warning "Missing GNU app: '${cmd}'."
-        return 1
-    fi
+    [ -x "$cmd" ] || return 1
     _koopa_print "$cmd"
     return 0
 }
+
+_koopa_7z() { # {{{1
+    # """
+    # Which 7z to use.
+    # @note Updated 2021-05-21.
+    # """
+    local brew_prefix cmd
+    cmd='7z'
+    if _koopa_is_macos
+    then
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        cmd="${brew_prefix}/opt/p7zip/bin/${cmd}"
+    fi
+    [ -x "$cmd" ] || return 1
+    _koopa_print "$cmd"
+    return 0
+}
+
+_koopa_bunzip2() { # {{{1
+    # """
+    # Which bunzip2 to use.
+    # @note Updated 2021-05-21.
+    # """
+    local brew_prefix cmd
+    cmd='bunzip2'
+    if _koopa_is_macos
+    then
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        cmd="${brew_prefix}/opt/bzip2/bin/${cmd}"
+    fi
+    [ -x "$cmd" ] || return 1
+    _koopa_print "$cmd"
+    return 0
+}
+
+_koopa_conda() { # {{{1
+    # """
+    # Which conda (or mamba) to use.
+    # @note Updated 2021-05-14.
+    #
+    # @seealso
+    # - https://github.com/mamba-org/mamba
+    # - https://github.com/conda-forge/miniforge
+    # """
+    local x
+    x='conda'
+    if _koopa_is_installed mamba
+    then
+        x='mamba'
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
 
 _koopa_gnu_awk() { # {{{1
     # """
@@ -148,6 +197,10 @@ _koopa_gnu_grep() { # {{{1
     # """
     __koopa_gnu_app 'grep' 'grep' "$@"
     return 0
+}
+
+_koopa_gnu_gunzip() { # {{{1
+    __koopa_gnu_app 'gzip' 'gunzip' "$@"
 }
 
 _koopa_gnu_head() { # {{{1
@@ -303,6 +356,10 @@ _koopa_gnu_tr() { # {{{1
     return 0
 }
 
+_koopa_gnu_uncompress() { # {{{1
+    __koopa_gnu_app 'gzip' 'uncompress' "$@"
+}
+
 _koopa_gnu_uname() { # {{{1
     # """
     # GNU uname.
@@ -327,5 +384,105 @@ _koopa_gnu_xargs() { # {{{1
     # @note Updated 2021-05-21.
     # """
     __koopa_gnu_app 'findutils' 'xargs' "$@"
+    return 0
+}
+
+_koopa_python() { # {{{1
+    # """
+    # Python executable path.
+    # @note Updated 2021-05-21.
+    # """
+    local x
+    x='python3'
+    x="$(_koopa_which "$x")"
+    [ -x "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_r() { # {{{1
+    # """
+    # R executable path.
+    # @note Updated 2021-05-21.
+    # """
+    local x
+    x='R'
+    x="$(_koopa_which "$x")"
+    [ -x "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_shell() { # {{{1
+    # """
+    # Current shell executable.
+    # @note Updated 2021-05-20.
+    #
+    # Detection issues with qemu ARM emulation on x86:
+    # - The 'ps' approach will return correct shell for ARM running via
+    #   emulation on x86 (e.g. Docker).
+    # - ARM running via emulation on x86 (e.g. Docker) will return
+    #   '/usr/bin/qemu-aarch64' here, rather than the shell we want.
+    #
+    # Useful variables:
+    # - Bash: 'BASH_VERSION'
+    # - Zsh: 'ZSH_VERSION'
+    #
+    # When '/proc' exists:
+    # - Shell invocation:
+    #   > cat "/proc/${$}/cmdline"
+    #   ## bash-il
+    # - Shell path:
+    #   > readlink "/proc/${$}/exe"
+    #   ## /usr/bin/bash
+    #
+    # How to resolve shell name when ps is installed:
+    # > shell_name="$( \
+    # >     ps -p "${$}" -o 'comm=' \
+    # >     | sed 's/^-//' \
+    # > )"
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/3327013
+    # - http://opensourceforgeeks.blogspot.com/2013/05/
+    #     how-to-find-current-shell-in-linux.html
+    # - https://superuser.com/questions/103309/
+    # - https://unix.stackexchange.com/questions/87061/
+    # - https://unix.stackexchange.com/questions/182590/
+    # """
+    local str
+    str=''
+    if [ -n "${KOOPA_SHELL:-}" ]
+    then
+        str="$KOOPA_SHELL"
+    elif _koopa_is_linux
+    then
+        if _koopa_is_installed ps sed
+        then
+            str="$( \
+                ps -p "${$}" -o 'comm=' \
+                | sed 's/^-//' \
+            )"
+        elif [ -x "/proc/${$}/exe" ]
+        then
+            str="$(_koopa_realpath "/proc/${$}/exe")"
+        fi
+    elif _koopa_is_macos
+    then
+        if _koopa_is_installed lsof sed
+        then
+            str="$( \
+                lsof \
+                    -a \
+                    -F 'n' \
+                    -d 'txt' \
+                    -p "${$}" \
+                | sed -n '3p' \
+                | sed 's/^n//' \
+            )"
+        fi
+    fi
+    [ -n "$str" ] || return 1
+    _koopa_print "$str"
     return 0
 }

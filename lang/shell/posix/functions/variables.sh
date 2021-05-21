@@ -1,31 +1,12 @@
 #!/bin/sh
-# koopa nolint=coreutils
 
+# FIXME Use gid here if possible.
 __koopa_id() { # {{{1
     # """
     # Return ID string.
     # @note Updated 2020-06-30.
     # """
     _koopa_print "$(id "$@")"
-    return 0
-}
-
-_koopa_conda() { # {{{1
-    # """
-    # Which conda (or mamba) to use.
-    # @note Updated 2021-05-14.
-    #
-    # @seealso
-    # - https://github.com/mamba-org/mamba
-    # - https://github.com/conda-forge/miniforge
-    # """
-    local x
-    x='conda'
-    if _koopa_is_installed mamba
-    then
-        x='mamba'
-    fi
-    _koopa_print "$x"
     return 0
 }
 
@@ -242,106 +223,6 @@ _koopa_os_string() { # {{{1
         string="${string}-${version}"
     fi
     _koopa_print "$string"
-    return 0
-}
-
-_koopa_python() { # {{{1
-    # """
-    # Python executable path.
-    # @note Updated 2021-05-05.
-    # """
-    local x
-    x='python3'
-    x="$(_koopa_which "$x")"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
-
-_koopa_r() { # {{{1
-    # """
-    # R executable path.
-    # @note Updated 2021-05-05.
-    # """
-    local x
-    x='R'
-    x="$(_koopa_which "$x")"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
-
-_koopa_shell() { # {{{1
-    # """
-    # Current shell executable.
-    # @note Updated 2021-05-20.
-    #
-    # Detection issues with qemu ARM emulation on x86:
-    # - The 'ps' approach will return correct shell for ARM running via
-    #   emulation on x86 (e.g. Docker).
-    # - ARM running via emulation on x86 (e.g. Docker) will return
-    #   '/usr/bin/qemu-aarch64' here, rather than the shell we want.
-    #
-    # Useful variables:
-    # - Bash: 'BASH_VERSION'
-    # - Zsh: 'ZSH_VERSION'
-    #
-    # When '/proc' exists:
-    # - Shell invocation:
-    #   > cat "/proc/${$}/cmdline"
-    #   ## bash-il
-    # - Shell path:
-    #   > readlink "/proc/${$}/exe"
-    #   ## /usr/bin/bash
-    #
-    # How to resolve shell name when ps is installed:
-    # > shell_name="$( \
-    # >     ps -p "${$}" -o 'comm=' \
-    # >     | sed 's/^-//' \
-    # > )"
-    #
-    # @seealso
-    # - https://stackoverflow.com/questions/3327013
-    # - http://opensourceforgeeks.blogspot.com/2013/05/
-    #     how-to-find-current-shell-in-linux.html
-    # - https://superuser.com/questions/103309/
-    # - https://unix.stackexchange.com/questions/87061/
-    # - https://unix.stackexchange.com/questions/182590/
-    # """
-    local str
-    str=''
-    if [ -n "${KOOPA_SHELL:-}" ]
-    then
-        str="$KOOPA_SHELL"
-    elif _koopa_is_linux
-    then
-        if _koopa_is_installed ps sed
-        then
-            str="$( \
-                ps -p "${$}" -o 'comm=' \
-                | sed 's/^-//' \
-            )"
-        elif [ -x "/proc/${$}/exe" ]
-        then
-            str="$(_koopa_realpath "/proc/${$}/exe")"
-        fi
-    elif _koopa_is_macos
-    then
-        if _koopa_is_installed lsof sed
-        then
-            str="$( \
-                lsof \
-                    -a \
-                    -F 'n' \
-                    -d 'txt' \
-                    -p "${$}" \
-                | sed -n '3p' \
-                | sed 's/^n//' \
-            )"
-        fi
-    fi
-    [ -n "$str" ] || return 1
-    _koopa_print "$str"
     return 0
 }
 
