@@ -628,6 +628,10 @@ koopa::local_data_prefix() { # {{{1
     _koopa_local_data_prefix "$@"
 }
 
+koopa::locate_shell() { # {{{1
+    _koopa_locate_shell "$@"
+}
+
 koopa::lowercase() { # {{{1
     _koopa_lowercase "$@"
 }
@@ -858,10 +862,6 @@ koopa::rust_prefix() { # {{{1
 
 koopa::scripts_private_prefix() { # {{{1
     _koopa_scripts_private_prefix "$@"
-}
-
-koopa::shell() { # {{{1
-    _koopa_shell "$@"
 }
 
 koopa::shell_name() { # {{{1
