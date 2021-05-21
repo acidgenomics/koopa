@@ -94,8 +94,18 @@ koopa::macos_install_r_framework() { # {{{1
 
     # Intel:
     # https://cran.r-project.org/bin/macosx/base/R-4.1.0.pkg
+    # Important: this release uses Xcode 12.4 and GNU Fortran 8.2. If you wish
+    # to compile R packages from sources, you may need to download GNU Fortran
+    # 8.2 - see the tools directory.
+
     # ARM:
     # https://cran.r-project.org/bin/macosx/big-sur-arm64/base/R-4.1.0-arm64.pkg
+    # This release uses Xcode 12.4 and experimental GNU Fortran 11 arm64 fork.
+    # If you wish to compile R packages from sources, you may need to download
+    # GNU Fortran for arm64 from https://mac.R-project.org/libs-arm64. Any
+    # external libraries and tools are expected to live in /opt/R/arm64 to not
+    # conflict with Intel-based software and this build will not use /usr/local
+    # to avoid such conflicts. 
 
     return 0
 }
