@@ -488,6 +488,10 @@ koopa::local_data_prefix() { # {{{1
     _koopa_local_data_prefix "$@"
 }
 
+koopa::locate_7z() { # {{{1
+    _koopa_locate_7z "$@"
+}
+
 koopa::locate_awk() { # {{{1
     _koopa_locate_awk "$@"
 }
@@ -498,6 +502,10 @@ koopa::locate_basename() { # {{{1
 
 koopa::locate_bc() { # {{{1
     _koopa_locate_bc "$@"
+}
+
+koopa::locate_bunzip2() { # {{{1
+    _koopa_locate_bunzip2 "$@"
 }
 
 koopa::locate_chgrp() { # {{{1
@@ -588,6 +596,10 @@ koopa::locate_patch() { # {{{1
     _koopa_locate_patch "$@"
 }
 
+koopa::locate_pcregrep() { # {{{1
+    _koopa_locate_pcregrep "$@"
+}
+
 koopa::locate_python() { # {{{1
     _koopa_locate_python "$@"
 }
@@ -606,6 +618,10 @@ koopa::locate_realpath() { # {{{1
 
 koopa::locate_rm() { # {{{1
     _koopa_locate_rm "$@"
+}
+
+koopa::locate_rsync() { # {{{1
+    _koopa_locate_rsync "$@"
 }
 
 koopa::locate_sed() { # {{{1
