@@ -435,10 +435,9 @@ _koopa_r() { # {{{1
     return 0
 }
 
-# FIXME Rename this to 'koopa_locate_shell'
-_koopa_shell() { # {{{1
+_koopa_locate_shell() { # {{{1
     # """
-    # Current shell executable.
+    # Locate the current shell executable.
     # @note Updated 2021-05-20.
     #
     # Detection issues with qemu ARM emulation on x86:
