@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename this to include 'locate_' for better consistency.
+
 __koopa_gnu_app() { # {{{1
     # """
     # GNU app.
