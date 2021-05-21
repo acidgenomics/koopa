@@ -369,7 +369,7 @@ koopa::is_powerful() { # {{{1
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -384,8 +384,7 @@ koopa::is_python_package_installed() { # {{{1
     # """
     local pkg prefix python version
     koopa::assert_has_args "$#"
-    python="$(koopa::python)"
-    koopa::is_installed "$python" || return 1
+    python="$(koopa::locate_python)"
     version="$(koopa::get_version "$python")"
     prefix="$(koopa::python_packages_prefix "$version")"
     [[ -d "$prefix" ]] || return 1
@@ -403,7 +402,7 @@ koopa::is_python_package_installed() { # {{{1
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-05-21.
     #
     # This will only return true for user-installed packages.
     #
@@ -415,8 +414,7 @@ koopa::is_r_package_installed() { # {{{1
     # """
     local pkg r
     koopa::assert_has_args "$#"
-    r="$(koopa::r)"
-    koopa::is_installed "$r" || return 1
+    r="$(koopa::locate_r)"
     prefix="$(koopa::r_library_prefix "$r")"
     for pkg in "$@"
     do
