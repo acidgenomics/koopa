@@ -148,6 +148,22 @@ _koopa_is_debian_like() { # {{{1
     _koopa_is_os_like 'debian'
 }
 
+# FIXME Double check that this works correctly inside Docker...
+_koopa_is_docker() { # {{{1
+    # """
+    # Is the current session running inside Docker?
+    # @note Updated 2021-05-21.
+    # @seealso
+    # - https://stackoverflow.com/questions/23513045
+    # """
+    local file grep pattern
+    file='/proc/1/cgroup'
+    [ -f "$file" ] || return 1
+    pattern=':/docker/'
+    grep="$(_koopa_locate_gnu_grep)"
+    "$grep" -q "$pattern" "$file"
+}
+
 _koopa_is_fedora() { # {{{1
     # """
     # Is the operating system Fedora?
