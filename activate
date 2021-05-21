@@ -758,8 +758,8 @@ __koopa_activate() { # {{{1
         _koopa_activate_ssh_key || return 1
         if ! _koopa_is_subshell
         then
-            _koopa_today_bucket || return 1
-            _koopa_tmux_sessions || return 1
+            _koopa_activate_today_bucket || return 1
+            _koopa_activate_tmux_sessions || return 1
         fi
     fi
     if [ "$test" -eq 1 ]

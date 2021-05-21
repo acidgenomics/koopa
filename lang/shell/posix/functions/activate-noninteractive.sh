@@ -963,11 +963,10 @@ _koopa_activate_venv() { # {{{1
     return 0
 }
 
-# FIXME Make koopa function variants of these and call here...
 _koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     # @seealso
     # - https://developer.gnome.org/basedir-spec/
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
