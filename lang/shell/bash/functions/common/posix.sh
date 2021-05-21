@@ -220,6 +220,46 @@ koopa::gnu_awk() { # {{{1
     _koopa_gnu_awk "$@"
 }
 
+koopa::gnu_basename() { # {{{1
+    _koopa_gnu_basename "$@"
+}
+
+koopa::gnu_bc() { # {{{1
+    _koopa_gnu_bc "$@"
+}
+
+koopa::gnu_chgrp() { # {{{1
+    _koopa_gnu_chgrp "$@"
+}
+
+koopa::gnu_chmod() { # {{{1
+    _koopa_gnu_chmod "$@"
+}
+
+koopa::gnu_chown() { # {{{1
+    _koopa_gnu_chown "$@"
+}
+
+koopa::gnu_cp() { # {{{1
+    _koopa_gnu_cp "$@"
+}
+
+koopa::gnu_cut() { # {{{1
+    _koopa_gnu_cut "$@"
+}
+
+koopa::gnu_date() { # {{{1
+    _koopa_gnu_date "$@"
+}
+
+koopa::gnu_dirname() { # {{{1
+    _koopa_gnu_dirname "$@"
+}
+
+koopa::gnu_du() { # {{{1
+    _koopa_gnu_du "$@"
+}
+
 koopa::gnu_find() { # {{{1
     _koopa_gnu_find "$@"
 }
@@ -228,8 +268,68 @@ koopa::gnu_grep() { # {{{1
     _koopa_gnu_grep "$@"
 }
 
+koopa::gnu_head() { # {{{1
+    _koopa_gnu_head "$@"
+}
+
+koopa::gnu_ln() { # {{{1
+    _koopa_gnu_ln "$@"
+}
+
+koopa::gnu_ls() { # {{{1
+    _koopa_gnu_ls "$@"
+}
+
+koopa::gnu_make() { # {{{1
+    _koopa_gnu_make "$@"
+}
+
+koopa::gnu_man() { # {{{1
+    _koopa_gnu_man "$@"
+}
+
+koopa::gnu_mkdir() { # {{{1
+    _koopa_gnu_mkdir "$@"
+}
+
+koopa::gnu_mv() { # {{{1
+    _koopa_gnu_mv "$@"
+}
+
+koopa::gnu_readlink() { # {{{1
+    _koopa_gnu_readlink "$@"
+}
+
+koopa::gnu_realpath() { # {{{1
+    _koopa_gnu_realpath "$@"
+}
+
+koopa::gnu_rm() { # {{{1
+    _koopa_gnu_rm "$@"
+}
+
+koopa::gnu_sed() { # {{{1
+    _koopa_gnu_sed "$@"
+}
+
 koopa::gnu_sort() { # {{{1
     _koopa_gnu_sort "$@"
+}
+
+koopa::gnu_stat() { # {{{1
+    _koopa_gnu_stat "$@"
+}
+
+koopa::gnu_tail() { # {{{1
+    _koopa_gnu_tail "$@"
+}
+
+koopa::gnu_tar() { # {{{1
+    _koopa_gnu_tar "$@"
+}
+
+koopa::gnu_tee() { # {{{1
+    _koopa_gnu_tee "$@"
 }
 
 koopa::gnu_tr() { # {{{1
@@ -242,6 +342,10 @@ koopa::gnu_uname() { # {{{1
 
 koopa::gnu_wc() { # {{{1
     _koopa_gnu_wc "$@"
+}
+
+koopa::gnu_xargs() { # {{{1
+    _koopa_gnu_xargs "$@"
 }
 
 koopa::go_packages() { # {{{1

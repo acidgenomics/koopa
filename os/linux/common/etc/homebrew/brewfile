@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-03-22.
+# Updated 2021-05-21.
 #
 # Problematic formulas:
 # - armadillo
@@ -43,6 +43,7 @@ brew "binutils"
 brew "black"  # python
 brew "bpytop"  # python
 brew "broot"  # rust
+brew "bzip2"
 brew "ccache"
 brew "checkbashisms"
 brew "circleci"
