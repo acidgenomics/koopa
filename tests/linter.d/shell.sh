@@ -50,6 +50,7 @@ test_all_coreutils() { # {{{1
         'ln'
         'mkdir'
         'mv'
+        'patch'
         'readlink'
         'realpath'
         'rm'
