@@ -352,7 +352,7 @@ koopa::docker_prune_stale_tags() { # {{{1
 koopa::docker_push() { # {{{1
     # """
     # Push a local Docker build.
-    # Updated 2021-05-20.
+    # Updated 2021-05-21.
     #
     # Useful if GPG agent causes push failure.
     #
@@ -362,20 +362,12 @@ koopa::docker_push() { # {{{1
     # @examples
     # docker-push acidgenomics/debian:latest
     # """
-    local brew_prefix image images json pattern sed server sort tr
+    local image images json pattern sed server sort tr
     koopa::assert_has_args "$#"
-    sed='sed'
-    sort='sort'
-    tr='tr'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        sed="${brew_prefix}/bin/gsed"
-        sort="${brew_prefix}/bin/gsort"
-        tr="${brew_prefix}/bin/gtr"
-    fi
-    koopa::assert_is_gnu "$sed" "$sort" "$tr"
     koopa::assert_is_installed 'docker'
+    sed="$(koopa::locate_sed)"
+    sort="$(koopa::locate_sort)"
+    tr="$(koopa::locate_tr)"
     # Consider allowing user to define, so we can support quay.io, for example.
     server='docker.io'
     for pattern in "$@"
@@ -410,19 +402,14 @@ koopa::docker_push() { # {{{1
 koopa::docker_remove() { # {{{1
     # """
     # Remove docker images by pattern.
-    # Updated 2021-05-20.
+    # Updated 2021-05-21.
     # """
-    local awk brew_prefix grep pattern xargs
+    local awk grep pattern xargs
     koopa::assert_has_args "$#"
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        awk="${brew_prefix}/bin/gawk"
-        grep="${brew_prefix}/bin/ggrep"
-        xargs="${brew_prefix}/bin/xargs"
-    fi
-    koopa::assert_is_gnu "$awk" "$grep" "$xargs"
     koopa::assert_is_installed 'docker'
+    awk="$(koopa::locate_awk)"
+    grep="$(koopa::locate_grep)"
+    xargs="$(koopa::locate_xargs)"
     for pattern in "$@"
     do
         # shellcheck disable=SC2016
@@ -448,7 +435,7 @@ koopa::docker_run() { # {{{1
     # """
     local dict image pos run_args workdir
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    koopa::assert_is_installed 'docker'
     declare -A dict=(
         [arm]=0
         [bash]=0
@@ -540,6 +527,7 @@ koopa::docker_tag() { # {{{1
     image="${1:?}"
     source_tag="${2:?}"
     dest_tag="${3:-latest}"
+    # Consider allowing this to be user-definable in a future update.
     server='docker.io'
     # Assume acidgenomics recipe by default.
     if ! koopa::str_match "$image" '/'
@@ -569,20 +557,11 @@ koopa::is_docker_build_recent() { # {{{1
     # - https://stackoverflow.com/questions/8903239/
     # - https://unix.stackexchange.com/questions/27013/
     # """
-    local created current days diff grep image json seconds sed
+    local created current date days diff grep image json seconds sed
     koopa::assert_has_args "$#"
-    date='date'
-    grep='grep'
-    sed='sed'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        date="${brew_prefix}/bin/gdate"
-        grep="${brew_prefix}/bin/ggrep"
-        sed="${brew_prefix}/bin/gsed"
-    fi
-    koopa::assert_is_gnu "$date" "$grep" "$sed"
-    koopa::assert_is_installed 'docker'
+    date="$(koopa::locate_date)"
+    grep="$(koopa::locate_grep)"
+    sed="$(koopa::locate_sed)"
     days=7
     pos=()
     while (("$#"))
