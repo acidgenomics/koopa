@@ -54,8 +54,7 @@ koopa::sys_info() { # {{{
     # System information.
     # @note Updated 2021-05-21.
     # """
-    local array koopa_prefix nf origin os python shell shell_name \
-        shell_version uname
+    local array koopa_prefix nf origin os shell shell_name shell_version uname
     koopa::assert_has_no_args "$#"
     koopa_prefix="$(koopa::prefix)"
     array=(
@@ -108,14 +107,11 @@ koopa::sys_info() { # {{{
                     "$(sw_vers -buildVersion)" \
             )"
         else
-            python="$(koopa::python)"
-            if koopa::is_installed "$python"
-            then
-                os="$("$python" -mplatform)"
-            else
-                uname="$(koopa::gnu_uname)"
-                os="$("$uname" --all)"
-            fi
+            uname="$(koopa::locate_uname)"
+            os="$("$uname" --all)"
+            # Alternate approach using Python:
+            # > python="$(koopa::locate_python)"
+            # > os="$("$python" -mplatform)"
         fi
         shell_name="$(koopa::shell_name)"
         shell_version="$(koopa::get_version "${shell_name}")"

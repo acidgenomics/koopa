@@ -75,7 +75,7 @@ _koopa_lowercase() { # {{{1
     # https://stackoverflow.com/questions/2264428
     # """
     local string tr
-    tr="$(_koopa_gnu_tr)"
+    tr="$(_koopa_locate_tr)"
     for string in "$@"
     do
         _koopa_print "$string" \
