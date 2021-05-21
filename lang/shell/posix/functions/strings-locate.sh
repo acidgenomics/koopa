@@ -431,7 +431,7 @@ _koopa_locate_shell() { # {{{1
         return 0
     fi
     pid="${$}"
-    sed="$(_koopa_locate_gnu_sed)"
+    sed="$(_koopa_locate_sed)"
     if _koopa_is_linux
     then
         proc_file="/proc/${pid}/exe"
