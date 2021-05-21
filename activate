@@ -550,6 +550,8 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
+# FIXME Can we simplify this approach and just load up our POSIX variant first?
+# It seems like there's too much duplication going on here...
 # FIXME Rework this, once we update our approach in the POSIX function library.
 # FIXME Need to rename this to '__koopa_locate_shell'.
 __koopa_shell() { # {{{1
