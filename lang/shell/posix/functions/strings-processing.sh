@@ -1,46 +1,5 @@
 #!/bin/sh
 
-_koopa_arch() { # {{{1
-    # """
-    # Platform architecture.
-    # @note Updated 2021-05-21.
-    #
-    # e.g. Intel: x86_64; ARM: aarch64.
-    # """
-    local uname x
-    uname="$(_koopa_gnu_uname)"
-    x="$("$uname" -m)"
-    _koopa_print "$x"
-    return 0
-}
-
-_koopa_arch2() { # {{{1
-    # """
-    # Alternative platform architecture.
-    # @note Updated 2021-05-06.
-    #
-    # e.g. Intel: amd64; ARM: arm64.
-    #
-    # @seealso
-    # - https://wiki.debian.org/ArchitectureSpecificsMemo
-    # """
-    local x
-    x="$(_koopa_arch)"
-    case "$x" in
-        aarch64)
-            x='arm64'
-            ;;
-        x86_64)
-            x='amd64'
-            ;;
-        *)
-            _koopa_stop "Unsupported architecture: '${x}'."
-            ;;
-    esac
-    _koopa_print "$x"
-    return 0
-}
-
 _koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
@@ -123,21 +82,6 @@ _koopa_lowercase() { # {{{1
             | "$tr" '[:upper:]' '[:lower:]'
     done
     return 0
-}
-
-_koopa_macos_color_mode() { # {{{1
-    # """
-    # Return the color mode (dark/light) value.
-    # @note Updated 2021-05-07.
-    # """
-    local x
-    if _koopa_macos_is_dark_mode
-    then
-        x='dark'
-    else
-        x='light'
-    fi
-    _koopa_print "$x"
 }
 
 _koopa_ngettext() { # {{{1
