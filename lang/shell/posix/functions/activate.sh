@@ -154,6 +154,7 @@ _koopa_activate_gnu() { # {{{1
             mv='gmv'
             rm='grm'
             # Standardize using GNU variants by default.
+            # FIXME guname?
             alias basename='gbasename'
             alias chgrp='gchgrp'
             alias chmod='gchmod'

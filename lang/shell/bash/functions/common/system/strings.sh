@@ -175,10 +175,20 @@ koopa::make_build_string() { # {{{1
 koopa::os_type() { # {{{1
     # """
     # Operating system type.
-    # @note Updated 2021-01-01.
+    # @note Updated 2021-05-21.
     # """
-    local x
-    x="$(uname -s | tr '[:upper:]' '[:lower:]')"
+    local brew_prefix tr uname x
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        # FIXME Create GNU wrappers for these...
+        tr="${brew_prefix}/bin/gtr"
+        uname="${brew_prefix}/bin/guname"
+    fi
+    x="$( \
+        "$uname" -s \
+        | "$tr" '[:upper:]' '[:lower:]' \
+    )"
     koopa::print "$x"
     return 0
 }
