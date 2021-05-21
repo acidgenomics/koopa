@@ -52,10 +52,11 @@ koopa::sys_git_pull() { # {{{1
 koopa::sys_info() { # {{{
     # """
     # System information.
-    # @note Updated 2021-05-12.
+    # @note Updated 2021-05-21.
     # """
+    local array koopa_prefix nf origin os python shell shell_name \
+        shell_version uname
     koopa::assert_has_no_args "$#"
-    local array koopa_prefix nf origin shell shell_name shell_version
     koopa_prefix="$(koopa::prefix)"
     array=(
         "koopa $(koopa::version) ($(koopa::date))"
@@ -98,7 +99,6 @@ koopa::sys_info() { # {{{
             "${nf[@]:2}"
         )
     else
-        local os
         if koopa::is_macos
         then
             os="$( \
@@ -108,11 +108,13 @@ koopa::sys_info() { # {{{
                     "$(sw_vers -buildVersion)" \
             )"
         else
-            if koopa::is_installed python
+            python="$(koopa::python)"
+            if koopa::is_installed "$python"
             then
-                os="$(python -mplatform)"
+                os="$("$python" -mplatform)"
             else
-                os="$(uname --all)"
+                uname="$(koopa::gnu_uname)"
+                os="$("$uname" --all)"
             fi
         fi
         shell_name="$(koopa::shell_name)"
