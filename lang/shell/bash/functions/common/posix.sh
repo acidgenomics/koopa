@@ -212,146 +212,6 @@ koopa::git_branch() { # {{{1
     _koopa_git_branch "$@"
 }
 
-koopa::gnu_awk() { # {{{1
-    _koopa_gnu_awk "$@"
-}
-
-koopa::gnu_basename() { # {{{1
-    _koopa_gnu_basename "$@"
-}
-
-koopa::gnu_bc() { # {{{1
-    _koopa_gnu_bc "$@"
-}
-
-koopa::gnu_chgrp() { # {{{1
-    _koopa_gnu_chgrp "$@"
-}
-
-koopa::gnu_chmod() { # {{{1
-    _koopa_gnu_chmod "$@"
-}
-
-koopa::gnu_chown() { # {{{1
-    _koopa_gnu_chown "$@"
-}
-
-koopa::gnu_cp() { # {{{1
-    _koopa_gnu_cp "$@"
-}
-
-koopa::gnu_cut() { # {{{1
-    _koopa_gnu_cut "$@"
-}
-
-koopa::gnu_date() { # {{{1
-    _koopa_gnu_date "$@"
-}
-
-koopa::gnu_dirname() { # {{{1
-    _koopa_gnu_dirname "$@"
-}
-
-koopa::gnu_du() { # {{{1
-    _koopa_gnu_du "$@"
-}
-
-koopa::gnu_find() { # {{{1
-    _koopa_gnu_find "$@"
-}
-
-koopa::gnu_grep() { # {{{1
-    _koopa_gnu_grep "$@"
-}
-
-koopa::gnu_gunzip() { # {{{1
-    _koopa_gnu_gunzip "$@"
-}
-
-koopa::gnu_head() { # {{{1
-    _koopa_gnu_head "$@"
-}
-
-koopa::gnu_ln() { # {{{1
-    _koopa_gnu_ln "$@"
-}
-
-koopa::gnu_ls() { # {{{1
-    _koopa_gnu_ls "$@"
-}
-
-koopa::gnu_make() { # {{{1
-    _koopa_gnu_make "$@"
-}
-
-koopa::gnu_man() { # {{{1
-    _koopa_gnu_man "$@"
-}
-
-koopa::gnu_mkdir() { # {{{1
-    _koopa_gnu_mkdir "$@"
-}
-
-koopa::gnu_mv() { # {{{1
-    _koopa_gnu_mv "$@"
-}
-
-koopa::gnu_readlink() { # {{{1
-    _koopa_gnu_readlink "$@"
-}
-
-koopa::gnu_realpath() { # {{{1
-    _koopa_gnu_realpath "$@"
-}
-
-koopa::gnu_rm() { # {{{1
-    _koopa_gnu_rm "$@"
-}
-
-koopa::gnu_sed() { # {{{1
-    _koopa_gnu_sed "$@"
-}
-
-koopa::gnu_sort() { # {{{1
-    _koopa_gnu_sort "$@"
-}
-
-koopa::gnu_stat() { # {{{1
-    _koopa_gnu_stat "$@"
-}
-
-koopa::gnu_tail() { # {{{1
-    _koopa_gnu_tail "$@"
-}
-
-koopa::gnu_tar() { # {{{1
-    _koopa_gnu_tar "$@"
-}
-
-koopa::gnu_tee() { # {{{1
-    _koopa_gnu_tee "$@"
-}
-
-koopa::gnu_tr() { # {{{1
-    _koopa_gnu_tr "$@"
-}
-
-koopa::gnu_uncompress() { # {{{1
-    _koopa_gnu_uncompress "$@"
-}
-
-koopa::gnu_uname() { # {{{1
-    _koopa_gnu_uname "$@"
-}
-
-koopa::gnu_wc() { # {{{1
-    _koopa_gnu_wc "$@"
-}
-
-koopa::gnu_xargs() { # {{{1
-    _koopa_gnu_xargs "$@"
-}
-
 koopa::go_packages() { # {{{1
     _koopa_go_packages "$@"
 }
@@ -628,10 +488,92 @@ koopa::local_data_prefix() { # {{{1
     _koopa_local_data_prefix "$@"
 }
 
-# FIXME Ensure we have consistency with the POSIX locate functions.
+koopa::locate_awk() { # {{{1
+    _koopa_locate_awk "$@"
+}
+
+koopa::locate_basename() { # {{{1
+    _koopa_locate_basename "$@"
+}
+
+koopa::locate_bc() { # {{{1
+    _koopa_locate_bc "$@"
+}
+
+koopa::locate_chgrp() { # {{{1
+    _koopa_locate_chgrp "$@"
+}
+
+koopa::locate_chmod() { # {{{1
+    _koopa_locate_chmod "$@"
+}
+
+koopa::locate_chown() { # {{{1
+    _koopa_locate_chown "$@"
+}
 
 koopa::locate_conda() { # {{{1
     _koopa_locate_conda "$@"
+}
+
+koopa::locate_cp() { # {{{1
+    _koopa_locate_cp "$@"
+}
+
+koopa::locate_cut() { # {{{1
+    _koopa_locate_cut "$@"
+}
+
+koopa::locate_date() { # {{{1
+    _koopa_locate_date "$@"
+}
+
+koopa::locate_dirname() { # {{{1
+    _koopa_locate_dirname "$@"
+}
+
+koopa::locate_du() { # {{{1
+    _koopa_locate_du "$@"
+}
+
+koopa::locate_find() { # {{{1
+    _koopa_locate_find "$@"
+}
+
+koopa::locate_grep() { # {{{1
+    _koopa_locate_grep "$@"
+}
+
+koopa::locate_gunzip() { # {{{1
+    _koopa_locate_gunzip "$@"
+}
+
+koopa::locate_head() { # {{{1
+    _koopa_locate_head "$@"
+}
+
+koopa::locate_ln() { # {{{1
+    _koopa_locate_ln "$@"
+}
+
+koopa::locate_ls() { # {{{1
+    _koopa_locate_ls "$@"
+}
+
+koopa::locate_make() { # {{{1
+    _koopa_locate_make "$@"
+}
+
+koopa::locate_man() { # {{{1
+    _koopa_locate_man "$@"
+}
+
+koopa::locate_mkdir() { # {{{1
+    _koopa_locate_mkdir "$@"
+}
+
+koopa::locate_mv() { # {{{1
+    _koopa_locate_mv "$@"
 }
 
 koopa::locate_python() { # {{{1
@@ -642,8 +584,64 @@ koopa::locate_r() { # {{{1
     _koopa_locate_r "$@"
 }
 
+koopa::locate_readlink() { # {{{1
+    _koopa_locate_readlink "$@"
+}
+
+koopa::locate_realpath() { # {{{1
+    _koopa_locate_realpath "$@"
+}
+
+koopa::locate_rm() { # {{{1
+    _koopa_locate_rm "$@"
+}
+
+koopa::locate_sed() { # {{{1
+    _koopa_locate_sed "$@"
+}
+
 koopa::locate_shell() { # {{{1
     _koopa_locate_shell "$@"
+}
+
+koopa::locate_sort() { # {{{1
+    _koopa_locate_sort "$@"
+}
+
+koopa::locate_stat() { # {{{1
+    _koopa_locate_stat "$@"
+}
+
+koopa::locate_tail() { # {{{1
+    _koopa_locate_tail "$@"
+}
+
+koopa::locate_tar() { # {{{1
+    _koopa_locate_tar "$@"
+}
+
+koopa::locate_tee() { # {{{1
+    _koopa_locate_tee "$@"
+}
+
+koopa::locate_tr() { # {{{1
+    _koopa_locate_tr "$@"
+}
+
+koopa::locate_uncompress() { # {{{1
+    _koopa_locate_uncompress "$@"
+}
+
+koopa::locate_uname() { # {{{1
+    _koopa_locate_uname "$@"
+}
+
+koopa::locate_wc() { # {{{1
+    _koopa_locate_wc "$@"
+}
+
+koopa::locate_xargs() { # {{{1
+    _koopa_locate_xargs "$@"
 }
 
 koopa::lowercase() { # {{{1
