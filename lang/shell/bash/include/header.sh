@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# koopa nolint=coreutils
 
 __koopa_bash_source_dir() { # {{{1
     # """
@@ -19,6 +18,7 @@ __koopa_bash_source_dir() { # {{{1
     prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
     # Can add a sort step here, but it is slower and unecessary.
+    # FIXME Revert back to calling GNU find here...simpler.
     fun_scripts="$( \
         __koopa_find \
             --glob='*.sh' \
@@ -34,6 +34,7 @@ __koopa_bash_source_dir() { # {{{1
     return 0
 }
 
+# FIXME Need to simplify this...too much duplication...
 __koopa_find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
