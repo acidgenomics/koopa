@@ -159,7 +159,7 @@ _koopa_export_python() { # {{{1
 _koopa_export_shell() { # {{{1
     # """
     # Export 'SHELL' variable.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-21.
     #
     # Some POSIX shells, such as Dash, don't export this by default.
     #
@@ -169,7 +169,7 @@ _koopa_export_shell() { # {{{1
     # We are ensuring reexport here so that subshells contain the correct
     # value, e.g. running 'bash -il' inside a Zsh login shell.
     # """
-    SHELL="$(_koopa_shell)"
+    SHELL="$(_koopa_shell_name)"
     export SHELL
     return 0
 }
