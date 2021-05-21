@@ -154,14 +154,13 @@ _koopa_activate_gnu() { # {{{1
             mv='gmv'
             rm='grm'
             # Standardize using GNU variants by default.
-            # FIXME guname?
             alias basename='gbasename'
             alias chgrp='gchgrp'
             alias chmod='gchmod'
             alias chown='gchown'
             alias cut='gcut'
-            alias dirname='gdirname'
             alias date='gdate'
+            alias dirname='gdirname'
             alias du='gdu'
             alias head='ghead'
             alias readlink='greadlink'
@@ -171,6 +170,7 @@ _koopa_activate_gnu() { # {{{1
             alias tail='gtail'
             alias tee='gtee'
             alias tr='gtr'
+            alias uname='guname'
         else
             _koopa_alert_not_installed 'Homebrew coreutils'
             harden_coreutils=0
