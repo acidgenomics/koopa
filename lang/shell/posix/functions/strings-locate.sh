@@ -176,6 +176,14 @@ _koopa_locate_date() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'date' "$@"
 }
 
+_koopa_locate_df() { # {{{1
+    # """
+    # Locate GNU df.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'df' "$@"
+}
+
 _koopa_locate_dirname() { # {{{1
     # """
     # Locate GNU dirname.

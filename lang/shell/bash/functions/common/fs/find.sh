@@ -115,8 +115,9 @@ koopa::find_and_replace_in_files() { # {{{1
     # by default on macOS.
     # https://stackoverflow.com/questions/4247068/
     # """
-    local file from to
+    local file from sed to
     koopa::assert_has_args_ge "$#" 3
+    sed="$(koopa::locate_sed)"
     from="${1:?}"
     to="${2:?}"
     shift 2
@@ -135,7 +136,7 @@ koopa::find_and_replace_in_files() { # {{{1
     do
         [[ -f "$file" ]] || return 1
         koopa::alert_info "$file"
-        koopa::sed -i "s/${from}/${to}/g" "$file"
+        "$sed" -i "s/${from}/${to}/g" "$file"
     done
     return 0
 }
