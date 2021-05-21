@@ -1,6 +1,11 @@
 #!/bin/sh
 # shellcheck disable=SC3040
 
+# FIXME Improve configuration of NPM, to save packages outside of /usr/local.
+# > npm config get prefix
+# Want something like:
+# /opt/koopa/opt/npm-packages
+
 
 
 # Csh is not supported, primarily due to lack of functions.

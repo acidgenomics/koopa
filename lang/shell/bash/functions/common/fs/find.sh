@@ -329,31 +329,60 @@ koopa::find_large_files() { # {{{1
 koopa::find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
     # """
-    local app_prefix koopa_prefix make_prefix opt_prefix x
+    local app_prefix brew_prefix find find_args koopa_prefix make_prefix \
+        opt_prefix sort x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_gnu 'find'
+    find="$(koopa::locate_find)"
+    sort="$(koopa::locate_sort)"
     app_prefix="$(koopa::app_prefix)"
-    koopa_prefix="$(koopa::koopa_prefix)"
+    koopa_prefix="$(koopa::prefix)"
     opt_prefix="$(koopa::opt_prefix)"
     make_prefix="$(koopa::make_prefix)"
-    x="$( \
-        find "$make_prefix" \
-            -xdev \
-            -mindepth 1 \
-            -type f \
-            -not -path "${app_prefix}/*" \
-            -not -path "${koopa_prefix}/*" \
-            -not -path "${opt_prefix}/*" \
-            -not -path "${make_prefix}/share/applications/mimeinfo.cache" \
-            -not -path "${make_prefix}/share/emacs/site-lisp/*" \
-            -not -path "${make_prefix}/share/zsh/site-functions/*" \
-        | sort \
-    )"
+    find_args=(
+        "$make_prefix"
+        -xdev
+        -mindepth 1
+        -type f
+        -not -path "${app_prefix}/*"
+        -not -path "${koopa_prefix}/*"
+        -not -path "${opt_prefix}/*"
+    )
+    if koopa::is_linux
+    then
+        find_args+=(
+            -not -path "${make_prefix}/share/applications/mimeinfo.cache"
+            -not -path "${make_prefix}/share/emacs/site-lisp/*"
+            -not -path "${make_prefix}/share/zsh/site-functions/*"
+        )
+    elif koopa::is_macos
+    then
+        # Current cruft (2021-05-21):
+        # - /usr/local/etc/fonts/conf.d
+        # - /usr/local/etc/httpd
+        # - /usr/local/etc/openldap
+        # - /usr/local/lib/node_modules/npm
+        # - /usr/local/lib/python3.8/site-packages
+        # - /usr/local/lib/python3.9/site-packages
+        # - /usr/local/lib/ruby/site_ruby
+        # - /usr/local/lib/tcl8.6
+        # - /usr/local/lib/tk8.6
+        # - /usr/local/share/texinfo
+        brew_prefix="$(koopa::homebrew_prefix)"
+        find_args+=(
+            -not -path "${brew_prefix}/Caskroom/*"
+            -not -path "${brew_prefix}/Cellar/*"
+            -not -path "${brew_prefix}/Homebrew/*"
+            -not -path "${make_prefix}/MacGPG2/*"
+            -not -path "${make_prefix}/gfortran/*"
+            -not -path "${make_prefix}/texlive/*"
+        )
+    fi
+    x="$("$find" "${find_args[@]}" | "$sort")"
     koopa::print "$x"
     return 0
 }
