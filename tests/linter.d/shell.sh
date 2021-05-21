@@ -51,6 +51,7 @@ test_all_coreutils() { # {{{1
         'id'
         'ln'
         'ls'
+        'make'
         'mkdir'
         'mv'
         'patch'

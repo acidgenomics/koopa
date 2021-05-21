@@ -520,6 +520,10 @@ koopa::locate_cp() { # {{{1
     _koopa_locate_cp "$@"
 }
 
+koopa::locate_curl() { # {{{1
+    _koopa_locate_curl "$@"
+}
+
 koopa::locate_cut() { # {{{1
     _koopa_locate_cut "$@"
 }
@@ -574,6 +578,14 @@ koopa::locate_mkdir() { # {{{1
 
 koopa::locate_mv() { # {{{1
     _koopa_locate_mv "$@"
+}
+
+koopa::locate_paste() { # {{{1
+    _koopa_locate_paste "$@"
+}
+
+koopa::locate_patch() { # {{{1
+    _koopa_locate_patch "$@"
 }
 
 koopa::locate_python() { # {{{1
@@ -638,6 +650,10 @@ koopa::locate_uname() { # {{{1
 
 koopa::locate_wc() { # {{{1
     _koopa_locate_wc "$@"
+}
+
+koopa::locate_wget() { # {{{1
+    _koopa_locate_wget "$@"
 }
 
 koopa::locate_xargs() { # {{{1
