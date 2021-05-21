@@ -288,6 +288,14 @@ _koopa_locate_patch() { # {{{1
     __koopa_locate_app 'gpatch' 'patch' "$@"
 }
 
+_koopa_locate_parallel() { # {{{1
+    # """
+    # Locate GNU parallel.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app 'parallel' 'parallel' "$@"
+}
+
 _koopa_locate_pcregrep() { # {{{1
     # """
     # Locate pcregrep.
