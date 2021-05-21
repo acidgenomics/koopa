@@ -51,6 +51,15 @@ _koopa_gnu_grep() { # {{{1
     return 0
 }
 
+_koopa_gnu_sort() { # {{{1
+    # """
+    # GNU sort.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_gnu_app 'coreutils' 'sort' "$@"
+    return 0
+}
+
 _koopa_gnu_tr() { # {{{1
     # """
     # GNU tr.
