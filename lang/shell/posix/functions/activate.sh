@@ -160,6 +160,7 @@ _koopa_activate_gnu() { # {{{1
             alias chown='gchown'
             alias cut='gcut'
             alias dirname='gdirname'
+            alias date='gdate'
             alias du='gdu'
             alias head='ghead'
             alias readlink='greadlink'
