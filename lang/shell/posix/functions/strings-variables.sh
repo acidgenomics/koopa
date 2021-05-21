@@ -1,5 +1,46 @@
 #!/bin/sh
 
+_koopa_arch() { # {{{1
+    # """
+    # Platform architecture.
+    # @note Updated 2021-05-21.
+    #
+    # e.g. Intel: x86_64; ARM: aarch64.
+    # """
+    local uname x
+    uname="$(_koopa_gnu_uname)"
+    x="$("$uname" -m)"
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_arch2() { # {{{1
+    # """
+    # Alternative platform architecture.
+    # @note Updated 2021-05-06.
+    #
+    # e.g. Intel: amd64; ARM: arm64.
+    #
+    # @seealso
+    # - https://wiki.debian.org/ArchitectureSpecificsMemo
+    # """
+    local x
+    x="$(_koopa_arch)"
+    case "$x" in
+        aarch64)
+            x='arm64'
+            ;;
+        x86_64)
+            x='amd64'
+            ;;
+        *)
+            _koopa_stop "Unsupported architecture: '${x}'."
+            ;;
+    esac
+    _koopa_print "$x"
+    return 0
+}
+
 # FIXME Use gid here if possible.
 __koopa_id() { # {{{1
     # """
@@ -137,6 +178,21 @@ _koopa_host_id() { # {{{1
     esac
     _koopa_print "$id"
     return 0
+}
+
+_koopa_macos_color_mode() { # {{{1
+    # """
+    # Return the color mode (dark/light) value.
+    # @note Updated 2021-05-07.
+    # """
+    local x
+    if _koopa_macos_is_dark_mode
+    then
+        x='dark'
+    else
+        x='light'
+    fi
+    _koopa_print "$x"
 }
 
 _koopa_mem_gb() { # {{{1
@@ -291,30 +347,5 @@ _koopa_user_id() { # {{{1
     # @note Updated 2020-04-16.
     # """
     __koopa_id -u
-    return 0
-}
-
-_koopa_variable() { # {{{1
-    # """
-    # Get version stored internally in versions.txt file.
-    # @note Updated 2020-07-05.
-    #
-    # This approach handles inline comments.
-    # """
-    local file key value
-    key="${1:?}"
-    file="$(_koopa_include_prefix)/variables.txt"
-    [ -f "$file" ] || return 1
-    value="$( \
-        grep -Eo "^${key}=\"[^\"]+\"" "$file" \
-        || _koopa_stop "'${key}' not defined in '${file}'." \
-    )"
-    value="$( \
-        _koopa_print "$value" \
-            | head -n 1 \
-            | cut -d '"' -f 2 \
-    )"
-    [ -n "$value" ] || return 1
-    _koopa_print "$value"
     return 0
 }
