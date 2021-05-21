@@ -501,7 +501,7 @@ _koopa_locate_tar() { # {{{1
 
 _koopa_locate_tee() { # {{{1
     # """
-    # Locate GNU tr.
+    # Locate GNU tee.
     # @note Updated 2021-05-21.
     # """
     __koopa_locate_gnu_app 'coreutils' 'tee' "$@"
