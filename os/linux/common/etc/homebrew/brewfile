@@ -123,6 +123,7 @@ brew "texinfo"
 brew "tmux"
 brew "tokei"  # rust
 brew "udunits"
+brew "unzip"
 brew "vim"
 brew "wget"
 brew "xsv"  # rust
