@@ -72,11 +72,15 @@ test_all_coreutils() { # {{{1
         'xargs'
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
-    # Ignoring commented lines and 'local' variable calls here using a
-    # negative lookahead pattern.
+
+    # FIXME This doesn't seem to be the right approach.
+    # FIXME Need to do something more complex...
+    # FIXME Consider writing this in R instead...
+
+    # Ignoring commented lines and 'local' variable calls.
     # See also:
     # - http://www.blackwasp.co.uk/RegexLookahead.aspx
-    pattern="^[\s]+(?!([\#]+|local).*)\s(${pattern})\s.*$"
+    pattern="(?!^[\s]+(local|#).*)\s(${pattern})\s"
     koopa::test_grep \
         -i 'coreutils' \
         -n 'shell | all | coreutils' \

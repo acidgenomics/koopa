@@ -1,6 +1,10 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Improve configuration of NPM, to store packages outside of '/usr/local'.
+   > npm config get prefix
+   Want something like:
+   '/opt/koopa/opt/npm-packages'
 ** TODO Improve support for Void Linux.
         Detect admin group.
         Add support for configure-system.

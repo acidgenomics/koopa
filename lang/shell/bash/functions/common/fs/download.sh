@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to harden all cases of basename and dirname
 koopa::download() { # {{{1
     # """
     # Download a file.
@@ -25,16 +24,14 @@ koopa::download() { # {{{1
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # """
-    local basename bn dl dl_args file url wd
+    local bn dl dl_args file url wd
     koopa::assert_has_args "$#"
-    # FIXME Define koopa::basename and koopa::dirname...
-    basename="$(koopa::locate_basename)"
     url="${1:?}"
     file="${2:-}"
     if [[ -z "$file" ]]
     then
         wd="$(pwd)"
-        bn="$("$basename" "$url")"
+        bn="$(koopa::basename "$url")"
         file="${wd}/${bn}"
     fi
     dl='curl'

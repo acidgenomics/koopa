@@ -145,15 +145,15 @@ koopa::convert_utf8_nfd_to_nfc() { # {{{1
 koopa::delete_adobe_bridge_cache() { # {{{1
     # """
     # Delete Adobe Bridge cache files.
-    # @note Updated 2020-07-16.
+    # @note Updated 2021-05-21.
     # """
     local dir
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed find
+    find="$(koopa::locate_find)"
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
-    koopa::h1 "Deleting Adobe Bridge cache in '${dir}'."
-    find "$dir" \
+    koopa::alert "Deleting Adobe Bridge cache in '${dir}'."
+    "$find" "$dir" \
         -mindepth 1 \
         -type f \
         \( \
@@ -244,11 +244,14 @@ koopa::delete_empty_dirs() { # {{{1
 koopa::delete_file_system_cruft() { # {{{1
     # """
     # Delete file system cruft.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-21.
     # """
+    local dir find
     koopa::assert_has_args_le "$#" 1
+    find="$(koopa::locate_find)"
     dir="${1:-.}"
-    find "$dir" \
+    koopa::assert_is_dir "$dir"
+    "$find" "$dir" \
         -type f \
         \( \
             -name '.DS_Store' -o \
