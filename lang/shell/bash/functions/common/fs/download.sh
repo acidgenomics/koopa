@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden all cases of basename and dirname
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # @section curl:
     #
@@ -24,14 +25,16 @@ koopa::download() { # {{{1
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # """
-    local bn brew_curl brew_prefix dl dl_args file url wd
+    local basename bn dl dl_args file url wd
     koopa::assert_has_args "$#"
+    # FIXME Define koopa::basename and koopa::dirname...
+    basename="$(koopa::locate_basename)"
     url="${1:?}"
     file="${2:-}"
     if [[ -z "$file" ]]
     then
         wd="$(pwd)"
-        bn="$(basename "$url")"
+        bn="$("$basename" "$url")"
         file="${wd}/${bn}"
     fi
     dl='curl'
@@ -39,13 +42,6 @@ koopa::download() { # {{{1
     dl_args=()
     case "$dl" in
         curl)
-            # Switch to Homebrew cURL on macOS, if possible.
-            if koopa::is_macos
-            then
-                brew_prefix="$(koopa::homebrew_prefix)"
-                brew_curl="${brew_prefix}/opt/curl/bin/curl"
-                [[ -x "$brew_curl" ]] && dl="$brew_curl"
-            fi
             dl_args+=(
                 '--disable'  # Ignore the '~/.curlrc' file. Must come first!
                 '--create-dirs'
@@ -64,7 +60,7 @@ koopa::download() { # {{{1
             ;;
     esac
     koopa::alert "Downloading '${url}' to '${file}'."
-    koopa::assert_is_installed "$dl"
+    dl="$("koopa::locate_${dl}")"
     dl_args+=("$url")
     "$dl" "${dl_args[@]}"
     return 0
@@ -95,20 +91,11 @@ koopa::download_github_latest() { # {{{1
     # """
     local api_url curl cut grep repo tag tarball_url tr
     koopa::assert_has_args "$#"
-    curl='curl'
-    cut='cut'
-    grep='grep'
-    tr='tr'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        curl="${brew_prefix}/opt/curl/bin/curl"
-        cut="${brew_prefix}/bin/gcut"
-        grep="${brew_prefix}/bin/ggrep"
-        tr="${brew_prefix}/bin/gtr"
-    fi
-    koopa::assert_is_gnu "$cut" "$grep" "$tr"
-    koopa::assert_is_installed "$curl"
+    basename="$(koopa::locate_basename)"
+    curl="$(koopa::locate_curl)"
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
+    tr="$(koopa::locate_tr)"
     for repo in "$@"
     do
         api_url="https://api.github.com/repos/${repo}/releases/latest"
@@ -118,7 +105,7 @@ koopa::download_github_latest() { # {{{1
             | "$cut" -d ':' -f 2,3 \
             | "$tr" -d ' ,"' \
         )"
-        tag="$(basename "$tarball_url")"
+        tag="$("$basename" "$tarball_url")"
         koopa::download "$tarball_url" "${tag}.tar.gz"
     done
     return 0
