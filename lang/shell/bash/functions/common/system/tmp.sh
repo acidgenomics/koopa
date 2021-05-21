@@ -25,13 +25,10 @@ koopa::mktemp() { # {{{1
     local date_id mktemp mktemp_args template user_id
     mktemp="$(koopa::locate_mktemp)"
     mktemp_args=("$@")
-    if koopa::is_gnu "$mktemp"
-    then
-        user_id="$(koopa::user_id)"
-        date_id="$(koopa::datetime)"
-        template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
-        mktemp_args+=('-t' "$template")
-    fi
+    user_id="$(koopa::user_id)"
+    date_id="$(koopa::datetime)"
+    template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
+    mktemp_args+=('-t' "$template")
     x="$("$mktemp" "${mktemp_args[@]}")"
     koopa::print "$x"
     return 0
