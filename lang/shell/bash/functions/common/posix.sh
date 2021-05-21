@@ -216,8 +216,16 @@ koopa::git_branch() { # {{{1
     _koopa_git_branch "$@"
 }
 
+koopa::gnu_awk() { # {{{1
+    _koopa_gnu_awk "$@"
+}
+
 koopa::gnu_find() { # {{{1
     _koopa_gnu_find "$@"
+}
+
+koopa::gnu_grep() { # {{{1
+    _koopa_gnu_grep "$@"
 }
 
 koopa::gnu_tr() { # {{{1
