@@ -11,30 +11,40 @@ koopa::extract() { # {{{1
     # See also:
     # - https://github.com/stephenturner/oneliners
     # """
-    local cmd file
+    local cmd cmd_args file
     koopa::assert_has_args "$#"
-    declare -A cmd=(
-        [bunzip2]='bunzip2'
-        [tar]="$(_koopa_gnu_tar)"
-    )
+    # FIXME This may cause install scripts to fail if some of these programs
+    # aren't installed...may want to reconsider approach here...
+    #declare -A xxxx=(
+    #    [7z]='7z'                                                        # FIXME not on macos system
+    #    [bunzip2]="$(koopa::locate_bunzip2)"
+    #    [gunzip]="$(koopa::gnu_gunzip)"
+    #    [tar]="$(koopa::gnu_tar)"
+    #    [uncompress]="$(koopa::gnu_uncompress)"
+    #    [unrar]='unrar'  # Commerical
+    #    [xz]='xz'                                                        # FIXME not on macos system
+    #    [unzip]='FIXME'
+    #)
     for file in "$@"
     do
         koopa::assert_is_file "$file"
         file="$(koopa::realpath "$file")"
         koopa::alert "Extracting '${file}'."
         case "$file" in
+            # Two extensions (must come first).
             *.tar.bz2)
-                koopa::assert_is_installed "${cmd[tar]}"
-                "${cmd[tar]}" -xj -f "$file"
+                cmd="$(koopa::gnu_tar)"
+                cmd_args=(-xj -f "$file")
                 ;;
             *.tar.gz)
-                koopa::assert_is_installed tar
-                tar -xz -f "$file"
+                cmd="$(koopa::gnu_tar)"
+                cmd_args=(-xz -f "$file")
                 ;;
             *.tar.xz)
                 koopa::assert_is_installed tar
                 tar -xJ -f "$file"
                 ;;
+            # Single extension.
             *.bz2)
                 koopa::assert_is_installed bunzip2
                 bunzip2 "$file"
@@ -44,8 +54,9 @@ koopa::extract() { # {{{1
                 gunzip "$file"
                 ;;
             *.rar)
-                koopa::assert_is_installed unrar
-                unrar -x "$file"
+                cmd='unrar'
+                koopa::assert_is_installed "$cmd"
+                "$cmd" -x "$file"
                 ;;
             *.tar)
                 koopa::assert_is_installed tar
@@ -72,13 +83,16 @@ koopa::extract() { # {{{1
                 uncompress "$file"
                 ;;
             *.7z)
-                koopa::assert_is_installed 7z
-                7z -x "$file"
+                cmd="$(koopa::locate_7z)"
+                koopa::assert_is_installed "$cmd"
+                "$cmd" -x "$file"
                 ;;
             *)
                 koopa::stop "Unsupported extension: '${file}'."
                 ;;
         esac
+        koopa::assert_is_installed "$cmd"
+        "$cmd" "${cmd_args[@]}"
     done
     return 0
 }
