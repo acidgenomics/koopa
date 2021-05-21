@@ -40,6 +40,7 @@ test_all_coreutils() { # {{{1
         'chmod'
         'chown'
         'cp'
+        'curl'
         'cut'
         'date'
         'dirname'
@@ -58,6 +59,7 @@ test_all_coreutils() { # {{{1
         'stat'
         'tee'
         'tr'
+        'wget'
         'which'
         'xargs'
     )
