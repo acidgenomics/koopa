@@ -62,21 +62,19 @@ koopa::autopad_zeros() { # {{{1
 koopa::basename() { # {{{1
     # """
     # Extract the file basename.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-21.
     #
     # Parameterized, supporting multiple basename extractions.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/22401091/
     # """
     local arg
     koopa::assert_has_args "$#"
-    if koopa::is_installed basename
-    then
-        koopa::print "$(basename -a "$@")"
-    else
-        for arg in "$@"
-        do
-            koopa::print "${arg##*/}"
-        done
-    fi
+    for arg in "$@"
+    do
+        koopa::print "${arg##*/}"
+    done
     return 0
 }
 
@@ -277,6 +275,26 @@ koopa::delete_named_subdirs() { # {{{1
         -name "$subdir_name" \
         -print0 \
         | xargs -0 -I {} rm -frv {}
+    return 0
+}
+
+koopa::dirname() { # {{{1
+    # """
+    # Extract the file dirname.
+    # @note Updated 2021-05-21.
+    #
+    # Parameterized, supporting multiple basename extractions.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/22401091/
+    # """
+    local arg
+    koopa::assert_has_args "$#"
+    for arg in "$@"
+    do
+        arg="$(koopa::realpath "$arg")"
+        koopa::print "${arg%/*}"
+    done
     return 0
 }
 
