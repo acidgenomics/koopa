@@ -90,6 +90,9 @@ koopa::macos_install_r_framework() { # {{{1
     # """
     # Install R framework.
     # @note Updated 2021-05-21.
+    # @seealso
+    # - https://cran.r-project.org/bin/macosx/
+    # - https://mac.r-project.org/tools/
     # """
 
     # Intel:
