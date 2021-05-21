@@ -295,21 +295,14 @@ koopa::is_export() { # {{{1
 koopa::is_file_system_case_sensitive() { # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
-    local brew_prefix find wc
+    local find wc
     koopa::assert_has_no_args "$#"
-    find='find'
-    wc='wc'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        find="${brew_prefix}/bin/gfind"
-        wc="${brew_prefix}/bin/gwc"
-    fi
-    koopa::assert_is_gnu "$find" "$wc"
+    find="$(koopa::gnu_find)"
+    wc="$(koopa::gnu_wc)"
     touch '.tmp.checkcase' '.tmp.checkCase'
     count="$( \
         "$find" . \
