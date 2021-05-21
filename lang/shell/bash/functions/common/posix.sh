@@ -544,6 +544,10 @@ koopa::locate_date() { # {{{1
     _koopa_locate_date "$@"
 }
 
+koopa::locate_df() { # {{{1
+    _koopa_locate_df "$@"
+}
+
 koopa::locate_dirname() { # {{{1
     _koopa_locate_dirname "$@"
 }
