@@ -292,8 +292,8 @@ koopa::is_file_system_case_sensitive() { # {{{1
     # """
     local find wc
     koopa::assert_has_no_args "$#"
-    find="$(koopa::gnu_find)"
-    wc="$(koopa::gnu_wc)"
+    find="$(koopa::locate_find)"
+    wc="$(koopa::locate_wc)"
     touch '.tmp.checkcase' '.tmp.checkCase'
     count="$( \
         "$find" . \
