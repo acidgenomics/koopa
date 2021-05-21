@@ -77,6 +77,12 @@ test_all_coreutils() { # {{{1
     # FIXME Need to do something more complex...
     # FIXME Consider writing this in R instead...
 
+    # FIXME Ignore false positives:
+    # - 'aws s3 cp'
+    # - 'aws s3 ls'
+    # - docker images ls
+    # - docker buildx rm
+    
     # Ignoring commented lines and 'local' variable calls.
     # See also:
     # - http://www.blackwasp.co.uk/RegexLookahead.aspx
