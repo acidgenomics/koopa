@@ -8,7 +8,7 @@ _koopa_arch() { # {{{1
     # e.g. Intel: x86_64; ARM: aarch64.
     # """
     local uname x
-    uname="$(_koopa_gnu_uname)"
+    uname="$(_koopa_locate_uname)"
     x="$("$uname" -m)"
     _koopa_print "$x"
     return 0
@@ -41,13 +41,16 @@ _koopa_arch2() { # {{{1
     return 0
 }
 
-# FIXME Use gid here if possible.
 __koopa_id() { # {{{1
     # """
     # Return ID string.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-21.
     # """
-    _koopa_print "$(id "$@")"
+    local id x
+    id="$(_koopa_locate_id)"
+    x="$("$id" "$@")"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
@@ -124,9 +127,13 @@ _koopa_group_id() { # {{{1
 _koopa_hostname() { # {{{1
     # """
     # Host name.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-21
     # """
-    _koopa_print "$(uname -n)"
+    local uname
+    uname="$(_koopa_locate_uname)"
+    x="$("$uname" -n)"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
@@ -176,6 +183,7 @@ _koopa_host_id() { # {{{1
             id='harvard-odyssey'
             ;;
     esac
+    [ -n "$id" ] || return 1
     _koopa_print "$id"
     return 0
 }
@@ -198,7 +206,7 @@ _koopa_macos_color_mode() { # {{{1
 _koopa_mem_gb() { # {{{1
     # """
     # Get total system memory in GB.
-    # @note Updated 2020-07-21.
+    # @note Updated 2021-05-21.
     #
     # - 1 GB / 1024 MB
     # - 1 MB / 1024 KB
@@ -206,19 +214,19 @@ _koopa_mem_gb() { # {{{1
     #
     # Usage of 'int()' in awk rounds down.
     # """
-    local denom mem
-    _koopa_is_installed awk || return 1
+    local awk denom mem
+    awk="$(_koopa_locate_awk)"
     if _koopa_is_macos
     then
         mem="$(sysctl -n hw.memsize)"
         denom=1073741824  # 1024^3; bytes
-
     else
-        mem="$(awk '/MemTotal/ {print $2}' '/proc/meminfo')"
+        # shellcheck disable=SC2016
+        mem="$("$awk" '/MemTotal/ {print $2}' '/proc/meminfo')"
         denom=1048576  # 1024^2; KB
     fi
     mem="$( \
-        awk -v denom="$denom" -v mem="$mem" \
+        "$awk" -v denom="$denom" -v mem="$mem" \
         'BEGIN{ printf "%.0f\n", mem / denom }' \
     )"
     _koopa_print "$mem"
@@ -230,24 +238,27 @@ _koopa_os_codename() { # {{{1
     # Operating system code name.
     # @note Updated 2020-08-06.
     # """
-    local os_codename
+    local x
     _koopa_is_debian_like || return 0
     _koopa_is_installed lsb_release || return 0
-    os_codename="$(lsb_release -cs)"
-    _koopa_print "$os_codename"
+    x="$(lsb_release -cs)"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_os_id() { # {{{1
     # """
     # Operating system ID.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-21.
     #
     # Just return the OS platform ID (e.g. debian).
     # """
-    local os_id
-    os_id="$(_koopa_os_string | cut -d '-' -f 1)"
-    _koopa_print "$os_id"
+    local cut x
+    cut="$(_koopa_locate_cut)"
+    x="$(_koopa_os_string | "$cut" -d '-' -f 1)"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
@@ -269,9 +280,8 @@ _koopa_os_string() { # {{{1
         version="$(_koopa_major_minor_version "$version")"
     elif _koopa_is_linux
     then
-        awk='awk'
-        tr='tr'
-        _koopa_is_gnu "$awk" "$tr" || return 1
+        awk="$(_koopa_locate_awk)"
+        tr="$(_koopa_locate_tr)"
         release_file='/etc/os-release'
         if [ -r "$release_file" ]
         then
@@ -312,10 +322,10 @@ _koopa_shell_name() { # {{{1
     # Current shell name.
     # @note Updated 2021-05-21.
     # """
-    local shell
+    local basename shell
+    basename="$(_koopa_locate_basename)"
     shell="$(_koopa_locate_shell)"
-    # FIXME Need to harden basename here..
-    str="$(basename "$shell")"
+    str="$("$basename" "$shell")"
     [ -n "$str" ] || return 1
     _koopa_print "$str"
     return 0
@@ -324,10 +334,11 @@ _koopa_shell_name() { # {{{1
 _koopa_today() { # {{{1
     # """
     # Today string.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-21.
     # """
-    local str
-    str="$(date '+%Y-%m-%d')"
+    local date str
+    date="$(_koopa_locate_date)"
+    str="$("$date" '+%Y-%m-%d')"
     [ -n "$str" ] || return 1
     _koopa_print "$str"
     return 0

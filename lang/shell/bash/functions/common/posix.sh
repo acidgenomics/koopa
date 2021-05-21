@@ -572,6 +572,10 @@ koopa::locate_head() { # {{{1
     _koopa_locate_head "$@"
 }
 
+koopa::locate_id() { # {{{1
+    _koopa_locate_id "$@"
+}
+
 koopa::locate_ln() { # {{{1
     _koopa_locate_ln "$@"
 }
