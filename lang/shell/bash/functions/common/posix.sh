@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+koopa::activate_aspera() { # {{{1
+    _koopa_activate_aspera "$@"
+}
+
 koopa::activate_conda() { # {{{1
     _koopa_activate_conda "$@"
 }
