@@ -15,18 +15,19 @@ koopa:::install_bash() { # {{{1
     # https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
     # """
     local base_url cflags conf_args curl cut file gnu_mirror jobs link_app \
-        minor_version mv_tr patch patches range request tr url version
+        make minor_version mv_tr patch patches range request tr url version
+    curl="$(koopa::locate_curl)"
+    cut="$(koopa::locate_cut)"
+    gnu_mirror="$(koopa::gnu_mirror_url)"
+    jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    patch="$(koopa::locate_patch)"
+    tr="$(koopa::locate_tr)"
     link_app="${INSTALL_LINK_APP:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='bash'
     minor_version="$(koopa::major_minor_version "$version")"
-    gnu_mirror="$(koopa::gnu_mirror_url)"
-    jobs="$(koopa::cpu_count)"
-    curl="$(koopa::locate_curl)"
-    cut="$(koopa::locate_cut)"
-    patch="$(koopa::locate_patch)"
-    tr="$(koopa::locate_tr)"
     file="${name}-${minor_version}.tar.gz"
     url="${gnu_mirror}/${name}/${file}"
     koopa::download "$url"
@@ -34,7 +35,7 @@ koopa:::install_bash() { # {{{1
     koopa::cd "${name}-${minor_version}"
     # Apply patches. 
     patches="$(koopa::print "$version" | "$cut" -d '.' -f 3)"
-    koopa::mkdir patches
+    koopa::mkdir 'patches'
     (
         koopa::cd 'patches'
         # Note that GNU mirror doesn't seem to work correctly here.
@@ -78,9 +79,9 @@ ${name}-${minor_version}-patches"
         conf_args+=("CFLAGS=${cflags[*]}")
     fi
     ./configure "${conf_args[@]}"
-    make --jobs="$jobs"
-    # > make test
-    make install
+    "$make" --jobs="$jobs"
+    # > "$make" test
+    "$make" install
     [[ "${link_app:-0}" -eq 1 ]] && koopa::enable_shell "$name"
     return 0
 }

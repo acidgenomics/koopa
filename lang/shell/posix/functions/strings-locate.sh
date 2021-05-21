@@ -52,16 +52,7 @@ __koopa_locate_gnu_app() { # {{{1
     elif _koopa_is_macos
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
-        case "$brew_name" in
-            bc | \
-            gzip)
-                file="bin/${app_name}"
-                ;;
-            *)
-                file="libexec/gnubin/${app_name}"
-                ;;
-        esac
-        file="${brew_prefix}/opt/${brew_name}/${file}"
+        file="${brew_prefix}/opt/${brew_name}/libexec/gnubin/${app_name}"
         file="$(_koopa_realpath "$file")"
     fi
     [ -x "$file" ] || return 1
@@ -98,7 +89,7 @@ _koopa_locate_bc() { # {{{1
     # Locate GNU bc.
     # @note Updated 2021-05-21.
     # """
-    __koopa_locate_gnu_app 'bc' 'bc' "$@"
+    __koopa_locate_app 'bc' 'bc' "$@"
 }
 
 _koopa_locate_bunzip2() { # {{{1
@@ -161,6 +152,14 @@ _koopa_locate_cp() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'cp' "$@"
 }
 
+_koopa_locate_curl() { # {{{1
+    # """
+    # Locate curl.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app 'curl' 'curl' "$@"
+}
+
 _koopa_locate_cut() { # {{{1
     # """
     # Locate GNU cut.
@@ -214,7 +213,7 @@ _koopa_locate_gunzip() { # {{{1
     # Locate GNU gunzip.
     # @note Updated 2021-05-21.
     # """
-    __koopa_locate_gnu_app 'gzip' 'gunzip' "$@"
+    __koopa_locate_app 'gzip' 'gunzip' "$@"
 }
 
 _koopa_locate_head() { # {{{1
@@ -271,6 +270,22 @@ _koopa_locate_mv() { # {{{1
     # @note Updated 2021-05-21.
     # """
     __koopa_locate_gnu_app 'coreutils' 'mv' "$@"
+}
+
+_koopa_locate_patch() { # {{{1
+    # """
+    # Locate GNU patch.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app 'gpatch' 'patch' "$@"
+}
+
+_koopa_locate_paste() { # {{{1
+    # """
+    # Locate GNU paste.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'paste' "$@"
 }
 
 # FIXME Need to replace in other functions.
@@ -482,6 +497,14 @@ _koopa_locate_wc() { # {{{1
     # @note Updated 2021-05-21.
     # """
     __koopa_locate_gnu_app 'coreutils' 'wc' "$@"
+}
+
+_koopa_locate_wget() { # {{{1
+    # """
+    # Locate wget.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app 'wget' 'wget' "$@"
 }
 
 _koopa_locate_xargs() { # {{{1

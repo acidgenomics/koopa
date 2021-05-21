@@ -3,7 +3,7 @@
 koopa::convert_fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # Alternate approaches:
     #
@@ -14,22 +14,12 @@ koopa::convert_fastq_to_fasta() { # {{{1
     # >     | awk -v FS="\t" '{print $1"\n"$2}' \
     # >     > "$fasta_file"
     # """
-    local array brew_prefix cut fasta_file fastq_file paste sed source_dir \
-        target_dir tr
+    local array cut fasta_file fastq_file paste sed source_dir target_dir tr
     koopa::assert_has_args "$#"
-    cut='cut'
-    paste='paste'
-    sed='sed'
-    tr='tr'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        cut="${brew_prefix}/bin/gcut"
-        paste="${brew_prefix}/bin/gpaste"
-        sed="${brew_prefix}/bin/gsed"
-        tr="${brew_prefix}/bin/gtr"
-    fi
-    koopa::assert_is_gnu "$cut" "$paste" "$sed" "$tr"
+    cut="$(koopa::locate_cut)"
+    paste="$(koopa::locate_paste)"
+    sed="$(koopa::locate_sed)"
+    tr="$(koopa::locate_tr)"
     source_dir='.'
     target_dir='.'
     while (("$#"))
