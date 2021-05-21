@@ -3,7 +3,7 @@
 koopa::mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-21.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -22,15 +22,8 @@ koopa::mktemp() { # {{{1
     # - https://stackoverflow.com/a/10983009/3911732
     # - https://gist.github.com/earthgecko/3089509
     # """
-    local brew_mktemp brew_prefix date_id mktemp mktemp_args template user_id
-    mktemp='mktemp'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        brew_mktemp="${brew_prefix}/bin/gmktemp"
-        [[ -x "$brew_mktemp" ]] && mktemp="$brew_mktemp"
-    fi
-    koopa::assert_is_installed "$mktemp"
+    local date_id mktemp mktemp_args template user_id
+    mktemp="$(koopa::locate_mktemp)"
     mktemp_args=("$@")
     if koopa::is_gnu "$mktemp"
     then
