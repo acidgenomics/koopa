@@ -30,9 +30,10 @@ __koopa_gnu_app() { # {{{1
     return 0
 }
 
-_koopa_7z() { # {{{1
+# FIXME Standardize the Homebrew approach...
+_koopa_locate_7z() { # {{{1
     # """
-    # Which 7z to use.
+    # Locate 7z.
     # @note Updated 2021-05-21.
     # """
     local brew_prefix cmd
@@ -47,9 +48,10 @@ _koopa_7z() { # {{{1
     return 0
 }
 
-_koopa_bunzip2() { # {{{1
+# FIXME Standardize the Homebrew approach...
+_koopa_locate_bunzip2() { # {{{1
     # """
-    # Which bunzip2 to use.
+    # Locate bunzip2.
     # @note Updated 2021-05-21.
     # """
     local brew_prefix cmd
@@ -64,6 +66,22 @@ _koopa_bunzip2() { # {{{1
     return 0
 }
 
+# FIXME Can we standardize the homebrew approach here a little better???
+# See also approach for 7z and bunzip2, which is duplicated...
+_koopa_locate_unzip() { # {{{1
+    # """
+    # Locate unzip.
+    # @note Updated 2021-05-21.
+    # """
+    return 0
+}
+
+
+
+
+
+# FIXME Need to rename this...
+# FIXME Return the full path...
 _koopa_conda() { # {{{1
     # """
     # Which conda (or mamba) to use.
@@ -389,6 +407,7 @@ _koopa_gnu_xargs() { # {{{1
     return 0
 }
 
+# FIXME Rename with locate...
 _koopa_python() { # {{{1
     # """
     # Python executable path.
@@ -402,6 +421,7 @@ _koopa_python() { # {{{1
     return 0
 }
 
+# FIXME Rename with locate...
 _koopa_r() { # {{{1
     # """
     # R executable path.
@@ -415,6 +435,7 @@ _koopa_r() { # {{{1
     return 0
 }
 
+# FIXME Rename this to 'koopa_locate_shell'
 _koopa_shell() { # {{{1
     # """
     # Current shell executable.
@@ -459,6 +480,10 @@ _koopa_shell() { # {{{1
         str="$KOOPA_SHELL"
     elif _koopa_is_linux
     then
+        # FIXME The proc approach returns the full path.
+        # This errors in Docker because it returns qemu...but it should NOT
+        # be the default. We need to use this as a fallback in case system
+        # is Docker...
         if _koopa_is_installed ps sed
         then
             str="$( \

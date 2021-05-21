@@ -243,6 +243,7 @@ koopa::is_defined_in_user_profile() { # {{{1
     koopa::file_match "$file" 'koopa'
 }
 
+# FIXME Can we make this POSIX so we can add to our Shell checker??
 koopa::is_docker() { # {{{1
     # """
     # Is the current shell running inside Docker?
