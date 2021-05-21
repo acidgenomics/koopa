@@ -254,16 +254,8 @@ _koopa_activate_tmux_sessions() { # {{{1
     local x
     _koopa_is_installed tmux || return 0
     _koopa_is_tmux && return 0
-    # FIXME Rework using new GNU functions.
-    cut='cut'
-    tr='tr'
-    if _koopa_is_macos
-    then
-        brew_prefix="$(_koopa_homebrew_prefix)"
-        cut="${brew_prefix}/bin/gcut"
-        tr="${brew_prefix}/bin/gtr"
-    fi
-    _koopa_is_gnu "$cut" "$tr" || return 0
+    cut="$(_koopa_locate_cut)"
+    tr="$(_koopa_locate_tr)"
     # shellcheck disable=SC2033
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
