@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME Need to test 8.2 and 10.2 URL update support.
-
 koopa::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
@@ -85,3 +84,35 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     koopa::alert_restart
     return 0
 }
+
+# FIXME Need to add support for this.
+koopa::macos_install_r_framework() { # {{{1
+    # """
+    # Install R framework.
+    # @note Updated 2021-05-21.
+    # """
+
+    # Intel:
+    # https://cran.r-project.org/bin/macosx/base/R-4.1.0.pkg
+    # ARM:
+    # https://cran.r-project.org/bin/macosx/big-sur-arm64/base/R-4.1.0-arm64.pkg
+
+    return 0
+}
+
+koopa::macos_uninstall_r_framework() { # {{{1
+    # """
+    # Uninstall R framework.
+    # @note Updated 2021-05-21.
+    # """
+    local name_fancy
+    name_fancy='R framework'
+    koopa::uninstall_start "$name_fancy"
+    koopa::rm -S \
+        '/Applications/R.app' \
+        '/Library/Frameworks/R.framework'
+    koopa::delete_broken_symlinks '/usr/local/bin'
+    koopa::uninstall_success "$name_fancy"
+    return 0
+}
+
