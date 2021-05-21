@@ -7,9 +7,11 @@ koopa::sra_prefetch_parallel() { # {{{1
     # """
     local brew_prefix find parallel sort
     koopa::assert_is_installed 'ascp' 'prefetch'
+
     find='find'
     parallel='parallel'
     sort='sort'
+
     if koopa::is_macos
     then
         brew_prefix="$(koopa::homebrew_prefix)"

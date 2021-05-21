@@ -588,6 +588,10 @@ koopa::locate_mv() { # {{{1
     _koopa_locate_mv "$@"
 }
 
+koopa::locate_parallel() { # {{{1
+    _koopa_locate_parallel "$@"
+}
+
 koopa::locate_paste() { # {{{1
     _koopa_locate_paste "$@"
 }
