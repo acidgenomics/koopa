@@ -143,26 +143,28 @@ koopa::find_and_replace_in_files() { # {{{1
 koopa::find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
-    local dir x
+    local dir find grep sort x
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_gnu 'find' 'grep' 'sort'
+    find="$(koopa::locate_find)"
+    grep="$(koopa::locate_grep)"
+    sort="$(koopa::locate_sort)"
     dir="${1:-.}"
     dir="$(koopa::realpath "$dir")"
     koopa::assert_is_dir "$dir"
     x="$( \
-        find "$dir" \
+        "$find" "$dir" \
             -xdev \
             -mindepth 1 \
             -xtype l \
             -print \
             2>&1 \
-        | grep -v 'Permission denied' \
-        | sort \
+        | "$grep" -v 'Permission denied' \
+        | "$sort" \
     )"
     koopa::print "$x"
     return 0
@@ -171,18 +173,22 @@ koopa::find_broken_symlinks() { # {{{1
 koopa::find_dotfiles() { # {{{1
     # """
     # Find dotfiles by type.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     #
     # This is used internally by 'koopa::list_dotfiles' script.
     #
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. 'Files')
     # """
-    local header type x
+    local awk basename header sort type x xargs
     koopa::assert_has_args_eq "$#" 2
-    koopa::assert_is_installed awk find
+    awk="$(koopa::locate_awk)"
+    basename="$(koopa::locate_basename)"
+    sort="$(koopa::locate_sort)"
+    xargs="$(koopa::locate_xargs)"
     type="${1:?}"
     header="${2:?}"
+    # shellcheck disable=SC2016
     x="$( \
         koopa::find \
             --glob='.*' \
@@ -190,9 +196,9 @@ koopa::find_dotfiles() { # {{{1
             --prefix="${HOME:?}" \
             --print0 \
             --type="$type" \
-        | xargs -0 -n1 basename \
-        | sort \
-        | awk '{print "    -",$0}' \
+        | "$xargs" -0 -n1 "$basename" \
+        | "$sort" \
+        | "$awk" '{print "    -",$0}' \
     )"
     koopa::h2 "${header}:"
     koopa::print "$x"
@@ -204,14 +210,16 @@ koopa::find_empty_dirs() { # {{{1
     # Find empty directories.
     # @note Updated 2020-07-03.
     # """
-    local dir x
+    local find grep dir sort x
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed find grep
+    find="$(koopa::locate_find)"
+    grep="$(koopa::locate_grep)"
+    sort="$(koopa::locate_sort)"
     dir="${1:-.}"
     dir="$(koopa::realpath "$dir")"
     koopa::assert_is_dir "$dir"
     x="$( \
-        find "$dir" \
+        "$find" "$dir" \
             -xdev \
             -mindepth 1 \
             -type d \
@@ -219,8 +227,8 @@ koopa::find_empty_dirs() { # {{{1
             -empty \
             -print \
             2>&1 \
-            | grep -v 'Permission denied' \
-            | sort \
+            | "$grep" -v 'Permission denied' \
+            | "$sort" \
     )"
     koopa::print "$x"
     return 0
@@ -229,23 +237,24 @@ koopa::find_empty_dirs() { # {{{1
 koopa::find_files_without_line_ending() { # {{{1
     # """
     # Find files without line ending.
-    # @note Updated 2021-05-08.
+    # @note Updated 2021-05-21.
     #
     # @seealso
     # - https://stackoverflow.com/questions/4631068/
     # """
-    local files prefix
+    local files find pcregrep prefix
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed find pcregrep
+    find="$(koopa::locate_find)"
+    pcregrep="$(koopa::locate_pcregrep)"
     prefix="${1:-.}"
     koopa::assert_is_dir "$prefix"
     readarray -t files <<< "$(
-        find "$prefix" \
+        "$find" "$prefix" \
             -mindepth 1 \
             -type f \
     )"
     koopa::is_array_non_empty "${files[@]:-}" || return 1
-    x="$(pcregrep -LMr '\n$' "${files[@]}")"
+    x="$("$pcregrep" -LMr '\n$' "${files[@]}")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -258,7 +267,12 @@ koopa::find_large_dirs() { # {{{1
     # """
     local dir x
     koopa::assert_has_args_le "$#" 1
+
+
+    # FIXME du sort head
     koopa::assert_is_installed du
+
+
     dir="${1:-.}"
     dir="$(koopa::realpath "$dir")"
     x="$( \
