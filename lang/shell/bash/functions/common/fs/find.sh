@@ -71,8 +71,7 @@ koopa::find() { # {{{1
             find_args+=('--print0')
         fi
     else
-        find='find'
-        __koopa_is_installed 'gfind' && find='gfind'
+        find="$(koopa::gnu_find)"
         find_args=('-L' "$prefix")
         if [[ "$max_depth" -gt 0 ]]
         then
@@ -90,11 +89,7 @@ koopa::find() { # {{{1
             find_args+=('--print')
         fi
     fi
-    if ! __koopa_is_installed "$find"
-    then
-        __koopa_warning "Not installed: '${find}'."
-        return 1
-    fi
+    koopa::assert_is_installed "$find"
     "${find[@]}" "${find_args[@]}"
     return 0
 }
