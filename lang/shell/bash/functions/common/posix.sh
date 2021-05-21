@@ -634,6 +634,14 @@ koopa::locate_conda() { # {{{1
     _koopa_locate_conda "$@"
 }
 
+koopa::locate_python() { # {{{1
+    _koopa_locate_python "$@"
+}
+
+koopa::locate_r() { # {{{1
+    _koopa_locate_r "$@"
+}
+
 koopa::locate_shell() { # {{{1
     _koopa_locate_shell "$@"
 }
@@ -814,20 +822,12 @@ koopa::pyenv_prefix() { # {{{1
     _koopa_pyenv_prefix "$@"
 }
 
-koopa::python() { # {{{1
-    _koopa_python "$@"
-}
-
 koopa::python_packages_prefix() { # {{{1
     _koopa_python_packages_prefix "$@"
 }
 
 koopa::python_system_packages_prefix() { # {{{1
     _koopa_python_system_packages_prefix "$@"
-}
-
-koopa::r() { # {{{1
-    _koopa_r "$@"
 }
 
 koopa::r_packages_prefix() { # {{{1
