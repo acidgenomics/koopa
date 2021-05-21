@@ -132,10 +132,6 @@ koopa::cd() { # {{{1
     _koopa_cd "$@"
 }
 
-koopa::conda() { # {{{1
-    _koopa_conda "$@"
-}
-
 koopa::conda_env() { # {{{1
     _koopa_conda_env "$@"
 }
@@ -630,6 +626,12 @@ koopa::lmod_prefix() { # {{{1
 
 koopa::local_data_prefix() { # {{{1
     _koopa_local_data_prefix "$@"
+}
+
+# FIXME Ensure we have consistency with the POSIX locate functions.
+
+koopa::locate_conda() { # {{{1
+    _koopa_locate_conda "$@"
 }
 
 koopa::locate_shell() { # {{{1
