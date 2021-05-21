@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Harden this by using Homebrew / GNU versions on macOS when possible.
 koopa::extract() { # {{{1
     # """
     # Extract compressed files automatically.
@@ -13,18 +12,6 @@ koopa::extract() { # {{{1
     # """
     local cmd cmd_args file
     koopa::assert_has_args "$#"
-    # FIXME This may cause install scripts to fail if some of these programs
-    # aren't installed...may want to reconsider approach here...
-    #declare -A xxxx=(
-    #    [7z]='7z'                                                        # FIXME not on macos system
-    #    [bunzip2]="$(koopa::locate_bunzip2)"
-    #    [gunzip]="$(koopa::gnu_gunzip)"
-    #    [tar]="$(koopa::gnu_tar)"
-    #    [uncompress]="$(koopa::gnu_uncompress)"
-    #    [unrar]='unrar'  # Commerical
-    #    [xz]='xz'                                                        # FIXME not on macos system
-    #    [unzip]='FIXME'
-    #)
     for file in "$@"
     do
         koopa::assert_is_file "$file"
@@ -33,60 +20,53 @@ koopa::extract() { # {{{1
         case "$file" in
             # Two extensions (must come first).
             *.tar.bz2)
-                cmd="$(koopa::gnu_tar)"
+                cmd="$(koopa::locate_tar)"
                 cmd_args=(-xj -f "$file")
                 ;;
             *.tar.gz)
-                cmd="$(koopa::gnu_tar)"
+                cmd="$(koopa::locate_tar)"
                 cmd_args=(-xz -f "$file")
                 ;;
             *.tar.xz)
-                cmd="$(koopa::gnu_tar)"
+                cmd="$(koopa::locate_tar)"
                 cmd_args=(-xJ -f "$file")
                 ;;
             # Single extension.
             *.bz2)
-                cmd="$(koopa::bunzip2)"
+                cmd="$(koopa::locate_bunzip2)"
                 cmd_args=("$file")
                 ;;
             *.gz)
-                cmd="$(koopa::gnu_gunzip)"
+                cmd="$(koopa::locate_gunzip)"
                 cmd_args=("$file")
                 ;;
-            *.rar)
-                # Commercial.
-                cmd='unrar'
-                cmd_args=(-x "$file")
-                ;;
             *.tar)
-                cmd="$(koopa::gnu_tar)"
+                cmd="$(koopa::locate_tar)"
                 cmd_args=(-x -f "$file")
                 ;;
             *.tbz2)
-                cmd="$(koopa::gnu_tar)"
+                cmd="$(koopa::locate_tar)"
                 cmd_args=(-xj -f "$file")
                 ;;
             *.tgz)
-                cmd="$(koopa::gnu_tar)"
+                cmd="$(koopa::locate_tar)"
                 cmd_args=(-xz -f "$file")
                 ;;
             *.xz)
-                cmd="$(koopa::xz)"  # FIXME Need to define this.
+                cmd="$(koopa::locate_xz)"
                 cmd_args=(--decompress "$file")
                 ;;
             *.zip)
-                cmd="$(koopa::unzip)"  # FIXME Need to define this.
-                koopa::assert_is_installed unzip
-                unzip -qq "$file"
+                cmd="$(koopa::locate_unzip)"
+                cmd_args=(-qq "$file")
                 ;;
             *.Z)
-                cmd="$(koopa::gnu_uncompress)"
+                cmd="$(koopa::locate_uncompress)"
                 cmd_args=("$file")
                 ;;
             *.7z)
                 cmd="$(koopa::locate_7z)"
-                koopa::assert_is_installed "$cmd"
-                "$cmd" -x "$file"
+                cmd_args=(-x "$file")
                 ;;
             *)
                 koopa::stop "Unsupported extension: '${file}'."
