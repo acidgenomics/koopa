@@ -3,17 +3,9 @@
 koopa::chmod() { # {{{1
     # """
     # GNU chmod.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-21.
     # """
     local brew_prefix chmod pos sudo which_chmod
-    which_chmod='chmod'
-    if koopa::is_macos
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        which_chmod="${brew_prefix}/bin/gchmod"
-    fi
-    koopa::assert_is_installed "$which_chmod"
-    koopa::assert_is_gnu "$which_chmod"
     sudo=0
     pos=()
     while (("$#"))
@@ -31,6 +23,7 @@ koopa::chmod() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
+    which_chmod="$(koopa::gnu_chmod)"
     if [[ "$sudo" -eq 1 ]]
     then
         chmod=('sudo' "$which_chmod")

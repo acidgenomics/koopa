@@ -35,6 +35,7 @@ test_all_coreutils() { # {{{1
     array=(
         'awk'
         'basename'
+        'bc'
         'cd'
         'chgrp'
         'chmod'
@@ -48,6 +49,7 @@ test_all_coreutils() { # {{{1
         'find'
         'grep'
         'ln'
+        'ls'
         'mkdir'
         'mv'
         'patch'
@@ -66,7 +68,7 @@ test_all_coreutils() { # {{{1
         'xargs'
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
-    pattern="^([ ]+)?(${pattern}) "
+    pattern="\b${pattern}\b"
     koopa::test_grep \
         -i 'coreutils' \
         -n 'shell | all | coreutils' \

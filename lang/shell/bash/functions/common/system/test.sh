@@ -107,6 +107,7 @@ koopa::test_find_files_by_shebang() { # {{{1
     return 0
 }
 
+# FIXME This needs to ignore comments.
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
