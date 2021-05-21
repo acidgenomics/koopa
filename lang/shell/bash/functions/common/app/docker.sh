@@ -178,9 +178,12 @@ koopa::docker_build_all_images() { # {{{1
     # Build all Docker images.
     # @note Updated 2021-05-20.
     # """
-    local build_file build_args days force image images prune pos \
-        repo repos repo_name
+    local build_file build_args days force grep image images prune pos \
+        repo repos repo_name sort xargs
     koopa::assert_is_installed docker
+    grep="$(koopa::locate_grep)"
+    sort="$(koopa::locate_sort)"
+    xargs="$(koopa::locate_xargs)"
     days=7
     force=0
     prune=0
@@ -234,7 +237,7 @@ koopa::docker_build_all_images() { # {{{1
         if [[ -f "$build_file" ]]
         then
             readarray -t images <<< "$( \
-                grep -E '^[-_a-z0-9]+$' "$build_file" \
+                "$grep" -E '^[-_a-z0-9]+$' "$build_file" \
             )"
         else
             readarray -t images <<< "$( \
@@ -244,8 +247,8 @@ koopa::docker_build_all_images() { # {{{1
                     --prefix='.' \
                     --print0 \
                     --type='d' \
-                | sort -z \
-                | xargs -0 -n1 basename \
+                | "$sort" -z \
+                | "$xargs" -0 -n1 basename \
             )"
         fi
         koopa::assert_is_array_non_empty "${images[@]:-}"

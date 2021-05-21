@@ -475,6 +475,14 @@ _koopa_locate_sort() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'sort' "$@"
 }
 
+_koopa_locate_ssh() { # {{{1
+    # """
+    # Locate ssh.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app 'openssh' 'ssh' "$@"
+}
+
 _koopa_locate_stat() { # {{{1
     # """
     # Locate GNU stat.
