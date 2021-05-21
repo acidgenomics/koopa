@@ -29,15 +29,15 @@ koopa::test_find_files() { # {{{1
     # """
     local find grep prefix sort x
     koopa::assert_has_no_args "$#"
-    find="$(koopa::gnu_find)"
-    grep="$(koopa::gnu_grep)"
-    sort="$(koopa::gnu_sort)"
+    find="$(koopa::locate_find)"
+    grep="$(koopa::locate_grep)"
+    sort="$(koopa::locate_sort)"
     prefix="$(koopa::prefix)"
     x="$( \
         "$find" "$prefix" \
             -mindepth 1 \
             -type f \
-            -not -name "$(basename "$0")" \
+            -not -name "$(koopa::basename "$0")" \
             -not -name '*.1' \
             -not -name '*.md' \
             -not -name '*.ronn' \
@@ -68,16 +68,17 @@ koopa::test_find_files() { # {{{1
 koopa::test_find_files_by_ext() { # {{{1
     # """
     # Find relevant test files by extension.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-21.
     # """
-    local ext files pattern x
+    local ext files grep pattern x
     koopa::assert_has_args "$#"
+    grep="$(koopa::locate_grep)"
     ext="${1:?}"
     pattern="\.${ext}$"
     readarray -t files <<< "$(koopa::test_find_files)"
     x="$( \
         printf '%s\n' "${files[@]}" \
-        | grep -Ei "$pattern" \
+        | "$grep" -Ei "$pattern" \
         || true \
     )"
     [[ -n "$x" ]] || return 1
@@ -88,10 +89,12 @@ koopa::test_find_files_by_ext() { # {{{1
 koopa::test_find_files_by_shebang() { # {{{1
     # """
     # Find relevant test files by shebang.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-05-21.
     # """
-    local file files pattern shebang shebang_files x
+    local file files head pattern shebang shebang_files tr x
     koopa::assert_has_args "$#"
+    head="$(koopa::locate_head)"
+    tr="$(koopa::locate_tr)"
     pattern="${1:?}"
     readarray -t files <<< "$(koopa::test_find_files)"
     shebang_files=()
@@ -99,11 +102,11 @@ koopa::test_find_files_by_shebang() { # {{{1
     do
         [[ -s "$file" ]] || continue
         # Avoid 'command substitution: ignored null byte in input' warning.
-        shebang="$(tr -d '\0' < "$file" | head -n 1)"
+        shebang="$("$tr" -d '\0' < "$file" | "$head" -n 1)"
         [[ -n "$shebang" ]] || continue
         koopa::str_match_regex "$shebang" "$pattern" && shebang_files+=("$file")
     done
-    printf '%s\n' "${shebang_files[@]}"
+    koopa::print "${shebang_files[@]}"
     return 0
 }
 
@@ -138,7 +141,7 @@ koopa::test_grep() { # {{{1
     done
     shift "$((OPTIND-1))"
     koopa::assert_has_args "$#"
-    grep="$(koopa::gnu_grep)"
+    grep="$(koopa::locate_grep)"
     failures=()
     for file in "$@"
     do
