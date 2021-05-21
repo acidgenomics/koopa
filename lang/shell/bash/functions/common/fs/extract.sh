@@ -4,25 +4,28 @@
 koopa::extract() { # {{{1
     # """
     # Extract compressed files automatically.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-21.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
     # See also:
     # - https://github.com/stephenturner/oneliners
     # """
-    local file
+    local cmd file
     koopa::assert_has_args "$#"
+    declare -A cmd=(
+        [bunzip2]='bunzip2'
+        [tar]="$(_koopa_gnu_tar)"
+    )
     for file in "$@"
     do
-        pwd
         koopa::assert_is_file "$file"
         file="$(koopa::realpath "$file")"
         koopa::alert "Extracting '${file}'."
         case "$file" in
             *.tar.bz2)
-                koopa::assert_is_installed tar
-                tar -xj -f "$file"
+                koopa::assert_is_installed "${cmd[tar]}"
+                "${cmd[tar]}" -xj -f "$file"
                 ;;
             *.tar.gz)
                 koopa::assert_is_installed tar
