@@ -272,6 +272,14 @@ _koopa_locate_mkdir() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'mkdir' "$@"
 }
 
+_koopa_locate_mktemp() { # {{{1
+    # """
+    # Locate GNU mktemp.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'mktemp' "$@"
+}
+
 _koopa_locate_mv() { # {{{1
     # """
     # Locate GNU mv.
