@@ -330,6 +330,14 @@ _koopa_locate_rm() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'rm' "$@"
 }
 
+_koopa_locate_rsync() { # {{{1
+    # """
+    # Locate rsync.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app 'rsync' 'rsync' "$@"
+}
+
 _koopa_locate_sed() { # {{{1
     # """
     # Locate GNU sed.
