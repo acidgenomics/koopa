@@ -592,6 +592,10 @@ koopa::locate_mkdir() { # {{{1
     _koopa_locate_mkdir "$@"
 }
 
+koopa::locate_mktemp() { # {{{1
+    _koopa_locate_mktemp "$@"
+}
+
 koopa::locate_mv() { # {{{1
     _koopa_locate_mv "$@"
 }
