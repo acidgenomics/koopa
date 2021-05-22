@@ -4,13 +4,13 @@
 koopa::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
-    # @note Updated 2021-05-18.
+    # @note Updated 2021-05-22.
     # @seealso
     # - https://mac.r-project.org/tools/
     # - https://github.com/fxcoudert/gfortran-for-macOS/
     # """
-    local arch file file_stem name os_codename pkg prefix reinstall tmp_dir \
-        url url_stem version
+    local arch file file_stem name os_codename pkg prefix reinstall tmp_dir
+    local url url_stem version
     arch="$(koopa::arch)"
     case "$arch" in
         aarch64)

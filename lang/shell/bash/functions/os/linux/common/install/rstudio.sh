@@ -3,7 +3,7 @@
 koopa:::linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-05-22.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -21,8 +21,8 @@ koopa:::linux_install_rstudio_server() { # {{{1
     # - https://hub.docker.com/r/rocker/rstudio/dockerfile
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
-    local file file_ext file_stem install name name_fancy os_codename platform \
-        pos pro reinstall server tmp_dir url version
+    local file file_ext file_stem install name name_fancy os_codename platform
+    local pos pro reinstall server tmp_dir url version
     koopa::assert_is_installed R
     pro=0
     reinstall=0

@@ -28,8 +28,8 @@ koopa::alpine_install_glibc() { # {{{1
     # Don't want to see:
     # Error relocating /usr/glibc-compat/lib/...
     # """
-    local apk_bin_file apk_dev_file apk_i18n_file apk_main_file base_url name \
-        name_fancy version
+    local apk_bin_file apk_dev_file apk_i18n_file apk_main_file base_url name
+    local name_fancy version
     name='glibc'
     version='2.30-r0'
     name_fancy="${name} ${version}"

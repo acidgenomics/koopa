@@ -330,13 +330,13 @@ koopa::find_large_files() { # {{{1
 koopa::find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-22.
     #
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
     # """
-    local app_prefix brew_prefix find find_args koopa_prefix make_prefix \
-        opt_prefix sort x
+    local app_prefix brew_prefix find find_args koopa_prefix make_prefix
+    local opt_prefix sort x
     koopa::assert_has_no_args "$#"
     find="$(koopa::locate_find)"
     sort="$(koopa::locate_sort)"

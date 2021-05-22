@@ -3,7 +3,7 @@
 koopa::debian_install_llvm() { # {{{1
     # """
     # Install LLVM (clang).
-    # @note Updated 2020-07-16.
+    # @note Updated 2021-05-22.
     #
     # @seealso
     # - https://apt.llvm.org/
@@ -14,8 +14,8 @@ koopa::debian_install_llvm() { # {{{1
     #
     # Note that default llvm recipe currently installs version 6.
     # """
-    local current_major_version current_version major_version name name_fancy \
-        pos reinstall version
+    local current_major_version current_version major_version name name_fancy
+    local pos reinstall version
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     reinstall=0

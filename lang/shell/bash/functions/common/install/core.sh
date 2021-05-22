@@ -228,7 +228,7 @@ at '${dict[prefix]}'."
 koopa::link_app() { # {{{1
     # """
     # Symlink application into build directory.
-    # @note Updated 2021-04-26.
+    # @note Updated 2021-05-22.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -247,8 +247,8 @@ koopa::link_app() { # {{{1
     # @examples
     # koopa::link_app emacs 26.3
     # """
-    local app_prefix app_subdirs cp_flags include_dirs make_prefix name \
-        pos version
+    local app_prefix app_subdirs cp_flags include_dirs make_prefix name
+    local pos version
     include_dirs=''
     version=''
     pos=()

@@ -71,14 +71,14 @@ koopa::chown() { # {{{1
 koopa::cp() { # {{{1
     # """
     # Hardened version of GNU coreutils copy.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-22.
     #
     # getopts info:
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
-    local OPTIND cp cp_args mkdir rm sudo symlink target_dir \
-        target_parent which_cp
+    local OPTIND cp cp_args mkdir rm sudo symlink target_dir
+    local target_parent which_cp
     sudo=0
     symlink=0
     target_dir=''
@@ -153,10 +153,10 @@ koopa::df() { # {{{1
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly with GNU ln.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-222.
     # """
-    local OPTIND ln ln_args mkdir rm source_file target_file target_dir \
-        target_parent which_ln
+    local OPTIND ln ln_args mkdir rm source_file target_file target_dir
+    local target_parent which_ln
     sudo=0
     target_dir=''
     OPTIND=1
@@ -243,7 +243,7 @@ koopa::mkdir() { # {{{1
 koopa::mv() { # {{{1
     # """
     # Move a file or directory with GNU mv.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-22.
     #
     # This function works on 1 file or directory at a time.
     # It ensures that the target parent directory exists automatically.
@@ -252,8 +252,8 @@ koopa::mv() { # {{{1
     # - -T: no-target-directory
     # - --strip-trailing-slashes
     # """
-    local OPTIND mkdir mv mv_args rm source_file sudo target_file \
-        target_parent which_mv
+    local OPTIND mkdir mv mv_args rm source_file sudo target_file
+    local target_parent which_mv
     sudo=0
     target_dir=''
     OPTIND=1
