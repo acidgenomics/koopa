@@ -9,7 +9,7 @@ koopa::install_subversion() { # {{{1
 koopa:::install_subversion() { # {{{1
     # """
     # Install Subversion.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-22.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -19,8 +19,8 @@ koopa:::install_subversion() { # {{{1
     # - https://subversion.apache.org/download.cgi
     # - https://subversion.apache.org/source-code.html
     # """
-    local brew_apr brew_apr_util brew_prefix conf_args file jobs name prefix \
-        url version
+    local brew_apr brew_apr_util brew_prefix conf_args file jobs name prefix
+    local url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='subversion'

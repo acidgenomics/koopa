@@ -239,10 +239,10 @@ koopa::ip_address() { # {{{1
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-22.
     # """
-    local config dot_dir dot_repo force pos private source_name symlink_name \
-        xdg_config_home
+    local config dot_dir dot_repo force pos private source_name
+    local symlink_name xdg_config_home
     koopa::assert_has_args "$#"
     config=0
     force=0

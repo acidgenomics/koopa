@@ -10,12 +10,12 @@ koopa::install_bash() { # {{{1
 koopa:::install_bash() { # {{{1
     # """
     # Install Bash.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-22.
     # @seealso
     # https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
     # """
-    local base_url cflags conf_args curl cut file gnu_mirror jobs link_app \
-        make minor_version mv_tr patch patches range request tr url version
+    local base_url cflags conf_args curl cut file gnu_mirror jobs link_app make
+    local minor_version mv_tr patch patches range request tr url version
     curl="$(koopa::locate_curl)"
     cut="$(koopa::locate_cut)"
     gnu_mirror="$(koopa::gnu_mirror_url)"
