@@ -37,10 +37,10 @@ koopa::install_miniconda() { # {{{1
 koopa:::install_anaconda() { # {{{1
     # """
     # Install full Anaconda distribution.
-    # @note Updated 2021-05-16.
+    # @note Updated 2021-05-22.
     # """
-    local arch koopa_prefix name name2 os_type prefix py_major_version \
-        py_version script url version
+    local arch koopa_prefix name name2 os_type prefix py_major_version
+    local py_version script url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='anaconda'
@@ -80,8 +80,8 @@ koopa:::install_miniconda() { # {{{1
     # This currently can cause dependency changes, so avoid for the moment.
     # > conda install mamba -n base -c conda-forge
     # """
-    local arch koopa_prefix name name2 os_type prefix py_major_version \
-        py_version script url version
+    local arch koopa_prefix name name2 os_type prefix py_major_version
+    local py_version script url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='miniconda'
