@@ -3,10 +3,10 @@
 koopa::bowtie2() { # {{{1
     # """
     # Run bowtie2 on paired-end FASTQ files.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-05-22.
     # """
-    local fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_prefix log_file \
-        output_dir r1_tail r2_tail sam_file sample_output_dir threads
+    local fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_prefix log_file
+    local output_dir r1_tail r2_tail sam_file sample_output_dir threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed bowtie2
     while (("$#"))
