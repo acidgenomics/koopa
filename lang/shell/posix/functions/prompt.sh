@@ -4,7 +4,7 @@
 _koopa_prompt() { # {{{1
     # """
     # Customize the interactive prompt.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-05-22.
     #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
@@ -27,8 +27,8 @@ _koopa_prompt() { # {{{1
     #       howto-linux-unix-bash-shell-setup-prompt.html
     # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
     # """
-    local conda conda_color git git_color hostname newline prompt prompt_color \
-        shell user user_color venv venv_color wd wd_color
+    local conda conda_color git git_color hostname newline prompt prompt_color
+    local shell user user_color venv venv_color wd wd_color
     shell="$(_koopa_shell_name)"
     hostname="$(_koopa_hostname)"
     # String replacement supported in Bash, Zsh.

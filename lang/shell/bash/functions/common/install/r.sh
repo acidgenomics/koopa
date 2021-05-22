@@ -29,8 +29,8 @@ koopa:::install_r() { # {{{1
     # - Homebrew recipe:
     #   https://github.com/Homebrew/homebrew-core/blob/master/Formula/r.rb
     # """
-    local brew_opt brew_prefix conf_args file jobs major_version name name2 \
-        prefix r url version
+    local brew_opt brew_prefix conf_args file jobs major_version name name2
+    local prefix r url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='r'

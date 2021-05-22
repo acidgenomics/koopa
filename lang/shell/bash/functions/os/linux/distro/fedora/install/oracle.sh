@@ -3,12 +3,12 @@
 koopa::fedora_install_oracle_instantclient() { # {{{1
     # """
     # Install Oracle InstantClient.
-    # @note Updated 2020-07-16.
+    # @note Updated 2021-05-22.
     # @seealso
     # - https://www.oracle.com/database/technologies/instant-client/
     # """
-    local arch minor_version name name_fancy stem stems tmp_dir \
-        url_prefix version
+    local arch minor_version name name_fancy stem stems tmp_dir
+    local url_prefix version
     koopa::assert_has_no_args "$#"
     name='oracle-instantclient'
     name_fancy='Oracle Instant Client'

@@ -10,10 +10,10 @@ koopa::install_vim() { # {{{1
 koopa:::install_vim() { # {{{1
     # """
     # Install Vim.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-22.
     # """
-    local conf_args file jobs name prefix python python_config \
-        python_config_dir url version
+    local conf_args file jobs name prefix python python_config
+    local python_config_dir url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='vim'

@@ -39,7 +39,7 @@ koopa:::install_rust() { # {{{1
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2021-05-11.
+    # @note Updated 2021-05-22.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -49,8 +49,8 @@ koopa::install_rust_packages() { # {{{1
     # - https://github.com/rust-lang/cargo/pull/6798
     # - https://github.com/rust-lang/cargo/pull/7560
     # """
-    local args default jobs name_fancy pkg pkgs pkg_args pos prefix \
-        reinstall version
+    local args default jobs name_fancy pkg pkgs pkg_args pos prefix
+    local reinstall version
     name_fancy='Rust packages (cargo crates)'
     default=0
     reinstall=0

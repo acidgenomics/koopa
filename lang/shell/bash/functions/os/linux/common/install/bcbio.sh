@@ -63,7 +63,7 @@ koopa:::linux_install_bcbio() { # {{{1
 koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # """
     # Install bcbio genome from Ensembl.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-05-21.
     #
     # This script can fail on a clean bcbio install if this file is missing:
     # 'install/galaxy/tool-data/sam_fa_indices.loc'.
@@ -99,8 +99,9 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     #     --organism="$organism" \
     #     --release="$release"
     # """
-    local bcbio_genome_name bcbio_species_dir build cores fasta gtf indexes \
-        install_prefix organism provider release script tmp_dir tool_data_prefix
+    local bcbio_genome_name bcbio_species_dir build cores fasta gtf indexes
+    local install_prefix organism provider release script tmp_dir
+    local tool_data_prefix
     koopa::assert_has_args "$#"
     script='bcbio_setup_genome.py'
     koopa::assert_is_installed "$script" 'awk' 'du' 'find' 'head' 'sort' 'xargs'

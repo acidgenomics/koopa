@@ -5,11 +5,11 @@
 koopa::install_spacevim() { # {{{1
     # """
     # Install SpaceVim.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-22.
     # https://spacevim.org
     # """
-    local name name_fancy prefix script_file script_url tmp_dir \
-        vimproc_prefix xdg_data_home
+    local name name_fancy prefix script_file script_url tmp_dir
+    local vimproc_prefix xdg_data_home
     name='spacevim'
     name_fancy='SpaceVim'
     # FIXME We need to define this in the package...

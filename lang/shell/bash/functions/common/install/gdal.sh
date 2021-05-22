@@ -10,7 +10,7 @@ koopa::install_gdal() { # {{{1
 koopa:::install_gdal() { # {{{1
     # """
     # Install GDAL.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-05-22.
     #
     # Use 'configure --help' for build options.
     #
@@ -24,8 +24,8 @@ koopa:::install_gdal() { # {{{1
     # - https://github.com/OSGeo/gdal/issues/2402
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
-    local brew_opt_pkgs conf_args file jobs make_prefix name opt_pkgs \
-        prefix url version
+    local brew_opt_pkgs conf_args file jobs make_prefix name opt_pkgs
+    local prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='gdal'

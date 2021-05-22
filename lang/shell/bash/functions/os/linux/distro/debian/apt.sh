@@ -374,13 +374,13 @@ koopa::apt_configure_sources() { # {{{1
 
     # """
     # Configure apt sources.
-    # @note Updated 2021-03-30.
+    # @note Updated 2021-05-22.
     #
     # Debian Docker images can also use snapshots:
     # http://snapshot.debian.org/archive/debian/20210326T030000Z
     # """
-    local arch codenames os_codename os_id repos sources_list \
-        sources_list_d urls
+    local arch codenames os_codename os_id repos sources_list
+    local sources_list_d urls
     koopa::assert_has_no_args "$#"
     sources_list='/etc/apt/sources.list'
     koopa::alert "Configuring apt sources in '${sources_list}'."
