@@ -47,14 +47,14 @@ koopa::debian_install_rstudio_server_pro() { # {{{1
 koopa::debian_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Debian/Ubuntu.
-    # @note Updated 2021-04-30.
+    # @note Updated 2021-05-22.
     # @seealso
     # https://rstudio.com/products/shiny/download-server/ubuntu/
     # """
     local arch arch2 name name_fancy pos r reinstall version
     # Currently only "amd64" (x86) is supported here.
     arch="$(koopa::arch)"
-    r="$(koopa::r)"
+    r="$(koopa::locate_r)"
     case "$arch" in
         x86_64)
             arch2='amd64'
