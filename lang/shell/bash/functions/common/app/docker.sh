@@ -3,7 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2021-04-06.
+    # Updated 2021-05-22.
     #
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
@@ -29,9 +29,9 @@ koopa::docker_build() { # {{{1
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
     # """
-    local build_name delete docker_dir image image_ids memory platforms \
-        platforms_file platforms_string pos push server source_image tag \
-        tags tags_file
+    local build_name delete docker_dir image image_ids memory platforms
+    local platforms_file platforms_string pos push server source_image tag
+    local tags tags_file
     koopa::assert_has_args "$#"
     koopa::assert_is_installed docker
     docker_dir="$(koopa::docker_prefix)"
@@ -176,10 +176,10 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-22.
     # """
-    local build_file build_args days force grep image images prune pos \
-        repo repos repo_name sort xargs
+    local build_file build_args days force grep image images prune pos repo
+    local repos repo_name sort xargs
     koopa::assert_is_installed docker
     grep="$(koopa::locate_grep)"
     sort="$(koopa::locate_sort)"

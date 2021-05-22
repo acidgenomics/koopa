@@ -3,10 +3,10 @@
 koopa::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
-    # @note Updated 2021-04-28.
+    # @note Updated 2021-05-22.
     # """
-    local file framework_dir macos_string macos_version major_version \
-        name name_fancy pos reinstall url version
+    local file framework_dir macos_string macos_version major_version name
+    local name_fancy pos reinstall url version
     reinstall=0
     pos=()
     while (("$#"))
