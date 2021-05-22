@@ -24,7 +24,8 @@ koopa::configure_r() { # {{{1
     # """
     local etc_prefix make_prefix pkg_index r r_prefix
     koopa::assert_has_args_le "$#" 1
-    r="${1:-$(koopa::r)}"
+    r="${1:-$(koopa::locate_r)}"
+    # FIXME OK to take this check out?
     koopa::assert_is_installed "$r"
     r="$(koopa::which_realpath "$r")"
     r_prefix="$(koopa::r_prefix "$r")"
@@ -113,7 +114,7 @@ koopa::link_r_etc() { # {{{1
     # """
     local distro_prefix file files r r_etc_source r_etc_target r_prefix version
     koopa::assert_has_args_le "$#" 1
-    r="${1:-$(koopa::r)}"
+    r="${1:-$(koopa::locate_r)}"
     koopa::assert_is_installed "$r"
     r="$(koopa::which_realpath "$r")"
     r_prefix="$(koopa::r_prefix "$r")"
@@ -166,7 +167,7 @@ koopa::link_r_site_library() { # {{{1
     # """
     local lib_source lib_target r r_prefix version
     koopa::assert_has_args_le "$#" 1
-    r="${1:-$(koopa::r)}"
+    r="${1:-$(koopa::locate_r)}"
     koopa::assert_is_installed "$r"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
@@ -223,7 +224,7 @@ koopa::r_javareconf() { # {{{1
     # """
     local java_flags java_home r r_cmd
     koopa::assert_has_args_le "$#" 1
-    r="${1:-$(koopa::r)}"
+    r="${1:-$(koopa::locate_r)}"
     koopa::assert_is_installed "$r"
     r="$(koopa::which_realpath "$r")"
     if [[ -z "${java_home:-}" ]]
@@ -278,7 +279,7 @@ koopa::r_rebuild_docs() { # {{{1
     #     make.packages.html.html
     # """
     local doc_dir html_dir pkg_index r rscript rscript_flags
-    r="${1:-$(koopa::r)}"
+    r="${1:-$(koopa::locate_r)}"
     rscript="${r}script"
     koopa::assert_is_installed "$r" "$rscript"
     rscript_flags=('--vanilla')
@@ -301,8 +302,9 @@ koopa::rscript() { # {{{1
     # Execute an R script.
     # @note Updated 2021-04-30.
     # """
-    local code header_file flags fun pos rscript
-    rscript="$(koopa::r)script"
+    local code header_file flags fun pos r rscript
+    r="$(koopa::locate_r)"
+    rscript="${r}script"
     koopa::assert_is_installed "$rscript"
     flags=()
     pos=()
@@ -354,7 +356,7 @@ koopa::run_shiny_app() { # {{{1
     # """
     local dir r
     dir="${1:-.}"
-    r="$(koopa::r)"
+    r="$(koopa::locate_r)"
     koopa::assert_is_installed "$r"
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
