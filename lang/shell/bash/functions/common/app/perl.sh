@@ -42,13 +42,14 @@ koopa:::install_ensembl_perl_api() { # {{{1
 koopa::install_perlbrew() { # {{{1
     # """
     # Install Perlbrew.
-    # @note Updated 2020-11-18.
+    # @note Updated 2021-05-23.
     #
     # Available releases:
     # > perlbrew available
     # """
-    local all name_fancy prefix
+    local all name_fancy prefix tee
     koopa::assert_has_args_le "$#" 1
+    tee="$(koopa::locate_tee)"
     all=0
     while (("$#"))
     do
@@ -74,10 +75,7 @@ koopa::install_perlbrew() { # {{{1
     koopa::assert_has_no_envs
     koopa::assert_is_not_installed perlbrew
     export PERLBREW_ROOT="$prefix"
-
-    # Install Perlbrew {{{2
-    # --------------------------------------------------------------------------
-
+    # Install Perlbrew.
     koopa::mkdir "$prefix"
     koopa::rm "${HOME}/.perlbrew"
     tmp_dir="$(koopa::tmp_dir)"
@@ -88,14 +86,11 @@ koopa::install_perlbrew() { # {{{1
         koopa::download "$url" "$file"
         koopa::chmod +x "$file"
         "./${file}"
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::sys_set_permissions -r "$prefix"
     koopa::activate_perlbrew
-
-    # Add system Perl to Perlbrew {{{2
-    # --------------------------------------------------------------------------
-
+    # Add system Perl to Perlbrew.
     if [[ -x '/usr/local/bin/perl' ]]
     then
         bin_dir='/usr/local/bin'
@@ -115,10 +110,7 @@ koopa::install_perlbrew() { # {{{1
             koopa::ln "$bin_dir" 'system/bin'
         )
     fi
-
-    # Install latest Perl and pinned version for Ensembl Perl API {{{2
-    # --------------------------------------------------------------------------
-
+    # Install latest Perl and pinned version for Ensembl Perl API.
     if [[ "$all" -eq 1 ]]
     then
         perls=(
