@@ -15,7 +15,7 @@ koopa::linux_install_bcbio() { # {{{1
 koopa:::linux_install_bcbio() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-23.
     #
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
@@ -23,7 +23,7 @@ koopa:::linux_install_bcbio() { # {{{1
     local conda file install_dir prefix python tools_dir upgrade url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    python="$(koopa::python)"
+    python="$(koopa::locate_python)"
     koopa::assert_is_installed "$python"
     koopa::alert_coffee_time
     install_dir="${prefix}/install"
