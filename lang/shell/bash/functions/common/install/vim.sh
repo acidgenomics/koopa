@@ -10,7 +10,7 @@ koopa::install_vim() { # {{{1
 koopa:::install_vim() { # {{{1
     # """
     # Install Vim.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-23.
     # """
     local conf_args file jobs name prefix python python_config
     local python_config_dir url version
@@ -25,7 +25,7 @@ koopa:::install_vim() { # {{{1
     then
         koopa::macos_activate_python
     fi
-    python="$(koopa::python)"
+    python="$(koopa::locate_python)"
     python_config="${python}-config"
     koopa::assert_is_installed "$python" "$python_config"
     python_config_dir="$("$python_config" --configdir)"

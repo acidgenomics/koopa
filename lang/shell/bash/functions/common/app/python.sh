@@ -180,12 +180,12 @@ koopa::python_remove_pycache() { # {{{1
 koopa::venv_create() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2021-01-14.
+    # @note Updated 2021-05-23.
     # """
     local name name_fancy default_pkgs prefix pos python venv_python
     koopa::assert_has_no_envs
     name_fancy='Python virtual environment'
-    python="$(koopa::python)"
+    python="$(koopa::locate_python)"
     pos=()
     while (("$#"))
     do

@@ -116,7 +116,7 @@ koopa::install_python_packages() { # {{{1
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
-    # @note Updated 2021-04-30.
+    # @note Updated 2021-05-23.
     # @seealso
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
@@ -124,7 +124,7 @@ koopa::update_python_packages() { # {{{1
     local name_fancy pkgs python
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
-    python="$(koopa::python)"
+    python="$(koopa::locate_python)"
     koopa::is_installed "$python" || return 0
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
