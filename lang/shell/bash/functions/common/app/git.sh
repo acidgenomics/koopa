@@ -3,9 +3,10 @@
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-23.
     # """
-    local branch default_branch dir dirs origin pos repo repos
+    local branch default_branch dir dirs origin pos repo repos sort
+    sort="$(koopa::locate_sort)"
     branch=''
     origin=''
     pos=()
@@ -45,7 +46,7 @@ koopa::git_checkout_recursive() { # {{{1
                 --max-depth=3 \
                 --min-depth=2 \
                 --prefix="$dir" \
-            | sort \
+            | "$sort" \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
@@ -54,7 +55,7 @@ koopa::git_checkout_recursive() { # {{{1
         koopa::h1 "Checking out ${#repos[@]} git repos in '${dir}'."
         for repo in "${repos[@]}"
         do
-            repo="$(dirname "$repo")"
+            repo="$(koopa::dirname "$repo")"
             koopa::h2 "$repo"
             (
                 koopa::cd "$repo"
@@ -109,7 +110,7 @@ koopa::git_clone() { # {{{1
 koopa::git_default_branch() { # {{{1
     # """
     # Default branch of Git repository.
-    # @note Updated 2020-12-03.
+    # @note Updated 2021-05-23.
     #
     # Alternate approach:
     # > x="$( \
@@ -120,15 +121,17 @@ koopa::git_default_branch() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/28666357
     # """
-    local remote x
+    local grep remote sed x
     koopa::assert_has_no_args "$#"
     koopa::is_git || return 1
     koopa::is_installed git || return 1
+    grep="$(koopa::locate_grep)"
+    sed="$(koopa::locate_sed)"
     remote='origin'
     x="$( \
         git remote show "$remote" \
-            | grep 'HEAD branch' \
-            | sed 's/.*: //' \
+            | "$grep" 'HEAD branch' \
+            | "$sed" 's/.*: //' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -263,10 +266,11 @@ koopa::git_pull() { # {{{1
 koopa::git_pull_recursive() { # {{{1
     # """
     # Pull multiple Git repositories recursively.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-23.
     # """
-    local dir dirs repo repos
+    local dir dirs repo repos sort
     dirs=("$@")
+    sort="$(koopa::locate_sort)"
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
@@ -277,7 +281,7 @@ koopa::git_pull_recursive() { # {{{1
                 --max-depth=3 \
                 --min-depth=2 \
                 --prefix="$dir" \
-            | sort \
+            | "$sort" \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
@@ -302,10 +306,11 @@ koopa::git_pull_recursive() { # {{{1
 koopa::git_push_recursive() { # {{{1
     # """
     # Push multiple Git repositories recursively.
-    # @note Updated 2021-01-06.
+    # @note Updated 2021-05-23.
     # """
-    local dir dirs repo repos
+    local dir dirs repo repos sort
     dirs=("$@")
+    sort="$(koopa::locate_sort)"
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
@@ -317,7 +322,7 @@ koopa::git_push_recursive() { # {{{1
                 --max-depth=3 \
                 --min-depth=2 \
                 --prefix="$dir" \
-            | sort \
+            | "$sort" \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
@@ -479,10 +484,11 @@ koopa::git_set_remote_url() { # {{{1
 koopa::git_status_recursive() { # {{{1
     # """
     # Get the status of multiple Git repos recursively.
-    # @note Updated 2021-01-06.
+    # @note Updated 2021-05-23.
     # """
     local dir dirs repo repos
     dirs=("$@")
+    sort="$(koopa::locate_sort)"
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     for dir in "${dirs[@]}"
     do
@@ -494,7 +500,7 @@ koopa::git_status_recursive() { # {{{1
                 --max-depth=3 \
                 --min-depth=2 \
                 --prefix="$dir" \
-            | sort \
+            | "$sort" \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
@@ -517,9 +523,10 @@ koopa::git_status_recursive() { # {{{1
 koopa::git_submodule_init() { # {{{1
     # """
     # Initialize git submodules.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-23.
     # """
-    local array lines string target target_key url url_key
+    local array cut lines string target target_key url url_key
+    cut="$(koopa::locate_cut)"
     koopa::assert_has_no_args "$#"
     koopa::alert "Initializing submodules in '${PWD:?}'."
     koopa::assert_is_git
@@ -538,10 +545,20 @@ koopa::git_submodule_init() { # {{{1
     fi
     for string in "${array[@]}"
     do
-        target_key="$(koopa::print "$string" | cut -d ' ' -f 1)"
-        target="$(koopa::print "$string" | cut -d ' ' -f 2)"
+        target_key="$( \
+            koopa::print "$string" \
+            | "$cut" -d ' ' -f 1 \
+        )"
+        target="$( \
+            koopa::print "$string" \
+            | "$cut" -d ' ' -f 2 \
+        )"
         url_key="${target_key//\.path/.url}"
-        url="$(git config -f '.gitmodules' --get "$url_key")"
+        url="$( \
+            git config \
+                -f '.gitmodules' \
+                --get "$url_key" \
+        )"
         koopa::dl "$target" "$url"
         if [[ ! -d "$target" ]]
         then

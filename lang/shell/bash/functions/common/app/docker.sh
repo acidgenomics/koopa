@@ -3,7 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2021-05-22.
+    # Updated 2021-05-23.
     #
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
@@ -29,11 +29,13 @@ koopa::docker_build() { # {{{1
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
     # """
-    local build_name delete docker_dir image image_ids memory platforms
-    local platforms_file platforms_string pos push server source_image tag
-    local tags tags_file
+    local build_name cut delete docker_dir image image_ids memory platforms
+    local platforms_file platforms_string pos push server sort source_image
+    local tag tags tags_file
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    koopa::assert_is_installed 'docker'
+    cut="$(koopa::locate_cut)"
+    sort="$(koopa::locate_sort)"
     docker_dir="$(koopa::docker_prefix)"
     koopa::assert_is_dir "$docker_dir"
     delete=0
@@ -97,8 +99,14 @@ koopa::docker_build() { # {{{1
     # Handle tag support, if necessary.
     if koopa::str_match "$image" ':'
     then
-        tag="$(koopa::print "$image" | cut -d ':' -f 2)"
-        image="$(koopa::print "$image" | cut -d ':' -f 1)"
+        tag="$( \
+            koopa::print "$image" \
+            | "$cut" -d ':' -f 2 \
+        )"
+        image="$( \
+            koopa::print "$image" \
+            | "$cut" -d ':' -f 1 \
+        )"
     fi
     source_image="${docker_dir}/${image}/${tag}"
     koopa::assert_is_dir "$source_image"
@@ -115,7 +123,10 @@ koopa::docker_build() { # {{{1
     fi
     tags+=("$tag" "${tag}-$(date '+%Y%m%d')")
     # Ensure tags are sorted and unique.
-    readarray -t tags <<< "$(koopa::print "${tags[@]}" | sort -u)"
+    readarray -t tags <<< "$( \
+        koopa::print "${tags[@]}" \
+        | "$sort" -u \
+    )"
     for tag in "${tags[@]}"
     do
         args+=("--tag=${image}:${tag}")
@@ -136,7 +147,10 @@ koopa::docker_build() { # {{{1
         # If you don't want to use swap, give '--memory' and '--memory-swap'
         # the same values. Don't set '--memory-swap' to 0. Alternatively,
         # set '--memory-swap' to '-1' for unlimited swap.
-        args+=("--memory=${memory}" "--memory-swap=${memory}")
+        args+=(
+            "--memory=${memory}"
+            "--memory-swap=${memory}"
+        )
     fi
     args+=(
         '--no-cache'
@@ -178,9 +192,10 @@ koopa::docker_build_all_images() { # {{{1
     # Build all Docker images.
     # @note Updated 2021-05-22.
     # """
-    local build_file build_args days force grep image images prune pos repo
-    local repos repo_name sort xargs
-    koopa::assert_is_installed docker
+    local basename build_file build_args days force grep image images prune pos
+    local repo repos repo_name sort xargs
+    koopa::assert_is_installed 'docker'
+    basename="$(koopa::locate_basename)"
     grep="$(koopa::locate_grep)"
     sort="$(koopa::locate_sort)"
     xargs="$(koopa::locate_xargs)"
@@ -248,7 +263,7 @@ koopa::docker_build_all_images() { # {{{1
                     --print0 \
                     --type='d' \
                 | "$sort" -z \
-                | "$xargs" -0 -n1 basename \
+                | "$xargs" -0 -n1 "$basename" \
             )"
         fi
         koopa::assert_is_array_non_empty "${images[@]:-}"
