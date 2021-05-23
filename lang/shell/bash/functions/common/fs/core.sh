@@ -22,7 +22,7 @@ koopa::chmod() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
+    koopa::assert_has_args "$#"
     which_chmod="$(koopa::locate_chmod)"
     if [[ "$sudo" -eq 1 ]]
     then
@@ -56,7 +56,7 @@ koopa::chown() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
+    koopa::assert_has_args "$#"
     which_chown="$(koopa::locate_chown)"
     if [[ "$sudo" -eq 1 ]]
     then
