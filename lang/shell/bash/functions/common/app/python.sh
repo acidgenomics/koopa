@@ -93,11 +93,11 @@ koopa::pip_outdated() { # {{{1
 koopa::pyscript() { # {{{1
     # """
     # Execute a Python script.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-05-23.
     # """
     local name prefix python script
     koopa::assert_has_args "$#"
-    python="$(koopa::python)"
+    python="$(koopa::locate_python)"
     prefix="$(koopa::pyscript_prefix)"
     name="${1:?}"
     shift 1
@@ -110,14 +110,14 @@ koopa::pyscript() { # {{{1
 koopa::python_add_site_packages_to_sys_path() { # {{{1
     # """
     # Add our custom site packages library to sys.path.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-23.
     #
     # @seealso
     # > "$python" -m site
     # """
-    local file k_site_pkgs python sys_site_pkgs version
+    local file k_site_pkgs python sys_site_pkgs version x
     python="${1:-}"
-    [[ -z "$python" ]] && python="$(koopa::python)"
+    [[ -z "$python" ]] && python="$(koopa::locate_python)"
     koopa::assert_is_installed "$python"
     version="$(koopa::get_version "$python")"
     sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
@@ -132,22 +132,27 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     else
         koopa::sudo_write_string "$k_site_pkgs" "$file"
     fi
-    "$python" -m site
+    x=$("$python" -m site)
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
     return 0
 }
 
 koopa::python_remove_pycache() { # {{{1
     # """
     # Remove Python '__pycache__/' from site packages.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-05-23.
     #
     # These directories can create permission issues when attempting to rsync
     # installation across multiple VMs.
     # """
-    local pos prefix python
+    local find pos prefix python rm xargs
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_installed find
-    python="$(koopa::python)"
+    find="$(koopa::locate_find)"
+    python="$(koopa::locate_python)"
+    rm="$(koopa::locate_rm)"
+    xargs="$(koopa::locate_xargs)"
     while (("$#"))
     do
         case "$1" in
@@ -164,11 +169,11 @@ koopa::python_remove_pycache() { # {{{1
     python="$(koopa::which_realpath "$python")"
     prefix="$(koopa::parent_dir -n 2 "$python")"
     koopa::alert "Removing pycache in '${prefix}'."
-    find "$prefix" \
+    "$find" "$prefix" \
         -type d \
         -name '__pycache__' \
         -print0 \
-        | xargs -0 -I {} rm -frv '{}'
+        | "$xargs" -0 -I {} "$rm" -fr '{}'
     return 0
 }
 
