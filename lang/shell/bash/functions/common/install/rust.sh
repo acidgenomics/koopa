@@ -12,7 +12,7 @@ koopa::install_rust() { # {{{1
 koopa:::install_rust() { # {{{1
     # """
     # Install Rust (via rustup).
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-23.
     # """
     local cargo_prefix file prefix rustup_prefix url version
     prefix="${INSTALL_PREFIX:?}"
@@ -29,12 +29,9 @@ koopa:::install_rust() { # {{{1
     url='https://sh.rustup.rs'
     file='rustup.sh'
     koopa::download "$url" "$file"
-    echo 'FIXME 2'
-    # FIXME This step is erroring now.
     koopa::chmod +x "$file"
     # Can check the version of install script with '--version'.
     "./${file}" --no-modify-path -v -y
-    echo 'FIXME 3'
     return 0
 }
 
