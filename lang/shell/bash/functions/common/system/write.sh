@@ -3,15 +3,15 @@
 koopa::append_string() { # {{{1
     # """
     # Append a string at end of file.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-05-24.
     # """
-    local file string
+    local file grep string
     koopa::assert_has_args_eq "$#" 2
-    koopa::assert_is_installed grep
+    grep="$(koopa::locate_grep)"
     string="${1:?}"
     file="${2:?}"
-    koopa::mkdir "$(dirname "$file")"
-    if ! grep -Eq "^${string}$" "$file"
+    koopa::mkdir "$(koopa::dirname "$file")"
+    if ! "$grep" -Eq "^${string}$" "$file"
     then
         koopa::print "$string" >> "$file"
     fi
@@ -21,24 +21,23 @@ koopa::append_string() { # {{{1
 koopa::sudo_append_string() { # {{{1
     # """
     # Append a string at end of file as root user.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-05-24.
     #
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' >> '${file}'"
     # """
-    local file string
+    local file grep parent_dir string tee
     koopa::assert_has_args_eq "$#" 2
     koopa::assert_is_admin
-    koopa::assert_is_installed grep tee
+    grep="$(koopa::locate_grep)"
+    tee="$(koopa::locate_grep)"
     string="${1:?}"
     file="${2:?}"
-    if [[ ! -d "$(dirname "$file")" ]]
+    parent_dir="$(koopa::dirname "$file")"
+    [[ ! -d "$parent_dir" ]] && koopa::mkdir -S "$parent_dir"
+    if ! sudo "$grep" -Eq "^${string}$" "$file"
     then
-        koopa::mkdir -S "$(dirname "$file")"
-    fi
-    if ! sudo grep -Eq "^${string}$" "$file"
-    then
-        koopa::print "$string" | sudo tee -a "$file" >/dev/null
+        koopa::print "$string" | sudo "$tee" -a "$file" >/dev/null
     fi
     return 0
 }
@@ -46,22 +45,20 @@ koopa::sudo_append_string() { # {{{1
 koopa::sudo_write_string() { # {{{1
     # """
     # Write a string to disk using root user.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-05-24.
     #
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' > '${file}'"
     # """
-    local file string
+    local file parent_dir string tee
     koopa::assert_has_args_eq "$#" 2
     koopa::assert_is_admin
-    koopa::assert_is_installed tee
+    tee="$(koopa::locate_tee)"
     string="${1:?}"
     file="${2:?}"
-    if [[ ! -d "$(dirname "$file")" ]]
-    then
-        koopa::mkdir -S "$(dirname "$file")"
-    fi
-    koopa::print "$string" | sudo tee "$file" >/dev/null
+    parent_dir="$(koopa::dirname "$file")"
+    [[ ! -d "$parent_dir" ]] && koopa::mkdir -S "$parent_dir"
+    koopa::print "$string" | sudo "$tee" "$file" >/dev/null
     return 0
 }
 
