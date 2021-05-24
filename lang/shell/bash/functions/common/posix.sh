@@ -580,6 +580,10 @@ koopa::locate_id() { # {{{1
     _koopa_locate_id "$@"
 }
 
+koopa::locate_llvm_config() { # {{{1
+    _koopa_locate_llvm_config "$@"
+}
+
 koopa::locate_ln() { # {{{1
     _koopa_locate_ln "$@"
 }

@@ -504,24 +504,8 @@ _koopa_activate_llvm() { # {{{1
     # Activate LLVM config.
     # @note Updated 2021-05-24.
     # """
-    local brew_prefix config find sort tail
-    [ -x "${LLVM_CONFIG:-}" ] && return 0
-    if _koopa_is_linux
-    then
-        find="$(_koopa_locate_find)"
-        sort="$(_koopa_locate_sort)"
-        tail="$(_koopa_locate_tail)"
-        config="$( \
-            "$find" '/usr/bin' -name 'llvm-config-*' \
-            | "$sort" \
-            | "$tail" -n 1 \
-        )"
-    elif _koopa_is_macos
-    then
-        brew_prefix="$(_koopa_homebrew_prefix)"
-        config="${brew_prefix}/opt/llvm/bin/llvm-config"
-    fi
-    [ -x "$config" ] && export LLVM_CONFIG="$config"
+    LLVM_CONFIG="$(_koopa_locate_llvm_config)"
+    export LLVM_CONFIG
     return 0
 }
 

@@ -47,6 +47,7 @@ koopa::debian_install_llvm() { # {{{1
     major_version="$(koopa::major_version "$version")"
     name_fancy="LLVM ${major_version}"
     # Check if LLVM installation is current, or whether we need to update.
+    # FIXME Consider reworking this approach with 'koopa::locate_llvm_config'.
     if [[ -n "${LLVM_CONFIG:-}" ]]
     then
         current_version="$(koopa::get_version "$LLVM_CONFIG")"
