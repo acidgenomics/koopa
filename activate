@@ -450,10 +450,15 @@ __koopa_activate() { # {{{1
         _koopa_duration_start || return 1
     fi
     _koopa_activate_xdg || return 1                                     #  40 ms
-    # FIXME Run these in a single parameterized call:
-    # > _koopa_add_config_link "$(_koopa_prefix)" 'home' || return 1
-    # > _koopa_add_config_link "$(_koopa_prefix)/activate" || return 1
-    # > _koopa_add_config_link "$(_koopa_dotfiles_prefix)" || return 1
+    _koopa_add_config_link \
+        "$(_koopa_prefix)" 'home' \
+        || return 1
+    _koopa_add_config_link \
+        "$(_koopa_prefix)/activate" 'activate' \
+        || return 1
+    _koopa_add_config_link \
+        "$(_koopa_dotfiles_prefix)" 'dotfiles' \
+        || return 1
     _koopa_activate_standard_paths || return 1                          #  25 ms
     _koopa_activate_pkg_config || return 1                              #  25 ms
     _koopa_export_cpu_count || return 1                                 #   6 ms
