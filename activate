@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Consider warning if shell activation is taking longer than 2 seconds.
+
 # Csh is not supported, primarily due to lack of functions.
 # > csh -l or csh -i
 [ "$0" = 'csh' ] && \
