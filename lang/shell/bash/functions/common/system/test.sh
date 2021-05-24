@@ -178,13 +178,15 @@ koopa::test_grep() { # {{{1
 koopa::test_true_color() { # {{{1
     # """
     # Test 24-bit true color support.
-    # @note Updated 2020-02-15.
+    # @note Updated 2021-05-24.
     #
     # @seealso
     # https://jdhao.github.io/2018/10/19/tmux_nvim_true_color/
     # """
+    local awk
     koopa::assert_has_no_args "$#"
-    awk 'BEGIN{
+    awk="$(koopa::locate_awk)"
+    "$awk" 'BEGIN{
         s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
         for (colnum = 0; colnum<77; colnum++) {
             r = 255-(colnum*255/76);
