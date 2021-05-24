@@ -27,6 +27,23 @@ _koopa_add_config_link() { # {{{1
     return 0
 }
 
+_koopa_check_os() {
+    # """
+    # Check that operating system is supported.
+    # @note Updated 2021-05-07.
+    # """
+    case "$(uname -s)" in
+        Darwin | \
+        Linux)
+            ;;
+        *)
+            _koopa_warning 'Unsupported operating system.'
+            return 1
+            ;;
+    esac
+    return 0
+}
+
 _koopa_exec_dir() { # {{{1
     # """
     # Execute multiple shell scripts in a directory.
