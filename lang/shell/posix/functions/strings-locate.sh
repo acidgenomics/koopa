@@ -250,6 +250,38 @@ _koopa_locate_id() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'id' "$@"
 }
 
+_koopa_locate_llvm_config() { # {{{1
+    # """
+    # Locate 'llvm-config' executable.
+    # @note Updated 2021-05-24.
+    #
+    # This is versioned on many Linux systems.
+    # """
+    local brew_prefix find sort tail x
+    x="${LLVM_CONFIG:-}"
+    if [ -z "$x" ]
+    then
+        if _koopa_is_linux
+        then
+            find="$(_koopa_locate_find)"
+            sort="$(_koopa_locate_sort)"
+            tail="$(_koopa_locate_tail)"
+            x="$( \
+                "$find" '/usr/bin' -name 'llvm-config-*' \
+                | "$sort" \
+                | "$tail" -n 1 \
+            )"
+        elif _koopa_is_macos
+        then
+            brew_prefix="$(_koopa_homebrew_prefix)"
+            x="${brew_prefix}/opt/llvm/bin/llvm-config"
+        fi
+    fi
+    [ -x "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
 _koopa_locate_ln() { # {{{1
     # """
     # Locate GNU ls.

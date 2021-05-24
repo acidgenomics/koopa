@@ -156,9 +156,15 @@ koopa::current_ensembl_version() { # {{{1
 koopa::current_flybase_version() { # {{{1
     # """
     # Current FlyBase version.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-24.
     # """
-    local dmel url x
+    local curl cut dmel grep head sort tail url x
+    curl="$(koopa::locate_curl)"
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
+    head="$(koopa::locate_head)"
+    sort="$(koopa::locate_sort)"
+    tail="$(koopa::locate_tail)"
     url='ftp://ftp.flybase.net/releases'
     dmel=0
     while (("$#"))
@@ -176,17 +182,17 @@ koopa::current_flybase_version() { # {{{1
     if [[ "$dmel" -eq 1 ]]
     then
         x="$( \
-            curl --list-only --silent "${url}/current/" \
-            | grep -E '^dmel_r[.0-9]+$' \
-            | head -n 1 \
-            | cut -d '_' -f 2 \
+            "$curl" --list-only --silent "${url}/current/" \
+            | "$grep" -E '^dmel_r[.0-9]+$' \
+            | "$head" -n 1 \
+            | "$cut" -d '_' -f 2 \
         )"
     else
         x="$( \
-            curl --list-only --silent "${url}/" \
-            | grep -E '^FB[0-9]{4}_[0-9]{2}$' \
-            | sort \
-            | tail -n 1 \
+            "$curl" --list-only --silent "${url}/" \
+            | "$grep" -E '^FB[0-9]{4}_[0-9]{2}$' \
+            | "$sort" \
+            | "$tail" -n 1 \
         )"
     fi
     [[ -n "$x" ]] || return 1
@@ -197,11 +203,14 @@ koopa::current_flybase_version() { # {{{1
 koopa::current_gencode_version() { # {{{1
     # """
     # Current GENCODE version.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-24.
     # """
-    local base_url organism pattern short_name url x
+    local base_url curl cut grep head organism pattern short_name url x
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed curl
+    curl="$(koopa::locate_curl)"
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
+    head="$(koopa::locate_head)"
     organism="${1:-Homo sapiens}"
     case "$organism" in
         'Homo sapiens')
@@ -219,10 +228,10 @@ koopa::current_gencode_version() { # {{{1
     base_url='https://www.gencodegenes.org'
     url="${base_url}/${short_name}/"
     x="$( \
-        curl --silent "$url" \
-        | grep -Eo "$pattern" \
-        | head -n 1 \
-        | cut -d ' ' -f 2 \
+        "$curl" --silent "$url" \
+        | "$grep" -Eo "$pattern" \
+        | "$head" -n 1 \
+        | "$cut" -d ' ' -f 2 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -232,12 +241,13 @@ koopa::current_gencode_version() { # {{{1
 koopa::current_refseq_version() { # {{{1
     # """
     # Current RefSeq version.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-24.
     # """
-    local url version
+    local curl url version
     koopa::assert_has_no_args "$#"
+    curl="$(koopa::locate_curl)"
     url='ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER'
-    version="$(curl --silent "$url")"
+    version="$("$curl" --silent "$url")"
     [[ -n "$version" ]] || return 1
     koopa::print "$version"
     return 0
@@ -246,16 +256,19 @@ koopa::current_refseq_version() { # {{{1
 koopa::current_wormbase_version() { # {{{1
     # """
     # Current WormBase version.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-24.
     # """
-    local url version
+    local curl cut grep url version
     koopa::assert_has_no_args "$#"
+    curl="$(koopa::locate_curl)"
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
     url="ftp://ftp.wormbase.org/pub/wormbase/\
 releases/current-production-release"
     version="$( \
-        curl --list-only --silent "${url}/" | \
-        grep -Eo 'letter.WS[0-9]+' | \
-        cut -d '.' -f 2 \
+        "$curl" --list-only --silent "${url}/" | \
+        "$grep" -Eo 'letter.WS[0-9]+' | \
+        "$cut" -d '.' -f 2 \
     )"
     koopa::print "$version"
     return 0
@@ -273,17 +286,19 @@ koopa::eigen_version() { # {{{1
 koopa::extract_version() { # {{{1
     # """
     # Extract version number.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-24.
     # """
+    local arg grep head pattern x
     koopa::assert_has_args "$#"
-    local arg pattern x
+    grep="$(koopa::locate_grep)"
+    head="$(koopa::locate_head)"
     pattern="$(koopa::version_pattern)"
     for arg in "$@"
     do
         x="$( \
             koopa::print "$arg" \
-                | grep -Eo "$pattern" \
-                | head -n 1 \
+                | "$grep" -Eo "$pattern" \
+                | "$head" -n 1 \
         )"
         [[ -n "$x" ]] || return 1
         koopa::print "$x"
@@ -294,18 +309,12 @@ koopa::extract_version() { # {{{1
 koopa::gcc_version() { # {{{1
     # """
     # GCC version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-24.
     # """
     local x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed gcc
-    if koopa::is_macos
-    then
-        x="$(gcc --version 2>&1 | sed -n '2p')"
-        x="$(koopa::extract_version "$x")"
-    else
-        x="$(koopa::return_version 'gcc')"
-    fi
+    gcc="$(koopa::locate_gcc)"
+    x="$(koopa::return_version "$gcc")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -336,24 +345,28 @@ koopa::get_version() { # {{{1
 koopa::github_latest_release() { # {{{1
     # """
     # Get the latest release version from GitHub.
-    # @note Updated 2020-02-15.
+    # @note Updated 2021-05-24.
     #
     # @examples
     # koopa::github_latest_release 'acidgenomics/koopa'
     # # Expected failure:
     # koopa::github_latest_release 'acidgenomics/acidgenomics.github.io'
     # """
-    local json repo url x
+    local curl cut grep json repo sed url x
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed curl
+    curl="$(koopa::locate_curl)"
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
+    sed="$(koopa::locate_sed)"
     repo="${1:?}"
     url="https://api.github.com/repos/${repo}/releases/latest"
-    json="$(curl -s "$url" 2>&1 || true)"
+    json="$("$curl" -s "$url" 2>&1 || true)"
+    [[ -n "$json" ]] || return 1
     x="$( \
         koopa::print "$json" \
-            | grep '"tag_name":' \
-            | cut -d '"' -f 4 \
-            | sed 's/^v//' \
+            | "$grep" '"tag_name":' \
+            | "$cut" -d '"' -f 4 \
+            | "$sed" 's/^v//' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -372,17 +385,19 @@ koopa::harfbuzz_version() { # {{{1
 koopa::hdf5_version() { # {{{1
     # """
     # HDF5 version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-24.
     #
     # Debian: 'dpkg -s libhdf5-dev'
     # """
-    local x
+    local grep sed x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed h5cc
+    grep="$(koopa::locate_grep)"
+    sed="$(koopa::locate_sed)"
+    koopa::assert_is_installed 'h5cc'
     x="$( \
         h5cc -showconfig \
-            | grep 'HDF5 Version:' \
-            | sed -E 's/^(.+): //' \
+            | "$grep" 'HDF5 Version:' \
+            | "$sed" -E 's/^(.+): //' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -411,15 +426,12 @@ koopa::imagemagick_version() { # {{{1
 koopa::llvm_version() { # {{{1
     # """
     # LLVM version.
-    # @note Updated 2020-06-29.
-    #
-    # Note that 'llvm-config' is versioned on most systems.
+    # @note Updated 2021-05-24.
     # """
-    local x
+    local llvm_config x
     koopa::assert_has_no_args "$#"
-    x="${LLVM_CONFIG:-}"
-    [[ -n "$x" ]] || return 1
-    x="$(koopa::return_version "$LLVM_CONFIG")"
+    llvm_config="$(koopa::locate_llvm_config)"
+    x="$(koopa::return_version "$llvm_config")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -446,15 +458,17 @@ koopa::lmod_version() { # {{{1
 koopa::openjdk_version() { # {{{1
     # """
     # Java (OpenJDK) version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-24.
     # """
-    local x
+    local cut head x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed java
+    cut="$(koopa::locate_cut)"
+    head="$(koopa::locate_head)"
+    koopa::assert_is_installed 'java'
     x="$( \
         java --version \
-            | head -n 1 \
-            | cut -d ' ' -f 2 \
+            | "$head" -n 1 \
+            | "$cut" -d ' ' -f 2 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -464,12 +478,13 @@ koopa::openjdk_version() { # {{{1
 koopa::oracle_instantclient_version() { # {{{1
     # """
     # Oracle InstantClient version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-24.
     # """
-    local x
+    local grep x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed sqlplus
-    x="$(sqlplus -v | grep -E '^Version')"
+    grep="$(koopa::locate_grep)"
+    koopa::assert_is_installed 'sqlplus'
+    x="$(sqlplus -v | "$grep" -E '^Version')"
     x="$(koopa::extract_version "$x")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -479,17 +494,19 @@ koopa::oracle_instantclient_version() { # {{{1
 koopa::os_version() { # {{{1
     # """
     # Operating system version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-24.
     #
     # 'uname' returns Darwin kernel version for macOS.
     # """
     local x
     koopa::assert_has_no_args "$#"
-    if koopa::is_macos
+    x=''
+    if koopa::is_linux
+    then
+        x="$(koopa::linux_version)"
+    elif koopa::is_macos
     then
         x="$(koopa::macos_version)"
-    else
-        x="$(koopa::linux_version)"
     fi
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -517,12 +534,16 @@ koopa::parallel_version() { # {{{1
 koopa::perl_file_rename_version() { # {{{1
     # """
     # Perl File::Rename version.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-05-24.
     # """
-    local x
+    local head rename x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed perl rename
-    x="$(rename --version 2>/dev/null | head -n 1)"
+    head="$(koopa::locate_head)"
+    rename="$(koopa::locate_rename)"
+    x="$( \
+        "$rename" --version 2>/dev/null \
+        | "$head" -n 1 \
+    )"
     koopa::str_match "$x" 'File::Rename' || return 1
     koopa::extract_version "$x"
     return 0
