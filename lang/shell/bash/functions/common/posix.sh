@@ -624,8 +624,8 @@ koopa::locate_pcregrep() { # {{{1
     _koopa_locate_pcregrep "$@"
 }
 
-koopa::locate_pkgconfig() { # {{{1
-    _koopa_locate_pkgconfig "$@"
+koopa::locate_pkg_config() { # {{{1
+    _koopa_locate_pkg_config "$@"
 }
 
 koopa::locate_python() { # {{{1
