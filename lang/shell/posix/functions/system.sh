@@ -5,22 +5,16 @@ _koopa_add_config_link() { # {{{1
     # Add a symlink into the koopa configuration directory.
     # @note Updated 2021-05-24.
     # """
-    local basename config_prefix dest_file dest_name ln mkdir rm source_file
+    local config_prefix dest_file dest_name ln mkdir rm source_file
+    [ "$#" -eq 2 ] || return 1
     source_file="${1:?}"
-    [ -e "$source_file" ] || return 0
-    dest_name="${2:-}"
-    # > basename="$(_koopa_locate_basename)"  # FIXME
-    basename='basename'
-    [ -z "$dest_name" ] && dest_name="$("$basename" "$source_file")"
+    dest_name="${2:?}"
     config_prefix="$(_koopa_config_prefix)"
     dest_file="${config_prefix}/${dest_name}"
     [ -L "$dest_file" ] && return 0
-    # > ln="$(_koopa_locate_ln)"  # FIXME
-    ln='ln'
-    # > mkdir="$(_koopa_locate_mkdir)"  # FIXME
-    mkdir='mkdir'
-    # > rm="$(_koopa_locate_rm)"  # FIXME
-    rm='rm'
+    ln="$(_koopa_locate_ln)"
+    mkdir="$(_koopa_locate_mkdir)"
+    rm="$(_koopa_locate_rm)"
     "$mkdir" -p "$config_prefix"
     "$rm" -fr "$dest_file"
     "$ln" -fns "$source_file" "$dest_file"

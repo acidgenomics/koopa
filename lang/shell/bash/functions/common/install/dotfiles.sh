@@ -3,7 +3,7 @@
 koopa::install_dotfiles() { # {{{1
     # """
     # Install dot files.
-    # @note Updated 2021-05-11.
+    # @note Updated 2021-05-24.
     # """
     local koopa_prefix name_fancy prefix reinstall script
     name_fancy='dotfiles'
@@ -30,7 +30,7 @@ koopa::install_dotfiles() { # {{{1
     koopa_prefix="$(koopa::prefix)"
     koopa::add_to_path_start "${koopa_prefix}/bin"
     [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles
-    koopa::add_config_link "$prefix"
+    koopa::add_config_link "$prefix" 'dotfiles'
     script="${prefix}/install"
     koopa::assert_is_file "$script"
     "$script"
