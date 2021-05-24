@@ -39,7 +39,7 @@ __koopa_locate_app_simple() { # {{{1
 __koopa_locate_gnu_app() { # {{{1
     # """
     # Locate a GNU application.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-24.
     # """
     local app_name brew_name brew_prefix file
     [ "$#" -eq 2 ] || return 1
@@ -52,7 +52,6 @@ __koopa_locate_gnu_app() { # {{{1
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
         file="${brew_prefix}/opt/${brew_name}/libexec/gnubin/${app_name}"
-        file="$(_koopa_realpath "$file")"
     fi
     [ -x "$file" ] || return 1
     _koopa_print "$file"
