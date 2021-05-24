@@ -19,6 +19,7 @@
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
 
+# FIXME Create 'latest' symlinks so we don't have to keep track of version?
 PYTHON_VERSION="3.9"
 RUST_VERSION="rolling"
 
