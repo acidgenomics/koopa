@@ -491,6 +491,14 @@ _koopa_locate_stat() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'stat' "$@"
 }
 
+_koopa_locate_tac() { # {{{1
+    # """
+    # Locate GNU tac.
+    # @note Updated 2021-05-24.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'tac' "$@"
+}
+
 _koopa_locate_tail() { # {{{1
     # """
     # Locate GNU tail.
