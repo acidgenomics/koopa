@@ -3,13 +3,13 @@
 koopa:::pkg_config_version() { # {{{1
     # """
     # Get a library version via pkg-config.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-05-24.
     # """
-    local pkg x
+    local pkg pkg_config x
     koopa::assert_has_args_eq "$#" 1
     pkg="${1:?}"
-    koopa::is_installed pkg-config || return 1
-    x="$(pkg-config --modversion "$pkg")"
+    pkg_config="$(koopa::locate_pkg_config)"
+    x="$("$pkg_config" --modversion "$pkg")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -19,16 +19,19 @@ koopa:::pkg_config_version() { # {{{1
 koopa::anaconda_version() { # {{{
     # """
     # Anaconda verison.
-    # @note Updated 2020-07-08.
+    # @note Updated 2021-05-24.
     # """
-    local x
+    local awk conda grep x
     koopa::assert_has_no_args "$#"
+    awk="$(koopa::locate_awk)"
+    conda="$(koopa::locate_conda)"
+    grep="$(koopa::locate_grep)"
     koopa::is_anaconda || return 1
-    koopa::assert_is_installed awk grep
+    # shellcheck disable=SC2016
     x="$( \
-        conda list 'anaconda' \
-            | grep -E '^anaconda ' \
-            | awk '{print $2}' \
+        "$conda" list 'anaconda' \
+            | "$grep" -E '^anaconda ' \
+            | "$awk" '{print $2}' \
     )"
     koopa::print "$x"
     return 0
@@ -46,26 +49,30 @@ koopa::armadillo_version() { # {{{1
 koopa::boost_version() { # {{{1
     # """
     # Boost (libboost) version.
-    # @note Updated 2021-03-02.
+    # @note Updated 2021-05-24.
+    #
+    # Extract the Boost library version using GCC preprocessing. This approach
+    # is nice because it doesn't hardcode to a specific file path.
+    #
     # @seealso
     # - https://stackoverflow.com/questions/3708706/
     # - https://stackoverflow.com/questions/4518584/
     # """
     local major minor patch x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed bc gcc grep
-    # Extract the Boost library version using GCC preprocessing. This approach
-    # is nice because it doesn't hardcode to a specific file path.
+    bc="$(koopa::locate_bc)"
+    gcc="$(koopa::locate_gcc)"  # FIXME Need to add this.
+    grep="$(koopa::locate_grep)"
     x="$( \
         koopa::print '#include <boost/version.hpp>\nBOOST_VERSION' \
-        | gcc -x c++ -E - \
-        | grep -E '^[0-9]+$' \
+        | "$gcc" -x 'c++' -E - \
+        | "$grep" -E '^[0-9]+$' \
     )"
     [[ -n "$x" ]] || return 1
     # Convert '107500' to '1.75.0', for example.
-    major="$(koopa::print "$x / 100000" | bc)"
-    minor="$(koopa::print "$x / 100 % 1000" | bc)"
-    patch="$(koopa::print "$x % 100" | bc)"
+    major="$(koopa::print "$x / 100000" | "$bc")"
+    minor="$(koopa::print "$x / 100 % 1000" | "$bc")"
+    patch="$(koopa::print "$x % 100" | "$bc")"
     koopa::print "${major}.${minor}.${patch}"
     return 0
 }
