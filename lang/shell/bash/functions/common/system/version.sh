@@ -516,15 +516,17 @@ koopa::os_version() { # {{{1
 koopa::parallel_version() { # {{{1
     # """
     # GNU parallel version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-24.
     # """
-    local x
+    local cut head parallel x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed parallel
+    cut="$(koopa::locate_cut)"
+    head="$(koopa::locate_head)"
+    parallel="$(koopa::locate_parallel)"
     x="$( \
-        parallel --version \
-            | head -n 1 \
-            | cut -d ' ' -f 3 \
+        "$parallel" --version \
+            | "$head" -n 1 \
+            | "$cut" -d ' ' -f 3 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -552,13 +554,13 @@ koopa::perl_file_rename_version() { # {{{1
 koopa::r_package_version() { # {{{1
     # """
     # R package version.
-    # @note Updated 2020-07-06.
+    # @note Updated 2021-05-24.
     # """
     local r rscript vec x
     koopa::assert_has_args "$#"
-    r='R'
+    r="$(_koopa_locate_r)"
     rscript="${r}script"
-    koopa::assert_is_installed "$r" "$rscript"
+    koopa::assert_is_installed "$rscript"
     pkgs=("$@")
     koopa::assert_is_r_package_installed "${pkgs[@]}"
     vec="$(koopa::array_to_r_vector "${pkgs[@]}")"
@@ -583,10 +585,15 @@ koopa::r_version() { # {{{1
     # R version.
     # @note Updated 2021-03-01.
     # """
-    local r x
+    local head r x
     koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
-    x="$("$r" --version 2>/dev/null | head -n 1)"
+    head="$(koopa::locate_head)"
+    r="${1:-}"
+    [ -z "$r" ] && r="$(koopa::locate_r)"
+    x="$( \
+        "$r" --version 2>/dev/null \
+        | head -n 1 \
+    )"
     if koopa::str_match "$x" 'R Under development (unstable)'
     then
         x='devel'
@@ -760,7 +767,7 @@ koopa::sanitize_version() { # {{{1
 koopa::tex_version() { # {{{1
     # """
     # TeX version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-24.
     #
     # We're checking the TeX Live release year here.
     # Here's what it looks like on Debian/Ubuntu:
@@ -768,14 +775,16 @@ koopa::tex_version() { # {{{1
     # """
     local x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed tex
+    koopa::assert_is_installed 'tex'
+    cut="$(koopa::locate_cut)"
+    head="$(koopa::locate_head)"
     x="$( \
         tex --version \
-            | head -n 1 \
-            | cut -d '(' -f 2 \
-            | cut -d ')' -f 1 \
-            | cut -d ' ' -f 3 \
-            | cut -d '/' -f 1 \
+            | "$head" -n 1 \
+            | "$cut" -d '(' -f 2 \
+            | "$cut" -d ')' -f 1 \
+            | "$cut" -d ' ' -f 3 \
+            | "$cut" -d '/' -f 1 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -805,31 +814,32 @@ koopa::version_pattern() { # {{{1
 koopa::vim_version() { # {{{1
     # """
     # Vim version.
-    # @note Updated 2020-11-10.
+    # @note Updated 2021-05-24.
     # """
-    local major_minor version x
+    local cut grep head major_minor patch version x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed vim
+    koopa::assert_is_installed 'vim'
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
+    head="$(koopa::locate_head)"
     x="$(vim --version 2>/dev/null)"
     major_minor="$( \
         koopa::print "$x" \
-            | head -n 1 \
-            | cut -d ' ' -f 5 \
+            | "$head" -n 1 \
+            | "$cut" -d ' ' -f 5 \
     )"
-    # > if koopa::str_match "$x" 'Included patches:'
-    # > then
-    # >     local patch
-    # >     patch="$( \
-    # >         koopa::print "$x" \
-    # >             | grep 'Included patches:' \
-    # >             | cut -d '-' -f 2 \
-    # >             | cut -d ',' -f 1 \
-    # >     )"
-    # >     version="${major_minor}.${patch}"
-    # > else
-    # >     version="$major_minor"
-    # > fi
-    version="$major_minor"
+    if koopa::str_match "$x" 'Included patches:'
+    then
+        patch="$( \
+            koopa::print "$x" \
+                | "$grep" 'Included patches:' \
+                | "$cut" -d '-' -f 2 \
+                | "$cut" -d ',' -f 1 \
+        )"
+        version="${major_minor}.${patch}"
+    else
+        version="$major_minor"
+    fi
     koopa::print "$version"
     return 0
 }
