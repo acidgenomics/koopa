@@ -220,7 +220,7 @@ _koopa_activate_fzf() { # {{{1
 _koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
-    # @note Updated 2021-05-12.
+    # @note Updated 2021-05-24.
     #
     # Note that 'starship.bash' script has unbound PREEXEC_READY.
     # https://github.com/starship/starship/blob/master/src/init/starship.bash
@@ -240,9 +240,11 @@ _koopa_activate_starship() { # {{{1
             ;;
     esac
     nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
+    # FIXME When KOOPA_TEST=1, hitting this unbound variable error with Bash
+    # STARSHIP_PREEXEC_READY
+    [ "$nounset" -eq 1 ] && echo 'FIXME 1' && set +u
     eval "$(starship init "$shell")"
-    [ "$nounset" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && echo 'FIXME 2' && set -u
     return 0
 }
 
