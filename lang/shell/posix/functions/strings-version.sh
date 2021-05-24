@@ -19,14 +19,15 @@ _koopa_macos_version() { # {{{1
 _koopa_major_version() { # {{{1
     # """
     # Program 'MAJOR' version.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-24.
     #
     # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
-    local version x
+    local cut version x
+    cut="$(_koopa_locate_cut)"
     for version in "$@"
     do
-        x="$(_koopa_print "$version" | cut -d '.' -f 1)"
+        x="$(_koopa_print "$version" | "$cut" -d '.' -f 1)"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
     done
@@ -36,12 +37,13 @@ _koopa_major_version() { # {{{1
 _koopa_major_minor_version() { # {{{1
     # """
     # Program 'MAJOR.MINOR' version.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-24.
     # """
-    local version x
+    local cut version x
+    cut="$(_koopa_locate_cut)"
     for version in "$@"
     do
-        x="$(_koopa_print "$version" | cut -d '.' -f 1-2)"
+        x="$(_koopa_print "$version" | "$cut" -d '.' -f '1-2')"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
     done
@@ -51,12 +53,13 @@ _koopa_major_minor_version() { # {{{1
 _koopa_major_minor_patch_version() { # {{{1
     # """
     # Program 'MAJOR.MINOR.PATCH' version.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-24.
     # """
-    local version x
+    local cut version x
+    cut="$(_koopa_locate_cut)"
     for version in "$@"
     do
-        x="$(_koopa_print "$version" | cut -d '.' -f 1-3)"
+        x="$(_koopa_print "$version" | "$cut" -d '.' -f '1-3')"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
     done
