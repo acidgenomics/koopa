@@ -58,14 +58,24 @@ koopa::boost_version() { # {{{1
     # - https://stackoverflow.com/questions/3708706/
     # - https://stackoverflow.com/questions/4518584/
     # """
-    local major minor patch x
+    local bc brew_prefix gcc gcc_args grep major minor patch x
     koopa::assert_has_no_args "$#"
     bc="$(koopa::locate_bc)"
-    gcc="$(koopa::locate_gcc)"  # FIXME Need to add this.
+    gcc="$(koopa::locate_gcc)"
     grep="$(koopa::locate_grep)"
+    gcc_args=()
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        gcc_args+=("-I${brew_prefix}/opt/boost/include")
+    fi
+    gcc_args+=(
+        '-x' 'c++'
+        '-E' '-'
+    )
     x="$( \
         koopa::print '#include <boost/version.hpp>\nBOOST_VERSION' \
-        | "$gcc" -x 'c++' -E - \
+        | "$gcc" "${gcc_args[@]}" \
         | "$grep" -E '^[0-9]+$' \
     )"
     [[ -n "$x" ]] || return 1

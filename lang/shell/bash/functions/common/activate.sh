@@ -3,7 +3,7 @@
 koopa::activate_homebrew_opt_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-24.
     # """
     local name opt_prefix prefix
     koopa::assert_has_args "$#"
@@ -12,7 +12,6 @@ koopa::activate_homebrew_opt_prefix() { # {{{1
     do
         prefix="${opt_prefix}/${name}"
         koopa::assert_is_dir "$prefix"
-        koopa::alert "Activating prefix at '${prefix}'."
         koopa::activate_prefix "$prefix"
     done
     return 0
@@ -21,7 +20,7 @@ koopa::activate_homebrew_opt_prefix() { # {{{1
 koopa::activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-24.
     #
     # @examples
     # koopa::activate_opt_prefix proj gdal
@@ -33,7 +32,6 @@ koopa::activate_opt_prefix() { # {{{1
     do
         prefix="${opt_prefix}/${name}"
         koopa::assert_is_dir "$prefix"
-        koopa::alert "Activating prefix at '${prefix}'."
         koopa::activate_prefix "$prefix"
     done
     return 0
