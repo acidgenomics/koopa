@@ -9,15 +9,14 @@ __koopa_locate_app() { # {{{1
     [ "$#" -eq 2 ] || return 1
     brew_name="${1:?}"
     app_name="${2:?}"
-    if _koopa_is_linux
-    then
-        _koopa_print "$app_name"
-    elif _koopa_is_macos
+    if _koopa_is_macos
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
         file="${brew_prefix}/opt/${brew_name}/bin/${app_name}"
         [ -x "$file" ] || return 1
         _koopa_print "$file"
+    else
+        _koopa_print "$app_name"
     fi
     return 0
 }
@@ -25,7 +24,7 @@ __koopa_locate_app() { # {{{1
 __koopa_locate_app_simple() { # {{{1
     # """
     # Simpler app location fetcher that doesn't attempt to use Homebrew.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-24.
     # """
     local app_name file
     [ "$#" -eq 1 ] || return 1
@@ -45,15 +44,14 @@ __koopa_locate_gnu_app() { # {{{1
     [ "$#" -eq 2 ] || return 1
     brew_name="${1:?}"
     app_name="${2:?}"
-    if _koopa_is_linux
-    then
-        _koopa_print "$app_name"
-    elif _koopa_is_macos
+    if _koopa_is_macos
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
         file="${brew_prefix}/opt/${brew_name}/libexec/gnubin/${app_name}"
         [ -x "$file" ] || return 1
         _koopa_print "$file"
+    else
+        _koopa_print "$app_name"
     fi
     return 0
 }
