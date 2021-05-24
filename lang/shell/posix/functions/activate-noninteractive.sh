@@ -647,6 +647,7 @@ _koopa_activate_pipx() { # {{{1
     return 0
 }
 
+# FIXME Take out this libffi step (slow)
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
@@ -685,15 +686,6 @@ _koopa_activate_pkg_config() { # {{{1
         arch="$(_koopa_arch)"
         _koopa_add_to_pkg_config_path_start \
             "${make_prefix}/lib/${arch}-linux-gnu/pkgconfig"
-    fi
-    if _koopa_is_macos && _koopa_is_installed brew
-    then
-        homebrew_prefix="$(_koopa_homebrew_prefix)"
-        # This is useful for getting Ruby jekyll gem (requires ffi) to install.
-        # Alternatively, this works but is annoying:
-        # > gem install ffi -- --disable-system-libffi
-        _koopa_add_to_pkg_config_path_start \
-            "${homebrew_prefix}/opt/libffi/lib/pkgconfig"
     fi
     return 0
 }

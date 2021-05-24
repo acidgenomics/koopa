@@ -40,7 +40,7 @@ koopa:::install_ruby() { # {{{1
 koopa::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2021-04-25.
+    # @note Updated 2021-05-24.
     # @seealso
     # - https://bundler.io/man/bundle-pristine.1.html
     # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
@@ -51,6 +51,10 @@ koopa::install_ruby_packages() { # {{{1
     then
         koopa::alert_note 'gem is not installed.'
         return 0
+    fi
+    if koopa::is_macos
+    then
+        koopa::activate_homebrew_opt_prefix 'libffi'
     fi
     name_fancy='Ruby gems'
     koopa::install_start "$name_fancy"
