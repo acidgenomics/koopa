@@ -72,74 +72,6 @@ END
 
 
 
-# FIXME Just define this in POSIX library, it's OK to start from there...
-__koopa_activate_duration_start() { # {{{1
-    # """
-    # Start activation duration timer.
-    # @note Updated 2021-05-24.
-    # """
-    local bc date brew_prefix
-    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
-    if __koopa_is_macos
-    then
-        if [ -x '/opt/homebrew/bin/brew' ]
-        then
-            brew_prefix='/opt/homebrew'
-        elif [ -x '/usr/local/bin/brew' ]
-        then
-            brew_prefix='/usr/local'
-        else
-            exit 0
-            return 0
-        fi
-        bc="${brew_prefix}/opt/bc/bin/bc"
-        date="${brew_prefix}/opt/coreutils/libexec/gnubin/date"
-    else
-        bc='bc'
-        date='date'
-    fi
-    __koopa_is_installed "$bc" "$date" || return 0
-    KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
-    export KOOPA_DURATION_START
-    return 0
-}
-
-# FIXME Define this in POSIX library...
-__koopa_activate_duration_stop() { # {{{1
-    # """
-    # Stop activation duration timer.
-    # @note Updated 2021-05-24.
-    # """
-    local bc date brew_prefix
-    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
-    if __koopa_is_macos
-    then
-        if [ -x '/opt/homebrew/bin/brew' ]
-        then
-            brew_prefix='/opt/homebrew'
-        elif [ -x '/usr/local/bin/brew' ]
-        then
-            brew_prefix='/usr/local'
-        else
-            return 0
-        fi
-        bc="${brew_prefix}/opt/bc/bin/bc"
-        date="${brew_prefix}/opt/coreutils/libexec/gnubin/date"
-    else
-        bc='bc'
-        date='date'
-    fi
-    __koopa_is_installed "$bc" "$date" || return 0
-    KOOPA_DURATION_STOP="$("$date" -u '+%s%3N')"
-    KOOPA_DURATION="$( \
-        __koopa_print "${KOOPA_DURATION_STOP:?}-${KOOPA_DURATION_START:?}" \
-        | "$bc" \
-    )"
-    export KOOPA_DURATION
-    unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
-    return 0
-}
-
 __koopa_bash_source() { # {{{1
     # """
     # Bash source file location.
@@ -650,12 +582,15 @@ __koopa_activate() { # {{{1
             set -o pipefail
         fi
     fi
-    __koopa_activate_duration_start || return 1
     __koopa_export_koopa_prefix || return 1
     # shellcheck source=/dev/null
     # FIXME We need to try to get to this step faster, so we can reduce
     # function duplication in this script...
     . "$(__koopa_header)" || return 1
+    if [ "$test" -eq 1 ]
+    then
+        _koopa_duration_start || return 1
+    fi
     # > _koopa_activate_xdg || return 1
     # > _koopa_activate_standard_paths || return 1
     # > _koopa_activate_pkg_config || return 1
@@ -749,11 +684,7 @@ __koopa_activate() { # {{{1
         # >     _koopa_alert_info 'Locale'
         # >     locale
         # > fi
-        __koopa_activate_duration_stop || return 1
-        if [ -n "${KOOPA_DURATION:-}" ]
-        then
-            _koopa_dl 'duration' "${KOOPA_DURATION:?} ms"
-        fi
+        _koopa_duration_stop || return 1
         _koopa_alert_success 'Activation was successful.'
     fi
     unset -v KOOPA_ACTIVATE KOOPA_INTERACTIVE
