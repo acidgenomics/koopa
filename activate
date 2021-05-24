@@ -77,6 +77,72 @@ END
 # FIXME Can we load the POSIX functions rather than duplicating here?
 # FIXME Annoying to have these duplicates in the activation steps...
 
+__koopa_activate_duration_start() { # {{{1
+    # """
+    # Start activation duration timer.
+    # @note Updated 2021-05-24.
+    # """
+    local bc date brew_prefix
+    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
+    if __koopa_is_macos
+    then
+        if [ -x '/opt/homebrew/bin/brew' ]
+        then
+            brew_prefix='/opt/homebrew'
+        elif [ -x '/usr/local/bin/brew' ]
+        then
+            brew_prefix='/usr/local'
+        else
+            exit 0
+            return 0
+        fi
+        bc="${brew_prefix}/opt/bc/bin/bc"
+        date="${brew_prefix}/opt/coreutils/libexec/gnubin/date"
+    else
+        bc='bc'
+        date='date'
+    fi
+    __koopa_is_installed "$bc" "$date" || return 0
+    KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
+    export KOOPA_DURATION_START
+    return 0
+}
+
+__koopa_activate_duration_stop() { # {{{1
+    # """
+    # Stop activation duration timer.
+    # @note Updated 2021-05-24.
+    # """
+    local bc date brew_prefix
+    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
+    if __koopa_is_macos
+    then
+        if [ -x '/opt/homebrew/bin/brew' ]
+        then
+            brew_prefix='/opt/homebrew'
+        elif [ -x '/usr/local/bin/brew' ]
+        then
+            brew_prefix='/usr/local'
+        else
+            return 0
+        fi
+        bc="${brew_prefix}/opt/bc/bin/bc"
+        date="${brew_prefix}/opt/coreutils/libexec/gnubin/date"
+    else
+        bc='bc'
+        date='date'
+    fi
+    __koopa_is_installed "$bc" "$date" || return 0
+    KOOPA_DURATION_STOP="$("$date" -u '+%s%3N')"
+    KOOPA_DURATION="$( \
+        __koopa_print "${KOOPA_DURATION_STOP:?}-${KOOPA_DURATION_START:?}" \
+        | "$bc" \
+    )"
+    export KOOPA_DURATION
+    unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
+    return 0
+}
+
 __koopa_bash_source() { # {{{1
     # """
     # Bash source file location.
@@ -129,72 +195,6 @@ __koopa_check_zsh() { # {{{1
             export KOOPA_ZSHRC=1
             ;;
     esac
-    return 0
-}
-
-__koopa_duration_start() { # {{{1
-    # """
-    # Start duration timer.
-    # @note Updated 2021-05-07.
-    # """
-    local bc date brew_prefix
-    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
-    if __koopa_is_macos
-    then
-        if [ -x '/opt/homebrew/bin/brew' ]
-        then
-            brew_prefix='/opt/homebrew'
-        elif [ -x '/usr/local/bin/brew' ]
-        then
-            brew_prefix='/usr/local'
-        else
-            exit 0
-            return 0
-        fi
-        bc="${brew_prefix}/opt/bc/bin/bc"
-        date="${brew_prefix}/opt/coreutils/libexec/gnubin/date"
-    else
-        bc='bc'
-        date='date'
-    fi
-    __koopa_is_installed "$bc" "$date" || return 0
-    KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
-    export KOOPA_DURATION_START
-    return 0
-}
-
-__koopa_duration_stop() { # {{{1
-    # """
-    # Stop duration timer.
-    # @note Updated 2021-05-07.
-    # """
-    local bc date brew_prefix
-    [ "${KOOPA_TEST:-0}" -eq 1 ] || return 0
-    if __koopa_is_macos
-    then
-        if [ -x '/opt/homebrew/bin/brew' ]
-        then
-            brew_prefix='/opt/homebrew'
-        elif [ -x '/usr/local/bin/brew' ]
-        then
-            brew_prefix='/usr/local'
-        else
-            return 0
-        fi
-        bc="${brew_prefix}/opt/bc/bin/bc"
-        date="${brew_prefix}/opt/coreutils/libexec/gnubin/date"
-    else
-        bc='bc'
-        date='date'
-    fi
-    __koopa_is_installed "$bc" "$date" || return 0
-    KOOPA_DURATION_STOP="$("$date" -u '+%s%3N')"
-    KOOPA_DURATION="$( \
-        __koopa_print "${KOOPA_DURATION_STOP:?}-${KOOPA_DURATION_START:?}" \
-        | "$bc" \
-    )"
-    export KOOPA_DURATION
-    unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
     return 0
 }
 
@@ -262,6 +262,7 @@ __koopa_export_koopa_minimal() { # {{{1
     return 0
 }
 
+# FIXME Can we move this into the POSIX library / header instead?
 __koopa_export_koopa_prefix() { # {{{1
     # """
     # Export 'KOOPA_PREFIX' variable.
@@ -385,6 +386,7 @@ __koopa_export_user() { # {{{1
     return 0
 }
 
+# FIXME We need to get to this step faster in our activation scripts...
 __koopa_header() { # {{{1
     # """
     # Shared shell header file location.
@@ -499,6 +501,7 @@ __koopa_posix_source() { # {{{1
     return 0
 }
 
+# FIXME Can we move most of these to the POSIX header instead?
 __koopa_preflight() { # {{{1
     # """
     # Run pre-flight checks.
@@ -676,6 +679,7 @@ __koopa_activate() { # {{{1
         KOOPA_INTERACTIVE \
         KOOPA_SHELL \
         KOOPA_SUBSHELL
+    # FIXME Move these checks to the POSIX header...
     __koopa_preflight || return 0
     __koopa_export_koopa_interactive || return 1
     __koopa_export_koopa_minimal || return 1
@@ -698,78 +702,81 @@ __koopa_activate() { # {{{1
             set -o pipefail
         fi
     fi
-    __koopa_duration_start || return 1
+    __koopa_activate_duration_start || return 1
     __koopa_export_koopa_prefix || return 1
     # shellcheck source=/dev/null
+    # FIXME We need to try to get to this step faster, so we can reduce
+    # function duplication in this script...
     . "$(__koopa_header)" || return 1
-    _koopa_activate_xdg || return 1
-    _koopa_activate_standard_paths || return 1
-    _koopa_activate_pkg_config || return 1
-    _koopa_add_config_link "$(_koopa_prefix)" 'home' || return 1
-    _koopa_add_config_link "$(_koopa_prefix)/activate" || return 1
-    _koopa_add_config_link "$(_koopa_dotfiles_prefix)" || return 1
-    _koopa_export_cpu_count || return 1
-    _koopa_export_editor || return 1
-    _koopa_export_git || return 1
-    _koopa_export_gnupg || return 1
-    _koopa_export_history || return 1
-    _koopa_export_hostname || return 1
-    _koopa_export_pager || return 1
-    _koopa_export_python || return 1
-    _koopa_export_shell || return 1
-    _koopa_export_tmpdir || return 1
-    _koopa_export_today || return 1
-    if [ "$minimal" -eq 0 ]
-    then
-        if _koopa_is_linux
-        then
-            _koopa_activate_bcbio || return 1
-        elif _koopa_is_macos
-        then
-            _koopa_macos_activate_python || return 1
-            _koopa_macos_activate_visual_studio_code || return 1
-        fi
-        _koopa_activate_homebrew || return 1
-        _koopa_activate_gnu || return 1
-        _koopa_activate_dircolors || return 1
-        _koopa_activate_gcc_colors || return 1
-        _koopa_activate_emacs || return 1
-        _koopa_activate_go || return 1
-        _koopa_activate_llvm || return 1
-        _koopa_activate_openjdk || return 1
-        _koopa_activate_aspera || return 1
-        _koopa_activate_nextflow || return 1
-        _koopa_activate_ruby || return 1
-        _koopa_activate_rust || return 1
-        _koopa_activate_perl_packages || return 1
-        _koopa_activate_python_packages || return 1
-        _koopa_activate_python_startup || return 1
-    fi
-    _koopa_activate_koopa_paths || return 1
-    _koopa_activate_local_paths || return 1
-    if [ "$minimal" -eq 0 ]
-    then
-        case "$shell" in
-            bash|dash|zsh)
-                "_koopa_activate_${shell}_extras"
-                ;;
-        esac
-        if _koopa_is_macos
-        then
-            _koopa_macos_activate_color_mode || return 1
-            _koopa_macos_activate_iterm || return 1
-            _koopa_macos_activate_cli_colors || return 1
-        fi
-        _koopa_activate_completion || return 1
-        _koopa_activate_aliases || return 1
-        _koopa_activate_secrets || return 1
-        _koopa_activate_ssh_key || return 1
-        if ! _koopa_is_subshell
-        then
-            _koopa_activate_today_bucket || return 1
-            _koopa_activate_tmux_sessions || return 1
-        fi
-    fi
+    # > _koopa_activate_xdg || return 1
+    # > _koopa_activate_standard_paths || return 1
+    # > _koopa_activate_pkg_config || return 1
+    # FIXME Rethink these steps:
+    # > _koopa_add_config_link "$(_koopa_prefix)" 'home' || return 1
+    # > _koopa_add_config_link "$(_koopa_prefix)/activate" || return 1
+    # > _koopa_add_config_link "$(_koopa_dotfiles_prefix)" || return 1
+    # > _koopa_export_cpu_count || return 1
+    # > _koopa_export_editor || return 1
+    # > _koopa_export_git || return 1
+    # > _koopa_export_gnupg || return 1
+    # > _koopa_export_history || return 1
+    # > _koopa_export_hostname || return 1
+    # > _koopa_export_pager || return 1
+    # > _koopa_export_python || return 1
+    # > _koopa_export_shell || return 1
+    # > _koopa_export_tmpdir || return 1
+    # > _koopa_export_today || return 1
+    # > if [ "$minimal" -eq 0 ]
+    # > then
+    # >     if _koopa_is_linux
+    # >     then
+    # >         _koopa_activate_bcbio || return 1
+    # >     elif _koopa_is_macos
+    # >     then
+    # >         _koopa_macos_activate_python || return 1
+    # >         _koopa_macos_activate_visual_studio_code || return 1
+    # >     fi
+    # >     _koopa_activate_homebrew || return 1
+    # >     _koopa_activate_gnu || return 1
+    # >     _koopa_activate_dircolors || return 1
+    # >     _koopa_activate_gcc_colors || return 1
+    # >     _koopa_activate_emacs || return 1
+    # >     _koopa_activate_go || return 1
+    # >     _koopa_activate_llvm || return 1
+    # >     _koopa_activate_openjdk || return 1
+    # >     _koopa_activate_aspera || return 1
+    # >     _koopa_activate_nextflow || return 1
+    # >     _koopa_activate_ruby || return 1
+    # >     _koopa_activate_rust || return 1
+    # >     _koopa_activate_perl_packages || return 1
+    # >     _koopa_activate_python_packages || return 1
+    # >     _koopa_activate_python_startup || return 1
+    # > fi
+    # > _koopa_activate_koopa_paths || return 1
+    # > _koopa_activate_local_paths || return 1
+    # > if [ "$minimal" -eq 0 ]
+    # > then
+        # > case "$shell" in
+        # >     bash|dash|zsh)
+        # >         "_koopa_activate_${shell}_extras"
+        # >         ;;
+        # > esac
+        # > if _koopa_is_macos
+        # > then
+        # >     _koopa_macos_activate_color_mode || return 1
+        # >     _koopa_macos_activate_iterm || return 1
+        # >     _koopa_macos_activate_cli_colors || return 1
+        # > fi
+        # > _koopa_activate_completion || return 1
+        # > _koopa_activate_aliases || return 1
+        # > _koopa_activate_secrets || return 1
+        # > _koopa_activate_ssh_key || return 1
+        # > if ! _koopa_is_subshell
+        # > then
+        # >     _koopa_activate_today_bucket || return 1
+        # >     _koopa_activate_tmux_sessions || return 1
+        # > fi
+    # > fi
     if [ "$test" -eq 1 ]
     then
         set +o errexit
@@ -780,8 +787,8 @@ __koopa_activate() { # {{{1
             set +o errtrace
             set +o pipefail
         fi
-        _koopa_alert_info 'Shell options'
-        set +o
+        # > _koopa_alert_info 'Shell options'
+        # > set +o
         _koopa_alert_info 'Shell variables'
         _koopa_dl \
             '$' "${$}" \
@@ -789,12 +796,12 @@ __koopa_activate() { # {{{1
             '0' "${0}" \
             'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
             'SHELL' "${SHELL:-}"
-        if _koopa_is_installed locale
-        then
-            _koopa_alert_info 'Locale'
-            locale
-        fi
-        __koopa_duration_stop || return 1
+        # > if _koopa_is_installed locale
+        # > then
+        # >     _koopa_alert_info 'Locale'
+        # >     locale
+        # > fi
+        __koopa_activate_duration_stop || return 1
         if [ -n "${KOOPA_DURATION:-}" ]
         then
             _koopa_dl 'duration' "${KOOPA_DURATION:?} ms"
