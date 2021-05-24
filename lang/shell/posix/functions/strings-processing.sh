@@ -9,7 +9,8 @@ _koopa_camel_case_simple() { # {{{1
     # https://stackoverflow.com/questions/34420091/
     # """
     local sed string
-    sed="$(_koopa_locate_sed)"
+    # > sed="$(_koopa_locate_sed)"  # FIXME
+    sed='sed'
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -34,7 +35,8 @@ _koopa_gsub() { # {{{1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
-    sed="$(_koopa_locate_sed)"
+    # > sed="$(_koopa_locate_sed)"  # FIXME
+    sed='sed'
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -75,7 +77,8 @@ _koopa_lowercase() { # {{{1
     # https://stackoverflow.com/questions/2264428
     # """
     local string tr
-    tr="$(_koopa_locate_tr)"
+    # > tr="$(_koopa_locate_tr)"  # FIXME
+    tr='tr'
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -215,7 +218,8 @@ _koopa_sub() { # {{{1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
-    sed="$(_koopa_locate_sed)"
+    # > sed="$(_koopa_locate_sed)"  # FIXME
+    sed='sed'
     for string in "$@"
     do
         _koopa_print "$string" \

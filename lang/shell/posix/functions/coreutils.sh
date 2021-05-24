@@ -21,7 +21,10 @@ _koopa_parent_dir() { # {{{1
     # This requires file to exist and resolves symlinks.
     # """
     local OPTIND cd_tail dirname file n parent sed 
-    dirname="$(_koopa_locate_dirname)"
+    # > dirname="$(_koopa_locate_dirname)"  # FIXME
+    dirname='dirname'
+    # > sed="$(_koopa_locate_sed)"  # FIXME
+    sed='sed'
     cd_tail=''
     n=1
     OPTIND=1
@@ -41,8 +44,10 @@ _koopa_parent_dir() { # {{{1
     if [ "$n" -ge 2 ]
     then
         n="$((n-1))"
-        sed="$(_koopa_locate_sed)"
-        cd_tail="$(printf "%${n}s" | "$sed" 's| |/..|g')"
+        cd_tail="$( \
+            printf "%${n}s" \
+            | "$sed" 's| |/..|g' \
+        )"
     fi
     for file in "$@"
     do
@@ -74,7 +79,8 @@ _koopa_realpath() { # {{{1
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
     local readlink x
-    readlink="$(_koopa_locate_readlink)"
+    # > readlink="$(_koopa_locate_readlink)"  # FIXME
+    readlink='readlink'
     x="$("$readlink" -f "$@")"
     [ -n "$x" ] || return 1
     _koopa_print "$x"

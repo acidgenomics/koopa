@@ -160,7 +160,8 @@ _koopa_is_docker() { # {{{1
     file='/proc/1/cgroup'
     [ -f "$file" ] || return 1
     pattern=':/docker/'
-    grep="$(_koopa_locate_gnu_grep)"
+    # > grep="$(_koopa_locate_gnu_grep)"  # FIXME
+    grep='grep'
     "$grep" -q "$pattern" "$file"
 }
 
@@ -319,7 +320,8 @@ _koopa_is_os_like() { # {{{1
     # This will match Debian and Ubuntu for a Debian check.
     # """
     local grep file id
-    grep="$(_koopa_locate_grep)"
+    # > grep="$(_koopa_locate_grep)"  # FIXME
+    grep='grep'
     id="${1:?}"
     _koopa_is_os "$id" && return 0
     file='/etc/os-release'
@@ -335,7 +337,8 @@ _koopa_is_os_version() { # {{{1
     # @note Updated 2021-05-24.
     # """
     local file grep version
-    grep="$(_koopa_locate_grep)"
+    # > grep="$(_koopa_locate_grep)"  # FIXME
+    grep='grep'
     version="${1:?}"
     file='/etc/os-release'
     [ -f "$file" ] || return 1
@@ -351,8 +354,10 @@ _koopa_is_qemu() { # {{{1
     # machine, and vice versa.
     # """
     local basename cmd readlink real_cmd
-    basename="$(_koopa_locate_basename)"
-    readlink="$(_koopa_locate_readlink)"
+    # > basename="$(_koopa_locate_basename)"  # FIXME
+    # > readlink="$(_koopa_locate_readlink)"  # FIXME
+    basename='basename'
+    readlink='readlink'
     cmd="/proc/${$}/exe"
     [ -L "$cmd" ] || return 1
     real_cmd="$("$readlink" "$cmd")"

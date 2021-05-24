@@ -250,6 +250,7 @@ _koopa_locate_id() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'id' "$@"
 }
 
+# FIXME Need to keep this in POSIX library, since called by _koopa_activate_llvm.
 _koopa_locate_llvm_config() { # {{{1
     # """
     # Locate 'llvm-config' executable.
