@@ -207,6 +207,17 @@ _koopa_locate_find() { # {{{1
     __koopa_locate_gnu_app 'findutils' 'find' "$@"
 }
 
+_koopa_locate_gcc() { # {{{1
+    # """
+    # Locate GNU gcc.
+    # @note Updated 2021-05-24.
+    # """
+    local version
+    version="$(_koopa_variable 'gcc')"
+    version="$(_koopa_major_version "$version")"
+    __koopa_locate_app "gcc@${version}" "gcc-${version}" "$@"
+}
+
 _koopa_locate_grep() { # {{{1
     # """
     # Locate GNU grep.
@@ -325,6 +336,14 @@ _koopa_locate_pcregrep() { # {{{1
     # @note Updated 2021-05-21.
     # """
     __koopa_locate_app 'pcre' 'pcregrep' "$@"
+}
+
+_koopa_locate_pkg_config() { # {{{1
+    # """
+    # Locate pkg-config.
+    # @note Updated 2021-05-24.
+    # """
+    __koopa_locate_app 'pkg-config' 'pkg-config' "$@"
 }
 
 # FIXME Need to replace in other functions.

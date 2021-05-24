@@ -79,11 +79,12 @@ koopa::tmp_log_file() { # {{{1
 koopa::view_latest_tmp_log_file() { # {{{1
     # """
     # View the latest temporary log file.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-24.
     # """
-    local log_file tmp_dir user_id
+    local log_file sort tail tmp_dir user_id
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed find
+    sort="$(koopa::locate_sort)"
+    tail="$(koopa::locate_tail)"
     tmp_dir="${TMPDIR:-/tmp}"
     user_id="$(koopa::user_id)"
     log_file="$( \
@@ -93,8 +94,8 @@ koopa::view_latest_tmp_log_file() { # {{{1
             --min-depth=1 \
             --prefix="$tmp_dir" \
             --type='f' \
-        | sort \
-        | tail -n 1 \
+        | "$sort" \
+        | "$tail" -n 1 \
     )"
     [[ -f "$log_file" ]] || return 1
     koopa::alert "Viewing '${log_file}'."

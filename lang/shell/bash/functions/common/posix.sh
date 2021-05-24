@@ -560,6 +560,10 @@ koopa::locate_find() { # {{{1
     _koopa_locate_find "$@"
 }
 
+koopa::locate_gcc() { # {{{1
+    _koopa_locate_gcc "$@"
+}
+
 koopa::locate_grep() { # {{{1
     _koopa_locate_grep "$@"
 }
@@ -618,6 +622,10 @@ koopa::locate_patch() { # {{{1
 
 koopa::locate_pcregrep() { # {{{1
     _koopa_locate_pcregrep "$@"
+}
+
+koopa::locate_pkgconfig() { # {{{1
+    _koopa_locate_pkgconfig "$@"
 }
 
 koopa::locate_python() { # {{{1
