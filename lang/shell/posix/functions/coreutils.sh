@@ -55,8 +55,6 @@ _koopa_parent_dir() { # {{{1
     return 0
 }
 
-# FIXME Attempting to use '_koopa_locate_readlink' is causing the shell to go into a loop.
-# Where else is this being called?
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
@@ -76,8 +74,7 @@ _koopa_realpath() { # {{{1
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
     local readlink x
-    # > readlink="$(_koopa_locate_readlink)"  # FIXME
-    readlink='/usr/local/bin/greadlink'  # FIXME
+    readlink="$(_koopa_locate_readlink)"
     x="$("$readlink" -f "$@")"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
