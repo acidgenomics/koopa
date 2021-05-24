@@ -20,7 +20,6 @@ _koopa_posix_header() { # {{{1
     done
     _koopa_check_os || return 1
     _koopa_check_shell || return 1
-    _koopa_is_koopa_active && return 1
     return 0
 }
 
