@@ -9,14 +9,18 @@ _koopa_add_config_link() { # {{{1
     source_file="${1:?}"
     [ -e "$source_file" ] || return 0
     dest_name="${2:-}"
-    basename="$(_koopa_locate_basename)"
+    # > basename="$(_koopa_locate_basename)"  # FIXME
+    basename='basename'
     [ -z "$dest_name" ] && dest_name="$("$basename" "$source_file")"
     config_prefix="$(_koopa_config_prefix)"
     dest_file="${config_prefix}/${dest_name}"
     [ -L "$dest_file" ] && return 0
-    ln="$(_koopa_locate_ln)"
-    mkdir="$(_koopa_locate_mkdir)"
-    rm="$(_koopa_locate_rm)"
+    # > ln="$(_koopa_locate_ln)"  # FIXME
+    ln='ln'
+    # > mkdir="$(_koopa_locate_mkdir)"  # FIXME
+    mkdir='mkdir'
+    # > rm="$(_koopa_locate_rm)"  # FIXME
+    rm='rm'
     "$mkdir" -p "$config_prefix"
     "$rm" -fr "$dest_file"
     "$ln" -fns "$source_file" "$dest_file"
@@ -97,9 +101,12 @@ _koopa_variable() { # {{{1
     # This approach handles inline comments.
     # """
     local cut file grep head include_prefix key value
-    cut="$(_koopa_locate_cut)"
-    grep="$(_koopa_locate_grep)"
-    head="$(_koopa_locate_head)"
+    # > cut="$(_koopa_locate_cut)"  # FIXME
+    cut='cut'
+    # > grep="$(_koopa_locate_grep)"  # FIXME
+    grep='grep'
+    # > head="$(_koopa_locate_head)"  # FIXME
+    head='head'
     key="${1:?}"
     include_prefix="$(_koopa_include_prefix)"
     file="${include_prefix}/variables.txt"
