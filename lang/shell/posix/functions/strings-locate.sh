@@ -539,6 +539,14 @@ _koopa_locate_uname() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'uname' "$@"
 }
 
+_koopa_locate_uniq() { # {{{1
+    # """
+    # Locate GNU uniq.
+    # @note Updated 2021-05-24.
+    # """
+    __koopa_locate_gnu_app 'coreutils' 'uniq' "$@"
+}
+
 _koopa_locate_unzip() { # {{{1
     # """
     # Locate unzip.

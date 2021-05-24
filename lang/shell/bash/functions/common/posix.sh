@@ -688,6 +688,10 @@ koopa::locate_uname() { # {{{1
     _koopa_locate_uname "$@"
 }
 
+koopa::locate_uniq() { # {{{1
+    _koopa_locate_uniq "$@"
+}
+
 koopa::locate_wc() { # {{{1
     _koopa_locate_wc "$@"
 }
