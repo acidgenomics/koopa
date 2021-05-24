@@ -449,33 +449,32 @@ __koopa_activate() { # {{{1
     then
         _koopa_duration_start || return 1
     fi
-    _koopa_activate_xdg || return 1                                      # 40 ms
+    _koopa_activate_xdg || return 1                                     #  40 ms
     # FIXME Run these in a single parameterized call:
     # > _koopa_add_config_link "$(_koopa_prefix)" 'home' || return 1
     # > _koopa_add_config_link "$(_koopa_prefix)/activate" || return 1
     # > _koopa_add_config_link "$(_koopa_dotfiles_prefix)" || return 1
-    _koopa_activate_standard_paths || return 1                           # 25 ms
-    _koopa_activate_pkg_config || return 1                               # 25 ms
-    _koopa_export_cpu_count || return 1                                  #  6 ms
-    _koopa_export_editor || return 1                                     #  1 ms
-    _koopa_export_git || return 1                                        #  1 ms
-    _koopa_export_gnupg || return 1                                      #  1 ms
-    _koopa_export_history || return 1                                    # 40 ms
-    _koopa_export_pager || return 1                                      #  1 ms
-    _koopa_export_python || return 1                                     #  1 ms
-    _koopa_export_shell || return 1                                      # 30 ms
-    _koopa_export_tmpdir || return 1                                     #  1 ms
-    #_koopa_export_today || return 1
-    # > if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
-    # > then
-    # >     if _koopa_is_linux
-    # >     then
-    # >         _koopa_activate_bcbio || return 1
-    # >     elif _koopa_is_macos
-    # >     then
-    # >         _koopa_macos_activate_python || return 1
-    # >         _koopa_macos_activate_visual_studio_code || return 1
-    # >     fi
+    _koopa_activate_standard_paths || return 1                          #  25 ms
+    _koopa_activate_pkg_config || return 1                              #  25 ms
+    _koopa_export_cpu_count || return 1                                 #   6 ms
+    _koopa_export_editor || return 1                                    #   1 ms
+    _koopa_export_git || return 1                                       #   1 ms
+    _koopa_export_gnupg || return 1                                     #   1 ms
+    _koopa_export_history || return 1                                   #  40 ms
+    _koopa_export_pager || return 1                                     #   1 ms
+    _koopa_export_python || return 1                                    #   1 ms
+    _koopa_export_shell || return 1                                     #  30 ms
+    _koopa_export_tmpdir || return 1                                    #   1 ms
+    if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
+    then
+        if _koopa_is_linux
+        then
+            _koopa_activate_bcbio || return 1
+        elif _koopa_is_macos
+        then
+            _koopa_macos_activate_python || return 1
+            _koopa_macos_activate_visual_studio_code || return 1
+        fi
     # >     _koopa_activate_homebrew || return 1
     # >     _koopa_activate_gnu || return 1
     # >     _koopa_activate_dircolors || return 1
@@ -491,32 +490,34 @@ __koopa_activate() { # {{{1
     # >     _koopa_activate_perl_packages || return 1
     # >     _koopa_activate_python_packages || return 1
     # >     _koopa_activate_python_startup || return 1
-    # > fi
-    # > _koopa_activate_koopa_paths || return 1
-    # > _koopa_activate_local_paths || return 1
-    # > if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
-    # > then
-        # > case "${SHELL:?}" in
-        # >     bash|dash|zsh)
-        # >         "_koopa_activate_${SHELL?}_extras"
-        # >         ;;
-        # > esac
-        # > if _koopa_is_macos
-        # > then
-        # >     _koopa_macos_activate_color_mode || return 1
-        # >     _koopa_macos_activate_iterm || return 1
-        # >     _koopa_macos_activate_cli_colors || return 1
-        # > fi
-        # > _koopa_activate_completion || return 1
-        # > _koopa_activate_aliases || return 1
-        # > _koopa_activate_secrets || return 1
-        # > _koopa_activate_ssh_key || return 1
-        # > if ! _koopa_is_subshell
-        # > then
-        # >     _koopa_activate_today_bucket || return 1
-        # >     _koopa_activate_tmux_sessions || return 1
-        # > fi
-    # > fi
+    fi
+    _koopa_activate_koopa_paths || return 1                             # 160 ms
+    _koopa_activate_local_paths || return 1                             #   1 ms
+    if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
+    then
+        case "${SHELL:?}" in
+            bash|dash|zsh)
+                "_koopa_activate_${SHELL?}_extras"                      # 260 ms
+                ;;
+        esac
+        if _koopa_is_macos
+        then
+            _koopa_macos_activate_color_mode || return 1                #   1 ms
+            _koopa_macos_activate_iterm || return 1                     #   1 ms
+            _koopa_macos_activate_cli_colors || return 1                #   3 ms
+        fi
+        # FIXME This step will fail if Zsh completion is not enabled...
+        # FIXME Just run this for Bash, Zsh...
+        _koopa_activate_completion || return 1                          #  30 ms
+        _koopa_activate_aliases || return 1                             #  20 ms
+        _koopa_activate_secrets || return 1                             #   8 ms
+        _koopa_activate_ssh_key || return 1                             #   5 ms
+        if ! _koopa_is_subshell
+        then
+            _koopa_activate_today_bucket || return 1                    #   1 ms
+            _koopa_activate_tmux_sessions || return 1                   #   1 ms
+        fi
+    fi
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         set +o errexit
@@ -527,6 +528,7 @@ __koopa_activate() { # {{{1
             set +o errtrace
             set +o pipefail
         fi
+        _koopa_duration_stop || return 1
         # > if _koopa_is_installed locale
         # > then
         # >     _koopa_alert_info 'Locale'
@@ -540,7 +542,6 @@ __koopa_activate() { # {{{1
             '-' "${-}" \
             'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
             'SHELL' "${SHELL:-}"
-        _koopa_duration_stop || return 1
         _koopa_alert_success 'Activation was successful.'
     fi
     unset -v KOOPA_ACTIVATE KOOPA_INTERACTIVE
