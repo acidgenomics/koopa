@@ -636,6 +636,10 @@ koopa::locate_realpath() { # {{{1
     _koopa_locate_realpath "$@"
 }
 
+koopa::locate_rename() { # {{{1
+    _koopa_locate_rename "$@"
+}
+
 koopa::locate_rm() { # {{{1
     _koopa_locate_rm "$@"
 }
