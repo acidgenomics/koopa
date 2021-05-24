@@ -44,6 +44,51 @@ _koopa_check_os() {
     return 0
 }
 
+_koopa_check_shell() { # {{{1
+    # """
+    # Check that current shell is supported, and export 'KOOPA_SHELL' variable.
+    # @note Updated 2021-05-24.
+    # """
+    local shell
+    shell="$(_koopa_locate_shell)"
+    case "$(basename "$shell")" in
+        ash | \
+        bash | \
+        busybox | \
+        dash | \
+        zsh)
+            ;;
+        *)
+            if _koopa_is_interactive
+            then
+                >&2 cat << END
+WARNING: Failed to activate koopa in the current shell.
+
+    Recommended: Bash or Zsh.
+    Also supported: Ash, Busybox, Dash.
+
+    KOOPA_SHELL : '${shell}'
+          SHELL : '${SHELL:-}'
+              - : '${-}'
+              0 : '${0}'
+              \$ : '${$}'
+
+    Change to Bash:
+        > chsh -s /bin/bash
+
+    Change to Zsh:
+        > chsh -s /bin/zsh
+
+END
+            fi
+            return 1
+            ;;
+    esac
+    KOOPA_SHELL="$shell"
+    export KOOPA_SHELL
+    return 0
+}
+
 _koopa_duration_start() { # {{{1
     # """
     # Start activation duration timer.
