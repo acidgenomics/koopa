@@ -475,29 +475,28 @@ __koopa_activate() { # {{{1
             _koopa_macos_activate_python || return 1
             _koopa_macos_activate_visual_studio_code || return 1
         fi
-    # >     _koopa_activate_homebrew || return 1
-    # >     _koopa_activate_gnu || return 1
-    # >     _koopa_activate_dircolors || return 1
-    # >     _koopa_activate_gcc_colors || return 1
-    # >     _koopa_activate_emacs || return 1
-    # >     _koopa_activate_go || return 1
-    # >     _koopa_activate_llvm || return 1
-    # >     _koopa_activate_openjdk || return 1
-    # >     _koopa_activate_aspera || return 1
-    # >     _koopa_activate_nextflow || return 1
-    # >     _koopa_activate_ruby || return 1
-    # >     _koopa_activate_rust || return 1
-    # >     _koopa_activate_perl_packages || return 1
-    # >     _koopa_activate_python_packages || return 1
-    # >     _koopa_activate_python_startup || return 1
+        _koopa_activate_homebrew || return 1
+        _koopa_activate_gnu || return 1
+        _koopa_activate_dircolors || return 1
+        _koopa_activate_gcc_colors || return 1
+        _koopa_activate_emacs || return 1
+        _koopa_activate_go || return 1
+        _koopa_activate_openjdk || return 1
+        _koopa_activate_aspera || return 1
+        _koopa_activate_nextflow || return 1
+        _koopa_activate_ruby || return 1
+        _koopa_activate_rust || return 1
+        _koopa_activate_perl_packages || return 1
+        _koopa_activate_python_packages || return 1
+        _koopa_activate_python_startup || return 1
     fi
-    _koopa_activate_koopa_paths || return 1                             # 160 ms
+    _koopa_activate_koopa_paths || return 1                             # 120 ms
     _koopa_activate_local_paths || return 1                             #   1 ms
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         case "${SHELL:?}" in
             bash|dash|zsh)
-                "_koopa_activate_${SHELL?}_extras"                      # 260 ms
+                "_koopa_activate_${SHELL?}_extras"                      # 200 ms
                 ;;
         esac
         if _koopa_is_macos
@@ -506,9 +505,6 @@ __koopa_activate() { # {{{1
             _koopa_macos_activate_iterm || return 1                     #   1 ms
             _koopa_macos_activate_cli_colors || return 1                #   3 ms
         fi
-        # FIXME This step will fail if Zsh completion is not enabled...
-        # FIXME Just run this for Bash, Zsh...
-        _koopa_activate_completion || return 1                          #  30 ms
         _koopa_activate_aliases || return 1                             #  20 ms
         _koopa_activate_secrets || return 1                             #   8 ms
         _koopa_activate_ssh_key || return 1                             #   5 ms
