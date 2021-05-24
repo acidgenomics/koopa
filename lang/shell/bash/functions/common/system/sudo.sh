@@ -21,15 +21,16 @@ koopa::disable_passwordless_sudo() { # {{{1
 koopa::enable_passwordless_sudo() { # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-24.
     # """
-    local file group string
+    local file grep group string
     koopa::assert_has_no_args "$#"
     koopa::is_root && return 0
     koopa::assert_is_admin
     file='/etc/sudoers.d/sudo'
     group="$(koopa::admin_group)"
-    if [[ -f "$file" ]] && sudo grep -q "$group" "$file"
+    grep="$(koopa::locate_grep)"
+    if [[ -f "$file" ]] && sudo "$grep" -q "$group" "$file"
     then
         koopa::alert_success "sudo already configured at '${file}'."
         return 0
