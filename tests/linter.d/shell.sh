@@ -64,6 +64,7 @@ test_all_coreutils() { # {{{1
         'sort'
         'ssh'
         'stat'
+        'tac'
         'tee'
         'tr'
         'uname'
