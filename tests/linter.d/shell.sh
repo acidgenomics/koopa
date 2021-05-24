@@ -83,6 +83,7 @@ test_all_coreutils() { # {{{1
     # - 'aws s3 ls'
     # - docker images ls
     # - docker buildx rm
+    # - tmux ls
     
     # Ignoring commented lines and 'local' variable calls.
     # See also:
