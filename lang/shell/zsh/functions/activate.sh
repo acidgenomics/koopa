@@ -82,6 +82,7 @@ _koopa_activate_zsh_extras() { # {{{1
     _koopa_activate_zsh_plugins
     _koopa_activate_zsh_aliases
     _koopa_activate_zsh_prompt
+    _koopa_activate_completion
     return 0
 }
 

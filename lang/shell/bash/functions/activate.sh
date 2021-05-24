@@ -53,13 +53,14 @@ _koopa_activate_bash_completion() { # {{{1
 _koopa_activate_bash_extras() { # {{{1
     # """
     # Activate Bash extras.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-05-24.
     # """
     _koopa_activate_bash_completion
     _koopa_activate_bash_readline
     _koopa_activate_bash_lesspipe
     _koopa_activate_bash_aliases
     _koopa_activate_bash_prompt
+    _koopa_activate_completion
     return 0
 }
 
