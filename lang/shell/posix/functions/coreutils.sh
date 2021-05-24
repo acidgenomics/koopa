@@ -79,8 +79,7 @@ _koopa_realpath() { # {{{1
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
     local readlink x
-    # > readlink="$(_koopa_locate_readlink)"  # FIXME
-    readlink='readlink'
+    readlink="$(_koopa_locate_readlink)"
     x="$("$readlink" -f "$@")"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
