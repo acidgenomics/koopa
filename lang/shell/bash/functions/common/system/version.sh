@@ -99,19 +99,21 @@ koopa::cairo_version() { # {{{1
 koopa::current_bcbio_version() { # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-05-24.
     #
     # This approach checks for latest stable release available via bioconda.
     # """
-    local url x
+    local curl cut grep url x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed curl
+    curl="$(koopa::locate_curl)"
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
     url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
 /master/requirements-conda.txt"
     x="$( \
-        curl --silent "$url" \
-            | grep 'bcbio-nextgen=' \
-            | cut -d '=' -f 2 \
+        "$curl" --silent "$url" \
+            | "$grep" 'bcbio-nextgen=' \
+            | "$cut" -d '=' -f 2 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -121,12 +123,12 @@ koopa::current_bcbio_version() { # {{{1
 koopa::current_bioc_version() { # {{{1
     # """
     # Current Bioconductor version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-24.
     # """
-    local x
+    local curl x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed curl
-    x="$(curl --silent 'https://bioconductor.org/bioc-version')"
+    curl="$(koopa::locate_curl)"
+    x="$("$curl" --silent 'https://bioconductor.org/bioc-version')"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -135,17 +137,19 @@ koopa::current_bioc_version() { # {{{1
 koopa::current_ensembl_version() { # {{{1
     # """
     # Current Ensembl version.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-24.
     # """
-    local version
+    local curl cut sed x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed curl
-    version="$( \
-        curl --silent 'ftp://ftp.ensembl.org/pub/current_README' \
-        | sed -n 3p \
-        | cut -d ' ' -f 3 \
+    curl="$(koopa::locate_curl)"
+    cut="$(koopa::locate_cut)"
+    sed="$(koopa::locate_sed)"
+    x="$( \
+        "$curl" --silent 'ftp://ftp.ensembl.org/pub/current_README' \
+        | "$sed" -n '3p' \
+        | "$cut" -d ' ' -f 3 \
     )"
-    koopa::print "$version"
+    koopa::print "$x"
     return 0
 }
 
