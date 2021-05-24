@@ -31,15 +31,17 @@ koopa:::list_path_priority() { # {{{1
 koopa:::list_path_priority_unique() { # {{{1
     # """
     # Split PATH string by ':' delim into lines but only return uniques.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-05-24.
     # """
-    local x
-    koopa::assert_is_installed awk tac
+    local awk tac x
+    awk="$(koopa::locate_awk)"
+    tac="$(koopa::locate_tac)"
+    # shellcheck disable=SC2016
     x="$( \
         koopa:::list_path_priority "$@" \
-            | tac \
-            | awk '!a[$0]++' \
-            | tac \
+            | "$tac" \
+            | "$awk" '!a[$0]++' \
+            | "$tac" \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
