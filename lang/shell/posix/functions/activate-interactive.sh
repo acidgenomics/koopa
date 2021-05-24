@@ -271,7 +271,7 @@ _koopa_activate_tmux_sessions() { # {{{1
 _koopa_activate_today_bucket() { # {{{1
     # """
     # Create a dated file today bucket.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-24.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -287,20 +287,21 @@ _koopa_activate_today_bucket() { # {{{1
     # -s, --symbolic
     #        make symbolic links instead of hard links
     # """
-    local bucket_dir today_bucket today_link
+    local bucket_dir date ln mkdir readlink today_bucket today_link
     bucket_dir="${KOOPA_BUCKET:-}"
     [ -z "$bucket_dir" ] && bucket_dir="${HOME:?}/bucket"
     # Early return if there's no bucket directory on the system.
     [ -d "$bucket_dir" ] || return 0
-    today_bucket="$(date '+%Y/%m/%d')"
+    date="$(_koopa_locate_date)"
+    ln="$(_koopa_locate_ln)"
+    mkdir="$(_koopa_locate_mkdir)"
+    readlink="$(_koopa_locate_readlink)"
+    today_bucket="$("$date" '+%Y/%m/%d')"
     today_link="${HOME:?}/today"
     # Early return if we've already updated the symlink.
-    _koopa_is_installed readlink || return 0
-    _koopa_str_match "$(readlink "$today_link")" "$today_bucket" && return 0
-    # FIXME Need to harden this using GNU variants..
-    mkdir -p "${bucket_dir}/${today_bucket}"
-    # FIXME Need to harden this using GNU variants..
-    ln -fns "${bucket_dir}/${today_bucket}" "$today_link"
+    _koopa_str_match "$("$readlink" "$today_link")" "$today_bucket" && return 0
+    "$mkdir" -p "${bucket_dir}/${today_bucket}"
+    "$ln" -fns "${bucket_dir}/${today_bucket}" "$today_link"
     return 0
 }
 
