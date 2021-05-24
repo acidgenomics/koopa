@@ -3,13 +3,13 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-05-24.
     # """
     local file
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
-        exit 1
+        return 1
     fi
     # Source POSIX functions.
     # Use shell globbing instead of 'find', which doesn't support source.
@@ -18,6 +18,8 @@ _koopa_posix_header() { # {{{1
         # shellcheck source=/dev/null
         [ -f "$file" ] && . "$file"
     done
+    _koopa_check_os || return 1
+    return 0
 }
 
 _koopa_posix_header "$@"

@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-# koopa nolint=coreutils
 
 __koopa_is_installed() { # {{{1
     # """
@@ -84,7 +83,7 @@ __koopa_warning() { # {{{1
 __koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-24.
     # """
     local dict
     declare -A dict=(
