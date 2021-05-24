@@ -44,6 +44,38 @@ _koopa_check_os() {
     return 0
 }
 
+_koopa_duration_start() { # {{{1
+    # """
+    # Start activation duration timer.
+    # @note Updated 2021-05-24.
+    # """
+    local bc date
+    bc="$(_koopa_locate_bc)"
+    date="$(_koopa_locate_date)"
+    KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
+    export KOOPA_DURATION_START
+    return 0
+}
+
+_koopa_duration_stop() { # {{{1
+    # """
+    # Stop activation duration timer.
+    # @note Updated 2021-05-24.
+    # """
+    local bc date duration start stop
+    bc="$(_koopa_locate_bc)"
+    date="$(_koopa_locate_date)"
+    start="${KOOPA_DURATION_START:?}"
+    stop="$("$date" -u '+%s%3N')"
+    duration="$( \
+        _koopa_print "${stop}-${start}" \
+        | "$bc" \
+    )"
+    _koopa_dl 'duration' "${duration} ms"
+    unset -v KOOPA_DURATION_START
+    return 0
+}
+
 _koopa_exec_dir() { # {{{1
     # """
     # Execute multiple shell scripts in a directory.
