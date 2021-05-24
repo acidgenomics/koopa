@@ -1,22 +1,25 @@
 #!/bin/sh
 
-# FIXME Need to harden the coreutils here...
 _koopa_add_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
-    # @note Updated 2020-12-11.
+    # @note Updated 2021-05-24.
     # """
-    local config_prefix dest_file dest_name source_file
+    local basename config_prefix dest_file dest_name ln mkdir rm source_file
     source_file="${1:?}"
     [ -e "$source_file" ] || return 0
     dest_name="${2:-}"
-    [ -z "$dest_name" ] && dest_name="$(basename "$source_file")"
+    basename="$(_koopa_locate_basename)"
+    [ -z "$dest_name" ] && dest_name="$("$basename" "$source_file")"
     config_prefix="$(_koopa_config_prefix)"
     dest_file="${config_prefix}/${dest_name}"
     [ -L "$dest_file" ] && return 0
-    mkdir -p "$config_prefix"
-    rm -fr "$dest_file"
-    ln -fns "$source_file" "$dest_file"
+    ln="$(_koopa_locate_ln)"
+    mkdir="$(_koopa_locate_mkdir)"
+    rm="$(_koopa_locate_rm)"
+    "$mkdir" -p "$config_prefix"
+    "$rm" -fr "$dest_file"
+    "$ln" -fns "$source_file" "$dest_file"
     return 0
 }
 

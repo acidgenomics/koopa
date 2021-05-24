@@ -3,7 +3,7 @@
 __koopa_str_match() { # {{{1
     # """
     # Does the input match a string?
-    # @note Updated 2020-07-24.
+    # @note Updated 2021-05-24.
     #
     # Modes:
     # * -E, --extended-regexp
@@ -22,7 +22,7 @@ __koopa_str_match() { # {{{1
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997
     # - https://unix.stackexchange.com/questions/233987
     # """
-    local OPTIND flag pattern string
+    local OPTIND flag grep pattern string
     OPTIND=1
     while getopts 'EFP' opt
     do
@@ -59,7 +59,8 @@ __koopa_str_match() { # {{{1
     else
         return 1
     fi
-    _koopa_print "$string" | grep "$flag" -q "$pattern" >/dev/null
+    grep="$(_koopa_locate_grep)"
+    _koopa_print "$string" | "$grep" "$flag" -q "$pattern" >/dev/null
 }
 
 _koopa_str_match() { #{{{1
