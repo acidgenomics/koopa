@@ -60,19 +60,27 @@ koopa::list() { # {{{1
 koopa::list_app_versions() { # {{{1
     # """
     # List installed application versions.
-    # @note Updated 2020-11-23.
+    # @note Updated 2021-05-24.
     # """
-    local prefix
+    local find prefix sort x
     koopa::assert_has_no_args "$#"
+    find="$(koopa::locate_find)"
+    sort="$(koopa::locate_sort)"
     prefix="$(koopa::app_prefix)"
     if [[ ! -d "$prefix" ]]
     then
         koopa::alert_note "No applications are installed in '${prefix}'."
         return 0
     fi
-    # This approach doesn't work well when only a single program is installed.
-    # > ls -1 -- "${prefix}/"*
-    find "$prefix" -mindepth 2 -maxdepth 2 -type d | sort
+    x="$( \
+        "$find" "$prefix" \
+            -mindepth 2 \
+            -maxdepth 2 \
+            -type 'd' \
+        | "$sort" \
+    )"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
     return 0
 }
 
@@ -91,20 +99,26 @@ koopa::list_dotfiles() { # {{{1
 koopa::list_path_priority() { # {{{1
     # """
     # List path priority.
-    # @note Updated 2020-07-10.
+    # @note Updated 2021-05-24.
     # """
-    local all all_arr n_all n_dupes n_unique unique
-    koopa::assert_is_installed awk
+    local all all_arr awk n_all n_dupes n_unique str unique
+    awk="$(koopa::locate_awk)"
     all="$(koopa:::list_path_priority "$@")"
+    [[ -n "$all" ]] || return 1
     readarray -t all_arr <<< "$(koopa::print "$all")"
-    unique="$(koopa::print "$all" | awk '!a[$0]++')"
+    # shellcheck disable=SC2016
+    unique="$( \
+        koopa::print "$all" \
+        | "$awk" '!a[$0]++' \
+    )"
     readarray -t unique_arr <<< "$(koopa::print "$unique")"
     n_all="${#all_arr[@]}"
     n_unique="${#unique_arr[@]}"
-    n_dupes="$((n_all-n_unique))"
+    n_dupes="$((n_all - n_unique))"
     if [[ "$n_dupes" -gt 0 ]]
     then
-        koopa::alert_note "${n_dupes} duplicate(s) detected."
+        str="$(koopa::ngettext "${n_dupes}" 'duplicate' 'duplicates')"
+        koopa::alert_note "${n_dupes} ${str} detected."
     fi
     koopa::print "$all"
     return 0

@@ -664,6 +664,10 @@ koopa::locate_stat() { # {{{1
     _koopa_locate_stat "$@"
 }
 
+koopa::locate_tac() { # {{{1
+    _koopa_locate_tac "$@"
+}
+
 koopa::locate_tail() { # {{{1
     _koopa_locate_tail "$@"
 }
