@@ -39,14 +39,14 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-# Homebrew curl.
+# cURL.
 PATH="/usr/local/opt/curl/bin:${PATH}"
 
-# Python binaries and site packages.
+# Python.
 PATH="/Library/Frameworks/Python.framework/Versions/${PYTHON_VERSION}/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/python-packages/${PYTHON_VERSION}/bin:${PATH}"
 
-# Rust packages.
+# Rust.
 PATH="${KOOPA_OPT_PREFIX}/rust-packages/${RUST_VERSION}/bin:${PATH}"
 
 # Conda.
