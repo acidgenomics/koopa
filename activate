@@ -72,11 +72,7 @@ END
 
 
 
-
-
-# FIXME Can we load the POSIX functions rather than duplicating here?
-# FIXME Annoying to have these duplicates in the activation steps...
-
+# FIXME Just define this in POSIX library, it's OK to start from there...
 __koopa_activate_duration_start() { # {{{1
     # """
     # Start activation duration timer.
@@ -108,6 +104,7 @@ __koopa_activate_duration_start() { # {{{1
     return 0
 }
 
+# FIXME Define this in POSIX library...
 __koopa_activate_duration_stop() { # {{{1
     # """
     # Stop activation duration timer.
@@ -150,51 +147,6 @@ __koopa_bash_source() { # {{{1
     # """
     # shellcheck disable=SC3028,SC3054
     __koopa_print "${BASH_SOURCE[0]}"
-    return 0
-}
-
-__koopa_check_os() { # {{{1
-    # """
-    # Check that operating system is supported.
-    # @note Updated 2021-05-07.
-    # """
-    case "$(uname -s)" in
-        Darwin|Linux)
-            ;;
-        *)
-            __koopa_warning 'Unsupported operating system.'
-            return 1
-            ;;
-    esac
-    return 0
-}
-
-__koopa_check_zsh() { # {{{1
-    # """
-    # Check that current Zsh configuration is supported.
-    # @note Updated 2021-05-17.
-    #
-    # Zsh currently requires presence of '~/.zshrc' for clean activation.
-    # This check will intentionally force early return when activation is
-    # attempted from '/etc/profile.d'.
-    #
-    # Note that sourcing in '/etc/profile' doesn't return script path in
-    # '0', which is commonly recommended online in place of 'BASH_SOURCE'.
-    # '0' in this case instead returns '_src_etc_profile'.
-    #
-    # This approach covers both '_src_etc_profile' and '_src_etc_profile_d'.
-    #
-    # @seealso
-    # - https://stackoverflow.com/a/23259585/3911732
-    [ -n "${ZSH_VERSION:-}" ] || return 0
-    case "$0" in
-        _src_etc_profile*)
-            return 1
-            ;;
-        *)
-            export KOOPA_ZSHRC=1
-            ;;
-    esac
     return 0
 }
 
@@ -516,9 +468,6 @@ __koopa_preflight() { # {{{1
     __koopa_is_interactive || return 1
     __koopa_is_user_named_admin && return 1
     __koopa_is_user_manual_skip && return 1
-    __koopa_check_os || return 1
-    # This will intentionally skip for non-Zsh shells.
-    __koopa_check_zsh || return 1
     return 0
 }
 
@@ -692,7 +641,6 @@ __koopa_activate() { # {{{1
     test="${KOOPA_TEST:-0}"
     if [ "$test" -eq 1 ]
     then
-        __koopa_print 'Test mode enabled.'
         set -o errexit
         set -o nounset
         # > set -o xtrace
