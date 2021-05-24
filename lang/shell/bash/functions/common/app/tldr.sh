@@ -38,10 +38,11 @@ koopa::tldr() { # {{{1
 koopa::tldr_display() { # {{{1
     # """
     # Display rendered tldr page.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-05-24.
     # """
-    local file italic_end italic_start line lines
+    local file italic_end italic_start line lines sed
     koopa::assert_has_args_eq "$#" 1
+    sed="$(koopa::locate_sed)"
     file="${1:?}"
     koopa::assert_is_file "$file"
     readarray -t lines < "$file"
@@ -50,13 +51,13 @@ koopa::tldr_display() { # {{{1
     italic_end="$(printf '\033[23m')"
     readarray -t lines <<< "$( \
         koopa::print "${lines[@]}" \
-            | sed "s/{{/${italic_start}/g;s/}}/${italic_end}/g" \
+            | "$sed" "s/{{/${italic_start}/g;s/}}/${italic_end}/g" \
     )"
     code() { # {{{1
         # shellcheck disable=SC2016
         koopa::print_blue_bold "$( \
             koopa::print "${1:?}" \
-                | sed 's/\`\([^\`]*\)\`/  \1/g' \
+                | "$sed" 's/\`\([^\`]*\)\`/  \1/g' \
         )"
     }
     heading() { # {{{1
@@ -166,11 +167,12 @@ koopa::tldr_index_file() { # {{{1
 koopa::tldr_list_pages() { # {{{1
     # """
     # List locally cached tldr pages.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-24.
     # """
-    local cmd pages prefix
+    local cmd pages prefix sort
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed fzf
+    koopa::assert_is_installed 'fzf'
+    sort="$(koopa::locate_sort)"
     prefix="$(koopa::tldr_prefix)"
     [[ ! -d "$prefix" ]] && koopa::mkdir "$prefix"
     readarray -t pages <<< "$( \
@@ -178,7 +180,7 @@ koopa::tldr_list_pages() { # {{{1
             --glob='*.md' \
             --prefix="$prefix" \
             --type='f' \
-        | sort -u \
+        | "$sort" -u \
     )"
     cmd="$(koopa::basename_sans_ext "${pages[@]}" | fzf || true)"
     [[ -n "$cmd" ]] || return 0
