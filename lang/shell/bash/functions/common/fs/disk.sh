@@ -66,12 +66,12 @@ koopa::disk_gb_used() { # {{{1
     disk="${1:-/}"
     x="$( \
         "$df" --block-size='G' "$disk" \
-            | head -n 2 \
-            | sed -n '2p' \
-            | grep -Eo '(\b[.0-9]+G\b)' \
-            | head -n 2 \
-            | sed -n '2p' \
-            | sed 's/G$//' \
+            | "$head" -n 2 \
+            | "$sed" -n '2p' \
+            | "$grep" -Eo '(\b[.0-9]+G\b)' \
+            | "$head" -n 2 \
+            | "$sed" -n '2p' \
+            | "$sed" 's/G$//' \
     )"
     koopa::print "$x"
     return 0
@@ -94,19 +94,22 @@ koopa::disk_pct_free() { # {{{1
 koopa::disk_pct_used() { # {{{1
     # """
     # Disk usage percentage (on main drive).
-    # @note Updated 2020-07-14.
+    # @note Updated 2021-05-24.
     # """
-    local disk x
+    local df disk grep head sed x
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed df grep head sed
+    df="$(koopa::locate_df)"
+    grep="$(koopa::locate_grep)"
+    head="$(koopa::locate_head)"
+    sed="$(koopa::locate_sed)"
     disk="${1:-/}"
     x="$( \
-        df "$disk" \
-            | head -n 2 \
-            | sed -n '2p' \
-            | grep -Eo '([.0-9]+%)' \
-            | head -n 1 \
-            | sed 's/%$//' \
+        "$df" "$disk" \
+            | "$head" -n 2 \
+            | "$sed" -n '2p' \
+            | "$grep" -Eo '([.0-9]+%)' \
+            | "$head" -n 1 \
+            | "$sed" 's/%$//' \
     )"
     koopa::print "$x"
     return 0
