@@ -264,26 +264,23 @@ koopa::find_files_without_line_ending() { # {{{1
 koopa::find_large_dirs() { # {{{1
     # """
     # Find large directories.
-    # @note Updated 2021-05-08.
+    # @note Updated 2021-05-24.
     # """
-    local dir x
+    local dir du head sort x
     koopa::assert_has_args_le "$#" 1
-
-
-    # FIXME du sort head
-    koopa::assert_is_installed du
-
-
+    du="$(koopa::locate_du)"
+    head="$(koopa::locate_head)"
+    sort="$(koopa::locate_sort)"
     dir="${1:-.}"
     dir="$(koopa::realpath "$dir")"
     x="$( \
-        du \
+        "$du" \
             --max-depth=20 \
             --threshold=100000000 \
             "${dir}"/* \
             2>/dev/null \
-        | sort -n \
-        | head -n 100 \
+        | "$sort" -n \
+        | "$head" -n 100 \
         || true \
     )"
     [[ -n "$x" ]] || return 1
@@ -294,7 +291,7 @@ koopa::find_large_dirs() { # {{{1
 koopa::find_large_files() { # {{{1
     # """
     # Find large files.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-05-24.
     #
     # Note that use of 'grep --null-data' requires GNU grep.
     #
@@ -303,25 +300,30 @@ koopa::find_large_files() { # {{{1
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
-    local dir x
+    local dir du find grep sort tail x xargs
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed find grep
+    du="$(koopa::locate_du)"
+    find="$(koopa::locate_find)"
+    grep="$(koopa::locate_grep)"
+    sort="$(koopa::locate_sort)"
+    tail="$(koopa::locate_tail)"
+    xargs="$(koopa::locate_xargs)"
     dir="${1:-.}"
     dir="$(koopa::realpath "$dir")"
     x="$( \
-        find "$dir" \
+        "$find" "$dir" \
             -xdev \
             -mindepth 1 \
-            -type f \
-            -size +100000000c \
+            -type 'f' \
+            -size '+100000000c' \
             -print0 \
             2>&1 \
-            | grep \
-                --null-data \
-                --invert-match 'Permission denied' \
-            | xargs -0 du \
-            | sort -n \
-            | tail -n 100 \
+        | "$grep" \
+            --invert-match 'Permission denied' \
+            --null-data \
+        | "$xargs" -0 "$du" \
+        | "$sort" -n \
+        | "$tail" -n 100 \
     )"
     koopa::print "$x"
     return 0
