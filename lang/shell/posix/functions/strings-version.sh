@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME We should move most of these to Bash library...
+
 # NOTE Most version functions should go in:
 # 'shell/bash/functions/common/system/version.sh'.
 
