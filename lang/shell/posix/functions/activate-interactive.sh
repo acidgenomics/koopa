@@ -240,11 +240,19 @@ _koopa_activate_starship() { # {{{1
             ;;
     esac
     nounset="$(_koopa_boolean_nounset)"
-    # FIXME When KOOPA_TEST=1, hitting this unbound variable error with Bash
-    # STARSHIP_PREEXEC_READY
-    [ "$nounset" -eq 1 ] && echo 'FIXME 1' && set +u
+    if [ "$nounset" -eq 1 ]
+    then
+        set +u
+    fi
     eval "$(starship init "$shell")"
-    [ "$nounset" -eq 1 ] && echo 'FIXME 2' && set -u
+    if [ "$nounset" -eq 1 ]
+    then
+        if [ -z "${STARSHIP_PREEXEC_READY:-}" ]
+        then
+            export STARSHIP_PREEXEC_READY=''
+        fi
+        set -u
+    fi
     return 0
 }
 
