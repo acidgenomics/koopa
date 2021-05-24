@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for Linux.
-# @note Updated 2021-05-18.
+# @note Updated 2021-05-24.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -18,6 +18,9 @@
 
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
+
+PYTHON_VERSION="3.9"
+RUST_VERSION="rolling"
 
 # Package libraries {{{1
 # ==============================================================================
@@ -85,9 +88,13 @@ R_LIBS_USER="${R_LIBS_SITE}"
 PATH="/usr/local/bin:/usr/bin:/bin"
 
 # Python site packages.
-PATH="${KOOPA_OPT_PREFIX}/python/site-packages/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/python/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/python-packages/${PYTHON_VERSION}/bin:${PATH}"
 
-# Conda binary.
+# Rust.
+PATH="${KOOPA_OPT_PREFIX}/rust-packages/${RUST_VERSION}/bin:${PATH}"
+
+# Conda.
 PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
 
 # Koopa.
@@ -191,7 +198,7 @@ R_REMOTES_STANDALONE="true"
 # If left unset, defaults to `~/.virtualenvs`.
 # Check with `virtualenv_list()`.
 # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-WORKON_HOME="${KOOPA_OPT_PREFIX}/python/virtualenvs"
+WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
 
 # tools {{{2
 # ------------------------------------------------------------------------------
