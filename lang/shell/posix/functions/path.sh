@@ -44,8 +44,10 @@ __koopa_remove_from_path_string() { # {{{1
     # Alternative non-POSIX approach that works on Bash and Zsh:
     # > PATH="${PATH//:$dir/}"
     # """
+    local sed
     [ "$#" -eq 2 ] || return 1
-    _koopa_print "${1:?}" | sed "s|:${2:?}||g"
+    sed="$(_koopa_locate_sed)"
+    _koopa_print "${1:?}" | "$sed" "s|:${2:?}||g"
     return 0
 }
 

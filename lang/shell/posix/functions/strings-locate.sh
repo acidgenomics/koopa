@@ -3,7 +3,7 @@
 __koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-24.
     # """
     local app_name brew_name brew_prefix file
     [ "$#" -eq 2 ] || return 1
@@ -16,7 +16,6 @@ __koopa_locate_app() { # {{{1
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
         file="${brew_prefix}/opt/${brew_name}/bin/${app_name}"
-        file="$(_koopa_realpath "$file")"
     fi
     [ -x "$file" ] || return 1
     _koopa_print "$file"

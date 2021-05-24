@@ -16,12 +16,12 @@ _koopa_cd() { # {{{1
 _koopa_parent_dir() { # {{{1
     # """
     # Get the parent directory path.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-24.
     #
     # This requires file to exist and resolves symlinks.
     # """
-    local OPTIND cd_tail file n parent
-    _koopa_is_installed dirname printf pwd sed || return 1
+    local OPTIND cd_tail dirname file n parent sed 
+    dirname="$(_koopa_locate_dirname)"
     cd_tail=''
     n=1
     OPTIND=1
@@ -41,12 +41,13 @@ _koopa_parent_dir() { # {{{1
     if [ "$n" -ge 2 ]
     then
         n="$((n-1))"
-        cd_tail="$(printf "%${n}s" | sed 's| |/..|g')"
+        sed="$(_koopa_locate_sed)"
+        cd_tail="$(printf "%${n}s" | "$sed" 's| |/..|g')"
     fi
     for file in "$@"
     do
         [ -e "$file" ] || return 1
-        parent="$(dirname "$file")"
+        parent="$("$dirname" "$file")"
         parent="${parent}${cd_tail}"
         parent="$(_koopa_cd "$parent" && pwd -P)"
         _koopa_print "$parent"
@@ -54,10 +55,12 @@ _koopa_parent_dir() { # {{{1
     return 0
 }
 
+# FIXME Attempting to use '_koopa_locate_readlink' is causing the shell to go into a loop.
+# Where else is this being called?
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-24.
     #
     # Note that 'readlink -f' only works with GNU coreutils but not BSD
     # (i.e. macOS) variant.
@@ -72,15 +75,9 @@ _koopa_realpath() { # {{{1
     # - https://stackoverflow.com/questions/3572030/
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
-    local brew_prefix readlink x
-    # FIXME Rework this approach...
-    readlink='readlink'
-    if _koopa_is_macos
-    then
-        brew_prefix="$(_koopa_homebrew_prefix)"
-        readlink="${brew_prefix}/bin/greadlink"
-    fi
-    _koopa_is_installed "$readlink" || return 1
+    local readlink x
+    # > readlink="$(_koopa_locate_readlink)"  # FIXME
+    readlink='/usr/local/bin/greadlink'  # FIXME
     x="$("$readlink" -f "$@")"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
