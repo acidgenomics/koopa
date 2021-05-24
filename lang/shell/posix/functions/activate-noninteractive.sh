@@ -275,7 +275,7 @@ _koopa_activate_homebrew() { # {{{1
     if _koopa_is_macos
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
-        _koopa_activate_homebrew_prefix curl ruby
+        _koopa_activate_homebrew_prefix 'curl' 'ruby'
         _koopa_activate_homebrew_cask_google_cloud_sdk
         _koopa_activate_homebrew_cask_gpg_suite
         _koopa_activate_homebrew_cask_julia
@@ -502,24 +502,24 @@ _koopa_activate_koopa_paths() { # {{{1
 _koopa_activate_llvm() { # {{{1
     # """
     # Activate LLVM config.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-24.
     # """
-    local brew_prefix config
+    local brew_prefix config find sort tail
     [ -x "${LLVM_CONFIG:-}" ] && return 0
-    if _koopa_is_macos
+    if _koopa_is_linux
+    then
+        find="$(_koopa_locate_find)"
+        sort="$(_koopa_locate_sort)"
+        tail="$(_koopa_locate_tail)"
+        config="$( \
+            "$find" '/usr/bin' -name 'llvm-config-*' \
+            | "$sort" \
+            | "$tail" -n 1 \
+        )"
+    elif _koopa_is_macos
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
         config="${brew_prefix}/opt/llvm/bin/llvm-config"
-    else
-        # Note that findutils isn't installed on Linux distros by default
-        # (e.g. Docker fedora image), and will error here otherwise.
-        _koopa_is_installed find || return 0
-        # Attempt to find the latest version automatically.
-        config="$( \
-            find '/usr/bin' -name 'llvm-config-*' \
-            | sort \
-            | tail -n 1 \
-        )"
     fi
     [ -x "$config" ] && export LLVM_CONFIG="$config"
     return 0
