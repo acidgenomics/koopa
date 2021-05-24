@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider making these accessible only in Bash scripts, to
+# ensure that POSIX activation stays fast.
+
 __koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -356,6 +359,19 @@ _koopa_locate_realpath() { # {{{1
     # @note Updated 2021-05-21.
     # """
     __koopa_locate_gnu_app 'coreutils' 'realpath' "$@"
+}
+
+_koopa_locate_rename() { # {{{1
+    # """
+    # Locate Perl rename.
+    # @note Updated 2021-05-24.
+    # """
+    local file prefix
+    prefix="$(_koopa_perl_packages_prefix)"
+    file="${prefix}/bin/rename"
+    [[ -x "$file" ]] || return 1
+    __koopa_print "$file"
+    return 0
 }
 
 _koopa_locate_rm() { # {{{1
