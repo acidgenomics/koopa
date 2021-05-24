@@ -72,6 +72,31 @@ END
 
 
 
+# FIXME We need to get to KOOPA_PREFIX and KOOPA_SHELL here...
+__koopa_header() { # {{{1
+    # """
+    # Shared shell header file location.
+    # @note Updated 2021-05-24.
+    # """
+    local file prefix shell
+    prefix="${KOOPA_PREFIX:?}/lang/shell"
+    shell="$(__koopa_shell_name)"
+    [ -d "${prefix}/${shell}" ] || shell='posix'
+    file="${prefix}/${shell}/include/header.sh"
+    [ -f "$file" ] || return 1
+    __koopa_print "$file"
+    return 0
+}
+
+
+
+
+
+
+
+
+
+
 __koopa_bash_source() { # {{{1
     # """
     # Bash source file location.
@@ -179,50 +204,6 @@ __koopa_export_koopa_prefix() { # {{{1
     return 0
 }
 
-__koopa_export_koopa_shell() { # {{{1
-    # """
-    # Check that current shell is supported, and export 'KOOPA_SHELL' variable.
-    # @note Updated 2021-05-14.
-    # """
-    local shell
-    shell="$(__koopa_shell)"
-    case "$(basename "$shell")" in
-        ash | \
-        bash | \
-        busybox | \
-        dash | \
-        zsh)
-            ;;
-        *)
-            if __koopa_is_interactive
-            then
-                >&2 cat << END
-WARNING: Failed to activate koopa in the current shell.
-
-    Recommended: Bash or Zsh.
-    Also supported: Ash, Busybox, Dash.
-
-    KOOPA_SHELL : '${shell}'
-          SHELL : '${SHELL:-}'
-              - : '${-}'
-              0 : '${0}'
-              \$ : '${$}'
-
-    Change to Bash:
-        > chsh -s /bin/bash
-
-    Change to Zsh:
-        > chsh -s /bin/zsh
-
-END
-            fi
-            return 1
-            ;;
-    esac
-    KOOPA_SHELL="$shell"
-    export KOOPA_SHELL
-    return 0
-}
 
 __koopa_export_koopa_subshell() { # {{{1
     # """
@@ -270,22 +251,6 @@ __koopa_export_user() { # {{{1
     return 0
 }
 
-# FIXME We need to get to this step faster in our activation scripts...
-__koopa_header() { # {{{1
-    # """
-    # Shared shell header file location.
-    # @note Updated 2021-05-14.
-    # """
-    local file prefix shell
-    prefix="${KOOPA_PREFIX:?}/lang/shell"
-    shell="$(__koopa_shell_name)"
-    [ -d "${prefix}/${shell}" ] || shell='posix'
-    file="${prefix}/${shell}/include/header.sh"
-    [ -f "$file" ] || return 1
-    __koopa_print "$file"
-    return 0
-}
-
 __koopa_is_installed() { # {{{1
     # """
     # Are all of the requested programs installed?
@@ -307,15 +272,6 @@ __koopa_is_interactive() { # {{{1
     __koopa_str_match_fixed "$-" 'i'
 }
 
-__koopa_is_koopa_active() { # {{{1
-    # """
-    # Is koopa active in the current shell session?
-    # @note Updated 2021-05-07.
-    # """
-    local x
-    x="$(type '_koopa_prefix' 2>/dev/null)"
-    __koopa_str_match_fixed "$x" 'function'
-}
 
 __koopa_is_linux() { # {{{1
     # """
@@ -393,10 +349,8 @@ __koopa_preflight() { # {{{1
     # """
     __koopa_export_user || return 1
     __koopa_export_koopa_force || return 1
-    __koopa_export_koopa_shell || return 1
     [ "${KOOPA_FORCE:-0}" -eq 0 ] || return 0
     [ "${KOOPA_SKIP:-0}" -eq 0 ] || return 1
-    __koopa_is_koopa_active && return 1
     __koopa_is_interactive || return 1
     __koopa_is_user_named_admin && return 1
     __koopa_is_user_manual_skip && return 1
@@ -670,20 +624,19 @@ __koopa_activate() { # {{{1
             set +o errtrace
             set +o pipefail
         fi
+        # > if _koopa_is_installed locale
+        # > then
+        # >     _koopa_alert_info 'Locale'
+        # >     locale
+        # > fi
         # > _koopa_alert_info 'Shell options'
         # > set +o
         _koopa_alert_info 'Shell variables'
         _koopa_dl \
             '$' "${$}" \
             '-' "${-}" \
-            '0' "${0}" \
             'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
             'SHELL' "${SHELL:-}"
-        # > if _koopa_is_installed locale
-        # > then
-        # >     _koopa_alert_info 'Locale'
-        # >     locale
-        # > fi
         _koopa_duration_stop || return 1
         _koopa_alert_success 'Activation was successful.'
     fi
