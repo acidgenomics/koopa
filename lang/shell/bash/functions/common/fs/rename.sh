@@ -26,7 +26,7 @@ koopa::rename_lowercase() { # {{{1
     local dir find pos recursive rename sort xargs
     koopa::assert_has_args "$#"
     find="$(koopa::locate_find)"
-    rename='rename'  # FIXME Needs to be Perl rename.
+    rename="$(koopa::locate_rename)"
     sort="$(koopa::locate_sort)"
     xargs="$(koopa::locate_xargs)"
     recursive=0
