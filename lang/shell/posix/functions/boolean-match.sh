@@ -59,7 +59,8 @@ __koopa_str_match() { # {{{1
     else
         return 1
     fi
-    grep="$(_koopa_locate_grep)"
+    # > grep="$(_koopa_locate_grep)"  # FIXME
+    grep='grep'
     _koopa_print "$string" | "$grep" "$flag" -q "$pattern" >/dev/null
 }
 

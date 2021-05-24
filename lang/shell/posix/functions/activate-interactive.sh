@@ -264,8 +264,10 @@ _koopa_activate_tmux_sessions() { # {{{1
     local x
     _koopa_is_installed tmux || return 0
     _koopa_is_tmux && return 0
-    cut="$(_koopa_locate_cut)"
-    tr="$(_koopa_locate_tr)"
+    # > cut="$(_koopa_locate_cut)"  # FIXME
+    cut='cut'
+    # > tr="$(_koopa_locate_tr)"  # FIXME
+    tr='tr'
     # shellcheck disable=SC2033
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
@@ -302,10 +304,14 @@ _koopa_activate_today_bucket() { # {{{1
     [ -z "$bucket_dir" ] && bucket_dir="${HOME:?}/bucket"
     # Early return if there's no bucket directory on the system.
     [ -d "$bucket_dir" ] || return 0
-    date="$(_koopa_locate_date)"
-    ln="$(_koopa_locate_ln)"
-    mkdir="$(_koopa_locate_mkdir)"
-    readlink="$(_koopa_locate_readlink)"
+    # > date="$(_koopa_locate_date)"  # FIXME
+    date='date'
+    # > ln="$(_koopa_locate_ln)"  # FIXME
+    ln='ln'
+    # > mkdir="$(_koopa_locate_mkdir)"  # FIXME
+    mkdir='mkdir'
+    # > readlink="$(_koopa_locate_readlink)"  # FIXME
+    readlink='readlink'
     today_bucket="$("$date" '+%Y/%m/%d')"
     today_link="${HOME:?}/today"
     # Early return if we've already updated the symlink.

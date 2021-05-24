@@ -26,10 +26,14 @@ _koopa_major_version() { # {{{1
     # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
     local cut version x
-    cut="$(_koopa_locate_cut)"
+    # > cut="$(_koopa_locate_cut)"  # FIXME
+    cut='cut'
     for version in "$@"
     do
-        x="$(_koopa_print "$version" | "$cut" -d '.' -f 1)"
+        x="$( \
+            _koopa_print "$version" \
+            | "$cut" -d '.' -f 1 \
+        )"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
     done
@@ -42,10 +46,14 @@ _koopa_major_minor_version() { # {{{1
     # @note Updated 2021-05-24.
     # """
     local cut version x
-    cut="$(_koopa_locate_cut)"
+    # > cut="$(_koopa_locate_cut)"  # FIXME
+    cut='cut'
     for version in "$@"
     do
-        x="$(_koopa_print "$version" | "$cut" -d '.' -f '1-2')"
+        x="$( \
+            _koopa_print "$version" \
+            | "$cut" -d '.' -f '1-2' \
+        )"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
     done
@@ -58,10 +66,14 @@ _koopa_major_minor_patch_version() { # {{{1
     # @note Updated 2021-05-24.
     # """
     local cut version x
-    cut="$(_koopa_locate_cut)"
+    # > cut="$(_koopa_locate_cut)"
+    cut='cut'
     for version in "$@"
     do
-        x="$(_koopa_print "$version" | "$cut" -d '.' -f '1-3')"
+        x="$( \
+            _koopa_print "$version" \
+            | "$cut" -d '.' -f '1-3' \
+        )"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
     done
@@ -71,13 +83,13 @@ _koopa_major_minor_patch_version() { # {{{1
 _koopa_ruby_api_version() { # {{{1
     # """
     # Ruby API version.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-24.
     #
     # Used by Homebrew Ruby for default gem installation path.
     # See 'brew info ruby' for details.
     # """
     local x
-    _koopa_is_installed ruby || return 1
+    _koopa_is_installed 'ruby' || return 1
     x="$(ruby -e 'print Gem.ruby_api_version')"
     [ -n "$x" ] || return 1
     _koopa_print "$x"

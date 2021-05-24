@@ -46,7 +46,8 @@ __koopa_remove_from_path_string() { # {{{1
     # """
     local sed
     [ "$#" -eq 2 ] || return 1
-    sed="$(_koopa_locate_sed)"
+    # > sed="$(_koopa_locate_sed)"  # FIXME
+    sed='sed'
     _koopa_print "${1:?}" | "$sed" "s|:${2:?}||g"
     return 0
 }
