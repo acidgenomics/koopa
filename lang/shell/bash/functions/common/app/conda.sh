@@ -234,6 +234,9 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     fi
     if [[ "${dict[file_formats]}" -eq 1 ]]
     then
+        # Consider:
+        # - ffq (not on conda yet)
+        #   https://github.com/pachterlab/ffq
         envs+=(
             'bamtools'
             'bcftools'
