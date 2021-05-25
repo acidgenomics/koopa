@@ -40,13 +40,14 @@ koopa:::install_ruby() { # {{{1
 koopa::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-25.
     # @seealso
     # - https://bundler.io/man/bundle-pristine.1.html
     # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
     # """
     local default gemdir gem gems name_fancy
     koopa::assert_has_no_envs
+    koopa::activate_ruby
     if ! koopa::is_installed gem
     then
         koopa::alert_note 'gem is not installed.'
@@ -60,6 +61,15 @@ koopa::install_ruby_packages() { # {{{1
     koopa::install_start "$name_fancy"
     gemdir="$(gem environment gemdir)"
     koopa::dl 'Target' "$gemdir"
+    if [[ ! -d "$gemdir" ]]
+    then
+        koopa::sys_mkdir "$gemdir"
+        (
+            koopa::sys_set_permissions "$(koopa::dirname "$gemdir")"
+            koopa::cd "$(koopa::dirname "$gemdir")"
+            koopa::sys_ln "$(koopa::basename "$gemdir")" 'latest'
+        )
+    fi
     if [[ "$#" -eq 0 ]]
     then
         default=1
@@ -91,6 +101,7 @@ koopa::install_ruby_packages() { # {{{1
     then
         gem cleanup
     fi
+    koopa::sys_set_permissions -r "$gemdir"
     koopa::install_success "$name_fancy"
     return 0
 }

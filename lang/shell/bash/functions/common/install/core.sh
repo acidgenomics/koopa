@@ -26,6 +26,7 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
+# FIXME This needs to set permissions correctly on parent directory.
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.

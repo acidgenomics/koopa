@@ -203,30 +203,36 @@ koopa::install_r_cmd_check() { # {{{1
     return 0
 }
 
-# FIXME Need to set permissions on the library.
 koopa::install_r_packages() { # {{{1
     # """
     # Install R packages.
     # @note Updated 2021-05-25.
     # """
-    local name_fancy
+    local name_fancy pkg_prefix
     name_fancy='R packages'
+    pkg_prefix="$(koopa::r_packages_prefix)"
+    koopa::assert_is_dir "$pkg_prefix"
     koopa::install_start "$name_fancy"
+    koopa::configure_r
     koopa::rscript 'installRPackages' "$@"
+    koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::install_success "$name_fancy"
     return 0
 }
 
-# FIXME Need to set permissions on the library.
 koopa::update_r_packages() { # {{{1
     # """
     # Update R packages.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-25.
     # """
     local name_fancy
     name_fancy='R packages'
+    pkg_prefix="$(koopa::r_packages_prefix)"
+    koopa::assert_is_dir "$pkg_prefix"
     koopa::update_start "$name_fancy"
+    koopa::configure_r
     koopa::rscript 'updateRPackages' "$@"
+    koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::update_success "$name_fancy"
     return 0
 }

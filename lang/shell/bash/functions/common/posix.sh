@@ -36,6 +36,10 @@ koopa::activate_prefix() { # {{{1
     _koopa_activate_prefix "$@"
 }
 
+koopa::activate_ruby() { # {{{1
+    _koopa_activate_ruby "$@"
+}
+
 koopa::activate_rust() { # {{{1
     _koopa_activate_rust "$@"
 }
