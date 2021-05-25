@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider making these accessible only in Bash scripts, to
-# ensure that POSIX activation stays fast.
-
 __koopa_locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -250,7 +247,6 @@ _koopa_locate_id() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'id' "$@"
 }
 
-# FIXME Need to keep this in POSIX library, since called by _koopa_activate_llvm.
 _koopa_locate_llvm_config() { # {{{1
     # """
     # Locate 'llvm-config' executable.
@@ -339,6 +335,14 @@ _koopa_locate_mv() { # {{{1
     __koopa_locate_gnu_app 'coreutils' 'mv' "$@"
 }
 
+_koopa_locate_parallel() { # {{{1
+    # """
+    # Locate GNU parallel.
+    # @note Updated 2021-05-21.
+    # """
+    __koopa_locate_app 'parallel' 'parallel' "$@"
+}
+
 _koopa_locate_paste() { # {{{1
     # """
     # Locate GNU paste.
@@ -353,14 +357,6 @@ _koopa_locate_patch() { # {{{1
     # @note Updated 2021-05-21.
     # """
     __koopa_locate_app 'gpatch' 'patch' "$@"
-}
-
-_koopa_locate_parallel() { # {{{1
-    # """
-    # Locate GNU parallel.
-    # @note Updated 2021-05-21.
-    # """
-    __koopa_locate_app 'parallel' 'parallel' "$@"
 }
 
 _koopa_locate_pcregrep() { # {{{1
@@ -379,7 +375,6 @@ _koopa_locate_pkg_config() { # {{{1
     __koopa_locate_app 'pkg-config' 'pkg-config' "$@"
 }
 
-# FIXME Need to replace in other functions.
 _koopa_locate_python() { # {{{1
     # """
     # Locate Python.
@@ -388,7 +383,6 @@ _koopa_locate_python() { # {{{1
     __koopa_locate_app_simple 'python3'
 }
 
-# FIXME Need to replace in other functions.
 _koopa_locate_r() { # {{{1
     # """
     # Locate R.
