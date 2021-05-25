@@ -12,14 +12,14 @@ koopa::install_rust() { # {{{1
 koopa:::install_rust() { # {{{1
     # """
     # Install Rust (via rustup).
-    # @note Updated 2021-05-23.
+    # @note Updated 2021-05-25.
     # """
     local cargo_prefix file prefix rustup_prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     rustup_prefix="$prefix"
     cargo_prefix="$(koopa::rust_packages_prefix "$version")"
-    koopa::mkdir "$cargo_prefix" "$rustup_prefix"
+    koopa::sys_mkdir "$cargo_prefix" "$rustup_prefix"
     CARGO_HOME="$cargo_prefix"
     RUSTUP_HOME="$rustup_prefix"
     export CARGO_HOME RUSTUP_HOME
@@ -32,13 +32,15 @@ koopa:::install_rust() { # {{{1
     koopa::chmod +x "$file"
     # Can check the version of install script with '--version'.
     "./${file}" --no-modify-path -v -y
+    koopa::sys_set_permissions "$(koopa::dirname "$cargo_prefix")"
+    koopa::sys_set_permissions -r "$cargo_prefix"
     return 0
 }
 
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-25.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -80,7 +82,7 @@ koopa::install_rust_packages() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_envs
     koopa::activate_rust
-    if ! koopa::is_installed cargo rustc rustup
+    if ! koopa::is_installed 'cargo' 'rustc' 'rustup'
     then
         koopa::alert_note 'Required: cargo, rustc, rustup.'
         return 0
@@ -90,7 +92,7 @@ koopa::install_rust_packages() { # {{{1
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         default=1
-        if koopa::is_installed brew
+        if koopa::is_installed 'brew'
         then
             koopa::alert_note 'Use Homebrew to manage Rust binaries instead.'
             return 0
@@ -147,7 +149,7 @@ koopa::install_rust_packages() { # {{{1
 koopa::update_rust() { # {{{1
     # """
     # Install Rust.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-25.
     # """
     local force name_fancy
     koopa::assert_has_no_envs
@@ -171,16 +173,18 @@ koopa::update_rust() { # {{{1
         koopa::alert_note "${name_fancy} is up-to-date."
         return 0
     fi
-    koopa::assert_is_installed rustup
+    koopa::activate_rust
+    koopa::assert_is_installed 'rustup'
     koopa::h1 'Updating Rust via rustup.'
     export RUST_BACKTRACE='full'
     # rustup v1.21.0 fix.
     # https://github.com/rust-lang/rustup/issues/2166
-    koopa::mkdir "${RUSTUP_HOME}/downloads"
+    koopa::mkdir "${RUSTUP_HOME:?}/downloads"
     # rustup v1.21.1 fix (2020-01-31).
-    koopa::rm "${CARGO_HOME}/bin/"{'cargo-fmt','rustfmt'}
+    koopa::rm "${CARGO_HOME:?}/bin/"{'cargo-fmt','rustfmt'}
     # > rustup update stable
     rustup update
+    koopa::sys_set_permissions -r "${CARGO_HOME:?}"
     koopa::update_success "$name_fancy"
     return 0
 }
