@@ -54,7 +54,6 @@ ${name}-${minor_version}-patches"
         koopa::cd ..
         for file in 'patches/'*
         do
-            koopa::alert "Applying patch '${file}'."
             # Alternatively, can pipe curl call directly to 'patch -p0'.
             # https://stackoverflow.com/questions/14282617
             "$patch" -p0 --ignore-whitespace --input="$file"
