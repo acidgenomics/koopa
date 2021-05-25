@@ -255,7 +255,7 @@ patch="2.7.6"
 perl="5.34.0"
 
 # https://perlbrew.pl/
-perlbrew="0.91"
+perlbrew="0.92"
 
 # https://metacpan.org/release/File-Rename
 perl-file-rename="1.10"

@@ -36,6 +36,10 @@ koopa::activate_perl_packages() { # {{{1
     _koopa_activate_perl_packages "$@"
 }
 
+koopa::activate_perlbrew() { # {{{1
+    _koopa_activate_perlbrew "$@"
+}
+
 koopa::activate_prefix() { # {{{1
     _koopa_activate_prefix "$@"
 }
