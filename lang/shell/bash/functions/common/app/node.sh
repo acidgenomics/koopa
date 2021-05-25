@@ -21,6 +21,7 @@ koopa::configure_node() { # {{{1
             koopa::sys_ln "$(koopa::basename "$prefix")" 'latest'
         )
     fi
+    koopa::activate_node
     koopa::configure_success "$name_fancy" "$prefix"
     return 0
 }
