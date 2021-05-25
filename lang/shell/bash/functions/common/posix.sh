@@ -720,6 +720,10 @@ koopa::locate_uniq() { # {{{1
     _koopa_locate_uniq "$@"
 }
 
+koopa::locate_unzip() { # {{{1
+    _koopa_locate_unzip "$@"
+}
+
 koopa::locate_wc() { # {{{1
     _koopa_locate_wc "$@"
 }
