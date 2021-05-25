@@ -3,7 +3,7 @@
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-25.
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
     # """
@@ -62,6 +62,7 @@ koopa::pip_install() { # {{{1
         )
     fi
     "$python" -m pip install "${install_flags[@]}" "$@"
+    koopa::sys_set_permissions -r "$target"
     return 0
 }
 
@@ -122,11 +123,15 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     version="$(koopa::get_version "$python")"
     sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
     k_site_pkgs="$(koopa::python_packages_prefix "$version")"
-    [[ ! -d "${k_site_pkgs:?}" ]] && koopa::sys_mkdir "$k_site_pkgs"
-    (
-        koopa::cd "$(koopa::dirname "$k_site_pkgs")"
-        koopa::sys_ln "$(koopa::basename "$k_site_pkgs")" 'latest'
-    )
+    if [[ ! -d "${k_site_pkgs:?}" ]]
+    then
+        koopa::sys_mkdir "$k_site_pkgs"
+        koopa::sys_set_permissions "$(koopa::dirname "$k_site_pkgs")"
+        (
+            koopa::cd "$(koopa::dirname "$k_site_pkgs")"
+            koopa::sys_ln "$(koopa::basename "$k_site_pkgs")" 'latest'
+        )
+    fi
     file="${sys_site_pkgs:?}/koopa.pth"
     koopa::alert "Adding '${file}' path file in '${sys_site_pkgs}'."
     if koopa::is_symlinked_app "$python"
