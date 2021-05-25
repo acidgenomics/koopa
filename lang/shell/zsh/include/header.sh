@@ -13,14 +13,6 @@ __koopa_is_installed() { # {{{1
     return 0
 }
 
-__koopa_is_linux() { # {{{1
-    # """
-    # is the operating system linux?
-    # @note updated 2021-05-07.
-    # """
-    [[ "$(uname -s)" == 'Linux' ]]
-}
-
 __koopa_is_macos() { # {{{1
     # """
     # is the operating system macos?
