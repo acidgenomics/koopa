@@ -107,7 +107,7 @@ cask "font-source-serif"
 cask "font-victor-mono"
 cask "font-victor-mono-nerd-font"
 cask "github"
-cask "google-cloud-sdk"
+cask "google-cloud-sdk", greedy: true
 cask "gpg-suite-no-mail"  # no-binaries
 cask "hazel"
 cask "ibm-aspera-connect"
@@ -163,9 +163,6 @@ brew "gpg", link: false
 
 # This conflicts with 'imath' and 'openexr' recipes.
 brew "ilmbase", link: false  # neofetch
-
-# Ensure Node.js installs without NPM.
-brew "node", args: ["without-npm"]
 
 # Python: Use official Framework binary install instead of Homebrew.
 # Use 'koopa install python-framework' to install.
@@ -269,6 +266,7 @@ brew "ncmpcpp"
 brew "neofetch"
 brew "neovim"
 brew "nmap"
+brew "node"
 brew "oil"
 brew "open-mpi"
 brew "openblas"

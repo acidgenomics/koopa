@@ -220,8 +220,8 @@ koopa::git_branch() { # {{{1
     _koopa_git_branch "$@"
 }
 
-koopa::go_packages() { # {{{1
-    _koopa_go_packages "$@"
+koopa::go_packages_prefix() { # {{{1
+    _koopa_go_packages_prefix "$@"
 }
 
 koopa::go_prefix() { # {{{1
