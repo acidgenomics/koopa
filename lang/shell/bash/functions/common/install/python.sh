@@ -67,7 +67,7 @@ koopa:::install_python() { # {{{1
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-05-23.
+    # @note Updated 2021-05-25.
     # """
     local name_fancy pkg pkg_lower pkgs version
     python="$(koopa::locate_python)"

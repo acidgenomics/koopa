@@ -299,7 +299,13 @@ koopa::sys_group() { # {{{1
 koopa::sys_ln() { # {{{1
     # """
     # Create a symlink quietly.
-    # @note Updated 2020-07-06.
+    # @note Updated 2021-05-25.
+    #
+    # Don't need to set 'g+rw' for symbolic link here.
+    # Symlink permissions are ignored on most systems, including Linux.
+    #
+    # On macOS, you can override using BSD ln:
+    # > /bin/ln -h g+rw <file>
     # """
     local ln
     koopa::assert_has_args "$#"
