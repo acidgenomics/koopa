@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 # koopa nolint=coreutils
 
-
-
-# FIXME Can we just source some scripts relative to this first???
-# FIXME No functions should be defined here....
-
-
-
-# FIXME Define this in the core functions...
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
@@ -18,11 +10,7 @@ __koopa_bash_source_dir() { # {{{1
     # doesn't support readarray/mapfile.
     # """
     local fun_script fun_scripts fun_scripts_arr koopa_prefix prefix
-    if [[ $(type -t readarray) != 'builtin' ]]
-    then
-        __koopa_warning 'Bash is missing readarray (mapfile).'
-        return 1
-    fi
+    [[ $(type -t readarray) != 'builtin' ]] || return 1
     koopa_prefix="$(_koopa_prefix)"
     prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
@@ -57,7 +45,7 @@ __koopa_is_installed() { # {{{1
 
 __koopa_is_linux() { # {{{1
     # """
-    # Is the operating system linux?
+    # Is the operating system Linux?
     # @note Updated 2021-05-07.
     # """
     [[ "$(uname -s)" == 'Linux' ]]
@@ -65,7 +53,7 @@ __koopa_is_linux() { # {{{1
 
 __koopa_is_macos() { # {{{1
     # """
-    # Is the operating system macos?
+    # Is the operating system macOS?
     # @note Updated 2021-05-07.
     # """
     [[ "$(uname -s)" == 'Darwin' ]]
@@ -125,7 +113,7 @@ __koopa_warning() { # {{{1
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-25.
     # """
     local dict
     declare -A dict=(
@@ -183,11 +171,7 @@ __koopa_bash_header() { # {{{1
             fi
             return 1
         fi
-        if [[ $(type -t readarray) != 'builtin' ]]
-        then
-            printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
-            return 1
-        fi
+        [[ $(type -t readarray) != 'builtin' ]] || return 1
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
