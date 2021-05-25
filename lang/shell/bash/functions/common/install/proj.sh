@@ -4,6 +4,7 @@ koopa::install_proj() { # {{{1
     koopa::install_app \
         --name='proj' \
         --name-fancy='PROJ' \
+        --no-link \
         "$@"
 }
 
