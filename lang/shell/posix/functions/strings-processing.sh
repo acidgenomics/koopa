@@ -3,14 +3,13 @@
 _koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-25.
     #
     # @seealso
     # https://stackoverflow.com/questions/34420091/
     # """
     local sed string
-    # > sed="$(_koopa_locate_sed)"  # FIXME
-    sed='sed'
+    sed="$(_koopa_locate_sed)"
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -22,7 +21,7 @@ _koopa_camel_case_simple() { # {{{1
 _koopa_gsub() { # {{{1
     # """
     # Global substitution.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-25.
     #
     # Instead of using '|' in sed here, we can also escape '/'.
     #
@@ -35,8 +34,7 @@ _koopa_gsub() { # {{{1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
-    # > sed="$(_koopa_locate_sed)"  # FIXME
-    sed='sed'
+    sed="$(_koopa_locate_sed)"
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -67,7 +65,7 @@ _koopa_kebab_case_simple() { # {{{1
 _koopa_lowercase() { # {{{1
     # """
     # Transform string to lowercase.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-25.
     #
     # awk alternative:
     # > awk="$(_koopa_locate_awk)"
@@ -77,8 +75,7 @@ _koopa_lowercase() { # {{{1
     # https://stackoverflow.com/questions/2264428
     # """
     local string tr
-    # > tr="$(_koopa_locate_tr)"  # FIXME
-    tr='tr'
+    tr="$(_koopa_locate_tr)"
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -218,8 +215,7 @@ _koopa_sub() { # {{{1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
-    # > sed="$(_koopa_locate_sed)"  # FIXME
-    sed='sed'
+    sed="$(_koopa_locate_sed)"
     for string in "$@"
     do
         _koopa_print "$string" \
