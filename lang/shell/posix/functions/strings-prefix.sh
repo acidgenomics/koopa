@@ -497,10 +497,10 @@ _koopa_python_system_packages_prefix() { # {{{1
 _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-25.
     # """
     local major_minor_version version
-    version="${1:?}"
+    version="${1:-}"
     if [ -z "$version" ]
     then
         version="$(_koopa_variable 'r')"
