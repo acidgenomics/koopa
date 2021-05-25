@@ -678,7 +678,7 @@ koopa::return_version() { # {{{1
             cmd='pip3'
             ;;
         python)
-            cmd="$(_koopa_python)"
+            cmd="$(_koopa_locate_python)"
             ;;
         ranger-fm)
             cmd='ranger'

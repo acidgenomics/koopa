@@ -483,11 +483,11 @@ _koopa_python_packages_prefix() { # {{{1
 _koopa_python_system_packages_prefix() { # {{{1
     # """
     # Python system site packages library prefix.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-25.
     # """
     local python x
     python="${1:-}"
-    [ -z "$python" ] && python="$(_koopa_python)"
+    [ -z "$python" ] && python="$(_koopa_locate_python)"
     _koopa_is_installed "$python" || return 0
     x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
     _koopa_print "$x"
