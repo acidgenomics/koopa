@@ -24,6 +24,10 @@ koopa::activate_llvm() { # {{{1
     _koopa_activate_llvm "$@"
 }
 
+koopa::activate_node() { # {{{1
+    _koopa_activate_node "$@"
+}
+
 koopa::activate_openjdk() { # {{{1
     _koopa_activate_openjdk "$@"
 }
