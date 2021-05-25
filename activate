@@ -340,7 +340,7 @@ __koopa_preflight() { # {{{1
     # """
     [ "${KOOPA_SKIP:-0}" -eq 1 ] && return 1
     [ "${KOOPA_FORCE:-0}" -eq 1 ] && return 0
-    __check_zsh || return 1
+    __koopa_check_zsh || return 1
     __koopa_is_interactive || return 1
     __koopa_export_user || return 1
     __koopa_is_user_named_admin && return 1
