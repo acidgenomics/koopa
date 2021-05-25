@@ -134,7 +134,6 @@ _koopa_docker_private_prefix() { # {{{1
     return 0
 }
 
-# FIXME Koopa install needs to link this into 'XDG_CONFIG_HOME'.
 _koopa_dotfiles_prefix() { # {{{1
     # """
     # Koopa system dotfiles prefix.
@@ -144,7 +143,6 @@ _koopa_dotfiles_prefix() { # {{{1
     return 0
 }
 
-# FIXME REWORK PUTTING INTO 'XDG_CONFIG_HOME' instead.
 _koopa_dotfiles_private_prefix() { # {{{1
     # """
     # Private user dotfiles prefix.
@@ -181,7 +179,6 @@ _koopa_fzf_prefix() { # {{{1
     return 0
 }
 
-# FIXME Use 'latest' here by default.
 _koopa_go_packages_prefix() { # {{{1
     # """
     # Go packages 'GOPATH', for building from source.
@@ -195,17 +192,18 @@ _koopa_go_packages_prefix() { # {{{1
     # - go env GOROOT
     # - https://golang.org/wiki/SettingGOPATH to set a custom GOPATH
     # """
-    local major_minor_version prefix version
+    local prefix version
     prefix="${GOPATH:-}"
     version="${1:-}"
     if [ -z "$prefix" ]
     then
         if [ -z "$version" ]
         then
-            version="$(_koopa_variable 'go')"
+            version='latest'
+        else
+            version="$(_koopa_major_minor_version "$version")"
         fi
-        major_minor_version="$(_koopa_major_minor_version "$version")"
-        prefix="$(_koopa_opt_prefix)/go-packages/${major_minor_version}"
+        prefix="$(_koopa_opt_prefix)/go-packages/${version}"
     fi
     _koopa_print "$prefix"
     return 0
@@ -406,24 +404,24 @@ _koopa_opt_prefix() { # {{{1
     return 0
 }
 
-# FIXME Use latest here by default.
 _koopa_perl_packages_prefix() { # {{{1
     # """
     # Perl site library prefix.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-25.
     #
     # @seealso
     # > perl -V
     # # Inspect the '@INC' variable.
     # """
-    local major_minor_version version
+    local version
     version="${1:-}"
     if [ -z "$version" ]
     then
-        version="$(_koopa_variable 'perl')"
+        version='latest'
+    else
+        version="$(_koopa_major_minor_version "$version")"
     fi
-    major_minor_version="$(_koopa_major_minor_version "$version")"
-    _koopa_print "$(_koopa_opt_prefix)/perl-packages/${major_minor_version}"
+    _koopa_print "$(_koopa_opt_prefix)/perl-packages/${version}"
     return 0
 }
 
@@ -474,11 +472,10 @@ _koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
-# FIXME Use 'latest' here by default.
 _koopa_python_packages_prefix() { # {{{1
     # """
     # Python site packages library prefix.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-25.
     #
     # This was changed to an unversioned approach in koopa v0.9.
     #
@@ -489,10 +486,11 @@ _koopa_python_packages_prefix() { # {{{1
     version="${1:-}"
     if [ -z "$version" ]
     then
-        version="$(_koopa_variable 'python')"
+        version='latest'
+    else
+        version="$(_koopa_major_minor_version "$version")"
     fi
-    major_minor_version="$(_koopa_major_minor_version "$version")"
-    _koopa_print "$(_koopa_opt_prefix)/python-packages/${major_minor_version}"
+    _koopa_print "$(_koopa_opt_prefix)/python-packages/${version}"
     return 0
 }
 
@@ -510,20 +508,20 @@ _koopa_python_system_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME Use 'latest' here by default.
 _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
     # @note Updated 2021-05-25.
     # """
-    local major_minor_version version
+    local version
     version="${1:-}"
     if [ -z "$version" ]
     then
-        version="$(_koopa_variable 'r')"
+        version='latest'
+    else
+        version="$(_koopa_major_minor_version "$version")"
     fi
-    major_minor_version="$(_koopa_major_minor_version "$version")"
-    _koopa_print "$(_koopa_opt_prefix)/r-packages/${major_minor_version}"
+    _koopa_print "$(_koopa_opt_prefix)/r-packages/${version}"
     return 0
 }
 
@@ -548,33 +546,32 @@ _koopa_refdata_prefix() { # {{{1
     return 0
 }
 
-# FIXME Use 'latest' here by default.
 _koopa_ruby_packages_prefix() { # {{{1
     # """
     # Ruby packags (gems) prefix.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-25.
     # """
-    local major_minor_version prefix version
+    local prefix version
     prefix="${GEM_HOME:-}"
     version="${1:-}"
     if [ -z "$prefix" ]
     then
         if [ -z "$version" ]
         then
-            version="$(_koopa_variable 'ruby')"
+            version='latest'
+        else
+            version="$(_koopa_major_minor_version "$version")"
         fi
-        major_minor_version="$(_koopa_major_minor_version "$version")"
-        prefix="$(_koopa_opt_prefix)/ruby-packages/${major_minor_version}"
+        prefix="$(_koopa_opt_prefix)/ruby-packages/${version}"
     fi
     _koopa_print "$prefix"
     return 0
 }
 
-# FIXME Use 'latest' here by default.
 _koopa_rust_packages_prefix() { # {{{1
     # """
     # Rust packages (cargo) install prefix.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-25.
     #
     # See also:
     # - https://github.com/rust-lang/rustup#environment-variables
@@ -588,7 +585,9 @@ _koopa_rust_packages_prefix() { # {{{1
     then
         if [ -z "$version" ]
         then
-            version='rolling'
+            version='latest'
+        else
+            version="$(_koopa_major_minor_version "$version")"
         fi
         prefix="$(_koopa_opt_prefix)/rust-packages/${version}"
     fi
