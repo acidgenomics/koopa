@@ -204,17 +204,6 @@ _koopa_locate_find() { # {{{1
     __koopa_locate_gnu_app 'findutils' 'find' "$@"
 }
 
-_koopa_locate_gcc() { # {{{1
-    # """
-    # Locate GNU gcc.
-    # @note Updated 2021-05-24.
-    # """
-    local version
-    version="$(_koopa_variable 'gcc')"
-    version="$(_koopa_major_version "$version")"
-    __koopa_locate_app "gcc@${version}" "gcc-${version}" "$@"
-}
-
 _koopa_locate_git() { # {{{1
     # """
     # Locate git.

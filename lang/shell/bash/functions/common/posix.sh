@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+koopa:::locate_app() { # {{{1
+    __koopa_locate_app "$@"
+}
+
 koopa::activate_aspera() { # {{{1
     _koopa_activate_aspera "$@"
 }
@@ -570,10 +574,6 @@ koopa::locate_du() { # {{{1
 
 koopa::locate_find() { # {{{1
     _koopa_locate_find "$@"
-}
-
-koopa::locate_gcc() { # {{{1
-    _koopa_locate_gcc "$@"
 }
 
 koopa::locate_git() { # {{{1
