@@ -149,7 +149,7 @@ gnupg="2.3.1"
 go="1.16.3"
 
 # https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="339.0.0"
+google-cloud-sdk="342.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.6"
