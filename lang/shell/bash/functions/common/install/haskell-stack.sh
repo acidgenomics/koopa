@@ -4,6 +4,7 @@ koopa::install_haskell_stack() { # {{{1
     koopa::install_app \
         --name='haskell-stack' \
         --name-fancy='Haskell Stack' \
+        --no-link \
         "$@"
 }
 

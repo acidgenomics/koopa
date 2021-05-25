@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Should we rethink the linking?
 koopa::install_go() { # {{{1
     koopa::install_app \
         --name='go' \

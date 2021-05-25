@@ -4,6 +4,7 @@ koopa::install_openssh() { # {{{1
     koopa::install_app \
         --name='openssh' \
         --name-fancy='OpenSSH' \
+        --no-link \
         "$@"
 }
 

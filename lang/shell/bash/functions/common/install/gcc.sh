@@ -4,6 +4,7 @@ koopa::install_gcc() { # {{{1
     koopa::install_app \
         --name='gcc' \
         --name-fancy='GCC' \
+        --no-link \
         "$@"
 }
 
