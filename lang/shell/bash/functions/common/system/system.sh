@@ -132,23 +132,29 @@ koopa::sys_info() { # {{{
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2020-07-06.
+    # @note Updated 2021-05-25.
     # @param -r
     #   Change permissions recursively.
     # """
     koopa::assert_has_args "$#"
-    local OPTIND arg chmod chown group recursive user
-    recursive=0
-    user=0
+    local OPTIND arg chmod chown dict group user
+    declare -A dict=(
+        [dereference]=1
+        [recursive]=0
+        [user]=0
+    )
     OPTIND=1
-    while getopts 'ru' opt
+    while getopts 'hru' opt
     do
         case "$opt" in
+            h)
+                dict[dereference]=0
+                ;;
             r)
-                recursive=1
+                dict[recursive]=1
                 ;;
             u)
-                user=1
+                dict[user]=1
                 ;;
             \?)
                 koopa::invalid_arg
@@ -159,13 +165,13 @@ koopa::sys_set_permissions() { # {{{1
     koopa::assert_has_args "$#"
     chmod=('koopa::sys_chmod')
     chown=('koopa::sys_chown' '-h')
-    if [[ "$recursive" -eq 1 ]]
+    if [[ "${dict[recursive]}" -eq 1 ]]
     then
         chmod+=('-R')
         chown+=('-R')
     fi
     chmod+=("$(koopa::sys_chmod_flags)")
-    case "$user" in
+    case "${dict[user]}" in
         0)
             user="$(koopa::sys_user)"
             ;;
@@ -177,8 +183,10 @@ koopa::sys_set_permissions() { # {{{1
     chown+=("${user}:${group}")
     for arg in "$@"
     do
-        # Ensure we resolve symlinks here.
-        arg="$(koopa::realpath "$arg")"
+        if [[ "${dict[dereference]}" -eq 1 ]] && [[ -L "$arg" ]]
+        then
+            arg="$(koopa::realpath "$arg")"
+        fi
         "${chmod[@]}" "$arg"
         "${chown[@]}" "$arg"
     done
@@ -318,7 +326,7 @@ koopa::sys_ln() { # {{{1
         ln+=('-S')
     fi
     "${ln[@]}" "$source" "$target"
-    koopa::sys_set_permissions "$target"
+    koopa::sys_set_permissions -h "$target"
     return 0
 }
 
