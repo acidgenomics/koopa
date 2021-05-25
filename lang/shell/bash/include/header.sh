@@ -107,7 +107,6 @@ __koopa_bash_header() { # {{{1
     # Bash header.
     # @note Updated 2021-05-25.
     # """
-    echo 'FIXME 1'
     local dict
     declare -A dict=(
         [activate]=0
