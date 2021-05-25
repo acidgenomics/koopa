@@ -63,17 +63,10 @@ _koopa_bcbio_tools_prefix() { # {{{1
 _koopa_conda_prefix() { # {{{1
     # """
     # Conda prefix.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-05-25.
     # @seealso conda info --base
     # """
-    local prefix
-    if [ -n "${CONDA_EXE:-}" ]
-    then
-        prefix="$(_koopa_parent_dir -n 2 "$CONDA_EXE")"
-    else
-        prefix="$(_koopa_opt_prefix)/conda"
-    fi
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/conda"
     return 0
 }
 
