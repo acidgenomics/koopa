@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for Linux.
-# @note Updated 2021-05-24.
+# @note Updated 2021-05-25.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -19,9 +19,8 @@
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
 
-# FIXME Create 'latest' symlinks so we don't have to keep track of version.
-PYTHON_VERSION="3.9"
-RUST_VERSION="rolling"
+PYTHON_VERSION="latest"
+RUST_VERSION="latest"
 
 # Package libraries {{{1
 # ==============================================================================
