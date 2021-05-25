@@ -1,4 +1,5 @@
 #!/bin/sh
+# koopa nolint=coreutils
 
 # Csh is not supported, primarily due to lack of functions.
 # > csh -l or csh -i

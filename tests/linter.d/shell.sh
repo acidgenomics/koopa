@@ -28,6 +28,16 @@ test_all() { # {{{1
     return 0
 }
 
+# FIXME Ignore false positives:
+# - 'aws s3 cp'
+# - 'aws s3 ls'
+# - 'docker images ls'
+# - 'docker buildx rm'
+# - 'tmux ls'
+# - 'koopa::<name>'
+#
+# See also:
+# - http://www.blackwasp.co.uk/RegexLookahead.aspx
 test_all_coreutils() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
@@ -67,6 +77,7 @@ test_all_coreutils() { # {{{1
         'sort'
         'ssh'
         'stat'
+        'svn'
         'tac'
         'tail'
         'tee'
@@ -77,21 +88,8 @@ test_all_coreutils() { # {{{1
         'xargs'
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
-
-    # FIXME This doesn't seem to be the right approach.
-    # FIXME Need to do something more complex...
-    # FIXME Consider writing this in R instead...
-
-    # FIXME Ignore false positives:
-    # - 'aws s3 cp'
-    # - 'aws s3 ls'
-    # - docker images ls
-    # - docker buildx rm
-    # - tmux ls
-    
-    # Ignoring commented lines and 'local' variable calls.
-    # See also:
-    # - http://www.blackwasp.co.uk/RegexLookahead.aspx
+    # This doesn't work the way we want:
+    # > pattern="(?!(koopa::))\b(${pattern})\s"
     pattern="(?!^[\s]+(local|#).*)\s(${pattern})\s"
     koopa::test_grep \
         -i 'coreutils' \
