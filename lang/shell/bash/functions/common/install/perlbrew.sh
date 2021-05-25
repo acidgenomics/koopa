@@ -1,45 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::install_ensembl_perl_api() { # {{{1
-    koopa::install_app \
-        --name='ensembl-perl-api' \
-        --name-fancy='Ensembl Perl API' \
-        --no-link \
-        --prefix="$(koopa::ensembl_perl_api_prefix)" \
-        --version='rolling'
-}
+# FIXME Need to test this out on macOS...
+# FIXME This needs to be wrapped with install_app...
 
-koopa:::install_ensembl_perl_api() { # {{{1
-    # """
-    # Install Ensembl Perl API.
-    # @note Updated 2021-05-07.
-    # """
-    local repo repos prefix
-    prefix="${INSTALL_PREFIX:?}"
-    # Install BioPerl.
-    git clone -b release-1-6-924 --depth 1 \
-        'https://github.com/bioperl/bioperl-live.git' \
-        "${prefix}/bioperl-live" \
-        || return 1
-    repos=(
-        'ensembl'
-        'ensembl-compara'
-        'ensembl-funcgen'
-        'ensembl-git-tools'
-        'ensembl-io'
-        'ensembl-variation'
-    )
-    for repo in "${repos[@]}"
-    do
-        git clone \
-            "https://github.com/Ensembl/${repo}.git" \
-            "${prefix}/${repo}" \
-            || return 1
-    done
-    return 0
-}
-
-koopa::install_perlbrew() { # {{{1
+koopa:::install_perlbrew() { # {{{1
     # """
     # Install Perlbrew.
     # @note Updated 2021-05-23.
@@ -135,7 +99,7 @@ koopa::install_perlbrew() { # {{{1
 koopa::install_perlbrew_perl() { # {{{1
     # """
     # Install Perlbrew Perl.
-    # @note Updated 2020-07-10.
+    # @note Updated 2021-05-25.
     #
     # Note that 5.30.1 is currently failing with Perlbrew on macOS.
     # Using the '--notest' flag to avoid this error.
@@ -145,7 +109,7 @@ koopa::install_perlbrew_perl() { # {{{1
     # """
     local perl_name version
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed perlbrew
+    koopa::assert_is_installed 'perlbrew'
     version="$(koopa::variable perl)"
     perl_name="perl-${version}"
     # Alternatively, can use '--force' here.
@@ -158,9 +122,9 @@ koopa::install_perlbrew_perl() { # {{{1
 koopa::update_perlbrew() { # {{{1
     # """
     # Update Perlbrew.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-25.
     # """
-    if ! koopa::is_installed perlbrew
+    if ! koopa::is_installed 'perlbrew'
     then
         koopa::alert_not_installed 'perlbrew'
         return 0
