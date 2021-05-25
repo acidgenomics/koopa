@@ -318,13 +318,14 @@ _koopa_activate_homebrew_cask_gpg_suite() { # {{{1
     return 0
 }
 
+# FIXME Can we do this without using the variable?
 _koopa_activate_homebrew_cask_julia() { # {{{1
     # """
     # Activate Julia Homebrew cask.
     # @note Updated 2021-04-25.
     # """
     local prefix version
-    version="$(_koopa_variable 'julia')"
+    version="$(_koopa_variable 'julia')"  # FIXME Take this out...
     version="$(_koopa_major_minor_version "$version")"
     prefix="/Applications/Julia-${version}.app/Contents/Resources/julia"
     _koopa_activate_prefix "$prefix"
@@ -334,7 +335,7 @@ _koopa_activate_homebrew_cask_julia() { # {{{1
 _koopa_activate_homebrew_cask_r() { # {{{1
     # """
     # Activate R Homebrew cask.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-05-25.
     # """
     local prefix version
     version='Current'
