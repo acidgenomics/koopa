@@ -35,11 +35,10 @@ koopa:::install_perl() { # {{{1
     return 0
 }
 
-# FIXME Need to set the permissions on the package library.
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-25.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #

@@ -207,7 +207,7 @@ koopa::install_r_cmd_check() { # {{{1
 koopa::install_r_packages() { # {{{1
     # """
     # Install R packages.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-25.
     # """
     local name_fancy
     name_fancy='R packages'
