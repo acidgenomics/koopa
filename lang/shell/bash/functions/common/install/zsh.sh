@@ -5,6 +5,7 @@ koopa::install_zsh() { # {{{1
         --name='zsh' \
         --name-fancy='Zsh' \
         "$@"
+    koopa::fix_zsh_permissions
 }
 
 koopa:::install_zsh() { # {{{1
@@ -63,6 +64,5 @@ ${name}/${name}/${version}/${file}"
             "$(koopa::distro_prefix)/etc/zsh/"*
     fi
     [[ "${link_app:-0}" -eq 1 ]] && koopa::enable_shell "$name"
-    koopa::fix_zsh_permissions
     return 0
 }
