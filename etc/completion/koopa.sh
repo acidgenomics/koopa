@@ -186,6 +186,7 @@ _koopa_complete() { # {{{1
                     'delete-cache'
                     'disable-passwordless-sudo'
                     'enable-passwordless-sudo'
+                    'find-non-symlinked-make-files'
                     'fix-sudo-setrlimit-error'
                     'fix-zsh-permissions'
                     'host-id'
