@@ -84,7 +84,7 @@ _koopa_cpu_count() { # {{{1
 _koopa_git_branch() { # {{{1
     # """
     # Current git branch name.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-25.
     #
     # This is used in prompt, so be careful with assert checks.
     #
@@ -100,8 +100,8 @@ _koopa_git_branch() { # {{{1
     # """
     local branch
     _koopa_is_git || return 0
-    _koopa_is_installed git || return 0
-    branch="$(git symbolic-ref --short -q HEAD 2>/dev/null)"
+    git="$(_koopa_locate_git)"
+    branch="$("$git" symbolic-ref --short -q HEAD 2>/dev/null)"
     _koopa_print "$branch"
     return 0
 }

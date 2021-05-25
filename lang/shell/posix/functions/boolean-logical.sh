@@ -150,11 +150,10 @@ _koopa_is_debian_like() { # {{{1
     _koopa_is_os_like 'debian'
 }
 
-# FIXME Double check that this works correctly inside Docker...
 _koopa_is_docker() { # {{{1
     # """
     # Is the current session running inside Docker?
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-25.
     # @seealso
     # - https://stackoverflow.com/questions/23513045
     # """
@@ -162,8 +161,7 @@ _koopa_is_docker() { # {{{1
     file='/proc/1/cgroup'
     [ -f "$file" ] || return 1
     pattern=':/docker/'
-    # > grep="$(_koopa_locate_gnu_grep)"  # FIXME
-    grep='grep'
+    grep="$(_koopa_locate_grep)"
     "$grep" -q "$pattern" "$file"
 }
 
@@ -186,13 +184,14 @@ _koopa_is_fedora_like() { # {{{1
 _koopa_is_git() { # {{{1i
     # """
     # Is the working directory a git repository?
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-25.
     # @seealso
     # - https://stackoverflow.com/questions/2180270
     # """
+    local git
     _koopa_is_git_toplevel '.' && return 0
-    _koopa_is_installed git || return 1
-    git rev-parse --git-dir >/dev/null 2>&1 || return 1
+    git="$(_koopa_locate_git)"
+    "$git" rev-parse --git-dir >/dev/null 2>&1 || return 1
     return 0
 }
 
@@ -208,7 +207,6 @@ _koopa_is_git_clean() { # {{{1
     # - https://stackoverflow.com/questions/3258243
     # """
     _koopa_is_git || return 1
-    _koopa_is_installed git || return 1
     __koopa_git_has_unstaged_changes && return 1
     __koopa_git_needs_pull_or_push && return 1
     return 0
