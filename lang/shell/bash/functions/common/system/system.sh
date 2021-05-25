@@ -307,15 +307,18 @@ koopa::sys_ln() { # {{{1
     # On macOS, you can override using BSD ln:
     # > /bin/ln -h g+rw <file>
     # """
-    local ln
-    koopa::assert_has_args "$#"
+    local ln source target
+    koopa::assert_has_args_eq "$#" 2
+    source="${1:?}"
+    target="${2:?}"
     ln=('koopa::ln')
     if koopa::is_shared_install
     then
         # NOTE Don't check for admin access here, can slow down functions.
         ln+=('-S')
     fi
-    "${ln[@]}" "$@"
+    "${ln[@]}" "$source" "$target"
+    koopa::sys_set_permissions "$target"
     return 0
 }
 
