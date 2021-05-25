@@ -561,6 +561,18 @@ _koopa_activate_nextflow() { # {{{1
     return 0
 }
 
+_koopa_activate_node() { # {{{1
+    # """
+    # Activate Node.js (and NPM).
+    # @note Updated 2021-05-25.
+    # """
+    local prefix
+    prefix="$(_koopa_node_packages_prefix)"
+    _koopa_activate_prefix "$prefix"
+    export NPM_CONFIG_PREFIX="$prefix"
+    return 0
+}
+
 _koopa_activate_openjdk() { # {{{1
     # """
     # Activate OpenJDK.
