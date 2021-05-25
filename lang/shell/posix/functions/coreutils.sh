@@ -16,15 +16,13 @@ _koopa_cd() { # {{{1
 _koopa_parent_dir() { # {{{1
     # """
     # Get the parent directory path.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-25.
     #
     # This requires file to exist and resolves symlinks.
     # """
     local OPTIND cd_tail dirname file n parent sed 
-    # > dirname="$(_koopa_locate_dirname)"  # FIXME
-    dirname='dirname'
-    # > sed="$(_koopa_locate_sed)"  # FIXME
-    sed='sed'
+    dirname="$(_koopa_locate_dirname)"
+    sed="$(_koopa_locate_sed)"
     cd_tail=''
     n=1
     OPTIND=1

@@ -666,7 +666,6 @@ _koopa_activate_pipx() { # {{{1
     return 0
 }
 
-# FIXME Take out this libffi step (slow)
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
