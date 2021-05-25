@@ -455,11 +455,14 @@ __koopa_activate() { # {{{1
             return 0
             ;;
     esac
+    if [ "${KOOPA_VERBOSE:-0}" -eq 1 ]
+    then
+        set -o xtrace
+    fi
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         set -o errexit
         set -o nounset
-        # > set -o xtrace
         if [ -n "${BASH_VERSION:-}" ]
         then
             set -o errtrace
@@ -553,14 +556,9 @@ __koopa_activate() { # {{{1
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         _koopa_duration_stop || return 1
-        set +o errexit
-        set +o nounset
-        # > set +o xtrace
-        if [ -n "${BASH_VERSION:-}" ]
-        then
-            set +o errtrace
-            set +o pipefail
-        fi
+    fi
+    if [ "${KOOPA_VERBOSE:-0}" -eq 1 ]
+    then
         if _koopa_is_installed locale
         then
             _koopa_alert_info 'Locale'
@@ -574,7 +572,21 @@ __koopa_activate() { # {{{1
             '-' "${-}" \
             'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
             'SHELL' "${SHELL:-}"
+    fi
+    if [ "${KOOPA_TEST:-0}" -eq 1 ]
+    then
+        set +o errexit
+        set +o nounset
+        if [ -n "${BASH_VERSION:-}" ]
+        then
+            set +o errtrace
+            set +o pipefail
+        fi
         _koopa_alert_success 'Activation was successful.'
+    fi
+    if [ "${KOOPA_VERBOSE:-0}" -eq 1 ]
+    then
+        set +o xtrace
     fi
     unset -v KOOPA_ACTIVATE KOOPA_INTERACTIVE
     return 0
