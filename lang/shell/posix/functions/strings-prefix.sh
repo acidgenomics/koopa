@@ -56,7 +56,6 @@ _koopa_bcbio_tools_prefix() { # {{{1
     # bcbio-nextgen tools prefix.
     # @note Updated 2021-03-02.
     # """
-    _koopa_is_linux || return 0
     _koopa_print "$(_koopa_opt_prefix)/bcbio/tools"
     return 0
 }
@@ -83,10 +82,7 @@ _koopa_config_prefix() { # {{{1
     # Local koopa config directory.
     # @note Updated 2020-07-01.
     # """
-    local prefix
-    prefix="${XDG_CONFIG_HOME:-}"
-    [ -z "$prefix" ] && prefix="${HOME:?}/.config"
-    _koopa_print "${prefix}/koopa"
+    _koopa_print "$(_koopa_xdg_config_home)/koopa"
     return 0
 }
 
@@ -103,14 +99,16 @@ _koopa_data_disk_link_prefix() { # {{{1
 _koopa_distro_prefix() { # {{{1
     # """
     # Operating system distro prefix.
-    # @note Updated 2020-11-12.
+    # @note Updated 2021-05-25.
     # """
-    local prefix
+    local koopa_prefix os_id prefix
+    koopa_prefix="$(_koopa_prefix)"
+    os_id="$(_koopa_os_id)"
     if _koopa_is_linux
     then
-        prefix="$(_koopa_prefix)/os/linux/distro/$(_koopa_os_id)"
+        prefix="${koopa_prefix}/os/linux/distro/${os_id}"
     else
-        prefix="$(_koopa_prefix)/os/$(_koopa_os_id)"
+        prefix="${koopa_prefix}/os/${os_id}"
     fi
     _koopa_print "$prefix"
     return 0
@@ -182,7 +180,7 @@ _koopa_fzf_prefix() { # {{{1
 _koopa_go_packages_prefix() { # {{{1
     # """
     # Go packages 'GOPATH', for building from source.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-25.
     #
     # This must be different from 'go root' value.
     #
@@ -192,20 +190,15 @@ _koopa_go_packages_prefix() { # {{{1
     # - go env GOROOT
     # - https://golang.org/wiki/SettingGOPATH to set a custom GOPATH
     # """
-    local prefix version
-    prefix="${GOPATH:-}"
+    local version
     version="${1:-}"
-    if [ -z "$prefix" ]
+    if [ -z "$version" ]
     then
-        if [ -z "$version" ]
-        then
-            version='latest'
-        else
-            version="$(_koopa_major_minor_version "$version")"
-        fi
-        prefix="$(_koopa_opt_prefix)/go-packages/${version}"
+        version='latest'
+    else
+        version="$(_koopa_major_minor_version "$version")"
     fi
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/go-packages/${version}"
     return 0
 }
 
@@ -325,14 +318,11 @@ _koopa_lmod_prefix() { # {{{1
 _koopa_local_data_prefix() { # {{{1
     # """
     # Local user application data prefix.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-25.
     #
     # This is the default app path when koopa is installed per user.
     # """
-    local prefix
-    prefix="${XDG_DATA_HOME:-}"
-    [ -z "$prefix" ] && prefix="${HOME:?}/.local/share"
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_xdg_data_home)"
     return 0
 }
 
@@ -432,24 +422,18 @@ _koopa_perl_packages_prefix() { # {{{1
 _koopa_perlbrew_prefix() { # {{{1
     # """
     # Perlbrew prefix.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-25.
     # """
-    local prefix
-    prefix="${PERLBREW_ROOT:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/perlbrew"
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/perlbrew"
     return 0
 }
 
 _koopa_pipx_prefix() { # {{{1
     # """
     # pipx prefix.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-25.
     # """
-    local prefix
-    prefix="${PIPX_HOME:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/pipx"
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/pipx"
     return 0
 }
 
@@ -465,14 +449,11 @@ _koopa_prefix() { # {{{1
 _koopa_pyenv_prefix() { # {{{1
     # """
     # Python pyenv prefix.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-25.
     #
     # See also approach used for rbenv.
     # """
-    local prefix
-    prefix="${PYENV_ROOT:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/pyenv"
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/pyenv"
     return 0
 }
 
@@ -532,12 +513,9 @@ _koopa_r_packages_prefix() { # {{{1
 _koopa_rbenv_prefix() { # {{{1
     # """
     # Ruby rbenv prefix.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-05-25.
     # ""
-    local prefix
-    prefix="${RBENV_ROOT:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/rbenv"
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/rbenv"
     return 0
 }
 
@@ -555,20 +533,15 @@ _koopa_ruby_packages_prefix() { # {{{1
     # Ruby packags (gems) prefix.
     # @note Updated 2021-05-25.
     # """
-    local prefix version
-    prefix="${GEM_HOME:-}"
+    local version
     version="${1:-}"
-    if [ -z "$prefix" ]
+    if [ -z "$version" ]
     then
-        if [ -z "$version" ]
-        then
-            version='latest'
-        else
-            version="$(_koopa_major_minor_version "$version")"
-        fi
-        prefix="$(_koopa_opt_prefix)/ruby-packages/${version}"
+        version='latest'
+    else
+        version="$(_koopa_major_minor_version "$version")"
     fi
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/ruby-packages/${version}"
     return 0
 }
 
@@ -582,32 +555,24 @@ _koopa_rust_packages_prefix() { # {{{1
     # - CARGO_HOME
     # - RUSTUP_HOME
     # """
-    local prefix version
-    prefix="${CARGO_HOME:-}"
+    local version
     version="${1:-}"
-    if [ -z "$prefix" ]
+    if [ -z "$version" ]
     then
-        if [ -z "$version" ]
-        then
-            version='latest'
-        else
-            version="$(_koopa_major_minor_version "$version")"
-        fi
-        prefix="$(_koopa_opt_prefix)/rust-packages/${version}"
+        version='latest'
+    else
+        version="$(_koopa_major_minor_version "$version")"
     fi
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/rust-packages/${version}"
     return 0
 }
 
 _koopa_rust_prefix() { # {{{1
     # """
     # Rust (rustup) install prefix.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-25.
     # """
-    local prefix
-    prefix="${RUSTUP_HOME:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_opt_prefix)/rust"
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_opt_prefix)/rust"
     return 0
 }
 
