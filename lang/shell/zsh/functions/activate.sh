@@ -143,7 +143,7 @@ _koopa_activate_zsh_plugins() { # {{{1
 _koopa_activate_zsh_prompt() { # {{{1
     # """
     # Activate Zsh prompt.
-    # Updated 2020-11-24.
+    # Updated 2021-05-25.
     #
     # See also:
     # - https://github.com/sindresorhus/pure
@@ -152,11 +152,13 @@ _koopa_activate_zsh_prompt() { # {{{1
     # This won't work if an oh-my-zsh theme is enabled.
     # This step must be sourced after oh-my-zsh.
     # """
-    [[ "${KOOPA_TEST:-}" -eq 1 ]] && set +u
+    local nounset
+    nounset="$(_koopa_boolean_nounset)"
+    [[ "$nounset" -eq 1 ]] && set +u
     setopt promptsubst
     autoload -U promptinit
     promptinit
     prompt koopa
-    [[ "${KOOPA_TEST:-}" -eq 1 ]] && set -u
+    [[ "$nounset" -eq 1 ]] && set -u
     return 0
 }
