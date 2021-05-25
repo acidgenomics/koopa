@@ -378,11 +378,15 @@ _koopa_node_packages_prefix() { # {{{1
     # Node.js (NPM) packages prefix.
     # @note Updated 2021-05-25.
     # """
-    local version x
+    local version
     version="${1:-}"
-    [ -z "$version" ] && version='latest'
-    x="$(_koopa_opt_prefix)/node-packages/${version}"
-    _koopa_print "$x"
+    if [ -z "$version" ]
+    then
+        version='latest'
+    else
+        version="$(_koopa_major_minor_version "$version")"
+    fi
+    _koopa_print "$(_koopa_opt_prefix)/node-packages/${version}"
     return 0
 }
 

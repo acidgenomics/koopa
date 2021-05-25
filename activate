@@ -480,6 +480,7 @@ __koopa_activate() { # {{{1
         _koopa_activate_gcc_colors || return 1
         _koopa_activate_emacs || return 1
         _koopa_activate_go || return 1
+        _koopa_activate_node || return 1
         _koopa_activate_openjdk || return 1
         _koopa_activate_aspera || return 1
         _koopa_activate_nextflow || return 1
