@@ -3,25 +3,28 @@
 koopa::find_app_version() { # {{{1
     # """
     # Find the latest application version.
-    # @note Updated 2020-11-22.
+    # @note Updated 2021-05-25.
     # """
-    local name prefix x
+    local find name prefix sort tail x
     koopa::assert_has_args "$#"
+    find="$(koopa::locate_find)"
+    sort="$(koopa::locate_sort)"
+    tail="$(koopa::locate_tail)"
     name="${1:?}"
     prefix="$(koopa::app_prefix)"
     koopa::assert_is_dir "$prefix"
     prefix="${prefix}/${name}"
     koopa::assert_is_dir "$prefix"
     x="$( \
-        find "$prefix" \
+        "$find" "$prefix" \
             -mindepth 1 \
             -maxdepth 1 \
-            -type d \
-        | sort \
-        | tail -n 1 \
+            -type 'd' \
+        | "$sort" \
+        | "$tail" -n 1 \
     )"
-    koopa::assert_is_dir "$x"
-    x="$(basename "$x")"
+    [[ -d "$x" ]] || return 1
+    x="$(koopa::basename "$x")"
     koopa::print "$x"
     return 0
 }
@@ -34,10 +37,11 @@ koopa::install_app() { # {{{1
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
     # """
-    local arr dict link_args pkgs pos str
+    local arr dict link_args pkgs pos str tee
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     koopa::is_shared_install && koopa::assert_is_admin
+    tee="$(koopa::locate_tee)"
     # Use a dictionary approach for storing configuration variables.
     declare -A dict=(
         [arch]="$(koopa::arch)"
@@ -191,9 +195,9 @@ at '${dict[prefix]}'."
         IFS=',' read -r -a pkgs <<< "${dict[opt]}"
         koopa::activate_opt_prefix "${pkgs[@]}"
     fi
-    if koopa::is_shared_install && koopa::is_installed ldconfig
+    if koopa::is_linux && koopa::is_shared_install
     then
-        sudo ldconfig || return 1
+        koopa::update_ldconfig
     fi
     dict[tmp_dir]="$(koopa::tmp_dir)"
     (
@@ -203,7 +207,7 @@ at '${dict[prefix]}'."
         export INSTALL_PREFIX="${dict[prefix]}"
         export INSTALL_VERSION="${dict[version]}"
         "${dict[function]}" "$@"
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "${dict[tmp_dir]}"
     koopa::sys_set_permissions -r "${dict[prefix]}"
     koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
@@ -222,9 +226,9 @@ at '${dict[prefix]}'."
         # Including the 'true' catch here to avoid 'cp' issues on Arch Linux.
         koopa::link_app "${link_args[@]}" || true
     fi
-    if koopa::is_shared_install && koopa::is_installed ldconfig
+    if koopa::is_linux && koopa::is_shared_install
     then
-        sudo ldconfig || return 1
+        koopa::update_ldconfig
     fi
     # Reset global variables, if applicable.
     if [[ "${dict[path_harden]}" -eq 1 ]]
@@ -252,7 +256,7 @@ at '${dict[prefix]}'."
 koopa::link_app() { # {{{1
     # """
     # Symlink application into build directory.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-25.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -271,8 +275,10 @@ koopa::link_app() { # {{{1
     # @examples
     # koopa::link_app emacs 26.3
     # """
-    local app_prefix app_subdirs cp_flags include_dirs make_prefix name
-    local pos version
+    local app_prefix app_subdirs cp_flags find include_dirs make_prefix name
+    local pos sort version
+    find="$(koopa::locate_find)"
+    sort="$(koopa::locate_sort)"
     include_dirs=''
     version=''
     pos=()
@@ -329,8 +335,12 @@ koopa::link_app() { # {{{1
         done
     else
         readarray -t app_subdirs <<< "$( \
-            find "$app_prefix" -mindepth 1 -maxdepth 1 -type d -print \
-            | sort \
+            "$find" "$app_prefix" \
+                -mindepth 1 \
+                -maxdepth 1 \
+                -type 'd' \
+                -print \
+            | "$sort" \
         )"
     fi
     # Copy as symbolic links.

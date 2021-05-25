@@ -513,7 +513,7 @@ koopa::reset_permissions() { # {{{1
     koopa::chown -R "${user}:${group}" "$dir"
     "$find" "$dir" -type 'd' -print0 \
         | "$xargs" -0 -I {} \
-            chmod 'u=rwx,g=rwx,o=rx' {}
+            "$chmod" 'u=rwx,g=rwx,o=rx' {}
     "$find" "$dir" -type 'f' -print0 \
         | "$xargs" -0 -I {} \
             "$chmod" 'u=rw,g=rw,o=r' {}

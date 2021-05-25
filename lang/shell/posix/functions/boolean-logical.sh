@@ -3,7 +3,7 @@
 __koopa_git_has_unstaged_changes() { # {{{1
     # """
     # Are there unstaged changes in current git repo?
-    # @note Updated 2020-10-06.
+    # @note Updated 2021-05-25.
     #
     # Don't use '--quiet' flag here, as it can cause shell to exit if 'set -e'
     # mode is enabled.
@@ -12,23 +12,25 @@ __koopa_git_has_unstaged_changes() { # {{{1
     # - https://stackoverflow.com/questions/3878624/
     # - https://stackoverflow.com/questions/28296130/
     # """
-    local x
-    git update-index --refresh >/dev/null 2>&1
-    x="$(git diff-index HEAD -- 2>/dev/null)"
+    local git x
+    git="$(_koopa_locate_git)"
+    "$git" update-index --refresh >/dev/null 2>&1
+    x="$("$git" diff-index 'HEAD' -- 2>/dev/null)"
     [ -n "$x" ]
 }
 
 __koopa_git_needs_pull_or_push() { # {{{1
     # """
     # Does the current git repo need a pull or push?
-    # @note Updated 2020-10-06.
+    # @note Updated 2021-05-25.
     #
     # This will return an expected fatal warning when no upstream exists.
     # We're handling this case by piping errors to '/dev/null'.
     # """
-    local rev_1 rev_2
-    rev_1="$(git rev-parse HEAD 2>/dev/null)"
-    rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
+    local git rev_1 rev_2
+    git="$(_koopa_locate_git)"
+    rev_1="$("$git" rev-parse 'HEAD' 2>/dev/null)"
+    rev_2="$("$git" rev-parse '@{u}' 2>/dev/null)"
     [ "$rev_1" != "$rev_2" ]
 }
 
