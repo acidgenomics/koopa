@@ -19,7 +19,9 @@
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
 
+PERL_VERSION="latest"
 PYTHON_VERSION="latest"
+RUBY_VERSION="latest"
 RUST_VERSION="latest"
 
 # Package libraries {{{1
@@ -87,12 +89,18 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves consistency when running inside RStudio Server.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-# Python site packages.
-PATH="${KOOPA_OPT_PREFIX}/python/bin:${PATH}"
-PATH="${KOOPA_OPT_PREFIX}/python-packages/${PYTHON_VERSION}/bin:${PATH}"
+# Ruby.
+PATH="${KOOPA_OPT_PREFIX}/ruby-packages/${RUBY_VERSION}/bin:${PATH}"
+
+# Perl.
+PATH="${KOOPA_OPT_PREFIX}/perl-packages/${PERL_VERSION}/bin:${PATH}"
 
 # Rust.
 PATH="${KOOPA_OPT_PREFIX}/rust-packages/${RUST_VERSION}/bin:${PATH}"
+
+# Python.
+PATH="${KOOPA_OPT_PREFIX}/python/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/python-packages/${PYTHON_VERSION}/bin:${PATH}"
 
 # Conda.
 PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
