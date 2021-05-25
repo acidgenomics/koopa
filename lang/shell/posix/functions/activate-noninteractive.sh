@@ -581,7 +581,7 @@ _koopa_activate_openjdk() { # {{{1
 _koopa_activate_perl_packages() { # {{{1
     # """
     # Activate Perl local library.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-25.
     # @seealso
     # - brew info perl
     # """
@@ -589,7 +589,13 @@ _koopa_activate_perl_packages() { # {{{1
     prefix="$(_koopa_perl_packages_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_is_installed perl || return 0
-    eval "$(perl "-I${prefix}/lib/perl5" "-Mlocal::lib=${prefix}")"
+    # NOTE This step may error/warn if new shell is activated while Perl
+    # packages are installing.
+    eval "$( \
+        perl \
+            "-I${prefix}/lib/perl5" \
+            "-Mlocal::lib=${prefix}" \
+    )"
     _koopa_activate_prefix "$prefix"
     return 0
 }

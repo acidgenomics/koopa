@@ -203,6 +203,7 @@ koopa::install_r_cmd_check() { # {{{1
     return 0
 }
 
+# FIXME Need to set permissions on the library.
 koopa::install_r_packages() { # {{{1
     # """
     # Install R packages.
@@ -216,6 +217,7 @@ koopa::install_r_packages() { # {{{1
     return 0
 }
 
+# FIXME Need to set permissions on the library.
 koopa::update_r_packages() { # {{{1
     # """
     # Update R packages.

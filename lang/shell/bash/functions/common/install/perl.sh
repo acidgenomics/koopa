@@ -35,6 +35,7 @@ koopa:::install_perl() { # {{{1
     return 0
 }
 
+# FIXME Need to set the permissions on the package library.
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
@@ -54,6 +55,12 @@ koopa::install_perl_packages() { # {{{1
     # NOTE Consider also checking for '~/.cpan' here also.
     if [[ ! -d "$prefix" ]]
     then
+        koopa::sys_mkdir "$prefix"
+        koopa::sys_set_permissions "$(koopa::dirname "$prefix")"
+        (
+            koopa::cd "$(koopa::dirname "$prefix")"
+            koopa::sys_ln "$(koopa::basename "$prefix")" 'latest'
+        )
         PERL_MM_OPT="INSTALL_BASE=$prefix" \
             cpan 'local::lib'
     fi
@@ -79,6 +86,7 @@ koopa::install_perl_packages() { # {{{1
         koopa::alert "${module}"
         cpanm "$module" &>/dev/null
     done
+    koopa::sys_set_permissions -r "$prefix"
     koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
