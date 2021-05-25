@@ -58,18 +58,19 @@ koopa::brew_outdated() { # {{{1
 koopa::brew_reset_core_repo() { # {{{1
     # """
     # Ensure internal 'homebrew-core' repo is clean.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-05-25.
     # """
-    local branch origin
-    koopa::assert_is_installed brew
+    local branch git origin
+    koopa::assert_is_installed 'brew'
+    git="$(koopa::locate_git)"
     (
         koopa::cd "$(brew --repo 'homebrew/core')"
         origin='origin'
         branch="$(koopa::git_default_branch)"
-        git checkout -q "$branch"
-        git branch -q "$branch" -u "${origin}/${branch}"
-        git reset -q --hard "${origin}/${branch}"
-        # > git branch -vv
+        "$git" checkout -q "$branch"
+        "$git" branch -q "$branch" -u "${origin}/${branch}"
+        "$git" reset -q --hard "${origin}/${branch}"
+        # > "$git" branch -vv
     )
     return 0
 }
