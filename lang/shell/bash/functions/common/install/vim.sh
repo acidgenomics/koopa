@@ -11,6 +11,12 @@ koopa:::install_vim() { # {{{1
     # """
     # Install Vim.
     # @note Updated 2021-05-25.
+    #
+    # On Ubuntu, '--enable-rubyinterp' currently causing a false positive error
+    # related to ncurses, even when '--with-tlib' is correctly set.
+    #
+    # @seealso
+    # - https://github.com/vim/vim/issues/1081
     # """
     local conf_args file jobs make name prefix python python_config
     local python_config_dir url version
