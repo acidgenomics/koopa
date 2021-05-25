@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_anaconda() { # {{{1
-    # """
-    # Install Anaconda.
-    # @note Updated 2021-05-25.
-    # """
-    koopa::install_app \
-        --name='anaconda' \
-        --name-fancy='Anaconda' \
-        --no-link \
-        "$@"
-    return 0
-}
-
 koopa::install_conda() { # {{{1
     # """
     # Install Conda.
@@ -22,15 +9,14 @@ koopa::install_conda() { # {{{1
     return 0
 }
 
-koopa::install_miniconda() { # {{{1
+koopa::install_anaconda() { # {{{1
     # """
-    # Install Miniconda.
+    # Install Anaconda.
     # @note Updated 2021-05-25.
     # """
     koopa::install_app \
-        --name='conda' \
-        --name-fancy='Miniconda' \
-        --installer='miniconda' \
+        --name='anaconda' \
+        --name-fancy='Anaconda' \
         --no-link \
         "$@"
     return 0
@@ -70,6 +56,20 @@ koopa:::install_anaconda() { # {{{1
     koopa::ln \
         "${koopa_prefix}/etc/conda/condarc" \
         "${prefix}/.condarc"
+    return 0
+}
+
+koopa::install_miniconda() { # {{{1
+    # """
+    # Install Miniconda.
+    # @note Updated 2021-05-25.
+    # """
+    koopa::install_app \
+        --name='conda' \
+        --name-fancy='Miniconda' \
+        --installer='miniconda' \
+        --no-link \
+        "$@"
     return 0
 }
 
