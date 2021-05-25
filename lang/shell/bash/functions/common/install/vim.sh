@@ -47,7 +47,9 @@ koopa:::install_vim() { # {{{1
     )
     if koopa::is_linux
     then
-        conf_args+=("LDFLAGS=-Wl,-rpath=${prefix}/lib")
+        conf_args+=(
+            "LDFLAGS=-Wl,-rpath=${prefix}/lib"
+        )
     fi
     name='vim'
     file="v${version}.tar.gz"

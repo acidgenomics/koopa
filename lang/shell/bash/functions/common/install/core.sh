@@ -40,6 +40,7 @@ koopa::install_app() { # {{{1
     koopa::is_shared_install && koopa::assert_is_admin
     # Use a dictionary approach for storing configuration variables.
     declare -A dict=(
+        [arch]="$(koopa::arch)"
         [homebrew_opt]=''
         [installer]=''
         [link_app]=1
@@ -155,6 +156,11 @@ at '${dict[prefix]}'."
         PATH='/usr/bin:/bin:/usr/sbin:/sbin'
         export PATH
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
+        if koopa::is_linux
+        then
+            PKG_CONFIG_PATH="/usr/lib/${dict[arch]}-linux-gnu/pkgconfig:\
+/usr/lib/pkgconfig:/usr/share/pkgconfig"
+        fi
     fi
     # Activate packages installed in Homebrew opt.
     if [[ -n "${dict[homebrew_opt]}" ]]
