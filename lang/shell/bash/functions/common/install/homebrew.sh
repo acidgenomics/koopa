@@ -46,12 +46,12 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-25.
     #
     # Custom brewfile is supported using a positional argument.
     # """
     local brewfile install_args name_fancy
-    koopa::assert_has_no_args_le "$#" 1
+    koopa::assert_has_args_le "$#" 1
     koopa::assert_is_admin
     brewfile="${1:-$(koopa::brew_brewfile)}"
     name_fancy='Homebrew Bundle'
