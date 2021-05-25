@@ -158,7 +158,7 @@ at '${dict[prefix]}'."
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
         if koopa::is_linux
         then
-            PKG_CONFIG_PATH="/usr/lib/${dict[arch]}-linux-gnu/pkgconfig:\
+            export PKG_CONFIG_PATH="/usr/lib/${dict[arch]}-linux-gnu/pkgconfig:\
 /usr/lib/pkgconfig:/usr/share/pkgconfig"
         fi
     fi
