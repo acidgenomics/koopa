@@ -3,6 +3,7 @@
 koopa::install_pyenv() { # {{{1
     koopa::install_app \
         --name='pyenv' \
+        --no-link \
         "$@"
 }
 

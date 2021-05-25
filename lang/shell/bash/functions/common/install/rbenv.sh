@@ -3,6 +3,7 @@
 koopa::install_rbenv() { # {{{1
     koopa::install_app \
         --name='rbenv' \
+        --no-link \
         "$@"
 }
 
