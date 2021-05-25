@@ -34,7 +34,7 @@ koopa::install_app() { # {{{1
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
     # """
-    local dict link_args pkgs pos
+    local arr dict link_args pkgs pos str
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     koopa::is_shared_install && koopa::assert_is_admin
@@ -153,13 +153,30 @@ at '${dict[prefix]}'."
             [PATH]="${PATH:-}"
             [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
         )
-        PATH='/usr/bin:/bin:/usr/sbin:/sbin'
+        unset -v LD_LIBRARY_PATH
+        # Ensure clean 'PATH'.
+        arr=(
+            '/usr/bin'
+            '/bin'
+            '/usr/sbin'
+            '/sbin'
+        )
+        str="$(koopa::paste0 ':' "${arr[@]}")"
+        PATH="$str"
         export PATH
-        unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
+        # Ensure clean 'PKG_CONFIG_PATH'.
         if koopa::is_linux
         then
-            export PKG_CONFIG_PATH="/usr/lib/${dict[arch]}-linux-gnu/pkgconfig:\
-/usr/lib/pkgconfig:/usr/share/pkgconfig"
+            arr=(
+                "/usr/lib/${dict[arch]}-linux-gnu/pkgconfig"
+                '/usr/lib/pkgconfig'
+                '/usr/share/pkgconfig'
+            )
+            str="$(koopa::paste0 ':' "${arr[@]}")"
+            PKG_CONFIG_PATH="$str"
+            export PKG_CONFIG_PATH
+        else
+            unset -v PKG_CONFIG_PATH
         fi
     fi
     # Activate packages installed in Homebrew opt.
