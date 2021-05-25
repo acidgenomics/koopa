@@ -568,6 +568,7 @@ _koopa_activate_node() { # {{{1
     # """
     local prefix
     prefix="$(_koopa_node_packages_prefix)"
+    [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
     export NPM_CONFIG_PREFIX="$prefix"
     return 0
