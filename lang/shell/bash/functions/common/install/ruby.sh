@@ -56,8 +56,8 @@ koopa::install_ruby_packages() { # {{{1
     fi
     name_fancy='Ruby gems'
     koopa::install_start "$name_fancy"
-    koopa::dl 'Target' "$gemdir"
     gemdir="$(gem environment gemdir)"
+    koopa::dl 'Target' "$gemdir"
     if [[ "$#" -eq 0 ]]
     then
         default=1
