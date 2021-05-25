@@ -48,28 +48,16 @@ koopa::install_ruby_packages() { # {{{1
     local default gemdir gem gems name_fancy
     koopa::assert_has_no_envs
     koopa::activate_ruby
-    if ! koopa::is_installed gem
-    then
-        koopa::alert_note 'gem is not installed.'
-        return 0
-    fi
+    koopa::configure_ruby
+    koopa::assert_is_installed 'gem'
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'libffi'
     fi
     name_fancy='Ruby gems'
     koopa::install_start "$name_fancy"
-    gemdir="$(gem environment gemdir)"
     koopa::dl 'Target' "$gemdir"
-    if [[ ! -d "$gemdir" ]]
-    then
-        koopa::sys_mkdir "$gemdir"
-        (
-            koopa::sys_set_permissions "$(koopa::dirname "$gemdir")"
-            koopa::cd "$(koopa::dirname "$gemdir")"
-            koopa::sys_ln "$(koopa::basename "$gemdir")" 'latest'
-        )
-    fi
+    gemdir="$(gem environment gemdir)"
     if [[ "$#" -eq 0 ]]
     then
         default=1

@@ -948,6 +948,10 @@ koopa::ruby_api_version() { # {{{1
     _koopa_ruby_api_version "$@"
 }
 
+koopa::ruby_packages_prefix() { # {{{1
+    _koopa_ruby_packages_prefix "$@"
+}
+
 koopa::rust_packages_prefix() { # {{{1
     _koopa_rust_packages_prefix "$@"
 }
