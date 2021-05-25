@@ -20,6 +20,11 @@ koopa:::install_rust() { # {{{1
     rustup_prefix="$prefix"
     cargo_prefix="$(koopa::rust_packages_prefix "$version")"
     koopa::sys_mkdir "$cargo_prefix" "$rustup_prefix"
+    koopa::sys_set_permissions "$(koopa::dirname "$cargo_prefix")"
+    (
+        koopa::cd "$(koopa::dirname "$cargo_prefix")"
+        koopa::sys_ln "$(koopa::basename "$cargo_prefix")" 'latest'
+    )
     CARGO_HOME="$cargo_prefix"
     RUSTUP_HOME="$rustup_prefix"
     export CARGO_HOME RUSTUP_HOME
@@ -32,7 +37,6 @@ koopa:::install_rust() { # {{{1
     koopa::chmod +x "$file"
     # Can check the version of install script with '--version'.
     "./${file}" --no-modify-path -v -y
-    koopa::sys_set_permissions "$(koopa::dirname "$cargo_prefix")"
     koopa::sys_set_permissions -r "$cargo_prefix"
     return 0
 }
