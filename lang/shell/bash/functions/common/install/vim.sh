@@ -33,22 +33,25 @@ koopa:::install_vim() { # {{{1
         "--prefix=${prefix}"
         "--with-python3-command=${python}"
         "--with-python3-config-dir=${python_config_dir}"
-        '--enable-cscope'
-        '--enable-gui=no'
-        '--enable-luainterp'
-        '--enable-multibyte'
-        '--enable-perlinterp'
         '--enable-python3interp'
-        '--enable-python3interp=yes'
-        '--enable-rubyinterp'
-        '--enable-terminal'
-        '--with-tlib=ncurses'
-        '--without-x'
     )
     if koopa::is_linux
     then
         conf_args+=(
             "LDFLAGS=-Wl,-rpath=${prefix}/lib"
+        )
+    elif koopa::is_macos
+    then
+        conf_args+=(
+            '--enable-cscope'
+            '--enable-gui=no'
+            '--enable-luainterp'
+            '--enable-multibyte'
+            '--enable-perlinterp'
+            '--enable-rubyinterp'
+            '--enable-terminal'
+            '--with-tlib=ncurses'
+            '--without-x'
         )
     fi
     name='vim'
