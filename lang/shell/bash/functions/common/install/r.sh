@@ -211,9 +211,9 @@ koopa::install_r_packages() { # {{{1
     local name_fancy pkg_prefix
     name_fancy='R packages'
     pkg_prefix="$(koopa::r_packages_prefix)"
-    koopa::assert_is_dir "$pkg_prefix"
     koopa::install_start "$name_fancy"
     koopa::configure_r
+    koopa::assert_is_dir "$pkg_prefix"
     koopa::rscript 'installRPackages' "$@"
     koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::install_success "$name_fancy"
@@ -228,9 +228,9 @@ koopa::update_r_packages() { # {{{1
     local name_fancy
     name_fancy='R packages'
     pkg_prefix="$(koopa::r_packages_prefix)"
-    koopa::assert_is_dir "$pkg_prefix"
     koopa::update_start "$name_fancy"
     koopa::configure_r
+    koopa::assert_is_dir "$pkg_prefix"
     koopa::rscript 'updateRPackages' "$@"
     koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::update_success "$name_fancy"
