@@ -4,6 +4,8 @@ koopa::configure_node() { # {{{1
     # """
     # Configure Node.js (and NPM).
     # @note Updated 2021-05-25.
+    # @seealso
+    # > npm config get prefix
     # """
     local version
     koopa::assert_is_installed 'node'
