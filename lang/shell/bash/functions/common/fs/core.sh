@@ -1,5 +1,39 @@
 #!/usr/bin/env bash
 
+koopa::chgrp() { # {{{1
+    # """
+    # GNU chgrp.
+    # @note Updated 2021-05-25.
+    # """
+    local chgrp pos sudo which_chgrp
+    sudo=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            -S)
+                sudo=1
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    which_chgrp="$(koopa::locate_chgrp)"
+    if [[ "$sudo" -eq 1 ]]
+    then
+        chgrp=('sudo' "$which_chgrp")
+    else
+        chgrp=("$which_chgrp")
+    fi
+    "${chgrp[@]}" "$@"
+    return 0
+}
+
 koopa::chmod() { # {{{1
     # """
     # GNU chmod.
