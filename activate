@@ -85,11 +85,10 @@ __koopa_bash_source() { # {{{1
 __koopa_export_koopa_interactive() { # {{{1
     # """
     # Export 'KOOPA_INTERACTIVE' variable.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-25.
     # """
     unset -v KOOPA_INTERACTIVE
-    if __koopa_is_interactive || \
-        [ "${KOOPA_FORCE:-0}" -eq 1 ]
+    if __koopa_is_interactive || [ "${KOOPA_FORCE:-0}" -eq 1 ]
     then
         KOOPA_INTERACTIVE=1
         export KOOPA_INTERACTIVE
@@ -100,9 +99,10 @@ __koopa_export_koopa_interactive() { # {{{1
 __koopa_export_koopa_prefix() { # {{{1
     # """
     # Export 'KOOPA_PREFIX' variable.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-25.
     # """
     local prefix script shell
+    unset -v KOOPA_PREFIX
     shell="$(__koopa_shell_name)"
     case "$shell" in
         bash|zsh)
@@ -132,11 +132,12 @@ __koopa_export_koopa_prefix() { # {{{1
 __koopa_export_koopa_subshell() { # {{{1
     # """
     # Export 'KOOPA_SUBSHELL' variable.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-25.
     #
     # This function evaluates whether 'KOOPA_PREFIX' is defined, which should be
     # the case only inside a subshell.
     # """
+    unset -v KOOPA_SUBSHELL
     [ -z "${KOOPA_PREFIX:-}" ] && return 0
     KOOPA_SUBSHELL=1
     export KOOPA_SUBSHELL
@@ -146,12 +147,9 @@ __koopa_export_koopa_subshell() { # {{{1
 __koopa_export_user() { # {{{1
     # """
     # Export 'USER' variable.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-25.
     # """
-    if [ -z "${USER:-}" ]
-    then
-        USER="$(id -un)"
-    fi
+    [ -z "${USER:-}" ] && USER="$(id -un)"
     export USER
     return 0
 }
@@ -415,7 +413,7 @@ __koopa_zsh_source() { # {{{1
 __koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-25.
     # """
     case "${1:-}" in
         --help|-h)
@@ -435,10 +433,6 @@ __koopa_activate() { # {{{1
         fi
     fi
     __koopa_preflight || return 0
-    unset -v \
-        KOOPA_INTERACTIVE \
-        KOOPA_SHELL \
-        KOOPA_SUBSHELL
     __koopa_export_koopa_interactive || return 1
     __koopa_export_koopa_subshell || return 1
     __koopa_export_koopa_prefix || return 1
@@ -521,6 +515,7 @@ __koopa_activate() { # {{{1
     fi
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
+        _koopa_duration_stop || return 1
         set +o errexit
         set +o nounset
         # > set +o xtrace
@@ -529,14 +524,13 @@ __koopa_activate() { # {{{1
             set +o errtrace
             set +o pipefail
         fi
-        _koopa_duration_stop || return 1
-        # > if _koopa_is_installed locale
-        # > then
-        # >     _koopa_alert_info 'Locale'
-        # >     locale
-        # > fi
-        # > _koopa_alert_info 'Shell options'
-        # > set +o
+        if _koopa_is_installed locale
+        then
+            _koopa_alert_info 'Locale'
+            locale
+        fi
+        _koopa_alert_info 'Shell options'
+        set +o
         _koopa_alert_info 'Shell variables'
         _koopa_dl \
             '$' "${$}" \
