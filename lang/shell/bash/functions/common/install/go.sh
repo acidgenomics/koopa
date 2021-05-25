@@ -10,9 +10,9 @@ koopa::install_go() { # {{{1
 koopa:::install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-25.
     # """
-    local arch file name os_id prefix url version
+    local arch file gopath name os_id prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='go'
@@ -29,5 +29,13 @@ koopa:::install_go() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cp -t "$prefix" "${name}/"*
+    # FIXME Consider putting this code on 'koopa::configure_go'.
+    gopath="$(koopa::go_packages_prefix)"
+    koopa::sys_mkdir "$gopath"
+    (
+        koopa::sys_set_permissions "$(koopa::dirname "$gopath")"
+        koopa::cd "$(koopa::dirname "$gopath")"
+        koopa::sys_ln "$(koopa::basename "$gopath")" 'latest'
+    )
     return 0
 }

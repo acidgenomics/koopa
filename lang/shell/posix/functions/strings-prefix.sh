@@ -181,6 +181,7 @@ _koopa_fzf_prefix() { # {{{1
     return 0
 }
 
+# FIXME Use 'latest' here by default.
 _koopa_go_packages_prefix() { # {{{1
     # """
     # Go packages 'GOPATH', for building from source.
@@ -374,6 +375,19 @@ _koopa_monorepo_prefix() { # {{{1
     return 0
 }
 
+_koopa_node_packages_prefix() { # {{{1
+    # """
+    # Node.js (NPM) packages prefix.
+    # @note Updated 2021-05-25.
+    # """
+    local version x
+    version="${1:-}"
+    [ -z "$version" ] && version='latest'
+    x="$(_koopa_opt_prefix)/node-packages/${version}"
+    _koopa_print "$x"
+    return 0
+}
+
 _koopa_openjdk_prefix() { # {{{1
     # """
     # OpenJDK prefix.
@@ -392,6 +406,7 @@ _koopa_opt_prefix() { # {{{1
     return 0
 }
 
+# FIXME Use latest here by default.
 _koopa_perl_packages_prefix() { # {{{1
     # """
     # Perl site library prefix.
@@ -459,6 +474,7 @@ _koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
+# FIXME Use 'latest' here by default.
 _koopa_python_packages_prefix() { # {{{1
     # """
     # Python site packages library prefix.
@@ -494,6 +510,7 @@ _koopa_python_system_packages_prefix() { # {{{1
     return 0
 }
 
+# FIXME Use 'latest' here by default.
 _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
@@ -531,6 +548,7 @@ _koopa_refdata_prefix() { # {{{1
     return 0
 }
 
+# FIXME Use 'latest' here by default.
 _koopa_ruby_packages_prefix() { # {{{1
     # """
     # Ruby packags (gems) prefix.
@@ -552,6 +570,7 @@ _koopa_ruby_packages_prefix() { # {{{1
     return 0
 }
 
+# FIXME Use 'latest' here by default.
 _koopa_rust_packages_prefix() { # {{{1
     # """
     # Rust packages (cargo) install prefix.
