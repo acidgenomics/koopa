@@ -215,6 +215,14 @@ _koopa_locate_gcc() { # {{{1
     __koopa_locate_app "gcc@${version}" "gcc-${version}" "$@"
 }
 
+_koopa_locate_git() { # {{{1
+    # """
+    # Locate git.
+    # @note Updated 2021-05-25.
+    # """
+    __koopa_locate_app 'git' 'git' "$@"
+}
+
 _koopa_locate_grep() { # {{{1
     # """
     # Locate GNU grep.

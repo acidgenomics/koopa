@@ -46,6 +46,7 @@ test_all_coreutils() { # {{{1
         'dirname'
         'du'
         'find'
+        'git'
         'grep'
         'head'
         'id'

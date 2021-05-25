@@ -576,6 +576,10 @@ koopa::locate_gcc() { # {{{1
     _koopa_locate_gcc "$@"
 }
 
+koopa::locate_git() { # {{{1
+    _koopa_locate_git "$@"
+}
+
 koopa::locate_grep() { # {{{1
     _koopa_locate_grep "$@"
 }
