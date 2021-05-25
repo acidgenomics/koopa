@@ -241,6 +241,7 @@ koopa:::koopa_system() { # {{{1
         disable-touch-id-sudo | \
         enable-passwordless-sudo | \
         enable-touch-id-sudo | \
+        find-non-symlinked-make-files | \
         fix-sudo-setrlimit-error | \
         fix-zsh-permissions | \
         host-id | \
