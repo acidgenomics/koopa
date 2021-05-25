@@ -18,15 +18,14 @@ koopa::array_to_r_vector() { # {{{1
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2021-05-03.
+    # @note Updated 2021-05-25.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
     local etc_prefix make_prefix pkg_index r r_prefix
     koopa::assert_has_args_le "$#" 1
-    r="${1:-$(koopa::locate_r)}"
-    # FIXME OK to take this check out?
-    koopa::assert_is_installed "$r"
+    r="${1:-}"
+    [[ -z "$r" ]] && r="$(koopa::locate_r)"
     r="$(koopa::which_realpath "$r")"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
@@ -56,6 +55,7 @@ koopa::configure_r() { # {{{1
     koopa::link_r_site_library "$r"
     koopa::r_javareconf "$r"
     koopa::r_rebuild_docs "$r"
+    koopa::sys_set_permissions -r "${r_prefix}/site-library"
     koopa::alert_success 'Update of R configuration was successful.'
     return 0
 }
@@ -157,7 +157,7 @@ koopa::link_r_etc() { # {{{1
 koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2021-05-19.
+    # @note Updated 2021-05-25.
     #
     # R on Fedora won't pick up site library in '--vanilla' mode unless we
     # symlink the site-library into '/usr/local/lib/R' as well.
@@ -175,8 +175,13 @@ koopa::link_r_site_library() { # {{{1
     lib_source="$(koopa::r_packages_prefix "$version")"
     lib_target="${r_prefix}/site-library"
     koopa::dl 'Site library' "$lib_source"
-    koopa::sys_mkdir "$lib_source"
     koopa::alert "Linking '${lib_source}' into R install at '${lib_target}'."
+    koopa::sys_mkdir "$lib_source"
+    (
+        koopa::sys_set_permissions "$(koopa::dirname "$lib_source")"
+        koopa::cd "$(koopa::dirname "$lib_source")"
+        koopa::sys_ln "$(koopa::basename "$lib_source")" 'latest'
+    )
     koopa::sys_ln "$lib_source" "$lib_target"
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then
