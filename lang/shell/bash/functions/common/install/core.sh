@@ -26,11 +26,10 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
-# FIXME This needs to set permissions correctly on parent directory.
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-25.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -184,6 +183,7 @@ at '${dict[prefix]}'."
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "${dict[tmp_dir]}"
     koopa::sys_set_permissions -r "${dict[prefix]}"
+    koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
     koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
