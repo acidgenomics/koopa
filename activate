@@ -87,7 +87,6 @@ __koopa_export_koopa_interactive() { # {{{1
     # Export 'KOOPA_INTERACTIVE' variable.
     # @note Updated 2021-05-25.
     # """
-    unset -v KOOPA_INTERACTIVE
     if __koopa_is_interactive || [ "${KOOPA_FORCE:-0}" -eq 1 ]
     then
         KOOPA_INTERACTIVE=1
@@ -102,8 +101,7 @@ __koopa_export_koopa_prefix() { # {{{1
     # @note Updated 2021-05-25.
     # """
     local prefix script shell
-    unset -v KOOPA_PREFIX
-    shell="$(__koopa_shell_name)"
+    shell="${SHELL?}"
     case "$shell" in
         bash|zsh)
             ;;
@@ -137,10 +135,19 @@ __koopa_export_koopa_subshell() { # {{{1
     # This function evaluates whether 'KOOPA_PREFIX' is defined, which should be
     # the case only inside a subshell.
     # """
-    unset -v KOOPA_SUBSHELL
     [ -z "${KOOPA_PREFIX:-}" ] && return 0
     KOOPA_SUBSHELL=1
     export KOOPA_SUBSHELL
+    return 0
+}
+
+__koopa_export_shell() { # {{{1
+    # """
+    # Export 'SHELL' variable.
+    # @note Updated 2021-05-25.
+    # """
+    SHELL="$(__koopa_shell_name)"
+    export SHELL
     return 0
 }
 
@@ -157,11 +164,11 @@ __koopa_export_user() { # {{{1
 __koopa_header() { # {{{1
     # """
     # Shared shell header file location.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-25.
     # """
     local file prefix shell
     prefix="${KOOPA_PREFIX:?}/lang/shell"
-    shell="$(__koopa_shell_name)"
+    shell="${SHELL?}"
     [ -d "${prefix}/${shell}" ] || shell='posix'
     file="${prefix}/${shell}/include/header.sh"
     [ -f "$file" ] || return 1
@@ -241,10 +248,7 @@ __koopa_locate_shell() { # {{{1
     # """
     local str
     str=''
-    if [ -n "${KOOPA_SHELL:-}" ]
-    then
-        str="$KOOPA_SHELL"
-    elif __koopa_is_linux
+    if __koopa_is_linux
     then
         if __koopa_is_installed ps sed
         then
@@ -352,9 +356,11 @@ __koopa_realpath() { # {{{1
 __koopa_shell_name() { # {{{1
     # """
     # Current shell name.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-25.
     # """
-    str="$(basename "$(__koopa_locate_shell)")"
+    local shell str
+    shell="$(__koopa_locate_shell)"
+    str="$(basename "$shell")"
     [ -n "$str" ] || return 1
     __koopa_print "$str"
     return 0
@@ -432,7 +438,9 @@ __koopa_activate() { # {{{1
             set -o pipefail
         fi
     fi
+    unset -v KOOPA_INTERACTIVE KOOPA_SHELL KOOPA_SUBSHELL
     __koopa_preflight || return 0
+    __koopa_export_shell || return 1
     __koopa_export_koopa_interactive || return 1
     __koopa_export_koopa_subshell || return 1
     __koopa_export_koopa_prefix || return 1

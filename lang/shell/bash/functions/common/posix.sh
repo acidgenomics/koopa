@@ -784,6 +784,10 @@ koopa::ngettext() { # {{{1
     _koopa_ngettext "$@"
 }
 
+koopa::node_packages_prefix() { # {{{1
+    _koopa_node_packages_prefix "$@"
+}
+
 koopa::openjdk_prefix() { # {{{1
     _koopa_openjdk_prefix "$@"
 }

@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
-koopa::install_start() { # {{{1
+# FIXME Come back to this after we fix bash activation...
+
+koopa:::alert_start() { # {{{1
     # """
-    # Inform the user about start of installation.
-    # @note Updated 2020-07-07.
+    # Inform the user about the start of a process.
+    # @note Updated 2021-05-25.
     # """
-    local msg name version prefix
+    local msg name version prefix verb
+    verb="${1:?}"
+    shift 1
     koopa::assert_has_args_le "$#" 3
     name="${1:?}"
     version=''
@@ -20,34 +24,54 @@ koopa::install_start() { # {{{1
     fi
     if [[ -n "$prefix" ]] && [[ -n "$version" ]]
     then
-        msg="Installing ${name} ${version} at '${prefix}'."
+        msg="${verb} ${name} ${version} at '${prefix}'."
     elif [[ -n "$prefix" ]]
     then
-        msg="Installing ${name} at '${prefix}'."
+        msg="${verb} ${name} at '${prefix}'."
     else
-        msg="Installing ${name}."
+        msg="${verb} ${name}."
     fi
     koopa::h1 "$msg"
     return 0
 }
 
-koopa::install_success() { # {{{1
+koopa:::alert_success() { # {{{1
     # """
-    # Installation success message.
-    # @note Updated 2020-11-17.
+    # Inform the user about the successful completion of a process.
+    # @note Updated 2021-05-25.
     # """
-    local msg name prefix
+    local msg name prefix word
+    verb="${1:?}"
+    shift 1
     koopa::assert_has_args_le "$#" 2
     name="${1:?}"
     prefix="${2:-}"
     if [[ -n "$prefix" ]]
     then
-        msg="Installation of ${name} at '${prefix}' was successful."
+        msg="${word} of ${name} at '${prefix}' was successful."
     else
-        msg="Installation of ${name} was successful."
+        msg="${word} of ${name} was successful."
     fi
     koopa::alert_success "$msg"
     return 0
+}
+
+# FIXME Need to standardize these, so we can also support 'configure' easily.
+
+koopa::install_start() { # {{{1
+    # """
+    # Inform the user about start of installation.
+    # @note Updated 2020-07-07.
+    # """
+    koopa:::alert_start 'Installing' "$@"
+}
+
+koopa::install_success() { # {{{1
+    # """
+    # Inform the user that installation was successful.
+    # @note Updated 2021-05-25.
+    # """
+    koopa:::alert_start 'Installation' "$@"
 }
 
 koopa::uninstall_start() { # {{{1
