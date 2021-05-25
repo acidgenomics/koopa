@@ -4,6 +4,7 @@ koopa::install_geos() { # {{{1
     koopa::install_app \
         --name='geos' \
         --name-fancy='GEOS' \
+        --no-link \
         "$@"
 }
 

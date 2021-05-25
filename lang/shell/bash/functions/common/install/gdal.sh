@@ -4,6 +4,7 @@ koopa::install_gdal() { # {{{1
     koopa::install_app \
         --name='gdal' \
         --name-fancy='GDAL' \
+        --no-link \
         "$@"
 }
 
