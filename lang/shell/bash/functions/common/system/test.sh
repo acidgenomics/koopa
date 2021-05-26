@@ -110,13 +110,14 @@ koopa::test_find_files_by_shebang() { # {{{1
     return 0
 }
 
-# FIXME This needs to ignore comments.
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
     # @note Updated 2021-05-21.
     #
     # Requires Perl-compatible regular expression (PCRE) support (-P).
+    #
+    # This doesn't currently ignore commented lines.
     # """
     local OPTIND failures file grep ignore name pattern x
     koopa::assert_has_args "$#"

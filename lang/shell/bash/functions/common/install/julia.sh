@@ -51,7 +51,7 @@ v${version}/${file}"
     koopa::cd "${name}-${version}"
     # If set, this will interfere with internal LLVM build required for
     # Julia. See 'build.md' file for LLVM details.
-    unset LLVM_CONFIG
+    unset -v LLVM_CONFIG
     # Customize the 'Make.user' file.
     # Need to ensure we configure internal LLVM build here.
     cat > 'Make.user' << END
