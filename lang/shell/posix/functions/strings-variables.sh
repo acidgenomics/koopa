@@ -44,11 +44,10 @@ _koopa_arch2() { # {{{1
 __koopa_id() { # {{{1
     # """
     # Return ID string.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-25.
     # """
-    local id x
-    id="$(_koopa_locate_id)"
-    x="$("$id" "$@")"
+    local x
+    x="$(id "$@")"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
@@ -254,9 +253,8 @@ _koopa_os_id() { # {{{1
     #
     # Just return the OS platform ID (e.g. debian).
     # """
-    local cut x
-    cut="$(_koopa_locate_cut)"
-    x="$(_koopa_os_string | "$cut" -d '-' -f 1)"
+    local x
+    x="$(_koopa_os_string | cut -d '-' -f 1)"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
@@ -320,12 +318,11 @@ _koopa_os_string() { # {{{1
 _koopa_shell_name() { # {{{1
     # """
     # Current shell name.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-25.
     # """
-    local basename shell
-    basename="$(_koopa_locate_basename)"
+    local shell str
     shell="$(_koopa_locate_shell)"
-    str="$("$basename" "$shell")"
+    str="$(basename "$shell")"
     [ -n "$str" ] || return 1
     _koopa_print "$str"
     return 0
