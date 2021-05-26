@@ -6,6 +6,7 @@ _koopa_posix_header() { # {{{1
     # @note Updated 2021-05-26.
     # """
     local file
+    unset -v KOOPA_INTERACTIVE KOOPA_SHELL KOOPA_SUBSHELL
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
