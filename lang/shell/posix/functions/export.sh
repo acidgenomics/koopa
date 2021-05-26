@@ -116,19 +116,6 @@ _koopa_export_history() { # {{{1
     return 0
 }
 
-_koopa_export_hostname() { # {{{1
-    # """
-    # Export 'HOSTNAME' variable.
-    # @note Updated 2021-05-14.
-    # """
-    if [ -z "${HOSTNAME:-}" ]
-    then
-        HOSTNAME="$(_koopa_hostname)"
-    fi
-    export HOSTNAME
-    return 0
-}
-
 _koopa_export_pager() { # {{{1
     # """
     # Export 'PAGER' variable.
@@ -184,21 +171,6 @@ _koopa_export_tmpdir() { # {{{1
         TMPDIR='/tmp'
     fi
     export TMPDIR
-    return 0
-}
-
-_koopa_export_today() { # {{{1
-    # """
-    # Export 'TODAY' variable.
-    # @note Updated 2021-05-14.
-    #
-    # Current date. Alternatively, can use '%F' shorthand.
-    # """
-    if [ -z "${TODAY:-}" ]
-    then
-        TODAY="$(_koopa_today)"
-    fi
-    export TODAY
     return 0
 }
 
