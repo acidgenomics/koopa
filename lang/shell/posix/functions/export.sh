@@ -116,19 +116,6 @@ _koopa_export_history() { # {{{1
     return 0
 }
 
-_koopa_export_koopa_interactive() { # {{{1
-    # """
-    # Export 'KOOPA_INTERACTIVE' variable.
-    # @note Updated 2021-05-26.
-    # """
-    if _koopa_is_interactive
-    then
-        KOOPA_INTERACTIVE=1
-        export KOOPA_INTERACTIVE
-    fi
-    return 0
-}
-
 _koopa_export_pager() { # {{{1
     # """
     # Export 'PAGER' variable.
