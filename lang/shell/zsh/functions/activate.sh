@@ -106,7 +106,7 @@ _koopa_activate_zsh_fpath() { # {{{1
 _koopa_activate_zsh_plugins() { # {{{1
     # """
     # Activate Zsh plugins.
-    # Updated 2021-05-22.
+    # Updated 2021-05-25.
     #
     # Debug plugins via:
     # > zsh -df
@@ -115,23 +115,18 @@ _koopa_activate_zsh_plugins() { # {{{1
     # https://unix.stackexchange.com/questions/29724/
     # Alternatively, can use '<<<' herestring, which also works in Bash.
     # """
-    local basename dotfiles_prefix find plugin plugins sort
-    local xargs zsh_plugins_dir
+    local dotfiles_prefix plugin plugins zsh_plugins_dir
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
     zsh_plugins_dir="${dotfiles_prefix}/shell/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
-    basename="$(_koopa_locate_basename)"
-    find="$(_koopa_locate_find)"
-    sort="$(_koopa_locate_sort)"
-    xargs="$(_koopa_locate_xargs)"
     plugins=("${(@f)$( \
-        "$find" "$zsh_plugins_dir" \
+        find "$zsh_plugins_dir" \
             -mindepth 1 \
             -maxdepth 1 \
             -type d \
             -print0 \
-        | "$sort" -z \
-        | "$xargs" -0 -n1 "$basename" \
+        | sort -z \
+        | xargs -0 -n1 basename \
     )}")
     for plugin in "${plugins[@]}"
     do
