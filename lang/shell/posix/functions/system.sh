@@ -65,9 +65,7 @@ _koopa_check_shell() { # {{{1
         zsh)
             ;;
         *)
-            if _koopa_is_interactive
-            then
-                >&2 cat << END
+            >&2 cat << END
 WARNING: Failed to activate koopa in the current shell.
 
     Recommended: Bash or Zsh.
@@ -86,7 +84,6 @@ WARNING: Failed to activate koopa in the current shell.
         > chsh -s /bin/zsh
 
 END
-            fi
             return 1
             ;;
     esac
