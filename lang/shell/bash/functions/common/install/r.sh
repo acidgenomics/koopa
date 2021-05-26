@@ -19,7 +19,7 @@ koopa::install_r_devel() { # {{{1
 koopa:::install_r() { # {{{1
     # """
     # Install R.
-    # @note Updated 2021-05-18.
+    # @note Updated 2021-05-26.
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
     # - https://hub.docker.com/r/rocker/r-ver/dockerfile
@@ -29,13 +29,14 @@ koopa:::install_r() { # {{{1
     # - Homebrew recipe:
     #   https://github.com/Homebrew/homebrew-core/blob/master/Formula/r.rb
     # """
-    local brew_opt brew_prefix conf_args file jobs major_version name name2
-    local prefix r url version
+    local brew_opt brew_prefix conf_args file jobs major_version
+    local make name name2 prefix r url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
     name='r'
     name2="$(koopa::capitalize "$name")"
-    jobs="$(koopa::cpu_count)"
     major_version="$(koopa::major_version "$version")"
     conf_args=(
         "--prefix=${prefix}"
@@ -100,11 +101,11 @@ koopa:::install_r() { # {{{1
     unset -v R_HOME
     export TZ='America/New_York'
     ./configure "${conf_args[@]}"
-    make --jobs="$jobs"
-    # > make check
-    make pdf
-    make info
-    make install
+    "$make" --jobs="$jobs"
+    # > "$make" check
+    "$make" pdf
+    "$make" info
+    "$make" install
     r="${prefix}/bin/R"
     koopa::assert_is_file "$r"
     koopa::configure_r "$r"
@@ -114,14 +115,15 @@ koopa:::install_r() { # {{{1
 koopa:::install_r_devel() { # {{{1
     # """
     # Install R-devel.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-26.
     # """
-    local flags jobs name prefix repo_url revision rtop
-    koopa::assert_is_installed svn
+    local flags jobs make name prefix repo_url revision rtop
+    koopa::assert_is_installed 'svn'
     prefix="${INSTALL_PREFIX:?}"
-    name='r-devel'
     jobs="$(koopa::cpu_count)"
-    # Subversion revision number (e.g. 80130).
+    make="$(koopa::locate_make)"
+    name='r-devel'
+    # Subversion revision number (e.g. 80190).
     revision="$(koopa::variable "$name")"
     # Set the R source code repo URL.
     repo_url='https://svn.r-project.org/R'
@@ -167,11 +169,11 @@ koopa:::install_r_devel() { # {{{1
     # We build in the separate directory created above,
     # in order not to pollute the source code.
     ../source/configure "${flags[@]}"
-    make --jobs="$jobs"
-    make check
-    make pdf
-    make info
-    make install
+    "$make" --jobs="$jobs"
+    "$make" check
+    "$make" pdf
+    "$make" info
+    "$make" install
     r="${prefix}/bin/R"
     koopa::assert_is_file "$r"
     koopa::configure_r "$r"
