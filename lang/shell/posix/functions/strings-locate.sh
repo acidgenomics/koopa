@@ -49,6 +49,7 @@ _koopa_locate_shell() { # {{{1
                 -F 'n' \
                 -d 'txt' \
                 -p "$pid" \
+                >/dev/null 2>&1 \
             | "$sed" -n '3p' \
             | "$sed" 's/^n//' \
         )"
