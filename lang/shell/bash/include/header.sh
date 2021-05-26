@@ -105,7 +105,7 @@ __koopa_warning() { # {{{1
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-05-26.
     # """
     local dict
     declare -A dict=(
@@ -185,8 +185,11 @@ __koopa_bash_header() { # {{{1
     then
         # shellcheck source=/dev/null
         source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
-    fi
-    if [[ "${dict[activate]}" -eq 0 ]] || \
+        if [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]]
+        then
+            _koopa_activate_bash_extras
+        fi
+    elif [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
     then
         __koopa_bash_source_dir 'common'

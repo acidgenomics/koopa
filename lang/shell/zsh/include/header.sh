@@ -76,7 +76,7 @@ __koopa_warning() { # {{{1
 __koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-26.
     # """
     local dict
     declare -A dict=(
@@ -135,6 +135,10 @@ __koopa_zsh_header() { # {{{1
     if [[ "${dict[activate]}" -eq 1 ]]
     then
         source "${KOOPA_PREFIX:?}/lang/shell/zsh/functions/activate.sh"
+        if [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]]
+        then
+            _koopa_activate_zsh_extras
+        fi
     fi
     return 0
 }

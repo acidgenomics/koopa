@@ -90,16 +90,6 @@ _koopa_activate_completion() { # {{{1
     return 0
 }
 
-_koopa_activate_dash_extras() { # {{{1
-    # """
-    # Extra configuration options for Dash shell.
-    # @note Updated 2021-05-07.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    export PS1='# '
-    return 0
-}
-
 _koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
