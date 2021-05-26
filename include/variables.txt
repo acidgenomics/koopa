@@ -337,7 +337,7 @@ shiny-server="1.5.16.958"
 shunit2="2.1.7"
 
 # https://github.com/sylabs/singularity/releases
-singularity="3.6.0"
+singularity="3.7.3"
 
 # https://www.sqlite.org/download.html
 sqlite="3.35.3"
