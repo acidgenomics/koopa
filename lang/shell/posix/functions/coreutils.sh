@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# FIXME Can we put this in Bash library?
 _koopa_cd() { # {{{1
     # """
     # Change directory quietly.
@@ -13,6 +14,7 @@ _koopa_cd() { # {{{1
     return 0
 }
 
+# FIXME Need to move this to Bash library.
 _koopa_parent_dir() { # {{{1
     # """
     # Get the parent directory path.
@@ -58,6 +60,7 @@ _koopa_parent_dir() { # {{{1
     return 0
 }
 
+# FIXME Now this is broken...
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
