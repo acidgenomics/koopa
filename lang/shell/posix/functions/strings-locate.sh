@@ -9,6 +9,7 @@ __koopa_locate_app() { # {{{1
     [ "$#" -eq 2 ] || return 1
     brew_name="${1:?}"
     app_name="${2:?}"
+    _koopa_warning "App: ${app_name}"  # FIXME
     if _koopa_is_macos
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
@@ -35,6 +36,7 @@ __koopa_locate_app_simple() { # {{{1
     return 0
 }
 
+# FIXME These are getting called during login...need to rethink.
 __koopa_locate_gnu_app() { # {{{1
     # """
     # Locate a GNU application.
@@ -44,6 +46,7 @@ __koopa_locate_gnu_app() { # {{{1
     [ "$#" -eq 2 ] || return 1
     brew_name="${1:?}"
     app_name="${2:?}"
+    _koopa_warning "GNU app: ${app_name}"  # FIXME
     if _koopa_is_macos
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
@@ -460,7 +463,7 @@ _koopa_locate_shell() { # {{{1
     # - https://unix.stackexchange.com/questions/87061/
     # - https://unix.stackexchange.com/questions/182590/
     # """
-    local proc_file pid ps sed shell
+    local proc_file pid shell
     shell="${KOOPA_SHELL:-}"
     if [ -x "$shell" ]
     then
@@ -476,25 +479,22 @@ _koopa_locate_shell() { # {{{1
             shell="$(_koopa_realpath "$proc_file")"
         elif _koopa_is_installed ps
         then
-            ps="$(_koopa_locate_ps)"
-            sed="$(_koopa_locate_sed)"
             shell="$( \
-                "$ps" -p "$pid" -o 'comm=' \
-                | "$sed" 's/^-//' \
+                ps -p "$pid" -o 'comm=' \
+                | sed 's/^-//' \
             )"
             shell="$(_koopa_which_realpath "$shell")"
         fi
     elif _koopa_is_macos
     then
-        sed="$(_koopa_locate_sed)"
         shell="$( \
             lsof \
                 -a \
                 -F 'n' \
                 -d 'txt' \
                 -p "$pid" \
-            | "$sed" -n '3p' \
-            | "$sed" 's/^n//' \
+            | sed -n '3p' \
+            | sed 's/^n//' \
         )"
     fi
     [ -x "$shell" ] || return 1
