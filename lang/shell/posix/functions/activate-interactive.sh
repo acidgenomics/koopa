@@ -1,18 +1,16 @@
 #!/bin/sh
 # shellcheck disable=SC2032
 
-# FIXME This should only be run in interactive sesssion!!!!!
-
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-26.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
-    # > alias perl='unalias perl && _koopa_activate_perl_packages && perl'
-    alias br='unalias br && _koopa_activate_broot && br'
-    alias conda='unalias conda && _koopa_activate_conda && conda'
+    # > perl='_koopa_alias_perl'
+    alias br='_koopa_alias_br'
+    alias conda='_koopa_alias_conda'
     alias fzf='unalias fzf && _koopa_activate_fzf && fzf'
     alias perlbrew='unalias perlbrew && _koopa_activate_perlbrew && perlbrew'
     alias pipx='unalias pipx && _koopa_activate_pipx && pipx'
