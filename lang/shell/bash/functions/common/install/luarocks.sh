@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Harden make.
-
 koopa::install_luarocks() { # {{{1
     koopa::install_app \
         --name='luarocks' \
@@ -14,8 +12,8 @@ koopa:::install_luarocks() { # {{{1
     # @note Updated 2021-05-26.
     # """
     local file make name lua_version prefix url version
-    koopa::activate_opt_prefix lua
-    koopa::assert_is_installed lua
+    koopa::activate_opt_prefix 'lua'
+    koopa::assert_is_installed 'lua'
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     make="$(koopa::locate_make)"
