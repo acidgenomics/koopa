@@ -1060,10 +1060,6 @@ koopa::user_id() { # {{{1
     _koopa_user_id "$@"
 }
 
-koopa::variable() { # {{{1
-    _koopa_variable "$@"
-}
-
 koopa::venv() { # {{{1
     _koopa_venv "$@"
 }
