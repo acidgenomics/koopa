@@ -492,16 +492,6 @@ _koopa_activate_koopa_paths() { # {{{1
     return 0
 }
 
-_koopa_activate_llvm() { # {{{1
-    # """
-    # Activate LLVM config.
-    # @note Updated 2021-05-24.
-    # """
-    LLVM_CONFIG="$(_koopa_locate_llvm_config)"
-    export LLVM_CONFIG
-    return 0
-}
-
 _koopa_activate_local_etc_profile() { # {{{1
     # """
     # Source 'profile.d' scripts in '/usr/local/etc'.
