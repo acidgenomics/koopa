@@ -440,11 +440,9 @@ _koopa_activate_homebrew_prefix() { # {{{1
 _koopa_activate_homebrew_python() { # {{{1
     # """
     # Activate Homebrew Python.
-    # @note Updated 2020-10-27.
+    # @note Updated 2021-05-25.
     # """
-    local version
-    version="$(_koopa_major_minor_version "$(_koopa_variable 'python')")"
-    _koopa_activate_homebrew_prefix "python@${version}"
+    _koopa_activate_homebrew_prefix 'python@3'
     return 0
 }
 
