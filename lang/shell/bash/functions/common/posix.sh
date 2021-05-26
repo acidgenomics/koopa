@@ -844,3 +844,31 @@ koopa::which() { # {{{1
 koopa::which_realpath() { # {{{1
     _koopa_which_realpath "$@"
 }
+
+koopa::xdg_cache_home() { # {{{1
+    _koopa_xdg_cache_home "$@"
+}
+
+koopa::xdg_config_dirs() { # {{{1
+    _koopa_xdg_config_dirs "$@"
+}
+
+koopa::xdg_config_home() { # {{{1
+    _koopa_xdg_config_home "$@"
+}
+
+koopa::xdg_data_dirs() { # {{{1
+    _koopa_xdg_data_dirs "$@"
+}
+
+koopa::xdg_data_home() { # {{{1
+    _koopa_xdg_data_home "$@"
+}
+
+koopa::xdg_local_home() { # {{{1
+    _koopa_xdg_local_home "$@"
+}
+
+koopa::xdg_runtime_dir() { # {{{1
+    _koopa_xdg_runtime_dir "$@"
+}
