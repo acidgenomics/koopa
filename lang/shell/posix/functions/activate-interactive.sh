@@ -353,35 +353,6 @@ _koopa_activate_gnu() { # {{{1
     return 0
 }
 
-_koopa_activate_ssh_key() { # {{{1
-    # """
-    # Import an SSH key automatically.
-    # @note Updated 2020-06-30.
-    #
-    # NOTE: SCP will fail unless this is interactive only.
-    # ssh-agent will prompt for password if there's one set.
-    #
-    # To change SSH key passphrase:
-    # > ssh-keygen -p
-    #
-    # List currently loaded keys:
-    # > ssh-add -L
-    # """
-    local key
-    _koopa_is_linux || return 0
-    key="${1:-}"
-    if [ -z "$key" ] && [ -n "${SSH_KEY:-}" ]
-    then
-        key="$SSH_KEY"
-    else
-        key="${HOME}/.ssh/id_rsa"
-    fi
-    [ -r "$key" ] || return 0
-    eval "$(ssh-agent -s)" >/dev/null 2>&1
-    ssh-add "$key" >/dev/null 2>&1
-    return 0
-}
-
 _koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
@@ -423,22 +394,18 @@ _koopa_activate_starship() { # {{{1
 _koopa_activate_tmux_sessions() { # {{{1
     # """
     # Show active tmux sessions.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-26.
     # """
     local x
     _koopa_is_installed tmux || return 0
     _koopa_is_tmux && return 0
-    # > cut="$(_koopa_locate_cut)"  # FIXME
-    cut='cut'
-    # > tr="$(_koopa_locate_tr)"  # FIXME
-    tr='tr'
     # shellcheck disable=SC2033
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
     x="$( \
         _koopa_print "$x" \
-        | "$cut" -d ':' -f 1 \
-        | "$tr" '\n' ' ' \
+        | cut -d ':' -f 1 \
+        | tr '\n' ' ' \
     )"
     _koopa_dl 'tmux' "$x"
     return 0
@@ -447,7 +414,7 @@ _koopa_activate_tmux_sessions() { # {{{1
 _koopa_activate_today_bucket() { # {{{1
     # """
     # Create a dated file today bucket.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-26.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -463,19 +430,23 @@ _koopa_activate_today_bucket() { # {{{1
     # -s, --symbolic
     #        make symbolic links instead of hard links
     # """
-    local bucket_dir date ln mkdir readlink today_bucket today_link
+    local brew_prefix bucket_dir date ln mkdir readlink today_bucket today_link
     bucket_dir="${KOOPA_BUCKET:-}"
     [ -z "$bucket_dir" ] && bucket_dir="${HOME:?}/bucket"
     # Early return if there's no bucket directory on the system.
     [ -d "$bucket_dir" ] || return 0
-    # > date="$(_koopa_locate_date)"  # FIXME
     date='date'
-    # > ln="$(_koopa_locate_ln)"  # FIXME
     ln='ln'
-    # > mkdir="$(_koopa_locate_mkdir)"  # FIXME
     mkdir='mkdir'
-    # > readlink="$(_koopa_locate_readlink)"  # FIXME
     readlink='readlink'
+    if _koopa_is_macos
+    then
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        date="${brew_prefix}/opt/coreutils/bin/gdate"
+        ln="${brew_prefix}/opt/coreutils/bin/gln"
+        mkdir="${brew_prefix}/opt/coreutils/bin/gmkdir"
+        readlink="${brew_prefix}/opt/coreutils/bin/greadlink"
+    fi
     today_bucket="$("$date" '+%Y/%m/%d')"
     today_link="${HOME:?}/today"
     # Early return if we've already updated the symlink.
