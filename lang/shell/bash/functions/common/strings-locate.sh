@@ -351,6 +351,17 @@ koopa::locate_mv() { # {{{1
     koopa:::locate_gnu_app 'coreutils' 'mv' "$@"
 }
 
+koopa::locate_openssl() { # {{{1
+    # """
+    # Locate openssl.
+    # @note Updated 2021-05-26.
+    # """
+    local x
+    x='/bin/openssl'
+    [[ -x "$x" ]] || return 1
+    koopa::print "$x"
+}
+
 koopa::locate_parallel() { # {{{1
     # """
     # Locate GNU parallel.

@@ -10,13 +10,15 @@ koopa::install_hdf5() { # {{{1
 koopa:::install_hdf5() { # {{{1
     # """
     # Install HDF5.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-26.
     # """
-    local file gfortran_prefix jobs minor_version name prefix url version
+    local conf_args file gfortran_prefix jobs minor_version make name
+    local prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='hdf5'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='hdf5'
     if koopa::is_macos
     then
         gfortran_prefix='/usr/local/gfortran'
@@ -31,12 +33,14 @@ ${name}-${minor_version}/${name}-${version}/src/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    ./configure \
-        --prefix="$prefix" \
-        --enable-cxx \
-        --enable-fortran
-    make --jobs="$jobs"
-    # > make check
-    make install
+    conf_args=(
+        "--prefix=$prefix"
+        '--enable-cxx'
+        '--enable-fortran'
+    )
+    ./configure "${conf_args[@]}"
+    "$make" --jobs="$jobs"
+    # > "$make" check
+    "$make" install
     return 0
 }
