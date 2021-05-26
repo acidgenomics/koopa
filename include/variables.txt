@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.5"
+aws-cli="2.2.6"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.24.0"
@@ -68,7 +68,7 @@ bfg="1.14.0"
 binutils="2.36.1"
 
 # https://www.boost.org/
-boost="1.75.0"
+boost="1.76.0"
 
 # https://cairographics.org/
 cairo="1.16.0"
@@ -98,7 +98,7 @@ coreutils="8.32"
 cpufetch="0.97"
 
 # https://curl.haxx.se/
-curl="7.76.1"
+curl="7.77.0"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -145,7 +145,7 @@ git="2.31.1"
 gnupg="2.3.1"
 
 # https://golang.org/dl/
-go="1.16.3"
+go="1.16.4"
 
 # https://cloud.google.com/sdk/docs/install
 google-cloud-sdk="342.0.0"
