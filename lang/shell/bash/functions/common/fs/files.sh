@@ -469,11 +469,10 @@ koopa::md5sum_check_to_new_md5_file() { # {{{1
     return 0
 }
 
-# FIXME This should ignore files without an extension.
 koopa::nfiletypes() { # {{{1
     # """
     # Return the number of file types in a specific directory.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-26.
     # """
     local dir find sed sort uniq x
     koopa::assert_has_args_le "$#" 1
@@ -485,7 +484,9 @@ koopa::nfiletypes() { # {{{1
     x="$( \
         "$find" "$dir" \
             -maxdepth 1 \
-            -type f \
+            -mindepth 1 \
+            -type 'f' \
+            -iregex '^.+\.[a-z0-9]+$' \
             | "$sed" 's/.*\.//' \
             | "$sort" \
             | "$uniq" -c \
