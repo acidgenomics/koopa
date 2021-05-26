@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Harden make.
+
 koopa::install_neofetch() { # {{{1
     koopa::install_app \
         --name='neofetch' \

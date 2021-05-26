@@ -113,9 +113,17 @@ _koopa_duration_start() { # {{{1
 _koopa_duration_stop() { # {{{1
     # """
     # Stop activation duration timer.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-05-26.
     # """
-    local brew_prefix bc date duration start stop
+    local brew_prefix bc date duration key start stop
+    [ "$#" -le 1 ] || return 1
+    key="${1:-}"
+    if [ -z "$key" ]
+    then
+        key='duration'
+    else
+        key="[${key}] duration"
+    fi
     bc='bc'
     date='date'
     if _koopa_is_macos
@@ -130,7 +138,7 @@ _koopa_duration_stop() { # {{{1
         _koopa_print "${stop}-${start}" \
         | "$bc" \
     )"
-    _koopa_dl 'duration' "${duration} ms"
+    _koopa_dl "$key" "${duration} ms"
     unset -v KOOPA_DURATION_START
     return 0
 }
