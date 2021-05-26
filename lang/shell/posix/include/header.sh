@@ -6,7 +6,7 @@ _koopa_posix_header() { # {{{1
     # @note Updated 2021-05-26.
     # """
     local file
-    unset -v KOOPA_INTERACTIVE KOOPA_SHELL KOOPA_SUBSHELL
+    unset -v KOOPA_SHELL KOOPA_SUBSHELL
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
@@ -24,7 +24,6 @@ _koopa_posix_header() { # {{{1
     fi
     _koopa_check_os || return 1
     _koopa_check_shell || return 1
-    _koopa_export_koopa_interactive || return 1
     _koopa_activate_xdg || return 1
     _koopa_add_config_link \
         "$(_koopa_prefix)" 'home' \
