@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # koopa nolint=coreutils
 
-# FIXME Need to reduce the amount of interactive stuff that gets loaded non-interactively...
-
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
@@ -114,39 +112,37 @@ __koopa_bash_header() { # {{{1
         [activate]=0
         [checks]=1
         [dev]=0
-        [shopts]=1
+        [minimal]=0
+        [test]=0
         [verbose]=0
     )
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dict[dev]="$KOOPA_DEV"
+    [[ -n "${KOOPA_MINIMAL:-}" ]] && dict[minimal]="$KOOPA_MINIMAL"
+    [[ -n "${KOOPA_TEST:-}" ]] && dict[test]="$KOOPA_TEST"
     [[ -n "${KOOPA_VERBOSE:-}" ]] && dict[verbose]="$KOOPA_VERBOSE"
-    if [[ "${dict[activate]}" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 1 ]] && \
+        [[ "${dict[dev]}" -eq 0 ]] && \
+        [[ "${dict[test]}" -eq 0 ]]
     then
         dict[checks]=0
-        dict[shopts]=0
     fi
-    if [[ "${dict[shopts]}" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 0 ]] || [[ "${dict[dev]}" -eq 1 ]]
     then
-        if [[ "${dict[verbose]}" -eq 1 ]]
-        then
-            set -o xtrace # -x
-        fi
-        # > set -o noglob # -f
-        set -o errexit # -e
-        set -o errtrace # -E
-        set -o nounset # -u
-        set -o pipefail
-    fi
-    if [[ "${dict[activate]}" -eq 0 ]] || \
-        [[ "${dict[dev]}" -eq 1 ]]
-    then
-        # Disable user-defined aliases.
-        # Primarily intended to reset cp, mv, rf for use inside scripts.
         unalias -a
+    fi
+    if [[ "${dict[verbose]}" -eq 1 ]]
+    then
+        set -o xtrace  # -x
     fi
     if [[ "${dict[checks]}" -eq 1 ]]
     then
+        # > set -o noglob  # -f
+        set -o errexit  # -e
+        set -o errtrace  # -E
+        set -o nounset  # -u
+        set -o pipefail
         dict[major_version]="$( \
             printf '%s\n' "${BASH_VERSION}" \
             | cut -d '.' -f 1 \
@@ -183,7 +179,7 @@ __koopa_bash_header() { # {{{1
     fi
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
-    if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
+    if [[ "${dict[test]}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
     fi
@@ -191,7 +187,7 @@ __koopa_bash_header() { # {{{1
     then
         # shellcheck source=/dev/null
         source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
-        if [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]]
+        if [[ "${dict[minimal]}" -eq 0 ]]
         then
             _koopa_activate_bash_extras
         fi
@@ -225,12 +221,22 @@ __koopa_bash_header() { # {{{1
         # Require sudo permission to run 'sbin/' scripts.
         koopa::str_match "$0" '/sbin' && koopa::assert_is_admin
         # Disable user-defined aliases.
-        # Primarily intended to reset cp, mv, rf for use inside scripts.
         unalias -a
     fi
-    if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
+    if [[ "${dict[test]}" -eq 1 ]]
     then
         _koopa_duration_stop 'bash' || return 1
+    fi
+    if [[ "${dict[checks]}" -eq 1 ]]
+    then
+        set +o errexit
+        set +o errtrace
+        set +o nounset
+        set +o pipefail
+    fi
+    if [[ "${dict[verbose]}" -eq 1 ]]
+    then
+        set +o xtrace
     fi
     return 0
 }
