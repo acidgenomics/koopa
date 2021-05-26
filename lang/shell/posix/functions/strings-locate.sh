@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 _koopa_locate_shell() { # {{{1
     # """
