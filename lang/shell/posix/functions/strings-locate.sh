@@ -3,7 +3,7 @@
 _koopa_locate_shell() { # {{{1
     # """
     # Locate the current shell executable.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-05-26.
     #
     # Detection issues with qemu ARM emulation on x86:
     # - The 'ps' approach will return correct shell for ARM running via
@@ -19,25 +19,26 @@ _koopa_locate_shell() { # {{{1
     # - https://unix.stackexchange.com/questions/87061/
     # - https://unix.stackexchange.com/questions/182590/
     # """
-    local proc_file pid shell
+    local proc_file pid sed shell
     shell="${KOOPA_SHELL:-}"
     if [ -x "$shell" ]
     then
         _koopa_print "$shell"
         return 0
     fi
+    sed='sed'
     pid="${$}"
     if _koopa_is_linux
     then
         proc_file="/proc/${pid}/exe"
-        if [ -x "$proc_file" ] && ! _koopa_is_docker
+        if [ -x "$proc_file" ] && ! _koopa_is_qemu
         then
             shell="$(_koopa_realpath "$proc_file")"
         elif _koopa_is_installed ps
         then
             shell="$( \
                 ps -p "$pid" -o 'comm=' \
-                | sed 's/^-//' \
+                | "$sed" 's/^-//' \
             )"
             shell="$(_koopa_which_realpath "$shell")"
         fi
@@ -49,8 +50,8 @@ _koopa_locate_shell() { # {{{1
                 -F 'n' \
                 -d 'txt' \
                 -p "$pid" \
-            | sed -n '3p' \
-            | sed 's/^n//' \
+            | "$sed" -n '3p' \
+            | "$sed" 's/^n//' \
         )"
     fi
     [ -x "$shell" ] || return 1

@@ -325,12 +325,11 @@ _koopa_is_os() { # {{{1
 _koopa_is_os_like() { # {{{1
     # """
     # Is a specific OS ID-like?
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-26.
     #
     # This will match Debian and Ubuntu for a Debian check.
     # """
     local grep file id
-    # > grep="$(_koopa_locate_grep)"  # FIXME
     grep='grep'
     id="${1:?}"
     _koopa_is_os "$id" && return 0
@@ -347,7 +346,6 @@ _koopa_is_os_version() { # {{{1
     # @note Updated 2021-05-24.
     # """
     local file grep version
-    # > grep="$(_koopa_locate_grep)"  # FIXME
     grep='grep'
     version="${1:?}"
     file='/etc/os-release'
@@ -358,19 +356,16 @@ _koopa_is_os_version() { # {{{1
 _koopa_is_qemu() { # {{{1
     # """
     # Is the current shell running inside of QEMU emulation?
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-26.
     #
     # This can be the case for ARM Docker images running on an x86 Intel
     # machine, and vice versa.
     # """
-    local basename cmd readlink real_cmd
-    # > basename="$(_koopa_locate_basename)"  # FIXME
-    # > readlink="$(_koopa_locate_readlink)"  # FIXME
+    local basename cmd real_cmd
     basename='basename'
-    readlink='readlink'
     cmd="/proc/${$}/exe"
     [ -L "$cmd" ] || return 1
-    real_cmd="$("$readlink" "$cmd")"
+    real_cmd="$(_koopa_realpath "$cmd")"
     case "$("$basename" "$real_cmd")" in
         qemu-*)
             return 0

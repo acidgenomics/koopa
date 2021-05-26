@@ -396,16 +396,18 @@ _koopa_activate_tmux_sessions() { # {{{1
     # Show active tmux sessions.
     # @note Updated 2021-05-26.
     # """
-    local x
+    local cut tr x
     _koopa_is_installed tmux || return 0
     _koopa_is_tmux && return 0
+    cut='cut'
+    tr='tr'
     # shellcheck disable=SC2033
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
     x="$( \
         _koopa_print "$x" \
-        | cut -d ':' -f 1 \
-        | tr '\n' ' ' \
+        | "$cut" -d ':' -f 1 \
+        | "$tr" '\n' ' ' \
     )"
     _koopa_dl 'tmux' "$x"
     return 0
