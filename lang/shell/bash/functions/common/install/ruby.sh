@@ -10,15 +10,16 @@ koopa::install_ruby() { # {{{1
 koopa:::install_ruby() { # {{{1
     # """
     # Install Ruby.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-26.
     # @seealso
     # - https://www.ruby-lang.org/en/downloads/
     # """
-    local file jobs name prefix url version
+    local file jobs make name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='ruby'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='ruby'
     # Ensure '2.7.1p83' becomes '2.7.1' here, for example.
     version="$(koopa::sanitize_version "$version")"
     minor_version="$(koopa::major_minor_version "$version")"
@@ -32,8 +33,8 @@ koopa:::install_ruby() { # {{{1
     # https://github.com/rbenv/ruby-build/issues/729
     export RUBY_CONFIGURE_OPTS='--disable-install-doc'
     ./configure --prefix="$prefix"
-    make --jobs="$jobs"
-    make install
+    "$make" --jobs="$jobs"
+    "$make" install
     return 0
 }
 
