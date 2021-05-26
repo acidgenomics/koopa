@@ -995,24 +995,19 @@ _koopa_activate_xdg() { # {{{1
 _koopa_macos_activate_python() { # {{{1
     # """
     # Activate macOS Python binary install.
-    # @note Updated 2020-11-16.
+    # @note Updated 2021-05-25.
     # """
-    local minor_version version
-    [ -z "${VIRTUAL_ENV:-}" ] || return 0
-    version="$(_koopa_variable 'python')"
-    minor_version="$(_koopa_major_minor_version "$version")"
-    _koopa_activate_prefix "/Library/Frameworks/Python.framework/\
-Versions/${minor_version}"
+    _koopa_activate_prefix \
+        '/Library/Frameworks/Python.framework/Versions/Current'
     return 0
 }
 
 _koopa_macos_activate_visual_studio_code() { # {{{1
     # """
     # Activate Visual Studio Code.
-    # @note Updated 2021-03-16.
+    # @note Updated 2021-05-25.
     # """
-    local prefix
-    prefix='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
-    _koopa_add_to_path_start "$prefix"
+    _koopa_add_to_path_start \
+        '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
     return 0
 }
