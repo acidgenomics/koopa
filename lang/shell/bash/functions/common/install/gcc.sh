@@ -11,7 +11,7 @@ koopa::install_gcc() { # {{{1
 koopa:::install_gcc() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-26.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -61,19 +61,20 @@ koopa:::install_gcc() { # {{{1
     # - https://solarianprogrammer.com/2016/10/07/building-gcc-ubuntu-linux/
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
     # """
-    local conf_args file gnu_mirror jobs name prefix url version
+    local conf_args file gnu_mirror jobs make name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='gcc'
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='gcc'
     file="${name}-${version}.tar.xz"
     url="${gnu_mirror}/${name}/${name}-${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     # Need to build outside of source code directory.
-    koopa::mkdir build
-    koopa::cd build
+    koopa::mkdir 'build'
+    koopa::cd 'build'
     conf_args=(
         "--prefix=${prefix}"
         '--disable-multilib'
@@ -81,7 +82,7 @@ koopa:::install_gcc() { # {{{1
         '-v'
     )
     "../${name}-${version}/configure" "${conf_args[@]}"
-    make --jobs="$jobs"
-    make install
+    "$make" --jobs="$jobs"
+    "$make" install
     return 0
 }
