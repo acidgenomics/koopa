@@ -3,18 +3,25 @@
 _koopa_add_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-26.
     # """
-    local config_prefix dest_file dest_name ln mkdir rm source_file
+    local brew_prefix config_prefix dest_file dest_name ln mkdir rm source_file
     [ "$#" -eq 2 ] || return 1
     source_file="${1:?}"
     dest_name="${2:?}"
     config_prefix="$(_koopa_config_prefix)"
     dest_file="${config_prefix}/${dest_name}"
     [ -L "$dest_file" ] && return 0
-    ln="$(_koopa_locate_ln)"
-    mkdir="$(_koopa_locate_mkdir)"
-    rm="$(_koopa_locate_rm)"
+    ln='ln'
+    mkdir='mkdir'
+    rm='rm'
+    if _koopa_is_macos
+    then
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        ln="${brew_prefix}/opt/coreutils/bin/gln"
+        mkdir="${brew_prefix}/opt/coreutils/bin/gmkdir"
+        rm="${brew_prefix}/opt/coreutils/bin/grm"
+    fi
     "$mkdir" -p "$config_prefix"
     "$rm" -fr "$dest_file"
     "$ln" -fns "$source_file" "$dest_file"
