@@ -237,11 +237,10 @@ koopa::ip_address() { # {{{1
     return 0
 }
 
-# FIXME Use internal 'koopa::xdg_config_home' variables for this...
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-26.
     # """
     local config dot_dir dot_repo force pos private source_name
     local symlink_name xdg_config_home
@@ -304,10 +303,9 @@ koopa::link_dotfile() { # {{{1
     then
         symlink_name="$(basename "$source_path")"
     fi
-    # Add link either in HOME (default) or XDG_CONFIG_HOME.
     if [[ "$config" -eq 1 ]]
     then
-        xdg_config_home="${XDG_CONFIG_HOME:-}"
+        xdg_config_home="$(koopa::xdg_config_home)"
         [[ -z "$xdg_config_home" ]] && xdg_config_home="${HOME:?}/.config"
         symlink_path="${xdg_config_home}/${symlink_name}"
     else
