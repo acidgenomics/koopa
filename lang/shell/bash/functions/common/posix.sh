@@ -896,6 +896,10 @@ koopa::source_dir() { # {{{1
     _koopa_source_dir "$@"
 }
 
+koopa::spacevim_prefix() { # {{{1
+    _koopa_spacevim_prefix "$@"
+}
+
 koopa::status_fail() { # {{{1
     _koopa_status_fail "$@"
 }
