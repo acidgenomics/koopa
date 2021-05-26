@@ -180,35 +180,3 @@ _koopa_umask() { # {{{1
     umask 0002
     return 0
 }
-
-_koopa_variable() { # {{{1
-    # """
-    # Return a variable stored 'variables.txt' include file.
-    # @note Updated 2021-05-24.
-    #
-    # This approach handles inline comments.
-    # """
-    local cut file grep head include_prefix key value
-    # > cut="$(_koopa_locate_cut)"  # FIXME
-    cut='cut'
-    # > grep="$(_koopa_locate_grep)"  # FIXME
-    grep='grep'
-    # > head="$(_koopa_locate_head)"  # FIXME
-    head='head'
-    key="${1:?}"
-    include_prefix="$(_koopa_include_prefix)"
-    file="${include_prefix}/variables.txt"
-    [ -f "$file" ] || return 1
-    value="$( \
-        "$grep" -Eo "^${key}=\"[^\"]+\"" "$file" \
-        || _koopa_stop "'${key}' not defined in '${file}'." \
-    )"
-    value="$( \
-        _koopa_print "$value" \
-            | "$head" -n 1 \
-            | "$cut" -d '"' -f 2 \
-    )"
-    [ -n "$value" ] || return 1
-    _koopa_print "$value"
-    return 0
-}
