@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # FIXME Ensure all of these are also included in Bash library.
+# FIXME ensure activate_ensembl_perl_api is removed from posix.sh.
 
 _koopa_activate_aspera() { # {{{1
     # """
@@ -76,28 +77,6 @@ _koopa_activate_emacs() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_activate_prefix "${HOME}/.emacs.d"
-    return 0
-}
-
-# FIXME Put this in Bash.
-_koopa_activate_ensembl_perl_api() { # {{{1
-    # """
-    # Activate Ensembl Perl API.
-    # @note Updated 2020-12-31.
-    #
-    # Note that this currently requires Perl 5.26.
-    # > perlbrew switch perl-5.26
-    # """
-    local prefix
-    prefix="$(_koopa_ensembl_perl_api_prefix)"
-    [ -d "$prefix" ] || return 0
-    _koopa_activate_prefix "${prefix}/ensembl-git-tools"
-    PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
-    PERL5LIB="${PERL5LIB}:${prefix}/ensembl/modules"
-    PERL5LIB="${PERL5LIB}:${prefix}/ensembl-compara/modules"
-    PERL5LIB="${PERL5LIB}:${prefix}/ensembl-variation/modules"
-    PERL5LIB="${PERL5LIB}:${prefix}/ensembl-funcgen/modules"
-    export PERL5LIB
     return 0
 }
 
