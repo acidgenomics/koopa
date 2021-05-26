@@ -14,7 +14,7 @@ koopa::install_spacevim() { # {{{1
     name_fancy='SpaceVim'
     # FIXME We need to define this in the package...
     prefix="${HOME:?}/.SpaceVim"
-    xdg_data_home="$(_koopa_xdg_data_home)"
+    xdg_data_home="$(koopa::xdg_data_home)"
     if [[ -d "$prefix" ]]
     then
         koopa::alert_note "${name_fancy} is already installed at '${prefix}'."

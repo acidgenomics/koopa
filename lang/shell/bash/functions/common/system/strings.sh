@@ -187,8 +187,8 @@ koopa::os_type() { # {{{1
     # @note Updated 2021-05-21.
     # """
     local tr uname x
-    tr="$(_koopa_locate_tr)"
-    uname="$(_koopa_locate_uname)"
+    tr="$(koopa::locate_tr)"
+    uname="$(koopa::locate_uname)"
     x="$( \
         "$uname" -s \
         | "$tr" '[:upper:]' '[:lower:]' \

@@ -17,7 +17,7 @@ koopa:::install_haskell_stack() { # {{{1
     # """
     local file url xdg_bin_dir
     prefix="${INSTALL_PREFIX:?}"
-    xdg_bin_dir="$(_koopa_xdg_local_home)/bin"
+    xdg_bin_dir="$(koopa::xdg_local_home)/bin"
     koopa::mkdir "$xdg_bin_dir"
     koopa::add_to_path_start "$xdg_bin_dir"
     file='stack.sh'

@@ -63,7 +63,7 @@ koopa::install_perl_packages() { # {{{1
         PERL_MM_OPT="INSTALL_BASE=$prefix" \
             cpan 'local::lib'
     fi
-    _koopa_activate_perl_packages
+    koopa::activate_perl_packages
     export PERL_MM_USE_DEFAULT=1
     if ! koopa::is_installed cpanm
     then

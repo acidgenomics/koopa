@@ -558,7 +558,7 @@ koopa::r_package_version() { # {{{1
     # """
     local r rscript vec x
     koopa::assert_has_args "$#"
-    r="$(_koopa_locate_r)"
+    r="$(koopa::locate_r)"
     rscript="${r}script"
     koopa::assert_is_installed "$rscript"
     pkgs=("$@")
@@ -678,7 +678,7 @@ koopa::return_version() { # {{{1
             cmd='pip3'
             ;;
         python)
-            cmd="$(_koopa_locate_python)"
+            cmd="$(koopa::locate_python)"
             ;;
         ranger-fm)
             cmd='ranger'

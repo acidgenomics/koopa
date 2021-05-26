@@ -48,7 +48,7 @@ koopa::find() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_set 'glob' 'prefix'
     koopa::assert_is_dir "$prefix"
-    if __koopa_is_installed 'fd'
+    if koopa::is_installed 'fd'
     then
         find='fd'
         find_args=(

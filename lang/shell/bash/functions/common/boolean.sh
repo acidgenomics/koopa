@@ -499,7 +499,7 @@ koopa::is_set() { # {{{1
     # """
     local nounset value var x
     koopa::assert_has_args "$#"
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [[ "${nounset:-0}" -eq 1 ]] && set +u
     for var
     do
