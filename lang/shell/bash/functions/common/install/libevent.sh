@@ -9,13 +9,14 @@ koopa::install_libevent() { # {{{1
 koopa:::install_libevent() { # {{{1
     # """
     # Install libevent.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-05-26.
     # """
     local file jobs name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='libevent'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='libevent'
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'openssl@1.1'
@@ -27,8 +28,8 @@ release-${version}-stable/${file}"
     koopa::extract "$file"
     koopa::cd "${name}-${version}-stable"
     ./configure --prefix="$prefix"
-    make --jobs="$jobs"
-    # > make check
-    make install
+    "$make" --jobs="$jobs"
+    # > "$make" check
+    "$make" install
     return 0
 }
