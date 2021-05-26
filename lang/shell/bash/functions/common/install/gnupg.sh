@@ -176,15 +176,16 @@ koopa:::install_gnupg() { # {{{1
 koopa:::install_gnupg_gcrypt() { # {{{1
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-26.
     # """
-    local base_url gcrypt_url gpg gpg_agent jobs name prefix sig_file sig_url
-    local tar_file tar_url version
+    local base_url gcrypt_url gpg gpg_agent jobs make name prefix
+    local sig_file sig_url tar_file tar_url version
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     gcrypt_url="$(koopa::gcrypt_url)"
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
     base_url="${gcrypt_url}/${name}"
     tar_file="${name}-${version}.tar.bz2"
     tar_url="${base_url}/${tar_file}"
@@ -201,23 +202,24 @@ koopa:::install_gnupg_gcrypt() { # {{{1
     koopa::extract "$tar_file"
     koopa::cd "${name}-${version}"
     ./configure --prefix="$prefix"
-    make --jobs="$jobs"
-    make install
+    "$make" --jobs="$jobs"
+    "$make" install
     return 0
 }
 
 koopa:::install_gnupg_pinentry() { # {{{1
     # """
     # Install GnuPG pinentry library.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-26.
     # """
-    local base_url gcrypt_url gpg gpg_agent jobs name prefix sig_file sig_url
-    local tar_file tar_url version
+    local base_url gcrypt_url gpg gpg_agent jobs make name prefix
+    local sig_file sig_url tar_file tar_url version
     name="${INSTALL_NAME:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     gcrypt_url="$(koopa::gcrypt_url)"
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
     base_url="${gcrypt_url}/${name}"
     tar_file="${name}-${version}.tar.bz2"
     tar_url="${base_url}/${tar_file}"
@@ -248,7 +250,7 @@ koopa:::install_gnupg_pinentry() { # {{{1
         flags+=('--enable-pinentry-curses')
     fi
     ./configure "${flags[@]}"
-    make --jobs="$jobs"
-    make install
+    "$make" --jobs="$jobs"
+    "$make" install
     return 0
 }
