@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Locate conda needs to error if not installed.
+# FIXME That function needs to resolve conda path better.
+
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-26.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -22,31 +25,17 @@ koopa::activate_conda_env() { # {{{1
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    local conda conda_prefix env_name env_prefix grep nounset script
+    local conda conda_prefix env_name env_prefix grep nounset
     koopa::assert_has_args_eq "$#" 1
     grep="$(koopa::locate_grep)"
-    env_prefix="$(koopa::conda_env_prefix "${1:?}")"
-    [[ -n "$env_prefix" ]] || return 1
-    env_name="$(koopa::basename "$env_prefix")"
-
-
-
-    # FIXME This step seems unnecessary.
-    # Attempt to call something like this in conda locate if we can't detect.
     nounset="$(koopa::boolean_nounset)"
-    [[ "$nounset" -eq 1 ]] && set +u
-    if ! type 'conda' | "$grep" -q 'conda.sh'
-    then
-        conda_prefix="$(koopa::conda_prefix)"
-        script="${conda_prefix}/etc/profile.d/conda.sh"
-        koopa::assert_is_file "$script"
-        # shellcheck source=/dev/null
-        . "$script"
-    fi
-
-
-
+    koopa::activate_conda
     conda="$(koopa::locate_conda)"
+    env_name="${1:?}"
+    env_prefix="$(koopa::conda_env_prefix "$env_name")"
+    koopa::assert_is_dir "$env_prefix"
+    env_name="$(koopa::basename "$env_prefix")"
+    [[ "$nounset" -eq 1 ]] && set +u
     "$conda" activate "$env_name"
     [[ "$nounset" -eq 1 ]] && set -u
     return 0
