@@ -1,8 +1,6 @@
 #!/usr/bin/env zsh
 # koopa nolint=coreutils
 #
-# FIXME Need to reduce the amount of interactive stuff that gets loaded non-interactively...
-
 __koopa_is_installed() { # {{{1
     # """
     # are all of the requested programs installed?
@@ -84,29 +82,28 @@ __koopa_zsh_header() { # {{{1
     declare -A dict=(
         [activate]=0
         [checks]=1
-        [shopts]=1
+        [minimal]=0
+        [test]=0
         [verbose]=0
     )
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_MINIMAL:-}" ]] && dict[minimal]="$KOOPA_MINIMAL"
+    [[ -n "${KOOPA_TEST:-}" ]] && dict[test]="$KOOPA_TEST"
     [[ -n "${KOOPA_VERBOSE:-}" ]] && dict[verbose]="$KOOPA_VERBOSE"
-    if [[ "${dict[activate]}" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 1 ]] && [[ "${dict[test]}" -eq 0 ]]
     then
         dict[checks]=0
-        dict[shopts]=0
     fi
-    if [[ "${dict[shopts]}" -eq 1 ]]
+    if [[ "${dict[verbose]}" -eq 1 ]]
     then
-        if [[ "${dict[verbose]}" -eq 1 ]]
-        then
-            setopt xtrace # -x
-        fi
-        setopt errexit # -e
-        setopt nounset # -u
-        setopt pipefail
+        setopt xtrace  # -x
     fi
     if [[ "${dict[checks]}" -eq 1 ]]
     then
+        setopt errexit  # -e
+        setopt nounset  # -u
+        setopt pipefail
         dict[major_version]="$( \
             printf '%s\n' "${ZSH_VERSION:?}" \
             | cut -d '.' -f 1 \
@@ -115,7 +112,7 @@ __koopa_zsh_header() { # {{{1
         then
             __koopa_warning \
                 'Koopa requires Zsh >= 5.' \
-                "Current Zsh version: '${ZSH_VERSION}'."
+                "Current Zsh version: '${ZSH_VERSION:?}'."
             return 1
         fi
     fi
@@ -138,17 +135,24 @@ __koopa_zsh_header() { # {{{1
     then
         _koopa_duration_start || return 1
     fi
-    if [[ "${dict[activate]}" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 1 ]] && [[ "${dict[minimal]}" -eq 0 ]]
     then
         source "${KOOPA_PREFIX:?}/lang/shell/zsh/functions/activate.sh"
-        if [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]]
-        then
-            _koopa_activate_zsh_extras
-        fi
+        _koopa_activate_zsh_extras
     fi
-    if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
+    if [[ "${dict[test]}" -eq 1 ]]
     then
         _koopa_duration_stop 'zsh' || return 1
+    fi
+    if [[ "${dict[checks]}" -eq 1 ]]
+    then
+        unsetopt errexit
+        unsetopt nounset
+        unsetopt pipefail
+    fi
+    if [[ "${dict[verbose]}" -eq 1 ]]
+    then
+        set +o xtrace
     fi
     return 0
 }
