@@ -3,13 +3,14 @@
 _koopa_arch() { # {{{1
     # """
     # Platform architecture.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-26.
     #
     # e.g. Intel: x86_64; ARM: aarch64.
     # """
     local uname x
-    uname="$(_koopa_locate_uname)"
+    uname='uname'
     x="$("$uname" -m)"
+    [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
 }
@@ -17,7 +18,7 @@ _koopa_arch() { # {{{1
 _koopa_arch2() { # {{{1
     # """
     # Alternative platform architecture.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-26.
     #
     # e.g. Intel: amd64; ARM: arm64.
     #
@@ -34,9 +35,10 @@ _koopa_arch2() { # {{{1
             x='amd64'
             ;;
         *)
-            _koopa_stop "Unsupported architecture: '${x}'."
+            return 1
             ;;
     esac
+    [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
 }
@@ -83,7 +85,7 @@ _koopa_cpu_count() { # {{{1
 _koopa_git_branch() { # {{{1
     # """
     # Current git branch name.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-05-26.
     #
     # This is used in prompt, so be careful with assert checks.
     #
@@ -99,8 +101,8 @@ _koopa_git_branch() { # {{{1
     # """
     local branch
     _koopa_is_git || return 0
-    git="$(_koopa_locate_git)"
-    branch="$("$git" symbolic-ref --short -q HEAD 2>/dev/null)"
+    git='git'
+    branch="$("$git" symbolic-ref --short -q 'HEAD' 2>/dev/null)"
     _koopa_print "$branch"
     return 0
 }
@@ -129,7 +131,7 @@ _koopa_hostname() { # {{{1
     # @note Updated 2021-05-21
     # """
     local uname
-    uname="$(_koopa_locate_uname)"
+    uname='uname'
     x="$("$uname" -n)"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
@@ -205,7 +207,7 @@ _koopa_macos_color_mode() { # {{{1
 _koopa_mem_gb() { # {{{1
     # """
     # Get total system memory in GB.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-26.
     #
     # - 1 GB / 1024 MB
     # - 1 MB / 1024 KB
@@ -214,7 +216,7 @@ _koopa_mem_gb() { # {{{1
     # Usage of 'int()' in awk rounds down.
     # """
     local awk denom mem
-    awk="$(_koopa_locate_awk)"
+    awk='awk'
     if _koopa_is_macos
     then
         mem="$(sysctl -n hw.memsize)"
@@ -279,8 +281,8 @@ _koopa_os_string() { # {{{1
         version="$(_koopa_major_minor_version "$version")"
     elif _koopa_is_linux
     then
-        awk="$(_koopa_locate_awk)"
-        tr="$(_koopa_locate_tr)"
+        awk='awk'
+        tr='tr'
         release_file='/etc/os-release'
         if [ -r "$release_file" ]
         then
@@ -332,10 +334,10 @@ _koopa_shell_name() { # {{{1
 _koopa_today() { # {{{1
     # """
     # Today string.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-26.
     # """
     local date str
-    date="$(_koopa_locate_date)"
+    date='date'
     str="$("$date" '+%Y-%m-%d')"
     [ -n "$str" ] || return 1
     _koopa_print "$str"

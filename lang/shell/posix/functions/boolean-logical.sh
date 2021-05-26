@@ -13,7 +13,7 @@ __koopa_git_has_unstaged_changes() { # {{{1
     # - https://stackoverflow.com/questions/28296130/
     # """
     local git x
-    git="$(_koopa_locate_git)"
+    git='git'
     "$git" update-index --refresh >/dev/null 2>&1
     x="$("$git" diff-index 'HEAD' -- 2>/dev/null)"
     [ -n "$x" ]
@@ -28,7 +28,7 @@ __koopa_git_needs_pull_or_push() { # {{{1
     # We're handling this case by piping errors to '/dev/null'.
     # """
     local git rev_1 rev_2
-    git="$(_koopa_locate_git)"
+    git='git'
     rev_1="$("$git" rev-parse 'HEAD' 2>/dev/null)"
     rev_2="$("$git" rev-parse '@{u}' 2>/dev/null)"
     [ "$rev_1" != "$rev_2" ]
@@ -161,7 +161,7 @@ _koopa_is_docker() { # {{{1
     file='/proc/1/cgroup'
     [ -f "$file" ] || return 1
     pattern=':/docker/'
-    grep="$(_koopa_locate_grep)"
+    grep='grep'
     "$grep" -q "$pattern" "$file"
 }
 
@@ -190,7 +190,7 @@ _koopa_is_git() { # {{{1i
     # """
     local git
     _koopa_is_git_toplevel '.' && return 0
-    git="$(_koopa_locate_git)"
+    git='git'
     "$git" rev-parse --git-dir >/dev/null 2>&1 || return 1
     return 0
 }
