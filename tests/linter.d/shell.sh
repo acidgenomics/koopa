@@ -49,6 +49,7 @@ test_all_coreutils() { # {{{1
         'chgrp'
         'chmod'
         'chown'
+        'cmake'
         'cp'
         'curl'
         'cut'
