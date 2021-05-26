@@ -444,31 +444,13 @@ _koopa_locate_sed() { # {{{1
 _koopa_locate_shell() { # {{{1
     # """
     # Locate the current shell executable.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-25.
     #
     # Detection issues with qemu ARM emulation on x86:
     # - The 'ps' approach will return correct shell for ARM running via
     #   emulation on x86 (e.g. Docker).
     # - ARM running via emulation on x86 (e.g. Docker) will return
     #   '/usr/bin/qemu-aarch64' here, rather than the shell we want.
-    #
-    # Useful variables:
-    # - Bash: 'BASH_VERSION'
-    # - Zsh: 'ZSH_VERSION'
-    #
-    # When '/proc' exists:
-    # - Shell invocation:
-    #   > cat "/proc/${$}/cmdline"
-    #   ## bash-il
-    # - Shell path:
-    #   > readlink "/proc/${$}/exe"
-    #   ## /usr/bin/bash
-    #
-    # How to resolve shell name when ps is installed:
-    # > shell_name="$( \
-    # >     ps -p "${$}" -o 'comm=' \
-    # >     | sed 's/^-//' \
-    # > )"
     #
     # @seealso
     # - https://stackoverflow.com/questions/3327013
@@ -486,16 +468,16 @@ _koopa_locate_shell() { # {{{1
         return 0
     fi
     pid="${$}"
-    sed="$(_koopa_locate_sed)"
     if _koopa_is_linux
     then
         proc_file="/proc/${pid}/exe"
         if [ -x "$proc_file" ] && ! _koopa_is_docker
         then
             shell="$(_koopa_realpath "$proc_file")"
-        elif _koopa_is_installed ps sed
+        elif _koopa_is_installed ps
         then
-            ps="$(_koopa_locate_ps)"  # FIXME Need to add this.
+            ps="$(_koopa_locate_ps)"
+            sed="$(_koopa_locate_sed)"
             shell="$( \
                 "$ps" -p "$pid" -o 'comm=' \
                 | "$sed" 's/^-//' \
@@ -504,18 +486,16 @@ _koopa_locate_shell() { # {{{1
         fi
     elif _koopa_is_macos
     then
-        if _koopa_is_installed lsof sed
-        then
-            shell="$( \
-                lsof \
-                    -a \
-                    -F 'n' \
-                    -d 'txt' \
-                    -p "$pid" \
-                | "$sed" -n '3p' \
-                | "$sed" 's/^n//' \
-            )"
-        fi
+        sed="$(_koopa_locate_sed)"
+        shell="$( \
+            lsof \
+                -a \
+                -F 'n' \
+                -d 'txt' \
+                -p "$pid" \
+            | "$sed" -n '3p' \
+            | "$sed" 's/^n//' \
+        )"
     fi
     [ -x "$shell" ] || return 1
     _koopa_print "$shell"
