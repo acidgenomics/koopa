@@ -45,8 +45,6 @@ _koopa_check_os() {
     return 0
 }
 
-# FIXME Now this is breaking inside our subshell...
-# FIXME Now this is messing up inside Bash subshell? What happened?
 _koopa_check_shell() { # {{{1
     # """
     # Check that current shell is supported, and export 'KOOPA_SHELL' variable.
