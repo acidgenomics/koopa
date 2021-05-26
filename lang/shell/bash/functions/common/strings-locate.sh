@@ -130,14 +130,8 @@ koopa::locate_cmake() { # {{{1
 
 koopa::locate_conda() { # {{{1
     # """
-    # Locate conda (or mamba).
+    # Locate conda.
     # @note Updated 2021-05-26.
-    #
-    # Currently intentionally requires 'koopa::activate_conda' to be called
-    # first, otherwise this will intentionally fail.
-    #
-    # Support for mamba is currently experimental, and may be removed in
-    # a future release.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba
@@ -145,13 +139,11 @@ koopa::locate_conda() { # {{{1
     # """
     local x
     koopa::assert_has_no_args "$#"
-    if koopa::is_installed 'mamba'
+    if ! koopa::is_function conda
     then
-        x='mamba'
-    else
-        x='conda'
+        koopa::activate_conda
     fi
-    x="$(koopa::which_realpath "$x")"
+    x="$(koopa::which_realpath 'conda')"
     [[ -x "$x" ]] || return 1
     koopa::print "$x"
     return 0
