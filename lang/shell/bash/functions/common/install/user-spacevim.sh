@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 
-# NOTE '--reinstall' is not supported.
+# NOTE '--reinstall' is not currently supported.
 
 koopa::install_spacevim() { # {{{1
     # """
     # Install SpaceVim.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-26.
     # https://spacevim.org
     # """
     local name name_fancy prefix script_file script_url tmp_dir
     local vimproc_prefix xdg_data_home
     name='spacevim'
     name_fancy='SpaceVim'
-    # FIXME We need to define this in the package...
-    prefix="${HOME:?}/.SpaceVim"
+    prefix="$(koopa::spacevim_prefix)"
     xdg_data_home="$(koopa::xdg_data_home)"
     if [[ -d "$prefix" ]]
     then
@@ -48,12 +47,11 @@ koopa::install_spacevim() { # {{{1
 koopa::uninstall_spacevim() { # {{{1
     # """
     # Uninstall SpaceVim.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-26.
     # """
     local name_fancy prefix
     name_fancy='SpaceVim'
-    # FIXME We need to define this in the package as a function.
-    prefix="${HOME:?}/.SpaceVim"
+    prefix="$(koopa::spacevim_prefix)"
     if [[ ! -d "$prefix" ]]
     then
         koopa::alert_not_installed "$name_fancy" "$prefix"
@@ -61,7 +59,8 @@ koopa::uninstall_spacevim() { # {{{1
     fi
     koopa::uninstall_start "$name_fancy"
     koopa::rm \
-        "$prefix" "${prefix}.d" \
+        "$prefix" \
+        "${prefix}.d" \
         "${HOME:?}/.cache/SpaceVim"
     if [[ -d "${HOME:?}/.vim_back" ]]
     then
