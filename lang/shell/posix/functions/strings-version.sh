@@ -21,12 +21,11 @@ _koopa_major_version() { # {{{1
     # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
     local cut version x
-    cut="$(_koopa_locate_cut)"
     for version in "$@"
     do
         x="$( \
             _koopa_print "$version" \
-            | "$cut" -d '.' -f 1 \
+            | cut -d '.' -f 1 \
         )"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
@@ -39,13 +38,12 @@ _koopa_major_minor_version() { # {{{1
     # Program 'MAJOR.MINOR' version.
     # @note Updated 2021-05-25.
     # """
-    local cut version x
-    cut="$(_koopa_locate_cut)"
+    local version x
     for version in "$@"
     do
         x="$( \
             _koopa_print "$version" \
-            | "$cut" -d '.' -f '1-2' \
+            | cut -d '.' -f '1-2' \
         )"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
