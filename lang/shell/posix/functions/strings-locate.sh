@@ -40,7 +40,6 @@ _koopa_locate_shell() { # {{{1
                 ps -p "$pid" -o 'comm=' \
                 | "$sed" 's/^-//' \
             )"
-            shell="$(_koopa_which_realpath "$shell")"
         fi
     elif _koopa_is_macos
     then
@@ -54,7 +53,7 @@ _koopa_locate_shell() { # {{{1
             | "$sed" 's/^n//' \
         )"
     fi
-    [ -x "$shell" ] || return 1
+    [ -n "$shell" ] || return 1
     _koopa_print "$shell"
     return 0
 }

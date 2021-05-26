@@ -38,7 +38,8 @@ _koopa_activate_conda() { # {{{1
     # @note Updated 2021-05-26.
     # """
     local anaconda_prefix conda_prefix name nounset prefix
-    [ "$#" -le 2 ] || return 1
+    [ "$#" -le 1 ] || return 1
+    _koopa_is_alias conda && unalias conda
     prefix="${1:-}"
     # Prefer Miniconda over Anaconda by default, if both are installed.
     if [ -z "$prefix" ]
@@ -53,20 +54,13 @@ _koopa_activate_conda() { # {{{1
             prefix="$anaconda_prefix"
         fi
     fi
-    [ -d "$prefix" ] || return 0
-    name="${2:-base}"
+    [ -d "$prefix" ] || return 1
     script="${prefix}/bin/activate"
-    [ -r "$script" ] || return 0
+    [ -r "$script" ] || return 1
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
-    # Ensure base environment gets deactivated by default.
-    if [ "$name" = 'base' ]
-    then
-        # Don't use the full conda path here; will return config error.
-        conda deactivate
-    fi
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }

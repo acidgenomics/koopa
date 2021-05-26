@@ -193,7 +193,8 @@ __koopa_bash_header() { # {{{1
         then
             _koopa_activate_bash_extras
         fi
-    elif [[ "${dict[activate]}" -eq 0 ]] || \
+    fi
+    if [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
     then
         __koopa_bash_source_dir 'common'
