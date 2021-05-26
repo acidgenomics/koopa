@@ -120,6 +120,14 @@ koopa::locate_chown() { # {{{1
     koopa:::locate_gnu_app 'coreutils' 'chown' "$@"
 }
 
+koopa::locate_cmake() { # {{{1
+    # """
+    # Locate cmake.
+    # @note Updated 2021-05-26.
+    # """
+    koopa:::locate_app 'cmake' 'cmake' "$@"
+}
+
 koopa::locate_conda() { # {{{1
     # """
     # Locate conda (or mamba).

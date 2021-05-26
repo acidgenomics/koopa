@@ -10,7 +10,7 @@ koopa::install_curl() { # {{{1
 koopa:::install_curl() { # {{{1
     # """
     # Install cURL.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-05-26.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -19,11 +19,12 @@ koopa:::install_curl() { # {{{1
     # - https://curl.haxx.se/docs/install.html
     # - https://stackoverflow.com/questions/30017397
     # """
-    local conf_args file jobs name prefix url version version2
+    local conf_args file jobs make name prefix url version version2
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='curl'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='curl'
     file="${name}-${version}.tar.xz"
     version2="${version//./_}"
     url="https://github.com/${name}/${name}/releases/download/\
@@ -36,8 +37,8 @@ ${name}-${version2}/${file}"
         '--enable-versioned-symbols'
     )
     ./configure "${conf_args[@]}"
-    make --jobs="$jobs"
-    # > make test
-    make install
+    "$make" --jobs="$jobs"
+    # > "$make" test
+    "$make" install
     return 0
 }
