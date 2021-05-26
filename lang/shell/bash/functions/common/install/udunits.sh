@@ -9,13 +9,14 @@ koopa::install_udunits() { # {{{1
 koopa:::install_udunits() { # {{{1
     # """
     # Install udunits.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-26.
     # """
-    local file jobs name prefix url version
+    local file jobs make name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='udunits'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='udunits'
     file="${name}-${version}.tar.gz"
     # HTTP alternative:
     # > url="https://www.unidata.ucar.edu/downloads/udunits/${file}"
@@ -24,8 +25,8 @@ koopa:::install_udunits() { # {{{1
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure --prefix="$prefix"
-    make --jobs="$jobs"
-    # > make check
-    make install
+    "$make" --jobs="$jobs"
+    # > "$make" check
+    "$make" install
     return 0
 }
