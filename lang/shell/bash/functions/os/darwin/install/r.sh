@@ -1,17 +1,25 @@
 #!/usr/bin/env bash
 
 # FIXME Need to test 8.2 and 10.2 URL update support.
+# FIXME Ensure the installer doesn't link into /usr/local.
 koopa::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-26.
     # @seealso
     # - https://mac.r-project.org/tools/
     # - https://github.com/fxcoudert/gfortran-for-macOS/
     # """
-    local arch file file_stem name os_codename pkg prefix reinstall tmp_dir
-    local url url_stem version
+    local arch file file_stem name os_codename make_prefix pkg prefix reinstall
+    local tee tmp_dir url url_stem version
+    koopa::assert_is_admin
     arch="$(koopa::arch)"
+    make_prefix="$(koopa::make_prefix)"
+    name='gfortran'
+    prefix="/usr/local/${name}"
+    reinstall=0
+    tee="$(koopa::locate_tee)"
+    version="$(koopa::variable 'r-cran-gfortran')"
     case "$arch" in
         aarch64)
             arch='ARM'
@@ -23,8 +31,6 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
             koopa::stop "Unsupported architecture: '${arch}'."
             ;;
     esac
-    reinstall=0
-    version="$(koopa::variable 'r-cran-gfortran')"
     while (("$#"))
     do
         case "$1" in
@@ -42,8 +48,6 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
-    name='gfortran'
-    prefix="/usr/local/${name}"
     [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
     if [[ -d "$prefix" ]]
     then
@@ -78,8 +82,13 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
         hdiutil mount "$file"
         sudo installer -pkg "$pkg" -target /
         hdiutil unmount "/Volumes/${file_stem}"
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
+    # Ensure the installer doesn't link outside of target prefix.
+    if [[ -x "${make_prefix}/bin/gfortran" ]]
+    then
+        koopa::rm -S "${make_prefix}/bin/gfortran"
+    fi
     koopa::install_success "$name" "$prefix"
     koopa::alert_restart
     return 0
@@ -89,7 +98,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
 koopa::macos_install_r_framework() { # {{{1
     # """
     # Install R framework.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-26.
     # @seealso
     # - https://cran.r-project.org/bin/macosx/
     # - https://mac.r-project.org/tools/
@@ -109,7 +118,6 @@ koopa::macos_install_r_framework() { # {{{1
     # external libraries and tools are expected to live in /opt/R/arm64 to not
     # conflict with Intel-based software and this build will not use /usr/local
     # to avoid such conflicts. 
-
     return 0
 }
 
