@@ -181,6 +181,10 @@ __koopa_bash_header() { # {{{1
     fi
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
+    if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
+    then
+        _koopa_duration_start || return 1
+    fi
     if [[ "${dict[activate]}" -eq 1 ]]
     then
         # shellcheck source=/dev/null
@@ -220,6 +224,10 @@ __koopa_bash_header() { # {{{1
         # Disable user-defined aliases.
         # Primarily intended to reset cp, mv, rf for use inside scripts.
         unalias -a
+    fi
+    if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
+    then
+        _koopa_duration_stop 'bash' || return 1
     fi
     return 0
 }

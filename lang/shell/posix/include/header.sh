@@ -93,7 +93,6 @@ _koopa_posix_header() { # {{{1
     fi
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
-        # FIXME Add an argument to show which timer...
         _koopa_duration_stop 'posix' || return 1
     fi
     return 0

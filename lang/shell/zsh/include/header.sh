@@ -132,6 +132,10 @@ __koopa_zsh_header() { # {{{1
         export KOOPA_PREFIX
     fi
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
+    if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
+    then
+        _koopa_duration_start || return 1
+    fi
     if [[ "${dict[activate]}" -eq 1 ]]
     then
         source "${KOOPA_PREFIX:?}/lang/shell/zsh/functions/activate.sh"
@@ -139,6 +143,10 @@ __koopa_zsh_header() { # {{{1
         then
             _koopa_activate_zsh_extras
         fi
+    fi
+    if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
+    then
+        _koopa_duration_stop 'zsh' || return 1
     fi
     return 0
 }
