@@ -133,22 +133,22 @@ koopa::locate_conda() { # {{{1
     # Locate conda (or mamba).
     # @note Updated 2021-05-26.
     #
+    # Currently intentionally requires 'koopa::activate_conda' to be called
+    # first, otherwise this will intentionally fail.
+    #
     # @seealso
     # - https://github.com/mamba-org/mamba
     # - https://github.com/conda-forge/miniforge
     # """
     local x
     koopa::assert_has_no_args "$#"
-    koopa::activate_conda
     if koopa::is_installed 'mamba'
     then
         x='mamba'
     else
         x='conda'
     fi
-    # FIXME This isn't locating conda correctly...
     x="$(koopa::which_realpath "$x")"
-    echo "$x"
     [[ -x "$x" ]] || return 1
     koopa::print "$x"
     return 0
