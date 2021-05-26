@@ -32,18 +32,20 @@ koopa::linux_install_bcl2fastq() { # {{{1
 koopa:::linux_install_bcl2fastq() { # {{{1
     # """
     # Install bcl2fastq.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-26.
     #
     # This uses CMake to install.
     # ARM is not yet supported for this.
     # """
-    local arch file jobs major_version name platform prefix url version version2
+    local arch file jobs major_version make name platform prefix
+    local url version version2
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='bcl2fastq'
     arch="$(koopa::arch)"
-    platform='linux-gnu'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='bcl2fastq'
+    platform='linux-gnu'
     major_version="$(koopa::major_version "$version")"
     # e.g. 2.20.0.422 to 2-20-0.
     version2="$(koopa::sub '\.[0-9]+$' '' "$version")"
@@ -59,8 +61,8 @@ koopa:::linux_install_bcl2fastq() { # {{{1
     # Fix for missing '/usr/include/x86_64-linux-gnu/sys/stat.h'.
     export C_INCLUDE_PATH="/usr/include/${arch}-${platform}"
     ../src/configure --prefix="$prefix"
-    make --jobs="$jobs"
-    make install
+    "$make" --jobs="$jobs"
+    "$make" install
     # For some reason bcl2fastq creates an empty test directory.
     koopa::rm "${prefix}/bin/test"
     return 0
