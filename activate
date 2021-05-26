@@ -395,11 +395,7 @@ __koopa_activate() { # {{{1
             set -o pipefail
         fi
     fi
-    # FIXME Move these to the POSIX library.
-    unset -v KOOPA_INTERACTIVE KOOPA_SHELL KOOPA_SUBSHELL
     __koopa_preflight || return 0
-    # FIXME Move to POSIX library.
-    # FIXME Move to POSIX library.
     __koopa_export_koopa_subshell || return 1
     __koopa_export_koopa_prefix || return 1
     export KOOPA_ACTIVATE=1
