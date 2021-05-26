@@ -10,28 +10,29 @@ koopa::install_perl() { # {{{1
 koopa:::install_perl() { # {{{1
     # """
     # Install Perl.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-26.
     # @seealso
     # - https://www.cpan.org/src/
     # - https://metacpan.org/pod/distribution/perl/INSTALL
     # - https://perlmaven.com/how-to-build-perl-from-source-code
     # """
-    local file jobs name prefix url version
-    koopa::alert_coffee_time
+    local file jobs make name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='perl'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='perl'
     file="${name}-${version}.tar.gz"
     url="https://www.cpan.org/src/5.0/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
+    koopa::alert_coffee_time
     ./Configure -des -Dprefix="$prefix"
-    make --jobs="$jobs"
+    "$make" --jobs="$jobs"
     # The installer will warn when you skip this step.
-    # > make test
-    make install
+    # > "$make" test
+    "$make" install
     return 0
 }
 
@@ -47,7 +48,7 @@ koopa::install_perl_packages() { # {{{1
     # * --from https://cpan.metacpan.org/      # use only the HTTPS mirror
     # """
     local module modules name_fancy prefix
-    koopa::assert_is_installed cpan perl
+    koopa::assert_is_installed 'cpan' 'perl'
     name_fancy='Perl packages'
     prefix="$(koopa::perl_packages_prefix)"
     koopa::install_start "$name_fancy" "$prefix"
