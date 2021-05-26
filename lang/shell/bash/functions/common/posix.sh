@@ -16,12 +16,28 @@ koopa::activate_emacs() { # {{{1
     _koopa_activate_emacs "$@"
 }
 
-koopa::activate_ensembl_perl_api() { # {{{1
-    _koopa_activate_ensembl_perl_api "$@"
+koopa::activate_fzf() { # {{{1
+    _koopa_activate_fzf "$@"
 }
 
 koopa::activate_go() { # {{{1
     _koopa_activate_go "$@"
+}
+
+koopa::activate_homebrew() { # {{{1
+    _koopa_activate_homebrew "$@"
+}
+
+koopa::activate_homebrew_cask_google_cloud_sdk() { # {{{1
+    _koopa_activate_homebrew_cask_google_cloud_sdk "$@"
+}
+
+koopa::activate_homebrew_cask_gpg_suite() { # {{{1
+    _koopa_activate_homebrew_cask_gpg_suite "$@"
+}
+
+koopa::activate_homebrew_cask_julia() { # {{{1
+    _koopa_activate_homebrew_cask_julia "$@"
 }
 
 koopa::activate_homebrew_cask_r() { # {{{1
@@ -36,8 +52,24 @@ koopa::activate_homebrew_opt_prefix() { # {{{1
     _koopa_activate_homebrew_opt_prefix "$@"
 }
 
+koopa::activate_koopa_paths() { # {{{1
+    _koopa_activate_koopa_paths "$@"
+}
+
 koopa::activate_llvm() { # {{{1
     _koopa_activate_llvm "$@"
+}
+
+koopa::activate_local_etc_profile() { # {{{1
+    _koopa_activate_local_etc_profile "$@"
+}
+
+koopa::activate_local_paths() { # {{{1
+    _koopa_activate_local_paths "$@"
+}
+
+koopa::activate_nextflow() { # {{{1
+    _koopa_activate_nextflow "$@"
 }
 
 koopa::activate_node() { # {{{1
@@ -60,8 +92,32 @@ koopa::activate_perlbrew() { # {{{1
     _koopa_activate_perlbrew "$@"
 }
 
+koopa::activate_pipx() { # {{{1
+    _koopa_activate_pipx "$@"
+}
+
+koopa::activate_pkg_config() { # {{{1
+    _koopa_activate_pkg_config "$@"
+}
+
 koopa::activate_prefix() { # {{{1
     _koopa_activate_prefix "$@"
+}
+
+koopa::activate_pyenv() { # {{{1
+    _koopa_activate_pyenv "$@"
+}
+
+koopa::activate_python_packages() { # {{{1
+    _koopa_activate_python_packages "$@"
+}
+
+koopa::activate_python_startup() { # {{{1
+    _koopa_activate_python_startup "$@"
+}
+
+koopa::activate_rbenv() { # {{{1
+    _koopa_activate_rbenv "$@"
 }
 
 koopa::activate_ruby() { # {{{1
@@ -72,8 +128,24 @@ koopa::activate_rust() { # {{{1
     _koopa_activate_rust "$@"
 }
 
-koopa::activate_starship() { # {{{1
-    _koopa_activate_starship "$@"
+koopa::activate_secrets() { # {{{1
+    _koopa_activate_secrets "$@"
+}
+
+koopa::activate_ssh_key() { # {{{1
+    _koopa_activate_ssh_key "$@"
+}
+
+koopa::activate_standard_paths() { # {{{1
+    _koopa_activate_standard_paths "$@"
+}
+
+koopa::activate_venv() { # {{{1
+    _koopa_activate_venv "$@"
+}
+
+koopa::activate_xdg() { # {{{1
+    _koopa_activate_xdg "$@"
 }
 
 koopa::add_config_link() { # {{{1
@@ -164,6 +236,14 @@ koopa::camel_case_simple() { # {{{1
     _koopa_camel_case_simple "$@"
 }
 
+koopa::check_os() { # {{{1
+    _koopa_check_os "$@"
+}
+
+koopa::check_shell() { # {{{1
+    _koopa_check_shell "$@"
+}
+
 koopa::conda_env() { # {{{1
     _koopa_conda_env "$@"
 }
@@ -220,6 +300,14 @@ koopa::dotfiles_private_prefix() { # {{{1
     _koopa_dotfiles_private_prefix "$@"
 }
 
+koopa::duration_start() { # {{{1
+    _koopa_duration_start "$@"
+}
+
+koopa::duration_stop() { # {{{1
+    _koopa_duration_stop "$@"
+}
+
 koopa::emacs_prefix() { # {{{1
     _koopa_emacs_prefix "$@"
 }
@@ -230,6 +318,42 @@ koopa::ensembl_perl_api_prefix() { # {{{1
 
 koopa::exec_dir() { # {{{1
     _koopa_exec_dir "$@"
+}
+
+koopa::export_cpu_count() { # {{{1
+    _koopa_export_cpu_count "$@"
+}
+
+koopa::export_editor() { # {{{1
+    _koopa_export_editor "$@"
+}
+
+koopa::export_gnupg() { # {{{1
+    _koopa_export_gnupg "$@"
+}
+
+koopa::export_git() { # {{{1
+    _koopa_export_git "$@"
+}
+
+koopa::export_history() { # {{{1
+    _koopa_export_history "$@"
+}
+
+koopa::export_pager() { # {{{1
+    _koopa_export_pager "$@"
+}
+
+koopa::export_python() { # {{{1
+    _koopa_export_python "$@"
+}
+
+koopa::export_shell() { # {{{1
+    _koopa_export_shell "$@"
+}
+
+koopa::export_user() { # {{{1
+    _koopa_export_user "$@"
 }
 
 koopa::expr() { # {{{1
@@ -532,6 +656,10 @@ koopa::macos_activate_python() { # {{{1
     _koopa_macos_activate_python "$@"
 }
 
+koopa::macos_activate_visual_studio_code() { # {{{1
+    _koopa_macos_activate_visual_studio_code "$@"
+}
+
 koopa::macos_is_dark_mode() { # {{{1
     _koopa_macos_is_dark_mode "$@"
 }
@@ -610,6 +738,10 @@ koopa::perl_packages_prefix() { # {{{1
 
 koopa::perlbrew_prefix() { # {{{1
     _koopa_perlbrew_prefix "$@"
+}
+
+koopa::pipx_prefix() { # {{{1
+    _koopa_pipx_prefix "$@"
 }
 
 koopa::prefix() { # {{{1
@@ -828,6 +960,10 @@ koopa::trim_ws() { # {{{1
     _koopa_trim_ws "$@"
 }
 
+koopa::umask() { # {{{1
+    _koopa_umask "$@"
+}
+
 koopa::user() { # {{{1
     _koopa_user "$@"
 }
@@ -852,7 +988,6 @@ koopa::which() { # {{{1
     _koopa_which "$@"
 }
 
-# FIXME Consider reworking this.
 koopa::which_realpath() { # {{{1
     _koopa_which_realpath "$@"
 }
