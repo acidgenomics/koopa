@@ -1,10 +1,5 @@
 #!/bin/sh
 
-# FIXME We should move most of these to Bash library...
-
-# NOTE Most version functions should go in:
-# 'shell/bash/functions/common/system/version.sh'.
-
 _koopa_macos_version() { # {{{1
     # """
     # macOS version.
@@ -21,13 +16,12 @@ _koopa_macos_version() { # {{{1
 _koopa_major_version() { # {{{1
     # """
     # Program 'MAJOR' version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-25.
     #
     # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
     local cut version x
-    # > cut="$(_koopa_locate_cut)"  # FIXME
-    cut='cut'
+    cut="$(_koopa_locate_cut)"
     for version in "$@"
     do
         x="$( \
@@ -43,11 +37,10 @@ _koopa_major_version() { # {{{1
 _koopa_major_minor_version() { # {{{1
     # """
     # Program 'MAJOR.MINOR' version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-25.
     # """
     local cut version x
-    # > cut="$(_koopa_locate_cut)"  # FIXME
-    cut='cut'
+    cut="$(_koopa_locate_cut)"
     for version in "$@"
     do
         x="$( \
