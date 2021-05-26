@@ -11,12 +11,12 @@ _koopa_activate_aliases() { # {{{1
     # > perl='_koopa_alias_perl'
     alias br='_koopa_alias_br'
     alias conda='_koopa_alias_conda'
-    alias fzf='unalias fzf && _koopa_activate_fzf && fzf'
-    alias perlbrew='unalias perlbrew && _koopa_activate_perlbrew && perlbrew'
-    alias pipx='unalias pipx && _koopa_activate_pipx && pipx'
-    alias pyenv='unalias pyenv && _koopa_activate_pyenv && pyenv'
-    alias rbenv='unalias rbenv && _koopa_activate_rbenv && rbenv'
-    alias z='unalias z && _koopa_activate_zoxide && z'
+    alias fzf='_koopa_alias_fzf'
+    alias perlbrew='_koopa_alias_perlbrew'
+    alias pipx='_koopa_alias_pipx'
+    alias pyenv='_koopa_alias_pyenv'
+    alias rbenv='_koopa_alias_rbenv'
+    alias z='_koopa_alias_z'
     file="${HOME}/.aliases"
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
