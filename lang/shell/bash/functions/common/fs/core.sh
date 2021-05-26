@@ -7,9 +7,8 @@ koopa::cd() { # {{{1
     # """
     local cd prefix
     koopa::assert_has_args_eq "$#" 1
-    cd="$(koopa::locate_cd)"
     prefix="${1:?}"
-    "$cd" "$prefix" >/dev/null 2>&1 || return 1
+    cd "$prefix" >/dev/null 2>&1 || return 1
     return 0
 }
 
