@@ -22,22 +22,17 @@ koopa::activate_conda_env() { # {{{1
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    local conda conda_prefix env_name env_prefix grep nounset
+    local env_name env_prefix grep nounset
     koopa::assert_has_args_eq "$#" 1
+    koopa::activate_conda
     grep="$(koopa::locate_grep)"
     nounset="$(koopa::boolean_nounset)"
-    # FIXME This step is failing because of the alias no?
-    koopa::activate_conda
     env_name="${1:?}"
     env_prefix="$(koopa::conda_env_prefix "$env_name")"
     koopa::assert_is_dir "$env_prefix"
     env_name="$(koopa::basename "$env_prefix")"
     [[ "$nounset" -eq 1 ]] && set +u
-    echo "FIXME OK 1"
-    echo "$env_name"
-    type conda
     conda activate "$env_name"
-    echo "FIXME OK 2"
     [[ "$nounset" -eq 1 ]] && set -u
     return 0
 }
@@ -45,10 +40,9 @@ koopa::activate_conda_env() { # {{{1
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-06-26.
     # """
     local dict env envs
-    koopa::assert_is_installed 'conda'
     declare -A dict=(
         [all]=0
         [aligners]=0
@@ -381,7 +375,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-26.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -412,7 +406,6 @@ koopa::conda_create_env() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    koopa::activate_conda
     conda="$(koopa::locate_conda)"
     conda_prefix="$(koopa::conda_prefix)"
     for env_string in "$@"
@@ -455,7 +448,7 @@ koopa::conda_create_env() { # {{{1
 koopa::conda_env_latest_version() { # {{{1
     # """
     # Get the latest version of a conda environment available.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-26.
     # """
     local awk conda env_name tail
     koopa::assert_has_args_eq "$#" 1
