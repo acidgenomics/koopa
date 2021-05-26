@@ -25,8 +25,7 @@ koopa:::install_git() { # {{{1
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
     make="$(koopa::locate_make)"
-    # FIXME Rework this as locate_openssl.
-    openssl='/bin/openssl'
+    openssl="$(koopa::locate_openssl)"
     name='git'
     file="${name}-${version}.tar.gz"
     mirror='https://mirrors.edge.kernel.org/pub/software/scm/'
