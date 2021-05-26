@@ -284,6 +284,7 @@ python="3.9.5"
 r="4.1.0"
 
 # https://mac.r-project.org/
+# This release matches current R version.
 r-cran-gfortran="8.2"
 
 # https://svn.r-project.org/R/
