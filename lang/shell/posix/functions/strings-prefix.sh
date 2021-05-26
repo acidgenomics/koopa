@@ -566,6 +566,15 @@ _koopa_scripts_private_prefix() { # {{{1
     return 0
 }
 
+_koopa_spacevim_prefix() { # {{{1
+    # """
+    # SpaceVim prefix.
+    # @note Updated 2021-05-26.
+    # """
+    _koopa_print "${HOME:?}/.Spacevim"
+    return 0
+}
+
 _koopa_tests_prefix() { # {{{1
     # """
     # Unit tests prefix.
