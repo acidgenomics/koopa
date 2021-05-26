@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# NOTE Some of these should migrate to Bash library.
+
 _koopa_anaconda_prefix() { # {{{1
     # """
     # Anaconda prefix.
