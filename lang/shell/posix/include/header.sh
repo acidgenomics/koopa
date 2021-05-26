@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# FIXME Should we move stuff out of the KOOPA_ACTIVATE call here?
-
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
