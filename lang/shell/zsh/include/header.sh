@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 # koopa nolint=coreutils
+#
+# FIXME Need to reduce the amount of interactive stuff that gets loaded non-interactively...
 
 __koopa_is_installed() { # {{{1
     # """
@@ -39,7 +41,7 @@ __koopa_print() { # {{{1
 __koopa_realpath() { # {{{1
     # """
     # Resolve file path.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-26.
     # """
     local readlink x
     readlink='readlink'
@@ -52,7 +54,7 @@ __koopa_realpath() { # {{{1
         return 1
     fi
     x="$("$readlink" -f "$@")"
-    [ -n "$x" ] || return 1
+    [[ -e "$x" ]] || return 1
     __koopa_print "$x"
     return 0
 }

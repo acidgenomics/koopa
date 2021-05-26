@@ -1,6 +1,8 @@
 #!/bin/sh
 # shellcheck disable=SC2032
 
+# FIXME This should only be run in interactive sesssion!!!!!
+
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.

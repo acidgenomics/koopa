@@ -136,6 +136,9 @@ koopa::locate_conda() { # {{{1
     # Currently intentionally requires 'koopa::activate_conda' to be called
     # first, otherwise this will intentionally fail.
     #
+    # Support for mamba is currently experimental, and may be removed in
+    # a future release.
+    #
     # @seealso
     # - https://github.com/mamba-org/mamba
     # - https://github.com/conda-forge/miniforge

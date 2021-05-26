@@ -39,7 +39,11 @@ _koopa_activate_conda() { # {{{1
     # """
     local anaconda_prefix conda_prefix name nounset prefix
     [ "$#" -le 1 ] || return 1
-    _koopa_is_alias conda && unalias conda
+    
+    echo 'FIXME AHHHH 1'
+    # > _koopa_is_alias conda && unalias conda
+    echo 'FIXME AHHHH 2'
+
     prefix="${1:-}"
     # Prefer Miniconda over Anaconda by default, if both are installed.
     if [ -z "$prefix" ]
@@ -61,6 +65,7 @@ _koopa_activate_conda() { # {{{1
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
+    # > conda deactivate
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }

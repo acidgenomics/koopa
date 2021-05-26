@@ -109,19 +109,6 @@ __koopa_check_zsh() { # {{{1
     return 0
 }
 
-__koopa_export_koopa_interactive() { # {{{1
-    # """
-    # Export 'KOOPA_INTERACTIVE' variable.
-    # @note Updated 2021-05-25.
-    # """
-    if __koopa_is_interactive || [ "${KOOPA_FORCE:-0}" -eq 1 ]
-    then
-        KOOPA_INTERACTIVE=1
-        export KOOPA_INTERACTIVE
-    fi
-    return 0
-}
-
 __koopa_export_koopa_prefix() { # {{{1
     # """
     # Export 'KOOPA_PREFIX' variable.
@@ -150,7 +137,7 @@ __koopa_export_koopa_prefix() { # {{{1
 __koopa_export_koopa_subshell() { # {{{1
     # """
     # Export 'KOOPA_SUBSHELL' variable.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-05-26.
     #
     # This function evaluates whether 'KOOPA_PREFIX' is defined, which should be
     # the case only inside a subshell.
@@ -201,7 +188,7 @@ __koopa_is_installed() { # {{{1
 __koopa_is_interactive() { # {{{1
     # """
     # Is the current shell interactive?
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-26.
     # """
     __koopa_str_match_fixed "$-" 'i'
 }
@@ -220,14 +207,6 @@ __koopa_is_macos() { # {{{1
     # @note Updated 2021-05-07.
     # """
     [ "$(uname -s)" = 'Darwin' ]
-}
-
-__koopa_is_subshell() { # {{{1
-    # """
-    # Is koopa running inside of a subshell?
-    # @note Updated 2021-05-07.
-    # """
-    [ "${KOOPA_SUBSHELL:-0}" -eq 1 ]
 }
 
 __koopa_is_user_named_admin() { # {{{1
@@ -263,7 +242,7 @@ __koopa_posix_source() { # {{{1
     then
         prefix='/opt/koopa'
     fi
-    if [ ! -d "$prefix" ] && __koopa_is_interactive
+    if [ ! -d "$prefix" ]
     then
         __koopa_warning \
             'Failed to locate koopa activation script.' \
@@ -416,15 +395,18 @@ __koopa_activate() { # {{{1
             set -o pipefail
         fi
     fi
+    # FIXME Move these to the POSIX library.
     unset -v KOOPA_INTERACTIVE KOOPA_SHELL KOOPA_SUBSHELL
     __koopa_preflight || return 0
-    __koopa_export_koopa_interactive || return 1
+    # FIXME Move to POSIX library.
+    # FIXME Move to POSIX library.
     __koopa_export_koopa_subshell || return 1
     __koopa_export_koopa_prefix || return 1
     export KOOPA_ACTIVATE=1
     # shellcheck source=/dev/null
     . "$(__koopa_header)" || return 1
-    if [ "${KOOPA_VERBOSE:-0}" -eq 1 ]
+    if [ "${KOOPA_TEST:-0}" -eq 1 ] || \
+        [ "${KOOPA_VERBOSE:-0}" -eq 1 ]
     then
         if _koopa_is_installed 'locale'
         then
