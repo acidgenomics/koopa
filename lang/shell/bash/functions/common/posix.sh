@@ -156,10 +156,6 @@ koopa::camel_case_simple() { # {{{1
     _koopa_camel_case_simple "$@"
 }
 
-koopa::cd() { # {{{1
-    _koopa_cd "$@"
-}
-
 koopa::conda_env() { # {{{1
     _koopa_conda_env "$@"
 }
@@ -598,10 +594,6 @@ koopa::os_id() { # {{{1
 
 koopa::os_string() { # {{{1
     _koopa_os_string "$@"
-}
-
-koopa::parent_dir() { # {{{1
-    _koopa_parent_dir "$@"
 }
 
 koopa::perl_packages_prefix() { # {{{1

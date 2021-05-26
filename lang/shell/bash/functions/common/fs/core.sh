@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+koopa::cd() { # {{{1
+    # """
+    # Change directory quietly.
+    # @note Updated 2021-05-26.
+    # """
+    local cd prefix
+    koopa::assert_has_args_eq "$#" 1
+    cd="$(koopa::locate_cd)"
+    prefix="${1:?}"
+    "$cd" "$prefix" >/dev/null 2>&1 || return 1
+    return 0
+}
+
 koopa::chgrp() { # {{{1
     # """
     # GNU chgrp.
@@ -336,6 +349,50 @@ koopa::mv() { # {{{1
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
     "${mv[@]}" "${mv_args[@]}" "$@"
+    return 0
+}
+
+koopa::parent_dir() { # {{{1
+    # """
+    # Get the parent directory path.
+    # @note Updated 2021-05-26.
+    #
+    # This requires file to exist and resolves symlinks.
+    # """
+    local OPTIND cd_tail file n parent sed 
+    sed="$(koopa::locate_sed)"
+    cd_tail=''
+    n=1
+    OPTIND=1
+    while getopts 'n:' opt
+    do
+        case "$opt" in
+            n)
+                n="${OPTARG}"
+                ;;
+            \?)
+                koopa::invalid_arg "$opt"
+                ;;
+        esac
+    done
+    shift "$((OPTIND-1))"
+    [[ "$n" -ge 1 ]] || n=1
+    if [[ "$n" -ge 2 ]]
+    then
+        n="$((n-1))"
+        cd_tail="$( \
+            printf "%${n}s" \
+            | "$sed" 's| |/..|g' \
+        )"
+    fi
+    for file in "$@"
+    do
+        [[ -e "$file" ]] || return 1
+        parent="$(koopa::dirname "$file")"
+        parent="${parent}${cd_tail}"
+        parent="$(koopa::cd "$parent" && pwd -P)"
+        koopa::print "$parent"
+    done
     return 0
 }
 

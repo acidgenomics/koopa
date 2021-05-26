@@ -39,16 +39,13 @@ __koopa_add_to_path_string_start() { # {{{1
 __koopa_remove_from_path_string() { # {{{1
     # """
     # Remove directory from PATH string with POSIX conventions.
-    # @note Updated 2021-04-23.
+    # @note Updated 2021-05-26.
     #
     # Alternative non-POSIX approach that works on Bash and Zsh:
     # > PATH="${PATH//:$dir/}"
     # """
-    local sed
     [ "$#" -eq 2 ] || return 1
-    # > sed="$(_koopa_locate_sed)"  # FIXME
-    sed='sed'
-    _koopa_print "${1:?}" | "$sed" "s|:${2:?}||g"
+    _koopa_print "${1:?}" | sed "s|:${2:?}||g"
     return 0
 }
 
