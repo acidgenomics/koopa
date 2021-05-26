@@ -214,12 +214,19 @@ _koopa_complete() { # {{{1
                 fi
                 ;;
             uninstall)
+                # FIXME Need to improve this.
                 args=(
                     'dotfiles'
                     'homebrew'
                     'koopa'
                     'spacevim'
                 )
+                if _koopa_is_macos
+                then
+                    args+=(
+                        'r-cran-gfortran'
+                    )
+                fi
                 ;;
             update)
                 args=(
