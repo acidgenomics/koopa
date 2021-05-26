@@ -10,7 +10,7 @@ koopa::install_sqlite() { # {{{1
 koopa:::install_sqlite() { # {{{1
     # """
     # Install SQLite.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-05-26.
     #
     # Use autoconf instead of amalgamation.
     #

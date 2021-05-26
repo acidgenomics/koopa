@@ -32,6 +32,6 @@ v${version}/${file}"
     koopa::cd "$name"
     ./mconfig --prefix="$prefix"
     "$make" -C builddir
-    "$make" -C builddir install  # FIXME Need sudo here?
+    "$make" -C builddir install
     return 0
 }
