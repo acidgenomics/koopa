@@ -9,6 +9,20 @@ koopa::pyscript_prefix() { # {{{1
     return 0
 }
 
+koopa::python_system_packages_prefix() { # {{{1
+    # """
+    # Python system site packages library prefix.
+    # @note Updated 2021-05-25.
+    # """
+    local python x
+    python="${1:-}"
+    [[ -z "$python" ]] && python="$(koopa::locate_python)"
+    koopa::assert_is_installed "$python"
+    x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
+    koopa::print "$x"
+    return 0
+}
+
 koopa::r_prefix() { # {{{1
     # """
     # R prefix.
