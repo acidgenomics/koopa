@@ -20,7 +20,7 @@ koopa::install_julia() { # {{{1
 koopa:::install_julia() { # {{{1
     # """
     # Install Julia (from source).
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-26.
     # @seealso
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/linux.md
@@ -28,18 +28,19 @@ koopa:::install_julia() { # {{{1
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md#llvm
     # - https://github.com/JuliaLang/julia/blob/master/Make.inc
     # """
-    local file jobs name prefix version url
+    local file jobs make name prefix version url
     if koopa::is_macos
     then
         # NOTE Seeing this pop up on macOS:
         # # Warning: git information unavailable; versioning information limited
         # Including 'git' here makes no difference.
-        koopa::activate_homebrew_opt_prefix gcc
+        koopa::activate_homebrew_opt_prefix 'gcc'
     fi
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='julia'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='julia'
     # > file="v${version}.tar.gz"
     # > url="https://github.com/JuliaLang/julia/archive/${file}"
     file="${name}-${version}-full.tar.gz"
@@ -62,8 +63,8 @@ prefix=${prefix}
 USE_LLVM_SHLIB=0
 USE_SYSTEM_LLVM=0
 END
-    make --jobs="$jobs"
-    # > make test
-    make install
+    "$make" --jobs="$jobs"
+    # > "$make" test
+    "$make" install
     return 0
 }
