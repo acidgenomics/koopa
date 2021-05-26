@@ -43,9 +43,14 @@ _koopa_check_shell() { # {{{1
     # Check that current shell is supported, and export 'KOOPA_SHELL' variable.
     # @note Updated 2021-05-24.
     # """
-    local shell
+    local shell shell_name
     shell="$(_koopa_locate_shell)"
-    case "$(basename "$shell")" in
+    KOOPA_SHELL="$shell"
+    export KOOPA_SHELL
+    shell_name="$(_koopa_shell_name)"
+    SHELL="$shell_name"
+    export SHELL
+    case "$shell_name" in
         ash | \
         bash | \
         busybox | \
@@ -78,8 +83,6 @@ END
             return 1
             ;;
     esac
-    KOOPA_SHELL="$shell"
-    export KOOPA_SHELL
     return 0
 }
 
