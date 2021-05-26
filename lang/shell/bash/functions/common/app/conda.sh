@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Locate conda needs to error if not installed.
-# FIXME That function needs to resolve conda path better.
-
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
@@ -29,14 +26,18 @@ koopa::activate_conda_env() { # {{{1
     koopa::assert_has_args_eq "$#" 1
     grep="$(koopa::locate_grep)"
     nounset="$(koopa::boolean_nounset)"
+    # FIXME This step is failing because of the alias no?
     koopa::activate_conda
-    conda="$(koopa::locate_conda)"
     env_name="${1:?}"
     env_prefix="$(koopa::conda_env_prefix "$env_name")"
     koopa::assert_is_dir "$env_prefix"
     env_name="$(koopa::basename "$env_prefix")"
     [[ "$nounset" -eq 1 ]] && set +u
-    "$conda" activate "$env_name"
+    echo "FIXME OK 1"
+    echo "$env_name"
+    type conda
+    conda activate "$env_name"
+    echo "FIXME OK 2"
     [[ "$nounset" -eq 1 ]] && set -u
     return 0
 }
@@ -546,7 +547,7 @@ koopa::conda_env_prefix() { # {{{1
 koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-26.
     #
     # @seealso
     # - conda env list --verbose
@@ -555,7 +556,6 @@ koopa::conda_remove_env() { # {{{1
     local arg env_prefix nounset
     koopa::assert_has_args "$#"
     koopa::activate_conda
-    # FIXME Probably a good idea to rework and activate here if necessary.
     conda="$(koopa::locate_conda)"
     nounset="$(koopa::boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +u
