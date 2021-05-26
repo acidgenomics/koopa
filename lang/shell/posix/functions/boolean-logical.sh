@@ -270,16 +270,6 @@ _koopa_is_interactive() { # {{{1
     return 1
 }
 
-_koopa_is_koopa_active() { # {{{1
-    # """
-    # Is koopa active in the current shell session?
-    # @note Updated 2021-05-07.
-    # """
-    local x
-    x="$(type '_koopa_prefix' 2>/dev/null)"
-    _koopa_str_match_fixed "$x" 'function'
-}
-
 _koopa_is_linux() { # {{{1
     # """
     # Is the current operating system Linux?

@@ -1,7 +1,6 @@
 #!/bin/sh
 
 # FIXME Ensure all of these are also included in Bash library.
-# FIXME ensure activate_ensembl_perl_api is removed from posix.sh.
 
 _koopa_activate_aspera() { # {{{1
     # """

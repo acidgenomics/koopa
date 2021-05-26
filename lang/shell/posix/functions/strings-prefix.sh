@@ -243,7 +243,7 @@ _koopa_homebrew_prefix() { # {{{1
             x='/home/linuxbrew/.linuxbrew'
         fi
     fi
-    [ -n "$x" ] || return 0
+    [ -d "$x" ] || return 1
     _koopa_print "$x"
     return 0
 }
