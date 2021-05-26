@@ -89,11 +89,15 @@ END
 _koopa_duration_start() { # {{{1
     # """
     # Start activation duration timer.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-25.
     # """
-    local bc date
-    bc="$(_koopa_locate_bc)"
-    date="$(_koopa_locate_date)"
+    local brew_prefix date
+    date='date'
+    if _koopa_is_macos
+    then
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        date="${brew_prefix}/opt/coreutils/bin/gdate"
+    fi
     KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
     export KOOPA_DURATION_START
     return 0
@@ -102,11 +106,17 @@ _koopa_duration_start() { # {{{1
 _koopa_duration_stop() { # {{{1
     # """
     # Stop activation duration timer.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-25.
     # """
-    local bc date duration start stop
-    bc="$(_koopa_locate_bc)"
-    date="$(_koopa_locate_date)"
+    local brew_prefix bc date duration start stop
+    bc='bc'
+    date='date'
+    if _koopa_is_macos
+    then
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        bc="${brew_prefix}/opt/bc/bin/bc"
+        date="${brew_prefix}/opt/coreutils/bin/gdate"
+    fi
     start="${KOOPA_DURATION_START:?}"
     stop="$("$date" -u '+%s%3N')"
     duration="$( \
