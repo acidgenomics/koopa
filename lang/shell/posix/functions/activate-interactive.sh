@@ -7,6 +7,7 @@ _koopa_activate_aliases() { # {{{1
     # @note Updated 2021-05-07.
     # """
     local file
+    [ "$#" -eq 0 ] || return 1
     # > alias perl='unalias perl && _koopa_activate_perl_packages && perl'
     alias br='unalias br && _koopa_activate_broot && br'
     alias conda='unalias conda && _koopa_activate_conda && conda'
@@ -43,6 +44,7 @@ _koopa_activate_broot() { # {{{1
     # https://github.com/Canop/broot
     # """
     local br_script config_dir nounset shell
+    [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
         bash|zsh)
@@ -70,6 +72,7 @@ _koopa_activate_completion() { # {{{1
     # @note Updated 2021-05-06.
     # """
     local file koopa_prefix shell
+    [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
         bash|zsh)
@@ -92,6 +95,7 @@ _koopa_activate_dash_extras() { # {{{1
     # Extra configuration options for Dash shell.
     # @note Updated 2021-05-07.
     # """
+    [ "$#" -eq 0 ] || return 1
     export PS1='# '
     return 0
 }
@@ -104,6 +108,7 @@ _koopa_activate_dircolors() { # {{{1
     # This will set the 'LD_COLORS' environment variable.
     # """
     local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
+    [ "$#" -eq 0 ] || return 1
     [ -n "${SHELL:-}" ] || return 0
     export SHELL  # RStudio shell config edge case.
     dir='dir'
@@ -177,6 +182,7 @@ _koopa_activate_fzf() { # {{{1
     #   https://gist.github.com/umayr/8875b44740702b340430b610b52cd182
     # """
     local nounset prefix script shell
+    [ "$#" -eq 0 ] || return 1
     if [ -z "${FZF_DEFAULT_COMMAND:-}" ]
     then
         export FZF_DEFAULT_COMMAND='rg --files'
@@ -226,7 +232,7 @@ _koopa_activate_gcc_colors() { # {{{1
     # Activate GCC colors.
     # @note Updated 2020-06-30.
     # """
-    # Colored GCC warnings and errors.
+    [ "$#" -eq 0 ] || return 1
     [ -n "${GCC_COLORS:-}" ] && return 0
     export GCC_COLORS="caret=01;32:error=01;31:locus=01:note=01;36:\
 quote=01:warning=01;35"
@@ -246,6 +252,7 @@ _koopa_activate_gnu() { # {{{1
     # macOS ships with BSD coreutils, which don't support all GNU options.
     # """
     local cp harden_coreutils ln mkdir mv opt_prefix rm
+    [ "$#" -eq 0 ] || return 1
     if _koopa_is_linux
     then
         harden_coreutils=1
@@ -365,6 +372,7 @@ _koopa_activate_starship() { # {{{1
     # https://starship.rs/
     # """
     local nounset shell
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_installed starship || return 0
     shell="$(_koopa_shell_name)"
     case "$shell" in
@@ -397,6 +405,7 @@ _koopa_activate_tmux_sessions() { # {{{1
     # @note Updated 2021-05-26.
     # """
     local cut tr x
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_installed tmux || return 0
     _koopa_is_tmux && return 0
     cut='cut'
@@ -433,6 +442,7 @@ _koopa_activate_today_bucket() { # {{{1
     #        make symbolic links instead of hard links
     # """
     local brew_prefix bucket_dir date ln mkdir readlink today_bucket today_link
+    [ "$#" -eq 0 ] || return 1
     bucket_dir="${KOOPA_BUCKET:-}"
     [ -z "$bucket_dir" ] && bucket_dir="${HOME:?}/bucket"
     # Early return if there's no bucket directory on the system.
@@ -472,6 +482,7 @@ _koopa_activate_zoxide() { # {{{1
     # - https://github.com/ajeetdsouza/zoxide
     # """
     local nounset shell
+    [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
         bash|zsh)
@@ -496,6 +507,7 @@ _koopa_macos_activate_cli_colors() { # {{{1
     # Refer to 'man ls' for 'LSCOLORS' section on color designators. Note that
     # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ -z "${CLICOLOR:-}" ] && export CLICOLOR=1
     [ -z "${LSCOLORS:-}" ] && export LSCOLORS='Gxfxcxdxbxegedabagacad'
     return 0
@@ -506,6 +518,7 @@ _koopa_macos_activate_color_mode() { # {{{1
     # Activate macOS color mode.
     # @note Updated 2021-05-07.
     # """
+    [ "$#" -eq 0 ] || return 1
     KOOPA_COLOR_MODE="$(_koopa_macos_color_mode)"
     export KOOPA_COLOR_MODE
     return 0
@@ -523,6 +536,7 @@ _koopa_macos_activate_iterm() { # {{{1
     # - https://apas.gr/2018/11/dark-mode-macos-safari-iterm-vim/
     # """
     local iterm_theme koopa_theme
+    [ "$#" -eq 0 ] || return 1
     [ "${TERM_PROGRAM:-}" = 'iTerm.app' ] || return 0
     iterm_theme="${ITERM_PROFILE:-}"
     koopa_theme="${KOOPA_COLOR_MODE:-}"

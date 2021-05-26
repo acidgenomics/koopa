@@ -28,8 +28,12 @@ koopa::activate_homebrew_cask_r() { # {{{1
     _koopa_activate_homebrew_cask_r "$@"
 }
 
-koopa::activate_homebrew_keg_only() { # {{{1
-    _koopa_activate_homebrew_keg_only "$@"
+koopa::activate_homebrew_opt_gnu_prefix() { # {{{1
+    _koopa_activate_homebrew_opt_gnu_prefix "$@"
+}
+
+koopa::activate_homebrew_opt_prefix() { # {{{1
+    _koopa_activate_homebrew_opt_prefix "$@"
 }
 
 koopa::activate_llvm() { # {{{1
@@ -42,6 +46,10 @@ koopa::activate_node() { # {{{1
 
 koopa::activate_openjdk() { # {{{1
     _koopa_activate_openjdk "$@"
+}
+
+koopa::activate_opt_prefix() { # {{{1
+    _koopa_activate_opt_prefix "$@"
 }
 
 koopa::activate_perl_packages() { # {{{1
