@@ -61,7 +61,7 @@ _koopa_activate_zsh_editor() { # {{{1
 _koopa_activate_zsh_extras() { # {{{1
     # """
     # Activate Zsh extras.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-05-26.
     #
     # Note on path (and also fpath) arrays in Zsh:
     # https://www.zsh.org/mla/users/2012/msg00785.html
@@ -74,6 +74,7 @@ _koopa_activate_zsh_extras() { # {{{1
     # https://unix.stackexchange.com/questions/214296
     # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
     # """
+    _koopa_is_interactive || return 0
     _koopa_activate_zsh_fpath
     _koopa_activate_zsh_compinit
     _koopa_activate_zsh_bashcompinit
