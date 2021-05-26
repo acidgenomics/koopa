@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# FIXME Ensure all of these are also included in Bash library.
-
 _koopa_activate_aspera() { # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
