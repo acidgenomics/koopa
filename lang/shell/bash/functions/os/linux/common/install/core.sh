@@ -11,14 +11,13 @@ koopa::linux_delete_broken_app_symlinks() { # {{{1
     return 0
 }
 
-# NOTE Consider making this in a function that we can also use on macOS.
-# FIXME Need to rework using koopa::find here...
 koopa::linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-05-26.
     # """
-    local app_prefix koopa_prefix make_prefix file links name version
+    local app_prefix find koopa_prefix make_prefix file links name
+    local sort tail version
     koopa::assert_has_args "$#"
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_linux
@@ -26,6 +25,9 @@ koopa::linux_find_app_symlinks() { # {{{1
     version="${2:-}"
     koopa_prefix="$(koopa::prefix)"
     make_prefix="$(koopa::make_prefix)"
+    find="$(koopa::locate_find)"
+    sort="$(koopa::locate_sort)"
+    tail="$(koopa::locate_tail)"
     # Automatically detect version, if left unset.
     app_prefix="$(koopa::app_prefix)/${name}"
     koopa::assert_is_dir "$app_prefix"
@@ -33,25 +35,23 @@ koopa::linux_find_app_symlinks() { # {{{1
     then
         app_prefix="${app_prefix}/${version}"
     else
-        # FIXME GNU sort, tail
         app_prefix="$( \
             koopa::find \
                 --prefix="$app_prefix" \
                 --max-depth=1 \
                 --type='d' \
-            | sort \
-            | tail -n 1 \
+            | "$sort" \
+            | "$tail" -n 1 \
         )"
     fi
     # Pipe GNU find into array.
-    # FIXME GNU sort, tail
     readarray -t links <<< "$( \
-        find -L "$make_prefix" \
+        "$find" -L "$make_prefix" \
             -type f \
             -path "${app_prefix}/*" \
             ! -path "$koopa_prefix" \
             -print0 \
-        | sort -z \
+        | "$sort" -z \
     )"
     # Replace the cellar prefix with our build prefix.
     for file in "${links[@]}"

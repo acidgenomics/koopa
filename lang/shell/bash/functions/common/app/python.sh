@@ -261,7 +261,7 @@ koopa::venv_create_base() { # {{{1
 koopa::venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
-    # @note Updated 2021-01-14.
+    # @note Updated 2021-05-26.
     #
     # Check that LLVM is configured correctly.
     # umap-learn > numba > llvmlite
@@ -311,10 +311,9 @@ koopa::venv_create_r_reticulate() { # {{{1
         export DYLD_LIBRARY_PATH='/usr/local/opt/libomp/lib'
         export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
     fi
-    if [[ -n "${LLVM_CONFIG:-}" ]]
-    then
-        koopa::stop 'Export "LLVM_CONFIG" to locate LLVM llvm-config binary.'
-    fi
+    LLVM_CONFIG="$(koopa::locate_llvm_config)"
+    koopa::assert_is_exectuable "$LLVM_CONFIG"
+    export LLVM_CONFIG
     koopa::venv_create --name="$name" "${packages[@]}"
     return 0
 }
