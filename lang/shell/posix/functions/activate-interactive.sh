@@ -7,7 +7,6 @@ _koopa_activate_aliases() { # {{{1
     # @note Updated 2021-05-07.
     # """
     local file
-    _koopa_is_interactive || return 0
     # > alias perl='unalias perl && _koopa_activate_perl_packages && perl'
     alias br='unalias br && _koopa_activate_broot && br'
     alias conda='unalias conda && _koopa_activate_conda && conda'
@@ -44,7 +43,6 @@ _koopa_activate_broot() { # {{{1
     # https://github.com/Canop/broot
     # """
     local br_script config_dir nounset shell
-    _koopa_is_interactive || return 0
     shell="$(_koopa_shell_name)"
     case "$shell" in
         bash|zsh)
@@ -72,7 +70,6 @@ _koopa_activate_completion() { # {{{1
     # @note Updated 2021-05-06.
     # """
     local file koopa_prefix shell
-    _koopa_is_interactive || return 0
     shell="$(_koopa_shell_name)"
     case "$shell" in
         bash|zsh)
@@ -90,6 +87,15 @@ _koopa_activate_completion() { # {{{1
     return 0
 }
 
+_koopa_activate_dash_extras() { # {{{1
+    # """
+    # Extra configuration options for Dash shell.
+    # @note Updated 2021-05-07.
+    # """
+    export PS1='# '
+    return 0
+}
+
 _koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
@@ -98,7 +104,6 @@ _koopa_activate_dircolors() { # {{{1
     # This will set the 'LD_COLORS' environment variable.
     # """
     local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
-    _koopa_is_interactive || return 0
     [ -n "${SHELL:-}" ] || return 0
     export SHELL  # RStudio shell config edge case.
     dir='dir'
@@ -172,7 +177,6 @@ _koopa_activate_fzf() { # {{{1
     #   https://gist.github.com/umayr/8875b44740702b340430b610b52cd182
     # """
     local nounset prefix script shell
-    _koopa_is_interactive || return 0
     if [ -z "${FZF_DEFAULT_COMMAND:-}" ]
     then
         export FZF_DEFAULT_COMMAND='rg --files'
@@ -217,6 +221,167 @@ _koopa_activate_fzf() { # {{{1
     return 0
 }
 
+_koopa_activate_gcc_colors() { # {{{1
+    # """
+    # Activate GCC colors.
+    # @note Updated 2020-06-30.
+    # """
+    # Colored GCC warnings and errors.
+    [ -n "${GCC_COLORS:-}" ] && return 0
+    export GCC_COLORS="caret=01;32:error=01;31:locus=01:note=01;36:\
+quote=01:warning=01;35"
+    return 0
+}
+
+_koopa_activate_gnu() { # {{{1
+    # """
+    # Activate GNU utilities.
+    # @note Updated 2021-05-21.
+    #
+    # Creates hardened interactive aliases for GNU coreutils.
+    #
+    # These aliases get unaliased inside of koopa scripts, and they should only
+    # apply to interactive use at the command prompt.
+    #
+    # macOS ships with BSD coreutils, which don't support all GNU options.
+    # """
+    local cp harden_coreutils ln mkdir mv opt_prefix rm
+    if _koopa_is_linux
+    then
+        harden_coreutils=1
+        cp='cp'
+        ln='ln'
+        mkdir='mkdir'
+        mv='mv'
+        rm='rm'
+    elif _koopa_is_macos
+    then
+        _koopa_is_installed brew || return 0
+        opt_prefix="$(_koopa_homebrew_prefix)/opt"
+        if [ -d "${opt_prefix}/coreutils" ]
+        then
+            harden_coreutils=1
+            # These are hardened utils where we are changing default args.
+            cp='gcp'
+            ln='gln'
+            mkdir='gmkdir'
+            mv='gmv'
+            rm='grm'
+            # Standardize using GNU variants by default.
+            alias basename='gbasename'
+            alias chgrp='gchgrp'
+            alias chmod='gchmod'
+            alias chown='gchown'
+            alias cut='gcut'
+            alias date='gdate'
+            alias dirname='gdirname'
+            alias du='gdu'
+            alias head='ghead'
+            alias readlink='greadlink'
+            alias realpath='grealpath'
+            alias sort='gsort'
+            alias stat='gstat'
+            alias tail='gtail'
+            alias tee='gtee'
+            alias tr='gtr'
+            alias uname='guname'
+        else
+            _koopa_alert_not_installed 'Homebrew coreutils'
+            harden_coreutils=0
+        fi
+        if [ -d "${opt_prefix}/findutils" ]
+        then
+            alias find='gfind'
+            alias xargs='gxargs'
+        else
+            _koopa_alert_not_installed 'Homebrew findutils'
+        fi
+        if [ -d "${opt_prefix}/gawk" ]
+        then
+            alias awk='gawk'
+        else
+            _koopa_alert_not_installed 'Homebrew gawk'
+        fi
+        if [ -d "${opt_prefix}/gnu-sed" ]
+        then
+            alias sed='gsed'
+        else
+            _koopa_alert_not_installed 'Homebrew gnu-sed'
+        fi
+        if [ -d "${opt_prefix}/gnu-tar" ]
+        then
+            alias tar='gtar'
+        else
+            _koopa_alert_not_installed 'Homebrew gnu-tar'
+        fi
+        if [ -d "${opt_prefix}/grep" ]
+        then
+            alias grep='ggrep'
+        else
+            _koopa_alert_not_installed 'Homebrew grep'
+        fi
+        if [ -d "${opt_prefix}/make" ]
+        then
+            alias make='gmake'
+        else
+            _koopa_alert_not_installed 'Homebrew make'
+        fi
+        if [ -d "${opt_prefix}/man-db" ]
+        then
+            alias man='gman'
+        else
+            _koopa_alert_not_installed 'Homebrew man-db'
+        fi
+    fi
+    if [ "$harden_coreutils" -eq 1 ]
+    then
+        # The '--archive' flag seems to have issues on some file systems.
+        # shellcheck disable=SC2139
+        alias cp="${cp} --interactive --recursive" # -i
+        # shellcheck disable=SC2139
+        alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
+        # shellcheck disable=SC2139
+        alias mkdir="${mkdir} --parents" # -p
+        # shellcheck disable=SC2139
+        alias mv="${mv} --interactive" # -i
+        # Problematic on some file systems: --dir --preserve-root
+        # Don't enable '--recursive' here by default, so we don't accidentally
+        # nuke an important directory.
+        # shellcheck disable=SC2139
+        alias rm="${rm} --interactive=once" # -I
+    fi
+    return 0
+}
+
+_koopa_activate_ssh_key() { # {{{1
+    # """
+    # Import an SSH key automatically.
+    # @note Updated 2020-06-30.
+    #
+    # NOTE: SCP will fail unless this is interactive only.
+    # ssh-agent will prompt for password if there's one set.
+    #
+    # To change SSH key passphrase:
+    # > ssh-keygen -p
+    #
+    # List currently loaded keys:
+    # > ssh-add -L
+    # """
+    local key
+    _koopa_is_linux || return 0
+    key="${1:-}"
+    if [ -z "$key" ] && [ -n "${SSH_KEY:-}" ]
+    then
+        key="$SSH_KEY"
+    else
+        key="${HOME}/.ssh/id_rsa"
+    fi
+    [ -r "$key" ] || return 0
+    eval "$(ssh-agent -s)" >/dev/null 2>&1
+    ssh-add "$key" >/dev/null 2>&1
+    return 0
+}
+
 _koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
@@ -229,7 +394,6 @@ _koopa_activate_starship() { # {{{1
     # https://starship.rs/
     # """
     local nounset shell
-    _koopa_is_interactive || return 0
     _koopa_is_installed starship || return 0
     shell="$(_koopa_shell_name)"
     case "$shell" in
@@ -335,7 +499,6 @@ _koopa_activate_zoxide() { # {{{1
     # - https://github.com/ajeetdsouza/zoxide
     # """
     local nounset shell
-    _koopa_is_interactive || return 0
     shell="$(_koopa_shell_name)"
     case "$shell" in
         bash|zsh)
@@ -360,7 +523,6 @@ _koopa_macos_activate_cli_colors() { # {{{1
     # Refer to 'man ls' for 'LSCOLORS' section on color designators. Note that
     # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
     # """
-    _koopa_is_interactive || return 0
     [ -z "${CLICOLOR:-}" ] && export CLICOLOR=1
     [ -z "${LSCOLORS:-}" ] && export LSCOLORS='Gxfxcxdxbxegedabagacad'
     return 0
@@ -371,7 +533,6 @@ _koopa_macos_activate_color_mode() { # {{{1
     # Activate macOS color mode.
     # @note Updated 2021-05-07.
     # """
-    _koopa_is_interactive || return 0
     KOOPA_COLOR_MODE="$(_koopa_macos_color_mode)"
     export KOOPA_COLOR_MODE
     return 0
@@ -389,7 +550,6 @@ _koopa_macos_activate_iterm() { # {{{1
     # - https://apas.gr/2018/11/dark-mode-macos-safari-iterm-vim/
     # """
     local iterm_theme koopa_theme
-    _koopa_is_interactive || return 0
     [ "${TERM_PROGRAM:-}" = 'iTerm.app' ] || return 0
     iterm_theme="${ITERM_PROFILE:-}"
     koopa_theme="${KOOPA_COLOR_MODE:-}"
