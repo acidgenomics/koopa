@@ -984,14 +984,6 @@ koopa::warning() { # {{{1
     _koopa_warning "$@"
 }
 
-koopa::which() { # {{{1
-    _koopa_which "$@"
-}
-
-koopa::which_realpath() { # {{{1
-    _koopa_which_realpath "$@"
-}
-
 koopa::xdg_cache_home() { # {{{1
     _koopa_xdg_cache_home "$@"
 }

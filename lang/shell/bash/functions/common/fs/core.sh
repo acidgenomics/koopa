@@ -5,7 +5,7 @@ koopa::cd() { # {{{1
     # Change directory quietly.
     # @note Updated 2021-05-26.
     # """
-    local cd prefix
+    local prefix
     koopa::assert_has_args_eq "$#" 1
     prefix="${1:?}"
     cd "$prefix" >/dev/null 2>&1 || return 1
@@ -464,5 +464,59 @@ koopa::rm() { # {{{1
         rm=("$which_rm")
     fi
     "${rm[@]}" -fr "$@"
+    return 0
+}
+
+koopa::which() { # {{{1
+    # """
+    # Locate which program.
+    # @note Updated 2021-05-26.
+    #
+    # Example:
+    # koopa::which bash
+    # """
+    local cmd
+    koopa::assert_has_args "$#"
+    for cmd in "$@"
+    do
+        if koopa::is_alias "$cmd"
+        then
+            unalias "$cmd"
+        elif koopa::is_function "$cmd"
+        then
+            unset -f "$cmd"
+        fi
+        cmd="$(command -v "$cmd")"
+        [[ -x "$cmd" ]] || return 1
+        koopa::print "$cmd"
+    done
+    return 0
+}
+
+koopa::which_realpath() { # {{{1
+    # """
+    # Locate the realpath of a program.
+    # @note Updated 2021-05-26.
+    #
+    # This resolves symlinks automatically.
+    # For 'which' style return, use 'koopa::which' instead.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/7665
+    # - https://unix.stackexchange.com/questions/85249
+    # - https://stackoverflow.com/questions/7522712
+    # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
+    #
+    # @examples
+    # koopa::which_realpath bash vim
+    # """
+    local cmd
+    koopa::assert_has_args "$#"
+    for cmd in "$@"
+    do
+        cmd="$(koopa::which "$cmd")"
+        cmd="$(koopa::realpath "$cmd")"
+        koopa::print "$cmd"
+    done
     return 0
 }
