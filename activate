@@ -404,7 +404,7 @@ __koopa_activate() { # {{{1
             'SHELL' "${SHELL:-}"
         _koopa_alert_success 'Activation was successful.'
     fi
-    unset -v KOOPA_ACTIVATE KOOPA_INTERACTIVE
+    unset -v KOOPA_ACTIVATE
     return 0
 }
 
