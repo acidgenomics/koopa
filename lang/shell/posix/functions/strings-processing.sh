@@ -3,13 +3,13 @@
 _koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-05-26.
     #
     # @seealso
     # https://stackoverflow.com/questions/34420091/
     # """
     local sed string
-    sed="$(_koopa_locate_sed)"
+    sed='sed'
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -34,7 +34,7 @@ _koopa_gsub() { # {{{1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
-    sed="$(_koopa_locate_sed)"
+    sed='sed'
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -68,14 +68,13 @@ _koopa_lowercase() { # {{{1
     # @note Updated 2021-05-25.
     #
     # awk alternative:
-    # > awk="$(_koopa_locate_awk)"
     # > _koopa_print "$string" | "$awk" '{print tolower($0)}'
     #
     # @seealso
     # https://stackoverflow.com/questions/2264428
     # """
     local string tr
-    tr="$(_koopa_locate_tr)"
+    tr='tr'
     for string in "$@"
     do
         _koopa_print "$string" \
@@ -215,7 +214,7 @@ _koopa_sub() { # {{{1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
-    sed="$(_koopa_locate_sed)"
+    sed='sed'
     for string in "$@"
     do
         _koopa_print "$string" \

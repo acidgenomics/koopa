@@ -56,10 +56,9 @@ _koopa_major_minor_version() { # {{{1
 _koopa_major_minor_patch_version() { # {{{1
     # """
     # Program 'MAJOR.MINOR.PATCH' version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-26.
     # """
     local cut version x
-    # > cut="$(_koopa_locate_cut)"
     cut='cut'
     for version in "$@"
     do
