@@ -143,6 +143,9 @@ __koopa_bash_header() { # {{{1
         set -o errtrace  # -E
         set -o nounset  # -u
         set -o pipefail
+        # This setting helps protect our conda alias defined in the interactive
+        # login shell from messing with 'koopa::activate_conda_env'.
+        shopt -u expand_aliases
         dict[major_version]="$( \
             printf '%s\n' "${BASH_VERSION}" \
             | cut -d '.' -f 1 \
