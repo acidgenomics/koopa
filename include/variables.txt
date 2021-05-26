@@ -219,7 +219,8 @@ ncurses="6.2"
 neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
-neovim="0.4.4"
+# > neovim="0.4.4"
+neovim="nightly"
 
 # https://nodejs.org/
 node="16.2.0"
