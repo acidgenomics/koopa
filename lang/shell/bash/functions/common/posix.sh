@@ -4,8 +4,20 @@ koopa::activate_aspera() { # {{{1
     _koopa_activate_aspera "$@"
 }
 
+koopa::activate_bcbio() { # {{{1
+    _koopa_activate_bcbio "$@"
+}
+
 koopa::activate_conda() { # {{{1
     _koopa_activate_conda "$@"
+}
+
+koopa::activate_emacs() { # {{{1
+    _koopa_activate_emacs "$@"
+}
+
+koopa::activate_ensembl_perl_api() { # {{{1
+    _koopa_activate_ensembl_perl_api "$@"
 }
 
 koopa::activate_go() { # {{{1

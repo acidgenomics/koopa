@@ -68,15 +68,6 @@ _koopa_activate_conda() { # {{{1
     return 0
 }
 
-_koopa_activate_dash_extras() { # {{{1
-    # """
-    # Extra configuration options for Dash shell.
-    # @note Updated 2021-05-07.
-    # """
-    export PS1='# '
-    return 0
-}
-
 _koopa_activate_emacs() { # {{{1
     # """
     # Activate Emacs.
@@ -86,6 +77,7 @@ _koopa_activate_emacs() { # {{{1
     return 0
 }
 
+# FIXME Put this in Bash.
 _koopa_activate_ensembl_perl_api() { # {{{1
     # """
     # Activate Ensembl Perl API.
@@ -104,138 +96,6 @@ _koopa_activate_ensembl_perl_api() { # {{{1
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-variation/modules"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-funcgen/modules"
     export PERL5LIB
-    return 0
-}
-
-_koopa_activate_gcc_colors() { # {{{1
-    # """
-    # Activate GCC colors.
-    # @note Updated 2020-06-30.
-    # """
-    # Colored GCC warnings and errors.
-    [ -n "${GCC_COLORS:-}" ] && return 0
-    export GCC_COLORS="caret=01;32:error=01;31:locus=01:note=01;36:\
-quote=01:warning=01;35"
-    return 0
-}
-
-_koopa_activate_gnu() { # {{{1
-    # """
-    # Activate GNU utilities.
-    # @note Updated 2021-05-21.
-    #
-    # Creates hardened interactive aliases for GNU coreutils.
-    #
-    # These aliases get unaliased inside of koopa scripts, and they should only
-    # apply to interactive use at the command prompt.
-    #
-    # macOS ships with BSD coreutils, which don't support all GNU options.
-    # """
-    local cp harden_coreutils ln mkdir mv opt_prefix rm
-    if _koopa_is_linux
-    then
-        harden_coreutils=1
-        cp='cp'
-        ln='ln'
-        mkdir='mkdir'
-        mv='mv'
-        rm='rm'
-    elif _koopa_is_macos
-    then
-        _koopa_is_installed brew || return 0
-        opt_prefix="$(_koopa_homebrew_prefix)/opt"
-        if [ -d "${opt_prefix}/coreutils" ]
-        then
-            harden_coreutils=1
-            # These are hardened utils where we are changing default args.
-            cp='gcp'
-            ln='gln'
-            mkdir='gmkdir'
-            mv='gmv'
-            rm='grm'
-            # Standardize using GNU variants by default.
-            alias basename='gbasename'
-            alias chgrp='gchgrp'
-            alias chmod='gchmod'
-            alias chown='gchown'
-            alias cut='gcut'
-            alias date='gdate'
-            alias dirname='gdirname'
-            alias du='gdu'
-            alias head='ghead'
-            alias readlink='greadlink'
-            alias realpath='grealpath'
-            alias sort='gsort'
-            alias stat='gstat'
-            alias tail='gtail'
-            alias tee='gtee'
-            alias tr='gtr'
-            alias uname='guname'
-        else
-            _koopa_alert_not_installed 'Homebrew coreutils'
-            harden_coreutils=0
-        fi
-        if [ -d "${opt_prefix}/findutils" ]
-        then
-            alias find='gfind'
-            alias xargs='gxargs'
-        else
-            _koopa_alert_not_installed 'Homebrew findutils'
-        fi
-        if [ -d "${opt_prefix}/gawk" ]
-        then
-            alias awk='gawk'
-        else
-            _koopa_alert_not_installed 'Homebrew gawk'
-        fi
-        if [ -d "${opt_prefix}/gnu-sed" ]
-        then
-            alias sed='gsed'
-        else
-            _koopa_alert_not_installed 'Homebrew gnu-sed'
-        fi
-        if [ -d "${opt_prefix}/gnu-tar" ]
-        then
-            alias tar='gtar'
-        else
-            _koopa_alert_not_installed 'Homebrew gnu-tar'
-        fi
-        if [ -d "${opt_prefix}/grep" ]
-        then
-            alias grep='ggrep'
-        else
-            _koopa_alert_not_installed 'Homebrew grep'
-        fi
-        if [ -d "${opt_prefix}/make" ]
-        then
-            alias make='gmake'
-        else
-            _koopa_alert_not_installed 'Homebrew make'
-        fi
-        if [ -d "${opt_prefix}/man-db" ]
-        then
-            alias man='gman'
-        else
-            _koopa_alert_not_installed 'Homebrew man-db'
-        fi
-    fi
-    if [ "$harden_coreutils" -eq 1 ]
-    then
-        # The '--archive' flag seems to have issues on some file systems.
-        # shellcheck disable=SC2139
-        alias cp="${cp} --interactive --recursive" # -i
-        # shellcheck disable=SC2139
-        alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
-        # shellcheck disable=SC2139
-        alias mkdir="${mkdir} --parents" # -p
-        # shellcheck disable=SC2139
-        alias mv="${mv} --interactive" # -i
-        # Problematic on some file systems: --dir --preserve-root
-        # Don't enable '--recursive' here by default, so we don't accidentally
-        # nuke an important directory.
-        # shellcheck disable=SC2139
-        alias rm="${rm} --interactive=once" # -I
-    fi
     return 0
 }
 
@@ -372,6 +232,7 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     return 0
 }
 
+# FIXME Put this in Bash...
 _koopa_activate_homebrew_keg_only() { # {{{1
     # """
     # Activate Homebrew GNU utilities.
@@ -405,6 +266,7 @@ _koopa_activate_homebrew_keg_only() { # {{{1
     return 0
 }
 
+# FIXME Put this in Bash.
 _koopa_activate_homebrew_libexec_prefix() { # {{{1
     # """
     # Activate a Homebrew cellar-only program.
@@ -437,6 +299,7 @@ _koopa_activate_homebrew_prefix() { # {{{1
     return 0
 }
 
+# FIXME Put this in Bash, or delete...
 _koopa_activate_homebrew_python() { # {{{1
     # """
     # Activate Homebrew Python.
@@ -446,6 +309,7 @@ _koopa_activate_homebrew_python() { # {{{1
     return 0
 }
 
+# FIXME Put this in Bash, or delete.
 _koopa_activate_homebrew_ruby_packages() { # {{{1
     # """
     # Activate Homebrew Ruby packages (gems).
@@ -841,36 +705,6 @@ _koopa_activate_secrets() { # {{{1
     [ -r "$file" ] || return 0
     # shellcheck source=/dev/null
     . "$file"
-    return 0
-}
-
-_koopa_activate_ssh_key() { # {{{1
-    # """
-    # Import an SSH key automatically.
-    # @note Updated 2020-06-30.
-    #
-    # NOTE: SCP will fail unless this is interactive only.
-    # ssh-agent will prompt for password if there's one set.
-    #
-    # To change SSH key passphrase:
-    # > ssh-keygen -p
-    #
-    # List currently loaded keys:
-    # > ssh-add -L
-    # """
-    local key
-    _koopa_is_linux || return 0
-    _koopa_is_interactive || return 0
-    key="${1:-}"
-    if [ -z "$key" ] && [ -n "${SSH_KEY:-}" ]
-    then
-        key="$SSH_KEY"
-    else
-        key="${HOME}/.ssh/id_rsa"
-    fi
-    [ -r "$key" ] || return 0
-    eval "$(ssh-agent -s)" >/dev/null 2>&1
-    ssh-add "$key" >/dev/null 2>&1
     return 0
 }
 
