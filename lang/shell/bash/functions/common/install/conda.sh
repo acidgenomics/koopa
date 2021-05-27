@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_conda() { # {{{1
     # """
     # Install Conda.
