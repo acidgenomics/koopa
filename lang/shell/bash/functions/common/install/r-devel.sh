@@ -16,6 +16,8 @@ koopa:::install_r_devel() { # {{{1
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'svn'
+        # This is the fxcoudert gfortran recommended by CRAN.
+        koopa::activate_prefix '/usr/local/gfortran'
     fi
     koopa::assert_is_installed 'svn'
     prefix="${INSTALL_PREFIX:?}"
