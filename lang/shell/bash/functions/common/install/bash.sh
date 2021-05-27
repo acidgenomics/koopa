@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_bash() { # {{{1
     koopa::install_app \
         --name='bash' \
