@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_go() { # {{{1
     koopa::install_app \
         --name='go' \
         --name-fancy='Go' \
         --no-link \
         "$@"
+    koopa::configure_go
 }
 
 koopa:::install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-05-27.
     # """
     local arch file name os_id prefix url version
     prefix="${INSTALL_PREFIX:?}"
@@ -30,6 +33,5 @@ koopa:::install_go() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cp -t "$prefix" "${name}/"*
-    koopa::configure_go
     return 0
 }
