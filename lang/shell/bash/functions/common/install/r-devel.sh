@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] Hitting this install error:
+# ERROR: not an svn checkout
+# make: *** [Makefile:107: svnonly] Error 1
+
 koopa::install_r_devel() { # {{{1
     koopa::install_app \
         --name='r-devel' \
