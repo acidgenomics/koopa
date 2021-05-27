@@ -15,6 +15,8 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
+# FIXME Ensure r-devel creates 'devel' site package library, and doesn't link
+# into 4.0, 4.1 for example.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
