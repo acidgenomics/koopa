@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_password_store() { # {{{1
     koopa::install_app \
         --name='password-store' \

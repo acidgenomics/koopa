@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add a standardized app uninstaller.
+
 koopa::find_app_version() { # {{{1
     # """
     # Find the latest application version.

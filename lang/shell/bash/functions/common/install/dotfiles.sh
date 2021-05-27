@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] Linux success.
+# [2021-05-27] macOS success.
+
 koopa::install_dotfiles() { # {{{1
     # """
     # Install dot files.
