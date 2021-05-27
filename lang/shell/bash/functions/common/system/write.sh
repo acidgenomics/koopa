@@ -45,7 +45,7 @@ koopa::sudo_append_string() { # {{{1
 koopa::sudo_write_string() { # {{{1
     # """
     # Write a string to disk using root user.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-27.
     #
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' > '${file}'"
@@ -56,11 +56,8 @@ koopa::sudo_write_string() { # {{{1
     tee="$(koopa::locate_tee)"
     string="${1:?}"
     file="${2:?}"
-
-    # FIXME We may need to rethink this step...
     parent_dir="$(koopa::dirname "$file")"
     [[ ! -d "$parent_dir" ]] && koopa::mkdir -S "$parent_dir"
-
     koopa::print "$string" | sudo "$tee" "$file" >/dev/null
     return 0
 }
