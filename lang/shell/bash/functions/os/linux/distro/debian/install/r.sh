@@ -42,7 +42,6 @@ koopa::debian_install_r_cran_binary() { # {{{1
     return 0
 }
 
-# FIXME This is now erroring out in our Ubuntu Docker image.
 koopa::debian_install_r_devel() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
