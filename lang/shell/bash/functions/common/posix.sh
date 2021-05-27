@@ -525,7 +525,7 @@ koopa::is_installed() { # {{{1
 }
 
 koopa::is_interactive() { # {{{1
-    _koopa_is_installed "$@"
+    _koopa_is_interactive "$@"
 }
 
 koopa::is_linux() { # {{{1
