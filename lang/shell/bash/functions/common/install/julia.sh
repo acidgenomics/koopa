@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_julia() { # {{{1
     if koopa::is_linux
     then

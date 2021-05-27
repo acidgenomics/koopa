@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE This is failing to build on macOS.
+# [2021-05-27] macOS failure.
 
 koopa::install_neovim() { # {{{1
     koopa::install_app \
