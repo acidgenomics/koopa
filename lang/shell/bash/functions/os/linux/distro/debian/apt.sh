@@ -190,10 +190,11 @@ koopa::apt_add_r_key() { # {{{1
     return 0
 }
 
+# FIXME This function is now erroring.
 koopa::apt_add_r_repo() { # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-27.
     # """
     local file os_codename os_id repo string version
     koopa::assert_has_args_le "$#" 1
@@ -227,6 +228,9 @@ koopa::apt_add_r_repo() { # {{{1
     koopa::apt_add_r_key
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
+
+    echo 'FIXME 1'
+
     repo="https://cloud.r-project.org/bin/linux/${os_id} \
 ${os_codename}-${version}/"
     # Note that 'read' will return status 1 here.
@@ -235,7 +239,9 @@ ${os_codename}-${version}/"
 deb ${repo}
 deb-src ${repo}
 END
+    echo 'FIXME 2'
     koopa::sudo_write_string "$string" "$file"
+    echo 'FIXME 3'
     return 0
 }
 
