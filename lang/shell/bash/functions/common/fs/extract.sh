@@ -3,7 +3,7 @@
 koopa::extract() { # {{{1
     # """
     # Extract compressed files automatically.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-27.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -28,6 +28,10 @@ koopa::extract() { # {{{1
                 cmd_args=(-xz -f "$file")
                 ;;
             *.tar.xz)
+                if koopa::is_macos
+                then
+                    koopa::activate_homebrew_opt_prefix 'xz'
+                fi
                 cmd="$(koopa::locate_tar)"
                 cmd_args=(-xJ -f "$file")
                 ;;
