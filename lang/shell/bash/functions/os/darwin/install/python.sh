@@ -3,9 +3,9 @@
 koopa::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-05-27.
     # """
-    local file framework_dir macos_string macos_version major_version name
+    local file macos_string macos_version major_version name prefix
     local name_fancy pos reinstall url version
     reinstall=0
     pos=()
@@ -46,13 +46,17 @@ koopa::macos_install_python_framework() { # {{{1
             koopa::stop "Unsupported macOS version: '${version}'."
             ;;
     esac
-    framework_dir='/Library/Frameworks/Python.framework'
+    prefix='/Library/Frameworks/Python.framework'
     if ! koopa::is_current_version "$name" || [[ "$reinstall" -eq 1 ]]
     then
-        koopa::sys_rm "$framework_dir"
+        koopa::sys_rm "$prefix"
     fi
-    [[ -d "$framework_dir" ]] && return 0
-    koopa::install_start "$name_fancy" "$framework_dir"
+    if [[ -d "$prefix" ]]
+    then
+        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
+        return 0
+    fi
+    koopa::install_start "$name_fancy" "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -63,7 +67,7 @@ koopa::macos_install_python_framework() { # {{{1
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     python="${name}${major_version}"
-    python="${framework_dir}/Versions/Current/bin/${python}"
+    python="${prefix}/Versions/Current/bin/${python}"
     koopa::assert_is_file "$python"
     koopa::python_add_site_packages_to_sys_path "$python"
     koopa::install_success "$name_fancy"

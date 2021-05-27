@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
 koopa::install_python() { # {{{1
-    if koopa::is_macos
-    then
-        koopa::macos_install_python_framework
-        return 0
-    fi
     koopa::install_app \
         --name='python' \
         --name-fancy='Python' \
