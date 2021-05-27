@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Run 'koopa install tex-packages' if you hit this warning:
+# neither inconsolata.sty nor zi4.sty found: PDF vignettes and package manuals
+# will not be rendered optimally
+
 koopa::install_r() { # {{{1
     koopa::install_app \
         --name='r' \
