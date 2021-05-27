@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS failure.
+
 koopa::install_gcc() { # {{{1
     koopa::install_app \
         --name='gcc' \
@@ -11,7 +13,7 @@ koopa::install_gcc() { # {{{1
 koopa:::install_gcc() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-05-27.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -61,7 +63,7 @@ koopa:::install_gcc() { # {{{1
     # - https://solarianprogrammer.com/2016/10/07/building-gcc-ubuntu-linux/
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
     # """
-    local conf_args file gnu_mirror jobs make name prefix url version
+    local conf_args file gnu_mirror jobs make name prefix sdk_prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     gnu_mirror="$(koopa::gnu_mirror_url)"
@@ -81,6 +83,13 @@ koopa:::install_gcc() { # {{{1
         '--enable-languages=c,c++,fortran'
         '-v'
     )
+    if koopa::is_macos
+    then
+        sdk_prefix='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+        conf_args+=(
+            "--with-native-system-header-dir=${sdk_prefix}/usr/include"
+        )
+    fi
     "../${name}-${version}/configure" "${conf_args[@]}"
     "$make" --jobs="$jobs"
     "$make" install
