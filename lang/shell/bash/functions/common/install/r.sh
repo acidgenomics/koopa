@@ -7,15 +7,6 @@ koopa::install_r() { # {{{1
         "$@"
 }
 
-koopa::install_r_devel() { # {{{1
-    koopa::install_app \
-        --name='r' \
-        --name-fancy='R' \
-        --version='devel' \
-        --installer='r-devel' \
-        "$@"
-}
-
 koopa:::install_r() { # {{{1
     # """
     # Install R.
@@ -109,100 +100,6 @@ koopa:::install_r() { # {{{1
     r="${prefix}/bin/R"
     koopa::assert_is_file "$r"
     koopa::configure_r "$r"
-    return 0
-}
-
-koopa:::install_r_devel() { # {{{1
-    # """
-    # Install R-devel.
-    # @note Updated 2021-05-26.
-    # """
-    local flags jobs make name prefix repo_url revision rtop
-    koopa::assert_is_installed 'svn'
-    prefix="${INSTALL_PREFIX:?}"
-    jobs="$(koopa::cpu_count)"
-    make="$(koopa::locate_make)"
-    name='r-devel'
-    # Subversion revision number (e.g. 80190).
-    revision="$(koopa::variable "$name")"
-    # Set the R source code repo URL.
-    repo_url='https://svn.r-project.org/R'
-    # Set the desired top-level directory structure.
-    rtop="${PWD}/svn/r"
-    # Create necessary build directories.
-    koopa::mkdir "${rtop}/${name}/build"
-    # Check out the latest revision of R-devel.
-    koopa::cd "$rtop"
-    svn checkout \
-        --revision="$revision" \
-        "${repo_url}/trunk" \
-        "${name}/source"
-    # > koopa::cd "${rtop}/${name}/source"
-    # Draft version information is located in 'VERSION' file.
-    # How to ensure that repo is up-to-date.
-    # > svn update
-    # Here's how to switch to a different revision inside the source trunk.
-    # Somewhere between 80100 and 80200 the version was changed.
-    # > svn checkout \
-    # >     --revision='80190' \
-    # >     "${repo_url}/trunk" \
-    # >     .
-    # Get the sources of the recommended packages.
-    koopa::cd "${rtop}/${name}/source/tools"
-    ./rsync-recommended
-    # Ready to build from source.
-    koopa::cd "${rtop}/${name}/build"
-    # Use the same flags as 'install-r' script.
-    flags=(
-        "--prefix=${prefix}"
-        '--enable-R-profiling'
-        '--enable-R-shlib'
-        '--enable-memory-profiling'
-        '--with-blas'
-        '--with-cairo'
-        '--with-jpeglib'
-        '--with-lapack'
-        '--with-readline'
-        '--with-tcltk'
-        '--with-x=no'
-    )
-    # We build in the separate directory created above,
-    # in order not to pollute the source code.
-    ../source/configure "${flags[@]}"
-    "$make" --jobs="$jobs"
-    "$make" check
-    "$make" pdf
-    "$make" info
-    "$make" install
-    r="${prefix}/bin/R"
-    koopa::assert_is_file "$r"
-    koopa::configure_r "$r"
-    return 0
-}
-
-# FIXME Rework the install target here...
-koopa::install_r_cmd_check() { # {{{1
-    # """
-    # Install R CMD check (Rcheck) scripts for CI.
-    # @note Updated 2021-03-01.
-    # """
-    local link_name name source_repo target_dir
-    koopa::assert_has_no_args "$#"
-    name='r-cmd-check'
-    source_repo="https://github.com/acidgenomics/${name}.git"
-    target_dir="$(koopa::local_data_prefix)/${name}"
-    link_name='.Rcheck'
-    koopa::install_start "$name"
-    if [[ ! -d "$target_dir" ]]
-    then
-        koopa::alert "Downloading ${name} to '${target_dir}'."
-        (
-            koopa::mkdir "$target_dir"
-            git clone "$source_repo" "$target_dir"
-        )
-    fi
-    koopa::ln "$target_dir" "$link_name"
-    koopa::install_success "$name"
     return 0
 }
 
