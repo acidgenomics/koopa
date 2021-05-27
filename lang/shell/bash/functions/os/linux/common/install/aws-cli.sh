@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] Ubuntu success.
+
 koopa::linux_install_aws_cli() { # {{{1
     koopa::install_app \
         --name='aws-cli' \
