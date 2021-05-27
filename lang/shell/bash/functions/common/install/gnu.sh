@@ -49,23 +49,26 @@ koopa:::install_gnu_app() { # {{{1
 }
 
 koopa::install_autoconf() { # {{{1
-    koopa::install_gnu_app \
-        --name='autoconf' \
-        "$@"
+    local conf_args
+    conf_args=(
+        '--name=autoconf'
+    )
+    # m4 is required for automake to build.
+    if koopa::is_macos
+    then
+        conf_args+=(
+            '--homebrew-opt=m4'
+        )
+    fi
+    koopa::install_gnu_app "${conf_args[@]}" "$@"
 }
 
 koopa::install_automake() { # {{{1
     local conf_args
     conf_args=(
         '--name=automake'
+        '--opt=autoconf'
     )
-    # NOTE This doesn't work with our local autoconf installation.
-    if koopa::is_macos
-    then
-        conf_args+=(
-            '--homebrew-opt=autoconf'
-        )
-    fi
     koopa::install_gnu_app "${conf_args[@]}" "$@"
 }
 
