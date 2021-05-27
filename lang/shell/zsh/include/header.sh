@@ -144,16 +144,16 @@ __koopa_zsh_header() { # {{{1
     then
         _koopa_duration_stop 'zsh' || return 1
     fi
-    if [[ "${dict[checks]}" -eq 1 ]]
-    then
-        unsetopt errexit
-        unsetopt nounset
-        unsetopt pipefail
-    fi
-    if [[ "${dict[verbose]}" -eq 1 ]]
-    then
-        set +o xtrace
-    fi
+    # > if [[ "${dict[checks]}" -eq 1 ]]
+    # > then
+    # >     unsetopt errexit
+    # >     unsetopt nounset
+    # >     unsetopt pipefail
+    # > fi
+    # > if [[ "${dict[verbose]}" -eq 1 ]]
+    # > then
+    # >     set +o xtrace
+    # > fi
     return 0
 }
 

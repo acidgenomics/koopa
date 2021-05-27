@@ -230,17 +230,17 @@ __koopa_bash_header() { # {{{1
     then
         _koopa_duration_stop 'bash' || return 1
     fi
-    if [[ "${dict[checks]}" -eq 1 ]]
-    then
-        set +o errexit
-        set +o errtrace
-        set +o nounset
-        set +o pipefail
-    fi
-    if [[ "${dict[verbose]}" -eq 1 ]]
-    then
-        set +o xtrace
-    fi
+    # > if [[ "${dict[checks]}" -eq 1 ]]
+    # > then
+    # >     set +o errexit
+    # >     set +o errtrace
+    # >     set +o nounset
+    # >     set +o pipefail
+    # > fi
+    # > if [[ "${dict[verbose]}" -eq 1 ]]
+    # > then
+    # >     set +o xtrace
+    # > fi
     return 0
 }
 
