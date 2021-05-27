@@ -75,7 +75,6 @@ koopa::debian_install_r_devel() { # {{{1
     # - texlive-plain-generic
     # - xvfb
     # """
-    # FIXME This step is now erroring...
     koopa::apt_add_r_repo
     koopa::apt_get build-dep r-base
     koopa::install_r_devel "$@"
