@@ -236,8 +236,7 @@ ${os_codename}-${version}/"
 deb ${repo}
 deb-src ${repo}
 END
-    echo "file $file"
-    echo "string $string"
+    # FIXME This function isn't working as expected..
     koopa::sudo_write_string "$string" "$file"
     echo 'FIXME 3'
     return 0

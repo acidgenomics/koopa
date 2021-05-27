@@ -56,8 +56,11 @@ koopa::sudo_write_string() { # {{{1
     tee="$(koopa::locate_tee)"
     string="${1:?}"
     file="${2:?}"
+
+    # FIXME We may need to rethink this step...
     parent_dir="$(koopa::dirname "$file")"
     [[ ! -d "$parent_dir" ]] && koopa::mkdir -S "$parent_dir"
+
     koopa::print "$string" | sudo "$tee" "$file" >/dev/null
     return 0
 }
