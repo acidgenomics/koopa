@@ -73,6 +73,7 @@ koopa:::install_r() { # {{{1
             'texinfo' \
             'xz'
         koopa::activate_prefix '/usr/local/gfortran'
+        koopa::add_to_path_start '/Library/TeX/texbin'
         conf_args+=(
             "--with-blas=-L${brew_opt}/openblas/lib -lopenblas"
             "--with-tcl-config=${brew_opt}/tcl-tk/lib/tclConfig.sh"
