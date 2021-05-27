@@ -290,7 +290,8 @@ r-cran-gfortran="8.2"
 # https://svn.r-project.org/R/
 # https://stat.ethz.ch/R/daily/
 # This is the SVN revision number.
-r-devel="80190"  # R 4.1 RC.
+# > r-devel="80190"  # R 4.1 RC.
+r-devel="80398"  # 2021-05-27
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
