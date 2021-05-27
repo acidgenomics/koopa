@@ -62,6 +62,7 @@ koopa:::install_r_devel() { # {{{1
             'pkg-config' \
             'readline' \
             'tcl-tk' \
+            'texinfo' \
             'xz'
         koopa::activate_prefix '/usr/local/gfortran'
         conf_args+=(
