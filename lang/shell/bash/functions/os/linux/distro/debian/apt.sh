@@ -228,9 +228,6 @@ koopa::apt_add_r_repo() { # {{{1
     koopa::apt_add_r_key
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
-
-    echo 'FIXME 1'
-
     repo="https://cloud.r-project.org/bin/linux/${os_id} \
 ${os_codename}-${version}/"
     # Note that 'read' will return status 1 here.
@@ -239,7 +236,8 @@ ${os_codename}-${version}/"
 deb ${repo}
 deb-src ${repo}
 END
-    echo 'FIXME 2'
+    echo "file $file"
+    echo "string $string"
     koopa::sudo_write_string "$string" "$file"
     echo 'FIXME 3'
     return 0
