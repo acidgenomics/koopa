@@ -836,10 +836,6 @@ koopa::python_packages_prefix() { # {{{1
     _koopa_python_packages_prefix "$@"
 }
 
-koopa::python_system_packages_prefix() { # {{{1
-    _koopa_python_system_packages_prefix "$@"
-}
-
 koopa::r_packages_prefix() { # {{{1
     _koopa_r_packages_prefix "$@"
 }

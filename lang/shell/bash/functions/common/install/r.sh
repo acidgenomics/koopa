@@ -180,6 +180,7 @@ koopa:::install_r_devel() { # {{{1
     return 0
 }
 
+# FIXME Rework the install target here...
 koopa::install_r_cmd_check() { # {{{1
     # """
     # Install R CMD check (Rcheck) scripts for CI.
