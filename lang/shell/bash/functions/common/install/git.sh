@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_git() { # {{{1
     koopa::install_app \
         --name='git' \
@@ -21,6 +23,10 @@ koopa:::install_git() { # {{{1
     # > url="https://github.com/git/${name}/archive/${file}"
     # """
     local file jobs make mirror name openssl prefix url version
+    if koopa::is_macos
+    then
+        koopa::activate_opt_prefix 'autoconf'
+    fi
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
