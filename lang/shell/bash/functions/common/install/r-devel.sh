@@ -12,12 +12,14 @@ koopa:::install_r_devel() { # {{{1
     # Install R-devel.
     # @note Updated 2021-05-27.
     # """
-    local conf_args jobs make name prefix repo_url revision rtop svn
+    local brew_opt brew_prefix conf_args jobs make name prefix repo_url
+    local revision rtop svn
     prefix="${INSTALL_PREFIX:?}"
     revision="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
     make="$(koopa::locate_make)"
     svn="$(koopa::locate_svn)"
+    # Keep this configuration in sync with 'koopa:::install_r'.
     conf_args=(
         "--prefix=${prefix}"
         '--enable-R-shlib'
