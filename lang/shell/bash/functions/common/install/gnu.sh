@@ -55,9 +55,18 @@ koopa::install_autoconf() { # {{{1
 }
 
 koopa::install_automake() { # {{{1
-    koopa::install_gnu_app \
-        --name='automake' \
-        "$@"
+    local conf_args
+    conf_args=(
+        '--name=automake'
+    )
+    # NOTE This doesn't work with our local autoconf installation.
+    if koopa::is_macos
+    then
+        conf_args+=(
+            '--homebrew-opt=autoconf'
+        )
+    fi
+    koopa::install_gnu_app "${conf_args[@]}" "$@"
 }
 
 koopa::install_binutils() { # {{{1
