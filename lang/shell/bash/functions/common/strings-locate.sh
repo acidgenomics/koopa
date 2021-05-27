@@ -355,12 +355,9 @@ koopa::locate_mv() { # {{{1
 koopa::locate_openssl() { # {{{1
     # """
     # Locate openssl.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-05-27.
     # """
-    local x
-    x='/bin/openssl'
-    [[ -x "$x" ]] || return 1
-    koopa::print "$x"
+    koopa:::locate_app 'openssl@1.1' 'openssl' "$@"
 }
 
 koopa::locate_parallel() { # {{{1
