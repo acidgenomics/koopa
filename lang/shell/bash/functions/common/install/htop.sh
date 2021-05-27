@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_htop() { # {{{1
     koopa::install_app \
         --name='htop' \
@@ -9,13 +11,21 @@ koopa::install_htop() { # {{{1
 koopa:::install_htop() { # {{{1
     # """
     # Install htop.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-05-27.
     #
     # Repo transferred from https://github.com/hishamhm/htop to 
     # https://github.com/htop-dev/htop in 2020-08.
     # """
     local conf_args file jobs make name prefix url version
-    koopa::assert_is_installed python3
+    if koopa::is_macos
+    then
+        koopa::activate_opt_prefix \
+            'autoconf' \
+            'automake'
+        koopa::macos_activate_python
+    else
+        koopa::activate_opt_prefix 'python'
+    fi
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"

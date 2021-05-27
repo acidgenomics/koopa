@@ -20,7 +20,7 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     version2="$(koopa::sub '\.[0-9]+$' '' "$version")"
     version2="$(koopa::kebab_case_simple "$version2")"
     file="${name}${major_version}-v${version2}-${platform}-${arch2}.zip"
-    url_prefix="http://seq.cloud/install/${name}"
+    url_prefix="https://seq.cloud/install/${name}"
     url="${url_prefix}/rpm/${file}"
     koopa::download "$url"
     koopa::extract "$file"
