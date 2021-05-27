@@ -81,13 +81,21 @@ koopa:::install_gcc() { # {{{1
         "--prefix=${prefix}"
         '--disable-multilib'
         '--enable-languages=c,c++,fortran'
+        '--enable-checking=release'
         '-v'
     )
     if koopa::is_macos
     then
+        arch="$(koopa::arch)"
+        macos_version="$(koopa::macos_version)"
+        macos_version="$(koopa::major_minor_version "$macos_version")"
         sdk_prefix='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
         conf_args+=(
+            "--build=${arch}-apple-darwin${macos_version}"
             "--with-native-system-header-dir=${sdk_prefix}/usr/include"
+            # Workaround for Xcode 12.5 bug on Intel.
+            # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100340
+            '--without-build-config'
         )
     fi
     "../${name}-${version}/configure" "${conf_args[@]}"
