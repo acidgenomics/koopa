@@ -493,6 +493,14 @@ koopa::locate_stat() { # {{{1
     koopa:::locate_gnu_app 'coreutils' 'stat' "$@"
 }
 
+koopa::locate_svn() { # {{{1
+    # """
+    # Locate svn.
+    # @note Updated 2021-05-27.
+    # """
+    koopa:::locate_app 'svn' 'svn' "$@"
+}
+
 koopa::locate_tac() { # {{{1
     # """
     # Locate GNU tac.
