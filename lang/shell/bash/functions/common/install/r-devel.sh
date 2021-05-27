@@ -65,6 +65,7 @@ koopa:::install_r_devel() { # {{{1
             'texinfo' \
             'xz'
         koopa::activate_prefix '/usr/local/gfortran'
+        koopa::add_to_path_start '/Library/TeX/texbin'
         conf_args+=(
             "--with-blas=-L${brew_opt}/openblas/lib -lopenblas"
             "--with-tcl-config=${brew_opt}/tcl-tk/lib/tclConfig.sh"
@@ -114,6 +115,7 @@ koopa:::install_r_devel() { # {{{1
     "$make" install
     r="${prefix}/bin/R"
     koopa::assert_is_file "$r"
-    koopa::configure_r "$r"
+    # FIXME Reenable this once we know the config is good.
+    # koopa::configure_r "$r"
     return 0
 }
