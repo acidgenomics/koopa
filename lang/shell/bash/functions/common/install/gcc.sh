@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # [2021-05-27] macOS failure.
-
+#
 # ld: warning: building for macOS 10.4 is deprecated
 # ld: warning: Csu support file -ldylib1.o not found, changing to target
 # macOS 10.8 where it is not needed
 # ld: library not found for -lc
 # collect2: error: ld returned 1 exit status
-
+#
 # https://stackoverflow.com/questions/52211390/
 # https://stackoverflow.com/questions/25352389/
 
