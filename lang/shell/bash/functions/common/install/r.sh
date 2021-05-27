@@ -26,9 +26,6 @@ koopa:::install_r() { # {{{1
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
     make="$(koopa::locate_make)"
-    name='r'
-    name2="$(koopa::capitalize "$name")"
-    major_version="$(koopa::major_version "$version")"
     conf_args=(
         "--prefix=${prefix}"
         '--enable-R-shlib'
@@ -83,6 +80,9 @@ koopa:::install_r() { # {{{1
         )
         export CFLAGS='-Wno-error=implicit-function-declaration'
     fi
+    name='r'
+    name2="$(koopa::capitalize "$name")"
+    major_version="$(koopa::major_version "$version")"
     file="${name2}-${version}.tar.gz"
     url="https://cloud.r-project.org/src/base/${name2}-${major_version}/${file}"
     koopa::download "$url"
