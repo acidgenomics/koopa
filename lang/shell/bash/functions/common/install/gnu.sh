@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_gnu_app() { # {{{1
     # """
     # Build and install a GNU package from source.
@@ -108,6 +110,7 @@ koopa::install_gawk() { # {{{1
         "$@"
 }
 
+# NOTE Consider adding support for pcre here.
 koopa::install_grep() { # {{{1
     koopa::install_gnu_app \
         --name='grep' \

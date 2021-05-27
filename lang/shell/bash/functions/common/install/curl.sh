@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_curl() { # {{{1
     koopa::install_app \
         --name='curl' \
@@ -10,16 +12,21 @@ koopa::install_curl() { # {{{1
 koopa:::install_curl() { # {{{1
     # """
     # Install cURL.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-05-27.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
     #
     # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/curl.rb
     # - https://curl.haxx.se/docs/install.html
     # - https://stackoverflow.com/questions/30017397
     # """
     local conf_args file jobs make name prefix url version version2
+    # > if koopa::is_macos
+    # > then
+    # >     koopa::activate_homebrew_opt_prefix 'openssl@1.1'
+    # > fi
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
@@ -36,6 +43,13 @@ ${name}-${version2}/${file}"
         "--prefix=${prefix}"
         '--enable-versioned-symbols'
     )
+    if koopa::is_macos
+    then
+        brew_prefix="$(koopa::homebrew_prefix)"
+        conf_args+=(
+            "--with-ssl=${brew_prefix}/opt/openssl@1.1"
+        )
+    fi
     ./configure "${conf_args[@]}"
     "$make" --jobs="$jobs"
     # > "$make" test
