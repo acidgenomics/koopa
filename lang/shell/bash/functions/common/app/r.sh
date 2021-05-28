@@ -34,7 +34,6 @@ koopa::configure_r() { # {{{1
     koopa::dl \
         'R home' "$r_prefix" \
         'R path' "$r"
-    echo 'FIXME 1'
     if koopa::is_symlinked_app "$r"
     then
         make_prefix="$(koopa::make_prefix)"
@@ -53,9 +52,9 @@ koopa::configure_r() { # {{{1
     else
         koopa::sys_set_permissions -r "${r_prefix}/library"
     fi
-    echo 'FIXME 2'
     koopa::link_r_etc "$r"
     echo 'FIXME 3'
+    # FIXME This step is now erroring for r-devel.
     koopa::link_r_site_library "$r"
     echo 'FIXME 4'
     koopa::r_javareconf "$r"
@@ -178,8 +177,12 @@ koopa::link_r_site_library() { # {{{1
     koopa::assert_is_installed "$r"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
+    echo 'R SITE LIB FIXME 1'
+    # FIXME Need to rework this for r-devel.
     version="$(koopa::get_version "$r")"
     lib_source="$(koopa::r_packages_prefix "$version")"
+    echo 'R SITE LIB FIXME 2'
+
     lib_target="${r_prefix}/site-library"
     koopa::dl 'Site library' "$lib_source"
     koopa::alert "Linking '${lib_source}' into R install at '${lib_target}'."
