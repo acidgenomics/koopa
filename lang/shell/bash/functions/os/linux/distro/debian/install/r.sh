@@ -45,10 +45,11 @@ koopa::debian_install_r_cran_binary() { # {{{1
 koopa::debian_install_r_devel() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
-    # @note Updated 2021-05-11.
+    # @note Updated 2021-05-27.
     #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
+    # - https://github.com/geerlingguy/ansible-role-java/issues/64
     #
     # The following NEW packages will be installed:
     # - bison
@@ -75,6 +76,7 @@ koopa::debian_install_r_devel() { # {{{1
     # - texlive-plain-generic
     # - xvfb
     # """
+    koopa::mkdir -S '/usr/share/man/man1'
     koopa::apt_add_r_repo
     koopa::apt_get build-dep r-base
     koopa::install_r_devel "$@"
