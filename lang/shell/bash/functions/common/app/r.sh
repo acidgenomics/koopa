@@ -179,7 +179,8 @@ koopa::link_r_site_library() { # {{{1
     koopa::assert_is_dir "$r_prefix"
     echo 'R SITE LIB FIXME 1'
     # FIXME Need to rework this for r-devel.
-    version="$(koopa::get_version "$r")"
+    # FIXME This isn't working, need different function call...
+    version="$(koopa::r_version "$r")"
     echo "$version"
     echo 'R SITE LIB FIXME 2'
     lib_source="$(koopa::r_packages_prefix "$version")"
