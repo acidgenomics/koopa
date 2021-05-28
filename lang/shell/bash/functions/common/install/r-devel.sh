@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] Hitting this install error:
+# [2021-05-27] Linux success.
+
+# [2021-05-27] macOS hitting this install error:
+#
+# make[1]: Entering directory '[...]/svn/r/r-devel/build/doc/manual'
+# creating RESOURCES
+# creating FAQ
+# creating doc/html/resources.html
+# make[1]: Leaving directory '[...]/svn/r/r-devel/build/doc/manual'
 # ERROR: not an svn checkout
 # make: *** [Makefile:107: svnonly] Error 1
 
@@ -121,7 +129,7 @@ koopa:::install_r_devel() { # {{{1
     "$make" install
     r="${prefix}/bin/R"
     koopa::assert_is_file "$r"
-    # FIXME Reenable this once we know the config is good (for macOS).
+    # FIXME Reenable this once we know the config is good.
     # koopa::configure_r "$r"
     return 0
 }
