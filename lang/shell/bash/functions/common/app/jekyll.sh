@@ -29,7 +29,10 @@ koopa::jekyll_deploy_to_aws() { # {{{1
     koopa::assert_is_set bucket_prefix distribution_id local_prefix
     bucket_prefix="$(koopa::strip_trailing_slash "$bucket_prefix")"
     local_prefix="$(koopa::strip_trailing_slash "$local_prefix")"
-    [[ -f 'Gemfile.lock' ]] && bundle update --bundler
+    if [[ -f 'Gemfile.lock' ]]
+    then
+        bundle update --bundler
+    fi
     bundle install
     bundle exec jekyll build
     koopa::aws_s3_sync "${local_prefix}/" "${bucket_prefix}/"
