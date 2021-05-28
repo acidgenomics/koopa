@@ -115,7 +115,7 @@ koopa:::install_r_devel() { # {{{1
     # in order not to pollute the source code.
     ../source/configure "${conf_args[@]}"
     "$make" --jobs="$jobs"
-    "$make" check
+    # > "$make" check
     "$make" pdf
     "$make" info
     "$make" install
