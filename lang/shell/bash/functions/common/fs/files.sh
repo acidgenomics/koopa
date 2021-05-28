@@ -290,7 +290,7 @@ koopa::delete_named_subdirs() { # {{{1
 koopa::dirname() { # {{{1
     # """
     # Extract the file dirname.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-05-27.
     #
     # Parameterized, supporting multiple basename extractions.
     #
@@ -301,7 +301,10 @@ koopa::dirname() { # {{{1
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
-        arg="$(koopa::realpath "$arg")"
+        if [[ -e "$arg" ]]
+        then
+            arg="$(koopa::realpath "$arg")"
+        fi
         koopa::print "${arg%/*}"
     done
     return 0

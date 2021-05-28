@@ -193,7 +193,7 @@ koopa::apt_add_r_key() { # {{{1
 koopa::apt_add_r_repo() { # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-27.
     # """
     local file os_codename os_id repo string version
     koopa::assert_has_args_le "$#" 1
@@ -202,12 +202,15 @@ koopa::apt_add_r_repo() { # {{{1
     then
         version="$(koopa::variable 'r')"
     fi
+    version="$(koopa::major_minor_version "$version")"
     case "$version" in
-        3.6*)
+        4.1)
+            version='4.0'
+            ;;
+        3.6)
             version='3.5'
             ;;
     esac
-    version="$(koopa::major_minor_version "$version")"
     # Need to strip the periods here.
     version="$(koopa::gsub '\.' '' "$version")"
     version="cran${version}"

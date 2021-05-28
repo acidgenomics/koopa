@@ -45,7 +45,7 @@ koopa::sudo_append_string() { # {{{1
 koopa::sudo_write_string() { # {{{1
     # """
     # Write a string to disk using root user.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-05-27.
     #
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' > '${file}'"
