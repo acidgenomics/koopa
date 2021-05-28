@@ -177,23 +177,20 @@ koopa::link_r_site_library() { # {{{1
     koopa::assert_is_installed "$r"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
-    echo 'R SITE LIB FIXME 1'
-    # FIXME Need to rework this for r-devel.
-    # FIXME This isn't working, need different function call...
     version="$(koopa::r_version "$r")"
-    echo "$version"
-    echo 'R SITE LIB FIXME 2'
     lib_source="$(koopa::r_packages_prefix "$version")"
-    echo 'R SITE LIB FIXME 3'
     lib_target="${r_prefix}/site-library"
     koopa::dl 'Site library' "$lib_source"
     koopa::alert "Linking '${lib_source}' into R install at '${lib_target}'."
     koopa::sys_mkdir "$lib_source"
-    (
-        koopa::sys_set_permissions "$(koopa::dirname "$lib_source")"
-        koopa::cd "$(koopa::dirname "$lib_source")"
-        koopa::sys_ln "$(koopa::basename "$lib_source")" 'latest'
-    )
+    koopa::sys_set_permissions "$(koopa::dirname "$lib_source")"
+    if [[ "$version" != 'devel' ]]
+    then
+        (
+            koopa::cd "$(koopa::dirname "$lib_source")"
+            koopa::sys_ln "$(koopa::basename "$lib_source")" 'latest'
+        )
+    fi
     koopa::sys_ln "$lib_source" "$lib_target"
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then
