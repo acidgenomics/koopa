@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Improve completion support for all exported scripts.
 ** TODO Improve configuration of NPM, to store packages outside of '/usr/local'.
    > npm config get prefix
    Want something like:
