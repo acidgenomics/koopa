@@ -15,8 +15,7 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
-# FIXME Ensure r-devel creates 'devel' site package library, and doesn't link
-# into 4.0, 4.1 for example.
+# FIXME This isn't setting up site library correctly for r-devel.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
@@ -35,6 +34,7 @@ koopa::configure_r() { # {{{1
     koopa::dl \
         'R home' "$r_prefix" \
         'R path' "$r"
+    echo 'FIXME 1'
     if koopa::is_symlinked_app "$r"
     then
         make_prefix="$(koopa::make_prefix)"
@@ -53,10 +53,15 @@ koopa::configure_r() { # {{{1
     else
         koopa::sys_set_permissions -r "${r_prefix}/library"
     fi
+    echo 'FIXME 2'
     koopa::link_r_etc "$r"
+    echo 'FIXME 3'
     koopa::link_r_site_library "$r"
+    echo 'FIXME 4'
     koopa::r_javareconf "$r"
+    echo 'FIXME 5'
     koopa::r_rebuild_docs "$r"
+    echo 'FIXME 6'
     koopa::sys_set_permissions -r "${r_prefix}/site-library"
     koopa::alert_success 'Update of R configuration was successful.'
     return 0
