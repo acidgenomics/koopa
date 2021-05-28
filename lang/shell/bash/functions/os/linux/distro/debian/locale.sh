@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is failing for Debian 10...locale-gen missing.
-# FIXME Compare with our Docker recipe.
 koopa::debian_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.
