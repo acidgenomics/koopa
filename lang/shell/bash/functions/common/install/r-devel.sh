@@ -11,6 +11,12 @@
 # make[1]: Leaving directory '[...]/svn/r/r-devel/build/doc/manual'
 # ERROR: not an svn checkout
 # make: *** [Makefile:107: svnonly] Error 1
+#
+# Potentially related:
+# - https://stat.ethz.ch/pipermail/r-devel/2016-May/072781.html
+# - http://singmann.org/installing-r-devel-on-linux/#comment-161
+#
+# Maybe it's the 'rsync-recommended' step not working on macOS?
 
 koopa::install_r_devel() { # {{{1
     koopa::install_app \
