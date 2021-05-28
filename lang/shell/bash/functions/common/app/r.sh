@@ -53,14 +53,9 @@ koopa::configure_r() { # {{{1
         koopa::sys_set_permissions -r "${r_prefix}/library"
     fi
     koopa::link_r_etc "$r"
-    echo 'FIXME 3'
-    # FIXME This step is now erroring for r-devel.
     koopa::link_r_site_library "$r"
-    echo 'FIXME 4'
     koopa::r_javareconf "$r"
-    echo 'FIXME 5'
     koopa::r_rebuild_docs "$r"
-    echo 'FIXME 6'
     koopa::sys_set_permissions -r "${r_prefix}/site-library"
     koopa::alert_success 'Update of R configuration was successful.'
     return 0
