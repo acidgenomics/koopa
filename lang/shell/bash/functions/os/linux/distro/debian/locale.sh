@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME This is failing for Ubuntu 20...locale-gen missing?
 koopa::debian_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.

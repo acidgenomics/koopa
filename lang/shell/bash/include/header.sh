@@ -194,6 +194,10 @@ __koopa_bash_header() { # {{{1
         then
             _koopa_activate_bash_extras
         fi
+        if [[ -z "${_PRESERVED_PROMPT_COMMAND:-}" ]]
+        then
+            export _PRESERVED_PROMPT_COMMAND=''
+        fi
     fi
     if [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
