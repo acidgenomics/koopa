@@ -15,11 +15,10 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
-# FIXME This isn't setting up site library correctly for r-devel.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-05-27.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
