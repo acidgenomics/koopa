@@ -135,7 +135,6 @@ koopa:::install_r_devel() { # {{{1
     "$make" install
     r="${prefix}/bin/R"
     koopa::assert_is_file "$r"
-    # FIXME Reenable this once we know the config is good.
-    # koopa::configure_r "$r"
+    koopa::configure_r "$r"
     return 0
 }
