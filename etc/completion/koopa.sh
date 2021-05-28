@@ -54,6 +54,11 @@ _koopa_complete() { # {{{1
                 )
                 ;;
             install)
+                # FIXME Need to indicate here that these arguments
+                # are supported:
+                # --no-link
+                # --reinstall
+                # --version
                 args=(
                     'anaconda'
                     'autoconf'
