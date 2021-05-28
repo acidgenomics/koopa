@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] Linux success.
 # [2021-05-27] macOS success.
+
+# FIXME All programs like this need to include an uninstaller.
+# FIXME Also need to provide completion support for uninstallers.
 
 koopa::install_bash() { # {{{1
     koopa::install_app \
