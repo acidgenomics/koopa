@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-05-26"
+koopa-date="2021-05-28"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.0a"
@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.6"
+aws-cli="2.2.7"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.24.0"
@@ -55,7 +55,7 @@ bash="5.1.8"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-bcbio-nextgen="1.2.7"
+bcbio-nextgen="1.2.8"
 
 # https://support.illumina.com/sequencing/sequencing_software/
 #     bcl2fastq-conversion-software.html
@@ -84,7 +84,7 @@ cellranger="5.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.20.2"
+cmake="3.20.3"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
