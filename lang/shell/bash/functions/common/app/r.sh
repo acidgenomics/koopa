@@ -163,7 +163,7 @@ koopa::link_r_etc() { # {{{1
 koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-05-27.
     #
     # R on Fedora won't pick up site library in '--vanilla' mode unless we
     # symlink the site-library into '/usr/local/lib/R' as well.
@@ -180,9 +180,10 @@ koopa::link_r_site_library() { # {{{1
     echo 'R SITE LIB FIXME 1'
     # FIXME Need to rework this for r-devel.
     version="$(koopa::get_version "$r")"
-    lib_source="$(koopa::r_packages_prefix "$version")"
+    echo "$version"
     echo 'R SITE LIB FIXME 2'
-
+    lib_source="$(koopa::r_packages_prefix "$version")"
+    echo 'R SITE LIB FIXME 3'
     lib_target="${r_prefix}/site-library"
     koopa::dl 'Site library' "$lib_source"
     koopa::alert "Linking '${lib_source}' into R install at '${lib_target}'."
