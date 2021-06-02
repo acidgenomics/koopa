@@ -15,8 +15,7 @@ koopa:::install_r_cmd_check() { # {{{1
     prefix="${INSTALL_PREFIX:?}"
     source_repo="https://github.com/acidgenomics/r-cmd-check.git"
     koopa::mkdir "$prefix"
-    # FIXME Make this an internal function...
-    git clone --depth 1 "$source_repo" "$prefix"
+    koopa::git_clone "$source_repo" "$prefix"
     return 0
 }
 
