@@ -87,12 +87,12 @@ koopa::git_clone() { # {{{1
     # @note Updated 2021-06-02.
     # """
     local git repo target
-    koopa::assert_has_args "$#"
+    koopa::assert_has_args_eq "$#" 2
     repo="${1:?}"
     target="${2:?}"
     if [[ -d "$target" ]]
     then
-        koopa::alert_note "Already cloned: '${target}'."
+        koopa::alert_note "Repo already cloned: '${target}'."
         return 0
     fi
     # Check if user has sufficient permissions.
