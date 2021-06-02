@@ -154,37 +154,20 @@ _koopa_activate_dircolors() { # {{{1
     return 0
 }
 
-# FIXME Improve fzf config to support Dracula colors.
 _koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
     # @note Updated 2021-06-02.
     #
     # Currently Bash and Zsh are supported.
-    #
     # Shell lockout has been observed on Ubuntu unless we disable 'set -e'.
-    #
-    # @seealso
-    # - https://github.com/junegunn/fzf
-    # - https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko
-    # Customization:
-    # - https://github.com/ngynLk/dotfiles/blob/master/.bashrc
-    # - Dracula palette:
-    #   https://gist.github.com/umayr/8875b44740702b340430b610b52cd182
     # """
-    local nounset prefix script shell
+    local fzfrc nounset prefix script shell
     [ "$#" -eq 0 ] || return 1
-    if [ -z "${FZF_DEFAULT_COMMAND:-}" ]
-    then
-        export FZF_DEFAULT_COMMAND='rg --files'
-    fi
-    if [ -z "${FZF_DEFAULT_OPTS:-}" ]
-    then
-        # On multi-select mode (-m/--multi), TAB and Shift-TAB to mark
-        # multiple items.
-        export FZF_DEFAULT_OPTS='--border --color bw --multi'
-    fi
-    prefix="$(_koopa_fzf_prefix)/latest"
+    fzfrc="$(_koopa_dotfiles_prefix)/app/fzf/fzfrc"
+    # shellcheck source=/dev/null
+    [ -f "$fzfrc" ] && . "$fzfrc"
+    prefix="$(_koopa_fzf_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
     nounset="$(_koopa_boolean_nounset)"
@@ -222,6 +205,9 @@ _koopa_activate_gcc_colors() { # {{{1
     # """
     # Activate GCC colors.
     # @note Updated 2020-06-30.
+    # @seealso
+    # - https://gcc.gnu.org/onlinedocs/gcc-10.1.0/gcc/
+    #     Diagnostic-Message-Formatting-Options.html
     # """
     [ "$#" -eq 0 ] || return 1
     [ -n "${GCC_COLORS:-}" ] && return 0
