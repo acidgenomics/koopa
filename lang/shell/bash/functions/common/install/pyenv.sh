@@ -10,13 +10,13 @@ koopa::install_pyenv() { # {{{1
 koopa:::install_pyenv() { # {{{1
     # """
     # Install pyenv.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-06-02.
     # """
     local prefix url
     prefix="${INSTALL_PREFIX:?}"
     url='https://github.com/pyenv/pyenv.git'
     koopa::mkdir "$prefix"
-    git clone "$url" "$prefix"
+    koopa::git_clone "$url" "$prefix"
     return 0
 }
 
@@ -37,7 +37,7 @@ koopa::update_pyenv() { # {{{1
     koopa::update_start "$name_fancy"
     (
         koopa::cd "$(pyenv root)"
-        git pull
+        koopa::git_pull
     )
     koopa::update_success "$name_fancy"
     return 0
