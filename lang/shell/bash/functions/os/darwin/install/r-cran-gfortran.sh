@@ -3,7 +3,7 @@
 koopa::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-02.
     # @seealso
     # - https://mac.r-project.org/tools/
     # - https://github.com/fxcoudert/gfortran-for-macOS/
@@ -14,11 +14,11 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     arch="$(koopa::arch)"
     make_prefix="$(koopa::make_prefix)"
     name='gfortran'
-    name_fancy='R CRAN gfortran'
+    name_fancy="R CRAN ${name}"
     prefix="/usr/local/${name}"
     reinstall=0
     tee="$(koopa::locate_tee)"
-    version="$(koopa::variable 'r-cran-gfortran')"
+    version="$(koopa::variable "r-cran-${name}")"
     case "$arch" in
         aarch64)
             arch='ARM'
@@ -50,11 +50,12 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
     if [[ -d "$prefix" ]]
     then
+        # FIXME Use 'alert_is_installed' here.
         koopa::alert_note "${name} already installed at '${prefix}'."
         return 0
     fi
     koopa::install_start "$name_fancy" "$version" "$prefix"
-    url_stem='https://github.com/fxcoudert/gfortran-for-macOS/releases/download'
+    url_stem="https://github.com/fxcoudert/${name}-for-macOS/releases/download"
     case "$version" in
         8.2)
             # R 4.0, 4.1.
@@ -88,9 +89,9 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     koopa::rm "$tmp_dir"
     koopa::assert_is_dir "$prefix"
     # Ensure the installer doesn't link outside of target prefix.
-    if [[ -x "${make_prefix}/bin/gfortran" ]]
+    if [[ -x "${make_prefix}/bin/${name}" ]]
     then
-        koopa::rm -S "${make_prefix}/bin/gfortran"
+        koopa::rm -S "${make_prefix}/bin/${name}"
     fi
     koopa::install_success "$name_fancy" "$prefix"
     koopa::alert_restart
@@ -100,11 +101,12 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
 koopa::macos_uninstall_r_cran_gfortran() { # {{{1
     # """
     # Uninstall R CRAN gfortran.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-02.
     # """
-    local name_fancy prefix
-    name_fancy='R CRAN gfortran'
-    prefix='/usr/local/gfortran'
+    local name name_fancy prefix
+    name='gfortran'
+    name_fancy="R CRAN ${name}"
+    prefix="/usr/local/${name}"
     if [[ ! -d "$prefix" ]]
     then
         koopa::alert_not_installed "$name_fancy"
@@ -113,50 +115,6 @@ koopa::macos_uninstall_r_cran_gfortran() { # {{{1
     koopa::uninstall_start "$name_fancy" "$prefix"
     koopa::rm -S "$prefix"
     koopa::uninstall_success "$name_fancy" "$prefix"
-    return 0
-}
-
-# FIXME Need to add support for this.
-koopa::macos_install_r_framework() { # {{{1
-    # """
-    # Install R framework.
-    # @note Updated 2021-05-26.
-    # @seealso
-    # - https://cran.r-project.org/bin/macosx/
-    # - https://mac.r-project.org/tools/
-    # """
-
-    # Intel:
-    # https://cran.r-project.org/bin/macosx/base/R-4.1.0.pkg
-    # Important: this release uses Xcode 12.4 and GNU Fortran 8.2. If you wish
-    # to compile R packages from sources, you may need to download GNU Fortran
-    # 8.2 - see the tools directory.
-
-    # ARM:
-    # https://cran.r-project.org/bin/macosx/big-sur-arm64/base/R-4.1.0-arm64.pkg
-    # This release uses Xcode 12.4 and experimental GNU Fortran 11 arm64 fork.
-    # If you wish to compile R packages from sources, you may need to download
-    # GNU Fortran for arm64 from https://mac.R-project.org/libs-arm64. Any
-    # external libraries and tools are expected to live in /opt/R/arm64 to not
-    # conflict with Intel-based software and this build will not use /usr/local
-    # to avoid such conflicts. 
-    return 0
-}
-
-# FIXME Need to sure this is in autocomplete.
-koopa::macos_uninstall_r_framework() { # {{{1
-    # """
-    # Uninstall R framework.
-    # @note Updated 2021-05-21.
-    # """
-    local name_fancy
-    name_fancy='R framework'
-    koopa::uninstall_start "$name_fancy"
-    koopa::rm -S \
-        '/Applications/R.app' \
-        '/Library/Frameworks/R.framework'
-    koopa::delete_broken_symlinks '/usr/local/bin'
-    koopa::uninstall_success "$name_fancy"
     return 0
 }
 
