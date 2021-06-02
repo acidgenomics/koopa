@@ -37,7 +37,7 @@ koopa::install_doom_emacs() { # {{{1
     koopa::install_start "$name_fancy" "$install_dir"
     (
         repo='https://github.com/hlissner/doom-emacs'
-        git clone "$repo" "$install_dir"
+        koopa::git_clone "$repo" "$install_dir"
         doom="${install_dir}/bin/doom"
         install_args=(
             # > '--no-config'
