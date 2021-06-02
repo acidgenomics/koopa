@@ -283,6 +283,8 @@ python="3.9.5"
 # https://cloud.r-project.org/src/base/R-4/
 r="4.1.0"
 
+r-cmd-check="rolling"
+
 # https://mac.r-project.org/
 # This release matches current R version.
 r-cran-gfortran="8.2"
