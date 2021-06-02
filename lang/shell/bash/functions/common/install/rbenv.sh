@@ -16,11 +16,11 @@ koopa:::install_rbenv() { # {{{1
     prefix="${INSTALL_PREFIX:?}"
     name='rbenv'
     koopa::mkdir "$prefix"
-    git clone \
+    koopa::git_clone \
         "https://github.com/sstephenson/${name}.git" \
         "$prefix"
     koopa::mkdir "${prefix}/plugins"
-    git clone \
+    koopa::git_clone \
         'https://github.com/sstephenson/ruby-build.git' \
         "${prefix}/plugins/ruby-build"
     return 0
@@ -29,7 +29,7 @@ koopa:::install_rbenv() { # {{{1
 koopa::install_rbenv_ruby() { # {{{1
     # """
     # Install latest verison of Ruby in rbenv.
-    # @note Updated 2020-07-08.
+    # @note Updated 2021-06-02.
     #
     # > rbenv install -l
     # > rbenv versions
@@ -51,7 +51,7 @@ koopa::install_rbenv_ruby() { # {{{1
         koopa::alert_note "Updating ruby-build plugin: '${ruby_build_dir}'."
         (
             koopa::cd "$ruby_build_dir"
-            git pull --quiet
+            koopa::git_pull
         )
     fi
     rbenv install "$version"
@@ -63,7 +63,7 @@ koopa::install_rbenv_ruby() { # {{{1
 koopa::update_rbenv() { # {{{1
     # """
     # Update rbenv.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-06-02.
     # """
     local exe name name_fancy prefix
     koopa::assert_has_no_args "$#"
@@ -79,7 +79,7 @@ koopa::update_rbenv() { # {{{1
     koopa::update_start "$name_fancy"
     (
         koopa::cd "$prefix"
-        git pull
+        koopa::git_pull
     )
     koopa::update_success "$name_fancy"
     return 0
