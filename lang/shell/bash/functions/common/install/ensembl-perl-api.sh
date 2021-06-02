@@ -14,12 +14,14 @@ koopa::install_ensembl_perl_api() { # {{{1
 koopa:::install_ensembl_perl_api() { # {{{1
     # """
     # Install Ensembl Perl API.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-06-02.
     # """
-    local repo repos prefix
+    local git repo repos prefix
     prefix="${INSTALL_PREFIX:?}"
-    # Install BioPerl.
-    git clone -b release-1-6-924 --depth 1 \
+    git="$(koopa::locate_git)"
+    "$git" clone \
+        --branch 'release-1-6-924' \
+        --depth 1 \
         'https://github.com/bioperl/bioperl-live.git' \
         "${prefix}/bioperl-live" \
         || return 1
@@ -33,7 +35,7 @@ koopa:::install_ensembl_perl_api() { # {{{1
     )
     for repo in "${repos[@]}"
     do
-        git clone \
+        koopa::git_clone \
             "https://github.com/Ensembl/${repo}.git" \
             "${prefix}/${repo}" \
             || return 1
