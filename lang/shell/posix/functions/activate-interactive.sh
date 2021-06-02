@@ -154,10 +154,11 @@ _koopa_activate_dircolors() { # {{{1
     return 0
 }
 
+# FIXME Improve fzf config to support Dracula colors.
 _koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-06-02.
     #
     # Currently Bash and Zsh are supported.
     #

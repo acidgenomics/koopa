@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-05-27.
+# Updated 2021-06-02.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -236,6 +236,7 @@ brew "hyperfine"
 brew "igraph"
 brew "imagemagick"
 brew "jq"
+brew "kakoune"
 brew "ksh"
 brew "lame"
 brew "lapack"
