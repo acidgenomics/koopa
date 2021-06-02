@@ -84,7 +84,7 @@ koopa::git_checkout_recursive() { # {{{1
 koopa::git_clone() { # {{{1
     # """
     # Quietly clone a git repository.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-02.
     # """
     local git repo target
     koopa::assert_has_args "$#"
@@ -104,7 +104,12 @@ koopa::git_clone() { # {{{1
         koopa::assert_is_gitlab_ssh_enabled
     fi
     git="$(koopa::locate_git)"
-    "$git" clone --quiet --recursive "$repo" "$target"
+    "$git" clone \
+        --depth 1 \
+        --quiet \
+        --recursive \
+        "$repo" \
+        "$target"
     return 0
 }
 
