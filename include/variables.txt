@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-06-01"
+koopa-date="2021-06-02"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.0a"
@@ -45,10 +45,10 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.7"
+aws-cli="2.2.8"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.24.1"
+azure-cli="2.24.2"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.8"
@@ -240,7 +240,7 @@ openssl="1.1.1d"
 oracle-instantclient="19.5.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.14"
+pandoc="2.14.0.1"
 
 # https://www.gnu.org/software/parallel/
 parallel="20210422"
