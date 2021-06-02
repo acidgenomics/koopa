@@ -89,6 +89,7 @@ cmake="3.20.3"
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
 # https://docs.conda.io/projects/conda/en/latest/user-guide/install/
+# 4.10.1 added on 2021-06-01, but missing Linux x86 at the moment.
 conda="4.9.2"
 
 # https://www.gnu.org/software/coreutils/
