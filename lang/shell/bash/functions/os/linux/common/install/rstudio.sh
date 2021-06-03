@@ -3,7 +3,9 @@
 koopa:::linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-06-03.
+    #
+    # RStudio Server Pro was renamed to Workbench in 2021-06.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -22,11 +24,11 @@ koopa:::linux_install_rstudio_server() { # {{{1
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
     local file file_ext file_stem install name name_fancy os_codename platform
-    local pos pro reinstall server tmp_dir url version
+    local pos reinstall server tmp_dir url version workbench
     koopa::assert_is_installed R
-    pro=0
     reinstall=0
     version=''
+    workbench=0
     pos=()
     while (("$#"))
     do
@@ -47,8 +49,9 @@ koopa:::linux_install_rstudio_server() { # {{{1
                 platform="${1#*=}"
                 shift 1
                 ;;
-            --pro)
-                pro=1
+            --pro | \
+            --workbench)
+                workbench=1
                 shift 1
                 ;;
             --reinstall)
@@ -78,11 +81,11 @@ koopa:::linux_install_rstudio_server() { # {{{1
     file_stem="$name"
     koopa::is_fedora_like && file_stem="${file_stem}-rhel"
     name_fancy='RStudio Server'
-    if [[ "$pro" -eq 1 ]]
+    if [[ "$workbench" -eq 1 ]]
     then
-        file_stem="${file_stem}-pro"
-        name="${name}-pro"
-        name_fancy="${name_fancy} Pro"
+        file_stem="${file_stem}-workbench"
+        name="${name}-workbench"
+        name_fancy="${name_fancy} Workbench"
     fi
     [[ -z "$version" ]] && version="$(koopa::variable "$name")"
     name_fancy="${name_fancy} ${version}"
@@ -101,7 +104,7 @@ koopa:::linux_install_rstudio_server() { # {{{1
         "${install[@]}" "$file"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
-    if [[ "$pro" -eq 1 ]]
+    if [[ "$workbench" -eq 1 ]]
     then
         cat << END
 Activate product license key (if necessary):
