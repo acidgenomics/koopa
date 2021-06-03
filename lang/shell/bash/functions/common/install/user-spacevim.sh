@@ -54,7 +54,7 @@ koopa::uninstall_spacevim() { # {{{1
     prefix="$(koopa::spacevim_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::alert_not_installed "$name_fancy" "$prefix"
+        koopa::alert_is_not_installed "$name_fancy" "$prefix"
         return 0
     fi
     koopa::uninstall_start "$name_fancy"

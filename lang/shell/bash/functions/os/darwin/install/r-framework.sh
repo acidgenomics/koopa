@@ -6,7 +6,7 @@
 koopa::macos_install_r_framework() { # {{{1
     # """
     # Install R framework.
-    # @note Updated 2021-06-02.
+    # @note Updated 2021-06-03.
     #
     # @section Intel:
     #
@@ -55,19 +55,18 @@ koopa::macos_install_r_framework() { # {{{1
     [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
     if [[ -d "$prefix" ]]
     then
-        # FIXME Use 'alert_is_installed' here.
-        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
+        koopa::alert_is_installed "$name_fancy" "$prefix"
         return 0
     fi
     koopa::install_start "$name_fancy" "$version" "$prefix"
     url_stem='https://cran.r-project.org/bin/macosx'
     arch="$(koopa::arch)"
+    os_codename="$(koopa::os_codename)"
+    # FIXME This needs to convert to lowercase...
+    os_codename="$(koopa::kebab_case_simple "$os_codename")"
     case "$arch" in
         aarch64)
             arch='arm64'
-            # FIXME Need to be able to get the os_codename for macOS
-            # e.g. Big Sur, Mojave...
-            os_codename='big-sur'
             file="R-${version}-${arch}.pkg"
             url="${url_stem}/${os_codename}-${arch}/base/${file}"
             ;;

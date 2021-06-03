@@ -64,7 +64,7 @@ koopa::update_perlbrew() { # {{{1
     koopa::activate_perlbrew
     if ! koopa::is_installed 'perlbrew'
     then
-        koopa::alert_not_installed 'perlbrew'
+        koopa::alert_is_not_installed 'perlbrew'
         return 0
     fi
     koopa::h1 'Updating Perlbrew.'
