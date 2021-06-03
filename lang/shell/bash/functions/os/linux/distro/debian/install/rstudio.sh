@@ -39,8 +39,8 @@ koopa::debian_install_rstudio_server() { # {{{1
     return 0
 }
 
-koopa::debian_install_rstudio_server_pro() { # {{{1
-    koopa::debian_install_rstudio_server --pro "$@"
+koopa::debian_install_rstudio_server_workbench() { # {{{1
+    koopa::debian_install_rstudio_server --workbench "$@"
     return 0
 }
 
