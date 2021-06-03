@@ -46,7 +46,7 @@ _koopa_gsub() { # {{{1
 _koopa_kebab_case_simple() { # {{{1
     # """
     # Simple snake case function.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-06-03.
     #
     # @seealso
     # - Exported 'kebab-case' that uses R syntactic internally.
@@ -58,7 +58,13 @@ _koopa_kebab_case_simple() { # {{{1
     # _koopa_kebab_case_simple 'bcbio-nextgen.py'
     # ## bcbio-nextgen-py
     # """
-    _koopa_gsub '[^-A-Za-z0-9]' '-' "$@"
+    local string
+    for string in "$@"
+    do
+        string="$(_koopa_gsub '[^-A-Za-z0-9]' '-' "$string")"
+        string="$(_koopa_lowercase "$string")"
+        _koopa_print "$string"
+    done
     return 0
 }
 
@@ -120,7 +126,7 @@ _koopa_ngettext() { # {{{1
 _koopa_snake_case_simple() { # {{{1
     # """
     # Simple snake case function.
-    # @note Updated 2020-11-19.
+    # @note Updated 2021-06-03.
     #
     # @seealso
     # - Exported 'snake-case' that uses R syntactic internally.
@@ -132,7 +138,13 @@ _koopa_snake_case_simple() { # {{{1
     # _koopa_snake_case_simple 'bcbio-nextgen.py'
     # ## bcbio_nextgen_py
     # """
-    _koopa_gsub '[^A-Za-z0-9_]' '_' "$@"
+    local string
+    for string in "$@"
+    do
+        string="$(_koopa_gsub '[^A-Za-z0-9_]' '_' "$string")"
+        string="$(_koopa_lowercase "$string")"
+        _koopa_print "$string"
+    done
     return 0
 }
 
