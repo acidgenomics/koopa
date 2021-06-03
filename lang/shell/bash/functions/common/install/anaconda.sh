@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Needs uninstaller.
+
 # [2021-05-27] Linux success.
 # [2021-05-27] macOS success.
 

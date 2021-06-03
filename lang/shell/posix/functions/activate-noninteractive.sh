@@ -782,6 +782,10 @@ _koopa_activate_xdg() { # {{{1
     then
         XDG_DATA_HOME="$(_koopa_xdg_data_home)"
     fi
+    # FIXME Need to create this if it doesn't exist for the current user.
+    # https://github.com/cmus/cmus/issues/995
+    # Needs to be 0700.
+    # Also need to delete this on shell logout...
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
     then
         XDG_RUNTIME_DIR="$(_koopa_xdg_runtime_dir)"
