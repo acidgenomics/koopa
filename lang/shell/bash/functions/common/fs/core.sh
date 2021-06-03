@@ -496,7 +496,7 @@ koopa::which() { # {{{1
 koopa::which_realpath() { # {{{1
     # """
     # Locate the realpath of a program.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-03.
     #
     # This resolves symlinks automatically.
     # For 'which' style return, use 'koopa::which' instead.
@@ -515,7 +515,9 @@ koopa::which_realpath() { # {{{1
     for cmd in "$@"
     do
         cmd="$(koopa::which "$cmd")"
+        [[ -n "$cmd" ]] || return 1
         cmd="$(koopa::realpath "$cmd")"
+        [[ -x "$cmd" ]] || return 1
         koopa::print "$cmd"
     done
     return 0
