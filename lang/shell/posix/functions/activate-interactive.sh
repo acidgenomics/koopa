@@ -216,10 +216,10 @@ quote=01:warning=01;35"
     return 0
 }
 
-_koopa_activate_gnu() { # {{{1
+_koopa_activate_gnu_aliases() { # {{{1
     # """
-    # Activate GNU utilities.
-    # @note Updated 2021-05-21.
+    # Activate GNU aliases.
+    # @note Updated 2021-06-03.
     #
     # Creates hardened interactive aliases for GNU coreutils.
     #

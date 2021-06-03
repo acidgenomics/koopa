@@ -80,7 +80,7 @@ _koopa_posix_header() { # {{{1
             _koopa_activate_aliases || return 1
             _koopa_activate_dircolors || return 1
             _koopa_activate_gcc_colors || return 1
-            _koopa_activate_gnu || return 1
+            _koopa_activate_gnu_aliases || return 1
             _koopa_activate_secrets || return 1
             _koopa_activate_ssh_key || return 1
             if ! _koopa_is_subshell
