@@ -150,6 +150,7 @@ _koopa_complete() { # {{{1
                     'wget'
                     'zsh'
                 )
+                # FIXME Need to ensure we provide uninstallers for all of these.
                 if _koopa_is_linux
                 then
                     args+=(
@@ -163,6 +164,7 @@ _koopa_complete() { # {{{1
                         'julia'
                         'lmod'
                         'rstudio-server'
+                        'rstudio-workbench'
                         'shiny-server'
                     )
                 fi
