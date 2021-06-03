@@ -18,7 +18,7 @@ koopa::linux_configure_lmod() { # {{{1
     name_fancy='Lmod'
     if [[ ! -d "$init_dir" ]]
     then
-        koopa::alert_not_installed "$name_fancy" "$init_dir"
+        koopa::alert_is_not_installed "$name_fancy" "$init_dir"
         return 0
     fi
     etc_dir='/etc/profile.d'
