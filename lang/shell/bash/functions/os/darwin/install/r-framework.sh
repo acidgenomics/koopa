@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for this.
-# FIXME Check for this '/usr/local/Caskroom/r' and early return.
-# FIXME Need to support version.
 koopa::macos_install_r_framework() { # {{{1
     # """
     # Install R framework.
@@ -27,13 +24,15 @@ koopa::macos_install_r_framework() { # {{{1
     # - https://cran.r-project.org/bin/macosx/
     # - https://mac.r-project.org/tools/
     # """
-    local arch os_codename name name2 name_fancy prefix reinstall tee
-    local tmp_dir url version
+    local arch os_codename name name2 name_fancy os_codename prefix reinstall
+    local tee tmp_dir url url_stem version
     koopa::assert_is_admin
     name='r'
     name2="$(koopa::capitalize "$name")"
     name_fancy="$name2"
     prefix='/Library/Frameworks/R.framework'
+    reinstall=0
+    tee="$(koopa::locate_tee)"
     version="$(koopa::variable "$name")"
     while (("$#"))
     do
@@ -52,6 +51,11 @@ koopa::macos_install_r_framework() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
+    if [[ -d '/usr/local/Caskroom/r' ]]
+    then
+        koopa::alert_is_installed 'R Homebrew cask'
+        return 0
+    fi
     [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
     if [[ -d "$prefix" ]]
     then
@@ -62,7 +66,6 @@ koopa::macos_install_r_framework() { # {{{1
     url_stem='https://cran.r-project.org/bin/macosx'
     arch="$(koopa::arch)"
     os_codename="$(koopa::os_codename)"
-    # FIXME This needs to convert to lowercase...
     os_codename="$(koopa::kebab_case_simple "$os_codename")"
     case "$arch" in
         aarch64)
@@ -82,14 +85,7 @@ koopa::macos_install_r_framework() { # {{{1
     (
         koopa::cd "$tmp_dir"
         koopa::download "$url"
-        hdiutil mount "$file"
-
-        pkg='FIXME'
-        file_stem='FIXME'
-
-        koopa::assert_is_file "$pkg"
-        sudo installer -pkg "$pkg" -target /
-        hdiutil unmount "/Volumes/${file_stem}"
+        sudo installer -pkg "$file" -target /
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::assert_is_dir "$prefix"
@@ -98,11 +94,10 @@ koopa::macos_install_r_framework() { # {{{1
     return 0
 }
 
-# FIXME Need to sure this is in autocomplete.
 koopa::macos_uninstall_r_framework() { # {{{1
     # """
     # Uninstall R framework.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-06-03.
     # """
     local name_fancy
     name_fancy='R framework'
