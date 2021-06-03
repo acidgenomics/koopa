@@ -24,12 +24,16 @@ koopa:::locate_app() { # {{{1
 koopa:::locate_app_simple() { # {{{1
     # """
     # Simpler app location fetcher that doesn't attempt to use Homebrew.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-03.
     # """
     local app_name file
     koopa::assert_has_args_eq "$#" 1
     app_name="${1:?}"
     file="$(koopa::which_realpath "$app_name")"
+    if [[ -z "$file" ]]
+    then
+        koopa::stop "Failed to locate '${app_name}'."
+    fi
     koopa::assert_is_executable "$file"
     koopa::print "$file"
     return 0
