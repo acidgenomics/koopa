@@ -205,6 +205,7 @@ _koopa_alert() { # {{{1
     return 0
 }
 
+# FIXME Move this to bash library.
 _koopa_alert_coffee_time() { # {{{1
     # """
     # Alert that it's coffee time.
@@ -223,6 +224,7 @@ _koopa_alert_info() { # {{{1
     return 0
 }
 
+# FIXME Move this to bash library.
 _koopa_alert_not_installed() { # {{{1
     # """
     # Note that program is not installed.
@@ -251,6 +253,7 @@ _koopa_alert_note() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_alert_restart() { # {{{1
     # """
     # Inform the user that they should restart shell.
