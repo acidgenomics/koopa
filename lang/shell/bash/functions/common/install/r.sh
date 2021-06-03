@@ -129,7 +129,7 @@ koopa::install_r_packages() { # {{{1
 koopa::update_r_packages() { # {{{1
     # """
     # Update R packages.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-03.
     # """
     local name_fancy
     name_fancy='R packages'
@@ -137,7 +137,8 @@ koopa::update_r_packages() { # {{{1
     koopa::update_start "$name_fancy"
     koopa::configure_r
     koopa::assert_is_dir "$pkg_prefix"
-    koopa::rscript 'updateRPackages' "$@"
+    # Return with success even if 'BiocManager::valid()' check returns false.
+    koopa::rscript 'updateRPackages' "$@" || true
     koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::update_success "$name_fancy"
     return 0
