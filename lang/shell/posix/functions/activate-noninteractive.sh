@@ -756,9 +756,11 @@ _koopa_activate_venv() { # {{{1
 _koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-06-03.
     # @seealso
     # - https://developer.gnome.org/basedir-spec/
+    # - https://specifications.freedesktop.org/basedir-spec/
+    #     basedir-spec-latest.html#variables
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
     # """
     [ "$#" -eq 0 ] || return 1
@@ -782,13 +784,14 @@ _koopa_activate_xdg() { # {{{1
     then
         XDG_DATA_HOME="$(_koopa_xdg_data_home)"
     fi
-    # FIXME Need to create this if it doesn't exist for the current user.
-    # https://github.com/cmus/cmus/issues/995
-    # Needs to be 0700.
-    # Also need to delete this on shell logout...
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
     then
         XDG_RUNTIME_DIR="$(_koopa_xdg_runtime_dir)"
+    fi
+    if [ ! -d "$XDG_RUNTIME_DIR" ]
+    then
+        mkdir -p "$XDG_RUNTIME_DIR"
+        chmod 0700 "$XDG_RUNTIME_DIR"
     fi
     export \
         XDG_CACHE_HOME \
