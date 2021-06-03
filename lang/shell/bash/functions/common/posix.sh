@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+koopa:::ansi_escape() { # {{{1
+    __koopa_ansi_escape "$@"
+}
+
+koopa:::msg() { # {{{1
+    __koopa_msg "$@"
+}
+
 koopa::activate_aspera() { # {{{1
     _koopa_activate_aspera "$@"
 }
@@ -180,24 +188,20 @@ koopa::alert() { # {{{1
     _koopa_alert "$@"
 }
 
-koopa::alert_coffee_time() { # {{{1
-    _koopa_alert_coffee_time "$@"
-}
-
 koopa::alert_info() { # {{{1
     _koopa_alert_info "$@"
 }
 
-koopa::alert_not_installed() { # {{{1
-    _koopa_alert_not_installed "$@"
+koopa::alert_is_installed() { # {{{1
+    _koopa_alert_is_installed "$@"
+}
+
+koopa::alert_is_not_installed() { # {{{1
+    _koopa_alert_is_not_installed "$@"
 }
 
 koopa::alert_note() { # {{{1
     _koopa_alert_note "$@"
-}
-
-koopa::alert_restart() { # {{{1
-    _koopa_alert_restart "$@"
 }
 
 koopa::alert_success() { # {{{1
@@ -438,10 +442,6 @@ koopa::host_id() { # {{{1
 
 koopa::include_prefix() { # {{{1
     _koopa_include_prefix "$@"
-}
-
-koopa::invalid_arg() { # {{{1
-    _koopa_invalid_arg "$@"
 }
 
 koopa::is_alias() { # {{{1
@@ -692,10 +692,6 @@ koopa::mem_gb() { # {{{1
     _koopa_mem_gb "$@"
 }
 
-koopa::missing_arg() { # {{{1
-    _koopa_missing_arg "$@"
-}
-
 koopa::msigdb_prefix() { # {{{1
     _koopa_msigdb_prefix "$@"
 }
@@ -894,22 +890,6 @@ koopa::source_dir() { # {{{1
 
 koopa::spacevim_prefix() { # {{{1
     _koopa_spacevim_prefix "$@"
-}
-
-koopa::status_fail() { # {{{1
-    _koopa_status_fail "$@"
-}
-
-koopa::status_note() { # {{{1
-    _koopa_status_note "$@"
-}
-
-koopa::status_ok() { # {{{1
-    _koopa_status_ok "$@"
-}
-
-koopa::stop() { # {{{1
-    _koopa_stop "$@"
 }
 
 koopa::str_match() { # {{{1

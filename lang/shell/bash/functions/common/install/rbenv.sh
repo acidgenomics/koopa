@@ -63,7 +63,7 @@ koopa::install_rbenv_ruby() { # {{{1
 koopa::update_rbenv() { # {{{1
     # """
     # Update rbenv.
-    # @note Updated 2021-06-02.
+    # @note Updated 2021-06-03.
     # """
     local exe name name_fancy prefix
     koopa::assert_has_no_args "$#"
@@ -73,7 +73,7 @@ koopa::update_rbenv() { # {{{1
     exe="${prefix}/bin/${name}"
     if ! koopa::is_installed "$exe"
     then
-        koopa::alert_not_installed "$name"
+        koopa::alert_is_not_installed "$name"
         return 0
     fi
     koopa::update_start "$name_fancy"

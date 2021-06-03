@@ -270,7 +270,7 @@ _koopa_activate_gnu() { # {{{1
             alias tr='gtr'
             alias uname='guname'
         else
-            _koopa_alert_not_installed 'Homebrew coreutils'
+            _koopa_alert_is_not_installed 'Homebrew coreutils'
             harden_coreutils=0
         fi
         if [ -d "${opt_prefix}/findutils" ]
@@ -278,43 +278,43 @@ _koopa_activate_gnu() { # {{{1
             alias find='gfind'
             alias xargs='gxargs'
         else
-            _koopa_alert_not_installed 'Homebrew findutils'
+            _koopa_alert_is_not_installed 'Homebrew findutils'
         fi
         if [ -d "${opt_prefix}/gawk" ]
         then
             alias awk='gawk'
         else
-            _koopa_alert_not_installed 'Homebrew gawk'
+            _koopa_alert_is_not_installed 'Homebrew gawk'
         fi
         if [ -d "${opt_prefix}/gnu-sed" ]
         then
             alias sed='gsed'
         else
-            _koopa_alert_not_installed 'Homebrew gnu-sed'
+            _koopa_alert_is_not_installed 'Homebrew gnu-sed'
         fi
         if [ -d "${opt_prefix}/gnu-tar" ]
         then
             alias tar='gtar'
         else
-            _koopa_alert_not_installed 'Homebrew gnu-tar'
+            _koopa_alert_is_not_installed 'Homebrew gnu-tar'
         fi
         if [ -d "${opt_prefix}/grep" ]
         then
             alias grep='ggrep'
         else
-            _koopa_alert_not_installed 'Homebrew grep'
+            _koopa_alert_is_not_installed 'Homebrew grep'
         fi
         if [ -d "${opt_prefix}/make" ]
         then
             alias make='gmake'
         else
-            _koopa_alert_not_installed 'Homebrew make'
+            _koopa_alert_is_not_installed 'Homebrew make'
         fi
         if [ -d "${opt_prefix}/man-db" ]
         then
             alias man='gman'
         else
-            _koopa_alert_not_installed 'Homebrew man-db'
+            _koopa_alert_is_not_installed 'Homebrew man-db'
         fi
     fi
     if [ "$harden_coreutils" -eq 1 ]

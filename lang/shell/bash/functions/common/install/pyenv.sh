@@ -28,7 +28,7 @@ koopa::update_pyenv() { # {{{1
     local name_fancy
     if ! koopa::is_installed pyenv
     then
-        koopa::alert_not_installed 'pyenv'
+        koopa::alert_is_not_installed 'pyenv'
         return 0
     fi
     koopa::assert_has_no_args "$#"

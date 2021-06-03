@@ -109,7 +109,7 @@ koopa::macos_uninstall_r_cran_gfortran() { # {{{1
     prefix="/usr/local/${name}"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::alert_not_installed "$name_fancy"
+        koopa::alert_is_not_installed "$name_fancy"
         return 0
     fi
     koopa::uninstall_start "$name_fancy" "$prefix"

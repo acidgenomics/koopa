@@ -93,7 +93,7 @@ koopa::uninstall_homebrew() { # {{{1
     local file name_fancy tmp_dir url user
     if ! koopa::is_installed 'brew'
     then
-        koopa::alert_not_installed 'Homebrew'
+        koopa::alert_is_not_installed 'Homebrew'
         return 0
     fi
     koopa::assert_is_admin
