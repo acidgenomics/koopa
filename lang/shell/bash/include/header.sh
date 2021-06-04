@@ -9,6 +9,7 @@ __koopa_bash_source_dir() { # {{{1
     # doesn't support readarray/mapfile.
     # """
     local fun_script fun_scripts fun_scripts_arr koopa_prefix prefix
+    [[ "$#" -eq 1 ]] || return 1
     [[ $(type -t readarray) == 'builtin' ]] || return 1
     koopa_prefix="$(_koopa_prefix)"
     prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
@@ -32,9 +33,10 @@ __koopa_bash_source_dir() { # {{{1
 __koopa_is_installed() { # {{{1
     # """
     # Are all of the requested programs installed?
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-06-16.
     # """
     local cmd
+    [[ "$#" -gt 0 ]] || return 1
     for cmd in "$@"
     do
         command -v "$cmd" >/dev/null || return 1
@@ -45,8 +47,9 @@ __koopa_is_installed() { # {{{1
 __koopa_is_macos() { # {{{1
     # """
     # Is the operating system macOS?
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-06-04.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     [[ "$(uname -s)" == 'Darwin' ]]
 }
 
@@ -67,9 +70,10 @@ __koopa_print() { # {{{1
 __koopa_realpath() { # {{{1
     # """
     # Resolve file path.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-04.
     # """
     local readlink x
+    [[ "$#" -gt 0 ]] || return 1
     readlink='readlink'
     __koopa_is_macos && readlink='greadlink'
     if ! __koopa_is_installed "$readlink"
@@ -233,17 +237,6 @@ __koopa_bash_header() { # {{{1
     then
         _koopa_duration_stop 'bash' || return 1
     fi
-    # > if [[ "${dict[checks]}" -eq 1 ]]
-    # > then
-    # >     set +o errexit
-    # >     set +o errtrace
-    # >     set +o nounset
-    # >     set +o pipefail
-    # > fi
-    # > if [[ "${dict[verbose]}" -eq 1 ]]
-    # > then
-    # >     set +o xtrace
-    # > fi
     return 0
 }
 
