@@ -127,7 +127,7 @@ __koopa_activate_shared_profile() { # {{{1
     # @seealso https://koopa.acidgenomics.com/
     # """
     # shellcheck source=/dev/null
-    . "${koopa_prefix}/activate"
+    source "${koopa_prefix}/activate"
     return 0
 }
 

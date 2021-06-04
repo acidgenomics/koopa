@@ -25,7 +25,7 @@ __koopa_bash_source_dir() { # {{{1
     for fun_script in "${fun_scripts_arr[@]}"
     do
         # shellcheck source=/dev/null
-        . "$fun_script"
+        source "$fun_script"
     done
     return 0
 }
