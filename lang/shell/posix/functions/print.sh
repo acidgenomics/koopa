@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# FIXME All POSIX functions should check if any arguments are passed in.
-
 __koopa_acid_emoji() { # {{{1
     # """
     # Acid Genomics test tube emoji.
@@ -19,6 +17,7 @@ __koopa_ansi_escape() { # {{{1
     # @note Updated 2020-07-05.
     # """
     local escape
+    [ "$#" -eq 1 ] || return 1
     case "${1:?}" in
         nocolor)
             escape='0'
@@ -91,6 +90,7 @@ __koopa_h() { # {{{1
     # @note Updated 2021-03-31.
     # """
     local emoji level prefix x
+    [ "$#" -ge 2 ] || return 1
     level="${1:?}"
     shift 1
     case "$level" in
@@ -131,6 +131,7 @@ __koopa_msg() { # {{{1
     # @note Updated 2021-03-31.
     # """
     local c1 c2 emoji nc prefix string x
+    [ "$#" -eq 2 ] || return 1
     c1="$(__koopa_ansi_escape "${1:?}")"
     c2="$(__koopa_ansi_escape "${2:?}")"
     nc="$(__koopa_ansi_escape 'nocolor')"
@@ -170,6 +171,7 @@ __koopa_print_ansi() { # {{{1
     # - https://bixense.com/clicolors/
     # """
     local color nocolor string
+    [ "$#" -ge 2 ] || return 1
     color="$(__koopa_ansi_escape "${1:?}")"
     nocolor="$(__koopa_ansi_escape 'nocolor')"
     shift 1
@@ -185,6 +187,7 @@ _koopa_alert() { # {{{1
     # Alert message.
     # @note Updated 2021-03-31.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'default' 'default' '→' "$@"
     return 0
 }
@@ -194,11 +197,11 @@ _koopa_alert_info() { # {{{1
     # Alert info message.
     # @note Updated 2021-03-30.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
     return 0
 }
 
-# FIXME Ensure Bash library references this.
 _koopa_alert_is_installed() { # {{{1
     # """
     # Alert the user that a program is installed.
@@ -242,6 +245,7 @@ _koopa_alert_note() { # {{{1
     # General note.
     # @note Updated 2020-07-01.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'yellow' 'default' '**' "$@"
     return 0
 }
@@ -251,6 +255,7 @@ _koopa_alert_success() { # {{{1
     # Alert success message.
     # @note Updated 2021-03-31.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'green-bold' 'green' '✓' "$@"
     return 0
 }
@@ -270,36 +275,43 @@ _koopa_dl() { # {{{1
 }
 
 _koopa_h1() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 1 "$@"
     return 0
 }
 
 _koopa_h2() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 2 "$@"
     return 0
 }
 
 _koopa_h3() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 3 "$@"
     return 0
 }
 
 _koopa_h4() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 4 "$@"
     return 0
 }
 
 _koopa_h5() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 5 "$@"
     return 0
 }
 
 _koopa_h6() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 6 "$@"
     return 0
 }
 
 _koopa_h7() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 7 "$@"
     return 0
 }
@@ -329,91 +341,109 @@ _koopa_print() { # {{{1
 }
 
 _koopa_print_black() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'black' "$@"
     return 0
 }
 
 _koopa_print_black_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'black-bold' "$@"
     return 0
 }
 
 _koopa_print_blue() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'blue' "$@"
     return 0
 }
 
 _koopa_print_blue_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'blue-bold' "$@"
     return 0
 }
 
 _koopa_print_cyan() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'cyan' "$@"
     return 0
 }
 
 _koopa_print_cyan_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'cyan-bold' "$@"
     return 0
 }
 
 _koopa_print_default() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'default' "$@"
     return 0
 }
 
 _koopa_print_default_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'default-bold' "$@"
     return 0
 }
 
 _koopa_print_green() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'green' "$@"
     return 0
 }
 
 _koopa_print_green_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'green-bold' "$@"
     return 0
 }
 
 _koopa_print_magenta() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'magenta' "$@"
     return 0
 }
 
 _koopa_print_magenta_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'magenta-bold' "$@"
     return 0
 }
 
 _koopa_print_red() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'red' "$@"
     return 0
 }
 
 _koopa_print_red_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'red-bold' "$@"
     return 0
 }
 
 _koopa_print_yellow() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'yellow' "$@"
     return 0
 }
 
 _koopa_print_yellow_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'yellow-bold' "$@"
     return 0
 }
 
 _koopa_print_white() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'white' "$@"
     return 0
 }
 
 _koopa_print_white_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'white-bold' "$@"
     return 0
 }
@@ -423,6 +453,7 @@ _koopa_warning() { # {{{1
     # Warning message.
     # @note Updated 2021-01-19.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'magenta-bold' 'magenta' '!! Warning:' "$@" >&2
     return 0
 }

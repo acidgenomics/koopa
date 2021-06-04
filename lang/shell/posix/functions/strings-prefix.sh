@@ -7,6 +7,7 @@ _koopa_anaconda_prefix() { # {{{1
     # Anaconda prefix.
     # @note Updated 2021-05-16.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/conda"
     return 0
 }
@@ -21,6 +22,7 @@ _koopa_app_prefix() { # {{{1
     # Recommended to keep on a local mount.
     # """
     local prefix
+    [ "$#" -eq 0 ] || return 1
     prefix="${KOOPA_APP_PREFIX:-}"
     # Don't allow this prefix to match the opt prefix.
     if [ -n "$prefix" ] && [ "$prefix" = "$(_koopa_opt_prefix)" ]
@@ -49,6 +51,7 @@ _koopa_aspera_prefix() { # {{{1
     # Aspera Connect prefix.
     # @note Updated 2020-11-24.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/aspera-connect"
     return 0
 }
@@ -58,6 +61,7 @@ _koopa_bcbio_tools_prefix() { # {{{1
     # bcbio-nextgen tools prefix.
     # @note Updated 2021-03-02.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/bcbio/tools"
     return 0
 }
@@ -68,6 +72,7 @@ _koopa_conda_prefix() { # {{{1
     # @note Updated 2021-05-25.
     # @seealso conda info --base
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/conda"
     return 0
 }
@@ -77,6 +82,7 @@ _koopa_config_prefix() { # {{{1
     # Local koopa config directory.
     # @note Updated 2020-07-01.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_xdg_config_home)/koopa"
     return 0
 }
@@ -86,6 +92,7 @@ _koopa_data_disk_link_prefix() { # {{{1
     # Data disk symlink prefix.
     # @note Updated 2020-07-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_linux || return 0
     _koopa_print '/n'
     return 0
@@ -97,6 +104,7 @@ _koopa_distro_prefix() { # {{{1
     # @note Updated 2021-05-25.
     # """
     local koopa_prefix os_id prefix
+    [ "$#" -eq 0 ] || return 1
     koopa_prefix="$(_koopa_prefix)"
     os_id="$(_koopa_os_id)"
     if _koopa_is_linux
@@ -114,6 +122,7 @@ _koopa_docker_prefix() { # {{{1
     # Docker prefix.
     # @note Updated 2020-02-15.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_config_prefix)/docker"
     return 0
 }
@@ -123,6 +132,7 @@ _koopa_docker_private_prefix() { # {{{1
     # Private Docker prefix.
     # @note Updated 2020-03-05.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_config_prefix)/docker-private"
     return 0
 }
@@ -132,6 +142,7 @@ _koopa_dotfiles_prefix() { # {{{1
     # Koopa system dotfiles prefix.
     # @note Updated 2020-05-05.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/dotfiles"
     return 0
 }
@@ -141,6 +152,7 @@ _koopa_dotfiles_private_prefix() { # {{{1
     # Private user dotfiles prefix.
     # @note Updated 2020-02-15.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_config_prefix)/dotfiles-private"
     return 0
 }
@@ -150,6 +162,7 @@ _koopa_emacs_prefix() { # {{{1
     # Default Emacs prefix.
     # @note Updated 2020-06-29.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "${HOME:?}/.emacs.d"
     return 0
 }
@@ -159,6 +172,7 @@ _koopa_ensembl_perl_api_prefix() { # {{{1
     # Ensembl Perl API prefix.
     # @note Updated 2021-05-04.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/ensembl-perl-api"
     return 0
 }
@@ -168,6 +182,7 @@ _koopa_fzf_prefix() { # {{{1
     # fzf prefix.
     # @note Updated 2020-11-19.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/fzf"
     return 0
 }
@@ -186,6 +201,7 @@ _koopa_go_packages_prefix() { # {{{1
     # - https://golang.org/wiki/SettingGOPATH to set a custom GOPATH
     # """
     local version
+    [ "$#" -le 1 ] || return 1
     version="${1:-}"
     if [ -z "$version" ]
     then
@@ -202,6 +218,7 @@ _koopa_go_prefix() { # {{{1
     # Go prefix.
     # @note Updated 2020-11-19.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/go"
     return 0
 }
@@ -211,6 +228,7 @@ _koopa_homebrew_cellar_prefix() { # {{{1
     # Homebrew cellar prefix.
     # @note Updated 2020-07-01.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_homebrew_prefix)/Cellar"
     return 0
 }
@@ -223,6 +241,7 @@ _koopa_homebrew_prefix() { # {{{1
     # @seealso https://brew.sh/
     # """
     local arch x
+    [ "$#" -eq 0 ] || return 1
     x="${HOMEBREW_PREFIX:-}"
     if [ -z "$x" ]
     then
@@ -256,7 +275,8 @@ _koopa_homebrew_ruby_packages_prefix() { # {{{1
     # @note Updated 2021-05-04.
     # """
     local api_version homebrew_prefix prefix
-    _koopa_is_installed brew ruby || return 0
+    [ "$#" -eq 0 ] || return 1
+    _koopa_is_installed 'brew' 'ruby' || return 0
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     api_version="$(_koopa_ruby_api_version)"
     prefix="${homebrew_prefix}/lib/ruby/gems/${api_version}"
@@ -269,6 +289,7 @@ _koopa_include_prefix() { # {{{1
     # Koopa system includes prefix.
     # @note Updated 2020-07-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_prefix)/include"
     return 0
 }
@@ -284,6 +305,7 @@ _koopa_java_prefix() { # {{{1
     # - https://stackoverflow.com/questions/22290554
     # """
     local prefix
+    [ "$#" -eq 0 ] || return 1
     if [ -n "${JAVA_HOME:-}" ]
     then
         # Allow user to override default.
@@ -291,7 +313,7 @@ _koopa_java_prefix() { # {{{1
     elif [ -x '/usr/libexec/java_home' ]
     then
         # Handle macOS config.
-        prefix="$(/usr/libexec/java_home)"
+        prefix="$('/usr/libexec/java_home')"
     else
         # Otherwise assume latest OpenJDK.
         # This works on Linux installs, including Docker images.
@@ -306,6 +328,7 @@ _koopa_lmod_prefix() { # {{{1
     # Lmod prefix.
     # @note Updated 2021-01-20.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/lmod"
     return 0
 }
@@ -317,6 +340,7 @@ _koopa_local_data_prefix() { # {{{1
     #
     # This is the default app path when koopa is installed per user.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_xdg_data_home)"
     return 0
 }
@@ -327,6 +351,7 @@ _koopa_make_prefix() { # {{{1
     # @note Updated 2020-08-09.
     # """
     local prefix
+    [ "$#" -eq 0 ] || return 1
     if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
     then
         prefix="$KOOPA_MAKE_PREFIX"
@@ -345,6 +370,7 @@ _koopa_msigdb_prefix() { # {{{1
     # MSigDB prefix.
     # @note Updated 2020-05-05.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_refdata_prefix)/msigdb"
     return 0
 }
@@ -354,6 +380,7 @@ _koopa_monorepo_prefix() { # {{{1
     # Git monorepo prefix.
     # @note Updated 2020-07-03.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "${HOME:?}/monorepo"
     return 0
 }
@@ -364,6 +391,7 @@ _koopa_node_packages_prefix() { # {{{1
     # @note Updated 2021-05-25.
     # """
     local version
+    [ "$#" -le 1 ] || return 1
     version="${1:-}"
     if [ -z "$version" ]
     then
@@ -380,6 +408,7 @@ _koopa_openjdk_prefix() { # {{{1
     # OpenJDK prefix.
     # @note Updated 2020-11-19.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/openjdk"
     return 0
 }
@@ -389,6 +418,7 @@ _koopa_opt_prefix() { # {{{1
     # Custom application install prefix.
     # @note Updated 2021-05-17.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_prefix)/opt"
     return 0
 }
@@ -403,6 +433,7 @@ _koopa_perl_packages_prefix() { # {{{1
     # # Inspect the '@INC' variable.
     # """
     local version
+    [ "$#" -le 1 ] || return 1
     version="${1:-}"
     if [ -z "$version" ]
     then
@@ -419,6 +450,7 @@ _koopa_perlbrew_prefix() { # {{{1
     # Perlbrew prefix.
     # @note Updated 2021-05-25.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/perlbrew"
     return 0
 }
@@ -428,6 +460,7 @@ _koopa_pipx_prefix() { # {{{1
     # pipx prefix.
     # @note Updated 2021-05-25.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/pipx"
     return 0
 }
@@ -437,6 +470,7 @@ _koopa_prefix() { # {{{1
     # Koopa prefix (home).
     # @note Updated 2020-01-12.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "${KOOPA_PREFIX:?}"
     return 0
 }
@@ -448,6 +482,7 @@ _koopa_pyenv_prefix() { # {{{1
     #
     # See also approach used for rbenv.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/pyenv"
     return 0
 }
@@ -463,6 +498,7 @@ _koopa_python_packages_prefix() { # {{{1
     # > "$python" -m site
     # """
     local version
+    [ "$#" -le 1 ] || return 1
     version="${1:-}"
     if [ -z "$version" ]
     then
@@ -480,6 +516,7 @@ _koopa_r_packages_prefix() { # {{{1
     # @note Updated 2021-05-25.
     # """
     local version
+    [ "$#" -le 1 ] || return 1
     version="${1:-}"
     if [ -z "$version" ]
     then
@@ -496,6 +533,7 @@ _koopa_rbenv_prefix() { # {{{1
     # Ruby rbenv prefix.
     # @note Updated 2021-05-25.
     # ""
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/rbenv"
     return 0
 }
@@ -505,6 +543,7 @@ _koopa_refdata_prefix() { # {{{1
     # Reference data prefix.
     # @note Updated 2020-05-05.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_data_disk_link_prefix)/refdata"
     return 0
 }
@@ -515,6 +554,7 @@ _koopa_ruby_packages_prefix() { # {{{1
     # @note Updated 2021-05-25.
     # """
     local version
+    [ "$#" -le 1 ] || return 1
     version="${1:-}"
     if [ -z "$version" ]
     then
@@ -537,6 +577,7 @@ _koopa_rust_packages_prefix() { # {{{1
     # - RUSTUP_HOME
     # """
     local version
+    [ "$#" -le 1 ] || return 1
     version="${1:-}"
     if [ -z "$version" ]
     then
@@ -553,6 +594,7 @@ _koopa_rust_prefix() { # {{{1
     # Rust (rustup) install prefix.
     # @note Updated 2021-05-25.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/rust"
     return 0
 }
@@ -562,6 +604,7 @@ _koopa_scripts_private_prefix() { # {{{1
     # Private scripts prefix.
     # @note Updated 2020-02-15.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_config_prefix)/scripts-private"
     return 0
 }
@@ -571,6 +614,7 @@ _koopa_spacevim_prefix() { # {{{1
     # SpaceVim prefix.
     # @note Updated 2021-05-26.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "${HOME:?}/.Spacevim"
     return 0
 }
@@ -580,6 +624,7 @@ _koopa_tests_prefix() { # {{{1
     # Unit tests prefix.
     # @note Updated 2020-06-24.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_prefix)/tests"
     return 0
 }
@@ -589,6 +634,7 @@ _koopa_venv_prefix() { # {{{1
     # Python venv prefix.
     # @note Updated 2021-04-28.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_opt_prefix)/virtualenvs"
     return 0
 }
@@ -599,6 +645,7 @@ _koopa_xdg_cache_home() { # {{{1
     # @note Updated 2021-05-20.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     x="${XDG_CACHE_HOME:-}"
     if [ -z "$x" ]
     then
@@ -614,6 +661,7 @@ _koopa_xdg_config_dirs() { # {{{1
     # @note Updated 2021-05-20.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     x="${XDG_CONFIG_DIRS:-}"
     if [ -z "$x" ] 
     then
@@ -629,6 +677,7 @@ _koopa_xdg_config_home() { # {{{1
     # @note Updated 2021-05-20.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     x="${XDG_CONFIG_HOME:-}"
     if [ -z "$x" ]
     then
@@ -644,6 +693,7 @@ _koopa_xdg_data_dirs() { # {{{1
     # @note Updated 2021-05-20.
     # """
     local make_prefix x
+    [ "$#" -eq 0 ] || return 1
     x="${XDG_DATA_DIRS:-}"
     if [ -z "$x" ]
     then
@@ -660,6 +710,7 @@ _koopa_xdg_data_home() { # {{{1
     # @note Updated 2021-05-20.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     x="${XDG_DATA_HOME:-}"
     if [ -z "$x" ]
     then
@@ -679,6 +730,7 @@ _koopa_xdg_local_home() { # {{{1
     # @seealso
     # - https://www.freedesktop.org/software/systemd/man/file-hierarchy.html
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print "${HOME:?}/.local"
     return 0
 }
@@ -694,6 +746,7 @@ _koopa_xdg_runtime_dir() { # {{{1
     # - Should not store large files as it may be mounted as a tmpfs.
     # """
     local user_id x
+    [ "$#" -eq 0 ] || return 1
     x="${XDG_RUNTIME_DIR:-}"
     if [ -z "$x" ]
     then

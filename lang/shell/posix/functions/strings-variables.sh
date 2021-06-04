@@ -6,6 +6,7 @@ __koopa_id() { # {{{1
     # @note Updated 2021-05-25.
     # """
     local x
+    [ "$#" -gt 0 ] || return 1
     x="$(id "$@")"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
@@ -20,6 +21,7 @@ _koopa_arch() { # {{{1
     # e.g. Intel: x86_64; ARM: aarch64.
     # """
     local uname x
+    [ "$#" -eq 0 ] || return 1
     uname='uname'
     x="$("$uname" -m)"
     [ -n "$x" ] || return 1
@@ -38,6 +40,7 @@ _koopa_arch2() { # {{{1
     # - https://wiki.debian.org/ArchitectureSpecificsMemo
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     x="$(_koopa_arch)"
     case "$x" in
         aarch64)
@@ -63,6 +66,7 @@ _koopa_cpu_count() { # {{{1
     # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
     # """
     local n
+    [ "$#" -eq 0 ] || return 1
     if _koopa_is_installed nproc
     then
         n="$(nproc)"
@@ -88,6 +92,7 @@ _koopa_debian_os_codename() { # {{{1
     # @note Updated 2021-06-02.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_installed 'lsb_release' || return 0
     x="$(lsb_release -cs)"
     [ -n "$x" ] || return 1
@@ -113,6 +118,7 @@ _koopa_git_branch() { # {{{1
     #       git-completion.bash?id=HEAD
     # """
     local branch
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_git || return 0
     git='git'
     branch="$("$git" symbolic-ref --short -q 'HEAD' 2>/dev/null)"
@@ -125,6 +131,7 @@ _koopa_group() { # {{{1
     # Current user's default group.
     # @note Updated 2020-06-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     __koopa_id -gn
     return 0
 }
@@ -134,6 +141,7 @@ _koopa_group_id() { # {{{1
     # Current user's default group ID.
     # @note Updated 2020-06-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     __koopa_id -g
     return 0
 }
@@ -144,6 +152,7 @@ _koopa_hostname() { # {{{1
     # @note Updated 2021-05-21
     # """
     local uname
+    [ "$#" -eq 0 ] || return 1
     uname='uname'
     x="$("$uname" -n)"
     [ -n "$x" ] || return 1
@@ -167,6 +176,7 @@ _koopa_host_id() { # {{{1
     # Alternatively, can use 'hostname -d' for reverse lookups.
     # """
     local id
+    [ "$#" -eq 0 ] || return 1
     if [ -r '/etc/hostname' ]
     then
         id="$(cat '/etc/hostname')"
@@ -208,6 +218,7 @@ _koopa_macos_color_mode() { # {{{1
     # @note Updated 2021-05-07.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     if _koopa_macos_is_dark_mode
     then
         x='dark'
@@ -226,6 +237,7 @@ _koopa_macos_os_codename() { # {{{1
     # - https://unix.stackexchange.com/questions/234104/
     # """
     local version x
+    [ "$#" -eq 0 ] || return 1
     version="$(_koopa_macos_version)"
     case "$version" in
         11.*)
@@ -300,6 +312,7 @@ _koopa_mem_gb() { # {{{1
     # Usage of 'int()' in awk rounds down.
     # """
     local awk denom mem
+    [ "$#" -eq 0 ] || return 1
     awk='awk'
     if _koopa_is_macos
     then
@@ -323,6 +336,7 @@ _koopa_os_codename() { # {{{1
     # Operating system codename.
     # @note Updated 2021-06-02.
     # """
+    [ "$#" -eq 0 ] || return 1
     if _koopa_is_debian_like
     then
         _koopa_debian_os_codename
@@ -343,8 +357,12 @@ _koopa_os_id() { # {{{1
     # Just return the OS platform ID (e.g. debian).
     # """
     local cut x
+    [ "$#" -eq 0 ] || return 1
     cut='cut'
-    x="$(_koopa_os_string | "$cut" -d '-' -f 1)"
+    x="$( \
+        _koopa_os_string \
+        | "$cut" -d '-' -f 1 \
+    )"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
@@ -361,6 +379,7 @@ _koopa_os_string() { # {{{1
     # If we ever add Windows support, look for: cygwin, mingw32*, msys*.
     # """
     local awk id release_file string tr version
+    [ "$#" -eq 0 ] || return 1
     if _koopa_is_macos
     then
         id='macos'
@@ -411,6 +430,7 @@ _koopa_shell_name() { # {{{1
     # @note Updated 2021-05-25.
     # """
     local shell str
+    [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_locate_shell)"
     str="$(basename "$shell")"
     [ -n "$str" ] || return 1
@@ -424,6 +444,7 @@ _koopa_today() { # {{{1
     # @note Updated 2021-05-26.
     # """
     local date str
+    [ "$#" -eq 0 ] || return 1
     date='date'
     str="$("$date" '+%Y-%m-%d')"
     [ -n "$str" ] || return 1
@@ -438,6 +459,7 @@ _koopa_user() { # {{{1
     #
     # Alternatively, can use 'whoami' here.
     # """
+    [ "$#" -eq 0 ] || return 1
     __koopa_id -un
     return 0
 }
@@ -447,6 +469,7 @@ _koopa_user_id() { # {{{1
     # Current user ID.
     # @note Updated 2020-04-16.
     # """
+    [ "$#" -eq 0 ] || return 1
     __koopa_id -u
     return 0
 }
