@@ -36,9 +36,9 @@ koopa::get_homebrew_cask_version() { # {{{1
     # @examples koopa::get_homebrew_cask_version gpg-suite
     # # 2019.2
     # """
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed brew
     local cask x
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed 'brew'
     for cask in "$@"
     do
         x="$(brew info --cask "$cask")"

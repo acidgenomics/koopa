@@ -134,7 +134,7 @@ koopa::local_ip_address() { # {{{1
     tail="$(koopa::locate_tail)"
     if koopa::is_macos
     then
-        koopa::assert_is_installed ifconfig
+        koopa::assert_is_installed 'ifconfig'
         # shellcheck disable=SC2016
         x="$( \
             ifconfig \
@@ -144,7 +144,7 @@ koopa::local_ip_address() { # {{{1
             | "$tail" -n 1
         )"
     else
-        koopa::assert_is_installed hostname
+        koopa::assert_is_installed 'hostname'
         # shellcheck disable=SC2016
         x="$( \
             hostname -I \
@@ -208,7 +208,7 @@ koopa::public_ip_address() { # {{{1
     # """
     local curl x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed dig
+    koopa::assert_is_installed 'dig'
     x="$(dig +short 'myip.opendns.com' '@resolver1.opendns.com')"
     # Fallback in case dig approach doesn't work.
     if [[ -z "$x" ]]

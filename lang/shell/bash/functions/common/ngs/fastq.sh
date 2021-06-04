@@ -71,7 +71,7 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
     # """
     local filelist id
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed fastq-dump
+    koopa::assert_is_installed 'fastq-dump'
     filelist="${1:-SRR_Acc_List.txt}"
     koopa::assert_is_file "$filelist"
     while read -r id
@@ -170,7 +170,7 @@ koopa::fastq_reads_per_file() { # {{{1
     # @note Updated 2020-08-12.
     # """
     local dir
-    koopa::assert_is_installed awk wc zcat
+    koopa::assert_is_installed 'awk' 'wc' 'zcat'
     dir="${1:-.}"
     dir="$(koopa::strip_trailing_slash "$dir")"
     # Divide by 4.

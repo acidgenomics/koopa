@@ -184,7 +184,7 @@ koopa:::install_gnupg() { # {{{1
         --installer='gnupg-gcrypt' \
         --opt="$opt_str" \
         "$@"
-    if koopa::is_installed gpg-agent
+    if koopa::is_installed 'gpg-agent'
     then
         gpgconf --kill gpg-agent
     fi

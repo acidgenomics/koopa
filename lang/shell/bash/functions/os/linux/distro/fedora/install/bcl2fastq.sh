@@ -7,7 +7,7 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     # """
     local arch arch2 major_version name platform platform2 version version2
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed rpm
+    koopa::assert_is_installed 'rpm'
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='bcl2fastq'

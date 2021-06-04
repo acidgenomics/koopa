@@ -11,10 +11,9 @@ koopa::install_proj() { # {{{1
 koopa:::install_proj() { # {{{1
     # """
     # Install PROJ.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-04.
     # """
     local arch conf_args file make_prefix prefix url version
-    koopa::assert_is_installed sqlite3
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     arch="$(koopa::arch)"
@@ -24,7 +23,7 @@ koopa:::install_proj() { # {{{1
     conf_args=("--prefix=${prefix}")
     if koopa::is_macos
     then
-        koopa::activate_homebrew_opt_prefix pkg-config libtiff sqlite3
+        koopa::activate_homebrew_opt_prefix 'pkg-config' 'libtiff' 'sqlite3'
     elif koopa_is_linux
     then
         make_prefix="$(koopa::make_prefix)"

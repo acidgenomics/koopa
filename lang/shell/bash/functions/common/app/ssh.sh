@@ -18,7 +18,7 @@ koopa::generate_ssh_key() { # {{{1
     # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
     # """
     local comment file flags hostname key_name user
-    koopa::is_installed ssh-keygen || return 0
+    koopa::assert_is_installed 'ssh-keygen'
     user="$(koopa::user)"
     hostname="$(koopa::hostname)"
     comment="${user}@${hostname}"

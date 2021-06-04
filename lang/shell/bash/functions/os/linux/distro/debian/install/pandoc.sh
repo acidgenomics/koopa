@@ -7,7 +7,7 @@ koopa::debian_install_pandoc() { # {{{1
     # """
     local arch name name_fancy tmp_dir version
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed dpkg sudo
+    koopa::assert_is_installed 'dpkg' 'sudo'
     name='pandoc'
     name_fancy='Pandoc'
     koopa::install_start "$name_fancy"

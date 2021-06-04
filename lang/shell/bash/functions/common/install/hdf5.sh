@@ -27,7 +27,7 @@ koopa:::install_hdf5() { # {{{1
         koopa::assert_is_dir "$gfortran_prefix"
         koopa::add_to_path_start "${gfortran_prefix}/bin"
     fi
-    koopa::assert_is_installed gfortran
+    koopa::assert_is_installed 'gfortran'
     minor_version="$(koopa::major_minor_version "$version")"
     file="${name}-${version}.tar.gz"
     url="https://support.hdfgroup.org/ftp/HDF5/releases/\

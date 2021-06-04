@@ -84,7 +84,7 @@ koopa::install_python_packages() { # {{{1
             'six'
             'wheel'
         )
-        if ! koopa::is_installed brew
+        if ! koopa::is_installed 'brew'
         then
             pkgs+=(
                 'black'

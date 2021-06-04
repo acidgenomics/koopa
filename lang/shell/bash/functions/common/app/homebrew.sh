@@ -23,7 +23,7 @@ koopa::brew_cleanup() { # {{{1
     # Clean up Homebrew.
     # @note Updated 2021-04-22.
     # """
-    koopa::assert_is_installed brew
+    koopa::assert_is_installed 'brew'
     koopa::alert 'Cleaning up Homebrew install.'
     brew cleanup -s || true
     koopa::rm "$(brew --cache)"
@@ -81,7 +81,7 @@ koopa::brew_reset_permissions() { # {{{1
     # @note Updated 2021-05-20.
     # """
     local group prefix user
-    koopa::assert_is_installed brew
+    koopa::assert_is_installed 'brew'
     koopa::assert_is_admin
     user="$(koopa::user)"
     group="$(koopa::admin_group)"

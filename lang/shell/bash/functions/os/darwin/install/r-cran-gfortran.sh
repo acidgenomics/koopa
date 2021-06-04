@@ -50,8 +50,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
     if [[ -d "$prefix" ]]
     then
-        # FIXME Use 'alert_is_installed' here.
-        koopa::alert_note "${name} already installed at '${prefix}'."
+        koopa::alert_is_installed "$name_fancy" "$prefix"
         return 0
     fi
     koopa::install_start "$name_fancy" "$version" "$prefix"

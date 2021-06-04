@@ -89,7 +89,7 @@ koopa::sys_info() { # {{{
     )
     array+=("")
     # Show neofetch info, if installed.
-    if koopa::is_installed neofetch
+    if koopa::is_installed 'neofetch'
     then
         readarray -t nf <<< "$(neofetch --stdout)"
         array+=(
@@ -415,7 +415,7 @@ koopa::variables() { # {{{1
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed vim
+    koopa::assert_is_installed 'vim'
     vim "$(koopa::include_prefix)/variables.txt"
     return 0
 }

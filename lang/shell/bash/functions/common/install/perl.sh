@@ -68,12 +68,12 @@ koopa::install_perl_packages() { # {{{1
     fi
     koopa::activate_perl_packages
     export PERL_MM_USE_DEFAULT=1
-    if ! koopa::is_installed cpanm
+    if ! koopa::is_installed 'cpanm'
     then
         koopa::install_start 'CPAN Minus'
         cpan -i 'App::cpanminus' &>/dev/null
     fi
-    koopa::assert_is_installed cpanm
+    koopa::assert_is_installed 'cpanm'
     if [[ "$#" -gt 0 ]]
     then
         modules=("$@")

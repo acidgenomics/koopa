@@ -3,7 +3,7 @@
 koopa::linux_java_update_alternatives() { # {{{1
     # """
     # Update Java alternatives.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-06-04.
     #
     # This step is intentionally skipped for non-admin installs, when calling
     # from 'install-openjdk' script.
@@ -11,7 +11,7 @@ koopa::linux_java_update_alternatives() { # {{{1
     local prefix priority
     koopa::assert_has_args_eq "$#" 1
     koopa::is_shared_install || return 0
-    koopa::is_installed update-alternatives || return 0
+    koopa::assert_is_installed 'update-alternatives'
     prefix="${1:?}"
     prefix="$(koopa::realpath "$prefix")"
     priority=100

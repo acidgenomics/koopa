@@ -18,7 +18,7 @@ koopa::samtools_convert_sam_to_bam() { # {{{1
     # """
     local bam_bn sam_bn threads
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed samtools
+    koopa::assert_is_installed 'samtools'
     while (("$#"))
     do
         case "$1" in

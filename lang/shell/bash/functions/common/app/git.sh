@@ -477,7 +477,7 @@ koopa::git_rm_untracked() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_git
     git="$(koopa::locate_git)"
-    koopa::assert_is_installed git
+    koopa::assert_is_installed 'git'
     "$git" clean -dfx
     return 0
 }

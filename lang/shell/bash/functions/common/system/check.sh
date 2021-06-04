@@ -152,7 +152,7 @@ koopa::check_mount() { # {{{1
     # """
     local mnt
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed find
+    koopa::assert_is_installed 'find'
     mnt="${1:?}"
     if [[ "$(find "$mnt" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]]
     then
@@ -170,7 +170,7 @@ koopa::check_system() { # {{{1
     local current expected
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed R
-    if ! koopa::is_r_package_installed koopa
+    if ! koopa::is_r_package_installed 'koopa'
     then
         koopa::install_r_koopa
     else

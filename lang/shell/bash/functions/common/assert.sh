@@ -244,7 +244,7 @@ koopa::assert_is_conda_active() { # {{{1
 
 koopa::assert_is_current_version() { # {{{1
     # """
-    # Assert that programs are installed and current.
+    # Assert that programs are installed (and current).
     # @note Updated 2020-02-16.
     # """
     local arg expected
@@ -730,7 +730,6 @@ koopa::assert_is_venv_active() { # {{{1
     # @note Updated 2019-10-23.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed pip
     if ! koopa::is_venv_active
     then
         koopa::stop 'No active Python venv detected.'

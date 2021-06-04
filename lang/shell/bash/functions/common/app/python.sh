@@ -160,7 +160,7 @@ koopa::python_remove_pycache() { # {{{1
     # """
     local find pos prefix python rm xargs
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed find
+    koopa::assert_is_installed 'find'
     find="$(koopa::locate_find)"
     python="$(koopa::locate_python)"
     rm="$(koopa::locate_rm)"

@@ -12,8 +12,12 @@ koopa::fedora_install_wine() { # {{{1
     # - https://wiki.winehq.org/Fedora
     # """
     local name_fancy repo_url version
-    koopa::is_installed wine && return 0
     name_fancy='Wine'
+    if koopa::is_installed 'wine'
+    then
+        koopa::alert_is_installed "$name_fancy"
+        return 0
+    fi
     koopa::install_start "$name_fancy"
     version="$( \
         grep 'VERSION_ID=' '/etc/os-release' \

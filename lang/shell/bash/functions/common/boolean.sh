@@ -148,7 +148,7 @@ koopa::has_passwordless_sudo() { # {{{1
     # https://askubuntu.com/questions/357220
     # """
     koopa::assert_has_no_args "$#"
-    koopa::is_installed sudo || return 1
+    koopa::is_installed 'sudo' || return 1
     koopa::is_root && return 0
     sudo -n true 2>/dev/null && return 0
     return 1
@@ -186,7 +186,7 @@ koopa::is_admin() { # {{{1
     # Always return true for root user.
     [[ "$(koopa::user_id)" -eq 0 ]] && return 0
     # Return false if 'sudo' program is not installed.
-    koopa::is_installed sudo || return 1
+    koopa::is_installed 'sudo' || return 1
     # Early return true if user has passwordless sudo enabled.
     koopa::has_passwordless_sudo && return 0
     # Check if user is any accepted admin group.
@@ -235,7 +235,7 @@ koopa::is_bash_ok() { # {{{1
     # 'read' that we have to handle with special care here.
     # """
     local major_version version
-    koopa::is_installed bash || return 1
+    koopa::is_installed 'bash' || return 1
     version="$(koopa::get_version 'bash')"
     major_version="$(koopa::major_version "$version")"
     [[ "$major_version" -ge 4 ]]
@@ -275,7 +275,7 @@ koopa::is_doom_emacs_installed() { # {{{1
     # """
     local init_file prefix
     koopa::assert_has_no_args "$#"
-    koopa::is_installed emacs || return 1
+    koopa::is_installed 'emacs' || return 1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
@@ -521,7 +521,7 @@ koopa::is_spacemacs_installed() { # {{{1
     # """
     local init_file prefix
     koopa::assert_has_no_args "$#"
-    koopa::is_installed emacs || return 1
+    koopa::is_installed 'emacs' || return 1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
