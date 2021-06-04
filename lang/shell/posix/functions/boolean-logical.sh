@@ -13,6 +13,7 @@ __koopa_git_has_unstaged_changes() { # {{{1
     # - https://stackoverflow.com/questions/28296130/
     # """
     local git x
+    [ "$#" -eq 0 ] || return 1
     git='git'
     "$git" update-index --refresh >/dev/null 2>&1
     x="$("$git" diff-index 'HEAD' -- 2>/dev/null)"
@@ -28,6 +29,7 @@ __koopa_git_needs_pull_or_push() { # {{{1
     # We're handling this case by piping errors to '/dev/null'.
     # """
     local git rev_1 rev_2
+    [ "$#" -eq 0 ] || return 1
     git='git'
     rev_1="$("$git" rev-parse 'HEAD' 2>/dev/null)"
     rev_2="$("$git" rev-parse '@{u}' 2>/dev/null)"
@@ -45,6 +47,7 @@ _koopa_expr() { # {{{1
     # See also:
     # - https://stackoverflow.com/questions/21115121
     # """
+    [ "$#" -eq 2 ] || return 1
     expr "${1:?}" : "${2:?}" 1>/dev/null
 }
 
@@ -60,6 +63,7 @@ _koopa_is_alias() { # {{{1
     # koopa::is_alias R
     # """
     local cmd str
+    [ "$#" -gt 0 ] || return 1
     for cmd in "$@"
     do
         _koopa_is_installed "$cmd" || return 1
@@ -75,6 +79,7 @@ _koopa_is_alpine() { # {{{1
     # Is the operating system Alpine Linux?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'alpine'
 }
 
@@ -83,6 +88,7 @@ _koopa_is_amzn() { # {{{1
     # Is the operating system Amazon Linux?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'amzn'
 }
 
@@ -91,6 +97,7 @@ _koopa_is_arch() { # {{{1
     # Is the operating system Arch Linux?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'arch'
 }
 
@@ -99,6 +106,7 @@ _koopa_is_aws() { # {{{1
     # Is the current session running on AWS?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_host 'aws'
 }
 
@@ -107,6 +115,7 @@ _koopa_is_azure() { # {{{1
     # Is the current session running on Microsoft Azure?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_host 'azure'
 }
 
@@ -115,6 +124,7 @@ _koopa_is_centos() { # {{{1
     # Is the operating system CentOS?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'centos'
 }
 
@@ -123,6 +133,7 @@ _koopa_is_centos_like() { # {{{1
     # Is the operating system CentOS-like?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os_like 'centos'
 }
 
@@ -131,6 +142,7 @@ _koopa_is_conda_active() { # {{{1
     # Is there a Conda environment active?
     # @note Updated 2019-10-20.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
@@ -139,6 +151,7 @@ _koopa_is_debian() { # {{{1
     # Is the operating system Debian?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'debian'
 }
 
@@ -147,6 +160,7 @@ _koopa_is_debian_like() { # {{{1
     # Is the operating system Debian-like?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os_like 'debian'
 }
 
@@ -158,6 +172,7 @@ _koopa_is_docker() { # {{{1
     # - https://stackoverflow.com/questions/23513045
     # """
     local file grep pattern
+    [ "$#" -eq 0 ] || return 1
     file='/proc/1/cgroup'
     [ -f "$file" ] || return 1
     pattern=':/docker/'
@@ -170,6 +185,7 @@ _koopa_is_fedora() { # {{{1
     # Is the operating system Fedora?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'fedora'
 }
 
@@ -178,6 +194,7 @@ _koopa_is_fedora_like() { # {{{1
     # Is the operating system Fedora-like?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os_like 'fedora'
 }
 
@@ -189,6 +206,7 @@ _koopa_is_git() { # {{{1i
     # - https://stackoverflow.com/questions/2180270
     # """
     local git
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_git_toplevel '.' && return 0
     git='git'
     "$git" rev-parse --git-dir >/dev/null 2>&1 || return 1
@@ -206,6 +224,7 @@ _koopa_is_git_clean() { # {{{1
     # - https://stackoverflow.com/questions/3878624
     # - https://stackoverflow.com/questions/3258243
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_git || return 1
     __koopa_git_has_unstaged_changes && return 1
     __koopa_git_needs_pull_or_push && return 1
@@ -215,9 +234,10 @@ _koopa_is_git_clean() { # {{{1
 _koopa_is_git_toplevel() { # {{{1
     # """
     # Is the working directory the top level of a git repository?
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-06-04.
     # """
     local dir
+    [ "$#" -le 1 ] || return 1
     dir="${1:-.}"
     [ -e "${dir}/.git" ]
 }
@@ -228,6 +248,7 @@ _koopa_is_gnu() { # {{{1
     # @note Updated 2020-07-20.
     # """
     local cmd str
+    [ "$#" -gt 0 ] || return 1
     for cmd in "$@"
     do
         _koopa_is_installed "$cmd" || return 1
@@ -242,6 +263,7 @@ _koopa_is_host() { # {{{1
     # Does the current host match?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 1 ] || return 1
     [ "$(_koopa_host_id)" = "${1:?}" ]
 }
 
@@ -251,6 +273,7 @@ _koopa_is_installed() { # {{{1
     # @note Updated 2020-07-05.
     # """
     local cmd
+    [ "$#" -gt 0 ] || return 1
     for cmd in "$@"
     do
         command -v "$cmd" >/dev/null || return 1
@@ -264,6 +287,7 @@ _koopa_is_interactive() { # {{{1
     # @note Updated 2021-05-27.
     # Consider checking for tmux or subshell here.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ "${KOOPA_INTERACTIVE:-0}" -eq 1 ] && return 0
     [ "${KOOPA_FORCE:-0}" -eq 1 ] && return 0
     _koopa_str_match_posix "$-" 'i' && return 0
@@ -276,6 +300,7 @@ _koopa_is_linux() { # {{{1
     # Is the current operating system Linux?
     # @note Updated 2020-02-05.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ "$(uname -s)" = 'Linux' ]
 }
 
@@ -284,6 +309,7 @@ _koopa_is_local_install() { # {{{1
     # Is koopa installed only for the current user?
     # @note Updated 2020-04-29.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_str_match_regex "$(_koopa_prefix)" "^${HOME}"
 }
 
@@ -292,6 +318,7 @@ _koopa_is_macos() { # {{{1
     # Is the operating system macOS (Darwin)?
     # @note Updated 2020-01-13.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ "$(uname -s)" = 'Darwin' ]
 }
 
@@ -300,6 +327,7 @@ _koopa_is_opensuse() { # {{{1
     # Is the operating system openSUSE?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'opensuse'
 }
 
@@ -310,6 +338,7 @@ _koopa_is_os() { # {{{1
     #
     # This will match Debian but not Ubuntu for a Debian check.
     # """
+    [ "$#" -eq 1 ] || return 1
     [ "$(_koopa_os_id)" = "${1:?}" ]
 }
 
@@ -321,6 +350,7 @@ _koopa_is_os_like() { # {{{1
     # This will match Debian and Ubuntu for a Debian check.
     # """
     local grep file id
+    [ "$#" -eq 1 ] || return 1
     grep='grep'
     id="${1:?}"
     _koopa_is_os "$id" && return 0
@@ -337,6 +367,7 @@ _koopa_is_os_version() { # {{{1
     # @note Updated 2021-05-24.
     # """
     local file grep version
+    [ "$#" -eq 1 ] || return 1
     grep='grep'
     version="${1:?}"
     file='/etc/os-release'
@@ -353,6 +384,7 @@ _koopa_is_qemu() { # {{{1
     # machine, and vice versa.
     # """
     local basename cmd real_cmd
+    [ "$#" -eq 0 ] || return 1
     basename='basename'
     cmd="/proc/${$}/exe"
     [ -L "$cmd" ] || return 1
@@ -370,6 +402,7 @@ _koopa_is_raspbian() { # {{{1
     # Is the operating system Raspbian?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'raspbian'
 }
 
@@ -378,6 +411,7 @@ _koopa_is_remote() { # {{{1
     # Is the current shell session a remote connection over SSH?
     # @note Updated 2019-06-25.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ -n "${SSH_CONNECTION:-}" ]
 }
 
@@ -386,6 +420,7 @@ _koopa_is_rhel() { # {{{1
     # Is the operating system RHEL?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'rhel'
 }
 
@@ -394,6 +429,7 @@ _koopa_is_rhel_like() { # {{{1
     # Is the operating system RHEL-like?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os_like 'rhel'
 }
 
@@ -402,6 +438,7 @@ _koopa_is_rhel_ubi() { # {{{
     # Is the operating system a RHEL universal base image (UBI)?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ -f '/etc/yum.repos.d/ubi.repo' ]
 }
 
@@ -410,6 +447,7 @@ _koopa_is_rhel_7_like() { # {{{1
     # Is the operating system RHEL 7-like?
     # @note Updated 2021-03-25.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_rhel_like && _koopa_is_os_version 7
 }
 
@@ -418,6 +456,7 @@ _koopa_is_rhel_8_like() { # {{{1
     # Is the operating system RHEL 8-like?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_rhel_like && _koopa_is_os_version 8
 }
 
@@ -426,6 +465,7 @@ _koopa_is_root() { # {{{1
     # Is the current user root?
     # @note Updated 2020-04-16.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ "$(_koopa_user_id)" -eq 0 ]
 }
 
@@ -434,6 +474,7 @@ _koopa_is_rstudio() { # {{{1
     # Is the terminal running inside RStudio?
     # @note Updated 2020-06-19.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ -n "${RSTUDIO:-}" ]
 }
 
@@ -460,6 +501,7 @@ _koopa_is_set_nounset() { # {{{1
     # setopt
     # Enabled: 'nounset'.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_str_match_posix "$(set +o)" 'set -o nounset'
 }
 
@@ -468,6 +510,7 @@ _koopa_is_shared_install() { # {{{1
     # Is koopa installed for all users (shared)?
     # @note Updated 2019-06-25.
     # """
+    [ "$#" -eq 0 ] || return 1
     ! _koopa_is_local_install
 }
 
@@ -476,6 +519,7 @@ _koopa_is_subshell() { # {{{1
     # Is koopa running inside a subshell?
     # @note Updated 2021-05-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
 }
 
@@ -484,6 +528,7 @@ _koopa_is_tmux() { # {{{1
     # Is current session running inside tmux?
     # @note Updated 2020-02-26.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ -n "${TMUX:-}" ]
 }
 
@@ -492,7 +537,8 @@ _koopa_is_tty() { # {{{1
     # Is current shell a teletypewriter?
     # @note Updated 2020-07-03.
     # """
-    _koopa_is_installed tty || return 1
+    [ "$#" -eq 0 ] || return 1
+    _koopa_is_installed 'tty' || return 1
     tty >/dev/null 2>&1 || false
 }
 
@@ -501,6 +547,7 @@ _koopa_is_ubuntu() { # {{{1
     # Is the operating system Ubuntu?
     # @note Updated 2020-04-29.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os 'ubuntu'
 }
 
@@ -509,6 +556,7 @@ _koopa_is_ubuntu_like() { # {{{1
     # Is the operating system Ubuntu-like?
     # @note Updated 2020-08-06.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_os_like 'ubuntu'
 }
 
@@ -517,6 +565,7 @@ _koopa_is_venv_active() { # {{{1
     # Is there a Python virtual environment active?
     # @note Updated 2019-10-20.
     # """
+    [ "$#" -eq 0 ] || return 1
     [ -n "${VIRTUAL_ENV:-}" ]
 }
 
@@ -526,6 +575,7 @@ _koopa_macos_is_dark_mode() { # {{{1
     # @note Updated 2021-05-05.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     x=$(defaults read -g 'AppleInterfaceStyle' 2>/dev/null)
     [ "$x" = 'Dark' ]
 }
@@ -535,5 +585,6 @@ _koopa_macos_is_light_mode() { # {{{1
     # Is the current terminal running in light mode?
     # @note Updated 2021-05-05.
     # """
+    [ "$#" -eq 0 ] || return 1
     ! _koopa_macos_is_dark_mode
 }

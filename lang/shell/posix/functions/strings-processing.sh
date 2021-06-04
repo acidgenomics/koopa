@@ -9,6 +9,7 @@ _koopa_camel_case_simple() { # {{{1
     # https://stackoverflow.com/questions/34420091/
     # """
     local sed string
+    [ "$#" -gt 0 ] || return 1
     sed='sed'
     for string in "$@"
     do
@@ -31,6 +32,7 @@ _koopa_gsub() { # {{{1
     # ## cc
     # """
     local pattern replacement sed string
+    [ "$#" -ge 3 ] || return 1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
@@ -59,6 +61,7 @@ _koopa_kebab_case_simple() { # {{{1
     # ## bcbio-nextgen-py
     # """
     local string
+    [ "$#" -gt 0 ] || return 1
     for string in "$@"
     do
         string="$(_koopa_gsub '[^-A-Za-z0-9]' '-' "$string")"
@@ -80,6 +83,7 @@ _koopa_lowercase() { # {{{1
     # https://stackoverflow.com/questions/2264428
     # """
     local string tr
+    [ "$#" -gt 0 ] || return 1
     tr='tr'
     for string in "$@"
     do
@@ -139,6 +143,7 @@ _koopa_snake_case_simple() { # {{{1
     # ## bcbio_nextgen_py
     # """
     local string
+    [ "$#" -gt 0 ] || return 1
     for string in "$@"
     do
         string="$(_koopa_gsub '[^A-Za-z0-9_]' '_' "$string")"
@@ -161,6 +166,7 @@ _koopa_strip_left() { # {{{1
     # ## White Lady
     # """
     local pattern string
+    [ "$#" -ge 2 ] || return 1
     pattern="${1:?}"
     shift 1
     for string in "$@"
@@ -183,6 +189,7 @@ _koopa_strip_right() { # {{{1
     # ## Michael J.
     # """
     local pattern string
+    [ "$#" -ge 2 ] || return 1
     pattern="${1:?}"
     shift 1
     for string in "$@"
@@ -205,6 +212,7 @@ _koopa_strip_trailing_slash() { # {{{1
     # ## ./dir1
     # ## ./dir2
     # """
+    [ "$#" -gt 0 ] || return 1
     _koopa_strip_right '/' "$@"
     return 0
 }
@@ -223,6 +231,7 @@ _koopa_sub() { # {{{1
     # ## aa
     # """
     local pattern replacement sed string
+    [ "$#" -ge 3 ] || return 1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
@@ -250,6 +259,7 @@ _koopa_trim_ws() { # {{{1
     # _koopa_trim_ws '  hello world  ' ' foo bar '
     # """
     local string
+    [ "$#" -gt 0 ] || return 1
     for string in "$@"
     do
         string="${string#${string%%[![:space:]]*}}"

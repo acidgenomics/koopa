@@ -6,6 +6,7 @@ _koopa_macos_version() { # {{{1
     # @note Updated 2020-07-05.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_macos || return 1
     x="$(sw_vers -productVersion)"
     [ -n "$x" ] || return 1
@@ -21,6 +22,7 @@ _koopa_major_version() { # {{{1
     # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
     local cut version x
+    [ "$#" -gt 0 ] || return 1
     cut='cut'
     for version in "$@"
     do
@@ -40,6 +42,7 @@ _koopa_major_minor_version() { # {{{1
     # @note Updated 2021-05-26.
     # """
     local cut version x
+    [ "$#" -gt 0 ] || return 1
     cut='cut'
     for version in "$@"
     do
@@ -59,6 +62,7 @@ _koopa_major_minor_patch_version() { # {{{1
     # @note Updated 2021-05-26.
     # """
     local cut version x
+    [ "$#" -gt 0 ] || return 1
     cut='cut'
     for version in "$@"
     do
@@ -72,6 +76,7 @@ _koopa_major_minor_patch_version() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_ruby_api_version() { # {{{1
     # """
     # Ruby API version.
@@ -81,6 +86,7 @@ _koopa_ruby_api_version() { # {{{1
     # See 'brew info ruby' for details.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_installed 'ruby' || return 1
     x="$(ruby -e 'print Gem.ruby_api_version')"
     [ -n "$x" ] || return 1

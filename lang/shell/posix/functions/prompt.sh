@@ -4,7 +4,7 @@
 _koopa_prompt() { # {{{1
     # """
     # Customize the interactive prompt.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-06-04.
     #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
@@ -29,6 +29,7 @@ _koopa_prompt() { # {{{1
     # """
     local conda conda_color git git_color hostname newline prompt prompt_color
     local shell user user_color venv venv_color wd wd_color
+    [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     hostname="$(_koopa_hostname)"
     # String replacement supported in Bash, Zsh.
@@ -104,6 +105,7 @@ _koopa_prompt_conda() { # {{{1
     # @note Updated 2020-06-30.
     # """
     local env
+    [ "$#" -eq 0 ] || return 1
     env="$(_koopa_conda_env)"
     [ -n "$env" ] || return 0
     _koopa_print " conda:${env}"
@@ -118,6 +120,7 @@ _koopa_prompt_git() { # {{{1
     # Also indicate status with '*' if dirty (i.e. has unstaged changes).
     # """
     local git_branch git_status
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_git || return 0
     git_branch="$(_koopa_git_branch)"
     if _koopa_is_git_clean
@@ -138,6 +141,7 @@ _koopa_prompt_venv() { # {{{1
     # See also: https://stackoverflow.com/questions/10406926
     # """
     local env
+    [ "$#" -eq 0 ] || return 1
     env="$(_koopa_venv)"
     [ -n "$env" ] || return 0
     _koopa_print " venv:${env}"

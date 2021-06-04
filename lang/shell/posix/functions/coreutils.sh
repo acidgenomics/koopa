@@ -3,7 +3,7 @@
 _koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-04.
     #
     # Note that 'readlink -f' only works with GNU coreutils but not BSD
     # (i.e. macOS) variant.
@@ -19,6 +19,7 @@ _koopa_realpath() { # {{{1
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
     local brew_prefix readlink x
+    [ "$#" -gt 0 ] || return 1
     readlink='readlink'
     if _koopa_is_macos
     then

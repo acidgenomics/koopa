@@ -23,6 +23,7 @@ __koopa_str_match() { # {{{1
     # - https://unix.stackexchange.com/questions/233987
     # """
     local OPTIND grep flag pattern string
+    [ "$#" -gt 0 ] || return 1
     grep='grep'
     OPTIND=1
     while getopts 'EFP' opt
@@ -68,6 +69,7 @@ _koopa_str_match() { #{{{1
     # Does the input match a string?
     # @note Updated 2020-07-24.
     # """
+    [ "$#" -gt 0 ] || return 1
     _koopa_str_match_fixed "$@"
 }
 
@@ -76,6 +78,7 @@ _koopa_str_match_fixed() { # {{{1
     # Does the input match a fixed string?
     # @note Updated 2020-07-24.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_str_match -F "$@"
 }
 
@@ -84,6 +87,7 @@ _koopa_str_match_perl() { # {{{
     # Does the input match a Perl-compatible regulare expression (PCRE)?
     # @note Updated 2020-07-24.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_str_match -P "$@"
 }
 
@@ -92,6 +96,7 @@ _koopa_str_match_posix() { # {{{1
     # Evaluate whether a string contains a desired value.
     # @note Updated 2020-07-24.
     # """
+    [ "$#" -eq 2 ] || return 1
     test "${1#*$2}" != "$1"
 }
 
@@ -100,5 +105,6 @@ _koopa_str_match_regex() { # {{{1
     # Does the input match a regular expression?
     # @note Updated 2020-07-24.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_str_match -E "$@"
 }

@@ -20,6 +20,7 @@ _koopa_locate_shell() { # {{{1
     # - https://unix.stackexchange.com/questions/182590/
     # """
     local proc_file pid sed shell
+    [ "$#" -eq 0 ] || return 1
     shell="${KOOPA_SHELL:-}"
     if [ -x "$shell" ]
     then

@@ -11,6 +11,7 @@ _koopa_boolean_nounset() { # {{{1
     # true and 1 is false.
     # """
     local bool
+    [ "$#" -eq 0 ] || return 1
     if _koopa_is_set_nounset
     then
         bool=1
