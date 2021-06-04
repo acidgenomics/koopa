@@ -7,7 +7,7 @@ koopa::add_conda_env_to_path() { # {{{1
     # """
     local bin_dir name
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed conda
+    koopa::assert_is_installed 'conda'
     [[ -z "${CONDA_PREFIX:-}" ]] || return 1
     for name in "$@"
     do

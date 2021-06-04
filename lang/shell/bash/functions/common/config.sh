@@ -142,7 +142,7 @@ koopa::fix_zsh_permissions() { # {{{1
     koopa::sys_chmod 'g-w' \
         "${koopa_prefix}/lang/shell/zsh" \
         "${koopa_prefix}/lang/shell/zsh/functions"
-    koopa::is_installed zsh || return 0
+    koopa::is_installed 'zsh' || return 0
     make_prefix="$(koopa::make_prefix)"
     if [[ -d "${make_prefix}/share/zsh/site-functions" ]]
     then

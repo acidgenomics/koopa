@@ -7,7 +7,7 @@ koopa::jekyll_deploy_to_aws() { # {{{1
     # """
     local bucket_prefix distribution_id local_prefix
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed aws bundle
+    koopa::assert_is_installed 'aws' 'bundle'
     koopa::assert_is_file 'Gemfile'
     local_prefix='_site'
     while (("$#"))
@@ -51,7 +51,7 @@ koopa::jekyll_serve() { # {{{1
     local dir
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_file 'Gemfile'
-    koopa::assert_is_installed bundle
+    koopa::assert_is_installed 'bundle'
     dir="${1:-.}"
     (
         koopa::cd "$dir"

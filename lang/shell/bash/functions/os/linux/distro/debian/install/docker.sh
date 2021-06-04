@@ -3,7 +3,7 @@
 koopa::debian_install_docker() { # {{{1
     # """
     # Install Docker.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-06-04.
     #
     # @seealso
     # - https://docs.docker.com/install/linux/docker-ce/debian/
@@ -14,9 +14,17 @@ koopa::debian_install_docker() { # {{{1
     # Configures at '/var/lib/docker/'.
     # """
     local name_fancy pkgs
-    koopa::is_docker && return 0
-    koopa::is_installed docker && return 0
     name_fancy='Docker'
+    if koopa::is_docker
+    then
+        koopa::alert_note "Can't install ${name_fancy} inside ${name_fancy}."
+        return 0
+    fi
+    if koopa::is_installed 'docker'
+    then
+        koopa::alert_is_installed "$name_fancy"
+        return 0
+    fi
     koopa::install_start "$name_fancy"
     koopa::assert_has_no_args "$#"
     koopa::apt_add_docker_repo

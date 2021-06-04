@@ -6,9 +6,9 @@ koopa::linux_bcl2fastq_indrops() { # {{{1
     # @note Updated 2020-07-20.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed bcl2fastq
+    koopa::assert_is_installed 'bcl2fastq'
     bcl2fastq \
-        --use-bases-mask y*,y*,y*,y* \
+        --use-bases-mask 'y*,y*,y*,y*' \
         --mask-short-adapter-reads 0 \
         --minimum-trimmed-read-length 0 \
         2>&1 | tee 'bcl2fastq-indrops.log'

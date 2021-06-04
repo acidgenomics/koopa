@@ -7,7 +7,7 @@ koopa::macos_create_dmg() { # {{{1
     # """
     local dir name
     koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_installed hdiutil
+    koopa::assert_is_installed 'hdiutil'
     dir="${1:?}"
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"

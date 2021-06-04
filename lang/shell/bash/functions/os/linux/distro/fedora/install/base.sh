@@ -11,11 +11,11 @@ koopa::fedora_install_base() { # {{{1
     # """
     local dict dnf name_fancy pkgs pos
     dnf='dnf'
-    if ! koopa::is_installed dnf && koopa::is_installed yum
+    if ! koopa::is_installed "$dnf" && koopa::is_installed 'yum'
     then
         dnf='yum'
     fi
-    koopa::assert_is_installed "$dnf" sudo
+    koopa::assert_is_installed "$dnf" 'sudo'
     declare -A dict=(
         [base]=1
         [dev]=1

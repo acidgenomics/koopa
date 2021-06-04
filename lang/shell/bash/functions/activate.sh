@@ -23,7 +23,7 @@ _koopa_activate_bash_completion() { # {{{1
     # Add tab completion for many commands.
     # """
     local brew_prefix nounset script
-    if _koopa_is_installed brew
+    if _koopa_is_installed 'brew'
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
         # Ensure existing Homebrew v1 completions continue to work.
@@ -81,7 +81,7 @@ _koopa_activate_bash_prompt() { # {{{1
     # Activate Bash prompt.
     # @note Updated 2020-11-24.
     # """
-    if _koopa_is_installed starship
+    if _koopa_is_installed 'starship'
     then
         _koopa_activate_starship
         return 0

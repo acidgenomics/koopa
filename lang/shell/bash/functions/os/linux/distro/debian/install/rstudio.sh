@@ -12,7 +12,7 @@ koopa::debian_install_rstudio_server() { # {{{1
     # > sudo rstudio-server status
     # """
     local arch os_codename
-    koopa::assert_is_installed gdebi sudo
+    koopa::assert_is_installed 'gdebi' 'sudo'
     arch="$(koopa::arch)"
     case "$arch" in
         x86_64)
@@ -95,7 +95,7 @@ koopa::debian_install_shiny_server() { # {{{1
     [[ "$reinstall" -eq 0 ]] && koopa::is_installed "$name" && return 0
     koopa::install_start "$name_fancy"
     tmp_dir="$(koopa::tmp_dir)"
-    if ! koopa::is_r_package_installed shiny
+    if ! koopa::is_r_package_installed 'shiny'
     then
         koopa::alert 'Installing shiny R package.'
         (

@@ -38,7 +38,7 @@ koopa::install_rbenv_ruby() { # {{{1
     # > export RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
     # """
     local name_fancy version
-    koopa::assert_is_installed rbenv
+    koopa::assert_is_installed 'rbenv'
     version="$(koopa::variable ruby)"
     # Ensure '2.6.5p' becomes '2.6.5', for example.
     version="$(koopa::sanitize_version "$version")"
