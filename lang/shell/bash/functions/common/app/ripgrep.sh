@@ -1,25 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::rg_fixme() { # {{{1
-    # """
-    # ripgrep for 'FIXME' string.
-    # @note Updated 2021-05-24.
-    # """
-    local pattern x
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'rg'
-    pattern='FIXME'
-    x="$( \
-        rg \
-        --files-with-matches \
-        --sort 'path' \
-        "$pattern" \
-    )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
-}
-
 koopa::rg_sort() { # {{{1
     # """
     # ripgrep sorted.
