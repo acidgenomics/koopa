@@ -302,10 +302,9 @@ koopa::linux_patch_bcbio() { # {{{1
     # Patch bcbio.
     # @note Updated 2021-05-20.
     # """
-    local bcbio_python cache_files git_dir install_dir name_fancy
-    # FIXME Locate tee here instead...
-    koopa::assert_is_installed 'tee'
+    local bcbio_python cache_files git_dir install_dir name_fancy tee
     koopa::assert_has_no_envs
+    tee="$(koopa::locate_tee)"
     name_fancy='bcbio-nextgen'
     while (("$#"))
     do
@@ -373,7 +372,7 @@ koopa::linux_patch_bcbio() { # {{{1
         koopa::rm 'tests/test_automated_output'
         koopa::alert "Patching installation via 'setup.py' script."
         "$bcbio_python" setup.py install
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::alert_success "Patching of ${name_fancy} was successful."
     return 0
 }
