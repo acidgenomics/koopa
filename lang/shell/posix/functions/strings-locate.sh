@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# FIXME This is failing when called inside of R subprocess.
 _koopa_locate_shell() { # {{{1
     # """
     # Locate the current shell executable.
@@ -53,6 +54,17 @@ _koopa_locate_shell() { # {{{1
             | "$sed" -n '3p' \
             | "$sed" 's/^n//' \
         )"
+    fi
+    # Fallback support for detection failure inside of some subprocesses.
+    if [ -z "$shell" ]
+    then
+        if [ -n "${BASH_VERSION:-}" ]
+        then
+            shell='bash'
+        elif [ -n "${ZSH_VERSION:-}" ]
+        then
+            shell='zsh'
+        fi
     fi
     [ -n "$shell" ] || return 1
     _koopa_print "$shell"
