@@ -24,14 +24,14 @@ koopa::install_doom_emacs() { # {{{1
     # """
     local doom emacs_prefix install_args install_dir name name_fancy repo
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed emacs git tee
+    koopa::assert_is_installed 'emacs' 'git' 'tee'
     name='doom'
     name_fancy='Doom Emacs'
     emacs_prefix="$(koopa::emacs_prefix)"
     install_dir="${emacs_prefix}-${name}"
     if [[ -d "$install_dir" ]]
     then
-        koopa::alert_note "${name_fancy} already installed at '${install_dir}'."
+        koopa::alert_is_installed "$name_fancy" "$install_dir"
         return 0
     fi
     koopa::install_start "$name_fancy" "$install_dir"
@@ -65,7 +65,7 @@ koopa:::update_doom_emacs() { # {{{1
     local name_fancy
     name_fancy='Doom Emacs'
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed doom
+    koopa::assert_is_installed 'doom'
     koopa::update_start "$name_fancy"
     doom upgrade --force
     doom sync

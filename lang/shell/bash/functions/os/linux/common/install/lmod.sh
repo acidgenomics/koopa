@@ -29,7 +29,7 @@ koopa::linux_configure_lmod() { # {{{1
     # csh, tcsh
     koopa::ln -S "${init_dir}/cshrc" "${etc_dir}/z00_lmod.csh"
     # fish
-    if koopa::is_installed fish
+    if koopa::is_installed 'fish'
     then
         etc_dir='/etc/fish/conf.d'
         koopa::alert "Updating Fish configuration in '${etc_dir}'."

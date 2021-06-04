@@ -15,7 +15,7 @@ koopa::run_rnaeditingindexer() { # {{{1
     #       search?q=index+file&unscoped_q=index+file
     # """
     local bam_dir bam_suffix bam_suffix_arr example genome output_dir
-    koopa::assert_is_installed docker
+    koopa::assert_is_installed 'docker'
     bam_dir='bam'
     bam_suffix='.Aligned.sortedByCoord.out.bam'
     genome='hg38'

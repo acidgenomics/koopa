@@ -101,7 +101,7 @@ koopa::download_refseq_genome() { # {{{1
 
 koopa::kill_r() { # {{{1
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed pkill
+    koopa::assert_is_installed 'pkill'
     pkill rsession
 }
 
@@ -239,7 +239,7 @@ koopa::r_javareconf() { # {{{1
     then
         koopa::activate_openjdk
         java_home="$(koopa::java_prefix)"
-        if ! koopa::is_installed java
+        if ! koopa::is_installed 'java'
         then
             koopa::alert_note "Failed to locate 'java'."
             return 0
@@ -337,7 +337,7 @@ koopa::rscript() { # {{{1
     koopa::assert_is_file "$header_file"
     code="source('${header_file}')"
     # The 'header' variable is currently used to simply load the shared R
-    # script header and check that the koopa R package is installed cleanly.
+    # script header and check that the koopa R package is installed.
     if [[ "$fun" != 'header' ]]
     then
         code="${code}; koopa::${fun}()"

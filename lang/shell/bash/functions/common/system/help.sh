@@ -15,7 +15,7 @@ koopa::help() { # {{{1
     do
         case "$arg" in
             --help|-h)
-                koopa::assert_is_installed man
+                koopa::assert_is_installed 'man'
                 file="$(koopa::realpath "$0")"
                 script_name="$(basename "$file")"
                 prefix="$(dirname "$(dirname "$file")")"

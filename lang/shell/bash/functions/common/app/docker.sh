@@ -313,7 +313,7 @@ koopa::docker_prune_all_images() { # {{{1
     # This is a nuclear option for resetting Docker.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::is_installed docker
+    koopa::is_installed 'docker'
     koopa::alert 'Pruning Docker images.'
     docker system prune --all --force
     docker images
@@ -346,7 +346,7 @@ koopa::docker_prune_old_images() { # {{{
     # - https://stackoverflow.com/questions/32723111
     # """
     koopa::assert_has_no_args "$#"
-    koopa::is_installed docker
+    koopa::is_installed 'docker'
     koopa::alert 'Pruning Docker images older than 3 months.'
     docker image prune \
         --all \
@@ -541,7 +541,7 @@ koopa::docker_tag() { # {{{1
     # """
     local dest_tag image server source_tag
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    koopa::assert_is_installed 'docker'
     image="${1:?}"
     source_tag="${2:?}"
     dest_tag="${3:-latest}"

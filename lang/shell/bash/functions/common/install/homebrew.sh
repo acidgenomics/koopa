@@ -56,7 +56,7 @@ koopa::install_homebrew_bundle() { # {{{1
     brewfile="${1:-$(koopa::brew_brewfile)}"
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
-    koopa::assert_is_installed brew
+    koopa::assert_is_installed 'brew'
     koopa::assert_is_file "$brewfile"
     koopa::dl 'Brewfile' "$brewfile"
     brew analytics off

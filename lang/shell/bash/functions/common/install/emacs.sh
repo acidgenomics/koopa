@@ -60,7 +60,7 @@ koopa::update_emacs() { # {{{1
     # @note Updated 2020-11-25.
     # """
     koopa::assert_has_no_args "$#"
-    if ! koopa::is_installed emacs
+    if ! koopa::is_installed 'emacs'
     then
         koopa::alert_is_not_installed 'emacs'
         return 0

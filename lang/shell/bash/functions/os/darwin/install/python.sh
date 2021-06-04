@@ -53,7 +53,7 @@ koopa::macos_install_python_framework() { # {{{1
     fi
     if [[ -d "$prefix" ]]
     then
-        koopa::alert_note "${name_fancy} already installed at '${prefix}'."
+        koopa::alert_is_installed "$name_fancy" "$prefix"
         return 0
     fi
     koopa::install_start "$name_fancy" "$prefix"

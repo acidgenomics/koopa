@@ -303,7 +303,8 @@ koopa::linux_patch_bcbio() { # {{{1
     # @note Updated 2021-05-20.
     # """
     local bcbio_python cache_files git_dir install_dir name_fancy
-    koopa::assert_is_installed tee
+    # FIXME Locate tee here instead...
+    koopa::assert_is_installed 'tee'
     koopa::assert_has_no_envs
     name_fancy='bcbio-nextgen'
     while (("$#"))

@@ -435,7 +435,7 @@ deb ${urls[main]} ${codenames[main]} ${repos[*]}
 deb ${urls[security]} ${codenames[security]} ${repos[*]}
 deb ${urls[updates]} ${codenames[updates]} ${repos[*]}
 END
-    if koopa::is_installed cat
+    if koopa::is_installed 'cat'
     then
         cat "$sources_list"
     fi

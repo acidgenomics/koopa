@@ -7,7 +7,7 @@ koopa:::kallisto_index() { # {{{1
     # """
     local fasta_file index_dir index_file log_file
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed kallisto
+    koopa::assert_is_installed 'kallisto'
     while (("$#"))
     do
         case "$1" in
@@ -50,7 +50,7 @@ koopa:::kallisto_quant() { # {{{1
     local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_file
     local log_file output_dir r1_tail r2_tail sample_output_dir threads
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed kallisto
+    koopa::assert_is_installed 'kallisto'
     while (("$#"))
     do
         case "$1" in

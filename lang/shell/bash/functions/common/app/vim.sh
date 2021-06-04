@@ -7,7 +7,7 @@ koopa::detab() { # {{{1
     # """
     local file
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed vim
+    koopa::assert_is_installed 'vim'
     koopa::assert_is_file "$@"
     for file in "$@"
     do
@@ -27,7 +27,7 @@ koopa::entab() { # {{{1
     # """
     local file
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed vim
+    koopa::assert_is_installed 'vim'
     koopa::assert_is_file "$@"
     for file in "$@"
     do
@@ -47,7 +47,7 @@ koopa::sort_lines() { # {{{1
     # """
     local file
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed vim
+    koopa::assert_is_installed 'vim'
     koopa::assert_is_file "$@"
     for file in "$@"
     do

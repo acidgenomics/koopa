@@ -87,7 +87,7 @@ koopa::update_koopa_system() { # {{{1
         conf_args=('--no-check')
         koopa::linux_configure_system "${conf_args[@]}"
     fi
-    if koopa::is_installed brew
+    if koopa::is_installed 'brew'
     then
         koopa::update_homebrew
     else

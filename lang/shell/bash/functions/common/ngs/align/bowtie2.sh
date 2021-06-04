@@ -8,7 +8,7 @@ koopa::bowtie2() { # {{{1
     local fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_prefix log_file
     local output_dir r1_tail r2_tail sam_file sample_output_dir threads
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed bowtie2
+    koopa::assert_is_installed 'bowtie2'
     while (("$#"))
     do
         case "$1" in
@@ -87,7 +87,7 @@ koopa::bowtie2_index() { # {{{1
     # """
     local fasta_file index_dir index_prefix threads
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed bowtie2-build
+    koopa::assert_is_installed 'bowtie2-build'
     while (("$#"))
     do
         case "$1" in

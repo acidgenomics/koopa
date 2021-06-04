@@ -39,7 +39,7 @@ koopa::add_user_to_group() { # {{{1
     # """
     local group user
     koopa::assert_has_args_le "$#" 2
-    koopa::assert_is_installed gpasswd
+    koopa::assert_is_installed 'gpasswd'
     group="${1:?}"
     user="${2:-$(koopa::user)}"
     koopa::alert "Adding user '${user}' to group '${group}'."
@@ -54,13 +54,13 @@ koopa::link_docker() { # {{{1
     # """
     local dd_link_prefix distro_prefix etc_source lib_n lib_sys
     koopa::assert_has_no_args "$#"
-    koopa::is_installed docker || return 0
+    koopa::is_installed 'docker' || return 0
     koopa::assert_is_admin
     # e.g. '/mnt/data01/n' to '/n' for AWS.
     dd_link_prefix="$(koopa::data_disk_link_prefix)"
     [[ -d "$dd_link_prefix" ]] || return 0
     koopa::alert 'Updating Docker configuration.'
-    koopa::assert_is_installed systemctl
+    koopa::assert_is_installed 'systemctl'
     koopa::alert_note 'Stopping Docker.'
     sudo systemctl stop docker
     lib_sys='/var/lib/docker'
@@ -91,7 +91,7 @@ koopa::remove_user_from_group() { # {{{1
     # """
     local group user
     koopa::assert_has_args_le "$#" 2
-    koopa::assert_is_installed gpasswd sudo
+    koopa::assert_is_installed 'gpasswd' 'sudo'
     koopa::assert_is_admin
     group="${1:?}"
     user="${2:-$(koopa::user)}"
@@ -144,7 +144,7 @@ koopa::update_ldconfig() { # {{{1
     local conf_source dest_file distro_prefix source_file
     koopa::assert_has_no_args "$#"
     [[ -d '/etc/ld.so.conf.d' ]] || return 0
-    koopa::assert_is_installed ldconfig
+    koopa::assert_is_installed 'ldconfig'
     koopa::assert_is_admin
     distro_prefix="$(koopa::distro_prefix)"
     conf_source="${distro_prefix}/etc/ld.so.conf.d"

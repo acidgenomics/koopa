@@ -23,7 +23,7 @@ koopa::debian_install_base() { # {{{1
     #   https://serverfault.com/questions/56848
     # """
     local dict name_fancy pkgs pos
-    koopa::assert_is_installed apt apt-get sed sudo
+    koopa::assert_is_installed 'apt' 'apt-get' 'sed' 'sudo'
     declare -A dict=(
         [apt_enabled_repos]="$(koopa::apt_enabled_repos)"
         [base]=1
