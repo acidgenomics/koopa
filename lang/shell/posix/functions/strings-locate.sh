@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# FIXME This is failing when called inside of R subprocess.
 _koopa_locate_shell() { # {{{1
     # """
     # Locate the current shell executable.
