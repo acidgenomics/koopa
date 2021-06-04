@@ -22,83 +22,12 @@ test_all() { # {{{1
     koopa::assert_has_no_args "$#"
     readarray -t files <<< \
         "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh|zsh)$')"
-    test_all_coreutils "${files[@]}"
     test_all_quoting "${files[@]}"
     test_all_illegal_strings "${files[@]}"
     return 0
 }
 
-# FIXME Ignore false positives:
-# - 'aws s3 cp'
-# - 'aws s3 ls'
-# - 'docker images ls'
-# - 'docker buildx rm'
-# - 'tmux ls'
-# - 'koopa::<name>'
-#
-# See also:
-# - http://www.blackwasp.co.uk/RegexLookahead.aspx
-test_all_coreutils() { # {{{1
-    local array pattern
-    koopa::assert_has_args "$#"
-    array=(
-        'awk'
-        'basename'
-        'bc'
-        'cd'
-        'chgrp'
-        'chmod'
-        'chown'
-        'cmake'
-        'cp'
-        'curl'
-        'cut'
-        'date'
-        'dirname'
-        'du'
-        'find'
-        'git'
-        'grep'
-        'head'
-        'id'
-        'ln'
-        'ls'
-        'make'
-        'mkdir'
-        'mktemp'
-        'mv'
-        'parallel'
-        'patch'
-        'readlink'
-        'realpath'
-        'rename'
-        'rm'
-        'rsync'
-        'sed'
-        'sort'
-        'ssh'
-        'stat'
-        'svn'
-        'tac'
-        'tail'
-        'tee'
-        'tr'
-        'uname'
-        'wget'
-        'which'
-        'xargs'
-    )
-    pattern="$(koopa::paste0 '|' "${array[@]}")"
-    # This doesn't work the way we want:
-    # > pattern="(?!(koopa::))\b(${pattern})\s"
-    pattern="(?!^[\s]+(local|#).*)\s(${pattern})\s"
-    koopa::test_grep \
-        -i 'coreutils' \
-        -n 'shell | all | coreutils' \
-        -p "$pattern" \
-        "$@"
-    return 0
-}
+# FIXME Ensure all of these tests are also defined in AcidLinter.
 
 test_all_illegal_strings() { # {{{1
     local array pattern
@@ -136,8 +65,8 @@ test_all_quoting() { # {{{1
         "'\$.+'"
         ":-['\"]"
         "^((?!').)*[ =\(]\"[^'\$\"]+\"+$"
-        # '\\\"\$'
-        # '\}\\\"'
+        # > '\\\"\$'
+        # > '\}\\\"'
     )
     # Check for escaped double quotes.
     # > array+=(
