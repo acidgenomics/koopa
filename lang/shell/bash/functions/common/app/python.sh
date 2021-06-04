@@ -86,7 +86,7 @@ koopa::pip_outdated() { # {{{1
             --outdated \
             --path "$prefix" \
     )"
-    [ -n "$x" ] || return 0
+    [[ -n "$x" ]] || return 0
     koopa::print "$x"
     return 0
 }

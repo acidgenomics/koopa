@@ -13,7 +13,7 @@ koopa::sra_prefetch_parallel() { # {{{1
     parallel="$(koopa::locate_parallel)"
     sort="$(koopa::locate_sort)"
     file="${1:-}"
-    [ -z "$file" ] && file='SraAccList.txt'
+    [[ -z "$file" ]] && file='SraAccList.txt'
     koopa::assert_is_file "$file"
     # Delete any temporary files that may have been created by previous run.
     "$find" . \(-name '*.lock' -o -name '*.tmp'\) -delete
