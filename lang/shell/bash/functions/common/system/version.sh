@@ -589,7 +589,7 @@ koopa::r_version() { # {{{1
     koopa::assert_has_args_le "$#" 1
     head="$(koopa::locate_head)"
     r="${1:-}"
-    [ -z "$r" ] && r="$(koopa::locate_r)"
+    [[ -z "$r" ]] && r="$(koopa::locate_r)"
     x="$( \
         "$r" --version 2>/dev/null \
         | head -n 1 \
