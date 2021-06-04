@@ -28,7 +28,7 @@ _koopa_add_config_link() { # {{{1
     return 0
 }
 
-_koopa_check_os() {
+_koopa_check_os() { # {{{1
     # """
     # Check that operating system is supported.
     # @note Updated 2021-05-07.

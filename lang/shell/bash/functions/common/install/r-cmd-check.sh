@@ -13,7 +13,7 @@ koopa:::install_r_cmd_check() { # {{{1
     # """
     local prefix source_repo
     prefix="${INSTALL_PREFIX:?}"
-    source_repo="https://github.com/acidgenomics/r-cmd-check.git"
+    source_repo='https://github.com/acidgenomics/r-cmd-check.git'
     koopa::mkdir "$prefix"
     koopa::git_clone "$source_repo" "$prefix"
     return 0
