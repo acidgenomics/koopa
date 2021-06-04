@@ -33,6 +33,7 @@ _koopa_check_os() { # {{{1
     # Check that operating system is supported.
     # @note Updated 2021-05-07.
     # """
+    [ "$#" -eq 0 ] || return 1
     case "$(uname -s)" in
         Darwin | \
         Linux)
@@ -51,6 +52,7 @@ _koopa_check_shell() { # {{{1
     # @note Updated 2021-06-04.
     # """
     local shell shell_name
+    [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_locate_shell)"
     shell_name="$(_koopa_shell_name)"
     KOOPA_SHELL="$shell"
@@ -95,6 +97,7 @@ _koopa_duration_start() { # {{{1
     # @note Updated 2021-05-25.
     # """
     local brew_prefix date
+    [ "$#" -eq 0 ] || return 1
     date='date'
     if _koopa_is_macos
     then
@@ -145,6 +148,7 @@ _koopa_exec_dir() { # {{{1
     # @note Updated 2020-07-23.
     # """
     local dir file
+    [ "$#" -eq 1 ] || return 1
     dir="${1:?}"
     [ -d "$dir" ] || return 0
     for file in "${dir}/"*'.sh'
@@ -162,6 +166,7 @@ _koopa_source_dir() { # {{{1
     # @note Updated 2020-07-23.
     # """
     local dir file
+    [ "$#" -eq 1 ] || return 1
     dir="${1:?}"
     [ -d "$dir" ] || return 0
     for file in "${dir}/"*'.sh'
@@ -201,6 +206,7 @@ _koopa_umask() { # {{{1
     # - https://stackoverflow.com/questions/13268796
     # - https://askubuntu.com/questions/44534
     # """
+    [ "$#" -eq 0 ] || return 1
     umask 0002
     return 0
 }
