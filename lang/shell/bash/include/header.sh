@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# koopa nolint=coreutils
 
 __koopa_bash_source_dir() { # {{{1
     # """

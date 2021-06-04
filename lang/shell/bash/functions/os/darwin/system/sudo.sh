@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# koopa nolint=coreutils
 
 koopa::macos_disable_touch_id_sudo() { # {{{1
     # """
