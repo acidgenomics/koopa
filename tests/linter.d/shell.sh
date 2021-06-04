@@ -27,8 +27,6 @@ test_all() { # {{{1
     return 0
 }
 
-# FIXME Ensure all of these tests are also defined in AcidLinter.
-
 test_all_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
@@ -135,8 +133,9 @@ test_posix_illegal_strings() { # {{{1
         ' \[\[ '
         ' \]\] '
         ' \]\]$'
-        '^\[\[ '
         '\[@\]\}'
+        '\bexit\b'
+        '^\[\[ '
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \

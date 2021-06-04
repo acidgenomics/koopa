@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# FIXME linter should check for any 'exit' references in POSIX library.
 # FIXME All POSIX functions should check if any arguments are passed in.
 
 __koopa_acid_emoji() { # {{{1
