@@ -48,15 +48,14 @@ _koopa_check_os() {
 _koopa_check_shell() { # {{{1
     # """
     # Check that current shell is supported, and export 'KOOPA_SHELL' variable.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-06-04.
     # """
     local shell shell_name
     shell="$(_koopa_locate_shell)"
-    KOOPA_SHELL="$shell"
-    export KOOPA_SHELL
     shell_name="$(_koopa_shell_name)"
+    KOOPA_SHELL="$shell"
     SHELL="$shell_name"
-    export SHELL
+    export KOOPA_SHELL SHELL
     case "$shell_name" in
         ash | \
         bash | \
@@ -71,7 +70,7 @@ WARNING: Failed to activate koopa in the current shell.
     Recommended: Bash or Zsh.
     Also supported: Ash, Busybox, Dash.
 
-    KOOPA_SHELL : '${shell}'
+    KOOPA_SHELL : '${KOOPA_SHELL:-}'
           SHELL : '${SHELL:-}'
               - : '${-}'
               0 : '${0}'
