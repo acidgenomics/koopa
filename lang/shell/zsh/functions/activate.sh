@@ -6,6 +6,7 @@ _koopa_activate_zsh_aliases() { # {{{1
     # @note Updated 2020-11-24.
     # """
     local user_aliases
+    [[ "$#" -eq 0 ]] || return 1
     user_aliases="${HOME}/.zsh_aliases"
     if [[ -f "$user_aliases" ]]
     then
@@ -20,6 +21,7 @@ _koopa_activate_zsh_bashcompinit() { # {{{1
     # Activate Bash completions for Zsh.
     # @note Updated 2020-11-24.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz bashcompinit && bashcompinit 2>/dev/null
     return 0
 }
@@ -29,6 +31,7 @@ _koopa_activate_zsh_colors() { # {{{1
     # Enable colors in terminal.
     # @note Updated 2020-11-24.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz colors && colors 2>/dev/null
     return 0
 }
@@ -38,6 +41,7 @@ _koopa_activate_zsh_compinit() { # {{{1
     # Activate Zsh compinit (completion system).
     # @note Updated 2020-11-24.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz compinit && compinit 2>/dev/null
     return 0
 }
@@ -47,6 +51,7 @@ _koopa_activate_zsh_editor() { # {{{1
     # Activate Zsh editor.
     # @note Updated 2020-11-24.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     case "${EDITOR:-}" in
         emacs)
             bindkey -e
@@ -74,6 +79,7 @@ _koopa_activate_zsh_extras() { # {{{1
     # https://unix.stackexchange.com/questions/214296
     # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
     # """
+    [[ "$#" -eq 0 ]] || return 1
     _koopa_is_interactive || return 0
     _koopa_activate_zsh_fpath
     _koopa_activate_zsh_compinit
@@ -93,6 +99,7 @@ _koopa_activate_zsh_fpath() { # {{{1
     # @note Updated 2021-01-19.
     # """
     local koopa_fpath koopa_prefix
+    [[ "$#" -eq 0 ]] || return 1
     koopa_prefix="$(_koopa_prefix)"
     koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
@@ -117,6 +124,7 @@ _koopa_activate_zsh_plugins() { # {{{1
     # Alternatively, can use '<<<' herestring, which also works in Bash.
     # """
     local dotfiles_prefix plugin plugins zsh_plugins_dir
+    [[ "$#" -eq 0 ]] || return 1
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
     zsh_plugins_dir="${dotfiles_prefix}/shell/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
@@ -149,6 +157,7 @@ _koopa_activate_zsh_prompt() { # {{{1
     # This step must be sourced after oh-my-zsh.
     # """
     local nounset
+    [[ "$#" -eq 0 ]] || return 1
     nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +u
     setopt promptsubst

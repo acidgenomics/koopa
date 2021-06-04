@@ -6,6 +6,7 @@ __koopa_is_installed() { # {{{1
     # @note updated 2021-05-07.
     # """
     local cmd
+    [[ "$#" -gt 0 ]] || return 1
     for cmd in "$@"
     do
         command -v "$cmd" >/dev/null || return 1
@@ -16,8 +17,9 @@ __koopa_is_installed() { # {{{1
 __koopa_is_macos() { # {{{1
     # """
     # is the operating system macos?
-    # @note updated 2021-05-07.
+    # @note updated 2021-06-04.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     [[ "$(uname -s)" == 'Darwin' ]]
 }
 
@@ -38,9 +40,10 @@ __koopa_print() { # {{{1
 __koopa_realpath() { # {{{1
     # """
     # Resolve file path.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-04.
     # """
     local readlink x
+    [[ "$#" -gt 0 ]] || return 1
     readlink='readlink'
     __koopa_is_macos && readlink='greadlink'
     if ! __koopa_is_installed "$readlink"
@@ -75,9 +78,10 @@ __koopa_warning() { # {{{1
 __koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-04.
     # """
     local dict
+    [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
         [activate]=0
         [checks]=1
@@ -143,17 +147,7 @@ __koopa_zsh_header() { # {{{1
     then
         _koopa_duration_stop 'zsh' || return 1
     fi
-    # > if [[ "${dict[checks]}" -eq 1 ]]
-    # > then
-    # >     unsetopt errexit
-    # >     unsetopt nounset
-    # >     unsetopt pipefail
-    # > fi
-    # > if [[ "${dict[verbose]}" -eq 1 ]]
-    # > then
-    # >     set +o xtrace
-    # > fi
     return 0
 }
 
-__koopa_zsh_header "$@"
+__koopa_zsh_header

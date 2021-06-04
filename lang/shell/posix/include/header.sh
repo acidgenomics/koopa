@@ -3,9 +3,10 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-04.
     # """
     local file
+    [ "$#" -eq 0 ] || return 1
     unset -v KOOPA_SHELL KOOPA_SUBSHELL
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
@@ -99,4 +100,4 @@ _koopa_posix_header() { # {{{1
     return 0
 }
 
-_koopa_posix_header "$@"
+_koopa_posix_header
