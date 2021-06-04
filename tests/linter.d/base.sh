@@ -18,6 +18,7 @@ test() { # {{{1
     return 0
 }
 
+# FIXME This doesn't seem to be picking up FIXMEs anymore...
 test_illegal_strings() { # {{{1
     local array pattern
     koopa::assert_has_args "$#"
