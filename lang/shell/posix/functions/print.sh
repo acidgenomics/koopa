@@ -128,10 +128,10 @@ __koopa_h() { # {{{1
 __koopa_msg() { # {{{1
     # """
     # Koopa standard message.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-06-05.
     # """
     local c1 c2 emoji nc prefix string x
-    [ "$#" -eq 2 ] || return 1
+    [ "$#" -ge 4 ] || return 1
     c1="$(__koopa_ansi_escape "${1:?}")"
     c2="$(__koopa_ansi_escape "${2:?}")"
     nc="$(__koopa_ansi_escape 'nocolor')"
