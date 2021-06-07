@@ -310,28 +310,40 @@ koopa::ip_address() { # {{{1
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-07.
     # """
-    local config dot_dir dot_repo force pos private source_name
-    local symlink_name xdg_config_home
+    local pos source_basename source_path source_prefix
+    local symlink_basename symlink_dirname symlink_path symlink_prefix
     koopa::assert_has_args "$#"
-    config=0
-    force=0
-    private=0
+    declare -A dict=(
+        [config]=0
+        [dotfiles_config_link]="$(koopa::dotfiles_config_link)"
+        [dotfiles_prefix]="$(koopa::dotfiles_prefix)"
+        [dotfiles_private_config_link]="$(koopa::dotfiles_private_config_link)"
+        [force]=0
+        [opt]=0
+        [opt_prefix]="$(koopa::opt_prefix)"
+        [private]=0
+        [xdg_config_home]="$(koopa::xdg_config_home)"
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
             --config)
-                config=1
+                dict[config]=1
                 shift 1
                 ;;
             --force)
-                force=1
+                dict[force]=1
+                shift 1
+                ;;
+            --opt)
+                dict[opt]=1
                 shift 1
                 ;;
             --private)
-                private=1
+                dict[private]=1
                 shift 1
                 ;;
             --)
@@ -349,51 +361,51 @@ koopa::link_dotfile() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_le "$#" 2
-    source_name="$1"
-    symlink_name="${2:-}"
-    if [[ "$private" -eq 1 ]]
+    source_basename="${1:?}"
+    symlink_basename="${2:-}"
+    if [[ -z "$symlink_basename" ]]
     then
-        dot_dir="$(koopa::dotfiles_private_config_link)"
+        symlink_basename="$source_basename"
+    fi
+    if [[ "${dict[opt]}" -eq 1 ]]
+    then
+        source_prefix="${dict[opt_prefix]}"
+    elif [[ "${dict[private]}" -eq 1 ]]
+    then
+        source_prefix="${dict[dotfiles_private_config_link]}"
     else
-        # e.g. ~/.config/koopa/dotfiles
-        dot_dir="$(koopa::dotfiles_config_link)"
-        # Note that this step automatically links into koopa config for users.
-        if [[ ! -d "$dot_dir" ]]
+        source_prefix="${dict[dotfiles_config_link]}"
+        if [[ ! -L "$source_prefix" ]]
         then
-            dot_repo="$(koopa::dotfiles_prefix)"
-            koopa::rm "$dot_dir"
-            koopa::ln "$dot_repo" "$dot_dir"
+            koopa::ln "${dict[dotfiles_prefix]}" "$source_prefix"
         fi
     fi
-    koopa::assert_is_dir "$dot_dir"
-    source_path="${dot_dir}/${source_name}"
+    source_path="${source_prefix}/${source_basename}"
     koopa::assert_is_existing "$source_path"
-    # Define optional target symlink name.
-    if [[ -z "$symlink_name" ]]
+    if [[ "${dict[config]}" -eq 1 ]]
     then
-        symlink_name="$(basename "$source_path")"
-    fi
-    if [[ "$config" -eq 1 ]]
-    then
-        xdg_config_home="$(koopa::xdg_config_home)"
-        [[ -z "$xdg_config_home" ]] && xdg_config_home="${HOME:?}/.config"
-        symlink_path="${xdg_config_home}/${symlink_name}"
+        symlink_prefix="${dict[xdg_config_home]}"
     else
-        symlink_path="${HOME:?}/.${symlink_name}"
+        symlink_prefix="${HOME:?}"
+        symlink_basename=".${symlink_basename}"
     fi
+    symlink_path="${symlink_prefix}/${symlink_basename}"
     # Inform the user when nuking a broken symlink.
-    if [[ "$force" -eq 1 ]] ||
+    if [[ "${dict[force]}" -eq 1 ]] ||
         { [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]; }
     then
         koopa::rm "$symlink_path"
     elif [[ -e "$symlink_path" ]]
     then
         koopa::stop "Existing dotfile: '${symlink_path}'."
-        return 1
     fi
     koopa::dl "$symlink_path" "$source_path"
-    symlink_dn="$(dirname "$symlink_path")"
-    [[ "$symlink_dn" != "${HOME:?}" ]] && koopa::mkdir "$symlink_dn"
+    # Create the parent directory, if necessary.
+    symlink_dirname="$(koopa::dirname "$symlink_path")"
+    if [[ "$symlink_dirname" != "${HOME:?}" ]]
+    then
+        koopa::mkdir "$symlink_dirname"
+    fi
     koopa::ln "$source_path" "$symlink_path"
     return 0
 }
