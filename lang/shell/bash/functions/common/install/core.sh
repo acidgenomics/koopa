@@ -430,24 +430,57 @@ koopa::prune_apps() { # {{{1
     return 0
 }
 
+# FIXME Need to think about how to support this.
 # NEED TO Add support for this.
+# NORMALLY LOOK FOR APP/VERSION AND REMOVE.
+# IF LINKED, NEED TO REMOVE BROKEN SYMLINKS IN /USR/LOCAL.
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
     # @note Updated 2021-06-07.
     # """
-    echo 'FIXME'
+    local dict koopa_prefix pos
+    declare -A dict=(
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [prefix]=''
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --homebrew-opt=*)
+                dict[homebrew_opt]="${1#*=}"
+                shift 1
+                ;;
+            --installer=*)
+                dict[installer]="${1#*=}"
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::uninstall_start "${dict[name_fancy]}"
+
+
+
+
+
+
+    koopa::uninstall_success "${dict[name_fancy]}"
     return 0
 }
 
 koopa::unlink_app() { # {{{1
     # """
     # Unlink an application.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-06-07.
     # """
+    local make_prefix
+    make_prefix="$(koopa::make_prefix)"
     if koopa::is_macos
     then
-        koopa::alert_note 'App links are not supported on macOS.'
+        koopa::alert_note "Linking into '${make_prefix}' is not \
+supported on macOS."
         return 0
     fi
     koopa::rscript 'unlinkApp' "$@"

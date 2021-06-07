@@ -640,6 +640,10 @@ koopa::kebab_case_simple() { # {{{1
     _koopa_kebab_case_simple "$@"
 }
 
+koopa::koopa_prefix() { # {{{1
+    _koopa_koopa_prefix "$@"
+}
+
 koopa::lmod_prefix() { # {{{1
     _koopa_lmod_prefix "$@"
 }
@@ -742,10 +746,6 @@ koopa::perlbrew_prefix() { # {{{1
 
 koopa::pipx_prefix() { # {{{1
     _koopa_pipx_prefix "$@"
-}
-
-koopa::prefix() { # {{{1
-    _koopa_prefix "$@"
 }
 
 koopa::prelude_emacs_prefix() { # {{{1

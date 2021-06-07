@@ -310,7 +310,7 @@ _koopa_is_local_install() { # {{{1
     # @note Updated 2020-04-29.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_str_match_regex "$(_koopa_prefix)" "^${HOME}"
+    _koopa_str_match_regex "$(_koopa_koopa_prefix)" "^${HOME}"
 }
 
 _koopa_is_macos() { # {{{1

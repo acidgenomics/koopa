@@ -59,7 +59,7 @@ koopa:::koopa_header() { # {{{1
     local arg ext file koopa_prefix subdir
     koopa::assert_has_args_eq "$#" 1
     arg="$(koopa::lowercase "${1:?}")"
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     subdir='lang'
     case "$arg" in
         bash|posix|zsh)
