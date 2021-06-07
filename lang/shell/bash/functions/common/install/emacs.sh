@@ -103,27 +103,3 @@ koopa::link_emacs() { # {{{1
     koopa::ln "$custom_prefix" "$default_prefix"
     return 0
 }
-
-koopa::update_emacs() { # {{{1
-    # """
-    # Update Emacs.
-    # @note Updated 2020-11-25.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_installed 'emacs'
-    then
-        koopa::alert_is_not_installed 'emacs'
-        return 0
-    fi
-    if koopa::is_spacemacs_installed
-    then
-        koopa:::update_spacemacs
-    elif koopa::is_doom_emacs_installed
-    then
-        koopa:::update_doom_emacs
-    else
-        koopa::alert_note 'Emacs configuration cannot be updated.'
-        return 0
-    fi
-    return 0
-}
