@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Move this into a separate file.
 koopa::variable() { # {{{1
     # """
     # Return a variable stored 'variables.txt' include file.
