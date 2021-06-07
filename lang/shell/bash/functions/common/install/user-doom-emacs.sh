@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# NOTE '--reinstall' is not supported.
+# FIXME Need to dynamically support both spacemacs and doom.
+# FIXME '--reinstall' is not supported.
+# FIXME Need to support an uninstaller.
 
 koopa::install_doom_emacs() { # {{{1
     # """

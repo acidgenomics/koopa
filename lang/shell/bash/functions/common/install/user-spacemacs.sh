@@ -3,10 +3,8 @@
 # FIXME Need to support installation of both Doom Emacs and Spacemacs
 # at the same time...
 # FIXME Also need to support updating of both Doom and Spacemacs...
-
-
-
 # FIXME '--reinstall' is not supported.
+
 koopa::install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.
