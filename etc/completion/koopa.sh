@@ -344,8 +344,8 @@ _koopa_complete() { # {{{1
                     'system'
                     'user'
                     # packages:
+                    'doom-emacs'
                     'dotfiles'
-                    'emacs'
                     'google-cloud-sdk'
                     'homebrew'
                     'pyenv'
@@ -355,6 +355,7 @@ _koopa_complete() { # {{{1
                     'ruby-packages'
                     'rust'
                     'rust-packages'
+                    'spacemacs'
                     'tex'
                 )
                 ;;

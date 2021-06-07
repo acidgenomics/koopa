@@ -201,6 +201,17 @@ koopa::locate_dirname() { # {{{1
     koopa:::locate_gnu_app 'coreutils' 'dirname' "$@"
 }
 
+koopa::locate_doom() { # {{{1
+    # """
+    # Locate Doom Emacs.
+    # @note Updated 2021-06-07.
+    # """
+    local app prefix
+    prefix="$(koopa::doom_emacs_prefix)"
+    koopa::assert_is_dir "$prefix"
+    koopa:::locate_app_simple "${prefix}/bin/doom"
+}
+
 koopa::locate_du() { # {{{1
     # """
     # Locate GNU du.
