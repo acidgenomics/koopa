@@ -33,6 +33,7 @@ koopa::anaconda_version() { # {{{
             | "$grep" -E '^anaconda ' \
             | "$awk" '{print $2}' \
     )"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
@@ -149,6 +150,7 @@ koopa::current_ensembl_version() { # {{{1
         | "$sed" -n '3p' \
         | "$cut" -d ' ' -f 3 \
     )"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
@@ -270,6 +272,7 @@ releases/current-production-release"
         "$grep" -Eo 'letter.WS[0-9]+' | \
         "$cut" -d '.' -f 2 \
     )"
+    [[ -n "$x" ]] || return 1
     koopa::print "$version"
     return 0
 }
@@ -283,6 +286,7 @@ koopa::eigen_version() { # {{{1
     koopa:::pkg_config_version 'eigen3'
 }
 
+# FIXME Move this to separate file.
 koopa::extract_version() { # {{{1
     # """
     # Extract version number.
@@ -320,6 +324,7 @@ koopa::gcc_version() { # {{{1
     return 0
 }
 
+# FIXME Move this.
 koopa::get_version() { # {{{1
     # """
     # Get the version of an installed program.
@@ -605,6 +610,7 @@ koopa::r_version() { # {{{1
     return 0
 }
 
+# FIXME Move this to separate file...
 koopa::return_version() { # {{{1
     # """
     # Return version (via extraction).
@@ -761,6 +767,7 @@ koopa::ruby_api_version() { # {{{1
     return 0
 }
 
+# FIXME Move this.
 koopa::sanitize_version() { # {{{1
     # """
     # Sanitize version.
@@ -808,6 +815,7 @@ koopa::tex_version() { # {{{1
     return 0
 }
 
+# FIXME Move this.
 koopa::version() { # {{{1
     # """
     # Koopa version.
@@ -818,6 +826,7 @@ koopa::version() { # {{{1
     return 0
 }
 
+# FIXME Move this.
 koopa::version_pattern() { # {{{1
     # """
     # Version pattern.
