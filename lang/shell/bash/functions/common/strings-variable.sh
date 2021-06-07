@@ -41,16 +41,6 @@ koopa::admin_group() { # {{{1
     return 0
 }
 
-koopa::date() { # {{{1
-    # """
-    # Koopa date.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::variable 'koopa-date'
-    return 0
-}
-
 koopa::datetime() { # {{{
     # """
     # Datetime string.
@@ -87,16 +77,6 @@ koopa::dotfiles_private_config_link() { # {{{1
     return 0
 }
 
-koopa::github_url() { # {{{1
-    # """
-    # Koopa GitHub URL.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::variable 'koopa-github-url'
-    return 0
-}
-
 koopa::gcrypt_url() { # {{{1
     # """
     # Get GnuPG FTP URL.
@@ -114,6 +94,36 @@ koopa::gnu_mirror_url() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::variable 'gnu-mirror-url'
+    return 0
+}
+
+koopa::koopa_date() { # {{{1
+    # """
+    # Koopa date.
+    # @note Updated 2021-06-07.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::variable 'koopa-date'
+    return 0
+}
+
+koopa::koopa_github_url() { # {{{1
+    # """
+    # Koopa GitHub URL.
+    # @note Updated 2021-06-07.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::variable 'koopa-github-url'
+    return 0
+}
+
+koopa::koopa_url() { # {{{1
+    # """
+    # Koopa URL.
+    # @note Updated 2021-06-07.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::variable 'koopa-url'
     return 0
 }
 
@@ -240,5 +250,34 @@ koopa::script_name() { # {{{1
     x="$(koopa::basename "$file")"
     [[ -n "$x" ]] || return 0
     koopa::print "$x"
+    return 0
+}
+
+koopa::variable() { # {{{1
+    # """
+    # Return a variable stored 'variables.txt' include file.
+    # @note Updated 2021-05-25.
+    #
+    # This approach handles inline comments.
+    # """
+    local cut file grep head include_prefix key value
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
+    head="$(koopa::locate_head)"
+    key="${1:?}"
+    include_prefix="$(koopa::include_prefix)"
+    file="${include_prefix}/variables.txt"
+    koopa::assert_is_file "$file"
+    value="$( \
+        "$grep" -Eo "^${key}=\"[^\"]+\"" "$file" \
+        || koopa::stop "'${key}' not defined in '${file}'." \
+    )"
+    value="$( \
+        koopa::print "$value" \
+            | "$head" -n 1 \
+            | "$cut" -d '"' -f 2 \
+    )"
+    [[ -n "$value" ]] || return 1
+    koopa::print "$value"
     return 0
 }
