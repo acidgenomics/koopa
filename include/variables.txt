@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-06-02"
+koopa-date="2021-06-07"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.0a"
@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.8"
+aws-cli="2.2.9"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.24.2"
@@ -139,7 +139,7 @@ geos="3.9.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.31.1"
+git="2.32.0"
 
 # https://gnupg.org/download/index.html
 # LTS: 2.2.27 (2021-01-11).
@@ -379,7 +379,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.2925"
+vim="8.2.2950"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.1"
