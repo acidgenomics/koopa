@@ -748,6 +748,10 @@ koopa::prefix() { # {{{1
     _koopa_prefix "$@"
 }
 
+koopa::prelude_emacs_prefix() { # {{{1
+    _koopa_prelude_emacs_prefix "$@"
+}
+
 koopa::prompt() { # {{{1
     _koopa_prompt "$@"
 }

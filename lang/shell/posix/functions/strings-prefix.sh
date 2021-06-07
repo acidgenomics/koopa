@@ -475,6 +475,16 @@ _koopa_pipx_prefix() { # {{{1
     return 0
 }
 
+_koopa_prelude_emacs_prefix() { # {{{1
+    # """
+    # Prelude Emacs prefix.
+    # @note Updated 2021-06-07.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print "$(_koopa_xdg_config_home)/prelude"
+    return 0
+}
+
 _koopa_prefix() { # {{{1
     # """
     # Koopa prefix (home).

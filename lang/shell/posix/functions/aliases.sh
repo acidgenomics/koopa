@@ -80,6 +80,20 @@ _koopa_alias_rbenv() { # {{{1
     rbenv "$@"
 }
 
+_koopa_alias_spacevim() { # {{{1
+    # """
+    # SpaceVim alias.
+    # @note Updated 2021-06-07.
+    # """
+    local prefix vimrc
+    prefix="$(_koopa_spacevim_prefix)"
+    vimrc="${prefix}/vimrc"
+    [ -f "$vimrc" ] || return 1
+    _koopa_is_installed 'vim' || return 1
+    _koopa_is_alias vim && unalias vim
+    vim -u "$vimrc" "$@"
+}
+
 _koopa_alias_z() { # {{{1
     # """
     # Zoxide alias.
