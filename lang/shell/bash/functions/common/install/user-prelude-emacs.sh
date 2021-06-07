@@ -1,37 +1,38 @@
 #!/usr/bin/env bash
 
-koopa::install_spacemacs() { # {{{1
+koopa::install_prelude_emacs() { # {{{1
     koopa::install_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa::spacemacs_prefix)" \
+        --name-fancy='Prelude Emacs' \
+        --name='prelude-emacs' \
+        --prefix="$(koopa::prelude_emacs_prefix)" \
         --version='rolling' \
         --no-shared \
         "$@"
     return 0
 }
 
-koopa:::install_spacemacs() { # {{{1
+
+koopa:::install_prelude_emacs() { # {{{1
     # """
-    # Install Spacemacs.
+    # Install Prelude Emacs.
     # @note Updated 2021-06-07.
     #
-    # Note that master branch is ancient and way behind current codebase.
-    # Switching to more recent code on develop branch.
+    # @seealso
+    # - https://prelude.emacsredux.com/en/latest/
     # """
     local prefix repo
     koopa::assert_has_no_args "$#"
     prefix="${INSTALL_PREFIX:?}"
-    repo="https://github.com/syl20bnr/spacemacs.git"
+    repo='https://github.com/bbatsov/prelude.git'
     koopa::git_clone "$repo" "$prefix"
     return 0
 }
 
-koopa::uninstall_spacemacs() { # {{{1
+koopa::uninstall_prelude_emacs() { # {{{1
     echo "FIXME need to add support."
 }
 
-koopa::update_spacemacs() { # {{{1
+koopa::update_prelude_emacs() { # {{{1
     # """
     # Update spacemacs non-interatively.
     # @note Updated 2021-06-07.
