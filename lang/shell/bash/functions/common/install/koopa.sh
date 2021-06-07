@@ -143,7 +143,6 @@ koopa::update_koopa_user() { # {{{1
     ! koopa::is_shared_install && \
         koopa::update_dotfiles "$(koopa::dotfiles_prefix)"
     koopa::update_dotfiles "$(koopa::dotfiles_private_prefix)"
-    # > koopa::update_emacs
     koopa::alert_success 'User configuration update was successful.'
     return 0
 }

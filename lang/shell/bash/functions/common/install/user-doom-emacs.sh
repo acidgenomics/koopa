@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework using 'koopa::install_app' here.
-# FIXME Need to dynamically support both spacemacs and doom.
-# FIXME '--reinstall' is not supported.
 # FIXME Need to support an uninstaller.
-
 koopa::install_doom_emacs() { # {{{1
     koopa::install_app \
-        --name='doom-emacs' \
         --name-fancy='Doom Emacs' \
+        --name='doom-emacs' \
+        --prefix="$(koopa::doom_emacs_prefix)" \
         --version='rolling' \
-        --no-shared
+        --no-shared \
+        "$@"
     return 0
 }
 
+# FIXME Consider linking '~/.emacs.d' to doom here.
 koopa:::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
@@ -34,14 +33,15 @@ koopa:::install_doom_emacs() { # {{{1
     # - octicons.ttf
     # - weathericons.ttf
     # """
-    local doom install_args prefix repo
+    local brew_prefix doom install_args prefix repo
     koopa::assert_has_no_args "$#"
     if koopa::is_macos
     then
-        # NEED TO ACTIVATE EMACS CASK HERE...
-        koopa::activate_emacs
+        brew_prefix="$(koopa::homebrew_prefix)"
+        koopa::add_to_path_start "${brew_prefix}/bin"
     fi
     koopa::assert_is_installed 'emacs'
+    koopa::activate_python_packages
     prefix="${INSTALL_PREFIX:?}"
     repo='https://github.com/hlissner/doom-emacs'
     koopa::git_clone "$repo" "$prefix"
@@ -59,21 +59,21 @@ koopa:::install_doom_emacs() { # {{{1
     return 0
 }
 
-koopa:::update_doom_emacs() { # {{{1
+koopa::update_doom_emacs() { # {{{1
     # """
     # Update Doom Emacs.
-    # @note Updated 2020-11-25.
+    # @note Updated 2021-06-07.
     #
     # @seealso
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/upgrade.el
     # """
-    local name_fancy
+    local doom name_fancy
     name_fancy='Doom Emacs'
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'doom'
+    doom="$(koopa::locate_doom)"
     koopa::update_start "$name_fancy"
-    doom upgrade --force
-    doom sync
+    "$doom" upgrade --force
+    "$doom" sync
     koopa::update_success "$name_fancy"
     return 0
 }
