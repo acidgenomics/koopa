@@ -137,6 +137,16 @@ _koopa_docker_private_prefix() { # {{{1
     return 0
 }
 
+_koopa_doom_emacs_prefix() { # {{{1
+    # """
+    # Doom Emacs prefix.
+    # @note Updated 2021-06-07.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print "$(_koopa_xdg_data_home)/doom"
+    return 0
+}
+
 _koopa_dotfiles_prefix() { # {{{1
     # """
     # Koopa system dotfiles prefix.
@@ -609,6 +619,17 @@ _koopa_scripts_private_prefix() { # {{{1
     return 0
 }
 
+_koopa_spacemacs_prefix() { # {{{1
+    # """
+    # Spacemacs prefix.
+    # @note Updated 2021-06-07.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print "$(_koopa_xdg_data_home)/spacemacs"
+    return 0
+}
+
+# NOTE Consider moving this into XDG data home and symlinking into home.
 _koopa_spacevim_prefix() { # {{{1
     # """
     # SpaceVim prefix.
