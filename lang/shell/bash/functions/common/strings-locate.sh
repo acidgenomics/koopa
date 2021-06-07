@@ -209,6 +209,21 @@ koopa::locate_du() { # {{{1
     koopa:::locate_gnu_app 'coreutils' 'du' "$@"
 }
 
+koopa::locate_emacs() { # {{{1
+    # """
+    # Locate Emacs.
+    # @note Updated 2021-06-07.
+    # """
+    local app
+    if koopa::is_macos
+    then
+        app='/Applications/Emacs.app/Contents/MacOS/Emacs'
+    else
+        app='emacs'
+    fi
+    koopa:::locate_app_simple "$app"
+}
+
 koopa::locate_find() { # {{{1
     # """
     # Locate GNU find.
@@ -407,17 +422,31 @@ koopa::locate_pkg_config() { # {{{1
 koopa::locate_python() { # {{{1
     # """
     # Locate Python.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-06-07.
     # """
-    koopa:::locate_app_simple 'python3'
+    local app
+    if koopa::is_macos
+    then
+        app='/Library/Frameworks/Python.framework/Versions/Current/bin/python3'
+    else
+        app='python3'
+    fi
+    koopa:::locate_app_simple "$app"
 }
 
 koopa::locate_r() { # {{{1
     # """
     # Locate R.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-06-07.
     # """
-    koopa:::locate_app_simple 'R'
+    local app
+    if koopa::is_macos
+    then
+        app='/Library/Frameworks/R.framework/Versions/Current/Resources/bin/R'
+    else
+        app='R'
+    fi
+    koopa:::locate_app_simple "$app"
 }
 
 koopa::locate_readlink() { # {{{1
