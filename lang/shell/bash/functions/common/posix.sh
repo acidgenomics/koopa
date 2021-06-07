@@ -296,6 +296,10 @@ koopa::docker_private_prefix() { # {{{1
     _koopa_docker_private_prefix "$@"
 }
 
+koopa::doom_emacs_prefix() { # {{{1
+    _koopa_doom_emacs_prefix "$@"
+}
+
 koopa::dotfiles_prefix() { # {{{1
     _koopa_dotfiles_prefix "$@"
 }
@@ -882,6 +886,10 @@ koopa::snake_case_simple() { # {{{1
 
 koopa::source_dir() { # {{{1
     _koopa_source_dir "$@"
+}
+
+koopa::spacemacs_prefix() { # {{{1
+    _koopa_spacemacs_prefix "$@"
 }
 
 koopa::spacevim_prefix() { # {{{1
