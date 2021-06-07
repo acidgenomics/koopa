@@ -49,10 +49,12 @@ koopa::install_app() { # {{{1
         [installer]=''
         [link_app]=1
         [link_include_dirs]=''
+        [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt]=''
         [path_harden]=1
         [platform]=''
+        [prefix]=''
         [reinstall]=0
         [shared]=0
         [version]=''
@@ -102,7 +104,12 @@ koopa::install_app() { # {{{1
                 dict[platform]="${1#*=}"
                 shift 1
                 ;;
-            --reinstall|--force)
+            --prefix=*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            --reinstall | \
+            --force)
                 dict[reinstall]=1
                 shift 1
                 ;;
@@ -154,8 +161,14 @@ koopa::install_app() { # {{{1
     then
         dict[version]="$(koopa::variable "${dict[name]}")"
     fi
-    dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
-    dict[make_prefix]="$(koopa::make_prefix)"
+    if [[ -z "${dict[prefix]}" ]]
+    then
+        dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
+    fi
+    koopa::install_start \
+        "${dict[name_fancy]}" \
+        "${dict[version]}" \
+        "${dict[prefix]}"
     if [[ "${dict[reinstall]}" -eq 1 ]] && [[ -d "${dict[prefix]}" ]]
     then
         koopa::alert_note "Removing previous install at '${dict[prefix]}'."
@@ -173,10 +186,6 @@ koopa::install_app() { # {{{1
 at '${dict[prefix]}'."
         return 0
     fi
-    koopa::install_start \
-        "${dict[name_fancy]}" \
-        "${dict[version]}" \
-        "${dict[prefix]}"
     # Ensure configuration is minimal before proceeding, when desirable.
     if [[ "${dict[path_harden]}" -eq 1 ]]
     then
@@ -418,6 +427,16 @@ koopa::prune_apps() { # {{{1
         return 0
     fi
     koopa::rscript 'pruneApps' "$@"
+    return 0
+}
+
+# NEED TO Add support for this.
+koopa::uninstall_app() { # {{{1
+    # """
+    # Uninstall an application.
+    # @note Updated 2021-06-07.
+    # """
+    echo 'FIXME'
     return 0
 }
 
