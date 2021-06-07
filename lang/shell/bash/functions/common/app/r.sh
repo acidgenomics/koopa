@@ -333,7 +333,7 @@ koopa::rscript() { # {{{1
     koopa::assert_has_args "$#"
     fun="${1:?}"
     shift 1
-    header_file="$(koopa::prefix)/lang/r/include/header.R"
+    header_file="$(koopa::koopa_prefix)/lang/r/include/header.R"
     koopa::assert_is_file "$header_file"
     code="source('${header_file}')"
     # The 'header' variable is currently used to simply load the shared R

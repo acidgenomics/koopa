@@ -61,7 +61,7 @@ koopa::roff() { # {{{1
     # """
     local koopa_prefix
     koopa::assert_is_installed 'ronn'
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     (
         koopa::cd "${koopa_prefix}/man"
         ronn --roff ./*.ronn
@@ -103,7 +103,7 @@ koopa::sys_git_pull() { # {{{1
     koopa::assert_has_no_args "$#"
     local current_branch default_branch prefix
     (
-        prefix="$(koopa::prefix)"
+        prefix="$(koopa::koopa_prefix)"
         koopa::cd "$prefix"
         koopa::sys_set_permissions -r "${prefix}/lang/shell/zsh" &>/dev/null
         current_branch="$(koopa::git_branch)"
@@ -126,7 +126,7 @@ koopa::sys_info() { # {{{
     # """
     local array koopa_prefix nf origin os shell shell_name shell_version uname
     koopa::assert_has_no_args "$#"
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     array=(
         "koopa $(koopa::koopa_version) ($(koopa::koopa_date))"
         "URL: $(koopa::koopa_url)"

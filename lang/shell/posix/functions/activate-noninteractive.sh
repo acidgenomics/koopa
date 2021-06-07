@@ -234,7 +234,7 @@ _koopa_activate_koopa_paths() { # {{{1
     # """
     local config_prefix distro_prefix koopa_prefix linux_prefix shell
     [ "$#" -eq 0 ] || return 1
-    koopa_prefix="$(_koopa_prefix)"
+    koopa_prefix="$(_koopa_koopa_prefix)"
     config_prefix="$(_koopa_config_prefix)"
     shell="$(_koopa_shell_name)"
     _koopa_activate_prefix "$koopa_prefix"

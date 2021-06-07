@@ -12,7 +12,7 @@ koopa::brew_brewfile() { # {{{1
     else
         subdir='linux/common'
     fi
-    file="$(koopa::prefix)/os/${subdir}/etc/homebrew/brewfile"
+    file="$(koopa::koopa_prefix)/os/${subdir}/etc/homebrew/brewfile"
     [[ -f "$file" ]] || return 0
     koopa::print "$file"
     return 0

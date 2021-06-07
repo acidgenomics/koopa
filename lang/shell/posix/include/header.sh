@@ -27,10 +27,10 @@ _koopa_posix_header() { # {{{1
     _koopa_check_shell || return 1
     _koopa_activate_xdg || return 1
     _koopa_add_config_link \
-        "$(_koopa_prefix)" 'home' \
+        "$(_koopa_koopa_prefix)" 'home' \
         || return 1
     _koopa_add_config_link \
-        "$(_koopa_prefix)/activate" 'activate' \
+        "$(_koopa_koopa_prefix)/activate" 'activate' \
         || return 1
     _koopa_add_config_link \
         "$(_koopa_dotfiles_prefix)" 'dotfiles' \

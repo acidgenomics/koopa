@@ -343,7 +343,7 @@ koopa::find_non_symlinked_make_files() { # {{{1
     find="$(koopa::locate_find)"
     sort="$(koopa::locate_sort)"
     app_prefix="$(koopa::app_prefix)"
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     opt_prefix="$(koopa::opt_prefix)"
     make_prefix="$(koopa::make_prefix)"
     find_args=(

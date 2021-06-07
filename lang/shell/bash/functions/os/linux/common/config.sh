@@ -116,7 +116,7 @@ koopa::update_etc_profile_d() { # {{{1
         return 0
     fi
     sudo rm -fv "$file"
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     read -r -d '' string << END || true
 #!/bin/sh
 
