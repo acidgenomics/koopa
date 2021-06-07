@@ -121,7 +121,7 @@ koopa::current_bcbio_version() { # {{{1
     return 0
 }
 
-koopa::current_bioc_version() { # {{{1
+koopa::current_bioconductor_version() { # {{{1
     # """
     # Current Bioconductor version.
     # @note Updated 2021-05-24.
