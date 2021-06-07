@@ -6,9 +6,18 @@
 # FIXME Need to support an uninstaller.
 
 koopa::install_doom_emacs() { # {{{1
+    koopa::install_app \
+        --name='doom-emacs' \
+        --name-fancy='Doom Emacs' \
+        --version='rolling' \
+        --no-shared
+    return 0
+}
+
+koopa:::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-06-07.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -25,35 +34,28 @@ koopa::install_doom_emacs() { # {{{1
     # - octicons.ttf
     # - weathericons.ttf
     # """
-    local doom emacs_prefix install_args install_dir name name_fancy repo
+    local doom install_args prefix repo
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'emacs' 'git' 'tee'
-    name='doom'
-    name_fancy='Doom Emacs'
-    emacs_prefix="$(koopa::emacs_prefix)"
-    install_dir="${emacs_prefix}-${name}"
-    if [[ -d "$install_dir" ]]
+    if koopa::is_macos
     then
-        koopa::alert_is_installed "$name_fancy" "$install_dir"
-        return 0
+        # NEED TO ACTIVATE EMACS CASK HERE...
+        koopa::activate_emacs
     fi
-    koopa::install_start "$name_fancy" "$install_dir"
-    (
-        repo='https://github.com/hlissner/doom-emacs'
-        koopa::git_clone "$repo" "$install_dir"
-        doom="${install_dir}/bin/doom"
-        install_args=(
-            # > '--no-config'
-            # > '--no-install'
-            '--no-env'
-            '--no-fonts'
-        )
-        "$doom" install "${install_args[@]}"
-        "$doom" sync
-        "$doom" doctor
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
-    # > koopa::link_emacs "$name"
-    koopa::install_success "$name_fancy" "$install_dir"
+    koopa::assert_is_installed 'emacs'
+    prefix="${INSTALL_PREFIX:?}"
+    repo='https://github.com/hlissner/doom-emacs'
+    koopa::git_clone "$repo" "$prefix"
+    doom="${prefix}/bin/doom"
+    koopa::assert_is_executable "$doom"
+    install_args=(
+        # > '--no-config'
+        # > '--no-install'
+        '--no-env'
+        '--no-fonts'
+    )
+    "$doom" install "${install_args[@]}"
+    "$doom" sync
+    "$doom" doctor
     return 0
 }
 
