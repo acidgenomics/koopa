@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Need to support an uninstaller.
+
 koopa::install_doom_emacs() { # {{{1
     koopa::install_app \
         --name-fancy='Doom Emacs' \
@@ -12,7 +13,6 @@ koopa::install_doom_emacs() { # {{{1
     return 0
 }
 
-# FIXME Consider linking '~/.emacs.d' to doom here.
 koopa:::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
@@ -57,6 +57,10 @@ koopa:::install_doom_emacs() { # {{{1
     "$doom" sync
     "$doom" doctor
     return 0
+}
+
+koopa::uninstall_doom_emacs() { # {{{1
+    echo "FIXME need to add support."
 }
 
 koopa::update_doom_emacs() { # {{{1
