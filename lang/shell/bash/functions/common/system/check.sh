@@ -37,6 +37,7 @@ koopa::check_access_human() { # {{{1
     if [[ "$access" != "$code" ]]
     then
         koopa::warning "'${file}' current access '${access}' is not '${code}'."
+        return 1
     fi
     return 0
 }
@@ -59,6 +60,7 @@ koopa::check_access_octal() { # {{{1
     if [[ "$access" != "$code" ]]
     then
         koopa::warning "'${file}' current access '${access}' is not '${code}'."
+        return 1
     fi
     return 0
 }
@@ -76,12 +78,14 @@ koopa::check_data_disk() { # {{{1
     if [[ -L "$data_disk_link_prefix" ]] && [[ ! -e "$data_disk_link_prefix" ]]
     then
         koopa::warning "Invalid symlink: '${data_disk_link_prefix}'."
+        return 1
     fi
     # e.g. '/opt/koopa/opt'; or previously '/usr/local/koopa/opt'.
     opt_prefix="$(koopa::opt_prefix)"
     if [[ -L "$opt_prefix" ]] && [[ ! -e "$opt_prefix" ]]
     then
         koopa::warning "Invalid symlink: '${opt_prefix}'."
+        return 1
     fi
     return 0
 }
@@ -97,6 +101,7 @@ koopa::check_disk() { # {{{1
     if [[ "$used" -gt "$limit" ]]
     then
         koopa::warning "Disk usage is ${used}%."
+        return 1
     fi
     return 0
 }
