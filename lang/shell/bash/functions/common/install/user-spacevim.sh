@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework using 'install_app' here.
 # NOTE '--reinstall' is not currently supported.
 
 koopa::install_spacevim() { # {{{1
