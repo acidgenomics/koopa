@@ -80,6 +80,76 @@ koopa::delete_dotfile() { # {{{1
     return 0
 }
 
+koopa::disable_passwordless_sudo() { # {{{1
+    # """
+    # Disable passwordless sudo access for all admin users.
+    # @note Updated 2021-03-01.
+    # Consider using 'has_passwordless_sudo' as a check step here.
+    # """
+    local file
+    koopa::assert_is_admin
+    file='/etc/sudoers.d/sudo'
+    if [[ -f "$file" ]]
+    then
+        koopa::alert "Removing sudo permission file at '${file}'."
+        koopa::rm -S "$file"
+    fi
+    koopa::alert_success 'Passwordless sudo is disabled.'
+    return 0
+}
+
+koopa::enable_passwordless_sudo() { # {{{1
+    # """
+    # Enable passwordless sudo access for all admin users.
+    # @note Updated 2021-05-24.
+    # """
+    local file grep group string
+    koopa::assert_has_no_args "$#"
+    koopa::is_root && return 0
+    koopa::assert_is_admin
+    file='/etc/sudoers.d/sudo'
+    group="$(koopa::admin_group)"
+    grep="$(koopa::locate_grep)"
+    if [[ -f "$file" ]] && sudo "$grep" -q "$group" "$file"
+    then
+        koopa::alert_success "sudo already configured at '${file}'."
+        return 0
+    fi
+    koopa::alert "Modifying '${file}' to include '${group}'."
+    string="%${group} ALL=(ALL) NOPASSWD: ALL"
+    koopa::sudo_append_string "$string" "$file"
+    koopa::chmod -S 0440 "$file"
+    koopa::alert_success "Passwordless sudo enabled for '${group}' \
+at '${file}'."
+    return 0
+}
+
+koopa::enable_shell() { # {{{1
+    # """
+    # Enable shell.
+    # @note Updated 2021-05-14.
+    # """
+    local cmd_name cmd_path etc_file make_prefix user
+    koopa::assert_has_args "$#"
+    koopa::is_admin || return 0
+    cmd_name="${1:?}"
+    make_prefix="$(koopa::make_prefix)"
+    cmd_path="${make_prefix}/bin/${cmd_name}"
+    etc_file='/etc/shells'
+    [[ -f "$etc_file" ]] || return 0
+    koopa::alert "Updating '${etc_file}' to include '${cmd_path}'."
+    if ! grep -q "$cmd_path" "$etc_file"
+    then
+        koopa::sudo_append_string "$cmd_path" "$etc_file"
+    else
+        koopa::alert_success "'${cmd_path}' already defined in '${etc_file}'."
+    fi
+    user="$(koopa::user)"
+    koopa::alert_note "Run 'chsh -s ${cmd_path} ${user}' to change the \
+default shell."
+    return 0
+}
+
 koopa::find_user_profile() { # {{{1
     # """
     # Find current user's shell profile configuration file.
@@ -325,5 +395,16 @@ koopa::link_dotfile() { # {{{1
     symlink_dn="$(dirname "$symlink_path")"
     [[ "$symlink_dn" != "${HOME:?}" ]] && koopa::mkdir "$symlink_dn"
     koopa::ln "$source_path" "$symlink_path"
+    return 0
+}
+
+koopa::reload_shell() { # {{{1
+    # """
+    # Reload the current shell.
+    # @note Updated 2021-03-18.
+    # """
+    koopa::assert_has_no_args "$#"
+    # shellcheck disable=SC2093
+    exec "${SHELL:?}" -il
     return 0
 }

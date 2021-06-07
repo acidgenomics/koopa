@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Move these into other strings.sh file.
+
 koopa::admin_group() { # {{{1
     # """
     # Return the administrator group.
