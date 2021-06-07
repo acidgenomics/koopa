@@ -75,21 +75,3 @@ _koopa_major_minor_patch_version() { # {{{1
     done
     return 0
 }
-
-# FIXME Move this to Bash library.
-_koopa_ruby_api_version() { # {{{1
-    # """
-    # Ruby API version.
-    # @note Updated 2021-05-24.
-    #
-    # Used by Homebrew Ruby for default gem installation path.
-    # See 'brew info ruby' for details.
-    # """
-    local x
-    [ "$#" -eq 0 ] || return 1
-    _koopa_is_installed 'ruby' || return 1
-    x="$(ruby -e 'print Gem.ruby_api_version')"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
