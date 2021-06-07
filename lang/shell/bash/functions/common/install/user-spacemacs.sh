@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to support installation of both Doom Emacs and Spacemacs
-# at the same time...
-# FIXME Also need to support updating of both Doom and Spacemacs...
-# FIXME '--reinstall' is not supported.
-# FIXME Need to use something like 'koopa::install_local_app' here.
-# FIXME Need to link Spacemacs dynamically for commands here.
-
 koopa::install_spacemacs() { # {{{1
     koopa::install_app \
         --name-fancy='Spacemacs' \
@@ -26,7 +19,7 @@ koopa:::install_spacemacs() { # {{{1
     # Note that master branch is ancient and way behind current codebase.
     # Switching to more recent code on develop branch.
     # """
-    local prefix
+    local prefix repo
     koopa::assert_has_no_args "$#"
     if koopa::is_macos
     then
