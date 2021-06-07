@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework using 'koopa::install_app' here.
 # FIXME Need to dynamically support both spacemacs and doom.
 # FIXME '--reinstall' is not supported.
 # FIXME Need to support an uninstaller.
