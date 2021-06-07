@@ -1,5 +1,75 @@
 #!/usr/bin/env bash
 
+koopa::help() { # {{{1
+    # """
+    # Show usage via '--help' flag.
+    # @note Updated 2021-06-07.
+    # """
+    local arg args first_arg last_arg man_file prefix script_name
+    [[ "$#" -eq 0 ]] && return 0
+    [[ "${1:-}" == "" ]] && return 0
+    first_arg="${1:?}"
+    last_arg="${!#}"
+    args=("$first_arg" "$last_arg")
+    for arg in "${args[@]}"
+    do
+        case "$arg" in
+            --help|-h)
+                koopa::assert_is_installed 'man'
+                file="$(koopa::realpath "$0")"
+                script_name="$(koopa::basename "$file")"
+                prefix="$(koopa::parent_dir -n 2 "$file")"
+                man_file="${prefix}/man/man1/${script_name}.1"
+                if [[ -s "$man_file" ]]
+                then
+                    head -n 10 "$man_file" \
+                        | koopa::str_match_regex '^\.TH ' \
+                        || koopa::stop "Invalid documentation at '${man_file}'."
+                else
+                    koopa::stop "No documentation for '${script_name}'."
+                fi
+                man "$man_file"
+                exit 0
+                ;;
+        esac
+    done
+    return 0
+}
+
+koopa::pager() { # {{{1
+    # """
+    # Run less with support for colors (escape characters).
+    # @note Updated 2021-06-07.
+    #
+    # Detail on handling escape sequences:
+    # https://major.io/2013/05/21/
+    #     handling-terminal-color-escape-sequences-in-less/
+    # """
+    local pager
+    koopa::assert_has_args "$#"
+    pager="${PAGER:-}"
+    [[ -z "$pager" ]] && pager='less'
+    koopa::assert_is_installed "$pager"
+    "$pager" -R "$@"
+    return 0
+}
+
+koopa::roff() { # {{{1
+    # """
+    # Convert roff markdown files to ronn man pages.
+    # @note Updated 2020-08-14.
+    # """
+    local koopa_prefix
+    koopa::assert_is_installed 'ronn'
+    koopa_prefix="$(koopa::prefix)"
+    (
+        koopa::cd "${koopa_prefix}/man"
+        ronn --roff ./*.ronn
+        koopa::mv -t 'man1' ./*.1
+    )
+    return 0
+}
+
 koopa::run_if_installed() { # {{{1
     # """
     # Run program(s) if installed.
