@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for koopa::install_local_app.
-# This should not link into koopa opt...
-
 # FIXME Need to add a standardized app uninstaller.
 
 koopa::find_app_version() { # {{{1
@@ -34,9 +31,6 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Need to add support for not linking into koopa opt
-# (e.g. doom, spacemacs, spacevim).
-# FIXME Only link in opt if prefix matches app prefix...
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -45,12 +39,10 @@ koopa::install_app() { # {{{1
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
     # """
-    local arr dict link_args pkgs pos str tee
+    local arr dict link_args pkgs pos rm str tee
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
-    koopa::is_shared_install && koopa::assert_is_admin
     tee="$(koopa::locate_tee)"
-    # Use a dictionary approach for storing configuration variables.
     declare -A dict=(
         [arch]="$(koopa::arch)"
         [homebrew_opt]=''
@@ -62,10 +54,10 @@ koopa::install_app() { # {{{1
         [path_harden]=1
         [platform]=''
         [reinstall]=0
+        [shared]=0
         [version]=''
     )
-    # Any additional configuration variables (positional arguments) are passed
-    # to the internal installer function below.
+    koopa::is_shared_install && dict[shared]=1
     pos=()
     while (("$#"))
     do
@@ -98,6 +90,10 @@ koopa::install_app() { # {{{1
                 dict[path_harden]=0
                 shift 1
                 ;;
+            --no-shared)
+                dict[shared]=0
+                shift 1
+                ;;
             --opt=*)
                 dict[opt]="${1#*=}"
                 shift 1
@@ -125,27 +121,51 @@ koopa::install_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    [[ -z "${dict[installer]}" ]] && dict[installer]="${dict[name]}"
+    if [[ "${dict[shared]}" -eq 1 ]]
+    then
+        koopa::assert_is_admin
+    else
+        dict[link_app]=0
+    fi
+    if koopa::is_macos
+    then
+        dict[link_app]=0
+    fi
+    if [[ -z "${dict[installer]}" ]]
+    then
+        dict[installer]="${dict[name]}"
+    fi
     dict[function]="$(koopa::snake_case_simple "${dict[installer]}")"
     dict[function]="install_${dict[function]}"
-    [[ -n "${dict[platform]}" ]] && \
+    if [[ -n "${dict[platform]}" ]]
+    then
         dict[function]="${dict[platform]}_${dict[function]}"
+    fi
     dict[function]="koopa:::${dict[function]}"
     if ! koopa::is_function "${dict[function]}"
     then
         koopa::stop 'Unsupported command.'
     fi
-    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
-    [[ -z "${dict[version]}" ]] && \
+    if [[ -z "${dict[name_fancy]}" ]]
+    then
+        dict[name_fancy]="${dict[name]}"
+    fi
+    if [[ -z "${dict[version]}" ]]
+    then
         dict[version]="$(koopa::variable "${dict[name]}")"
-    # Never link apps into make prefix on macOS.
-    koopa::is_macos && dict[link_app]=0
+    fi
     dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     dict[make_prefix]="$(koopa::make_prefix)"
     if [[ "${dict[reinstall]}" -eq 1 ]] && [[ -d "${dict[prefix]}" ]]
     then
         koopa::alert_note "Removing previous install at '${dict[prefix]}'."
-        koopa::sys_rm "${dict[prefix]}"
+        if [[ "${dict[shared]}" -eq 1 ]]
+        then
+            rm='koopa::sys_rm'
+        else
+            rm='koopa::rm'
+        fi
+        "$rm" "${dict[prefix]}"
     fi
     if [[ -d "${dict[prefix]}" ]]
     then
@@ -203,7 +223,7 @@ at '${dict[prefix]}'."
         IFS=',' read -r -a pkgs <<< "${dict[opt]}"
         koopa::activate_opt_prefix "${pkgs[@]}"
     fi
-    if koopa::is_linux && koopa::is_shared_install
+    if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
     then
         koopa::update_ldconfig
     fi
@@ -217,17 +237,12 @@ at '${dict[prefix]}'."
         "${dict[function]}" "$@"
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "${dict[tmp_dir]}"
-
-
-
-    # FIXME Only run these steps if prefix matches koopa app prefix.
-    # This should skip for spacemacs, doom emacs, spacevim.
-    koopa::sys_set_permissions -r "${dict[prefix]}"
-    koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
-    koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
-
-
-
+    if [[ "${dict[shared]}" -eq 1 ]]
+    then
+        koopa::sys_set_permissions -r "${dict[prefix]}"
+        koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
+        koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
+    fi
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
         koopa::delete_broken_symlinks "${dict[make_prefix]}"
@@ -242,7 +257,7 @@ at '${dict[prefix]}'."
         # Including the 'true' catch here to avoid 'cp' issues on Arch Linux.
         koopa::link_app "${link_args[@]}" || true
     fi
-    if koopa::is_linux && koopa::is_shared_install
+    if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
     then
         koopa::update_ldconfig
     fi
