@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-05-25.
+# @note Updated 2021-06-07.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
@@ -40,6 +40,9 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # Restrict path, so we don't mask compiler binaries with conda or venv.
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
+
+# gfortran (from fxcoudert).
+PATH="/usr/local/gfortran/bin:${PATH}"
 
 # cURL.
 PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
