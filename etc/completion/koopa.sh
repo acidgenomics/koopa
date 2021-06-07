@@ -114,6 +114,7 @@ _koopa_complete() { # {{{1
                     'perlbrew'
                     'perlbrew-perl'
                     'pkg-config'
+                    'prelude-emacs'
                     'proj'
                     'pyenv'
                     'python'
@@ -135,8 +136,8 @@ _koopa_complete() { # {{{1
                     'shellcheck'
                     'shunit2'
                     'singularity'
-                    'spacemacs'  # FIXME Need to indicate user here?
-                    'spacevim'  # FIXME Need to indicate user here?
+                    'spacemacs'
+                    'spacevim'
                     'sqlite'
                     'subversion'
                     'taglib'
@@ -275,6 +276,7 @@ _koopa_complete() { # {{{1
                     'perl-packages'  # FIXME prompt about this
                     'perlbrew'  # FIXME
                     'pkg-config'  # FIXME
+                    'prelude-emacs'  # FIXME
                     'proj'  # FIXME
                     'pyenv'  # FIXME
                     'python'  # FIXME
@@ -348,6 +350,7 @@ _koopa_complete() { # {{{1
                     'dotfiles'
                     'google-cloud-sdk'
                     'homebrew'
+                    'prelude-emacs'  # FIXME
                     'pyenv'
                     'python-packages'
                     'r-packages'
@@ -356,6 +359,7 @@ _koopa_complete() { # {{{1
                     'rust'
                     'rust-packages'
                     'spacemacs'
+                    'spacevim'
                     'tex'
                 )
                 ;;

@@ -4,7 +4,7 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-07.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
@@ -16,6 +16,7 @@ _koopa_activate_aliases() { # {{{1
     alias pipx='_koopa_alias_pipx'
     alias pyenv='_koopa_alias_pyenv'
     alias rbenv='_koopa_alias_rbenv'
+    alias spacevim='_koopa_alias_spacevim'
     alias z='_koopa_alias_z'
     file="${HOME}/.aliases"
     # shellcheck source=/dev/null
