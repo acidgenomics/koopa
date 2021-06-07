@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider converting these into R function variants that we can call
-# inside our new AcidLinter package.
-
 koopa::check_bin_man_consistency() { # {{{1
     # """
     # Check bin and man consistency.
@@ -24,7 +21,6 @@ koopa::test() { # {{{1
     return 0
 }
 
-# FIXME We should use fd here instead of GNU find, for speed.
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.

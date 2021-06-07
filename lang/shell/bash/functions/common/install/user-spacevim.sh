@@ -1,50 +1,54 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework using 'install_app' here.
-# NOTE '--reinstall' is not currently supported.
+# FIXME Need to support an uninstaller.
 
 koopa::install_spacevim() { # {{{1
+    koopa::install_app \
+        --name-fancy='SpaceVim' \
+        --name='spacevim' \
+        --prefix="$(koopa::spacevim_prefix)" \
+        --version='rolling' \
+        --no-shared \
+        "$@"
+    return 0
+}
+
+koopa:::install_spacevim() { # {{{1
     # """
     # Install SpaceVim.
-    # @note Updated 2021-05-26.
-    # https://spacevim.org
+    # @note Updated 2021-06-07.
+    # @seealso
+    # - https://spacevim.org
+    # - https://spacevim.org/quick-start-guide/
+    # - https://spacevim.org/faq/
     # """
-    local name name_fancy prefix script_file script_url tmp_dir
-    local vimproc_prefix xdg_data_home
-    name='spacevim'
-    name_fancy='SpaceVim'
-    prefix="$(koopa::spacevim_prefix)"
+    local make prefix vimproc_prefix xdg_data_home
+    prefix="${INSTALL_PREFIX:?}"
+    repo='https://github.com/SpaceVim/SpaceVim.git'
+    make="$(koopa::locate_make)"
     xdg_data_home="$(koopa::xdg_data_home)"
-    if [[ -d "$prefix" ]]
-    then
-        koopa::alert_is_installed "$name_fancy" "$prefix"
-        return 0
-    fi
-    koopa::install_start "$name_fancy"
     # Symlink the font cache, to avoid unnecessary copy step.
-    koopa::rm "${xdg_data_home}/fonts"
     koopa::ln "${HOME:?}/Library/Fonts" "${xdg_data_home}/fonts"
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        script_url="https://${name}.org/install.sh"
-        script_file="$(koopa::basename "$script_url")"
-        koopa::download "$script_url" "$script_file"
-        koopa::chmod +x "$script_file"
-        "./${script_file}"
-    )
+    # Install script method, which overwrites '~/.vim' and '~/.vimrc'.
+    # > local script_file script_url
+    # > script_url="https://spacevim.org/install.sh"
+    # > script_file="$(koopa::basename "$script_url")"
+    # > koopa::download "$script_url" "$script_file"
+    # > koopa::chmod +x "$script_file"
+    # > "./${script_file}"
+    koopa::git_clone "$repo" "$prefix"
     # Bug fix for vimproc error.
     # https://github.com/SpaceVim/SpaceVim/issues/435
     vimproc_prefix="${prefix}/bundle/vimproc.vim"
     koopa::alert "Fixing vimproc at '${vimproc_prefix}'."
     (
         koopa::cd "$vimproc_prefix"
-        make
+        "$make"
     )
-    koopa::install_success "$name_fancy"
     return 0
 }
 
+# FIXME Need to rework this after new approach using Git clone...
 koopa::uninstall_spacevim() { # {{{1
     # """
     # Uninstall SpaceVim.
@@ -74,5 +78,24 @@ koopa::uninstall_spacevim() { # {{{1
         koopa::mv "${HOME:?}/.vimrc_back" "${HOME:?}/.vimrc"
     fi
     koopa::uninstall_success "$name_fancy"
+    return 0
+}
+
+koopa::update_spacevim() { # {{{1
+    # """
+    # Update SpaceVim.
+    # @note Updated 2021-06-07.
+    # """
+    local name_fancy prefix
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed 'emacs'
+    name_fancy='SpaceVim'
+    koopa::update_start "$name_fancy"
+    prefix="$(koopa::spacevim_prefix)"
+    (
+        koopa::cd "$prefix"
+        koopa::git_pull
+    )
+    koopa::update_success "$name_fancy"
     return 0
 }
