@@ -27,7 +27,7 @@ koopa::uninstall_koopa() { # {{{1
     # Uninstall koopa.
     # @note Updated 2020-06-24.
     # """
-    "$(koopa::prefix)/uninstall" "$@"
+    "$(koopa::koopa_prefix)/uninstall" "$@"
     return 0
 }
 
@@ -40,7 +40,7 @@ koopa::update_koopa() { # {{{1
     # """
     local koopa_prefix name_fancy url version
     name_fancy='koopa'
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     if ! koopa::is_git_toplevel "$koopa_prefix"
     then
         version="$(koopa::version)"

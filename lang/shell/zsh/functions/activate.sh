@@ -100,7 +100,7 @@ _koopa_activate_zsh_fpath() { # {{{1
     # """
     local koopa_fpath koopa_prefix
     [[ "$#" -eq 0 ]] || return 1
-    koopa_prefix="$(_koopa_prefix)"
+    koopa_prefix="$(_koopa_koopa_prefix)"
     koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
     then

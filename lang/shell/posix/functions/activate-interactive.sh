@@ -82,7 +82,7 @@ _koopa_activate_completion() { # {{{1
             return 0
             ;;
     esac
-    koopa_prefix="$(_koopa_prefix)"
+    koopa_prefix="$(_koopa_koopa_prefix)"
     for file in "${koopa_prefix}/etc/completion/"*'.sh'
     do
         # shellcheck source=/dev/null

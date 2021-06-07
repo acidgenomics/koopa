@@ -23,7 +23,7 @@ koopa::linux_find_app_symlinks() { # {{{1
     koopa::assert_is_linux
     name="${1:?}"
     version="${2:-}"
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     make_prefix="$(koopa::make_prefix)"
     find="$(koopa::locate_find)"
     sort="$(koopa::locate_sort)"

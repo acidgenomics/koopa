@@ -12,7 +12,7 @@ koopa::add_make_prefix_link() { # {{{1
     koopa::assert_has_args_le "$#" 1
     koopa::is_shared_install || return 0
     koopa_prefix="${1:-}"
-    [[ -z "$koopa_prefix" ]] && koopa_prefix="$(koopa::prefix)"
+    [[ -z "$koopa_prefix" ]] && koopa_prefix="$(koopa::koopa_prefix)"
     make_prefix="$(koopa::make_prefix)"
     [[ -d "$make_prefix" ]] || return 0
     target_link="${make_prefix}/bin/koopa"
@@ -49,7 +49,7 @@ koopa::add_to_user_profile() { # {{{1
     local source_file target_file
     koopa::assert_has_no_args "$#"
     target_file="$(koopa::find_user_profile)"
-    source_file="$(koopa::prefix)/lang/shell/posix/include/profile.sh"
+    source_file="$(koopa::koopa_prefix)/lang/shell/posix/include/profile.sh"
     koopa::assert_is_file "$source_file"
     koopa::alert "Adding koopa activation to '${target_file}'."
     touch "$target_file"
@@ -208,7 +208,7 @@ koopa::fix_zsh_permissions() { # {{{1
     local app_prefix koopa_prefix make_prefix
     koopa::assert_has_no_args "$#"
     koopa::alert 'Fixing Zsh permissions.'
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     koopa::sys_chmod 'g-w' \
         "${koopa_prefix}/lang/shell/zsh" \
         "${koopa_prefix}/lang/shell/zsh/functions"

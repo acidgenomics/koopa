@@ -30,7 +30,7 @@ koopa::install_dotfiles() { # {{{1
         koopa::rm "$prefix"
     fi
     koopa::install_start "$name_fancy" "$prefix"
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     koopa::add_to_path_start "${koopa_prefix}/bin"
     [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles
     koopa::add_config_link "$prefix" 'dotfiles'

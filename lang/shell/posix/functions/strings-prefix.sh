@@ -36,12 +36,12 @@ _koopa_app_prefix() { # {{{1
         if [ -d "$(_koopa_make_prefix)/cellar" ]
         then
             prefix="$(_koopa_make_prefix)/cellar"
-        elif [ -d "$(_koopa_prefix)/cellar" ]
+        elif [ -d "$(_koopa_koopa_prefix)/cellar" ]
         then
-            prefix="$(_koopa_prefix)/cellar"
+            prefix="$(_koopa_koopa_prefix)/cellar"
         fi
     fi
-    [ -z "$prefix" ] && prefix="$(_koopa_prefix)/app"
+    [ -z "$prefix" ] && prefix="$(_koopa_koopa_prefix)/app"
     _koopa_print "$prefix"
     return 0
 }
@@ -105,7 +105,7 @@ _koopa_distro_prefix() { # {{{1
     # """
     local koopa_prefix os_id prefix
     [ "$#" -eq 0 ] || return 1
-    koopa_prefix="$(_koopa_prefix)"
+    koopa_prefix="$(_koopa_koopa_prefix)"
     os_id="$(_koopa_os_id)"
     if _koopa_is_linux
     then
@@ -300,7 +300,7 @@ _koopa_include_prefix() { # {{{1
     # @note Updated 2020-07-30.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_print "$(_koopa_prefix)/include"
+    _koopa_print "$(_koopa_koopa_prefix)/include"
     return 0
 }
 
@@ -330,6 +330,16 @@ _koopa_java_prefix() { # {{{1
         prefix="$(_koopa_openjdk_prefix)"
     fi
     _koopa_print "$prefix"
+    return 0
+}
+
+_koopa_koopa_prefix() { # {{{1
+    # """
+    # Koopa prefix (home).
+    # @note Updated 2020-01-12.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print "${KOOPA_PREFIX:?}"
     return 0
 }
 
@@ -429,7 +439,7 @@ _koopa_opt_prefix() { # {{{1
     # @note Updated 2021-05-17.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_print "$(_koopa_prefix)/opt"
+    _koopa_print "$(_koopa_koopa_prefix)/opt"
     return 0
 }
 
@@ -482,16 +492,6 @@ _koopa_prelude_emacs_prefix() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_xdg_data_home)/prelude"
-    return 0
-}
-
-_koopa_prefix() { # {{{1
-    # """
-    # Koopa prefix (home).
-    # @note Updated 2020-01-12.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_print "${KOOPA_PREFIX:?}"
     return 0
 }
 
@@ -655,7 +655,7 @@ _koopa_tests_prefix() { # {{{1
     # @note Updated 2020-06-24.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_print "$(_koopa_prefix)/tests"
+    _koopa_print "$(_koopa_koopa_prefix)/tests"
     return 0
 }
 

@@ -32,7 +32,7 @@ koopa::test_find_files() { # {{{1
     find="$(koopa::locate_find)"
     grep="$(koopa::locate_grep)"
     sort="$(koopa::locate_sort)"
-    prefix="$(koopa::prefix)"
+    prefix="$(koopa::koopa_prefix)"
     x="$( \
         "$find" "$prefix" \
             -mindepth 1 \

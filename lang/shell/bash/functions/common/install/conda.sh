@@ -42,7 +42,7 @@ koopa:::install_miniconda() { # {{{1
     name='miniconda'
     name2="$(koopa::capitalize "$name")"
     arch="$(koopa::arch)"
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     os_type="$(koopa::os_type)"
     case "$os_type" in
         darwin*)

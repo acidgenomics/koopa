@@ -5,7 +5,7 @@ koopa::pyscript_prefix() { # {{{1
     # Rscript file prefix.
     # @note Updated 2020-11-19.
     # """
-    koopa::print "$(koopa::prefix)/lang/python/include"
+    koopa::print "$(koopa::koopa_prefix)/lang/python/include"
     return 0
 }
 
@@ -88,6 +88,6 @@ koopa::rscript_prefix() { # {{{1
     # Rscript file prefix.
     # @note Updated 2020-11-17.
     # """
-    koopa::print "$(koopa::prefix)/lang/r/include"
+    koopa::print "$(koopa::koopa_prefix)/lang/r/include"
     return 0
 }

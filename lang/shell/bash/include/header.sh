@@ -11,7 +11,7 @@ __koopa_bash_source_dir() { # {{{1
     local fun_script fun_scripts fun_scripts_arr koopa_prefix prefix
     [[ "$#" -eq 1 ]] || return 1
     [[ $(type -t readarray) == 'builtin' ]] || return 1
-    koopa_prefix="$(_koopa_prefix)"
+    koopa_prefix="$(_koopa_koopa_prefix)"
     prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
     fun_scripts="$( \
