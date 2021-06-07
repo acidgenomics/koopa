@@ -122,15 +122,15 @@ koopa::sys_git_pull() { # {{{1
 koopa::sys_info() { # {{{
     # """
     # System information.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-06-07.
     # """
     local array koopa_prefix nf origin os shell shell_name shell_version uname
     koopa::assert_has_no_args "$#"
     koopa_prefix="$(koopa::prefix)"
     array=(
-        "koopa $(koopa::version) ($(koopa::date))"
-        "URL: $(koopa::url)"
-        "GitHub URL: $(koopa::github_url)"
+        "koopa $(koopa::koopa_version) ($(koopa::koopa_date))"
+        "URL: $(koopa::koopa_url)"
+        "GitHub URL: $(koopa::koopa_github_url)"
     )
     if koopa::is_git_toplevel "$koopa_prefix"
     then
@@ -466,16 +466,6 @@ koopa::sys_user() { # {{{1
         user="$(koopa::user)"
     fi
     koopa::print "$user"
-    return 0
-}
-
-koopa::url() { # {{{1
-    # """
-    # Koopa URL.
-    # @note Updated 2020-04-16.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::variable 'koopa-url'
     return 0
 }
 
