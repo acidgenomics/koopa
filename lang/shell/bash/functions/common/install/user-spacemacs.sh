@@ -4,6 +4,8 @@
 # at the same time...
 # FIXME Also need to support updating of both Doom and Spacemacs...
 # FIXME '--reinstall' is not supported.
+# FIXME Need to use something like 'koopa::install_local_app' here.
+# FIXME Need to link Spacemacs dynamically for commands here.
 
 koopa::install_spacemacs() { # {{{1
     # """
