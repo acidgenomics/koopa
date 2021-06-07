@@ -312,7 +312,7 @@ koopa::link_dotfile() { # {{{1
     # Link dotfile.
     # @note Updated 2021-06-07.
     # """
-    local pos source_basename source_path source_prefix
+    local pos source_path source_prefix source_subdir
     local symlink_basename symlink_dirname symlink_path symlink_prefix
     koopa::assert_has_args "$#"
     declare -A dict=(
@@ -361,11 +361,11 @@ koopa::link_dotfile() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_le "$#" 2
-    source_basename="${1:?}"
+    source_subdir="${1:?}"
     symlink_basename="${2:-}"
     if [[ -z "$symlink_basename" ]]
     then
-        symlink_basename="$source_basename"
+        symlink_basename="$(koopa::basename "$source_subdir")"
     fi
     if [[ "${dict[opt]}" -eq 1 ]]
     then
@@ -380,7 +380,7 @@ koopa::link_dotfile() { # {{{1
             koopa::ln "${dict[dotfiles_prefix]}" "$source_prefix"
         fi
     fi
-    source_path="${source_prefix}/${source_basename}"
+    source_path="${source_prefix}/${source_subdir}"
     koopa::assert_is_existing "$source_path"
     if [[ "${dict[config]}" -eq 1 ]]
     then
