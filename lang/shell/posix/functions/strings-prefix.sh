@@ -629,14 +629,13 @@ _koopa_spacemacs_prefix() { # {{{1
     return 0
 }
 
-# NOTE Consider moving this into XDG data home and symlinking into home.
 _koopa_spacevim_prefix() { # {{{1
     # """
     # SpaceVim prefix.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-07.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_print "${HOME:?}/.Spacevim"
+    _koopa_print "$(_koopa_xdg_data_home)/spacevim"
     return 0
 }
 

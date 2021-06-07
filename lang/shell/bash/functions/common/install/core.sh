@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add support for koopa::install_local_app.
+# This should not link into koopa opt...
+
 # FIXME Need to add a standardized app uninstaller.
 
 koopa::find_app_version() { # {{{1
@@ -31,10 +34,13 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
+# FIXME Need to add support for not linking into koopa opt
+# (e.g. doom, spacemacs, spacevim).
+# FIXME Only link in opt if prefix matches app prefix...
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-07.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -211,9 +217,17 @@ at '${dict[prefix]}'."
         "${dict[function]}" "$@"
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "${dict[tmp_dir]}"
+
+
+
+    # FIXME Only run these steps if prefix matches koopa app prefix.
+    # This should skip for spacemacs, doom emacs, spacevim.
     koopa::sys_set_permissions -r "${dict[prefix]}"
     koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
     koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
+
+
+
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
         koopa::delete_broken_symlinks "${dict[make_prefix]}"
