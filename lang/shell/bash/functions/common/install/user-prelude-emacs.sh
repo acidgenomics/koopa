@@ -46,10 +46,9 @@ koopa::update_prelude_emacs() { # {{{1
     # """
     local name_fancy prefix
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'emacs'
-    name_fancy='Spacemacs'
+    name_fancy='Prelude Emacs'
     koopa::update_start "$name_fancy"
-    prefix="$(koopa::spacemacs_prefix)"
+    prefix="$(koopa::prelude_emacs_prefix)"
     (
         koopa::cd "$prefix"
         koopa::git_pull
