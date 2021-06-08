@@ -4,15 +4,18 @@
 
 koopa::install_fzf() { # {{{1
     koopa::install_app \
-        --name='fzf' \
         --name-fancy='FZF' \
+        --name='fzf' \
         "$@"
 }
+
+# NOTE Safe to ignore this warning/error:
+# fatal: not a git repository (or any of the parent directories): .git
 
 koopa:::install_fzf() { # {{{1
     # """
     # Install fzf.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-08.
     # @seealso
     # - https://github.com/junegunn/fzf/blob/master/BUILD.md
     # """
@@ -34,13 +37,23 @@ koopa:::install_fzf() { # {{{1
     export FZF_REVISION='tarball'
     "$make" --jobs="$jobs"
     # > "$make" test
-    # This will copy fzf binary from 'target/' to 'bin/' inside tmp dir.
-    # Note that this step does not copy to '/usr/bin/'.
+    # This will copy fzf binary from 'target/' to 'bin/'.
     "$make" install
     # > ./install --help
     ./install --bin --no-update-rc
-    # Following approach used in Homebrew recipe here.
-    koopa::rm .[[:alnum:]]* 'src' 'target'
-    koopa::cp . "$prefix"
+    koopa::cp \
+        -t "$prefix" \
+        'bin' \
+        'doc' \
+        'man' \
+        'plugin' \
+        'shell'
     return 0
+}
+
+koopa::uninstall_fzf() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='FZF' \
+        --name='fzf' \
+        "$@"
 }

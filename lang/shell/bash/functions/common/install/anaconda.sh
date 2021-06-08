@@ -56,5 +56,6 @@ koopa::uninstall_anaconda() { # {{{1
     koopa::uninstall_app \
         --name-fancy='Anaconda' \
         --name='anaconda' \
+        --no-link \
         "$@"
 }

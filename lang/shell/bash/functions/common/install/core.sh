@@ -431,12 +431,13 @@ koopa::prune_apps() { # {{{1
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-06-08.
     # """
     local dict pos rm
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
+        [link_app]=1
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt_prefix]="$(koopa::opt_prefix)"
@@ -449,6 +450,14 @@ koopa::uninstall_app() { # {{{1
         case "$1" in
             --name=*)
                 dict[name]="${1#*=}"
+                shift 1
+                ;;
+            --name-fancy=*)
+                dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            --no-link)
+                dict[link_app]=0
                 shift 1
                 ;;
             --prefix=*)
@@ -466,7 +475,15 @@ koopa::uninstall_app() { # {{{1
     then
         dict[prefix]="${dict[app_prefix]}/${dict[name]}"
     fi
-    koopa::assert_is_dir "${dict[prefix]}"
+    if [[ ! -d "${dict[prefix]}" ]]
+    then
+        koopa::alert_is_not_installed "${dict[name_fancy]}" "${dict[prefix]}"
+        return 0
+    fi
+    if [[ "${dict[shared]}" -eq 0 ]] || koopa::is_macos
+    then
+        dict[link_app]=0
+    fi
     if [[ -z "${dict[name_fancy]}" ]]
     then
         dict[name_fancy]="${dict[name]}"
@@ -485,7 +502,7 @@ koopa::uninstall_app() { # {{{1
     "$rm" \
         "${dict[prefix]}" \
         "${dict[opt_prefix]}/${dict[name]}"
-    if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
+    if [[ "${dict[link_app]}" -eq 1 ]]
     then
         koopa::alert "Deleting broken symlinks in '${dict[make_prefix]}'."
         koopa::delete_broken_symlinks "${dict[make_prefix]}"
