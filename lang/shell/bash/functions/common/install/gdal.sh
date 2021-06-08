@@ -4,8 +4,8 @@
 
 koopa::install_gdal() { # {{{1
     koopa::install_app \
-        --name='gdal' \
         --name-fancy='GDAL' \
+        --name='gdal' \
         --no-link \
         "$@"
 }
@@ -93,4 +93,12 @@ koopa:::install_gdal() { # {{{1
     "$make" --jobs="$jobs"
     "$make" install
     return 0
+}
+
+koopa::uninstall_gdal() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='GDAL' \
+        --name='gdal' \
+        --no-link \
+        "$@"
 }

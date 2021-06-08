@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add an uninstaller.
+
 koopa::debian_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.

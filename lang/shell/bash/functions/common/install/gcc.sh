@@ -13,8 +13,8 @@
 
 koopa::install_gcc() { # {{{1
     koopa::install_app \
-        --name='gcc' \
         --name-fancy='GCC' \
+        --name='gcc' \
         --no-link \
         "$@"
 }
@@ -111,4 +111,12 @@ koopa:::install_gcc() { # {{{1
     "$make" --jobs="$jobs"
     "$make" install
     return 0
+}
+
+koopa::uninstall_gcc() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='GCC' \
+        --name='gcc' \
+        --no-link \
+        "$@"
 }

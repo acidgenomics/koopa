@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add an uninstaller.
+
 koopa::fedora_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.
@@ -20,4 +22,3 @@ koopa::fedora_install_google_cloud_sdk() { # {{{1
     koopa::install_success "$name_fancy"
     return 0
 }
-
