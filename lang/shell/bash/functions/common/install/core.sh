@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add a standardized app uninstaller.
-
 koopa::find_app_version() { # {{{1
     # """
     # Find the latest application version.
@@ -430,42 +428,63 @@ koopa::prune_apps() { # {{{1
     return 0
 }
 
-# FIXME Need to think about how to support this.
-# NEED TO Add support for this.
-# NORMALLY LOOK FOR APP/VERSION AND REMOVE.
-# IF LINKED, NEED TO REMOVE BROKEN SYMLINKS IN /USR/LOCAL.
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
     # @note Updated 2021-06-07.
     # """
-    local dict koopa_prefix pos
+    local dict pos rm
     declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
+        [make_prefix]="$(koopa::make_prefix)"
+        [name_fancy]=''
+        [opt_prefix]="$(koopa::opt_prefix)"
         [prefix]=''
+        [shared]=0
     )
     pos=()
     while (("$#"))
     do
         case "$1" in
-            --homebrew-opt=*)
-                dict[homebrew_opt]="${1#*=}"
+            --name=*)
+                dict[name]="${1#*=}"
                 shift 1
                 ;;
-            --installer=*)
-                dict[installer]="${1#*=}"
+            --prefix=*)
+                dict[prefix]="${1#*=}"
                 shift 1
                 ;;
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::uninstall_start "${dict[name_fancy]}"
-
-
-
-
-
-
+    if [[ -z "${dict[prefix]}" ]]
+    then
+        dict[prefix]="${dict[app_prefix]}/${dict[name]}"
+    fi
+    koopa::assert_is_dir "${dict[prefix]}"
+    if [[ -z "${dict[name_fancy]}" ]]
+    then
+        dict[name_fancy]="${dict[name]}"
+    fi
+    koopa::uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
+    if koopa::str_match_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
+    then
+        dict[shared]=1
+    fi
+    if [[ "${dict[shared]}" -eq 1 ]]
+    then
+        rm='koopa::sys_rm'
+    else
+        rm='koopa::rm'
+    fi
+    "$rm" \
+        "${dict[prefix]}" \
+        "${dict[opt_prefix]}/${dict[name]}"
+    if [[ "${dict[shared]}" -eq 1 ]]
+    then
+        koopa::delete_broken_symlinks "${dict[make_prefix]}"
+    fi
     koopa::uninstall_success "${dict[name_fancy]}"
     return 0
 }
