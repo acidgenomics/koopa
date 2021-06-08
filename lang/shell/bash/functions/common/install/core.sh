@@ -455,9 +455,13 @@ koopa::uninstall_app() { # {{{1
                 dict[prefix]="${1#*=}"
                 shift 1
                 ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_no_args "$#"
     if [[ -z "${dict[prefix]}" ]]
     then
         dict[prefix]="${dict[app_prefix]}/${dict[name]}"
