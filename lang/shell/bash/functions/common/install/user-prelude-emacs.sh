@@ -11,7 +11,6 @@ koopa::install_prelude_emacs() { # {{{1
     return 0
 }
 
-
 koopa:::install_prelude_emacs() { # {{{1
     # """
     # Install Prelude Emacs.
@@ -29,7 +28,9 @@ koopa:::install_prelude_emacs() { # {{{1
 }
 
 koopa::uninstall_prelude_emacs() { # {{{1
-    echo "FIXME need to add support."
+    koopa::uninstall_app \
+        --name='prelude' \
+        --prefix="$(koopa::prelude_emacs_prefix)"
 }
 
 koopa::update_prelude_emacs() { # {{{1
