@@ -4,8 +4,8 @@
 
 koopa::install_openssh() { # {{{1
     koopa::install_app \
-        --name='openssh' \
         --name-fancy='OpenSSH' \
+        --name='openssh' \
         --no-link \
         "$@"
 }
@@ -31,4 +31,12 @@ portable/${file}"
     "$make" --jobs="$jobs"
     "$make" install
     return 0
+}
+
+koopa::uninstall_openssh() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='OpenSSH' \
+        --name='openssh' \
+        --no-link \
+        "$@"
 }

@@ -27,3 +27,9 @@ koopa:::install_neofetch() { # {{{1
     "$make" PREFIX="$prefix" install
     return 0
 }
+
+koopa::uninstall_neofetch() { # {{{1
+    koopa::uninstall_app \
+        --name='neofetch' \
+        "$@"
+}

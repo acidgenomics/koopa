@@ -4,8 +4,8 @@
 
 koopa::install_openssl() { # {{{1
     koopa::install_app \
-        --name='openssl' \
         --name-fancy='OpenSSL' \
+        --name='openssl' \
         --no-link \
         "$@"
 }
@@ -34,4 +34,12 @@ koopa:::install_openssl() { # {{{1
     # > "$make" test
     "$make" install
     return 0
+}
+
+koopa::uninstall_openssl() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='OpenSSL' \
+        --name='openssl' \
+        --no-link \
+        "$@"
 }
