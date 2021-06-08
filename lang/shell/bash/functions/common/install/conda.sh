@@ -4,32 +4,17 @@
 # [2021-05-27] macOS success.
 
 koopa::install_conda() { # {{{1
-    # """
-    # Install Conda.
-    # @note Updated 2021-05-16.
-    # """
-    koopa::install_miniconda "$@"
-    return 0
-}
-
-koopa::install_miniconda() { # {{{1
-    # """
-    # Install Miniconda.
-    # @note Updated 2021-05-25.
-    # """
     koopa::install_app \
         --name='conda' \
         --name-fancy='Miniconda' \
-        --installer='miniconda' \
         --no-link \
         "$@"
-    return 0
 }
 
-koopa:::install_miniconda() { # {{{1
+koopa:::install_conda() { # {{{1
     # """
-    # Install Miniconda.
-    # @note Updated 2021-05-16.
+    # Install Conda (Miniconda).
+    # @note Updated 2021-06-08.
     #
     # NOTE Consider adding install support for mamba into base environment.
     # This currently can cause dependency changes, so avoid for the moment.
@@ -80,4 +65,11 @@ ${os_type}-${arch}.sh"
         "${koopa_prefix}/etc/conda/condarc" \
         "${prefix}/.condarc"
     return 0
+}
+
+koopa::uninstall_conda() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Miniconda' \
+        --name='conda' \
+        "$@"
 }

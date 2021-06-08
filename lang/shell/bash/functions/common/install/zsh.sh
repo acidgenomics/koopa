@@ -6,6 +6,7 @@ koopa::install_zsh() { # {{{1
         --name='zsh' \
         "$@"
     koopa::fix_zsh_permissions
+    return 0
 }
 
 koopa:::install_zsh() { # {{{1
@@ -74,5 +75,4 @@ koopa::uninstall_zsh() { # {{{1
         --name-fancy="Zsh" \
         --name='zsh' \
         "$@"
-    return 0
 }

@@ -13,7 +13,6 @@ koopa::install_anaconda() { # {{{1
         --name='anaconda' \
         --no-link \
         "$@"
-    return 0
 }
 
 koopa:::install_anaconda() { # {{{1
@@ -58,5 +57,4 @@ koopa::uninstall_anaconda() { # {{{1
         --name-fancy='Anaconda' \
         --name='anaconda' \
         "$@"
-    return 0
 }
