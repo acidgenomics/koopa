@@ -4,8 +4,8 @@
 
 koopa::install_gnupg() { # {{{1
     koopa::install_app \
-        --name='gnupg' \
         --name-fancy='GnuPG suite' \
+        --name='gnupg' \
         "$@"
 }
 
@@ -271,4 +271,11 @@ koopa:::install_gnupg_pinentry() { # {{{1
     "$make" --jobs="$jobs"
     "$make" install
     return 0
+}
+
+koopa::uninstall_gnupg() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='GnuPG suite' \
+        --name='gnupg' \
+        "$@"
 }

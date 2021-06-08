@@ -74,15 +74,6 @@ koopa::install_homebrew_bundle() { # {{{1
     return 0
 }
 
-koopa::install_homebrew_packages() { # {{{1
-    # """
-    # Install Homebrew packages via bundle (user-friendly alias).
-    # @note Updated 2021-04-22.
-    # """
-    koopa::install_homebrew_bundle "$@"
-    return 0
-}
-
 koopa::uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
