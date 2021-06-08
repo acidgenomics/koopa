@@ -191,12 +191,16 @@ _koopa_alias_spacemacs() { # {{{1
 _koopa_alias_spacevim() { # {{{1
     # """
     # SpaceVim alias.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-06-08.
     # """
     local prefix vimrc
     prefix="$(_koopa_spacevim_prefix)"
     vimrc="${prefix}/vimrc"
-    [ -f "$vimrc" ] || return 1
+    if [ ! -f "$vimrc" ]
+    then
+        _koopa_alert_is_not_installed 'SpaceVim' "$vimrc"
+        return 1
+    fi
     _koopa_is_installed 'vim' || return 1
     _koopa_is_alias 'vim' && unalias 'vim'
     vim -u "$vimrc" "$@"
