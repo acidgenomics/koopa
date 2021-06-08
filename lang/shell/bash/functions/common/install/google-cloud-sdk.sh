@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Need to fix install support.
+# FIXME Move this to Linux.
+# FIXME Uninstaller should be Linux-only?
+
 koopa::update_google_cloud_sdk() { # {{{1
     # """
     # Update Google Cloud SDK.
@@ -23,3 +27,4 @@ koopa::update_google_cloud_sdk() { # {{{1
     koopa::update_success "$name_fancy"
     return 0
 }
+

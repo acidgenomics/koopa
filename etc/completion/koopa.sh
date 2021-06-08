@@ -88,7 +88,6 @@ _koopa_complete() { # {{{1
                     'hdf5'
                     'homebrew'
                     'homebrew-bundle'
-                    'homebrew-packages'  # FIXME Remove this.
                     'htop'
                     'julia'
                     'libevent'
@@ -157,6 +156,7 @@ _koopa_complete() { # {{{1
                         'cellranger'
                         'cloudbiolinux'
                         'docker-credential-pass'
+                        'google-cloud-sdk'
                         'julia'
                         'lmod'
                         'rstudio-server'
@@ -220,32 +220,32 @@ _koopa_complete() { # {{{1
             uninstall)
                 args=(
                     'anaconda'
-                    'autoconf'  # FIXME
-                    'automake'  # FIXME
+                    'autoconf'
+                    'automake'
                     'bash'
-                    'binutils'  # FIXME
+                    'binutils'
                     'cmake'
-                    'conda'  # FIXME
-                    'coreutils'  # FIXME
-                    'cpufetch'  # FIXME
-                    'curl'  # FIXME
+                    'conda'
+                    'coreutils'
+                    'cpufetch'
+                    'curl'
                     'doom-emacs'  # FIXME
                     'dotfiles'
-                    'emacs'  # FIXME
-                    'ensembl-perl-api'  # FIXME
-                    'findutils'  # FIXME
-                    'fish'  # FIXME
-                    'fzf'  # FIXME
-                    'gawk'  # FIXME
-                    'gcc'  # FIXME
-                    'gdal'  # FIXME
-                    'geos'  # FIXME
-                    'git'  # FIXME
-                    'gnupg'  # FIXME
-                    'go'  # FIXME
-                    'grep'  # FIXME
-                    'groff'  # FIXME
-                    'gsl'  # FIXME
+                    'emacs'
+                    'ensembl-perl-api'
+                    'findutils'
+                    'fish'
+                    'fzf'
+                    'gawk'
+                    'gcc'
+                    'gdal'
+                    'geos'
+                    'git'
+                    'gnupg'
+                    'go'
+                    'grep'
+                    'groff'
+                    'gsl'
                     'haskell-stack'  # FIXME
                     'hdf5'  # FIXME
                     'homebrew'
@@ -317,6 +317,7 @@ _koopa_complete() { # {{{1
                         'cellranger'  # FIXME
                         'cloudbiolinux'  # FIXME
                         'docker-credential-pass'  # FIXME
+                        'google-cloud-sdk'
                         'julia'  # FIXME
                         'lmod'  # FIXME prompt about this?
                         'rstudio-server'  # FIXME

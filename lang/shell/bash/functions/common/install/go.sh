@@ -4,11 +4,12 @@
 
 koopa::install_go() { # {{{1
     koopa::install_app \
-        --name='go' \
         --name-fancy='Go' \
+        --name='go' \
         --no-link \
         "$@"
     koopa::configure_go
+    return 0
 }
 
 koopa:::install_go() { # {{{1
@@ -34,4 +35,12 @@ koopa:::install_go() { # {{{1
     koopa::extract "$file"
     koopa::cp -t "$prefix" "${name}/"*
     return 0
+}
+
+koopa::uninstall_go() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Go' \
+        --name='go' \
+        --no-link \
+        "$@"
 }
