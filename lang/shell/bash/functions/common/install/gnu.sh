@@ -27,7 +27,13 @@ koopa:::install_gnu_app() { # {{{1
     jobs="$(koopa::cpu_count)"
     make="$(koopa::locate_make)"
     case "$name" in
-        groff|gsl|make|ncurses|patch|tar|wget)
+        groff | \
+        gsl | \
+        make | \
+        ncurses | \
+        patch | \
+        tar | \
+        wget)
             suffix='gz'
             ;;
         parallel)
@@ -49,6 +55,8 @@ koopa:::install_gnu_app() { # {{{1
     "$make" install
     return 0
 }
+
+
 
 koopa::install_autoconf() { # {{{1
     local conf_args
@@ -175,5 +183,11 @@ koopa::install_tar() { # {{{1
 koopa::install_texinfo() { # {{{1
     koopa::install_gnu_app \
         --name='texinfo' \
+        "$@"
+}
+
+koopa::uninstall_autoconf() { # {{{1
+    koopa::uninstall_app \
+        --name='autoconf' \
         "$@"
 }

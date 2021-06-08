@@ -10,7 +10,6 @@ koopa::install_spacevim() { # {{{1
         --version='rolling' \
         --no-shared \
         "$@"
-    return 0
 }
 
 koopa:::install_spacevim() { # {{{1

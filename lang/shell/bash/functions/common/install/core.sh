@@ -485,8 +485,9 @@ koopa::uninstall_app() { # {{{1
     "$rm" \
         "${dict[prefix]}" \
         "${dict[opt_prefix]}/${dict[name]}"
-    if [[ "${dict[shared]}" -eq 1 ]]
+    if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
     then
+        koopa::alert "Deleting broken symlinks in '${dict[make_prefix]}'."
         koopa::delete_broken_symlinks "${dict[make_prefix]}"
     fi
     koopa::uninstall_success "${dict[name_fancy]}"

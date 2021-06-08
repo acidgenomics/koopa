@@ -54,11 +54,8 @@ _koopa_complete() { # {{{1
                 )
                 ;;
             install)
-                # FIXME Need to indicate here that these arguments
-                # are supported:
-                # --no-link
-                # --reinstall
-                # --version
+                # NOTE Consider indicating support of these arguments:
+                # '--no-link', '--reinstall', and '--version'.
                 args=(
                     'anaconda'
                     'autoconf'
@@ -91,7 +88,7 @@ _koopa_complete() { # {{{1
                     'hdf5'
                     'homebrew'
                     'homebrew-bundle'
-                    'homebrew-packages'  # FIXME Remove?
+                    'homebrew-packages'  # FIXME Remove this.
                     'htop'
                     'julia'
                     'libevent'
@@ -99,7 +96,6 @@ _koopa_complete() { # {{{1
                     'lua'
                     'luarocks'
                     'make'
-                    'miniconda'  # FIXME Rename to just conda...
                     'ncurses'
                     'neofetch'
                     'neovim'
@@ -151,7 +147,6 @@ _koopa_complete() { # {{{1
                     'wget'
                     'zsh'
                 )
-                # FIXME Need to ensure we provide uninstallers for all of these.
                 if _koopa_is_linux
                 then
                     args+=(
@@ -175,7 +170,7 @@ _koopa_complete() { # {{{1
                         'homebrew-little-snitch'
                         'python-framework'
                         'r-cran-gfortran'
-                        'r-framework'  # FIXME
+                        'r-framework'
                         'xcode-clt'
                     )
                 fi
@@ -224,12 +219,12 @@ _koopa_complete() { # {{{1
                 ;;
             uninstall)
                 args=(
-                    'anaconda'  # FIXME
+                    'anaconda'
                     'autoconf'  # FIXME
                     'automake'  # FIXME
-                    'bash'  # FIXME
+                    'bash'
                     'binutils'  # FIXME
-                    'cmake'  # FIXME
+                    'cmake'
                     'conda'  # FIXME
                     'coreutils'  # FIXME
                     'cpufetch'  # FIXME
@@ -262,7 +257,6 @@ _koopa_complete() { # {{{1
                     'lua'  # FIXME
                     'luarocks'  # FIXME
                     'make'
-                    'miniconda'  # FIXME Rename to just conda...
                     'ncurses'  # FIXME
                     'neofetch'  # FIXME
                     'neovim'  # FIXME

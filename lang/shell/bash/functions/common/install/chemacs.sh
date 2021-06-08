@@ -6,7 +6,6 @@ koopa::install_chemacs() { # {{{1
         --name='chemacs' \
         --version='rolling' \
         "$@"
-    return 0
 }
 
 koopa:::install_chemacs() { # {{{1
