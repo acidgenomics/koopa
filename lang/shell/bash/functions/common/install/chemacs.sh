@@ -20,3 +20,7 @@ koopa:::install_chemacs() { # {{{1
     koopa::git_clone "$repo" "$prefix"
     return 0
 }
+
+# FIXME Add updater.
+
+# FIXME Add uninstaller.
