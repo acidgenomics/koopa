@@ -304,9 +304,9 @@ _koopa_complete() { # {{{1
                     'the-silver-searcher'
                     'tmux'
                     'udunits'
-                    'vim'  # FIXME
-                    'wget'  # FIXME
-                    'zsh'  # FIXME
+                    'vim'
+                    'wget'
+                    'zsh'
                 )
                 if _koopa_is_linux
                 then

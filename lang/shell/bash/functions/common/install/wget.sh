@@ -47,3 +47,9 @@ koopa::install_wget() { # {{{1
         "${conf_args[@]}" \
         "$@"
 }
+
+koopa::uninstall_wget() { # {{{1
+    koopa::uninstall_app \
+        --name='wget' \
+        "$@"
+}
