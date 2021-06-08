@@ -30,7 +30,8 @@ koopa:::install_prelude_emacs() { # {{{1
 koopa::uninstall_prelude_emacs() { # {{{1
     koopa::uninstall_app \
         --name='prelude' \
-        --prefix="$(koopa::prelude_emacs_prefix)"
+        --prefix="$(koopa::prelude_emacs_prefix)" \
+        "$@"
 }
 
 koopa::update_prelude_emacs() { # {{{1

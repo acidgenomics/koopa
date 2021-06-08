@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 
-# FIXME Needs uninstaller.
-
 # [2021-05-27] Linux success.
 # [2021-05-27] macOS success.
 
 koopa::install_anaconda() { # {{{1
     # """
     # Install Anaconda.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-07.
     # """
     koopa::install_app \
-        --name='anaconda' \
         --name-fancy='Anaconda' \
+        --name='anaconda' \
         --no-link \
         "$@"
     return 0
@@ -52,5 +50,13 @@ koopa:::install_anaconda() { # {{{1
     koopa::ln \
         "${koopa_prefix}/etc/conda/condarc" \
         "${prefix}/.condarc"
+    return 0
+}
+
+koopa::uninstall_anaconda() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Anaconda' \
+        --name='anaconda' \
+        "$@"
     return 0
 }
