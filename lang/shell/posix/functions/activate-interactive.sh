@@ -9,19 +9,27 @@ _koopa_activate_aliases() { # {{{1
     local file
     [ "$#" -eq 0 ] || return 1
     # > perl='_koopa_alias_perl'
-    alias br='_koopa_alias_br'
+    alias br='_koopa_alias_broot'
     alias bucket='_koopa_alias_bucket'
     alias conda='_koopa_alias_conda'
+    alias doom-emacs='_koopa_alias_doom_emacs'
+    alias emacs='_koopa_alias_emacs'
+    alias emacs-vanilla='_koopa_alias_emacs_vanilla'
     alias fzf='_koopa_alias_fzf'
+    alias j='z'
     alias k='_koopa_alias_k'
     alias perlbrew='_koopa_alias_perlbrew'
     alias pipx='_koopa_alias_pipx'
     alias pyenv='_koopa_alias_pyenv'
     alias rbenv='_koopa_alias_rbenv'
+    alias sha256="_koopa_alias_sha256"
+    alias spacemacs='_koopa_alias_spacemacs'
     alias spacevim='_koopa_alias_spacevim'
+    alias tar-c='_koopa_alias_tar_c'
+    alias tar-x='_koopa_alias_tar_x'
     alias today='_koopa_alias_today'
     alias week='_koopa_alias_week'
-    alias z='_koopa_alias_z'
+    alias z='_koopa_alias_zoxide'
     file="${HOME:?}/.aliases"
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
