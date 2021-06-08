@@ -2,10 +2,10 @@
 
 koopa::install_perlbrew() { # {{{1
     koopa::install_app \
-        --name='perlbrew' \
         --name-fancy='Perlbrew' \
-        --version='rolling' \
+        --name='perlbrew' \
         --no-link \
+        --version='rolling' \
         "$@"
 }
 
@@ -52,6 +52,14 @@ koopa::install_perlbrew_perl() { # {{{1
     perlbrew switch "$perl_name"
     # > perlbrew list
     return 0
+}
+
+koopa::uninstall_perlbrew() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Perlbrew' \
+        --name='perlbrew' \
+        --no-link \
+        "$@"
 }
 
 koopa::update_perlbrew() { # {{{1

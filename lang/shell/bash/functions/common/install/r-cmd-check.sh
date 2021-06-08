@@ -3,6 +3,7 @@
 koopa::install_r_cmd_check() { # {{{1
     koopa::install_app \
         --name='r-cmd-check' \
+        --no-link \
         "$@"
 }
 
@@ -19,7 +20,12 @@ koopa:::install_r_cmd_check() { # {{{1
     return 0
 }
 
-# FIXME Need to add uninstall support here.
+koopa::uninstall_r_cmd_check() { # {{{1
+    koopa::uninstall_app \
+        --name='r-cmd-check' \
+        --no-link \
+        "$@"
+}
 
 koopa::update_r_cmd_check() { # {{{1
     # """

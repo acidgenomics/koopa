@@ -28,3 +28,9 @@ koopa:::install_password_store() { # {{{1
     PREFIX="$prefix" make install
     return 0
 }
+
+koopa::uninstall_password_store() { # {{{1
+    koopa::uninstall_app \
+        --name='password-store' \
+        "$@"
+}

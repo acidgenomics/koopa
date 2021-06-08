@@ -25,3 +25,9 @@ koopa:::install_rmate() { # {{{1
     koopa::cp -t "${prefix}/bin" "$name"
     return 0
 }
+
+koopa::uninstall_rmate() { # {{{1
+    koopa::uninstall_app \
+        --name='rmate' \
+        "$@"
+}

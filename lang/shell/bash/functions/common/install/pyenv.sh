@@ -20,6 +20,13 @@ koopa:::install_pyenv() { # {{{1
     return 0
 }
 
+koopa::uninstall_pyenv() { # {{{1
+    koopa::uninstall_app \
+        --name='pyenv' \
+        --no-link \
+        "$@"
+}
+
 koopa::update_pyenv() { # {{{1
     # """
     # Update pyenv.
