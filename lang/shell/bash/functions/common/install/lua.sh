@@ -4,8 +4,8 @@
 
 koopa::install_lua() { # {{{1
     koopa::install_app \
-        --name='lua' \
         --name-fancy='Lua' \
+        --name='lua' \
         "$@"
 }
 
@@ -37,4 +37,11 @@ koopa:::install_lua() { # {{{1
     "$make" test
     "$make" install INSTALL_TOP="$prefix"
     return 0
+}
+
+koopa::uninstall_lua() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Lua' \
+        --name='lua' \
+        "$@"
 }

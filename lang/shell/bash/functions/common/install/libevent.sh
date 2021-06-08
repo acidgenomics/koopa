@@ -35,3 +35,9 @@ release-${version}-stable/${file}"
     "$make" install
     return 0
 }
+
+koopa::uninstall_libevent() { # {{{1
+    koopa::uninstall_app \
+        --name='libevent' \
+        "$@"
+}

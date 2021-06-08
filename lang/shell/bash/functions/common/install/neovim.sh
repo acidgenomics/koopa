@@ -52,3 +52,9 @@ koopa:::install_neovim() { # {{{1
     "$make" install
     return 0
 }
+
+koopa::uninstall_neovim() { # {{{1
+    koopa::uninstall_app \
+        --name='neovim' \
+        "$@"
+}
