@@ -47,3 +47,9 @@ koopa:::install_htop() { # {{{1
     "$make" install
     return 0
 }
+
+koopa::uninstall_htop() { # {{{1
+    koopa::uninstall_app \
+        --name='htop' \
+        "$@"
+}

@@ -4,8 +4,8 @@
 
 koopa::install_hdf5() { # {{{1
     koopa::install_app \
-        --name='hdf5' \
         --name-fancy='HDF5' \
+        --name='hdf5' \
         "$@"
 }
 
@@ -45,4 +45,11 @@ ${name}-${minor_version}/${name}-${version}/src/${file}"
     # > "$make" check
     "$make" install
     return 0
+}
+
+koopa::uninstall_hdf5() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='HDF5' \
+        --name='hdf5' \
+        "$@"
 }
