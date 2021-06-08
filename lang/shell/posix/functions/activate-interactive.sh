@@ -4,24 +4,28 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-06-08.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
     # > perl='_koopa_alias_perl'
     alias br='_koopa_alias_br'
+    alias bucket='_koopa_alias_bucket'
     alias conda='_koopa_alias_conda'
     alias fzf='_koopa_alias_fzf'
+    alias k='_koopa_alias_k'
     alias perlbrew='_koopa_alias_perlbrew'
     alias pipx='_koopa_alias_pipx'
     alias pyenv='_koopa_alias_pyenv'
     alias rbenv='_koopa_alias_rbenv'
     alias spacevim='_koopa_alias_spacevim'
+    alias today='_koopa_alias_today'
+    alias week='_koopa_alias_week'
     alias z='_koopa_alias_z'
-    file="${HOME}/.aliases"
+    file="${HOME:?}/.aliases"
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
-    file="${HOME}/.aliases-private"
+    file="${HOME:?}/.aliases-private"
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
     return 0
