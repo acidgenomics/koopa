@@ -60,6 +60,13 @@ koopa::install_rbenv_ruby() { # {{{1
     return 0
 }
 
+koopa::uninstall_rbenv() { # {{{1
+    koopa::uninstall_app \
+        --name='rbenv' \
+        --no-link \
+        "$@"
+}
+
 koopa::update_rbenv() { # {{{1
     # """
     # Update rbenv.

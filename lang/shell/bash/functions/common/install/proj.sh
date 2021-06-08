@@ -2,8 +2,8 @@
 
 koopa::install_proj() { # {{{1
     koopa::install_app \
-        --name='proj' \
         --name-fancy='PROJ' \
+        --name='proj' \
         --no-link \
         "$@"
 }
@@ -58,4 +58,12 @@ koopa:::install_proj() { # {{{1
     "$make" --jobs="$jobs"
     "$make" install
     return 0
+}
+
+koopa::uninstall_proj() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='PROJ' \
+        --name='proj' \
+        --no-link \
+        "$@"
 }
