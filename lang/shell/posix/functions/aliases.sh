@@ -2,20 +2,17 @@
 
 
 
-
 # FIXME Move these to koopa.
 #if _koopa_is_installed 'nvim'
 #then
 #    # > alias {vi,vim}='nvim'
 #    alias nvim-fzf='nvim "$(fzf)"'
-#    alias nvim-vanilla='unalias nvim; nvim -u NONE'
 #fi
 #
 #if _koopa_is_installed 'vim'
 #then
 #    alias vi='vim'
 #    alias vim-fzf='vim "$(fzf)"'
-#    alias vim-vanilla='unalias vim; vim -i NONE -u NONE -U NONE'
 #fi
 
 
@@ -112,6 +109,15 @@ _koopa_alias_k() { # {{{1
     # @note Updated 2021-06-08.
     # """
     cd "$(_koopa_koopa_prefix)" || return 1
+}
+
+_koopa_alias_nvim_vanilla() { # {{{1
+    # """
+    # Vanilla Neovim.
+    # @note Updated 2021-06-08.
+    # """
+    _koopa_is_installed 'nvim' || return 1
+    nvim -u 'NONE'
 }
 
 # NOTE This is not currently loaded during activation.
@@ -228,6 +234,15 @@ _koopa_alias_today() { # {{{1
     # """
     _koopa_is_installed 'date' || return 1
     date '+%Y-%m-%d'
+}
+
+_koopa_alias_vim_vanilla() { # {{{1
+    # """
+    # Vanilla Vim.
+    # @note Updated 2021-06-08.
+    # """
+    _koopa_is_installed 'vim' || return 1
+    vim -i 'NONE' -u 'NONE' -U 'NONE'
 }
 
 _koopa_alias_week() { # {{{1
