@@ -264,14 +264,14 @@ _koopa_complete() { # {{{1
                     'openssh'
                     'openssl'
                     'parallel'
-                    'password-store'  # FIXME
-                    'patch'  # FIXME
-                    'perl'  # FIXME
-                    'perl-packages'  # FIXME prompt about this
-                    'perlbrew'  # FIXME
-                    'pkg-config'  # FIXME
+                    'password-store'
+                    'patch'
+                    'perl'
+                    'perl-packages'  # FIXME
+                    'perlbrew'
+                    'pkg-config'
                     'prelude-emacs'  # FIXME
-                    'proj'  # FIXME
+                    'proj'
                     'pyenv'  # FIXME
                     'python'  # FIXME
                     'python-packages'  # FIXME prompt about this

@@ -42,3 +42,9 @@ koopa:::install_pkg_config() { # {{{1
     "$make" install
     return 0
 }
+
+koopa::uninstall_pkg_config() { # {{{1
+    koopa::uninstall_app \
+        --name='pkg-config' \
+        "$@"
+}

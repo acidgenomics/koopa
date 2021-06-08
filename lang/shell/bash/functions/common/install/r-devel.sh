@@ -20,8 +20,8 @@
 
 koopa::install_r_devel() { # {{{1
     koopa::install_app \
-        --name='r-devel' \
         --name-fancy='R-devel' \
+        --name='r-devel' \
         "$@"
 }
 
@@ -137,4 +137,11 @@ koopa:::install_r_devel() { # {{{1
     koopa::assert_is_file "$r"
     koopa::configure_r "$r"
     return 0
+}
+
+koopa::uninstall_r_devel() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='R-devel' \
+        --name='r-devel' \
+        "$@"
 }
