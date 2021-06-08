@@ -62,6 +62,7 @@ _koopa_complete() { # {{{1
                     'automake'
                     'bash'
                     'binutils'
+                    'chemacs'
                     'cmake'
                     'conda'
                     'coreutils'
@@ -224,6 +225,7 @@ _koopa_complete() { # {{{1
                     'automake'
                     'bash'
                     'binutils'
+                    'chemacs'
                     'cmake'
                     'conda'
                     'coreutils'
@@ -342,6 +344,7 @@ _koopa_complete() { # {{{1
                     'system'
                     'user'
                     # packages:
+                    'chemacs'
                     'doom-emacs'
                     'dotfiles'
                     'homebrew'
