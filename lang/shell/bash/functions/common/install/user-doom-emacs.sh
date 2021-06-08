@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
 # FIXME Need to support an uninstaller.
+# FIXME Installer needs to support '--no-shared' flag.
 
 koopa::install_doom_emacs() { # {{{1
     koopa::install_app \
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
+        --no-shared \
         --prefix="$(koopa::doom_emacs_prefix)" \
         --version='rolling' \
-        --no-shared \
         "$@"
 }
 
@@ -59,7 +60,16 @@ koopa:::install_doom_emacs() { # {{{1
 }
 
 koopa::uninstall_doom_emacs() { # {{{1
-    echo "FIXME need to add support."
+    # """
+    # Uninstall Doom Emacs.
+    # @note Updated 2021-06-08.
+    # """
+    koopa::uninstall_app \
+        --name-fancy='Doom Emacs' \
+        --name='doom-emacs' \
+        --no-shared \
+        --prefix="$(koopa::doom_emacs_prefix)" \
+        "$@"
 }
 
 koopa::update_doom_emacs() { # {{{1

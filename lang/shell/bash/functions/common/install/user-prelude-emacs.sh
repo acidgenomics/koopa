@@ -4,9 +4,9 @@ koopa::install_prelude_emacs() { # {{{1
     koopa::install_app \
         --name-fancy='Prelude Emacs' \
         --name='prelude-emacs' \
+        --no-shared \
         --prefix="$(koopa::prelude_emacs_prefix)" \
         --version='rolling' \
-        --no-shared \
         "$@"
 }
 
@@ -27,8 +27,14 @@ koopa:::install_prelude_emacs() { # {{{1
 }
 
 koopa::uninstall_prelude_emacs() { # {{{1
+    # """
+    # Uninstall Prelude Emacs.
+    # @note Updated 2021-06-08.
+    # """
     koopa::uninstall_app \
-        --name='prelude' \
+        --name-fancy='Prelude Emacs' \
+        --name='prelude-emacs' \
+        --no-shared \
         --prefix="$(koopa::prelude_emacs_prefix)" \
         "$@"
 }
