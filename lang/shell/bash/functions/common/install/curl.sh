@@ -4,8 +4,8 @@
 
 koopa::install_curl() { # {{{1
     koopa::install_app \
-        --name='curl' \
         --name-fancy='cURL' \
+        --name='curl' \
         "$@"
 }
 
@@ -55,4 +55,11 @@ ${name}-${version2}/${file}"
     # > "$make" test
     "$make" install
     return 0
+}
+
+koopa::uninstall_curl() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='cURL' \
+        --name='curl' \
+        "$@"
 }

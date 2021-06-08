@@ -47,8 +47,8 @@ koopa::install_emacs() { # {{{1
         )
     fi
     koopa::install_gnu_app \
-        --name='emacs' \
         --name-fancy='Emacs' \
+        --name='emacs' \
         "${install_args[@]}" \
         "${conf_args[@]}" \
         "$@"
@@ -102,4 +102,11 @@ koopa::link_emacs() { # {{{1
     esac
     koopa::ln "$custom_prefix" "$default_prefix"
     return 0
+}
+
+koopa::uninstall_emacs() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Emacs' \
+        --name='emacs' \
+        "$@"
 }
