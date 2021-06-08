@@ -41,7 +41,7 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-# gfortran (from fxcoudert).
+# GNU Fortran (from fxcoudert).
 PATH="/usr/local/gfortran/bin:${PATH}"
 
 # cURL.
