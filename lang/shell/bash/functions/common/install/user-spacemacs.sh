@@ -27,24 +27,30 @@ koopa:::install_spacemacs() { # {{{1
 }
 
 koopa::uninstall_spacemacs() { # {{{1
-    echo "FIXME need to add support."
+    # """
+    # Uninstall Spacemacs.
+    # @note Updated 2021-06-08.
+    # """
+    koopa::uninstall_app \
+        --name-fancy='Spacemacs' \
+        --name='spacemacs' \
+        --no-shared \
+        --prefix="$(koopa::spacemacs_prefix)" \
+        "$@"
 }
 
 koopa::update_spacemacs() { # {{{1
     # """
-    # Update spacemacs non-interatively.
-    # @note Updated 2021-06-07.
+    # Update Spacemacs.
+    # @note Updated 2021-06-08.
     #
-    # Potentially useful: 'emacs --no-window-system'.
-    #
-    # How to update packages from command line:
-    # > emacs \
-    # >     --batch -l "${prefix}/init.el" \
-    # >     --eval='(configuration-layer/update-packages t)'
+    # Note that fully non-interactive  '--batch' argument doesn't work with
+    # Chemacs2 configuration currently.
     # """
-    local name_fancy prefix
+    local emacs name_fancy prefix
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'emacs'
+    koopa::assert_is_file "${HOME:?}/.emacs.d/chemacs.el"
+    emacs="$(koopa::locate_emacs)"
     name_fancy='Spacemacs'
     koopa::update_start "$name_fancy"
     prefix="$(koopa::spacemacs_prefix)"
@@ -52,6 +58,11 @@ koopa::update_spacemacs() { # {{{1
         koopa::cd "$prefix"
         koopa::git_pull
     )
+    # Can't use '--batch' here with chemacs.
+    "$emacs" \
+        --no-window-system \
+        --with-profile 'spacemacs' \
+        --eval='(configuration-layer/update-packages t)'
     koopa::update_success "$name_fancy"
     return 0
 }
