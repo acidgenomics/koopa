@@ -2,8 +2,8 @@
 
 koopa::install_taglib() { # {{{1
     koopa::install_app \
-        --name='taglib' \
         --name-fancy='TagLib' \
+        --name='taglib' \
         "$@"
 }
 
@@ -52,4 +52,11 @@ v${version}/${file}"
         --parallel "$jobs"
     "$cmake" --install 'build'
     return 0
+}
+
+koopa::uninstall_taglib() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='TagLib' \
+        --name='taglib' \
+        "$@"
 }

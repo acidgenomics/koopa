@@ -272,37 +272,38 @@ _koopa_complete() { # {{{1
                     'pkg-config'
                     'prelude-emacs'  # FIXME
                     'proj'
-                    'pyenv'  # FIXME
-                    'python'  # FIXME
+                    'pyenv'
+                    'python'
                     'python-packages'  # FIXME prompt about this
-                    'r'  # FIXME
-                    'r-cmd-check'  # FIXME
-                    'r-devel'  # FIXME
+                    'r'
+                    'r-cmd-check'
+                    'r-devel'
                     'r-koopa'  # FIXME
                     'r-packages'  # FIXME prompt about this
-                    'rbenv'  # FIXME
+                    'rbenv'
                     'rbenv-ruby'  # FIXME
-                    'rmate'  # FIXME
-                    'rsync'  # FIXME
-                    'ruby'  # FIXME
+                    'rmate'
+                    'rsync'
+                    'ruby'
                     'ruby-packages'  # FIXME
-                    'rust'  # FIXME
-                    'rust-packages'  # FIXME prompt about this
-                    'sed'  # FIXME
-                    'shellcheck'  # FIXME
-                    'shunit2'  # FIXME
-                    'singularity'  # FIXME
+                    'rust'
+                    'rust-packages'  # FIXME
+                    'sed'
+                    'shellcheck'
+                    'shunit2'
+                    'singularity'
                     'spacemacs'  # FIXME
-                    'spacevim'
-                    'sqlite'  # FIXME
-                    'subversion'  # FIXME
-                    'taglib'  # FIXME
-                    'tar'  # FIXME
+                    'spacevim'  # FIXME
+                    'sqlite'
+                    'subversion'
+                    'taglib'
+                    'tar'
+                    'tex'  # FIXME
                     'tex-packages'  # FIXME
-                    'texinfo'  # FIXME
-                    'the-silver-searcher'  # FIXME
-                    'tmux'  # FIXME
-                    'udunits'  # FIXME
+                    'texinfo'
+                    'the-silver-searcher'
+                    'tmux'
+                    'udunits'
                     'vim'  # FIXME
                     'wget'  # FIXME
                     'zsh'  # FIXME
