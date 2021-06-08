@@ -4,8 +4,8 @@
 
 koopa::install_haskell_stack() { # {{{1
     koopa::install_app \
-        --name='haskell-stack' \
         --name-fancy='Haskell Stack' \
+        --name='haskell-stack' \
         --no-link \
         "$@"
 }
@@ -29,4 +29,12 @@ koopa:::install_haskell_stack() { # {{{1
     koopa::mkdir "${prefix}/bin"
     ./"${file}" -f -d "${prefix}/bin"
     return 0
+}
+
+koopa::uninstall_haskell_stack() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Haskell Stack' \
+        --name='haskell-stack' \
+        --no-link \
+        "$@"
 }

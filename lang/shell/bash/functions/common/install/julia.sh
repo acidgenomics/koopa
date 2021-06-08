@@ -6,15 +6,15 @@ koopa::install_julia() { # {{{1
     if koopa::is_linux
     then
         koopa::install_app \
-            --name='julia' \
-            --name-fancy='Julia' \
-            --platform='linux' \
             --installer="julia-binary" \
+            --name-fancy='Julia' \
+            --name='julia' \
+            --platform='linux' \
             "$@"
     else
         koopa::install_app \
-            --name='julia' \
             --name-fancy='Julia' \
+            --name='julia' \
             "$@"
     fi
 }
@@ -69,4 +69,11 @@ END
     # > "$make" test
     "$make" install
     return 0
+}
+
+koopa::uninstall_julia() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Julia' \
+        --name='julia' \
+        "$@"
 }

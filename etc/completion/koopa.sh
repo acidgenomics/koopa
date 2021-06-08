@@ -246,11 +246,11 @@ _koopa_complete() { # {{{1
                     'grep'
                     'groff'
                     'gsl'
-                    'haskell-stack'  # FIXME
-                    'hdf5'  # FIXME
+                    'haskell-stack'
+                    'hdf5'
                     'homebrew'
-                    'htop'  # FIXME
-                    'julia'  # FIXME
+                    'htop'
+                    'julia'
                     'koopa'
                     'libevent'  # FIXME
                     'libtool'  # FIXME
@@ -343,7 +343,6 @@ _koopa_complete() { # {{{1
                     # packages:
                     'doom-emacs'
                     'dotfiles'
-                    'google-cloud-sdk'
                     'homebrew'
                     'prelude-emacs'  # FIXME
                     'pyenv'
@@ -357,6 +356,12 @@ _koopa_complete() { # {{{1
                     'spacevim'
                     'tex'
                 )
+                if _koopa_is_linux
+                then
+                    args+=(
+                        'google-cloud-sdk'
+                    )
+                fi
                 ;;
             *)
                 ;;
