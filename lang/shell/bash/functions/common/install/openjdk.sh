@@ -4,8 +4,8 @@
 
 koopa::install_openjdk() { # {{{1
     koopa::install_app \
-        --name='openjdk' \
         --name-fancy='OpenJDK' \
+        --name='openjdk' \
         --no-link \
         "$@"
 }
@@ -104,4 +104,12 @@ ${unique}/GPL/${file}"
         # This step will skip for non-shared install.
         koopa::linux_java_update_alternatives "$prefix"
     fi
+}
+
+koopa::uninstall_openjdk() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='OpenJDK' \
+        --name='openjdk' \
+        --no-link \
+        "$@"
 }

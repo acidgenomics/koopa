@@ -252,18 +252,18 @@ _koopa_complete() { # {{{1
                     'htop'
                     'julia'
                     'koopa'
-                    'libevent'  # FIXME
-                    'libtool'  # FIXME
-                    'lua'  # FIXME
-                    'luarocks'  # FIXME
+                    'libevent'
+                    'libtool'
+                    'lua'
+                    'luarocks'
                     'make'
-                    'ncurses'  # FIXME
-                    'neofetch'  # FIXME
-                    'neovim'  # FIXME
-                    'openjdk'  # FIXME
-                    'openssh'  # FIXME
-                    'openssl'  # FIXME
-                    'parallel'  # FIXME
+                    'ncurses'
+                    'neofetch'
+                    'neovim'
+                    'openjdk'
+                    'openssh'
+                    'openssl'
+                    'parallel'
                     'password-store'  # FIXME
                     'patch'  # FIXME
                     'perl'  # FIXME
