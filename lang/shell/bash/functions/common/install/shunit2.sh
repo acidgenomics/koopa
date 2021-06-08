@@ -2,8 +2,8 @@
 
 koopa::install_shunit2() { # {{{1
     koopa::install_app \
-        --name='shunit2' \
         --name-fancy='shUnit2' \
+        --name='shunit2' \
         "$@"
 }
 
@@ -23,4 +23,11 @@ koopa:::install_shunit2() { # {{{1
     koopa::cd "${name}-${version}"
     koopa::cp -t "${prefix}/bin" "$name"
     return 0
+}
+
+koopa::uninstall_shunit2() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='shUnit2' \
+        --name='shunit2' \
+        "$@"
 }

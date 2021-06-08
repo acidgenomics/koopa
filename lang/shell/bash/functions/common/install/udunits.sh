@@ -30,3 +30,9 @@ koopa:::install_udunits() { # {{{1
     "$make" install
     return 0
 }
+
+koopa::uninstall_udunits() { # {{{1
+    koopa::uninstall_app \
+        --name='udunits' \
+        "$@"
+}
