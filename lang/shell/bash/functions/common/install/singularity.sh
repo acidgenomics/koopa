@@ -35,3 +35,9 @@ v${version}/${file}"
     "$make" -C builddir install
     return 0
 }
+
+koopa::uninstall_singularity() { # {{{1
+    koopa::uninstall_app \
+        --name='singularity' \
+        "$@"
+}

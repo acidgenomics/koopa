@@ -28,3 +28,9 @@ ${version}/${file}"
     "$make" install
     return 0
 }
+
+koopa::uninstall_tmux() { # {{{1
+    koopa::uninstall_app \
+        --name='tmux' \
+        "$@"
+}
