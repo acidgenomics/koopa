@@ -99,5 +99,4 @@ koopa::uninstall_bash() { # {{{1
         --name-fancy='Bash' \
         --name='bash' \
         "$@"
-    return 0
 }

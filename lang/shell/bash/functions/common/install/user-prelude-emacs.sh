@@ -8,7 +8,6 @@ koopa::install_prelude_emacs() { # {{{1
         --version='rolling' \
         --no-shared \
         "$@"
-    return 0
 }
 
 koopa:::install_prelude_emacs() { # {{{1

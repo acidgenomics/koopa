@@ -10,7 +10,6 @@ koopa::install_doom_emacs() { # {{{1
         --version='rolling' \
         --no-shared \
         "$@"
-    return 0
 }
 
 koopa:::install_doom_emacs() { # {{{1

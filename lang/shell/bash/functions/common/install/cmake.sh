@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Needs uninstaller.
-
 # [2021-05-27] macOS success.
 
 koopa::install_cmake() { # {{{1
@@ -45,5 +43,13 @@ koopa:::install_cmake() { # {{{1
         --prefix="$prefix"
     "$make" --jobs="$jobs"
     "$make" install
+    return 0
+}
+
+koopa::uninstall_cmake() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='CMake' \
+        --name='cmake' \
+        "$@"
     return 0
 }
