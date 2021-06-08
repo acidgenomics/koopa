@@ -4,8 +4,8 @@
 
 koopa::install_ensembl_perl_api() { # {{{1
     koopa::install_app \
-        --name='ensembl-perl-api' \
         --name-fancy='Ensembl Perl API' \
+        --name='ensembl-perl-api' \
         --no-link \
         --prefix="$(koopa::ensembl_perl_api_prefix)" \
         --version='rolling'
@@ -41,4 +41,12 @@ koopa:::install_ensembl_perl_api() { # {{{1
             || return 1
     done
     return 0
+}
+
+koopa::uninstall_ensembl_perl_api() { # {{{1
+    koopa::install_app \
+        --name-fancy='Ensembl Perl API' \
+        --name='ensembl-perl-api' \
+        --no-link \
+        "$@"
 }

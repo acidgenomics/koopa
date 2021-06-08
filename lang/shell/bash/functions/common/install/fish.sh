@@ -4,8 +4,8 @@
 
 koopa::install_fish() { # {{{1
     koopa::install_app \
-        --name='fish' \
         --name-fancy='Fish' \
+        --name='fish' \
         "$@"
 }
 
@@ -48,4 +48,11 @@ ${version}/${file}"
         koopa::enable_shell "$name"
     fi
     return 0
+}
+
+koopa::uninstall_fish() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Fish' \
+        --name='fish' \
+        "$@"
 }

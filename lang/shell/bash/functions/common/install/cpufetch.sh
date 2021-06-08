@@ -29,3 +29,9 @@ koopa:::install_cpufetch() { # {{{1
     PREFIX="$prefix" "$make" install
     return 0
 }
+
+koopa::uninstall_cpufetch() { # {{{1
+    koopa::uninstall_app \
+        --name='cpufetch' \
+        "$@"
+}

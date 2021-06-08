@@ -71,5 +71,6 @@ koopa::uninstall_conda() { # {{{1
     koopa::uninstall_app \
         --name-fancy='Miniconda' \
         --name='conda' \
+        --no-link \
         "$@"
 }
