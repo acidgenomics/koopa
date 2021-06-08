@@ -15,6 +15,7 @@ _koopa_alias_bucket() { # {{{1
     # Today bucket alias.
     # @note Updated 2021-06-08.
     # """
+    [ "$#" -eq 0 ] || return 1
     local prefix
     prefix="${HOME:?}/today"
     [ -d "$prefix" ] || return 1
@@ -44,7 +45,7 @@ _koopa_alias_doom_emacs() { # {{{1
         _koopa_alert_is_not_installed 'Doom Emacs' "$prefix"
         return 1
     fi
-    emacs --with-profile 'doom'
+    emacs --with-profile 'doom' "$@"
 }
 
 _koopa_alias_emacs() { # {{{1
@@ -91,6 +92,7 @@ _koopa_alias_k() { # {{{1
     # Koopa 'k' shortcut alias.
     # @note Updated 2021-06-08.
     # """
+    [ "$#" -eq 0 ] || return 1
     cd "$(_koopa_koopa_prefix)" || return 1
 }
 
@@ -110,7 +112,7 @@ _koopa_alias_nvim_vanilla() { # {{{1
     # @note Updated 2021-06-08.
     # """
     _koopa_is_installed 'nvim' || return 1
-    nvim -u 'NONE'
+    nvim -u 'NONE' "$@"
 }
 
 # NOTE This is not currently loaded during activation.
@@ -169,6 +171,7 @@ _koopa_alias_sha256() { # {{{1
     # sha256 alias.
     # @note Updated 2021-06-08.
     # """
+    [ "$#" -gt 0 ] || return 1
     _koopa_is_installed 'shasum' || return 1
     shasum -a 256 "$@"
 }
@@ -185,7 +188,7 @@ _koopa_alias_spacemacs() { # {{{1
         _koopa_alert_is_not_installed 'Spacemacs' "$prefix"
         return 1
     fi
-    emacs --with-profile 'spacemacs'
+    emacs --with-profile 'spacemacs' "$@"
 }
 
 _koopa_alias_spacevim() { # {{{1
@@ -211,6 +214,7 @@ _koopa_alias_tar_c() { # {{{1
     # Compress with tar alias.
     # @note Updated 2021-06-08.
     # """
+    [ "$#" -gt 0 ] || return 1
     _koopa_is_installed 'tar' || return 1
     tar -czvf "$@"
 }
@@ -220,6 +224,7 @@ _koopa_alias_tar_x() { # {{{1
     # Compress with tar alias.
     # @note Updated 2021-06-08.
     # """
+    [ "$#" -gt 0 ] || return 1
     _koopa_is_installed 'tar' || return 1
     tar -xzvf "$@"
 }
@@ -229,6 +234,7 @@ _koopa_alias_today() { # {{{1
     # Today alias.
     # @note Updated 2021-06-08.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_installed 'date' || return 1
     date '+%Y-%m-%d'
 }
@@ -249,7 +255,7 @@ _koopa_alias_vim_vanilla() { # {{{1
     # @note Updated 2021-06-08.
     # """
     _koopa_is_installed 'vim' || return 1
-    vim -i 'NONE' -u 'NONE' -U 'NONE'
+    vim -i 'NONE' -u 'NONE' -U 'NONE' "$@"
 }
 
 _koopa_alias_week() { # {{{1
@@ -257,6 +263,7 @@ _koopa_alias_week() { # {{{1
     # Numerical week alias.
     # @note Updated 2021-06-08.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_is_installed 'date' || return 1
     date '+%V'
 }
