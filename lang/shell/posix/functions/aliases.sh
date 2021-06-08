@@ -1,22 +1,5 @@
 #!/bin/sh
 
-
-
-# FIXME Move these to koopa.
-#if _koopa_is_installed 'nvim'
-#then
-#    # > alias {vi,vim}='nvim'
-#    alias nvim-fzf='nvim "$(fzf)"'
-#fi
-#
-#if _koopa_is_installed 'vim'
-#then
-#    alias vi='vim'
-#    alias vim-fzf='vim "$(fzf)"'
-#fi
-
-
-
 _koopa_alias_broot() { # {{{1
     # """
     # Broot 'br' alias.
@@ -109,6 +92,16 @@ _koopa_alias_k() { # {{{1
     # @note Updated 2021-06-08.
     # """
     cd "$(_koopa_koopa_prefix)" || return 1
+}
+
+_koopa_alias_nvim_fzf() { # {{{1
+    # """
+    # Pipe FZF output to Neovim.
+    # @note Updated 2021-06-08.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_is_installed 'fzf' 'nvim' || return 1
+    nvim "$(fzf)"
 }
 
 _koopa_alias_nvim_vanilla() { # {{{1
@@ -234,6 +227,16 @@ _koopa_alias_today() { # {{{1
     # """
     _koopa_is_installed 'date' || return 1
     date '+%Y-%m-%d'
+}
+
+_koopa_alias_vim_fzf() { # {{{1
+    # """
+    # Pipe FZF output to Vim.
+    # @note Updated 2021-06-08.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_is_installed 'fzf' 'vim' || return 1
+    vim "$(fzf)"
 }
 
 _koopa_alias_vim_vanilla() { # {{{1
