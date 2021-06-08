@@ -84,9 +84,25 @@ koopa::git_checkout_recursive() { # {{{1
 koopa::git_clone() { # {{{1
     # """
     # Quietly clone a git repository.
-    # @note Updated 2021-06-02.
+    # @note Updated 2021-06-08.
     # """
-    local git repo target
+    local branch git git_args pos repo target
+    koopa::assert_has_args_ge "$#" 2
+    branch=''
+    while (("$#"))
+    do
+        case "$1" in
+            --branch=*)
+                branch="${1#*=}"
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 2
     repo="${1:?}"
     target="${2:?}"
@@ -104,12 +120,19 @@ koopa::git_clone() { # {{{1
         koopa::assert_is_gitlab_ssh_enabled
     fi
     git="$(koopa::locate_git)"
-    "$git" clone \
-        --depth 1 \
-        --quiet \
-        --recursive \
-        "$repo" \
-        "$target"
+    git_args=()
+    if [[ -n "$branch" ]]
+    then
+        git_args+=(
+            '-b' "$branch"
+        )
+    fi
+    git_args+=(
+        '--depth' 1
+        '--quiet'
+        '--recursive'
+    )
+    "$git" clone "${git_args[@]}" "$repo" "$target"
     return 0
 }
 

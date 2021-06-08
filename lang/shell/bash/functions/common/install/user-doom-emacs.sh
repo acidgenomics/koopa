@@ -44,7 +44,7 @@ koopa:::install_doom_emacs() { # {{{1
     koopa::activate_python_packages
     prefix="${INSTALL_PREFIX:?}"
     repo='https://github.com/hlissner/doom-emacs'
-    koopa::git_clone "$repo" "$prefix"
+    koopa::git_clone --branch='develop' "$repo" "$prefix"
     doom="${prefix}/bin/doom"
     koopa::assert_is_executable "$doom"
     install_args=(
