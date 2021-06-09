@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-06-08"
+koopa-date="2021-06-09"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.0a"
@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.9"
+aws-cli="2.2.10"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.24.2"
@@ -484,7 +484,7 @@ homebrew-cask-gpg-suite="2021.1"
 # ------------------------------------------------------------------------------
 
 python-black="21.5b2"     # homebrew
-python-bpytop="1.0.66"    # homebrew
+python-bpytop="1.0.67"    # homebrew
 python-flake8="3.9.2"     # homebrew
 python-pipx="0.16.2.0"    # homebrew
 python-pylint="2.8.3"     # homebrew

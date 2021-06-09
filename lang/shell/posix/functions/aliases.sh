@@ -196,7 +196,16 @@ _koopa_alias_spacevim() { # {{{1
     # SpaceVim alias.
     # @note Updated 2021-06-08.
     # """
-    local prefix vimrc
+    local gvim prefix vim vimrc
+    vim='vim'
+    if _koopa_is_macos
+    then
+        gvim='/Applications/MacVim.app/Contents/bin/gvim'
+        if [ -x "$gvim" ]
+        then
+            vim="$gvim"
+        fi
+    fi
     prefix="$(_koopa_spacevim_prefix)"
     vimrc="${prefix}/vimrc"
     if [ ! -f "$vimrc" ]
@@ -206,7 +215,7 @@ _koopa_alias_spacevim() { # {{{1
     fi
     _koopa_is_installed 'vim' || return 1
     _koopa_is_alias 'vim' && unalias 'vim'
-    vim -u "$vimrc" "$@"
+    "$vim" -u "$vimrc" "$@"
 }
 
 _koopa_alias_tar_c() { # {{{1
