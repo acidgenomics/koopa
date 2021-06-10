@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-06-09"
+koopa-date="2021-06-10"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.0a"
@@ -370,7 +370,7 @@ texinfo="6.7"
 the-silver-searcher="2.2.0"
 
 # https://github.com/tmux/tmux/releases
-tmux="3.2"
+tmux="3.2a"
 
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
