@@ -42,6 +42,7 @@ koopa::debian_uninstall_azure_cli() { # {{{1
     name_fancy='Azure CLI'
     koopa::uninstall_start "$name_fancy"
     koopa::debian_apt_remove "$name"
-    koopa:::debian_apt_delete_repo "$name"
+    koopa::debian_apt_delete_repo "$name"
     koopa::uninstall_success "$name_fancy"
+    return 0
 }
