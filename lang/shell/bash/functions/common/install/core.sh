@@ -437,7 +437,7 @@ koopa::uninstall_app() { # {{{1
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
-        [link_app]=1
+        [link_app]=''
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt_prefix]="$(koopa::opt_prefix)"
@@ -490,9 +490,14 @@ koopa::uninstall_app() { # {{{1
     else
         rm='koopa::rm'
     fi
-    if [[ "${dict[shared]}" -eq 0 ]] || koopa::is_macos
+    if [[ -z "${dict[link_app]}" ]]
     then
-        dict[link_app]=0
+        if [[ "${dict[shared]}" -eq 0 ]] || koopa::is_macos
+        then
+            dict[link_app]=0
+        else
+            dict[link_app]=1
+        fi
     fi
     if [[ -z "${dict[name_fancy]}" ]]
     then

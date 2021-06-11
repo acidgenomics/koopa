@@ -50,5 +50,9 @@ koopa::linux_uninstall_aspera_connect() { # {{{1
     # Uninstall Aspera Connect.
     # @note Updated 2021-06-11.
     # """
-    koopa::stop 'FIXME'
+    koopa::install_app \
+        --name='aspera-connect' \
+        --name-fancy='Aspera Connect' \
+        --no-link \
+        "$@"
 }
