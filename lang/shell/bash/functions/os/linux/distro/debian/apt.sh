@@ -1,19 +1,5 @@
 #!/usr/bin/env bash
 
-koopa:::debian_apt_delete_repo() { # {{{1
-    # """
-    # Delete an apt repo file.
-    # @note Updated 2021-06-11.
-    # """
-    local file name
-    koopa::assert_has_args_eq "$#" 1
-    name="${1:?}"
-    file="/etc/apt/sources.list.d/${name}/.list"
-    [[ -f "$file" ]] || return 0
-    koopa::rm -S "$file"
-    return 0
-}
-
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
@@ -542,6 +528,20 @@ deb ${urls[main]} ${codenames[main]} ${repos[*]}
 deb ${urls[security]} ${codenames[security]} ${repos[*]}
 deb ${urls[updates]} ${codenames[updates]} ${repos[*]}
 END
+    return 0
+}
+
+koopa::debian_apt_delete_repo() { # {{{1
+    # """
+    # Delete an apt repo file.
+    # @note Updated 2021-06-11.
+    # """
+    local file name
+    koopa::assert_has_args_eq "$#" 1
+    name="${1:?}"
+    file="/etc/apt/sources.list.d/${name}/.list"
+    [[ -f "$file" ]] || return 0
+    koopa::rm -S "$file"
     return 0
 }
 

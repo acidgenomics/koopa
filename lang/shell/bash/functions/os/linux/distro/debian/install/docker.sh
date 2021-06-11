@@ -46,8 +46,21 @@ koopa::debian_install_docker() { # {{{1
 
 koopa::debian_uninstall_docker() { # {{{1
     # """
-    # Uninstall Azure CLI.
+    # Uninstall Docker.
     # @note Updated 2021-06-11.
     # """
-    koopa::stop 'FIXME'
+    local name name_fancy pkgs
+    name='docker'
+    name_fancy='Docker'
+    koopa::uninstall_start "$name_fancy"
+    pkgs=(
+        'containerd.io'
+        'docker-ce'
+        'docker-ce-cli'
+    )
+    koopa::debian_apt_remove "${pkgs[@]}"
+    koopa::debian_apt_delete_repo "$name"
+    koopa::uninstall_success "$name_fancy"
+    return 0
+
 }
