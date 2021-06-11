@@ -67,3 +67,12 @@ koopa:::linux_install_bcl2fastq() { # {{{1
     koopa::rm "${prefix}/bin/test"
     return 0
 }
+
+koopa::linux_uninstall_bcl2fastq() { # {{{1
+    # """
+    # Uninstall bcl2fastq.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Need to prompt the user about this.
+}
