@@ -1,24 +1,33 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2207
 
-# """
-# Bash/Zsh TAB completion.
-# Updated 2021-06-11.
-#
-# Keep all of these commands in a single file.
-# Sourcing multiple scripts doesn't work reliably.
-#
-# Multi-level bash completion:
-# - https://stackoverflow.com/questions/17879322/
-# - https://stackoverflow.com/questions/5302650/
-# """
 
 _koopa_complete() { # {{{1
+    # """
+    # Bash/Zsh TAB completion for primary 'koopa' program.
+    # Updated 2021-06-11.
+    #
+    # Keep all of these commands in a single file.
+    # Sourcing multiple scripts doesn't work reliably.
+    #
+    # Here's how to keep track of variables:
+    # > cur=${COMP_WORDS[COMP_CWORD]}
+    # > prev=${COMP_WORDS[COMP_CWORD-1]}
+    #
+    # Multi-level bash completion:
+    # - https://stackoverflow.com/questions/17879322/
+    # - https://stackoverflow.com/questions/5302650/
+    #
+    # @seealso
+    # - https://github.com/scop/bash-completion/
+    # - https://www.gnu.org/software/bash/manual/html_node/
+    #     A-Programmable-Completion-Example.html
+    #
+    # """
     local args cur prev
     COMPREPLY=()
-    cur=${COMP_WORDS[COMP_CWORD]}
-    prev=${COMP_WORDS[COMP_CWORD-1]}
-    if [[ "$COMP_CWORD" -eq 1 ]]
+    if [[ "$COMP_CWORD" -eq 1 ]] && \
+        [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'koopa' ]]
     then
         args=(
             '--help'
@@ -32,14 +41,14 @@ _koopa_complete() { # {{{1
             'uninstall'
             'update'
         )
-        # Quoting inside the array doesn't work on Bash.
-        COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
-    elif [[ "$COMP_CWORD" -eq 2 ]]
+    elif [[ "$COMP_CWORD" -eq 2 ]] && \
+        [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'koopa' ]]
     then
-        case "$prev" in
+        case "${COMP_WORDS[COMP_CWORD-1]}" in
             app)
                 args=(
                     'clean'
+                    'configure'
                     'list'
                     'link'
                     'unlink'
@@ -261,16 +270,25 @@ _koopa_complete() { # {{{1
             *)
                 ;;
         esac
-        # Quoting inside the array doesn't work on Bash.
-        COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
+    elif [[ "$COMP_CWORD" -eq 3 ]] && \
+        [[ "${COMP_WORDS[COMP_CWORD-3]}" == 'koopa' ]] &&
+        [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'app' ]] &&
+        [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'configure' ]]
+    then
+        args=(
+            # > 'julia'
+            'go'
+            'node'
+            'perl'
+            'python'
+            'r'
+            'ruby'
+            'rust'
+        )
     fi
+    # Quoting inside the array doesn't work for Bash, but does for Zsh.
+    COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
     return 0
 }
-
-# @seealso
-# - https://github.com/scop/bash-completion/
-# - https://www.gnu.org/software/bash/manual/html_node/
-#     A-Programmable-Completion-Example.html
-
 
 complete -F _koopa_complete koopa
