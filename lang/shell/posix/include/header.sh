@@ -51,7 +51,7 @@ _koopa_posix_header() { # {{{1
         then
             if _koopa_is_linux
             then
-                _koopa_activate_bcbio || return 1
+                _koopa_activate_bcbio_nextgen || return 1
             elif _koopa_is_macos
             then
                 _koopa_macos_activate_python || return 1
