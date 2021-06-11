@@ -3,7 +3,7 @@
 
 # """
 # Bash/Zsh TAB completion.
-# Updated 2021-05-20.
+# Updated 2021-06-11.
 #
 # Keep all of these commands in a single file.
 # Sourcing multiple scripts doesn't work reliably.
@@ -118,7 +118,6 @@ _koopa_complete() { # {{{1
                     'r'
                     'r-cmd-check'
                     'r-devel'
-                    'r-koopa'
                     'r-packages'
                     'rbenv'
                     'rbenv-ruby'
@@ -269,19 +268,18 @@ _koopa_complete() { # {{{1
                     'password-store'
                     'patch'
                     'perl'
-                    'perl-packages'  # FIXME
+                    'perl-packages'
                     'perlbrew'
                     'pkg-config'
-                    'prelude-emacs'  # FIXME
+                    'prelude-emacs'
                     'proj'
                     'pyenv'
                     'python'
-                    'python-packages'  # FIXME prompt about this
+                    'python-packages'
                     'r'
                     'r-cmd-check'
                     'r-devel'
-                    'r-koopa'  # FIXME
-                    'r-packages'  # FIXME prompt about this
+                    'r-packages'
                     'rbenv'
                     'rbenv-ruby'  # FIXME
                     'rmate'

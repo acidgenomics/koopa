@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add an uninstaller, which prompts for confirmation.
-
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
@@ -49,6 +47,15 @@ koopa::install_python_packages() { # {{{1
     koopa::pip_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
+}
+
+koopa::uninstall_python_packages() { # {{{1
+    # """
+    # Uninstall Python packages.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Prompt the user here.
 }
 
 koopa::update_python_packages() { # {{{1

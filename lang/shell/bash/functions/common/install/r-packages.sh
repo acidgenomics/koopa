@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Add an uninstaller that prompts for confirmation.
-
 koopa::install_r_packages() { # {{{1
     # """
     # Install R packages.
@@ -17,6 +15,15 @@ koopa::install_r_packages() { # {{{1
     koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::install_success "$name_fancy"
     return 0
+}
+
+koopa::uninstall_r_packages() { # {{{1
+    # """
+    # Uninstall R packages.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Prompt the user here.
 }
 
 koopa::update_r_packages() { # {{{1

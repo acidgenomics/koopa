@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Needs an uninstaller.
-# FIXME Consider prompting the user on uninstall.
-
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
@@ -56,4 +53,13 @@ koopa::install_perl_packages() { # {{{1
     koopa::sys_set_permissions -r "$prefix"
     koopa::install_success "$name_fancy" "$prefix"
     return 0
+}
+
+koopa::uninstall_perl_packages() { # {{{1
+    # """
+    # Uninstall Perl packages.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Prompt the user here.
 }
