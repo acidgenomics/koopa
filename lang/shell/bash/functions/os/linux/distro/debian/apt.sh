@@ -185,17 +185,16 @@ llvm-toolchain-${os_codename}-${version} main"
     return 0
 }
 
-# FIXME Need to use gpg locate function...
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
     # Add the Microsoft Azure CLI key.
     # @note Updated 2021-06-11.
     # """
-    local curl file tee url
+    local curl file gpg tee url
     koopa::assert_has_no_args "$#"
     curl="$(koopa::locate_curl)"
+    gpg="$(koopa::locate_gpg)"
     tee="$(koopa::locate_tee)"
-    koopa::assert_is_installed 'gpg'
     url='https://packages.microsoft.com/keys/microsoft.asc'
     file='/etc/apt/trusted.gpg.d/microsoft.asc.gpg'
     [[ -e "$file" ]] && return 0
