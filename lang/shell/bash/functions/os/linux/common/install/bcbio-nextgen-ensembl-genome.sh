@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_bcbio_ensembl_genome() { # {{{1
+koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     # """
-    # Install bcbio genome from Ensembl.
-    # @note Updated 2021-05-26.
+    # Install bcbio-nextgen genome from Ensembl.
+    # @note Updated 2021-06-11.
     #
     # This script can fail on a clean bcbio install if this file is missing:
     # 'install/galaxy/tool-data/sam_fa_indices.loc'.
@@ -31,7 +31,7 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     # # GTF is easier to parse than GFF3.
     # gtf="${genome_dir}/annotation/gtf/Homo_sapiens.GRCh38.102.gtf.gz"
     # # Now we're ready to call the install script.
-    # koopa install bcbio-ensembl-genome \
+    # koopa install bcbio-nextgen-ensembl-genome \
     #     --build="$build" \
     #     --fasta="$fasta" \
     #     --gtf="$gtf" \
@@ -43,6 +43,8 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     local install_prefix organism provider release script sed tee tmp_dir
     local tool_data_prefix
     koopa::assert_has_args "$#"
+    koopa::assert_has_no_envs
+    koopa::activate_bcbio_nextgen
     script='bcbio_setup_genome.py'
     koopa::assert_is_installed "$script"
     sed="$(koopa::locate_sed)"
@@ -116,9 +118,10 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
         # directory is helpful, to avoid clutter.
         set -x
         koopa::cd "$tmp_dir"
-        koopa::dl 'FASTA file' "$fasta"
-        koopa::dl 'GTF file' "$gtf"
-        koopa::dl 'Indexes' "${indexes[*]}"
+        koopa::dl \
+            'FASTA file' "$fasta" \
+            'GTF file' "$gtf" \
+            'Indexes' "${indexes[*]}"
         # Note that '--buildversion' was added in 2021 and is now required.
         "$script" \
             --build "$bcbio_genome_name" \
@@ -132,43 +135,5 @@ koopa::linux_install_bcbio_ensembl_genome() { # {{{1
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::install_success "$bcbio_genome_name"
-    return 0
-}
-
-koopa::linux_install_bcbio_genome() { # {{{1
-    # """
-    # Install a natively supported bcbio genome (e.g. hg38).
-    # @note Updated 2021-05-26.
-    # """
-    local bcbio bcbio_dir cores flags genomes genomes_dir name_fancy tee tmp_dir
-    koopa::assert_has_args "$#"
-    koopa::assert_has_no_envs
-    bcbio='bcbio_nextgen.py'
-    koopa::assert_is_installed "$bcbio"
-    bcbio="$(koopa::which_realpath "$bcbio")"
-    bcbio_dir="$(cd "$(dirname "$bcbio")/../.." && pwd -P)"
-    genomes=("$@")
-    genomes_dir="${bcbio_dir}/genomes"
-    name_fancy='bcbio-nextgen genomes'
-    koopa::install_start "$name_fancy" "$genomes_dir"
-    koopa::dl 'Genomes' "$(koopa::to_string "${genomes[@]}")"
-    cores="$(koopa::cpu_count)"
-    tee="$(koopa::locate_tee)"
-    tmp_dir="$(koopa::tmp_dir)"
-    flags=(
-        "--cores=${cores}"
-        '--upgrade=skip'
-    )
-    for genome in "${genomes[@]}"
-    do
-        flags+=("--genomes=${genome}")
-    done
-    koopa::dl 'Flags' "${flags[@]}"
-    (
-        koopa::cd "$tmp_dir"
-        "$bcbio" upgrade "${flags[@]}"
-    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    koopa::install_success "$name_fancy"
     return 0
 }
