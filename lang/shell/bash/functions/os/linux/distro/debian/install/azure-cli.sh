@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# NOTE Now seeing this message during install:
+# N: Skipping acquire of configured file 'main/binary-x86_64/Packages' as
+# repository 'https://packages.microsoft.com/repos/azure-cli buster InRelease'
+# doesn't support architecture 'x86_64'
+
 koopa::debian_install_azure_cli() { # {{{1
     # """
     # Install Azure CLI.
