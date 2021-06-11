@@ -53,14 +53,9 @@ _koopa_complete() { # {{{1
                     'zsh'
                 )
                 ;;
-            install)
-                # NOTE Consider indicating support of these arguments:
-                # '--no-link', '--reinstall', and '--version'.
+            install | \
+            uninstall)
                 args=(
-                    # These are unique to 'install'.
-                    'homebrew-bundle'
-                    'tex-packages'
-                    # FIXME Need to share these with uninstall:
                     'anaconda'
                     'autoconf'
                     'automake'
@@ -146,7 +141,6 @@ _koopa_complete() { # {{{1
                     'wget'
                     'zsh'
                 )
-                # FIXME These are safe to share with 'uninstall'.
                 if _koopa_is_linux
                 then
                     args+=(
@@ -165,7 +159,6 @@ _koopa_complete() { # {{{1
                         'shiny-server'
                     )
                 fi
-                # FIXME These are safe to share with 'uninstall'.
                 if _koopa_is_macos
                 then
                     args+=(
@@ -175,6 +168,20 @@ _koopa_complete() { # {{{1
                         'xcode-clt'
                     )
                 fi
+                # Handle 'install' or 'uninstall'-specific arguments.
+                case "$1" in
+                    install)
+                        args+=(
+                            'homebrew-bundle'
+                            'tex-packages'
+                        )
+                        ;;
+                    uninstall)
+                        args+=(
+                            'koopa'
+                        )
+                        ;;
+                esac
                 ;;
             list)
                 args=(
@@ -215,133 +222,6 @@ _koopa_complete() { # {{{1
                         'enable-touch-id-sudo'
                         'homebrew-cask-version'
                         'macos-app-version'
-                    )
-                fi
-                ;;
-            uninstall)
-                args=(
-                    # These are unique to 'uninstall'.
-                    'koopa'
-                    # FIXME Need to share these with 'install'.
-                    'anaconda'
-                    'autoconf'
-                    'automake'
-                    'bash'
-                    'binutils'
-                    'chemacs'
-                    'cmake'
-                    'conda'
-                    'coreutils'
-                    'cpufetch'
-                    'curl'
-                    'doom-emacs'
-                    'dotfiles'
-                    'emacs'
-                    'ensembl-perl-api'
-                    'findutils'
-                    'fish'
-                    'fzf'
-                    'gawk'
-                    'gcc'
-                    'gdal'
-                    'geos'
-                    'git'
-                    'gnupg'
-                    'go'
-                    'grep'
-                    'groff'
-                    'gsl'
-                    'haskell-stack'
-                    'hdf5'
-                    'homebrew'
-                    'htop'
-                    'julia'
-                    'libevent'
-                    'libtool'
-                    'lua'
-                    'luarocks'
-                    'make'
-                    'ncurses'
-                    'neofetch'
-                    'neovim'
-                    'openjdk'
-                    'openssh'
-                    'openssl'
-                    'parallel'
-                    'password-store'
-                    'patch'
-                    'perl'
-                    'perl-packages'
-                    'perlbrew'
-                    'pkg-config'
-                    'prelude-emacs'
-                    'proj'
-                    'pyenv'
-                    'python'
-                    'python-packages'
-                    'r'
-                    'r-cmd-check'
-                    'r-devel'
-                    'r-packages'
-                    'rbenv'
-                    'rmate'
-                    'rsync'
-                    'ruby'
-                    'ruby-packages'
-                    'rust'
-                    'rust-packages'
-                    'sed'
-                    'shellcheck'
-                    'shunit2'
-                    'singularity'
-                    'spacemacs'
-                    'spacevim'
-                    'sqlite'
-                    'subversion'
-                    'taglib'
-                    'tar'
-                    'texinfo'
-                    'the-silver-searcher'
-                    'tmux'
-                    'udunits'
-                    'vim'
-                    'wget'
-                    'zsh'
-                )
-                # FIXME These are safe to share with 'install'.
-                if _koopa_is_linux
-                then
-                    args+=(
-                        'aspera-connect'
-                        'aws-cli'
-                        'bcbio'
-                        'bcl2fastq'
-                        'cellranger'
-                        'cloudbiolinux'
-                        'docker-credential-pass'
-                        'google-cloud-sdk'
-                        'lmod'
-                        'tex'  # FIXME
-                    )
-                    if _koopa_is_debian_like || _koopa_is_fedora_like
-                    then
-                        'rstudio-server'
-                    fi
-                    if _koopa_is_debian_like
-                    then
-                        args+=(
-                            'shiny-server'
-                        )
-                    fi
-                fi
-                # FIXME These are safe to share with 'install'.
-                if _koopa_is_macos
-                then
-                    args+=(
-                        'python-framework'
-                        'r-cran-gfortran'
-                        'r-framework'
-                        'xcode-clt'
                     )
                 fi
                 ;;
