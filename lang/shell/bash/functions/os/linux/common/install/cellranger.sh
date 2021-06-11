@@ -29,3 +29,12 @@ koopa:::linux_install_cellranger() { # {{{1
     koopa::sys_mv "${name}-${version}" "$prefix"
     return 0
 }
+
+koopa::linux_uninstall_cellranger() { # {{{1
+    # """
+    # Uninstall Cell Ranger.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Need to prompt the user about this.
+}
