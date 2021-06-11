@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+## NOTE We may want to link 'bin/cellranger' specifically here.
+
 koopa::linux_install_cellranger() { # {{{1
     koopa::install_app \
         --name='cellranger' \
