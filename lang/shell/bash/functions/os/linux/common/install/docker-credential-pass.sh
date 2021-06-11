@@ -43,6 +43,7 @@ koopa::linux_uninstall_docker_credential_pass() { # {{{1
     # Uninstall docker-credential-pass.
     # @note Updated 2021-06-11.
     # """
-    koopa::stop 'FIXME'
-    # Need to prompt the user about this.
+    koopa::uninstall_app \
+        --name='docker-credential-pass' \
+        "$@"
 }
