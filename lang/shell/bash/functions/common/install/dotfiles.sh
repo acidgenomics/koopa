@@ -3,6 +3,8 @@
 # [2021-05-27] Linux success.
 # [2021-05-27] macOS success.
 
+# FIXME Install this into '/opt/koopa/app/dotfiles/rolling' and then link
+# into opt prefix, for app consistency.
 koopa::install_dotfiles() { # {{{1
     # """
     # Install dot files.
