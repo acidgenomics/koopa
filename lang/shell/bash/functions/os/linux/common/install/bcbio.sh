@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_bcbio() { # {{{1
-    local version
-    version="$(koopa::current_bcbio_version)"
     koopa::install_app \
         --name='bcbio' \
         --name-fancy='bcbio-nextgen' \
         --no-link \
         --platform='linux' \
-        --version="$version" \
+        --version="$(koopa::current_bcbio_version)" \
         "$@"
 }
 
