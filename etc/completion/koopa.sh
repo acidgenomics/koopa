@@ -167,7 +167,6 @@ _koopa_complete() { # {{{1
                 if _koopa_is_macos
                 then
                     args+=(
-                        'homebrew-little-snitch'
                         'python-framework'
                         'r-cran-gfortran'
                         'r-framework'
@@ -297,8 +296,6 @@ _koopa_complete() { # {{{1
                     'subversion'
                     'taglib'
                     'tar'
-                    'tex'  # FIXME
-                    'tex-packages'  # FIXME
                     'texinfo'
                     'the-silver-searcher'
                     'tmux'
@@ -322,12 +319,12 @@ _koopa_complete() { # {{{1
                         'lmod'  # FIXME prompt about this?
                         'rstudio-server'  # FIXME
                         'shiny-server'  # FIXME
+                        'tex'  # FIXME
                     )
                 fi
                 if _koopa_is_macos
                 then
                     args+=(
-                        'homebrew-little-snitch'  # FIXME
                         'python-framework'  # FIXME
                         'r-cran-gfortran'
                         'r-framework'  # FIXME
@@ -355,7 +352,7 @@ _koopa_complete() { # {{{1
                     'rust-packages'
                     'spacemacs'
                     'spacevim'
-                    'tex'
+                    'tex-packages'
                 )
                 if _koopa_is_linux
                 then

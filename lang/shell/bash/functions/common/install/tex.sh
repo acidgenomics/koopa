@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add an uninstaller.
-# FIXME The uninstaller needs to be Linux-specific.
-
-koopa::update_tex() { # {{{1
+koopa::update_tex_packages() { # {{{1
     # """
-    # Update TeX.
-    # @note Updated 2021-05-05.
+    # Update TeX packages.
+    # @note Updated 2021-06-11.
     # """
     local name_fancy
     koopa::assert_has_no_args "$#"
