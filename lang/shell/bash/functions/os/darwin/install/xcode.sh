@@ -27,7 +27,8 @@ koopa::macos_install_xcode_clt() { # {{{1
     xcode-select --install
     sudo xcodebuild -license 'accept'
     sudo xcode-select -r
-    xcode-select -p
+    prefix="$(xcode-select -p)"
+    koopa::assert_is_dir "$prefix"
     koopa::install_success "$name_fancy"
     return 0
 }
