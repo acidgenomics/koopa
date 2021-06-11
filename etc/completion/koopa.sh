@@ -169,7 +169,7 @@ _koopa_complete() { # {{{1
                     )
                 fi
                 # Handle 'install' or 'uninstall'-specific arguments.
-                case "$1" in
+                case "$prev" in
                     install)
                         args+=(
                             'homebrew-bundle'
