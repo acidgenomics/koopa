@@ -70,3 +70,11 @@ koopa::debian_install_shiny_server() { # {{{1
     return 0
 }
 
+koopa::debian_uninstall_shiny_server() { # {{{1
+    # """
+    # Uninstall Shiny Server.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Prompt the user about this.
+}

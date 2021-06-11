@@ -20,6 +20,26 @@ koopa::fedora_install_rstudio_server() { # {{{1
 }
 
 koopa::fedora_install_rstudio_workbench() { # {{{1
+    # """
+    # Install RStudio Workbench.
+    # @note Updated 2021-06-11.
+    # """
     koopa::fedora_install_rstudio_server --workbench "$@"
     return 0
+}
+
+koopa::fedora_uninstall_rstudio_server() { # {{{1
+    # """
+    # Uninstall RStudio Server.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+}
+
+koopa::fedora_uninstall_rstudio_workbench() { # {{{1
+    # """
+    # Uninstall RStudio Workbench.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::fedora_uninstall_rstudio_server "$@"
 }

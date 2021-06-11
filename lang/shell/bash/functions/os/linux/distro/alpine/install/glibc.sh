@@ -2,7 +2,7 @@
 
 koopa::alpine_install_glibc() { # {{{1
     # """
-    # Install glibc
+    # Install glibc.
     # @note Updated 2020-07-20.
     #
     # Custom glibc library is required to install conda.

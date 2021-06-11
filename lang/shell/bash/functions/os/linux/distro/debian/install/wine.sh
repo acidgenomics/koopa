@@ -25,12 +25,12 @@ koopa::debian_install_wine() { # {{{1
     # """
     local name_fancy
     name_fancy='Wine'
+    koopa::install_start "$name_fancy"
     if koopa::is_installed 'wine'
     then
         koopa::alert_is_installed "$name_fancy"
         return 0
     fi
-    koopa::install_start "$name_fancy"
     koopa::apt_add_wine_repo
     # This is required to install missing libaudio0 dependency.
     koopa::apt_add_wine_obs_repo
@@ -51,3 +51,10 @@ koopa::debian_install_wine() { # {{{1
     return 0
 }
 
+koopa::debian_uninstall_wine() { # {{{1
+    # """
+    # Uninstall Wine.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+}
