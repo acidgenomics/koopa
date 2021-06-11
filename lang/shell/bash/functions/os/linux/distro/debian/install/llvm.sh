@@ -61,14 +61,14 @@ koopa::debian_install_llvm() { # {{{1
         fi
     fi
     koopa::install_start "$name_fancy"
-    koopa::apt_add_llvm_repo
+    koopa::debian_apt_add_llvm_repo
     pkgs=(
         "clang-${major_version}"
         "clangd-${major_version}"
         "lld-${major_version}"
         "lldb-${major_version}"
     )
-    koopa::apt_install "${pkgs[@]}"
+    koopa::debian_apt_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }

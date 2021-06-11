@@ -26,8 +26,8 @@ koopa::debian_install_azure_cli() { # {{{1
         koopa::alert_is_installed "$name_fancy"
         return 0
     fi
-    koopa::apt_add_azure_cli_repo
-    koopa::apt_install 'azure-cli'
+    koopa::debian_apt_add_azure_cli_repo
+    koopa::debian_apt_install 'azure-cli'
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -40,8 +40,8 @@ koopa::debian_uninstall_azure_cli() { # {{{1
     local apt_file name_fancy
     name_fancy='Azure CLI'
     koopa::uninstall_start "$name_fancy"
-    koopa::apt_remove 'azure-cli'
-    # FIXME Convert this to 'koopa::apt_delete_azure_cli_repo'.
+    koopa::debian_apt_remove 'azure-cli'
+    # FIXME Convert this to 'koopa::debian_apt_delete_azure_cli_repo'.
     apt_file='/etc/apt/sources.list.d/azure-cli.list'
     koopa::rm -S "$apt_file"
     koopa::uninstall_success "$name_fancy"
