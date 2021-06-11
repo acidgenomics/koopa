@@ -39,7 +39,27 @@ koopa::debian_install_rstudio_server() { # {{{1
     return 0
 }
 
-koopa::debian_install_rstudio_server_workbench() { # {{{1
+koopa::debian_install_rstudio_workbench() { # {{{1
+    # """
+    # Install RStudio Workbench.
+    # @note Updated 2021-06-11.
+    # """
     koopa::debian_install_rstudio_server --workbench "$@"
     return 0
+}
+
+koopa::debian_uninstall_rstudio_server() { # {{{1
+    # """
+    # Uninstall RStudio Server.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+}
+
+koopa::debian_uninstall_rstudio_workbench() { # {{{1
+    # """
+    # Uninstall RStudio Workbench.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::debian_uninstall_rstudio_server "$@"
 }

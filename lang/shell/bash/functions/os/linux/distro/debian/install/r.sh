@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Do we need to improve the uninstall here?
+
 koopa::debian_install_r_cran_binary() { # {{{1
     # """
     # Install latest version of R from CRAN.
