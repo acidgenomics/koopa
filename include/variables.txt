@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-06-10"
+koopa-date="2021-06-11"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.0a"
@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.10"
+aws-cli="2.2.11"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.24.2"
@@ -170,7 +170,7 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.1.11"
+homebrew="3.1.12"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -317,7 +317,7 @@ ruby="3.0.1p64"
 rust="1.52.1"
 
 # https://rustup.rs/
-rustup="1.24.2"
+rustup="1.24.3"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
@@ -483,7 +483,7 @@ homebrew-cask-gpg-suite="2021.1"
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-python-black="21.5b2"     # homebrew
+python-black="21.6b0"     # homebrew
 python-bpytop="1.0.67"    # homebrew
 python-flake8="3.9.2"     # homebrew
 python-pipx="0.16.2.0"    # homebrew
@@ -535,7 +535,7 @@ rust-ripgrep="12.1.1"     # homebrew; rg
 rust-starship="0.54.0"    # homebrew
 rust-tokei="12.1.2"       # homebrew
 rust-xsv="0.13.0"         # homebrew
-rust-zoxide="0.7.0"       # homebrew; z
+rust-zoxide="0.7.2"       # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
