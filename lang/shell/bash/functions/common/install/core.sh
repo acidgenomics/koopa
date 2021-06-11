@@ -431,7 +431,7 @@ koopa::prune_apps() { # {{{1
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2021-06-08.
+    # @note Updated 2021-06-11.
     # """
     local dict pos rm
     declare -A dict=(
@@ -480,15 +480,6 @@ koopa::uninstall_app() { # {{{1
         koopa::alert_is_not_installed "${dict[name_fancy]}" "${dict[prefix]}"
         return 0
     fi
-    if [[ "${dict[shared]}" -eq 0 ]] || koopa::is_macos
-    then
-        dict[link_app]=0
-    fi
-    if [[ -z "${dict[name_fancy]}" ]]
-    then
-        dict[name_fancy]="${dict[name]}"
-    fi
-    koopa::uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
     if koopa::str_match_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
     then
         dict[shared]=1
@@ -499,6 +490,15 @@ koopa::uninstall_app() { # {{{1
     else
         rm='koopa::rm'
     fi
+    if [[ "${dict[shared]}" -eq 0 ]] || koopa::is_macos
+    then
+        dict[link_app]=0
+    fi
+    if [[ -z "${dict[name_fancy]}" ]]
+    then
+        dict[name_fancy]="${dict[name]}"
+    fi
+    koopa::uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
     "$rm" \
         "${dict[prefix]}" \
         "${dict[opt_prefix]}/${dict[name]}"
