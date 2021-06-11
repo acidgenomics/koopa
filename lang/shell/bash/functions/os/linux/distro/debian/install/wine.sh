@@ -3,7 +3,7 @@
 koopa::debian_install_wine() { # {{{1
     # """
     # Install Wine.
-    # @note Updated 2021-06-04.
+    # @note Updated 2021-06-11.
     #
     # aptitude will return more informative error messages on held package
     # errors, such as with missing libaudio0 dependency.
@@ -35,18 +35,18 @@ koopa::debian_install_wine() { # {{{1
     # This is required to install missing libaudio0 dependency.
     koopa::apt_add_wine_obs_repo
     # Enable 32-bit packages.
-    sudo dpkg --add-architecture i386
+    sudo dpkg --add-architecture 'i386'
     # Old stable version: Use wine, wine32 here.
     koopa::apt_get install \
-        winbind \
-        x11-apps \
-        xauth \
-        xvfb
+        'winbind' \
+        'x11-apps' \
+        'xauth' \
+        'xvfb'
     # Install latest stable version of Wine.
     sudo DEBIAN_FRONTEND=noninteractive \
         apt-get --yes install \
             --install-recommends \
-            winehq-stable
+            'winehq-stable'
     koopa::install_success "$name_fancy"
     return 0
 }
