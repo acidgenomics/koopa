@@ -26,7 +26,6 @@ koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
     # """
     local arch conda file prefix url
     koopa::assert_has_no_envs
-    koopa::assert_is_installed 'docker'
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     arch="$(koopa::arch)"
