@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # NOTE Currently failing to install on Ubuntu 20.
-# # include could not find load file:
-# # CMakeFindDependencyMacro
-# # Unknown CMake command "find_dependency".
+# ## include could not find load file:
+# ## CMakeFindDependencyMacro
+# ## Unknown CMake command "find_dependency".
 
 koopa::linux_install_bcl2fastq() { # {{{1
     # """
@@ -73,6 +73,7 @@ koopa::linux_uninstall_bcl2fastq() { # {{{1
     # Uninstall bcl2fastq.
     # @note Updated 2021-06-11.
     # """
-    koopa::stop 'FIXME'
-    # Need to prompt the user about this.
+    koopa::uninstall_app \
+        --name='bcl2fastq' \
+        "$@"
 }
