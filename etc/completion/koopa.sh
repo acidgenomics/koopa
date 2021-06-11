@@ -321,10 +321,18 @@ _koopa_complete() { # {{{1
                         'docker-credential-pass'
                         'google-cloud-sdk'
                         'lmod'
-                        'rstudio-server'  # FIXME
-                        'shiny-server'  # FIXME
                         'tex'  # FIXME
                     )
+                    if _koopa_is_debian_like || _koopa_is_fedora_like
+                    then
+                        'rstudio-server'
+                    fi
+                    if _koopa_is_debian_like
+                    then
+                        args+=(
+                            'shiny-server'
+                        )
+                    fi
                 fi
                 # FIXME These are safe to share with 'install'.
                 if _koopa_is_macos
