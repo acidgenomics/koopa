@@ -35,6 +35,9 @@ koopa::linux_uninstall_cellranger() { # {{{1
     # Uninstall Cell Ranger.
     # @note Updated 2021-06-11.
     # """
-    koopa::stop 'FIXME'
-    # Need to prompt the user about this.
+    koopa::uninstall_app \
+        --name='cellranger' \
+        --name-fancy='CellRanger' \
+        --no-link \
+        "$@"
 }
