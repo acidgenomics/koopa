@@ -84,3 +84,12 @@ koopa:::linux_install_lmod() { # {{{1
     fi
     return 0
 }
+
+koopa::linux_uninstall_lmod() { # {{{1
+    # """
+    # Uninstall Lmod.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Need to prompt the user about this.
+}
