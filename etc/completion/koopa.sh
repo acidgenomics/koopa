@@ -57,6 +57,10 @@ _koopa_complete() { # {{{1
                 # NOTE Consider indicating support of these arguments:
                 # '--no-link', '--reinstall', and '--version'.
                 args=(
+                    # These are unique to 'install'.
+                    'homebrew-bundle'
+                    'tex-packages'
+                    # FIXME Need to share these with uninstall:
                     'anaconda'
                     'autoconf'
                     'automake'
@@ -88,7 +92,6 @@ _koopa_complete() { # {{{1
                     'haskell-stack'
                     'hdf5'
                     'homebrew'
-                    'homebrew-bundle'
                     'htop'
                     'julia'
                     'libevent'
@@ -108,7 +111,6 @@ _koopa_complete() { # {{{1
                     'perl'
                     'perl-packages'
                     'perlbrew'
-                    'perlbrew-perl'
                     'pkg-config'
                     'prelude-emacs'
                     'proj'
@@ -120,7 +122,6 @@ _koopa_complete() { # {{{1
                     'r-devel'
                     'r-packages'
                     'rbenv'
-                    'rbenv-ruby'
                     'rmate'
                     'rsync'
                     'ruby'
@@ -137,7 +138,6 @@ _koopa_complete() { # {{{1
                     'subversion'
                     'taglib'
                     'tar'
-                    'tex-packages'
                     'texinfo'
                     'the-silver-searcher'
                     'tmux'
@@ -146,6 +146,7 @@ _koopa_complete() { # {{{1
                     'wget'
                     'zsh'
                 )
+                # FIXME These are safe to share with 'uninstall'.
                 if _koopa_is_linux
                 then
                     args+=(
@@ -164,6 +165,7 @@ _koopa_complete() { # {{{1
                         'shiny-server'
                     )
                 fi
+                # FIXME These are safe to share with 'uninstall'.
                 if _koopa_is_macos
                 then
                     args+=(
@@ -218,6 +220,9 @@ _koopa_complete() { # {{{1
                 ;;
             uninstall)
                 args=(
+                    # These are unique to 'uninstall'.
+                    'koopa'
+                    # FIXME Need to share these with 'install'.
                     'anaconda'
                     'autoconf'
                     'automake'
@@ -251,7 +256,6 @@ _koopa_complete() { # {{{1
                     'homebrew'
                     'htop'
                     'julia'
-                    'koopa'
                     'libevent'
                     'libtool'
                     'lua'
@@ -304,6 +308,7 @@ _koopa_complete() { # {{{1
                     'wget'
                     'zsh'
                 )
+                # FIXME These are safe to share with 'install'.
                 if _koopa_is_linux
                 then
                     args+=(
@@ -322,6 +327,7 @@ _koopa_complete() { # {{{1
                         'tex'  # FIXME
                     )
                 fi
+                # FIXME These are safe to share with 'install'.
                 if _koopa_is_macos
                 then
                     args+=(
