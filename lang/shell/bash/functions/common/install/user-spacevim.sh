@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to support an uninstaller.
-
 koopa::install_spacevim() { # {{{1
     koopa::install_app \
         --name-fancy='SpaceVim' \
@@ -47,37 +45,17 @@ koopa:::install_spacevim() { # {{{1
     return 0
 }
 
-# FIXME Need to rework this after new approach using Git clone...
 koopa::uninstall_spacevim() { # {{{1
     # """
     # Uninstall SpaceVim.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-11.
     # """
-    local name_fancy prefix
-    name_fancy='SpaceVim'
-    prefix="$(koopa::spacevim_prefix)"
-    if [[ ! -d "$prefix" ]]
-    then
-        koopa::alert_is_not_installed "$name_fancy" "$prefix"
-        return 0
-    fi
-    koopa::uninstall_start "$name_fancy"
-    koopa::rm \
-        "$prefix" \
-        "${prefix}.d" \
-        "${HOME:?}/.cache/SpaceVim"
-    if [[ -d "${HOME:?}/.vim_back" ]]
-    then
-        koopa::rm "${HOME:?}/.vim"
-        koopa::mv "${HOME:?}/.vim_back" "${HOME:?}/.vim"
-    fi
-    if [[ -f "${HOME:?}/.vimrc_back" ]]
-    then
-        koopa::rm "${HOME:?}/.vimrc"
-        koopa::mv "${HOME:?}/.vimrc_back" "${HOME:?}/.vimrc"
-    fi
-    koopa::uninstall_success "$name_fancy"
-    return 0
+    koopa::uninstall_app \
+        --name-fancy='SpaceVim' \
+        --name='spacevim' \
+        --no-shared \
+        --prefix="$(koopa::spacevim_prefix)" \
+        "$@"
 }
 
 koopa::update_spacevim() { # {{{1
