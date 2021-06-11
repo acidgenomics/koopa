@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Rework, putting this into app and then linking into opt instead...
+# FIXME Can we wrap this with our standard app installer??
+
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-11.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -60,6 +63,8 @@ koopa::uninstall_perl_packages() { # {{{1
     # Uninstall Perl packages.
     # @note Updated 2021-06-11.
     # """
-    koopa::stop 'FIXME'
-    # Prompt the user here.
+    koopa::uninstall_app \
+        --name-fancy='Perl packages' \
+        --name='perl-packages' \
+        "$@"
 }
