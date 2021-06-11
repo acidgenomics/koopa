@@ -262,6 +262,20 @@ koopa::locate_git() { # {{{1
     koopa:::locate_app 'git' 'git' "$@"
 }
 
+koopa::locate_gpg() { # {{{1
+    # """
+    # Locate gpg.
+    # @note Updated 2021-06-11.
+    # """
+    local app
+    app='gpg'
+    if koopa::is_macos
+    then
+        app='/usr/local/MacGPG2/bin/gpg'
+    fi
+    koopa:::locate_app_simple "$app"
+}
+
 koopa::locate_grep() { # {{{1
     # """
     # Locate GNU grep.
