@@ -10,11 +10,11 @@ koopa:::debian_apt_key_add() {  #{{{1
     # """
     local curl name_fancy url key
     koopa::assert_has_args_le "$#" 3
+    curl="$(koopa::locate_curl)"
+    koopa::assert_is_installed 'apt-key'
     name_fancy="${1:?}"
     url="${2:?}"
     key="${3:-}"
-    curl="$(koopa::locate_curl)"
-    koopa::assert_is_installed 'apt-key'
     if [[ -n "$key" ]]
     then
         koopa::debian_apt_is_key_imported "$key" && return 0
@@ -107,13 +107,15 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     # Add the Google Cloud key.
     # @note Updated 2020-08-17.
     # """
-    local file url
+    local curl file url
     koopa::assert_has_no_args "$#"
+    curl="$(koopa::locate_curl)"
+    koopa::assert_is_installed 'apt-key'
     url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     file='/usr/share/keyrings/cloud.google.gpg'
     [[ -e "$file" ]] && return 0
     koopa::alert "Adding Google Cloud keyring at '${file}'."
-    curl -fsSL "$url" \
+    "$curl" -fsSL "$url" \
         | sudo apt-key --keyring "$file" add - \
         >/dev/null 2>&1 \
         || true
@@ -183,21 +185,24 @@ llvm-toolchain-${os_codename}-${version} main"
     return 0
 }
 
-# FIXME locate curl here...
+# FIXME Need to use gpg locate function...
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
     # Add the Microsoft Azure CLI key.
-    # @note Updated 2020-08-17.
+    # @note Updated 2021-06-11.
     # """
-    local file url
+    local curl file tee url
     koopa::assert_has_no_args "$#"
+    curl="$(koopa::locate_curl)"
+    tee="$(koopa::locate_tee)"
+    koopa::assert_is_installed 'gpg'
     url='https://packages.microsoft.com/keys/microsoft.asc'
     file='/etc/apt/trusted.gpg.d/microsoft.asc.gpg'
     [[ -e "$file" ]] && return 0
     koopa::alert "Adding Microsoft key at '${file}'."
-    curl -fsSL "$url" \
+    "$curl" -fsSL "$url" \
         | gpg --dearmor \
-        | sudo tee "$file" \
+        | sudo "$tee" "$file" \
         >/dev/null 2>&1 \
         || true
     return 0
@@ -206,7 +211,7 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
-    # @note Updated 2020-09-18.
+    # @note Updated 2021-06-11.
     #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
@@ -214,6 +219,7 @@ koopa::debian_apt_add_r_key() { # {{{1
     # """
     local key keys keyserver
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed 'apt-key'
     if koopa::is_ubuntu
     then
         # Release is signed by Michael Rutter <marutter@gmail.com>.
@@ -276,7 +282,7 @@ koopa::debian_apt_add_r_repo() { # {{{1
             koopa::alert_info "${name_fancy} repo exists at '${file}'."
             return 0
         else
-            sudo rm -frv "$file"
+            koopa::rm -S "$file"
         fi
     fi
     koopa::alert "Adding ${name_fancy} repo at '${file}'."
@@ -467,12 +473,12 @@ koopa::debian_apt_configure_sources() { # {{{1
     koopa::alert "Configuring apt sources in '${sources_list}'."
     if [[ -L "$sources_list" ]]
     then
-        koopa::sys_rm "$sources_list"
+        koopa::rm -S "$sources_list"
     fi
     sources_list_d='/etc/apt/sources.list.d'
     if [[ -L "$sources_list_d" ]]
     then
-        koopa::sys_rm "$sources_list_d"
+        koopa::rm -S "$sources_list_d"
     fi
     if [[ ! -d "$sources_list_d" ]]
     then
@@ -522,10 +528,6 @@ deb ${urls[main]} ${codenames[main]} ${repos[*]}
 deb ${urls[security]} ${codenames[security]} ${repos[*]}
 deb ${urls[updates]} ${codenames[updates]} ${repos[*]}
 END
-    if koopa::is_installed 'cat'
-    then
-        cat "$sources_list"
-    fi
     return 0
 }
 
@@ -555,19 +557,22 @@ koopa::debian_apt_disable_deb_src() { # {{{1
 koopa::debian_apt_enable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
-    # @note Updated 2020-02-05.
+    # @note Updated 2021-06-11.
     # """
-    local file
+    local file grep sed
     koopa::assert_has_args_le "$#" 1
-    file="${1:-/etc/apt/sources.list}"
+    grep="$(koopa::locate_grep)"
+    sed="$(koopa::locate_sed)"
+    file="${1:-}"
+    [[ -z "$file" ]] && file='/etc/apt/sources.list'
     file="$(koopa::realpath "$file")"
     koopa::alert "Enabling Debian sources in '${file}'."
-    if ! grep -Eq '^# deb-src ' "$file"
+    if ! "$grep" -Eq '^# deb-src ' "$file"
     then
         koopa::alert_note "No '# deb-src' lines to uncomment in '${file}'."
         return 0
     fi
-    sudo sed -Ei 's/^# deb-src /deb-src /' "$file"
+    sudo "$sed" -Ei 's/^# deb-src /deb-src /' "$file"
     sudo apt-get update
     return 0
 }
@@ -575,14 +580,18 @@ koopa::debian_apt_enable_deb_src() { # {{{1
 koopa::debian_apt_enabled_repos() { # {{{1
     # """
     # Get a list of enabled default apt repos.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-06-11.
     # """
-    local os_codename x
+    local cut file grep os_codename pattern x
     koopa::assert_has_no_args "$#"
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
     os_codename="$(koopa::os_codename)"
+    file='/etc/apt/sources.list'
+    pattern="^deb\s.+\s${os_codename}\s.+$"
     x="$( \
-        grep -E "^deb\s.+\s${os_codename}\s.+$" /etc/apt/sources.list \
-            | cut -d ' ' -f 4- \
+        "$grep" -E "$pattern" "$file" \
+            | "$cut" -d ' ' -f '4-' \
     )"
     koopa::print "$x"
 }
@@ -621,17 +630,18 @@ koopa::debian_apt_is_key_imported() { # {{{1
     # Is a GPG key imported for apt?
     # @note Updated 2020-06-30.
     # """
-    local key
+    local key sed x
     koopa::assert_has_args_eq "$#" 1
+    sed="$(koopa::locate_sed)"
+    koopa::assert_is_installed 'apt-key'
     key="${1:?}"
     key="$( \
         koopa::print "$key" \
-        | sed 's/ //g' \
-        | sed -E "s/\
+        | "$sed" 's/ //g' \
+        | "$sed" -E "s/\
 ^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\$/\
 \1 \2 \3 \4 \5  \6 \7 \8 \9 \10/" \
     )"
-    local x
     x="$(apt-key list 2>&1 || true)"
     koopa::str_match "$x" "$key"
 }
@@ -662,17 +672,19 @@ koopa::debian_apt_space_used_by() { # {{{1
 koopa::debian_apt_space_used_by_grep() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-06-11.
     #
     # See also:
     # https://askubuntu.com/questions/490945
     # """
-    local x
+    local cut grep x
     koopa::assert_has_args "$#"
+    cut="$(koopa::locate_cut)"
+    grep="$(koopa::locate_grep)"
     x="$( \
         sudo apt-get --assume-no autoremove "$@" \
-            | grep freed \
-            | cut -d ' ' -f 4-5 \
+            | "$grep" 'freed' \
+            | "$cut" -d ' ' -f '4-5' \
     )"
     koopa::print "$x"
     return 0
@@ -681,9 +693,11 @@ koopa::debian_apt_space_used_by_grep() { # {{{1
 koopa::debian_apt_space_used_by_no_deps() { # {{{1
     # """
     # Check install apt package size, without dependencies.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-06-11.
     # """
+    local grep
+    grep="$(koopa::locate_grep)"
     koopa::assert_has_args "$#"
-    sudo apt show "$@" | grep 'Size'
+    sudo apt show "$@" | "$grep" 'Size'
     return 0
 }
