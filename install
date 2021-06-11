@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# FIXME Should we save a shared koopa configuration file on macOS?
-# FIXME Touch this into '/etc/paths.d'?
-# https://apple.stackexchange.com/questions/128897/
-# FIXME eval `/usr/libexec/path_helper -s`
-# FIXME Consider using '/etc/launchd.conf' on macOS.
-
 # """
 # koopa shell
 # https://koopa.acidgenomics.com/
