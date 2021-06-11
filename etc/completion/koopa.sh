@@ -275,6 +275,7 @@ _koopa_complete() { # {{{1
         [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'app' ]] &&
         [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'configure' ]]
     then
+        # FIXME Ensure all of these are supported.
         args=(
             # > 'julia'
             'go'
