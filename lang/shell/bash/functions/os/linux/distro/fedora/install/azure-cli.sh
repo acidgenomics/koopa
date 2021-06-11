@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME We should use 'koopa::fedora_dnf' instead of dnf/yum...
+# FIXME koopa::fedora_dnf --yes...
+
 koopa::fedora_install_azure_cli() { # {{{1
     # """
     # Install Azure CLI.

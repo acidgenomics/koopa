@@ -34,9 +34,9 @@ koopa::debian_install_r_cran_binary() { # {{{1
         '/etc/R' \
         '/etc/apt/sources.list.d/r.list' \
         '/usr/lib/R/etc'
-    koopa::apt_add_r_repo "$version"
+    koopa::debian_apt_add_r_repo "$version"
     pkgs=('r-base' 'r-base-dev')
-    koopa::apt_install "${pkgs[@]}"
+    koopa::debian_apt_install "${pkgs[@]}"
     # Ensure we don't have a duplicate site library.
     koopa::rm -S '/usr/local/lib/R'
     koopa::configure_r
@@ -79,8 +79,8 @@ koopa::debian_install_r_devel() { # {{{1
     # - xvfb
     # """
     koopa::mkdir -S '/usr/share/man/man1'
-    koopa::apt_add_r_repo
-    koopa::apt_get build-dep r-base
+    koopa::debian_apt_add_r_repo
+    koopa::debian_apt_get build-dep r-base
     koopa::install_r_devel "$@"
     return 0
 }
@@ -97,7 +97,7 @@ koopa::debian_uninstall_r_cran_binary() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     koopa::rm -S '/etc/R' '/usr/lib/R/etc'
-    koopa::apt_remove 'r-*'
+    koopa::debian_apt_remove 'r-*'
     koopa::uninstall_success "$name_fancy"
     return 0
 }
