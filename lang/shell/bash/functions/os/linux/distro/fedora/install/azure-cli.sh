@@ -29,4 +29,5 @@ koopa::fedora_uninstall_azure_cli() { # {{{1
     # @note Updated 2021-06-11.
     # """
     koopa::stop 'FIXME'
+    sudo dnf remove 'azure-cli'
 }
