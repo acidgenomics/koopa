@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_bcbio_vm() { # {{{1
+koopa::linux_install_bcbio_nextgen_vm() { # {{{1
     koopa::install_app \
-        --name-fancy='bcbio-nextgen-vm' \
-        --name='bcbio-vm' \
+        --name='bcbio-nextgen-vm' \
         --no-link \
         --platform='linux' \
         "$@"
 }
 
 # NOTE ARM is not yet supported.
-koopa:::linux_install_bcbio_vm() { # {{{1
+koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
     # """
     # Install bcbio-nextgen-vm.
     # @note Updated 2021-06-11.
@@ -60,14 +59,13 @@ koopa:::linux_install_bcbio_vm() { # {{{1
     return 0
 }
 
-koopa::linux_uninstall_bcbio_vm() { # {{{1
+koopa::linux_uninstall_bcbio_nextgen_vm() { # {{{1
     # """
     # Uninstall bcbio-nextgen-vm.
     # @note Updated 2021-06-11.
     # """
     koopa::uninstall_app \
-        --name-fancy='bcbio-nextgen-vm' \
-        --name='bcbio-vm' \
+        --name='bcbio-nextgen-vm' \
         --no-link \
         "$@"
 }
