@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework, putting this into app and then linking into opt instead...
-# FIXME Can we wrap this with our standard app installer??
-
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
@@ -24,12 +21,8 @@ koopa::install_perl_packages() { # {{{1
     then
         koopa::sys_mkdir "$prefix"
         koopa::sys_set_permissions "$(koopa::dirname "$prefix")"
-        (
-            koopa::cd "$(koopa::dirname "$prefix")"
-            koopa::sys_ln "$(koopa::basename "$prefix")" 'latest'
-        )
-        PERL_MM_OPT="INSTALL_BASE=$prefix" \
-            cpan 'local::lib'
+        koopa::link_into_opt "$prefix" 'perl-packages'
+        PERL_MM_OPT="INSTALL_BASE=$prefix" cpan 'local::lib'
     fi
     koopa::activate_perl_packages
     export PERL_MM_USE_DEFAULT=1

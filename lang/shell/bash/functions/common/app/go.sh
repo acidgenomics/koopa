@@ -3,7 +3,7 @@
 koopa::configure_go() { # {{{1
     # """
     # Configure Go.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-11.
     # """
     local name_fancy prefix version
     koopa::activate_go
@@ -15,11 +15,8 @@ koopa::configure_go() { # {{{1
     if [[ ! -d "$prefix" ]]
     then
         koopa::sys_mkdir "$prefix"
-        (
-            koopa::sys_set_permissions "$(koopa::dirname "$prefix")"
-            koopa::cd "$(koopa::dirname "$prefix")"
-            koopa::sys_ln "$(koopa::basename "$prefix")" 'latest'
-        )
+        koopa::sys_set_permissions "$(koopa::dirname "$prefix")"
+        koopa::link_into_opt "$prefix" 'go-packages'
     fi
     koopa::activate_go
     koopa::configure_success "$name_fancy" "$prefix"
