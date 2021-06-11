@@ -19,3 +19,12 @@ koopa:::linux_install_cloudbiolinux() { # {{{1
     url='https://github.com/chapmanb/cloudbiolinux.git'
     koopa::git_clone "$url" "$prefix"
 }
+
+koopa::linux_uninstall_cloudbiolinux() { # {{{1
+    # """
+    # Uninstall CloudBioLinux.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Need to prompt the user about this.
+}

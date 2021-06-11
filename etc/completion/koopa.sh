@@ -316,12 +316,11 @@ _koopa_complete() { # {{{1
                         'aws-cli'
                         'bcbio'
                         'bcl2fastq'
-                        'cellranger'  # FIXME
-                        'cloudbiolinux'  # FIXME
-                        'docker-credential-pass'  # FIXME
+                        'cellranger'
+                        'cloudbiolinux'
+                        'docker-credential-pass'
                         'google-cloud-sdk'
-                        'julia'  # FIXME
-                        'lmod'  # FIXME prompt about this?
+                        'lmod'
                         'rstudio-server'  # FIXME
                         'shiny-server'  # FIXME
                         'tex'  # FIXME
