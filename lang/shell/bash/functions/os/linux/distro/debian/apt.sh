@@ -539,7 +539,7 @@ koopa::debian_apt_delete_repo() { # {{{1
     local file name
     koopa::assert_has_args_eq "$#" 1
     name="${1:?}"
-    file="/etc/apt/sources.list.d/${name}/.list"
+    file="/etc/apt/sources.list.d/${name}.list"
     [[ -f "$file" ]] || return 0
     koopa::rm -S "$file"
     return 0
