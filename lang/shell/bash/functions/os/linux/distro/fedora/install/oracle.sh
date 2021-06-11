@@ -37,3 +37,10 @@ ${minor_version}-${stem}-${version}.${arch}.rpm"
     return 0
 }
 
+koopa::fedora_uninstall_oracle_instantclient() { # {{{1
+    # """
+    # Uninstall Oracle InstantClient.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+}

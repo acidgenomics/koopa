@@ -22,3 +22,11 @@ koopa::fedora_install_azure_cli() { # {{{1
     koopa::install_success "$name_fancy"
     return 0
 }
+
+koopa::fedora_uninstall_azure_cli() { # {{{1
+    # """
+    # Uninstall Azure CLI.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+}

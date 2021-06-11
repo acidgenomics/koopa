@@ -43,3 +43,11 @@ koopa::debian_install_docker() { # {{{1
     koopa::alert_restart
     return 0
 }
+
+koopa::debian_uninstall_docker() { # {{{1
+    # """
+    # Uninstall Azure CLI.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+}
