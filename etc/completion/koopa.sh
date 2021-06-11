@@ -281,7 +281,6 @@ _koopa_complete() { # {{{1
                     'r-devel'
                     'r-packages'
                     'rbenv'
-                    'rbenv-ruby'  # FIXME
                     'rmate'
                     'rsync'
                     'ruby'
