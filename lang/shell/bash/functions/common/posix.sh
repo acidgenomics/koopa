@@ -12,8 +12,8 @@ koopa::activate_aspera() { # {{{1
     _koopa_activate_aspera "$@"
 }
 
-koopa::activate_bcbio() { # {{{1
-    _koopa_activate_bcbio "$@"
+koopa::activate_bcbio_nextgen() { # {{{1
+    _koopa_activate_bcbio_nextgen "$@"
 }
 
 koopa::activate_conda() { # {{{1
@@ -228,8 +228,8 @@ koopa::aspera_prefix() { # {{{1
     _koopa_aspera_prefix "$@"
 }
 
-koopa::bcbio_tools_prefix() { # {{{1
-    _koopa_bcbio_tools_prefix "$@"
+koopa::bcbio_nextgen_tools_prefix() { # {{{1
+    _koopa_bcbio_nextgen_tools_prefix "$@"
 }
 
 koopa::boolean_nounset() { # {{{1
