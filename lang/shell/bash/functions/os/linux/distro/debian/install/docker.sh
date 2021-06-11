@@ -27,14 +27,14 @@ koopa::debian_install_docker() { # {{{1
     fi
     koopa::install_start "$name_fancy"
     koopa::assert_has_no_args "$#"
-    koopa::apt_add_docker_repo
+    koopa::debian_apt_add_docker_repo
     # Ready to install Docker.
     pkgs=(
         'containerd.io'
         'docker-ce'
         'docker-ce-cli'
     )
-    koopa::apt_install "${pkgs[@]}"
+    koopa::debian_apt_install "${pkgs[@]}"
     # Ensure current user is added to Docker group.
     koopa::add_user_to_group 'docker'
     # Move '/var/lib/docker' to '/n/var/lib/docker'.
