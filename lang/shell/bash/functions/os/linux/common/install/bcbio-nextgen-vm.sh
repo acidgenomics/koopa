@@ -43,10 +43,10 @@ koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
     conda="${prefix}/anaconda/bin/conda"
     koopa::assert_is_executable "$conda"
     "$conda" install --yes \
-        --channel='conda-forge' \
         --channel='bioconda' \
-        "bcbio-nextgen-vm=${version}" \
-        'bcbio-nextgen'
+        --channel='conda-forge' \
+        --override-channels \
+        "bcbio-nextgen-vm=${version}"
     # Configure Docker, if necessary.
     if ! koopa::str_match "$(groups)" 'docker'
     then
