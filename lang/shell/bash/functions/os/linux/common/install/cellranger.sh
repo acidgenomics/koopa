@@ -3,7 +3,7 @@
 koopa::linux_install_cellranger() { # {{{1
     koopa::install_app \
         --name='cellranger' \
-        --name-fancy='CellRanger' \
+        --name-fancy='Cell Ranger' \
         --no-link \
         --platform='linux' \
         "$@"
@@ -37,7 +37,7 @@ koopa::linux_uninstall_cellranger() { # {{{1
     # """
     koopa::uninstall_app \
         --name='cellranger' \
-        --name-fancy='CellRanger' \
+        --name-fancy='Cell Ranger' \
         --no-link \
         "$@"
 }
