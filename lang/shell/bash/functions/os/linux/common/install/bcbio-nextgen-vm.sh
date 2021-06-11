@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is failing due to incompatible Python...conda?
+
 koopa::linux_install_bcbio_nextgen_vm() { # {{{1
     koopa::install_app \
         --name='bcbio-nextgen-vm' \
@@ -36,8 +38,8 @@ koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
             koopa::stop "Architecture not supported: '${arch}'."
             ;;
     esac
-    file='Miniconda3-latest-Linux-x86_64.sh'
-    url="https://repo.continuum.io/miniconda/${file}"
+    file='Miniconda3-py37_4.9.2-Linux-x86_64.sh'
+    url="https://repo.anaconda.com/miniconda/${file}"
     koopa::download "$url"
     bash "$file" -b -p "${prefix}/anaconda"
     conda="${prefix}/anaconda/bin/conda"
