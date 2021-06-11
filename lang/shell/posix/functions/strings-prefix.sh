@@ -384,17 +384,7 @@ _koopa_node_packages_prefix() { # {{{1
     # Node.js (NPM) packages prefix.
     # @note Updated 2021-05-25.
     # """
-    local version
-    [ "$#" -le 1 ] || return 1
-    version="${1:-}"
-    if [ -z "$version" ]
-    then
-        version='latest'
-    else
-        version="$(_koopa_major_minor_version "$version")"
-    fi
-    _koopa_print "$(_koopa_opt_prefix)/node-packages/${version}"
-    return 0
+    __koopa_packages_prefix 'node' "$@"
 }
 
 _koopa_openjdk_prefix() { # {{{1
@@ -487,19 +477,9 @@ _koopa_python_packages_prefix() { # {{{1
 _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-11.
     # """
-    local version
-    [ "$#" -le 1 ] || return 1
-    version="${1:-}"
-    if [ -z "$version" ]
-    then
-        version='latest'
-    else
-        version="$(_koopa_major_minor_version "$version")"
-    fi
-    _koopa_print "$(_koopa_opt_prefix)/r-packages/${version}"
-    return 0
+    __koopa_packages_prefix 'r' "$@"
 }
 
 _koopa_rbenv_prefix() { # {{{1
@@ -527,17 +507,7 @@ _koopa_ruby_packages_prefix() { # {{{1
     # Ruby packags (gems) prefix.
     # @note Updated 2021-05-25.
     # """
-    local version
-    [ "$#" -le 1 ] || return 1
-    version="${1:-}"
-    if [ -z "$version" ]
-    then
-        version='latest'
-    else
-        version="$(_koopa_major_minor_version "$version")"
-    fi
-    _koopa_print "$(_koopa_opt_prefix)/ruby-packages/${version}"
-    return 0
+    __koopa_packages_prefix 'ruby' "$@"
 }
 
 _koopa_rust_packages_prefix() { # {{{1
@@ -550,17 +520,7 @@ _koopa_rust_packages_prefix() { # {{{1
     # - CARGO_HOME
     # - RUSTUP_HOME
     # """
-    local version
-    [ "$#" -le 1 ] || return 1
-    version="${1:-}"
-    if [ -z "$version" ]
-    then
-        version='latest'
-    else
-        version="$(_koopa_major_minor_version "$version")"
-    fi
-    _koopa_print "$(_koopa_opt_prefix)/rust-packages/${version}"
-    return 0
+    __koopa_packages_prefix 'rust' "$@"
 }
 
 _koopa_rust_prefix() { # {{{1
