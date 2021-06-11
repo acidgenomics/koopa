@@ -1,6 +1,29 @@
 #!/bin/sh
 
-# NOTE Some of these should migrate to Bash library.
+__koopa_packages_prefix() { # {{{1
+    # """
+    # Packages prefix for a specific language.
+    # @note Updated 2021-06-11.
+    #
+    # @seealso
+    # > perl -V
+    # # Inspect the '@INC' variable.
+    # """
+    local name version x
+    [ "$#" -le 2 ] || return 1
+    name="${1:?}"
+    name="${name}-packages"
+    version="${2:-}"
+    if [ -n "$version" ]
+    then
+        version="$(_koopa_major_minor_version "$version")"
+        x="$(_koopa_app_prefix)/${name}/${version}"
+    else
+        x="$(_koopa_opt_prefix)/${name}"
+    fi
+    _koopa_print "$x"
+    return 0
+}
 
 _koopa_anaconda_prefix() { # {{{1
     # """
@@ -15,34 +38,10 @@ _koopa_anaconda_prefix() { # {{{1
 _koopa_app_prefix() { # {{{1
     # """
     # Application prefix.
-    # @note Updated 2021-02-15.
-    #
-    # Previously referred to as "cellar", prior to v0.9.
-    #
-    # Recommended to keep on a local mount.
+    # @note Updated 2021-06-11.
     # """
-    local prefix
     [ "$#" -eq 0 ] || return 1
-    prefix="${KOOPA_APP_PREFIX:-}"
-    # Don't allow this prefix to match the opt prefix.
-    if [ -n "$prefix" ] && [ "$prefix" = "$(_koopa_opt_prefix)" ]
-    then
-        prefix=''
-    fi
-    # Provide fallback support for existing installs using "cellar".
-    # Otherwise, use "app" by default.
-    if [ -z "$prefix" ] && _koopa_is_linux
-    then
-        if [ -d "$(_koopa_make_prefix)/cellar" ]
-        then
-            prefix="$(_koopa_make_prefix)/cellar"
-        elif [ -d "$(_koopa_koopa_prefix)/cellar" ]
-        then
-            prefix="$(_koopa_koopa_prefix)/cellar"
-        fi
-    fi
-    [ -z "$prefix" ] && prefix="$(_koopa_koopa_prefix)/app"
-    _koopa_print "$prefix"
+    _koopa_print "$(_koopa_koopa_prefix)/app"
     return 0
 }
 
@@ -200,7 +199,7 @@ _koopa_fzf_prefix() { # {{{1
 _koopa_go_packages_prefix() { # {{{1
     # """
     # Go packages 'GOPATH', for building from source.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-11.
     #
     # This must be different from 'go root' value.
     #
@@ -210,17 +209,7 @@ _koopa_go_packages_prefix() { # {{{1
     # - go env GOROOT
     # - https://golang.org/wiki/SettingGOPATH to set a custom GOPATH
     # """
-    local version
-    [ "$#" -le 1 ] || return 1
-    version="${1:-}"
-    if [ -z "$version" ]
-    then
-        version='latest'
-    else
-        version="$(_koopa_major_minor_version "$version")"
-    fi
-    _koopa_print "$(_koopa_opt_prefix)/go-packages/${version}"
-    return 0
+    __koopa_packages_prefix 'go' "$@"
 }
 
 _koopa_go_prefix() { # {{{1
@@ -276,21 +265,6 @@ _koopa_homebrew_prefix() { # {{{1
     fi
     [ -d "$x" ] || return 1
     _koopa_print "$x"
-    return 0
-}
-
-_koopa_homebrew_ruby_packages_prefix() { # {{{1
-    # """
-    # Homebrew Ruby packages (gems) prefix.
-    # @note Updated 2021-05-04.
-    # """
-    local api_version homebrew_prefix prefix
-    [ "$#" -eq 0 ] || return 1
-    _koopa_is_installed 'brew' 'ruby' || return 0
-    homebrew_prefix="$(_koopa_homebrew_prefix)"
-    api_version="$(_koopa_ruby_api_version)"
-    prefix="${homebrew_prefix}/lib/ruby/gems/${api_version}"
-    _koopa_print "$prefix"
     return 0
 }
 
@@ -446,23 +420,13 @@ _koopa_opt_prefix() { # {{{1
 _koopa_perl_packages_prefix() { # {{{1
     # """
     # Perl site library prefix.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-11.
     #
     # @seealso
     # > perl -V
     # # Inspect the '@INC' variable.
     # """
-    local version
-    [ "$#" -le 1 ] || return 1
-    version="${1:-}"
-    if [ -z "$version" ]
-    then
-        version='latest'
-    else
-        version="$(_koopa_major_minor_version "$version")"
-    fi
-    _koopa_print "$(_koopa_opt_prefix)/perl-packages/${version}"
-    return 0
+    __koopa_packages_prefix 'perl' "$@"
 }
 
 _koopa_perlbrew_prefix() { # {{{1
@@ -510,24 +474,14 @@ _koopa_pyenv_prefix() { # {{{1
 _koopa_python_packages_prefix() { # {{{1
     # """
     # Python site packages library prefix.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-11.
     #
     # This was changed to an unversioned approach in koopa v0.9.
     #
     # @seealso
     # > "$python" -m site
     # """
-    local version
-    [ "$#" -le 1 ] || return 1
-    version="${1:-}"
-    if [ -z "$version" ]
-    then
-        version='latest'
-    else
-        version="$(_koopa_major_minor_version "$version")"
-    fi
-    _koopa_print "$(_koopa_opt_prefix)/python-packages/${version}"
-    return 0
+    __koopa_packages_prefix 'python' "$@"
 }
 
 _koopa_r_packages_prefix() { # {{{1
