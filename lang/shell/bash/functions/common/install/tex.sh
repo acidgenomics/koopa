@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Need to add an uninstaller.
+# FIXME The uninstaller needs to be Linux-specific.
 
 koopa::update_tex() { # {{{1
     # """

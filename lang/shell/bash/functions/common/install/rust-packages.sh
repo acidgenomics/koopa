@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Add an uninstaller that prompts.
-
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
@@ -108,6 +106,15 @@ koopa::install_rust_packages() { # {{{1
     koopa::sys_set_permissions -r "$prefix"
     koopa::install_success "$name_fancy"
     return 0
+}
+
+koopa::uninstall_rust_packages() { # {{{1
+    # """
+    # Uninstall Rust packages.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Prompt the user here.
 }
 
 koopa::update_rust_packages() { # {{{1

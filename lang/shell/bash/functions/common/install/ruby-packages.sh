@@ -59,6 +59,15 @@ koopa::install_ruby_packages() { # {{{1
     return 0
 }
 
+koopa::uninstall_ruby_packages() { # {{{1
+    # """
+    # Uninstall Ruby packages.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+    # Prompt the user here.
+}
+
 koopa::update_ruby_packages() {  # {{{1
     # """
     # Update Ruby packages.

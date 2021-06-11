@@ -284,15 +284,15 @@ _koopa_complete() { # {{{1
                     'rmate'
                     'rsync'
                     'ruby'
-                    'ruby-packages'  # FIXME
+                    'ruby-packages'
                     'rust'
-                    'rust-packages'  # FIXME
+                    'rust-packages'
                     'sed'
                     'shellcheck'
                     'shunit2'
                     'singularity'
-                    'spacemacs'  # FIXME
-                    'spacevim'  # FIXME
+                    'spacemacs'
+                    'spacevim'
                     'sqlite'
                     'subversion'
                     'taglib'
