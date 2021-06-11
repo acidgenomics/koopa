@@ -146,6 +146,7 @@ _koopa_complete() { # {{{1
                     args+=(
                         'aspera-connect'
                         'aws-cli'
+                        'azure-cli'
                         'bcbio'
                         'bcl2fastq'
                         'cellranger'
