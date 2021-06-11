@@ -231,7 +231,7 @@ _koopa_complete() { # {{{1
                     'coreutils'
                     'cpufetch'
                     'curl'
-                    'doom-emacs'  # FIXME
+                    'doom-emacs'
                     'dotfiles'
                     'emacs'
                     'ensembl-perl-api'
@@ -348,7 +348,7 @@ _koopa_complete() { # {{{1
                     'doom-emacs'
                     'dotfiles'
                     'homebrew'
-                    'prelude-emacs'  # FIXME
+                    'prelude-emacs'
                     'pyenv'
                     'python-packages'
                     'r-packages'

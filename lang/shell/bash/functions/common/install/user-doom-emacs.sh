@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to support an uninstaller.
-# FIXME Installer needs to support '--no-shared' flag.
-
 koopa::install_doom_emacs() { # {{{1
     koopa::install_app \
         --name-fancy='Doom Emacs' \
