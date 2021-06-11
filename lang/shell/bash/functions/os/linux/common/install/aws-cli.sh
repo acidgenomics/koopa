@@ -50,3 +50,11 @@ koopa:::linux_install_aws_cli() { # {{{1
     koopa::sys_cp "$version" "$prefix"
     return 0
 }
+
+koopa::linux_uninstall_aws_cli() { # {{{1
+    # """
+    # Uninstall AWS CLI.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+}

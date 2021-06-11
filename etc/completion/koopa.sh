@@ -312,10 +312,10 @@ _koopa_complete() { # {{{1
                 if _koopa_is_linux
                 then
                     args+=(
-                        'aspera-connect'  # FIXME
-                        'aws-cli'  # FIXME
-                        'bcbio'  # FIXME
-                        'bcl2fastq'  # FIXME
+                        'aspera-connect'
+                        'aws-cli'
+                        'bcbio'
+                        'bcl2fastq'
                         'cellranger'  # FIXME
                         'cloudbiolinux'  # FIXME
                         'docker-credential-pass'  # FIXME
