@@ -56,13 +56,13 @@ _koopa_aspera_prefix() { # {{{1
     return 0
 }
 
-_koopa_bcbio_tools_prefix() { # {{{1
+_koopa_bcbio_nextgen_tools_prefix() { # {{{1
     # """
     # bcbio-nextgen tools prefix.
-    # @note Updated 2021-03-02.
+    # @note Updated 2021-06-11.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_print "$(_koopa_opt_prefix)/bcbio/tools"
+    _koopa_print "$(_koopa_opt_prefix)/bcbio-nextgen/tools"
     return 0
 }
 

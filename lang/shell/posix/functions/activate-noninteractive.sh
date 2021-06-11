@@ -10,10 +10,10 @@ _koopa_activate_aspera() { # {{{1
     return 0
 }
 
-_koopa_activate_bcbio() { # {{{1
+_koopa_activate_bcbio_nextgen() { # {{{1
     # """
     # Activate bcbio-nextgen tool binaries.
-    # @note Updated 2021-03-02.
+    # @note Updated 2021-06-11.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
@@ -23,9 +23,7 @@ _koopa_activate_bcbio() { # {{{1
     # """
     local prefix
     [ "$#" -eq 0 ] || return 1
-    _koopa_is_linux || return 0
-    _koopa_is_installed bcbio_nextgen.py && return 0
-    prefix="$(_koopa_bcbio_tools_prefix)"
+    prefix="$(_koopa_bcbio_nextgen_tools_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH

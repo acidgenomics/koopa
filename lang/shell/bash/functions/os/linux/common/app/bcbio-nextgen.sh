@@ -22,7 +22,7 @@ koopa::linux_bcbio_run_tests() { # {{{1
     )
     git_dir="${HOME:?}/git/bcbio-nextgen"
     output_dir="${PWD:?}/bcbio-tests"
-    tools_dir="$(koopa::bcbio_tools_prefix)"
+    tools_dir="$(koopa::bcbio_nextgen_tools_prefix)"
     while (("$#"))
     do
         case "$1" in
