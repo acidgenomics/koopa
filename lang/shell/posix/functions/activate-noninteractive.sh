@@ -756,50 +756,56 @@ _koopa_activate_venv() { # {{{1
 _koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
-    # @note Updated 2021-06-03.
+    # @note Updated 2021-06-11.
     # @seealso
     # - https://developer.gnome.org/basedir-spec/
     # - https://specifications.freedesktop.org/basedir-spec/
     #     basedir-spec-latest.html#variables
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
+    # - https://unix.stackexchange.com/questions/476963/
     # """
     [ "$#" -eq 0 ] || return 1
+    # XDG_CACHE_HOME.
     if [ -z "${XDG_CACHE_HOME:-}" ]
     then
         XDG_CACHE_HOME="$(_koopa_xdg_cache_home)"
     fi
+    export XDG_CACHE_HOME
+    # XDG_CONFIG_DIRS.
     if [ -z "${XDG_CONFIG_DIRS:-}" ]
     then
         XDG_CONFIG_DIRS="$(_koopa_xdg_config_dirs)"
     fi
+    export XDG_CONFIG_DIRS
+    # XDG_CONFIG_HOME.
     if [ -z "${XDG_CONFIG_HOME:-}" ]
     then
         XDG_CONFIG_HOME="$(_koopa_xdg_config_home)"
     fi
+    export XDG_CONFIG_HOME
+    # XDG_DATA_DIRS.
     if [ -z "${XDG_DATA_DIRS:-}" ]
     then
         XDG_DATA_DIRS="$(_koopa_xdg_data_dirs)"
     fi
+    export XDG_DATA_DIRS
+    # XDG_DATA_HOME.
     if [ -z "${XDG_DATA_HOME:-}" ]
     then
         XDG_DATA_HOME="$(_koopa_xdg_data_home)"
     fi
+    export XDG_DATA_HOME
+    # XDG_RUNTIME_DIR.
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
     then
         XDG_RUNTIME_DIR="$(_koopa_xdg_runtime_dir)"
     fi
     if [ ! -d "$XDG_RUNTIME_DIR" ]
     then
-        mkdir -p "$XDG_RUNTIME_DIR"
-        chmod 0700 "$XDG_RUNTIME_DIR"
+        unset -v XDG_RUNTIME_DIR
+    else
+        export XDG_RUNTIME_DIR
     fi
-    export \
-        XDG_CACHE_HOME \
-        XDG_CONFIG_DIRS \
-        XDG_CONFIG_HOME \
-        XDG_DATA_DIRS \
-        XDG_DATA_HOME \
-        XDG_RUNTIME_DIR
     return 0
 }
 
