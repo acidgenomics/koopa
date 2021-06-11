@@ -148,6 +148,8 @@ _koopa_complete() { # {{{1
                         'aws-cli'
                         'azure-cli'
                         'bcbio-nextgen'
+                        'bcbio-nextgen-ensembl-genome'
+                        'bcbio-nextgen-genome'
                         'bcbio-nextgen-vm'
                         'bcl2fastq'
                         'cellranger'
