@@ -37,5 +37,12 @@ koopa::debian_uninstall_azure_cli() { # {{{1
     # Uninstall Azure CLI.
     # @note Updated 2021-06-11.
     # """
-    koopa::stop 'FIXME'
+    local apt_file name_fancy
+    name_fancy='Azure CLI'
+    koopa::uninstall_start "$name_fancy"
+    koopa::apt_remove 'azure-cli'
+    # FIXME Convert this to 'koopa::apt_delete_azure_cli_repo'.
+    apt_file='/etc/apt/sources.list.d/azure-cli.list'
+    koopa::rm -S "$apt_file"
+    koopa::uninstall_success "$name_fancy"
 }
