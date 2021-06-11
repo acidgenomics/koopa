@@ -97,10 +97,10 @@ koopa::cairo_version() { # {{{1
     koopa:::pkg_config_version 'cairo'
 }
 
-koopa::current_bcbio_version() { # {{{1
+koopa::current_bcbio_nextgen_version() { # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-06-11.
     #
     # This approach checks for latest stable release available via bioconda.
     # """
