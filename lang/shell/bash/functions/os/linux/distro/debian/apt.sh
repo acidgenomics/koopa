@@ -363,18 +363,30 @@ Emulators:/Wine:/Debian"
 koopa::apt_clean() { # {{{1
     # """
     # Clean up apt after an install/uninstall call.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-06-11.
+    #
+    # Alternatively, can consider using 'autoclean' here, which is lighter
+    # than calling 'clean'.
+
+    # - 'clean': Cleans the packages and install script in
+    #       '/var/cache/apt/archives/'.
+    # - 'autoclean': Cleans obsolete deb-packages, less than 'clean'.
+    # - 'autoremove': Removes orphaned packages which are not longer needed from
+    #       the system, but not purges them, use the '--purge' option together
+    #       with the command for that.
+    #
     # @seealso
+    # - https://askubuntu.com/questions/984797/
+    # - https://askubuntu.com/questions/3167/
     # - https://github.com/hadolint/hadolint/wiki/DL3009
     # """
-    sudo apt-get --yes clean
     sudo apt-get --yes autoremove
-    koopa::rm -S '/var/lib/apt/lists/'*
+    sudo apt-get --yes clean
+    # > koopa::rm -S '/var/lib/apt/lists/'*
     return 0
 }
 
 koopa::apt_configure_sources() { # {{{1
-
     # """
     # Configure apt sources.
     # @note Updated 2021-05-22.
