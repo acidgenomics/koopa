@@ -44,3 +44,11 @@ koopa:::linux_install_aspera_connect() { # {{{1
     koopa::assert_is_file "${prefix}/bin/ascp"
     return 0
 }
+
+koopa::linux_uninstall_aspera_connect() { # {{{1
+    # """
+    # Uninstall Aspera Connect.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::stop 'FIXME'
+}
