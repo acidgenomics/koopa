@@ -325,10 +325,10 @@ _koopa_complete() { # {{{1
                 if _koopa_is_macos
                 then
                     args+=(
-                        'python-framework'  # FIXME
+                        'python-framework'
                         'r-cran-gfortran'
-                        'r-framework'  # FIXME
-                        'xcode-clt'  # FIXME
+                        'r-framework'
+                        'xcode-clt'
                     )
                 fi
                 ;;
