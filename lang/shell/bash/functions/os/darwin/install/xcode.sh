@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Needs an uninstaller here.
+
 koopa::macos_install_xcode_clt() { # {{{1
     # """
     # Install Xcode CLT.
