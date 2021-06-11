@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for Linux.
-# @note Updated 2021-05-25.
+# @note Updated 2021-06-11.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -18,11 +18,6 @@
 
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
-
-PERL_VERSION="latest"
-PYTHON_VERSION="latest"
-RUBY_VERSION="latest"
-RUST_VERSION="latest"
 
 # Package libraries {{{1
 # ==============================================================================
@@ -90,17 +85,17 @@ R_LIBS_USER="${R_LIBS_SITE}"
 PATH="/usr/local/bin:/usr/bin:/bin"
 
 # Ruby.
-PATH="${KOOPA_OPT_PREFIX}/ruby-packages/${RUBY_VERSION}/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/ruby-packages/bin:${PATH}"
 
 # Perl.
-PATH="${KOOPA_OPT_PREFIX}/perl-packages/${PERL_VERSION}/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/perl-packages/bin:${PATH}"
 
 # Rust.
-PATH="${KOOPA_OPT_PREFIX}/rust-packages/${RUST_VERSION}/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/rust-packages/bin:${PATH}"
 
 # Python.
 PATH="${KOOPA_OPT_PREFIX}/python/bin:${PATH}"
-PATH="${KOOPA_OPT_PREFIX}/python-packages/${PYTHON_VERSION}/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/python-packages/bin:${PATH}"
 
 # Conda.
 PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
