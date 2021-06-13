@@ -15,9 +15,6 @@ koopa:::koopa_app() { # {{{1
         clean)
             name='delete-broken-app-symlinks'
             ;;
-        configure)
-            name='koopa:::koopa_app_configure'
-            ;;
         list)
             name='list-app-versions'
             ;;
@@ -36,7 +33,7 @@ koopa:::koopa_app() { # {{{1
     return 0
 }
 
-koopa:::koopa_app_configure() { # {{{1
+koopa:::koopa_configure() { # {{{1
     # """
     # Parse user input to 'koopa configure'.
     # @note Updated 2021-06-11.
@@ -45,7 +42,7 @@ koopa:::koopa_app_configure() { # {{{1
     name="${1:-}"
     if [[ -z "$name" ]]
     then
-        koopa::stop "Missing argument: 'koopa app configure <ARG>...'."
+        koopa::stop "Missing argument: 'koopa configure <ARG>...'."
     fi
     shift 1
     koopa:::run_function "configure-${name}" "$@"
@@ -475,6 +472,7 @@ koopa::koopa() { # {{{1
             shift 1
             ;;
         app | \
+        configure | \
         header | \
         install | \
         link | \
