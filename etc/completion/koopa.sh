@@ -5,7 +5,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-06-11.
+    # Updated 2021-06-13.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -33,6 +33,7 @@ _koopa_complete() { # {{{1
             '--help'
             '--version'
             'app'
+            'configure'
             'header'
             'install'
             'list'
@@ -48,10 +49,21 @@ _koopa_complete() { # {{{1
             app)
                 args=(
                     'clean'
-                    'configure'
                     'list'
                     'link'
                     'unlink'
+                )
+                ;;
+            configure)
+                args=(
+                    # > 'julia'
+                    'go'
+                    'node'
+                    'perl'
+                    'python'
+                    'r'
+                    'ruby'
+                    'rust'
                 )
                 ;;
             header)
@@ -270,22 +282,6 @@ _koopa_complete() { # {{{1
             *)
                 ;;
         esac
-    elif [[ "$COMP_CWORD" -eq 3 ]] && \
-        [[ "${COMP_WORDS[COMP_CWORD-3]}" == 'koopa' ]] &&
-        [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'app' ]] &&
-        [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'configure' ]]
-    then
-        # FIXME Ensure all of these are supported.
-        args=(
-            # > 'julia'
-            'go'
-            'node'
-            'perl'
-            'python'
-            'r'
-            'ruby'
-            'rust'
-        )
     fi
     # Quoting inside the array doesn't work for Bash, but does for Zsh.
     COMPREPLY=($(compgen -W "${args[*]}" -- "$cur"))
