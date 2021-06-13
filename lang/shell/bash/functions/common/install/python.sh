@@ -4,6 +4,10 @@ koopa::configure_python() { #{{{1
     # """
     # Configure Python.
     # @note Updated 2021-06-13.
+    #
+    # This creates a Python 'site-packages' directory and then links using
+    # a 'koopa.pth' file into the Python system 'site-packages'.
+    #
     # @seealso
     # > "$python" -m site
     # """
