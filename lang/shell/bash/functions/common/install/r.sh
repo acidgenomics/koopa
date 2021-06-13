@@ -1,8 +1,49 @@
 #!/usr/bin/env bash
 
-# Run 'koopa install tex-packages' if you hit this warning:
-# neither inconsolata.sty nor zi4.sty found: PDF vignettes and package manuals
-# will not be rendered optimally
+koopa::configure_r() { # {{{1
+    # """
+    # Update R configuration.
+    # @note Updated 2021-05-27.
+    #
+    # Add shared R configuration symlinks in '${R_HOME}/etc'.
+    # """
+    local etc_prefix make_prefix r r_prefix
+    koopa::assert_has_args_le "$#" 1
+    r="${1:-}"
+    [[ -z "$r" ]] && r="$(koopa::locate_r)"
+    r="$(koopa::which_realpath "$r")"
+    r_prefix="$(koopa::r_prefix "$r")"
+    koopa::assert_is_dir "$r_prefix"
+    koopa::alert 'Updating R configuration.'
+    koopa::dl \
+        'R home' "$r_prefix" \
+        'R path' "$r"
+    if koopa::is_symlinked_app "$r"
+    then
+        make_prefix="$(koopa::make_prefix)"
+        etc_prefix="${make_prefix}/lib/R/etc"
+        koopa::sys_set_permissions -r "$r_prefix"
+        # Ensure that (Debian) system 'etc' directories are removed.
+        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        then
+            koopa::sys_rm "$etc_prefix"
+        fi
+        etc_prefix="${make_prefix}/lib64/R/etc"
+        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        then
+            koopa::sys_rm "$etc_prefix"
+        fi
+    else
+        koopa::sys_set_permissions -r "${r_prefix}/library"
+    fi
+    koopa::link_r_etc "$r"
+    koopa::link_r_site_library "$r"
+    koopa::r_javareconf "$r"
+    koopa::r_rebuild_docs "$r"
+    koopa::sys_set_permissions -r "${r_prefix}/site-library"
+    koopa::alert_success 'Update of R configuration was successful.'
+    return 0
+}
 
 koopa::install_r() { # {{{1
     koopa::install_app \
@@ -10,6 +51,10 @@ koopa::install_r() { # {{{1
         --name='r' \
         "$@"
 }
+
+# Run 'koopa install tex-packages' if you hit this warning:
+# neither inconsolata.sty nor zi4.sty found: PDF vignettes and package manuals
+# will not be rendered optimally
 
 koopa:::install_r() { # {{{1
     # """
