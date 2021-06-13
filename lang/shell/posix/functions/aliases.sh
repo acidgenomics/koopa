@@ -119,10 +119,10 @@ _koopa_alias_nvim_vanilla() { # {{{1
 _koopa_alias_perl() { #{{{1
     # """
     # Perl alias.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-13.
     # """
     _koopa_is_alias 'perl' && unalias 'perl'
-    _koopa_activate_perl_packages
+    _koopa_activate_perl
     perl "$@"
 }
 

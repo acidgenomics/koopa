@@ -370,10 +370,10 @@ _koopa_activate_opt_prefix() { # {{{1
     return 0
 }
 
-_koopa_activate_perl_packages() { # {{{1
+_koopa_activate_perl() { # {{{1
     # """
-    # Activate Perl local library.
-    # @note Updated 2021-06-11.
+    # Activate Perl, adding local library to 'PATH'.
+    # @note Updated 2021-06-13.
     #
     # This step may error/warn if new shell is activated while Perl
     # packages are installing.
@@ -385,10 +385,9 @@ _koopa_activate_perl_packages() { # {{{1
     [ "$#" -eq 0 ] || return 1
     prefix="$(_koopa_perl_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    perl="${prefix}/bin/perl"
-    [ -x "$perl" ] || return 0
+    _koopa_is_installed perl || return 0
     eval "$( \
-        "$perl" \
+        perl \
             "-I${prefix}/lib/perl5" \
             "-Mlocal::lib=${prefix}" \
     )"
