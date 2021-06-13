@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider renaming 'koopa::rscript' to 'koopa::r_script'.
+
 koopa::array_to_r_vector() { # {{{1
     # """
     # Convert a bash array to an R vector string.
