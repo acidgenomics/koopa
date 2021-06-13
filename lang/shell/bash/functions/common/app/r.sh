@@ -15,6 +15,7 @@ koopa::array_to_r_vector() { # {{{1
     return 0
 }
 
+# FIXME Move this to the install folder.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.

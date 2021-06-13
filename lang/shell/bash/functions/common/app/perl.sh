@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Move this to the install folder.
 koopa::configure_perl() { # {{{1
     # """
     # Configure Perl.
