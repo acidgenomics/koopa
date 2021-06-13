@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+koopa::configure_rust() { # {{{1
+    # """
+    # Configure Rust.
+    # @note Updated 2021-06-13.
+    # """
+    koopa::stop 'FIXME Need to add this.'
+}
+
 koopa::install_rust() { # {{{1
     koopa::install_app \
         --name-fancy='Rust' \

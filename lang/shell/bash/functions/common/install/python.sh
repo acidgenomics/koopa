@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+koopa::configure_python() { #{{{1
+    # """
+    # Configure Python.
+    # @note Updated 2021-06-13.
+    # """
+    koopa::stop 'FIXME Need to add this.'
+}
+
 koopa::install_python() { # {{{1
     koopa::install_app \
         --name-fancy='Python' \
