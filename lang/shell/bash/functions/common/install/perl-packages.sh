@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to figure out how to get cpanm to resolve here better...
+
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
@@ -14,21 +16,23 @@ koopa::install_perl_packages() { # {{{1
     local module modules name_fancy prefix
     koopa::assert_is_installed 'cpan' 'perl'
     name_fancy='Perl packages'
+    koopa::configure_perl
     prefix="$(koopa::perl_packages_prefix)"
     koopa::install_start "$name_fancy" "$prefix"
-    # NOTE Consider also checking for '~/.cpan' here also.
-    if [[ ! -d "$prefix" ]]
-    then
-        koopa::sys_mkdir "$prefix"
-        koopa::sys_set_permissions "$(koopa::dirname "$prefix")"
-        koopa::link_into_opt "$prefix" 'perl-packages'
-        PERL_MM_OPT="INSTALL_BASE=$prefix" cpan 'local::lib'
-    fi
-    koopa::activate_perl_packages
+
+
+    # FIXME Need to rethink this.
+    PERL_MM_OPT="INSTALL_BASE=$prefix" cpan 'local::lib'
     export PERL_MM_USE_DEFAULT=1
+    koopa::activate_perl_packages
+
+
+
     if ! koopa::is_installed 'cpanm'
     then
         koopa::install_start 'CPAN Minus'
+        # FIXME This is installing into Homebrew again ugh...
+        # FIXME Need to rework...
         cpan -i 'App::cpanminus' &>/dev/null
     fi
     koopa::assert_is_installed 'cpanm'

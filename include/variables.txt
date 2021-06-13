@@ -32,7 +32,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 anaconda="2021.05"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.5.1"
+armadillo="10.5.2"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="3.11.2.63"
@@ -149,7 +149,7 @@ git="2.32.0"
 gnupg="2.3.1"
 
 # https://golang.org/dl/
-go="1.16.4"
+go="1.16.5"
 
 # https://cloud.google.com/sdk/docs/install
 google-cloud-sdk="342.0.0"
@@ -163,7 +163,7 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.7"
 
-hadolint="2.4.1"
+hadolint="2.5.0"
 
 harfbuzz="2.8.1"
 
@@ -244,13 +244,13 @@ openssl="1.1.1d"
 oracle-instantclient="19.5.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.14.0.1"
+pandoc="2.14.0.2"
 
 # https://www.gnu.org/software/parallel/
 parallel="20210422"
 
 # https://www.passwordstore.org/
-password-store="1.7.3"
+password-store="1.7.4"
 
 # ftp://ftp.gnu.org/gnu/patch
 patch="2.7.6"
@@ -382,7 +382,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.2950"
+vim="8.2.2975"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.1"
@@ -513,7 +513,7 @@ python-wheel="0.36.2"
 # Update with 'gem update' or 'gem install <name>'.
 
 # https://rubygems.org/gems/bundler/versions/
-ruby-bundler="2.2.17"
+ruby-bundler="2.2.20"
 
 # Last updated 2010-06-24...
 ruby-ronn="0.7.3"
@@ -534,7 +534,7 @@ rust-fd-find="8.2.1"      # homebrew; fd
 rust-hyperfine="1.11.0"   # homebrew
 rust-procs="0.11.8"       # homebrew
 rust-ripgrep-all="0.9.6"  # homebrew; rga
-rust-ripgrep="12.1.1"     # homebrew; rg
+rust-ripgrep="13.0.0"     # homebrew; rg
 rust-starship="0.54.0"    # homebrew
 rust-tokei="12.1.2"       # homebrew
 rust-xsv="0.13.0"         # homebrew
