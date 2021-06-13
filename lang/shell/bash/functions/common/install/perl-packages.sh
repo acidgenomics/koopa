@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to figure out how to get cpanm to resolve here better...
-
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
@@ -19,12 +17,10 @@ koopa::install_perl_packages() { # {{{1
     koopa::configure_perl
     prefix="$(koopa::perl_packages_prefix)"
     koopa::install_start "$name_fancy" "$prefix"
-
-
-    # FIXME Need to rethink this.
-    PERL_MM_OPT="INSTALL_BASE=$prefix" cpan 'local::lib'
+    # Ensure that Perl installer doesn't prompt.
     export PERL_MM_USE_DEFAULT=1
-    koopa::activate_perl_packages
+    # FIXME Double check that this works...
+    koopa::activate_perl
 
 
 
