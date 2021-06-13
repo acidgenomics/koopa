@@ -3,7 +3,7 @@
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-13.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -14,21 +14,16 @@ koopa::install_perl_packages() { # {{{1
     local module modules name_fancy prefix
     koopa::assert_is_installed 'cpan' 'perl'
     name_fancy='Perl packages'
-    koopa::configure_perl
     prefix="$(koopa::perl_packages_prefix)"
     koopa::install_start "$name_fancy" "$prefix"
+    koopa::configure_perl
+    koopa::activate_perl
     # Ensure that Perl installer doesn't prompt.
     export PERL_MM_USE_DEFAULT=1
-    # FIXME Double check that this works...
-    koopa::activate_perl
-
-
-
     if ! koopa::is_installed 'cpanm'
     then
+        koopa::assert_is_installed 'cpan'
         koopa::install_start 'CPAN Minus'
-        # FIXME This is installing into Homebrew again ugh...
-        # FIXME Need to rework...
         cpan -i 'App::cpanminus' &>/dev/null
     fi
     koopa::assert_is_installed 'cpanm'
@@ -38,7 +33,8 @@ koopa::install_perl_packages() { # {{{1
     else
         modules=(
             'App::Ack'
-            'File::Rename'  # Also managed by Homebrew.
+            'File::Rename'
+            'Log::Log4perl'
         )
     fi
     for module in "${modules[@]}"
