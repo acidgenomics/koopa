@@ -186,7 +186,7 @@ koopa::check_system() { # {{{1
             koopa::install_r_koopa
         fi
     fi
-    koopa::rscript_vanilla 'checkSystem'
+    koopa::r_script_vanilla 'checkSystem'
     koopa::check_exports
     koopa::check_disk
     koopa::check_data_disk

@@ -301,7 +301,7 @@ koopa::docker_build_all_tags() { # {{{1
     # @note Updated 2020-01-04.
     # """
     koopa::assert_has_args "$#"
-    koopa::rscript 'dockerBuildAllTags' "$@"
+    koopa::r_script 'dockerBuildAllTags' "$@"
     return 0
 }
 
@@ -329,7 +329,7 @@ koopa::docker_prune_all_stale_tags() { # {{{1
     # @note Updated 2021-03-30.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::rscript 'dockerPruneAllStaleTags' "$@"
+    koopa::r_script 'dockerPruneAllStaleTags' "$@"
     return 0
 }
 
@@ -363,7 +363,7 @@ koopa::docker_prune_stale_tags() { # {{{1
     # @note Updated 2020-03-02.
     # """
     koopa::assert_has_args "$#"
-    koopa::rscript 'dockerPruneStaleTags' "$@"
+    koopa::r_script 'dockerPruneStaleTags' "$@"
     return 0
 }
 

@@ -1,15 +1,42 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add 'koopa::configure_start' and 'koopa::configure_success' functions.
 koopa::configure_python() { #{{{1
     # """
     # Configure Python.
     # @note Updated 2021-06-13.
+    # @seealso
+    # > "$python" -m site
     # """
-    local python
+    local file k_site_pkgs name name_fancy python sys_site_pkgs version
     python="${1:-}"
     [[ -z "$python" ]] && python="$(koopa::locate_python)"
-    koopa::python_add_site_packages_to_sys_path "$python"
+    koopa::assert_is_installed "$python"
+    name='python'
+    name_fancy='Python'
+    version="$(koopa::get_version "$python")"
+    sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
+    k_site_pkgs="$(koopa::python_packages_prefix "$version")"
+    koopa::configure_start "$name_fancy" "$k_site_pkgs"
+    if [[ ! -d "${k_site_pkgs:?}" ]]
+    then
+        koopa::sys_mkdir "$k_site_pkgs"
+        koopa::sys_set_permissions "$(koopa::dirname "$k_site_pkgs")"
+        koopa::link_into_opt "$k_site_pkgs" "${name}-packages"
+    fi
+    file="${sys_site_pkgs:?}/koopa.pth"
+    koopa::alert "Adding '${file}' path file in '${sys_site_pkgs}'."
+    if koopa::is_symlinked_app "$python"
+    then
+        koopa::write_string "$k_site_pkgs" "$file"
+        if ! koopa::is_macos
+        then
+            koopa::link_app python
+        fi
+    else
+        koopa::sudo_write_string "$k_site_pkgs" "$file"
+    fi
+    koopa::configure_success "$name_fancy" "$k_site_pkgs"
+    return 0
 }
 
 koopa::install_python() { # {{{1

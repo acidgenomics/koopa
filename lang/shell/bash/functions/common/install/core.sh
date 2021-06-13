@@ -424,7 +424,7 @@ koopa::prune_apps() { # {{{1
         koopa::alert_note 'App pruning not yet supported on macOS.'
         return 0
     fi
-    koopa::rscript 'pruneApps' "$@"
+    koopa::r_script 'pruneApps' "$@"
     return 0
 }
 
@@ -529,6 +529,6 @@ koopa::unlink_app() { # {{{1
 supported on macOS."
         return 0
     fi
-    koopa::rscript 'unlinkApp' "$@"
+    koopa::r_script 'unlinkApp' "$@"
     return 0
 }

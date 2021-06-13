@@ -53,7 +53,7 @@ koopa::list() { # {{{1
     # List koopa programs available in PATH.
     # @note Updated 2021-01-04.
     # """
-    koopa::rscript_vanilla 'listPrograms'
+    koopa::r_script_vanilla 'listPrograms'
     return 0
 }
 

@@ -100,7 +100,7 @@ koopa::find_and_move_in_sequence() { # {{{1
     # @note Updated 2021-01-04.
     # """
     koopa::assert_has_args "$#"
-    koopa::rscript 'findAndMoveInSequence' "$@"
+    koopa::r_script 'findAndMoveInSequence' "$@"
     return 0
 }
 

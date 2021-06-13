@@ -93,65 +93,7 @@ koopa::pip_outdated() { # {{{1
     return 0
 }
 
-koopa::pyscript() { # {{{1
-    # """
-    # Execute a Python script.
-    # @note Updated 2021-05-23.
-    # """
-    local name prefix python script
-    koopa::assert_has_args "$#"
-    python="$(koopa::locate_python)"
-    prefix="$(koopa::pyscript_prefix)"
-    name="${1:?}"
-    shift 1
-    script="${prefix}/${name}.py"
-    koopa::assert_is_file "$script"
-    "$python" "$script" "$@"
-    return 0
-}
-
-# FIXME Need to call this in our main Python configure function.
-koopa::python_add_site_packages_to_sys_path() { # {{{1
-    # """
-    # Add our custom site packages library to sys.path.
-    # @note Updated 2021-06-11.
-    #
-    # @seealso
-    # > "$python" -m site
-    # """
-    local file k_site_pkgs python sys_site_pkgs version x
-    python="${1:-}"
-    [[ -z "$python" ]] && python="$(koopa::locate_python)"
-    koopa::assert_is_installed "$python"
-    version="$(koopa::get_version "$python")"
-    sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
-    k_site_pkgs="$(koopa::python_packages_prefix "$version")"
-    if [[ ! -d "${k_site_pkgs:?}" ]]
-    then
-        koopa::sys_mkdir "$k_site_pkgs"
-        koopa::sys_set_permissions "$(koopa::dirname "$k_site_pkgs")"
-        koopa::link_into_opt "$k_site_pkgs" 'python-packages'
-    fi
-    file="${sys_site_pkgs:?}/koopa.pth"
-    koopa::alert "Adding '${file}' path file in '${sys_site_pkgs}'."
-    if koopa::is_symlinked_app "$python"
-    then
-        koopa::write_string "$k_site_pkgs" "$file"
-        if ! koopa::is_macos
-        then
-            koopa::link_app python
-        fi
-    else
-        koopa::sudo_write_string "$k_site_pkgs" "$file"
-    fi
-    x=$("$python" -m site)
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
-}
-
-# FIXME Rename 'remove' to 'delete' for consistency?
-koopa::python_remove_pycache() { # {{{1
+koopa::python_delete_pycache() { # {{{1
     # """
     # Remove Python '__pycache__/' from site packages.
     # @note Updated 2021-05-23.

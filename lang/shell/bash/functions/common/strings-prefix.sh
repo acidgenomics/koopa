@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::pyscript_prefix() { # {{{1
-    # """
-    # Rscript file prefix.
-    # @note Updated 2020-11-19.
-    # """
-    koopa::print "$(koopa::koopa_prefix)/lang/python/include"
-    return 0
-}
-
 koopa::python_system_packages_prefix() { # {{{1
     # """
     # Python system site packages library prefix.
@@ -83,7 +74,7 @@ koopa::r_system_library_prefix() { # {{{1
     return 0
 }
 
-koopa::rscript_prefix() { # {{{1
+koopa::r_script_prefix() { # {{{1
     # """
     # Rscript file prefix.
     # @note Updated 2020-11-17.
