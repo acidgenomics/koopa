@@ -5,7 +5,17 @@ koopa::configure_rust() { # {{{1
     # Configure Rust.
     # @note Updated 2021-06-13.
     # """
-    koopa::stop 'FIXME Need to add this.'
+    local name name_fancy prefix version
+    version="${1:-}"
+    [[ -z "$version" ]] && version='rolling'
+    name='rust'
+    name_fancy='Rust'
+    prefix="$(koopa::rust_packages_prefix "$version")"
+    koopa::configure_start "$name_fancy" "$prefix"
+    koopa::sys_mkdir "$prefix"
+    koopa::sys_set_permissions "$(koopa::dirname "$prefix")"
+    koopa::link_into_opt "$prefix" "${name}-packages"
+    koopa::configure_success "$name_fancy" "$prefix"
 }
 
 koopa::install_rust() { # {{{1
@@ -20,29 +30,27 @@ koopa::install_rust() { # {{{1
 koopa:::install_rust() { # {{{1
     # """
     # Install Rust (via rustup).
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-13.
     # """
-    local cargo_prefix file prefix rustup_prefix url version
+    local file pkg_prefix prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    rustup_prefix="$prefix"
-    cargo_prefix="$(koopa::rust_packages_prefix "$version")"
-    koopa::sys_mkdir "$cargo_prefix" "$rustup_prefix"
-    koopa::sys_set_permissions "$(koopa::dirname "$cargo_prefix")"
-    koopa::link_into_opt "$cargo_prefix" 'rust-packages'
-    CARGO_HOME="$cargo_prefix"
-    RUSTUP_HOME="$rustup_prefix"
+    pkg_prefix="$(koopa::rust_packages_prefix "$version")"
+    RUSTUP_HOME="$prefix"
+    CARGO_HOME="$pkg_prefix"
     export CARGO_HOME RUSTUP_HOME
     koopa::dl \
-        'CARGO_HOME' "$CARGO_HOME" \
-        'RUSTUP_HOME' "$RUSTUP_HOME"
+        'RUSTUP_HOME' "$RUSTUP_HOME" \
+        'CARGO_HOME' "$CARGO_HOME"
+    koopa::configure_rust "$version"
+    koopa::sys_mkdir "$prefix"
     url='https://sh.rustup.rs'
     file='rustup.sh'
     koopa::download "$url" "$file"
     koopa::chmod +x "$file"
-    # Can check the version of install script with '--version'.
+    # Can get the version of install script with '--version' here.
     "./${file}" --no-modify-path -v -y
-    koopa::sys_set_permissions -r "$cargo_prefix"
+    koopa::sys_set_permissions -r "$pkg_prefix"
     return 0
 }
 
