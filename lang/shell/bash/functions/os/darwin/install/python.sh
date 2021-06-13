@@ -69,7 +69,7 @@ koopa::macos_install_python_framework() { # {{{1
     python="${name}${major_version}"
     python="${prefix}/Versions/Current/bin/${python}"
     koopa::assert_is_file "$python"
-    koopa::python_add_site_packages_to_sys_path "$python"
+    koopa::configure_python "$python"
     koopa::install_success "$name_fancy"
     koopa::alert_restart
     return 0

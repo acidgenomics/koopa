@@ -7,7 +7,7 @@
 # >     # @note Updated 2021-01-20.
 # >     # """
 # >     local url
-# >     koopa::python_add_site_packages_to_sys_path
+# >     koopa::configure_python
 # >     url='https://github.com/acidgenomics/py-koopa/archive/main.zip'
 # >     koopa::pip_install "$url"
 # >     return 0

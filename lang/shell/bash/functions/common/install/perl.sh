@@ -2,6 +2,7 @@
 
 # [2021-05-27] macOS success.
 
+# FIXME Need to harden which Perl here more clearly.
 koopa::configure_perl() { # {{{1
     # """
     # Configure Perl.

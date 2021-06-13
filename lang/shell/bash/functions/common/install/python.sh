@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add 'koopa::configure_start' and 'koopa::configure_success' functions.
 koopa::configure_python() { #{{{1
     # """
     # Configure Python.
     # @note Updated 2021-06-13.
     # """
-    koopa::stop 'FIXME Need to add this.'
+    local python
+    python="${1:-}"
+    [[ -z "$python" ]] && python="$(koopa::locate_python)"
+    koopa::python_add_site_packages_to_sys_path "$python"
 }
 
 koopa::install_python() { # {{{1
@@ -64,7 +68,7 @@ koopa:::install_python() { # {{{1
     "$make" install
     python="${prefix}/bin/${name}${minor_version}"
     koopa::assert_is_file "$python"
-    koopa::python_add_site_packages_to_sys_path "$python"
+    koopa::configure_python "$python"
     return 0
 }
 

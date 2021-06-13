@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider adding python_ prefixes consistently to all of these.
+
 koopa::pip_install() { # {{{1
     # """
     # Internal pip install command.
@@ -40,7 +42,7 @@ koopa::pip_install() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::python_add_site_packages_to_sys_path "$python"
+    koopa::configure_python "$python"
     version="$(koopa::get_version "$python")"
     target="$(koopa::python_packages_prefix "$version")"
     koopa::dl \
@@ -108,6 +110,7 @@ koopa::pyscript() { # {{{1
     return 0
 }
 
+# FIXME Need to call this in our main Python configure function.
 koopa::python_add_site_packages_to_sys_path() { # {{{1
     # """
     # Add our custom site packages library to sys.path.
@@ -147,6 +150,7 @@ koopa::python_add_site_packages_to_sys_path() { # {{{1
     return 0
 }
 
+# FIXME Rename 'remove' to 'delete' for consistency?
 koopa::python_remove_pycache() { # {{{1
     # """
     # Remove Python '__pycache__/' from site packages.
