@@ -2,23 +2,28 @@
 
 # [2021-05-27] macOS success.
 
-# FIXME Need to harden which Perl here more clearly.
 koopa::configure_perl() { # {{{1
     # """
     # Configure Perl.
     # @note Updated 2021-06-13.
     # """
-    local prefix version
-    koopa::assert_is_installed 'perl'
-    version="$(koopa::get_version 'perl')"
+    local name name_fancy perl prefix version
+    perl="${1:-}"
+    [[ -z "$perl" ]] && perl="$(koopa::locate_perl)"
+    koopa::assert_is_installed "$perl"
+    name='perl'
+    name_fancy='Perl'
+    version="$(koopa::get_version "$name")"
     prefix="$(koopa::perl_packages_prefix "$version")"
-    koopa::link_into_opt "$prefix" 'perl-packages'
+    koopa::configure_start "$name_fancy" "$prefix"
+    koopa::link_into_opt "$prefix" "${name}-packages"
     PERL_MM_OPT="INSTALL_BASE=$prefix" cpan 'local::lib'
     eval "$( \
         perl \
             "-I${prefix}/lib/perl5" \
             "-Mlocal::lib=${prefix}" \
     )"
+    koopa::configure_success "$name_fancy" "$prefix"
     return 0
 }
 

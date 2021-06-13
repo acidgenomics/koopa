@@ -11,7 +11,7 @@ koopa::install_r_packages() { # {{{1
     koopa::install_start "$name_fancy"
     koopa::configure_r
     koopa::assert_is_dir "$pkg_prefix"
-    koopa::rscript 'installRPackages' "$@"
+    koopa::r_script 'installRPackages' "$@"
     koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::install_success "$name_fancy"
     return 0
@@ -38,7 +38,7 @@ koopa::update_r_packages() { # {{{1
     koopa::configure_r
     koopa::assert_is_dir "$pkg_prefix"
     # Return with success even if 'BiocManager::valid()' check returns false.
-    koopa::rscript 'updateRPackages' "$@" || true
+    koopa::r_script 'updateRPackages' "$@" || true
     koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::update_success "$name_fancy"
     return 0
