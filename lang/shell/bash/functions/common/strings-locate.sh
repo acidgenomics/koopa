@@ -436,6 +436,14 @@ koopa::locate_pcregrep() { # {{{1
     koopa:::locate_app 'pcre' 'pcregrep' "$@"
 }
 
+koopa::locate_perl() { # {{{1
+    # """
+    # Locate perl.
+    # @note Updated 2021-06-13.
+    # """
+    koopa:::locate_app 'perl' 'perl' "$@"
+}
+
 koopa::locate_pkg_config() { # {{{1
     # """
     # Locate pkg-config.
