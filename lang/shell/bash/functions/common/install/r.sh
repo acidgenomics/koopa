@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to use 'koopa:::configure_app_packages' internally.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
@@ -38,6 +39,7 @@ koopa::configure_r() { # {{{1
         koopa::sys_set_permissions -r "${r_prefix}/library"
     fi
     koopa::r_link_files_into_etc "$r"
+    # FIXME Rework this, standardizing with 'koopa:::configure_app_packages'?
     koopa::r_link_site_library "$r"
     koopa::r_javareconf "$r"
     koopa::r_rebuild_docs "$r"

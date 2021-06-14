@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can we rework this and simplify?
+# FIXME Need to use 'koopa:::configure_app_packages' internally.
 koopa::configure_rust() { # {{{1
     # """
     # Configure Rust.
