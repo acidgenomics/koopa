@@ -545,6 +545,14 @@ koopa::locate_rsync() { # {{{1
     koopa:::locate_app 'rsync' 'rsync' "$@"
 }
 
+koopa::locate_ruby() { # {{{1
+    # """
+    # Locate ruby.
+    # @note Updated 2021-05-24.
+    # """
+    koopa:::locate_app 'ruby' 'ruby' "$@"
+}
+
 koopa::locate_sed() { # {{{1
     # """
     # Locate GNU sed.
