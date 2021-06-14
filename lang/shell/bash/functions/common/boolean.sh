@@ -131,11 +131,11 @@ koopa::has_monorepo() { # {{{1
 koopa::has_no_environments() { # {{{1
     # """
     # Detect activation of virtual environments.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-06-14.
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_conda_active && return 1
-    koopa::is_venv_active && return 1
+    koopa::is_python_venv_active && return 1
     return 0
 }
 

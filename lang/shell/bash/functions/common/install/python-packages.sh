@@ -44,7 +44,7 @@ koopa::install_python_packages() { # {{{1
         done
     fi
     koopa::install_start "$name_fancy"
-    koopa::pip_install "${pkgs[@]}"
+    koopa::python_pip_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -61,19 +61,19 @@ koopa::uninstall_python_packages() { # {{{1
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
-    # @note Updated 2021-05-23.
+    # @note Updated 2021-06-14.
     # @seealso
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
     # """
-    local name_fancy pkgs python
+    local cut name_fancy pkgs python
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
+    cut="$(koopa::locate_cut)"
     python="$(koopa::locate_python)"
-    koopa::is_installed "$python" || return 0
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
-    pkgs="$(koopa::pip_outdated)"
+    pkgs="$(koopa::python_pip_outdated)"
     if [[ -z "$pkgs" ]]
     then
         koopa::alert_success 'All Python packages are current.'
@@ -81,9 +81,9 @@ koopa::update_python_packages() { # {{{1
     fi
     readarray -t pkgs <<< "$( \
         koopa::print "$pkgs" \
-        | cut -d '=' -f 1 \
+        | "$cut" -d '=' -f 1 \
     )"
-    koopa::pip_install "${pkgs[@]}"
+    koopa::python_pip_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
 }

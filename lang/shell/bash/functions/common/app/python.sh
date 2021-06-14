@@ -1,8 +1,45 @@
 #!/usr/bin/env bash
 
-# FIXME Consider adding python_ prefixes consistently to all of these.
+koopa::python_delete_pycache() { # {{{1
+    # """
+    # Remove Python '__pycache__/' from site packages.
+    # @note Updated 2021-05-23.
+    #
+    # These directories can create permission issues when attempting to rsync
+    # installation across multiple VMs.
+    # """
+    local find pos prefix python rm xargs
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_installed 'find'
+    find="$(koopa::locate_find)"
+    python="$(koopa::locate_python)"
+    rm="$(koopa::locate_rm)"
+    xargs="$(koopa::locate_xargs)"
+    while (("$#"))
+    do
+        case "$1" in
+            --python=*)
+                python="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_has_no_args "$#"
+    python="$(koopa::which_realpath "$python")"
+    prefix="$(koopa::parent_dir -n 2 "$python")"
+    koopa::alert "Removing pycache in '${prefix}'."
+    "$find" "$prefix" \
+        -type d \
+        -name '__pycache__' \
+        -print0 \
+        | "$xargs" -0 -I {} "$rm" -fr '{}'
+    return 0
+}
 
-koopa::pip_install() { # {{{1
+koopa::python_pip_install() { # {{{1
     # """
     # Internal pip install command.
     # @note Updated 2021-05-25.
@@ -68,10 +105,10 @@ koopa::pip_install() { # {{{1
     return 0
 }
 
-koopa::pip_outdated() { # {{{1
+koopa::python_pip_outdated() { # {{{1
     # """
     # List oudated pip packages.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-06-14.
     #
     # Requesting 'freeze' format will return '<pkg>==<version>'.
     #
@@ -90,45 +127,6 @@ koopa::pip_outdated() { # {{{1
     )"
     [[ -n "$x" ]] || return 0
     koopa::print "$x"
-    return 0
-}
-
-koopa::python_delete_pycache() { # {{{1
-    # """
-    # Remove Python '__pycache__/' from site packages.
-    # @note Updated 2021-05-23.
-    #
-    # These directories can create permission issues when attempting to rsync
-    # installation across multiple VMs.
-    # """
-    local find pos prefix python rm xargs
-    koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed 'find'
-    find="$(koopa::locate_find)"
-    python="$(koopa::locate_python)"
-    rm="$(koopa::locate_rm)"
-    xargs="$(koopa::locate_xargs)"
-    while (("$#"))
-    do
-        case "$1" in
-            --python=*)
-                python="${1#*=}"
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::assert_has_no_args "$#"
-    python="$(koopa::which_realpath "$python")"
-    prefix="$(koopa::parent_dir -n 2 "$python")"
-    koopa::alert "Removing pycache in '${prefix}'."
-    "$find" "$prefix" \
-        -type d \
-        -name '__pycache__' \
-        -print0 \
-        | "$xargs" -0 -I {} "$rm" -fr '{}'
     return 0
 }
 

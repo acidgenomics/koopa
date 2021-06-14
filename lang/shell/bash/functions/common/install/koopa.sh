@@ -9,7 +9,7 @@
 # >     local url
 # >     koopa::configure_python
 # >     url='https://github.com/acidgenomics/py-koopa/archive/main.zip'
-# >     koopa::pip_install "$url"
+# >     koopa::python_pip_install "$url"
 # >     return 0
 # > }
 

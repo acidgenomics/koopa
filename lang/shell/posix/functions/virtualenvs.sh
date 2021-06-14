@@ -45,10 +45,10 @@ _koopa_deactivate_envs() { # {{{1
     return 0
 }
 
-_koopa_deactivate_venv() { # {{{1
+_koopa_deactivate_python_venv() { # {{{1
     # """
     # Deactivate Python virtual environment.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-06-14.
     # """
     [ "$#" -eq 0 ] || return 1
     [ -n "${VIRTUAL_ENV:-}" ] || return 0
@@ -57,7 +57,7 @@ _koopa_deactivate_venv() { # {{{1
     return 0
 }
 
-_koopa_venv() { # {{{1
+_koopa_venv_name() { # {{{1
     # """
     # Python virtual environment name.
     # @note Updated 2020-06-30.
