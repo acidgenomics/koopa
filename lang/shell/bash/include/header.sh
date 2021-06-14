@@ -105,8 +105,6 @@ __koopa_warning() { # {{{1
 
 
 
-# FIXME This now has an issue with unbound activate variable?
-# FIXME "koopa install dotfiles --reinstall" is failing, not sure how to debug...
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
