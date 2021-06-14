@@ -137,7 +137,6 @@ koopa::debian_install_base() { # {{{1
             'automake'
             'byacc'
             'cmake'
-            'default-jdk'
             'diffutils'
             'dirmngr'
             'file'
