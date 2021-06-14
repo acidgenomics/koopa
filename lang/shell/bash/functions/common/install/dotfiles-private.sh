@@ -1,36 +1,17 @@
 #!/usr/bin/env bash
 
-# FIXME Rethink this approach...
-
 koopa::install_dotfiles_private() { # {{{1
     # """
-    # Install private dot files.
+    # Install private dotfiles.
     # @note Updated 2021-06-14.
     # """
-    local name_fancy prefix reinstall script
+    local name_fancy prefix script
     name='dotfiles-private'
     name_fancy='private dotfiles'
     prefix="$(koopa::dotfiles_private_prefix)"
-    reinstall=0
-    while (("$#"))
-    do
-        case "$1" in
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 1 ]]
-    then
-        koopa::alert_note "Removing ${name_fancy} at '${prefix}'."
-        koopa::rm "$prefix"
-    fi
     koopa::install_start "$name_fancy" "$prefix"
     koopa::add_monorepo_config_link "$name"
+    koopa::assert_is_dir "$prefix"
     script="${prefix}/install"
     koopa::assert_is_file "$script"
     "$script"
@@ -38,19 +19,18 @@ koopa::install_dotfiles_private() { # {{{1
     return 0
 }
 
-# FIXME Can we use our standard uninstaller here?
-# FIXME Also need to remove the koopa config link...
 koopa::uninstall_dotfiles_private() { # {{{1
     # """
     # Uninstall private dot files.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-06-14.
     # """
-    local prefix script
+    local name_fancy prefix script
     koopa::assert_has_no_args "$#"
+    name_fancy='private dotfiles'
     prefix="$(koopa::dotfiles_private_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::alert_note "No private dotfiles at '${prefix}'."
+        koopa::alert_is_not_installed "$name_fancy" "$prefix"
         return 0
     fi
     script="${prefix}/uninstall"
