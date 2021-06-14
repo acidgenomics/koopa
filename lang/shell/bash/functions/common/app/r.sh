@@ -135,6 +135,7 @@ koopa::r_link_site_library() { # {{{1
     name='r'
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
+    # FIXME Is this returning 'devel' or the revision number?
     version="$(koopa::r_version "$r")"
     lib_source="$(koopa::r_packages_prefix "$version")"
     lib_target="${r_prefix}/site-library"
