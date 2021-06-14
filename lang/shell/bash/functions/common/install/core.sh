@@ -7,6 +7,7 @@ koopa:::configure_app_packages() { # {{{1
     # """
     local dict
     declare -A dict=(
+        [link_app]=1
         [name_fancy]=''
         [prefix]=''
         [version]=''
@@ -21,6 +22,10 @@ koopa:::configure_app_packages() { # {{{1
                 ;;
             --name-fancy=*)
                 dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            --no-link)
+                dict[link_app]=0
                 shift 1
                 ;;
             --prefix=*)
@@ -66,7 +71,10 @@ koopa:::configure_app_packages() { # {{{1
         koopa::sys_mkdir "${dict[prefix]}"
         koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
     fi
-    koopa::link_into_opt "${dict[prefix]}" "${dict[name]}-packages"
+    if [[ "${dict[link_app]}" -eq 1 ]]
+    then
+        koopa::link_into_opt "${dict[prefix]}" "${dict[name]}-packages"
+    fi
     koopa::is_function "${dict[activate_fun]}" && "${dict[activate_fun]}"
     koopa::configure_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
