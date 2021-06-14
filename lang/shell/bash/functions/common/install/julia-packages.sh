@@ -17,20 +17,12 @@ koopa::install_julia_packages() { # {{{1
     #     getting-familiar-with-biojulia-bioinformatics-for-julia-796438aa059
     # - https://juliaobserver.com/packages
     # """
-    local eval_string
+    local julia script
     koopa::configure_julia
-    read -r -d '' eval_string << END || true
-using Pkg
-Pkg.add("DataFrames")
-Pkg.add("BioCore")
-Pkg.add("BioSymbols")
-Pkg.add("GenomeGraphs")
-Pkg.add("BioGenerics")
-Pkg.add("BigBed")
-Pkg.add("BioSequences")
-Pkg.add("XAM")
-END
-    julia --eval="$eval_string"
+    julia="$(koopa::locate_julia)"
+    script="$(koopa::julia_script_prefix)/install-packages.jl"
+    koopa::assert_is_file "$script"
+    "$julia" "$script"
     return 0
 }
 
