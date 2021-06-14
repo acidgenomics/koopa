@@ -3,8 +3,7 @@
 # [2021-05-27] Linux success.
 # [2021-05-27] macOS success.
 
-# FIXME Install this into '/opt/koopa/app/dotfiles/rolling' and then link
-# into opt prefix, for app consistency.
+# FIXME Need to link into opt here.
 koopa::install_dotfiles() { # {{{1
     # """
     # Install dot files.
@@ -35,7 +34,7 @@ koopa::install_dotfiles() { # {{{1
     koopa_prefix="$(koopa::koopa_prefix)"
     koopa::add_to_path_start "${koopa_prefix}/bin"
     [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles
-    koopa::add_config_link "$prefix" 'dotfiles'
+    koopa::add_koopa_config_link "$prefix" 'dotfiles'
     script="${prefix}/install"
     koopa::assert_is_file "$script"
     "$script"
@@ -79,6 +78,7 @@ koopa::install_dotfiles_private() { # {{{1
     return 0
 }
 
+# FIXME Need to remove opt link.
 koopa::uninstall_dotfiles() { # {{{1
     # """
     # Uninstall dot files.

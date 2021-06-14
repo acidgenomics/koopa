@@ -156,8 +156,8 @@ koopa::activate_xdg() { # {{{1
     _koopa_activate_xdg "$@"
 }
 
-koopa::add_config_link() { # {{{1
-    _koopa_add_config_link "$@"
+koopa::add_koopa_config_link() { # {{{1
+    _koopa_add_koopa_config_link "$@"
 }
 
 koopa::add_to_manpath_end() { # {{{1
