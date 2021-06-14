@@ -110,7 +110,6 @@ __koopa_bash_header() { # {{{1
     # Bash header.
     # @note Updated 2021-05-26.
     # """
-    echo 'FIXME 1'
     local dict
     declare -A dict=(
         [activate]=0
@@ -120,7 +119,6 @@ __koopa_bash_header() { # {{{1
         [test]=0
         [verbose]=0
     )
-    echo 'FIXME 2'
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dict[dev]="$KOOPA_DEV"
