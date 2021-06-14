@@ -355,8 +355,8 @@ _koopa_macos_julia_prefix() { # {{{1
     # macOS Julia prefix.
     # @note Updated 2021-06-14.
     # """
-    local prefix
-    prefix="$( \
+    local x
+    x="$( \
         find '/Applications' \
             -mindepth 1 \
             -maxdepth 1 \
@@ -366,6 +366,9 @@ _koopa_macos_julia_prefix() { # {{{1
         | sort \
         | tail -n 1 \
     )"
+    [ -d "$x" ] || return 1
+    prefix="${x}/Contents/Resources/julia"
+    [ -d "$x" ] || return 1
     _koopa_print "$prefix"
 }
 
