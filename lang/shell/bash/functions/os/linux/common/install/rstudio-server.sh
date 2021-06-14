@@ -3,7 +3,7 @@
 koopa:::linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
-    # @note Updated 2021-06-03.
+    # @note Updated 2021-06-14.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
     #
@@ -16,6 +16,7 @@ koopa:::linux_install_rstudio_server() { # {{{1
     # System config: /etc/rstudio
     #
     # @seealso
+    # - https://docs.rstudio.com/rsp/installation/
     # - https://rstudio.com/products/rstudio/download-commercial/
     # - https://rstudio.com/products/rstudio/download-server/debian-ubuntu/
     # - https://rstudio.com/products/rstudio/download-server/redhat-centos/
@@ -23,43 +24,51 @@ koopa:::linux_install_rstudio_server() { # {{{1
     # - https://hub.docker.com/r/rocker/rstudio/dockerfile
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
-    local file file_ext file_stem install name name_fancy os_codename platform
-    local pos reinstall server tmp_dir url version workbench
-    koopa::assert_is_installed R
-    reinstall=0
-    version=''
-    workbench=0
+    local file install server dict pos tee tmp_dir url
+    declare -A dict=(
+        [file_ext]=''
+        [install]=''
+        [name]='rstudio-server'
+        [name_fancy]='RStudio Server'
+        [os_codename]=''
+        [platform]=''
+        [reinstall]=0
+        [version]=''
+        [workbench]=0
+    )
+    koopa::assert_is_installed 'R'
+    tee="$(koopa::locate_tee)"
     pos=()
     while (("$#"))
     do
         case "$1" in
             --file-ext=*)
-                file_ext="${1#*=}"
+                dict[file_ext]="${1#*=}"
                 shift 1
                 ;;
             --install=*)
-                install="${1#*=}"
+                dict[install]="${1#*=}"
                 shift 1
                 ;;
             --os-codename=*)
-                os_codename="${1#*=}"
+                dict[os_codename]="${1#*=}"
                 shift 1
                 ;;
             --platform=*)
-                platform="${1#*=}"
+                dict[platform]="${1#*=}"
                 shift 1
                 ;;
             --pro | \
             --workbench)
-                workbench=1
+                dict[workbench]=1
                 shift 1
                 ;;
             --reinstall)
-                reinstall=1
+                dict[reinstall]=1
                 shift 1
                 ;;
             --version=*)
-                version="${1#*=}"
+                dict[version]="${1#*=}"
                 shift 1
                 ;;
             --)
@@ -77,34 +86,47 @@ koopa:::linux_install_rstudio_server() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    name='rstudio-server'
-    file_stem="$name"
-    koopa::is_fedora_like && file_stem="${file_stem}-rhel"
-    name_fancy='RStudio Server'
-    if [[ "$workbench" -eq 1 ]]
+    if [[ "${dict[workbench]}" -eq 1 ]]
     then
-        file_stem="${file_stem}-workbench"
-        name="${name}-workbench"
-        name_fancy="${name_fancy} Workbench"
+        dict[name]="rstudio-workbench"
+        dict[name_fancy]="RStudio Workbench"
+        dict[file_stem]="${dict[name]}"
     fi
-    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-    name_fancy="${name_fancy} ${version}"
-    ! koopa::is_current_version "$name" && reinstall=1
-    [[ "$reinstall" -eq 0 ]] && koopa::is_installed "$name" && return 0
-    koopa::install_start "$name_fancy"
-    file="${file_stem}-${version}-${platform}.${file_ext}"
-    server='download2.rstudio.org'
-    url="https://${server}/server/${os_codename}/${platform}/${file}"
+    if koopa::is_fedora_like
+    then
+        dict[file_stem]="${dict[file_stem]}-rhel"
+    fi
+    if [[ -z "${dict[version]}" ]]
+    then
+        dict[version]="$(koopa::variable "${dict[name]}")"
+    fi
+    dict[name_fancy]="${dict[name_fancy]} ${dict[version]}"
+    if ! koopa::is_current_version "${dict[name]}"
+    then
+        dict[reinstall]=1
+    fi
+    # NOTE This step may not check correctly for RStudio Workbench.
+    if [[ "${dict[reinstall]}" -eq 0 ]] && koopa::is_installed "${dict[name]}"
+    then
+        koopa::alert_is_installed "${dict[name_fancy]}"
+        return 0
+    fi
+    koopa::install_start "${dict[name_fancy]}"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
+        file="${dict[file_stem]}-${dict[version]}-\
+${dict[platform]}.${dict[file_ext]}"
+        server='download2.rstudio.org'
+        url="https://${server}/server/${dict[os_codename]}/\
+${dict[platform]}/${file}"
         koopa::download "$url"
         file="$(basename "$url")"
-        IFS=' ' read -r -a install <<< "$install"
+        IFS=' ' read -r -a install <<< "${dict[install]}"
         "${install[@]}" "$file"
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
-    if [[ "$workbench" -eq 1 ]]
+    if [[ "${dict[workbench]}" -eq 1 ]]
     then
         cat << END
 Activate product license key (if necessary):
@@ -115,6 +137,6 @@ first deactivate it on the old system with the command:
 > sudo rstudio-server license-manager deactivate
 END
     fi
-    koopa::install_success "$name_fancy"
+    koopa::install_success "${dict[name_fancy]}"
     return 0
 }
