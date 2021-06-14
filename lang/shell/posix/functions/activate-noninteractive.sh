@@ -91,7 +91,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-14.
     # """
     local prefix
     [ "$#" -eq 0 ] || return 1
@@ -107,12 +107,6 @@ _koopa_activate_homebrew() { # {{{1
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
         _koopa_activate_homebrew_opt_prefix 'curl' 'ruby'
         _koopa_activate_homebrew_cask_google_cloud_sdk
-        # FIXME Rename this.
-        _koopa_activate_homebrew_cask_gpg_suite
-        # FIXME Rename this.
-        _koopa_activate_homebrew_cask_julia
-        # FIXME Rename this.
-        _koopa_activate_homebrew_cask_r
     fi
     return 0
 }
@@ -137,49 +131,6 @@ _koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
     # > # shellcheck source=/dev/null
     # > [ -f "${prefix}/completion.${shell}.inc" ] && \
     # >     . "${prefix}/completion.${shell}.inc"
-    return 0
-}
-
-# FIXME Rename this.
-_koopa_activate_homebrew_cask_gpg_suite() { # {{{1
-    # """
-    # Activate MacGPG (gpg-suite) Homebrew cask.
-    # @note Updated 2021-04-22.
-    #
-    # This code shouldn't be necessary to run at startup, since MacGPG2
-    # should be configured at '/private/etc/paths.d/MacGPG2' automatically.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_activate_prefix '/usr/local/MacGPG2'
-    return 0
-}
-
-# FIXME Rename this.
-_koopa_activate_homebrew_cask_julia() { # {{{1
-    # """
-    # Activate Julia Homebrew cask.
-    # @note Updated 2021-05-25.
-    #
-    # Using glob matching here, so we don't have to fetch the current version
-    # from our internal 'variables.txt' file.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_activate_prefix \
-        '/Applications/Julia-'*'.app/Contents/Resources/julia'
-    return 0
-}
-
-# FIXME Rename this.
-# FIXME Need to work rework this using macos_r_prefix...
-# This isn't Homebrew Cask really, it's the standard R path.
-_koopa_activate_homebrew_cask_r() { # {{{1
-    # """
-    # Activate R Homebrew cask.
-    # @note Updated 2021-05-25.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_activate_prefix \
-        '/Library/Frameworks/R.framework/Versions/Current/Resources'
     return 0
 }
 
@@ -823,6 +774,45 @@ _koopa_activate_xdg() { # {{{1
     else
         export XDG_RUNTIME_DIR
     fi
+    return 0
+}
+
+_koopa_macos_activate_gpg_suite() { # {{{1
+    # """
+    # Activate MacGPG (gpg-suite) on macOS.
+    # @note Updated 2021-06-14.
+    #
+    # This code shouldn't be necessary to run at startup, since MacGPG2
+    # should be configured at '/private/etc/paths.d/MacGPG2' automatically.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_activate_prefix '/usr/local/MacGPG2'
+    return 0
+}
+
+_koopa_macos_activate_julia() { # {{{1
+    # """
+    # Activate Julia on macOS.
+    # @note Updated 2021-06-14.
+    #
+    # Using glob matching here, so we don't have to fetch the current version
+    # from our internal 'variables.txt' file.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_activate_prefix \
+        '/Applications/Julia-'*'.app/Contents/Resources/julia'
+    return 0
+}
+
+_koopa_macos_activate_r() { # {{{1
+    # """
+    # Activate R on macOS.
+    # @note Updated 2021-06-14.
+    # """
+    local prefix
+    [ "$#" -eq 0 ] || return 1
+    prefix="$(_koopa_macos_r_prefix)"
+    _koopa_activate_prefix "$prefix"
     return 0
 }
 
