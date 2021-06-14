@@ -50,18 +50,18 @@ _koopa_posix_header() { # {{{1
             _koopa_activate_node || return 1
             _koopa_activate_openjdk || return 1
             _koopa_activate_aspera || return 1
+            _koopa_activate_julia || return 1
             _koopa_activate_nextflow || return 1
-            _koopa_activate_ruby || return 1
-            _koopa_activate_rust || return 1
             _koopa_activate_perl || return 1
             _koopa_activate_python || return 1
+            _koopa_activate_ruby || return 1
+            _koopa_activate_rust || return 1
             if _koopa_is_linux
             then
                 _koopa_activate_bcbio_nextgen || return 1
             elif _koopa_is_macos
             then
                 _koopa_macos_activate_gpg_suite || return 1
-                _koopa_macos_activate_julia || return 1
                 _koopa_macos_activate_r || return 1
                 _koopa_macos_activate_visual_studio_code || return 1
             fi

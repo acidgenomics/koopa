@@ -7,7 +7,7 @@ koopa::configure_julia() { # {{{1
     # Configure Julia.
     # @note Updated 2021-06-14.
     # """
-    koopa::stop 'FIXME Need to add this'
+    koopa:::configure_app_packages 'julia' 'Julia' "$@"
 }
 
 koopa::install_julia() { # {{{1
@@ -25,6 +25,8 @@ koopa::install_julia() { # {{{1
             --name='julia' \
             "$@"
     fi
+    koopa::configure_julia
+    return 0
 }
 
 koopa:::install_julia() { # {{{1

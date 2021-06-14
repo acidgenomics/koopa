@@ -48,6 +48,10 @@ koopa::activate_homebrew_opt_prefix() { # {{{1
     _koopa_activate_homebrew_opt_prefix "$@"
 }
 
+koopa::activate_julia() { # {{{1
+    _koopa_activate_julia "$@"
+}
+
 koopa::activate_koopa_paths() { # {{{1
     _koopa_activate_koopa_paths "$@"
 }
@@ -612,6 +616,10 @@ koopa::java_prefix() { # {{{1
     _koopa_java_prefix "$@"
 }
 
+koopa::julia_packages_prefix() { # {{{1
+    _koopa_julia_packages_prefix "$@"
+}
+
 koopa::kebab_case_simple() { # {{{1
     _koopa_kebab_case_simple "$@"
 }
@@ -638,10 +646,6 @@ koopa::lowercase() { # {{{1
 
 koopa::macos_activate_gpg_suite() { # {{{1
     _koopa_macos_activate_gpg_suite "$@"
-}
-
-koopa::macos_activate_julia() { # {{{1
-    _koopa_macos_activate_julia "$@"
 }
 
 koopa::macos_activate_r() { # {{{1

@@ -184,6 +184,25 @@ _koopa_activate_homebrew_opt_prefix() { # {{{1
     return 0
 }
 
+_koopa_activate_julia() { # {{{1
+    # """
+    # Activate Julia.
+    # @note Updated 2021-06-14.
+    # """
+    local prefix
+    if _koopa_is_macos
+    then
+        _koopa_activate_prefix \
+            '/Applications/Julia-'*'.app/Contents/Resources/julia'
+    fi
+    prefix="$(_koopa_julia_packages_prefix)"
+    if [ -d "$prefix" ]
+    then
+        export JULIA_DEPOT_PATH="$prefix"
+    fi
+    return 0
+}
+
 _koopa_activate_koopa_paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
@@ -787,20 +806,6 @@ _koopa_macos_activate_gpg_suite() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_activate_prefix '/usr/local/MacGPG2'
-    return 0
-}
-
-_koopa_macos_activate_julia() { # {{{1
-    # """
-    # Activate Julia on macOS.
-    # @note Updated 2021-06-14.
-    #
-    # Using glob matching here, so we don't have to fetch the current version
-    # from our internal 'variables.txt' file.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_activate_prefix \
-        '/Applications/Julia-'*'.app/Contents/Resources/julia'
     return 0
 }
 
