@@ -240,7 +240,6 @@ koopa::fix_zsh_permissions() { # {{{1
     return 0
 }
 
-# FIXME Don't error on 'opt' failure.
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
