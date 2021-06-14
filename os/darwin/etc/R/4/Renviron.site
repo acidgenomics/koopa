@@ -32,7 +32,7 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # - http://mac.r-project.org/tools/
 # - https://cran.r-project.org/bin/macosx/tools/
 
-# Restrict path, so we don't mask compiler binaries with conda or venv.
+# Restrict path, so we don't mask compiler binaries with virtual environment.
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
