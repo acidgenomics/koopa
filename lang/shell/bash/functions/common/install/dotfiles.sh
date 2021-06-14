@@ -16,7 +16,6 @@ koopa:::install_dotfiles() { # {{{1
     # Install dotfiles.
     # @note Updated 2021-06-14.
     # """
-    set -x
     local prefix script
     prefix="${INSTALL_PREFIX:?}"
     repo='https://github.com/acidgenomics/dotfiles.git'
