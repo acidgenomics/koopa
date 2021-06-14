@@ -40,14 +40,17 @@ koopa::activate_homebrew_cask_google_cloud_sdk() { # {{{1
     _koopa_activate_homebrew_cask_google_cloud_sdk "$@"
 }
 
+# FIXME Rename this.
 koopa::activate_homebrew_cask_gpg_suite() { # {{{1
     _koopa_activate_homebrew_cask_gpg_suite "$@"
 }
 
+# FIXME Rename this.
 koopa::activate_homebrew_cask_julia() { # {{{1
     _koopa_activate_homebrew_cask_julia "$@"
 }
 
+# FIXME Rename this.
 koopa::activate_homebrew_cask_r() { # {{{1
     _koopa_activate_homebrew_cask_r "$@"
 }
@@ -116,12 +119,8 @@ koopa::activate_pyenv() { # {{{1
     _koopa_activate_pyenv "$@"
 }
 
-koopa::activate_python_packages() { # {{{1
-    _koopa_activate_python_packages "$@"
-}
-
-koopa::activate_python_startup() { # {{{1
-    _koopa_activate_python_startup "$@"
+koopa::activate_python() { # {{{1
+    _koopa_activate_python "$@"
 }
 
 koopa::activate_rbenv() { # {{{1
@@ -350,10 +349,6 @@ koopa::export_history() { # {{{1
 
 koopa::export_pager() { # {{{1
     _koopa_export_pager "$@"
-}
-
-koopa::export_python() { # {{{1
-    _koopa_export_python "$@"
 }
 
 koopa::export_shell() { # {{{1
@@ -654,10 +649,6 @@ koopa::locate_shell() { # {{{1
 
 koopa::lowercase() { # {{{1
     _koopa_lowercase "$@"
-}
-
-koopa::macos_activate_python() { # {{{1
-    _koopa_macos_activate_python "$@"
 }
 
 koopa::macos_activate_visual_studio_code() { # {{{1

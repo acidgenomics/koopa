@@ -41,8 +41,6 @@ _koopa_posix_header() { # {{{1
         _koopa_export_gnupg || return 1
         _koopa_export_history || return 1
         _koopa_export_pager || return 1
-        # FIXME Merge this in with Python activation.
-        _koopa_export_python || return 1
         _koopa_export_tmpdir || return 1
         if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
         then
@@ -51,8 +49,6 @@ _koopa_posix_header() { # {{{1
                 _koopa_activate_bcbio_nextgen || return 1
             elif _koopa_is_macos
             then
-                # FIXME Consolidate this with Python activation step below.
-                _koopa_macos_activate_python || return 1
                 _koopa_macos_activate_visual_studio_code || return 1
             fi
             _koopa_activate_homebrew || return 1
@@ -65,9 +61,7 @@ _koopa_posix_header() { # {{{1
             _koopa_activate_ruby || return 1
             _koopa_activate_rust || return 1
             _koopa_activate_perl || return 1
-            # FIXME Need to combine the Python steps here...
-            _koopa_activate_python_packages || return 1
-            _koopa_activate_python_startup || return 1
+            _koopa_activate_python || return 1
         fi
         if [ "${KOOPA_MINIMAL:-0}" -eq 0 ] && _koopa_is_interactive
         then
