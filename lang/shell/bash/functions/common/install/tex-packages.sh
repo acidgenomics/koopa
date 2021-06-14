@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Need to add an uninstaller that prompts.
+# FIXME Need to add an updater here.
 
 koopa::install_tex_packages() { # {{{1
     # """

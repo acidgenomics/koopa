@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Add an uninstaller that prompts the user.
-
 koopa::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
@@ -62,10 +60,13 @@ koopa::install_ruby_packages() { # {{{1
 koopa::uninstall_ruby_packages() { # {{{1
     # """
     # Uninstall Ruby packages.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-14.
     # """
-    koopa::stop 'FIXME'
-    # Prompt the user here.
+    koopa::uninstall_app \
+        --name-fancy='Ruby packages' \
+        --name='ruby-packages' \
+        --no-link \
+        "$@"
 }
 
 koopa::update_ruby_packages() {  # {{{1
