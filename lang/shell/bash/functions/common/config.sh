@@ -240,18 +240,7 @@ koopa::fix_zsh_permissions() { # {{{1
     return 0
 }
 
-koopa::git_clone_dotfiles() { # {{{1
-    # """
-    # Clone dotfiles repo.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::git_clone \
-        'https://github.com/acidgenomics/dotfiles.git' \
-        "$(koopa::dotfiles_prefix)"
-    return 0
-}
-
+# FIXME This isn't really config...needs to be moved.
 koopa::info_box() { # {{{1
     # """
     # Configuration information box.
@@ -274,6 +263,7 @@ koopa::info_box() { # {{{1
     return 0
 }
 
+# FIXME Move this to strings.
 koopa::ip_address() { # {{{1
     # """
     # IP address.

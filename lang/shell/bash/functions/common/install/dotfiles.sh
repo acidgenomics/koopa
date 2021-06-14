@@ -10,41 +10,29 @@ koopa::install_dotfiles() { # {{{1
         "$@"
 }
 
+# FIXME The prefix here is unbound for new install?
 koopa:::install_dotfiles() { # {{{1
     # """
     # Install dotfiles.
     # @note Updated 2021-06-14.
     # """
+    set -x
     local prefix script
-    name='dotfiles'
-    name_fancy='dotfiles'
-
-
-
-
-    if [[ ! -d "$prefix" ]]
-    then
-        # FIXME Rework this, doesn't need to be a separate function...
-        koopa::git_clone_dotfiles
-    fi
-    koopa::link_into_opt "$prefix" "$name"
-
-
-    # FIXME Ensure this gets called every time per user...
+    prefix="${INSTALL_PREFIX:?}"
+    repo='https://github.com/acidgenomics/dotfiles.git'
+    koopa::git_clone "$repo" "$prefix"
     koopa::add_koopa_config_link "$prefix" "$name"
     script="${prefix}/install"
     koopa::assert_is_file "$script"
     "$script"
-    koopa::install_success "$name_fancy" "$prefix"
-
-
     return 0
 }
 
+# FIXME Rework the prefix handling here?
 koopa::uninstall_dotfiles() { # {{{1
     # """
     # Uninstall dot files.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-06-14.
     # """
     local name name_fancy prefix script
     koopa::assert_has_no_args "$#"
@@ -69,7 +57,7 @@ koopa::uninstall_dotfiles() { # {{{1
 koopa::update_dotfiles() { # {{{1
     # """
     # Update dotfiles repo and run install script, if defined.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-06-14.
     # """
     local config_prefix repo repos script
     if [[ "$#" -eq 0 ]]
