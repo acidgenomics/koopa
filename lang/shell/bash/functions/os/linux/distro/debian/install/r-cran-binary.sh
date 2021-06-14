@@ -55,7 +55,7 @@ koopa::debian_uninstall_r_cran_binary() { # {{{1
     koopa::assert_has_no_envs
     koopa::rm -S '/etc/R' '/usr/lib/R/etc'
     koopa::debian_apt_remove 'r-*'
-    koopa::debian_delete_apt_repo 'r'
+    koopa::debian_apt_delete_repo 'r'
     koopa::uninstall_success "$name_fancy"
     return 0
 }

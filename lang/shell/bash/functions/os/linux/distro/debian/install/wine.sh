@@ -51,14 +51,11 @@ koopa::debian_install_wine() { # {{{1
     return 0
 }
 
-# FIXME Need to remove from sources list.
 koopa::debian_uninstall_wine() { # {{{1
     # """
     # Uninstall Wine.
     # @note Updated 2021-06-14.
     # """
     koopa::debian_apt_remove 'wine-*'
-    # FIXME Need to remove from apt sources:
-    # wine.list
-    # wine-obs.list
+    koopa::debian_apt_delete_repo 'wine' 'wine-obs'
 }
