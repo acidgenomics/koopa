@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to use 'koopa:::configure_app_packages' internally.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
