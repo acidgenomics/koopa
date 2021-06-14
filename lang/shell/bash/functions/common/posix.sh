@@ -40,21 +40,6 @@ koopa::activate_homebrew_cask_google_cloud_sdk() { # {{{1
     _koopa_activate_homebrew_cask_google_cloud_sdk "$@"
 }
 
-# FIXME Rename this.
-koopa::activate_homebrew_cask_gpg_suite() { # {{{1
-    _koopa_activate_homebrew_cask_gpg_suite "$@"
-}
-
-# FIXME Rename this.
-koopa::activate_homebrew_cask_julia() { # {{{1
-    _koopa_activate_homebrew_cask_julia "$@"
-}
-
-# FIXME Rename this.
-koopa::activate_homebrew_cask_r() { # {{{1
-    _koopa_activate_homebrew_cask_r "$@"
-}
-
 koopa::activate_homebrew_opt_gnu_prefix() { # {{{1
     _koopa_activate_homebrew_opt_gnu_prefix "$@"
 }
@@ -649,6 +634,18 @@ koopa::locate_shell() { # {{{1
 
 koopa::lowercase() { # {{{1
     _koopa_lowercase "$@"
+}
+
+koopa::macos_activate_gpg_suite() { # {{{1
+    _koopa_macos_activate_gpg_suite "$@"
+}
+
+koopa::macos_activate_julia() { # {{{1
+    _koopa_macos_activate_julia "$@"
+}
+
+koopa::macos_activate_r() { # {{{1
+    _koopa_macos_activate_r "$@"
 }
 
 koopa::macos_activate_visual_studio_code() { # {{{1
