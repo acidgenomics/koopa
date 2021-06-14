@@ -2,14 +2,12 @@
 
 # [2021-05-27] macOS success.
 
-# FIXME Need to standardize with 'koopa:::configure_app_packages'.
 koopa::configure_perl() { # {{{1
     # """
     # Configure Perl.
-    # @note Updated 2021-06-13.
+    # @note Updated 2021-06-14.
     # """
     local name name_fancy perl prefix version
-    # FIXME Can we take this out and harden?
     perl="${1:-}"
     [[ -z "$perl" ]] && perl="$(koopa::locate_perl)"
     koopa::assert_is_installed "$perl"
@@ -17,15 +15,18 @@ koopa::configure_perl() { # {{{1
     name_fancy='Perl'
     version="$(koopa::get_version "$name")"
     prefix="$(koopa::perl_packages_prefix "$version")"
-    koopa::configure_start "$name_fancy" "$prefix"
-    koopa::link_into_opt "$prefix" "${name}-packages"
+    koopa:::configure_app_packages \
+        --name="$name" \
+        --name-fancy="$name_fancy" \
+        --prefix="$prefix"
+    koopa::assert_is_dir "$prefix"
+    koopa::alert "Setting up local library at '${prefix}' using CPAN."
     PERL_MM_OPT="INSTALL_BASE=$prefix" cpan 'local::lib'
     eval "$( \
-        perl \
+        "$perl" \
             "-I${prefix}/lib/perl5" \
             "-Mlocal::lib=${prefix}" \
     )"
-    koopa::configure_success "$name_fancy" "$prefix"
     return 0
 }
 
