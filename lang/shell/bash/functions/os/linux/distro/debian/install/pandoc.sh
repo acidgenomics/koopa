@@ -15,7 +15,7 @@ koopa::debian_install_pandoc() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        arch="$(koopa::arch)"
+        arch="$(koopa::arch2)"
         file="${name}-${version}-1-${arch}.deb"
         url="https://github.com/jgm/${name}/releases/download/\
 ${version}/${file}"
