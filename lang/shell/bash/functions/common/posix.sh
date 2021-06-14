@@ -663,6 +663,14 @@ koopa::macos_is_light_mode() { # {{{1
     _koopa_macos_is_light_mode "$@"
 }
 
+koopa::macos_python_prefix() { # {{{1
+    _koopa_macos_python_prefix "$@"
+}
+
+koopa::macos_r_prefix() { # {{{1
+    _koopa_macos_r_prefix "$@"
+}
+
 koopa::macos_version() { # {{{1
     _koopa_macos_version "$@"
 }

@@ -339,6 +339,24 @@ _koopa_local_data_prefix() { # {{{1
     return 0
 }
 
+_koopa_macos_python_prefix() { # {{{1
+    # """
+    # macOS Python installation prefix.
+    # @note Updated 2021-06-14.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print '/Library/Frameworks/Python.framework/Versions/Current'
+}
+
+_koopa_macos_r_prefix() { # {{{1
+    # """
+    # macOS R installation prefix.
+    # @note Updated 2021-06-14.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print '/Library/Frameworks/R.framework/Versions/Current'
+}
+
 _koopa_make_prefix() { # {{{1
     # """
     # Return the installation prefix to use.

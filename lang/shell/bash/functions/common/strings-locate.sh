@@ -452,33 +452,32 @@ koopa::locate_pkg_config() { # {{{1
     koopa:::locate_app 'pkg-config' 'pkg-config' "$@"
 }
 
-# FIXME Consolidate this with activate_python.
-# FIXME Need to use macos_python_prefix.
 koopa::locate_python() { # {{{1
     # """
     # Locate Python.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-06-14.
     # """
-    local app
+    local app prefix
     if koopa::is_macos
     then
-        app='/Library/Frameworks/Python.framework/Versions/Current/bin/python3'
+        prefix="$(koopa::macos_python_prefix)"
+        app="${prefix}/bin/python3"
     else
         app='python3'
     fi
     koopa:::locate_app_simple "$app"
 }
 
-# FIXME Need to use macos_r_prefix.
 koopa::locate_r() { # {{{1
     # """
     # Locate R.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-06-14.
     # """
-    local app
+    local app prefix
     if koopa::is_macos
     then
-        app='/Library/Frameworks/R.framework/Versions/Current/Resources/bin/R'
+        prefix="$(koopa::macos_r_prefix)"
+        app="${prefix}/bin/R"
     else
         app='R'
     fi
