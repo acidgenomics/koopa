@@ -90,6 +90,9 @@ koopa:::linux_install_rstudio_server() { # {{{1
     then
         dict[name]="rstudio-workbench"
         dict[name_fancy]="RStudio Workbench"
+    fi
+    if [[ -z "${dict[file_stem]}" ]]
+    then
         dict[file_stem]="${dict[name]}"
     fi
     if koopa::is_fedora_like
