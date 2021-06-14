@@ -188,6 +188,7 @@ _koopa_complete() { # {{{1
                     then
                         args+=(
                             'pandoc'
+                            'r-cran-binary'
                         )
                     fi
                 fi
