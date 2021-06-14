@@ -52,10 +52,13 @@ koopa::install_python_packages() { # {{{1
 koopa::uninstall_python_packages() { # {{{1
     # """
     # Uninstall Python packages.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-14.
     # """
-    koopa::stop 'FIXME'
-    # Prompt the user here.
+    koopa::uninstall_app \
+        --name-fancy='Python packages' \
+        --name='python-packages' \
+        --no-link \
+        "$@"
 }
 
 koopa::update_python_packages() { # {{{1

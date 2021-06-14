@@ -20,10 +20,13 @@ koopa::install_r_packages() { # {{{1
 koopa::uninstall_r_packages() { # {{{1
     # """
     # Uninstall R packages.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-14.
     # """
-    koopa::stop 'FIXME'
-    # Prompt the user here.
+    koopa::uninstall_app \
+        --name-fancy='R packages' \
+        --name='r-packages' \
+        --no-link \
+        "$@"
 }
 
 koopa::update_r_packages() { # {{{1
