@@ -6,15 +6,7 @@ _koopa_add_koopa_config_link() { # {{{1
     # @note Updated 2021-06-14.
     # """
     local brew_prefix config_prefix dest_file dest_name ln mkdir rm source_file
-    [ "$#" -eq 2 ] || return 1
-    source_file="${1:?}"
-    dest_name="${2:?}"
-    config_prefix="$(_koopa_config_prefix)"
-    dest_file="${config_prefix}/${dest_name}"
-    if [ -L "$dest_file" ] && [ -e "$dest_file" ]
-    then
-        return 0
-    fi
+    [ "$#" -ge 2 ] || return 1
     ln='ln'
     mkdir='mkdir'
     rm='rm'
@@ -25,9 +17,21 @@ _koopa_add_koopa_config_link() { # {{{1
         mkdir="${brew_prefix}/opt/coreutils/bin/gmkdir"
         rm="${brew_prefix}/opt/coreutils/bin/grm"
     fi
-    "$mkdir" -p "$config_prefix"
-    "$rm" -fr "$dest_file"
-    "$ln" -fns "$source_file" "$dest_file"
+    config_prefix="$(_koopa_config_prefix)"
+    while [ "$#" -ge 2 ]
+    do
+        source_file="${1:?}"
+        dest_name="${2:?}"
+        shift 2
+        dest_file="${config_prefix}/${dest_name}"
+        if [ -L "$dest_file" ] && [ -e "$dest_file" ]
+        then
+            continue
+        fi
+        "$mkdir" -p "$config_prefix"
+        "$rm" -fr "$dest_file"
+        "$ln" -fns "$source_file" "$dest_file"
+    done
     return 0
 }
 
