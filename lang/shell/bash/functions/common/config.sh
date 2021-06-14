@@ -240,10 +240,11 @@ koopa::fix_zsh_permissions() { # {{{1
     return 0
 }
 
+# FIXME Don't error on 'opt' failure.
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-06-14.
     # """
     local pos source_path source_prefix source_subdir
     local symlink_basename symlink_dirname symlink_path symlink_prefix
@@ -314,7 +315,11 @@ koopa::link_dotfile() { # {{{1
         fi
     fi
     source_path="${source_prefix}/${source_subdir}"
-    koopa::assert_is_existing "$source_path"
+    if [[ ! -d "$source_path" ]]
+    then
+        koopa::warning "Does not exist: '${source_path}'."
+        return 0
+    fi
     if [[ "${dict[config]}" -eq 1 ]]
     then
         symlink_prefix="${dict[xdg_config_home]}"
