@@ -376,6 +376,31 @@ koopa::is_gitlab_ssh_enabled() { # {{{1
     koopa:::is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
 }
 
+koopa::is_koopa_app() { # {{{1
+    # """
+    # Is a specific command installed in koopa app prefix?
+    # @note Updated 2021-06-14.
+    # """
+    local app_prefix str
+    koopa::assert_has_args "$#"
+    app_prefix="$(koopa::app_prefix)"
+    [[ -d "$app_prefix" ]] || return 1
+    for str in "$@"
+    do
+        if koopa::is_installed "$str"
+        then
+            str="$(koopa::which_realpath "$str")"
+        elif [[ -e "$str" ]]
+        then
+            str="$(koopa::realpath "$str")"
+        else
+            return 1
+        fi
+        koopa::str_match_regex "$str" "^${app_prefix}" || return 1
+    done
+    return 0
+}
+
 koopa::is_powerful() { # {{{1
     # """
     # Is the current machine powerful?
@@ -526,29 +551,4 @@ koopa::is_spacemacs_installed() { # {{{1
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
     koopa::file_match "$init_file" 'Spacemacs'
-}
-
-koopa::is_symlinked_app() { # {{{1
-    # """
-    # Is a specific command or file symlinked?
-    # @note Updated 2020-11-19.
-    # """
-    local app_prefix str
-    koopa::assert_has_args "$#"
-    app_prefix="$(koopa::app_prefix)"
-    [[ -d "$app_prefix" ]] || return 1
-    for str in "$@"
-    do
-        if koopa::is_installed "$str"
-        then
-            str="$(koopa::which_realpath "$str")"
-        elif [[ -e "$str" ]]
-        then
-            str="$(koopa::realpath "$str")"
-        else
-            return 1
-        fi
-        koopa::str_match_regex "$str" "^${app_prefix}" || return 1
-    done
-    return 0
 }
