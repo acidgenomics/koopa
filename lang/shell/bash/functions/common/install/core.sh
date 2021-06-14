@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This needs to support:
-# - name
-# - name-fancy (inherit from)
-# - version (e.g. Rust rolling).
-# - Some kind of app location? needed for perl, python?
 koopa:::configure_app_packages() { # {{{1
     # """
     # Configure language application.
@@ -15,6 +10,7 @@ koopa:::configure_app_packages() { # {{{1
         [name_fancy]=''
         [prefix]=''
         [version]=''
+        [which_app]=''
     )
     while (("$#"))
     do
@@ -35,6 +31,10 @@ koopa:::configure_app_packages() { # {{{1
                 dict[version]="${1#*=}"
                 shift 1
                 ;;
+            --which-app=*)
+                dict[which_app]="${1#*=}"
+                shift 1
+                ;;
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -48,12 +48,16 @@ koopa:::configure_app_packages() { # {{{1
     koopa::assert_is_function "${dict[pkg_prefix_fun]}"
     dict[activate_fun]="koopa::activate_${dict[name]}"
     koopa::is_function "${dict[activate_fun]}" && "${dict[activate_fun]}"
-    if [[ -z "${dict[version]}" ]]
-    then
-        dict[version]="$(koopa::get_version "${dict[name]}")"
-    fi
     if [[ -z "${dict[prefix]}" ]]
     then
+        if [[ -z "${dict[version]}" ]]
+        then
+            if [[ -z "${dict[which_app]}" ]]
+            then
+                dict[which_app]="${dict[name]}"
+            fi
+            dict[version]="$(koopa::get_version "${dict[which_app]}")"
+        fi
         dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
     fi
     koopa::configure_start "${dict[name_fancy]}" "${dict[prefix]}"

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to standardize with 'koopa:::configure_app_packages'.
 koopa::configure_python() { #{{{1
     # """
     # Configure Python.
@@ -12,9 +11,8 @@ koopa::configure_python() { #{{{1
     # @seealso
     # > "$python" -m site
     # """
-    local file k_site_pkgs name name_fancy python sys_site_pkgs version
+    local k_site_pkgs name name_fancy pth_file python sys_site_pkgs version
     python="${1:-}"
-    # FIXME Can we take this out and harden?
     [[ -z "$python" ]] && python="$(koopa::locate_python)"
     koopa::assert_is_installed "$python"
     name='python'
@@ -22,26 +20,22 @@ koopa::configure_python() { #{{{1
     version="$(koopa::get_version "$python")"
     sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
     k_site_pkgs="$(koopa::python_packages_prefix "$version")"
-    koopa::configure_start "$name_fancy" "$k_site_pkgs"
-    if [[ ! -d "${k_site_pkgs:?}" ]]
-    then
-        koopa::sys_mkdir "$k_site_pkgs"
-        koopa::sys_set_permissions "$(koopa::dirname "$k_site_pkgs")"
-        koopa::link_into_opt "$k_site_pkgs" "${name}-packages"
-    fi
-    file="${sys_site_pkgs:?}/koopa.pth"
-    koopa::alert "Adding '${file}' path file in '${sys_site_pkgs}'."
+    pth_file="${sys_site_pkgs:?}/koopa.pth"
+    koopa::alert "Adding '${pth_file}' path file."
     if koopa::is_symlinked_app "$python"
     then
-        koopa::write_string "$k_site_pkgs" "$file"
+        koopa::write_string "$k_site_pkgs" "$pth_file"
         if ! koopa::is_macos
         then
-            koopa::link_app python
+            koopa::link_app "$name"
         fi
     else
-        koopa::sudo_write_string "$k_site_pkgs" "$file"
+        koopa::sudo_write_string "$k_site_pkgs" "$pth_file"
     fi
-    koopa::configure_success "$name_fancy" "$k_site_pkgs"
+    koopa:::configure_app_packages \
+        --name-fancy="$name_fancy" \
+        --name="$name" \
+        --prefix="$k_site_pkgs"
     return 0
 }
 

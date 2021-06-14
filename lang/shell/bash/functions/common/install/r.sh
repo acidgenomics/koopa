@@ -39,7 +39,6 @@ koopa::configure_r() { # {{{1
         koopa::sys_set_permissions -r "${r_prefix}/library"
     fi
     koopa::r_link_files_into_etc "$r"
-    # FIXME Rework this, standardizing with 'koopa:::configure_app_packages'?
     koopa::r_link_site_library "$r"
     koopa::r_javareconf "$r"
     koopa::r_rebuild_docs "$r"
@@ -54,10 +53,6 @@ koopa::install_r() { # {{{1
         --name='r' \
         "$@"
 }
-
-# Run 'koopa install tex-packages' if you hit this warning:
-# neither inconsolata.sty nor zi4.sty found: PDF vignettes and package manuals
-# will not be rendered optimally
 
 koopa:::install_r() { # {{{1
     # """
