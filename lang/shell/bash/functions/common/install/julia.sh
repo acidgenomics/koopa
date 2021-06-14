@@ -2,6 +2,14 @@
 
 # [2021-05-27] macOS success.
 
+koopa::configure_julia() { # {{{1
+    # """
+    # Configure Julia.
+    # @note Updated 2021-06-14.
+    # """
+    koopa::stop 'FIXME Need to add this'
+}
+
 koopa::install_julia() { # {{{1
     if koopa::is_linux
     then
