@@ -474,6 +474,16 @@ _koopa_python_packages_prefix() { # {{{1
     __koopa_packages_prefix 'python' "$@"
 }
 
+_koopa_python_venv_prefix() { # {{{1
+    # """
+    # Python virtual environment prefix.
+    # @note Updated 2021-06-14.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print "$(_koopa_opt_prefix)/virtualenvs"
+    return 0
+}
+
 _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
@@ -570,16 +580,6 @@ _koopa_tests_prefix() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_koopa_prefix)/tests"
-    return 0
-}
-
-_koopa_venv_prefix() { # {{{1
-    # """
-    # Python venv prefix.
-    # @note Updated 2021-04-28.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_print "$(_koopa_opt_prefix)/virtualenvs"
     return 0
 }
 

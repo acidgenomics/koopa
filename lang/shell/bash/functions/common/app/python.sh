@@ -130,10 +130,10 @@ koopa::python_pip_outdated() { # {{{1
     return 0
 }
 
-koopa::venv_create() { # {{{1
+koopa::python_venv_create() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2021-05-23.
+    # @note Updated 2021-06-14.
     # """
     local name name_fancy default_pkgs prefix pos python venv_python
     koopa::assert_has_no_envs
@@ -170,7 +170,7 @@ koopa::venv_create() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_is_set name python
     koopa::assert_is_installed "$python"
-    prefix="$(koopa::venv_prefix)/${name}"
+    prefix="$(koopa::python_venv_prefix)/${name}"
     if [[ -d "$prefix" ]]
     then
         koopa::alert_note "Environment already exists at '${prefix}'."
@@ -192,20 +192,20 @@ koopa::venv_create() { # {{{1
     return 0
 }
 
-koopa::venv_create_base() { # {{{1
+koopa::python_venv_create_base() { # {{{1
     # """
     # Create base Python virtual environment.
-    # @note Updated 2021-01-14.
+    # @note Updated 2021-06-14.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::venv_create --name='base'
+    koopa::python_venv_create --name='base'
     return 0
 }
 
-koopa::venv_create_r_reticulate() { # {{{1
+koopa::python_venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-14.
     #
     # Check that LLVM is configured correctly.
     # umap-learn > numba > llvmlite
@@ -258,6 +258,6 @@ koopa::venv_create_r_reticulate() { # {{{1
     LLVM_CONFIG="$(koopa::locate_llvm_config)"
     koopa::assert_is_exectuable "$LLVM_CONFIG"
     export LLVM_CONFIG
-    koopa::venv_create --name="$name" "${packages[@]}"
+    koopa::python_venv_create --name="$name" "${packages[@]}"
     return 0
 }

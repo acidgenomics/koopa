@@ -142,7 +142,7 @@ _koopa_prompt_python_venv() { # {{{1
     # """
     local env
     [ "$#" -eq 0 ] || return 1
-    env="$(_koopa_python_venv)"
+    env="$(_koopa_python_venv_name)"
     [ -n "$env" ] || return 0
     _koopa_print " venv:${env}"
     return 0

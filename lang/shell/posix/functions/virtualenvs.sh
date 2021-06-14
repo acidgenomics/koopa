@@ -37,10 +37,10 @@ _koopa_deactivate_conda() { # {{{1
 _koopa_deactivate_envs() { # {{{1
     # """
     # Deactivate Conda and Python environments.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-06-14.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_deactivate_venv
+    _koopa_deactivate_python_venv
     _koopa_deactivate_conda
     return 0
 }
@@ -57,10 +57,10 @@ _koopa_deactivate_python_venv() { # {{{1
     return 0
 }
 
-_koopa_venv_name() { # {{{1
+_koopa_python_venv_name() { # {{{1
     # """
     # Python virtual environment name.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-06-14.
     # """
     local env
     [ "$#" -eq 0 ] || return 1
