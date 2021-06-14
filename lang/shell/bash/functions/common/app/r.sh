@@ -148,7 +148,7 @@ koopa::r_link_site_library() { # {{{1
         koopa::sys_ln "$lib_source" "$lib_target"
         if ! koopa::is_macos
         then
-            koopa 'FIXME NOOOO'
+            koopa::stop 'FIXME NOOOO'
             koopa::link_app "$name"
         fi
     else
