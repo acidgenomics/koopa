@@ -20,7 +20,7 @@ koopa::configure_perl() { # {{{1
         --name-fancy="$name_fancy" \
         --prefix="$prefix"
     koopa::assert_is_dir "$prefix"
-    koopa::alert "Setting up local library at '${prefix}' using CPAN."
+    koopa::alert "Setting up 'local::lib' at '${prefix}' using CPAN."
     PERL_MM_OPT="INSTALL_BASE=$prefix" cpan 'local::lib'
     eval "$( \
         "$perl" \
