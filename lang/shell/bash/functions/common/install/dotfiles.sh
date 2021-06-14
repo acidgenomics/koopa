@@ -3,6 +3,8 @@
 # [2021-05-27] Linux success.
 # [2021-05-27] macOS success.
 
+# FIXME Consider handling private dotfiles here in a single call.
+
 koopa::install_dotfiles() { # {{{1
     local prefix script
     koopa::install_app \
@@ -10,6 +12,7 @@ koopa::install_dotfiles() { # {{{1
         --version='rolling' \
         "$@"
     prefix="$(koopa::dotfiles_prefix)"
+    koopa::assert_is_dir "$prefix"
     koopa::add_koopa_config_link "$prefix" 'dotfiles'
     script="${prefix}/install"
     koopa::assert_is_file "$script"
