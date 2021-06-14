@@ -88,8 +88,11 @@ koopa:::linux_install_lmod() { # {{{1
 koopa::linux_uninstall_lmod() { # {{{1
     # """
     # Uninstall Lmod.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-14.
     # """
-    koopa::stop 'FIXME'
-    # Need to prompt the user about this.
+    koopa::uninstall_app \
+        --name='lmod' \
+        --name-fancy='Lmod' \
+        --no-link \
+        "$@"
 }
