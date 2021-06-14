@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+koopa::julia_script_prefix() { # {{{1
+    # """
+    # Julia script prefix.
+    # @note Updated 2021-06-14.
+    # """
+    koopa::print "$(koopa::koopa_prefix)/lang/julia/include"
+    return 0
+}
+
 koopa::python_system_packages_prefix() { # {{{1
     # """
     # Python system site packages library prefix.
