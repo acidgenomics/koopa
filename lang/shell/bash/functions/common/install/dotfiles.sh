@@ -3,117 +3,66 @@
 # [2021-05-27] Linux success.
 # [2021-05-27] macOS success.
 
-# FIXME Need to link into opt here.
 koopa::install_dotfiles() { # {{{1
+    koopa::install_app \
+        --name='dotfiles' \
+        --version='rolling' \
+        "$@"
+}
+
+koopa:::install_dotfiles() { # {{{1
     # """
-    # Install dot files.
-    # @note Updated 2021-05-24.
+    # Install dotfiles.
+    # @note Updated 2021-06-14.
     # """
-    local koopa_prefix name_fancy prefix reinstall script
+    local prefix script
+    name='dotfiles'
     name_fancy='dotfiles'
-    prefix="$(koopa::dotfiles_prefix)"
-    reinstall=0
-    while (("$#"))
-    do
-        case "$1" in
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 1 ]]
+
+
+
+
+    if [[ ! -d "$prefix" ]]
     then
-        koopa::alert_note "Removing ${name_fancy} at '${prefix}'."
-        koopa::rm "$prefix"
+        # FIXME Rework this, doesn't need to be a separate function...
+        koopa::git_clone_dotfiles
     fi
-    koopa::install_start "$name_fancy" "$prefix"
-    koopa_prefix="$(koopa::koopa_prefix)"
-    koopa::add_to_path_start "${koopa_prefix}/bin"
-    [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles
-    koopa::add_koopa_config_link "$prefix" 'dotfiles'
+    koopa::link_into_opt "$prefix" "$name"
+
+
+    # FIXME Ensure this gets called every time per user...
+    koopa::add_koopa_config_link "$prefix" "$name"
     script="${prefix}/install"
     koopa::assert_is_file "$script"
     "$script"
     koopa::install_success "$name_fancy" "$prefix"
+
+
     return 0
 }
 
-koopa::install_dotfiles_private() { # {{{1
-    # """
-    # Install private dot files.
-    # @note Updated 2021-05-11.
-    # """
-    local name_fancy prefix reinstall script
-    name_fancy='private dotfiles'
-    prefix="$(koopa::dotfiles_private_prefix)"
-    reinstall=0
-    while (("$#"))
-    do
-        case "$1" in
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 1 ]]
-    then
-        koopa::alert_note "Removing ${name_fancy} at '${prefix}'."
-        koopa::rm "$prefix"
-    fi
-    koopa::install_start "$name_fancy" "$prefix"
-    koopa::add_monorepo_config_link 'dotfiles-private'
-    [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles_private
-    script="${prefix}/install"
-    koopa::assert_is_file "$script"
-    "$script"
-    koopa::install_success "$name_fancy" "$prefix"
-    return 0
-}
-
-# FIXME Need to remove opt link.
 koopa::uninstall_dotfiles() { # {{{1
     # """
     # Uninstall dot files.
     # @note Updated 2020-07-05.
     # """
-    local prefix script
+    local name name_fancy prefix script
     koopa::assert_has_no_args "$#"
+    name='dotfiles'
+    name_fancy='dotfiles'
     prefix="$(koopa::dotfiles_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::alert_note "No dotfiles at '${prefix}'."
+        koopa::alert_is_not_installed "$name_fancy" "$prefix"
         return 0
     fi
     script="${prefix}/uninstall"
     koopa::assert_is_file "$script"
     "$script"
-    return 0
-}
-
-koopa::uninstall_dotfiles_private() { # {{{1
-    # """
-    # Uninstall private dot files.
-    # @note Updated 2020-07-05.
-    # """
-    local prefix script
-    koopa::assert_has_no_args "$#"
-    prefix="$(koopa::dotfiles_private_prefix)"
-    if [[ ! -d "$prefix" ]]
-    then
-        koopa::alert_note "No private dotfiles at '${prefix}'."
-        return 0
-    fi
-    script="${prefix}/uninstall"
-    koopa::assert_is_file "$script"
-    "$script"
+    koopa::uninstall_app \
+        --name-fancy="$name_fancy" \
+        --name="$name" \
+        "$@"
     return 0
 }
 
