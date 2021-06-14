@@ -315,11 +315,12 @@ koopa::link_dotfile() { # {{{1
         fi
     fi
     source_path="${source_prefix}/${source_subdir}"
-    if [[ ! -d "$source_path" ]]
+    if [[ "${dict[opt]}" -eq 1 ]] && [[ ! -e "$source_path" ]]
     then
         koopa::warning "Does not exist: '${source_path}'."
         return 0
     fi
+    koopa::assert_is_existing "$source_path"
     if [[ "${dict[config]}" -eq 1 ]]
     then
         symlink_prefix="${dict[xdg_config_home]}"
