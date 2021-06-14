@@ -1,23 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Can we rework this and simplify?
-# FIXME Need to use 'koopa:::configure_app_packages' internally.
 koopa::configure_rust() { # {{{1
     # """
     # Configure Rust.
-    # @note Updated 2021-06-13.
+    # @note Updated 2021-06-14.
     # """
-    local name name_fancy prefix version
-    version="${1:-}"
-    [[ -z "$version" ]] && version='rolling'
-    name='rust'
-    name_fancy='Rust'
-    prefix="$(koopa::rust_packages_prefix "$version")"
-    koopa::configure_start "$name_fancy" "$prefix"
-    koopa::sys_mkdir "$prefix"
-    koopa::sys_set_permissions "$(koopa::dirname "$prefix")"
-    koopa::link_into_opt "$prefix" "${name}-packages"
-    koopa::configure_success "$name_fancy" "$prefix"
+    koopa:::configure_app_packages \
+        --name-fancy='Rust' \
+        --name='rust' \
+        --version='rolling' \
+        "$@"
 }
 
 koopa::install_rust() { # {{{1
