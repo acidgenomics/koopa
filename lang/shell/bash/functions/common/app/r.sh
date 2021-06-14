@@ -115,6 +115,7 @@ koopa::r_link_files_into_etc() { # {{{1
     return 0
 }
 
+# FIXME This isn't working correctly for 'r-devel'. May need to rethink.
 koopa::r_link_site_library() { # {{{1
     # """
     # Link R site library.
@@ -152,6 +153,7 @@ koopa::r_link_site_library() { # {{{1
     conf_args=(
         "--prefix=${lib_source}"
     )
+    # FIXME I think this isn't catching correctly, not picking up devel here?
     if [[ "$version" == 'devel' ]]
     then
         conf_args+=(
@@ -169,7 +171,7 @@ koopa::r_link_site_library() { # {{{1
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then
         koopa::alert_note 'Fixing Fedora R configuration.'
-        koopa::sys_ln \
+        koopa::ln -S \
             '/usr/lib64/R/site-library' \
             '/usr/local/lib/R/site-library'
     fi
