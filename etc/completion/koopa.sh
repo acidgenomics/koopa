@@ -56,8 +56,8 @@ _koopa_complete() { # {{{1
                 ;;
             configure)
                 args=(
-                    # > 'julia'
                     'go'
+                    'julia'
                     'node'
                     'perl'
                     'python'
@@ -110,6 +110,7 @@ _koopa_complete() { # {{{1
                     'homebrew'
                     'htop'
                     'julia'
+                    'julia-packages'
                     'libevent'
                     'libtool'
                     'lua'
