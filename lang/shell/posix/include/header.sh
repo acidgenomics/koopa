@@ -62,7 +62,6 @@ _koopa_posix_header() { # {{{1
             then
                 _koopa_macos_activate_gpg_suite || return 1
                 _koopa_macos_activate_julia || return 1
-                # FIXME This isn't picking up correctly...
                 _koopa_macos_activate_r || return 1
                 _koopa_macos_activate_visual_studio_code || return 1
             fi
