@@ -93,7 +93,7 @@ koopa::r_link_files_into_etc() { # {{{1
     r_etc_source="${distro_prefix}/etc/R/${version}"
     koopa::assert_is_dir "$r_etc_source"
     if koopa::is_linux && \
-        ! koopa::is_symlinked_app "$r" && \
+        ! koopa::is_koopa_app "$r" && \
         [[ -d '/etc/R' ]]
     then
         # This applies to Debian/Ubuntu CRAN binary installs.
@@ -115,7 +115,6 @@ koopa::r_link_files_into_etc() { # {{{1
     return 0
 }
 
-# FIXME This isn't working correctly for 'r-devel'. May need to rethink.
 koopa::r_link_site_library() { # {{{1
     # """
     # Link R site library.
@@ -127,37 +126,27 @@ koopa::r_link_site_library() { # {{{1
     #
     # Changed to unversioned library approach at opt prefix in koopa v0.9.
     # """
-    local conf_args lib_source lib_target name r r_prefix version
+    local conf_args lib_source lib_target r r_prefix version
     koopa::assert_has_args_le "$#" 1
     r="${1:-}"
     [[ -z "$r" ]] && r="$(koopa::locate_r)"
     koopa::assert_is_installed "$r"
-    name='r'
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
-    # FIXME Is this returning 'devel' or the revision number?
     version="$(koopa::r_version "$r")"
     lib_source="$(koopa::r_packages_prefix "$version")"
     lib_target="${r_prefix}/site-library"
     koopa::alert "Adding '${lib_target}' symbolic link."
     koopa::sys_mkdir "$lib_source"
-
-    # FIXME It's this step that is the problem...
-    if koopa::is_symlinked_app "$r"
+    if koopa::is_koopa_app "$r"
     then
         koopa::sys_ln "$lib_source" "$lib_target"
-        if ! koopa::is_macos
-        then
-            koopa::stop 'FIXME NOOOO'
-            koopa::link_app "$name"
-        fi
     else
         koopa::ln -S "$lib_source" "$lib_target"
     fi
     conf_args=(
         "--prefix=${lib_source}"
     )
-    # FIXME I think this isn't catching correctly, not picking up devel here?
     if [[ "$version" == 'devel' ]]
     then
         conf_args+=(
@@ -237,7 +226,7 @@ koopa::r_javareconf() { # {{{1
         "JAVAH=${java_home}/bin/javah"
         "JAR=${java_home}/bin/jar"
     )
-    if koopa::is_symlinked_app "$r"
+    if koopa::is_koopa_app "$r"
     then
         r_cmd=("$r")
     else
