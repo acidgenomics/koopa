@@ -3,8 +3,6 @@
 # [2021-05-27] Linux success.
 # [2021-05-27] macOS success.
 
-# FIXME Consider handling private dotfiles here in a single call.
-
 koopa::install_dotfiles() { # {{{1
     local prefix script
     koopa::install_app \
