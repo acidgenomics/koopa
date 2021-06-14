@@ -10,26 +10,61 @@ koopa:::configure_app_packages() { # {{{1
     # Configure language application.
     # @note Updated 2021-06-14.
     # """
-    local activate_fun name name_fancy pkg_prefix_fun
-    koopa::assert_has_args_eq "$#" 2
-    name="${1:?}"
-    name_fancy="${2:?}"
-    pkg_prefix_fun="koopa::${name}_packages_prefix"
-    koopa::assert_is_function "$pkg_prefix_fun"
-    activate_fun="koopa::activate_${name}"
-    koopa::is_function "$activate_fun" && "$activate_fun"
-    koopa::assert_is_installed "$name"
-    version="$(koopa::get_version "$name")"
-    prefix="$("$pkg_prefix_fun" "$version")"
-    koopa::configure_start "$name_fancy" "$prefix"
-    if [[ ! -d "$prefix" ]]
+    local dict
+    declare -A dict=(
+        [name_fancy]=''
+        [prefix]=''
+        [version]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            --name=*)
+                dict[name]="${1#*=}"
+                shift 1
+                ;;
+            --name-fancy=*)
+                dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            --prefix=*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            --version=*)
+                dict[version]="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ -z "${dict[name_fancy]}" ]]
     then
-        koopa::sys_mkdir "$prefix"
-        koopa::sys_set_permissions "$(koopa::dirname "$prefix")"
+        dict[name_fancy]="${dict[name]}"
     fi
-    koopa::link_into_opt "$prefix" "${name}-packages"
-    koopa::is_function "$activate_fun" && "$activate_fun"
-    koopa::configure_success "$name_fancy" "$prefix"
+    dict[pkg_prefix_fun]="koopa::${dict[name]}_packages_prefix"
+    koopa::assert_is_function "${dict[pkg_prefix_fun]}"
+    dict[activate_fun]="koopa::activate_${dict[name]}"
+    koopa::is_function "${dict[activate_fun]}" && "${dict[activate_fun]}"
+    if [[ -z "${dict[version]}" ]]
+    then
+        dict[version]="$(koopa::get_version "${dict[name]}")"
+    fi
+    if [[ -z "${dict[prefix]}" ]]
+    then
+        dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
+    fi
+    koopa::configure_start "${dict[name_fancy]}" "${dict[prefix]}"
+    if [[ ! -d "${dict[prefix]}" ]]
+    then
+        koopa::sys_mkdir "${dict[prefix]}"
+        koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
+    fi
+    koopa::link_into_opt "${dict[prefix]}" "${dict[name]}-packages"
+    koopa::is_function "${dict[activate_fun]}" && "${dict[activate_fun]}"
+    koopa::configure_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
 }
 

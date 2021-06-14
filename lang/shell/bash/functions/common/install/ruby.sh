@@ -5,7 +5,10 @@ koopa::configure_ruby() { # {{{1
     # Configure Ruby.
     # @note Updated 2021-06-14.
     # """
-    koopa:::configure_app_packages 'ruby' 'Ruby' "$@"
+    koopa:::configure_app_packages \
+        --name-fancy='Ruby' \
+        --name='ruby' \
+        "$@"
 }
 
 koopa::install_ruby() { # {{{1
