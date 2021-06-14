@@ -30,7 +30,8 @@ ${version}/${file}"
 koopa::debian_uninstall_pandoc() { # {{{1
     # """
     # Uninstall Pandoc.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-14.
     # """
-    koopa::stop 'FIXME'
+    koopa::debian_apt_remove 'pandoc' 'pandoc-data'
+    return 0
 }
