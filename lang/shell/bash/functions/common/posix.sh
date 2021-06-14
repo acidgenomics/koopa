@@ -664,6 +664,10 @@ koopa::macos_is_light_mode() { # {{{1
     _koopa_macos_is_light_mode "$@"
 }
 
+koopa::macos_julia_prefix() { # {{{1
+    _koopa_macos_julia_prefix "$@"
+}
+
 koopa::macos_python_prefix() { # {{{1
     _koopa_macos_python_prefix "$@"
 }
