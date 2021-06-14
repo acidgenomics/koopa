@@ -240,63 +240,6 @@ koopa::fix_zsh_permissions() { # {{{1
     return 0
 }
 
-# FIXME This isn't really config...needs to be moved.
-koopa::info_box() { # {{{1
-    # """
-    # Configuration information box.
-    # @note Updated 2021-03-30.
-    #
-    # Using unicode box drawings here.
-    # Note that we're truncating lines inside the box to 68 characters.
-    # """
-    koopa::assert_has_args "$#"
-    local array
-    array=("$@")
-    local barpad
-    barpad="$(printf '━%.0s' {1..70})"
-    printf '  %s%s%s  \n' '┏' "$barpad" '┓'
-    for i in "${array[@]}"
-    do
-        printf '  ┃ %-68s ┃  \n' "${i::68}"
-    done
-    printf '  %s%s%s  \n\n' '┗' "$barpad" '┛'
-    return 0
-}
-
-# FIXME Move this to strings.
-koopa::ip_address() { # {{{1
-    # """
-    # IP address.
-    # @note Updated 2020-07-14.
-    # """
-    type='public'
-    while (("$#"))
-    do
-        case "$1" in
-            --local)
-                type='local'
-                shift 1
-                ;;
-            --public)
-                type='public'
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    case "$type" in
-        local)
-            koopa::local_ip_address
-            ;;
-        public)
-            koopa::public_ip_address
-            ;;
-    esac
-    return 0
-}
-
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
