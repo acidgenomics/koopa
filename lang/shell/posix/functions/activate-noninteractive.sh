@@ -540,6 +540,7 @@ _koopa_activate_pyenv() { # {{{1
     return 0
 }
 
+# FIXME Need to consolidate this.
 _koopa_activate_python_packages() { # {{{1
     # """
     # Activate Python site packages library.
@@ -553,6 +554,7 @@ _koopa_activate_python_packages() { # {{{1
     return 0
 }
 
+# FIXME Need to consolidate this.
 _koopa_activate_python_startup() { # {{{1
     # """
     # Activate Python startup configuration.
@@ -565,6 +567,47 @@ _koopa_activate_python_startup() { # {{{1
     file="${HOME:?}/.pyrc"
     [ -f "$file" ] || return 0
     export PYTHONSTARTUP="$file"
+    return 0
+}
+
+_koopa_activate_python_venv() { # {{{1
+    # """
+    # Activate Python virtual environment.
+    # @note Updated 2020-06-30.
+    #
+    # Note that we're using this instead of conda as our default interactive
+    # Python environment, so we can easily use pip.
+    #
+    # Here's how to write a function to detect virtual environment name:
+    # https://stackoverflow.com/questions/10406926
+    #
+    # Only attempt to autoload for bash or zsh.
+    #
+    # This needs to be run last, otherwise PATH can get messed upon
+    # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
+    #
+    # Refer to 'declare -f deactivate' for function source code.
+    # """
+    local name nounset prefix script shell
+    [ "$#" -le 1 ] || return 1
+    [ -n "${VIRTUAL_ENV:-}" ] && return 0
+    shell="$(_koopa_shell_name)"
+    case "$shell" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    name="${1:-base}"
+    prefix="$(_koopa_python_venv_prefix)"
+    script="${prefix}/${name}/bin/activate"
+    [ -r "$script" ] || return 0
+    nounset="$(_koopa_boolean_nounset)"
+    [ "$nounset" -eq 1 ] && set +u
+    # shellcheck source=/dev/null
+    . "$script"
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
@@ -709,47 +752,6 @@ _koopa_activate_standard_paths() { # {{{1
     _koopa_add_to_manpath_start \
         "${make_prefix}/man" \
         "${make_prefix}/share/man"
-    return 0
-}
-
-_koopa_activate_venv() { # {{{1
-    # """
-    # Activate Python virtual environment.
-    # @note Updated 2020-06-30.
-    #
-    # Note that we're using this instead of conda as our default interactive
-    # Python environment, so we can easily use pip.
-    #
-    # Here's how to write a function to detect virtual environment name:
-    # https://stackoverflow.com/questions/10406926
-    #
-    # Only attempt to autoload for bash or zsh.
-    #
-    # This needs to be run last, otherwise PATH can get messed upon
-    # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
-    #
-    # Refer to 'declare -f deactivate' for function source code.
-    # """
-    local name nounset prefix script shell
-    [ "$#" -le 1 ] || return 1
-    [ -n "${VIRTUAL_ENV:-}" ] && return 0
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
-        bash|zsh)
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    name="${1:-base}"
-    prefix="$(_koopa_venv_prefix)"
-    script="${prefix}/${name}/bin/activate"
-    [ -r "$script" ] || return 0
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    # shellcheck source=/dev/null
-    . "$script"
-    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 

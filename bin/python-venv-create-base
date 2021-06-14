@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-koopa::venv_create_base "$@"
+koopa::python_venv_create_base "$@"

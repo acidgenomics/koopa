@@ -38,7 +38,7 @@ _koopa_prompt() { # {{{1
     user="${user}@${hostname}"
     conda="\$(_koopa_prompt_conda)"
     git="\$(_koopa_prompt_git)"
-    venv="\$(_koopa_prompt_venv)"
+    venv="\$(_koopa_prompt_python_venv)"
     case "$shell" in
         bash)
             newline='\n'
@@ -133,16 +133,16 @@ _koopa_prompt_git() { # {{{1
     return 0
 }
 
-_koopa_prompt_venv() { # {{{1
+_koopa_prompt_python_venv() { # {{{1
     # """
     # Get Python virtual environment name for prompt string.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-06-14.
     #
     # See also: https://stackoverflow.com/questions/10406926
     # """
     local env
     [ "$#" -eq 0 ] || return 1
-    env="$(_koopa_venv)"
+    env="$(_koopa_python_venv)"
     [ -n "$env" ] || return 0
     _koopa_print " venv:${env}"
     return 0

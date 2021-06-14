@@ -148,8 +148,8 @@ koopa::activate_standard_paths() { # {{{1
     _koopa_activate_standard_paths "$@"
 }
 
-koopa::activate_venv() { # {{{1
-    _koopa_activate_venv "$@"
+koopa::activate_python_venv() { # {{{1
+    _koopa_activate_python_venv "$@"
 }
 
 koopa::activate_xdg() { # {{{1
@@ -276,8 +276,8 @@ koopa::deactivate_envs() { # {{{1
     _koopa_deactivate_envs "$@"
 }
 
-koopa::deactivate_venv() { # {{{1
-    _koopa_deactivate_venv "$@"
+koopa::deactivate_python_venv() { # {{{1
+    _koopa_deactivate_python_venv "$@"
 }
 
 koopa::distro_prefix() { # {{{
@@ -556,6 +556,10 @@ koopa::is_os_version() { # {{{1
     _koopa_is_os_version "$@"
 }
 
+koopa::is_python_venv_active() { # {{{1
+    _koopa_is_python_venv_active "$@"
+}
+
 koopa::is_qemu() { # {{{1
     _koopa_is_qemu "$@"
 }
@@ -622,10 +626,6 @@ koopa::is_ubuntu() { # {{{1
 
 koopa::is_ubuntu_like() { # {{{1
     _koopa_is_ubuntu_like "$@"
-}
-
-koopa::is_venv_active() { # {{{1
-    _koopa_is_venv_active "$@"
 }
 
 koopa::java_prefix() { # {{{1
@@ -836,6 +836,14 @@ koopa::python_packages_prefix() { # {{{1
     _koopa_python_packages_prefix "$@"
 }
 
+koopa::python_venv_name() { # {{{1
+    _koopa_python_venv_name "$@"
+}
+
+koopa::python_venv_prefix() { # {{{1
+    _koopa_python_venv_prefix "$@"
+}
+
 koopa::r_packages_prefix() { # {{{1
     _koopa_r_packages_prefix "$@"
 }
@@ -954,14 +962,6 @@ koopa::user() { # {{{1
 
 koopa::user_id() { # {{{1
     _koopa_user_id "$@"
-}
-
-koopa::venv() { # {{{1
-    _koopa_venv "$@"
-}
-
-koopa::venv_prefix() { # {{{1
-    _koopa_venv_prefix "$@"
 }
 
 koopa::warning() { # {{{1
