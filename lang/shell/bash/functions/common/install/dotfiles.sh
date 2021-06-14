@@ -4,13 +4,19 @@
 # [2021-05-27] macOS success.
 
 koopa::install_dotfiles() { # {{{1
+    local prefix script
     koopa::install_app \
         --name='dotfiles' \
         --version='rolling' \
         "$@"
+    prefix="$(koopa::dotfiles_prefix)"
+    koopa::add_koopa_config_link "$prefix" 'dotfiles'
+    script="${prefix}/install"
+    koopa::assert_is_file "$script"
+    "$script"
+    return 0
 }
 
-# FIXME The prefix here is unbound for new install?
 koopa:::install_dotfiles() { # {{{1
     # """
     # Install dotfiles.
@@ -20,14 +26,9 @@ koopa:::install_dotfiles() { # {{{1
     prefix="${INSTALL_PREFIX:?}"
     repo='https://github.com/acidgenomics/dotfiles.git'
     koopa::git_clone "$repo" "$prefix"
-    koopa::add_koopa_config_link "$prefix" "$name"
-    script="${prefix}/install"
-    koopa::assert_is_file "$script"
-    "$script"
     return 0
 }
 
-# FIXME Rework the prefix handling here?
 koopa::uninstall_dotfiles() { # {{{1
     # """
     # Uninstall dot files.
