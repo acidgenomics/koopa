@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is failing due to incompatible Python...conda?
-
 koopa::linux_install_bcbio_nextgen_vm() { # {{{1
     koopa::install_app \
         --name='bcbio-nextgen-vm' \
@@ -10,7 +8,6 @@ koopa::linux_install_bcbio_nextgen_vm() { # {{{1
         "$@"
 }
 
-# NOTE ARM is not yet supported.
 koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
     # """
     # Install bcbio-nextgen-vm.
@@ -31,6 +28,7 @@ koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     arch="$(koopa::arch)"
+    # ARM is not yet supported. Check for Intel x86.
     case "$arch" in
         x86_64)
             ;;
@@ -38,6 +36,7 @@ koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
             koopa::stop "Architecture not supported: '${arch}'."
             ;;
     esac
+    # Install is failing latest version of Miniconda installer.
     file='Miniconda3-py37_4.9.2-Linux-x86_64.sh'
     url="https://repo.anaconda.com/miniconda/${file}"
     koopa::download "$url"
