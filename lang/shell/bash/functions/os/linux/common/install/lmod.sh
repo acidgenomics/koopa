@@ -95,4 +95,8 @@ koopa::linux_uninstall_lmod() { # {{{1
         --name-fancy='Lmod' \
         --no-link \
         "$@"
+    koopa::rm -S \
+        '/etc/profile.d/z00_lmod.csh' \
+        '/etc/profile.d/z00_lmod.sh'
+    return 0
 }
