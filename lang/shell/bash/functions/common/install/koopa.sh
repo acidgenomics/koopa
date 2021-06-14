@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-# Temporarily disabled, until we rethink Python and/or Rust approach.
-# > koopa::install_py_koopa() { # {{{1
-# >     # """
-# >     # Install Python koopa package.
-# >     # @note Updated 2021-01-20.
-# >     # """
-# >     local url
-# >     koopa::configure_python
-# >     url='https://github.com/acidgenomics/py-koopa/archive/main.zip'
-# >     koopa::python_pip_install "$url"
-# >     return 0
-# > }
-
 koopa::install_r_koopa() { # {{{1
     # """
     # Install koopa R package.
