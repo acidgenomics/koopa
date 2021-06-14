@@ -744,8 +744,9 @@ _koopa_activate_standard_paths() { # {{{1
     local make_prefix
     [ "$#" -eq 0 ] || return 1
     make_prefix="$(_koopa_make_prefix)"
-    # Don't define '/usr/bin' here. Can cause shell lockout.
+    # Don't define '/bin' or '/usr/bin' here. Can cause shell lockout.
     _koopa_add_to_path_start \
+        '/sbin' \
         '/usr/sbin' \
         "${make_prefix}/bin" \
         "${make_prefix}/sbin"
