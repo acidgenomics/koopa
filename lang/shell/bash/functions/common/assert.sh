@@ -434,6 +434,23 @@ koopa::assert_is_installed() { # {{{1
     return 0
 }
 
+koopa::assert_is_koopa_app() { # {{{1
+    # """
+    # Assert that input is an application installed in koopa app prefix.
+    # @note Updated 2021-06-14.
+    # """
+    local arg
+    koopa::assert_has_args "$#"
+    for arg in "$@"
+    do
+        if ! koopa::is_koopa_app "$arg"
+        then
+            koopa::stop "Not koopa app: '${arg}'."
+        fi
+    done
+    return 0
+}
+
 koopa::assert_is_linux() { # {{{1
     # """
     # Assert that operating system is Linux.
@@ -715,23 +732,6 @@ koopa::assert_is_symlink() { # {{{1
         if [[ ! -L "$arg" ]]
         then
             koopa::stop "Not symlink: '${arg}'."
-        fi
-    done
-    return 0
-}
-
-koopa::assert_is_symlinked_app() { # {{{1
-    # """
-    # Assert that input is a symlinked application.
-    # @note Updated 2020-11-19.
-    # """
-    local arg
-    koopa::assert_has_args "$#"
-    for arg in "$@"
-    do
-        if ! koopa::is_symlinked_app "$arg"
-        then
-            koopa::stop "Not symlinked app: '${arg}'."
         fi
     done
     return 0

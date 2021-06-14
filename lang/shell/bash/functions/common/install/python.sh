@@ -22,13 +22,15 @@ koopa::configure_python() { #{{{1
     k_site_pkgs="$(koopa::python_packages_prefix "$version")"
     pth_file="${sys_site_pkgs:?}/koopa.pth"
     koopa::alert "Adding '${pth_file}' path file."
-    if koopa::is_symlinked_app "$python"
+    if koopa::is_koopa_app "$python"
     then
         koopa::write_string "$k_site_pkgs" "$pth_file"
-        if ! koopa::is_macos
-        then
-            koopa::link_app "$name"
-        fi
+        # Don't assume this is linked into make prefix. May need to re-enable
+        # this if we run into configuration issues.
+        # > if ! koopa::is_macos
+        # > then
+        # >     koopa::link_app "$name"
+        # > fi
     else
         koopa::sudo_write_string "$k_site_pkgs" "$pth_file"
     fi

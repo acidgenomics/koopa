@@ -3,7 +3,7 @@
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2021-06-13.
+    # @note Updated 2021-06-14.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -19,12 +19,12 @@ koopa::configure_r() { # {{{1
         'R home' "$r_prefix" \
         'R path' "$r"
     koopa::assert_is_dir "$r_prefix"
-    if koopa::is_symlinked_app "$r"
+    if koopa::is_koopa_app "$r"
     then
-        make_prefix="$(koopa::make_prefix)"
-        etc_prefix="${make_prefix}/lib/R/etc"
         koopa::sys_set_permissions -r "$r_prefix"
         # Ensure that (Debian) system 'etc' directories are removed.
+        make_prefix="$(koopa::make_prefix)"
+        etc_prefix="${make_prefix}/lib/R/etc"
         if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
             koopa::sys_rm "$etc_prefix"
