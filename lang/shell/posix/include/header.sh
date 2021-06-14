@@ -44,13 +44,6 @@ _koopa_posix_header() { # {{{1
         _koopa_export_tmpdir || return 1
         if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
         then
-            if _koopa_is_linux
-            then
-                _koopa_activate_bcbio_nextgen || return 1
-            elif _koopa_is_macos
-            then
-                _koopa_macos_activate_visual_studio_code || return 1
-            fi
             _koopa_activate_homebrew || return 1
             _koopa_activate_emacs || return 1
             _koopa_activate_go || return 1
@@ -62,6 +55,17 @@ _koopa_posix_header() { # {{{1
             _koopa_activate_rust || return 1
             _koopa_activate_perl || return 1
             _koopa_activate_python || return 1
+            if _koopa_is_linux
+            then
+                _koopa_activate_bcbio_nextgen || return 1
+            elif _koopa_is_macos
+            then
+                _koopa_macos_activate_gpg_suite || return 1
+                _koopa_macos_activate_julia || return 1
+                # FIXME This isn't picking up correctly...
+                _koopa_macos_activate_r || return 1
+                _koopa_macos_activate_visual_studio_code || return 1
+            fi
         fi
         if [ "${KOOPA_MINIMAL:-0}" -eq 0 ] && _koopa_is_interactive
         then
