@@ -6,7 +6,7 @@
 uninstall() { # {{{1
     # """
     # Uninstall koopa.
-    # @note Updated 2020-07-08.
+    # @note Updated 2021-06-14.
     # """
     local koopa_prefix
     koopa_prefix="$(koopa::prefix)"
@@ -16,7 +16,9 @@ uninstall() { # {{{1
     fi
     koopa::uninstall_dotfiles
     koopa::uninstall_dotfiles_private
-    koopa::rm "$(koopa::config_prefix)" "$koopa_prefix"
+    koopa::rm \
+        "$(koopa::config_prefix)" \
+        "$koopa_prefix"
     koopa::alert_success 'Uninstallation of koopa was successful.'
     koopa::alert_note 'Restart the shell.'
     return 0
