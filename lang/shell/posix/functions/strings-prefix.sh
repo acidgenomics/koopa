@@ -350,13 +350,31 @@ _koopa_local_data_prefix() { # {{{1
     return 0
 }
 
+_koopa_macos_julia_prefix() { # {{{1
+    # """
+    # macOS Julia prefix.
+    # @note Updated 2021-06-14.
+    # """
+    local prefix
+    prefix="$( \
+        find '/Applications' \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -name 'Julia-*.app' \
+            -type d \
+            -print \
+        | sort \
+        | tail -n 1 \
+    )"
+    _koopa_print "$prefix"
+}
+
 _koopa_macos_python_prefix() { # {{{1
     # """
     # macOS Python installation prefix.
     # @note Updated 2021-06-14.
     # """
     local x
-    [ "$#" -eq 0 ] || return 1
     x='/Library/Frameworks/Python.framework/Versions/Current'
     _koopa_print "$x"
 }
