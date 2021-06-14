@@ -151,12 +151,19 @@ koopa::r_link_site_library() { # {{{1
     fi
     conf_args=(
         "--prefix=${lib_source}"
-        '--name-fancy=R'
-        '--name=r'
     )
     if [[ "$version" == 'devel' ]]
     then
-        conf_args+=('--no-link')
+        conf_args+=(
+            '--name-fancy=R-devel'
+            '--name=r-devel'
+            '--no-link'
+        )
+    else
+        conf_args+=(
+            '--name-fancy=R'
+            '--name=r'
+        )
     fi
     koopa:::configure_app_packages "${conf_args[@]}"
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
