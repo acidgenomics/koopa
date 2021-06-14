@@ -51,9 +51,10 @@ koopa::debian_install_rstudio_workbench() { # {{{1
 koopa::debian_uninstall_rstudio_server() { # {{{1
     # """
     # Uninstall RStudio Server.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-14.
     # """
-    koopa::stop 'FIXME'
+    koopa::debian_apt_remove 'rstudio-server'
+    return 0
 }
 
 koopa::debian_uninstall_rstudio_workbench() { # {{{1
