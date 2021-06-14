@@ -452,6 +452,8 @@ koopa::locate_pkg_config() { # {{{1
     koopa:::locate_app 'pkg-config' 'pkg-config' "$@"
 }
 
+# FIXME Consolidate this with activate_python.
+# FIXME Need to use macos_python_prefix.
 koopa::locate_python() { # {{{1
     # """
     # Locate Python.
@@ -467,6 +469,7 @@ koopa::locate_python() { # {{{1
     koopa:::locate_app_simple "$app"
 }
 
+# FIXME Need to use macos_r_prefix.
 koopa::locate_r() { # {{{1
     # """
     # Locate R.
