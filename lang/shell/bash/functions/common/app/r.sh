@@ -141,11 +141,14 @@ koopa::r_link_site_library() { # {{{1
     lib_target="${r_prefix}/site-library"
     koopa::alert "Adding '${lib_target}' symbolic link."
     koopa::sys_mkdir "$lib_source"
+
+    # FIXME It's this step that is the problem...
     if koopa::is_symlinked_app "$r"
     then
         koopa::sys_ln "$lib_source" "$lib_target"
         if ! koopa::is_macos
         then
+            koopa 'FIXME NOOOO'
             koopa::link_app "$name"
         fi
     else
