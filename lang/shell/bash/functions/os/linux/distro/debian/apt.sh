@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add functions for easy apt removal.
-
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
@@ -38,7 +36,6 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     name='azure-cli'
     name_fancy='Microsoft Azure CLI'
-    # FIXME Make this a shared function.
     file="/etc/apt/sources.list.d/${name}.list"
     if [[ -f "$file" ]]
     then
@@ -82,7 +79,6 @@ koopa::debian_apt_add_docker_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     name='docker'
     name_fancy='Docker'
-    # FIXME Make this a shared function.
     file="/etc/apt/sources.list.d/${name}.list"
     if [[ -f "$file" ]]
     then
@@ -135,7 +131,6 @@ koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     name='google-cloud-sdk'
     name_fancy='Google Cloud SDK'
-    # FIXME Make this a shared function.
     file="/etc/apt/sources.list.d/${name}.list"
     if [[ -f "$file" ]]
     then
@@ -173,7 +168,6 @@ koopa::debian_apt_add_llvm_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     name='llvm'
     name_fancy='LLVM'
-    # FIXME Make this a shared function.
     file="/etc/apt/sources.list.d/${name}.list"
     if [[ -f "$file" ]]
     then
@@ -277,7 +271,6 @@ koopa::debian_apt_add_r_repo() { # {{{1
     # Need to strip the periods here.
     version="$(koopa::gsub '\.' '' "$version")"
     version="cran${version}"
-    # FIXME Make this a shared function.
     file="/etc/apt/sources.list.d/${name}.list"
     if [[ -f "$file" ]]
     then
@@ -348,7 +341,6 @@ koopa::debian_apt_add_wine_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     name='wine'
     name_fancy='Wine'
-    # FIXME Make this a shared function.
     file="/etc/apt/sources.list.d/${name}.list"
     if [[ -f "$file" ]]
     then
@@ -411,7 +403,6 @@ koopa::debian_apt_add_wine_obs_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     name='wine-obs'
     name_fancy='Wine OBS'
-    # FIXME Make this a shared function.
     file="/etc/apt/sources.list.d/${name}.list"
     if [[ -f "$file" ]]
     then
