@@ -7,5 +7,8 @@ koopa::configure_node() { # {{{1
     # @seealso
     # > npm config get prefix
     # """
-    koopa:::configure_app_packages 'node' 'Node.js' "$@"
+    koopa:::configure_app_packages \
+        --name-fancy='Node.js' \
+        --name='node' \
+        "$@"
 }

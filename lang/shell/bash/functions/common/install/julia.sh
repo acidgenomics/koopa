@@ -7,7 +7,10 @@ koopa::configure_julia() { # {{{1
     # Configure Julia.
     # @note Updated 2021-06-14.
     # """
-    koopa:::configure_app_packages 'julia' 'Julia' "$@"
+    koopa:::configure_app_packages \
+        --name-fancy='Julia' \
+        --name='julia' \
+        "$@"
 }
 
 koopa::install_julia() { # {{{1

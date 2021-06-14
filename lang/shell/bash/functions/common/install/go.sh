@@ -7,7 +7,10 @@ koopa::configure_go() { # {{{1
     # Configure Go.
     # @note Updated 2021-06-14.
     # """
-    koopa:::configure_app_packages 'go' 'Go' "$@"
+    koopa:::configure_app_packages \
+        --name-fancy='Go' \
+        --name='go' \
+        "$@"
 }
 
 koopa::install_go() { # {{{1
