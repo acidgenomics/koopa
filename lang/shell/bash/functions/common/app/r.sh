@@ -115,6 +115,8 @@ koopa::r_link_files_into_etc() { # {{{1
     return 0
 }
 
+# FIXME This is still failing for 'r-devel'. Need to rethink.
+# Not function: 'koopa::r-devel_packages_prefix'.
 koopa::r_link_site_library() { # {{{1
     # """
     # Link R site library.
@@ -146,18 +148,13 @@ koopa::r_link_site_library() { # {{{1
     fi
     conf_args=(
         "--prefix=${lib_source}"
+        '--name-fancy=R'
+        '--name=r'
     )
     if [[ "$version" == 'devel' ]]
     then
         conf_args+=(
-            '--name-fancy=R-devel'
-            '--name=r-devel'
             '--no-link'
-        )
-    else
-        conf_args+=(
-            '--name-fancy=R'
-            '--name=r'
         )
     fi
     koopa:::configure_app_packages "${conf_args[@]}"
