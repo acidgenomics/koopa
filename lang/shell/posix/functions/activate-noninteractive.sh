@@ -184,7 +184,6 @@ _koopa_activate_homebrew_opt_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need to locate the prefix here.
 _koopa_activate_julia() { # {{{1
     # """
     # Activate Julia.
