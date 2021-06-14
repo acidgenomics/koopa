@@ -819,10 +819,11 @@ _koopa_macos_activate_r() { # {{{1
 _koopa_macos_activate_visual_studio_code() { # {{{1
     # """
     # Activate Visual Studio Code.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-14.
     # """
+    local x
     [ "$#" -eq 0 ] || return 1
-    _koopa_add_to_path_start \
-        '/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
+    x='/Applications/Visual Studio Code.app/Contents/Resources/app/bin'
+    _koopa_add_to_path_start "$x"
     return 0
 }
