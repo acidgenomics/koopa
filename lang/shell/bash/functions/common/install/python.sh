@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to standardize with 'koopa:::configure_app_packages'.
 koopa::configure_python() { #{{{1
     # """
     # Configure Python.
@@ -13,6 +14,7 @@ koopa::configure_python() { #{{{1
     # """
     local file k_site_pkgs name name_fancy python sys_site_pkgs version
     python="${1:-}"
+    # FIXME Can we take this out and harden?
     [[ -z "$python" ]] && python="$(koopa::locate_python)"
     koopa::assert_is_installed "$python"
     name='python'
@@ -48,6 +50,7 @@ koopa::install_python() { # {{{1
         --name-fancy='Python' \
         --name='python' \
         "$@"
+    koopa::configure_python
 }
 
 koopa:::install_python() { # {{{1
@@ -99,7 +102,6 @@ koopa:::install_python() { # {{{1
     "$make" install
     python="${prefix}/bin/${name}${minor_version}"
     koopa::assert_is_file "$python"
-    koopa::configure_python "$python"
     return 0
 }
 

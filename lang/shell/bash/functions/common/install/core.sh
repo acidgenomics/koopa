@@ -1,5 +1,38 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to support:
+# - name
+# - name-fancy (inherit from)
+# - version (e.g. Rust rolling).
+# - Some kind of app location? needed for perl, python?
+koopa:::configure_app_packages() { # {{{1
+    # """
+    # Configure language application.
+    # @note Updated 2021-06-14.
+    # """
+    local activate_fun name name_fancy pkg_prefix_fun
+    koopa::assert_has_args_eq "$#" 2
+    name="${1:?}"
+    name_fancy="${2:?}"
+    pkg_prefix_fun="koopa::${name}_packages_prefix"
+    koopa::assert_is_function "$pkg_prefix_fun"
+    activate_fun="koopa::activate_${name}"
+    koopa::is_function "$activate_fun" && "$activate_fun"
+    koopa::assert_is_installed "$name"
+    version="$(koopa::get_version "$name")"
+    prefix="$("$pkg_prefix_fun" "$version")"
+    koopa::configure_start "$name_fancy" "$prefix"
+    if [[ ! -d "$prefix" ]]
+    then
+        koopa::sys_mkdir "$prefix"
+        koopa::sys_set_permissions "$(koopa::dirname "$prefix")"
+    fi
+    koopa::link_into_opt "$prefix" "${name}-packages"
+    koopa::is_function "$activate_fun" && "$activate_fun"
+    koopa::configure_success "$name_fancy" "$prefix"
+    return 0
+}
+
 koopa::find_app_version() { # {{{1
     # """
     # Find the latest application version.

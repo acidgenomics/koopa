@@ -307,6 +307,17 @@ _koopa_java_prefix() { # {{{1
     return 0
 }
 
+_koopa_julia_packages_prefix() { # {{{1
+    # """
+    # Julia packages (depot) library prefix.
+    # @note Updated 2021-06-14.
+    #
+    # In the shell environment, check 'JULIA_DEPOT_PATH'.
+    # Inside Julia, check 'DEPOT_PATH'.
+    # """
+    __koopa_packages_prefix 'julia' "$@"
+}
+
 _koopa_koopa_prefix() { # {{{1
     # """
     # Koopa prefix (home).
