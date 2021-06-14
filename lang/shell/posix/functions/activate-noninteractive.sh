@@ -107,8 +107,11 @@ _koopa_activate_homebrew() { # {{{1
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
         _koopa_activate_homebrew_opt_prefix 'curl' 'ruby'
         _koopa_activate_homebrew_cask_google_cloud_sdk
+        # FIXME Rename this.
         _koopa_activate_homebrew_cask_gpg_suite
+        # FIXME Rename this.
         _koopa_activate_homebrew_cask_julia
+        # FIXME Rename this.
         _koopa_activate_homebrew_cask_r
     fi
     return 0
@@ -137,6 +140,7 @@ _koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
     return 0
 }
 
+# FIXME Rename this.
 _koopa_activate_homebrew_cask_gpg_suite() { # {{{1
     # """
     # Activate MacGPG (gpg-suite) Homebrew cask.
@@ -150,6 +154,7 @@ _koopa_activate_homebrew_cask_gpg_suite() { # {{{1
     return 0
 }
 
+# FIXME Rename this.
 _koopa_activate_homebrew_cask_julia() { # {{{1
     # """
     # Activate Julia Homebrew cask.
@@ -164,6 +169,9 @@ _koopa_activate_homebrew_cask_julia() { # {{{1
     return 0
 }
 
+# FIXME Rename this.
+# FIXME Need to work rework this using macos_r_prefix...
+# This isn't Homebrew Cask really, it's the standard R path.
 _koopa_activate_homebrew_cask_r() { # {{{1
     # """
     # Activate R Homebrew cask.
@@ -540,33 +548,37 @@ _koopa_activate_pyenv() { # {{{1
     return 0
 }
 
-# FIXME Need to consolidate this.
-_koopa_activate_python_packages() { # {{{1
+# FIXME Consolidate macOS prefix with 'lang/shell/bash/functions/common/strings-locate.sh'.
+# FIXME Need to use macos_python_prefix.
+_koopa_activate_python() { # {{{1
     # """
-    # Activate Python site packages library.
-    # @note Updated 2021-05-04.
+    # Activate Python.
+    # @note Updated 2021-06-14.
+    #
+    # Configures:
+    # - Site packages library.
+    # - Custom startup file, defined in our 'dotfiles' repo.
     #
     # This ensures that 'bin' will be added to PATH, which is useful when
     # installing via pip with '--target' flag.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_activate_prefix "$(_koopa_python_packages_prefix)"
-    return 0
-}
-
-# FIXME Need to consolidate this.
-_koopa_activate_python_startup() { # {{{1
-    # """
-    # Activate Python startup configuration.
-    # @note Updated 2020-07-13.
+    #
     # @seealso
     # - https://stackoverflow.com/questions/33683744/
     # """
-    local file
+    local pkg_prefix startup_file
     [ "$#" -eq 0 ] || return 1
-    file="${HOME:?}/.pyrc"
-    [ -f "$file" ] || return 0
-    export PYTHONSTARTUP="$file"
+    if _koopa_is_macos
+    then
+        _koopa_activate_prefix \
+            '/Library/Frameworks/Python.framework/Versions/Current'
+    fi
+    pkg_prefix="$(_koopa_python_packages_prefix)"
+    _koopa_activate_prefix "$pkg_prefix"
+    startup_file="${HOME:?}/.pyrc"
+    if [ -f "$startup_file" ]
+    then
+        export PYTHONSTARTUP="$startup_file"
+    fi
     return 0
 }
 
@@ -809,17 +821,6 @@ _koopa_activate_xdg() { # {{{1
     else
         export XDG_RUNTIME_DIR
     fi
-    return 0
-}
-
-_koopa_macos_activate_python() { # {{{1
-    # """
-    # Activate macOS Python binary install.
-    # @note Updated 2021-05-25.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_activate_prefix \
-        '/Library/Frameworks/Python.framework/Versions/Current'
     return 0
 }
 

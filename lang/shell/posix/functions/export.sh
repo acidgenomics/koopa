@@ -135,6 +135,7 @@ _koopa_export_pager() { # {{{1
     return 0
 }
 
+# FIXME Rework this with other Python configuration...
 _koopa_export_python() { # {{{1
     # """
     # Export Python settings.
