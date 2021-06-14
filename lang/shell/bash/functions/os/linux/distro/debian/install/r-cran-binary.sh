@@ -42,6 +42,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
     return 0
 }
 
+# FIXME Need to remove from apt sources.
 koopa::debian_uninstall_r_cran_binary() { # {{{1
     # """
     # Uninstall R CRAN binary.
