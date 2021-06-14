@@ -39,7 +39,11 @@ koopa::uninstall_julia_packages() { # {{{1
     # Uninstall Julia packages.
     # @note Updated 2021-06-14.
     # """
-    koopa::stop 'FIXME add this'
+    koopa::uninstall_app \
+        --name-fancy='Julia packages' \
+        --name='julia-packages' \
+        --no-link \
+        "$@"
     return 0
 }
 
@@ -48,6 +52,5 @@ koopa::update_julia_packages() { # {{{1
     # Update Julia packages.
     # @note Updated 2021-06-14.
     # """
-    koopa::stop 'FIXME add this'
-    return 0
+    koopa::install_julia_packages "$@"
 }
