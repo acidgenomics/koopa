@@ -184,6 +184,7 @@ _koopa_activate_homebrew_opt_prefix() { # {{{1
     return 0
 }
 
+# FIXME Need to locate the prefix here.
 _koopa_activate_julia() { # {{{1
     # """
     # Activate Julia.
@@ -192,8 +193,8 @@ _koopa_activate_julia() { # {{{1
     local prefix
     if _koopa_is_macos
     then
-        _koopa_activate_prefix \
-            '/Applications/Julia-'*'.app/Contents/Resources/julia'
+        prefix="$(_koopa_macos_julia_prefix)"
+        _koopa_activate_prefix "$prefix"
     fi
     prefix="$(_koopa_julia_packages_prefix)"
     if [ -d "$prefix" ]

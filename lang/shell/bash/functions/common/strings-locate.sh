@@ -308,6 +308,22 @@ koopa::locate_id() { # {{{1
     koopa:::locate_gnu_app 'coreutils' 'id' "$@"
 }
 
+koopa::locate_julia() { # {{{1
+    # """
+    # Locate Julia.
+    # @note Updated 2021-06-14.
+    # """
+    local app prefix
+    if koopa::is_macos
+    then
+        prefix="$(koopa::macos_julia_prefix)"
+        app="${prefix}/bin/julia"
+    else
+        app='julia'
+    fi
+    koopa:::locate_app_simple "$app"
+}
+
 koopa::locate_llvm_config() { # {{{1
     # """
     # Locate 'llvm-config' executable.
