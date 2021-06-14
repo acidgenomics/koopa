@@ -548,8 +548,6 @@ _koopa_activate_pyenv() { # {{{1
     return 0
 }
 
-# FIXME Consolidate macOS prefix with 'lang/shell/bash/functions/common/strings-locate.sh'.
-# FIXME Need to use macos_python_prefix.
 _koopa_activate_python() { # {{{1
     # """
     # Activate Python.
@@ -565,19 +563,23 @@ _koopa_activate_python() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/33683744/
     # """
-    local pkg_prefix startup_file
+    local prefix startup_file
     [ "$#" -eq 0 ] || return 1
     if _koopa_is_macos
     then
-        _koopa_activate_prefix \
-            '/Library/Frameworks/Python.framework/Versions/Current'
+        prefix="$(_koopa_macos_python_prefix)"
+        _koopa_activate_prefix "$prefix"
     fi
-    pkg_prefix="$(_koopa_python_packages_prefix)"
-    _koopa_activate_prefix "$pkg_prefix"
+    prefix="$(_koopa_python_packages_prefix)"
+    _koopa_activate_prefix "$prefix"
     startup_file="${HOME:?}/.pyrc"
-    if [ -f "$startup_file" ]
+    if [ -z "${PYTHONSTARTUP:-}" ] && [ -f "$startup_file" ]
     then
         export PYTHONSTARTUP="$startup_file"
+    fi
+    if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
+    then
+        export VIRTUAL_ENV_DISABLE_PROMPT=1
     fi
     return 0
 }

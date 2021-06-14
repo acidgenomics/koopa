@@ -135,23 +135,6 @@ _koopa_export_pager() { # {{{1
     return 0
 }
 
-# FIXME Rework this with other Python configuration...
-_koopa_export_python() { # {{{1
-    # """
-    # Export Python settings.
-    # @note Updated 2020-06-30.
-    #
-    # Don't allow Python to change the prompt string by default.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
-    then
-        VIRTUAL_ENV_DISABLE_PROMPT=1
-    fi
-    export VIRTUAL_ENV_DISABLE_PROMPT
-    return 0
-}
-
 _koopa_export_shell() { # {{{1
     # """
     # Export 'SHELL' variable.
