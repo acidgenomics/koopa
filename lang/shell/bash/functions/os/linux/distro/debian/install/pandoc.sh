@@ -31,6 +31,7 @@ koopa::debian_uninstall_pandoc() { # {{{1
     # """
     # Uninstall Pandoc.
     # @note Updated 2021-06-14.
+    # May not need (or want) to install 'pandoc-data' here.
     # """
     koopa::debian_apt_remove 'pandoc' 'pandoc-data'
     return 0

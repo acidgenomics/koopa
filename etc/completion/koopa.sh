@@ -184,6 +184,12 @@ _koopa_complete() { # {{{1
                         'rstudio-workbench'
                         'shiny-server'
                     )
+                    if _koopa_is_debian_like
+                    then
+                        args+=(
+                            'pandoc'
+                        )
+                    fi
                 fi
                 if _koopa_is_macos
                 then
