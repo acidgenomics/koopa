@@ -26,13 +26,15 @@ _koopa_posix_header() { # {{{1
     _koopa_check_os || return 1
     _koopa_check_shell || return 1
     _koopa_activate_xdg || return 1
-    _koopa_add_config_link \
+    # FIXME There is a way to shift arguments by 2 here...refer to _koopa_dl
+    # FIXME Combine these into a single call.
+    _koopa_add_koopa_config_link \
         "$(_koopa_koopa_prefix)" 'home' \
         || return 1
-    _koopa_add_config_link \
+    _koopa_add_koopa_config_link \
         "$(_koopa_koopa_prefix)/activate" 'activate' \
         || return 1
-    _koopa_add_config_link \
+    _koopa_add_koopa_config_link \
         "$(_koopa_dotfiles_prefix)" 'dotfiles' \
         || return 1
     _koopa_activate_standard_paths || return 1

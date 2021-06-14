@@ -34,7 +34,7 @@ koopa::add_monorepo_config_link() { # {{{1
     monorepo_prefix="$(koopa::monorepo_prefix)"
     for subdir in "$@"
     do
-        koopa::add_config_link \
+        koopa::add_koopa_config_link \
             "${monorepo_prefix}/${subdir}" \
             "$subdir"
     done
