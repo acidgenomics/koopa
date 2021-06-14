@@ -80,7 +80,7 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # System path {{{1
 # ==============================================================================
 
-# Restrict path, so we don't mask compiler binaries with conda or venv.
+# Restrict path, so we don't mask compiler binaries with virtual environment.
 # This also greatly improves consistency when running inside RStudio Server.
 PATH="/usr/local/bin:/usr/bin:/bin"
 

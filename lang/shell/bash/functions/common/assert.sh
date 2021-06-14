@@ -620,6 +620,19 @@ koopa::assert_is_python_package_installed() { # {{{1
     return 0
 }
 
+koopa::assert_is_python_venv_active() { # {{{1
+    # """
+    # Assert that a Python virtual environment is active.
+    # @note Updated 2021-06-14.
+    # """
+    koopa::assert_has_no_args "$#"
+    if ! koopa::is_python_venv_active
+    then
+        koopa::stop 'No active Python venv detected.'
+    fi
+    return 0
+}
+
 koopa::assert_is_r_package_installed() { # {{{1
     # """
     # Assert that specific R packages are installed.
@@ -721,19 +734,6 @@ koopa::assert_is_symlinked_app() { # {{{1
             koopa::stop "Not symlinked app: '${arg}'."
         fi
     done
-    return 0
-}
-
-koopa::assert_is_venv_active() { # {{{1
-    # """
-    # Assert that a Python virtual environment is active.
-    # @note Updated 2019-10-23.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_venv_active
-    then
-        koopa::stop 'No active Python venv detected.'
-    fi
     return 0
 }
 

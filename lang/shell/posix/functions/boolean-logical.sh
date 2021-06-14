@@ -375,6 +375,15 @@ _koopa_is_os_version() { # {{{1
     "$grep" -q "VERSION_ID=\"${version}" "$file"
 }
 
+_koopa_is_python_venv_active() { # {{{1
+    # """
+    # Is there a Python virtual environment active?
+    # @note Updated 2019-10-20.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    [ -n "${VIRTUAL_ENV:-}" ]
+}
+
 _koopa_is_qemu() { # {{{1
     # """
     # Is the current shell running inside of QEMU emulation?
@@ -558,15 +567,6 @@ _koopa_is_ubuntu_like() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_is_os_like 'ubuntu'
-}
-
-_koopa_is_venv_active() { # {{{1
-    # """
-    # Is there a Python virtual environment active?
-    # @note Updated 2019-10-20.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    [ -n "${VIRTUAL_ENV:-}" ]
 }
 
 _koopa_macos_is_dark_mode() { # {{{1
