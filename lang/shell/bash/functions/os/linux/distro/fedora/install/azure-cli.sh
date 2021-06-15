@@ -29,4 +29,7 @@ koopa::fedora_uninstall_azure_cli() { # {{{1
     # @note Updated 2021-06-15.
     # """
     koopa::fedora_dnf_remove 'azure-cli'
+    # FIXME Need to delete the repo.
+    # FIXME Mimic this after Debian approach.
+    # /etc/yum.repos.d/azure-cli.repo
 }
