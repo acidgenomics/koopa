@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME We should use 'koopa::fedora_dnf' instead of dnf/yum...
-# FIXME koopa::fedora_dnf --yes...
-
 koopa::fedora_install_azure_cli() { # {{{1
     # """
     # Install Azure CLI.
-    # @note Updated 2021-06-04.
+    # @note Updated 2021-06-15.
     # @seealso
     # - https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-yum
     # """
@@ -21,7 +18,7 @@ koopa::fedora_install_azure_cli() { # {{{1
     koopa::install_start "$name_fancy"
     koopa::fedora_import_azure_cli_key
     koopa::fedora_add_azure_cli_repo
-    sudo dnf -y install azure-cli
+    koopa::fedora_dnf_install 'azure-cli'
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -29,8 +26,7 @@ koopa::fedora_install_azure_cli() { # {{{1
 koopa::fedora_uninstall_azure_cli() { # {{{1
     # """
     # Uninstall Azure CLI.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-15.
     # """
-    koopa::stop 'FIXME'
-    sudo dnf remove 'azure-cli'
+    koopa::fedora_dnf_remove 'azure-cli'
 }
