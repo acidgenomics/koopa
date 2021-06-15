@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't working for 'r-devel' install correctly.
-#       May need to rethink the variable approach here.
 koopa:::configure_app_packages() { # {{{1
     # """
     # Configure language application.
