@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Likely need to update the version here.
 koopa::fedora_install_oracle_instantclient() { # {{{1
     # """
     # Install Oracle InstantClient.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-06-16.
     # @seealso
     # - https://www.oracle.com/database/technologies/instant-client/
     # """
@@ -16,9 +17,6 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
     minor_version="$(koopa::major_minor_version "$version")"
     arch="$(koopa::arch)"
     koopa::install_start "$name_fancy"
-    koopa::alert_note 'Removing previous version, if applicable.'
-    sudo dnf -y remove 'oracle-instantclient*'
-    koopa::rm -S '/etc/ld.so.conf.d/oracle-instantclient.conf'
     url_prefix="https://download.oracle.com/otn_software/linux/\
 instantclient/195000"
     stems=('basic' 'devel' 'sqlplus' 'jdbc' 'odbc')
@@ -30,6 +28,7 @@ instantclient/195000"
             file="oracle-instantclient\
 ${minor_version}-${stem}-${version}.${arch}.rpm"
             koopa::download "${url_prefix}/${file}"
+            # FIXME Can we make this a shared function?
             sudo rpm -i "$file"
         done
     )
@@ -37,10 +36,12 @@ ${minor_version}-${stem}-${version}.${arch}.rpm"
     return 0
 }
 
+# FIXME Need to double check this.
 koopa::fedora_uninstall_oracle_instantclient() { # {{{1
     # """
     # Uninstall Oracle InstantClient.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-16.
     # """
-    koopa::stop 'FIXME'
+    koopa::fedora_dnf_remove 'oracle-instantclient*'
+    koopa::rm -S '/etc/ld.so.conf.d/oracle-instantclient.conf'
 }

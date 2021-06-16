@@ -3,7 +3,7 @@
 koopa::rhel_install_base() { # {{{1
     # """
     # Install Red Hat Enterprise Linux (RHEL) base system.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-06-16.
     #
     # 'dnf-plugins-core' installs 'config-manager'.
     # """
@@ -17,7 +17,7 @@ koopa::rhel_install_base() { # {{{1
     koopa::assert_is_installed 'dnf' 'sudo'
     name_fancy='Red Hat Enterprise Linux (RHEL) base system'
     koopa::install_start "$name_fancy"
-    sudo dnf -y install 'dnf-plugins-core' 'util-linux-user'
+    koopa::fedora_dnf_install 'dnf-plugins-core' 'util-linux-user'
     koopa::rhel_enable_epel
     if koopa::is_centos
     then
@@ -27,7 +27,7 @@ koopa::rhel_install_base() { # {{{1
     fi
     if ! koopa::is_rhel_ubi
     then
-        sudo dnf config-manager --set-enabled "$powertools"
+        koopa::fedora_dnf config-manager --set-enabled "$powertools"
     fi
     koopa::install_success "$name_fancy"
     return 0

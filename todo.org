@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Add support for nushell?
 ** TODO Improve completion support for all exported scripts.
 ** TODO Improve configuration of NPM, to store packages outside of '/usr/local'.
    > npm config get prefix
@@ -16,6 +17,7 @@
 ** TODO koopa install base should work on CentOS.
 ** TODO Add support for activation in fish shell.
 ** TODO Add support for activation in oil shell.
+        This is likely too difficult due to POSIX-incompatibility...
 ** TODO Move website and installer from GitHub pages to Cloudfront.
 ** TODO Ensure koopa installs clean on a macOS system without Homebrew.
 ** TODO dotfiles installer needs to locate koopa install better?
