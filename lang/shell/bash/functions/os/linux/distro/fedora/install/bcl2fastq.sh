@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME This seems to be updating ldconfig twice at the end. Need to fix.
 koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     # """
     # Install bcl2fastq from Fedora/RHEL RPM file.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-06-16.
     # """
     local arch arch2 major_version name platform platform2 version version2
     koopa::assert_has_no_args "$#"
@@ -24,6 +25,8 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     url="${url_prefix}/rpm/${file}"
     koopa::download "$url"
     koopa::extract "$file"
+    # FIXME Need to make this a function.
+    # FIXME Check for other functions that call ' rpm ' and update.
     sudo rpm -v \
         --force \
         --install \

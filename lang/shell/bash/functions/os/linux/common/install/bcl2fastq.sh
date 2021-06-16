@@ -5,6 +5,8 @@
 # ## CMakeFindDependencyMacro
 # ## Unknown CMake command "find_dependency".
 
+# FIXME Should we not link this?
+
 koopa::linux_install_bcl2fastq() { # {{{1
     # """
     # Install bcl2fastq.
