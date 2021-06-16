@@ -108,6 +108,7 @@ _koopa_complete() { # {{{1
                     'haskell-stack'
                     'hdf5'
                     'homebrew'
+                    'homebrew-bundle'
                     'htop'
                     'julia'
                     'julia-packages'
