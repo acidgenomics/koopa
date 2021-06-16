@@ -5,8 +5,6 @@
 # ## CMakeFindDependencyMacro
 # ## Unknown CMake command "find_dependency".
 
-# FIXME Should we not link this?
-
 koopa::linux_install_bcl2fastq() { # {{{1
     # """
     # Install bcl2fastq.
@@ -34,7 +32,7 @@ koopa::linux_install_bcl2fastq() { # {{{1
 koopa:::linux_install_bcl2fastq() { # {{{1
     # """
     # Install bcl2fastq.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-16.
     #
     # This uses CMake to install.
     # ARM is not yet supported for this.
@@ -57,14 +55,18 @@ koopa:::linux_install_bcl2fastq() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::extract "${name}${major_version}-v${version}-Source.tar.gz"
-    koopa::cd "$name"
-    koopa::mkdir "${name}-build"
-    koopa::cd "${name}-build"
-    # Fix for missing '/usr/include/x86_64-linux-gnu/sys/stat.h'.
-    export C_INCLUDE_PATH="/usr/include/${arch}-${platform}"
-    ../src/configure --prefix="$prefix"
-    "$make" --jobs="$jobs"
-    "$make" install
+    (
+        koopa::cd "$name"
+        koopa::mkdir "${name}-build"
+    )
+    (
+        koopa::cd "${name}-build"
+        # Fix for missing '/usr/include/x86_64-linux-gnu/sys/stat.h'.
+        export C_INCLUDE_PATH="/usr/include/${arch}-${platform}"
+        ../src/configure --prefix="$prefix"
+        "$make" --jobs="$jobs"
+        "$make" install
+    )
     # For some reason bcl2fastq creates an empty test directory.
     koopa::rm "${prefix}/bin/test"
     return 0
