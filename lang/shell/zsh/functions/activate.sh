@@ -90,6 +90,7 @@ _koopa_activate_zsh_extras() { # {{{1
     _koopa_activate_zsh_aliases
     _koopa_activate_zsh_prompt
     _koopa_activate_completion
+    bindkey '^R' history-incremental-search-backward
     return 0
 }
 
