@@ -141,6 +141,9 @@ koopa::find_and_replace_in_files() { # {{{1
     return 0
 }
 
+# FIXME Need to parameterize this, like empty dirs.
+# FIXME Don't assume we want current directory.
+# FIXME Run this on the parent too...
 koopa::find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
@@ -209,32 +212,36 @@ koopa::find_dotfiles() { # {{{1
 koopa::find_empty_dirs() { # {{{1
     # """
     # Find empty directories.
-    # @note Updated 2020-07-03.
+    # @note Updated 2021-06-16.
     # """
-    local find grep dir sort x
-    koopa::assert_has_args_le "$#" 1
+    local find grep prefix sort x
+    koopa::assert_has_args "$#"
     find="$(koopa::locate_find)"
     grep="$(koopa::locate_grep)"
     sort="$(koopa::locate_sort)"
-    dir="${1:-.}"
-    dir="$(koopa::realpath "$dir")"
-    koopa::assert_is_dir "$dir"
-    x="$( \
-        "$find" "$dir" \
-            -xdev \
-            -mindepth 1 \
-            -type d \
-            -not -path '*/.*/*' \
-            -empty \
-            -print \
-            2>&1 \
-            | "$grep" -v 'Permission denied' \
-            | "$sort" \
-    )"
-    koopa::print "$x"
+    for prefix in "$@"
+    do
+        prefix="$(koopa::realpath "$prefix")"
+        koopa::assert_is_dir "$prefix"
+        x="$( \
+            "$find" "$prefix" \
+                -xdev \
+                -mindepth 0 \
+                -type d \
+                -not -path '*/.*/*' \
+                -empty \
+                -print \
+                2>&1 \
+                | "$grep" -v 'Permission denied' \
+                | "$sort" \
+        )"
+        [[ -n "$x" ]] || continue
+        koopa::print "$x"
+    done
     return 0
 }
 
+# FIXME Parameterize, supporting multiple directories.
 koopa::find_files_without_line_ending() { # {{{1
     # """
     # Find files without line ending.
@@ -261,6 +268,7 @@ koopa::find_files_without_line_ending() { # {{{1
     return 0
 }
 
+# FIXME Parameterize, supporting multiple dirs.
 koopa::find_large_dirs() { # {{{1
     # """
     # Find large directories.
@@ -288,6 +296,7 @@ koopa::find_large_dirs() { # {{{1
     return 0
 }
 
+# FIXME Parameterize, supporting multiple dirs.
 koopa::find_large_files() { # {{{1
     # """
     # Find large files.

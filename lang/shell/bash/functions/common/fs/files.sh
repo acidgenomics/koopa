@@ -224,22 +224,35 @@ koopa::delete_cache() { # {{{1
 koopa::delete_empty_dirs() { # {{{1
     # """
     # Delete empty directories.
-    # @note Updated 2020-11-18.
+    # @note Updated 2021-06-16.
+    #
+    # Don't pass a single call to 'rm' here, as argument list can be too
+    # long to parse.
+    #
+    # @examples
+    # koopa::mkdir 'a/aa/aaa/aaaa' 'b/bb/bbb/bbbb'
+    # koopa::delete_empty_dirs 'a' 'b'
+    #
+    # @seealso
+    # - While loop
+    #   https://www.cyberciti.biz/faq/bash-while-loop/
     # """
     local dir dirs prefix
     koopa::assert_has_args "$#"
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
-        readarray -t dirs <<< "$(koopa::find_empty_dirs "$prefix")"
-        koopa::is_array_non_empty "${dirs[@]:-}" || continue
-        koopa::alert_note "Removing ${#dirs[@]} empty directories."
-        # Don't pass single call to rm, as argument list can be too long.
-        for dir in "${dirs[@]}"
+        while [[ -d "$prefix" ]] && \
+            [[ -n "$(koopa::find_empty_dirs "$prefix")" ]]
         do
-            [[ -z "$dir" ]] && continue
-            koopa::alert "Removing '${dir}'."
-            koopa::rm "$dir"
+            readarray -t dirs <<< "$(koopa::find_empty_dirs "$prefix")"
+            koopa::is_array_non_empty "${dirs[@]:-}" || continue
+            for dir in "${dirs[@]}"
+            do
+                [[ -d "$dir" ]] || continue
+                koopa::alert "Deleting '${dir}'."
+                koopa::rm "$dir"
+            done
         done
     done
     return 0
