@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Likely need to update the version here.
 koopa::fedora_install_oracle_instantclient() { # {{{1
     # """
     # Install Oracle InstantClient.
@@ -10,7 +9,7 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
     #     instant-client/downloads.html
     # """
     local arch minor_version name name_fancy stem stems tmp_dir
-    local url_prefix version
+    local url_prefix version version2
     koopa::assert_has_no_args "$#"
     name='oracle-instantclient'
     name_fancy='Oracle Instant Client'
@@ -19,12 +18,10 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
     arch="$(koopa::arch)"
     koopa::install_start "$name_fancy"
     koopa::fedora_dnf_install 'libaio-devel'
-    # FIXME Need to create a stripped version string here...
-    # '21.1.0.0.0' to '211000'.
+    # e.g. '21.1.0.0.0' to '211000'.
+    version2="$(koopa::gsub '\.' '' "$version")"
     url_prefix="https://download.oracle.com/otn_software/linux/\
-instantclient/195000"
-    # FIXME Need to update version:
-    # https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basic-linux.x64-21.1.0.0.0.zip
+instantclient/${version2}"
     stems=('basic' 'devel' 'sqlplus' 'jdbc' 'odbc')
     tmp_dir="$(koopa::tmp_dir)"
     (
