@@ -29,7 +29,7 @@ koopa::fedora_dnf_delete_repo() { # {{{1
     for name in "$@"
     do
         file="/etc/yum.repos.d/${name}.repo"
-        [[ -f "$file" ]] || continue
+        koopa::assert_is_file "$file"
         koopa::rm -S "$file"
     done
     return 0
