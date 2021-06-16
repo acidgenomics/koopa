@@ -45,10 +45,10 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.11"
+aws-cli="2.2.12"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.24.2"
+azure-cli="2.25.0"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.8"
@@ -87,7 +87,7 @@ cellranger="6.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.20.3"
+cmake="3.20.4"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -382,7 +382,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.2975"
+vim="8.2.3000"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.1"
