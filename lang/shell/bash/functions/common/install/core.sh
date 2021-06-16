@@ -109,7 +109,6 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
-# FIXME Need to call delete empty directories here.
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -325,15 +324,13 @@ at '${dict[prefix]}'."
         "${dict[function]}" "$@"
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "${dict[tmp_dir]}"
-    # Ensure that installer doesn't propagate any empty directories.
-    # This is useful for some messy edge cases (e.g. Fedora bcl2fastq rpm).
-    koopa::delete_empty_dirs "${dict[prefix]}"
     if [[ "${dict[shared]}" -eq 1 ]]
     then
-        koopa::sys_set_permissions -r "${dict[prefix]}"
         koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
-        koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
+        koopa::sys_set_permissions -r "${dict[prefix]}"
     fi
+    koopa::delete_empty_dirs "${dict[prefix]}"
+    koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
         koopa::delete_broken_symlinks "${dict[make_prefix]}"
