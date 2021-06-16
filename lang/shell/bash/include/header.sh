@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider hardening to a minimal path outside of activation.
+# FIXME We may be able to just do this inside the POSIX header.
+
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
