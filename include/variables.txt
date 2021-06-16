@@ -526,7 +526,7 @@ ruby-ronn="0.7.3"
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.1"         # homebrew
-rust-broot="1.5.1"        # homebrew; br
+rust-broot="1.6.0"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.5.4"      # homebrew; dust
 rust-exa="0.10.1"         # homebrew
