@@ -8,7 +8,8 @@ _koopa_activate_aliases() { # {{{1
     # """
     local file
     [ "$#" -eq 0 ] || return 1
-    # > perl='_koopa_alias_perl'
+    # > alias mcfly='_koopa_alias_mcfly'
+    # > alias perl='_koopa_alias_perl'
     alias br='_koopa_alias_broot'
     alias bucket='_koopa_alias_bucket'
     alias conda='_koopa_alias_conda'
@@ -18,7 +19,6 @@ _koopa_activate_aliases() { # {{{1
     alias fzf='_koopa_alias_fzf'
     alias j='z'
     alias k='_koopa_alias_k'
-    alias mcfly='_koopa_alias_mcfly'
     alias nvim-fzf='_koopa_alias_nvim_fzf'
     alias nvim-vanilla='_koopa_alias_nvim_vanilla'
     alias perlbrew='_koopa_alias_perlbrew'
@@ -355,12 +355,12 @@ _koopa_activate_gnu_aliases() { # {{{1
     return 0
 }
 
-# FIXME May need to activate automatically, to enable Ctrl+r,
-# rather than using an alias.
 _koopa_activate_mcfly() { #{{{1
     # """
     # Activate mcfly.
     # @note Updated 2021-06-16.
+    #
+    # Use 'mcfly search XXX' to query directly.
     # """
     local nounset shell
     [ "$#" -eq 0 ] || return 1
@@ -373,6 +373,16 @@ _koopa_activate_mcfly() { #{{{1
             return 0
             ;;
     esac
+    # > export MCFLY_LIGHT=true
+    case "${EDITOR:-}" in
+        emacs|vim)
+            export MCFLY_KEY_SCHEME="$EDITOR"
+        ;;
+    esac
+    export MCFLY_FUZZY=true
+    export MCFLY_HISTORY_LIMIT=10000
+    export MCFLY_KEY_SCHEME=vim
+    export MCFLY_RESULTS=50
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     eval "$(mcfly init "$shell")"
