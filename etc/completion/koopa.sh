@@ -5,7 +5,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-06-13.
+    # Updated 2021-06-16.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -189,6 +189,11 @@ _koopa_complete() { # {{{1
                         args+=(
                             'pandoc'
                             'r-cran-binary'
+                        )
+                    elif _koopa_is_fedora_like
+                    then
+                        args+=(
+                            'oracle-instantclient'
                         )
                     fi
                 fi
