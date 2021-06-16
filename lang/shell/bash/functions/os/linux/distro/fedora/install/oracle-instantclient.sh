@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add support for Debian.
+
 koopa::fedora_install_oracle_instantclient() { # {{{1
     # """
     # Install Oracle InstantClient.
@@ -8,30 +10,37 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
     # - https://www.oracle.com/database/technologies/
     #     instant-client/downloads.html
     # """
-    local arch minor_version name name_fancy stem stems tmp_dir
+    local arch name name_fancy platform stem stems tmp_dir
     local url_prefix version version2
     koopa::assert_has_no_args "$#"
     name='oracle-instantclient'
     name_fancy='Oracle Instant Client'
     version="$(koopa::variable "$name")"
-    minor_version="$(koopa::major_minor_version "$version")"
+    platform='linux'
     arch="$(koopa::arch)"
     koopa::install_start "$name_fancy"
     koopa::fedora_dnf_install 'libaio-devel'
     # e.g. '21.1.0.0.0' to '211000'.
     version2="$(koopa::gsub '\.' '' "$version")"
-    url_prefix="https://download.oracle.com/otn_software/linux/\
+    url_prefix="https://download.oracle.com/otn_software/${platform}/\
 instantclient/${version2}"
+
+
+    # Current:
+    # https://download.oracle.com/otn_software/linux/instantclient/211000/oracle-instantclient21.1-basic-21.1.0.0.0.x86_64.rpm
+
+    # Expected:
+    # https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basic-linux.x64-21.1.0.0.0.zip
+
     stems=('basic' 'devel' 'sqlplus' 'jdbc' 'odbc')
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
         for stem in "${stems[@]}"
         do
-            file="oracle-instantclient\
-${minor_version}-${stem}-${version}.${arch}.rpm"
+            file="instantclient-${stem}-${platform}.${arch}-${version}.rpm"
             koopa::download "${url_prefix}/${file}"
-            # FIXME Can we make this a shared function?
+            # FIXME Can we make this a shared function with other custom RPM installs?
             sudo rpm -i "$file"
         done
     )
