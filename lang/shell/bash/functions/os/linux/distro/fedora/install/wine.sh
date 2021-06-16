@@ -26,10 +26,10 @@ koopa::fedora_install_wine() { # {{{1
             | "$cut" -d '=' -f 2 \
     )"
     repo_url="https://dl.winehq.org/wine-builds/fedora/${version}/winehq.repo"
-    dnf -y update
-    dnf -y install 'dnf-plugins-core'
-    dnf config-manager --add-repo "$repo_url"
-    dnf -y install \
+    koopa::fedora_dnf update
+    koopa::fedora_dnf_install 'dnf-plugins-core'
+    koopa::fedora_dnf config-manager --add-repo "$repo_url"
+    koopa::fedora_dnf_install \
         'winehq-stable' \
         'xorg-x11-apps' \
         'xorg-x11-server-Xvfb' \
@@ -43,5 +43,11 @@ koopa::fedora_uninstall_wine() { # {{{1
     # Uninstall Wine.
     # @note Updated 2021-06-11.
     # """
-    koopa::stop 'FIXME'
+    koopa::fedora_dnf_remove \
+        'winehq-stable' \
+        'xorg-x11-apps' \
+        'xorg-x11-server-Xvfb' \
+        'xorg-x11-xauth'
+    # FIXME Need to ensure we remove the repos here too.
+    return 0
 }

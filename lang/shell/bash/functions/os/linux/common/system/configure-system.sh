@@ -273,7 +273,7 @@ koopa::linux_configure_system() { # {{{1
         dict[delete_cache]=1
         dict[ssh_key]=0
     fi
-    # Building Python from source can break dnf on Fedora 32+.
+    # NOTE Building Python from source can break dnf on Fedora 32+.
     if koopa::is_fedora
     then
         dict[install_python]=0
