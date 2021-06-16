@@ -37,9 +37,7 @@ instantclient/${version2}"
         do
             file="${name}-${stem}-${version}.${arch}.rpm"
             koopa::download "${url_prefix}/${file}"
-            # FIXME Do we need to extract the ZIP first?
-            # FIXME Can we make this a shared function with other custom RPM installs?
-            sudo rpm -i "$file"
+            koopa::fedora_rpm_install "$file"
         done
     )
     koopa::install_success "$name_fancy"
