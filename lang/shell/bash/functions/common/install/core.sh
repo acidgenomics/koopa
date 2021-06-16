@@ -327,7 +327,7 @@ at '${dict[prefix]}'."
     koopa::rm "${dict[tmp_dir]}"
     # Ensure that installer doesn't propagate any empty directories.
     # This is useful for some messy edge cases (e.g. Fedora bcl2fastq rpm).
-    koopa::delete_empty_dirs "$prefix"
+    koopa::delete_empty_dirs "${dict[prefix]}"
     if [[ "${dict[shared]}" -eq 1 ]]
     then
         koopa::sys_set_permissions -r "${dict[prefix]}"
