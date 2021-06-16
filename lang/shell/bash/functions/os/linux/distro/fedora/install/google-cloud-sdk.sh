@@ -26,7 +26,9 @@ koopa::fedora_uninstall_google_cloud_sdk() { # {{{1
     # Uninstall Google Cloud SDK.
     # @note Updated 2021-06-16.
     # """
-    koopa::fedora_dnf_remove 'google-cloud-sdk'
-    # FIXME Need to ensure repo is removed here.
+    local name
+    name='google-cloud-sdk'
+    koopa::fedora_dnf_remove "$name"
+    koopa::fedora_dnf_delete_repo "$name"
     return 0
 }
