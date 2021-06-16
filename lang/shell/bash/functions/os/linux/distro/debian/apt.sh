@@ -533,14 +533,14 @@ END
 koopa::debian_apt_delete_repo() { # {{{1
     # """
     # Delete an apt repo file.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-06-16.
     # """
     local file name
     koopa::assert_has_args "$#"
     for name in "$@"
     do
         file="/etc/apt/sources.list.d/${name}.list"
-        [[ -f "$file" ]] || continue
+        koopa::assert_is_file "$file"
         koopa::rm -S "$file"
     done
     return 0
