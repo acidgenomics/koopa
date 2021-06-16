@@ -19,7 +19,6 @@ koopa::fedora_dnf() { # {{{1
     return 0
 }
 
-# FIXME Double check that apt variant is also parameterized.
 koopa::fedora_dnf_delete_repo() { # {{{1
     # """
     # Delete an enabled dnf repo.
