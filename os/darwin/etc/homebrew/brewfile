@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-06-02.
+# Updated 2021-06-16.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -192,7 +192,9 @@ brew "bpytop"  # python
 brew "broot"  # rust
 brew "bzip2"
 brew "ccache"
+brew "cheat"
 brew "checkbashisms"
+brew "choose-rust"
 brew "circleci"
 brew "cmake"
 brew "cmus"
@@ -216,6 +218,7 @@ brew "gawk"
 brew "gdal"
 brew "git-lfs"
 brew "gitui"
+brew "glances"
 brew "gnu-sed"
 brew "gnu-tar"
 brew "gnu-time"
@@ -231,6 +234,7 @@ brew "hadolint"
 brew "hdf5"
 brew "htop"
 brew "httpd"
+brew "httpie"
 brew "hub"
 brew "hyperfine"
 brew "igraph"
@@ -255,6 +259,7 @@ brew "libxml2"
 brew "libxslt"
 brew "libxt"  # R Cairo
 brew "llvm"
+brew "lsd"
 brew "lua"
 brew "luarocks"
 brew "make"
@@ -298,6 +303,7 @@ brew "ripgrep-all"  # rust
 brew "rsync"
 brew "ruby"
 brew "screen"
+brew "sd"
 brew "shellcheck"
 brew "shellharden"
 brew "shunit2"
@@ -308,6 +314,7 @@ brew "stow"
 brew "taglib"
 brew "tcl-tk"
 brew "tcsh"
+brew "tealdeer"
 brew "tesseract"
 brew "texinfo"
 brew "the_silver_searcher"
@@ -318,6 +325,7 @@ brew "unzip"
 brew "v8"
 brew "vim"
 brew "wget"
+brew "xh"
 brew "xsv"  # rust
 brew "youtube-dl"
 brew "zlib"
@@ -328,7 +336,10 @@ brew "zsh"
 # ==============================================================================
 
 # > brew "muesli/tap/duf"
+brew "cantino/mcfly/mcfly"
+brew "clementtsang/bottom/bottom"
 brew "mongodb/brew/mongodb-community"
+brew "rs/tap/curlie"
 brew "vitorgalvao/tiny-scripts/cask-repair"
 
 # App Store {{{1
