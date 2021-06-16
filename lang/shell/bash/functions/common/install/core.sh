@@ -109,6 +109,7 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
+# FIXME Need to call delete empty directories here.
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
