@@ -241,7 +241,7 @@ openssl="1.1.1d"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
-oracle-instantclient="19.5.0.0.0-1"
+oracle-instantclient="21.1.0.0.0"
 
 # https://pandoc.org/releases.html
 pandoc="2.14.0.2"
