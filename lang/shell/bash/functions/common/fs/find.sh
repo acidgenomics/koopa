@@ -275,49 +275,45 @@ koopa::find_files_without_line_ending() { # {{{1
     return 0
 }
 
-# FIXME This is OK to return with success on empty.
-# FIXME Parameterize, supporting multiple dirs.
 koopa::find_large_dirs() { # {{{1
     # """
     # Find large directories.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-06-16.
     # """
-    local dir du head sort x
-    koopa::assert_has_args_le "$#" 1
+    local du prefix sort tail x
+    koopa::assert_has_args "$#"
     du="$(koopa::locate_du)"
-    head="$(koopa::locate_head)"
     sort="$(koopa::locate_sort)"
-    dir="${1:-.}"
-    dir="$(koopa::realpath "$dir")"
-    x="$( \
-        "$du" \
-            --max-depth=20 \
-            --threshold=100000000 \
-            "${dir}"/* \
-            2>/dev/null \
-        | "$sort" -n \
-        | "$head" -n 100 \
-        || true \
-    )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    tail="$(koopa::locate_tail)"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        prefix="$(koopa::realpath "$prefix")"
+        x="$( \
+            "$du" \
+                --max-depth=10 \
+                --threshold=100000000 \
+                "${prefix}"/* \
+                2>/dev/null \
+            | "$sort" -n \
+            | "$tail" -n 50 \
+            || true \
+        )"
+        [[ -n "$x" ]] || continue
+        koopa::print "$x"
+    done
     return 0
 }
 
-# FIXME Parameterize, supporting multiple dirs.
 koopa::find_large_files() { # {{{1
     # """
     # Find large files.
-    # @note Updated 2021-05-24.
-    #
-    # Note that use of 'grep --null-data' requires GNU grep.
-    #
-    # Usage of '-size +100M' isn't POSIX.
+    # @note Updated 2021-06-16.
     #
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
-    local dir du find grep sort tail x xargs
+    local du find grep prefix sort tail x xargs
     koopa::assert_has_args_le "$#" 1
     du="$(koopa::locate_du)"
     find="$(koopa::locate_find)"
@@ -325,24 +321,30 @@ koopa::find_large_files() { # {{{1
     sort="$(koopa::locate_sort)"
     tail="$(koopa::locate_tail)"
     xargs="$(koopa::locate_xargs)"
-    dir="${1:-.}"
-    dir="$(koopa::realpath "$dir")"
-    x="$( \
-        "$find" "$dir" \
-            -xdev \
-            -mindepth 1 \
-            -type 'f' \
-            -size '+100000000c' \
-            -print0 \
-            2>&1 \
-        | "$grep" \
-            --invert-match 'Permission denied' \
-            --null-data \
-        | "$xargs" -0 "$du" \
-        | "$sort" -n \
-        | "$tail" -n 100 \
-    )"
-    koopa::print "$x"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        prefix="$(koopa::realpath "$prefix")"
+        x="$( \
+            "$find" "$prefix" \
+                -xdev \
+                -mindepth 1 \
+                -type 'f' \
+                -size '+100000000c' \
+                -print0 \
+                2>&1 \
+            | "$grep" \
+                --invert-match 'Permission denied' \
+                --null-data \
+            | "$xargs" -0 "$du" \
+            | "$sort" -n \
+            | "$tail" -n 50 \
+        )"
+        koopa::print "$x"
+    done
+
+
+
     return 0
 }
 
