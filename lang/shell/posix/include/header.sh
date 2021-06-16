@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Consider hardening to a minimal path outside of activation.
+
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
