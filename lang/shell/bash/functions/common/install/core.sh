@@ -113,7 +113,7 @@ koopa::find_app_version() { # {{{1
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-06-16.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -121,7 +121,6 @@ koopa::install_app() { # {{{1
     local arr dict link_args pkgs pos rm str tee
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
-    tee="$(koopa::locate_tee)"
     declare -A dict=(
         [arch]="$(koopa::arch)"
         [homebrew_opt]=''
@@ -139,6 +138,7 @@ koopa::install_app() { # {{{1
         [version]=''
     )
     koopa::is_shared_install && dict[shared]=1
+    tee="$(koopa::locate_tee)"
     pos=()
     while (("$#"))
     do
@@ -274,7 +274,7 @@ at '${dict[prefix]}'."
             [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
         )
         unset -v LD_LIBRARY_PATH
-        # Ensure clean 'PATH'.
+        # Ensure clean minimal 'PATH'.
         arr=(
             '/usr/bin'
             '/bin'
@@ -284,7 +284,7 @@ at '${dict[prefix]}'."
         str="$(koopa::paste0 ':' "${arr[@]}")"
         PATH="$str"
         export PATH
-        # Ensure clean 'PKG_CONFIG_PATH'.
+        # Ensure clean minimal 'PKG_CONFIG_PATH'.
         if koopa::is_linux
         then
             arr=(
@@ -299,13 +299,13 @@ at '${dict[prefix]}'."
             unset -v PKG_CONFIG_PATH
         fi
     fi
-    # Activate packages installed in Homebrew opt.
+    # Activate packages installed in Homebrew 'opt/' directory.
     if [[ -n "${dict[homebrew_opt]}" ]]
     then
         IFS=',' read -r -a pkgs <<< "${dict[homebrew_opt]}"
         koopa::activate_homebrew_opt_prefix "${pkgs[@]}"
     fi
-    # Activate packages installed in Koopa opt.
+    # Activate packages installed in Koopa 'opt/' directory.
     if [[ -n "${dict[opt]}" ]]
     then
         IFS=',' read -r -a pkgs <<< "${dict[opt]}"
@@ -325,6 +325,9 @@ at '${dict[prefix]}'."
         "${dict[function]}" "$@"
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "${dict[tmp_dir]}"
+    # Ensure that installer doesn't propagate any empty directories.
+    # This is useful for some messy edge cases (e.g. Fedora bcl2fastq rpm).
+    koopa::delete_empty_dirs "$prefix"
     if [[ "${dict[shared]}" -eq 1 ]]
     then
         koopa::sys_set_permissions -r "${dict[prefix]}"
