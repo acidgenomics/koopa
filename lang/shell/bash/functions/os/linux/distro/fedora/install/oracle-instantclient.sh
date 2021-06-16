@@ -18,6 +18,11 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
     version="$(koopa::variable "$name")"
     platform='linux'
     arch="$(koopa::arch)"
+    case "$arch" in
+        x86_64)
+            arch='x64'
+            ;;
+    esac
     koopa::install_start "$name_fancy"
     koopa::fedora_dnf_install 'libaio-devel'
     # e.g. '21.1.0.0.0' to '211000'.
@@ -25,9 +30,8 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
     url_prefix="https://download.oracle.com/otn_software/${platform}/\
 instantclient/${version2}"
 
-
     # Current:
-    # https://download.oracle.com/otn_software/linux/instantclient/211000/oracle-instantclient21.1-basic-21.1.0.0.0.x86_64.rpm
+    # https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basic-linux.x86_64-21.1.0.0.0.rpm
 
     # Expected:
     # https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basic-linux.x64-21.1.0.0.0.zip
