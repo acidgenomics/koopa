@@ -141,36 +141,36 @@ koopa::find_and_replace_in_files() { # {{{1
     return 0
 }
 
-# FIXME Need to parameterize this, like empty dirs.
-# FIXME Don't assume we want current directory.
-# FIXME Run this on the parent too...
 koopa::find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-06-16.
     #
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
-    local dir find grep sort x
-    koopa::assert_has_args_le "$#" 1
+    local find grep prefix sort x
+    koopa::assert_has_args "$#"
     find="$(koopa::locate_find)"
     grep="$(koopa::locate_grep)"
     sort="$(koopa::locate_sort)"
-    dir="${1:-.}"
-    dir="$(koopa::realpath "$dir")"
-    koopa::assert_is_dir "$dir"
-    x="$( \
-        "$find" "$dir" \
-            -xdev \
-            -mindepth 1 \
-            -xtype l \
-            -print \
-            2>&1 \
-        | "$grep" -v 'Permission denied' \
-        | "$sort" \
-    )"
-    koopa::print "$x"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        prefix="$(koopa::realpath "$prefix")"
+        x="$( \
+            "$find" "$prefix" \
+                -xdev \
+                -mindepth 1 \
+                -xtype l \
+                -print \
+                2>&1 \
+            | "$grep" --invert-match 'Permission denied' \
+            | "$sort" \
+        )"
+        [[ -n "$x" ]] || continue
+        koopa::print "$x"
+    done
     return 0
 }
 
@@ -219,10 +219,10 @@ koopa::find_empty_dirs() { # {{{1
     find="$(koopa::locate_find)"
     grep="$(koopa::locate_grep)"
     sort="$(koopa::locate_sort)"
+    koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
         prefix="$(koopa::realpath "$prefix")"
-        koopa::assert_is_dir "$prefix"
         x="$( \
             "$find" "$prefix" \
                 -xdev \
@@ -232,8 +232,8 @@ koopa::find_empty_dirs() { # {{{1
                 -empty \
                 -print \
                 2>&1 \
-                | "$grep" -v 'Permission denied' \
-                | "$sort" \
+            | "$grep" --invert-match 'Permission denied' \
+            | "$sort" \
         )"
         [[ -n "$x" ]] || continue
         koopa::print "$x"
@@ -241,33 +241,41 @@ koopa::find_empty_dirs() { # {{{1
     return 0
 }
 
-# FIXME Parameterize, supporting multiple directories.
 koopa::find_files_without_line_ending() { # {{{1
     # """
     # Find files without line ending.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-06-16.
     #
     # @seealso
     # - https://stackoverflow.com/questions/4631068/
     # """
-    local files find pcregrep prefix
-    koopa::assert_has_args_le "$#" 1
+    local files find grep pcregrep prefix sort
+    koopa::assert_has_args "$#"
     find="$(koopa::locate_find)"
+    grep="$(koopa::locate_grep)"
     pcregrep="$(koopa::locate_pcregrep)"
-    prefix="${1:-.}"
-    koopa::assert_is_dir "$prefix"
-    readarray -t files <<< "$(
-        "$find" "$prefix" \
-            -mindepth 1 \
-            -type f \
-    )"
-    koopa::is_array_non_empty "${files[@]:-}" || return 1
-    x="$("$pcregrep" -LMr '\n$' "${files[@]}")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    sort="$(koopa::locate_sort)"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        prefix="$(koopa::realpath "$prefix")"
+        readarray -t files <<< "$(
+            "$find" "$prefix" \
+                -mindepth 1 \
+                -type 'f' \
+                2>&1 \
+            | "$grep" --invert-match 'Permission denied' \
+            | "$sort" \
+        )"
+        koopa::is_array_non_empty "${files[@]:-}" || continue
+        x="$("$pcregrep" -LMr '\n$' "${files[@]}")"
+        [[ -n "$x" ]] || continue
+        koopa::print "$x"
+    done
     return 0
 }
 
+# FIXME This is OK to return with success on empty.
 # FIXME Parameterize, supporting multiple dirs.
 koopa::find_large_dirs() { # {{{1
     # """
