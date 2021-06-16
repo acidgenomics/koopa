@@ -24,11 +24,7 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     url="${url_prefix}/rpm/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    # FIXME Need to make this a function.
-    # FIXME Check for other functions that call ' rpm ' and update.
-    sudo rpm -v \
-        --force \
-        --install \
+    koopa::fedora_rpm_install \
         --prefix="${prefix}" \
         "${name}${major_version}-v${version}-${platform2}-${arch}.rpm"
     return 0
