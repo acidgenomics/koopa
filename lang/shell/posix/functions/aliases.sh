@@ -96,6 +96,16 @@ _koopa_alias_k() { # {{{1
     cd "$(_koopa_koopa_prefix)" || return 1
 }
 
+_koopa_alias_mcfly() { # {{{1
+    # """
+    # mcfly alias.
+    # @note Updated 2021-06-16.
+    # """
+    _koopa_is_alias 'mcfly' && unalias 'mcfly'
+    _koopa_activate_mcfly
+    mcfly "$@"
+}
+
 _koopa_alias_nvim_fzf() { # {{{1
     # """
     # Pipe FZF output to Neovim.

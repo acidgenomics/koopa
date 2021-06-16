@@ -4,7 +4,7 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-06-08.
+    # @note Updated 2021-06-16.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
@@ -18,6 +18,7 @@ _koopa_activate_aliases() { # {{{1
     alias fzf='_koopa_alias_fzf'
     alias j='z'
     alias k='_koopa_alias_k'
+    alias mcfly='_koopa_alias_mcfly'
     alias nvim-fzf='_koopa_alias_nvim_fzf'
     alias nvim-vanilla='_koopa_alias_nvim_vanilla'
     alias perlbrew='_koopa_alias_perlbrew'
@@ -46,7 +47,7 @@ _koopa_activate_aliases() { # {{{1
 _koopa_activate_broot() { # {{{1
     # """
     # Activate broot directory tree utility.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-06-16.
     #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
@@ -60,7 +61,7 @@ _koopa_activate_broot() { # {{{1
     # @seealso
     # https://github.com/Canop/broot
     # """
-    local br_script config_dir nounset shell
+    local config_dir nounset script shell
     [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
@@ -73,12 +74,12 @@ _koopa_activate_broot() { # {{{1
     config_dir="${HOME}/.config/broot"
     [ -d "$config_dir" ] || return 0
     # This is supported for Bash and Zsh.
-    br_script="${config_dir}/launcher/bash/br"
-    [ -f "$br_script" ] || return 0
+    script="${config_dir}/launcher/bash/br"
+    [ -f "$script" ] || return 0
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
-    . "$br_script"
+    . "$script"
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
@@ -351,6 +352,31 @@ _koopa_activate_gnu_aliases() { # {{{1
         # shellcheck disable=SC2139
         alias rm="${rm} --interactive=once" # -I
     fi
+    return 0
+}
+
+# FIXME May need to activate automatically, to enable Ctrl+r,
+# rather than using an alias.
+_koopa_activate_mcfly() { #{{{1
+    # """
+    # Activate mcfly.
+    # @note Updated 2021-06-16.
+    # """
+    local nounset shell
+    [ "$#" -eq 0 ] || return 1
+    _koopa_is_installed 'mcfly' || return 1
+    shell="$(_koopa_shell_name)"
+    case "$shell" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    nounset="$(_koopa_boolean_nounset)"
+    [ "$nounset" -eq 1 ] && set +u
+    eval "$(mcfly init "$shell")"
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
