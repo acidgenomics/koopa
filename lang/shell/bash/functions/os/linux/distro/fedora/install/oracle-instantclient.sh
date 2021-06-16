@@ -26,6 +26,8 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
 instantclient/${version2}"
     # Expected:
     # https://download.oracle.com/otn_software/linux/instantclient/211000/oracle-instantclient-basic-21.1.0.0.0-1.x86_64.rpm
+    # Current:
+    # https://download.oracle.com/otn_software/linux/instantclient/211000/oracle-instantclient-basic-21.1.0.0.0.x86_64.rpm
     stems=('basic' 'devel' 'sqlplus' 'jdbc' 'odbc')
     tmp_dir="$(koopa::tmp_dir)"
     (
