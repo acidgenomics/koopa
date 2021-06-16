@@ -346,7 +346,6 @@ at '${dict[prefix]}'."
     fi
     if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
     then
-        echo 'FIXME Hello there'
         koopa::update_ldconfig
     fi
     # Reset global variables, if applicable.
@@ -469,10 +468,6 @@ koopa::link_app() { # {{{1
     )
     koopa::is_shared_install && cp_flags+=('-S')
     koopa::cp "${cp_flags[@]}" "${app_subdirs[@]}"
-    if koopa::is_linux && koopa::is_shared_install
-    then
-        koopa::update_ldconfig
-    fi
     return 0
 }
 
