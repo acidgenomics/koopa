@@ -3,7 +3,7 @@
 koopa::fedora_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-06-16.
     # @seealso
     # - https://cloud.google.com/sdk/docs/downloads-yum
     # """
@@ -16,7 +16,7 @@ koopa::fedora_install_google_cloud_sdk() { # {{{1
     fi
     koopa::install_start "$name_fancy"
     koopa::fedora_add_google_cloud_sdk_repo
-    sudo dnf -y install google-cloud-sdk
+    koopa::fedora_dnf_install 'google-cloud-sdk'
     koopa::install_success "$name_fancy"
     return 0
 }
@@ -24,7 +24,9 @@ koopa::fedora_install_google_cloud_sdk() { # {{{1
 koopa::fedora_uninstall_google_cloud_sdk() { # {{{1
     # """
     # Uninstall Google Cloud SDK.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-16.
     # """
-    koopa::stop 'FIXME'
+    koopa::fedora_dnf_remove 'google-cloud-sdk'
+    # FIXME Need to ensure repo is removed here.
+    return 0
 }
