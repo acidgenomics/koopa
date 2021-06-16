@@ -18,32 +18,23 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
     version="$(koopa::variable "$name")"
     platform='linux'
     arch="$(koopa::arch)"
-    case "$arch" in
-        x86_64)
-            arch='x64'
-            ;;
-    esac
     koopa::install_start "$name_fancy"
     koopa::fedora_dnf_install 'libaio-devel'
     # e.g. '21.1.0.0.0' to '211000'.
     version2="$(koopa::gsub '\.' '' "$version")"
     url_prefix="https://download.oracle.com/otn_software/${platform}/\
 instantclient/${version2}"
-
-    # Current:
-    # https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basic-linux.x86_64-21.1.0.0.0.rpm
-
     # Expected:
-    # https://download.oracle.com/otn_software/linux/instantclient/211000/instantclient-basic-linux.x64-21.1.0.0.0.zip
-
+    # https://download.oracle.com/otn_software/linux/instantclient/211000/oracle-instantclient-basic-21.1.0.0.0-1.x86_64.rpm
     stems=('basic' 'devel' 'sqlplus' 'jdbc' 'odbc')
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
         for stem in "${stems[@]}"
         do
-            file="instantclient-${stem}-${platform}.${arch}-${version}.rpm"
+            file="${name}-${stem}-${version}.${arch}.rpm"
             koopa::download "${url_prefix}/${file}"
+            # FIXME Do we need to extract the ZIP first?
             # FIXME Can we make this a shared function with other custom RPM installs?
             sudo rpm -i "$file"
         done
