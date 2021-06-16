@@ -55,7 +55,7 @@ _koopa_activate_bash_completion() { # {{{1
 _koopa_activate_bash_extras() { # {{{1
     # """
     # Activate Bash extras.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-16.
     # """
     [[ "$#" -eq 0 ]] || return 1
     _koopa_is_interactive || return 0
@@ -63,6 +63,7 @@ _koopa_activate_bash_extras() { # {{{1
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
     _koopa_activate_bash_prompt
+    _koopa_activate_bash_reverse_search
     _koopa_activate_completion
     return 0
 }
@@ -94,5 +95,17 @@ _koopa_activate_bash_readline() { # {{{1
     input_rc="${HOME}/.inputrc"
     [[ -r "$input_rc" ]] || return 0
     export INPUTRC="${HOME}/.inputrc"
+    return 0
+}
+
+_koopa_activate_bash_reverse_search() { # {{{1
+    # """
+    # Activate reverse search for Bash.
+    # @note Updated 2021-06-16.
+    # """
+    if _koopa_is_installed 'mcfly'
+    then
+        _koopa_activate_mcfly
+    fi
     return 0
 }

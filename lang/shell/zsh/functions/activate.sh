@@ -66,7 +66,7 @@ _koopa_activate_zsh_editor() { # {{{1
 _koopa_activate_zsh_extras() { # {{{1
     # """
     # Activate Zsh extras.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-16.
     #
     # Note on path (and also fpath) arrays in Zsh:
     # https://www.zsh.org/mla/users/2012/msg00785.html
@@ -89,8 +89,8 @@ _koopa_activate_zsh_extras() { # {{{1
     _koopa_activate_zsh_plugins
     _koopa_activate_zsh_aliases
     _koopa_activate_zsh_prompt
+    _koopa_activate_zsh_reverse_search
     _koopa_activate_completion
-    bindkey '^R' history-incremental-search-backward
     return 0
 }
 
@@ -166,5 +166,20 @@ _koopa_activate_zsh_prompt() { # {{{1
     promptinit
     prompt koopa
     [[ "$nounset" -eq 1 ]] && set -u
+    return 0
+}
+
+_koopa_activate_zsh_reverse_search() { # {{{1
+    # """
+    # Activate reverse search using Ctrl+R in Zsh.
+    # @note Updated 2021-06-16.
+    # """
+    if _koopa_is_installed 'mcfly'
+    then
+        _koopa_activate_mcfly
+        # > bindkey '^R' 'mcfly-history-widget'
+    else
+        bindkey '^R' 'history-incremental-search-backward'
+    fi
     return 0
 }
