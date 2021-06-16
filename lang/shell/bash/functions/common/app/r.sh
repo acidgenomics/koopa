@@ -117,6 +117,7 @@ koopa::r_link_files_into_etc() { # {{{1
 
 # FIXME This is still failing for 'r-devel'. Need to rethink.
 # Not function: 'koopa::r-devel_packages_prefix'.
+# FIXME Does r-devel install on Fedora currently?
 koopa::r_link_site_library() { # {{{1
     # """
     # Link R site library.
