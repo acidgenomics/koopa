@@ -716,3 +716,15 @@ koopa::debian_apt_space_used_by_no_deps() { # {{{1
     sudo apt show "$@" | "$grep" 'Size'
     return 0
 }
+
+koopa::debian_install_from_deb() { # {{{1
+    # """
+    # Install directly from a '.deb' file.
+    # @note Updated 2021-06-17.
+    # """
+    local file
+    koopa::assert_has_args_eq "$#" 1
+    file="${1:?}"
+    sudo gdebi --non-interactive "$file"
+    return 0
+}

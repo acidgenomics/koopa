@@ -43,12 +43,17 @@ koopa::fedora_dnf_remove() { # {{{1
     koopa::fedora_dnf remove "$@"
 }
 
-koopa::fedora_rpm_install() { # {{{1
+koopa::fedora_install_from_rpm() { # {{{1
     # """
     # Install directly from RPM file.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-06-17.
+    # Allowing passthrough of '--prefix' here.
     # """
     koopa::assert_has_args "$#"
-    sudo rpm -v --force --install "$@"
+    sudo rpm -v \
+        --force \
+        --install \
+        --nogpgcheck \
+        "$@"
     return 0
 }
