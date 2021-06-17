@@ -21,7 +21,6 @@ koopa::install_r_devel() { # {{{1
     koopa::install_app \
         --name-fancy='R-devel' \
         --name='r-devel' \
-        --no-link \
         "$@"
 }
 
