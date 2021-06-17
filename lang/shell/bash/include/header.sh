@@ -1,24 +1,19 @@
 #!/usr/bin/env bash
-# koopa nolint=coreutils
 
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-21.
     #
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
     # """
-    local prefix fun_script fun_scripts fun_scripts_arr koopa_prefix
-    if [[ $(type -t readarray) != 'builtin' ]]
-    then
-        printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
-        return 1
-    fi
-    koopa_prefix="$(_koopa_prefix)"
+    local fun_script fun_scripts fun_scripts_arr koopa_prefix prefix
+    [[ "$#" -eq 1 ]] || return 1
+    [[ $(type -t readarray) == 'builtin' ]] || return 1
+    koopa_prefix="$(_koopa_koopa_prefix)"
     prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
-    # Can add a sort step here, but it is slower and unecessary.
     fun_scripts="$( \
         find -L "$prefix" \
             -mindepth 1 \
@@ -30,17 +25,18 @@ __koopa_bash_source_dir() { # {{{1
     for fun_script in "${fun_scripts_arr[@]}"
     do
         # shellcheck source=/dev/null
-        . "$fun_script"
+        source "$fun_script"
     done
     return 0
 }
 
 __koopa_is_installed() { # {{{1
     # """
-    # are all of the requested programs installed?
-    # @note updated 2021-05-07.
+    # Are all of the requested programs installed?
+    # @note Updated 2021-06-16.
     # """
     local cmd
+    [[ "$#" -gt 0 ]] || return 1
     for cmd in "$@"
     do
         command -v "$cmd" >/dev/null || return 1
@@ -48,26 +44,19 @@ __koopa_is_installed() { # {{{1
     return 0
 }
 
-__koopa_is_linux() { # {{{1
-    # """
-    # is the operating system linux?
-    # @note updated 2021-05-07.
-    # """
-    [[ "$(uname -s)" == 'Linux' ]]
-}
-
 __koopa_is_macos() { # {{{1
     # """
-    # is the operating system macos?
-    # @note updated 2021-05-07.
+    # Is the operating system macOS?
+    # @note Updated 2021-06-04.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     [[ "$(uname -s)" == 'Darwin' ]]
 }
 
 __koopa_print() { # {{{1
     # """
-    # print a string.
-    # @note updated 2021-05-07.
+    # Print a string.
+    # @note Updated 2021-05-07.
     # """
     local string
     [[ "$#" -gt 0 ]] || return 1
@@ -80,31 +69,22 @@ __koopa_print() { # {{{1
 
 __koopa_realpath() { # {{{1
     # """
-    # resolve file path.
-    # @note updated 2021-05-11.
+    # Resolve file path.
+    # @note Updated 2021-06-04.
     # """
-    local arg bn dn x
+    local readlink x
     [[ "$#" -gt 0 ]] || return 1
-    if __koopa_is_installed realpath
+    readlink='readlink'
+    __koopa_is_macos && readlink='greadlink'
+    if ! __koopa_is_installed "$readlink"
     then
-        x="$(realpath "$@")"
-    elif __koopa_is_installed grealpath
-    then
-        x="$(grealpath "$@")"
-    elif __koopa_is_macos
-    then
-        for arg in "$@"
-        do
-            bn="$(basename "$arg")"
-            dn="$(cd "$(dirname "$arg")" || return 1; pwd -p)"
-            x="${dn}/${bn}"
-            __koopa_print "$x"
-        done
-        return 0
-    else
-        x="$(readlink -f "$@")"
+        __koopa_warning "Not installed: '${readlink}'."
+        __koopa_is_macos && \
+            __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
+        return 1
     fi
-    [[ -n "$x" ]] || return 1
+    x="$("$readlink" -f "$@")"
+    [[ -e "$x" ]] || return 1
     __koopa_print "$x"
     return 0
 }
@@ -128,39 +108,47 @@ __koopa_warning() { # {{{1
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-26.
     # """
     local dict
     declare -A dict=(
         [activate]=0
         [checks]=1
         [dev]=0
-        [shopts]=1
+        [minimal]=0
+        [test]=0
         [verbose]=0
     )
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dict[dev]="$KOOPA_DEV"
+    [[ -n "${KOOPA_MINIMAL:-}" ]] && dict[minimal]="$KOOPA_MINIMAL"
+    [[ -n "${KOOPA_TEST:-}" ]] && dict[test]="$KOOPA_TEST"
     [[ -n "${KOOPA_VERBOSE:-}" ]] && dict[verbose]="$KOOPA_VERBOSE"
-    if [[ "${dict[activate]}" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 1 ]] && \
+        [[ "${dict[dev]}" -eq 0 ]] && \
+        [[ "${dict[test]}" -eq 0 ]]
     then
         dict[checks]=0
-        dict[shopts]=0
     fi
-    if [[ "${dict[shopts]}" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 0 ]] || [[ "${dict[dev]}" -eq 1 ]]
     then
-        if [[ "${dict[verbose]}" -eq 1 ]]
-        then
-            set -o xtrace # -x
-        fi
-        # > set -o noglob # -f
-        set -o errexit # -e
-        set -o errtrace # -E
-        set -o nounset # -u
-        set -o pipefail
+        unalias -a
+    fi
+    if [[ "${dict[verbose]}" -eq 1 ]]
+    then
+        set -o xtrace  # -x
     fi
     if [[ "${dict[checks]}" -eq 1 ]]
     then
+        # > set -o noglob  # -f
+        set -o errexit  # -e
+        set -o errtrace  # -E
+        set -o nounset  # -u
+        set -o pipefail
+        # This setting helps protect our conda alias defined in the interactive
+        # login shell from messing with 'koopa::activate_conda_env'.
+        shopt -u expand_aliases
         dict[major_version]="$( \
             printf '%s\n' "${BASH_VERSION}" \
             | cut -d '.' -f 1 \
@@ -179,11 +167,7 @@ __koopa_bash_header() { # {{{1
             fi
             return 1
         fi
-        if [[ $(type -t readarray) != 'builtin' ]]
-        then
-            printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).' >&2
-            return 1
-        fi
+        [[ $(type -t readarray) == 'builtin' ]] || return 1
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
@@ -201,10 +185,22 @@ __koopa_bash_header() { # {{{1
     fi
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
+    if [[ "${dict[test]}" -eq 1 ]]
+    then
+        _koopa_duration_start || return 1
+    fi
     if [[ "${dict[activate]}" -eq 1 ]]
     then
         # shellcheck source=/dev/null
         source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
+        if [[ "${dict[minimal]}" -eq 0 ]]
+        then
+            _koopa_activate_bash_extras
+        fi
+        if [[ -z "${_PRESERVED_PROMPT_COMMAND:-}" ]]
+        then
+            export _PRESERVED_PROMPT_COMMAND=''
+        fi
     fi
     if [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
@@ -230,16 +226,16 @@ __koopa_bash_header() { # {{{1
         else
             __koopa_bash_source_dir "os/${dict[os_id]}"
         fi
-        # Ensure we activate GNU coreutils and other tools that are keg-only
-        # for Homebrew but preferred default for our Bash scripts.
-        koopa::activate_homebrew_keg_only
         # Check if user is requesting help documentation.
         koopa::help "$@"
         # Require sudo permission to run 'sbin/' scripts.
         koopa::str_match "$0" '/sbin' && koopa::assert_is_admin
         # Disable user-defined aliases.
-        # Primarily intended to reset cp, mv, rf for use inside scripts.
         unalias -a
+    fi
+    if [[ "${dict[test]}" -eq 1 ]]
+    then
+        _koopa_duration_stop 'bash' || return 1
     fi
     return 0
 }

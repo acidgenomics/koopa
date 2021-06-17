@@ -3,12 +3,12 @@
 koopa::macos_disable_touch_id_sudo() { # {{{1
     # """
     # Disable sudo authentication via Touch ID PAM.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-05-20.
     # """
     local source_file target_file
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    source_file="$(koopa::prefix)/os/macos/etc/pam.d/sudo~orig"
+    source_file="$(koopa::koopa_prefix)/os/macos/etc/pam.d/sudo~orig"
     target_file='/etc/pam.d/sudo'
     if [[ -f "$target_file" ]] && \
         ! grep -q 'pam_tid.so' "$target_file"
@@ -20,7 +20,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     # NOTE Don't use 'koopa::cp' here, as it will remove the target file
     # and can cause system lockout in this case.
     sudo cp -v "$source_file" "$target_file"
-    sudo chmod 0444 "$target_file"
+    koopa::chmod -S 0444 "$target_file"
     koopa::alert_success 'Touch ID disabled for sudo.'
     return 0
 }
@@ -28,7 +28,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
 koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     # Enable sudo authentication via Touch ID PAM.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-05-20.
     # @seealso
     # - https://davidwalsh.name/touch-sudo
     # - https://news.ycombinator.com/item?id=26302139
@@ -36,7 +36,7 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     local source_file target_file
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    source_file="$(koopa::prefix)/os/macos/etc/pam.d/sudo"
+    source_file="$(koopa::koopa_prefix)/os/macos/etc/pam.d/sudo"
     target_file='/etc/pam.d/sudo'
     if [[ -f "$target_file" ]] && grep -q 'pam_tid.so' "$target_file"
     then
@@ -49,7 +49,7 @@ in '${target_file}'."
     # NOTE Don't use 'koopa::cp' here, as it will remove the target file
     # and can cause system lockout in this case.
     sudo cp -v "$source_file" "$target_file"
-    sudo chmod 0444 "$target_file"
+    koopa::chmod -S 0444 "$target_file"
     koopa::alert_success 'Touch ID enabled for sudo.'
     return 0
 }

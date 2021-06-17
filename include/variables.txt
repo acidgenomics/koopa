@@ -5,13 +5,13 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-05-18"
+koopa-date="2021-06-17"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.10.2"
+koopa-version="0.11.0a"
 
 # Also update this value in 'lang/r/include/header.R'.
-r-koopa="0.1.18"
+r-koopa="0.1.19"
 
 # Globals {{{1
 # ==============================================================================
@@ -29,10 +29,10 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
-anaconda="2021.04"
+anaconda="2021.05"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.4.1"
+armadillo="10.5.2"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="3.11.2.63"
@@ -45,17 +45,20 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.5"
+aws-cli="2.2.12"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.23.0"
+azure-cli="2.25.0"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.8"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-bcbio-nextgen="1.2.7"
+bcbio-nextgen="1.2.8"
+
+# https://github.com/bcbio/bcbio-nextgen-vm/releases
+bcbio-nextgen-vm="0.1.6"
 
 # https://support.illumina.com/sequencing/sequencing_software/
 #     bcl2fastq-conversion-software.html
@@ -68,7 +71,7 @@ bfg="1.14.0"
 binutils="2.36.1"
 
 # https://www.boost.org/
-boost="1.75.0"
+boost="1.76.0"
 
 # https://cairographics.org/
 cairo="1.16.0"
@@ -76,7 +79,7 @@ cairo="1.16.0"
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
 #     pipelines/latest/installation
-cellranger="5.0.1"
+cellranger="6.0.1"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
@@ -84,22 +87,22 @@ cellranger="5.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.20.2"
+cmake="3.20.4"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
 # https://docs.conda.io/projects/conda/en/latest/user-guide/install/
+# 4.10.1 added on 2021-06-01, but missing Linux x86 at the moment.
 conda="4.9.2"
 
 # https://www.gnu.org/software/coreutils/
 coreutils="8.32"
 
 # https://github.com/Dr-Noob/cpufetch/releases
-# Currently this is master branch, without a release.
-cpufetch="0.96"
+cpufetch="0.97"
 
 # https://curl.haxx.se/
-curl="7.76.1"
+curl="7.77.0"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -122,13 +125,13 @@ findutils="4.8.0"
 fish="3.2.2"
 
 # https://github.com/junegunn/fzf
-fzf="0.27.0"
+fzf="0.27.2"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.0"
 
 # https://ftp.gnu.org/gnu/gcc/
-gcc="11.1"
+gcc="11.1.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
@@ -139,17 +142,17 @@ geos="3.9.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.31.1"
+git="2.32.0"
 
 # https://gnupg.org/download/index.html
 # LTS: 2.2.27 (2021-01-11).
 gnupg="2.3.1"
 
 # https://golang.org/dl/
-go="1.16.3"
+go="1.16.5"
 
 # https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="339.0.0"
+google-cloud-sdk="342.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.6"
@@ -158,9 +161,9 @@ grep="3.6"
 groff="1.22.4"
 
 # https://www.gnu.org/software/gsl/
-gsl="2.6"
+gsl="2.7"
 
-hadolint="2.4.1"
+hadolint="2.5.0"
 
 harfbuzz="2.8.1"
 
@@ -170,7 +173,7 @@ haskell-stack="rolling"
 hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="3.1.7"
+homebrew="3.1.12"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -180,7 +183,7 @@ htop="3.0.5"
 icu="68.2"
 
 # https://imagemagick.org/
-imagemagick="7.0.11"
+imagemagick="7.1.0"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -220,10 +223,11 @@ ncurses="6.2"
 neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
+# > neovim="nightly"
 neovim="0.4.4"
 
 # https://nodejs.org/
-node="16.1.0"
+node="16.3.0"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -237,25 +241,25 @@ openssl="1.1.1d"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
-oracle-instantclient="19.5.0.0.0-1"
+oracle-instantclient="21.1.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.13"
+pandoc="2.14.0.2"
 
 # https://www.gnu.org/software/parallel/
 parallel="20210422"
 
 # https://www.passwordstore.org/
-password-store="1.7.3"
+password-store="1.7.4"
 
 # ftp://ftp.gnu.org/gnu/patch
 patch="2.7.6"
 
 # https://www.perl.org/get.html
-perl="5.32.1"
+perl="5.34.0"
 
 # https://perlbrew.pl/
-perlbrew="0.91"
+perlbrew="0.92"
 
 # https://metacpan.org/release/File-Rename
 perl-file-rename="1.10"
@@ -283,13 +287,17 @@ python="3.9.5"
 # https://cloud.r-project.org/src/base/R-4/
 r="4.1.0"
 
+r-cmd-check="rolling"
+
 # https://mac.r-project.org/
+# This release matches current R version.
 r-cran-gfortran="8.2"
 
 # https://svn.r-project.org/R/
 # https://stat.ethz.ch/R/daily/
 # This is the SVN revision number.
-r-devel="80190"  # R 4.1 RC.
+# > r-devel="80190"  # R 4.1 RC.
+r-devel="80502"      # 2021-06-14
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
@@ -298,22 +306,21 @@ rbenv="1.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-# 2021-03-02
-rstudio-server="1.4.1106"
+rstudio-server="1.4.1717"
 
+# RStudio Server Pro renamed to Workbench in 2021-06.
 # https://www.rstudio.com/products/rstudio/download-commercial/
-# 2021-03-02
-rstudio-server-pro="1.4.1106-5"
+rstudio-workbench="1.4.1717-3"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.0.1p64"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
-rust="1.52.0"
+rust="1.52.1"
 
 # https://rustup.rs/
-rustup="1.24.1"
+rustup="1.24.3"
 
 # https://download.samba.org/pub/rsync/src/
 rsync="3.2.3"
@@ -338,10 +345,10 @@ shiny-server="1.5.16.958"
 shunit2="2.1.7"
 
 # https://github.com/sylabs/singularity/releases
-singularity="3.6.0"
+singularity="3.7.3"
 
 # https://www.sqlite.org/download.html
-sqlite="3.35.3"
+sqlite="3.35.5"
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
@@ -366,16 +373,16 @@ texinfo="6.7"
 the-silver-searcher="2.2.0"
 
 # https://github.com/tmux/tmux/releases
-tmux="3.2"
+tmux="3.2a"
 
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
-udunits="2.2.26"
+udunits="2.2.28"
 
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.2825"
+vim="8.2.3000"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.1"
@@ -423,7 +430,7 @@ conda-hisat2="2.2.1"                    # 2020-07-24 bioconda
 conda-homer="4.11"                      # 2020-07-10 bioconda
 conda-htslib="1.12"                     # 2021-03-17 bioconda
 conda-igvtools="2.5.3"                  # 2021-03-25 bioconda
-conda-jupyterlab="3.0.15"               # 2021-05-11 conda-forge
+conda-jupyterlab="3.0.16"               # 2021-05-11 conda-forge
 conda-kallisto="0.46.2"                 # 2021-03-26 bioconda
 conda-kraken2="2.1.2"                   # 2021-05-10 bioconda
 conda-macs2="2.2.7.1"                   # 2021-03-26 bioconda
@@ -446,7 +453,7 @@ conda-ribocode="1.2.11"                 # 2018-12-20 bioconda
 conda-ribodiff="0.2.2"                  # 2019-10-27 bioconda
 conda-ribotaper="1.3.1"                 # 2020-07-13 bioconda
 conda-rsem="1.3.3"                      # 2020-07-26 bioconda
-conda-salmon="1.5.0"                    # 2021-05-12 bioconda
+conda-salmon="1.5.1"                    # 2021-05-12 bioconda
 conda-sambamba="0.8.0"                  # 2021-01-02 bioconda
 conda-samblaster="0.1.26"               # 2020-06-04 bioconda
 conda-samtools="1.12"                   # 2021-03-17 bioconda
@@ -466,7 +473,15 @@ conda-vardict="2019.06.04"              # 2019-06-05 bioconda
 # Homebrew cask versions {{{1
 # ==============================================================================
 
-homebrew-cask-gpg-suite="2020.2"
+homebrew-cask-gpg-suite="2021.1"
+
+# Node (NPM) packages {{{1
+# ==============================================================================
+
+node-npm="7.17.0"
+
+node-gtop="1.1.1"
+node-tldr="3.3.7"
 
 # Python packages {{{1
 # ==============================================================================
@@ -479,11 +494,11 @@ homebrew-cask-gpg-suite="2020.2"
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-python-black="21.5b1"     # homebrew
-python-bpytop="1.0.65"    # homebrew
+python-black="21.6b0"     # homebrew
+python-bpytop="1.0.67"    # homebrew
 python-flake8="3.9.2"     # homebrew
 python-pipx="0.16.2.0"    # homebrew
-python-pylint="2.8.2"     # homebrew
+python-pylint="2.8.3"     # homebrew
 python-ranger-fm="1.9.3"  # homebrew
 
 # Libraries without binaries {{{2
@@ -506,7 +521,7 @@ python-wheel="0.36.2"
 # Update with 'gem update' or 'gem install <name>'.
 
 # https://rubygems.org/gems/bundler/versions/
-ruby-bundler="2.2.17"
+ruby-bundler="2.2.20"
 
 # Last updated 2010-06-24...
 ruby-ronn="0.7.3"
@@ -519,19 +534,19 @@ ruby-ronn="0.7.3"
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.1"         # homebrew
-rust-broot="1.4.0"        # homebrew; br
+rust-broot="1.6.0"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.5.4"      # homebrew; dust
 rust-exa="0.10.1"         # homebrew
 rust-fd-find="8.2.1"      # homebrew; fd
 rust-hyperfine="1.11.0"   # homebrew
-rust-procs="0.11.6"       # homebrew
+rust-procs="0.11.8"       # homebrew
 rust-ripgrep-all="0.9.6"  # homebrew; rga
-rust-ripgrep="12.1.1"     # homebrew; rg
+rust-ripgrep="13.0.0"     # homebrew; rg
 rust-starship="0.54.0"    # homebrew
 rust-tokei="12.1.2"       # homebrew
 rust-xsv="0.13.0"         # homebrew
-rust-zoxide="0.7.0"       # homebrew; z
+rust-zoxide="0.7.2"       # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------

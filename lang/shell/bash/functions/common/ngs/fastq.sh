@@ -3,7 +3,7 @@
 koopa::convert_fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-05-21.
     #
     # Alternate approaches:
     #
@@ -14,9 +14,12 @@ koopa::convert_fastq_to_fasta() { # {{{1
     # >     | awk -v FS="\t" '{print $1"\n"$2}' \
     # >     > "$fasta_file"
     # """
-    local array fasta_file fastq_file source_dir target_dir 
+    local array cut fasta_file fastq_file paste sed source_dir target_dir tr
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed cut find paste sed sort tr
+    cut="$(koopa::locate_cut)"
+    paste="$(koopa::locate_paste)"
+    sed="$(koopa::locate_sed)"
+    tr="$(koopa::locate_tr)"
     source_dir='.'
     target_dir='.'
     while (("$#"))
@@ -35,16 +38,17 @@ koopa::convert_fastq_to_fasta() { # {{{1
                 ;;
         esac
     done
+    koopa::assert_is_dir "$source_dir"
     source_dir="$(koopa::strip_trailing_slash "$source_dir")"
     target_dir="$(koopa::strip_trailing_slash "$target_dir")"
     # Pipe GNU find into array.
     readarray -t array <<< "$( \
-        find "$source_dir" \
-            -maxdepth 1 \
-            -mindepth 1 \
-            -type f \
-            -iname '*.fastq' \
-            -print \
+        koopa::find \
+            --glob='*.fastq' \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="$source_dir" \
+            --type='f' \
         | sort \
     )"
     [[ "${#array[@]}" -eq 0 ]] && koopa::stop 'No FASTQ files detected.'
@@ -52,10 +56,10 @@ koopa::convert_fastq_to_fasta() { # {{{1
     for fastq_file in "${array[@]}"
     do
         fasta_file="${fastq_file%.fastq}.fasta"
-        paste - - - - < "$fastq_file" \
-            | cut -f 1,2 \
-            | sed 's/^@/>/' \
-            | tr '\t' '\n' > "$fasta_file"
+        "$paste" - - - - < "$fastq_file" \
+            | "$cut" -f 1,2 \
+            | "$sed" 's/^@/>/' \
+            | "$tr" '\t' '\n' > "$fasta_file"
     done
     return 0
 }
@@ -67,7 +71,7 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
     # """
     local filelist id
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed fastq-dump
+    koopa::assert_is_installed 'fastq-dump'
     filelist="${1:-SRR_Acc_List.txt}"
     koopa::assert_is_file "$filelist"
     while read -r id
@@ -166,7 +170,7 @@ koopa::fastq_reads_per_file() { # {{{1
     # @note Updated 2020-08-12.
     # """
     local dir
-    koopa::assert_is_installed awk wc zcat
+    koopa::assert_is_installed 'awk' 'wc' 'zcat'
     dir="${1:-.}"
     dir="$(koopa::strip_trailing_slash "$dir")"
     # Divide by 4.

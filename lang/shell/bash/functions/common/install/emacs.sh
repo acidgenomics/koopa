@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_emacs() { # {{{1
     # """
     # Install Emacs.
@@ -45,33 +47,66 @@ koopa::install_emacs() { # {{{1
         )
     fi
     koopa::install_gnu_app \
-        --name='emacs' \
         --name-fancy='Emacs' \
+        --name='emacs' \
         "${install_args[@]}" \
         "${conf_args[@]}" \
         "$@"
 }
 
-koopa::update_emacs() { # {{{1
+koopa::link_emacs() { # {{{1
     # """
-    # Update Emacs.
-    # @note Updated 2020-11-25.
+    # Link Emacs.
+    # @note Updated 2020-12-31.
+    #
+    # Currently supports Doom, Spacemacs, and minimal ESS config.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_installed emacs
+    local custom_prefix default_prefix name
+    koopa::assert_has_args "$#"
+    name="${1:?}"
+    default_prefix="$(koopa::emacs_prefix)"
+    custom_prefix="${default_prefix}-${name}"
+    koopa::assert_is_dir "$custom_prefix"
+    if [[ -d "$default_prefix" ]] && [[ ! -L "$default_prefix" ]]
     then
-        koopa::alert_not_installed 'emacs'
-        return 0
+        koopa::stop "Emacs directory detected at '${default_prefix}'."
     fi
-    if koopa::is_spacemacs_installed
+    if [[ "$name" != 'minimal' ]]
     then
-        koopa:::update_spacemacs
-    elif koopa::is_doom_emacs_installed
+        koopa::rm "${HOME}/.emacs"
+    elif [[ "$name" != 'spacemacs' ]]
     then
-        koopa:::update_doom_emacs
-    else
-        koopa::alert_note 'Emacs configuration cannot be updated.'
-        return 0
+        koopa::rm "${HOME}/.spacemacs"
     fi
+    case "$name" in
+        doom)
+            koopa::link_dotfile \
+                --force \
+                'app/emacs/doom' \
+                'doom.d'
+            ;;
+        minimal)
+            koopa::link_dotfile \
+                --force \
+                'app/emacs/minimal/emacs.el'
+            ;;
+        spacemacs)
+            koopa::link_dotfile \
+                --force \
+                'app/emacs/spacemacs/spacemacs.el' \
+                'spacemacs'
+            ;;
+        *)
+            koopa::stop 'Invalid Emacs config name.'
+            ;;
+    esac
+    koopa::ln "$custom_prefix" "$default_prefix"
     return 0
+}
+
+koopa::uninstall_emacs() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Emacs' \
+        --name='emacs' \
+        "$@"
 }

@@ -131,84 +131,6 @@ koopa::assert_has_file_ext() { # {{{1
     return 0
 }
 
-koopa::assert_has_gnu_binutils() {  #{{{1
-    # """
-    # Assert that GNU binutils is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_binutils
-    then
-        koopa::stop 'GNU binutils is not installed.'
-    fi
-    return 0
-}
-
-koopa::assert_has_gnu_coreutils() {  #{{{1
-    # """
-    # Assert that GNU coreutils is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_coreutils
-    then
-        koopa::stop 'GNU coreutils is not installed.'
-    fi
-    return 0
-}
-
-koopa::assert_has_gnu_findutils() {  #{{{1
-    # """
-    # Assert that GNU findutils is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_findutils
-    then
-        koopa::stop 'GNU findutils is not installed.'
-    fi
-    return 0
-}
-
-koopa::assert_has_gnu_rsync() {  #{{{1
-    # """
-    # Assert that GNU rsync is installed.
-    # @note Updated 2020-12-31.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_rsync
-    then
-        koopa::stop 'GNU rsync is not installed.'
-    fi
-    return 0
-}
-
-koopa::assert_has_gnu_sed() {  #{{{1
-    # """
-    # Assert that GNU sed is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_sed
-    then
-        koopa::stop 'GNU sed is not installed.'
-    fi
-    return 0
-}
-
-koopa::assert_has_gnu_tar() {  #{{{1
-    # """
-    # Assert that GNU tar is installed.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_gnu_tar
-    then
-        koopa::stop 'GNU tar is not installed.'
-    fi
-    return 0
-}
-
 koopa::assert_has_monorepo() { # {{{1
     # """
     # Assert that the user has a git monorepo.
@@ -322,7 +244,7 @@ koopa::assert_is_conda_active() { # {{{1
 
 koopa::assert_is_current_version() { # {{{1
     # """
-    # Assert that programs are installed and current.
+    # Assert that programs are installed (and current).
     # @note Updated 2020-02-16.
     # """
     local arg expected
@@ -444,12 +366,12 @@ koopa::assert_is_function() { # {{{1
 koopa::assert_is_git() { # {{{1
     # """
     # Assert that current directory is a git repo.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-25.
     # """
     koopa::assert_has_no_args "$#"
     if ! koopa::is_git
     then
-        koopa::stop "Not a git repo: '${PWD:?}'."
+        koopa::stop "Not a Git repo: '${PWD:?}'."
     fi
     return 0
 }
@@ -478,6 +400,23 @@ koopa::assert_is_gitlab_ssh_enabled() { # {{{1
     return 0
 }
 
+koopa::assert_is_gnu() {  #{{{1
+    # """
+    # Assert that GNU version of a program is installed.
+    # @note Updated 2021-05-20.
+    # """
+    local arg
+    koopa::assert_has_args "$#"
+    for arg in "$@"
+    do
+        if ! koopa::is_gnu "$arg"
+        then
+            koopa::stop "GNU ${arg} is not installed."
+        fi
+    done
+    return 0
+}
+
 koopa::assert_is_installed() { # {{{1
     # """
     # Assert that programs are installed.
@@ -490,6 +429,23 @@ koopa::assert_is_installed() { # {{{1
         if ! koopa::is_installed "$arg"
         then
             koopa::stop "Not installed: '${arg}'."
+        fi
+    done
+    return 0
+}
+
+koopa::assert_is_koopa_app() { # {{{1
+    # """
+    # Assert that input is an application installed in koopa app prefix.
+    # @note Updated 2021-06-14.
+    # """
+    local arg
+    koopa::assert_has_args "$#"
+    for arg in "$@"
+    do
+        if ! koopa::is_koopa_app "$arg"
+        then
+            koopa::stop "Not koopa app: '${arg}'."
         fi
     done
     return 0
@@ -681,6 +637,19 @@ koopa::assert_is_python_package_installed() { # {{{1
     return 0
 }
 
+koopa::assert_is_python_venv_active() { # {{{1
+    # """
+    # Assert that a Python virtual environment is active.
+    # @note Updated 2021-06-14.
+    # """
+    koopa::assert_has_no_args "$#"
+    if ! koopa::is_python_venv_active
+    then
+        koopa::stop 'No active Python venv detected.'
+    fi
+    return 0
+}
+
 koopa::assert_is_r_package_installed() { # {{{1
     # """
     # Assert that specific R packages are installed.
@@ -765,37 +734,6 @@ koopa::assert_is_symlink() { # {{{1
             koopa::stop "Not symlink: '${arg}'."
         fi
     done
-    return 0
-}
-
-koopa::assert_is_symlinked_app() { # {{{1
-    # """
-    # Assert that input is a symlinked application.
-    # @note Updated 2020-11-19.
-    # """
-    local arg
-    koopa::assert_has_args "$#"
-    for arg in "$@"
-    do
-        if ! koopa::is_symlinked_app "$arg"
-        then
-            koopa::stop "Not symlinked app: '${arg}'."
-        fi
-    done
-    return 0
-}
-
-koopa::assert_is_venv_active() { # {{{1
-    # """
-    # Assert that a Python virtual environment is active.
-    # @note Updated 2019-10-23.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed pip
-    if ! koopa::is_venv_active
-    then
-        koopa::stop 'No active Python venv detected.'
-    fi
     return 0
 }
 

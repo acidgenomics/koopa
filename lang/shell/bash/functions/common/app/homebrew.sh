@@ -12,7 +12,7 @@ koopa::brew_brewfile() { # {{{1
     else
         subdir='linux/common'
     fi
-    file="$(koopa::prefix)/os/${subdir}/etc/homebrew/brewfile"
+    file="$(koopa::koopa_prefix)/os/${subdir}/etc/homebrew/brewfile"
     [[ -f "$file" ]] || return 0
     koopa::print "$file"
     return 0
@@ -23,7 +23,7 @@ koopa::brew_cleanup() { # {{{1
     # Clean up Homebrew.
     # @note Updated 2021-04-22.
     # """
-    koopa::assert_is_installed brew
+    koopa::assert_is_installed 'brew'
     koopa::alert 'Cleaning up Homebrew install.'
     brew cleanup -s || true
     koopa::rm "$(brew --cache)"
@@ -58,18 +58,19 @@ koopa::brew_outdated() { # {{{1
 koopa::brew_reset_core_repo() { # {{{1
     # """
     # Ensure internal 'homebrew-core' repo is clean.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-05-25.
     # """
-    local branch origin
-    koopa::assert_is_installed brew
+    local branch git origin
+    koopa::assert_is_installed 'brew'
+    git="$(koopa::locate_git)"
     (
         koopa::cd "$(brew --repo 'homebrew/core')"
         origin='origin'
         branch="$(koopa::git_default_branch)"
-        git checkout -q "$branch"
-        git branch -q "$branch" -u "${origin}/${branch}"
-        git reset -q --hard "${origin}/${branch}"
-        # > git branch -vv
+        "$git" checkout -q "$branch"
+        "$git" branch -q "$branch" -u "${origin}/${branch}"
+        "$git" reset -q --hard "${origin}/${branch}"
+        # > "$git" branch -vv
     )
     return 0
 }
@@ -77,16 +78,16 @@ koopa::brew_reset_core_repo() { # {{{1
 koopa::brew_reset_permissions() { # {{{1
     # """
     # Reset permissions on Homebrew installation.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-05-20.
     # """
     local group prefix user
-    koopa::assert_is_installed brew
+    koopa::assert_is_installed 'brew'
     koopa::assert_is_admin
     user="$(koopa::user)"
     group="$(koopa::admin_group)"
     prefix="$(koopa::homebrew_prefix)"
     koopa::alert "Resetting ownership of '${prefix}' to '${user}:${group}'."
-    sudo chown -Rh "${user}:${group}" "${prefix}/"*
+    koopa::chown -S -Rh "${user}:${group}" "${prefix}/"*
     return 0
 }
 

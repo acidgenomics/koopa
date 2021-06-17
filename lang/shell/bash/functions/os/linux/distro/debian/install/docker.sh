@@ -3,7 +3,7 @@
 koopa::debian_install_docker() { # {{{1
     # """
     # Install Docker.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-06-04.
     #
     # @seealso
     # - https://docs.docker.com/install/linux/docker-ce/debian/
@@ -14,19 +14,27 @@ koopa::debian_install_docker() { # {{{1
     # Configures at '/var/lib/docker/'.
     # """
     local name_fancy pkgs
-    koopa::is_docker && return 0
-    koopa::is_installed docker && return 0
     name_fancy='Docker'
+    if koopa::is_docker
+    then
+        koopa::alert_note "Can't install ${name_fancy} inside ${name_fancy}."
+        return 0
+    fi
+    if koopa::is_installed 'docker'
+    then
+        koopa::alert_is_installed "$name_fancy"
+        return 0
+    fi
     koopa::install_start "$name_fancy"
     koopa::assert_has_no_args "$#"
-    koopa::apt_add_docker_repo
+    koopa::debian_apt_add_docker_repo
     # Ready to install Docker.
     pkgs=(
         'containerd.io'
         'docker-ce'
         'docker-ce-cli'
     )
-    koopa::apt_install "${pkgs[@]}"
+    koopa::debian_apt_install "${pkgs[@]}"
     # Ensure current user is added to Docker group.
     koopa::add_user_to_group 'docker'
     # Move '/var/lib/docker' to '/n/var/lib/docker'.
@@ -34,4 +42,25 @@ koopa::debian_install_docker() { # {{{1
     koopa::install_success "$name_fancy"
     koopa::alert_restart
     return 0
+}
+
+koopa::debian_uninstall_docker() { # {{{1
+    # """
+    # Uninstall Docker.
+    # @note Updated 2021-06-11.
+    # """
+    local name name_fancy pkgs
+    name='docker'
+    name_fancy='Docker'
+    koopa::uninstall_start "$name_fancy"
+    pkgs=(
+        'containerd.io'
+        'docker-ce'
+        'docker-ce-cli'
+    )
+    koopa::debian_apt_remove "${pkgs[@]}"
+    koopa::debian_apt_delete_repo "$name"
+    koopa::uninstall_success "$name_fancy"
+    return 0
+
 }

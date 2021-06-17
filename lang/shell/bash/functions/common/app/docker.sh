@@ -3,7 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2021-04-06.
+    # Updated 2021-05-23.
     #
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
@@ -29,11 +29,13 @@ koopa::docker_build() { # {{{1
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
     # """
-    local build_name delete docker_dir image image_ids memory platforms \
-        platforms_file platforms_string pos push server source_image tag \
-        tags tags_file
+    local build_name cut delete docker_dir image image_ids memory platforms
+    local platforms_file platforms_string pos push server sort source_image
+    local tag tags tags_file
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    koopa::assert_is_installed 'docker'
+    cut="$(koopa::locate_cut)"
+    sort="$(koopa::locate_sort)"
     docker_dir="$(koopa::docker_prefix)"
     koopa::assert_is_dir "$docker_dir"
     delete=0
@@ -97,8 +99,14 @@ koopa::docker_build() { # {{{1
     # Handle tag support, if necessary.
     if koopa::str_match "$image" ':'
     then
-        tag="$(koopa::print "$image" | cut -d ':' -f 2)"
-        image="$(koopa::print "$image" | cut -d ':' -f 1)"
+        tag="$( \
+            koopa::print "$image" \
+            | "$cut" -d ':' -f 2 \
+        )"
+        image="$( \
+            koopa::print "$image" \
+            | "$cut" -d ':' -f 1 \
+        )"
     fi
     source_image="${docker_dir}/${image}/${tag}"
     koopa::assert_is_dir "$source_image"
@@ -115,7 +123,10 @@ koopa::docker_build() { # {{{1
     fi
     tags+=("$tag" "${tag}-$(date '+%Y%m%d')")
     # Ensure tags are sorted and unique.
-    readarray -t tags <<< "$(koopa::print "${tags[@]}" | sort -u)"
+    readarray -t tags <<< "$( \
+        koopa::print "${tags[@]}" \
+        | "$sort" -u \
+    )"
     for tag in "${tags[@]}"
     do
         args+=("--tag=${image}:${tag}")
@@ -136,7 +147,10 @@ koopa::docker_build() { # {{{1
         # If you don't want to use swap, give '--memory' and '--memory-swap'
         # the same values. Don't set '--memory-swap' to 0. Alternatively,
         # set '--memory-swap' to '-1' for unlimited swap.
-        args+=("--memory=${memory}" "--memory-swap=${memory}")
+        args+=(
+            "--memory=${memory}"
+            "--memory-swap=${memory}"
+        )
     fi
     args+=(
         '--no-cache'
@@ -176,11 +190,15 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2021-05-11.
+    # @note Updated 2021-05-22.
     # """
-    local build_file build_args days force image images prune pos \
-        repo repos repo_name
-    koopa::assert_is_installed docker
+    local basename build_file build_args days force grep image images prune pos
+    local repo repos repo_name sort xargs
+    koopa::assert_is_installed 'docker'
+    basename="$(koopa::locate_basename)"
+    grep="$(koopa::locate_grep)"
+    sort="$(koopa::locate_sort)"
+    xargs="$(koopa::locate_xargs)"
     days=7
     force=0
     prune=0
@@ -228,23 +246,24 @@ koopa::docker_build_all_images() { # {{{1
     [[ "$force" -eq 1 ]] && build_args+=('--force')
     for repo in "${repos[@]}"
     do
-        repo_name="$(basename "$(realpath "$repo")")"
+        repo_name="$(basename "$(koopa::realpath "$repo")")"
         koopa::h1 "Building '${repo_name}' images."
         build_file="${repo}/build.txt"
         if [[ -f "$build_file" ]]
         then
             readarray -t images <<< "$( \
-                grep -E '^[-_a-z0-9]+$' "$build_file" \
+                "$grep" -E '^[-_a-z0-9]+$' "$build_file" \
             )"
         else
             readarray -t images <<< "$( \
-                find . \
-                    -mindepth 1 \
-                    -maxdepth 1 \
-                    -type d \
-                    -print0 \
-                | sort -z \
-                | xargs -0 -n1 basename \
+                koopa::find \
+                    --max-depth=1 \
+                    --min-depth=1 \
+                    --prefix='.' \
+                    --print0 \
+                    --type='d' \
+                | "$sort" -z \
+                | "$xargs" -0 -n1 "$basename" \
             )"
         fi
         koopa::assert_is_array_non_empty "${images[@]:-}"
@@ -282,7 +301,7 @@ koopa::docker_build_all_tags() { # {{{1
     # @note Updated 2020-01-04.
     # """
     koopa::assert_has_args "$#"
-    koopa::rscript 'dockerBuildAllTags' "$@"
+    koopa::r_script 'dockerBuildAllTags' "$@"
     return 0
 }
 
@@ -294,7 +313,7 @@ koopa::docker_prune_all_images() { # {{{1
     # This is a nuclear option for resetting Docker.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::is_installed docker
+    koopa::is_installed 'docker'
     koopa::alert 'Pruning Docker images.'
     docker system prune --all --force
     docker images
@@ -310,7 +329,7 @@ koopa::docker_prune_all_stale_tags() { # {{{1
     # @note Updated 2021-03-30.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::rscript 'dockerPruneAllStaleTags' "$@"
+    koopa::r_script 'dockerPruneAllStaleTags' "$@"
     return 0
 }
 
@@ -327,7 +346,7 @@ koopa::docker_prune_old_images() { # {{{
     # - https://stackoverflow.com/questions/32723111
     # """
     koopa::assert_has_no_args "$#"
-    koopa::is_installed docker
+    koopa::is_installed 'docker'
     koopa::alert 'Pruning Docker images older than 3 months.'
     docker image prune \
         --all \
@@ -344,14 +363,14 @@ koopa::docker_prune_stale_tags() { # {{{1
     # @note Updated 2020-03-02.
     # """
     koopa::assert_has_args "$#"
-    koopa::rscript 'dockerPruneStaleTags' "$@"
+    koopa::r_script 'dockerPruneStaleTags' "$@"
     return 0
 }
 
 koopa::docker_push() { # {{{1
     # """
     # Push a local Docker build.
-    # Updated 2021-03-25.
+    # Updated 2021-05-21.
     #
     # Useful if GPG agent causes push failure.
     #
@@ -361,9 +380,13 @@ koopa::docker_push() { # {{{1
     # @examples
     # docker-push acidgenomics/debian:latest
     # """
-    local image images json pattern server
+    local image images json pattern sed server sort tr
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    koopa::assert_is_installed 'docker'
+    sed="$(koopa::locate_sed)"
+    sort="$(koopa::locate_sort)"
+    tr="$(koopa::locate_tr)"
+    # Consider allowing user to define, so we can support quay.io, for example.
     server='docker.io'
     for pattern in "$@"
     do
@@ -373,12 +396,12 @@ koopa::docker_push() { # {{{1
         # Convert JSON to lines.
         readarray -t images <<< "$( \
             koopa::print "$json" \
-                | tr ',' '\n' \
-                | sed 's/^\[//' \
-                | sed 's/\]$//' \
-                | sed 's/^\"//g' \
-                | sed 's/\"$//g' \
-                | sort \
+                | "$tr" ',' '\n' \
+                | "$sed" 's/^\[//' \
+                | "$sed" 's/\]$//' \
+                | "$sed" 's/^\"//g' \
+                | "$sed" 's/\"$//g' \
+                | "$sort" \
         )"
         if ! koopa::is_array_non_empty "${images[@]:-}"
         then
@@ -397,17 +420,21 @@ koopa::docker_push() { # {{{1
 koopa::docker_remove() { # {{{1
     # """
     # Remove docker images by pattern.
-    # Updated 2020-07-01.
+    # Updated 2021-05-21.
     # """
-    local pattern
+    local awk grep pattern xargs
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    koopa::assert_is_installed 'docker'
+    awk="$(koopa::locate_awk)"
+    grep="$(koopa::locate_grep)"
+    xargs="$(koopa::locate_xargs)"
     for pattern in "$@"
     do
+        # shellcheck disable=SC2016
         docker images \
-            | grep "$pattern" \
-            | awk '{print $1 ":" $2}' \
-            | xargs docker rmi
+            | "$grep" "$pattern" \
+            | "$awk" '{print $1 ":" $2}' \
+            | "$xargs" docker rmi
     done
     return 0
 }
@@ -426,7 +453,7 @@ koopa::docker_run() { # {{{1
     # """
     local dict image pos run_args workdir
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    koopa::assert_is_installed 'docker'
     declare -A dict=(
         [arm]=0
         [bash]=0
@@ -514,10 +541,11 @@ koopa::docker_tag() { # {{{1
     # """
     local dest_tag image server source_tag
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    koopa::assert_is_installed 'docker'
     image="${1:?}"
     source_tag="${2:?}"
     dest_tag="${3:-latest}"
+    # Consider allowing this to be user-definable in a future update.
     server='docker.io'
     # Assume acidgenomics recipe by default.
     if ! koopa::str_match "$image" '/'
@@ -540,16 +568,18 @@ koopa::docker_tag() { # {{{1
 koopa::is_docker_build_recent() { # {{{1
     # """
     # Has the requested Docker image been built recently?
-    # @note Updated 2021-05-12.
+    # @note Updated 2021-05-20.
     #
     # @seealso
     # - Corresponding 'isDockerBuildRecent()' R function.
     # - https://stackoverflow.com/questions/8903239/
     # - https://unix.stackexchange.com/questions/27013/
     # """
-    local created current days diff image json seconds
+    local created current date days diff grep image json seconds sed
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed docker
+    date="$(koopa::locate_date)"
+    grep="$(koopa::locate_grep)"
+    sed="$(koopa::locate_sed)"
     days=7
     pos=()
     while (("$#"))
@@ -576,18 +606,18 @@ koopa::is_docker_build_recent() { # {{{1
     koopa::assert_has_args "$#"
     # 24 hours * 60 minutes * 60 seconds = 86400.
     seconds="$((days * 86400))"
-    current="$(date -u '+%s')"
+    current="$("$date" -u '+%s')"
     for image in "$@"
     do
         docker pull "$image" >/dev/null
         json="$(docker inspect --format='{{json .Created}}' "$image")"
         created="$( \
             koopa::print "$json" \
-                | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
-                | sed 's/T/ /' \
-                | sed 's/\$/ UTC/'
+                | "$grep" -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
+                | "$sed" 's/T/ /' \
+                | "$sed" 's/\$/ UTC/'
         )"
-        created="$(date -u -d "$created" '+%s')"
+        created="$("$date" -u -d "$created" '+%s')"
         diff=$((current - created))
         [[ "$diff" -gt "$seconds" ]] && return 1
     done

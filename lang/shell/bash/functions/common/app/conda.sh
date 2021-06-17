@@ -3,7 +3,7 @@
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-26.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -22,24 +22,17 @@ koopa::activate_conda_env() { # {{{1
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    local conda conda_prefix env_name env_prefix nounset script
+    local env_name env_prefix grep nounset
     koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_installed conda
-    env_prefix="$(koopa::conda_env_prefix "${1:?}")"
-    [[ -n "$env_prefix" ]] || return 1
-    env_name="$(basename "$env_prefix")"
+    koopa::activate_conda
+    grep="$(koopa::locate_grep)"
     nounset="$(koopa::boolean_nounset)"
+    env_name="${1:?}"
+    env_prefix="$(koopa::conda_env_prefix "$env_name")"
+    koopa::assert_is_dir "$env_prefix"
+    env_name="$(koopa::basename "$env_prefix")"
     [[ "$nounset" -eq 1 ]] && set +u
-    if ! type conda | grep -q 'conda.sh'
-    then
-        conda_prefix="$(koopa::conda_prefix)"
-        script="${conda_prefix}/etc/profile.d/conda.sh"
-        koopa::assert_is_file "$script"
-        # shellcheck source=/dev/null
-        . "$script"
-    fi
-    conda="$(koopa::conda)"
-    "$conda" activate "$env_name"
+    conda activate "$env_name"
     [[ "$nounset" -eq 1 ]] && set -u
     return 0
 }
@@ -47,10 +40,9 @@ koopa::activate_conda_env() { # {{{1
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-06-26.
     # """
     local dict env envs
-    koopa::assert_is_installed conda
     declare -A dict=(
         [all]=0
         [aligners]=0
@@ -226,6 +218,9 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     fi
     if [[ "${dict[file_formats]}" -eq 1 ]]
     then
+        # Consider:
+        # - ffq (not on conda yet)
+        #   https://github.com/pachterlab/ffq
         envs+=(
             'bamtools'
             'bcftools'
@@ -380,7 +375,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-26.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -411,9 +406,7 @@ koopa::conda_create_env() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    koopa::activate_conda
-    koopa::assert_is_installed conda
-    conda="$(koopa::conda)"
+    conda="$(koopa::locate_conda)"
     conda_prefix="$(koopa::conda_prefix)"
     for env_string in "$@"
     do
@@ -455,17 +448,19 @@ koopa::conda_create_env() { # {{{1
 koopa::conda_env_latest_version() { # {{{1
     # """
     # Get the latest version of a conda environment available.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-26.
     # """
-    local conda env_name
+    local awk conda env_name tail
     koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_installed awk conda
-    conda="$(koopa::conda)"
+    awk="$(koopa::locate_awk)"
+    conda="$(koopa::locate_conda)"
+    tail="$(koopa::locate_tail)"
     env_name="${1:?}"
+    # shellcheck disable=SC2016
     x="$( \
         "$conda" search "$env_name" \
-            | tail -n 1 \
-            | awk '{print $2}'
+            | "$tail" -n 1 \
+            | "$awk" '{print $2}'
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -475,12 +470,11 @@ koopa::conda_env_latest_version() { # {{{1
 koopa::conda_env_list() { # {{{1
     # """
     # Return a list of conda environments in JSON format.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-22.
     # """
     local conda x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed conda
-    conda="$(koopa::conda)"
+    conda="$(koopa::locate_conda)"
     x="$("$conda" env list --json)"
     koopa::print "$x"
     return 0
@@ -489,7 +483,7 @@ koopa::conda_env_list() { # {{{1
 koopa::conda_env_prefix() { # {{{1
     # """
     # Return prefix for a specified conda environment.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-05-22.
     #
     # Attempt to locate by default path first, which is the fastest approach.
     #
@@ -504,9 +498,11 @@ koopa::conda_env_prefix() { # {{{1
     # - conda info --envs
     # - conda info --json
     # """
-    local conda_prefix env_dir env_list env_name x
+    local conda_prefix env_dir env_list env_name grep sed tail x
     koopa::assert_has_args_le "$#" 2
-    koopa::assert_is_installed conda
+    grep="$(koopa::locate_grep)"
+    sed="$(koopa::locate_sed)"
+    tail="$(koopa::locate_tail)"
     env_name="${1:?}"
     [[ -n "$env_name" ]] || return 1
     env_list="${2:-}"
@@ -521,15 +517,21 @@ koopa::conda_env_prefix() { # {{{1
         fi
         env_list="$(koopa::conda_env_list)"
     fi
-    env_list="$(koopa::print "$env_list" | grep "$env_name")"
+    env_list="$( \
+        koopa::print "$env_list" \
+        | "$grep" "$env_name" \
+    )"
     [[ -n "$env_list" ]] || return 1
     # Note that this step attempts to automatically match the latest version.
     env_dir="$( \
         koopa::print "$env_list" \
-        | grep -E "/${env_name}(@[.0-9]+)?\"" \
-        | tail -n 1 \
+        | "$grep" -E "/${env_name}(@[.0-9]+)?\"" \
+        | "$tail" -n 1 \
     )"
-    x="$(koopa::print "$env_dir" | sed -E 's/^.*"(.+)".*$/\1/')"
+    x="$( \
+        koopa::print "$env_dir" \
+        | "$sed" -E 's/^.*"(.+)".*$/\1/' \
+    )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -538,7 +540,7 @@ koopa::conda_env_prefix() { # {{{1
 koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-26.
     #
     # @seealso
     # - conda env list --verbose
@@ -547,8 +549,7 @@ koopa::conda_remove_env() { # {{{1
     local arg env_prefix nounset
     koopa::assert_has_args "$#"
     koopa::activate_conda
-    koopa::assert_is_installed conda
-    conda="$(koopa::conda)"
+    conda="$(koopa::locate_conda)"
     nounset="$(koopa::boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +u
     for arg in "$@"

@@ -1,19 +1,32 @@
 #!/usr/bin/env bash
 
-# NOTE Seeing this pop up on macOS.
-# # tar: Ignoring unknown extended header keyword
+# [2021-05-27] macOS success.
+
+koopa::configure_go() { # {{{1
+    # """
+    # Configure Go.
+    # @note Updated 2021-06-14.
+    # """
+    koopa:::configure_app_packages \
+        --name-fancy='Go' \
+        --name='go' \
+        "$@"
+}
 
 koopa::install_go() { # {{{1
     koopa::install_app \
-        --name='go' \
         --name-fancy='Go' \
+        --name='go' \
+        --no-link \
         "$@"
+    koopa::configure_go
+    return 0
 }
 
 koopa:::install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-05-27.
     # """
     local arch file name os_id prefix url version
     prefix="${INSTALL_PREFIX:?}"
@@ -33,4 +46,12 @@ koopa:::install_go() { # {{{1
     koopa::extract "$file"
     koopa::cp -t "$prefix" "${name}/"*
     return 0
+}
+
+koopa::uninstall_go() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Go' \
+        --name='go' \
+        --no-link \
+        "$@"
 }

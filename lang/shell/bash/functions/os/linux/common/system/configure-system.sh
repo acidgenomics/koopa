@@ -67,7 +67,7 @@ koopa::linux_configure_system() { # {{{1
         [install_gsl]=0
         [install_hdf5]=0
         [install_homebrew]=0
-        [install_homebrew_packages]=0
+        [install_homebrew_bundle]=0
         [install_htop]=0
         [install_julia]=0
         [install_libevent]=0
@@ -210,7 +210,7 @@ koopa::linux_configure_system() { # {{{1
             dict[install_gsl]=1
             dict[install_hdf5]=1
             dict[install_homebrew]=1
-            dict[install_homebrew_packages]=1
+            dict[install_homebrew_bundle]=1
             dict[install_julia]=1
             dict[install_libevent]=1
             dict[install_libtool]=1
@@ -273,7 +273,7 @@ koopa::linux_configure_system() { # {{{1
         dict[delete_cache]=1
         dict[ssh_key]=0
     fi
-    # Building Python from source can break dnf on Fedora 32+.
+    # NOTE Building Python from source can break dnf on Fedora 32+.
     if koopa::is_fedora
     then
         dict[install_python]=0
@@ -335,16 +335,16 @@ koopa::linux_configure_system() { # {{{1
     install_base_flags=("${dict[install_base_flags]}")
     koopa install base "${install_base_flags[@]:-}"
     # Consider requiring: gfortran, xml2-config.
-    koopa::assert_is_installed autoconf bc bzip2 g++ gcc gzip ldconfig make \
-        man msgfmt tar unzip xz
+    koopa::assert_is_installed 'autoconf' 'bc' 'bzip2' 'g++' 'gcc' 'gzip' \
+        'ldconfig' 'make' 'man' 'msgfmt' 'tar' 'unzip' 'xz'
     koopa::assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
     koopa::update_ldconfig
     # Programs {{{2
     # --------------------------------------------------------------------------
     [[ "${dict[install_homebrew]}" -eq 1 ]] && \
         koopa install homebrew
-    [[ "${dict[install_homebrew_packages]}" -eq 1 ]] && \
-        koopa install homebrew-packages
+    [[ "${dict[install_homebrew_bundle]}" -eq 1 ]] && \
+        koopa install homebrew-bundle
     [[ "${dict[install_llvm]}" -eq 1 ]] && \
         koopa install llvm
     [[ "${dict[install_openjdk]}" -eq 1 ]] && \
