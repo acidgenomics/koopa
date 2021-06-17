@@ -29,8 +29,9 @@ koopa::install_node_packages() { # {{{1
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
+            # This conflicts with Rust tealdeer.
+            # > 'tldr'
             'gtop'
-            'tldr'
         )
         for i in "${!pkgs[@]}"
         do
@@ -44,3 +45,15 @@ koopa::install_node_packages() { # {{{1
     koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
+
+koopa::uninstall_node_packages() { # {{{1
+    # """
+    # Uninstall Node.js packages.
+    # @note Updated 2021-06-17.
+    # """
+    koopa::uninstall_app \
+        --name='node-packages' \
+        --name-fancy='Node.js packages' \
+        --no-link \
+        "$@"
+    }
