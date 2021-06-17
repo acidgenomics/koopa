@@ -28,8 +28,6 @@ koopa::fedora_install_rstudio_workbench() { # {{{1
     return 0
 }
 
-# FIXME Need to ensure repo gets removed here.
-# FIXME Check that this works for workbench.
 koopa::fedora_uninstall_rstudio_server() { # {{{1
     # """
     # Uninstall RStudio Server.
