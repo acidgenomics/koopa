@@ -39,7 +39,9 @@ koopa::sudo_append_string() { # {{{1
         sudo touch "$file"
     fi
     echo 'FIXME BB'
-    koopa::print "$string" | sudo "$tee" -a "$file" >/dev/null
+    # FIXME This is now erroring.
+    echo "tee: $tee"
+    koopa::print "$string" | sudo tee -a "$file" >/dev/null
     echo 'FIXME CC'
     return 0
 }
