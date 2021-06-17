@@ -704,12 +704,11 @@ koopa::macos_update_defaults() { # {{{1
         'closeViewZoomFollowsFocus' \
         -bool true
 
-    # Disable press-and-hold for keys in favor of key repeat.
-    # Note that this will disable easy access to accent marks in the UI.
+    # Enable press-and-hold for accent marks in favor of key repeat.
     defaults write \
         'NSGlobalDomain' \
         'ApplePressAndHoldEnabled' \
-        -bool false
+        -bool true
 
     # Increase the speed of keyboard repeat rate.
     # This is very useful for keyboard-based navigation.
