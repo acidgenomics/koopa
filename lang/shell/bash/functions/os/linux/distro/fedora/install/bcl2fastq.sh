@@ -24,7 +24,7 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     url="${url_prefix}/rpm/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::fedora_rpm_install \
+    koopa::fedora_install_from_rpm \
         --prefix="${prefix}" \
         "${name}${major_version}-v${version}-${platform2}-${arch}.rpm"
     return 0

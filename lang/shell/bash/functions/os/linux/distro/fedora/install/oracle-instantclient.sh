@@ -37,7 +37,7 @@ instantclient/${version2}"
         do
             file="${name}-${stem}-${version}.${arch}.rpm"
             koopa::download "${url_prefix}/${file}"
-            koopa::fedora_rpm_install "$file"
+            koopa::fedora_install_from_rpm "$file"
         done
     )
     koopa::install_success "$name_fancy"
