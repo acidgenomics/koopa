@@ -9,7 +9,7 @@ koopa::test_roff() { # {{{1
     # Updated 2020-12-31.
     # """
     local bin_dirs dir file files koopa_prefix man_dirs status
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     status=0
     koopa::h1 "Running manual file '--help' flag checks."
 
