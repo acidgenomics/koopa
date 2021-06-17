@@ -292,6 +292,11 @@ _koopa_complete() { # {{{1
                     args+=(
                         'google-cloud-sdk'
                     )
+                elif _koopa_is_macos
+                then
+                    args+=(
+                        'defaults'
+                    )
                 fi
                 ;;
             *)
