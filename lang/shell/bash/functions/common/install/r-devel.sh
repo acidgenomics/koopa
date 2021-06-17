@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # [2021-05-27] Linux success.
-
 # [2021-05-27] macOS hitting this install error:
 #
 # make[1]: Entering directory '[...]/svn/r/r-devel/build/doc/manual'
@@ -22,6 +21,7 @@ koopa::install_r_devel() { # {{{1
     koopa::install_app \
         --name-fancy='R-devel' \
         --name='r-devel' \
+        --no-link \
         "$@"
 }
 
