@@ -13,7 +13,7 @@ koopa::install_spacevim() { # {{{1
 koopa:::install_spacevim() { # {{{1
     # """
     # Install SpaceVim.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-06-17.
     # @seealso
     # - https://spacevim.org
     # - https://spacevim.org/quick-start-guide/
@@ -26,13 +26,6 @@ koopa:::install_spacevim() { # {{{1
     xdg_data_home="$(koopa::xdg_data_home)"
     # Symlink the font cache, to avoid unnecessary copy step.
     koopa::ln "${HOME:?}/Library/Fonts" "${xdg_data_home}/fonts"
-    # Install script method, which overwrites '~/.vim' and '~/.vimrc'.
-    # > local script_file script_url
-    # > script_url="https://spacevim.org/install.sh"
-    # > script_file="$(koopa::basename "$script_url")"
-    # > koopa::download "$script_url" "$script_file"
-    # > koopa::chmod +x "$script_file"
-    # > "./${script_file}"
     koopa::git_clone "$repo" "$prefix"
     # Bug fix for vimproc error.
     # https://github.com/SpaceVim/SpaceVim/issues/435

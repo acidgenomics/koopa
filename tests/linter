@@ -11,7 +11,6 @@ koopa::test_linter() {
     local koopa_prefix linter_prefix
     koopa_prefix="$(koopa::koopa_prefix)"
     koopa::h1 'Running linter checks.'
-    koopa::git_clone_dotfiles &>/dev/null
     koopa::assert_is_file "${koopa_prefix}/."{'lintr','pylintrc'}
     linter_prefix="${koopa_prefix}/tests/linter.d"
     koopa::exec_dir "$linter_prefix"
