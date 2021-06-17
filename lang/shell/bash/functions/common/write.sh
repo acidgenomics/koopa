@@ -5,9 +5,8 @@ koopa::append_string() { # {{{1
     # Append a string at end of file.
     # @note Updated 2021-06-17.
     # """
-    local file grep string
+    local file string
     koopa::assert_has_args_eq "$#" 2
-    grep="$(koopa::locate_grep)"
     string="${1:?}"
     file="${2:?}"
     if [[ ! -f "$file" ]]
@@ -27,19 +26,20 @@ koopa::sudo_append_string() { # {{{1
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' >> '${file}'"
     # """
-    local file grep parent_dir string tee
+    local file parent_dir string tee
     koopa::assert_has_args_eq "$#" 2
     koopa::assert_is_admin
-    grep="$(koopa::locate_grep)"
     tee="$(koopa::locate_grep)"
     string="${1:?}"
     file="${2:?}"
+    echo 'FIXME AA'
     if [[ ! -f "$file" ]]
     then
         koopa::mkdir -S "$(koopa::dirname "$file")"
         sudo touch "$file"
     fi
     koopa::print "$string" | sudo "$tee" -a "$file" >/dev/null
+    echo 'FIXME BB'
     return 0
 }
 
