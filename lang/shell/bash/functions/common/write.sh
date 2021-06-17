@@ -29,20 +29,15 @@ koopa::sudo_append_string() { # {{{1
     local file parent_dir string tee
     koopa::assert_has_args_eq "$#" 2
     koopa::assert_is_admin
-    tee="$(koopa::locate_grep)"
+    tee="$(koopa::locate_tee)"
     string="${1:?}"
     file="${2:?}"
-    echo 'FIXME AA'
     if [[ ! -f "$file" ]]
     then
         koopa::mkdir -S "$(koopa::dirname "$file")"
         sudo touch "$file"
     fi
-    echo 'FIXME BB'
-    # FIXME This is now erroring.
-    echo "tee: $tee"
-    koopa::print "$string" | sudo tee -a "$file" >/dev/null
-    echo 'FIXME CC'
+    koopa::print "$string" | sudo "$tee" -a "$file" >/dev/null
     return 0
 }
 
