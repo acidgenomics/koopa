@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Consider not linking r-devel into /usr/local. If we change this,
+        need to update r-devel Docker image to hard-code the PATH.
 ** TODO Add support for nushell?
 ** TODO Improve completion support for all exported scripts.
 ** TODO Improve configuration of NPM, to store packages outside of '/usr/local'.
