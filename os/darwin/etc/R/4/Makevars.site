@@ -1,106 +1,72 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2021-05-03.
-#
-# '-O3' should be faster than '-O2' (default) level optimization.
+# Updated 2021-05-20.
 #
 # See also:
 # - /Library/Frameworks/R.framework/Resources/etc/Makeconf
+# - https://mac.r-project.org/
 # - https://cran.r-project.org/doc/manuals/r-release/
 #     R-admin.html#macOS-packages
-# - https://cran.r-project.org/doc/manuals/r-devel/R-exts.html#Using-Makevars
-# - https://github.com/Rdatatable/data.table/wiki/
-#     Installation#openmp-enabled-compiler-for-mac
-# - https://mac.r-project.org/openmp/
-# - https://thecoatlessprofessor.com/programming/cpp/
-#     r-compiler-tools-for-rcpp-on-macos/
-# https://stackoverflow.com/questions/23414448/
+# - https://cran.r-project.org/doc/manuals/r-devel/
+#     R-exts.html#Using-Makevars
 # """
 
 
 
-# Apple Clang configuration {{{1
+# C compiler {{{1
 # ==============================================================================
 
-# Note that this doesn't support OpenMP currently, which is required to build
-# data.table with parallel thread support.
-
-# > SDK_LOC=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-# >
-# > CCFLAGS=-isysroot $(SDK_LOC)
-# > CFLAGS=-isysroot $(SDK_LOC)
-# > CPPFLAGS=-isysroot $(SDK_LOC) -I/usr/local/include
-# > CXXFLAGS=-isysroot $(SDK_LOC)
-
-
-
-# GCC (Official GNU fortran) configuration {{{1
-# ==============================================================================
-
-# Download and install GNU Fortran complier from CRAN, which contains full GCC.
-# CRAN recommends official GNU Fortran 8.2 from fxcoudert.
-
-# These compiler settings work nicely for compiling data.table.
-
-# > C_LOC=/usr/local/gfortran
-# > SDK_LOC=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-# >
-# > CC=$(C_LOC)/bin/gcc -fopenmp
-# > CXX=$(C_LOC)/bin/g++ -fopenmp
-# >
-# > CXX11=$(C_LOC)/bin/g++ -fopenmp
-# > CXX14=$(C_LOC)/bin/g++ -fopenmp
-# > CXX17=$(C_LOC)/bin/g++ -fopenmp
-# > CXX20=$(C_LOC)/bin/g++ -fopenmp
-# >
-# > CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
-# > CPPFLAGS=-I$(C_LOC)/include -I$(SDK_LOC)/usr/include
-# > CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-# > LDFLAGS=-L$(C_LOC)/lib -Wl,-rpath,$(C_LOC)/lib
-# >
-# > CXX11FLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-# > CXX14FLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-# > CXX17FLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-# > CXX20FLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-
-
-
-# Homebrew LLVM configuration {{{1
-# ==============================================================================
-
-# This configuration is intended for data.table to run in parallel properly,
-# with proper OpenMP support. It works nicely for data.table but currently
-# errors for rJava.
-
-# > HOMEBREW_OPT_LOC=/usr/local/opt
-# > SDK_LOC=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-# >
-# > LLVM_LOC=$(HOMEBREW_OPT_LOC)/llvm
-# > GETTEXT_LOC="$(HOMEBREW_OPT_LOC)/gettext
-# >
-# > CC=$(LLVM_LOC)/bin/clang -fopenmp
-# > CXX=$(LLVM_LOC)/bin/clang++ -fopenmp
+# Notes {{{2
+# ------------------------------------------------------------------------------
 #
-# > CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
-# > CPPFLAGS=-I$(GETTEXT_LOC)/include -I$(LLVM_LOC)/include -I$(SDK_LOC)/usr/include
-# > CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
-# > LDFLAGS=-L$(GETTEXT_LOC)/lib -L$(LLVM_LOC)/lib -Wl,-rpath,$(LLVM_LOC)/lib
-
-
-
-# Rcpp flags {{{1
-# ==============================================================================
-
-# These compiler options are recommended by Dirk Eddelbuettel.
-#
-# Otherwise will see this warning:
-# # unused variable 'data' [-Wunused-variable]
+# '-O3' should be faster than '-O2' (default) level optimization.
+# 
+# 'CXXFLAGS' do not automagically promote to 'CXX11FLAGS' (and same for C++14,
+# C++17, C++20).
 #
 # See also:
-# - https://stackoverflow.com/questions/65987522/
-# - https://stackoverflow.com/a/37234225
+# - https://thecoatlessprofessor.com/programming/cpp/
+#     r-compiler-tools-for-rcpp-on-macos/
 # - https://stackoverflow.com/a/23414789
+# - https://stackoverflow.com/a/37234225
 
-CFLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=gnu99
-CXXFLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=c++11 -Wno-unused
-CXX11FLAGS+=-O3 -Wall -mtune=native -pedantic -pipe -std=c++11 -Wno-unused
+# Current configuration {{{2
+# ------------------------------------------------------------------------------
+
+CFLAGS += -O3 -Wall -g -pedantic -pipe -mtune=native -std=gnu99
+CXXFLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
+CXX11FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
+CXX14FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
+CXX17FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
+CXX20FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
+
+
+
+# Fortran {{{1
+# ==============================================================================
+
+# See also:
+# - https://thecoatlessprofessor.com/programming/cpp/
+#     rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error/
+
+FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/gfortran/lib -lgfortran -lquadmath -lm
+
+
+
+# OpenMP {{{1
+# ==============================================================================
+
+# See also:
+# - https://mac.r-project.org/openmp/
+# - https://github.com/Rdatatable/data.table/wiki/Installation
+# - https://stackoverflow.com/questions/40904488/openmp-r-and-macos
+# - https://iscinumpy.gitlab.io/post/omp-on-high-sierra/
+
+CPPFLAGS += -Xclang -fopenmp
+LDFLAGS += -lomp
+LIBS += -lomp
+
+# May need to enable:
+# > SHLIB_OPENMP_CFLAGS += -Xpreprocessor -fopenmp
+# > SHLIB_OPENMP_CPPFLAGS += -Xpreprocessor -fopenmp
+# > SHLIB_OPENMP_CXXFLAGS += -Xpreprocessor -fopenmp

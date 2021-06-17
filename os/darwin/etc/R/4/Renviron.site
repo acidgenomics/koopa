@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-05-18.
+# @note Updated 2021-06-11.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
@@ -32,27 +32,30 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # - http://mac.r-project.org/tools/
 # - https://cran.r-project.org/bin/macosx/tools/
 
-# Note that CRAN is now using Xcode clang for R 4.0+.
-
-# Restrict path, so we don't mask compiler binaries with conda or venv.
+# Restrict path, so we don't mask compiler binaries with virtual environment.
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-# fxcoudert gfortran 8.2 (for R 4.0+).
-# > PATH="/usr/local/gfortran/bin:${PATH}"
+# GNU Fortran (from fxcoudert).
+PATH="/usr/local/gfortran/bin:${PATH}"
 
-# Homebrew curl.
-PATH="/usr/local/opt/curl/bin:${PATH}"
+# cURL.
+PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
 
-# Python binaries and site packages.
-# > PATH="${HOMEBREW_OPT_PREFIX}/python@3.9/bin:${PATH}"
-PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
-PATH="${KOOPA_OPT_PREFIX}/python/site-packages/bin:${PATH}"
+# Ruby.
+PATH="${KOOPA_OPT_PREFIX}/ruby-packages/bin:${PATH}"
 
-# Rust packages.
-PATH="${KOOPA_OPT_PREFIX}/rust/cargo/bin:${PATH}"
+# Perl.
+PATH="${KOOPA_OPT_PREFIX}/perl-packages/bin:${PATH}"
 
-# Conda binary.
+# Rust.
+PATH="${KOOPA_OPT_PREFIX}/rust-packages/bin:${PATH}"
+
+# Python.
+PATH="/Library/Frameworks/Python.framework/Versions/Current/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/python-packages/bin:${PATH}"
+
+# Conda.
 PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
 
 # Koopa.
@@ -97,12 +100,6 @@ _R_CHECK_SYSTEM_CLOCK_=0
 
 XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
 
-# rappdirs {{{2
-# ------------------------------------------------------------------------------
-
-## Note that this setting is inherited by BiocFileCache.
-R_USER_CACHE_DIR="${KOOPA_OPT_PREFIX}/r-cache"
-
 # remotes {{{2
 # ------------------------------------------------------------------------------
 
@@ -120,7 +117,15 @@ R_REMOTES_UPGRADE="always"
 # If left unset, defaults to `~/.virtualenvs`.
 # Check with `virtualenv_list()`.
 # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-WORKON_HOME="${KOOPA_OPT_PREFIX}/python/virtualenvs"
+WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
+
+# tools / rappdirs {{{2
+# ------------------------------------------------------------------------------
+
+# These values are inherited by `tools::R_user_dir()`.
+R_USER_CACHE_DIR="${XDG_CACHE_HOME:-~/.cache}"
+R_USER_CONFIG_DIR="${XDG_CONFIG_HOME:-~/.config}"
+R_USER_DATA_DIR="${XDG_DATA_HOME:-~/.local/share}"
 
 # units / udunits {{{2
 # ------------------------------------------------------------------------------

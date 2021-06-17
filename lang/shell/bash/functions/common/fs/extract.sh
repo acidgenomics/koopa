@@ -3,14 +3,14 @@
 koopa::extract() { # {{{1
     # """
     # Extract compressed files automatically.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-05-27.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
     # See also:
     # - https://github.com/stephenturner/oneliners
     # """
-    local file
+    local cmd cmd_args file
     koopa::assert_has_args "$#"
     for file in "$@"
     do
@@ -18,62 +18,66 @@ koopa::extract() { # {{{1
         file="$(koopa::realpath "$file")"
         koopa::alert "Extracting '${file}'."
         case "$file" in
+            # Two extensions (must come first).
             *.tar.bz2)
-                koopa::assert_is_installed tar
-                tar -xj -f "$file"
+                cmd="$(koopa::locate_tar)"
+                cmd_args=(-xj -f "$file")
                 ;;
             *.tar.gz)
-                koopa::assert_is_installed tar
-                tar -xz -f "$file"
+                cmd="$(koopa::locate_tar)"
+                cmd_args=(-xz -f "$file")
                 ;;
             *.tar.xz)
-                koopa::assert_is_installed tar
-                tar -xJ -f "$file"
+                if koopa::is_macos
+                then
+                    koopa::activate_homebrew_opt_prefix 'xz'
+                fi
+                cmd="$(koopa::locate_tar)"
+                cmd_args=(-xJ -f "$file")
                 ;;
+            # Single extension.
             *.bz2)
-                koopa::assert_is_installed bunzip2
-                bunzip2 "$file"
+                cmd="$(koopa::locate_bunzip2)"
+                cmd_args=("$file")
                 ;;
             *.gz)
-                koopa::assert_is_installed gunzip
-                gunzip "$file"
-                ;;
-            *.rar)
-                koopa::assert_is_installed unrar
-                unrar -x "$file"
+                cmd="$(koopa::locate_gunzip)"
+                cmd_args=("$file")
                 ;;
             *.tar)
-                koopa::assert_is_installed tar
-                tar -x -f "$file"
+                cmd="$(koopa::locate_tar)"
+                cmd_args=(-x -f "$file")
                 ;;
             *.tbz2)
-                koopa::assert_is_installed tar
-                tar -xj -f "$file"
+                cmd="$(koopa::locate_tar)"
+                cmd_args=(-xj -f "$file")
                 ;;
             *.tgz)
-                koopa::assert_is_installed tar
-                tar -xz -f "$file"
+                cmd="$(koopa::locate_tar)"
+                cmd_args=(-xz -f "$file")
                 ;;
             *.xz)
-                koopa::assert_is_installed xz
-                xz --decompress "$file"
+                cmd="$(koopa::locate_xz)"
+                cmd_args=(--decompress "$file")
                 ;;
             *.zip)
-                koopa::assert_is_installed unzip
-                unzip -qq "$file"
+                cmd="$(koopa::locate_unzip)"
+                cmd_args=(-qq "$file")
                 ;;
             *.Z)
-                koopa::assert_is_installed uncompress
-                uncompress "$file"
+                cmd="$(koopa::locate_uncompress)"
+                cmd_args=("$file")
                 ;;
             *.7z)
-                koopa::assert_is_installed 7z
-                7z -x "$file"
+                cmd="$(koopa::locate_7z)"
+                cmd_args=(-x "$file")
                 ;;
             *)
                 koopa::stop "Unsupported extension: '${file}'."
                 ;;
         esac
+        koopa::assert_is_installed "$cmd"
+        "$cmd" "${cmd_args[@]}"
     done
     return 0
 }

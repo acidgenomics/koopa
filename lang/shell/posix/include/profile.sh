@@ -3,14 +3,21 @@
 __koopa_activate_user_profile() { # {{{1
     # """
     # Activate koopa shell for current user.
-    # @note Updated 2021-05-17.
+    # @note Updated 2021-06-04.
     # @seealso https://koopa.acidgenomics.com/
     # """
-    export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
-    if [ -f "${XDG_CONFIG_HOME}/koopa/activate" ]
+    local script xdg_config_home
+    [ "$#" -eq 0 ] || return 1
+    xdg_config_home="${XDG_CONFIG_HOME:-}"
+    if [ -z "$xdg_config_home" ]
+    then
+        xdg_config_home="${HOME:?}/.config"
+    fi
+    script="${xdg_config_home}/koopa/activate"
+    if [ -r "$script" ]
     then
         # shellcheck source=/dev/null
-        . "${XDG_CONFIG_HOME}/koopa/activate"
+        . "$script"
     fi
     return 0
 }

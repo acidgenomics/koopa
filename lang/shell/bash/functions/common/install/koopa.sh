@@ -1,24 +1,11 @@
 #!/usr/bin/env bash
 
-# Temporarily disabled, until we rethink Python and/or Rust approach.
-# > koopa::install_py_koopa() { # {{{1
-# >     # """
-# >     # Install Python koopa package.
-# >     # @note Updated 2021-01-20.
-# >     # """
-# >     local url
-# >     koopa::python_add_site_packages_to_sys_path
-# >     url='https://github.com/acidgenomics/py-koopa/archive/main.zip'
-# >     koopa::pip_install "$url"
-# >     return 0
-# > }
-
 koopa::install_r_koopa() { # {{{1
     # """
     # Install koopa R package.
     # @note Updated 2020-01-04.
     # """
-    koopa::rscript 'header'
+    koopa::r_script 'header'
     return 0
 }
 
@@ -27,7 +14,7 @@ koopa::uninstall_koopa() { # {{{1
     # Uninstall koopa.
     # @note Updated 2020-06-24.
     # """
-    "$(koopa::prefix)/uninstall" "$@"
+    "$(koopa::koopa_prefix)/uninstall" "$@"
     return 0
 }
 
@@ -40,7 +27,7 @@ koopa::update_koopa() { # {{{1
     # """
     local koopa_prefix name_fancy url version
     name_fancy='koopa'
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     if ! koopa::is_git_toplevel "$koopa_prefix"
     then
         version="$(koopa::version)"
@@ -87,7 +74,7 @@ koopa::update_koopa_system() { # {{{1
         conf_args=('--no-check')
         koopa::linux_configure_system "${conf_args[@]}"
     fi
-    if koopa::is_installed brew
+    if koopa::is_installed 'brew'
     then
         koopa::update_homebrew
     else
@@ -143,7 +130,6 @@ koopa::update_koopa_user() { # {{{1
     ! koopa::is_shared_install && \
         koopa::update_dotfiles "$(koopa::dotfiles_prefix)"
     koopa::update_dotfiles "$(koopa::dotfiles_private_prefix)"
-    # > koopa::update_emacs
     koopa::alert_success 'User configuration update was successful.'
     return 0
 }

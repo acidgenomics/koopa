@@ -116,13 +116,6 @@ koopa::note() { # {{{1
     koopa::defunct 'koopa::alert_note'
 }
 
-koopa::prefix_mkdir() { # {{{1
-    # """
-    # @note Updated 2020-02-19.
-    # """
-    koopa::defunct 'koopa::mkdir'
-}
-
 koopa::prune_cellar() { # {{{1
     # """
     # @note Updated 2020-11-22.

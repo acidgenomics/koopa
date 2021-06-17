@@ -18,7 +18,7 @@ koopa::linux_configure_lmod() { # {{{1
     name_fancy='Lmod'
     if [[ ! -d "$init_dir" ]]
     then
-        koopa::alert_not_installed "$name_fancy" "$init_dir"
+        koopa::alert_is_not_installed "$name_fancy" "$init_dir"
         return 0
     fi
     etc_dir='/etc/profile.d'
@@ -29,7 +29,7 @@ koopa::linux_configure_lmod() { # {{{1
     # csh, tcsh
     koopa::ln -S "${init_dir}/cshrc" "${etc_dir}/z00_lmod.csh"
     # fish
-    if koopa::is_installed fish
+    if koopa::is_installed 'fish'
     then
         etc_dir='/etc/fish/conf.d'
         koopa::alert "Updating Fish configuration in '${etc_dir}'."
@@ -40,7 +40,7 @@ koopa::linux_configure_lmod() { # {{{1
     return 0
 }
 
-koopa::install_lmod() { # {{{1
+koopa::linux_install_lmod() { # {{{1
     koopa::install_app \
         --name='lmod' \
         --name-fancy='Lmod' \
@@ -52,14 +52,14 @@ koopa::install_lmod() { # {{{1
 koopa:::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-05-26.
     # """
-    set -x
-    local apps_dir data_dir file name name2 prefix url version
-    koopa::activate_opt_prefix lua luarocks
-    koopa::assert_is_installed lua luarocks
+    local apps_dir data_dir file make name name2 prefix url version
+    koopa::activate_opt_prefix 'lua' 'luarocks'
+    koopa::assert_is_installed 'lua' 'luarocks'
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    make="$(koopa::locate_make)"
     name='lmod'
     name2="$(koopa::capitalize "$name")"
     apps_dir="${prefix}/apps"
@@ -76,11 +76,27 @@ koopa:::linux_install_lmod() { # {{{1
         --prefix="$apps_dir" \
         --with-spiderCacheDir="${data_dir}/cacheDir" \
         --with-updateSystemFn="${data_dir}/system.txt"
-    make
-    make install
+    "$make"
+    "$make" install
     if koopa::is_admin
     then
         koopa::linux_configure_lmod "$prefix"
     fi
+    return 0
+}
+
+koopa::linux_uninstall_lmod() { # {{{1
+    # """
+    # Uninstall Lmod.
+    # @note Updated 2021-06-14.
+    # """
+    koopa::uninstall_app \
+        --name='lmod' \
+        --name-fancy='Lmod' \
+        --no-link \
+        "$@"
+    koopa::rm -S \
+        '/etc/profile.d/z00_lmod.csh' \
+        '/etc/profile.d/z00_lmod.sh'
     return 0
 }

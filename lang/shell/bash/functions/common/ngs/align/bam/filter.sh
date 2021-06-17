@@ -3,10 +3,10 @@
 koopa::bam_filter() { # {{{1
     # """
     # Apply multi-step filtering to BAM files.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-05-22.
     # """
-    local bam_file bam_files dir final_output_bam final_output_tail input_bam \
-        input_tail output_bam output_tail
+    local bam_file bam_files dir final_output_bam final_output_tail input_bam
+    local input_tail output_bam output_tail
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"

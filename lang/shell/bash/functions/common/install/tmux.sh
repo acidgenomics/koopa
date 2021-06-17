@@ -9,13 +9,14 @@ koopa::install_tmux() { # {{{1
 koopa:::install_tmux() { # {{{1
     # """
     # Install Tmux.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-25.
     # """
-    local file jobs name prefix url version
+    local file jobs make name prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='tmux'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='tmux'
     file="${name}-${version}.tar.gz"
     url="https://github.com/${name}/${name}/releases/download/\
 ${version}/${file}"
@@ -23,7 +24,13 @@ ${version}/${file}"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure --prefix="$prefix"
-    make --jobs="$jobs"
-    make install
+    "$make" --jobs="$jobs"
+    "$make" install
     return 0
+}
+
+koopa::uninstall_tmux() { # {{{1
+    koopa::uninstall_app \
+        --name='tmux' \
+        "$@"
 }

@@ -5,6 +5,7 @@ _koopa_export_cpu_count() { # {{{1
     # Export 'CPU_COUNT' variable.
     # @note Updated 2021-05-14.
     # """
+    [ "$#" -eq 0 ] || return 1
     if [ -z "${CPU_COUNT:-}" ]
     then
         CPU_COUNT="$(_koopa_cpu_count)"
@@ -18,6 +19,7 @@ _koopa_export_editor() { # {{{1
     # Export 'EDITOR' variable.
     # @note Updated 2021-05-07.
     # """
+    [ "$#" -eq 0 ] || return 1
     if [ -z "${EDITOR:-}" ]
     then
         EDITOR='vim'
@@ -35,6 +37,7 @@ _koopa_export_git() { # {{{1
     # @seealso
     # https://git-scm.com/docs/merge-options
     # """
+    [ "$#" -eq 0 ] || return 1
     if [ -z "${GIT_MERGE_AUTOEDIT:-}" ]
     then
         GIT_MERGE_AUTOEDIT='no'
@@ -52,6 +55,7 @@ _koopa_export_gnupg() { # {{{1
     # Useful for getting Docker credential store to work.
     # https://github.com/docker/docker-credential-helpers/issues/118
     # """
+    [ "$#" -eq 0 ] || return 1
     [ -z "${GPG_TTY:-}" ] || return 0
     _koopa_is_tty || return 0
     GPG_TTY="$(tty || true)"
@@ -68,6 +72,7 @@ _koopa_export_history() { # {{{1
     # For setting history length, see HISTSIZE and HISTFILESIZE.
     # """
     local shell
+    [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     # Standardize the history file name across shells.
     # Note that snake case is commonly used here across platforms.
@@ -116,24 +121,12 @@ _koopa_export_history() { # {{{1
     return 0
 }
 
-_koopa_export_hostname() { # {{{1
-    # """
-    # Export 'HOSTNAME' variable.
-    # @note Updated 2021-05-14.
-    # """
-    if [ -z "${HOSTNAME:-}" ]
-    then
-        HOSTNAME="$(_koopa_hostname)"
-    fi
-    export HOSTNAME
-    return 0
-}
-
 _koopa_export_pager() { # {{{1
     # """
     # Export 'PAGER' variable.
     # @note Updated 2021-05-14.
     # """
+    [ "$#" -eq 0 ] || return 1
     if [ -z "${PAGER:-}" ]
     then
         PAGER='less'
@@ -142,24 +135,10 @@ _koopa_export_pager() { # {{{1
     return 0
 }
 
-_koopa_export_python() { # {{{1
-    # """
-    # Export Python settings.
-    # @note Updated 2020-06-30.
-    # """
-    # Don't allow Python to change the prompt string by default.
-    if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
-    then
-        VIRTUAL_ENV_DISABLE_PROMPT=1
-    fi
-    export VIRTUAL_ENV_DISABLE_PROMPT
-    return 0
-}
-
 _koopa_export_shell() { # {{{1
     # """
     # Export 'SHELL' variable.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-05-21.
     #
     # Some POSIX shells, such as Dash, don't export this by default.
     #
@@ -169,7 +148,8 @@ _koopa_export_shell() { # {{{1
     # We are ensuring reexport here so that subshells contain the correct
     # value, e.g. running 'bash -il' inside a Zsh login shell.
     # """
-    SHELL="$(_koopa_shell)"
+    [ "$#" -eq 0 ] || return 1
+    SHELL="$(_koopa_shell_name)"
     export SHELL
     return 0
 }
@@ -179,6 +159,7 @@ _koopa_export_tmpdir() { # {{{1
     # Export 'TMPDIR' variable.
     # @note Updated 2021-05-14.
     # """
+    [ "$#" -eq 0 ] || return 1
     if [ -z "${TMPDIR:-}" ]
     then
         TMPDIR='/tmp'
@@ -187,26 +168,12 @@ _koopa_export_tmpdir() { # {{{1
     return 0
 }
 
-_koopa_export_today() { # {{{1
-    # """
-    # Export 'TODAY' variable.
-    # @note Updated 2021-05-14.
-    #
-    # Current date. Alternatively, can use '%F' shorthand.
-    # """
-    if [ -z "${TODAY:-}" ]
-    then
-        TODAY="$(_koopa_today)"
-    fi
-    export TODAY
-    return 0
-}
-
 _koopa_export_user() { # {{{1
     # """
     # Export 'USER' variable.
     # @note Updated 2021-05-14.
     # """
+    [ "$#" -eq 0 ] || return 1
     if [ -z "${USER:-}" ]
     then
         USER="$(_koopa_user)"

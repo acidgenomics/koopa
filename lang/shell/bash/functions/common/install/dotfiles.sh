@@ -1,121 +1,64 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] Linux success.
+# [2021-05-27] macOS success.
+
 koopa::install_dotfiles() { # {{{1
-    # """
-    # Install dot files.
-    # @note Updated 2021-05-11.
-    # """
-    local koopa_prefix name_fancy prefix reinstall script
-    name_fancy='dotfiles'
+    local prefix script
+    koopa::install_app \
+        --name='dotfiles' \
+        --version='rolling' \
+        "$@"
     prefix="$(koopa::dotfiles_prefix)"
-    reinstall=0
-    while (("$#"))
-    do
-        case "$1" in
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 1 ]]
-    then
-        koopa::alert_note "Removing ${name_fancy} at '${prefix}'."
-        koopa::rm "$prefix"
-    fi
-    koopa::install_start "$name_fancy" "$prefix"
-    koopa_prefix="$(koopa::prefix)"
-    koopa::add_to_path_start "${koopa_prefix}/bin"
-    [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles
-    koopa::add_config_link "$prefix"
+    koopa::assert_is_dir "$prefix"
+    koopa::add_koopa_config_link "$prefix" 'dotfiles'
     script="${prefix}/install"
     koopa::assert_is_file "$script"
     "$script"
-    koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
 
-koopa::install_dotfiles_private() { # {{{1
+koopa:::install_dotfiles() { # {{{1
     # """
-    # Install private dot files.
-    # @note Updated 2021-05-11.
+    # Install dotfiles.
+    # @note Updated 2021-06-14.
     # """
-    local name_fancy prefix reinstall script
-    name_fancy='private dotfiles'
-    prefix="$(koopa::dotfiles_private_prefix)"
-    reinstall=0
-    while (("$#"))
-    do
-        case "$1" in
-            --reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ -d "$prefix" ]] && [[ "$reinstall" -eq 1 ]]
-    then
-        koopa::alert_note "Removing ${name_fancy} at '${prefix}'."
-        koopa::rm "$prefix"
-    fi
-    koopa::install_start "$name_fancy" "$prefix"
-    koopa::add_monorepo_config_link 'dotfiles-private'
-    [[ ! -d "$prefix" ]] && koopa::git_clone_dotfiles_private
-    script="${prefix}/install"
-    koopa::assert_is_file "$script"
-    "$script"
-    koopa::install_success "$name_fancy" "$prefix"
+    local prefix script
+    prefix="${INSTALL_PREFIX:?}"
+    repo='https://github.com/acidgenomics/dotfiles.git'
+    koopa::git_clone "$repo" "$prefix"
     return 0
 }
 
 koopa::uninstall_dotfiles() { # {{{1
     # """
     # Uninstall dot files.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-06-14.
     # """
-    local prefix script
+    local name name_fancy prefix script
     koopa::assert_has_no_args "$#"
+    name='dotfiles'
+    name_fancy='dotfiles'
     prefix="$(koopa::dotfiles_prefix)"
     if [[ ! -d "$prefix" ]]
     then
-        koopa::alert_note "No dotfiles at '${prefix}'."
+        koopa::alert_is_not_installed "$name_fancy" "$prefix"
         return 0
     fi
     script="${prefix}/uninstall"
     koopa::assert_is_file "$script"
     "$script"
-    return 0
-}
-
-koopa::uninstall_dotfiles_private() { # {{{1
-    # """
-    # Uninstall private dot files.
-    # @note Updated 2020-07-05.
-    # """
-    local prefix script
-    koopa::assert_has_no_args "$#"
-    prefix="$(koopa::dotfiles_private_prefix)"
-    if [[ ! -d "$prefix" ]]
-    then
-        koopa::alert_note "No private dotfiles at '${prefix}'."
-        return 0
-    fi
-    script="${prefix}/uninstall"
-    koopa::assert_is_file "$script"
-    "$script"
+    koopa::uninstall_app \
+        --name-fancy="$name_fancy" \
+        --name="$name" \
+        "$@"
     return 0
 }
 
 koopa::update_dotfiles() { # {{{1
     # """
     # Update dotfiles repo and run install script, if defined.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-06-14.
     # """
     local config_prefix repo repos script
     if [[ "$#" -eq 0 ]]
