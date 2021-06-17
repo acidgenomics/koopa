@@ -88,8 +88,8 @@ koopa:::linux_install_rstudio_server() { # {{{1
     koopa::assert_has_no_args "$#"
     if [[ "${dict[workbench]}" -eq 1 ]]
     then
-        dict[name]="rstudio-workbench"
-        dict[name_fancy]="RStudio Workbench"
+        dict[name]='rstudio-workbench'
+        dict[name_fancy]='RStudio Workbench'
     fi
     dict[file_stem]="${dict[name]}"
     if koopa::is_fedora_like

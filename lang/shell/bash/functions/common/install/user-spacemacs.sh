@@ -21,7 +21,7 @@ koopa:::install_spacemacs() { # {{{1
     local prefix repo
     koopa::assert_has_no_args "$#"
     prefix="${INSTALL_PREFIX:?}"
-    repo="https://github.com/syl20bnr/spacemacs.git"
+    repo='https://github.com/syl20bnr/spacemacs.git'
     koopa::git_clone --branch='develop' "$repo" "$prefix"
     return 0
 }

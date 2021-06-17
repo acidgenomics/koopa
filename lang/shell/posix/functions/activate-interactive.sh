@@ -25,7 +25,7 @@ _koopa_activate_aliases() { # {{{1
     alias pipx='_koopa_alias_pipx'
     alias pyenv='_koopa_alias_pyenv'
     alias rbenv='_koopa_alias_rbenv'
-    alias sha256="_koopa_alias_sha256"
+    alias sha256='_koopa_alias_sha256'
     alias spacemacs='_koopa_alias_spacemacs'
     alias spacevim='_koopa_alias_spacevim'
     alias tar-c='_koopa_alias_tar_c'
