@@ -3,7 +3,7 @@
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-06-16.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -15,9 +15,6 @@ koopa::configure_r() { # {{{1
     name_fancy='R'
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::configure_start "$name_fancy" "$r_prefix"
-    koopa::dl \
-        'R home' "$r_prefix" \
-        'R path' "$r"
     koopa::assert_is_dir "$r_prefix"
     if koopa::is_koopa_app "$r"
     then
