@@ -41,13 +41,13 @@ koopa::fedora_install_wine() { # {{{1
 koopa::fedora_uninstall_wine() { # {{{1
     # """
     # Uninstall Wine.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-06-17.
     # """
     koopa::fedora_dnf_remove \
         'winehq-stable' \
         'xorg-x11-apps' \
         'xorg-x11-server-Xvfb' \
         'xorg-x11-xauth'
-    # FIXME Need to ensure we remove the repos here too.
+    koopa::fedora_dnf_delete_repo 'winehq'
     return 0
 }
