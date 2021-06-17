@@ -28,7 +28,7 @@ koopa::test_shunit2() {
     koopa::h1 'Running unit tests with shUnit2.'
     # Don't exit on errors, which are handled by shunit2.
     set +o errexit
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     shunit2_dir="${koopa_prefix}/tests/shunit2.d"
     suite() { # {{{1
         koopa::source_dir "$shunit2_dir"

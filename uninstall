@@ -9,7 +9,7 @@ uninstall() { # {{{1
     # @note Updated 2021-06-14.
     # """
     local koopa_prefix
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     if koopa::is_shared_install
     then
         koopa::rm -S '/etc/profile.d/zzz-koopa.sh'

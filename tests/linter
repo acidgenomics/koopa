@@ -9,7 +9,7 @@ koopa::test_linter() {
     # Updated 2020-08-12.
     # """
     local koopa_prefix linter_prefix
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     koopa::h1 'Running linter checks.'
     koopa::git_clone_dotfiles &>/dev/null
     koopa::assert_is_file "${koopa_prefix}/."{'lintr','pylintrc'}
