@@ -101,7 +101,7 @@ END
 _koopa_duration_start() { # {{{1
     # """
     # Start activation duration timer.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-06-17.
     # """
     local brew_prefix date
     [ "$#" -eq 0 ] || return 1
@@ -111,6 +111,7 @@ _koopa_duration_start() { # {{{1
         brew_prefix="$(_koopa_homebrew_prefix)"
         date="${brew_prefix}/opt/coreutils/bin/gdate"
     fi
+    _koopa_is_installed "$date" || return 0
     KOOPA_DURATION_START="$("$date" -u '+%s%3N')"
     export KOOPA_DURATION_START
     return 0
@@ -119,7 +120,7 @@ _koopa_duration_start() { # {{{1
 _koopa_duration_stop() { # {{{1
     # """
     # Stop activation duration timer.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-17.
     # """
     local brew_prefix bc date duration key start stop
     [ "$#" -le 1 ] || return 1
@@ -138,12 +139,14 @@ _koopa_duration_stop() { # {{{1
         bc="${brew_prefix}/opt/bc/bin/bc"
         date="${brew_prefix}/opt/coreutils/bin/gdate"
     fi
+    _koopa_is_installed "$bc" "$date" || return 0
     start="${KOOPA_DURATION_START:?}"
     stop="$("$date" -u '+%s%3N')"
     duration="$( \
         _koopa_print "${stop}-${start}" \
         | "$bc" \
     )"
+    [ -n "$duration" ] || return 1
     _koopa_dl "$key" "${duration} ms"
     unset -v KOOPA_DURATION_START
     return 0
