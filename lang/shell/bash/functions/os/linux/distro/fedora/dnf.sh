@@ -50,6 +50,7 @@ koopa::fedora_install_from_rpm() { # {{{1
     # Allowing passthrough of '--prefix' here.
     # """
     koopa::assert_has_args "$#"
+    koopa::assert_is_installed 'rpm'
     sudo rpm -v \
         --force \
         --install \

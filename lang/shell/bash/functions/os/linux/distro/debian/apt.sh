@@ -724,6 +724,7 @@ koopa::debian_install_from_deb() { # {{{1
     # """
     local file
     koopa::assert_has_args_eq "$#" 1
+    koopa::assert_is_installed 'gdebi'
     file="${1:?}"
     sudo gdebi --non-interactive "$file"
     return 0
