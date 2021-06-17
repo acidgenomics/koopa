@@ -5,11 +5,12 @@ koopa::install_python_packages() { # {{{1
     # Install Python packages.
     # @note Updated 2021-06-13.
     # """
-    local name_fancy pkg pkg_lower pkgs version
+    local name_fancy pkg pkg_lower pkgs prefix version
     python="$(koopa::locate_python)"
     koopa::assert_has_no_envs
     koopa::assert_is_installed "$python"
     name_fancy='Python packages'
+    prefix="$(koopa::python_packages_prefix)"
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
@@ -43,9 +44,9 @@ koopa::install_python_packages() { # {{{1
             pkgs[$i]="${pkg}==${version}"
         done
     fi
-    koopa::install_start "$name_fancy"
+    koopa::install_start "$name_fancy" "$prefix"
     koopa::python_pip_install "${pkgs[@]}"
-    koopa::install_success "$name_fancy"
+    koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
 
