@@ -43,11 +43,15 @@ koopa::sudo_append_string() { # {{{1
         koopa::mkdir -S "$(koopa::dirname "$file")"
         sudo touch "$file"
     fi
+    echo 'FIXME BB'
+    echo "grep: $grep"
+    echo "string: $string"
+    echo "file: $file"
     if ! sudo "$grep" -Eq "^${string}$" "$file"
     then
         koopa::print "$string" | sudo "$tee" -a "$file" >/dev/null
     fi
-    echo 'FIXME BB'
+    echo 'FIXME CC'
     return 0
 }
 
