@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for Debian.
-
 koopa::fedora_install_oracle_instantclient() { # {{{1
     # """
     # Install Oracle InstantClient.
