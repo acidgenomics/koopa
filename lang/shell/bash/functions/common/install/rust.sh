@@ -24,7 +24,7 @@ koopa::install_rust() { # {{{1
 koopa:::install_rust() { # {{{1
     # """
     # Install Rust (via rustup).
-    # @note Updated 2021-06-13.
+    # @note Updated 2021-06-17.
     # """
     local file pkg_prefix prefix url version
     prefix="${INSTALL_PREFIX:?}"
@@ -36,7 +36,7 @@ koopa:::install_rust() { # {{{1
     koopa::dl \
         'RUSTUP_HOME' "$RUSTUP_HOME" \
         'CARGO_HOME' "$CARGO_HOME"
-    koopa::configure_rust "$version"
+    koopa::configure_rust
     koopa::sys_mkdir "$prefix"
     url='https://sh.rustup.rs'
     file='rustup.sh'
