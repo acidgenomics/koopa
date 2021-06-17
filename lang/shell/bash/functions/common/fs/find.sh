@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Use of 'grep -v' is more compatible with macOS and BusyBox than use of
+# 'grep --invert-match'.
+
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
@@ -145,9 +148,6 @@ koopa::find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
     # @note Updated 2021-06-16.
-    #
-    # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
-    # 'grep --invert-match'.
     # """
     local find grep prefix sort x
     koopa::assert_has_args "$#"
@@ -165,7 +165,7 @@ koopa::find_broken_symlinks() { # {{{1
                 -xtype l \
                 -print \
                 2>&1 \
-            | "$grep" --invert-match 'Permission denied' \
+            | "$grep" -v 'Permission denied' \
             | "$sort" \
         )"
         [[ -n "$x" ]] || continue
@@ -232,7 +232,7 @@ koopa::find_empty_dirs() { # {{{1
                 -empty \
                 -print \
                 2>&1 \
-            | "$grep" --invert-match 'Permission denied' \
+            | "$grep" -v 'Permission denied' \
             | "$sort" \
         )"
         [[ -n "$x" ]] || continue
@@ -264,7 +264,7 @@ koopa::find_files_without_line_ending() { # {{{1
                 -mindepth 1 \
                 -type 'f' \
                 2>&1 \
-            | "$grep" --invert-match 'Permission denied' \
+            | "$grep" -v 'Permission denied' \
             | "$sort" \
         )"
         koopa::is_array_non_empty "${files[@]:-}" || continue
@@ -309,6 +309,8 @@ koopa::find_large_files() { # {{{1
     # """
     # Find large files.
     # @note Updated 2021-06-16.
+    #
+    # This requires GNU grep.
     #
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
