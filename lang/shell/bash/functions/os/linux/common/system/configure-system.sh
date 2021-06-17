@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME This seems to be broken in v0.11.0a update?
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
@@ -262,7 +263,9 @@ koopa::linux_configure_system() { # {{{1
             dict[install_tmux]=1
             dict[install_vim]=1
             ;;
-        bioconductor|default|minimal)
+        bioconductor | \
+        default | \
+        minimal)
             ;;
         *)
             koopa::stop 'Invalid mode.'
