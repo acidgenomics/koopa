@@ -37,6 +37,7 @@ koopa::sudo_append_string() { # {{{1
     tee="$(koopa::locate_grep)"
     string="${1:?}"
     file="${2:?}"
+    echo 'FIXME AA'
     if [[ ! -f "$file" ]]
     then
         koopa::mkdir -S "$(koopa::dirname "$file")"
@@ -46,6 +47,7 @@ koopa::sudo_append_string() { # {{{1
     then
         koopa::print "$string" | sudo "$tee" -a "$file" >/dev/null
     fi
+    echo 'FIXME BB'
     return 0
 }
 
