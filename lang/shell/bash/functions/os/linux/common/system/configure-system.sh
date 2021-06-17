@@ -262,7 +262,9 @@ koopa::linux_configure_system() { # {{{1
             dict[install_tmux]=1
             dict[install_vim]=1
             ;;
-        bioconductor|default|minimal)
+        bioconductor | \
+        default | \
+        minimal)
             ;;
         *)
             koopa::stop 'Invalid mode.'
