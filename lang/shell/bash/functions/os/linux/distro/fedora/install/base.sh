@@ -66,7 +66,7 @@ koopa::fedora_install_base() { # {{{1
     fi
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        koopa::alert "Upgrading all installed packages."
+        koopa::alert 'Upgrading all installed packages.'
         koopa::fedora_dnf update
     fi
     pkgs=()
