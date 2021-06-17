@@ -12,7 +12,7 @@ koopa::add_make_prefix_link() { # {{{1
     koopa::assert_has_args_le "$#" 1
     koopa::is_shared_install || return 0
     koopa_prefix="${1:-}"
-    [[ -z "$koopa_prefix" ]] && koopa_prefix="$(koopa::prefix)"
+    [[ -z "$koopa_prefix" ]] && koopa_prefix="$(koopa::koopa_prefix)"
     make_prefix="$(koopa::make_prefix)"
     [[ -d "$make_prefix" ]] || return 0
     target_link="${make_prefix}/bin/koopa"
@@ -26,7 +26,7 @@ koopa::add_make_prefix_link() { # {{{1
 koopa::add_monorepo_config_link() { # {{{1
     # """
     # Add koopa configuration link from user's git monorepo.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-05-24.
     # """
     local monorepo_prefix subdir
     koopa::assert_has_args "$#"
@@ -34,7 +34,9 @@ koopa::add_monorepo_config_link() { # {{{1
     monorepo_prefix="$(koopa::monorepo_prefix)"
     for subdir in "$@"
     do
-        koopa::add_config_link "${monorepo_prefix}/${subdir}"
+        koopa::add_koopa_config_link \
+            "${monorepo_prefix}/${subdir}" \
+            "$subdir"
     done
     return 0
 }
@@ -47,7 +49,7 @@ koopa::add_to_user_profile() { # {{{1
     local source_file target_file
     koopa::assert_has_no_args "$#"
     target_file="$(koopa::find_user_profile)"
-    source_file="$(koopa::prefix)/lang/shell/posix/include/profile.sh"
+    source_file="$(koopa::koopa_prefix)/lang/shell/posix/include/profile.sh"
     koopa::assert_is_file "$source_file"
     koopa::alert "Adding koopa activation to '${target_file}'."
     touch "$target_file"
@@ -75,6 +77,76 @@ koopa::delete_dotfile() { # {{{1
             koopa::warning "Not a symlink: '${filepath}'."
         fi
     done
+    return 0
+}
+
+koopa::disable_passwordless_sudo() { # {{{1
+    # """
+    # Disable passwordless sudo access for all admin users.
+    # @note Updated 2021-03-01.
+    # Consider using 'has_passwordless_sudo' as a check step here.
+    # """
+    local file
+    koopa::assert_is_admin
+    file='/etc/sudoers.d/sudo'
+    if [[ -f "$file" ]]
+    then
+        koopa::alert "Removing sudo permission file at '${file}'."
+        koopa::rm -S "$file"
+    fi
+    koopa::alert_success 'Passwordless sudo is disabled.'
+    return 0
+}
+
+koopa::enable_passwordless_sudo() { # {{{1
+    # """
+    # Enable passwordless sudo access for all admin users.
+    # @note Updated 2021-05-24.
+    # """
+    local file grep group string
+    koopa::assert_has_no_args "$#"
+    koopa::is_root && return 0
+    koopa::assert_is_admin
+    file='/etc/sudoers.d/sudo'
+    group="$(koopa::admin_group)"
+    grep="$(koopa::locate_grep)"
+    if [[ -f "$file" ]] && sudo "$grep" -q "$group" "$file"
+    then
+        koopa::alert_success "sudo already configured at '${file}'."
+        return 0
+    fi
+    koopa::alert "Modifying '${file}' to include '${group}'."
+    string="%${group} ALL=(ALL) NOPASSWD: ALL"
+    koopa::sudo_append_string "$string" "$file"
+    koopa::chmod -S 0440 "$file"
+    koopa::alert_success "Passwordless sudo enabled for '${group}' \
+at '${file}'."
+    return 0
+}
+
+koopa::enable_shell() { # {{{1
+    # """
+    # Enable shell.
+    # @note Updated 2021-05-14.
+    # """
+    local cmd_name cmd_path etc_file make_prefix user
+    koopa::assert_has_args "$#"
+    koopa::is_admin || return 0
+    cmd_name="${1:?}"
+    make_prefix="$(koopa::make_prefix)"
+    cmd_path="${make_prefix}/bin/${cmd_name}"
+    etc_file='/etc/shells'
+    [[ -f "$etc_file" ]] || return 0
+    koopa::alert "Updating '${etc_file}' to include '${cmd_path}'."
+    if ! grep -q "$cmd_path" "$etc_file"
+    then
+        koopa::sudo_append_string "$cmd_path" "$etc_file"
+    else
+        koopa::alert_success "'${cmd_path}' already defined in '${etc_file}'."
+    fi
+    user="$(koopa::user)"
+    koopa::alert_note "Run 'chsh -s ${cmd_path} ${user}' to change the \
+default shell."
     return 0
 }
 
@@ -136,11 +208,11 @@ koopa::fix_zsh_permissions() { # {{{1
     local app_prefix koopa_prefix make_prefix
     koopa::assert_has_no_args "$#"
     koopa::alert 'Fixing Zsh permissions.'
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     koopa::sys_chmod 'g-w' \
         "${koopa_prefix}/lang/shell/zsh" \
         "${koopa_prefix}/lang/shell/zsh/functions"
-    koopa::is_installed zsh || return 0
+    koopa::is_installed 'zsh' || return 0
     make_prefix="$(koopa::make_prefix)"
     if [[ -d "${make_prefix}/share/zsh/site-functions" ]]
     then
@@ -168,98 +240,43 @@ koopa::fix_zsh_permissions() { # {{{1
     return 0
 }
 
-koopa::git_clone_dotfiles() { # {{{1
-    # """
-    # Clone dotfiles repo.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::git_clone \
-        'https://github.com/acidgenomics/dotfiles.git' \
-        "$(koopa::dotfiles_prefix)"
-    return 0
-}
-
-koopa::info_box() { # {{{1
-    # """
-    # Configuration information box.
-    # @note Updated 2021-03-30.
-    #
-    # Using unicode box drawings here.
-    # Note that we're truncating lines inside the box to 68 characters.
-    # """
-    koopa::assert_has_args "$#"
-    local array
-    array=("$@")
-    local barpad
-    barpad="$(printf '━%.0s' {1..70})"
-    printf '  %s%s%s  \n' '┏' "$barpad" '┓'
-    for i in "${array[@]}"
-    do
-        printf '  ┃ %-68s ┃  \n' "${i::68}"
-    done
-    printf '  %s%s%s  \n\n' '┗' "$barpad" '┛'
-    return 0
-}
-
-koopa::ip_address() { # {{{1
-    # """
-    # IP address.
-    # @note Updated 2020-07-14.
-    # """
-    type='public'
-    while (("$#"))
-    do
-        case "$1" in
-            --local)
-                type='local'
-                shift 1
-                ;;
-            --public)
-                type='public'
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    case "$type" in
-        local)
-            koopa::local_ip_address
-            ;;
-        public)
-            koopa::public_ip_address
-            ;;
-    esac
-    return 0
-}
-
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-06-14.
     # """
-    local config dot_dir dot_repo force pos private source_name symlink_name \
-        xdg_config_home
+    local pos source_path source_prefix source_subdir
+    local symlink_basename symlink_dirname symlink_path symlink_prefix
     koopa::assert_has_args "$#"
-    config=0
-    force=0
-    private=0
+    declare -A dict=(
+        [config]=0
+        [dotfiles_config_link]="$(koopa::dotfiles_config_link)"
+        [dotfiles_prefix]="$(koopa::dotfiles_prefix)"
+        [dotfiles_private_config_link]="$(koopa::dotfiles_private_config_link)"
+        [force]=0
+        [opt]=0
+        [opt_prefix]="$(koopa::opt_prefix)"
+        [private]=0
+        [xdg_config_home]="$(koopa::xdg_config_home)"
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
             --config)
-                config=1
+                dict[config]=1
                 shift 1
                 ;;
             --force)
-                force=1
+                dict[force]=1
+                shift 1
+                ;;
+            --opt)
+                dict[opt]=1
                 shift 1
                 ;;
             --private)
-                private=1
+                dict[private]=1
                 shift 1
                 ;;
             --)
@@ -277,52 +294,67 @@ koopa::link_dotfile() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_le "$#" 2
-    source_name="$1"
-    symlink_name="${2:-}"
-    if [[ "$private" -eq 1 ]]
+    source_subdir="${1:?}"
+    symlink_basename="${2:-}"
+    if [[ -z "$symlink_basename" ]]
     then
-        dot_dir="$(koopa::dotfiles_private_config_link)"
+        symlink_basename="$(koopa::basename "$source_subdir")"
+    fi
+    if [[ "${dict[opt]}" -eq 1 ]]
+    then
+        source_prefix="${dict[opt_prefix]}"
+    elif [[ "${dict[private]}" -eq 1 ]]
+    then
+        source_prefix="${dict[dotfiles_private_config_link]}"
     else
-        # e.g. ~/.config/koopa/dotfiles
-        dot_dir="$(koopa::dotfiles_config_link)"
-        # Note that this step automatically links into koopa config for users.
-        if [[ ! -d "$dot_dir" ]]
+        source_prefix="${dict[dotfiles_config_link]}"
+        if [[ ! -L "$source_prefix" ]]
         then
-            dot_repo="$(koopa::dotfiles_prefix)"
-            koopa::rm "$dot_dir"
-            koopa::ln "$dot_repo" "$dot_dir"
+            koopa::ln "${dict[dotfiles_prefix]}" "$source_prefix"
         fi
     fi
-    koopa::assert_is_dir "$dot_dir"
-    source_path="${dot_dir}/${source_name}"
+    source_path="${source_prefix}/${source_subdir}"
+    if [[ "${dict[opt]}" -eq 1 ]] && [[ ! -e "$source_path" ]]
+    then
+        koopa::warning "Does not exist: '${source_path}'."
+        return 0
+    fi
     koopa::assert_is_existing "$source_path"
-    # Define optional target symlink name.
-    if [[ -z "$symlink_name" ]]
+    if [[ "${dict[config]}" -eq 1 ]]
     then
-        symlink_name="$(basename "$source_path")"
-    fi
-    # Add link either in HOME (default) or XDG_CONFIG_HOME.
-    if [[ "$config" -eq 1 ]]
-    then
-        xdg_config_home="${XDG_CONFIG_HOME:-}"
-        [[ -z "$xdg_config_home" ]] && xdg_config_home="${HOME:?}/.config"
-        symlink_path="${xdg_config_home}/${symlink_name}"
+        symlink_prefix="${dict[xdg_config_home]}"
     else
-        symlink_path="${HOME:?}/.${symlink_name}"
+        symlink_prefix="${HOME:?}"
+        symlink_basename=".${symlink_basename}"
     fi
+    symlink_path="${symlink_prefix}/${symlink_basename}"
     # Inform the user when nuking a broken symlink.
-    if [[ "$force" -eq 1 ]] ||
+    if [[ "${dict[force]}" -eq 1 ]] ||
         { [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]; }
     then
         koopa::rm "$symlink_path"
     elif [[ -e "$symlink_path" ]]
     then
         koopa::stop "Existing dotfile: '${symlink_path}'."
-        return 1
     fi
     koopa::dl "$symlink_path" "$source_path"
-    symlink_dn="$(dirname "$symlink_path")"
-    [[ "$symlink_dn" != "${HOME:?}" ]] && koopa::mkdir "$symlink_dn"
+    # Create the parent directory, if necessary.
+    symlink_dirname="$(koopa::dirname "$symlink_path")"
+    if [[ "$symlink_dirname" != "${HOME:?}" ]]
+    then
+        koopa::mkdir "$symlink_dirname"
+    fi
     koopa::ln "$source_path" "$symlink_path"
+    return 0
+}
+
+koopa::reload_shell() { # {{{1
+    # """
+    # Reload the current shell.
+    # @note Updated 2021-03-18.
+    # """
+    koopa::assert_has_no_args "$#"
+    # shellcheck disable=SC2093
+    exec "${SHELL:?}" -il
     return 0
 }

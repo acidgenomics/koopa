@@ -3,10 +3,11 @@
 __koopa_acid_emoji() { # {{{1
     # """
     # Acid Genomics test tube emoji.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-06-03.
     #
     # Previous versions defaulted to using the '🐢' turtle.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_print '🧪'
 }
 
@@ -16,6 +17,7 @@ __koopa_ansi_escape() { # {{{1
     # @note Updated 2020-07-05.
     # """
     local escape
+    [ "$#" -eq 1 ] || return 1
     case "${1:?}" in
         nocolor)
             escape='0'
@@ -75,7 +77,7 @@ __koopa_ansi_escape() { # {{{1
             escape='1;97'
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            return 1
             ;;
     esac
     printf '\033[%sm' "$escape"
@@ -88,6 +90,7 @@ __koopa_h() { # {{{1
     # @note Updated 2021-03-31.
     # """
     local emoji level prefix x
+    [ "$#" -ge 2 ] || return 1
     level="${1:?}"
     shift 1
     case "$level" in
@@ -114,7 +117,7 @@ __koopa_h() { # {{{1
             prefix='#######'
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            return 1
             ;;
     esac
     emoji="$(__koopa_acid_emoji)"
@@ -125,9 +128,10 @@ __koopa_h() { # {{{1
 __koopa_msg() { # {{{1
     # """
     # Koopa standard message.
-    # @note Updated 2021-03-31.
+    # @note Updated 2021-06-05.
     # """
     local c1 c2 emoji nc prefix string x
+    [ "$#" -ge 4 ] || return 1
     c1="$(__koopa_ansi_escape "${1:?}")"
     c2="$(__koopa_ansi_escape "${2:?}")"
     nc="$(__koopa_ansi_escape 'nocolor')"
@@ -167,6 +171,7 @@ __koopa_print_ansi() { # {{{1
     # - https://bixense.com/clicolors/
     # """
     local color nocolor string
+    [ "$#" -ge 2 ] || return 1
     color="$(__koopa_ansi_escape "${1:?}")"
     nocolor="$(__koopa_ansi_escape 'nocolor')"
     shift 1
@@ -177,40 +182,13 @@ __koopa_print_ansi() { # {{{1
     return 0
 }
 
-__koopa_status() { # {{{1
-    # """
-    # Koopa status.
-    # @note Updated 2020-07-20.
-    # """
-    local color nocolor label string x
-    [ "$#" -ge 3 ] || return 1
-    label="$(printf '%10s\n' "${1:?}")"
-    color="$(__koopa_ansi_escape "${2:?}")"
-    nocolor="$(__koopa_ansi_escape 'nocolor')"
-    shift 2
-    for string in "$@"
-    do
-        x="${color}${label}${nocolor} | ${string}"
-        _koopa_print "$x"
-    done
-    return 0
-}
-
 _koopa_alert() { # {{{1
     # """
     # Alert message.
     # @note Updated 2021-03-31.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'default' 'default' '→' "$@"
-    return 0
-}
-
-_koopa_alert_coffee_time() { # {{{1
-    # """
-    # Alert that it's coffee time.
-    # @note Updated 2021-03-31.
-    # """
-    _koopa_alert_note 'This step takes a while. Time for a coffee break! ☕'
     return 0
 }
 
@@ -219,17 +197,37 @@ _koopa_alert_info() { # {{{1
     # Alert info message.
     # @note Updated 2021-03-30.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
     return 0
 }
 
-_koopa_alert_not_installed() { # {{{1
+_koopa_alert_is_installed() { # {{{1
     # """
-    # Note that program is not installed.
-    # @note Updated 2021-05-07.
+    # Alert the user that a program is installed.
+    # @note Updated 2021-06-03.
     # """
     local name prefix
-    [ "$#" -gt 0 ] || return 1
+    [ "$#" -le 2 ] || return 1
+    name="${1:?}"
+    prefix="${2:-}"
+    x="${name} is installed"
+    if [ -n "$prefix" ]
+    then
+        x="${x} at '${prefix}'"
+    fi
+    x="${x}."
+    _koopa_alert_note "$x"
+    return 0
+}
+
+_koopa_alert_is_not_installed() { # {{{1
+    # """
+    # Alert the user that a program is not installed.
+    # @note Updated 2021-06-03.
+    # """
+    local name prefix
+    [ "$#" -le 2 ] || return 1
     name="${1:?}"
     prefix="${2:-}"
     x="${name} is not installed"
@@ -247,16 +245,8 @@ _koopa_alert_note() { # {{{1
     # General note.
     # @note Updated 2020-07-01.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'yellow' 'default' '**' "$@"
-    return 0
-}
-
-_koopa_alert_restart() { # {{{1
-    # """
-    # Inform the user that they should restart shell.
-    # @note Updated 2021-03-31.
-    # """
-    _koopa_alert_note 'Restart the shell.'
     return 0
 }
 
@@ -265,6 +255,7 @@ _koopa_alert_success() { # {{{1
     # Alert success message.
     # @note Updated 2021-03-31.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'green-bold' 'green' '✓' "$@"
     return 0
 }
@@ -284,66 +275,45 @@ _koopa_dl() { # {{{1
 }
 
 _koopa_h1() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 1 "$@"
     return 0
 }
 
 _koopa_h2() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 2 "$@"
     return 0
 }
 
 _koopa_h3() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 3 "$@"
     return 0
 }
 
 _koopa_h4() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 4 "$@"
     return 0
 }
 
 _koopa_h5() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 5 "$@"
     return 0
 }
 
 _koopa_h6() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 6 "$@"
     return 0
 }
 
 _koopa_h7() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_h 7 "$@"
     return 0
-}
-
-_koopa_invalid_arg() { # {{{1
-    # """
-    # Error on invalid argument.
-    # @note Updated 2021-05-05.
-    # """
-    local arg x
-    if [ "$#" -gt 0 ]
-    then
-        arg="${1:-}"
-        if _koopa_str_match_posix "$arg" '--'
-        then
-            _koopa_warning "Use '--arg=VALUE' not '--arg VALUE'."
-        fi
-        x="Invalid argument: '${arg}'."
-    else
-        x='Invalid argument.'
-    fi
-    _koopa_stop "$x"
-}
-
-_koopa_missing_arg() { # {{{1
-    # """
-    # Error on a missing argument.
-    # @note Updated 2020-07-01.
-    # """
-    _koopa_stop 'Missing required argument.'
 }
 
 _koopa_print() { # {{{1
@@ -371,129 +341,111 @@ _koopa_print() { # {{{1
 }
 
 _koopa_print_black() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'black' "$@"
     return 0
 }
 
 _koopa_print_black_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'black-bold' "$@"
     return 0
 }
 
 _koopa_print_blue() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'blue' "$@"
     return 0
 }
 
 _koopa_print_blue_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'blue-bold' "$@"
     return 0
 }
 
 _koopa_print_cyan() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'cyan' "$@"
     return 0
 }
 
 _koopa_print_cyan_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'cyan-bold' "$@"
     return 0
 }
 
 _koopa_print_default() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'default' "$@"
     return 0
 }
 
 _koopa_print_default_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'default-bold' "$@"
     return 0
 }
 
 _koopa_print_green() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'green' "$@"
     return 0
 }
 
 _koopa_print_green_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'green-bold' "$@"
     return 0
 }
 
 _koopa_print_magenta() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'magenta' "$@"
     return 0
 }
 
 _koopa_print_magenta_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'magenta-bold' "$@"
     return 0
 }
 
 _koopa_print_red() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'red' "$@"
     return 0
 }
 
 _koopa_print_red_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'red-bold' "$@"
     return 0
 }
 
 _koopa_print_yellow() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'yellow' "$@"
     return 0
 }
 
 _koopa_print_yellow_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'yellow-bold' "$@"
     return 0
 }
 
 _koopa_print_white() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'white' "$@"
     return 0
 }
 
 _koopa_print_white_bold() { # {{{1
+    [ "$#" -gt 0 ] || return 1
     __koopa_print_ansi 'white-bold' "$@"
     return 0
-}
-
-_koopa_status_fail() { # {{{1
-    # """
-    # FAIL status.
-    # @note Updated 2020-07-20.
-    # """
-    __koopa_status 'FAIL' 'red' "$@" >&2
-    return 0
-}
-
-_koopa_status_note() { # {{{1
-    # """
-    # NOTE status.
-    # @note Updated 2020-07-20.
-    # """
-    __koopa_status 'NOTE' 'yellow' "$@"
-    return 0
-}
-
-_koopa_status_ok() { # {{{1
-    # """
-    # OK status.
-    # @note Updated 2020-07-20.
-    # """
-    __koopa_status 'OK' 'green' "$@"
-    return 0
-}
-
-_koopa_stop() { # {{{1
-    # """
-    # Stop with an error message, and exit.
-    # @note Updated 2021-01-19.
-    # """
-    __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
-    exit 1
 }
 
 _koopa_warning() { # {{{1
@@ -501,6 +453,7 @@ _koopa_warning() { # {{{1
     # Warning message.
     # @note Updated 2021-01-19.
     # """
+    [ "$#" -gt 0 ] || return 1
     __koopa_msg 'magenta-bold' 'magenta' '!! Warning:' "$@" >&2
     return 0
 }

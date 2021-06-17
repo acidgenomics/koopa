@@ -23,9 +23,9 @@ koopa::debian_install_base() { # {{{1
     #   https://serverfault.com/questions/56848
     # """
     local dict name_fancy pkgs pos
-    koopa::assert_is_installed apt apt-get sed sudo
+    koopa::assert_is_installed 'apt' 'apt-get' 'sed' 'sudo'
     declare -A dict=(
-        [apt_enabled_repos]="$(koopa::apt_enabled_repos)"
+        [apt_enabled_repos]="$(koopa::debian_apt_enabled_repos)"
         [base]=1
         [dev]=1
         [extra]=0
@@ -92,7 +92,7 @@ koopa::debian_install_base() { # {{{1
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
         koopa::alert "Upgrading system via 'dist-upgrade'."
-        koopa::apt_get dist-upgrade
+        koopa::debian_apt_get dist-upgrade
     fi
     pkgs=()
     # These packages should be included in the Docker base image.
@@ -137,7 +137,6 @@ koopa::debian_install_base() { # {{{1
             'automake'
             'byacc'
             'cmake'
-            'default-jdk'
             'diffutils'
             'dirmngr'
             'file'
@@ -295,9 +294,9 @@ koopa::debian_install_base() { # {{{1
             pkgs+=('firefox')
         fi
     fi
-    koopa::apt_install "${pkgs[@]}"
-    koopa::apt_configure_sources
-    koopa::apt_clean
+    koopa::debian_apt_install "${pkgs[@]}"
+    koopa::debian_apt_configure_sources
+    koopa::debian_apt_clean
     koopa::debian_set_locale
     koopa::install_success "$name_fancy"
     return 0

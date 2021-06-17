@@ -9,11 +9,11 @@ test() { # {{{1
     # Shell script checks.
     # Updated 2020-07-20.
     # """
-    test_shellcheck
     test_all
     test_posix
     test_bash
     test_zsh
+    test_shellcheck
     return 0
 }
 
@@ -24,20 +24,6 @@ test_all() { # {{{1
         "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh|zsh)$')"
     test_all_quoting "${files[@]}"
     test_all_illegal_strings "${files[@]}"
-    test_all_coreutils "${files[@]}"
-    return 0
-}
-
-test_all_coreutils() { # {{{1
-    local array pattern
-    koopa::assert_has_args "$#"
-    array=('^([ ]+)?(cd|cp|ln|mkdir|mv|rm) ')
-    pattern="$(koopa::paste0 '|' "${array[@]}")"
-    koopa::test_grep \
-        -i 'coreutils' \
-        -n 'shell | all | coreutils' \
-        -p "$pattern" \
-        "$@"
     return 0
 }
 
@@ -77,8 +63,8 @@ test_all_quoting() { # {{{1
         "'\$.+'"
         ":-['\"]"
         "^((?!').)*[ =\(]\"[^'\$\"]+\"+$"
-        # '\\\"\$'
-        # '\}\\\"'
+        # > '\\\"\$'
+        # > '\}\\\"'
     )
     # Check for escaped double quotes.
     # > array+=(
@@ -147,8 +133,9 @@ test_posix_illegal_strings() { # {{{1
         ' \[\[ '
         ' \]\] '
         ' \]\]$'
-        '^\[\[ '
         '\[@\]\}'
+        '\bexit\b'
+        '^\[\[ '
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \

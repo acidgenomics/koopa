@@ -1,16 +1,28 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS failure.
+#
+# ld: warning: building for macOS 10.4 is deprecated
+# ld: warning: Csu support file -ldylib1.o not found, changing to target
+# macOS 10.8 where it is not needed
+# ld: library not found for -lc
+# collect2: error: ld returned 1 exit status
+#
+# https://stackoverflow.com/questions/52211390/
+# https://stackoverflow.com/questions/25352389/
+
 koopa::install_gcc() { # {{{1
     koopa::install_app \
-        --name='gcc' \
         --name-fancy='GCC' \
+        --name='gcc' \
+        --no-link \
         "$@"
 }
 
 koopa:::install_gcc() { # {{{1
     # """
     # Install GCC.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-27.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -60,27 +72,51 @@ koopa:::install_gcc() { # {{{1
     # - https://solarianprogrammer.com/2016/10/07/building-gcc-ubuntu-linux/
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
     # """
-    local conf_args file gnu_mirror jobs name prefix url version
+    local conf_args file gnu_mirror jobs make name prefix sdk_prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='gcc'
     gnu_mirror="$(koopa::gnu_mirror_url)"
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='gcc'
     file="${name}-${version}.tar.xz"
     url="${gnu_mirror}/${name}/${name}-${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
     # Need to build outside of source code directory.
-    koopa::mkdir build
-    koopa::cd build
+    koopa::mkdir 'build'
+    koopa::cd 'build'
     conf_args=(
         "--prefix=${prefix}"
         '--disable-multilib'
         '--enable-languages=c,c++,fortran'
+        '--enable-checking=release'
         '-v'
     )
+    if koopa::is_macos
+    then
+        arch="$(koopa::arch)"
+        macos_version="$(koopa::macos_version)"
+        macos_version="$(koopa::major_minor_version "$macos_version")"
+        sdk_prefix='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+        conf_args+=(
+            "--build=${arch}-apple-darwin${macos_version}"
+            "--with-native-system-header-dir=${sdk_prefix}/usr/include"
+            # Workaround for Xcode 12.5 bug on Intel.
+            # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100340
+            '--without-build-config'
+        )
+    fi
     "../${name}-${version}/configure" "${conf_args[@]}"
-    make --jobs="$jobs"
-    make install
+    "$make" --jobs="$jobs"
+    "$make" install
     return 0
+}
+
+koopa::uninstall_gcc() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='GCC' \
+        --name='gcc' \
+        --no-link \
+        "$@"
 }

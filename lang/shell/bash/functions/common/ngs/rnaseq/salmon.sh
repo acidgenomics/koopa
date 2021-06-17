@@ -7,7 +7,7 @@ koopa:::salmon_index() { # {{{1
     # """
     local fasta_file index_dir log_file threads
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed salmon
+    koopa::assert_is_installed 'salmon'
     while (("$#"))
     do
         case "$1" in
@@ -85,10 +85,10 @@ koopa:::salmon_quant() { # {{{1
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
     #       rnaseq/salmon.py
     # """
-    local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_dir \
-        lib_type log_file output_dir r1_tail r2_tail sample_output_dir threads
+    local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_dir
+    local lib_type log_file output_dir r1_tail r2_tail sample_output_dir threads
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed salmon
+    koopa::assert_is_installed 'salmon'
     while (("$#"))
     do
         case "$1" in
@@ -168,13 +168,13 @@ koopa:::salmon_quant() { # {{{1
 koopa::run_salmon() { # {{{1
     # """
     # Run salmon on multiple samples (per FASTQ directory).
-    # @note Updated 2021-01-20.
+    # @note Updated 2021-05-22.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
     # """
-    local bootstraps fastq_dir fastq_r1_files lib_type output_dir \
-        r1_tail r2_tail
+    local bootstraps fastq_dir fastq_r1_files lib_type output_dir
+    local r1_tail r2_tail
     koopa::assert_has_args "$#"
     bootstraps=30
     fastq_dir='fastq'

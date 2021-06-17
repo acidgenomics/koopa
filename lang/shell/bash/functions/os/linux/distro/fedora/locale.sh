@@ -7,7 +7,7 @@ koopa::fedora_set_locale() { # {{{1
     # """
     local charset country lang lang_string
     koopa::assert_is_admin
-    koopa::assert_is_installed locale localedef
+    koopa::assert_is_installed 'locale' 'localedef'
     lang='en'
     country='US'
     charset='UTF-8'

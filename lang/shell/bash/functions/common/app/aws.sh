@@ -9,7 +9,7 @@
 koopa::aws_batch_fetch_and_run() { # {{{1
     # """
     # Fetch and run a script on AWS Batch.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-05-20.
     #
     # S3 bucket paths and remote URLs are supported.
     #
@@ -19,12 +19,13 @@ koopa::aws_batch_fetch_and_run() { # {{{1
     # """
     local file url
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_set BATCH_FILE_URL
-    koopa::assert_is_installed aws curl unzip
+    koopa::assert_is_set 'BATCH_FILE_URL'
+    koopa::assert_is_installed 'aws' 'curl' 'unzip'
     url="$BATCH_FILE_URL"
     file="$(koopa::tmp_file)"
     case "$url" in
-        ftp|http*)
+        ftp* | \
+        http*)
             koopa::download "$url" "$file"
             ;;
         s3*)
@@ -34,7 +35,7 @@ koopa::aws_batch_fetch_and_run() { # {{{1
             koopa::stop "Unsupported URL: '${url}'."
             ;;
     esac
-    chmod u+x "$file"
+    koopa::chmod u+x "$file"
     "$file"
     return 0
 }
@@ -46,11 +47,11 @@ koopa::aws_batch_list_jobs() { # {{{1
     # """
     local job_queue job_queue_array status status_array
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed aws
+    koopa::assert_is_installed 'aws'
     koopa::assert_is_set \
-        AWS_BATCH_ACCOUNT_ID \
-        AWS_BATCH_QUEUE \
-        AWS_BATCH_REGION
+        'AWS_BATCH_ACCOUNT_ID' \
+        'AWS_BATCH_QUEUE' \
+        'AWS_BATCH_REGION'
     koopa::h1 'Checking AWS Batch job status.'
     job_queue_array=(
         'arn'
@@ -92,7 +93,7 @@ koopa::aws_cp_regex() { # {{{1
     # """
     local pattern source_prefix target_prefix
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed aws
+    koopa::assert_is_installed 'aws'
     pattern="${1:?}"
     source_prefix="${2:?}"
     target_prefix="${3:?}"
@@ -110,20 +111,21 @@ koopa::aws_s3_find() { # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-22.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
     #
     # @examples
-    # aws-s3-find \
+    # koopa::aws_s3_find \
     #     --include="*.bw$" \
     #     --exclude="antisense" \
     #     s3://bioinfo/igv/
     # """
-    local exclude include pos x
+    local exclude grep include pos x
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed aws
+    koopa::assert_is_installed 'aws'
+    grep="$(koopa::locate_grep)"
     exclude=''
     include=''
     pos=()
@@ -157,13 +159,13 @@ koopa::aws_s3_find() { # {{{1
     # Exclude pattern.
     if [[ -n "${exclude:-}" ]]
     then
-        x="$(koopa::print "$x" | grep -Ev "$exclude")"
+        x="$(koopa::print "$x" | "$grep" -Ev "$exclude")"
         [[ -n "$x" ]] || return 1
     fi
     # Include pattern.
     if [[ -n "${include:-}" ]]
     then
-        x="$(koopa::print "$x" | grep -E "$include")"
+        x="$(koopa::print "$x" | "$grep" -E "$include")"
         [[ -n "$x" ]] || return 1
     fi
     koopa::print "$x"
@@ -173,7 +175,7 @@ koopa::aws_s3_find() { # {{{1
 koopa::aws_s3_ls() { # {{{1
     # """
     # List an AWS S3 bucket.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-05-22.
     #
     # @seealso
     # - aws s3 ls help
@@ -182,10 +184,12 @@ koopa::aws_s3_ls() { # {{{1
     # koopa::aws_s3_ls s3://cpi-bioinfo01/
     # koopa::aws_s3_ls cpi-bioinfo01/
     # # Directories only:
-    # aws-s3-ls --type=f s3://cpi-bioinfo01/datasets/
+    # koopa::aws_s3_ls --type='f' s3://cpi-bioinfo01/datasets/
     # """
-    local bucket_prefix dirs files flags pos prefix recursive type x
-    koopa::assert_is_installed aws
+    local bucket_prefix dirs files flags grep pos prefix recursive sed type x
+    koopa::assert_is_installed 'aws'
+    grep="$(koopa::locate_grep)"
+    sed="$(koopa::locate_sed)"
     if [[ "$#" -eq 0 ]]
     then
         aws s3 ls
@@ -254,18 +258,21 @@ koopa::aws_s3_ls() { # {{{1
     # the bucket name.
     if [[ "$recursive" -eq 1 ]]
     then
-        bucket_prefix="$(koopa::print "$prefix" | grep -Eo '^s3://[^/]+')"
+        bucket_prefix="$( \
+            koopa::print "$prefix" \
+            | "$grep" -Eo '^s3://[^/]+' \
+        )"
         files="$( \
             koopa::print "$x" \
-            | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+            | "$grep" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
             || true \
         )"
         [[ -n "$files" ]] || return 0
         files="$( \
             koopa::print "$files" \
-                | grep -Eo '  [0-9]+ .+$' \
-                | sed 's/^  [0-9]* //g' \
-                | sed "s|^|${bucket_prefix}/|g" \
+                | "$grep" -Eo '  [0-9]+ .+$' \
+                | "$sed" 's/^  [0-9]* //g' \
+                | "$sed" "s|^|${bucket_prefix}/|g" \
         )"
         koopa::print "$files"
         return 0
@@ -273,13 +280,17 @@ koopa::aws_s3_ls() { # {{{1
     # Directories.
     if [[ "$dirs" -eq 1 ]]
     then
-        dirs="$(koopa::print "$x" | grep -Eo '  PRE .+$' || true)"
+        dirs="$( \
+            koopa::print "$x" \
+            | "$grep" -Eo '  PRE .+$' \
+            || true \
+        )"
         if [[ -n "$dirs" ]]
         then
             dirs="$( \
                 koopa::print "$dirs" \
-                    | sed 's/^  PRE //g' \
-                    | sed "s|^|${prefix}|g" \
+                    | "$sed" 's/^  PRE //g' \
+                    | "$sed" "s|^|${prefix}|g" \
             )"
             koopa::print "$dirs"
         fi
@@ -289,16 +300,16 @@ koopa::aws_s3_ls() { # {{{1
     then
         files="$( \
             koopa::print "$x" \
-            | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+            | "$grep" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
             || true \
         )"
         if [[ -n "$files" ]]
         then
             files="$( \
                 koopa::print "$files" \
-                    | grep -Eo '  [0-9]+ .+$' \
-                    | sed 's/^  [0-9]* //g' \
-                    | sed "s|^|${prefix}|g" \
+                    | "$grep" -Eo '  [0-9]+ .+$' \
+                    | "$sed" 's/^  [0-9]* //g' \
+                    | "$sed" "s|^|${prefix}|g" \
             )"
             koopa::print "$files"
         fi
@@ -310,7 +321,7 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     # """
     # Move objects in an S3 bucket to parent directory.
     #
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-05-22.
     #
     # @details
     # Empty directory will be removed automatically, since S3 uses object
@@ -318,16 +329,16 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     # """
     local bn dn1 dn2 file files prefix target x
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed aws
+    koopa::assert_is_installed 'aws'
     prefix="${1:?}"
-    x="$(aws-s3-ls "$prefix")"
+    x="$(koopa::aws_s3_ls "$prefix")"
     [[ -n "$x" ]] || return 0
     readarray -t files <<< "$x"
     for file in "${files[@]}"
     do
-        bn="$(basename "$file")"
-        dn1="$(dirname "$file")"
-        dn2="$(dirname "$dn1")"
+        bn="$(koopa::basename "$file")"
+        dn1="$(koopa::dirname "$file")"
+        dn2="$(koopa::dirname "$dn1")"
         target="${dn2}/${bn}"
         aws s3 mv "$file" "$target"
     done
@@ -359,7 +370,7 @@ koopa::aws_s3_sync() { # {{{1
     # - *.swp files (from vim).
     # """
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed aws
+    koopa::assert_is_installed 'aws'
     aws s3 sync \
         --exclude='*.Rproj/*' \
         --exclude='*.swp' \

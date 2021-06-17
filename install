@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# koopa nolint=coreutils
 set -Eeu -o pipefail
 
 # """

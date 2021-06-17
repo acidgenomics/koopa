@@ -2,15 +2,17 @@
 
 koopa::install_zsh() { # {{{1
     koopa::install_app \
-        --name='zsh' \
         --name-fancy='Zsh' \
+        --name='zsh' \
         "$@"
+    koopa::fix_zsh_permissions
+    return 0
 }
 
 koopa:::install_zsh() { # {{{1
     # """
     # Install Zsh.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-05-26.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -33,12 +35,13 @@ koopa:::install_zsh() { # {{{1
     # - https://github.com/Homebrew/legacy-homebrew/issues/25719
     # - https://github.com/TACC/Lmod/issues/434
     # """
-    local etc_dir file jobs link_app name prefix url version
+    local distro_prefix etc_dir file jobs link_app make name prefix url version
     link_app="${INSTALL_LINK_APP:?}"
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='zsh'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='zsh'
     etc_dir="${prefix}/etc/${name}"
     file="${name}-${version}.tar.xz"
     # > url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
@@ -51,18 +54,25 @@ ${name}/${name}/${version}/${file}"
         --prefix="$prefix" \
         --enable-etcdir="$etc_dir" \
         --without-tcsetpgrp
-    make --jobs="$jobs"
-    # > make check
-    # > make test
-    make install
+    "$make" --jobs="$jobs"
+    # > "$make" check
+    # > "$make" test
+    "$make" install
     if koopa::is_debian_like
     then
         koopa::alert "Linking shared config scripts into '${etc_dir}'."
+        distro_prefix="$(koopa::distro_prefix)"
         koopa::ln \
             -t "${etc_dir}" \
-            "$(koopa::distro_prefix)/etc/zsh/"*
+            "${distro_prefix}/etc/zsh/"*
     fi
     [[ "${link_app:-0}" -eq 1 ]] && koopa::enable_shell "$name"
-    koopa::fix_zsh_permissions
     return 0
+}
+
+koopa::uninstall_zsh() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy="Zsh" \
+        --name='zsh' \
+        "$@"
 }

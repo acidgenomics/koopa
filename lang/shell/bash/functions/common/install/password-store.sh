@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# [2021-05-27] macOS success.
+
 koopa::install_password_store() { # {{{1
     koopa::install_app \
         --name='password-store' \
@@ -25,4 +27,10 @@ koopa:::install_password_store() { # {{{1
     koopa::cd "${name}-${version}"
     PREFIX="$prefix" make install
     return 0
+}
+
+koopa::uninstall_password_store() { # {{{1
+    koopa::uninstall_app \
+        --name='password-store' \
+        "$@"
 }

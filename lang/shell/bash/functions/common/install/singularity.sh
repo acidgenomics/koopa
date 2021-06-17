@@ -9,13 +9,20 @@ koopa::install_singularity() { # {{{1
 koopa:::install_singularity() { # {{{1
     # """
     # Install Singularity.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-26.
     # """
-    local file name prefix url version
-    koopa::assert_is_installed go
-    koopa::assert_is_admin
+    local file make name prefix url version
+    if koopa::is_linux
+    then
+        koopa::activate_opt_prefix 'go'
+    elif koopa::is_macos
+    then
+        koopa::activate_homebrew_opt_prefix 'go'
+    fi
+    koopa::assert_is_installed 'go'
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
+    make="$(koopa::locate_make)"
     name='singularity'
     file="${name}-${version}.tar.gz"
     url="https://github.com/sylabs/${name}/releases/download/\
@@ -24,7 +31,13 @@ v${version}/${file}"
     koopa::extract "$file"
     koopa::cd "$name"
     ./mconfig --prefix="$prefix"
-    make -C builddir
-    sudo make -C builddir install
+    "$make" -C builddir
+    "$make" -C builddir install
     return 0
+}
+
+koopa::uninstall_singularity() { # {{{1
+    koopa::uninstall_app \
+        --name='singularity' \
+        "$@"
 }

@@ -9,7 +9,7 @@ koopa::install_the_silver_searcher() { # {{{1
 koopa:::install_the_silver_searcher() { # {{{1
     # """
     # Install the silver searcher.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-05-26.
     #
     # Ag has been renamed to The Silver Searcher.
     #
@@ -35,12 +35,17 @@ koopa:::install_the_silver_searcher() { # {{{1
     # # ./configure: [...] `PKG_CHECK_MODULES(PCRE, libpcre)'
     # https://github.com/ggreer/the_silver_searcher/issues/341
     # """
-    local file jobs name name2 prefix url version
-    koopa::assert_is_installed pcre-config
+    local file jobs make name name2 prefix url version
+    if koopa::is_macos
+    then
+        koopa::activate_homebrew_opt_prefix 'pcre' 'pkg-config'
+    fi
+    koopa::assert_is_installed 'pcre-config' 'pkg-config'
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='the-silver-searcher'
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='the-silver-searcher'
     # Temporarily installing from master branch, which has bug fixes that aren't
     # yet available in tagged release, especially for GCC 10.
     version='master'
@@ -53,7 +58,13 @@ koopa:::install_the_silver_searcher() { # {{{1
     # Refer to 'build.sh' script for details.
     ./autogen.sh
     ./configure --prefix="$prefix"
-    make --jobs="$jobs"
-    make install
+    "$make" --jobs="$jobs"
+    "$make" install
     return 0
+}
+
+koopa::uninstall_the_silver_searcher() { # {{{1
+    koopa::uninstall_app \
+        --name='the-silver-searcher' \
+        "$@"
 }

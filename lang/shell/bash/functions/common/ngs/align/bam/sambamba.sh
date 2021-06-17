@@ -16,7 +16,7 @@ koopa::sambamba_filter() { # {{{1
     # """
     local filter input_bam input_bam_bn output_bam output_bam_bn threads
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed sambamba
+    koopa::assert_is_installed 'sambamba'
     while (("$#"))
     do
         case "$1" in
@@ -105,7 +105,7 @@ koopa::sambamba_index() { # {{{1
     # """
     local bam_file threads
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed samtools
+    koopa::assert_is_installed 'samtools'
     threads="$(koopa::cpu_count)"
     koopa::dl 'Threads' "$threads"
     for bam_file in "$@"
@@ -133,7 +133,7 @@ koopa::sambamba_sort() { # {{{1
     # """
     local sorted_bam sorted_bam_bn threads unsorted_bam unsorted_bam_bn
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed sambamba
+    koopa::assert_is_installed 'sambamba'
     unsorted_bam="${1:?}"
     sorted_bam="${unsorted_bam%.bam}.sorted.bam"
     unsorted_bam_bn="$(basename "$unsorted_bam")"

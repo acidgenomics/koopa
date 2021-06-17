@@ -7,7 +7,7 @@ koopa::debian_install_pandoc() { # {{{1
     # """
     local arch name name_fancy tmp_dir version
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed dpkg sudo
+    koopa::assert_is_installed 'dpkg' 'sudo'
     name='pandoc'
     name_fancy='Pandoc'
     koopa::install_start "$name_fancy"
@@ -15,7 +15,7 @@ koopa::debian_install_pandoc() { # {{{1
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
-        arch="$(koopa::arch)"
+        arch="$(koopa::arch2)"
         file="${name}-${version}-1-${arch}.deb"
         url="https://github.com/jgm/${name}/releases/download/\
 ${version}/${file}"
@@ -27,3 +27,12 @@ ${version}/${file}"
     return 0
 }
 
+koopa::debian_uninstall_pandoc() { # {{{1
+    # """
+    # Uninstall Pandoc.
+    # @note Updated 2021-06-14.
+    # May not need (or want) to install 'pandoc-data' here.
+    # """
+    koopa::debian_apt_remove 'pandoc' 'pandoc-data'
+    return 0
+}

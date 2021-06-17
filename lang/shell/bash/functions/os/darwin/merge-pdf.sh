@@ -11,7 +11,7 @@ koopa::macos_merge_pdf() { # {{{1
     # https://github.com/mathiasbynens/dotfiles/blob/main/.aliases
     # """
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed gs
+    koopa::assert_is_installed 'gs'
     koopa::assert_is_file "$@"
     gs \
         -dBATCH \

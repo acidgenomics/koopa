@@ -2,27 +2,28 @@
 
 koopa::install_proj() { # {{{1
     koopa::install_app \
-        --name='proj' \
         --name-fancy='PROJ' \
+        --name='proj' \
+        --no-link \
         "$@"
 }
 
 koopa:::install_proj() { # {{{1
     # """
     # Install PROJ.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-06-04.
     # """
     local arch conf_args file make_prefix prefix url version
-    koopa::assert_is_installed sqlite3
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    name='proj'
     arch="$(koopa::arch)"
     jobs="$(koopa::cpu_count)"
+    make="$(koopa::locate_make)"
+    name='proj'
     conf_args=("--prefix=${prefix}")
     if koopa::is_macos
     then
-        koopa::activate_homebrew_opt_prefix pkg-config libtiff sqlite3
+        koopa::activate_homebrew_opt_prefix 'pkg-config' 'libtiff' 'sqlite3'
     elif koopa_is_linux
     then
         make_prefix="$(koopa::make_prefix)"
@@ -54,7 +55,15 @@ koopa:::install_proj() { # {{{1
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure "${conf_args[@]}"
-    make --jobs="$jobs"
-    make install
+    "$make" --jobs="$jobs"
+    "$make" install
     return 0
+}
+
+koopa::uninstall_proj() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='PROJ' \
+        --name='proj' \
+        --no-link \
+        "$@"
 }

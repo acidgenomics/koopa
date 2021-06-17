@@ -21,7 +21,7 @@ koopa::macos_brew_cask_outdated() { # {{{
     local keep_latest tmp_file x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
-    koopa::assert_is_installed brew
+    koopa::assert_is_installed 'brew'
     # Whether we want to keep unversioned 'latest' casks returned with
     # '--greedy'. This tends to include font casks and the Google Cloud SDK,
     # which are annoying to have reinstall with each update, so disabling
@@ -69,7 +69,7 @@ koopa::macos_brew_upgrade_casks() { # {{{1
     local cask casks str
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
-    koopa::assert_is_installed brew
+    koopa::assert_is_installed 'brew'
     readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
     koopa::is_array_non_empty "${casks[@]:-}" || return 0
     str="$(koopa::ngettext "${#casks[@]}" 'cask' 'casks')"

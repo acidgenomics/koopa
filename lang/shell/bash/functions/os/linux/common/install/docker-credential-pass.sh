@@ -31,9 +31,19 @@ koopa:::linux_install_docker_credential_pass() { # {{{1
 download/v${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    chmod 0775 "$name"
+    koopa::chmod 0775 "$name"
     koopa::mkdir "${prefix}/bin"
     koopa::sys_set_permissions -r "$prefix"
     koopa::cp -t "${prefix}/bin" "$name"
     return 0
+}
+
+koopa::linux_uninstall_docker_credential_pass() { # {{{1
+    # """
+    # Uninstall docker-credential-pass.
+    # @note Updated 2021-06-11.
+    # """
+    koopa::uninstall_app \
+        --name='docker-credential-pass' \
+        "$@"
 }

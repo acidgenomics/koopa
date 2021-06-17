@@ -6,6 +6,7 @@ _koopa_activate_zsh_aliases() { # {{{1
     # @note Updated 2020-11-24.
     # """
     local user_aliases
+    [[ "$#" -eq 0 ]] || return 1
     user_aliases="${HOME}/.zsh_aliases"
     if [[ -f "$user_aliases" ]]
     then
@@ -20,6 +21,7 @@ _koopa_activate_zsh_bashcompinit() { # {{{1
     # Activate Bash completions for Zsh.
     # @note Updated 2020-11-24.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz bashcompinit && bashcompinit 2>/dev/null
     return 0
 }
@@ -29,6 +31,7 @@ _koopa_activate_zsh_colors() { # {{{1
     # Enable colors in terminal.
     # @note Updated 2020-11-24.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz colors && colors 2>/dev/null
     return 0
 }
@@ -38,6 +41,7 @@ _koopa_activate_zsh_compinit() { # {{{1
     # Activate Zsh compinit (completion system).
     # @note Updated 2020-11-24.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz compinit && compinit 2>/dev/null
     return 0
 }
@@ -47,6 +51,7 @@ _koopa_activate_zsh_editor() { # {{{1
     # Activate Zsh editor.
     # @note Updated 2020-11-24.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     case "${EDITOR:-}" in
         emacs)
             bindkey -e
@@ -61,7 +66,7 @@ _koopa_activate_zsh_editor() { # {{{1
 _koopa_activate_zsh_extras() { # {{{1
     # """
     # Activate Zsh extras.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-06-16.
     #
     # Note on path (and also fpath) arrays in Zsh:
     # https://www.zsh.org/mla/users/2012/msg00785.html
@@ -74,6 +79,8 @@ _koopa_activate_zsh_extras() { # {{{1
     # https://unix.stackexchange.com/questions/214296
     # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
     # """
+    [[ "$#" -eq 0 ]] || return 1
+    _koopa_is_interactive || return 0
     _koopa_activate_zsh_fpath
     _koopa_activate_zsh_compinit
     _koopa_activate_zsh_bashcompinit
@@ -82,6 +89,8 @@ _koopa_activate_zsh_extras() { # {{{1
     _koopa_activate_zsh_plugins
     _koopa_activate_zsh_aliases
     _koopa_activate_zsh_prompt
+    _koopa_activate_zsh_reverse_search
+    _koopa_activate_completion
     return 0
 }
 
@@ -91,7 +100,8 @@ _koopa_activate_zsh_fpath() { # {{{1
     # @note Updated 2021-01-19.
     # """
     local koopa_fpath koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
+    [[ "$#" -eq 0 ]] || return 1
+    koopa_prefix="$(_koopa_koopa_prefix)"
     koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
     then
@@ -105,7 +115,7 @@ _koopa_activate_zsh_fpath() { # {{{1
 _koopa_activate_zsh_plugins() { # {{{1
     # """
     # Activate Zsh plugins.
-    # Updated 2020-11-24.
+    # Updated 2021-05-25.
     #
     # Debug plugins via:
     # > zsh -df
@@ -115,6 +125,7 @@ _koopa_activate_zsh_plugins() { # {{{1
     # Alternatively, can use '<<<' herestring, which also works in Bash.
     # """
     local dotfiles_prefix plugin plugins zsh_plugins_dir
+    [[ "$#" -eq 0 ]] || return 1
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
     zsh_plugins_dir="${dotfiles_prefix}/shell/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
@@ -137,7 +148,7 @@ _koopa_activate_zsh_plugins() { # {{{1
 _koopa_activate_zsh_prompt() { # {{{1
     # """
     # Activate Zsh prompt.
-    # Updated 2020-11-24.
+    # Updated 2021-05-25.
     #
     # See also:
     # - https://github.com/sindresorhus/pure
@@ -146,11 +157,29 @@ _koopa_activate_zsh_prompt() { # {{{1
     # This won't work if an oh-my-zsh theme is enabled.
     # This step must be sourced after oh-my-zsh.
     # """
-    [[ "${KOOPA_TEST:-}" -eq 1 ]] && set +u
+    local nounset
+    [[ "$#" -eq 0 ]] || return 1
+    nounset="$(_koopa_boolean_nounset)"
+    [[ "$nounset" -eq 1 ]] && set +u
     setopt promptsubst
     autoload -U promptinit
     promptinit
     prompt koopa
-    [[ "${KOOPA_TEST:-}" -eq 1 ]] && set -u
+    [[ "$nounset" -eq 1 ]] && set -u
+    return 0
+}
+
+_koopa_activate_zsh_reverse_search() { # {{{1
+    # """
+    # Activate reverse search using Ctrl+R in Zsh.
+    # @note Updated 2021-06-16.
+    # """
+    if _koopa_is_installed 'mcfly'
+    then
+        _koopa_activate_mcfly
+        # > bindkey '^R' 'mcfly-history-widget'
+    else
+        bindkey '^R' 'history-incremental-search-backward'
+    fi
     return 0
 }

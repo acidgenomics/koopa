@@ -3,7 +3,7 @@
 koopa:::koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-06-11.
     # """
     local name
     name="${1:-}"
@@ -36,7 +36,7 @@ koopa:::koopa_app() { # {{{1
 koopa:::koopa_configure() { # {{{1
     # """
     # Parse user input to 'koopa configure'.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-06-11.
     # """
     local name
     name="${1:-}"
@@ -59,7 +59,7 @@ koopa:::koopa_header() { # {{{1
     local arg ext file koopa_prefix subdir
     koopa::assert_has_args_eq "$#" 1
     arg="$(koopa::lowercase "${1:?}")"
-    koopa_prefix="$(koopa::prefix)"
+    koopa_prefix="$(koopa::koopa_prefix)"
     subdir='lang'
     case "$arg" in
         bash|posix|zsh)
@@ -201,7 +201,7 @@ koopa:::koopa_system() { # {{{1
             f='view-latest-tmp-log-file'
             ;;
         path)
-            koopa::print "$PATH"
+            koopa::print "${PATH:-}"
             return 0
             ;;
         prefix)
@@ -241,6 +241,7 @@ koopa:::koopa_system() { # {{{1
         disable-touch-id-sudo | \
         enable-passwordless-sudo | \
         enable-touch-id-sudo | \
+        find-non-symlinked-make-files | \
         fix-sudo-setrlimit-error | \
         fix-zsh-permissions | \
         host-id | \
@@ -330,7 +331,8 @@ koopa:::koopa_update() { # {{{1
     do
         case "$1" in
             # Renamers ---------------------------------------------------------
-            system|user)
+            system | \
+            user)
                 pos+=("koopa-${name}")
                 ;;
             # Defunct ----------------------------------------------------------
@@ -413,11 +415,16 @@ koopa:::run_function() { # {{{1
 koopa:::which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2021-05-11.
+    # @note Updated 2021-06-11.
     # """
     local fun os_id
     koopa::assert_has_args_eq "$#" 1
     fun="${1:?}"
+    if koopa::is_function "${fun}"
+    then
+        koopa::print "$fun"
+        return 0
+    fi
     fun="${fun//-/_}"
     os_id="$(koopa::os_id)"
     if koopa::is_function "koopa::${os_id}_${fun}"

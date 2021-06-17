@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-# koopa nolint=coreutils
 
 __koopa_is_installed() { # {{{1
     # """
@@ -7,6 +6,7 @@ __koopa_is_installed() { # {{{1
     # @note updated 2021-05-07.
     # """
     local cmd
+    [[ "$#" -gt 0 ]] || return 1
     for cmd in "$@"
     do
         command -v "$cmd" >/dev/null || return 1
@@ -14,19 +14,12 @@ __koopa_is_installed() { # {{{1
     return 0
 }
 
-__koopa_is_linux() { # {{{1
-    # """
-    # is the operating system linux?
-    # @note updated 2021-05-07.
-    # """
-    [[ "$(uname -s)" == 'Linux' ]]
-}
-
 __koopa_is_macos() { # {{{1
     # """
     # is the operating system macos?
-    # @note updated 2021-05-07.
+    # @note updated 2021-06-04.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     [[ "$(uname -s)" == 'Darwin' ]]
 }
 
@@ -46,31 +39,22 @@ __koopa_print() { # {{{1
 
 __koopa_realpath() { # {{{1
     # """
-    # resolve file path.
-    # @note updated 2021-05-11.
+    # Resolve file path.
+    # @note Updated 2021-06-04.
     # """
-    local arg bn dn x
+    local readlink x
     [[ "$#" -gt 0 ]] || return 1
-    if __koopa_is_installed realpath
+    readlink='readlink'
+    __koopa_is_macos && readlink='greadlink'
+    if ! __koopa_is_installed "$readlink"
     then
-        x="$(realpath "$@")"
-    elif __koopa_is_installed grealpath
-    then
-        x="$(grealpath "$@")"
-    elif __koopa_is_macos
-    then
-        for arg in "$@"
-        do
-            bn="$(basename "$arg")"
-            dn="$(cd "$(dirname "$arg")" || return 1; pwd -p)"
-            x="${dn}/${bn}"
-            __koopa_print "$x"
-        done
-        return 0
-    else
-        x="$(readlink -f "$@")"
+        __koopa_warning "Not installed: '${readlink}'."
+        __koopa_is_macos && \
+            __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
+        return 1
     fi
-    [[ -n "$x" ]] || return 1
+    x="$("$readlink" -f "$@")"
+    [[ -e "$x" ]] || return 1
     __koopa_print "$x"
     return 0
 }
@@ -94,35 +78,35 @@ __koopa_warning() { # {{{1
 __koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-06-04.
     # """
     local dict
+    [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
         [activate]=0
         [checks]=1
-        [shopts]=1
+        [minimal]=0
+        [test]=0
         [verbose]=0
     )
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
+    [[ -n "${KOOPA_MINIMAL:-}" ]] && dict[minimal]="$KOOPA_MINIMAL"
+    [[ -n "${KOOPA_TEST:-}" ]] && dict[test]="$KOOPA_TEST"
     [[ -n "${KOOPA_VERBOSE:-}" ]] && dict[verbose]="$KOOPA_VERBOSE"
-    if [[ "${dict[activate]}" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 1 ]] && [[ "${dict[test]}" -eq 0 ]]
     then
         dict[checks]=0
-        dict[shopts]=0
     fi
-    if [[ "${dict[shopts]}" -eq 1 ]]
+    if [[ "${dict[verbose]}" -eq 1 ]]
     then
-        if [[ "${dict[verbose]}" -eq 1 ]]
-        then
-            setopt xtrace # -x
-        fi
-        setopt errexit # -e
-        setopt nounset # -u
-        setopt pipefail
+        setopt xtrace  # -x
     fi
     if [[ "${dict[checks]}" -eq 1 ]]
     then
+        setopt errexit  # -e
+        setopt nounset  # -u
+        setopt pipefail
         dict[major_version]="$( \
             printf '%s\n' "${ZSH_VERSION:?}" \
             | cut -d '.' -f 1 \
@@ -131,7 +115,7 @@ __koopa_zsh_header() { # {{{1
         then
             __koopa_warning \
                 'Koopa requires Zsh >= 5.' \
-                "Current Zsh version: '${ZSH_VERSION}'."
+                "Current Zsh version: '${ZSH_VERSION:?}'."
             return 1
         fi
     fi
@@ -150,11 +134,20 @@ __koopa_zsh_header() { # {{{1
         export KOOPA_PREFIX
     fi
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
-    if [[ "${dict[activate]}" -eq 1 ]]
+    if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
+    then
+        _koopa_duration_start || return 1
+    fi
+    if [[ "${dict[activate]}" -eq 1 ]] && [[ "${dict[minimal]}" -eq 0 ]]
     then
         source "${KOOPA_PREFIX:?}/lang/shell/zsh/functions/activate.sh"
+        _koopa_activate_zsh_extras
+    fi
+    if [[ "${dict[test]}" -eq 1 ]]
+    then
+        _koopa_duration_stop 'zsh' || return 1
     fi
     return 0
 }
 
-__koopa_zsh_header "$@"
+__koopa_zsh_header

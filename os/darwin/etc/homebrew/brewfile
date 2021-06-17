@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-05-18.
+# Updated 2021-06-16.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -30,8 +30,6 @@ tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
-tap "mongodb/brew"
-tap "vitorgalvao/tiny-scripts"
 
 # Priority brews {{{1
 # ==============================================================================
@@ -67,6 +65,7 @@ cask "airfoil"
 cask "alacritty"
 cask "alfred"
 cask "audio-hijack"
+cask "bartender"
 cask "basictex"
 cask "bbedit"
 cask "bibdesk"
@@ -107,7 +106,7 @@ cask "font-source-serif"
 cask "font-victor-mono"
 cask "font-victor-mono-nerd-font"
 cask "github"
-cask "google-cloud-sdk"
+cask "google-cloud-sdk", greedy: true
 cask "gpg-suite-no-mail"  # no-binaries
 cask "hazel"
 cask "ibm-aspera-connect"
@@ -131,6 +130,7 @@ cask "superduper"
 cask "textmate"
 cask "transmit"
 cask "tunnelblick"
+cask "vanilla"
 cask "virtualbox"
 cask "visual-studio-code"
 cask "vlc"
@@ -168,6 +168,10 @@ brew "ilmbase", link: false  # neofetch
 # Use 'koopa install python-framework' to install.
 brew "python@3.9", link: false
 
+# This will conflict with R igraph install from source if linked.
+# https://github.com/igraph/rigraph/issues/135
+brew "suite-sparse", link: false
+
 brew "ack"
 brew "armadillo"
 brew "autoconf"
@@ -184,8 +188,11 @@ brew "binutils"
 brew "black"  # python
 brew "bpytop"  # python
 brew "broot"  # rust
+brew "bzip2"
 brew "ccache"
+brew "cheat"
 brew "checkbashisms"
+brew "choose-rust"
 brew "circleci"
 brew "cmake"
 brew "cmus"
@@ -194,6 +201,7 @@ brew "coreutils"
 brew "curl"
 brew "dash"
 brew "dog"  # rust
+brew "duf"
 brew "dust"  # rust
 brew "editorconfig"
 brew "exa"  # rust
@@ -209,6 +217,7 @@ brew "gawk"
 brew "gdal"
 brew "git-lfs"
 brew "gitui"
+brew "glances"
 brew "gnu-sed"
 brew "gnu-tar"
 brew "gnu-time"
@@ -224,11 +233,13 @@ brew "hadolint"
 brew "hdf5"
 brew "htop"
 brew "httpd"
+brew "httpie"
 brew "hub"
 brew "hyperfine"
 brew "igraph"
 brew "imagemagick"
 brew "jq"
+brew "kakoune"
 brew "ksh"
 brew "lame"
 brew "lapack"
@@ -245,7 +256,9 @@ brew "libssh2"
 brew "libtool"
 brew "libxml2"
 brew "libxslt"
+brew "libxt"  # R Cairo
 brew "llvm"
+brew "lsd"
 brew "lua"
 brew "luarocks"
 brew "make"
@@ -268,6 +281,7 @@ brew "openjdk"
 brew "openjdk@8"  # for nextflow
 brew "openssh"
 brew "osx-cpu-temp"
+brew "p7zip"
 brew "pandoc"
 brew "pandoc-crossref"
 brew "parallel"
@@ -288,6 +302,7 @@ brew "ripgrep-all"  # rust
 brew "rsync"
 brew "ruby"
 brew "screen"
+brew "sd"
 brew "shellcheck"
 brew "shellharden"
 brew "shunit2"
@@ -298,15 +313,18 @@ brew "stow"
 brew "taglib"
 brew "tcl-tk"
 brew "tcsh"
+brew "tealdeer"
 brew "tesseract"
 brew "texinfo"
 brew "the_silver_searcher"
 brew "tmux"
 brew "tokei"  # rust
 brew "udunits"
+brew "unzip"
 brew "v8"
 brew "vim"
 brew "wget"
+brew "xh"
 brew "xsv"  # rust
 brew "youtube-dl"
 brew "zlib"
@@ -316,9 +334,20 @@ brew "zsh"
 # External brews {{{1
 # ==============================================================================
 
-# > brew "muesli/tap/duf"
+tap "cantino/mcfly"
+brew "cantino/mcfly/mcfly"
+
+tap "clementtsang/bottom"
+brew "clementtsang/bottom/bottom"
+
+tap "mongodb/brew"
 brew "mongodb/brew/mongodb-community"
+
+tap "vitorgalvao/tiny-scripts"
 brew "vitorgalvao/tiny-scripts/cask-repair"
+
+tap "rs/tap"
+brew "rs/tap/curlie"
 
 # App Store {{{1
 # ==============================================================================

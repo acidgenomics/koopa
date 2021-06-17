@@ -3,7 +3,7 @@
 koopa::macos_update_defaults() { # {{{1
     # """
     # Update macOS defaults.
-    # @note Updated 2021-03-19.
+    # @note Updated 2021-06-04.
     #
     # Tested to work on macOS Big Sur.
     #
@@ -33,8 +33,10 @@ koopa::macos_update_defaults() { # {{{1
     # - https://github.com/tech-otaku/macos-config-big-sur/blob/
     #       main/macos-config.sh
     # """
-    local name_fancy
+    local name_fancy plistbuddy
     koopa::assert_has_no_args "$#"
+    plistbuddy='/usr/libexec/PlistBuddy'
+    koopa::assert_is_executable "$plistbuddy"
     name_fancy='macOS defaults'
     koopa::update_start "$name_fancy"
 
@@ -999,54 +1001,54 @@ koopa::macos_update_defaults() { # {{{1
     # >     -bool true
 
     # Show item info near icons on the desktop and in other icon views.
-    /usr/libexec/PlistBuddy \
+    "$plistbuddy" \
         -c 'Set :DesktopViewSettings:IconViewSettings:showItemInfo true' \
-        ~/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy \
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
+    "$plistbuddy" \
         -c 'Set :FK_StandardViewSettings:IconViewSettings:showItemInfo true' \
-        ~/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy \
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
+    "$plistbuddy" \
         -c 'Set :StandardViewSettings:IconViewSettings:showItemInfo true' \
-        ~/Library/Preferences/com.apple.finder.plist
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
 
     # Show item info to the right of the icons on the desktop.
-    /usr/libexec/PlistBuddy \
+    "$plistbuddy" \
         -c 'Set DesktopViewSettings:IconViewSettings:labelOnBottom false' \
-        ~/Library/Preferences/com.apple.finder.plist
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
 
     # Sort icon views by name.
     # Alternatively, can use 'grid' here for snap-to-grid.
-    /usr/libexec/PlistBuddy \
+    "$plistbuddy" \
         -c 'Set :DesktopViewSettings:IconViewSettings:arrangeBy name' \
-        ~/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy \
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
+    "$plistbuddy" \
         -c 'Set :FK_StandardViewSettings:IconViewSettings:arrangeBy name' \
-        ~/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy \
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
+    "$plistbuddy" \
         -c 'Set :StandardViewSettings:IconViewSettings:arrangeBy name' \
-        ~/Library/Preferences/com.apple.finder.plist
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
 
     # Set grid spacing for icons on the desktop and in other icon views.
-    /usr/libexec/PlistBuddy \
+    "$plistbuddy" \
         -c 'Set :DesktopViewSettings:IconViewSettings:gridSpacing 100' \
-        ~/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy \
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
+    "$plistbuddy" \
         -c 'Set :FK_StandardViewSettings:IconViewSettings:gridSpacing 100' \
-        ~/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy \
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
+    "$plistbuddy" \
         -c 'Set :StandardViewSettings:IconViewSettings:gridSpacing 100' \
-        ~/Library/Preferences/com.apple.finder.plist
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
 
     # Set the size of icons on the desktop and in other icon views.
-    /usr/libexec/PlistBuddy \
+    "$plistbuddy" \
         -c 'Set :DesktopViewSettings:IconViewSettings:iconSize 48' \
-        ~/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy \
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
+    "$plistbuddy" \
         -c 'Set :FK_StandardViewSettings:IconViewSettings:iconSize 48' \
-        ~/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy \
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
+    "$plistbuddy" \
         -c 'Set :StandardViewSettings:IconViewSettings:iconSize 48' \
-        ~/Library/Preferences/com.apple.finder.plist
+        "${HOME}/Library/Preferences/com.apple.finder.plist"
 
     # Use list view in all Finder windows by default.
     # Four-letter codes for the other view modes: 'icnv', 'clmv', 'glyv'
@@ -1067,7 +1069,7 @@ koopa::macos_update_defaults() { # {{{1
         'BrowseAllInterfaces' \
         -bool true
 
-    # Show the ~/Library folder.
+    # Show the '~/Library' folder.
     chflags nohidden "${HOME}/Library"
 
     # Show the /Volumes folder.
@@ -1187,7 +1189,7 @@ koopa::macos_update_defaults() { # {{{1
     # --------------------------------------------------------------------------
 
     # Hide Spotlight tray-icon (and subsequent helper).
-    # > sudo chmod 600 \
+    # > koopa::chmod -S 600 \
     # >     '/System/Library/CoreServices/Search.bundle/Contents/MacOS/Search'
 
     # Disable Spotlight indexing for any volume that gets mounted and has not

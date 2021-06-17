@@ -6,7 +6,7 @@ koopa::macos_update_system() { # {{{1
     # @note Updated 2020-11-12.
     # """
     koopa::assert_has_no_args "$#"
-    if koopa::is_installed mas
+    if koopa::is_installed 'mas'
     then
         koopa::h1 "Updating App Store apps via 'mas'."
         mas upgrade
