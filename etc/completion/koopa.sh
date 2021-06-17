@@ -184,6 +184,7 @@ _koopa_complete() { # {{{1
                         'rstudio-server'
                         'rstudio-workbench'
                         'shiny-server'
+                        'wine'
                     )
                     if _koopa_is_debian_like
                     then
