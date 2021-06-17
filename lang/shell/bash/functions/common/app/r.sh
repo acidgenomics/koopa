@@ -115,13 +115,10 @@ koopa::r_link_files_into_etc() { # {{{1
     return 0
 }
 
-# FIXME This is still failing for 'r-devel'. Need to rethink.
-# Not function: 'koopa::r-devel_packages_prefix'.
-# FIXME Does r-devel install on Fedora currently?
 koopa::r_link_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-06-16.
     #
     # R on Fedora won't pick up site library in '--vanilla' mode unless we
     # symlink the site-library into '/usr/local/lib/R' as well.
@@ -139,7 +136,7 @@ koopa::r_link_site_library() { # {{{1
     version="$(koopa::r_version "$r")"
     lib_source="$(koopa::r_packages_prefix "$version")"
     lib_target="${r_prefix}/site-library"
-    koopa::alert "Adding '${lib_target}' symbolic link."
+    koopa::alert "Linking '${lib_target}' to '${lib_source}'."
     koopa::sys_mkdir "$lib_source"
     if koopa::is_koopa_app "$r"
     then
@@ -161,7 +158,8 @@ koopa::r_link_site_library() { # {{{1
     koopa:::configure_app_packages "${conf_args[@]}"
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then
-        koopa::alert_note 'Fixing Fedora R configuration.'
+        koopa::alert_note "Fixing Fedora R configuration at '/usr/lib64/R'."
+        koopa::mkdir -S '/usr/lib64/R/site-library'
         koopa::ln -S \
             '/usr/lib64/R/site-library' \
             '/usr/local/lib/R/site-library'
