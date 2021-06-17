@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This seems to be broken in v0.11.0a update?
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
@@ -293,9 +292,7 @@ koopa::linux_configure_system() { # {{{1
     # --------------------------------------------------------------------------
     if [[ "${dict[passwordless_sudo]}" -eq 1 ]]
     then
-        echo 'FIXME 1'
         koopa::enable_passwordless_sudo
-        echo 'FIXME 2'
         koopa::linux_fix_sudo_setrlimit_error
     fi
     # Delete skeleton files {{{3
