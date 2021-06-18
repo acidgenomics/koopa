@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.12"
+aws-cli="2.2.13"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.25.0"
