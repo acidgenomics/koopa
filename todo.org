@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO R versioned unit test script in koopa.
+        Our 'AcidDevTools::check()' needs to call 'devtools::test()' manually.
 ** TODO Consider not linking r-devel into /usr/local. If we change this,
         need to update r-devel Docker image to hard-code the PATH.
 ** TODO Add support for nushell?
