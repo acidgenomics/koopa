@@ -576,6 +576,10 @@ koopa::is_rhel_8_like() { # {{{1
     _koopa_is_rhel_8_like "$@"
 }
 
+koopa::is_rocky() { # {{{1
+    _koopa_is_rocky "$@"
+}
+
 koopa::is_root() { # {{{1
     _koopa_is_root "$@"
 }

@@ -108,7 +108,7 @@ __koopa_warning() { # {{{1
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-06-21.
     # """
     local dict
     declare -A dict=(
@@ -168,6 +168,10 @@ __koopa_bash_header() { # {{{1
             return 1
         fi
         [[ $(type -t readarray) == 'builtin' ]] || return 1
+        # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
+        # https://100things.wzzrd.com/2018/07/11/
+        #   The-confusing-Bash-configuration-files.html
+        [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then

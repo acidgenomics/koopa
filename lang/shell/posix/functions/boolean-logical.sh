@@ -469,6 +469,14 @@ _koopa_is_rhel_8_like() { # {{{1
     _koopa_is_rhel_like && _koopa_is_os_version 8
 }
 
+_koopa_is_rocky() { # {{{1
+    # """
+    # Is the current operating system Rocky Linux?
+    # @note Updated 2021-06-21.
+    # """
+    _koopa_is_os 'rocky'
+}
+
 _koopa_is_root() { # {{{1
     # """
     # Is the current user root?
