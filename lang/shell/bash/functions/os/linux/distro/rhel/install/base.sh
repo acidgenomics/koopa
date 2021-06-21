@@ -19,7 +19,7 @@ koopa::rhel_install_base() { # {{{1
     koopa::install_start "$name_fancy"
     koopa::fedora_dnf_install 'dnf-plugins-core' 'util-linux-user'
     koopa::rhel_enable_epel
-    if koopa::is_centos
+    if koopa::is_centos || koopa::is_rocky
     then
         powertools='powertools'
     else
