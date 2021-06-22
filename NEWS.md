@@ -1,5 +1,8 @@
 ## koopa 0.11.0 (2021-06-22)
 
+This is a significant release that overhauls a number of functions in the Bash
+library, with the intent to improve standardization of app configuration.
+
 ### Major changes
 
 - Overhauled and significantly improved completion support for main `koopa`
