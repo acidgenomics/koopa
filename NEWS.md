@@ -1,6 +1,30 @@
-## koopa 0.11.0 (UNRELEASED)
+## koopa 0.11.0 (2021-06-22)
 
+### Major changes
 
+- Overhauled and significantly improved completion support for main `koopa`
+  script on Bash and Zsh. Added support for nested completion of `install`
+  and `uninstall` here, which is very useful for quickly identifying which
+  install scripts are supported for a specific platform (e.g. macOS or Linux).
+  Internally reduced the complexity by simplifying the number of calls to
+  `COMPREPLY`.
+- Added initial support for Julia package management with
+  `koopa install julia-packages`.
+
+### Minor changes
+
+- Updated multiple dependency version checks. Refer to `include/variables.txt`
+  for a diff of all specific changes.
+- Updated R RSPM CRAN shapshot for Linux to 2021-06-16 in `Rprofile.site` file.
+- Hardened R CRAN binary check on macOS in `Rprofile.site` file.
+- Renamed `current-bioc-version` to `current-bioconductor-version`.
+- Renamed `current-bcbio-version` to `current-bcbio-nextgen-version`.
+- Removed `tldr` custom code, in favor of using Rust `tealdeer` to manage
+  tldr look-ups.
+- Prefixed all `venv-*` exported scripts and functions with `python-*`.
+- Removed `goalie::isCleanSystemLibrary` check inside of R script header,
+  which can be overly strict. This check currently fails on Debian/Ubuntu
+  CRAN binaries for R 4.1.0.
 
 ## koopa 0.10.2 (2021-05-18)
 
