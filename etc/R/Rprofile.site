@@ -260,7 +260,8 @@ local({  # nolint
     ## > }
     options("repos" = repos)
     ## Allow Bioconductor to work offline.
-    ## Note that this will warn when enabled.
+    ## Note that this will warn when enabled, which causes
+    ## `AcidDevTools::install` to error, since warnings are converted to errors.
     ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
 
     ## Allow binary install on macOS for CRAN R.
