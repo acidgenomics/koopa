@@ -1,4 +1,4 @@
-## koopa 0.11.0 (2021-06-22)
+## koopa 0.11.0 (2021-06-28)
 
 This is a significant release that overhauls a number of functions in the Bash
 library, with the intent to improve standardization of app configuration.
