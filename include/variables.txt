@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-06-21"
+koopa-date="2021-06-28"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.11.0a"
+koopa-version="0.11.0"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.1.19"
@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.13"
+aws-cli="2.2.14"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.25.0"
@@ -87,7 +87,7 @@ cellranger="6.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.20.4"
+cmake="3.20.5"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -122,7 +122,7 @@ findutils="4.8.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
-fish="3.2.2"
+fish="3.3.0"
 
 # https://github.com/junegunn/fzf
 fzf="0.27.2"
@@ -227,7 +227,7 @@ neofetch="7.1.0"
 neovim="0.4.4"
 
 # https://nodejs.org/
-node="16.3.0"
+node="16.4.0"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -244,10 +244,10 @@ openssl="1.1.1d"
 oracle-instantclient="21.1.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.14.0.2"
+pandoc="2.14.0.3"
 
 # https://www.gnu.org/software/parallel/
-parallel="20210422"
+parallel="20210622"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
@@ -382,7 +382,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.3025"
+vim="8.2.3050"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.1"
@@ -534,13 +534,13 @@ ruby-ronn="0.7.3"
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.1"         # homebrew
-rust-broot="1.6.0"        # homebrew; br
+rust-broot="1.6.1"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
-rust-du-dust="0.5.4"      # homebrew; dust
+rust-du-dust="0.6.0"      # homebrew; dust
 rust-exa="0.10.1"         # homebrew
 rust-fd-find="8.2.1"      # homebrew; fd
 rust-hyperfine="1.11.0"   # homebrew
-rust-procs="0.11.8"       # homebrew
+rust-procs="0.11.9"       # homebrew
 rust-ripgrep-all="0.9.6"  # homebrew; rga
 rust-ripgrep="13.0.0"     # homebrew; rg
 rust-starship="0.55.0"    # homebrew

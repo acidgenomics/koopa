@@ -1,6 +1,61 @@
-## koopa 0.11.0 (UNRELEASED)
+## koopa 0.11.0 (2021-06-28)
 
+This is a significant release that overhauls a number of functions in the Bash
+library, with the intent to improve standardization of app configuration.
 
+### Major changes
+
+- Overhauled and significantly improved completion support for main `koopa`
+  script on Bash and Zsh. Added support for nested completion of `install`
+  and `uninstall` here, which is very useful for quickly identifying which
+  install scripts are supported for a specific platform (e.g. macOS or Linux).
+  Internally reduced the complexity by simplifying the number of calls to
+  `COMPREPLY`.
+- Reworked main shell activation script defined in `activate` file. This now
+  defines some standard POSIX functions internally, and then hands off to
+  POSIX shell library inside of POSIX header file to complete the activation
+  process. This helps improve configuration consistency when `koopa` is
+  called externally outside of our Bash or Zsh configuration files.
+- Improved standardization (and consistency) of installer functions by
+  using new `install_app` and `uninstall_app` wrapper functions. These help
+  improve the consistency of linking into `app/` and `opt/` subdirectories
+  inside of koopa installation.
+- Hardened coreutils and other commonly used external programs with function
+  wrappers, with the intent to improve consistency across platforms. This
+  applies primarily to GNU coreutils, which can be distributed instead as
+  BSD variants on some platforms (e.g. macOS, Busybox). These wrappers are
+  named with `locate_*` prefix internally in the Bash library.
+- Added initial support for Julia package management with
+  `koopa install julia-packages`.
+- Reworked `julia-packages`, `perl-packages`, `r-packages`, `ruby-packages`,
+  and `rust-packages` structure in `app/`. These now contain versioned
+  subdirectories consistently, similar to installed apps. The latest version
+  is now linked into `opt/`.
+
+### Minor changes
+
+- Added support for new Rocky Linux distribution, which aims to replace
+  CentOS 8 for HPC configurations.
+- Updated multiple dependency version checks. Refer to `include/variables.txt`
+  for a diff of all specific changes.
+- Updated R RSPM CRAN shapshot for Linux to 2021-06-16 in `Rprofile.site` file.
+- Hardened R CRAN binary check on macOS in `Rprofile.site` file.
+- Renamed `current-bioc-version` to `current-bioconductor-version`.
+- Renamed `current-bcbio-version` to `current-bcbio-nextgen-version`.
+- Removed `tldr` custom code, in favor of using Rust `tealdeer` to manage
+  tldr look-ups.
+- Prefixed all `venv-*` exported scripts and functions with `python-*`.
+- Removed `goalie::isCleanSystemLibrary` check inside of R script header,
+  which can be overly strict. This check currently fails on Debian/Ubuntu
+  CRAN binaries for R 4.1.0.
+- Simplified conda environment handling in `activate_conda_env` function.
+- Initial commit of `koopa::find` internal function, which attempts to use
+  Rust `fd` instead of GNU `find` when possible.
+- Improved support for multiple Emacs configurations (e.g. Spacemacs,
+  Doom Emacs, etc.) using chemacs2 approach.
+- Reorganized R configuration files, to better support new 4.1 release.
+- Reworked some linter checks that are called by `koopa system test`.
+  Some of these checks will migrate to new AcidLinter package in the future.
 
 ## koopa 0.10.2 (2021-05-18)
 

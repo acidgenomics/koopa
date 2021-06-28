@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::sra_prefetch_parallel() { # {{{1
+koopa::aspera_sra_prefetch_parallel() { # {{{1
     # """
-    # Prefetch files from SRA in parallel.
-    # @note Updated 2021-05-21.
+    # Prefetch files from SRA in parallel with Aspera.
+    # @note Updated 2021-06-22.
     # """
     local file find jobs parallel sort
     koopa::activate_aspera
