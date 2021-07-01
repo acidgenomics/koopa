@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-06-28"
+koopa-date="2021-07-01"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.11.0"
+koopa-version="0.11.1a"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.1.19"
@@ -273,9 +273,7 @@ php="8.0.5"
 pkg-config="0.29.2"
 
 # https://proj.org/
-# 8.0.0 release is having build issues with Homebrew.
-# https://github.com/Homebrew/homebrew-core/pull/72680
-proj="8.0.1"
+proj="8.1.0"
 
 # https://github.com/pyenv/pyenv
 pyenv="1.2.26"
