@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-06-18.
+# Updated 2021-07-04.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -69,6 +69,7 @@ cask "bartender"
 cask "basictex"
 cask "bbedit"
 cask "bibdesk"
+cask "boop"
 cask "brave-browser"  # Avoid Keystone bloat from Google Chrome.
 cask "carbon-copy-cloner"
 cask "coconutbattery"
@@ -276,6 +277,7 @@ brew "neovim"
 brew "nmap"
 brew "node"
 brew "oil"
+brew "onefetch"
 brew "open-mpi"
 brew "openblas"
 brew "openjdk"
