@@ -4,7 +4,7 @@
 
 - Updated Python dependencies. Also updated other versions as recommended by
   latest Homebrew update.
-- Updated r-koopa dependency.
+- Updated r-koopa dependency to 0.1.20.
 - Updated RStudio Package Manager (RSPM) to 2021-07-01.
 
 ## koopa 0.11.0 (2021-06-28)
