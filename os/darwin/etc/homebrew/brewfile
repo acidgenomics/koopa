@@ -176,6 +176,7 @@ brew "suite-sparse", link: false
 
 brew "ack"
 brew "armadillo"
+brew "asdf"
 brew "autoconf"
 brew "automake"
 brew "awscli"
