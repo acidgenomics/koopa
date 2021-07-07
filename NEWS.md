@@ -1,3 +1,12 @@
+## koopa 0.11.1 (2021-07-07)
+
+### Minor changes
+
+- Updated Python dependencies. Also updated other versions as recommended by
+  latest Homebrew update.
+- Updated r-koopa dependency to 0.1.20.
+- Updated RStudio Package Manager (RSPM) to 2021-07-01.
+
 ## koopa 0.11.0 (2021-06-28)
 
 This is a significant release that overhauls a number of functions in the Bash

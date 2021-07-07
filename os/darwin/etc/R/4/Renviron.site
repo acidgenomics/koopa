@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-06-11.
+# @note Updated 2021-06-29.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
@@ -61,10 +61,11 @@ PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
 
-# RStudio {{{2
-# ------------------------------------------------------------------------------
+# TeX (e.g. pdflatex).
+PATH="/Library/TeX/texbin:${PATH}"
 
-# Use RStudio bundled version of pandoc, for improved R Markdown stability.
+# Pandoc. Use RStudio bundled version of pandoc when possible,
+# for improved R Markdown stability.
 PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 
 # Package configuration {{{2
