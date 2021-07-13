@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-07-12"
+koopa-date="2021-07-13"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.11.1"
+koopa-version="0.11.2a"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.1.20"
@@ -170,10 +170,10 @@ harfbuzz="2.8.2"
 haskell-stack="rolling"
 
 # https://www.hdfgroup.org/downloads/hdf5
-hdf5="1.12.0"
+hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.2.1"
+homebrew="3.2.2"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -533,7 +533,7 @@ ruby-ronn="0.7.3"
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-rust-bat="0.18.1"         # homebrew
+rust-bat="0.18.2"         # homebrew
 rust-broot="1.6.1"        # homebrew; br
 rust-dog="0.1.0"          # homebrew
 rust-du-dust="0.6.0"      # homebrew; dust
