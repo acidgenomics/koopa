@@ -494,27 +494,28 @@ node-tldr="3.3.7"
 # FIXME Need to include more default packages in default
 # site library, label more clearly here.
 
-python-black="21.6b0"           # homebrew
-python-bpytop="1.0.67"          # homebrew
-python-cython="0.29.24"         # reticulate
-python-flake8="3.9.2"           # homebrew
+python-black="21.6b0"           # default; homebrew
+python-bpytop="1.0.67"          # default; homebrew
+python-cython="0.29.24"         # default; reticulate
+python-flake8="3.9.2"           # default; homebrew
 python-louvain="0.7.0"          # reticulate
 python-numpy="1.21.0"           # reticulate
 python-pandas="1.3.0"           # reticulate
-python-pip2pi="0.8.1"
-python-pip="21.1.3"             # reticulate
-python-pipx="0.16.2.0"          # homebrew
-python-psutil="5.8.0"
-python-pyflakes="2.3.1"
-python-pylint="2.9.3"           # homebrew
-python-pytaglib="1.4.6"
-python-pytest="6.2.4"
+python-pip2pi="0.8.1"           # default
+python-pip="21.1.3"             # default; reticulate
+python-pipx="0.16.2.0"          # default; homebrew
+python-psutil="5.8.0"           # default
+python-pyflakes="2.3.1"         # default
+python-pylint="2.9.3"           # default; homebrew
+python-pynvim="0.4.3"           # default
+python-pytaglib="1.4.6"         # default
+python-pytest="6.2.4"           # default
 python-pyyaml="5.4.1"           # reticulate
-python-ranger-fm="1.9.3"        # homebrew
+python-ranger-fm="1.9.3"        # default; homebrew
 python-scikit-learn="0.24.2"    # reticulate
 python-scipy="1.7.0"            # reticulate
 python-setuptools="57.1.0"      # default; reticulate
-python-six="1.16.0"
+python-six="1.16.0"             # default
 python-umap-learn="0.5.1"       # reticulate
 python-wheel="0.36.2"           # default; reticulate
 
