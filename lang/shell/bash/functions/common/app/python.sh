@@ -202,11 +202,10 @@ koopa::python_venv_create_base() { # {{{1
     return 0
 }
 
-# FIXME Can we update the versions here, 'umap-learn' in particular?
 koopa::python_venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-07-14.
     #
     # Check that LLVM is configured correctly.
     # umap-learn > numba > llvmlite
@@ -229,17 +228,17 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
-    local name packages
+    local cflags cppflags cxxflags dyld_library_path ldflags name packages
     koopa::assert_has_no_args "$#"
     name='r-reticulate'
+    # FIXME Need to fetch the versions from our 'variables.txt' file instead.
     packages=(
         'Cython'
-        'cwltool'
+        'PyYAML'
         'louvain'
         'numpy'
         'pandas'
         'pip'
-        'pyyaml'
         'scikit-learn'
         'scipy'
         'setuptools'
@@ -248,17 +247,50 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     )
     if koopa::is_macos
     then
+        cflags=(
+            "${CFLAGS:-}"
+            '-I/usr/local/opt/libomp/include'
+            # Don't treat these warnings as errors on macOS with clang.
+            # https://github.com/scikit-image/scikit-image/
+            #   issues/5051#issuecomment-729795085
+            '-Wno-implicit-function-declaration'
+        )
+        cppflags=(
+            "${CPPFLAGS:-}"
+            '-Xpreprocessor'
+            '-fopenmp'
+        )
+        cxxflags=(
+            "${CXXFLAGS:-}"
+            '-I/usr/local/opt/libomp/include'
+        )
+        dyld_library_path=(
+            "${DYLD_LIBRARY_PATH:-}"
+            '/usr/local/opt/libomp/lib'
+        )
+        ldflags=(
+            "${LDFLAGS:-}"
+            '-L/usr/local/opt/libomp/lib'
+            '-lomp'
+        )
         export CC='/usr/bin/clang'
         export CXX='/usr/bin/clang++'
-        export CFLAGS="${CFLAGS:-} -I/usr/local/opt/libomp/include"
-        export CPPFLAGS="${CPPFLAGS:-} -Xpreprocessor -fopenmp"
-        export CXXFLAGS="${CXXFLAGS:-} -I/usr/local/opt/libomp/include"
-        export DYLD_LIBRARY_PATH='/usr/local/opt/libomp/lib'
-        export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
+        export CFLAGS="${cflags[*]}"
+        export CPPFLAGS="${cppflags[*]}"
+        export CXXFLAGS="${cxxflags[*]}"
+        export DYLD_LIBRARY_PATH="${dyld_library_path[*]}"
+        export LDFLAGS="${ldflags[*]}"
+        koopa::dl \
+            'CC' "${CC:-}" \
+            'CXX' "${CXX:-}" \
+            'CFLAGS' "${CFLAGS:-}" \
+            'CPPFLAGS' "${CPPFLAGS:-}" \
+            'CXXFLAGS' "${CXXFLAGS:-}" \
+            'DYLD_LIBRARY_PATH' "${DYLD_LIBRARY_PATH:-}" \
+            'LDFLAGS' "${LDFLAGS:-}"
     fi
     LLVM_CONFIG="$(koopa::locate_llvm_config)"
-    # FIXME This assert doesn't exist. Need to add.
-    # > koopa::assert_is_exectuable "$LLVM_CONFIG"
+    koopa::assert_is_executable "$LLVM_CONFIG"
     export LLVM_CONFIG
     koopa::python_venv_create --name="$name" "${packages[@]}"
     return 0
