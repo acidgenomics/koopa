@@ -202,6 +202,7 @@ koopa::python_venv_create_base() { # {{{1
     return 0
 }
 
+# FIXME Can we update the versions here, 'umap-learn' in particular?
 koopa::python_venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
