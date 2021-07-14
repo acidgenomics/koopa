@@ -256,7 +256,8 @@ koopa::python_venv_create_r_reticulate() { # {{{1
         export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
     fi
     LLVM_CONFIG="$(koopa::locate_llvm_config)"
-    koopa::assert_is_exectuable "$LLVM_CONFIG"
+    # FIXME This assert doesn't exist. Need to add.
+    # > koopa::assert_is_exectuable "$LLVM_CONFIG"
     export LLVM_CONFIG
     koopa::python_venv_create --name="$name" "${packages[@]}"
     return 0
