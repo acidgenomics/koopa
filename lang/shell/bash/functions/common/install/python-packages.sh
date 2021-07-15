@@ -15,27 +15,25 @@ koopa::install_python_packages() { # {{{1
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
-            # > 'pynvim'
+            'Cython'
+            'black'         # homebrew
+            'bpytop'        # homebrew
+            'flake8'        # homebrew
+            'pip'
             'pip2pi'
+            'pipx'          # homebrew
             'psutil'
             'pyflakes'
+            'pylint'        # homebrew
+            'pynvim'
             'pytaglib'
             'pytest'
+            'ranger-fm'     # homebrew
             'setuptools'
             'six'
             'wheel'
         )
-        if ! koopa::is_installed 'brew'
-        then
-            pkgs+=(
-                'black'
-                'bpytop'
-                'flake8'
-                'pipx'
-                'pylint'
-                'ranger-fm'
-            )
-        fi
+        # NOTE This code is duplicated in 'python_venv_create_r_reticulate'.
         for i in "${!pkgs[@]}"
         do
             pkg="${pkgs[$i]}"
@@ -46,6 +44,7 @@ koopa::install_python_packages() { # {{{1
     fi
     koopa::install_start "$name_fancy" "$prefix"
     koopa::python_pip_install "${pkgs[@]}"
+    # NOTE Consider listing all installed packages here.
     koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
