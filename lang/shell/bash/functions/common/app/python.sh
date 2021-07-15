@@ -228,11 +228,10 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
-    local cflags cppflags cxxflags dyld_library_path ldflags name packages
+    local cflags cppflags cxxflags dyld_library_path ldflags name pkgs
     koopa::assert_has_no_args "$#"
     name='r-reticulate'
-    # FIXME Need to fetch the versions from our 'variables.txt' file instead.
-    packages=(
+    pkgs=(
         'Cython'
         'PyYAML'
         'louvain'
@@ -245,6 +244,14 @@ koopa::python_venv_create_r_reticulate() { # {{{1
         'umap-learn'
         'wheel'
     )
+    # NOTE This code is duplicated in 'install_python_packages'.
+    for i in "${!pkgs[@]}"
+    do
+        pkg="${pkgs[$i]}"
+        pkg_lower="$(koopa::lowercase "$pkg")"
+        version="$(koopa::variable "python-${pkg_lower}")"
+        pkgs[$i]="${pkg}==${version}"
+    done
     if koopa::is_macos
     then
         cflags=(
@@ -282,9 +289,9 @@ koopa::python_venv_create_r_reticulate() { # {{{1
         export LDFLAGS="${ldflags[*]}"
         koopa::dl \
             'CC' "${CC:-}" \
-            'CXX' "${CXX:-}" \
             'CFLAGS' "${CFLAGS:-}" \
             'CPPFLAGS' "${CPPFLAGS:-}" \
+            'CXX' "${CXX:-}" \
             'CXXFLAGS' "${CXXFLAGS:-}" \
             'DYLD_LIBRARY_PATH' "${DYLD_LIBRARY_PATH:-}" \
             'LDFLAGS' "${LDFLAGS:-}"
@@ -292,6 +299,6 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     LLVM_CONFIG="$(koopa::locate_llvm_config)"
     koopa::assert_is_executable "$LLVM_CONFIG"
     export LLVM_CONFIG
-    koopa::python_venv_create --name="$name" "${packages[@]}"
+    koopa::python_venv_create --name="$name" "${pkgs[@]}"
     return 0
 }
