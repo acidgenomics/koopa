@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-07-06.
+#' @note Updated 2021-07-15.
 #'
 #' @section Restarting R:
 #'
@@ -253,6 +253,9 @@ local({  # nolint
     ## Always include our Acid Genomics repo.
     repos[["AcidGenomics"]] <-
         "https://r.acidgenomics.com"
+    ## Additional repo universies that can be useful:
+    ## https://r-universe.dev/organizations/
+    ## > repos[["carpentries"]] <- "https://carpentries.r-universe.dev"
     ## Yihui Xie's repo has some extra binary builds for macOS.
     ## > if (isTRUE(macos)) {
     ## >    repos[["CRANextra"]] <-
