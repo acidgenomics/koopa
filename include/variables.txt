@@ -189,7 +189,7 @@ imagemagick="7.1.0"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.6.1"
+julia="1.6.2"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
