@@ -494,7 +494,7 @@ node-tldr="3.3.7"
 # FIXME Need to include more default packages in default
 # site library, label more clearly here.
 
-python-black="21.6b0"           # default; homebrew
+python-black="21.7b0"           # default; homebrew
 python-bpytop="1.0.67"          # default; homebrew
 python-cython="0.29.24"         # default; reticulate
 python-flake8="3.9.2"           # default; homebrew
