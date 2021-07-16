@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-07-15.
+#' @note Updated 2021-07-16.
 #'
 #' @section Restarting R:
 #'
@@ -410,9 +410,9 @@ local({  # nolint
         "warnPartialMatchDollar" = TRUE
     )
 
-    ## Timeouts default to 60 seconds, which can be too long.
-    ## Note that this applies to `download.file()` calls as well.
-    ## > options("timeout" = 30L)
+    ## Timeouts default to 60 seconds (1 minute), which can be too short for
+    ## some large file downloads. Extending to 10 minutes here instead.
+    options("timeout" = 600L)
 
     ## Improve stack traces for error messages.
     ##
