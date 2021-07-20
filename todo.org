@@ -1,13 +1,13 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Add support for nushell?
 ** TODO Consider prefixing with "command XXX" instead of using "unalias XXX".
 ** TODO Clone shallow during install...
 ** TODO R versioned unit test script in koopa.
         Our 'AcidDevTools::check()' needs to call 'devtools::test()' manually.
 ** TODO Consider not linking r-devel into /usr/local. If we change this,
         need to update r-devel Docker image to hard-code the PATH.
-** TODO Add support for nushell?
 ** TODO Improve completion support for all exported scripts.
 ** TODO Improve configuration of NPM, to store packages outside of '/usr/local'.
    > npm config get prefix
