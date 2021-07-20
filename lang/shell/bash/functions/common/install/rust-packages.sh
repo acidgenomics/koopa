@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Can we pass this to our main 'install_app' function instead?
+# FIXME Are we doing this for Python packages?
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-07-20.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -45,21 +47,12 @@ koopa::install_rust_packages() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_envs
     koopa::activate_rust
-    if ! koopa::is_installed 'cargo' 'rustc' 'rustup'
-    then
-        koopa::alert_note 'Required: cargo, rustc, rustup.'
-        return 0
-    fi
+    koopa::assert_is_installed 'cargo' 'rustc' 'rustup'
     prefix="${CARGO_HOME:?}"
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         default=1
-        if koopa::is_installed 'brew'
-        then
-            koopa::alert_note 'Use Homebrew to manage Rust binaries instead.'
-            return 0
-        fi
         pkgs=(
             'bat'
             'broot'
@@ -69,9 +62,12 @@ koopa::install_rust_packages() { # {{{1
             'hyperfine'
             'procs'
             'ripgrep'
+
+            # FIXME Try to enable this again, see if it works now.
             # Currently failing to build due to cachedir constraint.
             # https://github.com/phiresky/ripgrep-all/issues/88
             # > 'ripgrep-all'
+
             'starship'
             'tokei'
             'xsv'
