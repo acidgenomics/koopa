@@ -54,6 +54,9 @@ koopa::install_rust_packages() { # {{{1
     then
         default=1
         pkgs=(
+            # Currently failing to build due to cachedir constraint.
+            # https://github.com/phiresky/ripgrep-all/issues/88
+            # > 'ripgrep-all'
             'bat'
             'broot'
             'du-dust'
@@ -62,12 +65,6 @@ koopa::install_rust_packages() { # {{{1
             'hyperfine'
             'procs'
             'ripgrep'
-
-            # FIXME Try to enable this again, see if it works now.
-            # Currently failing to build due to cachedir constraint.
-            # https://github.com/phiresky/ripgrep-all/issues/88
-            # > 'ripgrep-all'
-
             'starship'
             'tokei'
             'xsv'

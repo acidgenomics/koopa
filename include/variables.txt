@@ -317,7 +317,7 @@ ruby="3.0.2p107"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
-rust="1.52.1"
+rust="1.53.0"
 
 # https://rustup.rs/
 rustup="1.24.3"
