@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-07-16.
+#' @note Updated 2021-07-21.
 #'
 #' @section Restarting R:
 #'
@@ -479,6 +479,10 @@ local({  # nolint
         ##
         ## Increase default limit to 4 GB.
         options("future.globals.maxSize" = 4000L * (1024L ^ 2L))
+    }
+
+    if (isInstalled("ggrepel")) {
+        options("ggrepel.max.overlaps" = Inf)
     }
 
     if (isInstalled("httr")) {
