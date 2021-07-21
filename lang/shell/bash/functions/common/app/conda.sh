@@ -309,10 +309,11 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         #   https://jef.works/veloviz/
         envs+=(
             'bustools'
-            'cellrank'  # 1.3.1
+            'cellrank'
             'r-monocle3'
             'r-seurat'
             'scanpy'
+            'scrublet'
         )
     fi
     if [[ "${dict[spatial]}" -eq 1 ]]
