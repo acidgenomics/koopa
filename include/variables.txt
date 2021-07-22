@@ -404,6 +404,8 @@ zsh="5.8"
 # like this issue is persisting in the 0.5.1 recipe update...
 # https://github.com/conda-forge/umap-learn-feedstock/issues/29
 
+# FIXME Need to add celltypist here (need to create recipe first).
+
 conda-arriba="2.1.0"                    # 2021-01-24 bioconda
 conda-atropos="1.1.29"                  # 2020-12-07 bioconda
 conda-bamtools="2.5.1"                  # 2018-07-04 bioconda
