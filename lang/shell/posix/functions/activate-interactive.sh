@@ -355,6 +355,22 @@ _koopa_activate_gnu_aliases() { # {{{1
     return 0
 }
 
+_koopa_activate_lesspipe() { # {{{1
+    # """
+    # Activate lesspipe.
+    # @note Updated 2021-07-22.
+    #
+    # @seealso
+    # - https://github.com/wofr06/lesspipe
+    # - https://manned.org/lesspipe
+    # - brew info lesspipe
+    # """
+    _koopa_is_installed 'lesspipe.sh' || return 0
+    export LESS_ADVANCED_PREPROCESSOR=1
+    export LESSOPEN="|lesspipe.sh %s"
+    return 0
+}
+
 _koopa_activate_mcfly() { #{{{1
     # """
     # Activate mcfly.
