@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-07-20"
+koopa-date="2021-07-26"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.2a"
@@ -102,7 +102,7 @@ coreutils="8.32"
 cpufetch="0.97"
 
 # https://curl.haxx.se/
-curl="7.77.0"
+curl="7.78.0"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -149,7 +149,7 @@ git="2.32.0"
 gnupg="2.3.1"
 
 # https://golang.org/dl/
-go="1.16.5"
+go="1.16.6"
 
 # https://cloud.google.com/sdk/docs/install
 google-cloud-sdk="342.0.0"
@@ -382,7 +382,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.3175"
+vim="8.2.3200"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.1"
@@ -403,8 +403,8 @@ zsh="5.8"
 # Python 3.8. The 0.4.6 release is confirmed to work with Seurat in R. It looks
 # like this issue is persisting in the 0.5.1 recipe update...
 # https://github.com/conda-forge/umap-learn-feedstock/issues/29
-
-# FIXME Need to add celltypist here (need to create recipe first).
+#
+# NOTE Need to add celltypist here (need to create recipe first).
 
 conda-arriba="2.1.0"                    # 2021-01-24 bioconda
 conda-atropos="1.1.29"                  # 2020-12-07 bioconda
