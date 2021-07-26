@@ -45,7 +45,7 @@ automake="1.16.3"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.20"
+aws-cli="2.2.22"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.26.1"
@@ -278,7 +278,7 @@ poetry="1.1.7"
 proj="8.1.0"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.0.3"
+pyenv="2.0.4"
 
 # https://www.python.org/downloads/
 python="3.9.6"
