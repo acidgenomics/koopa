@@ -41,7 +41,7 @@ aspera-connect="3.11.2.63"
 autoconf="2.71"
 
 # https://ftp.gnu.org/gnu/automake/
-automake="1.16.3"
+automake="1.16.4"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
