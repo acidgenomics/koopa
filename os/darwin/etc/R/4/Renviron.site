@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-06-29.
+# @note Updated 2021-07-27.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
@@ -54,6 +54,7 @@ PATH="${KOOPA_OPT_PREFIX}/rust-packages/bin:${PATH}"
 # Python.
 PATH="/Library/Frameworks/Python.framework/Versions/Current/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/python-packages/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/virtualenvs/r-reticulate/bin:${PATH}"
 
 # Conda.
 PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"

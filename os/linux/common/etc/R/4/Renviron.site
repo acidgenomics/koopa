@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for Linux.
-# @note Updated 2021-06-11.
+# @note Updated 2021-07-27.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -96,6 +96,7 @@ PATH="${KOOPA_OPT_PREFIX}/rust-packages/bin:${PATH}"
 # Python.
 PATH="${KOOPA_OPT_PREFIX}/python/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/python-packages/bin:${PATH}"
+PATH="${KOOPA_OPT_PREFIX}/virtualenvs/r-reticulate/bin:${PATH}"
 
 # Conda.
 PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
