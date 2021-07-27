@@ -460,7 +460,7 @@ koopa:::which_function() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-07-27.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
@@ -468,7 +468,7 @@ koopa::koopa() { # {{{1
     koopa::assert_has_args "$#"
     case "$1" in
         --version|-V)
-            f='version'
+            f='koopa_version'
             shift 1
             ;;
         app | \
