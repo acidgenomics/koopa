@@ -234,12 +234,12 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     pkgs=(
         'Cython'
         'PyYAML'
-        'igraph'        # R leiden
-        'leidenalg'     # R leiden
+        'leidenalg'         # R leiden
         'louvain'
         'numpy'
         'pandas'
         'pip'
+        'python-igraph'     # R leiden
         'scikit-learn'
         'scipy'
         'setuptools'
