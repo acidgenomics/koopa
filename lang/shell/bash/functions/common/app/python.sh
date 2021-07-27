@@ -205,7 +205,7 @@ koopa::python_venv_create_base() { # {{{1
 koopa::python_venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
-    # @note Updated 2021-07-14.
+    # @note Updated 2021-07-27.
     #
     # Check that LLVM is configured correctly.
     # umap-learn > numba > llvmlite
@@ -234,6 +234,8 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     pkgs=(
         'Cython'
         'PyYAML'
+        'igraph'        # R leiden
+        'leidenalg'     # R leiden
         'louvain'
         'numpy'
         'pandas'
