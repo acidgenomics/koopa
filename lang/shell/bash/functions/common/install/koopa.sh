@@ -21,7 +21,7 @@ koopa::uninstall_koopa() { # {{{1
 koopa::update_koopa() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2021-01-19.
+    # @note Updated 2021-07-27.
     #
     # Note that stable releases are not git, and can't be updated.
     # """
@@ -30,7 +30,7 @@ koopa::update_koopa() { # {{{1
     koopa_prefix="$(koopa::koopa_prefix)"
     if ! koopa::is_git_toplevel "$koopa_prefix"
     then
-        version="$(koopa::version)"
+        version="$(koopa::koopa_version)"
         url="$(koopa::url)"
         koopa::alert_note \
             "Stable release of ${name_fancy} ${version} detected." \

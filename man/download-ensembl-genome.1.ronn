@@ -1,5 +1,7 @@
 # download-ensembl-genome(1) - download ensembl genome
 
+# FIXME Need to update the argument names here...
+
 ## SYNOPSIS
 
 `download-ensembl-genome`
