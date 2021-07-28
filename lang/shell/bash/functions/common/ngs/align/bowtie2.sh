@@ -41,8 +41,8 @@ koopa::bowtie2() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set fastq_r1 fastq_r2 index_prefix output_dir \
-        r1_tail r2_tail
+    koopa::assert_is_set 'fastq_r1' 'fastq_r2' 'index_prefix' 'output_dir' \
+        'r1_tail' 'r2_tail'
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
     fastq_r1_bn="$(basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
@@ -104,7 +104,7 @@ koopa::bowtie2_index() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set fasta_file index_dir
+    koopa::assert_is_set 'fasta_file' 'index_dir'
     koopa::assert_is_file "$fasta_file"
     if [[ -d "$index_dir" ]]
     then
@@ -173,7 +173,7 @@ koopa::run_bowtie2() { # {{{1
     then
         koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
     fi
-    koopa::assert_is_set fastq_dir output_dir
+    koopa::assert_is_set 'fastq_dir' 'output_dir'
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running bowtie2.'

@@ -168,7 +168,7 @@ koopa::python_venv_create() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_is_set name python
+    koopa::assert_is_set 'name' 'python'
     koopa::assert_is_installed "$python"
     prefix="$(koopa::python_venv_prefix)/${name}"
     if [[ -d "$prefix" ]]
