@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
 # FIXME Rework, adding single-end support, similar to modifications in salmon functions.
+# FIXME Consider reworking these functions as ':::' instead of '::'.
 
 # FIXME Need to export this and make it user-accessible, similar to salmon.
 koopa:::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-07-28.
     # """
-    local fasta_file index_dir index_file log_file
+    local fasta_file index_dir index_file log_file tee
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'kallisto'
     while (("$#"))
@@ -31,17 +32,23 @@ koopa:::kallisto_index() { # {{{1
     koopa::assert_is_file "$fasta_file"
     if [[ -f "$index_file" ]]
     then
-        koopa::alert_note "Index exists at '${index_file}'. Skipping."
+        index_file="$(koopa::realpath "$index_file")"
+        # FIXME Need to match conventions used in salmon functions.
+        koopa::alert_note \
+            "Index exists at '${index_file}'." \
+            "Skipping."
         return 0
     fi
     koopa::h2 "Generating kallisto index at '${index_file}'."
     index_dir="$(dirname "$index_file")"
     log_file="${index_dir}/kallisto-index.log"
     koopa::mkdir "$index_dir"
+    index_dir="$(koopa::realpath "$index_dir")"
+    tee="$(koopa::locate_tee)"
     kallisto index \
         -i "$index_file" \
         "$fasta_file" \
-        2>&1 | tee "$log_file"
+        2>&1 | "$tee" "$log_file"
     return 0
 }
 
@@ -51,7 +58,7 @@ koopa:::kallisto_quant() { # {{{1
     # @note Updated 2021-05-22.
     # """
     local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_file
-    local log_file output_dir r1_tail r2_tail sample_output_dir threads
+    local log_file output_dir r1_tail r2_tail sample_output_dir tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'kallisto'
     while (("$#"))
@@ -111,6 +118,7 @@ koopa:::kallisto_quant() { # {{{1
     koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/kallisto-quant.log"
     koopa::mkdir "$sample_output_dir"
+    tee="$(koopa::locate_tee)"
     kallisto quant \
         --bootstrap-samples="$bootstraps" \
         --index="$index_file" \
@@ -118,7 +126,7 @@ koopa:::kallisto_quant() { # {{{1
         --threads="$threads" \
         "$fastq_r1" \
         "$fastq_r2" \
-        2>&1 | tee "$log_file"
+        2>&1 | "$tee" "$log_file"
     return 0
 }
 
@@ -238,4 +246,3 @@ koopa::run_kallisto() { # {{{1
     done
     return 0
 }
-

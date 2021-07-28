@@ -3,7 +3,7 @@
 koopa::install_homebrew() { # {{{1
     # """
     # Install Homebrew.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-07-28.
     #
     # @seealso
     # - https://docs.brew.sh/Installation
@@ -18,6 +18,7 @@ koopa::install_homebrew() { # {{{1
     # Linux:
     # Creates a new linuxbrew user and installs to /home/linuxbrew/.linuxbrew.
     # """
+    local tee tmp_dir
     koopa::assert_has_no_args "$#"
     if koopa::is_installed 'brew'
     then
@@ -29,6 +30,7 @@ koopa::install_homebrew() { # {{{1
     name_fancy='Homebrew'
     koopa::install_start "$name_fancy"
     koopa::is_macos && koopa::macos_install_xcode_clt
+    tee="$(koopa::locate_tee)"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -37,7 +39,7 @@ koopa::install_homebrew() { # {{{1
         koopa::download "$url"
         koopa::chmod +x "$file"
         yes | "./${file}" || true
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::install_success "$name_fancy"
     return 0
@@ -77,11 +79,11 @@ koopa::install_homebrew_bundle() { # {{{1
 koopa::uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-07-28.
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
-    local file name_fancy tmp_dir url user
+    local file name_fancy tee tmp_dir url user
     if ! koopa::is_installed 'brew'
     then
         koopa::alert_is_not_installed 'Homebrew'
@@ -99,6 +101,7 @@ koopa::uninstall_homebrew() { # {{{1
         koopa::alert 'Changing default shell to system Zsh.'
         chsh -s '/bin/zsh' "$user"
     fi
+    tee="$(koopa::locate_tee)"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -107,7 +110,7 @@ koopa::uninstall_homebrew() { # {{{1
         koopa::download "$url"
         koopa::chmod +x "$file"
         yes | "./${file}" || true
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     koopa::uninstall_success "$name_fancy"
     return 0

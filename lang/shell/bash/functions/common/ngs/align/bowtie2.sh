@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-koopa::bowtie2() { # {{{1
+koopa:::bowtie2_align() { # {{{1
     # """
-    # Run bowtie2 on paired-end FASTQ files.
-    # @note Updated 2021-05-22.
+    # Run bowtie2 alignment on multiple paired-end FASTQ files.
+    # @note Updated 2021-07-28.
     # """
     local fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_prefix log_file
-    local output_dir r1_tail r2_tail sam_file sample_output_dir threads
+    local output_dir r1_tail r2_tail sam_file sample_output_dir tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'bowtie2'
     while (("$#"))
@@ -62,6 +62,7 @@ koopa::bowtie2() { # {{{1
     sam_file="${sample_output_dir}/${id}.sam"
     log_file="${sample_output_dir}/bowtie2.log"
     koopa::mkdir "$sample_output_dir"
+    tee="$(koopa::locate_tee)"
     bowtie2 \
         --local \
         --sensitive-local \
@@ -76,14 +77,14 @@ koopa::bowtie2() { # {{{1
         -p "$threads" \
         -q \
         -x "$index_prefix" \
-        2>&1 | tee "$log_file"
+        2>&1 | "$tee" "$log_file"
     return 0
 }
 
-koopa::bowtie2_index() { # {{{1
+koopa:::bowtie2_index() { # {{{1
     # """
     # Generate bowtie2 index.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-07-28.
     # """
     local fasta_file index_dir index_prefix threads
     koopa::assert_has_args "$#"
@@ -106,17 +107,22 @@ koopa::bowtie2_index() { # {{{1
     done
     koopa::assert_is_set 'fasta_file' 'index_dir'
     koopa::assert_is_file "$fasta_file"
+    fasta_file="$(koopa::realpath "$fasta_file")"
     if [[ -d "$index_dir" ]]
     then
+        index_dir="$(koopa::realpath "$index_dir")"
         koopa::alert_note "Index exists at '${index_dir}'. Skipping."
         return 0
     fi
+    koopa::mkdir "$index_dir"
+    index_dir="$(koopa::realpath "$index_dir")"
     koopa::h2 "Generating bowtie2 index at '${index_dir}'."
     threads="$(koopa::cpu_count)"
-    koopa::dl 'Threads' "$threads"
+    koopa::dl \
+        'FASTA' "$fasta_file" \
+        'Threads' "$threads"
     # This step adds 'bowtie2.*' to the files created in the index directory.
     index_prefix="${index_dir}/bowtie2"
-    koopa::mkdir "$index_dir"
     bowtie2-build \
         --threads="$threads" \
         "$fasta_file" \
@@ -127,7 +133,7 @@ koopa::bowtie2_index() { # {{{1
 koopa::run_bowtie2() { # {{{1
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-07-28.
     # """
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     fastq_dir='fastq'
@@ -174,16 +180,21 @@ koopa::run_bowtie2() { # {{{1
         koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
     fi
     koopa::assert_is_set 'fastq_dir' 'output_dir'
+    # FIXME Ensure that the conventions used here match kallisto and salmon.
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
-    output_dir="$(koopa::strip_trailing_slash "$output_dir")"
-    koopa::h1 'Running bowtie2.'
-    koopa::activate_conda_env bowtie2
+    koopa::assert_is_dir "$fastq_dir"
     fastq_dir="$(koopa::realpath "$fastq_dir")"
-    koopa::dl 'fastq dir' "$fastq_dir"
-
+    output_dir="$(koopa::strip_trailing_slash "$output_dir")"
+    # FIXME Consider making an init_dir function, similar to basejump::initDir.
+    # FIXME Look in our code and see if there are places where we can simplify.
+    koopa::mkdir "$output_dir"
+    output_dir="$(koopa::realpath "$output_dir")"
+    koopa::h1 'Running bowtie2.'
+    koopa::activate_conda_env 'bowtie2'
+    fastq_dir="$(koopa::realpath "$fastq_dir")"
+    koopa::dl 'FASTQ dir' "$fastq_dir"
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
-
     # Create a per-sample array from the R1 FASTQ files.
     # Pipe GNU find into array.
     readarray -t fastq_r1_files <<< "$( \
@@ -201,10 +212,8 @@ koopa::run_bowtie2() { # {{{1
         koopa::stop "No FASTQs in '${fastq_dir}' with '${r1_tail}'."
     fi
     koopa::alert_info "${#fastq_r1_files[@]} samples detected."
-
     # Index {{{2
     # --------------------------------------------------------------------------
-
     # Generate the genome index on the fly, if necessary.
     if [[ -n "${index_dir:-}" ]]
     then
@@ -215,11 +224,9 @@ koopa::run_bowtie2() { # {{{1
             --fasta-file="$fasta_file" \
             --index-dir="$index_dir"
     fi
-    koopa::dl 'index' "$index_dir"
-
+    koopa::dl 'Index' "$index_dir"
     # Alignment {{{2
     # --------------------------------------------------------------------------
-
     # Loop across the per-sample array and align.
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
@@ -233,6 +240,6 @@ koopa::run_bowtie2() { # {{{1
             --r1-tail="$r1_tail" \
             --r2-tail="$r2_tail"
     done
+    koopa::alert_success 'Run completed successfully.'
     return 0
 }
-
