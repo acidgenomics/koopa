@@ -3,10 +3,10 @@
 koopa::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
-    # @note Updated 2021-05-27.
+    # @note Updated 2021-05-28.
     # """
     local file macos_string macos_version major_version name prefix
-    local name_fancy pos reinstall url version
+    local name_fancy pos reinstall tee url version
     reinstall=0
     pos=()
     while (("$#"))
@@ -57,6 +57,7 @@ koopa::macos_install_python_framework() { # {{{1
         return 0
     fi
     koopa::install_start "$name_fancy" "$prefix"
+    tee="$(koopa::locate_tee)"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -64,7 +65,7 @@ koopa::macos_install_python_framework() { # {{{1
         url="https://www.${name}.org/ftp/${name}/${version}/${file}"
         koopa::download "$url"
         sudo installer -pkg "$file" -target /
-    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
     python="${name}${major_version}"
     python="${prefix}/Versions/Current/bin/${python}"

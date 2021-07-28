@@ -94,7 +94,8 @@ koopa:::salmon_quant_paired_end() { # {{{1
     #       rnaseq/salmon.py
     # """
     local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_dir
-    local lib_type log_file output_dir r1_tail r2_tail sample_output_dir threads
+    local lib_type log_file output_dir r1_tail r2_tail sample_output_dir
+    local tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'salmon'
     while (("$#"))
@@ -158,6 +159,7 @@ koopa:::salmon_quant_paired_end() { # {{{1
     koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/salmon-quant.log"
     koopa::mkdir "$sample_output_dir"
+    tee="$(koopa::locate_tee)"
     salmon quant \
         --gcBias \
         --index="$index_dir" \
@@ -168,7 +170,7 @@ koopa:::salmon_quant_paired_end() { # {{{1
         --output="$sample_output_dir" \
         --seqBias \
         --threads="$threads" \
-        2>&1 | tee "$log_file"
+        2>&1 | "$tee" "$log_file"
     return 0
 }
 
@@ -181,7 +183,7 @@ koopa:::salmon_quant_single_end() { # {{{1
     # - https://salmon.readthedocs.io/en/latest/salmon.html
     # """
     local bootstraps fastq fastq_bn id index_dir lib_type log_file output_dir
-    local sample_output_dir tail threads
+    local sample_output_dir tail tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'salmon'
     while (("$#"))
@@ -234,6 +236,7 @@ koopa:::salmon_quant_single_end() { # {{{1
     koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/salmon-quant.log"
     koopa::mkdir "$sample_output_dir"
+    tee="$(koopa::locate_tee)"
     # Don't set '--gcBias' here, considered beta for single-end reads.
     salmon quant \
         --index="$index_dir" \
@@ -243,7 +246,7 @@ koopa:::salmon_quant_single_end() { # {{{1
         --seqBias \
         --threads="$threads" \
         --unmatedReads="$fastq" \
-        2>&1 | tee "$log_file"
+        2>&1 | "$tee" "$log_file"
     return 0
 }
 
