@@ -9,27 +9,27 @@ koopa::install_conda() { # {{{1
 
 koopa::install_miniconda() { # {{{1
     koopa::install_app \
-        --installer='install_miniconda' \
+        --installer='miniconda' \
         --name-fancy='Miniconda' \
         --name='conda' \
         --no-link \
         "$@"
 }
 
-# FIXME Come back to this and rework mamba installation.
 koopa:::install_miniconda() { # {{{1
     # """
     # Install Miniconda, including Mamba in base environment.
     # @note Updated 2021-07-28.
     # """
-    local arch koopa_prefix name name2 os_type prefix py_major_version
-    local py_version script url version
+    local arch koopa_prefix mamba mamba_version name name2 os_type prefix
+    local py_major_version py_version script url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='miniconda'
     name2="$(koopa::capitalize "$name")"
     arch="$(koopa::arch)"
     koopa_prefix="$(koopa::koopa_prefix)"
+    mamba=1
     os_type="$(koopa::os_type)"
     case "$os_type" in
         darwin*)
@@ -46,6 +46,10 @@ koopa:::install_miniconda() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            --no-mamba)
+                mamba=0
+                shift 1
+                ;;
             --py-version=*)
                 py_version="${1#*=}"
                 shift 1
@@ -66,12 +70,19 @@ ${os_type}-${arch}.sh"
     koopa::ln \
         "${koopa_prefix}/etc/conda/condarc" \
         "${prefix}/.condarc"
-
-    # FIXME Ensure we install mamba here into base environment.
-    # NOTE Consider adding install support for mamba into base environment.
-    # This currently can cause dependency changes, so avoid for the moment.
-    # > conda install mamba -n base -c conda-forge
-
+    # Install mamba inside of conda base environment, if desired.
+    if [[ "$mamba" -eq 1 ]]
+    then
+        koopa::alert "Installing mamba inside conda at '${prefix}'."
+        koopa::activate_conda "$prefix"
+        mamba_version="$(koopa::variable 'conda-mamba')"
+        conda install \
+            --yes \
+            --name='base' \
+            --channel='conda-forge' \
+            "mamba==${mamba_version}"
+        koopa::deactivate_conda
+    fi
     return 0
 }
 
