@@ -3,13 +3,14 @@
 koopa::fedora_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI repo.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-07-28.
     # """
-    local file
+    local file tee
     koopa::assert_has_no_args "$#"
     file='/etc/yum.repos.d/azure-cli.repo'
     [[ -f "$file" ]] && return 0
-    sudo tee "$file" >/dev/null << END
+    tee="$(koopa::locate_tee)"
+    sudo "$tee" "$file" >/dev/null << END
 [azure-cli]
 name=Azure CLI
 baseurl=https://packages.microsoft.com/yumrepos/azure-cli
@@ -23,7 +24,7 @@ END
 koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK repo.
-    # @note Updated 2020-08-06.
+    # @note Updated 2021-07-28.
     #
     # Spacing is important in the 'gpgkey' section.
     #
@@ -34,7 +35,7 @@ koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
     # - https://github.com/kubernetes/kubernetes/issues/60134
     # - https://github.com/GoogleCloudPlatform/google-fluentd/issues/136
     # """
-    local file gpgcheck
+    local file gpgcheck tee
     koopa::assert_has_no_args "$#"
     file='/etc/yum.repos.d/google-cloud-sdk.repo'
     [[ -f "$file" ]] && return 0
@@ -48,7 +49,8 @@ koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
     # > else
     # >     repo_gpgcheck=1
     # > fi
-    sudo tee "$file" >/dev/null << END
+    tee="$(koopa::locate_tee)"
+    sudo "$tee" "$file" >/dev/null << END
 [google-cloud-sdk]
 name=Google Cloud SDK
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64

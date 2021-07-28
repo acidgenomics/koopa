@@ -75,7 +75,7 @@ koopa::linux_install_shiny_server() { # {{{1
         koopa::alert 'Installing shiny R package.'
         (
             "$r" -e 'install.packages("shiny")'
-        ) 2>&1 | tee "$(koopa::tmp_log_file)"
+        ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     fi
     (
         koopa::cd "$tmp_dir"
