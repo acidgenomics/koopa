@@ -29,7 +29,9 @@ koopa:::salmon_index() { # {{{1
     if [[ -d "$index_dir" ]]
     then
         index_dir="$(koopa::realpath "$index_dir")"
-        koopa::alert_note "Index exists at '${index_dir}'. Skipping."
+        koopa::alert_note \
+            "Salmon transcriptome index exists at '${index_dir}'." \
+            "Skipping on-the-fly indexing of '${fasta_file}'."
         return 0
     fi
     tee="$(koopa::which_tee)"
@@ -37,7 +39,9 @@ koopa:::salmon_index() { # {{{1
     koopa::mkdir "$index_dir"
     index_dir="$(koopa::realpath "$index_dir")"
     koopa::h2 "Generating salmon index at '${index_dir}'."
-    koopa::dl 'Threads' "$threads"
+    koopa::dl \
+        'FASTA' "$fasta_file"
+        'Threads' "$threads" \
     log_file="$(koopa::dirname "$index_dir")/salmon-index.log"
     salmon index \
         -i "$index_dir" \
@@ -211,7 +215,6 @@ koopa:::salmon_quant_single_end() { # {{{1
                 ;;
         esac
     done
-    # FIXME Ensure these calls are all quoted in koopa.
     koopa::assert_is_set 'bootstraps' 'fastq' 'index_dir' 'lib_type' \
         'output_dir' 'tail'
     koopa::assert_is_file "$fastq"
@@ -347,7 +350,7 @@ koopa::run_salmon_paired_end() { # {{{1
             --fasta-file="$fasta_file" \
             --index-dir="$index_dir"
     fi
-    koopa::dl 'index' "$index_dir"
+    koopa::dl 'Index' "$index_dir"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
@@ -364,7 +367,7 @@ koopa::run_salmon_paired_end() { # {{{1
             --r1-tail="$r1_tail" \
             --r2-tail="$r2_tail"
     done
-    koopa::alert_success 'salmon run completed successfully.'
+    koopa::alert_success 'Run completed successfully.'
     return 0
 }
 
@@ -450,6 +453,7 @@ koopa::run_salmon_single_end() { # {{{1
     fi
     koopa::alert_info "${#fastq_files[@]} samples detected."
     koopa::mkdir "$output_dir"
+    output_dir="$(koopa::realpath "$output_dir")"
     # Index {{{2
     # --------------------------------------------------------------------------
     # Generate the genome index on the fly, if necessary.
@@ -462,7 +466,7 @@ koopa::run_salmon_single_end() { # {{{1
             --fasta-file="$fasta_file" \
             --index-dir="$index_dir"
     fi
-    koopa::dl 'index' "$index_dir"
+    koopa::dl 'Index' "$index_dir"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
@@ -474,8 +478,8 @@ koopa::run_salmon_single_end() { # {{{1
             --index-dir="$index_dir" \
             --lib-type="$lib_type" \
             --output-dir="$output_dir" \
-            --tail="$r1_tail"
+            --tail="$tail"
     done
-    koopa::alert_success 'salmon run completed successfully.'
+    koopa::alert_success 'Run completed successfully.'
     return 0
 }
