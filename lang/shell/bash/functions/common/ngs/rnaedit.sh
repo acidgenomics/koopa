@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider rewriting this in Python or R.
+
 koopa::run_rnaeditingindexer() { # {{{1
     # """
     # Run RNAEditingIndexer.
@@ -74,7 +76,7 @@ koopa::run_rnaeditingindexer() { # {{{1
     docker run \
         -v "${bam_dir}:${mnt_bam_dir}:ro" \
         -v "${output_dir}:${mnt_output_dir}:rw" \
-        acidgenomics/rnaeditingindexer \
+        'acidgenomics/rnaeditingindexer' \
         RNAEditingIndex \
             --genome "$genome" \
             --keep_cmpileup \
