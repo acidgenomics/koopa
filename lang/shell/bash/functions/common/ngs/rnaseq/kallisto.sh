@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework, adding single-end support, similar to modifications in salmon functions.
+
 koopa:::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
