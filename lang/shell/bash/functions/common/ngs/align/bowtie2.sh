@@ -220,7 +220,7 @@ koopa::run_bowtie2() { # {{{1
         index_dir="$(koopa::realpath "$index_dir")"
     else
         index_dir="${output_dir}/bowtie2.idx"
-        koopa::bowtie2_index \
+        koopa:::bowtie2_index \
             --fasta-file="$fasta_file" \
             --index-dir="$index_dir"
     fi
@@ -232,7 +232,7 @@ koopa::run_bowtie2() { # {{{1
     do
         fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
         index_prefix="${index_dir}/bowtie2"
-        koopa::bowtie2 \
+        koopa:::bowtie2_align \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
             --index-prefix="$index_prefix" \

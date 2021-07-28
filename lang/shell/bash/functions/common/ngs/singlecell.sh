@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden the coreutils here.
+# FIXME Need to ensure that directory contains an R3 file.
+# FIXME Consider piping this to an array.
 koopa::indrops_i5_sample_index_counts() { # {{{1
     local dir
     koopa::assert_has_args_le "$#" 1
