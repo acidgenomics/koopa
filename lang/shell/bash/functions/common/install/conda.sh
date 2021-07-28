@@ -29,7 +29,7 @@ koopa:::install_miniconda() { # {{{1
     name2="$(koopa::capitalize "$name")"
     arch="$(koopa::arch)"
     koopa_prefix="$(koopa::koopa_prefix)"
-    mamba=1
+    mamba=0
     os_type="$(koopa::os_type)"
     case "$os_type" in
         darwin*)
@@ -52,6 +52,10 @@ koopa:::install_miniconda() { # {{{1
                 ;;
             --py-version=*)
                 py_version="${1#*=}"
+                shift 1
+                ;;
+            --with-mamba)
+                mamba=1
                 shift 1
                 ;;
             *)
