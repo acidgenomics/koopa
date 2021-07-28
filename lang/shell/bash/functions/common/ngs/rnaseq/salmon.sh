@@ -3,9 +3,9 @@
 koopa:::salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-07-28.
     # """
-    local fasta_file index_dir log_file threads
+    local fasta_file index_dir log_file tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'salmon'
     while (("$#"))
@@ -24,24 +24,27 @@ koopa:::salmon_index() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set fasta_file index_dir
+    koopa::assert_is_set 'fasta_file' 'index_dir'
     koopa::assert_is_file "$fasta_file"
     if [[ -d "$index_dir" ]]
     then
+        index_dir="$(koopa::realpath "$index_dir")"
         koopa::alert_note "Index exists at '${index_dir}'. Skipping."
         return 0
     fi
-    koopa::h2 "Generating salmon index at '${index_dir}'."
+    tee="$(koopa::which_tee)"
     threads="$(koopa::cpu_count)"
-    koopa::dl 'Threads' "$threads"
-    log_file="$(dirname "$index_dir")/salmon-index.log"
     koopa::mkdir "$index_dir"
+    index_dir="$(koopa::realpath "$index_dir")"
+    koopa::h2 "Generating salmon index at '${index_dir}'."
+    koopa::dl 'Threads' "$threads"
+    log_file="$(koopa::dirname "$index_dir")/salmon-index.log"
     salmon index \
+        -i "$index_dir" \
         -k 31 \
         -p "$threads" \
-        -i "$index_dir" \
         -t "$fasta_file" \
-        2>&1 | tee "$log_file"
+        2>&1 | "$tee" "$log_file"
     return 0
 }
 
@@ -129,8 +132,8 @@ koopa:::salmon_quant_paired_end() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set bootstraps fastq_r1 fastq_r2 index_dir lib_type \
-        output_dir r1_tail r2_tail
+    koopa::assert_is_set 'bootstraps' 'fastq_r1' 'fastq_r2' 'index_dir' \
+        'lib_type' 'output_dir' 'r1_tail' 'r2_tail'
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
     fastq_r1_bn="$(basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
@@ -304,7 +307,7 @@ koopa::run_salmon_paired_end() { # {{{1
     then
         koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
     fi
-    koopa::assert_is_set fastq_dir output_dir
+    koopa::assert_is_set 'fastq_dir' 'output_dir'
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running salmon.'
@@ -361,6 +364,7 @@ koopa::run_salmon_paired_end() { # {{{1
             --r1-tail="$r1_tail" \
             --r2-tail="$r2_tail"
     done
+    koopa::alert_success 'salmon run completed successfully.'
     return 0
 }
 
@@ -462,7 +466,7 @@ koopa::run_salmon_single_end() { # {{{1
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
-    for fastq in "${fastq_r1_files[@]}"
+    for fastq in "${fastq_files[@]}"
     do
         koopa:::salmon_quant_single_end \
             --bootstraps="$bootstraps" \
@@ -472,5 +476,6 @@ koopa::run_salmon_single_end() { # {{{1
             --output-dir="$output_dir" \
             --tail="$r1_tail"
     done
+    koopa::alert_success 'salmon run completed successfully.'
     return 0
 }

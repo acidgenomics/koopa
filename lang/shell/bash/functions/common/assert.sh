@@ -706,7 +706,7 @@ koopa::assert_is_set() { # {{{1
     # - https://unix.stackexchange.com/questions/129084
     #
     # Example:
-    # koopa::assert_is_set PATH MANPATH xxx
+    # koopa::assert_is_set 'PATH' 'MANPATH' 'xxx'
     # """
     local arg
     koopa::assert_has_args "$#"

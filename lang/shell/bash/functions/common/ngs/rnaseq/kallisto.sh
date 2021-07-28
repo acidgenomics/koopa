@@ -26,7 +26,7 @@ koopa:::kallisto_index() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set fasta_file index_file
+    koopa::assert_is_set 'fasta_file' 'index_file'
     koopa::assert_is_file "$fasta_file"
     if [[ -f "$index_file" ]]
     then
@@ -89,8 +89,8 @@ koopa:::kallisto_quant() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set bootstraps fastq_r1 fastq_r2 index_file output_dir \
-        r1_tail r2_tail
+    koopa::assert_is_set 'bootstraps' 'fastq_r1' 'fastq_r2' 'index_file' \
+        'output_dir' 'r1_tail' 'r2_tail'
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
     fastq_r1_bn="$(basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
@@ -179,7 +179,7 @@ koopa::run_kallisto() { # {{{1
     then
         koopa::stop "Specify 'fasta-file' or 'index-file', but not both."
     fi
-    koopa::assert_is_set fastq_dir output_dir
+    koopa::assert_is_set 'fastq_dir' 'output_dir'
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running kallisto.'
