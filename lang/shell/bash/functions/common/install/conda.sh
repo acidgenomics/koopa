@@ -4,21 +4,23 @@
 # [2021-05-27] macOS success.
 
 koopa::install_conda() { # {{{1
+    koopa::install_miniconda "$@"
+}
+
+koopa::install_miniconda() { # {{{1
     koopa::install_app \
-        --name='conda' \
+        --installer='install_miniconda' \
         --name-fancy='Miniconda' \
+        --name='conda' \
         --no-link \
         "$@"
 }
 
-koopa:::install_conda() { # {{{1
+# FIXME Come back to this and rework mamba installation.
+koopa:::install_miniconda() { # {{{1
     # """
-    # Install Conda (Miniconda).
-    # @note Updated 2021-06-08.
-    #
-    # NOTE Consider adding install support for mamba into base environment.
-    # This currently can cause dependency changes, so avoid for the moment.
-    # > conda install mamba -n base -c conda-forge
+    # Install Miniconda, including Mamba in base environment.
+    # @note Updated 2021-07-28.
     # """
     local arch koopa_prefix name name2 os_type prefix py_major_version
     local py_version script url version
@@ -64,6 +66,12 @@ ${os_type}-${arch}.sh"
     koopa::ln \
         "${koopa_prefix}/etc/conda/condarc" \
         "${prefix}/.condarc"
+
+    # FIXME Ensure we install mamba here into base environment.
+    # NOTE Consider adding install support for mamba into base environment.
+    # This currently can cause dependency changes, so avoid for the moment.
+    # > conda install mamba -n base -c conda-forge
+
     return 0
 }
 
