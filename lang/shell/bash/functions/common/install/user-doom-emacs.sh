@@ -13,7 +13,7 @@ koopa::install_doom_emacs() { # {{{1
 koopa:::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-07-28.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -50,9 +50,9 @@ koopa:::install_doom_emacs() { # {{{1
         '--no-env'
         '--no-fonts'
     )
-    "$doom" install "${install_args[@]}"
-    "$doom" sync
-    "$doom" doctor
+    "$doom" --yes install "${install_args[@]}"
+    "$doom" --yes sync
+    "$doom" --yes doctor
     return 0
 }
 
@@ -72,7 +72,7 @@ koopa::uninstall_doom_emacs() { # {{{1
 koopa::update_doom_emacs() { # {{{1
     # """
     # Update Doom Emacs.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-07-28.
     #
     # @seealso
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/upgrade.el
@@ -82,8 +82,8 @@ koopa::update_doom_emacs() { # {{{1
     koopa::assert_has_no_args "$#"
     doom="$(koopa::locate_doom)"
     koopa::update_start "$name_fancy"
-    "$doom" upgrade --force
-    "$doom" sync
+    "$doom" --yes upgrade --force
+    "$doom" --yes sync
     koopa::update_success "$name_fancy"
     return 0
 }
