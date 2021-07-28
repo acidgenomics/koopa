@@ -397,7 +397,7 @@ _koopa_activate_mcfly() { #{{{1
     esac
     export MCFLY_FUZZY=true
     export MCFLY_HISTORY_LIMIT=10000
-    export MCFLY_KEY_SCHEME=vim
+    export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
@@ -409,7 +409,7 @@ _koopa_activate_mcfly() { #{{{1
 _koopa_activate_starship() { # {{{1
     # """
     # Activate starship prompt.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-07-28.
     #
     # Note that 'starship.bash' script has unbound PREEXEC_READY.
     # https://github.com/starship/starship/blob/master/src/init/starship.bash
@@ -420,6 +420,7 @@ _koopa_activate_starship() { # {{{1
     local nounset shell
     [ "$#" -eq 0 ] || return 1
     _koopa_is_installed starship || return 0
+    unset -v STARSHIP_SESSION_KEY STARSHIP_SHELL
     shell="$(_koopa_shell_name)"
     case "$shell" in
         bash|zsh)
@@ -429,19 +430,8 @@ _koopa_activate_starship() { # {{{1
             ;;
     esac
     nounset="$(_koopa_boolean_nounset)"
-    if [ "$nounset" -eq 1 ]
-    then
-        set +u
-    fi
+    [ "$nounset" -eq 1 ] && return 0
     eval "$(starship init "$shell")"
-    if [ "$nounset" -eq 1 ]
-    then
-        if [ -z "${STARSHIP_PREEXEC_READY:-}" ]
-        then
-            export STARSHIP_PREEXEC_READY=''
-        fi
-        set -u
-    fi
     return 0
 }
 
