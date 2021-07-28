@@ -26,6 +26,7 @@ koopa:::salmon_index() { # {{{1
     done
     koopa::assert_is_set 'fasta_file' 'index_dir'
     koopa::assert_is_file "$fasta_file"
+    fasta_file="$(koopa::realpath "$fasta_file")"
     if [[ -d "$index_dir" ]]
     then
         index_dir="$(koopa::realpath "$index_dir")"
@@ -345,6 +346,8 @@ koopa::run_salmon_paired_end() { # {{{1
     then
         index_dir="$(koopa::realpath "$index_dir")"
     else
+        koopa::assert_is_file "$fasta_file"
+        fasta_file="$(koopa::realpath "$fasta_file")"
         index_dir="${output_dir}/salmon.idx"
         koopa:::salmon_index \
             --fasta-file="$fasta_file" \
@@ -461,6 +464,8 @@ koopa::run_salmon_single_end() { # {{{1
     then
         index_dir="$(koopa::realpath "$index_dir")"
     else
+        koopa::assert_is_file "$fasta_file"
+        fasta_file="$(koopa::realpath "$fasta_file")"
         index_dir="${output_dir}/salmon.idx"
         koopa:::salmon_index \
             --fasta-file="$fasta_file" \
