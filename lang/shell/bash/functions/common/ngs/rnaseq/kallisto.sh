@@ -2,6 +2,7 @@
 
 # FIXME Rework, adding single-end support, similar to modifications in salmon functions.
 
+# FIXME Need to export this and make it user-accessible, similar to salmon.
 koopa:::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Export this and make it user-accessible.
+# FIXME Need to rename in internal calls below.
+
 koopa:::salmon_index() { # {{{1
     # """
     # Generate salmon index.
