@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-07-27"
+koopa-date="2021-07-29"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.2a"
@@ -32,7 +32,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 anaconda="2021.05"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.5.3"
+armadillo="10.6.1"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="3.11.2.63"
@@ -45,7 +45,7 @@ automake="1.16.4"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.22"
+aws-cli="2.2.23"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.26.1"
@@ -507,7 +507,7 @@ python-pip="21.2.1"             # default; reticulate
 python-pipx="0.16.2.0"          # default; homebrew
 python-psutil="5.8.0"           # default
 python-pyflakes="2.3.1"         # default
-python-pylint="2.9.5"           # default; homebrew
+python-pylint="2.9.6"           # default; homebrew
 python-pynvim="0.4.3"           # default
 python-pytaglib="1.4.6"         # default
 python-pytest="6.2.4"           # default
