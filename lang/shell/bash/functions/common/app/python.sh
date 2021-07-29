@@ -130,6 +130,7 @@ koopa::python_pip_outdated() { # {{{1
     return 0
 }
 
+# FIXME This needs to support '--reinstall' flag.
 koopa::python_venv_create() { # {{{1
     # """
     # Create Python virtual environment.
@@ -195,17 +196,16 @@ koopa::python_venv_create() { # {{{1
 koopa::python_venv_create_base() { # {{{1
     # """
     # Create base Python virtual environment.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-07-29.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::python_venv_create --name='base'
+    koopa::python_venv_create --name='base' "$@"
     return 0
 }
 
 koopa::python_venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
-    # @note Updated 2021-07-27.
+    # @note Updated 2021-07-29.
     #
     # Check that LLVM is configured correctly.
     # umap-learn > numba > llvmlite
@@ -229,7 +229,6 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
     local cflags cppflags cxxflags dyld_library_path ldflags name pkgs
-    koopa::assert_has_no_args "$#"
     name='r-reticulate'
     pkgs=(
         'Cython'
@@ -301,6 +300,9 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     LLVM_CONFIG="$(koopa::locate_llvm_config)"
     koopa::assert_is_executable "$LLVM_CONFIG"
     export LLVM_CONFIG
-    koopa::python_venv_create --name="$name" "${pkgs[@]}"
+    koopa::python_venv_create \
+        --name="$name" \
+        "${pkgs[@]}" \
+        "$@"
     return 0
 }
