@@ -1,5 +1,7 @@
 # download-refseq-genome(1) - download refseq genome
 
+FIXME Need to update the argument names here...
+
 ## SYNOPSIS
 
 `download-refseq-genome`
