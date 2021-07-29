@@ -266,6 +266,7 @@ koopa::r_rebuild_docs() { # {{{1
     "$rscript" "${rscript_flags[@]}" -e 'utils::make.packages.html()'
 }
 
+# FIXME Rename this.
 koopa::r_script() { # {{{1
     # """
     # Execute an R script.
@@ -309,6 +310,7 @@ koopa::r_script() { # {{{1
     return 0
 }
 
+# FIXME Rename this.
 koopa::r_script_vanilla() { # {{{1
     # """
     # Run Rscript without configuration (vanilla mode).
