@@ -42,27 +42,33 @@ koopa::uninstall_spacemacs() { # {{{1
 koopa::update_spacemacs() { # {{{1
     # """
     # Update Spacemacs.
-    # @note Updated 2021-06-08.
+    # @note Updated 2021-07-29.
     #
     # Note that fully non-interactive  '--batch' argument doesn't work with
     # Chemacs2 configuration currently.
     # """
-    local emacs name_fancy prefix
+    local name_fancy prefix
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_file "${HOME:?}/.emacs.d/chemacs.el"
-    emacs="$(koopa::locate_emacs)"
     name_fancy='Spacemacs'
-    koopa::update_start "$name_fancy"
     prefix="$(koopa::spacemacs_prefix)"
+    koopa::assert_is_dir "$prefix"
+    koopa::update_start "$name_fancy" "$prefix"
     (
         koopa::cd "$prefix"
+        git checkout -B 'develop' 'origin/develop'
         koopa::git_pull
     )
-    # Can't use '--batch' here with chemacs.
-    "$emacs" \
-        --no-window-system \
-        --with-profile 'spacemacs' \
-        --eval='(configuration-layer/update-packages t)'
-    koopa::update_success "$name_fancy"
+    # Attempt to update spacemacs packages inside of chemacs2 configuration.
+    # NOTE Can't use '--batch' here with chemacs.
+    # > local emacs
+    # > emacs="$(koopa::locate_emacs)"
+    # > if [[ -f "${HOME}/.emacs.d/chemacs.el" ]]
+    # > then
+    # >     "$emacs" \
+    # >         --no-window-system \
+    # >         --with-profile 'spacemacs' \
+    # >         --eval='(configuration-layer/update-packages t)'
+    # > fi
+    koopa::update_success "$name_fancy" "$prefix"
     return 0
 }
