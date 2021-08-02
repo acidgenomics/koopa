@@ -119,7 +119,7 @@ koopa::uninstall_homebrew() { # {{{1
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-08-02.
     #
     # @seealso
     # - Refer to useful discussion regarding '--greedy' flag.
@@ -128,20 +128,46 @@ koopa::update_homebrew() { # {{{1
     # - https://thecoatlessprofessor.com/programming/
     #       macos/updating-a-homebrew-formula/
     # """
-    local name_fancy
-    koopa::assert_has_no_args "$#"
+    local name_fancy reset
     koopa::assert_is_installed 'brew'
     koopa::assert_is_admin
+    reset=0
+    while (("$#"))
+    do
+        case "$1" in
+            --no-reset)
+                reset=0
+                shift 1
+                ;;
+            --reset)
+                reset=1
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_has_no_args "$#"
     name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
-    koopa::brew_reset_permissions
-    koopa::brew_reset_core_repo
+    if [[ "$reset" -eq 1 ]]
+    then
+        koopa::brew_reset_permissions
+        koopa::brew_reset_core_repo
+    fi
     brew analytics off
     brew update &>/dev/null
-    koopa::is_macos && koopa::macos_brew_upgrade_casks
+    if koopa::is_macos
+    then
+        koopa::macos_brew_upgrade_casks
+    fi
     koopa::brew_upgrade_brews
     koopa::brew_cleanup
-    koopa::brew_reset_permissions
+    if [[ "$reset" -eq 1 ]]
+    then
+        koopa::brew_reset_permissions
+    fi
     koopa::update_success "$name_fancy"
     return 0
 }
