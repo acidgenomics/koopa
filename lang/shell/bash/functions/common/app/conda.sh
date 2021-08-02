@@ -376,7 +376,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-07-29.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -388,7 +388,8 @@ koopa::conda_create_env() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --force)
+            --force | \
+            --reinstall)
                 force=1
                 shift 1
                 ;;
