@@ -553,7 +553,7 @@ rust-ripgrep="13.0.0"     # homebrew; rg
 rust-starship="0.56.0"    # homebrew
 rust-tokei="12.1.2"       # homebrew
 rust-xsv="0.13.0"         # homebrew
-rust-zoxide="0.7.2"       # homebrew; z
+rust-zoxide="0.7.3"       # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
