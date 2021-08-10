@@ -229,7 +229,7 @@ node="16.6.1"
 
 # https://openjdk.java.net/
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="16.0.1"
+openjdk="16.0.2"
 
 # https://www.openssh.com/portable.html
 openssh="8.6p1"
