@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-08-05.
+# Updated 2021-08-12.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -137,6 +137,7 @@ cask "vanilla"
 cask "virtualbox"
 cask "visual-studio-code"
 cask "vlc"
+cask "xld"
 cask "xquartz"
 cask "zoom"
 
