@@ -5,6 +5,7 @@ koopa::install_r_koopa() { # {{{1
     # Install koopa R package.
     # @note Updated 2020-08-14.
     # """
+    koopa::assert_has_no_args "$#"
     koopa::r_koopa 'header'
     return 0
 }

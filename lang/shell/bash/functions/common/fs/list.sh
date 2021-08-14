@@ -53,6 +53,7 @@ koopa::list() { # {{{1
     # List koopa programs available in PATH.
     # @note Updated 2021-08-14.
     # """
+    koopa::assert_has_no_args "$#"
     koopa::r_koopa --vanilla 'cliListPrograms'
     return 0
 }

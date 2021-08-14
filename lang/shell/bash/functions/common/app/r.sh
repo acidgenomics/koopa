@@ -20,6 +20,7 @@ koopa::drat() { # {{{
     # Add R package to drat repository.
     # @note Updated 2021-08-14.
     # """
+    koopa::assert_has_args "$#"
     koopa::r_koopa 'cliDrat' "$@"
     return 0
 }
