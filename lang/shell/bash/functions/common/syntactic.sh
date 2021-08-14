@@ -3,29 +3,29 @@
 koopa::camel_case() { # {{{1
     # """
     # Camel case.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-08-14.
     # """
     koopa::assert_has_args "$#"
-    koopa::r_script 'camelCase' "$@"
+    koopa::r_koopa 'cliCamelCase' "$@"
     return 0
 }
 
 koopa::kebab_case() { # {{{1
     # """
     # Kebab case.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-08-14.
     # """
     koopa::assert_has_args "$#"
-    koopa::r_script 'kebabCase' "$@"
+    koopa::r_koopa 'cliKebabCase' "$@"
     return 0
 }
 
 koopa::snake_case() { # {{{1
     # """
     # Snake case.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-08-14.
     # """
     koopa::assert_has_args "$#"
-    koopa::r_script 'snakeCase' "$@"
+    koopa::r_koopa 'cliSnakeCase' "$@"
     return 0
 }

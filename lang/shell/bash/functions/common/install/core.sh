@@ -494,14 +494,14 @@ koopa::link_into_opt() { # {{{1
 koopa::prune_apps() { # {{{1
     # """
     # Prune applications.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-08-14.
     # """
     if koopa::is_macos
     then
         koopa::alert_note 'App pruning not yet supported on macOS.'
         return 0
     fi
-    koopa::r_script 'pruneApps' "$@"
+    koopa::r_koopa 'cliPruneApps' "$@"
     return 0
 }
 
@@ -596,7 +596,7 @@ koopa::uninstall_app() { # {{{1
 koopa::unlink_app() { # {{{1
     # """
     # Unlink an application.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-08-14.
     # """
     local make_prefix
     make_prefix="$(koopa::make_prefix)"
@@ -606,6 +606,6 @@ koopa::unlink_app() { # {{{1
 supported on macOS."
         return 0
     fi
-    koopa::r_script 'unlinkApp' "$@"
+    koopa::r_koopa 'cliUnlinkApp' "$@"
     return 0
 }
