@@ -18,39 +18,39 @@ koopa::array_to_r_vector() { # {{{1
 koopa::drat() { # {{{
     # """
     # Add R package to drat repository.
-    # @note Updated 2020-12-07.
+    # @note Updated 2021-08-14.
     # """
-    koopa::r_script 'drat' "$@"
+    koopa::r_koopa 'cliDrat' "$@"
     return 0
 }
 
 koopa::download_ensembl_genome() { # {{{1
     # """
     # Download Ensembl genome.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-08-14.
     # """
     koopa::assert_has_args "$#"
-    koopa::r_script 'downloadEnsemblGenome' "$@"
+    koopa::r_koopa 'cliDownloadEnsemblGenome' "$@"
     return 0
 }
 
 koopa::download_gencode_genome() { # {{{1
     # """
     # Download GENCODE genome.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-08-14.
     # """
     koopa::assert_has_args "$#"
-    koopa::r_script 'downloadGencodeGenome' "$@"
+    koopa::r_koopa 'cliDownloadGencodeGenome' "$@"
     return 0
 }
 
 koopa::download_refseq_genome() { # {{{1
     # """
     # Download RefSeq genome.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-08-14.
     # """
     koopa::assert_has_args "$#"
-    koopa::r_script 'downloadRefseqGenome' "$@"
+    koopa::r_koopa 'cliDownloadRefseqGenome' "$@"
     return 0
 }
 
@@ -63,10 +63,10 @@ koopa::kill_r() { # {{{1
 koopa::pkgdown_deploy_to_aws() { # {{{1
     # """
     # Deploy a pkgdown website to AWS.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-08-14.
     # """
     koopa::assert_has_args "$#"
-    koopa::r_script 'pkgdownDeployToAWS' "$@"
+    koopa::r_koopa 'cliPkgdownDeployToAWS' "$@"
     return 0
 }
 
