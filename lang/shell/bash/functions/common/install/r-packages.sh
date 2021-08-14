@@ -3,7 +3,7 @@
 koopa::install_r_packages() { # {{{1
     # """
     # Install R packages.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-08-14.
     # """
     local name_fancy pkg_prefix
     name_fancy='R packages'
@@ -11,7 +11,7 @@ koopa::install_r_packages() { # {{{1
     koopa::install_start "$name_fancy"
     koopa::configure_r
     koopa::assert_is_dir "$pkg_prefix"
-    koopa::r_script 'installRPackages' "$@"
+    koopa::r_koopa 'cliInstallRPackages' "$@"
     koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::install_success "$name_fancy"
     return 0
@@ -32,7 +32,7 @@ koopa::uninstall_r_packages() { # {{{1
 koopa::update_r_packages() { # {{{1
     # """
     # Update R packages.
-    # @note Updated 2021-06-03.
+    # @note Updated 2021-08-14.
     # """
     local name_fancy
     name_fancy='R packages'
@@ -41,7 +41,7 @@ koopa::update_r_packages() { # {{{1
     koopa::configure_r
     koopa::assert_is_dir "$pkg_prefix"
     # Return with success even if 'BiocManager::valid()' check returns false.
-    koopa::r_script 'updateRPackages' "$@" || true
+    koopa::r_koopa 'cliUpdateRPackages' "$@" || true
     koopa::sys_set_permissions -r "$pkg_prefix"
     koopa::update_success "$name_fancy"
     return 0
