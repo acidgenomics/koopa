@@ -35,6 +35,7 @@ koopa::update_r_packages() { # {{{1
     # @note Updated 2021-08-14.
     # """
     local name_fancy
+    koopa::assert_has_no_args "$#"
     name_fancy='R packages'
     pkg_prefix="$(koopa::r_packages_prefix)"
     koopa::update_start "$name_fancy"
