@@ -266,11 +266,10 @@ koopa::r_rebuild_docs() { # {{{1
     "$rscript" "${rscript_flags[@]}" -e 'utils::make.packages.html()'
 }
 
-# FIXME Rename this.
-koopa::r_script() { # {{{1
+koopa::r_koopa() { # {{{1
     # """
-    # Execute an R script.
-    # @note Updated 2021-04-30.
+    # Execute a function in koopa R package.
+    # @note Updated 2021-08-14.
     # """
     local code header_file flags fun pos r rscript
     r="$(koopa::locate_r)"
@@ -307,16 +306,6 @@ koopa::r_script() { # {{{1
     # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
     "$rscript" "${flags[@]}" -e "$code" "${pos[@]@Q}"
-    return 0
-}
-
-# FIXME Rename this.
-koopa::r_script_vanilla() { # {{{1
-    # """
-    # Run Rscript without configuration (vanilla mode).
-    # @note Updated 2020-11-19.
-    # """
-    koopa::r_script --vanilla "$@"
     return 0
 }
 

@@ -170,7 +170,7 @@ koopa::check_mount() { # {{{1
 koopa::check_system() { # {{{1
     # """
     # Check system.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-08-14.
     # """
     local current expected
     koopa::assert_has_no_args "$#"
@@ -186,7 +186,7 @@ koopa::check_system() { # {{{1
             koopa::install_r_koopa
         fi
     fi
-    koopa::r_script_vanilla 'checkSystem'
+    koopa::r_koopa --vanilla 'cliCheckSystem'
     koopa::check_exports
     koopa::check_disk
     koopa::check_data_disk
