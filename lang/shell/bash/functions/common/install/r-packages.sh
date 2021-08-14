@@ -6,6 +6,7 @@ koopa::install_r_packages() { # {{{1
     # @note Updated 2021-08-14.
     # """
     local name_fancy pkg_prefix
+    koopa::assert_has_no_args "$#"
     name_fancy='R packages'
     pkg_prefix="$(koopa::r_packages_prefix)"
     koopa::install_start "$name_fancy"
