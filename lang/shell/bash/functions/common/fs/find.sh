@@ -100,10 +100,10 @@ koopa::find() { # {{{1
 koopa::find_and_move_in_sequence() { # {{{1
     # """
     # Find and move files in sequence.
-    # @note Updated 2021-01-04.
+    # @note Updated 2021-08-14.
     # """
     koopa::assert_has_args "$#"
-    koopa::r_script 'findAndMoveInSequence' "$@"
+    koopa::r_koopa 'cliFindAndMoveInSequence' "$@"
     return 0
 }
 

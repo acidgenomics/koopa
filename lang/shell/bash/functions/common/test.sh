@@ -3,9 +3,9 @@
 koopa::check_bin_man_consistency() { # {{{1
     # """
     # Check bin and man consistency.
-    # @note Updated 2021-02-15.
+    # @note Updated 2021-08-14.
     # """
-    koopa::r_script 'checkBinManConsistency' "$@"
+    koopa::r_koopa 'cliCheckBinManConsistency' "$@"
     return 0
 }
 
