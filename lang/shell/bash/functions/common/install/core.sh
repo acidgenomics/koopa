@@ -599,6 +599,7 @@ koopa::unlink_app() { # {{{1
     # @note Updated 2021-08-14.
     # """
     local make_prefix
+    koopa::assert_has_args "$#"
     make_prefix="$(koopa::make_prefix)"
     if koopa::is_macos
     then
