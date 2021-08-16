@@ -3,7 +3,7 @@
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-06-13.
+    # @note Updated 2021-08-16.
     # """
     local name_fancy pkg pkg_lower pkgs prefix version
     python="$(koopa::locate_python)"
@@ -19,6 +19,7 @@ koopa::install_python_packages() { # {{{1
             'black'         # homebrew
             'bpytop'        # homebrew
             'flake8'        # homebrew
+            'glances'       # homebrew
             'pip'
             'pip2pi'
             'pipx'          # homebrew
