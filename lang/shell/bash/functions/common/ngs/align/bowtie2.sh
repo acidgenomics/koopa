@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE Migrate this code to r-koopa package.
+# FIXME Rework these using dict approaches.
 
 koopa:::bowtie2_align() { # {{{1
     # """
@@ -91,6 +92,7 @@ koopa:::bowtie2_align() { # {{{1
     return 0
 }
 
+# FIXME Rename 'index-dir' to 'output-dir'
 koopa:::bowtie2_index() { # {{{1
     # """
     # Generate bowtie2 index.
@@ -145,7 +147,7 @@ koopa:::bowtie2_index() { # {{{1
 koopa::run_bowtie2() { # {{{1
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-08-16.
     # """
     local fastq_dir fastq_r1_files output_dir r1_tail r2_tail
     fastq_dir='fastq'
@@ -161,10 +163,6 @@ koopa::run_bowtie2() { # {{{1
                 ;;
             --fastq-dir=*)
                 fastq_dir="${1#*=}"
-                shift 1
-                ;;
-            --index-dir=*)
-                index_dir="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
@@ -184,6 +182,11 @@ koopa::run_bowtie2() { # {{{1
                 ;;
         esac
     done
+    koopa::h1 'Running bowtie2.'
+    koopa::activate_conda_env 'bowtie2'
+
+
+
     if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
     then
         koopa::stop "Specify 'fasta-file' or 'index-dir'."
@@ -191,9 +194,8 @@ koopa::run_bowtie2() { # {{{1
     then
         koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
     fi
-    koopa::assert_is_set \
-        'fastq_dir' \
-        'output_dir'
+
+
     # FIXME Ensure that the conventions used here match kallisto and salmon.
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
     koopa::assert_is_dir "$fastq_dir"
@@ -203,8 +205,6 @@ koopa::run_bowtie2() { # {{{1
     # FIXME Look in our code and see if there are places where we can simplify.
     koopa::mkdir "$output_dir"
     output_dir="$(koopa::realpath "$output_dir")"
-    koopa::h1 'Running bowtie2 alignment.'
-    koopa::activate_conda_env 'bowtie2'
     fastq_dir="$(koopa::realpath "$fastq_dir")"
     koopa::dl 'FASTQ dir' "$fastq_dir"
     # Sample array from FASTQ files {{{2
@@ -238,7 +238,6 @@ koopa::run_bowtie2() { # {{{1
             --fasta-file="$fasta_file" \
             --index-dir="$index_dir"
     fi
-    koopa::dl 'Index' "$index_dir"
     # Alignment {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and align.
