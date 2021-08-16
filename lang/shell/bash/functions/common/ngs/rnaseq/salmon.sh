@@ -40,8 +40,8 @@ koopa:::salmon_index() { # {{{1
             "Skipping on-the-fly indexing of '${dict[fasta_file]}'."
         return 0
     fi
-    koopa::mkdir "${dict[output_dir]}"
     koopa::h2 "Generating salmon index at '${dict[output_dir]}'."
+    koopa::mkdir "${dict[output_dir]}"
     dict[log_file]="${dict[output_dir]}/index.log"
     index_args=(
         "--index=${dict[output_dir]}"
