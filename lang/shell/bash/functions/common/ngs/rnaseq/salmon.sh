@@ -1,24 +1,30 @@
 #!/usr/bin/env bash
 
-# FIXME Put the index in a top-level directory.
-
 koopa:::salmon_index() { # {{{1
     # """
     # Generate salmon index.
     # @note Updated 2021-08-16.
     # """
-    local fasta_file index_args index_dir log_file tee threads
+    local app dict
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'salmon'
+    declare -A app=(
+        [tee]="$(koopa::locate_tee)"
+    )
+    declare -A dict=(
+        [fasta_file]=''
+        [output_dir]=''
+        [threads]="$(koopa::cpu_count)"
+    )
     while (("$#"))
     do
         case "$1" in
             --fasta-file=*)
-                fasta_file="${1#*=}"
+                dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            --index-dir=*)
-                index_dir="${1#*=}"
+            --output-dir=*)
+                dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -26,35 +32,27 @@ koopa:::salmon_index() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'fasta_file' 'index_dir'
-    koopa::assert_is_file "$fasta_file"
-    fasta_file="$(koopa::realpath "$fasta_file")"
-    if [[ -d "$index_dir" ]]
+    koopa::assert_is_file "${dict[fasta_file]}"
+    if [[ -d "${dict[index_dir]}" ]]
     then
-        index_dir="$(koopa::realpath "$index_dir")"
         koopa::alert_note \
-            "Salmon transcriptome index exists at '${index_dir}'." \
-            "Skipping on-the-fly indexing of '${fasta_file}'."
+            "Salmon transcriptome index exists at '${dict[output_dir]}'." \
+            "Skipping on-the-fly indexing of '${dict[fasta_file]}'."
         return 0
     fi
-    tee="$(koopa::which_tee)"
-    threads="$(koopa::cpu_count)"
-    koopa::mkdir "$index_dir"
-    index_dir="$(koopa::realpath "$index_dir")"
-    koopa::h2 "Generating salmon index at '${index_dir}'."
-    log_file="$(koopa::dirname "$index_dir")/salmon-index.log"
+    koopa::mkdir "${dict[output_dir]}"
+    koopa::h2 "Generating salmon index at '${dict[output_dir]}'."
+    dict[log_file]="${dict[output_dir]}/index.log"
     index_args=(
-        "--index=${index_dir}"
+        "--index=${dict[output_dir]}"
         '--kmerLen=31'
-        "--threads=${threads}"
-        "--transcripts=${fasta_file}"
+        "--threads=${dict[threads]}"
+        "--transcripts=${dict[fasta_file]}"
     )
     koopa::dl 'Index args' "${index_args[*]}"
-    salmon index "${index_args[@]}" 2>&1 | "$tee" "$log_file"
+    salmon index "${index_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
-
-# FIXME Ensure we pass in 'geneMap' argument here.
 
 koopa:::salmon_quant_paired_end() { # {{{1
     # """
@@ -98,44 +96,53 @@ koopa:::salmon_quant_paired_end() { # {{{1
     # - How to output pseudobams:
     #   https://github.com/COMBINE-lab/salmon/issues/38
     # """
-    local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_dir
-    local lib_type log_file output_dir quant_args r1_tail r2_tail
-    local sample_output_dir tee threads
+    local app dict quant_args
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'salmon'
+    declare -A app=(
+        [tee]="$(koopa::locate_tee)"
+    )
+    declare -A dict=(
+        [sam_file]='output.sam'
+        [threads]="$(koopa::cpu_count)"
+    )
     while (("$#"))
     do
         case "$1" in
             --bootstraps=*)
-                bootstraps="${1#*=}"
+                dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
             --fastq-r1=*)
-                fastq_r1="${1#*=}"
+                dict[fastq_r1]="${1#*=}"
                 shift 1
                 ;;
             --fastq-r2=*)
-                fastq_r2="${1#*=}"
+                dict[fastq_r2]="${1#*=}"
+                shift 1
+                ;;
+            --gff-file=*)
+                dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
             --index-dir=*)
-                index_dir="${1#*=}"
+                dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
             --lib-type=*)
-                lib_type="${1#*=}"
+                dict[lib_type]="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
-                output_dir="${1#*=}"
+                dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             --r1-tail=*)
-                r1_tail="${1#*=}"
+                dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
             --r2-tail=*)
-                r2_tail="${1#*=}"
+                dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -143,43 +150,38 @@ koopa:::salmon_quant_paired_end() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'bootstraps' 'fastq_r1' 'fastq_r2' 'index_dir' \
-        'lib_type' 'output_dir' 'r1_tail' 'r2_tail'
-    koopa::assert_is_file "$fastq_r1" "$fastq_r2"
-    fastq_r1_bn="$(koopa::basename "$fastq_r1")"
-    fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
-    fastq_r2_bn="$(koopa::basename "$fastq_r2")"
-    fastq_r2_bn="${fastq_r2_bn/${r2_tail}/}"
-    koopa::assert_are_identical "$fastq_r1_bn" "$fastq_r2_bn"
-    id="$fastq_r1_bn"
-    sample_output_dir="${output_dir}/${id}"
-    if [[ -d "$sample_output_dir" ]]
+    koopa::assert_is_file "${dict[fastq_r1]}" "${dict[fastq_r2]}"
+    dict[fastq_r1_bn]="$(koopa::basename "${dict[fastq_r1]}")"
+    dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[r1_tail]}/}"
+    dict[fastq_r2_bn]="$(koopa::basename "${dict[fastq_r2]}")"
+    dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[r2_tail]}/}"
+    koopa::assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
+    dict[id]="${dict[fastq_r1_bn]}"
+    dict[sample_output_dir]="${dict[output_dir]}/${dict[id]}"
+    if [[ -d "${dict[sample_output_dir]}" ]]
     then
-        koopa::alert_note "Skipping '${id}'."
+        koopa::alert_note "Skipping '${dict[id]}'."
         return 0
     fi
-    koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
-    threads="$(koopa::cpu_count)"
-    log_file="${sample_output_dir}/salmon-quant.log"
-    koopa::mkdir "$sample_output_dir"
-    tee="$(koopa::locate_tee)"
+    koopa::h2 "Quantifying '${dict[id]}' into '${dict[sample_output_dir]}'."
+    koopa::mkdir "${dict[sample_output_dir]}"
+    dict[log_file]="${dict[sample_output_dir]}/quant.log"
     quant_args=(
         '--gcBias'
-        "--index=${index_dir}"
-        "--libType=${lib_type}"
-        "--mates1=${fastq_r1}"
-        "--mates2=${fastq_r2}"
+        "--geneMap=${dict[gff_file]}"
+        "--index=${dict[index_dir]}"
+        "--libType=${dict[lib_type]}"
+        "--mates1=${dict[fastq_r1]}"
+        "--mates2=${dict[fastq_r2]}"
+        "--numBootstraps=${dict[bootstraps]}"
         '--no-version-check'
-        "--numBootstraps=${bootstraps}"
-        "--output=${sample_output_dir}"
+        "--output=${dict[sample_output_dir]}"
         '--seqBias'
-        "--threads=${threads}"
-        # FIXME Check that this outputs per directory.
-        # FIXME Need to add a bamtools SAM to BAM conversion step.
-        '--writeMappings=output.sam'
+        "--threads=${dict[threads]}"
+        "--writeMappings=${dict[sam_file]}"
     )
     koopa::dl 'Quant args' "${quant_args[*]}"
-    salmon quant "${quant_args[@]}" 2>&1 | "$tee" "$log_file"
+    salmon quant "${quant_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
 
@@ -191,35 +193,45 @@ koopa:::salmon_quant_single_end() { # {{{1
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html
     # """
-    local bootstraps fastq fastq_bn id index_dir lib_type log_file output_dir
-    local quant_args sample_output_dir tail tee threads
+    local app dict quant_args
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'salmon'
+    declare -A app=(
+        [tee]="$(koopa::locate_tee)"
+    )
+    declare -A dict=(
+        [sam_file]='output.sam'
+        [threads]="$(koopa::cpu_count)"
+    )
     while (("$#"))
     do
         case "$1" in
             --bootstraps=*)
-                bootstraps="${1#*=}"
+                dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
             --fastq=*)
-                fastq="${1#*=}"
+                dict[fastq]="${1#*=}"
+                shift 1
+                ;;
+            --gff-file=*)
+                dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
             --index-dir=*)
-                index_dir="${1#*=}"
+                dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
             --lib-type=*)
-                lib_type="${1#*=}"
+                dict[lib_type]="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
-                output_dir="${1#*=}"
+                dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             --tail=*)
-                tail="${1#*=}"
+                dict[tail]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -227,85 +239,89 @@ koopa:::salmon_quant_single_end() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'bootstraps' 'fastq' 'index_dir' 'lib_type' \
-        'output_dir' 'tail'
-    koopa::assert_is_file "$fastq"
-    fastq_bn="$(koopa::basename "$fastq")"
-    fastq_bn="${fastq_bn/${tail}/}"
-    id="$fastq_bn"
-    sample_output_dir="${output_dir}/${id}"
-    if [[ -d "$sample_output_dir" ]]
+    koopa::assert_is_file "${dict[fastq]}"
+    dict[fastq_bn]="$(koopa::basename "${dict[fastq]}")"
+    dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
+    dict[id]="${dict[fastq_bn]}"
+    dict[sample_output_dir]="${dict[output_dir]}/${dict[id]}"
+    if [[ -d "${dict[sample_output_dir]}" ]]
     then
-        koopa::alert_note "Skipping '${id}'."
+        koopa::alert_note "Skipping '${dict[id]}'."
         return 0
     fi
-    koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
-    threads="$(koopa::cpu_count)"
-    log_file="${sample_output_dir}/salmon-quant.log"
-    koopa::mkdir "$sample_output_dir"
-    tee="$(koopa::locate_tee)"
+    koopa::h2 "Quantifying '${dict[id]}' into '${dict[sample_output_dir]}'."
+    koopa::mkdir "${dict[sample_output_dir]}"
+    dict[log_file]="${dict[sample_output_dir]}/quant.log"
     # Don't set '--gcBias' here, considered beta for single-end reads.
     quant_args=(
-        "--index=${index_dir}"
-        "--libType=${lib_type}"
-        "--numBootstraps=${bootstraps}"
-        "--output=${sample_output_dir}"
-        "--threads=${threads}"
-        "--unmatedReads=${fastq}"
+        "--geneMap=${dict[gff_file]}"
+        "--index=${dict[index_dir]}"
+        "--libType=${dict[lib_type]}"
+        "--numBootstraps=${dict[bootstraps]}"
         '--no-version-check'
+        "--output=${dict[sample_output_dir]}"
         '--seqBias'
+        "--threads=${dict[threads]}"
+        "--unmatedReads=${dict[fastq]}"
+        "--writeMappings=${dict[sam_file]}"
     )
     koopa::dl 'Quant args' "${quant_args[*]}"
-    salmon quant "${quant_args[@]}" 2>&1 | "$tee" "$log_file"
+    salmon quant "${quant_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
 
 koopa::run_salmon_paired_end() { # {{{1
     # """
     # Run salmon on multiple paired-end FASTQ files.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-08-16.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
     # """
-    local bootstraps fastq_dir fastq_r1_files lib_type output_dir
-    local r1_tail r2_tail
+    local app dict
+    local fastq_r1_files fastq_r1 fastq_r2 str
     koopa::assert_has_args "$#"
-    bootstraps=30
-    fastq_dir='fastq'
-    lib_type='A'
-    output_dir='salmon'
-    r1_tail='_R1_001.fastq.gz'
-    r2_tail='_R2_001.fastq.gz'
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [bootstraps]=30
+        [fastq_dir]='fastq'
+        [lib_type]='A'
+        [output_dir]='salmon'
+        [r1_tail]='_R1_001.fastq.gz'
+        [r2_tail]='_R2_001.fastq.gz'
+    )
     while (("$#"))
     do
         case "$1" in
             --bootstraps=*)
-                bootstraps="${1#*=}"
+                dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
             --fasta-file=*)
-                fasta_file="${1#*=}"
+                dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
             --fastq-dir=*)
-                fastq_dir="${1#*=}"
+                dict[fastq_dir]="${1#*=}"
                 shift 1
                 ;;
-            --index-dir=*)
-                index_dir="${1#*=}"
+            --gff-file=*)
+                dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
-                output_dir="${1#*=}"
+                dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             --r1-tail=*)
-                r1_tail="${1#*=}"
+                dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
             --r2-tail=*)
-                r2_tail="${1#*=}"
+                dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -313,92 +329,96 @@ koopa::run_salmon_paired_end() { # {{{1
                 ;;
         esac
     done
-    if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
-    then
-        koopa::stop "Specify 'fasta-file' or 'index-dir'."
-    elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
-    then
-        koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
-    fi
-    koopa::assert_is_set 'fastq_dir' 'output_dir'
-    fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
-    output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running salmon.'
-    koopa::activate_conda_env salmon
-    fastq_dir="$(koopa::realpath "$fastq_dir")"
-    koopa::dl 'FASTQ dir' "$fastq_dir"
+    koopa::activate_conda_env 'salmon'
+    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
+    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
+    dict[gff_file]="$(koopa::realpath "${dict[fasta_file]}")"
+    koopa::mkdir "${dict[output_dir]}"
+    dict[output_dir]="$(koopa::realpath "${dict[output_dir]}")"
+    dict[index_dir]="${dict[output_dir]}/index"
+    dict[samples_dir]="${dict[output_dir]}/samples"
+    koopa::dl \
+        'Bootstraps' "${dict[bootstraps]}" \
+        'FASTA file' "${dict[fasta_file]}" \
+        'FASTQ dir' "${dict[fastq_dir]}" \
+        'GFF file' "${dict[gff_file]}" \
+        'Output dir' "${dict[output_dir]}" \
+        'R1 tail' "${dict[r1_tail]}" \
+        'R2 tail' "${dict[r2_tail]}"
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
     # Create a per-sample array from the R1 FASTQ files.
     # Pipe GNU find into array.
     readarray -t fastq_r1_files <<< "$( \
-        find "$fastq_dir" \
+        "${app[find]}" "${dict[fastq_dir]}" \
             -maxdepth 1 \
             -mindepth 1 \
-            -type f \
-            -name "*${r1_tail}" \
+            -type 'f' \
+            -name "*${dict[r1_tail]}" \
             -not -name '._*' \
             -print \
-        | sort \
+        | "${app[sort]}" \
     )"
     # Error on FASTQ match failure.
     if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No FASTQs in '${fastq_dir}' with '${r1_tail}'."
+        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
+with '${dict[r1_tail]}'."
     fi
-    koopa::alert_info "${#fastq_r1_files[@]} samples detected."
-    koopa::mkdir "$output_dir"
+    str="$(koopa::ngettext "${#fastq_r1_files[@]}" 'sample' 'samples')"
+    koopa::alert_info "${#fastq_r1_files[@]} ${str} detected."
     # Index {{{2
     # --------------------------------------------------------------------------
-    # Generate the genome index on the fly, if necessary.
-    if [[ -n "${index_dir:-}" ]]
-    then
-        index_dir="$(koopa::realpath "$index_dir")"
-    else
-        koopa::assert_is_file "$fasta_file"
-        fasta_file="$(koopa::realpath "$fasta_file")"
-        index_dir="${output_dir}/salmon.idx"
-        koopa:::salmon_index \
-            --fasta-file="$fasta_file" \
-            --index-dir="$index_dir"
-    fi
-    koopa::dl 'Index dir' "$index_dir"
+    koopa:::salmon_index \
+        --fasta-file="${dict[fasta_file]}" \
+        --output-dir="${dict[index_dir]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
-        fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
+        fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
         koopa:::salmon_quant_paired_end \
-            --bootstraps="$bootstraps" \
+            --bootstraps="${dict[bootstraps]}" \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
-            --index-dir="$index_dir" \
-            --lib-type="$lib_type" \
-            --output-dir="$output_dir" \
-            --r1-tail="$r1_tail" \
-            --r2-tail="$r2_tail"
+            --gff-file="${dict[gff_file]}" \
+            --index-dir="${dict[index_dir]}" \
+            --lib-type="${dict[lib_type]}" \
+            --output-dir="${dict[samples_dir]}" \
+            --r1-tail="${dict[r1_tail]}" \
+            --r2-tail="${dict[r2_tail]}"
     done
+    # Convert SAM-to-BAM {{{2
+    # --------------------------------------------------------------------------
     # FIXME Work on a SAM-to-BAM conversion step here.
-    koopa::alert_success 'Run completed successfully.'
+    koopa::alert_success 'salmon run completed successfully.'
     return 0
 }
 
 koopa::run_salmon_single_end() { # {{{1
     # """
     # Run salmon on multiple single-end FASTQ files.
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-08-16.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
     # """
-    local bootstraps fastq_dir fastq_files lib_type output_dir tail
+    local app dict
+    local fastq_files fastq str
     koopa::assert_has_args "$#"
-    bootstraps=30
-    fastq_dir='fastq'
-    lib_type='A'
-    output_dir='salmon'
-    tail='.fastq.gz'
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [bootstraps]=30
+        [fastq_dir]='fastq'
+        [lib_type]='A'
+        [output_dir]='salmon'
+        [tail]='.fastq.gz'
+    )
     while (("$#"))
     do
         case "$1" in
@@ -414,8 +434,8 @@ koopa::run_salmon_single_end() { # {{{1
                 fastq_dir="${1#*=}"
                 shift 1
                 ;;
-            --index-dir=*)
-                index_dir="${1#*=}"
+            --gff-file=*)
+                gff_file="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
@@ -431,71 +451,66 @@ koopa::run_salmon_single_end() { # {{{1
                 ;;
         esac
     done
-    if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
-    then
-        koopa::stop "Specify 'fasta-file' or 'index-dir'."
-    elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
-    then
-        koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
-    fi
-    koopa::assert_is_set 'fastq_dir' 'output_dir'
-    fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
-    output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running salmon.'
-    koopa::activate_conda_env salmon
-    fastq_dir="$(koopa::realpath "$fastq_dir")"
-    koopa::dl 'fastq dir' "$fastq_dir"
+    koopa::activate_conda_env 'salmon'
+    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
+    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
+    koopa::mkdir "${dict[output_dir]}"
+    dict[output_dir]="$(koopa::realpath "${dict[output_dir]}")"
+    dict[index_dir]="${dict[output_dir]}/index"
+    dict[samples_dir]="${dict[output_dir]}/samples"
+    koopa::dl \
+        'Bootstraps' "${dict[bootstraps]}" \
+        'FASTA file' "${dict[fasta_file]}" \
+        'FASTQ dir' "${dict[fastq_dir]}" \
+        'GFF file' "${dict[gff_file]}" \
+        'Output dir' "${dict[output_dir]}" \
+        'Tail' "${dict[tail]}"
+
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
     # Create a per-sample array from the FASTQ files.
     # Pipe GNU find into array.
     readarray -t fastq_files <<< "$( \
-        find "$fastq_dir" \
+        "${app[find]}" "$fastq_dir" \
             -maxdepth 1 \
             -mindepth 1 \
-            -type f \
+            -type 'f' \
             -name "*${tail}" \
             -not -name '._*' \
             -print \
-        | sort \
+        | "${app[sort]}" \
     )"
     # Error on FASTQ match failure.
     if [[ "${#fastq_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No FASTQs in '${fastq_dir}' with '${tail}'."
+        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
+with '${dict[tail]}'."
     fi
-    koopa::alert_info "${#fastq_files[@]} samples detected."
-    koopa::mkdir "$output_dir"
-    output_dir="$(koopa::realpath "$output_dir")"
+    str="$(koopa::ngettext "${#fastq_files[@]}" 'sample' 'samples')"
+    koopa::alert_info "${#fastq_files[@]} ${str} detected."
     # Index {{{2
     # --------------------------------------------------------------------------
-    # Generate the genome index on the fly, if necessary.
-    if [[ -n "${index_dir:-}" ]]
-    then
-        index_dir="$(koopa::realpath "$index_dir")"
-    else
-        koopa::assert_is_file "$fasta_file"
-        fasta_file="$(koopa::realpath "$fasta_file")"
-        index_dir="${output_dir}/salmon.idx"
-        koopa:::salmon_index \
-            --fasta-file="$fasta_file" \
-            --index-dir="$index_dir"
-    fi
-    koopa::dl 'Index' "$index_dir"
+    koopa:::salmon_index \
+        --fasta-file="${dict[fasta_file]}" \
+        --output-dir="${dict[index_dir]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
     for fastq in "${fastq_files[@]}"
     do
         koopa:::salmon_quant_single_end \
-            --bootstraps="$bootstraps" \
+            --bootstraps="${dict[bootstraps]}" \
             --fastq="$fastq" \
-            --index-dir="$index_dir" \
-            --lib-type="$lib_type" \
-            --output-dir="$output_dir" \
-            --tail="$tail"
+            --gff-file="${dict[gff_file]}" \
+            --index-dir="${dict[index_dir]}" \
+            --lib-type="${dict[lib_type]}" \
+            --output-dir="${dict[samples_dir]}" \
+            --tail="${dict[tail]}"
     done
+    # Convert SAM to BAM {{{2
+    # --------------------------------------------------------------------------
     # FIXME Work on a SAM-to-BAM conversion step here.
-    koopa::alert_success 'Run completed successfully.'
+    koopa::alert_success 'salmon run completed successfully.'
     return 0
 }
