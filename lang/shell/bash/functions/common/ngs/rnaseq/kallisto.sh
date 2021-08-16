@@ -51,6 +51,7 @@ koopa:::kallisto_index() { # {{{1
     return 0
 }
 
+# FIXME Rework input as 'index-dir'?
 koopa:::kallisto_quant_paired_end() { # {{{1
     # """
     # Run kallisto quant (per paired-end sample).
@@ -184,6 +185,7 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     return 0
 }
 
+# FIXME Rework input as 'index-dir'?
 koopa:::kallisto_quant_single_end() { # {{{1
     # Run kallisto quant (per single-end sample).
     # @note Updated 2021-08-16.
