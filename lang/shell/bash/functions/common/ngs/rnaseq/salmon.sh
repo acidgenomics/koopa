@@ -33,7 +33,7 @@ koopa:::salmon_index() { # {{{1
         esac
     done
     koopa::assert_is_file "${dict[fasta_file]}"
-    if [[ -d "${dict[index_dir]}" ]]
+    if [[ -d "${dict[output_dir]}" ]]
     then
         koopa::alert_note \
             "Salmon transcriptome index exists at '${dict[output_dir]}'." \
