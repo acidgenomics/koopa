@@ -1,13 +1,13 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "DOWNLOAD\-ENSEMBL\-GENOME" "1" "October 2020" "" ""
+.TH "DOWNLOAD\-ENSEMBL\-GENOME" "1" "August 2021" "" ""
 .
 .SH "NAME"
 \fBdownload\-ensembl\-genome\fR \- download ensembl genome
 .
 .SH "SYNOPSIS"
-\fBdownload\-ensembl\-genome\fR \fB\-\-organism\fR=\fIorganism\fR \fB\-\-build\fR=\fIbuild\fR [\fB\-\-release\fR=\fIrelease\fR] [\fB\-\-type\fR=\fItype\fR] [\fB\-\-annotation\fR=\fIannotation\fR] [\fB\-\-output\-dir\fR=\fIoutput_dir\fR] [\fB\-\-decompress\fR]
+\fBdownload\-ensembl\-genome\fR \fB\-\-organism\fR=\fIorganism\fR [\fB\-\-genome\-build\fR=\fIgenome_build\fR] [\fB\-\-release\fR=\fIrelease\fR] [\fB\-\-output\-dir\fR=\fIoutput_dir\fR] [\fB\-\-decompress\fR]
 .
 .SH "DESCRIPTION"
 Download Ensembl genome and corresponding annotation files\.
@@ -38,31 +38,19 @@ $ grep "$(sum *\.gz)" "CHECKSUMS"
 .
 .TP
 \fB\-\-organism\fR=\fIorganism\fR
-Latin name (e\.g\. "Homo sapiens")\.
+Latin name (e\.g\. \fB"Homo sapiens"\fR)\.
 .
 .TP
-\fB\-\-build\fR=\fIbuild\fR
-Genome build (e\.g\. "GRCh38")\.
+\fB\-\-genome\-build\fR=\fIgenome_build\fR
+Genome build (e\.g\. \fB"GRCh38"\fR)\. Defaults to current genome build\.
 .
 .TP
 \fB\-\-release\fR=\fIrelease\fR
-Ensembl release version (e\.g\. 100)\. If left unset, defaults to current release\.
-.
-.TP
-\fB\-\-type\fR=\fItype\fR
-Genome type: \fBall\fR (default): Download all reference types; \fBgenome\fR: Primary assembly (DNA); \fBtranscriptome\fR: Transcripts (cDNA/RNA); \fBnone\fR: Skip download\.
-.
-.TP
-\fB\-\-annotation\fR=\fIannotation\fR
-Annotation type: \fBall\fR (default): Download all annotation formats; \fBgtf\fR: GTF (GFFv2); \fBgff\fR: GFF3; \fBnone\fR: Skip download\.
+Ensembl release version (e\.g\. \fB100\fR)\. Defaults to current release\.
 .
 .TP
 \fB\-\-output\-dir\fR=\fIoutput_dir\fR
 Output directory\. Defaults to working directory\.
-.
-.TP
-\fB\-\-decompress\fR
-Decompress files (but keep the compressed originals)\.
 .
 .SH "SEE ALSO"
 .
@@ -144,4 +132,4 @@ https://github\.com/COMBINE\-lab/salmon/issues/336
 .IP "" 0
 .
 .SH "NOTE"
-Python script\.
+R function, defined in r\-acidgenomes package\.

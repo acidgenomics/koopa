@@ -1,0 +1,40 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "DOWNLOAD\-UCSC\-GENOME" "1" "August 2021" "" ""
+.
+.SH "NAME"
+\fBdownload\-ucsc\-genome\fR \- download ucsc genome
+.
+.SH "SYNOPSIS"
+\fBdownload\-ucsc\-genome\fR \fB\-\-organism\fR=\fIorganism\fR [\fB\-\-genome\-build\fR=\fIgenome_build\fR] [\fB\-\-output\-dir\fR=\fIoutput_dir\fR]
+.
+.SH "DESCRIPTION"
+Download UCSC genome and corresponding annotation files\.
+.
+.P
+Creates a new directory in the current working directory by default\.
+.
+.SH "OPTIONS"
+.
+.TP
+\fB\-\-organism\fR=\fIorganism\fR
+Latin name (e\.g\. \fB"Homo sapiens"\fR)\.
+.
+.TP
+\fB\-\-genome\-build\fR=\fIgenome_build\fR
+Genome build (e\.g\. \fB"hg38"\fR)\. Defaults to current genome build\.
+.
+.TP
+\fB\-\-output\-dir\fR=\fIoutput_dir\fR
+Output directory\. Defaults to working directory\.
+.
+.SH "SEE ALSO"
+.
+.IP "\(bu" 4
+https://hgdownload\.soe\.ucsc\.edu/downloads\.html
+.
+.IP "" 0
+.
+.SH "NOTE"
+R function, defined in r\-acidgenomes package\.
