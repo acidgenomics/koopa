@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Put the index in a top-level directory.
+
 koopa:::salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-08-16.
     # """
-    local fasta_file index_dir log_file tee threads
+    local fasta_file index_args index_dir log_file tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'salmon'
     while (("$#"))
@@ -40,18 +42,19 @@ koopa:::salmon_index() { # {{{1
     koopa::mkdir "$index_dir"
     index_dir="$(koopa::realpath "$index_dir")"
     koopa::h2 "Generating salmon index at '${index_dir}'."
-    koopa::dl \
-        'FASTA' "$fasta_file"
-        'Threads' "$threads" \
     log_file="$(koopa::dirname "$index_dir")/salmon-index.log"
-    salmon index \
-        -i "$index_dir" \
-        -k 31 \
-        -p "$threads" \
-        -t "$fasta_file" \
-        2>&1 | "$tee" "$log_file"
+    index_args=(
+        "--index=${index_dir}"
+        '--kmerLen=31'
+        "--threads=${threads}"
+        "--transcripts=${fasta_file}"
+    )
+    koopa::dl 'Index args' "${index_args[*]}"
+    salmon index "${index_args[@]}" 2>&1 | "$tee" "$log_file"
     return 0
 }
+
+# FIXME Ensure we pass in 'geneMap' argument here.
 
 koopa:::salmon_quant_paired_end() { # {{{1
     # """
@@ -161,19 +164,19 @@ koopa:::salmon_quant_paired_end() { # {{{1
     koopa::mkdir "$sample_output_dir"
     tee="$(koopa::locate_tee)"
     quant_args=(
+        '--gcBias'
         "--index=${index_dir}"
         "--libType=${lib_type}"
         "--mates1=${fastq_r1}"
         "--mates2=${fastq_r2}"
+        '--no-version-check'
         "--numBootstraps=${bootstraps}"
         "--output=${sample_output_dir}"
+        '--seqBias'
         "--threads=${threads}"
         # FIXME Check that this outputs per directory.
         # FIXME Need to add a bamtools SAM to BAM conversion step.
         '--writeMappings=output.sam'
-        '--gcBias' \
-        '--no-version-check'
-        '--seqBias' \
     )
     koopa::dl 'Quant args' "${quant_args[*]}"
     salmon quant "${quant_args[@]}" 2>&1 | "$tee" "$log_file"

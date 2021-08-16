@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Put the index in a top-level directory.
+
 # FIXME Rework, adding single-end support, similar to modifications in salmon functions.
 
 koopa:::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-08-16.
     # """
-    local fasta_file index_dir index_file log_file tee
+    local fasta_file index_args index_dir index_file log_file tee
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'kallisto'
     while (("$#"))
@@ -37,18 +39,20 @@ koopa:::kallisto_index() { # {{{1
             "Skipping on-the-fly indexing of '${fasta_file}'."
         return 0
     fi
-    koopa::h2 "Generating kallisto index at '${index_file}'."
-    index_dir="$(dirname "$index_file")"
-    log_file="${index_dir}/kallisto-index.log"
-    koopa::mkdir "$index_dir"
-    index_dir="$(koopa::realpath "$index_dir")"
     tee="$(koopa::locate_tee)"
-    kallisto index \
-        --index="$index_file" \
-        --kmer-size=31 \
-        --make-unique \
-        "$fasta_file" \
-        2>&1 | "$tee" "$log_file"
+    koopa::h2 "Generating kallisto index at '${index_file}'."
+    index_dir="$(koopa::dirname "$index_file")"
+    koopa::mkdir "$index_dir"
+    log_file="${index_dir}/kallisto-index.log"
+    index_dir="$(koopa::realpath "$index_dir")"
+    index_args=(
+        "--index=${index_file}"
+        '--kmer-size=31'
+        '--make-unique'
+        "$fasta_file"
+    )
+    koopa::dl 'Index args' "${index_args[*]}"
+    kallisto index "${index_args[@]}" 2>&1 | "$tee" "$log_file"
     return 0
 }
 
@@ -104,8 +108,8 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     # - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
     # - https://salmon.readthedocs.io/en/latest/library_type.html
     # """
-    local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_file
-    local lib_type log_file output_dir quant_args r1_tail r2_tail
+    local bootstraps chromosomes_file fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn
+    local id index_file lib_type log_file output_dir quant_args r1_tail r2_tail
     local sample_output_dir tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'kallisto'
@@ -117,12 +121,20 @@ koopa:::kallisto_quant_paired_end() { # {{{1
                 bootstraps="${1#*=}"
                 shift 1
                 ;;
+            --chromosomes-file=*)
+                chromosomes_file="${1#*=}"
+                shift 1
+                ;;
             --fastq-r1=*)
                 fastq_r1="${1#*=}"
                 shift 1
                 ;;
             --fastq-r2=*)
                 fastq_r2="${1#*=}"
+                shift 1
+                ;;
+            --gtf-file=*)
+                gtf_file="${1#*=}"
                 shift 1
                 ;;
             --index-file=*)
@@ -150,8 +162,8 @@ koopa:::kallisto_quant_paired_end() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'bootstraps' 'fastq_r1' 'fastq_r2' 'index_file' \
-        'output_dir' 'r1_tail' 'r2_tail'
+    koopa::assert_is_set 'bootstraps' 'fastq_r1' 'fastq_r2' 'gtf_file' \
+        'index_file' 'lib_type' 'output_dir' 'r1_tail' 'r2_tail'
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
     fastq_r1_bn="$(basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
@@ -173,11 +185,14 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     koopa::mkdir "$sample_output_dir"
     tee="$(koopa::locate_tee)"
     quant_args=(
+        '--bias'
         "--bootstrap-samples=${bootstraps}"
+        "--chromosomes=${chromosomes_file}"
+        '--genomebam'
+        "--gtf=${gtf_file}"
         "--index=${index_file}"
         "--output-dir=${sample_output_dir}"
         "--threads=${threads}"
-        '--bias'
         '--verbose'
     )
     # Run kallisto in stranded mode, depending on the library type.
