@@ -146,9 +146,9 @@ koopa:::salmon_quant_paired_end() { # {{{1
     koopa::assert_is_set 'bootstraps' 'fastq_r1' 'fastq_r2' 'index_dir' \
         'lib_type' 'output_dir' 'r1_tail' 'r2_tail'
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
-    fastq_r1_bn="$(basename "$fastq_r1")"
+    fastq_r1_bn="$(koopa::basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
-    fastq_r2_bn="$(basename "$fastq_r2")"
+    fastq_r2_bn="$(koopa::basename "$fastq_r2")"
     fastq_r2_bn="${fastq_r2_bn/${r2_tail}/}"
     koopa::assert_are_identical "$fastq_r1_bn" "$fastq_r2_bn"
     id="$fastq_r1_bn"
@@ -230,7 +230,7 @@ koopa:::salmon_quant_single_end() { # {{{1
     koopa::assert_is_set 'bootstraps' 'fastq' 'index_dir' 'lib_type' \
         'output_dir' 'tail'
     koopa::assert_is_file "$fastq"
-    fastq_bn="$(basename "$fastq")"
+    fastq_bn="$(koopa::basename "$fastq")"
     fastq_bn="${fastq_bn/${tail}/}"
     id="$fastq_bn"
     sample_output_dir="${output_dir}/${id}"
@@ -326,7 +326,7 @@ koopa::run_salmon_paired_end() { # {{{1
     koopa::h1 'Running salmon.'
     koopa::activate_conda_env salmon
     fastq_dir="$(koopa::realpath "$fastq_dir")"
-    koopa::dl 'fastq dir' "$fastq_dir"
+    koopa::dl 'FASTQ dir' "$fastq_dir"
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
     # Create a per-sample array from the R1 FASTQ files.
@@ -362,7 +362,7 @@ koopa::run_salmon_paired_end() { # {{{1
             --fasta-file="$fasta_file" \
             --index-dir="$index_dir"
     fi
-    koopa::dl 'Index' "$index_dir"
+    koopa::dl 'Index dir' "$index_dir"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
@@ -379,6 +379,7 @@ koopa::run_salmon_paired_end() { # {{{1
             --r1-tail="$r1_tail" \
             --r2-tail="$r2_tail"
     done
+    # FIXME Work on a SAM-to-BAM conversion step here.
     koopa::alert_success 'Run completed successfully.'
     return 0
 }
@@ -494,6 +495,7 @@ koopa::run_salmon_single_end() { # {{{1
             --output-dir="$output_dir" \
             --tail="$tail"
     done
+    # FIXME Work on a SAM-to-BAM conversion step here.
     koopa::alert_success 'Run completed successfully.'
     return 0
 }

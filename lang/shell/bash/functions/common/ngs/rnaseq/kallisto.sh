@@ -113,7 +113,6 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     local sample_output_dir tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'kallisto'
-    lib_type='A'
     while (("$#"))
     do
         case "$1" in
@@ -165,9 +164,9 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     koopa::assert_is_set 'bootstraps' 'fastq_r1' 'fastq_r2' 'gtf_file' \
         'index_file' 'lib_type' 'output_dir' 'r1_tail' 'r2_tail'
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
-    fastq_r1_bn="$(basename "$fastq_r1")"
+    fastq_r1_bn="$(koopa::basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
-    fastq_r2_bn="$(basename "$fastq_r2")"
+    fastq_r2_bn="$(koopa::basename "$fastq_r2")"
     fastq_r2_bn="${fastq_r2_bn/${r2_tail}/}"
     koopa::assert_are_identical "$fastq_r1_bn" "$fastq_r2_bn"
     id="$fastq_r1_bn"
@@ -198,6 +197,7 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     # Run kallisto in stranded mode, depending on the library type.
     # Using salmon library type codes here, for consistency.
     # Doesn't currently support an auto detection mode, like salmon.
+    # Most current libraries are 'ISR'/'--rf-stranded', if unsure.
     case "$lib_type" in
         A)
             ;;
@@ -224,19 +224,29 @@ koopa:::kallisto_quant_paired_end() { # {{{1
 #                    end data, but are required when using --single)
 koopa:::kallisto_quant_single_end() { # {{{1
     # Run kallisto quant (per single-end sample).
-
-    # Must supply the length and standard deviation of the fragment length (not the read length).
-
+    # @note Updated 2021-08-16.
+    #
+    # Must supply the length and standard deviation of the fragment length
+    # (not the read length).
+    #
+    # Fragment length refers to the length of the fragments loaded onto the
+    # sequencer. If this is your own dataset, then either you or whoever did the
+    # sequencing should know this (it can be estimated from a bioanalyzer plot).
+    # If this is a public dataset, then hopefully the value is written down
+    # somewhere.
+    #
+    # Typical values for RNA-Seq are '-l 200' and '-s 30'.
+    #
+    # @seealso
+    # - https://www.biostars.org/p/252823/
+    # """
     # FIXME We need to calculate the standard deviation here...
-
-    echo 'FIXME'
-
     # FIXME Don't use '--bias' flag here.
     # FIXME Pass in the '--single' flag.
     # FIXME Pass in the '--verbose' flag here.
+    echo 'FIXME'
 }
 
-# NOTE Consider adding '--lib-type' flag here in a future update.
 koopa::run_kallisto_paired_end() { # {{{1
     # """
     # Run kallisto on multiple samples.
@@ -248,6 +258,7 @@ koopa::run_kallisto_paired_end() { # {{{1
     koopa::assert_has_args "$#"
     bootstraps=30
     fastq_dir='fastq'
+    lib_type='A'
     output_dir='kallisto'
     r1_tail='_R1_001.fastq.gz'
     r2_tail='_R2_001.fastq.gz'
@@ -268,6 +279,10 @@ koopa::run_kallisto_paired_end() { # {{{1
                 ;;
             --index-file=*)
                 index_file="${1#*=}"
+                shift 1
+                ;;
+            --lib-type=*)
+                lib_type="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
@@ -294,13 +309,13 @@ koopa::run_kallisto_paired_end() { # {{{1
     then
         koopa::stop "Specify 'fasta-file' or 'index-file', but not both."
     fi
-    koopa::assert_is_set 'fastq_dir' 'output_dir'
+    koopa::assert_is_set 'fastq_dir' 'lib_type' 'output_dir' 'r1_tail' 'r2_tail'
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running kallisto.'
     koopa::activate_conda_env kallisto
     fastq_dir="$(koopa::realpath "$fastq_dir")"
-    koopa::dl 'fastq dir' "$fastq_dir"
+    koopa::dl 'FASTQ dir' "$fastq_dir"
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
     # Create a per-sample array from the R1 FASTQ files.
@@ -334,7 +349,7 @@ koopa::run_kallisto_paired_end() { # {{{1
             --fasta-file="$fasta_file" \
             --index-file="$index_file"
     fi
-    koopa::dl 'index' "$index_file"
+    koopa::dl 'Index file' "$index_file"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify.
@@ -346,6 +361,7 @@ koopa::run_kallisto_paired_end() { # {{{1
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
             --index-file="$index_file" \
+            --lib-type="$lib_type" \
             --output-dir="$output_dir" \
             --r1-tail="$r1_tail" \
             --r2-tail="$r2_tail"
@@ -359,4 +375,5 @@ koopa::run_kallisto_single_end() { # {{{1
     # @note Updated 2021-08-16.
     # """
     echo 'FIXME'
+    # FIXME Need to pass options for '-l' and '-s' flags here...see above.
 }
