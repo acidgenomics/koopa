@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Put the index in a top-level directory.
-
-# FIXME Rework, adding single-end support, similar to modifications in salmon functions.
+# FIXME Consider putting the index in a top-level directory.
+# FIXME Consider nesting the samples a 'samples' subdirectory.
 
 koopa:::kallisto_index() { # {{{1
     # """
@@ -86,6 +85,7 @@ koopa:::kallisto_index() { # {{{1
 
 
 
+# FIXME Simplify the FASTA/index handling here.
 # FIXME Need to require the genomebam settings here...GTF input.
 koopa:::kallisto_quant_paired_end() { # {{{1
     # """
@@ -217,11 +217,7 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     return 0
 }
 
-# FIXME Need to add this.
-# FIXME How to do this for single end mode?
-# -s, --sd=DOUBLE    Estimated standard deviation of fragment length
-#                    (default: -l, -s values are estimated from paired
-#                    end data, but are required when using --single)
+# FIXME Simplify the FASTA/index handling here.
 koopa:::kallisto_quant_single_end() { # {{{1
     # Run kallisto quant (per single-end sample).
     # @note Updated 2021-08-16.
@@ -235,7 +231,7 @@ koopa:::kallisto_quant_single_end() { # {{{1
     # If this is a public dataset, then hopefully the value is written down
     # somewhere.
     #
-    # Typical values for RNA-Seq are '-l 200' and '-s 30'.
+    # Typical values for RNA-seq are '--fragment-length=200' and '--sd=30'.
     #
     # @seealso
     # - https://www.biostars.org/p/252823/
@@ -245,8 +241,58 @@ koopa:::kallisto_quant_single_end() { # {{{1
     # FIXME Pass in the '--single' flag.
     # FIXME Pass in the '--verbose' flag here.
     echo 'FIXME'
+
+    while (("$#"))
+    do
+        case "$1" in
+            --bootstraps=*)
+                bootstraps="${1#*=}"
+                shift 1
+                ;;
+            --fasta-file=*)
+                fasta_file="${1#*=}"
+                shift 1
+                ;;
+            --fastq-dir=*)
+                fastq_dir="${1#*=}"
+                shift 1
+                ;;
+            --fragment-length=*)
+                fragment_length="${1#*=}"
+                shift 1
+                ;;
+            --index-file=*)
+                index_file="${1#*=}"
+                shift 1
+                ;;
+            --output-dir=*)
+                output_dir="${1#*=}"
+                shift 1
+                ;;
+            # FIXME What's the tail name to use here?
+            --r1-tail=*)
+                r1_tail="${1#*=}"
+                shift 1
+                ;;
+            --sd=*)
+                sd="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_set \
+        'fragment_length' \
+        'sd'
+
+    # FIXME need these flags:
+    # Typical values for RNA-seq are '--fragment-length=200' and '--sd=30'.
+
 }
 
+# FIXME This needs to pass-in GTF and chromosome.txt file.
 koopa::run_kallisto_paired_end() { # {{{1
     # """
     # Run kallisto on multiple samples.
@@ -309,7 +355,12 @@ koopa::run_kallisto_paired_end() { # {{{1
     then
         koopa::stop "Specify 'fasta-file' or 'index-file', but not both."
     fi
-    koopa::assert_is_set 'fastq_dir' 'lib_type' 'output_dir' 'r1_tail' 'r2_tail'
+    koopa::assert_is_set \
+        'fastq_dir' \
+        'lib_type' \
+        'output_dir' \
+        'r1_tail' \
+        'r2_tail'
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
     output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running kallisto.'
@@ -369,11 +420,71 @@ koopa::run_kallisto_paired_end() { # {{{1
     return 0
 }
 
+# FIXME This needs to support GTF file and 'chromosomes.txt' file.
 koopa::run_kallisto_single_end() { # {{{1
     # """
     # Run kallisto on multiple single-end FASTQ files.
     # @note Updated 2021-08-16.
     # """
-    echo 'FIXME'
-    # FIXME Need to pass options for '-l' and '-s' flags here...see above.
+    local bootstraps fastq_dir fragment_length output_dir sd tail
+    koopa::assert_has_args "$#"
+    bootstraps=30
+    fastq_dir='fastq'
+    fragment_length=200
+    output_dir='kallisto'
+    sd=30
+    tail='.fastq.gz'
+    while (("$#"))
+    do
+        case "$1" in
+            --bootstraps=*)
+                bootstraps="${1#*=}"
+                shift 1
+                ;;
+            --fasta-file=*)
+                fasta_file="${1#*=}"
+                shift 1
+                ;;
+            --fastq-dir=*)
+                fastq_dir="${1#*=}"
+                shift 1
+                ;;
+            --index-dir=*)
+                index_dir="${1#*=}"
+                shift 1
+                ;;
+            --output-dir=*)
+                output_dir="${1#*=}"
+                shift 1
+                ;;
+            --tail=*)
+                tail="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_set \
+        'bootstraps' \
+        'fastq_dir' \
+        'fragment_length' \
+        'output_dir' \
+        'sd' \
+        'tail'
+
+    # Quantify {{{2
+    # --------------------------------------------------------------------------
+    # Loop across the per-sample array and quantify with kallisto.
+    fastq_files=()  # FIXME
+    for fastq in "${fastq_files[@]}"
+    do
+        echo "$fastq"  # FIXME
+        koopa::kalisto_quant_single_end \
+            --fragment-length="$fragment_length" \
+            --sd="$sd" \
+            --tail="$tail"
+    done
+    koopa::alert_success 'kallisto run completed successfully.'
 }

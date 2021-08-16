@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+# NOTE Migrate this code to r-koopa package.
+
 koopa:::bowtie2_align() { # {{{1
     # """
     # Run bowtie2 alignment on multiple paired-end FASTQ files.
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-08-16.
     # """
-    local fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_prefix log_file
-    local output_dir r1_tail r2_tail sam_file sample_output_dir tee threads
+    local align_args fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_prefix
+    local log_file output_dir r1_tail r2_tail sam_file sample_output_dir
+    local tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'bowtie2'
     while (("$#"))
@@ -41,12 +44,17 @@ koopa:::bowtie2_align() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'fastq_r1' 'fastq_r2' 'index_prefix' 'output_dir' \
-        'r1_tail' 'r2_tail'
+    koopa::assert_is_set \
+        'fastq_r1' \
+        'fastq_r2' \
+        'index_prefix' \
+        'output_dir' \
+        'r1_tail' \
+        'r2_tail'
     koopa::assert_is_file "$fastq_r1" "$fastq_r2"
-    fastq_r1_bn="$(basename "$fastq_r1")"
+    fastq_r1_bn="$(koopa::basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
-    fastq_r2_bn="$(basename "$fastq_r2")"
+    fastq_r2_bn="$(koopa::basename "$fastq_r2")"
     fastq_r2_bn="${fastq_r2_bn/${r2_tail}/}"
     koopa::assert_are_identical "$fastq_r1_bn" "$fastq_r2_bn"
     id="$fastq_r1_bn"
@@ -63,21 +71,23 @@ koopa:::bowtie2_align() { # {{{1
     log_file="${sample_output_dir}/bowtie2.log"
     koopa::mkdir "$sample_output_dir"
     tee="$(koopa::locate_tee)"
-    bowtie2 \
-        --local \
-        --sensitive-local \
-        --rg-id "$id" \
-        --rg 'PL:illumina' \
-        --rg "PU:${id}" \
-        --rg "SM:${id}" \
-        -1 "$fastq_r1" \
-        -2 "$fastq_r2" \
-        -S "$sam_file" \
-        -X 2000 \
-        -p "$threads" \
-        -q \
-        -x "$index_prefix" \
-        2>&1 | "$tee" "$log_file"
+    align_args=(
+        '--local'
+        '--sensitive-local'
+        '--rg-id' "$id"
+        '--rg' 'PL:illumina'
+        '--rg' "PU:${id}"
+        '--rg' "SM:${id}"
+        '--threads' "$threads"
+        '-1' "$fastq_r1"
+        '-2' "$fastq_r2"
+        '-S' "$sam_file"
+        '-X' 2000
+        '-q'
+        '-x' "$index_prefix"
+    )
+    koopa::dl 'Align args' "${align_args[*]}"
+    bowtie2 "${align_args[@]}" 2>&1 | "$tee" "$log_file"
     return 0
 }
 
@@ -105,7 +115,9 @@ koopa:::bowtie2_index() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'fasta_file' 'index_dir'
+    koopa::assert_is_set \
+        'fasta_file' \
+        'index_dir'
     koopa::assert_is_file "$fasta_file"
     fasta_file="$(koopa::realpath "$fasta_file")"
     if [[ -d "$index_dir" ]]
@@ -179,7 +191,9 @@ koopa::run_bowtie2() { # {{{1
     then
         koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
     fi
-    koopa::assert_is_set 'fastq_dir' 'output_dir'
+    koopa::assert_is_set \
+        'fastq_dir' \
+        'output_dir'
     # FIXME Ensure that the conventions used here match kallisto and salmon.
     fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
     koopa::assert_is_dir "$fastq_dir"
@@ -189,7 +203,7 @@ koopa::run_bowtie2() { # {{{1
     # FIXME Look in our code and see if there are places where we can simplify.
     koopa::mkdir "$output_dir"
     output_dir="$(koopa::realpath "$output_dir")"
-    koopa::h1 'Running bowtie2.'
+    koopa::h1 'Running bowtie2 alignment.'
     koopa::activate_conda_env 'bowtie2'
     fastq_dir="$(koopa::realpath "$fastq_dir")"
     koopa::dl 'FASTQ dir' "$fastq_dir"
@@ -240,6 +254,6 @@ koopa::run_bowtie2() { # {{{1
             --r1-tail="$r1_tail" \
             --r2-tail="$r2_tail"
     done
-    koopa::alert_success 'Run completed successfully.'
+    koopa::alert_success 'bowtie alignment completed successfully.'
     return 0
 }
