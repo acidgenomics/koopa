@@ -2,24 +2,29 @@
 
 # FIXME Consider putting the index in a top-level directory.
 # FIXME Consider nesting the samples a 'samples' subdirectory.
+# FIXME Need to rework handoff to 'kallisto_index', using '--output-dir' instead.
 
 koopa:::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
     # @note Updated 2021-08-16.
     # """
-    local fasta_file index_args index_dir index_file log_file tee
+    local app dict index_args
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'kallisto'
+    declare -A app=(
+        [tee]="$(koopa::locate_tee)"
+    )
+    declare -A dict
     while (("$#"))
     do
         case "$1" in
             --fasta-file=*)
-                fasta_file="${1#*=}"
+                dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            --index-file=*)
-                index_file="${1#*=}"
+            --output-dir=*)
+                dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -27,31 +32,26 @@ koopa:::kallisto_index() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'fasta_file' 'index_file'
-    koopa::assert_is_file "$fasta_file"
-    fasta_file="$(koopa::realpath "$fasta_file")"
-    if [[ -f "$index_file" ]]
+    koopa::assert_is_file "${dict[fasta_file]}"
+    if [[ -d "${dict[output_dir]}" ]]
     then
-        index_file="$(koopa::realpath "$index_file")"
         koopa::alert_note \
-            "Kallisto transcriptome index exists at '${index_file}'." \
-            "Skipping on-the-fly indexing of '${fasta_file}'."
+            "Kallisto transcriptome index exists at '${dict[output_dir]}'." \
+            "Skipping on-the-fly indexing of '${dict[fasta_file]}'."
         return 0
     fi
-    tee="$(koopa::locate_tee)"
-    koopa::h2 "Generating kallisto index at '${index_file}'."
-    index_dir="$(koopa::dirname "$index_file")"
-    koopa::mkdir "$index_dir"
-    log_file="${index_dir}/kallisto-index.log"
-    index_dir="$(koopa::realpath "$index_dir")"
+    koopa::h2 "Generating kallisto index at '${dict[output_dir]}'."
+    koopa::mkdir "${dict[output_dir]}"
+    dict[index_file]="${dict[output_dir]}/kallisto.idx"
+    dict[log_file]="${dict[output_dir]}/index.log"
     index_args=(
-        "--index=${index_file}"
+        "--index=${dict[index_file]}"
         '--kmer-size=31'
         '--make-unique'
-        "$fasta_file"
+        "${dict[fasta_file]}"
     )
     koopa::dl 'Index args' "${index_args[*]}"
-    kallisto index "${index_args[@]}" 2>&1 | "$tee" "$log_file"
+    kallisto index "${index_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
 
@@ -108,52 +108,58 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     # - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
     # - https://salmon.readthedocs.io/en/latest/library_type.html
     # """
-    local bootstraps chromosomes_file fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn
-    local id index_file lib_type log_file output_dir quant_args r1_tail r2_tail
-    local sample_output_dir tee threads
+    local app dict quant_args
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'kallisto'
+    declare -A app=(
+        [tee]="$(koopa::locate_tee)"
+    )
+    declare -A dict=(
+        [threads]="$(koopa::cpu_count)"
+    )
     while (("$#"))
     do
         case "$1" in
             --bootstraps=*)
-                bootstraps="${1#*=}"
+                dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
             --chromosomes-file=*)
-                chromosomes_file="${1#*=}"
+                # FIXME Need to define this in main function.
+                dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
             --fastq-r1=*)
-                fastq_r1="${1#*=}"
+                dict[fastq_r1]="${1#*=}"
                 shift 1
                 ;;
             --fastq-r2=*)
-                fastq_r2="${1#*=}"
+                dict[fastq_r2]="${1#*=}"
                 shift 1
                 ;;
-            --gtf-file=*)
-                gtf_file="${1#*=}"
+            --gff-file=*)
+                # FIXME Need to define this in main function.
+                dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
             --index-file=*)
-                index_file="${1#*=}"
+                dict[index_file]="${1#*=}"
                 shift 1
                 ;;
             --lib-type=*)
-                lib_type="${1#*=}"
+                dict[lib_type]="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
-                output_dir="${1#*=}"
+                dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             --r1-tail=*)
-                r1_tail="${1#*=}"
+                dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
             --r2-tail=*)
-                r2_tail="${1#*=}"
+                dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -161,44 +167,43 @@ koopa:::kallisto_quant_paired_end() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'bootstraps' 'fastq_r1' 'fastq_r2' 'gtf_file' \
-        'index_file' 'lib_type' 'output_dir' 'r1_tail' 'r2_tail'
-    koopa::assert_is_file "$fastq_r1" "$fastq_r2"
-    fastq_r1_bn="$(koopa::basename "$fastq_r1")"
-    fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
-    fastq_r2_bn="$(koopa::basename "$fastq_r2")"
-    fastq_r2_bn="${fastq_r2_bn/${r2_tail}/}"
-    koopa::assert_are_identical "$fastq_r1_bn" "$fastq_r2_bn"
-    id="$fastq_r1_bn"
-    sample_output_dir="${output_dir}/${id}"
-    if [[ -d "$sample_output_dir" ]]
+    koopa::assert_is_file \
+        "${dict[fastq_r1]}" \
+        "${dict[fastq_r2]}" \
+        "${dict[gff_file]}" \
+        "${dict[index_file]}"
+    dict[fastq_r1_bn]="$(koopa::basename "${dict[fastq_r1]}")"
+    dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[r1_tail]}/}"
+    dict[fastq_r2_bn]="$(koopa::basename "${dict[fastq_r2]}")"
+    dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[r2_tail]}/}"
+    koopa::assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
+    dict[id]="${dict[fastq_r1_bn]}"
+    dict[sample_output_dir]="${dict[output_dir]}/${dict[id]}"
+    if [[ -d "${dict[sample_output_dir]}" ]]
     then
-        koopa::alert_note "Skipping '${id}'."
+        koopa::alert_note "Skipping '${dict[id]}'."
         return 0
     fi
-    koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
-    koopa::dl 'Bootstraps' "$bootstraps"
-    threads="$(koopa::cpu_count)"
-    koopa::dl 'Threads' "$threads"
-    log_file="${sample_output_dir}/kallisto-quant.log"
-    koopa::mkdir "$sample_output_dir"
-    tee="$(koopa::locate_tee)"
+    koopa::h2 "Quantifying '${dict[id]}' into '${dict[sample_output_dir]}'."
+    koopa::mkdir "${dict[sample_output_dir]}"
+    dict[log_file]="${dict[sample_output_dir]}/quant.log"
     quant_args=(
         '--bias'
-        "--bootstrap-samples=${bootstraps}"
-        "--chromosomes=${chromosomes_file}"
+        "--bootstrap-samples=${dict[bootstraps]}"
+        "--chromosomes=${dict[chromosomes_file]}"
         '--genomebam'
-        "--gtf=${gtf_file}"
-        "--index=${index_file}"
-        "--output-dir=${sample_output_dir}"
-        "--threads=${threads}"
+        "--gtf=${dict[gff_file]}"
+        "--index=${dict[index_file]}"
+        "--output-dir=${dict[sample_output_dir]}"
+        '--pseudobam'
+        "--threads=${dict[threads]}"
         '--verbose'
     )
-    # Run kallisto in stranded mode, depending on the library type.
-    # Using salmon library type codes here, for consistency.
-    # Doesn't currently support an auto detection mode, like salmon.
-    # Most current libraries are 'ISR'/'--rf-stranded', if unsure.
-    case "$lib_type" in
+    # Run kallisto in stranded mode, depending on the library type. Using salmon
+    # library type codes here, for consistency. Doesn't currently support an
+    # auto detection mode, like salmon. Most current libraries are 'ISR' /
+    # '--rf-stranded', if unsure.
+    case "${dict[lib_type]}" in
         A)
             ;;
         ISF)
@@ -208,12 +213,12 @@ koopa:::kallisto_quant_paired_end() { # {{{1
             quant_args+=('--rf-stranded')
             ;;
         *)
-            koopa::invalid_arg "$lib_type"
+            koopa::invalid_arg "${dict[lib_type]}"
             ;;
     esac
-    quant_args+=("$fastq_r1" "$fastq_r2")
+    quant_args+=("${dict[fastq_r1]}" "${dict[fastq_r2]}")
     koopa::dl 'Quant args' "${quant_args[*]}"
-    kallisto quant "${quant_args[@]}" 2>&1 | "$tee" "$log_file"
+    kallisto quant "${quant_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
 
@@ -300,19 +305,30 @@ koopa::run_kallisto_paired_end() { # {{{1
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # """
-    local bootstraps fastq_dir fastq_r1_files output_dir r1_tail r2_tail
+    local app dict
+    local fastq_r1_files fastq_r1 fastq_r2 str
     koopa::assert_has_args "$#"
-    bootstraps=30
-    fastq_dir='fastq'
-    lib_type='A'
-    output_dir='kallisto'
-    r1_tail='_R1_001.fastq.gz'
-    r2_tail='_R2_001.fastq.gz'
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [bootstraps]=30
+        [fastq_dir]='fastq'
+        [lib_type]='A'
+        [output_dir]='kallisto'
+        [r1_tail]='_R1_001.fastq.gz'
+        [r2_tail]='_R2_001.fastq.gz'
+    )
     while (("$#"))
     do
         case "$1" in
             --bootstraps=*)
                 bootstraps="${1#*=}"
+                shift 1
+                ;;
+            --chromosomes-file=*)
+                chromosomes_file="${1#*=}"
                 shift 1
                 ;;
             --fasta-file=*)
@@ -323,8 +339,8 @@ koopa::run_kallisto_paired_end() { # {{{1
                 fastq_dir="${1#*=}"
                 shift 1
                 ;;
-            --index-file=*)
-                index_file="${1#*=}"
+            --gff-file=*)
+                gff_file="${1#*=}"
                 shift 1
                 ;;
             --lib-type=*)
@@ -348,79 +364,78 @@ koopa::run_kallisto_paired_end() { # {{{1
                 ;;
         esac
     done
-    if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_file:-}" ]]
-    then
-        koopa::stop "Specify 'fasta-file' or 'index-file'."
-    elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_file:-}" ]]
-    then
-        koopa::stop "Specify 'fasta-file' or 'index-file', but not both."
-    fi
-    koopa::assert_is_set \
-        'fastq_dir' \
-        'lib_type' \
-        'output_dir' \
-        'r1_tail' \
-        'r2_tail'
-    fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
-    output_dir="$(koopa::strip_trailing_slash "$output_dir")"
     koopa::h1 'Running kallisto.'
-    koopa::activate_conda_env kallisto
-    fastq_dir="$(koopa::realpath "$fastq_dir")"
-    koopa::dl 'FASTQ dir' "$fastq_dir"
+    koopa::activate_conda_env 'kallisto'
+    dict[chromosomes_file]="$(koopa::realpath "${dict[chromosomes_file]}")"
+    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
+    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
+    dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
+    koopa::mkdir "${dict[output_dir]}"
+    dict[output_dir]="$(koopa::realpath "${dict[output_dir]}")"
+    dict[index_dir]="${dict[output_dir]}/index"
+    dict[index_file]="${dict[index_dir]}/kallisto.idx"
+    dict[samples_dir]="${dict[output_dir]}/samples"
+    koopa::dl \
+        'Bootstraps' "${dict[bootstraps]}" \
+        'Chromosomes file' "${dict[chromosomes_file]}" \
+        'FASTA file' "${dict[fasta_file]}" \
+        'FASTQ dir' "${dict[fastq_dir]}" \
+        'GFF file' "${dict[gff_file]}" \
+        'Output dir' "${dict[output_dir]}" \
+        'R1 tail' "${dict[r1_tail]}" \
+        'R2 tail' "${dict[r2_tail]}"
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
     # Create a per-sample array from the R1 FASTQ files.
     # Pipe GNU find into array.
     readarray -t fastq_r1_files <<< "$( \
-        find "$fastq_dir" \
+        "${app[find]}" "$fastq_dir" \
             -maxdepth 1 \
             -mindepth 1 \
-            -type f \
+            -type 'f' \
             -name "*${r1_tail}" \
             -not -name '._*' \
             -print \
-        | sort \
+        | "${app[sort]}" \
     )"
     # Error on FASTQ match failure.
     if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No FASTQs in '${fastq_dir}' with '${r1_tail}'."
+        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
+with '${dict[r1_tail]}'."
     fi
-    koopa::alert_info "${#fastq_r1_files[@]} samples detected."
-    koopa::mkdir "$output_dir"
+    str="$(koopa::ngettext "${#fastq_r1_files[@]}" 'sample' 'samples')"
+    koopa::alert_info "${#fastq_r1_files[@]} ${str} detected."
     # Index {{{2
     # --------------------------------------------------------------------------
-    # Generate the genome index on the fly, if necessary.
-    if [[ -n "${index_file:-}" ]]
-    then
-        index_file="$(koopa::realpath "$index_file")"
-    else
-        index_file="${output_dir}/kallisto.idx"
-        koopa:::kallisto_index \
-            --fasta-file="$fasta_file" \
-            --index-file="$index_file"
-    fi
-    koopa::dl 'Index file' "$index_file"
+    koopa:::kallisto_index \
+        --fasta-file="${dict[fasta_file]}" \
+        --output-dir="$index_dir"
+    koopa::assert_is_file "${dict[index_file]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify.
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
-        fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
+        fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
         koopa:::kallisto_quant \
-            --bootstraps="$bootstraps" \
+            --bootstraps="${dict[bootstraps]}" \
+            --chromosomes-file="${dict[chromosomes_file]}" \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
-            --index-file="$index_file" \
-            --lib-type="$lib_type" \
-            --output-dir="$output_dir" \
-            --r1-tail="$r1_tail" \
-            --r2-tail="$r2_tail"
+            --gff-file="${dict[gff_file]}" \
+            --index-file="${dict[index_file]}" \
+            --lib-type="${dict[lib_type]}" \
+            --output-dir="${dict[output_dir]}" \
+            --r1-tail="${dict[r1_tail]}" \
+            --r2-tail="${dict[r2_tail]}"
     done
+    koopa::alert_success 'kallisto run completed successfully.'
     return 0
 }
 
 # FIXME This needs to support GTF file and 'chromosomes.txt' file.
+# FIXME Rework, using conventions defined in paired-end runners.
 koopa::run_kallisto_single_end() { # {{{1
     # """
     # Run kallisto on multiple single-end FASTQ files.
@@ -451,6 +466,7 @@ koopa::run_kallisto_single_end() { # {{{1
                 ;;
             --index-dir=*)
                 index_dir="${1#*=}"
+                echo "$index_dir"  # FIXME
                 shift 1
                 ;;
             --output-dir=*)
@@ -466,13 +482,9 @@ koopa::run_kallisto_single_end() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set \
-        'bootstraps' \
-        'fastq_dir' \
-        'fragment_length' \
-        'output_dir' \
-        'sd' \
-        'tail'
+
+
+    # FIXME Need to handle the sample indexing...
 
     # Quantify {{{2
     # --------------------------------------------------------------------------
