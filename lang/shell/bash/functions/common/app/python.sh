@@ -130,20 +130,25 @@ koopa::python_pip_outdated() { # {{{1
     return 0
 }
 
-# FIXME This needs to support '--reinstall' flag.
 koopa::python_venv_create() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-08-16.
     # """
-    local name name_fancy default_pkgs prefix pos python venv_python
+    local default_pkgs name name_fancy prefix pos python reinstall venv_python
     koopa::assert_has_no_envs
     name_fancy='Python virtual environment'
     python="$(koopa::locate_python)"
+    reinstall=0
     pos=()
     while (("$#"))
     do
         case "$1" in
+            --force | \
+            --reinstall)
+                reinstall=1
+                shift 1
+                ;;
             --name=*)
                 name="${1#*=}"
                 shift 1
@@ -172,6 +177,10 @@ koopa::python_venv_create() { # {{{1
     koopa::assert_is_set 'name' 'python'
     koopa::assert_is_installed "$python"
     prefix="$(koopa::python_venv_prefix)/${name}"
+    if [[ "$reinstall" -eq 1 ]]
+    then
+        koopa::rm "$prefix"
+    fi
     if [[ -d "$prefix" ]]
     then
         koopa::alert_note "Environment already exists at '${prefix}'."
