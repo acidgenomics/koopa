@@ -292,6 +292,14 @@ koopa::locate_gunzip() { # {{{1
     koopa:::locate_app 'gzip' 'gunzip' "$@"
 }
 
+koopa::locate_gzip() { # {{{1
+    # """
+    # Locate GNU gzip.
+    # @note Updated 2021-08-16.
+    # """
+    koopa:::locate_app 'gzip' 'gzip' "$@"
+}
+
 koopa::locate_head() { # {{{1
     # """
     # Locate GNU du.
