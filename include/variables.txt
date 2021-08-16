@@ -228,6 +228,7 @@ neovim="0.5.0"
 node="16.6.1"
 
 # https://openjdk.java.net/
+# https://projects.eclipse.org/projects/adoptium.temurin
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
 openjdk="16.0.2"
 
