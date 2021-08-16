@@ -354,6 +354,7 @@ koopa::run_kallisto_paired_end() { # {{{1
     dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
     dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
+    # FIXME Rework this using 'init_dir' approach.
     koopa::mkdir "${dict[output_dir]}"
     dict[output_dir]="$(koopa::realpath "${dict[output_dir]}")"
     dict[index_dir]="${dict[output_dir]}/index"
@@ -488,6 +489,7 @@ koopa::run_kallisto_single_end() { # {{{1
     dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
     dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
+    # FIXME Rework this using 'init_dir' approach.
     koopa::mkdir "${dict[output_dir]}"
     dict[output_dir]="$(koopa::realpath "${dict[output_dir]}")"
     dict[index_dir]="${dict[output_dir]}/index"
