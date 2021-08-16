@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Rework, adding single-end support, similar to modifications in salmon functions.
-# FIXME Consider reworking these functions as ':::' instead of '::'.
 
-# FIXME Need to export this and make it user-accessible, similar to salmon.
 koopa:::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
@@ -30,13 +28,13 @@ koopa:::kallisto_index() { # {{{1
     done
     koopa::assert_is_set 'fasta_file' 'index_file'
     koopa::assert_is_file "$fasta_file"
+    fasta_file="$(koopa::realpath "$fasta_file")"
     if [[ -f "$index_file" ]]
     then
         index_file="$(koopa::realpath "$index_file")"
-        # FIXME Need to match conventions used in salmon functions.
         koopa::alert_note \
-            "Index exists at '${index_file}'." \
-            "Skipping."
+            "Kallisto transcriptome index exists at '${index_file}'." \
+            "Skipping on-the-fly indexing of '${fasta_file}'."
         return 0
     fi
     koopa::h2 "Generating kallisto index at '${index_file}'."
@@ -46,13 +44,16 @@ koopa:::kallisto_index() { # {{{1
     index_dir="$(koopa::realpath "$index_dir")"
     tee="$(koopa::locate_tee)"
     kallisto index \
-        -i "$index_file" \
+        --index="$index_file" \
+        --kmer-size=31 \
+        --make-unique \
         "$fasta_file" \
         2>&1 | "$tee" "$log_file"
     return 0
 }
 
-koopa:::kallisto_quant() { # {{{1
+# FIXME Need to rework this to match salmon function.
+koopa:::kallisto_quant_paired_end() { # {{{1
     # """
     # Run kallisto quant.
     # @note Updated 2021-05-22.
@@ -130,11 +131,16 @@ koopa:::kallisto_quant() { # {{{1
     return 0
 }
 
+# FIXME Need to add this.
+koopa:::kallisto_quant_single_end() { # {{{1
+    echo 'FIXME'
+}
+
 # NOTE Consider adding '--lib-type' flag here in a future update.
-koopa::run_kallisto() { # {{{1
+koopa::run_kallisto_paired_end() { # {{{1
     # """
     # Run kallisto on multiple samples.
-    # @note Updated 2021-01-20.
+    # @note Updated 2021-08-16.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # """
@@ -245,4 +251,12 @@ koopa::run_kallisto() { # {{{1
             --r2-tail="$r2_tail"
     done
     return 0
+}
+
+koopa::run_kallisto_single_end() { # {{{1
+    # """
+    # Run kallisto on multiple single-end FASTQ files.
+    # @note Updated 2021-08-16.
+    # """
+    echo 'FIXME'
 }

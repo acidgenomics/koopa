@@ -250,10 +250,6 @@ koopa:::salmon_quant_single_end() { # {{{1
     return 0
 }
 
-koopa::run_salmon() { # {{{1
-    koopa::run_salmon_paired_end "$@"
-}
-
 koopa::run_salmon_paired_end() { # {{{1
     # """
     # Run salmon on multiple paired-end FASTQ files.
