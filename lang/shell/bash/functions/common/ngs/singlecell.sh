@@ -7,7 +7,7 @@ koopa::indrops_i5_sample_index_counts() { # {{{1
     # Get the sample index counts from single-cell RNA-seq FASTQ files.
     # @note Updated 2021-08-16.
     # """
-    local dir
+    local awk dir grep gzip head sort uniq
     koopa::assert_has_args_le "$#" 1
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
