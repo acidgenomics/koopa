@@ -1,13 +1,13 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "AUTOPAD\-SAMPLES" "1" "October 2020" "" ""
+.TH "AUTOPAD\-ZEROS" "1" "May 2021" "" ""
 .
 .SH "NAME"
-\fBautopad\-samples\fR \- autopad sample file names that begin with a number
+\fBautopad\-zeros\fR \- autopad sample file names that begin with a number
 .
 .SH "SYNOPSIS"
-\fBautopad\-samples\fR \fB\-\-prefix\fR="sample" \fB\-\-pad\-width\fR=2 \fIfile\fR\.\.\.
+\fBautopad\-zeros\fR \fB\-\-prefix\fR="sample" \fB\-\-pad\-width\fR=2 \fIfile\fR\.\.\.
 .
 .SH "DESCRIPTION"
 Intended for quick sanitization of FASTQ files from a sequencing vendor that begin with numbers and aren\'t zero padded\.
@@ -32,7 +32,7 @@ Zero padding width\. Manually adjust this when working with >= 100 samples\.
 .
 .nf
 
-$ autopad\-samples \-\-prefix=\'sample\' \-\-padwidth=2 *\.fastq\.gz
+$ autopad\-zeros \-\-prefix=\'sample\' \-\-padwidth=2 *\.fastq\.gz
 
 Input:
 ## 1\-dmso\-A\-R1\.fastq\.qz
