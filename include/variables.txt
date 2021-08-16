@@ -45,10 +45,10 @@ automake="1.16.4"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.27"
+aws-cli="2.2.29"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.27.0"
+azure-cli="2.27.1"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.8"
@@ -225,7 +225,7 @@ neofetch="7.1.0"
 neovim="0.5.0"
 
 # https://nodejs.org/
-node="16.6.1"
+node="16.6.2"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
