@@ -1,15 +1,11 @@
 # download-ensembl-genome(1) - download ensembl genome
 
-FIXME Need to update the argument names here...
-
 ## SYNOPSIS
 
 `download-ensembl-genome`
 `--organism`=<organism>
-`--build`=<build>
+[`--genome-build`=<genome_build>]
 [`--release`=<release>]
-[`--type`=<type>]
-[`--annotation`=<annotation>]
 [`--output-dir`=<output_dir>]
 [`--decompress`]
 
@@ -32,35 +28,19 @@ Verify checksums in shell with:
 ## OPTIONS
 
   * `--organism`=<organism>:
-    Latin name (e.g. "Homo sapiens").
+    Latin name (e.g. `"Homo sapiens"`).
 
-  * `--build`=<build>:
-    Genome build (e.g. "GRCh38").
+  * `--genome-build`=<genome_build>:
+    Genome build (e.g. `"GRCh38"`).
+    Defaults to current genome build.
 
   * `--release`=<release>:
-      Ensembl release version (e.g. 100).
-      If left unset, defaults to current release.
-
-  * `--type`=<type>:
-    Genome type:
-    `all` (default): Download all reference types;
-    `genome`: Primary assembly (DNA);
-    `transcriptome`: Transcripts (cDNA/RNA);
-    `none`: Skip download.
-
-  * `--annotation`=<annotation>:
-    Annotation type:
-    `all` (default): Download all annotation formats;
-    `gtf`: GTF (GFFv2);
-    `gff`: GFF3;
-    `none`: Skip download.
+    Ensembl release version (e.g. `100`).
+    Defaults to current release.
 
   * `--output-dir`=<output_dir>:
     Output directory.
     Defaults to working directory.
-
-  * `--decompress`:
-    Decompress files (but keep the compressed originals).
 
 ## SEE ALSO
 
@@ -111,4 +91,4 @@ See related issues:
 
 ## NOTE
 
-R function, defined in r-koopa package.
+R function, defined in r-acidgenomes package.

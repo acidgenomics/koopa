@@ -1,47 +1,34 @@
 # download-refseq-genome(1) - download refseq genome
 
-FIXME Need to update the argument names here...
-
 ## SYNOPSIS
 
 `download-refseq-genome`
-[`--build`=<build>]
-[`--type`=<type>]
-[`--annotation`=<annotation>]
+`--organism`=<organism>
+[`--taxonomic-group`=<taxonomic_group>]
+[`--genome-build`=<genome_build>]
 [`--output-dir`=<output_dir>]
-[`--decompress`]
 
 ## DESCRIPTION
 
 Download RefSeq genome and corresponding annotation files.
-Creates a new directory in the current working directory.
-Only *Homo sapiens* genome is supported.
 
 ## OPTIONS
 
-  * `--build`=<build>:
-    Genome build (e.g. "GRCh38").
-    Defaults to GRCh38.
+  * `organism`=<organism>:
+    Full Latin organism name (e.g. `"Homo sapiens"`).
 
-  * `--type`=<type>:
-    Genome type:
-    `all` (default): Download all reference types;
-    `genome`: Primary assembly (DNA);
-    `transcriptome`: Transcripts (cDNA/RNA);
-    `none`: Skip download.
+  * `taxonomic-group`=<taxonomic_group>:
+    NCBI FTP server taxnomic group subdirectory path
+    (e.g. `"vertebrate_mammalian"`).
+    Defining this manually avoids having to query the FTP server.
 
-  * `--annotation`=<annotation>:
-    `all` (default): Download all annotation formats;
-    `gtf`: GTF (GFFv2);
-    `gff`: GFF3;
-    `none`: Skip download.
+  * `--genome-build`=<build>:
+    Genome build (e.g. `"GCF_000001405.39_GRCh38.p12"`).
+    Defaults to current genome build.
 
   * `--output-dir`=<output_dir>
     Output directory.
     Defaults to working directory.
-
-  * `--decompress`:
-    Decompress files (but keep the compressed originals).
 
 ## SEE ALSO
 
@@ -80,4 +67,4 @@ Alternate paths:
 
 ## NOTE
 
-R function, defined in r-koopa package.
+R function, defined in r-acidgenomes package.
