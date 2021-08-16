@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-08-12.
+# Updated 2021-08-16.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -59,8 +59,10 @@ brew "subversion"
 # > cask "adobe-acrobat-reader"
 # > cask "google-drive-file-stream"
 
+# Replaced by "temurin" (2021-08-16):
+# > cask "adoptopenjdk"
+
 cask "1password"
-cask "adoptopenjdk"
 cask "airfoil"
 cask "alacritty"
 cask "alfred"
@@ -130,6 +132,7 @@ cask "skype"
 cask "spotify"
 cask "sublime-text"
 cask "superduper"
+cask "temurin"
 cask "textmate"
 cask "transmit"
 cask "tunnelblick"

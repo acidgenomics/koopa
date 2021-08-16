@@ -89,7 +89,8 @@ koopa::macos_brew_upgrade_casks() { # {{{1
         brew reinstall --cask --force "$cask" || true
         case "$cask" in
             'adoptopenjdk' | \
-            'r')
+            'r' | \
+            'temurin')
                 koopa::configure_r
                 ;;
         esac
