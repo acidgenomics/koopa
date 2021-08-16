@@ -56,7 +56,7 @@ koopa:::salmon_index() { # {{{1
 koopa:::salmon_quant_paired_end() { # {{{1
     # """
     # Run salmon quant (per paired-end sample).
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-08-16.
     #
     # Quartz is currently using only '--validateMappings' and '--gcBias' flags.
     #
@@ -92,10 +92,12 @@ koopa:::salmon_quant_paired_end() { # {{{1
     # - https://salmon.readthedocs.io/en/latest/salmon.html
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
     #       rnaseq/salmon.py
+    # - How to output pseudobams:
+    #   https://github.com/COMBINE-lab/salmon/issues/38
     # """
     local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_dir
-    local lib_type log_file output_dir r1_tail r2_tail sample_output_dir
-    local tee threads
+    local lib_type log_file output_dir quant_args r1_tail r2_tail
+    local sample_output_dir tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'salmon'
     while (("$#"))
@@ -154,36 +156,40 @@ koopa:::salmon_quant_paired_end() { # {{{1
         return 0
     fi
     koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
-    koopa::dl 'Bootstraps' "$bootstraps"
     threads="$(koopa::cpu_count)"
-    koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/salmon-quant.log"
     koopa::mkdir "$sample_output_dir"
     tee="$(koopa::locate_tee)"
-    salmon quant \
-        --gcBias \
-        --index="$index_dir" \
-        --libType="$lib_type" \
-        --mates1="$fastq_r1" \
-        --mates2="$fastq_r2" \
-        --numBootstraps="$bootstraps" \
-        --output="$sample_output_dir" \
-        --seqBias \
-        --threads="$threads" \
-        2>&1 | "$tee" "$log_file"
+    quant_args=(
+        "--index=${index_dir}"
+        "--libType=${lib_type}"
+        "--mates1=${fastq_r1}"
+        "--mates2=${fastq_r2}"
+        "--numBootstraps=${bootstraps}"
+        "--output=${sample_output_dir}"
+        "--threads=${threads}"
+        # FIXME Check that this outputs per directory.
+        # FIXME Need to add a bamtools SAM to BAM conversion step.
+        '--writeMappings=output.sam'
+        '--gcBias' \
+        '--no-version-check'
+        '--seqBias' \
+    )
+    koopa::dl 'Quant args' "${quant_args[*]}"
+    salmon quant "${quant_args[@]}" 2>&1 | "$tee" "$log_file"
     return 0
 }
 
 koopa:::salmon_quant_single_end() { # {{{1
     # """
     # Run salmon quant (per single-end sample).
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-08-16.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html
     # """
     local bootstraps fastq fastq_bn id index_dir lib_type log_file output_dir
-    local sample_output_dir tail tee threads
+    local quant_args sample_output_dir tail tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'salmon'
     while (("$#"))
@@ -231,22 +237,23 @@ koopa:::salmon_quant_single_end() { # {{{1
         return 0
     fi
     koopa::h2 "Quantifying '${id}' into '${sample_output_dir}'."
-    koopa::dl 'Bootstraps' "$bootstraps"
     threads="$(koopa::cpu_count)"
-    koopa::dl 'Threads' "$threads"
     log_file="${sample_output_dir}/salmon-quant.log"
     koopa::mkdir "$sample_output_dir"
     tee="$(koopa::locate_tee)"
     # Don't set '--gcBias' here, considered beta for single-end reads.
-    salmon quant \
-        --index="$index_dir" \
-        --libType="$lib_type" \
-        --numBootstraps="$bootstraps" \
-        --output="$sample_output_dir" \
-        --seqBias \
-        --threads="$threads" \
-        --unmatedReads="$fastq" \
-        2>&1 | "$tee" "$log_file"
+    quant_args=(
+        "--index=${index_dir}"
+        "--libType=${lib_type}"
+        "--numBootstraps=${bootstraps}"
+        "--output=${sample_output_dir}"
+        "--threads=${threads}"
+        "--unmatedReads=${fastq}"
+        '--no-version-check'
+        '--seqBias'
+    )
+    koopa::dl 'Quant args' "${quant_args[*]}"
+    salmon quant "${quant_args[@]}" 2>&1 | "$tee" "$log_file"
     return 0
 }
 

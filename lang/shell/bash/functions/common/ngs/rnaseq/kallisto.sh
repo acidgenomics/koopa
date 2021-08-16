@@ -52,16 +52,64 @@ koopa:::kallisto_index() { # {{{1
     return 0
 }
 
-# FIXME Need to rework this to match salmon function.
+
+
+# FIXME Work on adding support for genomebam here.
+# FIXME AcidGenomes downloader needs to generate this chromosomes.txt file.
+
+# To visualize the pseudoalignments we need to run kallisto with the
+# --genomebam option. To do this we need two additional files, a GTF file, which
+# describes where the transcripts lie in the genome, and a text file containing
+# the length of each chromosome. These files are part of the test directory.
+# To run kallisto we type:
+
+#     kallisto quant \
+#         -i transcripts.kidx \
+#         -b 30 -o kallisto_out \
+#         --genomebam \
+#         --gtf transcripts.gtf.gz \
+#         --chromosomes chrom.txt \
+#         reads_1.fastq.gz \
+#         reads_2.fastq.gz
+
+# this is the same run as above, but now we supply --gtf transcripts.gtf.gz for
+# the GTF file and the chromosome file --chromosomes chrom.txt. For a larger
+# transcriptome we recommend downloading the GTF file from the same release and
+# data source as the FASTA file used to construct the index. The output now
+# contains two additional files pseudoalignments.bam and
+# pseudoalignments.bam.bai. The files can be viewed and processed using Samtools
+# or a genome browser such as IGV.
+
+
+
+# FIXME Need to require the genomebam settings here...GTF input.
 koopa:::kallisto_quant_paired_end() { # {{{1
     # """
-    # Run kallisto quant.
-    # @note Updated 2021-05-22.
+    # Run kallisto quant (per paired-end sample).
+    # @note Updated 2021-08-16.
+    #
+    # Important options:
+    # * --bias: Learns parameters for a model of sequences specific bias and
+    #   corrects the abundances accordlingly.
+    # * --fr-stranded: Run kallisto in strand specific mode, only fragments
+    #   where the first read in the pair pseudoaligns to the forward strand of a
+    #   transcript are processed. If a fragment pseudoaligns to multiple
+    #   transcripts, only the transcripts that are consistent with the first
+    #   read are kept.
+    # * --rf-stranded: Same as '--fr-stranded', but the first read maps to the
+    #   reverse strand of a transcript.
+
+    # @seealso
+    # - https://pachterlab.github.io/kallisto/manual
+    # - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
+    # - https://salmon.readthedocs.io/en/latest/library_type.html
     # """
     local bootstraps fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_file
-    local log_file output_dir r1_tail r2_tail sample_output_dir tee threads
+    local lib_type log_file output_dir quant_args r1_tail r2_tail
+    local sample_output_dir tee threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'kallisto'
+    lib_type='A'
     while (("$#"))
     do
         case "$1" in
@@ -79,6 +127,10 @@ koopa:::kallisto_quant_paired_end() { # {{{1
                 ;;
             --index-file=*)
                 index_file="${1#*=}"
+                shift 1
+                ;;
+            --lib-type=*)
+                lib_type="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
@@ -120,20 +172,53 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     log_file="${sample_output_dir}/kallisto-quant.log"
     koopa::mkdir "$sample_output_dir"
     tee="$(koopa::locate_tee)"
-    kallisto quant \
-        --bootstrap-samples="$bootstraps" \
-        --index="$index_file" \
-        --output-dir="$sample_output_dir" \
-        --threads="$threads" \
-        "$fastq_r1" \
-        "$fastq_r2" \
-        2>&1 | "$tee" "$log_file"
+    quant_args=(
+        "--bootstrap-samples=${bootstraps}"
+        "--index=${index_file}"
+        "--output-dir=${sample_output_dir}"
+        "--threads=${threads}"
+        '--bias'
+        '--verbose'
+    )
+    # Run kallisto in stranded mode, depending on the library type.
+    # Using salmon library type codes here, for consistency.
+    # Doesn't currently support an auto detection mode, like salmon.
+    case "$lib_type" in
+        A)
+            ;;
+        ISF)
+            quant_args+=('--fr-stranded')
+            ;;
+        ISR)
+            quant_args+=('--rf-stranded')
+            ;;
+        *)
+            koopa::invalid_arg "$lib_type"
+            ;;
+    esac
+    quant_args+=("$fastq_r1" "$fastq_r2")
+    koopa::dl 'Quant args' "${quant_args[*]}"
+    kallisto quant "${quant_args[@]}" 2>&1 | "$tee" "$log_file"
     return 0
 }
 
 # FIXME Need to add this.
+# FIXME How to do this for single end mode?
+# -s, --sd=DOUBLE    Estimated standard deviation of fragment length
+#                    (default: -l, -s values are estimated from paired
+#                    end data, but are required when using --single)
 koopa:::kallisto_quant_single_end() { # {{{1
+    # Run kallisto quant (per single-end sample).
+
+    # Must supply the length and standard deviation of the fragment length (not the read length).
+
+    # FIXME We need to calculate the standard deviation here...
+
     echo 'FIXME'
+
+    # FIXME Don't use '--bias' flag here.
+    # FIXME Pass in the '--single' flag.
+    # FIXME Pass in the '--verbose' flag here.
 }
 
 # NOTE Consider adding '--lib-type' flag here in a future update.
