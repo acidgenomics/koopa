@@ -157,15 +157,15 @@ koopa:::salmon_quant_paired_end() { # {{{1
     dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[r2_tail]}/}"
     koopa::assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
     dict[id]="${dict[fastq_r1_bn]}"
-    dict[sample_output_dir]="${dict[output_dir]}/${dict[id]}"
-    if [[ -d "${dict[sample_output_dir]}" ]]
+    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
+    if [[ -d "${dict[output_dir]}" ]]
     then
         koopa::alert_note "Skipping '${dict[id]}'."
         return 0
     fi
-    koopa::h2 "Quantifying '${dict[id]}' into '${dict[sample_output_dir]}'."
-    koopa::mkdir "${dict[sample_output_dir]}"
-    dict[log_file]="${dict[sample_output_dir]}/quant.log"
+    koopa::h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
+    koopa::mkdir "${dict[output_dir]}"
+    dict[log_file]="${dict[output_dir]}/quant.log"
     quant_args=(
         '--gcBias'
         "--geneMap=${dict[gff_file]}"
@@ -175,7 +175,7 @@ koopa:::salmon_quant_paired_end() { # {{{1
         "--mates2=${dict[fastq_r2]}"
         "--numBootstraps=${dict[bootstraps]}"
         '--no-version-check'
-        "--output=${dict[sample_output_dir]}"
+        "--output=${dict[output_dir]}"
         '--seqBias'
         "--threads=${dict[threads]}"
         "--writeMappings=${dict[sam_file]}"
@@ -243,15 +243,15 @@ koopa:::salmon_quant_single_end() { # {{{1
     dict[fastq_bn]="$(koopa::basename "${dict[fastq]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
     dict[id]="${dict[fastq_bn]}"
-    dict[sample_output_dir]="${dict[output_dir]}/${dict[id]}"
-    if [[ -d "${dict[sample_output_dir]}" ]]
+    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
+    if [[ -d "${dict[output_dir]}" ]]
     then
         koopa::alert_note "Skipping '${dict[id]}'."
         return 0
     fi
-    koopa::h2 "Quantifying '${dict[id]}' into '${dict[sample_output_dir]}'."
-    koopa::mkdir "${dict[sample_output_dir]}"
-    dict[log_file]="${dict[sample_output_dir]}/quant.log"
+    koopa::h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
+    koopa::mkdir "${dict[output_dir]}"
+    dict[log_file]="${dict[output_dir]}/quant.log"
     # Don't set '--gcBias' here, considered beta for single-end reads.
     quant_args=(
         "--geneMap=${dict[gff_file]}"
@@ -259,7 +259,7 @@ koopa:::salmon_quant_single_end() { # {{{1
         "--libType=${dict[lib_type]}"
         "--numBootstraps=${dict[bootstraps]}"
         '--no-version-check'
-        "--output=${dict[sample_output_dir]}"
+        "--output=${dict[output_dir]}"
         '--seqBias'
         "--threads=${dict[threads]}"
         "--unmatedReads=${dict[fastq]}"
