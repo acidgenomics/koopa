@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider putting the index in a top-level directory.
-# FIXME Consider nesting the samples a 'samples' subdirectory.
-# FIXME Need to rework handoff to 'kallisto_index', using '--output-dir' instead.
-
 koopa:::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
@@ -55,38 +51,6 @@ koopa:::kallisto_index() { # {{{1
     return 0
 }
 
-
-
-# FIXME Work on adding support for genomebam here.
-# FIXME AcidGenomes downloader needs to generate this chromosomes.txt file.
-
-# To visualize the pseudoalignments we need to run kallisto with the
-# --genomebam option. To do this we need two additional files, a GTF file, which
-# describes where the transcripts lie in the genome, and a text file containing
-# the length of each chromosome. These files are part of the test directory.
-# To run kallisto we type:
-
-#     kallisto quant \
-#         -i transcripts.kidx \
-#         -b 30 -o kallisto_out \
-#         --genomebam \
-#         --gtf transcripts.gtf.gz \
-#         --chromosomes chrom.txt \
-#         reads_1.fastq.gz \
-#         reads_2.fastq.gz
-
-# this is the same run as above, but now we supply --gtf transcripts.gtf.gz for
-# the GTF file and the chromosome file --chromosomes chrom.txt. For a larger
-# transcriptome we recommend downloading the GTF file from the same release and
-# data source as the FASTA file used to construct the index. The output now
-# contains two additional files pseudoalignments.bam and
-# pseudoalignments.bam.bai. The files can be viewed and processed using Samtools
-# or a genome browser such as IGV.
-
-
-
-# FIXME Simplify the FASTA/index handling here.
-# FIXME Need to require the genomebam settings here...GTF input.
 koopa:::kallisto_quant_paired_end() { # {{{1
     # """
     # Run kallisto quant (per paired-end sample).
@@ -125,7 +89,6 @@ koopa:::kallisto_quant_paired_end() { # {{{1
                 shift 1
                 ;;
             --chromosomes-file=*)
-                # FIXME Need to define this in main function.
                 dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
@@ -138,7 +101,6 @@ koopa:::kallisto_quant_paired_end() { # {{{1
                 shift 1
                 ;;
             --gff-file=*)
-                # FIXME Need to define this in main function.
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
@@ -178,15 +140,15 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[r2_tail]}/}"
     koopa::assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
     dict[id]="${dict[fastq_r1_bn]}"
-    dict[sample_output_dir]="${dict[output_dir]}/${dict[id]}"
-    if [[ -d "${dict[sample_output_dir]}" ]]
+    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
+    if [[ -d "${dict[output_dir]}" ]]
     then
         koopa::alert_note "Skipping '${dict[id]}'."
         return 0
     fi
-    koopa::h2 "Quantifying '${dict[id]}' into '${dict[sample_output_dir]}'."
-    koopa::mkdir "${dict[sample_output_dir]}"
-    dict[log_file]="${dict[sample_output_dir]}/quant.log"
+    koopa::h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
+    koopa::mkdir "${dict[output_dir]}"
+    dict[log_file]="${dict[output_dir]}/quant.log"
     quant_args=(
         '--bias'
         "--bootstrap-samples=${dict[bootstraps]}"
@@ -194,7 +156,7 @@ koopa:::kallisto_quant_paired_end() { # {{{1
         '--genomebam'
         "--gtf=${dict[gff_file]}"
         "--index=${dict[index_file]}"
-        "--output-dir=${dict[sample_output_dir]}"
+        "--output-dir=${dict[output_dir]}"
         '--pseudobam'
         "--threads=${dict[threads]}"
         '--verbose'
@@ -222,7 +184,6 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     return 0
 }
 
-# FIXME Simplify the FASTA/index handling here.
 koopa:::kallisto_quant_single_end() { # {{{1
     # Run kallisto quant (per single-end sample).
     # @note Updated 2021-08-16.
@@ -236,51 +197,51 @@ koopa:::kallisto_quant_single_end() { # {{{1
     # If this is a public dataset, then hopefully the value is written down
     # somewhere.
     #
-    # Typical values for RNA-seq are '--fragment-length=200' and '--sd=30'.
-    #
     # @seealso
     # - https://www.biostars.org/p/252823/
     # """
-    # FIXME We need to calculate the standard deviation here...
-    # FIXME Don't use '--bias' flag here.
-    # FIXME Pass in the '--single' flag.
-    # FIXME Pass in the '--verbose' flag here.
-    echo 'FIXME'
-
+    local app dict quant_args
+    declare -A app=(
+        [tee]="$(koopa::locate_tee)"
+    )
+    declare -A dict
     while (("$#"))
     do
         case "$1" in
             --bootstraps=*)
-                bootstraps="${1#*=}"
+                dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
-            --fasta-file=*)
-                fasta_file="${1#*=}"
+            --chromosomes-file=*)
+                dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-dir=*)
-                fastq_dir="${1#*=}"
+            --fastq=*)
+                dict[fastq]="${1#*=}"
                 shift 1
                 ;;
             --fragment-length=*)
-                fragment_length="${1#*=}"
+                dict[fragment_length]="${1#*=}"
+                shift 1
+                ;;
+            --gff-file=*)
+                dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
             --index-file=*)
-                index_file="${1#*=}"
+                dict[index_file]="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
-                output_dir="${1#*=}"
-                shift 1
-                ;;
-            # FIXME What's the tail name to use here?
-            --r1-tail=*)
-                r1_tail="${1#*=}"
+                dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             --sd=*)
-                sd="${1#*=}"
+                dict[sd]="${1#*=}"
+                shift 1
+                ;;
+            --tail=*)
+                dict[tail]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -288,16 +249,39 @@ koopa:::kallisto_quant_single_end() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set \
-        'fragment_length' \
-        'sd'
-
-    # FIXME need these flags:
-    # Typical values for RNA-seq are '--fragment-length=200' and '--sd=30'.
-
+    koopa::assert_is_file "${dict[fastq]}"
+    dict[fastq_bn]="$(koopa::basename "${dict[fastq]}")"
+    dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
+    dict[id]="${dict[fastq_bn]}"
+    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
+    if [[ -d "${dict[output_dir]}" ]]
+    then
+        koopa::alert_note "Skipping '${dict[id]}'."
+        return 0
+    fi
+    koopa::h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
+    koopa::mkdir "${dict[output_dir]}"
+    dict[log_file]="${dict[output_dir]}/quant.log"
+    quant_args=(
+        "--bootstrap-samples=${dict[bootstraps]}"
+        "--chromosomes=${dict[chromosomes_file]}"
+        "--fragment-length=${dict[fragment_length]}"
+        '--genomebam'
+        "--gtf=${dict[gff_file]}"
+        "--index=${dict[index_file]}"
+        "--output-dir=${dict[output_dir]}"
+        '--pseudobam'
+        "--sd=${dict[sd]}"
+        '--single'
+        "--threads=${dict[threads]}"
+        '--verbose'
+    )
+    quant_args+=("$fastq")
+    koopa::dl 'Quant args' "${quant_args[*]}"
+    kallisto quant "${quant_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
+    return 0
 }
 
-# FIXME This needs to pass-in GTF and chromosome.txt file.
 koopa::run_kallisto_paired_end() { # {{{1
     # """
     # Run kallisto on multiple samples.
@@ -324,39 +308,39 @@ koopa::run_kallisto_paired_end() { # {{{1
     do
         case "$1" in
             --bootstraps=*)
-                bootstraps="${1#*=}"
+                dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
             --chromosomes-file=*)
-                chromosomes_file="${1#*=}"
+                dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
             --fasta-file=*)
-                fasta_file="${1#*=}"
+                dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
             --fastq-dir=*)
-                fastq_dir="${1#*=}"
+                dict[fastq_dir]="${1#*=}"
                 shift 1
                 ;;
             --gff-file=*)
-                gff_file="${1#*=}"
+                dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
             --lib-type=*)
-                lib_type="${1#*=}"
+                dict[lib_type]="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
-                output_dir="${1#*=}"
+                dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             --r1-tail=*)
-                r1_tail="${1#*=}"
+                dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
             --r2-tail=*)
-                r2_tail="${1#*=}"
+                dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -434,47 +418,63 @@ with '${dict[r1_tail]}'."
     return 0
 }
 
-# FIXME This needs to support GTF file and 'chromosomes.txt' file.
-# FIXME Rework, using conventions defined in paired-end runners.
 koopa::run_kallisto_single_end() { # {{{1
     # """
     # Run kallisto on multiple single-end FASTQ files.
     # @note Updated 2021-08-16.
     # """
-    local bootstraps fastq_dir fragment_length output_dir sd tail
+    local app dict
+    local fastq_files fastq str
     koopa::assert_has_args "$#"
-    bootstraps=30
-    fastq_dir='fastq'
-    fragment_length=200
-    output_dir='kallisto'
-    sd=30
-    tail='.fastq.gz'
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [bootstraps]=30
+        [fastq_dir]='fastq'
+        [fragment_length]=200
+        [output_dir]='kallisto'
+        [sd]=30
+        [tail]='.fastq.gz'
+    )
     while (("$#"))
     do
         case "$1" in
             --bootstraps=*)
-                bootstraps="${1#*=}"
+                dict[bootstraps]="${1#*=}"
+                shift 1
+                ;;
+            --chromosomes-file=*)
+                dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
             --fasta-file=*)
-                fasta_file="${1#*=}"
+                dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
             --fastq-dir=*)
-                fastq_dir="${1#*=}"
+                dict[fastq_dir]="${1#*=}"
                 shift 1
                 ;;
-            --index-dir=*)
-                index_dir="${1#*=}"
-                echo "$index_dir"  # FIXME
+            --fragment-length=*)
+                dict[fragment_length]="${1#*=}"
+                shift 1
+                ;;
+            --gff-file=*)
+                dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
-                output_dir="${1#*=}"
+                dict[output_dir]="${1#*=}"
+                shift 1
+                ;;
+            --sd=*)
+                dict[sd]="${1#*=}"
                 shift 1
                 ;;
             --tail=*)
-                tail="${1#*=}"
+                dict[tail]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -482,21 +482,68 @@ koopa::run_kallisto_single_end() { # {{{1
                 ;;
         esac
     done
-
-
-    # FIXME Need to handle the sample indexing...
-
+    koopa::h1 'Running kallisto.'
+    koopa::activate_conda_env 'kallisto'
+    dict[chromosomes_file]="$(koopa::realpath "${dict[chromosomes_file]}")"
+    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
+    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
+    dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
+    koopa::mkdir "${dict[output_dir]}"
+    dict[output_dir]="$(koopa::realpath "${dict[output_dir]}")"
+    dict[index_dir]="${dict[output_dir]}/index"
+    dict[index_file]="${dict[index_dir]}/kallisto.idx"
+    dict[samples_dir]="${dict[output_dir]}/samples"
+    koopa::dl \
+        'Bootstraps' "${dict[bootstraps]}" \
+        'Chromosomes file' "${dict[chromosomes_file]}" \
+        'FASTA file' "${dict[fasta_file]}" \
+        'FASTQ dir' "${dict[fastq_dir]}" \
+        'GFF file' "${dict[gff_file]}" \
+        'Output dir' "${dict[output_dir]}" \
+        'Tail' "${dict[tail]}"
+    # Sample array from FASTQ files {{{2
+    # --------------------------------------------------------------------------
+    # Create a per-sample array from the FASTQ files.
+    # Pipe GNU find into array.
+    readarray -t fastq_files <<< "$( \
+        "${app[find]}" "$fastq_dir" \
+            -maxdepth 1 \
+            -mindepth 1 \
+            -type 'f' \
+            -name "*${tail}" \
+            -not -name '._*' \
+            -print \
+        | "${app[sort]}" \
+    )"
+    # Error on FASTQ match failure.
+    if [[ "${#fastq_files[@]}" -eq 0 ]]
+    then
+        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
+with '${dict[tail]}'."
+    fi
+    str="$(koopa::ngettext "${#fastq_files[@]}" 'sample' 'samples')"
+    koopa::alert_info "${#fastq_files[@]} ${str} detected."
+    # Index {{{2
+    # --------------------------------------------------------------------------
+    koopa:::kallisto_index \
+        --fasta-file="${dict[fasta_file]}" \
+        --output-dir="$index_dir"
+    koopa::assert_is_file "${dict[index_file]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
-    # Loop across the per-sample array and quantify with kallisto.
-    fastq_files=()  # FIXME
+    # Loop across the per-sample array and quantify with salmon.
     for fastq in "${fastq_files[@]}"
     do
-        echo "$fastq"  # FIXME
-        koopa::kalisto_quant_single_end \
-            --fragment-length="$fragment_length" \
-            --sd="$sd" \
-            --tail="$tail"
+        koopa:::kallisto_quant_single_end \
+            --bootstraps="${dict[bootstraps]}" \
+            --chromosomes-file="${dict[chromosomes_file]}" \
+            --fastq="$fastq" \
+            --fragment-length="${dict[fragment_length]}" \
+            --gff-file="${dict[gff_file]}" \
+            --index-file="${dict[index_file]}" \
+            --output-dir="${dict[samples_dir]}" \
+            --sd="${dict[sd]}" \
+            --tail="${dict[tail]}"
     done
     koopa::alert_success 'kallisto run completed successfully.'
 }

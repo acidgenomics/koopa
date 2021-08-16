@@ -467,7 +467,6 @@ koopa::run_salmon_single_end() { # {{{1
         'GFF file' "${dict[gff_file]}" \
         'Output dir' "${dict[output_dir]}" \
         'Tail' "${dict[tail]}"
-
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
     # Create a per-sample array from the FASTQ files.
