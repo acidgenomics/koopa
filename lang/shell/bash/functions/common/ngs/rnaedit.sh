@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Consider rewriting this in Python or R.
+# NOTE Consider rewriting this in Python or R.
 
 koopa::run_rnaeditingindexer() { # {{{1
     # """

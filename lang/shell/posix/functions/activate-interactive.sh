@@ -237,7 +237,7 @@ quote=01:warning=01;35"
 _koopa_activate_gnu_aliases() { # {{{1
     # """
     # Activate GNU aliases.
-    # @note Updated 2021-06-03.
+    # @note Updated 2021-08-16.
     #
     # Creates hardened interactive aliases for GNU coreutils.
     #
@@ -287,6 +287,7 @@ _koopa_activate_gnu_aliases() { # {{{1
             alias tee='gtee'
             alias tr='gtr'
             alias uname='guname'
+            alias uniq='guniq'
         else
             _koopa_alert_is_not_installed 'Homebrew coreutils'
             harden_coreutils=0
