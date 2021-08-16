@@ -373,6 +373,7 @@ with '${dict[r1_tail]}'."
     koopa:::salmon_index \
         --fasta-file="${dict[fasta_file]}" \
         --output-dir="${dict[index_dir]}"
+    koopa::assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
@@ -494,6 +495,7 @@ with '${dict[tail]}'."
     koopa:::salmon_index \
         --fasta-file="${dict[fasta_file]}" \
         --output-dir="${dict[index_dir]}"
+    koopa::assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
