@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Can we pass this to our main 'install_app' function instead?
-# FIXME Are we doing this for Python packages?
+# NOTE Can we pass this to our main 'install_app' function instead?
+#      Are we doing this for Python packages?
+
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
