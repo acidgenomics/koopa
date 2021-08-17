@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these functions in R.
+
 koopa::copy_bam_files() { # {{{1
     # """
     # Copy BAM files.
