@@ -236,8 +236,8 @@ koopa::check_shell() { # {{{1
     _koopa_check_shell "$@"
 }
 
-koopa::conda_env() { # {{{1
-    _koopa_conda_env "$@"
+koopa::conda_env_name() { # {{{1
+    _koopa_conda_env_name "$@"
 }
 
 koopa::conda_prefix() { # {{{1
@@ -258,10 +258,6 @@ koopa::data_disk_link_prefix() { # {{{1
 
 koopa::deactivate_conda() { # {{{1
     _koopa_deactivate_conda "$@"
-}
-
-koopa::deactivate_envs() { # {{{1
-    _koopa_deactivate_envs "$@"
 }
 
 koopa::deactivate_python_venv() { # {{{1
