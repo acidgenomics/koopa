@@ -33,7 +33,7 @@ _koopa_activate_bcbio_nextgen() { # {{{1
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-08-17.
     # """
     local anaconda_prefix conda_prefix name nounset prefix
     [ "$#" -le 1 ] || return 1
@@ -58,7 +58,8 @@ _koopa_activate_conda() { # {{{1
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
-    # > conda deactivate
+    # Ensure the base environment is deactivated by default.
+    conda deactivate
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
@@ -91,7 +92,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-08-17.
     # """
     local prefix
     [ "$#" -eq 0 ] || return 1
@@ -105,7 +106,15 @@ _koopa_activate_homebrew() { # {{{1
     if _koopa_is_macos
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
-        _koopa_activate_homebrew_opt_prefix 'curl' 'ruby'
+        _koopa_activate_homebrew_opt_gnu_prefix \
+            'coreutils' \
+            'findutils' \
+            'grep'
+        _koopa_activate_homebrew_opt_prefix \
+            'bc' \
+            'curl' \
+            'man-db' \
+            'ruby'
         _koopa_activate_homebrew_cask_google_cloud_sdk
     fi
     return 0
