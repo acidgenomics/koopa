@@ -12,7 +12,7 @@ _koopa_activate_aliases() { # {{{1
     # > alias perl='_koopa_alias_perl'
     alias br='_koopa_alias_broot'
     alias bucket='_koopa_alias_bucket'
-    alias conda='_koopa_alias_conda'
+    # > alias conda='_koopa_alias_conda'
     alias doom-emacs='_koopa_alias_doom_emacs'
     alias emacs-vanilla='_koopa_alias_emacs_vanilla'
     alias emacs='_koopa_alias_emacs'
@@ -260,6 +260,11 @@ _koopa_activate_gnu_aliases() { # {{{1
     then
         _koopa_is_installed brew || return 0
         opt_prefix="$(_koopa_homebrew_prefix)/opt"
+        if [ -d "${opt_prefix}/bc" ]
+        then
+            # shellcheck disable=SC2139
+            alias bc="${opt_prefix}/bc/bin/bc"
+        fi
         if [ -d "${opt_prefix}/coreutils" ]
         then
             harden_coreutils=1
@@ -270,10 +275,13 @@ _koopa_activate_gnu_aliases() { # {{{1
             mv='gmv'
             rm='grm'
             # Standardize using GNU variants by default.
+            alias base64='gbase64'
             alias basename='gbasename'
+            alias cat='gcat'
             alias chgrp='gchgrp'
             alias chmod='gchmod'
             alias chown='gchown'
+            alias chroot='gchroot'
             alias cut='gcut'
             alias date='gdate'
             alias dirname='gdirname'
@@ -288,6 +296,8 @@ _koopa_activate_gnu_aliases() { # {{{1
             alias tr='gtr'
             alias uname='guname'
             alias uniq='guniq'
+            alias whoami='gwhoami'
+            alias yes='gyes'
         else
             _koopa_alert_is_not_installed 'Homebrew coreutils'
             harden_coreutils=0
