@@ -270,7 +270,7 @@ koopa::r_rebuild_docs() { # {{{1
 koopa::r_koopa() { # {{{1
     # """
     # Execute a function in koopa R package.
-    # @note Updated 2021-08-14.
+    # @note Updated 2021-08-17.
     # """
     local code header_file flags fun pos r rscript
     r="$(koopa::locate_r)"
@@ -297,16 +297,17 @@ koopa::r_koopa() { # {{{1
     shift 1
     header_file="$(koopa::koopa_prefix)/lang/r/include/header.R"
     koopa::assert_is_file "$header_file"
-    code="source('${header_file}')"
+    code=()
+    code+=("source('${header_file}');")
     # The 'header' variable is currently used to simply load the shared R
     # script header and check that the koopa R package is installed.
     if [[ "$fun" != 'header' ]]
     then
-        code="${code}; koopa::${fun}()"
+        code+=("koopa::${fun}();")
     fi
     # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
-    "$rscript" "${flags[@]}" -e "$code" "${pos[@]@Q}"
+    "$rscript" "${flags[@]}" -e "${code[*]}" "${pos[@]@Q}"
     return 0
 }
 
