@@ -1,9 +1,9 @@
 #!/bin/sh
 
-_koopa_conda_env() { # {{{1
+_koopa_conda_env_name() { # {{{1
     # """
     # Conda environment name.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-08-17.
     #
     # Alternate approach:
     # > CONDA_PROMPT_MODIFIER="($(basename "$CONDA_PREFIX"))"
@@ -13,19 +13,27 @@ _koopa_conda_env() { # {{{1
     # See also:
     # - https://stackoverflow.com/questions/42481726
     # """
+    local x
     [ "$#" -eq 0 ] || return 1
-    _koopa_print "${CONDA_DEFAULT_ENV:-}"
+    x="${CONDA_DEFAULT_ENV:-}"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_deactivate_conda() { # {{{1
     # """
     # Deactivate Conda environment.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-08-17.
     # """
-    local nounset
+    local env_name nounset
     [ "$#" -eq 0 ] || return 1
-    [ -n "${CONDA_DEFAULT_ENV:-}" ] || return 0
+    env_name="$(_koopa_conda_env_name)"
+    if [ -z "$env_name" ]
+    then
+        _koopa_warning 'conda is not active.'
+        return 1
+    fi
     # Avoid exit on unbound PS1 in conda script.
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
@@ -34,25 +42,20 @@ _koopa_deactivate_conda() { # {{{1
     return 0
 }
 
-_koopa_deactivate_envs() { # {{{1
-    # """
-    # Deactivate Conda and Python environments.
-    # @note Updated 2021-06-14.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_deactivate_python_venv
-    _koopa_deactivate_conda
-    return 0
-}
-
 _koopa_deactivate_python_venv() { # {{{1
     # """
     # Deactivate Python virtual environment.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-08-17.
     # """
+    local prefix
     [ "$#" -eq 0 ] || return 1
-    [ -n "${VIRTUAL_ENV:-}" ] || return 0
-    _koopa_remove_from_path "${VIRTUAL_ENV}/bin"
+    prefix="${VIRTUAL_ENV:-}"
+    if [ -z "$prefix" ]
+    then
+        _koopa_warning 'Python virtual environment is not active.'
+        return 1
+    fi
+    _koopa_remove_from_path "${prefix}/bin"
     unset -v VIRTUAL_ENV
     return 0
 }
@@ -60,14 +63,15 @@ _koopa_deactivate_python_venv() { # {{{1
 _koopa_python_venv_name() { # {{{1
     # """
     # Python virtual environment name.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-08-17.
     # """
-    local env
+    local x
     [ "$#" -eq 0 ] || return 1
-    env="${VIRTUAL_ENV:-}"
-    [ -n "$env" ] || return 1
+    x="${VIRTUAL_ENV:-}"
+    [ -n "$x" ] || return 1
     # Strip out the path and just leave the env name.
-    env="${env##*/}"
-    _koopa_print "$env"
+    x="${x##*/}"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
