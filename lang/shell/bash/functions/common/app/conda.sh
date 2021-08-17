@@ -3,7 +3,7 @@
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-08-17.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -24,6 +24,10 @@ koopa::activate_conda_env() { # {{{1
     # """
     local env_name env_prefix grep nounset
     koopa::assert_has_args_eq "$#" 1
+    if koopa::is_conda_env_active
+    then
+        koopa::stop 'conda environment is already active.'
+    fi
     koopa::activate_conda
     grep="$(koopa::locate_grep)"
     nounset="$(koopa::boolean_nounset)"
