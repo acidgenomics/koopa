@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-07-27.
+# @note Updated 2021-08-17.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
@@ -113,7 +113,10 @@ R_REMOTES_UPGRADE="always"
 # reticulate {{{2
 # ------------------------------------------------------------------------------
 
-# Reticulate allows you to run Python code inside of R.
+# The reticulate package allows you to run Python code inside of R.
+
+# Ensure the default location of miniconda is standardized.
+# > RETICULATE_MINICONDA_PATH="${KOOPA_OPT_PREFIX}/conda"
 
 # Default path to virtual environments.
 # If left unset, defaults to `~/.virtualenvs`.
