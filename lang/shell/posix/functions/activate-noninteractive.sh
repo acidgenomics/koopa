@@ -106,15 +106,19 @@ _koopa_activate_homebrew() { # {{{1
     if _koopa_is_macos
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
-        _koopa_activate_homebrew_opt_gnu_prefix \
-            'coreutils' \
-            'findutils' \
-            'grep'
+        _koopa_activate_homebrew_opt_libexec_prefix \
+            'man-db'
         _koopa_activate_homebrew_opt_prefix \
             'bc' \
             'curl' \
-            'man-db' \
+            'openssl' \
             'ruby'
+        _koopa_activate_homebrew_opt_gnu_prefix \
+            'coreutils' \
+            'findutils' \
+            'gnu-sed' \
+            'gnu-which' \
+            'grep'
         _koopa_activate_homebrew_cask_google_cloud_sdk
     fi
     return 0
@@ -168,6 +172,28 @@ _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
         fi
         _koopa_add_to_path_start "${prefix}/gnubin"
         _koopa_add_to_manpath_start "${prefix}/gnuman"
+    done
+    return 0
+}
+
+_koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
+    # """
+    # Activate Homebrew opt libexec prefix.
+    # @note Updated 2021-08-17.
+    # """
+    local homebrew_prefix name prefix
+    [ "$#" -gt 0 ] || return 1
+    homebrew_prefix="$(_koopa_homebrew_prefix)"
+    for name in "$@"
+    do
+        prefix="${homebrew_prefix}/opt/${name}/libexec"
+        if [ ! -d "$prefix" ]
+        then
+            _koopa_warning "Not installed: '${prefix}'."
+            return 1
+        fi
+        _koopa_add_to_path_start "${prefix}/bin"
+        _koopa_add_to_manpath_start "${prefix}/man"
     done
     return 0
 }
