@@ -146,6 +146,17 @@ _koopa_is_conda_active() { # {{{1
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
+_koopa_is_conda_env_active() { # {{{1
+    # """
+    # Is a Conda environment (other than base) active?
+    # @note Updated 2021-08-17.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    [ "${CONDA_SHLVL:-1}" -gt 1 ] && return 0
+    [ "${CONDA_DEFAULT_ENV:-base}" != 'base' ] && return 0
+    return 1
+}
+
 _koopa_is_debian() { # {{{1
     # """
     # Is the operating system Debian?
