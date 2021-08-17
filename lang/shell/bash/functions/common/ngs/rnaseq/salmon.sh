@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add step to generate BAM and CRAM files from SAM.
+
 koopa:::salmon_index() { # {{{1
     # """
     # Generate salmon index.
