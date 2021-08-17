@@ -102,11 +102,11 @@ _koopa_prompt() { # {{{1
 _koopa_prompt_conda() { # {{{1
     # """
     # Get conda environment name for prompt string.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-08-17.
     # """
     local env
     [ "$#" -eq 0 ] || return 1
-    env="$(_koopa_conda_env)"
+    env="$(_koopa_conda_env_name)"
     [ -n "$env" ] || return 0
     _koopa_print " conda:${env}"
     return 0
