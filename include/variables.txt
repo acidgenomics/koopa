@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-08-16"
+koopa-date="2021-08-17"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.2a"
@@ -555,12 +555,12 @@ rust-ripgrep="13.0.0"     # homebrew; rg
 rust-starship="0.56.0"    # homebrew
 rust-tokei="12.1.2"       # homebrew
 rust-xsv="0.13.0"         # homebrew
-rust-zoxide="0.7.3"       # homebrew; z
+rust-zoxide="0.7.4"       # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
 
-rust-crossbeam="0.8.0"
-rust-hyper="0.14.7"
-rust-rayon="1.5.0"
-rust-tide="0.16.0"
+# > rust-crossbeam="0.8.0"
+# > rust-hyper="0.14.7"
+# > rust-rayon="1.5.0"
+# > rust-tide="0.16.0"
