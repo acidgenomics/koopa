@@ -1,45 +1,46 @@
 #!/usr/bin/env bash
 
-# NOTE Migrate this code to r-koopa package.
-# FIXME Rework these using dict approaches.
+# FIXME Add steps to generate BAM and CRAM files from SAM output here.
 
 koopa:::bowtie2_align() { # {{{1
     # """
     # Run bowtie2 alignment on multiple paired-end FASTQ files.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-08-17.
     # """
-    local align_args fastq_r1 fastq_r1_bn fastq_r2 fastq_r2_bn id index_prefix
-    local log_file output_dir r1_tail r2_tail sam_file sample_output_dir
-    local tee threads
+    local app dict
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'bowtie2'
+    declare -A app=(
+        [tee]="$(koopa::locate_tee)"
+    )
+    declare -A dict=(
+        [threads]="$(koopa::cpu_count)"
+    )
     while (("$#"))
     do
         case "$1" in
             --fastq-r1=*)
-                fastq_r1="${1#*=}"
+                dict[fastq_r1]="${1#*=}"
                 shift 1
                 ;;
             --fastq-r2=*)
-                fastq_r2="${1#*=}"
+                dict[fastq_r2]="${1#*=}"
                 shift 1
                 ;;
-            # FIXME Rename / consider reworking this.
-            # FIXME Rework this as 'index-dir'.
-            --index-prefix=*)
-                index_prefix="${1#*=}"
+            --index-base=*)
+                dict[index_base]="${1#*=}"
                 shift 1
                 ;;
             --output-dir=*)
-                output_dir="${1#*=}"
+                dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             --r1-tail=*)
-                r1_tail="${1#*=}"
+                dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
             --r2-tail=*)
-                r2_tail="${1#*=}"
+                dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -47,28 +48,23 @@ koopa:::bowtie2_align() { # {{{1
                 ;;
         esac
     done
-
-
-    koopa::assert_is_file "$fastq_r1" "$fastq_r2"
-    fastq_r1_bn="$(koopa::basename "$fastq_r1")"
-    fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
-    fastq_r2_bn="$(koopa::basename "$fastq_r2")"
-    fastq_r2_bn="${fastq_r2_bn/${r2_tail}/}"
-    koopa::assert_are_identical "$fastq_r1_bn" "$fastq_r2_bn"
-    id="$fastq_r1_bn"
-    sample_output_dir="${output_dir}/${id}"
-    if [[ -d "$sample_output_dir" ]]
+    koopa::assert_is_file "${dict[fastq_r1]}" "${dict[fastq_r2]}"
+    dict[fastq_r1_bn]="$(koopa::basename "${dict[fastq_r1]}")"
+    dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[r1_tail]}/}"
+    dict[fastq_r2_bn]="$(koopa::basename "${dict[fastq_r2]}")"
+    dict[fastq_r2_bn]="${dict[fastq_r2_bn]/${dict[r2_tail]}/}"
+    koopa::assert_are_identical "${dict[fastq_r1_bn]}" "${dict[fastq_r2_bn]}"
+    id="${dict[fastq_r1_bn]}"
+    dict[output_dir]="${dict[output_dir]}/${dict[id]}"
+    if [[ -d "${dict[output_dir]}" ]]
     then
-        koopa::alert_note "Skipping '${id}'."
+        koopa::alert_note "Skipping '${dict[id]}'."
         return 0
     fi
-    koopa::h2 "Aligning '${id}' into '${sample_output_dir}'."
-    threads="$(koopa::cpu_count)"
-    koopa::dl 'Threads' "$threads"
-    sam_file="${sample_output_dir}/${id}.sam"
-    log_file="${sample_output_dir}/bowtie2.log"
-    koopa::mkdir "$sample_output_dir"
-    tee="$(koopa::locate_tee)"
+    koopa::h2 "Aligning '${dict[id]}' into '${dict[output_dir]}'."
+    koopa::mkdir "${dict[output_dir]}"
+    sam_file="${dict[output_dir]}/${dict[id]}.sam"
+    log_file="${dict[output_dir]}/align.log"
     align_args=(
         '--local'
         '--sensitive-local'
@@ -76,17 +72,16 @@ koopa:::bowtie2_align() { # {{{1
         '--rg' 'PL:illumina'
         '--rg' "PU:${id}"
         '--rg' "SM:${id}"
-        '--threads' "$threads"
+        '--threads' "${dict[threads]}"
         '-1' "$fastq_r1"
         '-2' "$fastq_r2"
         '-S' "$sam_file"
         '-X' 2000
         '-q'
-        # FIXME Rename this to 'index_base'
-        '-x' "$index_prefix"
+        '-x' "${dict[index_base]}"
     )
     koopa::dl 'Align args' "${align_args[*]}"
-    bowtie2 "${align_args[@]}" 2>&1 | "$tee" "$log_file"
+    bowtie2 "${align_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
 
@@ -144,7 +139,7 @@ koopa:::bowtie2_index() { # {{{1
     return 0
 }
 
-# FIXME Need to nest 'index' and 'samples' under subdirectories.
+# FIXME Need to add option to generate BAM and CRAM files here.
 koopa::run_bowtie2() { # {{{1
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
@@ -216,7 +211,6 @@ koopa::run_bowtie2() { # {{{1
     # Error on FASTQ match failure.
     if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
     then
-        # FIXME Improve message consistency with salmon.
         koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
 with '${dict[r1_tail]}'."
     fi
@@ -225,7 +219,7 @@ with '${dict[r1_tail]}'."
     # Index {{{2
     # --------------------------------------------------------------------------
     koopa:::bowtie2_index \
-        --fasta-file="$fasta_file" \
+        --fasta-file="${dict[fasta_file]}" \
         --output-dir="${dict[index_dir]}"
     koopa::assert_is_dir "${dict[index_dir]}"
     # Alignment {{{2
@@ -243,6 +237,7 @@ with '${dict[r1_tail]}'."
             --r1-tail="${dict[r1_tail]}" \
             --r2-tail="${dict[r2_tail]}"
     done
+    # FIXME Need a step to convert SAM to BAM here?
     koopa::alert_success 'bowtie alignment completed successfully.'
     return 0
 }
