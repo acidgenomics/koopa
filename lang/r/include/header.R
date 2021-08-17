@@ -33,7 +33,7 @@ local({
 
     #' Install R koopa package, if necessary
     #'
-    #' @note Updated 2021-08-16.
+    #' @note Updated 2021-08-17.
     #' @noRd
     installIfNecessary <- function() {
         ## Minimum version of koopa R package.
@@ -49,7 +49,7 @@ local({
                 return(invisible())
             }
         }
-        if (isTRUE("--vanilla" %in% commandArgs())) {
+        if (isVanilla()) {
             stop("R packages should not be installed in '--vanilla' mode.")
         }
         message("Installing koopa R package.")
@@ -68,9 +68,25 @@ local({
         invisible(TRUE)
     }
 
+    #' Is the current R session running in vanilla mode?
+    #'
+    #' @note Updated 2021-08-17.
+    #' @noRd
+    isVanilla <- function() {
+        isTRUE("--vanilla" %in% commandArgs())
+    }
+
+    #' Should the current R session be running in verbose mode?
+    #'
+    #' @note Updated 2021-08-17.
+    #' @noRd
+    isVerbose <- function() {
+        isTRUE("--verbose" %in% commandArgs())
+    }
+
     #' R script header
     #'
-    #' @note Updated 2021-01-04.
+    #' @note Updated 2021-08-17.
     #' @noRd
     header <- function() {
         options(
@@ -78,17 +94,11 @@ local({
             "warn" = 2L,
             "warning" = quote(quit(status = 1L))
         )
-        if (isTRUE("--verbose" %in% commandArgs())) {
+        if (isVerbose()) {
             options("verbose" = TRUE)
         }
         getHelpIfNecessary()
         installIfNecessary()
-        ## This check is currently returning false for Ubuntu CRAN R 4.1
-        ## release, so disabled at the moment.
-        ## > stopifnot(
-        ## >     requireNamespace("goalie", quietly = TRUE),
-        ## >     goalie::isCleanSystemLibrary()
-        ## > )
         invisible(TRUE)
     }
 
