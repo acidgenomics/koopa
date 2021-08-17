@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Consider rewriting this in Python or R.
+# FIXME Rework this function in R.
 
 koopa::indrops_i5_sample_index_counts() { # {{{1
     # """

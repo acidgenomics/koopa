@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these functions in R.
 # FIXME Add step to generate BAM and CRAM files from SAM.
 
 koopa:::salmon_index() { # {{{1

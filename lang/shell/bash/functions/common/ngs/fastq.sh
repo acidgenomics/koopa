@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these functions in R.
+
 koopa::convert_fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.

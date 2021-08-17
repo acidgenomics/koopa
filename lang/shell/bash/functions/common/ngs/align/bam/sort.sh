@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these functions in R.
+
 koopa::bam_sort() { # {{{1
     # """
     # Sort multiple BAM files in a directory.
@@ -26,7 +28,7 @@ koopa::bam_sort() { # {{{1
         koopa::stop "No BAM files detected in '${dir}'."
     fi
     koopa::h1 "Sorting BAM files in '${dir}'."
-    koopa::activate_conda_env sambamba
+    koopa::activate_conda_env 'sambamba'
     for bam_file in "${bam_files[@]}"
     do
         koopa::sambamba_sort "$bam_file"

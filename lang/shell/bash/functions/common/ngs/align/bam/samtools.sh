@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these functions in R.
+
 koopa::samtools_convert_sam_to_bam() { # {{{1
     # """
     # Convert a SAM file to BAM format.

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these functions in R.
+
 koopa::bam_filter() { # {{{1
     # """
     # Apply multi-step filtering to BAM files.

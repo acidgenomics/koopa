@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these functions in R.
 # FIXME Add steps to generate BAM and CRAM files from SAM output here.
 
 koopa:::bowtie2_align() { # {{{1
