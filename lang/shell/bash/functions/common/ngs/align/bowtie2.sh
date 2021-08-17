@@ -229,7 +229,6 @@ with '${dict[r1_tail]}'."
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
-        # FIXME Ensure we've reworked 'index_base' in other calls.
         koopa:::bowtie2_align \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
@@ -239,6 +238,7 @@ with '${dict[r1_tail]}'."
             --r2-tail="${dict[r2_tail]}"
     done
     # FIXME Need a step to convert SAM to BAM here?
+    koopa::deactivate_conda
     koopa::alert_success 'bowtie alignment completed successfully.'
     return 0
 }

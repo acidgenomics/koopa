@@ -398,6 +398,7 @@ with '${dict[r1_tail]}'."
     # Convert SAM-to-BAM {{{2
     # --------------------------------------------------------------------------
     # FIXME Work on a SAM-to-BAM conversion step here.
+    koopa::deactivate_conda
     koopa::alert_success 'salmon run completed successfully.'
     return 0
 }
@@ -517,6 +518,7 @@ with '${dict[tail]}'."
     # Convert SAM to BAM {{{2
     # --------------------------------------------------------------------------
     # FIXME Work on a SAM-to-BAM conversion step here.
+    koopa::deactivate_conda
     koopa::alert_success 'salmon run completed successfully.'
     return 0
 }
