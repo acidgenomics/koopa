@@ -3,7 +3,7 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2021-07-22.
+    # @note Updated 2021-08-17.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
@@ -12,6 +12,14 @@ _koopa_posix_header() { # {{{1
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
+    fi
+    if [ -z "${KOOPA_DEFAULT_SYSTEM_PATH:-}" ]
+    then
+        export KOOPA_DEFAULT_SYSTEM_PATH="${PATH:?}"
+    fi
+    if [ "${KOOPA_ACTIVATE:-0}" -eq 0 ]
+    then
+        export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
     # Source POSIX functions.
     for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'.sh'
@@ -94,6 +102,11 @@ _koopa_posix_header() { # {{{1
     then
         _koopa_duration_stop 'posix' || return 1
     fi
+
+    echo 'POSIX shell ======================='
+    echo "$PATH"  # FIXME
+    echo '==================================='
+
     return 0
 }
 
