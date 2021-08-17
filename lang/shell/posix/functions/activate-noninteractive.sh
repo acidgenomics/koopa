@@ -351,10 +351,13 @@ _koopa_activate_opt_prefix() { # {{{1
 _koopa_activate_perl() { # {{{1
     # """
     # Activate Perl, adding local library to 'PATH'.
-    # @note Updated 2021-06-13.
+    # @note Updated 2021-08-17.
     #
-    # This step may error/warn if new shell is activated while Perl
-    # packages are installing.
+    # No longer querying Perl directly here, to speed up shell activation
+    # (see commented legacy approach below).
+    #
+    # The legacy Perl eval approach may error/warn if new shell is activated
+    # while Perl packages are installing.
     #
     # @seealso
     # - brew info perl
@@ -363,13 +366,18 @@ _koopa_activate_perl() { # {{{1
     [ "$#" -eq 0 ] || return 1
     prefix="$(_koopa_perl_packages_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_is_installed perl || return 0
-    eval "$( \
-        perl \
-            "-I${prefix}/lib/perl5" \
-            "-Mlocal::lib=${prefix}" \
-    )"
+    # Legacy approach that doesn't propagate in subshells correctly:
+    # > _koopa_is_installed perl || return 0
+    # > eval "$( \
+    # >     perl \
+    # >         "-I${prefix}/lib/perl5" \
+    # >         "-Mlocal::lib=${prefix}" \
+    # > )"
     _koopa_activate_prefix "$prefix"
+    export PERL5LIB="${prefix}/lib/perl5"
+    export PERL_LOCAL_LIB_ROOT="$prefix"
+    export PERL_MB_OPT="--install_base '${prefix}'"
+    export PERL_MM_OPT="INSTALL_BASE=${prefix}"
     return 0
 }
 
