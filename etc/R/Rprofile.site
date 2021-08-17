@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-07-21.
+#' @note Updated 2021-08-17.
 #'
 #' @section Restarting R:
 #'
@@ -510,6 +510,17 @@ local({  # nolint
         options(
             "readr.num_columns" = 0L,
             "readr.show_progress" = FALSE
+        )
+    }
+
+    if (isInstalled("reticulate")) {
+        ## Ensure that miniconda is used by default.
+        options(
+            "reticulate.conda_binary" =
+                file.path(
+                    Sys.getenv("KOOPA_OPT_PREFIX"),
+                    "conda", "condabin", "conda"
+                )
         )
     }
 
