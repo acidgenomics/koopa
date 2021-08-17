@@ -111,6 +111,7 @@ _koopa_activate_homebrew() { # {{{1
         _koopa_activate_homebrew_opt_prefix \
             'bc' \
             'curl' \
+            'gnu-getopt' \
             'openssl' \
             'ruby'
         _koopa_activate_homebrew_opt_gnu_prefix \
