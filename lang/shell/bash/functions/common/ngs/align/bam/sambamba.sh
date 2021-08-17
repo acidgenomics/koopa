@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these functions in R.
+
 koopa::sambamba_filter() { # {{{1
     # """
     # Perform filtering on a BAM file with sambamba.
