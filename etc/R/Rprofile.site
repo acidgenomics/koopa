@@ -97,7 +97,11 @@ local({  # nolint
     ## Conda {{{3
     ## ---------------------------------------------------------------------
 
-    if (isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV")))) {
+    condaEnvName <- Sys.getenv("CONDA_DEFAULT_ENV")
+    if (
+        isTRUE(nzchar(condaEnvName)) &&
+        !identical(condaEnvName, "base")
+    ) {
         conda <- TRUE
     } else {
         conda <- FALSE
