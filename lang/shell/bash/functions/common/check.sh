@@ -170,7 +170,7 @@ koopa::check_mount() { # {{{1
 koopa::check_system() { # {{{1
     # """
     # Check system.
-    # @note Updated 2021-08-14.
+    # @note Updated 2021-08-17.
     # """
     local current expected
     koopa::assert_has_no_args "$#"
@@ -178,13 +178,6 @@ koopa::check_system() { # {{{1
     if ! koopa::is_r_package_installed 'koopa'
     then
         koopa::install_r_koopa
-    else
-        current="$(koopa::r_package_version 'koopa')"
-        expected="$(koopa::variable 'r-koopa')"
-        if [[ "$current" != "$expected" ]]
-        then
-            koopa::install_r_koopa
-        fi
     fi
     koopa::r_koopa --vanilla 'cliCheckSystem'
     koopa::check_exports
