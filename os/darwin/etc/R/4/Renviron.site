@@ -36,11 +36,17 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
+# Homebrew-managed programs.
+PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/openssl/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/coreutils/libexec/gnubin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/findutils/libexec/gnubin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/gnu-sed/libexec/gnubin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/grep/libexec/gnubin:${PATH}"
+
 # GNU Fortran (from fxcoudert).
 PATH="/usr/local/gfortran/bin:${PATH}"
-
-# cURL.
-PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
 
 # Ruby.
 PATH="${KOOPA_OPT_PREFIX}/ruby-packages/bin:${PATH}"
