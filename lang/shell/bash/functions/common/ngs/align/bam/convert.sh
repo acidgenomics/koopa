@@ -48,7 +48,7 @@ koopa::convert_sam_to_bam() { # {{{1
         koopa::stop "No SAM files detected in '${dir}'."
     fi
     koopa::h1 "Converting SAM files in '${dir}' to BAM format."
-    koopa::activate_conda_env samtools
+    koopa::activate_conda_env 'samtools'
     case "$keep_sam" in
         0)
             koopa::alert_note 'SAM files will be deleted.'
@@ -65,5 +65,6 @@ koopa::convert_sam_to_bam() { # {{{1
             --output-bam="$bam_file"
         [[ "$keep_sam" -eq 0 ]] && koopa::rm "$sam_file"
     done
+    koopa::deactivate_conda
     return 0
 }

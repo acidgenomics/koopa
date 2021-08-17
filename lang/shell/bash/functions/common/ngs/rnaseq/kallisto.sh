@@ -419,6 +419,7 @@ with '${dict[r1_tail]}'."
             --r1-tail="${dict[r1_tail]}" \
             --r2-tail="${dict[r2_tail]}"
     done
+    koopa::deactivate_conda
     koopa::alert_success 'kallisto run completed successfully.'
     return 0
 }
@@ -551,5 +552,6 @@ with '${dict[tail]}'."
             --sd="${dict[sd]}" \
             --tail="${dict[tail]}"
     done
+    koopa::deactivate_conda
     koopa::alert_success 'kallisto run completed successfully.'
 }
