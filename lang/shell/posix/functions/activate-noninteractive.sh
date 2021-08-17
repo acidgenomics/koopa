@@ -640,28 +640,22 @@ _koopa_activate_ruby() { # {{{1
 _koopa_activate_rust() { # {{{1
     # """
     # Activate Rust programming language.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-08-17.
     #
-    # Attempt to locate cargo home and source the env script.
+    # Attempt to locate cargo home and source the 'env' script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
     #
     # Alternatively, can just add '${cargo_home}/bin' to PATH.
     # """
-    local cargo_prefix nounset script rustup_prefix
+    local cargo_prefix rustup_prefix
     [ "$#" -eq 0 ] || return 1
     cargo_prefix="$(_koopa_rust_packages_prefix)"
     rustup_prefix="$(_koopa_rust_prefix)"
     [ -d "$cargo_prefix" ] || return 0
     [ -d "$rustup_prefix" ] || return 0
-    script="${cargo_prefix}/env"
-    [ -r "$script" ] || return 0
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
+    _koopa_add_to_path_start "${cargo_prefix}/bin"
     export CARGO_HOME="$cargo_prefix"
     export RUSTUP_HOME="$rustup_prefix"
-    # shellcheck source=/dev/null
-    . "$script"
-    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
