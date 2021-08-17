@@ -33,5 +33,6 @@ koopa::bam_sort() { # {{{1
     do
         koopa::sambamba_sort "$bam_file"
     done
+    koopa::deactivate_conda
     return 0
 }

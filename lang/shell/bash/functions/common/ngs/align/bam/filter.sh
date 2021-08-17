@@ -5,7 +5,7 @@
 koopa::bam_filter() { # {{{1
     # """
     # Apply multi-step filtering to BAM files.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-08-17.
     # """
     local bam_file bam_files dir final_output_bam final_output_tail input_bam
     local input_tail output_bam output_tail
@@ -27,7 +27,7 @@ koopa::bam_filter() { # {{{1
         koopa::stop "No BAM files detected in '${dir}'."
     fi
     koopa::h1 "Filtering BAM files in '${dir}'."
-    koopa::activate_conda_env sambamba
+    koopa::activate_conda_env 'sambamba'
     for bam_file in "${bam_files[@]}"
     do
         final_output_tail='filtered'
@@ -64,5 +64,6 @@ koopa::bam_filter() { # {{{1
         koopa::cp "$output_bam" "$final_output_bam"
         koopa::sambamba_index "$final_output_bam"
     done
+    koopa::deactivate_conda
     return 0
 }

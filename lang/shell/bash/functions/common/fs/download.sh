@@ -141,12 +141,14 @@ koopa::download_refdata_scsig() { # {{{1
 koopa::download_sra_accession_list() { # {{{1
     # """
     # Download SRA accession list.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-08-17.
     # """
-    local cut file id sed
+    local app file id
     koopa::assert_has_args_le "$#" 2
-    cut="$(koopa::locate_cut)"
-    sed="$(koopa::locate_sed)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [sed]="$(koopa::locate_sed)"
+    )
     koopa::activate_conda_env 'entrez-direct'
     koopa::assert_is_installed 'esearch' 'efetch'
     id="${1:?}"
@@ -154,16 +156,17 @@ koopa::download_sra_accession_list() { # {{{1
     koopa::h1 "Downloading SRA '${id}' to '${file}'."
     esearch -db sra -q "$id" \
         | efetch -format 'runinfo' \
-        | "$sed" 1d \
-        | "$cut" -d ',' -f 1 \
+        | "${app[sed]}" '1d' \
+        | "${app[cut]}" -d ',' -f 1 \
         > "$file"
+    koopa::deactivate_conda
     return 0
 }
 
 koopa::download_sra_run_info_table() { # {{{1
     # """
     # Download SRA run info table.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-08-17.
     # """
     koopa::assert_has_args_le "$#" 2
     koopa::activate_conda_env 'entrez-direct'
@@ -174,6 +177,7 @@ koopa::download_sra_run_info_table() { # {{{1
     esearch -db sra -q "$id" \
         | efetch -format runinfo \
         > "$file"
+    koopa::deactivate_conda
     return 0
 }
 
