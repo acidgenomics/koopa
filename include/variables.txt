@@ -141,7 +141,7 @@ geos="3.9.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.32.0"
+git="2.33.0"
 
 # https://gnupg.org/download/index.html
 # LTS: 2.2.27 (2021-01-11).
