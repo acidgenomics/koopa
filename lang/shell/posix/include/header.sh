@@ -41,6 +41,32 @@ _koopa_posix_header() { # {{{1
         || return 1
     _koopa_activate_standard_paths || return 1
     _koopa_activate_pkg_config || return 1
+    if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
+    then
+        _koopa_activate_homebrew || return 1
+        _koopa_activate_emacs || return 1
+        _koopa_activate_go || return 1
+        _koopa_activate_node || return 1
+        _koopa_activate_openjdk || return 1
+        _koopa_activate_aspera || return 1
+        _koopa_activate_julia || return 1
+        _koopa_activate_nextflow || return 1
+        _koopa_activate_perl || return 1
+        _koopa_activate_python || return 1
+        _koopa_activate_ruby || return 1
+        _koopa_activate_rust || return 1
+        if _koopa_is_linux
+        then
+            _koopa_activate_bcbio_nextgen || return 1
+        elif _koopa_is_macos
+        then
+            _koopa_macos_activate_gpg_suite || return 1
+            _koopa_macos_activate_r || return 1
+            _koopa_macos_activate_visual_studio_code || return 1
+        fi
+    fi
+    _koopa_activate_koopa_paths || return 1
+    _koopa_activate_local_paths || return 1
     if [ "${KOOPA_ACTIVATE:-0}" -eq 1 ]
     then
         _koopa_export_cpu_count || return 1
@@ -50,30 +76,6 @@ _koopa_posix_header() { # {{{1
         _koopa_export_history || return 1
         _koopa_export_pager || return 1
         _koopa_export_tmpdir || return 1
-        if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
-        then
-            _koopa_activate_homebrew || return 1
-            _koopa_activate_emacs || return 1
-            _koopa_activate_go || return 1
-            _koopa_activate_node || return 1
-            _koopa_activate_openjdk || return 1
-            _koopa_activate_aspera || return 1
-            _koopa_activate_julia || return 1
-            _koopa_activate_nextflow || return 1
-            _koopa_activate_perl || return 1
-            _koopa_activate_python || return 1
-            _koopa_activate_ruby || return 1
-            _koopa_activate_rust || return 1
-            if _koopa_is_linux
-            then
-                _koopa_activate_bcbio_nextgen || return 1
-            elif _koopa_is_macos
-            then
-                _koopa_macos_activate_gpg_suite || return 1
-                _koopa_macos_activate_r || return 1
-                _koopa_macos_activate_visual_studio_code || return 1
-            fi
-        fi
         if [ "${KOOPA_MINIMAL:-0}" -eq 0 ] && _koopa_is_interactive
         then
             if _koopa_is_macos
@@ -96,17 +98,10 @@ _koopa_posix_header() { # {{{1
             fi
         fi
     fi
-    _koopa_activate_koopa_paths || return 1
-    _koopa_activate_local_paths || return 1
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         _koopa_duration_stop 'posix' || return 1
     fi
-
-    echo 'POSIX shell ======================='
-    echo "$PATH"  # FIXME
-    echo '==================================='
-
     return 0
 }
 
