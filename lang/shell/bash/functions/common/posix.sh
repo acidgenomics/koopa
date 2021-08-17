@@ -460,6 +460,10 @@ koopa::is_conda_active() { # {{{1
     _koopa_is_conda_active "$@"
 }
 
+koopa::is_conda_env_active() { # {{{1
+    _koopa_is_conda_env_active "$@"
+}
+
 koopa::is_debian() { # {{{1
     _koopa_is_debian "$@"
 }
