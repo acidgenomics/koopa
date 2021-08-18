@@ -8,19 +8,19 @@ _koopa_activate_aliases() { # {{{1
     # """
     local file
     [ "$#" -eq 0 ] || return 1
-    # > alias mcfly='_koopa_alias_mcfly'
-    # > alias perl='_koopa_alias_perl'
     alias br='_koopa_alias_broot'
     alias bucket='_koopa_alias_bucket'
-    # > alias conda='_koopa_alias_conda'
+    alias conda='_koopa_alias_conda'
     alias doom-emacs='_koopa_alias_doom_emacs'
     alias emacs-vanilla='_koopa_alias_emacs_vanilla'
     alias emacs='_koopa_alias_emacs'
     alias fzf='_koopa_alias_fzf'
     alias j='z'
     alias k='_koopa_alias_k'
+    # > alias mcfly='_koopa_alias_mcfly'
     alias nvim-fzf='_koopa_alias_nvim_fzf'
     alias nvim-vanilla='_koopa_alias_nvim_vanilla'
+    # > alias perl='_koopa_alias_perl'
     alias perlbrew='_koopa_alias_perlbrew'
     alias pipx='_koopa_alias_pipx'
     alias pyenv='_koopa_alias_pyenv'
@@ -237,7 +237,7 @@ quote=01:warning=01;35"
 _koopa_activate_gnu_aliases() { # {{{1
     # """
     # Activate GNU aliases.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-08-18.
     #
     # Creates hardened interactive aliases for GNU coreutils.
     #
@@ -258,93 +258,92 @@ _koopa_activate_gnu_aliases() { # {{{1
         rm='rm'
     elif _koopa_is_macos
     then
-        _koopa_is_installed brew || return 0
+        _koopa_is_installed 'brew' || return 0
         opt_prefix="$(_koopa_homebrew_prefix)/opt"
-        if [ -d "${opt_prefix}/bc" ]
-        then
-            # shellcheck disable=SC2139
-            alias bc="${opt_prefix}/bc/bin/bc"
-        fi
+        # > if [ -d "${opt_prefix}/bc" ]
+        # > then
+        # >     # shellcheck disable=SC2139
+        # >     alias bc="${opt_prefix}/bc/bin/bc"
+        # > fi
         if [ -d "${opt_prefix}/coreutils" ]
         then
             harden_coreutils=1
-            # These are hardened utils where we are changing default args.
             cp='gcp'
             ln='gln'
             mkdir='gmkdir'
             mv='gmv'
             rm='grm'
             # Standardize using GNU variants by default.
-            alias base64='gbase64'
-            alias basename='gbasename'
-            alias cat='gcat'
-            alias chgrp='gchgrp'
-            alias chmod='gchmod'
-            alias chown='gchown'
-            alias chroot='gchroot'
-            alias cut='gcut'
-            alias date='gdate'
-            alias dirname='gdirname'
-            alias du='gdu'
-            alias head='ghead'
-            alias readlink='greadlink'
-            alias realpath='grealpath'
-            alias sort='gsort'
-            alias stat='gstat'
-            alias tail='gtail'
-            alias tee='gtee'
-            alias tr='gtr'
-            alias uname='guname'
-            alias uniq='guniq'
-            alias whoami='gwhoami'
-            alias yes='gyes'
+            # > alias base64='gbase64'
+            # > alias basename='gbasename'
+            # > alias cat='gcat'
+            # > alias chgrp='gchgrp'
+            # > alias chmod='gchmod'
+            # > alias chown='gchown'
+            # > alias chroot='gchroot'
+            # > alias cut='gcut'
+            # > alias date='gdate'
+            # > alias dirname='gdirname'
+            # > alias du='gdu'
+            # > alias head='ghead'
+            # > alias readlink='greadlink'
+            # > alias realpath='grealpath'
+            # > alias sort='gsort'
+            # > alias stat='gstat'
+            # > alias tail='gtail'
+            # > alias tee='gtee'
+            # > alias tr='gtr'
+            # > alias uname='guname'
+            # > alias uniq='guniq'
+            # > alias whoami='gwhoami'
+            # > alias yes='gyes'
         else
             _koopa_alert_is_not_installed 'Homebrew coreutils'
             harden_coreutils=0
         fi
-        if [ -d "${opt_prefix}/findutils" ]
-        then
-            alias find='gfind'
-            alias xargs='gxargs'
-        else
-            _koopa_alert_is_not_installed 'Homebrew findutils'
-        fi
-        if [ -d "${opt_prefix}/gawk" ]
-        then
-            alias awk='gawk'
-        else
-            _koopa_alert_is_not_installed 'Homebrew gawk'
-        fi
-        if [ -d "${opt_prefix}/gnu-sed" ]
-        then
-            alias sed='gsed'
-        else
-            _koopa_alert_is_not_installed 'Homebrew gnu-sed'
-        fi
-        if [ -d "${opt_prefix}/gnu-tar" ]
-        then
-            alias tar='gtar'
-        else
-            _koopa_alert_is_not_installed 'Homebrew gnu-tar'
-        fi
-        if [ -d "${opt_prefix}/grep" ]
-        then
-            alias grep='ggrep'
-        else
-            _koopa_alert_is_not_installed 'Homebrew grep'
-        fi
-        if [ -d "${opt_prefix}/make" ]
-        then
-            alias make='gmake'
-        else
-            _koopa_alert_is_not_installed 'Homebrew make'
-        fi
-        if [ -d "${opt_prefix}/man-db" ]
-        then
-            alias man='gman'
-        else
-            _koopa_alert_is_not_installed 'Homebrew man-db'
-        fi
+        # > if [ -d "${opt_prefix}/findutils" ]
+        # > then
+        # >     alias find='gfind'
+        # >     alias xargs='gxargs'
+        # > else
+        # >     _koopa_alert_is_not_installed 'Homebrew findutils'
+        # > fi
+        # > if [ -d "${opt_prefix}/gawk" ]
+        # > then
+        # >     alias awk='gawk'
+        # > else
+        # >     _koopa_alert_is_not_installed 'Homebrew gawk'
+        # > fi
+        # > if [ -d "${opt_prefix}/gnu-sed" ]
+        # > then
+        # >     alias sed='gsed'
+        # > else
+        # >     _koopa_alert_is_not_installed 'Homebrew gnu-sed'
+        # > fi
+        # > if [ -d "${opt_prefix}/gnu-tar" ]
+        # > then
+        # >     alias tar='gtar'
+        # > else
+        # >     _koopa_alert_is_not_installed 'Homebrew gnu-tar'
+        # > fi
+        # > if [ -d "${opt_prefix}/grep" ]
+        # > then
+        # >     alias grep='ggrep'
+        # > else
+        # >     _koopa_alert_is_not_installed 'Homebrew grep'
+        # > fi
+        # > if [ -d "${opt_prefix}/make" ]
+        # > then
+        # >     alias make='gmake'
+        # > else
+        # >     _koopa_alert_is_not_installed 'Homebrew make'
+        # > fi
+        # > if [ -d "${opt_prefix}/man-db" ]
+        # > then
+        # >     alias man='gman'
+        # > else
+        # >     _koopa_alert_is_not_installed 'Homebrew man-db'
+        # > fi
     fi
     if [ "$harden_coreutils" -eq 1 ]
     then

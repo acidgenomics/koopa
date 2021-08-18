@@ -55,6 +55,16 @@ koopa::download_refseq_genome() { # {{{1
     return 0
 }
 
+koopa::download_ucsc_genome() { # {{{1
+    # """
+    # Download UCSC genome.
+    # @note Updated 2021-08-18.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::r_koopa 'cliDownloadUCSCGenome' "$@"
+    return 0
+}
+
 koopa::kill_r() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed 'pkill'

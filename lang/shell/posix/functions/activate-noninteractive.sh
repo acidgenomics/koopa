@@ -32,8 +32,8 @@ _koopa_activate_bcbio_nextgen() { # {{{1
 
 _koopa_activate_conda() { # {{{1
     # """
-    # Activate conda.
-    # @note Updated 2021-08-17.
+    # Activate conda using 'activate' script.
+    # @note Updated 2021-08-18.
     # """
     local anaconda_prefix conda_prefix name nounset prefix
     [ "$#" -le 1 ] || return 1
@@ -61,6 +61,17 @@ _koopa_activate_conda() { # {{{1
     # Ensure the base environment is deactivated by default.
     conda deactivate
     [ "$nounset" -eq 1 ] && set -u
+    return 0
+}
+
+_koopa_activate_conda2() {
+    # """
+    # Simplify conda activation that puts 'condabin' in PATH.
+    # @note Updated 2021-08-18.
+    # """
+    local prefix
+    prefix="$(_koopa_conda_prefix)"
+    _koopa_add_to_path_start "${prefix}/condabin"
     return 0
 }
 
