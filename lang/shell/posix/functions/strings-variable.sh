@@ -103,25 +103,40 @@ _koopa_debian_os_codename() { # {{{1
 _koopa_git_branch() { # {{{1
     # """
     # Current git branch name.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-08-19.
     #
-    # This is used in prompt, so be careful with assert checks.
+    # Currently used in prompt, so be careful with assert checks.
     #
-    # Handles detached HEAD state.
+    # Correctly handles detached HEAD state.
     #
-    # Alternatives:
-    # > git name-rev --name-only HEAD
-    # > git rev-parse --abbrev-ref HEAD
+    # Approaches:
+    # > git branch --show-current
+    # > git name-rev --name-only 'HEAD'
+    # > git rev-parse --abbrev-ref 'HEAD'
+    # > git symbolic-ref --short -q 'HEAD'
     #
     # @seealso
+    # - https://stackoverflow.com/questions/6245570/
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
-    local branch
+    local branch cut git head
     [ "$#" -eq 0 ] || return 1
     _koopa_is_git_repo || return 0
+    cut='cut'
     git='git'
-    branch="$("$git" symbolic-ref --short -q 'HEAD' 2>/dev/null)"
+    head='head'
+    branch="$("$git" branch --show-current 2>/dev/null || true)"
+    # Keep track of detached HEAD state, similar to starship.
+    if [ -z "$branch" ]
+    then
+        branch="$( \
+            "$git" branch \
+            | "$head" -n 1 \
+            | "$cut" -c '3-' \
+        )"
+    fi
+    [ -n "$branch" ] || return 0
     _koopa_print "$branch"
     return 0
 }
