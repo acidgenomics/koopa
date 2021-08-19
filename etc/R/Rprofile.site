@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-08-17.
+#' @note Updated 2021-08-19.
 #'
 #' @section Restarting R:
 #'
@@ -98,9 +98,11 @@ local({  # nolint
     ## ---------------------------------------------------------------------
 
     condaEnvName <- Sys.getenv("CONDA_DEFAULT_ENV")
+    condaShlvl <- Sys.getenv("CONDA_SHLVL")
     if (
         isTRUE(nzchar(condaEnvName)) &&
-        !identical(condaEnvName, "base")
+        !identical(condaEnvName, "base") &&
+        isTRUE(as.integer(condaShlvl) > 0L)
     ) {
         conda <- TRUE
     } else {
