@@ -126,12 +126,12 @@ _koopa_git_branch() { # {{{1
     cut='cut'
     git='git'
     head='head'
-    branch="$("$git" branch --show-current 2>/dev/null || true)"
+    branch="$("$git" branch --show-current 2>/dev/null)"
     # Keep track of detached HEAD state, similar to starship.
     if [ -z "$branch" ]
     then
         branch="$( \
-            "$git" branch \
+            "$git" branch 2>/dev/null \
             | "$head" -n 1 \
             | "$cut" -c '3-' \
         )"
