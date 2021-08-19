@@ -1,9 +1,9 @@
 #!/bin/sh
 
-__koopa_git_has_unstaged_changes() { # {{{1
+__koopa_git_repo_has_unstaged_changes() { # {{{1
     # """
     # Are there unstaged changes in current git repo?
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-08-19.
     #
     # Don't use '--quiet' flag here, as it can cause shell to exit if 'set -e'
     # mode is enabled.
@@ -20,10 +20,10 @@ __koopa_git_has_unstaged_changes() { # {{{1
     [ -n "$x" ]
 }
 
-__koopa_git_needs_pull_or_push() { # {{{1
+__koopa_git_repo_needs_pull_or_push() { # {{{1
     # """
     # Does the current git repo need a pull or push?
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-08-19.
     #
     # This will return an expected fatal warning when no upstream exists.
     # We're handling this case by piping errors to '/dev/null'.
@@ -209,25 +209,25 @@ _koopa_is_fedora_like() { # {{{1
     _koopa_is_os_like 'fedora'
 }
 
-_koopa_is_git() { # {{{1i
+_koopa_is_git_repo() { # {{{1i
     # """
     # Is the working directory a git repository?
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-08-19.
     # @seealso
     # - https://stackoverflow.com/questions/2180270
     # """
     local git
     [ "$#" -eq 0 ] || return 1
-    _koopa_is_git_toplevel '.' && return 0
+    _koopa_is_git_repo_top_level '.' && return 0
     git='git'
     "$git" rev-parse --git-dir >/dev/null 2>&1 || return 1
     return 0
 }
 
-_koopa_is_git_clean() { # {{{1
+_koopa_is_git_repo_clean() { # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2020-10-06.
+    # @note Updated 2021-18-19.
     #
     # This is used in prompt, so be careful with assert checks.
     #
@@ -236,16 +236,16 @@ _koopa_is_git_clean() { # {{{1
     # - https://stackoverflow.com/questions/3258243
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_is_git || return 1
-    __koopa_git_has_unstaged_changes && return 1
-    __koopa_git_needs_pull_or_push && return 1
+    _koopa_is_git_repo || return 1
+    __koopa_git_repo_has_unstaged_changes && return 1
+    __koopa_git_repo_needs_pull_or_push && return 1
     return 0
 }
 
-_koopa_is_git_toplevel() { # {{{1
+_koopa_is_git_repo_top_level() { # {{{1
     # """
     # Is the working directory the top level of a git repository?
-    # @note Updated 2021-06-04.
+    # @note Updated 2021-08-19.
     # """
     local dir
     [ "$#" -le 1 ] || return 1

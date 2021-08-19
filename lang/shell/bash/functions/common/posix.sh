@@ -484,16 +484,16 @@ koopa::is_fedora_like() { # {{{1
     _koopa_is_fedora_like "$@"
 }
 
-koopa::is_git() { # {{{1
-    _koopa_is_git "$@"
+koopa::is_git_repo() { # {{{1
+    _koopa_is_git_repo "$@"
 }
 
-koopa::is_git_clean() { # {{{1
-    _koopa_is_git_clean "$@"
+koopa::is_git_repo_clean() { # {{{1
+    _koopa_is_git_repo_clean "$@"
 }
 
-koopa::is_git_toplevel() { # {{{1
-    _koopa_is_git_toplevel "$@"
+koopa::is_git_repo_top_level() { # {{{1
+    _koopa_is_git_repo_top_level "$@"
 }
 
 koopa::is_gnu() { # {{{1

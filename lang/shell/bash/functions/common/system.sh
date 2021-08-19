@@ -154,7 +154,7 @@ koopa::sys_info() { # {{{
         "URL: $(koopa::koopa_url)"
         "GitHub URL: $(koopa::koopa_github_url)"
     )
-    if koopa::is_git_toplevel "$koopa_prefix"
+    if koopa::is_git_repo_top_level "$koopa_prefix"
     then
         origin="$( \
             koopa::cd "$koopa_prefix"; \
