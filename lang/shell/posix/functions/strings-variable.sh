@@ -119,7 +119,7 @@ _koopa_git_branch() { # {{{1
     # """
     local branch
     [ "$#" -eq 0 ] || return 1
-    _koopa_is_git || return 0
+    _koopa_is_git_repo || return 0
     git='git'
     branch="$("$git" symbolic-ref --short -q 'HEAD' 2>/dev/null)"
     _koopa_print "$branch"
