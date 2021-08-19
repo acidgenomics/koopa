@@ -152,7 +152,7 @@ koopa::git_default_branch() { # {{{1
     # """
     local git grep remote sed x
     koopa::assert_has_no_args "$#"
-    koopa::is_git || return 1
+    koopa::is_git_repo || return 1
     remote='origin'
     git="$(koopa::locate_git)"
     grep="$(koopa::locate_grep)"
@@ -215,7 +215,7 @@ koopa::git_last_commit_local() { # {{{1
     # """
     local git x
     koopa::assert_has_no_args "$#"
-    koopa::is_git || return 1
+    koopa::is_git_repo || return 1
     git="$(koopa::locate_git)"
     x="$("$git" rev-parse HEAD 2>/dev/null || true)"
     [[ -n "$x" ]] || return 1
@@ -230,7 +230,7 @@ koopa::git_last_commit_remote() { # {{{1
     local git url x
     koopa::assert_has_args "$#"
     url="${1:?}"
-    koopa::assert_is_git
+    koopa::assert_is_git_repo
     git="$(koopa::locate_git)"
     x="$("$git" ls-remote "$url" 'HEAD' 2>/dev/null || true)"
     [[ -n "$x" ]] || return 1
@@ -244,7 +244,7 @@ koopa::git_rename_master_to_main() { # {{{1
     # """
     local git new old origin
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_git
+    koopa::assert_is_git_repo
     git="$(koopa::locate_git)"
     origin='origin'
     old='master'
@@ -270,7 +270,7 @@ koopa::git_pull() { # {{{1
     local branch git
     branch=''
     [[ "$#" -gt 0 ]] && branch="${*: -1}"
-    koopa::assert_is_git
+    koopa::assert_is_git_repo
     git="$(koopa::locate_git)"
     koopa::alert "Pulling repo at '${PWD:?}'."
     "$git" fetch --all
@@ -401,7 +401,7 @@ koopa::git_remote_url() { # {{{1
     # """
     local git x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_git
+    koopa::assert_is_git_repo
     git="$(koopa::locate_git)"
     x="$("$git" config --get 'remote.origin.url' || true)"
     [[ -n "$x" ]] || return 1
@@ -422,7 +422,7 @@ koopa::git_reset() { # {{{1
     # """
     local git
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_git
+    koopa::assert_is_git_repo
     git="$(koopa::locate_git)"
     koopa::alert "Resetting repo at '${PWD:?}'."
     "$git" clean -dffx
@@ -472,7 +472,7 @@ koopa::git_rm_submodule() { # {{{1
     # """
     local git module
     koopa::assert_has_args "$#"
-    koopa::assert_is_git
+    koopa::assert_is_git_repo
     git="$(koopa::locate_git)"
     for module in "$@"
     do
@@ -498,7 +498,7 @@ koopa::git_rm_untracked() { # {{{1
     # """
     local git
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_git
+    koopa::assert_is_git_repo
     git="$(koopa::locate_git)"
     koopa::assert_is_installed 'git'
     "$git" clean -dfx
@@ -512,7 +512,7 @@ koopa::git_set_remote_url() { # {{{1
     # """
     local git origin url
     koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_git
+    koopa::assert_is_git_repo
     git="$(koopa::locate_git)"
     url="${1:?}"
     origin='origin'
@@ -567,7 +567,7 @@ koopa::git_submodule_init() { # {{{1
     # """
     local array cut git lines string target target_key url url_key
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_git
+    koopa::assert_is_git_repo
     koopa::assert_is_nonzero_file '.gitmodules'
     cut="$(koopa::locate_cut)"
     git="$(koopa::locate_git)"

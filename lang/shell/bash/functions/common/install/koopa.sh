@@ -29,7 +29,7 @@ koopa::update_koopa() { # {{{1
     local koopa_prefix name_fancy url version
     name_fancy='koopa'
     koopa_prefix="$(koopa::koopa_prefix)"
-    if ! koopa::is_git_toplevel "$koopa_prefix"
+    if ! koopa::is_git_repo_top_level "$koopa_prefix"
     then
         version="$(koopa::koopa_version)"
         url="$(koopa::url)"

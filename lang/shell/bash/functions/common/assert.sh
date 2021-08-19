@@ -363,13 +363,15 @@ koopa::assert_is_function() { # {{{1
     return 0
 }
 
-koopa::assert_is_git() { # {{{1
+koopa::assert_is_git_repo() { # {{{1
     # """
     # Assert that current directory is a git repo.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-08-19.
+    #
+    # Intentionally doesn't support input of multiple directories here.
     # """
     koopa::assert_has_no_args "$#"
-    if ! koopa::is_git
+    if ! koopa::is_git_repo
     then
         koopa::stop "Not a Git repo: '${PWD:?}'."
     fi
