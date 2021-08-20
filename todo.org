@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Terminal zsh autosuggestion colors are messed up in solarized mode.
 ** TODO Add support for nushell?
 ** TODO Consider prefixing with "command XXX" instead of using "unalias XXX".
 ** TODO Clone shallow during install...
