@@ -24,6 +24,7 @@ koopa::indrops_i5_sample_index_counts() { # {{{1
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
     koopa::h1 "Processing inDrops i5 barcode index counts in '${dir}'."
+    koopa::alert_coffee_time
     readarray -t files <<< "$( \
         "${app[find]}" "$dir" \
             -maxdepth 1 \
@@ -34,6 +35,8 @@ koopa::indrops_i5_sample_index_counts() { # {{{1
             -print \
         | "${app[sort]}" \
     )"
+    # FIXME We should run this loop in parallel for greater speed.
+    # FIXME Maybe we can grep match for lines that contain index barcodes better...
     for file in "${files[@]}"
     do
         koopa::alert "Processing '${file}'."
