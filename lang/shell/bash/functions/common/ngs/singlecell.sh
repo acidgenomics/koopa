@@ -23,6 +23,7 @@ koopa::indrops_i5_sample_index_counts() { # {{{1
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
+    koopa::h1 "Processing inDrops i5 barcode index counts in '${dir}'."
     readarray -t files <<< "$( \
         "${app[find]}" "$dir" \
             -maxdepth 1 \
