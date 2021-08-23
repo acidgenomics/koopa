@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-08-17"
+koopa-date="2021-08-23"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.11.2a"
+koopa-version="0.11.2"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.2.0"
@@ -23,7 +23,6 @@ gcrypt-url="https://gnupg.org/ftp/gcrypt"
 # https://www.gnu.org/prep/ftp.en.html
 # > gnu-mirror-url="https://ftpmirror.gnu.org"
 gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
-
 
 # Program versions {{{1
 # ==============================================================================
@@ -45,10 +44,10 @@ automake="1.16.4"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.29"
+aws-cli="2.2.31"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.27.1"
+azure-cli="2.27.2"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.8"
@@ -164,7 +163,7 @@ gsl="2.7"
 
 hadolint="2.6.1"
 
-harfbuzz="2.8.2"
+harfbuzz="2.9.0"
 
 haskell-stack="rolling"
 
@@ -172,7 +171,7 @@ haskell-stack="rolling"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.2.8"
+homebrew="3.2.9"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -225,7 +224,7 @@ neofetch="7.1.0"
 neovim="0.5.0"
 
 # https://nodejs.org/
-node="16.6.2"
+node="16.7.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -233,7 +232,7 @@ node="16.6.2"
 openjdk="16.0.2"
 
 # https://www.openssh.com/portable.html
-openssh="8.6p1"
+openssh="8.7p1"
 
 # https://www.openssl.org/source/
 openssl="1.1.1d"
@@ -243,7 +242,7 @@ openssl="1.1.1d"
 oracle-instantclient="21.1.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.14.1"
+pandoc="2.14.2"
 
 # https://www.gnu.org/software/parallel/
 parallel="20210622"
@@ -272,7 +271,7 @@ php="8.0.5"
 pkg-config="0.29.2"
 
 # https://python-poetry.org
-poetry="1.1.7"
+poetry="1.1.8"
 
 # https://proj.org/
 proj="8.1.0"
