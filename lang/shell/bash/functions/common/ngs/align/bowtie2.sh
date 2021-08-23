@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Rework these functions in R.
-# FIXME Add steps to generate BAM and CRAM files from SAM output here.
+# NOTE Need to migrate these functions to r-koopa.
+# NOTE Add steps to generate BAM and CRAM files from SAM output here.
 
 koopa:::bowtie2_align() { # {{{1
     # """
@@ -140,7 +140,7 @@ koopa:::bowtie2_index() { # {{{1
     return 0
 }
 
-# FIXME Need to add option to generate BAM and CRAM files here.
+# NOTE Need to add option to generate BAM and CRAM files here.
 koopa::run_bowtie2() { # {{{1
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
@@ -237,7 +237,7 @@ with '${dict[r1_tail]}'."
             --r1-tail="${dict[r1_tail]}" \
             --r2-tail="${dict[r2_tail]}"
     done
-    # FIXME Need a step to convert SAM to BAM here?
+    # NOTE Need a step to convert SAM to BAM here.
     koopa::deactivate_conda
     koopa::alert_success 'bowtie alignment completed successfully.'
     return 0

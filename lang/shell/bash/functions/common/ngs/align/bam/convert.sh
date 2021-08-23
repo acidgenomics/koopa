@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Rework these functions in R.
+# NOTE Need to migrate these functions to r-koopa.
 
 koopa::convert_sam_to_bam() { # {{{1
     # """
