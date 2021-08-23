@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Rework these functions in R.
+# NOTE Need to migrate these functions to r-koopa.
 
 koopa::run_rnaeditingindexer() { # {{{1
     # """

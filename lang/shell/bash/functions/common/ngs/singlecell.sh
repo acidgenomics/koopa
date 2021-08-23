@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this function in R.
+# NOTE Need to migrate these functions to r-koopa.
 
 koopa::indrops_i5_sample_index_counts() { # {{{1
     # """
