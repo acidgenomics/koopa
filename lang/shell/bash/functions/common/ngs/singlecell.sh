@@ -3,6 +3,8 @@
 # FIXME Need to migrate these functions to r-koopa.
 # FIXME Need to split this out per file
 # FIXME What's up with the head call here?
+# FIXME This isn't working and sticks on inDrops example file.
+# FIXME Need to rethink and rework this one...
 
 koopa::indrops_i5_sample_index_counts() { # {{{1
     # """
