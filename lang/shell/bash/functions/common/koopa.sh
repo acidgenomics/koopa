@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for 'koopa bin/run XXX' here, so we can call programs from
+# the command line easily inside of shells without koopa active.
+
 koopa:::koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
