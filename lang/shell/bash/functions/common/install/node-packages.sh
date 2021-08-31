@@ -28,9 +28,8 @@ koopa::install_node_packages() { # {{{1
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
+        # 'tldr' conflicts with Rust 'tealdeer'.
         pkgs=(
-            # This conflicts with Rust tealdeer.
-            # > 'tldr'
             'gtop'
         )
         for i in "${!pkgs[@]}"
@@ -57,3 +56,11 @@ koopa::uninstall_node_packages() { # {{{1
         --no-link \
         "$@"
     }
+
+koopa::update_node_packages() { # {{{1
+    # """
+    # Update Node.js packages.
+    # @note Updated 2021-08-31.
+    # """
+    koopa::install_node_packages "$@"
+}
