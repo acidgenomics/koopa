@@ -473,15 +473,12 @@ conda-trimmomatic="0.39"                # 2021-03-27 bioconda
 conda-umap-learn="0.4.6"                # 2020-07-03 bioconda (0.5.1*)
 conda-vardict="2019.06.04"              # 2019-06-05 bioconda
 
-# Homebrew cask versions {{{1
-# ==============================================================================
-
-homebrew-cask-gpg-suite="2021.1"
-
 # Node (NPM) packages {{{1
 # ==============================================================================
+# Updated 2021-08-31.
 
-node-npm="7.17.0"
+# https://www.npmjs.com/npm/
+node-npm="7.21.1"
 
 node-gtop="1.1.1"
 node-tldr="3.3.7"

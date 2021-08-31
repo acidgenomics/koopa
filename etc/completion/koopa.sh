@@ -5,7 +5,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-06-16.
+    # Updated 2021-08-31.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -120,6 +120,7 @@ _koopa_complete() { # {{{1
                     'ncurses'
                     'neofetch'
                     'neovim'
+                    'node-packages'
                     'openjdk'
                     'openssh'
                     'openssl'
