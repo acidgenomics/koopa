@@ -79,7 +79,7 @@ koopa::tmp_log_file() { # {{{1
 koopa::view_latest_tmp_log_file() { # {{{1
     # """
     # View the latest temporary log file.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-08-31.
     # """
     local log_file sort tail tmp_dir user_id
     koopa::assert_has_no_args "$#"
@@ -99,7 +99,7 @@ koopa::view_latest_tmp_log_file() { # {{{1
     )"
     [[ -f "$log_file" ]] || return 1
     koopa::alert "Viewing '${log_file}'."
-    # Note that this will skip to the end automatically.
+    # The use of '+G' flag here forces pager to return at end of line.
     koopa::pager +G "$log_file"
     return 0
 }
