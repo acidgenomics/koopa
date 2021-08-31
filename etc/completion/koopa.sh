@@ -276,6 +276,7 @@ _koopa_complete() { # {{{1
                     'doom-emacs'
                     'dotfiles'
                     'homebrew'
+                    'node-packages'
                     'prelude-emacs'
                     'pyenv'
                     'python-packages'
