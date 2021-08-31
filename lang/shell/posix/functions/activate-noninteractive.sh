@@ -117,20 +117,24 @@ _koopa_activate_homebrew() { # {{{1
     if _koopa_is_macos
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
-        _koopa_activate_homebrew_opt_libexec_prefix \
-            'man-db'
         _koopa_activate_homebrew_opt_prefix \
             'bc' \
+            'binutils' \
             'curl' \
             'gnu-getopt' \
+            'ncurses' \
             'openssl' \
             'ruby'
+        _koopa_activate_homebrew_opt_libexec_prefix \
+            'man-db'
         _koopa_activate_homebrew_opt_gnu_prefix \
             'coreutils' \
             'findutils' \
             'gnu-sed' \
+            'gnu-tar' \
             'gnu-which' \
-            'grep'
+            'grep' \
+            'make'
         _koopa_activate_homebrew_cask_google_cloud_sdk
     fi
     return 0
