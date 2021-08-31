@@ -312,6 +312,9 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         #   https://github.com/BaderLab/scClustViz
         # - r-veloviz*
         #   https://jef.works/veloviz/
+        # - scarches
+        #   https://github.com/theislab/scarches
+        #   Available on PyPi only currently.
         envs+=(
             'bustools'
             'cellrank'
