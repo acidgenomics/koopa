@@ -621,7 +621,7 @@ koopa::r_version() { # {{{1
 koopa::return_version() { # {{{1
     # """
     # Return version (via extraction).
-    # @note Updated 2020-07-14.
+    # @note Updated 2021-08-31.
     # """
     local cmd flag x
     koopa::assert_has_args_le "$#" 2
@@ -710,6 +710,9 @@ koopa::return_version() { # {{{1
             ;;
         subversion)
             cmd='svn'
+            ;;
+        tealdeer)
+            cmd='tldr'
             ;;
         texinfo)
             cmd='makeinfo'
