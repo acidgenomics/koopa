@@ -92,6 +92,7 @@ _koopa_posix_header() { # {{{1
             _koopa_activate_lesspipe || return 1
             _koopa_activate_secrets || return 1
             _koopa_activate_ssh_key || return 1
+            _koopa_activate_tealdeer || return 1
             if ! _koopa_is_subshell
             then
                 _koopa_activate_today_bucket || return 1
