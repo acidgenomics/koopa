@@ -481,7 +481,6 @@ conda-vardict="2019.06.04"              # 2019-06-05 bioconda
 node-npm="7.21.1"
 
 node-gtop="1.1.1"
-node-tldr="3.3.7"
 
 # Python packages {{{1
 # ==============================================================================
@@ -537,6 +536,8 @@ ruby-ronn="0.7.3"
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
+
+# FIXME Need to add support for tealdeer here (tldr).
 
 rust-bat="0.18.2"         # homebrew
 rust-broot="1.6.3"        # homebrew; br
