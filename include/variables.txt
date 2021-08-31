@@ -129,7 +129,7 @@ fzf="0.27.2"
 gawk="5.1.0"
 
 # https://ftp.gnu.org/gnu/gcc/
-gcc="11.1.0"
+gcc="11.2.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
