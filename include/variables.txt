@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-08-25"
+koopa-date="2021-08-31"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.2"
@@ -44,7 +44,7 @@ automake="1.16.4"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.31"
+aws-cli="2.2.33"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.27.2"
@@ -86,7 +86,7 @@ cellranger="6.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.21.1"
+cmake="3.21.2"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -161,7 +161,7 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.7"
 
-hadolint="2.6.1"
+hadolint="2.7.0"
 
 harfbuzz="2.9.0"
 
@@ -171,7 +171,7 @@ haskell-stack="rolling"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.2.9"
+homebrew="3.2.10"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -224,7 +224,7 @@ neofetch="7.1.0"
 neovim="0.5.0"
 
 # https://nodejs.org/
-node="16.7.0"
+node="16.8.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -277,7 +277,7 @@ poetry="1.1.8"
 proj="8.1.0"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.0.4"
+pyenv="2.0.6"
 
 # https://www.python.org/downloads/
 python="3.9.6"
