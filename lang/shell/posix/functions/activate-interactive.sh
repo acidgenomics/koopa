@@ -445,6 +445,29 @@ _koopa_activate_starship() { # {{{1
     return 0
 }
 
+_koopa_activate_tealdeer() { # {{{1
+    # """
+    # Activate Rust tealdeer (tldr).
+    # @note Updated 2021-08-31.
+    #
+    # This helps standardization the configuration across Linux and macOS.
+    # """
+    if [ -z "${TEALDEER_CACHE_DIR:-}" ]
+    then
+        TEALDEER_CACHE_DIR="${XDG_CACHE_HOME:?}/tealdeer"
+    fi
+    if [ -z "${TEALDEER_CONFIG_DIR:-}" ]
+    then
+        TEALDEER_CONFIG_DIR="${XDG_CONFIG_HOME:?}/tealdeer"
+    fi
+    if [ ! -d "${TEALDEER_CACHE_DIR:?}" ]
+    then
+        mkdir -p "${TEALDEER_CACHE_DIR:?}"
+    fi
+    export TEALDEER_CACHE_DIR TEALDEER_CONFIG_DIR
+    return 0
+}
+
 _koopa_activate_tmux_sessions() { # {{{1
     # """
     # Show active tmux sessions.
