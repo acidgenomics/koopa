@@ -452,6 +452,7 @@ _koopa_activate_tealdeer() { # {{{1
     #
     # This helps standardization the configuration across Linux and macOS.
     # """
+    _koopa_is_installed 'tldr' || return 0
     if [ -z "${TEALDEER_CACHE_DIR:-}" ]
     then
         TEALDEER_CACHE_DIR="${XDG_CACHE_HOME:?}/tealdeer"
