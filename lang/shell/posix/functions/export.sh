@@ -124,12 +124,12 @@ _koopa_export_history() { # {{{1
 _koopa_export_pager() { # {{{1
     # """
     # Export 'PAGER' variable.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-08-31.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${PAGER:-}" ]
     then
-        PAGER='less'
+        PAGER='less -R'
     fi
     export PAGER
     return 0
