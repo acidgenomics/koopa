@@ -1,6 +1,6 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2021-05-20.
+# Updated 2021-09-03.
 #
 # See also:
 # - /Library/Frameworks/R.framework/Resources/etc/Makeconf
@@ -70,3 +70,14 @@ LIBS += -lomp
 # > SHLIB_OPENMP_CFLAGS += -Xpreprocessor -fopenmp
 # > SHLIB_OPENMP_CPPFLAGS += -Xpreprocessor -fopenmp
 # > SHLIB_OPENMP_CXXFLAGS += -Xpreprocessor -fopenmp
+
+
+
+# OpenSSL {{{1
+# ==============================================================================
+
+# See also:
+# - https://stackoverflow.com/questions/65207249/
+
+CPPFLAGS += -I/usr/local/opt/openssl@1.1/include
+LDFLAGS += -L/usr/local/opt/openssl@1.1/lib
