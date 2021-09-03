@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-08-16.
+# Updated 2021-09-03.
 #
 # LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
@@ -339,7 +339,7 @@ brew "vim"
 brew "wget"
 brew "xh"
 brew "xsv"  # rust
-brew "youtube-dl"
+brew "yt-dlp"  # youtube-dl alternative
 brew "zlib"
 brew "zoxide"  # rust
 brew "zsh"
