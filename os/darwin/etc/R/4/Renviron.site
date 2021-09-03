@@ -36,10 +36,17 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves path consistency when running inside RStudio.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-# Homebrew-managed programs. Refer to koopa
-# 'shell/posix/functions/activate-noninteractive.sh' for consistency.
+# Homebrew-managed programs.
+#
+# Refer to koopa for consistency:
+# 'shell/posix/functions/activate-noninteractive.sh'
+#
+# Don't put binutils in PATH, this will cause compilation issues for r-openssl.
+# See related:
+# - https://github.com/jeroen/openssl/issues/67
+# - https://github.com/jeroen/openssl/issues/90
+# > PATH="${HOMEBREW_OPT_PREFIX}/binutils/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/binutils/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
