@@ -79,5 +79,6 @@ LIBS += -lomp
 # See also:
 # - https://stackoverflow.com/questions/65207249/
 
-CPPFLAGS += -I/usr/local/opt/openssl@1.1/include
-LDFLAGS += -L/usr/local/opt/openssl@1.1/lib
+# These values are already handled by pkgconfig, defined in Renviron.
+# > CPPFLAGS += -I/usr/local/opt/openssl@1.1/include
+# > LDFLAGS += -L/usr/local/opt/openssl@1.1/lib
