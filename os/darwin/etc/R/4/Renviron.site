@@ -3,7 +3,8 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-08-31.
+# @note Updated 2021-09-03.
+#
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
@@ -41,7 +42,8 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 # Refer to koopa for consistency:
 # 'shell/posix/functions/activate-noninteractive.sh'
 #
-# Don't put binutils in PATH, this will cause compilation issues for r-openssl.
+# Don't put binutils in PATH, as this will cause compilation issues for
+# r-openssl, due to incompatible 'ar' that causes issues with Xcode linker.
 # See related:
 # - https://github.com/jeroen/openssl/issues/67
 # - https://github.com/jeroen/openssl/issues/90
