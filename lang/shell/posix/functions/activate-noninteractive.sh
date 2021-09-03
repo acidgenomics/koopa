@@ -117,9 +117,9 @@ _koopa_activate_homebrew() { # {{{1
     if _koopa_is_macos
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
+        # Don't activate 'binutils' here.
         _koopa_activate_homebrew_opt_prefix \
             'bc' \
-            'binutils' \
             'curl' \
             'gnu-getopt' \
             'ncurses' \
