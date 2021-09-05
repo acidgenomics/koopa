@@ -113,7 +113,7 @@ koopa::brew_upgrade_brews() { # {{{1
             case "$brew" in
                 'gpg' | \
                 'vim')
-                    brew relink --overwrite "$brew" || true
+                    brew link --overwrite "$brew" || true
                     ;;
             esac
         fi
