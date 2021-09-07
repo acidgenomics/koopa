@@ -155,30 +155,6 @@ cask "zoom"
 # > brew "rust"
 # > brew "rustup-init"  # rust
 
-# MacVim Cask conflicts with Vim.
-# > brew "vim"
-
-# sshfs requires osxfuse cask, which insecurely hooks into system.
-# > brew "sshfs"
-
-# CRAN gfortran installs into '/usr/local/gfortran' and links into
-# '/usr/local/bin', without an override option.
-brew "gcc", link: false
-
-# Use MacGPG (gpg-suite) cask instead.
-brew "gpg", link: false
-
-# This conflicts with 'imath' and 'openexr' recipes.
-brew "ilmbase", link: false  # neofetch
-
-# Python: Use official Framework binary install instead of Homebrew.
-# Use 'koopa install python-framework' to install.
-brew "python@3.9", link: false
-
-# This will conflict with R igraph install from source if linked.
-# https://github.com/igraph/rigraph/issues/135
-brew "suite-sparse", link: false
-
 brew "ack"
 brew "armadillo"
 brew "asdf"
@@ -222,6 +198,7 @@ brew "flac"
 brew "flake8"  # python
 brew "fzf"
 brew "gawk"
+brew "gcc"
 brew "gdal"
 brew "git-lfs"
 brew "gitui"
@@ -234,6 +211,7 @@ brew "gnu-units"
 brew "gnu-which"
 brew "go"
 brew "gpatch"
+brew "gpg"
 brew "grep"
 brew "groff"
 brew "gsl"
@@ -246,6 +224,7 @@ brew "httpie"
 brew "hub"
 brew "hyperfine"
 brew "igraph"
+brew "ilmbase"  # neofetch
 brew "imagemagick"
 brew "jq"
 brew "kakoune"
@@ -308,6 +287,7 @@ brew "proj"
 brew "protobuf"
 brew "pyenv"
 brew "pylint"  # python
+brew "python@3.9"
 brew "ranger"  # python
 brew "rename"
 brew "ripgrep"  # rust
