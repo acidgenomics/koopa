@@ -95,7 +95,7 @@ koopa::brew_reset_permissions() { # {{{1
 koopa::brew_upgrade_brews() { # {{{1
     # """
     # Upgrade outdated Homebrew brews.
-    # @note Updated 2021-08-31.
+    # @note Updated 2021-09-07.
     # """
     local brew brews str
     readarray -t brews <<< "$(koopa::brew_outdated)"
@@ -111,7 +111,10 @@ koopa::brew_upgrade_brews() { # {{{1
         if koopa::is_macos
         then
             case "$brew" in
+                'gcc' | \
                 'gpg' | \
+                'ilmbase' | \
+                'python@3.9' | \
                 'vim')
                     brew link --overwrite "$brew" || true
                     ;;
