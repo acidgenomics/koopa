@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-09-03"
+koopa-date="2021-09-07"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.2a"
@@ -235,7 +235,7 @@ openjdk="16.0.2"
 openssh="8.7p1"
 
 # https://www.openssl.org/source/
-openssl="1.1.1l"
+openssl="3.0.0"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
