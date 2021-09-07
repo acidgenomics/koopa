@@ -27,8 +27,6 @@
 # - podofo
 # """
 
-brew "python@3.9", link: false
-
 brew "ack"
 brew "autoconf"
 brew "automake"
@@ -102,6 +100,7 @@ brew "pipenv"  # python
 brew "pkg-config"
 brew "procs"  # rust
 brew "pylint"  # python
+brew "python@3.9"
 brew "ranger"  # python
 brew "rename"
 brew "ripgrep"  # rust
