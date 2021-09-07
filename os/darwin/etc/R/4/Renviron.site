@@ -52,7 +52,7 @@ PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/openssl/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"
 # libexec/bin:
 PATH="${HOMEBREW_OPT_PREFIX}/man-db/libexec/bin:${PATH}"
@@ -101,7 +101,7 @@ PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
