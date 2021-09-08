@@ -278,6 +278,7 @@ brew "parallel"
 brew "pass"
 brew "pcre"
 brew "php"
+brew "pinentry-mac"
 brew "pipenv"  # python
 brew "pkg-config"
 brew "podofo"
