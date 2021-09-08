@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-09-03.
+# @note Updated 2021-09-07.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -90,6 +90,9 @@ PATH="${KOOPA_PREFIX}/bin:${PATH}"
 
 # TeX (e.g. pdflatex).
 PATH="/Library/TeX/texbin:${PATH}"
+
+# GnuPG.
+PATH="/usr/local/MacGPG2/bin:${PATH}"
 
 # Pandoc. Use RStudio bundled version of pandoc when possible,
 # for improved R Markdown stability.
