@@ -1,19 +1,25 @@
 # """
 # Conda configuration.
-# Updated 2021-05-17.
+# Updated 2021-09-08.
 #
 # See also:
 # - 'conda config --set'
 # - https://bioconda.github.io/#set-up-channels
+# - https://conda.io/projects/conda/en/latest/user-guide/configuration/
+#       use-condarc.html
 # - https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/
 #       admin-multi-user-install.html
 # - https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/
 #       manage-conda.html
 # """
 
-allow_other_channels: false
+add_pip_as_python_dependency: True
 
-changeps1: false
+allow_other_channels: False
+
+auto_update_conda: False
+
+changeps1: False
 
 channels:
   - conda-forge
@@ -24,6 +30,8 @@ channels:
 # > envs_dirs:
 # >   - /opt/koopa/opt/conda/envs
 
-notify_outdated_conda: false
+notify_outdated_conda: False
 
-report_errors: true
+report_errors: True
+
+show_channel_urls: True
