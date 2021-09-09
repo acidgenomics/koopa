@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-08-19.
+#' @note Updated 2021-09-09.
 #'
 #' @section Restarting R:
 #'
@@ -437,8 +437,6 @@ local({  # nolint
             "rlang_backtrace_on_error" = "full",
             "rstudio.errors.suppressed" = FALSE
         )
-    } else {
-        options("error" = utils::recover)
     }
 
     ## Quiet down about registered S3 method collisons.
@@ -450,6 +448,24 @@ local({  # nolint
 
     ## Package-specific options {{{2
     ## -------------------------------------------------------------------------
+
+    if (isInstalled("AcidPlots")) {
+        ## See also:
+        ## - https://ggplot2.tidyverse.org/reference/
+        ##       scale_colour_continuous.html
+        ## - https://ggplot2.tidyverse.org/reference/
+        ##       scale_colour_discrete.html
+        options(
+            "ggplot2.continuous.colour" =
+                quote(AcidPlots::scale_color_synesthesia_c()),
+            "ggplot2.continuous.fill" =
+                quote(AcidPlots::scale_fill_synesthesia_c()),
+            "ggplot2.discrete.colour" =
+                quote(AcidPlots::scale_color_synesthesia_d()),
+            "ggplot2.discrete.fill" =
+                quote(AcidPlots::scale_fill_synesthesia_d())
+        )
+    }
 
     if (isInstalled("BiocManager")) {
         ## Overriding the annoying message about manual CRAN configuration.
