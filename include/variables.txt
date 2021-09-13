@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-09-09"
+koopa-date="2021-09-13"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.2a"
@@ -44,7 +44,7 @@ automake="1.16.4"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.36"
+aws-cli="2.2.37"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.28.0"
@@ -133,7 +133,7 @@ gcc="11.2.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.3.1"
+gdal="3.3.2"
 
 # https://github.com/libgeos/geos/releases
 geos="3.9.1"
@@ -163,7 +163,7 @@ gsl="2.7"
 
 hadolint="2.7.0"
 
-harfbuzz="2.9.0"
+harfbuzz="2.9.1"
 
 haskell-stack="rolling"
 
@@ -224,7 +224,7 @@ neofetch="7.1.0"
 neovim="0.5.0"
 
 # https://nodejs.org/
-node="16.9.0"
+node="16.9.1"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
