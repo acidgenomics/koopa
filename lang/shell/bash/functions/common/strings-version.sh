@@ -417,6 +417,7 @@ koopa::icu4c_version() { # {{{1
     koopa:::pkg_config_version 'icu4c'
 }
 
+# FIXME This isn't working with Linuxbrew version currently.
 koopa::imagemagick_version() { # {{{1
     # """
     # ImageMagick version.
