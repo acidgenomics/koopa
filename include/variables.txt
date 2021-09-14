@@ -115,6 +115,8 @@ emacs="27.2"
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl-perl="5.26.3"
 
+ensembl-perl-api="rolling"
+
 # https://www.gnu.org/software/findutils/
 findutils="4.8.0"
 
