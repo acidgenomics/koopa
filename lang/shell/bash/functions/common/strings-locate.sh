@@ -335,7 +335,7 @@ koopa::locate_julia() { # {{{1
 koopa::locate_llvm_config() { # {{{1
     # """
     # Locate 'llvm-config' executable.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-14.
     #
     # This is versioned on many Linux systems.
     # """
@@ -343,8 +343,11 @@ koopa::locate_llvm_config() { # {{{1
     x="${LLVM_CONFIG:-}"
     if [[ -z "$x" ]]
     then
-        if koopa::is_linux
+        if koopa::is_installed 'brew'
         then
+            brew_prefix="$(koopa::homebrew_prefix)"
+            x="${brew_prefix}/opt/llvm/bin/llvm-config"
+        else
             find="$(koopa::locate_find)"
             sort="$(koopa::locate_sort)"
             tail="$(koopa::locate_tail)"
@@ -353,10 +356,6 @@ koopa::locate_llvm_config() { # {{{1
                 | "$sort" \
                 | "$tail" -n 1 \
             )"
-        elif koopa::is_macos
-        then
-            brew_prefix="$(koopa::homebrew_prefix)"
-            x="${brew_prefix}/opt/llvm/bin/llvm-config"
         fi
     fi
     koopa::assert_is_executable "$x"
