@@ -533,7 +533,7 @@ python-wheel="0.36.2"           # default; reticulate
 # Update with 'gem update' or 'gem install <name>'.
 
 # https://rubygems.org/gems/bundler/versions/
-ruby-bundler="2.2.20"
+ruby-bundler="2.2.27"
 
 # Last updated 2010-06-24...
 ruby-ronn="0.7.3"
