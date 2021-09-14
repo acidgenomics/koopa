@@ -52,16 +52,21 @@ koopa::install_homebrew_bundle() { # {{{1
     #
     # Custom brewfile is supported using a positional argument.
     # """
-    local brewfiles install_args name_fancy
+    local brewfiles koopa_prefix install_args name_fancy
     koopa::assert_is_admin
     if [[ "$#" -eq 0 ]]
     then
+        koopa_prefix="$(koopa::koopa_prefix)"
         brewfiles=()
         if koopa::is_macos
         then
+            brewfiles+=(
+                "${koopa_prefix}/os/macos/etc/homebrew/brewfile"
+            )
         fi
-        brewfiles+=("FIXME cask file")
-        brewfiles+=("$(koopa::brew_brewfile)")
+        brewfiles+=(
+            "${koopa_prefix}/etc/homebrew/brewfile"
+        )
     else
         brewfiles=("$@")
     fi
