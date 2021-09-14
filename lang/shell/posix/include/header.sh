@@ -39,14 +39,11 @@ _koopa_posix_header() { # {{{1
         "$(_koopa_koopa_prefix)/activate" 'activate' \
         "$(_koopa_dotfiles_prefix)" 'dotfiles' \
         || return 1
-    if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
-    then
-        _koopa_activate_homebrew || return 1
-    fi
     _koopa_activate_standard_paths || return 1
     _koopa_activate_pkg_config || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
+        _koopa_activate_homebrew || return 1
         _koopa_activate_conda2 || return 1
         _koopa_activate_emacs || return 1
         _koopa_activate_go || return 1
