@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Consider linking '/etc/shells' on Linux, to enable easier configuration
+        of Linuxbrew Zsh and/or Bash.
 ** TODO Terminal zsh autosuggestion colors are messed up in solarized mode.
 ** TODO Add support for nushell?
 ** TODO Consider prefixing with "command XXX" instead of using "unalias XXX".
