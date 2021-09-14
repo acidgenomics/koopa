@@ -112,10 +112,16 @@ ${unique}/GPL/${file}"
     fi
 }
 
+# FIXME This needs to reset alternatives on Linux.
 koopa::uninstall_openjdk() { # {{{1
     koopa::uninstall_app \
         --name-fancy='OpenJDK' \
         --name='openjdk' \
         --no-link \
         "$@"
+    # FIXME Need to add support for this.
+    # if koopa::is_linux
+    # then
+    #     koopa::linux_java_update_alternatives "$prefix"
+    # fi
 }
