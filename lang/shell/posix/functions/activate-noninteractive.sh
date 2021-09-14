@@ -121,29 +121,6 @@ _koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
     fi
-    # Don't activate 'binutils' here. Can mess with R package compilation.
-    _koopa_activate_homebrew_opt_prefix \
-        'bc' \
-        'curl' \
-        'gnu-getopt' \
-        'ncurses' \
-        'openssl' \
-        'ruby' \
-        'texinfo'
-    _koopa_activate_homebrew_opt_libexec_prefix \
-        'man-db'
-    _koopa_activate_homebrew_opt_gnu_prefix \
-        'coreutils' \
-        'findutils' \
-        'gnu-sed' \
-        'gnu-tar' \
-        'gnu-which' \
-        'grep' \
-        'make'
-    if _koopa_is_macos
-    then
-        _koopa_activate_homebrew_cask_google_cloud_sdk
-    fi
     return 0
 }
 
