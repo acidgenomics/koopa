@@ -44,7 +44,6 @@ _koopa_posix_header() { # {{{1
         _koopa_activate_homebrew || return 1
     fi
     _koopa_activate_standard_paths || return 1
-    # FIXME Should we rework this step?
     _koopa_activate_pkg_config || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
