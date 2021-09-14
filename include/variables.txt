@@ -350,7 +350,7 @@ shunit2="2.1.7"
 singularity="3.7.3"
 
 # https://www.sqlite.org/download.html
-sqlite="3.35.5"
+sqlite="3.36.0"
 
 # https://www.gnu.org/software/stow/
 stow="2.3.1"
