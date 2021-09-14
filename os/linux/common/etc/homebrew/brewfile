@@ -1,6 +1,6 @@
 # """
-# Homebrew Bundle Brewfile.
-# Updated 2021-05-21.
+# Homebrew (Linuxbrew) Bundle Brewfile.
+# Updated 2021-09-14.
 #
 # Problematic formulas:
 # - armadillo
@@ -26,6 +26,15 @@
 # Maybe include:
 # - podofo
 # """
+
+# Priority brews {{{1
+# ==============================================================================
+
+brew "git"
+brew "subversion"
+
+# Brews {{{1
+# ==============================================================================
 
 brew "ack"
 brew "autoconf"
@@ -61,7 +70,6 @@ brew "fish"
 brew "flake8"  # python
 brew "fzf"
 brew "gawk"
-brew "git"
 brew "git-lfs"
 brew "gnu-sed"
 brew "gnu-tar"
@@ -114,7 +122,6 @@ brew "shunit2"
 brew "sqlite"
 brew "starship"  # rust
 brew "stow"
-brew "subversion"
 brew "taglib"
 brew "tcl-tk"
 brew "tesseract"
