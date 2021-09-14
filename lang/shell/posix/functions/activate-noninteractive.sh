@@ -403,7 +403,7 @@ _koopa_activate_node() { # {{{1
 _koopa_activate_openjdk() { # {{{1
     # """
     # Activate OpenJDK.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-09-14.
     #
     # Use Homebrew instead to manage on macOS.
     #
@@ -411,10 +411,18 @@ _koopa_activate_openjdk() { # {{{1
     # """
     local prefix
     [ "$#" -eq 0 ] || return 1
-    _koopa_is_linux || return 0
     prefix="$(_koopa_openjdk_prefix)"
-    [ -d "$prefix" ] || return 0
-    _koopa_activate_prefix "$prefix"
+    if [ -d "$prefix" ]
+    then
+        _koopa_activate_prefix "$prefix"
+    else
+        # Fall back to using Homebrew OpenJDK.
+        prefix="$(_koopa_homebrew_prefix)/opt/openjdk"
+        if [ -d "$prefix" ]
+        then
+            _koopa_activate_prefix "$prefix"
+        fi
+    fi
     return 0
 }
 
