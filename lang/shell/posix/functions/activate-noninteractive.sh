@@ -501,7 +501,6 @@ _koopa_activate_pipx() { # {{{1
     return 0
 }
 
-# FIXME This won't set up the PATH we want correctly on Linux.
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
@@ -525,15 +524,17 @@ _koopa_activate_pkg_config() { # {{{1
     # """
     local arch homebrew_prefix make_prefix sys_pkg_config
     [ "$#" -eq 0 ] || return 1
-    [ -n "${PKG_CONFIG_PATH:-}" ] && return 0
     make_prefix="$(_koopa_make_prefix)"
     sys_pkg_config='/usr/bin/pkg-config'
-    if _koopa_is_installed "$sys_pkg_config"
+    if ! _koopa_is_installed "$sys_pkg_config"
     then
-        PKG_CONFIG_PATH="$( \
-            "$sys_pkg_config" --variable 'pc_path' 'pkg-config' \
-        )"
+        unset -v PKG_CONFIG_PATH
+        return 0
     fi
+    PKG_CONFIG_PATH="$( \
+        "$sys_pkg_config" --variable 'pc_path' 'pkg-config' \
+    )"
+    export PKG_CONFIG_PATH
     _koopa_add_to_pkg_config_path_start \
         "${make_prefix}/share/pkgconfig" \
         "${make_prefix}/lib/pkgconfig" \
