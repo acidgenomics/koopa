@@ -13,7 +13,7 @@ koopa::install_openjdk() { # {{{1
 koopa:::install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-09-14.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -36,6 +36,12 @@ koopa:::install_openjdk() { # {{{1
     version="${INSTALL_VERSION:?}"
     name='openjdk'
     case "$version" in
+        17)
+            unique='0d483333a00540d886896bac774ff48b/35'
+            ;;
+        16.0.2)
+            unique='d4a915d82b4c4fbb9bde534da945d746/7'
+            ;;
         16.0.1)
             unique='7147401fd7354114ac51ef3e1328291f/9'
             ;;
