@@ -281,7 +281,7 @@ _koopa_include_prefix() { # {{{1
 _koopa_java_prefix() { # {{{1
     # """
     # Java prefix.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-09-14.
     #
     # See also:
     # - https://www.mkyong.com/java/
@@ -294,14 +294,20 @@ _koopa_java_prefix() { # {{{1
     then
         # Allow user to override default.
         prefix="$JAVA_HOME"
-    elif [ -x '/usr/libexec/java_home' ]
+    elif [ -d "$(_koopa_openjdk_prefix)" ]
     then
-        # Handle macOS config.
-        prefix="$('/usr/libexec/java_home')"
-    else
         # Otherwise assume latest OpenJDK.
         # This works on Linux installs, including Docker images.
         prefix="$(_koopa_openjdk_prefix)"
+    elif [ -x '/usr/libexec/java_home' ]
+    then
+        # Handle macOS config with adoptopenjdk cask.
+        prefix="$('/usr/libexec/java_home')"
+    elif [ -d "$(_koopa_homebrew_prefix)/opt/openjdk" ]
+    then
+        prefix="$(_koopa_homebrew_prefix)/opt/openjdk"
+    else
+        return 1
     fi
     _koopa_print "$prefix"
     return 0
