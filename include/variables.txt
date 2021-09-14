@@ -178,7 +178,7 @@ homebrew="3.2.11"
 htop="3.0.5"
 
 # http://site.icu-project.org/
-icu="68.2"
+icu="69.1"
 
 # https://imagemagick.org/
 imagemagick="7.1.0"
