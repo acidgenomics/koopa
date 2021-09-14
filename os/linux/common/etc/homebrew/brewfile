@@ -3,15 +3,9 @@
 # Updated 2021-09-14.
 #
 # Problematic formulas:
-# - armadillo
-# - imagemagick
 # - lapack
 # - libiconv
 # - libressl
-#
-# Large formulas:
-# - gcc
-# - llvm (use LLVM's Debian APT instead)
 #
 # Formula without bottles:
 # - emacs
@@ -37,6 +31,7 @@ brew "subversion"
 # ==============================================================================
 
 brew "ack"
+brew "armadillo"
 brew "autoconf"
 brew "automake"
 brew "awscli"
@@ -70,6 +65,7 @@ brew "fish"
 brew "flake8"  # python
 brew "fzf"
 brew "gawk"
+brew "gcc"
 brew "git-lfs"
 brew "gnu-sed"
 brew "gnu-tar"
@@ -86,10 +82,12 @@ brew "hadolint"
 brew "hdf5"
 brew "htop"
 brew "igraph"
+brew "imagemagick"
 brew "jq"
 brew "leiningen"
 brew "lesspipe"
 brew "libxt"
+brew "llvm"
 brew "lua"
 brew "luarocks"
 brew "make"
