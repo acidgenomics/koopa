@@ -6,8 +6,7 @@ koopa::install_ensembl_perl_api() { # {{{1
     koopa::install_app \
         --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
-        --no-link \
-        --prefix="$(koopa::ensembl_perl_api_prefix)"
+        --no-link
 }
 
 koopa:::install_ensembl_perl_api() { # {{{1
