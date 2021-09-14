@@ -196,9 +196,9 @@ _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
             "${prefix}/gnubin"
         _koopa_add_to_manpath_start \
             "${prefix}/gnuman"
-        # FIXME Need to rethink this? lib64?
         _koopa_add_to_pkg_config_path_start \
-            "${prefix}/lib/pkgconfig"
+            "${prefix}/lib/pkgconfig" \
+            "${prefix}/share/pkgconfig"
     done
     return 0
 }
@@ -223,9 +223,9 @@ _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
             "${prefix}/bin"
         _koopa_add_to_manpath_start \
             "${prefix}/man"
-        # FIXME Need to rethink this? lib64?
         _koopa_add_to_pkg_config_path_start \
-            "${prefix}/lib/pkgconfig"
+            "${prefix}/lib/pkgconfig" \
+            "${prefix}/share/pkgconfig"
     done
     return 0
 }
@@ -605,10 +605,9 @@ _koopa_activate_prefix() { # {{{1
         _koopa_add_to_manpath_start \
             "${prefix}/man" \
             "${prefix}/share/man"
-        # FIXME Need to rethink this? lib64?
-        # FIXME Call the 'pkg-config' configuration program directly?
         _koopa_add_to_pkg_config_path_start \
-            "${prefix}/lib/pkgconfig"
+            "${prefix}/lib/pkgconfig" \
+            "${prefix}/share/pkgconfig"
     done
     return 0
 }
