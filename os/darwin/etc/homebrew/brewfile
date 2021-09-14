@@ -122,6 +122,19 @@ cask "xld"
 cask "xquartz"
 cask "zoom"
 
+# macOS-only personal brews {{{1
+# ==============================================================================
+
+# These recipes don't need to be installed on cloud Linux instances.
+brew "bandcamp-dl"
+brew "lame"
+brew "mas"
+brew "mkvtoolnix"
+brew "osx-cpu-temp"
+brew "pinentry-mac"
+brew "taglib"
+brew "yt-dlp"  # youtube-dl alternative
+
 # App Store {{{1
 # ==============================================================================
 
