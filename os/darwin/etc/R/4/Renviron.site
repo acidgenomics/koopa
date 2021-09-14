@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-09-07.
+# @note Updated 2021-09-14.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -54,6 +54,7 @@ PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/texinfo/bin:${PATH}"
 # libexec/bin:
 PATH="${HOMEBREW_OPT_PREFIX}/man-db/libexec/bin:${PATH}"
 # libexec/gnubin:
