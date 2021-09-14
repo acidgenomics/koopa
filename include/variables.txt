@@ -147,7 +147,7 @@ git="2.33.0"
 gnupg="2.3.1"
 
 # https://golang.org/dl/
-go="1.16.6"
+go="1.17"
 
 # https://cloud.google.com/sdk/docs/install
 google-cloud-sdk="342.0.0"
