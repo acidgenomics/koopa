@@ -25,7 +25,6 @@
 #
 # Problematic formulas:
 # - lapack
-# - libiconv
 # - libressl
 #
 # Formula without bottles:
@@ -132,7 +131,6 @@ brew "leiningen"
 brew "lesspipe"
 brew "libarchive"
 brew "libgit2"
-brew "libiconv"
 brew "libidn2"  # wget
 brew "libomp"
 brew "libpsl"  # wget
