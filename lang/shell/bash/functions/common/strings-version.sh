@@ -436,10 +436,11 @@ koopa::koopa_version() { # {{{1
     return 0
 }
 
+# FIXME This isn't working with Linuxbrew llvm-config currently.
 koopa::llvm_version() { # {{{1
     # """
     # LLVM version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-09-14.
     # """
     local llvm_config x
     koopa::assert_has_no_args "$#"
