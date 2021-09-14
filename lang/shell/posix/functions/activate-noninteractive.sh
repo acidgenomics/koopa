@@ -196,6 +196,7 @@ _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
             "${prefix}/gnubin"
         _koopa_add_to_manpath_start \
             "${prefix}/gnuman"
+        # FIXME Need to rethink this? lib64?
         _koopa_add_to_pkg_config_path_start \
             "${prefix}/lib/pkgconfig"
     done
@@ -222,6 +223,7 @@ _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
             "${prefix}/bin"
         _koopa_add_to_manpath_start \
             "${prefix}/man"
+        # FIXME Need to rethink this? lib64?
         _koopa_add_to_pkg_config_path_start \
             "${prefix}/lib/pkgconfig"
     done
@@ -341,6 +343,33 @@ _koopa_activate_local_paths() { # {{{1
     [ "$#" -eq 0 ] || return 1
     _koopa_activate_prefix "$(_koopa_xdg_local_home)"
     _koopa_add_to_path_start "${HOME:?}/bin"
+    return 0
+}
+
+_koopa_activate_make_paths() { # {{{1
+    # """
+    # Activate standard Makefile paths.
+    # @note Updated 2021-09-14.
+    #
+    # Note that here we're making sure local binaries are included.
+    # Inspect '/etc/profile' if system PATH appears misconfigured.
+    #
+    # Note that macOS Big Sur includes '/usr/local/bin' automatically now,
+    # resulting in a duplication. This is OK.
+    # Refer to '/etc/paths.d' for other system paths.
+    #
+    # @seealso
+    # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
+    # """
+    local make_prefix
+    [ "$#" -eq 0 ] || return 1
+    make_prefix="$(_koopa_make_prefix)"
+    _koopa_add_to_path_start \
+        "${make_prefix}/bin" \
+        "${make_prefix}/sbin"
+    _koopa_add_to_manpath_start \
+        "${make_prefix}/man" \
+        "${make_prefix}/share/man"
     return 0
 }
 
@@ -522,28 +551,39 @@ _koopa_activate_pkg_config() { # {{{1
     # @seealso
     # - https://askubuntu.com/questions/210210/
     # """
-    local arch homebrew_prefix make_prefix sys_pkg_config
+    local exe homebrew_prefix make_prefix path_str sys_prefix
     [ "$#" -eq 0 ] || return 1
+    path_str=''
+    exe_name='pkg-config'
+    sys_prefix='/usr/bin'
+    homebrew_prefix="$(_koopa_homebrew_prefix)"
     make_prefix="$(_koopa_make_prefix)"
-    sys_pkg_config='/usr/bin/pkg-config'
-    if ! _koopa_is_installed "$sys_pkg_config"
+    exe="${sys_prefix}/${exe_name}"
+    if _koopa_is_installed "$exe"
     then
-        unset -v PKG_CONFIG_PATH
-        return 0
+        str="$("$exe" --variable 'pc_path' 'pkg-config')"
+        path_str="${str}:${path_str}"
     fi
-    PKG_CONFIG_PATH="$( \
-        "$sys_pkg_config" --variable 'pc_path' 'pkg-config' \
-    )"
-    export PKG_CONFIG_PATH
-    _koopa_add_to_pkg_config_path_start \
-        "${make_prefix}/share/pkgconfig" \
-        "${make_prefix}/lib/pkgconfig" \
-        "${make_prefix}/lib64/pkgconfig"
-    if _koopa_is_linux
+    if [ "$homebrew_prefix" != "$make_prefix" ]
     then
-        arch="$(_koopa_arch)"
-        _koopa_add_to_pkg_config_path_start \
-            "${make_prefix}/lib/${arch}-linux-gnu/pkgconfig"
+        exe="${homebrew_prefix}/bin/${exe_name}"
+        if _koopa_is_installed "$exe"
+        then
+            str="$("$exe" --variable 'pc_path' 'pkg-config')"
+            path_str="${str}:${path_str}"
+        fi
+    fi
+    exe="${make_prefix}/bin/${exe_name}"
+    if _koopa_is_installed "$exe"
+    then
+        str="$("$exe" --variable 'pc_path' 'pkg-config')"
+        path_str="${str}:${path_str}"
+    fi
+    if [ -n "$path_str" ]
+    then
+        export PKG_CONFIG_PATH="$path_str"
+    else
+        unset -v PKG_CONFIG_PATH
     fi
     return 0
 }
@@ -552,7 +592,7 @@ _koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure 'PATH', 'PKG_CONFIG_PATH' and 'MANPATH' for a
     # specified prefix.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-09-14.
     # """
     local prefix
     [ "$#" -gt 0 ] || return 1
@@ -565,6 +605,8 @@ _koopa_activate_prefix() { # {{{1
         _koopa_add_to_manpath_start \
             "${prefix}/man" \
             "${prefix}/share/man"
+        # FIXME Need to rethink this? lib64?
+        # FIXME Call the 'pkg-config' configuration program directly?
         _koopa_add_to_pkg_config_path_start \
             "${prefix}/lib/pkgconfig"
     done
@@ -778,36 +820,6 @@ _koopa_activate_ssh_key() { # {{{1
     [ -r "$key" ] || return 0
     eval "$(ssh-agent -s)" >/dev/null 2>&1
     ssh-add "$key" >/dev/null 2>&1
-    return 0
-}
-
-_koopa_activate_standard_paths() { # {{{1
-    # """
-    # Activate standard paths.
-    # @note Updated 2021-05-27.
-    #
-    # Note that here we're making sure local binaries are included.
-    # Inspect '/etc/profile' if system PATH appears misconfigured.
-    #
-    # Note that macOS Big Sur includes '/usr/local/bin' automatically now,
-    # resulting in a duplication. This is OK.
-    # Refer to '/etc/paths.d' for other system paths.
-    #
-    # @seealso
-    # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
-    # """
-    local make_prefix
-    [ "$#" -eq 0 ] || return 1
-    make_prefix="$(_koopa_make_prefix)"
-    # Don't define '/bin' or '/usr/bin' here. Can cause shell lockout.
-    _koopa_add_to_path_start \
-        '/sbin' \
-        '/usr/sbin' \
-        "${make_prefix}/bin" \
-        "${make_prefix}/sbin"
-    _koopa_add_to_manpath_start \
-        "${make_prefix}/man" \
-        "${make_prefix}/share/man"
     return 0
 }
 
