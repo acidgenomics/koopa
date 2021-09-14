@@ -172,7 +172,7 @@ _koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
 _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix for a GNU program.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-09-14.
     #
     # Linked using 'g' prefix by default.
     #
@@ -192,8 +192,12 @@ _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
             _koopa_warning "Not installed: '${prefix}'."
             return 1
         fi
-        _koopa_add_to_path_start "${prefix}/gnubin"
-        _koopa_add_to_manpath_start "${prefix}/gnuman"
+        _koopa_add_to_path_start \
+            "${prefix}/gnubin"
+        _koopa_add_to_manpath_start \
+            "${prefix}/gnuman"
+        _koopa_add_to_pkg_config_path_start \
+            "${prefix}/lib/pkgconfig"
     done
     return 0
 }
@@ -201,7 +205,7 @@ _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
 _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
     # """
     # Activate Homebrew opt libexec prefix.
-    # @note Updated 2021-08-17.
+    # @note Updated 2021-09-14.
     # """
     local homebrew_prefix name prefix
     [ "$#" -gt 0 ] || return 1
@@ -214,8 +218,12 @@ _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
             _koopa_warning "Not installed: '${prefix}'."
             return 1
         fi
-        _koopa_add_to_path_start "${prefix}/bin"
-        _koopa_add_to_manpath_start "${prefix}/man"
+        _koopa_add_to_path_start \
+            "${prefix}/bin"
+        _koopa_add_to_manpath_start \
+            "${prefix}/man"
+        _koopa_add_to_pkg_config_path_start \
+            "${prefix}/lib/pkgconfig"
     done
     return 0
 }
@@ -493,10 +501,11 @@ _koopa_activate_pipx() { # {{{1
     return 0
 }
 
+# FIXME This won't set up the PATH we want correctly on Linux.
 _koopa_activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-09-14.
     #
     # Typical priorities (e.g. on Debian):
     # - /usr/local/lib/x86_64-linux-gnu/pkgconfig
@@ -521,7 +530,9 @@ _koopa_activate_pkg_config() { # {{{1
     sys_pkg_config='/usr/bin/pkg-config'
     if _koopa_is_installed "$sys_pkg_config"
     then
-        PKG_CONFIG_PATH="$("$sys_pkg_config" --variable pc_path pkg-config)"
+        PKG_CONFIG_PATH="$( \
+            "$sys_pkg_config" --variable 'pc_path' 'pkg-config' \
+        )"
     fi
     _koopa_add_to_pkg_config_path_start \
         "${make_prefix}/share/pkgconfig" \
