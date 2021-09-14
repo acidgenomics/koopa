@@ -411,18 +411,8 @@ _koopa_activate_openjdk() { # {{{1
     # """
     local prefix
     [ "$#" -eq 0 ] || return 1
-    prefix="$(_koopa_openjdk_prefix)"
-    if [ -d "$prefix" ]
-    then
-        _koopa_activate_prefix "$prefix"
-    else
-        # Fall back to using Homebrew OpenJDK.
-        prefix="$(_koopa_homebrew_prefix)/opt/openjdk"
-        if [ -d "$prefix" ]
-        then
-            _koopa_activate_prefix "$prefix"
-        fi
-    fi
+    prefix="$(_koopa_java_prefix || true)"
+    [ -d "$prefix" ] && _koopa_activate_prefix "$prefix"
     return 0
 }
 

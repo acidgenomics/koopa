@@ -181,7 +181,7 @@ koopa::r_link_site_library() { # {{{1
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-09-14.
     #
     # The default Java path differs depending on the system.
     #
@@ -207,25 +207,14 @@ koopa::r_javareconf() { # {{{1
     r="${1:-$(koopa::locate_r)}"
     koopa::assert_is_installed "$r"
     r="$(koopa::which_realpath "$r")"
-    if [[ -z "${java_home:-}" ]]
-    then
-        koopa::activate_openjdk
-        java_home="$(koopa::java_prefix)"
-        if ! koopa::is_installed 'java'
-        then
-            koopa::alert_note "Failed to locate 'java'."
-            return 0
-        fi
-    fi
-    # This step can happen with r-devel in Docker images.
-    if [[ ! -d "$java_home" ]]
-    then
-        koopa::alert_note "Failed to locate 'JAVA_HOME'."
-        return 0
-    fi
+    koopa::activate_openjdk
+    koopa::assert_is_installed 'java'
+    java_home="$(koopa::java_prefix)"
+    koopa::assert_is_dir "$java_home"
     koopa::alert 'Updating R Java configuration.'
-    koopa::dl 'R' "$r"
-    koopa::dl 'Java home' "$java_home"
+    koopa::dl \
+        'R' "$r" \
+        'Java home' "$java_home"
     java_flags=(
         "JAVA_HOME=${java_home}"
         "JAVA=${java_home}/bin/java"
