@@ -47,33 +47,6 @@ _koopa_posix_header() { # {{{1
     _koopa_activate_pkg_config || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
-        if _koopa_is_installed brew
-        then
-            # Don't activate 'binutils' here.
-            # Can mess up R package compilation.
-            _koopa_activate_homebrew_opt_prefix \
-                'bc' \
-                'curl' \
-                'gnu-getopt' \
-                'ncurses' \
-                'openssl' \
-                'ruby' \
-                'texinfo'
-            _koopa_activate_homebrew_opt_libexec_prefix \
-                'man-db'
-            _koopa_activate_homebrew_opt_gnu_prefix \
-                'coreutils' \
-                'findutils' \
-                'gnu-sed' \
-                'gnu-tar' \
-                'gnu-which' \
-                'grep' \
-                'make'
-            if _koopa_is_macos
-            then
-                _koopa_activate_homebrew_cask_google_cloud_sdk
-            fi
-        fi
         _koopa_activate_conda2 || return 1
         _koopa_activate_emacs || return 1
         _koopa_activate_go || return 1
