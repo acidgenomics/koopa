@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-05-12.
+    # @note Updated 2021-09-14.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -200,6 +200,7 @@ koopa::debian_install_base() { # {{{1
             'libgeos-dev'
             'libgfortran5'  # R nlme
             'libgif-dev'
+            'libgit2-dev'
             'libgl1-mesa-dev'
             'libglib2.0-dev'  # ag
             'libglu1-mesa-dev'
