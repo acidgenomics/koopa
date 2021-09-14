@@ -128,7 +128,8 @@ _koopa_activate_homebrew() { # {{{1
         'gnu-getopt' \
         'ncurses' \
         'openssl' \
-        'ruby'
+        'ruby' \
+        'texinfo'
     _koopa_activate_homebrew_opt_libexec_prefix \
         'man-db'
     _koopa_activate_homebrew_opt_gnu_prefix \
