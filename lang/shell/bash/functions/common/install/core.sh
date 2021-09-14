@@ -505,10 +505,11 @@ koopa::prune_apps() { # {{{1
     return 0
 }
 
+# FIXME This is returning unbound for 'gnupg' call.
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-09-14.
     # """
     local dict pos rm
     declare -A dict=(
@@ -548,6 +549,10 @@ koopa::uninstall_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
+    if [[ -z "${dict[name_fancy]}" ]]
+    then
+        dict[name_fancy]="${dict[name]}"
+    fi
     if [[ -z "${dict[prefix]}" ]]
     then
         dict[prefix]="${dict[app_prefix]}/${dict[name]}"
@@ -575,10 +580,6 @@ koopa::uninstall_app() { # {{{1
         else
             dict[link_app]=1
         fi
-    fi
-    if [[ -z "${dict[name_fancy]}" ]]
-    then
-        dict[name_fancy]="${dict[name]}"
     fi
     koopa::uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
     "$rm" \
