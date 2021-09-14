@@ -196,7 +196,7 @@ brew "tcsh"
 brew "tealdeer"
 brew "tesseract"
 brew "texinfo"
-brew "texlive"
+# > brew "texlive"  # Problematic with Linuxbrew -- 2020 vs. 2021 mismatch.
 brew "the_silver_searcher"
 brew "tmux"
 brew "tokei"  # rust
