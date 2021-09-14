@@ -1,23 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::brew_brewfile() { # {{{1
-    # """
-    # Homebrew Bundle Brewfile path.
-    # @note Updated 2020-11-20.
-    # """
-    local file subdir
-    if koopa::is_macos
-    then
-        subdir='macos'
-    else
-        subdir='linux/common'
-    fi
-    file="$(koopa::koopa_prefix)/os/${subdir}/etc/homebrew/brewfile"
-    [[ -f "$file" ]] || return 0
-    koopa::print "$file"
-    return 0
-}
-
 koopa::brew_cleanup() { # {{{1
     # """
     # Clean up Homebrew.
