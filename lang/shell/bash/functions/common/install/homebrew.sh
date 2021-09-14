@@ -48,31 +48,44 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-14.
     #
     # Custom brewfile is supported using a positional argument.
     # """
-    local brewfile install_args name_fancy
-    koopa::assert_has_args_le "$#" 1
+    local brewfiles install_args name_fancy
     koopa::assert_is_admin
-    brewfile="${1:-$(koopa::brew_brewfile)}"
+    if [[ "$#" -eq 0 ]]
+    then
+        brewfiles=()
+        if koopa::is_macos
+        then
+        fi
+        brewfiles+=("FIXME cask file")
+        brewfiles+=("$(koopa::brew_brewfile)")
+    else
+        brewfiles=("$@")
+    fi
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
     koopa::assert_is_installed 'brew'
-    koopa::assert_is_file "$brewfile"
-    koopa::dl 'Brewfile' "$brewfile"
     brew analytics off
+    # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
+    # variable, which is defined in our main Homebrew activation function.
     install_args=(
         # > '--debug'
         # > '--verbose'
-        "--file=${brewfile}"
         '--force'
         '--no-lock'
         '--no-upgrade'
     )
-    # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
-    # variable, which is defined in our main Homebrew activation function.
-    brew bundle install "${install_args[@]}"
+    for brewfile in "${brewfiles[@]}"
+    do
+        koopa::assert_is_file "$brewfile"
+        koopa::dl 'Brewfile' "$brewfile"
+        brew bundle install \
+            "${install_args[@]}" \
+            --file="${brewfile}"
+    done
     return 0
 }
 
