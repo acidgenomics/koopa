@@ -59,9 +59,6 @@ brew "subversion"
 # > cask "adobe-acrobat-reader"
 # > cask "google-drive-file-stream"
 
-# Replaced by "temurin" (2021-08-16):
-# > cask "adoptopenjdk"
-
 cask "1password"
 cask "airfoil"
 cask "alacritty"
