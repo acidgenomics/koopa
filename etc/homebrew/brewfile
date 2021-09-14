@@ -222,8 +222,5 @@ brew "clementtsang/bottom/bottom"
 tap "mongodb/brew"
 brew "mongodb/brew/mongodb-community"
 
-tap "vitorgalvao/tiny-scripts"
-brew "vitorgalvao/tiny-scripts/cask-repair"
-
 tap "rs/tap"
 brew "rs/tap/curlie"

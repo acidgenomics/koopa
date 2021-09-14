@@ -141,6 +141,12 @@ brew "pinentry-mac"
 brew "taglib"
 brew "yt-dlp"  # youtube-dl alternative
 
+# External brews {{{1
+# ==============================================================================
+
+tap "vitorgalvao/tiny-scripts"
+brew "vitorgalvao/tiny-scripts/cask-repair"
+
 # App Store {{{1
 # ==============================================================================
 
