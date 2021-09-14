@@ -229,7 +229,7 @@ node="16.9.1"
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="17"
+openjdk="16.0.2"  # 17 is out 2021-09-14
 
 # https://www.openssh.com/portable.html
 openssh="8.7p1"
