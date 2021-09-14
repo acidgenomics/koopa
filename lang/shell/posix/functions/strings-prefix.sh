@@ -301,7 +301,7 @@ _koopa_java_prefix() { # {{{1
         prefix="$(_koopa_openjdk_prefix)"
     elif [ -x '/usr/libexec/java_home' ]
     then
-        # Handle macOS config with adoptopenjdk cask.
+        # Handle macOS config with temurin cask.
         prefix="$('/usr/libexec/java_home')"
     elif [ -d "$(_koopa_homebrew_prefix)/opt/openjdk" ]
     then
