@@ -68,6 +68,10 @@ koopa::activate_local_paths() { # {{{1
     _koopa_activate_local_paths "$@"
 }
 
+koopa::activate_make_paths() { # {{{1
+    _koopa_activate_make_paths "$@"
+}
+
 koopa::activate_nextflow() { # {{{1
     _koopa_activate_nextflow "$@"
 }
@@ -130,10 +134,6 @@ koopa::activate_secrets() { # {{{1
 
 koopa::activate_ssh_key() { # {{{1
     _koopa_activate_ssh_key "$@"
-}
-
-koopa::activate_standard_paths() { # {{{1
-    _koopa_activate_standard_paths "$@"
 }
 
 koopa::activate_python_venv() { # {{{1
