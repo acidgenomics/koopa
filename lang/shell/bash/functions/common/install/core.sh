@@ -112,7 +112,7 @@ koopa::find_app_version() { # {{{1
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-09-15.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -132,6 +132,7 @@ koopa::install_app() { # {{{1
         [path_harden]=1
         [platform]=''
         [prefix]=''
+        [prefix_check]=1
         [reinstall]=0
         [shared]=0
         [version]=''
@@ -168,6 +169,10 @@ koopa::install_app() { # {{{1
                 ;;
             --no-path-harden)
                 dict[path_harden]=0
+                shift 1
+                ;;
+            --no-prefix-check)
+                dict[prefix_check]=0
                 shift 1
                 ;;
             --no-shared)
@@ -247,22 +252,25 @@ koopa::install_app() { # {{{1
         "${dict[name_fancy]}" \
         "${dict[version]}" \
         "${dict[prefix]}"
-    if [[ "${dict[reinstall]}" -eq 1 ]] && [[ -d "${dict[prefix]}" ]]
+    if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
     then
-        koopa::alert_note "Removing previous install at '${dict[prefix]}'."
-        if [[ "${dict[shared]}" -eq 1 ]]
+        if [[ "${dict[reinstall]}" -eq 1 ]]
         then
-            rm='koopa::sys_rm'
-        else
-            rm='koopa::rm'
+            koopa::alert_note "Removing previous install at '${dict[prefix]}'."
+            if [[ "${dict[shared]}" -eq 1 ]]
+            then
+                rm='koopa::sys_rm'
+            else
+                rm='koopa::rm'
+            fi
+            "$rm" "${dict[prefix]}"
         fi
-        "$rm" "${dict[prefix]}"
-    fi
-    if [[ -d "${dict[prefix]}" ]]
-    then
-        koopa::alert_note "${dict[name_fancy]} is already installed \
+        if [[ -d "${dict[prefix]}" ]]
+        then
+            koopa::alert_note "${dict[name_fancy]} is already installed \
 at '${dict[prefix]}'."
-        return 0
+            return 0
+        fi
     fi
     # Ensure configuration is minimal before proceeding, when desirable.
     if [[ "${dict[path_harden]}" -eq 1 ]]
@@ -505,7 +513,6 @@ koopa::prune_apps() { # {{{1
     return 0
 }
 
-# FIXME This is returning unbound for 'gnupg' call.
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
