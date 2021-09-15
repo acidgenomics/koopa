@@ -100,6 +100,7 @@ _koopa_activate_go() { # {{{1
     return 0
 }
 
+# FIXME gnubin doesn't work the same way on Linuxbrew...
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
