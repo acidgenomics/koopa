@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't working the way we want on Linuxbrew.
+# FIXME Failing to detect ImageMagick 'imagemagick' and ICU 'icu4c'.
 koopa:::pkg_config_version() { # {{{1
     # """
     # Get a library version via pkg-config.
@@ -407,6 +409,7 @@ koopa::hdf5_version() { # {{{1
     return 0
 }
 
+# FIXME This is also not working correctly with Linuxbrew...
 koopa::icu4c_version() { # {{{1
     # """
     # ICU version.
