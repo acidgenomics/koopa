@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for Linux.
-# @note Updated 2021-08-17.
+# @note Updated 2021-09-15.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -15,6 +15,9 @@
 
 # Global variables {{{1
 # ==============================================================================
+
+HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
+HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
 
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
@@ -82,7 +85,40 @@ R_LIBS_USER="${R_LIBS_SITE}"
 
 # Restrict path, so we don't mask compiler binaries with virtual environment.
 # This also greatly improves consistency when running inside RStudio Server.
-PATH="/usr/local/bin:/usr/bin:/bin"
+PATH="/usr/bin:/bin"
+
+# Homebrew-managed programs.
+#
+# Refer to koopa for consistency:
+# 'shell/posix/functions/activate-noninteractive.sh'
+#
+# Don't put binutils in PATH, as this will cause compilation issues for
+# r-openssl, due to incompatible 'ar' that causes issues with Xcode linker.
+# See related:
+# - https://github.com/jeroen/openssl/issues/67
+# - https://github.com/jeroen/openssl/issues/90
+PATH="${HOMEBREW_PREFIX}/bin:${PATH}"
+# opt:
+PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/texinfo/bin:${PATH}"
+# libexec/bin:
+PATH="${HOMEBREW_OPT_PREFIX}/man-db/libexec/bin:${PATH}"
+# libexec/gnubin:
+PATH="${HOMEBREW_OPT_PREFIX}/coreutils/libexec/gnubin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/findutils/libexec/gnubin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/gnu-sed/libexec/gnubin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/gnu-tar/libexec/gnubin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/gnu-which/libexec/gnubin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/grep/libexec/gnubin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/make/libexec/gnubin:${PATH}"
+
+# Make.
+PATH="/usr/local/bin:${PATH}"
 
 # Ruby.
 PATH="${KOOPA_OPT_PREFIX}/ruby-packages/bin:${PATH}"
@@ -103,6 +139,14 @@ PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
+
+# Package configuration {{{2
+# ------------------------------------------------------------------------------
+
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
@@ -174,6 +218,11 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # > TNS_ADMIN="${ORACLE_HOME}/network/admin"
 # > PATH="${PATH}:${ORACLE_HOME}/bin"
 
+# libxml2 {{{2
+# ------------------------------------------------------------------------------
+
+XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
+
 # remotes {{{2
 # ------------------------------------------------------------------------------
 
@@ -214,6 +263,15 @@ WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
 R_USER_CACHE_DIR="${XDG_CACHE_HOME:-~/.cache}"
 R_USER_CONFIG_DIR="${XDG_CONFIG_HOME:-~/.config}"
 R_USER_DATA_DIR="${XDG_DATA_HOME:-~/.local/share}"
+
+# units / udunits {{{2
+# ------------------------------------------------------------------------------
+
+# The units package requires udunits to be installed.
+# Use homebrew: brew install udunits
+
+UDUNITS2_INCLUDE="${HOMEBREW_OPT_PREFIX}/udunits/include"
+UDUNITS2_LIBS="${HOMEBREW_OPT_PREFIX}/udunits/lib"
 
 # R check {{{1
 # ==============================================================================

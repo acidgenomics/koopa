@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-09-14.
+# @note Updated 2021-09-15.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -35,7 +35,7 @@ R_LIBS_USER="${R_LIBS_SITE}"
 
 # Restrict path, so we don't mask compiler binaries with virtual environment.
 # This also greatly improves path consistency when running inside RStudio.
-PATH="/usr/local/bin:/usr/bin:/bin"
+PATH="/usr/bin:/bin"
 
 # Homebrew-managed programs.
 #
@@ -47,7 +47,8 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 # See related:
 # - https://github.com/jeroen/openssl/issues/67
 # - https://github.com/jeroen/openssl/issues/90
-# > PATH="${HOMEBREW_OPT_PREFIX}/binutils/bin:${PATH}"
+PATH="${HOMEBREW_PREFIX}/bin:${PATH}"
+# opt:
 PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
@@ -65,6 +66,9 @@ PATH="${HOMEBREW_OPT_PREFIX}/gnu-tar/libexec/gnubin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-which/libexec/gnubin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/grep/libexec/gnubin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/make/libexec/gnubin:${PATH}"
+
+# Make.
+PATH="/usr/local/bin:${PATH}"
 
 # GNU Fortran (from fxcoudert).
 PATH="/usr/local/gfortran/bin:${PATH}"
@@ -139,6 +143,12 @@ XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
 # Always upgrade GitHub R packages, without prompting.
 # See `remotes::update_packages()` for details.
 R_REMOTES_UPGRADE="always"
+
+# If you set the environment variable 'R_REMOTES_STANDALONE="true"' (e.g. in R
+# 'Sys.setenv(R_REMOTES_STANDALONE="true")') you can force remotes to operate in
+# standalone mode and use only its internal R implementations. This will allow
+# successful installation of these packages.
+R_REMOTES_STANDALONE="true"
 
 # reticulate {{{2
 # ------------------------------------------------------------------------------
