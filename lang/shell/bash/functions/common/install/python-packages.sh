@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 
 koopa::install_python_packages() { # {{{1
-    local version
-    version="$(koopa::get_version 'python')"
-    version="$(koopa::major_minor_version "$version")"
     koopa::install_app \
         --name-fancy='Python packages' \
         --name='python-packages' \
         --no-link \
         --no-prefix-check \
-        --version="$version" \
+        --prefix="$(koopa::python_packages_prefix)" \
         "$@"
 }
 
@@ -20,6 +17,7 @@ koopa:::install_python_packages() { # {{{1
     # """
     local pkg pkg_lower pkgs version
     pkgs=("$@")
+    koopa::configure_python
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
