@@ -48,7 +48,7 @@ koopa::install_homebrew() { # {{{1
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2021-09-14.
+    # @note Updated 2021-09-15.
     #
     # Custom brewfile is supported using a positional argument.
     # """
@@ -58,7 +58,12 @@ koopa::install_homebrew_bundle() { # {{{1
     then
         koopa_prefix="$(koopa::koopa_prefix)"
         brewfiles=()
-        if koopa::is_macos
+        if koopa::is_linux
+        then
+            brewfiles+=(
+                "${koopa_prefix}/os/linux/common/etc/homebrew/brewfile"
+            )
+        elif koopa::is_macos
         then
             brewfiles+=(
                 "${koopa_prefix}/os/macos/etc/homebrew/brewfile"
