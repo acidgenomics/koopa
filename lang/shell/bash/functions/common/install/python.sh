@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This needs to link into opt.
 koopa::configure_python() { #{{{1
     # """
     # Configure Python.
-    # @note Updated 2021-06-13.
+    # @note Updated 2021-09-15.
     #
     # This creates a Python 'site-packages' directory and then links using
     # a 'koopa.pth' file into the Python system 'site-packages'.
@@ -14,7 +13,11 @@ koopa::configure_python() { #{{{1
     # """
     local k_site_pkgs name name_fancy pth_file python sys_site_pkgs version
     python="${1:-}"
-    [[ -z "$python" ]] && python="$(koopa::locate_python)"
+    if [[ -z "$python" ]]
+    then
+        koopa::activate_python
+        python="$(koopa::locate_python)"
+    fi
     koopa::assert_is_installed "$python"
     name='python'
     name_fancy='Python'
