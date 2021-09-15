@@ -443,7 +443,6 @@ koopa::locate_julia() { # {{{1
         --name='julia'
 }
 
-# FIXME Rework this one, it's a bit complicated.
 koopa::locate_llvm_config() { # {{{1
     # """
     # Locate 'llvm-config' executable.
@@ -451,27 +450,31 @@ koopa::locate_llvm_config() { # {{{1
     #
     # This is versioned on many Linux systems.
     # """
-    local brew_prefix find sort tail x
+    local app dict
     koopa::assert_has_no_args "$#"
-    x="${LLVM_CONFIG:-}"
-    if [[ -z "$x" ]]
+    app='llvm-config'
+    if [[ -n "${LLVM_CONFIG:-}" ]]
     then
-        if koopa::is_installed 'brew'
-        then
-            brew_prefix="$(koopa::homebrew_prefix)"
-            x="${brew_prefix}/opt/llvm/bin/llvm-config"
-        else
-            find="$(koopa::locate_find)"
-            sort="$(koopa::locate_sort)"
-            tail="$(koopa::locate_tail)"
-            x="$( \
-                "$find" '/usr/bin' -name 'llvm-config-*' \
-                | "$sort" \
-                | "$tail" -n 1 \
-            )"
-        fi
+        app="${LLVM_CONFIG:?}"
+    elif koopa::is_linux && ! koopa::is_installed 'brew'
+    then
+        # Fall back to looking for system LLVM on Linux when
+        # Homebrew isn't installed.
+        declare -A dict=(
+            [find]="$(koopa::locate_find)"
+            [sort]="$(koopa::locate_sort)"
+            [tail]="$(koopa::locate_tail)"
+        )
+        x="$( \
+            "${dict[find]}" '/usr/bin' -name 'llvm-config-*' \
+            | "${dict[sort]}" \
+            | "${dict[tail]}" -n 1 \
+        )"
+        [[ -n "$x" ]] && app="$x"
     fi
-    koopa:::locate_app "$x"
+    koopa:::locate_app \
+        --brew-name='llvm' \
+        --name="$app"
 }
 
 koopa::locate_ln() { # {{{1
