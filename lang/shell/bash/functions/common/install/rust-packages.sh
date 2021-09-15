@@ -6,7 +6,7 @@ koopa::install_rust_packages() {
         --name='rust-packages' \
         --no-link \
         --no-prefix-check \
-        --prefix="$(koopa::rust_packages_prefix)" \
+        --version='rolling' \
         "$@"
 }
 
