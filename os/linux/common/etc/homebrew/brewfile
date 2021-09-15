@@ -12,4 +12,6 @@ tap "homebrew/core"
 # Brews {{{1
 # ==============================================================================
 
+brew "docker"
+brew "docker-credential-helper"  # docker-credential-pass
 brew "emacs"
