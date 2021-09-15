@@ -43,46 +43,16 @@ koopa:::locate_app() { # {{{1
         koopa::print "$app_name"
     fi
 
-    # FIXME Migrate the located app here.
-    return 0
-}
 
-koopa:::locate_app_simple() { # {{{1
-    # """
-    # Simpler app location fetcher that doesn't attempt to use Homebrew.
-    # @note Updated 2021-09-15.
-    # """
-    local x
-    koopa::assert_has_args_eq "$#" 1
-    x="${1:?}"
+    # FIXME if '--gnubin' flag is set:
+    # file="${brew_prefix}/opt/${brew_name}/libexec/gnubin/${app_name}"
+
+
+
     x="$(koopa::which_realpath "$x")"
     [[ -z "$x" ]] && koopa::stop "Failed to locate '${x}'."
     koopa::assert_is_executable "$x"
     koopa::print "$x"
-    return 0
-}
-
-# FIXME Rework this using locate_app above, with different brew subdir approach.
-# FIXME Define '--gnubin' internally for this function.
-# FIXME Take this out in favor of just passing '--gnubin' flag (simpler).
-koopa:::locate_gnu_app() { # {{{1
-    # """
-    # Locate a GNU application.
-    # @note Updated 2021-09-15.
-    # """
-    local app_name brew_name brew_prefix file
-    koopa::assert_has_args_eq "$#" 2
-    brew_name="${1:?}"
-    app_name="${2:?}"
-    if koopa::is_installed 'brew'
-    then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        file="${brew_prefix}/opt/${brew_name}/libexec/gnubin/${app_name}"
-        koopa::assert_is_executable "$file"
-        koopa::print "$file"
-    else
-        koopa::print "$app_name"
-    fi
     return 0
 }
 
@@ -232,7 +202,7 @@ koopa::locate_cut() { # {{{1
     # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app \
+    koopa:::locate_app \
         --brew-name='coreutils' \
         --gnubin \
         --name='cut'
@@ -291,7 +261,7 @@ koopa::locate_du() { # {{{1
     # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app \
+    koopa:::locate_app \
         --brew-name='coreutils' \
         --gnubin \
         --name='du'
