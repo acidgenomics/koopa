@@ -48,8 +48,9 @@ koopa:::install_python_packages() { # {{{1
             pkgs[$i]="${pkg}==${version}"
         done
     fi
+    # This step will configure Python site packages directory.
     koopa::python_pip_install "${pkgs[@]}"
-    # NOTE Consider listing all installed packages here.
+    # Consider listing all installed packages here.
     return 0
 }
 
