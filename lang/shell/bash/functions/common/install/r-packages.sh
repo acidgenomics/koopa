@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Wrap in 'install_app' call.
+
 koopa::install_r_packages() { # {{{1
     # """
     # Install R packages.

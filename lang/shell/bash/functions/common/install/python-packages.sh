@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this in 'install_app()' call.
+
 koopa::install_python_packages() { # {{{1
     # """
     # Install Python packages.
