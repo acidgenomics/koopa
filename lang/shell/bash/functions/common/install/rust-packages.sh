@@ -4,8 +4,9 @@ koopa::install_rust_packages() {
     koopa::install_app \
         --name-fancy='Rust packages' \
         --name='rust-packages' \
+        --no-link \
         --no-prefix-check \
-        --version='rolling' \
+        --prefix="$(koopa::rust_packages_prefix)" \
         "$@"
 }
 
