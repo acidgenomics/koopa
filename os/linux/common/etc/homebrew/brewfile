@@ -1,0 +1,15 @@
+# """
+# Linux-specific (Linuxbrew) Homebrew Bundle Brewfile.
+# Updated 2021-09-15.
+# """
+
+# Taps {{{1
+# ==============================================================================
+
+tap "homebrew/bundle"
+tap "homebrew/core"
+
+# Brews {{{1
+# ==============================================================================
+
+brew "emacs"
