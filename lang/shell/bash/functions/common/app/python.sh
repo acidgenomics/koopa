@@ -52,6 +52,7 @@ koopa::python_pip_install() { # {{{1
     local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
     python="$(koopa::locate_python)"
+    koopa::stop "FIXME ${python}"
     reinstall=0
     pos=()
     while (("$#"))
