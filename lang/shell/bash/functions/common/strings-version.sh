@@ -697,6 +697,9 @@ koopa::return_version() { # {{{1
         openssh)
             cmd='ssh'
             ;;
+        password-store)
+            cmd='pass'
+            ;;
         pip)
             cmd='pip3'
             ;;
