@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't picking up correct Python on our Shiny Server.
 koopa::install_python_packages() { # {{{1
     koopa::install_app \
         --name-fancy='Python packages' \

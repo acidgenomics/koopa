@@ -39,6 +39,9 @@ koopa::python_delete_pycache() { # {{{1
     return 0
 }
 
+# FIXME We shouldn't run the configure step here.
+# FIXME Run this in the install and updater commands separately instead?
+# FIXME Is this locating the correct python?
 koopa::python_pip_install() { # {{{1
     # """
     # Internal pip install command.
