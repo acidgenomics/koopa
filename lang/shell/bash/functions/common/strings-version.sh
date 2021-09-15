@@ -286,6 +286,16 @@ koopa::eigen_version() { # {{{1
     koopa:::pkg_config_version 'eigen3'
 }
 
+koopa::emacs_version() { # {{{1
+    # """
+    # Emacs version.
+    # @note Updated 2021-09-15.
+    # """
+    local emacs
+    emacs="$(koopa::locate_emacs)"
+    koopa::get_version "$emacs"
+}
+
 koopa::extract_version() { # {{{1
     # """
     # Extract version number.
