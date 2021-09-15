@@ -24,6 +24,7 @@ koopa:::install_rust_packages() { # {{{1
     # - https://github.com/rust-lang/cargo/pull/7560
     # """
     local args default jobs pkg pkgs pkg_args root version
+    koopa::assert_has_no_envs
     koopa::activate_rust
     # NOTE This step will currently fail when '--reinstall' is set.
     # These packages are installed by default in our Rust install script.

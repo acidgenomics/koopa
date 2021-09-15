@@ -15,12 +15,7 @@ koopa:::install_python_packages() { # {{{1
     # Install Python packages.
     # @note Updated 2021-09-15.
     # """
-    local name_fancy pkg pkg_lower pkgs prefix version
-    python="$(koopa::locate_python)"
-    koopa::assert_has_no_envs
-    koopa::assert_is_installed "$python"
-    name_fancy='Python packages'
-    prefix="$(koopa::python_packages_prefix)"
+    local pkg pkg_lower pkgs version
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
@@ -53,10 +48,8 @@ koopa:::install_python_packages() { # {{{1
             pkgs[$i]="${pkg}==${version}"
         done
     fi
-    koopa::install_start "$name_fancy" "$prefix"
     koopa::python_pip_install "${pkgs[@]}"
     # NOTE Consider listing all installed packages here.
-    koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
 
@@ -75,16 +68,15 @@ koopa::uninstall_python_packages() { # {{{1
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-15.
     # @seealso
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
     # """
-    local cut name_fancy pkgs python
+    local cut name_fancy pkgs
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     cut="$(koopa::locate_cut)"
-    python="$(koopa::locate_python)"
     name_fancy='Python packages'
     koopa::install_start "$name_fancy"
     pkgs="$(koopa::python_pip_outdated)"
