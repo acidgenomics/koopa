@@ -240,17 +240,16 @@ koopa::install_app() { # {{{1
     then
         dict[name_fancy]="${dict[name]}"
     fi
-    if [[ -z "${dict[version]}" ]]
-    then
-        dict[version]="$(koopa::variable "${dict[name]}")"
-    fi
     if [[ -z "${dict[prefix]}" ]]
     then
+        if [[ -z "${dict[version]}" ]]
+        then
+            dict[version]="$(koopa::variable "${dict[name]}")"
+        fi
         dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     fi
     koopa::install_start \
         "${dict[name_fancy]}" \
-        "${dict[version]}" \
         "${dict[prefix]}"
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
     then
