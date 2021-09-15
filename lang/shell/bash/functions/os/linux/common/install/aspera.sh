@@ -2,6 +2,8 @@
 
 # [2021-05-27] Ubuntu success.
 
+# FIXME URL is now broken. Need to reconfigure.
+
 koopa::linux_install_aspera_connect() { # {{{1
     koopa::install_app \
         --name='aspera-connect' \
