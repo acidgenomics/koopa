@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't working the way we want on Linuxbrew.
-# FIXME Failing to detect ImageMagick 'imagemagick' and ICU 'icu4c'.
 koopa:::pkg_config_version() { # {{{1
     # """
     # Get a library version via pkg-config.
@@ -409,27 +407,23 @@ koopa::hdf5_version() { # {{{1
     return 0
 }
 
-# FIXME This is also not working correctly with Linuxbrew...
 koopa::icu4c_version() { # {{{1
     # """
     # ICU version.
     # C/C++ and Java libraries for Unicode and globalization.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::pkg_config_version 'icu4c'
+    koopa:::pkg_config_version 'icu-uc'
 }
 
-# FIXME This isn't working with Linuxbrew version currently.
-# FIXME Need to locate imagemagick?
-# FIXME Need to locate pkg_config?
 koopa::imagemagick_version() { # {{{1
     # """
     # ImageMagick version.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::pkg_config_version 'imagemagick'
+    koopa:::pkg_config_version 'ImageMagick'
 }
 
 koopa::koopa_version() { # {{{1
