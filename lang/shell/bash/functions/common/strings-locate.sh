@@ -1,19 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework all these other locators.
-# Prioritize /usr/local here instead.
-# FIXME Need to use Homebrew flags here for argument parsing instead.
-# FIXME If brew_name is unset, assume it's the name of the app.
-# FIXME Allow optional path handling with '--gnubin' flag.
-# FIXME This also needs to support positional unnamed argument.
-# FIXME Rework this, allowing positional arguments.
-# FIXME If pos is defined, only allow 1.
-# FIXME Allow user to pass in path here first.
-# FIXME If it's executable, skip the other ones.
-# FIXME Prioritize /usr/local here.
-# FIXME Ensure we set 'brew_name' if 'name' is only set.
-# FIXME Add support for macOS-
-
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -106,6 +92,7 @@ bin/${dict[app_name]}"
         koopa::stop "Failed to locate '${dict[app_name]}'."
     fi
     koopa::assert_is_executable "$app"
+    app="$(koopa::realpath "$app")"
     koopa::print "$app"
     return 0
 }
