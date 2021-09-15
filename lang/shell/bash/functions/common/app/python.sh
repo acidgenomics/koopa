@@ -48,7 +48,10 @@ koopa::python_pip_install() { # {{{1
     # """
     local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
+    koopa::configure_python
+    koopa::activate_python
     python="$(koopa::locate_python)"
+    # FIXME Still not working the way we want on Linux.
     koopa::stop "FIXME ${python}"
     reinstall=0
     pos=()

@@ -48,10 +48,7 @@ koopa:::install_python_packages() { # {{{1
             pkgs[$i]="${pkg}==${version}"
         done
     fi
-    koopa::configure_python
-    koopa::activate_python
     koopa::python_pip_install "${pkgs[@]}"
-    # Consider listing all installed packages here.
     return 0
 }
 
@@ -91,8 +88,6 @@ koopa::update_python_packages() { # {{{1
         koopa::print "$pkgs" \
         | "$cut" -d '=' -f 1 \
     )"
-    koopa::configure_python
-    koopa::activate_python
     koopa::python_pip_install "${pkgs[@]}"
     koopa::install_success "$name_fancy"
     return 0
