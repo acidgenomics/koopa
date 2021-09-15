@@ -106,7 +106,7 @@ curl="7.78.0"
 docker="19.03.8"
 
 # https://github.com/docker/docker-credential-helpers/releases
-docker-credential-pass="0.6.3"
+docker-credential-pass="0.6.4"
 
 # https://www.gnu.org/software/emacs/
 emacs="27.2"
