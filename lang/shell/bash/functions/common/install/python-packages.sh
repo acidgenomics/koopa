@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap this in 'install_app()' call.
-
 koopa::install_python_packages() { # {{{1
+    koopa::install_app \
+        --name-fancy='Python packages' \
+        --name='python-packages' \
+        --no-link \
+        --no-prefix-check \
+        --prefix="$(koopa::python_packages_prefix)" \
+        "$@"
+}
+
+koopa:::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-09-15.
     # """
     local name_fancy pkg pkg_lower pkgs prefix version
     python="$(koopa::locate_python)"
