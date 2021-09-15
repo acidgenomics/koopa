@@ -773,116 +773,146 @@ koopa::locate_stat() { # {{{1
 koopa::locate_svn() { # {{{1
     # """
     # Locate svn.
-    # @note Updated 2021-05-27.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'svn' 'svn' "$@"
+    koopa:::locate_app 'svn'
 }
 
 koopa::locate_tac() { # {{{1
     # """
     # Locate GNU tac.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'tac' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='tac'
 }
 
 koopa::locate_tail() { # {{{1
     # """
     # Locate GNU tail.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'tail' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='tail'
 }
 
 koopa::locate_tar() { # {{{1
     # """
     # Locate GNU tar.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'gnu-tar' 'tar' "$@"
+    koopa:::locate_app \
+        --brew-name='gnu-tar' \
+        --gnubin \
+        --name='tar'
 }
 
 koopa::locate_tee() { # {{{1
     # """
     # Locate GNU tee.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'tee' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='tee'
 }
 
 koopa::locate_tr() { # {{{1
     # """
     # Locate GNU tr.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'tr' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='tr'
 }
 
 koopa::locate_uncompress() { # {{{1
     # """
     # Locate GNU uncompress.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'gzip' 'uncompress' "$@"
+    koopa:::locate_app \
+        --brew-name='gzip' \
+        --gnubin \
+        --name='uncompress'
 }
 
 koopa::locate_uname() { # {{{1
     # """
     # Locate GNU uname.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'uname' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='uname'
 }
 
 koopa::locate_uniq() { # {{{1
     # """
     # Locate GNU uniq.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'uniq' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='uniq'
 }
 
 koopa::locate_unzip() { # {{{1
     # """
     # Locate unzip.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'unzip' 'unzip'
+    koopa:::locate_app 'unzip'
 }
 
 koopa::locate_wc() { # {{{1
     # """
     # Locate GNU wc.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'wc' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='wc'
 }
 
 koopa::locate_wget() { # {{{1
     # """
     # Locate wget.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'wget' 'wget' "$@"
+    koopa:::locate_app 'wget'
 }
 
 koopa::locate_xargs() { # {{{1
     # """
     # Locate GNU xargs.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'findutils' 'xargs' "$@"
+    koopa:::locate_app \
+        --brew-name='findutils' \
+        --gnubin \
+        --name='xargs'
 }
