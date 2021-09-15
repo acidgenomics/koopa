@@ -28,9 +28,6 @@ _koopa_activate_bash_completion() { # {{{1
     if _koopa_is_installed 'brew'
     then
         brew_prefix="$(_koopa_homebrew_prefix)"
-        # Ensure existing Homebrew v1 completions continue to work.
-        export BASH_COMPLETION_COMPAT_DIR="${brew_prefix}/etc/bash_completion.d"
-        # shellcheck source=/dev/null
         script="${brew_prefix}/etc/profile.d/bash_completion.sh"
     else
         script='/etc/bash_completion'
