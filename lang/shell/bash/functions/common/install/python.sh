@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to link into opt.
 koopa::configure_python() { #{{{1
     # """
     # Configure Python.
