@@ -418,6 +418,8 @@ koopa::icu4c_version() { # {{{1
 }
 
 # FIXME This isn't working with Linuxbrew version currently.
+# FIXME Need to locate imagemagick?
+# FIXME Need to locate pkg_config?
 koopa::imagemagick_version() { # {{{1
     # """
     # ImageMagick version.
@@ -437,16 +439,15 @@ koopa::koopa_version() { # {{{1
     return 0
 }
 
-# FIXME This isn't working with Linuxbrew llvm-config currently.
 koopa::llvm_version() { # {{{1
     # """
     # LLVM version.
-    # @note Updated 2021-09-14.
+    # @note Updated 2021-09-15.
     # """
-    local llvm_config x
+    local app x
     koopa::assert_has_no_args "$#"
-    llvm_config="$(koopa::locate_llvm_config)"
-    x="$(koopa::return_version "$llvm_config")"
+    app="$(koopa::locate_llvm_config)"
+    x="$(koopa::return_version "$app")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
