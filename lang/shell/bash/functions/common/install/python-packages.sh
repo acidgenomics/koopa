@@ -17,7 +17,6 @@ koopa:::install_python_packages() { # {{{1
     # """
     local pkg pkg_lower pkgs version
     pkgs=("$@")
-    koopa::configure_python
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         pkgs=(
