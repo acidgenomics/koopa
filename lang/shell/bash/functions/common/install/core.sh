@@ -337,7 +337,6 @@ at '${dict[prefix]}'."
         koopa::sys_set_permissions -r "${dict[prefix]}"
     fi
     koopa::delete_empty_dirs "${dict[prefix]}"
-    # FIXME This function needs to detect when the input is the same.
     koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
