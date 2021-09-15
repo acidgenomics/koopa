@@ -59,3 +59,11 @@ koopa::uninstall_perl_packages() { # {{{1
         --name='perl-packages' \
         "$@"
 }
+
+koopa::update_perl_packages() { # {{{1
+    # """
+    # Update Perl packages.
+    # @note Updated 2021-09-15.
+    # """
+    koopa::install_perl_packages "$@"
+}
