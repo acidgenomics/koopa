@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
 koopa::install_python_packages() { # {{{1
+    local version
+    version="$(koopa::python_version)"
+    version="$(koopa::major_minor_version "$version")"
     koopa::install_app \
         --name-fancy='Python packages' \
         --name='python-packages' \
         --no-link \
         --no-prefix-check \
-        --prefix="$(koopa::python_packages_prefix)" \
+        --version="$version" \
         "$@"
 }
 
