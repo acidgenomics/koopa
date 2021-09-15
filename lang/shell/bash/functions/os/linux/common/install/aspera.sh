@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] Ubuntu success.
-
-# FIXME URL is now broken. Need to reconfigure.
+# [2021-09-15] Ubuntu success.
 
 koopa::linux_install_aspera_connect() { # {{{1
     koopa::install_app \
@@ -16,7 +14,7 @@ koopa::linux_install_aspera_connect() { # {{{1
 koopa:::linux_install_aspera_connect() { # {{{1
     # """
     # Install Aspera Connect.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-09-15.
     #
     # Use Homebrew Cask to install on macOS instead.
     #
@@ -28,7 +26,7 @@ koopa:::linux_install_aspera_connect() { # {{{1
     version="${INSTALL_VERSION:?}"
     name='ibm-aspera-connect'
     platform='linux'
-    file="${name}-${version}-${platform}-g2.12-64.tar.gz"
+    file="${name}_${version}_${platform}.tar.gz"
     url="https://d3gcli72yxqn2z.cloudfront.net/connect_latest/v4/bin/${file}"
     koopa::download "$url"
     koopa::extract "$file"
