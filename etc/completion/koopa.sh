@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2207
 
-
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-08-31.
+    # Updated 2021-09-15.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -277,6 +276,7 @@ _koopa_complete() { # {{{1
                     'dotfiles'
                     'homebrew'
                     'node-packages'
+                    'perl-packages'
                     'prelude-emacs'
                     'pyenv'
                     'python-packages'
