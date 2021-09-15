@@ -1,5 +1,20 @@
 #!/bin/sh
 
+__koopa_emacs() { # {{{1
+    # """
+    # Emacs binary for alias functions.
+    # @note Updated 2021-09-15.
+    # """
+    local app
+    app='emacs'
+    if _koopa_is_macos
+    then
+        app='/Applications/Emacs.app/Contents/MacOS/Emacs'
+    fi
+    _koopa_is_installed "$app" || return 1
+    _koopa_print "$app"
+}
+
 _koopa_alias_broot() { # {{{1
     # """
     # Broot 'br' alias.
@@ -38,14 +53,15 @@ _koopa_alias_doom_emacs() { # {{{1
     # Doom Emacs.
     # @note Updated 2021-06-08.
     # """
-    local prefix
+    local emacs prefix
+    emacs="$(__koopa_emacs)"
     prefix="$(_koopa_doom_emacs_prefix)"
     if [ ! -d "$prefix" ]
     then
         _koopa_alert_is_not_installed 'Doom Emacs' "$prefix"
         return 1
     fi
-    emacs --with-profile 'doom' "$@"
+    "$emacs" --with-profile 'doom' "$@"
 }
 
 _koopa_alias_emacs() { # {{{1
@@ -60,9 +76,7 @@ _koopa_alias_emacs() { # {{{1
         _koopa_alert_is_not_installed 'Chemacs' "$prefix"
         return 1
     fi
-    # FIXME Need to locate this on macOS.
-    emacs='FIXME'
-    _koopa_is_installed "$emacs" || return 1
+    emacs="$(__koopa_emacs)"
     if [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ]
     then
         TERM='xterm-24bit' \
@@ -77,7 +91,9 @@ _koopa_alias_emacs_vanilla() { # {{{1
     # Vanilla Emacs alias.
     # @note Updated 2021-06-08.
     # """
-    emacs --no-init-file --no-window-system "$@"
+    local emacs
+    emacs="$(__koopa_emacs)"
+    "$emacs" --no-init-file --no-window-system "$@"
 }
 
 _koopa_alias_fzf() { # {{{1
@@ -194,14 +210,15 @@ _koopa_alias_spacemacs() { # {{{1
     # Spacemacs.
     # @note Updated 2021-06-08.
     # """
-    local prefix
+    local emacs prefix
     prefix="$(_koopa_spacemacs_prefix)"
     if [ ! -d "$prefix" ]
     then
         _koopa_alert_is_not_installed 'Spacemacs' "$prefix"
         return 1
     fi
-    emacs --with-profile 'spacemacs' "$@"
+    emacs="$(__koopa_emacs)"
+    "$emacs" --with-profile 'spacemacs' "$@"
 }
 
 _koopa_alias_spacevim() { # {{{1
