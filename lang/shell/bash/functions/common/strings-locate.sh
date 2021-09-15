@@ -282,7 +282,6 @@ koopa::locate_doom() { # {{{1
     local prefix
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::doom_emacs_prefix)"
-    koopa::assert_is_dir "$prefix"
     koopa:::locate_app "${prefix}/bin/doom"
 }
 
@@ -306,6 +305,7 @@ koopa::locate_emacs() { # {{{1
     local app
     koopa::assert_has_no_args "$#"
     app='emacs'
+    # FIXME Can we pass this in as a flag instead?
     if koopa::is_macos
     then
         app='/Applications/Emacs.app/Contents/MacOS/Emacs'
@@ -357,9 +357,10 @@ koopa::locate_gpg() { # {{{1
     local app
     koopa::assert_has_no_args "$#"
     app='gpg'
+    # FIXME Can we pass this in as a flag instead?
     if koopa::is_macos
     then
-        app='/usr/local/MacGPG2/bin/gpg'
+        app="/usr/local/MacGPG2/bin/${app}"
     fi
     koopa:::locate_app "$app"
 }
@@ -371,8 +372,8 @@ koopa::locate_grep() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --name='grep' \
-        --gnubin
+        --gnubin \
+        --name='grep'
 }
 
 koopa::locate_gunzip() { # {{{1
@@ -389,51 +390,58 @@ koopa::locate_gunzip() { # {{{1
 koopa::locate_gzip() { # {{{1
     # """
     # Locate GNU gzip.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'gzip' 'gzip' "$@"
+    koopa:::locate_app 'gzip'
 }
 
 koopa::locate_head() { # {{{1
     # """
-    # Locate GNU du.
-    # @note Updated 2021-05-21.
+    # Locate GNU head.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'head' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='head'
 }
 
 koopa::locate_id() { # {{{1
     # """
     # Locate GNU id.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'id' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='id'
 }
 
 koopa::locate_julia() { # {{{1
     # """
     # Locate Julia.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-15.
     # """
     local app prefix
     koopa::assert_has_no_args "$#"
+    app='julia'
+    # FIXME Can we pass this in as a flag instead?
     if koopa::is_macos
     then
         prefix="$(koopa::macos_julia_prefix)"
-        app="${prefix}/bin/julia"
-    else
-        app='julia'
+        app="${prefix}/bin/${app}"
     fi
-    koopa:::locate_app_simple "$app"
+    koopa:::locate_app "$app"
 }
 
+# FIXME Rework this one, it's a bit complicated.
 koopa::locate_llvm_config() { # {{{1
     # """
     # Locate 'llvm-config' executable.
-    # @note Updated 2021-09-14.
+    # @note Updated 2021-09-15.
     #
     # This is versioned on many Linux systems.
     # """
@@ -457,169 +465,197 @@ koopa::locate_llvm_config() { # {{{1
             )"
         fi
     fi
-    koopa::assert_is_executable "$x"
-    koopa::print "$x"
-    return 0
+    koopa:::locate_app "$x"
 }
 
 koopa::locate_ln() { # {{{1
     # """
-    # Locate GNU ls.
-    # @note Updated 2021-05-21.
+    # Locate GNU ln.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'ln' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='ln'
 }
 
 koopa::locate_ls() { # {{{1
     # """
     # Locate GNU ls.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'ls' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='ls'
 }
 
 koopa::locate_make() { # {{{1
     # """
     # Locate GNU make.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'make' 'make' "$@"
+    koopa:::locate_app \
+        --gnubin \
+        --name='make'
 }
 
 koopa::locate_man() { # {{{1
     # """
-    # Locate GNU man-db.
-    # @note Updated 2021-05-21.
+    # Locate GNU man.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'man-db' 'man' "$@"
+    koopa:::locate_app \
+        --brew-name='man-db' \
+        --gnubin \
+        --name='man'
 }
 
 koopa::locate_mkdir() { # {{{1
     # """
     # Locate GNU mkdir.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'mkdir' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='mkdir'
 }
 
 koopa::locate_mktemp() { # {{{1
     # """
     # Locate GNU mktemp.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'mktemp' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='mktemp'
 }
 
 koopa::locate_mv() { # {{{1
     # """
     # Locate GNU mv.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'mv' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='mv'
 }
 
 koopa::locate_openssl() { # {{{1
     # """
     # Locate openssl.
-    # @note Updated 2021-09-03.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'openssl' 'openssl' "$@"
+    koopa:::locate_app 'openssl'
 }
 
 koopa::locate_parallel() { # {{{1
     # """
     # Locate GNU parallel.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'parallel' 'parallel' "$@"
+    koopa:::locate_app 'parallel'
 }
 
 koopa::locate_paste() { # {{{1
     # """
     # Locate GNU paste.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'paste' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='paste'
 }
 
 koopa::locate_patch() { # {{{1
     # """
     # Locate GNU patch.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'gpatch' 'patch' "$@"
+    koopa:::locate_app \
+        --brew-name='gpatch' \
+        --name='patch'
 }
 
 koopa::locate_pcregrep() { # {{{1
     # """
     # Locate pcregrep.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'pcre' 'pcregrep' "$@"
+    koopa:::locate_app \
+        --brew-name='pcre' \
+        --name='pcregrep'
 }
 
 koopa::locate_perl() { # {{{1
     # """
     # Locate perl.
-    # @note Updated 2021-06-13.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'perl' 'perl' "$@"
+    koopa:::locate_app 'perl'
 }
 
 koopa::locate_pkg_config() { # {{{1
     # """
     # Locate pkg-config.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'pkg-config' 'pkg-config' "$@"
+    koopa:::locate_app 'pkg-config'
 }
 
 koopa::locate_python() { # {{{1
     # """
     # Locate Python.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-15.
     # """
-    local app prefix
+    local app name prefix version
     koopa::assert_has_no_args "$#"
+    name='python'
+    version="$(koopa::variable "$name")"
+    version="$(koopa::major_version "$version")"
+    app="${name}${version}"
+    # FIXME Can we pass this in as a flag instead?
     if koopa::is_macos
     then
         prefix="$(koopa::macos_python_prefix)"
-        app="${prefix}/bin/python3"
-    else
-        app='python3'
+        app="${prefix}/bin/${app}"
     fi
-    koopa:::locate_app_simple "$app"
+    koopa:::locate_app "$app"
 }
 
 koopa::locate_r() { # {{{1
     # """
     # Locate R.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-15.
     # """
     local app prefix
     koopa::assert_has_no_args "$#"
+    app='R'
+    # FIXME Can we pass this in as a flag instead?
     if koopa::is_macos
     then
         prefix="$(koopa::macos_r_prefix)"
-        app="${prefix}/bin/R"
-    else
-        app='R'
+        app="${prefix}/bin/${app}"
     fi
-    koopa:::locate_app_simple "$app"
+    koopa:::locate_app "$app"
 }
 
 koopa::locate_readlink() { # {{{1
@@ -643,15 +679,12 @@ koopa::locate_realpath() { # {{{1
 koopa::locate_rename() { # {{{1
     # """
     # Locate Perl rename.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-09-15.
     # """
-    local file prefix
+    local prefix
     koopa::assert_has_no_args "$#"
     prefix="$(koopa::perl_packages_prefix)"
-    file="${prefix}/bin/rename"
-    koopa::assert_is_executable "$file"
-    koopa::print "$file"
-    return 0
+    koopa:::locate_app "${prefix}/bin/rename"
 }
 
 koopa::locate_rm() { # {{{1
