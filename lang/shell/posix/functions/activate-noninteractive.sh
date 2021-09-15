@@ -100,11 +100,10 @@ _koopa_activate_go() { # {{{1
     return 0
 }
 
-# FIXME gnubin doesn't work the same way on Linuxbrew...
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-09-14.
+    # @note Updated 2021-09-15.
     # """
     local prefix
     [ "$#" -eq 0 ] || return 1
@@ -118,10 +117,6 @@ _koopa_activate_homebrew() { # {{{1
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_NO_AUTO_UPDATE=1
     export HOMEBREW_PREFIX="$prefix"
-    if _koopa_is_macos
-    then
-        export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
-    fi
     # Don't activate 'binutils' here.
     # Can mess up R package compilation.
     _koopa_activate_homebrew_opt_prefix \
@@ -135,16 +130,27 @@ _koopa_activate_homebrew() { # {{{1
     _koopa_activate_homebrew_opt_libexec_prefix \
         'man-db'
     _koopa_activate_homebrew_opt_gnu_prefix \
-        'coreutils' \
-        'findutils' \
-        'gnu-sed' \
-        'gnu-tar' \
-        'gnu-which' \
-        'grep' \
-        'make'
-    if _koopa_is_macos
+        'coreutils'
+    if _koopa_is_linux
     then
+        _koopa_activate_homebrew_opt_prefix \
+            'findutils' \
+            'gnu-sed' \
+            'gnu-tar' \
+            'gnu-which' \
+            'grep' \
+            'make'
+    elif _koopa_is_macos
+    then
+        _koopa_activate_homebrew_opt_gnu_prefix \
+            'findutils' \
+            'gnu-sed' \
+            'gnu-tar' \
+            'gnu-which' \
+            'grep' \
+            'make'
         _koopa_activate_homebrew_cask_google_cloud_sdk
+        export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
     fi
     return 0
 }
