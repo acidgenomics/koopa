@@ -475,6 +475,7 @@ koopa::locate_pkg_config() { # {{{1
     koopa:::locate_app 'pkg-config' 'pkg-config' "$@"
 }
 
+# FIXME Need to improve the location of this inside install call on Linux.
 koopa::locate_python() { # {{{1
     # """
     # Locate Python.

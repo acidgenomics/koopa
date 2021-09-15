@@ -42,6 +42,8 @@ koopa::python_delete_pycache() { # {{{1
 # FIXME We shouldn't run the configure step here.
 # FIXME Run this in the install and updater commands separately instead?
 # FIXME Is this locating the correct python?
+# FIXME This is returning /usr/bin/python3.8 during Linux install call.
+# FIXME This should detect /usr/local/bin/python3.9.
 koopa::python_pip_install() { # {{{1
     # """
     # Internal pip install command.
@@ -51,6 +53,8 @@ koopa::python_pip_install() { # {{{1
     # """
     local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
+    # FIXME We need to ensure we're detecting the correct Python always here,
+    # ignoring what is currently defined in system path.
     python="$(koopa::locate_python)"
     koopa::stop "FIXME ${python}"
     reinstall=0
