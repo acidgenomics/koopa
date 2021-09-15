@@ -51,21 +51,24 @@ _koopa_alias_doom_emacs() { # {{{1
 _koopa_alias_emacs() { # {{{1
     # """
     # Emacs alias that provides 24-bit color support.
-    # @note Updated 2021-06-08.
+    # @note Updated 2021-09-15.
     # """
-    local prefix
+    local emacs prefix
     prefix="${HOME:?}/.emacs.d"
     if [ ! -f "${prefix}/chemacs.el" ]
     then
         _koopa_alert_is_not_installed 'Chemacs' "$prefix"
         return 1
     fi
-    _koopa_is_installed 'emacs' || return 1
+    # FIXME Need to locate this on macOS.
+    emacs='FIXME'
+    _koopa_is_installed "$emacs" || return 1
     if [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ]
     then
-        TERM='xterm-24bit' emacs --no-window-system "$@"
+        TERM='xterm-24bit' \
+            "$emacs" --no-window-system "$@"
     else
-        emacs --no-window-system "$@"
+        "$emacs" --no-window-system "$@"
     fi
 }
 
