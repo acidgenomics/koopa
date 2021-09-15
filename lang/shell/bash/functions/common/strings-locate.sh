@@ -1,15 +1,28 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework all these other locators.
+
+# Prioritize /usr/local here instead.
+
+# FIXME Need to use Homebrew flags here for argument parsing instead.
+# FIXME If brew_name is unset, assume it's the name of the app.
+
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-15.
     # """
     local app_name brew_name brew_prefix file
     koopa::assert_has_args_eq "$#" 2
     brew_name="${1:?}"
     app_name="${2:?}"
-    if koopa::is_macos
+
+    # FIXME Allow user to pass in path here first.
+    # FIXME If it's executable, skip the other ones.
+
+    # FIXME Prioritize /usr/local here.
+
+    if koopa::is_installed 'brew'
     then
         brew_prefix="$(koopa::homebrew_prefix)"
         file="${brew_prefix}/opt/${brew_name}/bin/${app_name}"
@@ -18,13 +31,16 @@ koopa:::locate_app() { # {{{1
     else
         koopa::print "$app_name"
     fi
+
+    # FIXME Migrate the located app here.
     return 0
 }
 
+# FIXME Consolidate this with above code.
 koopa:::locate_app_simple() { # {{{1
     # """
     # Simpler app location fetcher that doesn't attempt to use Homebrew.
-    # @note Updated 2021-06-03.
+    # @note Updated 2021-09-15.
     # """
     local app_name file
     koopa::assert_has_args_eq "$#" 1
@@ -42,13 +58,13 @@ koopa:::locate_app_simple() { # {{{1
 koopa:::locate_gnu_app() { # {{{1
     # """
     # Locate a GNU application.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-15.
     # """
     local app_name brew_name brew_prefix file
     koopa::assert_has_args_eq "$#" 2
     brew_name="${1:?}"
     app_name="${2:?}"
-    if koopa::is_macos
+    if koopa::is_installed 'brew'
     then
         brew_prefix="$(koopa::homebrew_prefix)"
         file="${brew_prefix}/opt/${brew_name}/libexec/gnubin/${app_name}"
@@ -63,9 +79,12 @@ koopa:::locate_gnu_app() { # {{{1
 koopa::locate_7z() { # {{{1
     # """
     # Locate 7z.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
-    koopa:::locate_app 'p7zip' '7z' "$@"
+    koopa:::locate_app \
+        --brew-name='p7zip' \
+        --name='7z' \
+        "$@"
 }
 
 koopa::locate_awk() { # {{{1
@@ -209,6 +228,7 @@ koopa::locate_doom() { # {{{1
     local app prefix
     prefix="$(koopa::doom_emacs_prefix)"
     koopa::assert_is_dir "$prefix"
+    # FIXME Rework this.
     koopa:::locate_app_simple "${prefix}/bin/doom"
 }
 
