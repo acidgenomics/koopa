@@ -2,8 +2,9 @@
 
 koopa::install_rust_packages() {
     koopa::install_app \
-        --name='rust-packages' \
         --name-fancy='Rust packages' \
+        --name='rust-packages' \
+        --no-prefix-check \
         --version='rolling' \
         "$@"
 }
@@ -23,6 +24,8 @@ koopa:::install_rust_packages() { # {{{1
     # """
     local args default jobs pkg pkgs pkg_args root version
     koopa::activate_rust
+    # NOTE This step will currently fail when '--reinstall' is set.
+    # These packages are installed by default in our Rust install script.
     koopa::assert_is_installed 'cargo' 'rustc' 'rustup'
     pkgs=("$@")
     root="${INSTALL_PREFIX:?}"
