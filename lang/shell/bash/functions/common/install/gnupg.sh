@@ -24,6 +24,15 @@ koopa:::install_gnupg() { # {{{1
     local gpg gpg_agent gpg_keys version
     version="${INSTALL_VERSION:?}"
     case "$version" in
+        2.3.2)
+            # 2021-08-24.
+            libgpg_error_version='1.42'     # 2021-03-22
+            libgcrypt_version='1.9.4'       # 2021-08-22
+            libksba_version='1.6.0'         # 2021-06-10
+            libassuan_version='2.5.5'       # 2021-03-22
+            npth_version='1.6'              # 2018-07-16
+            pinentry_version='1.2.0'        # 2021-08-25
+            ;;
         2.3.1)
             # 2021-04-20.
             libgpg_error_version='1.42'     # 2021-03-22
