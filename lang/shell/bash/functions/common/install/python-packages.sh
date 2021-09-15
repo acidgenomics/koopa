@@ -2,7 +2,7 @@
 
 koopa::install_python_packages() { # {{{1
     local version
-    version="$(koopa::python_version)"
+    version="$(koopa::get_version 'python')"
     version="$(koopa::major_minor_version "$version")"
     koopa::install_app \
         --name-fancy='Python packages' \
