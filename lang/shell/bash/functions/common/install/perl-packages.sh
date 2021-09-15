@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap in 'install_app()' call.
+
 koopa::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.

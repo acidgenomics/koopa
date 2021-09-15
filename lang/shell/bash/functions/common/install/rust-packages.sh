@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME Pass this through to 'install_app' call instead, which sets minimal
+# path.
+# FIXME Then we can add in specific required modules individually.
+
 # NOTE Can we pass this to our main 'install_app' function instead?
 #      Are we doing this for Python packages?
 
 koopa::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2021-07-20.
+    # @note Updated 2021-09-15.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
