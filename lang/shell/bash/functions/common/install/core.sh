@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME This step needs to link into opt.
 koopa:::configure_app_packages() { # {{{1
     # """
     # Configure language application.
@@ -337,6 +338,7 @@ at '${dict[prefix]}'."
         koopa::sys_set_permissions -r "${dict[prefix]}"
     fi
     koopa::delete_empty_dirs "${dict[prefix]}"
+    # FIXME This function needs to detect when the input is the same.
     koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
@@ -479,6 +481,7 @@ koopa::link_app() { # {{{1
     return 0
 }
 
+# FIXME This needs to skip when input is identical (e.g. Python packages).
 koopa::link_into_opt() { # {{{1
     # """
     # Link into koopa opt prefix.
