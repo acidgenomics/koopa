@@ -661,19 +661,25 @@ koopa::locate_r() { # {{{1
 koopa::locate_readlink() { # {{{1
     # """
     # Locate GNU readlink.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'readlink' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='readlink'
 }
 
 koopa::locate_realpath() { # {{{1
     # """
     # Locate GNU realpath.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'realpath' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='realpath'
 }
 
 koopa::locate_rename() { # {{{1
@@ -690,64 +696,78 @@ koopa::locate_rename() { # {{{1
 koopa::locate_rm() { # {{{1
     # """
     # Locate GNU rm.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'rm' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='rm'
 }
 
 koopa::locate_rsync() { # {{{1
     # """
     # Locate rsync.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'rsync' 'rsync' "$@"
+    koopa:::locate_app 'rsync'
 }
 
 koopa::locate_ruby() { # {{{1
     # """
     # Locate ruby.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'ruby' 'ruby' "$@"
+    koopa:::locate_app 'ruby'
 }
 
 koopa::locate_sed() { # {{{1
     # """
     # Locate GNU sed.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'gnu-sed' 'sed' "$@"
+    koopa:::locate_app \
+        --brew-name='gnu-sed' \
+        --gnubin \
+        --name='sed'
 }
 
 koopa::locate_sort() { # {{{1
     # """
     # Locate GNU sort.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'sort' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='sort'
 }
 
 koopa::locate_ssh() { # {{{1
     # """
     # Locate ssh.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'openssh' 'ssh' "$@"
+    koopa:::locate_app \
+        --brew-name='openssh' \
+        --name='ssh'
 }
 
 koopa::locate_stat() { # {{{1
     # """
     # Locate GNU stat.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-15.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_gnu_app 'coreutils' 'stat' "$@"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='stat'
 }
 
 koopa::locate_svn() { # {{{1
