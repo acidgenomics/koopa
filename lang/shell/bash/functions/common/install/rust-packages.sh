@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME Pass this through to 'install_app' call instead, which sets minimal
-# path.
-# FIXME Then we can add in specific required modules individually.
+koopa::install_rust_packages() {
+    koopa::install_app \
+        --name='rust-packages' \
+        --name-fancy='Rust packages' \
+        --version='rolling' \
+        "$@"
+}
 
-# NOTE Can we pass this to our main 'install_app' function instead?
-#      Are we doing this for Python packages?
-
-koopa::install_rust_packages() { # {{{1
+koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
     # @note Updated 2021-09-15.
@@ -20,45 +21,13 @@ koopa::install_rust_packages() { # {{{1
     # - https://github.com/rust-lang/cargo/pull/6798
     # - https://github.com/rust-lang/cargo/pull/7560
     # """
-    local args default jobs name_fancy pkg pkgs pkg_args pos prefix
-    local reinstall version
-    name_fancy='Rust packages (cargo crates)'
-    default=0
-    reinstall=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --force|--reinstall)
-                reinstall=1
-                shift 1
-                ;;
-            '')
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_envs
+    local args default jobs pkg pkgs pkg_args root version
     koopa::activate_rust
     koopa::assert_is_installed 'cargo' 'rustc' 'rustup'
-    prefix="${CARGO_HOME:?}"
     pkgs=("$@")
-
-    echo "$PATH"
-    koopa::stop 'FIXME'
-
+    root="${INSTALL_PREFIX:?}"
+    jobs="$(koopa::cpu_count)"
+    default=0
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         default=1
@@ -80,15 +49,13 @@ koopa::install_rust_packages() { # {{{1
             'zoxide'
         )
     fi
-    koopa::install_start "$name_fancy" "$prefix"
     koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
-    koopa::sys_set_permissions -ru "$prefix"
-    jobs="$(koopa::cpu_count)"
+    # Can use '--force' flag here to force reinstall.
     pkg_args=(
-        '--jobs' "${jobs}"
+        '--jobs' "$jobs"
+        '--root' "$root"
         '--verbose'
     )
-    [[ "$reinstall" -eq 1 ]] && pkg_flags+=('--force')
     for pkg in "${pkgs[@]}"
     do
         args=("${pkg_args[@]}")
@@ -105,8 +72,6 @@ koopa::install_rust_packages() { # {{{1
         esac
         cargo install "$pkg" "${args[@]}"
     done
-    koopa::sys_set_permissions -r "$prefix"
-    koopa::install_success "$name_fancy"
     return 0
 }
 
