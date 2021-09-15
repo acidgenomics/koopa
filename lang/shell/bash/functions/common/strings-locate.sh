@@ -1,58 +1,112 @@
 #!/usr/bin/env bash
 
 # FIXME Need to rework all these other locators.
-
 # Prioritize /usr/local here instead.
-
 # FIXME Need to use Homebrew flags here for argument parsing instead.
 # FIXME If brew_name is unset, assume it's the name of the app.
 # FIXME Allow optional path handling with '--gnubin' flag.
-
 # FIXME This also needs to support positional unnamed argument.
+# FIXME Rework this, allowing positional arguments.
+# FIXME If pos is defined, only allow 1.
+# FIXME Allow user to pass in path here first.
+# FIXME If it's executable, skip the other ones.
+# FIXME Prioritize /usr/local here.
+# FIXME Ensure we set 'brew_name' if 'name' is only set.
+# FIXME Add support for macOS-
 
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
     # @note Updated 2021-09-15.
+    #
+    # App locator prioritization:
+    # 1. Allow for direct input of a program path.
+    # 2. Check in make prefix (e.g. '/usr/local').
+    # 3. Check in Homebrew opt.
+    # 4. Check in system library.
     # """
-
-
-
-    local app_name brew_name brew_prefix file
-    # FIXME Rework this using argparse.
-    koopa::assert_has_args_eq "$#" 2
-    brew_name="${1:?}"
-    app_name="${2:?}"
-
-    # FIXME Allow user to pass in path here first.
-    # FIXME If it's executable, skip the other ones.
-
-    # FIXME Prioritize /usr/local here.
-
-
-    # FIXME Ensure we set 'brew_name' if 'name' is only set.
-
-
-    if koopa::is_installed 'brew'
+    local app dict pos
+    declare -A dict=(
+        [app_name]=''
+        [brew_name]=''
+        [brew_prefix]="$(koopa::homebrew_prefix)"
+        [gnubin]=0
+        [make_prefix]="$(koopa::make_prefix)"
+        [macos_app]=''
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --brew-name=*)
+                dict[brew_name]="${1#*=}"
+                shift 1
+                ;;
+            --macos-app=*)
+                dict[macos_app]="${1#*=}"
+                shift 1
+                ;;
+            --name=*)
+                dict[app_name]="${1#*=}"
+                shift 1
+                ;;
+            --gnubin)
+                dict[gnubin]=1
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args_le "$#" 1
+    # Allow simple input using a single positional argument for name.
+    if [[ -z "${dict[app_name]}" ]]
     then
-        brew_prefix="$(koopa::homebrew_prefix)"
-        file="${brew_prefix}/opt/${brew_name}/bin/${app_name}"
-        koopa::assert_is_executable "$file"
-        koopa::print "$file"
-    else
-        koopa::print "$app_name"
+        koopa::assert_has_args_eq "$#" 1
+        dict[app_name]="${1:?}"
     fi
-
-
-    # FIXME if '--gnubin' flag is set:
-    # file="${brew_prefix}/opt/${brew_name}/libexec/gnubin/${app_name}"
-
-
-
-    x="$(koopa::which_realpath "$x")"
-    [[ -z "$x" ]] && koopa::stop "Failed to locate '${x}'."
-    koopa::assert_is_executable "$x"
-    koopa::print "$x"
+    # Prepare paths where to look for app.
+    dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
+    if [[ "${dict[gnubin]}" -eq 1 ]]
+    then
+        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_name]}/\
+libexec/gnubin/${dict[app_name]}"
+    else
+        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_name]}/\
+bin/${dict[app_name]}"
+    fi
+    # Ready to locate the application by priority.
+    if [[ -x "${dict[macos_app]}" ]] && koopa::is_macos
+    then
+        app="${dict[macos_app]}"
+    elif [[ -x "${dict[app_name]}" ]]
+    then
+        app="${dict[app_name]}"
+    elif [[ -x "${dict[make_app]}" ]]
+    then
+        app="${dict[make_app]}"
+    elif [[ -x "${dict[brew_app]}" ]]
+    then
+        app="${dict[brew_app]}"
+    else
+        app="$(koopa::which_realpath "${dict[app_name]}")"
+    fi
+    if [[ -z "$app" ]]
+    then
+        koopa::stop "Failed to locate '${dict[app_name]}'."
+    fi
+    koopa::assert_is_executable "$app"
+    koopa::print "$app"
     return 0
 }
 
@@ -249,10 +303,8 @@ koopa::locate_doom() { # {{{1
     # Locate Doom Emacs.
     # @note Updated 2021-09-15.
     # """
-    local prefix
     koopa::assert_has_no_args "$#"
-    prefix="$(koopa::doom_emacs_prefix)"
-    koopa:::locate_app "${prefix}/bin/doom"
+    koopa:::locate_app "$(koopa::doom_emacs_prefix)/bin/doom"
 }
 
 koopa::locate_du() { # {{{1
@@ -272,15 +324,10 @@ koopa::locate_emacs() { # {{{1
     # Locate Emacs.
     # @note Updated 2021-09-15.
     # """
-    local app
     koopa::assert_has_no_args "$#"
-    app='emacs'
-    # FIXME Can we pass this in as a flag instead?
-    if koopa::is_macos
-    then
-        app='/Applications/Emacs.app/Contents/MacOS/Emacs'
-    fi
-    koopa:::locate_app "$app"
+    koopa:::locate_app \
+        --macos-app='/Applications/Emacs.app/Contents/MacOS/Emacs' \
+        --name="emacs"
 }
 
 koopa::locate_find() { # {{{1
@@ -324,15 +371,10 @@ koopa::locate_gpg() { # {{{1
     # Locate gpg.
     # @note Updated 2021-09-15.
     # """
-    local app
     koopa::assert_has_no_args "$#"
-    app='gpg'
-    # FIXME Can we pass this in as a flag instead?
-    if koopa::is_macos
-    then
-        app="/usr/local/MacGPG2/bin/${app}"
-    fi
-    koopa:::locate_app "$app"
+    koopa:::locate_app \
+        --macos-app='/usr/local/MacGPG2/bin/gpg' \
+        --name='gpg'
 }
 
 koopa::locate_grep() { # {{{1
@@ -395,16 +437,10 @@ koopa::locate_julia() { # {{{1
     # Locate Julia.
     # @note Updated 2021-09-15.
     # """
-    local app prefix
     koopa::assert_has_no_args "$#"
-    app='julia'
-    # FIXME Can we pass this in as a flag instead?
-    if koopa::is_macos
-    then
-        prefix="$(koopa::macos_julia_prefix)"
-        app="${prefix}/bin/${app}"
-    fi
-    koopa:::locate_app "$app"
+    koopa:::locate_app \
+        --macos-app="$(koopa::macos_julia_prefix)/bin/julia" \
+        --name='julia'
 }
 
 # FIXME Rework this one, it's a bit complicated.
@@ -596,19 +632,15 @@ koopa::locate_python() { # {{{1
     # Locate Python.
     # @note Updated 2021-09-15.
     # """
-    local app name prefix version
+    local app name version
     koopa::assert_has_no_args "$#"
     name='python'
     version="$(koopa::variable "$name")"
     version="$(koopa::major_version "$version")"
     app="${name}${version}"
-    # FIXME Can we pass this in as a flag instead?
-    if koopa::is_macos
-    then
-        prefix="$(koopa::macos_python_prefix)"
-        app="${prefix}/bin/${app}"
-    fi
-    koopa:::locate_app "$app"
+    koopa:::locate_app \
+        --macos-app="$(koopa::macos_python_prefix)/bin/${app}" \
+        --name="$app"
 }
 
 koopa::locate_r() { # {{{1
@@ -616,16 +648,10 @@ koopa::locate_r() { # {{{1
     # Locate R.
     # @note Updated 2021-09-15.
     # """
-    local app prefix
     koopa::assert_has_no_args "$#"
-    app='R'
-    # FIXME Can we pass this in as a flag instead?
-    if koopa::is_macos
-    then
-        prefix="$(koopa::macos_r_prefix)"
-        app="${prefix}/bin/${app}"
-    fi
-    koopa:::locate_app "$app"
+    koopa:::locate_app \
+        --macos-app="$(koopa::macos_r_prefix)/bin/R" \
+        --name='R'
 }
 
 koopa::locate_readlink() { # {{{1
@@ -657,10 +683,8 @@ koopa::locate_rename() { # {{{1
     # Locate Perl rename.
     # @note Updated 2021-09-15.
     # """
-    local prefix
     koopa::assert_has_no_args "$#"
-    prefix="$(koopa::perl_packages_prefix)"
-    koopa:::locate_app "${prefix}/bin/rename"
+    koopa:::locate_app "$(koopa::perl_packages_prefix)/bin/rename"
 }
 
 koopa::locate_rm() { # {{{1
