@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap in 'install_app' call.
+
 koopa::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).

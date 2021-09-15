@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Wrap in 'install_app' call.
+
 koopa::install_node_packages() { # {{{1
     # """
     # Install Node.js packages using npm.
