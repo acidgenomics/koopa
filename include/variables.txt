@@ -103,7 +103,7 @@ cpufetch="0.97"
 curl="7.78.0"
 
 # https://docs.docker.com/install/
-docker="19.03.8"
+docker="20.10.8"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.4"
@@ -262,7 +262,7 @@ perl="5.34.0"
 perlbrew="0.92"
 
 # https://metacpan.org/release/File-Rename
-perl-file-rename="1.10"
+perl-file-rename="1.20"
 
 # https://www.php.net/downloads
 # https://github.com/php/php-src/releases

@@ -559,10 +559,11 @@ koopa::parallel_version() { # {{{1
 koopa::perl_file_rename_version() { # {{{1
     # """
     # Perl File::Rename version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-09-16.
     # """
-    local head rename x
+    local cut head rename x
     koopa::assert_has_no_args "$#"
+    cut="$(koopa::locate_cut)"
     head="$(koopa::locate_head)"
     rename="$(koopa::locate_rename)"
     x="$( \
@@ -570,7 +571,13 @@ koopa::perl_file_rename_version() { # {{{1
         | "$head" -n 1 \
     )"
     koopa::str_match "$x" 'File::Rename' || return 1
-    koopa::extract_version "$x"
+    x="$( \
+        koopa::print "$x" \
+        | "$cut" -d ' ' -f 5 \
+    )"
+    x="$(koopa::extract_version "$x")"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
     return 0
 }
 
