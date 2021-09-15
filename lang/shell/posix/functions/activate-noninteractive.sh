@@ -178,6 +178,8 @@ _koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
     return 0
 }
 
+# FIXME Migrate this into main homebrew opt prefix function below.
+# FIXME Note that some of these are platform-specific.
 _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix for a GNU program.
@@ -212,6 +214,7 @@ _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     return 0
 }
 
+# FIXME Migrate this into main activation function below.
 _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
     # """
     # Activate Homebrew opt libexec prefix.
@@ -239,10 +242,11 @@ _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
     return 0
 }
 
+# Only packages with gnubin on Linux: gawk, coreutils.
 _koopa_activate_homebrew_opt_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-09-15.
     # """
     local homebrew_prefix name prefix
     [ "$#" -gt 0 ] || return 1
