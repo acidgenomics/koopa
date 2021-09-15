@@ -411,8 +411,8 @@ local({  # nolint
     )
 
     ## Timeouts default to 60 seconds (1 minute), which can be too short for
-    ## some large file downloads. Extending to 10 minutes here instead.
-    options("timeout" = 600L)
+    ## some large file downloads.
+    options("timeout" = 10000L)
 
     ## Improve stack traces for error messages.
     ##
