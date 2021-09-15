@@ -51,6 +51,10 @@ koopa::install_rust_packages() { # {{{1
     koopa::assert_is_installed 'cargo' 'rustc' 'rustup'
     prefix="${CARGO_HOME:?}"
     pkgs=("$@")
+
+    echo "$PATH"
+    koopa::stop 'FIXME'
+
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
         default=1
