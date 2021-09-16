@@ -500,11 +500,9 @@ koopa::debian_apt_configure_sources() { # {{{1
     declare -A urls
     case "$os_id" in
         debian)
-            # NOTE Consider including 'backports' here, which are defined by
-            # default in the AWS AMI image for Debian 11 (bullseye).
             repos=('main')
             codenames[main]="$os_codename"
-            codenames[security]="${os_codename}/updates"
+            codenames[security]="${os_codename}-security"
             codenames[updates]="${os_codename}-updates"
             if [[ "$aws_cdn" -eq 1 ]]
             then
