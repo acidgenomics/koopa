@@ -490,6 +490,8 @@ koopa::debian_apt_configure_sources() { # {{{1
     declare -A urls
     case "$os_id" in
         debian)
+            # FIXME This step is messing up AWS AMI Debian 11 image.
+            #       Need to rethink the URL handling here.
             repos=('main')
             codenames[main]="$os_codename"
             codenames[security]="${os_codename}/updates"
