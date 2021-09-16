@@ -159,6 +159,7 @@ koopa::update_ldconfig() { # {{{1
         dest_file="/etc/ld.so.conf.d/koopa-$(basename "$source_file")"
         koopa::ln -S "$source_file" "$dest_file"
     done
+    # FIXME Declare full path here, don't assume sbin is in path.
     sudo ldconfig || true
     return 0
 }
