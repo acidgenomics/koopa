@@ -21,6 +21,7 @@ koopa::debian_install_rstudio_server() { # {{{1
     esac
     os_codename="$(koopa::os_codename)"
     case "$os_codename" in
+        # FIXME Need to add support for Debian 11 bullseye.
         buster|focal)
             os_codename='bionic'
             ;;
