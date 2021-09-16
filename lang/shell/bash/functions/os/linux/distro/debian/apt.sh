@@ -459,17 +459,27 @@ koopa::debian_apt_clean() { # {{{1
 koopa::debian_apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-09-16.
     #
     # Debian Docker images can also use snapshots:
     # http://snapshot.debian.org/archive/debian/20210326T030000Z
     # """
-    local arch codenames os_codename os_id repos sources_list tee
+    local arch aws_cdn codenames os_codename grep os_id repos sources_list tee
     local sources_list_d urls
     koopa::assert_has_no_args "$#"
+    grep="$(koopa::locate_grep)"
     tee="$(koopa::locate_tee)"
     sources_list='/etc/apt/sources.list'
     koopa::alert "Configuring apt sources in '${sources_list}'."
+    koopa::assert_is_file "$sources_list"
+    # Check if system is an Amazon EC2 AMI using AWS CDN.
+    # This currently applies to Debian 11 marketplace images.
+    if grep -q 'cdn-aws' "$sources_list"
+    then
+        aws_cdn=1
+    else
+        aws_cdn=0
+    fi
     if [[ -L "$sources_list" ]]
     then
         koopa::rm -S "$sources_list"
@@ -490,15 +500,19 @@ koopa::debian_apt_configure_sources() { # {{{1
     declare -A urls
     case "$os_id" in
         debian)
-            # FIXME This step is messing up AWS AMI Debian 11 image.
-            #       Need to rethink the URL handling here.
+            # NOTE Consider including 'backports' here, which are defined by
+            # default in the AWS AMI image for Debian 11 (bullseye).
             repos=('main')
             codenames[main]="$os_codename"
             codenames[security]="${os_codename}/updates"
             codenames[updates]="${os_codename}-updates"
-            urls[main]='http://deb.debian.org/debian/'
+            if [[ "$aws_cdn" -eq 1 ]]
+            then
+                urls[main]='http://cdn-aws.deb.debian.org/debian/'
+            else
+                urls[main]='http://deb.debian.org/debian/'
+            fi
             urls[security]='http://security.debian.org/debian-security/'
-            urls[updates]='http://deb.debian.org/debian/'
             ;;
         ubuntu)
             # Can consider including 'multiverse' here as well.
@@ -510,13 +524,11 @@ koopa::debian_apt_configure_sources() { # {{{1
                 aarch64)
                     # ARM (e.g. Raspberry Pi).
                     urls[main]='http://ports.ubuntu.com/ubuntu-ports/'
-                    urls[security]='http://ports.ubuntu.com/ubuntu-ports/'
-                    urls[updates]='http://ports.ubuntu.com/ubuntu-ports/'
+                    urls[security]="${urls[main]}"
                     ;;
                 *)
                     urls[main]='http://archive.ubuntu.com/ubuntu/'
                     urls[security]='http://security.ubuntu.com/ubuntu/'
-                    urls[updates]='http://archive.ubuntu.com/ubuntu/'
                     ;;
             esac
             ;;
@@ -524,6 +536,7 @@ koopa::debian_apt_configure_sources() { # {{{1
             koopa::stop "Unsupported OS: '${os_id}'."
             ;;
     esac
+    urls[updates]="${urls[main]}"
     sudo "$tee" "$sources_list" >/dev/null << END
 deb ${urls[main]} ${codenames[main]} ${repos[*]}
 deb ${urls[security]} ${codenames[security]} ${repos[*]}
