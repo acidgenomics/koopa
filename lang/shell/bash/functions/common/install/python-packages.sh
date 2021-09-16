@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Standardize this with other package installers.
 koopa::install_python_packages() { # {{{1
     koopa::install_app \
         --name-fancy='Python packages' \
@@ -64,6 +65,7 @@ koopa::uninstall_python_packages() { # {{{1
         "$@"
 }
 
+# FIXME Need to wrap this in 'update_app' call.
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.

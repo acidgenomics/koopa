@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
 
-# FIXME Wrap in 'install_app' call.
-
+# FIXME Standardize this with other package installers.
 koopa::install_r_packages() { # {{{1
+    koopa::install_app \
+        --name-fancy='R packages' \
+        --name='r-packages' \
+        --no-link \
+        --no-prefix-check \
+        --prefix="$(koopa::r_packages_prefix)" \
+        "$@"
+}
+
+koopa:::install_r_packages() { # {{{1
     # """
     # Install R packages.
-    # @note Updated 2021-08-14.
+    # @note Updated 2021-09-16.
     # """
-    local name_fancy pkg_prefix
-    koopa::assert_has_no_args "$#"
-    name_fancy='R packages'
-    pkg_prefix="$(koopa::r_packages_prefix)"
-    koopa::install_start "$name_fancy"
     koopa::configure_r
-    koopa::assert_is_dir "$pkg_prefix"
     koopa::r_koopa 'cliInstallRPackages' "$@"
-    koopa::sys_set_permissions -r "$pkg_prefix"
-    koopa::install_success "$name_fancy"
     return 0
 }
 
@@ -32,6 +33,7 @@ koopa::uninstall_r_packages() { # {{{1
         "$@"
 }
 
+# FIXME Need to wrap this in 'update_app' call.
 koopa::update_r_packages() { # {{{1
     # """
     # Update R packages.
