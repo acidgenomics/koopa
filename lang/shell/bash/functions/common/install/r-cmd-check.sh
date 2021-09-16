@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_r_cmd_check() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='r-cmd-check' \
         --no-link \
         "$@"

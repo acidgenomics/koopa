@@ -44,7 +44,7 @@ koopa::configure_r() { # {{{1
 }
 
 koopa::install_r() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='R' \
         --name='r' \
         "$@"

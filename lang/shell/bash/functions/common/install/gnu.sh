@@ -8,7 +8,7 @@ koopa::install_gnu_app() { # {{{1
     # @note Updated 2021-05-05.
     # """
     koopa::assert_has_args "$#"
-    koopa::install_app --installer='gnu-app' "$@"
+    koopa:::install_app --installer='gnu-app' "$@"
     return 0
 }
 

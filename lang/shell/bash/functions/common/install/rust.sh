@@ -13,7 +13,7 @@ koopa::configure_rust() { # {{{1
 }
 
 koopa::install_rust() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Rust' \
         --name='rust' \
         --no-link \

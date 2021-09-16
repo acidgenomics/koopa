@@ -41,7 +41,7 @@ koopa::linux_configure_lmod() { # {{{1
 }
 
 koopa::linux_install_lmod() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='lmod' \
         --name-fancy='Lmod' \
         --no-link \

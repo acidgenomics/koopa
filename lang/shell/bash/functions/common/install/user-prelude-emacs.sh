@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_prelude_emacs() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Prelude Emacs' \
         --name='prelude-emacs' \
         --no-shared \

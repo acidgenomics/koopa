@@ -109,7 +109,7 @@ koopa::find_app_version() { # {{{1
     return 0
 }
 
-koopa::install_app() { # {{{1
+koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
     # @note Updated 2021-09-15.
