@@ -352,6 +352,18 @@ koopa::locate_gcc() { # {{{1
         --name="${name}-${version}"
 }
 
+# FIXME Attempt to locate in ruby-packages first.
+koopa::locate_gem() { # {{{1
+    # """
+    # Locate Ruby gem package manager.
+    # @note Updated 2021-09-16.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-name='ruby' \
+        --name='gem'
+}
+
 koopa::locate_git() { # {{{1
     # """
     # Locate git.
@@ -571,7 +583,9 @@ koopa::locate_npm() { # {{{1
     # @note Updated 2021-09-16.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app 'npm'
+    koopa:::locate_app \
+        --brew-name='node' \
+        --name='npm'
 }
 
 koopa::locate_openssl() { # {{{1
