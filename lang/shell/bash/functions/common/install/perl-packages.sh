@@ -18,6 +18,9 @@ koopa::install_perl_packages() { # {{{1
     name_fancy='Perl packages'
     prefix="$(koopa::perl_packages_prefix)"
     koopa::install_start "$name_fancy" "$prefix"
+    # FIXME Work on passing the specific program through here.
+    # FIXME In the other package installers, we've extracted the version,
+    # which is a bit redunant. Just pass the program through instead?
     koopa::configure_perl
     koopa::activate_perl
     # Ensure that Perl installer doesn't prompt.
