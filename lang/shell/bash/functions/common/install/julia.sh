@@ -85,7 +85,7 @@ END
 }
 
 koopa::uninstall_julia() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Julia' \
         --name='julia' \
         "$@"

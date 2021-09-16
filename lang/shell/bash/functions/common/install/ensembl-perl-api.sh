@@ -42,7 +42,7 @@ koopa:::install_ensembl_perl_api() { # {{{1
 }
 
 koopa::uninstall_ensembl_perl_api() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Ensembl Perl API' \
         --name='ensembl-perl-api' \
         --no-link \

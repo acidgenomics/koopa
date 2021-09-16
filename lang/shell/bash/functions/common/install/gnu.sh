@@ -185,103 +185,103 @@ koopa::install_texinfo() { # {{{1
 }
 
 koopa::uninstall_autoconf() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='autoconf' \
         "$@"
 }
 
 koopa::uninstall_automake() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='automake' \
         "$@"
 }
 
 koopa::uninstall_binutils() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='binutils' \
         "$@"
 }
 
 koopa::uninstall_coreutils() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='coreutils' \
         "$@"
 }
 
 koopa::uninstall_findutils() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='findutils' \
         "$@"
 }
 
 koopa::uninstall_gawk() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='gawk' \
         "$@"
 }
 
 koopa::uninstall_grep() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='grep' \
         "$@"
 }
 
 koopa::uninstall_groff() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='groff' \
         "$@"
 }
 
 koopa::uninstall_gsl() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='gsl' \
         "$@"
 }
 
 koopa::uninstall_libtool() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='libtool' \
         "$@"
 }
 
 koopa::uninstall_make() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='make' \
         "$@"
 }
 
 koopa::uninstall_ncurses() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='ncurses' \
         "$@"
 }
 
 koopa::uninstall_parallel() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='parallel' \
         "$@"
 }
 
 koopa::uninstall_patch() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='patch' \
         "$@"
 }
 
 koopa::uninstall_sed() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='sed' \
         "$@"
 }
 
 koopa::uninstall_tar() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='tar' \
         "$@"
 }
 
 koopa::uninstall_texinfo() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='texinfo' \
         "$@"
 }

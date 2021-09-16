@@ -33,7 +33,7 @@ koopa::uninstall_julia_packages() { # {{{1
     # Uninstall Julia packages.
     # @note Updated 2021-06-14.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Julia packages' \
         --name='julia-packages' \
         --no-link \

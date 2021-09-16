@@ -48,7 +48,7 @@ ${name}-${minor_version}/${name}-${version}/src/${file}"
 }
 
 koopa::uninstall_hdf5() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='HDF5' \
         --name='hdf5' \
         "$@"

@@ -25,7 +25,7 @@ koopa::uninstall_chemacs() { # {{{1
     # Uninstall Chemacs2.
     # @note Updated 2021-06-07.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Chemacs' \
         --name='chemacs' \
         "$@"

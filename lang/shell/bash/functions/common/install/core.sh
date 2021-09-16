@@ -514,7 +514,7 @@ koopa::prune_apps() { # {{{1
     return 0
 }
 
-koopa::uninstall_app() { # {{{1
+koopa:::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
     # @note Updated 2021-09-14.

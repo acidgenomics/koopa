@@ -30,7 +30,7 @@ koopa:::install_password_store() { # {{{1
 }
 
 koopa::uninstall_password_store() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='password-store' \
         "$@"
 }

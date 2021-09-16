@@ -33,7 +33,7 @@ v${version}/${file}"
 }
 
 koopa::uninstall_shellcheck() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='ShellCheck' \
         --name='shellcheck' \
         "$@"

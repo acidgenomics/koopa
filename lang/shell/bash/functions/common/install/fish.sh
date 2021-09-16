@@ -51,7 +51,7 @@ ${version}/${file}"
 }
 
 koopa::uninstall_fish() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Fish' \
         --name='fish' \
         "$@"

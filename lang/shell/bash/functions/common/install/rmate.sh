@@ -27,7 +27,7 @@ koopa:::install_rmate() { # {{{1
 }
 
 koopa::uninstall_rmate() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='rmate' \
         "$@"
 }

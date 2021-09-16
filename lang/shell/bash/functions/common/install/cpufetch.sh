@@ -31,7 +31,7 @@ koopa:::install_cpufetch() { # {{{1
 }
 
 koopa::uninstall_cpufetch() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='cpufetch' \
         "$@"
 }

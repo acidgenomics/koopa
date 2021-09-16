@@ -32,7 +32,7 @@ koopa:::install_haskell_stack() { # {{{1
 }
 
 koopa::uninstall_haskell_stack() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Haskell Stack' \
         --name='haskell-stack' \
         --no-link \

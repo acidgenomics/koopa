@@ -61,7 +61,7 @@ koopa::uninstall_doom_emacs() { # {{{1
     # Uninstall Doom Emacs.
     # @note Updated 2021-06-08.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
         --no-shared \
