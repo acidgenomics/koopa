@@ -108,7 +108,7 @@ __koopa_warning() { # {{{1
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-06-21.
+    # @note Updated 2021-09-16.
     # """
     local dict
     declare -A dict=(
@@ -158,12 +158,13 @@ __koopa_bash_header() { # {{{1
             __koopa_warning \
                 'Koopa requires Bash >= 4.' \
                 "Current Bash version: '${BASH_VERSION}'."
-            if [[ "$(uname -s)" == "Darwin" ]]
+            if [[ "$(uname -s)" == 'Darwin' ]]
             then
+                # FIXME Need to improve CLI quoting consistency.
                 __koopa_warning \
-                    "On macOS, we recommend installing Homebrew." \
-                    "Refer to 'https://brew.sh' for instructions." \
-                    "Then install Bash with 'brew install bash'."
+                    'On macOS, we recommend installing Homebrew.' \
+                    'Refer to "https://brew.sh" for instructions.' \
+                    'Then install Bash with "brew install bash".'
             fi
             return 1
         fi
@@ -232,6 +233,15 @@ __koopa_bash_header() { # {{{1
         fi
         # Check if user is requesting help documentation.
         koopa::help "$@"
+        if [[ -z "${KOOPA_ADMIN:-}" ]]
+        then
+            if koopa::is_shared_install && koopa::is_admin
+            then
+                export KOOPA_ADMIN=1
+            else
+                export KOOPA_ADMIN=0
+            fi
+        fi
         # Require sudo permission to run 'sbin/' scripts.
         koopa::str_match "$0" '/sbin' && koopa::assert_is_admin
         # Disable user-defined aliases.

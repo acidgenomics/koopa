@@ -157,7 +157,7 @@ koopa::has_passwordless_sudo() { # {{{1
 koopa::is_admin() { # {{{1
     # """
     # Check that current user has administrator permissions.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-09-16.
     #
     # This check is hanging on an CPI AWS Ubuntu EC2 instance, I think due to
     # 'groups' can lag on systems for domain user accounts.
@@ -183,6 +183,17 @@ koopa::is_admin() { # {{{1
     # - https://linuxhandbook.com/check-if-user-has-sudo-rights/
     # """
     koopa::assert_has_no_args "$#"
+    if [[ -n "${KOOPA:ADMIN:-}" ]]
+    then
+        case "${KOOPA_ADMIN:?}" in
+            0)
+                return 1
+                ;;
+            1)
+                return 0
+                ;;
+        esac
+    fi
     # Always return true for root user.
     [[ "$(koopa::user_id)" -eq 0 ]] && return 0
     # Return false if 'sudo' program is not installed.
