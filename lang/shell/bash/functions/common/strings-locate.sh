@@ -19,7 +19,7 @@ koopa:::locate_app() { # {{{1
         [brew_prefix]="$(koopa::homebrew_prefix)"
         [gnubin]=0
         [koopa_app]=''
-        [koopa_opt]="$(koopa::opt_prefix)"
+        [koopa_opt_prefix]="$(koopa::opt_prefix)"
         [make_prefix]="$(koopa::make_prefix)"
         [macos_app]=''
     )
@@ -66,7 +66,7 @@ koopa:::locate_app() { # {{{1
     fi
     # Prepare paths where to look for app.
     dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
-    dict[koopa_app]="${dict[opt_prefix]}/${dict[app_name]}/\
+    dict[koopa_app]="${dict[koopa_opt_prefix]}/${dict[app_name]}/\
 bin/${dict[app_name]}"
     if [[ "${dict[gnubin]}" -eq 1 ]]
     then
