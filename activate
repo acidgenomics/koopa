@@ -25,7 +25,7 @@ fi
 __koopa_activate_usage() { # {{{1
     # """
     # Koopa activation usage triggered by '--help' flag.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-09-16.
     # """
     cat << END
 usage: activate [--help|-h]
@@ -46,8 +46,6 @@ supported environment variables:
         Used for Travis CI checks.
     KOOPA_USERS_SKIP='<user1> <user2> ...'
         Skip activation for specific users.
-        Note that users containing the word 'admin' (but not 'root' user)
-        are skipped by default.
 
 details:
     Bash or Zsh is currently recommended.
@@ -208,14 +206,6 @@ __koopa_is_macos() { # {{{1
     [ "$(uname -s)" = 'Darwin' ]
 }
 
-__koopa_is_user_named_admin() { # {{{1
-    # """
-    # Is the current user named 'admin' or begin with 'admin'?
-    # @note Updated 2021-05-07.
-    # """
-    __koopa_str_match_regex "${USER:?}" '^admin'
-}
-
 __koopa_is_user_manual_skip() { # {{{1
     # """
     # Should activation be manually skipped for the current user?
@@ -262,7 +252,6 @@ __koopa_preflight() { # {{{1
     __koopa_check_zsh || return 1
     __koopa_is_interactive || return 1
     __koopa_export_user || return 1
-    __koopa_is_user_named_admin && return 1
     __koopa_is_user_manual_skip && return 1
     return 0
 }
