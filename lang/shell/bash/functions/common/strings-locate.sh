@@ -555,6 +555,25 @@ koopa::locate_mv() { # {{{1
         --name='mv'
 }
 
+koopa::locate_node() { # {{{1
+    # """
+    # Locate node.
+    # @note Updated 2021-09-16.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'node'
+}
+
+# FIXME Prioritize installation in 'opt/node-packages/bin/npm'.
+koopa::locate_npm() { # {{{1
+    # """
+    # Locate node package manager (npm).
+    # @note Updated 2021-09-16.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'npm'
+}
+
 koopa::locate_openssl() { # {{{1
     # """
     # Locate openssl.
