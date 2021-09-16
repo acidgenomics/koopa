@@ -29,6 +29,7 @@ koopa::debian_set_locale() { # {{{1
     charset2="$(koopa::gsub '-' '' "$charset2")"
     # e.g. 'en_US.utf8'.
     string="${lang}_${country}.${charset2}"
+    # FIXME This doesn't work on Debian 10.10.
     sudo locale-gen "$string"
     # e.g. 'en_US.UTF-8'.
     string="${lang}_${country}.${charset}"
