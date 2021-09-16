@@ -287,7 +287,6 @@ koopa::uninstall_gnupg() { # {{{1
     koopa::assert_has_no_args "$#"
     name_fancy='GnuPG suite'
     koopa::uninstall_start "$name_fancy"
-    # FIXME This is returning unbound...
     koopa:::uninstall_app --name='gnupg'
     koopa:::uninstall_app --name='libassuan'
     koopa:::uninstall_app --name='libgcrypt'
