@@ -3,14 +3,17 @@
 koopa::debian_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-09-16.
     #
     # Refer to '/usr/share/i18n/SUPPORTED' for supported locales.
     # """
     local charset charset2 country lang lang_string file string
     koopa::assert_is_admin
-    # FIXME Debian 10.10 ARM doesn't install 'locale-gen' with 'locales'?
-    koopa::assert_is_installed 'grep' 'locale' 'locale-gen' 'update-locale'
+    koopa::assert_is_installed \
+        'grep' \
+        'locale' \
+        '/usr/sbin/locale-gen' \
+        '/usr/sbin/update-locale'
     # Consider allowing the user to change these in a future release.
     lang='en'
     country='US'
@@ -29,11 +32,10 @@ koopa::debian_set_locale() { # {{{1
     charset2="$(koopa::gsub '-' '' "$charset2")"
     # e.g. 'en_US.utf8'.
     string="${lang}_${country}.${charset2}"
-    # FIXME This doesn't work on Debian 10.10.
-    sudo locale-gen "$string"
+    sudo /usr/sbin/locale-gen "$string"
     # e.g. 'en_US.UTF-8'.
     string="${lang}_${country}.${charset}"
-    sudo update-locale LANG="$string"
+    sudo /usr/sbin/update-locale LANG="$string"
     locale
     koopa::alert_success "Locale is defined as '${lang_string}'."
     return 0
