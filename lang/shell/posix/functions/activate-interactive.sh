@@ -4,13 +4,13 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-09-16.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
     alias br='_koopa_alias_broot'
     alias bucket='_koopa_alias_bucket'
-    alias conda='_koopa_alias_conda'
+    # > alias conda='_koopa_alias_conda'
     alias doom-emacs='_koopa_alias_doom_emacs'
     alias emacs-vanilla='_koopa_alias_emacs_vanilla'
     alias emacs='_koopa_alias_emacs'
