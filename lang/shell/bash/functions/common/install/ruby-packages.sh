@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
 
 # FIXME Need to wrap in 'install_app' call.
-
 koopa::install_ruby_packages() { # {{{1
+}
+
+
+koopa:::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-16.
     # @seealso
     # - https://bundler.io/man/bundle-pristine.1.html
     # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
     # """
-    local default gemdir gem gems name_fancy
+    local default gemdir gem gems name_fancy ruby ruby_version
     koopa::assert_has_no_envs
+    ruby="$(koopa::locate_ruby)"
+    ruby_version="$(koopa::get version "$ruby")"
+    # FIXME Need to locate ruby and specify the version here.
     koopa::activate_ruby
-    koopa::configure_ruby
+    # FIXME This step will likely fail, need to point to gem.
     koopa::assert_is_installed 'gem'
     if koopa::is_macos
     then
