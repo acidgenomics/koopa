@@ -30,7 +30,7 @@ ${version}/${file}"
 }
 
 koopa::uninstall_tmux() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='tmux' \
         "$@"
 }

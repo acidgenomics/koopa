@@ -49,7 +49,7 @@ koopa:::install_htop() { # {{{1
 }
 
 koopa::uninstall_htop() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='htop' \
         "$@"
 }

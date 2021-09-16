@@ -30,7 +30,7 @@ koopa:::install_perlbrew() { # {{{1
 }
 
 koopa::uninstall_perlbrew() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Perlbrew' \
         --name='perlbrew' \
         --no-link \

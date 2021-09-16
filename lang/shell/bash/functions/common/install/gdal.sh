@@ -96,7 +96,7 @@ koopa:::install_gdal() { # {{{1
 }
 
 koopa::uninstall_gdal() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='GDAL' \
         --name='gdal' \
         --no-link \

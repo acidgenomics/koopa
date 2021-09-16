@@ -60,7 +60,7 @@ koopa:::install_geos() { # {{{1
 }
 
 koopa::uninstall_geos() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='GEOS' \
         --name='geos' \
         --no-link \

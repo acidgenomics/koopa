@@ -27,7 +27,7 @@ koopa:::install_rbenv() { # {{{1
 }
 
 koopa::uninstall_rbenv() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='rbenv' \
         --no-link \
         "$@"

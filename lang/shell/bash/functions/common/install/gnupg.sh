@@ -288,12 +288,12 @@ koopa::uninstall_gnupg() { # {{{1
     name_fancy='GnuPG suite'
     koopa::uninstall_start "$name_fancy"
     # FIXME This is returning unbound...
-    koopa::uninstall_app --name='gnupg'
-    koopa::uninstall_app --name='libassuan'
-    koopa::uninstall_app --name='libgcrypt'
-    koopa::uninstall_app --name='libgpg-error'
-    koopa::uninstall_app --name='libksba'
-    koopa::uninstall_app --name='npth'
+    koopa:::uninstall_app --name='gnupg'
+    koopa:::uninstall_app --name='libassuan'
+    koopa:::uninstall_app --name='libgcrypt'
+    koopa:::uninstall_app --name='libgpg-error'
+    koopa:::uninstall_app --name='libksba'
+    koopa:::uninstall_app --name='npth'
     koopa::uninstall_success "$name_fancy"
     return 0
 }

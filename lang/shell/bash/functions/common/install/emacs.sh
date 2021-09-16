@@ -105,7 +105,7 @@ koopa::link_emacs() { # {{{1
 }
 
 koopa::uninstall_emacs() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Emacs' \
         --name='emacs' \
         "$@"

@@ -40,7 +40,7 @@ koopa:::install_lua() { # {{{1
 }
 
 koopa::uninstall_lua() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Lua' \
         --name='lua' \
         "$@"

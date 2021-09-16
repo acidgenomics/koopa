@@ -70,7 +70,7 @@ koopa:::install_sqlite() { # {{{1
 }
 
 koopa::uninstall_sqlite() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='SQLite' \
         --name='sqlite' \
         "$@"

@@ -37,7 +37,7 @@ release-${version}-stable/${file}"
 }
 
 koopa::uninstall_libevent() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='libevent' \
         "$@"
 }

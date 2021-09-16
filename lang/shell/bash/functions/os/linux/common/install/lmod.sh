@@ -90,7 +90,7 @@ koopa::linux_uninstall_lmod() { # {{{1
     # Uninstall Lmod.
     # @note Updated 2021-06-14.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='lmod' \
         --name-fancy='Lmod' \
         --no-link \

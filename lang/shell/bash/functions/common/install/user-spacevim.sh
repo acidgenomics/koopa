@@ -43,7 +43,7 @@ koopa::uninstall_spacevim() { # {{{1
     # Uninstall SpaceVim.
     # @note Updated 2021-06-11.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='SpaceVim' \
         --name='spacevim' \
         --no-shared \

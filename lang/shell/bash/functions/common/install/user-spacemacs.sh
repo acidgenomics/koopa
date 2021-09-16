@@ -31,7 +31,7 @@ koopa::uninstall_spacemacs() { # {{{1
     # Uninstall Spacemacs.
     # @note Updated 2021-06-08.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Spacemacs' \
         --name='spacemacs' \
         --no-shared \

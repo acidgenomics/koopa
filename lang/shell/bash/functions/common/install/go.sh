@@ -49,7 +49,7 @@ koopa:::install_go() { # {{{1
 }
 
 koopa::uninstall_go() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Go' \
         --name='go' \
         --no-link \

@@ -74,7 +74,7 @@ koopa:::install_vim() { # {{{1
 }
 
 koopa::uninstall_vim() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Vim' \
         --name='vim' \
         "$@"

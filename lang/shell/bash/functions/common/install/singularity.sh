@@ -37,7 +37,7 @@ v${version}/${file}"
 }
 
 koopa::uninstall_singularity() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='singularity' \
         "$@"
 }

@@ -48,7 +48,7 @@ koopa:::install_rsync() { # {{{1
 }
 
 koopa::uninstall_rsync() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='rsync' \
         "$@"
 }

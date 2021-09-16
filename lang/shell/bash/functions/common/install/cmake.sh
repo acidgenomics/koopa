@@ -47,7 +47,7 @@ koopa:::install_cmake() { # {{{1
 }
 
 koopa::uninstall_cmake() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='CMake' \
         --name='cmake' \
         "$@"

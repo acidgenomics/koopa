@@ -91,7 +91,7 @@ ${os_type}-${arch}.sh"
 }
 
 koopa::uninstall_conda() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Miniconda' \
         --name='conda' \
         --no-link \

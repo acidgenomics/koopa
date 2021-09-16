@@ -58,7 +58,7 @@ ${name}-${version2}/${file}"
 }
 
 koopa::uninstall_curl() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='cURL' \
         --name='curl' \
         "$@"

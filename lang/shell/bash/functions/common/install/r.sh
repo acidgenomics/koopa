@@ -149,7 +149,7 @@ koopa:::install_r() { # {{{1
 }
 
 koopa::uninstall_r() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='R' \
         --name='r' \
         "$@"

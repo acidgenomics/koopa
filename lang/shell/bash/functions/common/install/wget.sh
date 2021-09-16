@@ -49,7 +49,7 @@ koopa::install_wget() { # {{{1
 }
 
 koopa::uninstall_wget() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='wget' \
         "$@"
 }

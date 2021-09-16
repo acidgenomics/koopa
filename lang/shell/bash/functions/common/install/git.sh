@@ -49,7 +49,7 @@ koopa:::install_git() { # {{{1
 }
 
 koopa::uninstall_git() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Git' \
         --name='git' \
         "$@"

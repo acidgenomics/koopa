@@ -37,7 +37,7 @@ koopa::linux_uninstall_cellranger() { # {{{1
     # Uninstall Cell Ranger.
     # @note Updated 2021-06-11.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='cellranger' \
         --name-fancy='Cell Ranger' \
         --no-link \

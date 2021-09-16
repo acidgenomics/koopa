@@ -77,7 +77,7 @@ koopa::linux_uninstall_bcl2fastq() { # {{{1
     # Uninstall bcl2fastq.
     # @note Updated 2021-06-11.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='bcl2fastq' \
         "$@"
 }

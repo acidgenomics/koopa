@@ -55,7 +55,7 @@ v${version}/${file}"
 }
 
 koopa::uninstall_taglib() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='TagLib' \
         --name='taglib' \
         "$@"
