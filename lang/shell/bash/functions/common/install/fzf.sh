@@ -3,7 +3,7 @@
 # [2021-05-27] macOS success.
 
 koopa::install_fzf() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='FZF' \
         --name='fzf' \
         "$@"

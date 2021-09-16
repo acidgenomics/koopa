@@ -15,13 +15,13 @@ koopa::linux_install_bcl2fastq() { # {{{1
     # """
     if koopa::is_fedora
     then
-        koopa::install_app \
+        koopa:::install_app \
             --name='bcl2fastq' \
             --platform='fedora' \
             --installer='bcl2fastq-from-rpm' \
             "$@"
     else
-        koopa::install_app \
+        koopa:::install_app \
             --name='bcl2fastq' \
             --platform='linux' \
             "$@"

@@ -4,7 +4,7 @@
 # [2021-05-27] macOS success.
 
 koopa::install_bash() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Bash' \
         --name='bash' \
         "$@"

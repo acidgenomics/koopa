@@ -31,7 +31,7 @@ koopa::configure_perl() { # {{{1
 }
 
 koopa::install_perl() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Perl' \
         --name='perl' \
         "$@"

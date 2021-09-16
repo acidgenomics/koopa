@@ -3,7 +3,7 @@
 # [2021-05-27] macOS failure.
 
 koopa::install_cpufetch() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='cpufetch' \
         "$@"
 }

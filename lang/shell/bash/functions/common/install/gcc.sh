@@ -12,7 +12,7 @@
 # https://stackoverflow.com/questions/25352389/
 
 koopa::install_gcc() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='GCC' \
         --name='gcc' \
         --no-link \

@@ -18,7 +18,7 @@
 # Maybe it's the 'rsync-recommended' step not working on macOS?
 
 koopa::install_r_devel() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='R-devel' \
         --name='r-devel' \
         "$@"

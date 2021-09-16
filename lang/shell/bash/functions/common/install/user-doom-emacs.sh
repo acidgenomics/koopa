@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_doom_emacs() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
         --no-shared \

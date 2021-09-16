@@ -8,7 +8,7 @@ koopa::install_conda() { # {{{1
 }
 
 koopa::install_miniconda() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --installer='miniconda' \
         --name-fancy='Miniconda' \
         --name='conda' \

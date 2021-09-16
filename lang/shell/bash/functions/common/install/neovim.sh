@@ -3,7 +3,7 @@
 # [2021-05-27] macOS failure.
 
 koopa::install_neovim() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='neovim' \
         "$@"
 }

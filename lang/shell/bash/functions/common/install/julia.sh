@@ -16,14 +16,14 @@ koopa::configure_julia() { # {{{1
 koopa::install_julia() { # {{{1
     if koopa::is_linux
     then
-        koopa::install_app \
+        koopa:::install_app \
             --installer="julia-binary" \
             --name-fancy='Julia' \
             --name='julia' \
             --platform='linux' \
             "$@"
     else
-        koopa::install_app \
+        koopa:::install_app \
             --name-fancy='Julia' \
             --name='julia' \
             "$@"

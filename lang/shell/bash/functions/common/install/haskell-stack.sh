@@ -3,7 +3,7 @@
 # [2021-05-27] macOS success.
 
 koopa::install_haskell_stack() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Haskell Stack' \
         --name='haskell-stack' \
         --no-link \

@@ -3,7 +3,7 @@
 # [2021-05-27] macOS success.
 
 koopa::install_lua() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Lua' \
         --name='lua' \
         "$@"

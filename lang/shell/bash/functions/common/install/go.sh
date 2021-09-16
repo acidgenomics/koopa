@@ -14,7 +14,7 @@ koopa::configure_go() { # {{{1
 }
 
 koopa::install_go() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Go' \
         --name='go' \
         --no-link \

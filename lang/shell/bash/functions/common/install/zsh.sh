@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_zsh() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Zsh' \
         --name='zsh' \
         "$@"

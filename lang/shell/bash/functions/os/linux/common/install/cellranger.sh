@@ -3,7 +3,7 @@
 ## NOTE We may want to link 'bin/cellranger' specifically here.
 
 koopa::linux_install_cellranger() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='cellranger' \
         --name-fancy='Cell Ranger' \
         --no-link \

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_shunit2() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='shUnit2' \
         --name='shunit2' \
         "$@"

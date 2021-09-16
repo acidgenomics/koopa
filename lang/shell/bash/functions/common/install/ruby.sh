@@ -12,7 +12,7 @@ koopa::configure_ruby() { # {{{1
 }
 
 koopa::install_ruby() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Ruby' \
         --name='ruby' \
         "$@"

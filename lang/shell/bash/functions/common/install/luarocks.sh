@@ -3,7 +3,7 @@
 # [2021-05-27] macOS success.
 
 koopa::install_luarocks() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='luarocks' \
         "$@"
 }

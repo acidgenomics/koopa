@@ -2,7 +2,7 @@
 
 # FIXME Standardize this with other package installers.
 koopa::install_r_packages() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='R packages' \
         --name='r-packages' \
         --no-link \

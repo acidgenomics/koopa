@@ -3,7 +3,7 @@
 # [2021-09-15] Ubuntu success.
 
 koopa::linux_install_aspera_connect() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='aspera-connect' \
         --name-fancy='Aspera Connect' \
         --no-link \

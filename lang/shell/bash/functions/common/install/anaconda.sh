@@ -8,7 +8,7 @@ koopa::install_anaconda() { # {{{1
     # Install Anaconda.
     # @note Updated 2021-06-07.
     # """
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Anaconda' \
         --name='anaconda' \
         --no-link \

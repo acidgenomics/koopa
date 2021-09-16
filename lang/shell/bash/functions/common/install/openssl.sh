@@ -3,7 +3,7 @@
 # [2021-05-27] macOS success.
 
 koopa::install_openssl() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='OpenSSL' \
         --name='openssl' \
         --no-link \

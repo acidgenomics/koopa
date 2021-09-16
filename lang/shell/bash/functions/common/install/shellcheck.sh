@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_shellcheck() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='ShellCheck' \
         --name='shellcheck' \
         "$@"

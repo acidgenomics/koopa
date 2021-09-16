@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_udunits() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='udunits' \
         "$@"
 }

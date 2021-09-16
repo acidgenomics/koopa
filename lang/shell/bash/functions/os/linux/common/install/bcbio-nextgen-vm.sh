@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_bcbio_nextgen_vm() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='bcbio-nextgen-vm' \
         --no-link \
         --platform='linux' \
