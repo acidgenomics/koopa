@@ -183,7 +183,7 @@ koopa::is_admin() { # {{{1
     # - https://linuxhandbook.com/check-if-user-has-sudo-rights/
     # """
     koopa::assert_has_no_args "$#"
-    if [[ -n "${KOOPA:ADMIN:-}" ]]
+    if [[ -n "${KOOPA_ADMIN:-}" ]]
     then
         case "${KOOPA_ADMIN:?}" in
             0)
