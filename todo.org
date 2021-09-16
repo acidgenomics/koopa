@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO conda seems to be very buggy inside Debian 11 ARM AMI instance.
 ** FIXME Shell is double activating, showing tmux sessions twice on Debian ARM dev machine.
 ** TODO Consider removing non-symlinked programs in /usr/local/bin on macOS.
 ** TODO JAVA_HOME need to support Homebrew OpenJDK on Linux.
