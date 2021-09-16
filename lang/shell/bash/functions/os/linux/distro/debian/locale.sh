@@ -9,6 +9,7 @@ koopa::debian_set_locale() { # {{{1
     # """
     local charset charset2 country lang lang_string file string
     koopa::assert_is_admin
+    # FIXME Debian 10.10 ARM doesn't install 'locale-gen' with 'locales'?
     koopa::assert_is_installed 'grep' 'locale' 'locale-gen' 'update-locale'
     # Consider allowing the user to change these in a future release.
     lang='en'
