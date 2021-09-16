@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap in 'install_app' call.
 koopa::install_ruby_packages() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Ruby packages' \
+        --name='ruby-packages' \
+        --no-link \
+        --no-prefix-check \
+        --prefix="$(koopa::ruby_packages_prefix)" \
+        "$@"
 }
-
 
 koopa:::install_ruby_packages() { # {{{1
     # """
@@ -13,26 +18,24 @@ koopa:::install_ruby_packages() { # {{{1
     # - https://bundler.io/man/bundle-pristine.1.html
     # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
     # """
-    local default gemdir gem gems name_fancy ruby ruby_version
-    koopa::assert_has_no_envs
+    local app apps default gemdir gem ruby ruby_version
+    gem="$(koopa::locate_gem)"
     ruby="$(koopa::locate_ruby)"
-    ruby_version="$(koopa::get version "$ruby")"
-    # FIXME Need to locate ruby and specify the version here.
+    koopa::dl \
+        'ruby' "$ruby" \
+        'gem' "$gem"
+    ruby_version="$(koopa::get_version "$ruby")"
+    koopa::configure_ruby --version="$ruby_version"
     koopa::activate_ruby
-    # FIXME This step will likely fail, need to point to gem.
-    koopa::assert_is_installed 'gem'
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'libffi'
     fi
-    name_fancy='Ruby gems'
-    koopa::install_start "$name_fancy"
-    gemdir="$(gem environment gemdir)"
-    koopa::dl 'Target' "$gemdir"
+    gemdir="$("$gem" environment gemdir)"
     if [[ "$#" -eq 0 ]]
     then
         default=1
-        gems=(
+        apps=(
             # > 'neovim'
             'bundler'
             'bashcov'
@@ -40,28 +43,28 @@ koopa:::install_ruby_packages() { # {{{1
         )
     else
         default=0
-        gems=("$@")
+        apps=("$@")
     fi
-    koopa::dl 'Gems' "$(koopa::to_string "${gems[@]}")"
+    koopa::dl \
+        'Target' "$gemdir" \
+        'Gems' "$(koopa::to_string "${apps[@]}")"
     if [[ "$default" -eq 1 ]]
     then
-        gem cleanup
-        gem pristine --all
-        if koopa::is_shared_install
-        then
-            gem update --system
-        fi
+        "$gem" cleanup
+        "$gem" pristine --all
+        # > if koopa::is_shared_install
+        # > then
+        # >     "$gem" update --system
+        # > fi
     fi
-    for gem in "${gems[@]}"
+    for app in "${apps[@]}"
     do
-        gem install "$gem"
+        "$gem" install "$app"
     done
     if [[ "$default" -eq 1 ]]
     then
-        gem cleanup
+        "$gem" cleanup
     fi
-    koopa::sys_set_permissions -r "$gemdir"
-    koopa::install_success "$name_fancy"
     return 0
 }
 

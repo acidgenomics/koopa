@@ -64,6 +64,10 @@ koopa:::locate_app() { # {{{1
         koopa::assert_has_args_eq "$#" 1
         dict[app_name]="${1:?}"
     fi
+    if [[ -z "${dict[brew_name]}" ]]
+    then
+        dict[brew_name]="${dict[app_name]}"
+    fi
     # Prepare paths where to look for app.
     dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
     dict[koopa_app]="${dict[koopa_opt_prefix]}/${dict[app_name]}/\
