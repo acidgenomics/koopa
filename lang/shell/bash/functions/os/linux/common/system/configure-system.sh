@@ -337,8 +337,19 @@ koopa::linux_configure_system() { # {{{1
     install_base_flags=("${dict[install_base_flags]}")
     koopa install base "${install_base_flags[@]:-}"
     # Consider requiring: gfortran, xml2-config.
-    koopa::assert_is_installed 'autoconf' 'bc' 'bzip2' 'g++' 'gcc' 'gzip' \
-        'ldconfig' 'make' 'man' 'msgfmt' 'tar' 'unzip' 'xz'
+    koopa::assert_is_installed \
+        'autoconf' \
+        'bc' \
+        'bzip2' \
+        'g++' \
+        'gcc' \
+        'gzip' \
+        'make' \
+        'man' \
+        'msgfmt' \
+        'tar' \
+        'unzip' \
+        'xz'
     koopa::assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
     koopa::update_ldconfig
     # Programs {{{2
