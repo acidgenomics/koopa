@@ -13,3 +13,7 @@ koopa::configure_node() { # {{{1
         --name='node' \
         "$@"
 }
+
+# FIXME Add a Debian binary installer from NodeSource.
+# https://github.com/nodesource/distributions/blob/master/README.md
+# https://nodesource.com/
