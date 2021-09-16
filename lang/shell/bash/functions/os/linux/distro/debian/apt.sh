@@ -473,7 +473,6 @@ koopa::debian_apt_configure_sources() { # {{{1
     koopa::alert "Configuring apt sources in '${sources_list}'."
     koopa::assert_is_file "$sources_list"
     # Check if system is an Amazon EC2 AMI using AWS CDN.
-    # This currently applies to Debian 11 marketplace images.
     if grep -q 'cdn-aws' "$sources_list"
     then
         aws_cdn=1
@@ -500,10 +499,8 @@ koopa::debian_apt_configure_sources() { # {{{1
     declare -A urls
     case "$os_id" in
         debian)
+            # Can consider including 'backports' here as well.
             repos=('main')
-            codenames[main]="$os_codename"
-            codenames[security]="${os_codename}-security"
-            codenames[updates]="${os_codename}-updates"
             if [[ "$aws_cdn" -eq 1 ]]
             then
                 urls[main]='http://cdn-aws.deb.debian.org/debian/'
@@ -515,9 +512,6 @@ koopa::debian_apt_configure_sources() { # {{{1
         ubuntu)
             # Can consider including 'multiverse' here as well.
             repos=('main' 'restricted' 'universe')
-            codenames[main]="${os_codename}"
-            codenames[security]="${os_codename}-security"
-            codenames[updates]="${os_codename}-updates"
             case "$arch" in
                 aarch64)
                     # ARM (e.g. Raspberry Pi).
@@ -534,6 +528,9 @@ koopa::debian_apt_configure_sources() { # {{{1
             koopa::stop "Unsupported OS: '${os_id}'."
             ;;
     esac
+    codenames[main]="$os_codename"
+    codenames[security]="${os_codename}-security"
+    codenames[updates]="${os_codename}-updates"
     urls[updates]="${urls[main]}"
     sudo "$tee" "$sources_list" >/dev/null << END
 deb ${urls[main]} ${codenames[main]} ${repos[*]}
