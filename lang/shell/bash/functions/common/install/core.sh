@@ -470,7 +470,7 @@ koopa::find_app_version() { # {{{1
 koopa::link_app() { # {{{1
     # """
     # Symlink application into build directory.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-16.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -531,10 +531,8 @@ koopa::link_app() { # {{{1
     make_prefix="$(koopa::make_prefix)"
     app_prefix="$(koopa::app_prefix)/${name}/${version}"
     koopa::assert_is_dir "$app_prefix" "$make_prefix"
-    if koopa::is_macos
-    then
-        koopa::stop "Linking into '${make_prefix}' is not supported on macOS."
-    fi
+    koopa::link_into_opt "$app_prefix" "$name"
+    koopa::is_macos && return 0
     koopa::alert "Linking '${app_prefix}' in '${make_prefix}'."
     koopa::sys_set_permissions -r "$app_prefix"
     koopa::delete_broken_symlinks "$app_prefix" "$make_prefix"
