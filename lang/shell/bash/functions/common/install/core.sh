@@ -61,6 +61,9 @@ koopa:::configure_app_packages() { # {{{1
             then
                 dict[which_app]="${dict[name]}"
             fi
+            # FIXME This step will fail inside installer calls where the PATH
+            # is intentionally restricted.
+            # FIXME Need to rethink how we locate the app in this situation.
             dict[version]="$(koopa::get_version "${dict[which_app]}")"
         fi
         dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"

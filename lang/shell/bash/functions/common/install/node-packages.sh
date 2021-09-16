@@ -22,8 +22,11 @@ koopa:::install_node_packages() { # {{{1
     # """
     local npm npm_version pkg pkg_lower pkgs prefix version
     koopa::assert_has_no_args "$#"
-    koopa::configure_node
     koopa::activate_node
+    echo 'FIXME 111'
+    # FIXME This step is erroring when called inside install...
+    koopa::configure_node
+    echo 'FIXME 222'
     prefix="${INSTALL_PREFIX:?}"
     npm='npm'
     koopa::assert_is_installed "$npm"
