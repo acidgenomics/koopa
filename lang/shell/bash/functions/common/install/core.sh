@@ -80,35 +80,6 @@ koopa:::configure_app_packages() { # {{{1
     return 0
 }
 
-koopa::find_app_version() { # {{{1
-    # """
-    # Find the latest application version.
-    # @note Updated 2021-05-25.
-    # """
-    local find name prefix sort tail x
-    koopa::assert_has_args "$#"
-    find="$(koopa::locate_find)"
-    sort="$(koopa::locate_sort)"
-    tail="$(koopa::locate_tail)"
-    name="${1:?}"
-    prefix="$(koopa::app_prefix)"
-    koopa::assert_is_dir "$prefix"
-    prefix="${prefix}/${name}"
-    koopa::assert_is_dir "$prefix"
-    x="$( \
-        "$find" "$prefix" \
-            -mindepth 1 \
-            -maxdepth 1 \
-            -type 'd' \
-        | "$sort" \
-        | "$tail" -n 1 \
-    )"
-    [[ -d "$x" ]] || return 1
-    x="$(koopa::basename "$x")"
-    koopa::print "$x"
-    return 0
-}
-
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -376,6 +347,35 @@ at '${dict[prefix]}'."
         fi
     fi
     koopa::install_success "${dict[name_fancy]}" "${dict[prefix]}"
+    return 0
+}
+
+koopa::find_app_version() { # {{{1
+    # """
+    # Find the latest application version.
+    # @note Updated 2021-05-25.
+    # """
+    local find name prefix sort tail x
+    koopa::assert_has_args "$#"
+    find="$(koopa::locate_find)"
+    sort="$(koopa::locate_sort)"
+    tail="$(koopa::locate_tail)"
+    name="${1:?}"
+    prefix="$(koopa::app_prefix)"
+    koopa::assert_is_dir "$prefix"
+    prefix="${prefix}/${name}"
+    koopa::assert_is_dir "$prefix"
+    x="$( \
+        "$find" "$prefix" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type 'd' \
+        | "$sort" \
+        | "$tail" -n 1 \
+    )"
+    [[ -d "$x" ]] || return 1
+    x="$(koopa::basename "$x")"
+    koopa::print "$x"
     return 0
 }
 
