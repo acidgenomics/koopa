@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::linux_install_bcbio_nextgen() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='bcbio-nextgen' \
         --no-link \
         --platform='linux' \
@@ -62,7 +62,7 @@ koopa::linux_uninstall_bcbio() { # {{{1
     # Uninstall bcbio-nextgen.
     # @note Updated 2021-06-11.
     # """
-    koopa::install_app \
+    koopa:::install_app \
         --name='bcbio-nextgen' \
         --no-link \
         "$@"

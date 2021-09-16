@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_pyenv() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='pyenv' \
         --no-link \
         "$@"

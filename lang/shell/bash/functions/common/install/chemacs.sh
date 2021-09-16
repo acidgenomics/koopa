@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_chemacs() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name-fancy='Chemacs' \
         --name='chemacs' \
         --version='rolling' \

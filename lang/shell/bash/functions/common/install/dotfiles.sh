@@ -5,7 +5,7 @@
 
 koopa::install_dotfiles() { # {{{1
     local prefix script
-    koopa::install_app \
+    koopa:::install_app \
         --name='dotfiles' \
         --version='rolling' \
         "$@"

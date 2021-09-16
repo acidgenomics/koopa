@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_rbenv() { # {{{1
-    koopa::install_app \
+    koopa:::install_app \
         --name='rbenv' \
         --no-link \
         "$@"
