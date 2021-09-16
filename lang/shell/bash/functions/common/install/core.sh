@@ -308,7 +308,6 @@ at '${dict[prefix]}'."
         koopa::sys_set_permissions -r "${dict[prefix]}"
     fi
     koopa::delete_empty_dirs "${dict[prefix]}"
-    koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
         koopa::delete_broken_symlinks "${dict[make_prefix]}"
@@ -322,6 +321,8 @@ at '${dict[prefix]}'."
         fi
         # Including the 'true' catch here to avoid 'cp' issues on Arch Linux.
         koopa::link_app "${link_args[@]}" || true
+    else
+        koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
     fi
     if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
     then
