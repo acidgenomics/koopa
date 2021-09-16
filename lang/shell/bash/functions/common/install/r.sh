@@ -65,6 +65,7 @@ koopa:::install_r() { # {{{1
     # """
     local brew_opt brew_prefix conf_args file jobs major_version
     local make name name2 prefix r url version
+    koopa::assert_is_installed 'java'
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     jobs="$(koopa::cpu_count)"
