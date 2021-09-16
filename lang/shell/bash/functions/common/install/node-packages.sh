@@ -11,7 +11,6 @@ koopa::install_node_packages() { # {{{1
         "$@"
 }
 
-# FIXME This step is erroring, need to figure out why.
 koopa:::install_node_packages() { # {{{1
     # """
     # Install Node.js packages using npm.
@@ -21,21 +20,22 @@ koopa:::install_node_packages() { # {{{1
     # - npm help install
     # - npm config get prefix
     # """
-    local npm npm_version pkg pkg_lower pkgs prefix version
+    local node node_version npm npm_version pkg pkg_lower pkgs prefix version
     koopa::assert_has_no_args "$#"
-    # FIXME This won't configure into app, like we want...argh!!!
-    # FIXME Need to rethink the logic here.
     prefix="${INSTALL_PREFIX:?}"
-    koopa::configure_node --prefix="$prefix"
+    node="$(koopa::locate_node)"
+    npm="$(koopa::locate_npm)"
+    koopa::dl \
+        'node' "$node" \
+        'npm' "$npm"
+    node_version="$(koopa::get_version "$node")"
+    koopa::configure_node --version="$node_version"
     koopa::activate_node
-    echo 'FIXME 111'
-    # FIXME This step is erroring when called inside install...
-    npm='npm'
-    koopa::assert_is_installed "$npm"
     # Ensure npm is configured to desired version.
     npm_version="$(koopa::variable 'node-npm')"
-    npm install -g "npm@${npm_version}"
-    koopa::activate_node
+    # The npm install step will fail unless 'node' is in 'PATH'.
+    koopa::add_to_path_start "$(koopa::dirname "$node")"
+    "$npm" install -g "npm@${npm_version}"
     npm="${prefix}/bin/npm"
     koopa::assert_is_executable "$npm"
     pkgs=("$@")
