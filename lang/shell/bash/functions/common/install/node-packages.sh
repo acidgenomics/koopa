@@ -1,26 +1,32 @@
 #!/usr/bin/env bash
 
-# FIXME Wrap in 'install_app' call.
-
 koopa::install_node_packages() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Node packages' \
+        --name='node-packages' \
+        --no-link \
+        --no-prefix-check \
+        --prefix="$(koopa::node_packages_prefix)" \
+        "$@"
+}
+
+# FIXME This step is erroring, need to figure out why.
+koopa:::install_node_packages() { # {{{1
     # """
     # Install Node.js packages using npm.
-    # @note Updated 2021-06-17.
+    # @note Updated 2021-09-16.
     # @seealso
     # - npm help config
     # - npm help install
     # - npm config get prefix
     # """
-    local name_fancy npm npm_version pkg pkg_lower pkgs prefix version
+    local npm npm_version pkg pkg_lower pkgs prefix version
     koopa::assert_has_no_args "$#"
-    koopa::assert_has_no_envs
     koopa::configure_node
     koopa::activate_node
-    name_fancy='Node.js packages'
-    prefix="$(koopa::node_packages_prefix)"
+    prefix="${INSTALL_PREFIX:?}"
     npm='npm'
     koopa::assert_is_installed "$npm"
-    koopa::install_start "$name_fancy" "$prefix"
     # Ensure npm is configured to desired version.
     npm_version="$(koopa::variable 'node-npm')"
     npm install -g "npm@${npm_version}"
@@ -30,7 +36,7 @@ koopa::install_node_packages() { # {{{1
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
-        # 'tldr' conflicts with Rust 'tealdeer'.
+        # NOTE 'tldr' conflicts with Rust 'tealdeer'.
         pkgs=(
             'gtop'
         )
@@ -43,7 +49,6 @@ koopa::install_node_packages() { # {{{1
         done
     fi
     "$npm" install -g "${pkgs[@]}"
-    koopa::install_success "$name_fancy" "$prefix"
     return 0
 }
 
