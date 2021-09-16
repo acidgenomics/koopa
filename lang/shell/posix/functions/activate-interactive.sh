@@ -384,7 +384,7 @@ _koopa_activate_lesspipe() { # {{{1
 _koopa_activate_mcfly() { #{{{1
     # """
     # Activate mcfly.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-09-16.
     #
     # Use 'mcfly search XXX' to query directly.
     # """
@@ -393,7 +393,8 @@ _koopa_activate_mcfly() { #{{{1
     _koopa_is_installed 'mcfly' || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
-        bash|zsh)
+        'bash' | \
+        'zsh')
             ;;
         *)
             return 0
@@ -401,8 +402,9 @@ _koopa_activate_mcfly() { #{{{1
     esac
     # > export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
-        emacs|vim)
-            export MCFLY_KEY_SCHEME="$EDITOR"
+        'emacs' | \
+        'vim')
+            export MCFLY_KEY_SCHEME="${EDITOR:?}"
         ;;
     esac
     export MCFLY_FUZZY=true
