@@ -2,6 +2,7 @@
 
 # [2021-05-27] macOS success.
 
+# FIXME This will fail inside of hardened 'install_app()' call. Need to rethink.
 koopa::configure_perl() { # {{{1
     # """
     # Configure Perl.

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME This will fail inside of hardened 'install_app()' call. Need to rethink.
 koopa::configure_node() { # {{{1
     # """
     # Configure Node.js (and NPM).
