@@ -64,17 +64,6 @@ _koopa_activate_conda() { # {{{1
     return 0
 }
 
-_koopa_activate_conda2() {
-    # """
-    # Simplify conda activation that puts 'condabin' in PATH.
-    # @note Updated 2021-08-18.
-    # """
-    local prefix
-    prefix="$(_koopa_conda_prefix)"
-    _koopa_add_to_path_start "${prefix}/condabin"
-    return 0
-}
-
 _koopa_activate_emacs() { # {{{1
     # """
     # Activate Emacs.
