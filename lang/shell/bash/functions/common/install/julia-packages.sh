@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
 
-# FIXME Wrap in 'install_app' call.
-
 koopa::install_julia_packages() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Julia packages' \
+        --name='julia-packages' \
+        --no-link \
+        --no-prefix-check \
+        --prefix="$(koopa::python_packages_prefix)" \
+        "$@"
+}
+
+koopa:::install_julia_packages() { # {{{1
     # """
     # Install Julia packages.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-16.
     # @seealso
     # - 'JULIA_DEPOT_PATH' in shell.
     # - 'DEPOT_PATH' in Julia.
