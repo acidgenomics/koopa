@@ -58,7 +58,7 @@ koopa::uninstall_python_packages() { # {{{1
     # Uninstall Python packages.
     # @note Updated 2021-06-14.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Python packages' \
         --name='python-packages' \
         --no-link \

@@ -106,7 +106,7 @@ koopa:::install_python() { # {{{1
 }
 
 koopa::uninstall_python() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Python' \
         --name='python' \
         "$@"

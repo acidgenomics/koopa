@@ -32,7 +32,7 @@ koopa:::install_udunits() { # {{{1
 }
 
 koopa::uninstall_udunits() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='udunits' \
         "$@"
 }

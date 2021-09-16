@@ -25,7 +25,7 @@ koopa::linux_uninstall_cloudbiolinux() { # {{{1
     # Uninstall CloudBioLinux.
     # @note Updated 2021-06-11.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='cloudbiolinux' \
         --name-fancy='CloudBioLinux' \
         --no-link \

@@ -139,7 +139,7 @@ koopa:::install_r_devel() { # {{{1
 }
 
 koopa::uninstall_r_devel() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='R-devel' \
         --name='r-devel' \
         "$@"

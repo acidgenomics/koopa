@@ -56,7 +56,7 @@ koopa::linux_uninstall_aws_cli() { # {{{1
     # Uninstall AWS CLI.
     # @note Updated 2021-06-11.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='aws-cli' \
         --name-fancy='AWS CLI' \
         "$@"

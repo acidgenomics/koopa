@@ -52,7 +52,7 @@ koopa::uninstall_node_packages() { # {{{1
     # Uninstall Node.js packages.
     # @note Updated 2021-06-17.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='node-packages' \
         --name-fancy='Node.js packages' \
         --no-link \

@@ -69,7 +69,7 @@ koopa:::install_perl() { # {{{1
 }
 
 koopa::uninstall_perl() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Perl' \
         --name='perl' \
         "$@"

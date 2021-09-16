@@ -63,7 +63,7 @@ koopa::linux_uninstall_bcbio_nextgen_vm() { # {{{1
     # Uninstall bcbio-nextgen-vm.
     # @note Updated 2021-06-11.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='bcbio-nextgen-vm' \
         --no-link \
         "$@"

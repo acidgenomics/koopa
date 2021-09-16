@@ -27,7 +27,7 @@ koopa::uninstall_r_packages() { # {{{1
     # Uninstall R packages.
     # @note Updated 2021-06-14.
     # """
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='R packages' \
         --name='r-packages' \
         --no-link \

@@ -95,7 +95,7 @@ ${name}-${minor_version}-patches"
 }
 
 koopa::uninstall_bash() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Bash' \
         --name='bash' \
         "$@"

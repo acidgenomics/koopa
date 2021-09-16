@@ -49,7 +49,7 @@ koopa:::install_rust() { # {{{1
 }
 
 koopa::uninstall_rust() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='Rust' \
         --name='rust' \
         --no-link \

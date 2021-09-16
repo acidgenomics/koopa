@@ -118,7 +118,7 @@ koopa::uninstall_openjdk() { # {{{1
     # @note Updated 2021-09-14.
     # """
     local default_prefix
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='OpenJDK' \
         --name='openjdk' \
         --no-link \

@@ -29,7 +29,7 @@ koopa:::install_neofetch() { # {{{1
 }
 
 koopa::uninstall_neofetch() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='neofetch' \
         "$@"
 }

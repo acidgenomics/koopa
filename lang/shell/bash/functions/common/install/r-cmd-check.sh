@@ -21,7 +21,7 @@ koopa:::install_r_cmd_check() { # {{{1
 }
 
 koopa::uninstall_r_cmd_check() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name='r-cmd-check' \
         --no-link \
         "$@"

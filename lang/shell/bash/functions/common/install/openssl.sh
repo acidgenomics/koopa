@@ -37,7 +37,7 @@ koopa:::install_openssl() { # {{{1
 }
 
 koopa::uninstall_openssl() { # {{{1
-    koopa::uninstall_app \
+    koopa:::uninstall_app \
         --name-fancy='OpenSSL' \
         --name='openssl' \
         --no-link \
