@@ -3,13 +3,14 @@
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-09-16.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
     # 2. Check in make prefix (e.g. '/usr/local').
-    # 3. Check in Homebrew opt.
-    # 4. Check in system library.
+    # 3. Check in koopa opt.
+    # 4. Check in Homebrew opt.
+    # 5. Check in system library.
     # """
     local app dict pos
     declare -A dict=(
@@ -17,6 +18,8 @@ koopa:::locate_app() { # {{{1
         [brew_name]=''
         [brew_prefix]="$(koopa::homebrew_prefix)"
         [gnubin]=0
+        [koopa_app]=''
+        [koopa_opt]="$(koopa::opt_prefix)"
         [make_prefix]="$(koopa::make_prefix)"
         [macos_app]=''
     )
@@ -63,6 +66,8 @@ koopa:::locate_app() { # {{{1
     fi
     # Prepare paths where to look for app.
     dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
+    dict[koopa_app]="${dict[opt_prefix]}/${dict[app_name]}/\
+bin/${dict[app_name]}"
     if [[ "${dict[gnubin]}" -eq 1 ]]
     then
         dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_name]}/\
@@ -81,6 +86,9 @@ bin/${dict[app_name]}"
     elif [[ -x "${dict[make_app]}" ]]
     then
         app="${dict[make_app]}"
+    elif [[ -x "${dict[koopa_app]}" ]]
+    then
+        app="${dict[koopa_app]}"
     elif [[ -x "${dict[brew_app]}" ]]
     then
         app="${dict[brew_app]}"
