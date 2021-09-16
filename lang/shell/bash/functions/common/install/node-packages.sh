@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently failing due to 'configure_node' call.
 koopa::install_node_packages() { # {{{1
     koopa:::install_app \
         --name-fancy='Node packages' \
