@@ -21,6 +21,7 @@ koopa:::install_r_packages() { # {{{1
     return 0
 }
 
+# FIXME Standard this with other package manager functions.
 koopa::uninstall_r_packages() { # {{{1
     # """
     # Uninstall R packages.
