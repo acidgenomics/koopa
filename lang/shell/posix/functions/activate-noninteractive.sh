@@ -445,7 +445,7 @@ _koopa_activate_opt_prefix() { # {{{1
 _koopa_activate_perl() { # {{{1
     # """
     # Activate Perl, adding local library to 'PATH'.
-    # @note Updated 2021-08-17.
+    # @note Updated 2021-09-17.
     #
     # No longer querying Perl directly here, to speed up shell activation
     # (see commented legacy approach below).
@@ -472,6 +472,7 @@ _koopa_activate_perl() { # {{{1
     export PERL_LOCAL_LIB_ROOT="$prefix"
     export PERL_MB_OPT="--install_base '${prefix}'"
     export PERL_MM_OPT="INSTALL_BASE=${prefix}"
+    export PERL_MM_USE_DEFAULT=1
     return 0
 }
 
