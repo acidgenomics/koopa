@@ -685,6 +685,15 @@ koopa::locate_perl() { # {{{1
     koopa:::locate_app 'perl'
 }
 
+koopa::locate_perlbrew() { # {{{1
+    # """
+    # Locate perlbrew.
+    # @note Updated 2021-09-17.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'perlbrew'
+}
+
 koopa::locate_pkg_config() { # {{{1
     # """
     # Locate pkg-config.
