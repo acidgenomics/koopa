@@ -428,6 +428,7 @@ koopa::update_app() { # {{{1
         [homebrew_opt]=''
         [name_fancy]=''
         [opt]=''
+        [opt_prefix]="$(koopa::opt_prefix)"
         [platform]=''
         [prefix]=''
         [shared]=0
@@ -512,11 +513,7 @@ koopa::update_app() { # {{{1
     fi
     if [[ -z "${dict[prefix]}" ]]
     then
-        if [[ -z "${dict[version]}" ]]
-        then
-            dict[version]="$(koopa::variable "${dict[name]}")"
-        fi
-        dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
+        dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
     fi
     koopa::update_start "${dict[name_fancy]}" "${dict[prefix]}"
     koopa::assert_is_dir "${dict[prefix]}"
