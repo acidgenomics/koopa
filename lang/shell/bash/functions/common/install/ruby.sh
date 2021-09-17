@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This will fail inside of hardened 'install_app()' call. Need to rethink.
 koopa::configure_ruby() { # {{{1
     # """
     # Configure Ruby.
@@ -9,6 +8,7 @@ koopa::configure_ruby() { # {{{1
     koopa:::configure_app_packages \
         --name-fancy='Ruby' \
         --name='ruby' \
+        --which-app="$(koopa::locate_ruby)" \
         "$@"
 }
 
