@@ -82,9 +82,14 @@ koopa:::install_app() { # {{{1
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
     # """
-    local arr dict link_args pkgs pos rm str tee
+    local arr conf_bak dict link_args pkgs pos rm str tee
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
+    declare -A conf_bak=(
+        [LD_LIBRARY_PATH]="${LD_LIBRARY_PATH:-}"
+        [PATH]="${PATH:-}"
+        [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
+    )
     declare -A dict=(
         [homebrew_opt]=''
         [installer]=''
@@ -93,7 +98,6 @@ koopa:::install_app() { # {{{1
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt]=''
-        [path_harden]=1
         [platform]=''
         [prefix]=''
         [prefix_check]=1
@@ -129,10 +133,6 @@ koopa:::install_app() { # {{{1
                 ;;
             --no-link)
                 dict[link_app]=0
-                shift 1
-                ;;
-            --no-path-harden)
-                dict[path_harden]=0
                 shift 1
                 ;;
             --no-prefix-check)
@@ -212,9 +212,7 @@ koopa:::install_app() { # {{{1
         fi
         dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     fi
-    koopa::install_start \
-        "${dict[name_fancy]}" \
-        "${dict[prefix]}"
+    koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
     then
         if [[ "${dict[reinstall]}" -eq 1 ]]
@@ -236,46 +234,18 @@ at '${dict[prefix]}'."
         fi
     fi
     # Ensure configuration is minimal before proceeding, when desirable.
-    if [[ "${dict[path_harden]}" -eq 1 ]]
+    unset -v LD_LIBRARY_PATH
+    # Ensure clean minimal 'PATH'.
+    arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
+    str="$(koopa::paste0 ':' "${arr[@]}")"
+    PATH="$str"
+    export PATH
+    # Ensure clean minimal 'PKG_CONFIG_PATH'.
+    unset -v PKG_CONFIG_PATH
+    if [[ -x '/usr/bin/pkg-config' ]]
     then
-        declare -A conf_bak=(
-            [LD_LIBRARY_PATH]="${LD_LIBRARY_PATH:-}"
-            [PATH]="${PATH:-}"
-            [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
-        )
-        unset -v LD_LIBRARY_PATH
-        # Ensure clean minimal 'PATH'.
-        arr=(
-            '/usr/bin'
-            '/bin'
-            '/usr/sbin'
-            '/sbin'
-        )
-        str="$(koopa::paste0 ':' "${arr[@]}")"
-        PATH="$str"
-        export PATH
-        # Ensure clean minimal 'PKG_CONFIG_PATH'.
-        if koopa::is_linux
-        then
-            # FIXME Get the configuration from the system instead...
-            # FIXME Need to call system pkgconfig here and get the string
-            # instead.
-            # FIXME Alternatively, can store default PKG_CONFIG_PATH string.
-            arr=(
-                "/usr/lib/${dict[arch]}-linux-gnu/pkgconfig"  # FIXME Rework.
-                '/usr/lib/pkgconfig'
-                '/usr/share/pkgconfig'
-            )
-            str="$(koopa::paste0 ':' "${arr[@]}")"
-            PKG_CONFIG_PATH="$str"
-            export PKG_CONFIG_PATH
-        else
-            unset -v PKG_CONFIG_PATH
-        fi
-
-
-
-
+        _koopa_add_to_pkg_config_path_start_2 \
+            '/usr/bin/pkg-config'
     fi
     # Activate packages installed in Homebrew 'opt/' directory.
     if [[ -n "${dict[homebrew_opt]}" ]]
@@ -329,28 +299,25 @@ at '${dict[prefix]}'."
     else
         koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
     fi
+    # Reset global variables, if applicable.
+    if [[ -n "${conf_bak[LD_LIBRARY_PATH]}" ]]
+    then
+        LD_LIBRARY_PATH="${conf_bak[LD_LIBRARY_PATH]}"
+        export LD_LIBRARY_PATH
+    fi
+    if [[ -n "${conf_bak[PATH]}" ]]
+    then
+        PATH="${conf_bak[PATH]}"
+        export PATH
+    fi
+    if [[ -n "${conf_bak[PKG_CONFIG_PATH]}" ]]
+    then
+        PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
+        export PKG_CONFIG_PATH
+    fi
     if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
     then
         koopa::update_ldconfig
-    fi
-    # Reset global variables, if applicable.
-    if [[ "${dict[path_harden]}" -eq 1 ]]
-    then
-        if [[ -n "${conf_bak[LD_LIBRARY_PATH]}" ]]
-        then
-            LD_LIBRARY_PATH="${conf_bak[LD_LIBRARY_PATH]}"
-            export LD_LIBRARY_PATH
-        fi
-        if [[ -n "${conf_bak[PATH]}" ]]
-        then
-            PATH="${conf_bak[PATH]}"
-            export PATH
-        fi
-        if [[ -n "${conf_bak[PKG_CONFIG_PATH]}" ]]
-        then
-            PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
-            export PKG_CONFIG_PATH
-        fi
     fi
     koopa::install_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
@@ -449,21 +416,22 @@ koopa::update_app() { # {{{1
     # Update application.
     # @note Updated 2021-09-17.
     # """
-    local arr dict link_args pkgs pos rm str tee
+    local arr conf_bak dict pkgs pos str tee
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
+    declare -A conf_bak=(
+        [LD_LIBRARY_PATH]="${LD_LIBRARY_PATH:-}"
+        [PATH]="${PATH:-}"
+        [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
+    )
     declare -A dict=(
         [homebrew_opt]=''
-        [installer]=''
-        [link_app]=1
-        [link_include_dirs]=''
-        [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt]=''
-        [path_harden]=1
         [platform]=''
         [prefix]=''
         [shared]=0
+        [updater]=''
         [version]=''
     )
     koopa::is_shared_install && dict[shared]=1
@@ -476,28 +444,12 @@ koopa::update_app() { # {{{1
                 dict[homebrew_opt]="${1#*=}"
                 shift 1
                 ;;
-            --installer=*)
-                dict[installer]="${1#*=}"
-                shift 1
-                ;;
-            --link-include-dirs=*)
-                dict[link_include_dirs]="${1#*=}"
-                shift 1
-                ;;
             --name=*)
                 dict[name]="${1#*=}"
                 shift 1
                 ;;
             --name-fancy=*)
                 dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            --no-link)
-                dict[link_app]=0
-                shift 1
-                ;;
-            --no-path-harden)
-                dict[path_harden]=0
                 shift 1
                 ;;
             --no-shared)
@@ -514,6 +466,10 @@ koopa::update_app() { # {{{1
                 ;;
             --prefix=*)
                 dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            --updater=*)
+                dict[updater]="${1#*=}"
                 shift 1
                 ;;
             --version=*)
@@ -534,16 +490,10 @@ koopa::update_app() { # {{{1
     if [[ "${dict[shared]}" -eq 1 ]]
     then
         koopa::assert_is_admin
-    else
-        dict[link_app]=0
     fi
-    if koopa::is_macos
+    if [[ -z "${dict[updater]}" ]]
     then
-        dict[link_app]=0
-    fi
-    if [[ -z "${dict[installer]}" ]]
-    then
-        dict[installer]="${dict[name]}"
+        dict[updater]="${dict[name]}"
     fi
     dict[function]="$(koopa::snake_case_simple "${dict[installer]}")"
     dict[function]="update_${dict[function]}"
@@ -568,46 +518,21 @@ koopa::update_app() { # {{{1
         fi
         dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     fi
-    koopa::update_start \
-        "${dict[name_fancy]}" \
-        "${dict[prefix]}"
+    koopa::update_start "${dict[name_fancy]}" "${dict[prefix]}"
     koopa::assert_is_dir "${dict[prefix]}"
     # Ensure configuration is minimal before proceeding, when desirable.
-    if [[ "${dict[path_harden]}" -eq 1 ]]
+    unset -v LD_LIBRARY_PATH
+    # Ensure clean minimal 'PATH'.
+    arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
+    str="$(koopa::paste0 ':' "${arr[@]}")"
+    PATH="$str"
+    export PATH
+    # Ensure clean minimal 'PKG_CONFIG_PATH'.
+    unset -v PKG_CONFIG_PATH
+    if [[ -x '/usr/bin/pkg-config' ]]
     then
-        declare -A conf_bak=(
-            [LD_LIBRARY_PATH]="${LD_LIBRARY_PATH:-}"
-            [PATH]="${PATH:-}"
-            [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
-        )
-        unset -v LD_LIBRARY_PATH
-        # Ensure clean minimal 'PATH'.
-        arr=(
-            '/usr/bin'
-            '/bin'
-            '/usr/sbin'
-            '/sbin'
-        )
-        str="$(koopa::paste0 ':' "${arr[@]}")"
-        PATH="$str"
-        export PATH
-        # Ensure clean minimal 'PKG_CONFIG_PATH'.
-        # FIXME Need to call system pkgconfig here and get the string
-        # instead.
-        # FIXME Alternatively, can store default PKG_CONFIG_PATH string.
-        if koopa::is_linux
-        then
-            arr=(
-                "/usr/lib/${dict[arch]}-linux-gnu/pkgconfig"
-                '/usr/lib/pkgconfig'
-                '/usr/share/pkgconfig'
-            )
-            str="$(koopa::paste0 ':' "${arr[@]}")"
-            PKG_CONFIG_PATH="$str"
-            export PKG_CONFIG_PATH
-        else
-            unset -v PKG_CONFIG_PATH
-        fi
+        _koopa_add_to_pkg_config_path_start_2 \
+            '/usr/bin/pkg-config'
     fi
     # Activate packages installed in Homebrew 'opt/' directory.
     if [[ -n "${dict[homebrew_opt]}" ]]
@@ -641,48 +566,28 @@ koopa::update_app() { # {{{1
     koopa::rm "${dict[tmp_dir]}"
     if [[ "${dict[shared]}" -eq 1 ]]
     then
-        koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
         koopa::sys_set_permissions -r "${dict[prefix]}"
     fi
     koopa::delete_empty_dirs "${dict[prefix]}"
-    if [[ "${dict[link_app]}" -eq 1 ]]
+    # Reset global variables, if applicable.
+    if [[ -n "${conf_bak[LD_LIBRARY_PATH]}" ]]
     then
-        koopa::delete_broken_symlinks "${dict[make_prefix]}"
-        link_args=(
-            "--name=${dict[name]}"
-            "--version=${dict[version]}"
-        )
-        if [[ -n "${dict[link_include_dirs]}" ]]
-        then
-            link_args+=("--include-dirs=${dict[link_include_dirs]}")
-        fi
-        # Including the 'true' catch here to avoid 'cp' issues on Arch Linux.
-        koopa::link_app "${link_args[@]}" || true
-    else
-        koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
+        LD_LIBRARY_PATH="${conf_bak[LD_LIBRARY_PATH]}"
+        export LD_LIBRARY_PATH
+    fi
+    if [[ -n "${conf_bak[PATH]}" ]]
+    then
+        PATH="${conf_bak[PATH]}"
+        export PATH
+    fi
+    if [[ -n "${conf_bak[PKG_CONFIG_PATH]}" ]]
+    then
+        PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
+        export PKG_CONFIG_PATH
     fi
     if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
     then
         koopa::update_ldconfig
-    fi
-    # Reset global variables, if applicable.
-    if [[ "${dict[path_harden]}" -eq 1 ]]
-    then
-        if [[ -n "${conf_bak[LD_LIBRARY_PATH]}" ]]
-        then
-            LD_LIBRARY_PATH="${conf_bak[LD_LIBRARY_PATH]}"
-            export LD_LIBRARY_PATH
-        fi
-        if [[ -n "${conf_bak[PATH]}" ]]
-        then
-            PATH="${conf_bak[PATH]}"
-            export PATH
-        fi
-        if [[ -n "${conf_bak[PKG_CONFIG_PATH]}" ]]
-        then
-            PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
-            export PKG_CONFIG_PATH
-        fi
     fi
     koopa::update_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
