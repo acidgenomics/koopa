@@ -102,7 +102,8 @@ koopa::python_pip_install() { # {{{1
         )
     fi
     "$python" -m pip install "${install_flags[@]}" "$@"
-    koopa::sys_set_permissions -r "$target"
+    # NOTE This step is handled in the 'install' and 'update' wrapper functions.
+    # > koopa::sys_set_permissions -r "$target"
     return 0
 }
 
