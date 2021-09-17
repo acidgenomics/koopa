@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rethink package install consistency.
-
 koopa::install_rust_packages() {
     koopa:::install_app \
         --name-fancy='Rust packages' \
@@ -26,13 +24,12 @@ koopa:::install_rust_packages() { # {{{1
     # - https://github.com/rust-lang/cargo/pull/7560
     # """
     local args default jobs pkg pkgs pkg_args root version
-    koopa::assert_has_no_envs
-    # FIXME Need to locate rust or pass in the version.
     koopa::configure_rust
     koopa::activate_rust
-    # NOTE This step will currently fail when '--reinstall' is set.
-    # These packages are installed by default in our Rust install script.
-    koopa::assert_is_installed 'cargo' 'rustc' 'rustup'
+    if ! koopa::is_installed 'cargo' 'rustc' 'rustup'
+    then
+        koopa::stop 'Need to reinstall Rust.'
+    fi
     pkgs=("$@")
     root="${INSTALL_PREFIX:?}"
     jobs="$(koopa::cpu_count)"
