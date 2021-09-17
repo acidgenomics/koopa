@@ -33,7 +33,7 @@ koopa::configure_perl() { # {{{1
     koopa::add_to_path_start "$(koopa::dirname "$perl")"
     "$yes" \
         | PERL_MM_OPT="INSTALL_BASE=$prefix" \
-            cpan -f -i 'local::lib' \
+            cpan -f -i 'local::lib' &>/dev/null \
         || true
     eval "$( \
         "$perl" \
