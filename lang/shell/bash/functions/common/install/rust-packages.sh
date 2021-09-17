@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rethink package install consistency.
+
 koopa::install_rust_packages() {
     koopa:::install_app \
         --name-fancy='Rust packages' \
@@ -25,6 +27,7 @@ koopa:::install_rust_packages() { # {{{1
     # """
     local args default jobs pkg pkgs pkg_args root version
     koopa::assert_has_no_envs
+    # FIXME Need to locate rust or pass in the version.
     koopa::configure_rust
     koopa::activate_rust
     # NOTE This step will currently fail when '--reinstall' is set.

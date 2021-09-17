@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rethink package install consistency.
+
 koopa::install_ruby_packages() { # {{{1
     koopa:::install_app \
         --name-fancy='Ruby packages' \
@@ -25,6 +27,7 @@ koopa:::install_ruby_packages() { # {{{1
         'ruby' "$ruby" \
         'gem' "$gem"
     ruby_version="$(koopa::get_version "$ruby")"
+    # FIXME Should we just locate ruby instead of passing in the version?
     koopa::configure_ruby --version="$ruby_version"
     koopa::activate_ruby
     if koopa::is_macos
