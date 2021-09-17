@@ -638,134 +638,135 @@ koopa::r_version() { # {{{1
 koopa::return_version() { # {{{1
     # """
     # Return version (via extraction).
-    # @note Updated 2021-08-31.
+    # @note Updated 2021-09-17.
     # """
-    local cmd flag x
+    local cmd cmd_name flag x
     koopa::assert_has_args_le "$#" 2
     cmd="${1:?}"
+    cmd_name="$(koopa::basename "$cmd")"
     flag="${2:-}"
-    case "$cmd" in
-        aspera-connect)
+    case "$cmd_name" in
+        'aspera-connect')
             cmd='ascp'
             ;;
-        aws-cli)
+        'aws-cli')
             cmd='aws'
             ;;
-        azure-cli)
+        'azure-cli')
             cmd='az'
             ;;
-        bcbio-nextgen)
+        'bcbio-nextgen')
             cmd='bcbio_nextgen.py'
             ;;
-        binutils)
+        'binutils')
             # > cmd='ld'  # doesn't work on macOS with Homebrew.
             cmd='dlltool'
             ;;
-        coreutils)
+        'coreutils')
             cmd='env'
             ;;
-        du-dust)
+        'du-dust')
             cmd='dust'
             ;;
-        fd-find)
+        'fd-find')
             cmd='fd'
             ;;
-        findutils)
+        'findutils')
             cmd='find'
             ;;
-        gdal)
+        'gdal')
             # Changed from 'gdalinfo' to 'gdal-config' in 3.2.0.
             cmd='gdal-config'
             ;;
-        geos)
+        'geos')
             cmd='geos-config'
             ;;
-        gnupg)
+        'gnupg')
             cmd='gpg'
             ;;
-        google-cloud-sdk)
+        'google-cloud-sdk')
             cmd='gcloud'
             ;;
-        gsl)
+        'gsl')
             cmd='gsl-config'
             ;;
-        homebrew)
+        'homebrew')
             cmd='brew'
             ;;
-        icu)
+        'icu')
             cmd='icu-config'
             ;;
-        ncurses)
+        'ncurses')
             cmd='ncurses6-config'
             ;;
-        neovim)
+        'neovim')
             cmd='nvim'
             ;;
-        openssh)
+        'openssh')
             cmd='ssh'
             ;;
-        password-store)
+        'password-store')
             cmd='pass'
             ;;
-        pip)
+        'pip')
             cmd='pip3'
             ;;
-        python)
+        'python')
             cmd="$(koopa::locate_python)"
             ;;
-        ranger-fm)
+        'ranger-fm')
             cmd='ranger'
             ;;
-        ripgrep)
+        'ripgrep')
             cmd='rg'
             ;;
-        ripgrep-all)
+        'ripgrep-all')
             cmd='rga'
             ;;
-        rust)
+        'rust')
             cmd='rustc'
             ;;
-        sqlite)
+        'sqlite')
             cmd='sqlite3'
             ;;
-        subversion)
+        'subversion')
             cmd='svn'
             ;;
-        tealdeer)
+        'tealdeer')
             cmd='tldr'
             ;;
-        texinfo)
+        'texinfo')
             cmd='makeinfo'
             ;;
-        the-silver-searcher)
+        'the-silver-searcher')
             cmd='ag'
             ;;
     esac
     if [[ -z "${flag:-}" ]]
     then
-        case "$cmd" in
-            docker-credential-pass)
+        case "$cmd_name" in
+            'docker-credential-pass')
                 flag='version'
                 ;;
-            go)
+            'go')
                 flag='version'
                 ;;
-            lua)
+            'lua')
                 flag='-v'
                 ;;
-            openssl)
+            'openssl')
                 flag='version'
                 ;;
-            rstudio-server)
+            'rstudio-server')
                 flag='version'
                 ;;
-            ssh)
+            'ssh')
                 flag='-V'
                 ;;
-            singularity)
+            'singularity')
                 flag='version'
                 ;;
-            tmux)
+            'tmux')
                 flag='-V'
                 ;;
             *)

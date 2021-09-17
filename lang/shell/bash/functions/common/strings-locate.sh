@@ -400,6 +400,15 @@ koopa::locate_git() { # {{{1
     koopa:::locate_app 'git'
 }
 
+koopa::locate_go() { # {{{1
+    # """
+    # Locate go.
+    # @note Updated 2021-09-17.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'go'
+}
+
 koopa::locate_gpg() { # {{{1
     # """
     # Locate gpg.
