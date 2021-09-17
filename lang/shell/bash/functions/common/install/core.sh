@@ -86,7 +86,6 @@ koopa:::install_app() { # {{{1
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A dict=(
-        [arch]="$(koopa::arch)"
         [homebrew_opt]=''
         [installer]=''
         [link_app]=1
@@ -256,19 +255,14 @@ at '${dict[prefix]}'."
         PATH="$str"
         export PATH
         # Ensure clean minimal 'PKG_CONFIG_PATH'.
-
-
-
-
-        # FIXME This needs to be done on macOS as well.
-
         if koopa::is_linux
         then
+            # FIXME Get the configuration from the system instead...
             # FIXME Need to call system pkgconfig here and get the string
             # instead.
             # FIXME Alternatively, can store default PKG_CONFIG_PATH string.
             arr=(
-                "/usr/lib/${dict[arch]}-linux-gnu/pkgconfig"
+                "/usr/lib/${dict[arch]}-linux-gnu/pkgconfig"  # FIXME Rework.
                 '/usr/lib/pkgconfig'
                 '/usr/share/pkgconfig'
             )
@@ -459,7 +453,6 @@ koopa::update_app() { # {{{1
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A dict=(
-        [arch]="$(koopa::arch)"
         [homebrew_opt]=''
         [installer]=''
         [link_app]=1
