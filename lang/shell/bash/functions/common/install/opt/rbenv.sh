@@ -33,6 +33,7 @@ koopa::uninstall_rbenv() { # {{{1
         "$@"
 }
 
+# FIXME Need to wrap this.
 koopa::update_rbenv() { # {{{1
     # """
     # Update rbenv.
