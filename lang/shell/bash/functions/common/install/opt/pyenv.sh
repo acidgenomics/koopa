@@ -27,6 +27,8 @@ koopa::uninstall_pyenv() { # {{{1
         "$@"
 }
 
+# FIXME This doesn't handle permissions correctly.
+# FIXME Need to rethink using an internal function.
 koopa::update_pyenv() { # {{{1
     # """
     # Update pyenv.

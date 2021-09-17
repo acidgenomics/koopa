@@ -37,6 +37,7 @@ koopa::uninstall_perlbrew() { # {{{1
         "$@"
 }
 
+# FIXME Need to wrap this, and ensure permissions are correct.
 koopa::update_perlbrew() { # {{{1
     # """
     # Update Perlbrew.

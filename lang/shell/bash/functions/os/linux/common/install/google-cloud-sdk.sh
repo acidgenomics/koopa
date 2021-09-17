@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Does this set permissions correctly?
+# Need to wrap this in internal installer.
 koopa::linux_update_google_cloud_sdk() { # {{{1
     # """
     # Update Google Cloud SDK.

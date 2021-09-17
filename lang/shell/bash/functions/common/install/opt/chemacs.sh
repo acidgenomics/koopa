@@ -31,6 +31,7 @@ koopa::uninstall_chemacs() { # {{{1
         "$@"
 }
 
+# FIXME Need to standardize using an internal updater.
 koopa::update_chemacs() { # {{{1
     # """
     # Update Chemacs2.
