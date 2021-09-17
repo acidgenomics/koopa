@@ -27,6 +27,7 @@ koopa::uninstall_r_cmd_check() { # {{{1
         "$@"
 }
 
+# FIXME Need to wrap this and ensure permissions are correct.
 koopa::update_r_cmd_check() { # {{{1
     # """
     # Update r-cmd-check scripts.

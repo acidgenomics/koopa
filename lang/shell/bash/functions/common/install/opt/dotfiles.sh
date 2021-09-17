@@ -55,6 +55,7 @@ koopa::uninstall_dotfiles() { # {{{1
     return 0
 }
 
+# FIXME Need to ensure permissions are correct here.
 koopa::update_dotfiles() { # {{{1
     # """
     # Update dotfiles repo and run install script, if defined.

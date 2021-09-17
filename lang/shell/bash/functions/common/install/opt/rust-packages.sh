@@ -99,5 +99,4 @@ koopa::update_rust_packages() { # {{{1
     # @note Updated 2020-07-17.
     # """
     koopa::install_rust_packages "$@"
-    return 0
 }

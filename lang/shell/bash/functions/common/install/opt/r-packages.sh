@@ -34,6 +34,7 @@ koopa::uninstall_r_packages() { # {{{1
 }
 
 # FIXME Need to wrap this in 'update_app' call.
+# FIXME Remove manual permissions call here after wrapping.
 koopa::update_r_packages() { # {{{1
     # """
     # Update R packages.
