@@ -37,21 +37,20 @@ koopa::uninstall_perlbrew() { # {{{1
         "$@"
 }
 
-# FIXME Need to wrap this, and ensure permissions are correct.
 koopa::update_perlbrew() { # {{{1
+    koopa:::update_app \
+        --name='perlbrew' \
+        --name-fancy='Perlbrew'
+    }
+
+koopa:::update_perlbrew() { # {{{1
     # """
     # Update Perlbrew.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-17.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_has_no_envs
     koopa::activate_perlbrew
-    if ! koopa::is_installed 'perlbrew'
-    then
-        koopa::alert_is_not_installed 'perlbrew'
-        return 0
-    fi
-    koopa::h1 'Updating Perlbrew.'
+    koopa::assert_is_installed 'perlbrew'
     perlbrew self-upgrade
     return 0
 }
