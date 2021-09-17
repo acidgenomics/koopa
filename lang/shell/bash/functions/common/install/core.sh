@@ -411,7 +411,7 @@ koopa:::uninstall_app() { # {{{1
     return 0
 }
 
-koopa::update_app() { # {{{1
+koopa:::update_app() { # {{{1
     # """
     # Update application.
     # @note Updated 2021-09-17.
@@ -496,7 +496,7 @@ koopa::update_app() { # {{{1
     then
         dict[updater]="${dict[name]}"
     fi
-    dict[function]="$(koopa::snake_case_simple "${dict[installer]}")"
+    dict[function]="$(koopa::snake_case_simple "${dict[updater]}")"
     dict[function]="update_${dict[function]}"
     if [[ -n "${dict[platform]}" ]]
     then
@@ -550,8 +550,6 @@ koopa::update_app() { # {{{1
     dict[tmp_dir]="$(koopa::tmp_dir)"
     (
         koopa::cd "${dict[tmp_dir]}"
-        # shellcheck disable=SC2030
-        export UPDATE_LINK_APP="${dict[link_app]}"
         # shellcheck disable=SC2030
         export UPDATE_NAME="${dict[name]}"
         # shellcheck disable=SC2030

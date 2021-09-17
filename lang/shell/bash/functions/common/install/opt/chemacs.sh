@@ -31,21 +31,22 @@ koopa::uninstall_chemacs() { # {{{1
         "$@"
 }
 
-# FIXME Need to standardize using an internal updater.
 koopa::update_chemacs() { # {{{1
+    koopa:::update_app \
+        --name='chemacs' \
+        --name-fancy='Chemacs'
+}
+
+koopa:::update_chemacs() { # {{{1
     # """
     # Update Chemacs2.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-09-17.
     # """
-    local name_fancy prefix
-    name_fancy='Chemacs'
-    prefix="$(koopa::opt_prefix)/chemacs"
-    koopa::assert_is_dir "$prefix"
-    koopa::update_start "$name_fancy" "$prefix"
+    local prefix
+    prefix="${UPDATE_PREFIX:?}"
     (
         koopa::cd "$prefix"
         koopa::git_pull
     )
-    koopa::update_success "$name_fancy" "$prefix"
     return 0
 }
