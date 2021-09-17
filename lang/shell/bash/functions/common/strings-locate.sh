@@ -945,3 +945,15 @@ koopa::locate_xargs() { # {{{1
         --gnubin \
         --name='xargs'
 }
+
+koopa::locate_yes() { # {{{1
+    # """
+    # Locate GNU yes.
+    # @note Updated 2021-09-17.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-name='coreutils' \
+        --gnubin \
+        --name='yes'
+}

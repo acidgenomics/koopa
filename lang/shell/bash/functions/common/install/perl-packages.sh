@@ -10,6 +10,8 @@ koopa::install_perl_packages() { # {{{1
         "$@"
 }
 
+# FIXME We may need to put correct Perl in path here.
+# FIXME This is prompting about CPAN config.
 koopa:::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
@@ -22,10 +24,15 @@ koopa:::install_perl_packages() { # {{{1
     # * --from https://cpan.metacpan.org/      # use only the HTTPS mirror
     # """
     local module modules
+    # FIXME This is prompting about CPAN configuration...need to ensure this
+    # is fully automatic.
     koopa::configure_perl
     koopa::activate_perl
     koopa::assert_is_installed 'cpan' 'perl'
     # Ensure that Perl installer doesn't prompt.
+
+    koopa::stop "$(koopa::which_realpath 'perl')"
+
     export PERL_MM_USE_DEFAULT=1
     if ! koopa::is_installed 'cpanm'
     then
