@@ -1,28 +1,24 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
+# [2021-09-17] macOS success.
 
-# FIXME This will fail inside of hardened 'install_app()' call. Need to rethink.
 koopa::configure_perl() { # {{{1
     # """
     # Configure Perl.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-17.
     # """
-    local name name_fancy perl prefix version
-    perl="${1:-}"
-    [[ -z "$perl" ]] && perl="$(koopa::locate_perl)"
-    koopa::assert_is_installed "$perl"
-    name='perl'
-    name_fancy='Perl'
-    version="$(koopa::get_version "$name")"
-    prefix="$(koopa::perl_packages_prefix "$version")"
+    local perl prefix
+    koopa::assert_has_no_args "$#"
+    perl="$(koopa::locate_perl)"
     koopa:::configure_app_packages \
-        --name="$name" \
-        --name-fancy="$name_fancy" \
-        --prefix="$prefix"
+        --name='perl' \
+        --name-fancy='Perl' \
+        --which-app="$perl"
+    prefix="$(koopa::perl_packages_prefix)"
     koopa::assert_is_dir "$prefix"
     koopa::alert "Setting up 'local::lib' at '${prefix}' using CPAN."
-    PERL_MM_OPT="INSTALL_BASE=$prefix" cpan 'local::lib'
+    PERL_MM_OPT="INSTALL_BASE=$prefix" \
+        cpan 'local::lib'
     eval "$( \
         "$perl" \
             "-I${prefix}/lib/perl5" \

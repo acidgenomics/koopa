@@ -166,6 +166,7 @@ koopa::r_link_site_library() { # {{{1
             '--no-link'
         )
     fi
+    # FIXME Need rethink using '--app', '--version', and or '--no-link'...
     koopa:::configure_app_packages "${conf_args[@]}"
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then
