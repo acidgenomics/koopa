@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This will fail inside of hardened 'install_app()' call. Need to rethink.
 koopa::configure_rust() { # {{{1
     # """
     # Configure Rust.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-17.
     # """
     koopa:::configure_app_packages \
         --name-fancy='Rust' \
