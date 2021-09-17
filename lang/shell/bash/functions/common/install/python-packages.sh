@@ -65,6 +65,7 @@ koopa::uninstall_python_packages() { # {{{1
 }
 
 # FIXME Need to wrap this in 'update_app' call.
+# FIXME This needs to ensure permissions are set correctly.
 koopa::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
