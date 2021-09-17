@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Wrap in 'install_app' call.
-
 koopa::install_tex_packages() { # {{{1
     # """
     # Install TeX packages.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-09-17.
     # """
     local name_fancy package packages
     koopa::assert_has_no_args "$#"
@@ -60,7 +58,7 @@ koopa::install_tex_packages() { # {{{1
 koopa::update_tex_packages() { # {{{1
     # """
     # Update TeX packages.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-09-17.
     # """
     local name_fancy
     koopa::assert_has_no_args "$#"
