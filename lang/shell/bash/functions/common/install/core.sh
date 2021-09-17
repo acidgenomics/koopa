@@ -3,11 +3,12 @@
 koopa:::configure_app_packages() { # {{{1
     # """
     # Configure language application.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-17.
     # """
     local dict
     declare -A dict=(
         [link_app]=1
+        [name]=''
         [name_fancy]=''
         [prefix]=''
         [version]=''
@@ -51,19 +52,10 @@ koopa:::configure_app_packages() { # {{{1
     fi
     dict[pkg_prefix_fun]="koopa::${dict[name]}_packages_prefix"
     koopa::assert_is_function "${dict[pkg_prefix_fun]}"
-    dict[activate_fun]="koopa::activate_${dict[name]}"
-    koopa::is_function "${dict[activate_fun]}" && "${dict[activate_fun]}"
     if [[ -z "${dict[prefix]}" ]]
     then
         if [[ -z "${dict[version]}" ]]
         then
-            if [[ -z "${dict[which_app]}" ]]
-            then
-                dict[which_app]="${dict[name]}"
-            fi
-            # FIXME This step will fail inside installer calls where the PATH
-            # is intentionally restricted.
-            # FIXME Need to rethink how we locate the app in this situation.
             dict[version]="$(koopa::get_version "${dict[which_app]}")"
         fi
         dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
@@ -78,7 +70,6 @@ koopa:::configure_app_packages() { # {{{1
     then
         koopa::link_into_opt "${dict[prefix]}" "${dict[name]}-packages"
     fi
-    koopa::is_function "${dict[activate_fun]}" && "${dict[activate_fun]}"
     koopa::configure_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
 }
