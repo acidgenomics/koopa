@@ -168,8 +168,16 @@ koopa::add_to_pkg_config_path_end() { # {{{1
     _koopa_add_to_pkg_config_path_end "$@"
 }
 
+koopa::add_to_pkg_config_path_end_2() { # {{{1
+    _koopa_add_to_pkg_config_path_end_2 "$@"
+}
+
 koopa::add_to_pkg_config_path_start() { # {{{1
     _koopa_add_to_pkg_config_path_start "$@"
+}
+
+koopa::add_to_pkg_config_path_start_2() { # {{{1
+    _koopa_add_to_pkg_config_path_start_2 "$@"
 }
 
 koopa::alert() { # {{{1
