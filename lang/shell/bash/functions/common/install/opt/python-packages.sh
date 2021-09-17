@@ -64,9 +64,13 @@ koopa::uninstall_python_packages() { # {{{1
         "$@"
 }
 
-# FIXME Need to wrap this in 'update_app' call.
-# FIXME This needs to ensure permissions are set correctly.
 koopa::update_python_packages() { # {{{1
+    koopa:::update_app \
+        --name='python-packages' \
+        --name-fancy='Python packages'
+}
+
+koopa:::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
     # @note Updated 2021-09-15.
@@ -74,12 +78,9 @@ koopa::update_python_packages() { # {{{1
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
     # """
-    local cut name_fancy pkgs
+    local cut pkgs
     koopa::assert_has_no_args "$#"
-    koopa::assert_has_no_envs
     cut="$(koopa::locate_cut)"
-    name_fancy='Python packages'
-    koopa::install_start "$name_fancy"
     pkgs="$(koopa::python_pip_outdated)"
     if [[ -z "$pkgs" ]]
     then
@@ -91,6 +92,5 @@ koopa::update_python_packages() { # {{{1
         | "$cut" -d '=' -f 1 \
     )"
     koopa::python_pip_install "${pkgs[@]}"
-    koopa::install_success "$name_fancy"
     return 0
 }

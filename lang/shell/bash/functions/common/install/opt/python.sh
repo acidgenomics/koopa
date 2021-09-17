@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This will fail inside of hardened 'install_app()' call. Need to rethink.
 koopa::configure_python() { #{{{1
     # """
     # Configure Python.
