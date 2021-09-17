@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rethink package install consistency.
-
 koopa::install_ruby_packages() { # {{{1
     koopa:::install_app \
         --name-fancy='Ruby packages' \
@@ -20,21 +18,13 @@ koopa:::install_ruby_packages() { # {{{1
     # - https://bundler.io/man/bundle-pristine.1.html
     # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
     # """
-    local app apps default gemdir gem ruby ruby_version
-    gem="$(koopa::locate_gem)"
-    ruby="$(koopa::locate_ruby)"
-    koopa::dl \
-        'ruby' "$ruby" \
-        'gem' "$gem"
-    ruby_version="$(koopa::get_version "$ruby")"
-    # FIXME Should we just locate ruby instead of passing in the version?
-    koopa::configure_ruby --version="$ruby_version"
+    local app apps default gemdir gem
+    koopa::configure_ruby
     koopa::activate_ruby
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'libffi'
     fi
-    gemdir="$("$gem" environment gemdir)"
     if [[ "$#" -eq 0 ]]
     then
         default=1
@@ -48,6 +38,8 @@ koopa:::install_ruby_packages() { # {{{1
         default=0
         apps=("$@")
     fi
+    gem="$(koopa::locate_gem)"
+    gemdir="$("$gem" environment gemdir)"
     koopa::dl \
         'Target' "$gemdir" \
         'Gems' "$(koopa::to_string "${apps[@]}")"
