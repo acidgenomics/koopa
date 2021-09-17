@@ -3,8 +3,9 @@
 koopa::configure_ruby() { # {{{1
     # """
     # Configure Ruby.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-17.
     # """
+    koopa::rm "${HOME}/.gem"
     koopa:::configure_app_packages \
         --name-fancy='Ruby' \
         --name='ruby' \
