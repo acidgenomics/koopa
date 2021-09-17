@@ -54,4 +54,3 @@ koopa:::update_perlbrew() { # {{{1
     perlbrew self-upgrade
     return 0
 }
-
