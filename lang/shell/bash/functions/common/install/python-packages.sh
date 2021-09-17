@@ -13,7 +13,7 @@ koopa::install_python_packages() { # {{{1
 koopa:::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-09-17.
     # """
     local pkg pkg_lower pkgs version
     pkgs=("$@")

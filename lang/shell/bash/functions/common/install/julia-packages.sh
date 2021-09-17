@@ -6,14 +6,14 @@ koopa::install_julia_packages() { # {{{1
         --name='julia-packages' \
         --no-link \
         --no-prefix-check \
-        --prefix="$(koopa::python_packages_prefix)" \
+        --prefix="$(koopa::julia_packages_prefix)" \
         "$@"
 }
 
 koopa:::install_julia_packages() { # {{{1
     # """
     # Install Julia packages.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-09-17.
     # @seealso
     # - 'JULIA_DEPOT_PATH' in shell.
     # - 'DEPOT_PATH' in Julia.
@@ -29,6 +29,7 @@ koopa:::install_julia_packages() { # {{{1
     # """
     local julia script
     koopa::configure_julia
+    koopa::activate_julia
     julia="$(koopa::locate_julia)"
     script="$(koopa::julia_script_prefix)/install-packages.jl"
     koopa::assert_is_file "$script"
