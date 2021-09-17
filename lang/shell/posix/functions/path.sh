@@ -190,3 +190,45 @@ _koopa_add_to_pkg_config_path_start() { # {{{1
     export PKG_CONFIG_PATH
     return 0
 }
+
+_koopa_add_to_pkg_config_path_end_2() { # {{{1
+    # """
+    # Force add to end of 'PKG_CONFIG_PATH' using 'pc_path' variable lookup from
+    # 'pkg-config' program.
+    # @note Updated 2021-09-17.
+    # """
+    local app str
+    [ "$#" -gt 0 ] || return 1
+    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
+    for app in "$@"
+    do
+        [ -x "$app" ] || continue
+        str="$("$app" --variable 'pc_path' 'pkg-config')"
+        PKG_CONFIG_PATH="$( \
+            __koopa_add_to_path_string_end "$PKG_CONFIG_PATH" "$str" \
+        )"
+    done
+    export PKG_CONFIG_PATH
+    return 0
+}
+
+_koopa_add_to_pkg_config_path_start_2() { # {{{1
+    # """
+    # Force add to start of 'PKG_CONFIG_PATH' using 'pc_path' variable
+    # lookup from 'pkg-config' program.
+    # @note Updated 2021-09-17.
+    # """
+    local app str
+    [ "$#" -gt 0 ] || return 1
+    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
+    for app in "$@"
+    do
+        [ -x "$app" ] || continue
+        str="$("$app" --variable 'pc_path' 'pkg-config')"
+        PKG_CONFIG_PATH="$( \
+            __koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$str" \
+        )"
+    done
+    export PKG_CONFIG_PATH
+    return 0
+}
