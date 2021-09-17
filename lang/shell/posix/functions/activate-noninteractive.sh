@@ -552,42 +552,19 @@ _koopa_activate_pkg_config() { # {{{1
     # @seealso
     # - https://askubuntu.com/questions/210210/
     # """
-    local exe homebrew_prefix make_prefix path_str sys_prefix
+    local homebrew_prefix make_prefix
     [ "$#" -eq 0 ] || return 1
-    path_str=''
-    exe_name='pkg-config'
-    sys_prefix='/usr/bin'
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     make_prefix="$(_koopa_make_prefix)"
-    exe="${sys_prefix}/${exe_name}"
-    if _koopa_is_installed "$exe"
-    then
-        # FIXME Make this an internal function.
-        str="$("$exe" --variable 'pc_path' 'pkg-config')"
-        path_str="${str}:${path_str}"
-    fi
+    _koopa_add_to_pkg_config_path_start_2 \
+        '/usr/bin/pkg-config'
     if [ "$homebrew_prefix" != "$make_prefix" ]
     then
-        exe="${homebrew_prefix}/bin/${exe_name}"
-        if _koopa_is_installed "$exe"
-        then
-            # FIXME Make this an internal function.
-            str="$("$exe" --variable 'pc_path' 'pkg-config')"
-            path_str="${str}:${path_str}"
-        fi
+        _koopa_add_to_pkg_config_path_start_2 \
+            "${homebrew_prefix}/bin/pkg-config"
     fi
-    exe="${make_prefix}/bin/${exe_name}"
-    if _koopa_is_installed "$exe"
-    then
-        str="$("$exe" --variable 'pc_path' 'pkg-config')"
-        path_str="${str}:${path_str}"
-    fi
-    if [ -n "$path_str" ]
-    then
-        export PKG_CONFIG_PATH="$path_str"
-    else
-        unset -v PKG_CONFIG_PATH
-    fi
+    _koopa_add_to_pkg_config_path_start_2 \
+        "${make_prefix}/bin/pkg-config"
     return 0
 }
 
