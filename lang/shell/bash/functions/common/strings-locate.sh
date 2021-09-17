@@ -341,6 +341,15 @@ koopa::locate_find() { # {{{1
         --name='find'
 }
 
+koopa::locate_fish() { # {{{1
+    # """
+    # Locate fish shell.
+    # @note Updated 2021-09-17.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'fish'
+}
+
 koopa::locate_gcc() { # {{{1
     # """
     # Locate GNU gcc.
