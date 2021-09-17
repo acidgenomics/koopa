@@ -2,8 +2,10 @@
 
 koopa::install_r_cmd_check() { # {{{1
     koopa:::install_app \
+        --name-fancy='R CMD check' \
         --name='r-cmd-check' \
         --no-link \
+        --version='rolling' \
         "$@"
 }
 
@@ -15,7 +17,6 @@ koopa:::install_r_cmd_check() { # {{{1
     local prefix source_repo
     prefix="${INSTALL_PREFIX:?}"
     source_repo='https://github.com/acidgenomics/r-cmd-check.git'
-    koopa::mkdir "$prefix"
     koopa::git_clone "$source_repo" "$prefix"
     return 0
 }
@@ -27,22 +28,23 @@ koopa::uninstall_r_cmd_check() { # {{{1
         "$@"
 }
 
-# FIXME Need to wrap this and ensure permissions are correct.
 koopa::update_r_cmd_check() { # {{{1
+    koopa:::update_app \
+        --name='r-cmd-check' \
+        --name-fancy='R CMD check'
+}
+
+koopa:::update_r_cmd_check() { # {{{1
     # """
     # Update r-cmd-check scripts.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-09-17.
     # """
-    local name name_fancy prefix
+    local prefix
     koopa::assert_has_no_args "$#"
-    name='r-cmd-check'
-    name_fancy="$name"
-    koopa::update_start "$name_fancy"
-    prefix="$(koopa::opt_prefix)/${name}"
+    prefix="${UPDATE_PREFIX:?}"
     (
         koopa::cd "$prefix"
         koopa::git_pull
     )
-    koopa::update_success "$name_fancy"
     return 0
 }
