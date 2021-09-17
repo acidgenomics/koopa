@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-09-14"
+koopa-date="2021-09-17"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.11.2a"
@@ -44,7 +44,7 @@ automake="1.16.4"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.37"
+aws-cli="2.2.38"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.28.0"
@@ -100,7 +100,7 @@ coreutils="8.32"
 cpufetch="0.97"
 
 # https://curl.haxx.se/
-curl="7.78.0"
+curl="7.79.0"
 
 # https://docs.docker.com/install/
 docker="20.10.8"
@@ -172,7 +172,7 @@ haskell-stack="rolling"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.2.11"
+homebrew="3.2.12"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -497,11 +497,11 @@ node-gtop="1.1.1"
 # These are essential Python tools that should always be available.
 # Otherwise, for heavy libraries, consider using a conda environment instead.
 
-python-black="21.7b0"           # default; homebrew
+python-black="21.9b0"           # default; homebrew
 python-bpytop="1.0.67"          # default; homebrew
 python-cython="0.29.24"         # default; reticulate
 python-flake8="3.9.2"           # default; homebrew
-python-glances="3.2.3"          # default; homebrew
+python-glances="3.2.3.1"        # default; homebrew
 python-leidenalg="0.8.7"        # reticulate
 python-louvain="0.7.0"          # reticulate
 python-numpy="1.21.0"           # reticulate
@@ -511,7 +511,7 @@ python-pip="21.2.1"             # default; reticulate
 python-pipx="0.16.2.0"          # default; homebrew
 python-psutil="5.8.0"           # default
 python-pyflakes="2.3.1"         # default
-python-pylint="2.9.6"           # default; homebrew
+python-pylint="2.11.1"          # default; homebrew
 python-pynvim="0.4.3"           # default
 python-pytaglib="1.4.6"         # default
 python-pytest="6.2.4"           # default
