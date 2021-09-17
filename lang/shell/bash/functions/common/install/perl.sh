@@ -2,12 +2,13 @@
 
 # [2021-09-17] macOS success.
 
+# FIXME Need to ensure that correct Perl is in PATH.
 koopa::configure_perl() { # {{{1
     # """
     # Configure Perl.
     # @note Updated 2021-09-17.
     # """
-    local perl prefix
+    local perl prefix yes
     koopa::assert_has_no_args "$#"
     perl="$(koopa::locate_perl)"
     koopa:::configure_app_packages \
@@ -16,9 +17,16 @@ koopa::configure_perl() { # {{{1
         --which-app="$perl"
     prefix="$(koopa::perl_packages_prefix)"
     koopa::assert_is_dir "$prefix"
+    # Ensure we start with a clean CPAN configuration.
+    koopa::rm "${HOME}/.cpan"
     koopa::alert "Setting up 'local::lib' at '${prefix}' using CPAN."
-    PERL_MM_OPT="INSTALL_BASE=$prefix" \
-        cpan 'local::lib'
+    koopa::add_to_path_start "$(koopa::dirname "$perl")"
+    # FIXME Need to add support for this.
+    yes="$(koopa::locate_yes)"
+    # FIXME This is prompting, which we don't want.
+    "$yes" \
+        | PERL_MM_OPT="INSTALL_BASE=$prefix" \
+            cpan 'local::lib'
     eval "$( \
         "$perl" \
             "-I${prefix}/lib/perl5" \
