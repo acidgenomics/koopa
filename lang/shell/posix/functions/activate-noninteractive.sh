@@ -562,6 +562,7 @@ _koopa_activate_pkg_config() { # {{{1
     exe="${sys_prefix}/${exe_name}"
     if _koopa_is_installed "$exe"
     then
+        # FIXME Make this an internal function.
         str="$("$exe" --variable 'pc_path' 'pkg-config')"
         path_str="${str}:${path_str}"
     fi
@@ -570,6 +571,7 @@ _koopa_activate_pkg_config() { # {{{1
         exe="${homebrew_prefix}/bin/${exe_name}"
         if _koopa_is_installed "$exe"
         then
+            # FIXME Make this an internal function.
             str="$("$exe" --variable 'pc_path' 'pkg-config')"
             path_str="${str}:${path_str}"
         fi
