@@ -3,7 +3,7 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-09-17.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
@@ -25,7 +25,11 @@ _koopa_posix_header() { # {{{1
     fi
     if [ -z "${KOOPA_DEFAULT_SYSTEM_PATH:-}" ]
     then
-        export KOOPA_DEFAULT_SYSTEM_PATH="${PATH:?}"
+        export KOOPA_DEFAULT_SYSTEM_PATH="${PATH:-}"
+    fi
+    if [ -z "${KOOPA_DEFAULT_SYSTEM_PKG_CONFIG_PATH:-}" ]
+    then
+        export KOOPA_DEFAULT_SYSTEM_PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     fi
     if [ "${KOOPA_ACTIVATE:-0}" -eq 0 ]
     then
