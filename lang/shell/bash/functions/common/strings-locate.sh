@@ -3,7 +3,7 @@
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-09-17.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
@@ -15,20 +15,26 @@ koopa:::locate_app() { # {{{1
     local app dict pos
     declare -A dict=(
         [app_name]=''
-        [brew_name]=''
+        [brew_app]=''
+        [brew_opt_name]=''
         [brew_prefix]="$(koopa::homebrew_prefix)"
         [gnubin]=0
         [koopa_app]=''
+        [koopa_opt_name]=''
         [koopa_opt_prefix]="$(koopa::opt_prefix)"
-        [make_prefix]="$(koopa::make_prefix)"
         [macos_app]=''
+        [make_prefix]="$(koopa::make_prefix)"
     )
     pos=()
     while (("$#"))
     do
         case "$1" in
-            --brew-name=*)
-                dict[brew_name]="${1#*=}"
+            --brew-opt=*)
+                dict[brew_opt_name]="${1#*=}"
+                shift 1
+                ;;
+            --koopa-opt=*)
+                dict[koopa_opt_name]="${1#*=}"
                 shift 1
                 ;;
             --macos-app=*)
@@ -64,20 +70,24 @@ koopa:::locate_app() { # {{{1
         koopa::assert_has_args_eq "$#" 1
         dict[app_name]="${1:?}"
     fi
-    if [[ -z "${dict[brew_name]}" ]]
+    if [[ -z "${dict[brew_opt_name]}" ]]
     then
-        dict[brew_name]="${dict[app_name]}"
+        dict[brew_opt_name]="${dict[app_name]}"
+    fi
+    if [[ -z "${dict[koopa_opt_name]}" ]]
+    then
+        dict[koopa_opt_name]="${dict[app_name]}"
     fi
     # Prepare paths where to look for app.
     dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
-    dict[koopa_app]="${dict[koopa_opt_prefix]}/${dict[app_name]}/\
+    dict[koopa_app]="${dict[koopa_opt_prefix]}/${dict[koopa_opt_name]}/\
 bin/${dict[app_name]}"
     if [[ "${dict[gnubin]}" -eq 1 ]]
     then
-        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_name]}/\
+        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
 libexec/gnubin/${dict[app_name]}"
     else
-        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_name]}/\
+        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
 bin/${dict[app_name]}"
     fi
     # Ready to locate the application by priority.
@@ -87,12 +97,17 @@ bin/${dict[app_name]}"
     elif [[ -x "${dict[app_name]}" ]]
     then
         app="${dict[app_name]}"
-    elif [[ -x "${dict[make_app]}" ]]
+    elif [[ "${dict[brew_prefix]}" != "${dict[make_prefix]}" ]] && \
+        [[ -x "${dict[make_app]}" ]]
     then
         app="${dict[make_app]}"
     elif [[ -x "${dict[koopa_app]}" ]]
     then
         app="${dict[koopa_app]}"
+    elif [[ "${dict[brew_prefix]}" == "${dict[make_prefix]}" ]] && \
+        [[ -x "${dict[make_app]}" ]]
+    then
+        app="${dict[make_app]}"
     elif [[ -x "${dict[brew_app]}" ]]
     then
         app="${dict[brew_app]}"
@@ -116,7 +131,7 @@ koopa::locate_7z() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='p7zip' \
+        --brew-opt='p7zip' \
         --name='7z'
 }
 
@@ -127,7 +142,7 @@ koopa::locate_awk() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='gawk' \
+        --brew-opt='gawk' \
         --gnubin \
         --name='awk'
 }
@@ -139,7 +154,7 @@ koopa::locate_basename() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='basename'
 }
@@ -160,7 +175,7 @@ koopa::locate_bunzip2() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='bzip2' \
+        --brew-opt='bzip2' \
         --name='bunzip2'
 }
 
@@ -171,7 +186,7 @@ koopa::locate_chgrp() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='chgrp'
 }
@@ -183,7 +198,7 @@ koopa::locate_chmod() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='chmod'
 }
@@ -195,7 +210,7 @@ koopa::locate_chown() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='chown'
 }
@@ -235,7 +250,7 @@ koopa::locate_cp() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='cp'
 }
@@ -256,7 +271,7 @@ koopa::locate_cut() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='cut'
 }
@@ -268,7 +283,7 @@ koopa::locate_date() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='date'
 }
@@ -280,7 +295,7 @@ koopa::locate_df() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='df'
 }
@@ -292,7 +307,7 @@ koopa::locate_dirname() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='dirname'
 }
@@ -313,7 +328,7 @@ koopa::locate_du() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='du'
 }
@@ -336,7 +351,7 @@ koopa::locate_find() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='findutils' \
+        --brew-opt='findutils' \
         --gnubin \
         --name='find'
 }
@@ -361,11 +376,10 @@ koopa::locate_gcc() { # {{{1
     version="$(koopa::variable "$name")"
     version="$(koopa::major_version "$version")"
     koopa:::locate_app \
-        --brew-name="${name}@${version}" \
+        --brew-opt="${name}@${version}" \
         --name="${name}-${version}"
 }
 
-# FIXME Attempt to locate in ruby-packages first.
 koopa::locate_gem() { # {{{1
     # """
     # Locate Ruby gem package manager.
@@ -373,7 +387,7 @@ koopa::locate_gem() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='ruby' \
+        --brew-opt='ruby' \
         --name='gem'
 }
 
@@ -415,7 +429,7 @@ koopa::locate_gunzip() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='gzip' \
+        --brew-opt='gzip' \
         --name='gunzip'
 }
 
@@ -435,7 +449,7 @@ koopa::locate_head() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='head'
 }
@@ -447,7 +461,7 @@ koopa::locate_id() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='id'
 }
@@ -493,7 +507,7 @@ koopa::locate_llvm_config() { # {{{1
         [[ -n "$x" ]] && app="$x"
     fi
     koopa:::locate_app \
-        --brew-name='llvm' \
+        --brew-opt='llvm' \
         --name="$app"
 }
 
@@ -504,7 +518,7 @@ koopa::locate_ln() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='ln'
 }
@@ -516,7 +530,7 @@ koopa::locate_ls() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='ls'
 }
@@ -539,7 +553,7 @@ koopa::locate_man() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='man-db' \
+        --brew-opt='man-db' \
         --gnubin \
         --name='man'
 }
@@ -551,7 +565,7 @@ koopa::locate_mkdir() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='mkdir'
 }
@@ -563,7 +577,7 @@ koopa::locate_mktemp() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='mktemp'
 }
@@ -575,7 +589,7 @@ koopa::locate_mv() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='mv'
 }
@@ -589,15 +603,15 @@ koopa::locate_node() { # {{{1
     koopa:::locate_app 'node'
 }
 
-# FIXME Prioritize installation in 'opt/node-packages/bin/npm'.
 koopa::locate_npm() { # {{{1
     # """
     # Locate node package manager (npm).
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-09-17.
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='node' \
+        --brew-opt='node' \
+        --koopa-opt='node-packages' \
         --name='npm'
 }
 
@@ -626,7 +640,7 @@ koopa::locate_paste() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='paste'
 }
@@ -638,7 +652,7 @@ koopa::locate_patch() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='gpatch' \
+        --brew-opt='gpatch' \
         --name='patch'
 }
 
@@ -649,7 +663,7 @@ koopa::locate_pcregrep() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='pcre' \
+        --brew-opt='pcre' \
         --name='pcregrep'
 }
 
@@ -705,7 +719,7 @@ koopa::locate_readlink() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='readlink'
 }
@@ -717,7 +731,7 @@ koopa::locate_realpath() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='realpath'
 }
@@ -738,7 +752,7 @@ koopa::locate_rm() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='rm'
 }
@@ -768,7 +782,7 @@ koopa::locate_sed() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='gnu-sed' \
+        --brew-opt='gnu-sed' \
         --gnubin \
         --name='sed'
 }
@@ -780,7 +794,7 @@ koopa::locate_sort() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='sort'
 }
@@ -792,7 +806,7 @@ koopa::locate_ssh() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='openssh' \
+        --brew-opt='openssh' \
         --name='ssh'
 }
 
@@ -803,7 +817,7 @@ koopa::locate_stat() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='stat'
 }
@@ -824,7 +838,7 @@ koopa::locate_tac() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='tac'
 }
@@ -836,7 +850,7 @@ koopa::locate_tail() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='tail'
 }
@@ -848,7 +862,7 @@ koopa::locate_tar() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='gnu-tar' \
+        --brew-opt='gnu-tar' \
         --gnubin \
         --name='tar'
 }
@@ -860,7 +874,7 @@ koopa::locate_tee() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='tee'
 }
@@ -872,7 +886,7 @@ koopa::locate_tr() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='tr'
 }
@@ -884,7 +898,7 @@ koopa::locate_uncompress() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='gzip' \
+        --brew-opt='gzip' \
         --gnubin \
         --name='uncompress'
 }
@@ -896,7 +910,7 @@ koopa::locate_uname() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='uname'
 }
@@ -908,7 +922,7 @@ koopa::locate_uniq() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='uniq'
 }
@@ -929,7 +943,7 @@ koopa::locate_wc() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='wc'
 }
@@ -950,7 +964,7 @@ koopa::locate_xargs() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='findutils' \
+        --brew-opt='findutils' \
         --gnubin \
         --name='xargs'
 }
@@ -962,7 +976,7 @@ koopa::locate_yes() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
-        --brew-name='coreutils' \
+        --brew-opt='coreutils' \
         --gnubin \
         --name='yes'
 }
