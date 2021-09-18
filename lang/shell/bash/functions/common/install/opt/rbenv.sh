@@ -4,18 +4,18 @@ koopa::install_rbenv() { # {{{1
     koopa:::install_app \
         --name='rbenv' \
         --no-link \
+        --version='rolling' \
         "$@"
 }
 
 koopa:::install_rbenv() { # {{{1
     # """
     # Install rbenv.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-09-18.
     # """
     local name prefix
     prefix="${INSTALL_PREFIX:?}"
     name='rbenv'
-    koopa::mkdir "$prefix"
     koopa::git_clone \
         "https://github.com/sstephenson/${name}.git" \
         "$prefix"
@@ -33,28 +33,21 @@ koopa::uninstall_rbenv() { # {{{1
         "$@"
 }
 
-# FIXME Need to wrap this.
 koopa::update_rbenv() { # {{{1
+    koopa:::update_app --name='rbenv'
+}
+
+koopa:::update_rbenv() { # {{{1
     # """
     # Update rbenv.
-    # @note Updated 2021-06-03.
+    # @note Updated 2021-09-18.
     # """
-    local exe name name_fancy prefix
+    local prefix
     koopa::assert_has_no_args "$#"
-    name='rbenv'
-    name_fancy="$name"
-    prefix="$(koopa::rbenv_prefix)"
-    exe="${prefix}/bin/${name}"
-    if ! koopa::is_installed "$exe"
-    then
-        koopa::alert_is_not_installed "$name"
-        return 0
-    fi
-    koopa::update_start "$name_fancy"
+    prefix="${UPDATE_PREFIX:?}"
     (
         koopa::cd "$prefix"
         koopa::git_pull
     )
-    koopa::update_success "$name_fancy"
     return 0
 }
