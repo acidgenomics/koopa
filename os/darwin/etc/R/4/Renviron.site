@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
-# @note Updated 2021-09-15.
+# @note Updated 2021-09-18.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -70,9 +70,6 @@ PATH="${HOMEBREW_OPT_PREFIX}/make/libexec/gnubin:${PATH}"
 # Make.
 PATH="/usr/local/bin:${PATH}"
 
-# GNU Fortran (from fxcoudert).
-PATH="/usr/local/gfortran/bin:${PATH}"
-
 # Ruby.
 PATH="${KOOPA_OPT_PREFIX}/ruby-packages/bin:${PATH}"
 
@@ -93,15 +90,18 @@ PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
 
-# TeX (e.g. pdflatex).
-PATH="/Library/TeX/texbin:${PATH}"
-
 # GnuPG.
 PATH="/usr/local/MacGPG2/bin:${PATH}"
+
+# TeX (e.g. pdflatex).
+PATH="/Library/TeX/texbin:${PATH}"
 
 # Pandoc. Use RStudio bundled version of pandoc when possible,
 # for improved R Markdown stability.
 PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
+
+# GNU Fortran (from fxcoudert).
+PATH="/usr/local/gfortran/bin:${PATH}"
 
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
