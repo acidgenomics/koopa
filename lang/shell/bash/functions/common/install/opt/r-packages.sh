@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Standardize this with other package installers.
 koopa::install_r_packages() { # {{{1
     koopa:::install_app \
         --name-fancy='R packages' \
