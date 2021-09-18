@@ -33,23 +33,20 @@ koopa::uninstall_r_packages() { # {{{1
         "$@"
 }
 
-# FIXME Need to wrap this in 'update_app' call.
-# FIXME Remove manual permissions call here after wrapping.
 koopa::update_r_packages() { # {{{1
+    koopa:::update_app \
+        --name-fancy='R packages' \
+        --name='r-packages'
+}
+
+koopa:::update_r_packages() { # {{{1
     # """
     # Update R packages.
-    # @note Updated 2021-08-14.
+    # @note Updated 2021-09-18.
     # """
-    local name_fancy
     koopa::assert_has_no_args "$#"
-    name_fancy='R packages'
-    pkg_prefix="$(koopa::r_packages_prefix)"
-    koopa::update_start "$name_fancy"
     koopa::configure_r
-    koopa::assert_is_dir "$pkg_prefix"
     # Return with success even if 'BiocManager::valid()' check returns false.
     koopa::r_koopa 'cliUpdateRPackages' "$@" || true
-    koopa::sys_set_permissions -r "$pkg_prefix"
-    koopa::update_success "$name_fancy"
     return 0
 }
