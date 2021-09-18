@@ -15,19 +15,19 @@ koopa:::koopa_app() { # {{{1
         koopa::stop "Missing argument: 'koopa app <ARG>...'."
     fi
     case "$name" in
-        clean)
+        'clean')
             name='delete-broken-app-symlinks'
             ;;
-        list)
+        'list')
             name='list-app-versions'
             ;;
-        link)
+        'link')
             name='link-app'
             ;;
-        prune)
+        'prune')
             name='prune-apps'
             ;;
-        unlink)
+        'unlink')
             name='unlink-app'
             ;;
     esac
@@ -65,11 +65,13 @@ koopa:::koopa_header() { # {{{1
     koopa_prefix="$(koopa::koopa_prefix)"
     subdir='lang'
     case "$arg" in
-        bash|posix|zsh)
+        'bash' | \
+        'posix' | \
+        'zsh')
             subdir="${subdir}/shell"
             ext='sh'
             ;;
-        r)
+        'r')
             ext='R'
             ;;
         *)
@@ -97,7 +99,9 @@ koopa:::koopa_install() { # {{{1
             '')
                 shift 1
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
+                # FIXME We need to harden this against single flag input.
                 app_args+=("$1")
                 shift 1
                 ;;
@@ -194,25 +198,25 @@ koopa:::koopa_system() { # {{{1
         koopa::stop "Missing argument: 'koopa system <ARG>...'."
     fi
     case "$f" in
-        check)
+        'check')
             f='check-system'
             ;;
-        info)
+        'info')
             f='sys-info'
             ;;
-        log)
+        'log')
             f='view-latest-tmp-log-file'
             ;;
-        path)
+        'path')
             koopa::print "${PATH:-}"
             return 0
             ;;
-        prefix)
+        'prefix')
             case "${2:-}" in
                 '')
                     f='prefix'
                     ;;
-                koopa)
+                'koopa')
                     f='prefix'
                     shift 1
                     ;;
@@ -222,37 +226,37 @@ koopa:::koopa_system() { # {{{1
                     ;;
             esac
             ;;
-        pull)
+        'pull')
             f='sys-git-pull'
             ;;
-        homebrew-cask-version)
+        'homebrew-cask-version')
             f='get-homebrew-cask-version'
             ;;
-        macos-app-version)
+        'macos-app-version')
             f='get-macos-app-version'
             ;;
-        version)
+        'version')
             f='get-version'
             ;;
-        which)
+        'which')
             f='which-realpath'
             ;;
-        brew-dump-brewfile | \
-        brew-outdated | \
-        delete-cache | \
-        disable-passwordless-sudo | \
-        disable-touch-id-sudo | \
-        enable-passwordless-sudo | \
-        enable-touch-id-sudo | \
-        find-non-symlinked-make-files | \
-        fix-sudo-setrlimit-error | \
-        fix-zsh-permissions | \
-        host-id | \
-        os-string | \
-        roff | \
-        set-permissions | \
-        variable | \
-        variables)
+        'brew-dump-brewfile' | \
+        'brew-outdated' | \
+        'delete-cache' | \
+        'disable-passwordless-sudo' | \
+        'disable-touch-id-sudo' | \
+        'enable-passwordless-sudo' | \
+        'enable-touch-id-sudo' | \
+        'find-non-symlinked-make-files' | \
+        'fix-sudo-setrlimit-error' | \
+        'fix-zsh-permissions' | \
+        'host-id' | \
+        'os-string' | \
+        'roff' | \
+        'set-permissions' | \
+        'variable' | \
+        'variables')
             ;;
         *)
             koopa::invalid_arg "$*"
@@ -278,7 +282,9 @@ koopa:::koopa_uninstall() { # {{{1
             '')
                 shift 1
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
+                # FIXME We need to harden this against single flag input.
                 app_args+=("$1")
                 shift 1
                 ;;
@@ -334,28 +340,30 @@ koopa:::koopa_update() { # {{{1
     do
         case "$1" in
             # Renamers ---------------------------------------------------------
-            system | \
-            user)
+            'system' | \
+            'user')
                 pos+=("koopa-${name}")
                 ;;
             # Defunct ----------------------------------------------------------
-            --fast)
+            '--fast')
                 koopa::defunct 'koopa update'
                 ;;
-            --source-ip=*)
+            '--source-ip='*)
                 koopa::defunct 'koopa configure system --source-ip=SOURCE_IP'
                 ;;
-            --system)
+            '--system')
                 koopa::defunct 'koopa update system'
                 ;;
-            --user)
+            '--user')
                 koopa::defunct 'koopa update user'
                 ;;
             # General catchers -------------------------------------------------
             '')
                 shift 1
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
+                # FIXME We need to harden this against single flag input.
                 app_args+=("$1")
                 shift 1
                 ;;
@@ -463,118 +471,116 @@ koopa:::which_function() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2021-07-27.
+    # @note Updated 2021-09-18.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
     # """
     koopa::assert_has_args "$#"
     case "$1" in
-        --version|-V)
+        '--version' | \
+        '-V' | \
+        'version')
             f='koopa_version'
             shift 1
             ;;
-        app | \
-        configure | \
-        header | \
-        install | \
-        link | \
-        list | \
-        system | \
-        uninstall | \
-        update)
+        'app' | \
+        'configure' | \
+        'header' | \
+        'install' | \
+        'link' | \
+        'list' | \
+        'system' | \
+        'uninstall' | \
+        'update')
             # Note that the ':' is necessary here to call the internal functions
             # defined above.
             f=":koopa_${1}"
             shift 1
             ;;
-        test)
+        'test')
             f="$1"
             shift 1
             ;;
         # Soft deprecated args {{{2
         # ----------------------------------------------------------------------
-        check | \
-        check-system)
+        'check' | \
+        'check-system')
             f='check-system'
             shift 1
             ;;
-        home)
-            f='prefix'
+        'home' | \
+        'prefix')
+            f='koopa-prefix'
             shift 1
             ;;
-        info)
+        'info')
             f='sys-info'
-            shift 1
-            ;;
-        prefix | \
-        version)
-            f="$1"
             shift 1
             ;;
         # Defunct args / error catching {{{2
         # ----------------------------------------------------------------------
-        app-prefix)
+        'app-prefix')
             koopa::defunct 'koopa system prefix app'
             ;;
-        cellar-prefix)
+        'cellar-prefix')
             koopa::defunct 'koopa system prefix app'
             ;;
-        conda-prefix)
+        'conda-prefix')
             koopa::defunct 'koopa system prefix conda'
             ;;
-        config-prefix)
+        'config-prefix')
             koopa::defunct 'koopa system prefix config'
             ;;
-        delete-cache)
+        'delete-cache')
             koopa::defunct 'koopa system delete-cache'
             ;;
-        fix-zsh-permissions)
+        'fix-zsh-permissions')
             koopa::defunct 'koopa system fix-zsh-permissions'
             ;;
-        get-homebrew-cask-version)
+        'get-homebrew-cask-version')
             koopa::defunct 'koopa system homebrew-cask-version'
             ;;
-        get-macos-app-version)
+        'get-macos-app-version')
             koopa::defunct 'koopa system macos-app-version'
             ;;
-        get-version)
+        'get-version')
             koopa::defunct 'koopa system version'
             ;;
-        help)
+        'help')
             koopa::defunct 'koopa --help'
             ;;
-        host-id)
+        'host-id')
             koopa::defunct 'koopa system host-id'
             ;;
-        make-prefix)
+        'make-prefix')
             koopa::defunct 'koopa system prefix make'
             ;;
-        os-string)
+        'os-string')
             koopa::defunct 'koopa system os-string'
             ;;
-        r-home)
+        'r-home')
             koopa::defunct 'koopa system prefix r'
             ;;
-        roff)
+        'roff')
             koopa::defunct 'koopa system roff'
             ;;
-        set-permissions)
+        'set-permissions')
             koopa::defunct 'koopa system set-permissions'
             ;;
-        update-r-config)
+        'update-r-config')
             koopa::defunct 'koopa update r-config'
             ;;
-        upgrade)
+        'upgrade')
             koopa::defunct 'koopa update'
             ;;
-        variable)
+        'variable')
             koopa::defunct 'koopa system variable'
             ;;
-        variables)
+        'variables')
             koopa::defunct 'koopa system variables'
             ;;
-        which-realpath)
+        'which-realpath')
             koopa::defunct 'koopa system which'
             ;;
         *)
