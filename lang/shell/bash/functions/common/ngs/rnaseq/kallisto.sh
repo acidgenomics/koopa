@@ -358,9 +358,7 @@ koopa::run_kallisto_paired_end() { # {{{1
     dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
     dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
-    # FIXME Rework this using 'init_dir' approach.
-    koopa::mkdir "${dict[output_dir]}"
-    dict[output_dir]="$(koopa::realpath "${dict[output_dir]}")"
+    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
     dict[index_dir]="${dict[output_dir]}/index"
     dict[index_file]="${dict[index_dir]}/kallisto.idx"
     dict[samples_dir]="${dict[output_dir]}/samples"
@@ -494,9 +492,7 @@ koopa::run_kallisto_single_end() { # {{{1
     dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
     dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
-    # FIXME Rework this using 'init_dir' approach.
-    koopa::mkdir "${dict[output_dir]}"
-    dict[output_dir]="$(koopa::realpath "${dict[output_dir]}")"
+    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
     dict[index_dir]="${dict[output_dir]}/index"
     dict[index_file]="${dict[index_dir]}/kallisto.idx"
     dict[samples_dir]="${dict[output_dir]}/samples"
