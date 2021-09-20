@@ -252,6 +252,7 @@ koopa::init_dir() { # {{{1
     # """
     local dir
     koopa::assert_has_args_eq "$#" 1
+    dir="${1:?}"
     koopa::mkdir "$dir"
     dir="$(koopa::realpath "$dir")"
     koopa::print "$dir"
