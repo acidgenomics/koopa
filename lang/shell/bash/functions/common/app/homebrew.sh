@@ -71,7 +71,7 @@ koopa::brew_reset_permissions() { # {{{1
     koopa::alert "Resetting ownership of files in \
 '${prefix}' to '${user}:${group}'."
     koopa::chown \
-        --dereference \
+        --no-dereference \
         --recursive \
         --sudo \
         "${user}:${group}" \
