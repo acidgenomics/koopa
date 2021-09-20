@@ -30,10 +30,10 @@ koopa:::install_anaconda() { # {{{1
     koopa_prefix="$(koopa::koopa_prefix)"
     os_type="$(koopa::os_type)"
     case "$os_type" in
-        darwin*)
+        'darwin'*)
             os_type='MacOSX'
             ;;
-        linux*)
+        'linux'*)
             os_type='Linux'
             ;;
         *)

@@ -8,10 +8,10 @@ koopa:::int_to_yn() { # {{{1
     local x
     koopa::assert_has_args_eq "$#" 1
     case "${1:?}" in
-        0)
+        '0')
             x='no'
             ;;
-        1)
+        '1')
             x='yes'
             ;;
         *)
@@ -35,10 +35,10 @@ koopa:::read_prompt_yn() { # {{{1
     yes_default="$(koopa::print_green_bold 'YES')"
     prompt="${1:?}"
     case "${2:?}" in
-        0)
+        '0')
             yn="${yes}/${no_default}"
             ;;
-        1)
+        '1')
             yn="${yes_default}/${no}"
             ;;
         *)
@@ -91,14 +91,32 @@ koopa::read_yn() { # {{{1
     read "${flags[@]}" choice
     choice="${choice:-$default}"
     case "$choice" in
-        1|T|TRUE|True|Y|YES|Yes|true|y|yes)
+        '1' | \
+        'T' | \
+        'TRUE' | \
+        'True' | \
+        'Y' | \
+        'YES' | \
+        'Yes' | \
+        'true' | \
+        'y' | \
+        'yes')
             x=1
             ;;
-        0|F|FALSE|False|N|NO|No|false|n|no)
+        '0' | \
+        'F' | \
+        'FALSE' | \
+        'False' | \
+        'N' | \
+        'NO' | \
+        'No' | \
+        'false' | \
+        'n' | \
+        'no')
             x=0
             ;;
         *)
-            koopa::stop "Invalid 'yes/no' choice."
+            koopa::stop "Invalid 'yes/no' choice: '${choice}'."
             ;;
     esac
     koopa::print "$x"

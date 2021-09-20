@@ -158,11 +158,11 @@ koopa::update_homebrew() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --no-reset)
+            '--no-reset')
                 reset=0
                 shift 1
                 ;;
-            --reset)
+            '--reset')
                 reset=1
                 shift 1
                 ;;

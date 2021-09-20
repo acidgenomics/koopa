@@ -19,15 +19,15 @@ koopa::extract() { # {{{1
         koopa::alert "Extracting '${file}'."
         case "$file" in
             # Two extensions (must come first).
-            *.tar.bz2)
+            *'.tar.bz2')
                 cmd="$(koopa::locate_tar)"
                 cmd_args=(-xj -f "$file")
                 ;;
-            *.tar.gz)
+            *'.tar.gz')
                 cmd="$(koopa::locate_tar)"
                 cmd_args=(-xz -f "$file")
                 ;;
-            *.tar.xz)
+            *'.tar.xz')
                 if koopa::is_macos
                 then
                     koopa::activate_homebrew_opt_prefix 'xz'
@@ -36,39 +36,39 @@ koopa::extract() { # {{{1
                 cmd_args=(-xJ -f "$file")
                 ;;
             # Single extension.
-            *.bz2)
+            *'.bz2')
                 cmd="$(koopa::locate_bunzip2)"
                 cmd_args=("$file")
                 ;;
-            *.gz)
+            *'.gz')
                 cmd="$(koopa::locate_gunzip)"
                 cmd_args=("$file")
                 ;;
-            *.tar)
+            *'.tar')
                 cmd="$(koopa::locate_tar)"
                 cmd_args=(-x -f "$file")
                 ;;
-            *.tbz2)
+            *'.tbz2')
                 cmd="$(koopa::locate_tar)"
                 cmd_args=(-xj -f "$file")
                 ;;
-            *.tgz)
+            *'.tgz')
                 cmd="$(koopa::locate_tar)"
                 cmd_args=(-xz -f "$file")
                 ;;
-            *.xz)
+            *'.xz')
                 cmd="$(koopa::locate_xz)"
                 cmd_args=(--decompress "$file")
                 ;;
-            *.zip)
+            *'.zip')
                 cmd="$(koopa::locate_unzip)"
                 cmd_args=(-qq "$file")
                 ;;
-            *.Z)
+            *'.Z')
                 cmd="$(koopa::locate_uncompress)"
                 cmd_args=("$file")
                 ;;
-            *.7z)
+            *'.7z')
                 cmd="$(koopa::locate_7z)"
                 cmd_args=(-x "$file")
                 ;;

@@ -32,10 +32,10 @@ koopa:::install_miniconda() { # {{{1
     mamba=0
     os_type="$(koopa::os_type)"
     case "$os_type" in
-        darwin*)
+        'darwin'*)
             os_type='MacOSX'
             ;;
-        linux*)
+        'linux'*)
             os_type='Linux'
             ;;
         *)
@@ -46,15 +46,15 @@ koopa:::install_miniconda() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --no-mamba)
+            '--no-mamba')
                 mamba=0
                 shift 1
                 ;;
-            --py-version=*)
+            '--py-version='*)
                 py_version="${1#*=}"
                 shift 1
                 ;;
-            --with-mamba)
+            '--with-mamba')
                 mamba=1
                 shift 1
                 ;;

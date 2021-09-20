@@ -31,19 +31,19 @@ koopa:::install_sqlite() { # {{{1
     sed="$(koopa::locate_sed)"
     name='sqlite'
     case "$version" in
-        3.35.* | \
-        3.34.1)
+        '3.35.'* | \
+        '3.34.1')
             year='2021'
             ;;
-        3.34.0 | \
-        3.33.*)
+        '3.34.0' | \
+        '3.33.'*)
             year='2020'
             ;;
-        3.32.*)
+        '3.32.'*)
             year='2020'
             ;;
         *)
-            koopa::stop "Unsupported version: ${version}."
+            koopa::stop "Unsupported version: '${version}'."
             ;;
     esac
     # e.g. '3.32.3' to '3320300'.

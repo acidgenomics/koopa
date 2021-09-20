@@ -40,13 +40,13 @@ _koopa_prompt() { # {{{1
     git="\$(_koopa_prompt_git)"
     venv="\$(_koopa_prompt_python_venv)"
     case "$shell" in
-        bash)
+        'bash')
             newline='\n'
             prompt='\$'
             wd='\w'
             ;;
-        zsh)
-                    newline=$'\n'
+        'zsh')
+            newline=$'\n'
             # Note that Zsh uses '%' by default.
             # > prompt='%%'
             # Inspired by Pure prompt.

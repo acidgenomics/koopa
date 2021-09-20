@@ -32,7 +32,7 @@ koopa:::install_neovim() { # {{{1
     name='neovim'
     file="${version}.tar.gz"
     case "$version" in
-        nightly)
+        'nightly')
             ;;
         *)
             file="v${file}"

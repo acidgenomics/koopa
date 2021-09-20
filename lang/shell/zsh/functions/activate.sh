@@ -53,10 +53,11 @@ _koopa_activate_zsh_editor() { # {{{1
     # """
     [[ "$#" -eq 0 ]] || return 1
     case "${EDITOR:-}" in
-        emacs)
+        'emacs')
             bindkey -e
             ;;
-        vi|vim)
+        'vi' | \
+        'vim')
             bindkey -v
             ;;
     esac

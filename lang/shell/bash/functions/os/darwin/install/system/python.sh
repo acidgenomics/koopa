@@ -32,10 +32,10 @@ koopa::macos_install_python_framework() { # {{{1
     major_version="$(koopa::major_version "$version")"
     macos_version="$(koopa::macos_version)"
     case "$macos_version" in
-        11*)
+        '11'*)
             macos_string='macos11'
             ;;
-        10*)
+        '10'*)
             macos_string='macosx10.9'
             ;;
         *)

@@ -79,18 +79,18 @@ koopa::link_emacs() { # {{{1
         koopa::rm "${HOME}/.spacemacs"
     fi
     case "$name" in
-        doom)
+        'doom')
             koopa::link_dotfile \
                 --force \
                 'app/emacs/doom' \
                 'doom.d'
             ;;
-        minimal)
+        'minimal')
             koopa::link_dotfile \
                 --force \
                 'app/emacs/minimal/emacs.el'
             ;;
-        spacemacs)
+        'spacemacs')
             koopa::link_dotfile \
                 --force \
                 'app/emacs/spacemacs/spacemacs.el' \

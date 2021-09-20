@@ -27,11 +27,11 @@ koopa::convert_fastq_to_fasta() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --source-dir=*)
+            '--source-dir='*)
                 source_dir="${1#*=}"
                 shift 1
                 ;;
-            --target-dir=*)
+            '--target-dir='*)
                 target_dir="${1#*=}"
                 shift 1
                 ;;
@@ -99,15 +99,15 @@ koopa::fastq_lanepool() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --prefix=*)
+            '--prefix='*)
                 prefix="${1#*=}"
                 shift 1
                 ;;
-            --source-dir=*)
+            '--source-dir='*)
                 source_dir="${1#*=}"
                 shift 1
                 ;;
-            --target-dir=*)
+            '--target-dir='*)
                 target_dir="${1#*=}"
                 shift 1
                 ;;
