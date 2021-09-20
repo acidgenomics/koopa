@@ -39,7 +39,7 @@ __koopa_str_match() { # {{{1
                 flag='-P'
                 ;;
             \?)
-                koopa::invalid_arg
+                koopa::invalid_arg "$opt"
                 ;;
         esac
     done
