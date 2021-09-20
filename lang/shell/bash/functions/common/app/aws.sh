@@ -9,7 +9,7 @@
 koopa::aws_batch_fetch_and_run() { # {{{1
     # """
     # Fetch and run a script on AWS Batch.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-09-20.
     #
     # S3 bucket paths and remote URLs are supported.
     #
@@ -17,11 +17,10 @@ koopa::aws_batch_fetch_and_run() { # {{{1
     # - https://github.com/FredHutch/url-fetch-and-run
     # - https://github.com/awslabs/aws-batch-helpers
     # """
-    local file url
+    local aws file profile url
     koopa::assert_has_no_args "$#"
     koopa::assert_is_set 'BATCH_FILE_URL'
-    koopa::assert_is_installed 'aws' 'curl' 'unzip'
-    url="$BATCH_FILE_URL"
+    url="${BATCH_FILE_URL:?}"
     file="$(koopa::tmp_file)"
     case "$url" in
         'ftp'* | \
@@ -29,7 +28,10 @@ koopa::aws_batch_fetch_and_run() { # {{{1
             koopa::download "$url" "$file"
             ;;
         's3'*)
-            aws s3 cp "$url" "$file"
+            aws="$(koopa::locate_aws)"
+            profile="${AWS_PROFILE:-default}"
+            "$aws" --profile="$profile" \
+                s3 cp "$url" "$file"
             ;;
         *)
             koopa::stop "Unsupported URL: '${url}'."
@@ -40,12 +42,13 @@ koopa::aws_batch_fetch_and_run() { # {{{1
     return 0
 }
 
+# FIXME Allow the user to set '--profile' via flag here.
 koopa::aws_batch_list_jobs() { # {{{1
     # """
     # List AWS Batch jobs.
-    # @note Updated 2020-07-01.
+    # @note Updated 2021-09-20.
     # """
-    local job_queue job_queue_array status status_array
+    local aws job_queue job_queue_array profile status status_array
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed 'aws'
     koopa::assert_is_set \
@@ -53,6 +56,8 @@ koopa::aws_batch_list_jobs() { # {{{1
         'AWS_BATCH_QUEUE' \
         'AWS_BATCH_REGION'
     koopa::h1 'Checking AWS Batch job status.'
+    aws="$(koopa::locate_aws)"
+    profile="${AWS_PROFILE:-default}"
     job_queue_array=(
         'arn'
         'aws'
@@ -74,39 +79,44 @@ koopa::aws_batch_list_jobs() { # {{{1
     for status in "${status_array[@]}"
     do
         koopa::h2 "$status"
-        aws batch list-jobs \
-            --job-queue "$job_queue" \
-            --job-status "$status"
+        "$aws" --profile="$profile" \
+            batch list-jobs \
+                --job-queue "$job_queue" \
+                --job-status "$status"
     done
     return 0
 }
 
+# FIXME Allow the user to set '--profile' via flag here.
 koopa::aws_cp_regex() { # {{{1
     # """
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
     #
-    # @note Updated 2020-06-29.
+    # @note Updated 2021-09-20.
     #
     # @seealso
     # - aws s3 cp help
     # """
-    local pattern source_prefix target_prefix
+    local aws pattern profile source_prefix target_prefix
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'aws'
     pattern="${1:?}"
     source_prefix="${2:?}"
     target_prefix="${3:?}"
-    aws s3 cp \
-        --exclude='*' \
-        --follow-symlinks \
-        --include="$pattern" \
-        --recursive \
-        "$source_prefix" \
-        "$target_prefix"
+    aws="$(koopa::locate_aws)"
+    profile="${AWS_PROFILE:-default}"
+    "$aws" --profile="$profile" \
+        s3 cp \
+            --exclude='*' \
+            --follow-symlinks \
+            --include="$pattern" \
+            --recursive \
+            "$source_prefix" \
+            "$target_prefix"
     return 0
 }
 
+# FIXME Rework using 'app' and 'dict' arrays.
 koopa::aws_s3_find() { # {{{1
     # """
     # Find files in an AWS S3 bucket.
@@ -122,9 +132,9 @@ koopa::aws_s3_find() { # {{{1
     #     --exclude="antisense" \
     #     s3://bioinfo/igv/
     # """
-    local exclude grep include pos x
+    local exclude grep include pos profile x
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'aws'
+    profile="${AWS_PROFILE:-default}"
     grep="$(koopa::locate_grep)"
     exclude=''
     include=''
@@ -140,6 +150,10 @@ koopa::aws_s3_find() { # {{{1
                 include="${1#*=}"
                 shift 1
                 ;;
+            '--profile='*)
+                profile="${1#*=}"
+                shift 1
+                ;;
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -150,7 +164,12 @@ koopa::aws_s3_find() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    x="$(koopa::aws_s3_ls --recursive "$@")"
+    x="$( \
+        koopa::aws_s3_ls \
+        --profile="$profile" \
+        --recursive \
+        "$@" \
+    )"
     [[ -n "$x" ]] || return 1
     # Exclude pattern.
     if [[ -n "${exclude:-}" ]]
@@ -168,10 +187,11 @@ koopa::aws_s3_find() { # {{{1
     return 0
 }
 
+# FIXME Rework using 'app' and 'dict' arrays.
 koopa::aws_s3_ls() { # {{{1
     # """
     # List an AWS S3 bucket.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-09-20.
     #
     # @seealso
     # - aws s3 ls help
@@ -182,15 +202,12 @@ koopa::aws_s3_ls() { # {{{1
     # # Directories only:
     # koopa::aws_s3_ls --type='f' s3://cpi-bioinfo01/datasets/
     # """
-    local bucket_prefix dirs files flags grep pos prefix recursive sed type x
-    koopa::assert_is_installed 'aws'
+    local aws bucket_prefix dirs files flags grep pos prefix profile
+    local recursive sed type x
+    aws="$(koopa::locate_aws)"
+    profile="${AWS_PROFILE:-default}"
     grep="$(koopa::locate_grep)"
     sed="$(koopa::locate_sed)"
-    if [[ "$#" -eq 0 ]]
-    then
-        aws s3 ls
-        return 0
-    fi
     flags=()
     recursive=0
     type=''
@@ -198,6 +215,10 @@ koopa::aws_s3_ls() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            '--profile='*)
+                profile="${1#*=}"
+                shift 1
+                ;;
             '--recursive')
                 recursive=1
                 flags+=('--recursive')
@@ -236,15 +257,27 @@ koopa::aws_s3_ls() { # {{{1
             files=1
             ;;
     esac
-    prefix="${1:?}"
-    prefix="$(koopa::strip_trailing_slash "$prefix")"
-    prefix="${prefix}/"
+    if [[ "$#" -eq 0 ]]
+    then
+        prefix='s3://'
+    else
+        prefix="${1:?}"
+        prefix="$(koopa::strip_trailing_slash "$prefix")"
+        prefix="${prefix}/"
+    fi
     # Automatically add 's3://' if missing.
     if ! koopa::str_match_regex "$prefix" '^s3://'
     then
         prefix="s3://${prefix}"
     fi
-    x="$(aws s3 ls "${flags[@]}" "$prefix")"
+    x="$( \
+        "$aws" --profile="$profile" \
+            s3 ls "${flags[@]}" "$prefix" \
+    )"
+    if [[ "$#" -eq 0 ]]
+    then
+        koopa::print "$x"
+    fi
     # Recursive mode.
     # Note that in '--recursive' mode, 'aws s3 ls' returns the full path after
     # the bucket name.
@@ -309,6 +342,7 @@ koopa::aws_s3_ls() { # {{{1
     return 0
 }
 
+# FIXME Allow the user to define the profile.
 koopa::aws_s3_mv_to_parent() { # {{{1
     # """
     # Move objects in an S3 bucket to parent directory.
@@ -319,11 +353,16 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
-    local bn dn1 dn2 file files prefix target x
+    local aws bn dn1 dn2 file files prefix profile target x
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'aws'
+    aws="$(koopa::locate_aws)"
+    profile="${AWS_PROFILE:-default}"
     prefix="${1:?}"
-    x="$(koopa::aws_s3_ls "$prefix")"
+    x="$( \
+        koopa::aws_s3_ls \
+            --profile="$profile" \
+            "$prefix" \
+    )"
     [[ -n "$x" ]] || return 0
     readarray -t files <<< "$x"
     for file in "${files[@]}"
@@ -332,11 +371,14 @@ koopa::aws_s3_mv_to_parent() { # {{{1
         dn1="$(koopa::dirname "$file")"
         dn2="$(koopa::dirname "$dn1")"
         target="${dn2}/${bn}"
-        aws s3 mv "$file" "$target"
+        "$aws" --profile="$profile" \
+            s3 mv \
+                "$file" "$target"
     done
     return 0
 }
 
+# FIXME Allow the user to define the profile.
 koopa::aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
@@ -361,17 +403,21 @@ koopa::aws_s3_sync() { # {{{1
     # - *.Rproj directories.
     # - *.swp files (from vim).
     # """
+    local aws profile
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'aws'
-    aws s3 sync \
-        --exclude='*.Rproj/*' \
-        --exclude='*.swp' \
-        --exclude='*.tmp' \
-        --exclude='.*' \
-        --exclude='.DS_Store' \
-        --exclude='.Rproj.user/*' \
-        --exclude='._*' \
-        --exclude='.git/*' \
-        "$@"
+    aws="$(koopa::locate_aws)"
+    profile="${AWS_PROFILE:-default}"
+    # FIXME Allow the user to set profile via flag here.
+    "$aws" --profile="$profile" \
+        s3 sync \
+            --exclude='*.Rproj/*' \
+            --exclude='*.swp' \
+            --exclude='*.tmp' \
+            --exclude='.*' \
+            --exclude='.DS_Store' \
+            --exclude='.Rproj.user/*' \
+            --exclude='._*' \
+            --exclude='.git/*' \
+            "$@"
     return 0
 }

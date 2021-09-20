@@ -143,6 +143,15 @@ koopa::locate_awk() { # {{{1
         --name='awk'
 }
 
+koopa::locate_aws() { # {{{1
+    # """
+    # Locate AWS CLI.
+    # @note Updated 2021-09-20.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'aws'
+}
+
 koopa::locate_basename() { # {{{1
     # """
     # Locate GNU basename.
