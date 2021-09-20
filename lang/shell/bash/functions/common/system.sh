@@ -113,10 +113,104 @@ koopa::run_if_installed() { # {{{1
     return 0
 }
 
+# FIXME This is redundant with 'koopa::chgrp'.
+koopa::sys_chgrp() { # {{{1
+    # """
+    # chgrp with dynamic sudo handling.
+    # @note Updated 2020-07-06.
+    # """
+    local chgrp group
+    koopa::assert_has_args "$#"
+    group="$(koopa::sys_group)"
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        chgrp=('sudo' 'chgrp')
+    else
+        chgrp=('chgrp')
+    fi
+    "${chgrp[@]}" "$group" "$@"
+    return 0
+}
+
+# FIXME This is redundant with koopa::chmod.
+koopa::sys_chmod() { # {{{1
+    # """
+    # chmod with dynamic sudo handling.
+    # @note Updated 2020-07-06.
+    # """
+    local chmod
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
+    then
+    # NOTE Don't check for admin access here, can slow down functions.
+        chmod=('sudo' 'chmod')
+    else
+        chmod=('chmod')
+    fi
+    "${chmod[@]}" "$@"
+    return 0
+}
+
+# FIXME This should be internal.
+koopa::sys_chmod_flags() { # {{{1
+    # """
+    # Default recommended flags for chmod.
+    # @note Updated 2020-04-16.
+    # """
+    local flags
+    koopa::assert_has_no_args "$#"
+    if koopa::is_shared_install
+    then
+        flags='u+rw,g+rw'
+    else
+        flags='u+rw,g+r,g-w'
+    fi
+    koopa::print "$flags"
+    return 0
+}
+
+# FIXME This is redundant with koopa::chown.
+koopa::sys_chown() { # {{{1
+    # """
+    # chown with dynamic sudo handling.
+    # @note Updated 2020-07-06.
+    # """
+    local chown group user
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        chown=('sudo' 'chown')
+    else
+        chown=('chown')
+    fi
+    "${chown[@]}" "$@"
+    return 0
+}
+
+# FIXME This is reundant with 'koopa::cp'.
+koopa::sys_cp() { # {{{1
+    # """
+    # Koopa copy.
+    # @note Updated 2020-06-30.
+    # """
+    local cp
+    koopa::assert_has_args "$#"
+    cp=('koopa::cp')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        cp+=('-S')
+    fi
+    "${cp[@]}" "$@"
+    return 0
+}
+
 koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
-    # @note Updated 2021-04-12.
+    # @note Updated 2021-09-20.
     #
     # Intended for use with 'koopa pull'.
     #
@@ -128,6 +222,7 @@ koopa::sys_git_pull() { # {{{1
     (
         prefix="$(koopa::koopa_prefix)"
         koopa::cd "$prefix"
+        # FIXME Use '--recursive' instead of '-r' here.
         koopa::sys_set_permissions -r "${prefix}/lang/shell/zsh" &>/dev/null
         current_branch="$(koopa::git_branch)"
         default_branch="$(koopa::git_default_branch)"
@@ -139,6 +234,28 @@ koopa::sys_git_pull() { # {{{1
         fi
         koopa::fix_zsh_permissions
     )
+    return 0
+}
+
+koopa::sys_group() { # {{{1
+    # """
+    # Return the appropriate group to use with koopa installation.
+    # @note Updated 2020-07-04.
+    #
+    # Returns current user for local install.
+    # Dynamically returns the admin group for shared install.
+    #
+    # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
+    # """
+    local group
+    koopa::assert_has_no_args "$#"
+    if koopa::is_shared_install
+    then
+        group="$(koopa::admin_group)"
+    else
+        group="$(koopa::group)"
+    fi
+    koopa::print "$group"
     return 0
 }
 
@@ -222,6 +339,89 @@ koopa::sys_info() { # {{{
     return 0
 }
 
+# FIXME This is redundant with 'koopa::ln'.
+koopa::sys_ln() { # {{{1
+    # """
+    # Create a symlink quietly.
+    # @note Updated 2021-05-25.
+    #
+    # Don't need to set 'g+rw' for symbolic link here.
+    # Symlink permissions are ignored on most systems, including Linux.
+    #
+    # On macOS, you can override using BSD ln:
+    # > /bin/ln -h g+rw <file>
+    # """
+    local ln source target
+    koopa::assert_has_args_eq "$#" 2
+    source="${1:?}"
+    target="${2:?}"
+    ln=('koopa::ln')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        ln+=('-S')
+    fi
+    "${ln[@]}" "$source" "$target"
+    koopa::sys_set_permissions -h "$target"
+    return 0
+}
+
+# FIXME This is redundant with 'koopa::mkdir'.
+koopa::sys_mkdir() { # {{{1
+    # """
+    # mkdir with dynamic sudo handling.
+    # @note Updated 2020-07-06.
+    # """
+    local mkdir
+    koopa::assert_has_args "$#"
+    mkdir=('koopa::mkdir')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        mkdir+=('-S')
+    fi
+    "${mkdir[@]}" "$@"
+    koopa::sys_set_permissions "$@"
+    return 0
+}
+
+# FIXME This is redundant with 'koopa::mkdir'.
+koopa::sys_mv() { # {{{1
+    # """
+    # Move a file or directory.
+    # @note Updated 2020-07-06.
+    # """
+    local mv
+    koopa::assert_has_args "$#"
+    mv=('koopa::mv')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        mv+=('-S')
+    fi
+    "${mv[@]}" "$@"
+    return 0
+}
+
+# FIXME This is redundant with 'koopa::mkdir'.
+koopa::sys_rm() { # {{{1
+    # """
+    # Remove files/directories quietly.
+    # @note Updated 2020-06-30.
+    # """
+    local rm
+    koopa::assert_has_args "$#"
+    rm=('koopa::rm')
+    if koopa::is_shared_install
+    then
+        # NOTE Don't check for admin access here, can slow down functions.
+        rm+=('-S')
+    fi
+    "${rm[@]}" "$@"
+    return 0
+}
+
+# FIXME Rethink the flag handling here, and usage of OPTIND.
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
@@ -283,195 +483,6 @@ koopa::sys_set_permissions() { # {{{1
         "${chmod[@]}" "$arg"
         "${chown[@]}" "$arg"
     done
-    return 0
-}
-
-koopa::sys_chgrp() { # {{{1
-    # """
-    # chgrp with dynamic sudo handling.
-    # @note Updated 2020-07-06.
-    # """
-    local chgrp group
-    koopa::assert_has_args "$#"
-    group="$(koopa::sys_group)"
-    if koopa::is_shared_install
-    then
-        # NOTE Don't check for admin access here, can slow down functions.
-        chgrp=('sudo' 'chgrp')
-    else
-        chgrp=('chgrp')
-    fi
-    "${chgrp[@]}" "$group" "$@"
-    return 0
-}
-
-koopa::sys_chmod() { # {{{1
-    # """
-    # chmod with dynamic sudo handling.
-    # @note Updated 2020-07-06.
-    # """
-    local chmod
-    koopa::assert_has_args "$#"
-    if koopa::is_shared_install
-    then
-    # NOTE Don't check for admin access here, can slow down functions.
-        chmod=('sudo' 'chmod')
-    else
-        chmod=('chmod')
-    fi
-    "${chmod[@]}" "$@"
-    return 0
-}
-
-koopa::sys_chmod_flags() { # {{{1
-    # """
-    # Default recommended flags for chmod.
-    # @note Updated 2020-04-16.
-    # """
-    local flags
-    koopa::assert_has_no_args "$#"
-    if koopa::is_shared_install
-    then
-        flags='u+rw,g+rw'
-    else
-        flags='u+rw,g+r,g-w'
-    fi
-    koopa::print "$flags"
-    return 0
-}
-
-koopa::sys_chown() { # {{{1
-    # """
-    # chown with dynamic sudo handling.
-    # @note Updated 2020-07-06.
-    # """
-    local chown group user
-    koopa::assert_has_args "$#"
-    if koopa::is_shared_install
-    then
-        # NOTE Don't check for admin access here, can slow down functions.
-        chown=('sudo' 'chown')
-    else
-        chown=('chown')
-    fi
-    "${chown[@]}" "$@"
-    return 0
-}
-
-koopa::sys_cp() { # {{{1
-    # """
-    # Koopa copy.
-    # @note Updated 2020-06-30.
-    # """
-    local cp
-    koopa::assert_has_args "$#"
-    cp=('koopa::cp')
-    if koopa::is_shared_install
-    then
-        # NOTE Don't check for admin access here, can slow down functions.
-        cp+=('-S')
-    fi
-    "${cp[@]}" "$@"
-    return 0
-}
-
-koopa::sys_group() { # {{{1
-    # """
-    # Return the appropriate group to use with koopa installation.
-    # @note Updated 2020-07-04.
-    #
-    # Returns current user for local install.
-    # Dynamically returns the admin group for shared install.
-    #
-    # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
-    # """
-    local group
-    koopa::assert_has_no_args "$#"
-    if koopa::is_shared_install
-    then
-        group="$(koopa::admin_group)"
-    else
-        group="$(koopa::group)"
-    fi
-    koopa::print "$group"
-    return 0
-}
-
-koopa::sys_ln() { # {{{1
-    # """
-    # Create a symlink quietly.
-    # @note Updated 2021-05-25.
-    #
-    # Don't need to set 'g+rw' for symbolic link here.
-    # Symlink permissions are ignored on most systems, including Linux.
-    #
-    # On macOS, you can override using BSD ln:
-    # > /bin/ln -h g+rw <file>
-    # """
-    local ln source target
-    koopa::assert_has_args_eq "$#" 2
-    source="${1:?}"
-    target="${2:?}"
-    ln=('koopa::ln')
-    if koopa::is_shared_install
-    then
-        # NOTE Don't check for admin access here, can slow down functions.
-        ln+=('-S')
-    fi
-    "${ln[@]}" "$source" "$target"
-    koopa::sys_set_permissions -h "$target"
-    return 0
-}
-
-koopa::sys_mkdir() { # {{{1
-    # """
-    # mkdir with dynamic sudo handling.
-    # @note Updated 2020-07-06.
-    # """
-    local mkdir
-    koopa::assert_has_args "$#"
-    mkdir=('koopa::mkdir')
-    if koopa::is_shared_install
-    then
-        # NOTE Don't check for admin access here, can slow down functions.
-        mkdir+=('-S')
-    fi
-    "${mkdir[@]}" "$@"
-    koopa::sys_set_permissions "$@"
-    return 0
-}
-
-koopa::sys_mv() { # {{{1
-    # """
-    # Move a file or directory.
-    # @note Updated 2020-07-06.
-    # """
-    local mv
-    koopa::assert_has_args "$#"
-    mv=('koopa::mv')
-    if koopa::is_shared_install
-    then
-        # NOTE Don't check for admin access here, can slow down functions.
-        mv+=('-S')
-    fi
-    "${mv[@]}" "$@"
-    return 0
-}
-
-koopa::sys_rm() { # {{{1
-    # """
-    # Remove files/directories quietly.
-    # @note Updated 2020-06-30.
-    # """
-    local rm
-    koopa::assert_has_args "$#"
-    rm=('koopa::rm')
-    if koopa::is_shared_install
-    then
-        # NOTE Don't check for admin access here, can slow down functions.
-        rm+=('-S')
-    fi
-    "${rm[@]}" "$@"
     return 0
 }
 
