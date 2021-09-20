@@ -1,6 +1,274 @@
 #!/usr/bin/env bash
 
-koopa:::salmon_index() { # {{{1
+# Main functions ===============================================================
+koopa::run_salmon_paired_end() { # {{{1
+    # """
+    # Run salmon on multiple paired-end FASTQ files.
+    # @note Updated 2021-09-20.
+    #
+    # Number of bootstraps matches the current recommendation in bcbio-nextgen.
+    # Attempting to detect library type (strandedness) automatically by default.
+    # """
+    local app dict
+    local fastq_r1_files fastq_r1 fastq_r2 str
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [bootstraps]=30
+        [fastq_dir]='fastq'
+        [index_dir]=''
+        [lib_type]='A'
+        [output_dir]='salmon'
+        [r1_tail]='_R1_001.fastq.gz'
+        [r2_tail]='_R2_001.fastq.gz'
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            '--bootstraps='*)
+                dict[bootstraps]="${1#*=}"
+                shift 1
+                ;;
+            '--fasta-file='*)
+                dict[fasta_file]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-dir='*)
+                dict[fastq_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--gff-file='*)
+                dict[gff_file]="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir='*)
+                dict[index_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir='*)
+                dict[output_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--r1-tail='*)
+                dict[r1_tail]="${1#*=}"
+                shift 1
+                ;;
+            '--r2-tail='*)
+                dict[r2_tail]="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::h1 'Running salmon (paired-end mode).'
+    koopa::activate_conda_env 'salmon'
+    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
+    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
+    dict[gff_file]="$(koopa::realpath "${dict[fasta_file]}")"
+    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
+    dict[samples_dir]="${dict[output_dir]}/samples"
+    if [[ -z "${dict[index_dir]}" ]]
+    then
+        dict[index_dir]="${dict[output_dir]}/index"
+    fi
+    koopa::dl \
+        'Bootstraps' "${dict[bootstraps]}" \
+        'FASTA file' "${dict[fasta_file]}" \
+        'FASTQ dir' "${dict[fastq_dir]}" \
+        'GFF file' "${dict[gff_file]}" \
+        'Index dir' "${dict[index_dir]}" \
+        'Output dir' "${dict[output_dir]}" \
+        'R1 tail' "${dict[r1_tail]}" \
+        'R2 tail' "${dict[r2_tail]}"
+    # Sample array from FASTQ files {{{2
+    # --------------------------------------------------------------------------
+    # Create a per-sample array from the R1 FASTQ files.
+    # Pipe GNU find into array.
+    readarray -t fastq_r1_files <<< "$( \
+        "${app[find]}" "${dict[fastq_dir]}" \
+            -maxdepth 1 \
+            -mindepth 1 \
+            -type 'f' \
+            -name "*${dict[r1_tail]}" \
+            -not -name '._*' \
+            -print \
+        | "${app[sort]}" \
+    )"
+    # Error on FASTQ match failure.
+    if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
+    then
+        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
+with '${dict[r1_tail]}'."
+    fi
+    str="$(koopa::ngettext "${#fastq_r1_files[@]}" 'sample' 'samples')"
+    koopa::alert_info "${#fastq_r1_files[@]} ${str} detected."
+    # Index {{{2
+    # --------------------------------------------------------------------------
+    if [[ ! -d "${dict[index_dir]}" ]]
+    then
+        koopa::salmon_index \
+            --fasta-file="${dict[fasta_file]}" \
+            --output-dir="${dict[index_dir]}"
+    fi
+    koopa::assert_is_dir "${dict[index_dir]}"
+    # Quantify {{{2
+    # --------------------------------------------------------------------------
+    # Loop across the per-sample array and quantify with salmon.
+    for fastq_r1 in "${fastq_r1_files[@]}"
+    do
+        fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
+        koopa:::salmon_quant_paired_end \
+            --bootstraps="${dict[bootstraps]}" \
+            --fastq-r1="$fastq_r1" \
+            --fastq-r2="$fastq_r2" \
+            --gff-file="${dict[gff_file]}" \
+            --index-dir="${dict[index_dir]}" \
+            --lib-type="${dict[lib_type]}" \
+            --output-dir="${dict[samples_dir]}" \
+            --r1-tail="${dict[r1_tail]}" \
+            --r2-tail="${dict[r2_tail]}"
+    done
+    koopa::deactivate_conda
+    koopa::alert_success "salmon run at '${dict[output_dir]}' \
+completed successfully."
+    return 0
+}
+
+koopa::run_salmon_single_end() { # {{{1
+    # """
+    # Run salmon on multiple single-end FASTQ files.
+    # @note Updated 2021-09-20.
+    #
+    # Number of bootstraps matches the current recommendation in bcbio-nextgen.
+    # Attempting to detect library type (strandedness) automatically by default.
+    # """
+    local app dict
+    local fastq_files fastq str
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [bootstraps]=30
+        [fastq_dir]='fastq'
+        [index_dir]=''
+        [lib_type]='A'
+        [output_dir]='salmon'
+        [tail]='.fastq.gz'
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            '--bootstraps='*)
+                bootstraps="${1#*=}"
+                shift 1
+                ;;
+            '--fasta-file='*)
+                fasta_file="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-dir='*)
+                fastq_dir="${1#*=}"
+                shift 1
+                ;;
+            '--gff-file='*)
+                gff_file="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir='*)
+                dict[index_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir='*)
+                output_dir="${1#*=}"
+                shift 1
+                ;;
+            '--tail='*)
+                tail="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::h1 'Running salmon (single-end mode).'
+    koopa::activate_conda_env 'salmon'
+    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
+    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
+    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
+    dict[samples_dir]="${dict[output_dir]}/samples"
+    if [[ -z "${dict[index_dir]}" ]]
+    then
+        dict[index_dir]="${dict[output_dir]}/index"
+    fi
+    koopa::dl \
+        'Bootstraps' "${dict[bootstraps]}" \
+        'FASTA file' "${dict[fasta_file]}" \
+        'FASTQ dir' "${dict[fastq_dir]}" \
+        'GFF file' "${dict[gff_file]}" \
+        'Index dir' "${dict[index_dir]}" \
+        'Output dir' "${dict[output_dir]}" \
+        'Tail' "${dict[tail]}"
+    # Sample array from FASTQ files {{{2
+    # --------------------------------------------------------------------------
+    # Create a per-sample array from the FASTQ files.
+    # Pipe GNU find into array.
+    readarray -t fastq_files <<< "$( \
+        "${app[find]}" "$fastq_dir" \
+            -maxdepth 1 \
+            -mindepth 1 \
+            -type 'f' \
+            -name "*${tail}" \
+            -not -name '._*' \
+            -print \
+        | "${app[sort]}" \
+    )"
+    # Error on FASTQ match failure.
+    if [[ "${#fastq_files[@]}" -eq 0 ]]
+    then
+        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
+with '${dict[tail]}'."
+    fi
+    str="$(koopa::ngettext "${#fastq_files[@]}" 'sample' 'samples')"
+    koopa::alert_info "${#fastq_files[@]} ${str} detected."
+    # Index {{{2
+    # --------------------------------------------------------------------------
+    if [[ ! -d "${dict[index_dir]}" ]]
+    then
+        koopa::salmon_index \
+            --fasta-file="${dict[fasta_file]}" \
+            --output-dir="${dict[index_dir]}"
+    fi
+    koopa::assert_is_dir "${dict[index_dir]}"
+    # Quantify {{{2
+    # --------------------------------------------------------------------------
+    # Loop across the per-sample array and quantify with salmon.
+    for fastq in "${fastq_files[@]}"
+    do
+        koopa::salmon_quant_single_end \
+            --bootstraps="${dict[bootstraps]}" \
+            --fastq="$fastq" \
+            --gff-file="${dict[gff_file]}" \
+            --index-dir="${dict[index_dir]}" \
+            --lib-type="${dict[lib_type]}" \
+            --output-dir="${dict[samples_dir]}" \
+            --tail="${dict[tail]}"
+    done
+    koopa::deactivate_conda
+    koopa::alert_success "salmon run at '${dict[output_dir]}' \
+completed successfully."
+    return 0
+}
+
+# Individual runners ===========================================================
+koopa::salmon_index() { # {{{1
     # """
     # Generate salmon index.
     # @note Updated 2021-08-16.
@@ -51,13 +319,15 @@ koopa:::salmon_index() { # {{{1
     )
     koopa::dl 'Index args' "${index_args[*]}"
     salmon index "${index_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
+    koopa::alert_success "Indexing of '${dict[fasta_file]}' at \
+'${dict[output_dir]}' was successful."
     return 0
 }
 
-koopa:::salmon_quant_paired_end() { # {{{1
+koopa::salmon_quant_paired_end() { # {{{1
     # """
     # Run salmon quant (per paired-end sample).
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-09-20.
     #
     # Quartz is currently using only '--validateMappings' and '--gcBias' flags.
     #
@@ -185,10 +455,10 @@ koopa:::salmon_quant_paired_end() { # {{{1
     return 0
 }
 
-koopa:::salmon_quant_single_end() { # {{{1
+koopa::salmon_quant_single_end() { # {{{1
     # """
     # Run salmon quant (per single-end sample).
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-09-20.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html
@@ -270,242 +540,3 @@ koopa:::salmon_quant_single_end() { # {{{1
     return 0
 }
 
-koopa::run_salmon_paired_end() { # {{{1
-    # """
-    # Run salmon on multiple paired-end FASTQ files.
-    # @note Updated 2021-08-16.
-    #
-    # Number of bootstraps matches the current recommendation in bcbio-nextgen.
-    # Attempting to detect library type (strandedness) automatically by default.
-    # """
-    local app dict
-    local fastq_r1_files fastq_r1 fastq_r2 str
-    koopa::assert_has_args "$#"
-    declare -A app=(
-        [find]="$(koopa::locate_find)"
-        [sort]="$(koopa::locate_sort)"
-    )
-    declare -A dict=(
-        [bootstraps]=30
-        [fastq_dir]='fastq'
-        [lib_type]='A'
-        [output_dir]='salmon'
-        [r1_tail]='_R1_001.fastq.gz'
-        [r2_tail]='_R2_001.fastq.gz'
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            '--bootstraps='*)
-                dict[bootstraps]="${1#*=}"
-                shift 1
-                ;;
-            '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
-                shift 1
-                ;;
-            '--gff-file='*)
-                dict[gff_file]="${1#*=}"
-                shift 1
-                ;;
-            '--output-dir='*)
-                dict[output_dir]="${1#*=}"
-                shift 1
-                ;;
-            '--r1-tail='*)
-                dict[r1_tail]="${1#*=}"
-                shift 1
-                ;;
-            '--r2-tail='*)
-                dict[r2_tail]="${1#*=}"
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::h1 'Running salmon.'
-    koopa::activate_conda_env 'salmon'
-    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
-    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
-    dict[gff_file]="$(koopa::realpath "${dict[fasta_file]}")"
-    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
-    dict[index_dir]="${dict[output_dir]}/index"
-    dict[samples_dir]="${dict[output_dir]}/samples"
-    koopa::dl \
-        'Bootstraps' "${dict[bootstraps]}" \
-        'FASTA file' "${dict[fasta_file]}" \
-        'FASTQ dir' "${dict[fastq_dir]}" \
-        'GFF file' "${dict[gff_file]}" \
-        'Output dir' "${dict[output_dir]}" \
-        'R1 tail' "${dict[r1_tail]}" \
-        'R2 tail' "${dict[r2_tail]}"
-    # Sample array from FASTQ files {{{2
-    # --------------------------------------------------------------------------
-    # Create a per-sample array from the R1 FASTQ files.
-    # Pipe GNU find into array.
-    readarray -t fastq_r1_files <<< "$( \
-        "${app[find]}" "${dict[fastq_dir]}" \
-            -maxdepth 1 \
-            -mindepth 1 \
-            -type 'f' \
-            -name "*${dict[r1_tail]}" \
-            -not -name '._*' \
-            -print \
-        | "${app[sort]}" \
-    )"
-    # Error on FASTQ match failure.
-    if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
-    then
-        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
-with '${dict[r1_tail]}'."
-    fi
-    str="$(koopa::ngettext "${#fastq_r1_files[@]}" 'sample' 'samples')"
-    koopa::alert_info "${#fastq_r1_files[@]} ${str} detected."
-    # Index {{{2
-    # --------------------------------------------------------------------------
-    koopa:::salmon_index \
-        --fasta-file="${dict[fasta_file]}" \
-        --output-dir="${dict[index_dir]}"
-    koopa::assert_is_dir "${dict[index_dir]}"
-    # Quantify {{{2
-    # --------------------------------------------------------------------------
-    # Loop across the per-sample array and quantify with salmon.
-    for fastq_r1 in "${fastq_r1_files[@]}"
-    do
-        fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
-        koopa:::salmon_quant_paired_end \
-            --bootstraps="${dict[bootstraps]}" \
-            --fastq-r1="$fastq_r1" \
-            --fastq-r2="$fastq_r2" \
-            --gff-file="${dict[gff_file]}" \
-            --index-dir="${dict[index_dir]}" \
-            --lib-type="${dict[lib_type]}" \
-            --output-dir="${dict[samples_dir]}" \
-            --r1-tail="${dict[r1_tail]}" \
-            --r2-tail="${dict[r2_tail]}"
-    done
-    koopa::deactivate_conda
-    koopa::alert_success 'salmon run completed successfully.'
-    return 0
-}
-
-koopa::run_salmon_single_end() { # {{{1
-    # """
-    # Run salmon on multiple single-end FASTQ files.
-    # @note Updated 2021-08-16.
-    #
-    # Number of bootstraps matches the current recommendation in bcbio-nextgen.
-    # Attempting to detect library type (strandedness) automatically by default.
-    # """
-    local app dict
-    local fastq_files fastq str
-    koopa::assert_has_args "$#"
-    declare -A app=(
-        [find]="$(koopa::locate_find)"
-        [sort]="$(koopa::locate_sort)"
-    )
-    declare -A dict=(
-        [bootstraps]=30
-        [fastq_dir]='fastq'
-        [lib_type]='A'
-        [output_dir]='salmon'
-        [tail]='.fastq.gz'
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            '--bootstraps='*)
-                bootstraps="${1#*=}"
-                shift 1
-                ;;
-            '--fasta-file='*)
-                fasta_file="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-dir='*)
-                fastq_dir="${1#*=}"
-                shift 1
-                ;;
-            '--gff-file='*)
-                gff_file="${1#*=}"
-                shift 1
-                ;;
-            '--output-dir='*)
-                output_dir="${1#*=}"
-                shift 1
-                ;;
-            '--tail='*)
-                tail="${1#*=}"
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::h1 'Running salmon.'
-    koopa::activate_conda_env 'salmon'
-    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
-    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
-    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
-    dict[index_dir]="${dict[output_dir]}/index"
-    dict[samples_dir]="${dict[output_dir]}/samples"
-    koopa::dl \
-        'Bootstraps' "${dict[bootstraps]}" \
-        'FASTA file' "${dict[fasta_file]}" \
-        'FASTQ dir' "${dict[fastq_dir]}" \
-        'GFF file' "${dict[gff_file]}" \
-        'Output dir' "${dict[output_dir]}" \
-        'Tail' "${dict[tail]}"
-    # Sample array from FASTQ files {{{2
-    # --------------------------------------------------------------------------
-    # Create a per-sample array from the FASTQ files.
-    # Pipe GNU find into array.
-    readarray -t fastq_files <<< "$( \
-        "${app[find]}" "$fastq_dir" \
-            -maxdepth 1 \
-            -mindepth 1 \
-            -type 'f' \
-            -name "*${tail}" \
-            -not -name '._*' \
-            -print \
-        | "${app[sort]}" \
-    )"
-    # Error on FASTQ match failure.
-    if [[ "${#fastq_files[@]}" -eq 0 ]]
-    then
-        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
-with '${dict[tail]}'."
-    fi
-    str="$(koopa::ngettext "${#fastq_files[@]}" 'sample' 'samples')"
-    koopa::alert_info "${#fastq_files[@]} ${str} detected."
-    # Index {{{2
-    # --------------------------------------------------------------------------
-    koopa:::salmon_index \
-        --fasta-file="${dict[fasta_file]}" \
-        --output-dir="${dict[index_dir]}"
-    koopa::assert_is_dir "${dict[index_dir]}"
-    # Quantify {{{2
-    # --------------------------------------------------------------------------
-    # Loop across the per-sample array and quantify with salmon.
-    for fastq in "${fastq_files[@]}"
-    do
-        koopa:::salmon_quant_single_end \
-            --bootstraps="${dict[bootstraps]}" \
-            --fastq="$fastq" \
-            --gff-file="${dict[gff_file]}" \
-            --index-dir="${dict[index_dir]}" \
-            --lib-type="${dict[lib_type]}" \
-            --output-dir="${dict[samples_dir]}" \
-            --tail="${dict[tail]}"
-    done
-    koopa::deactivate_conda
-    koopa::alert_success 'salmon run completed successfully.'
-    return 0
-}
