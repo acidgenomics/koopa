@@ -93,7 +93,6 @@ koopa::uninstall_rust_packages() { # {{{1
         "$@"
 }
 
-# FIXME Switch to 'cargo-outdated' approach to only apply on outdated packages.
 koopa::update_rust_packages() { # {{{1
     # """
     # Update Rust packages.
