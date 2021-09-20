@@ -122,7 +122,7 @@ with '${dict[r1_tail]}'."
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
-        koopa:::salmon_quant_paired_end \
+        koopa::salmon_quant_paired_end \
             --bootstraps="${dict[bootstraps]}" \
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
