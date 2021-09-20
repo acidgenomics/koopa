@@ -111,6 +111,7 @@ koopa::test_find_files_by_shebang() { # {{{1
     return 0
 }
 
+# FIXME Rework optarg using our standard arg parser.
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
@@ -137,7 +138,7 @@ koopa::test_grep() { # {{{1
                 pattern="$OPTARG"
                 ;;
             \?)
-                koopa::invalid_arg
+                koopa::invalid_arg "$opt"
                 ;;
         esac
     done
