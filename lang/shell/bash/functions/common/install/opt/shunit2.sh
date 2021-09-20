@@ -21,7 +21,7 @@ koopa:::install_shunit2() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    koopa::cp -t "${prefix}/bin" "$name"
+    koopa::cp --target="${prefix}/bin" "$name"
     return 0
 }
 

@@ -20,7 +20,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     # NOTE Don't use 'koopa::cp' here, as it will remove the target file
     # and can cause system lockout in this case.
     sudo cp -v "$source_file" "$target_file"
-    koopa::chmod -S 0444 "$target_file"
+    koopa::chmod --sudo '0444' "$target_file"
     koopa::alert_success 'Touch ID disabled for sudo.'
     return 0
 }
@@ -49,7 +49,7 @@ in '${target_file}'."
     # NOTE Don't use 'koopa::cp' here, as it will remove the target file
     # and can cause system lockout in this case.
     sudo cp -v "$source_file" "$target_file"
-    koopa::chmod -S 0444 "$target_file"
+    koopa::chmod --sudo '0444' "$target_file"
     koopa::alert_success 'Touch ID enabled for sudo.'
     return 0
 }

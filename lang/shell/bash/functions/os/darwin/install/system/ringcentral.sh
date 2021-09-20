@@ -18,7 +18,7 @@ Contents/MacOS/RingCentralMeetings" \
         "${HOME}/Library/Logs/RingCentralMeetings" \
         "${HOME}/Preferences/RingcentralChat.plist" \
         "${HOME}/Preferences/us.zoom.ringcentral.plist"
-    koopa::rm -S '/Applications/RingCentral Meetings.app'
+    koopa::rm --sudo '/Applications/RingCentral Meetings.app'
     koopa::uninstall_success "$name_fancy"
     return 0
 }

@@ -205,14 +205,14 @@ koopa::delete_cache() { # {{{1
         koopa::stop 'Cache removal only supported inside Docker images.'
     fi
     koopa::alert 'Removing caches, logs, and temporary files.'
-    koopa::rm -S \
+    koopa::rm --sudo \
         '/root/.cache' \
         '/tmp/'* \
         '/var/backups/'* \
         '/var/cache/'*
     if koopa::is_debian_like
     then
-        koopa::rm -S '/var/lib/apt/lists/'*
+        koopa::rm --sudo '/var/lib/apt/lists/'*
     fi
     return 0
 }

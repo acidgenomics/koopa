@@ -40,12 +40,12 @@ koopa::update_koopa() { # {{{1
         return 1
     fi
     koopa::update_start "$name_fancy" "${koopa_prefix}"
-    koopa::sys_set_permissions -r "$koopa_prefix"
+    koopa::sys_set_permissions --recursive "$koopa_prefix"
     koopa::sys_git_pull
     koopa::update_dotfiles \
         "$(koopa::dotfiles_prefix)" \
         "$(koopa::dotfiles_private_prefix)"
-    koopa::sys_set_permissions -r "$koopa_prefix"
+    koopa::sys_set_permissions --recursive "$koopa_prefix"
     koopa::fix_zsh_permissions
     koopa::update_success "$name_fancy" "$koopa_prefix"
     return 0

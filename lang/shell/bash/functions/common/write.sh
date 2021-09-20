@@ -34,7 +34,7 @@ koopa::sudo_append_string() { # {{{1
     file="${2:?}"
     if [[ ! -f "$file" ]]
     then
-        koopa::mkdir -S "$(koopa::dirname "$file")"
+        koopa::mkdir --sudo "$(koopa::dirname "$file")"
         sudo touch "$file"
     fi
     koopa::print "$string" | sudo "$tee" -a "$file" >/dev/null
@@ -56,7 +56,7 @@ koopa::sudo_write_string() { # {{{1
     string="${1:?}"
     file="${2:?}"
     parent_dir="$(koopa::dirname "$file")"
-    [[ ! -d "$parent_dir" ]] && koopa::mkdir -S "$parent_dir"
+    [[ ! -d "$parent_dir" ]] && koopa::mkdir --sudo "$parent_dir"
     koopa::print "$string" | sudo "$tee" "$file" >/dev/null
     return 0
 }

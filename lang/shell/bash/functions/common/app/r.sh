@@ -153,7 +153,7 @@ koopa::r_link_site_library() { # {{{1
     then
         koopa::sys_ln "$lib_source" "$lib_target"
     else
-        koopa::ln -S "$lib_source" "$lib_target"
+        koopa::ln --sudo "$lib_source" "$lib_target"
     fi
     conf_args=(
         "--prefix=${lib_source}"
@@ -170,8 +170,8 @@ koopa::r_link_site_library() { # {{{1
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then
         koopa::alert_note "Fixing Fedora R configuration at '/usr/lib64/R'."
-        koopa::mkdir -S '/usr/lib64/R/site-library'
-        koopa::ln -S \
+        koopa::mkdir --sudo '/usr/lib64/R/site-library'
+        koopa::ln --sudo \
             '/usr/lib64/R/site-library' \
             '/usr/local/lib/R/site-library'
     fi
@@ -256,7 +256,7 @@ koopa::r_rebuild_docs() { # {{{1
     koopa::alert 'Updating HTML package index.'
     doc_dir="$("$rscript" "${rscript_flags[@]}" -e 'cat(R.home("doc"))')"
     html_dir="${doc_dir}/html"
-    [[ ! -d "$html_dir" ]] && koopa::mkdir -S "$html_dir"
+    [[ ! -d "$html_dir" ]] && koopa::mkdir --sudo "$html_dir"
     pkg_index="${html_dir}/packages.html"
     koopa::dl 'HTML index' "$pkg_index"
     [[ ! -f "$pkg_index" ]] && sudo touch "$pkg_index"

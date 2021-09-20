@@ -17,7 +17,7 @@ koopa::macos_disable_crashplan() { # {{{1
     then
         # > sudo launchctl stop com.crashplan.engine
         sudo launchctl unload "$system_plist"
-        koopa::mv -S "$system_plist" "${system_plist}.disabled"
+        koopa::mv --sudo "$system_plist" "${system_plist}.disabled"
     fi
     return 0
 }
@@ -41,7 +41,7 @@ koopa::macos_enable_crashplan() {  # {{{1
     fi
     if [[ -f "${system_plist}.disabled" ]]
     then
-        koopa::mv -S "${system_plist}.disabled" "$system_plist"
+        koopa::mv --sudo "${system_plist}.disabled" "$system_plist"
     fi
     if [[ -f "$system_plist" ]]
     then

@@ -20,7 +20,7 @@ koopa::macos_uninstall_adobe_creative_cloud() { # {{{1
         "${HOME}/Library/Preferences/Macromedia" \
         "${HOME}/Library/Preferences/com."{a,A}"dobe"* \
         "${HOME}/Library/Saved Application State/com."{a,A}"dobe"*
-    koopa::rm -S \
+    koopa::rm --sudo \
         '/Library/Application Support/Adobe'* \
         '/Library/Application Support/regid.'*'.com.adobe' \
         '/Library/Caches/com.'{a,A}'dobe'* \

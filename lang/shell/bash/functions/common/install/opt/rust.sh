@@ -44,7 +44,7 @@ koopa:::install_rust() { # {{{1
     koopa::chmod +x "$file"
     # Can get the version of install script with '--version' here.
     "./${file}" --no-modify-path -v -y
-    koopa::sys_set_permissions -r "$pkg_prefix"
+    koopa::sys_set_permissions --recursive "$pkg_prefix"
     return 0
 }
 
@@ -94,7 +94,7 @@ koopa::update_rust() { # {{{1
     koopa::rm "${CARGO_HOME:?}/bin/"{'cargo-fmt','rustfmt'}
     # > rustup update stable
     rustup update
-    koopa::sys_set_permissions -r "${CARGO_HOME:?}"
+    koopa::sys_set_permissions --recursive "${CARGO_HOME:?}"
     koopa::update_success "$name_fancy"
     return 0
 }
