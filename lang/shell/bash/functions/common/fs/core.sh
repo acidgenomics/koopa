@@ -94,16 +94,21 @@ koopa::chown() { # {{{1
     # @note Updated 2021-09-20.
     # """
     local chown dereference pos recursive sudo which_chown
-    dereference=0
+    dereference=1
     recursive=0
     sudo=0
     pos=()
     while (("$#"))
     do
         case "$1" in
-            '--dereference' | \
-            '-h')
+            'dereference' | \
+            '-H')
                 dereference=1
+                shift 1
+                ;;
+            '--no-dereference' | \
+            '-h')
+                dereference=0
                 shift 1
                 ;;
             '--recursive' | \
@@ -138,7 +143,7 @@ koopa::chown() { # {{{1
     then
         chown+=('-R')
     fi
-    if [[ "$dereference" -eq 1 ]]
+    if [[ "$dereference" -eq 0 ]]
     then
         chown+=('-h')
     fi
