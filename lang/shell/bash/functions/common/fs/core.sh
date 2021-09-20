@@ -12,6 +12,7 @@ koopa::cd() { # {{{1
     return 0
 }
 
+# FIXME Is this redundant with koopa::sys_chgrp?
 koopa::chgrp() { # {{{1
     # """
     # GNU chgrp.
@@ -24,10 +25,12 @@ koopa::chgrp() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
                 ;;
+
             *)
                 pos+=("$1")
                 shift 1
