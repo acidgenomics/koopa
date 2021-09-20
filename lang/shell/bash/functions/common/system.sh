@@ -443,9 +443,6 @@ koopa::sys_set_permissions() { # {{{1
         chmod+=('--recursive')
         chown+=('--recursive')
     fi
-    chmod+=(
-        "$(koopa::sys_chmod_flags)"
-    )
     if koopa::is_shared_install
     then
         chmod+=('u+rw,g+rw')
