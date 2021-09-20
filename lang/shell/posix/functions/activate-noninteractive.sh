@@ -392,7 +392,6 @@ _koopa_activate_node() { # {{{1
     return 0
 }
 
-# FIXME Does this pick up Homebrew OpenJDK?
 _koopa_activate_openjdk() { # {{{1
     # """
     # Activate OpenJDK.
