@@ -60,7 +60,7 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
 koopa::macos_brew_upgrade_casks() { # {{{1
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2021-08-15.
+    # @note Updated 2021-09-20.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
@@ -89,6 +89,7 @@ koopa::macos_brew_upgrade_casks() { # {{{1
         brew reinstall --cask --force "$cask" || true
         case "$cask" in
             'adoptopenjdk' | \
+            'openjdk' | \
             'r' | \
             'temurin')
                 koopa::configure_r
