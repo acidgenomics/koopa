@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-koopa::macos_delete_adobe_creative_cloud_preferences() { # {{{1
+koopa::macos_uninstall_adobe_creative_cloud() { # {{{1
     # """
-    # Delete Adobe Creative Cloud preferences.
-    # @note Updated 2020-11-12.
+    # Uninstall Adobe Creative Cloud preferences.
+    # @note Updated 2021-09-20.
     # """
     local name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    name_fancy='Adobe Creative Cloud preferences'
+    name_fancy='Adobe Creative Cloud'
     koopa::uninstall_start "$name_fancy"
     koopa::rm \
         "${HOME}/Documents/Adobe" \
