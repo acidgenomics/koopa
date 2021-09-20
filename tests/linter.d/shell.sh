@@ -49,9 +49,9 @@ test_all_illegal_strings() { # {{{1
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
-        -i 'illegal-strings' \
-        -n 'shell | all | illegal-strings' \
-        -p "$pattern" \
+        --ignore='illegal-strings' \
+        --name='shell | all | illegal-strings' \
+        --pattern="$pattern" \
         "$@"
     return 0
 }
@@ -72,9 +72,9 @@ test_all_quoting() { # {{{1
     for pattern in "${array[@]}"
     do
         koopa::test_grep \
-            -i 'quoting' \
-            -n "shell | all | quoting | ${pattern}" \
-            -p "$pattern" \
+            --ignore='quoting' \
+            --name="shell | all | quoting | ${pattern}" \
+            --pattern="$pattern" \
             "$@"
     done
     return 0
@@ -105,9 +105,9 @@ test_bash_illegal_strings() { # {{{1
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
-        -i 'illegal-strings' \
-        -n 'shell | bash | illegal-strings' \
-        -p "$pattern" \
+        --ignore='illegal-strings' \
+        --name='shell | bash | illegal-strings' \
+        --pattern="$pattern" \
         "$@"
     return 0
 }
@@ -139,9 +139,9 @@ test_posix_illegal_strings() { # {{{1
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
-        -i 'illegal-strings' \
-        -n 'shell | posix | illegal-strings' \
-        -p "$pattern" \
+        --ignore='illegal-strings' \
+        --name='shell | posix | illegal-strings' \
+        --pattern="$pattern" \
         "$@"
     return 0
 }
@@ -171,9 +171,9 @@ test_zsh_illegal_strings() { # {{{1
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
-        -i 'illegal-strings' \
-        -n 'shell | zsh | illegal-strings' \
-        -p "$pattern" \
+        --ignore='illegal-strings' \
+        --name='shell | zsh | illegal-strings' \
+        --pattern="$pattern" \
         "$@"
     return 0
 }
