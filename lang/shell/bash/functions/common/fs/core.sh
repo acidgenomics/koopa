@@ -245,6 +245,19 @@ koopa::df() { # {{{1
     return 0
 }
 
+koopa::init_dir() { # {{{1
+    # """
+    # Initialize (create) a directory and return the real path on disk.
+    # @note Updated 2021-09-20.
+    # """
+    local dir
+    koopa::assert_has_args_eq "$#" 1
+    koopa::mkdir "$dir"
+    dir="$(koopa::realpath "$dir")"
+    koopa::print "$dir"
+    return 0
+}
+
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly with GNU ln.
