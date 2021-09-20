@@ -30,9 +30,9 @@ test_illegal_strings() { # {{{1
     )
     pattern="$(koopa::paste0 '|' "${array[@]}")"
     koopa::test_grep \
-        -i 'illegal-strings' \
-        -n 'base-illegal-strings' \
-        -p "$pattern" \
+        --ignore='illegal-strings' \
+        --name='base-illegal-strings' \
+        --pattern="$pattern" \
         "$@"
     return 0
 }
@@ -40,9 +40,9 @@ test_illegal_strings() { # {{{1
 test_line_width() { # {{{1
     koopa::assert_has_args "$#"
     koopa::test_grep \
-        -i 'line-width' \
-        -n 'base-line-width' \
-        -p '^[^\n]{81}' \
+        --ignore='line-width' \
+        --name='base-line-width' \
+        --pattern='^[^\n]{81}' \
         "$@"
     return 0
 }

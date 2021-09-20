@@ -37,7 +37,7 @@ koopa::test_find_files() { # {{{1
     x="$( \
         "$find" "$prefix" \
             -mindepth 1 \
-            -type f \
+            -type 'f' \
             -not -name "$(koopa::basename "$0")" \
             -not -name '*.1' \
             -not -name '*.md' \
@@ -111,39 +111,56 @@ koopa::test_find_files_by_shebang() { # {{{1
     return 0
 }
 
-# FIXME Rework optarg using our standard arg parser.
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-20.
     #
     # Requires Perl-compatible regular expression (PCRE) support (-P).
     #
     # This doesn't currently ignore commented lines.
     # """
-    local OPTIND failures file grep ignore name pattern x
+    local failures file grep ignore name pattern pos x
     koopa::assert_has_args "$#"
     ignore=''
-    # FIXME Rework this.
-    OPTIND=1
-    while getopts 'i:n:p:' opt
+    pos=()
+    while (("$#"))
     do
-        case "$opt" in
-            'i')
-                ignore="$OPTARG"
+        case "$1" in
+            '--ignore='*)
+                ignore="${1#*=}"
+                shift 1
                 ;;
-            'n')
-                name="$OPTARG"
+            '--name='*)
+                name="${1#*=}"
+                shift 1
                 ;;
-            'p')
-                pattern="$OPTARG"
+            '--pattern='*)
+                pattern="${1#*=}"
+                shift 1
                 ;;
-            \?)
-                koopa::invalid_arg "$opt"
+            '-i')
+                ignore="${2:?}"
+                shift 2
+                ;;
+            '-n')
+                name="${2:?}"
+                shift 2
+                ;;
+            '-p')
+                pattern="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    shift "$((OPTIND-1))"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     grep="$(koopa::locate_grep)"
     failures=()
