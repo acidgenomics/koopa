@@ -24,7 +24,7 @@ koopa:::install_perlbrew() { # {{{1
     file='install.sh'
     url='https://install.perlbrew.pl'
     koopa::download "$url" "$file"
-    koopa::chmod +x "$file"
+    koopa::chmod 'u+x' "$file"
     export PERLBREW_ROOT="$prefix"
     "./${file}"
 }

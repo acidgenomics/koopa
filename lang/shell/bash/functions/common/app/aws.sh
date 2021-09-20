@@ -35,7 +35,7 @@ koopa::aws_batch_fetch_and_run() { # {{{1
             koopa::stop "Unsupported URL: '${url}'."
             ;;
     esac
-    koopa::chmod u+x "$file"
+    koopa::chmod 'u+x' "$file"
     "$file"
     return 0
 }
