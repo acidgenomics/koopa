@@ -23,10 +23,12 @@ koopa:::install_rust_packages() { # {{{1
     # - https://github.com/rust-lang/cargo/pull/6798
     # - https://github.com/rust-lang/cargo/pull/7560
     # """
-    local args cargo default jobs pkg pkgs pkg_args root version
+    local args cargo default jobs pkg pkgs pkg_args root rustc version
     koopa::configure_rust
     koopa::activate_rust
     cargo="$(koopa::locate_cargo)"
+    rustc="$(koopa::locate_rustc)"
+    koopa::add_to_path_start "$(koopa::dirname "$rustc")"
     pkgs=("$@")
     root="${INSTALL_PREFIX:?}"
     jobs="$(koopa::cpu_count)"
@@ -91,6 +93,7 @@ koopa::uninstall_rust_packages() { # {{{1
         "$@"
 }
 
+# FIXME Switch to 'cargo-outdated' approach to only apply on outdated packages.
 koopa::update_rust_packages() { # {{{1
     # """
     # Update Rust packages.
