@@ -333,7 +333,7 @@ koopa::sys_ln() { # {{{1
         ln+=('--sudo')
     fi
     "${ln[@]}" "$source" "$target"
-    koopa::sys_set_permissions --dereference "$target"
+    koopa::sys_set_permissions --no-dereference "$target"
     return 0
 }
 
@@ -386,50 +386,62 @@ koopa::sys_rm() { # {{{1
     return 0
 }
 
-# FIXME Rethink the flag handling here, and usage of OPTIND.
-# FIXME Need to update other instances in package with long args.
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-20.
     # @param -r
     #   Change permissions recursively.
     # """
     koopa::assert_has_args "$#"
-    local OPTIND arg chmod chown dict group user
+    local arg chmod chown dict group pos user
     declare -A dict=(
         [dereference]=1
         [recursive]=0
         [user]=0
     )
-    OPTIND=1
-    while getopts 'hru' opt
+    pos=()
+    while (("$#"))
     do
-        case "$opt" in
-            'h')
-                # FIXME Rename this to dereference.
+        case "$1" in
+            '--dereference' | \
+            '-H')
+                dict[dereference]=1
+                shift 1
+                ;;
+            '--no-dereference' | \
+            '-h')
                 dict[dereference]=0
+                shift 1
                 ;;
-            'r')
-                dict[recursive]=1
+            '--recursive' | \
+            '-R' | \
+            '-r')
+                dict[recursive]=0
+                shift 1
                 ;;
-            'u')
+            '--user' | \
+            '-u')
                 dict[user]=1
+                shift 1
                 ;;
-            \?)
-                koopa::invalid_arg
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    shift "$((OPTIND-1))"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     chmod=('koopa::sys_chmod')
-    # FIXME This won't support the '-h' flag now, need to rethink.
-    chown=('koopa::sys_chown' '-h')
+    chown=('koopa::sys_chown' '--no-dereference')
     if [[ "${dict[recursive]}" -eq 1 ]]
     then
-        chmod+=('-R')
-        chown+=('-R')
+        chmod+=('--recursive')
+        chown+=('--recursive')
     fi
     chmod+=(
         "$(koopa::sys_chmod_flags)"
