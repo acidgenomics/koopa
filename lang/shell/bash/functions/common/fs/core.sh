@@ -131,6 +131,7 @@ koopa::cp() { # {{{1
     sudo=0
     symlink=0
     target_dir=''
+    # FIXME Rework using our standard argparse approach.
     OPTIND=1
     while getopts 'Sst:' opt
     do
@@ -208,6 +209,7 @@ koopa::ln() { # {{{1
     local target_parent which_ln
     sudo=0
     target_dir=''
+    # FIXME Rework using our standard argparse approach.
     OPTIND=1
     while getopts 'St:' opt
     do
@@ -263,6 +265,7 @@ koopa::mkdir() { # {{{1
     # @note Updated 2021-05-21.
     local OPTIND mkdir sudo which_mkdir
     sudo=0
+    # FIXME Rework using our standard argparse approach.
     OPTIND=1
     while getopts 'S' opt
     do
@@ -305,6 +308,7 @@ koopa::mv() { # {{{1
     local target_parent which_mv
     sudo=0
     target_dir=''
+    # FIXME Rework using our standard argparse approach.
     OPTIND=1
     while getopts 'St:' opt
     do
@@ -365,6 +369,7 @@ koopa::parent_dir() { # {{{1
     sed="$(koopa::locate_sed)"
     cd_tail=''
     n=1
+    # FIXME Rework using our standard argparse approach.
     OPTIND=1
     while getopts 'n:' opt
     do
@@ -405,6 +410,7 @@ koopa::relink() { # {{{1
     # """
     local OPTIND dest_file ln rm source_file sudo
     sudo=0
+    # FIXME Rework using our standard argparse approach.
     OPTIND=1
     while getopts 'S' opt
     do
@@ -444,6 +450,7 @@ koopa::rm() { # {{{1
     # """
     local OPTIND rm sudo which_rm
     sudo=0
+    # FIXME Rework using our standard argparse approach.
     OPTIND=1
     while getopts 'S' opt
     do
