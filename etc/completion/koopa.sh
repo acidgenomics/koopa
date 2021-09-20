@@ -189,6 +189,7 @@ _koopa_complete() { # {{{1
                     if _koopa_is_debian_like
                     then
                         args+=(
+                            'node'
                             'pandoc'
                             'r-cran-binary'
                         )
