@@ -75,11 +75,6 @@ koopa::docker_build() { # {{{1
                 tag="${1#*=}"
                 shift 1
                 ;;
-            '--')
-                shift 1
-                break
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -219,11 +214,6 @@ koopa::docker_build_all_images() { # {{{1
                 prune=1
                 shift 1
                 ;;
-            '--')
-                shift 1
-                break
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -489,11 +479,6 @@ koopa::docker_run() { # {{{1
                 dict[x86]=1
                 shift 1
                 ;;
-            '--')
-                shift 1
-                break
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -599,11 +584,6 @@ koopa::is_docker_build_recent() { # {{{1
                 days="${1#*=}"
                 shift 1
                 ;;
-            '--')
-                shift 1
-                break
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
