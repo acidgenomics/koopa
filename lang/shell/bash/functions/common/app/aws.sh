@@ -187,7 +187,6 @@ koopa::aws_s3_find() { # {{{1
     return 0
 }
 
-# FIXME Rework using 'app' and 'dict' arrays.
 koopa::aws_s3_ls() { # {{{1
     # """
     # List an AWS S3 bucket.
@@ -197,35 +196,50 @@ koopa::aws_s3_ls() { # {{{1
     # - aws s3 ls help
     #
     # @examples
-    # koopa::aws_s3_ls s3://cpi-bioinfo01/
-    # koopa::aws_s3_ls cpi-bioinfo01/
+    # prefix='s3://r.acidgenomics.com/src/contrib/'
+    #
+    # Files and directories (default).
+    # koopa::aws_s3_ls "$prefix"
+    #
+    # # Files only:
+    # koopa::aws_s3_ls --type='f' "$prefix"
+    #
     # # Directories only:
-    # koopa::aws_s3_ls --type='f' s3://cpi-bioinfo01/datasets/
+    # koopa::aws_s3_ls --type='d' "$prefix"
     # """
-    local aws bucket_prefix dirs files flags grep pos prefix profile
-    local recursive sed type x
-    aws="$(koopa::locate_aws)"
-    profile="${AWS_PROFILE:-default}"
-    grep="$(koopa::locate_grep)"
-    sed="$(koopa::locate_sed)"
+    local app dict flags pos x
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [aws]="$(koopa::locate_aws)"
+        [grep]="$(koopa::locate_grep)"
+        [sed]="$(koopa::locate_sed)"
+    )
+    declare -A dict=(
+        [prefim]='s3://'
+        [profile]="${AWS_PROFILE:-default}"
+        [recursive]=0
+        [type]=''
+    )
     flags=()
-    recursive=0
-    type=''
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
             '--profile='*)
-                profile="${1#*=}"
+                dict[profile]="${1#*=}"
                 shift 1
                 ;;
             '--recursive')
-                recursive=1
+                dict[recursive]=1
                 flags+=('--recursive')
                 shift 1
                 ;;
             '--type='*)
-                type="${1#*=}"
+                dict[type]="${1#*=}"
                 shift 1
                 ;;
             '-'*)
@@ -239,102 +253,109 @@ koopa::aws_s3_ls() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     # Don't allow '--type' argument when '--recursive' flag is set.
-    if [[ "$recursive" -eq 1 ]] && [[ -n "$type" ]]
+    if [[ "${dict[recursive]}" -eq 1 ]] && \
+        [[ -n "${dict[type]}" ]]
     then
         koopa::stop "'--type' argument not supported for '--recursive' mode."
     fi
-    case "${type:-}" in
+    case "${dict[type]}" in
         'd')
-            dirs=1
-            files=0
+            dict[dirs]=1
+            dict[files]=0
             ;;
         'f')
-            dirs=0
-            files=1
+            dict[dirs]=0
+            dict[files]=1
+            ;;
+        '')
+            dict[dirs]=1
+            dict[files]=1
             ;;
         *)
-            dirs=1
-            files=1
+            koopa::stop "Unsupported type: '${dict[type]}'."
             ;;
     esac
-    if [[ "$#" -eq 0 ]]
+    if [[ "$#" -gt 0 ]]
     then
-        prefix='s3://'
-    else
-        prefix="${1:?}"
-        prefix="$(koopa::strip_trailing_slash "$prefix")"
-        prefix="${prefix}/"
+        dict[prefix]="${1:?}"
+    fi
+    if [[ "${dict[prefix]}" != 's3://' ]]
+    then
+        dict[prefix]="$(koopa::strip_trailing_slash "${dict[prefix]}")"
+        dict[prefix]="${dict[prefix]}/"
     fi
     # Automatically add 's3://' if missing.
-    if ! koopa::str_match_regex "$prefix" '^s3://'
+    if ! koopa::str_match_regex "${dict[prefix]}" '^s3://'
     then
-        prefix="s3://${prefix}"
+        dict[prefix]="s3://${dict[prefix]}"
     fi
     x="$( \
-        "$aws" --profile="$profile" \
-            s3 ls "${flags[@]}" "$prefix" \
+        "${app[aws]}" --profile="${dict[profile]}" \
+            s3 ls "${flags[@]}" "${dict[prefix]}" \
     )"
     if [[ "$#" -eq 0 ]]
     then
         koopa::print "$x"
     fi
-    # Recursive mode.
-    # Note that in '--recursive' mode, 'aws s3 ls' returns the full path after
-    # the bucket name.
-    if [[ "$recursive" -eq 1 ]]
+    # Recursive mode. Note that in this mode, 'aws s3 ls' returns the full path
+    # after the bucket name.
+    if [[ "${dict[recursive]}" -eq 1 ]]
     then
-        bucket_prefix="$( \
-            koopa::print "$prefix" \
-            | "$grep" -Eo '^s3://[^/]+' \
+        dict[bucket_prefix]="$( \
+            koopa::print "${dict[prefix]}" \
+            | "${app[grep]}" -Eo '^s3://[^/]+' \
         )"
         files="$( \
             koopa::print "$x" \
-            | "$grep" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+            | "${app[grep]}" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
             || true \
         )"
         [[ -n "$files" ]] || return 0
         files="$( \
+            # shellcheck disable=SC2016
             koopa::print "$files" \
-                | "$grep" -Eo '  [0-9]+ .+$' \
-                | "$sed" 's/^  [0-9]* //g' \
-                | "$sed" "s|^|${bucket_prefix}/|g" \
+                | "${app[awk]}" '{print $4}' \
+                | "${app[awk]}" 'NF' \
+                | "${app[sed]}" "s|^|${dict[bucket_prefix]}/|g" \
         )"
         koopa::print "$files"
         return 0
     fi
     # Directories.
-    if [[ "$dirs" -eq 1 ]]
+    if [[ "${dict[dirs]}" -eq 1 ]]
     then
         dirs="$( \
             koopa::print "$x" \
-            | "$grep" -Eo '  PRE .+$' \
+            | "${app[grep]}" -Eo '^\s+PRE\s.+/$' \
             || true \
         )"
         if [[ -n "$dirs" ]]
         then
             dirs="$( \
                 koopa::print "$dirs" \
-                    | "$sed" 's/^  PRE //g' \
-                    | "$sed" "s|^|${prefix}|g" \
+                    | "${app[sed]}" 's|^ \+PRE ||g' \
+                    | "${app[awk]}" 'NF' \
+                    | "${app[sed]}" "s|^|${dict[prefix]}|g" \
             )"
             koopa::print "$dirs"
         fi
     fi
     # Files.
-    if [[ "$files" -eq 1 ]]
+    if [[ "${dict[files]}" -eq 1 ]]
     then
         files="$( \
             koopa::print "$x" \
-            | "$grep" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+            | "${app[grep]}" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
             || true \
         )"
         if [[ -n "$files" ]]
         then
+            # shellcheck disable=SC2016
             files="$( \
                 koopa::print "$files" \
-                    | "$grep" -Eo '  [0-9]+ .+$' \
-                    | "$sed" 's/^  [0-9]* //g' \
-                    | "$sed" "s|^|${prefix}|g" \
+                    | "${app[awk]}" '{print $4}' \
+                    | "${app[awk]}" 'NF' \
+                    | "${app[sed]}" "s|^|${dict[prefix]}|g" \
             )"
             koopa::print "$files"
         fi
