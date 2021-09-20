@@ -20,10 +20,11 @@ koopa::chgrp() { # {{{1
     local chgrp pos sudo which_chgrp
     sudo=0
     pos=()
+    # FIXME Should we rework this using optarg?
     while (("$#"))
     do
         case "$1" in
-            -S)
+            '-S')
                 sudo=1
                 shift 1
                 ;;
@@ -54,10 +55,11 @@ koopa::chmod() { # {{{1
     local chmod pos sudo which_chmod
     sudo=0
     pos=()
+    # FIXME Should we rework this using optarg?
     while (("$#"))
     do
         case "$1" in
-            -S)
+            '-S')
                 sudo=1
                 shift 1
                 ;;
@@ -88,10 +90,11 @@ koopa::chown() { # {{{1
     local chown pos sudo which_chown
     sudo=0
     pos=()
+    # FIXME Should we rework this using optarg?
     while (("$#"))
     do
         case "$1" in
-            -S)
+            '-S')
                 sudo=1
                 shift 1
                 ;;
@@ -132,17 +135,17 @@ koopa::cp() { # {{{1
     while getopts 'Sst:' opt
     do
         case "$opt" in
-            S)
+            'S')
                 sudo=1
                 ;;
-            s)
+            's')
                 symlink=1
                 ;;
-            t)
+            't')
                 target_dir="$OPTARG"
                 ;;
             \?)
-                koopa::invalid_arg
+                koopa::invalid_arg "$opt"
                 ;;
         esac
     done
@@ -209,14 +212,14 @@ koopa::ln() { # {{{1
     while getopts 'St:' opt
     do
         case "$opt" in
-            S)
+            'S')
                 sudo=1
                 ;;
-            t)
+            't')
                 target_dir="$OPTARG"
                 ;;
             \?)
-                koopa::invalid_arg
+                koopa::invalid_arg "$opt"
                 ;;
         esac
     done
@@ -264,11 +267,11 @@ koopa::mkdir() { # {{{1
     while getopts 'S' opt
     do
         case "$opt" in
-            S)
+            'S')
                 sudo=1
                 ;;
             \?)
-                koopa::invalid_arg
+                koopa::invalid_arg "$opt"
                 ;;
         esac
     done
@@ -306,14 +309,14 @@ koopa::mv() { # {{{1
     while getopts 'St:' opt
     do
         case "$opt" in
-            S)
+            'S')
                 sudo=1
                 ;;
-            t)
+            't')
                 target_dir="$OPTARG"
                 ;;
             \?)
-                koopa::invalid_arg
+                koopa::invalid_arg "$opt"
                 ;;
         esac
     done
@@ -366,7 +369,7 @@ koopa::parent_dir() { # {{{1
     while getopts 'n:' opt
     do
         case "$opt" in
-            n)
+            'n')
                 n="${OPTARG}"
                 ;;
             \?)
@@ -406,11 +409,11 @@ koopa::relink() { # {{{1
     while getopts 'S' opt
     do
         case "$opt" in
-            S)
+            'S')
                 sudo=1
                 ;;
             \?)
-                koopa::invalid_arg
+                koopa::invalid_arg "$opt"
                 ;;
         esac
     done
@@ -445,11 +448,11 @@ koopa::rm() { # {{{1
     while getopts 'S' opt
     do
         case "$opt" in
-            S)
+            'S')
                 sudo=1
                 ;;
             \?)
-                koopa::invalid_arg
+                koopa::invalid_arg "$opt"
                 ;;
         esac
     done

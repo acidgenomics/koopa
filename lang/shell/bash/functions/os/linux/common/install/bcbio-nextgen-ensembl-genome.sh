@@ -52,27 +52,27 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --build=*)
+            '--build='*)
                 build="${1#*=}"
                 shift 1
                 ;;
-            --fasta=*)
+            '--fasta='*)
                 fasta="${1#*=}"
                 shift 1
                 ;;
-            --gtf=*)
+            '--gtf='*)
                 gtf="${1#*=}"
                 shift 1
                 ;;
-            --indexes=*)
+            '--indexes='*)
                 indexes="${1#*=}"
                 shift 1
                 ;;
-            --organism=*)
+            '--organism='*)
                 organism="${1#*=}"
                 shift 1
                 ;;
-            --release=*)
+            '--release='*)
                 release="${1#*=}"
                 shift 1
                 ;;

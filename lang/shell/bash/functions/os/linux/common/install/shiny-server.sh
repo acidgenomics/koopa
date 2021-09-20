@@ -17,7 +17,7 @@ koopa::linux_install_shiny_server() { # {{{1
     arch="$(koopa::arch)"
     r="$(koopa::locate_r)"
     case "$arch" in
-        x86_64)
+        'x86_64')
             arch2='amd64'
             ;;
         *)

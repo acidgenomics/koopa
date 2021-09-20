@@ -18,7 +18,7 @@ koopa:::linux_install_julia_binary() { # {{{1
     minor_version="$(koopa::major_minor_version "$version")"
     file="${name}-${version}-${os}-${arch}.tar.gz"
     case "$arch" in
-        x86*)
+        'x86'*)
             subdir='x86'
             ;;
         *)

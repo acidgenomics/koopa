@@ -79,10 +79,10 @@ koopa::macos_brew_upgrade_casks() { # {{{1
     for cask in "${casks[@]}"
     do
         case "$cask" in
-            docker)
+            'docker')
                 cask='homebrew/cask/docker'
                 ;;
-            macvim)
+            'macvim')
                 cask='homebrew/cask/macvim'
                 ;;
         esac

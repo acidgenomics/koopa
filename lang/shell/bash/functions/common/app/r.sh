@@ -280,9 +280,12 @@ koopa::r_koopa() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --vanilla)
+            '--vanilla')
                 flags+=('--vanilla')
                 shift 1
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")

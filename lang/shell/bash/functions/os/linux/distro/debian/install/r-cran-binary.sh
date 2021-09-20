@@ -14,7 +14,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --version=*)
+            '--version='*)
                 version="${1#*=}"
                 shift 1
                 ;;

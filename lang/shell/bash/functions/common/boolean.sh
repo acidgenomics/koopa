@@ -186,10 +186,10 @@ koopa::is_admin() { # {{{1
     if [[ -n "${KOOPA_ADMIN:-}" ]]
     then
         case "${KOOPA_ADMIN:?}" in
-            0)
+            '0')
                 return 1
                 ;;
-            1)
+            '1')
                 return 0
                 ;;
         esac

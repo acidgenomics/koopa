@@ -19,61 +19,61 @@ __koopa_ansi_escape() { # {{{1
     local escape
     [ "$#" -eq 1 ] || return 1
     case "${1:?}" in
-        nocolor)
+        'nocolor')
             escape='0'
             ;;
-        default)
+        'default')
             escape='0;39'
             ;;
-        default-bold)
+        'default-bold')
             escape='1;39'
             ;;
-        black)
+        'black')
             escape='0;30'
             ;;
-        black-bold)
+        'black-bold')
             escape='1;30'
             ;;
-        blue)
+        'blue')
             escape='0;34'
             ;;
-        blue-bold)
+        'blue-bold')
             escape='1;34'
             ;;
-        cyan)
+        'cyan')
             escape='0;36'
             ;;
-        cyan-bold)
+        'cyan-bold')
             escape='1;36'
             ;;
-        green)
+        'green')
             escape='0;32'
             ;;
-        green-bold)
+        'green-bold')
             escape='1;32'
             ;;
-        magenta)
+        'magenta')
             escape='0;35'
             ;;
-        magenta-bold)
+        'magenta-bold')
             escape='1;35'
             ;;
-        red)
+        'red')
             escape='0;31'
             ;;
-        red-bold)
+        'red-bold')
             escape='1;31'
             ;;
-        yellow)
+        'yellow')
             escape='0;33'
             ;;
-        yellow-bold)
+        'yellow-bold')
             escape='1;33'
             ;;
-        white)
+        'white')
             escape='0;97'
             ;;
-        white-bold)
+        'white-bold')
             escape='1;97'
             ;;
         *)
@@ -94,26 +94,26 @@ __koopa_h() { # {{{1
     level="${1:?}"
     shift 1
     case "$level" in
-        1)
+        '1')
             _koopa_print ''
             prefix='#'
             ;;
-        2)
+        '2')
             prefix='##'
             ;;
-        3)
+        '3')
             prefix='###'
             ;;
-        4)
+        '4')
             prefix='####'
             ;;
-        5)
+        '5')
             prefix='#####'
             ;;
-        6)
+        '6')
             prefix='######'
             ;;
-        7)
+        '7')
             prefix='#######'
             ;;
         *)

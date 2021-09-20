@@ -17,11 +17,11 @@ koopa:::kallisto_index() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --fasta-file=*)
+            '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
@@ -87,43 +87,43 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bootstraps=*)
+            '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
-            --chromosomes-file=*)
+            '--chromosomes-file='*)
                 dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-r1=*)
+            '--fastq-r1='*)
                 dict[fastq_r1]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-r2=*)
+            '--fastq-r2='*)
                 dict[fastq_r2]="${1#*=}"
                 shift 1
                 ;;
-            --gff-file=*)
+            '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
-            --index-file=*)
+            '--index-file='*)
                 dict[index_file]="${1#*=}"
                 shift 1
                 ;;
-            --lib-type=*)
+            '--lib-type='*)
                 dict[lib_type]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --r1-tail=*)
+            '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
-            --r2-tail=*)
+            '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
@@ -169,12 +169,12 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     # auto detection mode, like salmon. Most current libraries are 'ISR' /
     # '--rf-stranded', if unsure.
     case "${dict[lib_type]}" in
-        A)
+        'A')
             ;;
-        ISF)
+        'ISF')
             quant_args+=('--fr-stranded')
             ;;
-        ISR)
+        'ISR')
             quant_args+=('--rf-stranded')
             ;;
         *)
@@ -212,39 +212,39 @@ koopa:::kallisto_quant_single_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bootstraps=*)
+            '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
-            --chromosomes-file=*)
+            '--chromosomes-file='*)
                 dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
-            --fastq=*)
+            '--fastq='*)
                 dict[fastq]="${1#*=}"
                 shift 1
                 ;;
-            --fragment-length=*)
+            '--fragment-length='*)
                 dict[fragment_length]="${1#*=}"
                 shift 1
                 ;;
-            --gff-file=*)
+            '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
-            --index-file=*)
+            '--index-file='*)
                 dict[index_file]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --sd=*)
+            '--sd='*)
                 dict[sd]="${1#*=}"
                 shift 1
                 ;;
-            --tail=*)
+            '--tail='*)
                 dict[tail]="${1#*=}"
                 shift 1
                 ;;
@@ -311,39 +311,39 @@ koopa::run_kallisto_paired_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bootstraps=*)
+            '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
-            --chromosomes-file=*)
+            '--chromosomes-file='*)
                 dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
-            --fasta-file=*)
+            '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-dir=*)
+            '--fastq-dir='*)
                 dict[fastq_dir]="${1#*=}"
                 shift 1
                 ;;
-            --gff-file=*)
+            '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
-            --lib-type=*)
+            '--lib-type='*)
                 dict[lib_type]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --r1-tail=*)
+            '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
-            --r2-tail=*)
+            '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
@@ -447,39 +447,39 @@ koopa::run_kallisto_single_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bootstraps=*)
+            '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
-            --chromosomes-file=*)
+            '--chromosomes-file='*)
                 dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
-            --fasta-file=*)
+            '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-dir=*)
+            '--fastq-dir='*)
                 dict[fastq_dir]="${1#*=}"
                 shift 1
                 ;;
-            --fragment-length=*)
+            '--fragment-length='*)
                 dict[fragment_length]="${1#*=}"
                 shift 1
                 ;;
-            --gff-file=*)
+            '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --sd=*)
+            '--sd='*)
                 dict[sd]="${1#*=}"
                 shift 1
                 ;;
-            --tail=*)
+            '--tail='*)
                 dict[tail]="${1#*=}"
                 shift 1
                 ;;

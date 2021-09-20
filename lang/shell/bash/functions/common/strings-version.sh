@@ -172,7 +172,7 @@ koopa::current_flybase_version() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --dmel)
+            '--dmel')
                 dmel=1
                 shift 1
                 ;;

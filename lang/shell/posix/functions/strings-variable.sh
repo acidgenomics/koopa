@@ -43,10 +43,10 @@ _koopa_arch2() { # {{{1
     [ "$#" -eq 0 ] || return 1
     x="$(_koopa_arch)"
     case "$x" in
-        aarch64)
+        'aarch64')
             x='arm64'
             ;;
-        x86_64)
+        'x86_64')
             x='amd64'
             ;;
         *)
@@ -204,21 +204,21 @@ _koopa_host_id() { # {{{1
     case "$id" in
         # VMs {{{2
         # ----------------------------------------------------------------------
-        *.ec2.internal)
+        *'.ec2.internal')
             id='aws'
             ;;
-        awslab*)
+        'awslab'*)
             id='aws'
             ;;
-        azlab*)
+        'azlab'*)
             id='azure'
             ;;
         # HPCs {{{2
         # ----------------------------------------------------------------------
-        *.o2.rc.hms.harvard.edu)
+        *'.o2.rc.hms.harvard.edu')
             id='harvard-o2'
             ;;
-        *.rc.fas.harvard.edu)
+        *'.rc.fas.harvard.edu')
             id='harvard-odyssey'
             ;;
     esac
@@ -246,7 +246,7 @@ _koopa_macos_color_mode() { # {{{1
 _koopa_macos_os_codename() { # {{{1
     # """
     # macOS OS codename (marketing name).
-    # @note Updated 2021-06-02.
+    # @note Updated 2021-09-20.
     # @seealso
     # - https://apple.stackexchange.com/questions/333452/
     # - https://unix.stackexchange.com/questions/234104/
@@ -255,55 +255,58 @@ _koopa_macos_os_codename() { # {{{1
     [ "$#" -eq 0 ] || return 1
     version="$(_koopa_macos_version)"
     case "$version" in
-        11.*)
+        '12.'*)
+            x='Monterey'
+            ;;
+        '11.'*)
             x='Big Sur'
             ;;
-        10.15.*)
+        '10.15.'*)
             x='Catalina'
             ;;
-        10.14.*)
+        '10.14.'*)
             x='Mojave'
             ;;
-        10.13.*)
+        '10.13.'*)
             x='High Sierra'
             ;;
-        10.12.*)
+        '10.12.'*)
             x='Sierra'
             ;;
-        10.11.*)
+        '10.11.'*)
             x='El Capitan'
             ;;
-        10.10.*)
+        '10.10.'*)
             x='Yosmite'
             ;;
-        10.9.*)
+        '10.9.'*)
             x='Mavericks'
             ;;
-        10.8.*)
+        '10.8.'*)
             x='Mountain Lion'
             ;;
-        10.7.*)
+        '10.7.'*)
             x='Lion'
             ;;
-        10.6.*)
+        '10.6.'*)
             x='Snow Leopard'
             ;;
-        10.5.*)
+        '10.5.'*)
             x='Leopard'
             ;;
-        10.4.*)
+        '10.4.'*)
             x='Tiger'
             ;;
-        10.3.*)
+        '10.3.'*)
             x='Panther'
             ;;
-        10.2.*)
+        '10.2.'*)
             x='Jaguar'
             ;;
-        10.1.*)
+        '10.1.'*)
             x='Puma'
             ;;
-        10.0.*)
+        '10.0.'*)
             x='Cheetah'
             ;;
         *)

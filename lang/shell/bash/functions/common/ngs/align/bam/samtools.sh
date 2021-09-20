@@ -24,11 +24,11 @@ koopa::samtools_convert_sam_to_bam() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --input-sam=*)
+            '--input-sam='*)
                 local input_sam="${1#*=}"
                 shift 1
                 ;;
-            --output-bam=*)
+            '--output-bam='*)
                 local output_bam="${1#*=}"
                 shift 1
                 ;;

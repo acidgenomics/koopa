@@ -42,8 +42,8 @@ _koopa_check_os() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     case "$(uname -s)" in
-        Darwin | \
-        Linux)
+        'Darwin' | \
+        'Linux')
             ;;
         *)
             _koopa_warning 'Unsupported operating system.'
@@ -66,11 +66,11 @@ _koopa_check_shell() { # {{{1
     SHELL="$shell_name"
     export KOOPA_SHELL SHELL
     case "$shell_name" in
-        ash | \
-        bash | \
-        busybox | \
-        dash | \
-        zsh)
+        'ash' | \
+        'bash' | \
+        'busybox' | \
+        'dash' | \
+        'zsh')
             ;;
         *)
             >&2 cat << END

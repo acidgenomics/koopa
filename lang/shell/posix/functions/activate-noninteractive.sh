@@ -307,7 +307,7 @@ _koopa_activate_local_etc_profile() { # {{{1
     [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
-        bash)
+        'bash')
             ;;
         *)
             return 0
@@ -483,7 +483,8 @@ _koopa_activate_perlbrew() { # {{{1
     ! _koopa_is_installed perlbrew || return 0
     shell="$(_koopa_shell_name)"
     case "$shell" in
-        bash|zsh)
+        'bash' | \
+        'zsh')
             ;;
         *)
             return 0
@@ -665,7 +666,8 @@ _koopa_activate_python_venv() { # {{{1
     [ -n "${VIRTUAL_ENV:-}" ] && return 0
     shell="$(_koopa_shell_name)"
     case "$shell" in
-        bash|zsh)
+        'bash' | \
+        'zsh')
             ;;
         *)
             return 0

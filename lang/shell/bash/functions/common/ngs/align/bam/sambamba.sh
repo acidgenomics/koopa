@@ -22,15 +22,15 @@ koopa::sambamba_filter() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --filter=*)
+            '--filter='*)
                 filter="${1#*=}"
                 shift 1
                 ;;
-            --input-bam=*)
+            '--input-bam='*)
                 input_bam="${1#*=}"
                 shift 1
                 ;;
-            --output-bam=*)
+            '--output-bam='*)
                 output_bam="${1#*=}"
                 shift 1
                 ;;

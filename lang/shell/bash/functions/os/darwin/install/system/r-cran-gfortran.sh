@@ -20,10 +20,10 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     tee="$(koopa::locate_tee)"
     version="$(koopa::variable "r-cran-${name}")"
     case "$arch" in
-        aarch64)
+        'aarch64')
             arch='ARM'
             ;;
-        x86_64)
+        'x86_64')
             arch='Intel'
             ;;
         *)
@@ -33,11 +33,11 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --reinstall)
+            '--reinstall')
                 reinstall=1
                 shift 1
                 ;;
-            --version=*)
+            '--version='*)
                 version="${1#*=}"
                 shift 1
                 ;;
@@ -56,7 +56,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     koopa::install_start "$name_fancy" "$version" "$prefix"
     url_stem="https://github.com/fxcoudert/${name}-for-macOS/releases/download"
     case "$version" in
-        8.2)
+        '8.2')
             # R 4.0, 4.1.
             os_codename='Mojave'
             file_stem="${name}-${version}-${os_codename}"
@@ -64,7 +64,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
             url="${url_stem}/${version}/${file}"
             pkg="/Volumes/${file_stem}/${file_stem}/${name}.pkg"
             ;;
-        10.2)
+        '10.2')
             # Not yet used.
             os_codename="BigSur-${arch}"
             os_codename2="$(koopa::lowercase "$os_codename")"

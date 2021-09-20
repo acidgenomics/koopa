@@ -37,11 +37,11 @@ koopa::macos_install_r_framework() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --reinstall)
+            '--reinstall')
                 reinstall=1
                 shift 1
                 ;;
-            --version=*)
+            '--version='*)
                 version="${1#*=}"
                 shift 1
                 ;;
@@ -68,12 +68,12 @@ koopa::macos_install_r_framework() { # {{{1
     os_codename="$(koopa::os_codename)"
     os_codename="$(koopa::kebab_case_simple "$os_codename")"
     case "$arch" in
-        aarch64)
+        'aarch64')
             arch='arm64'
             file="R-${version}-${arch}.pkg"
             url="${url_stem}/${os_codename}-${arch}/base/${file}"
             ;;
-        x86_64)
+        'x86_64')
             file="R-${version}.pkg"
             url="${url_stem}/base/${file}"
             ;;

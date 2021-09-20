@@ -18,15 +18,15 @@ koopa::linux_bcbio_nextgen_run_tests() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --git-dir=*)
+            '--git-dir='*)
                 dict[git_dir]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --tools-dir=*)
+            '--tools-dir='*)
                 dict[tools_dir]="${1#*=}"
                 shift 1
                 ;;
@@ -77,15 +77,15 @@ koopa::linux_patch_bcbio_nextgen_devel() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bcbio-python=*)
+            '--bcbio-python='*)
                 dict[bcbio_python]="${1#*=}"
                 shift 1
                 ;;
-            --git-dir=*)
+            '--git-dir='*)
                 dict[git_dir]="${1#*=}"
                 shift 1
                 ;;
-            --install-dir=*)
+            '--install-dir='*)
                 dict[install_dir]="${1#*=}"
                 shift 1
                 ;;

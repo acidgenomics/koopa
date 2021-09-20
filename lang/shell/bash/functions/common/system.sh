@@ -14,7 +14,8 @@ koopa::help() { # {{{1
     for arg in "${args[@]}"
     do
         case "$arg" in
-            --help|-h)
+            '--help' | \
+            '-h')
                 koopa::assert_is_installed 'man'
                 file="$(koopa::realpath "$0")"
                 script_name="$(koopa::basename "$file")"
@@ -239,13 +240,13 @@ koopa::sys_set_permissions() { # {{{1
     while getopts 'hru' opt
     do
         case "$opt" in
-            h)
+            'h')
                 dict[dereference]=0
                 ;;
-            r)
+            'r')
                 dict[recursive]=1
                 ;;
-            u)
+            'u')
                 dict[user]=1
                 ;;
             \?)
@@ -264,10 +265,10 @@ koopa::sys_set_permissions() { # {{{1
     fi
     chmod+=("$(koopa::sys_chmod_flags)")
     case "${dict[user]}" in
-        0)
+        '0')
             user="$(koopa::sys_user)"
             ;;
-        1)
+        '1')
             user="$(koopa::user)"
             ;;
     esac

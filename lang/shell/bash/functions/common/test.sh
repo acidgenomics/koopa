@@ -127,13 +127,13 @@ koopa::test_grep() { # {{{1
     while getopts 'i:n:p:' opt
     do
         case "$opt" in
-            i)
+            'i')
                 ignore="$OPTARG"
                 ;;
-            n)
+            'n')
                 name="$OPTARG"
                 ;;
-            p)
+            'p')
                 pattern="$OPTARG"
                 ;;
             \?)

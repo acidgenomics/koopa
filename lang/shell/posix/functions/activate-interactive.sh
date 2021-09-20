@@ -65,7 +65,8 @@ _koopa_activate_broot() { # {{{1
     [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
-        bash|zsh)
+        'bash' | \
+        'zsh')
             ;;
         *)
             return 0
@@ -93,7 +94,8 @@ _koopa_activate_completion() { # {{{1
     [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
-        bash|zsh)
+        'bash' | \
+        'zsh')
             ;;
         *)
             return 0
@@ -435,7 +437,8 @@ _koopa_activate_starship() { # {{{1
     unset -v STARSHIP_SESSION_KEY STARSHIP_SHELL
     shell="$(_koopa_shell_name)"
     case "$shell" in
-        bash|zsh)
+        'bash' | \
+        'zsh')
             ;;
         *)
             return 0
@@ -557,7 +560,8 @@ _koopa_activate_zoxide() { # {{{1
     [ "$#" -eq 0 ] || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
-        bash|zsh)
+        'bash' | \
+        'zsh')
             ;;
         *)
             return 0

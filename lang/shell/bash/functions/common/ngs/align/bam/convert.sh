@@ -46,10 +46,10 @@ koopa::convert_sam_to_bam() { # {{{1
     koopa::h1 "Converting SAM files in '${dir}' to BAM format."
     koopa::activate_conda_env 'samtools'
     case "$keep_sam" in
-        0)
+        '0')
             koopa::alert_note 'SAM files will be deleted.'
             ;;
-        1)
+        '1')
             koopa::alert_note 'SAM files will be preserved.'
             ;;
     esac

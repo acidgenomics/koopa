@@ -27,16 +27,16 @@ koopa:::install_gnu_app() { # {{{1
     jobs="$(koopa::cpu_count)"
     make="$(koopa::locate_make)"
     case "$name" in
-        groff | \
-        gsl | \
-        make | \
-        ncurses | \
-        patch | \
-        tar | \
-        wget)
+        'groff' | \
+        'gsl' | \
+        'make' | \
+        'ncurses' | \
+        'patch' | \
+        'tar' | \
+        'wget')
             suffix='gz'
             ;;
-        parallel)
+        'parallel')
             suffix='bz2'
             ;;
         *)
