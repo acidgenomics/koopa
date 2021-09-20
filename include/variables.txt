@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-09-18"
+koopa-date="2021-09-19"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.0a"
@@ -539,26 +539,27 @@ ruby-ronn="0.7.3"
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2021-09-09 from https://crates.io/.
+# Updated 2021-09-19 from https://crates.io/.
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-rust-bat="0.18.3"         # homebrew
-rust-broot="1.6.3"        # homebrew; br
-rust-dog="0.1.0"          # homebrew
-rust-du-dust="0.6.2"      # homebrew; dust
-rust-exa="0.10.1"         # homebrew
-rust-fd-find="8.2.1"      # homebrew; fd
-rust-hyperfine="1.11.0"   # homebrew
-rust-procs="0.11.9"       # homebrew
-rust-ripgrep-all="0.9.6"  # homebrew; rga
-rust-ripgrep="13.0.0"     # homebrew; rg
-rust-starship="0.56.0"    # homebrew
-rust-tealdeer="1.4.1"     # homebrew; tldr
-rust-tokei="12.1.2"       # homebrew
-rust-xsv="0.13.0"         # homebrew
-rust-zoxide="0.7.5"       # homebrew; z
+rust-bat="0.18.3"             # homebrew
+rust-broot="1.6.3"            # homebrew; br
+rust-cargo-outdated="0.9.17"  # homebrew
+rust-dog="0.1.0"              # homebrew
+rust-du-dust="0.7.5"          # homebrew; dust
+rust-exa="0.10.1"             # homebrew
+rust-fd-find="8.2.1"          # homebrew; fd
+rust-hyperfine="1.11.0"       # homebrew
+rust-procs="0.11.9"           # homebrew
+rust-ripgrep-all="0.9.6"      # homebrew; rga
+rust-ripgrep="13.0.0"         # homebrew; rg
+rust-starship="0.56.0"        # homebrew
+rust-tealdeer="1.4.1"         # homebrew; tldr
+rust-tokei="12.1.2"           # homebrew
+rust-xsv="0.13.0"             # homebrew
+rust-zoxide="0.7.5"           # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------

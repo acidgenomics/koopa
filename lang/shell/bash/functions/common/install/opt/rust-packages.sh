@@ -43,6 +43,7 @@ koopa:::install_rust_packages() { # {{{1
             # > 'ripgrep-all'
             'bat'
             'broot'
+            'cargo-outdated'
             'du-dust'
             'exa'
             'fd-find'
