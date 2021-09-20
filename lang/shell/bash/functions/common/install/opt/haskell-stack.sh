@@ -25,7 +25,7 @@ koopa:::install_haskell_stack() { # {{{1
     file='stack.sh'
     url='https://get.haskellstack.org/'
     koopa::download "$url" "$file"
-    koopa::chmod +x "$file"
+    koopa::chmod 'u+x' "$file"
     koopa::mkdir "${prefix}/bin"
     ./"${file}" -f -d "${prefix}/bin"
     return 0
