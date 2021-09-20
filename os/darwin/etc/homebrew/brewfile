@@ -110,7 +110,7 @@ cask "skype"
 cask "spotify"
 cask "sublime-text"
 cask "superduper"
-cask "temurin"
+# > cask "temurin"  # Using 'openjdk' brew instead.
 cask "textmate"
 cask "transmit"
 cask "tunnelblick"
