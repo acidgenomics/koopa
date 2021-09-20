@@ -18,7 +18,7 @@ koopa::python_delete_pycache() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --python=*)
+            '--python='*)
                 python="${1#*=}"
                 shift 1
                 ;;
@@ -32,7 +32,7 @@ koopa::python_delete_pycache() { # {{{1
     prefix="$(koopa::parent_dir -n 2 "$python")"
     koopa::alert "Removing pycache in '${prefix}'."
     "$find" "$prefix" \
-        -type d \
+        -type 'd' \
         -name '__pycache__' \
         -print0 \
         | "$xargs" -0 -I {} "$rm" -fr '{}'
@@ -54,22 +54,23 @@ koopa::python_pip_install() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --python=*)
+            '--python='*)
                 python="${1#*=}"
                 shift 1
                 ;;
-            --reinstall)
+            '--reinstall')
                 reinstall=1
                 shift 1
                 ;;
             '')
                 shift 1
                 ;;
-            --)
+            '--')
                 shift 1
                 break
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -146,27 +147,24 @@ koopa::python_venv_create() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --force | \
-            --reinstall)
+            '--force' | \
+            '--reinstall')
                 reinstall=1
                 shift 1
                 ;;
-            --name=*)
+            '--name='*)
                 name="${1#*=}"
                 shift 1
                 ;;
-            --python=*)
+            '--python='*)
                 python="${1#*=}"
                 shift 1
                 ;;
             '')
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

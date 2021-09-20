@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for 'koopa bin/run XXX' here, so we can call programs from
-# the command line easily inside of shells without koopa active.
-
 koopa:::koopa_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
@@ -87,7 +84,7 @@ koopa:::koopa_header() { # {{{1
 koopa:::koopa_install() { # {{{1
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-09-20.
     # """
     local app app_args apps denylist pos
     app_args=()
@@ -99,11 +96,12 @@ koopa:::koopa_install() { # {{{1
             '')
                 shift 1
                 ;;
-            '--'* | \
-            '-'*)
-                # FIXME We need to harden this against single flag input.
+            '--'*)
                 app_args+=("$1")
                 shift 1
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")

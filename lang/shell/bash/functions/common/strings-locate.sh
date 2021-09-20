@@ -29,31 +29,27 @@ koopa:::locate_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --brew-opt=*)
+            '--brew-opt='*)
                 dict[brew_opt_name]="${1#*=}"
                 shift 1
                 ;;
-            --koopa-opt=*)
+            '--koopa-opt='*)
                 dict[koopa_opt_name]="${1#*=}"
                 shift 1
                 ;;
-            --macos-app=*)
+            '--macos-app='*)
                 dict[macos_app]="${1#*=}"
                 shift 1
                 ;;
-            --name=*)
+            '--name='*)
                 dict[app_name]="${1#*=}"
                 shift 1
                 ;;
-            --gnubin)
+            '--gnubin')
                 dict[gnubin]=1
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

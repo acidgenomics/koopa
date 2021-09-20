@@ -34,15 +34,11 @@ koopa::rename_lowercase() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --recursive)
+            '--recursive')
                 recursive=1
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -58,7 +54,7 @@ koopa::rename_lowercase() { # {{{1
         # Rename files.
         "$find" "$dir" \
             -mindepth 1 \
-            -type f \
+            -type 'f' \
             -name '*[A-Z]*' \
             -not -name '.*' \
             -print0 \
