@@ -124,6 +124,7 @@ koopa::test_grep() { # {{{1
     local OPTIND failures file grep ignore name pattern x
     koopa::assert_has_args "$#"
     ignore=''
+    # FIXME Rework this.
     OPTIND=1
     while getopts 'i:n:p:' opt
     do
