@@ -805,6 +805,18 @@ koopa::locate_ruby() { # {{{1
     koopa:::locate_app 'ruby'
 }
 
+koopa::locate_rustc() { # {{{1
+    # """
+    # Locate Rust compiler.
+    # @note Updated 2021-09-20.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='rust' \
+        --koopa-opt='rust' \
+        --name='rustc'
+}
+
 koopa::locate_sed() { # {{{1
     # """
     # Locate GNU sed.
