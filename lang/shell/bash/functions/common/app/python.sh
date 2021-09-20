@@ -62,14 +62,6 @@ koopa::python_pip_install() { # {{{1
                 reinstall=1
                 shift 1
                 ;;
-            '')
-                shift 1
-                ;;
-            '--')
-                shift 1
-                break
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -160,10 +152,6 @@ koopa::python_venv_create() { # {{{1
                 python="${1#*=}"
                 shift 1
                 ;;
-            '')
-                shift 1
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;

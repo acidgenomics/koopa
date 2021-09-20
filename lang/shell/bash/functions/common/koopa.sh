@@ -268,7 +268,7 @@ koopa:::koopa_system() { # {{{1
 koopa:::koopa_uninstall() { # {{{1
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-09-20.
     # """
     local app app_args apps denylist pos
     app_args=()
@@ -280,11 +280,12 @@ koopa:::koopa_uninstall() { # {{{1
             '')
                 shift 1
                 ;;
-            '--'* | \
-            '-'*)
-                # FIXME We need to harden this against single flag input.
+            '--'*)
                 app_args+=("$1")
                 shift 1
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -359,11 +360,12 @@ koopa:::koopa_update() { # {{{1
             '')
                 shift 1
                 ;;
-            '--'* | \
-            '-'*)
-                # FIXME We need to harden this against single flag input.
+            '--'*)
                 app_args+=("$1")
                 shift 1
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
