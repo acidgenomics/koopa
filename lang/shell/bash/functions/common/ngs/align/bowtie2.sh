@@ -190,9 +190,7 @@ koopa::run_bowtie2() { # {{{1
     koopa::activate_conda_env 'bowtie2'
     koopa::assert_is_file "${dict[fasta_file]}"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
-    # FIXME Rework this using 'init_dir' approach.
-    koopa::mkdir "${dict[output_dir]}"
-    dict[output_dir]="$(koopa::realpath "${dict[output_dir]}")"
+    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
     dict[index_dir]="${dict[output_dir]}/index"
     dict[index_base]="${dict[index_dir]}/bowtie2"
     dict[samples_dir]="${dict[output_dir]}/samples"
