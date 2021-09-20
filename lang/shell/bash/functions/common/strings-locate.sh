@@ -168,6 +168,15 @@ koopa::locate_bc() { # {{{1
     koopa:::locate_app 'bc'
 }
 
+koopa::locate_brew() { # {{{1
+    # """
+    # Locate Homebrew brew.
+    # @note Updated 2021-09-20.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'brew'
+}
+
 koopa::locate_bunzip2() { # {{{1
     # """
     # Locate bunzip2.
