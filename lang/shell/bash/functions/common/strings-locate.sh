@@ -179,6 +179,18 @@ koopa::locate_bunzip2() { # {{{1
         --name='bunzip2'
 }
 
+koopa::locate_cargo() { # {{{1
+    # """
+    # Locate cargo.
+    # @note Updated 2021-09-20.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='rust' \
+        --koopa-opt='rust-packages' \
+        --name='cargo'
+}
+
 koopa::locate_chgrp() { # {{{1
     # """
     # Locate GNU chgrp.
