@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework these functions in R.
-# FIXME Add step to generate BAM and CRAM files from SAM.
-
 koopa:::salmon_index() { # {{{1
     # """
     # Generate salmon index.
@@ -393,9 +390,6 @@ with '${dict[r1_tail]}'."
             --r1-tail="${dict[r1_tail]}" \
             --r2-tail="${dict[r2_tail]}"
     done
-    # Convert SAM-to-BAM {{{2
-    # --------------------------------------------------------------------------
-    # FIXME Work on a SAM-to-BAM conversion step here.
     koopa::deactivate_conda
     koopa::alert_success 'salmon run completed successfully.'
     return 0
@@ -511,9 +505,6 @@ with '${dict[tail]}'."
             --output-dir="${dict[samples_dir]}" \
             --tail="${dict[tail]}"
     done
-    # Convert SAM to BAM {{{2
-    # --------------------------------------------------------------------------
-    # FIXME Work on a SAM-to-BAM conversion step here.
     koopa::deactivate_conda
     koopa::alert_success 'salmon run completed successfully.'
     return 0
