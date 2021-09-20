@@ -13,7 +13,7 @@ koopa::install_rust_packages() {
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-09-20.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -23,13 +23,10 @@ koopa:::install_rust_packages() { # {{{1
     # - https://github.com/rust-lang/cargo/pull/6798
     # - https://github.com/rust-lang/cargo/pull/7560
     # """
-    local args default jobs pkg pkgs pkg_args root version
+    local args cargo default jobs pkg pkgs pkg_args root version
     koopa::configure_rust
     koopa::activate_rust
-    if ! koopa::is_installed 'cargo' 'rustc' 'rustup'
-    then
-        koopa::stop 'Need to reinstall Rust.'
-    fi
+    cargo="$(koopa::locate_cargo)"
     pkgs=("$@")
     root="${INSTALL_PREFIX:?}"
     jobs="$(koopa::cpu_count)"
@@ -77,7 +74,7 @@ koopa:::install_rust_packages() { # {{{1
                 pkg='ripgrep_all'
                 ;;
         esac
-        cargo install "$pkg" "${args[@]}"
+        "$cargo" install "$pkg" "${args[@]}"
     done
     return 0
 }
