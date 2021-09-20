@@ -410,7 +410,7 @@ _koopa_is_qemu() { # {{{1
     [ -L "$cmd" ] || return 1
     real_cmd="$(_koopa_realpath "$cmd")"
     case "$("$basename" "$real_cmd")" in
-        qemu-*)
+        'qemu-'*)
             return 0
             ;;
     esac

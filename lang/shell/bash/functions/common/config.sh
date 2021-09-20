@@ -160,10 +160,10 @@ koopa::find_user_profile() { # {{{1
     koopa::assert_has_no_args "$#"
     shell="$(koopa::shell_name)"
     case "$shell" in
-        bash)
+        'bash')
             file="${HOME}/.bashrc"
             ;;
-        zsh)
+        'zsh')
             file="${HOME}/.zshrc"
             ;;
         *)
@@ -264,27 +264,23 @@ koopa::link_dotfile() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --config)
+            '--config')
                 dict[config]=1
                 shift 1
                 ;;
-            --force)
+            '--force')
                 dict[force]=1
                 shift 1
                 ;;
-            --opt)
+            '--opt')
                 dict[opt]=1
                 shift 1
                 ;;
-            --private)
+            '--private')
                 dict[private]=1
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

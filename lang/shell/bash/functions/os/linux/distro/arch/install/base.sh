@@ -31,29 +31,26 @@ koopa::arch_install_base() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --base-image)
+            '--base-image')
                 dict[base]=1
                 dict[recommended]=0
                 dict[upgrade]=0
                 shift 1
                 ;;
-            --full)
+            '--full')
                 dict[base]=1
                 dict[recommended]=1
                 dict[upgrade]=1
                 shift 1
                 ;;
-            --default|--recommended)
+            '--default' | \
+            '--recommended')
                 shift 1
                 ;;
-            "")
+            '')
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

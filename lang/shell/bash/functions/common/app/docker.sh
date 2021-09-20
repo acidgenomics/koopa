@@ -46,40 +46,41 @@ koopa::docker_build() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --delete)
+            '--delete')
                 delete=1
                 shift 1
                 ;;
-            --memory=*)
+            '--memory='*)
                 # e.g. use '8g' for 8 GB limit.
                 memory="${1#*=}"
                 shift 1
                 ;;
-            --no-delete)
+            '--no-delete')
                 delete=0
                 shift 1
                 ;;
-            --no-push)
+            '--no-push')
                 push=0
                 shift 1
                 ;;
-            --push)
+            '--push')
                 push=1
                 shift 1
                 ;;
-            --server=*)
+            '--server='*)
                 server="${1#*=}"
                 shift 1
                 ;;
-            --tag=*)
+            '--tag='*)
                 tag="${1#*=}"
                 shift 1
                 ;;
-            --)
+            '--')
                 shift 1
                 break
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -206,23 +207,24 @@ koopa::docker_build_all_images() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --days=*)
+            '--days='*)
                 days="${1#*=}"
                 shift 1
                 ;;
-            --force)
+            '--force')
                 force=1
                 shift 1
                 ;;
-            --prune)
+            '--prune')
                 prune=1
                 shift 1
                 ;;
-            --)
+            '--')
                 shift 1
                 break
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -471,27 +473,28 @@ koopa::docker_run() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --arm)
+            '--arm')
                 dict[arm]=1
                 shift 1
                 ;;
-            --bash)
+            '--bash')
                 dict[bash]=1
                 shift 1
                 ;;
-            --bind)
+            '--bind')
                 dict[bind]=1
                 shift 1
                 ;;
-            --x86)
+            '--x86')
                 dict[x86]=1
                 shift 1
                 ;;
-            --)
+            '--')
                 shift 1
                 break
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -592,15 +595,16 @@ koopa::is_docker_build_recent() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --days=*)
+            '--days='*)
                 days="${1#*=}"
                 shift 1
                 ;;
-            --)
+            '--')
                 shift 1
                 break
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

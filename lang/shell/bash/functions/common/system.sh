@@ -179,7 +179,7 @@ koopa::sys_info() { # {{{
         "Make Prefix: $(koopa::make_prefix)"
         "User Config Prefix: $(koopa::config_prefix)"
     )
-    array+=("")
+    array+=('')
     # Show neofetch info, if installed.
     if koopa::is_installed 'neofetch'
     then

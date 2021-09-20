@@ -12,15 +12,11 @@ koopa::macos_install_python_framework() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --reinstall)
+            '--reinstall')
                 reinstall=1
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

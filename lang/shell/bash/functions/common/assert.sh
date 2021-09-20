@@ -188,12 +188,12 @@ Deactivate venv prior to conda, otherwise conda python may be left in PATH."
 koopa::assert_has_no_flags() { # {{{1
     # """
     # Assert that the user input does not contain flags.
-    # @note Updated 2020-12-31.
+    # @note Updated 2021-09-20.
     # """
     while (("$#"))
     do
         case "$1" in
-            -*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

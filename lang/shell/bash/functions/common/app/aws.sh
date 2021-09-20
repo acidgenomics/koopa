@@ -24,11 +24,11 @@ koopa::aws_batch_fetch_and_run() { # {{{1
     url="$BATCH_FILE_URL"
     file="$(koopa::tmp_file)"
     case "$url" in
-        ftp* | \
-        http*)
+        'ftp'* | \
+        'http'*)
             koopa::download "$url" "$file"
             ;;
-        s3*)
+        's3'*)
             aws s3 cp "$url" "$file"
             ;;
         *)
@@ -132,19 +132,20 @@ koopa::aws_s3_find() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --exclude=*)
+            '--exclude='*)
                 exclude="${1#*=}"
                 shift 1
                 ;;
-            --include=*)
+            '--include='*)
                 include="${1#*=}"
                 shift 1
                 ;;
-            --)
+            '--')
                 shift 1
                 break
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -202,20 +203,21 @@ koopa::aws_s3_ls() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --recursive)
+            '--recursive')
                 recursive=1
                 flags+=('--recursive')
                 shift 1
                 ;;
-            --type=*)
+            '--type='*)
                 type="${1#*=}"
                 shift 1
                 ;;
-            --)
+            '--')
                 shift 1
                 break
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -231,11 +233,11 @@ koopa::aws_s3_ls() { # {{{1
         koopa::stop "'--type' argument not supported for '--recursive' mode."
     fi
     case "${type:-}" in
-        d)
+        'd')
             dirs=1
             files=0
             ;;
-        f)
+        'f')
             dirs=0
             files=1
             ;;

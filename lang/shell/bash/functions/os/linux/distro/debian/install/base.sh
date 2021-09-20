@@ -36,7 +36,7 @@ koopa::debian_install_base() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --base-image)
+            '--base-image')
                 dict[base]=1
                 dict[dev]=0
                 dict[extra]=0
@@ -44,7 +44,7 @@ koopa::debian_install_base() { # {{{1
                 dict[upgrade]=0
                 shift 1
                 ;;
-            --full)
+            '--full')
                 dict[base]=1
                 dict[dev]=1
                 dict[extra]=1
@@ -52,14 +52,10 @@ koopa::debian_install_base() { # {{{1
                 dict[upgrade]=1
                 shift 1
                 ;;
-            "")
+            '')
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
