@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+koopa::macos_update_google_cloud_sdk() { # {{{1
+    koopa:::update_app \
+        --name='google-cloud-sdk' \
+        --name-fancy='Google Cloud SDK' \
+        --platform='macos' \
+        "$@"
+}
+
 koopa:::macos_update_google_cloud_sdk() { # {{{1
     # """
     # Update Google Cloud SDK.
