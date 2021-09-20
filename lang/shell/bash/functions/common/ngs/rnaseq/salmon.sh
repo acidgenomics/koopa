@@ -373,7 +373,6 @@ koopa::salmon_quant_paired_end() { # {{{1
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(
-        [sam_file]='output.sam'
         [threads]="$(koopa::cpu_count)"
     )
     while (("$#"))
@@ -436,6 +435,7 @@ koopa::salmon_quant_paired_end() { # {{{1
     koopa::h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
     koopa::mkdir "${dict[output_dir]}"
     dict[log_file]="${dict[output_dir]}/quant.log"
+    # > dict[sam_file]="${dict[output_dir]}/output.sam"
     quant_args=(
         '--gcBias'
         "--geneMap=${dict[gff_file]}"
@@ -448,7 +448,7 @@ koopa::salmon_quant_paired_end() { # {{{1
         "--output=${dict[output_dir]}"
         '--seqBias'
         "--threads=${dict[threads]}"
-        "--writeMappings=${dict[sam_file]}"
+        # > "--writeMappings=${dict[sam_file]}"
     )
     koopa::dl 'Quant args' "${quant_args[*]}"
     salmon quant "${quant_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
@@ -470,7 +470,6 @@ koopa::salmon_quant_single_end() { # {{{1
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(
-        [sam_file]='output.sam'
         [threads]="$(koopa::cpu_count)"
     )
     while (("$#"))
@@ -522,6 +521,7 @@ koopa::salmon_quant_single_end() { # {{{1
     koopa::h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
     koopa::mkdir "${dict[output_dir]}"
     dict[log_file]="${dict[output_dir]}/quant.log"
+    # > dict[sam_file]="${dict[output_dir]}/output.sam"
     # Don't set '--gcBias' here, considered beta for single-end reads.
     quant_args=(
         "--geneMap=${dict[gff_file]}"
@@ -533,7 +533,7 @@ koopa::salmon_quant_single_end() { # {{{1
         '--seqBias'
         "--threads=${dict[threads]}"
         "--unmatedReads=${dict[fastq]}"
-        "--writeMappings=${dict[sam_file]}"
+        # > "--writeMappings=${dict[sam_file]}"
     )
     koopa::dl 'Quant args' "${quant_args[*]}"
     salmon quant "${quant_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
