@@ -1,48 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-09-14.
-# 
-# Shared across macOS and Linux.
-#
-# LLVM:
-# LLVM takes up 4 GB of disk space but is required for some Python packages.
-# In particular, if we want to install umap-learn, this is now required.
-#
-# PROJ/GDAL:
-# Consider using 'osgeo-gdal' instead of regular 'gdal' brew. This one gets
-# updated more regularly. However, I've found that the newer version can
-# cause some R packages to fail to build from source.
-#
-# Rust:
-# Use cargo to manage packages instead.
-# Use the 'install-rust' script instead of Homebrew 'rustup-init'.
-# Don't install 'rust' alongside 'rustup-init'.
-#
-# See also:
-# - https://github.com/Homebrew/homebrew-bundle
-# - https://www.caseyliss.com/2019/10/8/brew-bundle
-# - https://gist.github.com/cliss/74782128b9a35366ecac44a7c4b45752
-#
-# Problematic formulas:
-# - lapack
-# - libressl
-#
-# Formula without bottles:
-# - emacs
-# - proj?
-# - gdal
-# - mariadb-connector-c
-# - openssh
-#
-# GCC warnings:
-# - protobuf
-#
-# Maybe include:
-# - podofo
-#
-# Consider:
-# - miniforge
-#   https://github.com/conda-forge/miniforge
+# Updated 2021-09-20.
 # """
 
 # Taps {{{1
@@ -182,6 +140,8 @@ brew "ripgrep"  # rust
 brew "ripgrep-all"  # rust
 brew "rsync"
 brew "ruby"
+brew "rust"
+brew "rustup-init"
 brew "screen"
 brew "sd"
 brew "shellcheck"
