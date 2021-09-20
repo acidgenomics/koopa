@@ -184,7 +184,7 @@ koopa::fix_pyenv_permissions() { # {{{1
     koopa::assert_has_no_args "$#"
     pyenv_prefix="$(koopa::pyenv_prefix)"
     [[ -d "${pyenv_prefix}/shims" ]] || return 0
-    koopa::sys_chmod 0777 "${pyenv_prefix}/shims"
+    koopa::sys_chmod '0777' "${pyenv_prefix}/shims"
     return 0
 }
 
@@ -197,7 +197,7 @@ koopa::fix_rbenv_permissions() { # {{{1
     koopa::assert_has_no_args "$#"
     rbenv_prefix="$(koopa::rbenv_prefix)"
     [[ -d "${rbenv_prefix}/shims" ]] || return 0
-    koopa::sys_chmod 0777 "${rbenv_prefix}/shims"
+    koopa::sys_chmod '0777' "${rbenv_prefix}/shims"
     return 0
 }
 
