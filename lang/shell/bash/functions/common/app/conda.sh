@@ -402,11 +402,6 @@ koopa::conda_create_env() { # {{{1
                 force=1
                 shift 1
                 ;;
-            '--')
-                shift 1
-                break
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;

@@ -20,11 +20,6 @@ koopa::git_checkout_recursive() { # {{{1
                 origin="${1#*=}"
                 shift 1
                 ;;
-            '--')
-                shift 1
-                break
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;

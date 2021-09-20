@@ -140,11 +140,6 @@ koopa::aws_s3_find() { # {{{1
                 include="${1#*=}"
                 shift 1
                 ;;
-            '--')
-                shift 1
-                break
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -212,11 +207,6 @@ koopa::aws_s3_ls() { # {{{1
                 type="${1#*=}"
                 shift 1
                 ;;
-            '--')
-                shift 1
-                break
-                ;;
-            '--'* | \
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
