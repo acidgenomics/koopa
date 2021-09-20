@@ -54,7 +54,7 @@ koopa::update_koopa() { # {{{1
 koopa::update_koopa_system() { # {{{1
     # """
     # Update system installation.
-    # @note Updated 2021-05-06.
+    # @note Updated 2021-09-20.
     # """
     local conf_args
     koopa::assert_is_admin
@@ -79,7 +79,7 @@ koopa::update_koopa_system() { # {{{1
     then
         koopa::update_homebrew
     else
-        koopa::update_google_cloud_sdk
+        # > koopa::update_google_cloud_sdk
         koopa::update_perlbrew
         koopa::update_pyenv
         koopa::update_rbenv

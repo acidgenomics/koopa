@@ -392,6 +392,15 @@ koopa::locate_gcc() { # {{{1
         --name="${name}-${version}"
 }
 
+koopa::locate_gcloud() { # {{{1
+    # """
+    # Locate gcloud.
+    # @note Updated 2021-09-20.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'gcloud'
+}
+
 koopa::locate_gem() { # {{{1
     # """
     # Locate Ruby gem package manager.
