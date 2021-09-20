@@ -79,7 +79,7 @@ koopa::update_koopa_system() { # {{{1
     then
         koopa::update_homebrew
     else
-        # > koopa::update_google_cloud_sdk
+        koopa::update_google_cloud_sdk
         koopa::update_perlbrew
         koopa::update_pyenv
         koopa::update_rbenv
