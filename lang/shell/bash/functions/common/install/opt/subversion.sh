@@ -31,8 +31,8 @@ koopa:::install_subversion() { # {{{1
     then
         if koopa::is_fedora
         then
-            koopa::ln -S '/usr/bin/apr-1-config' '/usr/bin/apr-config'
-            koopa::ln -S '/usr/bin/apu-1-config' '/usr/bin/apu-config'
+            koopa::ln --sudo '/usr/bin/apr-1-config' '/usr/bin/apr-config'
+            koopa::ln --sudo '/usr/bin/apu-1-config' '/usr/bin/apu-config'
             koopa::add_to_pkg_config_path_start '/usr/lib64/pkgconfig'
         fi
         koopa::assert_is_installed 'apr-config' 'apu-config' 'sqlite3'

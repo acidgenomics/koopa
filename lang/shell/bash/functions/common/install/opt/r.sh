@@ -18,7 +18,7 @@ koopa::configure_r() { # {{{1
     koopa::assert_is_dir "$r_prefix"
     if koopa::is_koopa_app "$r"
     then
-        koopa::sys_set_permissions -r "$r_prefix"
+        koopa::sys_set_permissions --recursive "$r_prefix"
         # Ensure that (Debian) system 'etc' directories are removed.
         make_prefix="$(koopa::make_prefix)"
         etc_prefix="${make_prefix}/lib/R/etc"
@@ -32,13 +32,13 @@ koopa::configure_r() { # {{{1
             koopa::sys_rm "$etc_prefix"
         fi
     else
-        koopa::sys_set_permissions -r "${r_prefix}/library"
+        koopa::sys_set_permissions --recursive "${r_prefix}/library"
     fi
     koopa::r_link_files_into_etc "$r"
     koopa::r_link_site_library "$r"
     koopa::r_javareconf "$r"
     koopa::r_rebuild_docs "$r"
-    koopa::sys_set_permissions -r "${r_prefix}/site-library"
+    koopa::sys_set_permissions --recursive "${r_prefix}/site-library"
     koopa::configure_success "$name_fancy" "$r_prefix"
     return 0
 }

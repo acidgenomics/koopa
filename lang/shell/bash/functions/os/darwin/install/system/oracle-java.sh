@@ -17,7 +17,7 @@ koopa::macos_uninstall_oracle_java() { # {{{1
         "${HOME}/Library/Preferences/com.apple.java.util.prefs.plist" \
         "${HOME}/Library/Preferences/com.oracle.java.JavaAppletPlugin.plist" \
         "${HOME}/Library/Safari/LocalStorage/https_www.java.com_0.localstorage"*
-    koopa::rm -S \
+    koopa::rm --sudo \
         '/Library/Internet Plug-Ins/JavaAppletPlugin.plugin' \
         '/Library/LaunchAgents/com.oracle.java.Java-Updater.plist' \
         '/Library/LaunchDaemons/com.oracle.java.Helper-Tool.plist' \

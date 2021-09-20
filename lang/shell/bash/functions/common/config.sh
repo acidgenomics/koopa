@@ -92,7 +92,7 @@ koopa::disable_passwordless_sudo() { # {{{1
     if [[ -f "$file" ]]
     then
         koopa::alert "Removing sudo permission file at '${file}'."
-        koopa::rm -S "$file"
+        koopa::rm --sudo "$file"
     fi
     koopa::alert_success 'Passwordless sudo is disabled.'
     return 0
@@ -119,7 +119,7 @@ koopa::enable_passwordless_sudo() { # {{{1
     koopa::alert "Modifying '${file}' to include '${group}'."
     string="%${group} ALL=(ALL) NOPASSWD: ALL"
     koopa::sudo_append_string "$string" "$file"
-    koopa::chmod -S 0440 "$file"
+    koopa::chmod --sudo '0440' "$file"
     koopa::alert_success "Passwordless sudo enabled for '${group}' \
 at '${file}'."
     return 0

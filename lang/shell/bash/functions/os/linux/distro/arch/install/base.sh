@@ -65,7 +65,8 @@ koopa::arch_install_base() { # {{{1
     koopa::install_start "$name_fancy"
     # Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
     # is non-standard and can cause koopa's application link script to break.
-    [[ -L '/usr/local/share/man' ]] && koopa::rm -S /usr/local/share/man
+    [[ -L '/usr/local/share/man' ]] && \
+        koopa::rm --sudo '/usr/local/share/man'
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
         sudo pacman -Syyu --noconfirm

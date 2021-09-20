@@ -23,18 +23,18 @@ koopa::linux_configure_lmod() { # {{{1
     fi
     etc_dir='/etc/profile.d'
     koopa::alert "Updating ${name_fancy} configuration in '${etc_dir}'."
-    koopa::mkdir -S "$etc_dir"
+    koopa::mkdir --sudo "$etc_dir"
     # bash, zsh
-    koopa::ln -S "${init_dir}/profile" "${etc_dir}/z00_lmod.sh"
+    koopa::ln --sudo "${init_dir}/profile" "${etc_dir}/z00_lmod.sh"
     # csh, tcsh
-    koopa::ln -S "${init_dir}/cshrc" "${etc_dir}/z00_lmod.csh"
+    koopa::ln --sudo "${init_dir}/cshrc" "${etc_dir}/z00_lmod.csh"
     # fish
     if koopa::is_installed 'fish'
     then
         etc_dir='/etc/fish/conf.d'
         koopa::alert "Updating Fish configuration in '${etc_dir}'."
-        koopa::mkdir -S "$etc_dir"
-        koopa::ln -S "${init_dir}/profile.fish" "${etc_dir}/z00_lmod.fish"
+        koopa::mkdir --sudo "$etc_dir"
+        koopa::ln --sudo "${init_dir}/profile.fish" "${etc_dir}/z00_lmod.fish"
     fi
     koopa::alert_success "${name_fancy} configuration was updated successfully."
     return 0
@@ -95,7 +95,7 @@ koopa::linux_uninstall_lmod() { # {{{1
         --name-fancy='Lmod' \
         --no-link \
         "$@"
-    koopa::rm -S \
+    koopa::rm --sudo \
         '/etc/profile.d/z00_lmod.csh' \
         '/etc/profile.d/z00_lmod.sh'
     return 0

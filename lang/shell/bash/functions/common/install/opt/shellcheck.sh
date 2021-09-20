@@ -28,7 +28,7 @@ koopa:::install_shellcheck() { # {{{1
 v${version}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cp -t "${prefix}/bin" "${name}-v${version}/${name}"
+    koopa::cp --target="${prefix}/bin" "${name}-v${version}/${name}"
     return 0
 }
 

@@ -36,7 +36,7 @@ koopa::macos_uninstall_webex() { # {{{1
         "${HOME}/Library/Receipts/"*'.webex.'* \
         "${HOME}/Library/Safari/LocalStorage/"*'.webex.com'* \
         "${HOME}/Library/WebKit/com.webex.meetingmanager"
-    koopa::rm -S '/Applications/Cisco Webex Meetings.app'
+    koopa::rm --sudo '/Applications/Cisco Webex Meetings.app'
     koopa::uninstall_success "$name_fancy"
     return 0
 }

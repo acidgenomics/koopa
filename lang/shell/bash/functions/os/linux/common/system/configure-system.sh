@@ -304,7 +304,7 @@ koopa::linux_configure_system() { # {{{1
     # Ubuntu, which sets a lot of config in bashrc.
     if [[ "${dict[delete_skel]}" -eq 1 ]]
     then
-        koopa::rm -S '/etc/skel'
+        koopa::rm --sudo '/etc/skel'
     fi
     # Early return in minimal mode {{{3
     # --------------------------------------------------------------------------
@@ -325,7 +325,7 @@ koopa::linux_configure_system() { # {{{1
         "${dict[opt_prefix]}"
     )
     koopa::sys_mkdir "${prefixes[@]}"
-    koopa::sys_set_permissions -r "${prefixes[@]}"
+    koopa::sys_set_permissions --recursive "${prefixes[@]}"
     # Set up secondary data disk, if applicable.
     if [[ -e "${dict[data_disk_prefix]}" ]]
     then
@@ -541,7 +541,7 @@ koopa::linux_configure_system() { # {{{1
         koopa::generate_ssh_key
     # Clean up and fix permissions {{{3
     # --------------------------------------------------------------------------
-    koopa::sys_set_permissions -r "${prefixes[@]}"
+    koopa::sys_set_permissions --recursive "${prefixes[@]}"
     koopa::delete_broken_symlinks "${prefixes[@]}"
     # > koopa::delete_empty_dirs "${prefixes[@]}"
     # > koopa::fix_pyenv_permissions

@@ -80,7 +80,7 @@ koopa::macos_uninstall_python_framework() { # {{{1
     local name_fancy
     name_fancy='Python framework'
     koopa::uninstall_start "$name_fancy"
-    koopa::rm -S \
+    koopa::rm --sudo \
         '/Applications/Python'* \
         '/Library/Frameworks/Python.framework'
     koopa::delete_broken_symlinks '/usr/local/bin'

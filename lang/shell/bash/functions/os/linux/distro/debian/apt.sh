@@ -281,7 +281,7 @@ koopa::debian_apt_add_r_repo() { # {{{1
             koopa::alert_info "${name_fancy} repo exists at '${file}'."
             return 0
         else
-            koopa::rm -S "$file"
+            koopa::rm --sudo "$file"
         fi
     fi
     koopa::alert "Adding ${name_fancy} repo at '${file}'."
@@ -452,7 +452,7 @@ koopa::debian_apt_clean() { # {{{1
     # """
     sudo apt-get --yes autoremove
     sudo apt-get --yes clean
-    # > koopa::rm -S '/var/lib/apt/lists/'*
+    # > koopa::rm --sudo '/var/lib/apt/lists/'*
     return 0
 }
 
@@ -481,16 +481,16 @@ koopa::debian_apt_configure_sources() { # {{{1
     fi
     if [[ -L "$sources_list" ]]
     then
-        koopa::rm -S "$sources_list"
+        koopa::rm --sudo "$sources_list"
     fi
     sources_list_d='/etc/apt/sources.list.d'
     if [[ -L "$sources_list_d" ]]
     then
-        koopa::rm -S "$sources_list_d"
+        koopa::rm --sudo "$sources_list_d"
     fi
     if [[ ! -d "$sources_list_d" ]]
     then
-        koopa::mkdir -S "$sources_list_d"
+        koopa::mkdir --sudo "$sources_list_d"
     fi
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
@@ -551,7 +551,7 @@ koopa::debian_apt_delete_repo() { # {{{1
     do
         file="/etc/apt/sources.list.d/${name}.list"
         koopa::assert_is_file "$file"
-        koopa::rm -S "$file"
+        koopa::rm --sudo "$file"
     done
     return 0
 }

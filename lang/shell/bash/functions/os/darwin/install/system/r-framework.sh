@@ -56,7 +56,7 @@ koopa::macos_install_r_framework() { # {{{1
         koopa::alert_is_installed 'R Homebrew cask'
         return 0
     fi
-    [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
+    [[ "$reinstall" -eq 1 ]] && koopa::rm --sudo "$prefix"
     if [[ -d "$prefix" ]]
     then
         koopa::alert_is_installed "$name_fancy" "$prefix"
@@ -102,7 +102,7 @@ koopa::macos_uninstall_r_framework() { # {{{1
     local name_fancy
     name_fancy='R framework'
     koopa::uninstall_start "$name_fancy"
-    koopa::rm -S \
+    koopa::rm --sudo \
         '/Applications/R.app' \
         '/Library/Frameworks/R.framework'
     koopa::delete_broken_symlinks '/usr/local/bin'

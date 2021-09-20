@@ -95,8 +95,6 @@ koopa::python_pip_install() { # {{{1
         )
     fi
     "$python" -m pip install "${install_flags[@]}" "$@"
-    # NOTE This step is handled in the 'install' and 'update' wrapper functions.
-    # > koopa::sys_set_permissions -r "$target"
     return 0
 }
 
@@ -184,7 +182,7 @@ koopa::python_venv_create() { # {{{1
     then
         "$venv_python" -m pip install --upgrade "$@"
     fi
-    koopa::sys_set_permissions -r "$prefix"
+    koopa::sys_set_permissions --recursive "$prefix"
     "$venv_python" -m pip list
     koopa::install_success "$name_fancy" "$prefix"
     return 0

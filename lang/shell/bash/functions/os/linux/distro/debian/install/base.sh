@@ -69,14 +69,15 @@ koopa::debian_install_base() { # {{{1
     name_fancy='Debian base system'
     koopa::install_start "$name_fancy"
     # Nuke caches before installing packages.
-    koopa::rm -S \
+    koopa::rm --sudo \
         '/var/cache/apt/'* \
         '/var/lib/dpkg/available'
     sudo dpkg --clear-avail
     # Debian symlinks '/usr/local/man' to '/usr/local/share/man' by default,
     # which is non-standard and can cause koopa's application link script
     # to break.
-    [[ -L '/usr/local/man' ]] && koopa::rm -S '/usr/local/man'
+    [[ -L '/usr/local/man' ]] && \
+        koopa::rm --sudo '/usr/local/man'
     # Requiring universe repo to be enabled on Ubuntu.
     if koopa::is_ubuntu && \
         ! koopa::str_match "${dict[apt_enabled_repos]}" universe

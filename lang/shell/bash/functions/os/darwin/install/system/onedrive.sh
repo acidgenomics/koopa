@@ -14,7 +14,7 @@ koopa::macos_uninstall_onedrive() { # {{{1
         "${HOME}/Library/Application Scripts/\
 com.microsoft.OneDrive-mac.FinderSync" \
         "${HOME}/Library/Group Containers/UBF8T346G9.OneDriveSyncClientSuite"
-    koopa::rm -S '/Applications/OneDrive.app'
+    koopa::rm --sudo '/Applications/OneDrive.app'
     koopa::uninstall_success "$name_fancy"
     return 0
 }
