@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework these functions in R.
-
 koopa:::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
@@ -53,11 +51,10 @@ koopa:::kallisto_index() { # {{{1
     return 0
 }
 
-# FIXME Rework input as 'index-dir'?
 koopa:::kallisto_quant_paired_end() { # {{{1
     # """
     # Run kallisto quant (per paired-end sample).
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-09-20.
     #
     # Important options:
     # * --bias: Learns parameters for a model of sequences specific bias and
@@ -107,8 +104,8 @@ koopa:::kallisto_quant_paired_end() { # {{{1
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
-            '--index-file='*)
-                dict[index_file]="${1#*=}"
+            '--index-dir='*)
+                dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
             '--lib-type='*)
@@ -132,6 +129,7 @@ koopa:::kallisto_quant_paired_end() { # {{{1
                 ;;
         esac
     done
+    dict[index_file]="${dict[index_dir]}/kallisto.idx"
     koopa::assert_is_file \
         "${dict[fastq_r1]}" \
         "${dict[fastq_r2]}" \
@@ -187,10 +185,9 @@ koopa:::kallisto_quant_paired_end() { # {{{1
     return 0
 }
 
-# FIXME Rework input as 'index-dir'?
 koopa:::kallisto_quant_single_end() { # {{{1
     # Run kallisto quant (per single-end sample).
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-09-20.
     #
     # Must supply the length and standard deviation of the fragment length
     # (not the read length).
@@ -232,8 +229,8 @@ koopa:::kallisto_quant_single_end() { # {{{1
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
-            '--index-file='*)
-                dict[index_file]="${1#*=}"
+            '--index-dir='*)
+                dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
             '--output-dir='*)
@@ -253,7 +250,10 @@ koopa:::kallisto_quant_single_end() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_file "${dict[fastq]}"
+    dict[index_file]="${dict[index_dir]}/kallisto.idx"
+    koopa::assert_is_file \
+        "${dict[fastq]}" \
+        "${dict[index_file]}"
     dict[fastq_bn]="$(koopa::basename "${dict[fastq]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
     dict[id]="${dict[fastq_bn]}"
@@ -360,7 +360,6 @@ koopa::run_kallisto_paired_end() { # {{{1
     dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
     dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
     dict[index_dir]="${dict[output_dir]}/index"
-    dict[index_file]="${dict[index_dir]}/kallisto.idx"
     dict[samples_dir]="${dict[output_dir]}/samples"
     koopa::dl \
         'Bootstraps' "${dict[bootstraps]}" \
@@ -398,7 +397,6 @@ with '${dict[r1_tail]}'."
     koopa:::kallisto_index \
         --fasta-file="${dict[fasta_file]}" \
         --output-dir="$index_dir"
-    koopa::assert_is_file "${dict[index_file]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify.
@@ -411,7 +409,7 @@ with '${dict[r1_tail]}'."
             --fastq-r1="$fastq_r1" \
             --fastq-r2="$fastq_r2" \
             --gff-file="${dict[gff_file]}" \
-            --index-file="${dict[index_file]}" \
+            --index-dir="${dict[index_dir]}" \
             --lib-type="${dict[lib_type]}" \
             --output-dir="${dict[output_dir]}" \
             --r1-tail="${dict[r1_tail]}" \
@@ -494,7 +492,6 @@ koopa::run_kallisto_single_end() { # {{{1
     dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
     dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
     dict[index_dir]="${dict[output_dir]}/index"
-    dict[index_file]="${dict[index_dir]}/kallisto.idx"
     dict[samples_dir]="${dict[output_dir]}/samples"
     koopa::dl \
         'Bootstraps' "${dict[bootstraps]}" \
@@ -531,7 +528,6 @@ with '${dict[tail]}'."
     koopa:::kallisto_index \
         --fasta-file="${dict[fasta_file]}" \
         --output-dir="$index_dir"
-    koopa::assert_is_file "${dict[index_file]}"
     # Quantify {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and quantify with salmon.
@@ -543,7 +539,7 @@ with '${dict[tail]}'."
             --fastq="$fastq" \
             --fragment-length="${dict[fragment_length]}" \
             --gff-file="${dict[gff_file]}" \
-            --index-file="${dict[index_file]}" \
+            --index-dir="${dict[index_dir]}" \
             --output-dir="${dict[samples_dir]}" \
             --sd="${dict[sd]}" \
             --tail="${dict[tail]}"

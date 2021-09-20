@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO Add step to generate BAM and/or CRAM files from salmon, kallisto,
+        bowtie2 output.
 ** TODO Shell is double activating, showing tmux sessions twice on Debian
         ARM dev machine.
 ** TODO Consider removing non-symlinked programs in /usr/local/bin on macOS.
