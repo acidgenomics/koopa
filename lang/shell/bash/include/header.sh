@@ -160,7 +160,6 @@ __koopa_bash_header() { # {{{1
                 "Current Bash version: '${BASH_VERSION}'."
             if [[ "$(uname -s)" == 'Darwin' ]]
             then
-                # FIXME Need to improve CLI quoting consistency.
                 __koopa_warning \
                     'On macOS, we recommend installing Homebrew.' \
                     'Refer to "https://brew.sh" for instructions.' \
