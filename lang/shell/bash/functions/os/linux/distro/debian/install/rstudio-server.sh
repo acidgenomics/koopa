@@ -3,7 +3,7 @@
 koopa::debian_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-09-20.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -21,7 +21,7 @@ koopa::debian_install_rstudio_server() { # {{{1
     esac
     os_codename="$(koopa::os_codename)"
     case "$os_codename" in
-        # FIXME Need to add support for Debian 11 bullseye.
+        'bullseye' | \
         'buster' | \
         'focal')
             os_codename='bionic'
