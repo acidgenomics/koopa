@@ -58,7 +58,6 @@ koopa:::configure_app_packages() { # {{{1
         then
             dict[version]="$(koopa::get_version "${dict[which_app]}")"
         fi
-        # FIXME This step is erroring for Go 1.17.
         dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
     fi
     koopa::configure_start "${dict[name_fancy]}" "${dict[prefix]}"
