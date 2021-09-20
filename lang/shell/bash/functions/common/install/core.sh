@@ -17,27 +17,27 @@ koopa:::configure_app_packages() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --name=*)
+            '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
                 ;;
-            --name-fancy=*)
+            '--name-fancy='*)
                 dict[name_fancy]="${1#*=}"
                 shift 1
                 ;;
-            --no-link)
+            '--no-link')
                 dict[link_app]=0
                 shift 1
                 ;;
-            --prefix=*)
+            '--prefix='*)
                 dict[prefix]="${1#*=}"
                 shift 1
                 ;;
-            --version=*)
+            '--version='*)
                 dict[version]="${1#*=}"
                 shift 1
                 ;;
-            --which-app=*)
+            '--which-app='*)
                 dict[which_app]="${1#*=}"
                 shift 1
                 ;;
@@ -649,23 +649,19 @@ koopa::link_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --include-dirs=*)
+            '--include-dirs='*)
                 include_dirs="${1#*=}"
                 shift 1
                 ;;
-            --name=*)
+            '--name='*)
                 name="${1#*=}"
                 shift 1
                 ;;
-            --version=*)
+            '--version='*)
                 version="${1#*=}"
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

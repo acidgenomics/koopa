@@ -12,19 +12,20 @@ koopa::git_checkout_recursive() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --branch=*)
+            '--branch='*)
                 branch="${1#*=}"
                 shift 1
                 ;;
-            --origin=*)
+            '--origin='*)
                 origin="${1#*=}"
                 shift 1
                 ;;
-            --)
+            '--')
                 shift 1
                 break
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -92,7 +93,7 @@ koopa::git_clone() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --branch=*)
+            '--branch='*)
                 branch="${1#*=}"
                 shift 1
                 ;;

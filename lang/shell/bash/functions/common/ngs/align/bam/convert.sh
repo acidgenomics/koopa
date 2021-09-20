@@ -5,7 +5,7 @@
 koopa::convert_sam_to_bam() { # {{{1
     # """
     # Convert multiple SAM files in a directory to BAM files.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-09-20.
     # """
     local bam_file keep_sam pos sam_file sam_files
     keep_sam=0
@@ -13,15 +13,11 @@ koopa::convert_sam_to_bam() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --keep-sam)
+            '--keep-sam')
                 keep_sam=1
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

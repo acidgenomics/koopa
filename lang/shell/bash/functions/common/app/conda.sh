@@ -79,72 +79,72 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --all)
+            '--all')
                 dict[all]=1
                 shift 1
                 ;;
-            --aligners)
+            '--aligners')
                 dict[aligners]=1
                 shift 1
                 ;;
-            --chipseq | \
-            --chip-seq)
+            '--chipseq' | \
+            '--chip-seq')
                 dict[chipseq]=1
                 shift 1
                 ;;
-            --data-mining)
+            '--data-mining')
                 dict[data_mining]=1
                 shift 1
                 ;;
-            --enrichment)
+            '--enrichment')
                 dict[enrichment]=1
                 shift 1
                 ;;
-            --file-formats)
+            '--file-formats')
                 dict[file_formats]=1
                 shift 1
                 ;;
-            --methylation)
+            '--methylation')
                 dict[methylation]=1
                 shift 1
                 ;;
-            --qc | \
-            --quality-control)
+            '--qc' | \
+            '--quality-control')
                 dict[quality_control]=1
                 shift 1
                 ;;
-            --reticulate)
+            '--reticulate')
                 dict[reticulate]=1
                 shift 1
                 ;;
-            --riboseq | \
-            --ribo-seq)
+            '--riboseq' | \
+            '--ribo-seq')
                 dict[riboseq]=1
                 shift 1
                 ;;
-            --rnaseq | \
-            --rna-seq)
+            '--rnaseq' | \
+            '--rna-seq')
                 dict[rnaseq]=1
                 shift 1
                 ;;
-            --singlecell | \
-            --single-cell)
+            '--singlecell' | \
+            '--single-cell')
                 dict[singlecell]=1
                 shift 1
                 ;;
-            --spatial)
+            '--spatial')
                 dict[spatial]=1
                 shift 1
                 ;;
-            --trimming)
+            '--trimming')
                 dict[trimming]=1
                 shift 1
                 ;;
-            --variation)
+            '--variation')
                 dict[variation]=1
                 shift 1
                 ;;
-            --workflows)
+            '--workflows')
                 dict[workflows]=1
                 shift 1
                 ;;
@@ -397,16 +397,17 @@ koopa::conda_create_env() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --force | \
-            --reinstall)
+            '--force' | \
+            '--reinstall')
                 force=1
                 shift 1
                 ;;
-            --)
+            '--')
                 shift 1
                 break
                 ;;
-            --*|-*)
+            '--'* | \
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)

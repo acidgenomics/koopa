@@ -42,40 +42,36 @@ koopa:::linux_install_rstudio_server() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --file-ext=*)
+            '--file-ext='*)
                 dict[file_ext]="${1#*=}"
                 shift 1
                 ;;
-            --install=*)
+            '--install='*)
                 dict[install]="${1#*=}"
                 shift 1
                 ;;
-            --os-codename=*)
+            '--os-codename='*)
                 dict[os_codename]="${1#*=}"
                 shift 1
                 ;;
-            --platform=*)
+            '--platform='*)
                 dict[platform]="${1#*=}"
                 shift 1
                 ;;
-            --pro | \
-            --workbench)
+           ' --pro' | \
+            '--workbench')
                 dict[workbench]=1
                 shift 1
                 ;;
-            --reinstall)
+            '--reinstall')
                 dict[reinstall]=1
                 shift 1
                 ;;
-            --version=*)
+            '--version='*)
                 dict[version]="${1#*=}"
                 shift 1
                 ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
