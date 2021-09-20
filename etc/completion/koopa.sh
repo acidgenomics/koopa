@@ -202,9 +202,14 @@ _koopa_complete() { # {{{1
                 if _koopa_is_macos
                 then
                     args+=(
+                        'adobe-creative-cloud'
+                        'onedrive'
+                        'oracle-java'
                         'python-framework'
                         'r-cran-gfortran'
                         'r-framework'
+                        'ringcentral'
+                        'webex'
                         'xcode-clt'
                     )
                 fi
