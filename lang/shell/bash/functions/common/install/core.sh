@@ -280,7 +280,7 @@ at '${dict[prefix]}'."
     if [[ "${dict[shared]}" -eq 1 ]]
     then
         koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
-        koopa::sys_set_permissions -r "${dict[prefix]}"
+        koopa::sys_set_permissions --recursive "${dict[prefix]}"
     fi
     koopa::delete_empty_dirs "${dict[prefix]}"
     if [[ "${dict[link_app]}" -eq 1 ]]
@@ -561,7 +561,7 @@ koopa:::update_app() { # {{{1
     koopa::rm "${dict[tmp_dir]}"
     if [[ "${dict[shared]}" -eq 1 ]]
     then
-        koopa::sys_set_permissions -r "${dict[prefix]}"
+        koopa::sys_set_permissions --recursive "${dict[prefix]}"
     fi
     koopa::delete_empty_dirs "${dict[prefix]}"
     # Reset global variables, if applicable.
@@ -620,7 +620,7 @@ koopa::find_app_version() { # {{{1
 koopa::link_app() { # {{{1
     # """
     # Symlink application into build directory.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-09-20.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -680,7 +680,7 @@ koopa::link_app() { # {{{1
     koopa::link_into_opt "$app_prefix" "$name"
     koopa::is_macos && return 0
     koopa::alert "Linking '${app_prefix}' in '${make_prefix}'."
-    koopa::sys_set_permissions -r "$app_prefix"
+    koopa::sys_set_permissions --recursive "$app_prefix"
     koopa::delete_broken_symlinks "$app_prefix" "$make_prefix"
     app_subdirs=()
     if [[ -n "$include_dirs" ]]
@@ -703,10 +703,10 @@ koopa::link_app() { # {{{1
     fi
     # Copy as symbolic links.
     cp_flags=(
-        '-s'
-        '-t' "${make_prefix}"
+        '--symbolic'
+        "--target=${make_prefix}"
     )
-    koopa::is_shared_install && cp_flags+=('-S')
+    koopa::is_shared_install && cp_flags+=('--sudo')
     koopa::cp "${cp_flags[@]}" "${app_subdirs[@]}"
     return 0
 }

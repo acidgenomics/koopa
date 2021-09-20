@@ -23,7 +23,7 @@ koopa::linux_clean_tmp() { # {{{1
             -ctime +30 \
             -print \
         )"
-        koopa::rm -S "${matches[@]}"
+        koopa::rm --sudo "${matches[@]}"
     done
     return 0
 }

@@ -34,7 +34,7 @@ koopa::debian_install_r_devel() { # {{{1
     # - texlive-plain-generic
     # - xvfb
     # """
-    koopa::mkdir -S '/usr/share/man/man1'
+    koopa::mkdir --sudo '/usr/share/man/man1'
     koopa::debian_apt_add_r_repo
     koopa::debian_apt_get build-dep r-base
     koopa::install_r_devel "$@"

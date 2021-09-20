@@ -28,7 +28,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
     name_fancy="R CRAN ${version} binary package"
     koopa::install_start "$name_fancy"
     # This ensures we're starting fresh with the correct apt repo.
-    koopa::rm -S \
+    koopa::rm --sudo \
         '/etc/R' \
         '/etc/apt/sources.list.d/r.list' \
         '/usr/lib/R/etc'
@@ -36,7 +36,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
     pkgs=('r-base' 'r-base-dev')
     koopa::debian_apt_install "${pkgs[@]}"
     # Ensure we don't have a duplicate site library.
-    koopa::rm -S '/usr/local/lib/R'
+    koopa::rm --sudo '/usr/local/lib/R'
     koopa::configure_r
     koopa::install_success "$name_fancy"
     return 0
@@ -53,7 +53,7 @@ koopa::debian_uninstall_r_cran_binary() { # {{{1
     koopa::uninstall_start "$name_fancy"
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
-    koopa::rm -S '/etc/R' '/usr/lib/R/etc'
+    koopa::rm --sudo '/etc/R' '/usr/lib/R/etc'
     koopa::debian_apt_remove 'r-*'
     koopa::debian_apt_delete_repo 'r'
     koopa::uninstall_success "$name_fancy"

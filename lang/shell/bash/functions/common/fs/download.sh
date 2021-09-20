@@ -133,7 +133,7 @@ koopa::download_refdata_scsig() { # {{{1
         koopa::download "${base_url}/scsig.v${version}.metadata.xls"
         koopa::download "${base_url}/scsig.v${version}.metadata.txt"
     )
-    koopa::sys_set_permissions -r "$prefix"
+    koopa::sys_set_permissions --recursive "$prefix"
     koopa::alert_success 'Download of SCSig was successful.'
     return 0
 }

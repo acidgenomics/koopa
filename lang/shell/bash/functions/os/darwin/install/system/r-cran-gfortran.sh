@@ -47,7 +47,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
-    [[ "$reinstall" -eq 1 ]] && koopa::rm -S "$prefix"
+    [[ "$reinstall" -eq 1 ]] && koopa::rm --sudo "$prefix"
     if [[ -d "$prefix" ]]
     then
         koopa::alert_is_installed "$name_fancy" "$prefix"
@@ -90,7 +90,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     # Ensure the installer doesn't link outside of target prefix.
     if [[ -x "${make_prefix}/bin/${name}" ]]
     then
-        koopa::rm -S "${make_prefix}/bin/${name}"
+        koopa::rm --sudo "${make_prefix}/bin/${name}"
     fi
     koopa::install_success "$name_fancy" "$prefix"
     koopa::alert_restart
@@ -112,7 +112,7 @@ koopa::macos_uninstall_r_cran_gfortran() { # {{{1
         return 0
     fi
     koopa::uninstall_start "$name_fancy" "$prefix"
-    koopa::rm -S "$prefix"
+    koopa::rm --sudo "$prefix"
     koopa::uninstall_success "$name_fancy" "$prefix"
     return 0
 }

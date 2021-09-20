@@ -21,7 +21,7 @@ koopa::macos_install_xcode_clt() { # {{{1
     name_fancy='Xcode CLT'
     koopa::install_start "$name_fancy"
     prefix="$(xcode-select -p 2>/dev/null || true)"
-    [[ -d "$prefix" ]] && koopa::rm -S "$prefix"
+    [[ -d "$prefix" ]] && koopa::rm --sudo "$prefix"
     # This step will prompt interactively, which is annoying. See above for
     # alternative workarounds that are more complicated, but may improve this.
     xcode-select --install
@@ -46,7 +46,7 @@ koopa::macos_uninstall_xcode_clt() { # {{{1
     prefix='/Library/Developer/CommandLineTools'
     koopa::uninstall_start "$name_fancy" "$prefix"
     koopa::assert_is_dir "$prefix"
-    koopa::rm -S "$prefix"
+    koopa::rm --sudo "$prefix"
     koopa::uninstall_success "$name_fancy" "$prefix"
     return 0
 }

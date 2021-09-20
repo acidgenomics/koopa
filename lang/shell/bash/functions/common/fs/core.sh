@@ -93,12 +93,24 @@ koopa::chown() { # {{{1
     # GNU chown.
     # @note Updated 2021-09-20.
     # """
-    local chown pos sudo which_chown
+    local chown dereference pos recursive sudo which_chown
+    dereference=0
+    recursive=0
     sudo=0
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--dereference' | \
+            '-h')
+                dereference=1
+                shift 1
+                ;;
+            '--recursive' | \
+            '-R')
+                recursive=1
+                shift 1
+                ;;
             '--sudo' | \
             '-S')
                 sudo=1
@@ -121,6 +133,14 @@ koopa::chown() { # {{{1
         chown=('sudo' "$which_chown")
     else
         chown=("$which_chown")
+    fi
+    if [[ "$recursive" -eq 1 ]]
+    then
+        chown+=('-R')
+    fi
+    if [[ "$dereference" -eq 1 ]]
+    then
+        chown+=('-h')
     fi
     "${chown[@]}" "$@"
     return 0

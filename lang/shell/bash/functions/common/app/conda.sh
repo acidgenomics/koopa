@@ -446,7 +446,7 @@ exists at '${prefix}'."
             --quiet \
             --yes \
             "$env_string"
-        koopa::sys_set_permissions -r "$prefix"
+        koopa::sys_set_permissions --recursive "$prefix"
         koopa::install_success "$env_name" "$prefix"
     done
     return 0

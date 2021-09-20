@@ -44,5 +44,5 @@ koopa::fedora_uninstall_oracle_instantclient() { # {{{1
     # @note Updated 2021-06-16.
     # """
     koopa::fedora_dnf_remove 'oracle-instantclient*'
-    koopa::rm -S '/etc/ld.so.conf.d/oracle-instantclient.conf'
+    koopa::rm --sudo '/etc/ld.so.conf.d/oracle-instantclient.conf'
 }

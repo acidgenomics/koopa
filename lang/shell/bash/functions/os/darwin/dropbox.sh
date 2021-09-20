@@ -6,10 +6,10 @@ koopa::macos_symlink_dropbox() { # {{{1
     # @note Updated 2020-11-18.
     # """
     koopa::assert_is_admin
-    koopa::rm -S "${HOME}/Desktop"
+    koopa::rm --sudo "${HOME}/Desktop"
     koopa::ln "${HOME}/Dropbox/Desktop" "${HOME}/."
-    koopa::rm -S "${HOME}/Documents"
+    koopa::rm --sudo "${HOME}/Documents"
     koopa::ln "${HOME}/Dropbox/Documents" "${HOME}/."
-    sudo killAll Finder
+    sudo killAll 'Finder'
     return 0
 }

@@ -43,7 +43,7 @@ koopa:::install_go() { # {{{1
     url="https://dl.google.com/${name}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cp -t "$prefix" "${name}/"*
+    koopa::cp --target="$prefix" "${name}/"*
     return 0
 }
 

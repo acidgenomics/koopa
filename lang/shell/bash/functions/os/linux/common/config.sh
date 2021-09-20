@@ -70,7 +70,10 @@ koopa::link_docker() { # {{{1
     etc_source="${distro_prefix}/etc/docker"
     if [[ -d "$etc_source" ]]
     then
-        koopa::ln -S -t '/etc/docker' "${etc_source}/"*
+        koopa::ln \
+            --sudo \
+            --target='/etc/docker' \
+            "${etc_source}/"*
     fi
     sudo rm -frv "$lib_sys"
     sudo mkdir -pv "$lib_n"
@@ -157,7 +160,7 @@ koopa::update_ldconfig() { # {{{1
     for source_file in "${conf_source}/"*".conf"
     do
         dest_file="/etc/ld.so.conf.d/koopa-$(basename "$source_file")"
-        koopa::ln -S "$source_file" "$dest_file"
+        koopa::ln --sudo "$source_file" "$dest_file"
     done
     sudo /usr/sbin/ldconfig || true
     return 0
