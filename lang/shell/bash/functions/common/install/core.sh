@@ -111,61 +111,61 @@ koopa:::install_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --homebrew-opt=*)
+            '--homebrew-opt='*)
                 dict[homebrew_opt]="${1#*=}"
                 shift 1
                 ;;
-            --installer=*)
+            '--installer='*)
                 dict[installer]="${1#*=}"
                 shift 1
                 ;;
-            --link-include-dirs=*)
+            '--link-include-dirs='*)
                 dict[link_include_dirs]="${1#*=}"
                 shift 1
                 ;;
-            --name=*)
+            '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
                 ;;
-            --name-fancy=*)
+            '--name-fancy='*)
                 dict[name_fancy]="${1#*=}"
                 shift 1
                 ;;
-            --no-link)
+            '--no-link')
                 dict[link_app]=0
                 shift 1
                 ;;
-            --no-prefix-check)
+            '--no-prefix-check')
                 dict[prefix_check]=0
                 shift 1
                 ;;
-            --no-shared)
+            '--no-shared')
                 dict[shared]=0
                 shift 1
                 ;;
-            --opt=*)
+            '--opt='*)
                 dict[opt]="${1#*=}"
                 shift 1
                 ;;
-            --platform=*)
+            '--platform='*)
                 dict[platform]="${1#*=}"
                 shift 1
                 ;;
-            --prefix=*)
+            '--prefix='*)
                 dict[prefix]="${1#*=}"
                 shift 1
                 ;;
-            --reinstall | \
-            --force)
+            '--force' | \
+            '--reinstall')
                 dict[reinstall]=1
                 shift 1
                 ;;
-            --version=*)
-                dict[version]="${1#*=}"
+            '--verbose')
+                set -x
                 shift 1
                 ;;
-            --verbose)
-                set -x
+            '--version='*)
+                dict[version]="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -343,19 +343,19 @@ koopa:::uninstall_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --name=*)
+            '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
                 ;;
-            --name-fancy=*)
+            '--name-fancy='*)
                 dict[name_fancy]="${1#*=}"
                 shift 1
                 ;;
-            --no-link)
+            '--no-link')
                 dict[link_app]=0
                 shift 1
                 ;;
-            --prefix=*)
+            '--prefix='*)
                 dict[prefix]="${1#*=}"
                 shift 1
                 ;;
@@ -441,44 +441,44 @@ koopa:::update_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --homebrew-opt=*)
+            '--homebrew-opt='*)
                 dict[homebrew_opt]="${1#*=}"
                 shift 1
                 ;;
-            --name=*)
+            '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
                 ;;
-            --name-fancy=*)
+            '--name-fancy='*)
                 dict[name_fancy]="${1#*=}"
                 shift 1
                 ;;
-            --no-shared)
+            '--no-shared')
                 dict[shared]=0
                 shift 1
                 ;;
-            --opt=*)
+            '--opt='*)
                 dict[opt]="${1#*=}"
                 shift 1
                 ;;
-            --platform=*)
+            '--platform='*)
                 dict[platform]="${1#*=}"
                 shift 1
                 ;;
-            --prefix=*)
+            '--prefix='*)
                 dict[prefix]="${1#*=}"
                 shift 1
                 ;;
-            --updater=*)
+            '--updater='*)
                 dict[updater]="${1#*=}"
                 shift 1
                 ;;
-            --version=*)
-                dict[version]="${1#*=}"
+            '--verbose')
+                set -x
                 shift 1
                 ;;
-            --verbose)
-                set -x
+            '--version='*)
+                dict[version]="${1#*=}"
                 shift 1
                 ;;
             *)

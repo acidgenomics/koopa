@@ -92,7 +92,7 @@ koopa::debian_apt_add_docker_repo() { # {{{1
     arch="$(koopa::arch)"
     # Remap 20.04 LTS to 19.10.
     case "$os_codename" in
-        focal)
+        'focal')
             os_codename='eoan'
             ;;
     esac
@@ -261,10 +261,10 @@ koopa::debian_apt_add_r_repo() { # {{{1
     [[ -z "$version" ]] && version="$(koopa::variable "$name")"
     version="$(koopa::major_minor_version "$version")"
     case "$version" in
-        4.1)
+        '4.1')
             version='4.0'
             ;;
-        3.6)
+        '3.6')
             version='3.5'
             ;;
     esac
@@ -369,13 +369,13 @@ koopa::debian_apt_add_wine_obs_key() { # {{{1
     # Signed by <Emulators@build.opensuse.org>.
     key='31CFB0B65659B5D40DEEC98DDFA175A75104960E'
     case "$os_string" in
-        debian-10)
+        'debian-10')
             subdir='Debian_10'
             ;;
-        ubuntu-18)
+        'ubuntu-18')
             url='xUbuntu_18.04'
             ;;
-        ubuntu-20)
+        'ubuntu-20')
             url='xUbuntu_20.04'
             ;;
         *)
@@ -415,10 +415,10 @@ koopa::debian_apt_add_wine_obs_repo() { # {{{1
 Emulators:/Wine:/Debian"
     os_string="$(koopa::os_string)"
     case "$os_string" in
-        debian-10)
+        'debian-10')
             repo_url="${base_url}/Debian_10/"
             ;;
-        ubuntu-18)
+        'ubuntu-18')
             repo_url="${base_url}/xUbuntu_18.04/"
             ;;
         *)
@@ -498,7 +498,7 @@ koopa::debian_apt_configure_sources() { # {{{1
     declare -A codenames
     declare -A urls
     case "$os_id" in
-        debian)
+        'debian')
             # Can consider including 'backports' here as well.
             repos=('main')
             if [[ "$aws_cdn" -eq 1 ]]
@@ -509,11 +509,11 @@ koopa::debian_apt_configure_sources() { # {{{1
             fi
             urls[security]='http://security.debian.org/debian-security/'
             ;;
-        ubuntu)
+        'ubuntu')
             # Can consider including 'multiverse' here as well.
             repos=('main' 'restricted' 'universe')
             case "$arch" in
-                aarch64)
+                'aarch64')
                     # ARM (e.g. Raspberry Pi).
                     urls[main]='http://ports.ubuntu.com/ubuntu-ports/'
                     urls[security]="${urls[main]}"

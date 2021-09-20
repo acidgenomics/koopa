@@ -26,19 +26,19 @@ koopa::run_rnaeditingindexer() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bam-dir=*)
+            '--bam-dir='*)
                 bam_dir="${1#*=}"
                 shift 1
                 ;;
-            --example)
+            '--example')
                 example=1
                 shift 1
                 ;;
-            --genome=*)
+            '--genome='*)
                 genome="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 output_dir="${1#*=}"
                 shift 1
                 ;;

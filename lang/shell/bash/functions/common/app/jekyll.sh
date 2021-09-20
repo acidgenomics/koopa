@@ -13,11 +13,11 @@ koopa::jekyll_deploy_to_aws() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bucket=*)
+            '--bucket='*)
                 bucket_prefix="${1#*=}"
                 shift 1
                 ;;
-            --distribution-id=*)
+            '--distribution-id='*)
                 distribution_id="${1#*=}"
                 shift 1
                 ;;

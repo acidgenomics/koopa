@@ -29,13 +29,13 @@ __koopa_str_match() { # {{{1
     while getopts 'EFP' opt
     do
         case "$opt" in
-            E)
+            'E')
                 flag='-E'
                 ;;
-            F)
+            'F')
                 flag='-F'
                 ;;
-            P)
+            'P')
                 flag='-P'
                 ;;
             \?)

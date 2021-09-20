@@ -251,10 +251,10 @@ _koopa_homebrew_prefix() { # {{{1
         then
             arch="$(_koopa_arch)"
             case "$arch" in
-                arm*)
+                'arm'*)
                     x='/opt/homebrew'
                     ;;
-                x86*)
+                'x86'*)
                     x='/usr/local'
                     ;;
             esac

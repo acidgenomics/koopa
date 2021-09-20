@@ -72,7 +72,7 @@ koopa:::install_rust_packages() { # {{{1
         fi
         # Edge case handling for package name variants on crates.io.
         case "$pkg" in
-            ripgrep-all)
+            'ripgrep-all')
                 pkg='ripgrep_all'
                 ;;
         esac

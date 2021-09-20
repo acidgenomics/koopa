@@ -68,7 +68,7 @@ koopa::update_rust() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --force)
+            '--force')
                 force=1
                 shift 1
                 ;;

@@ -38,7 +38,7 @@ koopa::download() { # {{{1
     koopa::is_qemu && dl='wget'
     dl_args=()
     case "$dl" in
-        curl)
+        'curl')
             dl_args+=(
                 '--disable'  # Ignore the '~/.curlrc' file. Must come first!
                 '--create-dirs'
@@ -49,7 +49,7 @@ koopa::download() { # {{{1
                 '--show-error'
             )
             ;;
-        wget)
+        'wget')
             dl_args+=(
                 "--output-document=${file}"
                 '--no-verbose'
@@ -189,15 +189,15 @@ koopa::ftp_mirror() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --dir=*)
+            '--dir='*)
                 dir="${1#*=}"
                 shift 1
                 ;;
-            --host=*)
+            '--host='*)
                 host="${1#*=}"
                 shift 1
                 ;;
-            --user=*)
+            '--user='*)
                 user="${1#*=}"
                 shift 1
                 ;;

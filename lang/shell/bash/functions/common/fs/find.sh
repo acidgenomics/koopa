@@ -19,27 +19,27 @@ koopa::find() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --glob=*)
+            '--glob='*)
                 glob="${1#*=}"
                 shift 1
                 ;;
-            --max-depth=*)
+            '--max-depth='*)
                 max_depth="${1#*=}"
                 shift 1
                 ;;
-            --min-depth=*)
+            '--min-depth='*)
                 min_depth="${1#*=}"
                 shift 1
                 ;;
-            --prefix=*)
+            '--prefix='*)
                 prefix="${1#*=}"
                 shift 1
                 ;;
-            --print0)
+            '--print0')
                 print0=1
                 shift 1
                 ;;
-            --type=*)
+            '--type='*)
                 type="${1#*=}"
                 shift 1
                 ;;

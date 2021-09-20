@@ -125,45 +125,47 @@ koopa::linux_configure_system() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --verbose)
+            '--verbose')
                 set -o xtrace
                 shift 1
                 ;;
             # Mode -------------------------------------------------------------
-            --mode=*)
+            '--mode='*)
                 mode="${1#*=}"
                 shift 1
                 ;;
-            --all|--full)
+            '--all' | \
+            '--full')
                 mode='full'
                 shift 1
                 ;;
-            --base-image)
+            '--base-image')
                 mode='base-image'
                 shift 1
                 ;;
-            --bioconductor)
+            '--bioconductor')
                 mode='bioconductor'
                 shift 1
                 ;;
-            --default|--recommended)
+            '--default' | \
+            '--recommended')
                 mode='default'
                 shift 1
                 ;;
-            --minimal)
+            '--minimal')
                 mode='minimal'
                 shift 1
                 ;;
             # Other variables --------------------------------------------------
-            --data-disk=*)
+            '--data-disk='*)
                 dict[data_disk_prefix]="${1#*=}"
                 shift 1
                 ;;
-            --python-version=*)
+            '--python-version='*)
                 dict[python_version]="${1#*=}"
                 shift 1
                 ;;
-            --r-version=*)
+            '--r-version='*)
                 dict[r_version]="${1#*=}"
                 shift 1
                 ;;
@@ -175,12 +177,12 @@ koopa::linux_configure_system() { # {{{1
     done
     # Automatically set internal variables, based on user input.
     case "$mode" in
-        base-image)
+        'base-image')
             # > dict[install_bash]=1
             # > dict[install_zsh]=1
             dict[install_base_flags]='--base-image'
             ;;
-        full)
+        'full')
             dict[install_aspera_connect]=1
             dict[install_autoconf]=1
             dict[install_automake]=1
@@ -249,7 +251,7 @@ koopa::linux_configure_system() { # {{{1
             dict[install_zsh]=1
             dict[which_conda]='anaconda'
             ;;
-        recommended)
+        'recommended')
             dict[install_aws_cli]=1
             dict[install_conda]=1
             dict[install_homebrew]=1
@@ -262,9 +264,9 @@ koopa::linux_configure_system() { # {{{1
             dict[install_tmux]=1
             dict[install_vim]=1
             ;;
-        bioconductor | \
-        default | \
-        minimal)
+        'bioconductor' | \
+        'default' | \
+        'minimal')
             ;;
         *)
             koopa::stop 'Invalid mode.'

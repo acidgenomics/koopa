@@ -26,11 +26,11 @@ koopa::generate_ssh_key() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --comment=*)
+            '--comment='*)
                 comment="${1#*=}"
                 shift 1
                 ;;
-            --key-name=*)
+            '--key-name='*)
                 key_name="${1#*=}"
                 shift 1
                 ;;

@@ -19,7 +19,7 @@ koopa:::linux_install_docker_credential_pass() { # {{{1
     name='docker-credential-pass'
     arch="$(koopa::arch)"
     case "$arch" in
-        x86_64)
+        'x86_64')
             arch2='amd64'
             ;;
         *)

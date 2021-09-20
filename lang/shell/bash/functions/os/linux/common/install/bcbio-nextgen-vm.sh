@@ -30,7 +30,7 @@ koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
     arch="$(koopa::arch)"
     # ARM is not yet supported. Check for Intel x86.
     case "$arch" in
-        x86_64)
+        'x86_64')
             ;;
         *)
             koopa::stop "Architecture not supported: '${arch}'."

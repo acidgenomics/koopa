@@ -26,7 +26,7 @@ koopa:::linux_install_bcbio_nextgen() { # {{{1
     install_dir="${prefix}/install"
     tools_dir="${prefix}/tools"
     case "$version" in
-        development)
+        'development')
             upgrade='development'
             ;;
         *)

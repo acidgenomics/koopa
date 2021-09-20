@@ -22,11 +22,11 @@ koopa:::salmon_index() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --fasta-file=*)
+            '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
@@ -112,39 +112,39 @@ koopa:::salmon_quant_paired_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bootstraps=*)
+            '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-r1=*)
+            '--fastq-r1='*)
                 dict[fastq_r1]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-r2=*)
+            '--fastq-r2='*)
                 dict[fastq_r2]="${1#*=}"
                 shift 1
                 ;;
-            --gff-file=*)
+            '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
-            --index-dir=*)
+            '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
-            --lib-type=*)
+            '--lib-type='*)
                 dict[lib_type]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --r1-tail=*)
+            '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
-            --r2-tail=*)
+            '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
@@ -209,31 +209,31 @@ koopa:::salmon_quant_single_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bootstraps=*)
+            '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
-            --fastq=*)
+            '--fastq='*)
                 dict[fastq]="${1#*=}"
                 shift 1
                 ;;
-            --gff-file=*)
+            '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
-            --index-dir=*)
+            '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
-            --lib-type=*)
+            '--lib-type='*)
                 dict[lib_type]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --tail=*)
+            '--tail='*)
                 dict[tail]="${1#*=}"
                 shift 1
                 ;;
@@ -299,31 +299,31 @@ koopa::run_salmon_paired_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bootstraps=*)
+            '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
                 ;;
-            --fasta-file=*)
+            '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-dir=*)
+            '--fastq-dir='*)
                 dict[fastq_dir]="${1#*=}"
                 shift 1
                 ;;
-            --gff-file=*)
+            '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --r1-tail=*)
+            '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
-            --r2-tail=*)
+            '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
@@ -428,27 +428,27 @@ koopa::run_salmon_single_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --bootstraps=*)
+            '--bootstraps='*)
                 bootstraps="${1#*=}"
                 shift 1
                 ;;
-            --fasta-file=*)
+            '--fasta-file='*)
                 fasta_file="${1#*=}"
                 shift 1
                 ;;
-            --fastq-dir=*)
+            '--fastq-dir='*)
                 fastq_dir="${1#*=}"
                 shift 1
                 ;;
-            --gff-file=*)
+            '--gff-file='*)
                 gff_file="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 output_dir="${1#*=}"
                 shift 1
                 ;;
-            --tail=*)
+            '--tail='*)
                 tail="${1#*=}"
                 shift 1
                 ;;

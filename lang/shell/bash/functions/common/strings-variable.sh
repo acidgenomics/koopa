@@ -106,11 +106,11 @@ koopa::ip_address() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --local)
+            '--local')
                 type='local'
                 shift 1
                 ;;
-            --public)
+            '--public')
                 type='public'
                 shift 1
                 ;;
@@ -120,10 +120,10 @@ koopa::ip_address() { # {{{1
         esac
     done
     case "$type" in
-        local)
+        'local')
             koopa::local_ip_address
             ;;
-        public)
+        'public')
             koopa::public_ip_address
             ;;
     esac

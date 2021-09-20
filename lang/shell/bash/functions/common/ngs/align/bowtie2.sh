@@ -20,27 +20,27 @@ koopa:::bowtie2_align() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --fastq-r1=*)
+            '--fastq-r1='*)
                 dict[fastq_r1]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-r2=*)
+            '--fastq-r2='*)
                 dict[fastq_r2]="${1#*=}"
                 shift 1
                 ;;
-            --index-base=*)
+            '--index-base='*)
                 dict[index_base]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --r1-tail=*)
+            '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
-            --r2-tail=*)
+            '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
@@ -103,11 +103,11 @@ koopa:::bowtie2_index() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --fasta-file=*)
+            '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
@@ -161,23 +161,23 @@ koopa::run_bowtie2() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            --fasta-file=*)
+            '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            --fastq-dir=*)
+            '--fastq-dir='*)
                 dict[fastq_dir]="${1#*=}"
                 shift 1
                 ;;
-            --output-dir=*)
+            '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
-            --r1-tail=*)
+            '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
-            --r2-tail=*)
+            '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
