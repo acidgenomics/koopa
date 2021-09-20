@@ -12,16 +12,14 @@ koopa::cd() { # {{{1
     return 0
 }
 
-# FIXME Is this redundant with koopa::sys_chgrp?
 koopa::chgrp() { # {{{1
     # """
     # GNU chgrp.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-20.
     # """
     local chgrp pos sudo which_chgrp
     sudo=0
     pos=()
-    # FIXME Should we rework this using optarg?
     while (("$#"))
     do
         case "$1" in
@@ -30,7 +28,9 @@ koopa::chgrp() { # {{{1
                 sudo=1
                 shift 1
                 ;;
-
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
             *)
                 pos+=("$1")
                 shift 1
@@ -53,18 +53,21 @@ koopa::chgrp() { # {{{1
 koopa::chmod() { # {{{1
     # """
     # GNU chmod.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-20.
     # """
     local chmod pos sudo which_chmod
     sudo=0
     pos=()
-    # FIXME Should we rework this using optarg?
     while (("$#"))
     do
         case "$1" in
+            '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -88,18 +91,21 @@ koopa::chmod() { # {{{1
 koopa::chown() { # {{{1
     # """
     # GNU chown.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-20.
     # """
     local chown pos sudo which_chown
     sudo=0
     pos=()
-    # FIXME Should we rework this using optarg?
     while (("$#"))
     do
         case "$1" in
+            '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -123,45 +129,56 @@ koopa::chown() { # {{{1
 koopa::cp() { # {{{1
     # """
     # Hardened version of GNU coreutils copy.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-09-20.
     #
     # getopts info:
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
-    local OPTIND cp cp_args mkdir rm sudo symlink target_dir
-    local target_parent which_cp
+    local cp cp_args mkdir rm pos sudo symlink target_dir target_parent which_cp
     sudo=0
     symlink=0
     target_dir=''
-    # FIXME Rework using our standard argparse approach.
-    OPTIND=1
-    while getopts 'Sst:' opt
+    pos=()
+    while (("$#"))
     do
-        case "$opt" in
-            'S')
+        case "$1" in
+            '--sudo' | \
+            '-S')
                 sudo=1
+                shift 1
                 ;;
-            's')
+            '--symlink' | \
+            '-s')
                 symlink=1
+                shift 1
                 ;;
-            't')
-                target_dir="$OPTARG"
+            '--target='*)
+                target_dir="${1#*=}"
+                shift 1
                 ;;
-            \?)
-                koopa::invalid_arg "$opt"
+            '-t')
+                target_dir="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    shift "$((OPTIND-1))"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     which_cp="$(koopa::locate_cp)"
     if [[ "$sudo" -eq 1 ]]
     then
         # NOTE Don't run sudo check here, can slow down functions.
         cp=('sudo' "$which_cp")
-        mkdir=('koopa::mkdir' '-S')
-        rm=('koopa::rm' '-S')
+        mkdir=('koopa::mkdir' '--sudo')
+        rm=('koopa::rm' '--sudo')
     else
         cp=("$which_cp")
         mkdir=('koopa::mkdir')
@@ -206,37 +223,47 @@ koopa::df() { # {{{1
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly with GNU ln.
-    # @note Updated 2021-05-222.
+    # @note Updated 2021-09-20.
     # """
-    local OPTIND ln ln_args mkdir rm source_file target_file target_dir
+    local ln ln_args mkdir pos rm source_file target_file target_dir
     local target_parent which_ln
     sudo=0
     target_dir=''
-    # FIXME Rework using our standard argparse approach.
-    OPTIND=1
-    while getopts 'St:' opt
+    pos=()
+    while (("$#"))
     do
-        case "$opt" in
-            'S')
+        case "$1" in
+            '--sudo' | \
+            '-S')
                 sudo=1
+                shift 1
                 ;;
-            't')
-                target_dir="$OPTARG"
+            '--target='*)
+                target_dir="${1#*=}"
+                shift 1
                 ;;
-            \?)
-                koopa::invalid_arg "$opt"
+            '-t')
+                target_dir="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    shift "$((OPTIND-1))"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     which_ln="$(koopa::locate_ln)"
     if [[ "$sudo" -eq 1 ]]
     then
         # NOTE Don't run sudo check here, can slow down functions.
         ln=('sudo' "$which_ln")
-        mkdir=('koopa::mkdir' '-S')
-        rm=('koopa::rm' '-S')
+        mkdir=('koopa::mkdir' '--sudo')
+        rm=('koopa::rm' '--sudo')
     else
         ln=("$which_ln")
         mkdir=('koopa::mkdir')
@@ -265,23 +292,29 @@ koopa::ln() { # {{{1
 koopa::mkdir() { # {{{1
     # """
     # Create directories with parents automatically.
-    # @note Updated 2021-05-21.
-    local OPTIND mkdir sudo which_mkdir
+    # @note Updated 2021-09-20.
+    # """
+    local mkdir pos sudo which_mkdir
     sudo=0
-    # FIXME Rework using our standard argparse approach.
-    OPTIND=1
-    while getopts 'S' opt
+    pos=()
+    while (("$#"))
     do
-        case "$opt" in
-            'S')
+        case "$1" in
+            '--sudo' | \
+            '-S')
                 sudo=1
+                shift 1
                 ;;
-            \?)
-                koopa::invalid_arg "$opt"
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    shift "$((OPTIND-1))"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     which_mkdir="$(koopa::locate_mkdir)"
     if [[ "$sudo" -eq 1 ]]
@@ -298,7 +331,7 @@ koopa::mkdir() { # {{{1
 koopa::mv() { # {{{1
     # """
     # Move a file or directory with GNU mv.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-09-20.
     #
     # This function works on 1 file or directory at a time.
     # It ensures that the target parent directory exists automatically.
@@ -307,35 +340,45 @@ koopa::mv() { # {{{1
     # - -T: no-target-directory
     # - --strip-trailing-slashes
     # """
-    local OPTIND mkdir mv mv_args rm source_file sudo target_file
+    local mkdir mv mv_args pos rm source_file sudo target_file
     local target_parent which_mv
     sudo=0
     target_dir=''
-    # FIXME Rework using our standard argparse approach.
-    OPTIND=1
-    while getopts 'St:' opt
+    pos=()
+    while (("$#"))
     do
-        case "$opt" in
-            'S')
+        case "$1" in
+            '--sudo' | \
+            '-S')
                 sudo=1
+                shift 1
                 ;;
-            't')
-                target_dir="$OPTARG"
+            '--target='*)
+                target_dir="${1#*=}"
+                shift 1
                 ;;
-            \?)
-                koopa::invalid_arg "$opt"
+            '-t')
+                target_dir="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    shift "$((OPTIND-1))"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     which_mv="$(koopa::locate_mv)"
     if [[ "$sudo" -eq 1 ]]
     then
         # NOTE Don't run sudo check here, can slow down functions.
-        mkdir=('koopa::mkdir' '-S')
+        mkdir=('koopa::mkdir' '--sudo')
         mv=('sudo' "$which_mv")
-        rm=('koopa::rm' '-S')
+        rm=('koopa::rm' '--sudo')
     else
         mkdir=('koopa::mkdir')
         mv=("$which_mv")
@@ -364,28 +407,37 @@ koopa::mv() { # {{{1
 koopa::parent_dir() { # {{{1
     # """
     # Get the parent directory path.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-09-20.
     #
     # This requires file to exist and resolves symlinks.
     # """
-    local OPTIND cd_tail file n parent sed 
+    local cd_tail file n parent pos sed
     sed="$(koopa::locate_sed)"
     cd_tail=''
     n=1
-    # FIXME Rework using our standard argparse approach.
-    OPTIND=1
-    while getopts 'n:' opt
+    pos=()
+    while (("$#"))
     do
-        case "$opt" in
-            'n')
-                n="${OPTARG}"
+        case "$1" in
+            '--num='*)
+                n="${1#*=}"
+                shift 1
                 ;;
-            \?)
-                koopa::invalid_arg "$opt"
+            '-n')
+                n="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    shift "$((OPTIND-1))"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
     [[ "$n" -ge 1 ]] || n=1
     if [[ "$n" -ge 2 ]]
     then
@@ -409,29 +461,34 @@ koopa::parent_dir() { # {{{1
 koopa::relink() { # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # @note Updated 2020-07-07.
+    # @note Updated 2020-09-20.
     # """
-    local OPTIND dest_file ln rm source_file sudo
+    local dest_file ln pos rm source_file sudo
     sudo=0
-    # FIXME Rework using our standard argparse approach.
-    OPTIND=1
-    while getopts 'S' opt
+    pos=()
+    while (("$#"))
     do
-        case "$opt" in
-            'S')
+        case "$1" in
+            '--sudo' | \
+            '-S')
                 sudo=1
+                shift 1
                 ;;
-            \?)
-                koopa::invalid_arg "$opt"
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    shift "$((OPTIND-1))"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 2
     if [[ "$sudo" -eq 1 ]]
     then
-        ln=('koopa::ln' '-S')
-        rm=('koopa::rm' '-S')
+        ln=('koopa::ln' '--sudo')
+        rm=('koopa::rm' '--sudo')
     else
         ln=('koopa::ln')
         rm=('koopa::rm')
@@ -449,24 +506,29 @@ koopa::relink() { # {{{1
 koopa::rm() { # {{{1
     # """
     # Remove files/directories quietly with GNU rm.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-20.
     # """
-    local OPTIND rm sudo which_rm
+    local pos rm sudo which_rm
     sudo=0
-    # FIXME Rework using our standard argparse approach.
-    OPTIND=1
-    while getopts 'S' opt
+    pos=()
+    while (("$#"))
     do
-        case "$opt" in
-            'S')
+        case "$1" in
+            '--sudo' | \
+            '-S')
                 sudo=1
+                shift 1
                 ;;
-            \?)
-                koopa::invalid_arg "$opt"
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    shift "$((OPTIND-1))"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     which_rm="$(koopa::locate_rm)"
     if [[ "$sudo" -eq 1 ]]
