@@ -3,7 +3,7 @@
 koopa::generate_ssh_key() { # {{{1
     # """
     # Generate SSH key.
-    # @note Updated 2021-04-26.
+    # @note Updated 2021-09-21.
     #
     # This script is called inside 'configure-vm', so don't use assert here.
     #
@@ -26,21 +26,35 @@ koopa::generate_ssh_key() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--comment='*)
                 comment="${1#*=}"
                 shift 1
+                ;;
+            '--comment')
+                comment="${2:?}"
+                shift 2
                 ;;
             '--key-name='*)
                 key_name="${1#*=}"
                 shift 1
                 ;;
+            '--key-name')
+                key_name="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
         esac
     done
     file="${HOME:?}/.ssh/${key_name}"
-    [[ -f "$file" ]] && return 0
+    if [[ -f "$file" ]]
+    then
+        koopa::alert_note "SSH key exists at '${file}'."
+        return 0
+    fi
     flags=(
         '-C' "$comment"
         '-N' ''
