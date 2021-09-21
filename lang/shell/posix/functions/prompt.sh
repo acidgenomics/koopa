@@ -122,6 +122,9 @@ _koopa_prompt_git() { # {{{1
     # """
     local git_branch git_status
     [ "$#" -eq 0 ] || return 1
+    _koopa_print 'FIXME'
+    return 0
+
     _koopa_is_git_repo || return 0
     git_branch="$(_koopa_git_branch)"
     if _koopa_is_git_repo_clean
