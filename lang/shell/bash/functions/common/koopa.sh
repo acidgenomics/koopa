@@ -45,6 +45,7 @@ koopa:::koopa_configure() { # {{{1
         koopa::stop "Missing argument: 'koopa configure <ARG>...'."
     fi
     shift 1
+    echo 'FIXME AAA'
     koopa:::run_function "configure-${name}" "$@"
     return 0
 }

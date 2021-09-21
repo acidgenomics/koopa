@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Now arguments aren't passing through correctly from
+# 'koopa configure system --base-image --verbose' call...argh.
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
