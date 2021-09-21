@@ -3,7 +3,7 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2021-03-25.
+    # @note Updated 2021-09-21.
     #
     # Intended primarily for virtual machine and Docker image builds.
     # """
@@ -125,15 +125,40 @@ koopa::linux_configure_system() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            '--verbose')
-                set -o xtrace
+            # Key-value pairs --------------------------------------------------
+            '--data-disk='*)
+                dict[data_disk_prefix]="${1#*=}"
                 shift 1
                 ;;
-            # Mode -------------------------------------------------------------
+            '--data-disk')
+                dict[data_disk_prefix]="${2:?}"
+                shift 2
+                ;;
             '--mode='*)
                 mode="${1#*=}"
                 shift 1
                 ;;
+            '--mode')
+                mode="${2:?}"
+                shift 2
+                ;;
+            '--python-version='*)
+                dict[python_version]="${1#*=}"
+                shift 1
+                ;;
+            '--python-version')
+                dict[python_version]="${2:?}"
+                shift 2
+                ;;
+            '--r-version='*)
+                dict[r_version]="${1#*=}"
+                shift 1
+                ;;
+            '--r-version')
+                dict[r_version]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
             '--all' | \
             '--full')
                 mode='full'
@@ -156,20 +181,11 @@ koopa::linux_configure_system() { # {{{1
                 mode='minimal'
                 shift 1
                 ;;
-            # Other variables --------------------------------------------------
-            '--data-disk='*)
-                dict[data_disk_prefix]="${1#*=}"
+            '--verbose')
+                set -o xtrace
                 shift 1
                 ;;
-            '--python-version='*)
-                dict[python_version]="${1#*=}"
-                shift 1
-                ;;
-            '--r-version='*)
-                dict[r_version]="${1#*=}"
-                shift 1
-                ;;
-            # Invalid arg trap -------------------------------------------------
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
