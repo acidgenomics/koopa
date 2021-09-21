@@ -52,7 +52,7 @@ _koopa_posix_header() { # {{{1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         echo 'FIXME AAA'
-        _koopa_activate_conda || return 1
+        # _koopa_activate_conda || return 1
         echo 'FIXME BBB'
          _koopa_activate_emacs || return 1
         echo 'FIXME CCC'
