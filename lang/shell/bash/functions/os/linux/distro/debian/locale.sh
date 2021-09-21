@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this, using new approach employed in Debian 11 Docker image.
-
 koopa::debian_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.
@@ -15,36 +13,25 @@ koopa::debian_set_locale() { # {{{1
     # @seealso
     # - https://wiki.debian.org/Locale
     # """
-    local charset charset2 country lang lang_string file string
+    local charset country lang lang_string file
     koopa::assert_is_admin
+    koopa::add_to_path_start '/usr/sbin'
     koopa::assert_is_installed \
-        'grep' \
+        'dpkg-reconfigure' \
         'locale' \
-        '/usr/sbin/locale-gen' \
-        '/usr/sbin/update-locale'
-    # Consider allowing the user to change these in a future release.
+        'locale-gen' \
+        'update-locale' 
     lang='en'
     country='US'
     charset='UTF-8'
-    # Inform the user about the locale that will be set.
-    # e.g. 'en_US.UTF-8'.
     lang_string="${lang}_${country}.${charset}"
     koopa::alert "Setting locale to '${lang_string}'."
-    # e.g. 'en_US.UTF-8 UTF-8'.
-    string="${lang_string} ${charset}"
     file='/etc/locale.gen'
-    koopa::assert_is_file "$file"
-    koopa::sudo_append_string "$string" "$file"
-    # e.g. convert 'UTF-8' to 'utf8'.
-    charset2="$(koopa::lowercase "$charset")"
-    charset2="$(koopa::gsub '-' '' "$charset2")"
-    # e.g. 'en_US.utf8'.
-    string="${lang}_${country}.${charset2}"
-    sudo /usr/sbin/locale-gen "$string"
-    # e.g. 'en_US.UTF-8'.
-    string="${lang}_${country}.${charset}"
-    sudo /usr/sbin/update-locale LANG="$string"
-    locale
+    koopa::sudo_write_string "${lang_string} ${charset}" "$file"
+    sudo locale-gen --purge
+    sudo dpkg-reconfigure --frontend='noninteractive' locales
+    sudo update-locale LANG="$lang_string"
+    locale -a
     koopa::alert_success "Locale is defined as '${lang_string}'."
     return 0
 }
