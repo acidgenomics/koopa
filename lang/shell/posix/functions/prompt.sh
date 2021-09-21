@@ -112,7 +112,7 @@ _koopa_prompt_conda() { # {{{1
     return 0
 }
 
-# FIXME This is erroring out inside of Debian 11 Docker base image.
+# FIXME The _koopa_is_git_repo_clean check is failing on Debian 11.
 _koopa_prompt_git() { # {{{1
     # """
     # Return the current git branch, if applicable.
@@ -124,14 +124,12 @@ _koopa_prompt_git() { # {{{1
     [ "$#" -eq 0 ] || return 1
     _koopa_is_git_repo || return 0
     git_branch="$(_koopa_git_branch)"
-
-    git_status=' FIXME'
-    # > if _koopa_is_git_repo_clean
-    # > then
-    # >     git_status=''
-    # > else
-    # >     git_status='*'
-    # > fi
+    if _koopa_is_git_repo_clean
+    then
+        git_status=''
+    else
+        git_status='*'
+    fi
     _koopa_print " ${git_branch}${git_status}"
     return 0
 }
