@@ -329,7 +329,7 @@ koopa:::koopa_uninstall_denylist() { # {{{1
 koopa:::koopa_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-09-21.
     # """
     local app app_args apps denylist pos
     app_args=()
@@ -347,7 +347,8 @@ koopa:::koopa_update() { # {{{1
             '--fast')
                 koopa::defunct 'koopa update'
                 ;;
-            '--source-ip='*)
+            '--source-ip='* | \
+            '--source-ip')
                 koopa::defunct 'koopa configure system --source-ip=SOURCE_IP'
                 ;;
             '--system')
