@@ -182,6 +182,18 @@ koopa::locate_brew() { # {{{1
     koopa:::locate_app 'brew'
 }
 
+koopa::locate_bundle() { # {{{1
+    # """
+    # Locate Ruby bundler (bundle).
+    # @note Updated 2021-09-21.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='ruby' \
+        --koopa-opt='ruby-packages' \
+        --name='bundle'
+}
+
 koopa::locate_bunzip2() { # {{{1
     # """
     # Locate bunzip2.
