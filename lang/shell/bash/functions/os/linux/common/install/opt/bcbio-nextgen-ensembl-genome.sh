@@ -3,7 +3,7 @@
 koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     # """
     # Install bcbio-nextgen genome from Ensembl.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-09-21.
     #
     # This script can fail on a clean bcbio install if this file is missing:
     # 'install/galaxy/tool-data/sam_fa_indices.loc'.
@@ -52,30 +52,56 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--build='*)
                 build="${1#*=}"
                 shift 1
+                ;;
+            '--build')
+                build="${2:?}"
+                shift 2
                 ;;
             '--fasta='*)
                 fasta="${1#*=}"
                 shift 1
                 ;;
+            '--fasta')
+                fasta="${2:?}"
+                shift 2
+                ;;
             '--gtf='*)
                 gtf="${1#*=}"
                 shift 1
+                ;;
+            '--gtf')
+                gtf="${2:?}"
+                shift 2
                 ;;
             '--indexes='*)
                 indexes="${1#*=}"
                 shift 1
                 ;;
+            '--indexes')
+                indexes="${2:?}"
+                shift 2
+                ;;
             '--organism='*)
                 organism="${1#*=}"
                 shift 1
+                ;;
+            '--organism')
+                organism="${2:?}"
+                shift 2
                 ;;
             '--release='*)
                 release="${1#*=}"
                 shift 1
                 ;;
+            '--release')
+                release="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
