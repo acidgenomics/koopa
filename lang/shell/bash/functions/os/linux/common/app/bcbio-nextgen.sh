@@ -3,7 +3,7 @@
 koopa::linux_bcbio_nextgen_run_tests() { # {{{1
     # """
     # Run bcbio-nextgen unit tests.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-09-21.
     #
     # See issues regarding unit tests inside Docker images:
     # - https://github.com/bcbio/bcbio-nextgen/issues/3371
@@ -18,18 +18,32 @@ koopa::linux_bcbio_nextgen_run_tests() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--git-dir='*)
                 dict[git_dir]="${1#*=}"
                 shift 1
+                ;;
+            '--git-dir')
+                dict[git_dir]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
             '--tools-dir='*)
                 dict[tools_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--tools-dir')
+                dict[tools_dir]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -63,7 +77,7 @@ koopa::linux_bcbio_nextgen_run_tests() { # {{{1
 koopa::linux_patch_bcbio_nextgen_devel() { # {{{1
     # """
     # Patch bcbio-nextgen development install.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-09-21
     # """
     local cache_files dict name_fancy tee
     koopa::assert_has_no_envs
@@ -77,18 +91,32 @@ koopa::linux_patch_bcbio_nextgen_devel() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bcbio-python='*)
                 dict[bcbio_python]="${1#*=}"
                 shift 1
+                ;;
+            '--bcbio-python')
+                dict[bcbio_python]="${2:?}"
+                shift 2
                 ;;
             '--git-dir='*)
                 dict[git_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--git-dir')
+                dict[git_dir]="${2:?}"
+                shift 2
+                ;;
             '--install-dir='*)
                 dict[install_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--install-dir')
+                dict[install_dir]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -107,9 +135,9 @@ koopa::linux_patch_bcbio_nextgen_devel() { # {{{1
     koopa::assert_is_dir "${dict[install_dir]}"
     koopa::h1 "Patching ${name_fancy} installation at '${dict[install_dir]}'."
     koopa::dl  \
-        'git_dir' "${dict[git_dir]}" \
-        'bcbio_python' "${dict[bcbio_python]}" \
-        'install_dir' "${dict[install_dir]}"
+        'Git dir' "${dict[git_dir]}" \
+        'Install dir' "${dict[install_dir]}" \
+        'bcbio_python' "${dict[bcbio_python]}"
     koopa::alert "Removing Python cache in '${dict[git_dir]}'."
     readarray -t cache_files <<< "$( \
         koopa::find \
