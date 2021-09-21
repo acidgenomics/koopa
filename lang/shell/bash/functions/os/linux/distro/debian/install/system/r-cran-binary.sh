@@ -3,7 +3,7 @@
 koopa::debian_install_r_cran_binary() { # {{{1
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-09-21.
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/README.html
@@ -14,10 +14,16 @@ koopa::debian_install_r_cran_binary() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--version='*)
                 version="${1#*=}"
                 shift 1
                 ;;
+            '--version')
+                version="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
