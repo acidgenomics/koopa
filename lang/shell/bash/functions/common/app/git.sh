@@ -3,7 +3,7 @@
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-21.
     # """
     local branch default_branch dir dirs git origin pos repo repos sort
     branch=''
@@ -12,14 +12,24 @@ koopa::git_checkout_recursive() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--branch='*)
                 branch="${1#*=}"
                 shift 1
+                ;;
+            '--branch')
+                branch="${2:?}"
+                shift 2
                 ;;
             '--origin='*)
                 origin="${1#*=}"
                 shift 1
                 ;;
+            '--origin')
+                origin="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -80,7 +90,7 @@ koopa::git_checkout_recursive() { # {{{1
 koopa::git_clone() { # {{{1
     # """
     # Quietly clone a git repository.
-    # @note Updated 2021-06-08.
+    # @note Updated 2021-09-21.
     # """
     local branch git git_args pos repo target
     koopa::assert_has_args_ge "$#" 2
@@ -88,10 +98,16 @@ koopa::git_clone() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--branch='*)
                 branch="${1#*=}"
                 shift 1
                 ;;
+            '--branch')
+                branch="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -169,7 +185,7 @@ koopa::git_default_branch() { # {{{1
 koopa::git_init_remote() { # {{{1
     # """
     # Initialize a remote Git repository.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-09-21.
     # """
     local branch git origin
     branch='main'
@@ -177,14 +193,24 @@ koopa::git_init_remote() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--branch='*)
                 branch="${1#*=}"
                 shift 1
+                ;;
+            '--branch')
+                branch="${2:?}"
+                shift 2
                 ;;
             '--origin='*)
                 origin="${1#*=}"
                 shift 1
                 ;;
+            '--origin')
+                origin="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
