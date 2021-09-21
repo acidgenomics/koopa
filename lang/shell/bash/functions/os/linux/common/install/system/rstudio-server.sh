@@ -3,7 +3,7 @@
 koopa:::linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-09-21.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
     #
@@ -42,22 +42,48 @@ koopa:::linux_install_rstudio_server() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--file-ext='*)
                 dict[file_ext]="${1#*=}"
                 shift 1
+                ;;
+            '--file-ext')
+                dict[file_ext]="${2:?}"
+                shift 2
                 ;;
             '--install='*)
                 dict[install]="${1#*=}"
                 shift 1
                 ;;
+            '--install')
+                dict[install]="${2:?}"
+                shift 2
+                ;;
             '--os-codename='*)
                 dict[os_codename]="${1#*=}"
                 shift 1
+                ;;
+            '--os-codename')
+                dict[os_codename]="${2:?}"
+                shift 2
                 ;;
             '--platform='*)
                 dict[platform]="${1#*=}"
                 shift 1
                 ;;
+            '--platform')
+                dict[platform]="${2:?}"
+                shift 2
+                ;;
+            '--version='*)
+                dict[version]="${1#*=}"
+                shift 1
+                ;;
+            '--version')
+                dict[version]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
            ' --pro' | \
             '--workbench')
                 dict[workbench]=1
@@ -67,10 +93,7 @@ koopa:::linux_install_rstudio_server() { # {{{1
                 dict[reinstall]=1
                 shift 1
                 ;;
-            '--version='*)
-                dict[version]="${1#*=}"
-                shift 1
-                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
