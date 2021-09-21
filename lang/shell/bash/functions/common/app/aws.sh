@@ -467,10 +467,6 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     return 0
 }
 
-# FIXME Allow the user to define the profile.
-# FIXME Tighten up the required arguments here.
-# FIXME Only allow two positional arguments.
-# FIXME Allow the user to specify named arguments.
 koopa::aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
@@ -495,21 +491,79 @@ koopa::aws_s3_sync() { # {{{1
     # - *.Rproj directories.
     # - *.swp files (from vim).
     # """
-    local aws profile
+    local aws dict exclude_args pos sync_args
     koopa::assert_has_args "$#"
     aws="$(koopa::locate_aws)"
-    profile="${AWS_PROFILE:-default}"
-    # FIXME Allow the user to set profile via flag here.
-    "$aws" --profile="$profile" \
+    declare -A dict=(
+        [profile]="${AWS_PROFILE:-default}"
+    )
+    # Include common file system and Git cruft that we don't want on S3.
+    exclude_args=(
+        '--exclude=*.Rproj/*'
+        '--exclude=*.swp'
+        '--exclude=*.tmp'
+        '--exclude=.*'
+        '--exclude=.DS_Store'
+        '--exclude=.Rproj.user/*'
+        '--exclude=._*'
+        '--exclude=.git/*'
+    )
+    pos=()
+    sync_args=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--exclude='*)
+                exclude_args+=("${1#*=}")
+                shift 1
+                ;;
+            '--profile='*)
+                dict[profile]="${1#*=}"
+                shift 1
+                ;;
+            '--source-prefix='*)
+                dict[source_prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--target-prefix='*)
+                dict[target_prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--delete' | \
+            '--dryrun' | \
+            '--exact-timestamps' | \
+            '--follow-symlinks' | \
+            '--no-follow-symlinks' | \
+            '--no-progress' | \
+            '--only-show-errors' | \
+            '--size-only' | \
+            '--quiet')
+                sync_args+=("$1")
+                shift 1
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -gt 0 ]]
+    then
+        koopa::assert_has_args_eq "$#" 2
+        sync_args+=("$@")
+    else
+        sync_args+=(
+            "${dict[source_prefix]}"
+            "${dict[target_prefix]}"
+        )
+    fi
+    "$aws" --profile="${dict[profile]}" \
         s3 sync \
-            --exclude='*.Rproj/*' \
-            --exclude='*.swp' \
-            --exclude='*.tmp' \
-            --exclude='.*' \
-            --exclude='.DS_Store' \
-            --exclude='.Rproj.user/*' \
-            --exclude='._*' \
-            --exclude='.git/*' \
-            "$@"
+            "${exclude_args[@]}" \
+            "${sync_args[@]}"
     return 0
 }
