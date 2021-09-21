@@ -35,7 +35,7 @@ koopa::python_delete_pycache() { # {{{1
     done
     koopa::assert_has_no_args "$#"
     python="$(koopa::which_realpath "$python")"
-    prefix="$(koopa::parent_dir -n 2 "$python")"
+    prefix="$(koopa::parent_dir --num=2 "$python")"
     koopa::alert "Removing pycache in '${prefix}'."
     "$find" "$prefix" \
         -type 'd' \

@@ -134,7 +134,7 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     cores="$(koopa::cpu_count)"
     # Ensure Galaxy is configured correctly for a clean bcbio install.
     # Recursive up from 'install/anaconda/bin/bcbio_setup_genome.py'.
-    install_prefix="$(koopa::parent_dir -n 3 "$script")"
+    install_prefix="$(koopa::parent_dir --num=3 "$script")"
     # If the 'sam_fa_indices.loc' file is missing, the script will error.
     tool_data_prefix="${install_prefix}/galaxy/tool-data"
     koopa::mkdir "$tool_data_prefix"

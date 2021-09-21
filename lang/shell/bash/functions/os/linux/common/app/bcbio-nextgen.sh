@@ -130,7 +130,7 @@ koopa::linux_patch_bcbio_nextgen_devel() { # {{{1
     koopa::assert_is_executable "${dict[bcbio_python]}"
     if [[ -z "${dict[install_dir]}" ]]
     then
-        dict[install_dir]="$(koopa::parent_dir -n 3 "${dict[bcbio_python]}")"
+        dict[install_dir]="$(koopa::parent_dir --num=3 "${dict[bcbio_python]}")"
     fi
     koopa::assert_is_dir "${dict[install_dir]}"
     koopa::h1 "Patching ${name_fancy} installation at '${dict[install_dir]}'."
