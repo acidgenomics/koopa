@@ -30,10 +30,11 @@ _koopa_activate_bcbio_nextgen() { # {{{1
     return 0
 }
 
+# FIXME This is failing now inside of Debian base image.
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda using 'activate' script.
-    # @note Updated 2021-08-18.
+    # @note Updated 2021-09-21.
     # """
     local anaconda_prefix conda_prefix name nounset prefix
     [ "$#" -le 1 ] || return 1
@@ -51,7 +52,7 @@ _koopa_activate_conda() { # {{{1
             prefix="$anaconda_prefix"
         fi
     fi
-    [ -d "$prefix" ] || return 1
+    [ -d "$prefix" ] || return 0
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 1
     nounset="$(_koopa_boolean_nounset)"
