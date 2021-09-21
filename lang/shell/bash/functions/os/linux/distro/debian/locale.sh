@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rethink this for Debian 11, not working correctly.
+# FIXME Appears that '/etc/locale.gen' isn't getting modified correctly.
 koopa::debian_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.
     # @note Updated 2021-09-21.
     #
     # Refer to '/usr/share/i18n/SUPPORTED' for supported locales.
+    #
+    # NOTE Don't set 'LC_ALL' here, it overrides everything, and is explicitly
+    # discouraged in the official Debian documentation.
     #
     # @seealso
     # - https://wiki.debian.org/Locale
@@ -38,11 +43,7 @@ koopa::debian_set_locale() { # {{{1
     sudo /usr/sbin/locale-gen "$string"
     # e.g. 'en_US.UTF-8'.
     string="${lang}_${country}.${charset}"
-    # NOTE Don't set 'LC_ALL' here, it overrides everything, and is explicitly
-    # discouraged in the official Debian documentation.
-    sudo /usr/sbin/update-locale \
-        LANG="$string" \
-        LANGUAGE="$string"
+    sudo /usr/sbin/update-locale LANG="$string"
     locale
     koopa::alert_success "Locale is defined as '${lang_string}'."
     return 0
