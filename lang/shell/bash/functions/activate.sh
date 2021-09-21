@@ -49,17 +49,19 @@ _koopa_activate_bash_completion() { # {{{1
     return 0
 }
 
+# FIXME This is erroring inside of '/opt/koopa' on Debian 11 Docker image.
 _koopa_activate_bash_extras() { # {{{1
     # """
     # Activate Bash extras.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-09-21.
     # """
     [[ "$#" -eq 0 ]] || return 1
     _koopa_is_interactive || return 0
     _koopa_activate_bash_completion
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
-    _koopa_activate_bash_prompt
+    # FIXME We may need to harden against dirty Git repo here...
+    # > _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_completion
     return 0
