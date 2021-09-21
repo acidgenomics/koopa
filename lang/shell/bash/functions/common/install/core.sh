@@ -3,7 +3,7 @@
 koopa:::configure_app_packages() { # {{{1
     # """
     # Configure language application.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-09-21.
     # """
     local dict
     declare -A dict=(
@@ -17,30 +17,57 @@ koopa:::configure_app_packages() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
                 ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
+                ;;
             '--name-fancy='*)
                 dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--version='*)
+                dict[version]="${1#*=}"
+                shift 1
+                ;;
+            '--version')
+                dict[version]="${2:?}"
+                shift 2
+                ;;
+            '--which-app='*)
+                dict[which_app]="${1#*=}"
+                shift 1
+                ;;
+            '--which-app')
+                dict[which_app]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--link')
+                dict[link_app]=1
                 shift 1
                 ;;
             '--no-link')
                 dict[link_app]=0
                 shift 1
                 ;;
-            '--prefix='*)
-                dict[prefix]="${1#*=}"
-                shift 1
-                ;;
-            '--version='*)
-                dict[version]="${1#*=}"
-                shift 1
-                ;;
-            '--which-app='*)
-                dict[which_app]="${1#*=}"
-                shift 1
-                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -77,7 +104,7 @@ koopa:::configure_app_packages() { # {{{1
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-09-21.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -111,24 +138,87 @@ koopa:::install_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--homebrew-opt='*)
                 dict[homebrew_opt]="${1#*=}"
                 shift 1
+                ;;
+            '--homebrew-opt')
+                dict[homebrew_opt]="${2:?}"
+                shift 2
                 ;;
             '--installer='*)
                 dict[installer]="${1#*=}"
                 shift 1
                 ;;
+            '--installer')
+                dict[installer]="${2:?}"
+                shift 2
+                ;;
             '--link-include-dirs='*)
                 dict[link_include_dirs]="${1#*=}"
                 shift 1
+                ;;
+            '--link-include-dirs')
+                dict[link_include_dirs]="${2:?}"
+                shift 2
                 ;;
             '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
                 ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
+                ;;
             '--name-fancy='*)
                 dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
+                ;;
+            '--opt='*)
+                dict[opt]="${1#*=}"
+                shift 1
+                ;;
+            '--opt')
+                dict[opt]="${2:?}"
+                shift 2
+                ;;
+            '--platform='*)
+                dict[platform]="${1#*=}"
+                shift 1
+                ;;
+            '--platform')
+                dict[platform]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--version='*)
+                dict[version]="${1#*=}"
+                shift 1
+                ;;
+            '--version')
+                dict[version]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--force' | \
+            '--reinstall')
+                dict[reinstall]=1
+                shift 1
+                ;;
+            '--link')
+                dict[link_app]=1
                 shift 1
                 ;;
             '--no-link')
@@ -143,31 +233,19 @@ koopa:::install_app() { # {{{1
                 dict[shared]=0
                 shift 1
                 ;;
-            '--opt='*)
-                dict[opt]="${1#*=}"
+            '--prefix-check')
+                dict[prefix_check]=1
                 shift 1
                 ;;
-            '--platform='*)
-                dict[platform]="${1#*=}"
-                shift 1
-                ;;
-            '--prefix='*)
-                dict[prefix]="${1#*=}"
-                shift 1
-                ;;
-            '--force' | \
-            '--reinstall')
-                dict[reinstall]=1
+            '--shared')
+                dict[shared]=1
                 shift 1
                 ;;
             '--verbose')
                 set -x
                 shift 1
                 ;;
-            '--version='*)
-                dict[version]="${1#*=}"
-                shift 1
-                ;;
+            # Other ------------------------------------------------------------
             *)
                 pos+=("$1")
                 shift 1
@@ -326,7 +404,7 @@ at '${dict[prefix]}'."
 koopa:::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2021-09-14.
+    # @note Updated 2021-09-21.
     # """
     local dict pos rm
     declare -A dict=(
@@ -347,18 +425,36 @@ koopa:::uninstall_app() { # {{{1
                 dict[name]="${1#*=}"
                 shift 1
                 ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
+                ;;
             '--name-fancy='*)
                 dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--link')
+                dict[link_app]=1
                 shift 1
                 ;;
             '--no-link')
                 dict[link_app]=0
                 shift 1
                 ;;
-            '--prefix='*)
-                dict[prefix]="${1#*=}"
-                shift 1
-                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -445,42 +541,80 @@ koopa:::update_app() { # {{{1
                 dict[homebrew_opt]="${1#*=}"
                 shift 1
                 ;;
+            '--homebrew-opt')
+                dict[homebrew_opt]="${2:?}"
+                shift 2
+                ;;
             '--name='*)
                 dict[name]="${1#*=}"
                 shift 1
+                ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
                 ;;
             '--name-fancy='*)
                 dict[name_fancy]="${1#*=}"
                 shift 1
                 ;;
-            '--no-shared')
-                dict[shared]=0
-                shift 1
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
                 ;;
             '--opt='*)
                 dict[opt]="${1#*=}"
                 shift 1
                 ;;
+            '--opt')
+                dict[opt]="${2:?}"
+                shift 2
+                ;;
             '--platform='*)
                 dict[platform]="${1#*=}"
                 shift 1
+                ;;
+            '--platform')
+                dict[platform]="${2:?}"
+                shift 2
                 ;;
             '--prefix='*)
                 dict[prefix]="${1#*=}"
                 shift 1
                 ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
             '--updater='*)
                 dict[updater]="${1#*=}"
+                shift 1
+                ;;
+            '--updater')
+                dict[updater]="${2:?}"
+                shift 2
+                ;;
+            '--version='*)
+                dict[version]="${1#*=}"
+                shift 1
+                ;;
+            '--version')
+                dict[version]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--no-shared')
+                dict[shared]=0
+                shift 1
+                ;;
+            '--shared')
+                dict[shared]=1
                 shift 1
                 ;;
             '--verbose')
                 set -x
                 shift 1
                 ;;
-            '--version='*)
-                dict[version]="${1#*=}"
-                shift 1
-                ;;
+            # Other ------------------------------------------------------------
             *)
                 pos+=("$1")
                 shift 1
@@ -620,7 +754,7 @@ koopa::find_app_version() { # {{{1
 koopa::link_app() { # {{{1
     # """
     # Symlink application into build directory.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -649,18 +783,32 @@ koopa::link_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--include-dirs='*)
                 include_dirs="${1#*=}"
                 shift 1
+                ;;
+            '--include-dirs')
+                include_dirs="${2:?}"
+                shift 2
                 ;;
             '--name='*)
                 name="${1#*=}"
                 shift 1
                 ;;
+            '--name')
+                name="${2:?}"
+                shift 2
+                ;;
             '--version='*)
                 version="${1#*=}"
                 shift 1
                 ;;
+            '--version')
+                version="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
