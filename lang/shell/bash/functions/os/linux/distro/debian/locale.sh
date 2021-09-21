@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rethink this for Debian 11, not working correctly.
-# FIXME Appears that '/etc/locale.gen' isn't getting modified correctly.
+# FIXME Rework this, using new approach employed in Debian 11 Docker image.
+
 koopa::debian_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.
