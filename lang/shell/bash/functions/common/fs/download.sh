@@ -182,6 +182,10 @@ koopa::download_sra_run_info_table() { # {{{1
 }
 
 koopa::ftp_mirror() { # {{{1
+    # """
+    # Mirror contents from an FTP server.
+    # @note Updated 2021-09-21.
+    # """
     local dir host user wget
     koopa::assert_has_args "$#"
     wget="$(koopa::locate_wget)"
@@ -189,18 +193,32 @@ koopa::ftp_mirror() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--dir='*)
                 dir="${1#*=}"
                 shift 1
+                ;;
+            '--dir')
+                dir="${2:?}"
+                shift 2
                 ;;
             '--host='*)
                 host="${1#*=}"
                 shift 1
                 ;;
+            '--host')
+                host="${2:?}"
+                shift 2
+                ;;
             '--user='*)
                 user="${1#*=}"
                 shift 1
                 ;;
+            '--user')
+                user="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
