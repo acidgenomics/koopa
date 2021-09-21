@@ -4,7 +4,7 @@
 koopa::run_kallisto_paired_end() { # {{{1
     # """
     # Run kallisto on multiple samples.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # """
@@ -27,46 +27,88 @@ koopa::run_kallisto_paired_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
+                ;;
+            '--bootstraps')
+                dict[bootstraps]="${2:?}"
+                shift 2
                 ;;
             '--chromosomes-file='*)
                 dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
+            '--chromosomes-file')
+                dict[chromosomes_file]="${2:?}"
+                shift 2
+                ;;
             '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
+                ;;
+            '--fasta-file')
+                dict[fasta_file]="${2:?}"
+                shift 2
                 ;;
             '--fastq-dir='*)
                 dict[fastq_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--fastq-dir')
+                dict[fastq_dir]="${2:?}"
+                shift 2
+                ;;
             '--gff-file='*)
                 dict[gff_file]="${1#*=}"
+                shift 1
+                ;;
+            '--gff-file')
+                dict[gff_file]="${2:?}"
                 shift 1
                 ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
+                ;;
             '--lib-type='*)
                 dict[lib_type]="${1#*=}"
                 shift 1
+                ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
             '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
+                ;;
+            '--r1-tail')
+                dict[r1_tail]="${2:?}"
+                shift 2
                 ;;
             '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
+            '--r2-tail')
+                dict[r2_tail]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -152,7 +194,7 @@ completed successfully."
 koopa::run_kallisto_single_end() { # {{{1
     # """
     # Run kallisto on multiple single-end FASTQ files.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local app dict
     local fastq_files fastq str
@@ -173,46 +215,88 @@ koopa::run_kallisto_single_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
+                ;;
+            '--bootstraps')
+                dict[bootstraps]="${2:?}"
+                shift 2
                 ;;
             '--chromosomes-file='*)
                 dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
+            '--chromosomes-file')
+                dict[chromosomes_file]="${2:?}"
+                shift 2
+                ;;
             '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
+                ;;
+            '--fasta-file')
+                dict[fasta_file]="${2:?}"
+                shift 2
                 ;;
             '--fastq-dir='*)
                 dict[fastq_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--fastq-dir')
+                dict[fastq_dir]="${2:?}"
+                shift 2
+                ;;
             '--fragment-length='*)
                 dict[fragment_length]="${1#*=}"
                 shift 1
+                ;;
+            '--fragment-length')
+                dict[fragment_length]="${2:?}"
+                shift 2
                 ;;
             '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
+            '--gff-file')
+                dict[gff_file]="${2:?}"
+                shift 2
+                ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
+                ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
             '--sd='*)
                 dict[sd]="${1#*=}"
                 shift 1
+                ;;
+            '--sd')
+                dict[sd]="${2:?}"
+                shift 2
                 ;;
             '--tail='*)
                 dict[tail]="${1#*=}"
                 shift 1
                 ;;
+            '--tail')
+                dict[tail]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -296,7 +380,7 @@ completed successfully."
 koopa::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local app dict index_args
     koopa::assert_has_args "$#"
@@ -308,14 +392,24 @@ koopa::kallisto_index() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
+                ;;
+            '--fasta-file')
+                dict[fasta_file]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -349,7 +443,7 @@ koopa::kallisto_index() { # {{{1
 koopa::kallisto_quant_paired_end() { # {{{1
     # """
     # Run kallisto quant (per paired-end sample).
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # Important options:
     # * --bias: Learns parameters for a model of sequences specific bias and
@@ -379,46 +473,88 @@ koopa::kallisto_quant_paired_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
+                ;;
+            '--bootstraps')
+                dict[bootstraps]="${2:?}"
+                shift 2
                 ;;
             '--chromosomes-file='*)
                 dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
+            '--chromosomes-file')
+                dict[chromosomes_file]="${2:?}"
+                shift 2
+                ;;
             '--fastq-r1='*)
                 dict[fastq_r1]="${1#*=}"
                 shift 1
+                ;;
+            '--fastq-r1')
+                dict[fastq_r1]="${2:?}"
+                shift 2
                 ;;
             '--fastq-r2='*)
                 dict[fastq_r2]="${1#*=}"
                 shift 1
                 ;;
+            '--fastq-r2')
+                dict[fastq_r2]="${2:?}"
+                shift 2
+                ;;
             '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
+                ;;
+            '--gff-file')
+                dict[gff_file]="${2:?}"
+                shift 2
                 ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
+                ;;
             '--lib-type='*)
                 dict[lib_type]="${1#*=}"
                 shift 1
+                ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
             '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
+                ;;
+            '--r1-tail')
+                dict[r1_tail]="${2:?}"
+                shift 2
                 ;;
             '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
+            '--r2-tail')
+                dict[r2_tail]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -482,7 +618,7 @@ koopa::kallisto_quant_paired_end() { # {{{1
 
 koopa::kallisto_quant_single_end() { # {{{1
     # Run kallisto quant (per single-end sample).
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # Must supply the length and standard deviation of the fragment length
     # (not the read length).
@@ -504,42 +640,80 @@ koopa::kallisto_quant_single_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
+                ;;
+            '--bootstraps')
+                dict[bootstraps]="${2:?}"
+                shift 2
                 ;;
             '--chromosomes-file='*)
                 dict[chromosomes_file]="${1#*=}"
                 shift 1
                 ;;
+            '--chromosomes-file')
+                dict[chromosomes_file]="${2:?}"
+                shift 2
+                ;;
             '--fastq='*)
                 dict[fastq]="${1#*=}"
                 shift 1
+                ;;
+            '--fastq')
+                dict[fastq]="${2:?}"
+                shift 2
                 ;;
             '--fragment-length='*)
                 dict[fragment_length]="${1#*=}"
                 shift 1
                 ;;
+            '--fragment-length')
+                dict[fragment_length]="${2:?}"
+                shift 2
+                ;;
             '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
+                ;;
+            '--gff-file')
+                dict[gff_file]="${2:?}"
+                shift 2
                 ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
+                ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
                 ;;
             '--sd='*)
                 dict[sd]="${1#*=}"
                 shift 1
                 ;;
+            '--sd')
+                dict[sd]="${2:?}"
+                shift 2
+                ;;
             '--tail='*)
                 dict[tail]="${1#*=}"
                 shift 1
                 ;;
+            '--tail')
+                dict[tail]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
