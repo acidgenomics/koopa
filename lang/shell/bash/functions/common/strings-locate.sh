@@ -3,7 +3,7 @@
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-09-21.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
@@ -29,26 +29,45 @@ koopa:::locate_app() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--brew-opt='*)
                 dict[brew_opt_name]="${1#*=}"
                 shift 1
+                ;;
+            '--brew-opt')
+                dict[brew_opt_name]="${2:?}"
+                shift 2
                 ;;
             '--koopa-opt='*)
                 dict[koopa_opt_name]="${1#*=}"
                 shift 1
                 ;;
+            '--koopa-opt')
+                dict[koopa_opt_name]="${2:?}"
+                shift 2
+                ;;
             '--macos-app='*)
                 dict[macos_app]="${1#*=}"
                 shift 1
+                ;;
+            '--macos-app')
+                dict[macos_app]="${2:?}"
+                shift 2
                 ;;
             '--name='*)
                 dict[app_name]="${1#*=}"
                 shift 1
                 ;;
+            '--name')
+                dict[app_name]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
             '--gnubin')
                 dict[gnubin]=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
