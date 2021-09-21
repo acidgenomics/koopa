@@ -1,7 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC2154,SC3003,SC3054,SC3060
 
-# FIXME This is problematic inside of Debian 11 base image.
 _koopa_prompt() { # {{{1
     # """
     # Customize the interactive prompt.
@@ -113,6 +112,7 @@ _koopa_prompt_conda() { # {{{1
     return 0
 }
 
+# FIXME This is erroring out inside of Debian 11 Docker base image.
 _koopa_prompt_git() { # {{{1
     # """
     # Return the current git branch, if applicable.
@@ -122,6 +122,7 @@ _koopa_prompt_git() { # {{{1
     # """
     local git_branch git_status
     [ "$#" -eq 0 ] || return 1
+    return 0  # FIXME
     _koopa_is_git_repo || return 0
     git_branch="$(_koopa_git_branch)"
     if _koopa_is_git_repo_clean
