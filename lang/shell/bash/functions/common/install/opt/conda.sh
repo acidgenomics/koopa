@@ -19,7 +19,7 @@ koopa::install_miniconda() { # {{{1
 koopa:::install_miniconda() { # {{{1
     # """
     # Install Miniconda, including Mamba in base environment.
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-09-21.
     # """
     local arch koopa_prefix mamba mamba_version name name2 os_type prefix
     local py_major_version py_version script url version
@@ -46,18 +46,25 @@ koopa:::install_miniconda() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            '--no-mamba')
-                mamba=0
-                shift 1
-                ;;
+            # Key-value pairs --------------------------------------------------
             '--py-version='*)
                 py_version="${1#*=}"
+                shift 1
+                ;;
+            '--py-version')
+                py_version="${2:?}"
+                shift 1
+                ;;
+            # Flags ------------------------------------------------------------
+            '--no-mamba')
+                mamba=0
                 shift 1
                 ;;
             '--with-mamba')
                 mamba=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
