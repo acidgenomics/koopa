@@ -4,7 +4,7 @@
 koopa::run_salmon_paired_end() { # {{{1
     # """
     # Run salmon on multiple paired-end FASTQ files.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -28,38 +28,72 @@ koopa::run_salmon_paired_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
+                ;;
+            '--bootstraps')
+                dict[bootstraps]="${2:?}"
+                shift 2
                 ;;
             '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
                 ;;
+            '--fasta-file')
+                dict[fasta_file]="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict[fastq_dir]="${1#*=}"
                 shift 1
+                ;;
+            '--fastq-dir')
+                dict[fastq_dir]="${2:?}"
+                shift 2
                 ;;
             '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
+            '--gff-file')
+                dict[gff_file]="${2:?}"
+                shift 2
+                ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
+                ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
             '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
+                ;;
+            '--r1-tail')
+                dict[r1_tail]="${2:?}"
+                shift 2
                 ;;
             '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
+            '--r2-tail')
+                dict[r2_tail]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -142,7 +176,7 @@ completed successfully."
 koopa::run_salmon_single_end() { # {{{1
     # """
     # Run salmon on multiple single-end FASTQ files.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -165,34 +199,64 @@ koopa::run_salmon_single_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 bootstraps="${1#*=}"
                 shift 1
+                ;;
+            '--bootstraps')
+                bootstraps="${2:?}"
+                shift 2
                 ;;
             '--fasta-file='*)
                 fasta_file="${1#*=}"
                 shift 1
                 ;;
+            '--fasta-file')
+                fasta_file="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 fastq_dir="${1#*=}"
                 shift 1
+                ;;
+            '--fastq-dir')
+                fastq_dir="${2:?}"
+                shift 2
                 ;;
             '--gff-file='*)
                 gff_file="${1#*=}"
                 shift 1
                 ;;
+            '--gff-file')
+                gff_file="${2:?}"
+                shift 2
+                ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
+                ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 output_dir="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                output_dir="${2:?}"
+                shift 2
+                ;;
             '--tail='*)
                 tail="${1#*=}"
                 shift 1
                 ;;
+            '--tail')
+                tail="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -272,7 +336,7 @@ completed successfully."
 koopa::salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-09-21.
     # """
     local app dict
     koopa::assert_has_args "$#"
@@ -288,14 +352,24 @@ koopa::salmon_index() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
+                ;;
+            '--fasta-file')
+                dict[fasta_file]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -328,7 +402,7 @@ koopa::salmon_index() { # {{{1
 koopa::salmon_quant_paired_end() { # {{{1
     # """
     # Run salmon quant (per paired-end sample).
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # Quartz is currently using only '--validateMappings' and '--gcBias' flags.
     #
@@ -379,42 +453,80 @@ koopa::salmon_quant_paired_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
                 shift 1
+                ;;
+            '--bootstraps')
+                dict[bootstraps]="${2:?}"
+                shift 2
                 ;;
             '--fastq-r1='*)
                 dict[fastq_r1]="${1#*=}"
                 shift 1
                 ;;
+            '--fastq-r1')
+                dict[fastq_r1]="${2:?}"
+                shift 2
+                ;;
             '--fastq-r2='*)
                 dict[fastq_r2]="${1#*=}"
                 shift 1
+                ;;
+            '--fastq-r2')
+                dict[fastq_r2]="${2:?}"
+                shift 2
                 ;;
             '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
                 ;;
+            '--gff-file')
+                dict[gff_file]="${2:?}"
+                shift 2
+                ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
+                ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
                 ;;
             '--lib-type='*)
                 dict[lib_type]="${1#*=}"
                 shift 1
                 ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
+                ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
                 ;;
             '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
                 ;;
+            '--r1-tail')
+                dict[r1_tail]="${2:?}"
+                shift 2
+                ;;
             '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
+            '--r2-tail')
+                dict[r2_tail]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -459,7 +571,7 @@ koopa::salmon_quant_paired_end() { # {{{1
 koopa::salmon_quant_single_end() { # {{{1
     # """
     # Run salmon quant (per single-end sample).
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html
@@ -476,34 +588,64 @@ koopa::salmon_quant_single_end() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
+                shift 1
+                ;;
+            '--bootstraps')
+                dict[bootstraps]="${2:?}"
                 shift 1
                 ;;
             '--fastq='*)
                 dict[fastq]="${1#*=}"
                 shift 1
                 ;;
+            '--fastq')
+                dict[fastq]="${2:?}"
+                shift 2
+                ;;
             '--gff-file='*)
                 dict[gff_file]="${1#*=}"
                 shift 1
+                ;;
+            '--gff-file')
+                dict[gff_file]="${2:?}"
+                shift 2
                 ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--index-dir')
+                dict[index_dir]="${2:?}"
+                shift 2
+                ;;
             '--lib-type='*)
                 dict[lib_type]="${1#*=}"
                 shift 1
+                ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
             '--tail='*)
                 dict[tail]="${1#*=}"
                 shift 1
                 ;;
+            '--tail')
+                dict[tail]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -540,4 +682,3 @@ koopa::salmon_quant_single_end() { # {{{1
     salmon quant "${quant_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
-
