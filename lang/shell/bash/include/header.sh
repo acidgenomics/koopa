@@ -173,7 +173,6 @@ __koopa_bash_header() { # {{{1
         #   The-confusing-Bash-configuration-files.html
         [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
     fi
-    echo 'FIXME aaa'
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
         dict[header_path]="${BASH_SOURCE[0]}"
@@ -188,10 +187,10 @@ __koopa_bash_header() { # {{{1
         )"
         export KOOPA_PREFIX
     fi
-    echo 'FIXME bbb'
+    echo 'FIXME aaa'
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
-    echo 'FIXME ccc'
+    echo 'FIXME bbb'
     if [[ "${dict[test]}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
