@@ -224,10 +224,11 @@ _koopa_is_git_repo() { # {{{1i
     return 0
 }
 
+# FIXME This is failing inside of Debian 11 Docker base image.
 _koopa_is_git_repo_clean() { # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2021-18-19.
+    # @note Updated 2021-09-21.
     #
     # This is used in prompt, so be careful with assert checks.
     #
@@ -237,8 +238,8 @@ _koopa_is_git_repo_clean() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_is_git_repo || return 1
-    __koopa_git_repo_has_unstaged_changes && return 1
-    __koopa_git_repo_needs_pull_or_push && return 1
+    # FIXME __koopa_git_repo_has_unstaged_changes && return 1
+    # FIXME __koopa_git_repo_needs_pull_or_push && return 1
     return 0
 }
 
