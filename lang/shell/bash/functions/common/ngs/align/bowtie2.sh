@@ -1,12 +1,135 @@
 #!/usr/bin/env bash
 
-# NOTE Need to migrate these functions to r-koopa.
-# NOTE Add steps to generate BAM and CRAM files from SAM output here.
+# NOTE Need to add option to generate BAM and CRAM files here.
 
-koopa:::bowtie2_align() { # {{{1
+# Main function ================================================================
+koopa::run_bowtie2() { # {{{1
+    # """
+    # Run bowtie2 on a directory containing multiple FASTQ files.
+    # @note Updated 2021-09-21.
+    # """
+    local app dict
+    local fastq_r1_files r1_tail r2_tail str
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [fastq_dir]='fastq'
+        [output_dir]='bowtie2'
+        [r1_tail]='_R1_001.fastq.gz'
+        [r2_tail]='_R2_001.fastq.gz'
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--fasta-file='*)
+                dict[fasta_file]="${1#*=}"
+                shift 1
+                ;;
+            '--fasta-file')
+                dict[fasta_file]="${2:?}"
+                shift 2
+                ;;
+            '--fastq-dir='*)
+                dict[fastq_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-dir')
+                dict[fastq_dir]="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict[output_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
+            '--r1-tail='*)
+                dict[r1_tail]="${1#*=}"
+                shift 1
+                ;;
+            '--r1-tail')
+                dict[r1_tail]="${2:?}"
+                shift 2
+                ;;
+            '--r2-tail='*)
+                dict[r2_tail]="${1#*=}"
+                shift 1
+                ;;
+            '--r2-tail')
+                dict[r2_tail]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::h1 'Running bowtie2.'
+    koopa::activate_conda_env 'bowtie2'
+    koopa::assert_is_file "${dict[fasta_file]}"
+    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
+    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
+    dict[index_dir]="${dict[output_dir]}/index"
+    dict[index_base]="${dict[index_dir]}/bowtie2"
+    dict[samples_dir]="${dict[output_dir]}/samples"
+    # Sample array from FASTQ files {{{2
+    # --------------------------------------------------------------------------
+    # Create a per-sample array from the R1 FASTQ files.
+    # Pipe GNU find into array.
+    readarray -t fastq_r1_files <<< "$( \
+        "${app[find]}" "$fastq_dir" \
+            -maxdepth 1 \
+            -mindepth 1 \
+            -type 'f' \
+            -name "*${r1_tail}" \
+            -print \
+        | "${app[sort]}" \
+    )"
+    # Error on FASTQ match failure.
+    if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
+    then
+        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
+with '${dict[r1_tail]}'."
+    fi
+    str="$(koopa::ngettext "${#fastq_r1_files[@]}" 'sample' 'samples')"
+    koopa::alert_info "${#fastq_r1_files[@]} ${str} detected."
+    # Index {{{2
+    # --------------------------------------------------------------------------
+    koopa::bowtie2_index \
+        --fasta-file="${dict[fasta_file]}" \
+        --output-dir="${dict[index_dir]}"
+    koopa::assert_is_dir "${dict[index_dir]}"
+    # Alignment {{{2
+    # --------------------------------------------------------------------------
+    # Loop across the per-sample array and align.
+    for fastq_r1 in "${fastq_r1_files[@]}"
+    do
+        fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
+        koopa::bowtie2_align \
+            --fastq-r1="$fastq_r1" \
+            --fastq-r2="$fastq_r2" \
+            --index-base="${dict[index_base]}" \
+            --output-dir="${dict[samples_dir]}" \
+            --r1-tail="${dict[r1_tail]}" \
+            --r2-tail="${dict[r2_tail]}"
+    done
+    # NOTE Need a step to convert SAM to BAM here.
+    koopa::deactivate_conda
+    koopa::alert_success 'bowtie alignment completed successfully.'
+    return 0
+}
+
+# Individual runners ===========================================================
+koopa::bowtie2_align() { # {{{1
     # """
     # Run bowtie2 alignment on multiple paired-end FASTQ files.
-    # @note Updated 2021-08-17.
+    # @note Updated 2021-09-21.
     # """
     local app dict
     koopa::assert_has_args "$#"
@@ -20,30 +143,56 @@ koopa:::bowtie2_align() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--fastq-r1='*)
                 dict[fastq_r1]="${1#*=}"
                 shift 1
+                ;;
+            '--fastq-r1')
+                dict[fastq_r1]="${2:?}"
+                shift 2
                 ;;
             '--fastq-r2='*)
                 dict[fastq_r2]="${1#*=}"
                 shift 1
                 ;;
+            '--fastq-r2')
+                dict[fastq_r2]="${2:?}"
+                shift 2
+                ;;
             '--index-base='*)
                 dict[index_base]="${1#*=}"
                 shift 1
+                ;;
+            '--index-base')
+                dict[index_base]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
             '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
+                ;;
+            '--r1-tail')
+                dict[r1_tail]="${2:?}"
+                shift 2
                 ;;
             '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
                 ;;
+            '--r2-tail')
+                dict[r2_tail]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -86,10 +235,10 @@ koopa:::bowtie2_align() { # {{{1
     return 0
 }
 
-koopa:::bowtie2_index() { # {{{1
+koopa::bowtie2_index() { # {{{1
     # """
     # Generate bowtie2 index.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-09-21.
     # """
     local app dict index_args
     koopa::assert_has_args "$#"
@@ -103,14 +252,24 @@ koopa:::bowtie2_index() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--fasta-file='*)
                 dict[fasta_file]="${1#*=}"
                 shift 1
+                ;;
+            '--fasta-file')
+                dict[fasta_file]="${2:?}"
+                shift 2
                 ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -137,106 +296,5 @@ koopa:::bowtie2_index() { # {{{1
     )
     koopa::dl 'Index args' "${index_args[*]}"
     bowtie2-build "${index_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
-    return 0
-}
-
-# NOTE Need to add option to generate BAM and CRAM files here.
-koopa::run_bowtie2() { # {{{1
-    # """
-    # Run bowtie2 on a directory containing multiple FASTQ files.
-    # @note Updated 2021-08-16.
-    # """
-    local app dict
-    local fastq_r1_files r1_tail r2_tail str
-    declare -A app=(
-        [find]="$(koopa::locate_find)"
-        [sort]="$(koopa::locate_sort)"
-    )
-    declare -A dict=(
-        [fastq_dir]='fastq'
-        [output_dir]='bowtie2'
-        [r1_tail]='_R1_001.fastq.gz'
-        [r2_tail]='_R2_001.fastq.gz'
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-dir='*)
-                dict[fastq_dir]="${1#*=}"
-                shift 1
-                ;;
-            '--output-dir='*)
-                dict[output_dir]="${1#*=}"
-                shift 1
-                ;;
-            '--r1-tail='*)
-                dict[r1_tail]="${1#*=}"
-                shift 1
-                ;;
-            '--r2-tail='*)
-                dict[r2_tail]="${1#*=}"
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::h1 'Running bowtie2.'
-    koopa::activate_conda_env 'bowtie2'
-    koopa::assert_is_file "${dict[fasta_file]}"
-    dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
-    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
-    dict[index_dir]="${dict[output_dir]}/index"
-    dict[index_base]="${dict[index_dir]}/bowtie2"
-    dict[samples_dir]="${dict[output_dir]}/samples"
-    # Sample array from FASTQ files {{{2
-    # --------------------------------------------------------------------------
-    # Create a per-sample array from the R1 FASTQ files.
-    # Pipe GNU find into array.
-    readarray -t fastq_r1_files <<< "$( \
-        "${app[find]}" "$fastq_dir" \
-            -maxdepth 1 \
-            -mindepth 1 \
-            -type 'f' \
-            -name "*${r1_tail}" \
-            -print \
-        | "${app[sort]}" \
-    )"
-    # Error on FASTQ match failure.
-    if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
-    then
-        koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
-with '${dict[r1_tail]}'."
-    fi
-    str="$(koopa::ngettext "${#fastq_r1_files[@]}" 'sample' 'samples')"
-    koopa::alert_info "${#fastq_r1_files[@]} ${str} detected."
-    # Index {{{2
-    # --------------------------------------------------------------------------
-    koopa:::bowtie2_index \
-        --fasta-file="${dict[fasta_file]}" \
-        --output-dir="${dict[index_dir]}"
-    koopa::assert_is_dir "${dict[index_dir]}"
-    # Alignment {{{2
-    # --------------------------------------------------------------------------
-    # Loop across the per-sample array and align.
-    for fastq_r1 in "${fastq_r1_files[@]}"
-    do
-        fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
-        koopa:::bowtie2_align \
-            --fastq-r1="$fastq_r1" \
-            --fastq-r2="$fastq_r2" \
-            --index-base="${dict[index_base]}" \
-            --output-dir="${dict[samples_dir]}" \
-            --r1-tail="${dict[r1_tail]}" \
-            --r2-tail="${dict[r2_tail]}"
-    done
-    # NOTE Need a step to convert SAM to BAM here.
-    koopa::deactivate_conda
-    koopa::alert_success 'bowtie alignment completed successfully.'
     return 0
 }
