@@ -81,10 +81,8 @@ fi
 export KOOPA_ACTIVATE=0
 # Need to keep this step outside of a function, otherwise we won't detect
 # the '--help' flag correctly.
-echo 'FIXME 1'
 # shellcheck source=/dev/null
 . "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
-echo 'FIXME 2'
 unset -v bash_source
 
 koopa::koopa "$@"
