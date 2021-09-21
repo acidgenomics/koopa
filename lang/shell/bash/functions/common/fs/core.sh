@@ -190,6 +190,7 @@ koopa::cp() { # {{{1
                 sudo=1
                 shift 1
                 ;;
+            '--symbolic-link' | \
             '--symlink' | \
             '-s')
                 symlink=1
