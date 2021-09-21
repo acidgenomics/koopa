@@ -69,7 +69,7 @@ koopa::run_salmon_paired_end() { # {{{1
     koopa::activate_conda_env 'salmon'
     dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
-    dict[gff_file]="$(koopa::realpath "${dict[fasta_file]}")"
+    dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
     dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
     dict[samples_dir]="${dict[output_dir]}/samples"
     if [[ -z "${dict[index_dir]}" ]]
@@ -202,6 +202,7 @@ koopa::run_salmon_single_end() { # {{{1
     koopa::activate_conda_env 'salmon'
     dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
+    dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
     dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
     dict[samples_dir]="${dict[output_dir]}/samples"
     if [[ -z "${dict[index_dir]}" ]]
