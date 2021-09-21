@@ -51,29 +51,18 @@ _koopa_posix_header() { # {{{1
     _koopa_activate_pkg_config || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
-        echo 'FIXME AAA'
-        # _koopa_activate_conda || return 1
-        echo 'FIXME BBB'
+        # FIXME This step is problematic inside Debian 11 base image.
+        _koopa_activate_conda || return 1
          _koopa_activate_emacs || return 1
-        echo 'FIXME CCC'
         _koopa_activate_go || return 1
-        echo 'FIXME DDD'
         _koopa_activate_node || return 1
-        echo 'FIXME EEE'
         _koopa_activate_openjdk || return 1
-        echo 'FIXME FFF'
         _koopa_activate_aspera || return 1
-        echo 'FIXME GGG'
         _koopa_activate_julia || return 1
-        echo 'FIXME HHH'
         _koopa_activate_nextflow || return 1
-        echo 'FIXME III'
         _koopa_activate_perl || return 1
-        echo 'FIXME JJJ'
         _koopa_activate_python || return 1
-        echo 'FIXME KKK'
         _koopa_activate_ruby || return 1
-        echo 'FIXME LLL'
         _koopa_activate_rust || return 1
         if _koopa_is_linux
         then
