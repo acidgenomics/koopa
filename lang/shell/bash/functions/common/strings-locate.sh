@@ -134,7 +134,8 @@ bin/${dict[app_name]}"
         koopa::stop "Failed to locate '${dict[app_name]}'."
     fi
     koopa::assert_is_executable "$app"
-    app="$(koopa::realpath "$app")"
+    # NOTE Resolving the path can cause issues with BusyBox coreutils.
+    # > app="$(koopa::realpath "$app")"
     koopa::print "$app"
     return 0
 }
