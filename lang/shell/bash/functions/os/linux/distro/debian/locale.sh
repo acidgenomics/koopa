@@ -35,6 +35,8 @@ koopa::debian_set_locale() { # {{{1
     sudo /usr/sbin/locale-gen "$string"
     # e.g. 'en_US.UTF-8'.
     string="${lang}_${country}.${charset}"
+    # FIXME Debian 11 is warning about 'LANGUAGE' and 'LC_ALL' being unset
+    # now. Need to resolve this?
     sudo /usr/sbin/update-locale LANG="$string"
     locale
     koopa::alert_success "Locale is defined as '${lang_string}'."
