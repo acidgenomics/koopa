@@ -269,7 +269,7 @@ koopa::r_rebuild_docs() { # {{{1
 koopa::r_koopa() { # {{{1
     # """
     # Execute a function in koopa R package.
-    # @note Updated 2021-08-17.
+    # @note Updated 2021-08-21.
     # """
     local code header_file flags fun pos r rscript
     r="$(koopa::locate_r)"
@@ -282,6 +282,10 @@ koopa::r_koopa() { # {{{1
         case "$1" in
             '--vanilla')
                 flags+=('--vanilla')
+                shift 1
+                ;;
+            '--'*)
+                pos+=("$1")
                 shift 1
                 ;;
             '-'*)
