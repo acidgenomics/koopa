@@ -5,7 +5,7 @@
 koopa::convert_fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-09-21.
     #
     # Alternate approaches:
     #
@@ -27,14 +27,24 @@ koopa::convert_fastq_to_fasta() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--source-dir='*)
                 source_dir="${1#*=}"
                 shift 1
+                ;;
+            '--source-dir')
+                source_dir="${2:?}"
+                shift 2
                 ;;
             '--target-dir='*)
                 target_dir="${1#*=}"
                 shift 1
                 ;;
+            '--target-dir')
+                target_dir="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -90,27 +100,45 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
 koopa::fastq_lanepool() { # {{{1
     # """
     # Pool lane-split FASTQ files.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-09-21.
     # """
-    local array basenames head i out prefix source_dir tail target_dir
+    local array basenames cat find head i out prefix source_dir sort
+    local tail target_dir
+    cat="$(koopa::locate_cat)"
+    find="$(koopa::locate_find)"
+    sort="$(koopa::locate_sort)"
     prefix='lanepool'
     source_dir='.'
     target_dir='.'
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--prefix='*)
                 prefix="${1#*=}"
                 shift 1
+                ;;
+            '--prefix')
+                prefix="${2:?}"
+                shift 2
                 ;;
             '--source-dir='*)
                 source_dir="${1#*=}"
                 shift 1
                 ;;
+            '--source-dir')
+                source_dir="${2:?}"
+                shift 2
+                ;;
             '--target-dir='*)
                 target_dir="${1#*=}"
                 shift 1
                 ;;
+            '--target-dir')
+                target_dir="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -120,13 +148,13 @@ koopa::fastq_lanepool() { # {{{1
     target_dir="$(koopa::strip_trailing_slash "$target_dir")"
     # Pipe GNU find into array.
     readarray -t array <<< "$( \
-        find "$source_dir" \
+        "$find" "$source_dir" \
             -maxdepth 1 \
             -mindepth 1 \
-            -type f \
+            -type 'f' \
             -iname '*_L001_*.fastq*' \
             -print \
-        | sort \
+        | "$sort" \
     )"
     # Error if file array is empty.
     if [[ "${#array[@]}" -eq 0 ]]
@@ -161,7 +189,7 @@ koopa::fastq_lanepool() { # {{{1
     # Loop across the array indices, similar to 'mapply()' approach in R.
     for i in "${!out[@]}"
     do
-        cat "${source_dir}/${head[i]}_L00"[1-9]"_${tail[i]}" > "${out[i]}"
+        "$cat" "${source_dir}/${head[i]}_L00"[1-9]"_${tail[i]}" > "${out[i]}"
     done
     return 0
 }
@@ -169,15 +197,18 @@ koopa::fastq_lanepool() { # {{{1
 koopa::fastq_reads_per_file() { # {{{1
     # """
     # Determine the number of reads per FASTQ file.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-09-21.
     # """
-    local dir
-    koopa::assert_is_installed 'awk' 'wc' 'zcat'
+    local awk dir wc zcat
+    awk="$(koopa::locate_awk)"
+    wc="$(koopa::locate_wc)"
+    zcat="$(koopa::locate_zcat)"
     dir="${1:-.}"
-    dir="$(koopa::strip_trailing_slash "$dir")"
+    dir="$(koopa::realpath "$dir")"
     # Divide by 4.
-    zcat "${dir}/"*'_R1.fastq.gz' \
-        | wc -l \
-        | awk '{print $1/4}'
+    # shellcheck disable=SC2016
+    "$zcat" "${dir}/"*'_R1.fastq.gz' \
+        | "$wc" -l \
+        | "$awk" '{print $1/4}'
     return 0
 }
