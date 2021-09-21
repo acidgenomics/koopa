@@ -66,7 +66,7 @@ koopa::run_kallisto_paired_end() { # {{{1
                 ;;
             '--gff-file')
                 dict[gff_file]="${2:?}"
-                shift 1
+                shift 2
                 ;;
             '--index-dir='*)
                 dict[index_dir]="${1#*=}"
