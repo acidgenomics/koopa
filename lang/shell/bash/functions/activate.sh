@@ -49,7 +49,6 @@ _koopa_activate_bash_completion() { # {{{1
     return 0
 }
 
-# FIXME This is erroring inside of '/opt/koopa' on Debian 11 Docker image.
 _koopa_activate_bash_extras() { # {{{1
     # """
     # Activate Bash extras.
@@ -60,13 +59,13 @@ _koopa_activate_bash_extras() { # {{{1
     _koopa_activate_bash_completion
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
-    # FIXME We may need to harden against dirty Git repo here...
-    # > _koopa_activate_bash_prompt
+    _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
     _koopa_activate_completion
     return 0
 }
 
+# FIXME This is erroring inside of Debian 11 Docker image.
 _koopa_activate_bash_prompt() { # {{{1
     # """
     # Activate Bash prompt.
@@ -79,6 +78,7 @@ _koopa_activate_bash_prompt() { # {{{1
         _koopa_activate_starship
         [[ -n "${STARSHIP_SHELL:-}" ]] && return 0
     fi
+    # FIXME This step is problematic for Debian 11 image.
     PS1="$(_koopa_prompt)"
     export PS1
     return 0

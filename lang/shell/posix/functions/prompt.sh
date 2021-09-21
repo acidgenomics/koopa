@@ -1,10 +1,11 @@
 #!/bin/sh
 # shellcheck disable=SC2154,SC3003,SC3054,SC3060
 
+# FIXME This is problematic inside of Debian 11 base image.
 _koopa_prompt() { # {{{1
     # """
     # Customize the interactive prompt.
-    # @note Updated 2021-06-04.
+    # @note Updated 2021-09-21.
     #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
