@@ -887,6 +887,17 @@ koopa::locate_ssh() { # {{{1
         --name='ssh'
 }
 
+koopa::locate_ssh_keygen() { # {{{1
+    # """
+    # Locate ssh.
+    # @note Updated 2021-09-21.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='openssh' \
+        --name='ssh-keygen'
+}
+
 koopa::locate_stat() { # {{{1
     # """
     # Locate GNU stat.
