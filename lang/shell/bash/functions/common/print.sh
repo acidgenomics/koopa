@@ -110,16 +110,16 @@ koopa::install_success() { # {{{1
 koopa::invalid_arg() { # {{{1
     # """
     # Error on invalid argument.
-    # @note Updated 2021-06-02.
+    # @note Updated 2021-09-21.
     # """
     local arg x
     if [[ "$#" -gt 0 ]]
     then
         arg="${1:-}"
-        if koopa::str_match_posix "$arg" '--'
-        then
-            koopa::warning "Use '--arg=VALUE' not '--arg VALUE'."
-        fi
+        # > if koopa::str_match_posix "$arg" '--'
+        # > then
+        # >     koopa::warning "Use '--arg=VALUE' not '--arg VALUE'."
+        # > fi
         x="Invalid argument: '${arg}'."
     else
         x='Invalid argument.'
