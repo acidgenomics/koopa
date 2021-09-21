@@ -142,7 +142,7 @@ END
 koopa::update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-09-21.
     # """
     local conf_source dest_file distro_prefix source_file
     koopa::assert_has_no_args "$#"
@@ -162,6 +162,6 @@ koopa::update_ldconfig() { # {{{1
         dest_file="/etc/ld.so.conf.d/koopa-$(basename "$source_file")"
         koopa::ln --sudo "$source_file" "$dest_file"
     done
-    sudo /usr/sbin/ldconfig || true
+    sudo /sbin/ldconfig || true
     return 0
 }
