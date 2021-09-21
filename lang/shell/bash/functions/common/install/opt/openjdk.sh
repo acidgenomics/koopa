@@ -115,7 +115,7 @@ ${unique}/GPL/${file}"
 koopa::uninstall_openjdk() { # {{{1
     # """
     # Uninstall OpenJDK.
-    # @note Updated 2021-09-14.
+    # @note Updated 2021-09-21.
     # """
     local default_prefix
     koopa:::uninstall_app \
@@ -125,7 +125,7 @@ koopa::uninstall_openjdk() { # {{{1
         "$@"
     if koopa::is_linux
     then
-        default_prefix="/usr/lib/jvm/default-java"
+        default_prefix='/usr/lib/jvm/default-java'
         if [[ -d "$default_prefix" ]]
         then
             koopa::linux_java_update_alternatives "$default_prefix"
