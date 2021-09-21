@@ -3,7 +3,7 @@
 koopa::docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2021-05-23.
+    # Updated 2021-09-21.
     #
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
@@ -46,13 +46,35 @@ koopa::docker_build() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            '--delete')
-                delete=1
-                shift 1
-                ;;
+            # Key-value pairs --------------------------------------------------
             '--memory='*)
                 # e.g. use '8g' for 8 GB limit.
                 memory="${1#*=}"
+                shift 1
+                ;;
+            '--memory')
+                memory="${2:?}"
+                shift 2
+                ;;
+            '--server='*)
+                server="${1#*=}"
+                shift 1
+                ;;
+            '--server')
+                server="${2:?}"
+                shift 2
+                ;;
+            '--tag='*)
+                tag="${1#*=}"
+                shift 1
+                ;;
+            '--tag')
+                tag="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--delete')
+                delete=1
                 shift 1
                 ;;
             '--no-delete')
@@ -67,14 +89,7 @@ koopa::docker_build() { # {{{1
                 push=1
                 shift 1
                 ;;
-            '--server='*)
-                server="${1#*=}"
-                shift 1
-                ;;
-            '--tag='*)
-                tag="${1#*=}"
-                shift 1
-                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -186,7 +201,7 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-09-21.
     # """
     local basename build_file build_args days force grep image images prune pos
     local repo repos repo_name sort xargs
@@ -202,10 +217,16 @@ koopa::docker_build_all_images() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--days='*)
                 days="${1#*=}"
                 shift 1
                 ;;
+            '--days')
+                days="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
             '--force')
                 force=1
                 shift 1
@@ -214,6 +235,7 @@ koopa::docker_build_all_images() { # {{{1
                 prune=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -463,6 +485,7 @@ koopa::docker_run() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Flags ------------------------------------------------------------
             '--arm')
                 dict[arm]=1
                 shift 1
@@ -479,6 +502,7 @@ koopa::docker_run() { # {{{1
                 dict[x86]=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -580,10 +604,16 @@ koopa::is_docker_build_recent() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--days='*)
                 days="${1#*=}"
                 shift 1
                 ;;
+            '--days')
+                days="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
