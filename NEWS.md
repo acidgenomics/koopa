@@ -1,3 +1,7 @@
+## koopa 0.12.0 (2021-09-21)
+
+### Major changes
+
 ## koopa 0.11.1 (2021-07-12)
 
 ### Minor changes
