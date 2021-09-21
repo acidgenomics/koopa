@@ -33,14 +33,21 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            '--reinstall')
-                reinstall=1
-                shift 1
-                ;;
+            # Key-value pairs --------------------------------------------------
             '--version='*)
                 version="${1#*=}"
                 shift 1
                 ;;
+            '--version')
+                version="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--reinstall')
+                reinstall=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
