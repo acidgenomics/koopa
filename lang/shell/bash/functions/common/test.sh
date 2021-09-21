@@ -114,7 +114,7 @@ koopa::test_find_files_by_shebang() { # {{{1
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # Requires Perl-compatible regular expression (PCRE) support (-P).
     #
@@ -127,30 +127,35 @@ koopa::test_grep() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--ignore='*)
                 ignore="${1#*=}"
                 shift 1
+                ;;
+            '--ignore' | \
+            '-i')
+                ignore="${2:?}"
+                shift 2
                 ;;
             '--name='*)
                 name="${1#*=}"
                 shift 1
                 ;;
-            '--pattern='*)
-                pattern="${1#*=}"
-                shift 1
-                ;;
-            '-i')
-                ignore="${2:?}"
-                shift 2
-                ;;
+            '--name' | \
             '-n')
                 name="${2:?}"
                 shift 2
                 ;;
+            '--pattern='*)
+                pattern="${1#*=}"
+                shift 1
+                ;;
+            '--pattern' | \
             '-p')
                 pattern="${2:?}"
                 shift 2
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
