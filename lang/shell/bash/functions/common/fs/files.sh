@@ -3,7 +3,7 @@
 koopa::autopad_zeros() { # {{{1
     # """
     # Autopad zeroes in sample names.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local files newname num padwidth oldname pos prefix stem
     koopa::assert_has_args "$#"
@@ -13,14 +13,24 @@ koopa::autopad_zeros() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--padwidth='*)
                 padwidth="${1#*=}"
                 shift 1
+                ;;
+            '--padwidth')
+                padwidth="${2:?}"
+                shift 2
                 ;;
             '--prefix='*)
                 prefix="${1#*=}"
                 shift 1
                 ;;
+            '--prefix')
+                prefix="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
