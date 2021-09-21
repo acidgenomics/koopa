@@ -370,7 +370,7 @@ _koopa_activate_gnu_aliases() { # {{{1
 _koopa_activate_lesspipe() { # {{{1
     # """
     # Activate lesspipe.
-    # @note Updated 2021-07-22.
+    # @note Updated 2021-09-21.
     #
     # @seealso
     # - https://github.com/wofr06/lesspipe
@@ -379,7 +379,7 @@ _koopa_activate_lesspipe() { # {{{1
     # """
     _koopa_is_installed 'lesspipe.sh' || return 0
     export LESS_ADVANCED_PREPROCESSOR=1
-    export LESSOPEN="|lesspipe.sh %s"
+    export LESSOPEN='|lesspipe.sh %s'
     return 0
 }
 
