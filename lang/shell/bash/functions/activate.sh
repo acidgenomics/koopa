@@ -68,9 +68,10 @@ _koopa_activate_bash_extras() { # {{{1
 _koopa_activate_bash_prompt() { # {{{1
     # """
     # Activate Bash prompt.
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-09-21.
     # """
     [[ "$#" -eq 0 ]] || return 1
+    _koopa_is_root && return 0
     if _koopa_is_installed 'starship'
     then
         _koopa_activate_starship
