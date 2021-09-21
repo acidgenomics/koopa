@@ -745,27 +745,18 @@ koopa::return_version() { # {{{1
     if [[ -z "${flag:-}" ]]
     then
         case "$cmd_name" in
-            'docker-credential-pass')
-                flag='version'
-                ;;
-            'go')
+            'docker-credential-pass' | \
+            'go' | \
+            'openssl' | \
+            'rstudio-server' | \
+            'singularity')
                 flag='version'
                 ;;
             'lua')
                 flag='-v'
                 ;;
-            'openssl')
-                flag='version'
-                ;;
-            'rstudio-server')
-                flag='version'
-                ;;
-            'ssh')
-                flag='-V'
-                ;;
-            'singularity')
-                flag='version'
-                ;;
+            'openssh' | \
+            'ssh' | \
             'tmux')
                 flag='-V'
                 ;;
