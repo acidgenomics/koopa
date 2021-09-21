@@ -5,7 +5,7 @@
 koopa::samtools_convert_sam_to_bam() { # {{{1
     # """
     # Convert a SAM file to BAM format.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-09-21.
     #
     # samtools view --help
     # Useful flags:
@@ -18,20 +18,30 @@ koopa::samtools_convert_sam_to_bam() { # {{{1
     # -o FILE               output file name [stdout]
     # -u                    uncompressed BAM output (implies -b)
     # """
-    local bam_bn sam_bn threads
+    local bam_bn input_sam output_bam sam_bn threads
     koopa::assert_has_args "$#"
     koopa::assert_is_installed 'samtools'
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--input-sam='*)
-                local input_sam="${1#*=}"
+                input_sam="${1#*=}"
                 shift 1
+                ;;
+            '--input-sam')
+                input_sam="${2:?}"
+                shift 2
                 ;;
             '--output-bam='*)
-                local output_bam="${1#*=}"
+                output_bam="${1#*=}"
                 shift 1
                 ;;
+            '--output-bam')
+                output_bam="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
