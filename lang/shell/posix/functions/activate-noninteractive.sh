@@ -30,7 +30,6 @@ _koopa_activate_bcbio_nextgen() { # {{{1
     return 0
 }
 
-# FIXME This is failing now inside of Debian base image.
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda using 'activate' script.

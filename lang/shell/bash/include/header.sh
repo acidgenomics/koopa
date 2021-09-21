@@ -187,10 +187,8 @@ __koopa_bash_header() { # {{{1
         )"
         export KOOPA_PREFIX
     fi
-    echo 'FIXME aaa'
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
-    echo 'FIXME bbb'
     if [[ "${dict[test]}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
@@ -252,7 +250,6 @@ __koopa_bash_header() { # {{{1
     then
         _koopa_duration_stop 'bash' || return 1
     fi
-    echo 'FIXME zzz'
     return 0
 }
 
