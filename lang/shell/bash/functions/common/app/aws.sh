@@ -9,7 +9,7 @@
 koopa::aws_batch_fetch_and_run() { # {{{1
     # """
     # Fetch and run a script on AWS Batch.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # S3 bucket paths and remote URLs are supported.
     #
@@ -42,22 +42,32 @@ koopa::aws_batch_fetch_and_run() { # {{{1
     return 0
 }
 
-# FIXME Allow the user to set '--profile' via flag here.
 koopa::aws_batch_list_jobs() { # {{{1
     # """
     # List AWS Batch jobs.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local aws job_queue job_queue_array profile status status_array
+    aws="$(koopa::locate_aws)"
+    profile="${AWS_PROFILE:-default}"
+    while (("$#"))
+    do
+        case "$1" in
+            '--profile='*)
+                profile="${1#*=}"
+                shift 1
+                ;;
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'aws'
     koopa::assert_is_set \
         'AWS_BATCH_ACCOUNT_ID' \
         'AWS_BATCH_QUEUE' \
         'AWS_BATCH_REGION'
-    koopa::h1 'Checking AWS Batch job status.'
-    aws="$(koopa::locate_aws)"
-    profile="${AWS_PROFILE:-default}"
+    koopa::h1 "Checking AWS Batch job status for '${profile}' profile."
     job_queue_array=(
         'arn'
         'aws'
@@ -87,24 +97,59 @@ koopa::aws_batch_list_jobs() { # {{{1
     return 0
 }
 
-# FIXME Allow the user to set '--profile' via flag here.
 koopa::aws_cp_regex() { # {{{1
     # """
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
     #
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # @seealso
     # - aws s3 cp help
     # """
-    local aws pattern profile source_prefix target_prefix
+    local aws pattern pos profile source_prefix target_prefix
     koopa::assert_has_args "$#"
-    pattern="${1:?}"
-    source_prefix="${2:?}"
-    target_prefix="${3:?}"
     aws="$(koopa::locate_aws)"
     profile="${AWS_PROFILE:-default}"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--pattern='*)
+                pattern="${1#*=}"
+                shift 1
+                ;;
+            '--profile='*)
+                profile="${1#*=}"
+                shift 1
+                ;;
+            '--source_prefix='*)
+                source_prefix="${1#*=}"
+                shift 1
+                ;;
+            '--target_prefix='*)
+                target_prefix="${1#*=}"
+                shift 1
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    # Providing legacy support for positional arguments. This may be removed
+    # in a future update in favor of requiring named arguments.
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -gt 0 ]]
+    then
+        koopa::assert_has_args_eq "$#" 3
+        pattern="${1:?}"
+        source_prefix="${2:?}"
+        target_prefix="${3:?}"
+    fi
     "$aws" --profile="$profile" \
         s3 cp \
             --exclude='*' \
@@ -116,12 +161,11 @@ koopa::aws_cp_regex() { # {{{1
     return 0
 }
 
-# FIXME Rework using 'app' and 'dict' arrays.
 koopa::aws_s3_find() { # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-09-21.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
@@ -363,22 +407,47 @@ koopa::aws_s3_ls() { # {{{1
     return 0
 }
 
-# FIXME Allow the user to define the profile.
 koopa::aws_s3_mv_to_parent() { # {{{1
     # """
-    # Move objects in an S3 bucket to parent directory.
+    # Move objects in an S3 bucket directory to parent directory.
     #
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-09-21.
     #
     # @details
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
-    local aws bn dn1 dn2 file files prefix profile target x
+    local aws bn dn1 dn2 file files pos prefix profile target x
     koopa::assert_has_args "$#"
     aws="$(koopa::locate_aws)"
     profile="${AWS_PROFILE:-default}"
-    prefix="${1:?}"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--prefix='*)
+                prefix="${1#*=}"
+                shift 1
+                ;;
+            '--profile='*)
+                profile="${1#*=}"
+                shift 1
+                ;;
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -gt 0 ]]
+    then
+        koopa::assert_has_args_eq "$#" 1
+        prefix="${1:?}"
+    fi
     x="$( \
         koopa::aws_s3_ls \
             --profile="$profile" \
@@ -393,17 +462,19 @@ koopa::aws_s3_mv_to_parent() { # {{{1
         dn2="$(koopa::dirname "$dn1")"
         target="${dn2}/${bn}"
         "$aws" --profile="$profile" \
-            s3 mv \
-                "$file" "$target"
+            s3 mv "$file" "$target"
     done
     return 0
 }
 
 # FIXME Allow the user to define the profile.
+# FIXME Tighten up the required arguments here.
+# FIXME Only allow two positional arguments.
+# FIXME Allow the user to specify named arguments.
 koopa::aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-09-21.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
