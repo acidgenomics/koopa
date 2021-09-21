@@ -53,10 +53,16 @@ koopa::aws_batch_list_jobs() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--profile='*)
                 profile="${1#*=}"
                 shift 1
                 ;;
+            '--profile')
+                profile="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -115,22 +121,40 @@ koopa::aws_cp_regex() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--pattern='*)
                 pattern="${1#*=}"
                 shift 1
+                ;;
+            '--pattern')
+                pattern="${2:?}"
+                shift 2
                 ;;
             '--profile='*)
                 profile="${1#*=}"
                 shift 1
                 ;;
+            '--profile')
+                profile="${2:?}"
+                shift 2
+                ;;
             '--source_prefix='*)
                 source_prefix="${1#*=}"
                 shift 1
+                ;;
+            '--source_prefix')
+                source_prefix="${2:?}"
+                shift 2
                 ;;
             '--target_prefix='*)
                 target_prefix="${1#*=}"
                 shift 1
                 ;;
+            '--target_prefix')
+                target_prefix="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -186,18 +210,32 @@ koopa::aws_s3_find() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--exclude='*)
                 exclude="${1#*=}"
                 shift 1
+                ;;
+            '--exclude')
+                exclude="${2:?}"
+                shift 2
                 ;;
             '--include='*)
                 include="${1#*=}"
                 shift 1
                 ;;
+            '--include')
+                include="${2:?}"
+                shift 2
+                ;;
             '--profile='*)
                 profile="${1#*=}"
                 shift 1
                 ;;
+            '--profile')
+                profile="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -269,23 +307,38 @@ koopa::aws_s3_ls() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--prefix='*)
                 dict[prefix]="${1#*=}"
                 shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
                 ;;
             '--profile='*)
                 dict[profile]="${1#*=}"
                 shift 1
                 ;;
-            '--recursive')
-                dict[recursive]=1
-                flags+=('--recursive')
-                shift 1
+            '--profile')
+                dict[profile]="${2:?}"
+                shift 2
                 ;;
             '--type='*)
                 dict[type]="${1#*=}"
                 shift 1
                 ;;
+            '--type')
+                dict[type]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--recursive')
+                dict[recursive]=1
+                flags+=('--recursive')
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -425,14 +478,24 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--prefix='*)
                 prefix="${1#*=}"
                 shift 1
+                ;;
+            '--prefix')
+                prefix="${2:?}"
+                shift 2
                 ;;
             '--profile='*)
                 profile="${1#*=}"
                 shift 1
                 ;;
+            '--profile')
+                profile="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -513,22 +576,40 @@ koopa::aws_s3_sync() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--exclude='*)
                 exclude_args+=("${1#*=}")
                 shift 1
+                ;;
+            '--exclude')
+                exclude_args+=("${2:?}")
+                shift 2
                 ;;
             '--profile='*)
                 dict[profile]="${1#*=}"
                 shift 1
                 ;;
+            '--profile')
+                dict[profile]="${2:?}"
+                shift 2
+                ;;
             '--source-prefix='*)
                 dict[source_prefix]="${1#*=}"
                 shift 1
+                ;;
+            '--source-prefix')
+                dict[source_prefix]="${2:?}"
+                shift 2
                 ;;
             '--target-prefix='*)
                 dict[target_prefix]="${1#*=}"
                 shift 1
                 ;;
+            '--target-prefix')
+                dict[target_prefix]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
             '--delete' | \
             '--dryrun' | \
             '--exact-timestamps' | \
@@ -541,6 +622,7 @@ koopa::aws_s3_sync() { # {{{1
                 sync_args+=("$1")
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
