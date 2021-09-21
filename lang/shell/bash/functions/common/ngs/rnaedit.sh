@@ -5,7 +5,7 @@
 koopa::run_rnaeditingindexer() { # {{{1
     # """
     # Run RNAEditingIndexer.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-09-21.
     #
     # Genome must be indexed by BEDGenomeIndexer.
     # Note that '--verbose' flag includes more output in summary CSV.
@@ -26,22 +26,37 @@ koopa::run_rnaeditingindexer() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--bam-dir='*)
                 bam_dir="${1#*=}"
                 shift 1
                 ;;
-            '--example')
-                example=1
-                shift 1
+            '--bam-dir')
+                bam_dir="${2:?}"
+                shift 2
                 ;;
             '--genome='*)
                 genome="${1#*=}"
                 shift 1
                 ;;
+            '--genome')
+                genome="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 output_dir="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir')
+                output_dir="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--example')
+                example=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
