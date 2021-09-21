@@ -15,7 +15,7 @@ koopa::cd() { # {{{1
 koopa::chgrp() { # {{{1
     # """
     # GNU chgrp.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local chgrp pos sudo which_chgrp
     sudo=0
@@ -23,11 +23,13 @@ koopa::chgrp() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -53,7 +55,7 @@ koopa::chgrp() { # {{{1
 koopa::chmod() { # {{{1
     # """
     # GNU chmod.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local chmod pos sudo which_chmod
     sudo=0
@@ -61,11 +63,13 @@ koopa::chmod() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -91,7 +95,7 @@ koopa::chmod() { # {{{1
 koopa::chown() { # {{{1
     # """
     # GNU chown.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local chown dereference pos recursive sudo which_chown
     dereference=1
@@ -101,7 +105,8 @@ koopa::chown() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            'dereference' | \
+            # Flags ------------------------------------------------------------
+            '--dereference' | \
             '-H')
                 dereference=1
                 shift 1
@@ -121,6 +126,7 @@ koopa::chown() { # {{{1
                 sudo=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -154,7 +160,7 @@ koopa::chown() { # {{{1
 koopa::cp() { # {{{1
     # """
     # Hardened version of GNU coreutils copy.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # getopts info:
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
@@ -168,6 +174,17 @@ koopa::cp() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--target='*)
+                target_dir="${1#*=}"
+                shift 1
+                ;;
+            '--target' | \
+            '-t')
+                target_dir="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
                 sudo=1
@@ -178,14 +195,7 @@ koopa::cp() { # {{{1
                 symlink=1
                 shift 1
                 ;;
-            '--target='*)
-                target_dir="${1#*=}"
-                shift 1
-                ;;
-            '-t')
-                target_dir="${2:?}"
-                shift 2
-                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -262,7 +272,7 @@ koopa::init_dir() { # {{{1
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly with GNU ln.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local ln ln_args mkdir pos rm source_file target_file target_dir
     local target_parent which_ln
@@ -272,19 +282,23 @@ koopa::ln() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--target='*)
+                target_dir="${1#*=}"
+                shift 1
+                ;;
+            '--target' | \
+            '-t')
+                target_dir="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
                 ;;
-            '--target='*)
-                target_dir="${1#*=}"
-                shift 1
-                ;;
-            '-t')
-                target_dir="${2:?}"
-                shift 2
-                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -331,7 +345,7 @@ koopa::ln() { # {{{1
 koopa::mkdir() { # {{{1
     # """
     # Create directories with parents automatically.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local mkdir pos sudo which_mkdir
     sudo=0
@@ -339,11 +353,13 @@ koopa::mkdir() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -370,7 +386,7 @@ koopa::mkdir() { # {{{1
 koopa::mv() { # {{{1
     # """
     # Move a file or directory with GNU mv.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # This function works on 1 file or directory at a time.
     # It ensures that the target parent directory exists automatically.
@@ -387,19 +403,23 @@ koopa::mv() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--target='*)
+                target_dir="${1#*=}"
+                shift 1
+                ;;
+            '--target' | \
+            '-t')
+                target_dir="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
                 ;;
-            '--target='*)
-                target_dir="${1#*=}"
-                shift 1
-                ;;
-            '-t')
-                target_dir="${2:?}"
-                shift 2
-                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -414,7 +434,6 @@ koopa::mv() { # {{{1
     which_mv="$(koopa::locate_mv)"
     if [[ "$sudo" -eq 1 ]]
     then
-        # NOTE Don't run sudo check here, can slow down functions.
         mkdir=('koopa::mkdir' '--sudo')
         mv=('sudo' "$which_mv")
         rm=('koopa::rm' '--sudo')
@@ -446,7 +465,7 @@ koopa::mv() { # {{{1
 koopa::parent_dir() { # {{{1
     # """
     # Get the parent directory path.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     #
     # This requires file to exist and resolves symlinks.
     # """
@@ -458,14 +477,17 @@ koopa::parent_dir() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--num='*)
                 n="${1#*=}"
                 shift 1
                 ;;
+            '--num' | \
             '-n')
                 n="${2:?}"
                 shift 2
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -500,7 +522,7 @@ koopa::parent_dir() { # {{{1
 koopa::relink() { # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # @note Updated 2020-09-20.
+    # @note Updated 2020-09-21.
     # """
     local dest_file ln pos rm source_file sudo
     sudo=0
@@ -508,11 +530,13 @@ koopa::relink() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -545,7 +569,7 @@ koopa::relink() { # {{{1
 koopa::rm() { # {{{1
     # """
     # Remove files/directories quietly with GNU rm.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-21.
     # """
     local pos rm sudo which_rm
     sudo=0
@@ -553,11 +577,13 @@ koopa::rm() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
                 sudo=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
