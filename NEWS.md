@@ -2,6 +2,10 @@
 
 ### Major changes
 
+- All functions supporting long flag arguments (e.g. `--argument=VALUE`) now
+  also support the `--argument VALUE` positional variant, which are easier to
+  code inside Python/R wrapper functions.
+
 ## koopa 0.11.1 (2021-07-12)
 
 ### Minor changes
