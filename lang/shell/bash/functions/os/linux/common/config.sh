@@ -147,7 +147,7 @@ koopa::update_ldconfig() { # {{{1
     local conf_source dest_file distro_prefix source_file
     koopa::assert_has_no_args "$#"
     [[ -d '/etc/ld.so.conf.d' ]] || return 0
-    koopa::assert_is_installed '/usr/sbin/ldconfig'
+    koopa::assert_is_installed '/sbin/ldconfig'
     koopa::assert_is_admin
     distro_prefix="$(koopa::distro_prefix)"
     conf_source="${distro_prefix}/etc/ld.so.conf.d"
