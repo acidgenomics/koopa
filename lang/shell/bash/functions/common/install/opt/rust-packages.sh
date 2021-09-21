@@ -95,9 +95,23 @@ koopa::uninstall_rust_packages() { # {{{1
 }
 
 koopa::update_rust_packages() { # {{{1
+    koopa:::update_app \
+        --name-fancy='Rust packages' \
+        --name='rust-packages'
+}
+
+koopa:::update_rust_packages() { # {{{1
     # """
     # Update Rust packages.
     # @note Updated 2020-07-17.
+    # @seealso
+    # - https://crates.io/crates/cargo-update
+    # - https://github.com/nabijaczleweli/cargo-update
     # """
-    koopa::install_rust_packages "$@"
+    local cargo
+    koopa::configure_rust
+    koopa::activate_rust
+    cargo="$(koopa::locate_cargo)"
+    "$cargo" install-update -a
+    return 0
 }
