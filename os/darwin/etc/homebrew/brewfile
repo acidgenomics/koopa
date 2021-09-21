@@ -126,7 +126,6 @@ cask "zoom"
 
 # These recipes don't need to be installed on cloud Linux instances.
 brew "bandcamp-dl"
-brew "busybox"
 brew "flac"
 brew "lame"
 brew "libiconv"
