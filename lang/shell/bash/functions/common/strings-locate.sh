@@ -362,12 +362,12 @@ koopa::locate_du() { # {{{1
 koopa::locate_emacs() { # {{{1
     # """
     # Locate Emacs.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-09-21.
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
         --macos-app='/Applications/Emacs.app/Contents/MacOS/Emacs' \
-        --name="emacs"
+        --name='emacs'
 }
 
 koopa::locate_find() { # {{{1
