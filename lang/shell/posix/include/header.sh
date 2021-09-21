@@ -68,7 +68,6 @@ _koopa_posix_header() { # {{{1
             _koopa_activate_bcbio_nextgen || return 1
         elif _koopa_is_macos
         then
-            # > _koopa_macos_activate_gpg_suite || return 1
             _koopa_macos_activate_r || return 1
             _koopa_macos_activate_visual_studio_code || return 1
         fi
