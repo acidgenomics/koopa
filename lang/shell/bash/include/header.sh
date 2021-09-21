@@ -119,7 +119,6 @@ __koopa_bash_header() { # {{{1
         [test]=0
         [verbose]=0
     )
-    echo 'FIXME aaa'
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dict[dev]="$KOOPA_DEV"
@@ -140,7 +139,6 @@ __koopa_bash_header() { # {{{1
     then
         set -o xtrace  # -x
     fi
-    echo 'FIXME bbb'
     if [[ "${dict[checks]}" -eq 1 ]]
     then
         # > set -o noglob  # -f
@@ -175,7 +173,7 @@ __koopa_bash_header() { # {{{1
         #   The-confusing-Bash-configuration-files.html
         [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
     fi
-    echo 'FIXME ccc'
+    echo 'FIXME aaa'
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
         dict[header_path]="${BASH_SOURCE[0]}"
@@ -190,8 +188,10 @@ __koopa_bash_header() { # {{{1
         )"
         export KOOPA_PREFIX
     fi
+    echo 'FIXME bbb'
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
+    echo 'FIXME ccc'
     if [[ "${dict[test]}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
