@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::install_rust_packages() {
+koopa::install_rust_packages() { # {{{1
     koopa:::install_app \
         --name-fancy='Rust packages' \
         --name='rust-packages' \
