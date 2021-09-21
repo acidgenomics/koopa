@@ -17,8 +17,8 @@ koopa::generate_ssh_key() { # {{{1
     # @seealso
     # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
     # """
-    local comment file flags hostname key_name user
-    koopa::assert_is_installed 'ssh-keygen'
+    local comment file flags hostname key_name ssh_keygen user
+    ssh_keygen="$(koopa::locate_ssh_keygen)"
     user="$(koopa::user)"
     hostname="$(koopa::hostname)"
     comment="${user}@${hostname}"
@@ -55,6 +55,7 @@ koopa::generate_ssh_key() { # {{{1
         koopa::alert_note "SSH key exists at '${file}'."
         return 0
     fi
+    koopa::alert "Generating SSH key at '${file}'."
     flags=(
         '-C' "$comment"
         '-N' ''
@@ -76,8 +77,10 @@ koopa::generate_ssh_key() { # {{{1
             '-t' 'ed25519'
         )
     fi
-    koopa::dl 'Flags' "${flags[*]}"
-    ssh-keygen "${flags[@]}"
+    koopa::dl \
+        'ssh-keygen' "$ssh_keygen" \
+        'Flags' "${flags[*]}"
+    "$ssh_keygen" "${flags[@]}"
     koopa::alert_success "Generated SSH key at '${file}'."
     return 0
 }
@@ -85,13 +88,16 @@ koopa::generate_ssh_key() { # {{{1
 koopa::ssh_key_info() { # {{{1
     # """
     # Get SSH key information.
-    # @note Updated 2021-06-04.
+    # @note Updated 2021-09-21.
     # @seealso
     # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
     # """
+    local keyfile ssh_keygen uniq
+    ssh_keygen="$(koopa::locate_ssh_keygen)"
+    uniq="$(koopa::locate_uniq)"
     for keyfile in "${HOME:?}/.ssh/id_"*
     do
-        ssh-keygen -l -f "${keyfile}"
-    done | uniq
+        "$ssh_keygen" -l -f "$keyfile"
+    done | "$uniq"
     return 0
 }
