@@ -172,7 +172,7 @@ haskell-stack="rolling"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.2.12"
+homebrew="3.2.13"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
