@@ -5,7 +5,7 @@
 koopa::sambamba_filter() { # {{{1
     # """
     # Perform filtering on a BAM file with sambamba.
-    # @note Updated 2020-08-13.
+    # @note Updated 2021-09-21.
     #
     # sambamba prints version information into stderr.
     #
@@ -22,18 +22,32 @@ koopa::sambamba_filter() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--filter='*)
                 filter="${1#*=}"
                 shift 1
+                ;;
+            '--filter')
+                filter="${2:?}"
+                shift 2
                 ;;
             '--input-bam='*)
                 input_bam="${1#*=}"
                 shift 1
                 ;;
+            '--input-bam')
+                input_bam="${2:?}"
+                shift 2
+                ;;
             '--output-bam='*)
                 output_bam="${1#*=}"
                 shift 1
                 ;;
+            '--output-bam')
+                output_bam="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
