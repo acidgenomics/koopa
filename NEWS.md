@@ -5,6 +5,53 @@
 - All functions supporting long flag arguments (e.g. `--argument=VALUE`) now
   also support the `--argument VALUE` positional variant, which are easier to
   code inside Python/R wrapper functions.
+- Added single-end sample processing support for kallisto and salmon.
+- Improved Homebrew (Linuxbrew) support for Linux. Split out the brewfiles into
+  separate files that we can share across Linux and macOS. This is still a bit
+  of a work in progress, and may change in the future. In particular, support
+  for Homebrew on ARM Linux is currently quite poor and helps development help.
+- Reworked and improved AWS CLI utility functions. In particular, `aws_s3_ls`
+  is improved to better pick out directories and files, using `awk` now
+  internally. All AWS functions now support non-default CLI profiles, either
+  using `AWS_PROFILE` global variable, or `--profile` argument.
+- Hardened `PATH` and `PKG_CONFIG_PATH` inside of install and update function
+  calls, where applicable.
+- Reverted use of `_koopa_conda_alias` back to full conda activation inside of
+  interactive shells. Use of this approach was resulting in weird behavior on
+  Debian 11 ARM test AWS AMI image.
+
+### Minor changes
+
+- `run-kallisto` is now a symlink to `run-kallisto-paired-end`, and
+  `run-salmon` is now a symlink to `run-salmon-paired-end`.
+- Our default `condarc` file inherited by conda now uses capitalized `True`
+  and `False` values, recommended by Bioconda. Also disabling auto update of
+  conda in this config by default.
+- Improved auto-completion support for main `koopa` program.
+- Improved conda detection support inside of active R session.
+  See `Rprofile.site` file for details.
+- Updated RSPM snapshot from 2021-07-01 to 2021-09-21.
+- Increased default timeout in R configuration.
+- Improved configuration when handing off to r-koopa package.
+  See `header.R` file for details.
+- All case switch statement arguments are now quoted, where applicable.
+- Improved CLI handoff to r-koopa.
+- Renamed `is_git` function to `is_git_repo`.
+- Added draft support for Debian 11 Bullseye release.
+- Reorganized installer functions, adding an additional level of nesting in
+  directory hierarchy.
+- Internal koopa coreutils functions now support long `--sudo` argument instead
+  of simply using `-S`, which is more readable.
+- Added more internal program locator functions.
+- Improved functions that extract program versions.
+- Miscellaneous improvements to non-interactive and interactive shell activation
+  functions.
+- Improved handling of Emacs configuration on macOS.
+
+### Removed functions
+
+- Removed `indrops-i5-sample-index-counts`, which has been migrated to r-koopa
+  package instead.
 
 ## koopa 0.11.1 (2021-07-12)
 
