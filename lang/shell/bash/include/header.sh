@@ -250,6 +250,7 @@ __koopa_bash_header() { # {{{1
     then
         _koopa_duration_stop 'bash' || return 1
     fi
+    echo 'OK FIXME'
     return 0
 }
 
