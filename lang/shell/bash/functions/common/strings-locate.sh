@@ -1087,3 +1087,14 @@ koopa::locate_yes() { # {{{1
         --gnubin \
         --name='yes'
 }
+
+koopa::locate_zcat() { # {{{1
+    # """
+    # Locate GNU zcat.
+    # @note Updated 2021-09-21.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='gzip' \
+        --name='zcat'
+}
