@@ -13,7 +13,6 @@ _koopa_posix_header() { # {{{1
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
-    echo 'FIXME AAA'
     # Source POSIX functions.
     for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'.sh'
     do
@@ -36,7 +35,6 @@ _koopa_posix_header() { # {{{1
     then
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
-    echo 'FIXME BBB'
     _koopa_check_os || return 1
     _koopa_check_shell || return 1
     _koopa_activate_xdg || return 1
@@ -45,15 +43,12 @@ _koopa_posix_header() { # {{{1
         "$(_koopa_koopa_prefix)/activate" 'activate' \
         "$(_koopa_dotfiles_prefix)" 'dotfiles' \
         || return 1
-    echo 'FIXME CCC'
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         _koopa_activate_homebrew || return 1
     fi
-    echo 'FIXME DDD'
     _koopa_activate_make_paths || return 1
     _koopa_activate_pkg_config || return 1
-    echo 'FIXME EEE'
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # FIXME _koopa_activate_conda || return 1
@@ -77,10 +72,8 @@ _koopa_posix_header() { # {{{1
             _koopa_macos_activate_visual_studio_code || return 1
         fi
     fi
-    echo 'FIXME FFF'
     _koopa_activate_koopa_paths || return 1
     _koopa_activate_local_paths || return 1
-    echo 'FIXME GGG'
     if [ "${KOOPA_ACTIVATE:-0}" -eq 1 ]
     then
         _koopa_export_cpu_count || return 1
@@ -117,7 +110,6 @@ _koopa_posix_header() { # {{{1
     then
         _koopa_duration_stop 'posix' || return 1
     fi
-    echo 'FIXME ZZZ'
     return 0
 }
 
