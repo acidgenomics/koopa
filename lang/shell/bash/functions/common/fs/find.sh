@@ -6,7 +6,7 @@
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-09-21.
     #
     # Consider updating the variant defined in the Bash header upon any
     # changes to this function.
@@ -19,30 +19,53 @@ koopa::find() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--glob='*)
                 glob="${1#*=}"
                 shift 1
+                ;;
+            '--glob')
+                glob="${2:?}"
+                shift 2
                 ;;
             '--max-depth='*)
                 max_depth="${1#*=}"
                 shift 1
                 ;;
+            '--max-depth')
+                max_depth="${2:?}"
+                shift 2
+                ;;
             '--min-depth='*)
                 min_depth="${1#*=}"
                 shift 1
+                ;;
+            '--min-depth')
+                min_depth="${2:?}"
+                shift 2
                 ;;
             '--prefix='*)
                 prefix="${1#*=}"
                 shift 1
                 ;;
-            '--print0')
-                print0=1
-                shift 1
+            '--prefix')
+                prefix="${2:?}"
+                shift 2
                 ;;
             '--type='*)
                 type="${1#*=}"
                 shift 1
                 ;;
+            '--type')
+                type="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--print0')
+                print0=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
