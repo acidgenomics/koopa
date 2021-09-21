@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-09-19"
+koopa-date="2021-09-21"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.12.0a"
+koopa-version="0.12.0"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.2.0"
@@ -86,7 +86,7 @@ cellranger="6.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.21.2"
+cmake="3.21.3"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -176,7 +176,7 @@ homebrew="3.2.12"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
-htop="3.0.5"
+htop="3.1.0"
 
 # http://site.icu-project.org/
 icu="69.1"
@@ -279,7 +279,7 @@ poetry="1.1.8"
 proj="8.1.1"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.0.6"
+pyenv="2.0.7"
 
 # https://www.python.org/downloads/
 python="3.9.6"
