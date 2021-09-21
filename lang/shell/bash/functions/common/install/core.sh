@@ -851,7 +851,7 @@ koopa::link_app() { # {{{1
     fi
     # Copy as symbolic links.
     cp_flags=(
-        '--symbolic'
+        '--symbolic-link'
         "--target=${make_prefix}"
     )
     koopa::is_shared_install && cp_flags+=('--sudo')
