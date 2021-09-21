@@ -43,6 +43,7 @@ koopa:::install_rust_packages() { # {{{1
             'bat'
             'broot'
             'cargo-outdated'
+            'cargo-update'
             'du-dust'
             'exa'
             'fd-find'
