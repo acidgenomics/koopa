@@ -14,7 +14,7 @@ koopa::linux_install_bcbio_nextgen_genome() { # {{{1
     bcbio='bcbio_nextgen.py'
     koopa::assert_is_installed "$bcbio"
     bcbio="$(koopa::which_realpath "$bcbio")"
-    bcbio_dir="$(koopa::parent_dir -n 3 "$bcbio")"
+    bcbio_dir="$(koopa::parent_dir --num=3 "$bcbio")"
     genomes_dir="${bcbio_dir}/genomes"
     str="$(koopa::ngettext "${#genomes[@]}" 'genome' 'genomes')"
     name_fancy="bcbio-nextgen ${str}"
