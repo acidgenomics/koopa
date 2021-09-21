@@ -3,7 +3,7 @@
 koopa::python_delete_pycache() { # {{{1
     # """
     # Remove Python '__pycache__/' from site packages.
-    # @note Updated 2021-05-23.
+    # @note Updated 2021-09-21.
     #
     # These directories can create permission issues when attempting to rsync
     # installation across multiple VMs.
@@ -18,10 +18,16 @@ koopa::python_delete_pycache() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--python='*)
                 python="${1#*=}"
                 shift 1
                 ;;
+            '--python')
+                python="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 ;;
@@ -42,7 +48,7 @@ koopa::python_delete_pycache() { # {{{1
 koopa::python_pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-09-21.
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
     # """
@@ -54,14 +60,21 @@ koopa::python_pip_install() { # {{{1
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--python='*)
                 python="${1#*=}"
                 shift 1
                 ;;
+            '--python')
+                python="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
             '--reinstall')
                 reinstall=1
                 shift 1
                 ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
@@ -126,7 +139,7 @@ koopa::python_pip_outdated() { # {{{1
 koopa::python_venv_create() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-09-21.
     # """
     local default_pkgs name name_fancy prefix pos python reinstall venv_python
     koopa::assert_has_no_envs
@@ -137,19 +150,30 @@ koopa::python_venv_create() { # {{{1
     while (("$#"))
     do
         case "$1" in
-            '--force' | \
-            '--reinstall')
-                reinstall=1
-                shift 1
-                ;;
+            # Key-value pairs --------------------------------------------------
             '--name='*)
                 name="${1#*=}"
                 shift 1
+                ;;
+            '--name')
+                name="${2:?}"
+                shift 2
                 ;;
             '--python='*)
                 python="${1#*=}"
                 shift 1
                 ;;
+            '--python')
+                python="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--force' | \
+            '--reinstall')
+                reinstall=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
             '-'*)
                 koopa::invalid_arg "$1"
                 ;;
