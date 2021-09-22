@@ -127,7 +127,8 @@ bin/${dict[app_name]}"
     then
         app="${dict[brew_app]}"
     else
-        app="$(koopa::which_realpath "${dict[app_name]}")"
+        # Using 'realpath' here causes issues with Alpine BusyBox coreutils.
+        app="$(koopa::which "${dict[app_name]}")"
     fi
     if [[ -z "$app" ]]
     then
