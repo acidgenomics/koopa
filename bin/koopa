@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-set -x  # FIXME
-
 __koopa_is_installed() { # {{{1
     # """
     # Are all of the requested programs installed?
