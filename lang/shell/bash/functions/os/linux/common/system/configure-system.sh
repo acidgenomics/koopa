@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure we install OpenJDK in Bioconductor mode.
-
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-09-22.
     #
     # Intended primarily for virtual machine and Docker image builds.
     # """
