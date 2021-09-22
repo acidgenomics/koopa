@@ -456,16 +456,84 @@ koopa::debian_apt_clean() { # {{{1
     return 0
 }
 
-# FIXME Need to improve URL detection inside Ubuntu AWS AMI.
 koopa::debian_apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-09-22.
+    #
+    # Look up currently enabled sources with:
+    # > grep -Eq '^deb ' '/etc/apt/sources.list'
     #
     # Debian Docker images can also use snapshots:
     # http://snapshot.debian.org/archive/debian/20210326T030000Z
+    #
+    # @section AWS AMI instances:
+    #
+    # Debian 11 x86 defaults:
+    # > deb http://cdn-aws.deb.debian.org/debian
+    #       bullseye main
+    # > deb http://security.debian.org/debian-security
+    #       bullseye-security main
+    # > deb http://cdn-aws.deb.debian.org/debian
+    #       bullseye-updates main
+    # > deb http://cdn-aws.deb.debian.org/debian
+    #       bullseye-backports main
+    #
+    # Debian 11 ARM defaults:
+    # deb http://cdn-aws.deb.debian.org/debian
+    #     bullseye main
+    # deb http://security.debian.org/debian-security
+    #     bullseye-security main
+    # deb http://cdn-aws.deb.debian.org/debian
+    #     bullseye-updates main
+    # deb http://cdn-aws.deb.debian.org/debian
+    #     bullseye-backports main
+    #
+    # Ubuntu 20 LTS x86 defaults:
+    # > deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/
+    #       focal main restricted
+    # > deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/
+    #       focal-updates main restricted
+    # > deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/
+    #       focal universe
+    # > deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/
+    #       focal-updates universe
+    # > deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/
+    #       focal multiverse
+    # > deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/
+    #       focal-updates multiverse
+    # > deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/
+    #       focal-backports main restricted universe multiverse
+    # > deb http://security.ubuntu.com/ubuntu
+    #       focal-security main restricted
+    # > deb http://security.ubuntu.com/ubuntu
+    #       focal-security universe
+    # > deb http://security.ubuntu.com/ubuntu
+    #       focal-security multiverse
+    #
+    # Ubuntu ARM defaults:
+    # > deb http://us-east-1.ec2.ports.ubuntu.com/ubuntu-ports/
+    #       focal main restricted
+    # > deb http://us-east-1.ec2.ports.ubuntu.com/ubuntu-ports/
+    #       focal-updates main restricted
+    # > deb http://us-east-1.ec2.ports.ubuntu.com/ubuntu-ports/
+    #       focal universe
+    # > deb http://us-east-1.ec2.ports.ubuntu.com/ubuntu-ports/
+    #       focal-updates universe
+    # > deb http://us-east-1.ec2.ports.ubuntu.com/ubuntu-ports/
+    #       focal multiverse
+    # > deb http://us-east-1.ec2.ports.ubuntu.com/ubuntu-ports/
+    #       focal-updates multiverse
+    # > deb http://us-east-1.ec2.ports.ubuntu.com/ubuntu-ports/
+    #       focal-backports main restricted universe multiverse
+    # > deb http://ports.ubuntu.com/ubuntu-ports
+    #       focal-security main restricted
+    # > deb http://ports.ubuntu.com/ubuntu-ports
+    #       focal-security universe
+    # > deb http://ports.ubuntu.com/ubuntu-ports
+    #       focal-security multiverse
     # """
-    local arch aws_cdn codenames os_codename grep os_id repos sources_list tee
+    local arch codenames os_codename grep os_id repos sources_list tee
     local sources_list_d urls
     koopa::assert_has_no_args "$#"
     grep="$(koopa::locate_grep)"
@@ -473,44 +541,19 @@ koopa::debian_apt_configure_sources() { # {{{1
     sources_list='/etc/apt/sources.list'
     koopa::alert "Configuring apt sources in '${sources_list}'."
     koopa::assert_is_file "$sources_list"
-
-
-    # FIXME This only works on Debian, need to rethink.
-    # Check if system is an Amazon EC2 AMI using AWS CDN.
-    if grep -q 'cdn-aws' "$sources_list"
-    then
-        aws_cdn=1
-    else
-        aws_cdn=0
-    fi
-
-
-
-    if [[ -L "$sources_list" ]]
-    then
-        koopa::rm --sudo "$sources_list"
-    fi
-    sources_list_d='/etc/apt/sources.list.d'
-    if [[ -L "$sources_list_d" ]]
-    then
-        koopa::rm --sudo "$sources_list_d"
-    fi
-    if [[ ! -d "$sources_list_d" ]]
-    then
-        koopa::mkdir --sudo "$sources_list_d"
-    fi
+    declare -A codenames
+    declare -A urls
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
     arch="$(koopa::arch)"
-    declare -A codenames
-    declare -A urls
     case "$os_id" in
         'debian')
             # Can consider including 'backports' here as well.
             repos=('main')
-            if [[ "$aws_cdn" -eq 1 ]]
+            if "$grep" -Fq \
+                    'http://cdn-aws.deb.debian.org/debian' \
+                    "$sources_list"
             then
-                # FIXME Rework this, using a variable.
                 urls[main]='http://cdn-aws.deb.debian.org/debian/'
             else
                 urls[main]='http://deb.debian.org/debian/'
@@ -520,13 +563,28 @@ koopa::debian_apt_configure_sources() { # {{{1
         'ubuntu')
             # Can consider including 'multiverse' here as well.
             repos=('main' 'restricted' 'universe')
+            if "$grep" -Fq \
+                'http://ports.ubuntu.com/ubuntu-ports' \
+                "$sources_list"
+            then
+                # e.g. this applies to Raspberry Pi ARM configuration.
+                urls[main]='http://ports.ubuntu.com/ubuntu-ports/'
+                urls[security]="${urls[main]}"
+            fi
+
+
+
+
+
+
+
+
+
             case "$arch" in
                 # FIXME This won't work correctly for Ubuntu AMI on ARM correct?
                 # FIXME Confirm this with AWS AMI using ARM.
                 'aarch64')
                     # ARM (e.g. Raspberry Pi).
-                    urls[main]='http://ports.ubuntu.com/ubuntu-ports/'
-                    urls[security]="${urls[main]}"
                     ;;
                 *)
                     if [[ "$aws_cdn" -eq 1 ]]
@@ -550,11 +608,29 @@ koopa::debian_apt_configure_sources() { # {{{1
     codenames[security]="${os_codename}-security"
     codenames[updates]="${os_codename}-updates"
     urls[updates]="${urls[main]}"
+
+
+
+    # Configure primary apt sources.
+    if [[ -L "$sources_list" ]]
+    then
+        koopa::rm --sudo "$sources_list"
+    fi
     sudo "$tee" "$sources_list" >/dev/null << END
 deb ${urls[main]} ${codenames[main]} ${repos[*]}
 deb ${urls[security]} ${codenames[security]} ${repos[*]}
 deb ${urls[updates]} ${codenames[updates]} ${repos[*]}
 END
+    # Configure secondary apt sources.
+    sources_list_d='/etc/apt/sources.list.d'
+    if [[ -L "$sources_list_d" ]]
+    then
+        koopa::rm --sudo "$sources_list_d"
+    fi
+    if [[ ! -d "$sources_list_d" ]]
+    then
+        koopa::mkdir --sudo "$sources_list_d"
+    fi
     return 0
 }
 
