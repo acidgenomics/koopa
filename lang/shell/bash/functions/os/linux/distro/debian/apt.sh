@@ -456,6 +456,7 @@ koopa::debian_apt_clean() { # {{{1
     return 0
 }
 
+# FIXME Need to improve URL detection inside Ubuntu AWS AMI.
 koopa::debian_apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
@@ -472,6 +473,9 @@ koopa::debian_apt_configure_sources() { # {{{1
     sources_list='/etc/apt/sources.list'
     koopa::alert "Configuring apt sources in '${sources_list}'."
     koopa::assert_is_file "$sources_list"
+
+
+    # FIXME This only works on Debian, need to rethink.
     # Check if system is an Amazon EC2 AMI using AWS CDN.
     if grep -q 'cdn-aws' "$sources_list"
     then
@@ -479,6 +483,9 @@ koopa::debian_apt_configure_sources() { # {{{1
     else
         aws_cdn=0
     fi
+
+
+
     if [[ -L "$sources_list" ]]
     then
         koopa::rm --sudo "$sources_list"
@@ -503,6 +510,7 @@ koopa::debian_apt_configure_sources() { # {{{1
             repos=('main')
             if [[ "$aws_cdn" -eq 1 ]]
             then
+                # FIXME Rework this, using a variable.
                 urls[main]='http://cdn-aws.deb.debian.org/debian/'
             else
                 urls[main]='http://deb.debian.org/debian/'
@@ -513,13 +521,23 @@ koopa::debian_apt_configure_sources() { # {{{1
             # Can consider including 'multiverse' here as well.
             repos=('main' 'restricted' 'universe')
             case "$arch" in
+                # FIXME This won't work correctly for Ubuntu AMI on ARM correct?
+                # FIXME Confirm this with AWS AMI using ARM.
                 'aarch64')
                     # ARM (e.g. Raspberry Pi).
                     urls[main]='http://ports.ubuntu.com/ubuntu-ports/'
                     urls[security]="${urls[main]}"
                     ;;
                 *)
-                    urls[main]='http://archive.ubuntu.com/ubuntu/'
+                    if [[ "$aws_cdn" -eq 1 ]]
+                    then
+                        # FIXME We want to match this to the current region.
+                        # FIXME Use grep matching to return this.
+                        urls[main]='http://us-east-1.ec2.archive.ubuntu.com/ubuntu/'
+                    else
+                        urls[main]='http://archive.ubuntu.com/ubuntu/'
+                    fi
+                    # FIXME What did the security look like in x86 Ubuntu AMI?
                     urls[security]='http://security.ubuntu.com/ubuntu/'
                     ;;
             esac
