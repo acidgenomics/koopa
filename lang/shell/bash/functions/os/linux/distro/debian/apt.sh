@@ -533,7 +533,7 @@ koopa::debian_apt_configure_sources() { # {{{1
     # > deb http://ports.ubuntu.com/ubuntu-ports
     #       focal-security multiverse
     # """
-    local arch codenames cut os_codename grep os_id repos
+    local codenames cut os_codename grep os_id repos
     local sources_list sources_list_d tee urls
     koopa::assert_has_no_args "$#"
     cut="$(koopa::locate_cut)"
@@ -545,41 +545,37 @@ koopa::debian_apt_configure_sources() { # {{{1
     koopa::assert_is_file "$sources_list"
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
-    arch="$(koopa::arch)"
     declare -A codenames
     declare -A urls
+    codenames[main]="$os_codename"
+    codenames[security]="${os_codename}-security"
+    codenames[updates]="${os_codename}-updates"
     urls[main]="$( \
         "$grep" -E '^deb\s' "$sources_list" \
         | "$grep" -F ' main ' \
         | "$head" -n 1 \
         | "$cut" -d ' ' -f 2 \
     )"
+    urls[security]="$( \
+        "$grep" -E '^deb\s' "$sources_list" \
+        | "$grep" -F " ${codenames[security]} " \
+        | "$head" -n 1 \
+        | "$cut" -d ' ' -f 2 \
+    )"
+    urls[updates]="${urls[main]}"
     case "$os_id" in
         'debian')
             # Can consider including 'backports' here as well.
             repos=('main')
-            urls[security]='http://security.debian.org/debian-security/'
             ;;
         'ubuntu')
             # Can consider including 'multiverse' here as well.
             repos=('main' 'restricted' 'universe')
-            case "$arch" in
-                'aarch64')
-                    urls[security]='http://ports.ubuntu.com/ubuntu-ports/'
-                    ;;
-                *)
-                    urls[security]='http://security.ubuntu.com/ubuntu/'
-                    ;;
-            esac
             ;;
         *)
             koopa::stop "Unsupported OS: '${os_id}'."
             ;;
     esac
-    codenames[main]="$os_codename"
-    codenames[security]="${os_codename}-security"
-    codenames[updates]="${os_codename}-updates"
-    urls[updates]="${urls[main]}"
     # Configure primary apt sources.
     if [[ -L "$sources_list" ]]
     then
