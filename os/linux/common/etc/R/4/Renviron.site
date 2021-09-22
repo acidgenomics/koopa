@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for Linux.
-# @note Updated 2021-09-15.
+# @note Updated 2021-09-22.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -221,7 +221,8 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # libxml2 {{{2
 # ------------------------------------------------------------------------------
 
-XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
+# This step will fail unless Homebrew is installed.
+# > XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
 
 # remotes {{{2
 # ------------------------------------------------------------------------------
@@ -270,8 +271,9 @@ R_USER_DATA_DIR="${XDG_DATA_HOME:-~/.local/share}"
 # The units package requires udunits to be installed.
 # Use homebrew: brew install udunits
 
-UDUNITS2_INCLUDE="${HOMEBREW_OPT_PREFIX}/udunits/include"
-UDUNITS2_LIBS="${HOMEBREW_OPT_PREFIX}/udunits/lib"
+# This step will fail unless Homebrew is installed.
+# > UDUNITS2_INCLUDE="${HOMEBREW_OPT_PREFIX}/udunits/include"
+# > UDUNITS2_LIBS="${HOMEBREW_OPT_PREFIX}/udunits/lib"
 
 # R check {{{1
 # ==============================================================================
