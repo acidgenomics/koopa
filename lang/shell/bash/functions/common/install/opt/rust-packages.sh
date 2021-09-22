@@ -13,7 +13,7 @@ koopa::install_rust_packages() { # {{{1
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-22.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -26,6 +26,7 @@ koopa:::install_rust_packages() { # {{{1
     local args cargo default jobs pkg pkgs pkg_args root rustc version
     koopa::configure_rust
     koopa::activate_rust
+    export RUST_BACKTRACE=1
     cargo="$(koopa::locate_cargo)"
     rustc="$(koopa::locate_rustc)"
     koopa::add_to_path_start "$(koopa::dirname "$rustc")"
@@ -103,7 +104,7 @@ koopa::update_rust_packages() { # {{{1
 koopa:::update_rust_packages() { # {{{1
     # """
     # Update Rust packages.
-    # @note Updated 2020-07-17.
+    # @note Updated 2021-09-22.
     # @seealso
     # - https://crates.io/crates/cargo-update
     # - https://github.com/nabijaczleweli/cargo-update
@@ -111,6 +112,7 @@ koopa:::update_rust_packages() { # {{{1
     local cargo
     koopa::configure_rust
     koopa::activate_rust
+    export RUST_BACKTRACE=1
     cargo="$(koopa::locate_cargo)"
     "$cargo" install-update -a
     return 0
