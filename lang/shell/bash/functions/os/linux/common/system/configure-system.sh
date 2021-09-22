@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure we install OpenJDK in Bioconductor mode.
+
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
@@ -193,10 +195,16 @@ koopa::linux_configure_system() { # {{{1
     done
     # Automatically set internal variables, based on user input.
     case "$mode" in
+        'default' | \
+        'minimal')
+            ;;
         'base-image')
             # > dict[install_bash]=1
             # > dict[install_zsh]=1
             dict[install_base_flags]='--base-image'
+            ;;
+        'bioconductor')
+            dict[install_openjdk]=1
             ;;
         'full')
             dict[install_aspera_connect]=1
@@ -279,10 +287,6 @@ koopa::linux_configure_system() { # {{{1
             dict[install_shunit2]=1
             dict[install_tmux]=1
             dict[install_vim]=1
-            ;;
-        'bioconductor' | \
-        'default' | \
-        'minimal')
             ;;
         *)
             koopa::stop 'Invalid mode.'
