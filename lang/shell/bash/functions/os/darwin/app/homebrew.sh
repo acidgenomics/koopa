@@ -60,7 +60,7 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
 koopa::macos_brew_upgrade_casks() { # {{{1
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-09-22.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
@@ -94,7 +94,11 @@ koopa::macos_brew_upgrade_casks() { # {{{1
             'temurin')
                 koopa::configure_r
                 ;;
+            'microsoft-teams')
+                koopa::macos_disable_microsoft_teams_updater
+                ;;
         esac
     done
     return 0
 }
+
