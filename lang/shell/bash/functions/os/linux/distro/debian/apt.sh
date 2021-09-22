@@ -462,7 +462,7 @@ koopa::debian_apt_configure_sources() { # {{{1
     # @note Updated 2021-09-22.
     #
     # Look up currently enabled sources with:
-    # > grep -Eq '^deb ' '/etc/apt/sources.list'
+    # > grep -Eq '^deb\s' '/etc/apt/sources.list'
     #
     # Debian Docker images can also use snapshots:
     # http://snapshot.debian.org/archive/debian/20210326T030000Z
@@ -533,69 +533,41 @@ koopa::debian_apt_configure_sources() { # {{{1
     # > deb http://ports.ubuntu.com/ubuntu-ports
     #       focal-security multiverse
     # """
-    local arch codenames os_codename grep os_id repos sources_list tee
-    local sources_list_d urls
+    local arch codenames cut os_codename grep os_id repos
+    local sources_list sources_list_d tee urls
     koopa::assert_has_no_args "$#"
+    cut="$(koopa::locate_cut)"
     grep="$(koopa::locate_grep)"
+    head="$(koopa::locate_head)"
     tee="$(koopa::locate_tee)"
     sources_list='/etc/apt/sources.list'
     koopa::alert "Configuring apt sources in '${sources_list}'."
     koopa::assert_is_file "$sources_list"
-    declare -A codenames
-    declare -A urls
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
     arch="$(koopa::arch)"
+    declare -A codenames
+    declare -A urls
+    urls[main]="$( \
+        "$grep" -E '^deb\s' "$sources_list" \
+        | "$grep" -F ' main ' \
+        | "$head" -n 1 \
+        | "$cut" -d ' ' -f 2 \
+    )"
     case "$os_id" in
         'debian')
             # Can consider including 'backports' here as well.
             repos=('main')
-            if "$grep" -Fq \
-                    'http://cdn-aws.deb.debian.org/debian' \
-                    "$sources_list"
-            then
-                urls[main]='http://cdn-aws.deb.debian.org/debian/'
-            else
-                urls[main]='http://deb.debian.org/debian/'
-            fi
             urls[security]='http://security.debian.org/debian-security/'
             ;;
         'ubuntu')
             # Can consider including 'multiverse' here as well.
             repos=('main' 'restricted' 'universe')
-            if "$grep" -Fq \
-                'http://ports.ubuntu.com/ubuntu-ports' \
-                "$sources_list"
-            then
-                # e.g. this applies to Raspberry Pi ARM configuration.
-                urls[main]='http://ports.ubuntu.com/ubuntu-ports/'
-                urls[security]="${urls[main]}"
-            fi
-
-
-
-
-
-
-
-
-
             case "$arch" in
-                # FIXME This won't work correctly for Ubuntu AMI on ARM correct?
-                # FIXME Confirm this with AWS AMI using ARM.
                 'aarch64')
-                    # ARM (e.g. Raspberry Pi).
+                    urls[security]='http://ports.ubuntu.com/ubuntu-ports/'
                     ;;
                 *)
-                    if [[ "$aws_cdn" -eq 1 ]]
-                    then
-                        # FIXME We want to match this to the current region.
-                        # FIXME Use grep matching to return this.
-                        urls[main]='http://us-east-1.ec2.archive.ubuntu.com/ubuntu/'
-                    else
-                        urls[main]='http://archive.ubuntu.com/ubuntu/'
-                    fi
-                    # FIXME What did the security look like in x86 Ubuntu AMI?
                     urls[security]='http://security.ubuntu.com/ubuntu/'
                     ;;
             esac
@@ -608,9 +580,6 @@ koopa::debian_apt_configure_sources() { # {{{1
     codenames[security]="${os_codename}-security"
     codenames[updates]="${os_codename}-updates"
     urls[updates]="${urls[main]}"
-
-
-
     # Configure primary apt sources.
     if [[ -L "$sources_list" ]]
     then
