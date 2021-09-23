@@ -81,8 +81,6 @@ koopa::update_doom_emacs() { # {{{1
     name_fancy='Doom Emacs'
     koopa::assert_has_no_args "$#"
     doom="$(koopa::locate_doom)"
-    # FIXME This approach causes warnings about Ruby config on macOS.
-    # FIXME Need to rethink putting emacs into '/usr/local/bin' instead?
     emacs="$(koopa::locate_emacs)"
     koopa::add_to_path_start "$(koopa::dirname "$emacs")"
     koopa::update_start "$name_fancy"

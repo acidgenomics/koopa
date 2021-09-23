@@ -3,7 +3,7 @@
 __koopa_emacs() { # {{{1
     # """
     # Emacs binary for alias functions.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-09-23.
     # """
     local app
     app='emacs'
@@ -51,7 +51,7 @@ _koopa_alias_conda() { # {{{1
 _koopa_alias_doom_emacs() { # {{{1
     # """
     # Doom Emacs.
-    # @note Updated 2021-06-08.
+    # @note Updated 2021-09-23.
     # """
     local emacs prefix
     emacs="$(__koopa_emacs)"
