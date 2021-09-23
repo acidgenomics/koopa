@@ -87,8 +87,6 @@ koopa::macos_brew_upgrade_casks() { # {{{1
                 ;;
         esac
         brew reinstall --cask --force "$cask" || true
-        # FIXME For Emacs cask, need to symlink 'Emacs' binary into
-        # '/usr/local/bin'.
         case "$cask" in
             'adoptopenjdk' | \
             'openjdk' | \
