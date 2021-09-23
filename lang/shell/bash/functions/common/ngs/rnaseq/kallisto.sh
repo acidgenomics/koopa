@@ -380,7 +380,7 @@ completed successfully."
 koopa::kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-09-23.
     # """
     local app dict index_args
     koopa::assert_has_args "$#"
@@ -388,7 +388,9 @@ koopa::kallisto_index() { # {{{1
     declare -A app=(
         [tee]="$(koopa::locate_tee)"
     )
-    declare -A dict
+    declare -A dict=(
+        [output_dir]='kallisto/index'
+    )
     while (("$#"))
     do
         case "$1" in

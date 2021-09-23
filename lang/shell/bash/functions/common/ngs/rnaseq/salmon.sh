@@ -336,7 +336,7 @@ completed successfully."
 koopa::salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-09-23.
     # """
     local app dict
     koopa::assert_has_args "$#"
@@ -346,7 +346,7 @@ koopa::salmon_index() { # {{{1
     )
     declare -A dict=(
         [fasta_file]=''
-        [output_dir]=''
+        [output_dir]='salmon/index'
         [threads]="$(koopa::cpu_count)"
     )
     while (("$#"))
