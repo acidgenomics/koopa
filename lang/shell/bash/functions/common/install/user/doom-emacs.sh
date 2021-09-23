@@ -72,15 +72,17 @@ koopa::uninstall_doom_emacs() { # {{{1
 koopa::update_doom_emacs() { # {{{1
     # """
     # Update Doom Emacs.
-    # @note Updated 2021-07-28.
+    # @note Updated 2021-09-23.
     #
     # @seealso
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/upgrade.el
     # """
-    local doom name_fancy
+    local doom name_fancy emacs
     name_fancy='Doom Emacs'
     koopa::assert_has_no_args "$#"
     doom="$(koopa::locate_doom)"
+    emacs="$(koopa::locate_emacs)"
+    koopa::add_to_path_start "$(koopa::dirname "$emacs")"
     koopa::update_start "$name_fancy"
     "$doom" --yes upgrade --force
     "$doom" --yes sync
