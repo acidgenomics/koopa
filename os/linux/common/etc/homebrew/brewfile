@@ -14,4 +14,3 @@ tap "homebrew/core"
 
 brew "docker"
 brew "docker-credential-helper"  # docker-credential-pass
-brew "emacs"
