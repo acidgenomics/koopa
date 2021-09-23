@@ -48,12 +48,12 @@ koopa::macos_brew_cask_outdated() { # {{{
 koopa::macos_brew_cask_quarantine_fix() { # {{{1
     # """
     # Homebrew cask fix for macOS quarantine.
-    # @note Updated 2020-11-12.
+    # @note Updated 2021-09-23.
     # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_macos
     koopa::assert_is_admin
-    sudo xattr -r -d com.apple.quarantine /Applications/*.app
+    sudo xattr -r -d 'com.apple.quarantine' '/Applications/'*'.app'
     return 0
 }
 
