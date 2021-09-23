@@ -4,7 +4,7 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-09-23.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
@@ -23,6 +23,7 @@ _koopa_activate_aliases() { # {{{1
     # > alias perl='_koopa_alias_perl'
     alias perlbrew='_koopa_alias_perlbrew'
     alias pipx='_koopa_alias_pipx'
+    alias prelude-emacs='_koopa_alias_prelude_emacs'
     alias pyenv='_koopa_alias_pyenv'
     alias rbenv='_koopa_alias_rbenv'
     alias sha256='_koopa_alias_sha256'

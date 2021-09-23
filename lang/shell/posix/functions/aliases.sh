@@ -175,6 +175,26 @@ _koopa_alias_pipx() { # {{{1
     pipx "$@"
 }
 
+
+
+_koopa_alias_prelude_emacs() { # {{{1
+    # """
+    # Prelude Emacs.
+    # @note Updated 2021-09-23.
+    # """
+    local emacs prefix
+    prefix="$(_koopa_prelude_emacs_prefix)"
+    if [ ! -d "$prefix" ]
+    then
+        _koopa_alert_is_not_installed 'Prelude Emacs' "$prefix"
+        return 1
+    fi
+    emacs="$(__koopa_emacs)"
+    "$emacs" --with-profile 'prelude' "$@"
+}
+
+
+
 _koopa_alias_pyenv() { # {{{1
     # """
     # pyenv alias.
