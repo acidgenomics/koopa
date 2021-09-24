@@ -149,11 +149,11 @@ brew "vitorgalvao/tiny-scripts/cask-repair"
 # App Store {{{1
 # ==============================================================================
 
+# > mas "AdGuard for Safari", id: 1440147259
 # > mas "Keynote", id: 409183694
 # > mas "Numbers", id: 409203825
 # > mas "Pages", id: 409201541
 
-mas "AdGuard for Safari", id: 1440147259
 mas "Calca", id: 635758264
 mas "Disk Speed Test", id: 425264550
 mas "Gapplin", id: 768053424
