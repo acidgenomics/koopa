@@ -126,11 +126,11 @@ koopa::update_etc_profile_d() { # {{{1
 __koopa_activate_shared_profile() { # {{{1
     # """
     # Activate koopa shell for all users.
-    # @note Updated 2021-05-17.
+    # @note Updated 2021-09-27.
     # @seealso https://koopa.acidgenomics.com/
     # """
     # shellcheck source=/dev/null
-    source "${koopa_prefix}/activate"
+    . "${koopa_prefix}/activate"
     return 0
 }
 
