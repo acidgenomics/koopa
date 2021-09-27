@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-09-21.
+#' @note Updated 2021-09-27.
 #'
 #' @section Restarting R:
 #'
@@ -517,7 +517,9 @@ local({  # nolint
         ## `BiocParallel::MulticoreParam()` should inherit this setting.
         cores <- Sys.getenv("CPU_COUNT")
         if (!isTRUE(nzchar(cores))) {
-            cores <- max(1L, parallel::detectCores() - 1L)
+            ## Using "n-1" cores instead:
+            ## > cores <- max(1L, parallel::detectCores() - 1L)
+            cores <- parallel::detectCores()
         }
         cores <- as.integer(cores)
         ## `install.packages()` looks for "Ncpus" global.
