@@ -159,3 +159,16 @@ END
     koopa::install_success "${dict[name_fancy]}"
     return 0
 }
+
+koopa::linux_add_rstudio_user() { #{{{1
+    # """
+    # Enable RStudio user on Linux.
+    # @note Updated 2021-09-27.
+    # """
+    sudo useradd 'rstudio'
+    sudo passwd 'rstudio'
+    sudo mkdir -p '/home/rstudio'
+    sudo chown 'rstudio:rstudio' '/home/rstudio'
+    sudo usermod -s '/bin/bash' 'rstudio'
+    return 0
+}
