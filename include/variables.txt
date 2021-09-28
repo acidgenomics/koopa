@@ -308,11 +308,11 @@ rbenv="1.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="1.4.1717"
+rstudio-server="2021.09.0+351"
 
 # RStudio Server Pro renamed to Workbench in 2021-06.
 # https://www.rstudio.com/products/rstudio/download-commercial/
-rstudio-workbench="1.4.1717-3"
+rstudio-workbench="2021.09.0+351.pro6"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.0.2p107"
