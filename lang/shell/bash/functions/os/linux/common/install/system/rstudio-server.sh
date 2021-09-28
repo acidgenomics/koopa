@@ -140,7 +140,7 @@ ${dict[platform]}.${dict[file_ext]}"
         url="https://${server}/server/${dict[os_codename]}/\
 ${dict[platform]}/${file}"
         # Ensure '+' gets converted to '%2B'.
-        url="$(koopa::gsub '+' '%2B' "$url")"
+        url="$(koopa::gsub '\+' '%2B' "$url")"
         koopa::download "$url"
         file="$(basename "$url")"
         IFS=' ' read -r -a install <<< "${dict[install]}"
