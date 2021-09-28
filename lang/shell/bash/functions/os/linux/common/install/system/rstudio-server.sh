@@ -3,7 +3,7 @@
 koopa:::linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-09-28.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
     #
@@ -139,6 +139,8 @@ ${dict[platform]}.${dict[file_ext]}"
         server='download2.rstudio.org'
         url="https://${server}/server/${dict[os_codename]}/\
 ${dict[platform]}/${file}"
+        # Ensure '+' gets converted to '%2B'.
+        url="$(koopa::gsub '+' '%2B' "$url")"
         koopa::download "$url"
         file="$(basename "$url")"
         IFS=' ' read -r -a install <<< "${dict[install]}"
