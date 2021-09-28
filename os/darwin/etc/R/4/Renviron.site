@@ -162,7 +162,7 @@ R_REMOTES_STANDALONE="true"
 # If left unset, defaults to `~/.virtualenvs`.
 # Check with `virtualenv_list()`.
 # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
+# > WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
 
 # tools / rappdirs {{{2
 # ------------------------------------------------------------------------------
