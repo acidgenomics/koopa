@@ -16,10 +16,6 @@
 # Global variables {{{1
 # ==============================================================================
 
-# FIXME Take these out?
-HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
-HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
-
 KOOPA_PREFIX="${KOOPA_PREFIX:-/opt/koopa}"
 KOOPA_OPT_PREFIX="${KOOPA_PREFIX}/opt"
 
@@ -88,60 +84,6 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # This also greatly improves consistency when running inside RStudio Server.
 PATH="/usr/bin:/bin"
 
-# Homebrew-managed programs.
-#
-# Refer to koopa for consistency:
-# 'shell/posix/functions/activate-noninteractive.sh'
-#
-# Don't put binutils in PATH, as this will cause compilation issues for
-# r-openssl, due to incompatible 'ar' that causes issues with Xcode linker.
-# See related:
-# - https://github.com/jeroen/openssl/issues/67
-# - https://github.com/jeroen/openssl/issues/90
-# > FIXME PATH="${HOMEBREW_PREFIX}/bin:${PATH}"
-# opt:
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/findutils/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/gnu-sed/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/gnu-tar/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/gnu-which/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/grep/bin:${PATH}"
-
-# FIXME Seeing rgdal install issues:
-# https://stackoverflow.com/questions/64701098/undefined-symbol-gtifgetgcsinfoex
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetGCSInfoEx'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetPCSInfoEx'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFKeyGetSHORT'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetUOMAngleInfoEx'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetDatumInfoEx'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetEllipsoidInfoEx'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `std::__throw_bad_array_new_length()@GLIBCXX_3.4.29'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFKeyGetASCII'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetUOMLengthInfoEx'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetPMInfoEx'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFSetVersionNumbers'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFKeyGetDOUBLE'
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `opj_encoder_set_extra_options'
-# collect2: error: ld returned 1 exit status
-# /home/linuxbrew/.linuxbrew/bin/ld: warning: libnetcdf.so.19, needed by /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so, may conflict with libnetcdf.so.15
-# /home/linuxbrew/.linuxbrew/bin/ld: warning: libpcre.so.1, needed by /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so, may conflict with libpcre.so.3
-# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `std::__throw_bad_array_new_length()@GLIBCXX_3.4.29'
-# collect2: error: ld returned 1 exit status
-# configure: Install failure: compilation and/or linkage problems.
-
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/bin:${PATH}"  # FIXME rgdal issue
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/make/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/texinfo/bin:${PATH}"
-# libexec/bin:
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/man-db/libexec/bin:${PATH}"
-# libexec/gnubin:
-# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/coreutils/libexec/gnubin:${PATH}"
-
 # Make.
 PATH="/usr/local/bin:${PATH}"
 
@@ -164,15 +106,6 @@ PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
 
 # Koopa.
 PATH="${KOOPA_PREFIX}/bin:${PATH}"
-
-# Package configuration {{{2
-# ------------------------------------------------------------------------------
-
-# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/lib/pkgconfig:${PKG_CONFIG_PATH}"  # FIMXE rgdal issue
-# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
-# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
@@ -244,12 +177,6 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # > TNS_ADMIN="${ORACLE_HOME}/network/admin"
 # > PATH="${PATH}:${ORACLE_HOME}/bin"
 
-# libxml2 {{{2
-# ------------------------------------------------------------------------------
-
-# This step will fail unless Homebrew is installed.
-# > XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
-
 # remotes {{{2
 # ------------------------------------------------------------------------------
 
@@ -290,16 +217,6 @@ R_REMOTES_STANDALONE="true"
 R_USER_CACHE_DIR="${XDG_CACHE_HOME:-~/.cache}"
 R_USER_CONFIG_DIR="${XDG_CONFIG_HOME:-~/.config}"
 R_USER_DATA_DIR="${XDG_DATA_HOME:-~/.local/share}"
-
-# units / udunits {{{2
-# ------------------------------------------------------------------------------
-
-# The units package requires udunits to be installed.
-# Use homebrew: brew install udunits
-
-# This step will fail unless Homebrew is installed.
-# > UDUNITS2_INCLUDE="${HOMEBREW_OPT_PREFIX}/udunits/include"
-# > UDUNITS2_LIBS="${HOMEBREW_OPT_PREFIX}/udunits/lib"
 
 # R check {{{1
 # ==============================================================================
