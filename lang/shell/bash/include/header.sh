@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Bash is double activating on AWS Ubuntu instance.
+
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
@@ -187,10 +189,9 @@ __koopa_bash_header() { # {{{1
         )"
         export KOOPA_PREFIX
     fi
-    echo 'FIXME 1'
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
-    echo 'FIXME 2'
+    echo 'FIXME 1'
     if [[ "${dict[test]}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
@@ -208,6 +209,7 @@ __koopa_bash_header() { # {{{1
             export _PRESERVED_PROMPT_COMMAND=''
         fi
     fi
+    echo 'FIXME 2'
     if [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
     then
@@ -252,6 +254,7 @@ __koopa_bash_header() { # {{{1
     then
         _koopa_duration_stop 'bash' || return 1
     fi
+    echo 'FIXME 3'
     return 0
 }
 
