@@ -40,16 +40,19 @@ _koopa_activate_bash_completion() { # {{{1
         set +e
         set +u
     fi
+    echo 'FIXME 1a'
     if [[ -r "$brew_script" ]]
     then
         # shellcheck source=/dev/null
         source "$brew_script"
     fi
+    echo 'FIXME 1b'
     if [[ -r "$sys_script" ]]
     then
         # shellcheck source=/dev/null
         source "$sys_script"
     fi
+    echo 'FIXME 1c'
     if [[ "$nounset" -eq 1 ]]
     then
         set -e
@@ -65,19 +68,12 @@ _koopa_activate_bash_extras() { # {{{1
     # """
     [[ "$#" -eq 0 ]] || return 1
     _koopa_is_interactive || return 0
-    echo 'FIXME 1a'
     _koopa_activate_bash_completion
-    echo 'FIXME 1b'
     _koopa_activate_bash_readline
-    echo 'FIXME 1c'
     _koopa_activate_bash_aliases
-    echo 'FIXME 1d'
     _koopa_activate_bash_prompt
-    echo 'FIXME 1e'
     _koopa_activate_bash_reverse_search
-    echo 'FIXME 1f'
     _koopa_activate_completion
-    echo 'FIXME 1g'
     return 0
 }
 
