@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Also generate an RSA key.
 koopa::generate_ssh_key() { # {{{1
     # """
     # Generate SSH key.
