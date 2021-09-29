@@ -107,7 +107,30 @@ PATH="${HOMEBREW_OPT_PREFIX}/gnu-sed/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-tar/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-which/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/grep/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/bin:${PATH}"
+
+# FIXME Seeing rgdal install issues:
+# https://stackoverflow.com/questions/64701098/undefined-symbol-gtifgetgcsinfoex
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetGCSInfoEx'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetPCSInfoEx'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFKeyGetSHORT'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetUOMAngleInfoEx'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetDatumInfoEx'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetEllipsoidInfoEx'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `std::__throw_bad_array_new_length()@GLIBCXX_3.4.29'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFKeyGetASCII'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetUOMLengthInfoEx'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFGetPMInfoEx'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFSetVersionNumbers'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `GTIFKeyGetDOUBLE'
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `opj_encoder_set_extra_options'
+# collect2: error: ld returned 1 exit status
+# /home/linuxbrew/.linuxbrew/bin/ld: warning: libnetcdf.so.19, needed by /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so, may conflict with libnetcdf.so.15
+# /home/linuxbrew/.linuxbrew/bin/ld: warning: libpcre.so.1, needed by /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so, may conflict with libpcre.so.3
+# /home/linuxbrew/.linuxbrew/bin/ld: /home/linuxbrew/.linuxbrew/Cellar/gdal/3.3.2_2/lib/libgdal.so: undefined reference to `std::__throw_bad_array_new_length()@GLIBCXX_3.4.29'
+# collect2: error: ld returned 1 exit status
+# configure: Install failure: compilation and/or linkage problems.
+
+PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/bin:${PATH}"  # FIXME rgdal issue
 PATH="${HOMEBREW_OPT_PREFIX}/make/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/bin:${PATH}"
@@ -146,7 +169,7 @@ PATH="${KOOPA_PREFIX}/bin:${PATH}"
 
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/lib/pkgconfig:${PKG_CONFIG_PATH}"  # FIMXE rgdal issue
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
 

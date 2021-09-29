@@ -52,6 +52,8 @@ PATH="${HOMEBREW_PREFIX}/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
+# FIXME Need to include libgeotiff here?
+# https://stackoverflow.com/questions/64701098/undefined-symbol-gtifgetgcsinfoex
 PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"
@@ -108,6 +110,7 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# FIXME Need to include libgeotiff here?
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
