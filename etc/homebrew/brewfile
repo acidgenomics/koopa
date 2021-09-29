@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-09-23.
+# Updated 2021-09-29.
 # """
 
 # Taps {{{1
@@ -109,6 +109,7 @@ brew "man-db"
 brew "mariadb-connector-c"
 brew "neofetch"
 brew "neovim"
+brew "nim"
 brew "nmap"
 brew "node"
 brew "oil"
