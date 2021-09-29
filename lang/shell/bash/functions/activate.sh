@@ -21,15 +21,19 @@ _koopa_activate_bash_completion() { # {{{1
     # """
     # Activate Bash completion.
     # @note Updated 2021-09-29.
-    # Add tab completion for many commands.
+    #
+    # Adds tab completion for many commands.
     # """
     local brew_prefix nounset script
     [[ "$#" -eq 0 ]] || return 1
     if _koopa_is_installed 'brew'
     then
+        # This won't work if we attempt to run directly on the script located
+        # inside of Homebrew 'opt/bash-completion/etc/profile.d'. It must be
+        # linked, otherwise we will hit a sed error, due to hard-coded path
+        # that is expecting to be linked.
         brew_prefix="$(_koopa_homebrew_prefix)"
-        script="${brew_prefix}/opt/bash-completion/etc/\
-profile.d/bash_completion.sh"
+        script="${brew_prefix}/etc/profile.d/bash_completion.sh"
     else
         script='/etc/bash_completion'
     fi
