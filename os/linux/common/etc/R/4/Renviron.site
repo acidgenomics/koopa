@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for Linux.
-# @note Updated 2021-09-22.
+# @note Updated 2021-09-29.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -107,6 +107,7 @@ PATH="${HOMEBREW_OPT_PREFIX}/gnu-sed/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-tar/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-which/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/grep/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/make/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/bin:${PATH}"
@@ -145,6 +146,7 @@ PATH="${KOOPA_PREFIX}/bin:${PATH}"
 
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
