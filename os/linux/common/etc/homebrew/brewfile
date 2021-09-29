@@ -12,6 +12,8 @@ tap "homebrew/core"
 # Brews {{{1
 # ==============================================================================
 
+# This is problematic with AWS CodeCommit git when linked.
+brew "openssh", link: false
 # This conflicts with "bash-completion" and "rename".
 brew "util-linux", link: false
 
