@@ -224,8 +224,8 @@ neofetch="7.1.0"
 # https://github.com/neovim/neovim/releases
 neovim="0.5.1"
 
-# FIXME nim
-nim="FIXME"
+# https://nim-lang.org/
+nim="1.4.8"
 
 # https://nodejs.org/
 node="16.10.0"

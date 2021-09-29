@@ -439,6 +439,14 @@ _koopa_monorepo_prefix() { # {{{1
     return 0
 }
 
+_koopa_nim_packages_prefix() { # {{{1
+    # """
+    # Nim (Nimble) packages prefix.
+    # @note Updated 2021-09-29.
+    # """
+    __koopa_packages_prefix 'nim' "$@"
+}
+
 _koopa_node_packages_prefix() { # {{{1
     # """
     # Node.js (NPM) packages prefix.
