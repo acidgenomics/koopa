@@ -211,6 +211,7 @@ koopa::fedora_install_base() { # {{{1
             # > golang
             'jq'
             'llvm'
+            'nim'
             'texlive'
             'texlive-bera'
             'texlive-caption'

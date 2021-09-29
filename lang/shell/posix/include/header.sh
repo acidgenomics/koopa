@@ -3,7 +3,7 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-09-29.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
@@ -55,6 +55,7 @@ _koopa_posix_header() { # {{{1
         _koopa_activate_conda || return 1
         _koopa_activate_emacs || return 1
         _koopa_activate_go || return 1
+        _koopa_activate_nim || return 1
         _koopa_activate_node || return 1
         _koopa_activate_openjdk || return 1
         _koopa_activate_aspera || return 1

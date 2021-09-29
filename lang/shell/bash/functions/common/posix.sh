@@ -76,6 +76,10 @@ koopa::activate_nextflow() { # {{{1
     _koopa_activate_nextflow "$@"
 }
 
+koopa::activate_nim() { # {{{1
+    _koopa_activate_nim "$@"
+}
+
 koopa::activate_node() { # {{{1
     _koopa_activate_node "$@"
 }
@@ -722,6 +726,10 @@ koopa::monorepo_prefix() { # {{{1
 
 koopa::ngettext() { # {{{1
     _koopa_ngettext "$@"
+}
+
+koopa::nim_packages_prefix() { # {{{1
+    _koopa_nim_packages_prefix "$@"
 }
 
 koopa::node_packages_prefix() { # {{{1

@@ -274,6 +274,7 @@ koopa::debian_install_base() { # {{{1
             'jq'
             'keyboard-configuration'
             'mpi-default-bin'
+            'nim'
             'openmpi-bin'
             'openmpi-common'
             'openmpi-doc'

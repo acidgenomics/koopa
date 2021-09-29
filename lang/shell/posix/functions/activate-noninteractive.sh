@@ -363,6 +363,20 @@ _koopa_activate_nextflow() { # {{{1
     return 0
 }
 
+_koopa_activate_nim() { # {{{1
+    # """
+    # Activate Nim.
+    # @note Updated 2021-09-29.
+    # """
+    local prefix
+    [ "$#" -eq 0 ] || return 1
+    prefix="$(_koopa_nim_packages_prefix)"
+    [ -d "$prefix" ] || return 0
+    _koopa_activate_prefix "$prefix"
+    export NIMBLE_DIR="$prefix"
+    return 0
+}
+
 _koopa_activate_node() { # {{{1
     # """
     # Activate Node.js (and NPM).
