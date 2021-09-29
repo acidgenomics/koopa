@@ -191,7 +191,6 @@ __koopa_bash_header() { # {{{1
     fi
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
-    echo 'FIXME 1'
     if [[ "${dict[test]}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
@@ -204,12 +203,7 @@ __koopa_bash_header() { # {{{1
         then
             _koopa_activate_bash_extras
         fi
-        if [[ -z "${_PRESERVED_PROMPT_COMMAND:-}" ]]
-        then
-            export _PRESERVED_PROMPT_COMMAND=''
-        fi
     fi
-    echo 'FIXME 2'
     if [[ "${dict[activate]}" -eq 0 ]] || \
         [[ "${dict[dev]}" -eq 1 ]]
     then

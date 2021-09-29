@@ -25,12 +25,17 @@ _koopa_activate_bash_completion() { # {{{1
     # Adds tab completion for many commands.
     # Consider adding detection support inside of make prefix.
     # """
-    local brew_prefix brew_script nounset sys_script
+    local brew_prefix brew_script nounset
     [[ "$#" -eq 0 ]] || return 1
     brew_prefix="$(_koopa_homebrew_prefix)"
     brew_script="${brew_prefix}/etc/profile.d/bash_completion.sh"
-    sys_script='/etc/bash_completion'
-    if [[ ! -r "$brew_script" ]] && [[ ! -r "$sys_script" ]]
+    # Disabled because sourcing system Bash completion is problematic on
+    # Ubuntu 20.
+    # > if [[ ! -r "$brew_script" ]] && [[ ! -r "$sys_script" ]]
+    # > then
+    # >     return 0
+    # > fi
+    if [[ ! -r "$brew_script" ]]
     then
         return 0
     fi
@@ -40,19 +45,19 @@ _koopa_activate_bash_completion() { # {{{1
         set +e
         set +u
     fi
-    echo 'FIXME 1a'
     if [[ -r "$brew_script" ]]
     then
         # shellcheck source=/dev/null
         source "$brew_script"
     fi
-    echo 'FIXME 1b'
-    if [[ -r "$sys_script" ]]
-    then
-        # shellcheck source=/dev/null
-        source "$sys_script"
-    fi
-    echo 'FIXME 1c'
+    # This is problematic on Ubuntu 20 LTS.
+    # > local sys_script
+    # > sys_script='/etc/bash_completion'
+    # > if [[ -r "$sys_script" ]]
+    # > then
+    # >     # shellcheck source=/dev/null
+    # >     source "$sys_script"
+    # > fi
     if [[ "$nounset" -eq 1 ]]
     then
         set -e
