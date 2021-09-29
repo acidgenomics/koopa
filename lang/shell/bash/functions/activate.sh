@@ -61,16 +61,23 @@ _koopa_activate_bash_completion() { # {{{1
 _koopa_activate_bash_extras() { # {{{1
     # """
     # Activate Bash extras.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-09-29.
     # """
     [[ "$#" -eq 0 ]] || return 1
     _koopa_is_interactive || return 0
+    echo 'FIXME 1a'
     _koopa_activate_bash_completion
+    echo 'FIXME 1b'
     _koopa_activate_bash_readline
+    echo 'FIXME 1c'
     _koopa_activate_bash_aliases
+    echo 'FIXME 1d'
     _koopa_activate_bash_prompt
+    echo 'FIXME 1e'
     _koopa_activate_bash_reverse_search
+    echo 'FIXME 1f'
     _koopa_activate_completion
+    echo 'FIXME 1g'
     return 0
 }
 
@@ -81,6 +88,10 @@ _koopa_activate_bash_prompt() { # {{{1
     # """
     [[ "$#" -eq 0 ]] || return 1
     _koopa_is_root && return 0
+    if [[ -z "${_PRESERVED_PROMPT_COMMAND:-}" ]]
+    then
+        export _PRESERVED_PROMPT_COMMAND=''
+    fi
     if _koopa_is_installed 'starship'
     then
         _koopa_activate_starship
