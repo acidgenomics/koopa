@@ -16,6 +16,7 @@
 # Global variables {{{1
 # ==============================================================================
 
+# FIXME Take these out?
 HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
 HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
 
@@ -97,16 +98,16 @@ PATH="/usr/bin:/bin"
 # See related:
 # - https://github.com/jeroen/openssl/issues/67
 # - https://github.com/jeroen/openssl/issues/90
-PATH="${HOMEBREW_PREFIX}/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_PREFIX}/bin:${PATH}"
 # opt:
-PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/findutils/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/gnu-sed/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/gnu-tar/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/gnu-which/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/grep/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/findutils/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/gnu-sed/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/gnu-tar/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/gnu-which/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/grep/bin:${PATH}"
 
 # FIXME Seeing rgdal install issues:
 # https://stackoverflow.com/questions/64701098/undefined-symbol-gtifgetgcsinfoex
@@ -130,16 +131,16 @@ PATH="${HOMEBREW_OPT_PREFIX}/grep/bin:${PATH}"
 # collect2: error: ld returned 1 exit status
 # configure: Install failure: compilation and/or linkage problems.
 
-PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/bin:${PATH}"  # FIXME rgdal issue
-PATH="${HOMEBREW_OPT_PREFIX}/make/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"
-PATH="${HOMEBREW_OPT_PREFIX}/texinfo/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/bin:${PATH}"  # FIXME rgdal issue
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/make/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/texinfo/bin:${PATH}"
 # libexec/bin:
-PATH="${HOMEBREW_OPT_PREFIX}/man-db/libexec/bin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/man-db/libexec/bin:${PATH}"
 # libexec/gnubin:
-PATH="${HOMEBREW_OPT_PREFIX}/coreutils/libexec/gnubin:${PATH}"
+# > FIXME PATH="${HOMEBREW_OPT_PREFIX}/coreutils/libexec/gnubin:${PATH}"
 
 # Make.
 PATH="/usr/local/bin:${PATH}"
@@ -167,11 +168,11 @@ PATH="${KOOPA_PREFIX}/bin:${PATH}"
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/lib/pkgconfig:${PKG_CONFIG_PATH}"  # FIMXE rgdal issue
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
-PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/libgeotiff/lib/pkgconfig:${PKG_CONFIG_PATH}"  # FIMXE rgdal issue
+# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# > FIXME PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openssl@1.1/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 # Miscellaneous {{{1
 # ==============================================================================
