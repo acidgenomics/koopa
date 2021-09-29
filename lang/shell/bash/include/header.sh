@@ -119,6 +119,7 @@ __koopa_bash_header() { # {{{1
         [test]=0
         [verbose]=0
     )
+    set -x  # FIXME
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dict[dev]="$KOOPA_DEV"
