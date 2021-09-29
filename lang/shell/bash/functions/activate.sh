@@ -23,29 +23,33 @@ _koopa_activate_bash_completion() { # {{{1
     # @note Updated 2021-09-29.
     #
     # Adds tab completion for many commands.
+    # Consider adding detection support inside of make prefix.
     # """
-    local brew_prefix nounset script
+    local brew_prefix brew_script nounset sys_script
     [[ "$#" -eq 0 ]] || return 1
-    if _koopa_is_installed 'brew'
+    brew_prefix="$(_koopa_homebrew_prefix)"
+    brew_script="${brew_prefix}/etc/profile.d/bash_completion.sh"
+    sys_script='/etc/bash_completion'
+    if [[ ! -r "$brew_script" ]] && [[ ! -r "$sys_script" ]]
     then
-        # This won't work if we attempt to run directly on the script located
-        # inside of Homebrew 'opt/bash-completion/etc/profile.d'. It must be
-        # linked, otherwise we will hit a sed error, due to hard-coded path
-        # that is expecting to be linked.
-        brew_prefix="$(_koopa_homebrew_prefix)"
-        script="${brew_prefix}/etc/profile.d/bash_completion.sh"
-    else
-        script='/etc/bash_completion'
+        return 0
     fi
-    [[ -r "$script" ]] || return 0
     nounset="$(_koopa_boolean_nounset)"
     if [[ "$nounset" -eq 1 ]]
     then
         set +e
         set +u
     fi
-    # shellcheck source=/dev/null
-    source "$script"
+    if [[ -r "$brew_script" ]]
+    then
+        # shellcheck source=/dev/null
+        source "$brew_script"
+    fi
+    if [[ -r "$sys_script" ]]
+    then
+        # shellcheck source=/dev/null
+        source "$sys_script"
+    fi
     if [[ "$nounset" -eq 1 ]]
     then
         set -e
