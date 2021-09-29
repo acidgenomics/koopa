@@ -119,7 +119,6 @@ __koopa_bash_header() { # {{{1
         [test]=0
         [verbose]=0
     )
-    set -x  # FIXME
     [[ -n "${KOOPA_ACTIVATE:-}" ]] && dict[activate]="$KOOPA_ACTIVATE"
     [[ -n "${KOOPA_CHECKS:-}" ]] && dict[checks]="$KOOPA_CHECKS"
     [[ -n "${KOOPA_DEV:-}" ]] && dict[dev]="$KOOPA_DEV"
@@ -188,8 +187,10 @@ __koopa_bash_header() { # {{{1
         )"
         export KOOPA_PREFIX
     fi
+    echo 'FIXME 1'
     # shellcheck source=/dev/null
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
+    echo 'FIXME 2'
     if [[ "${dict[test]}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
