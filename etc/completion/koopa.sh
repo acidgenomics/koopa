@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-09-20.
+    # Updated 2021-09-29.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -57,6 +57,7 @@ _koopa_complete() { # {{{1
                 args=(
                     'go'
                     'julia'
+                    'nim'
                     'node'
                     'perl'
                     'python'
@@ -119,6 +120,8 @@ _koopa_complete() { # {{{1
                     'ncurses'
                     'neofetch'
                     'neovim'
+                    'nim'  # FIXME
+                    'nim-packages'  # FIXME
                     'node-packages'
                     'openjdk'
                     'openssh'
@@ -282,6 +285,7 @@ _koopa_complete() { # {{{1
                     'dotfiles'
                     'google-cloud-sdk'
                     'homebrew'
+                    'nim-packages'  # FIXME
                     'node-packages'
                     'perl-packages'
                     'prelude-emacs'

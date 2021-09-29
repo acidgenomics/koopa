@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-09-17] macOS success.
-
 koopa::configure_perl() { # {{{1
     # """
     # Configure Perl.

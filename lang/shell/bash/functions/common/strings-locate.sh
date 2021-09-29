@@ -669,6 +669,15 @@ koopa::locate_mv() { # {{{1
         --name='mv'
 }
 
+koopa::locate_nim() { # {{{1
+    # """
+    # Locate Nim.
+    # @note Updated 2021-09-29.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'nim'
+}
+
 koopa::locate_node() { # {{{1
     # """
     # Locate node.
