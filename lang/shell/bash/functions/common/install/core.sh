@@ -101,6 +101,9 @@ koopa:::configure_app_packages() { # {{{1
     return 0
 }
 
+# FIXME This needs to support installation to non-default prefix.
+# FIXME In this case, never link.
+# FIXME Need to work this out for bcbio-nextgen.
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
