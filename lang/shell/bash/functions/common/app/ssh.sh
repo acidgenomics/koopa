@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Also generate an RSA key.
 koopa::generate_ssh_key() { # {{{1
     # """
     # Generate SSH key.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-09-29.
     #
-    # This script is called inside 'configure-vm', so don't use assert here.
+    # This script is called inside our Linux VM configuration function, so
+    # don't use assert here.
     #
     # With ssh-keygen use the '-o' option for the new RFC4716 key format and the
     # use of a modern key derivation function powered by bcrypt. Use the
@@ -22,7 +24,8 @@ koopa::generate_ssh_key() { # {{{1
     user="$(koopa::user)"
     hostname="$(koopa::hostname)"
     comment="${user}@${hostname}"
-    key_name='id_ed25519'
+    # > key_name='id_ed25519'
+    key_name='id_rsa'
     while (("$#"))
     do
         case "$1" in
