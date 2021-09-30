@@ -70,12 +70,13 @@ koopa::debian_apt_add_docker_key() { # {{{1
 koopa::debian_apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-09-30.
     #
-    # Ubuntu 20 (Focal Fossa) not yet supported:
-    # https://download.docker.com/linux/
+    # @seealso
+    # - https://docs.docker.com/engine/install/debian/
+    # - https://docs.docker.com/engine/install/ubuntu/
     # """
-    local arch file name name_fancy os_codename os_id string url
+    local arch file name name_fancy os_codename os_id signed_by string url
     koopa::assert_has_no_args "$#"
     name='docker'
     name_fancy='Docker'
@@ -90,14 +91,10 @@ koopa::debian_apt_add_docker_repo() { # {{{1
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
     arch="$(koopa::arch)"
-    # Remap 20.04 LTS to 19.10.
-    case "$os_codename" in
-        'focal')
-            os_codename='eoan'
-            ;;
-    esac
     url="https://download.docker.com/linux/${os_id}"
-    string="deb [arch=${arch}] ${url} ${os_codename} stable"
+    signed_by='/usr/share/keyrings/docker-archive-keyring.gpg'
+    string="deb [arch=${arch} signed-by=${signed_by}] \
+${url} ${os_codename} stable"
     koopa::sudo_write_string "$string" "$file"
     return 0
 }
