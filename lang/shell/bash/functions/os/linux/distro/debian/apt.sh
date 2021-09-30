@@ -55,17 +55,33 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
 koopa::debian_apt_add_docker_key() { # {{{1
     # """
     # Add the Docker key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-09-30.
+    #
+    # @seealso
+    # - https://docs.docker.com/engine/install/debian/
+    # - https://docs.docker.com/engine/install/ubuntu/
     # """
-    local key name_fancy os_id url
+    local curl file gpg name_fancy os_id url
     koopa::assert_has_no_args "$#"
+    file='/usr/share/keyrings/docker-archive-keyring.gpg'
+    [[ -f "$file" ]] && return 0
     name_fancy='Docker'
+    curl="$(koopa::locate_curl)"
+    gpg="$(koopa::locate_gpg)"
     os_id="$(koopa::os_id)"
     url="https://download.docker.com/linux/${os_id}/gpg"
-    key='9DC858229FC7DD38854AE2D88D81803C0EBFCD88'
-    koopa:::debian_apt_key_add "$name_fancy" "$url" "$key"
+    koopa::alert "Adding ${name_fancy} keyring at '${file}'."
+    "$curl" -fsSL "$url" \
+        | sudo "$gpg" --dearmor -o "$file"
+    koopa::assert_is_file "$file"
     return 0
 }
+
+# FIXME Now hitting this error (2021-09-30):
+# Err:3 https://download.docker.com/linux/ubuntu focal InRelease
+#   The following signatures couldn't be verified because the public key is
+#   not available: NO_PUBKEY 7EA0A9C3F273FCD8
+# Reading package lists... Done
 
 koopa::debian_apt_add_docker_repo() { # {{{1
     # """
