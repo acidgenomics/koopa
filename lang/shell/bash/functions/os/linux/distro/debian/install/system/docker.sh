@@ -3,7 +3,7 @@
 koopa::debian_install_docker() { # {{{1
     # """
     # Install Docker.
-    # @note Updated 2021-06-04.
+    # @note Updated 2021-09-30.
     #
     # @seealso
     # - https://docs.docker.com/install/linux/docker-ce/debian/
@@ -30,9 +30,9 @@ koopa::debian_install_docker() { # {{{1
     koopa::debian_apt_add_docker_repo
     # Ready to install Docker.
     pkgs=(
-        'containerd.io'
         'docker-ce'
         'docker-ce-cli'
+        'containerd.io'
     )
     koopa::debian_apt_install "${pkgs[@]}"
     # Ensure current user is added to Docker group.
