@@ -530,6 +530,7 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     return 0
 }
 
+# FIXME This isn't handling additional exclusions correctly, need to rethink.
 koopa::aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
