@@ -382,7 +382,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     return 0
 }
 
-# FIXME Inform the user when we're getting the latest version.
+# FIXME Inform the user when we're getting the latest version of a recipe.
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
