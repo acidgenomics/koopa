@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-09-27"
+koopa-date="2021-1004"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.0"
@@ -546,7 +546,7 @@ ruby-ronn="0.7.3"
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.3"             # homebrew
-rust-broot="1.6.3"            # homebrew; br
+rust-broot="1.6.4"            # homebrew; br
 rust-cargo-update="7.0.1"
 rust-cargo-outdated="0.9.17"  # homebrew
 rust-dog="0.1.0"              # homebrew
