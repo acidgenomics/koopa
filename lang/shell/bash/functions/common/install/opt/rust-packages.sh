@@ -104,7 +104,7 @@ koopa::update_rust_packages() { # {{{1
 koopa:::update_rust_packages() { # {{{1
     # """
     # Update Rust packages.
-    # @note Updated 2021-09-22.
+    # @note Updated 2021-10-05.
     # @seealso
     # - https://crates.io/crates/cargo-update
     # - https://github.com/nabijaczleweli/cargo-update
@@ -114,6 +114,7 @@ koopa:::update_rust_packages() { # {{{1
     koopa::activate_rust
     export RUST_BACKTRACE=1
     cargo="$(koopa::locate_cargo)"
+    koopa::add_to_path_start "$(koopa::dirname "$cargo")"
     "$cargo" install-update -a
     return 0
 }
