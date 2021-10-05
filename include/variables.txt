@@ -492,7 +492,7 @@ nim-markdown="0.8.5"
 
 # Node (NPM) packages {{{1
 # ==============================================================================
-# Updated 2021-08-31.
+# Updated 2021-10-05.
 
 # https://www.npmjs.com/npm/
 node-npm="7.24.2"
@@ -573,7 +573,8 @@ rust-zoxide="0.7.5"           # homebrew; z
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
 
-# > rust-crossbeam="0.8.0"
-# > rust-hyper="0.14.7"
-# > rust-rayon="1.5.0"
-# > rust-tide="0.16.0"
+# Consider (for package development):
+# - crossbeam
+# - hyper
+# - rayon
+# - tide
