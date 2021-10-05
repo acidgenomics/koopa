@@ -1,50 +1,28 @@
 #+TITLE: koopa
 #+STARTUP: content
-* Development
-** TODO koopa permissions need to be set correctly at end of install.
-** TODO conda base environment is activating inside RStudio terminal on
-        AWS *.170 instance.
-** TODO Add step to generate BAM and/or CRAM files from salmon, kallisto,
-        bowtie2 output.
-** TODO Shell is double activating, showing tmux sessions twice on Debian
-        ARM dev machine.
-** TODO Consider removing non-symlinked programs in /usr/local/bin on macOS.
-** TODO JAVA_HOME need to support Homebrew OpenJDK on Linux.
-** TODO Improve the consistency of Homebrew installs across macOS and Linux.
+* Development (high priority)
+** TODO conda base environment has been seen to stay active inside of RStudio
+        terminal on some AWS AMI EC2 instances.
+* Development (medium priority)
+** TODO Terminal zsh autosuggestion colors are messed up in solarized mode.
+** TODO Consider installing latest stable release by default for Docker images.
 ** TODO Consider linking '/etc/shells' on Linux, to enable easier configuration
         of Linuxbrew Zsh and/or Bash.
-** TODO Terminal zsh autosuggestion colors are messed up in solarized mode.
-** TODO Add support for nushell?
+** TODO Add step to generate BAM and/or CRAM files from salmon, kallisto,
+        bowtie2 output.
+** TODO Consider reworking git installs to use shallow clones?
+** TODO Today bucket activation needs to relink if link is broken.
+** TODO Consider removing non-symlinked programs in /usr/local/bin on macOS.
 ** TODO Consider prefixing with "command XXX" instead of using "unalias XXX".
-** TODO Clone shallow during install...
-** TODO R versioned unit test script in koopa.
-        Our 'AcidDevTools::check()' needs to call 'devtools::test()' manually.
-** TODO Consider not linking r-devel into /usr/local. If we change this,
-        need to update r-devel Docker image to hard-code the PATH.
-** TODO Improve completion support for all exported scripts.
-** TODO Improve configuration of NPM, to store packages outside of '/usr/local'.
-   > npm config get prefix
-   Want something like:
-   '/opt/koopa/opt/npm-packages'
+* Development (low priority)
+** TODO Add support for fish shell.
+** TODO Add support for nushell.
 ** TODO Improve support for Void Linux.
         Detect admin group.
         Add support for configure-system.
-** TODO Consider installing latest stable release by default for Docker images.
-** TODO Minimal Linux base images should not include '.git' directories.
 ** TODO Need to run bfg to make dotfiles more compact?
-** TODO Consider moving dotfiles under opt in a future update.
-** TODO koopa install base should work on CentOS.
-** TODO Add support for activation in fish shell.
-** TODO Add support for activation in oil shell.
-        This is likely too difficult due to POSIX-incompatibility...
-** TODO Move website and installer from GitHub pages to Cloudfront.
-** TODO Ensure koopa installs clean on a macOS system without Homebrew.
-** TODO dotfiles installer needs to locate koopa install better?
-** TODO Today bucket activation needs to relink if link is broken.
-** TODO Add support for `r-devel` installation on Fedora.
-** TODO Add support for Shiny Server installation on Fedora.
-** TODO Work on Fix macOS install script for Catalina.
 * Documentation
 ** TODO Need to systematically check all exported scripts for documentation.
 ** TODO Need to explain which programs are automatically supported and get
         activated by default more clearly.
+** TODO Improve completion support for all exported scripts.
