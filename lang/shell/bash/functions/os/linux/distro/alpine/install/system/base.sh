@@ -10,7 +10,7 @@ koopa::alpine_install_base() { # {{{1
     # Potentially useful flags:
     # > apk add --no-cache --virtual .build-dependencies
     # """
-    local dict name_fancy pkgs
+    local dict name_fancy pkgs pos
     koopa::assert_is_installed 'apk' 'sudo'
     declare -A dict=(
         [base]=1

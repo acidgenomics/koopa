@@ -8,7 +8,7 @@ koopa::opensuse_install_base() { # {{{1
     # zypper cheat sheet:
     # https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
     # """
-    local dict name_fancy pkgs
+    local dict name_fancy pkgs pos
     koopa::assert_is_installed 'sudo' 'zypper'
     declare -A dict=(
         [base]=1
