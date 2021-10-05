@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-1004"
+koopa-date="2021-10-05"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.12.0"
+koopa-version="0.12.1"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.2.0"
@@ -480,6 +480,11 @@ conda-vardict="2019.06.04"              # 2019-06-05 bioconda
 # ==============================================================================
 
 homebrew-cask-gpg-suite="2021.1"
+
+# Nim (Nimble) packages {{{1
+# ==============================================================================
+
+nim-markdown="0.8.5"
 
 # Node (NPM) packages {{{1
 # ==============================================================================
