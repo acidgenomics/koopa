@@ -382,11 +382,10 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     return 0
 }
 
-# FIXME Inform the user when we're getting the latest version of a recipe.
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-10-05.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -424,6 +423,7 @@ koopa::conda_create_env() { # {{{1
         # If the version isn't specified, fetch the latest one automatically.
         if ! koopa::str_match "$env_string" '='
         then
+            koopa::alert "Obtaining latest version for '${env_string}'."
             env_version="$(koopa::conda_env_latest_version "$env_string")"
             [[ -n "$env_version" ]] || return 1
             env_string="${env_string}=${env_version}"
