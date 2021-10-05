@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 koopa::install_julia_packages() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Julia packages' \
-        --name='julia-packages' \
-        --no-link \
-        --no-prefix-check \
-        --prefix="$(koopa::julia_packages_prefix)" \
+    koopa:::install_app_packages \
+        --name-fancy='Julia' \
+        --name='julia' \
         "$@"
 }
 

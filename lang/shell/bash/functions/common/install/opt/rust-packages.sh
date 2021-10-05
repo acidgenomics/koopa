@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 koopa::install_rust_packages() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Rust packages' \
-        --name='rust-packages' \
-        --no-link \
-        --no-prefix-check \
-        --prefix="$(koopa::rust_packages_prefix)" \
+    koopa:::install_app_packages \
+        --name-fancy='Rust' \
+        --name='rust' \
         "$@"
 }
 

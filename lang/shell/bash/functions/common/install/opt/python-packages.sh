@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 koopa::install_python_packages() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Python packages' \
-        --name='python-packages' \
-        --no-link \
-        --no-prefix-check \
-        --prefix="$(koopa::python_packages_prefix)" \
+    koopa:::install_app_packages \
+        --name-fancy='Python' \
+        --name='python' \
         "$@"
 }
 

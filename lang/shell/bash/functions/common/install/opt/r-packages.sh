@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 koopa::install_r_packages() { # {{{1
-    koopa:::install_app \
-        --name-fancy='R packages' \
-        --name='r-packages' \
-        --no-link \
-        --no-prefix-check \
-        --prefix="$(koopa::r_packages_prefix)" \
+    koopa:::install_app_packages \
+        --name-fancy='R' \
+        --name='r' \
         "$@"
 }
 

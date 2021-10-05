@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 koopa::install_nim_packages() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Nim packages' \
-        --name='nim-packages' \
-        --no-link \
-        --no-prefix-check \
-        --prefix="$(koopa::nim_packages_prefix)" \
+    koopa:::install_app_packages \
+        --name-fancy='Nim' \
+        --name='nim' \
         "$@"
 }
 

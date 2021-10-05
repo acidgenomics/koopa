@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 koopa::install_ruby_packages() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Ruby packages' \
-        --name='ruby-packages' \
-        --no-link \
-        --no-prefix-check \
-        --prefix="$(koopa::ruby_packages_prefix)" \
+    koopa:::install_app_packages \
+        --name-fancy='Ruby' \
+        --name='ruby' \
         "$@"
 }
 

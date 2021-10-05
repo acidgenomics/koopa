@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 koopa::install_node_packages() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Node packages' \
-        --name='node-packages' \
-        --no-link \
-        --no-prefix-check \
-        --prefix="$(koopa::node_packages_prefix)" \
+    koopa:::install_app_packages \
+        --name-fancy='Node' \
+        --name='node' \
         "$@"
 }
 
