@@ -45,6 +45,7 @@ koopa:::install_nim() { # {{{1
     ./koch boot -d:release
     ./koch tools
     koopa::cp --target="$prefix" 'bin'
+    koopa::rm "$tmp_dir"
     return 0
 }
 
