@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# FIXME Installer needs to set permissions to 'root:<admin>' on new install.
-
 # """
 # koopa shell
 # https://koopa.acidgenomics.com/
