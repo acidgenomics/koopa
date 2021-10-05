@@ -10,7 +10,7 @@ koopa::install_node_packages() { # {{{1
 koopa:::install_node_packages() { # {{{1
     # """
     # Install Node.js packages using npm.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-10-05.
     # @seealso
     # - npm help config
     # - npm help install
@@ -19,10 +19,10 @@ koopa:::install_node_packages() { # {{{1
     local node npm npm_version pkg pkg_lower pkgs prefix version
     koopa::assert_has_no_args "$#"
     prefix="${INSTALL_PREFIX:?}"
-    node="$(koopa::locate_node)"
-    npm="$(koopa::locate_npm)"
     koopa::configure_node
     koopa::activate_node
+    node="$(koopa::locate_node)"
+    npm="$(koopa::locate_npm)"
     # The npm install step will fail unless 'node' is in 'PATH'.
     koopa::add_to_path_start "$(koopa::dirname "$node")"
     # Ensure npm is configured to desired version.
