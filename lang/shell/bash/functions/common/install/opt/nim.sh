@@ -47,3 +47,10 @@ koopa:::install_nim() { # {{{1
     koopa::cp --target="$prefix" 'bin'
     return 0
 }
+
+koopa::uninstall_nim() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Nim' \
+        --name='nim' \
+        "$@"
+}
