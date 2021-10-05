@@ -4,7 +4,6 @@
 ** TODO conda base environment has been seen to stay active inside of RStudio
         terminal on some AWS AMI EC2 instances.
 * Development (medium priority)
-** TODO Terminal zsh autosuggestion colors are messed up in solarized mode.
 ** TODO Consider installing latest stable release by default for Docker images.
 ** TODO Consider linking '/etc/shells' on Linux, to enable easier configuration
         of Linuxbrew Zsh and/or Bash.
