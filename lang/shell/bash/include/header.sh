@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Bash is double activating on AWS Ubuntu instance.
-
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
