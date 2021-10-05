@@ -140,7 +140,7 @@ brew "pyenv"
 brew "pylint"  # python
 # NOTE Python 3.9 currently required for Google Cloud SDK.
 brew "python@3.9"
-brew "python@3.10"
+# > brew "python@3.10"
 brew "ranger"  # python
 brew "rename"
 brew "ripgrep"  # rust
