@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-09-29.
+# Updated 2021-10-05.
 # """
 
 # Taps {{{1
@@ -11,6 +11,8 @@ tap "homebrew/core"
 
 # Brews {{{1
 # ==============================================================================
+
+brew "nghttp2", link: false  # libnghttp2 / curl
 
 brew "ack"
 brew "armadillo"
@@ -91,6 +93,7 @@ brew "lesspipe"
 brew "libarchive"
 brew "libgit2"
 brew "libidn2"  # wget
+brew "libnghttp2"  # curl
 brew "libomp"
 brew "libpsl"  # wget
 brew "libressl"
