@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development
+** TODO koopa permissions need to be set correctly at end of install.
 ** TODO conda base environment is activating inside RStudio terminal on
         AWS *.170 instance.
 ** TODO Add step to generate BAM and/or CRAM files from salmon, kallisto,
