@@ -44,7 +44,7 @@ koopa::activate_conda_env() { # {{{1
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-10-05.
     # """
     local dict env envs name_fancy
     declare -A dict=(
@@ -60,6 +60,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         [riboseq]=0
         [rnaseq]=0
         [singlecell]=0
+        [smallrna]=0
         [spatial]=0
         [trimming]=0
         [variation]=0
@@ -132,6 +133,11 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 dict[singlecell]=1
                 shift 1
                 ;;
+            '--smallrna' | \
+            '--small-rna')
+                dict[smallrna]=1
+                shift 1
+                ;;
             '--spatial')
                 dict[spatial]=1
                 shift 1
@@ -169,6 +175,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         dict[riboseq]=1
         dict[rnaseq]=1
         dict[singlecell]=1
+        dict[smallrna]=1
         dict[spatial]=1
         dict[trimming]=1
         dict[variation]=1
@@ -322,6 +329,12 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             'r-seurat'
             'scanpy'
             'scrublet'
+        )
+    fi
+    if [[ "${dict[smallrna]}" -eq 1 ]]
+    then
+        envs+=(
+            'mirdeep2'
         )
     fi
     if [[ "${dict[spatial]}" -eq 1 ]]
