@@ -118,6 +118,7 @@ koopa:::install_app() { # {{{1
         [PKG_CONFIG_PATH]="${PKG_CONFIG_PATH:-}"
     )
     declare -A dict=(
+        [auto_prefix]=1
         [homebrew_opt]=''
         [installer]=''
         [link_app]=1
@@ -290,10 +291,10 @@ koopa:::install_app() { # {{{1
     then
         dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     else
-        # Ensure that non-default prefix never links into make prefix.
+        echo 'FIXME AUTO_PREFIX DISABLED'
+        dict[auto_prefix]=0
         dict[link_app]=0
     fi
-    koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
     then
         if [[ "${dict[reinstall]}" -eq 1 ]]
@@ -314,6 +315,13 @@ at '${dict[prefix]}'."
             return 0
         fi
     fi
+    dict[prefix]="$(koopa::init_dir "${dict[prefix]}")"
+    if koopa::str_match_fixed "${HOME}" "${dict[prefix]}"
+    then
+        echo 'FIXME HELLO THERE SHARED'
+        dict[shared]=0
+    fi
+    koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
     # Ensure configuration is minimal before proceeding, when desirable.
     unset -v LD_LIBRARY_PATH
     # Ensure clean minimal 'PATH'.
@@ -360,7 +368,10 @@ at '${dict[prefix]}'."
     koopa::rm "${dict[tmp_dir]}"
     if [[ "${dict[shared]}" -eq 1 ]]
     then
-        koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
+        if [[ "${dict[auto_prefix]}" -eq 1 ]]
+        then
+            koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
+        fi
         koopa::sys_set_permissions --recursive "${dict[prefix]}"
     fi
     koopa::delete_empty_dirs "${dict[prefix]}"
@@ -377,7 +388,8 @@ at '${dict[prefix]}'."
         fi
         # Including the 'true' catch here to avoid 'cp' issues on Arch Linux.
         koopa::link_app "${link_args[@]}" || true
-    else
+    elif [[ "${dict[auto_prefix]}" -eq 1 ]]
+    then
         koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
     fi
     # Reset global variables, if applicable.
