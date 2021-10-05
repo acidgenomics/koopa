@@ -12,7 +12,7 @@ koopa:::install_python_packages() { # {{{1
     # Install Python packages.
     # @note Updated 2021-10-05.
     # """
-    local pkg pkg_lower pkgs version
+    local pkgs
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
@@ -37,8 +37,7 @@ koopa:::install_python_packages() { # {{{1
             'pyflakes'
             'pylint'        # homebrew
             'pynvim'
-            # NOTE This is currently failing for 3.10.
-            # > 'pytaglib'
+            # > 'pytaglib'  # py3.9
             'pytest'
             'ranger-fm'     # homebrew
             'six'
