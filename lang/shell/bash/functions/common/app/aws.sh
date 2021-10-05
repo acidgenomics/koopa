@@ -530,11 +530,10 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     return 0
 }
 
-# FIXME This isn't handling additional exclusions correctly, need to rethink.
 koopa::aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-05.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
@@ -555,30 +554,22 @@ koopa::aws_s3_sync() { # {{{1
     # - *.Rproj directories.
     # - *.swp files (from vim).
     # """
-    local aws dict exclude_args pos sync_args
+    local aws dict exclude_args exclude_patterns pattern pos sync_args
     koopa::assert_has_args "$#"
     aws="$(koopa::locate_aws)"
     declare -A dict=(
         [profile]="${AWS_PROFILE:-default}"
     )
     # Include common file system and Git cruft that we don't want on S3.
-    exclude_args=(
-        '--exclude=*.Rproj/*'
-        '--exclude=*.swp'
-        '--exclude=*.tmp'
-        '--exclude=*/*.Rproj/*'
-        '--exclude=*/*.swp'
-        '--exclude=*/*.tmp'
-        '--exclude=*/.*'
-        '--exclude=*/.DS_Store'
-        '--exclude=*/.Rproj.user/*'
-        '--exclude=*/._*'
-        '--exclude=*/.git/*'
-        '--exclude=.*'
-        '--exclude=.DS_Store'
-        '--exclude=.Rproj.user/*'
-        '--exclude=._*'
-        '--exclude=.git/*'
+    exclude_patterns=(
+        '*.Rproj/*'
+        '*.swp'
+        '*.tmp'
+        '.*'
+        '.DS_Store'
+        '.Rproj.user/*'
+        '._*'
+        '.git/*'
     )
     pos=()
     sync_args=()
@@ -587,11 +578,11 @@ koopa::aws_s3_sync() { # {{{1
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--exclude='*)
-                exclude_args+=("${1#*=}")
+                exclude_patterns+=("${1#*=}")
                 shift 1
                 ;;
             '--exclude')
-                exclude_args+=("${2:?}")
+                exclude_patterns+=("${2:?}")
                 shift 2
                 ;;
             '--profile='*)
@@ -652,6 +643,14 @@ koopa::aws_s3_sync() { # {{{1
             "${dict[target_prefix]}"
         )
     fi
+    exclude_args=()
+    for pattern in "${exclude_patterns[@]}"
+    do
+        exclude_args+=(
+            "--exclude=${pattern}"
+            "--exclude=*/${pattern}"
+        )
+    done
     "$aws" --profile="${dict[profile]}" \
         s3 sync \
             "${exclude_args[@]}" \
