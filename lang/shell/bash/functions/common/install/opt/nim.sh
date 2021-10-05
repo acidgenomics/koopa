@@ -14,31 +14,36 @@ koopa::configure_nim() { # {{{1
     return 0
 }
 
-# FIXME Need to be able to install nim from source.
-# FIXME Need to work out how to configure nimble and nim packages.
-# FIXME Need to add support inside of koopa for this -- 'nim-packages'.
-# FIXME Need to add uninstall support.
+koopa::install_nim() { # {{{1
+    koopa:::install_app \
+        --name='nim' \
+        --name-fancy='Nim' \
+        --link-include-dirs='bin' \
+        "$@"
+    koopa::configure_nim
+    return 0
+}
 
 koopa:::install_nim() { # {{{1
     # """
     # Install Nim.
     # @note Updated 2021-10-05.
     # """
-    local file prefix url version
+    local file name prefix url version
+    name='nim'
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    file='nim-1.4.8.tar.xz'
+    file="${name}-${version}.tar.xz"
     url="https://nim-lang.org/download/${file}"
+    tmp_dir="$(koopa::tmp_dir)"
+    koopa::cd "$tmp_dir"
     koopa::download "$url"
     koopa::extract "$file"
-    (
-        koopa::cd 'FIXME'
-        sh build.sh
-        bin/nim c koch
-        ./koch boot -d:release
-        ./koch tools
-        koopa::cp --target="$prefix" 'bin'
-    )
-    # FIXME Need to copy the 'bin/' to target.
+    koopa::cd "${name}-${version}"
+    ./build.sh
+    bin/nim c koch
+    ./koch boot -d:release
+    ./koch tools
+    koopa::cp --target="$prefix" 'bin'
     return 0
 }
