@@ -389,9 +389,7 @@ koopa::sys_rm() { # {{{1
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2021-09-20.
-    # @param -r
-    #   Change permissions recursively.
+    # @note Updated 2021-10-05.
     # """
     koopa::assert_has_args "$#"
     local arg chmod chown dict group pos user
@@ -436,8 +434,21 @@ koopa::sys_set_permissions() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    chmod=('koopa::sys_chmod')
-    chown=('koopa::sys_chown' '--no-dereference')
+    case "${dict[user]}" in
+        '0')
+            chmod=('koopa::sys_chmod')
+            chown=('koopa::sys_chown')
+            group="$(koopa::sys_group)"
+            user="$(koopa::sys_user)"
+            ;;
+        '1')
+            chmod=('koopa::chmod')
+            chown=('koopa::chown')
+            group="$(koopa::group)"
+            user="$(koopa::user)"
+            ;;
+    esac
+    chown+=('--no-dereference')
     if [[ "${dict[recursive]}" -eq 1 ]]
     then
         chmod+=('--recursive')
@@ -449,15 +460,6 @@ koopa::sys_set_permissions() { # {{{1
     else
         chmod+=('u+rw,g+r,g-w')
     fi
-    case "${dict[user]}" in
-        '0')
-            user="$(koopa::sys_user)"
-            ;;
-        '1')
-            user="$(koopa::user)"
-            ;;
-    esac
-    group="$(koopa::sys_group)"
     chown+=("${user}:${group}")
     for arg in "$@"
     do
