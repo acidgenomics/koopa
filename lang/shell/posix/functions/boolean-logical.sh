@@ -542,7 +542,6 @@ _koopa_is_shared_install() { # {{{1
     ! _koopa_is_local_install
 }
 
-# FIXME Need to rethink the handling of this on Bash in Ubuntu 20.
 _koopa_is_subshell() { # {{{1
     # """
     # Is koopa running inside a subshell?
