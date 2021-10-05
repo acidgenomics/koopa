@@ -268,7 +268,10 @@ koopa::init_dir() { # {{{1
     then
         dir="$(koopa::sub '^~' "${HOME:?}" "$dir")"
     fi
-    koopa::mkdir "$dir"
+    if [[ ! -d "$dir" ]]
+    then
+        koopa::mkdir "$dir"
+    fi
     dir="$(koopa::realpath "$dir")"
     koopa::print "$dir"
     return 0
