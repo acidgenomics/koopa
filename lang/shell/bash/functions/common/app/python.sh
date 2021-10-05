@@ -280,11 +280,8 @@ koopa::python_venv_create_r_reticulate() { # {{{1
         'Cython'
         'PyYAML'
         'leidenalg'         # R leiden
-        # NOTE louvain package is no longer maintained.
-        # > 'louvain'
         'numpy'
-        # NOTE pandas won't install on 3.10.
-        # > 'pandas'
+        'pandas'            # py3.9
         'python-igraph'     # R leiden
         'scikit-learn'
         'scipy'
