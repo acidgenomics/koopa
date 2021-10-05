@@ -131,8 +131,6 @@ __koopa_export_koopa_prefix() { # {{{1
     return 0
 }
 
-# FIXME This step isn't working correctly on Bash / Ubuntu 20.
-# FIXME Need to rethink this logic here.
 __koopa_export_koopa_subshell() { # {{{1
     # """
     # Export 'KOOPA_SUBSHELL' variable.
@@ -360,8 +358,6 @@ __koopa_zsh_source() { # {{{1
 
 
 
-# FIXME The subshell activation approach is working correctly for Zsh but
-# not Bash subshells on Linux.
 __koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
@@ -373,13 +369,9 @@ __koopa_activate() { # {{{1
             return 0
             ;;
     esac
-    echo 'FIXME A'
     __koopa_preflight || return 0
-    echo 'FIXME B'
     __koopa_export_koopa_subshell || return 1
-    echo 'FIXME C'
     __koopa_export_koopa_prefix || return 1
-    echo 'FIXME D'
     export KOOPA_ACTIVATE=1
     # shellcheck source=/dev/null
     . "$(__koopa_header)" || return 1

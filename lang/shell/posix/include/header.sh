@@ -100,11 +100,8 @@ _koopa_posix_header() { # {{{1
             _koopa_activate_secrets || return 1
             _koopa_activate_ssh_key || return 1
             _koopa_activate_tealdeer || return 1
-            # FIXME Our subshell detection isn't working correctly on
-            # Bash inside Ubuntu 20.
             if ! _koopa_is_subshell
             then
-                echo 'FIXME SUBSHELL'
                 _koopa_activate_today_bucket || return 1
                 _koopa_activate_tmux_sessions || return 1
             fi
