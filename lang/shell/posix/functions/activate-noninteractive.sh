@@ -133,13 +133,18 @@ _koopa_activate_homebrew() { # {{{1
 _koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
     # """
     # Activate Homebrew Google Cloud SDK.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-10-05.
+    #
+    # The SDK doesn't currently support Python 3.10, so pinning to 3.9.
     # """
-    local prefix
+    local brew_prefix prefix python
     [ "$#" -eq 0 ] || return 1
-    prefix="$(_koopa_homebrew_prefix)"
-    prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
+    brew_prefix="$(_koopa_homebrew_prefix)"
+    prefix="${brew_prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
     _koopa_activate_prefix "$prefix"
+    # Need to pin to Python 3.9, since 3.10 isn't currently supported.
+    python="${brew_prefix}/opt/python@3.9/bin/python3.9"
+    export CLOUDSDK_PYTHON="$python"
     # Alternate (slower) approach that enables autocompletion.
     # > local shell
     # > [ -d "$prefix" ] || return 0
