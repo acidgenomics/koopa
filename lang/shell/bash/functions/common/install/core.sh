@@ -101,13 +101,10 @@ koopa:::configure_app_packages() { # {{{1
     return 0
 }
 
-# FIXME This needs to support installation to non-default prefix.
-# FIXME In this case, never link.
-# FIXME Need to work this out for bcbio-nextgen.
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-05.
     #
     # The 'dict' array approach has the benefit of avoiding passing unwanted
     # local variables to the internal installer function call below.
@@ -285,13 +282,16 @@ koopa:::install_app() { # {{{1
     then
         dict[name_fancy]="${dict[name]}"
     fi
+    if [[ -z "${dict[version]}" ]]
+    then
+        dict[version]="$(koopa::variable "${dict[name]}")"
+    fi
     if [[ -z "${dict[prefix]}" ]]
     then
-        if [[ -z "${dict[version]}" ]]
-        then
-            dict[version]="$(koopa::variable "${dict[name]}")"
-        fi
         dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
+    else
+        # Ensure that non-default prefix never links into make prefix.
+        dict[link_app]=0
     fi
     koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
