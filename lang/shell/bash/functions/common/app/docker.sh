@@ -594,7 +594,7 @@ koopa::is_docker_build_recent() { # {{{1
     # - https://stackoverflow.com/questions/8903239/
     # - https://unix.stackexchange.com/questions/27013/
     # """
-    local created current date days diff grep image json seconds sed
+    local created current date days diff grep image json pos seconds sed
     koopa::assert_has_args "$#"
     date="$(koopa::locate_date)"
     grep="$(koopa::locate_grep)"

@@ -423,9 +423,10 @@ koopa:::install_app_packages() { # {{{1
     # Install application packages.
     # @note Updated 2021-10-05.
     # """
-    local name name_fancy
+    local name name_fancy pos
     koopa::assert_has_args "$#"
     declare -A dict
+    pos=()
     while (("$#"))
     do
         case "$1" in
