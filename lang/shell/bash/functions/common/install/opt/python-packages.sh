@@ -1,5 +1,27 @@
 #!/usr/bin/env bash
 
+# FIXME Move this to python.sh file.
+# FIXME Update reticulate environment installer to use this too.
+# FIXME This code is duplicated in 'python_venv_create_r_reticulate'.
+koopa::python_get_pkg_versions() {
+    # """
+    # Get pinned Python package versions for pip install call.
+    # @note Updated 2021-10-05.
+    # """
+    local i pkg pkgs pkg_lower version
+    koopa::assert_has_args "$#"
+    pkgs=("$@")
+    for i in "${!pkgs[@]}"
+    do
+        pkg="${pkgs[$i]}"
+        pkg_lower="$(koopa::lowercase "$pkg")"
+        version="$(koopa::variable "python-${pkg_lower}")"
+        pkgs[$i]="${pkg}==${version}"
+    done
+    koopa::print "${pkgs[@]}"
+    return 0
+}
+
 koopa::install_python_packages() { # {{{1
     koopa:::install_app_packages \
         --name-fancy='Python' \
@@ -10,41 +32,41 @@ koopa::install_python_packages() { # {{{1
 koopa:::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-10-05.
     # """
     local pkg pkg_lower pkgs version
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
+        # Install essential defaults first.
+        pkgs=(
+            'pip'
+            'setuptools'
+            'wheel'
+        )
+        readarray -t pkgs <<< "$(koopa::python_get_pkg_versions "${pkgs[@]}")"
+        koopa::python_pip_install "${pkgs[@]}"
+        # Now we can install additional recommended extras.
         pkgs=(
             'Cython'
             'black'         # homebrew
             'bpytop'        # homebrew
             'flake8'        # homebrew
             'glances'       # homebrew
-            'pip'
             'pip2pi'
             'pipx'          # homebrew
             'psutil'
             'pyflakes'
             'pylint'        # homebrew
             'pynvim'
-            'pytaglib'
+            # NOTE This is currently failing for 3.10.
+            # > 'pytaglib'
             'pytest'
             'ranger-fm'     # homebrew
-            'setuptools'
             'six'
-            'wheel'
         )
-        # NOTE This code is duplicated in 'python_venv_create_r_reticulate'.
-        for i in "${!pkgs[@]}"
-        do
-            pkg="${pkgs[$i]}"
-            pkg_lower="$(koopa::lowercase "$pkg")"
-            version="$(koopa::variable "python-${pkg_lower}")"
-            pkgs[$i]="${pkg}==${version}"
-        done
     fi
+    readarray -t pkgs <<< "$(koopa::python_get_pkg_versions "${pkgs[@]}")"
     koopa::python_pip_install "${pkgs[@]}"
     return 0
 }
