@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 koopa::install_perl_packages() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Perl packages' \
-        --name='perl-packages' \
-        --no-link \
-        --no-prefix-check \
-        --prefix="$(koopa::perl_packages_prefix)" \
+    koopa:::install_app_packages \
+        --name-fancy='Perl' \
+        --name='perl' \
         "$@"
 }
 
