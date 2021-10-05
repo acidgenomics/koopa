@@ -291,12 +291,12 @@ koopa:::install_app() { # {{{1
     then
         dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     else
-        echo 'FIXME AUTO_PREFIX DISABLED'
         dict[auto_prefix]=0
         dict[link_app]=0
     fi
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
     then
+        dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
         if [[ "${dict[reinstall]}" -eq 1 ]]
         then
             koopa::alert_note "Removing previous install at '${dict[prefix]}'."
@@ -314,11 +314,11 @@ koopa:::install_app() { # {{{1
 at '${dict[prefix]}'."
             return 0
         fi
+    else
+        dict[prefix]="$(koopa::init_dir "${dict[prefix]}")"
     fi
-    dict[prefix]="$(koopa::init_dir "${dict[prefix]}")"
-    if koopa::str_match_fixed "${HOME}" "${dict[prefix]}"
+    if koopa::str_match_fixed "${dict[prefix]}" "${HOME:?}"
     then
-        echo 'FIXME HELLO THERE SHARED'
         dict[shared]=0
     fi
     koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
@@ -373,6 +373,8 @@ at '${dict[prefix]}'."
             koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
         fi
         koopa::sys_set_permissions --recursive "${dict[prefix]}"
+    else
+        koopa::sys_set_permissions --recursive --user "${dict[prefix]}"
     fi
     koopa::delete_empty_dirs "${dict[prefix]}"
     if [[ "${dict[link_app]}" -eq 1 ]]
