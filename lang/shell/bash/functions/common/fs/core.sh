@@ -259,11 +259,15 @@ koopa::df() { # {{{1
 koopa::init_dir() { # {{{1
     # """
     # Initialize (create) a directory and return the real path on disk.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-10-05.
     # """
     local dir
     koopa::assert_has_args_eq "$#" 1
     dir="${1:?}"
+    if koopa::str_match_regex "$dir" '^~'
+    then
+        dir="$(koopa::sub '^~' "${HOME:?}" "$dir")"
+    fi
     koopa::mkdir "$dir"
     dir="$(koopa::realpath "$dir")"
     koopa::print "$dir"
