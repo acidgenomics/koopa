@@ -120,8 +120,8 @@ _koopa_complete() { # {{{1
                     'ncurses'
                     'neofetch'
                     'neovim'
-                    'nim'  # FIXME
-                    'nim-packages'  # FIXME
+                    'nim'
+                    'nim-packages'
                     'node-packages'
                     'openjdk'
                     'openssh'
@@ -285,7 +285,7 @@ _koopa_complete() { # {{{1
                     'dotfiles'
                     'google-cloud-sdk'
                     'homebrew'
-                    'nim-packages'  # FIXME
+                    'nim-packages'
                     'node-packages'
                     'perl-packages'
                     'prelude-emacs'
