@@ -1,27 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Move this to python.sh file.
-# FIXME Update reticulate environment installer to use this too.
-# FIXME This code is duplicated in 'python_venv_create_r_reticulate'.
-koopa::python_get_pkg_versions() {
-    # """
-    # Get pinned Python package versions for pip install call.
-    # @note Updated 2021-10-05.
-    # """
-    local i pkg pkgs pkg_lower version
-    koopa::assert_has_args "$#"
-    pkgs=("$@")
-    for i in "${!pkgs[@]}"
-    do
-        pkg="${pkgs[$i]}"
-        pkg_lower="$(koopa::lowercase "$pkg")"
-        version="$(koopa::variable "python-${pkg_lower}")"
-        pkgs[$i]="${pkg}==${version}"
-    done
-    koopa::print "${pkgs[@]}"
-    return 0
-}
-
 koopa::install_python_packages() { # {{{1
     koopa:::install_app_packages \
         --name-fancy='Python' \

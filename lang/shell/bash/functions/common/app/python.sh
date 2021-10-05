@@ -45,6 +45,25 @@ koopa::python_delete_pycache() { # {{{1
     return 0
 }
 
+koopa::python_get_pkg_versions() {
+    # """
+    # Get pinned Python package versions for pip install call.
+    # @note Updated 2021-10-05.
+    # """
+    local i pkg pkgs pkg_lower version
+    koopa::assert_has_args "$#"
+    pkgs=("$@")
+    for i in "${!pkgs[@]}"
+    do
+        pkg="${pkgs[$i]}"
+        pkg_lower="$(koopa::lowercase "$pkg")"
+        version="$(koopa::variable "python-${pkg_lower}")"
+        pkgs[$i]="${pkg}==${version}"
+    done
+    koopa::print "${pkgs[@]}"
+    return 0
+}
+
 koopa::python_pip_install() { # {{{1
     # """
     # Internal pip install command.
@@ -136,6 +155,7 @@ koopa::python_pip_outdated() { # {{{1
     return 0
 }
 
+# FIXME Add easier support for simple Python version input here?
 koopa::python_venv_create() { # {{{1
     # """
     # Create Python virtual environment.
@@ -189,7 +209,7 @@ koopa::python_venv_create() { # {{{1
     prefix="$(koopa::python_venv_prefix)/${name}"
     if [[ "$reinstall" -eq 1 ]]
     then
-        koopa::rm "$prefix"
+        koopa::sys_rm "$prefix"
     fi
     if [[ -d "$prefix" ]]
     then
@@ -221,6 +241,8 @@ koopa::python_venv_create_base() { # {{{1
     return 0
 }
 
+# FIXME Need to pin this to Python 3.9.
+# FIXME louvain 0.7.0 fails to install otherwise.
 koopa::python_venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
@@ -250,28 +272,25 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     local cflags cppflags cxxflags dyld_library_path ldflags name pkgs
     name='r-reticulate'
     pkgs=(
+        # Essential defaults ---------------------------------------------------
+        'pip'
+        'setuptools'
+        'wheel'
+        # Other recommended packages -------------------------------------------
         'Cython'
         'PyYAML'
         'leidenalg'         # R leiden
-        'louvain'
+        # NOTE louvain package is no longer maintained.
+        # > 'louvain'
         'numpy'
-        'pandas'
-        'pip'
+        # NOTE pandas won't install on 3.10.
+        # > 'pandas'
         'python-igraph'     # R leiden
         'scikit-learn'
         'scipy'
-        'setuptools'
         'umap-learn'
-        'wheel'
     )
-    # NOTE This code is duplicated in 'install_python_packages'.
-    for i in "${!pkgs[@]}"
-    do
-        pkg="${pkgs[$i]}"
-        pkg_lower="$(koopa::lowercase "$pkg")"
-        version="$(koopa::variable "python-${pkg_lower}")"
-        pkgs[$i]="${pkg}==${version}"
-    done
+    readarray -t pkgs <<< "$(koopa::python_get_pkg_versions "${pkgs[@]}")"
     if koopa::is_macos
     then
         cflags=(
