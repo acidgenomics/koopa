@@ -37,7 +37,7 @@ koopa:::install_python_packages() { # {{{1
             'pyflakes'
             'pylint'        # homebrew
             'pynvim'
-            # > 'pytaglib'  # py3.9
+            'pytaglib'      # Failed to install on Python 3.10.
             'pytest'
             'ranger-fm'     # homebrew
             'six'
