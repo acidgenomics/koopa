@@ -275,7 +275,7 @@ php="8.0.11"
 pkg-config="0.29.2"
 
 # https://python-poetry.org
-poetry="1.1.10"
+poetry="1.1.11"
 
 # https://proj.org/
 proj="8.1.1"
