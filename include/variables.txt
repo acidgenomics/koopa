@@ -551,7 +551,8 @@ ruby-ronn="0.7.3"
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.3"             # homebrew
-rust-broot="1.6.4"            # homebrew; br
+# NOTE The 1.6.4 release isn't working on macOS from crates.io (2021-10-05).
+rust-broot="1.6.3"            # homebrew; br
 rust-cargo-update="7.0.1"
 rust-cargo-outdated="0.9.17"  # homebrew
 rust-dog="0.1.0"              # homebrew
