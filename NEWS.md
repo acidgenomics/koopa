@@ -1,10 +1,43 @@
 ## koopa 0.12.1 (2021-10-05)
 
+### Major changes
+
+- Improved internal subshell handling, which now avoids the duplicate tmux
+  session messages seen on EC2 instances.
+- Internal `install_app` function now provides better support for non-default
+  `--prefix` handling, which is useful for configuration on AWS EC2 instances.
+  In particular, this is useful for installing large programs onto internal
+  volumes, such as bcbio-nextgen.
+- `aws_s3_sync`: Improved array handling of `--exclude` patterns.
+- `generate_ssh_key`: Defaulting back to `id_rsa` instead of `id_ed25119`, which
+  still has better general compatibility support on AWS, in particular with
+  regard to CodeCommit. May revert back in a future update, but now is not
+  the time.
+- Improved the consistency (i.e. standardized) the configuration of language-
+  specific package libarries, including Julia, Nim, Node, Perl, Python, R,
+  Ruby, and Rust.
+- Improved Docker install support on Debian 10 and Ubuntu 20.
+
 ### Minor changes
 
+- Simplified Homebrew activation and R configuration on Linux.
 - Updated RSPM CRAN snapshot to 2021-10-05.
-- Added auto-completion support for `nim` and `nim-packages`.
+- Added installation and auto-completion support for `nim` and `nim-packages`.
 - Homebrew link fixes for `nghttp2`/`libnghttp2` and `python@3.9`.
+- Miscellaneous package version updates in `variables.txt`.
+- Updated conda recipe versions and added `mirdeep2` to bioinfo recipes.
+- `python_get_pkg_versions`: Split out this function, which is shared in
+  pip installer calls during standard Python package install, and in our
+  `r-reticulate` virtualenv generator.
+- `init_dir`: Improved detection and handling of input containing user home
+  directory abbreviated as `~`.
+- Emacs needs to be in path for our Doom Emacs updater.
+- Improved consistency of kallisto and salmon output directory handling in
+  their respective `index` functions.
+- Simplifed Emacs locator function approach on macOS.
+- Shared profile configuration file in `zzz-koopa.sh` should use `.` instead
+  of `source` in the call, which is POSIX-compliant.
+- Improved support for Prelude Emacs.
 
 ## koopa 0.12.0 (2021-09-21)
 
