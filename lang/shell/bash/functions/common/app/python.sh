@@ -155,7 +155,6 @@ koopa::python_pip_outdated() { # {{{1
     return 0
 }
 
-# FIXME Add easier support for simple Python version input here?
 koopa::python_venv_create() { # {{{1
     # """
     # Create Python virtual environment.
@@ -241,8 +240,7 @@ koopa::python_venv_create_base() { # {{{1
     return 0
 }
 
-# FIXME Need to pin this to Python 3.9.
-# FIXME louvain 0.7.0 fails to install otherwise.
+# NOTE Consider pinning this to Python 3.9.
 koopa::python_venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
@@ -281,7 +279,7 @@ koopa::python_venv_create_r_reticulate() { # {{{1
         'PyYAML'
         'leidenalg'         # R leiden
         'numpy'
-        'pandas'            # py3.9
+        'pandas'            # Fails on Python 3.10.
         'python-igraph'     # R leiden
         'scikit-learn'
         'scipy'
