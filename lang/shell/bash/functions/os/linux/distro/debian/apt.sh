@@ -77,12 +77,6 @@ koopa::debian_apt_add_docker_key() { # {{{1
     return 0
 }
 
-# FIXME Now hitting this error (2021-09-30):
-# Err:3 https://download.docker.com/linux/ubuntu focal InRelease
-#   The following signatures couldn't be verified because the public key is
-#   not available: NO_PUBKEY 7EA0A9C3F273FCD8
-# Reading package lists... Done
-
 koopa::debian_apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
