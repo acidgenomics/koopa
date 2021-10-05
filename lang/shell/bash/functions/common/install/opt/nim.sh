@@ -35,8 +35,6 @@ koopa:::install_nim() { # {{{1
     version="${INSTALL_VERSION:?}"
     file="${name}-${version}.tar.xz"
     url="https://nim-lang.org/download/${file}"
-    tmp_dir="$(koopa::tmp_dir)"
-    koopa::cd "$tmp_dir"
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
@@ -44,8 +42,7 @@ koopa:::install_nim() { # {{{1
     bin/nim c koch
     ./koch boot -d:release
     ./koch tools
-    koopa::cp --target="$prefix" 'bin'
-    koopa::rm "$tmp_dir"
+    koopa::cp --target="$prefix" .
     return 0
 }
 
