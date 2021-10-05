@@ -56,10 +56,11 @@ _koopa_check_os() { # {{{1
 _koopa_check_shell() { # {{{1
     # """
     # Check that current shell is supported, and export 'KOOPA_SHELL' variable.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-05.
     # """
     local shell shell_name
     [ "$#" -eq 0 ] || return 1
+    unset -v KOOPA_SHELL
     shell="$(_koopa_locate_shell)"
     shell_name="$(_koopa_shell_name)"
     KOOPA_SHELL="$shell"
