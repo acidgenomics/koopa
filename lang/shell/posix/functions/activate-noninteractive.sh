@@ -92,7 +92,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-09-29.
+    # @note Updated 2021-10-05.
     #
     # Don't activate 'binutils' here. Can mess up R package compilation.
     # """
@@ -122,7 +122,8 @@ _koopa_activate_homebrew() { # {{{1
         'gnu-sed' \
         'gnu-tar' \
         'gnu-which' \
-        'grep'
+        'grep' \
+        'make'
     # Casks are macOS-specific.
     _koopa_activate_homebrew_cask_google_cloud_sdk
     export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
