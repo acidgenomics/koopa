@@ -1,3 +1,11 @@
+## koopa 0.12.1 (2021-10-05)
+
+### Minor changes
+
+- Updated RSPM CRAN snapshot to 2021-10-05.
+- Added auto-completion support for `nim` and `nim-packages`.
+- Homebrew link fixes for `nghttp2`/`libnghttp2` and `python@3.9`.
+
 ## koopa 0.12.0 (2021-09-21)
 
 ### Major changes
