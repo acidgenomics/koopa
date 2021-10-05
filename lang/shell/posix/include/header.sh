@@ -3,11 +3,10 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2021-09-29.
+    # @note Updated 2021-10-05.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
-    unset -v KOOPA_SHELL KOOPA_SUBSHELL
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
