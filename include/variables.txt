@@ -151,7 +151,8 @@ gnupg="2.3.2"
 go="1.17.1"
 
 # https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="357.0.0"
+# NOTE Not currently compatible with Python 3.10, so pinning to 3.9.
+google-cloud-sdk="360.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.7"
