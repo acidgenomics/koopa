@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is now passing through 'rust-packages' argument...argh!
 koopa::install_rust_packages() { # {{{1
     koopa:::install_app_packages \
         --name-fancy='Rust' \

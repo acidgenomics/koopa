@@ -20,7 +20,7 @@ koopa::arch_install_base() { # {{{1
     # Note that Arch is currently overwriting PS1 for root.
     # This is due to configuration in '/etc/profile'.
     # """
-    local dict name_fancy pkgs
+    local dict name_fancy pkgs pos
     koopa::assert_is_installed 'pacman' 'sudo'
     declare -A dict=(
         [base]=1
