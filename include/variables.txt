@@ -5,10 +5,10 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-10-05"
+koopa-date="2021-10-06"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
-koopa-version="0.12.1"
+koopa-version="0.12.1a"
 
 # Also update this value in 'lang/r/include/header.R'.
 r-koopa="0.2.0"
@@ -446,6 +446,7 @@ conda-meme="5.3.0"                      # 2021-04-12 bioconda
 conda-merfishtools="1.5.0"              # 2018-10-24 bioconda linux
 conda-miniwdl="1.2.3"                   # 2021-09-28 conda-forge
 conda-mirdeep2="2.0.1.3"                # 2021-07-15 bioconda
+conda-mirtop="0.4.23"                   # 2020-07-30 bioconda
 conda-multiqc="1.11"                    # 2021-07-05 bioconda
 conda-nextflow="21.04.0"                # 2021-05-04 bioconda (21.04.3*)
 conda-numpy="1.21.2"                    # 2021-08-16 conda-forge
@@ -468,6 +469,8 @@ conda-samtools="1.13"                   # 2021-07-09 bioconda
 conda-scanpy="1.8.1"                    # 2021-07-07 bioconda
 conda-scikit-learn="1.0"                # 2021-09-25 conda-forge
 conda-scrublet="0.2.3"                  # 2021-04-12 bioconda
+conda-seqbuster="3.5"                   # 2021-03-26 bioconda
+conda-seqcluster="1.2.8"                # 2021-06-22 bioconda
 conda-seqtk="1.3"                       # 2019-07-31 bioconda
 conda-sicer2="1.0.3"                    # 2021-03-26 bioconda
 conda-snakemake="6.9.1"                 # 2021-09-30 bioconda

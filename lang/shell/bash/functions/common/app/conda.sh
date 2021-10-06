@@ -334,7 +334,11 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     if [[ "${dict[smallrna]}" -eq 1 ]]
     then
         envs+=(
+            # > bioconductor-isomirs
             'mirdeep2'
+            'mirtop'
+            'seqbuster'
+            'seqcluster'
         )
     fi
     if [[ "${dict[spatial]}" -eq 1 ]]
