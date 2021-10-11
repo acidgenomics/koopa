@@ -42,6 +42,7 @@ koopa::move_files_up_1_level() { # {{{1
     return 0
 }
 
+# FIXME This isn't working correctly on NFS mount.
 koopa::move_into_dated_dirs_by_filename() { # {{{1
     # """
     # Move into dated directories by filename.
@@ -75,6 +76,7 @@ koopa::move_into_dated_dirs_by_filename() { # {{{1
     return 0
 }
 
+# FIXME This isn't working correctly on NFS mount.
 koopa::move_into_dated_dirs_by_timestamp() { # {{{1
     # """
     # Move into dated directories by timestamp.
