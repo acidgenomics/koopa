@@ -88,6 +88,27 @@ koopa::boost_version() { # {{{1
     return 0
 }
 
+koopa::bpytop_version() { # {{{1
+    # """
+    # bpytop version.
+    # @note Updated 2021-10-12.
+    # """
+    local awk grep x
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed 'bpytop'
+    awk="$(koopa::locate_awk)"
+    grep="$(koopa::locate_grep)"
+    # shellcheck disable=SC2016
+    x="$( \
+        bpytop --version | \
+            "$grep" 'bpytop version:' | \
+            "$awk" '{ print $NF }' \
+    )"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
+}
+
 koopa::cairo_version() { # {{{1
     # """
     # Cairo (libcairo) version.
