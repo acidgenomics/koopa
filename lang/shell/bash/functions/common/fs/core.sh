@@ -391,6 +391,8 @@ koopa::mkdir() { # {{{1
     return 0
 }
 
+# FIXME This currently has issues with gmv on macOS NFS mount.
+# FIXME Consider reworking to use /usr/bin/mv on macOS?
 koopa::mv() { # {{{1
     # """
     # Move a file or directory with GNU mv.
