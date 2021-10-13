@@ -56,8 +56,16 @@ koopa::sra_fastq_dump_parallel() { # {{{1
     # - https://edwards.sdsu.edu/research/the-perils-of-fasterq-dump/
     # - https://www.reneshbedre.com/blog/ncbi_sra_toolkit.html
     # """
+    local dict
     local acc_file fastq_dir gzip id sort sra_dir sra_file sra_files threads
+    # FIXME Rework the argparse here
     koopa::assert_has_args_le "$#" 1
+    declare -A dict=(
+        # FIXME Allow override with '--no-compress'
+        [compress]=1
+    )
+    
+    # FIXME Rework this to merely locate the program directly instead.
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'sratoolkit'
@@ -100,6 +108,8 @@ koopa::sra_fastq_dump_parallel() { # {{{1
             koopa::dl \
                 'SRA accession' "$id" \
                 'SRA file' "$sra_file"
+            # FIXME Can we locate this program without activating conda
+            # and/or Homebrew prefix? Simpler. Think about this one.
             fasterq-dump \
                 --details \
                 --force \
@@ -147,10 +157,13 @@ koopa::sra_prefetch_parallel() { # {{{1
     #   https://github.com/ncbi/sra-tools/issues/497
     # """
     local acc_file cmd dir jobs parallel
+    # FIXME Rework the argparse, similar to FASTQ dump function above.
     koopa::assert_has_args_le "$#" 1
     acc_file="${1:-}"
     [[ -z "$acc_file" ]] && acc_file='SRR_Acc_List.txt'
     koopa::assert_is_file "$acc_file"
+
+    # FIXME Rework this to merely locate the program directly instead.
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'sratoolkit'
@@ -182,6 +195,7 @@ koopa::sra_prefetch_parallel() { # {{{1
         --progress \
         --will-cite \
         "${cmd[*]}"
+    # FIXME If we locate program directly, this step will be unnecessary.
     if koopa::is_macos
     then
         echo 'FIXME deactivate homebrew opt prefix'
