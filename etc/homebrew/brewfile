@@ -156,6 +156,7 @@ brew "shellharden"
 brew "shunit2"
 brew "sox"
 brew "sqlite"
+brew "sratoolkit"
 brew "starship"  # rust
 brew "stow"
 brew "tcl-tk"
