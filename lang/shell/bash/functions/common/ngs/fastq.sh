@@ -191,6 +191,12 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
     # FASTQ files.
     # FIXME Alert the user that we are compressing specific files...
     echo "$gzip"  # FIXME
+
+    # FIXME placeholder parallel gzip code:
+    # > find . -mindepth 1 -maxdepth 1 -name '*.fastq' \
+    # >     | parallel --bar --eta --jobs 8 --progress --will-cite \
+    # >         'gzip --force --verbose {}'
+
     if koopa::is_macos
     then
         echo 'FIXME Need to deactivate Homebrew prefix.'
