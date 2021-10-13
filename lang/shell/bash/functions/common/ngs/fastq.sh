@@ -290,7 +290,7 @@ koopa::sra_prefetch_parallel() { # {{{1
     # - Conda build isn't currently working on macOS.
     #   https://github.com/ncbi/sra-tools/issues/497
     # """
-    local cmd dir file find jobs parallel sort
+    local cmd dir file find jobs parallel
     file="${1:-}"
     [[ -z "$file" ]] && file='SRR_Acc_List.txt'
     koopa::assert_is_file "$file"
@@ -316,7 +316,14 @@ koopa::sra_prefetch_parallel() { # {{{1
         '--verify' 'yes'
         '{}'
     )
-    "$sort" -u "$file" | "$parallel" -j "$jobs" "${cmd[*]}"
+    "$parallel" \
+        --arg-file "$file" \
+        --bar \
+        --eta \
+        --jobs "$jobs" \
+        --progress \
+        --will-cite \
+        "${cmd[*]}"
     if koopa::is_macos
     then
         echo 'FIXME deactivate homebrew opt prefix'
