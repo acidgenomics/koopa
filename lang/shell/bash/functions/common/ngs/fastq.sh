@@ -286,7 +286,7 @@ koopa::sra_prefetch_parallel() { # {{{1
     # Prefetch files from SRA in parallel with Aspera.
     # @note Updated 2021-10-13.
     # """
-    local file find jobs parallel sort
+    local dir file find jobs parallel sort
     file="${1:-}"
     [[ -z "$file" ]] && file='SRR_Acc_List.txt'
     koopa::assert_is_file "$file"
@@ -296,8 +296,9 @@ koopa::sra_prefetch_parallel() { # {{{1
     jobs="$(koopa::cpu_count)"
     parallel="$(koopa::locate_parallel)"
     sort="$(koopa::locate_sort)"
+    dir='sra'
     # Delete any temporary files that may have been created by previous run.
-    "$find" . \
+    "$find" "$dir" \
         -mindepth 1 \
         -maxdepth 1 \
         \(-name '*.lock' -o -name '*.tmp'\) \
@@ -305,12 +306,13 @@ koopa::sra_prefetch_parallel() { # {{{1
     "$sort" -u "$file" \
         | "$parallel" -j "$jobs" \
             "prefetch \
-                --force 'no' \
+                --force no \
+                --output-directory ${dir} \
                 --progress \
-                --resume 'yes' \
-                --type 'sra' \
+                --resume yes \
+                --type sra \
                 --verbose \
-                --verify 'yes' \
+                --verify yes \
                 {}"
     koopa::deactivate_conda
     return 0
