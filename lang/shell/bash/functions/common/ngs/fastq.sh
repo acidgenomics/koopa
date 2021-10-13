@@ -76,9 +76,7 @@ koopa::convert_fastq_to_fasta() { # {{{1
     return 0
 }
 
-# FIXME Should this use 'sra-tools' conda environment?
-# FIXME Allow user to set the target directory?
-# FIXME Call prefetch here first.
+# FIXME Consider renaming this function, prefixing with 'sra-'.
 koopa::fastq_dump_from_sra_file_list() { # {{{1
     # """
     # Dump FASTQ files from SRA file list.
@@ -126,42 +124,68 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
     #   '*.fastq' file. All other reads in the spot are ignored.
     #
     # @seealso
-    # - koopa::aspera_sra_prefetch_parallel
     # - https://rnnh.github.io/bioinfo-notebook/docs/fasterq-dump.html
     # - https://edwards.sdsu.edu/research/the-perils-of-fasterq-dump/
+    # - https://www.reneshbedre.com/blog/ncbi_sra_toolkit.html
     # """
-    local file id
-    koopa::assert_has_no_args "$#"
-
-    # FIXME Prefetch via our sra_prefetch_parallel function here first.
-
-    koopa::activate_conda_env 'sra-tools'
+    local acc_file fastq_dir id sort sra_dir sra_file sra_files threads
+    koopa::assert_has_args_le "$#" 1
+    if koopa::is_macos
+    then
+        koopa::activate_homebrew_opt_prefix 'sratoolkit'
+    else
+        koopa::activate_conda_env 'sra-tools'
+    fi
     koopa::assert_is_installed 'fasterq-dump'
-    file="${1:-}"
-    [[ -z "$file" ]] && file='SRR_Acc_List.txt'
-    koopa::assert_is_file "$file"
-
-    ## FIXME Call aspera_sra_prefetch_parallel first here, if no SRA files
-    ## are detected in the current directory.
-    ## FIXME Double check extensions for fasterq-dump.
-
-    while read -r id
+    acc_file="${1:-}"
+    [[ -z "$acc_file" ]] && acc_file='SRR_Acc_List.txt'
+    koopa::assert_is_file "$acc_file"
+    fastq_dir='fastq'
+    sra_dir='sra'
+    if [[ ! -d "$sra_dir" ]]
+    then
+        koopa::sra_prefetch_parallel "$acc_file"
+    fi
+    koopa::assert_is_dir "$sra_dir"
+    sort="$(koopa::locate_sort)"
+    # FIXME Rework 'koopa::find' to support '--sort' natively.
+    readarray -t sra_files <<< "$(
+        koopa::find \
+            --glob='*.sra' \
+            --max-depth=2 \
+            --min-depth=2 \
+            --prefix="$sra_dir" \
+        | "$sort" \
+    )"
+    koopa::assert_is_array_non_empty "${sra_files[@]:-}"
+    threads="$(koopa::cpu_count)"
+    for sra_file in "${sra_files[@]}"
     do
-        if [[ ! -f "${id}.fastq.gz" ]] && [[ ! -f "${id}_1.fastq.gz" ]]
+        id="$(koopa::basename_sans_ext "$sra_file")"
+        if [[ ! -f "${fastq_dir}/${id}.fastq.gz" ]] && \
+            [[ ! -f "${fastq_dir}/${id}_1.fastq.gz" ]]
         then
             koopa::dl 'SRA Accession ID' "$id"
-            # Consider testing:
-            # * --clip
-            # * --read-filter 'pass'
             fasterq-dump \
-                --outdir '.' \
+                --details \
+                --force \
+                --outdir "$fastq_dir" \
                 --print-read-nr \
+                --progress \
                 --skip-technical \
                 --split-3 \
+                --strict \
+                --threads "$threads" \
+                --verbose \
                 "${id}"
         fi
-    done < "$file"
-    koopa::deactivate_conda
+    done
+    if koopa::is_macos
+    then
+        echo 'FIXME Need to deactivate Homebrew prefix.'
+    else
+        koopa::deactivate_conda
+    fi
     return 0
 }
 
@@ -290,10 +314,11 @@ koopa::sra_prefetch_parallel() { # {{{1
     # - Conda build isn't currently working on macOS.
     #   https://github.com/ncbi/sra-tools/issues/497
     # """
-    local cmd dir file find jobs parallel
-    file="${1:-}"
-    [[ -z "$file" ]] && file='SRR_Acc_List.txt'
-    koopa::assert_is_file "$file"
+    local acc_file cmd dir find jobs parallel
+    koopa::assert_has_args_le "$#" 1
+    acc_file="${1:-}"
+    [[ -z "$acc_file" ]] && acc_file='SRR_Acc_List.txt'
+    koopa::assert_is_file "$acc_file"
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'sratoolkit'
@@ -317,7 +342,7 @@ koopa::sra_prefetch_parallel() { # {{{1
         '{}'
     )
     "$parallel" \
-        --arg-file "$file" \
+        --arg-file "$acc_file" \
         --bar \
         --eta \
         --jobs "$jobs" \
