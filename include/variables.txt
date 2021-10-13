@@ -433,6 +433,7 @@ conda-fgbio="1.3.0"                     # 2021-08-12 bioconda
 conda-gatk4="4.2.2.0"                   # 2021-09-15 bioconda
 conda-genrich="0.6.1"                   # 2021-03-17 bioconda
 conda-gffutils="0.10.1"                 # 2020-07-26 bioconda
+conda-gseapy="0.10.5"                   # 2021-10-13 bioconda
 conda-hisat2="2.2.1"                    # 2020-07-24 bioconda
 conda-homer="4.11"                      # 2020-04-29 bioconda
 conda-htslib="1.13"                     # 2021-07-09 bioconda
