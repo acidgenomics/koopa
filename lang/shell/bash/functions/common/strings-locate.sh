@@ -152,6 +152,19 @@ koopa::locate_7z() { # {{{1
         --name='7z'
 }
 
+koopa::locate_ascp() { # {{{1
+    # """
+    # Locate Aspera Connect ascp.
+    # @note Updated 2021-10-13.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --koopa-opt='aspera-connect' \
+        --macos-app="${HOME}/Applications/Aspera Connect.app/\
+Contents/Resources/ascp" \
+        --name='ascp'
+}
+
 koopa::locate_awk() { # {{{1
     # """
     # Locate GNU awk.
