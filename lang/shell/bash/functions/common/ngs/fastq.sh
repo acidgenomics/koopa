@@ -129,7 +129,7 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
     # - https://edwards.sdsu.edu/research/the-perils-of-fasterq-dump/
     # - https://www.reneshbedre.com/blog/ncbi_sra_toolkit.html
     # """
-    local acc_file fastq_dir id sort sra_dir sra_file sra_files threads
+    local acc_file fastq_dir gzip id sort sra_dir sra_file sra_files threads
     koopa::assert_has_args_le "$#" 1
     if koopa::is_macos
     then
@@ -148,6 +148,7 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
         koopa::sra_prefetch_parallel "$acc_file"
     fi
     koopa::assert_is_dir "$sra_dir"
+    gzip="$(koopa::locate_gzip)"
     sort="$(koopa::locate_sort)"
     # FIXME Rework 'koopa::find' to support '--sort' natively.
     readarray -t sra_files <<< "$(
@@ -168,7 +169,10 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
             [[ ! -f "${fastq_dir}/${id}.fastq.gz" ]] && \
             [[ ! -f "${fastq_dir}/${id}_1.fastq.gz" ]]
         then
-            koopa::dl 'SRA Accession ID' "$id"
+            koopa::alert "Extracting FASTQ in '${sra_file}'."
+            koopa::dl \
+                'SRA accession' "$id" \
+                'SRA file' "$sra_file"
             fasterq-dump \
                 --details \
                 --force \
@@ -183,6 +187,10 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
                 "${id}"
         fi
     done
+    # FIXME Run gzip compression here in parallel if we detect any uncompressed
+    # FASTQ files.
+    # FIXME Alert the user that we are compressing specific files...
+    echo "$gzip"  # FIXME
     if koopa::is_macos
     then
         echo 'FIXME Need to deactivate Homebrew prefix.'
@@ -344,6 +352,7 @@ koopa::sra_prefetch_parallel() { # {{{1
         '--verify' 'yes'
         '{}'
     )
+    # FIXME Rework this an an internal koopa function.
     "$parallel" \
         --arg-file "$acc_file" \
         --bar \
