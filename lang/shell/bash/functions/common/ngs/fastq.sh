@@ -76,24 +76,92 @@ koopa::convert_fastq_to_fasta() { # {{{1
     return 0
 }
 
+# FIXME Should this use 'sra-tools' conda environment?
+# FIXME Allow user to set the target directory?
+# FIXME Call prefetch here first.
 koopa::fastq_dump_from_sra_file_list() { # {{{1
     # """
     # Dump FASTQ files from SRA file list.
-    # @note Updated 2020-08-12.
+    # @note Updated 2021-10-13.
+    #
+    # @section fasterq-dump vs. fastq-dump:
+    #
+    # 1. In fastq-dump, the flag '--split-3' is required to separate paired
+    #    reads into left and right ends. This is the default setting in
+    #    fasterq-dump.
+    # 2. The fastq-dump flag '--skip-technical' is no longer required to skip
+    #    technical reads in fasterq-dump. Instead, the flag
+    #    '--include-technical' is required to include technical reads when
+    #    using fasterq-dump.
+    # 3. There is no '--gzip' or '--bzip2' flag in fasterq-dump to download
+    #    compressed reads with fasterq-dump.
+    #
+    # fastq-dump-specific arguments:
+    # * '--clip': Remove adapter sequences from reads.
+    # * '--dumpbase': Formats sequence using base space
+    #   (default for other than SOLiD).
+    # * '--readids': Append read id after spot id as 'accession.spot.readid'
+    #   on defline.
+    # * '--read-filter <filter>': Split into files by 'READ_FILTER' value.
+    #   [split], optionally filter by value:
+    #   [pass|reject|criteria|redacted]
+    #
+    # fasterq-dump-specific arguments:
+    # * '--details': Print details of all options selected.
+    # * '--force': Force overwrite of existing files.
+    # * '--print-read-nr': Include read-number in defline.
+    # * '--progress': Show progress (not possible if stdout used).
+    # * '--strict': Terminate on invalid read.
+    # * '--temp <path>': Path to directory for temporary files.
+    # * '--threads <count>': Number of threads to use.
+    # * '--verbose': Increase the verbosity of the program status messages.
+    #    Use multiple times for more verbosity.
+    #
+    # Arguments supported by both fastq-dump and fasterq-dump:
+    # * '--split-3': Use this instead of '--split-files'. 3-way splitting for
+    #   mate-pairs. For each spot, if there are two biological reads satisfying
+    #   filter conditions, the first is placed in the '*_1.fastq' file, and the
+    #   second is placed in the '*_2.fastq' file. If there is only one
+    #   biological read satisfying the filter conditions, it is placed in the
+    #   '*.fastq' file. All other reads in the spot are ignored.
+    #
+    # @seealso
+    # - koopa::aspera_sra_prefetch_parallel
+    # - https://rnnh.github.io/bioinfo-notebook/docs/fasterq-dump.html
+    # - https://edwards.sdsu.edu/research/the-perils-of-fasterq-dump/
     # """
-    local filelist id
+    local file id
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'fastq-dump'
-    filelist="${1:-SRR_Acc_List.txt}"
-    koopa::assert_is_file "$filelist"
+
+    # FIXME Prefetch via our sra_prefetch_parallel function here first.
+
+    koopa::activate_conda_env 'sra-tools'
+    koopa::assert_is_installed 'fasterq-dump'
+    file="${1:-}"
+    [[ -z "$file" ]] && file='SRR_Acc_List.txt'
+    koopa::assert_is_file "$file"
+
+    ## FIXME Call aspera_sra_prefetch_parallel first here, if no SRA files
+    ## are detected in the current directory.
+    ## FIXME Double check extensions for fasterq-dump.
+
     while read -r id
     do
         if [[ ! -f "${id}.fastq.gz" ]] && [[ ! -f "${id}_1.fastq.gz" ]]
         then
-            koopa::h1 "SRA Accession ID: '${id}'."
-            fastq-dump --gzip --split-files "${id}"
+            koopa::dl 'SRA Accession ID' "$id"
+            # Consider testing:
+            # * --clip
+            # * --read-filter 'pass'
+            fasterq-dump \
+                --outdir '.' \
+                --print-read-nr \
+                --skip-technical \
+                --split-3 \
+                "${id}"
         fi
-    done < "$filelist"
+    done < "$file"
+    koopa::deactivate_conda
     return 0
 }
 
@@ -210,5 +278,40 @@ koopa::fastq_reads_per_file() { # {{{1
     "$zcat" "${dir}/"*'_R1.fastq.gz' \
         | "$wc" -l \
         | "$awk" '{print $1/4}'
+    return 0
+}
+
+koopa::sra_prefetch_parallel() { # {{{1
+    # """
+    # Prefetch files from SRA in parallel with Aspera.
+    # @note Updated 2021-10-13.
+    # """
+    local file find jobs parallel sort
+    file="${1:-}"
+    [[ -z "$file" ]] && file='SRR_Acc_List.txt'
+    koopa::assert_is_file "$file"
+    koopa::activate_conda_env 'sra-tools'
+    koopa::assert_is_installed 'prefetch'
+    find="$(koopa::locate_find)"
+    jobs="$(koopa::cpu_count)"
+    parallel="$(koopa::locate_parallel)"
+    sort="$(koopa::locate_sort)"
+    # Delete any temporary files that may have been created by previous run.
+    "$find" . \
+        -mindepth 1 \
+        -maxdepth 1 \
+        \(-name '*.lock' -o -name '*.tmp'\) \
+        -delete
+    "$sort" -u "$file" \
+        | "$parallel" -j "$jobs" \
+            "prefetch \
+                --force 'no' \
+                --progress \
+                --resume 'yes' \
+                --type 'sra' \
+                --verbose \
+                --verify 'yes' \
+                {}"
+    koopa::deactivate_conda
     return 0
 }
