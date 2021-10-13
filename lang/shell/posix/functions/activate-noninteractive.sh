@@ -159,6 +159,7 @@ _koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
     return 0
 }
 
+# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix for a GNU program.
@@ -193,6 +194,7 @@ _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     return 0
 }
 
+# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
     # """
     # Activate Homebrew opt libexec prefix.
@@ -214,6 +216,7 @@ _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
     return 0
 }
 
+# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_homebrew_opt_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix.
@@ -414,6 +417,7 @@ _koopa_activate_openjdk() { # {{{1
     return 0
 }
 
+# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
@@ -565,6 +569,7 @@ _koopa_activate_pkg_config() { # {{{1
     return 0
 }
 
+# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure 'PATH', 'PKG_CONFIG_PATH' and 'MANPATH' for a

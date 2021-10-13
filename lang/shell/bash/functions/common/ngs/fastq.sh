@@ -285,35 +285,43 @@ koopa::sra_prefetch_parallel() { # {{{1
     # """
     # Prefetch files from SRA in parallel with Aspera.
     # @note Updated 2021-10-13.
+    #
+    # @seealso
+    # - Conda build isn't currently working on macOS.
+    #   https://github.com/ncbi/sra-tools/issues/497
     # """
-    local dir file find jobs parallel sort
+    local cmd dir file find jobs parallel sort
     file="${1:-}"
     [[ -z "$file" ]] && file='SRR_Acc_List.txt'
     koopa::assert_is_file "$file"
-    koopa::activate_conda_env 'sra-tools'
+    if koopa::is_macos
+    then
+        koopa::activate_homebrew_opt_prefix 'sratoolkit'
+    else
+        koopa::activate_conda_env 'sra-tools'
+    fi
     koopa::assert_is_installed 'prefetch'
-    find="$(koopa::locate_find)"
     jobs="$(koopa::cpu_count)"
     parallel="$(koopa::locate_parallel)"
     sort="$(koopa::locate_sort)"
-    dir='sra'
-    # Delete any temporary files that may have been created by previous run.
-    "$find" "$dir" \
-        -mindepth 1 \
-        -maxdepth 1 \
-        \(-name '*.lock' -o -name '*.tmp'\) \
-        -delete
-    "$sort" -u "$file" \
-        | "$parallel" -j "$jobs" \
-            "prefetch \
-                --force no \
-                --output-directory ${dir} \
-                --progress \
-                --resume yes \
-                --type sra \
-                --verbose \
-                --verify yes \
-                {}"
-    koopa::deactivate_conda
+    dir="$(koopa::init_dir 'sra')"
+    cmd=(
+        'prefetch'
+        '--force' 'no'
+        '--output-directory' "${dir}"
+        '--progress'
+        '--resume' 'yes'
+        '--type' 'sra'
+        '--verbose'
+        '--verify' 'yes'
+        '{}'
+    )
+    "$sort" -u "$file" | "$parallel" -j "$jobs" "${cmd[*]}"
+    if koopa::is_macos
+    then
+        echo 'FIXME deactivate homebrew opt prefix'
+    else
+        koopa::deactivate_conda
+    fi
     return 0
 }
