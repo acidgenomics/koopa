@@ -77,6 +77,7 @@ koopa::convert_fastq_to_fasta() { # {{{1
 }
 
 # FIXME Consider renaming this function, prefixing with 'sra-'.
+# FIXME Need to compress FASTQ files here.
 koopa::fastq_dump_from_sra_file_list() { # {{{1
     # """
     # Dump FASTQ files from SRA file list.
@@ -162,7 +163,9 @@ koopa::fastq_dump_from_sra_file_list() { # {{{1
     for sra_file in "${sra_files[@]}"
     do
         id="$(koopa::basename_sans_ext "$sra_file")"
-        if [[ ! -f "${fastq_dir}/${id}.fastq.gz" ]] && \
+        if [[ ! -f "${fastq_dir}/${id}.fastq" ]] && \
+            [[ ! -f "${fastq_dir}/${id}_1.fastq" ]] && \
+            [[ ! -f "${fastq_dir}/${id}.fastq.gz" ]] && \
             [[ ! -f "${fastq_dir}/${id}_1.fastq.gz" ]]
         then
             koopa::dl 'SRA Accession ID' "$id"
