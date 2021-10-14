@@ -56,13 +56,20 @@ koopa::sra_fastq_dump_parallel() { # {{{1
     # - https://edwards.sdsu.edu/research/the-perils-of-fasterq-dump/
     # - https://www.reneshbedre.com/blog/ncbi_sra_toolkit.html
     # """
-    local dict
+    local app dict
     local acc_file fastq_dir gzip id sort sra_dir sra_file sra_files threads
     # FIXME Rework the argparse here
     koopa::assert_has_args_le "$#" 1
+    declare -A app=(
+        [gzip]="$(koopa::locate_gzip)"
+        [parallel]="$(koopa::locate_parallel)"
+        # FIXME Take this out once we add '--sort' support to 'koopa::find'.
+        [sort]="$(koopa::locate_sort)"
+    )
     declare -A dict=(
         # FIXME Allow override with '--no-compress'
         [compress]=1
+        [threads]="$(koopa::cpu_count)"
     )
     
     # FIXME Rework this to merely locate the program directly instead.
@@ -72,6 +79,7 @@ koopa::sra_fastq_dump_parallel() { # {{{1
     else
         koopa::activate_conda_env 'sra-tools'
     fi
+
     koopa::assert_is_installed 'fasterq-dump'
     acc_file="${1:-}"
     [[ -z "$acc_file" ]] && acc_file='SRR_Acc_List.txt'
@@ -83,19 +91,19 @@ koopa::sra_fastq_dump_parallel() { # {{{1
         koopa::sra_prefetch_parallel "$acc_file"
     fi
     koopa::assert_is_dir "$sra_dir"
-    gzip="$(koopa::locate_gzip)"
-    sort="$(koopa::locate_sort)"
+
     # FIXME Rework 'koopa::find' to support '--sort' natively.
     readarray -t sra_files <<< "$(
+        # FIXME Need to only match file.
         koopa::find \
             --glob='*.sra' \
             --max-depth=2 \
             --min-depth=2 \
             --prefix="$sra_dir" \
-        | "$sort" \
+            --type='f' \
+        | "${app[sort]}" \
     )"
     koopa::assert_is_array_non_empty "${sra_files[@]:-}"
-    threads="$(koopa::cpu_count)"
     for sra_file in "${sra_files[@]}"
     do
         id="$(koopa::basename_sans_ext "$sra_file")"
@@ -119,7 +127,7 @@ koopa::sra_fastq_dump_parallel() { # {{{1
                 --skip-technical \
                 --split-3 \
                 --strict \
-                --threads "$threads" \
+                --threads "${dict[threads]}" \
                 --verbose \
                 "${id}"
         fi
@@ -129,12 +137,27 @@ koopa::sra_fastq_dump_parallel() { # {{{1
     # FIXME Run gzip compression here in parallel if we detect any uncompressed
     # FASTQ files.
     # FIXME Alert the user that we are compressing specific files...
-    echo "$gzip"  # FIXME
 
-    # FIXME placeholder parallel gzip code:
-    # > find . -mindepth 1 -maxdepth 1 -name '*.fastq' \
-    # >     | parallel --bar --eta --jobs 8 --progress --will-cite \
-    # >         'gzip --force --verbose {}'
+    if [[ "${dict[compress]}" -eq 1 ]]
+    then
+        # FIXME This should only proceed when we detect files...
+        # FIXME Add a sort call here, once we add support to 'koopa::find'.
+        koopa::find \
+            --glob='*.fastq' \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="$fastq_dir" \
+            --type='f' \
+        | "${app[parallel]}" \
+            --bar \
+            --eta \
+            --jobs "${dict[threads]}" \
+            --progress \
+            --will-cite \
+            "${app[gzip]} --force --verbose {}"
+    fi
+
+    echo 'FIXME 4'
 
     if koopa::is_macos
     then
