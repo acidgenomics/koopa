@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-10-05.
+#' @note Updated 2021-10-14.
 #'
 #' @section Restarting R:
 #'
@@ -487,6 +487,11 @@ local({  # nolint
             "crayon.enabled" = TRUE,
             "crayon.colors" = 256L
         )
+    }
+
+    if (isInstalled("data.table")) {
+        ## Suppress annoying data.table startup message.
+        options("datatable.quiet" = TRUE)
     }
 
     if (isInstalled("future")) {
