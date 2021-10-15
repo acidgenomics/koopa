@@ -572,7 +572,7 @@ rust-starship="0.58.0"        # homebrew
 rust-tealdeer="1.4.1"         # homebrew; tldr
 rust-tokei="12.1.2"           # homebrew
 rust-xsv="0.13.0"             # homebrew
-rust-zoxide="0.7.6"           # homebrew; z
+rust-zoxide="0.7.7"           # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
