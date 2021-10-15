@@ -47,7 +47,7 @@ automake="1.16.5"
 aws-cli="2.2.46"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.29/0"
+azure-cli="2.29.0"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.8"
