@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.2.46"
+aws-cli="2.2.47"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.29.0"
@@ -173,7 +173,7 @@ haskell-stack="rolling"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.2.16"
+homebrew="3.2.17"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -229,7 +229,7 @@ neovim="0.5.1"
 nim="1.4.8"
 
 # https://nodejs.org/
-node="16.11.1"
+node="16.12.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
