@@ -187,8 +187,14 @@ brew "cantino/mcfly/mcfly"
 tap "clementtsang/bottom"
 brew "clementtsang/bottom/bottom"
 
-tap "mongodb/brew"
-brew "mongodb/brew/mongodb-community"
+# Currently warning:
+# Warning: Calling bottle :unneeded is deprecated!
+# https://github.com/mongodb/homebrew-brew
+# > tap "mongodb/brew"
+# > brew "mongodb/brew/mongodb-community@5.0"
 
-tap "rs/tap"
-brew "rs/tap/curlie"
+# Currently warning:
+# Warning: Calling bottle :unneeded is deprecated!
+# https://github.com/rs/homebrew-tap/
+# > tap "rs/tap"
+# > brew "rs/tap/curlie"
