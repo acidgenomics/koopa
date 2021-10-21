@@ -243,6 +243,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
             'sambamba'
             'samblaster'
             'samtools'
+            'seqkit'
             'seqtk'
         )
         if koopa::is_linux
