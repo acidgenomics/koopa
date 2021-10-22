@@ -448,7 +448,7 @@ _koopa_print_white_bold() { # {{{1
     return 0
 }
 
-_koopa_warning() { # {{{1
+_koopa_warn() { # {{{1
     # """
     # Warning message.
     # @note Updated 2021-01-19.

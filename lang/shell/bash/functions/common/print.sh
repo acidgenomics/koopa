@@ -118,7 +118,7 @@ koopa::invalid_arg() { # {{{1
         arg="${1:-}"
         # > if koopa::str_match_posix "$arg" '--'
         # > then
-        # >     koopa::warning "Use '--arg=VALUE' not '--arg VALUE'."
+        # >     koopa::warn "Use '--arg=VALUE' not '--arg VALUE'."
         # > fi
         x="Invalid argument: '${arg}'."
     else

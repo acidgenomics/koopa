@@ -106,7 +106,7 @@ _koopa_activate_zsh_fpath() { # {{{1
     koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
     then
-        _koopa_warning "FPATH directory is missing: '${koopa_fpath}'."
+        _koopa_warn "FPATH directory is missing: '${koopa_fpath}'."
         return 1
     fi
     _koopa_add_to_fpath_start "$koopa_fpath"

@@ -988,8 +988,8 @@ koopa::user_id() { # {{{1
     _koopa_user_id "$@"
 }
 
-koopa::warning() { # {{{1
-    _koopa_warning "$@"
+koopa::warn() { # {{{1
+    _koopa_warn "$@"
 }
 
 koopa::xdg_cache_home() { # {{{1

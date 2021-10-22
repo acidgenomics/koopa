@@ -269,6 +269,7 @@ koopa::docker_build_all_images() { # {{{1
                 "$grep" -E '^[-_a-z0-9]+$' "$build_file" \
             )"
         else
+            # FIXME Need to rework this using '--sort' flag.
             readarray -t images <<< "$( \
                 koopa::find \
                     --max-depth=1 \
