@@ -157,14 +157,16 @@ koopa::chown() { # {{{1
     return 0
 }
 
-# FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
-# FIXME Require the '--target' argument here.
-# FIXME Need to rework this argument as '--target-dir'.
-# FIXME Allow simple two position structure as well.
 koopa::cp() { # {{{1
     # """
-    # Hardened version of GNU coreutils copy.
+    # Hardened version of coreutils copy.
     # @note Updated 2021-10-22.
+    #
+    # @seealso
+    # - GNU cp man:
+    #   https://man7.org/linux/man-pages/man1/cp.1.html
+    # - BSD cp man:
+    #   https://www.freebsd.org/cgi/man.cgi?cp
     #
     # getopts info:
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
@@ -227,16 +229,13 @@ koopa::cp() { # {{{1
     cp_args=('-af')
     [[ "$symlink" -eq 1 ]] && cp_args+=('-s')
     cp_args+=("$@")
-
-
-
-    # FIXME Copy code back from stable branch and rethink here.
-    # FIXME Rework this, not passing positional args...
     if [[ -n "$target_dir" ]]
     then
+        koopa::assert_is_existing "$@"
         target_dir="$(koopa::strip_trailing_slash "$target_dir")"
-        cp_args+=('-t' "$target_dir")
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
+        # NOTE '-t' flag is not supported for BSD cp.
+        cp_args+=("$target_dir")
     else
         koopa::assert_has_args_eq "$#" 2
         source_file="${1:?}"
@@ -246,9 +245,7 @@ koopa::cp() { # {{{1
         target_parent="$(koopa::dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
-    "${cp[@]}" "${cp_args[@]}" "$@"
-
-
+    "${cp[@]}" "${cp_args[@]}"
     return 0
 }
 
