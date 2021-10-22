@@ -54,6 +54,7 @@ koopa::convert_fastq_to_fasta() { # {{{1
     source_dir="$(koopa::strip_trailing_slash "$source_dir")"
     target_dir="$(koopa::strip_trailing_slash "$target_dir")"
     # Pipe GNU find into array.
+    # FIXME Rework using 'koopa::find'.
     readarray -t array <<< "$( \
         koopa::find \
             --glob='*.fastq' \
@@ -126,6 +127,7 @@ koopa::fastq_lanepool() { # {{{1
     source_dir="$(koopa::strip_trailing_slash "$source_dir")"
     target_dir="$(koopa::strip_trailing_slash "$target_dir")"
     # Pipe GNU find into array.
+    # FIXME Rework using 'koopa::find'.
     readarray -t array <<< "$( \
         "$find" "$source_dir" \
             -maxdepth 1 \

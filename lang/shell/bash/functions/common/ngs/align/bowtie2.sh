@@ -82,6 +82,7 @@ koopa::run_bowtie2() { # {{{1
     # --------------------------------------------------------------------------
     # Create a per-sample array from the R1 FASTQ files.
     # Pipe GNU find into array.
+    # FIXME Rework using 'koopa::find'.
     readarray -t fastq_r1_files <<< "$( \
         "${app[find]}" "$fastq_dir" \
             -maxdepth 1 \

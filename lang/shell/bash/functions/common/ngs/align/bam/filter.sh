@@ -13,6 +13,7 @@ koopa::bam_filter() { # {{{1
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
+    # FIXME Rework using 'koopa::find'.
     readarray -t bam_files <<< "$( \
         find "$dir" \
             -maxdepth 3 \

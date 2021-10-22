@@ -163,6 +163,7 @@ koopa::delete_adobe_bridge_cache() { # {{{1
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
     koopa::alert "Deleting Adobe Bridge cache in '${dir}'."
+    # FIXME Rework using 'koopa::find'.
     "$find" "$dir" \
         -mindepth 1 \
         -type f \
@@ -274,6 +275,7 @@ koopa::delete_file_system_cruft() { # {{{1
     find="$(koopa::locate_find)"
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
+    # FIXME Rework using 'koopa::find'.
     "$find" "$dir" \
         -type f \
         \( \
@@ -298,6 +300,7 @@ koopa::delete_named_subdirs() { # {{{1
     xargs="$(koopa::locate_xargs)"
     dir="${1:?}"
     subdir_name="${2:?}"
+    # FIXME Rework using 'koopa::find'.
     "$find" "$dir" \
         -type 'd' \
         -name "$subdir_name" \
@@ -378,6 +381,7 @@ koopa::file_count() { # {{{1
         )"
     else
         find="$(koopa::locate_find)"
+        # FIXME Rework using 'koopa::find'.
         x="$( \
             "$find" "$prefix" \
                 -maxdepth 1 \
@@ -503,6 +507,7 @@ koopa::nfiletypes() { # {{{1
     sort="$(koopa::locate_sort)"
     uniq="$(koopa::locate_uniq)"
     dir="${1:-.}"
+    # FIXME Rework using 'koopa::find'.
     x="$( \
         "$find" "$dir" \
             -maxdepth 1 \
@@ -534,12 +539,15 @@ koopa::reset_permissions() { # {{{1
     user="$(koopa::user)"
     group="$(koopa::group)"
     koopa::chown -R "${user}:${group}" "$dir"
+    # FIXME Rework using 'koopa::find'.
     "$find" "$dir" -type 'd' -print0 \
         | "$xargs" -0 -I {} \
             "$chmod" 'u=rwx,g=rwx,o=rx' {}
+    # FIXME Rework using 'koopa::find'.
     "$find" "$dir" -type 'f' -print0 \
         | "$xargs" -0 -I {} \
             "$chmod" 'u=rw,g=rw,o=r' {}
+    # FIXME Rework using 'koopa::find'.
     "$find" "$dir" -name '*.sh' -type 'f' -print0 \
         | "$xargs" -0 -I {} \
             "$chmod" 'u=rwx,g=rwx,o=rx' {}

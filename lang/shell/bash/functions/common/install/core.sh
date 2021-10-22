@@ -815,6 +815,7 @@ koopa::find_app_version() { # {{{1
     koopa::assert_is_dir "$prefix"
     prefix="${prefix}/${name}"
     koopa::assert_is_dir "$prefix"
+    # FIXME Rework using 'koopa::find'.
     x="$( \
         "$find" "$prefix" \
             -mindepth 1 \
@@ -918,6 +919,7 @@ koopa::link_app() { # {{{1
             app_subdirs[$i]="${app_prefix}/${app_subdirs[$i]}"
         done
     else
+        # FIXME Rework using 'koopa::find'.
         readarray -t app_subdirs <<< "$( \
             "$find" "$app_prefix" \
                 -mindepth 1 \

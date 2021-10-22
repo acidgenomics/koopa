@@ -191,6 +191,7 @@ koopa::find_broken_symlinks() { # {{{1
     for prefix in "$@"
     do
         prefix="$(koopa::realpath "$prefix")"
+        # FIXME Rework using 'koopa::find'.
         x="$( \
             "$find" "$prefix" \
                 -xdev \
@@ -225,6 +226,7 @@ koopa::find_dotfiles() { # {{{1
     xargs="$(koopa::locate_xargs)"
     type="${1:?}"
     header="${2:?}"
+    # FIXME Rework using 'koopa::find'.
     # shellcheck disable=SC2016
     x="$( \
         koopa::find \
@@ -256,6 +258,7 @@ koopa::find_empty_dirs() { # {{{1
     for prefix in "$@"
     do
         prefix="$(koopa::realpath "$prefix")"
+        # FIXME Rework using 'koopa::find'.
         x="$( \
             "$find" "$prefix" \
                 -xdev \
@@ -292,6 +295,7 @@ koopa::find_files_without_line_ending() { # {{{1
     for prefix in "$@"
     do
         prefix="$(koopa::realpath "$prefix")"
+        # FIXME Rework using 'koopa::find'.
         readarray -t files <<< "$(
             "$find" "$prefix" \
                 -mindepth 1 \
@@ -360,6 +364,7 @@ koopa::find_large_files() { # {{{1
     for prefix in "$@"
     do
         prefix="$(koopa::realpath "$prefix")"
+        # FIXME Rework using 'koopa::find'.
         x="$( \
             "$find" "$prefix" \
                 -xdev \
@@ -383,6 +388,7 @@ koopa::find_large_files() { # {{{1
     return 0
 }
 
+# FIXME Rework using 'koopa::find'.
 koopa::find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
@@ -439,6 +445,7 @@ koopa::find_non_symlinked_make_files() { # {{{1
             -not -path "${make_prefix}/texlive/*"
         )
     fi
+    # FIXME Rework using 'koopa::find'.
     x="$("$find" "${find_args[@]}" | "$sort")"
     koopa::print "$x"
     return 0

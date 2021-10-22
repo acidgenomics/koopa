@@ -147,6 +147,7 @@ koopa::check_mount() { # {{{1
         return 1
     fi
     wc="$(koopa::locate_wc)"
+    # FIXME Consider adding '--count' support here.
     nfiles="$( \
         koopa::find \
             --prefix="$mnt" \

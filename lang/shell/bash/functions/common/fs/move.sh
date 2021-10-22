@@ -15,6 +15,7 @@ koopa::move_files_in_batch() { # {{{1
     source_dir="${2:?}"
     target_dir="${3:?}"
     koopa::assert_is_dir "$source_dir" "$target_dir"
+    # FIXME Rework using 'koopa::find'.
     "$find" "$source_dir" \
         -type f \
         -regex '.+/[^.].+$' \
@@ -35,8 +36,11 @@ koopa::move_files_up_1_level() { # {{{1
     dir="${1:-.}"
     (
         koopa::cd "$dir"
+        # FIXME Rework using 'koopa::find'.
         "$find" . -type f -mindepth 2 -exec koopa::mv {} . \;
+        # FIXME Rework using 'koopa::find'.
         "$find" . -mindepth 2
+        # FIXME Rework using 'koopa::find'.
         "$find" . -type d -delete -print
     )
     return 0
