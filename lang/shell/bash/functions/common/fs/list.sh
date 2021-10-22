@@ -73,6 +73,7 @@ koopa::list_app_versions() { # {{{1
         koopa::alert_note "No applications are installed in '${prefix}'."
         return 0
     fi
+    # FIXME Rework using 'koopa::find'.
     x="$( \
         "$find" "$prefix" \
             -mindepth 2 \

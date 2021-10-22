@@ -34,6 +34,7 @@ koopa::test_find_files() { # {{{1
     grep="$(koopa::locate_grep)"
     sort="$(koopa::locate_sort)"
     prefix="$(koopa::koopa_prefix)"
+    # FIXME Rework using 'koopa::find'.
     x="$( \
         "$find" "$prefix" \
             -mindepth 1 \
