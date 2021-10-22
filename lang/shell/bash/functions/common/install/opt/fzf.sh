@@ -42,7 +42,7 @@ koopa:::install_fzf() { # {{{1
     # > ./install --help
     ./install --bin --no-update-rc
     koopa::cp \
-        --target="$prefix" \
+        --target-directory="$prefix" \
         'bin' \
         'doc' \
         'man' \

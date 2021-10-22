@@ -25,7 +25,7 @@ koopa::install_go() { # {{{1
 koopa:::install_go() { # {{{1
     # """
     # Install Go.
-    # @note Updated 2021-05-27.
+    # @note Updated 2021-10-22.
     # """
     local arch file name os_id prefix url version
     prefix="${INSTALL_PREFIX:?}"
@@ -43,7 +43,7 @@ koopa:::install_go() { # {{{1
     url="https://dl.google.com/${name}/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::cp --target="$prefix" "${name}/"*
+    koopa::cp --target-directory="$prefix" "${name}/"*
     return 0
 }
 

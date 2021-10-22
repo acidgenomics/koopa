@@ -72,7 +72,7 @@ koopa::link_docker() { # {{{1
     then
         koopa::ln \
             --sudo \
-            --target='/etc/docker' \
+            --target-directory='/etc/docker' \
             "${etc_source}/"*
     fi
     sudo rm -frv "$lib_sys"
