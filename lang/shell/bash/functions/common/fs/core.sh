@@ -164,7 +164,7 @@ koopa::chown() { # {{{1
 koopa::cp() { # {{{1
     # """
     # Hardened version of GNU coreutils copy.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-22.
     #
     # getopts info:
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
