@@ -35,6 +35,8 @@ koopa::linux_find_app_symlinks() { # {{{1
     then
         app_prefix="${app_prefix}/${version}"
     else
+        # FIXME Use '--sort' flag in find call here instead.
+        # FIXME Always sort using print0?
         app_prefix="$( \
             koopa::find \
                 --prefix="$app_prefix" \
@@ -45,6 +47,7 @@ koopa::linux_find_app_symlinks() { # {{{1
         )"
     fi
     # Pipe GNU find into array.
+    # FIXME Need to rework this using koopa::find.
     readarray -t links <<< "$( \
         "$find" -L "$make_prefix" \
             -type f \

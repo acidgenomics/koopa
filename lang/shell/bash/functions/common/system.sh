@@ -515,7 +515,7 @@ koopa::warn_if_export() { # {{{1
     do
         if koopa::is_export "$arg"
         then
-            koopa::warning "'${arg}' is exported."
+            koopa::warn "'${arg}' is exported."
         fi
     done
     return 0

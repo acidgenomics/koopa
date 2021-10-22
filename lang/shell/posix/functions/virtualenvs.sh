@@ -31,7 +31,7 @@ _koopa_deactivate_conda() { # {{{1
     env_name="$(_koopa_conda_env_name)"
     if [ -z "$env_name" ]
     then
-        _koopa_warning 'conda is not active.'
+        _koopa_warn 'conda is not active.'
         return 1
     fi
     # Avoid exit on unbound PS1 in conda script.
@@ -52,7 +52,7 @@ _koopa_deactivate_python_venv() { # {{{1
     prefix="${VIRTUAL_ENV:-}"
     if [ -z "$prefix" ]
     then
-        _koopa_warning 'Python virtual environment is not active.'
+        _koopa_warn 'Python virtual environment is not active.'
         return 1
     fi
     _koopa_remove_from_path "${prefix}/bin"

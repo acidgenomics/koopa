@@ -74,7 +74,7 @@ koopa::delete_dotfile() { # {{{1
             koopa::rm "$filepath"
         elif [[ -f "$filepath" ]] || [[ -d "$filepath" ]]
         then
-            koopa::warning "Not a symlink: '${filepath}'."
+            koopa::warn "Not a symlink: '${filepath}'."
         fi
     done
     return 0
@@ -313,7 +313,7 @@ koopa::link_dotfile() { # {{{1
     source_path="${source_prefix}/${source_subdir}"
     if [[ "${dict[opt]}" -eq 1 ]] && [[ ! -e "$source_path" ]]
     then
-        koopa::warning "Does not exist: '${source_path}'."
+        koopa::warn "Does not exist: '${source_path}'."
         return 0
     fi
     koopa::assert_is_existing "$source_path"

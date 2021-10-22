@@ -47,6 +47,7 @@ koopa::git_checkout_recursive() { # {{{1
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
+        # FIXME Need to rework this using '--sort' flag.
         readarray -t repos <<< "$( \
             koopa::find \
                 --glob='.git' \
@@ -330,6 +331,7 @@ koopa::git_pull_recursive() { # {{{1
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
+        # FIXME Need to rework this using '--sort' flag.
         readarray -t repos <<< "$( \
             koopa::find \
                 --glob='.git' \
@@ -371,7 +373,7 @@ koopa::git_push_recursive() { # {{{1
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
-        # Using '-L' flag here in case git dir is a symlink.
+        # FIXME Need to rework this using '--sort' flag.
         readarray -t repos <<< "$( \
             koopa::find \
                 --glob='.git' \
@@ -558,7 +560,7 @@ koopa::git_status_recursive() { # {{{1
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
-        # Using '-L' flag here in case git dir is a symlink.
+        # FIXME Need to rework this using '--sort' flag.
         readarray -t repos <<< "$( \
             koopa::find \
                 --glob='.git' \
