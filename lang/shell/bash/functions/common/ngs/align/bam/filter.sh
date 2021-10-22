@@ -61,7 +61,7 @@ koopa::bam_filter() { # {{{1
         koopa::sambamba_filter_multimappers \
             --input-bam="$input_bam" \
             --output-bam="$output_bam"
-        koopa::cp "$output_bam" "$final_output_bam"
+        koopa::cp --target="$final_output_bam" "$output_bam"
         koopa::sambamba_index "$final_output_bam"
     done
     koopa::deactivate_conda

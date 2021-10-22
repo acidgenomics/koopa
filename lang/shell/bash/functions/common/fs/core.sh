@@ -158,6 +158,7 @@ koopa::chown() { # {{{1
 }
 
 # FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
+# FIXME Require the '--target' argument here.
 koopa::cp() { # {{{1
     # """
     # Hardened version of GNU coreutils copy.
