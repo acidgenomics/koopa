@@ -22,7 +22,7 @@ koopa:::install_rmate() { # {{{1
     koopa::cd "${name}-${version}"
     koopa::chmod 'a+x' "$name"
     koopa::mkdir "${prefix}/bin"
-    koopa::cp --target="${prefix}/bin" "$name"
+    koopa::cp "$name" "${prefix}/bin"
     return 0
 }
 

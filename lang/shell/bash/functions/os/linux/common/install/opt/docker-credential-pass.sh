@@ -34,7 +34,7 @@ download/v${version}/${file}"
     koopa::chmod '0775' "$name"
     koopa::mkdir "${prefix}/bin"
     koopa::sys_set_permissions --recursive "$prefix"
-    koopa::cp --target="${prefix}/bin" "$name"
+    koopa::cp "$name" "${prefix}/bin"
     return 0
 }
 

@@ -159,6 +159,8 @@ koopa::chown() { # {{{1
 
 # FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
 # FIXME Require the '--target' argument here.
+# FIXME Need to rework this argument as '--target-dir'.
+# FIXME Allow simple two position structure as well.
 koopa::cp() { # {{{1
     # """
     # Hardened version of GNU coreutils copy.
@@ -177,11 +179,11 @@ koopa::cp() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--target='*)
+            '--target-directory='*)
                 target_dir="${1#*=}"
                 shift 1
                 ;;
-            '--target' | \
+            '--target-directory' | \
             '-t')
                 target_dir="${2:?}"
                 shift 2
@@ -224,9 +226,14 @@ koopa::cp() { # {{{1
     fi
     cp_args=('-af')
     [[ "$symlink" -eq 1 ]] && cp_args+=('-s')
+    cp_args+=("$@")
+
+
+
+    # FIXME Copy code back from stable branch and rethink here.
+    # FIXME Rework this, not passing positional args...
     if [[ -n "$target_dir" ]]
     then
-        koopa::assert_is_existing "$@"
         target_dir="$(koopa::strip_trailing_slash "$target_dir")"
         cp_args+=('-t' "$target_dir")
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
@@ -240,6 +247,8 @@ koopa::cp() { # {{{1
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
     "${cp[@]}" "${cp_args[@]}" "$@"
+
+
     return 0
 }
 
@@ -280,6 +289,7 @@ koopa::init_dir() { # {{{1
 }
 
 # FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
+# FIXME Ensure '--target-directory' is used in function calls.
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly with GNU ln.
@@ -294,11 +304,11 @@ koopa::ln() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--target='*)
+            '--target-directory='*)
                 target_dir="${1#*=}"
                 shift 1
                 ;;
-            '--target' | \
+            '--target-directory' | \
             '-t')
                 target_dir="${2:?}"
                 shift 2
@@ -395,6 +405,7 @@ koopa::mkdir() { # {{{1
 }
 
 # FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
+# FIXME Ensure '--target-directory' is used in function calls.
 koopa::mv() { # {{{1
     # """
     # Move a file or directory with GNU mv.
@@ -416,11 +427,11 @@ koopa::mv() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--target='*)
+            '--target-directory='*)
                 target_dir="${1#*=}"
                 shift 1
                 ;;
-            '--target' | \
+            '--target-directory' | \
             '-t')
                 target_dir="${2:?}"
                 shift 2
@@ -459,6 +470,7 @@ koopa::mv() { # {{{1
     then
         koopa::assert_is_existing "$@"
         target_dir="$(koopa::strip_trailing_slash "$target_dir")"
+        # FIXME Rework this approach.
         mv_args+=('-t' "$target_dir")
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
     else

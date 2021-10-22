@@ -10,7 +10,7 @@ koopa::install_shunit2() { # {{{1
 koopa:::install_shunit2() { # {{{1
     # """
     # Install shUnit2.
-    # @note Updated 2021-04-27.
+    # @note Updated 2021-10-22.
     # """
     local file name prefix url version
     prefix="${INSTALL_PREFIX:?}"
@@ -21,7 +21,7 @@ koopa:::install_shunit2() { # {{{1
     koopa::download "$url"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
-    koopa::cp --target="${prefix}/bin" "$name"
+    koopa::cp --target-directory="${prefix}/bin" "$name"
     return 0
 }
 

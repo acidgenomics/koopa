@@ -42,7 +42,7 @@ koopa:::install_nim() { # {{{1
     bin/nim c koch
     ./koch boot -d:release
     ./koch tools
-    koopa::cp --target="$prefix" .
+    koopa::cp . "$prefix"
     return 0
 }
 

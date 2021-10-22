@@ -80,7 +80,7 @@ koopa::pager() { # {{{1
 koopa::roff() { # {{{1
     # """
     # Convert roff markdown files to ronn man pages.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-10-22.
     # """
     local koopa_prefix
     koopa::assert_is_installed 'ronn'
@@ -88,7 +88,7 @@ koopa::roff() { # {{{1
     (
         koopa::cd "${koopa_prefix}/man"
         ronn --roff ./*.ronn
-        koopa::mv --target='man1' ./*.1
+        koopa::mv --target-directory='man1' ./*.1
     )
     return 0
 }

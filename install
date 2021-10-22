@@ -286,11 +286,11 @@ koopa::install_koopa() { # {{{1
         koopa::alert_note 'Admin (sudo) permissions are required.'
         koopa::assert_is_admin
         koopa::rm --sudo "${dict[koopa_prefix]}"
-        koopa::cp --sudo --target="${dict[koopa_prefix]}" "${dict[script_dir]}"
+        koopa::cp --sudo "${dict[script_dir]}" "${dict[koopa_prefix]}"
         koopa::sys_set_permissions --recursive "${dict[koopa_prefix]}"
         koopa::add_make_prefix_link "${dict[koopa_prefix]}"
     else
-        koopa::cp --target="${dict[koopa_prefix]}" "${dict[script_dir]}"
+        koopa::cp "${dict[script_dir]}" "${dict[koopa_prefix]}"
     fi
     # Activate koopa {{{2
     # ==========================================================================
