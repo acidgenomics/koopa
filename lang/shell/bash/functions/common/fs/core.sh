@@ -235,7 +235,7 @@ koopa::cp() { # {{{1
         koopa::assert_is_existing "$source_file"
         target_file="${2:?}"
         [[ -e "$target_file" ]] && "${rm[@]}" "$target_file"
-        target_parent="$(dirname "$target_file")"
+        target_parent="$(koopa::dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
     "${cp[@]}" "${cp_args[@]}" "$@"
@@ -345,7 +345,7 @@ koopa::ln() { # {{{1
         koopa::assert_is_existing "$source_file"
         target_file="${2:?}"
         [[ -e "$target_file" ]] && "${rm[@]}" "$target_file"
-        target_parent="$(dirname "$target_file")"
+        target_parent="$(koopa::dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
     "${ln[@]}" "${ln_args[@]}" "$@"
@@ -466,7 +466,7 @@ koopa::mv() { # {{{1
         koopa::assert_is_existing "$source_file"
         target_file="$(koopa::strip_trailing_slash "${2:?}")"
         [[ -e "$target_file" ]] && "${rm[@]}" "$target_file"
-        target_parent="$(dirname "$target_file")"
+        target_parent="$(koopa::dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
     "${mv[@]}" "${mv_args[@]}" "$@"
