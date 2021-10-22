@@ -3,13 +3,10 @@
 # NOTE Use of 'grep -v' is more compatible with macOS and BusyBox than use of
 # 'grep --invert-match'.
 
-# FIXME Add support for '--sort' flag here, and remove pipe call to 'sort'
-# in other functions that use this.
-
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-22.
     #
     # Consider updating the variant defined in the Bash header upon any
     # changes to this function.
