@@ -137,7 +137,7 @@ _koopa_activate_coreutils_aliases() { # {{{1
     then
         # GNU coreutils.
         # The '--archive' flag can have issues on some file systems.
-        cp_args='--archive --interactive --recursive'
+        cp_args='--archive --interactive'
         ln_args='--interactive --no-dereference --symbolic'
         mkdir_args='--parents'
         mv_args='--interactive'
@@ -148,7 +148,7 @@ _koopa_activate_coreutils_aliases() { # {{{1
     elif _koopa_is_macos
     then
         # BSD coreutils.
-        cp_args='-Rai'
+        cp_args='-ai'
         ln_args='-ins'
         mkdir_args='-p'
         mv_args='-i'
