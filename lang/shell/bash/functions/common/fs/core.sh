@@ -234,7 +234,7 @@ koopa::cp() { # {{{1
         koopa::assert_is_existing "$@"
         target_dir="$(koopa::strip_trailing_slash "$target_dir")"
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
-        # NOTE '-t' flag is not supported for BSD cp.
+        # NOTE '-t' flag is not supported for BSD variant.
         cp_args+=("$target_dir")
     else
         koopa::assert_has_args_eq "$#" 2
@@ -285,12 +285,10 @@ koopa::init_dir() { # {{{1
     return 0
 }
 
-# FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
-# FIXME Ensure '--target-directory' is used in function calls.
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly with GNU ln.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-22.
     # """
     local ln ln_args mkdir pos rm source_file target_file target_dir
     local target_parent which_ln
@@ -341,12 +339,14 @@ koopa::ln() { # {{{1
         rm=('koopa::rm')
     fi
     ln_args=('-fns')
+    ln_args+=("$@")
     if [[ -n "$target_dir" ]]
     then
         koopa::assert_is_existing "$@"
         target_dir="$(koopa::strip_trailing_slash "$target_dir")"
-        ln_args+=('-t' "$target_dir")
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
+        # NOTE '-t' flag is not supported for BSD variant.
+        ln_args+=("$target_dir")
     else
         koopa::assert_has_args_eq "$#" 2
         source_file="${1:?}"
@@ -356,7 +356,7 @@ koopa::ln() { # {{{1
         target_parent="$(koopa::dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
-    "${ln[@]}" "${ln_args[@]}" "$@"
+    "${ln[@]}" "${ln_args[@]}"
     return 0
 }
 
@@ -401,19 +401,17 @@ koopa::mkdir() { # {{{1
     return 0
 }
 
-# FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
-# FIXME Ensure '--target-directory' is used in function calls.
 koopa::mv() { # {{{1
     # """
     # Move a file or directory with GNU mv.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-22.
     #
     # This function works on 1 file or directory at a time.
     # It ensures that the target parent directory exists automatically.
     #
     # Useful GNU mv args, for reference (non-POSIX):
-    # - -T: no-target-directory
-    # - --strip-trailing-slashes
+    # * '--no-target-directory'
+    # * '--strip-trailing-slashes'
     # """
     local mkdir mv mv_args pos rm source_file sudo target_file
     local target_parent which_mv
@@ -463,13 +461,14 @@ koopa::mv() { # {{{1
         rm=('koopa::rm')
     fi
     mv_args=('-f')
+    mv_args+=("$@")
     if [[ -n "$target_dir" ]]
     then
         koopa::assert_is_existing "$@"
         target_dir="$(koopa::strip_trailing_slash "$target_dir")"
-        # FIXME Rework this approach.
-        mv_args+=('-t' "$target_dir")
         [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
+        # NOTE '-t' flag is not supported for BSD variant.
+        mv_args+=("$target_dir")
     else
         koopa::assert_has_args_eq "$#" 2
         source_file="$(koopa::strip_trailing_slash "${1:?}")"
@@ -479,7 +478,7 @@ koopa::mv() { # {{{1
         target_parent="$(koopa::dirname "$target_file")"
         [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
     fi
-    "${mv[@]}" "${mv_args[@]}" "$@"
+    "${mv[@]}" "${mv_args[@]}"
     return 0
 }
 
