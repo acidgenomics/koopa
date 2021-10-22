@@ -673,12 +673,15 @@ koopa::locate_mktemp() { # {{{1
 koopa::locate_mv() { # {{{1
     # """
     # Locate GNU mv.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-22.
+    #
+    # macOS gmv currently has issues on NFS shares.
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app \
         --brew-opt='coreutils' \
         --gnubin \
+        --macos-app='/bin/mv' \
         --name='mv'
 }
 
