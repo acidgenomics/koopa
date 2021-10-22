@@ -3,7 +3,7 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2021-10-05.
+    # @note Updated 2021-10-22.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
@@ -95,7 +95,6 @@ _koopa_posix_header() { # {{{1
             _koopa_activate_aliases || return 1
             _koopa_activate_dircolors || return 1
             _koopa_activate_gcc_colors || return 1
-            _koopa_activate_gnu_aliases || return 1
             _koopa_activate_lesspipe || return 1
             _koopa_activate_secrets || return 1
             _koopa_activate_ssh_key || return 1

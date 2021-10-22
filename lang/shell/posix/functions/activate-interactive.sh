@@ -4,10 +4,11 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-09-23.
+    # @note Updated 2021-10-22.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
+    _koopa_activate_coreutils_aliases
     alias br='_koopa_alias_broot'
     alias bucket='_koopa_alias_bucket'
     # > alias conda='_koopa_alias_conda'
@@ -36,6 +37,7 @@ _koopa_activate_aliases() { # {{{1
     alias vim-vanilla='_koopa_alias_vim_vanilla'
     alias week='_koopa_alias_week'
     alias z='_koopa_alias_zoxide'
+    # Keep these at the end to allow the user to override our defaults.
     file="${HOME:?}/.aliases"
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
@@ -108,6 +110,60 @@ _koopa_activate_completion() { # {{{1
         # shellcheck source=/dev/null
         [ -f "$file" ] && . "$file"
     done
+    return 0
+}
+
+_koopa_activate_coreutils_aliases() { # {{{1
+    # """
+    # Activate GNU/BSD coreutils aliases.
+    # @note Updated 2021-10-22.
+    #
+    # Creates hardened interactive aliases for coreutils.
+    #
+    # These aliases get unaliased inside of koopa scripts, and they should only
+    # apply to interactive use at the command prompt.
+    #
+    # macOS ships with BSD coreutils, which don't support all GNU options.
+    # gmv on macOS currently has issues on NFS shares.
+    # """
+    local cp cp_args ln ln_args mkdir mkdir_args mv mv_args rm rm_args
+    [ "$#" -eq 0 ] || return 1
+    cp='/bin/cp'
+    ln='/bin/ln'
+    mkdir='/bin/mkdir'
+    mv='/bin/mv'
+    rm='/bin/rm'
+    if _koopa_is_linux
+    then
+        # GNU coreutils.
+        # The '--archive' flag can have issues on some file systems.
+        cp_args='--archive --interactive --recursive'
+        ln_args='--interactive --no-dereference --symbolic'
+        mkdir_args='--parents'
+        mv_args='--interactive'
+        # Problematic on some file systems: '--dir', '--preserve-root'.
+        # Don't enable '--recursive' here by default, to provide against
+        # accidental deletion of an important directory.
+        rm_args='--interactive=once'
+    elif _koopa_is_macos
+    then
+        # BSD coreutils.
+        cp_args='-Rai'
+        ln_args='-ins'
+        mkdir_args='-p'
+        mv_args='-i'
+        rm_args='-I'
+    fi
+    # shellcheck disable=SC2139
+    alias cp="${cp} ${cp_args}"
+    # shellcheck disable=SC2139
+    alias ln="${ln} ${ln_args}"
+    # shellcheck disable=SC2139
+    alias mkdir="${mkdir} ${mkdir_args}"
+    # shellcheck disable=SC2139
+    alias mv="${mv} ${mv_args}"
+    # shellcheck disable=SC2139
+    alias rm="${rm} ${rm_args}"
     return 0
 }
 
@@ -234,137 +290,6 @@ _koopa_activate_gcc_colors() { # {{{1
     [ -n "${GCC_COLORS:-}" ] && return 0
     export GCC_COLORS="caret=01;32:error=01;31:locus=01:note=01;36:\
 quote=01:warning=01;35"
-    return 0
-}
-
-_koopa_activate_gnu_aliases() { # {{{1
-    # """
-    # Activate GNU aliases.
-    # @note Updated 2021-08-18.
-    #
-    # Creates hardened interactive aliases for GNU coreutils.
-    #
-    # These aliases get unaliased inside of koopa scripts, and they should only
-    # apply to interactive use at the command prompt.
-    #
-    # macOS ships with BSD coreutils, which don't support all GNU options.
-    # """
-    local cp harden_coreutils ln mkdir mv opt_prefix rm
-    [ "$#" -eq 0 ] || return 1
-    if _koopa_is_linux
-    then
-        harden_coreutils=1
-        cp='cp'
-        ln='ln'
-        mkdir='mkdir'
-        mv='mv'
-        rm='rm'
-    elif _koopa_is_macos
-    then
-        _koopa_is_installed 'brew' || return 0
-        opt_prefix="$(_koopa_homebrew_prefix)/opt"
-        # > if [ -d "${opt_prefix}/bc" ]
-        # > then
-        # >     # shellcheck disable=SC2139
-        # >     alias bc="${opt_prefix}/bc/bin/bc"
-        # > fi
-        if [ -d "${opt_prefix}/coreutils" ]
-        then
-            harden_coreutils=1
-            cp='gcp'
-            ln='gln'
-            mkdir='gmkdir'
-            mv='gmv'
-            rm='grm'
-            # Standardize using GNU variants by default.
-            # > alias base64='gbase64'
-            # > alias basename='gbasename'
-            # > alias cat='gcat'
-            # > alias chgrp='gchgrp'
-            # > alias chmod='gchmod'
-            # > alias chown='gchown'
-            # > alias chroot='gchroot'
-            # > alias cut='gcut'
-            # > alias date='gdate'
-            # > alias dirname='gdirname'
-            # > alias du='gdu'
-            # > alias head='ghead'
-            # > alias readlink='greadlink'
-            # > alias realpath='grealpath'
-            # > alias sort='gsort'
-            # > alias stat='gstat'
-            # > alias tail='gtail'
-            # > alias tee='gtee'
-            # > alias tr='gtr'
-            # > alias uname='guname'
-            # > alias uniq='guniq'
-            # > alias whoami='gwhoami'
-            # > alias yes='gyes'
-        else
-            _koopa_alert_is_not_installed 'Homebrew coreutils'
-            harden_coreutils=0
-        fi
-        # > if [ -d "${opt_prefix}/findutils" ]
-        # > then
-        # >     alias find='gfind'
-        # >     alias xargs='gxargs'
-        # > else
-        # >     _koopa_alert_is_not_installed 'Homebrew findutils'
-        # > fi
-        # > if [ -d "${opt_prefix}/gawk" ]
-        # > then
-        # >     alias awk='gawk'
-        # > else
-        # >     _koopa_alert_is_not_installed 'Homebrew gawk'
-        # > fi
-        # > if [ -d "${opt_prefix}/gnu-sed" ]
-        # > then
-        # >     alias sed='gsed'
-        # > else
-        # >     _koopa_alert_is_not_installed 'Homebrew gnu-sed'
-        # > fi
-        # > if [ -d "${opt_prefix}/gnu-tar" ]
-        # > then
-        # >     alias tar='gtar'
-        # > else
-        # >     _koopa_alert_is_not_installed 'Homebrew gnu-tar'
-        # > fi
-        # > if [ -d "${opt_prefix}/grep" ]
-        # > then
-        # >     alias grep='ggrep'
-        # > else
-        # >     _koopa_alert_is_not_installed 'Homebrew grep'
-        # > fi
-        # > if [ -d "${opt_prefix}/make" ]
-        # > then
-        # >     alias make='gmake'
-        # > else
-        # >     _koopa_alert_is_not_installed 'Homebrew make'
-        # > fi
-        # > if [ -d "${opt_prefix}/man-db" ]
-        # > then
-        # >     alias man='gman'
-        # > else
-        # >     _koopa_alert_is_not_installed 'Homebrew man-db'
-        # > fi
-    fi
-    if [ "$harden_coreutils" -eq 1 ]
-    then
-        # The '--archive' flag seems to have issues on some file systems.
-        # shellcheck disable=SC2139
-        alias cp="${cp} --interactive --recursive" # -i
-        # shellcheck disable=SC2139
-        alias ln="${ln} --interactive --no-dereference --symbolic" # -ins
-        # shellcheck disable=SC2139
-        alias mkdir="${mkdir} --parents" # -p
-        # shellcheck disable=SC2139
-        alias mv="${mv} --interactive" # -i
-        # Problematic on some file systems: --dir --preserve-root
-        # Don't enable '--recursive' here by default, so we don't accidentally
-        # nuke an important directory.
-        # shellcheck disable=SC2139
-        alias rm="${rm} --interactive=once" # -I
-    fi
     return 0
 }
 
