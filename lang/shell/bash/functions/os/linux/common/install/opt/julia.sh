@@ -3,7 +3,7 @@
 koopa:::linux_install_julia_binary() { # {{{1
     # """
     # Install Julia (from binary).
-    # @note Updated 2021-05-04.
+    # @note Updated 2021-10-22.
     # @seealso
     # - https://julialang.org/downloads/
     # - https://julialang.org/downloads/platform/
@@ -32,6 +32,6 @@ ${minor_version}/${file}"
     koopa::cd "${name}-${version}"
     koopa::rm 'LICENSE.md'
     koopa::mkdir "$prefix"
-    koopa::cp . "$prefix"
+    koopa::cp --target="$prefix" .
     return 0
 }

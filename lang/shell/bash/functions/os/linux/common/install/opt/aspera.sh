@@ -38,7 +38,7 @@ koopa:::linux_install_aspera_connect() { # {{{1
     koopa::assert_is_dir "$script_target"
     if [[ "$prefix" != "$script_target" ]]
     then
-        koopa::cp "$script_target" "$prefix"
+        koopa::cp --target="$prefix" "$script_target"
         koopa::rm "$script_target" "$aspera_user"
     fi
     koopa::assert_is_file "${prefix}/bin/ascp"
