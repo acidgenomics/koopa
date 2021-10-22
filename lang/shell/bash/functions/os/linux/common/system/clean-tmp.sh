@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Can we also extend this to macOS? May be generally useful.
 koopa::linux_clean_tmp() { # {{{1
     # """
     # Clean temporary directory.
@@ -16,6 +17,7 @@ koopa::linux_clean_tmp() { # {{{1
     fi
     for dir in "${dirs[@]}"
     do
+        # FIXME Rework using 'koopa::find'.
         readarray -t matches <<< "$( \
         sudo "$find" "$dir" \
             -mindepth 1 \

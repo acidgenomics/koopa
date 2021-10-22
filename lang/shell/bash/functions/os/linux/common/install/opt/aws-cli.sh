@@ -43,6 +43,7 @@ koopa:::linux_install_aws_cli() { # {{{1
     tmp_bin_dir='tmp_bin'
     ./aws/install -i "$tmp_install_dir" -b "$tmp_bin_dir" > /dev/null
     koopa::cd "${tmp_install_dir}/v2"
+    # FIXME Rework using 'koopa::find'.
     # Note that directory structure currently returns differently for Alpine.
     version="$(find . -mindepth 1 -maxdepth 1 -type d -name '2.*')"
     [[ -z "$version" ]] && koopa::stop 'Failed to detect version.'

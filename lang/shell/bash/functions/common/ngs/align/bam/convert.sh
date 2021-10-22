@@ -30,6 +30,7 @@ koopa::convert_sam_to_bam() { # {{{1
     dir="${1:-.}"
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
+    # FIXME Rework using 'koopa::find'.
     readarray -t sam_files <<< "$( \
         find "$dir" \
             -maxdepth 3 \
