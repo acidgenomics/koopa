@@ -157,6 +157,7 @@ koopa::chown() { # {{{1
     return 0
 }
 
+# FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
 koopa::cp() { # {{{1
     # """
     # Hardened version of GNU coreutils copy.
@@ -277,6 +278,7 @@ koopa::init_dir() { # {{{1
     return 0
 }
 
+# FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly with GNU ln.
@@ -391,8 +393,7 @@ koopa::mkdir() { # {{{1
     return 0
 }
 
-# FIXME This currently has issues with gmv on macOS NFS mount.
-# FIXME Consider reworking to use /usr/bin/mv on macOS?
+# FIXME Rethink the '--target' argument approach here, since BSD doesn't support.
 koopa::mv() { # {{{1
     # """
     # Move a file or directory with GNU mv.
