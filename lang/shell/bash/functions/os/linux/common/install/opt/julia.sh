@@ -32,6 +32,6 @@ ${minor_version}/${file}"
     koopa::cd "${name}-${version}"
     koopa::rm 'LICENSE.md'
     koopa::mkdir "$prefix"
-    koopa::cp --target="$prefix" .
+    koopa::cp . "$prefix"
     return 0
 }

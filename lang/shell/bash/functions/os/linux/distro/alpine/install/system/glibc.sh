@@ -37,7 +37,7 @@ koopa::alpine_install_glibc() { # {{{1
     # Add key required for signed apk releases.
     pub_key='sgerrand.rsa.pub'
     wget "https://alpine-pkgs.sgerrand.com/${pub_key}"
-    koopa::cp --sudo --target="/etc/apk/keys/${pub_key}" "$pub_key"
+    koopa::cp --sudo "$pub_key" "/etc/apk/keys/${pub_key}"
     apk_bin_file="glibc-bin-${version}.apk"
     apk_dev_file="glibc-dev-${version}.apk"
     apk_i18n_file="glibc-i18n-${version}.apk"
