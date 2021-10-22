@@ -87,6 +87,7 @@ koopa::view_latest_tmp_log_file() { # {{{1
     tail="$(koopa::locate_tail)"
     tmp_dir="${TMPDIR:-/tmp}"
     user_id="$(koopa::user_id)"
+    # FIXME Need to rework this using '--sort' flag.
     log_file="$( \
         koopa::find \
             --glob="koopa-${user_id}-*" \

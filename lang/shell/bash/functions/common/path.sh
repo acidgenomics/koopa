@@ -14,7 +14,7 @@ koopa::add_conda_env_to_path() { # {{{1
         bin_dir="${CONDA_PREFIX}/envs/${name}/bin"
         if [[ ! -d "$bin_dir" ]]
         then
-            koopa::warning "Conda environment missing: '${bin_dir}'."
+            koopa::warn "Conda environment missing: '${bin_dir}'."
             return 1
         fi
         koopa::add_to_path_start "$bin_dir"

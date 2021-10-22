@@ -332,6 +332,7 @@ koopa::is_file_system_case_sensitive() { # {{{1
     find="$(koopa::locate_find)"
     wc="$(koopa::locate_wc)"
     touch '.tmp.checkcase' '.tmp.checkCase'
+    # FIXME Need to switch to 'koopa::find' here.
     count="$( \
         "$find" . \
             -maxdepth 1 \
@@ -509,6 +510,7 @@ koopa::is_recent() { # {{{1
     for file in "$@"
     do
         [[ -e "$file" ]] || return 1
+        # FIXME Need to switch to koopa::find here.
         exists="$( \
             "$find" "$file" \
                 -mindepth 0 \

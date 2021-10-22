@@ -55,7 +55,7 @@ _koopa_prompt() { # {{{1
             wd='%~'
             ;;
         *)
-            _koopa_warning 'Unsupported shell.'
+            _koopa_warn 'Unsupported shell.'
             return 0
             ;;
     esac

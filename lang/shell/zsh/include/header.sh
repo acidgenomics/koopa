@@ -48,9 +48,9 @@ __koopa_realpath() { # {{{1
     __koopa_is_macos && readlink='greadlink'
     if ! __koopa_is_installed "$readlink"
     then
-        __koopa_warning "Not installed: '${readlink}'."
+        __koopa_warn "Not installed: '${readlink}'."
         __koopa_is_macos && \
-            __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
+            __koopa_warn 'Install Homebrew and GNU coreutils to resolve.'
         return 1
     fi
     x="$("$readlink" -f "$@")"
@@ -59,7 +59,7 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
-__koopa_warning() { # {{{1
+__koopa_warn() { # {{{1
     # """
     # Print a warning message to the console.
     # @note Updated 2021-05-14.
@@ -113,7 +113,7 @@ __koopa_zsh_header() { # {{{1
         )"
         if [[ ! "${dict[major_version]}" -ge 5 ]]
         then
-            __koopa_warning \
+            __koopa_warn \
                 'Koopa requires Zsh >= 5.' \
                 "Current Zsh version: '${ZSH_VERSION:?}'."
             return 1

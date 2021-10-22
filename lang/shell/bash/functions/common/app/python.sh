@@ -37,6 +37,9 @@ koopa::python_delete_pycache() { # {{{1
     python="$(koopa::which_realpath "$python")"
     prefix="$(koopa::parent_dir --num=2 "$python")"
     koopa::alert "Removing pycache in '${prefix}'."
+    # FIXME Rework this using 'koopa::find'.
+    # FIXME Need to add '--remote' flag here for deletion...
+    # FIXME Can use this code here for inspiration.
     "$find" "$prefix" \
         -type 'd' \
         -name '__pycache__' \

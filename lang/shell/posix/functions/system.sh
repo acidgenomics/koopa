@@ -46,7 +46,7 @@ _koopa_check_os() { # {{{1
         'Linux')
             ;;
         *)
-            _koopa_warning 'Unsupported operating system.'
+            _koopa_warn 'Unsupported operating system.'
             return 1
             ;;
     esac

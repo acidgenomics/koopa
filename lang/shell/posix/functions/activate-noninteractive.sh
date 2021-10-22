@@ -180,7 +180,7 @@ _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
         prefix="${homebrew_prefix}/opt/${name}/libexec"
         if [ ! -d "$prefix" ]
         then
-            _koopa_warning "Not installed: '${prefix}'."
+            _koopa_warn "Not installed: '${prefix}'."
             return 1
         fi
         _koopa_add_to_path_start \
@@ -208,7 +208,7 @@ _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
         prefix="${homebrew_prefix}/opt/${name}/libexec"
         if [ ! -d "$prefix" ]
         then
-            _koopa_warning "Not installed: '${prefix}'."
+            _koopa_warn "Not installed: '${prefix}'."
             return 1
         fi
         _koopa_activate_prefix "$prefix"
@@ -230,7 +230,7 @@ _koopa_activate_homebrew_opt_prefix() { # {{{1
         prefix="${homebrew_prefix}/opt/${name}"
         if [ ! -d "$prefix" ]
         then
-            _koopa_warning "Not installed: '${prefix}'."
+            _koopa_warn "Not installed: '${prefix}'."
             return 1
         fi
         _koopa_activate_prefix "$prefix"
@@ -434,7 +434,7 @@ _koopa_activate_opt_prefix() { # {{{1
         prefix="${opt_prefix}/${name}"
         if [ ! -d "$prefix" ]
         then
-            _koopa_warning "Not installed: '${prefix}'."
+            _koopa_warn "Not installed: '${prefix}'."
             return 1
         fi
         _koopa_activate_prefix "$prefix"

@@ -3,6 +3,9 @@
 # NOTE Use of 'grep -v' is more compatible with macOS and BusyBox than use of
 # 'grep --invert-match'.
 
+# FIXME Work on adding easy support for '--sort' flag here.
+# FIXME If '--sort flag' is enabled, set --print0?
+
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
@@ -12,6 +15,7 @@ koopa::find() { # {{{1
     # changes to this function.
     # """
     local find find_args glob min_depth prefix print0 type
+    glob=''
     min_depth=1
     max_depth=0
     print0=0
@@ -72,7 +76,7 @@ koopa::find() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_set 'glob' 'prefix'
+    koopa::assert_is_set 'prefix'
     koopa::assert_is_dir "$prefix"
     if koopa::is_installed 'fd'
     then
@@ -81,13 +85,16 @@ koopa::find() { # {{{1
             '--absolute-path'
             '--base-directory' "$prefix"
             '--case-sensitive'
-            '--glob' "$glob"
             '--hidden'
             '--min-depth' "$min_depth"
             '--no-ignore'
             '--one-file-system'
             '--type' "$type"
         )
+        if [[ -n "$glob" ]]
+        then
+            find_args+=('--glob' "$glob")
+        fi
         if [[ "$max_depth" -gt 0 ]]
         then
             find_args+=('--max-depth' "$max_depth")
@@ -106,8 +113,11 @@ koopa::find() { # {{{1
         find_args+=(
             '-mindepth' "$min_depth"
             '-type' "$type"
-            '-name' "$glob"
         )
+        if [[ -n "$glob" ]]
+        then
+            find_args+=('-name' "$glob")
+        fi
         if [[ "$print0" -eq 1 ]]
         then
             find_args+=('--print0')
