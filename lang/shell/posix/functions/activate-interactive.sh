@@ -152,7 +152,7 @@ _koopa_activate_coreutils_aliases() { # {{{1
         ln_args='-ins'
         mkdir_args='-p'
         mv_args='-i'
-        rm_args='-I'
+        rm_args='-i'
     fi
     # shellcheck disable=SC2139
     alias cp="${cp} ${cp_args}"
