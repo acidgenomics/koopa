@@ -254,37 +254,28 @@ koopa::locate_cargo() { # {{{1
 koopa::locate_chgrp() { # {{{1
     # """
     # Locate GNU chgrp.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-22.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='chgrp'
+    koopa:::locate_app '/usr/bin/chgrp'
 }
 
 koopa::locate_chmod() { # {{{1
     # """
     # Locate GNU chmod.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-22.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='chmod'
+    koopa:::locate_app '/bin/chmod'
 }
 
 koopa::locate_chown() { # {{{1
     # """
     # Locate GNU chown.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-22.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='chown'
+    koopa:::locate_app '/usr/sbin/chown'
 }
 
 koopa::locate_cmake() { # {{{1
@@ -318,13 +309,10 @@ koopa::locate_conda() { # {{{1
 koopa::locate_cp() { # {{{1
     # """
     # Locate GNU cp.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-22.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='cp'
+    koopa:::locate_app '/bin/cp'
 }
 
 koopa::locate_curl() { # {{{1
@@ -602,13 +590,10 @@ koopa::locate_llvm_config() { # {{{1
 koopa::locate_ln() { # {{{1
     # """
     # Locate GNU ln.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-22.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='ln'
+    koopa:::locate_app '/bin/ln'
 }
 
 koopa::locate_ls() { # {{{1
@@ -678,11 +663,7 @@ koopa::locate_mv() { # {{{1
     # macOS gmv currently has issues on NFS shares.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --macos-app='/bin/mv' \
-        --name='mv'
+    koopa:::locate_app '/bin/mv'
 }
 
 koopa::locate_nim() { # {{{1
@@ -857,13 +838,10 @@ koopa::locate_rename() { # {{{1
 koopa::locate_rm() { # {{{1
     # """
     # Locate GNU rm.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-22.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='rm'
+    koopa:::locate_app '/bin/rm'
 }
 
 koopa::locate_rsync() { # {{{1
@@ -945,13 +923,10 @@ koopa::locate_ssh_keygen() { # {{{1
 koopa::locate_stat() { # {{{1
     # """
     # Locate GNU stat.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-22.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='stat'
+    koopa:::locate_app '/usr/bin/stat'
 }
 
 koopa::locate_svn() { # {{{1
