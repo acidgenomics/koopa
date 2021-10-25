@@ -20,9 +20,11 @@ koopa:::is_ssh_enabled() { # {{{1
             "$url" 2>&1 \
     )"
     [[ -n "$x" ]] || return 1
-    koopa::str_match "$x" "$pattern"
+    koopa::str_match_fixed "$x" "$pattern"
 }
 
+# FIXME Rethink this and parameterize???
+# FIXME This is a bit vague, rename or take out?
 koopa::contains() { # {{{1
     # """
     # Does an array contain a specific element?
@@ -47,64 +49,6 @@ koopa::contains() { # {{{1
     return 1
 }
 
-koopa::file_match() { # {{{1
-    # """
-    # Is a string defined in a file?
-    # @note Updated 2021-05-21.
-    #
-    # @examples
-    # koopa::file_match FILE PATTERN
-    # echo FILE | koopa::file_match PATTERN
-    # """
-    local file grep pattern
-    koopa::assert_has_args "$#"
-    if [[ "$#" -eq 2 ]]
-    then
-        # Standard input.
-        file="${1:?}"
-        pattern="${2:?}"
-    elif [[ "$#" -eq 1 ]]
-    then
-        # Piped input using stdin.
-        pattern="${1:?}"
-        shift 1
-        read -r file
-    else
-        return 1
-    fi
-    [[ -f "$file" ]] || return 1
-    grep="$(koopa::locate_grep)"
-    # FIXME Rework using 'koopa::grep'.
-    "$grep" -Fq "$pattern" "$file" >/dev/null
-}
-
-koopa::file_match_regex() { # {{{1
-    # """
-    # Is a string defined in a file?
-    # @note Updated 2020-04-30.
-    # """
-    local file grep pattern
-    koopa::assert_has_args "$#"
-    if [[ "$#" -eq 2 ]]
-    then
-        # Standard input.
-        file="${1:?}"
-        pattern="${2:?}"
-    elif [[ "$#" -eq 1 ]]
-    then
-        # Piped input using stdin.
-        pattern="${1:?}"
-        shift 1
-        read -r file
-    else
-        return 1
-    fi
-    [[ -f "$file" ]] || return 1
-    grep="$(koopa::locate_grep)"
-    # FIXME Rework using 'koopa::grep'.
-    "$grep" -Eq "$pattern" "$file" >/dev/null
-}
-
 koopa::has_file_ext() { # {{{1
     # """
     # Does the input contain a file extension?
@@ -117,7 +61,7 @@ koopa::has_file_ext() { # {{{1
     koopa::assert_has_args "$#"
     for file in "$@"
     do
-        koopa::str_match "$(koopa::print "$file")" '.' || return 1
+        koopa::str_match_fixed "$(koopa::print "$file")" '.' || return 1
     done
     return 0
 }
@@ -277,18 +221,18 @@ koopa::is_current_version() { # {{{1
 koopa::is_defined_in_user_profile() { # {{{1
     # """
     # Is koopa defined in current user's shell profile configuration file?
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-10-25.
     # """
     local file
     koopa::assert_has_no_args "$#"
     file="$(koopa::find_user_profile)"
-    koopa::file_match "$file" 'koopa'
+    koopa::file_match_fixed "$file" 'koopa'
 }
 
 koopa::is_doom_emacs_installed() { # {{{1
     # """
     # Is Doom Emacs installed?
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-25.
     # """
     local init_file prefix
     koopa::assert_has_no_args "$#"
@@ -296,7 +240,7 @@ koopa::is_doom_emacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
-    koopa::file_match "$init_file" 'doom-emacs'
+    koopa::file_match_fixed "$init_file" 'doom-emacs'
 }
 
 koopa::is_export() { # {{{1
@@ -553,7 +497,7 @@ koopa::is_set() { # {{{1
 koopa::is_spacemacs_installed() { # {{{1
     # """
     # Is Spacemacs installed?
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-25.
     # """
     local init_file prefix
     koopa::assert_has_no_args "$#"
@@ -561,5 +505,5 @@ koopa::is_spacemacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
-    koopa::file_match "$init_file" 'Spacemacs'
+    koopa::file_match_fixed "$init_file" 'Spacemacs'
 }

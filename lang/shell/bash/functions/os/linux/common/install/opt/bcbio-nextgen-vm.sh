@@ -48,7 +48,7 @@ koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
         --channel='conda-forge' \
         --override-channels \
         "bcbio-nextgen-vm=${version}"
-    if ! koopa::str_match "$(groups)" 'docker'
+    if ! koopa::str_match_fixed "$(groups)" 'docker'
     then
         sudo groupadd 'docker'
         sudo service docker restart
