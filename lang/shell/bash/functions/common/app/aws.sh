@@ -257,14 +257,20 @@ koopa::aws_s3_find() { # {{{1
     if [[ -n "${exclude:-}" ]]
     then
         # FIXME Rework this using 'koopa::grep'.
-        x="$(koopa::print "$x" | "$grep" -Ev "$exclude")"
+        x="$( \
+            koopa::print "$x" \
+                | "$grep" -Ev "$exclude" \
+        )"
         [[ -n "$x" ]] || return 1
     fi
     # Include pattern.
     if [[ -n "${include:-}" ]]
     then
         # FIXME Rework this using 'koopa::grep'.
-        x="$(koopa::print "$x" | "$grep" -E "$include")"
+        x="$( \
+            koopa::print "$x" \
+                | "$grep" -E "$include" \
+        )"
         [[ -n "$x" ]] || return 1
     fi
     koopa::print "$x"
