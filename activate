@@ -292,11 +292,8 @@ __koopa_str_match_posix() { # {{{1
     # Evaluate whether a string contains a desired value.
     # @note Updated 2021-10-25.
     # """
-    local pattern string
     [ "$#" -eq 2 ] || return 1
-    string="${1:?}"
-    pattern="${2:?}"
-    test "${string#*$pattern}" != "$string"
+    test "${1#*$2}" != "$1"
 }
 
 __koopa_warning() { # {{{1
