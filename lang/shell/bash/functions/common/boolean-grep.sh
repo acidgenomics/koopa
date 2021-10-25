@@ -88,6 +88,15 @@ koopa:::file_match() { # {{{1
     "$grep" "${grep_args[@]}" "$pattern" "$file" >/dev/null
 }
 
+# FIXME This is a work in progress.
+koopa::grep() { # {{{1
+    # """
+    # grep matching on piped string input.
+    # @note Updated 2021-10-25.
+    # """
+    echo 'FIXME'
+}
+
 koopa:::str_match() { # {{{1
     # """
     # Does the input match a string?
