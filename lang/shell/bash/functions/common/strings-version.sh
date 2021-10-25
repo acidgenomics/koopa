@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Need to improve consistency in this file of calls to koopa::grep.
+# FIXME Consider wrapping koopa::cut, koopa::sed, koopa::awk, koopa::head,
+# koopa::tail...
+
 koopa:::pkg_config_version() { # {{{1
     # """
     # Get a library version via pkg-config.
