@@ -5,6 +5,8 @@ koopa:::file_match() { # {{{1
     # Is a string defined in a file?
     # @note Updated 2021-10-25.
     #
+    # Uses ripgrep instead of grep when possible (faster).
+    #
     # @examples
     # koopa::file_match_fixed 'FILE' 'PATTERN'
     # koopa::file_match_regex 'FILE' '^PATTERN.+$'
@@ -13,23 +15,20 @@ koopa:::file_match() { # {{{1
     # echo 'FILE' | koopa::file_match_fixed - 'PATTERN'
     # echo 'FILE' | koopa::file_match_regex - '^PATTERN.+$'
     # """
-    local file grep grep_args pattern pos
+    local engine file grep grep_args mode pattern pos
     koopa::assert_has_args "$#"
-    # FIXME Add support for ripgrep.
-    grep="$(koopa::locate_grep)"
-    grep_args=()
-    grep_args+=('--quiet')  # -q
+    grep="$(koopa::locate_rg 2>/dev/null || true)"
+    [[ ! -x "$grep" ]] && grep="$(koopa::locate_grep)"
     pos=()
     while (("$#"))
     do
         case "$1" in
-            '--extended-regexp')
-                grep_args+=('--extended-regexp')  # -E
+            '--mode='*)
+                mode="${1#*=}"
                 shift 1
                 ;;
-            '--fixed-strings')
-                grep_args+=('--fixed-strings')  # -F
-                shift 1
+            --*)
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -53,6 +52,39 @@ koopa:::file_match() { # {{{1
         [[ "$file" == '-' ]] && read -r -d '' file
         pattern="${2:?}"
     fi
+    engine="$(koopa::basename "$grep")"
+    grep_args=()
+    case "$engine" in
+        'rg')
+            grep_args+=(
+                '--case-sensitive'
+                '--engine' 'default'
+                '--no-config'
+                '--no-ignore'
+                '--one-file-system'
+                '--quiet'
+            )
+            case "$mode" in
+                'fixed')
+                    grep_args+=('--fixed-strings')
+                    ;;
+                'regex')
+                    ;;
+            esac
+            ;;
+        'grep')
+            # Using short flags here for BSD compatibility.
+            grep_args+=('-q')  # --quiet
+            case "$mode" in
+                'fixed')
+                    grep_args+=('-F')  # --fixed-strings
+                    ;;
+                'regex')
+                    grep_args+=('-E')  # --extended-regexp
+                    ;;
+            esac
+            ;;
+    esac
     "$grep" "${grep_args[@]}" "$pattern" "$file" >/dev/null
 }
 
@@ -86,22 +118,19 @@ koopa:::str_match() { # {{{1
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997
     # - https://unix.stackexchange.com/questions/233987
     # """
-    local grep grep_args pattern pos string
+    local engine grep grep_args mode pattern pos string
     koopa::assert_has_args "$#"
     grep="$(koopa::locate_grep)"
-    grep_args=()
-    grep_args+=('--quiet')  # -q
     pos=()
     while (("$#"))
     do
         case "$1" in
-            '--extended-regexp')
-                grep_args+=('--extended-regexp')  # -E
+            '--mode='*)
+                mode="${1#*=}"
                 shift 1
                 ;;
-            '--fixed-strings')
-                grep_args+=('--fixed-strings')  # -F
-                shift 1
+            --*)
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -125,6 +154,16 @@ koopa:::str_match() { # {{{1
         [[ "$string" == '-' ]] && read -r -d '' string
         pattern="${2:?}"
     fi
+    # Using short flags here for BSD compatibility.
+    grep_args=('-q')
+    case "$mode" in
+        'fixed')
+            grep_args+=('-F')  # --fixed-strings
+            ;;
+        'regex')
+            grep_args+=('-E')  # --extended-regexp
+            ;;
+    esac
     _koopa_print "$string" \
         | "$grep" "${grep_args[@]}" "$pattern" >/dev/null
 }
@@ -134,7 +173,7 @@ koopa::file_match_fixed() { # {{{1
     # Does the input file match a fixed string?
     # @note Updated 2021-10-25.
     # """
-    koopa:::file_match --fixed-strings "$@"
+    koopa:::file_match --mode='fixed' "$@"
 }
 
 koopa::file_match_regex() { # {{{1
@@ -142,7 +181,7 @@ koopa::file_match_regex() { # {{{1
     # Does the input file match a regular expression?
     # @note Updated 2021-10-25.
     # """
-    koopa:::file_match --extended-regexp "$@"
+    koopa:::file_match --mode='regex' "$@"
 }
 
 koopa::str_match_fixed() { # {{{1
@@ -150,7 +189,7 @@ koopa::str_match_fixed() { # {{{1
     # Does the input match a fixed string?
     # @note Updated 2021-10-25.
     # """
-    koopa:::str_match --fixed-strings "$@"
+    koopa:::str_match --mode='fixed' "$@"
 }
 
 koopa::str_match_regex() { # {{{1
@@ -158,5 +197,5 @@ koopa::str_match_regex() { # {{{1
     # Does the input match a regular expression?
     # @note Updated 2021-10-25.
     # """
-    koopa:::str_match --extended-regexp "$@"
+    koopa:::str_match --mode='regex' "$@"
 }
