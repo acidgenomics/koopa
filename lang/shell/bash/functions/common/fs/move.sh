@@ -16,6 +16,7 @@ koopa::move_files_in_batch() { # {{{1
     target_dir="${3:?}"
     koopa::assert_is_dir "$source_dir" "$target_dir"
     # FIXME Rework using 'koopa::find'.
+    # FIXME Need to add support for '--regex' in addition to '--glob'.
     "$find" "$source_dir" \
         -type f \
         -regex '.+/[^.].+$' \
@@ -26,23 +27,22 @@ koopa::move_files_in_batch() { # {{{1
     return 0
 }
 
+# FIXME Rework this using 'koopa::find'.
+# FIXME Rework this using xargs?
 koopa::move_files_up_1_level() { # {{{1
     # """
     # Move files up 1 level.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local dir
+    local prefix
     find="$(koopa::locate_find)"
-    dir="${1:-.}"
-    (
-        koopa::cd "$dir"
-        # FIXME Rework using 'koopa::find'.
-        "$find" . -type f -mindepth 2 -exec koopa::mv {} . \;
-        # FIXME Rework using 'koopa::find'.
-        "$find" . -mindepth 2
-        # FIXME Rework using 'koopa::find'.
-        "$find" . -type d -delete -print
-    )
+    prefix="${1:-.}"
+    koopa::assert_is_dir "$prefix"
+    "$find" \
+        "$prefix" \
+        -mindepth 2 \
+        -type 'f' \
+        -exec koopa::mv --target-directory="$prefix" {} \;
     return 0
 }
 
