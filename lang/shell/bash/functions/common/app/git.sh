@@ -128,10 +128,10 @@ koopa::git_clone() { # {{{1
         return 0
     fi
     # Check if user has sufficient permissions.
-    if koopa::str_match "$repo" 'git@github.com'
+    if koopa::str_match_fixed "$repo" 'git@github.com'
     then
         koopa::assert_is_github_ssh_enabled
-    elif koopa::str_match "$repo" 'git@gitlab.com'
+    elif koopa::str_match_fixed "$repo" 'git@gitlab.com'
     then
         koopa::assert_is_gitlab_ssh_enabled
     fi

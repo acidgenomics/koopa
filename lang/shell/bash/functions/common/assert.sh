@@ -486,7 +486,7 @@ koopa::assert_is_matching_fixed() { # {{{1
     koopa::assert_has_args_eq "$#" 2
     string="${1:?}"
     pattern="${2:?}"
-    if ! koopa::str_match "$string" "$pattern"
+    if ! koopa::str_match_fixed "$string" "$pattern"
     then
         koopa::stop "'${string}' doesn't match '${pattern}'."
     fi

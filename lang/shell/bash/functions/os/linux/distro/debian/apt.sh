@@ -283,8 +283,8 @@ koopa::debian_apt_add_r_repo() { # {{{1
     if [[ -f "$file" ]]
     then
         # Early return if version matches and Debian source is enabled.
-        if koopa::file_match "$file" "$version" && \
-            koopa::file_match "$file" 'deb-src'
+        if koopa::file_match_fixed "$file" "$version" && \
+            koopa::file_match_fixed "$file" 'deb-src'
         then
             koopa::alert_info "${name_fancy} repo exists at '${file}'."
             return 0
@@ -740,7 +740,7 @@ koopa::debian_apt_is_key_imported() { # {{{1
 \1 \2 \3 \4 \5  \6 \7 \8 \9 \10/" \
     )"
     x="$(apt-key list 2>&1 || true)"
-    koopa::str_match "$x" "$key"
+    koopa::str_match_fixed "$x" "$key"
 }
 
 koopa::debian_apt_remove() { # {{{1

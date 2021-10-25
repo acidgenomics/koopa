@@ -200,11 +200,11 @@ koopa::find_and_replace_in_files() { # {{{1
     shift 2
     koopa::alert "Replacing '${from}' with '${to}' in ${#} files."
     if { \
-        koopa::str_match "${from}" '/' && \
-        ! koopa::str_match "${from}" '\/'; \
+        koopa::str_match_fixed "${from}" '/' && \
+        ! koopa::str_match_fixed "${from}" '\/'; \
     } || { \
-        koopa::str_match "${to}" '/' && \
-        ! koopa::str_match "${to}" '\/'; \
+        koopa::str_match_fixed "${to}" '/' && \
+        ! koopa::str_match_fixed "${to}" '\/'; \
     }
     then
         koopa::stop 'Unescaped slash detected.'
@@ -323,17 +323,19 @@ koopa::find_empty_dirs() { # {{{1
 koopa::find_files_without_line_ending() { # {{{1
     # """
     # Find files without line ending.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-10-25.
     #
     # @seealso
     # - https://stackoverflow.com/questions/4631068/
     # """
-    local files find grep pcregrep prefix sort
+    local app files prefix
     koopa::assert_has_args "$#"
-    find="$(koopa::locate_find)"
-    grep="$(koopa::locate_grep)"
-    pcregrep="$(koopa::locate_pcregrep)"
-    sort="$(koopa::locate_sort)"
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+        [grep]="$(koopa::locate_grep)"
+        [pcregrep]="$(koopa::locate_pcregrep)"
+        [sort]="$(koopa::locate_sort)"
+    )
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
@@ -341,15 +343,15 @@ koopa::find_files_without_line_ending() { # {{{1
         # FIXME Rework using 'koopa::find'.
         # FIXME Rework using 'koopa::grep'.
         readarray -t files <<< "$(
-            "$find" "$prefix" \
+            "${app[find]}" "$prefix" \
                 -mindepth 1 \
                 -type 'f' \
                 2>&1 \
-            | "$grep" -v 'Permission denied' \
-            | "$sort" \
+            | "${app[grep]}" -v 'Permission denied' \
+            | "${app[sort]}" \
         )"
         koopa::is_array_non_empty "${files[@]:-}" || continue
-        x="$("$pcregrep" -LMr '\n$' "${files[@]}")"
+        x="$("${app[pcregrep]}" -LMr '\n$' "${files[@]}")"
         [[ -n "$x" ]] || continue
         koopa::print "$x"
     done

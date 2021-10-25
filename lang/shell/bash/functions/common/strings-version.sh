@@ -606,7 +606,7 @@ koopa::perl_file_rename_version() { # {{{1
         "$rename" --version 2>/dev/null \
         | "$head" -n 1 \
     )"
-    koopa::str_match "$x" 'File::Rename' || return 1
+    koopa::str_match_fixed "$x" 'File::Rename' || return 1
     x="$( \
         koopa::print "$x" \
         | "$cut" -d ' ' -f 5 \
@@ -660,7 +660,7 @@ koopa::r_version() { # {{{1
         "$r" --version 2>/dev/null \
         | head -n 1 \
     )"
-    if koopa::str_match "$x" 'R Under development (unstable)'
+    if koopa::str_match_fixed "$x" 'R Under development (unstable)'
     then
         x='devel'
     else
@@ -899,7 +899,7 @@ koopa::vim_version() { # {{{1
             | "$head" -n 1 \
             | "$cut" -d ' ' -f 5 \
     )"
-    if koopa::str_match "$x" 'Included patches:'
+    if koopa::str_match_fixed "$x" 'Included patches:'
     then
         # FIXME Rework using 'koopa::grep'.
         patch="$( \

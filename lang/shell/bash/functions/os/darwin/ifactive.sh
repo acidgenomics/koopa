@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this using 'koopa::str_match_perl'.
 koopa::macos_ifactive() { # {{{1
     # """
     # Display active interfaces.
