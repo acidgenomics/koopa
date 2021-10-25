@@ -5,68 +5,82 @@
 
 # FIXME Work on adding easy support for '--sort' flag here.
 # FIXME If '--sort flag' is enabled, set --print0?
+# FIXME Allow the user to override the engine?
 
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2021-10-22.
+    # @note Updated 2021-10-25.
     #
     # Consider updating the variant defined in the Bash header upon any
     # changes to this function.
     # """
-    local find find_args glob min_depth prefix print0 type
-    glob=''
-    min_depth=1
-    max_depth=0
-    print0=0
-    type='f'
+    local dict find find_args
+    declare -A dict=(
+        [glob]=''
+        [max_depth]=0
+        [min_depth]=1
+        [print0]=0
+        [sort]=0
+        [type]=''
+    )
+    if koopa::is_installed 'fd'
+    then
+        dict[engine]='rust-fd'
+    else
+        dict[engine]='gnu-find'
+    fi
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--glob='*)
-                glob="${1#*=}"
+                dict[glob]="${1#*=}"
                 shift 1
                 ;;
             '--glob')
-                glob="${2:?}"
+                dict[glob]="${2:?}"
                 shift 2
                 ;;
             '--max-depth='*)
-                max_depth="${1#*=}"
+                dict[max_depth]="${1#*=}"
                 shift 1
                 ;;
             '--max-depth')
-                max_depth="${2:?}"
+                dict[max_depth]="${2:?}"
                 shift 2
                 ;;
             '--min-depth='*)
-                min_depth="${1#*=}"
+                dict[min_depth]="${1#*=}"
                 shift 1
                 ;;
             '--min-depth')
-                min_depth="${2:?}"
+                dict[min_depth]="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                prefix="${1#*=}"
+                dict[prefix]="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                prefix="${2:?}"
+                dict[prefix]="${2:?}"
                 shift 2
                 ;;
             '--type='*)
-                type="${1#*=}"
+                dict[type]="${1#*=}"
                 shift 1
                 ;;
             '--type')
-                type="${2:?}"
+                dict[type]="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--print0')
-                print0=1
+                dict[print0]=1
+                shift 1
+                ;;
+            '--sort')
+                dict[sort]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -76,57 +90,84 @@ koopa::find() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_set 'prefix'
-    koopa::assert_is_dir "$prefix"
-    if koopa::is_installed 'fd'
+    koopa::assert_is_dir "${dict[prefix]}"
+    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    case "${dict[engine]}" in
+        'gnu-find')
+            find="$(koopa::locate_find)"
+            find_args=('-L' "$prefix")
+            if [[ "${dict[min_depth]}" -gt 0 ]]
+            then
+                find_args+=('-mindepth' "${dict[min_depth]}")
+            fi
+            if [[ "${dict[max_depth]}" -gt 0 ]]
+            then
+                find_args+=('-maxdepth' "${dict[max_depth]}")
+            fi
+            if [[ -n "${dict[glob]}" ]]
+            then
+                find_args+=('-name' "${dict[glob]}")
+            fi
+            if [[ -n "${dict[type]}" ]]
+            then
+                find_args+=('-type' "${dict[type]}")
+            fi
+            if [[ "${dict[print0]}" -eq 1 ]]
+            then
+                find_args+=('--print0')
+            else
+                find_args+=('--print')
+            fi
+            ;;
+        'rust-fd')
+            find="$(koopa::locate_fd)"
+            find_args=(
+                '--absolute-path'
+                '--base-directory' "${dict[prefix]}"
+                '--case-sensitive'
+                '--hidden'
+                '--no-ignore'
+                '--one-file-system'
+            )
+            if [[ -n "${dict[glob]}" ]]
+            then
+                find_args+=('--glob' "${dict[glob]}")
+            fi
+            if [[ "${dict[min_depth]}" -gt 0 ]]
+            then
+                find_args+=('--min-depth' "${dict[min_depth]}")
+            fi
+            if [[ "${dict[max_depth]}" -gt 0 ]]
+            then
+                find_args+=('--max-depth' "${dict[max_depth]}")
+            fi
+            if [[ -n "${dict[type]}" ]]
+            then
+                find_args+=('--type' "${dict[type]}")
+            fi
+            if [[ "${dict[print0]}" -eq 1 ]]
+            then
+                find_args+=('--print0')
+            fi
+            ;;
+    esac
+    koopa::assert_is_installed "$find"
+    x="$("${find[@]}" "${find_args[@]}")"
+    # FIXME Consider adding some downstream steps we can use to process
+    # the find output.
+    # FIXME Does this mess up with '--print0' enabled?
+    if [[ "${dict[sort]}" -eq 1 ]]
     then
-        find='fd'
-        find_args=(
-            '--absolute-path'
-            '--base-directory' "$prefix"
-            '--case-sensitive'
-            '--hidden'
-            '--min-depth' "$min_depth"
-            '--no-ignore'
-            '--one-file-system'
-            '--type' "$type"
-        )
-        if [[ -n "$glob" ]]
+        koopa::stop 'FIXME'
+        if [[ "${dict[print0]}" -eq 1 ]]
         then
-            find_args+=('--glob' "$glob")
-        fi
-        if [[ "$max_depth" -gt 0 ]]
-        then
-            find_args+=('--max-depth' "$max_depth")
-        fi
-        if [[ "$print0" -eq 1 ]]
-        then
-            find_args+=('--print0')
-        fi
-    else
-        find="$(koopa::locate_find)"
-        find_args=('-L' "$prefix")
-        if [[ "$max_depth" -gt 0 ]]
-        then
-            find_args+=('-maxdepth' "$max_depth")
-        fi
-        find_args+=(
-            '-mindepth' "$min_depth"
-            '-type' "$type"
-        )
-        if [[ -n "$glob" ]]
-        then
-            find_args+=('-name' "$glob")
-        fi
-        if [[ "$print0" -eq 1 ]]
-        then
-            find_args+=('--print0')
+            koopa::stop 'FIXME'
         else
-            find_args+=('--print')
+            koopa::stop 'FIXME'
         fi
     fi
-    koopa::assert_is_installed "$find"
-    "${find[@]}" "${find_args[@]}"
+    # FIXME Bash warning: command substitution ignored null byte.
+    koopa::print "$x"
     return 0
 }
 
