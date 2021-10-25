@@ -212,6 +212,17 @@ koopa::locate_bc() { # {{{1
     koopa:::locate_app 'bc'
 }
 
+koopa::locate_bpytop() { # {{{1
+    # """
+    # Locate bpytop.
+    # @note Updated 2021-10-25.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --koopa-opt='python-packages' \
+        --name='bpytop'
+}
+
 koopa::locate_brew() { # {{{1
     # """
     # Locate Homebrew brew.

@@ -155,9 +155,16 @@ koopa::is_admin() { # {{{1
 koopa::is_anaconda() { # {{{1
     # """
     # Is Anaconda (rather than Miniconda) installed?
-    # @note Updated 2020-07-08.
+    # @note Updated 2021-10-25.
     # """
-    [[ -x "$(koopa::conda_prefix)/bin/anaconda" ]]
+    local conda prefix
+    koopa::assert_has_args_le "$#" 1
+    conda="${1:-}"
+    [[ -z "$conda" ]] && conda="$(koopa::locate_conda)"
+    [[ -x "$conda" ]] || return 1
+    prefix="$(koopa::parent_dir --num=2 "$conda")"
+    [[ -x "${prefix}/bin/anaconda" ]] || return 1
+    return 0
 }
 
 koopa::is_array_empty() { # {{{1
