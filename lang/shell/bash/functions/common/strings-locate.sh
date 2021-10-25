@@ -847,6 +847,18 @@ koopa::locate_rename() { # {{{1
     koopa:::locate_app "$(koopa::perl_packages_prefix)/bin/rename"
 }
 
+koopa::locate_rg() { # {{{1
+    # """
+    # Locate ripgrep.
+    # @note Updated 2021-10-25.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='ripgrep' \
+        --koopa-opt='ripgrep' \
+        --name='rg'
+}
+
 koopa::locate_rm() { # {{{1
     # """
     # Locate GNU rm.
