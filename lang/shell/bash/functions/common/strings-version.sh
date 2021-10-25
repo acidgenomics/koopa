@@ -124,22 +124,21 @@ koopa::cairo_version() { # {{{1
 koopa::current_bcbio_nextgen_version() { # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-10-25.
     #
     # This approach checks for latest stable release available via bioconda.
     # """
-    local curl cut grep url x
+    local app url x
     koopa::assert_has_no_args "$#"
-    curl="$(koopa::locate_curl)"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+    )
     url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
 /master/requirements-conda.txt"
-    # FIXME Rework using 'koopa::grep'.
     x="$( \
-        "$curl" --silent "$url" \
-            | "$grep" 'bcbio-nextgen=' \
-            | "$cut" -d '=' -f 2 \
+        koopa::parse_url "$url" \
+            | koopa::grep 'bcbio-nextgen=' \
+            | "${app[cut]}" -d '=' -f 2 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
