@@ -157,6 +157,10 @@ koopa::locate_7z() { # {{{1
         --name='7z'
 }
 
+# FIXME Add koopa::locate_anaconda, that specifically checks inside of
+# anaconda prefix instead of 'conda' opt prefix.
+# FIXME This will allow for side-by-side install of miniconda and anaconda.
+
 koopa::locate_ascp() { # {{{1
     # """
     # Locate Aspera Connect ascp.
@@ -678,6 +682,8 @@ koopa::locate_man() { # {{{1
         --gnubin \
         --name='man'
 }
+
+# FIXME Add koopa::locate_miniconda function.
 
 koopa::locate_mkdir() { # {{{1
     # """
