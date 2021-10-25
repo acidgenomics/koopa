@@ -377,6 +377,15 @@ koopa::locate_dirname() { # {{{1
         --name='dirname'
 }
 
+koopa::locate_docker() { # {{{1
+    # """
+    # Locate Docker.
+    # @note Updated 2021-10-25.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'docker'
+}
+
 koopa::locate_doom() { # {{{1
     # """
     # Locate Doom Emacs.

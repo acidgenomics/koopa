@@ -19,15 +19,28 @@ koopa:::file_match() { # {{{1
     koopa::assert_has_args "$#"
     grep="$(koopa::locate_rg 2>/dev/null || true)"
     [[ ! -x "$grep" ]] && grep="$(koopa::locate_grep)"
+    engine="$(koopa::basename "$grep")"
+    # Converting into an array here so we can prepend sudo, if necessary.
+    grep=("$grep")
     pos=()
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--mode='*)
                 mode="${1#*=}"
                 shift 1
                 ;;
-            --*)
+            # Flags ------------------------------------------------------------
+            '--sudo')
+                grep=('sudo' "${grep[@]}")
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-')
+                shift 1
+                ;;
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -47,12 +60,9 @@ koopa:::file_match() { # {{{1
         # Positional variable input.
         # Note that we're allowing empty string input here.
         koopa::assert_has_args_eq "$#" 2
-        file="${1:-}"
-        # Alternate piped input using stdin, with string set to '-'.
-        [[ "$file" == '-' ]] && read -r -d '' file
+        file="${1:?}"
         pattern="${2:?}"
     fi
-    engine="$(koopa::basename "$grep")"
     grep_args=()
     case "$engine" in
         'rg')
@@ -85,16 +95,9 @@ koopa:::file_match() { # {{{1
             esac
             ;;
     esac
-    "$grep" "${grep_args[@]}" "$pattern" "$file" >/dev/null
-}
-
-# FIXME This is a work in progress.
-koopa::grep() { # {{{1
-    # """
-    # grep matching on piped string input.
-    # @note Updated 2021-10-25.
-    # """
-    echo 'FIXME'
+    koopa::assert_is_file "$file"
+    koopa::assert_is_readable "$file"
+    "${grep[@]}" "${grep_args[@]}" "$pattern" "$file" >/dev/null
 }
 
 koopa:::str_match() { # {{{1
@@ -129,16 +132,27 @@ koopa:::str_match() { # {{{1
     # """
     local engine grep grep_args mode pattern pos string
     koopa::assert_has_args "$#"
-    grep="$(koopa::locate_grep)"
+    # Converting into an array here so we can prepend sudo, if necessary.
+    grep=("$(koopa::locate_grep)")
     pos=()
     while (("$#"))
     do
         case "$1" in
+            # Key-value pairs --------------------------------------------------
             '--mode='*)
                 mode="${1#*=}"
                 shift 1
                 ;;
-            --*)
+            # Flags ------------------------------------------------------------
+            '--sudo')
+                grep=('sudo' "${grep[@]}")
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-')
+                shift 1
+                ;;
+            '-'*)
                 koopa::invalid_arg "$1"
                 ;;
             *)
@@ -159,8 +173,6 @@ koopa:::str_match() { # {{{1
         # Note that we're allowing empty string input here.
         koopa::assert_has_args_eq "$#" 2
         string="${1:-}"
-        # Alternate piped input using stdin, with string set to '-'.
-        [[ "$string" == '-' ]] && read -r -d '' string
         pattern="${2:?}"
     fi
     # Using short flags here for BSD compatibility.
@@ -173,8 +185,8 @@ koopa:::str_match() { # {{{1
             grep_args+=('-E')  # --extended-regexp
             ;;
     esac
-    _koopa_print "$string" \
-        | "$grep" "${grep_args[@]}" "$pattern" >/dev/null
+    koopa::print "$string" \
+        | "${grep[@]}" "${grep_args[@]}" "$pattern" >/dev/null
 }
 
 koopa::file_match_fixed() { # {{{1
