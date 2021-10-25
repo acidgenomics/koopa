@@ -3,11 +3,11 @@
 koopa::help() { # {{{1
     # """
     # Show usage via '--help' flag.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-10-25.
     # """
-    local arg args first_arg last_arg man_file prefix script_name
+    local app arg args first_arg last_arg man_file prefix script_name
     [[ "$#" -eq 0 ]] && return 0
-    [[ "${1:-}" == "" ]] && return 0
+    [[ "${1:-}" == '' ]] && return 0
     first_arg="${1:?}"
     last_arg="${!#}"
     args=("$first_arg" "$last_arg")
@@ -16,20 +16,23 @@ koopa::help() { # {{{1
         case "$arg" in
             '--help' | \
             '-h')
-                koopa::assert_is_installed 'man'
+                declare -A app=(
+                    [head]="$(koopa::locate_head)"
+                    [man]="$(koopa::locate_man)"
+                )
                 file="$(koopa::realpath "$0")"
                 script_name="$(koopa::basename "$file")"
                 prefix="$(koopa::parent_dir --num=2 "$file")"
                 man_file="${prefix}/man/man1/${script_name}.1"
                 if [[ -s "$man_file" ]]
                 then
-                    head -n 10 "$man_file" \
-                        | koopa::str_match_regex '^\.TH ' \
+                    "${app[head]}" -n 10 "$man_file" \
+                        | koopa::str_match_fixed - '.TH ' \
                         || koopa::stop "Invalid documentation at '${man_file}'."
                 else
                     koopa::stop "No documentation for '${script_name}'."
                 fi
-                man "$man_file"
+                "${app[man]}" "$man_file"
                 exit 0
                 ;;
         esac
