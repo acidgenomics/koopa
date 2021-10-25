@@ -103,12 +103,12 @@ koopa::docker_build() { # {{{1
     # e.g. 'acidgenomics/debian'.
     image="${1:?}"
     # Assume acidgenomics recipe by default.
-    if ! koopa::str_match "$image" '/'
+    if ! koopa::str_match_fixed "$image" '/'
     then
         image="acidgenomics/${image}"
     fi
     # Handle tag support, if necessary.
-    if koopa::str_match "$image" ':'
+    if koopa::str_match_fixed "$image" ':'
     then
         tag="$( \
             koopa::print "$image" \
@@ -570,7 +570,7 @@ koopa::docker_tag() { # {{{1
     # Consider allowing this to be user-definable in a future update.
     server='docker.io'
     # Assume acidgenomics recipe by default.
-    if ! koopa::str_match "$image" '/'
+    if ! koopa::str_match_fixed "$image" '/'
     then
         image="acidgenomics/${image}"
     fi
