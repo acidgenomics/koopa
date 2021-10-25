@@ -127,7 +127,7 @@ at '${file}'."
 koopa::enable_shell() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-10-25.
     # """
     local cmd_name cmd_path etc_file make_prefix user
     koopa::assert_has_args "$#"
@@ -138,8 +138,7 @@ koopa::enable_shell() { # {{{1
     etc_file='/etc/shells'
     [[ -f "$etc_file" ]] || return 0
     koopa::alert "Updating '${etc_file}' to include '${cmd_path}'."
-    # FIXME Rework using 'koopa::grep'.
-    if ! grep -q "$cmd_path" "$etc_file"
+    if ! koopa::file_match_fixed "$etc_file" "$cmd_path"
     then
         koopa::sudo_append_string "$cmd_path" "$etc_file"
     else
