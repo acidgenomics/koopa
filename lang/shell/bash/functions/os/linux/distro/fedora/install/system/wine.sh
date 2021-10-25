@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Consider defining 'koopa::cut' function to wrap the cut call here.
 koopa::fedora_install_wine() { # {{{1
     # """
     # Install Wine.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-10-25.
     #
     # Note that 'winehq-stable' is currently only available on Fedora 31.
     # Can use 'winehq-devel' on Fedora 32.
@@ -11,9 +12,7 @@ koopa::fedora_install_wine() { # {{{1
     # @seealso
     # - https://wiki.winehq.org/Fedora
     # """
-    local cut grep name_fancy repo_url version
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
+    local app name_fancy repo_url version
     name_fancy='Wine'
     koopa::install_start "$name_fancy"
     if koopa::is_installed 'wine'
@@ -21,10 +20,12 @@ koopa::fedora_install_wine() { # {{{1
         koopa::alert_is_installed "$name_fancy"
         return 0
     fi
-    # FIXME Rework this using 'koopa::grep'.
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+    )
     version="$( \
-        "$grep" 'VERSION_ID=' '/etc/os-release' \
-            | "$cut" -d '=' -f 2 \
+        koopa::grep 'VERSION_ID=' '/etc/os-release' \
+            | "${app[cut]}" -d '=' -f 2 \
     )"
     repo_url="https://dl.winehq.org/wine-builds/fedora/${version}/winehq.repo"
     koopa::fedora_dnf update
