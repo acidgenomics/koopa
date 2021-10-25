@@ -365,6 +365,17 @@ koopa::locate_df() { # {{{1
         --name='df'
 }
 
+koopa::locate_dig() { # {{{1
+    # """
+    # Locate BIND dig.
+    # @note Updated 2021-10-25.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='bind' \
+        --name='dig'
+}
+
 koopa::locate_dirname() { # {{{1
     # """
     # Locate GNU dirname.
