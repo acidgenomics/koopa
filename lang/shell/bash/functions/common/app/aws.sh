@@ -200,10 +200,9 @@ koopa::aws_s3_find() { # {{{1
     #     --exclude="antisense" \
     #     s3://bioinfo/igv/
     # """
-    local exclude grep include pos profile x
+    local exclude include pos profile x
     koopa::assert_has_args "$#"
     profile="${AWS_PROFILE:-default}"
-    grep="$(koopa::locate_grep)"
     exclude=''
     include=''
     pos=()
@@ -256,20 +255,21 @@ koopa::aws_s3_find() { # {{{1
     # Exclude pattern.
     if [[ -n "${exclude:-}" ]]
     then
-        # FIXME Rework this using 'koopa::grep'.
         x="$( \
             koopa::print "$x" \
-                | "$grep" -Ev "$exclude" \
+                | koopa::grep \
+                    --extended-regexp \
+                    --invert-match \
+                    "$exclude" \
         )"
         [[ -n "$x" ]] || return 1
     fi
     # Include pattern.
     if [[ -n "${include:-}" ]]
     then
-        # FIXME Rework this using 'koopa::grep'.
         x="$( \
             koopa::print "$x" \
-                | "$grep" -E "$include" \
+                | koopa::grep --extended-regexp "$include" \
         )"
         [[ -n "$x" ]] || return 1
     fi
@@ -280,7 +280,7 @@ koopa::aws_s3_find() { # {{{1
 koopa::aws_s3_ls() { # {{{1
     # """
     # List an AWS S3 bucket.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-10-25.
     #
     # @seealso
     # - aws s3 ls help
@@ -301,7 +301,6 @@ koopa::aws_s3_ls() { # {{{1
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
         [aws]="$(koopa::locate_aws)"
-        [grep]="$(koopa::locate_grep)"
         [sed]="$(koopa::locate_sed)"
     )
     declare -A dict=(
@@ -406,16 +405,19 @@ koopa::aws_s3_ls() { # {{{1
     # after the bucket name.
     if [[ "${dict[recursive]}" -eq 1 ]]
     then
-        # FIXME Rework this using 'koopa::grep'.
         dict[bucket_prefix]="$( \
             koopa::print "${dict[prefix]}" \
-            | "${app[grep]}" -Eo '^s3://[^/]+' \
+                | koopa::grep \
+                    --extended-regexp \
+                    --only-matching \
+                    '^s3://[^/]+' \
         )"
-        # FIXME Rework this using 'koopa::grep'.
         files="$( \
             koopa::print "$x" \
-            | "${app[grep]}" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
-            || true \
+                | koopa::grep \
+                    --extended-regexp \
+                    '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+                || true \
         )"
         [[ -n "$files" ]] || return 0
         files="$( \
@@ -431,11 +433,13 @@ koopa::aws_s3_ls() { # {{{1
     # Directories.
     if [[ "${dict[dirs]}" -eq 1 ]]
     then
-        # FIXME Rework this using 'koopa::grep'.
         dirs="$( \
             koopa::print "$x" \
-            | "${app[grep]}" -Eo '^\s+PRE\s.+/$' \
-            || true \
+                | koopa::grep \
+                    --extended-regexp \
+                    --only-matching \
+                    '^\s+PRE\s.+/$' \
+                || true \
         )"
         if [[ -n "$dirs" ]]
         then
@@ -451,11 +455,12 @@ koopa::aws_s3_ls() { # {{{1
     # Files.
     if [[ "${dict[files]}" -eq 1 ]]
     then
-        # FIXME Rework this using 'koopa::grep'.
         files="$( \
             koopa::print "$x" \
-            | "${app[grep]}" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
-            || true \
+                | koopa::grep \
+                    --extended-regexp \
+                    '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+                || true \
         )"
         if [[ -n "$files" ]]
         then
