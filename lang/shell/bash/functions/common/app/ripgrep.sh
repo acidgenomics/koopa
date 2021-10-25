@@ -6,7 +6,7 @@ koopa::rg_sort() { # {{{1
     # @note Updated 2021-10-25.
     # """
     local pattern rg x
-    koopa::assert_has_args "$#" 1
+    koopa::assert_has_args_eq "$#" 1
     rg="$(koopa::locate_rg)"
     pattern="${1:?}"
     x="$( \
