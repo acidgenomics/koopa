@@ -9,6 +9,7 @@ koopa::rhel_enable_epel() { # {{{1
     local grep rpm
     koopa::assert_has_no_args "$#"
     grep="$(koopa::locate_grep)"
+    # FIXME Rework this using 'koopa::grep'.
     if koopa::fedora_dnf repolist | "$grep" -q 'epel/'
     then
         koopa::alert_success 'EPEL is already enabled.'

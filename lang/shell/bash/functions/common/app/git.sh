@@ -173,6 +173,7 @@ koopa::git_default_branch() { # {{{1
     git="$(koopa::locate_git)"
     grep="$(koopa::locate_grep)"
     sed="$(koopa::locate_sed)"
+    # FIXME Rework this using 'koopa::grep'.
     x="$( \
         "$git" remote show "$remote" \
             | "$grep" 'HEAD branch' \

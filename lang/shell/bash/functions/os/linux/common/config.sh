@@ -17,6 +17,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
     user="${1:-$(koopa::user)}"
     user_string="$(getent passwd "$user")"
     koopa::alert "Updating '${passwd_file}' to include '${user}'."
+    # FIXME Rework using 'koopa::grep'.
     if ! sudo grep -q "$user" "$passwd_file"
     then
         sudo sh -c "printf '%s\n' '${user_string}' >> '${passwd_file}'"

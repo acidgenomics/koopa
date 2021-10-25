@@ -233,6 +233,7 @@ koopa::find_broken_symlinks() { # {{{1
     do
         prefix="$(koopa::realpath "$prefix")"
         # FIXME Rework using 'koopa::find'.
+        # FIXME Rework using 'koopa::grep'.
         x="$( \
             "$find" "$prefix" \
                 -xdev \
@@ -300,6 +301,7 @@ koopa::find_empty_dirs() { # {{{1
     do
         prefix="$(koopa::realpath "$prefix")"
         # FIXME Rework using 'koopa::find'.
+        # FIXME Rework using 'koopa::grep'.
         x="$( \
             "$find" "$prefix" \
                 -xdev \
@@ -337,6 +339,7 @@ koopa::find_files_without_line_ending() { # {{{1
     do
         prefix="$(koopa::realpath "$prefix")"
         # FIXME Rework using 'koopa::find'.
+        # FIXME Rework using 'koopa::grep'.
         readarray -t files <<< "$(
             "$find" "$prefix" \
                 -mindepth 1 \
@@ -406,6 +409,7 @@ koopa::find_large_files() { # {{{1
     do
         prefix="$(koopa::realpath "$prefix")"
         # FIXME Rework using 'koopa::find'.
+        # FIXME Rework using 'koopa::grep'.
         x="$( \
             "$find" "$prefix" \
                 -xdev \

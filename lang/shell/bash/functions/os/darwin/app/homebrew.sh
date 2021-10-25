@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to locate grep here if we use the old approach.
 koopa::macos_brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.
@@ -34,6 +35,7 @@ koopa::macos_brew_cask_outdated() { # {{{
     then
         x="$(cut -d ' ' -f 1 < "$tmp_file")"
     else
+        # FIXME Rework using 'koopa::grep'.
         x="$( \
             grep -v '(latest)' "$tmp_file" \
             | cut -d ' ' -f 1 \

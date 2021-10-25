@@ -110,6 +110,7 @@ koopa::enable_passwordless_sudo() { # {{{1
     file='/etc/sudoers.d/sudo'
     group="$(koopa::admin_group)"
     grep="$(koopa::locate_grep)"
+    # FIXME Rework using 'koopa::grep'.
     if [[ -f "$file" ]] && sudo "$grep" -q "$group" "$file"
     then
 
@@ -139,6 +140,7 @@ koopa::enable_shell() { # {{{1
     etc_file='/etc/shells'
     [[ -f "$etc_file" ]] || return 0
     koopa::alert "Updating '${etc_file}' to include '${cmd_path}'."
+    # FIXME Rework using 'koopa::grep'.
     if ! grep -q "$cmd_path" "$etc_file"
     then
         koopa::sudo_append_string "$cmd_path" "$etc_file"

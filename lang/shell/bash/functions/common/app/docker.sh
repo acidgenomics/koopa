@@ -265,6 +265,7 @@ koopa::docker_build_all_images() { # {{{1
         build_file="${repo}/build.txt"
         if [[ -f "$build_file" ]]
         then
+            # FIXME Rework this using 'koopa::grep'.
             readarray -t images <<< "$( \
                 "$grep" -E '^[-_a-z0-9]+$' "$build_file" \
             )"
@@ -452,6 +453,7 @@ koopa::docker_remove() { # {{{1
     xargs="$(koopa::locate_xargs)"
     for pattern in "$@"
     do
+        # FIXME Rework this using 'koopa::grep'.
         # shellcheck disable=SC2016
         docker images \
             | "$grep" "$pattern" \
@@ -633,6 +635,7 @@ koopa::is_docker_build_recent() { # {{{1
     do
         docker pull "$image" >/dev/null
         json="$(docker inspect --format='{{json .Created}}' "$image")"
+        # FIXME Rework this using 'koopa::grep'.
         created="$( \
             koopa::print "$json" \
                 | "$grep" -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \

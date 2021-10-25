@@ -15,6 +15,7 @@ koopa::get_macos_app_version() { # {{{1
     do
         plist="/Applications/${app}.app/Contents/Info.plist"
         [[ -f "$plist" ]] || return 1
+        # FIXME Rework using 'koopa::grep'.
         # shellcheck disable=SC2016
         x="$( \
             plutil -p "$plist" \

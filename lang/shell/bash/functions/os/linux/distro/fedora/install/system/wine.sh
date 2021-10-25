@@ -21,6 +21,7 @@ koopa::fedora_install_wine() { # {{{1
         koopa::alert_is_installed "$name_fancy"
         return 0
     fi
+    # FIXME Rework this using 'koopa::grep'.
     version="$( \
         "$grep" 'VERSION_ID=' '/etc/os-release' \
             | "$cut" -d '=' -f 2 \

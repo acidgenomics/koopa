@@ -558,12 +558,14 @@ koopa::debian_apt_configure_sources() { # {{{1
     codenames[main]="$os_codename"
     codenames[security]="${os_codename}-security"
     codenames[updates]="${os_codename}-updates"
+    # FIXME Rework using 'koopa::grep'.
     urls[main]="$( \
         "$grep" -E '^deb\s' "$sources_list" \
         | "$grep" -F ' main ' \
         | "$head" -n 1 \
         | "$cut" -d ' ' -f 2 \
     )"
+    # FIXME Rework using 'koopa::grep'.
     urls[security]="$( \
         "$grep" -E '^deb\s' "$sources_list" \
         | "$grep" -F " ${codenames[security]} " \
@@ -636,6 +638,7 @@ koopa::debian_apt_disable_deb_src() { # {{{1
     koopa::alert "Disabling Debian sources in '${file}'."
     grep="$(koopa::locate_grep)"
     sed="$(koopa::locate_sed)"
+    # FIXME Rework using 'koopa::grep'.
     if ! "$grep" -Eq '^deb-src ' "$file"
     then
         koopa::alert_note "No 'deb-src' lines to comment in '${file}'."
@@ -659,6 +662,7 @@ koopa::debian_apt_enable_deb_src() { # {{{1
     [[ -z "$file" ]] && file='/etc/apt/sources.list'
     file="$(koopa::realpath "$file")"
     koopa::alert "Enabling Debian sources in '${file}'."
+    # FIXME Rework using 'koopa::grep'.
     if ! "$grep" -Eq '^# deb-src ' "$file"
     then
         koopa::alert_note "No '# deb-src' lines to uncomment in '${file}'."
@@ -681,6 +685,7 @@ koopa::debian_apt_enabled_repos() { # {{{1
     os_codename="$(koopa::os_codename)"
     file='/etc/apt/sources.list'
     pattern="^deb\s.+\s${os_codename}\s.+$"
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         "$grep" -E "$pattern" "$file" \
             | "$cut" -d ' ' -f '4-' \
@@ -773,6 +778,7 @@ koopa::debian_apt_space_used_by_grep() { # {{{1
     koopa::assert_has_args "$#"
     cut="$(koopa::locate_cut)"
     grep="$(koopa::locate_grep)"
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         sudo apt-get --assume-no autoremove "$@" \
             | "$grep" 'freed' \
@@ -790,6 +796,7 @@ koopa::debian_apt_space_used_by_no_deps() { # {{{1
     local grep
     grep="$(koopa::locate_grep)"
     koopa::assert_has_args "$#"
+    # FIXME Rework using 'koopa::grep'.
     sudo apt show "$@" | "$grep" 'Size'
     return 0
 }

@@ -15,6 +15,7 @@ koopa::disk_gb_free() { # {{{1
     head="$(koopa::locate_head)"
     sed="$(koopa::locate_sed)"
     disk="${1:-/}"
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         "$df" --block-size='G' "$disk" \
             | "$head" -n 2 \
@@ -40,6 +41,7 @@ koopa::disk_gb_total() { # {{{1
     head="$(koopa::locate_head)"
     sed="$(koopa::locate_sed)"
     disk="${1:-/}"
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         "$df" --block-size='G' "$disk" \
             | "$head" -n 2 \
@@ -64,6 +66,7 @@ koopa::disk_gb_used() { # {{{1
     head="$(koopa::locate_head)"
     sed="$(koopa::locate_sed)"
     disk="${1:-/}"
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         "$df" --block-size='G' "$disk" \
             | "$head" -n 2 \
@@ -103,6 +106,7 @@ koopa::disk_pct_used() { # {{{1
     head="$(koopa::locate_head)"
     sed="$(koopa::locate_sed)"
     disk="${1:-/}"
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         "$df" "$disk" \
             | "$head" -n 2 \
