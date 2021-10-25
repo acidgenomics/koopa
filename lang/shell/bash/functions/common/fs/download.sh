@@ -247,11 +247,33 @@ koopa::parse_url() { # {{{1
     # Parse a URL using cURL.
     # @note Updated 2021-10-25.
     # """
-    local curl url x
+    local curl curl_args pos url x
+    koopa::assert_has_args "$#"
+    curl="$(koopa::locate_curl)"
+    curl_args=('--silent')
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--list-only')
+                curl_args+=('--list-only')
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 1
     url="${1:?}"
-    curl="$(koopa::locate_curl)"
-    x="$("$curl" --silent "$url")"
+    x="$("$curl" "${curl_args[@]}" "$url")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
