@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-10-22"
+koopa-date="2021-10-25"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -247,10 +247,10 @@ openssl="3.0.0"
 oracle-instantclient="21.1.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.14.2"
+pandoc="2.15"
 
 # https://www.gnu.org/software/parallel/
-parallel="20210922"
+parallel="20211022"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
