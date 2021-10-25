@@ -3,7 +3,7 @@
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2021-08-17.
+    # @note Updated 2021-10-25.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -22,14 +22,13 @@ koopa::activate_conda_env() { # {{{1
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    local env_name env_prefix grep nounset
+    local env_name env_prefix nounset
     koopa::assert_has_args_eq "$#" 1
     if koopa::is_conda_env_active
     then
         koopa::stop 'conda environment is already active.'
     fi
     koopa::activate_conda
-    grep="$(koopa::locate_grep)"
     nounset="$(koopa::boolean_nounset)"
     env_name="${1:?}"
     env_prefix="$(koopa::conda_env_prefix "$env_name")"
@@ -509,7 +508,7 @@ koopa::conda_env_list() { # {{{1
 koopa::conda_env_prefix() { # {{{1
     # """
     # Return prefix for a specified conda environment.
-    # @note Updated 2021-08-16.
+    # @note Updated 2021-10-25.
     #
     # Attempt to locate by default path first, which is the fastest approach.
     #
@@ -524,11 +523,12 @@ koopa::conda_env_prefix() { # {{{1
     # - conda info --envs
     # - conda info --json
     # """
-    local conda_prefix env_dir env_list env_name grep sed tail x
+    local app conda_prefix env_dir env_list env_name sed tail x
     koopa::assert_has_args_le "$#" 2
-    grep="$(koopa::locate_grep)"
-    sed="$(koopa::locate_sed)"
-    tail="$(koopa::locate_tail)"
+    declare -A app=(
+        [sed]="$(koopa::locate_sed)"
+        [tail]="$(koopa::locate_tail)"
+    )
     env_name="${1:?}"
     [[ -n "$env_name" ]] || return 1
     env_list="${2:-}"
@@ -543,25 +543,23 @@ koopa::conda_env_prefix() { # {{{1
         fi
         env_list="$(koopa::conda_env_list)"
     fi
-    # FIXME Rework this using 'koopa::grep'.
     env_list="$( \
         koopa::print "$env_list" \
-        | "$grep" "$env_name" \
+            | koopa::grep "$env_name" \
     )"
     if [[ -z "$env_list" ]]
     then
         koopa::stop "conda environment does not exist: '${env_name}'."
     fi
     # Note that this step attempts to automatically match the latest version.
-    # FIXME Rework this using 'koopa::grep'.
     env_dir="$( \
         koopa::print "$env_list" \
-        | "$grep" -E "/${env_name}(@[.0-9]+)?\"" \
-        | "$tail" -n 1 \
+            | koopa::grep --extended-regexp "/${env_name}(@[.0-9]+)?\"" \
+            | "${app[tail]}" -n 1 \
     )"
     x="$( \
         koopa::print "$env_dir" \
-        | "$sed" -E 's/^.*"(.+)".*$/\1/' \
+            | "${app[sed]}" -E 's/^.*"(.+)".*$/\1/' \
     )"
     if [[ -z "$x" ]]
     then
