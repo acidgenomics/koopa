@@ -54,13 +54,17 @@ _koopa_expr() { # {{{1
 _koopa_is_alias() { # {{{1
     # """
     # Is the specified argument an alias?
-    # @note Updated 2020-07-17.
+    # @note Updated 2021-10-25.
     #
     # Intended primarily to determine if we need to unalias.
     # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
     #
+    # Built-in and/or tracked alias, e.g. 'cd', 'ls'.
+    # > _koopa_str_match_posix "$str" ' is a shell builtin' && return 1
+    # > _koopa_str_match_posix "$str" ' tracked alias ' && return 1
+    #
     # @example
-    # koopa::is_alias R
+    # _koopa_is_alias 'R'
     # """
     local cmd str
     [ "$#" -gt 0 ] || return 1
@@ -68,8 +72,11 @@ _koopa_is_alias() { # {{{1
     do
         _koopa_is_installed "$cmd" || return 1
         str="$(type "$cmd")"
-        _koopa_str_match "$str" ' tracked alias ' && return 1
-        _koopa_str_match_regex "$str" '\balias(ed)?\b' || return 1
+        # Bash convention.
+        _koopa_str_match_posix "$str" ' is aliased to ' && continue
+        # Zsh convention.
+        _koopa_str_match_posix "$str" ' is an alias for ' && continue
+        return 1
     done
     return 0
 }
@@ -318,10 +325,10 @@ _koopa_is_linux() { # {{{1
 _koopa_is_local_install() { # {{{1
     # """
     # Is koopa installed only for the current user?
-    # @note Updated 2020-04-29.
+    # @note Updated 2021-10-25.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_str_match_regex "$(_koopa_koopa_prefix)" "^${HOME}"
+    _koopa_str_match_posix "$(_koopa_koopa_prefix)" "${HOME}"
 }
 
 _koopa_is_macos() { # {{{1
@@ -606,4 +613,16 @@ _koopa_macos_is_light_mode() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     ! _koopa_macos_is_dark_mode
+}
+
+_koopa_str_match_posix() { # {{{1
+    # """
+    # Evaluate whether a string contains a desired value.
+    # @note Updated 2021-10-25.
+    # """
+    local pattern string
+    [ "$#" -eq 2 ] || return 1
+    string="${1:?}"
+    pattern="${2:?}"
+    test "${string#*$pattern}" != "$string"
 }
