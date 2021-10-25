@@ -463,7 +463,10 @@ _koopa_activate_today_bucket() { # {{{1
     today_bucket="$("$date" '+%Y/%m/%d')"
     today_link="${HOME:?}/today"
     # Early return if we've already updated the symlink.
-    _koopa_str_match "$("$readlink" "$today_link")" "$today_bucket" && return 0
+    if _koopa_str_match_posix "$("$readlink" "$today_link")" "$today_bucket"
+    then
+        return 0
+    fi
     "$mkdir" -p "${bucket_dir}/${today_bucket}"
     "$ln" -fns "${bucket_dir}/${today_bucket}" "$today_link"
     return 0
