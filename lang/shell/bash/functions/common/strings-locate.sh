@@ -3,7 +3,7 @@
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-25.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
@@ -11,6 +11,8 @@ koopa:::locate_app() { # {{{1
     # 3. Check in koopa opt.
     # 4. Check in Homebrew opt.
     # 5. Check in system library.
+    #
+    # Resolving the full executable path can cause BusyBox coreutils to error.
     # """
     local app dict pos
     declare -A dict=(
@@ -132,11 +134,14 @@ bin/${dict[app_name]}"
     fi
     if [[ -z "$app" ]]
     then
-        koopa::stop "Failed to locate '${dict[app_name]}'."
+        koopa::warn "Failed to locate '${dict[app_name]}'."
+        return 1
     fi
-    koopa::assert_is_executable "$app"
-    # NOTE Resolving the path can cause issues with BusyBox coreutils.
-    # > app="$(koopa::realpath "$app")"
+    if [[ ! -x "$app" ]]
+    then
+        koopa::warn "Not executable: '${app}'."
+        return 1
+    fi
     koopa::print "$app"
     return 0
 }
