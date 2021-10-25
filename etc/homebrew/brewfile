@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-10-05.
+# Updated 2021-10-25.
 # """
 
 # Taps {{{1
@@ -29,6 +29,7 @@ brew "bash-completion"
 brew "bat"  # rust
 brew "bc"
 brew "bfg"
+brew "bind"  # installs dig
 brew "binutils"
 brew "black"  # python
 brew "bpytop"  # python

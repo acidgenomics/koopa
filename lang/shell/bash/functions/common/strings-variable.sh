@@ -244,21 +244,25 @@ koopa::os_type() { # {{{1
 koopa::public_ip_address() { # {{{1
     # """
     # Public (remote) IP address.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-25.
     #
     # @seealso
     # - https://www.cyberciti.biz/faq/
     #     how-to-find-my-public-ip-address-from-command-line-on-a-linux/
     # """
-    local curl x
+    local dig x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'dig'
-    x="$(dig +short 'myip.opendns.com' '@resolver1.opendns.com')"
-    # Fallback in case dig approach doesn't work.
+    x=''
+    # Attempt to use BIND's Domain Information Groper (dig) tool.
+    dig="$(koopa::locate_dig 2>/dev/null || true)"
+    if koopa::is_installed "$dig"
+    then
+        x="$("$dig" +short 'myip.opendns.com' '@resolver1.opendns.com')"
+    fi
+    # Otherwise fall back to parsing URL via cURL.
     if [[ -z "$x" ]]
     then
-        curl="$(koopa::locate_curl)"
-        x="$("$curl" -s 'ipecho.net/plain')"
+        x="$(koopa::parse_url 'https://ipecho.net/plain')"
     fi
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
