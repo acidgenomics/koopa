@@ -116,7 +116,7 @@ _koopa_activate_zsh_fpath() { # {{{1
 _koopa_activate_zsh_plugins() { # {{{1
     # """
     # Activate Zsh plugins.
-    # Updated 2021-05-25.
+    # Updated 2021-10-25.
     #
     # Debug plugins via:
     # > zsh -df
@@ -134,7 +134,7 @@ _koopa_activate_zsh_plugins() { # {{{1
         find "$zsh_plugins_dir" \
             -mindepth 1 \
             -maxdepth 1 \
-            -type d \
+            -type 'd' \
             -print0 \
         | sort -z \
         | xargs -0 -n1 basename \

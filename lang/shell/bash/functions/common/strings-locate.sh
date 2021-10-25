@@ -402,6 +402,18 @@ koopa::locate_emacs() { # {{{1
     koopa:::locate_app 'emacs'
 }
 
+koopa::locate_fd() { # {{{1
+    # """
+    # Locate Rust fd (find).
+    # @note Updated 2021-10-22.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='fd' \
+        --koopa-opt='rust-packages' \
+        --name='fd'
+}
+
 koopa::locate_find() { # {{{1
     # """
     # Locate GNU find.
