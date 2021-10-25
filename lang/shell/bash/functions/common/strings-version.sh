@@ -20,6 +20,7 @@ koopa:::pkg_config_version() { # {{{1
 
 }
 
+# FIXME Consider reworking internally using koopa::locate_anaconda.
 koopa::anaconda_version() { # {{{
     # """
     # Anaconda verison.
@@ -207,25 +208,28 @@ koopa::current_flybase_version() { # {{{1
     return 0
 }
 
-# FIXME Rework using koopa::parse_url.
 koopa::current_gencode_version() { # {{{1
     # """
     # Current GENCODE version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local base_url curl cut grep head organism pattern short_name url x
+    local app base_url organism pattern short_name url x
     koopa::assert_has_args_le "$#" 1
-    curl="$(koopa::locate_curl)"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    head="$(koopa::locate_head)"
+    declare -A app=(
+        [curl]="$(koopa::locate_curl)"
+        [cut]="$(koopa::locate_cut)"
+        [grep]="$(koopa::locate_grep)"
+        [head]="$(koopa::locate_head)"
+    )
     organism="${1:-Homo sapiens}"
     case "$organism" in
-        'Homo sapiens')
+        'Homo sapiens' | \
+        'human')
             short_name='human'
             pattern='Release [0-9]+'
             ;;
-        'Mus musculus')
+        'Mus musculus' | \
+        'mouse')
             short_name='mouse'
             pattern='Release M[0-9]+'
             ;;
@@ -235,54 +239,55 @@ koopa::current_gencode_version() { # {{{1
     esac
     base_url='https://www.gencodegenes.org'
     url="${base_url}/${short_name}/"
-    # FIXME Rework using 'koopa::grep'.
     x="$( \
-        "$curl" --silent "$url" \
-        | "$grep" -Eo "$pattern" \
-        | "$head" -n 1 \
-        | "$cut" -d ' ' -f 2 \
+        koopa::parse_url "$url" \
+        | koopa::grep \
+            --extended-regexp \
+            --only-matching \
+            "$pattern" \
+        | "${app[head]}" -n 1 \
+        | "${app[cut]}" -d ' ' -f 2 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
 
-# FIXME Rework using koopa::parse_url.
 koopa::current_refseq_version() { # {{{1
     # """
     # Current RefSeq version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local curl url version
+    local url version
     koopa::assert_has_no_args "$#"
-    curl="$(koopa::locate_curl)"
     url='ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER'
-    version="$("$curl" --silent "$url")"
+    version="$(koopa::parse_url "$url")"
     [[ -n "$version" ]] || return 1
     koopa::print "$version"
     return 0
 }
 
-# FIXME Rework using koopa::parse_url.
 koopa::current_wormbase_version() { # {{{1
     # """
     # Current WormBase version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local curl cut grep url version
+    local app url version
     koopa::assert_has_no_args "$#"
-    curl="$(koopa::locate_curl)"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+    )
     url="ftp://ftp.wormbase.org/pub/wormbase/\
 releases/current-production-release"
-    # FIXME Rework using 'koopa::grep'.
     version="$( \
-        "$curl" --list-only --silent "${url}/" | \
-        "$grep" -Eo 'letter.WS[0-9]+' | \
-        "$cut" -d '.' -f 2 \
+        koopa::parse_url --list-only "${url}/" \
+            | koopa::grep \
+                --extended-regexp \
+                --only-matching \
+                'letter.WS[0-9]+' \
+            | "${app[cut]}" -d '.' -f 2 \
     )"
-    [[ -n "$x" ]] || return 1
+    [[ -n "$version" ]] || return 1
     koopa::print "$version"
     return 0
 }
@@ -309,20 +314,23 @@ koopa::emacs_version() { # {{{1
 koopa::extract_version() { # {{{1
     # """
     # Extract version number.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local arg grep head pattern x
+    local app arg pattern x
     koopa::assert_has_args "$#"
-    grep="$(koopa::locate_grep)"
-    head="$(koopa::locate_head)"
+    declare -A app=(
+        [head]="$(koopa::locate_head)"
+    )
     pattern="$(koopa::version_pattern)"
     for arg in "$@"
     do
-        # FIXME Rework using 'koopa::grep'.
         x="$( \
             koopa::print "$arg" \
-                | "$grep" -Eo "$pattern" \
-                | "$head" -n 1 \
+                | koopa::grep \
+                    --extended-regexp \
+                    --only-matching \
+                    "$pattern" \
+                | "${app[head]}" -n 1 \
         )"
         [[ -n "$x" ]] || return 1
         koopa::print "$x"
@@ -369,29 +377,24 @@ koopa::get_version() { # {{{1
 koopa::github_latest_release() { # {{{1
     # """
     # Get the latest release version from GitHub.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     #
     # @examples
     # koopa::github_latest_release 'acidgenomics/koopa'
-    # # Expected failure:
-    # koopa::github_latest_release 'acidgenomics/acidgenomics.github.io'
     # """
-    local curl cut grep json repo sed url x
+    local app repo url x
     koopa::assert_has_args "$#"
-    curl="$(koopa::locate_curl)"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    sed="$(koopa::locate_sed)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [sed]="$(koopa::locate_sed)"
+    )
     repo="${1:?}"
     url="https://api.github.com/repos/${repo}/releases/latest"
-    json="$("$curl" -s "$url" 2>&1 || true)"
-    [[ -n "$json" ]] || return 1
-    # FIXME Rework using 'koopa::grep'.
     x="$( \
-        koopa::print "$json" \
-            | "$grep" '"tag_name":' \
-            | "$cut" -d '"' -f 4 \
-            | "$sed" 's/^v//' \
+        koopa::parse_url "$url" \
+            | koopa::grep '"tag_name":' \
+            | "${app[cut]}" -d '"' -f 4 \
+            | "${app[sed]}" 's/^v//' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -407,6 +410,8 @@ koopa::harfbuzz_version() { # {{{1
     koopa:::pkg_config_version 'harfbuzz'
 }
 
+# FIXME Harden sed here.
+# FIXME Need to locate h5cc here.
 koopa::hdf5_version() { # {{{1
     # """
     # HDF5 version.
@@ -414,15 +419,13 @@ koopa::hdf5_version() { # {{{1
     #
     # Debian: 'dpkg -s libhdf5-dev'
     # """
-    local grep sed x
+    local sed x
     koopa::assert_has_no_args "$#"
-    grep="$(koopa::locate_grep)"
     sed="$(koopa::locate_sed)"
     koopa::assert_is_installed 'h5cc'
-    # FIXME Rework using 'koopa::grep'.
     x="$( \
         h5cc -showconfig \
-            | "$grep" 'HDF5 Version:' \
+            | koopa::grep 'HDF5 Version:' \
             | "$sed" -E 's/^(.+): //' \
     )"
     [[ -n "$x" ]] || return 1
@@ -491,6 +494,8 @@ koopa::lmod_version() { # {{{1
     return 0
 }
 
+# FIXME Consider locating java here.
+# FIXME Need to harden head and cut here.
 koopa::openjdk_version() { # {{{1
     # """
     # Java (OpenJDK) version.
@@ -511,6 +516,7 @@ koopa::openjdk_version() { # {{{1
     return 0
 }
 
+# FIXME Need to locate sqlplus here.
 koopa::oracle_instantclient_version() { # {{{1
     # """
     # Oracle InstantClient version.
@@ -556,17 +562,19 @@ koopa::os_version() { # {{{1
 koopa::parallel_version() { # {{{1
     # """
     # GNU parallel version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local cut head parallel x
+    local app x
     koopa::assert_has_no_args "$#"
-    cut="$(koopa::locate_cut)"
-    head="$(koopa::locate_head)"
-    parallel="$(koopa::locate_parallel)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+        [parallel]="$(koopa::locate_parallel)"
+    )
     x="$( \
-        "$parallel" --version \
-            | "$head" -n 1 \
-            | "$cut" -d ' ' -f 3 \
+        "${app[parallel]}" --version \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f 3 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -576,21 +584,23 @@ koopa::parallel_version() { # {{{1
 koopa::perl_file_rename_version() { # {{{1
     # """
     # Perl File::Rename version.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-10-25.
     # """
-    local cut head rename x
+    local app x
     koopa::assert_has_no_args "$#"
-    cut="$(koopa::locate_cut)"
-    head="$(koopa::locate_head)"
-    rename="$(koopa::locate_rename)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+        [rename]="$(koopa::locate_rename)"
+    )
     x="$( \
-        "$rename" --version 2>/dev/null \
-        | "$head" -n 1 \
+        "${app[rename]}" --version 2>/dev/null \
+            | "${app[head]}" -n 1 \
     )"
     koopa::str_match_fixed "$x" 'File::Rename' || return 1
     x="$( \
         koopa::print "$x" \
-        | "$cut" -d ' ' -f 5 \
+            | "${app[cut]}" -d ' ' -f 5 \
     )"
     x="$(koopa::extract_version "$x")"
     [[ -n "$x" ]] || return 1
@@ -792,15 +802,17 @@ koopa::return_version() { # {{{1
 koopa::ruby_api_version() { # {{{1
     # """
     # Ruby API version.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-10-25.
     #
     # Used by Homebrew Ruby for default gem installation path.
     # See 'brew info ruby' for details.
     # """
-    local x
+    local app x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'ruby'
-    x="$(ruby -e 'print Gem.ruby_api_version')"
+    declare -A app=(
+        [ruby]="$(koopa::locate_ruby)"
+    )
+    x="$("${app[ruby]}" -e 'print Gem.ruby_api_version')"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -826,10 +838,11 @@ koopa::sanitize_version() { # {{{1
     return 0
 }
 
+# FIXME Need to locate tex here.
 koopa::tex_version() { # {{{1
     # """
     # TeX version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     #
     # We're checking the TeX Live release year here.
     # Here's what it looks like on Debian/Ubuntu:
@@ -863,6 +876,7 @@ koopa::version_pattern() { # {{{1
     return 0
 }
 
+# FIXME Need to locate vim here.
 koopa::vim_version() { # {{{1
     # """
     # Vim version.
