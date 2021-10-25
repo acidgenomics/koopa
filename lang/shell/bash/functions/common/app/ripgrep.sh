@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to locate rg.
 koopa::rg_sort() { # {{{1
     # """
     # ripgrep sorted.
@@ -20,6 +21,7 @@ koopa::rg_sort() { # {{{1
     return 0
 }
 
+# FIXME Need to locate rg.
 koopa::rg_unique() { # {{{1
     # """
     # ripgrep, but only return a summary of all unique matches.

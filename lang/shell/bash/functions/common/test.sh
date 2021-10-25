@@ -35,6 +35,7 @@ koopa::test_find_files() { # {{{1
     sort="$(koopa::locate_sort)"
     prefix="$(koopa::koopa_prefix)"
     # FIXME Rework using 'koopa::find'.
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         "$find" "$prefix" \
             -mindepth 1 \
@@ -78,6 +79,7 @@ koopa::test_find_files_by_ext() { # {{{1
     ext="${1:?}"
     pattern="\.${ext}$"
     readarray -t files <<< "$(koopa::test_find_files)"
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         printf '%s\n' "${files[@]}" \
         | "$grep" -Ei "$pattern" \

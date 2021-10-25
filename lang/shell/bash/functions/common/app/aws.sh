@@ -256,12 +256,14 @@ koopa::aws_s3_find() { # {{{1
     # Exclude pattern.
     if [[ -n "${exclude:-}" ]]
     then
+        # FIXME Rework this using 'koopa::grep'.
         x="$(koopa::print "$x" | "$grep" -Ev "$exclude")"
         [[ -n "$x" ]] || return 1
     fi
     # Include pattern.
     if [[ -n "${include:-}" ]]
     then
+        # FIXME Rework this using 'koopa::grep'.
         x="$(koopa::print "$x" | "$grep" -E "$include")"
         [[ -n "$x" ]] || return 1
     fi
@@ -398,10 +400,12 @@ koopa::aws_s3_ls() { # {{{1
     # after the bucket name.
     if [[ "${dict[recursive]}" -eq 1 ]]
     then
+        # FIXME Rework this using 'koopa::grep'.
         dict[bucket_prefix]="$( \
             koopa::print "${dict[prefix]}" \
             | "${app[grep]}" -Eo '^s3://[^/]+' \
         )"
+        # FIXME Rework this using 'koopa::grep'.
         files="$( \
             koopa::print "$x" \
             | "${app[grep]}" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
@@ -421,6 +425,7 @@ koopa::aws_s3_ls() { # {{{1
     # Directories.
     if [[ "${dict[dirs]}" -eq 1 ]]
     then
+        # FIXME Rework this using 'koopa::grep'.
         dirs="$( \
             koopa::print "$x" \
             | "${app[grep]}" -Eo '^\s+PRE\s.+/$' \
@@ -440,6 +445,7 @@ koopa::aws_s3_ls() { # {{{1
     # Files.
     if [[ "${dict[files]}" -eq 1 ]]
     then
+        # FIXME Rework this using 'koopa::grep'.
         files="$( \
             koopa::print "$x" \
             | "${app[grep]}" -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \

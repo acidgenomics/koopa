@@ -178,6 +178,7 @@ koopa::local_ip_address() { # {{{1
     if koopa::is_macos
     then
         koopa::assert_is_installed 'ifconfig'
+        # FIXME Rework using 'koopa::grep'.
         # shellcheck disable=SC2016
         x="$( \
             ifconfig \
@@ -301,6 +302,7 @@ koopa::variable() { # {{{1
     include_prefix="$(koopa::include_prefix)"
     file="${include_prefix}/variables.txt"
     koopa::assert_is_file "$file"
+    # FIXME Rework using 'koopa::grep'.
     value="$( \
         "$grep" -Eo "^${key}=\"[^\"]+\"" "$file" \
         || koopa::stop "'${key}' not defined in '${file}'." \

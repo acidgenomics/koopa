@@ -543,6 +543,7 @@ koopa::conda_env_prefix() { # {{{1
         fi
         env_list="$(koopa::conda_env_list)"
     fi
+    # FIXME Rework this using 'koopa::grep'.
     env_list="$( \
         koopa::print "$env_list" \
         | "$grep" "$env_name" \
@@ -552,6 +553,7 @@ koopa::conda_env_prefix() { # {{{1
         koopa::stop "conda environment does not exist: '${env_name}'."
     fi
     # Note that this step attempts to automatically match the latest version.
+    # FIXME Rework this using 'koopa::grep'.
     env_dir="$( \
         koopa::print "$env_list" \
         | "$grep" -E "/${env_name}(@[.0-9]+)?\"" \
