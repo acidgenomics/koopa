@@ -19,20 +19,20 @@ koopa:::pkg_config_version() { # {{{1
 koopa::anaconda_version() { # {{{
     # """
     # Anaconda verison.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local awk conda grep x
+    local app x
     koopa::assert_has_no_args "$#"
-    awk="$(koopa::locate_awk)"
-    conda="$(koopa::locate_conda)"
-    grep="$(koopa::locate_grep)"
-    koopa::is_anaconda || return 1
-    # FIXME Rework using 'koopa::grep'.
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [conda]="$(koopa::locate_conda)"
+    )
+    koopa::is_anaconda "${app[conda]}" || return 1
     # shellcheck disable=SC2016
     x="$( \
-        "$conda" list 'anaconda' \
-            | "$grep" -E '^anaconda ' \
-            | "$awk" '{print $2}' \
+        "${app[conda]}" list 'anaconda' \
+            | koopa::grep --extended-regexp '^anaconda ' \
+            | "${app[awk]}" '{print $2}' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -51,7 +51,7 @@ koopa::armadillo_version() { # {{{1
 koopa::boost_version() { # {{{1
     # """
     # Boost (libboost) version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     #
     # Extract the Boost library version using GCC preprocessing. This approach
     # is nice because it doesn't hardcode to a specific file path.
@@ -60,11 +60,12 @@ koopa::boost_version() { # {{{1
     # - https://stackoverflow.com/questions/3708706/
     # - https://stackoverflow.com/questions/4518584/
     # """
-    local bc brew_prefix gcc gcc_args grep major minor patch x
+    local app brew_prefix gcc_args major minor patch x
     koopa::assert_has_no_args "$#"
-    bc="$(koopa::locate_bc)"
-    gcc="$(koopa::locate_gcc)"
-    grep="$(koopa::locate_grep)"
+    declare -A app=(
+        [bc]="$(koopa::locate_bc)"
+        [gcc]="$(koopa::locate_gcc)"
+    )
     gcc_args=()
     if koopa::is_macos
     then
@@ -75,17 +76,16 @@ koopa::boost_version() { # {{{1
         '-x' 'c++'
         '-E' '-'
     )
-    # FIXME Rework using 'koopa::grep'.
     x="$( \
         koopa::print '#include <boost/version.hpp>\nBOOST_VERSION' \
-        | "$gcc" "${gcc_args[@]}" \
-        | "$grep" -E '^[0-9]+$' \
+        | "${app[gcc]}" "${gcc_args[@]}" \
+        | koopa::grep --extended-regexp '^[0-9]+$' \
     )"
     [[ -n "$x" ]] || return 1
     # Convert '107500' to '1.75.0', for example.
-    major="$(koopa::print "$x / 100000" | "$bc")"
-    minor="$(koopa::print "$x / 100 % 1000" | "$bc")"
-    patch="$(koopa::print "$x % 100" | "$bc")"
+    major="$(koopa::print "$x / 100000" | "${app[bc]}")"
+    minor="$(koopa::print "$x / 100 % 1000" | "${app[bc]}")"
+    patch="$(koopa::print "$x % 100" | "${app[bc]}")"
     koopa::print "${major}.${minor}.${patch}"
     return 0
 }
@@ -93,19 +93,20 @@ koopa::boost_version() { # {{{1
 koopa::bpytop_version() { # {{{1
     # """
     # bpytop version.
-    # @note Updated 2021-10-12.
+    # @note Updated 2021-10-25.
     # """
-    local awk grep x
+    local app x
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed 'bpytop'
-    awk="$(koopa::locate_awk)"
-    grep="$(koopa::locate_grep)"
-    # FIXME Rework using 'koopa::grep'.
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [bpytop]="$(koopa::locate_bpytop)"
+    )
     # shellcheck disable=SC2016
     x="$( \
-        bpytop --version | \
-            "$grep" 'bpytop version:' | \
-            "$awk" '{ print $NF }' \
+        "${app[bpytop]}" --version \
+            | koopa::grep 'bpytop version:' \
+            | "${app[awk]}" '{ print $NF }' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -148,12 +149,11 @@ koopa::current_bcbio_nextgen_version() { # {{{1
 koopa::current_bioconductor_version() { # {{{1
     # """
     # Current Bioconductor version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local curl x
+    local x
     koopa::assert_has_no_args "$#"
-    curl="$(koopa::locate_curl)"
-    x="$("$curl" --silent 'https://bioconductor.org/bioc-version')"
+    x="$(koopa::parse_url 'https://bioconductor.org/bioc-version')"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -162,17 +162,18 @@ koopa::current_bioconductor_version() { # {{{1
 koopa::current_ensembl_version() { # {{{1
     # """
     # Current Ensembl version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local curl cut sed x
+    local app x
     koopa::assert_has_no_args "$#"
-    curl="$(koopa::locate_curl)"
-    cut="$(koopa::locate_cut)"
-    sed="$(koopa::locate_sed)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [sed]="$(koopa::locate_sed)"
+    )
     x="$( \
-        "$curl" --silent 'ftp://ftp.ensembl.org/pub/current_README' \
-        | "$sed" -n '3p' \
-        | "$cut" -d ' ' -f 3 \
+        koopa::parse_url 'ftp://ftp.ensembl.org/pub/current_README' \
+        | "${app[sed]}" -n '3p' \
+        | "${app[cut]}" -d ' ' -f 3 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -182,52 +183,27 @@ koopa::current_ensembl_version() { # {{{1
 koopa::current_flybase_version() { # {{{1
     # """
     # Current FlyBase version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local curl cut dmel grep head sort tail url x
-    curl="$(koopa::locate_curl)"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    head="$(koopa::locate_head)"
-    sort="$(koopa::locate_sort)"
-    tail="$(koopa::locate_tail)"
+    local app url x
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+        [tail]="$(koopa::locate_tail)"
+    )
     url='ftp://ftp.flybase.net/releases'
-    dmel=0
-    while (("$#"))
-    do
-        case "$1" in
-            '--dmel')
-                dmel=1
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ "$dmel" -eq 1 ]]
-    then
-        # FIXME Rework using 'koopa::grep'.
-        x="$( \
-            "$curl" --list-only --silent "${url}/current/" \
-            | "$grep" -E '^dmel_r[.0-9]+$' \
-            | "$head" -n 1 \
-            | "$cut" -d '_' -f 2 \
-        )"
-    else
-        # FIXME Rework using 'koopa::grep'.
-        x="$( \
-            "$curl" --list-only --silent "${url}/" \
-            | "$grep" -E '^FB[0-9]{4}_[0-9]{2}$' \
-            | "$sort" \
-            | "$tail" -n 1 \
-        )"
-    fi
+    x="$( \
+        koopa::parse_url --list-only "${url}/" \
+        | koopa::grep --extended-regexp '^FB[0-9]{4}_[0-9]{2}$' \
+        | "${app[tail]}" -n 1 \
+    )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
 
+# FIXME Rework using koopa::parse_url.
 koopa::current_gencode_version() { # {{{1
     # """
     # Current GENCODE version.
@@ -267,6 +243,7 @@ koopa::current_gencode_version() { # {{{1
     return 0
 }
 
+# FIXME Rework using koopa::parse_url.
 koopa::current_refseq_version() { # {{{1
     # """
     # Current RefSeq version.
@@ -282,6 +259,7 @@ koopa::current_refseq_version() { # {{{1
     return 0
 }
 
+# FIXME Rework using koopa::parse_url.
 koopa::current_wormbase_version() { # {{{1
     # """
     # Current WormBase version.
