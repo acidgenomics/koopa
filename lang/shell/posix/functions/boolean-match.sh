@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# FIXME Harden this as bash variants instead.
+# FIXME Consider reworking this to support ripgrep.
+# FIXME Rename this as grep in our Bash library.
+
 __koopa_str_match() { # {{{1
     # """
     # Does the input match a string?
@@ -61,16 +65,8 @@ __koopa_str_match() { # {{{1
     else
         return 1
     fi
-    _koopa_print "$string" | "$grep" "$flag" -q "$pattern" >/dev/null
-}
-
-_koopa_str_match() { #{{{1
-    # """
-    # Does the input match a string?
-    # @note Updated 2020-07-24.
-    # """
-    [ "$#" -gt 0 ] || return 1
-    _koopa_str_match_fixed "$@"
+    _koopa_print "$string" \
+        | "$grep" "$flag" -q "$pattern" >/dev/null
 }
 
 _koopa_str_match_fixed() { # {{{1
@@ -82,6 +78,8 @@ _koopa_str_match_fixed() { # {{{1
     __koopa_str_match -F "$@"
 }
 
+# FIXME Should we take this out?
+# FIXME Consider reworking as pcregrep?
 _koopa_str_match_perl() { # {{{
     # """
     # Does the input match a Perl-compatible regulare expression (PCRE)?
@@ -89,15 +87,6 @@ _koopa_str_match_perl() { # {{{
     # """
     [ "$#" -gt 0 ] || return 1
     __koopa_str_match -P "$@"
-}
-
-_koopa_str_match_posix() { # {{{1
-    # """
-    # Evaluate whether a string contains a desired value.
-    # @note Updated 2020-07-24.
-    # """
-    [ "$#" -eq 2 ] || return 1
-    test "${1#*$2}" != "$1"
 }
 
 _koopa_str_match_regex() { # {{{1
@@ -108,3 +97,6 @@ _koopa_str_match_regex() { # {{{1
     [ "$#" -gt 0 ] || return 1
     __koopa_str_match -E "$@"
 }
+
+
+
