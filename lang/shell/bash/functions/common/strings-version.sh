@@ -27,6 +27,7 @@ koopa::anaconda_version() { # {{{
     conda="$(koopa::locate_conda)"
     grep="$(koopa::locate_grep)"
     koopa::is_anaconda || return 1
+    # FIXME Rework using 'koopa::grep'.
     # shellcheck disable=SC2016
     x="$( \
         "$conda" list 'anaconda' \
@@ -74,6 +75,7 @@ koopa::boost_version() { # {{{1
         '-x' 'c++'
         '-E' '-'
     )
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         koopa::print '#include <boost/version.hpp>\nBOOST_VERSION' \
         | "$gcc" "${gcc_args[@]}" \
@@ -98,6 +100,7 @@ koopa::bpytop_version() { # {{{1
     koopa::assert_is_installed 'bpytop'
     awk="$(koopa::locate_awk)"
     grep="$(koopa::locate_grep)"
+    # FIXME Rework using 'koopa::grep'.
     # shellcheck disable=SC2016
     x="$( \
         bpytop --version | \
@@ -132,6 +135,7 @@ koopa::current_bcbio_nextgen_version() { # {{{1
     grep="$(koopa::locate_grep)"
     url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
 /master/requirements-conda.txt"
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         "$curl" --silent "$url" \
             | "$grep" 'bcbio-nextgen=' \
@@ -204,6 +208,7 @@ koopa::current_flybase_version() { # {{{1
     done
     if [[ "$dmel" -eq 1 ]]
     then
+        # FIXME Rework using 'koopa::grep'.
         x="$( \
             "$curl" --list-only --silent "${url}/current/" \
             | "$grep" -E '^dmel_r[.0-9]+$' \
@@ -211,6 +216,7 @@ koopa::current_flybase_version() { # {{{1
             | "$cut" -d '_' -f 2 \
         )"
     else
+        # FIXME Rework using 'koopa::grep'.
         x="$( \
             "$curl" --list-only --silent "${url}/" \
             | "$grep" -E '^FB[0-9]{4}_[0-9]{2}$' \
@@ -250,6 +256,7 @@ koopa::current_gencode_version() { # {{{1
     esac
     base_url='https://www.gencodegenes.org'
     url="${base_url}/${short_name}/"
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         "$curl" --silent "$url" \
         | "$grep" -Eo "$pattern" \
@@ -288,6 +295,7 @@ koopa::current_wormbase_version() { # {{{1
     grep="$(koopa::locate_grep)"
     url="ftp://ftp.wormbase.org/pub/wormbase/\
 releases/current-production-release"
+    # FIXME Rework using 'koopa::grep'.
     version="$( \
         "$curl" --list-only --silent "${url}/" | \
         "$grep" -Eo 'letter.WS[0-9]+' | \
@@ -329,6 +337,7 @@ koopa::extract_version() { # {{{1
     pattern="$(koopa::version_pattern)"
     for arg in "$@"
     do
+        # FIXME Rework using 'koopa::grep'.
         x="$( \
             koopa::print "$arg" \
                 | "$grep" -Eo "$pattern" \
@@ -396,6 +405,7 @@ koopa::github_latest_release() { # {{{1
     url="https://api.github.com/repos/${repo}/releases/latest"
     json="$("$curl" -s "$url" 2>&1 || true)"
     [[ -n "$json" ]] || return 1
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         koopa::print "$json" \
             | "$grep" '"tag_name":' \
@@ -428,6 +438,7 @@ koopa::hdf5_version() { # {{{1
     grep="$(koopa::locate_grep)"
     sed="$(koopa::locate_sed)"
     koopa::assert_is_installed 'h5cc'
+    # FIXME Rework using 'koopa::grep'.
     x="$( \
         h5cc -showconfig \
             | "$grep" 'HDF5 Version:' \
@@ -528,7 +539,11 @@ koopa::oracle_instantclient_version() { # {{{1
     koopa::assert_has_no_args "$#"
     grep="$(koopa::locate_grep)"
     koopa::assert_is_installed 'sqlplus'
-    x="$(sqlplus -v | "$grep" -E '^Version')"
+    # FIXME Rework using 'koopa::grep'.
+    x="$( \
+        sqlplus -v \
+            | "$grep" -E '^Version' \
+    )"
     x="$(koopa::extract_version "$x")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -886,6 +901,7 @@ koopa::vim_version() { # {{{1
     )"
     if koopa::str_match "$x" 'Included patches:'
     then
+        # FIXME Rework using 'koopa::grep'.
         patch="$( \
             koopa::print "$x" \
                 | "$grep" 'Included patches:' \

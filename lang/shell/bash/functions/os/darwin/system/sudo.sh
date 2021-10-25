@@ -38,6 +38,7 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     koopa::assert_is_admin
     source_file="$(koopa::koopa_prefix)/os/macos/etc/pam.d/sudo"
     target_file='/etc/pam.d/sudo'
+    # FIXME Rework using 'koopa::grep'.
     if [[ -f "$target_file" ]] && grep -q 'pam_tid.so' "$target_file"
     then
         koopa::alert_note "Touch ID already enabled for sudo \

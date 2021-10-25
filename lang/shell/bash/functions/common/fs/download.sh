@@ -77,6 +77,7 @@ koopa::download_cran_latest() { # {{{1
     do
         url="https://cran.r-project.org/web/packages/${name}/"
         pattern="${name}_[.0-9]+.tar.gz"
+        # FIXME Rework using 'koopa::grep'.
         file="$( \
             "$curl" --silent "$url" \
             | "$grep" -Eo "$pattern" \
@@ -101,6 +102,7 @@ koopa::download_github_latest() { # {{{1
     for repo in "$@"
     do
         api_url="https://api.github.com/repos/${repo}/releases/latest"
+        # FIXME Rework using 'koopa::grep'.
         tarball_url="$( \
             "$curl" -s "$api_url" \
             | "$grep" 'tarball_url' \

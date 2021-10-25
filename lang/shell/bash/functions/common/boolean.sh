@@ -74,6 +74,7 @@ koopa::file_match() { # {{{1
     fi
     [[ -f "$file" ]] || return 1
     grep="$(koopa::locate_grep)"
+    # FIXME Rework using 'koopa::grep'.
     "$grep" -Fq "$pattern" "$file" >/dev/null
 }
 
@@ -100,6 +101,7 @@ koopa::file_match_regex() { # {{{1
     fi
     [[ -f "$file" ]] || return 1
     grep="$(koopa::locate_grep)"
+    # FIXME Rework using 'koopa::grep'.
     "$grep" -Eq "$pattern" "$file" >/dev/null
 }
 
@@ -465,15 +467,7 @@ koopa::is_python_package_installed() { # {{{1
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2021-05-21.
-    #
-    # This will only return true for user-installed packages.
-    #
-    # Fast mode: checking the 'site-library' directory.
-    #
-    # Alternate, slow mode:
-    # > Rscript -e "'${1}' %in% rownames(utils::installed.packages())" \
-    # >     | grep -q 'TRUE'
+    # @note Updated 2021-10-25.
     # """
     local pkg r
     koopa::assert_has_args "$#"
