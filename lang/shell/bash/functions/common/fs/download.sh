@@ -3,7 +3,7 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-25.
     #
     # @section curl:
     #
@@ -34,8 +34,12 @@ koopa::download() { # {{{1
         bn="$(koopa::basename "$url")"
         file="${wd}/${bn}"
     fi
-    dl='curl'
-    koopa::is_qemu && dl='wget'
+    if koopa::is_qemu
+    then
+        dl='wget'
+    else
+        dl='curl'
+    fi
     dl_args=()
     case "$dl" in
         'curl')
@@ -56,7 +60,7 @@ koopa::download() { # {{{1
             )
             ;;
     esac
-    koopa::alert "Downloading '${url}' to '${file}'."
+    koopa::alert "Downloading '${url}' to '${file}' using '${dl}'."
     dl="$("koopa::locate_${dl}")"
     dl_args+=("$url")
     "$dl" "${dl_args[@]}"
@@ -66,22 +70,24 @@ koopa::download() { # {{{1
 koopa::download_cran_latest() { # {{{1
     # """
     # Download CRAN latest.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local curl file grep head name pattern url
+    local app file name pattern url
     koopa::assert_has_args "$#"
-    curl="$(koopa::locate_curl)"
-    grep="$(koopa::locate_grep)"
-    head="$(koopa::locate_head)"
+    declare -A app=(
+        [head]="$(koopa::locate_head)"
+    )
     for name in "$@"
     do
         url="https://cran.r-project.org/web/packages/${name}/"
-        pattern="${name}_[.0-9]+.tar.gz"
-        # FIXME Rework using 'koopa::grep'.
+        pattern="${name}_[-.0-9]+.tar.gz"
         file="$( \
-            "$curl" --silent "$url" \
-            | "$grep" -Eo "$pattern" \
-            | "$head" -n 1 \
+            koopa::parse_url "$url" \
+            | koopa::grep \
+                --extended-regexp \
+                --only-matching \
+                "$pattern" \
+            | "${app[head]}" -n 1 \
         )"
         koopa::download "https://cran.r-project.org/src/contrib/${file}"
     done
@@ -91,23 +97,22 @@ koopa::download_cran_latest() { # {{{1
 koopa::download_github_latest() { # {{{1
     # """
     # Download GitHub latest release.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-10-25.
     # """
-    local api_url curl cut grep repo tag tarball_url tr
+    local api_url app repo tag tarball_url
     koopa::assert_has_args "$#"
-    curl="$(koopa::locate_curl)"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    tr="$(koopa::locate_tr)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [tr]="$(koopa::locate_tr)"
+    )
     for repo in "$@"
     do
         api_url="https://api.github.com/repos/${repo}/releases/latest"
-        # FIXME Rework using 'koopa::grep'.
         tarball_url="$( \
-            "$curl" -s "$api_url" \
-            | "$grep" 'tarball_url' \
-            | "$cut" -d ':' -f 2,3 \
-            | "$tr" -d ' ,"' \
+            koopa::parse_url "$api_url" \
+            | koopa::grep 'tarball_url' \
+            | "${app[cut]}" -d ':' -f 2,3 \
+            | "${app[tr]}" -d ' ,"' \
         )"
         tag="$(koopa::basename "$tarball_url")"
         koopa::download "$tarball_url" "${tag}.tar.gz"
@@ -143,7 +148,7 @@ koopa::download_refdata_scsig() { # {{{1
 koopa::download_sra_accession_list() { # {{{1
     # """
     # Download SRA accession list.
-    # @note Updated 2021-08-17.
+    # @note Updated 2021-10-25.
     # """
     local app file id
     koopa::assert_has_args_le "$#" 2
@@ -155,7 +160,7 @@ koopa::download_sra_accession_list() { # {{{1
     koopa::assert_is_installed 'esearch' 'efetch'
     id="${1:?}"
     file="${2:-SraAccList.txt}"
-    koopa::h1 "Downloading SRA '${id}' to '${file}'."
+    koopa::alert "Downloading SRA '${id}' to '${file}'."
     esearch -db sra -q "$id" \
         | efetch -format 'runinfo' \
         | "${app[sed]}" '1d' \
@@ -168,14 +173,14 @@ koopa::download_sra_accession_list() { # {{{1
 koopa::download_sra_run_info_table() { # {{{1
     # """
     # Download SRA run info table.
-    # @note Updated 2021-08-17.
+    # @note Updated 2021-10-25.
     # """
     koopa::assert_has_args_le "$#" 2
     koopa::activate_conda_env 'entrez-direct'
     koopa::assert_is_installed 'esearch' 'efetch'
     id="${1:?}"
     file="${2:-SraRunTable.txt}"
-    koopa::h1 "Downloading SRA '${id}' to '${file}'."
+    koopa::alert "Downloading SRA '${id}' to '${file}'."
     esearch -db sra -q "$id" \
         | efetch -format runinfo \
         > "$file"
@@ -234,6 +239,21 @@ koopa::ftp_mirror() { # {{{1
         dir="${host}"
     fi
     "$wget" --ask-password --mirror "ftp://${user}@${dir}/"*
+    return 0
+}
+
+koopa::parse_url() { # {{{1
+    # """
+    # Parse a URL using cURL.
+    # @note Updated 2021-10-25.
+    # """
+    local curl url x
+    koopa::assert_has_args_eq "$#" 1
+    url="${1:?}"
+    curl="$(koopa::locate_curl)"
+    x="$("$curl" --silent "$url")"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
     return 0
 }
 
