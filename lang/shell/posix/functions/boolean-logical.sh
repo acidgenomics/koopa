@@ -59,10 +59,6 @@ _koopa_is_alias() { # {{{1
     # Intended primarily to determine if we need to unalias.
     # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
     #
-    # Built-in and/or tracked alias, e.g. 'cd', 'ls'.
-    # > _koopa_str_match_posix "$str" ' is a shell builtin' && return 1
-    # > _koopa_str_match_posix "$str" ' tracked alias ' && return 1
-    #
     # @example
     # _koopa_is_alias 'R'
     # """
