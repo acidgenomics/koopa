@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME I think multiple exclude calls aren't working here currently.
+
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
@@ -540,6 +542,8 @@ koopa::find_non_symlinked_make_files() { # {{{1
     #
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
+    #
+    # NOTE Exclusion patterns must be relative to glob for rust-fd to work.
     # """
     local app_prefix brew_prefix find_args koopa_prefix make_prefix opt_prefix x
     koopa::assert_has_no_args "$#"
@@ -548,6 +552,7 @@ koopa::find_non_symlinked_make_files() { # {{{1
     opt_prefix="$(koopa::opt_prefix)"
     make_prefix="$(koopa::make_prefix)"
     find_args=(
+        '--engine' 'gnu-find'
         '--min-depth' 1
         '--prefix' "$make_prefix"
         '--sort'
