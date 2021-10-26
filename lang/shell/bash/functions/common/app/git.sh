@@ -3,9 +3,9 @@
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-26.
     # """
-    local branch default_branch dir dirs git origin pos repo repos sort
+    local branch default_branch dir dirs git origin pos repo repos
     branch=''
     origin=''
     pos=()
@@ -43,18 +43,16 @@ koopa::git_checkout_recursive() { # {{{1
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     git="$(koopa::locate_git)"
-    sort="$(koopa::locate_sort)"
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
-        # FIXME Need to rework this using '--sort' flag.
         readarray -t repos <<< "$( \
             koopa::find \
                 --glob='.git' \
                 --max-depth=3 \
                 --min-depth=2 \
                 --prefix="$dir" \
-            | "$sort" \
+                --sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
@@ -272,10 +270,10 @@ koopa::git_rename_master_to_main() { # {{{1
     local git new old origin
     koopa::assert_has_no_args "$#"
     koopa::assert_is_git_repo
-    git="$(koopa::locate_git)"
     origin='origin'
     old='master'
     new='main'
+    git="$(koopa::locate_git)"
     "$git" branch -m "$old" "$new"
     "$git" fetch "$origin"
     "$git" branch -u "${origin}/${new}" "$new"
@@ -322,24 +320,22 @@ koopa::git_pull() { # {{{1
 koopa::git_pull_recursive() { # {{{1
     # """
     # Pull multiple Git repositories recursively.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-10-26.
     # """
-    local dir dirs git repo repos sort
+    local dir dirs git repo repos
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     git="$(koopa::locate_git)"
-    sort="$(koopa::locate_sort)"
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
-        # FIXME Need to rework this using '--sort' flag.
         readarray -t repos <<< "$( \
             koopa::find \
                 --glob='.git' \
                 --max-depth=3 \
                 --min-depth=2 \
                 --prefix="$dir" \
-            | "$sort" \
+                --sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
@@ -364,24 +360,22 @@ koopa::git_pull_recursive() { # {{{1
 koopa::git_push_recursive() { # {{{1
     # """
     # Push multiple Git repositories recursively.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-10-26.
     # """
-    local dir dirs git repo repos sort
+    local dir dirs git repo repos
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     git="$(koopa::locate_git)"
-    sort="$(koopa::locate_sort)"
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
-        # FIXME Need to rework this using '--sort' flag.
         readarray -t repos <<< "$( \
             koopa::find \
                 --glob='.git' \
                 --max-depth=3 \
                 --min-depth=2 \
                 --prefix="$dir" \
-            | "$sort" \
+                --sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
@@ -551,24 +545,22 @@ koopa::git_set_remote_url() { # {{{1
 koopa::git_status_recursive() { # {{{1
     # """
     # Get the status of multiple Git repos recursively.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-10-26.
     # """
     local dir dirs git repo repos
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
     git="$(koopa::locate_git)"
-    sort="$(koopa::locate_sort)"
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
-        # FIXME Need to rework this using '--sort' flag.
         readarray -t repos <<< "$( \
             koopa::find \
                 --glob='.git' \
                 --max-depth=3 \
                 --min-depth=2 \
                 --prefix="$dir" \
-            | "$sort" \
+                --sort \
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
@@ -577,7 +569,7 @@ koopa::git_status_recursive() { # {{{1
         koopa::h1 "Checking status of ${#repos[@]} repos in '${dir}'."
         for repo in "${repos[@]}"
         do
-            repo="$(dirname "$repo")"
+            repo="$(koopa::dirname "$repo")"
             koopa::h2 "$repo"
             (
                 koopa::cd "$repo"

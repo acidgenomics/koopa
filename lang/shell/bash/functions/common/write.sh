@@ -64,13 +64,13 @@ koopa::sudo_write_string() { # {{{1
 koopa::write_string() { # {{{1
     # """
     # Write a string to disk.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-10-26.
     # """
     local file string
     koopa::assert_has_args_eq "$#" 2
     string="${1:?}"
     file="${2:?}"
-    koopa::mkdir "$(dirname "$file")"
+    koopa::mkdir "$(koopa::dirname "$file")"
     koopa::print "$string" > "$file"
     return 0
 }

@@ -599,7 +599,7 @@ koopa::linux_link_data_disk() { # {{{1
     dd_real_prefix="${dd_prefix}${dd_link_prefix}"
     koopa::sys_ln "$dd_real_prefix" "$dd_link_prefix"
     # e.g. '/opt/koopa/opt'.
-    opt_prefix_bn="$(basename "$opt_prefix")"
+    opt_prefix_bn="$(koopa::basename "$opt_prefix")"
     # e.g. '/mnt/data01/n/opt'
     opt_prefix_real="${dd_real_prefix}/${opt_prefix_bn}"
     koopa::sys_mkdir "$opt_prefix_real"
