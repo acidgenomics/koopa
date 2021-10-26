@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Can we switch to koopa::parse_url instead of curl here?
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
@@ -52,6 +53,7 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
     return 0
 }
 
+# FIXME Can we switch to koopa::parse_url instead of curl here?
 koopa::debian_apt_add_docker_key() { # {{{1
     # """
     # Add the Docker key.
@@ -110,6 +112,7 @@ ${url} ${os_codename} stable"
     return 0
 }
 
+# FIXME Can we switch to koopa::parse_url instead of curl here?
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
@@ -193,6 +196,7 @@ llvm-toolchain-${os_codename}-${version} main"
     return 0
 }
 
+# FIXME Can we switch to koopa::parse_url instead of curl here?
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
     # Add the Microsoft Azure CLI key.
