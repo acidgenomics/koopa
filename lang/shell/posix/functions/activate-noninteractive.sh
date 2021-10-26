@@ -5,9 +5,9 @@ _koopa_activate_anaconda() { # {{{1
     # Activate Anaconda.
     # @note Updated 2021-10-26.
     # """
-    # FIXME Need to add this.
-    # FIXME Need to use _koopa_anaconda_prefix here.
-    return 1
+    [ "$#" -eq 0 ] || return 1
+    _koopa_activate_conda "$(_koopa_anaconda_prefix)"
+    return 0
 }
 
 _koopa_activate_aspera() { # {{{1
@@ -40,18 +40,16 @@ _koopa_activate_bcbio_nextgen() { # {{{1
     return 0
 }
 
-# FIXME We need a '_koopa_activate_anaconda' variant of this.
-# FIXME Simplify this, calling _koopa_activate_anaconda internally.
-
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda using 'activate' script.
     # @note Updated 2021-09-21.
+    #
+    # Prefer Miniconda over Anaconda by default, if both are installed.
     # """
     local anaconda_prefix conda_prefix name nounset prefix
     [ "$#" -le 1 ] || return 1
     prefix="${1:-}"
-    # Prefer Miniconda over Anaconda by default, if both are installed.
     if [ -z "$prefix" ]
     then
         conda_prefix="$(_koopa_conda_prefix)"
