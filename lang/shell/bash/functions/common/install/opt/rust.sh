@@ -21,6 +21,9 @@ koopa::install_rust() { # {{{1
         "$@"
 }
 
+# FIXME Now seeing this pop up:
+# !! Error: Not file: '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?([0-9]+)?'.
+
 koopa:::install_rust() { # {{{1
     # """
     # Install Rust (via rustup).

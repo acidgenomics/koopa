@@ -28,10 +28,10 @@ __koopa_packages_prefix() { # {{{1
 _koopa_anaconda_prefix() { # {{{1
     # """
     # Anaconda prefix.
-    # @note Updated 2021-05-16.
+    # @note Updated 2021-10-26.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_print "$(_koopa_opt_prefix)/conda"
+    _koopa_print "$(_koopa_opt_prefix)/anaconda"
     return 0
 }
 
