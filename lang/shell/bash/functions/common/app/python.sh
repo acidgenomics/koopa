@@ -40,6 +40,7 @@ koopa::python_delete_pycache() { # {{{1
     # FIXME Rework this using 'koopa::find'.
     # FIXME Need to add '--remote' flag here for deletion...
     # FIXME Can use this code here for inspiration.
+    # FIXME Rethink the '--print0' handling here.
     "$find" "$prefix" \
         -type 'd' \
         -name '__pycache__' \
