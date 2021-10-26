@@ -23,8 +23,6 @@ koopa:::is_ssh_enabled() { # {{{1
     koopa::str_match_fixed "$x" "$pattern"
 }
 
-# FIXME Rethink this and parameterize???
-# FIXME This is a bit vague, rename or take out?
 koopa::contains() { # {{{1
     # """
     # Does an array contain a specific element?
@@ -513,4 +511,15 @@ koopa::is_spacemacs_installed() { # {{{1
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
     koopa::file_match_fixed "$init_file" 'Spacemacs'
+}
+
+koopa::is_xcode_clt_installed() { # {{{1
+    # """
+    # Is Xcode CLT (command line tools) installed?
+    # @note Updated 2021-10-26.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::is_macos || return 1
+    [[ -d '/Library/Developer/CommandLineTools/usr/bin' ]] || return 1
+    return 0
 }
