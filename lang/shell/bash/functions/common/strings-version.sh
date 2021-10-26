@@ -24,13 +24,13 @@ koopa:::pkg_config_version() { # {{{1
 koopa::anaconda_version() { # {{{
     # """
     # Anaconda verison.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-10-26.
     # """
     local app x
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
-        [conda]="$(koopa::locate_conda)"
+        [conda]="$(koopa::locate_anaconda)"
     )
     koopa::is_anaconda "${app[conda]}" || return 1
     # shellcheck disable=SC2016
