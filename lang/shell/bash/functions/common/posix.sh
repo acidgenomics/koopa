@@ -272,6 +272,10 @@ koopa::data_disk_link_prefix() { # {{{1
     _koopa_data_disk_link_prefix "$@"
 }
 
+koopa::deactivate_anaconda() { # {{{1
+    _koopa_deactivate_anaconda "$@"
+}
+
 koopa::deactivate_conda() { # {{{1
     _koopa_deactivate_conda "$@"
 }
