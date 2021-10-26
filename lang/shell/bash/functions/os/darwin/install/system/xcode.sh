@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Check if CLT is already installed, and early return on success.
+# FIXME Consider adding support for '--force|--reinstall' flags here.
+
 koopa::macos_install_xcode_clt() { # {{{1
     # """
     # Install Xcode CLT.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-10-26.
     #
     # @seealso
     # - https://apple.stackexchange.com/questions/93573/
@@ -11,7 +14,7 @@ koopa::macos_install_xcode_clt() { # {{{1
     # Alternative minimal approach (used previously for Homebrew):
     # > xcode-select --install &>/dev/null || true
     #
-    # How to install non-interactively:
+    # How to install non-interactively (currently a bit hacky):
     # - https://apple.stackexchange.com/questions/107307/
     # - https://github.com/Homebrew/install/blob/
     #     878b5a18b89ff73f2f221392ecaabd03c1e69c3f/install#L297
