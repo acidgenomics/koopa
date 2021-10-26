@@ -3,7 +3,7 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-10-26.
     #
     # @section curl:
     #
@@ -44,7 +44,7 @@ koopa::download() { # {{{1
     case "$dl" in
         'curl')
             dl_args+=(
-                '--disable'  # Ignore the '~/.curlrc' file. Must come first!
+                '--disable'  # Ignore '~/.curlrc'. Must come first.
                 '--create-dirs'
                 '--fail'
                 '--location'
@@ -251,10 +251,12 @@ koopa::parse_url() { # {{{1
     koopa::assert_has_args "$#"
     curl="$(koopa::locate_curl)"
     curl_args=(
-        '--fail'        # -f
-        '--location'    # -L
-        '--show-error'  # -S
-        '--silent'      # -s
+        '--disable'  # Ignore '~/.curlrc'. Must come first.
+        '--fail'
+        '--location'
+        '--retry' 5
+        '--show-error'
+        '--silent'
     )
     pos=()
     while (("$#"))
