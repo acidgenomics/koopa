@@ -829,6 +829,16 @@ koopa::locate_pkg_config() { # {{{1
     koopa:::locate_app 'pkg-config'
 }
 
+koopa::locate_pkgutil() { # {{{1
+    # """
+    # Locate macOS pkgutil.
+    # @note Updated 2021-10-26.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_macos
+    koopa:::locate_app '/usr/sbin/pkgutil'
+}
+
 koopa::locate_python() { # {{{1
     # """
     # Locate Python.
