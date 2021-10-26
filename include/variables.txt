@@ -552,28 +552,28 @@ ruby-ronn="0.7.3"
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2021-10-05 from https://crates.io/.
+# Updated 2021-10-26 from https://crates.io/.
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.3"             # homebrew
-rust-broot="1.6.4"            # homebrew; br
+rust-broot="1.6.6"            # homebrew; br
 rust-cargo-update="7.0.1"
 rust-cargo-outdated="0.9.17"  # homebrew
 rust-dog="0.1.0"              # homebrew
 rust-du-dust="0.7.0"          # homebrew; dust
 rust-exa="0.10.1"             # homebrew
 rust-fd-find="8.2.1"          # homebrew; fd
-rust-hyperfine="1.11.0"       # homebrew
-rust-procs="0.11.9"           # homebrew
+rust-hyperfine="1.12.0"       # homebrew
+rust-procs="0.11.10"           # homebrew
 rust-ripgrep-all="0.9.6"      # homebrew; rga
 rust-ripgrep="13.0.0"         # homebrew; rg
 rust-starship="0.58.0"        # homebrew
 rust-tealdeer="1.4.1"         # homebrew; tldr
 rust-tokei="12.1.2"           # homebrew
 rust-xsv="0.13.0"             # homebrew
-rust-zoxide="0.7.7"           # homebrew; z
+rust-zoxide="0.7.8"           # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
