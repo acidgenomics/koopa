@@ -8,6 +8,10 @@ koopa:::msg() { # {{{1
     __koopa_msg "$@"
 }
 
+koopa::activate_anaconda() { # {{{1
+    _koopa_activate_anaconda "$@"
+}
+
 koopa::activate_aspera() { # {{{1
     _koopa_activate_aspera "$@"
 }

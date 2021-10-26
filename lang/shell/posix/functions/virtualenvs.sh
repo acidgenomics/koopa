@@ -21,6 +21,16 @@ _koopa_conda_env_name() { # {{{1
     return 0
 }
 
+_koopa_deactivate_anaconda() { # {{{1
+    # """
+    # Deactivate Anaconda environment.
+    # @note Updated 2021-10-26.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_deactivate_conda
+    return 0
+}
+
 _koopa_deactivate_conda() { # {{{1
     # """
     # Deactivate Conda environment.

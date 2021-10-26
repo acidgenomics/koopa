@@ -60,12 +60,14 @@ koopa::uninstall_python_packages() { # {{{1
         "$@"
 }
 
+# FIXME This is now failing...not enough arguments?
 koopa::update_python_packages() { # {{{1
     koopa:::update_app \
         --name='python-packages' \
         --name-fancy='Python packages'
 }
 
+# FIXME This is now erroring due to invalid number of arguments...
 koopa:::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
