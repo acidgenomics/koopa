@@ -157,26 +157,22 @@ koopa::locate_7z() { # {{{1
         --name='7z'
 }
 
-# FIXME Add koopa::locate_anaconda, that specifically checks inside of
-# anaconda prefix instead of 'conda' opt prefix.
-# FIXME This will allow for side-by-side install of miniconda and anaconda.
 koopa::locate_anaconda() { # {{{1
     # """
-    # Locate anaconda.
+    # Locate conda inside Anaconda install.
     # @note Updated 2021-10-26.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba
     # - https://github.com/conda-forge/miniforge
     # """
-    local x
+    local prefix x
     koopa::assert_has_no_args "$#"
-    if ! koopa::is_function 'conda'
-    then
-        koopa::activate_conda
-    fi
-    x="$(koopa::which_realpath 'conda')"
-    koopa:::locate_app "$x"
+    prefix="$(koopa::anaconda_prefix)"
+    x="${prefix}/bin/conda"
+    [[ -x "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
 }
 
 koopa::locate_ascp() { # {{{1
@@ -325,25 +321,22 @@ koopa::locate_cmake() { # {{{1
     koopa:::locate_app 'cmake'
 }
 
-# FIXME We need to simplify this, using conda prefix.
-# FIXME Can we take out the activation step here?
 koopa::locate_conda() { # {{{1
     # """
-    # Locate conda.
-    # @note Updated 2021-05-26.
+    # Locate conda inside Miniconda install.
+    # @note Updated 2021-10-26.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba
     # - https://github.com/conda-forge/miniforge
     # """
-    local x
+    local prefix x
     koopa::assert_has_no_args "$#"
-    if ! koopa::is_function conda
-    then
-        koopa::activate_conda
-    fi
-    x="$(koopa::which_realpath 'conda')"
-    koopa:::locate_app "$x"
+    prefix="$(koopa::conda_prefix)"
+    x="${prefix}/bin/conda"
+    [[ -x "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
 }
 
 koopa::locate_cp() { # {{{1
