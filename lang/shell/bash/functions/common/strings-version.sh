@@ -20,7 +20,6 @@ koopa:::pkg_config_version() { # {{{1
 
 }
 
-# FIXME Consider reworking internally using koopa::locate_anaconda.
 koopa::anaconda_version() { # {{{
     # """
     # Anaconda verison.
@@ -494,22 +493,22 @@ koopa::lmod_version() { # {{{1
     return 0
 }
 
-# FIXME Consider locating java here.
-# FIXME Need to harden head and cut here.
 koopa::openjdk_version() { # {{{1
     # """
     # Java (OpenJDK) version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-26.
     # """
-    local cut head x
+    local app x
     koopa::assert_has_no_args "$#"
-    cut="$(koopa::locate_cut)"
-    head="$(koopa::locate_head)"
-    koopa::assert_is_installed 'java'
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+        [java]="$(koopa::locate_java)"
+    )
     x="$( \
-        java --version \
-            | "$head" -n 1 \
-            | "$cut" -d ' ' -f 2 \
+        "${app[java]}" --version \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f 2 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
