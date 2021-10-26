@@ -155,7 +155,7 @@ koopa::git_clone() { # {{{1
 koopa::git_default_branch() { # {{{1
     # """
     # Default branch of Git repository.
-    # @note Updated 2021-05-23.
+    # @note Updated 2021-10-26.
     #
     # Alternate approach:
     # > x="$( \
@@ -166,18 +166,18 @@ koopa::git_default_branch() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/28666357
     # """
-    local git grep remote sed x
+    local app remote x
     koopa::assert_has_no_args "$#"
     koopa::is_git_repo || return 1
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+        [sed]="$(koopa::locate_sed)"
+    )
     remote='origin'
-    git="$(koopa::locate_git)"
-    grep="$(koopa::locate_grep)"
-    sed="$(koopa::locate_sed)"
-    # FIXME Rework this using 'koopa::grep'.
     x="$( \
-        "$git" remote show "$remote" \
-            | "$grep" 'HEAD branch' \
-            | "$sed" 's/.*: //' \
+        "${app[git]}" remote show "$remote" \
+            | koopa::grep 'HEAD branch' \
+            | "${app[sed]}" 's/.*: //' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"

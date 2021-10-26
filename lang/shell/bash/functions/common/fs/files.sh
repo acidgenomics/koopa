@@ -301,6 +301,7 @@ koopa::delete_named_subdirs() { # {{{1
     dir="${1:?}"
     subdir_name="${2:?}"
     # FIXME Rework using 'koopa::find'.
+    # FIXME Rethink the print0 handling here.
     "$find" "$dir" \
         -type 'd' \
         -name "$subdir_name" \
@@ -540,14 +541,17 @@ koopa::reset_permissions() { # {{{1
     group="$(koopa::group)"
     koopa::chown -R "${user}:${group}" "$dir"
     # FIXME Rework using 'koopa::find'.
+    # FIXME Rethink the '-print0' handling here.
     "$find" "$dir" -type 'd' -print0 \
         | "$xargs" -0 -I {} \
             "$chmod" 'u=rwx,g=rwx,o=rx' {}
     # FIXME Rework using 'koopa::find'.
+    # FIXME Rethink the '-print0' handling here.
     "$find" "$dir" -type 'f' -print0 \
         | "$xargs" -0 -I {} \
             "$chmod" 'u=rw,g=rw,o=r' {}
     # FIXME Rework using 'koopa::find'.
+    # FIXME Rethink the '-print0' handling here.
     "$find" "$dir" -name '*.sh' -type 'f' -print0 \
         | "$xargs" -0 -I {} \
             "$chmod" 'u=rwx,g=rwx,o=rx' {}
