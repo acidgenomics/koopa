@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Use of 'grep -v' is more compatible with macOS and BusyBox than use of
-# 'grep --invert-match'.
-
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
@@ -21,16 +18,20 @@ koopa::find() { # {{{1
     # - https://stackoverflow.com/questions/7442417/
     # - https://unix.stackexchange.com/questions/247655/
     # """
-    local dict find find_args results sort sorted_results
+    local dict exclude_arg exclude_arr find find_args
+    local results sort sorted_results
     declare -A dict=(
+        [empty]=0
         [engine]=''
         [glob]=''
         [max_depth]=0
         [min_depth]=1
         [print0]=0
+        [size]=''
         [sort]=0
         [type]=''
     )
+    exclude_arr=()
     while (("$#"))
     do
         case "$1" in
@@ -41,6 +42,14 @@ koopa::find() { # {{{1
                 ;;
             '--engine')
                 dict[engine]="${2:?}"
+                shift 2
+                ;;
+            '--exclude='*)
+                exclude_arr+=("${1#*=}")
+                shift 1
+                ;;
+            '--exclude')
+                exclude_arr+=("${2:?}")
                 shift 2
                 ;;
             '--glob='*)
@@ -75,6 +84,14 @@ koopa::find() { # {{{1
                 dict[prefix]="${2:?}"
                 shift 2
                 ;;
+            '--size='*)
+                dict[size]="${1#*=}"
+                shift 1
+                ;;
+            '--size')
+                dict[size]="${2:?}"
+                shift 2
+                ;;
             '--type='*)
                 dict[type]="${1#*=}"
                 shift 1
@@ -84,6 +101,10 @@ koopa::find() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--empty')
+                dict[empty]=1
+                shift 1
+                ;;
             '--print0')
                 dict[print0]=1
                 shift 1
@@ -150,10 +171,28 @@ koopa::find() { # {{{1
                     'broken-symlink')
                         find_args+=('-xtype' 'l')
                         ;;
-                    *)
+                    'd' | \
+                    'f')
                         find_args+=('-type' "${dict[type]}")
                         ;;
+                    *)
+                        koopa::stop 'Invalid type argument for GNU find.'
                 esac
+            fi
+            if koopa::is_array_non_empty "${exclude_arr[@]:-}"
+            then
+                for exclude_arg in "${exclude_arr[@]}"
+                do
+                    find_args+=('-not' '-path' "$exclude_arg")
+                done
+            fi
+            if [[ "${dict[empty]}" -eq 1 ]]
+            then
+                find_args+=('-empty')
+            fi
+            if [[ -n "${dict[size]}" ]]
+            then
+                find_args+=('-size' "${dict[size]}")
             fi
             if [[ "${dict[print0]}" -eq 1 ]]
             then
@@ -185,7 +224,36 @@ koopa::find() { # {{{1
             fi
             if [[ -n "${dict[type]}" ]]
             then
+                case "${dict[type]}" in
+                    'd')
+                        dict[type]='directory'
+                        ;;
+                    'f')
+                        dict[type]='file'
+                        ;;
+                    *)
+                        koopa::stop 'Invalid type argument for Rust fd.'
+                        ;;
+                esac
                 find_args+=('--type' "${dict[type]}")
+            fi
+            if [[ "${dict[empty]}" -eq 1 ]]
+            then
+                # This is additive with other '--type' calls.
+                find_args+=('--type' 'empty')
+            fi
+            if koopa::is_array_non_empty "${exclude_arr[@]:-}"
+            then
+                for exclude_arg in "${exclude_arr[@]}"
+                do
+                    find_args+=('--exclude' "$exclude_arg")
+                done
+            fi
+            if [[ -n "${dict[size]}" ]]
+            then
+                # Convert GNU find 'c' for bytes into 'b' convention here.
+                dict[size]="$(koopa::sub 'c^' 'b' "${dict[size]}")"
+                find_args+=('--size' "${dict[size]}")
             fi
             if [[ "${dict[print0]}" -eq 1 ]]
             then
@@ -344,30 +412,21 @@ koopa::find_dotfiles() { # {{{1
 koopa::find_empty_dirs() { # {{{1
     # """
     # Find empty directories.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-10-26.
     # """
-    local find grep prefix sort x
+    local prefix x
     koopa::assert_has_args "$#"
-    find="$(koopa::locate_find)"
-    grep="$(koopa::locate_grep)"
-    sort="$(koopa::locate_sort)"
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
-        prefix="$(koopa::realpath "$prefix")"
-        # FIXME Rework using 'koopa::find'.
-        # FIXME Rework using 'koopa::grep'.
         x="$( \
-            "$find" "$prefix" \
-                -xdev \
-                -mindepth 0 \
-                -type d \
-                -not -path '*/.*/*' \
-                -empty \
-                -print \
-                2>&1 \
-            | "$grep" -v 'Permission denied' \
-            | "$sort" \
+            koopa::find \
+                --empty \
+                --exclude='*/.*/*' \
+                --min-depth=0 \
+                --prefix="$(koopa::realpath "$prefix")" \
+                --sort \
+                --type='d' \
         )"
         [[ -n "$x" ]] || continue
         koopa::print "$x"
@@ -386,24 +445,17 @@ koopa::find_files_without_line_ending() { # {{{1
     local app files prefix
     koopa::assert_has_args "$#"
     declare -A app=(
-        [find]="$(koopa::locate_find)"
-        [grep]="$(koopa::locate_grep)"
         [pcregrep]="$(koopa::locate_pcregrep)"
-        [sort]="$(koopa::locate_sort)"
     )
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
-        prefix="$(koopa::realpath "$prefix")"
-        # FIXME Rework using 'koopa::find'.
-        # FIXME Rework using 'koopa::grep'.
         readarray -t files <<< "$(
-            "${app[find]}" "$prefix" \
-                -mindepth 1 \
-                -type 'f' \
-                2>&1 \
-            | "${app[grep]}" -v 'Permission denied' \
-            | "${app[sort]}" \
+            koopa::find \
+                --min-depth=1 \
+                --prefix="$(koopa::realpath "$prefix")" \
+                --sort \
+                --type='f' \
         )"
         koopa::is_array_non_empty "${files[@]:-}" || continue
         x="$("${app[pcregrep]}" -LMr '\n$' "${files[@]}")"
@@ -416,25 +468,27 @@ koopa::find_files_without_line_ending() { # {{{1
 koopa::find_large_dirs() { # {{{1
     # """
     # Find large directories.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-10-26.
     # """
-    local du prefix sort tail x
+    local app prefix x
     koopa::assert_has_args "$#"
-    du="$(koopa::locate_du)"
-    sort="$(koopa::locate_sort)"
-    tail="$(koopa::locate_tail)"
+    declare -A app=(
+        [du]="$(koopa::locate_du)"
+        [sort]="$(koopa::locate_sort)"
+        [tail]="$(koopa::locate_tail)"
+    )
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
         prefix="$(koopa::realpath "$prefix")"
         x="$( \
-            "$du" \
+            "${app[du]}" \
                 --max-depth=10 \
                 --threshold=100000000 \
                 "${prefix}"/* \
                 2>/dev/null \
-            | "$sort" -n \
-            | "$tail" -n 50 \
+            | "${app[sort]}" -n \
+            | "${app[tail]}" -n 50 \
             || true \
         )"
         [[ -n "$x" ]] || continue
@@ -446,83 +500,70 @@ koopa::find_large_dirs() { # {{{1
 koopa::find_large_files() { # {{{1
     # """
     # Find large files.
-    # @note Updated 2021-06-16.
-    #
-    # This requires GNU grep.
+    # @note Updated 2021-10-26.
     #
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
-    local du find grep prefix sort tail x xargs
-    koopa::assert_has_args_le "$#" 1
-    du="$(koopa::locate_du)"
-    find="$(koopa::locate_find)"
-    grep="$(koopa::locate_grep)"
-    sort="$(koopa::locate_sort)"
-    tail="$(koopa::locate_tail)"
-    xargs="$(koopa::locate_xargs)"
+    local app prefix x
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [du]="$(koopa::locate_du)"
+        [sort]="$(koopa::locate_sort)"
+        [tail]="$(koopa::locate_tail)"
+        [xargs]="$(koopa::locate_xargs)"
+    )
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
-        prefix="$(koopa::realpath "$prefix")"
-        # FIXME Rework using 'koopa::find'.
-        # FIXME Rework using 'koopa::grep'.
         x="$( \
-            "$find" "$prefix" \
-                -xdev \
-                -mindepth 1 \
-                -type 'f' \
-                -size '+100000000c' \
-                -print0 \
-                2>&1 \
-            | "$grep" \
-                --invert-match 'Permission denied' \
-                --null-data \
-            | "$xargs" -0 "$du" \
-            | "$sort" -n \
-            | "$tail" -n 50 \
+            koopa::find \
+                --min-depth=1 \
+                --prefix="$(koopa::realpath "$prefix")" \
+                --print0 \
+                --size='+100000000c' \
+                --type='f' \
+            | "${app[xargs]}" -0 "${app[du]}" \
+            | "${app[sort]}" -n \
+            | "${app[tail]}" -n 50 \
         )"
+        [[ -n "$x" ]] || continue
         koopa::print "$x"
     done
-
-
-
     return 0
 }
 
-# FIXME Rework using 'koopa::find'.
 koopa::find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-10-26.
     #
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
     # """
-    local app_prefix brew_prefix find find_args koopa_prefix make_prefix
-    local opt_prefix sort x
+    local app_prefix brew_prefix find_args koopa_prefix make_prefix opt_prefix x
     koopa::assert_has_no_args "$#"
-    find="$(koopa::locate_find)"
-    sort="$(koopa::locate_sort)"
     app_prefix="$(koopa::app_prefix)"
     koopa_prefix="$(koopa::koopa_prefix)"
     opt_prefix="$(koopa::opt_prefix)"
     make_prefix="$(koopa::make_prefix)"
     find_args=(
-        "$make_prefix"
-        -xdev
-        -mindepth 1
-        -type f
-        -not -path "${app_prefix}/*"
-        -not -path "${koopa_prefix}/*"
-        -not -path "${opt_prefix}/*"
+        '--min-depth' 1
+        '--prefix' "$make_prefix"
+        '--sort'
+        '--type' 'f'
+    )
+    find_args+=(
+        '--exclude' "${app_prefix}/*"
+        '--exclude' "${koopa_prefix}/*"
+        '--exclude' "${opt_prefix}/*"
     )
     if koopa::is_linux
     then
         find_args+=(
-            -not -path "${make_prefix}/share/applications/mimeinfo.cache"
-            -not -path "${make_prefix}/share/emacs/site-lisp/*"
-            -not -path "${make_prefix}/share/zsh/site-functions/*"
+            '--exclude' "${make_prefix}/share/applications/mimeinfo.cache"
+            '--exclude' "${make_prefix}/share/emacs/site-lisp/*"
+            '--exclude' "${make_prefix}/share/zsh/site-functions/*"
         )
     elif koopa::is_macos
     then
@@ -539,16 +580,15 @@ koopa::find_non_symlinked_make_files() { # {{{1
         # - /usr/local/share/texinfo
         brew_prefix="$(koopa::homebrew_prefix)"
         find_args+=(
-            -not -path "${brew_prefix}/Caskroom/*"
-            -not -path "${brew_prefix}/Cellar/*"
-            -not -path "${brew_prefix}/Homebrew/*"
-            -not -path "${make_prefix}/MacGPG2/*"
-            -not -path "${make_prefix}/gfortran/*"
-            -not -path "${make_prefix}/texlive/*"
+            '--exclude' "${brew_prefix}/Caskroom/*"
+            '--exclude' "${brew_prefix}/Cellar/*"
+            '--exclude' "${brew_prefix}/Homebrew/*"
+            '--exclude' "${make_prefix}/MacGPG2/*"
+            '--exclude' "${make_prefix}/gfortran/*"
+            '--exclude' "${make_prefix}/texlive/*"
         )
     fi
-    # FIXME Rework using 'koopa::find'.
-    x="$("$find" "${find_args[@]}" | "$sort")"
+    x="$(koopa::find "${find_args[@]}")"
     koopa::print "$x"
     return 0
 }
