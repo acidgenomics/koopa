@@ -146,7 +146,7 @@ koopa::fastq_lanepool() { # {{{1
     basenames=()
     for i in "${array[@]}"
     do
-        basenames+=("$(basename "$i")")
+        basenames+=("$(koopa::basename "$i")")
     done
     head=()
     for i in "${basenames[@]}"
