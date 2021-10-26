@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Also check that Xcode CLT is installed here before proceeding on macOS.
+
 koopa::install_homebrew() { # {{{1
     # """
     # Install Homebrew.
@@ -139,10 +141,14 @@ koopa::uninstall_homebrew() { # {{{1
     return 0
 }
 
+# FIXME Check that Xcode CLT is installed before proceeding.
+# This will break after an OS upgrade.
+# xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
+
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-08-02.
+    # @note Updated 2021-10-26.
     #
     # @seealso
     # - Refer to useful discussion regarding '--greedy' flag.
