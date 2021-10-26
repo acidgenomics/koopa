@@ -3,7 +3,7 @@
 koopa::macos_create_dmg() { # {{{1
     # """
     # Create DMG image.
-    # @note Updated 2020-07-15.
+    # @note Updated 2021-10-26.
     # """
     local dir name
     koopa::assert_has_args_eq "$#" 1
@@ -11,7 +11,10 @@ koopa::macos_create_dmg() { # {{{1
     dir="${1:?}"
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
-    name="$(basename "$dir")"
-    hdiutil create -volname "$name" -srcfolder "$dir" -ov "${name}.dmg"
+    name="$(koopa::basename "$dir")"
+    hdiutil create \
+        -volname "$name" \
+        -srcfolder "$dir" \
+        -ov "${name}.dmg"
     return 0
 }

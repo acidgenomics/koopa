@@ -48,8 +48,8 @@ koopa::samtools_convert_sam_to_bam() { # {{{1
         esac
     done
     koopa::assert_is_set 'input_sam' 'output_bam'
-    sam_bn="$(basename "$input_sam")"
-    bam_bn="$(basename "$output_bam")"
+    sam_bn="$(koopa::basename "$input_sam")"
+    bam_bn="$(koopa::basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
         koopa::alert_note "Skipping '${bam_bn}'."

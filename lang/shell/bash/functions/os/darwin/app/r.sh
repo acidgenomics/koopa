@@ -35,7 +35,7 @@ CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
 CXX11FLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
 LDFLAGS=-L\$(C_LOC)/lib -Wl,-rpath,\$(C_LOC)/lib
 END
-    koopa::mkdir "$(dirname "$makevars_file")"
+    koopa::mkdir "$(koopa::dirname "$makevars_file")"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"

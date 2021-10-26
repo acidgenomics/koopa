@@ -142,7 +142,7 @@ ${dict[platform]}/${file}"
         # Ensure '+' gets converted to '%2B'.
         url="$(koopa::gsub '\+' '%2B' "$url")"
         koopa::download "$url"
-        file="$(basename "$url")"
+        file="$(koopa::basename "$url")"
         IFS=' ' read -r -a install <<< "${dict[install]}"
         "${install[@]}" "$file"
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"

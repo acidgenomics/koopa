@@ -47,7 +47,7 @@ koopa:::linux_install_aws_cli() { # {{{1
     # Note that directory structure currently returns differently for Alpine.
     version="$(find . -mindepth 1 -maxdepth 1 -type d -name '2.*')"
     [[ -z "$version" ]] && koopa::stop 'Failed to detect version.'
-    version="$(basename "$version")"
+    version="$(koopa::basename "$version")"
     koopa::sys_cp "$version" "$prefix"
     return 0
 }
