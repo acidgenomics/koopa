@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Can we switch to koopa::parse_url instead of curl here?
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-10-26.
     #
     # Using '-k/--insecure' flag here to handle some servers
     # (e.g. download.opensuse.org) that will fail otherwise.
     # """
-    local curl name_fancy url key
+    local name_fancy url key
     koopa::assert_has_args_le "$#" 3
-    curl="$(koopa::locate_curl)"
     koopa::assert_is_installed 'apt-key'
     name_fancy="${1:?}"
     url="${2:?}"
@@ -21,7 +19,7 @@ koopa:::debian_apt_key_add() {  #{{{1
         koopa::debian_apt_is_key_imported "$key" && return 0
     fi
     koopa::alert "Adding '${name_fancy}' key to apt."
-    "$curl" -fksSL "$url" \
+    koopa::parse_url --insecure "$url" \
         | sudo apt-key add - \
         >/dev/null 2>&1 \
         || true
@@ -53,27 +51,25 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
     return 0
 }
 
-# FIXME Can we switch to koopa::parse_url instead of curl here?
 koopa::debian_apt_add_docker_key() { # {{{1
     # """
     # Add the Docker key.
-    # @note Updated 2021-09-30.
+    # @note Updated 2021-10-26.
     #
     # @seealso
     # - https://docs.docker.com/engine/install/debian/
     # - https://docs.docker.com/engine/install/ubuntu/
     # """
-    local curl file gpg name_fancy os_id url
+    local file gpg name_fancy os_id url
     koopa::assert_has_no_args "$#"
     file='/usr/share/keyrings/docker-archive-keyring.gpg'
     [[ -f "$file" ]] && return 0
     name_fancy='Docker'
-    curl="$(koopa::locate_curl)"
     gpg="$(koopa::locate_gpg)"
     os_id="$(koopa::os_id)"
     url="https://download.docker.com/linux/${os_id}/gpg"
     koopa::alert "Adding ${name_fancy} keyring at '${file}'."
-    "$curl" -fsSL "$url" \
+    koopa::parse_url "$url" \
         | sudo "$gpg" --dearmor -o "$file"
     koopa::assert_is_file "$file"
     return 0
@@ -112,21 +108,19 @@ ${url} ${os_codename} stable"
     return 0
 }
 
-# FIXME Can we switch to koopa::parse_url instead of curl here?
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
-    # @note Updated 2020-08-17.
+    # @note Updated 2021-10-126.
     # """
-    local curl file url
+    local file url
     koopa::assert_has_no_args "$#"
-    curl="$(koopa::locate_curl)"
     koopa::assert_is_installed 'apt-key'
     url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     file='/usr/share/keyrings/cloud.google.gpg'
     [[ -e "$file" ]] && return 0
     koopa::alert "Adding Google Cloud keyring at '${file}'."
-    "$curl" -fsSL "$url" \
+    koopa::parse_url "$url" \
         | sudo apt-key --keyring "$file" add - \
         >/dev/null 2>&1 \
         || true
@@ -196,22 +190,20 @@ llvm-toolchain-${os_codename}-${version} main"
     return 0
 }
 
-# FIXME Can we switch to koopa::parse_url instead of curl here?
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
     # Add the Microsoft Azure CLI key.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-10-26.
     # """
-    local curl file gpg tee url
+    local file gpg tee url
     koopa::assert_has_no_args "$#"
-    curl="$(koopa::locate_curl)"
     gpg="$(koopa::locate_gpg)"
     tee="$(koopa::locate_tee)"
     url='https://packages.microsoft.com/keys/microsoft.asc'
     file='/etc/apt/trusted.gpg.d/microsoft.asc.gpg'
     [[ -e "$file" ]] && return 0
     koopa::alert "Adding Microsoft key at '${file}'."
-    "$curl" -fsSL "$url" \
+    koopa::parse_url "$url" \
         | "$gpg" --dearmor \
         | sudo "$tee" "$file" \
         >/dev/null 2>&1 \
