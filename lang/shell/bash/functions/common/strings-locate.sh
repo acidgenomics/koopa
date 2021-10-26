@@ -607,6 +607,18 @@ koopa::locate_id() { # {{{1
         --name='id'
 }
 
+koopa::locate_java() { # {{{1
+    # """
+    # Locate OpenJDK java.
+    # @note Updated 2021-10-26.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='openjdk' \
+        --koopa-opt='openjdk' \
+        --name='java'
+}
+
 koopa::locate_julia() { # {{{1
     # """
     # Locate Julia.
