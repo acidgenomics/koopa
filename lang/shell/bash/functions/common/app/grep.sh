@@ -14,9 +14,13 @@ koopa::grep() { # {{{1
     do
         ## Passing short flags here for BSD compatibility.
         case "$1" in
-            # Key-value pairs --------------------------------------------------
+            # Flags ------------------------------------------------------------
             '--extended-regexp')
                 grep_args+=('-E')
+                shift 1
+                ;;
+            '--fixed-strings')
+                grep_args+=('-F')
                 shift 1
                 ;;
             '--invert-match')
@@ -27,7 +31,6 @@ koopa::grep() { # {{{1
                 grep_args+=('-o')
                 shift 1
                 ;;
-            # Flags ------------------------------------------------------------
             '--sudo')
                 grep=('sudo' "${grep[@]}")
                 shift 1
