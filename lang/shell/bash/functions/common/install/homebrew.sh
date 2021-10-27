@@ -47,16 +47,18 @@ koopa::install_homebrew() { # {{{1
     return 0
 }
 
-# FIXME Need to call 'locate_brew' here.
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-27.
     #
     # Custom brewfile is supported using a positional argument.
     # """
-    local brewfiles koopa_prefix install_args name_fancy
+    local app brewfiles koopa_prefix install_args name_fancy
     koopa::assert_is_admin
+    declare -A app=(
+        [brew]="$(koopa::locate_brew)"
+    )
     if [[ "$#" -eq 0 ]]
     then
         koopa_prefix="$(koopa::koopa_prefix)"
@@ -80,8 +82,7 @@ koopa::install_homebrew_bundle() { # {{{1
     fi
     name_fancy='Homebrew Bundle'
     koopa::install_start "$name_fancy"
-    koopa::assert_is_installed 'brew'
-    brew analytics off
+    "${app[brew]}" analytics off
     # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
     # variable, which is defined in our main Homebrew activation function.
     install_args=(
@@ -95,7 +96,7 @@ koopa::install_homebrew_bundle() { # {{{1
     do
         koopa::assert_is_file "$brewfile"
         koopa::dl 'Brewfile' "$brewfile"
-        brew bundle install \
+        "${app[brew]}" bundle install \
             "${install_args[@]}" \
             --file="${brewfile}"
     done
@@ -142,15 +143,10 @@ koopa::uninstall_homebrew() { # {{{1
     return 0
 }
 
-# FIXME Check that Xcode CLT is installed before proceeding.
-# This will break after an OS upgrade.
-# xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
-
-# FIXME Need to call 'locate_brew' here.
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-10-27.
     #
     # @seealso
     # - Refer to useful discussion regarding '--greedy' flag.
@@ -159,8 +155,7 @@ koopa::update_homebrew() { # {{{1
     # - https://thecoatlessprofessor.com/programming/
     #       macos/updating-a-homebrew-formula/
     # """
-    local name_fancy reset
-    koopa::assert_is_installed 'brew'
+    local app name_fancy reset
     koopa::assert_is_admin
     reset=0
     while (("$#"))
@@ -180,15 +175,22 @@ koopa::update_homebrew() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [brew]="$(koopa::locate_brew)"
+    )
     name_fancy='Homebrew'
     koopa::update_start "$name_fancy"
+    if ! koopa::is_xcode_clt_installed
+    then
+        koopa::stop 'Need to reinstall Xcode CLT.'
+    fi
     if [[ "$reset" -eq 1 ]]
     then
         koopa::brew_reset_permissions
         koopa::brew_reset_core_repo
     fi
-    brew analytics off
-    brew update &>/dev/null
+    "${app[brew]}" analytics off
+    "${app[brew]}" update &>/dev/null
     if koopa::is_macos
     then
         koopa::macos_brew_upgrade_casks
