@@ -583,6 +583,18 @@ koopa::locate_gzip() { # {{{1
     koopa:::locate_app 'gzip'
 }
 
+koopa::locate_h5cc() { # {{{1
+    # """
+    # Locate HDF5 h5cc.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='hdf5' \
+        --koopa-opt='hdf5' \
+        --name='h5cc'
+}
+
 koopa::locate_head() { # {{{1
     # """
     # Locate GNU head.
@@ -997,6 +1009,15 @@ koopa::locate_sort() { # {{{1
         --name='sort'
 }
 
+koopa::locate_sqlplus() { # {{{1
+    # """
+    # Locate Oracle sqlplus.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app --name='sqlplus'
+}
+
 koopa::locate_ssh() { # {{{1
     # """
     # Locate ssh.
@@ -1085,6 +1106,15 @@ koopa::locate_tee() { # {{{1
         --name='tee'
 }
 
+koopa::locate_tex() { # {{{1
+    # """
+    # Locate TeX.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app --name='tex'
+}
+
 koopa::locate_tr() { # {{{1
     # """
     # Locate GNU tr.
@@ -1140,6 +1170,15 @@ koopa::locate_unzip() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app 'unzip'
+}
+
+koopa::locate_vim() { # {{{1
+    # """
+    # Locate vim.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app --name='vim'
 }
 
 koopa::locate_wc() { # {{{1

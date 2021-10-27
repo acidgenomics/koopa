@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve consistency in this file of calls to koopa::grep.
-# FIXME Consider wrapping koopa::cut, koopa::sed, koopa::awk, koopa::head,
-# koopa::tail, koopa::sort...
-
 koopa:::pkg_config_version() { # {{{1
     # """
     # Get a library version via pkg-config.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-27.
     # """
-    local pkg pkg_config x
+    local app pkg x
     koopa::assert_has_args_eq "$#" 1
     pkg="${1:?}"
-    pkg_config="$(koopa::locate_pkg_config)"
-    x="$("$pkg_config" --modversion "$pkg")"
+    declare -A app=(
+        [pkg_config]="$(koopa::locate_pkg_config)"
+    )
+    x="$("${app[pkg_config]}" --modversion "$pkg")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -101,7 +99,6 @@ koopa::bpytop_version() { # {{{1
     # """
     local app x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'bpytop'
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
         [bpytop]="$(koopa::locate_bpytop)"
@@ -409,29 +406,31 @@ koopa::harfbuzz_version() { # {{{1
     koopa:::pkg_config_version 'harfbuzz'
 }
 
-# FIXME Harden sed here.
-# FIXME Need to locate h5cc here.
 koopa::hdf5_version() { # {{{1
     # """
     # HDF5 version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-27.
     #
     # Debian: 'dpkg -s libhdf5-dev'
     # """
-    local sed x
+    local app x
     koopa::assert_has_no_args "$#"
-    sed="$(koopa::locate_sed)"
-    koopa::assert_is_installed 'h5cc'
+    declare -A app=(
+        [h5cc]="$(koopa::locate_h5cc)"
+        [sed]="$(koopa::locate_sed)"
+    )
     x="$( \
-        h5cc -showconfig \
+        "${app[h5cc]}" -showconfig \
             | koopa::grep 'HDF5 Version:' \
-            | "$sed" -E 's/^(.+): //' \
+            | "${app[sed]}" -E 's/^(.+): //' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
 
+# FIXME This check seems to be failing on macOS.
+# FIXME Need to update Homebrew configuration?
 koopa::icu4c_version() { # {{{1
     # """
     # ICU version.
@@ -515,20 +514,19 @@ koopa::openjdk_version() { # {{{1
     return 0
 }
 
-# FIXME Need to locate sqlplus here.
 koopa::oracle_instantclient_version() { # {{{1
     # """
     # Oracle InstantClient version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-27.
     # """
-    local grep x
+    local app x
     koopa::assert_has_no_args "$#"
-    grep="$(koopa::locate_grep)"
-    koopa::assert_is_installed 'sqlplus'
-    # FIXME Rework using 'koopa::grep'.
+    declare -A app=(
+        [sqlplus]="$(koopa::locate_sqlplus)"
+    )
     x="$( \
-        sqlplus -v \
-            | "$grep" -E '^Version' \
+        "${app[sqlplus]}" -v \
+            | koopa::grep --extended-regexp '^Version' \
     )"
     x="$(koopa::extract_version "$x")"
     [[ -n "$x" ]] || return 1
@@ -639,16 +637,18 @@ koopa::r_package_version() { # {{{1
 koopa::r_version() { # {{{1
     # """
     # R version.
-    # @note Updated 2021-03-01.
+    # @note Updated 2021-10-27.
     # """
-    local head r x
+    local app x
     koopa::assert_has_args_le "$#" 1
-    head="$(koopa::locate_head)"
-    r="${1:-}"
-    [[ -z "$r" ]] && r="$(koopa::locate_r)"
+    declare -A app=(
+        [head]="$(koopa::locate_head)"
+        [r]="${1:-}"
+    )
+    [[ -z "${app[r]}" ]] && app[r]="$(koopa::locate_r)"
     x="$( \
-        "$r" --version 2>/dev/null \
-        | head -n 1 \
+        "${app[r]}" --version 2>/dev/null \
+        | "${app[head]}" -n 1 \
     )"
     if koopa::str_match_fixed "$x" 'R Under development (unstable)'
     then
@@ -840,28 +840,29 @@ koopa::sanitize_version() { # {{{1
     return 0
 }
 
-# FIXME Need to locate tex here.
 koopa::tex_version() { # {{{1
     # """
     # TeX version.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-10-27.
     #
     # We're checking the TeX Live release year here.
     # Here's what it looks like on Debian/Ubuntu:
     # TeX 3.14159265 (TeX Live 2017/Debian)
     # """
-    local x
+    local app x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'tex'
-    cut="$(koopa::locate_cut)"
-    head="$(koopa::locate_head)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+        [tex]="$(koopa::locate_tex)"
+    )
     x="$( \
-        tex --version \
-            | "$head" -n 1 \
-            | "$cut" -d '(' -f 2 \
-            | "$cut" -d ')' -f 1 \
-            | "$cut" -d ' ' -f 3 \
-            | "$cut" -d '/' -f 1 \
+        "${app[tex]}" --version \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d '(' -f 2 \
+            | "${app[cut]}" -d ')' -f 1 \
+            | "${app[cut]}" -d ' ' -f 3 \
+            | "${app[cut]}" -d '/' -f 1 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -878,32 +879,31 @@ koopa::version_pattern() { # {{{1
     return 0
 }
 
-# FIXME Need to locate vim here.
 koopa::vim_version() { # {{{1
     # """
     # Vim version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-27.
     # """
-    local cut grep head major_minor patch version x
+    local app major_minor patch version vim x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'vim'
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    head="$(koopa::locate_head)"
-    x="$(vim --version 2>/dev/null)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+        [vim]="$(koopa::locate_vim)"
+    )
+    x="$("${app[vim]}" --version 2>/dev/null)"
     major_minor="$( \
         koopa::print "$x" \
-            | "$head" -n 1 \
-            | "$cut" -d ' ' -f 5 \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f 5 \
     )"
     if koopa::str_match_fixed "$x" 'Included patches:'
     then
-        # FIXME Rework using 'koopa::grep'.
         patch="$( \
             koopa::print "$x" \
-                | "$grep" 'Included patches:' \
-                | "$cut" -d '-' -f 2 \
-                | "$cut" -d ',' -f 1 \
+                | koopa::grep 'Included patches:' \
+                | "${app[cut]}" -d '-' -f 2 \
+                | "${app[cut]}" -d ',' -f 1 \
         )"
         version="${major_minor}.${patch}"
     else
@@ -916,7 +916,7 @@ koopa::vim_version() { # {{{1
 koopa::xcode_clt_version() { # {{{1
     # """
     # Xcode CLT version.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-10-27.
     #
     # @seealso
     # - https://apple.stackexchange.com/questions/180957
@@ -927,7 +927,7 @@ koopa::xcode_clt_version() { # {{{1
     koopa::is_xcode_clt_installed || return 1
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
-        [pkgutil]="$(koopa::locate_pkgutil)"  # FIXME
+        [pkgutil]="$(koopa::locate_pkgutil)"
     )
     pkg='com.apple.pkg.CLTools_Executables'
     "${app[pkgutil]}" --pkgs="$pkg" >/dev/null || return 1
