@@ -47,6 +47,7 @@ koopa::install_homebrew() { # {{{1
     return 0
 }
 
+# FIXME Need to call 'locate_brew' here.
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
@@ -145,6 +146,7 @@ koopa::uninstall_homebrew() { # {{{1
 # This will break after an OS upgrade.
 # xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
 
+# FIXME Need to call 'locate_brew' here.
 koopa::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
