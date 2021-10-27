@@ -3,12 +3,13 @@
 koopa::grep() { # {{{1
     # """
     # grep matching.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-10-27.
     # """
-    local grep string
+    local grep pos string
     koopa::assert_has_args "$#"
     grep=("$(koopa::locate_grep)")
     grep_args=()
+    pos=()
     while (("$#"))
     do
         ## Passing short flags here for BSD compatibility.
@@ -45,6 +46,7 @@ koopa::grep() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
     if [[ "$#" -eq 1 ]]
     then
         # Piped input using stdin.
