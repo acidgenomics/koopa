@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden sudo and dpkg-reconfigure commands here.
+
 koopa::debian_enable_unattended_upgrades() { # {{{1
     # """
     # Enable unattended upgrades.
