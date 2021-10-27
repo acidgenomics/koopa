@@ -224,14 +224,13 @@ koopa::docker_build() { # {{{1
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-10-27.
     # """
     local app build_file build_args image images
     local pos repo repos repo_name 
     declare -A app=(
         [basename]="$(koopa::locate_basename)"
         [docker]="$(koopa::locate_docker)"
-        [sort]="$(koopa::locate_sort)"
         [xargs]="$(koopa::locate_xargs)"
     )
     declare -A dict=(
@@ -312,16 +311,14 @@ koopa::docker_build_all_images() { # {{{1
                     "$build_file" \
             )"
         else
-            # FIXME Need to rework this using '--sort' flag.
-            # FIXME Rethink the print0, sort -z, xargs -0 handling here...
             readarray -t images <<< "$( \
                 koopa::find \
                     --max-depth=1 \
                     --min-depth=1 \
-                    --prefix='.' \
+                    --prefix="${PWD:?}" \
                     --print0 \
+                    --sort \
                     --type='d' \
-                | "${app[sort]}" -z \
                 | "${app[xargs]}" -0 -n1 "${app[basename]}" \
             )"
         fi
