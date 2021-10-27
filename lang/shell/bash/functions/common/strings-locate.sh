@@ -447,6 +447,16 @@ koopa::locate_doom() { # {{{1
     koopa:::locate_app "$(koopa::doom_emacs_prefix)/bin/doom"
 }
 
+koopa::locate_dscacheutil() { # {{{1
+    # """
+    # Locate macOS dscacheutil.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/dscacheutil'
+}
+
 koopa::locate_du() { # {{{1
     # """
     # Locate GNU du.
@@ -667,6 +677,16 @@ koopa::locate_julia() { # {{{1
         --name='julia'
 }
 
+koopa::locate_kill_all() { # {{{1
+    # """
+    # Locate macOS killAll.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/killAll'
+}
+
 koopa::locate_llvm_config() { # {{{1
     # """
     # Locate 'llvm-config' executable.
@@ -720,6 +740,17 @@ koopa::locate_ls() { # {{{1
         --brew-opt='coreutils' \
         --gnubin \
         --name='ls'
+}
+
+koopa::locate_lsregister() { # {{{1
+    # """
+    # Locate macOS lsregister.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app "/System/Library/Frameworks/CoreServices.framework\
+/Frameworks/LaunchServices.framework/Support/lsregister"
 }
 
 koopa::locate_make() { # {{{1
