@@ -874,6 +874,16 @@ koopa::locate_pkgutil() { # {{{1
     koopa:::locate_app '/usr/sbin/pkgutil'
 }
 
+koopa::locate_plutil() { # {{{1
+    # """
+    # Locate macOS plutil.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/plutil'
+}
+
 koopa::locate_python() { # {{{1
     # """
     # Locate Python.
