@@ -785,6 +785,16 @@ koopa::locate_npm() { # {{{1
         --name='npm'
 }
 
+koopa::locate_open() { # {{{1
+    # """
+    # Locate macOS open command.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/open'
+}
+
 koopa::locate_openssl() { # {{{1
     # """
     # Locate openssl.
@@ -870,7 +880,7 @@ koopa::locate_pkgutil() { # {{{1
     # @note Updated 2021-10-26.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_macos
+    # > koopa::assert_is_macos
     koopa:::locate_app '/usr/sbin/pkgutil'
 }
 
@@ -880,7 +890,7 @@ koopa::locate_plutil() { # {{{1
     # @note Updated 2021-10-27.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_macos
+    # > koopa::assert_is_macos
     koopa:::locate_app '/usr/bin/plutil'
 }
 
@@ -1059,6 +1069,15 @@ koopa::locate_stat() { # {{{1
     koopa:::locate_app '/usr/bin/stat'
 }
 
+koopa::locate_sudo() { # {{{1
+    # """
+    # Locate sudo.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app '/usr/bin/sudo'
+}
+
 koopa::locate_svn() { # {{{1
     # """
     # Locate svn.
@@ -1122,7 +1141,20 @@ koopa::locate_tex() { # {{{1
     # @note Updated 2021-10-27.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::locate_app --name='tex'
+    koopa:::locate_app \
+        --macos-app='/Library/TeX/texbin/tex' \
+        --name='tex'
+}
+
+koopa::locate_tlmgr() { # {{{1
+    # """
+    # Locate Tex tlmgr.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --macos-app='/Library/TeX/texbin/tlmgr' \
+        --name='tlmgr'
 }
 
 koopa::locate_touch() { # {{{1

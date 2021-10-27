@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden tee call here.
 koopa::linux_bcl2fastq_indrops() { # {{{1
     # """
     # Run bcl2fastq on inDrops sequencing run.
