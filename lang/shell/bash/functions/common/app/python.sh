@@ -71,9 +71,10 @@ koopa::python_get_pkg_versions() {
 koopa::python_pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-27.
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
+    # - https://docs.python-guide.org/dev/pip-virtualenv/
     # """
     local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
@@ -130,6 +131,7 @@ koopa::python_pip_install() { # {{{1
             '--ignore-installed'
         )
     fi
+    unset -v PIP_REQUIRE_VIRTUALENV
     "$python" -m pip install "${install_flags[@]}" "$@"
     return 0
 }
