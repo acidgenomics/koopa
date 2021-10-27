@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME How to handle case where 'brew-opt' and 'koopa-opt' are the same?
+# FIXME We likely want to streamline the handling of this for coreutils.
+
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -561,6 +564,18 @@ koopa::locate_grep() { # {{{1
     koopa:::locate_app \
         --gnubin \
         --name='grep'
+}
+
+koopa::locate_groups() { # {{{1
+    # """
+    # Locate GNU groups.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='coreutils' \
+        --gnubin \
+        --name='groups'
 }
 
 koopa::locate_gunzip() { # {{{1

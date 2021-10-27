@@ -86,26 +86,28 @@ koopa::has_no_environments() { # {{{1
 koopa::has_passwordless_sudo() { # {{{1
     # """
     # Check if sudo is active or doesn't require a password.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-10-27.
     #
     # See also:
     # https://askubuntu.com/questions/357220
     # """
+    local app
     koopa::assert_has_no_args "$#"
-    koopa::is_installed 'sudo' || return 1
     koopa::is_root && return 0
-    sudo -n true 2>/dev/null && return 0
+    koopa::is_installed 'sudo' || return 1
+    declare -A app=(
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" -n true 2>/dev/null && return 0
     return 1
 }
 
 koopa::is_admin() { # {{{1
     # """
     # Check that current user has administrator permissions.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-10-27.
     #
-    # This check is hanging on an CPI AWS Ubuntu EC2 instance, I think due to
-    # 'groups' can lag on systems for domain user accounts.
-    # Currently seeing on CPI AWS Ubuntu config.
+    # This check can hang on some systems with domain user accounts.
     #
     # Avoid prompting with '-n, --non-interactive', but note that this isn't
     # supported on all systems.
@@ -126,6 +128,7 @@ koopa::is_admin() { # {{{1
     # - https://serverfault.com/questions/364334
     # - https://linuxhandbook.com/check-if-user-has-sudo-rights/
     # """
+    local app groups pattern
     koopa::assert_has_no_args "$#"
     if [[ -n "${KOOPA_ADMIN:-}" ]]
     then
@@ -139,14 +142,20 @@ koopa::is_admin() { # {{{1
         esac
     fi
     # Always return true for root user.
-    [[ "$(koopa::user_id)" -eq 0 ]] && return 0
+    koopa::is_root && return 0
     # Return false if 'sudo' program is not installed.
     koopa::is_installed 'sudo' || return 1
     # Early return true if user has passwordless sudo enabled.
     koopa::has_passwordless_sudo && return 0
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.
-    koopa::str_match_regex "$(groups)" '\b(admin|root|sudo|wheel)\b' && return 0
+    declare -A app=(
+        [groups]="$(koopa::locate_groups)"
+    )
+    groups="$("${app[groups]}")"
+    [[ -n "$groups" ]] || return 1
+    pattern='\b(admin|root|sudo|wheel)\b'
+    koopa::str_match_regex "$groups" "$pattern" && return 0
     return 1
 }
 
