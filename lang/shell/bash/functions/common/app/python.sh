@@ -26,6 +26,7 @@ koopa::python_pip_install() { # {{{1
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
     # - https://docs.python-guide.org/dev/pip-virtualenv/
+    # - https://github.com/pypa/pip/issues/3828
     # """
     local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
@@ -84,7 +85,9 @@ koopa::python_pip_install() { # {{{1
         )
     fi
     unset -v PIP_REQUIRE_VIRTUALENV
-    "$python" -m pip install "${install_flags[@]}" "$@"
+    # The '--isolated' flag will ignore user 'pip.conf' file.
+    "$python" -m pip --isolated \
+        install "${install_flags[@]}" "$@"
     return 0
 }
 
