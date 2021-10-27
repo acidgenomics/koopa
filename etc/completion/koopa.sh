@@ -4,14 +4,10 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-09-29.
+    # Updated 2021-10-27.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
-    #
-    # Here's how to keep track of variables:
-    # > cur=${COMP_WORDS[COMP_CWORD]}
-    # > prev=${COMP_WORDS[COMP_CWORD-1]}
     #
     # Multi-level bash completion:
     # - https://stackoverflow.com/questions/17879322/
@@ -23,7 +19,7 @@ _koopa_complete() { # {{{1
     #     A-Programmable-Completion-Example.html
     #
     # """
-    local args cur prev
+    local args cur
     COMPREPLY=()
     if [[ "$COMP_CWORD" -eq 1 ]] && \
         [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'koopa' ]]
@@ -218,7 +214,7 @@ _koopa_complete() { # {{{1
                     )
                 fi
                 # Handle 'install' or 'uninstall'-specific arguments.
-                case "$prev" in
+                case "${COMP_WORDS[COMP_CWORD-1]}" in
                     install)
                         args+=(
                             'homebrew-bundle'
