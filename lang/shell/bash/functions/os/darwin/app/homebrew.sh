@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to locate grep here if we use the old approach.
 koopa::macos_brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2021-04-22.
+    # @note Updated 2021-10-27.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
@@ -19,10 +18,12 @@ koopa::macos_brew_cask_outdated() { # {{{
     # - brew list --versions
     # - brew info
     # """
-    local keep_latest tmp_file x
+    local app keep_latest tmp_file x
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_macos
-    koopa::assert_is_installed 'brew'
+    declare -A app=(
+        [brew]="$(koopa::locate_brew)"
+        [cut]="$(koopa::locate_cut)"
+    )
     # Whether we want to keep unversioned 'latest' casks returned with
     # '--greedy'. This tends to include font casks and the Google Cloud SDK,
     # which are annoying to have reinstall with each update, so disabling
@@ -30,15 +31,15 @@ koopa::macos_brew_cask_outdated() { # {{{
     keep_latest=0
     # This approach keeps the version information, which we can parse.
     tmp_file="$(koopa::tmp_file)"
-    script -q "$tmp_file" brew outdated --cask --greedy >/dev/null
+    script -q "$tmp_file" \
+        "${app[brew]}" outdated --cask --greedy >/dev/null
     if [[ "$keep_latest" -eq 1 ]]
     then
-        x="$(cut -d ' ' -f 1 < "$tmp_file")"
+        x="$("${app[cut]}" -d ' ' -f 1 < "$tmp_file")"
     else
-        # FIXME Rework using 'koopa::grep'.
         x="$( \
-            grep -v '(latest)' "$tmp_file" \
-            | cut -d ' ' -f 1 \
+            koopa::grep --invert-match '(latest)' "$tmp_file" \
+            | "${app[cut]}" -d ' ' -f 1 \
         )"
     fi
     koopa::rm "$tmp_file"
@@ -53,7 +54,6 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
     # @note Updated 2021-09-23.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_macos
     koopa::assert_is_admin
     sudo xattr -r -d 'com.apple.quarantine' '/Applications/'*'.app'
     return 0
@@ -62,16 +62,17 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
 koopa::macos_brew_upgrade_casks() { # {{{1
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2021-09-22.
+    # @note Updated 2021-10-27.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
     # function.
     # """
-    local cask casks str
+    local app cask casks str
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_macos
-    koopa::assert_is_installed 'brew'
+    declare -A app=(
+        [brew]="$(koopa::locate_brew)"
+    )
     readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
     koopa::is_array_non_empty "${casks[@]:-}" || return 0
     str="$(koopa::ngettext "${#casks[@]}" 'cask' 'casks')"
@@ -88,7 +89,7 @@ koopa::macos_brew_upgrade_casks() { # {{{1
                 cask='homebrew/cask/macvim'
                 ;;
         esac
-        brew reinstall --cask --force "$cask" || true
+        "${app[brew]}" reinstall --cask --force "$cask" || true
         case "$cask" in
             'adoptopenjdk' | \
             'openjdk' | \
