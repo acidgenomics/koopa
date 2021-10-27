@@ -3,15 +3,18 @@
 koopa::install_tex_packages() { # {{{1
     # """
     # Install TeX packages.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-10-27.
     # """
-    local name_fancy package packages
+    local app name_fancy package packages
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'tlmgr'
     koopa::assert_is_admin
+    declare -A app=(
+        [sudo]="$(koopa::locate_sudo)"
+        [tlmgr]="$(koopa::locate_tlmgr)"
+    )
     name_fancy='TeX packages'
     koopa::install_start "$name_fancy"
-    sudo tlmgr update --self
+    "${app[sudo]}" "${app[tlmgr]}" update --self
     packages=(
         # Priority ----
         'collection-fontsrecommended'
@@ -49,7 +52,7 @@ koopa::install_tex_packages() { # {{{1
     )
     for package in "${packages[@]}"
     do
-        sudo tlmgr install "$package"
+        "${app[sudo]}" "${app[tlmgr]}" install "$package"
     done
     koopa::install_success "$name_fancy"
     return 0
@@ -58,17 +61,20 @@ koopa::install_tex_packages() { # {{{1
 koopa::update_tex_packages() { # {{{1
     # """
     # Update TeX packages.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-10-27.
     # """
     local name_fancy
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'tlmgr'
     koopa::assert_is_admin
+    declare -A app=(
+        [sudo]="$(koopa::locate_sudo)"
+        [tlmgr]="$(koopa::locate_tlmgr)"
+    )
     name_fancy='TeX packages'
     koopa::update_start "$name_fancy"
-    sudo tlmgr update --self
-    sudo tlmgr update --list
-    sudo tlmgr update --all
+    "${app[sudo]}" "${app[tlmgr]}" update --self
+    "${app[sudo]}" "${app[tlmgr]}" update --list
+    "${app[sudo]}" "${app[tlmgr]}" update --all
     koopa::update_success "$name_fancy"
     return 0
 }

@@ -193,19 +193,21 @@ llvm-toolchain-${os_codename}-${version} main"
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
     # Add the Microsoft Azure CLI key.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-10-27.
     # """
-    local file gpg tee url
+    local app file url
     koopa::assert_has_no_args "$#"
-    gpg="$(koopa::locate_gpg)"
-    tee="$(koopa::locate_tee)"
+    declare -A app=(
+        [gpg]="$(koopa::locate_gpg)"
+        [tee]="$(koopa::locate_tee)"
+    )
     url='https://packages.microsoft.com/keys/microsoft.asc'
     file='/etc/apt/trusted.gpg.d/microsoft.asc.gpg'
     [[ -e "$file" ]] && return 0
     koopa::alert "Adding Microsoft key at '${file}'."
     koopa::parse_url "$url" \
-        | "$gpg" --dearmor \
-        | sudo "$tee" "$file" \
+        | "${app[gpg]}" --dearmor \
+        | sudo "${app[tee]}" "$file" \
         >/dev/null 2>&1 \
         || true
     return 0
