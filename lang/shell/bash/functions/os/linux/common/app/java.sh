@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden sudo commands here.
+# FIXME Need to harden update-alternatives command.
+
 koopa::linux_java_update_alternatives() { # {{{1
     # """
     # Update Java alternatives.
