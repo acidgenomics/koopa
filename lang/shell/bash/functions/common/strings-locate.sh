@@ -1283,6 +1283,16 @@ koopa::locate_xargs() { # {{{1
         --name='xargs'
 }
 
+koopa::locate_xattr() { # {{{1
+    # """
+    # Locate macOS xattr.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/xattr'
+}
+
 koopa::locate_yes() { # {{{1
     # """
     # Locate GNU yes.
