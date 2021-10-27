@@ -1,54 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::python_delete_pycache() { # {{{1
-    # """
-    # Remove Python '__pycache__/' from site packages.
-    # @note Updated 2021-09-21.
-    #
-    # These directories can create permission issues when attempting to rsync
-    # installation across multiple VMs.
-    # """
-    local find pos prefix python rm xargs
-    koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed 'find'
-    find="$(koopa::locate_find)"
-    python="$(koopa::locate_python)"
-    rm="$(koopa::locate_rm)"
-    xargs="$(koopa::locate_xargs)"
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--python='*)
-                python="${1#*=}"
-                shift 1
-                ;;
-            '--python')
-                python="${2:?}"
-                shift 2
-                ;;
-            # Other ------------------------------------------------------------
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::assert_has_no_args "$#"
-    python="$(koopa::which_realpath "$python")"
-    prefix="$(koopa::parent_dir --num=2 "$python")"
-    koopa::alert "Removing pycache in '${prefix}'."
-    # FIXME Rework this using 'koopa::find'.
-    # FIXME Need to add '--remote' flag here for deletion...
-    # FIXME Can use this code here for inspiration.
-    # FIXME Rethink the '--print0' handling here.
-    "$find" "$prefix" \
-        -type 'd' \
-        -name '__pycache__' \
-        -print0 \
-        | "$xargs" -0 -I {} "$rm" -fr '{}'
-    return 0
-}
-
 koopa::python_get_pkg_versions() {
     # """
     # Get pinned Python package versions for pip install call.
@@ -78,7 +29,6 @@ koopa::python_pip_install() { # {{{1
     # """
     local install_flags pos python reinstall target
     koopa::assert_has_args "$#"
-    python="$(koopa::locate_python)"
     reinstall=0
     pos=()
     while (("$#"))
@@ -109,6 +59,8 @@ koopa::python_pip_install() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    [[ -z "${python:-}" ]] && python="$(koopa::locate_python)"
     koopa::configure_python "$python"
     version="$(koopa::get_version "$python")"
     target="$(koopa::python_packages_prefix "$version")"
@@ -139,7 +91,7 @@ koopa::python_pip_install() { # {{{1
 koopa::python_pip_outdated() { # {{{1
     # """
     # List oudated pip packages.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-10-27.
     #
     # Requesting 'freeze' format will return '<pkg>==<version>'.
     #
@@ -147,7 +99,8 @@ koopa::python_pip_outdated() { # {{{1
     # - https://pip.pypa.io/en/stable/cli/pip_list/
     # """
     local prefix python version x
-    python="$(koopa::locate_python)"
+    python="${1:-}"
+    [[ -z "${python:-}" ]] && python="$(koopa::locate_python)"
     version="$(koopa::get_version "$python")"
     prefix="$(koopa::python_packages_prefix "$version")"
     x="$( \
@@ -169,7 +122,6 @@ koopa::python_venv_create() { # {{{1
     local default_pkgs name name_fancy prefix pos python reinstall venv_python
     koopa::assert_has_no_envs
     name_fancy='Python virtual environment'
-    python="$(koopa::locate_python)"
     reinstall=0
     pos=()
     while (("$#"))
@@ -209,7 +161,7 @@ koopa::python_venv_create() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_is_set 'name' 'python'
+    [[ -z "${python:-}" ]] && python="$(koopa::locate_python)"
     koopa::assert_is_installed "$python"
     prefix="$(koopa::python_venv_prefix)/${name}"
     if [[ "$reinstall" -eq 1 ]]
