@@ -160,40 +160,41 @@ koopa::koopa_url() { # {{{1
     return 0
 }
 
+# FIXME Need to locate ifconfig and hostname here.
 koopa::local_ip_address() { # {{{1
     # """
     # Local IP address.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-27.
     #
     # Some systems (e.g. macOS) will return multiple IP address matches for
     # Ethernet and WiFi. Here we're simplying returning the first match, which
     # corresponds to the default on macOS.
     # """
-    local awk grep head tail x
+    local app x
     koopa::assert_has_no_args "$#"
-    awk="$(koopa::locate_awk)"
-    grep="$(koopa::locate_grep)"
-    head="$(koopa::locate_head)"
-    tail="$(koopa::locate_tail)"
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [head]="$(koopa::locate_head)"
+        [tail]="$(koopa::locate_tail)"
+    )
     if koopa::is_macos
     then
         koopa::assert_is_installed 'ifconfig'
-        # FIXME Rework using 'koopa::grep'.
         # shellcheck disable=SC2016
         x="$( \
             ifconfig \
-            | "$grep" 'inet ' \
-            | "$grep" 'broadcast' \
-            | "$awk" '{print $2}' \
-            | "$tail" -n 1
+            | koopa::grep 'inet ' \
+            | koopa::grep 'broadcast' \
+            | "${app[awk]}" '{print $2}' \
+            | "${app[tail]}" -n 1
         )"
     else
         koopa::assert_is_installed 'hostname'
         # shellcheck disable=SC2016
         x="$( \
             hostname -I \
-            | "$awk" '{print $1}' \
-            | "$head" -n 1
+            | "${app[awk]}" '{print $1}' \
+            | "${app[head]}" -n 1
         )"
     fi
     [[ -n "$x" ]] || return 1
@@ -228,14 +229,16 @@ koopa::make_build_string() { # {{{1
 koopa::os_type() { # {{{1
     # """
     # Operating system type.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-27.
     # """
-    local tr uname x
-    tr="$(koopa::locate_tr)"
-    uname="$(koopa::locate_uname)"
+    local app x
+    declare -A app=(
+        [tr]="$(koopa::locate_tr)"
+        [uname]="$(koopa::locate_uname)"
+    )
     x="$( \
-        "$uname" -s \
-        | "$tr" '[:upper:]' '[:lower:]' \
+        "${app[uname]}" -s \
+        | "${app[tr]}" '[:upper:]' '[:lower:]' \
     )"
     koopa::print "$x"
     return 0
