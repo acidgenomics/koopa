@@ -5,6 +5,7 @@ koopa::assert_is_r_package_installed syntactic
 test_camel_case_bin() { # {{{1
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
     MOCK_OUTPUT="$(dirname "${MOCK_INPUT}")/fooBar"
+    # FIXME Use 'koopa::touch' here.
     touch "$MOCK_INPUT"
     assertTrue "[ -f '${MOCK_INPUT}' ]"
     assertFalse "[ -f '${MOCK_OUTPUT}' ]"
@@ -15,6 +16,7 @@ test_camel_case_bin() { # {{{1
 test_kebab_case_bin() { # {{{1
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
     MOCK_OUTPUT="$(dirname "${MOCK_INPUT}")/foo-bar"
+    # FIXME Use 'koopa::touch' here.
     touch "$MOCK_INPUT"
     assertTrue "[ -f '${MOCK_INPUT}' ]"
     assertFalse "[ -f '${MOCK_OUTPUT}' ]"
@@ -25,6 +27,7 @@ test_kebab_case_bin() { # {{{1
 test_snake_case_bin() { # {{{1
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
     MOCK_OUTPUT="$(dirname "${MOCK_INPUT}")/foo_bar"
+    # FIXME Use 'koopa::touch' here.
     touch "$MOCK_INPUT"
     assertTrue "[ -f '${MOCK_INPUT}' ]"
     assertFalse "[ -f '${MOCK_OUTPUT}' ]"

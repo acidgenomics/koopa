@@ -138,6 +138,7 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     # If the 'sam_fa_indices.loc' file is missing, the script will error.
     tool_data_prefix="${install_prefix}/galaxy/tool-data"
     koopa::mkdir "$tool_data_prefix"
+    # FIXME Use 'koopa::touch' here.
     touch "${tool_data_prefix}/sam_fa_indices.log"
     (
         # This step will download cloudbiolinux, so migrating to a temporary

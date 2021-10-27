@@ -52,6 +52,7 @@ koopa::add_to_user_profile() { # {{{1
     source_file="$(koopa::koopa_prefix)/lang/shell/posix/include/profile.sh"
     koopa::assert_is_file "$source_file"
     koopa::alert "Adding koopa activation to '${target_file}'."
+    # FIXME Use 'koopa::touch' here.
     touch "$target_file"
     cat "$source_file" >> "$target_file"
     return 0
