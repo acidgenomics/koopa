@@ -3,7 +3,7 @@
 koopa::macos_disable_touch_id_sudo() { # {{{1
     # """
     # Disable sudo authentication via Touch ID PAM.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-10-27.
     # """
     local source_file target_file
     koopa::assert_has_no_args "$#"
@@ -11,7 +11,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     source_file="$(koopa::koopa_prefix)/os/macos/etc/pam.d/sudo~orig"
     target_file='/etc/pam.d/sudo'
     if [[ -f "$target_file" ]] && \
-        ! grep -q 'pam_tid.so' "$target_file"
+        ! koopa::file_match_fixed "$target_file" 'pam_tid.so'
     then
         koopa::alert_note "Touch ID not enabled for sudo in '${target_file}'."
         return 0
@@ -28,7 +28,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
 koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     # Enable sudo authentication via Touch ID PAM.
-    # @note Updated 2021-05-20.
+    # @note Updated 2021-10-27.
     # @seealso
     # - https://davidwalsh.name/touch-sudo
     # - https://news.ycombinator.com/item?id=26302139
@@ -38,8 +38,8 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     koopa::assert_is_admin
     source_file="$(koopa::koopa_prefix)/os/macos/etc/pam.d/sudo"
     target_file='/etc/pam.d/sudo'
-    # FIXME Rework using 'koopa::grep'.
-    if [[ -f "$target_file" ]] && grep -q 'pam_tid.so' "$target_file"
+    if [[ -f "$target_file" ]] && \
+        koopa::file_match_fixed "$target_file" 'pam_tid.so'
     then
         koopa::alert_note "Touch ID already enabled for sudo \
 in '${target_file}'."
