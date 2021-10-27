@@ -84,14 +84,14 @@ koopa::pkgdown_deploy_to_aws() { # {{{1
 koopa::r_link_files_into_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-10-27.
     #
     # Don't copy Makevars file across machines.
     # """
     local distro_prefix file files r r_etc_source r_etc_target r_prefix version
     koopa::assert_has_args_le "$#" 1
-    r="${1:-$(koopa::locate_r)}"
-    koopa::assert_is_installed "$r"
+    r="${1:-}"
+    [[ -z "${r:-}" ]] && r="$(koopa::locate_r)"
     r="$(koopa::which_realpath "$r")"
     r_prefix="$(koopa::r_prefix "$r")"
     koopa::assert_is_dir "$r_prefix"
@@ -181,7 +181,7 @@ koopa::r_link_site_library() { # {{{1
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2021-09-14.
+    # @note Updated 2021-10-27.
     #
     # The default Java path differs depending on the system.
     #
@@ -204,8 +204,8 @@ koopa::r_javareconf() { # {{{1
     # """
     local java_flags java_home r r_cmd
     koopa::assert_has_args_le "$#" 1
-    r="${1:-$(koopa::locate_r)}"
-    koopa::assert_is_installed "$r"
+    r="${1:-}"
+    [[ -z "${r:-}" ]] && r="$(koopa::locate_r)"
     r="$(koopa::which_realpath "$r")"
     koopa::activate_openjdk
     koopa::assert_is_installed 'java'
@@ -236,7 +236,7 @@ koopa::r_javareconf() { # {{{1
 koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-10-27.
     #
     # 1. Ensure HTML package index is writable.
     # 2. Touch an empty 'R.css' file to eliminate additional package warnings.
@@ -248,7 +248,8 @@ koopa::r_rebuild_docs() { # {{{1
     #     make.packages.html.html
     # """
     local doc_dir html_dir pkg_index r rscript rscript_flags
-    r="${1:-$(koopa::locate_r)}"
+    r="${1:-}"
+    [[ -z "${r:-}" ]] && r="$(koopa::locate_r)"
     rscript="${r}script"
     koopa::assert_is_installed "$r" "$rscript"
     rscript_flags=('--vanilla')
