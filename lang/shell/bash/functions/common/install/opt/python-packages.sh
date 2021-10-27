@@ -60,7 +60,6 @@ koopa::uninstall_python_packages() { # {{{1
         "$@"
 }
 
-# FIXME This is now failing...not enough arguments?
 koopa::update_python_packages() { # {{{1
     koopa:::update_app \
         --name='python-packages' \
@@ -81,10 +80,7 @@ koopa:::update_python_packages() { # {{{1
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
     )
-    # FIXME This is calling Python version I think.
-    echo 'FIXME AAA'
     pkgs="$(koopa::python_pip_outdated)"
-    echo 'FIXME BBB'
     if [[ -z "$pkgs" ]]
     then
         koopa::alert_success 'All Python packages are current.'
@@ -94,8 +90,6 @@ koopa:::update_python_packages() { # {{{1
         koopa::print "$pkgs" \
         | "${app[cut]}" -d '=' -f 1 \
     )"
-    # FIXME This step is erroring. Need to rework.
-    echo "${pkgs[@]}"
     koopa::python_pip_install "${pkgs[@]}"
     return 0
 }
