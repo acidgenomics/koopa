@@ -275,18 +275,20 @@ koopa::public_ip_address() { # {{{1
 koopa::script_name() { # {{{1
     # """
     # Get the calling script name.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-27.
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """
-    local cut file head x
+    local app file x
     koopa::assert_has_no_args "$#"
-    cut="$(koopa::locate_cut)"
-    head="$(koopa::locate_head)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+    )
     file="$( \
         caller \
-        | "$head" -n 1 \
-        | "$cut" -d ' ' -f 2 \
+        | "${app[head]}" -n 1 \
+        | "${app[cut]}" -d ' ' -f 2 \
     )"
     x="$(koopa::basename "$file")"
     [[ -n "$x" ]] || return 0
@@ -297,27 +299,31 @@ koopa::script_name() { # {{{1
 koopa::variable() { # {{{1
     # """
     # Return a variable stored 'variables.txt' include file.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-10-27.
     #
     # This approach handles inline comments.
     # """
-    local cut file grep head include_prefix key value
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    head="$(koopa::locate_head)"
+    local app file include_prefix key value
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+    )
     key="${1:?}"
     include_prefix="$(koopa::include_prefix)"
     file="${include_prefix}/variables.txt"
     koopa::assert_is_file "$file"
-    # FIXME Rework using 'koopa::grep'.
     value="$( \
-        "$grep" -Eo "^${key}=\"[^\"]+\"" "$file" \
+        koopa::grep \
+            --extended-regexp \
+            --only-matching \
+            "^${key}=\"[^\"]+\"" \
+            "$file" \
         || koopa::stop "'${key}' not defined in '${file}'." \
     )"
     value="$( \
         koopa::print "$value" \
-            | "$head" -n 1 \
-            | "$cut" -d '"' -f 2 \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d '"' -f 2 \
     )"
     [[ -n "$value" ]] || return 1
     koopa::print "$value"
