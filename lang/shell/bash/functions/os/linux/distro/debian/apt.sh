@@ -463,7 +463,7 @@ koopa::debian_apt_clean() { # {{{1
 koopa::debian_apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
-    # @note Updated 2021-09-22.
+    # @note Updated 2021-10-27.
     #
     # Look up currently enabled sources with:
     # > grep -Eq '^deb\s' '/etc/apt/sources.list'
@@ -537,13 +537,14 @@ koopa::debian_apt_configure_sources() { # {{{1
     # > deb http://ports.ubuntu.com/ubuntu-ports
     #       focal-security multiverse
     # """
-    local codenames cut os_codename grep os_id repos
-    local sources_list sources_list_d tee urls
+    local app codenames os_codename os_id repos
+    local sources_list sources_list_d urls
     koopa::assert_has_no_args "$#"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    head="$(koopa::locate_head)"
-    tee="$(koopa::locate_tee)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+        [tee]="$(koopa::locate_tee)"
+    )
     sources_list='/etc/apt/sources.list'
     koopa::alert "Configuring apt sources in '${sources_list}'."
     koopa::assert_is_file "$sources_list"
@@ -554,19 +555,27 @@ koopa::debian_apt_configure_sources() { # {{{1
     codenames[main]="$os_codename"
     codenames[security]="${os_codename}-security"
     codenames[updates]="${os_codename}-updates"
-    # FIXME Rework using 'koopa::grep'.
     urls[main]="$( \
-        "$grep" -E '^deb\s' "$sources_list" \
-        | "$grep" -F ' main ' \
-        | "$head" -n 1 \
-        | "$cut" -d ' ' -f 2 \
+        koopa::grep \
+            --extended-regexp \
+            '^deb\s' \
+            "$sources_list" \
+        | koopa::grep \
+            --fixed-strings \
+            ' main ' \
+        | "${app[head]}" -n 1 \
+        | "${app[cut]}" -d ' ' -f 2 \
     )"
-    # FIXME Rework using 'koopa::grep'.
     urls[security]="$( \
-        "$grep" -E '^deb\s' "$sources_list" \
-        | "$grep" -F " ${codenames[security]} " \
-        | "$head" -n 1 \
-        | "$cut" -d ' ' -f 2 \
+        koopa::grep \
+            --extended-regexp \
+                '^deb\s' \
+                "$sources_list" \
+        | koopa::grep \
+            --fixed-strings \
+            " ${codenames[security]} " \
+        | "${app[head]}" -n 1 \
+        | "${app[cut]}" -d ' ' -f 2 \
     )"
     urls[updates]="${urls[main]}"
     case "$os_id" in
@@ -624,23 +633,23 @@ koopa::debian_apt_delete_repo() { # {{{1
 koopa::debian_apt_disable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-10-27.
     # """
-    local file grep sed
+    local app file
     koopa::assert_has_args_le "$#" 1
     file="${1:-}"
     [[ -z "$file" ]] && file='/etc/apt/sources.list'
     file="$(koopa::realpath "$file")"
     koopa::alert "Disabling Debian sources in '${file}'."
-    grep="$(koopa::locate_grep)"
-    sed="$(koopa::locate_sed)"
-    # FIXME Rework using 'koopa::grep'.
-    if ! "$grep" -Eq '^deb-src ' "$file"
+    if ! koopa::file_match_regex "$file" '^deb-src '
     then
         koopa::alert_note "No 'deb-src' lines to comment in '${file}'."
         return 0
     fi
-    "$sed" -Ei 's/^deb-src /# deb-src /' "$file"
+    declare -A app=(
+        [sed]="$(koopa::locate_sed)"
+    )
+    "${app[sed]}" -Ei 's/^deb-src /# deb-src /' "$file"
     sudo apt-get update
     return 0
 }
@@ -648,23 +657,23 @@ koopa::debian_apt_disable_deb_src() { # {{{1
 koopa::debian_apt_enable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-10-27.
     # """
-    local file grep sed
+    local app file
     koopa::assert_has_args_le "$#" 1
-    grep="$(koopa::locate_grep)"
-    sed="$(koopa::locate_sed)"
     file="${1:-}"
     [[ -z "$file" ]] && file='/etc/apt/sources.list'
     file="$(koopa::realpath "$file")"
     koopa::alert "Enabling Debian sources in '${file}'."
-    # FIXME Rework using 'koopa::grep'.
-    if ! "$grep" -Eq '^# deb-src ' "$file"
+    if ! koopa::file_match_regex "$file" '^# deb-src '
     then
         koopa::alert_note "No '# deb-src' lines to uncomment in '${file}'."
         return 0
     fi
-    sudo "$sed" -Ei 's/^# deb-src /deb-src /' "$file"
+    declare -A app=(
+        [sed]="$(koopa::locate_sed)"
+    )
+    sudo "${app[sed]}" -Ei 's/^# deb-src /deb-src /' "$file"
     sudo apt-get update
     return 0
 }
@@ -672,19 +681,22 @@ koopa::debian_apt_enable_deb_src() { # {{{1
 koopa::debian_apt_enabled_repos() { # {{{1
     # """
     # Get a list of enabled default apt repos.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-10-27.
     # """
-    local cut file grep os_codename pattern x
+    local app file os_codename pattern x
     koopa::assert_has_no_args "$#"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+    )
     os_codename="$(koopa::os_codename)"
     file='/etc/apt/sources.list'
     pattern="^deb\s.+\s${os_codename}\s.+$"
-    # FIXME Rework using 'koopa::grep'.
     x="$( \
-        "$grep" -E "$pattern" "$file" \
-            | "$cut" -d ' ' -f '4-' \
+        koopa::grep \
+            --extended-regexp \
+            "$pattern" \
+            "$file" \
+        | "${app[cut]}" -d ' ' -f '4-' \
     )"
     koopa::print "$x"
 }
@@ -721,17 +733,19 @@ koopa::debian_apt_install() { # {{{1
 koopa::debian_apt_is_key_imported() { # {{{1
     # """
     # Is a GPG key imported for apt?
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-10-27.
     # """
-    local key sed x
+    local app key x
     koopa::assert_has_args_eq "$#" 1
-    sed="$(koopa::locate_sed)"
     koopa::assert_is_installed 'apt-key'
+    declare -A app=(
+        [sed]="$(koopa::locate_sed)"
+    )
     key="${1:?}"
     key="$( \
         koopa::print "$key" \
-        | "$sed" 's/ //g' \
-        | "$sed" -E "s/\
+        | "${app[sed]}" 's/ //g' \
+        | "${app[sed]}" -E "s/\
 ^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\$/\
 \1 \2 \3 \4 \5  \6 \7 \8 \9 \10/" \
     )"
@@ -765,20 +779,20 @@ koopa::debian_apt_space_used_by() { # {{{1
 koopa::debian_apt_space_used_by_grep() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-10-27.
     #
     # See also:
     # https://askubuntu.com/questions/490945
     # """
-    local cut grep x
+    local app x
     koopa::assert_has_args "$#"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    # FIXME Rework using 'koopa::grep'.
+    declare -A cut=(
+        [cut]="$(koopa::locate_cut)"
+    )
     x="$( \
         sudo apt-get --assume-no autoremove "$@" \
-            | "$grep" 'freed' \
-            | "$cut" -d ' ' -f '4-5' \
+            | koopa::grep 'freed' \
+            | "${app[cut]}" -d ' ' -f '4-5' \
     )"
     koopa::print "$x"
     return 0
@@ -787,13 +801,10 @@ koopa::debian_apt_space_used_by_grep() { # {{{1
 koopa::debian_apt_space_used_by_no_deps() { # {{{1
     # """
     # Check install apt package size, without dependencies.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-10-27.
     # """
-    local grep
-    grep="$(koopa::locate_grep)"
     koopa::assert_has_args "$#"
-    # FIXME Rework using 'koopa::grep'.
-    sudo apt show "$@" | "$grep" 'Size'
+    sudo apt show "$@" | koopa::grep 'Size'
     return 0
 }
 
