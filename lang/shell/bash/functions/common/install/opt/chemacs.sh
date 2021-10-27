@@ -34,7 +34,8 @@ koopa::uninstall_chemacs() { # {{{1
 koopa::update_chemacs() { # {{{1
     koopa:::update_app \
         --name='chemacs' \
-        --name-fancy='Chemacs'
+        --name-fancy='Chemacs' \
+        "$@"
 }
 
 koopa:::update_chemacs() { # {{{1

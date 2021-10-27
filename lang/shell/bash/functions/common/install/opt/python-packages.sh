@@ -64,22 +64,27 @@ koopa::uninstall_python_packages() { # {{{1
 koopa::update_python_packages() { # {{{1
     koopa:::update_app \
         --name='python-packages' \
-        --name-fancy='Python packages'
+        --name-fancy='Python packages' \
+        "$@"
 }
 
-# FIXME This is now erroring due to invalid number of arguments...
 koopa:::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-10-27.
     # @seealso
     # - https://github.com/pypa/pip/issues/59
     # - https://stackoverflow.com/questions/2720014
     # """
-    local cut pkgs
+    local app pkgs
     koopa::assert_has_no_args "$#"
-    cut="$(koopa::locate_cut)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+    )
+    # FIXME This is calling Python version I think.
+    echo 'FIXME AAA'
     pkgs="$(koopa::python_pip_outdated)"
+    echo 'FIXME BBB'
     if [[ -z "$pkgs" ]]
     then
         koopa::alert_success 'All Python packages are current.'
@@ -87,8 +92,10 @@ koopa:::update_python_packages() { # {{{1
     fi
     readarray -t pkgs <<< "$( \
         koopa::print "$pkgs" \
-        | "$cut" -d '=' -f 1 \
+        | "${app[cut]}" -d '=' -f 1 \
     )"
+    # FIXME This step is erroring. Need to rework.
+    echo "${pkgs[@]}"
     koopa::python_pip_install "${pkgs[@]}"
     return 0
 }

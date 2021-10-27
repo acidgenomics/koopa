@@ -95,7 +95,8 @@ koopa::uninstall_rust_packages() { # {{{1
 koopa::update_rust_packages() { # {{{1
     koopa:::update_app \
         --name-fancy='Rust packages' \
-        --name='rust-packages'
+        --name='rust-packages' \
+        "$@"
 }
 
 koopa:::update_rust_packages() { # {{{1

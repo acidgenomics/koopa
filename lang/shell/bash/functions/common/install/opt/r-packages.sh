@@ -32,7 +32,8 @@ koopa::uninstall_r_packages() { # {{{1
 koopa::update_r_packages() { # {{{1
     koopa:::update_app \
         --name-fancy='R packages' \
-        --name='r-packages'
+        --name='r-packages' \
+        "$@"
 }
 
 koopa:::update_r_packages() { # {{{1
