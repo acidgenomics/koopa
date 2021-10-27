@@ -1125,6 +1125,18 @@ koopa::locate_tex() { # {{{1
     koopa:::locate_app --name='tex'
 }
 
+koopa::locate_touch() { # {{{1
+    # """
+    # Locate GNU touch.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='coreutils' \
+        --gnubin \
+        --name='touch'
+}
+
 koopa::locate_tr() { # {{{1
     # """
     # Locate GNU tr.

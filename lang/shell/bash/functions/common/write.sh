@@ -12,6 +12,7 @@ koopa::append_string() { # {{{1
     if [[ ! -f "$file" ]]
     then
         koopa::mkdir "$(koopa::dirname "$file")"
+        # FIXME Use 'koopa::touch' here.
         touch "$file"
     fi
     koopa::print "$string" >> "$file"
@@ -35,6 +36,8 @@ koopa::sudo_append_string() { # {{{1
     if [[ ! -f "$file" ]]
     then
         koopa::mkdir --sudo "$(koopa::dirname "$file")"
+        # FIXME Use 'koopa::touch' here.
+        # Needs to support sudo flag.
         sudo touch "$file"
     fi
     koopa::print "$string" | sudo "$tee" -a "$file" >/dev/null
