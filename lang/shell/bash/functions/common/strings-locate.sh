@@ -191,6 +191,16 @@ Contents/Resources/ascp" \
         --name='ascp'
 }
 
+koopa::locate_automount() { # {{{1
+    # """
+    # Locate macOS automount.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/sbin/automount'
+}
+
 koopa::locate_awk() { # {{{1
     # """
     # Locate GNU awk.
