@@ -62,21 +62,22 @@ koopa::test_find_files() { # {{{1
     koopa::print "$x"
 }
 
+# FIXME Consider grepping against '--ignore-case' here.
 koopa::test_find_files_by_ext() { # {{{1
     # """
     # Find relevant test files by extension.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-27.
     # """
-    local ext files grep pattern x
+    local ext files pattern x
     koopa::assert_has_args "$#"
-    grep="$(koopa::locate_grep)"
     ext="${1:?}"
     pattern="\.${ext}$"
     readarray -t files <<< "$(koopa::test_find_files)"
-    # FIXME Rework using 'koopa::grep'.
     x="$( \
         printf '%s\n' "${files[@]}" \
-        | "$grep" -Ei "$pattern" \
+        | koopa::grep \
+            --extended-regexp \
+            "$pattern" \
         || true \
     )"
     [[ -n "$x" ]] || return 1
