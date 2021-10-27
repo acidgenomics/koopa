@@ -34,7 +34,9 @@ koopa::uninstall_rbenv() { # {{{1
 }
 
 koopa::update_rbenv() { # {{{1
-    koopa:::update_app --name='rbenv'
+    koopa:::update_app \
+        --name='rbenv' \
+        "$@"
 }
 
 koopa:::update_rbenv() { # {{{1

@@ -40,8 +40,9 @@ koopa::uninstall_perlbrew() { # {{{1
 koopa::update_perlbrew() { # {{{1
     koopa:::update_app \
         --name='perlbrew' \
-        --name-fancy='Perlbrew'
-    }
+        --name-fancy='Perlbrew' \
+        "$@"
+}
 
 koopa:::update_perlbrew() { # {{{1
     # """

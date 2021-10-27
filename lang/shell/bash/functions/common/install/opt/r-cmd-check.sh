@@ -31,7 +31,8 @@ koopa::uninstall_r_cmd_check() { # {{{1
 koopa::update_r_cmd_check() { # {{{1
     koopa:::update_app \
         --name='r-cmd-check' \
-        --name-fancy='R CMD check'
+        --name-fancy='R CMD check' \
+        "$@"
 }
 
 koopa:::update_r_cmd_check() { # {{{1
