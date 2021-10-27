@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME I think multiple exclude calls aren't working here currently.
+# FIXME Work on improving '-not -name XXX' and '-not -path XXX' style support.
 
 koopa::find() { # {{{1
     # """

@@ -28,14 +28,11 @@ koopa::test_find_files() { # {{{1
     # @note Updated 2021-05-21.
     # Not sorting here can speed the function up.
     # """
-    local find grep prefix sort x
+    local find prefix x
     koopa::assert_has_no_args "$#"
     find="$(koopa::locate_find)"
-    grep="$(koopa::locate_grep)"
-    sort="$(koopa::locate_sort)"
     prefix="$(koopa::koopa_prefix)"
     # FIXME Rework using 'koopa::find'.
-    # FIXME Rework using 'koopa::grep'.
     x="$( \
         "$find" "$prefix" \
             -mindepth 1 \
@@ -61,9 +58,6 @@ koopa::test_find_files() { # {{{1
             -not -path "${prefix}/todo.org" \
             -not -path '*/etc/R/*' \
             -print \
-        2>&1 \
-        | "$grep" -v 'Permission denied' \
-        | "$sort" \
     )"
     koopa::print "$x"
 }
