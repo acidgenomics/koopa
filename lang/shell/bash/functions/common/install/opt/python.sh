@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This function is now erroring due to incorrect number of arguments.
 koopa::configure_python() { #{{{1
     # """
     # Configure Python.
@@ -15,19 +14,10 @@ koopa::configure_python() { #{{{1
     local k_site_pkgs name name_fancy pth_file python sys_site_pkgs version
     python="${1:-}"
     [[ -z "$python" ]] && python="$(koopa::locate_python)"
-    # FIXME This needs to support a Python argument.
     koopa::assert_is_installed "$python"
     name='python'
     name_fancy='Python'
-    # FIXME This step is now erroring for Python version check.
-    # FIXME But it works interactively...what's up with that?
-    # FIXME There's an issue when it's being called inside installer...
-    echo 'FIXME 1'
-    echo "$python"
-    # FIXME This doesn't make a difference, take out.
-    # koopa::add_to_path_start "$(koopa::dirname "$python")"
     version="$(koopa::get_version "$python")"
-    echo 'FIXME 2'
     sys_site_pkgs="$(koopa::python_system_packages_prefix "$python")"
     k_site_pkgs="$(koopa::python_packages_prefix "$version")"
     pth_file="${sys_site_pkgs:?}/koopa.pth"
