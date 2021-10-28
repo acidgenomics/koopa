@@ -67,6 +67,8 @@ koopa::update_python_packages() { # {{{1
         "$@"
 }
 
+# FIXME Is our updater removing packages from '/bin' (e.g. ranger)?
+# FIXME Could this be due to use of '--isolate' flag?
 koopa:::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
