@@ -14,11 +14,16 @@ koopa::cd() { # {{{1
 
 koopa::chgrp() { # {{{1
     # """
-    # GNU chgrp.
-    # @note Updated 2021-09-21.
+    # Hardened version of coreutils chgrp (change user group).
+    # @note Updated 2021-10-29.
     # """
-    local chgrp pos sudo which_chgrp
-    sudo=0
+    local app chgrp dict pos
+    declare -A app=(
+        [chgrp]="$(koopa::locate_chgrp)"
+    )
+    declare -A dict=(
+        [sudo]=0
+    )
     pos=()
     while (("$#"))
     do
@@ -26,7 +31,7 @@ koopa::chgrp() { # {{{1
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                sudo=1
+                dict[sudo]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -41,12 +46,12 @@ koopa::chgrp() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    which_chgrp="$(koopa::locate_chgrp)"
-    if [[ "$sudo" -eq 1 ]]
+    if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        chgrp=('sudo' "$which_chgrp")
+        app[sudo]="$(koopa::locate_sudo)"
+        chgrp=("${app[sudo]}" "${app[chgrp]}")
     else
-        chgrp=("$which_chgrp")
+        chgrp=("${app[chgrp]}")
     fi
     "${chgrp[@]}" "$@"
     return 0
@@ -54,11 +59,16 @@ koopa::chgrp() { # {{{1
 
 koopa::chmod() { # {{{1
     # """
-    # GNU chmod.
-    # @note Updated 2021-09-21.
+    # Hardened version of coreutils chmod (change file mode bits).
+    # @note Updated 2021-10-29.
     # """
-    local chmod pos sudo which_chmod
-    sudo=0
+    local app chmod dict pos
+    declare -A app=(
+        [chmod]="$(koopa::locate_chmod)"
+    )
+    declare -A dict=(
+        [sudo]=0
+    )
     pos=()
     while (("$#"))
     do
@@ -66,7 +76,7 @@ koopa::chmod() { # {{{1
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                sudo=1
+                dict[sudo]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -81,12 +91,12 @@ koopa::chmod() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    which_chmod="$(koopa::locate_chmod)"
-    if [[ "$sudo" -eq 1 ]]
+    if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        chmod=('sudo' "$which_chmod")
+        app[sudo]="$(koopa::locate_sudo)"
+        chmod=("${app[sudo]}" "${app[chmod]}")
     else
-        chmod=("$which_chmod")
+        chmod=("${app[chmod]}")
     fi
     "${chmod[@]}" "$@"
     return 0
@@ -94,13 +104,18 @@ koopa::chmod() { # {{{1
 
 koopa::chown() { # {{{1
     # """
-    # GNU chown.
-    # @note Updated 2021-09-21.
+    # Hardened version of coreutils chown (change ownership).
+    # @note Updated 2021-10-29.
     # """
-    local chown dereference pos recursive sudo which_chown
-    dereference=1
-    recursive=0
-    sudo=0
+    local app chown dict pos
+    declare -A app=(
+        [chown]="$(koopa::locate_chown)"
+    )
+    declare -A dict=(
+        [dereference]=1
+        [recursive]=0
+        [sudo]=0
+    )
     pos=()
     while (("$#"))
     do
@@ -108,22 +123,22 @@ koopa::chown() { # {{{1
             # Flags ------------------------------------------------------------
             '--dereference' | \
             '-H')
-                dereference=1
+                dict[dereference]=1
                 shift 1
                 ;;
             '--no-dereference' | \
             '-h')
-                dereference=0
+                dict[dereference]=0
                 shift 1
                 ;;
             '--recursive' | \
             '-R')
-                recursive=1
+                dict[recursive]=1
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
-                sudo=1
+                dict[sudo]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -138,18 +153,18 @@ koopa::chown() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    which_chown="$(koopa::locate_chown)"
-    if [[ "$sudo" -eq 1 ]]
+    if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        chown=('sudo' "$which_chown")
+        app[sudo]="$(koopa::locate_sudo)"
+        chown=("${app[sudo]}" "${app[chown]}")
     else
-        chown=("$which_chown")
+        chown=("${app[chown]}")
     fi
-    if [[ "$recursive" -eq 1 ]]
+    if [[ "${dict[recursive]}" -eq 1 ]]
     then
         chown+=('-R')
     fi
-    if [[ "$dereference" -eq 0 ]]
+    if [[ "${dict[dereference]}" -eq 0 ]]
     then
         chown+=('-h')
     fi
@@ -159,8 +174,10 @@ koopa::chown() { # {{{1
 
 koopa::cp() { # {{{1
     # """
-    # Hardened version of coreutils copy.
+    # Hardened version of coreutils cp (copy).
     # @note Updated 2021-10-22.
+    #
+    # '-t' flag is not supported for BSD variant.
     #
     # @seealso
     # - GNU cp man:
@@ -172,34 +189,41 @@ koopa::cp() { # {{{1
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
-    local cp cp_args mkdir rm pos sudo symlink target_dir target_parent which_cp
-    sudo=0
-    symlink=0
-    target_dir=''
+    local app cp cp_args mkdir pos rm
+    declare -A app=(
+        [cp]="$(koopa::locate_cp)"
+        [mkdir]='koopa::mkdir'
+        [rm]='koopa::rm'
+    )
+    declare -A dict=(
+        [sudo]=0
+        [symlink]=0
+        [target_dir]=''
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--target-directory='*)
-                target_dir="${1#*=}"
+                dict[target_dir]="${1#*=}"
                 shift 1
                 ;;
             '--target-directory' | \
             '-t')
-                target_dir="${2:?}"
+                dict[target_dir]="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                sudo=1
+                dict[sudo]=1
                 shift 1
                 ;;
             '--symbolic-link' | \
             '--symlink' | \
             '-s')
-                symlink=1
+                dict[symlink]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -214,36 +238,43 @@ koopa::cp() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    which_cp="$(koopa::locate_cp)"
-    if [[ "$sudo" -eq 1 ]]
+    if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        # NOTE Don't run sudo check here, can slow down functions.
-        cp=('sudo' "$which_cp")
-        mkdir=('koopa::mkdir' '--sudo')
-        rm=('koopa::rm' '--sudo')
+        app[sudo]="$(koopa::locate_sudo)"
+        cp=("${app[sudo]}" "${app[cp]}")
+        mkdir=("${app[mkdir]}" '--sudo')
+        rm=("${app[rm]}" '--sudo')
     else
-        cp=("$which_cp")
-        mkdir=('koopa::mkdir')
-        rm=('koopa::rm')
+        cp=("${app[cp]}")
+        mkdir=("${app[mkdir]}")
+        rm=("${app[rm]}")
     fi
     cp_args=('-af')
-    [[ "$symlink" -eq 1 ]] && cp_args+=('-s')
+    [[ "${dict[symlink]}" -eq 1 ]] && cp_args+=('-s')
     cp_args+=("$@")
-    if [[ -n "$target_dir" ]]
+    if [[ -n "${dict[target_dir]}" ]]
     then
         koopa::assert_is_existing "$@"
-        target_dir="$(koopa::strip_trailing_slash "$target_dir")"
-        [[ -d "$target_dir" ]] || "${mkdir[@]}" "$target_dir"
-        # NOTE '-t' flag is not supported for BSD variant.
-        cp_args+=("$target_dir")
+        dict[target_dir]="$(koopa::strip_trailing_slash "${dict[target_dir]}")"
+        if [[ ! -d "${dict[target_dir]}" ]]
+        then
+            "${mkdir[@]}" "${dict[target_dir]}"
+        fi
+        cp_args+=("${dict[target_dir]}")
     else
         koopa::assert_has_args_eq "$#" 2
-        source_file="${1:?}"
-        koopa::assert_is_existing "$source_file"
-        target_file="${2:?}"
-        [[ -e "$target_file" ]] && "${rm[@]}" "$target_file"
-        target_parent="$(koopa::dirname "$target_file")"
-        [[ -d "$target_parent" ]] || "${mkdir[@]}" "$target_parent"
+        dict[source_file]="${1:?}"
+        koopa::assert_is_existing "${dict[source_file]}"
+        dict[target_file]="${2:?}"
+        if [[ -e "${dict[target_file]}" ]]
+        then
+            "${rm[@]}" "${dict[target_file]}"
+        fi
+        dict[target_parent]="$(koopa::dirname "${dict[target_file]}")"
+        if [[ ! -d "${dict[target_parent]}" ]]
+        then
+            "${mkdir[@]}" "${dict[target_parent]}"
+        fi
     fi
     "${cp[@]}" "${cp_args[@]}"
     return 0
@@ -251,12 +282,14 @@ koopa::cp() { # {{{1
 
 koopa::df() { # {{{1
     # """
-    # Human friendlier version of GNU df.
-    # @note Updated 2021-05-21.
+    # Human friendly version of GNU df.
+    # @note Updated 2021-10-29.
     # """
-    local df
-    df="$(koopa::locate_df)"
-    "$df" \
+    local app
+    declare -A app=(
+        [df]="$(koopa::locate_df)"
+    )
+    "${app[df]}" \
         --portability \
         --print-type \
         --si \
@@ -329,7 +362,6 @@ koopa::ln() { # {{{1
     which_ln="$(koopa::locate_ln)"
     if [[ "$sudo" -eq 1 ]]
     then
-        # NOTE Don't run sudo check here, can slow down functions.
         ln=('sudo' "$which_ln")
         mkdir=('koopa::mkdir' '--sudo')
         rm=('koopa::rm' '--sudo')
@@ -392,7 +424,6 @@ koopa::mkdir() { # {{{1
     which_mkdir="$(koopa::locate_mkdir)"
     if [[ "$sudo" -eq 1 ]]
     then
-        # NOTE Don't run sudo check here, can slow down functions.
         mkdir=('sudo' "$which_mkdir")
     else
         mkdir=("$which_mkdir")
@@ -618,7 +649,6 @@ koopa::rm() { # {{{1
     which_rm="$(koopa::locate_rm)"
     if [[ "$sudo" -eq 1 ]]
     then
-        # NOTE Don't run sudo check here, can slow down functions.
         rm=('sudo' "$which_rm")
     else
         rm=("$which_rm")
