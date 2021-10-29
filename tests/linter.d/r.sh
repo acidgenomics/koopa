@@ -27,13 +27,16 @@ test() { # {{{1
 }
 
 test_lintr() { # {{{1
-    local file
+    local app file
     koopa::assert_has_args "$#"
+    declare -A app=(
+        [rscript]="$(koopa::locate_rscript)"
+    )
     for file in "$@"
     do
         # Handle empty string edge case.
         [ -f "$file" ] || continue
-        Rscript -e "lintr::lint(file = '${file}')"
+        "${app[rscript]}" -e "lintr::lint(file = '${file}')"
     done
     koopa::status_ok "r-linter [${#}]"
     return 0

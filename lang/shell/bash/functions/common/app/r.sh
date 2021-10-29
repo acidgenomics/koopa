@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Work on locating rscript directly...
+
 koopa::array_to_r_vector() { # {{{1
     # """
     # Convert a bash array to an R vector string.
@@ -244,10 +246,14 @@ koopa::r_javareconf() { # {{{1
     return 0
 }
 
+# FIXME Need to check admin.
+# FIXME This doesn't necessarily need to run sudo here, correct?
+# FIXME Consider creating koopa::sys_touch, that sets the permissions correctly.
+
 koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-10-29.
     #
     # 1. Ensure HTML package index is writable.
     # 2. Touch an empty 'R.css' file to eliminate additional package warnings.
@@ -258,42 +264,60 @@ koopa::r_rebuild_docs() { # {{{1
     # https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
     #     make.packages.html.html
     # """
-    local doc_dir html_dir pkg_index r rscript rscript_flags
-    r="${1:-}"
-    [[ -z "${r:-}" ]] && r="$(koopa::locate_r)"
-    rscript="${r}script"
-    koopa::assert_is_installed "$r" "$rscript"
-    rscript_flags=('--vanilla')
-    koopa::assert_is_installed "$r" "$rscript"
+    local app doc_dir html_dir pkg_index rscript_args
+    declare -A app=(
+        [sudo]="$(koopa::locate_sudo)"
+        [touch]="$(koopa::locate_touch)"
+    )
+    declare -A dict
+    app[r]="${1:-}"
+    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa::locate_r)"
+    app[rscript]="${app[r]}script"
+    koopa::assert_is_installed "${app[r]}" "${app[rscript]}"
+    rscript_args=('--vanilla')
     koopa::alert 'Updating HTML package index.'
-    doc_dir="$("$rscript" "${rscript_flags[@]}" -e 'cat(R.home("doc"))')"
-    html_dir="${doc_dir}/html"
-    [[ ! -d "$html_dir" ]] && koopa::mkdir --sudo "$html_dir"
-    pkg_index="${html_dir}/packages.html"
-    koopa::dl 'HTML index' "$pkg_index"
-    [[ ! -f "$pkg_index" ]] && sudo touch "$pkg_index"
-    r_css="${html_dir}/R.css"
-    [[ ! -f "$r_css" ]] && sudo touch "$r_css"
-    koopa::sys_set_permissions "$pkg_index"
-    "$rscript" "${rscript_flags[@]}" -e 'utils::make.packages.html()'
+    dict[doc_dir]="$( \
+        "${app[rscript]}" "${rscript_args[@]}" -e 'cat(R.home("doc"))' \
+    )"
+    dict[html_dir]="${dict[doc_dir]}/html"
+    dict[pkg_index]="${dict[html_dir]}/packages.html"
+    if [[ ! -d "${dict[html_dir]}" ]]
+    then
+        koopa::mkdir --sudo "${dict[html_dir]}"
+    fi
+    if [[ ! -f "${dict[pkg_index]}" ]]
+    then
+        "${app[sudo]}" "${app[touch]}" "${dict[pkg_index]}"
+    fi
+    r_css="${dict[html_dir]}/R.css"
+    if [[ ! -f "${dict[r_css]}" ]]
+    then
+        "${app[sudo]}" "${app[touch]}" "${dict[r_css]}"
+    fi
+    koopa::sys_set_permissions "${dict[pkg_index]}"
+    "${app[rscript]}" "${rscript_args[@]}" -e 'utils::make.packages.html()'
+    return 0
 }
 
+# FIXME Rename the internal arguments here.
+# FIXME Add an rscript locator...
 koopa::r_koopa() { # {{{1
     # """
     # Execute a function in koopa R package.
     # @note Updated 2021-08-21.
     # """
-    local code header_file flags fun pos r rscript
-    r="$(koopa::locate_r)"
-    rscript="${r}script"
-    koopa::assert_is_installed "$rscript"
-    flags=()
+    local app code header_file fun pos rscript_args
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [rscript]="$(koopa::locate_rscript)"
+    )
+    rscript_args=()
     pos=()
     while (("$#"))
     do
         case "$1" in
             '--vanilla')
-                flags+=('--vanilla')
+                rscript_args+=('--vanilla')
                 shift 1
                 ;;
             '--'*)
@@ -315,8 +339,7 @@ koopa::r_koopa() { # {{{1
     shift 1
     header_file="$(koopa::koopa_prefix)/lang/r/include/header.R"
     koopa::assert_is_file "$header_file"
-    code=()
-    code+=("source('${header_file}');")
+    code=("source('${header_file}');")
     # The 'header' variable is currently used to simply load the shared R
     # script header and check that the koopa R package is installed.
     if [[ "$fun" != 'header' ]]
@@ -325,22 +348,23 @@ koopa::r_koopa() { # {{{1
     fi
     # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
-    "$rscript" "${flags[@]}" -e "${code[*]}" "${pos[@]@Q}"
+    "${app[rscript]}" "${rscript_args[@]}" -e "${code[*]}" "${pos[@]@Q}"
     return 0
 }
 
 koopa::run_shiny_app() { # {{{1
     # """
     # Run Shiny application.
-    # @note Updated 2021-04-29.
+    # @note Updated 2021-10-29.
     # """
-    local dir r
+    local app dir
+    declare -A app=(
+        [r]="$(koopa::locate_r)"
+    )
     dir="${1:-.}"
-    r="$(koopa::locate_r)"
-    koopa::assert_is_installed "$r"
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
-    "$r" \
+    "${app[r]}" \
         --no-restore \
         --no-save \
         --quiet \

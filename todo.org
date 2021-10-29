@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Consider reworking our conda-based NGS utilites by locating the programs
+        directly, rather than by activating conda inside a function.
 ** TODO Consider creating a koopa::grep function, that calls ripgrep rg
         internally if installed (for speed).
 ** TODO conda base environment has been seen to stay active inside of RStudio
