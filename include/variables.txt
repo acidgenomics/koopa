@@ -481,7 +481,7 @@ conda-sra-tools="2.11.0"                # 2021-04-27 bioconda linux
 conda-star-fusion="1.10.0"              # 2021-04-15 bioconda
 conda-star="2.7.9a"                     # 2021-05-11 bioconda
 conda-trimmomatic="0.39"                # 2021-03-27 bioconda
-conda-umap-learn="0.5.1"                # 2021-06-02 bioconda
+conda-umap-learn="0.5.1"                # 2021-06-02 bioconda  0.5.2 now out
 conda-vardict="2019.06.04"              # 2019-06-05 bioconda
 
 # Homebrew cask versions {{{1
