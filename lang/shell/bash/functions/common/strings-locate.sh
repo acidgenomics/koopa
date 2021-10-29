@@ -988,6 +988,20 @@ koopa::locate_r() { # {{{1
         --name='R'
 }
 
+koopa::locate_rscript() { # {{{1
+    # """
+    # Locate Rscript.
+    # @note Updated 2021-10-29.
+    # """
+    local r rscript
+    koopa::assert_has_no_args "$#"
+    r="$(koopa::locate_r)"
+    rscript="${r}script"
+    [[ -x "$rscript" ]] || return 1
+    koopa::print "$rscript"
+    return 0
+}
+
 koopa::locate_readlink() { # {{{1
     # """
     # Locate GNU readlink.
