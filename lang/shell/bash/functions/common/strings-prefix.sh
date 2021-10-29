@@ -12,30 +12,33 @@ koopa::julia_script_prefix() { # {{{1
 koopa::python_system_packages_prefix() { # {{{1
     # """
     # Python system site packages library prefix.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-10-29.
     # """
-    local python x
+    local prefix python
+    koopa::assert_has_args_le "$#" 1
     python="${1:-}"
     [[ -z "$python" ]] && python="$(koopa::locate_python)"
-    koopa::assert_is_installed "$python"
-    x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
-    koopa::print "$x"
+    koopa::is_installed "$python" || return 1
+    prefix="$("$python" -c "import site; print(site.getsitepackages()[0])")"
+    [[ -d "$prefix" ]] || return 1
+    koopa::print "$prefix"
     return 0
 }
 
 koopa::r_prefix() { # {{{1
     # """
     # R prefix.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-10-29.
     #
     # We're suppressing errors here that can pop up if 'etc' isn't linked yet
     # after a clean install. Can warn about ldpaths missing.
     # """
     local prefix r rscript
     koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
+    r="${1:-}"
+    [[ -z "$r" ]] && r="$(koopa::locate_r)"
     rscript="${r}script"
-    koopa::assert_is_installed "$r" "$rscript"
+    koopa::is_installed "$rscript" || return 1
     prefix="$( \
         "$rscript" \
             --vanilla \
@@ -50,13 +53,14 @@ koopa::r_prefix() { # {{{1
 koopa::r_library_prefix() { # {{{1
     # """
     # R default library prefix.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-10-29.
     # """
     local prefix r rscript
     koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
+    r="${1:-}"
+    [[ -z "$r" ]] && r="$(koopa::locate_r)"
     rscript="${r}script"
-    koopa::assert_is_installed "$r" "$rscript"
+    koopa::is_installed "$rscript" || return 1
     prefix="$("$rscript" -e 'cat(normalizePath(.libPaths()[[1L]]))')"
     [[ -d "$prefix" ]] || return 1
     koopa::print "$prefix"
@@ -66,13 +70,14 @@ koopa::r_library_prefix() { # {{{1
 koopa::r_system_library_prefix() { # {{{1
     # """
     # R system library prefix.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-10-29.
     # """
     local prefix r rscript
     koopa::assert_has_args_le "$#" 1
-    r="${1:-R}"
+    r="${1:-}"
+    [[ -z "$r" ]] && r="$(koopa::locate_r)"
     rscript="${r}script"
-    koopa::assert_is_installed "$r" "$rscript"
+    koopa::is_installed "$rscript" || return 1
     prefix="$( \
         "$rscript" \
             --vanilla \
