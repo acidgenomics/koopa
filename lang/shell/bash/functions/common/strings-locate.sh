@@ -698,6 +698,16 @@ koopa::locate_kill_all() { # {{{1
     koopa:::locate_app '/usr/bin/killAll'
 }
 
+koopa::locate_launchctl() { # {{{1
+    # """
+    # Locate macOS launchctl.
+    # @note Updated 2021-10-29.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/bin/launchctl'
+}
+
 koopa::locate_llvm_config() { # {{{1
     # """
     # Locate 'llvm-config' executable.

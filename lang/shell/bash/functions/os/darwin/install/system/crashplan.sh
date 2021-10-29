@@ -1,27 +1,35 @@
 #!/usr/bin/env bash
 
-# FIXME Need to harden sudo and launchctl here.
-
 koopa::macos_disable_crashplan() { # {{{1
     # """
     # Disable CrashPlan.
     # @note Updated 2021-10-29.
     # """
-    local system_plist user_plist
+    local app dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    system_plist='/Library/LaunchDaemons/com.crashplan.engine.plist'
-    user_plist="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
-    if [[ -f "$user_plist" ]]
+    declare -A app=(
+        [launchctl]="$(koopa::locate_launchctl)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [system_plist]='/Library/LaunchDaemons/com.crashplan.engine.plist'
+        [user_plist]="${HOME:?}/Library/LaunchAgents/com.crashplan.engine.plist"
+    )
+    if [[ -f "${dict[system_plist]}" ]]
     then
-        launchctl unload "$user_plist"
-        koopa::mv "$user_plist" "${user_plist}.disabled"
+        # > "${app[sudo]}" "${app[launchctl]}" stop 'com.crashplan.engine'
+        "${app[sudo]}" "${app[launchctl]}" unload "${dict[system_plist]}"
+        koopa::mv --sudo \
+            "${dict[system_plist]}" \
+            "${dict[system_plist]}.disabled"
     fi
-    if [[ -f "$system_plist" ]]
+    if [[ -f "${dict[user_plist]}" ]]
     then
-        # > sudo launchctl stop com.crashplan.engine
-        sudo launchctl unload "$system_plist"
-        koopa::mv --sudo "$system_plist" "${system_plist}.disabled"
+        "${app[launchctl]}" unload "${dict[user_plist]}"
+        koopa::mv \
+            "${dict[user_plist]}" \
+            "${dict[user_plist]}.disabled"
     fi
     return 0
 }
@@ -31,27 +39,37 @@ koopa::macos_enable_crashplan() {  # {{{1
     # Enable CrashPlan.
     # @note Updated 2021-10-29.
     # """
-    local system_plist user_plist
+    local app dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    system_plist='/Library/LaunchDaemons/com.crashplan.engine.plist'
-    user_plist="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
-    if [[ -f "${user_plist}.disabled" ]]
+    declare -A app=(
+        [launchctl]="$(koopa::locate_launchctl)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [system_plist]='/Library/LaunchDaemons/com.crashplan.engine.plist'
+        [user_plist]="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
+    )
+    if [[ -f "${dict[system_plist]}.disabled" ]]
     then
-        koopa::mv "${user_plist}.disabled" "$user_plist"
+        koopa::mv --sudo \
+            "${dict[system_plist]}.disabled" \
+            "${dict[system_plist]}"
     fi
-    if [[ -f "$user_plist" ]]
+    if [[ -f "${dict[system_plist]}" ]]
     then
-        launchctl load "$user_plist"
+        "${app[sudo]}" "${app[launchctl]}" load "$system_plist"
+        # > "${app[sudo]}" "${app[launchctl]}" start 'com.crashplan.engine'
     fi
-    if [[ -f "${system_plist}.disabled" ]]
+    if [[ -f "${dict[user_plist]}.disabled" ]]
     then
-        koopa::mv --sudo "${system_plist}.disabled" "$system_plist"
+        koopa::mv \
+            "${dict[user_plist]}.disabled" \
+            "${dict[user_plist]}"
     fi
-    if [[ -f "$system_plist" ]]
+    if [[ -f "${dict[user_plist]}" ]]
     then
-        sudo launchctl load "$system_plist"
-        # > sudo launchctl start com.crashplan.engine
+        "${app[launchctl]}" load "${dict[user_plist]}"
     fi
     return 0
 }
