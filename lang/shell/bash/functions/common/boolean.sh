@@ -118,7 +118,7 @@ koopa::is_admin() { # {{{1
     # > sudo -l
     #
     # List all users with sudo access:
-    # > getent group sudo
+    # > getent group 'sudo'
     #
     # - macOS: admin
     # - Debian: sudo
