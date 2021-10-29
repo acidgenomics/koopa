@@ -2,6 +2,7 @@
 
 # FIXME How to handle case where 'brew-opt' and 'koopa-opt' are the same?
 # FIXME We likely want to streamline the handling of this for coreutils.
+# FIXME Consider prefixing macOS and Linux-specific locators here.
 
 koopa:::locate_app() { # {{{1
     # """
@@ -427,6 +428,16 @@ koopa::locate_dirname() { # {{{1
         --brew-opt='coreutils' \
         --gnubin \
         --name='dirname'
+}
+
+koopa::locate_diskutil() { # {{{1
+    # """
+    # Locate macOS diskutil.
+    # @note Updated 2021-10-29.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/sbin/diskutil'
 }
 
 koopa::locate_docker() { # {{{1
@@ -999,6 +1010,16 @@ koopa::locate_realpath() { # {{{1
         --brew-opt='coreutils' \
         --gnubin \
         --name='realpath'
+}
+
+koopa::locate_reboot() { # {{{1
+    # """
+    # Locate macOS reboot.
+    # @note Updated 2021-10-29.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/sbin/reboot'
 }
 
 koopa::locate_rename() { # {{{1

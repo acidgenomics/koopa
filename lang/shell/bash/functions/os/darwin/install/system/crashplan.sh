@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden sudo and launchctl here.
+
 koopa::macos_disable_crashplan() { # {{{1
     # """
     # Disable CrashPlan.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-10-29.
     # """
+    local system_plist user_plist
+    koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     system_plist='/Library/LaunchDaemons/com.crashplan.engine.plist'
     user_plist="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
@@ -25,9 +29,10 @@ koopa::macos_disable_crashplan() { # {{{1
 koopa::macos_enable_crashplan() {  # {{{1
     # """
     # Enable CrashPlan.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-10-29.
     # """
     local system_plist user_plist
+    koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     system_plist='/Library/LaunchDaemons/com.crashplan.engine.plist'
     user_plist="${HOME}/Library/LaunchAgents/com.crashplan.engine.plist"
