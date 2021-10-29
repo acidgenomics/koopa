@@ -246,10 +246,6 @@ koopa::r_javareconf() { # {{{1
     return 0
 }
 
-# FIXME Need to check admin.
-# FIXME This doesn't necessarily need to run sudo here, correct?
-# FIXME Consider creating koopa::sys_touch, that sets the permissions correctly.
-
 koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
@@ -273,7 +269,7 @@ koopa::r_rebuild_docs() { # {{{1
     app[r]="${1:-}"
     [[ -z "${app[r]:-}" ]] && app[r]="$(koopa::locate_r)"
     app[rscript]="${app[r]}script"
-    koopa::assert_is_installed "${app[r]}" "${app[rscript]}"
+    koopa::assert_is_installed "${app[rscript]}"
     rscript_args=('--vanilla')
     koopa::alert 'Updating HTML package index.'
     dict[doc_dir]="$( \
@@ -287,11 +283,13 @@ koopa::r_rebuild_docs() { # {{{1
     fi
     if [[ ! -f "${dict[pkg_index]}" ]]
     then
+        koopa::assert_is_admin
         "${app[sudo]}" "${app[touch]}" "${dict[pkg_index]}"
     fi
     r_css="${dict[html_dir]}/R.css"
     if [[ ! -f "${dict[r_css]}" ]]
     then
+        koopa::assert_is_admin
         "${app[sudo]}" "${app[touch]}" "${dict[r_css]}"
     fi
     koopa::sys_set_permissions "${dict[pkg_index]}"
@@ -299,12 +297,10 @@ koopa::r_rebuild_docs() { # {{{1
     return 0
 }
 
-# FIXME Rename the internal arguments here.
-# FIXME Add an rscript locator...
 koopa::r_koopa() { # {{{1
     # """
     # Execute a function in koopa R package.
-    # @note Updated 2021-08-21.
+    # @note Updated 2021-10-29.
     # """
     local app code header_file fun pos rscript_args
     koopa::assert_has_args "$#"
