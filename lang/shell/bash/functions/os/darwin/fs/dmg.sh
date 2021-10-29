@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to lcoate hdiutil here.
+
 koopa::macos_create_dmg() { # {{{1
     # """
     # Create DMG image.
