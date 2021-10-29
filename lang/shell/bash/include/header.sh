@@ -237,8 +237,11 @@ __koopa_bash_header() { # {{{1
                 export KOOPA_ADMIN=0
             fi
         fi
-        # Require sudo permission to run 'sbin/' scripts.
-        koopa::str_match_fixed "$0" '/sbin' && koopa::assert_is_admin
+        # Require admin account to run 'sbin/' scripts.
+        if koopa::str_match_fixed "$0" '/sbin'
+        then
+            koopa::assert_is_admin
+        fi
         # Disable user-defined aliases.
         unalias -a
     fi

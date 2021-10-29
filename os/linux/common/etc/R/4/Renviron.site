@@ -145,7 +145,6 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # Previous version on RHEL 7 VM: 12.2.0.1.0.
 #
 # For Debian/Ubuntu, convert the RPM into DEB format using alien.
-# > sudo apt-get install alien
 #
 # See also:
 # - https://www.oracle.com/database/technologies/instant-client/
