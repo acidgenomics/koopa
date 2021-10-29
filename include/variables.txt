@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-10-27"
+koopa-date="2021-10-29"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.3.1"
+aws-cli="2.3.2"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.29.1"
@@ -86,7 +86,7 @@ cellranger="6.0.1"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.21.3"
+cmake="3.21.4"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -128,14 +128,14 @@ fish="3.3.1"
 fzf="0.27.3"
 
 # https://ftp.gnu.org/gnu/gawk/
-gawk="5.1.0"
+gawk="5.1.1"
 
 # https://ftp.gnu.org/gnu/gcc/
 gcc="11.2.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.3.2"
+gdal="3.3.3"
 
 # https://github.com/libgeos/geos/releases
 geos="3.10.0"
