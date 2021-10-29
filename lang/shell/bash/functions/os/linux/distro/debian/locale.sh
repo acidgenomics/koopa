@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to locate sudo and other Debian tools here.
+
 koopa::debian_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.
@@ -14,7 +16,6 @@ koopa::debian_set_locale() { # {{{1
     # - https://wiki.debian.org/Locale
     # """
     local charset country lang lang_string file
-    koopa::assert_is_admin
     koopa::add_to_path_start '/usr/sbin'
     koopa::assert_is_installed \
         'dpkg-reconfigure' \

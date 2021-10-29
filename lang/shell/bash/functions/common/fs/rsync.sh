@@ -83,23 +83,19 @@ koopa::rsync() { # {{{1
 koopa::rsync_cloud() { # {{{1
     # """
     # Rsync to cloud object storage buckets, such as AWS.
-    # @note Updated 2021-05-08.
+    # @note Updated 2021-10-29.
     # """
     local rsync_args
     koopa::assert_has_no_flags "$@"
     koopa::assert_has_args_eq "$#" 2
     koopa::assert_is_admin
     rsync_args=(
-        # > '--exclude=bam'
-        # > '--exclude=cram'
-        # > '--exclude=fastq'
-        # > '--exclude=sam'
-        '--exclude=.Rproj.user'
-        '--exclude=.git'
-        '--exclude=.gitignore'
-        '--exclude=work'
+        '--exclude' '.Rproj.user'
+        '--exclude' '.git'
+        '--exclude' '.gitignore'
+        '--exclude' 'work'
         '--no-links'
-        '--rsync-path=sudo rsync'
+        '--rsync-path' 'sudo rsync'
         '--size-only'
     )
     koopa::rsync "${rsync_args[@]}" "$@"

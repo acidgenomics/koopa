@@ -3,7 +3,7 @@
 koopa::install_tex_packages() { # {{{1
     # """
     # Install TeX packages.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-10-29.
     # """
     local app name_fancy package packages
     koopa::assert_has_no_args "$#"
@@ -61,7 +61,7 @@ koopa::install_tex_packages() { # {{{1
 koopa::update_tex_packages() { # {{{1
     # """
     # Update TeX packages.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-10-29.
     # """
     local name_fancy
     koopa::assert_has_no_args "$#"

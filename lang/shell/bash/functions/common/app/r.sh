@@ -181,7 +181,7 @@ koopa::r_link_site_library() { # {{{1
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-10-29.
     #
     # The default Java path differs depending on the system.
     #
@@ -202,34 +202,45 @@ koopa::r_javareconf() { # {{{1
     # > library(rJava)
     # > .jinit()
     # """
-    local java_flags java_home r r_cmd
+    local app dict java_args r_cmd
     koopa::assert_has_args_le "$#" 1
-    r="${1:-}"
-    [[ -z "${r:-}" ]] && r="$(koopa::locate_r)"
-    r="$(koopa::which_realpath "$r")"
-    koopa::activate_openjdk
-    koopa::assert_is_installed 'java'
-    java_home="$(koopa::java_prefix)"
-    koopa::assert_is_dir "$java_home"
+    declare -A app=(
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [java_home]="$(koopa::java_prefix)"
+    )
+    app[r]="${1:-}"
+    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa::locate_r)"
+    app[r]="$(koopa::which_realpath "${app[r]}")"
+    koopa::assert_is_dir "${dict[java_home]}"
+    dict[jar]="${dict[java_home]}/bin/jar"
+    dict[java]="${dict[java_home]}/bin/java"
+    dict[javac]="${dict[java_home]}/bin/javac"
+    dict[javah]="${dict[java_home]}/bin/javah"
     koopa::alert 'Updating R Java configuration.'
     koopa::dl \
-        'R' "$r" \
-        'Java home' "$java_home"
-    java_flags=(
-        "JAVA_HOME=${java_home}"
-        "JAVA=${java_home}/bin/java"
-        "JAVAC=${java_home}/bin/javac"
-        "JAVAH=${java_home}/bin/javah"
-        "JAR=${java_home}/bin/jar"
-    )
-    if koopa::is_koopa_app "$r"
+        'JAR' "${dict[jar]}" \
+        'JAVA' "${dict[java]}" \
+        'JAVAC' "${dict[javac]}" \
+        'JAVAH' "${dict[javah]}" \
+        'JAVA_HOME' "${dict[java_home]}" \
+        'R' "${app[r]}"
+    if koopa::is_koopa_app "${app[r]}"
     then
-        r_cmd=("$r")
+        r_cmd=("${app[r]}")
     else
         koopa::assert_is_admin
-        r_cmd=('sudo' "$r")
+        r_cmd=("${app[sudo]}" "${app[r]}")
     fi
-    "${r_cmd[@]}" --vanilla CMD javareconf "${java_flags[@]}"
+    java_args=(
+        "JAR=${dict[jar]}"
+        "JAVA=${dict[java]}"
+        "JAVAC=${dict[javac]}"
+        "JAVAH=${dict[javah]}"
+        "JAVA_HOME=${dict[java_home]}"
+    )
+    "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     return 0
 }
 
