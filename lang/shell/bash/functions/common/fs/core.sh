@@ -609,14 +609,19 @@ koopa::parent_dir() { # {{{1
     return 0
 }
 
-# FIXME Need to harden sudo.
 koopa::relink() { # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # @note Updated 2020-09-21.
+    # @note Updated 2020-10-29.
     # """
-    local dest_file ln pos rm source_file sudo
-    sudo=0
+    local app dict ln pos rm sudo
+    declare -A app=(
+        [ln]='koopa::ln'
+        [rm]='koopa::rm'
+    )
+    declare -A dict=(
+        [sudo]=0
+    )
     pos=()
     while (("$#"))
     do
@@ -624,7 +629,7 @@ koopa::relink() { # {{{1
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                sudo=1
+                dict[sudo]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -639,32 +644,35 @@ koopa::relink() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 2
-    if [[ "$sudo" -eq 1 ]]
+    ln=('koopa::ln')
+    rm=('koopa::rm')
+    if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        ln=('koopa::ln' '--sudo')
-        rm=('koopa::rm' '--sudo')
-    else
-        ln=('koopa::ln')
-        rm=('koopa::rm')
+        ln+=('--sudo')
+        rm+=('--sudo')
     fi
-    source_file="${1:?}"
-    dest_file="${2:?}"
-    # Keep this check relaxed, in case dotfiles haven't been cloned.
-    [[ -e "$source_file" ]] || return 0
-    [[ -L "$dest_file" ]] && return 0
-    "${rm[@]}" "$dest_file"
-    "${ln[@]}" "$source_file" "$dest_file"
+    dict[source_file]="${1:?}"
+    dict[dest_file]="${2:?}"
+    # Keep this check relaxed (i.e. in case dotfiles haven't been cloned).
+    [[ -e "${dict[source_file]}" ]] || return 0
+    [[ -L "${dict[dest_file]}" ]] && return 0
+    "${rm[@]}" "${dict[dest_file]}"
+    "${ln[@]}" "${dict[source_file]}" "${dict[dest_file]}"
     return 0
 }
 
-# FIXME Need to harden sudo.
 koopa::rm() { # {{{1
     # """
     # Remove files/directories quietly with GNU rm.
     # @note Updated 2021-09-21.
     # """
-    local pos rm sudo which_rm
-    sudo=0
+    local app dict pos rm rm_args
+    declare -A app=(
+        [rm]="$(koopa::locate_rm)"
+    )
+    declare -A dict=(
+        [sudo]=0
+    )
     pos=()
     while (("$#"))
     do
@@ -672,7 +680,7 @@ koopa::rm() { # {{{1
             # Flags ------------------------------------------------------------
             '--sudo' | \
             '-S')
-                sudo=1
+                dict[sudo]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -687,14 +695,15 @@ koopa::rm() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    which_rm="$(koopa::locate_rm)"
-    if [[ "$sudo" -eq 1 ]]
+    rm_args=('-fr')
+    if [[ "${dict[sudo]}" -eq 1 ]]
     then
-        rm=('sudo' "$which_rm")
+        app[sudo]="$(koopa::locate_sudo)"
+        rm=("${app[sudo]}" "${app[rm]}")
     else
-        rm=("$which_rm")
+        rm=("${app[rm]}")
     fi
-    "${rm[@]}" -fr "$@"
+    "${rm[@]}" "${rm_args[@]}" "$@"
     return 0
 }
 
