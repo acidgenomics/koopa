@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Rework the system, non-system handling here.
+# FIXME Only change PATH etc in the subshell.
+
 koopa:::update_app() { # {{{1
     # """
     # Update application.
     # @note Updated 2021-10-30.
     # """
-    local app conf_bak dict path_arr path_str pkgs pos
+    local app conf_bak dict path_arr pkgs
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A app=(
@@ -30,7 +33,6 @@ koopa:::update_app() { # {{{1
         [version]=''
     )
     koopa::is_shared_install && dict[shared]=1
-    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -109,12 +111,10 @@ koopa:::update_app() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                pos+=("$1")
-                shift 1
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
@@ -132,25 +132,22 @@ koopa:::update_app() { # {{{1
     then
         koopa::stop 'Unsupported command.'
     fi
-    case "${dict[system]}" in
-        '1')
-            koopa::update_start "${dict[name_fancy]}"
-            ;;
-        '0')
-            if [[ -z "${dict[prefix]}" ]]
-            then
-                dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
-            fi
-            koopa::update_start "${dict[name_fancy]}" "${dict[prefix]}"
-            koopa::assert_is_dir "${dict[prefix]}"
-            ;;
-    esac
+    if [[ "${dict[system]}" -eq 1 ]]
+    then
+        koopa::update_start "${dict[name_fancy]}"
+    else
+        if [[ -z "${dict[prefix]}" ]]
+        then
+            dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
+        fi
+        koopa::update_start "${dict[name_fancy]}" "${dict[prefix]}"
+        koopa::assert_is_dir "${dict[prefix]}"
+    fi
     # Ensure configuration is minimal before proceeding, when desirable.
     unset -v LD_LIBRARY_PATH
     # Ensure clean minimal 'PATH'.
     path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    path_str="$(koopa::paste0 ':' "${path_arr[@]}")"
-    PATH="$path_str"
+    PATH="$(koopa::paste0 ':' "${path_arr[@]}")"
     export PATH
     # Ensure clean minimal 'PKG_CONFIG_PATH'.
     unset -v PKG_CONFIG_PATH
@@ -179,21 +176,20 @@ koopa:::update_app() { # {{{1
     fi
     (
         koopa::cd "${dict[tmp_dir]}"
-        # shellcheck disable=SC2030
-        export UPDATE_NAME="${dict[name]:-}"
-        # shellcheck disable=SC2030
-        export UPDATE_PREFIX="${dict[prefix]:-}"
-        # shellcheck disable=SC2030
-        export UPDATE_VERSION="${dict[version]:-}"
-        "${dict[function]}" "$@"
+        if [[ "${dict[system]}" -eq 0 ]]
+        then
+            # shellcheck disable=SC2030
+            export UPDATE_PREFIX="${dict[prefix]}"
+        fi
+        "${dict[function]}"
     ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
     koopa::rm "${dict[tmp_dir]}"
-    if [[ "${dict[shared]}" -eq 1 ]]
-    then
-        koopa::sys_set_permissions --recursive "${dict[prefix]}"
-    fi
     if [[ "${dict[system]}" -eq 0 ]]
     then
+        if [[ "${dict[shared]}" -eq 1 ]]
+        then
+            koopa::sys_set_permissions --recursive "${dict[prefix]}"
+        fi
         koopa::delete_empty_dirs "${dict[prefix]}"
     fi
     # Reset global variables, if applicable.
@@ -218,13 +214,11 @@ koopa:::update_app() { # {{{1
     then
         koopa::update_ldconfig
     fi
-    case "${dict[system]}" in
-        '1')
-            koopa::update_success "${dict[name_fancy]}"
-            ;;
-        '0')
-            koopa::update_success "${dict[name_fancy]}" "${dict[prefix]}"
-            ;;
-    esac
+    if [[ "${dict[system]}" -eq 1 ]]
+    then
+        koopa::update_success "${dict[name_fancy]}"
+    else
+        koopa::update_success "${dict[name_fancy]}" "${dict[prefix]}"
+    fi
     return 0
 }
