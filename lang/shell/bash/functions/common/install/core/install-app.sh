@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2030,SC2031
 
+# FIXME This needs to check prefix when defined along with '--system' flag.
+# If '--reinstall' flag is set with '--system', use sudo to remove.
+
+# NOTE We can likely streamline the prefix checks in '--system' mode.
+
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -183,6 +188,22 @@ koopa:::install_app() { # {{{1
     if [[ "${dict[system]}" -eq 1 ]]
     then
         koopa::install_start "${dict[name_fancy]}"
+        if [[ -d "${dict[prefix]:-}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
+        then
+            dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+            if [[ "${dict[reinstall]}" -eq 1 ]]
+            then
+                koopa::alert "Removing previous install at '${dict[prefix]}'."
+                app[rm]='koopa::rm'
+                "${app[rm]}" --sudo "${dict[prefix]}"
+            fi
+            if [[ -d "${dict[prefix]}" ]]
+            then
+                koopa::alert_note "${dict[name_fancy]} is already installed \
+at '${dict[prefix]}'."
+                return 0
+            fi
+        fi
     else
         if [[ -z "${dict[version]}" ]]
         then
@@ -254,6 +275,8 @@ at '${dict[prefix]}'."
         fi
         if [[ "${dict[system]}" -eq 1 ]]
         then
+            # shellcheck disable=SC2030
+            export INSTALL_PREFIX="${dict[prefix]:-}"
             # shellcheck disable=SC2030
             export INSTALL_VERSION="${dict[version]:-}"
         else
