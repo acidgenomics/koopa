@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME The installer is now erroring, need to rethink.
-# FIXME This isn't handling version string correctly.
-# FIXME This errors inside of subshell...
+# NOTE This currently requires user interaction, and may error inside of the
+# subshell approach currently used in 'koopa:::install_app' handoff.
 
 koopa::macos_install_xcode_clt() { # {{{1
     koopa:::install_app \
@@ -38,7 +37,7 @@ koopa:::macos_install_xcode_clt() { # {{{1
     # - https://github.com/Homebrew/install/blob/
     #     878b5a18b89ff73f2f221392ecaabd03c1e69c3f/install#L297
     # """
-    local app prefix
+    local app dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
@@ -46,24 +45,21 @@ koopa:::macos_install_xcode_clt() { # {{{1
         [xcode_select]="$(koopa::locate_xcode_select)"
         [xcodebuild]="$(koopa::locate_xcodebuild)"
     )
-    echo 'FIXME 1'
-    prefix="$("${app[xcode_select]}" -p 2>/dev/null || true)"
-    echo 'FIXME 2'
-    if [[ -d "$prefix" ]]
+    declare -A dict=(
+        [prefix]="$("${app[xcode_select]}" -p 2>/dev/null || true)"
+    )
+    if [[ -d "${dict[prefix]}" ]]
     then
-        koopa::alert "Removing previous install at '${prefix}'."
-        koopa::rm --sudo "$prefix"
+        koopa::alert "Removing previous install at '${dict[prefix]}'."
+        koopa::rm --sudo "${dict[prefix]}"
     fi
-    echo 'FIXME 3'
     # This step will prompt interactively, which is annoying. See above for
     # alternative workarounds that are more complicated, but may improve this.
     "${app[xcode_select]}" --install
-    echo 'FIXME 4'
     "${app[sudo]}" "${app[xcodebuild]}" -license 'accept'
-    echo 'FIXME 5'
     "${app[sudo]}" "${app[xcode_select]}" -r
     prefix="$("${app[xcode_select]}" -p)"
-    koopa::assert_is_dir "$prefix"
+    koopa::assert_is_dir "${dict[prefix]}"
     return 0
 }
 
@@ -74,11 +70,13 @@ koopa:::macos_uninstall_xcode_clt() { # {{{1
     # @seealso
     # - https://apple.stackexchange.com/questions/308943
     # """
-    local prefix
+    local dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    prefix='/Library/Developer/CommandLineTools'
-    koopa::assert_is_dir "$prefix"
-    koopa::rm --sudo "$prefix"
+    declare -A dict=(
+        [prefix]='/Library/Developer/CommandLineTools'
+    )
+    koopa::assert_is_dir "${dict[prefix]}"
+    koopa::rm --sudo "${dict[prefix]}"
     return 0
 }
