@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME The installer is now erroring, need to rethink.
+# FIXME This isn't handling version string correctly.
+# FIXME This errors inside of subshell...
+
 koopa::macos_install_xcode_clt() { # {{{1
     koopa:::install_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
@@ -42,15 +46,21 @@ koopa:::macos_install_xcode_clt() { # {{{1
         [xcode_select]="$(koopa::locate_xcode_select)"
         [xcodebuild]="$(koopa::locate_xcodebuild)"
     )
+    echo 'FIXME 1'
     prefix="$("${app[xcode_select]}" -p 2>/dev/null || true)"
+    echo 'FIXME 2'
     if [[ -d "$prefix" ]]
     then
+        koopa::alert "Removing previous install at '${prefix}'."
         koopa::rm --sudo "$prefix"
     fi
+    echo 'FIXME 3'
     # This step will prompt interactively, which is annoying. See above for
     # alternative workarounds that are more complicated, but may improve this.
     "${app[xcode_select]}" --install
+    echo 'FIXME 4'
     "${app[sudo]}" "${app[xcodebuild]}" -license 'accept'
+    echo 'FIXME 5'
     "${app[sudo]}" "${app[xcode_select]}" -r
     prefix="$("${app[xcode_select]}" -p)"
     koopa::assert_is_dir "$prefix"
