@@ -1,10 +1,27 @@
 #!/usr/bin/env bash
 
-# FIXME Need to convert to wrapper.
 koopa::macos_install_r_framework() { # {{{1
+    koopa:::install_app \
+        --name-fancy='R framework' \
+        --name='r-framework' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa::macos_uninstall_r_framework() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='R framework' \
+        --name='r-framework' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa:::macos_install_r_framework() { # {{{1
     # """
     # Install R framework.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-30.
     #
     # @section Intel:
     #
@@ -25,96 +42,51 @@ koopa::macos_install_r_framework() { # {{{1
     # - https://cran.r-project.org/bin/macosx/
     # - https://mac.r-project.org/tools/
     # """
-    local arch os_codename name name2 name_fancy os_codename prefix reinstall
-    local tee tmp_dir url url_stem version
-    koopa::assert_is_admin
-    name='r'
-    name2="$(koopa::capitalize "$name")"
-    name_fancy="$name2"
-    prefix='/Library/Frameworks/R.framework'
-    reinstall=0
-    tee="$(koopa::locate_tee)"
-    version="$(koopa::variable "$name")"
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--version='*)
-                version="${1#*=}"
-                shift 1
-                ;;
-            '--version')
-                version="${2:?}"
-                shift 2
-                ;;
-            # Flags ------------------------------------------------------------
-            '--reinstall')
-                reinstall=1
-                shift 1
-                ;;
-            # Other ------------------------------------------------------------
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
+    local app dict
     koopa::assert_has_no_args "$#"
-    if [[ -d '/usr/local/Caskroom/r' ]]
-    then
-        koopa::alert_is_installed 'R Homebrew cask'
-        return 0
-    fi
-    [[ "$reinstall" -eq 1 ]] && koopa::rm --sudo "$prefix"
-    if [[ -d "$prefix" ]]
-    then
-        koopa::alert_is_installed "$name_fancy" "$prefix"
-        return 0
-    fi
-    koopa::install_start "$name_fancy" "$version" "$prefix"
-    url_stem='https://cran.r-project.org/bin/macosx'
-    arch="$(koopa::arch)"
-    os_codename="$(koopa::os_codename)"
-    os_codename="$(koopa::kebab_case_simple "$os_codename")"
-    case "$arch" in
+    koopa::assert_is_admin
+    declare -A app=(
+        [installer]="$(koopa::locate_installer)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [arch]="$(koopa::arch)"
+        [os]="$(koopa::kebab_case_simple "$(koopa::os_codename)")"
+        [prefix]='/Library/Frameworks/R.framework'
+        [url_stem]='https://cran.r-project.org/bin/macosx'
+        [version]="${INSTALL_VERSION:?}"
+    )
+    case "${dict[arch]}" in
         'aarch64')
-            arch='arm64'
-            file="R-${version}-${arch}.pkg"
-            url="${url_stem}/${os_codename}-${arch}/base/${file}"
+            dict[arch2]='arm64'
+            dict[pkg_file]="R-${dict[version]}-${dict[arch2]}.pkg"
+            dict[url]="${dict[url_stem]}/${dict[os]}-${dict[arch2]}/\
+base/${dict[pkg_file]}"
             ;;
         'x86_64')
-            file="R-${version}.pkg"
-            url="${url_stem}/base/${file}"
+            dict[pkg_file]="R-${version}.pkg"
+            dict[url]="${dict[url_stem]}/base/${dict[pkg_file]}"
             ;;
         *)
-            koopa::stop "Unsupported architecture: '${arch}'."
+            koopa::stop "Unsupported architecture: '${dict[arch]}'."
             ;;
     esac
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        koopa::download "$url"
-        sudo installer -pkg "$file" -target /
-    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    koopa::assert_is_dir "$prefix"
-    koopa::install_success "$name_fancy" "$prefix"
-    koopa::alert_restart
+    koopa::download "${dict[url]}"
+    "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
+    koopa::assert_is_dir "${dict[prefix]}"
     return 0
 }
 
-koopa::macos_uninstall_r_framework() { # {{{1
+koopa:::macos_uninstall_r_framework() { # {{{1
     # """
     # Uninstall R framework.
-    # @note Updated 2021-06-03.
+    # @note Updated 2021-10-30.
     # """
-    local name_fancy
-    name_fancy='R framework'
-    koopa::uninstall_start "$name_fancy"
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     koopa::rm --sudo \
         '/Applications/R.app' \
         '/Library/Frameworks/R.framework'
     koopa::delete_broken_symlinks '/usr/local/bin'
-    koopa::uninstall_success "$name_fancy"
     return 0
 }
-
