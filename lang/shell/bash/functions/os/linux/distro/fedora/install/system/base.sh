@@ -3,7 +3,7 @@
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-10-30.
     #
     # Use '<pkg>-<version>' to pin package versions.
     #
@@ -109,8 +109,9 @@ koopa::fedora_install_base() { # {{{1
             'cryptsetup'                                          # |       NO |
             'curl'                                                # |      YES |
             'diffutils'                                           # |      YES |
+            'expect'  # installs unbuffer                         # |        ? |
             'file'                                                # |        ? |
-            'gcc-gfortran'
+            'gcc-gfortran'                                        # |        ? |
             'gnupg2'                                              # |      YES |
             'gnutls'                                              # |      YES |
             'libtool'                                             # |      YES |

@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
 koopa::macos_uninstall_ringcentral() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='RingCentral' \
+        --name='ringcentral' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa:::macos_uninstall_ringcentral() { # {{{1
     # """
     # Uninstall RingCentral.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-10-30.
     # """
-    local name_fancy
     koopa::assert_has_no_args "$#"
-    name_fancy='RingCentral'
-    koopa::uninstall_start "$name_fancy"
+    koopa::assert_is_admin
+    koopa::rm --sudo \
+        '/Applications/RingCentral Meetings.app'
     koopa::rm \
         "${HOME}/Library/Application Support/RingCentral Meetings" \
         "${HOME}/Library/Caches/us.zoom.ringcentral" \
@@ -18,7 +27,5 @@ Contents/MacOS/RingCentralMeetings" \
         "${HOME}/Library/Logs/RingCentralMeetings" \
         "${HOME}/Preferences/RingcentralChat.plist" \
         "${HOME}/Preferences/us.zoom.ringcentral.plist"
-    koopa::rm --sudo '/Applications/RingCentral Meetings.app'
-    koopa::uninstall_success "$name_fancy"
     return 0
 }
