@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2030,SC2031
 
-# FIXME Need to improve '--prefix' handling for '--system' mode?
-
 koopa:::update_app() { # {{{1
     # """
     # Update application.
