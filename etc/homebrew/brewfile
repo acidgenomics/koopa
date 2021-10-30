@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-10-25.
+# Updated 2021-10-30.
 # """
 
 # Taps {{{1
@@ -53,6 +53,7 @@ brew "editorconfig"
 brew "emacs"
 brew "exa"  # rust
 brew "exiftool"
+brew "expect"  # installs unbuffer
 brew "fd"  # rust
 brew "ffmpeg"
 brew "findutils"
