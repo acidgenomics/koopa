@@ -1379,6 +1379,26 @@ koopa::locate_xattr() { # {{{1
     koopa:::locate_app '/usr/bin/xattr'
 }
 
+koopa::locate_xcode_select() { # {{{1
+    # """
+    # Locate macOS xcode-select.
+    # @note Updated 2021-10-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/xcode-select'
+}
+
+koopa::locate_xcodebuild() { # {{{1
+    # """
+    # Locate macOS xcodebuild.
+    # @note Updated 2021-10-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/xcodebuild'
+}
+
 koopa::locate_yes() { # {{{1
     # """
     # Locate GNU yes.
