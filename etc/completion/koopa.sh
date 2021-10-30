@@ -203,13 +203,13 @@ _koopa_complete() { # {{{1
                 then
                     args+=(
                         'adobe-creative-cloud'
+                        'cisco-webex'
                         'microsoft-onedrive'
                         'oracle-java'
                         'python-framework'
                         'r-cran-gfortran'
                         'r-framework'
                         'ringcentral'
-                        'webex'
                         'xcode-clt'
                     )
                 fi
