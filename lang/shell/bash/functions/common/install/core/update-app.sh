@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2030,SC2031
 
-# FIXME Rework the system, non-system handling here.
-# FIXME Only change PATH etc in the subshell.
 # FIXME Need to improve '--prefix' handling for '--system' mode?
-# FIXME Need to put the environment hardening steps inside the subshell.
 
 koopa:::update_app() { # {{{1
     # """
@@ -173,7 +170,6 @@ koopa:::update_app() { # {{{1
         "${dict[function]}"
     ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
     koopa::rm "${dict[tmp_dir]}"
-
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]
     then
         if [[ "${dict[shared]}" -eq 1 ]]
