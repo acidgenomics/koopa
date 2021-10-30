@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to support this in koopa autocompletion.
 koopa::macos_disable_crashplan() { # {{{1
     # """
     # Disable CrashPlan.
@@ -34,6 +35,7 @@ koopa::macos_disable_crashplan() { # {{{1
     return 0
 }
 
+# FIXME Need to support this in koopa autocompletion.
 koopa::macos_enable_crashplan() {  # {{{1
     # """
     # Enable CrashPlan.

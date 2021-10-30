@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to convert to wrapper.
 koopa::macos_install_r_framework() { # {{{1
     # """
     # Install R framework.
