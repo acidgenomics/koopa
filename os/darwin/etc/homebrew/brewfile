@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2021-09-21.
+# Updated 2021-10-30.
 # """
 
 # Taps {{{1
@@ -50,6 +50,7 @@ cask "bartender"
 cask "basictex"
 cask "bbedit"
 cask "bibdesk"
+# > cask "bluejeans"
 cask "boop"
 cask "brave-browser"  # Avoid Keystone bloat from Google Chrome.
 cask "carbon-copy-cloner"
@@ -104,6 +105,7 @@ cask "omnidisksweeper"
 cask "pacifist"
 cask "pycharm-ce"
 cask "r"
+# > cask "ringcentral"
 cask "rstudio"
 # > cask "safari-technology-preview"
 cask "skype"
@@ -117,6 +119,7 @@ cask "tunnelblick"
 cask "vanilla"
 cask "visual-studio-code"
 cask "vlc"
+# > cask "webex"
 cask "xld"
 cask "xquartz"
 cask "zoom"
