@@ -1,128 +1,124 @@
 #!/usr/bin/env bash
 
-# FIXME Need to convert to wrapper.
+# FIXME Need to remove the prefix if defined.
+# FIXME Need to rethink the version handling?
+# FIXME Need to define /usr/local/gfortran as a prefix?
+
 koopa::macos_install_r_cran_gfortran() { # {{{1
+    koopa:::install_app \
+        --name-fancy='R CRAN gfortran' \
+        --name='r-cran-gfortran' \
+        --platform='macos' \
+        --prefix="$(koopa::macos_gfortran_prefix)" \
+        --system \
+        --version="$(koopa::variable 'r-cran-gfortran')" \
+        "$@"
+}
+
+# FIXME Need to support '--prefix' pathrough here with '--system' flag.
+
+koopa::macos_uninstall_r_cran_gfortran() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='R CRAN gfortran' \
+        --name='r-cran-gfortran' \
+        --platform='macos' \
+        --prefix="$(koopa::macos_gfortran_prefix)" \
+        --system \
+        "$@"
+}
+
+# FIXME Ensure we still support version here.
+# FIXME Need to convert to wrapper.
+# FIXME Reinstall may need to use '--sudo' here in system call.
+# FIXME Ensure that when prefix is defined and '--reinstall' is not declared,
+#       the install script errors.
+
+koopa:::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-10-30.
     # @seealso
     # - https://mac.r-project.org/tools/
     # - https://github.com/fxcoudert/gfortran-for-macOS/
     # """
-    local arch file file_stem name name_fancy os_codename make_prefix pkg
-    local prefix reinstall tee tmp_dir url url_stem version
+    local dict
+    koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    arch="$(koopa::arch)"
-    make_prefix="$(koopa::make_prefix)"
-    name='gfortran'
-    name_fancy="R CRAN ${name}"
-    prefix="/usr/local/${name}"
-    reinstall=0
-    tee="$(koopa::locate_tee)"
-    version="$(koopa::variable "r-cran-${name}")"
-    case "$arch" in
+    declare -A app=(
+        [hdiutil]="$(koopa::locate_hdiutil)"
+        [installer]="$(koopa::locate_installer)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [arch]="$(koopa::arch)"
+        [make_prefix]="$(koopa::make_prefix)"
+        [name]='gfortran'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    case "${dict[arch]}" in
         'aarch64')
-            arch='ARM'
+            dict[arch2]='ARM'
             ;;
         'x86_64')
-            arch='Intel'
+            dict[arch2]='Intel'
             ;;
         *)
-            koopa::stop "Unsupported architecture: '${arch}'."
+            koopa::stop "Unsupported architecture: '${dict[arch]}'."
             ;;
     esac
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--version='*)
-                version="${1#*=}"
-                shift 1
-                ;;
-            '--version')
-                version="${2:?}"
-                shift 2
-                ;;
-            # Flags ------------------------------------------------------------
-            '--reinstall')
-                reinstall=1
-                shift 1
-                ;;
-            # Other ------------------------------------------------------------
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::assert_has_no_args "$#"
-    [[ "$reinstall" -eq 1 ]] && koopa::rm --sudo "$prefix"
-    if [[ -d "$prefix" ]]
-    then
-        koopa::alert_is_installed "$name_fancy" "$prefix"
-        return 0
-    fi
-    koopa::install_start "$name_fancy" "$version" "$prefix"
-    url_stem="https://github.com/fxcoudert/${name}-for-macOS/releases/download"
-    case "$version" in
+    dict[url_stem]="https://github.com/fxcoudert/gfortran-for-macOS/\
+releases/download"
+    case "${dict[version]}" in
         '8.2')
             # R 4.0, 4.1.
-            os_codename='Mojave'
-            file_stem="${name}-${version}-${os_codename}"
-            file="${file_stem}.dmg"
-            url="${url_stem}/${version}/${file}"
-            pkg="/Volumes/${file_stem}/${file_stem}/${name}.pkg"
+            dict[os]='Mojave'
+            dict[file_stem]="${dict[name]}-${dict[version]}-${dict[os]}"
+            dict[dmg_file]="${dict[file_stem]}.dmg"
+            dict[url]="${dict[url_stem]}/${dict[version]}/${dict[dmg_file]}"
+            dict[pkg_file]="/Volumes/${dict[file_stem]}/${dict[file_stem]}/\
+${dict[name]}.pkg"
             ;;
         '10.2')
-            # Not yet used.
-            os_codename="BigSur-${arch}"
-            os_codename2="$(koopa::lowercase "$os_codename")"
-            file_stem="${name}-${version}-${os_codename}"
-            file="${file_stem}.dmg"
-            url="${url_stem}/${version}-${os_codename2}/${file}"
-            pkg="/Volumes/${file_stem}/${name}.pkg"
+            # Not yet used, still in development.
+            dict[os]="BigSur-${dict[arch2]}"
+            dict[os2]="$(koopa::lowercase "${dict[os]}")"
+            dict[file_stem]="${dict[name]}-${dict[version]}-${dict[os]}"
+            dict[dmg_file]="${dict[file_stem]}.dmg"
+            dict[url]="${dict[url_stem]}/${dict[version]}-${dict[os2]}/\
+${dict[dmg_file]}"
+            dict[pkg_file]="/Volumes/${dict[file_stem]}/${dict[name]}.pkg"
             ;;
         *)
-            koopa::stop "Unsupported version: '${version}'."
+            koopa::stop "Unsupported version: '${dict[version]}'."
     esac
-    tmp_dir="$(koopa::tmp_dir)"
-    (
-        koopa::cd "$tmp_dir"
-        koopa::download "$url"
-        hdiutil mount "$file"
-        koopa::assert_is_file "$pkg"
-        sudo installer -pkg "$pkg" -target /
-        hdiutil unmount "/Volumes/${file_stem}"
-    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    koopa::assert_is_dir "$prefix"
+    dict[mount_point]="/Volumes/${dict[file_stem]}"
+    koopa::download "${dict[url]}" "${dict[dmg_file]}"
+    "${app[hdiutil]}" mount "${dict[dmg_file]}"
+    koopa::assert_is_file "${dict[pkg_file]}"
+    "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
+    "${app[hdiutil]}" unmount "${dict[mount_point]}"
+    koopa::assert_is_dir "${dict[prefix]}"
     # Ensure the installer doesn't link outside of target prefix.
-    if [[ -x "${make_prefix}/bin/${name}" ]]
+    app[gfortran]="${dict[make_prefix]}/bin/${dict[name]}"
+    if [[ -x "${app[gfortran]}" ]]
     then
-        koopa::rm --sudo "${make_prefix}/bin/${name}"
+        koopa::rm --sudo "${app[gfortran]}"
     fi
-    koopa::install_success "$name_fancy" "$prefix"
-    koopa::alert_restart
     return 0
 }
 
-# FIXME Need to convert to wrapper.
-koopa::macos_uninstall_r_cran_gfortran() { # {{{1
+koopa:::macos_uninstall_r_cran_gfortran() { # {{{1
     # """
     # Uninstall R CRAN gfortran.
-    # @note Updated 2021-06-02.
+    # @note Updated 2021-10-30.
     # """
-    local name name_fancy prefix
-    name='gfortran'
-    name_fancy="R CRAN ${name}"
-    prefix="/usr/local/${name}"
-    if [[ ! -d "$prefix" ]]
-    then
-        koopa::alert_is_not_installed "$name_fancy"
-        return 0
-    fi
-    koopa::uninstall_start "$name_fancy" "$prefix"
-    koopa::rm --sudo "$prefix"
-    koopa::uninstall_success "$name_fancy" "$prefix"
+    local dict
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
+    declare -A dict=(
+        [prefix]="${UNINSTALL_PREFIX:?}"
+    )
+    koopa::rm --sudo "${dict[prefix]}"
     return 0
 }
-
