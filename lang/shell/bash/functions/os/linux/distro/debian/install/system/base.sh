@@ -3,7 +3,7 @@
 koopa::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-09-14.
+    # @note Updated 2021-10-30.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -136,6 +136,7 @@ koopa::debian_install_base() { # {{{1
             'cmake'
             'diffutils'
             'dirmngr'
+            'expect-dev'  # installs unbuffer
             'file'
             'fortran77-compiler'
             'gdb'

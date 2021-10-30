@@ -203,7 +203,7 @@ _koopa_complete() { # {{{1
                 then
                     args+=(
                         'adobe-creative-cloud'
-                        'onedrive'
+                        'microsoft-onedrive'
                         'oracle-java'
                         'python-framework'
                         'r-cran-gfortran'

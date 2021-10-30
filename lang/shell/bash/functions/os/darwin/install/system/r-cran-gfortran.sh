@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Need to convert to wrapper.
 koopa::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
-    # @note Updated 2021-06-02.
+    # @note Updated 2021-10-29.
     # @seealso
     # - https://mac.r-project.org/tools/
     # - https://github.com/fxcoudert/gfortran-for-macOS/
@@ -104,6 +105,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
     return 0
 }
 
+# FIXME Need to convert to wrapper.
 koopa::macos_uninstall_r_cran_gfortran() { # {{{1
     # """
     # Uninstall R CRAN gfortran.
