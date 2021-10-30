@@ -29,11 +29,11 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [killAll]="$(koopa::locate_all)"
+        [kill_all]="$(koopa::locate_kill_all)"
         [reboot]="$(koopa::locate_reboot)"
         [sudo]="$(koopa::locate_sudo)"
     )
-    "${app[sudo]}" "${app[killAll]}" bird
+    "${app[sudo]}" "${app[kill_all]}" bird
     koopa::rm \
         "${HOME:?}/Library/Application Support/CloudDocs" \
         "${HOME:?}/Library/Caches/"*
