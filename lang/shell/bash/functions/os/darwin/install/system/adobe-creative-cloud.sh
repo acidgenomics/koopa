@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 
 koopa::macos_uninstall_adobe_creative_cloud() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Adobe Creative Cloud' \
+        --name='adobe-creative-cloud' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa:::macos_uninstall_adobe_creative_cloud() { # {{{1
     # """
     # Uninstall Adobe Creative Cloud preferences.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-10-30.
     # """
-    local name_fancy
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    name_fancy='Adobe Creative Cloud'
-    koopa::uninstall_start "$name_fancy"
     koopa::rm --sudo \
         '/Library/Application Support/Adobe'* \
         '/Library/Application Support/regid.'*'.com.adobe' \
@@ -28,6 +34,5 @@ koopa::macos_uninstall_adobe_creative_cloud() { # {{{1
         "${HOME}/Library/Preferences/Macromedia" \
         "${HOME}/Library/Preferences/com."{a,A}"dobe"* \
         "${HOME}/Library/Saved Application State/com."{a,A}"dobe"*
-    koopa::uninstall_success "$name_fancy"
     return 0
 }
