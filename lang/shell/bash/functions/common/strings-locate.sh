@@ -4,6 +4,8 @@
 # FIXME We likely want to streamline the handling of this for coreutils.
 # FIXME Consider prefixing macOS and Linux-specific locators here.
 
+# hdiutil
+
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -641,6 +643,16 @@ koopa::locate_h5cc() { # {{{1
         --name='h5cc'
 }
 
+koopa::locate_hdiutil() { # {{{1
+    # """
+    # Locate macOS hdiutil.
+    # @note Updated 2021-10-27.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/hdiutil'
+}
+
 koopa::locate_head() { # {{{1
     # """
     # Locate GNU head.
@@ -663,6 +675,16 @@ koopa::locate_id() { # {{{1
         --brew-opt='coreutils' \
         --gnubin \
         --name='id'
+}
+
+koopa::locate_installer() { # {{{1
+    # """
+    # Locate macOS installer.
+    # @note Updated 2021-10-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/sbin/installer'
 }
 
 koopa::locate_java() { # {{{1

@@ -680,6 +680,10 @@ koopa::macos_activate_visual_studio_code() { # {{{1
     _koopa_macos_activate_visual_studio_code "$@"
 }
 
+koopa::macos_gfortran_prefix() { # {{{1
+    _koopa_macos_gfortran_prefix "$@"
+}
+
 koopa::macos_is_dark_mode() { # {{{1
     _koopa_macos_is_dark_mode "$@"
 }

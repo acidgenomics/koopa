@@ -9,13 +9,13 @@ koopa::macos_symlink_dropbox() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [killAll]="$(koopa::locate_kill_all)"
+        [kill_all]="$(koopa::locate_kill_all)"
         [sudo]="$(koopa::locate_sudo)"
     )
     koopa::rm --sudo "${HOME}/Desktop"
     koopa::ln "${HOME}/Dropbox/Desktop" "${HOME}/."
     koopa::rm --sudo "${HOME}/Documents"
     koopa::ln "${HOME}/Dropbox/Documents" "${HOME}/."
-    "${app[sudo]}" "${app[killAll]}" 'Finder'
+    "${app[sudo]}" "${app[kill_all]}" 'Finder'
     return 0
 }

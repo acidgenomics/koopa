@@ -23,6 +23,7 @@ koopa:::install_hdf5() { # {{{1
     name='hdf5'
     if koopa::is_macos
     then
+        # FIXME Don't hardcode this here. Use a function instead.
         gfortran_prefix='/usr/local/gfortran'
         koopa::assert_is_dir "$gfortran_prefix"
         koopa::add_to_path_start "${gfortran_prefix}/bin"

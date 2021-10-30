@@ -356,6 +356,16 @@ _koopa_local_data_prefix() { # {{{1
     return 0
 }
 
+_koopa_macos_gfortran_prefix() { # {{{1
+    # """
+    # macOS gfortran prefix.
+    # @note Updated 2021-10-30.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print "$(_koopa_make_prefix)/gfortran"
+    return 0
+}
+
 _koopa_macos_julia_prefix() { # {{{1
     # """
     # macOS Julia prefix.
