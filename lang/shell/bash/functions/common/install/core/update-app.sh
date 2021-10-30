@@ -30,7 +30,6 @@ koopa:::update_app() { # {{{1
         [version]=''
     )
     koopa::is_shared_install && dict[shared]=1
-    tee="$(koopa::locate_tee)"
     pos=()
     while (("$#"))
     do
@@ -116,16 +115,9 @@ koopa:::update_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ -z "${dict[name_fancy]}" ]]
-    then
-        dict[name_fancy]="${dict[name]}"
-    fi
-    if [[ "${dict[system]}" -eq 1 ]]
-    then
-        dict[shared]=0
-    fi
-    if [[ "${dict[shared]}" -eq 1 ]] ||
-        [[ "${dict[system]}" -eq 1 ]]
+    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
+    [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
+    if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
     then
         koopa::assert_is_admin
     fi
@@ -200,7 +192,10 @@ koopa:::update_app() { # {{{1
     then
         koopa::sys_set_permissions --recursive "${dict[prefix]}"
     fi
-    koopa::delete_empty_dirs "${dict[prefix]}"
+    if [[ "${dict[system]}" -eq 0 ]]
+    then
+        koopa::delete_empty_dirs "${dict[prefix]}"
+    fi
     # Reset global variables, if applicable.
     if [[ -n "${conf_bak[LD_LIBRARY_PATH]}" ]]
     then
