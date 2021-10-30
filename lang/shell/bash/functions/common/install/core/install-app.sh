@@ -2,6 +2,7 @@
 
 # FIXME Add support for '--system', similar to update function.
 # FIXME Migrate tee, tmp_dir, and temp_log_file into arrays.
+# FIXME Improve consistency with 'update_app' function.
 
 koopa:::install_app() { # {{{1
     # """

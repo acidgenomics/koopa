@@ -1,23 +1,24 @@
 #!/usr/bin/env bash
 
-# FIXME Need to migrate tee, tmp_dir, etc. into array.
-# FIXME Need to add support for '--system' and '--platform'.
-
 koopa:::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-10-30.
     # """
-    local dict pos rm
+    local app dict pos
+    declare -A app
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
+        [function]=''
         [koopa_prefix]="$(koopa::koopa_prefix)"
         [link_app]=''
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt_prefix]="$(koopa::opt_prefix)"
+        [platform]=''
         [prefix]=''
         [shared]=0
+        [system]=0
     )
     pos=()
     while (("$#"))
@@ -39,6 +40,14 @@ koopa:::uninstall_app() { # {{{1
                 dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
+            '--platform='*)
+                dict[platform]="${1#*=}"
+                shift 1
+                ;;
+            '--platform')
+                dict[platform]="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict[prefix]="${1#*=}"
                 shift 1
@@ -56,6 +65,14 @@ koopa:::uninstall_app() { # {{{1
                 dict[link_app]=0
                 shift 1
                 ;;
+            '--system')
+                dict[system]=1
+                shift 1
+                ;;
+            '--verbose')
+                set -x
+                shift 1
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
@@ -68,43 +85,65 @@ koopa:::uninstall_app() { # {{{1
     then
         dict[name_fancy]="${dict[name]}"
     fi
-    if [[ -z "${dict[prefix]}" ]]
+    if [[ "${dict[system]}" -eq 1 ]]
     then
-        dict[prefix]="${dict[app_prefix]}/${dict[name]}"
-    fi
-    if [[ ! -d "${dict[prefix]}" ]]
-    then
-        koopa::alert_is_not_installed "${dict[name_fancy]}" "${dict[prefix]}"
-        return 0
-    fi
-    if koopa::str_match_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
-    then
-        dict[shared]=1
-    fi
-    if [[ "${dict[shared]}" -eq 1 ]]
-    then
-        rm='koopa::sys_rm'
-    else
-        rm='koopa::rm'
-    fi
-    if [[ -z "${dict[link_app]}" ]]
-    then
-        if [[ "${dict[shared]}" -eq 0 ]] || koopa::is_macos
+        koopa::uninstall_start "${dict[name_fancy]}"
+        dict[function]="$(koopa::snake_case_simple "${dict[name]}")"
+        dict[function]="uninstall_${dict[function]}"
+        if [[ -n "${dict[platform]}" ]]
         then
-            dict[link_app]=0
-        else
-            dict[link_app]=1
+            dict[function]="${dict[platform]}_${dict[function]}"
         fi
+        dict[function]="koopa:::${dict[function]}"
+        if ! koopa::is_function "${dict[function]}"
+        then
+            koopa::stop 'Unsupported command.'
+        fi
+        "${dict[function]}" "$@"
+        koopa::uninstall_success "${dict[name_fancy]}"
+    else
+        if [[ -z "${dict[prefix]}" ]]
+        then
+            dict[prefix]="${dict[app_prefix]}/${dict[name]}"
+        fi
+        if [[ ! -d "${dict[prefix]}" ]]
+        then
+            koopa::alert_is_not_installed \
+                "${dict[name_fancy]}" \
+                "${dict[prefix]}"
+            return 0
+        fi
+        if koopa::str_match_regex \
+            "${dict[prefix]}" \
+            "^${dict[koopa_prefix]}"
+        then
+            dict[shared]=1
+        fi
+        koopa::uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
+        if [[ "${dict[shared]}" -eq 1 ]]
+        then
+            app[rm]='koopa::sys_rm'
+        else
+            app[rm]='koopa::rm'
+        fi
+        "${app[rm]}" \
+            "${dict[prefix]}" \
+            "${dict[opt_prefix]}/${dict[name]}"
+        if [[ -z "${dict[link_app]}" ]]
+        then
+            if [[ "${dict[shared]}" -eq 0 ]] || koopa::is_macos
+            then
+                dict[link_app]=0
+            else
+                dict[link_app]=1
+            fi
+        fi
+        if [[ "${dict[link_app]}" -eq 1 ]]
+        then
+            koopa::alert "Deleting broken symlinks in '${dict[make_prefix]}'."
+            koopa::delete_broken_symlinks "${dict[make_prefix]}"
+        fi
+        koopa::uninstall_success "${dict[name_fancy]}"
     fi
-    koopa::uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
-    "$rm" \
-        "${dict[prefix]}" \
-        "${dict[opt_prefix]}/${dict[name]}"
-    if [[ "${dict[link_app]}" -eq 1 ]]
-    then
-        koopa::alert "Deleting broken symlinks in '${dict[make_prefix]}'."
-        koopa::delete_broken_symlinks "${dict[make_prefix]}"
-    fi
-    koopa::uninstall_success "${dict[name_fancy]}"
     return 0
 }

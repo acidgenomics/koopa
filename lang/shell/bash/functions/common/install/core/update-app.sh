@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Consider adding support for:
-# FIXME --platform
-# FIXME --system (admin is implied)
-# FIXME --admin
-
 koopa:::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-10-30.
     # """
-    local app arr conf_bak dict pkgs pos str tee
+    local app conf_bak dict path_arr path_str pkgs pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A app=(
@@ -32,7 +27,6 @@ koopa:::update_app() { # {{{1
         [system]=0
         [tmp_dir]="$(koopa::tmp_dir)"
         [tmp_log_file]="$(koopa::tmp_log_file)"
-        [updater]=''
         [version]=''
     )
     koopa::is_shared_install && dict[shared]=1
@@ -89,14 +83,6 @@ koopa:::update_app() { # {{{1
                 dict[prefix]="${2:?}"
                 shift 2
                 ;;
-            '--updater='*)
-                dict[updater]="${1#*=}"
-                shift 1
-                ;;
-            '--updater')
-                dict[updater]="${2:?}"
-                shift 2
-                ;;
             '--version='*)
                 dict[version]="${1#*=}"
                 shift 1
@@ -130,6 +116,10 @@ koopa:::update_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ -z "${dict[name_fancy]}" ]]
+    then
+        dict[name_fancy]="${dict[name]}"
+    fi
     if [[ "${dict[system]}" -eq 1 ]]
     then
         dict[shared]=0
@@ -139,11 +129,7 @@ koopa:::update_app() { # {{{1
     then
         koopa::assert_is_admin
     fi
-    if [[ -z "${dict[updater]}" ]]
-    then
-        dict[updater]="${dict[name]}"
-    fi
-    dict[function]="$(koopa::snake_case_simple "${dict[updater]}")"
+    dict[function]="$(koopa::snake_case_simple "${dict[name]}")"
     dict[function]="update_${dict[function]}"
     if [[ -n "${dict[platform]}" ]]
     then
@@ -154,29 +140,25 @@ koopa:::update_app() { # {{{1
     then
         koopa::stop 'Unsupported command.'
     fi
-    if [[ -z "${dict[name_fancy]}" ]]
-    then
-        dict[name_fancy]="${dict[name]}"
-    fi
-
-
-
-    # FIXME Rethink this for system install.
-    if [[ -z "${dict[prefix]}" ]]
-    then
-        dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
-    fi
-    koopa::update_start "${dict[name_fancy]}" "${dict[prefix]}"
-    koopa::assert_is_dir "${dict[prefix]}"
-
-
-
+    case "${dict[system]}" in
+        '1')
+            koopa::update_start "${dict[name_fancy]}"
+            ;;
+        '0')
+            if [[ -z "${dict[prefix]}" ]]
+            then
+                dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
+            fi
+            koopa::update_start "${dict[name_fancy]}" "${dict[prefix]}"
+            koopa::assert_is_dir "${dict[prefix]}"
+            ;;
+    esac
     # Ensure configuration is minimal before proceeding, when desirable.
     unset -v LD_LIBRARY_PATH
     # Ensure clean minimal 'PATH'.
-    arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    str="$(koopa::paste0 ':' "${arr[@]}")"
-    PATH="$str"
+    path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
+    path_str="$(koopa::paste0 ':' "${path_arr[@]}")"
+    PATH="$path_str"
     export PATH
     # Ensure clean minimal 'PKG_CONFIG_PATH'.
     unset -v PKG_CONFIG_PATH
@@ -197,9 +179,9 @@ koopa:::update_app() { # {{{1
         IFS=',' read -r -a pkgs <<< "${dict[opt]}"
         koopa::activate_opt_prefix "${pkgs[@]}"
     fi
-    # FIXME Also do this for '--system'.
-    if [[ "${dict[shared]}" -eq 1 ]] && \
-        koopa::is_linux
+    if koopa::is_linux && \
+        { [[ "${dict[shared]}" -eq 1 ]] || \
+            [[ "${dict[system]}" -eq 1 ]]; }
     then
         koopa::update_ldconfig
     fi
@@ -235,12 +217,19 @@ koopa:::update_app() { # {{{1
         PKG_CONFIG_PATH="${conf_bak[PKG_CONFIG_PATH]}"
         export PKG_CONFIG_PATH
     fi
-    # FIXME Also do this for '--system'.
-    if [[ "${dict[shared]}" -eq 1 ]] && \
-        koopa::is_linux
+    if koopa::is_linux && \
+        { [[ "${dict[shared]}" -eq 1 ]] || \
+            [[ "${dict[system]}" -eq 1 ]]; }
     then
         koopa::update_ldconfig
     fi
-    koopa::update_success "${dict[name_fancy]}" "${dict[prefix]}"
+    case "${dict[system]}" in
+        '1')
+            koopa::update_success "${dict[name_fancy]}"
+            ;;
+        '0')
+            koopa::update_success "${dict[name_fancy]}" "${dict[prefix]}"
+            ;;
+    esac
     return 0
 }
