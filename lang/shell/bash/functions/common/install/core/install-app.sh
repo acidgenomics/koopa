@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2030,SC2031
 
-# FIXME This needs to check prefix when defined along with '--system' flag.
-# If '--reinstall' flag is set with '--system', use sudo to remove.
-
-# NOTE We can likely streamline the prefix checks in '--system' mode.
-
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -17,23 +12,20 @@ koopa:::install_app() { # {{{1
     declare -A app=(
         [tee]="$(koopa::locate_tee)"
     )
-    clean_path_arr=(
-        '/usr/bin'
-        '/bin'
-        '/usr/sbin'
-        '/sbin'
-    )
     declare -A dict=(
-        [auto_prefix]=1
+        # When enabled, this will change permissions on the top level directory
+        # of the automatically generated prefix.
+        [auto_prefix]=0
         [homebrew_opt]=''
         [installer]=''
-        [link_app]=1
+        [link_app]=0
         [link_include_dirs]=''
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt]=''
         [platform]=''
         [prefix]=''
+        # This override is useful for app packages configuration.
         [prefix_check]=1
         [reinstall]=0
         [shared]=0
@@ -42,6 +34,7 @@ koopa:::install_app() { # {{{1
         [tmp_log_file]="$(koopa::tmp_log_file)"
         [version]=''
     )
+    clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     koopa::is_shared_install && dict[shared]=1
     while (("$#"))
     do
@@ -185,65 +178,55 @@ koopa:::install_app() { # {{{1
     then
         koopa::stop 'Unsupported command.'
     fi
-    if [[ "${dict[system]}" -eq 1 ]]
+    if [[ -n "${dict[prefix]}" ]]
     then
-        koopa::install_start "${dict[name_fancy]}"
-        if [[ -d "${dict[prefix]:-}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
-        then
-            dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
-            if [[ "${dict[reinstall]}" -eq 1 ]]
-            then
-                koopa::alert "Removing previous install at '${dict[prefix]}'."
-                app[rm]='koopa::rm'
-                "${app[rm]}" --sudo "${dict[prefix]}"
-            fi
-            if [[ -d "${dict[prefix]}" ]]
-            then
-                koopa::alert_note "${dict[name_fancy]} is already installed \
-at '${dict[prefix]}'."
-                return 0
-            fi
-        fi
+        koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
     else
+        koopa::install_start "${dict[name_fancy]}"
+    fi
+    if [[ "${dict[system]}" -eq 0 ]]
+    then
         if [[ -z "${dict[version]}" ]]
         then
             dict[version]="$(koopa::variable "${dict[name]}")"
         fi
         if [[ -z "${dict[prefix]}" ]]
         then
+            dict[auto_prefix]=1
+            dict[link_app]=1
             dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
-        else
-            dict[auto_prefix]=0
-            dict[link_app]=0
-        fi
-        if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
-        then
-            dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
-            if [[ "${dict[reinstall]}" -eq 1 ]]
-            then
-                koopa::alert "Removing previous install at '${dict[prefix]}'."
-                if [[ "${dict[shared]}" -eq 1 ]]
-                then
-                    app[rm]='koopa::sys_rm'
-                else
-                    app[rm]='koopa::rm'
-                fi
-                "${app[rm]}" "${dict[prefix]}"
-            fi
-            if [[ -d "${dict[prefix]}" ]]
-            then
-                koopa::alert_note "${dict[name_fancy]} is already installed \
-at '${dict[prefix]}'."
-                return 0
-            fi
-        else
-            dict[prefix]="$(koopa::init_dir "${dict[prefix]}")"
         fi
         if koopa::str_match_fixed "${dict[prefix]}" "${HOME:?}"
         then
             dict[shared]=0
         fi
-        koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
+    fi
+    if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
+    then
+        dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+        if [[ "${dict[reinstall]}" -eq 1 ]]
+        then
+            koopa::alert "Removing previous install at '${dict[prefix]}'."
+            if [[ "${dict[system]}" -eq 1 ]]
+            then
+                koopa::rm --sudo "${dict[prefix]}"
+            elif [[ "${dict[shared]}" -eq 1 ]]
+            then
+                koopa::sys_rm "${dict[prefix]}"
+            else
+                koopa::rm "${dict[prefix]}"
+            fi
+        fi
+        if [[ -d "${dict[prefix]}" ]]
+        then
+            koopa::alert_note "${dict[name_fancy]} is already installed \
+at '${dict[prefix]}'."
+            return 0
+        fi
+    fi
+    if [[ "${dict[system]}" -eq 0 ]]
+    then
+        dict[prefix]="$(koopa::init_dir "${dict[prefix]}")"
     fi
     (
         koopa::cd "${dict[tmp_dir]}"
@@ -273,22 +256,14 @@ at '${dict[prefix]}'."
         then
             koopa::update_ldconfig
         fi
-        if [[ "${dict[system]}" -eq 1 ]]
-        then
-            # shellcheck disable=SC2030
-            export INSTALL_PREFIX="${dict[prefix]:-}"
-            # shellcheck disable=SC2030
-            export INSTALL_VERSION="${dict[version]:-}"
-        else
-            # shellcheck disable=SC2030
-            export INSTALL_LINK_APP="${dict[link_app]}"
-            # shellcheck disable=SC2030
-            export INSTALL_NAME="${dict[name]}"
-            # shellcheck disable=SC2030
-            export INSTALL_PREFIX="${dict[prefix]}"
-            # shellcheck disable=SC2030
-            export INSTALL_VERSION="${dict[version]}"
-        fi
+        # shellcheck disable=SC2030
+        export INSTALL_LINK_APP="${dict[link_app]}"
+        # shellcheck disable=SC2030
+        export INSTALL_NAME="${dict[name]}"
+        # shellcheck disable=SC2030
+        export INSTALL_PREFIX="${dict[prefix]}"
+        # shellcheck disable=SC2030
+        export INSTALL_VERSION="${dict[version]}"
         "${dict[function]}"
     ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
     koopa::rm "${dict[tmp_dir]}"
@@ -329,11 +304,11 @@ at '${dict[prefix]}'."
     then
         koopa::update_ldconfig
     fi
-    if [[ "${dict[system]}" -eq 1 ]]
+    if [[ -d "${dict[prefix]}" ]]
     then
-        koopa::install_success "${dict[name_fancy]}"
-    else
         koopa::install_success "${dict[name_fancy]}" "${dict[prefix]}"
+    else
+        koopa::install_success "${dict[name_fancy]}"
     fi
     return 0
 }
