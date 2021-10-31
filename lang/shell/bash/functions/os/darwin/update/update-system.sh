@@ -3,16 +3,23 @@
 koopa::macos_update_system() { # {{{1
     # """
     # Update macOS system.
-    # @note Updated 2020-11-12.
+    # @note Updated 2021-10-31.
     # """
+    local app
     koopa::assert_has_no_args "$#"
-    if koopa::is_installed 'mas'
-    then
-        koopa::h1 "Updating App Store apps via 'mas'."
-        mas upgrade
-    fi
-    koopa::h1 "Updating macOS via 'softwareupdate'."
+    koopa::assert_is_admin
+    declare -A app=(
+        [mas]="$(koopa::locate_mas)"
+        [softwareupdate]="$(koopa::locate_softwareupdate)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    koopa::alert "Updating App Store apps via '${app[mas]}'."
+    "${app[mas]}" upgrade
+    koopa::alert "Updating macOS via '${app[softwareupdate]}'."
     koopa::alert_note 'Restart may be required.'
-    sudo softwareupdate --install --recommended --restart
+    "${app[sudo]}" "${app[softwareupdate]}" \
+        --install \
+        --recommended \
+        --restart
     return 0
 }
