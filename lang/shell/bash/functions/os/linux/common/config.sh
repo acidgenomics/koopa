@@ -113,7 +113,7 @@ koopa::remove_user_from_group() { # {{{1
 koopa::update_etc_profile_d() { # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
-    # @note Updated 2021-05-17.
+    # @note Updated 2021-10-31.
     # """
     local file koopa_prefix string
     koopa::assert_has_no_args "$#"
@@ -126,7 +126,7 @@ koopa::update_etc_profile_d() { # {{{1
     then
         return 0
     fi
-    sudo rm -fv "$file"
+    koopa::rm --sudo "$file"
     koopa_prefix="$(koopa::koopa_prefix)"
     read -r -d '' string << END || true
 #!/bin/sh
