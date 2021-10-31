@@ -27,6 +27,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
     return 0
 }
 
+# FIXME Need to harden these.
 koopa::add_user_to_group() { # {{{1
     # """
     # Add user to group.
@@ -51,37 +52,43 @@ koopa::add_user_to_group() { # {{{1
 koopa::link_docker() { # {{{1
     # """
     # Link Docker library onto data disk for VM.
-    # @note Updated 2020-11-12.
+    # @note Updated 2021-10-31.
     # """
-    local dd_link_prefix distro_prefix etc_source lib_n lib_sys
+    local app dict
     koopa::assert_has_no_args "$#"
-    koopa::is_installed 'docker' || return 0
     koopa::assert_is_admin
-    # e.g. '/mnt/data01/n' to '/n' for AWS.
-    dd_link_prefix="$(koopa::data_disk_link_prefix)"
-    [[ -d "$dd_link_prefix" ]] || return 0
+    declare -A app=(
+        [sudo]="$(koopa::locate_sudo)"
+        [systemctl]="$(koopa::locate_systemctl)"
+    )
+    declare -A dict=(
+        # e.g. '/mnt/data01/n' to '/n' for AWS.
+        [dd_link_prefix]="$(koopa::data_disk_link_prefix)"
+        [distro_prefix]="$(koopa::distro_prefix)"
+        [etc_target]='/etc/docker'
+        [lib_sys]='/var/lib/docker'
+    )
+    dict[etc_source]="${dict[distro_prefix]}${dict[etc_target]}"
+    dict[lib_n]="${dict[dd_link_prefix]}${dict[lib_sys]}"
+    koopa::assert_is_dir "${dict[dd_link_prefix]}"
     koopa::alert 'Updating Docker configuration.'
-    koopa::assert_is_installed 'systemctl'
     koopa::alert_note 'Stopping Docker.'
-    sudo systemctl stop docker
-    lib_sys='/var/lib/docker'
-    lib_n="${dd_link_prefix}${lib_sys}"
-    distro_prefix="$(koopa::distro_prefix)"
-    koopa::alert_note "Moving Docker lib from '${lib_sys}' to '${lib_n}'."
-    etc_source="${distro_prefix}/etc/docker"
-    if [[ -d "$etc_source" ]]
+    "${app[sudo]}" "${app[systemctl]}" stop 'docker'
+    koopa::alert_note "Moving Docker lib from '${dict[lib_sys]}' \
+to '${dict[lib_n]}'."
+    if [[ -d "${dict[etc_source]}" ]]
     then
         koopa::ln \
             --sudo \
-            --target-directory='/etc/docker' \
-            "${etc_source}/"*
+            --target-directory="${dict[etc_target]}" \
+            "${dict[etc_source]}/"*
     fi
-    sudo rm -frv "$lib_sys"
-    sudo mkdir -pv "$lib_n"
-    sudo ln -fnsv "$lib_n" "$lib_sys"
+    koopa::rm --sudo "${dict[lib_sys]}"
+    koopa::mkdir --sudo "${dict[lib_n]}"
+    koopa::ln --sudo "${dict[lib_n]}" "${dict[lib_sys]}"
     koopa::alert_note 'Restarting Docker.'
-    sudo systemctl enable docker
-    sudo systemctl start docker
+    "${app[sudo]}" "${app[systemctl]}" enable 'docker'
+    "${app[sudo]}" "${app[systemctl]}" start 'docker'
     return 0
 }
 
