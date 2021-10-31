@@ -4,8 +4,6 @@
 # FIXME We likely want to streamline the handling of this for coreutils.
 # FIXME Consider prefixing macOS and Linux-specific locators here.
 
-# hdiutil
-
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -395,6 +393,16 @@ koopa::locate_date() { # {{{1
         --brew-opt='coreutils' \
         --gnubin \
         --name='date'
+}
+
+koopa::locate_defaults() { # {{{1
+    # """
+    # Locate macOS defaults.
+    # @note Updated 2021-10-31.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/defaults'
 }
 
 koopa::locate_df() { # {{{1
@@ -884,6 +892,16 @@ koopa::locate_npm() { # {{{1
         --name='npm'
 }
 
+koopa::locate_nvram() { # {{{1
+    # """
+    # Locate macOS nvram.
+    # @note Updated 2021-10-31.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/sbin/nvram'
+}
+
 koopa::locate_open() { # {{{1
     # """
     # Locate macOS open command.
@@ -983,6 +1001,16 @@ koopa::locate_pkgutil() { # {{{1
     koopa:::locate_app '/usr/sbin/pkgutil'
 }
 
+koopa::locate_plistbuddy() { # {{{1
+    # """
+    # Locate macOS PlistBuddy.
+    # @note Updated 2021-10-31.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/libexec/PlistBuddy'
+}
+
 koopa::locate_plutil() { # {{{1
     # """
     # Locate macOS plutil.
@@ -991,6 +1019,16 @@ koopa::locate_plutil() { # {{{1
     koopa::assert_has_no_args "$#"
     # > koopa::assert_is_macos
     koopa:::locate_app '/usr/bin/plutil'
+}
+
+koopa::locate_pmset() { # {{{1
+    # """
+    # Locate macOS pmset.
+    # @note Updated 2021-10-31.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/bin/pmset'
 }
 
 koopa::locate_python() { # {{{1
@@ -1126,6 +1164,16 @@ koopa::locate_rustc() { # {{{1
         --brew-opt='rust' \
         --koopa-opt='rust' \
         --name='rustc'
+}
+
+koopa::locate_scutil() { # {{{1
+    # """
+    # Locate macOS scutil.
+    # @note Updated 2021-10-31.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/sbin/scutil'
 }
 
 koopa::locate_sed() { # {{{1
