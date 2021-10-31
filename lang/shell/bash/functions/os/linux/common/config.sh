@@ -150,26 +150,33 @@ END
 koopa::update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-10-31.
     # """
-    local conf_source dest_file distro_prefix source_file
+    local app dict source_file target_bn target_file
     koopa::assert_has_no_args "$#"
-    [[ -d '/etc/ld.so.conf.d' ]] || return 0
-    koopa::assert_is_installed '/sbin/ldconfig'
     koopa::assert_is_admin
-    distro_prefix="$(koopa::distro_prefix)"
-    conf_source="${distro_prefix}/etc/ld.so.conf.d"
+    declare -A app=(
+        [ldconfig]="$(koopa::locate_ldconfig)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [distro_prefix]="$(koopa::distro_prefix)"
+        [target_prefix]='/etc/ld.so.conf.d'
+    )
+    [[ -d "${dict[target_prefix]}" ]] || return 0
+    dict[conf_source]="${dict[distro_prefix]}${dict[target_prefix]}"
     # Intentionally early return for distros that don't need configuration.
-    [[ -d "$conf_source" ]] || return 0
+    [[ -d "${dict[conf_source]}" ]] || return 0
     # Create symlinks with 'koopa-' prefix.
     # Note that we're using shell globbing here.
     # https://unix.stackexchange.com/questions/218816
-    koopa::alert "Updating ldconfig in '/etc/ld.so.conf.d/'."
-    for source_file in "${conf_source}/"*".conf"
+    koopa::alert "Updating ldconfig in '${dict[target_prefix]}'."
+    for source_file in "${dict[conf_source]}/"*".conf"
     do
-        dest_file="/etc/ld.so.conf.d/koopa-$(koopa::basename "$source_file")"
-        koopa::ln --sudo "$source_file" "$dest_file"
+        target_bn="koopa-$(koopa::basename "$source_file")"
+        target_file="${dict[target_prefix]}/${target_bn}"
+        koopa::ln --sudo "$source_file" "$target_file"
     done
-    sudo /sbin/ldconfig || true
+    "${app[sudo]}" "${app[ldconfig]}" || true
     return 0
 }
