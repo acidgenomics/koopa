@@ -4,8 +4,6 @@
 # FIXME We likely want to streamline the handling of this for coreutils.
 # FIXME Consider prefixing macOS and Linux-specific locators here.
 
-
-
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -1288,7 +1286,6 @@ koopa::locate_systemctl() { # {{{1
     koopa::assert_has_no_args "$#"
     # > koopa::assert_is_linux
     koopa:::locate_app 'systemctl'  # FIXME Harden this
-
 }
 
 koopa::locate_tac() { # {{{1
@@ -1428,6 +1425,16 @@ koopa::locate_unzip() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app 'unzip'
+}
+
+koopa::locate_update_alternatives() { # {{{1
+    # """
+    # Locate Linux update-alternatives.
+    # @note Updated 2021-10-31.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_linux
+    koopa:::locate_app 'update-alternatives'  # FIXME Harden this
 }
 
 koopa::locate_vim() { # {{{1
