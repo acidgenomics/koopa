@@ -192,16 +192,6 @@ Contents/Resources/ascp" \
         --name='ascp'
 }
 
-koopa::locate_automount() { # {{{1
-    # """
-    # Locate macOS automount.
-    # @note Updated 2021-10-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/sbin/automount'
-}
-
 koopa::locate_awk() { # {{{1
     # """
     # Locate GNU awk.
@@ -395,16 +385,6 @@ koopa::locate_date() { # {{{1
         --name='date'
 }
 
-koopa::locate_defaults() { # {{{1
-    # """
-    # Locate macOS defaults.
-    # @note Updated 2021-10-31.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/defaults'
-}
-
 koopa::locate_df() { # {{{1
     # """
     # Locate GNU df.
@@ -440,16 +420,6 @@ koopa::locate_dirname() { # {{{1
         --name='dirname'
 }
 
-koopa::locate_diskutil() { # {{{1
-    # """
-    # Locate macOS diskutil.
-    # @note Updated 2021-10-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/sbin/diskutil'
-}
-
 koopa::locate_docker() { # {{{1
     # """
     # Locate Docker.
@@ -466,16 +436,6 @@ koopa::locate_doom() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app "$(koopa::doom_emacs_prefix)/bin/doom"
-}
-
-koopa::locate_dscacheutil() { # {{{1
-    # """
-    # Locate macOS dscacheutil.
-    # @note Updated 2021-10-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/dscacheutil'
 }
 
 koopa::locate_du() { # {{{1
@@ -651,16 +611,6 @@ koopa::locate_h5cc() { # {{{1
         --name='h5cc'
 }
 
-koopa::locate_hdiutil() { # {{{1
-    # """
-    # Locate macOS hdiutil.
-    # @note Updated 2021-10-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/hdiutil'
-}
-
 koopa::locate_head() { # {{{1
     # """
     # Locate GNU head.
@@ -685,16 +635,6 @@ koopa::locate_id() { # {{{1
         --name='id'
 }
 
-koopa::locate_installer() { # {{{1
-    # """
-    # Locate macOS installer.
-    # @note Updated 2021-10-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/sbin/installer'
-}
-
 koopa::locate_java() { # {{{1
     # """
     # Locate OpenJDK java.
@@ -716,26 +656,6 @@ koopa::locate_julia() { # {{{1
     koopa:::locate_app \
         --macos-app="$(koopa::macos_julia_prefix)/bin/julia" \
         --name='julia'
-}
-
-koopa::locate_kill_all() { # {{{1
-    # """
-    # Locate macOS killAll.
-    # @note Updated 2021-10-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/killAll'
-}
-
-koopa::locate_launchctl() { # {{{1
-    # """
-    # Locate macOS launchctl.
-    # @note Updated 2021-10-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/bin/launchctl'
 }
 
 koopa::locate_llvm_config() { # {{{1
@@ -793,17 +713,6 @@ koopa::locate_ls() { # {{{1
         --name='ls'
 }
 
-koopa::locate_lsregister() { # {{{1
-    # """
-    # Locate macOS lsregister.
-    # @note Updated 2021-10-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app "/System/Library/Frameworks/CoreServices.framework\
-/Frameworks/LaunchServices.framework/Support/lsregister"
-}
-
 koopa::locate_make() { # {{{1
     # """
     # Locate GNU make.
@@ -825,16 +734,6 @@ koopa::locate_man() { # {{{1
         --brew-opt='man-db' \
         --gnubin \
         --name='man'
-}
-
-koopa::locate_mas() { # {{{1
-    # """
-    # Locate macOS mas.
-    # @note Updated 2021-10-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app 'mas'
 }
 
 koopa::locate_mkdir() { # {{{1
@@ -900,26 +799,6 @@ koopa::locate_npm() { # {{{1
         --brew-opt='node' \
         --koopa-opt='node-packages' \
         --name='npm'
-}
-
-koopa::locate_nvram() { # {{{1
-    # """
-    # Locate macOS nvram.
-    # @note Updated 2021-10-31.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/sbin/nvram'
-}
-
-koopa::locate_open() { # {{{1
-    # """
-    # Locate macOS open command.
-    # @note Updated 2021-10-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/open'
 }
 
 koopa::locate_openssl() { # {{{1
@@ -1001,46 +880,6 @@ koopa::locate_pkg_config() { # {{{1
     koopa:::locate_app 'pkg-config'
 }
 
-koopa::locate_pkgutil() { # {{{1
-    # """
-    # Locate macOS pkgutil.
-    # @note Updated 2021-10-26.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/sbin/pkgutil'
-}
-
-koopa::locate_plistbuddy() { # {{{1
-    # """
-    # Locate macOS PlistBuddy.
-    # @note Updated 2021-10-31.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/libexec/PlistBuddy'
-}
-
-koopa::locate_plutil() { # {{{1
-    # """
-    # Locate macOS plutil.
-    # @note Updated 2021-10-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/plutil'
-}
-
-koopa::locate_pmset() { # {{{1
-    # """
-    # Locate macOS pmset.
-    # @note Updated 2021-10-31.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/pmset'
-}
-
 koopa::locate_python() { # {{{1
     # """
     # Locate Python.
@@ -1106,16 +945,6 @@ koopa::locate_realpath() { # {{{1
         --name='realpath'
 }
 
-koopa::locate_reboot() { # {{{1
-    # """
-    # Locate macOS reboot.
-    # @note Updated 2021-10-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/sbin/reboot'
-}
-
 koopa::locate_rename() { # {{{1
     # """
     # Locate Perl rename.
@@ -1176,16 +1005,6 @@ koopa::locate_rustc() { # {{{1
         --name='rustc'
 }
 
-koopa::locate_scutil() { # {{{1
-    # """
-    # Locate macOS scutil.
-    # @note Updated 2021-10-31.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/sbin/scutil'
-}
-
 koopa::locate_sed() { # {{{1
     # """
     # Locate GNU sed.
@@ -1196,16 +1015,6 @@ koopa::locate_sed() { # {{{1
         --brew-opt='gnu-sed' \
         --gnubin \
         --name='sed'
-}
-
-koopa::locate_softwareupdate() { # {{{1
-    # """
-    # Locate macOS softwareupdate.
-    # @note Updated 2021-10-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/sbin/automount'
 }
 
 koopa::locate_sort() { # {{{1
@@ -1276,16 +1085,6 @@ koopa::locate_svn() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::locate_app 'svn'
-}
-
-koopa::locate_systemctl() { # {{{1
-    # """
-    # Locate systemctl.
-    # @note Updated 2021-10-31.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_linux
-    koopa:::locate_app 'systemctl'  # FIXME Harden this
 }
 
 koopa::locate_tac() { # {{{1
@@ -1427,16 +1226,6 @@ koopa::locate_unzip() { # {{{1
     koopa:::locate_app 'unzip'
 }
 
-koopa::locate_update_alternatives() { # {{{1
-    # """
-    # Locate Linux update-alternatives.
-    # @note Updated 2021-10-31.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_linux
-    koopa:::locate_app 'update-alternatives'  # FIXME Harden this
-}
-
 koopa::locate_vim() { # {{{1
     # """
     # Locate vim.
@@ -1477,36 +1266,6 @@ koopa::locate_xargs() { # {{{1
         --brew-opt='findutils' \
         --gnubin \
         --name='xargs'
-}
-
-koopa::locate_xattr() { # {{{1
-    # """
-    # Locate macOS xattr.
-    # @note Updated 2021-10-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/xattr'
-}
-
-koopa::locate_xcode_select() { # {{{1
-    # """
-    # Locate macOS xcode-select.
-    # @note Updated 2021-10-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/xcode-select'
-}
-
-koopa::locate_xcodebuild() { # {{{1
-    # """
-    # Locate macOS xcodebuild.
-    # @note Updated 2021-10-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    # > koopa::assert_is_macos
-    koopa:::locate_app '/usr/bin/xcodebuild'
 }
 
 koopa::locate_yes() { # {{{1
