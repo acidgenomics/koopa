@@ -3,13 +3,16 @@
 koopa::opensuse_install_base() { # {{{1
     # """
     # Install openSUSE base system.
-    # @note Updated 2021-05-15.
+    # @note Updated 2021-10-31.
     #
     # zypper cheat sheet:
     # https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
     # """
-    local dict name_fancy pkgs pos
-    koopa::assert_is_installed 'sudo' 'zypper'
+    local app dict name_fancy pkgs pos
+    declare -A app=(
+        [sudo]="$(koopa::locate_sudo)"
+        [zypper]="$(koopa::locate_zypper)"
+    )
     declare -A dict=(
         [base]=1
         [dev]=1
@@ -58,10 +61,10 @@ koopa::opensuse_install_base() { # {{{1
     name_fancy='openSUSE base system'
     koopa::install_start "$name_fancy"
     pkgs=()
-    sudo zypper refresh
+    "${app[sudo]}" "${app[zypper]}" refresh
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        sudo zypper --non-interactive update
+        "${app[sudo]}" "${app[zypper]}" --non-interactive update
     fi
     if [[ "${dict[base]}" -eq 1 ]]
     then
@@ -120,8 +123,8 @@ koopa::opensuse_install_base() { # {{{1
             'zlib-devel'
         )
     fi
-    sudo zypper install -y "${pkgs[@]}"
-    sudo zypper clean
+    "${app[sudo]}" "${app[zypper]}" install -y "${pkgs[@]}"
+    "${app[sudo]}" "${app[zypper]}" clean
     koopa::install_success "$name_fancy"
     return 0
 }

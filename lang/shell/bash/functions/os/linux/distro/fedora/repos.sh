@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework app array.
 koopa::fedora_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI repo.
@@ -21,6 +22,7 @@ END
     return 0
 }
 
+# FIXME Rework app array.
 koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK repo.

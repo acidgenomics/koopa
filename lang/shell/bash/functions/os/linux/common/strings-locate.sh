@@ -12,6 +12,7 @@
 # - gpasswd
 # - groupadd
 # - ldconfig
+# - localedef  # fedora?
 # - locale-gen
 # - rpm  # fedora
 # - service  # fedora? is this on debian too?
