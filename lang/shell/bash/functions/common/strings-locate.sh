@@ -4,6 +4,8 @@
 # FIXME We likely want to streamline the handling of this for coreutils.
 # FIXME Consider prefixing macOS and Linux-specific locators here.
 
+
+
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -827,6 +829,16 @@ koopa::locate_man() { # {{{1
         --name='man'
 }
 
+koopa::locate_mas() { # {{{1
+    # """
+    # Locate macOS mas.
+    # @note Updated 2021-10-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app 'mas'
+}
+
 koopa::locate_mkdir() { # {{{1
     # """
     # Locate GNU mkdir.
@@ -1186,6 +1198,16 @@ koopa::locate_sed() { # {{{1
         --brew-opt='gnu-sed' \
         --gnubin \
         --name='sed'
+}
+
+koopa::locate_softwareupdate() { # {{{1
+    # """
+    # Locate macOS softwareupdate.
+    # @note Updated 2021-10-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    # > koopa::assert_is_macos
+    koopa:::locate_app '/usr/sbin/automount'
 }
 
 koopa::locate_sort() { # {{{1
