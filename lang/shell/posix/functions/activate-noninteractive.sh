@@ -43,7 +43,7 @@ _koopa_activate_bcbio_nextgen() { # {{{1
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda using 'activate' script.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-01.
     #
     # Prefer Miniconda over Anaconda by default, if both are installed.
     # """
@@ -64,7 +64,7 @@ _koopa_activate_conda() { # {{{1
     fi
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/activate"
-    [ -r "$script" ] || return 1
+    [ -r "$script" ] || return 0
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
