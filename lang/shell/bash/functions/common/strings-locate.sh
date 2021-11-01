@@ -661,6 +661,22 @@ koopa::locate_ln() { # {{{1
     koopa:::locate_app '/bin/ln'
 }
 
+koopa::locate_locale() { # {{{1
+    # """
+    # Locate locale.
+    # @note Updated 2021-11-01.
+    # """
+    koopa:::locate_app '/usr/bin/locale'
+}
+
+koopa::locate_localedef() { # {{{1
+    # """
+    # Locate localedef.
+    # @note Updated 2021-11-01.
+    # """
+    koopa:::locate_app '/usr/bin/localedef'
+}
+
 koopa::locate_ls() { # {{{1
     # """
     # Locate GNU ls.
