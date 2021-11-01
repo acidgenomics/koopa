@@ -47,7 +47,7 @@ automake="1.16.5"
 aws-cli="2.3.2"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.29.1"
+azure-cli="2.29.2"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.8"
@@ -152,7 +152,7 @@ go="1.17.2"
 
 # https://cloud.google.com/sdk/docs/install
 # NOTE Not currently compatible with Python 3.10, so pinning to 3.9.
-google-cloud-sdk="360.0.0"
+google-cloud-sdk="362.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.7"
@@ -173,7 +173,7 @@ haskell-stack="rolling"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.1"
+homebrew="3.3.2"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -247,7 +247,7 @@ openssl="3.0.0"
 oracle-instantclient="21.1.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.15"
+pandoc="2.16"
 
 # https://www.gnu.org/software/parallel/
 parallel="20211022"
@@ -514,7 +514,7 @@ node-gtop="1.1.1"
 
 python-pip="21.2.4"             # default; reticulate
 
-python-black="21.9b0"           # default; homebrew
+python-black="21.10b0"          # default; homebrew
 python-bpytop="1.0.67"          # default; homebrew
 python-cython="0.29.24"         # default; reticulate
 python-flake8="4.0.1"           # default; homebrew
@@ -558,7 +558,7 @@ ruby-ronn="0.7.3"
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.3"             # homebrew
-rust-broot="1.6.6"            # homebrew; br
+rust-broot="1.7.0"            # homebrew; br
 rust-cargo-update="7.0.1"
 rust-cargo-outdated="0.9.17"  # homebrew
 rust-dog="0.1.0"              # homebrew
