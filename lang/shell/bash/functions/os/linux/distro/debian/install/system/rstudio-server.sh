@@ -19,19 +19,6 @@ koopa::debian_install_rstudio_server() { # {{{1
             arch='amd64'
             ;;
     esac
-    # > os_codename="$(koopa::os_codename)"
-    # > case "$os_codename" in
-    # >     'bullseye' | \
-    # >     'buster' | \
-    # >     'focal')
-    # >         os_codename='bionic'
-    # >         ;;
-    # >     'bionic')
-    # >         ;;
-    # >     *)
-    # >         koopa::stop "Unsupported OS version: '${os_codename}'."
-    # >         ;;
-    # > esac
     os_codename='bionic'
     koopa:::linux_install_rstudio_server \
         --file-ext='deb' \
