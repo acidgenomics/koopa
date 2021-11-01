@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] Linux success.
-# [2021-05-27] macOS success.
-
 koopa::install_conda() { # {{{1
     koopa::install_miniconda "$@"
 }
@@ -19,49 +16,54 @@ koopa::install_miniconda() { # {{{1
 koopa:::install_miniconda() { # {{{1
     # """
     # Install Miniconda, including Mamba in base environment.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-01.
     # """
-    local arch koopa_prefix mamba mamba_version name name2 os_type prefix
-    local py_major_version py_version script url version
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    name='miniconda'
-    name2="$(koopa::capitalize "$name")"
-    arch="$(koopa::arch)"
-    koopa_prefix="$(koopa::koopa_prefix)"
-    mamba=0
-    os_type="$(koopa::os_type)"
-    case "$os_type" in
+    local app dict
+    declare -A app=(
+        [bash]="$(koopa::locate_bash)"
+    )
+    declare -A dict=(
+        [arch]="$(koopa::arch)"
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [mamba]=1
+        [mamba_version]="$(koopa::variable 'conda-mamba')"
+        [name2]='Miniconda'
+        [name]='miniconda'
+        [os_type]="$(koopa::os_type)"
+        [prefix]="${INSTALL_PREFIX:?}"
+        [py_version]="$(koopa::variable 'python')"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    case "${dict[os_type]}" in
         'darwin'*)
-            os_type='MacOSX'
+            dict[os_type2]='MacOSX'
             ;;
         'linux'*)
-            os_type='Linux'
+            dict[os_type2]='Linux'
             ;;
         *)
-            koopa::stop "'${os_type}' is not supported."
+            koopa::stop "'${dict[os_type]}' is not supported."
             ;;
     esac
-    py_version="$(koopa::variable 'python')"
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--py-version='*)
-                py_version="${1#*=}"
+                dict[py_version]="${1#*=}"
                 shift 1
                 ;;
             '--py-version')
-                py_version="${2:?}"
+                dict[py_version]="${2:?}"
                 shift 1
                 ;;
             # Flags ------------------------------------------------------------
             '--no-mamba')
-                mamba=0
+                dict[mamba]=0
                 shift 1
                 ;;
             '--with-mamba')
-                mamba=1
+                dict[mamba]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -70,28 +72,31 @@ koopa:::install_miniconda() { # {{{1
                 ;;
         esac
     done
-    py_major_version="$(koopa::major_version "$py_version")"
-    py_version="$(koopa::major_minor_version "$py_version")"
-    py_version="$(koopa::gsub '\.' '' "$py_version")"
-    script="${name2}${py_major_version}-py${py_version}_${version}-\
-${os_type}-${arch}.sh"
-    url="https://repo.continuum.io/${name}/${script}"
-    koopa::download "$url"
-    bash "$script" -bf -p "$prefix"
+    dict[py_major_version]="$(koopa::major_version "${dict[py_version]}")"
+    dict[py_version2]="$( \
+        koopa::gsub \
+            '\.' '' "$(koopa::major_minor_version "${dict[py_version]}")" \
+    )"
+    dict[script]="${dict[name2]}${dict[py_major_version]}-\
+py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch]}.sh"
+    dict[url]="https://repo.continuum.io/${dict[name]}/${dict[script]}"
+    koopa::download "${dict[url]}" "${dict[script]}"
+    "${app[bash]}" "${dict[script]}" -bf -p "${dict[prefix]}"
     koopa::ln \
-        "${koopa_prefix}/etc/conda/condarc" \
-        "${prefix}/.condarc"
+        "${dict[koopa_prefix]}/etc/conda/condarc" \
+        "${dict[prefix]}/.condarc"
     # Install mamba inside of conda base environment, if desired.
-    if [[ "$mamba" -eq 1 ]]
+    if [[ "${dict[mamba]}" -eq 1 ]]
     then
-        koopa::alert "Installing mamba inside conda at '${prefix}'."
-        koopa::activate_conda "$prefix"
-        mamba_version="$(koopa::variable 'conda-mamba')"
-        conda install \
+        koopa::alert "Installing mamba inside conda at '${dict[prefix]}'."
+        app[conda]="${dict[prefix]}/bin/conda"
+        koopa::assert_is_installed "${app[conda]}"
+        koopa::activate_conda "${dict[prefix]}"
+        "${app[conda]}" install \
             --yes \
             --name='base' \
             --channel='conda-forge' \
-            "mamba==${mamba_version}"
+            "mamba==${dict[mamba_version]}"
         koopa::deactivate_conda
     fi
     return 0
