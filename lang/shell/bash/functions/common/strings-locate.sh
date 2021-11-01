@@ -225,6 +225,15 @@ koopa::locate_basename() { # {{{1
         --name='basename'
 }
 
+koopa::locate_bash() { # {{{1
+    # """
+    # Locate bash.
+    # @note Updated 2021-11-01.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'bash'
+}
+
 koopa::locate_bc() { # {{{1
     # """
     # Locate GNU bc.
