@@ -13,6 +13,19 @@ koopa::install_miniconda() { # {{{1
         "$@"
 }
 
+koopa::uninstall_conda() { # {{{1
+    koopa:::uninstall_miniconda "$@"
+}
+
+koopa::uninstall_miniconda() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Miniconda' \
+        --name='conda' \
+        --no-link \
+        --uninstaller='miniconda' \
+        "$@"
+}
+
 koopa:::install_miniconda() { # {{{1
     # """
     # Install Miniconda, including Mamba in base environment.
@@ -88,24 +101,16 @@ py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch]}.sh"
     # Install mamba inside of conda base environment, if desired.
     if [[ "${dict[mamba]}" -eq 1 ]]
     then
-        koopa::alert "Installing mamba inside conda at '${dict[prefix]}'."
+        koopa::alert 'Installing mamba inside conda base environment.'
         app[conda]="${dict[prefix]}/bin/conda"
         koopa::assert_is_installed "${app[conda]}"
-        koopa::activate_conda "${dict[prefix]}"
+        # > koopa::activate_conda "${dict[prefix]}"
         "${app[conda]}" install \
             --yes \
             --name='base' \
             --channel='conda-forge' \
             "mamba==${dict[mamba_version]}"
-        koopa::deactivate_conda
+        # > koopa::deactivate_conda
     fi
     return 0
-}
-
-koopa::uninstall_conda() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Miniconda' \
-        --name='conda' \
-        --no-link \
-        "$@"
 }
