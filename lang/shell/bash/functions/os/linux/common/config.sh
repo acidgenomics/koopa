@@ -101,18 +101,24 @@ to '${dict[lib_n]}'."
 koopa::remove_user_from_group() { # {{{1
     # """
     # Remove user from group.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-11-01.
     #
     # @examples
     # koopa::remove_user_from_group 'docker'
     # """
-    local group user
+    local app dict
     koopa::assert_has_args_le "$#" 2
-    koopa::assert_is_installed 'gpasswd' 'sudo'
     koopa::assert_is_admin
-    group="${1:?}"
-    user="${2:-$(koopa::user)}"
-    sudo gpasswd --delete "$user" "$group"
+    declare -A app=(
+        [gpasswd]="$(koopa::locate_gpasswd)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [group]="${1:?}"
+        [user]="${2:-}"
+    )
+    [[ -z "${dict[user]}" ]] && dict[user]="$(koopa::user)"
+    "${app[sudo]}" "${app[gpasswd]}" --delete "${dict[user]}" "${dict[group]}"
     return 0
 }
 
