@@ -258,6 +258,8 @@ password-store="1.7.4"
 # ftp://ftp.gnu.org/gnu/patch
 patch="2.7.6"
 
+pcre2="10.39"
+
 # https://www.perl.org/get.html
 perl="5.34.0"
 
