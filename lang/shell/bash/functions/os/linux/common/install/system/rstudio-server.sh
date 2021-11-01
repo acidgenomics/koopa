@@ -165,12 +165,26 @@ END
 koopa::linux_add_rstudio_user() { #{{{1
     # """
     # Enable RStudio user on Linux.
-    # @note Updated 2021-09-27.
+    # @note Updated 2021-11-01.
     # """
-    sudo useradd 'rstudio'
-    sudo passwd 'rstudio'
-    sudo mkdir -p '/home/rstudio'
-    sudo chown 'rstudio:rstudio' '/home/rstudio'
-    sudo usermod -s '/bin/bash' 'rstudio'
+    local app dict
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
+    declare -A app=(
+        [passwd]="$(koopa::locate_passwd)"  # FIXME?
+        [sudo]="$(koopa::locate_sudo)"
+        [useradd]="$(koopa::locate_useradd)"  # FIXME?
+        [usermod]="$(koopa::locate_usermod)"  # FIXME?
+    )
+    declare -A dict=(
+        [home]='/home/rstudio'
+        [shell]='/bin/bash'
+        [user]='rstudio'
+    )
+    "${app[sudo]}" "${app[useradd]}" "${dict[user]}"
+    "${app[sudo]}" "${app[passwd]}" "${dict[user]}"
+    koopa::mkdir --sudo "${dict[home]}"
+    koopa::chown --sudo "${dict[user]}:${dict[user]}" "${dict[home]}"
+    "${app[sudo]}" "${app[usermod]}" -s "${dict[shell]}" "${dict[user]}"
     return 0
 }
