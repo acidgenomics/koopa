@@ -773,7 +773,7 @@ koopa::locate_passwd() { # {{{1
     # Locate passwd.
     # @note Updated 2021-11-01.
     # """
-    koopa:::locate_app '/bin/passwd'
+    koopa:::locate_app '/usr/bin/passwd'
 }
 
 koopa::locate_paste() { # {{{1
