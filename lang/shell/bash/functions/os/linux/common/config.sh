@@ -27,11 +27,10 @@ koopa::add_user_to_etc_passwd() { # {{{1
     return 0
 }
 
-# FIXME Need to harden these.
 koopa::add_user_to_group() { # {{{1
     # """
     # Add user to group.
-    # @note Updated 2021-03-18.
+    # @note Updated 2021-11-01.
     #
     # Alternate approach:
     # > usermod -a -G group user
@@ -39,13 +38,20 @@ koopa::add_user_to_group() { # {{{1
     # @examples
     # koopa::add_user_to_group 'docker'
     # """
-    local group user
+    local app dict
     koopa::assert_has_args_le "$#" 2
-    koopa::assert_is_installed 'gpasswd'
-    group="${1:?}"
-    user="${2:-$(koopa::user)}"
-    koopa::alert "Adding user '${user}' to group '${group}'."
-    sudo gpasswd --add "$user" "$group"
+    koopa::assert_is_admin
+    declare -A app=(
+        [gpasswd]="$(koopa::locate_gpasswd)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [group]="${1:?}"
+        [user]="${2:-}"
+    )
+    [[ -z "${dict[user]}" ]] && dict[user]="$(koopa::user)"
+    koopa::alert "Adding user '${dict[user]}' to group '${dict[group]}'."
+    "${app[sudo]}" "${app[gpasswd]}" --add "${dict[user]}" "${dict[group]}"
     return 0
 }
 
