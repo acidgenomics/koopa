@@ -736,6 +736,9 @@ koopa::return_version() { # {{{1
             'password-store')
                 cmd='pass'
                 ;;
+            'pcre2')
+                cmd='pcre2-config'
+                ;;
             'pip')
                 cmd='pip3'
                 ;;
