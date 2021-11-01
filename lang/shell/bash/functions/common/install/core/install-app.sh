@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2030,SC2031
 
+# FIXME Miniconda installer is currently ending with error...what's up?
+
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -178,12 +180,6 @@ koopa:::install_app() { # {{{1
     then
         koopa::stop 'Unsupported command.'
     fi
-    if [[ -n "${dict[prefix]}" ]]
-    then
-        koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
-    else
-        koopa::install_start "${dict[name_fancy]}"
-    fi
     if [[ "${dict[system]}" -eq 0 ]]
     then
         if [[ -z "${dict[version]}" ]]
@@ -199,6 +195,12 @@ koopa:::install_app() { # {{{1
         then
             dict[shared]=0
         fi
+    fi
+    if [[ -n "${dict[prefix]}" ]]
+    then
+        koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
+    else
+        koopa::install_start "${dict[name_fancy]}"
     fi
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
     then
