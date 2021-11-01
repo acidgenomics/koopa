@@ -508,13 +508,13 @@ node-gtop="1.1.1"
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2021-10-05 from https://pypi.org/.
+# Updated 2021-11-01 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
 # Otherwise, for heavy libraries, consider using a conda environment instead.
 
-python-pip="21.2.4"             # default; reticulate
+python-pip="21.3.1"             # default; reticulate
 
 python-black="21.10b0"          # default; homebrew
 python-bpytop="1.0.67"          # default; homebrew
@@ -538,7 +538,7 @@ python-pyyaml="5.4.1"           # reticulate
 python-ranger-fm="1.9.3"        # default; homebrew
 python-scikit-learn="1.0"       # reticulate
 python-scipy="1.7.1"            # reticulate
-python-setuptools="58.2.0"      # default; reticulate
+python-setuptools="58.4.0"      # default; reticulate
 python-six="1.16.0"             # default
 python-umap-learn="0.5.1"       # reticulate
 python-wheel="0.37.0"           # default; reticulate
