@@ -6,7 +6,7 @@
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-01.
     #
     # Consider updating the variant defined in the Bash header upon any
     # changes to this function.
@@ -21,17 +21,20 @@ koopa::find() { # {{{1
     # - https://stackoverflow.com/questions/7442417/
     # - https://unix.stackexchange.com/questions/247655/
     # """
-    local dict exclude_arg exclude_arr find find_args
+    local app dict exclude_arg exclude_arr find find_args
     local results sort sorted_results
+    declare -A app
     declare -A dict=(
         [empty]=0
         [engine]=''
         [glob]=''
         [max_depth]=0
+        [min_days_old]=0
         [min_depth]=1
         [print0]=0
         [size]=''
         [sort]=0
+        [sudo]=0
         [type]=''
     )
     exclude_arr=()
@@ -69,6 +72,14 @@ koopa::find() { # {{{1
                 ;;
             '--max-depth')
                 dict[max_depth]="${2:?}"
+                shift 2
+                ;;
+            '--min-days-old='*)
+                dict[min_days_old]="${1#*=}"
+                shift 1
+                ;;
+            '--min-days-old')
+                dict[min_days_old]="${2:?}"
                 shift 2
                 ;;
             '--min-depth='*)
@@ -116,6 +127,10 @@ koopa::find() { # {{{1
                 dict[sort]=1
                 shift 1
                 ;;
+            '--sudo')
+                dict[sudo]=1
+                shift 1
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
@@ -127,9 +142,9 @@ koopa::find() { # {{{1
     dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
     if [[ -z "${dict[engine]}" ]]
     then
-        find="$(koopa::locate_fd 2>/dev/null || true)"
-        [[ ! -x "$find" ]] && find="$(koopa::locate_find)"
-        case "$(koopa::basename "$find")" in
+        app[find]="$(koopa::locate_fd 2>/dev/null || true)"
+        [[ ! -x "${app[find]}" ]] && app[find]="$(koopa::locate_find)"
+        case "$(koopa::basename "${app[find]}")" in
             'fd')
                 dict[engine]='rust-fd'
                 ;;
@@ -143,13 +158,21 @@ koopa::find() { # {{{1
     else
         case "${dict[engine]}" in
             'gnu-find')
-                find="$(koopa::locate_find)"
+                app[find]="$(koopa::locate_find)"
                 ;;
             'rust-fd')
-                find="$(koopa::locate_fd)"
+                app[find]="$(koopa::locate_fd)"
                 ;;
         esac
     fi
+    koopa::assert_is_installed "${app[find]}"
+    find=()
+    if [[ "${dict[sudo]}" -eq 1 ]]
+    then
+        app[sudo]="$(koopa::locate_sudo)"
+        find+=("${app[sudo]}")
+    fi
+    find+=("${app[find]}")
     case "${dict[engine]}" in
         'gnu-find')
             find_args=(
@@ -181,6 +204,10 @@ koopa::find() { # {{{1
                     *)
                         koopa::stop 'Invalid type argument for GNU find.'
                 esac
+            fi
+            if [[ "${dict[min_days_old]}" -gt 0 ]]
+            then
+                find_args+=('-ctime' "+${dict[min_days_old]}")
             fi
             if koopa::is_array_non_empty "${exclude_arr[@]:-}"
             then
@@ -245,6 +272,10 @@ koopa::find() { # {{{1
                 # This is additive with other '--type' calls.
                 find_args+=('--type' 'empty')
             fi
+            if [[ "${dict[min_days_old]}" -gt 0 ]]
+            then
+                find_args+=('--changed-before' "${dict[min_days_old]}d")
+            fi
             if koopa::is_array_non_empty "${exclude_arr[@]:-}"
             then
                 for exclude_arg in "${exclude_arr[@]}"
@@ -267,7 +298,6 @@ koopa::find() { # {{{1
             koopa::stop 'Invalid find engine.'
             ;;
     esac
-    koopa::assert_is_installed "$find"
     [[ "${dict[sort]}" -eq 1 ]] && sort="$(koopa::locate_sort)"
     if [[ "${dict[print0]}" -eq 1 ]]
     then
