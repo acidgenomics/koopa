@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rework our environment install functions to use 'mamba_or_conda'
+# function, which selectively picks mamba over conda.
+
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
