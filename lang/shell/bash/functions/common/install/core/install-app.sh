@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2030,SC2031
 
-# FIXME Installer is now attempting to remove broken symlinks in /usr/local
-# for Rust install on macOS. We don't want this.
-
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-10-30.
+    # @note Updated 2021-11-01.
     # """
     local app clean_path_arr dict link_args pkgs
     koopa::assert_has_args "$#"
@@ -196,7 +193,6 @@ koopa:::install_app() { # {{{1
         if [[ -z "${dict[prefix]}" ]]
         then
             dict[auto_prefix]=1
-            dict[link_app]=1
             dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
         fi
         if koopa::str_match_fixed "${dict[prefix]}" "${HOME:?}"
