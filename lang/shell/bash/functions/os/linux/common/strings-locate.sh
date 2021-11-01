@@ -9,7 +9,6 @@
 # - dpkg  # debian
 # - dpkg-reconfigure  # debian
 # - gdebi  # debian
-# - gpasswd
 # - groupadd
 # - ldconfig
 # - localedef  # fedora?
@@ -20,6 +19,15 @@
 # - update-locale
 # - usermod
 # - zypper  # opensuse
+
+koopa::locate_gpasswd() { # {{{1
+    # """
+    # Locate Linux gpasswd.
+    # @note Updated 2021-11-01.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app 'gpasswd'  # FIXME
+}
 
 koopa::locate_ldconfig() { # {{{1
     # """
