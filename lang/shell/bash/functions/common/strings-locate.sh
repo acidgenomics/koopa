@@ -1265,6 +1265,18 @@ koopa::locate_wget() { # {{{1
     koopa:::locate_app 'wget'
 }
 
+koopa::locate_whoami() { # {{{1
+    # """
+    # Locate GNU whoami.
+    # @note Updated 2021-11-01.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::locate_app \
+        --brew-opt='coreutils' \
+        --gnubin \
+        --name='whoami'
+}
+
 koopa::locate_xargs() { # {{{1
     # """
     # Locate GNU xargs.
