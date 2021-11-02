@@ -172,7 +172,6 @@ _koopa_complete() { # {{{1
                         'bcbio-nextgen'
                         'bcbio-nextgen-ensembl-genome'
                         'bcbio-nextgen-genome'
-                        'bcbio-nextgen-vm'
                         'bcl2fastq'
                         'cellranger'
                         'cloudbiolinux'
@@ -188,6 +187,7 @@ _koopa_complete() { # {{{1
                     if _koopa_is_debian_like
                     then
                         args+=(
+                            'bcbio-nextgen-vm'
                             'node'
                             'pandoc'
                             'r-cran-binary'
