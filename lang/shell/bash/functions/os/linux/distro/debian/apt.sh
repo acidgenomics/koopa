@@ -108,17 +108,11 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     # - https://cloud.google.com/sdk/docs/install#deb
     # - https://github.com/docker/docker.github.io/issues/11625
     # """
-    local dict
     koopa::assert_has_no_args "$#"
-    declare -A dict=(
-        [basename]='cloud.google.gpg'
-        [name_fancy]='Google Cloud keyring'
-        [url]='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
-    )
     koopa::debian_apt_key_add \
-        "${dict[name_fancy]}" \
-        "${dict[url]}" \
-        "${dict[basename]}"
+        --basename='cloud.google.gpg' \
+        --name-fancy='Google Cloud' \
+        --url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     return 0
 }
 
@@ -161,17 +155,11 @@ koopa::debian_apt_add_llvm_key() { # {{{1
     # Add the LLVM key.
     # @note Updated 2021-11-02.
     # """
-    local dict
     koopa::assert_has_no_args "$#"
-    declare -A dict=(
-        [key]='6084F3CF814B57C1CF12EFD515CF4D18AF4F7421'
-        [name_fancy]='LLVM'
-        [url]='https://apt.llvm.org/llvm-snapshot.gpg.key'
-    )
     koopa:::debian_apt_key_add_legacy \
-        "${dict[name_fancy]}" \
-        "${dict[url]}" \
-        "${dict[key]}"
+        --basename='llvm.gpg' \
+        --name-fancy='LLVM' \
+        --url='https://apt.llvm.org/llvm-snapshot.gpg.key'
     return 0
 }
 
@@ -222,21 +210,23 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
     return 0
 }
 
-# FIXME Need to harden this.
-# FIXME Rework using the approach for Microsoft and LLVM keys instead.
-# FIXME apt-key is deprecated and will be removed in 11 release.
+# FIXME Confirm that this works.
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/
     # """
-    local key keys keyserver
+    local app key keys keyserver
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'apt-key'
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_key]="$(koopa::debian_locate_apt_key)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
     if koopa::is_ubuntu
     then
         # Release is signed by Michael Rutter <marutter@gmail.com>.
@@ -257,8 +247,7 @@ koopa::debian_apt_add_r_key() { # {{{1
     do
         koopa::debian_apt_is_key_imported "$key" && continue
         koopa::alert "Adding R key '${key}'."
-        # FIXME Rework or take this out.
-        sudo apt-key adv \
+        "${app[sudo]}" "${app[apt_key]}" adv \
             --keyserver "$keyserver" \
             --recv-key "$key" \
             >/dev/null 2>&1 \
@@ -835,6 +824,18 @@ koopa:::debian_apt_key_add() {  #{{{1
     # Using '--insecure' flag here to handle some servers
     # (e.g. download.opensuse.org) that can fail otherwise.
     #
+    # @section Regarding apt-key deprecation:
+    #
+    # Although adding keys directly to '/etc/apt/trusted.gpg.d/' is suggested by
+    # 'apt-key' deprecation message, as per Debian Wiki, GPG keys for third
+    # party repositories should be added to '/usr/share/keyrings', and
+    # referenced with the 'signed-by' option in the '/etc/apt/sources.list.d'
+    # entry.
+    #
+    # @seealso
+    # - https://github.com/docker/docker.github.io/issues/11625
+    # - https://github.com/docker/docker.github.io/issues/
+    #     11625#issuecomment-751388087
     # """
     local app dict
     koopa::assert_has_args_le "$#" 3
@@ -873,49 +874,17 @@ koopa:::debian_apt_key_add() {  #{{{1
     return 0
 }
 
-# FIXME Rework this, saving keys into '/etc/apt/trusted.gpg.d/' instead.
-# FIXME Check for the presence of key file, instead of the specific key.
 koopa:::debian_apt_key_add_legacy() {  #{{{1
     # """
-    # Add an apt key (legacy, deprecated approach).
+    # Add a legacy apt key (deprecated).
     # @note Updated 2021-11-02.
     #
-    # Using '--insecure' flag here to handle some servers
-    # (e.g. download.opensuse.org) that will fail otherwise.
-    #
-    # @section Regarding apt-key deprecation:
-    #
-    # Although adding keys directly to '/etc/apt/trusted.gpg.d/' is suggested by
-    # 'apt-key' deprecation message, as per Debian Wiki, GPG keys for third
-    # party repositories should be added to '/usr/share/keyrings', and
-    # referenced with the 'signed-by' option in the '/etc/apt/sources.list.d'
-    # entry.
-    #
-    # @seealso
-    # - https://github.com/docker/docker.github.io/issues/11625
-    # - https://github.com/docker/docker.github.io/issues/
-    #     11625#issuecomment-751388087
+    # For use with apt repos that don't yet support 'signed-by' approach.
     # """
-    local app dict
-    koopa::assert_has_args_le "$#" 3
-    declare -A app=(
-        [apt_key]="$(koopa::debian_locate_apt_key)"
-        [sudo]="$(koopa::locate_sudo)"
-    )
-    declare -A dict=(
-        [key]="${3:-}"
-        [name_fancy]="${1:?}"
-        [url]="${2:?}"
-    )
-    if [[ -n "${dict[key]}" ]]
-    then
-        koopa::debian_apt_is_key_imported "${dict[key]}" && return 0
-    fi
-    koopa::alert "Adding '${dict[name_fancy]}' key to apt."
-    koopa::parse_url --insecure "${dict[url]}" \
-        | "${app[sudo]}" "${app[apt_key]}" add - \
-            >/dev/null 2>&1 \
-        || true
+    koopa::assert_has_args "$#"
+    koopa::debian_apt_add_key \
+        --prefix='/etc/apt/trusted.gpg.d' \
+        "$@"
     return 0
 }
 
