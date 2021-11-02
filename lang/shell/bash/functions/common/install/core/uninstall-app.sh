@@ -3,7 +3,7 @@
 koopa:::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2021-10-30.
+    # @note Updated 2021-11-02.
     # """
     local app dict pos
     declare -A app
@@ -76,7 +76,9 @@ koopa:::uninstall_app() { # {{{1
             # Other ------------------------------------------------------------
             *)
                 pos+=("$1")
+                shift 1
                 ;;
+
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
