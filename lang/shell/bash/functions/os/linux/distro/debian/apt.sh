@@ -210,7 +210,8 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
     return 0
 }
 
-# FIXME Confirm that this works.
+# FIXME Figure out how to resave into '/etc/apt/trusted.gpg.d' instead
+# of directly in '/etc/apt/trusted.gpg'.
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
@@ -245,6 +246,7 @@ koopa::debian_apt_add_r_key() { # {{{1
     fi
     for key in "${keys[@]}"
     do
+        # FIXME This check is never returning TRUE now argh...
         koopa::debian_apt_is_key_imported "$key" && continue
         koopa::alert "Adding R key '${key}'."
         "${app[sudo]}" "${app[apt_key]}" adv \
@@ -788,6 +790,7 @@ koopa::debian_apt_install() { # {{{1
     koopa::debian_apt_get install "$@"
 }
 
+# FIXME Now this check never seems to be returning true argh...
 koopa::debian_apt_is_key_imported() { # {{{1
     # """
     # Is a GPG key imported for apt?
@@ -803,9 +806,8 @@ koopa::debian_apt_is_key_imported() { # {{{1
     key="$( \
         koopa::print "$key" \
         | "${app[sed]}" 's/ //g' \
-        | "${app[sed]}" -E "s/\
-^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\$/\
-\1 \2 \3 \4 \5  \6 \7 \8 \9 \10/" \
+        | "${app[sed]}" -E "s/^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\
+(.{4})(.{4})(.{4})\$/\1 \2 \3 \4 \5  \6 \7 \8 \9 \10/" \
     )"
     x="$("${app[apt_key]}" list 2>&1 || true)"
     koopa::str_match_fixed "$x" "$key"
