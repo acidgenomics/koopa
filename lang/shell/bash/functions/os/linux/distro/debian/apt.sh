@@ -594,6 +594,14 @@ koopa::debian_apt_configure_sources() { # {{{1
             | "${app[cut]}" -d ' ' -f 2 \
         )"
     )
+    if [[ -z "${urls[main]}" ]]
+    then
+        koopa::stop 'Failed to extract apt main URL.'
+    fi
+    if [[ -z "${urls[security]}" ]]
+    then
+        koopa::stop 'Failed to extract apt security URL.'
+    fi
     urls[updates]="${urls[main]}"
     case "${dict[os_id]}" in
         'debian')
