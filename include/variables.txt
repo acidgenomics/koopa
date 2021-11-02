@@ -281,7 +281,7 @@ pkg-config="0.29.2"
 poetry="1.1.11"
 
 # https://proj.org/
-proj="8.1.1"
+proj="8.2.0"
 
 # https://github.com/pyenv/pyenv
 pyenv="2.2.0"
@@ -575,7 +575,7 @@ rust-starship="0.58.0"        # homebrew
 rust-tealdeer="1.4.1"         # homebrew; tldr
 rust-tokei="12.1.2"           # homebrew
 rust-xsv="0.13.0"             # homebrew
-rust-zoxide="0.7.8"           # homebrew; z
+rust-zoxide="0.7.9"           # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
