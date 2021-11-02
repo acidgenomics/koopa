@@ -3,7 +3,7 @@
 koopa::arch_install_base() { # {{{1
     # """
     # Install Arch Linux base system.
-    # @note Updated 2021-05-15.
+    # @note Updated 2021-11-02.
     #
     # base-devel:
     # 1) autoconf  2) automake  3) binutils  4) bison  5) fakeroot  6) file
@@ -20,10 +20,16 @@ koopa::arch_install_base() { # {{{1
     # Note that Arch is currently overwriting PS1 for root.
     # This is due to configuration in '/etc/profile'.
     # """
-    local dict name_fancy pkgs pos
+    local app dict pkgs pos
     koopa::assert_is_installed 'pacman' 'sudo'
+    declare -A app=(
+        [pacman]="$(koopa::arch_locate_pacman)"
+        [pacman_db_upgrade]="$(koopa::arch_locate_pacman_db_upgrade)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
     declare -A dict=(
         [base]=1
+        [name_fancy]='Arch base system'
         [recommended]=1
         [upgrade]=1
     )
@@ -61,15 +67,14 @@ koopa::arch_install_base() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    name_fancy='Arch base system'
-    koopa::install_start "$name_fancy"
+    koopa::install_start "${dict[name_fancy]}"
     # Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
     # is non-standard and can cause koopa's application link script to break.
     [[ -L '/usr/local/share/man' ]] && \
         koopa::rm --sudo '/usr/local/share/man'
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
-        sudo pacman -Syyu --noconfirm
+        "${app[sudo]}" "${app[pacman]}" -Syyu --noconfirm
     fi
     pkgs=()
     if [[ "${dict[base]}" -eq 1 ]]
@@ -105,10 +110,9 @@ koopa::arch_install_base() { # {{{1
             'zsh'
         )
     fi
-    sudo pacman -Syy --noconfirm
-    sudo pacman-db-upgrade
-    sudo pacman -S --noconfirm "${pkgs[@]}"
-    koopa::install_success "$name_fancy"
+    "${app[sudo]}" "${app[pacman]}" -Syy --noconfirm
+    "${app[sudo]}" "${app[pacman_db_upgrade]}"
+    "${app[sudo]}" "${app[pacman]}" -S --noconfirm "${pkgs[@]}"
+    koopa::install_success "${dict[name_fancy]}"
     return 0
 }
-
