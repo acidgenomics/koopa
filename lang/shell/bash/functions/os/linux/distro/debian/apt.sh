@@ -1,5 +1,121 @@
 #!/usr/bin/env bash
 
+koopa:::debian_apt_key_add() {  #{{{1
+    # """
+    # Add an apt key.
+    # @note Updated 2021-11-02.
+    #
+    # @section Hardening against insecure URL failure:
+    # 
+    # Using '--insecure' flag here to handle some servers
+    # (e.g. download.opensuse.org) that can fail otherwise.
+    #
+    # @section Regarding apt-key deprecation:
+    #
+    # Although adding keys directly to '/etc/apt/trusted.gpg.d/' is suggested by
+    # 'apt-key' deprecation message, as per Debian Wiki, GPG keys for third
+    # party repositories should be added to '/usr/share/keyrings', and
+    # referenced with the 'signed-by' option in the '/etc/apt/sources.list.d'
+    # entry.
+    #
+    # @seealso
+    # - https://github.com/docker/docker.github.io/issues/11625
+    # - https://github.com/docker/docker.github.io/issues/
+    #     11625#issuecomment-751388087
+    # """
+    local app dict
+    koopa::assert_has_args_le "$#" 3
+    koopa::assert_is_admin
+    declare -A app=(
+        [gpg]="$(koopa::locate_gpg)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [basename]=''
+        [name_fancy]=''
+        [prefix]='/usr/share/keyrings'
+        [url]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--basename='*)
+                dict[basename]="${1#*=}"
+                shift 1
+                ;;
+            '--basename')
+                dict[basename]="${2:?}"
+                shift 2
+                ;;
+            '--name-fancy='*)
+                dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--url='*)
+                dict[url]="${1#*=}"
+                shift 1
+                ;;
+            '--url')
+                dict[url]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_dir "${dict[prefix]}"
+    if [[ -z "${dict[basename]}" ]]
+    then
+        dict[basename]="$(koopa::basename "${dict[url]}")"
+    fi
+    dict[file]="${dict[prefix]}/${dict[basename]}"
+    koopa::debian_apt_is_key_imported "${dict[file]}" && return 0
+    koopa::alert "Adding '${dict[name_fancy]}' key at '${dict[file]}'."
+    koopa::parse_url --insecure "${dict[url]}" \
+        | "${app[sudo]}" "${app[gpg]}" \
+            --dearmor \
+            --output "${dict[file]}" \
+            >/dev/null 2>&1 \
+        || true
+    # Alternative approach using tee:
+    # > koopa::parse_url --insecure "${dict[url]}" \
+    # >     | "${app[gpg]}" --dearmor \
+    # >     | "${app[sudo]}" "${app[tee]}" "${dict[file]}" \
+    # >         >/dev/null 2>&1 \
+    # >     || true
+    koopa::assert_is_file "${dict[file]}"
+    return 0
+}
+
+koopa:::debian_apt_key_add_legacy() {  #{{{1
+    # """
+    # Add a legacy apt key (deprecated).
+    # @note Updated 2021-11-02.
+    #
+    # For use with apt repos that don't yet support 'signed-by' approach.
+    # """
+    koopa::assert_has_args "$#"
+    koopa:::debian_apt_add_key \
+        --prefix='/etc/apt/trusted.gpg.d' \
+        "$@"
+    return 0
+}
+
 # FIXME This is erroring due to empty directory...what's up with that?
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
@@ -53,7 +169,7 @@ koopa::debian_apt_add_docker_key() { # {{{1
         [os_id]="$(koopa::os_id)"
     )
     dict[url]="https://download.docker.com/linux/${dict[os_id]}/gpg"
-    koopa::debian_apt_key_add \
+    koopa:::debian_apt_key_add \
         "${dict[name_fancy]}" \
         "${dict[url]}" \
         "${dict[basename]}"
@@ -109,7 +225,7 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     # - https://github.com/docker/docker.github.io/issues/11625
     # """
     koopa::assert_has_no_args "$#"
-    koopa::debian_apt_key_add \
+    koopa:::debian_apt_key_add \
         --basename='cloud.google.gpg' \
         --name-fancy='Google Cloud' \
         --url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
@@ -203,7 +319,7 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
     # @note Updated 2021-10-27.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::debian_apt_key_add_legacy \
+    koopa:::debian_apt_key_add_legacy \
         --basename='microsoft.asc.gpg' \
         --name-fancy='Microsoft' \
         --url='https://packages.microsoft.com/keys/microsoft.asc'
@@ -816,122 +932,6 @@ koopa::debian_apt_is_key_imported() { # {{{1
     )"
     dict[string]="$("${app[apt_key]}" list 2>&1 || true)"
     koopa::str_match_fixed "${dict[string]}" "${dict[key_pattern]}"
-}
-
-koopa:::debian_apt_key_add() {  #{{{1
-    # """
-    # Add an apt key.
-    # @note Updated 2021-11-02.
-    #
-    # @section Hardening against insecure URL failure:
-    # 
-    # Using '--insecure' flag here to handle some servers
-    # (e.g. download.opensuse.org) that can fail otherwise.
-    #
-    # @section Regarding apt-key deprecation:
-    #
-    # Although adding keys directly to '/etc/apt/trusted.gpg.d/' is suggested by
-    # 'apt-key' deprecation message, as per Debian Wiki, GPG keys for third
-    # party repositories should be added to '/usr/share/keyrings', and
-    # referenced with the 'signed-by' option in the '/etc/apt/sources.list.d'
-    # entry.
-    #
-    # @seealso
-    # - https://github.com/docker/docker.github.io/issues/11625
-    # - https://github.com/docker/docker.github.io/issues/
-    #     11625#issuecomment-751388087
-    # """
-    local app dict
-    koopa::assert_has_args_le "$#" 3
-    koopa::assert_is_admin
-    declare -A app=(
-        [gpg]="$(koopa::locate_gpg)"
-        [sudo]="$(koopa::locate_sudo)"
-    )
-    declare -A dict=(
-        [basename]=''
-        [name_fancy]=''
-        [prefix]='/usr/share/keyrings'
-        [url]=''
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--basename='*)
-                dict[basename]="${1#*=}"
-                shift 1
-                ;;
-            '--basename')
-                dict[basename]="${2:?}"
-                shift 2
-                ;;
-            '--name-fancy='*)
-                dict[name_fancy]="${1#*=}"
-                shift 1
-                ;;
-            '--name-fancy')
-                dict[name_fancy]="${2:?}"
-                shift 2
-                ;;
-            '--prefix='*)
-                dict[prefix]="${1#*=}"
-                shift 1
-                ;;
-            '--prefix')
-                dict[prefix]="${2:?}"
-                shift 2
-                ;;
-            '--url='*)
-                dict[url]="${1#*=}"
-                shift 1
-                ;;
-            '--url')
-                dict[url]="${2:?}"
-                shift 2
-                ;;
-            # Other ------------------------------------------------------------
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::assert_is_dir "${dict[prefix]}"
-    if [[ -z "${dict[basename]}" ]]
-    then
-        dict[basename]="$(koopa::basename "${dict[url]}")"
-    fi
-    dict[file]="${dict[prefix]}/${dict[basename]}"
-    koopa::debian_apt_is_key_imported "${dict[file]}" && return 0
-    koopa::alert "Adding '${dict[name_fancy]}' key at '${dict[file]}'."
-    koopa::parse_url --insecure "${dict[url]}" \
-        | "${app[sudo]}" "${app[gpg]}" \
-            --dearmor \
-            --output "${dict[file]}" \
-            >/dev/null 2>&1 \
-        || true
-    # Alternative approach using tee:
-    # > koopa::parse_url --insecure "${dict[url]}" \
-    # >     | "${app[gpg]}" --dearmor \
-    # >     | "${app[sudo]}" "${app[tee]}" "${dict[file]}" \
-    # >         >/dev/null 2>&1 \
-    # >     || true
-    koopa::assert_is_file "${dict[file]}"
-    return 0
-}
-
-koopa:::debian_apt_key_add_legacy() {  #{{{1
-    # """
-    # Add a legacy apt key (deprecated).
-    # @note Updated 2021-11-02.
-    #
-    # For use with apt repos that don't yet support 'signed-by' approach.
-    # """
-    koopa::assert_has_args "$#"
-    koopa::debian_apt_add_key \
-        --prefix='/etc/apt/trusted.gpg.d' \
-        "$@"
-    return 0
 }
 
 koopa::debian_apt_key_prefix() { # {{{1
