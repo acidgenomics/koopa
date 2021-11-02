@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden all app paths here.
+# FIXME sudo, apt-key, apt-get
+
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
@@ -813,12 +816,17 @@ koopa::debian_apt_space_used_by_no_deps() { # {{{1
 koopa::debian_install_from_deb() { # {{{1
     # """
     # Install directly from a '.deb' file.
-    # @note Updated 2021-06-17.
+    # @note Updated 2021-11-02.
     # """
-    local file
+    local app dict
     koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_installed 'gdebi'
-    file="${1:?}"
-    sudo gdebi --non-interactive "$file"
+    declare -A app=(
+        [gdebi]="$(koopa::debian_locate_gdebi)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [file]="${1:?}"
+    )
+    "${app[sudo]}" "${app[gdebi]}" --non-interactive "${dict[file]}"
     return 0
 }
