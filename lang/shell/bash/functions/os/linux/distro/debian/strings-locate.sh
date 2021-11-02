@@ -4,8 +4,6 @@
 
 # - apt
 # - apt-get  # debian
-# - dpkg  # debian
-# - dpkg-reconfigure  # debian
 # - gdebi  # debian
 
 koopa::debian_locate_locale_gen() { # {{{1
@@ -22,6 +20,14 @@ koopa::debian_locate_dpkg() { # {{{1
     # @note Updated 2021-11-02.
     # """
     koopa:::locate_app '/usr/bin/dpkg'
+}
+
+koopa::debian_locate_dpkg_reconfigure() { # {{{1
+    # """
+    # Locate Debian 'dpkg-reconfigure'.
+    # @note Updated 2021-11-02.
+    # """
+    koopa:::locate_app '/usr/bin/dpkg-reconfigure'
 }
 
 koopa::debian_locate_service() { # {{{1
