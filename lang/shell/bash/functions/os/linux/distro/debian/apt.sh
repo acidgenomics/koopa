@@ -153,6 +153,7 @@ ${dict[url]} cloud-sdk main"
     return 0
 }
 
+# FIXME Save this into /etc/apt/trusted.gpg.d/ instead.
 # FIXME Confirm that this works.
 koopa::debian_apt_add_llvm_key() { # {{{1
     # """
@@ -203,7 +204,8 @@ koopa::debian_apt_add_llvm_repo() { # {{{1
     return 0
 }
 
-# FIXME Note that this is going into trusted.gpg.d instead of keyrings...
+# FIXME Save this into /etc/apt/trusted.gpg.d/ instead.
+# FIXME Rework our legacy apt-key adder using this code instead.
 # FIXME Need to harden this.
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
@@ -229,6 +231,7 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
 }
 
 # FIXME Need to harden this.
+# FIXME Rework using the approach for Microsoft and LLVM keys instead.
 # FIXME apt-key is deprecated and will be removed in 11 release.
 koopa::debian_apt_add_r_key() { # {{{1
     # """
@@ -272,6 +275,7 @@ koopa::debian_apt_add_r_key() { # {{{1
     return 0
 }
 
+# FIXME Need to convert to using a dict approach here.
 # FIXME Need to harden this.
 koopa::debian_apt_add_r_repo() { # {{{1
     # """
@@ -325,11 +329,12 @@ END
     return 0
 }
 
+# FIXME Write this into /etc/apt/trusted.gpg.d instead.
 # FIXME Need to harden this.
 koopa::debian_apt_add_wine_key() { # {{{1
     # """
     # Add the WineHQ key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     #
     # Email: <wine-devel@winehq.org>
     #
@@ -344,15 +349,21 @@ koopa::debian_apt_add_wine_key() { # {{{1
     # > wget -nc https://dl.winehq.org/wine-builds/winehq.key
     # > sudo apt-key add winehq.key
     # """
-    local key name_fancy url
+    local dict
     koopa::assert_has_no_args "$#"
-    name_fancy='Wine'
-    url='https://dl.winehq.org/wine-builds/winehq.key'
-    key='D43F640145369C51D786DDEA76F1A20FF987672F'
-    koopa:::debian_apt_key_add "$name_fancy" "$url" "$key"
+    declare -A dict=(
+        [key]='D43F640145369C51D786DDEA76F1A20FF987672F'
+        [name_fancy]='Wine'
+        [url]='https://dl.winehq.org/wine-builds/winehq.key'
+    )
+    koopa:::debian_apt_key_add_legacy \
+        "${dict[name_fancy]}" \
+        "${dict[url]}" \
+        "${dict[key]}"
     return 0
 }
 
+# FIXME Rework using dict approach.
 # FIXME Need to harden this.
 koopa::debian_apt_add_wine_repo() { # {{{1
     # """
@@ -388,7 +399,7 @@ koopa::debian_apt_add_wine_repo() { # {{{1
 koopa::debian_apt_add_wine_obs_key() { # {{{1
     # """
     # Add the Wine OBS openSUSE key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     # """
     local key name_fancy os_string subdir url
     koopa::assert_has_no_args "$#"
@@ -412,7 +423,10 @@ koopa::debian_apt_add_wine_obs_key() { # {{{1
     esac
     url="https://download.opensuse.org/repositories/\
 Emulators:/Wine:/Debian/${subdir}/Release.key"
-    koopa:::debian_apt_key_add "$name_fancy" "$url" "$key"
+    koopa:::debian_apt_key_add_legacy \
+        "$name_fancy" \
+        "$url" \
+        "$key"
     return 0
 }
 
@@ -793,6 +807,7 @@ koopa::debian_apt_install() { # {{{1
     koopa::debian_apt_get install "$@"
 }
 
+# FIXME Take this out, if migration to '/etc/apt/trusted...' is successful.
 koopa::debian_apt_is_key_imported() { # {{{1
     # """
     # Is a GPG key imported for apt?
@@ -863,6 +878,8 @@ koopa:::debian_apt_key_add() {  #{{{1
     return 0
 }
 
+# FIXME Rework this, saving keys into '/etc/apt/trusted.gpg.d/' instead.
+# FIXME Check for the presence of key file, instead of the specific key.
 koopa:::debian_apt_key_add_legacy() {  #{{{1
     # """
     # Add an apt key (legacy, deprecated approach).
