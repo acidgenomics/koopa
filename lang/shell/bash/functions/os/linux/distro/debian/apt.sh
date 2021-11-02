@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to harden all app paths here.
-# FIXME sudo, apt-key, apt-get
-
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
@@ -92,7 +89,6 @@ koopa::debian_apt_add_docker_key() { # {{{1
     return 0
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
@@ -102,27 +98,29 @@ koopa::debian_apt_add_docker_repo() { # {{{1
     # - https://docs.docker.com/engine/install/debian/
     # - https://docs.docker.com/engine/install/ubuntu/
     # """
-    local arch file name name_fancy os_codename os_id signed_by string url
+    local dict
     koopa::assert_has_no_args "$#"
-    name='docker'
-    name_fancy='Docker'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
+    koopa::assert_is_admin
+    declare -A dict=(
+        [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
+        [name]='docker'
+        [name_fancy]='Docker'
+        [os_codename]="$(koopa::os_codename)"
+        [os_id]="$(koopa::os_id)"
+    )
+    dict[file]="/etc/apt/sources.list.d/${name}.list"
+    dict[url]="https://download.docker.com/linux/${dict[os_id]}"
+    dict[signed_by]='/usr/share/keyrings/docker-archive-keyring.gpg'
+    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
+${dict[url]} ${dict[os_codename]} stable"
+    if [[ -f "${dict[file]}" ]]
     then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
+        koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::debian_apt_add_docker_key
-    os_id="$(koopa::os_id)"
-    os_codename="$(koopa::os_codename)"
-    # e.g. "arm64" instead of "x86_64" here.
-    arch="$(koopa::arch2)"
-    url="https://download.docker.com/linux/${os_id}"
-    signed_by='/usr/share/keyrings/docker-archive-keyring.gpg'
-    string="deb [arch=${arch} signed-by=${signed_by}] \
-${url} ${os_codename} stable"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
 
