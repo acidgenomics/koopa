@@ -3,7 +3,7 @@
 koopa::alpine_install_base() { # {{{1
     # """
     # Install Alpine Linux base system.
-    # @note Updated 2021-05-15.
+    # @note Updated 2021-11-02.
     #
     # Use '<pkg>=~<version>' to pin package versions.
     #
@@ -11,11 +11,15 @@ koopa::alpine_install_base() { # {{{1
     # > apk add --no-cache --virtual .build-dependencies
     # """
     local dict name_fancy pkgs pos
-    koopa::assert_is_installed 'apk' 'sudo'
+    declare -A app=(
+        [apk]="$(koopa::alpine_locate_apk)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
     declare -A dict=(
         [base]=1
         [dev]=1
         [extra]=0
+        [name_fancy]='Alpine base system'
         [recommended]=1
         [upgrade]=1
     )
@@ -53,13 +57,12 @@ koopa::alpine_install_base() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    name_fancy='Alpine base system'
-    koopa::install_start "$name_fancy"
-    sudo apk --no-cache update
+    koopa::install_start "${dict[name_fancy]}"
+    "${app[sudo]}" "${app[apk]}" --no-cache update
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
         koopa::alert 'Upgrading system.'
-        sudo apk --no-cache upgrade
+        "${app[sudo]}" "${app[apk]}" --no-cache upgrade
     fi
     pkgs=()
     # These packages should be included in base image.
@@ -120,8 +123,8 @@ koopa::alpine_install_base() { # {{{1
             'ncurses-dev'
         )
     fi
-    sudo apk --no-cache add "${pkgs[@]}"
-    koopa::install_success "$name_fancy"
+    "${app[sudo]}" "${app[apk]}" --no-cache add "${pkgs[@]}"
+    koopa::install_success "${dict[name_fancy]}"
     return 0
 }
 
