@@ -6,25 +6,30 @@
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-02.
     #
     # Using '-k/--insecure' flag here to handle some servers
     # (e.g. download.opensuse.org) that will fail otherwise.
     # """
-    local name_fancy url key
+    local app dict
     koopa::assert_has_args_le "$#" 3
-    koopa::assert_is_installed 'apt-key'
-    name_fancy="${1:?}"
-    url="${2:?}"
-    key="${3:-}"
-    if [[ -n "$key" ]]
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_key]="$(koopa::debian_locate_apt_key)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [key]="${3:-}"
+        [name_fancy]="${1:?}"
+        [url]="${2:?}"
+    )
+    if [[ -n "${dict[key]}" ]]
     then
-        koopa::debian_apt_is_key_imported "$key" && return 0
+        koopa::debian_apt_is_key_imported "${dict[key]}" && return 0
     fi
-    koopa::alert "Adding '${name_fancy}' key to apt."
-    koopa::parse_url --insecure "$url" \
-        | sudo apt-key add - \
-        >/dev/null 2>&1 \
+    koopa::alert "Adding '${dict[name_fancy]}' key to 'apt'."
+    koopa::parse_url --insecure "${dict[url]}" \
+        | "${app[sudo]}" "${app[apt_key]}" add - >/dev/null 2>&1 \
         || true
     return 0
 }
@@ -570,7 +575,7 @@ koopa::debian_apt_configure_sources() { # {{{1
                 "${dict[sources_list]}" \
             | koopa::grep \
                 --fixed-strings \
-                ' main ' \
+                " ${codenames[main]} main" \
             | "${app[head]}" -n 1 \
             | "${app[cut]}" -d ' ' -f 2 \
         )"
@@ -581,7 +586,7 @@ koopa::debian_apt_configure_sources() { # {{{1
                     "${dict[sources_list]}" \
             | koopa::grep \
                 --fixed-strings \
-                " ${codenames[security]} " \
+                " ${codenames[security]} main" \
             | "${app[head]}" -n 1 \
             | "${app[cut]}" -d ' ' -f 2 \
         )"
