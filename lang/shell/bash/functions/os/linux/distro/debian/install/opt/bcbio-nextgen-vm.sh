@@ -1,17 +1,30 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_bcbio_nextgen_vm() { # {{{1
+# FIXME Make this Debian-specific.
+
+koopa::debian_install_bcbio_nextgen_vm() { # {{{1
     koopa:::install_app \
         --name='bcbio-nextgen-vm' \
         --no-link \
-        --platform='linux' \
+        --platform='debian' \
         "$@"
 }
 
-koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
+koopa::debian_uninstall_bcbio_nextgen_vm() { # {{{1
+    # """
+    # Uninstall bcbio-nextgen-vm.
+    # @note Updated 2021-11-02.
+    # """
+    koopa:::uninstall_app \
+        --name='bcbio-nextgen-vm' \
+        --no-link \
+        "$@"
+}
+
+koopa:::debian_install_bcbio_nextgen_vm() { # {{{1
     # """
     # Install bcbio-nextgen-vm.
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-02.
     #
     # Install pinned bcbio-nextgen v1.2.4:
     # > data_dir="${prefix}/v1.2.4"
@@ -30,7 +43,7 @@ koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
         [gpasswd]="$(koopa::locate_gpasswd)"
         [groupadd]="$(koopa::locate_groupadd)"
         [groups]="$(koopa::locate_groups)"
-        [service]="$(koopa::locate_service)"
+        [service]="$(koopa::debian_locate_service)"
         [sudo]="$(koopa::locate_sudo)"
         [whoami]="$(koopa::locate_whoami)"
     )
@@ -70,15 +83,4 @@ koopa:::linux_install_bcbio_nextgen_vm() { # {{{1
         newgrp 'docker'
     fi
     return 0
-}
-
-koopa::linux_uninstall_bcbio_nextgen_vm() { # {{{1
-    # """
-    # Uninstall bcbio-nextgen-vm.
-    # @note Updated 2021-06-11.
-    # """
-    koopa:::uninstall_app \
-        --name='bcbio-nextgen-vm' \
-        --no-link \
-        "$@"
 }
