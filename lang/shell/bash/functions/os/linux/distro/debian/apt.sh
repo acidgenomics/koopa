@@ -110,7 +110,7 @@ koopa:::debian_apt_key_add_legacy() {  #{{{1
     # For use with apt repos that don't yet support 'signed-by' approach.
     # """
     koopa::assert_has_args "$#"
-    koopa:::debian_apt_add_key \
+    koopa:::debian_apt_key_add \
         --prefix='/etc/apt/trusted.gpg.d' \
         "$@"
     return 0
