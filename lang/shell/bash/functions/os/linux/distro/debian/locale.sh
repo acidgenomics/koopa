@@ -35,6 +35,7 @@ koopa::debian_set_locale() { # {{{1
         "${dict[lang_string]} ${dict[charset]}" \
         "${dict[locale_file]}"
     "${app[sudo]}" "${app[locale_gen]}" --purge
+    # FIXME Location of dpkg_reconfigure is failing.
     "${app[sudo]}" "${app[dpkg_reconfigure]}" \
         --frontend='noninteractive' \
         'locales'
