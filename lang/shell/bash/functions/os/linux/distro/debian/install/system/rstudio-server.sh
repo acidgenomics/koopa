@@ -3,7 +3,7 @@
 koopa::debian_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-11-02.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -11,20 +11,20 @@ koopa::debian_install_rstudio_server() { # {{{1
     # > sudo rstudio-server start
     # > sudo rstudio-server status
     # """
-    local arch os_codename
-    koopa::assert_is_installed 'gdebi' 'sudo'
-    arch="$(koopa::arch)"
-    case "$arch" in
-        x86_64)
-            arch='amd64'
-            ;;
-    esac
-    os_codename='bionic'
+    local app dict
+    declare -A app=(
+        [gdebi]="$(koopa::debian_locate_gdebi)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
+        [os_codename]='bionic'
+    )
     koopa:::linux_install_rstudio_server \
         --file-ext='deb' \
-        --install='sudo gdebi --non-interactive' \
-        --os-codename="$os_codename" \
-        --platform="$arch" \
+        --install="${app[sudo]} ${app[gdebi]} --non-interactive" \
+        --os-codename="${dict[os_codename]}" \
+        --platform="${dict[arch]}" \
         "$@"
     return 0
 }
