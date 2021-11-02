@@ -65,31 +65,38 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
 koopa::debian_apt_add_docker_key() { # {{{1
     # """
     # Add the Docker key.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-02.
     #
     # @seealso
     # - https://docs.docker.com/engine/install/debian/
     # - https://docs.docker.com/engine/install/ubuntu/
     # """
-    local file gpg name_fancy os_id url
+    local app dict
     koopa::assert_has_no_args "$#"
-    file='/usr/share/keyrings/docker-archive-keyring.gpg'
-    [[ -f "$file" ]] && return 0
-    name_fancy='Docker'
-    gpg="$(koopa::locate_gpg)"
-    os_id="$(koopa::os_id)"
-    url="https://download.docker.com/linux/${os_id}/gpg"
-    koopa::alert "Adding ${name_fancy} keyring at '${file}'."
-    koopa::parse_url "$url" \
-        | sudo "$gpg" --dearmor -o "$file"
-    koopa::assert_is_file "$file"
+    koopa::assert_is_admin
+    declare -A app=(
+        [gpg]="$(koopa::locate_gpg)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [file]='/usr/share/keyrings/docker-archive-keyring.gpg'
+        [name_fancy]='Docker'
+        [os_id]="$(koopa::os_id)"
+    )
+    dict[url]="https://download.docker.com/linux/${dict[os_id]}/gpg"
+    [[ -f "${dict[file]}" ]] && return 0
+    koopa::alert "Adding ${dict[name_fancy]} keyring at '${dict[file]}'."
+    koopa::parse_url "${dict[url]}" \
+        | "${app[sudo]}" "${app[gpg]}" --dearmor -o "${dict[file]}"
+    koopa::assert_is_file "${dict[file]}"
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2021-09-30.
+    # @note Updated 2021-11-02.
     #
     # @seealso
     # - https://docs.docker.com/engine/install/debian/
@@ -119,6 +126,7 @@ ${url} ${os_codename} stable"
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
@@ -138,6 +146,7 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK apt repo.
@@ -161,6 +170,7 @@ https://packages.cloud.google.com/apt cloud-sdk main"
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_llvm_key() { # {{{1
     # """
     # Add the LLVM key.
@@ -175,6 +185,7 @@ koopa::debian_apt_add_llvm_key() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_llvm_repo() { # {{{1
     # """
     # Add LLVM apt repo.
@@ -201,6 +212,7 @@ llvm-toolchain-${os_codename}-${version} main"
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
     # Add the Microsoft Azure CLI key.
@@ -224,6 +236,7 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
@@ -265,6 +278,7 @@ koopa::debian_apt_add_r_key() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_r_repo() { # {{{1
     # """
     # Add R apt repo.
@@ -317,6 +331,7 @@ END
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_wine_key() { # {{{1
     # """
     # Add the WineHQ key.
@@ -344,6 +359,7 @@ koopa::debian_apt_add_wine_key() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_wine_repo() { # {{{1
     # """
     # Add WineHQ repo.
@@ -374,6 +390,7 @@ koopa::debian_apt_add_wine_repo() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_wine_obs_key() { # {{{1
     # """
     # Add the Wine OBS openSUSE key.
@@ -405,6 +422,7 @@ Emulators:/Wine:/Debian/${subdir}/Release.key"
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_add_wine_obs_repo() { # {{{1
     # """
     # Add Wine OBS openSUSE repo.
@@ -447,6 +465,7 @@ Emulators:/Wine:/Debian"
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_clean() { # {{{1
     # """
     # Clean up apt after an install/uninstall call.
@@ -641,10 +660,11 @@ END
 koopa::debian_apt_delete_repo() { # {{{1
     # """
     # Delete an apt repo file.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-11-02.
     # """
     local file name
     koopa::assert_has_args "$#"
+    koopa::assert_is_admin
     for name in "$@"
     do
         file="/etc/apt/sources.list.d/${name}.list"
@@ -654,6 +674,7 @@ koopa::debian_apt_delete_repo() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_disable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
@@ -678,6 +699,7 @@ koopa::debian_apt_disable_deb_src() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_enable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
@@ -702,6 +724,7 @@ koopa::debian_apt_enable_deb_src() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_enabled_repos() { # {{{1
     # """
     # Get a list of enabled default apt repos.
@@ -725,6 +748,7 @@ koopa::debian_apt_enabled_repos() { # {{{1
     koopa::print "$x"
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_get() { # {{{1
     # """
     # Non-interactive variant of apt-get, with saner defaults.
@@ -754,6 +778,7 @@ koopa::debian_apt_install() { # {{{1
     koopa::debian_apt_get install "$@"
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_is_key_imported() { # {{{1
     # """
     # Is a GPG key imported for apt?
@@ -777,6 +802,7 @@ koopa::debian_apt_is_key_imported() { # {{{1
     koopa::str_match_fixed "$x" "$key"
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_remove() { # {{{1
     # """
     # Remove Debian apt package.
@@ -788,6 +814,7 @@ koopa::debian_apt_remove() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_space_used_by() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
@@ -800,6 +827,7 @@ koopa::debian_apt_space_used_by() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_space_used_by_grep() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
@@ -822,6 +850,7 @@ koopa::debian_apt_space_used_by_grep() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this.
 koopa::debian_apt_space_used_by_no_deps() { # {{{1
     # """
     # Check install apt package size, without dependencies.
@@ -839,6 +868,7 @@ koopa::debian_install_from_deb() { # {{{1
     # """
     local app dict
     koopa::assert_has_args_eq "$#" 1
+    koopa::assert_is_admin
     declare -A app=(
         [gdebi]="$(koopa::debian_locate_gdebi)"
         [sudo]="$(koopa::locate_sudo)"
