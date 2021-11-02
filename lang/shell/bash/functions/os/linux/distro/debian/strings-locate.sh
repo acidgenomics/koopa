@@ -18,6 +18,14 @@ koopa::debian_locate_apt_get() { # {{{1
     koopa:::locate_app '/usr/bin/apt-get'
 }
 
+koopa::debian_locate_apt_key() { # {{{1
+    # """
+    # Locate Debian 'apt-key'.
+    # @note Updated 2021-11-02.
+    # """
+    koopa:::locate_app '/usr/bin/apt-key'
+}
+
 koopa::debian_locate_dpkg() { # {{{1
     # """
     # Locate Debian 'dpkg'.
