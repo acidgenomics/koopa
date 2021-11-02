@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Wrap this in a system install call, we're duplicating with name_fancy...
-# FIXME Rethink our version handling?
-# FIXME Need to add '--no-version' flag.
-
 koopa::debian_install_pandoc() { # {{{1
     koopa:::install_app \
         --name-fancy='Pandoc' \
@@ -39,8 +35,8 @@ koopa:::debian_install_pandoc() { # {{{1
         [version]="${INSTALL_VERSION:?}"
         [name]='pandoc'
     )
-    file="${dict[name]}-${dict[version]}-1-${dict[arch]}.deb"
-    url="https://github.com/jgm/${dict[name]}/releases/download/\
+    dict[file]="${dict[name]}-${dict[version]}-1-${dict[arch]}.deb"
+    dict[url]="https://github.com/jgm/${dict[name]}/releases/download/\
 ${dict[version]}/${dict[file]}"
     koopa::download "${dict[url]}" "${dict[file]}"
     "${app[sudo]}" "${app[dpkg]}" -i "${dict[file]}"
