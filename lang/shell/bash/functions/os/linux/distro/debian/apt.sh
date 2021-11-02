@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME This is erroring due to empty directory...what's up with that?
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
@@ -958,7 +959,7 @@ koopa::debian_apt_sources_file() { # {{{1
     # @note Updated 2021-11-02.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::print '/etc/apt/sources.list'
+    koopa::print '/etc/apt/sources.list'
 }
 
 koopa::debian_apt_sources_prefix() { # {{{1
@@ -967,7 +968,7 @@ koopa::debian_apt_sources_prefix() { # {{{1
     # @note Updated 2021-11-02.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::print '/etc/apt/sources.list.d'
+    koopa::print '/etc/apt/sources.list.d'
 }
 
 koopa::debian_apt_space_used_by() { # {{{1
