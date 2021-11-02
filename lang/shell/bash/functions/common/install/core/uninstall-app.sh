@@ -75,16 +75,12 @@ koopa:::uninstall_app() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                pos+=("$1")
                 ;;
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
-    if [[ -z "${dict[name_fancy]}" ]]
-    then
-        dict[name_fancy]="${dict[name]}"
-    fi
+    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ "${dict[system]}" -eq 1 ]]
     then
         koopa::uninstall_start "${dict[name_fancy]}"
@@ -102,6 +98,7 @@ koopa:::uninstall_app() { # {{{1
         "${dict[function]}" "$@"
         koopa::uninstall_success "${dict[name_fancy]}"
     else
+        koopa::assert_has_no_args "$#"
         if [[ -z "${dict[prefix]}" ]]
         then
             dict[prefix]="${dict[app_prefix]}/${dict[name]}"
@@ -143,7 +140,7 @@ koopa:::uninstall_app() { # {{{1
             koopa::alert "Deleting broken symlinks in '${dict[make_prefix]}'."
             koopa::delete_broken_symlinks "${dict[make_prefix]}"
         fi
-        koopa::uninstall_success "${dict[name_fancy]}"
+        koopa::uninstall_success "${dict[name_fancy]}" "${dict[prefix]}"
     fi
     return 0
 }

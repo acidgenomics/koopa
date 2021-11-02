@@ -7,9 +7,9 @@
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-02.
     # """
-    local app clean_path_arr dict link_args pkgs
+    local app clean_path_arr dict link_args pkgs pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A app=(
@@ -40,6 +40,7 @@ koopa:::install_app() { # {{{1
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     koopa::is_shared_install && dict[shared]=1
+    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -160,10 +161,11 @@ koopa:::install_app() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                pos+=("$1")
                 ;;
         esac
     done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ "${dict[system]}" -eq 1 ]]
     then
@@ -268,7 +270,7 @@ at '${dict[prefix]}'."
         export INSTALL_PREFIX="${dict[prefix]}"
         # shellcheck disable=SC2030
         export INSTALL_VERSION="${dict[version]}"
-        "${dict[function]}"
+        "${dict[function]}" "$@"
     ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
     koopa::rm "${dict[tmp_dir]}"
     if [[ "${dict[system]}" -eq 0 ]]

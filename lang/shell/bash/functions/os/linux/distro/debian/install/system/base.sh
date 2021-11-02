@@ -1,9 +1,19 @@
 #!/usr/bin/env bash
 
 koopa::debian_install_base() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Debian base system' \
+        --name='base' \
+        --no-version \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa:::debian_install_base() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-10-30.
+    # @note Updated 2021-11-02.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -22,8 +32,11 @@ koopa::debian_install_base() { # {{{1
     # - How to replicate installed packages across machines.
     #   https://serverfault.com/questions/56848
     # """
-    local dict name_fancy pkgs pos
-    koopa::assert_is_installed 'apt' 'apt-get' 'sed' 'sudo'
+    local app dict pkgs
+    declare -A app=(
+        [dpkg]="$(koopa::debian_locate_dpkg)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
     declare -A dict=(
         [apt_enabled_repos]="$(koopa::debian_apt_enabled_repos)"
         [base]=1
@@ -32,10 +45,12 @@ koopa::debian_install_base() { # {{{1
         [recommended]=1
         [upgrade]=1
     )
-    pos=()
     while (("$#"))
     do
         case "$1" in
+            '')
+                shift 1
+                ;;
             '--base-image')
                 dict[base]=1
                 dict[dev]=0
@@ -52,32 +67,23 @@ koopa::debian_install_base() { # {{{1
                 dict[upgrade]=1
                 shift 1
                 ;;
-            '')
-                shift 1
-                ;;
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
-    name_fancy='Debian base system'
-    koopa::install_start "$name_fancy"
     # Nuke caches before installing packages.
     koopa::rm --sudo \
         '/var/cache/apt/'* \
         '/var/lib/dpkg/available'
-    sudo dpkg --clear-avail
+    "${app[sudo]}" "${app[dpkg]}" --clear-avail
     # Debian symlinks '/usr/local/man' to '/usr/local/share/man' by default,
     # which is non-standard and can cause koopa's application link script
     # to break.
-    [[ -L '/usr/local/man' ]] && \
+    if [[ -L '/usr/local/man' ]]
+    then
         koopa::rm --sudo '/usr/local/man'
+    fi
     # Requiring universe repo to be enabled on Ubuntu.
     if koopa::is_ubuntu && \
         ! koopa::str_match_fixed "${dict[apt_enabled_repos]}" 'universe'
@@ -89,7 +95,7 @@ koopa::debian_install_base() { # {{{1
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
         koopa::alert "Upgrading system via 'dist-upgrade'."
-        koopa::debian_apt_get dist-upgrade
+        koopa::debian_apt_get 'dist-upgrade'
     fi
     pkgs=()
     # These packages should be included in the Docker base image.
@@ -298,6 +304,5 @@ koopa::debian_install_base() { # {{{1
     koopa::debian_apt_configure_sources
     koopa::debian_apt_clean
     koopa::debian_set_locale
-    koopa::install_success "$name_fancy"
     return 0
 }
