@@ -27,17 +27,6 @@ END
     return 0
 }
 
-# FIXME Add function for this...koopa::assert_is_intel_x86_64
-# FIXME Need a corresponding assert koopa::assert_is_arm
-#
-# Intel x86_64:
-# koopa::is_x86_64 (koopa::arch)
-# koopa::is_amd64 (koopa::arch2)
-#
-# ARM:
-# koopa::is_aarch64 (koopa::arch)
-# koopa::is_arm64 (koopa::arch2)
-
 koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK repo.
@@ -55,7 +44,7 @@ koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
     local app dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    # FIXME koopa::assert_is_x86_64 (or koopa::assert_is_intel)
+    koopa::assert_is_x86_64
     declare -A app=(
         [sudo]="$(koopa::locate_sudo)"
         [tee]="$(koopa::locate_tee)"

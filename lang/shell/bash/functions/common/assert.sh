@@ -204,6 +204,19 @@ koopa::assert_has_no_flags() { # {{{1
     return 0
 }
 
+koopa::assert_is_aarch64() { # {{{1
+    # """
+    # Assert that platform is ARM 64-bit.
+    # @note Updated 2021-11-02.
+    # """
+    koopa::assert_has_no_args "$#"
+    if ! koopa::is_aarch64
+    then
+        koopa::stop 'Architecture is not aarch64 (ARM 64-bit).'
+    fi
+    return 0
+}
+
 koopa::assert_is_admin() { # {{{1
     # """
     # Assert that current user has admin permissions.
@@ -753,5 +766,18 @@ koopa::assert_is_writable() { # {{{1
             koopa::stop "Not writable: '${arg}'."
         fi
     done
+    return 0
+}
+
+koopa::assert_is_x86_64() { # {{{1
+    # """
+    # Assert that platform is Intel x86 64-bit.
+    # @note Updated 2021-11-02.
+    # """
+    koopa::assert_has_no_args "$#"
+    if ! koopa::is_x86_64
+    then
+        koopa::stop 'Architecture is not x86_64 (Intel x86 64-bit).'
+    fi
     return 0
 }

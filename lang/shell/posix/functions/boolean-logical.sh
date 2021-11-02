@@ -51,6 +51,17 @@ _koopa_expr() { # {{{1
     expr "${1:?}" : "${2:?}" 1>/dev/null
 }
 
+_koopa_is_aarch64() { # {{{1
+    # """
+    # Is the architecture ARM 64-bit?
+    # @note Updated 2021-11-02.
+    #
+    # a.k.a. "arm64" (arch2 return).
+    # """
+    [ "$#" -eq 0 ] || return 1
+    [ "$(_koopa_arch)" = 'aarch64' ]
+}
+
 _koopa_is_alias() { # {{{1
     # """
     # Is the specified argument an alias?
@@ -589,6 +600,17 @@ _koopa_is_ubuntu_like() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_is_os_like 'ubuntu'
+}
+
+_koopa_is_x86_64() { # {{{1
+    # """
+    # Is the architecture Intel x86 64-bit?
+    # @note Updated 2021-11-02.
+    #
+    # a.k.a. "amd64" (arch2 return).
+    # """
+    [ "$#" -eq 0 ] || return 1
+    [ "$(_koopa_arch)" = 'x86_64' ]
 }
 
 _koopa_macos_is_dark_mode() { # {{{1

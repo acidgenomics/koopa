@@ -444,6 +444,10 @@ koopa::include_prefix() { # {{{1
     _koopa_include_prefix "$@"
 }
 
+koopa::is_aarch64() { # {{{1
+    _koopa_is_aarch64 "$@"
+}
+
 koopa::is_alias() { # {{{1
     _koopa_is_alias "$@"
 }
@@ -634,6 +638,10 @@ koopa::is_ubuntu() { # {{{1
 
 koopa::is_ubuntu_like() { # {{{1
     _koopa_is_ubuntu_like "$@"
+}
+
+koopa::is_x86_64() { # {{{1
+    _koopa_is_x86_64 "$@"
 }
 
 koopa::java_prefix() { # {{{1

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME What's up with our arch approach here?
+# FIXME Does this now work for ARM? Need to double check.
 koopa::linux_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Linux.
