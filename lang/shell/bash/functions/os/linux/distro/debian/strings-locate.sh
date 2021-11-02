@@ -31,7 +31,7 @@ koopa::debian_locate_dpkg_reconfigure() { # {{{1
     # Locate Debian 'dpkg-reconfigure'.
     # @note Updated 2021-11-02.
     # """
-    koopa:::locate_app '/usr/bin/dpkg-reconfigure'
+    koopa:::locate_app '/usr/sbin/dpkg-reconfigure'
 }
 
 koopa::debian_locate_gdebi() { # {{{1
