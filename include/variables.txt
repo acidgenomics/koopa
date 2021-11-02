@@ -287,8 +287,8 @@ proj="8.2.0"
 pyenv="2.2.0"
 
 # https://www.python.org/downloads/
-# > python="3.10.0"
-python="3.9.7"
+# > python="3.9.7"
+python="3.10.0"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
