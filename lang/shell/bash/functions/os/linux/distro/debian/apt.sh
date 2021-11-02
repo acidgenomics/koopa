@@ -127,10 +127,15 @@ ${dict[url]} ${dict[os_codename]} stable"
 # FIXME This is now resulting in:
 # bash: warning: command substitution: ignored null byte in input
 # FIXME This is due to switch to 'koopa::parse_url'...needs fix.
+# FIXME Now seeing '(23) Failed writing body' error.
+
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
     # @note Updated 2021-11-02.
+    #
+    # @seealso
+    # - https://cloud.google.com/sdk/docs/install#deb
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -146,13 +151,16 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     )
     [[ -e "${dict[file]}" ]] && return 0
     koopa::alert "Adding Google Cloud keyring at '${dict[file]}'."
+    echo "${app[apt_key]}"  # FIXME
+    echo "${app[curl]}"  # FIXME
+    echo "${app[sudo]}"  # FIXME
     # FIXME Rework this, switching to parse_url...
     # > koopa::parse_url "${dict[url]}" \
-    "${app[curl]}" -fsSL "${dict[url]}" \
+    "${app[curl]}" "${dict[url]}" \
         | "${app[sudo]}" "${app[apt_key]}" \
             --keyring "${dict[file]}" add - \
-            >/dev/null 2>&1 \
         || true
+    # >/dev/null 2>&1 \
     return 0
 }
 
