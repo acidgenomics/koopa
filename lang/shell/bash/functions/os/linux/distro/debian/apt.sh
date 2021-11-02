@@ -108,7 +108,7 @@ koopa::debian_apt_add_docker_repo() { # {{{1
         [os_codename]="$(koopa::os_codename)"
         [os_id]="$(koopa::os_id)"
     )
-    dict[file]="/etc/apt/sources.list.d/${name}.list"
+    dict[file]="/etc/apt/sources.list.d/${dict[name]}.list"
     dict[url]="https://download.docker.com/linux/${dict[os_id]}"
     dict[signed_by]='/usr/share/keyrings/docker-archive-keyring.gpg'
     dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
