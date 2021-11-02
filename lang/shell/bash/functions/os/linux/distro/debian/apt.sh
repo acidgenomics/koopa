@@ -850,7 +850,6 @@ koopa::debian_apt_space_used_by_grep() { # {{{1
     return 0
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_space_used_by_no_deps() { # {{{1
     # """
     # Check install apt package size, without dependencies.
@@ -864,7 +863,7 @@ koopa::debian_apt_space_used_by_no_deps() { # {{{1
         [sudo]="$(koopa::locate_sudo)"
     )
     x="$( \
-        "${app[sudo]}" "${app[apt]}" show "$@" \
+        "${app[sudo]}" "${app[apt]}" show "$@" 2>/dev/null \
             | koopa::grep 'Size' \
     )"
     [[ -n "$x" ]] || return 1
