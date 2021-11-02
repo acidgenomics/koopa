@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Ensure that no dict arrays contain '$dict' variable usage inside the
+        initial array call. This doesn't work in Bash. Double check this before
+        merging develop branch.
 ** TODO Consider reworking our conda-based NGS utilites by locating the programs
         directly, rather than by activating conda inside a function.
 ** TODO Consider creating a koopa::grep function, that calls ripgrep rg
