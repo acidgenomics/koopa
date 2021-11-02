@@ -790,7 +790,6 @@ koopa::debian_apt_install() { # {{{1
     koopa::debian_apt_get install "$@"
 }
 
-# FIXME Now this check never seems to be returning true argh...
 koopa::debian_apt_is_key_imported() { # {{{1
     # """
     # Is a GPG key imported for apt?
@@ -819,8 +818,6 @@ koopa::debian_apt_is_key_imported() { # {{{1
     koopa::str_match_fixed "${dict[string]}" "${dict[key_pattern]}"
 }
 
-# FIXME Use argparse here, so we can change the prefix to '/etc/apt/trusted.gpg.d' instead.
-# FIXME Don't use positional arguments here, use '--type' args instead.
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
@@ -852,12 +849,54 @@ koopa:::debian_apt_key_add() {  #{{{1
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
-        [basename]="${3:-}"
-        [name_fancy]="${1:?}"
+        [basename]=''
+        [name_fancy]=''
         [prefix]='/usr/share/keyrings'
-        [url]="${2:?}"
+        [url]=''
     )
-    # FIXME Allow the user to change prefix to '/etc/apt/trusted.gpg.d'
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--basename='*)
+                dict[basename]="${1#*=}"
+                shift 1
+                ;;
+            '--basename')
+                dict[basename]="${2:?}"
+                shift 2
+                ;;
+            '--name-fancy='*)
+                dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--url='*)
+                dict[url]="${1#*=}"
+                shift 1
+                ;;
+            '--url')
+                dict[url]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_dir "${dict[prefix]}"
     if [[ -z "${dict[basename]}" ]]
     then
         dict[basename]="$(koopa::basename "${dict[url]}")"
