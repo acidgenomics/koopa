@@ -2,16 +2,20 @@
 
 # FIXME Need to ensure that all of these are current in called functions.
 
-# - apt
-# - apt-get  # debian
-# - gdebi  # debian
-
-koopa::debian_locate_locale_gen() { # {{{1
+koopa::debian_locate_apt() { # {{{1
     # """
-    # Locate Debian 'locale-gen'.
+    # Locate Debian 'apt'.
     # @note Updated 2021-11-02.
     # """
-    koopa:::locate_app '/usr/sbin/locale-gen'
+    koopa:::locate_app '/usr/bin/apt'
+}
+
+koopa::debian_locate_apt_get() { # {{{1
+    # """
+    # Locate Debian 'apt-get'.
+    # @note Updated 2021-11-02.
+    # """
+    koopa:::locate_app '/usr/bin/apt-get'
 }
 
 koopa::debian_locate_dpkg() { # {{{1
@@ -28,6 +32,24 @@ koopa::debian_locate_dpkg_reconfigure() { # {{{1
     # @note Updated 2021-11-02.
     # """
     koopa:::locate_app '/usr/bin/dpkg-reconfigure'
+}
+
+koopa::debian_locate_gdebi() { # {{{1
+    # """
+    # Locate Debian 'gdebi'.
+    # @note Updated 2021-11-02.
+    #
+    # Requires 'gdebi-core' to be installed.
+    # """
+    koopa:::locate_app '/usr/bin/gdebi'
+}
+
+koopa::debian_locate_locale_gen() { # {{{1
+    # """
+    # Locate Debian 'locale-gen'.
+    # @note Updated 2021-11-02.
+    # """
+    koopa:::locate_app '/usr/sbin/locale-gen'
 }
 
 koopa::debian_locate_service() { # {{{1
