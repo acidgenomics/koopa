@@ -24,7 +24,7 @@ koopa:::debian_apt_key_add() {  #{{{1
     #     11625#issuecomment-751388087
     # """
     local app dict
-    koopa::assert_has_args_le "$#" 3
+    koopa::assert_has_args "$#"
     koopa::assert_is_admin
     declare -A app=(
         [gpg]="$(koopa::locate_gpg)"
