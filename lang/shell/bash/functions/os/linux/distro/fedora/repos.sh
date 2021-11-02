@@ -27,11 +27,17 @@ END
     return 0
 }
 
-# FIXME Rework app array.
-# FIXME Does this need to get updated to el8? Check Google documentation.
-# FIXME Need to check the arch here, only supporting intel...
 # FIXME Add function for this...koopa::assert_is_intel_x86_64
 # FIXME Need a corresponding assert koopa::assert_is_arm
+#
+# Intel x86_64:
+# koopa::is_x86_64 (koopa::arch)
+# koopa::is_amd64 (koopa::arch2)
+#
+# ARM:
+# koopa::is_aarch64 (koopa::arch)
+# koopa::is_arm64 (koopa::arch2)
+
 koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK repo.
@@ -61,11 +67,14 @@ koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
         [gpgcheck]=1
         [repo_gpgcheck]=0
     )
-    if koopa::is_rhel_7_like
+    if koopa::is_fedora || koopa::is_rhel_8_like
+    then
+        dict[platform]='el8'
+    elif koopa::is_rhel_7_like
     then
         dict[platform]='el7'
     else
-        dict[platform]='el8'
+        koopa::stop 'Unsupported platform.'
     fi
     dict[baseurl]="https://packages.cloud.google.com/yum/repos/\
 cloud-sdk-${dict[platform]}-${dict[arch]}"
