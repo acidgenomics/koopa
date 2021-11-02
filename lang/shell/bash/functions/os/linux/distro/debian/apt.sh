@@ -124,11 +124,8 @@ ${dict[url]} ${dict[os_codename]} stable"
     return 0
 }
 
-# FIXME This is now resulting in:
+# FIXME Seeing this issue with 'parse_url', that fails:
 # bash: warning: command substitution: ignored null byte in input
-# FIXME This is due to switch to 'koopa::parse_url'...needs fix.
-# FIXME Now seeing '(23) Failed writing body' error.
-# FIXME Failing to locate apt-key.
 
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
@@ -159,7 +156,8 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     echo "${app[apt_key]}"  # FIXME
     echo "${app[curl]}"  # FIXME
     echo "${app[sudo]}"  # FIXME
-    koopa::parse_url "${dict[url]}" \
+    # > koopa::parse_url "${dict[url]}" \
+    "${app[curl]}" -fsSL "${dict[url]}" \
         | "${app[sudo]}" "${app[apt_key]}" \
             --keyring "${dict[file]}" add - \
         || true
