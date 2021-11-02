@@ -37,25 +37,28 @@ koopa:::debian_apt_key_add() {  #{{{1
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     # """
-    local arch file name name_fancy os_codename string url
+    local dict
     koopa::assert_has_no_args "$#"
-    name='azure-cli'
-    name_fancy='Microsoft Azure CLI'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
+    koopa::assert_is_admin
+    declare -A dict=(
+        [arch]="$(koopa::arch)"
+        [name]='azure-cli'
+        [name_fancy]='Microsoft Azure CLI'
+        [os]="$(koopa::os_codename)"
+    )
+    dict[file]="/etc/apt/sources.list.d/${dict[name]}.list"
+    dict[url]="https://packages.microsoft.com/repos/${dict[name]}/"
+    dict[string]="deb [arch=${dict[arch]}] ${dict[url]} ${dict[os]} main"
+    if [[ -f "${dict[file]}" ]]
     then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
+        koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::debian_apt_add_microsoft_key
-    os_codename="$(koopa::os_codename)"
-    arch="$(koopa::arch)"
-    url="https://packages.microsoft.com/repos/${name}/"
-    string="deb [arch=${arch}] ${url} ${os_codename} main"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
 
