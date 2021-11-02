@@ -245,9 +245,9 @@ koopa::ftp_mirror() { # {{{1
 koopa::parse_url() { # {{{1
     # """
     # Parse a URL using cURL.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-02.
     # """
-    local curl curl_args pos url x
+    local curl curl_args pos url
     koopa::assert_has_args "$#"
     curl="$(koopa::locate_curl)"
     curl_args=(
@@ -281,9 +281,9 @@ koopa::parse_url() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 1
     url="${1:?}"
-    x="$("$curl" "${curl_args[@]}" "$url")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    # NOTE Don't use 'koopa::print' here, since we need to pass binary output
+    # in some cases for GPG key configuration.
+    "$curl" "${curl_args[@]}" "$url"
     return 0
 }
 
