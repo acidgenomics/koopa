@@ -135,6 +135,10 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     # Add the Google Cloud key.
     # @note Updated 2021-11-02.
     #
+    # Now seeing this warning:
+    # apt-key is deprecated.
+    # Manage keyring files in trusted.gpg.d instead (see apt-key(8))
+    #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install#deb
     # """
@@ -155,9 +159,7 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     echo "${app[apt_key]}"  # FIXME
     echo "${app[curl]}"  # FIXME
     echo "${app[sudo]}"  # FIXME
-    # FIXME Rework this, switching to parse_url...
-    # > koopa::parse_url "${dict[url]}" \
-    "${app[curl]}" "${dict[url]}" \
+    koopa::parse_url "${dict[url]}" \
         | "${app[sudo]}" "${app[apt_key]}" \
             --keyring "${dict[file]}" add - \
         || true
