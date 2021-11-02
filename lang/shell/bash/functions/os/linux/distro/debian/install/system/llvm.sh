@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework this to not warn about missing llvm-config.
+# FIXME Wrap this using our standard install:::app approach.
+
 koopa::debian_install_llvm() { # {{{1
     # """
     # Install LLVM (clang).

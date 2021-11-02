@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# NOTE Consider improving the consistency of repo configuration by defining
+# a new shared function, similar to our key approach.
+
+# koopa install llvm shouldn't warn about llvm-config...
+
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
@@ -125,7 +130,7 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A dict=(
-        [arch]="$(koopa::arch)"
+        [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
         [name]='azure-cli'
         [name_fancy]='Microsoft Azure CLI'
         [os]="$(koopa::os_codename)"
@@ -145,7 +150,6 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
     return 0
 }
 
-# FIXME Need to confirm that this works.
 koopa::debian_apt_add_docker_key() { # {{{1
     # """
     # Add the Docker key.
@@ -207,13 +211,12 @@ ${dict[url]} ${dict[os_codename]} stable"
         koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::debian_apt_add_docker_key
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
 
-# FIXME Confirm that this works.
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
@@ -231,7 +234,6 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     return 0
 }
 
-# FIXME Confirm that this works.
 koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK apt repo.
@@ -263,8 +265,6 @@ ${dict[url]} cloud-sdk main"
     return 0
 }
 
-# FIXME Save this into /etc/apt/trusted.gpg.d/ instead.
-# FIXME Confirm that this works.
 koopa::debian_apt_add_llvm_key() { # {{{1
     # """
     # Add the LLVM key.
@@ -278,7 +278,6 @@ koopa::debian_apt_add_llvm_key() { # {{{1
     return 0
 }
 
-# FIXME Confirm that this works.
 koopa::debian_apt_add_llvm_repo() { # {{{1
     # """
     # Add LLVM apt repo.
