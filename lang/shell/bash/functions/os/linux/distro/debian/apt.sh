@@ -170,9 +170,9 @@ koopa::debian_apt_add_docker_key() { # {{{1
     )
     dict[url]="https://download.docker.com/linux/${dict[os_id]}/gpg"
     koopa:::debian_apt_key_add \
-        "${dict[name_fancy]}" \
-        "${dict[url]}" \
-        "${dict[basename]}"
+        --basename="${dict[basename]}" \
+        --name-fancy="${dict[name_fancy]}" \
+        --url="${dict[url]}"
     return 0
 }
 
