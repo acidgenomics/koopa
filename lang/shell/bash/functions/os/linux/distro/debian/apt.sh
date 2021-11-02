@@ -208,26 +208,17 @@ koopa::debian_apt_add_llvm_repo() { # {{{1
 # FIXME Save this into /etc/apt/trusted.gpg.d/ instead.
 # FIXME Rework our legacy apt-key adder using this code instead.
 # FIXME Need to harden this.
+# FIXME Rework this using koopa::debian_apt_key_add_legacy
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
     # Add the Microsoft Azure CLI key.
     # @note Updated 2021-10-27.
     # """
-    local app file url
     koopa::assert_has_no_args "$#"
-    declare -A app=(
-        [gpg]="$(koopa::locate_gpg)"
-        [tee]="$(koopa::locate_tee)"
-    )
-    url='https://packages.microsoft.com/keys/microsoft.asc'
-    file='/etc/apt/trusted.gpg.d/microsoft.asc.gpg'
-    [[ -e "$file" ]] && return 0
-    koopa::alert "Adding Microsoft key at '${file}'."
-    koopa::parse_url "$url" \
-        | "${app[gpg]}" --dearmor \
-        | sudo "${app[tee]}" "$file" \
-        >/dev/null 2>&1 \
-        || true
+    koopa::debian_apt_key_add_legacy \
+        --basename='microsoft.asc.gpg' \
+        --name-fancy='Microsoft' \
+        --url='https://packages.microsoft.com/keys/microsoft.asc'
     return 0
 }
 
@@ -832,6 +823,8 @@ koopa::debian_apt_is_key_imported() { # {{{1
     koopa::str_match_fixed "$x" "$key"
 }
 
+# FIXME Use argparse here, so we can change the prefix to '/etc/apt/trusted.gpg.d' instead.
+# FIXME Don't use positional arguments here, use '--type' args instead.
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
@@ -856,6 +849,7 @@ koopa:::debian_apt_key_add() {  #{{{1
         [prefix]='/usr/share/keyrings'
         [url]="${2:?}"
     )
+    # FIXME Allow the user to change prefix to '/etc/apt/trusted.gpg.d'
     if [[ -z "${dict[basename]}" ]]
     then
         dict[basename]="$(koopa::basename "${dict[url]}")"
