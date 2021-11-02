@@ -2,6 +2,7 @@
 # shellcheck disable=SC2030,SC2031
 
 # FIXME Miniconda installer is currently ending with error...what's up?
+# FIXME Need to rethink our auto-prefix and auto-version approach here.
 
 koopa:::install_app() { # {{{1
     # """
@@ -17,7 +18,8 @@ koopa:::install_app() { # {{{1
     declare -A dict=(
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
-        [auto_prefix]=0
+        [auto_prefix]=1
+        [auto_version]=1
         [homebrew_opt]=''
         [installer]=''
         [link_app]=0
@@ -136,6 +138,10 @@ koopa:::install_app() { # {{{1
                 dict[shared]=0
                 shift 1
                 ;;
+            '--no-version')
+                dict[auto_version]=0
+                shift 1
+                ;;
             '--prefix-check')
                 dict[prefix_check]=1
                 shift 1
@@ -159,7 +165,11 @@ koopa:::install_app() { # {{{1
         esac
     done
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
-    [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
+    if [[ "${dict[system]}" -eq 1 ]]
+    then
+        dict[auto_prefix]=0
+        dict[shared]=0
+    fi
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
     then
         koopa::assert_is_admin
@@ -180,54 +190,47 @@ koopa:::install_app() { # {{{1
     then
         koopa::stop 'Unsupported command.'
     fi
-    if [[ "${dict[system]}" -eq 0 ]]
+    if [[ -z "${dict[version]}" ]] && [[ "${dict[auto_version]}" -eq 1 ]]
     then
-        if [[ -z "${dict[version]}" ]]
-        then
-            dict[version]="$(koopa::variable "${dict[name]}")"
-        fi
-        if [[ -z "${dict[prefix]}" ]]
-        then
-            dict[auto_prefix]=1
-            dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
-        fi
-        if koopa::str_match_fixed "${dict[prefix]}" "${HOME:?}"
-        then
-            dict[shared]=0
-        fi
+        dict[version]="$(koopa::variable "${dict[name]}")"
+    fi
+    if [[ -z "${dict[prefix]}" ]] && [[ "${dict[auto_prefix]}" -eq 1 ]]
+    then
+        dict[prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     fi
     if [[ -n "${dict[prefix]}" ]]
     then
         koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
-    else
-        koopa::install_start "${dict[name_fancy]}"
-    fi
-    if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
-    then
-        dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
-        if [[ "${dict[reinstall]}" -eq 1 ]]
+        if koopa::str_match_fixed "${dict[prefix]}" "${HOME:?}"
         then
-            koopa::alert "Removing previous install at '${dict[prefix]}'."
-            if [[ "${dict[system]}" -eq 1 ]]
+            dict[shared]=0
+        fi
+        if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
+        then
+            dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+            if [[ "${dict[reinstall]}" -eq 1 ]]
             then
-                koopa::rm --sudo "${dict[prefix]}"
-            elif [[ "${dict[shared]}" -eq 1 ]]
+                koopa::alert "Removing previous install at '${dict[prefix]}'."
+                if [[ "${dict[system]}" -eq 1 ]]
+                then
+                    koopa::rm --sudo "${dict[prefix]}"
+                elif [[ "${dict[shared]}" -eq 1 ]]
+                then
+                    koopa::sys_rm "${dict[prefix]}"
+                else
+                    koopa::rm "${dict[prefix]}"
+                fi
+            fi
+            if [[ -d "${dict[prefix]}" ]]
             then
-                koopa::sys_rm "${dict[prefix]}"
-            else
-                koopa::rm "${dict[prefix]}"
+                koopa::alert_note "${dict[name_fancy]} is already installed \
+at '${dict[prefix]}'."
+                return 0
             fi
         fi
-        if [[ -d "${dict[prefix]}" ]]
-        then
-            koopa::alert_note "${dict[name_fancy]} is already installed \
-at '${dict[prefix]}'."
-            return 0
-        fi
-    fi
-    if [[ "${dict[system]}" -eq 0 ]]
-    then
         dict[prefix]="$(koopa::init_dir "${dict[prefix]}")"
+    else
+        koopa::install_start "${dict[name_fancy]}"
     fi
     (
         koopa::cd "${dict[tmp_dir]}"
