@@ -1,36 +1,5 @@
 #!/usr/bin/env bash
 
-koopa:::debian_apt_key_add() {  #{{{1
-    # """
-    # Add an apt key.
-    # @note Updated 2021-11-02.
-    #
-    # Using '-k/--insecure' flag here to handle some servers
-    # (e.g. download.opensuse.org) that will fail otherwise.
-    # """
-    local app dict
-    koopa::assert_has_args_le "$#" 3
-    koopa::assert_is_admin
-    declare -A app=(
-        [apt_key]="$(koopa::debian_locate_apt_key)"
-        [sudo]="$(koopa::locate_sudo)"
-    )
-    declare -A dict=(
-        [key]="${3:-}"
-        [name_fancy]="${1:?}"
-        [url]="${2:?}"
-    )
-    if [[ -n "${dict[key]}" ]]
-    then
-        koopa::debian_apt_is_key_imported "${dict[key]}" && return 0
-    fi
-    koopa::alert "Adding '${dict[name_fancy]}' key to 'apt'."
-    koopa::parse_url --insecure "${dict[url]}" \
-        | "${app[sudo]}" "${app[apt_key]}" add - >/dev/null 2>&1 \
-        || true
-    return 0
-}
-
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
@@ -44,8 +13,9 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
         [name]='azure-cli'
         [name_fancy]='Microsoft Azure CLI'
         [os]="$(koopa::os_codename)"
+        [prefix]="$(koopa::debian_apt_sources_prefix)"
     )
-    dict[file]="/etc/apt/sources.list.d/${dict[name]}.list"
+    dict[file]="${dict[prefix]}/${dict[name]}.list"
     dict[url]="https://packages.microsoft.com/repos/${dict[name]}/"
     dict[string]="deb [arch=${dict[arch]}] ${dict[url]} ${dict[os]} main"
     if [[ -f "${dict[file]}" ]]
@@ -59,6 +29,7 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
     return 0
 }
 
+# FIXME Need to confirm that this works.
 koopa::debian_apt_add_docker_key() { # {{{1
     # """
     # Add the Docker key.
@@ -76,16 +47,15 @@ koopa::debian_apt_add_docker_key() { # {{{1
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
-        [file]='/usr/share/keyrings/docker-archive-keyring.gpg'
+        [basename]="docker-archive-keyring.gpg"
         [name_fancy]='Docker'
         [os_id]="$(koopa::os_id)"
     )
     dict[url]="https://download.docker.com/linux/${dict[os_id]}/gpg"
-    [[ -f "${dict[file]}" ]] && return 0
-    koopa::alert "Adding ${dict[name_fancy]} keyring at '${dict[file]}'."
-    koopa::parse_url "${dict[url]}" \
-        | "${app[sudo]}" "${app[gpg]}" --dearmor -o "${dict[file]}"
-    koopa::assert_is_file "${dict[file]}"
+    koopa::debian_apt_key_add \
+        "${dict[name_fancy]}" \
+        "${dict[url]}" \
+        "${dict[basename]}"
     return 0
 }
 
@@ -103,14 +73,17 @@ koopa::debian_apt_add_docker_repo() { # {{{1
     koopa::assert_is_admin
     declare -A dict=(
         [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
+        [key_basename]='docker-archive-keyring.gpg'
+        [key_prefix]="$(koopa::debian_apt_key_prefix)"
         [name]='docker'
         [name_fancy]='Docker'
         [os_codename]="$(koopa::os_codename)"
         [os_id]="$(koopa::os_id)"
+        [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
     )
-    dict[file]="/etc/apt/sources.list.d/${dict[name]}.list"
+    dict[file]="${dict[repo_prefix]}/${dict[name]}.list"
     dict[url]="https://download.docker.com/linux/${dict[os_id]}"
-    dict[signed_by]='/usr/share/keyrings/docker-archive-keyring.gpg'
+    dict[signed_by]="${dict[key_prefix]}/${dict[key_basename]}"
     dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
 ${dict[url]} ${dict[os_codename]} stable"
     if [[ -f "${dict[file]}" ]]
@@ -124,113 +97,113 @@ ${dict[url]} ${dict[os_codename]} stable"
     return 0
 }
 
-# FIXME Seeing this issue with 'parse_url', that fails:
-# bash: warning: command substitution: ignored null byte in input
-
+# FIXME Confirm that this works.
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
     # @note Updated 2021-11-02.
     #
-    # Now seeing this warning:
-    # apt-key is deprecated.
-    # Manage keyring files in trusted.gpg.d instead (see apt-key(8))
-    #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install#deb
+    # - https://github.com/docker/docker.github.io/issues/11625
     # """
-    local app dict
+    local dict
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    declare -A app=(
-        [apt_key]="$(koopa::debian_locate_apt_key)"
-        [curl]="$(koopa::locate_curl)"  # FIXME
-        [sudo]="$(koopa::locate_sudo)"
-    )
     declare -A dict=(
-        [file]='/usr/share/keyrings/cloud.google.gpg'
+        [basename]='cloud.google.gpg'
+        [name_fancy]='Google Cloud keyring'
         [url]='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     )
-    [[ -e "${dict[file]}" ]] && return 0
-    koopa::alert "Adding Google Cloud keyring at '${dict[file]}'."
-    echo "${app[apt_key]}"  # FIXME
-    echo "${app[curl]}"  # FIXME
-    echo "${app[sudo]}"  # FIXME
-    # > koopa::parse_url "${dict[url]}" \
-    "${app[curl]}" -fsSL "${dict[url]}" \
-        | "${app[sudo]}" "${app[apt_key]}" \
-            --keyring "${dict[file]}" add - \
-        || true
-    # >/dev/null 2>&1 \
+    koopa::debian_apt_key_add \
+        "${dict[name_fancy]}" \
+        "${dict[url]}" \
+        "${dict[basename]}"
     return 0
 }
 
-# FIXME Need to harden this.
+# FIXME Confirm that this works.
 koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK apt repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     # """
-    local file name name_fancy string
+    local dict
     koopa::assert_has_no_args "$#"
-    name='google-cloud-sdk'
-    name_fancy='Google Cloud SDK'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
+    koopa::assert_is_admin
+    declare -A dict=(
+        [key_basename]='cloud.google.gpg'
+        [key_prefix]="$(koopa::debian_apt_key_prefix)"
+        [name]='google-cloud-sdk'
+        [name_fancy]='Google Cloud SDK'
+        [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
+        [url]='https://packages.cloud.google.com/apt'
+    )
+    dict[file]="${dict[repo_prefix]}/${dict[name]}.list"
+    dict[signed_by]="${dict[key_prefix]}/${dict[key_basename]}"
+    dict[string]="deb [signed-by=${dict[signed_by]}] \
+${dict[url]} cloud-sdk main"
+    if [[ -f "${dict[file]}" ]]
     then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
+        koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::debian_apt_add_google_cloud_key
-    string="deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
-https://packages.cloud.google.com/apt cloud-sdk main"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
 
-# FIXME Need to harden this.
+# FIXME Confirm that this works.
 koopa::debian_apt_add_llvm_key() { # {{{1
     # """
     # Add the LLVM key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     # """
-    local key name_fancy url
+    local dict
     koopa::assert_has_no_args "$#"
-    name_fancy='LLVM'
-    url='https://apt.llvm.org/llvm-snapshot.gpg.key'
-    key='6084F3CF814B57C1CF12EFD515CF4D18AF4F7421'
-    koopa:::debian_apt_key_add "$name_fancy" "$url" "$key"
+    declare -A dict=(
+        [key]='6084F3CF814B57C1CF12EFD515CF4D18AF4F7421'
+        [name_fancy]='LLVM'
+        [url]='https://apt.llvm.org/llvm-snapshot.gpg.key'
+    )
+    koopa:::debian_apt_key_add_legacy \
+        "${dict[name_fancy]}" \
+        "${dict[url]}" \
+        "${dict[key]}"
     return 0
 }
 
-# FIXME Need to harden this.
+# FIXME Confirm that this works.
 koopa::debian_apt_add_llvm_repo() { # {{{1
     # """
     # Add LLVM apt repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     # """
-    local file name name_fancy os_codename string version
+    local dict
     koopa::assert_has_no_args "$#"
-    name='llvm'
-    name_fancy='LLVM'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
+    declare -A dict=(
+        [name]='llvm'
+        [name_fancy]='LLVM'
+        [os]="$(koopa::os_codename)"
+        [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
+    )
+    dict[file]="${dict[repo_prefix]}/${dict[name]}.list"
+    dict[url]="http://apt.llvm.org/${dict[os]}/"
+    dict[version]="$(koopa::major_version "$(koopa::variable "${dict[name]}")")"
+    dict[channel]="llvm-toolchain-${dict[os]}-${dict[version]}"
+    dict[string]="deb ${dict[url]} ${dict[channel]} main"
+    if [[ -f "${dict[file]}" ]]
     then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
+        koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::debian_apt_add_llvm_key
-    os_codename="$(koopa::os_codename)"
-    version="$(koopa::variable "$name")"
-    version="$(koopa::major_version "$version")"
-    string="deb http://apt.llvm.org/${os_codename}/ \
-llvm-toolchain-${os_codename}-${version} main"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
 
+# FIXME Note that this is going into trusted.gpg.d instead of keyrings...
 # FIXME Need to harden this.
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
@@ -256,6 +229,7 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
 }
 
 # FIXME Need to harden this.
+# FIXME apt-key is deprecated and will be removed in 11 release.
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
@@ -288,6 +262,7 @@ koopa::debian_apt_add_r_key() { # {{{1
     do
         koopa::debian_apt_is_key_imported "$key" && continue
         koopa::alert "Adding R key '${key}'."
+        # FIXME Rework or take this out.
         sudo apt-key adv \
             --keyserver "$keyserver" \
             --recv-key "$key" \
@@ -484,11 +459,10 @@ Emulators:/Wine:/Debian"
     return 0
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_clean() { # {{{1
     # """
     # Clean up apt after an install/uninstall call.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     #
     # Alternatively, can consider using 'autoclean' here, which is lighter
     # than calling 'clean'.
@@ -505,8 +479,15 @@ koopa::debian_apt_clean() { # {{{1
     # - https://askubuntu.com/questions/3167/
     # - https://github.com/hadolint/hadolint/wiki/DL3009
     # """
-    sudo apt-get --yes autoremove
-    sudo apt-get --yes clean
+    local app
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[apt_get]}" --yes autoremove
+    "${app[sudo]}" "${app[apt_get]}" --yes clean
     # > koopa::rm --sudo '/var/lib/apt/lists/'*
     return 0
 }
@@ -599,7 +580,7 @@ koopa::debian_apt_configure_sources() { # {{{1
         [os_codename]="$(koopa::os_codename)"
         [os_id]="$(koopa::os_id)"
         [sources_list]='/etc/apt/sources.list'
-        [sources_list_d]='/etc/apt/sources.list.d'
+        [sources_list_d]="$(koopa::debian_apt_sources_prefix)"
     )
     koopa::alert "Configuring apt sources in '${dict[sources_list]}'."
     koopa::assert_is_file "${dict[sources_list]}"
@@ -693,94 +674,109 @@ koopa::debian_apt_delete_repo() { # {{{1
     return 0
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_disable_deb_src() { # {{{1
     # """
-    # Enable 'deb-src' source packages.
-    # @note Updated 2021-10-27.
+    # Disable 'deb-src' source packages.
+    # @note Updated 2021-11-02.
     # """
-    local app file
+    local app dict
     koopa::assert_has_args_le "$#" 1
-    file="${1:-}"
-    [[ -z "$file" ]] && file='/etc/apt/sources.list'
-    file="$(koopa::realpath "$file")"
-    koopa::alert "Disabling Debian sources in '${file}'."
-    if ! koopa::file_match_regex "$file" '^deb-src '
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sed]="$(koopa::locate_sed)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [file]="${1:-}"
+    )
+    [[ -z "${dict[file]}" ]] && dict[file]='/etc/apt/sources.list'
+    koopa::assert_is_file "${dict[file]}"
+    koopa::alert "Disabling Debian sources in '${dict[file]}'."
+    if ! koopa::file_match_regex "${dict[file]}" '^deb-src '
     then
-        koopa::alert_note "No 'deb-src' lines to comment in '${file}'."
+        koopa::alert_note "No lines to comment in '${dict[file]}'."
         return 0
     fi
-    declare -A app=(
-        [sed]="$(koopa::locate_sed)"
-    )
-    "${app[sed]}" -Ei 's/^deb-src /# deb-src /' "$file"
-    sudo apt-get update
+    "${app[sudo]}" "${app[sed]}" -Ei 's/^deb-src /# deb-src /' "${dict[file]}"
+    "${app[sudo]}" "${app[apt_get]}" update
     return 0
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_enable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-02.
     # """
-    local app file
+    local app dict
     koopa::assert_has_args_le "$#" 1
-    file="${1:-}"
-    [[ -z "$file" ]] && file='/etc/apt/sources.list'
-    file="$(koopa::realpath "$file")"
-    koopa::alert "Enabling Debian sources in '${file}'."
-    if ! koopa::file_match_regex "$file" '^# deb-src '
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sed]="$(koopa::locate_sed)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [file]="${1:-}"
+    )
+    [[ -z "${dict[file]}" ]] && dict[file]='/etc/apt/sources.list'
+    koopa::assert_is_file "${dict[file]}"
+    koopa::alert "Enabling Debian sources in '${dict[file]}'."
+    if ! koopa::file_match_regex "${dict[file]}" '^# deb-src '
     then
-        koopa::alert_note "No '# deb-src' lines to uncomment in '${file}'."
+        koopa::alert_note "No lines to uncomment in '${dict[file]}'."
         return 0
     fi
-    declare -A app=(
-        [sed]="$(koopa::locate_sed)"
-    )
-    sudo "${app[sed]}" -Ei 's/^# deb-src /deb-src /' "$file"
-    sudo apt-get update
+    "${app[sudo]}" "${app[sed]}" -Ei 's/^# deb-src /deb-src /' "${dict[file]}"
+    "${app[sudo]}" "${app[apt_get]}" update
     return 0
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_enabled_repos() { # {{{1
     # """
     # Get a list of enabled default apt repos.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-02.
     # """
     local app file os_codename pattern x
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
     )
-    os_codename="$(koopa::os_codename)"
-    file='/etc/apt/sources.list'
-    pattern="^deb\s.+\s${os_codename}\s.+$"
+    declare -A dict=(
+        [file]='/etc/apt/sources.list'
+        [os]="$(koopa::os_codename)"
+    )
+    dict[pattern]="^deb\s.+\s${dict[os]}\s.+$"
     x="$( \
         koopa::grep \
             --extended-regexp \
-            "$pattern" \
-            "$file" \
+            "${dict[pattern]}" \
+            "${dict[file]}" \
         | "${app[cut]}" -d ' ' -f '4-' \
     )"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_get() { # {{{1
     # """
     # Non-interactive variant of apt-get, with saner defaults.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-11-02.
     #
     # Currently intended for:
     # - dist-upgrade
     # - install
     # """
+    local app
     koopa::assert_has_args "$#"
-    sudo apt-get update
-    sudo DEBIAN_FRONTEND='noninteractive' \
-        apt-get \
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[apt_get]}" update
+    "${app[sudo]}" DEBIAN_FRONTEND='noninteractive' \
+        "${app[apt_get]}" \
             --no-install-recommends \
             --quiet \
             --yes \
@@ -797,7 +793,6 @@ koopa::debian_apt_install() { # {{{1
     koopa::debian_apt_get install "$@"
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_is_key_imported() { # {{{1
     # """
     # Is a GPG key imported for apt?
@@ -805,8 +800,8 @@ koopa::debian_apt_is_key_imported() { # {{{1
     # """
     local app key x
     koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_installed 'apt-key'
     declare -A app=(
+        [apt_key]="$(koopa::debian_locate_apt_key)"
         [sed]="$(koopa::locate_sed)"
     )
     key="${1:?}"
@@ -817,54 +812,189 @@ koopa::debian_apt_is_key_imported() { # {{{1
 ^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\$/\
 \1 \2 \3 \4 \5  \6 \7 \8 \9 \10/" \
     )"
-    x="$(apt-key list 2>&1 || true)"
+    x="$("${app[apt-key]}" list 2>&1 || true)"
     koopa::str_match_fixed "$x" "$key"
 }
 
-# FIXME Need to harden this.
+koopa:::debian_apt_key_add() {  #{{{1
+    # """
+    # Add an apt key.
+    # @note Updated 2021-11-02.
+    #
+    # @section Hardening against insecure URL failure:
+    # 
+    # Using '--insecure' flag here to handle some servers
+    # (e.g. download.opensuse.org) that can fail otherwise.
+    #
+    # """
+    local app dict
+    koopa::assert_has_args_le "$#" 3
+    koopa::assert_is_admin
+    declare -A app=(
+        [gpg]="$(koopa::locate_gpg)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [basename]="${3:-}"
+        [name_fancy]="${1:?}"
+        [prefix]='/usr/share/keyrings'
+        [url]="${2:?}"
+    )
+    if [[ -z "${dict[basename]}" ]]
+    then
+        dict[basename]="$(koopa::basename "${dict[url]}")"
+    fi
+    dict[file]="${dict[prefix]}/${dict[basename]}"
+    koopa::debian_apt_is_key_imported "${dict[file]}" && return 0
+    koopa::alert "Adding '${dict[name_fancy]}' key at '${dict[file]}'."
+    koopa::parse_url --insecure "${dict[url]}" \
+        | "${app[sudo]}" "${app[gpg]}" \
+            --dearmor \
+            --output "${dict[file]}" \
+            >/dev/null 2>&1 \
+        || true
+    # Alternative approach using tee:
+    # > koopa::parse_url --insecure "${dict[url]}" \
+    # >     | "${app[gpg]}" --dearmor \
+    # >     | "${app[sudo]}" "${app[tee]}" "${dict[file]}" \
+    # >         >/dev/null 2>&1 \
+    # >     || true
+    koopa::assert_is_file "${dict[file]}"
+    return 0
+}
+
+koopa:::debian_apt_key_add_legacy() {  #{{{1
+    # """
+    # Add an apt key (legacy, deprecated approach).
+    # @note Updated 2021-11-02.
+    #
+    # Using '--insecure' flag here to handle some servers
+    # (e.g. download.opensuse.org) that will fail otherwise.
+    #
+    # @section Regarding apt-key deprecation:
+    #
+    # Although adding keys directly to '/etc/apt/trusted.gpg.d/' is suggested by
+    # 'apt-key' deprecation message, as per Debian Wiki, GPG keys for third
+    # party repositories should be added to '/usr/share/keyrings', and
+    # referenced with the 'signed-by' option in the '/etc/apt/sources.list.d'
+    # entry.
+    #
+    # @seealso
+    # - https://github.com/docker/docker.github.io/issues/11625
+    # - https://github.com/docker/docker.github.io/issues/
+    #     11625#issuecomment-751388087
+    # """
+    local app dict
+    koopa::assert_has_args_le "$#" 3
+    declare -A app=(
+        [apt_key]="$(koopa::debian_locate_apt_key)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [key]="${3:-}"
+        [name_fancy]="${1:?}"
+        [url]="${2:?}"
+    )
+    if [[ -n "${dict[key]}" ]]
+    then
+        koopa::debian_apt_is_key_imported "${dict[key]}" && return 0
+    fi
+    koopa::alert "Adding '${dict[name_fancy]}' key to apt."
+    koopa::parse_url --insecure "${dict[url]}" \
+        | "${app[sudo]}" "${app[apt_key]}" add - \
+            >/dev/null 2>&1 \
+        || true
+    return 0
+}
+
+koopa::debian_apt_key_prefix() { # {{{1
+    # """
+    # Debian apt key prefix.
+    # @note Updated 2021-11-02.
+    # @seealso
+    # - '/etc/apt/trusted.gpg.d' (alternate location for apt).
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::print '/usr/share/keyrings'
+}
+
 koopa::debian_apt_remove() { # {{{1
     # """
     # Remove Debian apt package.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-11-02.
     # """
+    local app
     koopa::assert_has_args "$#"
-    sudo apt-get --yes remove --purge "$@"
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[apt_get]}" --yes remove --purge "$@"
     koopa::debian_apt_clean
     return 0
 }
 
-# FIXME Need to harden this.
+koopa::debian_apt_sources_file() { # {{{1
+    # """
+    # Debian apt sources file.
+    # @note Updated 2021-11-02.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::print '/etc/apt/sources.list'
+}
+
+koopa::debian_apt_sources_prefix() { # {{{1
+    # """
+    # Debian apt sources directory.
+    # @note Updated 2021-11-02.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa:::print '/etc/apt/sources.list.d'
+}
+
 koopa::debian_apt_space_used_by() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-11-02.
     #
     # Alternate approach that doesn't attempt to grep match.
     # """
+    local app
     koopa::assert_has_args "$#"
-    sudo apt-get --assume-no autoremove "$@"
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[apt_get]}" --assume-no autoremove "$@"
     return 0
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_space_used_by_grep() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-02.
     #
     # See also:
     # https://askubuntu.com/questions/490945
     # """
     local app x
     koopa::assert_has_args "$#"
-    declare -A cut=(
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
         [cut]="$(koopa::locate_cut)"
+        [sudo]="$(koopa::locate_sudo)"
     )
     x="$( \
-        sudo apt-get --assume-no autoremove "$@" \
-            | koopa::grep 'freed' \
-            | "${app[cut]}" -d ' ' -f '4-5' \
+        "${app[sudo]}" "${app[apt_get]}" \
+            --assume-no \
+            autoremove "$@" \
+        | koopa::grep 'freed' \
+        | "${app[cut]}" -d ' ' -f '4-5' \
     )"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
