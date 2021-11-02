@@ -11,7 +11,7 @@ koopa::alpine_install_glibc() { # {{{1
 koopa:::alpine_install_glibc() { # {{{1
     # """
     # Install glibc.
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-02.
     #
     # Custom glibc library is required to install conda.
     #
@@ -40,7 +40,9 @@ koopa:::alpine_install_glibc() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [localedef]='/usr/glibc-compat/bin/localedef'
+        [apk]="$(koopa::alpine_locate_apk)"
+        [localedef]="$(koopa::alpine_locate_localedef)"
+        [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
         [version]="${INSTALL_VERSION:?}"
@@ -66,7 +68,7 @@ releases/download/${dict[version]}"
     koopa::cp --sudo \
         "${dict[pub_key_file]}" \
         "${dict[apk_key_prefix]}/${dict[pub_key_file]}"
-    sudo apk add \
+    "${app[sudo]}" "${app[apk]}" add \
         "${dict[apk_bin_file]}" \
         "${dict[apk_dev_file]}" \
         "${dict[apk_i18n_file]}" \
@@ -82,4 +84,3 @@ releases/download/${dict[version]}"
     # >     || true
     return 0
 }
-
