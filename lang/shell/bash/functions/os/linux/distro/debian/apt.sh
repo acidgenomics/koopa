@@ -468,7 +468,7 @@ koopa::debian_apt_clean() { # {{{1
 koopa::debian_apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-02.
     #
     # Look up currently enabled sources with:
     # > grep -Eq '^deb\s' '/etc/apt/sources.list'
@@ -542,79 +542,82 @@ koopa::debian_apt_configure_sources() { # {{{1
     # > deb http://ports.ubuntu.com/ubuntu-ports
     #       focal-security multiverse
     # """
-    local app codenames os_codename os_id repos
-    local sources_list sources_list_d urls
+    local app codenames repos urls
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
         [head]="$(koopa::locate_head)"
         [tee]="$(koopa::locate_tee)"
     )
-    sources_list='/etc/apt/sources.list'
-    koopa::alert "Configuring apt sources in '${sources_list}'."
-    koopa::assert_is_file "$sources_list"
-    os_id="$(koopa::os_id)"
-    os_codename="$(koopa::os_codename)"
-    declare -A codenames
-    declare -A urls
-    codenames[main]="$os_codename"
-    codenames[security]="${os_codename}-security"
-    codenames[updates]="${os_codename}-updates"
-    urls[main]="$( \
-        koopa::grep \
-            --extended-regexp \
-            '^deb\s' \
-            "$sources_list" \
-        | koopa::grep \
-            --fixed-strings \
-            ' main ' \
-        | "${app[head]}" -n 1 \
-        | "${app[cut]}" -d ' ' -f 2 \
-    )"
-    urls[security]="$( \
-        koopa::grep \
-            --extended-regexp \
+    declare -A dict=(
+        [os_codename]="$(koopa::os_codename)"
+        [os_id]="$(koopa::os_id)"
+        [sources_list]='/etc/apt/sources.list'
+        [sources_list_d]='/etc/apt/sources.list.d'
+    )
+    koopa::alert "Configuring apt sources in '${dict[sources_list]}'."
+    koopa::assert_is_file "${dict[sources_list]}"
+    declare -A codenames=(
+        [main]="${dict[os_codename]}"
+        [security]="${dict[os_codename]}-security"
+        [updates]="${dict[os_codename]}-updates"
+    )
+    declare -A urls=(
+        [main]="$( \
+            koopa::grep \
+                --extended-regexp \
                 '^deb\s' \
-                "$sources_list" \
-        | koopa::grep \
-            --fixed-strings \
-            " ${codenames[security]} " \
-        | "${app[head]}" -n 1 \
-        | "${app[cut]}" -d ' ' -f 2 \
-    )"
+                "${dict[sources_list]}" \
+            | koopa::grep \
+                --fixed-strings \
+                ' main ' \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f 2 \
+        )"
+        [security]="$( \
+            koopa::grep \
+                --extended-regexp \
+                    '^deb\s' \
+                    "${dict[sources_list]}" \
+            | koopa::grep \
+                --fixed-strings \
+                " ${codenames[security]} " \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f 2 \
+        )"
+    )
     urls[updates]="${urls[main]}"
-    case "$os_id" in
+    case "${dict[os_id]}" in
         'debian')
-            # Can consider including 'backports' here as well.
+            # Can consider including 'backports' here.
             repos=('main')
             ;;
         'ubuntu')
-            # Can consider including 'multiverse' here as well.
+            # Can consider including 'multiverse' here.
             repos=('main' 'restricted' 'universe')
             ;;
         *)
-            koopa::stop "Unsupported OS: '${os_id}'."
+            koopa::stop "Unsupported OS: '${dict[os_id]}'."
             ;;
     esac
     # Configure primary apt sources.
-    if [[ -L "$sources_list" ]]
+    if [[ -L "${dict[sources_list]}" ]]
     then
-        koopa::rm --sudo "$sources_list"
+        koopa::rm --sudo "${dict[sources_list]}"
     fi
-    sudo "$tee" "$sources_list" >/dev/null << END
+    sudo "${app[tee]}" "${dict[sources_list]}" >/dev/null << END
 deb ${urls[main]} ${codenames[main]} ${repos[*]}
 deb ${urls[security]} ${codenames[security]} ${repos[*]}
 deb ${urls[updates]} ${codenames[updates]} ${repos[*]}
 END
     # Configure secondary apt sources.
-    sources_list_d='/etc/apt/sources.list.d'
-    if [[ -L "$sources_list_d" ]]
+    if [[ -L "${dict[sources_list_d]}" ]]
     then
-        koopa::rm --sudo "$sources_list_d"
+        koopa::rm --sudo "${dict[sources_list_d]}"
     fi
-    if [[ ! -d "$sources_list_d" ]]
+    if [[ ! -d "${dict[sources_list_d]}" ]]
     then
-        koopa::mkdir --sudo "$sources_list_d"
+        koopa::mkdir --sudo "${dict[sources_list_d]}"
     fi
     return 0
 }
