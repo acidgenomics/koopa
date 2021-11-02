@@ -788,11 +788,10 @@ koopa::debian_apt_install() { # {{{1
     koopa::debian_apt_get install "$@"
 }
 
-# FIXME Take this out, if migration to '/etc/apt/trusted...' is successful.
 koopa::debian_apt_is_key_imported() { # {{{1
     # """
     # Is a GPG key imported for apt?
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-02.
     # """
     local app key x
     koopa::assert_has_args_eq "$#" 1
@@ -808,7 +807,7 @@ koopa::debian_apt_is_key_imported() { # {{{1
 ^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\$/\
 \1 \2 \3 \4 \5  \6 \7 \8 \9 \10/" \
     )"
-    x="$("${app[apt-key]}" list 2>&1 || true)"
+    x="$("${app[apt_key]}" list 2>&1 || true)"
     koopa::str_match_fixed "$x" "$key"
 }
 
