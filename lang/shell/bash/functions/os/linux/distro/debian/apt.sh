@@ -124,22 +124,28 @@ ${dict[url]} ${dict[os_codename]} stable"
     return 0
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
-    # @note Updated 2021-10-126.
+    # @note Updated 2021-11-02.
     # """
-    local file url
+    local app dict
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'apt-key'
-    url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
-    file='/usr/share/keyrings/cloud.google.gpg'
-    [[ -e "$file" ]] && return 0
-    koopa::alert "Adding Google Cloud keyring at '${file}'."
-    koopa::parse_url "$url" \
-        | sudo apt-key --keyring "$file" add - \
-        >/dev/null 2>&1 \
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_key]="$(koopa::debian_locate_apt_key)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [file]='/usr/share/keyrings/cloud.google.gpg'
+        [url]='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
+    )
+    [[ -e "${dict[file]}" ]] && return 0
+    koopa::alert "Adding Google Cloud keyring at '${dict[file]}'."
+    koopa::parse_url "${dict[url]}" \
+        | "${app[sudo]}" "${app[apt_key]}" \
+            --keyring "${dict[file]}" add - \
+            >/dev/null 2>&1 \
         || true
     return 0
 }
