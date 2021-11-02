@@ -84,8 +84,8 @@ koopa:::debian_apt_key_add() {  #{{{1
         dict[basename]="$(koopa::basename "${dict[url]}")"
     fi
     dict[file]="${dict[prefix]}/${dict[basename]}"
-    koopa::debian_apt_is_key_imported "${dict[file]}" && return 0
-    koopa::alert "Adding '${dict[name_fancy]}' key at '${dict[file]}'."
+    [[ -f "${dict[file]}" ]] && return 0
+    koopa::alert "Adding ${dict[name_fancy]} key at '${dict[file]}'."
     koopa::parse_url --insecure "${dict[url]}" \
         | "${app[sudo]}" "${app[gpg]}" \
             --dearmor \
@@ -116,7 +116,6 @@ koopa:::debian_apt_key_add_legacy() {  #{{{1
     return 0
 }
 
-# FIXME This is erroring due to empty directory...what's up with that?
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
@@ -140,8 +139,8 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
         koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::debian_apt_add_microsoft_key
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
