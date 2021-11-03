@@ -73,9 +73,9 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
         --homedir "${dict[tmp_dir]}" \
         --export \
         --quiet \
-        --output "${dict[file]}" \
+        --output "${dict[tmp_file]}" \
         "${dict[key]}"
-    set -x  # FIXME
+    koopa::assert_is_file "${dict[tmp_file]}"
     "${cp[@]}" "${dict[tmp_file]}" "${dict[file]}"
     koopa::rm "${dict[tmp_dir]}"
     koopa::assert_is_file "${dict[file]}"
