@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# NOTE Consider improving the consistency of repo configuration by defining
+# FIXME Consider improving the consistency of repo configuration by defining
 # a new shared function, similar to our key approach.
 
-# koopa install llvm shouldn't warn about llvm-config...
+# FIXME koopa install llvm shouldn't warn about llvm-config...
 
 koopa:::debian_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     #
     # @section Hardening against insecure URL failure:
     # 
@@ -36,7 +36,7 @@ koopa:::debian_apt_key_add() {  #{{{1
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
-        [basename]=''
+        [name]=''
         [name_fancy]=''
         [prefix]='/usr/share/keyrings'
         [url]=''
@@ -45,12 +45,12 @@ koopa:::debian_apt_key_add() {  #{{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--basename='*)
-                dict[basename]="${1#*=}"
+            '--name='*)
+                dict[name]="${1#*=}"
                 shift 1
                 ;;
-            '--basename')
-                dict[basename]="${2:?}"
+            '--name')
+                dict[name]="${2:?}"
                 shift 2
                 ;;
             '--name-fancy='*)
@@ -84,11 +84,7 @@ koopa:::debian_apt_key_add() {  #{{{1
         esac
     done
     koopa::assert_is_dir "${dict[prefix]}"
-    if [[ -z "${dict[basename]}" ]]
-    then
-        dict[basename]="$(koopa::basename "${dict[url]}")"
-    fi
-    dict[file]="${dict[prefix]}/${dict[basename]}"
+    dict[file]="${dict[prefix]}/koopa-${dict[name]}.gpg"
     [[ -f "${dict[file]}" ]] && return 0
     koopa::alert "Adding ${dict[name_fancy]} key at '${dict[file]}'."
     koopa::parse_url --insecure "${dict[url]}" \
@@ -124,21 +120,25 @@ koopa:::debian_apt_key_add_legacy() {  #{{{1
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     # """
     local dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A dict=(
         [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
+        [key_name]='microsoft'
+        [key_prefix]="$(koopa::debian_apt_key_prefix)"
         [name]='azure-cli'
         [name_fancy]='Microsoft Azure CLI'
         [os]="$(koopa::os_codename)"
         [prefix]="$(koopa::debian_apt_sources_prefix)"
     )
-    dict[file]="${dict[prefix]}/${dict[name]}.list"
+    dict[file]="${dict[prefix]}/koopa-${dict[name]}.list"
     dict[url]="https://packages.microsoft.com/repos/${dict[name]}/"
-    dict[string]="deb [arch=${dict[arch]}] ${dict[url]} ${dict[os]} main"
+    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
+    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
+${dict[url]} ${dict[os]} main"
     if [[ -f "${dict[file]}" ]]
     then
         koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
@@ -153,7 +153,7 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
 koopa::debian_apt_add_docker_key() { # {{{1
     # """
     # Add the Docker key.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     #
     # @seealso
     # - https://docs.docker.com/engine/install/debian/
@@ -167,7 +167,7 @@ koopa::debian_apt_add_docker_key() { # {{{1
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
-        [basename]="docker-archive-keyring.gpg"
+        [basename]="docker.gpg"
         [name_fancy]='Docker'
         [os_id]="$(koopa::os_id)"
     )
@@ -182,7 +182,7 @@ koopa::debian_apt_add_docker_key() { # {{{1
 koopa::debian_apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     #
     # @seealso
     # - https://docs.docker.com/engine/install/debian/
@@ -193,7 +193,7 @@ koopa::debian_apt_add_docker_repo() { # {{{1
     koopa::assert_is_admin
     declare -A dict=(
         [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
-        [key_basename]='docker-archive-keyring.gpg'
+        [key_name]='docker'
         [key_prefix]="$(koopa::debian_apt_key_prefix)"
         [name]='docker'
         [name_fancy]='Docker'
@@ -203,7 +203,7 @@ koopa::debian_apt_add_docker_repo() { # {{{1
     )
     dict[file]="${dict[repo_prefix]}/${dict[name]}.list"
     dict[url]="https://download.docker.com/linux/${dict[os_id]}"
-    dict[signed_by]="${dict[key_prefix]}/${dict[key_basename]}"
+    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
     dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
 ${dict[url]} ${dict[os_codename]} stable"
     if [[ -f "${dict[file]}" ]]
@@ -220,7 +220,7 @@ ${dict[url]} ${dict[os_codename]} stable"
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install#deb
@@ -228,7 +228,7 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::debian_apt_key_add \
-        --basename='cloud.google.gpg' \
+        --basename='google-cloud.gpg' \
         --name-fancy='Google Cloud' \
         --url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     return 0
@@ -307,19 +307,15 @@ koopa::debian_apt_add_llvm_repo() { # {{{1
     return 0
 }
 
-# FIXME Save this into /etc/apt/trusted.gpg.d/ instead.
-# FIXME Rework our legacy apt-key adder using this code instead.
-# FIXME Need to harden this.
-# FIXME Rework this using koopa::debian_apt_key_add_legacy
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
-    # Add the Microsoft Azure CLI key.
-    # @note Updated 2021-10-27.
+    # Add the Microsoft GPG key (for Azure CLI).
+    # @note Updated 2021-11-03.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::debian_apt_key_add_legacy \
-        --basename='microsoft.asc.gpg' \
+    koopa:::debian_apt_key_add \
         --name-fancy='Microsoft' \
+        --name='microsoft' \
         --url='https://packages.microsoft.com/keys/microsoft.asc'
     return 0
 }
