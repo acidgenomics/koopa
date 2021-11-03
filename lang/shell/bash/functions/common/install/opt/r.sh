@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is returning empty directory error on Debian.
-
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
@@ -18,13 +16,10 @@ koopa::configure_r() { # {{{1
     [[ -z "${dict[r]}" ]] && dict[r]="$(koopa::locate_r)"
     koopa::assert_is_installed "${dict[r]}"
     dict[r_prefix]="$(koopa::r_prefix "${dict[r]}")"
-    echo 'FIXME 1'
     koopa::configure_start "${dict[name_fancy]}" "${dict[r_prefix]}"
-    echo 'FIXME 2'
     koopa::assert_is_dir "${dict[r_prefix]}"
     if koopa::is_koopa_app "${dict[r]}"
     then
-        echo 'FIXME 3'
         koopa::sys_set_permissions --recursive "${dict[r_prefix]}"
         # Ensure that (Debian) system 'etc' directories are removed.
         dict[make_prefix]="$(koopa::make_prefix)"
@@ -39,12 +34,9 @@ koopa::configure_r() { # {{{1
             koopa::sys_rm "${dict[etc_prefix2]}"
         fi
     else
-        echo 'FIXME 4'
         koopa::sys_set_permissions --recursive "${dict[r_prefix]}/library"
     fi
-    echo 'FIXME 5'
     koopa::r_link_files_into_etc "${dict[r]}"
-    echo 'FIXME 6'
     koopa::r_link_site_library "${dict[r]}"
     koopa::r_javareconf "${dict[r]}"
     koopa::r_rebuild_docs "${dict[r]}"
