@@ -105,8 +105,7 @@ koopa:::debian_apt_key_add() {  #{{{1
     return 0
 }
 
-# FIXME This shouldn't be necessary, correct? Can't I just modify the list
-# file to just point to signing key?
+# FIXME Check that this is safe to remove following repo config updates.
 koopa:::debian_apt_key_add_legacy() {  #{{{1
     # """
     # Add a legacy apt key (deprecated).
@@ -247,6 +246,7 @@ koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A dict=(
+        [arch]="$(koopa::arch2)"
         [channel]='cloud-sdk'
         [key_name]='google-cloud'
         [key_prefix]="$(koopa::debian_apt_key_prefix)"
@@ -257,7 +257,7 @@ koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     )
     dict[file]="${dict[repo_prefix]}/koopa-${dict[name]}.list"
     dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
-    dict[string]="deb [signed-by=${dict[signed_by]}] \
+    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
 ${dict[url]} ${dict[channel]} main"
     if [[ -f "${dict[file]}" ]]
     then
@@ -273,10 +273,10 @@ ${dict[url]} ${dict[channel]} main"
 koopa::debian_apt_add_llvm_key() { # {{{1
     # """
     # Add the LLVM key.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     # """
     koopa::assert_has_no_args "$#"
-    koopa:::debian_apt_key_add_legacy \
+    koopa:::debian_apt_key_add \
         --basename='llvm.gpg' \
         --name-fancy='LLVM' \
         --url='https://apt.llvm.org/llvm-snapshot.gpg.key'
@@ -286,28 +286,32 @@ koopa::debian_apt_add_llvm_key() { # {{{1
 koopa::debian_apt_add_llvm_repo() { # {{{1
     # """
     # Add LLVM apt repo.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     # """
     local dict
     koopa::assert_has_no_args "$#"
     declare -A dict=(
+        [arch]="$(koopa::arch2)"
+        [key_name]='llvm'
         [name]='llvm'
         [name_fancy]='LLVM'
         [os]="$(koopa::os_codename)"
         [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
     )
-    dict[file]="${dict[repo_prefix]}/${dict[name]}.list"
+    dict[file]="${dict[repo_prefix]}/koopa-${dict[name]}.list"
     dict[url]="http://apt.llvm.org/${dict[os]}/"
+    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
     dict[version]="$(koopa::major_version "$(koopa::variable "${dict[name]}")")"
     dict[channel]="llvm-toolchain-${dict[os]}-${dict[version]}"
-    dict[string]="deb ${dict[url]} ${dict[channel]} main"
+    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
+${dict[url]} ${dict[channel]} main"
     if [[ -f "${dict[file]}" ]]
     then
         koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::debian_apt_add_llvm_key
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
@@ -328,7 +332,7 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     #
     # Addition of signing key via keyserver directly into /etc/apt/trusted.gpg'
     # file is deprecated in Debian, but currently the only supported method for
@@ -430,12 +434,10 @@ END
     return 0
 }
 
-# FIXME Write this into /etc/apt/trusted.gpg.d instead.
-# FIXME Need to harden this.
 koopa::debian_apt_add_wine_key() { # {{{1
     # """
     # Add the WineHQ key.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     #
     # Email: <wine-devel@winehq.org>
     #
@@ -450,17 +452,11 @@ koopa::debian_apt_add_wine_key() { # {{{1
     # > wget -nc https://dl.winehq.org/wine-builds/winehq.key
     # > sudo apt-key add winehq.key
     # """
-    local dict
     koopa::assert_has_no_args "$#"
-    declare -A dict=(
-        [key]='D43F640145369C51D786DDEA76F1A20FF987672F'
-        [name_fancy]='Wine'
-        [url]='https://dl.winehq.org/wine-builds/winehq.key'
-    )
-    koopa:::debian_apt_key_add_legacy \
-        "${dict[name_fancy]}" \
-        "${dict[url]}" \
-        "${dict[key]}"
+    koopa:::debian_apt_key_add \
+        --name-fancy='Wine' \
+        --name='wine' \
+        --url='https://dl.winehq.org/wine-builds/winehq.key'
     return 0
 }
 
@@ -480,18 +476,20 @@ koopa::debian_apt_add_wine_repo() { # {{{1
     koopa::assert_has_no_args "$#"
     name='wine'
     name_fancy='Wine'
-    file="/etc/apt/sources.list.d/${name}.list"
+    # FIXME Rework using prefix variable.
+    file="/etc/apt/sources.list.d/koopa-${name}.list"
     if [[ -f "$file" ]]
     then
         koopa::alert_info "${name_fancy} repo exists at '${file}'."
         return 0
     fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
     koopa::debian_apt_add_wine_key
     os_id="$(koopa::os_id)"
     os_codename="$(koopa::os_codename)"
     url="https://dl.winehq.org/wine-builds/${os_id}/"
+    # FIXME Need to include arch and signed-by.
     string="deb ${url} ${os_codename} main"
+    koopa::alert "Adding ${name_fancy} repo at '${file}'."
     koopa::sudo_write_string "$string" "$file"
     return 0
 }
@@ -772,6 +770,7 @@ END
     return 0
 }
 
+# FIXME Use prefix variable here.
 koopa::debian_apt_delete_repo() { # {{{1
     # """
     # Delete an apt repo file.
@@ -782,13 +781,14 @@ koopa::debian_apt_delete_repo() { # {{{1
     koopa::assert_is_admin
     for name in "$@"
     do
-        file="/etc/apt/sources.list.d/${name}.list"
+        file="/etc/apt/sources.list.d/koopa-${name}.list"
         koopa::assert_is_file "$file"
         koopa::rm --sudo "$file"
     done
     return 0
 }
 
+# FIXME Rework using apt_sources_file variable.
 koopa::debian_apt_disable_deb_src() { # {{{1
     # """
     # Disable 'deb-src' source packages.
@@ -818,6 +818,7 @@ koopa::debian_apt_disable_deb_src() { # {{{1
     return 0
 }
 
+# FIXME Rework using apt_sources_file variable.
 koopa::debian_apt_enable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
@@ -847,6 +848,7 @@ koopa::debian_apt_enable_deb_src() { # {{{1
     return 0
 }
 
+# FIXME Rework using apt_sources_file variable.
 koopa::debian_apt_enabled_repos() { # {{{1
     # """
     # Get a list of enabled default apt repos.
