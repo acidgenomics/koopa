@@ -336,8 +336,6 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
     return 0
 }
 
-# FIXME Rework using koopa::gpg_download_key_from_keyserver approach.
-# FIXME May not need to use the array approach here now.
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
@@ -356,37 +354,28 @@ koopa::debian_apt_add_r_key() { # {{{1
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/
     # """
-    local app key keys keyserver
+    local dict
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    declare -A app=(
-        [apt_key]="$(koopa::debian_locate_apt_key)"
-        [sudo]="$(koopa::locate_sudo)"
-    )
     declare -A dict=(
+        [key_name]='r'
         # Alternatively, may be able to use 'keys.gnupg.net'.
         [keyserver]='keyserver.ubuntu.com'
+        [prefix]="$(koopa::debian_apt_key_prefix)"
     )
-    if koopa::is_ubuntu
+    dict[file]="${dict[prefix]}/koopa-${dict[key_name]}.gpg"
+    if koopa::is_ubuntu_like
     then
-        # Release is signed by Michael Rutter <marutter@gmail.com>.
+        # Ubuntu release is signed by Michael Rutter <marutter@gmail.com>.
         dict[key]='E298A3A825C0D65DFD57CBB651716619E084DAB9'
     else
-        # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
+        # Debian release is signed by Johannes Ranke <jranke@uni-bremen.de>.
         dict[key]='E19F5F87128899B192B1A2C2AD5F960A256A04AF'
     fi
-    # FIXME Rework this without loop approach, once we get
-    # koopa::gpg_download_key_from_keyserver working.
-    for key in "${keys[@]}"
-    do
-        koopa::debian_apt_is_key_imported "$key" && continue
-        koopa::alert "Adding R key '${key}'."
-        "${app[sudo]}" "${app[apt_key]}" adv \
-            --keyserver "$keyserver" \
-            --recv-key "$key" \
-            >/dev/null 2>&1 \
-            || true
-    done
+    [[ -f "${dict[file]}" ]] && return 0
+    koopa::gpg_download_key_from_keyserver \
+        --key="${dict[key]}" \
+        --keyserver="${dict[keyserver]}" \
+        --file="${dict[file]}"
     return 0
 }
 

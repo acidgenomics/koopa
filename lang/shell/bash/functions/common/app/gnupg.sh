@@ -1,40 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Move this outside of apt config, since it's generally useful.
 koopa::gpg_download_key_from_keyserver() { # {{{1
     # """
     # Download a GPG key from a keyserver to a local file, without importing.
     # @note Updated 2021-11-03.
-    #
-    # @section Useful post from Stack Overflow:
-    #
-    # You can accomplish this by setting the 'GNUPGHOME' environmental variable
-    # to another directory, then receive keys to the alt keyring in it. None of
-    # the gpg actions you perform in the context of this alternate gnupg home
-    # will affect the keyring or any other data in your normal gnupg home.
-    #
-    # The 'GNUPGHOME' you set will remain in effect only for this terminal
-    # session. When you close the terminal window the gnupg home directory will
-    # revert to the default '~/.gnupg'. You can either create a persistent
-    # directory to use for this or just create a temporary directory on the fly:
-    #
-    # > export GNUPGHOME=$(mktemp -d)
-    #
-    # Now retrieve the key:
-    #
-    # > gpg --keyserver pool.sks-keyservers.net --recv-keys 648ACFD622F3D138
-    #
-    # Now you can display the info for the imported key:
-    #
-    # > gpg -k 648ACFD622F3D138
-    #
-    # And export the ascii-armored key file to your home directory.
-    #
-    # > gpg -ao ~/648ACFD622F3D138.asc --export 648ACFD622F3D138
-    #
-    # Just close the terminal window when you're done using the temporary home
-    # directory. If you decide you want the key in your keyring, import it from
-    # the file you exported.
     #
     # @seealso
     # - https://superuser.com/a/1643115/589630
