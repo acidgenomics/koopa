@@ -283,8 +283,8 @@ koopa::debian_apt_add_llvm_key() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::debian_apt_key_add \
-        --basename='llvm.gpg' \
         --name-fancy='LLVM' \
+        --name='llvm' \
         --url='https://apt.llvm.org/llvm-snapshot.gpg.key'
     return 0
 }
