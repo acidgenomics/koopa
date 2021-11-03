@@ -47,7 +47,9 @@ koopa::debian_install_r_cran_binary() { # {{{1
     koopa::debian_apt_install "${pkgs[@]}"
     # Ensure we don't have a duplicate site library.
     koopa::rm --sudo '/usr/local/lib/R'
+    echo 'FIXME 1'
     koopa::configure_r
+    echo 'FIXME 2'
     koopa::install_success "$name_fancy"
     return 0
 }
