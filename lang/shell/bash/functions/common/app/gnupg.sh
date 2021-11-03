@@ -93,7 +93,7 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
         --list-public-keys "${dict[key]}"
     "${app[gpg]}" \
         --homedir "${dict[tmp_dir]}" \
-        --armored \
+        --armor \
         --export "${dict[key]}" \
         --output "${dict[file]}"
     koopa::rm "${dict[tmp_dir]}"
