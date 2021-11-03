@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Installer is erroring with "Not directory: ''." at end of install.
+# FIXME '--reinstall' flag doesn't work here.
+# FIXME Need to wrap inside of system install call.
 
 koopa::debian_install_r_cran_binary() { # {{{1
     # """

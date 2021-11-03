@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is returning empty directory error on Debian.
+
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
@@ -9,6 +11,7 @@ koopa::configure_r() { # {{{1
     # """
     local etc_prefix make_prefix name_fancy r r_prefix
     koopa::assert_has_args_le "$#" 1
+    set -x  # FIXME
     r="${1:-}"
     [[ -z "$r" ]] && r="$(koopa::locate_r)"
     koopa::assert_is_installed "$r"
