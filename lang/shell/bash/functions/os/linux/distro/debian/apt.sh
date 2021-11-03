@@ -23,6 +23,14 @@ koopa:::debian_apt_key_add() {  #{{{1
     # referenced with the 'signed-by' option in the '/etc/apt/sources.list.d'
     # entry.
     #
+    # @section Alternative approach using tee:
+    #
+    # > koopa::parse_url --insecure "${dict[url]}" \
+    # >     | "${app[gpg]}" --dearmor \
+    # >     | "${app[sudo]}" "${app[tee]}" "${dict[file]}" \
+    # >         >/dev/null 2>&1 \
+    # >     || true
+    #
     # @seealso
     # - https://github.com/docker/docker.github.io/issues/11625
     # - https://github.com/docker/docker.github.io/issues/
@@ -93,16 +101,12 @@ koopa:::debian_apt_key_add() {  #{{{1
             --output "${dict[file]}" \
             >/dev/null 2>&1 \
         || true
-    # Alternative approach using tee:
-    # > koopa::parse_url --insecure "${dict[url]}" \
-    # >     | "${app[gpg]}" --dearmor \
-    # >     | "${app[sudo]}" "${app[tee]}" "${dict[file]}" \
-    # >         >/dev/null 2>&1 \
-    # >     || true
     koopa::assert_is_file "${dict[file]}"
     return 0
 }
 
+# FIXME This shouldn't be necessary, correct? Can't I just modify the list
+# file to just point to signing key?
 koopa:::debian_apt_key_add_legacy() {  #{{{1
     # """
     # Add a legacy apt key (deprecated).
@@ -167,14 +171,14 @@ koopa::debian_apt_add_docker_key() { # {{{1
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
-        [basename]="docker.gpg"
+        [name]='docker'
         [name_fancy]='Docker'
         [os_id]="$(koopa::os_id)"
     )
     dict[url]="https://download.docker.com/linux/${dict[os_id]}/gpg"
     koopa:::debian_apt_key_add \
-        --basename="${dict[basename]}" \
         --name-fancy="${dict[name_fancy]}" \
+        --name="${dict[name]}" \
         --url="${dict[url]}"
     return 0
 }
