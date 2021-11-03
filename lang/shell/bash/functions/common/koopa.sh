@@ -253,6 +253,7 @@ koopa:::koopa_system() { # {{{1
         'os-string' | \
         'roff' | \
         'set-permissions' | \
+        'switch-to-develop' | \
         'variable' | \
         'variables')
             ;;
