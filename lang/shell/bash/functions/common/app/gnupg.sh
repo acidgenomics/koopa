@@ -8,14 +8,16 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
     # @seealso
     # - https://superuser.com/a/1643115/589630
     # """
-    local app dict
+    local app cp dict
     koopa::assert_has_args "$#"
     declare -A app=(
         [gpg]="$(koopa::locate_gpg)"
     )
     declare -A dict=(
+        [sudo]=0
         [tmp_dir]="$(koopa::tmp_dir)"
     )
+    dict[tmp_file]="${dict[tmp_dir]}/export.gpg"
     while (("$#"))
     do
         case "$1" in
@@ -44,6 +46,11 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
                 dict[keyserver]="${2:?}"
                 shift 2
                 ;;
+            # Flags ------------------------------------------------------------
+            '--sudo')
+                dict[sudo]=1
+                shift 1
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
@@ -52,7 +59,8 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
     done
     [[ -f "${dict[file]}" ]] && return 0
     koopa::alert "Exporting GPG key '${dict[key]}' at '${dict[file]}'."
-    # > export GNUPGHOME="${dict[tmp_dir]}"
+    cp=('koopa::cp')
+    [[ "${dict[sudo]}" -eq 1 ]] && cp+=('--sudo')
     "${app[gpg]}" \
         --homedir "${dict[tmp_dir]}" \
         --quiet \
@@ -67,11 +75,11 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
         --quiet \
         --output "${dict[file]}" \
         "${dict[key]}"
+    "${cp[@]}" "${dict[tmp_file]}" "${dict[file]}"
     koopa::rm "${dict[tmp_dir]}"
     koopa::assert_is_file "${dict[file]}"
     return 0
 }
-
 
 koopa::gpg_prompt() { # {{{1
     # """
