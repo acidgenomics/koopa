@@ -183,7 +183,7 @@ koopa::r_link_site_library() { # {{{1
 koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-11-03.
     #
     # The default Java path differs depending on the system.
     #
@@ -215,7 +215,11 @@ koopa::r_javareconf() { # {{{1
     app[r]="${1:-}"
     [[ -z "${app[r]:-}" ]] && app[r]="$(koopa::locate_r)"
     app[r]="$(koopa::which_realpath "${app[r]}")"
-    koopa::assert_is_dir "${dict[java_home]}"
+    if [[ ! -d "${dict[java_home]}" ]]
+    then
+        koopa::alert_note 'Skipping R Java configuration.'
+        return 0
+    fi
     dict[jar]="${dict[java_home]}/bin/jar"
     dict[java]="${dict[java_home]}/bin/java"
     dict[javac]="${dict[java_home]}/bin/javac"
