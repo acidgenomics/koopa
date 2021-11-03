@@ -6,7 +6,7 @@
 koopa::debian_install_llvm() { # {{{1
     # """
     # Install LLVM (clang).
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-03.
     #
     # @seealso
     # - https://apt.llvm.org/
@@ -45,7 +45,7 @@ koopa::debian_install_llvm() { # {{{1
     version="$(koopa::variable "$name")"
     major_version="$(koopa::major_version "$version")"
     name_fancy="LLVM ${major_version}"
-    llvm_config="$(koopa::locate_llvm_config || true)"
+    llvm_config="$(koopa::locate_llvm_config 2>/dev/null || true)"
     if [[ -x "$llvm_config" ]]
     then
         current_version="$(koopa::get_version "$llvm_config")"
