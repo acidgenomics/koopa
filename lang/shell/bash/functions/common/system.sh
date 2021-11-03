@@ -116,6 +116,30 @@ koopa::run_if_installed() { # {{{1
     return 0
 }
 
+koopa::switch_to_develop() {  # {{{1
+    # """
+    # Switch koopa install to development version.
+    # @note Updated 2021-11-03.
+    # """
+    local app dict
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [branch]='develop'
+        [origin]='origin'
+        [prefix]="$(koopa::koopa_prefix)"
+    )
+    koopa::h1 "Switching koopa at '${dict[prefix]}' to '${dict[branch]}'."
+    "${app[git]}" checkout \
+        -B "${dict[branch]}" \
+        "${dict[origin]}/${dict[branch]}"
+    koopa::sys_set_permissions --recursive "${dict[prefix]}"
+    koopa::fix_zsh_permissions
+    return 0
+}
+
 koopa::sys_chgrp() { # {{{1
     # """
     # chgrp with dynamic sudo handling.
