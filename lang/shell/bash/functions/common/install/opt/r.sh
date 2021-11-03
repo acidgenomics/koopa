@@ -22,7 +22,7 @@ koopa::configure_r() { # {{{1
     koopa::configure_start "${dict[name_fancy]}" "${dict[r_prefix]}"
     echo 'FIXME 2'
     koopa::assert_is_dir "${dict[r_prefix]}"
-    if koopa::is_koopa_app "$r"
+    if koopa::is_koopa_app "${dict[r]}"
     then
         echo 'FIXME 3'
         koopa::sys_set_permissions --recursive "${dict[r_prefix]}"
