@@ -5,44 +5,51 @@
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-11-03.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
-    local etc_prefix make_prefix name_fancy r r_prefix
+    local dict
     koopa::assert_has_args_le "$#" 1
-    set -x  # FIXME
-    r="${1:-}"
-    [[ -z "$r" ]] && r="$(koopa::locate_r)"
-    koopa::assert_is_installed "$r"
-    name_fancy='R'
-    r_prefix="$(koopa::r_prefix "$r")"
-    koopa::configure_start "$name_fancy" "$r_prefix"
-    koopa::assert_is_dir "$r_prefix"
+    declare -A dict=(
+        [name_fancy]='R'
+        [r]="${1:-}"
+    )
+    [[ -z "${dict[r]}" ]] && dict[r]="$(koopa::locate_r)"
+    koopa::assert_is_installed "${dict[r]}"
+    dict[r_prefix]="$(koopa::r_prefix "${dict[r]}")"
+    echo 'FIXME 1'
+    koopa::configure_start "${dict[name_fancy]}" "${dict[r_prefix]}"
+    echo 'FIXME 2'
+    koopa::assert_is_dir "${dict[r_prefix]}"
     if koopa::is_koopa_app "$r"
     then
-        koopa::sys_set_permissions --recursive "$r_prefix"
+        echo 'FIXME 3'
+        koopa::sys_set_permissions --recursive "${dict[r_prefix]}"
         # Ensure that (Debian) system 'etc' directories are removed.
-        make_prefix="$(koopa::make_prefix)"
-        etc_prefix="${make_prefix}/lib/R/etc"
-        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        dict[make_prefix]="$(koopa::make_prefix)"
+        dict[etc_prefix1]="${dict[make_prefix]}/lib/R/etc"
+        dict[etc_prefix2]="${dict[make_prefix]}/lib64/R/etc"
+        if [[ -d "${dict[etc_prefix1]}" ]] && [[ ! -L "${dict[etc_prefix1]}" ]]
         then
-            koopa::sys_rm "$etc_prefix"
+            koopa::sys_rm "${dict[etc_prefix1]}"
         fi
-        etc_prefix="${make_prefix}/lib64/R/etc"
-        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        if [[ -d "${dict[etc_prefix2]}" ]] && [[ ! -L "${dict[etc_prefix2]}" ]]
         then
-            koopa::sys_rm "$etc_prefix"
+            koopa::sys_rm "${dict[etc_prefix2]}"
         fi
     else
-        koopa::sys_set_permissions --recursive "${r_prefix}/library"
+        echo 'FIXME 4'
+        koopa::sys_set_permissions --recursive "${dict[r_prefix]}/library"
     fi
-    koopa::r_link_files_into_etc "$r"
-    koopa::r_link_site_library "$r"
-    koopa::r_javareconf "$r"
-    koopa::r_rebuild_docs "$r"
-    koopa::sys_set_permissions --recursive "${r_prefix}/site-library"
-    koopa::configure_success "$name_fancy" "$r_prefix"
+    echo 'FIXME 5'
+    koopa::r_link_files_into_etc "${dict[r]}"
+    echo 'FIXME 6'
+    koopa::r_link_site_library "${dict[r]}"
+    koopa::r_javareconf "${dict[r]}"
+    koopa::r_rebuild_docs "${dict[r]}"
+    koopa::sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
+    koopa::configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
     return 0
 }
 
