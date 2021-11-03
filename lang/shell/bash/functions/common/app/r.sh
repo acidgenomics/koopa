@@ -249,7 +249,7 @@ koopa::r_javareconf() { # {{{1
 koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-11-03.
     #
     # 1. Ensure HTML package index is writable.
     # 2. Touch an empty 'R.css' file to eliminate additional package warnings.
@@ -277,6 +277,7 @@ koopa::r_rebuild_docs() { # {{{1
     )"
     dict[html_dir]="${dict[doc_dir]}/html"
     dict[pkg_index]="${dict[html_dir]}/packages.html"
+    dict[r_css]="${dict[html_dir]}/R.css"
     if [[ ! -d "${dict[html_dir]}" ]]
     then
         koopa::mkdir --sudo "${dict[html_dir]}"
@@ -286,7 +287,6 @@ koopa::r_rebuild_docs() { # {{{1
         koopa::assert_is_admin
         "${app[sudo]}" "${app[touch]}" "${dict[pkg_index]}"
     fi
-    r_css="${dict[html_dir]}/R.css"
     if [[ ! -f "${dict[r_css]}" ]]
     then
         koopa::assert_is_admin
