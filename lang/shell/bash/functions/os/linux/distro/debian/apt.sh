@@ -336,6 +336,7 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
     return 0
 }
 
+# FIXME Retest this to check that sudo works.
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
@@ -356,6 +357,7 @@ koopa::debian_apt_add_r_key() { # {{{1
     # """
     local dict
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     declare -A dict=(
         [key_name]='r'
         # Alternatively, may be able to use 'keys.gnupg.net'.
@@ -373,9 +375,10 @@ koopa::debian_apt_add_r_key() { # {{{1
     fi
     [[ -f "${dict[file]}" ]] && return 0
     koopa::gpg_download_key_from_keyserver \
+        --file="${dict[file]}" \
         --key="${dict[key]}" \
         --keyserver="${dict[keyserver]}" \
-        --file="${dict[file]}"
+        --sudo
     return 0
 }
 
