@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Create a standardized Debian repository list file generator
+# https://wiki.debian.org/DebianRepository/Format
+
 # FIXME Consider improving the consistency of repo configuration by defining
 # a new shared function, similar to our key approach.
 
@@ -120,6 +123,7 @@ koopa:::debian_apt_key_add_legacy() {  #{{{1
     return 0
 }
 
+# FIXME Need to standardize with Debian repo list file generator function.
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
@@ -182,6 +186,7 @@ koopa::debian_apt_add_docker_key() { # {{{1
     return 0
 }
 
+# FIXME Need to standardize with Debian repo list file generator function.
 koopa::debian_apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
@@ -237,6 +242,7 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     return 0
 }
 
+# FIXME Need to standardize with Debian repo list file generator function.
 koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK apt repo.
@@ -283,6 +289,7 @@ koopa::debian_apt_add_llvm_key() { # {{{1
     return 0
 }
 
+# FIXME Need to standardize with Debian repo list file generator function.
 koopa::debian_apt_add_llvm_repo() { # {{{1
     # """
     # Add LLVM apt repo.
@@ -329,6 +336,8 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
     return 0
 }
 
+# FIXME Rework using koopa::gpg_download_key_from_keyserver approach.
+# FIXME May not need to use the array approach here now.
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
@@ -338,6 +347,10 @@ koopa::debian_apt_add_r_key() { # {{{1
     # file is deprecated in Debian, but currently the only supported method for
     # installation of R CRAN binaries. Consider reworking this approach for
     # future R releases, if possible.
+    #
+    # @section Previous archive key:
+    #
+    # Additional archive key (required as of 2020-09): 'FCAE2A0E115C3D8A'
     #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
@@ -350,23 +363,20 @@ koopa::debian_apt_add_r_key() { # {{{1
         [apt_key]="$(koopa::debian_locate_apt_key)"
         [sudo]="$(koopa::locate_sudo)"
     )
+    declare -A dict=(
+        # Alternatively, may be able to use 'keys.gnupg.net'.
+        [keyserver]='keyserver.ubuntu.com'
+    )
     if koopa::is_ubuntu
     then
         # Release is signed by Michael Rutter <marutter@gmail.com>.
-        keys=(
-            'E298A3A825C0D65DFD57CBB651716619E084DAB9'
-        )
-        keyserver='keyserver.ubuntu.com'
+        dict[key]='E298A3A825C0D65DFD57CBB651716619E084DAB9'
     else
         # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
-        keys=(
-            'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
-            # Additional archive key (required as of 2020-09).
-            # > 'FCAE2A0E115C3D8A'
-        )
-        # > keyserver='keys.gnupg.net'
-        keyserver='keyserver.ubuntu.com'
+        dict[key]='E19F5F87128899B192B1A2C2AD5F960A256A04AF'
     fi
+    # FIXME Rework this without loop approach, once we get
+    # koopa::gpg_download_key_from_keyserver working.
     for key in "${keys[@]}"
     do
         koopa::debian_apt_is_key_imported "$key" && continue
@@ -380,8 +390,10 @@ koopa::debian_apt_add_r_key() { # {{{1
     return 0
 }
 
+# FIXME Don't include signed-by for this repo...
 # FIXME Need to convert to using a dict approach here.
 # FIXME Need to harden this.
+# FIXME Need to standardize with Debian repo list file generator function.
 koopa::debian_apt_add_r_repo() { # {{{1
     # """
     # Add R apt repo.
@@ -462,6 +474,7 @@ koopa::debian_apt_add_wine_key() { # {{{1
 
 # FIXME Rework using dict approach.
 # FIXME Need to harden this.
+# FIXME Need to standardize with Debian repo list file generator function.
 koopa::debian_apt_add_wine_repo() { # {{{1
     # """
     # Add WineHQ repo.
@@ -530,6 +543,7 @@ Emulators:/Wine:/Debian/${subdir}/Release.key"
 }
 
 # FIXME Need to harden this.
+# FIXME Need to standardize with Debian repo list file generator function.
 koopa::debian_apt_add_wine_obs_repo() { # {{{1
     # """
     # Add Wine OBS openSUSE repo.
