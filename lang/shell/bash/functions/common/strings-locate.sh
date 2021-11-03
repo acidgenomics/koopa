@@ -3,11 +3,12 @@
 # FIXME How to handle case where 'brew-opt' and 'koopa-opt' are the same?
 # FIXME We likely want to streamline the handling of this for coreutils.
 # FIXME Consider prefixing macOS and Linux-specific locators here.
+# FIXME Early return if executable is input.
 
 koopa:::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-11-03.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
@@ -18,6 +19,15 @@ koopa:::locate_app() { # {{{1
     #
     # Resolving the full executable path can cause BusyBox coreutils to error.
     # """
+    # Fast return for direct executable input.
+    if [[ "$#" -eq 1 ]]
+    then
+        if [[ -x "${1:?}" ]]
+        then
+            koopa::print "${1:?}"
+            return 0
+        fi
+    fi
     local app dict pos
     declare -A dict=(
         [app_name]=''
