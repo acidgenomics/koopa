@@ -232,8 +232,8 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa:::debian_apt_key_add \
-        --basename='google-cloud.gpg' \
         --name-fancy='Google Cloud' \
+        --name='google-cloud' \
         --url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     return 0
 }
@@ -241,13 +241,14 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
 koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK apt repo.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-03.
     # """
     local dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A dict=(
-        [key_basename]='cloud.google.gpg'
+        [channel]='cloud-sdk'
+        [key_name]='google-cloud'
         [key_prefix]="$(koopa::debian_apt_key_prefix)"
         [name]='google-cloud-sdk'
         [name_fancy]='Google Cloud SDK'
@@ -255,16 +256,16 @@ koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
         [url]='https://packages.cloud.google.com/apt'
     )
     dict[file]="${dict[repo_prefix]}/${dict[name]}.list"
-    dict[signed_by]="${dict[key_prefix]}/${dict[key_basename]}"
+    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
     dict[string]="deb [signed-by=${dict[signed_by]}] \
-${dict[url]} cloud-sdk main"
+${dict[url]} ${dict[channel]} main"
     if [[ -f "${dict[file]}" ]]
     then
         koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::debian_apt_add_google_cloud_key
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
     koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
