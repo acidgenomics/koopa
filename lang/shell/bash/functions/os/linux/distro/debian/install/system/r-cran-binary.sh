@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Installer is erroring with "Not directory: ''." at end of install.
+
 koopa::debian_install_r_cran_binary() { # {{{1
     # """
     # Install latest version of R from CRAN.
