@@ -300,6 +300,7 @@ koopa::debian_apt_add_llvm_repo() { # {{{1
     declare -A dict=(
         [arch]="$(koopa::arch2)"
         [key_name]='llvm'
+        [key_prefix]="$(koopa::debian_apt_key_prefix)"
         [name]='llvm'
         [name_fancy]='LLVM'
         [os]="$(koopa::os_codename)"
