@@ -324,12 +324,15 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
     return 0
 }
 
-# FIXME Figure out how to resave into '/etc/apt/trusted.gpg.d' instead
-# of directly in '/etc/apt/trusted.gpg'.
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
     # @note Updated 2021-11-02.
+    #
+    # Addition of signing key via keyserver directly into /etc/apt/trusted.gpg'
+    # file is deprecated in Debian, but currently the only supported method for
+    # installation of R CRAN binaries. Consider reworking this approach for
+    # future R releases, if possible.
     #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
