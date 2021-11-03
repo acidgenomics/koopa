@@ -382,59 +382,65 @@ koopa::debian_apt_add_r_key() { # {{{1
     return 0
 }
 
-# FIXME Don't include signed-by for this repo...
-# FIXME Need to convert to using a dict approach here.
-# FIXME Need to harden this.
+# FIXME Ensure that this also works for Ubuntu.
 # FIXME Need to standardize with Debian repo list file generator function.
 koopa::debian_apt_add_r_repo() { # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-03.
     # """
-    local file name name_fancy os_codename os_id repo string version
+    local dict
     koopa::assert_has_args_le "$#" 1
-    version="${1:-}"
-    name='r'
-    name_fancy='R'
-    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-    version="$(koopa::major_minor_version "$version")"
-    case "$version" in
+    koopa::assert_is_admin
+    declare -A dict=(
+        [arch]="$(koopa::arch2)"
+        [key_name]='r'
+        [key_prefix]="$(koopa::debian_apt_key_prefix)"
+        [name]='r'
+        [name_fancy]='R'
+        [os_codename]="$(koopa::os_codename)"
+        [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
+        [version]="${1:-}"
+    )
+    if koopa::is_ubuntu_like
+    then
+        dict[os_id]='ubuntu'
+    else
+        dict[os_id]='debian'
+    fi
+    if [[ -z "${dict[version]}" ]]
+    then
+        dict[version]="$(koopa::variable "${dict[name]}")"
+    fi
+    dict[version2]="$(koopa::major_minor_version "${dict[version]}")"
+    case "${dict[version2]}" in
         '4.1')
-            version='4.0'
+            dict[version2]='4.0'
             ;;
         '3.6')
-            version='3.5'
+            dict[version2]='3.5'
             ;;
     esac
-    # Need to strip the periods here.
-    version="$(koopa::gsub '\.' '' "$version")"
-    version="cran${version}"
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
+    dict[version2]="$(koopa::gsub '\.' '' "${dict[version2]}")"
+    dict[file]="${dict[repo_prefix]}/koopa-${dict[name]}.list"
+    dict[url]="https://cloud.r-project.org/bin/linux/${dict[os_id]}"
+    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
+    dict[channel]="${dict[os_codename]}-cran${dict[version2]}/"
+    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
+${dict[url]} ${dict[channel]}"
+    if [[ -f "${dict[file]}" ]]
     then
         # Early return if version matches and Debian source is enabled.
-        if koopa::file_match_fixed "$file" "$version" && \
-            koopa::file_match_fixed "$file" 'deb-src'
+        if koopa::file_match_fixed "${dict[file]}" "${dict[version2]}"
         then
-            koopa::alert_info "${name_fancy} repo exists at '${file}'."
             return 0
         else
-            koopa::rm --sudo "$file"
+            koopa::rm --sudo "${dict[file]}"
         fi
     fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
     koopa::debian_apt_add_r_key
-    os_id="$(koopa::os_id)"
-    os_codename="$(koopa::os_codename)"
-    repo="https://cloud.r-project.org/bin/linux/${os_id} \
-${os_codename}-${version}/"
-    # Note that 'read' will return status 1 here.
-    # https://unix.stackexchange.com/questions/80045/
-    read -r -d '' string << END || true
-deb ${repo}
-deb-src ${repo}
-END
-    koopa::sudo_write_string "$string" "$file"
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
+    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
 
