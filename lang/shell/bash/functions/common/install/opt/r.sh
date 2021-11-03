@@ -38,16 +38,10 @@ koopa::configure_r() { # {{{1
     fi
     koopa::r_link_files_into_etc "${dict[r]}"
     koopa::r_link_site_library "${dict[r]}"
-    echo 'FIXME 3'
-    # FIXME This is now erroring because Java isn't installed.
     koopa::r_javareconf "${dict[r]}"
-    echo 'FIXME 4'
     koopa::r_rebuild_docs "${dict[r]}"
-    echo 'FIXME 5'
     koopa::sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
-    echo 'FIXME 6'
     koopa::configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
-    echo 'FIXME 7'
     return 0
 }
 
