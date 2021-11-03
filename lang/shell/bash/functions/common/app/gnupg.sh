@@ -86,6 +86,7 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
     # > export GNUPGHOME="${dict[tmp_dir]}"
     "${app[gpg]}" \
         --homedir "${dict[tmp_dir]}" \
+        --quiet \
         --keyserver "${dict[keyserver]}" \
         --recv-keys "${dict[key]}"
     "${app[gpg]}" \
@@ -94,8 +95,10 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
     "${app[gpg]}" \
         --homedir "${dict[tmp_dir]}" \
         --armor \
-        --export "${dict[key]}" \
-        --output "${dict[file]}"
+        --export \
+        --quiet \
+        --output "${dict[file]}" \
+        "${dict[key]}"
     koopa::rm "${dict[tmp_dir]}"
     koopa::assert_is_file "${dict[file]}"
     return 0
