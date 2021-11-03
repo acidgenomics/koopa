@@ -304,9 +304,19 @@ koopa::locate_chmod() { # {{{1
 koopa::locate_chown() { # {{{1
     # """
     # Locate GNU chown.
-    # @note Updated 2021-10-22.
+    # @note Updated 2021-11-03.
     # """
-    koopa:::locate_app '/usr/sbin/chown'
+    local os_id str
+    os_id="$(koopa::os_id)"
+    case "$os_id" in
+        'macos')
+            str='/usr/sbin/chown'
+            ;;
+        *)
+            str='/bin/chown'
+            ;;
+    esac
+    koopa:::locate_app "$str"
 }
 
 koopa::locate_cmake() { # {{{1
