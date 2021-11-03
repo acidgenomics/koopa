@@ -255,7 +255,7 @@ koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
         [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
         [url]='https://packages.cloud.google.com/apt'
     )
-    dict[file]="${dict[repo_prefix]}/${dict[name]}.list"
+    dict[file]="${dict[repo_prefix]}/koopa-${dict[name]}.list"
     dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
     dict[string]="deb [signed-by=${dict[signed_by]}] \
 ${dict[url]} ${dict[channel]} main"
