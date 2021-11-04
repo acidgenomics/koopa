@@ -13,7 +13,7 @@ koopa::install_openjdk() { # {{{1
 koopa:::install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
-    # @note Updated 2021-09-14.
+    # @note Updated 2021-11-04.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -24,18 +24,17 @@ koopa:::install_openjdk() { # {{{1
     # - macOS/x64: 'osx-x64'
     #
     # @seealso
+    # - https://jdk.java.net/
     # - https://www.oracle.com/java/technologies/javase-downloads.html#JDK16
-    #
-    # Legacy java.net links (now down):
-    # - https://jdk.java.net/archive/
-    # - https://jdk.java.net/15/
-    # - https://openjdk.java.net/
     # """
     local arch arch2 file jdk_dirname name platform prefix version unique url
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='openjdk'
     case "$version" in
+        '17.0.1')
+            unique='2a2082e5a09d4267845be086888add4f/12'
+            ;;
         '17')
             unique='0d483333a00540d886896bac774ff48b/35'
             ;;
