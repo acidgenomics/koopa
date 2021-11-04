@@ -19,34 +19,42 @@ koopa::python_get_pkg_versions() {
     return 0
 }
 
+# FIXME Now seeing this error on my MacBook:
+# ERROR: Could not find an activated virtualenv (required).
+
 koopa::python_pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-04.
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # - https://github.com/pypa/pip/issues/3828
     # """
-    local install_args pos python reinstall target
+    local app dict pkgs pos
     koopa::assert_has_args "$#"
-    reinstall=0
+    declare -A app=(
+        [python]="$(koopa::locate_python)"
+    )
+    declare -A dict=(
+        [reinstall]=0
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--python='*)
-                python="${1#*=}"
+                app[python]="${1#*=}"
                 shift 1
                 ;;
             '--python')
-                python="${2:?}"
+                app[python]="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--reinstall')
-                reinstall=1
+                dict[reinstall]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -61,32 +69,32 @@ koopa::python_pip_install() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    [[ -z "${python:-}" ]] && python="$(koopa::locate_python)"
-    koopa::configure_python "$python"
-    version="$(koopa::get_version "$python")"
-    target="$(koopa::python_packages_prefix "$version")"
+    pkgs=("$@")
+    koopa::configure_python "${app[python]}"
+    dict[version]="$(koopa::get_version "${app[python]}")"
+    dict[target]="$(koopa::python_packages_prefix "${dict[version]}")"
     koopa::dl \
-        'Python' "$python" \
-        'Packages' "$(koopa::to_string "$@")" \
-        'Target' "$target"
+        'Python' "${app[python]}" \
+        'Packages' "$(koopa::to_string "${pkgs[*]}")" \
+        'Target' "${dict[target]}"
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
-        "--target=${target}"
+        "--target=${dict[target]}"
         '--disable-pip-version-check'
         '--no-warn-script-location'
         '--progress-bar=pretty'
         '--upgrade'
     )
-    if [[ "$reinstall" -eq 1 ]]
+    if [[ "${dict[reinstall]}" -eq 1 ]]
     then
         pip_flags+=(
             '--force-reinstall'
             '--ignore-installed'
         )
     fi
-    unset -v PIP_REQUIRE_VIRTUALENV
-    # The '--isolated' flag ignores the user 'pip.conf' file.
-    "$python" -m pip --isolated install "${install_args[@]}" "$@"
+    export PIP_REQUIRE_VIRTUALENV='false'
+    # The pip '--isolated' flag ignores the user 'pip.conf' file.
+    "${app[python]}" -m pip --isolated install "${install_args[@]}" "${pkgs[@]}"
     return 0
 }
 

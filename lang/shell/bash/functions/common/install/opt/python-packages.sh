@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing this error message on my MacBook:
+# ERROR: Could not find an activated virtualenv (required).
+
 koopa::install_python_packages() { # {{{1
     koopa:::install_app_packages \
         --name-fancy='Python' \
