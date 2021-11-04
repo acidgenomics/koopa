@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-11-03"
+koopa-date="2021-11-04"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -115,8 +115,6 @@ emacs="27.2"
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl-perl="5.26.3"
 
-ensembl-perl-api="rolling"
-
 # https://www.gnu.org/software/findutils/
 findutils="4.8.0"
 
@@ -125,7 +123,7 @@ findutils="4.8.0"
 fish="3.3.1"
 
 # https://github.com/junegunn/fzf
-fzf="0.27.3"
+fzf="0.28.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.1"
@@ -165,9 +163,7 @@ gsl="2.7"
 
 hadolint="2.7.0"
 
-harfbuzz="3.0.0"
-
-haskell-stack="rolling"
+harfbuzz="3.1.0"
 
 # https://www.hdfgroup.org/downloads/hdf5
 hdf5="1.12.1"
@@ -293,8 +289,6 @@ python="3.10.0"
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-4/
 r="4.1.2"
-
-r-cmd-check="rolling"
 
 # https://mac.r-project.org/
 # This release matches current R version.
