@@ -299,21 +299,47 @@ koopa::df() { # {{{1
 koopa::init_dir() { # {{{1
     # """
     # Initialize (create) a directory and return the real path on disk.
-    # @note Updated 2021-10-05.
+    # @note Updated 2021-11-04.
     # """
-    local dir
+    local dict mkdir pos
+    declare -A dict=(
+        [sudo]=0
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--sudo' | \
+            '-S')
+                dict[sudo]=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 1
-    dir="${1:?}"
-    if koopa::str_match_regex "$dir" '^~'
+    dict[dir]="${1:?}"
+    if koopa::str_match_regex "${dict[dir]}" '^~'
     then
-        dir="$(koopa::sub '^~' "${HOME:?}" "$dir")"
+        dict[dir]="$(koopa::sub '^~' "${HOME:?}" "${dict[dir]}")"
     fi
-    if [[ ! -d "$dir" ]]
+    mkdir=('koopa::mkdir')
+    [[ "${dict[sudo]}" -eq 1 ]] && mkdir+=('--sudo')
+    if [[ ! -d "${dict[dir]}" ]]
     then
-        koopa::mkdir "$dir"
+        "${mkdir[@]}" "${dict[dir]}"
     fi
-    dir="$(koopa::realpath "$dir")"
-    koopa::print "$dir"
+    dict[realdir]="$(koopa::realpath "${dict[dir]}")"
+    koopa::print "${dict[realdir]}"
     return 0
 }
 

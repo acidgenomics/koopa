@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME This will early return if 3.9 is installed but we want to install 3.10.
+
 koopa::macos_install_python_framework() { # {{{1
     koopa:::install_app \
+        --installer='python-framework' \
         --name-fancy='Python framework' \
-        --name='python-framework' \
+        --name='python' \
         --platform='macos' \
         --prefix='/Library/Frameworks/Python.framework' \
         --system \
@@ -13,9 +16,10 @@ koopa::macos_install_python_framework() { # {{{1
 koopa::macos_uninstall_python_framework() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='Python framework' \
-        --name='python-framework' \
+        --name='python' \
         --platform='macos' \
         --system \
+        --uninstaller='python-framework' \
         "$@"
 }
 
