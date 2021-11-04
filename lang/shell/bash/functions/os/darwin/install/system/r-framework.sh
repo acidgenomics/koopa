@@ -2,8 +2,9 @@
 
 koopa::macos_install_r_framework() { # {{{1
     koopa:::install_app \
+        --installer='r-framework' \
         --name-fancy='R framework' \
-        --name='r-framework' \
+        --name='r' \
         --platform='macos' \
         --system \
         "$@"
@@ -12,16 +13,17 @@ koopa::macos_install_r_framework() { # {{{1
 koopa::macos_uninstall_r_framework() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='R framework' \
-        --name='r-framework' \
+        --name='r' \
         --platform='macos' \
         --system \
+        --uninstaller='r-framework' \
         "$@"
 }
 
 koopa:::macos_install_r_framework() { # {{{1
     # """
     # Install R framework.
-    # @note Updated 2021-10-30.
+    # @note Updated 2021-11-04.
     #
     # @section Intel:
     #
@@ -51,11 +53,13 @@ koopa:::macos_install_r_framework() { # {{{1
     )
     declare -A dict=(
         [arch]="$(koopa::arch)"
+        [framework_prefix]='/Library/Frameworks/R.framework'
         [os]="$(koopa::kebab_case_simple "$(koopa::os_codename)")"
-        [prefix]='/Library/Frameworks/R.framework'
         [url_stem]='https://cran.r-project.org/bin/macosx'
         [version]="${INSTALL_VERSION:?}"
     )
+    dict[maj_min_version]="$(koopa::major_minor_version "${dict[version]}")"
+    dict[prefix]="${dict[framework_prefix]}/Versions/${dict[maj_min_version]}"
     case "${dict[arch]}" in
         'aarch64')
             dict[arch2]='arm64'
@@ -80,7 +84,7 @@ base/${dict[pkg_file]}"
 koopa:::macos_uninstall_r_framework() { # {{{1
     # """
     # Uninstall R framework.
-    # @note Updated 2021-10-30.
+    # @note Updated 2021-11-04.
     # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
