@@ -7,9 +7,9 @@
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-04.
     # """
-    local app clean_path_arr dict link_args pkgs pos
+    local app clean_path_arr dict init_dir link_args pkgs pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A app=(
@@ -231,7 +231,9 @@ at '${dict[prefix]}'."
                 return 0
             fi
         fi
-        dict[prefix]="$(koopa::init_dir "${dict[prefix]}")"
+        init_dir=('koopa::init_dir')
+        [[ "${dict[system]}" -eq 1 ]] && init_dir+=('--sudo')
+        dict[prefix]="$("${init_dir[@]}" "${dict[prefix]}")"
     else
         koopa::install_start "${dict[name_fancy]}"
     fi
