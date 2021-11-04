@@ -49,7 +49,7 @@ koopa::move_files_up_1_level() { # {{{1
 koopa::move_into_dated_dirs_by_filename() { # {{{1
     # """
     # Move into dated directories by filename.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
     local day file grep_array grep_string month subdir year
     koopa::assert_has_args "$#"
@@ -71,7 +71,7 @@ koopa::move_into_dated_dirs_by_filename() { # {{{1
             month="${BASH_REMATCH[3]}"
             day="${BASH_REMATCH[5]}"
             subdir="${year}/${month}/${day}"
-            koopa::mv -t "$subdir" "$file"
+            koopa::mv --target-directory="$subdir" "$file"
         else
             koopa::stop "Does not contain date: '${file}'."
         fi
@@ -79,17 +79,19 @@ koopa::move_into_dated_dirs_by_filename() { # {{{1
     return 0
 }
 
+# FIXME This doesn't seem to be working with BSD utils...the stat_modified
+# part seems to be problematic on macOS?
 koopa::move_into_dated_dirs_by_timestamp() { # {{{1
     # """
     # Move into dated directories by timestamp.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
     local file subdir
     koopa::assert_has_args "$#"
     for file in "$@"
     do
         subdir="$(koopa::stat_modified "$file" '%Y/%m/%d')"
-        koopa::mv -t "$subdir" "$file"
+        koopa::mv --target-directory="$subdir" "$file"
     done
     return 0
 }

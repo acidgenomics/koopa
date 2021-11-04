@@ -6,7 +6,7 @@
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-04.
     #
     # Consider updating the variant defined in the Bash header upon any
     # changes to this function.
@@ -28,10 +28,13 @@ koopa::find() { # {{{1
         [empty]=0
         [engine]=''
         [glob]=''
+        # This currently only applies to '--regex' argument.
+        [match_against_full_path]=0
         [max_depth]=0
         [min_days_old]=0
         [min_depth]=1
         [print0]=0
+        [regex]=''
         [size]=''
         [sort]=0
         [sudo]=0
@@ -98,6 +101,14 @@ koopa::find() { # {{{1
                 dict[prefix]="${2:?}"
                 shift 2
                 ;;
+            '--regex='*)
+                dict[regex]="${1#*=}"
+                shift 1
+                ;;
+            '--regex')
+                dict[regex]="${2:?}"
+                shift 2
+                ;;
             '--size='*)
                 dict[size]="${1#*=}"
                 shift 1
@@ -117,6 +128,10 @@ koopa::find() { # {{{1
             # Flags ------------------------------------------------------------
             '--empty')
                 dict[empty]=1
+                shift 1
+                ;;
+            '--match-against-full-path')
+                dict[match_against_full_path]=1
                 shift 1
                 ;;
             '--print0')
@@ -163,6 +178,9 @@ koopa::find() { # {{{1
             'rust-fd')
                 app[find]="$(koopa::locate_fd)"
                 ;;
+            *)
+                koopa::stop "Invalid engline '${dict[engine]}'."
+                ;;
         esac
     fi
     koopa::assert_is_installed "${app[find]}"
@@ -190,6 +208,39 @@ koopa::find() { # {{{1
             if [[ -n "${dict[glob]}" ]]
             then
                 find_args+=('-name' "${dict[glob]}")
+            fi
+            if [[ -n "${dict[regex]}" ]]
+            then
+                # GNU file '-regex' argument matches against the entire file
+                # path, so may we need to adjust our match here.
+                if [[ "${dict[match_against_full_path]}" -eq 0 ]]
+                then
+                    dict[regex]="$(koopa::sub '\^' '^.+/' "${dict[regex]}")"
+                fi
+                # Supported regex types for GNU find:
+                #
+                # - findutils-default
+                # - ed
+                # - emacs
+                # - gnu-awk
+                # - grep
+                # - posix-awk
+                # - awk
+                # - posix-basic
+                # - posix-egrep
+                # - egrep
+                # - posix-extended
+                # - posix-minimal-basic
+                # - sed
+                #
+                # Check for supported regex types with:
+                # > find . -regextype type
+                #
+                # Note that '-regextype' must come before '-regex' here.
+                find_args+=(
+                    '-regextype' 'posix-egrep'
+                    '-regex' "${dict[regex]}"
+                )
             fi
             if [[ -n "${dict[type]}" ]]
             then
@@ -243,6 +294,14 @@ koopa::find() { # {{{1
             if [[ -n "${dict[glob]}" ]]
             then
                 find_args+=('--glob' "${dict[glob]}")
+            fi
+            if [[ -n "${dict[regex]}" ]]
+            then
+                if [[ "${dict[match_against_full_path]}" -eq 1 ]]
+                then
+                    find_args+=('--full-path')
+                fi
+                find_args+=('--regex' "${dict[regex]}")
             fi
             if [[ "${dict[min_depth]}" -gt 0 ]]
             then
