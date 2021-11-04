@@ -555,7 +555,7 @@ koopa::reset_permissions() { # {{{1
     koopa::find \
         --prefix="${dict[prefix]}" \
         --print0 \
-        --type 'd' \
+        --type='d' \
     | "${app[xargs]}" -0 -I {} \
         "${app[chmod]}" 'u=rwx,g=rwx,o=rx' {}
     # Files.
@@ -576,15 +576,18 @@ koopa::reset_permissions() { # {{{1
     return 0
 }
 
+# FIXME This is now returning illegal option '-c'.
 koopa::stat_access_human() { # {{{1
     # """
     # Get the current access permissions in human readable form.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
-    local stat x
+    local app x
     koopa::assert_has_args "$#"
-    stat="$(koopa::locate_stat)"
-    x="$("$stat" -c '%A' "$@")"
+    declare -A app=(
+        [stat]="$(koopa::locate_stat)"
+    )
+    x="$("${app[stat]}" --format='%A' "$@")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -593,12 +596,14 @@ koopa::stat_access_human() { # {{{1
 koopa::stat_access_octal() { # {{{1
     # """
     # Get the current access permissions in octal form.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
-    local stat x
+    local app x
     koopa::assert_has_args "$#"
-    stat="$(koopa::locate_stat)"
-    x="$("$stat" -c '%a' "$@")"
+    declare -A app=(
+        [stat]="$(koopa::locate_stat)"
+    )
+    x="$("${app[stat]}" --format='%a' "$@")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -607,14 +612,16 @@ koopa::stat_access_octal() { # {{{1
 koopa::stat_dereference() { # {{{1
     # """
     # Dereference input files.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     #
     # Return quoted file with dereference if symbolic link.
     # """
-    local stat x
+    local app x
     koopa::assert_has_args "$#"
-    stat="$(koopa::locate_stat)"
-    x="$("$stat" --printf='%N\n' "$@")"
+    declare -A app=(
+        [stat]="$(koopa::locate_stat)"
+    )
+    x="$("${app[stat]}" --format='%N' "$@")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -623,21 +630,19 @@ koopa::stat_dereference() { # {{{1
 koopa::stat_group() { # {{{1
     # """
     # Get the current group of a file or directory.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
-    local x
+    local app x
     koopa::assert_has_args "$#"
-    stat="$(koopa::locate_stat)"
-    x="$("$stat" -c '%G' "$@")"
+    declare -A app=(
+        [stat]="$(koopa::locate_stat)"
+    )
+    x="$("${app[stat]}" --format='%G' "$@")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
 
-# FIXME This seems to now have an issue on macOS with BSD variant?
-# /usr/bin/stat
-# FIXME For example, this script is currently failing to move our screenshot
-# files...need to rethink.
 koopa::stat_modified() { # {{{1
     # """
     # Get file modification time.
@@ -651,14 +656,19 @@ koopa::stat_modified() { # {{{1
     #   https://www.gnu.org/software/coreutils/manual/html_node/
     #     Examples-of-date.html
     # """
-    local date file format stat x
+    local app dict x
     koopa::assert_has_args_eq "$#" 2
-    date="$(koopa::locate_date)"
-    stat="$(koopa::locate_stat)"
-    file="${1:?}"
-    format="${2:?}"
-    x="$("$stat" -c '%Y' "$file")"
-    x="$("$date" -d "@${x}" +"$format")"
+    declare -A app=(
+        [date]="$(koopa::locate_date)"
+        [stat]="$(koopa::locate_stat)"
+    )
+    declare -A dict=(
+        [file]="${1:?}"
+        [format]="${2:?}"
+    )
+    x="$("${app[stat]}" --format='%Y' "${dict[file]}")"
+    [[ -n "$x" ]] || return 1
+    x="$("${app[date]}" -d "@${x}" +"${dict[format]}")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
@@ -667,12 +677,14 @@ koopa::stat_modified() { # {{{1
 koopa::stat_user() { # {{{1
     # """
     # Get the current user (owner) of a file or directory.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
-    local stat x
+    local app x
     koopa::assert_has_args "$#"
-    stat="$(koopa::locate_stat)"
-    x="$("$stat" -c '%U' "$@")"
+    declare -A app=(
+        [stat]="$(koopa::locate_stat)"
+    )
+    x="$("${app[stat]}" --format='%U' "$@")"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
