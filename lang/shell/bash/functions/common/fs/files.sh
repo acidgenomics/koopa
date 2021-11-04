@@ -115,7 +115,7 @@ koopa::basename_sans_ext() { # {{{1
 koopa::basename_sans_ext2() { # {{{1
     # """
     # Extract the file basename prior to any dots in file name.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     #
     # Examples:
     # koopa::basename_sans_ext2 'dir/hello-world.tar.gz'
@@ -123,9 +123,11 @@ koopa::basename_sans_ext2() { # {{{1
     #
     # See also: koopa::file_ext2
     # """
-    local cut file str
+    local app file str
     koopa::assert_has_args "$#"
-    cut="$(koopa::locate_cut)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+    )
     for file in "$@"
     do
         str="$(koopa::basename "$file")"
@@ -133,7 +135,7 @@ koopa::basename_sans_ext2() { # {{{1
         then
             str="$( \
                 koopa::print "$str" \
-                | "$cut" -d '.' -f 1 \
+                | "${app[cut]}" -d '.' -f 1 \
             )"
         fi
         koopa::print "$str"
@@ -144,35 +146,48 @@ koopa::basename_sans_ext2() { # {{{1
 koopa::convert_utf8_nfd_to_nfc() { # {{{1
     # """
     # Convert UTF-8 NFD to NFC.
-    # @note Updated 2020-07-15.
+    # @note Updated 2021-11-04.
     # """
+    local app
     koopa::assert_has_args "$#"
-    koopa::is_installed 'convmv'
-    convmv -r -f utf8 -t utf8 --nfc --notest "$@"
+    declare -A app=(
+        [convmv]="$(koopa::locate_convmv)"
+    )
+    koopa::assert_is_file "$@"
+    "${app[convmv]}" \
+        -r \
+        -f 'utf8' \
+        -t 'utf8' \
+        --nfc \
+        --notest \
+        "$@"
     return 0
 }
 
 koopa::delete_adobe_bridge_cache() { # {{{1
     # """
     # Delete Adobe Bridge cache files.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-11-04.
     # """
-    local dir
+    local files prefix
     koopa::assert_has_args_le "$#" 1
-    find="$(koopa::locate_find)"
-    dir="${1:-.}"
-    koopa::assert_is_dir "$dir"
-    koopa::alert "Deleting Adobe Bridge cache in '${dir}'."
-    # FIXME Rework using 'koopa::find'.
-    "$find" "$dir" \
-        -mindepth 1 \
-        -type f \
-        \( \
-            -name '.BridgeCache' -o \
-            -name '.BridgeCacheT' \
-        \) \
-        -delete \
-        -print
+    prefix="${1:?}"
+    koopa::assert_is_dir "$prefix"
+    prefix="$(koopa::realpath "$prefix")"
+    koopa::alert "Deleting Adobe Bridge cache in '${prefix}'."
+    readarray -t files <<< "$( \
+        koopa::find \
+            --min-depth=1 \
+            --prefix="$prefix" \
+            --regex='^\.BridgeCache(T)?$' \
+            --type='f' \
+    )"
+    if ! koopa::is_array_non_empty "${files[@]:-}"
+    then
+        koopa::alert_note 'Failed to detect any Bridge cache files.'
+        return 1
+    fi
+    koopa::rm "${files[@]}"
     return 0
 }
 
@@ -197,34 +212,6 @@ koopa::delete_broken_symlinks() { # {{{1
             koopa::rm "$file"
         done
     done
-    return 0
-}
-
-koopa::delete_cache() { # {{{1
-    # """
-    # Delete cache files (on Linux).
-    # @note Updated 2020-11-03.
-    #
-    # Don't clear '/var/log/' here, as this can mess with 'sshd'.
-    # """
-    if ! koopa::is_linux
-    then
-        koopa::stop 'Cache removal only supported on Linux.'
-    fi
-    if ! koopa::is_docker
-    then
-        koopa::stop 'Cache removal only supported inside Docker images.'
-    fi
-    koopa::alert 'Removing caches, logs, and temporary files.'
-    koopa::rm --sudo \
-        '/root/.cache' \
-        '/tmp/'* \
-        '/var/backups/'* \
-        '/var/cache/'*
-    if koopa::is_debian_like
-    then
-        koopa::rm --sudo '/var/lib/apt/lists/'*
-    fi
     return 0
 }
 
@@ -616,10 +603,14 @@ koopa::stat_group() { # {{{1
     return 0
 }
 
+# FIXME This seems to now have an issue on macOS with BSD variant?
+# /usr/bin/stat
+# FIXME For example, this script is currently failing to move our screenshot
+# files...need to rethink.
 koopa::stat_modified() { # {{{1
     # """
     # Get file modification time.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     #
     # @examples
     # > koopa::stat_modified 'file.pdf' '%Y-%m-%d'
