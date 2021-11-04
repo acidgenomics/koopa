@@ -44,10 +44,10 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.3.2"
+aws-cli="2.3.3"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.29.2"
+azure-cli="2.30.0"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.8"
