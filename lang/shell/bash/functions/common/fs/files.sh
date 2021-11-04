@@ -170,7 +170,7 @@ koopa::delete_adobe_bridge_cache() { # {{{1
     # @note Updated 2021-11-04.
     # """
     local files prefix
-    koopa::assert_has_args_le "$#" 1
+    koopa::assert_has_args "$#"
     prefix="${1:?}"
     koopa::assert_is_dir "$prefix"
     prefix="$(koopa::realpath "$prefix")"
@@ -255,20 +255,25 @@ koopa::delete_empty_dirs() { # {{{1
 koopa::delete_file_system_cruft() { # {{{1
     # """
     # Delete file system cruft.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-11-04.
     # """
-    local dir find
-    koopa::assert_has_args_le "$#" 1
-    find="$(koopa::locate_find)"
-    dir="${1:-.}"
-    koopa::assert_is_dir "$dir"
-    # FIXME Rework using 'koopa::find'.
-    "$find" "$dir" \
-        -type f \
+    local app dict
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+    )
+    declare -A dict=(
+        [prefix]="${1:?}"
+    )
+    koopa::assert_is_dir "${dict[prefix]}"
+    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    "${app[find]}" \
+        "${dict[prefix]}" \
+        -type 'f' \
         \( \
-            -name '.DS_Store' -o \
-            -name '._*' -o \
-            -name 'Thumbs.db*' \
+               -name '.DS_Store' \
+            -o -name '._*' \
+            -o -name 'Thumbs.db*' \
         \) \
         -delete \
         -print
@@ -278,22 +283,23 @@ koopa::delete_file_system_cruft() { # {{{1
 koopa::delete_named_subdirs() { # {{{1
     # """
     # Delete named subdirectories.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
-    local dir find rm subdir_name xargs
+    local dict matches
     koopa::assert_has_args_eq "$#" 2
-    find="$(koopa::locate_find)"
-    rm="$(koopa::locate_rm)"
-    xargs="$(koopa::locate_xargs)"
-    dir="${1:?}"
-    subdir_name="${2:?}"
-    # FIXME Rework using 'koopa::find'.
-    # FIXME Rethink the print0 handling here.
-    "$find" "$dir" \
-        -type 'd' \
-        -name "$subdir_name" \
-        -print0 \
-        | "$xargs" -0 -I {} "$rm" -frv {}
+    declare -A dict=(
+        [prefix]="${1:?}"
+        [subdir_name]="${2:?}"
+    )
+    readarray -t matches <<< "$( \
+        koopa::find \
+            --glob="${dict[subdir_name]}" \
+            --prefix="${dict[prefix]}" \
+            --type='d' \
+    )"
+    koopa::is_array_non_empty "${matches[@]:-}" || return 1
+    koopa::print "${matches[@]}"
+    koopa::rm "${matches[@]}"
     return 0
 }
 
@@ -323,7 +329,7 @@ koopa::dirname() { # {{{1
 koopa::ensure_newline_at_end_of_file() { # {{{1
     # """
     # Ensure output CSV contains trailing line break.
-    # @note Updated 2020-07-07.
+    # @note Updated 2021-11-04.
     #
     # Otherwise 'readr::read_csv()' will skip the last line in R.
     # https://unix.stackexchange.com/questions/31947
@@ -334,18 +340,23 @@ koopa::ensure_newline_at_end_of_file() { # {{{1
     # ed -s file <<< w
     # sed -i -e '$a\' file
     # """
-    local file
+    local app dict
     koopa::assert_has_args_eq "$#" 1
-    file="${1:?}"
-    [[ -n "$(tail -c1 "$file")" ]] || return 0
-    printf '\n' >>"$file"
+    declare -A app=(
+        [tail]="$(koopa::locate_tail)"
+    )
+    declare -A dict=(
+        [file]="${1:?}"
+    )
+    [[ -n "$("${app[tail]}" -c1 "${dict[file]}")" ]] || return 0
+    printf '\n' >> "${dict[file]}"
     return 0
 }
 
 koopa::file_count() { # {{{1
     # """
     # Return number of files.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     #
     # Intentionally doesn't perform this search recursively.
     #
@@ -353,33 +364,25 @@ koopa::file_count() { # {{{1
     # > ls -1 "$prefix" | wc -l
     # """
     local find prefix wc x
-    wc="$(koopa::locate_wc)"
-    prefix="${1:-.}"
-    koopa::assert_is_dir "$prefix"
-    if koopa::is_installed 'fd'
-    then
-        x="$( \
-            fd \
-                --max-depth 1 \
-                --min-depth 1 \
-                --no-ignore-vcs \
-                --type 'f' \
-                "$prefix" \
-            | "$wc" -l \
-        )"
-    else
-        find="$(koopa::locate_find)"
-        # FIXME Rework using 'koopa::find'.
-        x="$( \
-            "$find" "$prefix" \
-                -maxdepth 1 \
-                -mindepth 1 \
-                -type 'f' \
-                -printf '.' \
-            | "$wc" -c \
-        )"
-    fi
-    koopa::print "$x"
+    koopa::assert_has_args_eq "$#" 1
+    declare -A app=(
+        [wc]="$(koopa::locate_wc)"
+    )
+    declare -A dict=(
+        [prefix]="${1:?}"
+    )
+    koopa::assert_is_dir "${dict[prefix]}"
+    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    dict[out]="$( \
+        koopa::find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --type='f' \
+            --prefix="${dict[prefix]}" \
+        | "${app[wc]}" -l \
+    )"
+    [[ -n "${dict[out]}" ]] || return 1
+    koopa::print "${dict[out]}"
     return 0
 }
 
@@ -415,7 +418,7 @@ koopa::file_ext() { # {{{1
 koopa::file_ext2() { # {{{1
     # """
     # Extract the file extension after any dots in the file name.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     #
     # This assumes file names are not in dotted case.
     #
@@ -425,16 +428,18 @@ koopa::file_ext2() { # {{{1
     #
     # See also: koopa::basename_sans_ext2
     # """
-    local cut file x
+    local app file x
     koopa::assert_has_args "$#"
-    cut="$(koopa::locate_cut)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+    )
     for file in "$@"
     do
         if koopa::has_file_ext "$file"
         then
             x="$( \
                 koopa::print "$file" \
-                | "$cut" -d '.' -f '2-' \
+                | "${app[cut]}" -d '.' -f '2-' \
             )"
         else
             x=''
@@ -447,21 +452,23 @@ koopa::file_ext2() { # {{{1
 koopa::line_count() { # {{{1
     # """
     # Return the number of lines in a file.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     #
     # Example: koopa::line_count tx2gene.csv
     # """
-    local cut file wc x xargs
+    local app file x
     koopa::assert_has_args "$#"
-    cut="$(koopa::locate_cut)"
-    wc="$(koopa::locate_wc)"
-    xargs="$(koopa::locate_xargs)"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [wc]="$(koopa::locate_wc)"
+        [xargs]="$(koopa::locate_xargs)"
+    )
     for file in "$@"
     do
         x="$( \
-            "$wc" -l "$file" \
-                | "$xargs" \
-                | "$cut" -d ' ' -f 1 \
+            "${app[wc]}" -l "$file" \
+                | "${app[xargs]}" \
+                | "${app[cut]}" -d ' ' -f 1 \
         )"
         koopa::print "$x"
     done    
@@ -471,77 +478,101 @@ koopa::line_count() { # {{{1
 koopa::md5sum_check_to_new_md5_file() { # {{{1
     # """
     # Perform md5sum check on specified files to a new log file.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
-    local datetime log_file tee
+    local app dict
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'md5sum'
-    tee="$(koopa::locate_tee)"
-    datetime="$(koopa::datetime)"
-    log_file="md5sum-${datetime}.md5"
-    md5sum "$@" 2>&1 | "$tee" "$log_file"
+    declare -A app=(
+        [md5sum]="$(koopa::locate_md5sum)"
+        [tee]="$(koopa::locate_tee)"
+    )
+    declare -A dict=(
+        [datetime]="$(koopa::datetime)"
+    )
+    dict[log_file]="md5sum-${dict[datetime]}.md5"
+    koopa::assert_is_not_file "${dict[log_file]}"
+    koopa::assert_is_file "$@"
+    "${app[md5sum]}" "$@" 2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
 
 koopa::nfiletypes() { # {{{1
     # """
     # Return the number of file types in a specific directory.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-04.
     # """
-    local dir find sed sort uniq x
-    koopa::assert_has_args_le "$#" 1
-    find="$(koopa::locate_find)"
-    sed="$(koopa::locate_sed)"
-    sort="$(koopa::locate_sort)"
-    uniq="$(koopa::locate_uniq)"
-    dir="${1:-.}"
-    # FIXME Rework using 'koopa::find'.
-    x="$( \
-        "$find" "$dir" \
-            -maxdepth 1 \
-            -mindepth 1 \
-            -type 'f' \
-            -iregex '^.+\.[a-z0-9]+$' \
-            | "$sed" 's/.*\.//' \
-            | "$sort" \
-            | "$uniq" -c \
-            | "$sed" 's/^ *//g' \
-            | "$sed" 's/ /\t/g' \
+    local app dict
+    koopa::assert_has_args_eq "$#" 1
+    declare -A app=(
+        [sed]="$(koopa::locate_sed)"
+        [sort]="$(koopa::locate_sort)"
+        [uniq]="$(koopa::locate_uniq)"
+    )
+    declare -A dict=(
+        [prefix]="${1:?}"
+    )
+    koopa::assert_is_dir "${dict[prefix]}"
+    dict[out]="$( \
+        koopa::find \
+            --prefix="${dict[prefix]}" \
+            --max-depth 1 \
+            --min-depth 1 \
+            --type 'f' \
+            --regex '^.+\.[A-Za-z0-9]+$' \
+        | "${app[sed]}" 's/.*\.//' \
+        | "${app[sort]}" \
+        | "${app[uniq]}" --count \
+        | "${app[sort]}" --numeric-sort \
+        | "${app[sed]}" 's/^ *//g' \
+        | "${app[sed]}" 's/ /\t/g' \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "${dict[out]}" ]] || return 1
+    koopa::print "${dict[out]}"
     return 0
 }
 
 koopa::reset_permissions() { # {{{1
     # """
     # Reset default permissions on a specified directory recursively.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
-    local chmod dir find group user xargs
-    koopa::assert_has_args_le "$#" 1
-    chmod="$(koopa::locate_chmod)"
-    find="$(koopa::locate_find)"
-    xargs="$(koopa::locate_xargs)"
-    dir="${1:-.}"
-    user="$(koopa::user)"
-    group="$(koopa::group)"
-    koopa::chown -R "${user}:${group}" "$dir"
-    # FIXME Rework using 'koopa::find'.
-    # FIXME Rethink the '-print0' handling here.
-    "$find" "$dir" -type 'd' -print0 \
-        | "$xargs" -0 -I {} \
-            "$chmod" 'u=rwx,g=rwx,o=rx' {}
-    # FIXME Rework using 'koopa::find'.
-    # FIXME Rethink the '-print0' handling here.
-    "$find" "$dir" -type 'f' -print0 \
-        | "$xargs" -0 -I {} \
-            "$chmod" 'u=rw,g=rw,o=r' {}
-    # FIXME Rework using 'koopa::find'.
-    # FIXME Rethink the '-print0' handling here.
-    "$find" "$dir" -name '*.sh' -type 'f' -print0 \
-        | "$xargs" -0 -I {} \
-            "$chmod" 'u=rwx,g=rwx,o=rx' {}
+    local app dict
+    koopa::assert_has_args_eq "$#" 1
+    declare -A app=(
+        [chmod]="$(koopa::locate_chmod)"
+        [find]="$(koopa::locate_find)"
+        [xargs]="$(koopa::locate_xargs)"
+    )
+    declare -A dict=(
+        [group]="$(koopa::group)"
+        [prefix]="${1:?}"
+        [user]="$(koopa::user)"
+    )
+    koopa::assert_is_dir "${dict[prefix]}"
+    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    koopa::chown --recursive "${dict[user]}:${dict[group]}" "${dict[prefix]}"
+    # Directories.
+    koopa::find \
+        --prefix="${dict[prefix]}" \
+        --print0 \
+        --type 'd' \
+    | "${app[xargs]}" -0 -I {} \
+        "${app[chmod]}" 'u=rwx,g=rwx,o=rx' {}
+    # Files.
+    koopa::find \
+        --prefix="${dict[prefix]}" \
+        --print0 \
+        --type='f' \
+    | "${app[xargs]}" -0 -I {} \
+        "${app[chmod]}" 'u=rw,g=rw,o=r' {}
+    # Executable (shell) scripts.
+    koopa::find \
+        --glob='*.sh' \
+        --prefix="${dict[prefix]}" \
+        --print0 \
+        --type='f' \
+    | "${app[xargs]}" -0 -I {} \
+        "${app[chmod]}" 'u=rwx,g=rwx,o=rx' {}
     return 0
 }
 
