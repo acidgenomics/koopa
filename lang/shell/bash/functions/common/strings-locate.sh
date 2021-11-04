@@ -2,8 +2,6 @@
 
 # FIXME How to handle case where 'brew-opt' and 'koopa-opt' are the same?
 # FIXME We likely want to streamline the handling of this for coreutils.
-# FIXME Consider prefixing macOS and Linux-specific locators here.
-# FIXME Early return if executable is input.
 
 koopa:::locate_app() { # {{{1
     # """
@@ -735,6 +733,17 @@ koopa::locate_man() { # {{{1
         --brew-opt='man-db' \
         --gnubin \
         --name='man'
+}
+
+koopa::locate_md5sum() { # {{{1
+    # """
+    # Locate GNU 'md5sum'.
+    # @note Updated 2021-11-04.
+    # """
+    koopa:::locate_app \
+        --brew-opt='coreutils' \
+        --gnubin \
+        --name='md5sum'
 }
 
 koopa::locate_mkdir() { # {{{1
