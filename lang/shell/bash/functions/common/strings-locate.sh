@@ -158,6 +158,18 @@ bin/${dict[app_name]}"
     return 0
 }
 
+# FIXME Rework our opt duplication approach.
+koopa:::locate_gnu_coreutils_app() { # {{{1
+    # """
+    # Locate a GNU coreutils app.
+    # @note Updated 2021-11-04.
+    koopa:::locate_app \
+        --brew-opt='coreutils' \
+        --gnubin \
+        --koopa-opt='coreutils' \
+        --name="${1:?}"
+}
+
 koopa::locate_7z() { # {{{1
     # """
     # Locate '7z'.
@@ -219,12 +231,9 @@ koopa::locate_aws() { # {{{1
 koopa::locate_basename() { # {{{1
     # """
     # Locate GNU 'basename'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='basename'
+    koopa:::locate_gnu_coreutils_app 'basename'
 }
 
 koopa::locate_bash() { # {{{1
@@ -379,34 +388,25 @@ koopa::locate_curl() { # {{{1
 koopa::locate_cut() { # {{{1
     # """
     # Locate GNU 'cut'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='cut'
+    koopa:::locate_gnu_coreutils_app 'cut'
 }
 
 koopa::locate_date() { # {{{1
     # """
     # Locate GNU 'date'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='date'
+    koopa:::locate_gnu_coreutils_app 'date'
 }
 
 koopa::locate_df() { # {{{1
     # """
     # Locate GNU 'df'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='df'
+    koopa:::locate_gnu_coreutils_app 'df'
 }
 
 koopa::locate_dig() { # {{{1
@@ -422,12 +422,9 @@ koopa::locate_dig() { # {{{1
 koopa::locate_dirname() { # {{{1
     # """
     # Locate GNU 'dirname'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='dirname'
+    koopa:::locate_gnu_coreutils_app 'dirname'
 }
 
 koopa::locate_docker() { # {{{1
@@ -449,12 +446,9 @@ koopa::locate_doom() { # {{{1
 koopa::locate_du() { # {{{1
     # """
     # Locate GNU 'du'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='du'
+    koopa:::locate_gnu_coreutils_app 'du'
 }
 
 koopa::locate_emacs() { # {{{1
@@ -566,12 +560,9 @@ koopa::locate_grep() { # {{{1
 koopa::locate_groups() { # {{{1
     # """
     # Locate GNU 'groups'.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='groups'
+    koopa:::locate_gnu_coreutils_app 'groups'
 }
 
 koopa::locate_gunzip() { # {{{1
@@ -606,23 +597,17 @@ koopa::locate_h5cc() { # {{{1
 koopa::locate_head() { # {{{1
     # """
     # Locate GNU 'head'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='head'
+    koopa:::locate_gnu_coreutils_app 'head'
 }
 
 koopa::locate_id() { # {{{1
     # """
     # Locate GNU 'id'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='id'
+    koopa:::locate_gnu_coreutils_app 'id'
 }
 
 koopa::locate_java() { # {{{1
@@ -706,12 +691,9 @@ koopa::locate_localedef() { # {{{1
 koopa::locate_ls() { # {{{1
     # """
     # Locate GNU 'ls'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='ls'
+    koopa:::locate_gnu_coreutils_app 'ls'
 }
 
 koopa::locate_make() { # {{{1
@@ -740,32 +722,23 @@ koopa::locate_md5sum() { # {{{1
     # Locate GNU 'md5sum'.
     # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='md5sum'
+    koopa:::locate_gnu_coreutils_app 'md5sum'
 }
 
 koopa::locate_mkdir() { # {{{1
     # """
     # Locate GNU 'mkdir'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='mkdir'
+    koopa:::locate_gnu_coreutils_app 'mkdir'
 }
 
 koopa::locate_mktemp() { # {{{1
     # """
     # Locate GNU 'mktemp'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='mktemp'
+    koopa:::locate_app 'mktemp'
 }
 
 koopa::locate_mv() { # {{{1
@@ -832,12 +805,9 @@ koopa::locate_passwd() { # {{{1
 koopa::locate_paste() { # {{{1
     # """
     # Locate GNU 'paste'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-4.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='paste'
+    koopa:::locate_gnu_coreutils_app 'paste'
 }
 
 koopa::locate_patch() { # {{{1
@@ -925,23 +895,17 @@ koopa::locate_rscript() { # {{{1
 koopa::locate_readlink() { # {{{1
     # """
     # Locate GNU 'readlink'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='readlink'
+    koopa:::locate_gnu_coreutils_app 'readlink'
 }
 
 koopa::locate_realpath() { # {{{1
     # """
     # Locate GNU 'realpath'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='realpath'
+    koopa:::locate_gnu_coreutils_app 'realpath'
 }
 
 koopa::locate_rename() { # {{{1
@@ -952,6 +916,7 @@ koopa::locate_rename() { # {{{1
     koopa:::locate_app "$(koopa::perl_packages_prefix)/bin/rename"
 }
 
+# FIXME Consider reworking opt duplication here.
 koopa::locate_rg() { # {{{1
     # """
     # Locate 'ripgrep'.
@@ -987,6 +952,7 @@ koopa::locate_ruby() { # {{{1
     koopa:::locate_app 'ruby'
 }
 
+# FIXME Consider reworking opt duplication here.
 koopa::locate_rustc() { # {{{1
     # """
     # Locate Rust compiler ('rustc').
@@ -1012,12 +978,9 @@ koopa::locate_sed() { # {{{1
 koopa::locate_sort() { # {{{1
     # """
     # Locate GNU 'sort'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='sort'
+    koopa:::locate_gnu_coreutils_app 'sort'
 }
 
 koopa::locate_sqlplus() { # {{{1
@@ -1051,9 +1014,9 @@ koopa::locate_ssh_keygen() { # {{{1
 koopa::locate_stat() { # {{{1
     # """
     # Locate GNU 'stat'.
-    # @note Updated 2021-10-22.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app '/usr/bin/stat'
+    koopa:::locate_gnu_coreutils_app 'stat'
 }
 
 koopa::locate_sudo() { # {{{1
@@ -1075,25 +1038,20 @@ koopa::locate_svn() { # {{{1
 koopa::locate_tac() { # {{{1
     # """
     # Locate GNU 'tac'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='tac'
+    koopa:::locate_gnu_coreutils_app 'tac'
 }
 
 koopa::locate_tail() { # {{{1
     # """
     # Locate GNU 'tail'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='tail'
+    koopa:::locate_gnu_coreutils_app 'tail'
 }
 
+# FIXME Define a koopa opt prefix here too.
 koopa::locate_tar() { # {{{1
     # """
     # Locate GNU 'tar'.
@@ -1108,12 +1066,9 @@ koopa::locate_tar() { # {{{1
 koopa::locate_tee() { # {{{1
     # """
     # Locate GNU 'tee'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='tee'
+    koopa:::locate_gnu_coreutils_app 'tee'
 }
 
 koopa::locate_tex() { # {{{1
@@ -1139,23 +1094,17 @@ koopa::locate_tlmgr() { # {{{1
 koopa::locate_touch() { # {{{1
     # """
     # Locate GNU 'touch'.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='touch'
+    koopa:::locate_gnu_coreutils_app 'touch'
 }
 
 koopa::locate_tr() { # {{{1
     # """
     # Locate GNU 'tr'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='tr'
+    koopa:::locate_gnu_coreutils_app 'tr'
 }
 
 koopa::locate_uncompress() { # {{{1
@@ -1172,23 +1121,17 @@ koopa::locate_uncompress() { # {{{1
 koopa::locate_uname() { # {{{1
     # """
     # Locate GNU 'uname'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='uname'
+    koopa:::locate_gnu_coreutils_app 'uname'
 }
 
 koopa::locate_uniq() { # {{{1
     # """
     # Locate GNU 'uniq'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='uniq'
+    koopa:::locate_gnu_coreutils_app 'uniq'
 }
 
 koopa::locate_unzip() { # {{{1
@@ -1210,12 +1153,9 @@ koopa::locate_vim() { # {{{1
 koopa::locate_wc() { # {{{1
     # """
     # Locate GNU 'wc'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='wc'
+    koopa:::locate_gnu_coreutils_app 'wc'
 }
 
 koopa::locate_wget() { # {{{1
@@ -1229,12 +1169,9 @@ koopa::locate_wget() { # {{{1
 koopa::locate_whoami() { # {{{1
     # """
     # Locate GNU 'whoami'.
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='whoami'
+    koopa:::locate_gnu_coreutils_app 'whoami'
 }
 
 koopa::locate_xargs() { # {{{1
@@ -1251,12 +1188,9 @@ koopa::locate_xargs() { # {{{1
 koopa::locate_yes() { # {{{1
     # """
     # Locate GNU 'yes'.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-11-04.
     # """
-    koopa:::locate_app \
-        --brew-opt='coreutils' \
-        --gnubin \
-        --name='yes'
+    koopa:::locate_gnu_coreutils_app 'yes'
 }
 
 koopa::locate_zcat() { # {{{1
