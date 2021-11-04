@@ -28,7 +28,6 @@ koopa::find() { # {{{1
         [empty]=0
         [engine]=''
         [glob]=''
-        # This currently only applies to '--regex' argument.
         [match_against_full_path]=0
         [max_depth]=0
         [min_days_old]=0
@@ -628,37 +627,39 @@ koopa::find_large_files() { # {{{1
 koopa::find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-04.
     #
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
     #
     # NOTE Exclusion patterns must be relative to glob for rust-fd to work.
     # """
-    local app_prefix brew_prefix find_args koopa_prefix make_prefix opt_prefix x
+    local dict find_args
     koopa::assert_has_no_args "$#"
-    app_prefix="$(koopa::app_prefix)"
-    koopa_prefix="$(koopa::koopa_prefix)"
-    opt_prefix="$(koopa::opt_prefix)"
-    make_prefix="$(koopa::make_prefix)"
+    declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [make_prefix]="$(koopa::make_prefix)"
+        [opt_prefix]="$(koopa::opt_prefix)"
+    )
     find_args=(
         '--engine' 'gnu-find'
         '--min-depth' 1
-        '--prefix' "$make_prefix"
+        '--prefix' "${dict[make_prefix]}"
         '--sort'
         '--type' 'f'
     )
     find_args+=(
-        '--exclude' "${app_prefix}/*"
-        '--exclude' "${koopa_prefix}/*"
-        '--exclude' "${opt_prefix}/*"
+        '--exclude' "${dict[app_prefix]}/*"
+        '--exclude' "${dict[koopa_prefix]}/*"
+        '--exclude' "${dict[opt_prefix]}/*"
     )
     if koopa::is_linux
     then
         find_args+=(
-            '--exclude' "${make_prefix}/share/applications/mimeinfo.cache"
-            '--exclude' "${make_prefix}/share/emacs/site-lisp/*"
-            '--exclude' "${make_prefix}/share/zsh/site-functions/*"
+            '--exclude' "${dict[make_prefix]}/share/applications/mimeinfo.cache"
+            '--exclude' "${dict[make_prefix]}/share/emacs/site-lisp/*"
+            '--exclude' "${dict[make_prefix]}/share/zsh/site-functions/*"
         )
     elif koopa::is_macos
     then
@@ -673,17 +674,22 @@ koopa::find_non_symlinked_make_files() { # {{{1
         # - /usr/local/lib/tcl8.6
         # - /usr/local/lib/tk8.6
         # - /usr/local/share/texinfo
-        brew_prefix="$(koopa::homebrew_prefix)"
+        dict[brew_prefix]="$(koopa::homebrew_prefix)"
+        if [[ "${dict[brew_prefix]}" == "${dict[make_prefix]}" ]]
+        then
+            find_args+=(
+                '--exclude' "${dict[brew_prefix]}/Caskroom/*"
+                '--exclude' "${dict[brew_prefix]}/Cellar/*"
+                '--exclude' "${dict[brew_prefix]}/Homebrew/*"
+            )
+        fi
         find_args+=(
-            '--exclude' "${brew_prefix}/Caskroom/*"
-            '--exclude' "${brew_prefix}/Cellar/*"
-            '--exclude' "${brew_prefix}/Homebrew/*"
-            '--exclude' "${make_prefix}/MacGPG2/*"
-            '--exclude' "${make_prefix}/gfortran/*"
-            '--exclude' "${make_prefix}/texlive/*"
+            '--exclude' "${dict[make_prefix]}/MacGPG2/*"
+            '--exclude' "${dict[make_prefix]}/gfortran/*"
+            '--exclude' "${dict[make_prefix]}/texlive/*"
         )
     fi
-    x="$(koopa::find "${find_args[@]}")"
-    koopa::print "$x"
+    dict[out]="$(koopa::find "${find_args[@]}")"
+    koopa::print "${dict[out]}"
     return 0
 }
