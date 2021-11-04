@@ -10,7 +10,7 @@ koopa::install_python_packages() { # {{{1
 koopa:::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-10-05.
+    # @note Updated 2021-11-04.
     # """
     local pkgs
     pkgs=("$@")
@@ -23,6 +23,7 @@ koopa:::install_python_packages() { # {{{1
             'wheel'
         )
         readarray -t pkgs <<< "$(koopa::python_get_pkg_versions "${pkgs[@]}")"
+        koopa::alert_info 'Ensuring essential defaults are version pinned.'
         koopa::python_pip_install "${pkgs[@]}"
         # Now we can install additional recommended extras.
         pkgs=(
@@ -31,6 +32,7 @@ koopa:::install_python_packages() { # {{{1
             'bpytop'        # homebrew
             'flake8'        # homebrew
             'glances'       # homebrew
+            'isort'
             'pip2pi'
             'pipx'          # homebrew
             'psutil'
