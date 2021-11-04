@@ -567,7 +567,7 @@ koopa::linux_configure_system() { # {{{1
     koopa::fix_zsh_permissions
     if [[ "${dict[delete_cache]}" -eq 1 ]]
     then
-        koopa::delete_cache
+        koopa::linux_delete_cache
     fi
     koopa::alert_success 'Configuration completed successfully.'
     return 0
