@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME This will early return if 3.9 is installed but we want to install 3.10.
-
 koopa::macos_install_python_framework() { # {{{1
     koopa:::install_app \
         --installer='python-framework' \
         --name-fancy='Python framework' \
         --name='python' \
         --platform='macos' \
-        --prefix='/Library/Frameworks/Python.framework' \
         --system \
         "$@"
 }
@@ -26,7 +23,7 @@ koopa::macos_uninstall_python_framework() { # {{{1
 koopa:::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-04.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -36,17 +33,18 @@ koopa:::macos_install_python_framework() { # {{{1
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(
+        [framework_prefix]='/Library/Frameworks/Python.framework'
         [macos_version]="$(koopa::macos_version)"
         [name]='python'
         [name_fancy]='Python'
-        [prefix]="${INSTALL_PREFIX:?}"
         [reinstall]=0
         [tmp_dir]="$(koopa::tmp_dir)"
         [tmp_log_file]="$(koopa::tmp_log_file)"
-        # FIXME I think this doesn't work because you have to move out of array.
+        [version]="${INSTALL_VERSION:?}"
     )
-    dict[version]="$(koopa::variable "${dict[name]}")"
     dict[major_version]="$(koopa::major_version "${dict[version]}")"
+    dict[maj_min_version]="$(koopa::major_minor_version "${dict[version]}")"
+    dict[prefix]="${dict[framework_prefix]}/Versions/${dict[maj_min_version]}"
     case "${dict[macos_version]}" in
         '11'* | \
         '12'*)
@@ -79,8 +77,7 @@ ${dict[version]}/${dict[file]}"
         "${app[sudo]}" "${app[installer]}" -pkg "${dict[file]}" -target /
     ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
     koopa::rm "${dict[tmp_dir]}"
-    dict[python]="${dict[prefix]}/Versions/Current/bin\
-/${dict[name]}${dict[major_version]}"
+    dict[python]="${dict[prefix]}/bin/${dict[name]}${dict[major_version]}"
     koopa::assert_is_executable "${dict[python]}"
     koopa::configure_python "${dict[python]}"
     koopa::install_success "${dict[name_fancy]}"
