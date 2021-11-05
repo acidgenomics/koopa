@@ -381,10 +381,10 @@ koopa::is_koopa_app() { # {{{1
     return 0
 }
 
-koopa::is_powerful() { # {{{1
+koopa::is_powerful_machine() { # {{{1
     # """
     # Is the current machine powerful?
-    # @note Updated 2020-03-07.
+    # @note Updated 2021-11-05.
     # """
     local cores
     koopa::assert_has_no_args "$#"
@@ -467,6 +467,7 @@ koopa::is_recent() { # {{{1
     do
         [[ -e "$file" ]] || return 1
         # FIXME Need to switch to koopa::find here.
+        # FIXME Rework our mtime approach here, to support fd.
         exists="$( \
             "$find" "$file" \
                 -mindepth 0 \
@@ -479,10 +480,24 @@ koopa::is_recent() { # {{{1
     return 0
 }
 
-koopa::is_set() { # {{{1
+koopa::is_spacemacs_installed() { # {{{1
     # """
-    # Is the variable set and non-empty?
-    # @note Updated 2021-02-15.
+    # Is Spacemacs installed?
+    # @note Updated 2021-10-25.
+    # """
+    local init_file prefix
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed 'emacs' || return 1
+    prefix="$(koopa::emacs_prefix)"
+    init_file="${prefix}/init.el"
+    [[ -s "$init_file" ]] || return 1
+    koopa::file_match_fixed "$init_file" 'Spacemacs'
+}
+
+koopa::is_variable_defined() { # {{{1
+    # """
+    # Is the variable defined (and non-empty)?
+    # @note Updated 2021-11-05.
     #
     # Passthrough of empty strings is bad practice in shell scripting.
     #
@@ -494,6 +509,9 @@ koopa::is_set() { # {{{1
     # - https://unix.stackexchange.com/questions/504082
     # - https://www.gnu.org/software/bash/manual/html_node/
     #       Shell-Parameter-Expansion.html
+    #
+    # @examples
+    # koopa::is_variable_defined 'PATH'
     # """
     local nounset value var x
     koopa::assert_has_args "$#"
@@ -510,20 +528,6 @@ koopa::is_set() { # {{{1
     done
     [[ "${nounset:-0}" -eq 1 ]] && set -u
     return 0
-}
-
-koopa::is_spacemacs_installed() { # {{{1
-    # """
-    # Is Spacemacs installed?
-    # @note Updated 2021-10-25.
-    # """
-    local init_file prefix
-    koopa::assert_has_no_args "$#"
-    koopa::is_installed 'emacs' || return 1
-    prefix="$(koopa::emacs_prefix)"
-    init_file="${prefix}/init.el"
-    [[ -s "$init_file" ]] || return 1
-    koopa::file_match_fixed "$init_file" 'Spacemacs'
 }
 
 koopa::is_xcode_clt_installed() { # {{{1

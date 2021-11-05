@@ -709,24 +709,39 @@ koopa::assert_is_root() { # {{{1
     return 0
 }
 
-# FIXME Rethink this input, passing in two positional variables, the name
-# of the variable, and the actual value.
-# FIXME May want to name this a different function.
-# FIXME Thinking this approach could be useful:
-#
-# koopa::assert_is_set \
-#     'XXX' "${XXX:-}" \
-#     'YYY' "${YYY:-}"
-#
-# FIXME Alternatively, could work it up this way:
-#     '--xxx' "${dict[xxx]:-}" \
-#     '--yyy' "${dict[yyy]:-}"
-
-# FIXME Consider renaming this to koopa::assert_is_set_2
 koopa::assert_is_set() { # {{{1
     # """
     # Assert that variables are set (and not unbound).
-    # @note Updated 2020-03-04.
+    # @note Updated 2021-11-05.
+    #
+    # @examples
+    # declare -A dict=(
+    #     [aaa]='AAA'
+    #     [bbb]='BBB'
+    # )
+    # koopa::assert_is_set \
+    #     '--aaa' "${dict[aaa]:-}" \
+    #     '--bbb' "${dict[bbb]:-}"
+    # """
+    local name value
+    koopa::assert_has_args_ge "$#" 2
+    while (("$#"))
+    do
+        name="${1:?}"
+        value="${2:-}"
+        shift 2
+        if [[ -z "${value}" ]]
+        then
+            koopa::stop "'${name}' is unset."
+        fi
+    done
+    return 0
+}
+
+koopa::assert_is_set_2() { # {{{1
+    # """
+    # Assert that variables are set (and not unbound).
+    # @note Updated 2021-11-05.
     #
     # Intended to use inside of functions, where we can't be sure that 'set -u'
     # mode is set, which otherwise catches unbound variables.
@@ -734,8 +749,8 @@ koopa::assert_is_set() { # {{{1
     # How to return bash variable name:
     # - https://unix.stackexchange.com/questions/129084
     #
-    # Example:
-    # koopa::assert_is_set 'PATH' 'MANPATH' 'xxx'
+    # @examples
+    # koopa::assert_is_set_2 'PATH' 'MANPATH'
     # """
     local arg
     koopa::assert_has_args "$#"
