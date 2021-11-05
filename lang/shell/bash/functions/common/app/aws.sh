@@ -19,6 +19,7 @@ koopa::aws_batch_fetch_and_run() { # {{{1
     # """
     local aws file profile url
     koopa::assert_has_no_args "$#"
+    ## FIXME Rework this.
     koopa::assert_is_set 'BATCH_FILE_URL'
     url="${BATCH_FILE_URL:?}"
     file="$(koopa::tmp_file)"
@@ -69,6 +70,7 @@ koopa::aws_batch_list_jobs() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
+    ## FIXME Rework this.
     koopa::assert_is_set \
         'AWS_BATCH_ACCOUNT_ID' \
         'AWS_BATCH_QUEUE' \
@@ -547,7 +549,6 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     return 0
 }
 
-# FIXME subdirectory exclusion still isn't working perfectly.
 koopa::aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.

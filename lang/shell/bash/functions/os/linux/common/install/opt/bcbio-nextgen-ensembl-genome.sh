@@ -108,6 +108,7 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
         esac
     done
     [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
+    # FIXME Rework this.
     koopa::assert_is_set 'build' 'fasta' 'gtf' 'indexes' 'organism' 'release'
     koopa::assert_is_file "$fasta" "$gtf"
     script="$(koopa::which_realpath "$script")"

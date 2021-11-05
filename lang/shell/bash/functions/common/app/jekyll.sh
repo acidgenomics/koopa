@@ -46,6 +46,7 @@ koopa::jekyll_deploy_to_aws() { # {{{1
                 ;;
         esac
     done
+    # FIXME Rework this.
     koopa::assert_is_set 'bucket_prefix' 'distribution_id' 'local_prefix'
     bucket_prefix="$(koopa::strip_trailing_slash "$bucket_prefix")"
     local_prefix="$(koopa::strip_trailing_slash "$local_prefix")"
