@@ -9,7 +9,7 @@
 koopa::aws_batch_fetch_and_run() { # {{{1
     # """
     # Fetch and run a script on AWS Batch.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-05.
     #
     # S3 bucket paths and remote URLs are supported.
     #
@@ -17,50 +17,86 @@ koopa::aws_batch_fetch_and_run() { # {{{1
     # - https://github.com/FredHutch/url-fetch-and-run
     # - https://github.com/awslabs/aws-batch-helpers
     # """
-    local aws file profile url
+    local app dict
     koopa::assert_has_no_args "$#"
-    ## FIXME Rework this.
-    koopa::assert_is_set 'BATCH_FILE_URL'
-    url="${BATCH_FILE_URL:?}"
-    file="$(koopa::tmp_file)"
-    case "$url" in
+    koopa::assert_is_set 'BATCH_FILE_URL' "${BATCH_FILE_URL:-}"
+    declare -A app=(
+        [aws]="$(koopa::locate_aws)"
+    )
+    declare -A dict=(
+        [file]="$(koopa::tmp_file)"
+        [profile]="${AWS_PROFILE:-}"
+        [url]="${BATCH_FILE_URL:?}"
+    )
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    case "${dict[url]}" in
         'ftp'* | \
         'http'*)
-            koopa::download "$url" "$file"
+            koopa::download "${dict[url]}" "${dict[file]}"
             ;;
         's3'*)
-            aws="$(koopa::locate_aws)"
-            profile="${AWS_PROFILE:-default}"
-            "$aws" --profile="$profile" \
-                s3 cp "$url" "$file"
+            "$aws" --profile="${dict[profile]}" \
+                s3 cp "${dict[url]}" "${dict[file]}"
             ;;
         *)
-            koopa::stop "Unsupported URL: '${url}'."
+            koopa::stop "Unsupported URL: '${dict[url]}'."
             ;;
     esac
-    koopa::chmod 'u+x' "$file"
-    "$file"
+    koopa::chmod 'u+x' "${dict[file]}"
+    "${dict[file]}"
     return 0
 }
 
 koopa::aws_batch_list_jobs() { # {{{1
     # """
     # List AWS Batch jobs.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-05.
     # """
-    local aws job_queue job_queue_array profile status status_array
-    aws="$(koopa::locate_aws)"
-    profile="${AWS_PROFILE:-default}"
+    local app dict job_queue_array status status_array
+    local -A app=(
+        [aws]="$(koopa::locate_aws)"
+    )
+    local -A dict=(
+        [account_id]="${AWS_BATCH_ACCOUNT_ID:-}"
+        [profile]="${AWS_PROFILE:-}"
+        [queue]="${AWS_BATCH_QUEUE:-}"
+        [region]="${AWS_BATCH_REGION:-}"
+    )
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--account-id='*)
+                dict[account_id]="${1#*=}"
+                shift 1
+                ;;
+            '--account-id')
+                dict[account_id]="${2:?}"
+                shift 2
+                ;;
             '--profile='*)
-                profile="${1#*=}"
+                dict[profile]="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                profile="${2:?}"
+                dict[profile]="${2:?}"
+                shift 2
+                ;;
+            '--queue='*)
+                dict[queue]="${1#*=}"
+                shift 1
+                ;;
+            '--queue')
+                dict[queue]="${2:?}"
+                shift 2
+                ;;
+            '--region='*)
+                dict[region]="${1#*=}"
+                shift 1
+                ;;
+            '--region')
+                dict[region]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -69,22 +105,20 @@ koopa::aws_batch_list_jobs() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_has_no_args "$#"
-    ## FIXME Rework this.
     koopa::assert_is_set \
-        'AWS_BATCH_ACCOUNT_ID' \
-        'AWS_BATCH_QUEUE' \
-        'AWS_BATCH_REGION'
-    koopa::h1 "Checking AWS Batch job status for '${profile}' profile."
+        '--account-id or AWS_BATCH_ACCOUNT_ID' "${dict[account_id]:-}" \
+        '--queue or AWS_BATCH_QUEUE' "${dict[queue]:-}" \
+        '--region or AWS_BATCH_REGION' "${dict[region]:-}" \
+        '--profile or AWS_PROFILE' "${dict[profile]:-}"
+    koopa::h1 "Checking AWS Batch job status for '${dict[profile]}' profile."
     job_queue_array=(
         'arn'
         'aws'
         'batch'
-        "${AWS_BATCH_REGION:?}"
-        "${AWS_BATCH_ACCOUNT_ID:?}"
-        "job-queue/${AWS_BATCH_QUEUE:?}"
+        "${dict[region]}"
+        "${dict[account_id]}"
+        "job-queue/${dict[queue]}"
     )
-    job_queue="$(koopa::paste0 ':' "${job_queue_array[@]}")"
     status_array=(
         'SUBMITTED'
         'PENDING'
@@ -94,12 +128,14 @@ koopa::aws_batch_list_jobs() { # {{{1
         'SUCCEEDED'
         'FAILED'
     )
+
+    dict[job_queue]="$(koopa::paste0 ':' "${job_queue_array[@]}")"
     for status in "${status_array[@]}"
     do
         koopa::h2 "$status"
-        "$aws" --profile="$profile" \
+        "${app[aws]}" --profile="${dict[profile]}" \
             batch list-jobs \
-                --job-queue "$job_queue" \
+                --job-queue "${dict[job_queue]}" \
                 --job-status "$status"
     done
     return 0
@@ -110,15 +146,20 @@ koopa::aws_cp_regex() { # {{{1
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
     #
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-05.
     #
     # @seealso
     # - aws s3 cp help
     # """
-    local aws pattern pos profile source_prefix target_prefix
+    local app dict pos
     koopa::assert_has_args "$#"
-    aws="$(koopa::locate_aws)"
-    profile="${AWS_PROFILE:-default}"
+    declare -A app=(
+        [aws]="$(koopa::locate_aws)"
+    )
+    declare -A dict=(
+        [profile]="${AWS_PROFILE:-}"
+    )
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     pos=()
     while (("$#"))
     do
@@ -157,33 +198,24 @@ koopa::aws_cp_regex() { # {{{1
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    # Providing legacy support for positional arguments. This may be removed
-    # in a future update in favor of requiring named arguments.
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -gt 0 ]]
-    then
-        koopa::assert_has_args_eq "$#" 3
-        pattern="${1:?}"
-        source_prefix="${2:?}"
-        target_prefix="${3:?}"
-    fi
-    "$aws" --profile="$profile" \
+    koopa::assert_is_set \
+        '--pattern' "${dict[pattern]:-}" \
+        '--profile or AWS_PROFILE' "${dict[profile]:-}" \
+        '--source-prefix' "${dict[source_prefix]:-}" \
+        '--target-prefix' "${dict[target_prefix]:-}"
+    "${app[aws]}" --profile="${dict[profile]}" \
         s3 cp \
             --exclude='*' \
             --follow-symlinks \
-            --include="$pattern" \
+            --include="${dict[pattern]}" \
             --recursive \
-            "$source_prefix" \
-            "$target_prefix"
+            "${dict[source_prefix]}" \
+            "${dict[target_prefix]}"
     return 0
 }
 
@@ -191,49 +223,52 @@ koopa::aws_s3_find() { # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-05.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
     #
     # @examples
     # koopa::aws_s3_find \
-    #     --include="*.bw$" \
-    #     --exclude="antisense" \
-    #     s3://bioinfo/igv/
+    #     --include='*.bw$' \
+    #     --exclude='antisense' \
+    #     's3://bioinfo/igv/'
     # """
-    local exclude include pos profile x
+    local dict pos x
     koopa::assert_has_args "$#"
-    profile="${AWS_PROFILE:-default}"
-    exclude=''
-    include=''
+    declare -A dict=(
+        [exclude]=''
+        [include]=''
+        [profile]="${AWS_PROFILE:-}"
+    )
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--exclude='*)
-                exclude="${1#*=}"
+                dict[exclude]="${1#*=}"
                 shift 1
                 ;;
             '--exclude')
-                exclude="${2:?}"
+                dict[exclude]="${2:?}"
                 shift 2
                 ;;
             '--include='*)
-                include="${1#*=}"
+                dict[include]="${1#*=}"
                 shift 1
                 ;;
             '--include')
-                include="${2:?}"
+                dict[include]="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                profile="${1#*=}"
+                dict[profile]="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                profile="${2:?}"
+                dict[profile]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -249,31 +284,44 @@ koopa::aws_s3_find() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     x="$( \
         koopa::aws_s3_ls \
-        --profile="$profile" \
+        --profile="${dict[profile]}" \
         --recursive \
         "$@" \
     )"
-    [[ -n "$x" ]] || return 1
+    if [[ -z "$x" ]]
+    then
+        koopa::warn 'Failed to recursively list any files.'
+        return 1
+    fi
     # Exclude pattern.
-    if [[ -n "${exclude:-}" ]]
+    if [[ -n "${dict[exclude]}" ]]
     then
         x="$( \
             koopa::print "$x" \
                 | koopa::grep \
                     --extended-regexp \
                     --invert-match \
-                    "$exclude" \
+                    "${dict[exclude]}" \
         )"
-        [[ -n "$x" ]] || return 1
+        if [[ -z "$x" ]]
+        then
+            koopa::warn "No files left with '--exclude' argument."
+            return 1
+        fi
     fi
     # Include pattern.
-    if [[ -n "${include:-}" ]]
+    if [[ -n "${dict[include]}" ]]
     then
         x="$( \
             koopa::print "$x" \
-                | koopa::grep --extended-regexp "$include" \
+                | koopa::grep \
+                    --extended-regexp "${dict[include]}" \
         )"
-        [[ -n "$x" ]] || return 1
+        if [[ -z "$x" ]]
+        then
+            koopa::warn "No files left with '--include' argument."
+            return 1
+        fi
     fi
     koopa::print "$x"
     return 0
@@ -282,7 +330,7 @@ koopa::aws_s3_find() { # {{{1
 koopa::aws_s3_ls() { # {{{1
     # """
     # List an AWS S3 bucket.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-11-05.
     #
     # @seealso
     # - aws s3 ls help
@@ -307,10 +355,11 @@ koopa::aws_s3_ls() { # {{{1
     )
     declare -A dict=(
         [prefim]='s3://'
-        [profile]="${AWS_PROFILE:-default}"
+        [profile]="${AWS_PROFILE:-}"
         [recursive]=0
         [type]=''
     )
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     flags=()
     pos=()
     while (("$#"))
@@ -483,35 +532,41 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     # """
     # Move objects in an S3 bucket directory to parent directory.
     #
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-05.
     #
     # @details
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
-    local aws bn dn1 dn2 file files pos prefix profile target x
+    local app dict pos
+    local bn dn1 dn2 file files prefix profile target x
     koopa::assert_has_args "$#"
-    aws="$(koopa::locate_aws)"
-    profile="${AWS_PROFILE:-default}"
+    declare -A app=(
+        [aws]="$(koopa::locate_aws)"
+    )
+    declare -A dict=(
+        [profile]="${AWS_PROFILE:-}"
+    )
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--prefix='*)
-                prefix="${1#*=}"
+                dict[prefix]="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                prefix="${2:?}"
+                dict[prefix]="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                profile="${1#*=}"
+                dict[profile]="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                profile="${2:?}"
+                dict[profile]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -528,14 +583,21 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     if [[ "$#" -gt 0 ]]
     then
         koopa::assert_has_args_eq "$#" 1
-        prefix="${1:?}"
+        dict[prefix]="${1:?}"
     fi
+    koopa::assert_is_set \
+        '--profile or AWS_PROFILE' "${dict[profile]:-}"
+        '--prefix' "${dict[prefix]:-}"
     x="$( \
         koopa::aws_s3_ls \
-            --profile="$profile" \
-            "$prefix" \
+            --profile="${dict[profile]}" \
+            "${dict[prefix]}" \
     )"
-    [[ -n "$x" ]] || return 0
+    if [[ -z "$x" ]]
+    then
+        koopa::warn "Failed to list any files in '${dict[prefix]}'."
+        return 1
+    fi
     readarray -t files <<< "$x"
     for file in "${files[@]}"
     do
@@ -543,7 +605,7 @@ koopa::aws_s3_mv_to_parent() { # {{{1
         dn1="$(koopa::dirname "$file")"
         dn2="$(koopa::dirname "$dn1")"
         target="${dn2}/${bn}"
-        "$aws" --profile="$profile" \
+        "${app[aws]}" --profile="${dict[profile]}" \
             s3 mv "$file" "$target"
     done
     return 0
@@ -552,7 +614,7 @@ koopa::aws_s3_mv_to_parent() { # {{{1
 koopa::aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
-    # @note Updated 2021-10-05.
+    # @note Updated 2021-11-05.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
@@ -575,10 +637,13 @@ koopa::aws_s3_sync() { # {{{1
     # """
     local aws dict exclude_args exclude_patterns pattern pos sync_args
     koopa::assert_has_args "$#"
-    aws="$(koopa::locate_aws)"
-    declare -A dict=(
-        [profile]="${AWS_PROFILE:-default}"
+    declare -A app=(
+        [aws]="$(koopa::locate_aws)"
     )
+    declare -A dict=(
+        [profile]="${AWS_PROFILE:-}"
+    )
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     # Include common file system and Git cruft that we don't want on S3.
     exclude_patterns=(
         '*.Rproj/*'
@@ -670,7 +735,7 @@ koopa::aws_s3_sync() { # {{{1
             "--exclude=*/${pattern}"
         )
     done
-    "$aws" --profile="${dict[profile]}" \
+    "${app[aws]}" --profile="${dict[profile]}" \
         s3 sync \
             "${exclude_args[@]}" \
             "${sync_args[@]}"
