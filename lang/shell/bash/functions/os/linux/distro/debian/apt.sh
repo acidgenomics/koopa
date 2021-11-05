@@ -108,21 +108,6 @@ koopa:::debian_apt_key_add() {  #{{{1
     return 0
 }
 
-# FIXME Check that this is safe to remove following repo config updates.
-koopa:::debian_apt_key_add_legacy() {  #{{{1
-    # """
-    # Add a legacy apt key (deprecated).
-    # @note Updated 2021-11-02.
-    #
-    # For use with apt repos that don't yet support 'signed-by' approach.
-    # """
-    koopa::assert_has_args "$#"
-    koopa:::debian_apt_key_add \
-        --prefix='/etc/apt/trusted.gpg.d' \
-        "$@"
-    return 0
-}
-
 # FIXME Need to standardize with Debian repo list file generator function.
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
@@ -506,43 +491,44 @@ koopa::debian_apt_add_wine_repo() { # {{{1
     return 0
 }
 
-# FIXME Need to harden this.
 koopa::debian_apt_add_wine_obs_key() { # {{{1
     # """
     # Add the Wine OBS openSUSE key.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-05.
     # """
-    local key name_fancy os_string subdir url
+    local dict
     koopa::assert_has_no_args "$#"
-    name_fancy='Wine OBS'
-    os_string="$(koopa::os_string)"
-    # Signed by <Emulators@build.opensuse.org>.
-    key='31CFB0B65659B5D40DEEC98DDFA175A75104960E'
-    case "$os_string" in
+    declare -A dict=(
+        [name]='wine-obs'
+        [name_fancy]='Wine OBS'
+        [os_string]="$(koopa::os_string)"
+    )
+    # FIXME Need to add support for other Debian and Ubuntu releases here.
+    case "${dict[os_string]}" in
         'debian-10')
-            subdir='Debian_10'
+            dict[subdir]='Debian_10'
             ;;
         'ubuntu-18')
-            url='xUbuntu_18.04'
+            dict[subdir]='xUbuntu_18.04'
             ;;
         'ubuntu-20')
-            url='xUbuntu_20.04'
+            dict[subdir]='xUbuntu_20.04'
             ;;
         *)
-            koopa::stop "Unsupported OS: '${os_string}'."
+            koopa::stop "Unsupported OS: '${dict[os_string]}'."
             ;;
     esac
-    url="https://download.opensuse.org/repositories/\
-Emulators:/Wine:/Debian/${subdir}/Release.key"
-    koopa:::debian_apt_key_add_legacy \
-        "$name_fancy" \
-        "$url" \
-        "$key"
+    dict[url]="https://download.opensuse.org/repositories/\
+Emulators:/Wine:/Debian/${dict[subdir]}/Release.key"
+    koopa:::debian_apt_key_add \
+        --name-fancy="${dict[name_fancy]}" \
+        --name="${dict[wine_obs]}" \
+        --url="${dict[url]}"
     return 0
 }
 
-# FIXME Need to harden this.
 # FIXME Need to standardize with Debian repo list file generator function.
+# FIXME Need to match the key to 'wine-obs' here.
 koopa::debian_apt_add_wine_obs_repo() { # {{{1
     # """
     # Add Wine OBS openSUSE repo.
@@ -621,7 +607,7 @@ koopa::debian_apt_clean() { # {{{1
 koopa::debian_apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-05.
     #
     # Look up currently enabled sources with:
     # > grep -Eq '^deb\s' '/etc/apt/sources.list'
@@ -705,7 +691,7 @@ koopa::debian_apt_configure_sources() { # {{{1
     declare -A dict=(
         [os_codename]="$(koopa::os_codename)"
         [os_id]="$(koopa::os_id)"
-        [sources_list]='/etc/apt/sources.list'
+        [sources_list]="$(koopa::debian_apt_sources_file)"
         [sources_list_d]="$(koopa::debian_apt_sources_prefix)"
     )
     koopa::alert "Configuring apt sources in '${dict[sources_list]}'."
@@ -783,29 +769,30 @@ END
     return 0
 }
 
-# FIXME Use prefix variable here.
 koopa::debian_apt_delete_repo() { # {{{1
     # """
     # Delete an apt repo file.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-05.
     # """
-    local file name
+    local dict file name
     koopa::assert_has_args "$#"
     koopa::assert_is_admin
+    declare -A dict=(
+        [prefix]="$(koopa::debian_apt_sources_prefix)"
+    )
     for name in "$@"
     do
-        file="/etc/apt/sources.list.d/koopa-${name}.list"
+        file="${dict[prefix]}/koopa-${name}.list"
         koopa::assert_is_file "$file"
         koopa::rm --sudo "$file"
     done
     return 0
 }
 
-# FIXME Rework using apt_sources_file variable.
 koopa::debian_apt_disable_deb_src() { # {{{1
     # """
     # Disable 'deb-src' source packages.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-05.
     # """
     local app dict
     koopa::assert_has_args_le "$#" 1
@@ -818,7 +805,7 @@ koopa::debian_apt_disable_deb_src() { # {{{1
     declare -A dict=(
         [file]="${1:-}"
     )
-    [[ -z "${dict[file]}" ]] && dict[file]='/etc/apt/sources.list'
+    [[ -z "${dict[file]}" ]] && dict[file]="$(koopa::debian_apt_sources_file)"
     koopa::assert_is_file "${dict[file]}"
     koopa::alert "Disabling Debian sources in '${dict[file]}'."
     if ! koopa::file_match_regex "${dict[file]}" '^deb-src '
@@ -831,11 +818,10 @@ koopa::debian_apt_disable_deb_src() { # {{{1
     return 0
 }
 
-# FIXME Rework using apt_sources_file variable.
 koopa::debian_apt_enable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-05.
     # """
     local app dict
     koopa::assert_has_args_le "$#" 1
@@ -848,7 +834,7 @@ koopa::debian_apt_enable_deb_src() { # {{{1
     declare -A dict=(
         [file]="${1:-}"
     )
-    [[ -z "${dict[file]}" ]] && dict[file]='/etc/apt/sources.list'
+    [[ -z "${dict[file]}" ]] && dict[file]="$(koopa::debian_apt_sources_file)"
     koopa::assert_is_file "${dict[file]}"
     koopa::alert "Enabling Debian sources in '${dict[file]}'."
     if ! koopa::file_match_regex "${dict[file]}" '^# deb-src '
@@ -861,11 +847,10 @@ koopa::debian_apt_enable_deb_src() { # {{{1
     return 0
 }
 
-# FIXME Rework using apt_sources_file variable.
 koopa::debian_apt_enabled_repos() { # {{{1
     # """
     # Get a list of enabled default apt repos.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-05.
     # """
     local app file os_codename pattern x
     koopa::assert_has_no_args "$#"
@@ -873,7 +858,7 @@ koopa::debian_apt_enabled_repos() { # {{{1
         [cut]="$(koopa::locate_cut)"
     )
     declare -A dict=(
-        [file]='/etc/apt/sources.list'
+        [file]="$(koopa::debian_apt_sources_file)"
         [os]="$(koopa::os_codename)"
     )
     dict[pattern]="^deb\s.+\s${dict[os]}\s.+$"

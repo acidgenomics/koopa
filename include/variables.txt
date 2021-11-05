@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-11-04"
+koopa-date="2021-11-05"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -273,7 +273,7 @@ php="8.0.11"
 # https://pkg-config.freedesktop.org/releases/
 pkg-config="0.29.2"
 
-# https://python-poetry.org
+# https://python-poetry.org/
 poetry="1.1.11"
 
 # https://proj.org/
@@ -499,6 +499,7 @@ nim-markdown="0.8.5"
 node-npm="8.1.2"                # 2021-10-28
 
 node-gtop="1.1.1"               # 2021-06-16
+node-prettier="2.4.1"           # 2021-09-16
 
 # Python packages {{{1
 # ==============================================================================
