@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-10-30.
+# Updated 2021-11-05.
 # """
 
 # Taps {{{1
@@ -138,6 +138,7 @@ brew "pipenv"  # python
 brew "pkg-config"
 brew "podofo"
 brew "poetry"
+brew "prettier"  # node
 brew "procs"  # rust
 brew "proj"
 brew "protobuf"
