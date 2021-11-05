@@ -216,6 +216,7 @@ koopa::git_init_remote() { # {{{1
                 ;;
         esac
     done
+    ## FIXME Rework this.
     koopa::assert_is_set 'branch' 'origin'
     git="$(koopa::locate_git)"
     "$git" init

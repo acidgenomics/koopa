@@ -53,6 +53,7 @@ koopa::sambamba_filter() { # {{{1
                 ;;
         esac
     done
+    # FIXME Rework this.
     koopa::assert_is_set 'filter' 'input_bam' 'output_bam'
     koopa::assert_are_not_identical "$input_bam" "$output_bam"
     input_bam_bn="$(koopa::basename "$input_bam")"

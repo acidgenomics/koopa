@@ -231,6 +231,7 @@ koopa::ftp_mirror() { # {{{1
                 ;;
         esac
     done
+    # FIXME Rework this.
     koopa::assert_is_set 'host' 'user'
     if [[ -n "$dir" ]]
     then
