@@ -10,7 +10,7 @@ koopa::install_node_packages() { # {{{1
 koopa:::install_node_packages() { # {{{1
     # """
     # Install Node.js packages using npm.
-    # @note Updated 2021-11-03.
+    # @note Updated 2021-11-05.
     # @seealso
     # - npm help config
     # - npm help install
@@ -39,6 +39,7 @@ koopa:::install_node_packages() { # {{{1
         # NOTE 'tldr' conflicts with Rust 'tealdeer'.
         pkgs=(
             'gtop'
+            'prettier'
         )
         for i in "${!pkgs[@]}"
         do
