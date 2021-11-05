@@ -709,6 +709,20 @@ koopa::assert_is_root() { # {{{1
     return 0
 }
 
+# FIXME Rethink this input, passing in two positional variables, the name
+# of the variable, and the actual value.
+# FIXME May want to name this a different function.
+# FIXME Thinking this approach could be useful:
+#
+# koopa::assert_is_set \
+#     'XXX' "${XXX:-}" \
+#     'YYY' "${YYY:-}"
+#
+# FIXME Alternatively, could work it up this way:
+#     '--xxx' "${dict[xxx]:-}" \
+#     '--yyy' "${dict[yyy]:-}"
+
+# FIXME Consider renaming this to koopa::assert_is_set_2
 koopa::assert_is_set() { # {{{1
     # """
     # Assert that variables are set (and not unbound).
