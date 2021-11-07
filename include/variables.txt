@@ -136,7 +136,7 @@ gcc="11.2.0"
 gdal="3.3.3"
 
 # https://github.com/libgeos/geos/releases
-geos="3.10.0"
+geos="3.10.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
@@ -246,7 +246,7 @@ openssl="3.0.0"
 oracle-instantclient="21.1.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.16"
+pandoc="2.16.1"
 
 # https://www.gnu.org/software/parallel/
 parallel="20211022"
