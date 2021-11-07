@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-11-05"
+koopa-date="2021-11-07"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -31,7 +31,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 anaconda="2021.05"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.7.1"
+armadillo="10.7.3"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="4.0.2.38"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.3.3"
+aws-cli="2.3.4"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.30.0"
@@ -161,7 +161,7 @@ groff="1.22.4"
 # https://www.gnu.org/software/gsl/
 gsl="2.7"
 
-hadolint="2.7.0"
+hadolint="2.8.0"
 
 harfbuzz="3.1.0"
 
@@ -211,6 +211,9 @@ luarocks="3.3.1"
 
 # https://ftp.gnu.org/gnu/make/
 make="4.3"
+
+# FIXME Need to provide manual install support for this.
+mcfly="0.5.10"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.2.20200212"
@@ -335,7 +338,7 @@ screen="4.8.0"
 sed="4.8"
 
 # https://github.com/koalaman/shellcheck/releases
-shellcheck="0.7.2"
+shellcheck="0.8.0"
 
 # https://www.rstudio.com/products/shiny/download-server/
 # 2021-01-11
