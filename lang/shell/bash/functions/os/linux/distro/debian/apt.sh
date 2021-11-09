@@ -291,37 +291,21 @@ ${dict[url]} ${dict[distribution]} ${components[*]}"
     return 0
 }
 
-# FIXME This needs to call koopa:::debian_apt_add_repo.
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
-    # @note Updated 2021-11-03.
+    # @note Updated 2021-11-09.
     # """
-    local dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    declare -A dict=(
-        [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
-        [key_name]='microsoft'
-        [key_prefix]="$(koopa::debian_apt_key_prefix)"
-        [name]='azure-cli'
-        [name_fancy]='Microsoft Azure CLI'
-        [os]="$(koopa::os_codename)"
-        [prefix]="$(koopa::debian_apt_sources_prefix)"
-    )
-    dict[file]="${dict[prefix]}/koopa-${dict[name]}.list"
-    dict[url]="https://packages.microsoft.com/repos/${dict[name]}/"
-    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
-    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
-${dict[url]} ${dict[os]} main"
-    if [[ -f "${dict[file]}" ]]
-    then
-        koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
-        return 0
-    fi
     koopa::debian_apt_add_microsoft_key
-    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
-    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
+    koopa::debian_apt_add_repo \
+        --name-fancy='Microsoft Azure CLI' \
+        --name='azure-cli' \
+        --key-name='microsoft' \
+        --url='https://packages.microsoft.com/repos/azure-cli/' \
+        --distribution="$(koopa::os_codename)" \
+        --component='main'
     return 0
 }
 
