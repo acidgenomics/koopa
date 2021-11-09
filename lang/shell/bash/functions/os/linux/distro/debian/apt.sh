@@ -193,7 +193,6 @@ koopa::debian_apt_add_repo() {
                 dict[key_name]="${2:?}"
                 shift 2
                 ;;
-
             '--key-prefix='*)
                 dict[key_prefix]="${1#*=}"
                 shift 1
@@ -202,7 +201,6 @@ koopa::debian_apt_add_repo() {
                 dict[key_prefix]="${2:?}"
                 shift 2
                 ;;
-
             '--name-fancy='*)
                 dict[name_fancy]="${1#*=}"
                 shift 1
@@ -249,6 +247,10 @@ koopa::debian_apt_add_repo() {
                 ;;
         esac
     done
+    if [[ -z "${dict[key_name]:-}" ]]
+    then
+        dict[key_name]="${dict[name]}"
+    fi
     koopa::assert_is_set \
         '--distribution' "${dict[distribution]:-}" \
         '--key-name' "${dict[key_name]:-}" \
@@ -323,42 +325,25 @@ koopa::debian_apt_add_docker_key() { # {{{1
     return 0
 }
 
-# FIXME This needs to call koopa:::debian_apt_add_repo.
 koopa::debian_apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2021-11-03.
+    # @note Updated 2021-11-09.
     #
     # @seealso
     # - https://docs.docker.com/engine/install/debian/
     # - https://docs.docker.com/engine/install/ubuntu/
     # """
-    local dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    declare -A dict=(
-        [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
-        [key_name]='docker'
-        [key_prefix]="$(koopa::debian_apt_key_prefix)"
-        [name]='docker'
-        [name_fancy]='Docker'
-        [os_codename]="$(koopa::os_codename)"
-        [os_id]="$(koopa::os_id)"
-        [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
-    )
-    dict[file]="${dict[repo_prefix]}/${dict[name]}.list"
-    dict[url]="https://download.docker.com/linux/${dict[os_id]}"
-    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
-    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
-${dict[url]} ${dict[os_codename]} stable"
-    if [[ -f "${dict[file]}" ]]
-    then
-        koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
-        return 0
-    fi
     koopa::debian_apt_add_docker_key
-    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
-    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
+    koopa::debian_apt_add_repo \
+        --name-fancy-'Docker' \
+        --name='docker' \
+        --url="https://download.docker.com/linux/$(koopa::os_id)" \
+        --distribution="$(koopa::os_codename)" \
+        --component='stable'
+
     return 0
 }
 
