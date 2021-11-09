@@ -100,11 +100,7 @@ koopa::debian_apt_add_key() {  #{{{1
     return 0
 }
 
-# FIXME Create a standardized Debian repository list file generator
-# FIXME Need to de-couple repo and key steps in the install commands.
-# FIXME Consider exporting these?
-
-koopa:::debian_apt_add_repo() {
+koopa::debian_apt_add_repo() {
     # """
     # Add an apt repo.
     # @note Updated 2021-11-09.
@@ -160,17 +156,6 @@ koopa:::debian_apt_add_repo() {
     # @seealso
     # - https://wiki.debian.org/DebianRepository/Format
     # """
-    # FIXME
-    #
-    # --uri
-    # --distribution
-    #
-    # --arch
-    # --signed-by
-    #
-    # FIXME Loop across these:
-    # --component
-
     local components dict
     koopa::assert_has_args "$#"
     koopa::assert_is_admin
