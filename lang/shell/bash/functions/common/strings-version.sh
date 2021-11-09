@@ -767,7 +767,8 @@ koopa::return_version() { # {{{1
                 cmd='tldr'
                 ;;
             'texinfo')
-                cmd='makeinfo'
+                # NOTE Tex Live install can mask this on macOS.
+                cmd='texi2any'
                 ;;
             'the-silver-searcher')
                 cmd='ag'
