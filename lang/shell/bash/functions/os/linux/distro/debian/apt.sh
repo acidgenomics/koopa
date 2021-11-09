@@ -343,7 +343,6 @@ koopa::debian_apt_add_docker_repo() { # {{{1
         --url="https://download.docker.com/linux/$(koopa::os_id)" \
         --distribution="$(koopa::os_codename)" \
         --component='stable'
-
     return 0
 }
 
@@ -364,37 +363,21 @@ koopa::debian_apt_add_google_cloud_key() { # {{{1
     return 0
 }
 
-# FIXME This needs to call koopa:::debian_apt_add_repo.
 koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK apt repo.
-    # @note Updated 2021-11-03.
+    # @note Updated 2021-11-09.
     # """
-    local dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    declare -A dict=(
-        [arch]="$(koopa::arch2)"
-        [channel]='cloud-sdk'
-        [key_name]='google-cloud'
-        [key_prefix]="$(koopa::debian_apt_key_prefix)"
-        [name]='google-cloud-sdk'
-        [name_fancy]='Google Cloud SDK'
-        [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
-        [url]='https://packages.cloud.google.com/apt'
-    )
-    dict[file]="${dict[repo_prefix]}/koopa-${dict[name]}.list"
-    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
-    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
-${dict[url]} ${dict[channel]} main"
-    if [[ -f "${dict[file]}" ]]
-    then
-        koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
-        return 0
-    fi
     koopa::debian_apt_add_google_cloud_key
-    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
-    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
+    koopa::debian_apt_add_repo \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        --key-name='google-cloud' \
+        --url='https://packages.cloud.google.com/apt' \
+        --distribution='cloud-sdk' \
+        --component='main'
     return 0
 }
 
