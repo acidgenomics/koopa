@@ -284,7 +284,6 @@ koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # @note Updated 2021-11-09.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
     koopa::debian_apt_add_microsoft_key
     koopa::debian_apt_add_repo \
         --name-fancy='Microsoft Azure CLI' \
@@ -305,23 +304,11 @@ koopa::debian_apt_add_docker_key() { # {{{1
     # - https://docs.docker.com/engine/install/debian/
     # - https://docs.docker.com/engine/install/ubuntu/
     # """
-    local app dict
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    declare -A app=(
-        [gpg]="$(koopa::locate_gpg)"
-        [sudo]="$(koopa::locate_sudo)"
-    )
-    declare -A dict=(
-        [name]='docker'
-        [name_fancy]='Docker'
-        [os_id]="$(koopa::os_id)"
-    )
-    dict[url]="https://download.docker.com/linux/${dict[os_id]}/gpg"
     koopa::debian_apt_add_key \
-        --name-fancy="${dict[name_fancy]}" \
-        --name="${dict[name]}" \
-        --url="${dict[url]}"
+        --name-fancy='Docker' \
+        --name='docker' \
+        --url="https://download.docker.com/linux/$(koopa::os_id)/gpg"
     return 0
 }
 
@@ -335,7 +322,6 @@ koopa::debian_apt_add_docker_repo() { # {{{1
     # - https://docs.docker.com/engine/install/ubuntu/
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
     koopa::debian_apt_add_docker_key
     koopa::debian_apt_add_repo \
         --name-fancy='Docker' \
@@ -369,7 +355,6 @@ koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     # @note Updated 2021-11-09.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
     koopa::debian_apt_add_google_cloud_key
     koopa::debian_apt_add_repo \
         --name-fancy='Google Cloud SDK' \
