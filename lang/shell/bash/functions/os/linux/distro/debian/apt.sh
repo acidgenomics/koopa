@@ -338,7 +338,7 @@ koopa::debian_apt_add_docker_repo() { # {{{1
     koopa::assert_is_admin
     koopa::debian_apt_add_docker_key
     koopa::debian_apt_add_repo \
-        --name-fancy-'Docker' \
+        --name-fancy='Docker' \
         --name='docker' \
         --url="https://download.docker.com/linux/$(koopa::os_id)" \
         --distribution="$(koopa::os_codename)" \
