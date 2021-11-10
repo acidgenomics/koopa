@@ -379,38 +379,29 @@ koopa::debian_apt_add_llvm_key() { # {{{1
     return 0
 }
 
-# FIXME This needs to call koopa:::debian_apt_add_repo.
 koopa::debian_apt_add_llvm_repo() { # {{{1
     # """
     # Add LLVM apt repo.
-    # @note Updated 2021-11-03.
+    # @note Updated 2021-11-10.
     # """
-    local dict
     koopa::assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa::arch2)"
-        [key_name]='llvm'
-        [key_prefix]="$(koopa::debian_apt_key_prefix)"
+        [component]='main'
         [name]='llvm'
         [name_fancy]='LLVM'
         [os]="$(koopa::os_codename)"
-        [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
     )
-    dict[file]="${dict[repo_prefix]}/koopa-${dict[name]}.list"
     dict[url]="http://apt.llvm.org/${dict[os]}/"
-    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
-    dict[version]="$(koopa::major_version "$(koopa::variable "${dict[name]}")")"
-    dict[channel]="llvm-toolchain-${dict[os]}-${dict[version]}"
-    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
-${dict[url]} ${dict[channel]} main"
-    if [[ -f "${dict[file]}" ]]
-    then
-        koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
-        return 0
-    fi
+    dict[version]="$(koopa::variable "${dict[name]}")"
+    dict[maj_ver]="$(koopa::major_version "${dict[version]}")"
+    dict[distribution]="llvm-toolchain-${dict[os]}-${dict[maj_ver]}"
     koopa::debian_apt_add_llvm_key
-    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
-    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
+    koopa::debian_apt_add_repo \
+        --name-fancy="${dict[name_fancy]}" \
+        --name="${dict[name]}" \
+        --url="${dict[url]}" \
+        --distribution="${dict[distribution]}" \
+        --component="${dict[component]}"
     return 0
 }
 
