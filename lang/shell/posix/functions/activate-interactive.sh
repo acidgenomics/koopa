@@ -113,6 +113,13 @@ _koopa_activate_completion() { # {{{1
     return 0
 }
 
+# FIXME Rework this, using GNU coreutils on macOS except for cp, which currently
+# has permissions issues on NFS file mounts. Usage of '--archive'/'-a' flag
+# can also be problematic and warn about ACLs onto NFS file mounts.
+# FIXME We need to switch rm back to GNU rm, so we can use
+# '--interactive=once'/-I', which is way better than prompting to remove for
+# each file.
+
 _koopa_activate_coreutils_aliases() { # {{{1
     # """
     # Activate GNU/BSD coreutils aliases.
