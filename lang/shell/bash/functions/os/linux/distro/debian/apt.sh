@@ -467,15 +467,13 @@ koopa::debian_apt_add_r_key() { # {{{1
     return 0
 }
 
-# FIXME This needs to call koopa:::debian_apt_add_repo.
 koopa::debian_apt_add_r_repo() { # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2021-11-03.
+    # @note Updated 2021-11-10.
     # """
     local dict
     koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_admin
     declare -A dict=(
         [name]='r'
         [name_fancy]='R'
@@ -502,25 +500,14 @@ koopa::debian_apt_add_r_repo() { # {{{1
             ;;
     esac
     dict[version2]="$(koopa::gsub '\.' '' "${dict[version2]}")"
-    dict[file]="${dict[repo_prefix]}/koopa-${dict[name]}.list"
     dict[url]="https://cloud.r-project.org/bin/linux/${dict[os_id]}"
-    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
-    dict[channel]="${dict[os_codename]}-cran${dict[version2]}/"
-    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
-${dict[url]} ${dict[channel]}"
-    if [[ -f "${dict[file]}" ]]
-    then
-        # Early return if version matches and Debian source is enabled.
-        if koopa::file_match_fixed "${dict[file]}" "${dict[version2]}"
-        then
-            return 0
-        else
-            koopa::rm --sudo "${dict[file]}"
-        fi
-    fi
+    dict[distribution]="${dict[os_codename]}-cran${dict[version2]}/"
     koopa::debian_apt_add_r_key
-    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
-    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
+    koopa::debian_apt_add_repo \
+        --name-fancy="${dict[name_fancy]}" \
+        --name="${dict[name]}" \
+        --url="${dict[url]}" \
+        --distribution="${dict[distribution]}"
     return 0
 }
 
