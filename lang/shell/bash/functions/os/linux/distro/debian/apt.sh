@@ -384,17 +384,21 @@ koopa::debian_apt_add_llvm_repo() { # {{{1
     # Add LLVM apt repo.
     # @note Updated 2021-11-10.
     # """
-    koopa::assert_has_no_args "$#"
+    koopa::assert_has_args_le "$#" 1
     declare -A dict=(
         [component]='main'
         [name]='llvm'
         [name_fancy]='LLVM'
         [os]="$(koopa::os_codename)"
+        [version]="${1:-}"
     )
+    if [[ -z "${dict[version]}" ]]
+    then
+        dict[version]="$(koopa::variable "${dict[name]}")"
+    fi
     dict[url]="http://apt.llvm.org/${dict[os]}/"
-    dict[version]="$(koopa::variable "${dict[name]}")"
-    dict[maj_ver]="$(koopa::major_version "${dict[version]}")"
-    dict[distribution]="llvm-toolchain-${dict[os]}-${dict[maj_ver]}"
+    dict[version2]="$(koopa::major_version "${dict[version]}")"
+    dict[distribution]="llvm-toolchain-${dict[os]}-${dict[version2]}"
     koopa::debian_apt_add_llvm_key
     koopa::debian_apt_add_repo \
         --name-fancy="${dict[name_fancy]}" \
@@ -441,7 +445,7 @@ koopa::debian_apt_add_r_key() { # {{{1
     koopa::assert_is_admin
     declare -A dict=(
         [key_name]='r'
-        # Alternatively, may be able to use 'keys.gnupg.net'.
+        # Alternatively, can use 'keys.gnupg.net' keyserver.
         [keyserver]='keyserver.ubuntu.com'
         [prefix]="$(koopa::debian_apt_key_prefix)"
     )
@@ -473,13 +477,9 @@ koopa::debian_apt_add_r_repo() { # {{{1
     koopa::assert_has_args_le "$#" 1
     koopa::assert_is_admin
     declare -A dict=(
-        [arch]="$(koopa::arch2)"
-        [key_name]='r'
-        [key_prefix]="$(koopa::debian_apt_key_prefix)"
         [name]='r'
         [name_fancy]='R'
         [os_codename]="$(koopa::os_codename)"
-        [repo_prefix]="$(koopa::debian_apt_sources_prefix)"
         [version]="${1:-}"
     )
     if koopa::is_ubuntu_like
