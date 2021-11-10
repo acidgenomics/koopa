@@ -26,19 +26,16 @@ koopa::debian_install_wine() { # {{{1
     # - https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949
     # """
     local app dict
-    echo 'FIXME 1'
     koopa::assert_has_no_args "$#"
-    echo 'FIXME 2'
     koopa::assert_is_admin
     declare -A app=(
-        [apt_get]="$(koopa::debian_apt_get)"
+        [apt_get]='koopa::debian_apt_get'
         [dpkg]="$(koopa::debian_locate_dpkg)"
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
         [name_fancy]='Wine'
     )
-    echo 'FIXME 3'
     if koopa::is_installed 'wine'
     then
         koopa::alert_is_installed "${dict[name_fancy]}"
@@ -51,6 +48,7 @@ koopa::debian_install_wine() { # {{{1
     echo 'FIXME 5'
     koopa::debian_apt_add_wine_obs_repo
     # Enable 32-bit packages.
+    echo 'FIXME 6'
     "${app[sudo]}" "${app[dpkg]}" --add-architecture 'i386'
     # Old stable version: Use wine, wine32 here.
     koopa::debian_apt_get install \
