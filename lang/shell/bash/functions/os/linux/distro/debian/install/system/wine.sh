@@ -5,7 +5,7 @@
 koopa::debian_install_wine() { # {{{1
     # """
     # Install Wine.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-10.
     #
     # aptitude will return more informative error messages on held package
     # errors, such as with missing libaudio0 dependency.
@@ -29,7 +29,6 @@ koopa::debian_install_wine() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [apt_get]='koopa::debian_apt_get'
         [dpkg]="$(koopa::debian_locate_dpkg)"
         [sudo]="$(koopa::locate_sudo)"
     )
@@ -52,12 +51,8 @@ koopa::debian_install_wine() { # {{{1
         'winbind' \
         'x11-apps' \
         'xauth' \
-        'xvfb'
-    # Install latest stable version of Wine.
-    "${app[sudo]}" DEBIAN_FRONTEND='noninteractive' \
-        "${app[apt_get]}" --yes install \
-            --install-recommends \
-            'winehq-stable'
+        'xvfb' \
+        'winehq-stable'
     koopa::install_success "${dict[name_fancy]}"
     return 0
 }
