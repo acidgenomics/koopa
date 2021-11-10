@@ -536,44 +536,31 @@ koopa::debian_apt_add_wine_key() { # {{{1
     return 0
 }
 
-
-# FIXME This needs to call koopa:::debian_apt_add_repo.
 koopa::debian_apt_add_wine_repo() { # {{{1
     # """
     # Add WineHQ repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-10.
     #
     # - Debian:
     #   https://wiki.winehq.org/Debian
     # - Ubuntu:
     #   https://wiki.winehq.org/Ubuntu
     # """
-    local file os_codename os_id string url
     koopa::assert_has_no_args "$#"
-    name='wine'
-    name_fancy='Wine'
-    # FIXME Rework using prefix variable.
-    file="/etc/apt/sources.list.d/koopa-${name}.list"
-    if [[ -f "$file" ]]
-    then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
-        return 0
-    fi
     koopa::debian_apt_add_wine_key
-    os_id="$(koopa::os_id)"
-    os_codename="$(koopa::os_codename)"
-    url="https://dl.winehq.org/wine-builds/${os_id}/"
-    # FIXME Need to include arch and signed-by.
-    string="deb ${url} ${os_codename} main"
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
-    koopa::sudo_write_string "$string" "$file"
+    koopa::debian_apt_add_repo \
+        --name-fancy='Wine' \
+        --name='wine' \
+        --url="https://dl.winehq.org/wine-builds/$(koopa::os_id)/" \
+        --distribution="$(koopa::os_codename)" \
+        --component='main'
     return 0
 }
 
 koopa::debian_apt_add_wine_obs_key() { # {{{1
     # """
     # Add the Wine OBS openSUSE key.
-    # @note Updated 2021-11-09.
+    # @note Updated 2021-11-10.
     # """
     local dict
     koopa::assert_has_no_args "$#"
@@ -582,7 +569,6 @@ koopa::debian_apt_add_wine_obs_key() { # {{{1
         [name_fancy]='Wine OBS'
         [os_string]="$(koopa::os_string)"
     )
-    # FIXME Need to add support for other Debian and Ubuntu releases here.
     case "${dict[os_string]}" in
         'debian-10')
             dict[subdir]='Debian_10'
@@ -606,11 +592,10 @@ Emulators:/Wine:/Debian/${dict[subdir]}/Release.key"
     return 0
 }
 
-# FIXME This needs to call koopa:::debian_apt_add_repo.
 koopa::debian_apt_add_wine_obs_repo() { # {{{1
     # """
     # Add Wine OBS openSUSE repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-10.
     #
     # Required to install libfaudio0 dependency for Wine on Debian 10+.
     #
@@ -618,34 +603,33 @@ koopa::debian_apt_add_wine_obs_repo() { # {{{1
     # - https://wiki.winehq.org/Debian
     # - https://forum.winehq.org/viewtopic.php?f=8&t=32192
     # """
-    local base_url file name name_fancy os_string repo_url string
+    local dict
     koopa::assert_has_no_args "$#"
-    name='wine-obs'
-    name_fancy='Wine OBS'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
-    then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
-        return 0
-    fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
-    koopa::debian_apt_add_wine_obs_key
-    base_url="https://download.opensuse.org/repositories/\
+    declare -A dict=(
+        [base_url]="https://download.opensuse.org/repositories/\
 Emulators:/Wine:/Debian"
-    os_string="$(koopa::os_string)"
-    case "$os_string" in
+        [distribution]='./'
+        [name]='wine-obs'
+        [name_fancy]='Wine OBS'
+        [os_string]="$(koopa::os_string)"
+    )
+    case "${dict[os_string]}" in
         'debian-10')
-            repo_url="${base_url}/Debian_10/"
+            dict[url]="${dict[base_url]}/Debian_10/"
             ;;
         'ubuntu-18')
-            repo_url="${base_url}/xUbuntu_18.04/"
+            dict[url]="${dict[base_url]}/xUbuntu_18.04/"
             ;;
         *)
-            koopa::stop "Unsupported OS: '${os_string}'."
+            koopa::stop "Unsupported OS: '${dict[os_string]}'."
             ;;
     esac
-    string="deb ${repo_url} ./"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::debian_apt_add_wine_obs_key
+    koopa::debian_apt_add_repo \
+        --name-fancy="${dict[name_fancy]}" \
+        --name="${dict[name]}" \
+        --url="${dict[url]}" \
+        --distribution="${dict[distribution]}"
     return 0
 }
 
