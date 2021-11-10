@@ -573,6 +573,9 @@ koopa::debian_apt_add_wine_obs_key() { # {{{1
         'debian-10')
             dict[subdir]='Debian_10'
             ;;
+        'debian-11')
+            dict[subdir]='Debian_11'
+            ;;
         'ubuntu-18')
             dict[subdir]='xUbuntu_18.04'
             ;;
