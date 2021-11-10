@@ -590,7 +590,7 @@ koopa::debian_apt_add_wine_obs_key() { # {{{1
 Emulators:/Wine:/Debian/${dict[subdir]}/Release.key"
     koopa::debian_apt_add_key \
         --name-fancy="${dict[name_fancy]}" \
-        --name="${dict[wine_obs]}" \
+        --name="${dict[name]}" \
         --url="${dict[url]}"
     return 0
 }
