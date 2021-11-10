@@ -155,6 +155,8 @@ _koopa_activate_coreutils_aliases() { # {{{1
     elif _koopa_is_macos
     then
         # BSD coreutils.
+        # FIXME usage of archive '-a' flag here can result in warnings on
+        # NFS mounts and other non-APFS file systems...
         cp_args='-ai'
         ln_args='-ins'
         mkdir_args='-p'
