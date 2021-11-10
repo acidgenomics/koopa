@@ -601,6 +601,7 @@ koopa::debian_apt_add_wine_obs_repo() { # {{{1
     #
     # @seealso
     # - https://wiki.winehq.org/Debian
+    # - https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/
     # - https://forum.winehq.org/viewtopic.php?f=8&t=32192
     # """
     local dict
@@ -617,8 +618,14 @@ Emulators:/Wine:/Debian"
         'debian-10')
             dict[url]="${dict[base_url]}/Debian_10/"
             ;;
+        'debian-11')
+            dict[url]="${dict[base_url]}/Debian_11/"
+            ;;
         'ubuntu-18')
             dict[url]="${dict[base_url]}/xUbuntu_18.04/"
+            ;;
+        'ubuntu-20')
+            dict[url]="${dict[base_url]}/xUbuntu_20.04/"
             ;;
         *)
             koopa::stop "Unsupported OS: '${dict[os_string]}'."
