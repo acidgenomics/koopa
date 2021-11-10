@@ -509,7 +509,7 @@ node-prettier="2.4.1"           # 2021-09-16
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2021-11-03 from https://pypi.org/.
+# Updated 2021-11-10 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
@@ -522,7 +522,7 @@ python-bpytop="1.0.67"          # default; homebrew
 python-cython="0.29.24"         # default; reticulate
 python-flake8="4.0.1"           # default; homebrew
 python-glances="3.2.3.1"        # default; homebrew
-python-isort="5.10.0"           # default
+python-isort="5.10.1"           # default
 python-leidenalg="0.8.7"        # reticulate
 python-louvain="0.7.0"          # reticulate
 python-numpy="1.21.2"           # reticulate
@@ -540,7 +540,7 @@ python-pyyaml="5.4.1"           # reticulate
 python-ranger-fm="1.9.3"        # default; homebrew
 python-scikit-learn="1.0"       # reticulate
 python-scipy="1.7.1"            # reticulate
-python-setuptools="58.5.2"      # default; reticulate
+python-setuptools="58.5.3"      # default; reticulate
 python-six="1.16.0"             # default
 python-umap-learn="0.5.1"       # reticulate
 python-wheel="0.37.0"           # default; reticulate
@@ -557,15 +557,15 @@ ruby-ronn="0.7.3"               # 2010-06-24
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2021-10-26 from https://crates.io/.
+# Updated 2021-11-10 from https://crates.io/.
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.3"               # homebrew
-rust-broot="1.7.0"              # homebrew; br
-rust-cargo-update="7.0.1"
-rust-cargo-outdated="0.9.17"    # homebrew
+rust-broot="1.7.1"              # homebrew; br
+rust-cargo-update="8.0.0"
+rust-cargo-outdated="0.9.18"    # homebrew
 rust-dog="0.1.0"                # homebrew
 rust-du-dust="0.7.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
@@ -574,7 +574,7 @@ rust-hyperfine="1.12.0"         # homebrew
 rust-procs="0.11.10"            # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
-rust-starship="0.58.0"          # homebrew
+rust-starship="1.0.0"           # homebrew
 rust-tealdeer="1.4.1"           # homebrew; tldr
 rust-tokei="12.1.2"             # homebrew
 rust-xsv="0.13.0"               # homebrew
