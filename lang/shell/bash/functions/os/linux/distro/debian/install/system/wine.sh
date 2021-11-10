@@ -42,13 +42,10 @@ koopa::debian_install_wine() { # {{{1
         return 0
     fi
     koopa::install_start "${dict[name_fancy]}"
-    echo 'FIXME 4'
     koopa::debian_apt_add_wine_repo
     # This is required to install missing libaudio0 dependency.
-    echo 'FIXME 5'
     koopa::debian_apt_add_wine_obs_repo
     # Enable 32-bit packages.
-    echo 'FIXME 6'
     "${app[sudo]}" "${app[dpkg]}" --add-architecture 'i386'
     # Old stable version: Use wine, wine32 here.
     koopa::debian_apt_get install \
