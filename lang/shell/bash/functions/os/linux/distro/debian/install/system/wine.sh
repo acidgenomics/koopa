@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this in our 'install_app' function.
+
 koopa::debian_install_wine() { # {{{1
     # """
     # Install Wine.
@@ -24,7 +26,9 @@ koopa::debian_install_wine() { # {{{1
     # - https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949
     # """
     local app dict
+    echo 'FIXME 1'
     koopa::assert_has_no_args "$#"
+    echo 'FIXME 2'
     koopa::assert_is_admin
     declare -A app=(
         [apt_get]="$(koopa::debian_apt_get)"
@@ -34,14 +38,17 @@ koopa::debian_install_wine() { # {{{1
     declare -A dict=(
         [name_fancy]='Wine'
     )
+    echo 'FIXME 3'
     if koopa::is_installed 'wine'
     then
         koopa::alert_is_installed "${dict[name_fancy]}"
         return 0
     fi
     koopa::install_start "${dict[name_fancy]}"
+    echo 'FIXME 4'
     koopa::debian_apt_add_wine_repo
     # This is required to install missing libaudio0 dependency.
+    echo 'FIXME 5'
     koopa::debian_apt_add_wine_obs_repo
     # Enable 32-bit packages.
     "${app[sudo]}" "${app[dpkg]}" --add-architecture 'i386'
