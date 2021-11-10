@@ -259,7 +259,6 @@ koopa::debian_apt_add_repo() {
         '--name-fancy' "${dict[name_fancy]:-}" \
         '--prefix' "${dict[prefix]:-}" \
         '--url' "${dict[url]:-}"
-    koopa::assert_is_array_non_empty "${components[@]:-}"
     koopa::assert_is_dir \
         "${dict[key_prefix]}" \
         "${dict[prefix]}"
