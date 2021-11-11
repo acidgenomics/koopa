@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap this in our 'install_app' function.
-
+# FIXME Need to wrap this.
 koopa::debian_install_wine() { # {{{1
     # """
     # Install Wine.
@@ -57,6 +56,7 @@ koopa::debian_install_wine() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::debian_uninstall_wine() { # {{{1
     # """
     # Uninstall Wine.

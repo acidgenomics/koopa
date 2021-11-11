@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::fedora_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.
@@ -21,6 +22,7 @@ koopa::fedora_install_google_cloud_sdk() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::fedora_uninstall_google_cloud_sdk() { # {{{1
     # """
     # Uninstall Google Cloud SDK.
