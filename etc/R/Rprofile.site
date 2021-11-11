@@ -1,7 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
-#' @note Updated 2021-10-14.
+#' @note Updated 2021-11-11.
 #'
 #' @section Restarting R:
 #'
@@ -222,7 +222,7 @@ local({  # nolint
     repos <- getOption("repos")
     if (isTRUE(linux)) {
         ## Configure the RSPM CRAN snapshot.
-        snapshot <- "2021-10-05"
+        snapshot <- "2021-11-01"
         cran <- "https://packagemanager.rstudio.com/cran"
         ## Enable binary packages for Ubuntu 20.04 LTS (Focal Fossa).
         if (isTRUE(grepl(
