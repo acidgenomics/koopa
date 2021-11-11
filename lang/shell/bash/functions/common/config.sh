@@ -41,7 +41,6 @@ koopa::add_monorepo_config_link() { # {{{1
     return 0
 }
 
-# FIXME Ensure that this works.
 koopa::add_to_user_profile() { # {{{1
     # """
     # Add koopa configuration to user profile.
@@ -54,7 +53,6 @@ koopa::add_to_user_profile() { # {{{1
     )
     koopa::alert "Adding koopa activation to '${dict[file]}'."
     read -r -d '' "dict[string]" << END || true
-
 __koopa_activate_user_profile() { # {{{1
     # """
     # Activate koopa shell for current user.
@@ -80,7 +78,7 @@ __koopa_activate_user_profile() { # {{{1
 
 __koopa_activate_user_profile
 END
-    koopa::append_string "${dict[string]}" "${dict[file]}"
+    koopa::append_string "\n${dict[string]}" "${dict[file]}"
     return 0
 }
 
