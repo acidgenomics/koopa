@@ -1,32 +1,33 @@
 #!/usr/bin/env bash
 
-# FIXME Need to update and wrap tail here.
 koopa::find_app_version() { # {{{1
     # """
     # Find the latest application version.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-11.
     # """
-    local find name prefix sort tail x
-    koopa::assert_has_args "$#"
-    find="$(koopa::locate_find)"
-    sort="$(koopa::locate_sort)"
-    tail="$(koopa::locate_tail)"
-    name="${1:?}"
-    prefix="$(koopa::app_prefix)"
-    koopa::assert_is_dir "$prefix"
-    prefix="${prefix}/${name}"
-    koopa::assert_is_dir "$prefix"
-    # FIXME Rework using 'koopa::find'.
-    x="$( \
-        "$find" "$prefix" \
-            -mindepth 1 \
-            -maxdepth 1 \
-            -type 'd' \
-        | "$sort" \
-        | "$tail" -n 1 \
+    local app dict
+    koopa::assert_has_args_eq "$#" 1
+    declare -A app=(
+        [sort]="$(koopa::locate_sort)"
+        [tail]="$(koopa::locate_tail)"
+    )
+    declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
+        [name]="${1:?}"
+    )
+    dict[prefix]="${dict[app_prefix]}/${dict[name]}"
+    koopa::assert_is_dir "${dict[prefix]}"
+    dict[hit]="$( \
+        koopa::find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict[prefix]}" \
+            --type='d' \
+        | "${app[sort]}" \
+        | "${app[tail]}" -n 1 \
     )"
-    [[ -d "$x" ]] || return 1
-    x="$(koopa::basename "$x")"
-    koopa::print "$x"
+    [[ -d "${dict[hit]}" ]] || return 1
+    dict[hit_bn]="$(koopa::basename "${dict[hit]}")"
+    koopa::print "${dict[hit_bn]}"
     return 0
 }

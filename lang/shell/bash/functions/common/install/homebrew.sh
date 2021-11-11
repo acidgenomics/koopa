@@ -47,6 +47,7 @@ koopa::install_homebrew() { # {{{1
     return 0
 }
 
+# FIXME Consider wrapping this.
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
