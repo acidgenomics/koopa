@@ -28,6 +28,10 @@ koopa::python_pip_install() { # {{{1
     # other packages that are not updated. This is annoying, but there's no
     # current workaround except to not use '--upgrade'.
     #
+    # If you disable '--upgrade', then these warning messages will pop up:
+    # > WARNING: Target directory XXX already exists.
+    # > Specify --upgrade to force replacement.
+    #
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
     # - https://docs.python-guide.org/dev/pip-virtualenv/
@@ -86,9 +90,7 @@ koopa::python_pip_install() { # {{{1
         '--disable-pip-version-check'
         '--no-warn-script-location'
         '--progress-bar=pretty'
-        # Disabling because this will remove bin files from other packages
-        # that are not installed / updated (see note above).
-        # > '--upgrade'
+        '--upgrade'
     )
     if [[ "${dict[reinstall]}" -eq 1 ]]
     then
