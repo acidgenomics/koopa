@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-11-09"
+koopa-date="2021-11-11"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.3.4"
+aws-cli="2.3.5"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.30.0"
@@ -100,7 +100,7 @@ coreutils="9.0"
 cpufetch="0.97"
 
 # https://curl.haxx.se/
-curl="7.79.1"
+curl="7.80.0"
 
 # https://docs.docker.com/install/
 docker="20.10.8"
@@ -187,6 +187,12 @@ jq="1.6"
 # https://github.com/JuliaLang/julia/releases
 julia="1.6.3"
 
+# https://github.com/wofr06/lesspipe/
+# FIXME Need to add install support for Linux.
+# Current lesspipe.sh script doesn't necessarily contain correct version,
+# so disabling version checks on this for time being.
+lesspipe="1.90"
+
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
 libevent="2.1.12"
@@ -216,7 +222,7 @@ make="4.3"
 mcfly="0.5.10"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
-ncurses="6.2.20200212"
+ncurses="6.3.20211021"
 
 # https://github.com/dylanaraps/neofetch/releases
 neofetch="7.1.0"
