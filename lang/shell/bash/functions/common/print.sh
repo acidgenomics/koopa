@@ -91,18 +91,22 @@ koopa::alert_restart() { # {{{1
     return 0
 }
 
+# FIXME Consider prefixing this with "alert".
 koopa::configure_start() { # {{{1
     koopa:::alert_process_start 'Configuring' "$@"
 }
 
+# FIXME Consider prefixing this with "alert".
 koopa::configure_success() { # {{{1
     koopa:::alert_process_success 'Configuration' "$@"
 }
 
+# FIXME Consider prefixing this with "alert".
 koopa::install_start() { # {{{1
     koopa:::alert_process_start 'Installing' "$@"
 }
 
+# FIXME Consider prefixing this with "alert".
 koopa::install_success() { # {{{1
     koopa:::alert_process_success 'Installation' "$@"
 }
@@ -175,18 +179,22 @@ koopa::stop() { # {{{1
     exit 1
 }
 
+# FIXME Consider prefixing this with "alert".
 koopa::uninstall_start() { # {{{1
     koopa:::alert_process_start 'Uninstalling' "$@"
 }
 
+# FIXME Consider prefixing this with "alert".
 koopa::uninstall_success() { # {{{1
     koopa:::alert_process_success 'Uninstallation' "$@"
 }
 
+# FIXME Consider prefixing this with "alert".
 koopa::update_start() { # {{{1
     koopa:::alert_process_start 'Updating' "$@"
 }
 
+# FIXME Consider prefixing this with "alert".
 koopa::update_success() { # {{{1
     koopa:::alert_process_success 'Update' "$@"
 }

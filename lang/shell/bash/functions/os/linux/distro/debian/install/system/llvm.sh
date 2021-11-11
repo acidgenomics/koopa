@@ -3,6 +3,7 @@
 # FIXME Need to rework this to not warn about missing llvm-config.
 # FIXME Wrap this using our standard install:::app approach.
 # FIXME Ensure version support works, e.g. LLVM 12 and 13.
+# FIXME Need to wrap this.
 
 koopa::debian_install_llvm() { # {{{1
     # """
@@ -73,6 +74,7 @@ koopa::debian_install_llvm() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::debian_uninstall_llvm() { # {{{1
     # """
     # Uninstall LLVM.

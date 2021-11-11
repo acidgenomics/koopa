@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::rhel_install_base() { # {{{1
     # """
     # Install Red Hat Enterprise Linux (RHEL) base system.

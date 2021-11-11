@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::debian_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.
@@ -28,6 +29,7 @@ koopa::debian_install_google_cloud_sdk() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::debian_uninstall_google_cloud_sdk() { # {{{1
     # """
     # Uninstall Google Cloud SDK.

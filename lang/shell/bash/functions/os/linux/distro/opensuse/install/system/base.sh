@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::opensuse_install_base() { # {{{1
     # """
     # Install openSUSE base system.
