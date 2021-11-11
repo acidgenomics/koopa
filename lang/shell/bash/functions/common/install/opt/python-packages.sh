@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now seeing this error message on my MacBook:
-# ERROR: Could not find an activated virtualenv (required).
-
-# FIXME This is removing packages from 'bin/' upon update.
-# How to resolve this?
-
 koopa::install_python_packages() { # {{{1
     koopa:::install_app_packages \
         --name-fancy='Python' \
@@ -75,8 +69,6 @@ koopa::update_python_packages() { # {{{1
         "$@"
 }
 
-# FIXME Is our updater removing packages from '/bin' (e.g. ranger)?
-# FIXME Could this be due to use of '--isolate' flag?
 koopa:::update_python_packages() { # {{{1
     # """
     # Update all pip packages.
