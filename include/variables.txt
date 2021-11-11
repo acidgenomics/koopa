@@ -189,9 +189,7 @@ julia="1.6.3"
 
 # https://github.com/wofr06/lesspipe/
 # FIXME Need to add install support for Linux.
-# Current lesspipe.sh script doesn't necessarily contain correct version,
-# so disabling version checks on this for time being.
-lesspipe="1.90"
+lesspipe="1.91"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases

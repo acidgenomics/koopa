@@ -302,6 +302,14 @@ koopa::locate_cargo() { # {{{1
         --name='cargo'
 }
 
+koopa::locate_cat() { # {{{1
+    # """
+    # Locate GNU 'cat'.
+    # @note Updated 2021-11-11.
+    # """
+    koopa:::locate_gnu_coreutils_app 'cat'
+}
+
 koopa::locate_chgrp() { # {{{1
     # """
     # Locate GNU 'chgrp'.
@@ -629,6 +637,17 @@ koopa::locate_julia() { # {{{1
     koopa:::locate_app \
         --macos-app="$(koopa::macos_julia_prefix)/bin/julia" \
         --name='julia'
+}
+
+koopa::locate_lesspipe() { # {{{1
+    # """
+    # Locate 'lesspipe.sh'.
+    # @note Updated 2021-11-11.
+    # """
+    koopa:::locate_app \
+        --brew-opt='lesspipe' \
+        --koopa-opt='lesspipe' \
+        --name='lesspipe.sh'
 }
 
 koopa::locate_llvm_config() { # {{{1
