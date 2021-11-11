@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_spacemacs() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --prefix="$(koopa::spacemacs_prefix)" \
-        --version='rolling' \
-        --no-shared \
-        "$@"
-}
-
 koopa:::install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.
@@ -26,19 +16,7 @@ koopa:::install_spacemacs() { # {{{1
     return 0
 }
 
-koopa::uninstall_spacemacs() { # {{{1
-    # """
-    # Uninstall Spacemacs.
-    # @note Updated 2021-06-08.
-    # """
-    koopa:::uninstall_app \
-        --name-fancy='Spacemacs' \
-        --name='spacemacs' \
-        --no-shared \
-        --prefix="$(koopa::spacemacs_prefix)" \
-        "$@"
-}
-
+# FIXME Need to wrap this.
 koopa::update_spacemacs() { # {{{1
     # """
     # Update Spacemacs.
