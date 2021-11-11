@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap call to 'koopa:::install_app' here.
+# FIXME Need to wrap this.
 koopa::debian_install_r_cran_binary() { # {{{1
     # """
     # Install latest version of R from CRAN.
@@ -53,6 +53,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::debian_uninstall_r_cran_binary() { # {{{1
     # """
     # Uninstall R CRAN binary.

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::arch_install_base() { # {{{1
     # """
     # Install Arch Linux base system.

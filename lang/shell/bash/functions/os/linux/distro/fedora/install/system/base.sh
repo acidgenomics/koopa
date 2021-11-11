@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::fedora_install_base() { # {{{1
     # """
     # Install Fedora base system.
