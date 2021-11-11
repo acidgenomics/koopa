@@ -19,17 +19,20 @@ koopa::python_get_pkg_versions() {
     return 0
 }
 
-# FIXME Now seeing this error on my MacBook:
-# ERROR: Could not find an activated virtualenv (required).
-
 koopa::python_pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2021-11-04.
+    # @note Updated 2021-11-11.
+    #
+    # Usage of '--target' with '--upgrade' will remove existing bin files from
+    # other packages that are not updated. This is annoying, but there's no
+    # current workaround except to not use '--upgrade'.
+    #
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # - https://github.com/pypa/pip/issues/3828
+    # - https://github.com/pypa/pip/issues/8063
     # """
     local app dict pkgs pos
     koopa::assert_has_args "$#"
@@ -83,7 +86,9 @@ koopa::python_pip_install() { # {{{1
         '--disable-pip-version-check'
         '--no-warn-script-location'
         '--progress-bar=pretty'
-        '--upgrade'
+        # Disabling because this will remove bin files from other packages
+        # that are not installed / updated (see note above).
+        # > '--upgrade'
     )
     if [[ "${dict[reinstall]}" -eq 1 ]]
     then
