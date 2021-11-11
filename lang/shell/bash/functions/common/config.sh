@@ -41,20 +41,46 @@ koopa::add_monorepo_config_link() { # {{{1
     return 0
 }
 
+# FIXME Ensure that this works.
 koopa::add_to_user_profile() { # {{{1
     # """
     # Add koopa configuration to user profile.
-    # @note Updated 2021-04-09.
+    # @note Updated 2021-11-11.
     # """
-    local source_file target_file
+    local dict
     koopa::assert_has_no_args "$#"
-    target_file="$(koopa::find_user_profile)"
-    source_file="$(koopa::koopa_prefix)/lang/shell/posix/include/profile.sh"
-    koopa::assert_is_file "$source_file"
-    koopa::alert "Adding koopa activation to '${target_file}'."
-    # FIXME Use 'koopa::touch' here.
-    touch "$target_file"
-    cat "$source_file" >> "$target_file"
+    declare -A dict=(
+        [file]="$(koopa::find_user_profile)"
+    )
+    koopa::alert "Adding koopa activation to '${dict[file]}'."
+    read -r -d '' "dict[string]" << END || true
+
+__koopa_activate_user_profile() { # {{{1
+    # """
+    # Activate koopa shell for current user.
+    # @note Updated 2021-11-11.
+    # @seealso
+    # - https://koopa.acidgenomics.com/
+    # """
+    local script xdg_config_home
+    [ "\$#" -eq 0 ] || return 1
+    xdg_config_home="\${XDG_CONFIG_HOME:-}"
+    if [ -z "\$xdg_config_home" ]
+    then
+        xdg_config_home="\${HOME:?}/.config"
+    fi
+    script="\${xdg_config_home}/koopa/activate"
+    if [ -r "\$script" ]
+    then
+        # shellcheck source=/dev/null
+        . "\$script"
+    fi
+    return 0
+}
+
+__koopa_activate_user_profile
+END
+    koopa::append_string "${dict[string]}" "${dict[file]}"
     return 0
 }
 

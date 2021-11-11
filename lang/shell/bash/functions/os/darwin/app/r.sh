@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden 'cat' here.
 koopa::macos_install_r_data_table() { # {{{1
     # """
     # Install R data.table package on macOS with OpenMP for parallel thread
