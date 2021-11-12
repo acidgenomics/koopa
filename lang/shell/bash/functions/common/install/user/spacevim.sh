@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_spacevim() { # {{{1
-    koopa:::install_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --prefix="$(koopa::spacevim_prefix)" \
-        --version='rolling' \
-        --no-shared \
-        "$@"
-}
-
 koopa:::install_spacevim() { # {{{1
     # """
     # Install SpaceVim.
@@ -38,19 +28,7 @@ koopa:::install_spacevim() { # {{{1
     return 0
 }
 
-koopa::uninstall_spacevim() { # {{{1
-    # """
-    # Uninstall SpaceVim.
-    # @note Updated 2021-06-11.
-    # """
-    koopa:::uninstall_app \
-        --name-fancy='SpaceVim' \
-        --name='spacevim' \
-        --no-shared \
-        --prefix="$(koopa::spacevim_prefix)" \
-        "$@"
-}
-
+# FIXME Need to wrap this.
 koopa::update_spacevim() { # {{{1
     # """
     # Update SpaceVim.

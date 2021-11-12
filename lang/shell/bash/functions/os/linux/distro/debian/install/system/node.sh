@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::debian_install_node() { # {{{1
     # """
     # Install Node.js for Debian using NodeSource.

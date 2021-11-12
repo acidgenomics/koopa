@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::debian_install_azure_cli() { # {{{1
     # """
     # Install Azure CLI.
@@ -32,6 +33,7 @@ koopa::debian_install_azure_cli() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::debian_uninstall_azure_cli() { # {{{1
     # """
     # Uninstall Azure CLI.
