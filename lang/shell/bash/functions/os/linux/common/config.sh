@@ -125,38 +125,42 @@ koopa::remove_user_from_group() { # {{{1
 koopa::update_etc_profile_d() { # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
-    # @note Updated 2021-10-31.
+    # @note Updated 2021-11-11.
     # """
-    local file koopa_prefix string
+    local dict
     koopa::assert_has_no_args "$#"
     koopa::is_shared_install || return 0
     koopa::assert_is_admin
-    file='/etc/profile.d/zzz-koopa.sh'
+    declare -A dict=(
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [file]='/etc/profile.d/zzz-koopa.sh'
+    )
     # Early return if file exists and is not a symlink.
     # Previous verisons of koopa prior to 2020-05-09 created a symlink here.
-    if [[ -f "$file" ]] && [[ ! -L "$file" ]]
+    if [[ -f "${dict[file]}" ]] && [[ ! -L "${dict[file]}" ]]
     then
         return 0
     fi
-    koopa::rm --sudo "$file"
-    koopa_prefix="$(koopa::koopa_prefix)"
-    read -r -d '' string << END || true
+    koopa::alert "Adding koopa activation to '${dict[file]}'."
+    koopa::rm --sudo "${dict[file]}"
+    read -r -d '' "dict[string]" << END || true
 #!/bin/sh
 
 __koopa_activate_shared_profile() { # {{{1
     # """
     # Activate koopa shell for all users.
-    # @note Updated 2021-09-27.
-    # @seealso https://koopa.acidgenomics.com/
+    # @note Updated 2021-11-11.
+    # @seealso
+    # - https://koopa.acidgenomics.com/
     # """
     # shellcheck source=/dev/null
-    . "${koopa_prefix}/activate"
+    . "${dict[koopa_prefix]}/activate"
     return 0
 }
 
 __koopa_activate_shared_profile
 END
-    koopa::sudo_write_string "$string" "$file"
+    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
 }
 
 koopa::update_ldconfig() { # {{{1

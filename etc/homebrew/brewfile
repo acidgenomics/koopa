@@ -1,6 +1,11 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-11-05.
+# Updated 2021-11-09.
+#
+# @section ilmbase deprecation (due to neofetch):
+#
+# This is currently required for neofetch, and is safe to remove.
+# > brew uninstall --ignore-dependencies ilmbase
 # """
 
 # Taps {{{1

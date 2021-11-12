@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::install_dotfiles_private() { # {{{1
     # """
     # Install private dotfiles.
@@ -19,6 +20,7 @@ koopa::install_dotfiles_private() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::uninstall_dotfiles_private() { # {{{1
     # """
     # Uninstall private dot files.

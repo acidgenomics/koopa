@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::opensuse_install_base() { # {{{1
     # """
     # Install openSUSE base system.
@@ -98,7 +99,7 @@ koopa::opensuse_install_base() { # {{{1
             # > R-base
             # > R-base-devel
             # > texlive
-            'texinfo'  # note that this will install texlive
+            'texinfo'
             'tree'
             'zsh'
         )

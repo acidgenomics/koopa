@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::debian_install_r_devel() { # {{{1
     # """
     # Install latest version of R-devel from CRAN.
