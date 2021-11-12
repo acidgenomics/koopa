@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::fedora_install_oracle_instantclient() { # {{{1
     # """
     # Install Oracle InstantClient.
@@ -38,6 +39,7 @@ instantclient/${version2}"
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::fedora_uninstall_oracle_instantclient() { # {{{1
     # """
     # Uninstall Oracle InstantClient.

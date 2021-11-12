@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 # FIXME Consider defining 'koopa::cut' function to wrap the cut call here.
 koopa::fedora_install_wine() { # {{{1
     # """
@@ -40,6 +41,7 @@ koopa::fedora_install_wine() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::fedora_uninstall_wine() { # {{{1
     # """
     # Uninstall Wine.

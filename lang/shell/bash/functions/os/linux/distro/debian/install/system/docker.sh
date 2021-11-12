@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::debian_install_docker() { # {{{1
     # """
     # Install Docker.
@@ -44,6 +45,7 @@ koopa::debian_install_docker() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::debian_uninstall_docker() { # {{{1
     # """
     # Uninstall Docker.

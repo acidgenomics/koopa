@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_doom_emacs() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --no-shared \
-        --prefix="$(koopa::doom_emacs_prefix)" \
-        --version='rolling' \
-        "$@"
-}
-
 koopa:::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
@@ -56,19 +46,7 @@ koopa:::install_doom_emacs() { # {{{1
     return 0
 }
 
-koopa::uninstall_doom_emacs() { # {{{1
-    # """
-    # Uninstall Doom Emacs.
-    # @note Updated 2021-06-08.
-    # """
-    koopa:::uninstall_app \
-        --name-fancy='Doom Emacs' \
-        --name='doom-emacs' \
-        --no-shared \
-        --prefix="$(koopa::doom_emacs_prefix)" \
-        "$@"
-}
-
+# FIXME Consider wrapping this.
 koopa::update_doom_emacs() { # {{{1
     # """
     # Update Doom Emacs.

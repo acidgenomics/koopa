@@ -307,6 +307,7 @@ koopa::emacs_version() { # {{{1
     koopa::get_version "$emacs"
 }
 
+# FIXME Consider adding support for pipe workflows here.
 koopa::extract_version() { # {{{1
     # """
     # Extract version number.
@@ -431,6 +432,12 @@ koopa::hdf5_version() { # {{{1
 
 # FIXME This check seems to be failing on macOS.
 # FIXME Need to update Homebrew configuration?
+# Seeing this error, need to resolve:
+# Package icu-uc was not found in the pkg-config search path.
+# Perhaps you should add the directory containing `icu-uc.pc'
+# to the PKG_CONFIG_PATH environment variable
+# No package 'icu-uc' found
+
 koopa::icu4c_version() { # {{{1
     # """
     # ICU version.
@@ -457,6 +464,27 @@ koopa::koopa_version() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::variable 'koopa-version'
+    return 0
+}
+
+koopa::lesspipe_version() { # {{{1
+    # """
+    # lesspipe.sh version.
+    # @note Updated 2021-11-11.
+    # """
+    local app x
+    declare -A app=(
+        [cat]="$(koopa::locate_cat)"
+        [lesspipe]="$(koopa::locate_lesspipe)"
+        [sed]="$(koopa::locate_sed)"
+    )
+    x="$( \
+        "${app[cat]}" "${app[lesspipe]}" \
+            | "${app[sed]}" -n '2 p' \
+    )"
+    x="$(koopa::extract_version "$x")"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
     return 0
 }
 
@@ -767,7 +795,8 @@ koopa::return_version() { # {{{1
                 cmd='tldr'
                 ;;
             'texinfo')
-                cmd='makeinfo'
+                # NOTE Tex Live install can mask this on macOS.
+                cmd='texi2any'
                 ;;
             'the-silver-searcher')
                 cmd='ag'

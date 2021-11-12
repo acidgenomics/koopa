@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::fedora_install_azure_cli() { # {{{1
     # """
     # Install Azure CLI.
@@ -23,6 +24,7 @@ koopa::fedora_install_azure_cli() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::fedora_uninstall_azure_cli() { # {{{1
     # """
     # Uninstall Azure CLI.
