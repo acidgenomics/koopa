@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS failure.
-
-koopa::install_cpufetch() { # {{{1
-    koopa:::install_app \
-        --name='cpufetch' \
-        "$@"
-}
-
 koopa:::install_cpufetch() { # {{{1
     # """
     # Install cpufetch.
@@ -28,10 +20,4 @@ koopa:::install_cpufetch() { # {{{1
     PREFIX="$prefix" "$make" --jobs="$jobs"
     PREFIX="$prefix" "$make" install
     return 0
-}
-
-koopa::uninstall_cpufetch() { # {{{1
-    koopa:::uninstall_app \
-        --name='cpufetch' \
-        "$@"
 }

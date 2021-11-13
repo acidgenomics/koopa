@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
+# FIXME Need to wrap this.
 koopa::install_emacs() { # {{{1
     # """
     # Install Emacs.
@@ -54,6 +53,7 @@ koopa::install_emacs() { # {{{1
         "$@"
 }
 
+# FIXME Consider moving this function / reworking?
 koopa::link_emacs() { # {{{1
     # """
     # Link Emacs.
@@ -102,11 +102,4 @@ koopa::link_emacs() { # {{{1
     esac
     koopa::ln "$custom_prefix" "$default_prefix"
     return 0
-}
-
-koopa::uninstall_emacs() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Emacs' \
-        --name='emacs' \
-        "$@"
 }
