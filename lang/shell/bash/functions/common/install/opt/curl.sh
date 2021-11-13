@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_curl() { # {{{1
-    koopa:::install_app \
-        --name-fancy='cURL' \
-        --name='curl' \
-        "$@"
-}
-
 koopa:::install_curl() { # {{{1
     # """
     # Install cURL.
@@ -55,11 +46,4 @@ ${name}-${version2}/${file}"
     # > "$make" test
     "$make" install
     return 0
-}
-
-koopa::uninstall_curl() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='cURL' \
-        --name='curl' \
-        "$@"
 }
