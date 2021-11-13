@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS failure.
-#
 # ld: warning: building for macOS 10.4 is deprecated
 # ld: warning: Csu support file -ldylib1.o not found, changing to target
 # macOS 10.8 where it is not needed
@@ -10,14 +8,6 @@
 #
 # https://stackoverflow.com/questions/52211390/
 # https://stackoverflow.com/questions/25352389/
-
-koopa::install_gcc() { # {{{1
-    koopa:::install_app \
-        --name-fancy='GCC' \
-        --name='gcc' \
-        --no-link \
-        "$@"
-}
 
 koopa:::install_gcc() { # {{{1
     # """
@@ -111,12 +101,4 @@ koopa:::install_gcc() { # {{{1
     "$make" --jobs="$jobs"
     "$make" install
     return 0
-}
-
-koopa::uninstall_gcc() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='GCC' \
-        --name='gcc' \
-        --no-link \
-        "$@"
 }
