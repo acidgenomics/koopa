@@ -1,23 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] Linux success.
-# [2021-05-27] macOS success.
-
-koopa::install_dotfiles() { # {{{1
-    local prefix script
-    koopa:::install_app \
-        --name='dotfiles' \
-        --version='rolling' \
-        "$@"
-    prefix="$(koopa::dotfiles_prefix)"
-    koopa::assert_is_dir "$prefix"
-    koopa::add_koopa_config_link "$prefix" 'dotfiles'
-    script="${prefix}/install"
-    koopa::assert_is_file "$script"
-    "$script"
-    return 0
-}
-
 koopa:::install_dotfiles() { # {{{1
     # """
     # Install dotfiles.
@@ -30,6 +12,7 @@ koopa:::install_dotfiles() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::uninstall_dotfiles() { # {{{1
     # """
     # Uninstall dot files.
@@ -55,6 +38,7 @@ koopa::uninstall_dotfiles() { # {{{1
     return 0
 }
 
+# FIXME Need to wrap this.
 # NOTE May need to ensure that permissions are correct here.
 koopa::update_dotfiles() { # {{{1
     # """
