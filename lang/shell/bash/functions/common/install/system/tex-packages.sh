@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 
-koopa::install_tex_packages() { # {{{1
+koopa:::install_tex_packages() { # {{{1
     # """
     # Install TeX packages.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-11-13.
     # """
-    local app name_fancy package packages
+    local app package packages
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
         [sudo]="$(koopa::locate_sudo)"
         [tlmgr]="$(koopa::locate_tlmgr)"
     )
-    name_fancy='TeX packages'
-    koopa::install_start "$name_fancy"
     "${app[sudo]}" "${app[tlmgr]}" update --self
     packages=(
         # Priority ----
@@ -54,27 +52,23 @@ koopa::install_tex_packages() { # {{{1
     do
         "${app[sudo]}" "${app[tlmgr]}" install "$package"
     done
-    koopa::install_success "$name_fancy"
     return 0
 }
 
-koopa::update_tex_packages() { # {{{1
+koopa:::update_tex_packages() { # {{{1
     # """
     # Update TeX packages.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-11-13.
     # """
-    local name_fancy
+    local app
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
         [sudo]="$(koopa::locate_sudo)"
         [tlmgr]="$(koopa::locate_tlmgr)"
     )
-    name_fancy='TeX packages'
-    koopa::update_start "$name_fancy"
     "${app[sudo]}" "${app[tlmgr]}" update --self
     "${app[sudo]}" "${app[tlmgr]}" update --list
     "${app[sudo]}" "${app[tlmgr]}" update --all
-    koopa::update_success "$name_fancy"
     return 0
 }

@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
 
+koopa::install_anaconda() { # {{{1
+    # """
+    # Install Anaconda.
+    # @note Updated 2021-06-07.
+    # """
+    koopa:::install_app \
+        --name-fancy='Anaconda' \
+        --name='anaconda' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_bash() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Bash' \
+        --name='bash' \
+        "$@"
+}
+
 koopa::install_doom_emacs() { # {{{1
     koopa:::install_app \
         --name-fancy='Doom Emacs' \
@@ -37,6 +56,49 @@ koopa::install_spacevim() { # {{{1
         --prefix="$(koopa::spacevim_prefix)" \
         --version='rolling' \
         --no-shared \
+        "$@"
+}
+
+koopa::install_tex_packages() { # {{{1
+    koopa:::install_app \
+        --name-fancy='TeX packages' \
+        --name='tex-packages' \
+        --system \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::uninstall_anaconda() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Anaconda' \
+        --name='anaconda' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_bash() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Bash' \
+        --name='bash' \
+        "$@"
+}
+
+koopa::install_chemacs() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Chemacs' \
+        --name='chemacs' \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::uninstall_chemacs() { # {{{1
+    # """
+    # Uninstall Chemacs2.
+    # @note Updated 2021-06-07.
+    # """
+    koopa:::uninstall_app \
+        --name-fancy='Chemacs' \
+        --name='chemacs' \
         "$@"
 }
 
@@ -89,5 +151,20 @@ koopa::uninstall_spacevim() { # {{{1
         --name='spacevim' \
         --no-shared \
         --prefix="$(koopa::spacevim_prefix)" \
+        "$@"
+}
+
+koopa::update_chemacs() { # {{{1
+    koopa:::update_app \
+        --name='chemacs' \
+        --name-fancy='Chemacs' \
+        "$@"
+}
+
+koopa::update_tex_packages() { # {{{1
+    koopa:::update_app \
+        --name-fancy='TeX packages' \
+        --name='tex-packages' \
+        --system \
         "$@"
 }

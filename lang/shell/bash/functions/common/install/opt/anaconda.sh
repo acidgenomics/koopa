@@ -1,20 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] Linux success.
-# [2021-05-27] macOS success.
-
-koopa::install_anaconda() { # {{{1
-    # """
-    # Install Anaconda.
-    # @note Updated 2021-06-07.
-    # """
-    koopa:::install_app \
-        --name-fancy='Anaconda' \
-        --name='anaconda' \
-        --no-link \
-        "$@"
-}
-
 koopa:::install_anaconda() { # {{{1
     # """
     # Install full Anaconda distribution.
@@ -50,12 +35,4 @@ koopa:::install_anaconda() { # {{{1
         "${koopa_prefix}/etc/conda/condarc" \
         "${prefix}/.condarc"
     return 0
-}
-
-koopa::uninstall_anaconda() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Anaconda' \
-        --name='anaconda' \
-        --no-link \
-        "$@"
 }
