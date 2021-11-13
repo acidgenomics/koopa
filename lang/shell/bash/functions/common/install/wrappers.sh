@@ -77,6 +77,30 @@ koopa::install_fzf() { # {{{1
         "$@"
 }
 
+koopa::install_gcc() { # {{{1
+    koopa:::install_app \
+        --name-fancy='GCC' \
+        --name='gcc' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_gdal() { # {{{1
+    koopa:::install_app \
+        --name-fancy='GDAL' \
+        --name='gdal' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_geos() { # {{{1
+    koopa:::install_app \
+        --name-fancy='GEOS' \
+        --name='geos' \
+        --no-link \
+        "$@"
+}
+
 koopa::install_miniconda() { # {{{1
     koopa:::install_app \
         --installer='miniconda' \
@@ -239,6 +263,30 @@ koopa::uninstall_fzf() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='FZF' \
         --name='fzf' \
+        "$@"
+}
+
+koopa::uninstall_gcc() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='GCC' \
+        --name='gcc' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_gdal() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='GDAL' \
+        --name='gdal' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_geos() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='GEOS' \
+        --name='geos' \
+        --no-link \
         "$@"
 }
 
