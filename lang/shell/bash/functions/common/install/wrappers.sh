@@ -19,6 +19,17 @@ koopa::install_bash() { # {{{1
         "$@"
 }
 
+koopa::install_cmake() { # {{{1
+    koopa:::install_app \
+        --name='cmake' \
+        --name-fancy='CMake' \
+        "$@"
+}
+
+koopa::install_conda() { # {{{1
+    koopa::install_miniconda "$@"
+}
+
 koopa::install_doom_emacs() { # {{{1
     koopa:::install_app \
         --name-fancy='Doom Emacs' \
@@ -26,6 +37,15 @@ koopa::install_doom_emacs() { # {{{1
         --no-shared \
         --prefix="$(koopa::doom_emacs_prefix)" \
         --version='rolling' \
+        "$@"
+}
+
+koopa::install_miniconda() { # {{{1
+    koopa:::install_app \
+        --installer='miniconda' \
+        --name-fancy='Miniconda' \
+        --name='conda' \
+        --no-link \
         "$@"
 }
 
@@ -102,6 +122,18 @@ koopa::uninstall_chemacs() { # {{{1
         "$@"
 }
 
+koopa::uninstall_cmake() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='CMake' \
+        --name='cmake' \
+        "$@"
+    return 0
+}
+
+koopa::uninstall_conda() { # {{{1
+    koopa:::uninstall_miniconda "$@"
+}
+
 koopa::uninstall_doom_emacs() { # {{{1
     # """
     # Uninstall Doom Emacs.
@@ -112,6 +144,15 @@ koopa::uninstall_doom_emacs() { # {{{1
         --name='doom-emacs' \
         --no-shared \
         --prefix="$(koopa::doom_emacs_prefix)" \
+        "$@"
+}
+
+koopa::uninstall_miniconda() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Miniconda' \
+        --name='conda' \
+        --no-link \
+        --uninstaller='miniconda' \
         "$@"
 }
 
