@@ -19,6 +19,14 @@ koopa::install_bash() { # {{{1
         "$@"
 }
 
+koopa::install_chemacs() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Chemacs' \
+        --name='chemacs' \
+        --version='rolling' \
+        "$@"
+}
+
 koopa::install_cmake() { # {{{1
     koopa:::install_app \
         --name='cmake' \
@@ -51,6 +59,22 @@ koopa::install_doom_emacs() { # {{{1
         --prefix="$(koopa::doom_emacs_prefix)" \
         --version='rolling' \
         "$@"
+}
+
+# FIXME Rethink the additional per-user configuration step here?
+koopa::install_dotfiles() { # {{{1
+    local prefix script
+    koopa:::install_app \
+        --name='dotfiles' \
+        --version='rolling' \
+        "$@"
+    prefix="$(koopa::dotfiles_prefix)"
+    koopa::assert_is_dir "$prefix"
+    koopa::add_koopa_config_link "$prefix" 'dotfiles'
+    script="${prefix}/install"
+    koopa::assert_is_file "$script"
+    "$script"
+    return 0
 }
 
 # FIXME Need to harden the installer against user input of version here.
@@ -98,6 +122,13 @@ koopa::install_geos() { # {{{1
         --name-fancy='GEOS' \
         --name='geos' \
         --no-link \
+        "$@"
+}
+
+koopa::install_git() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Git' \
+        --name='git' \
         "$@"
 }
 
@@ -164,14 +195,6 @@ koopa::uninstall_bash() { # {{{1
         "$@"
 }
 
-koopa::install_chemacs() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Chemacs' \
-        --name='chemacs' \
-        --version='rolling' \
-        "$@"
-}
-
 koopa::uninstall_chemacs() { # {{{1
     # """
     # Uninstall Chemacs2.
@@ -219,22 +242,6 @@ koopa::uninstall_doom_emacs() { # {{{1
         --no-shared \
         --prefix="$(koopa::doom_emacs_prefix)" \
         "$@"
-}
-
-# FIXME Rethink the additional per-user configuration step here?
-koopa::install_dotfiles() { # {{{1
-    local prefix script
-    koopa:::install_app \
-        --name='dotfiles' \
-        --version='rolling' \
-        "$@"
-    prefix="$(koopa::dotfiles_prefix)"
-    koopa::assert_is_dir "$prefix"
-    koopa::add_koopa_config_link "$prefix" 'dotfiles'
-    script="${prefix}/install"
-    koopa::assert_is_file "$script"
-    "$script"
-    return 0
 }
 
 koopa::uninstall_emacs() { # {{{1
@@ -287,6 +294,13 @@ koopa::uninstall_geos() { # {{{1
         --name-fancy='GEOS' \
         --name='geos' \
         --no-link \
+        "$@"
+}
+
+koopa::uninstall_git() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Git' \
+        --name='git' \
         "$@"
 }
 
