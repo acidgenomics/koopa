@@ -45,7 +45,7 @@ koopa::install_emacs() { # {{{1
             '--without-x'
         )
     fi
-    koopa::install_gnu_app \
+    koopa:::install_gnu_app \
         --name-fancy='Emacs' \
         --name='emacs' \
         "${install_args[@]}" \
