@@ -12,10 +12,40 @@ koopa::install_anaconda() { # {{{1
         "$@"
 }
 
+koopa::install_autoconf() { # {{{1
+    local conf_args
+    conf_args=(
+        '--name=autoconf'
+    )
+    # m4 is required for automake to build.
+    if koopa::is_macos
+    then
+        conf_args+=(
+            '--homebrew-opt=m4'
+        )
+    fi
+    koopa:::install_gnu_app "${conf_args[@]}" "$@"
+}
+
+koopa::install_automake() { # {{{1
+    local conf_args
+    conf_args=(
+        '--name=automake'
+        '--opt=autoconf'
+    )
+    koopa:::install_gnu_app "${conf_args[@]}" "$@"
+}
+
 koopa::install_bash() { # {{{1
     koopa:::install_app \
         --name-fancy='Bash' \
         --name='bash' \
+        "$@"
+}
+
+koopa::install_binutils() { # {{{1
+    koopa:::install_gnu_app \
+        --name='binutils' \
         "$@"
 }
 
@@ -36,6 +66,12 @@ koopa::install_cmake() { # {{{1
 
 koopa::install_conda() { # {{{1
     koopa::install_miniconda "$@"
+}
+
+koopa::install_coreutils() { # {{{1
+    koopa:::install_gnu_app \
+        --name='coreutils' \
+        "$@"
 }
 
 koopa::install_cpufetch() { # {{{1
@@ -87,6 +123,24 @@ koopa::install_ensembl_perl_api() { # {{{1
         "$@"
 }
 
+koopa::install_findutils() { # {{{1
+    if koopa::is_macos
+    then
+        # Workaround for build failures in 4.8.0.
+        # See also:
+        # - https://github.com/Homebrew/homebrew-core/blob/master/
+        #     Formula/findutils.rb
+        # - https://lists.gnu.org/archive/html/bug-findutils/2021-01/
+        #     msg00050.html
+        # - https://lists.gnu.org/archive/html/bug-findutils/2021-01/
+        #     msg00051.html
+        export CFLAGS='-D__nonnull\(params\)='
+    fi
+    koopa:::install_gnu_app \
+        --name='findutils' \
+        "$@"
+}
+
 koopa::install_fish() { # {{{1
     koopa:::install_app \
         --name-fancy='Fish' \
@@ -98,6 +152,12 @@ koopa::install_fzf() { # {{{1
     koopa:::install_app \
         --name-fancy='FZF' \
         --name='fzf' \
+        "$@"
+}
+
+koopa::install_gawk() { # {{{1
+    koopa:::install_gnu_app \
+        --name='gawk' \
         "$@"
 }
 
@@ -132,12 +192,62 @@ koopa::install_git() { # {{{1
         "$@"
 }
 
+# NOTE Consider adding support for pcre here.
+koopa::install_grep() { # {{{1
+    koopa:::install_gnu_app \
+        --name='grep' \
+        "$@"
+}
+
+koopa::install_groff() { # {{{1
+    koopa:::install_gnu_app \
+        --name='groff' \
+        "$@"
+}
+
+koopa::install_gsl() { # {{{1
+    koopa:::install_gnu_app \
+        --name='gsl' \
+        --name-fancy='GSL' \
+        "$@"
+}
+
+koopa::install_libtool() { # {{{1
+    koopa:::install_gnu_app \
+        --name='libtool' \
+        "$@"
+}
+
+koopa::install_make() { # {{{1
+    koopa:::install_gnu_app \
+        --name='make' \
+        "$@"
+}
+
 koopa::install_miniconda() { # {{{1
     koopa:::install_app \
         --installer='miniconda' \
         --name-fancy='Miniconda' \
         --name='conda' \
         --no-link \
+        "$@"
+}
+
+koopa::install_ncurses() { # {{{1
+    koopa:::install_gnu_app \
+        --name='ncurses' \
+        "$@"
+}
+
+koopa::install_parallel() { # {{{1
+    koopa:::install_gnu_app \
+        --name='parallel' \
+        "$@"
+}
+
+koopa::install_patch() { # {{{1
+    koopa:::install_gnu_app \
+        --name='patch' \
         "$@"
 }
 
@@ -148,6 +258,12 @@ koopa::install_prelude_emacs() { # {{{1
         --no-shared \
         --prefix="$(koopa::prelude_emacs_prefix)" \
         --version='rolling' \
+        "$@"
+}
+
+koopa::install_sed() { # {{{1
+    koopa:::install_gnu_app \
+        --name='sed' \
         "$@"
 }
 
@@ -171,12 +287,24 @@ koopa::install_spacevim() { # {{{1
         "$@"
 }
 
+koopa::install_tar() { # {{{1
+    koopa:::install_gnu_app \
+        --name='tar' \
+        "$@"
+}
+
 koopa::install_tex_packages() { # {{{1
     koopa:::install_app \
         --name-fancy='TeX packages' \
         --name='tex-packages' \
         --system \
         --version='rolling' \
+        "$@"
+}
+
+koopa::install_texinfo() { # {{{1
+    koopa:::install_gnu_app \
+        --name='texinfo' \
         "$@"
 }
 
@@ -188,10 +316,28 @@ koopa::uninstall_anaconda() { # {{{1
         "$@"
 }
 
+koopa::uninstall_autoconf() { # {{{1
+    koopa:::uninstall_app \
+        --name='autoconf' \
+        "$@"
+}
+
+koopa::uninstall_automake() { # {{{1
+    koopa:::uninstall_app \
+        --name='automake' \
+        "$@"
+}
+
 koopa::uninstall_bash() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='Bash' \
         --name='bash' \
+        "$@"
+}
+
+koopa::uninstall_binutils() { # {{{1
+    koopa:::uninstall_app \
+        --name='binutils' \
         "$@"
 }
 
@@ -216,6 +362,12 @@ koopa::uninstall_cmake() { # {{{1
 
 koopa::uninstall_conda() { # {{{1
     koopa:::uninstall_miniconda "$@"
+}
+
+koopa::uninstall_coreutils() { # {{{1
+    koopa:::uninstall_app \
+        --name='coreutils' \
+        "$@"
 }
 
 koopa::uninstall_cpufetch() { # {{{1
@@ -259,6 +411,12 @@ koopa::uninstall_ensembl_perl_api() { # {{{1
         "$@"
 }
 
+koopa::uninstall_findutils() { # {{{1
+    koopa:::uninstall_app \
+        --name='findutils' \
+        "$@"
+}
+
 koopa::uninstall_fish() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='Fish' \
@@ -270,6 +428,12 @@ koopa::uninstall_fzf() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='FZF' \
         --name='fzf' \
+        "$@"
+}
+
+koopa::uninstall_gawk() { # {{{1
+    koopa:::uninstall_app \
+        --name='gawk' \
         "$@"
 }
 
@@ -301,6 +465,24 @@ koopa::uninstall_git() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='Git' \
         --name='git' \
+        "$@"
+}
+
+koopa::uninstall_grep() { # {{{1
+    koopa:::uninstall_app \
+        --name='grep' \
+        "$@"
+}
+
+koopa::uninstall_groff() { # {{{1
+    koopa:::uninstall_app \
+        --name='groff' \
+        "$@"
+}
+
+koopa::uninstall_gsl() { # {{{1
+    koopa:::uninstall_app \
+        --name='gsl' \
         "$@"
 }
 
