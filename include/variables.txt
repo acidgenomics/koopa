@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-11-11"
+koopa-date="2021-11-15"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -313,11 +313,11 @@ rbenv="1.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2021.09.0+351"
+rstudio-server="2021.09.1+372"
 
 # RStudio Server Pro renamed to Workbench in 2021-06.
 # https://www.rstudio.com/products/rstudio/download-commercial/
-rstudio-workbench="2021.09.0+351.pro6"
+rstudio-workbench="2021.09.1-372.pro1"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.0.2p107"
@@ -349,7 +349,7 @@ shellharden="4.1.3"
 
 # https://www.rstudio.com/products/shiny/download-server/
 # 2021-01-11
-shiny-server="1.5.16.958"
+shiny-server="1.5.17.973"
 
 # https://github.com/kward/shunit2/releases
 shunit2="2.1.7"
