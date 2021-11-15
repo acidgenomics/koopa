@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] Linux success.
-# [2021-05-27] macOS success.
-
-koopa::install_bash() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Bash' \
-        --name='bash' \
-        "$@"
-}
-
 koopa:::install_bash() { # {{{1
     # """
     # Install Bash.
@@ -92,11 +82,4 @@ ${name}-${minor_version}-patches"
     "$make" install
     [[ "${link_app:-0}" -eq 1 ]] && koopa::enable_shell "$name"
     return 0
-}
-
-koopa::uninstall_bash() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Bash' \
-        --name='bash' \
-        "$@"
 }

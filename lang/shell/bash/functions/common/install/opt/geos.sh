@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_geos() { # {{{1
-    koopa:::install_app \
-        --name-fancy='GEOS' \
-        --name='geos' \
-        --no-link \
-        "$@"
-}
-
 koopa:::install_geos() { # {{{1
     # """
     # Install GEOS.
@@ -57,12 +47,4 @@ koopa:::install_geos() { # {{{1
     # > "$make" test
     "$make" install
     return 0
-}
-
-koopa::uninstall_geos() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='GEOS' \
-        --name='geos' \
-        --no-link \
-        "$@"
 }

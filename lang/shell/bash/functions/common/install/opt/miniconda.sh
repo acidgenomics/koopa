@@ -1,31 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_conda() { # {{{1
-    koopa::install_miniconda "$@"
-}
-
-koopa::install_miniconda() { # {{{1
-    koopa:::install_app \
-        --installer='miniconda' \
-        --name-fancy='Miniconda' \
-        --name='conda' \
-        --no-link \
-        "$@"
-}
-
-koopa::uninstall_conda() { # {{{1
-    koopa:::uninstall_miniconda "$@"
-}
-
-koopa::uninstall_miniconda() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Miniconda' \
-        --name='conda' \
-        --no-link \
-        --uninstaller='miniconda' \
-        "$@"
-}
-
 koopa:::install_miniconda() { # {{{1
     # """
     # Install Miniconda, including Mamba in base environment.
