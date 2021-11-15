@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_gdal() { # {{{1
-    koopa:::install_app \
-        --name-fancy='GDAL' \
-        --name='gdal' \
-        --no-link \
-        "$@"
-}
-
 koopa:::install_gdal() { # {{{1
     # """
     # Install GDAL.
@@ -93,12 +83,4 @@ koopa:::install_gdal() { # {{{1
     "$make" --jobs="$jobs"
     "$make" install
     return 0
-}
-
-koopa::uninstall_gdal() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='GDAL' \
-        --name='gdal' \
-        --no-link \
-        "$@"
 }

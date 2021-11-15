@@ -1,5 +1,92 @@
 #!/usr/bin/env bash
 
+koopa::install_anaconda() { # {{{1
+    # """
+    # Install Anaconda.
+    # @note Updated 2021-06-07.
+    # """
+    koopa:::install_app \
+        --name-fancy='Anaconda' \
+        --name='anaconda' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_autoconf() { # {{{1
+    local conf_args
+    conf_args=(
+        '--name=autoconf'
+    )
+    # m4 is required for automake to build.
+    if koopa::is_macos
+    then
+        conf_args+=(
+            '--homebrew-opt=m4'
+        )
+    fi
+    koopa:::install_gnu_app "${conf_args[@]}" "$@"
+}
+
+koopa::install_automake() { # {{{1
+    local conf_args
+    conf_args=(
+        '--name=automake'
+        '--opt=autoconf'
+    )
+    koopa:::install_gnu_app "${conf_args[@]}" "$@"
+}
+
+koopa::install_bash() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Bash' \
+        --name='bash' \
+        "$@"
+}
+
+koopa::install_binutils() { # {{{1
+    koopa:::install_gnu_app \
+        --name='binutils' \
+        "$@"
+}
+
+koopa::install_chemacs() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Chemacs' \
+        --name='chemacs' \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::install_cmake() { # {{{1
+    koopa:::install_app \
+        --name='cmake' \
+        --name-fancy='CMake' \
+        "$@"
+}
+
+koopa::install_conda() { # {{{1
+    koopa::install_miniconda "$@"
+}
+
+koopa::install_coreutils() { # {{{1
+    koopa:::install_gnu_app \
+        --name='coreutils' \
+        "$@"
+}
+
+koopa::install_cpufetch() { # {{{1
+    koopa:::install_app \
+        --name='cpufetch' \
+        "$@"
+}
+
+koopa::install_curl() { # {{{1
+    koopa:::install_app \
+        --name-fancy='cURL' \
+        --name='curl' \
+        "$@"
+}
+
 koopa::install_doom_emacs() { # {{{1
     koopa:::install_app \
         --name-fancy='Doom Emacs' \
@@ -10,6 +97,160 @@ koopa::install_doom_emacs() { # {{{1
         "$@"
 }
 
+# FIXME Rethink the additional per-user configuration step here?
+koopa::install_dotfiles() { # {{{1
+    local prefix script
+    koopa:::install_app \
+        --name='dotfiles' \
+        --version='rolling' \
+        "$@"
+    prefix="$(koopa::dotfiles_prefix)"
+    koopa::assert_is_dir "$prefix"
+    koopa::add_koopa_config_link "$prefix" 'dotfiles'
+    script="${prefix}/install"
+    koopa::assert_is_file "$script"
+    "$script"
+    return 0
+}
+
+# FIXME Need to harden the installer against user input of version here.
+koopa::install_ensembl_perl_api() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Ensembl Perl API' \
+        --name='ensembl-perl-api' \
+        --no-link \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::install_findutils() { # {{{1
+    if koopa::is_macos
+    then
+        # Workaround for build failures in 4.8.0.
+        # See also:
+        # - https://github.com/Homebrew/homebrew-core/blob/master/
+        #     Formula/findutils.rb
+        # - https://lists.gnu.org/archive/html/bug-findutils/2021-01/
+        #     msg00050.html
+        # - https://lists.gnu.org/archive/html/bug-findutils/2021-01/
+        #     msg00051.html
+        export CFLAGS='-D__nonnull\(params\)='
+    fi
+    koopa:::install_gnu_app \
+        --name='findutils' \
+        "$@"
+}
+
+koopa::install_fish() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Fish' \
+        --name='fish' \
+        "$@"
+}
+
+koopa::install_fzf() { # {{{1
+    koopa:::install_app \
+        --name-fancy='FZF' \
+        --name='fzf' \
+        "$@"
+}
+
+koopa::install_gawk() { # {{{1
+    koopa:::install_gnu_app \
+        --name='gawk' \
+        "$@"
+}
+
+koopa::install_gcc() { # {{{1
+    koopa:::install_app \
+        --name-fancy='GCC' \
+        --name='gcc' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_gdal() { # {{{1
+    koopa:::install_app \
+        --name-fancy='GDAL' \
+        --name='gdal' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_geos() { # {{{1
+    koopa:::install_app \
+        --name-fancy='GEOS' \
+        --name='geos' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_git() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Git' \
+        --name='git' \
+        "$@"
+}
+
+# NOTE Consider adding support for pcre here.
+koopa::install_grep() { # {{{1
+    koopa:::install_gnu_app \
+        --name='grep' \
+        "$@"
+}
+
+koopa::install_groff() { # {{{1
+    koopa:::install_gnu_app \
+        --name='groff' \
+        "$@"
+}
+
+koopa::install_gsl() { # {{{1
+    koopa:::install_gnu_app \
+        --name='gsl' \
+        --name-fancy='GSL' \
+        "$@"
+}
+
+koopa::install_libtool() { # {{{1
+    koopa:::install_gnu_app \
+        --name='libtool' \
+        "$@"
+}
+
+koopa::install_make() { # {{{1
+    koopa:::install_gnu_app \
+        --name='make' \
+        "$@"
+}
+
+koopa::install_miniconda() { # {{{1
+    koopa:::install_app \
+        --installer='miniconda' \
+        --name-fancy='Miniconda' \
+        --name='conda' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_ncurses() { # {{{1
+    koopa:::install_gnu_app \
+        --name='ncurses' \
+        "$@"
+}
+
+koopa::install_parallel() { # {{{1
+    koopa:::install_gnu_app \
+        --name='parallel' \
+        "$@"
+}
+
+koopa::install_patch() { # {{{1
+    koopa:::install_gnu_app \
+        --name='patch' \
+        "$@"
+}
+
 koopa::install_prelude_emacs() { # {{{1
     koopa:::install_app \
         --name-fancy='Prelude Emacs' \
@@ -17,6 +258,12 @@ koopa::install_prelude_emacs() { # {{{1
         --no-shared \
         --prefix="$(koopa::prelude_emacs_prefix)" \
         --version='rolling' \
+        "$@"
+}
+
+koopa::install_sed() { # {{{1
+    koopa:::install_gnu_app \
+        --name='sed' \
         "$@"
 }
 
@@ -40,6 +287,102 @@ koopa::install_spacevim() { # {{{1
         "$@"
 }
 
+koopa::install_tar() { # {{{1
+    koopa:::install_gnu_app \
+        --name='tar' \
+        "$@"
+}
+
+koopa::install_tex_packages() { # {{{1
+    koopa:::install_app \
+        --name-fancy='TeX packages' \
+        --name='tex-packages' \
+        --system \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::install_texinfo() { # {{{1
+    koopa:::install_gnu_app \
+        --name='texinfo' \
+        "$@"
+}
+
+koopa::uninstall_anaconda() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Anaconda' \
+        --name='anaconda' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_autoconf() { # {{{1
+    koopa:::uninstall_app \
+        --name='autoconf' \
+        "$@"
+}
+
+koopa::uninstall_automake() { # {{{1
+    koopa:::uninstall_app \
+        --name='automake' \
+        "$@"
+}
+
+koopa::uninstall_bash() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Bash' \
+        --name='bash' \
+        "$@"
+}
+
+koopa::uninstall_binutils() { # {{{1
+    koopa:::uninstall_app \
+        --name='binutils' \
+        "$@"
+}
+
+koopa::uninstall_chemacs() { # {{{1
+    # """
+    # Uninstall Chemacs2.
+    # @note Updated 2021-06-07.
+    # """
+    koopa:::uninstall_app \
+        --name-fancy='Chemacs' \
+        --name='chemacs' \
+        "$@"
+}
+
+koopa::uninstall_cmake() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='CMake' \
+        --name='cmake' \
+        "$@"
+    return 0
+}
+
+koopa::uninstall_conda() { # {{{1
+    koopa:::uninstall_miniconda "$@"
+}
+
+koopa::uninstall_coreutils() { # {{{1
+    koopa:::uninstall_app \
+        --name='coreutils' \
+        "$@"
+}
+
+koopa::uninstall_cpufetch() { # {{{1
+    koopa:::uninstall_app \
+        --name='cpufetch' \
+        "$@"
+}
+
+koopa::uninstall_curl() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='cURL' \
+        --name='curl' \
+        "$@"
+}
+
 koopa::uninstall_doom_emacs() { # {{{1
     # """
     # Uninstall Doom Emacs.
@@ -50,6 +393,105 @@ koopa::uninstall_doom_emacs() { # {{{1
         --name='doom-emacs' \
         --no-shared \
         --prefix="$(koopa::doom_emacs_prefix)" \
+        "$@"
+}
+
+koopa::uninstall_emacs() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Emacs' \
+        --name='emacs' \
+        "$@"
+}
+
+koopa::uninstall_ensembl_perl_api() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Ensembl Perl API' \
+        --name='ensembl-perl-api' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_findutils() { # {{{1
+    koopa:::uninstall_app \
+        --name='findutils' \
+        "$@"
+}
+
+koopa::uninstall_fish() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Fish' \
+        --name='fish' \
+        "$@"
+}
+
+koopa::uninstall_fzf() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='FZF' \
+        --name='fzf' \
+        "$@"
+}
+
+koopa::uninstall_gawk() { # {{{1
+    koopa:::uninstall_app \
+        --name='gawk' \
+        "$@"
+}
+
+koopa::uninstall_gcc() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='GCC' \
+        --name='gcc' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_gdal() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='GDAL' \
+        --name='gdal' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_geos() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='GEOS' \
+        --name='geos' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_git() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Git' \
+        --name='git' \
+        "$@"
+}
+
+koopa::uninstall_grep() { # {{{1
+    koopa:::uninstall_app \
+        --name='grep' \
+        "$@"
+}
+
+koopa::uninstall_groff() { # {{{1
+    koopa:::uninstall_app \
+        --name='groff' \
+        "$@"
+}
+
+koopa::uninstall_gsl() { # {{{1
+    koopa:::uninstall_app \
+        --name='gsl' \
+        "$@"
+}
+
+koopa::uninstall_miniconda() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Miniconda' \
+        --name='conda' \
+        --no-link \
+        --uninstaller='miniconda' \
         "$@"
 }
 
@@ -89,5 +531,20 @@ koopa::uninstall_spacevim() { # {{{1
         --name='spacevim' \
         --no-shared \
         --prefix="$(koopa::spacevim_prefix)" \
+        "$@"
+}
+
+koopa::update_chemacs() { # {{{1
+    koopa:::update_app \
+        --name='chemacs' \
+        --name-fancy='Chemacs' \
+        "$@"
+}
+
+koopa::update_tex_packages() { # {{{1
+    koopa:::update_app \
+        --name-fancy='TeX packages' \
+        --name='tex-packages' \
+        --system \
         "$@"
 }

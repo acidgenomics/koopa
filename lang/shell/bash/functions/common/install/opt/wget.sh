@@ -41,7 +41,7 @@ koopa::install_wget() { # {{{1
             '--without-libpsl'
         )
     fi
-    koopa::install_gnu_app \
+    koopa:::install_gnu_app \
         --name='wget' \
         "${install_args[@]}" \
         "${conf_args[@]}" \

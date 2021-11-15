@@ -1,21 +1,23 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO photos_rename_exiftool needs to error on file input instead of
+    directory more clearly.
 ** TODO Ensure that no dict arrays contain '$dict' variable usage inside the
-        initial array call. This doesn't work in Bash. Double check this before
-        merging develop branch.
+    initial array call. This doesn't work in Bash. Double check this before
+    merging develop branch.
 ** TODO Consider reworking our conda-based NGS utilites by locating the programs
-        directly, rather than by activating conda inside a function.
+    directly, rather than by activating conda inside a function.
 ** TODO Consider creating a koopa::grep function, that calls ripgrep rg
-        internally if installed (for speed).
+    internally if installed (for speed).
 ** TODO conda base environment has been seen to stay active inside of RStudio
-        terminal on some AWS AMI EC2 instances.
+    terminal on some AWS AMI EC2 instances.
 * Development (medium priority)
 ** TODO Consider installing latest stable release by default for Docker images.
 ** TODO Consider linking '/etc/shells' on Linux, to enable easier configuration
-        of Linuxbrew Zsh and/or Bash.
+    of Linuxbrew Zsh and/or Bash.
 ** TODO Add step to generate BAM and/or CRAM files from salmon, kallisto,
-        bowtie2 output.
+    bowtie2 output.
 ** TODO Consider reworking git installs to use shallow clones?
 ** TODO Today bucket activation needs to relink if link is broken.
 ** TODO Consider removing non-symlinked programs in /usr/local/bin on macOS.
@@ -24,11 +26,11 @@
 ** TODO Add support for fish shell.
 ** TODO Add support for nushell.
 ** TODO Improve support for Void Linux.
-        Detect admin group.
-        Add support for configure-system.
+    Detect admin group.
+    Add support for configure-system.
 ** TODO Need to run bfg to make dotfiles more compact?
 * Documentation
 ** TODO Need to systematically check all exported scripts for documentation.
 ** TODO Need to explain which programs are automatically supported and get
-        activated by default more clearly.
+    activated by default more clearly.
 ** TODO Improve completion support for all exported scripts.
