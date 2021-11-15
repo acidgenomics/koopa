@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_fish() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Fish' \
-        --name='fish' \
-        "$@"
-}
-
 koopa:::install_fish() { # {{{1
     # """
     # Install Fish shell.
@@ -48,11 +39,4 @@ ${version}/${file}"
         koopa::enable_shell "$name"
     fi
     return 0
-}
-
-koopa::uninstall_fish() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Fish' \
-        --name='fish' \
-        "$@"
 }

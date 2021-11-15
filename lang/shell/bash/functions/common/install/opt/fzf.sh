@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_fzf() { # {{{1
-    koopa:::install_app \
-        --name-fancy='FZF' \
-        --name='fzf' \
-        "$@"
-}
-
 # NOTE Safe to ignore this warning/error:
 # fatal: not a git repository (or any of the parent directories): .git
 
@@ -49,11 +40,4 @@ koopa:::install_fzf() { # {{{1
         'plugin' \
         'shell'
     return 0
-}
-
-koopa::uninstall_fzf() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='FZF' \
-        --name='fzf' \
-        "$@"
 }
