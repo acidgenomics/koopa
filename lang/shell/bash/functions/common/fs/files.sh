@@ -609,47 +609,60 @@ koopa::stat_access_octal() { # {{{1
     return 0
 }
 
-koopa::stat_dereference() { # {{{1
+koopa::stat() { # {{{1
     # """
-    # Dereference input files.
-    # @note Updated 2021-11-04.
-    #
-    # Return quoted file with dereference if symbolic link.
+    # Display file or file system status.
+    # @note Updated 2021-11-16.
     # """
-    local app x
-    koopa::assert_has_args "$#"
+    local app dict
+    koopa::assert_has_args_ge "$#" 2
     declare -A app=(
         [stat]="$(koopa::locate_stat)"
     )
-    x="$("${app[stat]}" --format='%N' "$@")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    declare -A dict=(
+        [format]="${1:?}"
+    )
+    shift 1
+    dict[out]="$("${app[stat]}" --format="${dict[format]}" "$@")"
+    [[ -n "${dict[out]}" ]] || return 1
+    koopa::print "${dict[out]}"
     return 0
+}
+
+koopa::stat_dereference() { # {{{1
+    # """
+    # Dereference input files.
+    # @note Updated 2021-11-16.
+    #
+    # Return quoted file with dereference if symbolic link.
+    #
+    # @examples
+    # > koopa::stat_dereference '/tmp'
+    # # '/tmp' -> 'private/tmp'
+    # """
+    koopa::stat '%N' "$@"
 }
 
 koopa::stat_group() { # {{{1
     # """
     # Get the current group of a file or directory.
-    # @note Updated 2021-11-04.
+    # @note Updated 2021-11-16.
+    #
+    # @examples
+    # > koopa::stat_group '/tmp'
+    # # wheel
     # """
-    local app x
-    koopa::assert_has_args "$#"
-    declare -A app=(
-        [stat]="$(koopa::locate_stat)"
-    )
-    x="$("${app[stat]}" --format='%G' "$@")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
+    koopa::stat '%G' "$@"
 }
 
+# FIXME Put the date string first, so we can support multiple files.
 koopa::stat_modified() { # {{{1
     # """
     # Get file modification time.
-    # @note Updated 2021-11-04.
+    # @note Updated 2021-11-16.
     #
     # @examples
-    # > koopa::stat_modified 'file.pdf' '%Y-%m-%d'
+    # > koopa::stat_modified '/tmp' '%Y-%m-%d'
     #
     # @seealso
     # - Convert seconds since Epoch into a useful format.
@@ -677,15 +690,11 @@ koopa::stat_modified() { # {{{1
 koopa::stat_user() { # {{{1
     # """
     # Get the current user (owner) of a file or directory.
-    # @note Updated 2021-11-04.
+    # @note Updated 2021-11-16.
+    #
+    # @examples
+    # > koopa::stat_user '/tmp'
+    # # root
     # """
-    local app x
-    koopa::assert_has_args "$#"
-    declare -A app=(
-        [stat]="$(koopa::locate_stat)"
-    )
-    x="$("${app[stat]}" --format='%U' "$@")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
+    koopa::stat '%U' "$@"
 }
