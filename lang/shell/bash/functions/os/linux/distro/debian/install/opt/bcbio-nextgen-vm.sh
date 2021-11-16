@@ -24,7 +24,7 @@ koopa::debian_uninstall_bcbio_nextgen_vm() { # {{{1
 koopa:::debian_install_bcbio_nextgen_vm() { # {{{1
     # """
     # Install bcbio-nextgen-vm.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-16.
     #
     # Install pinned bcbio-nextgen v1.2.4:
     # > data_dir="${prefix}/v1.2.4"
@@ -41,7 +41,7 @@ koopa:::debian_install_bcbio_nextgen_vm() { # {{{1
     declare -A app=(
         [bash]="$(koopa::locate_bash)"
         [gpasswd]="$(koopa::locate_gpasswd)"
-        [groupadd]="$(koopa::locate_groupadd)"
+        [groupadd]="$(koopa::linux_locate_groupadd)"
         [groups]="$(koopa::locate_groups)"
         [service]="$(koopa::debian_locate_service)"
         [sudo]="$(koopa::locate_sudo)"

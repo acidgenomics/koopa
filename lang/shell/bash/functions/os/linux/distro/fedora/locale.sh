@@ -3,7 +3,7 @@
 koopa::fedora_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-16.
     # """
     local app dict
     koopa::assert_has_no_args "$#"

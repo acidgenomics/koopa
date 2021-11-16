@@ -3,7 +3,7 @@
 koopa::linux_java_update_alternatives() { # {{{1
     # """
     # Update Java alternatives.
-    # @note Updated 2021-10-31.
+    # @note Updated 2021-11-16.
     #
     # This step is intentionally skipped for non-admin installs, when calling
     # from 'install-openjdk' script.
@@ -14,7 +14,7 @@ koopa::linux_java_update_alternatives() { # {{{1
     koopa::assert_is_admin
     declare -A app=(
         [sudo]="$(koopa::locate_sudo)"
-        [update_alternatives]="$(koopa::locate_update_alternatives)"
+        [update_alternatives]="$(koopa::linux_locate_update_alternatives)"
     )
     declare -A dict=(
         [alt_prefix]='/var/lib/alternatives'

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to prefix all of these with 'linux'.
-
-koopa::locate_groupadd() { # {{{1
+koopa::linux_locate_groupadd() { # {{{1
     # """
     # Locate Linux 'groupadd'.
     # @note Updated 2021-11-02.
@@ -10,7 +8,7 @@ koopa::locate_groupadd() { # {{{1
     koopa:::locate_app '/usr/sbin/groupadd'
 }
 
-koopa::locate_gpasswd() { # {{{1
+koopa::linux_locate_gpasswd() { # {{{1
     # """
     # Locate Linux 'gpasswd'.
     # @note Updated 2021-11-02.
@@ -18,10 +16,10 @@ koopa::locate_gpasswd() { # {{{1
     koopa:::locate_app '/usr/bin/gpasswd'
 }
 
-koopa::locate_ldconfig() { # {{{1
+koopa::linux_locate_ldconfig() { # {{{1
     # """
     # Locate Linux 'ldconfig'.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-16.
     # """
     local os_id str
     os_id="$(koopa::os_id)"
@@ -37,18 +35,10 @@ koopa::locate_ldconfig() { # {{{1
     koopa:::locate_app "$str"
 }
 
-koopa::locate_localedef() { # {{{1
-    # """
-    # Locate Linux 'localedef'.
-    # @note Updated 2021-11-02.
-    # """
-    koopa:::locate_app '/usr/bin/localedef'
-}
-
-koopa::locate_systemctl() { # {{{1
+koopa::linux_locate_systemctl() { # {{{1
     # """
     # Locate Linux 'systemctl'.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-16.
     # 
     # Requires systemd to be installed.
     # """
@@ -65,10 +55,10 @@ koopa::locate_systemctl() { # {{{1
     koopa:::locate_app "$str"
 }
 
-koopa::locate_update_alternatives() { # {{{1
+koopa::linux_locate_update_alternatives() { # {{{1
     # """
     # Locate Linux 'update-alternatives'.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-16.
     # """
     local str
     if koopa::is_fedora_like
@@ -80,10 +70,18 @@ koopa::locate_update_alternatives() { # {{{1
     koopa:::locate_app "$str"
 }
 
-koopa::locate_usermod() { # {{{1
+koopa::linux_locate_useradd() { # {{{1
     # """
     # Locate Linux 'usermod'.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-16.
+    # """
+    koopa:::locate_app '/usr/sbin/useradd'
+}
+
+koopa::linux_locate_usermod() { # {{{1
+    # """
+    # Locate Linux 'usermod'.
+    # @note Updated 2021-11-16.
     # """
     koopa:::locate_app '/usr/sbin/usermod'
 }
