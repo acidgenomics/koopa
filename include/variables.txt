@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-11-15"
+koopa-date="2021-11-16"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.3.5"
+aws-cli="2.3.6"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.30.0"
@@ -140,7 +140,7 @@ geos="3.10.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.33.1"
+git="2.34.0"
 
 # https://gnupg.org/download/index.html
 gnupg="2.3.2"
@@ -169,7 +169,7 @@ harfbuzz="3.1.1"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.3"
+homebrew="3.3.4"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
