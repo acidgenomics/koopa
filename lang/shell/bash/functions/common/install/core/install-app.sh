@@ -63,10 +63,12 @@ koopa:::install_app() { # {{{1
                 shift 2
                 ;;
             '--link-include='*)
+                echo 'FIXME HELLO THERE'
                 link_include_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--link-include')
+                echo 'FIXME HELLO THERE'
                 link_include_arr+=("${2:?}")
                 shift 2
                 ;;
@@ -292,6 +294,7 @@ at '${dict[prefix]}'."
         koopa::delete_empty_dirs "${dict[prefix]}"
         if [[ "${dict[link_app]}" -eq 1 ]]
         then
+            echo 'FIXME A'
             koopa::delete_broken_symlinks "${dict[make_prefix]}"
             link_args=(
                 "--name=${dict[name]}"
@@ -299,6 +302,7 @@ at '${dict[prefix]}'."
             )
             if koopa::is_array_non_empty "${link_include_arr[@]:-}"
             then
+                echo 'FIXME B'
                 for link_include in "${link_include_arr[@]}"
                 do
                     link_args+=("--include=${link_include}")
