@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2030,SC2031
 
-# FIXME Miniconda installer is currently ending with error...what's up?
 # FIXME Need to rethink our auto-prefix and auto-version approach here.
+# FIXME Need to rework '--link-include' array support here.
 
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
     # @note Updated 2021-11-16.
     # """
-    local app clean_path_arr dict init_dir link_args pkgs pos
+    local app clean_path_arr dict init_dir link_args
+    local link_include link_include_arr pkgs pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A app=(
@@ -23,7 +24,6 @@ koopa:::install_app() { # {{{1
         [homebrew_opt]=''
         [installer]=''
         [link_app]=0
-        [link_include_dirs]=''
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt]=''
@@ -39,6 +39,7 @@ koopa:::install_app() { # {{{1
         [version]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
+    link_include_arr=()
     koopa::is_shared_install && dict[shared]=1
     pos=()
     while (("$#"))
@@ -61,12 +62,12 @@ koopa:::install_app() { # {{{1
                 dict[installer]="${2:?}"
                 shift 2
                 ;;
-            '--link-include-dirs='*)
-                dict[link_include_dirs]="${1#*=}"
+            '--link-include='*)
+                link_include_arr+=("${1#*=}")
                 shift 1
                 ;;
-            '--link-include-dirs')
-                dict[link_include_dirs]="${2:?}"
+            '--link-include')
+                link_include_arr+=("${2:?}")
                 shift 2
                 ;;
             '--name='*)
@@ -296,9 +297,12 @@ at '${dict[prefix]}'."
                 "--name=${dict[name]}"
                 "--version=${dict[version]}"
             )
-            if [[ -n "${dict[link_include_dirs]}" ]]
+            if koopa::is_array_non_empty "${link_include_arr[@]:-}"
             then
-                link_args+=("--include-dirs=${dict[link_include_dirs]}")
+                for link_include in "${link_include_arr[@]}"
+                do
+                    link_args+=("--include=${link_include}")
+                done
             fi
             # Including the 'true' catch here to avoid 'cp' issues on Arch.
             koopa::link_app "${link_args[@]}" || true
