@@ -165,16 +165,16 @@ END
 koopa::linux_add_rstudio_user() { #{{{1
     # """
     # Enable RStudio user on Linux.
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-16.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [passwd]="$(koopa::locate_passwd)"  # FIXME?
+        [passwd]="$(koopa::locate_passwd)"
         [sudo]="$(koopa::locate_sudo)"
-        [useradd]="$(koopa::locate_useradd)"  # FIXME?
-        [usermod]="$(koopa::locate_usermod)"  # FIXME?
+        [useradd]="$(koopa::linux_locate_useradd)"
+        [usermod]="$(koopa::linux_locate_usermod)"
     )
     declare -A dict=(
         [home]='/home/rstudio'

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to prefix these with Linux.
+
 koopa::add_user_to_etc_passwd() { # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
@@ -30,7 +32,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
 koopa::add_user_to_group() { # {{{1
     # """
     # Add user to group.
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-16.
     #
     # Alternate approach:
     # > usermod -a -G group user
@@ -42,7 +44,7 @@ koopa::add_user_to_group() { # {{{1
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_admin
     declare -A app=(
-        [gpasswd]="$(koopa::locate_gpasswd)"
+        [gpasswd]="$(koopa::linux_locate_gpasswd)"
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
@@ -58,14 +60,14 @@ koopa::add_user_to_group() { # {{{1
 koopa::link_docker() { # {{{1
     # """
     # Link Docker library onto data disk for VM.
-    # @note Updated 2021-10-31.
+    # @note Updated 2021-11-16.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
         [sudo]="$(koopa::locate_sudo)"
-        [systemctl]="$(koopa::locate_systemctl)"
+        [systemctl]="$(koopa::linux_locate_systemctl)"
     )
     declare -A dict=(
         # e.g. '/mnt/data01/n' to '/n' for AWS.
@@ -98,10 +100,11 @@ to '${dict[lib_n]}'."
     return 0
 }
 
+# FIXME Need to prefix this with Linux.
 koopa::remove_user_from_group() { # {{{1
     # """
     # Remove user from group.
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-16.
     #
     # @examples
     # koopa::remove_user_from_group 'docker'
@@ -110,7 +113,7 @@ koopa::remove_user_from_group() { # {{{1
     koopa::assert_has_args_le "$#" 2
     koopa::assert_is_admin
     declare -A app=(
-        [gpasswd]="$(koopa::locate_gpasswd)"
+        [gpasswd]="$(koopa::linux_locate_gpasswd)"
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
@@ -172,7 +175,7 @@ koopa::update_ldconfig() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [ldconfig]="$(koopa::locate_ldconfig)"
+        [ldconfig]="$(koopa::linux_locate_ldconfig)"
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
