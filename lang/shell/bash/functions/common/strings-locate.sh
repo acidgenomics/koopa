@@ -699,10 +699,11 @@ koopa::locate_locale() { # {{{1
     koopa:::locate_app '/usr/bin/locale'
 }
 
+# FIXME Need to add edge-case support for Alpine here: koopa::alpine_locate_localedef.
 koopa::locate_localedef() { # {{{1
     # """
     # Locate 'localedef'.
-    # @note Updated 2021-11-01.
+    # @note Updated 2021-11-16.
     # """
     koopa:::locate_app '/usr/bin/localedef'
 }
