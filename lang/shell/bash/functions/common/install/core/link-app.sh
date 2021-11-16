@@ -23,7 +23,6 @@ koopa::link_app() { # {{{1
     # > koopa::link_app 'emacs' '26.3'
     # """
     local cp_args dict i include pos
-    koopa::stop "FIXME $*"
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A dict=(
@@ -87,19 +86,14 @@ koopa::link_app() { # {{{1
     koopa::alert "Linking '${dict[app_prefix]}' in '${dict[make_prefix]}'."
     koopa::sys_set_permissions --recursive "${dict[app_prefix]}"
     koopa::delete_broken_symlinks "${dict[app_prefix]}" "${dict[make_prefix]}"
-
-
-    # FIXME This isn't picking up our inclusion values correctly.
-    if ! koopa::is_array_non_empty "${include[@]:-}"
+    if koopa::is_array_non_empty "${include[@]:-}"
     then
-        koopa::stop 'FIXME A'
         include=("${include[@]/^/${dict[app_prefix]}}")
         for i in "${!include[@]}"
         do
             include[$i]="${dict[app_prefix]}/${include[$i]}"
         done
     else
-        koopa::stop 'FIXME B'
         readarray -t include <<< "$( \
             koopa::find \
                 --max-depth=1 \
@@ -109,10 +103,6 @@ koopa::link_app() { # {{{1
                 --type='d' \
         )"
     fi
-
-
-
-
     koopa::assert_is_array_non_empty "${include[@]:-}"
     echo "FIXME ${include[*]}"
     # Copy as symbolic links.
