@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this using app and dict approach.
 koopa::linux_install_bcbio_nextgen_genome() { # {{{1
     # """
     # Install a natively supported bcbio-nextgen genome (e.g. hg38).
