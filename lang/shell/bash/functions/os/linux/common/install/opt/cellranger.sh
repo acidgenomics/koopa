@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using dict approach.
 koopa:::linux_install_cellranger() { # {{{1
     # """
     # Install Cell Ranger.
@@ -10,14 +9,17 @@ koopa:::linux_install_cellranger() { # {{{1
     # https://support.10xgenomics.com/single-cell-gene-expression/
     #     software/downloads/latest
     # """
-    local file name prefix url version
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    name='cellranger'
-    file="${name}-${version}.tar.gz"
-    url="https://seq.cloud/install/cellranger/${file}"
-    koopa::download "$url" "$file"
-    koopa::extract "$file"
-    koopa::sys_mv "${name}-${version}" "$prefix"
+    local dict
+    koopa::assert_has_no_args "$#"
+    declare -A dict=(
+        [name]='cellranger'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
+    dict[url]="https://seq.cloud/install/cellranger/${dict[file]}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::sys_mv "${dict[name]}-${dict[version]}" "${dict[prefix]}"
     return 0
 }
