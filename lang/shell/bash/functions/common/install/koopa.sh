@@ -54,7 +54,7 @@ koopa::update_koopa() { # {{{1
 koopa::update_koopa_system() { # {{{1
     # """
     # Update system installation.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-11-16.
     # """
     local conf_args
     koopa::assert_is_admin
@@ -67,11 +67,8 @@ koopa::update_koopa_system() { # {{{1
     koopa::add_make_prefix_link
     if koopa::is_linux
     then
-        koopa::update_etc_profile_d
-        koopa::update_ldconfig
-    fi
-    if koopa::is_linux
-    then
+        koopa::linux_update_etc_profile_d
+        koopa::linux_update_ldconfig
         conf_args=('--no-check')
         koopa::linux_configure_system "${conf_args[@]}"
     fi

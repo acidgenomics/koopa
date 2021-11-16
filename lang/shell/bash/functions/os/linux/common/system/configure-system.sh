@@ -3,7 +3,7 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2021-09-22.
+    # @note Updated 2021-11-16.
     #
     # Intended primarily for virtual machine and Docker image builds.
     # """
@@ -352,7 +352,7 @@ koopa::linux_configure_system() { # {{{1
     # Base system {{{2
     # --------------------------------------------------------------------------
     koopa::alert 'Installing base system.'
-    koopa::update_etc_profile_d
+    koopa::linux_update_etc_profile_d
     koopa::install_dotfiles
     install_base_flags=("${dict[install_base_flags]}")
     koopa install base "${install_base_flags[@]:-}"
@@ -371,7 +371,7 @@ koopa::linux_configure_system() { # {{{1
         'unzip' \
         'xz'
     koopa::assert_is_file '/usr/bin/gcc' '/usr/bin/g++'
-    koopa::update_ldconfig
+    koopa::linux_update_ldconfig
     # Programs {{{2
     # --------------------------------------------------------------------------
     [[ "${dict[install_homebrew]}" -eq 1 ]] && \
@@ -533,7 +533,7 @@ koopa::linux_configure_system() { # {{{1
     # Ensure shared library configuration is current.
     [[ "${dict[install_lmod]}" -eq 1 ]] && \
         koopa::configure_lmod
-    koopa::update_ldconfig
+    koopa::linux_update_ldconfig
     # Language-specific packages {{{2
     # --------------------------------------------------------------------------
     [[ "${dict[install_python_packages]}" -eq 1 ]] && \
