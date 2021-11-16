@@ -948,7 +948,7 @@ koopa::vim_version() { # {{{1
 koopa::xcode_clt_version() { # {{{1
     # """
     # Xcode CLT version.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-16.
     #
     # @seealso
     # - https://apple.stackexchange.com/questions/180957
@@ -959,7 +959,7 @@ koopa::xcode_clt_version() { # {{{1
     koopa::is_xcode_clt_installed || return 1
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
-        [pkgutil]="$(koopa::locate_pkgutil)"
+        [pkgutil]="$(koopa::macos_locate_pkgutil)"
     )
     pkg='com.apple.pkg.CLTools_Executables'
     "${app[pkgutil]}" --pkgs="$pkg" >/dev/null || return 1

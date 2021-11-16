@@ -3,12 +3,12 @@
 koopa::macos_open_app() { # {{{1
     # """
     # Open a macOS GUI application.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-16.
     # """
     local name
     koopa::assert_has_args_eq "$#" 1
     declare -A app=(
-        [open]="$(koopa::locate_open)"
+        [open]="$(koopa::macos_locate_open)"
     )
     name="${1:?}"
     "${app[open]}" -a "${name}.app"
@@ -18,12 +18,12 @@ koopa::macos_open_app() { # {{{1
 koopa::macos_sudo_open_app() { # {{{1
     # """
     # Open a macOS GUI application with admin permissions.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-16.
     # """
     local app
     koopa::assert_has_args_eq "$#" 1
     declare -A app=(
-        [open]="$(koopa::locate_open)"
+        [open]="$(koopa::macos_locate_open)"
         [sudo]="$(koopa::locate_sudo)"
     )
     name="${1:?}"
