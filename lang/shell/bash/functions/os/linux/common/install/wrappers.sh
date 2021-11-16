@@ -11,15 +11,13 @@ koopa::linux_install_aspera_connect() { # {{{1
         "$@"
 }
 
-# FIXME This isn't linking 'bin' into '/usr/local' anymore, as expected.
-# FIXME Only link 'bin/aws' specifically?
-# FIXME Rework using 'link-file' argument targeting 'bin/aws' specifically?
-# FIXME Need to rename 'link-include-dir' instead?
+# FIXME Need to rework 'link-include-dirs' approach here.
+# FIXME Can we generalize this to '--link-include'?
 koopa::linux_install_aws_cli() { # {{{1
     koopa:::install_app \
         --name='aws-cli' \
         --name-fancy='AWS CLI' \
-        --link-include-dirs='bin' \
+        --link-include='bin' \
         --platform='linux' \
         --version='rolling' \
         "$@"
