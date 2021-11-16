@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Need a simple batch rename utility to convert file extension to
+    lowercase. We may simply add this in a future update to syntactic engine.
 ** TODO photos_rename_exiftool needs to error on file input instead of
     directory more clearly.
 ** TODO Ensure that no dict arrays contain '$dict' variable usage inside the
