@@ -4,19 +4,18 @@
 
 koopa::linux_install_aspera_connect() { # {{{1
     koopa:::install_app \
-        --name='aspera-connect' \
         --name-fancy='Aspera Connect' \
+        --name='aspera-connect' \
         --no-link \
         --platform='linux' \
         "$@"
 }
 
-# FIXME This should only link aws, but not aws_completer.
 koopa::linux_install_aws_cli() { # {{{1
     koopa:::install_app \
-        --name='aws-cli' \
-        --name-fancy='AWS CLI' \
         --link-include='bin/aws' \
+        --name-fancy='AWS CLI' \
+        --name='aws-cli' \
         --platform='linux' \
         --version='rolling' \
         "$@"
@@ -42,9 +41,9 @@ koopa::linux_install_bcl2fastq() { # {{{1
     if koopa::is_fedora
     then
         koopa:::install_app \
+            --installer='bcl2fastq-from-rpm' \
             --name='bcl2fastq' \
             --platform='fedora' \
-            --installer='bcl2fastq-from-rpm' \
             "$@"
     else
         koopa:::install_app \
@@ -57,17 +56,17 @@ koopa::linux_install_bcl2fastq() { # {{{1
 
 koopa::linux_install_cellranger() { # {{{1
     koopa:::install_app \
-        --name='cellranger' \
+        --link-include='bin/cellranger' \
         --name-fancy='Cell Ranger' \
-        --no-link \
+        --name='cellranger' \
         --platform='linux' \
         "$@"
 }
 
 koopa::linux_install_cloudbiolinux() { # {{{1
     koopa:::install_app \
-        --name='cloudbiolinux' \
         --name-fancy='CloudBioLinux' \
+        --name='cloudbiolinux' \
         --no-link \
         --platform='linux' \
         --version='rolling' \
@@ -83,8 +82,8 @@ koopa::linux_install_docker_credential_pass() { # {{{1
 
 koopa::linux_install_lmod() { # {{{1
     koopa:::install_app \
-        --name='lmod' \
         --name-fancy='Lmod' \
+        --name='lmod' \
         --no-link \
         --platform='linux' \
         "$@"
@@ -96,8 +95,8 @@ koopa::linux_uninstall_aspera_connect() { # {{{1
     # @note Updated 2021-06-11.
     # """
     koopa:::uninstall_app \
-        --name='aspera-connect' \
         --name-fancy='Aspera Connect' \
+        --name='aspera-connect' \
         --no-link \
         "$@"
 }
@@ -108,8 +107,8 @@ koopa::linux_uninstall_aws_cli() { # {{{1
     # @note Updated 2021-06-11.
     # """
     koopa:::uninstall_app \
-        --name='aws-cli' \
         --name-fancy='AWS CLI' \
+        --name='aws-cli' \
         "$@"
 }
 
@@ -152,8 +151,8 @@ koopa::linux_uninstall_cloudbiolinux() { # {{{1
     # @note Updated 2021-06-11.
     # """
     koopa:::uninstall_app \
-        --name='cloudbiolinux' \
         --name-fancy='CloudBioLinux' \
+        --name='cloudbiolinux' \
         --no-link \
         "$@"
 }
@@ -174,8 +173,8 @@ koopa::linux_uninstall_lmod() { # {{{1
     # @note Updated 2021-06-14.
     # """
     koopa:::uninstall_app \
-        --name='lmod' \
         --name-fancy='Lmod' \
+        --name='lmod' \
         --no-link \
         "$@"
     koopa::rm --sudo \
