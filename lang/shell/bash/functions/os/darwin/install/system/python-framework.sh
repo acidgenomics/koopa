@@ -23,7 +23,7 @@ koopa::macos_uninstall_python_framework() { # {{{1
 koopa:::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
-    # @note Updated 2021-11-04.
+    # @note Updated 2021-11-16.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -34,7 +34,7 @@ koopa:::macos_install_python_framework() { # {{{1
     )
     declare -A dict=(
         [framework_prefix]='/Library/Frameworks/Python.framework'
-        [macos_version]="$(koopa::macos_version)"
+        [macos_version]="$(koopa::macos_os_version)"
         [name]='python'
         [name_fancy]='Python'
         [reinstall]=0

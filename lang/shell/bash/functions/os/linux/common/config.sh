@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to prefix these with Linux.
-
+# FIXME Need to add linux prefix.
 koopa::add_user_to_etc_passwd() { # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
@@ -29,6 +28,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
     return 0
 }
 
+# FIXME Need to add linux prefix.
 koopa::add_user_to_group() { # {{{1
     # """
     # Add user to group.
@@ -57,6 +57,7 @@ koopa::add_user_to_group() { # {{{1
     return 0
 }
 
+# FIXME Need to add linux prefix.
 koopa::link_docker() { # {{{1
     # """
     # Link Docker library onto data disk for VM.
@@ -100,7 +101,7 @@ to '${dict[lib_n]}'."
     return 0
 }
 
-# FIXME Need to prefix this with Linux.
+# FIXME Need to add linux prefix.
 koopa::remove_user_from_group() { # {{{1
     # """
     # Remove user from group.
@@ -125,6 +126,7 @@ koopa::remove_user_from_group() { # {{{1
     return 0
 }
 
+# FIXME Need to add linux prefix.
 koopa::update_etc_profile_d() { # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
@@ -166,6 +168,7 @@ END
     koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
 }
 
+# FIXME Need to add linux prefix.
 koopa::update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.

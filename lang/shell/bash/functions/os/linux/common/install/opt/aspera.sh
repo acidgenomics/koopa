@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-09-15] Ubuntu success.
-
-koopa::linux_install_aspera_connect() { # {{{1
-    koopa:::install_app \
-        --name='aspera-connect' \
-        --name-fancy='Aspera Connect' \
-        --no-link \
-        --platform='linux' \
-        "$@"
-}
-
 koopa:::linux_install_aspera_connect() { # {{{1
     # """
     # Install Aspera Connect.
@@ -45,14 +34,3 @@ koopa:::linux_install_aspera_connect() { # {{{1
     return 0
 }
 
-koopa::linux_uninstall_aspera_connect() { # {{{1
-    # """
-    # Uninstall Aspera Connect.
-    # @note Updated 2021-06-11.
-    # """
-    koopa:::uninstall_app \
-        --name='aspera-connect' \
-        --name-fancy='Aspera Connect' \
-        --no-link \
-        "$@"
-}

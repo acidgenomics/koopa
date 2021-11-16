@@ -712,8 +712,8 @@ koopa::macos_r_prefix() { # {{{1
     _koopa_macos_r_prefix "$@"
 }
 
-koopa::macos_version() { # {{{1
-    _koopa_macos_version "$@"
+koopa::macos_os_version() { # {{{1
+    _koopa_macos_os_version "$@"
 }
 
 koopa::major_version() { # {{{1
