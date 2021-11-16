@@ -2,6 +2,18 @@
 
 # FIXME Need to finish consolidation of wrappers here.
 
+koopa::configure_nim() { # {{{1
+    # """
+    # Configure Nim.
+    # @note Updated 2021-11-16.
+    # """
+    koopa:::configure_app_packages \
+        --name-fancy='Nim' \
+        --name='nim' \
+        --which-app="$(koopa::locate_nim)"
+    return 0
+}
+
 koopa::install_anaconda() { # {{{1
     # """
     # Install Anaconda.
@@ -239,6 +251,17 @@ koopa::install_ncurses() { # {{{1
     koopa:::install_gnu_app \
         --name='ncurses' \
         "$@"
+}
+
+# FIXME Need to ensure that 'link-include' works here.
+koopa::install_nim() { # {{{1
+    koopa:::install_app \
+        --name='nim' \
+        --name-fancy='Nim' \
+        --link-include-dirs='bin' \
+        "$@"
+    koopa::configure_nim
+    return 0
 }
 
 koopa::install_parallel() { # {{{1
@@ -494,6 +517,13 @@ koopa::uninstall_miniconda() { # {{{1
         --name='conda' \
         --no-link \
         --uninstaller='miniconda' \
+        "$@"
+}
+
+koopa::uninstall_nim() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Nim' \
+        --name='nim' \
         "$@"
 }
 

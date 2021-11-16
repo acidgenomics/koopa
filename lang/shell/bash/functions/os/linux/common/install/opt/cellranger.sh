@@ -16,7 +16,7 @@ koopa:::linux_install_cellranger() { # {{{1
     name='cellranger'
     file="${name}-${version}.tar.gz"
     url="https://seq.cloud/install/cellranger/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::sys_mv "${name}-${version}" "$prefix"
     return 0

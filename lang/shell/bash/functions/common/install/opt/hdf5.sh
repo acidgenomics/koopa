@@ -33,7 +33,7 @@ koopa:::install_hdf5() { # {{{1
     file="${name}-${version}.tar.gz"
     url="https://support.hdfgroup.org/ftp/HDF5/releases/\
 ${name}-${minor_version}/${name}-${version}/src/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     conf_args=(

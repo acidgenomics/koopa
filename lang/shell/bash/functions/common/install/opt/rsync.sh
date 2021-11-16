@@ -22,7 +22,7 @@ koopa:::install_rsync() { # {{{1
     name='rsync'
     file="${name}-${version}.tar.gz"
     url="https://download.samba.org/pub/${name}/src/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     conf_args=("--prefix=${prefix}")

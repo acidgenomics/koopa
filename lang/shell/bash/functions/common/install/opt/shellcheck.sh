@@ -26,7 +26,7 @@ koopa:::install_shellcheck() { # {{{1
     file="${name}-v${version}.${os_id}.${arch}.tar.xz"
     url="https://github.com/koalaman/${name}/releases/download/\
 v${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cp "${name}-v${version}/${name}" "${prefix}/bin"
     return 0

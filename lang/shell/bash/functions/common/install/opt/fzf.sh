@@ -21,7 +21,7 @@ koopa:::install_fzf() { # {{{1
     koopa::mkdir "$prefix"
     file="${version}.tar.gz"
     url="https://github.com/junegunn/${name}/archive/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     export FZF_VERSION="$version"

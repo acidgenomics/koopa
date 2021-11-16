@@ -23,7 +23,7 @@ koopa:::install_fish() { # {{{1
     file="${name}-${version}.tar.xz"
     url="https://github.com/${name}-shell/${name}-shell/releases/download/\
 ${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     "$cmake" \

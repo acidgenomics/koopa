@@ -74,7 +74,7 @@ koopa:::install_gdal() { # {{{1
     jobs="$(koopa::cpu_count)"
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     koopa::alert_coffee_time

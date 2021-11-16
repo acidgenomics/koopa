@@ -13,7 +13,7 @@ koopa:::install_cpufetch() { # {{{1
     name='cpufetch'
     file="v${version}.tar.gz"
     url="https://github.com/Dr-Noob/${name}/archive/refs/tags/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     # Installer doesn't currently support 'configure' script.

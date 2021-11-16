@@ -27,7 +27,7 @@ koopa:::linux_install_bcbio_nextgen() { # {{{1
     esac
     file='bcbio_nextgen_install.py'
     url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::mkdir "$prefix"
     "$python" \
         "$file" \

@@ -38,7 +38,7 @@ koopa::install_homebrew() { # {{{1
         koopa::cd "$tmp_dir"
         file='install.sh'
         url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
-        koopa::download "$url"
+        koopa::download "$url" "$file"
         koopa::chmod 'u+x' "$file"
         yes | "./${file}" || true
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
@@ -136,7 +136,7 @@ koopa::uninstall_homebrew() { # {{{1
         koopa::cd "$tmp_dir"
         file='uninstall.sh'
         url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
-        koopa::download "$url"
+        koopa::download "$url" "$file"
         koopa::chmod 'u+x' "$file"
         yes | "./${file}" || true
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"

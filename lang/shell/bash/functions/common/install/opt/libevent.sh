@@ -26,7 +26,7 @@ koopa:::install_libevent() { # {{{1
     file="${name}-${version}-stable.tar.gz"
     url="https://github.com/${name}/${name}/releases/download/\
 release-${version}-stable/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}-stable"
     ./configure --prefix="$prefix"

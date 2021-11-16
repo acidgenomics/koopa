@@ -53,7 +53,7 @@ koopa:::install_subversion() { # {{{1
     fi
     file="${name}-${version}.tar.bz2"
     url="https://mirrors.ocf.berkeley.edu/apache/${name}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure "${conf_args[@]}"

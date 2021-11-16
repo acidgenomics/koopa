@@ -25,7 +25,7 @@ koopa:::install_pkg_config() { # {{{1
     name='pkg-config'
     file="${name}-${version}.tar.gz"
     url="https://${name}.freedesktop.org/releases/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     conf_args=(

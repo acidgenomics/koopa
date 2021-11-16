@@ -18,7 +18,7 @@ koopa:::linux_install_aspera_connect() { # {{{1
     platform='linux'
     file="${name}_${version}_${platform}.tar.gz"
     url="https://d3gcli72yxqn2z.cloudfront.net/connect_latest/v4/bin/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     script="${file//.tar.gz/.sh}"
     "./${script}"

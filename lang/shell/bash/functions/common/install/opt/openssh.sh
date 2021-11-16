@@ -24,7 +24,7 @@ koopa:::install_openssh() { # {{{1
     file="${name}-${version}.tar.gz"
     url="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
 portable/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure --prefix="$prefix"

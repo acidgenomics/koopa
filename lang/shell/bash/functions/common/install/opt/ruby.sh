@@ -39,7 +39,7 @@ koopa:::install_ruby() { # {{{1
     minor_version="$(koopa::major_minor_version "$version")"
     file="${name}-${version}.tar.gz"
     url="https://cache.ruby-lang.org/pub/${name}/${minor_version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     # This will fail on Ubuntu 18 otherwise.

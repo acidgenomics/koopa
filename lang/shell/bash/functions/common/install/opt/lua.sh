@@ -30,7 +30,7 @@ koopa:::install_lua() { # {{{1
     then
         platform='linux'
     fi
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     "$make" "$platform"

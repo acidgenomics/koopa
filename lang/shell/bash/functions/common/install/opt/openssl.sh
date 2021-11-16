@@ -23,7 +23,7 @@ koopa:::install_openssl() { # {{{1
     name='openssl'
     file="${name}-${version}.tar.gz"
     url="https://www.${name}.org/source/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./config \

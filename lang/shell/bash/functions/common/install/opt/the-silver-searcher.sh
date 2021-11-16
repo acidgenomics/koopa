@@ -52,7 +52,7 @@ koopa:::install_the_silver_searcher() { # {{{1
     name2="$(koopa::snake_case_simple "$name")"
     file="${version}.tar.gz"
     url="https://github.com/ggreer/${name2}/archive/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name2}-${version}"
     # Refer to 'build.sh' script for details.

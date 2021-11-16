@@ -62,7 +62,7 @@ koopa:::linux_install_lmod() { # {{{1
     luarocks install luafilesystem
     file="${version}.tar.gz"
     url="https://github.com/TACC/${name2}/archive/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name2}-${version}"
     ./configure \

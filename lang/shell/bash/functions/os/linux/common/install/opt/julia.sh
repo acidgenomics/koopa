@@ -28,7 +28,7 @@ koopa:::linux_install_julia_binary() { # {{{1
     esac
     url="https://julialang-s3.julialang.org/bin/${os}/${subdir}/\
 ${minor_version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     koopa::rm 'LICENSE.md'

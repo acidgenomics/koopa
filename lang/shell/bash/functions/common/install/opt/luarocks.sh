@@ -24,7 +24,7 @@ koopa:::install_luarocks() { # {{{1
     lua_version="$(koopa::major_minor_version "$lua_version")"
     file="${name}-${version}.tar.gz"
     url="https://${name}.org/releases/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure \

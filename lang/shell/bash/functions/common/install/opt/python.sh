@@ -78,7 +78,7 @@ koopa:::install_python() { # {{{1
     minor_version="$(koopa::major_minor_version "$version")"
     file="${name2}-${version}.tar.xz"
     url="https://www.${name}.org/ftp/${name}/${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name2}-${version}"
     conf_args=(

@@ -24,7 +24,7 @@ koopa:::install_cmake() { # {{{1
     name='cmake'
     file="${name}-${version}.tar.gz"
     url="https://github.com/Kitware/CMake/releases/download/v${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     # Note that the './configure' script is just a wrapper for './bootstrap'.

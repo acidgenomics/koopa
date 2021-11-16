@@ -23,7 +23,7 @@ koopa:::install_password_store() { # {{{1
     name='password-store'
     file="${name}-${version}.tar.xz"
     url="https://git.zx2c4.com/${name}/snapshot/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     PREFIX="$prefix" "$make" install

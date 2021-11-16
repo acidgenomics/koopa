@@ -133,7 +133,7 @@ koopa:::install_r() { # {{{1
     major_version="$(koopa::major_version "$version")"
     file="${name2}-${version}.tar.gz"
     url="https://cloud.r-project.org/src/base/${name2}-${major_version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name2}-${version}"
     koopa::activate_openjdk

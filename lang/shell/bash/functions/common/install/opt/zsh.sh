@@ -47,7 +47,7 @@ koopa:::install_zsh() { # {{{1
     # > url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
     url="https://downloads.sourceforge.net/project/\
 ${name}/${name}/${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure \
