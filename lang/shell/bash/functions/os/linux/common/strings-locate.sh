@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+koopa::linux_locate_bcl2fastq() { # {{{1
+    # """
+    # Locate Linux 'bcl2fastq'.
+    # @note Updated 2021-11-16.
+    # """
+    koopa:::locate_app 'bcl2fastq'
+}
+
 koopa::linux_locate_groupadd() { # {{{1
     # """
     # Locate Linux 'groupadd'.
