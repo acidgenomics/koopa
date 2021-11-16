@@ -11,13 +11,11 @@ koopa::linux_install_aspera_connect() { # {{{1
         "$@"
 }
 
-# FIXME Need to rework 'link-include-dirs' approach here.
-# FIXME Can we generalize this to '--link-include'?
 koopa::linux_install_aws_cli() { # {{{1
     koopa:::install_app \
         --name='aws-cli' \
         --name-fancy='AWS CLI' \
-        --link-include='bin' \
+        --link-include='bin/aws' \
         --platform='linux' \
         --version='rolling' \
         "$@"
