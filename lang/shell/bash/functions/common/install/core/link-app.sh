@@ -22,7 +22,7 @@ koopa::link_app() { # {{{1
     # @examples
     # > koopa::link_app 'emacs' '26.3'
     # """
-    local cp_args dict i include pos
+    local cp_args cp_source cp_target dict i include pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A dict=(
@@ -86,12 +86,17 @@ koopa::link_app() { # {{{1
     koopa::alert "Linking '${dict[app_prefix]}' in '${dict[make_prefix]}'."
     koopa::sys_set_permissions --recursive "${dict[app_prefix]}"
     koopa::delete_broken_symlinks "${dict[app_prefix]}" "${dict[make_prefix]}"
+    cp_args=('--symbolic-link')
+    koopa::is_shared_install && cp_args+=('--sudo')
     if koopa::is_array_non_empty "${include[@]:-}"
     then
+        # Ensure we are using relative paths in following commands.
         include=("${include[@]/^/${dict[app_prefix]}}")
         for i in "${!include[@]}"
         do
-            include[$i]="${dict[app_prefix]}/${include[$i]}"
+            cp_source="${dict[app_prefix]}/${include[$i]}"
+            cp_target="${dict[make_prefix]}/${include[$i]}"
+            koopa::cp "${cp_args[@]}" "$cp_source" "$cp_target"
         done
     else
         readarray -t include <<< "$( \
@@ -102,15 +107,9 @@ koopa::link_app() { # {{{1
                 --sort \
                 --type='d' \
         )"
+        koopa::assert_is_array_non_empty "${include[@]:-}"
+        cp_args+=("--target-directory=${dict[make_prefix]}")
+        koopa::cp "${cp_args[@]}" "${include[@]}"
     fi
-    koopa::assert_is_array_non_empty "${include[@]:-}"
-    echo "FIXME ${include[*]}"
-    # Copy as symbolic links.
-    cp_args=(
-        '--symbolic-link'
-        "--target-directory=${dict[make_prefix]}"
-    )
-    koopa::is_shared_install && cp_args+=('--sudo')
-    koopa::cp "${cp_args[@]}" "${include[@]}"
     return 0
 }
