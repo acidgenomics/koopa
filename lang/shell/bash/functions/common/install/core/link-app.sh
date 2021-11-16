@@ -23,6 +23,7 @@ koopa::link_app() { # {{{1
     # > koopa::link_app 'emacs' '26.3'
     # """
     local cp_args dict i include pos
+    koopa::stop "FIXME $*"
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A dict=(
