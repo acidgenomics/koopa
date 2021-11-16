@@ -565,7 +565,7 @@ koopa::oracle_instantclient_version() { # {{{1
 koopa::os_version() { # {{{1
     # """
     # Operating system version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-16.
     #
     # 'uname' returns Darwin kernel version for macOS.
     # """
@@ -574,10 +574,10 @@ koopa::os_version() { # {{{1
     x=''
     if koopa::is_linux
     then
-        x="$(koopa::linux_version)"
+        x="$(koopa::linux_os_version)"
     elif koopa::is_macos
     then
-        x="$(koopa::macos_version)"
+        x="$(koopa::macos_os_version)"
     fi
     [[ -n "$x" ]] || return 1
     koopa::print "$x"

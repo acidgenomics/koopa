@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
-koopa::linux_version() { # {{{1
+koopa::linux_os_version() { # {{{1
     # """
-    # Linux version.
-    # @note Updated 2020-08-06.
+    # Linux OS version.
+    # @note Updated 2021-11-16.
     # """
-    local x
+    local app x
     koopa::assert_has_no_args "$#"
-    x="$(uname -r)"
+    declare -A app=(
+        [uname]="$(koopa::locate_uname)"
+    )
+    x="$("${app[uname]}" -r)"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0

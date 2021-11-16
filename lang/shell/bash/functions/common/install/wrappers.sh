@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to finish consolidation of wrappers here.
+
 koopa::install_anaconda() { # {{{1
     # """
     # Install Anaconda.

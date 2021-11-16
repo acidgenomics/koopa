@@ -86,7 +86,7 @@ koopa:::install_gcc() { # {{{1
     if koopa::is_macos
     then
         arch="$(koopa::arch)"
-        macos_version="$(koopa::macos_version)"
+        macos_version="$(koopa::macos_os_version)"
         macos_version="$(koopa::major_minor_version "$macos_version")"
         sdk_prefix='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
         conf_args+=(
