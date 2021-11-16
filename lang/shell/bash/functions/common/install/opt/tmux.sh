@@ -20,7 +20,7 @@ koopa:::install_tmux() { # {{{1
     file="${name}-${version}.tar.gz"
     url="https://github.com/${name}/${name}/releases/download/\
 ${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure --prefix="$prefix"

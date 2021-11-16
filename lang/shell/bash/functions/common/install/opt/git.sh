@@ -27,7 +27,7 @@ koopa:::install_git() { # {{{1
     file="${name}-${version}.tar.gz"
     mirror='https://mirrors.edge.kernel.org/pub/software/scm/'
     url="${mirror}/${name}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     "$make" configure

@@ -51,7 +51,7 @@ koopa:::install_proj() { # {{{1
     fi
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/PROJ/releases/download/${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure "${conf_args[@]}"

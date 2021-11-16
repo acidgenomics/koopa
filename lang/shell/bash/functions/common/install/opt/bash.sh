@@ -23,7 +23,7 @@ koopa:::install_bash() { # {{{1
     minor_version="$(koopa::major_minor_version "$version")"
     file="${name}-${minor_version}.tar.gz"
     url="${gnu_mirror}/${name}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${minor_version}"
     # Apply patches. 

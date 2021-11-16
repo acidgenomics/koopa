@@ -21,7 +21,7 @@ koopa:::install_udunits() { # {{{1
     # HTTP alternative:
     # > url="https://www.unidata.ucar.edu/downloads/udunits/${file}"
     url="ftp://ftp.unidata.ucar.edu/pub/${name}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure --prefix="$prefix"

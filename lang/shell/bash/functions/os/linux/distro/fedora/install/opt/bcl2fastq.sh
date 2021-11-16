@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app and dict approach.
 koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     # """
     # Install bcl2fastq from Fedora/RHEL RPM file.
@@ -22,7 +23,7 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     file="${name}${major_version}-v${version2}-${platform}-${arch2}.zip"
     url_prefix="https://seq.cloud/install/${name}"
     url="${url_prefix}/rpm/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::fedora_install_from_rpm \
         --prefix="${prefix}" \

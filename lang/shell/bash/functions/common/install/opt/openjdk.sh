@@ -96,7 +96,7 @@ koopa:::install_openjdk() { # {{{1
     file="${name}-${version}_${platform}-${arch2}_bin.tar.gz"
     url="https://download.java.net/java/GA/jdk${version}/\
 ${unique}/GPL/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     jdk_dirname="jdk-${version}"
     if koopa::is_macos

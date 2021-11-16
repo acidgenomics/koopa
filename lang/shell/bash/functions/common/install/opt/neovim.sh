@@ -39,7 +39,7 @@ koopa:::install_neovim() { # {{{1
             ;;
     esac
     url="https://github.com/${name}/${name}/archive/refs/tags/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     # > "$make" distclean

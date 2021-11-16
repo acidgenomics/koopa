@@ -2,6 +2,7 @@
 
 # FIXME What's up with our arch approach here?
 # FIXME Does this now work for ARM? Need to double check.
+# FIXME Rework using app and dict approach.
 koopa::linux_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Linux.
@@ -79,7 +80,7 @@ koopa::linux_install_shiny_server() { # {{{1
         koopa::cd "$tmp_dir"
         file="${name}-${version}-${arch2}.${file_ext}"
         url="https://download3.rstudio.org/${distro}/${arch}/${file}"
-        koopa::download "$url"
+        koopa::download "$url" "$file"
         "$install_fun" "$file"
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"

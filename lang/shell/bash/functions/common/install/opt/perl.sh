@@ -69,7 +69,7 @@ koopa:::install_perl() { # {{{1
     name='perl'
     file="${name}-${version}.tar.gz"
     url="https://www.cpan.org/src/5.0/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     koopa::alert_coffee_time

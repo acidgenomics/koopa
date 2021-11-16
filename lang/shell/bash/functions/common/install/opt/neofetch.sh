@@ -20,7 +20,7 @@ koopa:::install_neofetch() { # {{{1
     name='neofetch'
     file="${version}.tar.gz"
     url="https://github.com/dylanaraps/${name}/archive/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     koopa::mkdir "$prefix"

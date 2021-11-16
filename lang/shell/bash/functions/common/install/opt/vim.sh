@@ -63,7 +63,7 @@ koopa:::install_vim() { # {{{1
     name='vim'
     file="v${version}.tar.gz"
     url="https://github.com/${name}/${name}/archive/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     ./configure "${conf_args[@]}"

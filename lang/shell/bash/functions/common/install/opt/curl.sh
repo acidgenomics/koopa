@@ -27,7 +27,7 @@ koopa:::install_curl() { # {{{1
     version2="${version//./_}"
     url="https://github.com/${name}/${name}/releases/download/\
 ${name}-${version2}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     conf_args=(

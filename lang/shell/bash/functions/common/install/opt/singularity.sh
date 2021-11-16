@@ -27,7 +27,7 @@ koopa:::install_singularity() { # {{{1
     file="${name}-${version}.tar.gz"
     url="https://github.com/sylabs/${name}/releases/download/\
 v${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "$name"
     ./mconfig --prefix="$prefix"

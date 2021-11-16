@@ -29,7 +29,7 @@ koopa:::linux_install_bcl2fastq() { # {{{1
     version2="$(koopa::kebab_case_simple "$version2")"
     file="${name}${major_version}-v${version2}-tar.zip"
     url="https://seq.cloud/install/${name}/source/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::extract "${name}${major_version}-v${version}-Source.tar.gz"
     (
