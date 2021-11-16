@@ -48,7 +48,7 @@ koopa:::macos_install_r_framework() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [installer]="$(koopa::locate_installer)"
+        [installer]="$(koopa::macos_locate_installer)"
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(

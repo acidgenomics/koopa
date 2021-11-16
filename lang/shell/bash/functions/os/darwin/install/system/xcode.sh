@@ -42,8 +42,8 @@ koopa:::macos_install_xcode_clt() { # {{{1
     koopa::assert_is_admin
     declare -A app=(
         [sudo]="$(koopa::locate_sudo)"
-        [xcode_select]="$(koopa::locate_xcode_select)"
-        [xcodebuild]="$(koopa::locate_xcodebuild)"
+        [xcode_select]="$(koopa::macos_locate_xcode_select)"
+        [xcodebuild]="$(koopa::macos_locate_xcodebuild)"
     )
     declare -A dict=(
         [prefix]="$("${app[xcode_select]}" -p 2>/dev/null || true)"

@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
 # FIXME Need to support this in koopa autocompletion.
+# FIXME Need to inform user when CrashPlan isn't installed.
 koopa::macos_disable_crashplan() { # {{{1
     # """
     # Disable CrashPlan.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-11-16.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [launchctl]="$(koopa::locate_launchctl)"
+        [launchctl]="$(koopa::macos_locate_launchctl)"
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
@@ -36,16 +37,17 @@ koopa::macos_disable_crashplan() { # {{{1
 }
 
 # FIXME Need to support this in koopa autocompletion.
+# FIXME Need to inform user when CrashPlan isn't installed.
 koopa::macos_enable_crashplan() {  # {{{1
     # """
     # Enable CrashPlan.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-11-16.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [launchctl]="$(koopa::locate_launchctl)"
+        [launchctl]="$(koopa::macos_locate_launchctl)"
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(

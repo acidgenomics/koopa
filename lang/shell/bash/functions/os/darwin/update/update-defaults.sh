@@ -3,7 +3,7 @@
 koopa::macos_update_defaults() { # {{{1
     # """
     # Update macOS defaults.
-    # @note Updated 2021-10-31.
+    # @note Updated 2021-11-16.
     #
     # Tested to work on macOS Big Sur.
     #
@@ -38,27 +38,28 @@ koopa::macos_update_defaults() { # {{{1
     koopa::assert_is_admin
     declare -A app=(
         [chflags]="$(koopa::locate_chflags)"
-        [defaults]="$(koopa::locate_defaults)"
-        [kill_all]="$(koopa::locate_kill_all)"
-        [lsregister]="$(koopa::locate_lsregister)"
-        [nvram]="$(koopa::locate_nvram)"
-        [plistbuddy]="$(koopa::locate_plistbuddy)"
-        [pmset]="$(koopa::locate_pmset)"
-        [screenshots_dir]="${HOME}/Documents/screenshots"
+        [defaults]="$(koopa::macos_locate_defaults)"
+        [kill_all]="$(koopa::macos_locate_kill_all)"
+        [lsregister]="$(koopa::macos_locate_lsregister)"
+        [nvram]="$(koopa::macos_locate_nvram)"
+        [plistbuddy]="$(koopa::macos_locate_plistbuddy)"
+        [pmset]="$(koopa::macos_locate_pmset)"
+        [scutil]="$(koopa::macos_locate_scutil)"
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
         [name_fancy]='macOS defaults'
+        [screenshots_dir]="${HOME}/Documents/screenshots"
     )
     koopa::update_start "${dict[name_fancy]}"
     # General UI/UX {{{2
     # --------------------------------------------------------------------------
     # For reference, here's how to set computer name automatically.
     # > local comp_name
-    # > sudo scutil --set ComputerName "$comp_name"
-    # > sudo scutil --set HostName "$comp_name"
-    # > sudo scutil --set LocalHostName "$comp_name"
-    # > sudo defaults write \
+    # > "${app[sudo]}" "${app[scutil]}" --set ComputerName "$comp_name"
+    # > "${app[sudo]}" "${app[scutil]}" --set HostName "$comp_name"
+    # > "${app[sudo]}" "${app[scutil]}" --set LocalHostName "$comp_name"
+    # > "${app[sudo]}" "${app[defaults]}" write \
     # >     /Library/Preferences/SystemConfiguration/com.apple.smb.server \
     # >     NetBIOSName -string "$comp_name"
     # Disable the chime on boot.

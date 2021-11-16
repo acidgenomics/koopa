@@ -36,7 +36,7 @@ koopa::macos_uninstall_r_cran_gfortran() { # {{{1
 koopa:::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
-    # @note Updated 2021-10-30.
+    # @note Updated 2021-11-16.
     # @seealso
     # - https://mac.r-project.org/tools/
     # - https://github.com/fxcoudert/gfortran-for-macOS/
@@ -45,8 +45,8 @@ koopa:::macos_install_r_cran_gfortran() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [hdiutil]="$(koopa::locate_hdiutil)"
-        [installer]="$(koopa::locate_installer)"
+        [hdiutil]="$(koopa::macos_locate_hdiutil)"
+        [installer]="$(koopa::macos_locate_installer)"
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(

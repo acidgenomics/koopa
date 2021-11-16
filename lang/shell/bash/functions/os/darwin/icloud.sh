@@ -3,7 +3,7 @@
 koopa::macos_force_reset_icloud_drive() { # {{{1
     # """
     # Force reset iCloud Drive.
-    # @note Updated 2021-10-29.
+    # @note Updated 2021-11-16.
     #
     # iCloud Drive is located here:
     # "${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
@@ -29,8 +29,8 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [kill_all]="$(koopa::locate_kill_all)"
-        [reboot]="$(koopa::locate_reboot)"
+        [kill_all]="$(koopa::macos_locate_kill_all)"
+        [reboot]="$(koopa::macos_locate_reboot)"
         [sudo]="$(koopa::locate_sudo)"
     )
     "${app[sudo]}" "${app[kill_all]}" bird

@@ -9,7 +9,7 @@ koopa::get_macos_app_version() { # {{{1
     koopa::assert_has_args "$#"
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
-        [plutil]="$(koopa::locate_plutil)"
+        [plutil]="$(koopa::macos_locate_plutil)"
         [tr]="$(koopa::locate_tr)"
     )
     for app in "$@"
