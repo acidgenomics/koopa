@@ -78,7 +78,7 @@ cairo="1.16.0"
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
 #     pipelines/latest/installation
-cellranger="6.0.1"
+cellranger="6.1.2"  # 2021-10-25
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
