@@ -85,7 +85,8 @@ py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch]}.sh"
     # Install mamba inside of conda base environment, if desired.
     if [[ "${dict[mamba]}" -eq 1 ]]
     then
-        koopa::alert 'Installing mamba inside conda base environment.'
+        koopa::alert "Installing mamba ${dict[mamba_version]} inside \
+conda base environment."
         app[conda]="${dict[prefix]}/bin/conda"
         koopa::assert_is_installed "${app[conda]}"
         # > koopa::activate_conda "${dict[prefix]}"
