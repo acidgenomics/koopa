@@ -41,7 +41,7 @@ koopa:::install_go() { # {{{1
     fi
     file="${name}${version}.${os_id}-${arch}.tar.gz"
     url="https://dl.google.com/${name}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cp --target-directory="$prefix" "${name}/"*
     return 0

@@ -45,6 +45,7 @@ koopa:::install_julia() { # {{{1
     # - https://github.com/JuliaLang/julia/blob/master/Make.inc
     # """
     local file jobs make name prefix version url
+    koopa::alert_coffee_time
     if koopa::is_macos
     then
         # NOTE Seeing this pop up on macOS:
@@ -62,8 +63,7 @@ koopa:::install_julia() { # {{{1
     file="${name}-${version}-full.tar.gz"
     url="https://github.com/JuliaLang/${name}/releases/download/\
 v${version}/${file}"
-    koopa::alert_coffee_time
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     # If set, this will interfere with internal LLVM build required for

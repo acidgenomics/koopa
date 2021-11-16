@@ -53,7 +53,7 @@ koopa:::install_sqlite() { # {{{1
     )"
     file="${name}-autoconf-${file_version}.tar.gz"
     url="https://www.sqlite.org/${year}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-autoconf-${file_version}"
     conf_args=(

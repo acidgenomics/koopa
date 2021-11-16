@@ -18,7 +18,7 @@ koopa:::install_shunit2() { # {{{1
     name='shunit2'
     file="v${version}.tar.gz"
     url="https://github.com/kward/${name}/archive/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::cd "${name}-${version}"
     koopa::cp --target-directory="${prefix}/bin" "$name"

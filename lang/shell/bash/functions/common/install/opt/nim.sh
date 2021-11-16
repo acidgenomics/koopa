@@ -1,54 +1,25 @@
 #!/usr/bin/env bash
 
-koopa::configure_nim() { # {{{1
-    # """
-    # Configure Nim.
-    # @note Updated 2021-09-29.
-    # """
-    local nim
-    nim="$(koopa::locate_nim)"
-    koopa:::configure_app_packages \
-        --name='nim' \
-        --name-fancy='Nim' \
-        --which-app="$nim"
-    return 0
-}
-
-koopa::install_nim() { # {{{1
-    koopa:::install_app \
-        --name='nim' \
-        --name-fancy='Nim' \
-        --link-include-dirs='bin' \
-        "$@"
-    koopa::configure_nim
-    return 0
-}
-
 koopa:::install_nim() { # {{{1
     # """
     # Install Nim.
-    # @note Updated 2021-10-05.
+    # @note Updated 2021-11-16.
     # """
-    local file name prefix url version
-    name='nim'
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    file="${name}-${version}.tar.xz"
-    url="https://nim-lang.org/download/${file}"
-    koopa::download "$url"
-    koopa::extract "$file"
-    koopa::cd "${name}-${version}"
+    local dict
+    declare -A dict=(
+        [name]='nim'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    dict[file]="${dict[name]}-${dict[version]}.tar.xz"
+    dict[url]="https://nim-lang.org/download/${dict[file]}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::cd "${dict[name]}-${dict[version]}"
     ./build.sh
     bin/nim c koch
     ./koch boot -d:release
     ./koch tools
-    koopa::cp . "$prefix"
+    koopa::cp "${PWD:?}" "${dict[prefix]}"
     return 0
-}
-
-koopa::uninstall_nim() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Nim' \
-        --name='nim' \
-        "$@"
 }

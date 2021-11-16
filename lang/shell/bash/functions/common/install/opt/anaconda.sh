@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using dict approach.
 koopa:::install_anaconda() { # {{{1
     # """
     # Install full Anaconda distribution.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-11-16.
     # """
-    local arch koopa_prefix name name2 os_type prefix py_major_version
-    local py_version script url version
+    local arch file koopa_prefix name name2 os_type prefix py_major_version
+    local py_version url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
     name='anaconda'
@@ -27,10 +28,10 @@ koopa:::install_anaconda() { # {{{1
     esac
     py_version="$(koopa::variable 'python')"
     py_major_version="$(koopa::major_version "$py_version")"
-    script="${name2}${py_major_version}-${version}-${os_type}-${arch}.sh"
-    url="https://repo.${name}.com/archive/${script}"
-    koopa::download "$url"
-    bash "$script" -bf -p "$prefix"
+    file="${name2}${py_major_version}-${version}-${os_type}-${arch}.sh"
+    url="https://repo.${name}.com/archive/${file}"
+    koopa::download "$url" "$file"
+    bash "$file" -bf -p "$prefix"
     koopa::ln \
         "${koopa_prefix}/etc/conda/condarc" \
         "${prefix}/.condarc"

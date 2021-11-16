@@ -23,7 +23,7 @@ koopa:::linux_install_docker_credential_pass() { # {{{1
     file="${name}-v${version}-${arch2}.tar.gz"
     url="https://github.com/docker/docker-credential-helpers/releases/\
 download/v${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::chmod '0775' "$name"
     koopa::mkdir "${prefix}/bin"

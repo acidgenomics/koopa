@@ -71,7 +71,7 @@ koopa:::install_gcc() { # {{{1
     name='gcc'
     file="${name}-${version}.tar.xz"
     url="${gnu_mirror}/${name}/${name}-${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     # Need to build outside of source code directory.
     koopa::mkdir 'build'

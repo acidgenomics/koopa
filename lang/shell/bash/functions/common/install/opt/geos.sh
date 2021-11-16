@@ -33,7 +33,7 @@ koopa:::install_geos() { # {{{1
     name='geos'
     file="${version}.tar.gz"
     url="https://github.com/lib${name}/${name}/archive/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::mkdir build
     koopa::cd build
