@@ -11,6 +11,7 @@ koopa::linux_install_aspera_connect() { # {{{1
         "$@"
 }
 
+# FIXME This should only link aws, but not aws_completer.
 koopa::linux_install_aws_cli() { # {{{1
     koopa:::install_app \
         --name='aws-cli' \
