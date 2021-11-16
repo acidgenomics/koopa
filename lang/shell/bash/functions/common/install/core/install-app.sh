@@ -23,7 +23,7 @@ koopa:::install_app() { # {{{1
         [auto_version]=1
         [homebrew_opt]=''
         [installer]=''
-        [link_app]=0
+        [link_app]=1
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt]=''
