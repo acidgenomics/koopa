@@ -655,35 +655,37 @@ koopa::stat_group() { # {{{1
     koopa::stat '%G' "$@"
 }
 
-# FIXME Put the date string first, so we can support multiple files.
 koopa::stat_modified() { # {{{1
     # """
     # Get file modification time.
     # @note Updated 2021-11-16.
     #
     # @examples
-    # > koopa::stat_modified '/tmp' '%Y-%m-%d'
+    # > koopa::stat_modified '%Y-%m-%d' '/tmp'
+    # # 2021-10-17
     #
     # @seealso
     # - Convert seconds since Epoch into a useful format.
     #   https://www.gnu.org/software/coreutils/manual/html_node/
     #     Examples-of-date.html
     # """
-    local app dict x
-    koopa::assert_has_args_eq "$#" 2
+    local app file dict x
+    koopa::assert_has_args_ge "$#" 2
     declare -A app=(
         [date]="$(koopa::locate_date)"
-        [stat]="$(koopa::locate_stat)"
     )
     declare -A dict=(
-        [file]="${1:?}"
-        [format]="${2:?}"
+        [format]="${1:?}"
     )
-    x="$("${app[stat]}" --format='%Y' "${dict[file]}")"
-    [[ -n "$x" ]] || return 1
-    x="$("${app[date]}" -d "@${x}" +"${dict[format]}")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    shift 1
+    for file in "$@"
+    do
+        x="$(koopa::stat '%Y' "$file")"
+        [[ -n "$x" ]] || return 1
+        x="$("${app[date]}" -d "@${x}" +"${dict[format]}")"
+        [[ -n "$x" ]] || return 1
+        koopa::print "$x"
+    done
     return 0
 }
 
