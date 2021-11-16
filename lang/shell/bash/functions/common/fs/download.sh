@@ -3,7 +3,7 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-16.
     #
     # @section curl:
     #
@@ -24,46 +24,53 @@ koopa::download() { # {{{1
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # """
-    local bn dl dl_args file url wd
-    koopa::assert_has_args "$#"
-    url="${1:?}"
-    file="${2:-}"
-    if [[ -z "$file" ]]
-    then
-        wd="$(pwd)"
-        bn="$(koopa::basename "$url")"
-        file="${wd}/${bn}"
-    fi
+    local app dict download_args
+    koopa::assert_has_args_le "$#" 2
+    declare -A dict=(
+        [url]="${1:?}"
+        [file]="${2:-}"
+    )
     if koopa::is_qemu
     then
-        dl='wget'
+        dict[engine]='wget'
     else
-        dl='curl'
+        dict[engine]='curl'
     fi
-    dl_args=()
-    case "$dl" in
+    declare -A app=(
+        [download]="$("koopa::locate_${dict[engine]}")"
+    )
+    if [[ -z "${dict[file]}" ]]
+    then
+        dict[file]="$(koopa::basename "${dict[url]}")"
+    fi
+    if ! str_match_fixed "${dict[file]}" '/'
+    then
+        dict[file]="$(pwd)/${dict[file]}"
+    fi
+    download_args=()
+    case "${dict[engine]}" in
         'curl')
-            dl_args+=(
+            download_args+=(
                 '--disable'  # Ignore '~/.curlrc'. Must come first.
                 '--create-dirs'
                 '--fail'
                 '--location'
-                '--output' "$file"
+                '--output' "${dict[file]}"
                 '--retry' 5
                 '--show-error'
             )
             ;;
         'wget')
-            dl_args+=(
-                "--output-document=${file}"
+            download_args+=(
+                "--output-document=${dict[file]}"
                 '--no-verbose'
             )
             ;;
     esac
-    koopa::alert "Downloading '${url}' to '${file}' using '${dl}'."
-    dl="$("koopa::locate_${dl}")"
-    dl_args+=("$url")
-    "$dl" "${dl_args[@]}"
+    download_args+=("${dict[url]}")
+    koopa::alert "Downloading '${dict[url]}' to '${dict[file]}' \
+using '${dict[engine]}'."
+    "${app[download]}" "${download_args[@]}"
     return 0
 }
 
