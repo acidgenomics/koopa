@@ -576,39 +576,6 @@ koopa::reset_permissions() { # {{{1
     return 0
 }
 
-# FIXME This is now returning illegal option '-c'.
-koopa::stat_access_human() { # {{{1
-    # """
-    # Get the current access permissions in human readable form.
-    # @note Updated 2021-11-04.
-    # """
-    local app x
-    koopa::assert_has_args "$#"
-    declare -A app=(
-        [stat]="$(koopa::locate_stat)"
-    )
-    x="$("${app[stat]}" --format='%A' "$@")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
-}
-
-koopa::stat_access_octal() { # {{{1
-    # """
-    # Get the current access permissions in octal form.
-    # @note Updated 2021-11-04.
-    # """
-    local app x
-    koopa::assert_has_args "$#"
-    declare -A app=(
-        [stat]="$(koopa::locate_stat)"
-    )
-    x="$("${app[stat]}" --format='%a' "$@")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
-}
-
 koopa::stat() { # {{{1
     # """
     # Display file or file system status.
@@ -627,6 +594,30 @@ koopa::stat() { # {{{1
     [[ -n "${dict[out]}" ]] || return 1
     koopa::print "${dict[out]}"
     return 0
+}
+
+koopa::stat_access_human() { # {{{1
+    # """
+    # Get the current access permissions in human readable form.
+    # @note Updated 2021-11-16.
+    #
+    # @examples
+    # > koopa::stat_access_human '/tmp'
+    # # lrwxr-xr-x
+    # """
+    koopa::stat '%A' "$@"
+}
+
+koopa::stat_access_octal() { # {{{1
+    # """
+    # Get the current access permissions in octal form.
+    # @note Updated 2021-11-16.
+    #
+    # @examples
+    # > koopa::stat_access_octal '/tmp'
+    # # 755
+    # """
+    koopa::stat '%a' "$@"
 }
 
 koopa::stat_dereference() { # {{{1
@@ -669,7 +660,7 @@ koopa::stat_modified() { # {{{1
     #   https://www.gnu.org/software/coreutils/manual/html_node/
     #     Examples-of-date.html
     # """
-    local app file dict x
+    local app dict timestamp timestamps x
     koopa::assert_has_args_ge "$#" 2
     declare -A app=(
         [date]="$(koopa::locate_date)"
@@ -678,11 +669,10 @@ koopa::stat_modified() { # {{{1
         [format]="${1:?}"
     )
     shift 1
-    for file in "$@"
+    readarray -t timestamps <<< "$(koopa::stat '%Y' "$@")"
+    for timestamp in "${timestamps[@]}"
     do
-        x="$(koopa::stat '%Y' "$file")"
-        [[ -n "$x" ]] || return 1
-        x="$("${app[date]}" -d "@${x}" +"${dict[format]}")"
+        x="$("${app[date]}" -d "@${timestamp}" +"${dict[format]}")"
         [[ -n "$x" ]] || return 1
         koopa::print "$x"
     done
