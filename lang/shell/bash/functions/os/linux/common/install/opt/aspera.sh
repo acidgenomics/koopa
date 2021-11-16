@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using dict approach.
 koopa:::linux_install_aspera_connect() { # {{{1
     # """
     # Install Aspera Connect.

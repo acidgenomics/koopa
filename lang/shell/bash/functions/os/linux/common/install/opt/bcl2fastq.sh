@@ -5,30 +5,7 @@
 # ## CMakeFindDependencyMacro
 # ## Unknown CMake command "find_dependency".
 
-koopa::linux_install_bcl2fastq() { # {{{1
-    # """
-    # Install bcl2fastq.
-    # @note Updated 2021-05-06.
-    #
-    # Using pre-built RPM package on Fedora / RHEL / CentOS.
-    # Otherwise, build and install from source.
-    # """
-    if koopa::is_fedora
-    then
-        koopa:::install_app \
-            --name='bcl2fastq' \
-            --platform='fedora' \
-            --installer='bcl2fastq-from-rpm' \
-            "$@"
-    else
-        koopa:::install_app \
-            --name='bcl2fastq' \
-            --platform='linux' \
-            "$@"
-    fi
-    return 0
-}
-
+# FIXME Need to rework using app and dict approach.
 koopa:::linux_install_bcl2fastq() { # {{{1
     # """
     # Install bcl2fastq.
@@ -70,14 +47,4 @@ koopa:::linux_install_bcl2fastq() { # {{{1
     # For some reason bcl2fastq creates an empty test directory.
     koopa::rm "${prefix}/bin/test"
     return 0
-}
-
-koopa::linux_uninstall_bcl2fastq() { # {{{1
-    # """
-    # Uninstall bcl2fastq.
-    # @note Updated 2021-06-11.
-    # """
-    koopa:::uninstall_app \
-        --name='bcl2fastq' \
-        "$@"
 }

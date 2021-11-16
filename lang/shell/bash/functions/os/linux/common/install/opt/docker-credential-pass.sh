@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_docker_credential_pass() { # {{{1
-    koopa:::install_app \
-        --name='docker-credential-pass' \
-        --platform='linux' \
-        "$@"
-}
-
+# FIXME Rework using dict approach.
 koopa:::linux_install_docker_credential_pass() { # {{{1
     # """
     # Install docker-credential-pass.
@@ -36,14 +30,4 @@ download/v${version}/${file}"
     koopa::sys_set_permissions --recursive "$prefix"
     koopa::cp "$name" "${prefix}/bin"
     return 0
-}
-
-koopa::linux_uninstall_docker_credential_pass() { # {{{1
-    # """
-    # Uninstall docker-credential-pass.
-    # @note Updated 2021-06-11.
-    # """
-    koopa:::uninstall_app \
-        --name='docker-credential-pass' \
-        "$@"
 }

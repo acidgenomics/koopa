@@ -1,20 +1,10 @@
 #!/usr/bin/env bash
 
-## NOTE We may want to link 'bin/cellranger' specifically here.
-
-koopa::linux_install_cellranger() { # {{{1
-    koopa:::install_app \
-        --name='cellranger' \
-        --name-fancy='Cell Ranger' \
-        --no-link \
-        --platform='linux' \
-        "$@"
-}
-
+# FIXME Rework using dict approach.
 koopa:::linux_install_cellranger() { # {{{1
     # """
     # Install Cell Ranger.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-11-16.
     #
     # Refdata is accessible here:
     # https://support.10xgenomics.com/single-cell-gene-expression/
@@ -30,16 +20,4 @@ koopa:::linux_install_cellranger() { # {{{1
     koopa::extract "$file"
     koopa::sys_mv "${name}-${version}" "$prefix"
     return 0
-}
-
-koopa::linux_uninstall_cellranger() { # {{{1
-    # """
-    # Uninstall Cell Ranger.
-    # @note Updated 2021-06-11.
-    # """
-    koopa:::uninstall_app \
-        --name='cellranger' \
-        --name-fancy='Cell Ranger' \
-        --no-link \
-        "$@"
 }

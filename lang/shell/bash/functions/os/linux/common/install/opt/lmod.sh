@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using dict approach.
 koopa::linux_configure_lmod() { # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
@@ -40,15 +41,7 @@ koopa::linux_configure_lmod() { # {{{1
     return 0
 }
 
-koopa::linux_install_lmod() { # {{{1
-    koopa:::install_app \
-        --name='lmod' \
-        --name-fancy='Lmod' \
-        --no-link \
-        --platform='linux' \
-        "$@"
-}
-
+# FIXME Rework using app and dict approach.
 koopa:::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
@@ -82,21 +75,5 @@ koopa:::linux_install_lmod() { # {{{1
     then
         koopa::linux_configure_lmod "$prefix"
     fi
-    return 0
-}
-
-koopa::linux_uninstall_lmod() { # {{{1
-    # """
-    # Uninstall Lmod.
-    # @note Updated 2021-06-14.
-    # """
-    koopa:::uninstall_app \
-        --name='lmod' \
-        --name-fancy='Lmod' \
-        --no-link \
-        "$@"
-    koopa::rm --sudo \
-        '/etc/profile.d/z00_lmod.csh' \
-        '/etc/profile.d/z00_lmod.sh'
     return 0
 }

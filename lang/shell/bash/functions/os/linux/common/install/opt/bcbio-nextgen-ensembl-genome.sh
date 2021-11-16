@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app and dict approach.
 koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     # """
     # Install bcbio-nextgen genome from Ensembl.

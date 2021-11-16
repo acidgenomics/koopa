@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using dict approach.
 koopa:::linux_install_julia_binary() { # {{{1
     # """
     # Install Julia (from binary).
