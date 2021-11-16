@@ -79,20 +79,17 @@ koopa::move_into_dated_dirs_by_filename() { # {{{1
     return 0
 }
 
-# FIXME This doesn't seem to be working with BSD utils...the stat_modified
-# part seems to be problematic on macOS?
 koopa::move_into_dated_dirs_by_timestamp() { # {{{1
     # """
     # Move into dated directories by timestamp.
-    # @note Updated 2021-11-04.
+    # @note Updated 2021-11-16.
     # """
     local file subdir
     koopa::assert_has_args "$#"
     for file in "$@"
     do
-        subdir="$(koopa::stat_modified "$file" '%Y/%m/%d')"
+        subdir="$(koopa::stat_modified '%Y/%m/%d' "$file")"
         koopa::mv --target-directory="$subdir" "$file"
     done
     return 0
 }
-
