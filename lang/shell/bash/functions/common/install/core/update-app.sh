@@ -4,7 +4,7 @@
 koopa:::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2021-10-30.
+    # @note Updated 2021-11-16.
     # """
     local app clean_path_arr dict pkgs
     koopa::assert_has_args "$#"
@@ -141,7 +141,7 @@ koopa:::update_app() { # {{{1
         { [[ "${dict[shared]}" -eq 1 ]] || \
             [[ "${dict[system]}" -eq 1 ]]; }
     then
-        koopa::update_ldconfig
+        koopa::linux_update_ldconfig
     fi
     (
         koopa::cd "${dict[tmp_dir]}"
@@ -180,7 +180,7 @@ koopa:::update_app() { # {{{1
         { [[ "${dict[shared]}" -eq 1 ]] || \
             [[ "${dict[system]}" -eq 1 ]]; }
     then
-        koopa::update_ldconfig
+        koopa::linux_update_ldconfig
     fi
     if [[ -d "${dict[prefix]}" ]]
     then

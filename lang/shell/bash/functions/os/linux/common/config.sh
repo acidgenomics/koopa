@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add linux prefix.
-koopa::add_user_to_etc_passwd() { # {{{1
+# FIXME Rework this using dict approach.
+koopa::linux_add_user_to_etc_passwd() { # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-16.
     #
     # Necessary for running 'chsh' with a Kerberos / Active Directory domain
     # account, on AWS or Azure for example.
     #
     # Note that this function will enable use of RStudio for domain users.
+    #
+    # @examples
+    # > koopa::linux_add_user_to_etc_passwd 'domain.user'
     # """
     local passwd_file user user_string
     koopa::assert_has_args_le "$#" 1
@@ -28,8 +31,7 @@ koopa::add_user_to_etc_passwd() { # {{{1
     return 0
 }
 
-# FIXME Need to add linux prefix.
-koopa::add_user_to_group() { # {{{1
+koopa::linux_add_user_to_group() { # {{{1
     # """
     # Add user to group.
     # @note Updated 2021-11-16.
@@ -38,7 +40,7 @@ koopa::add_user_to_group() { # {{{1
     # > usermod -a -G group user
     #
     # @examples
-    # koopa::add_user_to_group 'docker'
+    # > koopa::linux_add_user_to_group 'docker'
     # """
     local app dict
     koopa::assert_has_args_le "$#" 2
@@ -57,8 +59,7 @@ koopa::add_user_to_group() { # {{{1
     return 0
 }
 
-# FIXME Need to add linux prefix.
-koopa::link_docker() { # {{{1
+koopa::linux_link_docker() { # {{{1
     # """
     # Link Docker library onto data disk for VM.
     # @note Updated 2021-11-16.
@@ -101,14 +102,13 @@ to '${dict[lib_n]}'."
     return 0
 }
 
-# FIXME Need to add linux prefix.
-koopa::remove_user_from_group() { # {{{1
+koopa::linux_remove_user_from_group() { # {{{1
     # """
     # Remove user from group.
     # @note Updated 2021-11-16.
     #
     # @examples
-    # koopa::remove_user_from_group 'docker'
+    # koopa::linux_remove_user_from_group 'docker'
     # """
     local app dict
     koopa::assert_has_args_le "$#" 2
@@ -126,11 +126,10 @@ koopa::remove_user_from_group() { # {{{1
     return 0
 }
 
-# FIXME Need to add linux prefix.
-koopa::update_etc_profile_d() { # {{{1
+koopa::linux_update_etc_profile_d() { # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
-    # @note Updated 2021-11-11.
+    # @note Updated 2021-11-16.
     # """
     local dict
     koopa::assert_has_no_args "$#"
@@ -168,11 +167,10 @@ END
     koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
 }
 
-# FIXME Need to add linux prefix.
-koopa::update_ldconfig() { # {{{1
+koopa::linux_update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # @note Updated 2021-10-31.
+    # @note Updated 2021-11-16.
     # """
     local app dict source_file target_bn target_file
     koopa::assert_has_no_args "$#"

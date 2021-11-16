@@ -7,7 +7,7 @@
 koopa:::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-11-04.
+    # @note Updated 2021-11-16.
     # """
     local app clean_path_arr dict init_dir link_args pkgs pos
     koopa::assert_has_args "$#"
@@ -263,7 +263,7 @@ at '${dict[prefix]}'."
             { [[ "${dict[shared]}" -eq 1 ]] || \
                 [[ "${dict[system]}" -eq 1 ]]; }
         then
-            koopa::update_ldconfig
+            koopa::linux_update_ldconfig
         fi
         # shellcheck disable=SC2030
         export INSTALL_LINK_APP="${dict[link_app]}"
@@ -311,7 +311,7 @@ at '${dict[prefix]}'."
         { [[ "${dict[shared]}" -eq 1 ]] || \
             [[ "${dict[system]}" -eq 1 ]]; }
     then
-        koopa::update_ldconfig
+        koopa::linux_update_ldconfig
     fi
     if [[ -d "${dict[prefix]}" ]]
     then

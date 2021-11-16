@@ -4,7 +4,7 @@
 koopa::debian_install_docker() { # {{{1
     # """
     # Install Docker.
-    # @note Updated 2021-09-30.
+    # @note Updated 2021-11-16.
     #
     # @seealso
     # - https://docs.docker.com/install/linux/docker-ce/debian/
@@ -37,9 +37,9 @@ koopa::debian_install_docker() { # {{{1
     )
     koopa::debian_apt_install "${pkgs[@]}"
     # Ensure current user is added to Docker group.
-    koopa::add_user_to_group 'docker'
+    koopa::linux_add_user_to_group 'docker'
     # Move '/var/lib/docker' to '/n/var/lib/docker'.
-    koopa::link_docker
+    koopa::linux_link_docker
     koopa::install_success "$name_fancy"
     koopa::alert_restart
     return 0
@@ -64,5 +64,4 @@ koopa::debian_uninstall_docker() { # {{{1
     koopa::debian_apt_delete_repo "$name"
     koopa::uninstall_success "$name_fancy"
     return 0
-
 }
