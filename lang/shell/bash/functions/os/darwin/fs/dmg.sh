@@ -1,22 +1,25 @@
 #!/usr/bin/env bash
 
-# FIXME Need to lcoate hdiutil here.
-
 koopa::macos_create_dmg() { # {{{1
     # """
     # Create DMG image.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-16.
     # """
-    local dir name
+    local app dict
     koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_installed 'hdiutil'
-    dir="${1:?}"
-    koopa::assert_is_dir "$dir"
-    dir="$(koopa::realpath "$dir")"
-    name="$(koopa::basename "$dir")"
-    hdiutil create \
-        -volname "$name" \
-        -srcfolder "$dir" \
-        -ov "${name}.dmg"
+    declare -A app=(
+        [hdiutil]="$(koopa::locate_hdiutil)"
+    )
+    declare -A dict=(
+        [srcfolder]="${1:?}"
+    )
+    koopa::assert_is_dir "${dict[srcfolder]}"
+    dict[srcfolder]="$(koopa::realpath "${dict[srcfolder]}")"
+    dict[volname]="$(koopa::basename "${dict[volname]}")"
+    dict[ov]="${dict[volname]}.dmg"
+    "${app[hdiutil]}" create \
+        -ov "${dict[ov]}" \
+        -srcfolder "${dict[srcfolder]}" \
+        -volname "${dict[volname]}"
     return 0
 }
