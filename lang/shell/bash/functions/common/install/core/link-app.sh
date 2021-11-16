@@ -104,6 +104,7 @@ koopa::link_app() { # {{{1
         )"
     fi
     koopa::assert_is_array_non_empty "${include[@]:-}"
+    echo "FIXME ${include[*]}"
     # Copy as symbolic links.
     cp_args=(
         '--symbolic-link'

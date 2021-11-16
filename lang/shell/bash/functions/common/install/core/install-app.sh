@@ -2,7 +2,6 @@
 # shellcheck disable=SC2030,SC2031
 
 # FIXME Need to rethink our auto-prefix and auto-version approach here.
-# FIXME Need to rework '--link-include' array support here.
 
 koopa:::install_app() { # {{{1
     # """
@@ -63,12 +62,10 @@ koopa:::install_app() { # {{{1
                 shift 2
                 ;;
             '--link-include='*)
-                echo 'FIXME HELLO THERE'
                 link_include_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--link-include')
-                echo 'FIXME HELLO THERE'
                 link_include_arr+=("${2:?}")
                 shift 2
                 ;;
@@ -279,10 +276,8 @@ at '${dict[prefix]}'."
         "${dict[function]}" "$@"
     ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
     koopa::rm "${dict[tmp_dir]}"
-    echo 'FIXME A'
     if [[ "${dict[system]}" -eq 0 ]]
     then
-        echo 'FIXME B'
         if [[ "${dict[shared]}" -eq 1 ]]
         then
             if [[ "${dict[auto_prefix]}" -eq 1 ]]
@@ -294,10 +289,8 @@ at '${dict[prefix]}'."
             koopa::sys_set_permissions --recursive --user "${dict[prefix]}"
         fi
         koopa::delete_empty_dirs "${dict[prefix]}"
-        echo 'FIXME C'
         if [[ "${dict[link_app]}" -eq 1 ]]
         then
-            echo 'FIXME D'
             koopa::delete_broken_symlinks "${dict[make_prefix]}"
             link_args=(
                 "--name=${dict[name]}"
@@ -305,7 +298,6 @@ at '${dict[prefix]}'."
             )
             if koopa::is_array_non_empty "${link_include_arr[@]:-}"
             then
-                echo 'FIXME E'
                 for link_include in "${link_include_arr[@]}"
                 do
                     link_args+=("--include=${link_include}")
@@ -315,7 +307,6 @@ at '${dict[prefix]}'."
             koopa::link_app "${link_args[@]}" || true
         elif [[ "${dict[auto_prefix]}" -eq 1 ]]
         then
-            echo 'FIXME F'
             koopa::link_into_opt "${dict[prefix]}" "${dict[name]}"
         fi
     fi
