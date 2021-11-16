@@ -58,7 +58,7 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
     koopa::assert_is_admin
     declare -A app=(
         [sudo]="$(koopa::locate_sudo)"
-        [xattr]="$(koopa::locate_xattr)"
+        [xattr]="$(koopa::macos_locate_xattr)"
     )
     "${app[sudo]}" "${app[xattr]}" -r -d \
         'com.apple.quarantine' \

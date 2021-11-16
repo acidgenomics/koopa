@@ -28,7 +28,7 @@ koopa:::macos_install_python_framework() { # {{{1
     local app dict
     koopa::assert_has_no_args "$#"
     declare -A app=(
-        [installer]="$(koopa::locate_installer)"
+        [installer]="$(koopa::macos_locate_installer)"
         [sudo]="$(koopa::locate_sudo)"
         [tee]="$(koopa::locate_tee)"
     )

@@ -9,7 +9,7 @@ koopa::macos_reload_autofs() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
-        [automount]="$(koopa::locate_automount)"
+        [automount]="$(koopa::macos_locate_automount)"
         [sudo]="$(koopa::locate_sudo)"
     )
     "${app[sudo]}" "${app[automount]}" -vc
