@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_rust_packages() { # {{{1
-    koopa:::install_app_packages \
+    koopa::install_app_packages \
         --name-fancy='Rust' \
         --name='rust' \
         "$@"

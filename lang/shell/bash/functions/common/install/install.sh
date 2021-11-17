@@ -273,7 +273,7 @@ koopa::install_julia() { # {{{1
 }
 
 koopa::install_julia_packages() { # {{{1
-    koopa:::install_app_packages \
+    koopa::install_app_packages \
         --name-fancy='Julia' \
         --name='julia' \
         "$@"
@@ -348,14 +348,14 @@ koopa::install_nim() { # {{{1
 }
 
 koopa::install_nim_packages() { # {{{1
-    koopa:::install_app_packages \
+    koopa::install_app_packages \
         --name-fancy='Nim' \
         --name='nim' \
         "$@"
 }
 
 koopa::install_node_packages() { # {{{1
-    koopa:::install_app_packages \
+    koopa::install_app_packages \
         --name-fancy='Node' \
         --name='node' \
         "$@"
@@ -413,7 +413,7 @@ koopa::install_perl() { # {{{1
 }
 
 koopa::install_perl_packages() { # {{{1
-    koopa:::install_app_packages \
+    koopa::install_app_packages \
         --name-fancy='Perl' \
         --name='perl' \
         "$@"
