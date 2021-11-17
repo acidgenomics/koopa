@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-koopa:::install_app_packages() { # {{{1
+# FIXME Need to replace all calls that use previous internal reference to this.
+koopa::install_app_packages() { # {{{1
     # """
     # Install application packages.
-    # @note Updated 2021-10-05.
+    # @note Updated 2021-11-17.
     # """
     local name name_fancy pos
     koopa::assert_has_args "$#"
@@ -48,9 +49,10 @@ koopa:::install_app_packages() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    # FIXME Need to check that variables are defined here.
     dict[prefix_fun]="koopa::${dict[name]}_packages_prefix"
     koopa::assert_is_function "${dict[prefix_fun]}"
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy="${dict[name_fancy]} packages" \
         --name="${dict[name]}-packages" \
         --no-link \

@@ -1,14 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to move this function somewhere else in package.
 koopa:::install_gnu_app() { # {{{1
-    koopa::assert_has_args "$#"
-    koopa:::install_app \
-        --installer='gnu-app-runner' \
-        "$@"
-    return 0
-}
-
-koopa:::install_gnu_app_runner() { # {{{1
     # """
     # Build and install a GNU package from source.
     # @note Updated 2021-11-13.

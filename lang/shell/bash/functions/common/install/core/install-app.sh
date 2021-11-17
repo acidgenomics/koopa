@@ -2,8 +2,8 @@
 # shellcheck disable=SC2030,SC2031
 
 # FIXME Need to rethink our auto-prefix and auto-version approach here.
-
-koopa:::install_app() { # {{{1
+# FIXME Need to rename this inside of function calls
+koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
     # @note Updated 2021-11-16.
@@ -167,6 +167,7 @@ koopa:::install_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    # FIXME Need to improve our variable checks here.
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ "${dict[system]}" -eq 1 ]]
     then
