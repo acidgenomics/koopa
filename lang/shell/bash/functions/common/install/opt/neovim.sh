@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS failure.
-
-koopa::install_neovim() { # {{{1
-    koopa:::install_app \
-        --name='neovim' \
-        "$@"
-}
-
+# FIXME Rework using app and dict approach.
 koopa:::install_neovim() { # {{{1
     # """
     # Install Neovim.
@@ -51,10 +44,4 @@ koopa:::install_neovim() { # {{{1
         CMAKE_INSTALL_PREFIX="$prefix"
     "$make" install
     return 0
-}
-
-koopa::uninstall_neovim() { # {{{1
-    koopa:::uninstall_app \
-        --name='neovim' \
-        "$@"
 }
