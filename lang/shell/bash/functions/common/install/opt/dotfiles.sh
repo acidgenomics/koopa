@@ -3,12 +3,14 @@
 koopa:::install_dotfiles() { # {{{1
     # """
     # Install dotfiles.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-11-17.
     # """
-    local prefix script
-    prefix="${INSTALL_PREFIX:?}"
-    repo='https://github.com/acidgenomics/dotfiles.git'
-    koopa::git_clone "$repo" "$prefix"
+    local dict
+    declare -A dict=(
+        [prefix]="${INSTALL_PREFIX:?}"
+        [repo]='https://github.com/acidgenomics/dotfiles.git'
+    )
+    koopa::git_clone "${dict[repo]}" "${dict[prefix]}"
     return 0
 }
 
