@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_node_packages() { # {{{1
-    koopa:::install_app_packages \
-        --name-fancy='Node' \
-        --name='node' \
-        "$@"
-}
-
 koopa:::install_node_packages() { # {{{1
     # """
     # Install Node.js packages using npm.
@@ -52,24 +45,4 @@ koopa:::install_node_packages() { # {{{1
     koopa::dl 'Packages' "${pkgs[*]}"
     "${app[npm2]}" install -g "${pkgs[@]}" &>/dev/null
     return 0
-}
-
-koopa::uninstall_node_packages() { # {{{1
-    # """
-    # Uninstall Node.js packages.
-    # @note Updated 2021-06-17.
-    # """
-    koopa:::uninstall_app \
-        --name='node-packages' \
-        --name-fancy='Node.js packages' \
-        --no-link \
-        "$@"
-    }
-
-koopa::update_node_packages() { # {{{1
-    # """
-    # Update Node.js packages.
-    # @note Updated 2021-08-31.
-    # """
-    koopa::install_node_packages "$@"
 }

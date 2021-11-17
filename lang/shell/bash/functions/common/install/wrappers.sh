@@ -38,6 +38,20 @@ koopa::configure_nim() { # {{{1
     return 0
 }
 
+koopa::configure_node() { # {{{1
+    # """
+    # Configure Node.js (and NPM).
+    # @note Updated 2021-09-17.
+    # @seealso
+    # > npm config get prefix
+    # """
+    koopa:::configure_app_packages \
+        --name-fancy='Node.js' \
+        --name='node' \
+        --which-app="$(koopa::locate_node)" \
+        "$@"
+}
+
 koopa::install_anaconda() { # {{{1
     # """
     # Install Anaconda.
@@ -390,6 +404,13 @@ koopa::install_nim_packages() { # {{{1
     koopa:::install_app_packages \
         --name-fancy='Nim' \
         --name='nim' \
+        "$@"
+}
+
+koopa::install_node_packages() { # {{{1
+    koopa:::install_app_packages \
+        --name-fancy='Node' \
+        --name='node' \
         "$@"
 }
 
@@ -782,6 +803,18 @@ koopa::uninstall_nim_packages() { # {{{1
         "$@"
 }
 
+koopa::uninstall_node_packages() { # {{{1
+    # """
+    # Uninstall Node.js packages.
+    # @note Updated 2021-06-17.
+    # """
+    koopa:::uninstall_app \
+        --name='node-packages' \
+        --name-fancy='Node.js packages' \
+        --no-link \
+        "$@"
+}
+
 koopa::uninstall_parallel() { # {{{1
     koopa:::uninstall_app \
         --name='parallel' \
@@ -872,6 +905,14 @@ koopa::update_nim_packages() { # {{{1
     # @note Updated 2021-10-05.
     # """
     koopa::install_nim_packages "$@"
+}
+
+koopa::update_node_packages() { # {{{1
+    # """
+    # Update Node.js packages.
+    # @note Updated 2021-08-31.
+    # """
+    koopa::install_node_packages "$@"
 }
 
 koopa::update_tex_packages() { # {{{1
