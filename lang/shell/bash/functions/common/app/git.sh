@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME shellcheck is currently returning false positive about 'branch'
+# modification inside of a subshell.
+
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
@@ -66,6 +69,8 @@ koopa::git_checkout_recursive() { # {{{1
             (
                 koopa::cd "$repo"
                 default_branch="$(koopa::git_default_branch)"
+                # FIXME Rethink the subshell  modification here?
+                # shellcheck disable=SC2030
                 [[ -z "$branch" ]] && branch="$default_branch"
                 if [[ -n "$origin" ]]
                 then
@@ -89,21 +94,28 @@ koopa::git_checkout_recursive() { # {{{1
 koopa::git_clone() { # {{{1
     # """
     # Quietly clone a git repository.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-17.
     # """
-    local branch git git_args pos repo target
+    local app dict git_args pos
     koopa::assert_has_args_ge "$#" 2
-    branch=''
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [branch]=''
+    )
+    git_args=()
+    pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--branch='*)
-                branch="${1#*=}"
+                dict[branch]="${1#*=}"
                 shift 1
                 ;;
             '--branch')
-                branch="${2:?}"
+                dict[branch]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -118,27 +130,21 @@ koopa::git_clone() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 2
-    repo="${1:?}"
-    target="${2:?}"
-    if [[ -d "$target" ]]
-    then
-        koopa::alert_note "Repo already cloned: '${target}'."
-        return 0
-    fi
+    dict[repo]="${1:?}"
+    dict[target]="${2:?}"
+    [[ -d "${dict[target]}" ]] && koopa::rm "${dict[target]}"
     # Check if user has sufficient permissions.
-    if koopa::str_match_fixed "$repo" 'git@github.com'
+    if koopa::str_match_fixed "${dict[repo]}" 'git@github.com'
     then
         koopa::assert_is_github_ssh_enabled
-    elif koopa::str_match_fixed "$repo" 'git@gitlab.com'
+    elif koopa::str_match_fixed "${dict[repo]}" 'git@gitlab.com'
     then
         koopa::assert_is_gitlab_ssh_enabled
     fi
-    git="$(koopa::locate_git)"
-    git_args=()
-    if [[ -n "$branch" ]]
+    if [[ -n "${dict[branch]}" ]]
     then
         git_args+=(
-            '-b' "$branch"
+            '-b' "${dict[branch]}"
         )
     fi
     git_args+=(
@@ -146,14 +152,14 @@ koopa::git_clone() { # {{{1
         '--quiet'
         '--recursive'
     )
-    "$git" clone "${git_args[@]}" "$repo" "$target"
+    "${app[git]}" clone "${git_args[@]}" "${dict[repo]}" "${dict[target]}"
     return 0
 }
 
 koopa::git_default_branch() { # {{{1
     # """
     # Default branch of Git repository.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-17.
     #
     # Alternate approach:
     # > x="$( \
@@ -164,16 +170,18 @@ koopa::git_default_branch() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/28666357
     # """
-    local app remote x
+    local app dict x
     koopa::assert_has_no_args "$#"
     koopa::is_git_repo || return 1
     declare -A app=(
         [git]="$(koopa::locate_git)"
         [sed]="$(koopa::locate_sed)"
     )
-    remote='origin'
+    declare -A dict=(
+        [remote]='origin'
+    )
     x="$( \
-        "${app[git]}" remote show "$remote" \
+        "${app[git]}" remote show "${dict[remote]}" \
             | koopa::grep 'HEAD branch' \
             | "${app[sed]}" 's/.*: //' \
     )"
