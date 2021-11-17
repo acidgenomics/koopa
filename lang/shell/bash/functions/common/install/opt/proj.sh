@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_proj() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy='PROJ' \
         --name='proj' \
         --no-link \
@@ -61,7 +61,7 @@ koopa:::install_proj() { # {{{1
 }
 
 koopa::uninstall_proj() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='PROJ' \
         --name='proj' \
         --no-link \

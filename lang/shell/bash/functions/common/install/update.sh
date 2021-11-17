@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::update_chemacs() { # {{{1
-    koopa:::update_app \
+    koopa::update_app \
         --name='chemacs' \
         --name-fancy='Chemacs' \
         "$@"
@@ -24,7 +24,7 @@ koopa::update_perl_packages() { # {{{1
 }
 
 koopa::update_tex_packages() { # {{{1
-    koopa:::update_app \
+    koopa::update_app \
         --name-fancy='TeX packages' \
         --name='tex-packages' \
         --system \

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2030,SC2031
 
-koopa:::update_app() { # {{{1
+koopa::update_app() { # {{{1
     # """
     # Update application.
     # @note Updated 2021-11-16.

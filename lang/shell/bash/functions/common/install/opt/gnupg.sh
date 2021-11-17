@@ -132,30 +132,30 @@ koopa:::install_gnupg() { # {{{1
         "$gpg" --list-keys
     fi
     # Install dependencies.
-    koopa:::install_app \
+    koopa::install_app \
         --name='libgpg-error' \
         --version="$libgpg_error_version" \
         --installer='gnupg-gcrypt' \
         "$@"
-    koopa:::install_app \
+    koopa::install_app \
         --name='libgcrypt' \
         --version="$libgcrypt_version" \
         --installer='gnupg-gcrypt' \
         --opt='libgpg-error' \
         "$@"
-    koopa:::install_app \
+    koopa::install_app \
         --name='libassuan' \
         --version="$libassuan_version" \
         --installer='gnupg-gcrypt' \
         --opt='libgpg-error' \
         "$@"
-    koopa:::install_app \
+    koopa::install_app \
         --name='libksba' \
         --version="$libksba_version" \
         --installer='gnupg-gcrypt' \
         --opt='libgpg-error' \
         "$@"
-    koopa:::install_app \
+    koopa::install_app \
         --name='npth' \
         --version="$npth_version" \
         --installer='gnupg-gcrypt' \
@@ -164,7 +164,7 @@ koopa:::install_gnupg() { # {{{1
     then
         koopa::alert_note 'Skipping installation of pinentry.'
     else
-        koopa:::install_app \
+        koopa::install_app \
             --name='pinentry' \
             --version="$pinentry_version" \
             --installer='gnupg-pinentry' \
@@ -182,7 +182,7 @@ koopa:::install_gnupg() { # {{{1
         opt_arr+=('pinentry')
     fi
     opt_str="$(koopa::paste0 ',' "${opt_arr[@]}")"
-    koopa:::install_app \
+    koopa::install_app \
         --name='gnupg' \
         --version="$version" \
         --installer='gnupg-gcrypt' \

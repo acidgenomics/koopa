@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::macos_uninstall_ringcentral() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='RingCentral' \
         --name='ringcentral' \
         --platform='macos' \

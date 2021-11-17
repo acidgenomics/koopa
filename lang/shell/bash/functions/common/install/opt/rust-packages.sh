@@ -85,7 +85,7 @@ koopa::uninstall_rust_packages() { # {{{1
     # Uninstall Rust packages.
     # @note Updated 2021-06-14.
     # """
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Rust packages' \
         --name='rust-packages' \
         --no-link \
@@ -93,7 +93,7 @@ koopa::uninstall_rust_packages() { # {{{1
 }
 
 koopa::update_rust_packages() { # {{{1
-    koopa:::update_app \
+    koopa::update_app \
         --name-fancy='Rust packages' \
         --name='rust-packages' \
         "$@"
