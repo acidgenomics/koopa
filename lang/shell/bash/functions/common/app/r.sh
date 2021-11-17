@@ -168,7 +168,7 @@ koopa::r_link_site_library() { # {{{1
             '--no-link'
         )
     fi
-    koopa:::configure_app_packages "${conf_args[@]}"
+    koopa::configure_app_packages "${conf_args[@]}"
     if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
     then
         koopa::alert_note "Fixing Fedora R configuration at '/usr/lib64/R'."

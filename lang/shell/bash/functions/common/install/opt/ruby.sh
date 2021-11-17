@@ -6,7 +6,7 @@ koopa::configure_ruby() { # {{{1
     # @note Updated 2021-09-17.
     # """
     koopa::rm "${HOME}/.gem"
-    koopa:::configure_app_packages \
+    koopa::configure_app_packages \
         --name-fancy='Ruby' \
         --name='ruby' \
         --which-app="$(koopa::locate_ruby)" \
