@@ -364,6 +364,12 @@ koopa::install_ncurses() { # {{{1
         "$@"
 }
 
+koopa::install_neofetch() { # {{{1
+    koopa:::install_app \
+        --name='neofetch' \
+        "$@"
+}
+
 koopa::install_nim() { # {{{1
     koopa:::install_app \
         --name='nim' \
@@ -729,6 +735,12 @@ koopa::uninstall_miniconda() { # {{{1
 koopa::uninstall_ncurses() { # {{{1
     koopa:::uninstall_app \
         --name='ncurses' \
+        "$@"
+}
+
+koopa::uninstall_neofetch() { # {{{1
+    koopa:::uninstall_app \
+        --name='neofetch' \
         "$@"
 }
 
