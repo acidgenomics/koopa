@@ -43,15 +43,6 @@ koopa::configure_perl() { # {{{1
     return 0
 }
 
-koopa::install_perl() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Perl' \
-        --name='perl' \
-        "$@"
-    koopa::configure_perl
-    return 0
-}
-
 koopa:::install_perl() { # {{{1
     # """
     # Install Perl.
@@ -79,11 +70,4 @@ koopa:::install_perl() { # {{{1
     # > "$make" test
     "$make" install
     return 0
-}
-
-koopa::uninstall_perl() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Perl' \
-        --name='perl' \
-        "$@"
 }
