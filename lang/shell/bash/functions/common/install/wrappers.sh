@@ -111,19 +111,23 @@ koopa::install_doom_emacs() { # {{{1
         "$@"
 }
 
-# FIXME Rethink the additional per-user configuration step here?
 koopa::install_dotfiles() { # {{{1
-    local prefix script
+    local dict
+    declare -A dict=(
+        [name]='dotfiles'
+        [prefix]="$(koopa::dotfiles_prefix)"
+        [version]='rolling'
+    )
+    dict[script]="${dict[prefix]}/install"
     koopa:::install_app \
-        --name='dotfiles' \
-        --version='rolling' \
+        --name="${dict[name]}" \
+        --version="${dict[version]}" \
         "$@"
-    prefix="$(koopa::dotfiles_prefix)"
-    koopa::assert_is_dir "$prefix"
-    koopa::add_koopa_config_link "$prefix" 'dotfiles'
+    koopa::assert_is_dir "${dict[prefix]}"
+    koopa::add_koopa_config_link "${dict[prefix]}" "${dict[name]}"
     script="${prefix}/install"
-    koopa::assert_is_file "$script"
-    "$script"
+    koopa::assert_is_file "${dict[script]}"
+    "${dict[script]}"
     return 0
 }
 
