@@ -230,6 +230,15 @@ koopa::uninstall_julia_packages() { # {{{1
         "$@"
 }
 
+koopa::uninstall_koopa() { # {{{1
+    # """
+    # Uninstall koopa.
+    # @note Updated 2020-06-24.
+    # """
+    "$(koopa::koopa_prefix)/uninstall" "$@"
+    return 0
+}
+
 koopa::uninstall_libevent() { # {{{1
     koopa:::uninstall_app \
         --name='libevent' \
