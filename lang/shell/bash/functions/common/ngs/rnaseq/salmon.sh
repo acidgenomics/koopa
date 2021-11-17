@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to improve error message on R1, R2 tail mismatch.
+
 # Main functions ===============================================================
 koopa::run_salmon_paired_end() { # {{{1
     # """
