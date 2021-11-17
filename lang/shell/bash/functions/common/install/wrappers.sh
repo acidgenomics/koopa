@@ -125,7 +125,6 @@ koopa::install_dotfiles() { # {{{1
         "$@"
     koopa::assert_is_dir "${dict[prefix]}"
     koopa::add_koopa_config_link "${dict[prefix]}" "${dict[name]}"
-    script="${prefix}/install"
     koopa::assert_is_file "${dict[script]}"
     "${dict[script]}"
     return 0
