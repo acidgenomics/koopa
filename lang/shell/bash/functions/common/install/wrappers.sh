@@ -370,6 +370,12 @@ koopa::install_neofetch() { # {{{1
         "$@"
 }
 
+koopa::install_neovim() { # {{{1
+    koopa:::install_app \
+        --name='neovim' \
+        "$@"
+}
+
 koopa::install_nim() { # {{{1
     koopa:::install_app \
         --name='nim' \
@@ -378,6 +384,13 @@ koopa::install_nim() { # {{{1
         "$@"
     koopa::configure_nim
     return 0
+}
+
+koopa::install_nim_packages() { # {{{1
+    koopa:::install_app_packages \
+        --name-fancy='Nim' \
+        --name='nim' \
+        "$@"
 }
 
 koopa::install_parallel() { # {{{1
@@ -744,10 +757,28 @@ koopa::uninstall_neofetch() { # {{{1
         "$@"
 }
 
+koopa::uninstall_neovim() { # {{{1
+    koopa:::uninstall_app \
+        --name='neovim' \
+        "$@"
+}
+
 koopa::uninstall_nim() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='Nim' \
         --name='nim' \
+        "$@"
+}
+
+koopa::uninstall_nim_packages() { # {{{1
+    # """
+    # Uninstall Nim packages.
+    # @note Updated 2021-10-05.
+    # """
+    koopa:::uninstall_app \
+        --name='nim-packages' \
+        --name-fancy='Nim packages' \
+        --no-link \
         "$@"
 }
 
@@ -833,6 +864,14 @@ koopa::update_julia_packages() { # {{{1
     # @note Updated 2021-06-14.
     # """
     koopa::install_julia_packages "$@"
+}
+
+koopa::update_nim_packages() { # {{{1
+    # """
+    # Update Nim packages.
+    # @note Updated 2021-10-05.
+    # """
+    koopa::install_nim_packages "$@"
 }
 
 koopa::update_tex_packages() { # {{{1
