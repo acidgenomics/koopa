@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_haskell_stack() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Haskell Stack' \
-        --name='haskell-stack' \
-        --no-link \
-        --version='rolling' \
-        "$@"
-}
-
 koopa:::install_haskell_stack() { # {{{1
     # """
     # Install Haskell Stack.
@@ -30,12 +19,4 @@ koopa:::install_haskell_stack() { # {{{1
     koopa::mkdir "${prefix}/bin"
     ./"${file}" -f -d "${prefix}/bin"
     return 0
-}
-
-koopa::uninstall_haskell_stack() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Haskell Stack' \
-        --name='haskell-stack' \
-        --no-link \
-        "$@"
 }
