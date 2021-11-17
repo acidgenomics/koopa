@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_openjdk() { # {{{1
-    koopa:::install_app \
-        --name-fancy='OpenJDK' \
-        --name='openjdk' \
-        --no-link \
-        "$@"
-}
-
 koopa:::install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
@@ -108,26 +98,5 @@ ${unique}/GPL/${file}"
     then
         # This step will skip for non-shared install.
         koopa::linux_java_update_alternatives "$prefix"
-    fi
-}
-
-koopa::uninstall_openjdk() { # {{{1
-    # """
-    # Uninstall OpenJDK.
-    # @note Updated 2021-09-21.
-    # """
-    local default_prefix
-    koopa:::uninstall_app \
-        --name-fancy='OpenJDK' \
-        --name='openjdk' \
-        --no-link \
-        "$@"
-    if koopa::is_linux
-    then
-        default_prefix='/usr/lib/jvm/default-java'
-        if [[ -d "$default_prefix" ]]
-        then
-            koopa::linux_java_update_alternatives "$default_prefix"
-        fi
     fi
 }

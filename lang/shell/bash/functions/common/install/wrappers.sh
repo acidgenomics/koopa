@@ -414,6 +414,30 @@ koopa::install_node_packages() { # {{{1
         "$@"
 }
 
+koopa::install_openjdk() { # {{{1
+    koopa:::install_app \
+        --name-fancy='OpenJDK' \
+        --name='openjdk' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_openssh() { # {{{1
+    koopa:::install_app \
+        --name-fancy='OpenSSH' \
+        --name='openssh' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_openssl() { # {{{1
+    koopa:::install_app \
+        --name-fancy='OpenSSL' \
+        --name='openssl' \
+        --no-link \
+        "$@"
+}
+
 koopa::install_parallel() { # {{{1
     koopa:::install_gnu_app \
         --name='parallel' \
@@ -811,6 +835,43 @@ koopa::uninstall_node_packages() { # {{{1
     koopa:::uninstall_app \
         --name='node-packages' \
         --name-fancy='Node.js packages' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_openjdk() { # {{{1
+    # """
+    # Uninstall OpenJDK.
+    # @note Updated 2021-09-21.
+    # """
+    local default_prefix
+    koopa:::uninstall_app \
+        --name-fancy='OpenJDK' \
+        --name='openjdk' \
+        --no-link \
+        "$@"
+    if koopa::is_linux
+    then
+        default_prefix='/usr/lib/jvm/default-java'
+        if [[ -d "$default_prefix" ]]
+        then
+            koopa::linux_java_update_alternatives "$default_prefix"
+        fi
+    fi
+}
+
+koopa::uninstall_openssh() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='OpenSSH' \
+        --name='openssh' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_openssl() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='OpenSSL' \
+        --name='openssl' \
         --no-link \
         "$@"
 }
