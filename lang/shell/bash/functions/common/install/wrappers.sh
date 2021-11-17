@@ -2,6 +2,18 @@
 
 # FIXME Need to finish consolidation of wrappers here.
 
+koopa::configure_go() { # {{{1
+    # """
+    # Configure Go.
+    # @note Updated 2021-09-17.
+    # """
+    koopa:::configure_app_packages \
+        --name-fancy='Go' \
+        --name='go' \
+        --which-app="$(koopa::locate_go)" \
+        "$@"
+}
+
 koopa::configure_nim() { # {{{1
     # """
     # Configure Nim.
@@ -216,6 +228,16 @@ koopa::install_gnupg() { # {{{1
         "$@"
 }
 
+koopa::install_go() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Go' \
+        --name='go' \
+        --no-link \
+        "$@"
+    koopa::configure_go
+    return 0
+}
+
 # NOTE Consider adding support for pcre here.
 koopa::install_grep() { # {{{1
     koopa:::install_gnu_app \
@@ -233,6 +255,22 @@ koopa::install_gsl() { # {{{1
     koopa:::install_gnu_app \
         --name='gsl' \
         --name-fancy='GSL' \
+        "$@"
+}
+
+koopa::install_haskell_stack() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Haskell Stack' \
+        --name='haskell-stack' \
+        --no-link \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::install_hdf5() { # {{{1
+    koopa:::install_app \
+        --name-fancy='HDF5' \
+        --name='hdf5' \
         "$@"
 }
 
@@ -518,6 +556,14 @@ koopa::uninstall_gnupg() { # {{{1
     return 0
 }
 
+koopa::uninstall_go() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Go' \
+        --name='go' \
+        --no-link \
+        "$@"
+}
+
 koopa::uninstall_grep() { # {{{1
     koopa:::uninstall_app \
         --name='grep' \
@@ -533,6 +579,21 @@ koopa::uninstall_groff() { # {{{1
 koopa::uninstall_gsl() { # {{{1
     koopa:::uninstall_app \
         --name='gsl' \
+        "$@"
+}
+
+koopa::uninstall_haskell_stack() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Haskell Stack' \
+        --name='haskell-stack' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_hdf5() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='HDF5' \
+        --name='hdf5' \
         "$@"
 }
 
