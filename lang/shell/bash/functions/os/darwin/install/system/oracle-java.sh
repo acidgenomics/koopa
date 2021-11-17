@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::macos_uninstall_oracle_java() { # {{{
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Oracle Java' \
         --name='oracle-java' \
         --platform='macos' \

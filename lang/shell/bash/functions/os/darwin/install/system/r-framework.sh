@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::macos_install_r_framework() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --installer='r-framework' \
         --name-fancy='R framework' \
         --name='r' \
@@ -11,7 +11,7 @@ koopa::macos_install_r_framework() { # {{{1
 }
 
 koopa::macos_uninstall_r_framework() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='R framework' \
         --name='r' \
         --platform='macos' \

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_pyenv() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name='pyenv' \
         --no-link \
         --version='rolling' \
@@ -21,14 +21,14 @@ koopa:::install_pyenv() { # {{{1
 }
 
 koopa::uninstall_pyenv() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name='pyenv' \
         --no-link \
         "$@"
 }
 
 koopa::update_pyenv() { # {{{1
-    koopa:::update_app \
+    koopa::update_app \
         --name='pyenv' \
         "$@"
 }

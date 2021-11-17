@@ -33,7 +33,7 @@ koopa::uninstall_dotfiles() { # {{{1
     script="${prefix}/uninstall"
     koopa::assert_is_file "$script"
     "$script"
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy="$name_fancy" \
         --name="$name" \
         "$@"

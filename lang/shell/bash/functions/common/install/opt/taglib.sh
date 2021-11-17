@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_taglib() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy='TagLib' \
         --name='taglib' \
         "$@"
@@ -55,7 +55,7 @@ v${version}/${file}"
 }
 
 koopa::uninstall_taglib() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='TagLib' \
         --name='taglib' \
         "$@"

@@ -3,7 +3,7 @@
 # FIXME Make this Debian-specific.
 
 koopa::debian_install_bcbio_nextgen_vm() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name='bcbio-nextgen-vm' \
         --no-link \
         --platform='debian' \
@@ -15,7 +15,7 @@ koopa::debian_uninstall_bcbio_nextgen_vm() { # {{{1
     # Uninstall bcbio-nextgen-vm.
     # @note Updated 2021-11-02.
     # """
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name='bcbio-nextgen-vm' \
         --no-link \
         "$@"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::macos_uninstall_microsoft_onedrive() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Microsoft OneDrive' \
         --name='microsoft-onedrive' \
         --platform='macos' \

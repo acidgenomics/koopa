@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::alpine_install_glibc() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name='glibc' \
         --platform='alpine' \
         --system \
