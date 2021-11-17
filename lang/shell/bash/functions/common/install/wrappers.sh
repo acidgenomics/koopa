@@ -206,6 +206,13 @@ koopa::install_git() { # {{{1
         "$@"
 }
 
+koopa::install_gnupg() { # {{{1
+    koopa:::install_app \
+        --name-fancy='GnuPG suite' \
+        --name='gnupg' \
+        "$@"
+}
+
 # NOTE Consider adding support for pcre here.
 koopa::install_grep() { # {{{1
     koopa:::install_gnu_app \

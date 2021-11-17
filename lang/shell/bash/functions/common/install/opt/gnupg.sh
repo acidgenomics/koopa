@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_gnupg() { # {{{1
-    koopa:::install_app \
-        --name-fancy='GnuPG suite' \
-        --name='gnupg' \
-        "$@"
-}
+# FIXME Need to rework using dict approach.
 
 koopa:::install_gnupg() { # {{{1
     # """
@@ -284,6 +277,7 @@ koopa:::install_gnupg_pinentry() { # {{{1
     return 0
 }
 
+# FIXME Need to use dict approach here.
 koopa::uninstall_gnupg() { # {{{1
     local name_fancy
     koopa::assert_has_no_args "$#"
