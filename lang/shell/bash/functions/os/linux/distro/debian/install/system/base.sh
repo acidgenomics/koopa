@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::debian_install_base() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy='Debian base system' \
         --name='base' \
         --no-version \

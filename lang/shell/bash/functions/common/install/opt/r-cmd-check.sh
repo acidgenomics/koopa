@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_r_cmd_check() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy='R CMD check' \
         --name='r-cmd-check' \
         --no-link \
@@ -22,14 +22,14 @@ koopa:::install_r_cmd_check() { # {{{1
 }
 
 koopa::uninstall_r_cmd_check() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name='r-cmd-check' \
         --no-link \
         "$@"
 }
 
 koopa::update_r_cmd_check() { # {{{1
-    koopa:::update_app \
+    koopa::update_app \
         --name='r-cmd-check' \
         --name-fancy='R CMD check' \
         "$@"

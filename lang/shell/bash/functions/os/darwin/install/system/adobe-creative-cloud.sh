@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::macos_uninstall_adobe_creative_cloud() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Adobe Creative Cloud' \
         --name='adobe-creative-cloud' \
         --platform='macos' \

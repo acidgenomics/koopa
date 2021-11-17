@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # NOTE This currently requires user interaction, and may error inside of the
-# subshell approach currently used in 'koopa:::install_app' handoff.
+# subshell approach currently used in 'koopa::install_app' handoff.
 
 koopa::macos_install_xcode_clt() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
         --platform='macos' \
@@ -13,7 +13,7 @@ koopa::macos_install_xcode_clt() { # {{{1
 }
 
 koopa::macos_uninstall_xcode_clt() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Xcode Command Line Tools (CLT)' \
         --name='xcode-clt' \
         --platform='macos' \

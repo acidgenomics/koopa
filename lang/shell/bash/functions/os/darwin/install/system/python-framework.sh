@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::macos_install_python_framework() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --installer='python-framework' \
         --name-fancy='Python framework' \
         --name='python' \
@@ -11,7 +11,7 @@ koopa::macos_install_python_framework() { # {{{1
 }
 
 koopa::macos_uninstall_python_framework() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Python framework' \
         --name='python' \
         --platform='macos' \

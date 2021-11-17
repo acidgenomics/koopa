@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap in 'koopa:::install_app' call.
+# FIXME Need to wrap in 'koopa::install_app' call.
 # FIXME Also check that Xcode CLT is installed here before proceeding on macOS.
 koopa::install_homebrew() { # {{{1
     # """

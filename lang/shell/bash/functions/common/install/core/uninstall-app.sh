@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::uninstall_app() { # {{{1
+koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
     # @note Updated 2021-11-02.

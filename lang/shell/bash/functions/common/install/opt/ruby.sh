@@ -14,7 +14,7 @@ koopa::configure_ruby() { # {{{1
 }
 
 koopa::install_ruby() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy='Ruby' \
         --name='ruby' \
         "$@"
@@ -53,7 +53,7 @@ koopa:::install_ruby() { # {{{1
 }
 
 koopa::uninstall_ruby() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Ruby' \
         --name='ruby' \
         "$@"

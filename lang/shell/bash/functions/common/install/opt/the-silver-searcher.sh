@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_the_silver_searcher() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name='the-silver-searcher' \
         "$@"
 }
@@ -64,7 +64,7 @@ koopa:::install_the_silver_searcher() { # {{{1
 }
 
 koopa::uninstall_the_silver_searcher() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name='the-silver-searcher' \
         "$@"
 }

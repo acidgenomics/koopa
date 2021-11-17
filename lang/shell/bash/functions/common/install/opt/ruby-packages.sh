@@ -65,7 +65,7 @@ koopa::uninstall_ruby_packages() { # {{{1
     # Uninstall Ruby packages.
     # @note Updated 2021-06-14.
     # """
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Ruby packages' \
         --name='ruby-packages' \
         --no-link \

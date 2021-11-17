@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::install_perlbrew() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy='Perlbrew' \
         --name='perlbrew' \
         --no-link \
@@ -30,7 +30,7 @@ koopa:::install_perlbrew() { # {{{1
 }
 
 koopa::uninstall_perlbrew() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Perlbrew' \
         --name='perlbrew' \
         --no-link \
@@ -38,7 +38,7 @@ koopa::uninstall_perlbrew() { # {{{1
 }
 
 koopa::update_perlbrew() { # {{{1
-    koopa:::update_app \
+    koopa::update_app \
         --name='perlbrew' \
         --name-fancy='Perlbrew' \
         "$@"

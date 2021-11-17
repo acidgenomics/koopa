@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa::debian_install_pandoc() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy='Pandoc' \
         --name='pandoc' \
         --platform='debian' \
@@ -10,7 +10,7 @@ koopa::debian_install_pandoc() { # {{{1
 }
 
 koopa::debian_uninstall_pandoc() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='Pandoc' \
         --name='pandoc' \
         --platform='debian' \

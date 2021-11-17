@@ -5,7 +5,7 @@
 # FIXME Need to define /usr/local/gfortran as a prefix?
 
 koopa::macos_install_r_cran_gfortran() { # {{{1
-    koopa:::install_app \
+    koopa::install_app \
         --name-fancy='R CRAN gfortran' \
         --name='r-cran-gfortran' \
         --platform='macos' \
@@ -18,7 +18,7 @@ koopa::macos_install_r_cran_gfortran() { # {{{1
 # FIXME Need to support '--prefix' pathrough here with '--system' flag.
 
 koopa::macos_uninstall_r_cran_gfortran() { # {{{1
-    koopa:::uninstall_app \
+    koopa::uninstall_app \
         --name-fancy='R CRAN gfortran' \
         --name='r-cran-gfortran' \
         --platform='macos' \
