@@ -253,7 +253,6 @@ koopa::install_ncurses() { # {{{1
         "$@"
 }
 
-# FIXME Need to ensure that 'link-include' works here.
 koopa::install_nim() { # {{{1
     koopa:::install_app \
         --name='nim' \
@@ -511,6 +510,18 @@ koopa::uninstall_gsl() { # {{{1
         "$@"
 }
 
+koopa::uninstall_libtool() { # {{{1
+    koopa:::uninstall_app \
+        --name='libtool' \
+        "$@"
+}
+
+koopa::uninstall_make() { # {{{1
+    koopa:::uninstall_app \
+        --name='make' \
+        "$@"
+}
+
 koopa::uninstall_miniconda() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='Miniconda' \
@@ -520,10 +531,28 @@ koopa::uninstall_miniconda() { # {{{1
         "$@"
 }
 
+koopa::uninstall_ncurses() { # {{{1
+    koopa:::uninstall_app \
+        --name='ncurses' \
+        "$@"
+}
+
 koopa::uninstall_nim() { # {{{1
     koopa:::uninstall_app \
         --name-fancy='Nim' \
         --name='nim' \
+        "$@"
+}
+
+koopa::uninstall_parallel() { # {{{1
+    koopa:::uninstall_app \
+        --name='parallel' \
+        "$@"
+}
+
+koopa::uninstall_patch() { # {{{1
+    koopa:::uninstall_app \
+        --name='patch' \
         "$@"
 }
 
@@ -537,6 +566,12 @@ koopa::uninstall_prelude_emacs() { # {{{1
         --name='prelude-emacs' \
         --no-shared \
         --prefix="$(koopa::prelude_emacs_prefix)" \
+        "$@"
+}
+
+koopa::uninstall_sed() { # {{{1
+    koopa:::uninstall_app \
+        --name='sed' \
         "$@"
 }
 
@@ -563,6 +598,18 @@ koopa::uninstall_spacevim() { # {{{1
         --name='spacevim' \
         --no-shared \
         --prefix="$(koopa::spacevim_prefix)" \
+        "$@"
+}
+
+koopa::uninstall_tar() { # {{{1
+    koopa:::uninstall_app \
+        --name='tar' \
+        "$@"
+}
+
+koopa::uninstall_texinfo() { # {{{1
+    koopa:::uninstall_app \
+        --name='texinfo' \
         "$@"
 }
 
