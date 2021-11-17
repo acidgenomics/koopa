@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Improve install instructions on website to provide recommended default
+   packages for Debian (apt) and Fedora (yum).
 ** TODO User permissions on Debian 11 clean install are 'admin:admin' instead
    of 'root:admin', which we're expecting. Need to fix.
 ** TODO Dotifles are not installing clean on fresh Debian 11 AMI.
