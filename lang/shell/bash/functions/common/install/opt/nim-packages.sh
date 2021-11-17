@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_nim_packages() { # {{{1
-    koopa:::install_app_packages \
-        --name-fancy='Nim' \
-        --name='nim' \
-        "$@"
-}
-
 koopa:::install_nim_packages() { # {{{1
     # """
     # Install Nim packages using nimble.
@@ -35,24 +28,4 @@ koopa:::install_nim_packages() { # {{{1
     fi
     "$nimble" install "${pkgs[@]}"
     return 0
-}
-
-koopa::uninstall_nim_packages() { # {{{1
-    # """
-    # Uninstall Nim packages.
-    # @note Updated 2021-10-05.
-    # """
-    koopa:::uninstall_app \
-        --name='nim-packages' \
-        --name-fancy='Nim packages' \
-        --no-link \
-        "$@"
-    }
-
-koopa::update_nim_packages() { # {{{1
-    # """
-    # Update Nim packages.
-    # @note Updated 2021-10-05.
-    # """
-    koopa::install_nim_packages "$@"
 }
