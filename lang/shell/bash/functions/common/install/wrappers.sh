@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
 # FIXME Need to finish consolidation of wrappers here.
+# FIXME Consider improving error messages when user attempts to redefine
+# an internally defined value (e.g. '--version' when not allowed).
 
 koopa::configure_go() { # {{{1
-    # """
-    # Configure Go.
-    # @note Updated 2021-09-17.
-    # """
     koopa:::configure_app_packages \
         --name-fancy='Go' \
         --name='go' \
@@ -15,10 +13,6 @@ koopa::configure_go() { # {{{1
 }
 
 koopa::configure_julia() { # {{{1
-    # """
-    # Configure Julia.
-    # @note Updated 2021-09-17.
-    # """
     koopa:::configure_app_packages \
         --name-fancy='Julia' \
         --name='julia' \
@@ -27,10 +21,6 @@ koopa::configure_julia() { # {{{1
 }
 
 koopa::configure_nim() { # {{{1
-    # """
-    # Configure Nim.
-    # @note Updated 2021-11-16.
-    # """
     koopa:::configure_app_packages \
         --name-fancy='Nim' \
         --name='nim' \
@@ -39,12 +29,6 @@ koopa::configure_nim() { # {{{1
 }
 
 koopa::configure_node() { # {{{1
-    # """
-    # Configure Node.js (and NPM).
-    # @note Updated 2021-09-17.
-    # @seealso
-    # > npm config get prefix
-    # """
     koopa:::configure_app_packages \
         --name-fancy='Node.js' \
         --name='node' \
@@ -53,10 +37,6 @@ koopa::configure_node() { # {{{1
 }
 
 koopa::install_anaconda() { # {{{1
-    # """
-    # Install Anaconda.
-    # @note Updated 2021-06-07.
-    # """
     koopa:::install_app \
         --name-fancy='Anaconda' \
         --name='anaconda' \
@@ -168,7 +148,6 @@ koopa::install_dotfiles() { # {{{1
     return 0
 }
 
-# FIXME Need to harden the installer against user input of version here.
 koopa::install_ensembl_perl_api() { # {{{1
     koopa:::install_app \
         --name-fancy='Ensembl Perl API' \
@@ -444,9 +423,31 @@ koopa::install_parallel() { # {{{1
         "$@"
 }
 
+koopa::install_password_store() { # {{{1
+    koopa:::install_app \
+        --name='password-store' \
+        "$@"
+}
+
 koopa::install_patch() { # {{{1
     koopa:::install_gnu_app \
         --name='patch' \
+        "$@"
+}
+
+koopa::install_perl() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Perl' \
+        --name='perl' \
+        "$@"
+    koopa::configure_perl
+    return 0
+}
+
+koopa::install_perl_packages() { # {{{1
+    koopa:::install_app_packages \
+        --name-fancy='Perl' \
+        --name='perl' \
         "$@"
 }
 
@@ -541,10 +542,6 @@ koopa::uninstall_binutils() { # {{{1
 }
 
 koopa::uninstall_chemacs() { # {{{1
-    # """
-    # Uninstall Chemacs2.
-    # @note Updated 2021-06-07.
-    # """
     koopa:::uninstall_app \
         --name-fancy='Chemacs' \
         --name='chemacs' \
@@ -583,10 +580,6 @@ koopa::uninstall_curl() { # {{{1
 }
 
 koopa::uninstall_doom_emacs() { # {{{1
-    # """
-    # Uninstall Doom Emacs.
-    # @note Updated 2021-06-08.
-    # """
     koopa:::uninstall_app \
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
@@ -738,16 +731,11 @@ koopa::uninstall_julia() { # {{{1
 }
 
 koopa::uninstall_julia_packages() { # {{{1
-    # """
-    # Uninstall Julia packages.
-    # @note Updated 2021-06-14.
-    # """
     koopa:::uninstall_app \
         --name-fancy='Julia packages' \
         --name='julia-packages' \
         --no-link \
         "$@"
-    return 0
 }
 
 koopa::uninstall_libevent() { # {{{1
@@ -816,10 +804,6 @@ koopa::uninstall_nim() { # {{{1
 }
 
 koopa::uninstall_nim_packages() { # {{{1
-    # """
-    # Uninstall Nim packages.
-    # @note Updated 2021-10-05.
-    # """
     koopa:::uninstall_app \
         --name='nim-packages' \
         --name-fancy='Nim packages' \
@@ -828,10 +812,6 @@ koopa::uninstall_nim_packages() { # {{{1
 }
 
 koopa::uninstall_node_packages() { # {{{1
-    # """
-    # Uninstall Node.js packages.
-    # @note Updated 2021-06-17.
-    # """
     koopa:::uninstall_app \
         --name='node-packages' \
         --name-fancy='Node.js packages' \
@@ -840,10 +820,6 @@ koopa::uninstall_node_packages() { # {{{1
 }
 
 koopa::uninstall_openjdk() { # {{{1
-    # """
-    # Uninstall OpenJDK.
-    # @note Updated 2021-09-21.
-    # """
     local default_prefix
     koopa:::uninstall_app \
         --name-fancy='OpenJDK' \
@@ -858,6 +834,7 @@ koopa::uninstall_openjdk() { # {{{1
             koopa::linux_java_update_alternatives "$default_prefix"
         fi
     fi
+    return 0
 }
 
 koopa::uninstall_openssh() { # {{{1
@@ -882,17 +859,33 @@ koopa::uninstall_parallel() { # {{{1
         "$@"
 }
 
+koopa::uninstall_password_store() { # {{{1
+    koopa:::uninstall_app \
+        --name='password-store' \
+        "$@"
+}
+
 koopa::uninstall_patch() { # {{{1
     koopa:::uninstall_app \
         --name='patch' \
         "$@"
 }
 
+koopa::uninstall_perl() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Perl' \
+        --name='perl' \
+        "$@"
+}
+
+koopa::uninstall_perl_packages() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Perl packages' \
+        --name='perl-packages' \
+        "$@"
+}
+
 koopa::uninstall_prelude_emacs() { # {{{1
-    # """
-    # Uninstall Prelude Emacs.
-    # @note Updated 2021-06-08.
-    # """
     koopa:::uninstall_app \
         --name-fancy='Prelude Emacs' \
         --name='prelude-emacs' \
@@ -908,10 +901,6 @@ koopa::uninstall_sed() { # {{{1
 }
 
 koopa::uninstall_spacemacs() { # {{{1
-    # """
-    # Uninstall Spacemacs.
-    # @note Updated 2021-06-08.
-    # """
     koopa:::uninstall_app \
         --name-fancy='Spacemacs' \
         --name='spacemacs' \
@@ -921,10 +910,6 @@ koopa::uninstall_spacemacs() { # {{{1
 }
 
 koopa::uninstall_spacevim() { # {{{1
-    # """
-    # Uninstall SpaceVim.
-    # @note Updated 2021-06-11.
-    # """
     koopa:::uninstall_app \
         --name-fancy='SpaceVim' \
         --name='spacevim' \
@@ -953,27 +938,19 @@ koopa::update_chemacs() { # {{{1
 }
 
 koopa::update_julia_packages() { # {{{1
-    # """
-    # Update Julia packages.
-    # @note Updated 2021-06-14.
-    # """
     koopa::install_julia_packages "$@"
 }
 
 koopa::update_nim_packages() { # {{{1
-    # """
-    # Update Nim packages.
-    # @note Updated 2021-10-05.
-    # """
     koopa::install_nim_packages "$@"
 }
 
 koopa::update_node_packages() { # {{{1
-    # """
-    # Update Node.js packages.
-    # @note Updated 2021-08-31.
-    # """
     koopa::install_node_packages "$@"
+}
+
+koopa::update_perl_packages() { # {{{1
+    koopa::install_perl_packages "$@"
 }
 
 koopa::update_tex_packages() { # {{{1
