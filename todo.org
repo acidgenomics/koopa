@@ -1,6 +1,14 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO User permissions on Debian 11 clean install are 'admin:admin' instead
+   of 'root:admin', which we're expecting. Need to fix.
+** TODO Dotifles are not installing clean on fresh Debian 11 AMI.
+    > # Installing dotfiles at '/opt/koopa/app/dotfiles/rolling'.
+    > ** Repo already cloned: '/opt/koopa/app/dotfiles/rolling'.
+    > → Deleting '/opt/koopa/app/dotfiles/rolling'.
+    > !! Error: Not directory: '/opt/koopa/app/dotfiles/rolling'.
+    > admin@ip-10-28-99-104:~$
 ** TODO Need a simple batch rename utility to convert file extension to
     lowercase. We may simply add this in a future update to syntactic engine.
 ** TODO photos_rename_exiftool needs to error on file input instead of
