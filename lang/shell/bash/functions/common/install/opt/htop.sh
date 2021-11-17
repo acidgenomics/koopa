@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_htop() { # {{{1
-    koopa:::install_app \
-        --name='htop' \
-        "$@"
-}
-
 koopa:::install_htop() { # {{{1
     # """
     # Install htop.
@@ -46,10 +38,4 @@ koopa:::install_htop() { # {{{1
     # > "$make" check
     "$make" install
     return 0
-}
-
-koopa::uninstall_htop() { # {{{1
-    koopa:::uninstall_app \
-        --name='htop' \
-        "$@"
 }

@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_lua() { # {{{1
-    koopa:::install_app \
-        --name-fancy='Lua' \
-        --name='lua' \
-        "$@"
-}
-
 koopa:::install_lua() { # {{{1
     # """
     # Install Lua.
@@ -37,11 +28,4 @@ koopa:::install_lua() { # {{{1
     "$make" test
     "$make" install INSTALL_TOP="$prefix"
     return 0
-}
-
-koopa::uninstall_lua() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Lua' \
-        --name='lua' \
-        "$@"
 }

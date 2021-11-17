@@ -1,38 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-09-17] macOS success.
-
-koopa::configure_julia() { # {{{1
-    # """
-    # Configure Julia.
-    # @note Updated 2021-09-17.
-    # """
-    koopa:::configure_app_packages \
-        --name-fancy='Julia' \
-        --name='julia' \
-        --which-app="$(koopa::locate_julia)" \
-        "$@"
-}
-
-koopa::install_julia() { # {{{1
-    if koopa::is_linux
-    then
-        koopa:::install_app \
-            --installer="julia-binary" \
-            --name-fancy='Julia' \
-            --name='julia' \
-            --platform='linux' \
-            "$@"
-    else
-        koopa:::install_app \
-            --name-fancy='Julia' \
-            --name='julia' \
-            "$@"
-    fi
-    koopa::configure_julia
-    return 0
-}
-
 koopa:::install_julia() { # {{{1
     # """
     # Install Julia (from source).
@@ -83,11 +50,4 @@ END
     # > "$make" test
     "$make" install
     return 0
-}
-
-koopa::uninstall_julia() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='Julia' \
-        --name='julia' \
-        "$@"
 }

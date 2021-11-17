@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_julia_packages() { # {{{1
-    koopa:::install_app_packages \
-        --name-fancy='Julia' \
-        --name='julia' \
-        "$@"
-}
-
 koopa:::install_julia_packages() { # {{{1
     # """
     # Install Julia packages.
@@ -32,25 +25,4 @@ koopa:::install_julia_packages() { # {{{1
     koopa::assert_is_file "$script"
     "$julia" "$script"
     return 0
-}
-
-koopa::uninstall_julia_packages() { # {{{1
-    # """
-    # Uninstall Julia packages.
-    # @note Updated 2021-06-14.
-    # """
-    koopa:::uninstall_app \
-        --name-fancy='Julia packages' \
-        --name='julia-packages' \
-        --no-link \
-        "$@"
-    return 0
-}
-
-koopa::update_julia_packages() { # {{{1
-    # """
-    # Update Julia packages.
-    # @note Updated 2021-06-14.
-    # """
-    koopa::install_julia_packages "$@"
 }

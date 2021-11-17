@@ -14,6 +14,18 @@ koopa::configure_go() { # {{{1
         "$@"
 }
 
+koopa::configure_julia() { # {{{1
+    # """
+    # Configure Julia.
+    # @note Updated 2021-09-17.
+    # """
+    koopa:::configure_app_packages \
+        --name-fancy='Julia' \
+        --name='julia' \
+        --which-app="$(koopa::locate_julia)" \
+        "$@"
+}
+
 koopa::configure_nim() { # {{{1
     # """
     # Configure Nim.
@@ -274,9 +286,60 @@ koopa::install_hdf5() { # {{{1
         "$@"
 }
 
+koopa::install_htop() { # {{{1
+    koopa:::install_app \
+        --name='htop' \
+        "$@"
+}
+
+koopa::install_julia() { # {{{1
+    if koopa::is_linux
+    then
+        koopa:::install_app \
+            --installer="julia-binary" \
+            --name-fancy='Julia' \
+            --name='julia' \
+            --platform='linux' \
+            "$@"
+    else
+        koopa:::install_app \
+            --name-fancy='Julia' \
+            --name='julia' \
+            "$@"
+    fi
+    koopa::configure_julia
+    return 0
+}
+
+koopa::install_julia_packages() { # {{{1
+    koopa:::install_app_packages \
+        --name-fancy='Julia' \
+        --name='julia' \
+        "$@"
+}
+
+koopa::install_libevent() { # {{{1
+    koopa:::install_app \
+        --name='libevent' \
+        "$@"
+}
+
 koopa::install_libtool() { # {{{1
     koopa:::install_gnu_app \
         --name='libtool' \
+        "$@"
+}
+
+koopa::install_lua() { # {{{1
+    koopa:::install_app \
+        --name-fancy='Lua' \
+        --name='lua' \
+        "$@"
+}
+
+koopa::install_luarocks() { # {{{1
+    koopa:::install_app \
+        --name='luarocks' \
         "$@"
 }
 
@@ -597,9 +660,54 @@ koopa::uninstall_hdf5() { # {{{1
         "$@"
 }
 
+koopa::uninstall_htop() { # {{{1
+    koopa:::uninstall_app \
+        --name='htop' \
+        "$@"
+}
+
+koopa::uninstall_julia() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Julia' \
+        --name='julia' \
+        "$@"
+}
+
+koopa::uninstall_julia_packages() { # {{{1
+    # """
+    # Uninstall Julia packages.
+    # @note Updated 2021-06-14.
+    # """
+    koopa:::uninstall_app \
+        --name-fancy='Julia packages' \
+        --name='julia-packages' \
+        --no-link \
+        "$@"
+    return 0
+}
+
+koopa::uninstall_libevent() { # {{{1
+    koopa:::uninstall_app \
+        --name='libevent' \
+        "$@"
+}
+
 koopa::uninstall_libtool() { # {{{1
     koopa:::uninstall_app \
         --name='libtool' \
+        "$@"
+}
+
+koopa::uninstall_lua() { # {{{1
+    koopa:::uninstall_app \
+        --name-fancy='Lua' \
+        --name='lua' \
+        "$@"
+}
+
+koopa::uninstall_luarocks() { # {{{1
+    koopa:::uninstall_app \
+        --name='luarocks' \
         "$@"
 }
 
@@ -705,6 +813,14 @@ koopa::update_chemacs() { # {{{1
         --name='chemacs' \
         --name-fancy='Chemacs' \
         "$@"
+}
+
+koopa::update_julia_packages() { # {{{1
+    # """
+    # Update Julia packages.
+    # @note Updated 2021-06-14.
+    # """
+    koopa::install_julia_packages "$@"
 }
 
 koopa::update_tex_packages() { # {{{1
