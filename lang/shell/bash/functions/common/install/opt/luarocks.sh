@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_luarocks() { # {{{1
-    koopa:::install_app \
-        --name='luarocks' \
-        "$@"
-}
-
 koopa:::install_luarocks() { # {{{1
     # """
     # Install Luarocks.
@@ -34,10 +26,4 @@ koopa:::install_luarocks() { # {{{1
     "$make" build
     "$make" install
     return 0
-}
-
-koopa::uninstall_luarocks() { # {{{1
-    koopa:::uninstall_app \
-        --name='luarocks' \
-        "$@"
 }

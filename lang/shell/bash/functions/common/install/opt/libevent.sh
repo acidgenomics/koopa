@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_libevent() { # {{{1
-    koopa:::install_app \
-        --name='libevent' \
-        "$@"
-}
-
 koopa:::install_libevent() { # {{{1
     # """
     # Install libevent.
@@ -34,10 +26,4 @@ release-${version}-stable/${file}"
     # > "$make" check
     "$make" install
     return 0
-}
-
-koopa::uninstall_libevent() { # {{{1
-    koopa:::uninstall_app \
-        --name='libevent' \
-        "$@"
 }
