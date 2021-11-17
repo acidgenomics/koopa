@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework using dict approach here.
 koopa::configure_python() { #{{{1
     # """
     # Configure Python.
@@ -34,7 +35,7 @@ koopa::configure_python() { #{{{1
     else
         koopa::sudo_write_string "$k_site_pkgs" "$pth_file"
     fi
-    koopa:::configure_app_packages \
+    koopa::configure_app_packages \
         --name-fancy="$name_fancy" \
         --name="$name" \
         --prefix="$k_site_pkgs"

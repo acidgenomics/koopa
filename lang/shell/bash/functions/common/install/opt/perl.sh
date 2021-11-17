@@ -17,7 +17,7 @@ koopa::configure_perl() { # {{{1
     koopa::assert_has_no_args "$#"
     perl="$(koopa::locate_perl)"
     yes="$(koopa::locate_yes)"
-    koopa:::configure_app_packages \
+    koopa::configure_app_packages \
         --name='perl' \
         --name-fancy='Perl' \
         --which-app="$perl"
