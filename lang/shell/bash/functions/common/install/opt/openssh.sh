@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_openssh() { # {{{1
-    koopa:::install_app \
-        --name-fancy='OpenSSH' \
-        --name='openssh' \
-        --no-link \
-        "$@"
-}
-
 koopa:::install_openssh() { # {{{1
     # """
     # Install OpenSSH.
@@ -31,12 +21,4 @@ portable/${file}"
     "$make" --jobs="$jobs"
     "$make" install
     return 0
-}
-
-koopa::uninstall_openssh() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='OpenSSH' \
-        --name='openssh' \
-        --no-link \
-        "$@"
 }

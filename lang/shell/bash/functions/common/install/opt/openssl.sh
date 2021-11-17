@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_openssl() { # {{{1
-    koopa:::install_app \
-        --name-fancy='OpenSSL' \
-        --name='openssl' \
-        --no-link \
-        "$@"
-}
-
 koopa:::install_openssl() { # {{{1
     # """
     # Install OpenSSL.
@@ -34,12 +24,4 @@ koopa:::install_openssl() { # {{{1
     # > "$make" test
     "$make" install
     return 0
-}
-
-koopa::uninstall_openssl() { # {{{1
-    koopa:::uninstall_app \
-        --name-fancy='OpenSSL' \
-        --name='openssl' \
-        --no-link \
-        "$@"
 }
