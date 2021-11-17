@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_neofetch() { # {{{1
-    koopa:::install_app \
-        --name='neofetch' \
-        "$@"
-}
-
 koopa:::install_neofetch() { # {{{1
     # """
     # Install neofetch.
@@ -26,10 +18,4 @@ koopa:::install_neofetch() { # {{{1
     koopa::mkdir "$prefix"
     "$make" PREFIX="$prefix" install
     return 0
-}
-
-koopa::uninstall_neofetch() { # {{{1
-    koopa:::uninstall_app \
-        --name='neofetch' \
-        "$@"
 }
