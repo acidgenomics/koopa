@@ -429,6 +429,12 @@ koopa::install_prelude_emacs() { # {{{1
         "$@"
 }
 
+koopa::install_r_koopa() { # {{{1
+    koopa::assert_has_no_args "$#"
+    koopa::r_koopa 'header'
+    return 0
+}
+
 koopa::install_sed() { # {{{1
     koopa:::install_gnu_app \
         --name='sed' \
