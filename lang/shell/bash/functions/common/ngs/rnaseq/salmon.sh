@@ -19,6 +19,8 @@ koopa::run_salmon_paired_end() { # {{{1
     declare -A dict=(
         [bootstraps]=30
         [fastq_dir]='fastq'
+        # FIXME Work on making this optional.
+        [gff_file]=''
         [index_dir]=''
         [lib_type]='A'
         [output_dir]='salmon'
@@ -99,6 +101,7 @@ koopa::run_salmon_paired_end() { # {{{1
                 ;;
         esac
     done
+    # FIXME Improve the variable checks here.
     koopa::h1 'Running salmon (paired-end mode).'
     koopa::activate_conda_env 'salmon'
     dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
@@ -157,6 +160,7 @@ with '${dict[r1_tail]}'."
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
+        # FIXME Make gff file optional here.
         koopa::salmon_quant_paired_end \
             --bootstraps="${dict[bootstraps]}" \
             --fastq-r1="$fastq_r1" \
