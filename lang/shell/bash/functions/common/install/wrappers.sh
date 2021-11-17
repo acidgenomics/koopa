@@ -499,6 +499,22 @@ koopa::uninstall_git() { # {{{1
         "$@"
 }
 
+# FIXME Need to use dict approach here.
+koopa::uninstall_gnupg() { # {{{1
+    local name_fancy
+    koopa::assert_has_no_args "$#"
+    name_fancy='GnuPG suite'
+    koopa::uninstall_start "$name_fancy"
+    koopa:::uninstall_app --name='gnupg'
+    koopa:::uninstall_app --name='libassuan'
+    koopa:::uninstall_app --name='libgcrypt'
+    koopa:::uninstall_app --name='libgpg-error'
+    koopa:::uninstall_app --name='libksba'
+    koopa:::uninstall_app --name='npth'
+    koopa::uninstall_success "$name_fancy"
+    return 0
+}
+
 koopa::uninstall_grep() { # {{{1
     koopa:::uninstall_app \
         --name='grep' \
