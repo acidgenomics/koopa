@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to ensure that koopa is in path.
 koopa:::update_koopa() { # {{{1
     # """
     # Update koopa installation.
@@ -19,10 +20,8 @@ koopa:::update_koopa() { # {{{1
         return 1
     fi
     koopa::sys_set_permissions --recursive "${dict[koopa_prefix]}"
-    echo 'FIXME A'
+    # FIXME This is pulling the repo twice, what's up with that?
     koopa::sys_git_pull
-    echo 'FIXME A'
-    # FIXME This is currently breaking...
     koopa::update_dotfiles \
         "${dict[dotfiles_prefix]}" \
         "${dict[dotfiles_private_prefix]}"

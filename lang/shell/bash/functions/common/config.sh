@@ -82,6 +82,7 @@ END
     return 0
 }
 
+# FIXME Need to add support for '--config'.
 koopa::delete_dotfile() { # {{{1
     # """
     # Delete a dot file.
