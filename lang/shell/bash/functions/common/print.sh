@@ -1,77 +1,79 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using dict approach.
 koopa:::alert_process_start() { # {{{1
     # """
     # Inform the user about the start of a process.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-18.
     # """
-    local msg name version prefix word
-    word="${1:?}"
+    local dict
+    declare -A dict
+    dict[word]="${1:?}"
     shift 1
     koopa::assert_has_args_le "$#" 3
-    name="${1:?}"
-    version=''
-    prefix=''
+    dict[name]="${1:?}"
+    dict[version]=''
+    dict[prefix]=''
     if [[ "$#" -eq 2 ]]
     then
-        prefix="${2:?}"
+        dict[prefix]="${2:?}"
     elif [[ "$#" -eq 3 ]]
     then
-        version="${2:?}"
-        prefix="${3:?}"
+        dict[version]="${2:?}"
+        dict[prefix]="${3:?}"
     fi
-    if [[ -n "$prefix" ]] && [[ -n "$version" ]]
+    if [[ -n "${dict[prefix]}" ]] && [[ -n "${dict[version]}" ]]
     then
-        msg="${word} ${name} ${version} at '${prefix}'."
-    elif [[ -n "$prefix" ]]
+        out="${dict[word]} ${dict[name]} ${dict[version]} at '${dict[prefix]}'."
+    elif [[ -n "${dict[prefix]}" ]]
     then
-        msg="${word} ${name} at '${prefix}'."
+        out="${dict[word]} ${dict[name]} at '${dict[prefix]}'."
     else
-        msg="${word} ${name}."
+        out="${dict[word]} ${dict[name]}."
     fi
-    koopa::h1 "$msg"
+    koopa::h1 "${dict[out]}"
     return 0
 }
 
-# FIXME Rework using dict approach.
 koopa:::alert_process_success() { # {{{1
     # """
     # Inform the user about the successful completion of a process.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-18.
     # """
-    local msg name prefix word
-    word="${1:?}"
+    local dict
+    declare -A dict
+    dict[word]="${1:?}"
     shift 1
     koopa::assert_has_args_le "$#" 2
-    name="${1:?}"
-    prefix="${2:-}"
-    if [[ -n "$prefix" ]]
+    dict[name]="${1:?}"
+    dict[prefix]="${2:-}"
+    if [[ -n "${dict[prefix]}" ]]
     then
-        msg="${word} of ${name} at '${prefix}' was successful."
+        dict[out]="${dict[word]} of ${dict[name]} at '${dict[prefix]}' \
+was successful."
     else
-        msg="${word} of ${name} was successful."
+        dict[out]="${dict[word]} of ${dict[name]} was successful."
     fi
-    koopa::alert_success "$msg"
+    koopa::alert_success "${dict[out]}"
     return 0
 }
 
-# FIXME Rework using dict approach.
 koopa:::status() { # {{{1
     # """
     # Koopa status.
-    # @note Updated 2021-06-03.
+    # @note Updated 2021-11-18.
     # """
-    local color nocolor label string x
+    local dict string
     koopa::assert_has_args_ge "$#" 3
-    label="$(printf '%10s\n' "${1:?}")"
-    color="$(koopa:::ansi_escape "${2:?}")"
-    nocolor="$(koopa:::ansi_escape 'nocolor')"
+    declare -A dict=(
+        [label]="$(printf '%10s\n' "${1:?}")"
+        [color]="$(koopa:::ansi_escape "${2:?}")"
+        [nocolor]="$(koopa:::ansi_escape 'nocolor')"
+    )
     shift 2
     for string in "$@"
     do
-        x="${color}${label}${nocolor} | ${string}"
-        koopa::print "$x"
+        string="${dict[color]}${dict[label]}${dict[nocolor]} | ${string}"
+        koopa::print "$string"
     done
     return 0
 }
