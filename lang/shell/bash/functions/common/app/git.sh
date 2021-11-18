@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME Note that subshell usage here might not be worth the performance hit.
+# FIXME Consider wrapping the whole call in a single subshell...
 # FIXME Rework these functions to allow direct file path support, when possible.
-
 # FIXME shellcheck is currently returning false positive about 'branch'
 # modification inside of a subshell.
-
 # FIXME Need to add a function to detect whether git repo is detached (e.g. HEAD)
 # state. In that case, koopa::git_pull should skip and inform the user.
 # FIXME This is also called in 'koopa::configure_user', which needs to be adjusted.
+# FIXME Ensure all functions work on current working directory, if possible.
 
+# FIXME Rework with single subshell here, to avoid performance hit.
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
@@ -55,7 +57,7 @@ koopa::git_checkout_recursive() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     dirs=("$@")
-    koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
+    koopa::is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
@@ -147,6 +149,7 @@ koopa::git_clone() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 2
+    # FIXME Improve parameterization here, shifting by 2 instead.
     dict[repo]="${1:?}"
     dict[target]="${2:?}"
     [[ -d "${dict[target]}" ]] && koopa::rm "${dict[target]}"
@@ -173,6 +176,7 @@ koopa::git_clone() { # {{{1
     return 0
 }
 
+# FIXME Rework with single subshell here, to avoid performance hit.
 koopa::git_default_branch() { # {{{1
     # """
     # Default branch of Git repository.
@@ -192,7 +196,6 @@ koopa::git_default_branch() { # {{{1
     # # main
     # """
     local app dict repo repos x
-    koopa::assert_has_args "$#"
     declare -A app=(
         [git]="$(koopa::locate_git)"
         [sed]="$(koopa::locate_sed)"
@@ -201,6 +204,7 @@ koopa::git_default_branch() { # {{{1
         [remote]='origin'
     )
     repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa::assert_is_dir "${repos[@]}"
     for repo in "${repos[@]}"
     do
@@ -224,6 +228,7 @@ koopa::git_default_branch() { # {{{1
 # FIXME Export this as a user-accessible command-line function.
 # FIXME We need to pass in the URL here...currently too confusing.
 # FIXME Need to add a working example for this.
+# FIXME Rework with single subshell here, to avoid performance hit.
 
 koopa::git_init_remote() { # {{{1
     # """
@@ -304,7 +309,6 @@ koopa::git_last_commit_local() { # {{{1
     # # 9b7217c27858dd7ebffdf5a8ba66a6ea56ac5e1d
     # """
     local app dict repo repos x
-    koopa::assert_has_args "$#"
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
@@ -312,17 +316,20 @@ koopa::git_last_commit_local() { # {{{1
         [ref]='HEAD'
     )
     repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa::assert_is_dir "${repos[@]}"
-    for repo in "$@"
-    do
-        (
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        for repo in "${repos[@]}"
+        do
             koopa::cd "$repo"
             koopa::is_git_repo || return 1
             x="$("${app[git]}" rev-parse "${dict[ref]}" 2>/dev/null || true)"
             [[ -n "$x" ]] || return 1
             koopa::print "$x"
-        )
-    done
+        done
+    )
     return 0
 }
 
@@ -372,7 +379,6 @@ koopa::git_rename_master_to_main() { # {{{1
     # > koopa::git_rename_master_to_main "${HOME}/git/example"
     # """
     local app dict repo repos
-    koopa::assert_has_args "$#"
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
@@ -382,10 +388,13 @@ koopa::git_rename_master_to_main() { # {{{1
         [new_branch]='main'
     )
     repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa::assert_is_dir "${repos[@]}"
-    for repo in "${repos[@]}"
-    do
-        (
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        for repo in "${repos[@]}"
+        do
             koopa::cd "$repo"
             koopa::assert_is_git_repo
             "${app[git]}" branch -m \
@@ -396,14 +405,17 @@ koopa::git_rename_master_to_main() { # {{{1
                 -u "${dict[origin]}/${dict[new_branch]}" \
                 "${dict[new_branch]}"
             "${app[git]}" remote set-head "${dict[origin]}" -a
-        )
-    done
+        done
+    )
     return 0
 }
 
 # FIXME Allow the user to pull multiple repos in a single call.
 # FIXME Need to allow direct file path input here.
 # FIXME Rework using dict approach.
+# FIXME Manually override 'origin' and 'branch' arguments here.
+# FIXME Ensure we only use single subshell here.
+
 koopa::git_pull() { # {{{1
     # """
     # Pull (update) a git repository.
@@ -425,6 +437,7 @@ koopa::git_pull() { # {{{1
     "$git" pull "$@"
     if [[ -s '.gitmodules' ]]
     then
+        # FIXME Add the path here.
         koopa::git_submodule_init
         "$git" submodule --quiet update --init --recursive
         "$git" submodule --quiet foreach --recursive \
@@ -441,6 +454,7 @@ koopa::git_pull() { # {{{1
 }
 
 # FIXME Rework this.
+# FIXME Can we call 'koopa::git_pull' here instead?
 koopa::git_pull_recursive() { # {{{1
     # """
     # Pull multiple Git repositories recursively.
@@ -448,7 +462,7 @@ koopa::git_pull_recursive() { # {{{1
     # """
     local dir dirs git repo repos
     dirs=("$@")
-    koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
+    koopa::is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     git="$(koopa::locate_git)"
     for dir in "${dirs[@]}"
     do
@@ -465,6 +479,7 @@ koopa::git_pull_recursive() { # {{{1
         then
             koopa::stop "Failed to detect any git repos in '${dir}'."
         fi
+        # FIXME Need to improve this using ngettext.
         koopa::h1 "Pulling ${#repos[@]} git repos in '${dir}'."
         for repo in "${repos[@]}"
         do
@@ -487,10 +502,13 @@ koopa::git_push_recursive() { # {{{1
     # Push multiple Git repositories recursively.
     # @note Updated 2021-10-26.
     # """
-    local dir dirs git repo repos
+    local app dir dirs git repo repos
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
     dirs=("$@")
-    koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
-    git="$(koopa::locate_git)"
+    koopa::is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
+    koopa::assert_is_dir "${dirs[@]}"
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
@@ -504,8 +522,9 @@ koopa::git_push_recursive() { # {{{1
         )"
         if ! koopa::is_array_non_empty "${repos[@]:-}"
         then
-            koopa::stop 'Failed to detect any git repos.'
+            koopa::stop "Failed to detect any git repos in '${dir}'."
         fi
+        # FIXME Need to improve this using ngettext.
         koopa::h1 "Pushing ${#repos[@]} git repos in '${dir}'."
         for repo in "${repos[@]}"
         do
@@ -513,36 +532,39 @@ koopa::git_push_recursive() { # {{{1
             koopa::h2 "$repo"
             (
                 koopa::cd "$repo"
-                "$git" push
+                "${app[git]}" push
             )
         done
     done
     return 0
 }
 
-# FIXME Rework this.
 koopa::git_push_submodules() { # {{{1
     # """
     # Push Git submodules.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-18.
     # """
-    local dir dirs git
-    dirs=("$@")
-    koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
-    git="$(koopa::locate_git)"
-    for dir in "${dirs[@]}"
+    local app repo repos
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
+    koopa::assert_is_dir "${repos[@]}"
+    for repo in "${repos[@]}"
     do
         (
-            koopa::cd "$dir"
-            "$git" submodule update --remote --merge
-            "$git" commit -m 'Update submodules.'
-            "$git" push
+            koopa::cd "$repo"
+            "${app[git]}" submodule update --remote --merge
+            "${app[git]}" commit -m 'Update submodules.'
+            "${app[git]}" push
         )
     done
     return 0
 }
 
 # FIXME Rework this.
+# FIXME Allow parameterization of this.
 koopa::git_remote_url() { # {{{1
     # """
     # Return the Git remote URL for origin.
@@ -559,6 +581,7 @@ koopa::git_remote_url() { # {{{1
 }
 
 # FIXME Rework this.
+# FIXME Need to support parameterization.
 koopa::git_reset() { # {{{1
     # """
     # Clean and reset a git repo and its submodules.
@@ -578,6 +601,7 @@ koopa::git_reset() { # {{{1
     "$git" clean -dffx
     if [[ -s '.gitmodules' ]]
     then
+        # FIXME Add the path here.
         koopa::git_submodule_init
         "$git" submodule --quiet foreach --recursive \
             "$git" clean -dffx
@@ -588,62 +612,76 @@ koopa::git_reset() { # {{{1
     return 0
 }
 
-# FIXME Rework this.
 koopa::git_reset_fork_to_upstream() { # {{{1
     # """
     # Reset Git fork to upstream.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-18.
     # """
-    local branch dir dirs git
-    dirs=("$@")
-    koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
-    git="$(koopa::locate_git)"
-    for dir in "${dirs[@]}"
+    local app repo repos
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
+    koopa::assert_is_dir "${repos[@]}"
+    for repo in "${repos[@]}"
     do
         (
-            koopa::cd "$dir"
-            branch="$(koopa::git_default_branch)"
-            "$git" checkout "$branch"
-            "$git" fetch 'upstream'
-            "$git" reset --hard "upstream/${branch}"
-            "$git" push 'origin' "$branch" --force
+            local dict
+            koopa::cd "$repo"
+            koopa::assert_is_git_repo
+            declare -A dict=(
+                [branch]="$(koopa::git_default_branch)"
+                [origin]='origin'
+                [upstream]='upstream'
+            )
+            "${app[git]}" checkout "${dict[branch]}"
+            "${app[git]}" fetch "${dict[upstream]}"
+            "${app[git]}" reset --hard "${dict[upstream]}/${dict[branch]}"
+            "${app[git]}" push "${dict[origin]}" "${dict[branch]}" --force
         )
     done
     return 0
 }
 
-# FIXME Rework this.
 koopa::git_rm_submodule() { # {{{1
     # """
-    # Remove a git submodule.
-    # @note Updated 2021-05-25.
+    # Remove a git submodule from current repository.
+    # @note Updated 2021-11-18.
     #
     # @seealso
     # - https://stackoverflow.com/questions/1260748/
     # - https://gist.github.com/myusuf3/7f645819ded92bda6677
+    #
+    # @examples
+    # > cd "${HOME}/git/monorepo"
+    # > koopa::git_rm_submodule 'XXX' 'YYY'
     # """
-    local git module
+    local app module
     koopa::assert_has_args "$#"
     koopa::assert_is_git_repo
-    git="$(koopa::locate_git)"
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
     for module in "$@"
     do
         # Remove the submodule entry from '.git/config'.
-        "$git" submodule deinit -f "$module"
+        "${app[git]}" submodule deinit -f "$module"
         # Remove the submodule directory from the superproject's '.git/modules'
         # directory.
         koopa::rm ".git/modules/${module}"
         # Remove the entry in '.gitmodules' and remove the submodule directory
         # located at 'path/to/submodule'.
-        "$git" rm -f "$module"
+        "${app[git]}" rm -f "$module"
         # Update gitmodules file and commit.
-        "$git" add '.gitmodules'
-        "$git" commit -m "Removed submodule '${module}'."
+        "${app[git]}" add '.gitmodules'
+        "${app[git]}" commit -m "Removed submodule '${module}'."
     done
     return 0
 }
 
 # FIXME Rework this.
+# FIXME Allow this to work on multiple git repos in a single call.
 koopa::git_rm_untracked() { # {{{1
     # """
     # Remove untracked files from git repo.
@@ -658,32 +696,42 @@ koopa::git_rm_untracked() { # {{{1
     return 0
 }
 
-# FIXME Rework this.
 koopa::git_set_remote_url() { # {{{1
     # """
     # Set (or change) the remote URL of a git repo.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-18.#
+    #
+    # @examples
+    # > repo='/opt/koopa'
+    # > url='https://github.com/acidgenomics/koopa.git'
+    # > cd "$repo"
+    # > koopa::git_set_remote_url "$url"
     # """
-    local git origin url
+    local app dict
     koopa::assert_has_args_eq "$#" 1
     koopa::assert_is_git_repo
-    git="$(koopa::locate_git)"
-    url="${1:?}"
-    origin='origin'
-    "$git" remote set-url "$origin" "$url"
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [url]="${1:?}"
+        [origin]='origin'
+    )
+    "${app[git]}" remote set-url "${dict[origin]}" "${dict[url]}"
     return 0
 }
 
-# FIXME Rework this.
 koopa::git_status_recursive() { # {{{1
     # """
     # Get the status of multiple Git repos recursively.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-18.
     # """
-    local dir dirs git repo repos
+    local app dir dirs git repo repos
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
     dirs=("$@")
-    koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
-    git="$(koopa::locate_git)"
+    koopa::is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
@@ -699,6 +747,7 @@ koopa::git_status_recursive() { # {{{1
         then
             koopa::stop 'Failed to detect any Git repos.'
         fi
+        # FIXME Need to use ngettext here.
         koopa::h1 "Checking status of ${#repos[@]} repos in '${dir}'."
         for repo in "${repos[@]}"
         do
@@ -706,7 +755,7 @@ koopa::git_status_recursive() { # {{{1
             koopa::h2 "$repo"
             (
                 koopa::cd "$repo"
-                "$git" status
+                "${app[git]}" status
             )
         done
     done
@@ -714,50 +763,75 @@ koopa::git_status_recursive() { # {{{1
 }
 
 # FIXME Rework, allowing input of multiple git repos here.
+# FIXME Parameterize this, supporting multiple directories.
+# FIXME Consider calling this in our monorepo init script insteaad.
+# FIXME Consider making this user accessible as 'git-submodule-init'.
+
 koopa::git_submodule_init() { # {{{1
     # """
     # Initialize git submodules.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-18.
     # """
-    local array cut git lines string target target_key url url_key
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_git_repo
-    koopa::assert_is_nonzero_file '.gitmodules'
-    cut="$(koopa::locate_cut)"
-    git="$(koopa::locate_git)"
-    koopa::alert "Initializing submodules in '${PWD:?}'."
-    "$git" submodule init
-    lines="$( \
-        "$git" config \
-            -f '.gitmodules' \
-            --get-regexp '^submodule\..*\.path$' \
-    )"
-    readarray -t array <<< "$lines"
-    if ! koopa::is_array_non_empty "${array[@]:-}"
-    then
-        koopa::stop "Failed to detect submodules in '${PWD}'."
-    fi
-    for string in "${array[@]}"
-    do
-        target_key="$( \
-            koopa::print "$string" \
-            | "$cut" -d ' ' -f 1 \
-        )"
-        target="$( \
-            koopa::print "$string" \
-            | "$cut" -d ' ' -f 2 \
-        )"
-        url_key="${target_key//\.path/.url}"
-        url="$( \
-            "$git" config \
-                -f '.gitmodules' \
-                --get "$url_key" \
-        )"
-        koopa::dl "$target" "$url"
-        if [[ ! -d "$target" ]]
-        then
-            "$git" submodule add --force "$url" "$target" > /dev/null
-        fi
-    done
+    local app repo repos
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [git]="$(koopa::locate_git)"
+    )
+    repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
+    koopa::assert_is_dir "${repos[@]}"
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        for repo in "${repos[@]}"
+        do
+            local array dict lines string
+            koopa::cd "$repo"
+            koopa::assert_is_git_repo
+            declare -A dict=(
+                [module_file]='.gitmodules'
+            )
+            koopa::assert_is_nonzero_file "${dict[module_file]}"
+            koopa::alert "Initializing submodules in '${repo}'."
+            "${app[git]}" submodule init
+            lines="$( \
+                "${app[git]}" config \
+                    --file "${dict[module_file]}" \
+                    --get-regexp '^submodule\..*\.path$' \
+            )"
+            readarray -t array <<< "$lines"
+            if ! koopa::is_array_non_empty "${array[@]:-}"
+            then
+                koopa::stop "Failed to detect submodules in '${repo}'."
+            fi
+            for string in "${array[@]}"
+            do
+                local dict2
+                declare -A dict2
+                # shellcheck disable=SC2016
+                dict2[target_key]="$( \
+                    koopa::print "$string" \
+                    | "${app[awk]}" '{ print $1 }' \
+                )"
+                # shellcheck disable=SC2016
+                dict2[target]="$( \
+                    koopa::print "$string" \
+                    | "${app[awk]}" '{ print $2 }' \
+                )"
+                dict2[url_key]="${dict2[target_key]//\.path/.url}"
+                dict2[url]="$( \
+                    "${app[git]}" config \
+                        --file "${dict[module_file]}" \
+                        --get "${dict2[url_key]}" \
+                )"
+                koopa::dl "${dict2[target]}" "${dict2[url]}"
+                if [[ ! -d "${dict2[target]}" ]]
+                then
+                    "${app[git]}" submodule add --force \
+                        "${dict2[url]}" "${dict2[target]}" > /dev/null
+                fi
+            done
+        done
+    )
     return 0
 }
