@@ -60,7 +60,7 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
             koopa::cd "${dict[patch_prefix]}"
             "${app[curl]}" "${dict[patch_request_urls]}" -O
             koopa::cd ..
-            for file in "${dict[patch_dir]}/"*
+            for file in "${dict[patch_prefix]}/"*
             do
                 "${app[patch]}" -p0 --ignore-whitespace --input="$file"
             done
