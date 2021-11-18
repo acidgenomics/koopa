@@ -15,7 +15,7 @@ set -Eeu -o pipefail
 # removing the directory right before creation.
 # """
 
-koopa:::install_koopa_usage() { # {{{1
+install_koopa_usage() { # {{{1
     # """
     # Help usage for koopa installer.
     # @note Updated 2021-05-15.
@@ -58,7 +58,7 @@ Non-interactive configuration arguments:
 END
 }
 
-koopa:::stop() { # {{{1
+stop() { # {{{1
     # """
     # Print error messages to the console and abort.
     # @note Updated 2021-05-14.
@@ -71,17 +71,29 @@ koopa:::stop() { # {{{1
     exit 1
 }
 
-koopa::install_koopa() { # {{{1
+install_koopa() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-18.
     # """
-    local dict
+    local bash_cutoff bash_maj_ver bash_version dict
+    # Associative arrays ('dict') require Bash 4+.
+    bash_cutoff='4'
+    bash_version="${BASH_VERSION:?}"
+    bash_maj_ver="$( \
+        printf '%s\n' "$bash_version" \
+        | cut -d '.' -f 1 \
+    )"
+    if [[ ! "$bash_maj_ver" -ge "$bash_cutoff" ]]
+    then
+        stop "Bash ${bash_cutoff}+ is required (active: ${bash_version})."
+    fi
     declare -A dict=(
         [dotfiles]=1
         [interactive]=1
         [koopa_prefix]=''
         [modify_user_profile]=0
+        [name_fancy]='koopa'
         [passwordless]=0
         [shared]=0
         [test]=0
@@ -105,7 +117,7 @@ koopa::install_koopa() { # {{{1
                 ;;
             '--help' | \
             '-h')
-                koopa:::install_koopa_usage
+                install_koopa_usage
                 return 0
                 ;;
             '--interactive')
@@ -156,7 +168,7 @@ koopa::install_koopa() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa:::stop "Invalid arg: '${1:?}'."
+                stop "Invalid arg: '${1:?}'."
                 ;;
         esac
     done
@@ -164,7 +176,7 @@ koopa::install_koopa() { # {{{1
     # ==========================================================================
     if [[ -d "${KOOPA_PREFIX:-}" ]]
     then
-        koopa:::stop "Koopa is already installed at '${KOOPA_PREFIX}'."
+        stop "${dict[name_fancy]} already installed at '${KOOPA_PREFIX:?}'."
     fi
     unset KOOPA_PREFIX
     dict[script_dir]="$( \
@@ -179,7 +191,7 @@ koopa::install_koopa() { # {{{1
     . "${dict[script_dir]}/lang/shell/bash/include/header.sh" || return 1
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        koopa:::stop "Installer failed to set 'KOOPA_PREFIX'."
+        stop "Installer failed to set 'KOOPA_PREFIX'."
     fi
     # Configuration {{{2
     # ==========================================================================
@@ -278,7 +290,7 @@ koopa::install_koopa() { # {{{1
     # Copy files from temporary directory {{{3
     # --------------------------------------------------------------------------
     # Alternatively, can consider using rsync here instead of cp.
-    koopa::alert "Installing koopa at '${dict[koopa_prefix]}'."
+    koopa::alert_install_start "${dict[name_fancy]}" "${dict[koopa_prefix]}"
     koopa::assert_is_non_existing "${dict[koopa_prefix]}"
     if [[ "${dict[shared]}" -eq 1 ]]
     then
@@ -294,7 +306,7 @@ koopa::install_koopa() { # {{{1
     fi
     # Activate koopa {{{2
     # ==========================================================================
-    koopa::alert "Activating koopa at '${dict[koopa_prefix]}'."
+    koopa::alert "Activating ${dict[name_fancy]} at '${dict[koopa_prefix]}'."
     set +u
     # shellcheck source=/dev/null
     . "${dict[koopa_prefix]}/activate" || return 1
@@ -337,17 +349,12 @@ END
     fi
     # Final cleanup {{{3
     # --------------------------------------------------------------------------
-    if koopa::is_bash_ok
-    then
-        koopa::delete_broken_symlinks "${dict[koopa_prefix]}"
-    else
-        koopa::alert_note 'Bash is old and must be upgraded.'
-    fi
+    koopa::delete_broken_symlinks "${dict[koopa_prefix]}"
     koopa::update_etc_profile_d
     koopa::fix_zsh_permissions
-    koopa::install_success 'koopa'
+    koopa::alert_install_success "${dict[name_fancy]}" "${dict[koopa_prefix]}"
     koopa::alert_restart
     return 0
 }
 
-koopa::install_koopa "$@"
+install_koopa "$@"
