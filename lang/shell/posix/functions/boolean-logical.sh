@@ -636,8 +636,8 @@ _koopa_macos_is_light_mode() { # {{{1
 _koopa_str_match_posix() { # {{{1
     # """
     # Evaluate whether a string contains a desired value.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-11-18.
     # """
     [ "$#" -eq 2 ] || return 1
-    test "${1#*$2}" != "$1"
+    test "${1#*"$2"}" != "$1"
 }
