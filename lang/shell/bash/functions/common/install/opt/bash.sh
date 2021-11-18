@@ -45,6 +45,8 @@ ${dict[name]}-${dict[maj_min_ver]}-patches"
     # Apply patches, if necessary.
     if [[ "${dict[n_patches]}" -gt 0 ]]
     then
+        dict[np_str]="$(koopa::ngettext "${dict[n_patches]}" 'patch' 'patches')"
+        koopa::alert "Applying ${dict[n_patches]} ${dict[np_str]}."
         # mmv_tr: trimmed major minor version.
         dict[mmv_tr]="$( \
             koopa::print "${dict[maj_min_ver]}" \
