@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Return the version of current release after update.
 koopa:::update_koopa() { # {{{1
     # """
     # Update koopa installation.
     # @note Updated 2021-11-18.
     #
-    # Update of pinned stable releases is not currently supported.
+    # Update of pinned stable releases is intentionally not supported.
     # """
     local dict
     declare -A dict=(
