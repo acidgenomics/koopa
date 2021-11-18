@@ -517,7 +517,7 @@ koopa::koopa() { # {{{1
             shift 1
             ;;
         'info')
-            f='sys-info'
+            f='koopa-info'
             shift 1
             ;;
         # Defunct args / error catching {{{2
@@ -594,3 +594,102 @@ koopa::koopa() { # {{{1
     "$fun" "$@"
     return 0
 }
+
+koopa::koopa_info() { # {{{
+    # """
+    # System information.
+    # @note Updated 2021-11-18.
+    # """
+    local app dict info nf_info
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [cat]="$(koopa::locate_cat)"
+    )
+    declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
+        [arch]="$(koopa::arch)"
+        [ascii_turtle_file]="$(koopa::include_prefix)/ascii-turtle.txt"
+        [config_prefix]="$(koopa::config_prefix)"
+        [koopa_date]="$(koopa::koopa_date)"
+        [koopa_github_url]="$(koopa::koopa_github_url)"
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [koopa_url]="$(koopa::koopa_url)"
+        [koopa_version]="$(koopa::koopa_version)"
+        [make_prefix]="$(koopa::make_prefix)"
+        [opt_prefix]="$(koopa::opt_prefix)"
+    )
+    info=(
+        "koopa ${dict[koopa_version]} (${dict[koopa_date]})"
+        "URL: ${dict[koopa_url]}"
+        "GitHub URL: ${dict[koopa_github_url]}"
+    )
+    if koopa::is_git_repo_top_level "${dict[koopa_prefix]}"
+    then
+        # FIXME Rework this, supporting direct repo input.
+        dict[origin]="$( \
+            koopa::cd "${dict[koopa_prefix]}"; \
+            koopa::git_remote_url
+        )"
+        # FIXME Rework this, supporting direct repo input.
+        dict[commit]="$( \
+            koopa::cd "${dict[koopa_prefix]}"; \
+            koopa::git_last_commit_local
+        )"
+        info+=(
+            "Git Remote: ${dict[origin]}"
+            "Commit: ${dict[commit]}"
+        )
+    fi
+    info+=(
+        ''
+        'Configuration'
+        '-------------'
+        "Koopa Prefix: ${dict[koopa_prefix]}"
+        "App Prefix: ${dict[app_prefix]}"
+        "Opt Prefix: ${dict[opt_prefix]}"
+        "Make Prefix: ${dict[make_prefix]}"
+        "Config Prefix: ${dict[config_prefix]}"
+        ''
+    )
+    # Show neofetch info, if installed.
+    if koopa::is_installed 'neofetch'
+    then
+        app[neofetch]="$(koopa::locate_neofetch)"
+        readarray -t nf_info <<< "$("${app[neofetch]}" --stdout)"
+        info+=(
+            'System information (neofetch)'
+            '-----------------------------'
+            "${nf_info[@]:2}"
+        )
+    else
+        if koopa::is_macos
+        then
+            app[sw_vers]="$(koopa::macos_locate_sw_vers)"
+            dict[os]="$( \
+                printf '%s %s (%s)\n' \
+                    "$("${app[sw_vers]}" -productName)" \
+                    "$("${app[sw_vers]}" -productVersion)" \
+                    "$("${app[sw_vers]}" -buildVersion)" \
+            )"
+        else
+            app[uname]="$(koopa::locate_uname)"
+            dict[os]="$("${app[uname]}" --all)"
+            # Alternate approach using Python:
+            # > app[python]="$(koopa::locate_python)"
+            # > dict[os]="$("${app[python]}" -mplatform)"
+        fi
+        dict[shell_name]="$(koopa::shell_name)"
+        dict[shell_version]="$(koopa::get_version "${dict[shell_name]}")"
+        array+=(
+            'System information'
+            '------------------'
+            "OS: ${dict[os]}"
+            "Shell: ${dict[shell_name]} ${dict[shell_version]}"
+            "Architecture: ${dict[arch]}"
+        )
+    fi
+    "${app[cat]}" "${dict[ascii_turtle_file]}"
+    koopa::info_box "${info[@]}"
+    return 0
+}
+
