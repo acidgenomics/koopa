@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to locate cpan and cpanm here.
 koopa:::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
@@ -17,7 +18,9 @@ koopa:::install_perl_packages() { # {{{1
     if ! koopa::is_installed 'cpanm'
     then
         koopa::assert_is_installed 'cpan'
-        koopa::install_start 'CPAN Minus'
+        koopa::alert_install_start 'CPAN Minus'
+        koopa::assert_is_installed 'cpan'
+        # FIXME Need to locate this.
         cpan -i 'App::cpanminus' &>/dev/null
     fi
     koopa::assert_is_installed 'cpanm'
@@ -34,6 +37,7 @@ koopa:::install_perl_packages() { # {{{1
     for module in "${modules[@]}"
     do
         koopa::alert "${module}"
+        # FIXME Need to locate this.
         cpanm "$module" &>/dev/null
     done
     return 0

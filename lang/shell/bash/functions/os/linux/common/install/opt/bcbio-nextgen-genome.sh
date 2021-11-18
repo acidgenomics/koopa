@@ -19,7 +19,7 @@ koopa::linux_install_bcbio_nextgen_genome() { # {{{1
     genomes_dir="${bcbio_dir}/genomes"
     str="$(koopa::ngettext "${#genomes[@]}" 'genome' 'genomes')"
     name_fancy="bcbio-nextgen ${str}"
-    koopa::install_start "$name_fancy" "$genomes_dir"
+    koopa::alert_install_start "$name_fancy" "$genomes_dir"
     cores="$(koopa::cpu_count)"
     tee="$(koopa::locate_tee)"
     bcbio_args=(
@@ -39,6 +39,6 @@ koopa::linux_install_bcbio_nextgen_genome() { # {{{1
         "$bcbio" upgrade "${bcbio_args[@]}"
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }

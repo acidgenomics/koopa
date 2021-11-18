@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Don't make this internal, rename the function prefix.
 koopa::configure_app_packages() { # {{{1
     # """
     # Configure language application.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-18.
     # """
     local dict
     declare -A dict=(
@@ -88,7 +87,7 @@ koopa::configure_app_packages() { # {{{1
         fi
         dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
     fi
-    koopa::configure_start "${dict[name_fancy]}" "${dict[prefix]}"
+    koopa::alert_configure_start "${dict[name_fancy]}" "${dict[prefix]}"
     if [[ ! -d "${dict[prefix]}" ]]
     then
         koopa::sys_mkdir "${dict[prefix]}"
@@ -98,7 +97,7 @@ koopa::configure_app_packages() { # {{{1
     then
         koopa::link_app_into_opt "${dict[prefix]}" "${dict[name]}-packages"
     fi
-    koopa::configure_success "${dict[name_fancy]}" "${dict[prefix]}"
+    koopa::alert_configure_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
 }
 
@@ -337,7 +336,7 @@ koopa::install_app() { # {{{1
     fi
     if [[ -n "${dict[prefix]}" ]]
     then
-        koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
+        koopa::alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
         if koopa::str_match_fixed "${dict[prefix]}" "${HOME:?}"
         then
             dict[shared]=0
@@ -369,7 +368,7 @@ at '${dict[prefix]}'."
         [[ "${dict[system]}" -eq 1 ]] && init_dir+=('--sudo')
         dict[prefix]="$("${init_dir[@]}" "${dict[prefix]}")"
     else
-        koopa::install_start "${dict[name_fancy]}"
+        koopa::alert_install_start "${dict[name_fancy]}"
     fi
     (
         koopa::cd "${dict[tmp_dir]}"
@@ -452,9 +451,9 @@ at '${dict[prefix]}'."
     fi
     if [[ -d "${dict[prefix]}" ]]
     then
-        koopa::install_success "${dict[name_fancy]}" "${dict[prefix]}"
+        koopa::alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
     else
-        koopa::install_success "${dict[name_fancy]}"
+        koopa::alert_install_success "${dict[name_fancy]}"
     fi
     return 0
 }
