@@ -274,6 +274,7 @@ _koopa_complete() { # {{{1
             update)
                 args=(
                     # koopa:
+                    'koopa'
                     'system'
                     'user'
                     # packages:

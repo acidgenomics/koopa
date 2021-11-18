@@ -11,7 +11,7 @@ koopa:::update_koopa() { # {{{1
     declare -A dict=(
         [dotfiles_prefix]="$(koopa::dotfiles_prefix)"
         [dotfiles_private_prefix]="$(koopa::dotfiles_private_prefix)"
-        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [koopa_prefix]="${UPDATE_PREFIX:?}"
     )
     if ! koopa::is_git_repo_top_level "${dict[koopa_prefix]}"
     then
@@ -19,7 +19,10 @@ koopa:::update_koopa() { # {{{1
         return 1
     fi
     koopa::sys_set_permissions --recursive "${dict[koopa_prefix]}"
+    echo 'FIXME A'
     koopa::sys_git_pull
+    echo 'FIXME A'
+    # FIXME This is currently breaking...
     koopa::update_dotfiles \
         "${dict[dotfiles_prefix]}" \
         "${dict[dotfiles_private_prefix]}"
