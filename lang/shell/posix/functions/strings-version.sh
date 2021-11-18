@@ -3,12 +3,12 @@
 _koopa_macos_version() { # {{{1
     # """
     # macOS version.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-11-18.
     # """
     local x
     [ "$#" -eq 0 ] || return 1
     _koopa_is_macos || return 1
-    x="$(sw_vers -productVersion)"
+    x="$(/usr/bin/sw_vers -productVersion)"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
