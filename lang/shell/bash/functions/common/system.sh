@@ -208,7 +208,7 @@ koopa::sys_cp() { # {{{1
 koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-11-18.
     #
     # Intended for use with 'koopa pull'.
     #
@@ -216,21 +216,26 @@ koopa::sys_git_pull() { # {{{1
     # non-writable permissions, so Zsh passes 'compaudit' checks.
     # """
     koopa::assert_has_no_args "$#"
-    local current_branch default_branch prefix
     (
-        prefix="$(koopa::koopa_prefix)"
-        koopa::cd "$prefix"
+        local dict
+        declare -A dict=(
+            [origin]='origin'
+            [prefix]="$(koopa::koopa_prefix)"
+        )
+        koopa::cd "${dict[prefix]}"
         koopa::sys_set_permissions \
             --recursive \
-            "${prefix}/lang/shell/zsh" \
+            "${dict[prefix]}/lang/shell/zsh" \
             &>/dev/null
-        current_branch="$(koopa::git_branch)"
-        default_branch="$(koopa::git_default_branch)"
         koopa::git_pull
         # Ensure other branches, such as develop, are rebased to main branch.
-        if [[ "$current_branch" != "$default_branch" ]]
+        dict[current_branch]="$(koopa::git_branch)"
+        dict[default_branch]="$(koopa::git_default_branch)"
+        if [[ "${dict[current_branch]}" != "${dict[default_branch]}" ]]
         then
-            koopa::git_pull origin "$default_branch"
+            koopa::alert "Rebasing '${dict[default_branch]}' branch into \
+'${dict[current_branch]}' branch."
+            koopa::git_pull "${dict[origin]}" "${dict[default_branch]}"
         fi
         koopa::fix_zsh_permissions
     )
