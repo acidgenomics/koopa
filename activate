@@ -293,7 +293,7 @@ __koopa_str_match_posix() { # {{{1
     # @note Updated 2021-10-25.
     # """
     [ "$#" -eq 2 ] || return 1
-    test "${1#*$2}" != "$1"
+    test "${1#*"$2"}" != "$1"
 }
 
 __koopa_warning() { # {{{1
@@ -313,11 +313,12 @@ __koopa_warning() { # {{{1
 __koopa_zsh_source() { # {{{1
     # """
     # Zsh source file location.
-    # @note Updated 2021-05-07.
+    # @note Updated 2021-11-18.
     #
     # Use '%x' not '%N' when called inside function.
     # https://stackoverflow.com/a/23259585/3911732
     # """
+    # shellcheck disable=SC2296
     __koopa_print "${(%):-%x}"
     return 0
 }
