@@ -205,6 +205,7 @@ koopa::sys_cp() { # {{{1
     return 0
 }
 
+# FIXME Need to rethink parameterization here.
 koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
@@ -235,7 +236,11 @@ koopa::sys_git_pull() { # {{{1
         then
             koopa::alert "Rebasing '${dict[default_branch]}' branch into \
 '${dict[current_branch]}' branch."
-            koopa::git_pull "${dict[origin]}" "${dict[default_branch]}"
+            # FIXME Need to add support for '--origin' and '--branch' input.
+            koopa::git_pull \
+                --origin="${dict[origin]}" \
+                --branch="${dict[default_branch]}" \
+                "${dict[prefix]}"
         fi
         koopa::fix_zsh_permissions
     )
