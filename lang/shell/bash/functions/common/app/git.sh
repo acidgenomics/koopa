@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework these functions to allow direct file path support, when possible.
+
 # FIXME shellcheck is currently returning false positive about 'branch'
 # modification inside of a subshell.
 
@@ -7,33 +9,39 @@
 # state. In that case, koopa::git_pull should skip and inform the user.
 # FIXME This is also called in 'koopa::configure_user', which needs to be adjusted.
 
+# FIXME Need to switch to dict approach here.
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-18.
     # """
-    local branch default_branch dir dirs git origin pos repo repos
-    branch=''
-    origin=''
+    local app dict dir dirs pos repo repos
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [branch]=''
+        [origin]=''
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--branch='*)
-                branch="${1#*=}"
+                dict[branch]="${1#*=}"
                 shift 1
                 ;;
             '--branch')
-                branch="${2:?}"
+                dict[branch]="${2:?}"
                 shift 2
                 ;;
             '--origin='*)
-                origin="${1#*=}"
+                dict[origin]="${1#*=}"
                 shift 1
                 ;;
             '--origin')
-                origin="${2:?}"
+                dict[origin]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -49,7 +57,6 @@ koopa::git_checkout_recursive() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]='.'
-    git="$(koopa::locate_git)"
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
@@ -71,24 +78,30 @@ koopa::git_checkout_recursive() { # {{{1
             repo="$(koopa::dirname "$repo")"
             koopa::h2 "$repo"
             (
+                local dict2
+                declare -A dict2
                 koopa::cd "$repo"
-                default_branch="$(koopa::git_default_branch)"
-                # FIXME Rethink the subshell  modification here?
-                # shellcheck disable=SC2030
-                [[ -z "$branch" ]] && branch="$default_branch"
-                if [[ -n "$origin" ]]
+                dict2[branch]="${dict[branch]}"
+                dict2[default_branch]="$(koopa::git_default_branch)"
+                if [[ -z "${dict2[branch]}" ]]
                 then
-                    "$git" fetch --all
-                    if [[ "$branch" != "$default_branch" ]]
-                    then
-                        "$git" checkout "$default_branch"
-                        "$git" branch -D "$branch" || true
-                    fi
-                    "$git" checkout -b "$branch" "$origin"
-                else
-                    "$git" checkout "$branch"
+                    dict2[branch]="${dict2[default_branch]}"
                 fi
-                "$git" branch -vv
+                if [[ -n "${dict[origin]}" ]]
+                then
+                    "${app[git]}" fetch --all
+                    if [[ "${dict2[branch]}" != "${dict2[default_branch]}" ]]
+                    then
+                        "${app[git]}" checkout "${dict2[default_branch]}"
+                        "${app[git]}" branch -D "${dict2[branch]}" || true
+                    fi
+                    "${app[git]}" checkout \
+                        -B "${dict2[branch]}" \
+                        "${dict[origin]}"
+                else
+                    "${app[git]}" checkout "${dict2[branch]}"
+                fi
+                "${app[git]}" branch -vv
             )
         done
     done
@@ -294,6 +307,8 @@ koopa::git_rename_master_to_main() { # {{{1
     return 0
 }
 
+# FIXME Need to allow direct file path input here.
+# FIXME Rework using dict approach.
 koopa::git_pull() { # {{{1
     # """
     # Pull (update) a git repository.
