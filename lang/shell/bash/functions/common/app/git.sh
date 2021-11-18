@@ -107,6 +107,7 @@ koopa::git_checkout_recursive() { # {{{1
     return 0
 }
 
+# FIXME Improve parameterization, supporting multiple values...
 koopa::git_clone() { # {{{1
     # """
     # Quietly clone a git repository.
@@ -172,11 +173,10 @@ koopa::git_clone() { # {{{1
     return 0
 }
 
-# FIXME Allow the user to set a path here, and switch dynamically.
 koopa::git_default_branch() { # {{{1
     # """
     # Default branch of Git repository.
-    # @note Updated 2021-11-17.
+    # @note Updated 2021-11-18.
     #
     # Alternate approach:
     # > x="$( \
@@ -186,10 +186,13 @@ koopa::git_default_branch() { # {{{1
     #
     # @seealso
     # - https://stackoverflow.com/questions/28666357
+    #
+    # @examples
+    # > koopa::git_default_branch "${HOME}/git/monorepo"
+    # # main
     # """
-    local app dict x
-    koopa::assert_has_no_args "$#"
-    koopa::is_git_repo || return 1
+    local app dict repo repos x
+    koopa::assert_has_args "$#"
     declare -A app=(
         [git]="$(koopa::locate_git)"
         [sed]="$(koopa::locate_sed)"
@@ -197,26 +200,47 @@ koopa::git_default_branch() { # {{{1
     declare -A dict=(
         [remote]='origin'
     )
-    x="$( \
-        "${app[git]}" remote show "${dict[remote]}" \
-            | koopa::grep 'HEAD branch' \
-            | "${app[sed]}" 's/.*: //' \
-    )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    repos=("$@")
+    koopa::assert_is_dir "${repos[@]}"
+    for repo in "${repos[@]}"
+    do
+        (
+            koopa::cd "$repo"
+            koopa::is_git_repo || return 1
+            x="$( \
+                "${app[git]}" remote show "${dict[remote]}" \
+                    | koopa::grep 'HEAD branch' \
+                    | "${app[sed]}" 's/.*: //' \
+            )"
+            [[ -n "$x" ]] || return 1
+            koopa::print "$x"
+        )
+    done
     return 0
 }
 
 # FIXME Allow the user to set a path here, and switch dynamically.
 # FIXME Consider allowing parameterization.
+# FIXME Export this as a user-accessible command-line function.
+# FIXME We need to pass in the URL here...currently too confusing.
+# FIXME Need to add a working example for this.
+
 koopa::git_init_remote() { # {{{1
     # """
     # Initialize a remote Git repository.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-18.
     # """
     local branch git origin
-    branch='main'
-    origin='origin'
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [branch]='main'
+        [origin]='origin'
+    )
+
+    # FIXME Rework with pos approach here.
     while (("$#"))
     do
         case "$1" in
@@ -238,14 +262,21 @@ koopa::git_init_remote() { # {{{1
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
-            *)
+            '-'*)
                 koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+
     ## FIXME Rework this.
     koopa::assert_is_set 'branch' 'origin'
-    git="$(koopa::locate_git)"
+
     "$git" init
     "$git" remote add "$origin" "$origin"
     "$git" remote -vv
@@ -254,26 +285,45 @@ koopa::git_init_remote() { # {{{1
     "$git" branch --set-upstream-to="${origin}/${branch}" "$branch"
     "$git" pull "$origin" "$branch" --allow-unrelated-histories
     "$git" status
+
+
     return 0
 }
 
-# FIXME Parameterize, looping across repos.
 koopa::git_last_commit_local() { # {{{1
     # """
     # Last git commit of local repository.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-18.
     #
-    # Alternate:
+    # Alternate approach:
     # Can use '%h' for abbreviated commit ID.
     # > git log --format="%H" -n 1
+    #
+    # @examples
+    # > koopa::git_last_commit_local "${HOME}/git/monorepo"
+    # # 9b7217c27858dd7ebffdf5a8ba66a6ea56ac5e1d
     # """
-    local git x
-    koopa::assert_has_no_args "$#"
-    koopa::is_git_repo || return 1
-    git="$(koopa::locate_git)"
-    x="$("$git" rev-parse HEAD 2>/dev/null || true)"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    local app dict repo repos x
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [ref]='HEAD'
+    )
+    repos=("$@")
+    koopa::assert_is_dir "${repos[@]}"
+    for repo in "$@"
+    do
+        (
+            koopa::cd "$repo"
+            koopa::is_git_repo || return 1
+            x="$("${app[git]}" rev-parse "${dict[ref]}" 2>/dev/null || true)"
+            [[ -n "$x" ]] || return 1
+            koopa::print "$x"
+        )
+    done
+    return 0
 }
 
 koopa::git_last_commit_remote() { # {{{1

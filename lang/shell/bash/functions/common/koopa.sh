@@ -633,11 +633,7 @@ koopa::koopa_info() { # {{{
             koopa::cd "${dict[koopa_prefix]}"; \
             koopa::git_remote_url
         )"
-        # FIXME Rework this, supporting direct repo input.
-        dict[commit]="$( \
-            koopa::cd "${dict[koopa_prefix]}"; \
-            koopa::git_last_commit_local
-        )"
+        dict[commit]="$(koopa::git_last_commit_local "${dict[koopa_prefix]}")"
         info+=(
             "Git Remote: ${dict[origin]}"
             "Commit: ${dict[commit]}"
