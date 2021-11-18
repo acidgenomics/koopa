@@ -24,6 +24,8 @@ koopa::install_rust() { # {{{1
 # FIXME Now seeing this pop up:
 # !! Error: Not file: '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?([0-9]+)?'.
 
+# FIXME Need to rework this using dict approach.s
+
 koopa:::install_rust() { # {{{1
     # """
     # Install Rust (via rustup).
@@ -51,6 +53,7 @@ koopa:::install_rust() { # {{{1
     return 0
 }
 
+# FIXME Need to move this.
 koopa::uninstall_rust() { # {{{1
     koopa::uninstall_app \
         --name-fancy='Rust' \
@@ -59,6 +62,7 @@ koopa::uninstall_rust() { # {{{1
         "$@"
 }
 
+# FIXME Need to wrap this.
 koopa::update_rust() { # {{{1
     # """
     # Install Rust.
@@ -81,7 +85,8 @@ koopa::update_rust() { # {{{1
         esac
     done
     koopa::assert_has_no_args "$#"
-    if [[ "$force" -eq 0 ]] && koopa::is_current_version rust
+    # FIXME Need to locate Rust here...
+    if [[ "$force" -eq 0 ]] && koopa::is_current_version 'rust'
     then
         koopa::alert_note "${name_fancy} is up-to-date."
         return 0
@@ -98,6 +103,6 @@ koopa::update_rust() { # {{{1
     # > rustup update stable
     rustup update
     koopa::sys_set_permissions --recursive "${CARGO_HOME:?}"
-    koopa::update_success "$name_fancy"
+    koopa::alert_update_success "$name_fancy"
     return 0
 }
