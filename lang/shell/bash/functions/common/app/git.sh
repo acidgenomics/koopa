@@ -313,24 +313,41 @@ koopa::git_last_commit_remote() { # {{{1
     return 0
 }
 
-# FIXME Need to parameterize this.
-# FIXME Need to harden against repos with no remote?
 koopa::git_rename_master_to_main() { # {{{1
     # """
     # Rename default branch from "master" to "main".
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-18.
+    #
+    # @examples
+    # > koopa::git_rename_master_to_main "${HOME}/git/example"
     # """
-    local git new old origin
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_git_repo
-    origin='origin'
-    old='master'
-    new='main'
-    git="$(koopa::locate_git)"
-    "$git" branch -m "$old" "$new"
-    "$git" fetch "$origin"
-    "$git" branch -u "${origin}/${new}" "$new"
-    "$git" remote set-head "$origin" -a
+    local app dict repo repos
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [origin]='origin'
+        [old_branch]='master'
+        [new_branch]='main'
+    )
+    repos=("$@")
+    koopa::assert_is_dir "${repos[@]}"
+    for repo in "${repos[@]}"
+    do
+        (
+            koopa::cd "$repo"
+            koopa::assert_is_git_repo
+            "${app[git]}" branch -m \
+                "${dict[old_branch]}" \
+                "${dict[new_branch]}"
+            "${app[git]}" fetch "${dict[origin]}"
+            "${app[git]}" branch \
+                -u "${dict[origin]}/${dict[new_branch]}" \
+                "${dict[new_branch]}"
+            "${app[git]}" remote set-head "${dict[origin]}" -a
+        )
+    done
     return 0
 }
 
