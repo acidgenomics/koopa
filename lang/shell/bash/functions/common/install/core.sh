@@ -976,10 +976,10 @@ koopa::update_app() { # {{{1
     fi
     if [[ -n "${dict[prefix]}" ]]
     then
-        koopa::update_start "${dict[name_fancy]}" "${dict[prefix]}"
+        koopa::alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
         koopa::assert_is_dir "${dict[prefix]}"
     else
-        koopa::update_start "${dict[name_fancy]}"
+        koopa::alert_update_start "${dict[name_fancy]}"
     fi
     if koopa::is_linux && \
         { [[ "${dict[shared]}" -eq 1 ]] || \
@@ -1028,9 +1028,9 @@ koopa::update_app() { # {{{1
     fi
     if [[ -d "${dict[prefix]}" ]]
     then
-        koopa::update_success "${dict[name_fancy]}" "${dict[prefix]}"
+        koopa::alert_update_success "${dict[name_fancy]}" "${dict[prefix]}"
     else
-        koopa::update_success "${dict[name_fancy]}"
+        koopa::alert_update_success "${dict[name_fancy]}"
     fi
     return 0
 }

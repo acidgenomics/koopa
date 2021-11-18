@@ -17,6 +17,8 @@ koopa:::install_spacemacs() { # {{{1
 }
 
 # FIXME Need to wrap this.
+# FIXME Need to harden git branch switch call.
+# FIXME Need to rework git_pull call.
 koopa::update_spacemacs() { # {{{1
     # """
     # Update Spacemacs.
@@ -33,12 +35,12 @@ koopa::update_spacemacs() { # {{{1
     name_fancy='Spacemacs'
     prefix="$(koopa::spacemacs_prefix)"
     koopa::assert_is_dir "$prefix"
-    koopa::update_start "$name_fancy" "$prefix"
+    koopa::alert_update_start "$name_fancy" "$prefix"
     (
         koopa::cd "$prefix"
         git checkout -B 'develop' 'origin/develop'
         koopa::git_pull
     )
-    koopa::update_success "$name_fancy" "$prefix"
+    koopa::alert_update_success "$name_fancy" "$prefix"
     return 0
 }

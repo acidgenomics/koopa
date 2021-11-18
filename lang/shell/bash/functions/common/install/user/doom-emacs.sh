@@ -46,7 +46,7 @@ koopa:::install_doom_emacs() { # {{{1
     return 0
 }
 
-# FIXME Consider wrapping this.
+# FIXME Need to wrap this.
 koopa::update_doom_emacs() { # {{{1
     # """
     # Update Doom Emacs.
@@ -61,9 +61,9 @@ koopa::update_doom_emacs() { # {{{1
     doom="$(koopa::locate_doom)"
     emacs="$(koopa::locate_emacs)"
     koopa::add_to_path_start "$(koopa::dirname "$emacs")"
-    koopa::update_start "$name_fancy"
+    koopa::alert_update_start "$name_fancy"
     "$doom" --yes upgrade --force
     "$doom" --yes sync
-    koopa::update_success "$name_fancy"
+    koopa::alert_update_success "$name_fancy"
     return 0
 }
