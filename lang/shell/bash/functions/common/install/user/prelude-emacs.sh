@@ -17,6 +17,7 @@ koopa:::install_prelude_emacs() { # {{{1
 }
 
 # FIXME Need to wrap this.
+# FIXME Need to rework git_pull to allow direct file path input.
 koopa::update_prelude_emacs() { # {{{1
     # """
     # Update spacemacs non-interatively.
@@ -32,12 +33,12 @@ koopa::update_prelude_emacs() { # {{{1
     local name_fancy prefix
     koopa::assert_has_no_args "$#"
     name_fancy='Prelude Emacs'
-    koopa::update_start "$name_fancy"
+    koopa::alert_update_start "$name_fancy"
     prefix="$(koopa::prelude_emacs_prefix)"
     (
         koopa::cd "$prefix"
         koopa::git_pull
     )
-    koopa::update_success "$name_fancy"
+    koopa::alert_update_success "$name_fancy"
     return 0
 }

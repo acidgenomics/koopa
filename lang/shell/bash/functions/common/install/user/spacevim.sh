@@ -29,6 +29,7 @@ koopa:::install_spacevim() { # {{{1
 }
 
 # FIXME Need to wrap this.
+# FIXME Need to rework git_pull call.
 koopa::update_spacevim() { # {{{1
     # """
     # Update SpaceVim.
@@ -38,12 +39,12 @@ koopa::update_spacevim() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed 'emacs'
     name_fancy='SpaceVim'
-    koopa::update_start "$name_fancy"
+    koopa::alert_update_start "$name_fancy"
     prefix="$(koopa::spacevim_prefix)"
     (
         koopa::cd "$prefix"
         koopa::git_pull
     )
-    koopa::update_success "$name_fancy"
+    koopa::alert_update_success "$name_fancy"
     return 0
 }

@@ -51,7 +51,7 @@ koopa::macos_update_defaults() { # {{{1
         [name_fancy]='macOS defaults'
         [screenshots_dir]="${HOME}/Documents/screenshots"
     )
-    koopa::update_start "${dict[name_fancy]}"
+    koopa::alert_update_start "${dict[name_fancy]}"
     # General UI/UX {{{2
     # --------------------------------------------------------------------------
     # For reference, here's how to set computer name automatically.
@@ -1469,7 +1469,7 @@ WebKit2AllowsInlineMediaPlayback" \
     do
         "${app[kill_all]}" "${app_name}" &>/dev/null || true
     done
-    koopa::update_success "${dict[name_fancy]}"
+    koopa::alert_update_success "${dict[name_fancy]}"
     koopa::alert_note 'Some of these changes require logout to take effect.'
     return 0
 }
