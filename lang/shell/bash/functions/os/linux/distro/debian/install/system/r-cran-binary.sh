@@ -40,7 +40,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
         koopa::alert_is_installed "${dict[name_fancy]}"
         return 0
     fi
-    koopa::install_start "${dict[name_fancy]}"
+    koopa::alert_install_start "${dict[name_fancy]}"
     koopa::rm --sudo \
         '/etc/R' \
         '/usr/lib/R/etc' \
@@ -49,7 +49,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
     pkgs=('r-base' 'r-base-dev')
     koopa::debian_apt_install "${pkgs[@]}"
     koopa::configure_r "${dict[r]}"
-    koopa::install_success "${dict[name_fancy]}"
+    koopa::alert_install_success "${dict[name_fancy]}"
     return 0
 }
 

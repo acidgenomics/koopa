@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap in 'koopa::install_app' call.
+# FIXME Need to wrap this.
 # FIXME Also check that Xcode CLT is installed here before proceeding on macOS.
 koopa::install_homebrew() { # {{{1
     # """
@@ -30,7 +30,7 @@ koopa::install_homebrew() { # {{{1
     koopa::assert_is_admin
     koopa::assert_is_installed 'yes'
     name_fancy='Homebrew'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     koopa::is_macos && koopa::macos_install_xcode_clt
     tee="$(koopa::locate_tee)"
     tmp_dir="$(koopa::tmp_dir)"
@@ -43,11 +43,11 @@ koopa::install_homebrew() { # {{{1
         yes | "./${file}" || true
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 
-# FIXME Consider wrapping this.
+# FIXME Need to wrap this.
 koopa::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
@@ -82,7 +82,7 @@ koopa::install_homebrew_bundle() { # {{{1
         brewfiles=("$@")
     fi
     name_fancy='Homebrew Bundle'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     "${app[brew]}" analytics off
     # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
     # variable, which is defined in our main Homebrew activation function.
@@ -122,7 +122,7 @@ koopa::uninstall_homebrew() { # {{{1
     koopa::assert_is_installed 'yes'
     name_fancy='Homebrew'
     user="$(koopa::user)"
-    koopa::uninstall_start "$name_fancy"
+    koopa::alert_uninstall_start "$name_fancy"
     koopa::assert_has_no_args "$#"
     # Note that macOS Catalina now uses Zsh instead of Bash by default.
     if koopa::is_macos
@@ -141,7 +141,7 @@ koopa::uninstall_homebrew() { # {{{1
         yes | "./${file}" || true
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
-    koopa::uninstall_success "$name_fancy"
+    koopa::alert_uninstall_success "$name_fancy"
     return 0
 }
 
@@ -182,7 +182,7 @@ koopa::update_homebrew() { # {{{1
         [brew]="$(koopa::locate_brew)"
     )
     name_fancy='Homebrew'
-    koopa::update_start "$name_fancy"
+    koopa::alert_update_start "$name_fancy"
     if ! koopa::is_xcode_clt_installed
     then
         koopa::stop 'Need to reinstall Xcode CLT.'
@@ -204,6 +204,6 @@ koopa::update_homebrew() { # {{{1
     then
         koopa::brew_reset_permissions
     fi
-    koopa::update_success "$name_fancy"
+    koopa::alert_update_success "$name_fancy"
     return 0
 }

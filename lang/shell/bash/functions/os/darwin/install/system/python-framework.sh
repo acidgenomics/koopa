@@ -67,7 +67,7 @@ koopa:::macos_install_python_framework() { # {{{1
         koopa::alert_is_installed "${dict[name_fancy]}" "${dict[prefix]}"
         return 0
     fi
-    koopa::install_start "${dict[name_fancy]}" "${dict[prefix]}"
+    koopa::alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
     dict[file]="${dict[name]}-${dict[version]}-${dict[macos_string]}.pkg"
     dict[url]="https://www.${dict[name]}.org/ftp/${dict[name]}/\
 ${dict[version]}/${dict[file]}"
@@ -80,7 +80,7 @@ ${dict[version]}/${dict[file]}"
     dict[python]="${dict[prefix]}/bin/${dict[name]}${dict[major_version]}"
     koopa::assert_is_executable "${dict[python]}"
     koopa::configure_python "${dict[python]}"
-    koopa::install_success "${dict[name_fancy]}"
+    koopa::alert_install_success "${dict[name_fancy]}"
     return 0
 }
 

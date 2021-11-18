@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
 
+# FIXME Should I rework this monorepo approach here?
 # FIXME Need to wrap this.
 koopa::install_dotfiles_private() { # {{{1
     # """
     # Install private dotfiles.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-11-18.
     # """
     local name_fancy prefix script
     name='dotfiles-private'
     name_fancy='private dotfiles'
     prefix="$(koopa::dotfiles_private_prefix)"
-    koopa::install_start "$name_fancy" "$prefix"
+    koopa::alert_install_start "$name_fancy" "$prefix"
     koopa::add_monorepo_config_link "$name"
     koopa::assert_is_dir "$prefix"
     script="${prefix}/install"
     koopa::assert_is_file "$script"
     "$script"
-    koopa::install_success "$name_fancy" "$prefix"
+    koopa::alert_install_success "$name_fancy" "$prefix"
     return 0
 }
 

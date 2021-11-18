@@ -5,6 +5,7 @@
 # FIXME Needs a corresponding updater.
 # FIXME Needs a corresponding uninstaller.
 # FIXME This also works on Ubuntu, so consider moving.
+
 koopa::install_pihole() { # {{{1
     # """
     # Install Pi-hole.
@@ -16,7 +17,7 @@ koopa::install_pihole() { # {{{1
     local file name_fancy tmp_dir url
     koopa::assert_has_no_args "$#"
     name_fancy='Pi-hole'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -27,6 +28,6 @@ koopa::install_pihole() { # {{{1
         "./${file}"
     )
     koopa::rm "$tmp_dir"
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
