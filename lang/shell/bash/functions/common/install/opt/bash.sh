@@ -3,56 +3,68 @@
 koopa:::install_bash() { # {{{1
     # """
     # Install Bash.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-11-18.
+    #
+    # @section Applying patches:
+    #
+    # Alternatively, can pipe curl call directly to 'patch -p0'.
+    # https://stackoverflow.com/questions/14282617
+    #
     # @seealso
-    # https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
     # """
-    local base_url cflags conf_args curl cut file gnu_mirror jobs link_app make
-    local minor_version mv_tr patch patches range request tr url version
-    curl="$(koopa::locate_curl)"
-    cut="$(koopa::locate_cut)"
-    gnu_mirror="$(koopa::gnu_mirror_url)"
-    jobs="$(koopa::cpu_count)"
-    make="$(koopa::locate_make)"
-    patch="$(koopa::locate_patch)"
-    tr="$(koopa::locate_tr)"
-    link_app="${INSTALL_LINK_APP:?}"
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    name='bash'
-    minor_version="$(koopa::major_minor_version "$version")"
-    file="${name}-${minor_version}.tar.gz"
-    url="${gnu_mirror}/${name}/${file}"
-    koopa::download "$url" "$file"
-    koopa::extract "$file"
-    koopa::cd "${name}-${minor_version}"
-    # Apply patches. 
-    patches="$( \
-        koopa::print "$version" \
-        | "$cut" -d '.' -f 3 \
-    )"
-    koopa::mkdir 'patches'
-    (
-        koopa::cd 'patches'
-        # Note that GNU mirror doesn't seem to work correctly here.
-        base_url="https://ftp.gnu.org/gnu/${name}/\
-${name}-${minor_version}-patches"
-        mv_tr="$( \
-            koopa::print "$minor_version" \
-            | "$tr" -d '.' \
-        )"
-        range="$(printf '%03d-%03d' '1' "$patches")"
-        request="${base_url}/${name}${mv_tr}-[${range}]"
-        "$curl" "$request" -O
-        koopa::cd ..
-        for file in 'patches/'*
-        do
-            # Alternatively, can pipe curl call directly to 'patch -p0'.
-            # https://stackoverflow.com/questions/14282617
-            "$patch" -p0 --ignore-whitespace --input="$file"
-        done
+    local app dict
+    declare -A app=(
+        [curl]="$(koopa::locate_curl)"
+        [cut]="$(koopa::locate_cut)"
+        [make]="$(koopa::locate_make)"
+        [patch]="$(koopa::locate_patch)"
+        [tr]="$(koopa::locate_tr)"
     )
-    conf_args=("--prefix=${prefix}")
+    declare -A dict=(
+        [gnu_mirror]="$(koopa::gnu_mirror_url)"
+        [jobs]="$(koopa::cpu_count)"
+        [link_app]="${INSTALL_LINK_APP:?}"
+        [name]='bash'
+        [patch_prefix]='patches'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    dict[maj_min_ver]="$(koopa::major_minor_version "${dict[version]}")"
+    dict[patch_base_url]="https://ftp.gnu.org/gnu/${dict[name]}/\
+${dict[name]}-${dict[maj_min_ver]}-patches"
+    dict[n_patches]="$( \
+        koopa::major_minor_patch_version "${dict[version]}" \
+        | "${app[cut]}" -d '.' -f 3 \
+    )"
+    dict[file]="${dict[name]}-${dict[maj_min_ver]}.tar.gz"
+    dict[url]="${dict[gnu_mirror]}/${dict[name]}/${dict[file]}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::cd "${dict[name]}-${dict[maj_min_ver]}"
+    # Apply patches, if necessary.
+    if [[ "${dict[n_patches]}" -gt 0 ]]
+    then
+        # mmv_tr: trimmed major minor version.
+        dict[mmv_tr]="$( \
+            koopa::print "${dict[maj_min_ver]}" \
+            | "${app[tr]}" -d '.' \
+        )"
+        dict[patch_range]="$(printf '%03d-%03d' '1' "${dict[n_patches]}")"
+        dict[patch_request_urls]="${dict[patch_base_url]}/\
+${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
+        koopa::mkdir "${dict[patch_prefix]}"
+        (
+            koopa::cd "${dict[patch_prefix]}"
+            "${app[curl]}" "${dict[patch_request_urls]}" -O
+            koopa::cd ..
+            for file in "${dict[patch_dir]}/"*
+            do
+                "${app[patch]}" -p0 --ignore-whitespace --input="$file"
+            done
+        )
+    fi
+    conf_args=("--prefix=${dict[prefix]}")
     if koopa::is_alpine
     then
         # musl does not implement brk/sbrk (they simply return -ENOMEM).
@@ -77,9 +89,12 @@ ${name}-${minor_version}-patches"
         conf_args+=("CFLAGS=${cflags[*]}")
     fi
     ./configure "${conf_args[@]}"
-    "$make" --jobs="$jobs"
-    # > "$make" test
-    "$make" install
-    [[ "${link_app:-0}" -eq 1 ]] && koopa::enable_shell "$name"
+    "${app[make]}" --jobs="${dict[jobs]}"
+    # > "${app[make]}" test
+    "${app[make]}" install
+    if [[ "${dict[link_app]}" -eq 1 ]]
+    then
+        koopa::enable_shell "${dict[name]}"
+    fi
     return 0
 }
