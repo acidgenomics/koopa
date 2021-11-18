@@ -603,12 +603,15 @@ koopa::koopa_info() { # {{{
     local app dict info nf_info
     koopa::assert_has_no_args "$#"
     declare -A app=(
+        [bash]="$(koopa::locate_bash)"
         [cat]="$(koopa::locate_cat)"
     )
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
         [arch]="$(koopa::arch)"
+        [arch2]="$(koopa::arch2)"
         [ascii_turtle_file]="$(koopa::include_prefix)/ascii-turtle.txt"
+        [bash_version]="$(koopa::get_version "${app[bash]}")"
         [config_prefix]="$(koopa::config_prefix)"
         [koopa_date]="$(koopa::koopa_date)"
         [koopa_github_url]="$(koopa::koopa_github_url)"
@@ -647,45 +650,42 @@ koopa::koopa_info() { # {{{
         "Koopa Prefix: ${dict[koopa_prefix]}"
         "App Prefix: ${dict[app_prefix]}"
         "Opt Prefix: ${dict[opt_prefix]}"
-        "Make Prefix: ${dict[make_prefix]}"
         "Config Prefix: ${dict[config_prefix]}"
-        ''
+        "Make Prefix: ${dict[make_prefix]}"
     )
-    # Show neofetch info, if installed.
+    if koopa::is_macos
+    then
+        app[sw_vers]="$(koopa::macos_locate_sw_vers)"
+        dict[os]="$( \
+            printf '%s %s (%s)\n' \
+                "$("${app[sw_vers]}" -productName)" \
+                "$("${app[sw_vers]}" -productVersion)" \
+                "$("${app[sw_vers]}" -buildVersion)" \
+        )"
+    else
+        app[uname]="$(koopa::locate_uname)"
+        dict[os]="$("${app[uname]}" --all)"
+        # Alternate approach using Python:
+        # > app[python]="$(koopa::locate_python)"
+        # > dict[os]="$("${app[python]}" -mplatform)"
+    fi
+    info+=(
+        ''
+        'System information'
+        '------------------'
+        "OS: ${dict[os]}"
+        "Architecture: ${dict[arch]} / ${dict[arch2]}"
+        "Bash: ${dict[bash_version]}"
+    )
     if koopa::is_installed 'neofetch'
     then
         app[neofetch]="$(koopa::locate_neofetch)"
         readarray -t nf_info <<< "$("${app[neofetch]}" --stdout)"
         info+=(
-            'System information (neofetch)'
-            '-----------------------------'
+            ''
+            'Neofetch'
+            '--------'
             "${nf_info[@]:2}"
-        )
-    else
-        if koopa::is_macos
-        then
-            app[sw_vers]="$(koopa::macos_locate_sw_vers)"
-            dict[os]="$( \
-                printf '%s %s (%s)\n' \
-                    "$("${app[sw_vers]}" -productName)" \
-                    "$("${app[sw_vers]}" -productVersion)" \
-                    "$("${app[sw_vers]}" -buildVersion)" \
-            )"
-        else
-            app[uname]="$(koopa::locate_uname)"
-            dict[os]="$("${app[uname]}" --all)"
-            # Alternate approach using Python:
-            # > app[python]="$(koopa::locate_python)"
-            # > dict[os]="$("${app[python]}" -mplatform)"
-        fi
-        dict[shell_name]="$(koopa::shell_name)"
-        dict[shell_version]="$(koopa::get_version "${dict[shell_name]}")"
-        array+=(
-            'System information'
-            '------------------'
-            "OS: ${dict[os]}"
-            "Shell: ${dict[shell_name]} ${dict[shell_version]}"
-            "Architecture: ${dict[arch]}"
         )
     fi
     "${app[cat]}" "${dict[ascii_turtle_file]}"
