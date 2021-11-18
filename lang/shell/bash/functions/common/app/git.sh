@@ -9,7 +9,6 @@
 # state. In that case, koopa::git_pull should skip and inform the user.
 # FIXME This is also called in 'koopa::configure_user', which needs to be adjusted.
 
-# FIXME Need to switch to dict approach here.
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
@@ -173,6 +172,7 @@ koopa::git_clone() { # {{{1
     return 0
 }
 
+# FIXME Allow the user to set a path here, and switch dynamically.
 koopa::git_default_branch() { # {{{1
     # """
     # Default branch of Git repository.
@@ -207,6 +207,8 @@ koopa::git_default_branch() { # {{{1
     return 0
 }
 
+# FIXME Allow the user to set a path here, and switch dynamically.
+# FIXME Consider allowing parameterization.
 koopa::git_init_remote() { # {{{1
     # """
     # Initialize a remote Git repository.
@@ -255,6 +257,7 @@ koopa::git_init_remote() { # {{{1
     return 0
 }
 
+# FIXME Parameterize, looping across repos.
 koopa::git_last_commit_local() { # {{{1
     # """
     # Last git commit of local repository.
@@ -276,18 +279,42 @@ koopa::git_last_commit_local() { # {{{1
 koopa::git_last_commit_remote() { # {{{1
     # """
     # Last git commit of remote repository.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-18.
+    #
+    # @examples
+    # > url='https://github.com/acidgenomics/koopa.git'
+    # > koopa::git_last_commit_remote "$url"
+    # # 73f50603e00c1c7c809a10b6187b40066b8a4e4d
+    #
+    # @seealso
+    # > git ls-remote --help
     # """
-    local git url x
+    local app dict url x
     koopa::assert_has_args "$#"
-    url="${1:?}"
-    koopa::assert_is_git_repo
-    git="$(koopa::locate_git)"
-    x="$("$git" ls-remote "$url" 'HEAD' 2>/dev/null || true)"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [git]="$(koopa::locate_git)"
+        [head]="$(koopa::locate_head)"
+    )
+    declare -A dict=(
+        [ref]='HEAD'
+    )
+    for url in "$@"
+    do
+        # shellcheck disable=SC2016
+        x="$( \
+            "${app[git]}" ls-remote --quiet "$url" "${dict[ref]}" \
+            | "${app[head]}" -n 1 \
+            | "${app[awk]}" '{ print $1 }' \
+        )"
+        [[ -n "$x" ]] || return 1
+        koopa::print "$x"
+    done
+    return 0
 }
 
+# FIXME Need to parameterize this.
+# FIXME Need to harden against repos with no remote?
 koopa::git_rename_master_to_main() { # {{{1
     # """
     # Rename default branch from "master" to "main".
@@ -307,6 +334,7 @@ koopa::git_rename_master_to_main() { # {{{1
     return 0
 }
 
+# FIXME Allow the user to pull multiple repos in a single call.
 # FIXME Need to allow direct file path input here.
 # FIXME Rework using dict approach.
 koopa::git_pull() { # {{{1
@@ -345,6 +373,7 @@ koopa::git_pull() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_pull_recursive() { # {{{1
     # """
     # Pull multiple Git repositories recursively.
@@ -385,6 +414,7 @@ koopa::git_pull_recursive() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_push_recursive() { # {{{1
     # """
     # Push multiple Git repositories recursively.
@@ -423,6 +453,7 @@ koopa::git_push_recursive() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_push_submodules() { # {{{1
     # """
     # Push Git submodules.
@@ -444,6 +475,7 @@ koopa::git_push_submodules() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_remote_url() { # {{{1
     # """
     # Return the Git remote URL for origin.
@@ -459,6 +491,7 @@ koopa::git_remote_url() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_reset() { # {{{1
     # """
     # Clean and reset a git repo and its submodules.
@@ -488,6 +521,7 @@ koopa::git_reset() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_reset_fork_to_upstream() { # {{{1
     # """
     # Reset Git fork to upstream.
@@ -511,6 +545,7 @@ koopa::git_reset_fork_to_upstream() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_rm_submodule() { # {{{1
     # """
     # Remove a git submodule.
@@ -541,6 +576,7 @@ koopa::git_rm_submodule() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_rm_untracked() { # {{{1
     # """
     # Remove untracked files from git repo.
@@ -555,6 +591,7 @@ koopa::git_rm_untracked() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_set_remote_url() { # {{{1
     # """
     # Set (or change) the remote URL of a git repo.
@@ -570,6 +607,7 @@ koopa::git_set_remote_url() { # {{{1
     return 0
 }
 
+# FIXME Rework this.
 koopa::git_status_recursive() { # {{{1
     # """
     # Get the status of multiple Git repos recursively.
@@ -608,6 +646,7 @@ koopa::git_status_recursive() { # {{{1
     return 0
 }
 
+# FIXME Rework, allowing input of multiple git repos here.
 koopa::git_submodule_init() { # {{{1
     # """
     # Initialize git submodules.
