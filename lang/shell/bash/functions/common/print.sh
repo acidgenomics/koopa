@@ -23,12 +23,13 @@ koopa:::alert_process_start() { # {{{1
     fi
     if [[ -n "${dict[prefix]}" ]] && [[ -n "${dict[version]}" ]]
     then
-        out="${dict[word]} ${dict[name]} ${dict[version]} at '${dict[prefix]}'."
+        dict[out]="${dict[word]} ${dict[name]} ${dict[version]} \
+at '${dict[prefix]}'."
     elif [[ -n "${dict[prefix]}" ]]
     then
-        out="${dict[word]} ${dict[name]} at '${dict[prefix]}'."
+        dict[out]="${dict[word]} ${dict[name]} at '${dict[prefix]}'."
     else
-        out="${dict[word]} ${dict[name]}."
+        dict[out]="${dict[word]} ${dict[name]}."
     fi
     koopa::h1 "${dict[out]}"
     return 0
