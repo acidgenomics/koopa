@@ -58,7 +58,7 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
         koopa::mkdir "${dict[patch_prefix]}"
         (
             koopa::cd "${dict[patch_prefix]}"
-            "${app[curl]}" "${dict[patch_request_urls]}" -O
+            "${app[curl]}" --silent "${dict[patch_request_urls]}" -O
             koopa::cd ..
             for file in "${dict[patch_prefix]}/"*
             do
