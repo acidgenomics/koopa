@@ -57,7 +57,7 @@ koopa::fedora_install_base() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
     name_fancy='Fedora base system'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     if [[ "${dict[recommended]}" -eq 1 ]] && koopa::is_rhel_ubi
     then
         koopa::stop 'Recommended configuration not yet supported for RHEL UBI.'
@@ -244,6 +244,6 @@ koopa::fedora_install_base() { # {{{1
     koopa::fedora_dnf_install "${pkgs[@]}"
     koopa::fedora_dnf clean all
     koopa::fedora_set_locale
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }

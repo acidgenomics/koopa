@@ -61,7 +61,7 @@ koopa::debian_install_llvm() { # {{{1
             koopa::debian_uninstall_llvm
         fi
     fi
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     koopa::debian_apt_add_llvm_repo
     pkgs=(
         "clang-${major_version}"
@@ -70,7 +70,7 @@ koopa::debian_install_llvm() { # {{{1
         "lldb-${major_version}"
     )
     koopa::debian_apt_install "${pkgs[@]}"
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 

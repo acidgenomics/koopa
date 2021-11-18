@@ -26,7 +26,7 @@ koopa::debian_install_docker() { # {{{1
         koopa::alert_is_installed "$name_fancy"
         return 0
     fi
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     koopa::assert_has_no_args "$#"
     koopa::debian_apt_add_docker_repo
     # Ready to install Docker.
@@ -40,7 +40,7 @@ koopa::debian_install_docker() { # {{{1
     koopa::linux_add_user_to_group 'docker'
     # Move '/var/lib/docker' to '/n/var/lib/docker'.
     koopa::linux_link_docker
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     koopa::alert_restart
     return 0
 }

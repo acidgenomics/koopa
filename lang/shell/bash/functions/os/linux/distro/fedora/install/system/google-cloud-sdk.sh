@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Should our main installer include an additional option to skip
+# an installed program? Can pass in the function directly...
 # FIXME Need to wrap this.
 koopa::fedora_install_google_cloud_sdk() { # {{{1
     # """
@@ -8,6 +10,7 @@ koopa::fedora_install_google_cloud_sdk() { # {{{1
     # @seealso
     # - https://cloud.google.com/sdk/docs/downloads-yum
     # """
+    
     local name_fancy
     name_fancy='Google Cloud SDK'
     if koopa::is_installed 'gcloud'
@@ -15,10 +18,10 @@ koopa::fedora_install_google_cloud_sdk() { # {{{1
         koopa::alert_is_installed "$name_fancy"
         return 0
     fi
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     koopa::fedora_add_google_cloud_sdk_repo
     koopa::fedora_dnf_install 'google-cloud-sdk'
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 

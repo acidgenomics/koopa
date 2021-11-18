@@ -3,6 +3,10 @@
 # FIXME shellcheck is currently returning false positive about 'branch'
 # modification inside of a subshell.
 
+# FIXME Need to add a function to detect whether git repo is detached (e.g. HEAD)
+# state. In that case, koopa::git_pull should skip and inform the user.
+# FIXME This is also called in 'koopa::configure_user', which needs to be adjusted.
+
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.

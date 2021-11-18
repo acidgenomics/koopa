@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Rework using app and dict approach.
+# FIXME Consider wrapping this in our 'install_app' call.
 koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     # """
     # Install bcbio-nextgen genome from Ensembl.
@@ -126,7 +127,7 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     # e.g. "GRCh38_Ensembl_102".
     bcbio_genome_name="${build} ${provider} ${release}"
     bcbio_genome_name="${bcbio_genome_name// /_}"
-    koopa::install_start "$bcbio_genome_name"
+    koopa::alert_install_start "$bcbio_genome_name"
     # e.g. 'Hsapiens'.
     bcbio_species_dir="$( \
         koopa::print "${organism// /_}" \
@@ -163,6 +164,6 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
         set +x
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
-    koopa::install_success "$bcbio_genome_name"
+    koopa::alert_install_success "$bcbio_genome_name"
     return 0
 }

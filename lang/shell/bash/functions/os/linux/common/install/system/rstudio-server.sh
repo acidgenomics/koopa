@@ -130,7 +130,7 @@ koopa:::linux_install_rstudio_server() { # {{{1
         koopa::alert_is_installed "${dict[name_fancy]}"
         return 0
     fi
-    koopa::install_start "${dict[name_fancy]}"
+    koopa::alert_install_start "${dict[name_fancy]}"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -157,7 +157,7 @@ first deactivate it on the old system with the command:
 > sudo rstudio-server license-manager deactivate
 END
     fi
-    koopa::install_success "${dict[name_fancy]}"
+    koopa::alert_install_success "${dict[name_fancy]}"
     return 0
 }
 

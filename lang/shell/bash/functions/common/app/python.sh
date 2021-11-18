@@ -131,6 +131,7 @@ koopa::python_pip_outdated() { # {{{1
     return 0
 }
 
+# FIXME Need to rework using a dict approach here.
 koopa::python_venv_create() { # {{{1
     # """
     # Create Python virtual environment.
@@ -190,7 +191,7 @@ koopa::python_venv_create() { # {{{1
         koopa::alert_note "Environment already exists at '${prefix}'."
         return 0
     fi
-    koopa::install_start "$name_fancy" "$prefix"
+    koopa::alert_install_start "$name_fancy" "$prefix"
     koopa::sys_mkdir "$prefix"
     "$python" -m venv "$prefix"
     venv_python="${prefix}/bin/python3"
@@ -202,7 +203,7 @@ koopa::python_venv_create() { # {{{1
     fi
     koopa::sys_set_permissions --recursive "$prefix"
     "$venv_python" -m pip list
-    koopa::install_success "$name_fancy" "$prefix"
+    koopa::alert_install_success "$name_fancy" "$prefix"
     return 0
 }
 

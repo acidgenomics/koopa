@@ -5,6 +5,7 @@
 # FIXME This also works on Ubuntu, so consider moving.
 # FIXME This needs a corresponding uninstaller.
 # FIXME This needs a corresponding updater.
+
 koopa::install_pivpn() { # {{{1
     # """
     # Install PiVPN.
@@ -15,7 +16,7 @@ koopa::install_pivpn() { # {{{1
     local file name_fancy tmp_dir url
     koopa::assert_has_no_args "$#"
     name_fancy='PiVPN'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -26,6 +27,6 @@ koopa::install_pivpn() { # {{{1
         "./${file}"
     )
     koopa::rm "$tmp_dir"
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }

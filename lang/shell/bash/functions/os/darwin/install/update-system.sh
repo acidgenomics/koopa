@@ -3,7 +3,7 @@
 koopa::macos_update_system() { # {{{1
     # """
     # Update macOS system.
-    # @note Updated 2021-11-16.
+    # @note Updated 2021-11-18.
     # """
     local app
     koopa::assert_has_no_args "$#"
@@ -13,6 +13,7 @@ koopa::macos_update_system() { # {{{1
         [softwareupdate]="$(koopa::macos_locate_softwareupdate)"
         [sudo]="$(koopa::locate_sudo)"
     )
+    koopa::update_system
     koopa::alert "Updating App Store apps via '${app[mas]}'."
     "${app[mas]}" upgrade
     koopa::alert "Updating macOS via '${app[softwareupdate]}'."

@@ -21,7 +21,7 @@ koopa::debian_install_azure_cli() { # {{{1
     # """
     local name_fancy
     name_fancy='Azure CLI'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     if koopa::is_installed 'az'
     then
         koopa::alert_is_installed "$name_fancy"
@@ -29,7 +29,7 @@ koopa::debian_install_azure_cli() { # {{{1
     fi
     koopa::debian_apt_add_azure_cli_repo
     koopa::debian_apt_install 'azure-cli'
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 

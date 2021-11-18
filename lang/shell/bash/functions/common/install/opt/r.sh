@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::configure_r() { # {{{1
     # """
     # Update R configuration.
@@ -16,7 +17,7 @@ koopa::configure_r() { # {{{1
     [[ -z "${dict[r]}" ]] && dict[r]="$(koopa::locate_r)"
     koopa::assert_is_installed "${dict[r]}"
     dict[r_prefix]="$(koopa::r_prefix "${dict[r]}")"
-    koopa::configure_start "${dict[name_fancy]}" "${dict[r_prefix]}"
+    koopa::alert_configure_start "${dict[name_fancy]}" "${dict[r_prefix]}"
     koopa::assert_is_dir "${dict[r_prefix]}"
     if koopa::is_koopa_app "${dict[r]}"
     then
@@ -41,7 +42,7 @@ koopa::configure_r() { # {{{1
     koopa::r_javareconf "${dict[r]}"
     koopa::r_rebuild_docs "${dict[r]}"
     koopa::sys_set_permissions --recursive "${dict[r_prefix]}/site-library"
-    koopa::configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
+    koopa::alert_configure_success "${dict[name_fancy]}" "${dict[r_prefix]}"
     return 0
 }
 

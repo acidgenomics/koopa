@@ -46,10 +46,11 @@ koopa::activate_conda_env() { # {{{1
 koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     # Create Conda bioinformatics environments.
-    # @note Updated 2021-10-05.
+    # @note Updated 2021-11-18.
     # """
-    local dict env envs name_fancy
+    local dict env envs
     declare -A dict=(
+        name_fancy='conda environments for bioinformatics'
         [all]=0
         [aligners]=0
         [chipseq]=0
@@ -161,8 +162,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 ;;
         esac
     done
-    name_fancy='conda environments for bioinformatics'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "${dict[name_fancy]}"
     envs=()
     if [[ "${dict[all]}" -eq 1 ]]
     then
@@ -398,10 +398,11 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         envs[$i]="${env}@${version}"
     done
     koopa::conda_create_env "${envs[@]}"
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "${dict[name_fancy]}"
     return 0
 }
 
+# FIXME Rework using a dict approach here.
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
@@ -461,14 +462,14 @@ exists at '${prefix}'."
                 continue
             fi
         fi
-        koopa::install_start "${env_name}" "$prefix"
+        koopa::alert_install_start "$env_name" "$prefix"
         "$conda" create \
             --name="$env_name" \
             --quiet \
             --yes \
             "$env_string"
         koopa::sys_set_permissions --recursive "$prefix"
-        koopa::install_success "$env_name" "$prefix"
+        koopa::alert_install_success "$env_name" "$prefix"
     done
     return 0
 }
@@ -476,19 +477,23 @@ exists at '${prefix}'."
 koopa::conda_env_latest_version() { # {{{1
     # """
     # Get the latest version of a conda environment available.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-18.
     # """
-    local awk conda env_name tail
+    local app dict x
     koopa::assert_has_args_eq "$#" 1
-    awk="$(koopa::locate_awk)"
-    conda="$(koopa::locate_conda)"
-    tail="$(koopa::locate_tail)"
-    env_name="${1:?}"
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [conda]="$(koopa::locate_conda)"
+        [tail]="$(koopa::locate_tail)"
+    )
+    declare -A dict=(
+        [env_name]="${1:?}"
+    )
     # shellcheck disable=SC2016
     x="$( \
-        "$conda" search "$env_name" \
-            | "$tail" -n 1 \
-            | "$awk" '{print $2}'
+        "${app[conda]}" search "${dict[env_name]}" \
+            | "${app[tail]}" -n 1 \
+            | "${app[awk]}" '{print $2}'
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -498,16 +503,19 @@ koopa::conda_env_latest_version() { # {{{1
 koopa::conda_env_list() { # {{{1
     # """
     # Return a list of conda environments in JSON format.
-    # @note Updated 2021-05-22.
+    # @note Updated 2021-11-18.
     # """
-    local conda x
+    local app x
     koopa::assert_has_no_args "$#"
-    conda="$(koopa::locate_conda)"
-    x="$("$conda" env list --json)"
+    declare -A app=(
+        [conda]="$(koopa::locate_conda)"
+    )
+    x="$("${app[conda]}" env list --json)"
     koopa::print "$x"
     return 0
 }
 
+# FIXME Rework this using dict approach.
 koopa::conda_env_prefix() { # {{{1
     # """
     # Return prefix for a specified conda environment.
@@ -572,6 +580,7 @@ koopa::conda_env_prefix() { # {{{1
     return 0
 }
 
+# FIXME I think the conda environment step here is unnecessary, rework.
 koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.

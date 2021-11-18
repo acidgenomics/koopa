@@ -22,10 +22,10 @@ koopa::debian_install_google_cloud_sdk() { # {{{1
         koopa::alert_is_installed "$name_fancy"
         return 0
     fi
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     koopa::debian_apt_add_google_cloud_sdk_repo
     koopa::debian_apt_install 'google-cloud-sdk'
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 

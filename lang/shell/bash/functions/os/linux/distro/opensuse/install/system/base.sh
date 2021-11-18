@@ -60,7 +60,7 @@ koopa::opensuse_install_base() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
     name_fancy='openSUSE base system'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     pkgs=()
     "${app[sudo]}" "${app[zypper]}" refresh
     if [[ "${dict[upgrade]}" -eq 1 ]]
@@ -126,7 +126,7 @@ koopa::opensuse_install_base() { # {{{1
     fi
     "${app[sudo]}" "${app[zypper]}" install -y "${pkgs[@]}"
     "${app[sudo]}" "${app[zypper]}" clean
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 

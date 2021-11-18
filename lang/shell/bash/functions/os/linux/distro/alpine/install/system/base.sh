@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::alpine_install_base() { # {{{1
     # """
     # Install Alpine Linux base system.
@@ -57,7 +58,7 @@ koopa::alpine_install_base() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_no_args "$#"
-    koopa::install_start "${dict[name_fancy]}"
+    koopa::alert_install_start "${dict[name_fancy]}"
     "${app[sudo]}" "${app[apk]}" --no-cache update
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
@@ -124,7 +125,7 @@ koopa::alpine_install_base() { # {{{1
         )
     fi
     "${app[sudo]}" "${app[apk]}" --no-cache add "${pkgs[@]}"
-    koopa::install_success "${dict[name_fancy]}"
+    koopa::alert_install_success "${dict[name_fancy]}"
     return 0
 }
 

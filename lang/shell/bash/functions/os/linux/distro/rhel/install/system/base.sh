@@ -17,7 +17,7 @@ koopa::rhel_install_base() { # {{{1
     fi
     koopa::assert_is_installed 'dnf' 'sudo'
     name_fancy='Red Hat Enterprise Linux (RHEL) base system'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     koopa::fedora_dnf_install 'dnf-plugins-core' 'util-linux-user'
     koopa::rhel_enable_epel
     if koopa::is_centos || koopa::is_rocky
@@ -30,6 +30,6 @@ koopa::rhel_install_base() { # {{{1
     then
         koopa::fedora_dnf config-manager --set-enabled "$powertools"
     fi
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }

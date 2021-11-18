@@ -2,10 +2,12 @@
 
 # FIXME Need to wrap this.
 # FIXME Consider defining 'koopa::cut' function to wrap the cut call here.
+# FIXME Rework using a dict approach.
+
 koopa::fedora_install_wine() { # {{{1
     # """
     # Install Wine.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-11-18.
     #
     # Note that 'winehq-stable' is currently only available on Fedora 31.
     # Can use 'winehq-devel' on Fedora 32.
@@ -15,7 +17,7 @@ koopa::fedora_install_wine() { # {{{1
     # """
     local app name_fancy repo_url version
     name_fancy='Wine'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     if koopa::is_installed 'wine'
     then
         koopa::alert_is_installed "$name_fancy"
@@ -37,7 +39,7 @@ koopa::fedora_install_wine() { # {{{1
         'xorg-x11-apps' \
         'xorg-x11-server-Xvfb' \
         'xorg-x11-xauth'
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 

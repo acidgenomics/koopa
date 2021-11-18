@@ -4,7 +4,7 @@
 koopa::debian_install_wine() { # {{{1
     # """
     # Install Wine.
-    # @note Updated 2021-11-10.
+    # @note Updated 2021-11-18.
     #
     # aptitude will return more informative error messages on held package
     # errors, such as with missing libaudio0 dependency.
@@ -39,7 +39,7 @@ koopa::debian_install_wine() { # {{{1
         koopa::alert_is_installed "${dict[name_fancy]}"
         return 0
     fi
-    koopa::install_start "${dict[name_fancy]}"
+    koopa::alert_install_start "${dict[name_fancy]}"
     koopa::debian_apt_add_wine_repo
     # This is required to install missing libaudio0 dependency.
     koopa::debian_apt_add_wine_obs_repo
@@ -52,7 +52,7 @@ koopa::debian_install_wine() { # {{{1
         'xauth' \
         'xvfb' \
         'winehq-stable'
-    koopa::install_success "${dict[name_fancy]}"
+    koopa::alert_install_success "${dict[name_fancy]}"
     return 0
 }
 
