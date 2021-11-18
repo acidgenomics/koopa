@@ -11,6 +11,13 @@ koopa::update_julia_packages() { # {{{1
     koopa::install_julia_packages "$@"
 }
 
+koopa::update_koopa() { # {{{1
+    koopa::update_app \
+        --name='koopa' \
+        --system \
+        "$@"
+}
+
 koopa::update_nim_packages() { # {{{1
     koopa::install_nim_packages "$@"
 }
