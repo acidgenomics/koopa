@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using dict approach.
 koopa:::alert_process_start() { # {{{1
     # """
     # Inform the user about the start of a process.
@@ -33,6 +34,7 @@ koopa:::alert_process_start() { # {{{1
     return 0
 }
 
+# FIXME Rework using dict approach.
 koopa:::alert_process_success() { # {{{1
     # """
     # Inform the user about the successful completion of a process.
@@ -54,6 +56,7 @@ koopa:::alert_process_success() { # {{{1
     return 0
 }
 
+# FIXME Rework using dict approach.
 koopa:::status() { # {{{1
     # """
     # Koopa status.
@@ -81,22 +84,18 @@ koopa::alert_coffee_time() { # {{{1
     koopa::alert_note 'This step takes a while. Time for a coffee break! ☕'
 }
 
-# FIXME Need to replace this in files.
 koopa::alert_configure_start() { # {{{1
     koopa:::alert_process_start 'Configuring' "$@"
 }
 
-# FIXME Need to replace this in files.
 koopa::alert_configure_success() { # {{{1
     koopa:::alert_process_success 'Configuration' "$@"
 }
 
-# FIXME Need to replace this in files.
 koopa::alert_install_start() { # {{{1
     koopa:::alert_process_start 'Installing' "$@"
 }
 
-# FIXME Need to replace this in files.
 koopa::alert_install_success() { # {{{1
     koopa:::alert_process_success 'Installation' "$@"
 }
