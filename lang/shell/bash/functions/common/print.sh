@@ -79,7 +79,26 @@ koopa::alert_coffee_time() { # {{{1
     # @note Updated 2021-03-31.
     # """
     koopa::alert_note 'This step takes a while. Time for a coffee break! ☕'
-    return 0
+}
+
+# FIXME Need to replace this in files.
+koopa::alert_configure_start() { # {{{1
+    koopa:::alert_process_start 'Configuring' "$@"
+}
+
+# FIXME Need to replace this in files.
+koopa::alert_configure_success() { # {{{1
+    koopa:::alert_process_success 'Configuration' "$@"
+}
+
+# FIXME Need to replace this in files.
+koopa::alert_install_start() { # {{{1
+    koopa:::alert_process_start 'Installing' "$@"
+}
+
+# FIXME Need to replace this in files.
+koopa::alert_install_success() { # {{{1
+    koopa:::alert_process_success 'Installation' "$@"
 }
 
 koopa::alert_restart() { # {{{1
@@ -88,27 +107,22 @@ koopa::alert_restart() { # {{{1
     # @note Updated 2021-06-02.
     # """
     koopa::alert_note 'Restart the shell.'
-    return 0
 }
 
-# FIXME Consider prefixing this with "alert".
-koopa::configure_start() { # {{{1
-    koopa:::alert_process_start 'Configuring' "$@"
+koopa::alert_uninstall_start() { # {{{1
+    koopa:::alert_process_start 'Uninstalling' "$@"
 }
 
-# FIXME Consider prefixing this with "alert".
-koopa::configure_success() { # {{{1
-    koopa:::alert_process_success 'Configuration' "$@"
+koopa::alert_uninstall_success() { # {{{1
+    koopa:::alert_process_success 'Uninstallation' "$@"
 }
 
-# FIXME Consider prefixing this with "alert".
-koopa::install_start() { # {{{1
-    koopa:::alert_process_start 'Installing' "$@"
+koopa::alert_update_start() { # {{{1
+    koopa:::alert_process_start 'Updating' "$@"
 }
 
-# FIXME Consider prefixing this with "alert".
-koopa::install_success() { # {{{1
-    koopa:::alert_process_success 'Installation' "$@"
+koopa::alert_update_success() { # {{{1
+    koopa:::alert_process_success 'Update' "$@"
 }
 
 koopa::invalid_arg() { # {{{1
@@ -145,7 +159,6 @@ koopa::status_fail() { # {{{1
     # @note Updated 2021-06-03.
     # """
     koopa:::status 'FAIL' 'red' "$@" >&2
-    return 0
 }
 
 koopa::status_note() { # {{{1
@@ -154,7 +167,6 @@ koopa::status_note() { # {{{1
     # @note Updated 2021-06-03.
     # """
     koopa:::status 'NOTE' 'yellow' "$@"
-    return 0
 }
 
 koopa::status_ok() { # {{{1
@@ -163,7 +175,6 @@ koopa::status_ok() { # {{{1
     # @note Updated 2021-06-03.
     # """
     koopa:::status 'OK' 'green' "$@"
-    return 0
 }
 
 koopa::stop() { # {{{1
@@ -177,24 +188,4 @@ koopa::stop() { # {{{1
     # """
     koopa:::msg 'red-bold' 'red' '!! Error:' "$@" >&2
     exit 1
-}
-
-# FIXME Consider prefixing this with "alert".
-koopa::uninstall_start() { # {{{1
-    koopa:::alert_process_start 'Uninstalling' "$@"
-}
-
-# FIXME Consider prefixing this with "alert".
-koopa::uninstall_success() { # {{{1
-    koopa:::alert_process_success 'Uninstallation' "$@"
-}
-
-# FIXME Consider prefixing this with "alert".
-koopa::update_start() { # {{{1
-    koopa:::alert_process_start 'Updating' "$@"
-}
-
-# FIXME Consider prefixing this with "alert".
-koopa::update_success() { # {{{1
-    koopa:::alert_process_success 'Update' "$@"
 }

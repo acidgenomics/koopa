@@ -1,20 +1,7 @@
 #!/usr/bin/env bash
 
-koopa:::install_dotfiles() { # {{{1
-    # """
-    # Install dotfiles.
-    # @note Updated 2021-11-17.
-    # """
-    local dict
-    declare -A dict=(
-        [prefix]="${INSTALL_PREFIX:?}"
-        [repo]='https://github.com/acidgenomics/dotfiles.git'
-    )
-    koopa::git_clone "${dict[repo]}" "${dict[prefix]}"
-    return 0
-}
-
 # FIXME Need to wrap this.
+# FIXME Need to run uninstall script with specific Bash.
 koopa::uninstall_dotfiles() { # {{{1
     # """
     # Uninstall dot files.
@@ -40,20 +27,23 @@ koopa::uninstall_dotfiles() { # {{{1
     return 0
 }
 
+# FIXME Harden this by using our desired version of Bash, to run the script.
 # FIXME Need to wrap this.
-# NOTE May need to ensure that permissions are correct here.
+# FIXME May need to ensure that permissions are correct here.
 koopa::update_dotfiles() { # {{{1
     # """
     # Update dotfiles repo and run install script, if defined.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-11-18.
     # """
-    local config_prefix repo repos script
+    local app repo repos script
+    declare -A app=(
+        [bash]="$(koopa::locate_bash)"
+    )
     if [[ "$#" -eq 0 ]]
     then
-        config_prefix="$(koopa::config_prefix)"
         repos=(
-            "${config_prefix}/dotfiles"
-            "${config_prefix}/dotfiles-private"
+            "$(koopa::dotfiles_prefix)"
+            "$(koopa::dotfiles_private_prefix)"
         )
     else
         repos=("$@")
@@ -62,21 +52,22 @@ koopa::update_dotfiles() { # {{{1
     do
         [[ -d "$repo" ]] || continue
         (
-            koopa::update_start "$repo"
+            koopa::alert_update_start "$repo"
             koopa::cd "$repo"
-            # Run the updater script, if defined.
             script="${repo}/update"
             if [[ -x "$script" ]]
             then
-                "$script"
+                "${app[bash]}" "$script"
             else
                 koopa::git_reset
                 koopa::git_pull
             fi
-            # Run the install script, if defined.
             script="${repo}/install"
-            [[ -x "$script" ]] && "$script"
-            koopa::update_success "$repo"
+            if [[ -x "$script" ]]
+            then
+                "${app[bash]}" "$script"
+            fi
+            koopa::alert_update_success "$repo"
         )
     done
     return 0

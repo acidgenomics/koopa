@@ -32,6 +32,20 @@ koopa::cellar_prefix() { # {{{1
     koopa::defunct 'koopa::app_prefix'
 }
 
+koopa::configure_start() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_configure_start'
+}
+
+koopa::configure_success() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_configure_success'
+}
+
 koopa::find_cellar_version() { # {{{1
     # """
     # @note Updated 2020-11-22.
@@ -51,6 +65,20 @@ koopa::info() { # {{{1
     # @note Updated 2021-03-31.
     # """
     koopa::defunct 'koopa::alert_info'
+}
+
+koopa::install_start() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_install_start'
+}
+
+koopa::install_success() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_install_success'
 }
 
 koopa::is_darwin() { # {{{1
@@ -165,9 +193,37 @@ koopa::success() { # {{{1
     koopa::defunct 'koopa::alert_success'
 }
 
+koopa::uninstall_start() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_uninstall_start'
+}
+
+koopa::uninstall_success() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_uninstall_success'
+}
+
 koopa::unlink_cellar() { # {{{1
     # """
     # @note Updated 2020-11-11.
     # """
     koopa::defunct 'koopa::unlink_app'
+}
+
+koopa::update_start() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_update_start'
+}
+
+koopa::update_success() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_update_success'
 }
