@@ -14,6 +14,7 @@ koopa::update_julia_packages() { # {{{1
 koopa::update_koopa() { # {{{1
     koopa::update_app \
         --name='koopa' \
+        --prefix="$(koopa::koopa_prefix)" \
         --system \
         "$@"
 }
