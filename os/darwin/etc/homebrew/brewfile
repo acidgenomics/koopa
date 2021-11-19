@@ -110,7 +110,6 @@ cask "r"
 cask "rstudio"
 # > cask "safari-technology-preview"
 cask "skype"
-cask "spotify"
 cask "sublime-text"
 cask "superduper"
 # > cask "temurin"  # Using 'openjdk' brew instead.
