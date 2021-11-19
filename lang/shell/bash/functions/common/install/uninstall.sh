@@ -395,6 +395,26 @@ koopa::uninstall_prelude_emacs() { # {{{1
         "$@"
 }
 
+koopa::uninstall_python_packages() { # {{{1
+    # """
+    # Uninstall Python packages.
+    # @note Updated 2021-06-14.
+    # """
+    koopa::uninstall_app \
+        --name-fancy='Python packages' \
+        --name='python-packages' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_rust_packages() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Rust packages' \
+        --name='rust-packages' \
+        --no-link \
+        "$@"
+}
+
 koopa::uninstall_sed() { # {{{1
     koopa::uninstall_app \
         --name='sed' \

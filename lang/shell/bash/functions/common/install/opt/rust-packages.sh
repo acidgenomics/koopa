@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_rust_packages() { # {{{1
-    koopa::install_app_packages \
-        --name-fancy='Rust' \
-        --name='rust' \
-        "$@"
-}
-
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
@@ -77,42 +70,5 @@ koopa:::install_rust_packages() { # {{{1
         esac
         "$cargo" install "$pkg" "${args[@]}"
     done
-    return 0
-}
-
-koopa::uninstall_rust_packages() { # {{{1
-    # """
-    # Uninstall Rust packages.
-    # @note Updated 2021-06-14.
-    # """
-    koopa::uninstall_app \
-        --name-fancy='Rust packages' \
-        --name='rust-packages' \
-        --no-link \
-        "$@"
-}
-
-koopa::update_rust_packages() { # {{{1
-    koopa::update_app \
-        --name-fancy='Rust packages' \
-        --name='rust-packages' \
-        "$@"
-}
-
-koopa:::update_rust_packages() { # {{{1
-    # """
-    # Update Rust packages.
-    # @note Updated 2021-10-05.
-    # @seealso
-    # - https://crates.io/crates/cargo-update
-    # - https://github.com/nabijaczleweli/cargo-update
-    # """
-    local cargo
-    koopa::configure_rust
-    koopa::activate_rust
-    export RUST_BACKTRACE=1
-    cargo="$(koopa::locate_cargo)"
-    koopa::add_to_path_start "$(koopa::dirname "$cargo")"
-    "$cargo" install-update -a
     return 0
 }
