@@ -14,7 +14,7 @@ koopa:::update_python_packages() { # {{{1
         [cut]="$(koopa::locate_cut)"
     )
     readarray -t pkgs <<< "$( \
-        "$(koopa::python_pip_outdated)" \
+        koopa::print "$(koopa::python_pip_outdated)" \
         | "${app[cut]}" -d '=' -f 1 \
     )"
     if koopa::is_array_empty "${pkgs[@]:-}"
