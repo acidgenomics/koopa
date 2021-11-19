@@ -429,10 +429,24 @@ koopa::install_prelude_emacs() { # {{{1
         "$@"
 }
 
+koopa::install_python_packages() { # {{{1
+    koopa::install_app_packages \
+        --name-fancy='Python' \
+        --name='python' \
+        "$@"
+}
+
 koopa::install_r_koopa() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::r_koopa 'header'
     return 0
+}
+
+koopa::install_rust_packages() { # {{{1
+    koopa::install_app_packages \
+        --name-fancy='Rust' \
+        --name='rust' \
+        "$@"
 }
 
 koopa::install_sed() { # {{{1

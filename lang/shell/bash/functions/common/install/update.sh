@@ -31,6 +31,20 @@ koopa::update_perl_packages() { # {{{1
     koopa::install_perl_packages "$@"
 }
 
+koopa::update_python_packages() { # {{{1
+    koopa::update_app \
+        --name='python-packages' \
+        --name-fancy='Python packages' \
+        "$@"
+}
+
+koopa::update_rust_packages() { # {{{1
+    koopa::update_app \
+        --name-fancy='Rust packages' \
+        --name='rust-packages' \
+        "$@"
+}
+
 koopa::update_system() { # {{{1
     # """
     # Update system installation.
