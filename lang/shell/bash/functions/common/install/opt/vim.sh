@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_vim() { # {{{1
-    koopa::install_app \
-        --name-fancy='Vim' \
-        --name='vim' \
-        "$@"
-}
-
 koopa:::install_vim() { # {{{1
     # """
     # Install Vim.
@@ -71,11 +64,4 @@ koopa:::install_vim() { # {{{1
     # > "$make" test
     "$make" install
     return 0
-}
-
-koopa::uninstall_vim() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='Vim' \
-        --name='vim' \
-        "$@"
 }

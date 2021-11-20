@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] macOS success.
-
-koopa::install_pkg_config() { # {{{1
-    koopa::install_app \
-        --name='pkg-config' \
-        "$@"
-}
-
 koopa:::install_pkg_config() { # {{{1
     # """
     # Install pkg-config.
@@ -41,10 +33,4 @@ koopa:::install_pkg_config() { # {{{1
     "$make" --jobs="$jobs"
     "$make" install
     return 0
-}
-
-koopa::uninstall_pkg_config() { # {{{1
-    koopa::uninstall_app \
-        --name='pkg-config' \
-        "$@"
 }

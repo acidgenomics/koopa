@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to finish consolidation of wrappers here.
-# FIXME Consider improving error messages when user attempts to redefine
-# an internally defined value (e.g. '--version' when not allowed).
-
 koopa::install_anaconda() { # {{{1
     koopa::install_app \
         --name-fancy='Anaconda' \
@@ -419,6 +415,21 @@ koopa::install_perl_packages() { # {{{1
         "$@"
 }
 
+koopa::install_perlbrew() { # {{{1
+    koopa::install_app \
+        --name-fancy='Perlbrew' \
+        --name='perlbrew' \
+        --no-link \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::install_pkg_config() { # {{{1
+    koopa::install_app \
+        --name='pkg-config' \
+        "$@"
+}
+
 koopa::install_prelude_emacs() { # {{{1
     koopa::install_app \
         --name-fancy='Prelude Emacs' \
@@ -429,6 +440,30 @@ koopa::install_prelude_emacs() { # {{{1
         "$@"
 }
 
+koopa::install_proj() { # {{{1
+    koopa::install_app \
+        --name-fancy='PROJ' \
+        --name='proj' \
+        --no-link \
+        "$@"
+}
+
+koopa::install_pyenv() { # {{{1
+    koopa::install_app \
+        --name='pyenv' \
+        --no-link \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::install_python() { # {{{1
+    koopa::install_app \
+        --name-fancy='Python' \
+        --name='python' \
+        "$@"
+    koopa::configure_python
+}
+
 koopa::install_python_packages() { # {{{1
     koopa::install_app_packages \
         --name-fancy='Python' \
@@ -436,10 +471,84 @@ koopa::install_python_packages() { # {{{1
         "$@"
 }
 
+koopa::install_r() { # {{{1
+    koopa::install_app \
+        --name-fancy='R' \
+        --name='r' \
+        "$@"
+}
+
+koopa::install_r_cmd_check() { # {{{1
+    koopa::install_app \
+        --name-fancy='R CMD check' \
+        --name='r-cmd-check' \
+        --no-link \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::install_r_devel() { # {{{1
+    koopa::install_app \
+        --name-fancy='R-devel' \
+        --name='r-devel' \
+        "$@"
+}
+
 koopa::install_r_koopa() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::r_koopa 'header'
     return 0
+}
+
+koopa::install_r_packages() { # {{{1
+    koopa::install_app_packages \
+        --name-fancy='R' \
+        --name='r' \
+        "$@"
+}
+
+koopa::install_rbenv() { # {{{1
+    koopa::install_app \
+        --name='rbenv' \
+        --no-link \
+        --version='rolling' \
+        "$@"
+}
+
+koopa::install_rmate() { # {{{1
+    koopa::install_app \
+        --name='rmate' \
+        "$@"
+}
+
+koopa::install_rsync() { # {{{1
+    koopa::install_app \
+        --name='rsync' \
+        "$@"
+}
+
+koopa::install_ruby() { # {{{1
+    koopa::install_app \
+        --name-fancy='Ruby' \
+        --name='ruby' \
+        "$@"
+    koopa::configure_ruby
+}
+
+koopa::install_ruby_packages() { # {{{1
+    koopa::install_app_packages \
+        --name-fancy='Ruby' \
+        --name='ruby' \
+        "$@"
+}
+
+koopa::install_rust() { # {{{1
+    koopa::install_app \
+        --name-fancy='Rust' \
+        --name='rust' \
+        --no-link \
+        --version='rolling' \
+        "$@"
 }
 
 koopa::install_rust_packages() { # {{{1
@@ -452,6 +561,26 @@ koopa::install_rust_packages() { # {{{1
 koopa::install_sed() { # {{{1
     koopa:::install_gnu_app \
         --name='sed' \
+        "$@"
+}
+
+koopa::install_shellcheck() { # {{{1
+    koopa::install_app \
+        --name-fancy='ShellCheck' \
+        --name='shellcheck' \
+        "$@"
+}
+
+koopa::install_shunit2() { # {{{1
+    koopa::install_app \
+        --name-fancy='shUnit2' \
+        --name='shunit2' \
+        "$@"
+}
+
+koopa::install_singularity() { # {{{1
+    koopa::install_app \
+        --name='singularity' \
         "$@"
 }
 
@@ -475,6 +604,26 @@ koopa::install_spacevim() { # {{{1
         "$@"
 }
 
+koopa::install_sqlite() { # {{{1
+    koopa::install_app \
+        --name-fancy='SQLite' \
+        --name='sqlite' \
+        "$@"
+}
+
+koopa::install_subversion() { # {{{1
+    koopa::install_app \
+        --name='subversion' \
+        "$@"
+}
+
+koopa::install_taglib() { # {{{1
+    koopa::install_app \
+        --name-fancy='TagLib' \
+        --name='taglib' \
+        "$@"
+}
+
 koopa::install_tar() { # {{{1
     koopa:::install_gnu_app \
         --name='tar' \
@@ -494,4 +643,38 @@ koopa::install_texinfo() { # {{{1
     koopa:::install_gnu_app \
         --name='texinfo' \
         "$@"
+}
+
+koopa::install_the_silver_searcher() { # {{{1
+    koopa::install_app \
+        --name='the-silver-searcher' \
+        "$@"
+}
+
+koopa::install_tmux() { # {{{1
+    koopa::install_app \
+        --name='tmux' \
+        "$@"
+}
+
+koopa::install_udunits() { # {{{1
+    koopa::install_app \
+        --name='udunits' \
+        "$@"
+}
+
+koopa::install_vim() { # {{{1
+    koopa::install_app \
+        --name-fancy='Vim' \
+        --name='vim' \
+        "$@"
+}
+
+koopa::install_zsh() { # {{{1
+    koopa::install_app \
+        --name-fancy='Zsh' \
+        --name='zsh' \
+        "$@"
+    koopa::fix_zsh_permissions
+    return 0
 }

@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_perlbrew() { # {{{1
-    koopa::install_app \
-        --name-fancy='Perlbrew' \
-        --name='perlbrew' \
-        --no-link \
-        --version='rolling' \
-        "$@"
-}
-
 koopa:::install_perlbrew() { # {{{1
     # """
     # Install Perlbrew.
@@ -29,21 +20,7 @@ koopa:::install_perlbrew() { # {{{1
     "./${file}"
 }
 
-koopa::uninstall_perlbrew() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='Perlbrew' \
-        --name='perlbrew' \
-        --no-link \
-        "$@"
-}
-
-koopa::update_perlbrew() { # {{{1
-    koopa::update_app \
-        --name='perlbrew' \
-        --name-fancy='Perlbrew' \
-        "$@"
-}
-
+# FIXME Need to locate perlbrew.
 koopa:::update_perlbrew() { # {{{1
     # """
     # Update Perlbrew.

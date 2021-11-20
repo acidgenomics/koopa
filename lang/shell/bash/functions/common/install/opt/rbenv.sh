@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_rbenv() { # {{{1
-    koopa::install_app \
-        --name='rbenv' \
-        --no-link \
-        --version='rolling' \
-        "$@"
-}
-
 koopa:::install_rbenv() { # {{{1
     # """
     # Install rbenv.
@@ -24,19 +16,6 @@ koopa:::install_rbenv() { # {{{1
         'https://github.com/sstephenson/ruby-build.git' \
         "${prefix}/plugins/ruby-build"
     return 0
-}
-
-koopa::uninstall_rbenv() { # {{{1
-    koopa::uninstall_app \
-        --name='rbenv' \
-        --no-link \
-        "$@"
-}
-
-koopa::update_rbenv() { # {{{1
-    koopa::update_app \
-        --name='rbenv' \
-        "$@"
 }
 
 koopa:::update_rbenv() { # {{{1

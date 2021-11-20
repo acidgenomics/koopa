@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_ruby_packages() { # {{{1
-    koopa::install_app_packages \
-        --name-fancy='Ruby' \
-        --name='ruby' \
-        "$@"
-}
-
 koopa:::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
@@ -58,24 +51,4 @@ koopa:::install_ruby_packages() { # {{{1
         "$gem" cleanup
     fi
     return 0
-}
-
-koopa::uninstall_ruby_packages() { # {{{1
-    # """
-    # Uninstall Ruby packages.
-    # @note Updated 2021-06-14.
-    # """
-    koopa::uninstall_app \
-        --name-fancy='Ruby packages' \
-        --name='ruby-packages' \
-        --no-link \
-        "$@"
-}
-
-koopa::update_ruby_packages() {  # {{{1
-    # """
-    # Update Ruby packages.
-    # @note Updated 2021-02-15.
-    # """
-    koopa::install_ruby_packages "$@"
 }

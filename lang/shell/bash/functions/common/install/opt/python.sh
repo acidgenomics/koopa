@@ -42,14 +42,6 @@ koopa::configure_python() { #{{{1
     return 0
 }
 
-koopa::install_python() { # {{{1
-    koopa::install_app \
-        --name-fancy='Python' \
-        --name='python' \
-        "$@"
-    koopa::configure_python
-}
-
 koopa:::install_python() { # {{{1
     # """
     # Install Python.
@@ -100,11 +92,4 @@ koopa:::install_python() { # {{{1
     python="${prefix}/bin/${name}${minor_version}"
     koopa::assert_is_file "$python"
     return 0
-}
-
-koopa::uninstall_python() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='Python' \
-        --name='python' \
-        "$@"
 }

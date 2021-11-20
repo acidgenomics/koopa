@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-koopa::install_wget() { # {{{1
+# FIXME Need to wrap this.
+koopa:::install_wget() { # {{{1
     # """
     # Install wget.
-    # @note Updated 2021-05-10.
+    # @note Updated 2021-11-19.
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/wget.rb
     # """
     local conf_args gcc_version install_args pkgs pkgs_string
-    install_args=()
     conf_args=()
+    install_args=()
     if koopa::is_linux
     then
         conf_args+=(
@@ -29,6 +30,7 @@ koopa::install_wget() { # {{{1
             'openssl'
             'pkg-config'
         )
+        # FIXME Rework this approach, supporting multiple flags instead.
         pkgs_string="$(koopa::paste0 ',' "${pkgs[@]}")"
         install_args+=(
             "--homebrew-opt=${pkgs_string}"
@@ -41,15 +43,9 @@ koopa::install_wget() { # {{{1
             '--without-libpsl'
         )
     fi
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='wget' \
         "${install_args[@]}" \
         "${conf_args[@]}" \
-        "$@"
-}
-
-koopa::uninstall_wget() { # {{{1
-    koopa::uninstall_app \
-        --name='wget' \
         "$@"
 }

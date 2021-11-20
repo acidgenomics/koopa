@@ -231,11 +231,11 @@ koopa::uninstall_julia_packages() { # {{{1
 }
 
 koopa::uninstall_koopa() { # {{{1
-    # """
-    # Uninstall koopa.
-    # @note Updated 2020-06-24.
-    # """
-    "$(koopa::koopa_prefix)/uninstall" "$@"
+    local app
+    declare -A app=(
+        [bash]="$(koopa::locate_bash)"
+    )
+    "${app[bash]}" "$(koopa::koopa_prefix)/uninstall" "$@"
     return 0
 }
 
@@ -321,7 +321,8 @@ koopa::uninstall_node_packages() { # {{{1
 }
 
 koopa::uninstall_openjdk() { # {{{1
-    local default_prefix
+    local dict
+    declare -A dict
     koopa::uninstall_app \
         --name-fancy='OpenJDK' \
         --name='openjdk' \
@@ -329,10 +330,10 @@ koopa::uninstall_openjdk() { # {{{1
         "$@"
     if koopa::is_linux
     then
-        default_prefix='/usr/lib/jvm/default-java'
-        if [[ -d "$default_prefix" ]]
+        dict[default_java]='/usr/lib/jvm/default-java'
+        if [[ -d "${dict[default_java]}" ]]
         then
-            koopa::linux_java_update_alternatives "$default_prefix"
+            koopa::linux_java_update_alternatives "${dict[default_java]}"
         fi
     fi
     return 0
@@ -386,6 +387,20 @@ koopa::uninstall_perl_packages() { # {{{1
         "$@"
 }
 
+koopa::uninstall_perlbrew() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Perlbrew' \
+        --name='perlbrew' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_pkg_config() { # {{{1
+    koopa::uninstall_app \
+        --name='pkg-config' \
+        "$@"
+}
+
 koopa::uninstall_prelude_emacs() { # {{{1
     koopa::uninstall_app \
         --name-fancy='Prelude Emacs' \
@@ -395,14 +410,103 @@ koopa::uninstall_prelude_emacs() { # {{{1
         "$@"
 }
 
+koopa::uninstall_proj() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='PROJ' \
+        --name='proj' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_pyenv() { # {{{1
+    koopa::uninstall_app \
+        --name='pyenv' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_python() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Python' \
+        --name='python' \
+        "$@"
+}
+
 koopa::uninstall_python_packages() { # {{{1
-    # """
-    # Uninstall Python packages.
-    # @note Updated 2021-06-14.
-    # """
     koopa::uninstall_app \
         --name-fancy='Python packages' \
         --name='python-packages' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_r() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='R' \
+        --name='r' \
+        "$@"
+}
+
+koopa::uninstall_r_cmd_check() { # {{{1
+    koopa::uninstall_app \
+        --name='r-cmd-check' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_r_devel() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='R-devel' \
+        --name='r-devel' \
+        "$@"
+}
+
+koopa::uninstall_r_packages() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='R packages' \
+        --name='r-packages' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_rbenv() { # {{{1
+    koopa::uninstall_app \
+        --name='rbenv' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_rmate() { # {{{1
+    koopa::uninstall_app \
+        --name='rmate' \
+        "$@"
+}
+
+koopa::uninstall_rsync() { # {{{1
+    koopa::uninstall_app \
+        --name='rsync' \
+        "$@"
+}
+
+koopa::uninstall_ruby() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Ruby' \
+        --name='ruby' \
+        "$@"
+}
+
+koopa::uninstall_ruby_packages() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Ruby packages' \
+        --name='ruby-packages' \
+        --no-link \
+        "$@"
+}
+
+koopa::uninstall_rust() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Rust' \
+        --name='rust' \
         --no-link \
         "$@"
 }
@@ -418,6 +522,26 @@ koopa::uninstall_rust_packages() { # {{{1
 koopa::uninstall_sed() { # {{{1
     koopa::uninstall_app \
         --name='sed' \
+        "$@"
+}
+
+koopa::uninstall_shellcheck() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='ShellCheck' \
+        --name='shellcheck' \
+        "$@"
+}
+
+koopa::uninstall_shunit2() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='shUnit2' \
+        --name='shunit2' \
+        "$@"
+}
+
+koopa::uninstall_singularity() { # {{{1
+    koopa::uninstall_app \
+        --name='singularity' \
         "$@"
 }
 
@@ -439,6 +563,26 @@ koopa::uninstall_spacevim() { # {{{1
         "$@"
 }
 
+koopa::uninstall_sqlite() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='SQLite' \
+        --name='sqlite' \
+        "$@"
+}
+
+koopa::uninstall_subversion() { # {{{1
+    koopa::uninstall_app \
+        --name='subversion' \
+        "$@"
+}
+
+koopa::uninstall_taglib() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='TagLib' \
+        --name='taglib' \
+        "$@"
+}
+
 koopa::uninstall_tar() { # {{{1
     koopa::uninstall_app \
         --name='tar' \
@@ -448,5 +592,43 @@ koopa::uninstall_tar() { # {{{1
 koopa::uninstall_texinfo() { # {{{1
     koopa::uninstall_app \
         --name='texinfo' \
+        "$@"
+}
+
+koopa::uninstall_the_silver_searcher() { # {{{1
+    koopa::uninstall_app \
+        --name='the-silver-searcher' \
+        "$@"
+}
+
+koopa::uninstall_tmux() { # {{{1
+    koopa::uninstall_app \
+        --name='tmux' \
+        "$@"
+}
+
+koopa::uninstall_udunits() { # {{{1
+    koopa::uninstall_app \
+        --name='udunits' \
+        "$@"
+}
+
+koopa::uninstall_vim() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Vim' \
+        --name='vim' \
+        "$@"
+}
+
+koopa::uninstall_wget() { # {{{1
+    koopa::uninstall_app \
+        --name='wget' \
+        "$@"
+}
+
+koopa::uninstall_zsh() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy="Zsh" \
+        --name='zsh' \
         "$@"
 }

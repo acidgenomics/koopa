@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_singularity() { # {{{1
-    koopa::install_app \
-        --name='singularity' \
-        "$@"
-}
-
 koopa:::install_singularity() { # {{{1
     # """
     # Install Singularity.
@@ -36,8 +30,3 @@ v${version}/${file}"
     return 0
 }
 
-koopa::uninstall_singularity() { # {{{1
-    koopa::uninstall_app \
-        --name='singularity' \
-        "$@"
-}
