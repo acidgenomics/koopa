@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_r_packages() { # {{{1
-    koopa::install_app_packages \
-        --name-fancy='R' \
-        --name='r' \
-        "$@"
-}
-
 koopa:::install_r_packages() { # {{{1
     # """
     # Install R packages.
@@ -15,25 +8,6 @@ koopa:::install_r_packages() { # {{{1
     koopa::configure_r
     koopa::r_koopa 'cliInstallRPackages' "$@"
     return 0
-}
-
-koopa::uninstall_r_packages() { # {{{1
-    # """
-    # Uninstall R packages.
-    # @note Updated 2021-06-14.
-    # """
-    koopa::uninstall_app \
-        --name-fancy='R packages' \
-        --name='r-packages' \
-        --no-link \
-        "$@"
-}
-
-koopa::update_r_packages() { # {{{1
-    koopa::update_app \
-        --name-fancy='R packages' \
-        --name='r-packages' \
-        "$@"
 }
 
 koopa:::update_r_packages() { # {{{1

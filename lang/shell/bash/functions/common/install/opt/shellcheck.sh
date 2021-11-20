@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_shellcheck() { # {{{1
-    koopa::install_app \
-        --name-fancy='ShellCheck' \
-        --name='shellcheck' \
-        "$@"
-}
-
 koopa:::install_shellcheck() { # {{{1
     # """
     # Install ShellCheck.
@@ -30,11 +23,4 @@ v${version}/${file}"
     koopa::extract "$file"
     koopa::cp "${name}-v${version}/${name}" "${prefix}/bin"
     return 0
-}
-
-koopa::uninstall_shellcheck() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='ShellCheck' \
-        --name='shellcheck' \
-        "$@"
 }

@@ -2,7 +2,7 @@
 
 # FIXME Need to wrap this.
 # FIXME Also check that Xcode CLT is installed here before proceeding on macOS.
-koopa::install_homebrew() { # {{{1
+koopa:::install_homebrew() { # {{{1
     # """
     # Install Homebrew.
     # @note Updated 2021-07-28.
@@ -48,7 +48,7 @@ koopa::install_homebrew() { # {{{1
 }
 
 # FIXME Need to wrap this.
-koopa::install_homebrew_bundle() { # {{{1
+koopa:::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
     # @note Updated 2021-10-27.
@@ -105,7 +105,7 @@ koopa::install_homebrew_bundle() { # {{{1
 }
 
 # FIXME Need to wrap this.
-koopa::uninstall_homebrew() { # {{{1
+koopa:::uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
     # @note Updated 2021-07-28.
@@ -146,7 +146,7 @@ koopa::uninstall_homebrew() { # {{{1
 }
 
 # FIXME Need to wrap this.
-koopa::update_homebrew() { # {{{1
+koopa:::update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
     # @note Updated 2021-10-27.
