@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_rmate() { # {{{1
-    koopa::install_app \
-        --name='rmate' \
-        "$@"
-}
-
 koopa:::install_rmate() { # {{{1
     # """
     # Install rmate.
@@ -24,10 +18,4 @@ koopa:::install_rmate() { # {{{1
     koopa::mkdir "${prefix}/bin"
     koopa::cp "$name" "${prefix}/bin"
     return 0
-}
-
-koopa::uninstall_rmate() { # {{{1
-    koopa::uninstall_app \
-        --name='rmate' \
-        "$@"
 }

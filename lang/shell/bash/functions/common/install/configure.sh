@@ -20,8 +20,8 @@ koopa::configure_nim() { # {{{1
     koopa::configure_app_packages \
         --name-fancy='Nim' \
         --name='nim' \
-        --which-app="$(koopa::locate_nim)"
-    return 0
+        --which-app="$(koopa::locate_nim)" \
+        "$@"
 }
 
 koopa::configure_node() { # {{{1
@@ -29,6 +29,28 @@ koopa::configure_node() { # {{{1
         --name-fancy='Node.js' \
         --name='node' \
         --which-app="$(koopa::locate_node)" \
+        "$@"
+}
+
+koopa::configure_ruby() { # {{{1
+    koopa::configure_app_packages \
+        --name-fancy='Ruby' \
+        --name='ruby' \
+        --which-app="$(koopa::locate_ruby)" \
+        "$@"
+    koopa::rm "${HOME}/.gem"
+    return 0
+}
+
+koopa::configure_rust() { # {{{1
+    # """
+    # Configure Rust.
+    # @note Updated 2021-09-17.
+    # """
+    koopa::configure_app_packages \
+        --name-fancy='Rust' \
+        --name='rust' \
+        --version='rolling' \
         "$@"
 }
 

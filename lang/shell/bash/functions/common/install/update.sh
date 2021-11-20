@@ -31,10 +31,54 @@ koopa::update_perl_packages() { # {{{1
     koopa::install_perl_packages "$@"
 }
 
+koopa::update_perlbrew() { # {{{1
+    koopa::update_app \
+        --name='perlbrew' \
+        --name-fancy='Perlbrew' \
+        "$@"
+}
+
+koopa::update_pyenv() { # {{{1
+    koopa::update_app \
+        --name='pyenv' \
+        "$@"
+}
+
 koopa::update_python_packages() { # {{{1
     koopa::update_app \
         --name='python-packages' \
         --name-fancy='Python packages' \
+        "$@"
+}
+
+koopa::update_r_cmd_check() { # {{{1
+    koopa::update_app \
+        --name='r-cmd-check' \
+        --name-fancy='R CMD check' \
+        "$@"
+}
+
+koopa::update_r_packages() { # {{{1
+    koopa::update_app \
+        --name-fancy='R packages' \
+        --name='r-packages' \
+        "$@"
+}
+
+koopa::update_rbenv() { # {{{1
+    koopa::update_app \
+        --name='rbenv' \
+        "$@"
+}
+
+koopa::update_ruby_packages() {  # {{{1
+    koopa::install_ruby_packages "$@"
+}
+
+koopa::update_rust() { # {{{1
+    koopa::update_app \
+        --name-fancy='Rust' \
+        --name='rust' \
         "$@"
 }
 

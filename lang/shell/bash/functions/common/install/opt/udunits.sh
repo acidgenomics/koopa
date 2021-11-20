@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_udunits() { # {{{1
-    koopa::install_app \
-        --name='udunits' \
-        "$@"
-}
-
 koopa:::install_udunits() { # {{{1
     # """
     # Install udunits.
@@ -29,10 +23,4 @@ koopa:::install_udunits() { # {{{1
     # > "$make" check
     "$make" install
     return 0
-}
-
-koopa::uninstall_udunits() { # {{{1
-    koopa::uninstall_app \
-        --name='udunits' \
-        "$@"
 }

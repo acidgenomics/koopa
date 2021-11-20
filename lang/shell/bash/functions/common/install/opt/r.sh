@@ -46,13 +46,6 @@ koopa::configure_r() { # {{{1
     return 0
 }
 
-koopa::install_r() { # {{{1
-    koopa::install_app \
-        --name-fancy='R' \
-        --name='r' \
-        "$@"
-}
-
 koopa:::install_r() { # {{{1
     # """
     # Install R.
@@ -150,11 +143,4 @@ koopa:::install_r() { # {{{1
     koopa::assert_is_file "$r"
     koopa::configure_r "$r"
     return 0
-}
-
-koopa::uninstall_r() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='R' \
-        --name='r' \
-        "$@"
 }

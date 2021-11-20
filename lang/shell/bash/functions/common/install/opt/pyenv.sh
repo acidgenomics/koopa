@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_pyenv() { # {{{1
-    koopa::install_app \
-        --name='pyenv' \
-        --no-link \
-        --version='rolling' \
-        "$@"
-}
-
 koopa:::install_pyenv() { # {{{1
     # """
     # Install pyenv.
@@ -18,19 +10,6 @@ koopa:::install_pyenv() { # {{{1
     url='https://github.com/pyenv/pyenv.git'
     koopa::git_clone "$url" "$prefix"
     return 0
-}
-
-koopa::uninstall_pyenv() { # {{{1
-    koopa::uninstall_app \
-        --name='pyenv' \
-        --no-link \
-        "$@"
-}
-
-koopa::update_pyenv() { # {{{1
-    koopa::update_app \
-        --name='pyenv' \
-        "$@"
 }
 
 koopa:::update_pyenv() { # {{{1

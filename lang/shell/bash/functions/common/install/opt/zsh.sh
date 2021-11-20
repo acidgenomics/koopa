@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::install_zsh() { # {{{1
-    koopa::install_app \
-        --name-fancy='Zsh' \
-        --name='zsh' \
-        "$@"
-    koopa::fix_zsh_permissions
-    return 0
-}
-
 koopa:::install_zsh() { # {{{1
     # """
     # Install Zsh.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-19.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -68,11 +59,4 @@ ${name}/${name}/${version}/${file}"
     fi
     [[ "${link_app:-0}" -eq 1 ]] && koopa::enable_shell "$name"
     return 0
-}
-
-koopa::uninstall_zsh() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy="Zsh" \
-        --name='zsh' \
-        "$@"
 }

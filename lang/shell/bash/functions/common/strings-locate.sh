@@ -980,7 +980,6 @@ koopa::locate_ruby() { # {{{1
     koopa::locate_app 'ruby'
 }
 
-# FIXME Consider reworking opt duplication here.
 koopa::locate_rustc() { # {{{1
     # """
     # Locate Rust compiler ('rustc').
@@ -990,6 +989,17 @@ koopa::locate_rustc() { # {{{1
         --brew-opt='rust' \
         --koopa-opt='rust' \
         --name='rustc'
+}
+
+koopa::locate_rustup() { # {{{1
+    # """
+    # Locate Rust compiler ('rustc').
+    # @note Updated 2021-11-19.
+    # """
+    koopa::locate_app \
+        --brew-opt='rustup' \
+        --koopa-opt='rust-packages' \
+        --name='rustup'
 }
 
 koopa::locate_sed() { # {{{1

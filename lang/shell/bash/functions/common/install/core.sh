@@ -135,6 +135,9 @@ koopa::find_app_version() { # {{{1
 
 # FIXME Need to rethink our auto-prefix and auto-version approach here.
 # FIXME Need to rename this inside of function calls
+# FIXME Consider improving error messages when user attempts to redefine
+# an internally defined value (e.g. '--version' when not allowed).
+
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.

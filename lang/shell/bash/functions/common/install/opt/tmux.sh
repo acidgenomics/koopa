@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::install_tmux() { # {{{1
-    koopa::install_app \
-        --name='tmux' \
-        "$@"
-}
-
 koopa:::install_tmux() { # {{{1
     # """
     # Install Tmux.
@@ -27,10 +21,4 @@ ${version}/${file}"
     "$make" --jobs="$jobs"
     "$make" install
     return 0
-}
-
-koopa::uninstall_tmux() { # {{{1
-    koopa::uninstall_app \
-        --name='tmux' \
-        "$@"
 }
