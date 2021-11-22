@@ -41,6 +41,10 @@ koopa::macos_locate_mas() { # {{{1
     koopa::locate_app 'mas'
 }
 
+koopa::macos_locate_nfsstat() { # {{{1
+    koopa::locate_app '/usr/bin/nfsstat'
+}
+
 koopa::macos_locate_nvram() { # {{{1
     koopa::locate_app '/usr/sbin/nvram'
 }
