@@ -209,6 +209,14 @@ koopa::uninstall_hdf5() { # {{{1
         "$@"
 }
 
+koopa::uninstall_homebrew() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Homebrew' \
+        --name='homebrew' \
+        --system \
+        "$@"
+}
+
 koopa::uninstall_htop() { # {{{1
     koopa::uninstall_app \
         --name='htop' \

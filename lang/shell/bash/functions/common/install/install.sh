@@ -243,6 +243,22 @@ koopa::install_hdf5() { # {{{1
         "$@"
 }
 
+koopa::install_homebrew() { # {{{1
+    koopa::install_app \
+        --name-fancy='Homebrew' \
+        --name='homebrew' \
+        --system \
+        "$@"
+}
+
+koopa::install_homebrew_bundle() { # {{{1
+    koopa::install_app \
+        --name-fancy='Homebrew bundle' \
+        --name='homebrew-bundle' \
+        --system \
+        "$@"
+}
+
 koopa::install_htop() { # {{{1
     koopa::install_app \
         --name='htop' \
