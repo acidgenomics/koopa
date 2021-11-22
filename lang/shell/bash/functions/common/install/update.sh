@@ -7,6 +7,14 @@ koopa::update_chemacs() { # {{{1
         "$@"
 }
 
+koopa::update_homebrew() { # {{{1
+    koopa::update_app \
+        --name='homebrew' \
+        --name-fancy='Homebrew' \
+        --system \
+        "$@"
+}
+
 koopa::update_julia_packages() { # {{{1
     koopa::install_julia_packages "$@"
 }
