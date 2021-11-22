@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa:::update_chemacs() { # {{{1
+koopa:::update_r_cmd_check() { # {{{1
     # """
-    # Update Chemacs2.
+    # Update r-cmd-check scripts.
     # @note Updated 2021-11-22.
     # """
     local dict

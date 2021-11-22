@@ -851,9 +851,9 @@ supported on macOS."
 koopa::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2021-11-16.
+    # @note Updated 2021-11-22.
     # """
-    local app clean_path_arr dict pkgs
+    local app clean_path_arr dict pkgs pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A app=(
@@ -874,6 +874,7 @@ koopa::update_app() { # {{{1
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     koopa::is_shared_install && dict[shared]=1
+    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -952,10 +953,13 @@ koopa::update_app() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    # FIXME Need to improve our variable checks here.
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
@@ -1012,7 +1016,7 @@ koopa::update_app() { # {{{1
         fi
         # shellcheck disable=SC2030
         export UPDATE_PREFIX="${dict[prefix]}"
-        "${dict[function]}"
+        "${dict[function]}" "$@"
     ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
     koopa::rm "${dict[tmp_dir]}"
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]

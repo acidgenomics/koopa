@@ -11,6 +11,7 @@ koopa:::uninstall_homebrew() { # {{{1
     # - https://docs.brew.sh/FAQ
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
         [yes]="$(koopa::locate_yes)"

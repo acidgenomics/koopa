@@ -3,7 +3,7 @@
 koopa:::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2021-11-22.
+    # @note Updated 2021-11-23.
     #
     # Custom brewfile is supported using a positional argument.
     # """

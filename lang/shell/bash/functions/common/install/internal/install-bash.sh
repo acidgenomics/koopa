@@ -14,6 +14,7 @@ koopa:::install_bash() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [curl]="$(koopa::locate_curl)"
         [cut]="$(koopa::locate_cut)"
