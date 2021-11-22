@@ -3,9 +3,10 @@
 koopa:::update_rust() { # {{{1
     # """
     # Install Rust.
-    # @note Updated 2021-11-19.
+    # @note Updated 2021-11-22.
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     koopa::activate_rust
     declare -A app=(
         [rustup]="$(koopa::locate_rustup)"

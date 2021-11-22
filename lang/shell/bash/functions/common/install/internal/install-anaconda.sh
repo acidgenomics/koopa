@@ -6,6 +6,7 @@ koopa:::install_anaconda() { # {{{1
     # @note Updated 2021-11-18.
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [bash]="$(koopa::locate_bash)"
     )

@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME Need to ensure that koopa is in path.
 koopa:::update_koopa() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-22.
     #
     # Update of pinned stable releases is intentionally not supported.
     # """
     local dict
+    koopa::assert_has_no_args "$#"
     declare -A dict=(
         [dotfiles_prefix]="$(koopa::dotfiles_prefix)"
         [dotfiles_private_prefix]="$(koopa::dotfiles_private_prefix)"
@@ -20,7 +20,6 @@ koopa:::update_koopa() { # {{{1
         return 1
     fi
     koopa::sys_set_permissions --recursive "${dict[koopa_prefix]}"
-    # FIXME This is pulling the repo twice, what's up with that?
     koopa::sys_git_pull
     koopa::update_dotfiles \
         "${dict[dotfiles_prefix]}" \
