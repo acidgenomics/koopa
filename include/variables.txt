@@ -287,7 +287,7 @@ poetry="1.1.11"
 proj="8.2.0"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.2.0"
+pyenv="2.2.1"
 
 # https://www.python.org/downloads/
 # > python="3.9.7"
