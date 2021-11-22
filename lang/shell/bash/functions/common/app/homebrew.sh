@@ -3,7 +3,7 @@
 koopa::brew_cleanup() { # {{{1
     # """
     # Clean up Homebrew.
-    # @note Updated 2021-10-27.
+    # @note Updated 2021-11-22.
     # """
     local app
     koopa::assert_has_no_args "$#"
@@ -12,7 +12,7 @@ koopa::brew_cleanup() { # {{{1
     )
     koopa::alert 'Cleaning up Homebrew install.'
     "${app[brew]}" cleanup -s || true
-    koopa::rm "$(brew --cache)"
+    koopa::rm "$("${app[brew]}" --cache)"
     return 0
 }
 
