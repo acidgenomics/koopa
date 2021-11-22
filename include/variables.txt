@@ -185,7 +185,7 @@ imagemagick="7.1.0"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.6.3"
+julia="1.6.4"
 
 # https://github.com/wofr06/lesspipe/
 # FIXME Need to add install support for Linux.
@@ -250,7 +250,7 @@ openssl="3.0.0"
 oracle-instantclient="21.1.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.16.1"
+pandoc="2.16.2"
 
 # https://www.gnu.org/software/parallel/
 parallel="20211022"
@@ -567,7 +567,7 @@ ruby-ronn="0.7.3"               # 2010-06-24
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.3"               # homebrew
-rust-broot="1.7.1"              # homebrew; br
+rust-broot="1.7.2"              # homebrew; br
 rust-cargo-update="8.0.0"
 rust-cargo-outdated="0.9.18"    # homebrew
 rust-dog="0.1.0"                # homebrew
