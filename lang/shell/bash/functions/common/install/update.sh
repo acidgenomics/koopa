@@ -7,6 +7,13 @@ koopa::update_chemacs() { # {{{1
         "$@"
 }
 
+koopa::update_doom_emacs() { # {{{1
+    koopa::update_app \
+        --name-fancy='Doom Emacs' \
+        --name='doom-emacs' \
+        "$@"
+}
+
 koopa::update_homebrew() { # {{{1
     koopa::update_app \
         --name='homebrew' \
