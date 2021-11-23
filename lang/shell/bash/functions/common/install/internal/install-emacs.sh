@@ -33,7 +33,6 @@ koopa:::install_emacs() { # {{{1
             'gnutls'
             'pkg-config'
         )
-        # FIXME Support for this needs to be added to our core install handler.
         for pkg in "${pkgs[@]}"
         do
             install_args+=("--homebrew-opt=${pkg}")
