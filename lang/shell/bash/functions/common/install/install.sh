@@ -93,6 +93,7 @@ koopa::install_doom_emacs() { # {{{1
         "$@"
 }
 
+# FIXME Rework private dotfiles installer to use same approach.
 koopa::install_dotfiles() { # {{{1
     local dict
     declare -A dict=(
@@ -110,6 +111,15 @@ koopa::install_dotfiles() { # {{{1
     koopa::assert_is_file "${dict[script]}"
     "${dict[script]}"
     return 0
+}
+
+# FIXME Improve consistency with dotfiles.
+koopa::install_dotfiles_private() { # {{{1
+    koopa::install_app \
+        --name-fancy='Private Dotfiles' \
+        --name='dotfiles-private' \
+        --prefix="$(koopa::dotfiles_private_prefix)" \
+        "$@"
 }
 
 koopa::install_ensembl_perl_api() { # {{{1

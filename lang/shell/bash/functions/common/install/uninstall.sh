@@ -80,6 +80,27 @@ koopa::uninstall_doom_emacs() { # {{{1
         "$@"
 }
 
+# FIXME Need to confirm this works.
+koopa::uninstall_dotfiles() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Dotfiles' \
+        --name='dotfiles' \
+        --prefix="$(koopa::dotfiles_prefix)" \
+        "$@"
+}
+
+# FIXME Need to include dotfiles uninstaller here.
+# FIXME Need to pass the custom prefix in here.
+# FIXME Need to confirm that this works.
+koopa::uninstall_dotfiles_private() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Private Dotfiles' \
+        --name='dotfiles-private' \
+        --no-shared \
+        --prefix="$(koopa::dotfiles_private_prefix)" \
+        "$@"
+}
+
 koopa::uninstall_emacs() { # {{{1
     koopa::uninstall_app \
         --name-fancy='Emacs' \
