@@ -122,6 +122,13 @@ koopa::install_dotfiles_private() { # {{{1
         "$@"
 }
 
+koopa::install_emacs() { # {{{1
+    koopa::install_app \
+        --name-fancy='Emacs' \
+        --name='emacs' \
+        "$@"
+}
+
 koopa::install_ensembl_perl_api() { # {{{1
     koopa::install_app \
         --name-fancy='Ensembl Perl API' \
