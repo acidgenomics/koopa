@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to use app and dict approach here.
 koopa:::install_spacevim() { # {{{1
     # """
     # Install SpaceVim.
@@ -25,26 +26,5 @@ koopa:::install_spacevim() { # {{{1
         koopa::cd "$vimproc_prefix"
         "$make"
     )
-    return 0
-}
-
-# FIXME Need to wrap this.
-# FIXME Need to rework git_pull call.
-koopa::update_spacevim() { # {{{1
-    # """
-    # Update SpaceVim.
-    # @note Updated 2021-06-07.
-    # """
-    local name_fancy prefix
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'emacs'
-    name_fancy='SpaceVim'
-    koopa::alert_update_start "$name_fancy"
-    prefix="$(koopa::spacevim_prefix)"
-    (
-        koopa::cd "$prefix"
-        koopa::git_pull
-    )
-    koopa::alert_update_success "$name_fancy"
     return 0
 }

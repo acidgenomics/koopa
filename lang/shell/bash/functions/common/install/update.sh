@@ -14,6 +14,15 @@ koopa::update_doom_emacs() { # {{{1
         "$@"
 }
 
+koopa::update_dotfiles() { # {{{1
+    koopa::update_app \
+        --name='dotfiles' \
+        --name-fancy='dotfiles' \
+        "$@"
+}
+
+# FIXME Need to add support for dotfiles private.
+
 koopa::update_homebrew() { # {{{1
     koopa::update_app \
         --name='homebrew' \
@@ -101,6 +110,15 @@ koopa::update_rust_packages() { # {{{1
     koopa::update_app \
         --name-fancy='Rust packages' \
         --name='rust-packages' \
+        "$@"
+}
+
+koopa::update_spacevim() { # {{{1
+    koopa::update_app \
+        --name-fancy='SpaceVim' \
+        --name='spacevim' \
+        --no-shared \
+        --prefix="$(koopa::spacevim_prefix)" \
         "$@"
 }
 
