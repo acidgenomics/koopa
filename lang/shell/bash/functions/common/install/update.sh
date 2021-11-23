@@ -62,6 +62,15 @@ koopa::update_perlbrew() { # {{{1
         "$@"
 }
 
+koopa::update_prelude_emacs() { # {{{1
+    koopa::update_app \
+        --name-fancy='Prelude Emacs' \
+        --name='prelude-emacs' \
+        --no-shared \
+        --prefix="$(koopa::prelude_emacs_prefix)" \
+        "$@"
+}
+
 koopa::update_pyenv() { # {{{1
     koopa::update_app \
         --name='pyenv' \
