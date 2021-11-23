@@ -20,6 +20,7 @@ koopa:::install_emacs() { # {{{1
         '--name-fancy=Emacs'
         '--name=emacs'
         '--no-prefix-check'
+        '--quiet'
     )
     conf_args=()
     if koopa::is_linux

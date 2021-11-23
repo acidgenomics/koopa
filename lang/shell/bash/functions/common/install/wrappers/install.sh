@@ -202,6 +202,12 @@ koopa::install_git() { # {{{1
         "$@"
 }
 
+koopa::install_gnu_app() { # {{{1
+    koopa::install_app \
+        --installer='gnu-app' \
+        "$@"
+}
+
 koopa::install_gnupg() { # {{{1
     koopa::install_app \
         --name-fancy='GnuPG suite' \
