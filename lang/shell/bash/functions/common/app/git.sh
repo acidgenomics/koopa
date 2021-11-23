@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Avoid false positives on variable modification inside of subshells.
+# shellcheck disable=SC2030,SC2031
+
 # FIXME This is also called in 'koopa::configure_user', which needs to be adjusted.
 # FIXME Need to add a function to detect whether git repo is detached (e.g. HEAD)
 # state. In that case, koopa::git_pull should skip and inform the user.
@@ -7,9 +10,9 @@
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     # """
-    local app dict dir dirs pos repo repos
+    local app dict dirs pos
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
@@ -51,29 +54,33 @@ koopa::git_checkout_recursive() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
-    for dir in "${dirs[@]}"
-    do
-        dir="$(koopa::realpath "$dir")"
-        readarray -t repos <<< "$( \
-            koopa::find \
-                --glob='.git' \
-                --max-depth=3 \
-                --min-depth=2 \
-                --prefix="$dir" \
-                --sort \
-        )"
-        if ! koopa::is_array_non_empty "${repos[@]:-}"
-        then
-            koopa::stop "Failed to detect any repos in '${dir}'."
-        fi
-        koopa::h1 "Checking out ${#repos[@]} repos in '${dir}'."
-        for repo in "${repos[@]}"
+    koopa::assert_is_dir "${dirs[@]}"
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        local dir
+        for dir in "${dirs[@]}"
         do
-            repo="$(koopa::dirname "$repo")"
-            koopa::h2 "$repo"
-            (
+            local repo repos
+            dir="$(koopa::realpath "$dir")"
+            readarray -t repos <<< "$( \
+                koopa::find \
+                    --glob='.git' \
+                    --max-depth=3 \
+                    --min-depth=2 \
+                    --prefix="$dir" \
+                    --sort \
+            )"
+            if ! koopa::is_array_non_empty "${repos[@]:-}"
+            then
+                koopa::stop "Failed to detect any repos in '${dir}'."
+            fi
+            koopa::h1 "Checking out ${#repos[@]} repos in '${dir}'."
+            for repo in "${repos[@]}"
+            do
                 local dict2
                 declare -A dict2
+                koopa::h2 "$repo"
                 koopa::cd "$repo"
                 dict2[branch]="${dict[branch]}"
                 dict2[default_branch]="$(koopa::git_default_branch)"
@@ -96,9 +103,9 @@ koopa::git_checkout_recursive() { # {{{1
                     "${app[git]}" checkout "${dict2[branch]}"
                 fi
                 "${app[git]}" branch -vv
-            )
+            done
         done
-    done
+    )
     return 0
 }
 
@@ -107,7 +114,7 @@ koopa::git_clone() { # {{{1
     # Quietly clone a git repository.
     # @note Updated 2021-11-23.
     # """
-    local app clone_args dict dict2 pos
+    local app clone_args dict pos
     koopa::assert_has_args_ge "$#" 2
     declare -A app=(
         [git]="$(koopa::locate_git)"
@@ -142,6 +149,7 @@ koopa::git_clone() { # {{{1
     koopa::assert_has_args_ge "$#" 2
     while [[ "$#" -ge 2 ]]
     do
+        local dict2
         declare -A dict2=(
             [repo]="${1:?}"
             [target]="${2:?}"
@@ -196,7 +204,7 @@ koopa::git_default_branch() { # {{{1
     # > koopa::git_default_branch "${HOME}/git/monorepo"
     # # main
     # """
-    local app dict repo repos x
+    local app dict repos
     declare -A app=(
         [git]="$(koopa::locate_git)"
         [sed]="$(koopa::locate_sed)"
@@ -210,8 +218,10 @@ koopa::git_default_branch() { # {{{1
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
+        local repo
         for repo in "${repos[@]}"
         do
+            local x
             koopa::cd "$repo"
             koopa::is_git_repo || return 1
             x="$( \
@@ -223,78 +233,6 @@ koopa::git_default_branch() { # {{{1
             koopa::print "$x"
         done
     )
-    return 0
-}
-
-# FIXME Allow the user to set a path here, and switch dynamically.
-# FIXME Consider allowing parameterization.
-# FIXME Export this as a user-accessible command-line function.
-# FIXME We need to pass in the URL here...currently too confusing.
-# FIXME Need to add a working example for this.
-# FIXME Rework with single subshell here, to avoid performance hit.
-
-koopa::git_init_remote() { # {{{1
-    # """
-    # Initialize a remote Git repository.
-    # @note Updated 2021-11-18.
-    # """
-    local branch git origin
-    koopa::assert_has_args "$#"
-    declare -A app=(
-        [git]="$(koopa::locate_git)"
-    )
-    declare -A dict=(
-        [branch]='main'
-        [origin]='origin'
-    )
-
-    # FIXME Rework with pos approach here.
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--branch='*)
-                branch="${1#*=}"
-                shift 1
-                ;;
-            '--branch')
-                branch="${2:?}"
-                shift 2
-                ;;
-            '--origin='*)
-                origin="${1#*=}"
-                shift 1
-                ;;
-            '--origin')
-                origin="${2:?}"
-                shift 2
-                ;;
-            # Other ------------------------------------------------------------
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
-
-    ## FIXME Rework this.
-    koopa::assert_is_set 'branch' 'origin'
-
-    "$git" init
-    "$git" remote add "$origin" "$origin"
-    "$git" remote -vv
-    "$git" fetch --all
-    koopa::alert "Checking out '${origin}/${branch}' branch."
-    "$git" branch --set-upstream-to="${origin}/${branch}" "$branch"
-    "$git" pull "$origin" "$branch" --allow-unrelated-histories
-    "$git" status
-
-
     return 0
 }
 
