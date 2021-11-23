@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve nested call to 'install_app' to avoid double messages
-# about install start and stop here.
-
-# FIXME It appears that we need to add gnutls to path more clearly here on
-# Debian to get this to install now.
-
 koopa:::install_emacs() { # {{{1
     # """
     # Install Emacs.
