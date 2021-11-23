@@ -13,9 +13,12 @@ koopa:::install_emacs() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # """
     local conf_args dict install_args pkgs pkgs
-    declare -A dict
+    install_args=(
+        '--name-fancy=Emacs'
+        '--name=emacs'
+        '--no-prefix-check'
+    )
     conf_args=()
-    install_args=()
     if koopa::is_linux
     then
         conf_args+=(
@@ -24,6 +27,7 @@ koopa:::install_emacs() { # {{{1
         )
     elif koopa::is_macos
     then
+        declare -A dict
         dict[gcc_version]="$(koopa::variable 'gcc')"
         dict[gcc_maj_ver]="$(koopa::major_version "${dict[maj_ver]}")"
         pkgs=(
@@ -50,8 +54,6 @@ koopa:::install_emacs() { # {{{1
         )
     fi
     koopa::install_gnu_app \
-        --name-fancy='Emacs' \
-        --name='emacs' \
         "${install_args[@]}" \
         "${conf_args[@]}" \
         "$@"
