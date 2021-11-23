@@ -804,17 +804,12 @@ koopa::git_status_recursive() { # {{{1
     return 0
 }
 
-# FIXME Rework, allowing input of multiple git repos here.
-# FIXME Parameterize this, supporting multiple directories.
-# FIXME Consider calling this in our monorepo init script insteaad.
-# FIXME Consider making this user accessible as 'git-submodule-init'.
-
 koopa::git_submodule_init() { # {{{1
     # """
     # Initialize git submodules.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     # """
-    local app repo repos
+    local app repos
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
         [git]="$(koopa::locate_git)"
@@ -825,28 +820,29 @@ koopa::git_submodule_init() { # {{{1
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
+        local repo
         for repo in "${repos[@]}"
         do
-            local array dict lines string
-            koopa::cd "$repo"
-            koopa::assert_is_git_repo
+            local dict lines string
             declare -A dict=(
                 [module_file]='.gitmodules'
             )
-            koopa::assert_is_nonzero_file "${dict[module_file]}"
+            repo="$(koopa::realpath "$repo")"
             koopa::alert "Initializing submodules in '${repo}'."
+            koopa::cd "$repo"
+            koopa::assert_is_git_repo
+            koopa::assert_is_nonzero_file "${dict[module_file]}"
             "${app[git]}" submodule init
-            lines="$( \
+            readarray -t lines <<< "$(
                 "${app[git]}" config \
                     --file "${dict[module_file]}" \
                     --get-regexp '^submodule\..*\.path$' \
             )"
-            readarray -t array <<< "$lines"
-            if ! koopa::is_array_non_empty "${array[@]:-}"
+            if ! koopa::is_array_non_empty "${lines[@]:-}"
             then
                 koopa::stop "Failed to detect submodules in '${repo}'."
             fi
-            for string in "${array[@]}"
+            for string in "${lines[@]}"
             do
                 local dict2
                 declare -A dict2
