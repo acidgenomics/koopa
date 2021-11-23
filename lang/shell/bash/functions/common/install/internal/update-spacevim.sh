@@ -10,7 +10,6 @@ koopa:::update_spacevim() { # {{{1
     declare -A dict=(
         [prefix]="${UPDATE_PREFIX:?}"
     )
-    # FIXME This isn't currently working, need to fix.
     koopa::git_pull "${dict[prefix]}"
     return 0
 }

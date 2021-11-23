@@ -176,11 +176,10 @@ koopa::git_clone() { # {{{1
     return 0
 }
 
-# FIXME Rework with single subshell here, to avoid performance hit.
 koopa::git_default_branch() { # {{{1
     # """
     # Default branch of Git repository.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     #
     # Alternate approach:
     # > x="$( \
@@ -206,9 +205,11 @@ koopa::git_default_branch() { # {{{1
     repos=("$@")
     koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa::assert_is_dir "${repos[@]}"
-    for repo in "${repos[@]}"
-    do
-        (
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        for repo in "${repos[@]}"
+        do
             koopa::cd "$repo"
             koopa::is_git_repo || return 1
             x="$( \
@@ -218,8 +219,8 @@ koopa::git_default_branch() { # {{{1
             )"
             [[ -n "$x" ]] || return 1
             koopa::print "$x"
-        )
-    done
+        done
+    )
     return 0
 }
 
@@ -370,56 +371,10 @@ koopa::git_last_commit_remote() { # {{{1
     return 0
 }
 
-koopa::git_rename_master_to_main() { # {{{1
-    # """
-    # Rename default branch from "master" to "main".
-    # @note Updated 2021-11-18.
-    #
-    # @examples
-    # > koopa::git_rename_master_to_main "${HOME}/git/example"
-    # """
-    local app dict repo repos
-    declare -A app=(
-        [git]="$(koopa::locate_git)"
-    )
-    declare -A dict=(
-        [origin]='origin'
-        [old_branch]='master'
-        [new_branch]='main'
-    )
-    repos=("$@")
-    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa::assert_is_dir "${repos[@]}"
-    # Using a single subshell here to avoid performance hit during looping.
-    # This single subshell is necessary so we don't change working directory.
-    (
-        for repo in "${repos[@]}"
-        do
-            koopa::cd "$repo"
-            koopa::assert_is_git_repo
-            "${app[git]}" branch -m \
-                "${dict[old_branch]}" \
-                "${dict[new_branch]}"
-            "${app[git]}" fetch "${dict[origin]}"
-            "${app[git]}" branch \
-                -u "${dict[origin]}/${dict[new_branch]}" \
-                "${dict[new_branch]}"
-            "${app[git]}" remote set-head "${dict[origin]}" -a
-        done
-    )
-    return 0
-}
-
-# FIXME Allow the user to pull multiple repos in a single call.
-# FIXME Need to allow direct file path input here.
-# FIXME Rework using dict approach.
-# FIXME Manually override 'origin' and 'branch' arguments here.
-# FIXME Ensure we only use single subshell here.
-
 koopa::git_pull() { # {{{1
     # """
     # Pull (update) a git repository.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-23.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
@@ -427,29 +382,80 @@ koopa::git_pull() { # {{{1
     # @seealso
     # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
-    local branch git
-    branch=''
-    [[ "$#" -gt 0 ]] && branch="${*: -1}"
-    koopa::assert_is_git_repo
-    git="$(koopa::locate_git)"
-    koopa::alert "Pulling repo at '${PWD:?}'."
-    "$git" fetch --all
-    "$git" pull "$@"
-    if [[ -s '.gitmodules' ]]
-    then
-        # FIXME Add the path here.
-        koopa::git_submodule_init
-        "$git" submodule --quiet update --init --recursive
-        "$git" submodule --quiet foreach --recursive \
-            "$git" fetch --all --quiet
-        if [[ -n "$branch" ]]
-        then
-            "$git" submodule --quiet foreach --recursive \
-                "$git" checkout "$branch" --quiet
-            "$git" submodule --quiet foreach --recursive \
-                "$git" pull "$@"
-        fi
-    fi
+    local app branch dict dict2
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [branch]=''
+        [origin]='origin'
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--branch='*)
+                branch="${1#*=}"
+                shift 1
+                ;;
+            '--branch')
+                branch="${2:?}"
+                shift 2
+                ;;
+            '--origin='*)
+                origin="${1#*=}"
+                shift 1
+                ;;
+            '--origin')
+                origin="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
+    koopa::assert_is_dir "${repos[@]}"
+    (
+        for repo in "${repos[@]}"
+        do
+            koopa::alert "Pulling repo at '${repo}'."
+            koopa::cd "$repo"
+            koopa::assert_is_git_repo
+            declare -A dict2=(
+                [branch]="${dict[branch]}"
+                [origin]="${dict[origin]}"
+            )
+            if [[ -z "${dict2[branch]}" ]]
+            then
+                dict2[branch]="$(koopa::git_default_branch)"
+            fi
+            "${app[git]}" fetch --all
+            "${app[git]}" pull "${dict2[origin]}" "${dict2[branch]}"
+            if [[ -s '.gitmodules' ]]
+            then
+                koopa::git_submodule_init
+                "${app[git]}" submodule --quiet update --init --recursive
+                "${app[git]}" submodule --quiet foreach --recursive \
+                    "${app[git]}" fetch --all --quiet
+                if [[ -n "${dict2[branch]}" ]]
+                then
+                    "${app[git]}" submodule --quiet foreach --recursive \
+                        "${app[git]}" checkout "${dict2[branch]}" --quiet
+                    "${app[git]}" submodule --quiet foreach --recursive \
+                        "${app[git]}" pull "${dict2[origin]}" "${dict2[branch]}"
+                fi
+            fi
+        done
+    )
     return 0
 }
 
@@ -577,6 +583,46 @@ koopa::git_remote_url() { # {{{1
     x="$("$git" config --get 'remote.origin.url' || true)"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
+    return 0
+}
+
+koopa::git_rename_master_to_main() { # {{{1
+    # """
+    # Rename default branch from "master" to "main".
+    # @note Updated 2021-11-18.
+    #
+    # @examples
+    # > koopa::git_rename_master_to_main "${HOME}/git/example"
+    # """
+    local app dict repo repos
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [origin]='origin'
+        [old_branch]='master'
+        [new_branch]='main'
+    )
+    repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
+    koopa::assert_is_dir "${repos[@]}"
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        for repo in "${repos[@]}"
+        do
+            koopa::cd "$repo"
+            koopa::assert_is_git_repo
+            "${app[git]}" branch -m \
+                "${dict[old_branch]}" \
+                "${dict[new_branch]}"
+            "${app[git]}" fetch "${dict[origin]}"
+            "${app[git]}" branch \
+                -u "${dict[origin]}/${dict[new_branch]}" \
+                "${dict[new_branch]}"
+            "${app[git]}" remote set-head "${dict[origin]}" -a
+        done
+    )
     return 0
 }
 
