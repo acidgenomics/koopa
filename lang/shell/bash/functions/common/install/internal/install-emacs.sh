@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Does this double nesting approach work? Need to debug this?
-# FIXME This is passing '--name-fancy' through to GNU configure in a way
-# that we don't want...rethink?
+# FIXME Need to improve nested call to 'install_app' to avoid double messages
+# about install start and stop here.
+
 koopa:::install_emacs() { # {{{1
     # """
     # Install Emacs.
