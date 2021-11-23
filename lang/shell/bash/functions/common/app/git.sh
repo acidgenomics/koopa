@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# Avoid false positives on variable modification inside of subshells.
-# shellcheck disable=SC2030,SC2031
-
-# FIXME This is also called in 'koopa::configure_user', which needs to be adjusted.
-# FIXME Need to add a function to detect whether git repo is detached (e.g. HEAD)
-# state. In that case, koopa::git_pull should skip and inform the user.
-
 koopa::git_checkout_recursive() { # {{{1
     # """
     # Checkout to a different branch on multiple git repos.
@@ -714,26 +707,38 @@ koopa::git_rm_submodule() { # {{{1
     return 0
 }
 
-# FIXME Rework this.
-# FIXME Allow this to work on multiple git repos in a single call.
 koopa::git_rm_untracked() { # {{{1
     # """
     # Remove untracked files from git repo.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-23.
     # """
-    local git
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_git_repo
-    git="$(koopa::locate_git)"
-    koopa::assert_is_installed 'git'
-    "$git" clean -dfx
+    local app repos
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
+    koopa::assert_is_dir "${repos[@]}"
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        local repo
+        for repo in "${repos[@]}"
+        do
+            repo="$(koopa::realpath "$repo")"
+            koopa::alert "Removing untracked files in '${repo}'."
+            koopa::cd "$repo"
+            koopa::assert_is_git_repo
+            "${app[git]}" clean -dfx
+        done
+    )
     return 0
 }
 
 koopa::git_set_remote_url() { # {{{1
     # """
     # Set (or change) the remote URL of a git repo.
-    # @note Updated 2021-11-18.#
+    # @note Updated 2021-11-18.
     #
     # @examples
     # > repo='/opt/koopa'
@@ -758,41 +763,44 @@ koopa::git_set_remote_url() { # {{{1
 koopa::git_status_recursive() { # {{{1
     # """
     # Get the status of multiple Git repos recursively.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     # """
-    local app dir dirs git repo repos
+    local app dirs
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
-    for dir in "${dirs[@]}"
-    do
-        dir="$(koopa::realpath "$dir")"
-        readarray -t repos <<< "$( \
-            koopa::find \
-                --glob='.git' \
-                --max-depth=3 \
-                --min-depth=2 \
-                --prefix="$dir" \
-                --sort \
-        )"
-        if ! koopa::is_array_non_empty "${repos[@]:-}"
-        then
-            koopa::stop 'Failed to detect any Git repos.'
-        fi
-        # FIXME Need to use ngettext here.
-        koopa::h1 "Checking status of ${#repos[@]} repos in '${dir}'."
-        for repo in "${repos[@]}"
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        local dir
+        for dir in "${dirs[@]}"
         do
-            repo="$(koopa::dirname "$repo")"
-            koopa::h2 "$repo"
-            (
+            local repo repos str
+            dir="$(koopa::realpath "$dir")"
+            readarray -t repos <<< "$( \
+                koopa::find \
+                    --glob='.git' \
+                    --max-depth=3 \
+                    --min-depth=2 \
+                    --prefix="$dir" \
+                    --sort \
+            )"
+            if ! koopa::is_array_non_empty "${repos[@]:-}"
+            then
+                koopa::stop "Failed to detect any git repos in '${dir}'."
+            fi
+            str="$(koopa::ngettext "${#repos[@]}" 'repo' 'repos')"
+            koopa::h1 "Checking status of ${#repos[@]} ${str} in '${dir}'."
+            for repo in "${repos[@]}"
+            do
+                koopa::h2 "$repo"
                 koopa::cd "$repo"
                 "${app[git]}" status
-            )
+            done
         done
-    done
+    )
     return 0
 }
 
