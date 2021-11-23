@@ -113,6 +113,15 @@ koopa::update_rust_packages() { # {{{1
         "$@"
 }
 
+koopa::update_spacemacs() { # {{{1
+    koopa::update_app \
+        --name-fancy='Spacemacs' \
+        --name='spacemacs' \
+        --no-shared \
+        --prefix="$(koopa::spacemacs_prefix)" \
+        "$@"
+}
+
 koopa::update_spacevim() { # {{{1
     koopa::update_app \
         --name-fancy='SpaceVim' \
