@@ -151,18 +151,18 @@ koopa::git_clone() { # {{{1
     do
         local dict2
         declare -A dict2=(
-            [repo]="${1:?}"
-            [target]="${2:?}"
+            [url]="${1:?}"
+            [prefix]="${2:?}"
         )
-        if [[ -d "${dict2[target]}" ]]
+        if [[ -d "${dict2[prefix]}" ]]
         then
-            koopa::rm "${dict2[target]}"
+            koopa::rm "${dict2[prefix]}"
         fi
         # Check if user has sufficient permissions.
-        if koopa::str_match_fixed "${dict2[repo]}" 'git@github.com'
+        if koopa::str_match_fixed "${dict2[url]}" 'git@github.com'
         then
             koopa::assert_is_github_ssh_enabled
-        elif koopa::str_match_fixed "${dict2[repo]}" 'git@gitlab.com'
+        elif koopa::str_match_fixed "${dict2[url]}" 'git@gitlab.com'
         then
             koopa::assert_is_gitlab_ssh_enabled
         fi
@@ -177,8 +177,8 @@ koopa::git_clone() { # {{{1
             '--depth' 1
             '--quiet'
             '--recursive'
-            "${dict2[repo]}"
-            "${dict2[target]}"
+            "${dict2[url]}"
+            "${dict2[prefix]}"
         )
         "${app[git]}" clone "${clone_args[@]}"
         shift 2
@@ -374,6 +374,7 @@ koopa::git_pull() { # {{{1
         for repo in "${repos[@]}"
         do
             local dict2
+            repo="$(koopa::realpath "$repo")"
             koopa::alert "Pulling repo at '${repo}'."
             koopa::cd "$repo"
             koopa::assert_is_git_repo
@@ -599,12 +600,10 @@ koopa::git_rename_master_to_main() { # {{{1
     return 0
 }
 
-# FIXME Rework this.
-# FIXME Need to support parameterization.
 koopa::git_reset() { # {{{1
     # """
     # Clean and reset a git repo and its submodules.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-23.
     #
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
@@ -613,32 +612,34 @@ koopa::git_reset() { # {{{1
     # https://gist.github.com/nicktoumpelis/11214362
     # """
     local app repos
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_git_repo
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
-
-
+    repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
+    koopa::assert_is_dir "${repos[@]}"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
-
-
-    koopa::alert "Resetting repo at '${PWD:?}'."
-    "$git" clean -dffx
-    if [[ -s '.gitmodules' ]]
-    then
-        # FIXME Add the path here.
-        koopa::git_submodule_init
-        "$git" submodule --quiet foreach --recursive \
-            "$git" clean -dffx
-        "$git" reset --hard --quiet
-        "$git" submodule --quiet foreach --recursive \
-            "$git" reset --hard --quiet
-    fi
-
-
-
+    (
+        local repo
+        for repo in "${repos[@]}"
+        do
+            repo="$(koopa::realpath "$repo")"
+            koopa::alert "Resetting repo at '${repo}'."
+            koopa::cd "$repo"
+            koopa::assert_is_git_repo
+            "${app[git]}" clean -dffx
+            if [[ -s '.gitmodules' ]]
+            then
+                koopa::git_submodule_init
+                "${app[git]}" submodule --quiet foreach --recursive \
+                    "${app[git]}" clean -dffx
+                "${app[git]}" reset --hard --quiet
+                "${app[git]}" submodule --quiet foreach --recursive \
+                    "${app[git]}" reset --hard --quiet
+            fi
+        done
+    )
     return 0
 }
 
