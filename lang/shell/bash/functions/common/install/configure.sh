@@ -54,12 +54,10 @@ koopa::configure_rust() { # {{{1
         "$@"
 }
 
-# The 'koopa::git_pull' call here currently errors for repos in a detached
-# HEAD state. Rework this.
 koopa::configure_user() { # {{{1
     # """
     # Update koopa user configuration.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     # """
     local dict repo repos
     declare -A dict=(
@@ -88,11 +86,7 @@ koopa::configure_user() { # {{{1
     for repo in "${repos[@]}"
     do
         [[ -d "$repo" ]] || continue
-        (
-            koopa::cd "$repo"
-            # FIXME This currently errors when on HEAD (e.g. monorepo).
-            koopa::git_pull
-        )
+        koopa::git_pull "$repo"
     done
     if ! koopa::is_shared_install
     then
