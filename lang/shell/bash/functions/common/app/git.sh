@@ -239,7 +239,7 @@ koopa::git_default_branch() { # {{{1
 koopa::git_last_commit_local() { # {{{1
     # """
     # Last git commit of local repository.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     #
     # Alternate approach:
     # Can use '%h' for abbreviated commit ID.
@@ -249,7 +249,7 @@ koopa::git_last_commit_local() { # {{{1
     # > koopa::git_last_commit_local "${HOME}/git/monorepo"
     # # 9b7217c27858dd7ebffdf5a8ba66a6ea56ac5e1d
     # """
-    local app dict repo repos x
+    local app dict repos
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
@@ -262,8 +262,10 @@ koopa::git_last_commit_local() { # {{{1
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
+        local repo
         for repo in "${repos[@]}"
         do
+            local x
             koopa::cd "$repo"
             koopa::is_git_repo || return 1
             x="$("${app[git]}" rev-parse "${dict[ref]}" 2>/dev/null || true)"
@@ -277,7 +279,7 @@ koopa::git_last_commit_local() { # {{{1
 koopa::git_last_commit_remote() { # {{{1
     # """
     # Last git commit of remote repository.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     #
     # @examples
     # > url='https://github.com/acidgenomics/koopa.git'
@@ -287,7 +289,7 @@ koopa::git_last_commit_remote() { # {{{1
     # @seealso
     # > git ls-remote --help
     # """
-    local app dict url x
+    local app dict url
     koopa::assert_has_args "$#"
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
@@ -299,6 +301,7 @@ koopa::git_last_commit_remote() { # {{{1
     )
     for url in "$@"
     do
+        local x
         # shellcheck disable=SC2016
         x="$( \
             "${app[git]}" ls-remote --quiet "$url" "${dict[ref]}" \
@@ -311,6 +314,7 @@ koopa::git_last_commit_remote() { # {{{1
     return 0
 }
 
+# FIXME Handle attempt to pull on detached HEAD state more gracefully.
 koopa::git_pull() { # {{{1
     # """
     # Pull (update) a git repository.
@@ -322,7 +326,7 @@ koopa::git_pull() { # {{{1
     # @seealso
     # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
-    local app branch dict dict2
+    local app dict
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
@@ -335,19 +339,19 @@ koopa::git_pull() { # {{{1
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--branch='*)
-                branch="${1#*=}"
+                dict[branch]="${1#*=}"
                 shift 1
                 ;;
             '--branch')
-                branch="${2:?}"
+                dict[branch]="${2:?}"
                 shift 2
                 ;;
             '--origin='*)
-                origin="${1#*=}"
+                dict[origin]="${1#*=}"
                 shift 1
                 ;;
             '--origin')
-                origin="${2:?}"
+                dict[origin]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -364,9 +368,12 @@ koopa::git_pull() { # {{{1
     repos=("$@")
     koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa::assert_is_dir "${repos[@]}"
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
     (
         for repo in "${repos[@]}"
         do
+            local dict2
             koopa::alert "Pulling repo at '${repo}'."
             koopa::cd "$repo"
             koopa::assert_is_git_repo
@@ -399,8 +406,7 @@ koopa::git_pull() { # {{{1
     return 0
 }
 
-# FIXME Rework this.
-# FIXME Can we call 'koopa::git_pull' here instead?
+# FIXME Need to rework the subshell approach here.
 koopa::git_pull_recursive() { # {{{1
     # """
     # Pull multiple Git repositories recursively.
@@ -410,6 +416,11 @@ koopa::git_pull_recursive() { # {{{1
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     git="$(koopa::locate_git)"
+
+
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
@@ -439,10 +450,11 @@ koopa::git_pull_recursive() { # {{{1
             )
         done
     done
+
     return 0
 }
 
-# FIXME Rework this.
+# FIXME Need to rework the subshell approach here.
 koopa::git_push_recursive() { # {{{1
     # """
     # Push multiple Git repositories recursively.
@@ -455,6 +467,11 @@ koopa::git_push_recursive() { # {{{1
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     koopa::assert_is_dir "${dirs[@]}"
+
+
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+
     for dir in "${dirs[@]}"
     do
         dir="$(koopa::realpath "$dir")"
@@ -485,6 +502,7 @@ koopa::git_push_recursive() { # {{{1
     return 0
 }
 
+# FIXME Need to rework the subshell approach here.
 koopa::git_push_submodules() { # {{{1
     # """
     # Push Git submodules.
@@ -497,6 +515,11 @@ koopa::git_push_submodules() { # {{{1
     repos=("$@")
     koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa::assert_is_dir "${repos[@]}"
+
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+
+
     for repo in "${repos[@]}"
     do
         (
@@ -529,12 +552,12 @@ koopa::git_remote_url() { # {{{1
 koopa::git_rename_master_to_main() { # {{{1
     # """
     # Rename default branch from "master" to "main".
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     #
     # @examples
     # > koopa::git_rename_master_to_main "${HOME}/git/example"
     # """
-    local app dict repo repos
+    local app dict repos
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
@@ -549,6 +572,7 @@ koopa::git_rename_master_to_main() { # {{{1
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
+        local repo
         for repo in "${repos[@]}"
         do
             koopa::cd "$repo"
@@ -579,10 +603,18 @@ koopa::git_reset() { # {{{1
     # See also:
     # https://gist.github.com/nicktoumpelis/11214362
     # """
-    local git
+    local app repos
     koopa::assert_has_no_args "$#"
     koopa::assert_is_git_repo
-    git="$(koopa::locate_git)"
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+
+
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+
+
     koopa::alert "Resetting repo at '${PWD:?}'."
     "$git" clean -dffx
     if [[ -s '.gitmodules' ]]
@@ -595,24 +627,30 @@ koopa::git_reset() { # {{{1
         "$git" submodule --quiet foreach --recursive \
             "$git" reset --hard --quiet
     fi
+
+
+
     return 0
 }
 
 koopa::git_reset_fork_to_upstream() { # {{{1
     # """
     # Reset Git fork to upstream.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     # """
-    local app repo repos
+    local app repos
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
     repos=("$@")
     koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa::assert_is_dir "${repos[@]}"
-    for repo in "${repos[@]}"
-    do
-        (
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        local repo
+        for repo in "${repos[@]}"
+        do
             local dict
             koopa::cd "$repo"
             koopa::assert_is_git_repo
@@ -625,8 +663,8 @@ koopa::git_reset_fork_to_upstream() { # {{{1
             "${app[git]}" fetch "${dict[upstream]}"
             "${app[git]}" reset --hard "${dict[upstream]}/${dict[branch]}"
             "${app[git]}" push "${dict[origin]}" "${dict[branch]}" --force
-        )
-    done
+        done
+    )
     return 0
 }
 
