@@ -9,27 +9,21 @@ koopa::install_anaconda() { # {{{1
 }
 
 koopa::install_autoconf() { # {{{1
-    local conf_args
-    conf_args=(
-        '--name=autoconf'
-    )
+    local install_args
+    install_args=('--name=autoconf')
     # m4 is required for automake to build.
     if koopa::is_macos
     then
-        conf_args+=(
-            '--homebrew-opt=m4'
-        )
+        install_args+=('--homebrew-opt=m4')
     fi
-    koopa:::install_gnu_app "${conf_args[@]}" "$@"
+    koopa::install_gnu_app "${install_args[@]}" "$@"
 }
 
 koopa::install_automake() { # {{{1
-    local conf_args
-    conf_args=(
-        '--name=automake'
-        '--opt=autoconf'
-    )
-    koopa:::install_gnu_app "${conf_args[@]}" "$@"
+    koopa::install_gnu_app \
+        --name='automake' \
+        --opt='autoconf' \
+        "$@"
 }
 
 koopa::install_bash() { # {{{1
@@ -40,7 +34,7 @@ koopa::install_bash() { # {{{1
 }
 
 koopa::install_binutils() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='binutils' \
         "$@"
 }
@@ -65,7 +59,7 @@ koopa::install_conda() { # {{{1
 }
 
 koopa::install_coreutils() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='coreutils' \
         "$@"
 }
@@ -94,6 +88,7 @@ koopa::install_doom_emacs() { # {{{1
 }
 
 # FIXME Rework private dotfiles installer to use same approach.
+# FIXME This needs to locate Bash to handle install script call.
 koopa::install_dotfiles() { # {{{1
     local dict
     declare -A dict=(
@@ -151,7 +146,7 @@ koopa::install_findutils() { # {{{1
         #     msg00051.html
         export CFLAGS='-D__nonnull\(params\)='
     fi
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='findutils' \
         "$@"
 }
@@ -171,7 +166,7 @@ koopa::install_fzf() { # {{{1
 }
 
 koopa::install_gawk() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='gawk' \
         "$@"
 }
@@ -226,19 +221,19 @@ koopa::install_go() { # {{{1
 
 # FIXME Consider adding support for pcre here.
 koopa::install_grep() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='grep' \
         "$@"
 }
 
 koopa::install_groff() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='groff' \
         "$@"
 }
 
 koopa::install_gsl() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='gsl' \
         --name-fancy='GSL' \
         "$@"
@@ -315,7 +310,7 @@ koopa::install_libevent() { # {{{1
 }
 
 koopa::install_libtool() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='libtool' \
         "$@"
 }
@@ -334,7 +329,7 @@ koopa::install_luarocks() { # {{{1
 }
 
 koopa::install_make() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='make' \
         "$@"
 }
@@ -349,7 +344,7 @@ koopa::install_miniconda() { # {{{1
 }
 
 koopa::install_ncurses() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='ncurses' \
         "$@"
 }
@@ -415,7 +410,7 @@ koopa::install_openssl() { # {{{1
 }
 
 koopa::install_parallel() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='parallel' \
         "$@"
 }
@@ -592,7 +587,7 @@ koopa::install_rust_packages() { # {{{1
 }
 
 koopa::install_sed() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='sed' \
         "$@"
 }
@@ -658,7 +653,7 @@ koopa::install_taglib() { # {{{1
 }
 
 koopa::install_tar() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='tar' \
         "$@"
 }
@@ -673,7 +668,7 @@ koopa::install_tex_packages() { # {{{1
 }
 
 koopa::install_texinfo() { # {{{1
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name='texinfo' \
         "$@"
 }
