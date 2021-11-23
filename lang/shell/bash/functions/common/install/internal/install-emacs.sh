@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Does this double nesting approach work? Need to debug this?
+# FIXME This is passing '--name-fancy' through to GNU configure in a way
+# that we don't want...rethink?
 koopa:::install_emacs() { # {{{1
     # """
     # Install Emacs.
@@ -47,7 +49,7 @@ koopa:::install_emacs() { # {{{1
             '--without-x'
         )
     fi
-    koopa:::install_gnu_app \
+    koopa::install_gnu_app \
         --name-fancy='Emacs' \
         --name='emacs' \
         "${install_args[@]}" \
