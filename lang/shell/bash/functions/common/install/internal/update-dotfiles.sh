@@ -22,6 +22,7 @@ koopa:::update_dotfiles() { # {{{1
     else
         repos=("$@")
     fi
+    # FIXME Need to rework subshell approach here...
     for repo in "${repos[@]}"
     do
         [[ -d "$repo" ]] || continue
@@ -33,7 +34,9 @@ koopa:::update_dotfiles() { # {{{1
             then
                 "${app[bash]}" "$script"
             else
+                # FIXME Can pass directory path in directly.
                 koopa::git_reset
+                # FIXME Can pass directory path in directly.
                 koopa::git_pull
             fi
             script="${repo}/install"
