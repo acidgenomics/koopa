@@ -421,10 +421,10 @@ koopa::git_pull_recursive() { # {{{1
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
-        local dir str
+        local dir
         for dir in "${dirs[@]}"
         do
-            local repo repos
+            local repo repos str
             dir="$(koopa::realpath "$dir")"
             readarray -t repos <<< "$( \
                 koopa::find \
@@ -453,98 +453,108 @@ koopa::git_pull_recursive() { # {{{1
     return 0
 }
 
-# FIXME Need to rework the subshell approach here.
 koopa::git_push_recursive() { # {{{1
     # """
     # Push multiple Git repositories recursively.
-    # @note Updated 2021-10-26.
+    # @note Updated 2021-11-23.
     # """
-    local app dir dirs git repo repos
+    local app dirs
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
     dirs=("$@")
     koopa::is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
     koopa::assert_is_dir "${dirs[@]}"
-
-
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
-
-    for dir in "${dirs[@]}"
-    do
-        dir="$(koopa::realpath "$dir")"
-        readarray -t repos <<< "$( \
-            koopa::find \
-                --glob='.git' \
-                --max-depth=3 \
-                --min-depth=2 \
-                --prefix="$dir" \
-                --sort \
-        )"
-        if ! koopa::is_array_non_empty "${repos[@]:-}"
-        then
-            koopa::stop "Failed to detect any git repos in '${dir}'."
-        fi
-        # FIXME Need to improve this using ngettext.
-        koopa::h1 "Pushing ${#repos[@]} git repos in '${dir}'."
-        for repo in "${repos[@]}"
+    (
+        local dir
+        for dir in "${dirs[@]}"
         do
-            repo="$(koopa::dirname "$repo")"
-            koopa::h2 "$repo"
-            (
+            local repo repos str
+            dir="$(koopa::realpath "$dir")"
+            readarray -t repos <<< "$( \
+                koopa::find \
+                    --glob='.git' \
+                    --max-depth=3 \
+                    --min-depth=2 \
+                    --prefix="$dir" \
+                    --sort \
+            )"
+            if ! koopa::is_array_non_empty "${repos[@]:-}"
+            then
+                koopa::stop "Failed to detect any git repos in '${dir}'."
+            fi
+            str="$(koopa::ngettext "${#repos[@]}" 'repo' 'repos')"
+            koopa::h1 "Pushing ${#repos[@]} ${str} in '${dir}'."
+            for repo in "${repos[@]}"
+            do
+                koopa::h2 "$repo"
                 koopa::cd "$repo"
                 "${app[git]}" push
-            )
+            done
         done
-    done
+    )
     return 0
 }
 
-# FIXME Need to rework the subshell approach here.
 koopa::git_push_submodules() { # {{{1
     # """
     # Push Git submodules.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     # """
-    local app repo repos
+    local app repos
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
     repos=("$@")
     koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa::assert_is_dir "${repos[@]}"
-
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
-
-
-    for repo in "${repos[@]}"
-    do
-        (
+    (
+        local repo
+        for repo in "${repos[@]}"
+        do
             koopa::cd "$repo"
             "${app[git]}" submodule update --remote --merge
             "${app[git]}" commit -m 'Update submodules.'
             "${app[git]}" push
-        )
-    done
+        done
+    )
     return 0
 }
 
-# FIXME Rework this.
-# FIXME Allow parameterization of this.
 koopa::git_remote_url() { # {{{1
     # """
     # Return the Git remote URL for origin.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-11-23.
+    #
+    # @examples
+    # > koopa::git_remote_url '/opt/koopa'
+    # # https://github.com/acidgenomics/koopa.git
     # """
-    local git x
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_git_repo
-    git="$(koopa::locate_git)"
-    x="$("$git" config --get 'remote.origin.url' || true)"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    local app repos
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    repos=("$@")
+    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
+    koopa::assert_is_dir "${repos[@]}"
+    # Using a single subshell here to avoid performance hit during looping.
+    # This single subshell is necessary so we don't change working directory.
+    (
+        local repo
+        for repo in "${repos[@]}"
+        do
+            local x
+            koopa::cd "$repo"
+            koopa::is_git_repo || return 1
+            x="$("${app[git]}" config --get 'remote.origin.url' || true)"
+            [[ -n "$x" ]] || return 1
+            koopa::print "$x"
+        done
+    )
     return 0
 }
 
