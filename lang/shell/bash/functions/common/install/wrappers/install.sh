@@ -96,15 +96,6 @@ koopa::install_dotfiles() { # {{{1
         "$@"
 }
 
-koopa::install_dotfiles_private() { # {{{1
-    koopa::install_app \
-        --name-fancy='Dotfiles (Private)' \
-        --name='dotfiles-private' \
-        --prefix="$(koopa::dotfiles_private_prefix)" \
-        --version='rolling' \
-        "$@"
-}
-
 koopa::install_emacs() { # {{{1
     koopa::install_app \
         --name-fancy='Emacs' \
