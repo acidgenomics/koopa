@@ -6,7 +6,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/shell/bash/include/header.sh"
 uninstall() { # {{{1
     # """
     # Uninstall koopa.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-24.
     # """
     local dict
     declare -A dict=(
@@ -20,7 +20,6 @@ uninstall() { # {{{1
         koopa::rm --sudo '/etc/profile.d/zzz-koopa.sh'
     fi
     koopa::uninstall_dotfiles
-    koopa::uninstall_dotfiles_private
     koopa::rm \
         "${dict[config_prefix]}" \
         "${dict[koopa_prefix]}"
