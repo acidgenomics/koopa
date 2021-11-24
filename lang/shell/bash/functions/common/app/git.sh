@@ -307,93 +307,48 @@ koopa::git_last_commit_remote() { # {{{1
     return 0
 }
 
-# FIXME Handle attempt to pull on detached HEAD state more gracefully.
 koopa::git_pull() { # {{{1
     # """
     # Pull (update) a git repository.
-    # @note Updated 2021-11-23.
+    # @note Updated 2021-11-24.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
     #
+    # Potentially useful approach for submodules:
+    # > git submodule update --init --merge --remote
+    #
     # @seealso
     # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
-    local app dict
+    local app repos
     declare -A app=(
         [git]="$(koopa::locate_git)"
     )
-    declare -A dict=(
-        [branch]=''
-        [origin]='origin'
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--branch='*)
-                dict[branch]="${1#*=}"
-                shift 1
-                ;;
-            '--branch')
-                dict[branch]="${2:?}"
-                shift 2
-                ;;
-            '--origin='*)
-                dict[origin]="${1#*=}"
-                shift 1
-                ;;
-            '--origin')
-                dict[origin]="${2:?}"
-                shift 2
-                ;;
-            # Other ------------------------------------------------------------
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     repos=("$@")
-    koopa::is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa::assert_is_dir "${repos[@]}"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
         for repo in "${repos[@]}"
         do
-            local dict2
             repo="$(koopa::realpath "$repo")"
             koopa::alert "Pulling repo at '${repo}'."
             koopa::cd "$repo"
             koopa::assert_is_git_repo
-            declare -A dict2=(
-                [branch]="${dict[branch]}"
-                [origin]="${dict[origin]}"
-            )
-            if [[ -z "${dict2[branch]}" ]]
-            then
-                dict2[branch]="$(koopa::git_default_branch)"
-            fi
-            "${app[git]}" fetch --all
-            "${app[git]}" pull "${dict2[origin]}" "${dict2[branch]}"
+            "${app[git]}" fetch --all --quiet
+            "${app[git]}" pull --ff-only
             if [[ -s '.gitmodules' ]]
             then
                 koopa::git_submodule_init
-                "${app[git]}" submodule --quiet update --init --recursive
-                "${app[git]}" submodule --quiet foreach --recursive \
-                    "${app[git]}" fetch --all --quiet
-                if [[ -n "${dict2[branch]}" ]]
-                then
-                    "${app[git]}" submodule --quiet foreach --recursive \
-                        "${app[git]}" checkout "${dict2[branch]}" --quiet
-                    "${app[git]}" submodule --quiet foreach --recursive \
-                        "${app[git]}" pull "${dict2[origin]}" "${dict2[branch]}"
-                fi
+                "${app[git]}" submodule --quiet \
+                    update --init --recursive
+                "${app[git]}" submodule --quiet \
+                    foreach --recursive \
+                        "${app[git]}" fetch --all --quiet
+                "${app[git]}" submodule --quiet \
+                    foreach --recursive \
+                        "${app[git]}" pull --ff-only
             fi
         done
     )
