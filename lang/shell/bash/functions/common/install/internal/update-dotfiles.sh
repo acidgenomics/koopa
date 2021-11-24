@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Simplify this to work on our primary dotfiles repo.
 # FIXME Do we need a separate updater for dotfiles private?
 # FIXME Harden this by using our desired version of Bash, to run the script.
 # FIXME Need to wrap this.
 # FIXME May need to ensure that permissions are correct here.
+
 koopa:::update_dotfiles() { # {{{1
     # """
     # Update dotfiles repo and run install script, if defined.
