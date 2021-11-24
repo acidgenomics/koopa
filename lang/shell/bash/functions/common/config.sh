@@ -328,7 +328,7 @@ koopa::link_dotfile() { # {{{1
         dict[source_prefix]="${dict[opt_prefix]}"
     elif [[ "${dict[private]}" -eq 1 ]]
     then
-        dict[source_prefix]="${dict[dotfiles_private_config_link]}"
+        dict[source_prefix]="${dict[dotfiles_private_prefix]}"
     else
         dict[source_prefix]="${dict[dotfiles_config_link]}"
         if [[ ! -L "${dict[source_prefix]}" ]]
