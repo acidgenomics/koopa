@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to use dict approach.
 koopa:::install_cpufetch() { # {{{1
     # """
     # Install cpufetch.
