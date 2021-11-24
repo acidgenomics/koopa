@@ -252,7 +252,6 @@ _koopa_complete() { # {{{1
                     'os-string'
                     'path'
                     'prefix'
-                    'pull'
                     'roff'
                     'set-permissions'
                     'switch-to-develop'
