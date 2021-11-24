@@ -29,6 +29,7 @@ koopa:::install_sqlite() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     case "${dict[version]}" in
+        '3.36.'* | \
         '3.35.'* | \
         '3.34.1')
             dict[year]='2021'
