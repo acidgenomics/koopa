@@ -330,7 +330,7 @@ koopa:::koopa_uninstall_denylist() { # {{{1
 koopa:::koopa_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-23.
     # """
     local app app_args apps denylist pos
     app_args=()
@@ -340,8 +340,7 @@ koopa:::koopa_update() { # {{{1
     do
         case "$1" in
             # Renamers ---------------------------------------------------------
-            'system' | \
-            'user')
+            'system')
                 pos+=("koopa-${name}")
                 ;;
             # Defunct ----------------------------------------------------------

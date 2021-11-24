@@ -213,7 +213,6 @@ koopa::install_go() { # {{{1
     return 0
 }
 
-# FIXME Consider adding support for pcre here.
 koopa::install_grep() { # {{{1
     koopa::install_gnu_app \
         --name='grep' \

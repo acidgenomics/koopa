@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-11-18.
+    # Updated 2021-11-23.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -60,7 +60,6 @@ _koopa_complete() { # {{{1
                     'r'
                     'ruby'
                     'rust'
-                    'user'
                 )
                 ;;
             header)
@@ -277,7 +276,6 @@ _koopa_complete() { # {{{1
                     # koopa:
                     'koopa'
                     'system'
-                    'user'
                     # packages:
                     'chemacs'
                     'doom-emacs'
