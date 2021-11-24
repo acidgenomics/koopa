@@ -148,7 +148,7 @@ _koopa_doom_emacs_prefix() { # {{{1
 
 _koopa_dotfiles_prefix() { # {{{1
     # """
-    # Koopa system dotfiles prefix.
+    # Dotfiles prefix.
     # @note Updated 2020-05-05.
     # """
     [ "$#" -eq 0 ] || return 1
@@ -158,8 +158,8 @@ _koopa_dotfiles_prefix() { # {{{1
 
 _koopa_dotfiles_private_prefix() { # {{{1
     # """
-    # Private user dotfiles prefix.
-    # @note Updated 2020-02-15.
+    # Private dotfiles prefix.
+    # @note Updated 2021-11-24.
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_print "$(_koopa_config_prefix)/dotfiles-private"
