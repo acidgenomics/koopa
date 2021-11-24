@@ -205,48 +205,6 @@ koopa::sys_cp() { # {{{1
     return 0
 }
 
-# FIXME Need to rethink parameterization here.
-koopa::sys_git_pull() { # {{{1
-    # """
-    # Pull koopa git repo.
-    # @note Updated 2021-11-18.
-    #
-    # Intended for use with 'koopa pull'.
-    #
-    # This handles updates to Zsh functions that are changed to group
-    # non-writable permissions, so Zsh passes 'compaudit' checks.
-    # """
-    koopa::assert_has_no_args "$#"
-    (
-        local dict
-        declare -A dict=(
-            [origin]='origin'
-            [prefix]="$(koopa::koopa_prefix)"
-        )
-        koopa::cd "${dict[prefix]}"
-        koopa::sys_set_permissions \
-            --recursive \
-            "${dict[prefix]}/lang/shell/zsh" \
-            &>/dev/null
-        koopa::git_pull
-        # Ensure other branches, such as develop, are rebased to main branch.
-        dict[current_branch]="$(koopa::git_branch)"
-        dict[default_branch]="$(koopa::git_default_branch)"
-        if [[ "${dict[current_branch]}" != "${dict[default_branch]}" ]]
-        then
-            koopa::alert "Rebasing '${dict[default_branch]}' branch into \
-'${dict[current_branch]}' branch."
-            # FIXME Need to add support for '--origin' and '--branch' input.
-            koopa::git_pull \
-                --origin="${dict[origin]}" \
-                --branch="${dict[default_branch]}" \
-                "${dict[prefix]}"
-        fi
-        koopa::fix_zsh_permissions
-    )
-    return 0
-}
-
 koopa::sys_group() { # {{{1
     # """
     # Return the appropriate group to use with koopa installation.
