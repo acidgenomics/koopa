@@ -21,7 +21,7 @@ koopa:::install_proj() { # {{{1
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'pkg-config' 'libtiff' 'sqlite3'
-    elif koopa_is_linux
+    elif koopa::is_linux
     then
         conf_args+=(
             "CFLAGS=-I${dict[make_prefix]}/include"
@@ -46,7 +46,7 @@ koopa:::install_proj() { # {{{1
         export SQLITE3_CFLAGS SQLITE3_LIBS TIFF_CFLAGS TIFF_LIBS
     fi
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    url="https://github.com/OSGeo/PROJ/releases/download/\
+    dict[url]="https://github.com/OSGeo/PROJ/releases/download/\
 ${dict[version]}/${dict[file]}"
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
