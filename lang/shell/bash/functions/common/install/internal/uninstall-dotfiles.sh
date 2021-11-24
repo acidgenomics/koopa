@@ -7,10 +7,8 @@ koopa:::uninstall_dotfiles() { # {{{1
     # Uninstall dot files.
     # @note Updated 2021-06-14.
     # """
-    local name name_fancy prefix script
+    local prefix script
     koopa::assert_has_no_args "$#"
-    name='dotfiles'
-    name_fancy='dotfiles'
     prefix="$(koopa::dotfiles_prefix)"
     if [[ ! -d "$prefix" ]]
     then

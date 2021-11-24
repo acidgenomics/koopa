@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Add a user override to hide messages here.
-
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-24.
     # """
     local app dict pos
     declare -A app
@@ -80,27 +78,30 @@ koopa::uninstall_app() { # {{{1
                 pos+=("$1")
                 shift 1
                 ;;
-
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    # FIXME Need to improve our checks that variable is set.
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ "${dict[system]}" -eq 1 ]]
     then
         koopa::uninstall_start "${dict[name_fancy]}"
-        dict[function]="$(koopa::snake_case_simple "${dict[name]}")"
-        dict[function]="uninstall_${dict[function]}"
-        if [[ -n "${dict[platform]}" ]]
+        if [[ -n "${dict[prefix]}" ]]
         then
-            dict[function]="${dict[platform]}_${dict[function]}"
+            koopa::rm --sudo "${dict[prefix]}"
+        else
+            dict[function]="$(koopa::snake_case_simple "${dict[name]}")"
+            dict[function]="uninstall_${dict[function]}"
+            if [[ -n "${dict[platform]}" ]]
+            then
+                dict[function]="${dict[platform]}_${dict[function]}"
+            fi
+            dict[function]="koopa:::${dict[function]}"
+            if ! koopa::is_function "${dict[function]}"
+            then
+                koopa::stop 'Unsupported command.'
+            fi
+            "${dict[function]}" "$@"
         fi
-        dict[function]="koopa:::${dict[function]}"
-        if ! koopa::is_function "${dict[function]}"
-        then
-            koopa::stop 'Unsupported command.'
-        fi
-        "${dict[function]}" "$@"
         koopa::uninstall_success "${dict[name_fancy]}"
     else
         koopa::assert_has_no_args "$#"
