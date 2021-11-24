@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to use dict approach.
 koopa:::install_curl() { # {{{1
     # """
     # Install cURL.
