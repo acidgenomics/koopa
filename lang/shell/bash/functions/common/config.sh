@@ -269,16 +269,15 @@ koopa::fix_zsh_permissions() { # {{{1
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-11-24.
     # """
-    local pos source_path source_prefix source_subdir
-    local symlink_basename symlink_dirname symlink_path symlink_prefix
+    local dict pos
     koopa::assert_has_args "$#"
     declare -A dict=(
         [config]=0
         [dotfiles_config_link]="$(koopa::dotfiles_config_link)"
         [dotfiles_prefix]="$(koopa::dotfiles_prefix)"
-        [dotfiles_private_config_link]="$(koopa::dotfiles_private_config_link)"
+        [dotfiles_private_prefix]="$(koopa::dotfiles_private_prefix)"
         [force]=0
         [opt]=0
         [opt_prefix]="$(koopa::opt_prefix)"
@@ -316,57 +315,58 @@ koopa::link_dotfile() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_le "$#" 2
-    source_subdir="${1:?}"
-    symlink_basename="${2:-}"
-    if [[ -z "$symlink_basename" ]]
+    dict[source_subdir]="${1:?}"
+    dict[symlink_basename]="${2:-}"
+    if [[ -z "${dict[symlink_basename]}" ]]
     then
-        symlink_basename="$(koopa::basename "$source_subdir")"
+        dict[symlink_basename]="$(koopa::basename "${dict[source_subdir]}")"
     fi
     if [[ "${dict[opt]}" -eq 1 ]]
     then
-        source_prefix="${dict[opt_prefix]}"
+        dict[source_prefix]="${dict[opt_prefix]}"
     elif [[ "${dict[private]}" -eq 1 ]]
     then
-        source_prefix="${dict[dotfiles_private_config_link]}"
+        dict[source_prefix]="${dict[dotfiles_private_config_link]}"
     else
-        source_prefix="${dict[dotfiles_config_link]}"
-        if [[ ! -L "$source_prefix" ]]
+        dict[source_prefix]="${dict[dotfiles_config_link]}"
+        if [[ ! -L "${dict[source_prefix]}" ]]
         then
-            koopa::ln "${dict[dotfiles_prefix]}" "$source_prefix"
+            koopa::ln "${dict[dotfiles_prefix]}" "${dict[source_prefix]}"
         fi
     fi
-    source_path="${source_prefix}/${source_subdir}"
-    if [[ "${dict[opt]}" -eq 1 ]] && [[ ! -e "$source_path" ]]
+    dict[source_path]="${dict[source_prefix]}/${dict[source_subdir]}"
+    if [[ "${dict[opt]}" -eq 1 ]] && [[ ! -e "${dict[source_path]}" ]]
     then
-        koopa::warn "Does not exist: '${source_path}'."
+        koopa::warn "Does not exist: '${dict[source_path]}'."
         return 0
     fi
-    koopa::assert_is_existing "$source_path"
+    koopa::assert_is_existing "${dict[source_path]}"
     if [[ "${dict[config]}" -eq 1 ]]
     then
-        symlink_prefix="${dict[xdg_config_home]}"
+        dict[symlink_prefix]="${dict[xdg_config_home]}"
     else
-        symlink_prefix="${HOME:?}"
-        symlink_basename=".${symlink_basename}"
+        dict[symlink_prefix]="${HOME:?}"
+        dict[symlink_basename]=".${dict[symlink_basename]}"
     fi
-    symlink_path="${symlink_prefix}/${symlink_basename}"
+    dict[symlink_path]="${dict[symlink_prefix]}/${dict[symlink_basename]}"
     # Inform the user when nuking a broken symlink.
     if [[ "${dict[force]}" -eq 1 ]] ||
-        { [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]; }
+        { [[ -L "${dict[symlink_path]}" ]] && \
+            [[ ! -e "${dict[symlink_path]}" ]]; }
     then
-        koopa::rm "$symlink_path"
-    elif [[ -e "$symlink_path" ]]
+        koopa::rm "${dict[symlink_path]}"
+    elif [[ -e "${dict[symlink_path]}" ]]
     then
-        koopa::stop "Existing dotfile: '${symlink_path}'."
+        koopa::stop "Existing dotfile: '${dict[symlink_path]}'."
     fi
-    koopa::dl "$symlink_path" "$source_path"
+    koopa::dl "${dict[symlink_path]}" "${dict[source_path]}"
     # Create the parent directory, if necessary.
-    symlink_dirname="$(koopa::dirname "$symlink_path")"
-    if [[ "$symlink_dirname" != "${HOME:?}" ]]
+    dict[symlink_dirname]="$(koopa::dirname "${dict[symlink_path]}")"
+    if [[ "${dict[symlink_dirname]}" != "${HOME:?}" ]]
     then
-        koopa::mkdir "$symlink_dirname"
+        koopa::mkdir "${dict[symlink_dirname]}"
     fi
-    koopa::ln "$source_path" "$symlink_path"
+    koopa::ln "${dict[source_path]}" "${dict[symlink_path]}"
     return 0
 }
 
