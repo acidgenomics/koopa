@@ -337,7 +337,7 @@ koopa::git_pull() { # {{{1
             koopa::cd "$repo"
             koopa::assert_is_git_repo
             "${app[git]}" fetch --all --quiet
-            "${app[git]}" pull --ff-only --recurse-submodules --remote
+            "${app[git]}" pull --all --ff-only --recurse-submodules
         done
     )
     return 0
