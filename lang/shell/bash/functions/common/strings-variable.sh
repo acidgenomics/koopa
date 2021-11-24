@@ -67,16 +67,6 @@ koopa::dotfiles_config_link() { # {{{1
     return 0
 }
 
-koopa::dotfiles_private_config_link() { # {{{1
-    # """
-    # Private dotfiles directory.
-    # @note Updated 2019-11-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::print "$(koopa::dotfiles_config_link)-private"
-    return 0
-}
-
 koopa::gcrypt_url() { # {{{1
     # """
     # Get GnuPG FTP URL.
