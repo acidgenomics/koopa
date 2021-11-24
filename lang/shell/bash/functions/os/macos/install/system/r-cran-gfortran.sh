@@ -107,18 +107,3 @@ ${dict[dmg_file]}"
     fi
     return 0
 }
-
-koopa:::macos_uninstall_r_cran_gfortran() { # {{{1
-    # """
-    # Uninstall R CRAN gfortran.
-    # @note Updated 2021-10-30.
-    # """
-    local dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    declare -A dict=(
-        [prefix]="${UNINSTALL_PREFIX:?}"
-    )
-    koopa::rm --sudo "${dict[prefix]}"
-    return 0
-}
