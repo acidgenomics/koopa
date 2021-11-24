@@ -3,7 +3,7 @@
 koopa:::install_geos() { # {{{1
     # """
     # Install GEOS.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-24.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.
@@ -16,35 +16,39 @@ koopa:::install_geos() { # {{{1
     #
     # Alternate autotools approach:
     # > ./autogen.sh
-    # > ./configure --prefix="$prefix"
-    # > make --jobs="$jobs"
-    # > make check
+    # > ./configure --prefix="${dict[prefix]}"
+    # > "${app[make]}" --jobs="${dict[jobs]}"
+    # > "${app[make]}" check
     # """
-    local cmake cmake_args file jobs make name prefix url version
+    local app dict
+    declare -A app=(
+        [cmake]="$(koopa::locate_cmake)"
+        [make]="$(koopa::locate_make)"
+    )
+    declare -A dict=(
+        [jobs]="$(koopa::cpu_count)"
+        [name]='geos'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
     if koopa::is_macos
     then
-        koopa::activate_homebrew_opt_prefix cmake
+        koopa::activate_homebrew_opt_prefix 'cmake'
     fi
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    jobs="$(koopa::cpu_count)"
-    cmake="$(koopa::locate_cmake)"
-    make="$(koopa::locate_make)"
-    name='geos'
-    file="${version}.tar.gz"
-    url="https://github.com/lib${name}/${name}/archive/${file}"
-    koopa::download "$url" "$file"
-    koopa::extract "$file"
-    koopa::mkdir build
-    koopa::cd build
-    cmake_args=(
-        "../${name}-${version}"
-        "-DCMAKE_INSTALL_PREFIX=${prefix}"
-        # > '-DGEOS_ENABLE_TESTS=OFF'
-    )
-    "$cmake" "${cmake_args[@]}"
-    "$make" --jobs="$jobs"
-    # > "$make" test
-    "$make" install
+    dict[file]="${dict[version]}.tar.gz"
+    dict[url]="https://github.com/lib${dict[name]}/${dict[name]}/\
+archive/${dict[file]}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::mkdir 'build'
+    koopa::cd 'build'
+    # Can disable tests with:
+    # > '-DGEOS_ENABLE_TESTS='OFF'
+    "${app[cmake]}" \
+        ../"${dict[name]}-${dict[version]}" \
+        -DCMAKE_INSTALL_PREFIX="${dict[prefix]}"
+    "${app[make]}" --jobs="${dict[jobs]}"
+    # > "${app[make]}" test
+    "${app[make]}" install
     return 0
 }
