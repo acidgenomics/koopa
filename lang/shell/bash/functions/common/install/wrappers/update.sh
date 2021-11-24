@@ -17,11 +17,9 @@ koopa::update_doom_emacs() { # {{{1
 koopa::update_dotfiles() { # {{{1
     koopa::update_app \
         --name='dotfiles' \
-        --name-fancy='dotfiles' \
+        --name-fancy='Dotfiles' \
         "$@"
 }
-
-# FIXME Need to add support for Dotfiles (Private).
 
 koopa::update_homebrew() { # {{{1
     koopa::update_app \
