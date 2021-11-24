@@ -3,26 +3,27 @@
 koopa:::install_pyenv() { # {{{1
     # """
     # Install pyenv.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-11-24.
     # """
-    local prefix url
-    prefix="${INSTALL_PREFIX:?}"
-    url='https://github.com/pyenv/pyenv.git'
-    koopa::git_clone "$url" "$prefix"
+    local dict
+    declare -A dict=(
+        [prefix]="${INSTALL_PREFIX:?}"
+        [url]='https://github.com/pyenv/pyenv.git'
+    )
+    koopa::git_clone "${dict[url]}" "${dict[prefix]}"
     return 0
 }
 
 koopa:::update_pyenv() { # {{{1
     # """
     # Update pyenv.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-11-24.
     # """
+    local dict
     koopa::assert_has_no_args "$#"
-    koopa::activate_pyenv
-    koopa::assert_is_installed 'pyenv'
-    (
-        koopa::cd "$(pyenv root)"
-        koopa::git_pull
+    declare -A dict=(
+        [prefix]="${UPDATE_PREFIX:?}"
     )
+    koopa::git_pull "${dict[prefix]}"
     return 0
 }
