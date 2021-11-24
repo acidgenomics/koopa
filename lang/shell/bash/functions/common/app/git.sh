@@ -337,19 +337,7 @@ koopa::git_pull() { # {{{1
             koopa::cd "$repo"
             koopa::assert_is_git_repo
             "${app[git]}" fetch --all --quiet
-            "${app[git]}" pull --ff-only
-            if [[ -s '.gitmodules' ]]
-            then
-                koopa::git_submodule_init
-                "${app[git]}" submodule --quiet \
-                    update --init --recursive
-                "${app[git]}" submodule --quiet \
-                    foreach --recursive \
-                        "${app[git]}" fetch --all --quiet
-                "${app[git]}" submodule --quiet \
-                    foreach --recursive \
-                        "${app[git]}" pull --ff-only
-            fi
+            "${app[git]}" pull --ff-only --recurse-submodules --remote
         done
     )
     return 0
