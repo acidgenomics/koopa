@@ -3,7 +3,7 @@
 koopa:::install_sqlite() { # {{{1
     # """
     # Install SQLite.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-24.
     #
     # Use autoconf instead of amalgamation.
     #
@@ -16,48 +16,53 @@ koopa:::install_sqlite() { # {{{1
     # ## SQLite header and source version mismatch
     # https://askubuntu.com/questions/443379
     # """
-    local conf_args file file_version jobs make name prefix sed url version
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    jobs="$(koopa::cpu_count)"
-    make="$(koopa::locate_make)"
-    sed="$(koopa::locate_sed)"
-    name='sqlite'
-    case "$version" in
+    local app conf_args dict
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [make]="$(koopa::locate_make)"
+        [sed]="$(koopa::locate_sed)"
+    )
+    declare -A dict=(
+        [jobs]="$(koopa::cpu_count)"
+        [name]='sqlite'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    case "${dict[version]}" in
         '3.35.'* | \
         '3.34.1')
-            year='2021'
+            dict[year]='2021'
             ;;
         '3.34.0' | \
         '3.33.'*)
-            year='2020'
+            dict[year]='2020'
             ;;
         '3.32.'*)
-            year='2020'
+            dict[year]='2020'
             ;;
         *)
-            koopa::stop "Unsupported version: '${version}'."
+            koopa::stop "Unsupported version: '${dict[version]}'."
             ;;
     esac
     # e.g. '3.32.3' to '3320300'.
-    file_version="$( \
-        koopa::print "$version" \
-        | "$sed" -E 's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
+    dict[file_version]="$( \
+        koopa::print "${dict[version]}" \
+        | "${app[sed]}" -E 's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
     )"
-    file="${name}-autoconf-${file_version}.tar.gz"
-    url="https://www.sqlite.org/${year}/${file}"
-    koopa::download "$url" "$file"
-    koopa::extract "$file"
-    koopa::cd "${name}-autoconf-${file_version}"
+    dict[file]="${dict[name]}-autoconf-${dict[file_version]}.tar.gz"
+    dict[url]="https://www.sqlite.org/${dict[year]}/${dict[file]}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::cd "${dict[name]}-autoconf-${dict[file_version]}"
     conf_args=(
         # > '--disable-dynamic-extensions'
         # > '--disable-shared'
-        "--prefix=${prefix}"
+        "--prefix=${dict[prefix]}"
         '--enable-static'
     )
     ./configure "${conf_args[@]}"
-    "$make" --jobs="$jobs"
-    "$make" install
+    "${app[make]}" --jobs="${dict[jobs]}"
+    "${app[make]}" install
     koopa::alert_note 'Reinstall PROJ and GDAL, if built from source.'
     return 0
 }
