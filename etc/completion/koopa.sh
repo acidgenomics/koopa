@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-11-23.
+    # Updated 2021-11-24.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -51,6 +51,7 @@ _koopa_complete() { # {{{1
                 ;;
             configure)
                 args=(
+                    'dotfiles'
                     'go'
                     'julia'
                     'nim'
