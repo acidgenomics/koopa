@@ -26,16 +26,18 @@ koopa::add_make_prefix_link() { # {{{1
 koopa::add_monorepo_config_link() { # {{{1
     # """
     # Add koopa configuration link from user's git monorepo.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-24.
     # """
-    local monorepo_prefix subdir
+    local dict subdir
     koopa::assert_has_args "$#"
     koopa::assert_has_monorepo
-    monorepo_prefix="$(koopa::monorepo_prefix)"
+    declare -A dict=(
+        [prefix]="$(koopa::monorepo_prefix)"
+    )
     for subdir in "$@"
     do
         koopa::add_koopa_config_link \
-            "${monorepo_prefix}/${subdir}" \
+            "${dict[prefix]}/${subdir}" \
             "$subdir"
     done
     return 0
