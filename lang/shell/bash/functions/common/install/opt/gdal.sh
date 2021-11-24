@@ -3,7 +3,7 @@
 koopa:::install_gdal() { # {{{1
     # """
     # Install GDAL.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-24.
     #
     # Use 'configure --help' for build options.
     #
@@ -17,14 +17,19 @@ koopa:::install_gdal() { # {{{1
     # - https://github.com/OSGeo/gdal/issues/2402
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
-    local brew_opt_pkgs conf_args file jobs make make_prefix name opt_pkgs
-    local prefix url version
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    make="$(koopa::locate_make)"
-    name='gdal'
+    local app brew_opt_pkgs conf_args dict opt_pkgs
+    declare -A app=(
+        [make]="$(koopa::locate_make)"
+    )
+    declare -A dict=(
+        [jobs]="$(koopa::cpu_count)"
+        [make_prefix]="$(koopa::make_prefix)"
+        [name]='gdal'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
     conf_args=(
-        "--prefix=${prefix}"
+        "--prefix=${dict[prefix]}"
         '--with-armadillo=no'
         '--with-openjpeg'
         '--with-qhull=no'
@@ -59,11 +64,10 @@ koopa:::install_gdal() { # {{{1
     if koopa::is_linux
     then
         opt_pkgs+=('sqlite')
-        make_prefix="$(koopa::make_prefix)"
         conf_args+=(
-            "CFLAGS=-I${make_prefix}/include"
-            "CPPFLAGS=-I${make_prefix}/include"
-            "LDFLAGS=-L${make_prefix}/lib"
+            "CFLAGS=-I${dict[make_prefix]}/include"
+            "CPPFLAGS=-I${dict[make_prefix]}/include"
+            "LDFLAGS=-L${dict[make_prefix]}/lib"
         )
     elif koopa::is_macos
     then
@@ -71,16 +75,16 @@ koopa:::install_gdal() { # {{{1
         koopa::activate_homebrew_opt_prefix "${brew_opt_pkgs[@]}"
     fi
     koopa::activate_opt_prefix "${opt_pkgs[@]}"
-    jobs="$(koopa::cpu_count)"
-    file="${name}-${version}.tar.gz"
-    url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
-    koopa::download "$url" "$file"
-    koopa::extract "$file"
-    koopa::cd "${name}-${version}"
+    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
+    dict[url]="https://github.com/OSGeo/${dict[name]}/releases/download/\
+v${dict[version]}/${dict[file]}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::cd "${dict[name]}-${dict[version]}"
     koopa::alert_coffee_time
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.
-    "$make" --jobs="$jobs"
-    "$make" install
+    "${app[make]}" --jobs="${dict[jobs]}"
+    "${app[make]}" install
     return 0
 }
