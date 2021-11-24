@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework this:
+# g++: warning: /usr/include/x86_64-linux-gnu: linker input file unused
+# because linking not done
+
 koopa:::install_proj() { # {{{1
     # """
     # Install PROJ.
