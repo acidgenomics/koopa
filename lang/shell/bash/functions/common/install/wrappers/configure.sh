@@ -1,5 +1,25 @@
 #!/usr/bin/env bash
 
+koopa::configure_dotfiles() { # {{{1
+    # """
+    # Configure dotfiles.
+    # @note Updated 2021-11-24.
+    # """
+    local app dict
+    declare -A app=(
+        [bash]="$(koopa::locate_bash)"
+    )
+    declare -A dict=(
+        [name]='dotfiles'
+        [prefix]="$(koopa::dotfiles_prefix)"
+    )
+    dict[script]="${dict[prefix]}/install"
+    koopa::assert_is_file "${dict[script]}"
+    koopa::add_koopa_config_link "${dict[prefix]}" "${dict[name]}"
+    "${app[bash]}" "${dict[script]}"
+    return 0
+}
+
 koopa::configure_go() { # {{{1
     koopa::configure_app_packages \
         --name-fancy='Go' \
