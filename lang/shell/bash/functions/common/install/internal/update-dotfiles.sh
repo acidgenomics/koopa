@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME The 'git_pull' approach currently has submodule issue with 'main'
+# branch.
+
+# FIXME Need to rethink and rework this:
+# shell/zsh/plugins/zsh-autosuggestions: https://github.com/zsh-users/zsh-autosuggestions.git
+# shell/zsh/plugins/zsh-syntax-highlighting: https://github.com/zsh-users/zsh-syntax-highlighting.git
+# error: pathspec 'main' did not match any file(s) known to git
+# fatal: run_command returned non-zero status for shell/zsh/plugins/zsh-autosuggestions
+
 koopa:::update_dotfiles() { # {{{1
     # """
     # Update dotfiles repo and run install script, if defined.
