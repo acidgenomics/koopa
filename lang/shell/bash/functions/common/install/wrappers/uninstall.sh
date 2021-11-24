@@ -88,15 +88,6 @@ koopa::uninstall_dotfiles() { # {{{1
         "$@"
 }
 
-koopa::uninstall_dotfiles_private() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='Dotfiles (Private)' \
-        --name='dotfiles-private' \
-        --no-shared \
-        --prefix="$(koopa::dotfiles_private_prefix)" \
-        "$@"
-}
-
 koopa::uninstall_emacs() { # {{{1
     koopa::uninstall_app \
         --name-fancy='Emacs' \
