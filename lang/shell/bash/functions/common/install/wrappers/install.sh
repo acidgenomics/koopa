@@ -87,33 +87,21 @@ koopa::install_doom_emacs() { # {{{1
         "$@"
 }
 
-# FIXME Rework private dotfiles installer to use same approach.
-# FIXME This needs to locate Bash to handle install script call.
 koopa::install_dotfiles() { # {{{1
-    local dict
-    declare -A dict=(
-        [name]='dotfiles'
-        [prefix]="$(koopa::dotfiles_prefix)"
-        [version]='rolling'
-    )
-    dict[script]="${dict[prefix]}/install"
     koopa::install_app \
-        --name="${dict[name]}" \
-        --version="${dict[version]}" \
+        --name-fancy='Dotfiles' \
+        --name='dotfiles' \
+        --prefix="$(koopa::dotfiles_prefix)" \
+        --version='rolling' \
         "$@"
-    koopa::assert_is_dir "${dict[prefix]}"
-    koopa::add_koopa_config_link "${dict[prefix]}" "${dict[name]}"
-    koopa::assert_is_file "${dict[script]}"
-    "${dict[script]}"
-    return 0
 }
 
-# FIXME Improve consistency with dotfiles.
 koopa::install_dotfiles_private() { # {{{1
     koopa::install_app \
-        --name-fancy='Private Dotfiles' \
+        --name-fancy='Dotfiles (Private)' \
         --name='dotfiles-private' \
         --prefix="$(koopa::dotfiles_private_prefix)" \
+        --version='rolling' \
         "$@"
 }
 

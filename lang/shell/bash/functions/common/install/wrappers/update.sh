@@ -21,7 +21,7 @@ koopa::update_dotfiles() { # {{{1
         "$@"
 }
 
-# FIXME Need to add support for dotfiles private.
+# FIXME Need to add support for Dotfiles (Private).
 
 koopa::update_homebrew() { # {{{1
     koopa::update_app \

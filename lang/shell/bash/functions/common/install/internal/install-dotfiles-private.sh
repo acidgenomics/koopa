@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
 
-# FIXME Call Bash here instead of running script directly.
-# FIXME Should I rework this monorepo approach here?
-# FIXME Need to wrap this.
 koopa:::install_dotfiles_private() { # {{{1
     # """
     # Install private dotfiles.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-11-23.
     # """
-    local prefix script
+    local app dict
+    declare -A app=(
+        [bash]="$(koopa::locate_bash)"
+    )
+    declare -A dict=(
+        [prefix]="${INSTALL_PREFIX:?}"
+    )
+    koopa::assert_is_dir "${dict[prefix]}"
+
+    # FIXME Split this out to separate configure function -------------
     koopa::add_monorepo_config_link 'dotfiles-private'
-    # FIXME INSTALL_PREFIX
-    koopa::assert_is_dir "$prefix"
-    script="${prefix}/install"
-    koopa::assert_is_file "$script"
-    "$script"
+    dict[script]="${prefix}/install"
+    koopa::assert_is_file "${dict[script]}"
+    "${app[bash]}" "${dict[script]}"
+    # FIXME Split this out to separate configure function -----------
+
     return 0
 }
