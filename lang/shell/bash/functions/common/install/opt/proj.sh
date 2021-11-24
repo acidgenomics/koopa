@@ -17,7 +17,7 @@ koopa:::install_proj() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    conf_args=("--prefix=${prefix}")
+    conf_args=("--prefix=${dict[prefix]}")
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'pkg-config' 'libtiff' 'sqlite3'
