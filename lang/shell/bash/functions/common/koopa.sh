@@ -224,9 +224,6 @@ koopa:::koopa_system() { # {{{1
                     ;;
             esac
             ;;
-        'pull')
-            f='sys-git-pull'
-            ;;
         'homebrew-cask-version')
             f='get-homebrew-cask-version'
             ;;
