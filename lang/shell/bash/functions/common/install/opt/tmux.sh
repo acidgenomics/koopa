@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider adding tmux to enabled shells.
+
 koopa:::install_tmux() { # {{{1
     # """
     # Install Tmux.
