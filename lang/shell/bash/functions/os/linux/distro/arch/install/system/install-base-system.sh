@@ -29,7 +29,7 @@ koopa:::arch_install_base_system() { # {{{1
     # Note that Arch is currently overwriting PS1 for root.
     # This is due to configuration in '/etc/profile'.
     # """
-    local app dict pkgs pos
+    local app dict pkgs
     declare -A app=(
         [pacman]="$(koopa::arch_locate_pacman)"
         [pacman_db_upgrade]="$(koopa::arch_locate_pacman_db_upgrade)"
@@ -40,10 +40,12 @@ koopa:::arch_install_base_system() { # {{{1
         [recommended]=1
         [upgrade]=1
     )
-    pos=()
     while (("$#"))
     do
         case "$1" in
+            '')
+                shift 1
+                ;;
             '--base-image')
                 dict[base]=1
                 dict[recommended]=0
@@ -60,20 +62,11 @@ koopa:::arch_install_base_system() { # {{{1
             '--recommended')
                 shift 1
                 ;;
-            '')
-                shift 1
-                ;;
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
     # Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
     # is non-standard and can cause koopa's application link script to break.
     [[ -L '/usr/local/share/man' ]] && \
