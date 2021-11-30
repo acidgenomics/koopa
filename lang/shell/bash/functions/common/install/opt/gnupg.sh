@@ -5,99 +5,119 @@
 koopa:::install_gnupg() { # {{{1
     # """
     # Install GnuPG.
-    # @note Updated 2021-04-29.
-    #
-    # 2.2.27 is current LTS release.
+    # @note Updated 2021-11-30.
     #
     # @seealso
     # - https://gnupg.org/download/index.html
     # - https://gnupg.org/signature_key.html
     # - https://gnupg.org/download/integrity_check.html
     # """
-    local gpg gpg_agent gpg_keys version
-    version="${INSTALL_VERSION:?}"
-    case "$version" in
+    local app dict gpg_keys install_args opt opt_arr
+    declare -A app=(
+        [gpg]='/usr/bin/gpg'
+        [gpg_agent]='/usr/bin/gpg-agent'
+    )
+    declare -A dict=(
+        [version]="${INSTALL_VERSION:?}"
+    )
+    case "${dict[version]}" in
+        '2.3.3')
+            # 2021-10-12.
+            dict[libgpg_error_version]='1.43'     # 2021-11-03
+            dict[libgcrypt_version]='1.9.4'       # 2021-08-22
+            dict[libksba_version]='1.6.0'         # 2021-06-10
+            dict[libassuan_version]='2.5.5'       # 2021-03-22
+            dict[npth_version]='1.6'              # 2018-07-16
+            dict[pinentry_version]='1.2.0'        # 2021-08-25
+            ;;
         '2.3.2')
             # 2021-08-24.
-            libgpg_error_version='1.42'     # 2021-03-22
-            libgcrypt_version='1.9.4'       # 2021-08-22
-            libksba_version='1.6.0'         # 2021-06-10
-            libassuan_version='2.5.5'       # 2021-03-22
-            npth_version='1.6'              # 2018-07-16
-            pinentry_version='1.2.0'        # 2021-08-25
+            dict[libgpg_error_version]='1.42'     # 2021-03-22
+            dict[libgcrypt_version]='1.9.4'       # 2021-08-22
+            dict[libksba_version]='1.6.0'         # 2021-06-10
+            dict[libassuan_version]='2.5.5'       # 2021-03-22
+            dict[npth_version]='1.6'              # 2018-07-16
+            dict[pinentry_version]='1.2.0'        # 2021-08-25
             ;;
         '2.3.1')
             # 2021-04-20.
-            libgpg_error_version='1.42'     # 2021-03-22
-            libgcrypt_version='1.9.3'       # 2021-04-19
-            libksba_version='1.5.1'         # 2021-04-06
-            libassuan_version='2.5.5'       # 2021-03-22
-            npth_version='1.6'              # 2018-07-16
-            pinentry_version='1.1.1'        # 2021-01-22
+            dict[libgpg_error_version]='1.42'     # 2021-03-22
+            dict[libgcrypt_version]='1.9.3'       # 2021-04-19
+            dict[libksba_version]='1.5.1'         # 2021-04-06
+            dict[libassuan_version]='2.5.5'       # 2021-03-22
+            dict[npth_version]='1.6'              # 2018-07-16
+            dict[pinentry_version]='1.1.1'        # 2021-01-22
+            ;;
+        '2.2.33')
+            # 2021-11-30 (LTS).
+            dict[libgpg_error_version]='1.43'
+            dict[libgcrypt_version]='1.8.8'
+            dict[libksba_version]='1.6.0'
+            dict[libassuan_version]='2.5.5'
+            dict[npth_version]='1.6'
+            dict[pinentry_version]='1.2.0'
             ;;
         '2.2.26' | \
         '2.2.27')
-            libgpg_error_version='1.41'
-            libgcrypt_version='1.8.7'
-            libksba_version='1.5.0'
-            libassuan_version='2.5.4'
-            npth_version='1.6'
-            pinentry_version='1.1.0'
+            dict[libgpg_error_version]='1.41'
+            dict[libgcrypt_version]='1.8.7'
+            dict[libksba_version]='1.5.0'
+            dict[libassuan_version]='2.5.4'
+            dict[npth_version]='1.6'
+            dict[pinentry_version]='1.1.0'
             ;;
         '2.2.25' | \
         '2.2.24')
             # 2.2.25: 2020-11-24.
             # 2.2.24: 2020-11-17.
-            libgpg_error_version='1.39'
-            libgcrypt_version='1.8.7'
-            libksba_version='1.5.0'
-            libassuan_version='2.5.4'
-            npth_version='1.6'
-            pinentry_version='1.1.0'
+            dict[libgpg_error_version]='1.39'
+            dict[libgcrypt_version]='1.8.7'
+            dict[libksba_version]='1.5.0'
+            dict[libassuan_version]='2.5.4'
+            dict[npth_version]='1.6'
+            dict[pinentry_version]='1.1.0'
             ;;
         '2.2.23')
             # 2020-09-03.
-            libgpg_error_version='1.39'
-            libgcrypt_version='1.8.7'
-            libksba_version='1.4.0'
-            libassuan_version='2.5.4'
-            npth_version='1.6'
-            pinentry_version='1.1.0'
+            dict[libgpg_error_version]='1.39'
+            dict[libgcrypt_version]='1.8.7'
+            dict[libksba_version]='1.4.0'
+            dict[libassuan_version]='2.5.4'
+            dict[npth_version]='1.6'
+            dict[pinentry_version]='1.1.0'
             ;;
         '2.2.21')
             # 2020-07-09.
-            libgpg_error_version='1.38'
-            libgcrypt_version='1.8.6'
-            libksba_version='1.4.0'
-            libassuan_version='2.5.3'
-            npth_version='1.6'
-            pinentry_version='1.1.0'
+            dict[libgpg_error_version]='1.38'
+            dict[libgcrypt_version]='1.8.6'
+            dict[libksba_version]='1.4.0'
+            dict[libassuan_version]='2.5.3'
+            dict[npth_version]='1.6'
+            dict[pinentry_version]='1.1.0'
             ;;
         '2.2.20')
             # 2020-03-20.
-            libgpg_error_version='1.38'
-            libgcrypt_version='1.8.5'
-            libksba_version='1.4.0'
-            libassuan_version='2.5.3'
-            npth_version='1.6'
-            pinentry_version='1.1.0'
+            dict[libgpg_error_version]='1.38'
+            dict[libgcrypt_version]='1.8.5'
+            dict[libksba_version]='1.4.0'
+            dict[libassuan_version]='2.5.3'
+            dict[npth_version]='1.6'
+            dict[pinentry_version]='1.1.0'
             ;;
         '2.2.19')
             # 2019-12-07.
-            libgpg_error_version='1.37'
-            libgcrypt_version='1.8.5'
-            libksba_version='1.3.5'
-            libassuan_version='2.5.3'
-            npth_version='1.6'
-            pinentry_version='1.1.0'
+            dict[libgpg_error_version]='1.37'
+            dict[libgcrypt_version]='1.8.5'
+            dict[libksba_version]='1.3.5'
+            dict[libassuan_version]='2.5.3'
+            dict[npth_version]='1.6'
+            dict[pinentry_version]='1.1.0'
             ;;
         *)
-            koopa::stop "Unsupported version: '${version}'."
+            koopa::stop "Unsupported version: '${dict[version]}'."
             ;;
     esac
-    gpg='/usr/bin/gpg'
-    gpg_agent='/usr/bin/gpg-agent'
-    if koopa::is_installed "$gpg_agent"
+    if koopa::is_installed "${app[gpg_agent]}"
     then
         # Current releases are signed by one or more of these keys:
         #
@@ -126,50 +146,55 @@ koopa:::install_gnupg() { # {{{1
             # Extra key needed for pinentry 1.1.1.
             '80CC1B8D04C262DDFEE1980C6F7F0F91D138FC7B'
         )
-        "$gpg" \
+        "${app[gpg]}" \
             --keyserver 'hkp://keyserver.ubuntu.com:80' \
             --recv-keys "${gpg_keys[@]}"
-        "$gpg" --list-keys
+        "${app[gpg]}" --list-keys
     fi
     # Install dependencies.
     koopa::install_app \
+        --installer='gnupg-gcrypt' \
         --name='libgpg-error' \
-        --version="$libgpg_error_version" \
-        --installer='gnupg-gcrypt' \
+        --version="${dict[libgpg_error_version]}" \
         "$@"
     koopa::install_app \
+        --installer='gnupg-gcrypt' \
         --name='libgcrypt' \
-        --version="$libgcrypt_version" \
-        --installer='gnupg-gcrypt' \
         --opt='libgpg-error' \
+        --version="${dict[libgcrypt_version]}" \
         "$@"
     koopa::install_app \
+        --installer='gnupg-gcrypt' \
         --name='libassuan' \
-        --version="$libassuan_version" \
-        --installer='gnupg-gcrypt' \
         --opt='libgpg-error' \
+        --version="${dict[libassuan_version]}" \
         "$@"
     koopa::install_app \
+        --installer='gnupg-gcrypt' \
         --name='libksba' \
-        --version="$libksba_version" \
-        --installer='gnupg-gcrypt' \
         --opt='libgpg-error' \
+        --version="${dict[libksba_version]}" \
         "$@"
     koopa::install_app \
-        --name='npth' \
-        --version="$npth_version" \
         --installer='gnupg-gcrypt' \
+        --name='npth' \
+        --version="${dict[npth_version]}" \
         "$@"
     if koopa::is_macos
     then
-        koopa::alert_note 'Skipping installation of pinentry.'
+        koopa::alert_note 'Skipping installation of pinentry on macOS.'
     else
         koopa::install_app \
-            --name='pinentry' \
-            --version="$pinentry_version" \
             --installer='gnupg-pinentry' \
+            --name='pinentry' \
+            --version="${dict[pinentry_version]}" \
             "$@"
     fi
+    install_args=(
+        "--version=${dict[version]}"
+        '--installer=gnupg-gcrypt'
+        '--name=gnupg'
+    )
     opt_arr=(
         'libgpg-error'
         'libgcrypt'
@@ -181,98 +206,107 @@ koopa:::install_gnupg() { # {{{1
     then
         opt_arr+=('pinentry')
     fi
-    opt_str="$(koopa::paste --sep=',' "${opt_arr[@]}")"
-    koopa::install_app \
-        --name='gnupg' \
-        --version="$version" \
-        --installer='gnupg-gcrypt' \
-        --opt="$opt_str" \
-        "$@"
+    for opt in "${opt_arr[@]}"
+    do
+        install_args+=("--opt=${opt}")
+    done
+    koopa::install_app "${install_args[@]}" "$@"
+
+
     if koopa::is_installed 'gpg-agent'
     then
+        # FIXME Locate gpgconf too.
         gpgconf --kill gpg-agent
     fi
+
+
     return 0
 }
 
 koopa:::install_gnupg_gcrypt() { # {{{1
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-30.
     # """
-    local base_url gcrypt_url gpg gpg_agent jobs make name prefix
-    local sig_file sig_url tar_file tar_url version
-    name="${INSTALL_NAME:?}"
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    gcrypt_url="$(koopa::gcrypt_url)"
-    jobs="$(koopa::cpu_count)"
-    make="$(koopa::locate_make)"
-    base_url="${gcrypt_url}/${name}"
-    tar_file="${name}-${version}.tar.bz2"
-    tar_url="${base_url}/${tar_file}"
-    koopa::download "$tar_url"
-    gpg='/usr/bin/gpg'
-    gpg_agent='/usr/bin/gpg-agent'
-    if koopa::is_installed "$gpg_agent"
+    local app dict
+    declare -A app=(
+        [gpg]='/usr/bin/gpg'
+        [gpg_agent]='/usr/bin/gpg-agent'
+        [make]="$(koopa::locate_make)"
+    )
+    declare -A dict=(
+        [gcrypt_url]="$(koopa::gcrypt_url)"
+        [jobs]="$(koopa::cpu_count)"
+        [name]="${INSTALL_NAME:?}"
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
+    dict[tar_file]="${dict[name]}-${dict[version]}.tar.bz2"
+    dict[tar_url]="${dict[base_url]}/${dict[tar_file]}"
+    koopa::download "${dict[tar_url]}" "${dict[tar_file]}"
+    if koopa::is_installed "${app[gpg_agent]}"
     then
-        sig_file="${tar_file}.sig"
-        sig_url="${base_url}/${sig_file}"
-        koopa::download "$sig_url"
-        "$gpg" --verify "$sig_file" || return 1
+        dict[sig_file]="${dict[tar_file]}.sig"
+        dict[sig_url]="${dict[base_url]}/${dict[sig_file]}"
+        koopa::download "${dict[sig_url]}" "${dict[sig_file]}"
+        "${app[gpg]}" --verify "${dict[sig_file]}" || return 1
     fi
-    koopa::extract "$tar_file"
-    koopa::cd "${name}-${version}"
-    ./configure --prefix="$prefix"
-    "$make" --jobs="$jobs"
-    "$make" install
+    koopa::extract "${dict[tar_file]}"
+    koopa::cd "${dict[name]}-${dict[version]}"
+    ./configure --prefix="${dict[prefix]}"
+    "${app[make]}" --jobs="${dict[jobs]}"
+    "${app[make]}" install
     return 0
 }
 
 koopa:::install_gnupg_pinentry() { # {{{1
     # """
     # Install GnuPG pinentry library.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-30.
     # """
-    local base_url gcrypt_url gpg gpg_agent jobs make name prefix
-    local sig_file sig_url tar_file tar_url version
-    name="${INSTALL_NAME:?}"
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    gcrypt_url="$(koopa::gcrypt_url)"
-    jobs="$(koopa::cpu_count)"
-    make="$(koopa::locate_make)"
-    base_url="${gcrypt_url}/${name}"
-    tar_file="${name}-${version}.tar.bz2"
-    tar_url="${base_url}/${tar_file}"
-    koopa::download "$tar_url"
-    gpg='/usr/bin/gpg'
-    gpg_agent='/usr/bin/gpg-agent'
-    if koopa::is_installed "$gpg_agent"
+    local app conf_args dict
+    declare -A app=(
+        [gpg]='/usr/bin/gpg'
+        [gpg_agent]='/usr/bin/gpg-agent'
+        [make]="$(koopa::locate_make)"
+    )
+    declare -A dict=(
+        [gcrypt_url]="$(koopa::gcrypt_url)"
+        [jobs]="$(koopa::cpu_count)"
+        [name]="${INSTALL_NAME:?}"
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
+    dict[tar_file]="${dict[name]}-${dict[version]}.tar.bz2"
+    dict[tar_url]="${dict[base_url]}/${dict[tar_file]}"
+    koopa::download "${dict[tar_url]}" "${dict[tar_file]}"
+    if koopa::is_installed "${app[gpg_agent]}"
     then
-        sig_file="${tar_file}.sig"
-        sig_url="${base_url}/${sig_file}"
-        koopa::download "$sig_url"
-        "$gpg" --verify "$sig_file" || return 1
+        dict[sig_file]="${dict[tar_file]}.sig"
+        dict[sig_url]="${dict[base_url]}/${dict[sig_file]}"
+        koopa::download "${dict[sig_url]}" "${dict[sig_file]}"
+        "${app[gpg]}" --verify "${dict[sig_file]}" || return 1
     fi
-    koopa::extract "$tar_file"
-    koopa::cd "${name}-${version}"
-    flags=("--prefix=${prefix}")
+    koopa::extract "${dict[tar_file]}"
+    koopa::cd "${dict[name]}-${dict[version]}"
+    conf_args=("--prefix=${dict[prefix]}")
     if koopa::is_opensuse
     then
         # Build with ncurses is currently failing on openSUSE, due to
         # hard-coded link to '/usr/include/ncursesw' that isn't easy to resolve.
         # Falling back to using 'pinentry-tty' instead in this case.
-        flags+=(
+        conf_args+=(
             '--disable-fallback-curses'
             '--disable-pinentry-curses'
             '--enable-pinentry-tty'
         )
     else
-        flags+=('--enable-pinentry-curses')
+        conf_args+=('--enable-pinentry-curses')
     fi
-    ./configure "${flags[@]}"
-    "$make" --jobs="$jobs"
-    "$make" install
+    ./configure "${conf_args[@]}"
+    "${app[make]}" --jobs="${dict[jobs]}"
+    "${app[make]}" install
     return 0
 }
