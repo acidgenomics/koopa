@@ -170,6 +170,7 @@ _koopa_complete() { # {{{1
                         'aspera-connect'
                         'aws-cli'
                         'azure-cli'
+                        'base-system'
                         'bcbio-nextgen'
                         'bcbio-nextgen-ensembl-genome'
                         'bcbio-nextgen-genome'
