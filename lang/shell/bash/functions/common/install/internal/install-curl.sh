@@ -14,6 +14,7 @@ koopa:::install_curl() { # {{{1
     # - https://stackoverflow.com/questions/30017397
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

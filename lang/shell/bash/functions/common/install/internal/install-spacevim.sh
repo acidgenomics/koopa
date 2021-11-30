@@ -10,6 +10,7 @@ koopa:::install_spacevim() { # {{{1
     # - https://spacevim.org/faq/
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

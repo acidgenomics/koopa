@@ -8,6 +8,7 @@ koopa:::install_fish() { # {{{1
     # - https://github.com/fish-shell/fish-shell/#building
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [cmake]="$(koopa::locate_cmake)"
     )

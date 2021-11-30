@@ -6,6 +6,7 @@ koopa:::install_go() { # {{{1
     # @note Updated 2021-11-23.
     # """
     local dict
+    koopa::assert_has_no_args "$#"
     declare -A dict=(
         [arch]="$(koopa::arch2)"  # e.g. "amd64".
         [name]='go'

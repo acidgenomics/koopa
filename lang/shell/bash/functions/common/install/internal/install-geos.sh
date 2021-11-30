@@ -21,6 +21,7 @@ koopa:::install_geos() { # {{{1
     # > "${app[make]}" check
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [cmake]="$(koopa::locate_cmake)"
         [make]="$(koopa::locate_make)"
