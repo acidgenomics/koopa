@@ -50,7 +50,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
     # """
     local dict env envs
     declare -A dict=(
-        name_fancy='conda environments for bioinformatics'
+        [name_fancy]='conda environments for bioinformatics'
         [all]=0
         [aligners]=0
         [chipseq]=0
@@ -601,11 +601,11 @@ koopa::conda_remove_env() { # {{{1
         prefix="$(koopa::conda_env_prefix "$name")"
         koopa::assert_is_dir "$prefix"
         name="$(koopa::basename "$prefix")"
-        koopa::uninstall_start "$name" "$prefix"
+        koopa::alert_uninstall_start "$name" "$prefix"
         # Don't set the '--all' flag here, it can break other recipes.
         "$conda" env remove --name="$name" --yes
         [[ -d "$prefix" ]] && koopa::rm "$prefix"
-        koopa::uninstall_success "$name" "$prefix"
+        koopa::alert_uninstall_success "$name" "$prefix"
     done
     [[ "$nounset" -eq 1 ]] && set -u
     return 0
