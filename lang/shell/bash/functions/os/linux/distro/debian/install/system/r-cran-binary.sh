@@ -57,17 +57,13 @@ koopa::debian_install_r_cran_binary() { # {{{1
 koopa::debian_uninstall_r_cran_binary() { # {{{1
     # """
     # Uninstall R CRAN binary.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-11-30.
     # """
-    local name_fancy
     koopa::assert_has_no_args "$#"
-    name_fancy='R CRAN binary'
-    koopa::uninstall_start "$name_fancy"
-    koopa::assert_has_no_args "$#"
-    koopa::assert_has_no_envs
-    koopa::rm --sudo '/etc/R' '/usr/lib/R/etc'
+    koopa::rm --sudo \
+        '/etc/R' \
+        '/usr/lib/R/etc'
     koopa::debian_apt_remove 'r-*'
     koopa::debian_apt_delete_repo 'r'
-    koopa::uninstall_success "$name_fancy"
     return 0
 }

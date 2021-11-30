@@ -84,7 +84,7 @@ koopa::uninstall_app() { # {{{1
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ "${dict[system]}" -eq 1 ]]
     then
-        koopa::uninstall_start "${dict[name_fancy]}"
+        koopa::alert_uninstall_start "${dict[name_fancy]}"
         if [[ -n "${dict[prefix]}" ]]
         then
             koopa::rm --sudo "${dict[prefix]}"
@@ -102,7 +102,7 @@ koopa::uninstall_app() { # {{{1
             fi
             "${dict[function]}" "$@"
         fi
-        koopa::uninstall_success "${dict[name_fancy]}"
+        koopa::alert_uninstall_success "${dict[name_fancy]}"
     else
         koopa::assert_has_no_args "$#"
         if [[ -z "${dict[prefix]}" ]]
@@ -122,7 +122,7 @@ koopa::uninstall_app() { # {{{1
         then
             dict[shared]=1
         fi
-        koopa::uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
+        koopa::alert_uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
         if [[ "${dict[shared]}" -eq 1 ]]
         then
             app[rm]='koopa::sys_rm'
@@ -146,7 +146,7 @@ koopa::uninstall_app() { # {{{1
             koopa::alert "Deleting broken symlinks in '${dict[make_prefix]}'."
             koopa::delete_broken_symlinks "${dict[make_prefix]}"
         fi
-        koopa::uninstall_success "${dict[name_fancy]}" "${dict[prefix]}"
+        koopa::alert_uninstall_success "${dict[name_fancy]}" "${dict[prefix]}"
     fi
     return 0
 }
