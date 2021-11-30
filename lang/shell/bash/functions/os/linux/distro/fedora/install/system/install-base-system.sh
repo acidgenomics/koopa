@@ -1,16 +1,24 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap this.
-koopa::fedora_install_base() { # {{{1
+koopa::fedora_install_base_system() { # {{{1
+    koopa::install_app \
+        --name-fancy='Fedora base system' \
+        --name='base-system' \
+        --platform='fedora' \
+        --system \
+        "$@"
+}
+
+koopa:::fedora_install_base_system() { # {{{1
     # """
     # Install Fedora base system.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-30.
     #
     # Use '<pkg>-<version>' to pin package versions.
     #
     # Refer to Debian install base script for more details on supported args.
     # """
-    local dict name_fancy pkgs pos
+    local dict pkgs
     declare -A dict=(
         [base]=1
         [dev]=1
@@ -18,10 +26,12 @@ koopa::fedora_install_base() { # {{{1
         [recommended]=1
         [upgrade]=1
     )
-    pos=()
     while (("$#"))
     do
         case "$1" in
+            '')
+                shift 1
+                ;;
             '--base-image')
                 dict[base]=1
                 dict[dev]=0
@@ -42,22 +52,11 @@ koopa::fedora_install_base() { # {{{1
                 dict[upgrade]=1
                 shift 1
                 ;;
-            '')
-                shift 1
-                ;;
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
-    name_fancy='Fedora base system'
-    koopa::alert_install_start "$name_fancy"
     if [[ "${dict[recommended]}" -eq 1 ]] && koopa::is_rhel_ubi
     then
         koopa::stop 'Recommended configuration not yet supported for RHEL UBI.'
@@ -244,6 +243,5 @@ koopa::fedora_install_base() { # {{{1
     koopa::fedora_dnf_install "${pkgs[@]}"
     koopa::fedora_dnf clean all
     koopa::fedora_set_locale
-    koopa::alert_install_success "$name_fancy"
     return 0
 }
