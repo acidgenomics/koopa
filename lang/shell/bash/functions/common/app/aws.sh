@@ -129,7 +129,7 @@ koopa::aws_batch_list_jobs() { # {{{1
         'FAILED'
     )
 
-    dict[job_queue]="$(koopa::paste0 ':' "${job_queue_array[@]}")"
+    dict[job_queue]="$(koopa::paste --sep=':' "${job_queue_array[@]}")"
     for status in "${status_array[@]}"
     do
         koopa::h2 "$status"

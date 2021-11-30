@@ -683,6 +683,12 @@ koopa::install_vim() { # {{{1
         "$@"
 }
 
+koopa::install_wget() { # {{{1
+    koopa::install_app \
+        --name='wget' \
+        "$@"
+}
+
 koopa::install_zsh() { # {{{1
     koopa::install_app \
         --name-fancy='Zsh' \

@@ -181,7 +181,7 @@ koopa:::install_gnupg() { # {{{1
     then
         opt_arr+=('pinentry')
     fi
-    opt_str="$(koopa::paste0 ',' "${opt_arr[@]}")"
+    opt_str="$(koopa::paste --sep=',' "${opt_arr[@]}")"
     koopa::install_app \
         --name='gnupg' \
         --version="$version" \

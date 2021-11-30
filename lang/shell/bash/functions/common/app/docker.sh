@@ -167,7 +167,7 @@ koopa::docker_build() { # {{{1
             readarray -t platforms < "$platforms_file"
         fi
         # e.g. 'linux/amd64,linux/arm64'.
-        platforms_string="$(koopa::paste0 ',' "${platforms[@]}")"
+        platforms_string="$(koopa::paste --sep=',' "${platforms[@]}")"
         build_args+=("--platform=${platforms_string}")
         # Harden against buildx blowing up memory on a local machine.
         # Consider raising this when we deploy a more powerful build machine.
