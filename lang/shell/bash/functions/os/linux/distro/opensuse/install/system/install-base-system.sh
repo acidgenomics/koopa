@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap this.
-koopa::opensuse_install_base() { # {{{1
+koopa::opensuse_install_base_system() { # {{{1
+    koopa::install_app \
+        --name-fancy='openSUSE base system' \
+        --name='base-system' \
+        --platform='opensuse' \
+        --system \
+        "$@"
+}
+
+koopa:::opensuse_install_base_system() { # {{{1
     # """
     # Install openSUSE base system.
-    # @note Updated 2021-10-31.
+    # @note Updated 2021-11-30.
     #
     # zypper cheat sheet:
     # https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
     # """
-    local app dict name_fancy pkgs pos
+    local app dict pkgs
     declare -A app=(
         [sudo]="$(koopa::locate_sudo)"
         [zypper]="$(koopa::locate_zypper)"
@@ -21,7 +29,6 @@ koopa::opensuse_install_base() { # {{{1
         [recommended]=1
         [upgrade]=1
     )
-    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -57,10 +64,6 @@ koopa::opensuse_install_base() { # {{{1
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
-    name_fancy='openSUSE base system'
-    koopa::alert_install_start "$name_fancy"
     pkgs=()
     "${app[sudo]}" "${app[zypper]}" refresh
     if [[ "${dict[upgrade]}" -eq 1 ]]
@@ -126,7 +129,6 @@ koopa::opensuse_install_base() { # {{{1
     fi
     "${app[sudo]}" "${app[zypper]}" install -y "${pkgs[@]}"
     "${app[sudo]}" "${app[zypper]}" clean
-    koopa::alert_install_success "$name_fancy"
     return 0
 }
 
