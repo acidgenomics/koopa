@@ -6,6 +6,7 @@ koopa:::install_ensembl_perl_api() { # {{{1
     # @note Updated 2021-11-23.
     # """
     local dict ensembl_repos repo
+    koopa::assert_has_no_args "$#"
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
     )

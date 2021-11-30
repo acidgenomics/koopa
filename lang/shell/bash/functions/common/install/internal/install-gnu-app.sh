@@ -8,6 +8,7 @@ koopa:::install_gnu_app() { # {{{1
     # Positional arguments are passed to 'conf_args' array.
     # """
     local app conf_args dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

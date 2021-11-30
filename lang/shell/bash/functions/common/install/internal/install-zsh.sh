@@ -27,6 +27,7 @@ koopa:::install_zsh() { # {{{1
     # - https://github.com/TACC/Lmod/issues/434
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

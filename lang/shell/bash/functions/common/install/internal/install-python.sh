@@ -20,6 +20,7 @@ koopa:::install_python() { # {{{1
     # - https://stackoverflow.com/questions/43333207
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

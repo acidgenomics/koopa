@@ -11,6 +11,7 @@ koopa:::install_gnupg() { # {{{1
     # - https://gnupg.org/download/integrity_check.html
     # """
     local app dict gpg_keys install_args opt opt_arr
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'
@@ -219,6 +220,7 @@ koopa:::install_gnupg_gcrypt() { # {{{1
     # @note Updated 2021-11-30.
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'
@@ -256,6 +258,7 @@ koopa:::install_gnupg_pinentry() { # {{{1
     # @note Updated 2021-11-30.
     # """
     local app conf_args dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'

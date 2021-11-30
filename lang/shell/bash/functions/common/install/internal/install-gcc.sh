@@ -54,6 +54,7 @@ koopa:::install_gcc() { # {{{1
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
     # """
     local app conf_args dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

@@ -11,6 +11,7 @@ koopa:::install_fzf() { # {{{1
     # - https://github.com/junegunn/fzf/blob/master/BUILD.md
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

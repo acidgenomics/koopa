@@ -14,6 +14,7 @@ koopa:::install_git() { # {{{1
     # > url="https://github.com/git/${name}/archive/${file}"
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     if koopa::is_macos
     then
         koopa::activate_opt_prefix 'autoconf'

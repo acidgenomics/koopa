@@ -18,6 +18,7 @@ koopa:::install_gdal() { # {{{1
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
     local app brew_opt_pkgs conf_args dict opt_pkgs
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

@@ -9,6 +9,7 @@ koopa:::install_cmake() { # {{{1
     # - https://github.com/Kitware/CMake
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )
