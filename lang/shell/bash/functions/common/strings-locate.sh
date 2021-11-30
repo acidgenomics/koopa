@@ -554,6 +554,18 @@ koopa::locate_gpg() { # {{{1
         --name='gpg'
 }
 
+koopa::locate_gpg_agent() { # {{{1
+    # """
+    # Locate 'gpg-agent'.
+    # @note Updated 2021-11-30.
+    # """
+    koopa::locate_app \
+        --brew-opt='gnupg' \
+        --koopa-opt='gnupg' \
+        --macos-app='/usr/local/MacGPG2/bin/gpg-agent' \
+        --name='gpg-agent'
+}
+
 koopa::locate_gpgconf() { # {{{1
     # """
     # Locate 'gpgconf'.
