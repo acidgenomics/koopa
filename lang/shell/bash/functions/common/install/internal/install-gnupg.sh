@@ -194,6 +194,7 @@ koopa:::install_gnupg() { # {{{1
         "--version=${dict[version]}"
         '--installer=gnupg-gcrypt'
         '--name=gnupg'
+        '--no-prefix-check'
     )
     opt_arr=(
         'libgpg-error'
