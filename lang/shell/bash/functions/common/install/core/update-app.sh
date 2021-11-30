@@ -146,11 +146,11 @@ koopa::update_app() { # {{{1
     (
         koopa::cd "${dict[tmp_dir]}"
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
-        PATH="$(koopa::paste0 ':' "${clean_path_arr[@]}")"
+        PATH="$(koopa::paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
         if [[ -x '/usr/bin/pkg-config' ]]
         then
-            _koopa_add_to_pkg_config_path_start_2 \
+            koopa::add_to_pkg_config_path_start_2 \
                 '/usr/bin/pkg-config'
         fi
         if [[ -n "${dict[homebrew_opt]}" ]]

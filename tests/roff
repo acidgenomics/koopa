@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
 koopa::test_roff() { # {{{1
     # """

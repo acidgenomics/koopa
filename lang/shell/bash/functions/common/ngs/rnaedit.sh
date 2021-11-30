@@ -83,7 +83,7 @@ koopa::run_rnaeditingindexer() { # {{{1
             'AluChr1Only'
             'bam'
         )
-        bam_suffix="$(koopa::paste0 '.' "${bam_suffix_arr[@]}")"
+        bam_suffix="$(koopa::paste --sep='.' "${bam_suffix_arr[@]}")"
     fi
     # Note that genome indexing to generate 'ucscHg38Genome.fa.fai' is currently
     # failing due to root permission requirement.
