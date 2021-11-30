@@ -40,6 +40,8 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
         conf_args+=(
             "--with-ssl=${dict[brew_prefix]}/opt/openssl@1.1"
         )
+    else
+        conf_args+=('--with-openssl')
     fi
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
