@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 
-koopa::debian_install_base() { # {{{1
+koopa::debian_install_base_system() { # {{{1
     koopa::install_app \
         --name-fancy='Debian base system' \
-        --name='base' \
-        --no-version \
+        --name='base-system' \
         --platform='debian' \
         --system \
         "$@"
 }
 
-koopa:::debian_install_base() { # {{{1
+koopa:::debian_install_base_system() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-30.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
