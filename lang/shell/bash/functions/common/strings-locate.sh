@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME How to handle case where 'brew-opt' and 'koopa-opt' are the same?
-# FIXME We likely want to streamline the handling of this for coreutils.
-
 koopa::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
@@ -548,11 +545,25 @@ koopa::locate_go() { # {{{1
 koopa::locate_gpg() { # {{{1
     # """
     # Locate 'gpg'.
-    # @note Updated 2021-09-15.
+    # @note Updated 2021-11-30.
     # """
     koopa::locate_app \
+        --brew-opt='gnupg' \
+        --koopa-opt='gnupg' \
         --macos-app='/usr/local/MacGPG2/bin/gpg' \
         --name='gpg'
+}
+
+koopa::locate_gpgconf() { # {{{1
+    # """
+    # Locate 'gpgconf'.
+    # @note Updated 2021-11-30.
+    # """
+    koopa::locate_app \
+        --brew-opt='gnupg' \
+        --koopa-opt='gnupg' \
+        --macos-app='/usr/local/MacGPG2/bin/gpgconf' \
+        --name='gpgconf'
 }
 
 koopa::locate_grep() { # {{{1
