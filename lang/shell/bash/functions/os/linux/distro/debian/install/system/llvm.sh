@@ -78,16 +78,12 @@ koopa::debian_install_llvm() { # {{{1
 koopa::debian_uninstall_llvm() { # {{{1
     # """
     # Uninstall LLVM.
-    # @note Updated 2021-05-26.
+    # @note Updated 2021-11-30.
     # """
-    name_fancy='LLVM'
-    koopa::uninstall_start "$name_fancy"
     koopa::assert_has_no_args "$#"
     koopa::assert_has_no_envs
     sudo apt-get --yes remove '^clang-[0-9]+.*' '^llvm-[0-9]+.*'
     sudo apt-get --yes autoremove
     koopa::rm --sudo '/etc/apt/sources.list.d/llvm.list'
-    unset -v LLVM_CONFIG
-    koopa::uninstall_success "$name_fancy"
     return 0
 }

@@ -49,19 +49,15 @@ koopa::debian_install_docker() { # {{{1
 koopa::debian_uninstall_docker() { # {{{1
     # """
     # Uninstall Docker.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-30.
     # """
-    local name name_fancy pkgs
-    name='docker'
-    name_fancy='Docker'
-    koopa::uninstall_start "$name_fancy"
+    local pkgs
     pkgs=(
         'containerd.io'
         'docker-ce'
         'docker-ce-cli'
     )
     koopa::debian_apt_remove "${pkgs[@]}"
-    koopa::debian_apt_delete_repo "$name"
-    koopa::uninstall_success "$name_fancy"
+    koopa::debian_apt_delete_repo 'docker'
     return 0
 }
