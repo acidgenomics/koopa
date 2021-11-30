@@ -211,15 +211,9 @@ koopa:::install_gnupg() { # {{{1
         install_args+=("--opt=${opt}")
     done
     koopa::install_app "${install_args[@]}" "$@"
-
-
-    if koopa::is_installed 'gpg-agent'
-    then
-        # FIXME Locate gpgconf too.
-        gpgconf --kill gpg-agent
-    fi
-
-
+    app[gpg_agent]="$(koopa::locate_gpg_agent)"
+    app[gpgconf]="$(koopa::locate_gpgconf)"
+    "${app[gpgconf]}" --kill "${app[gpg_agent]}"
     return 0
 }
 
