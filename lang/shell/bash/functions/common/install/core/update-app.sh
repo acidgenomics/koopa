@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Add an override to hide messages here.
+# FIXME Need to rework, looping across opt and homebrew-opt.
 
 koopa::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2021-11-22.
+    # @note Updated 2021-11-29.
     # """
-    local app clean_path_arr dict pkgs pos
+    local clean_path_arr dict pkgs pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
-    declare -A app=(
-        [tee]="$(koopa::locate_tee)"
-    )
     declare -A dict=(
         [homebrew_opt]=''
         [name_fancy]=''
@@ -23,7 +20,6 @@ koopa::update_app() { # {{{1
         [shared]=0
         [system]=0
         [tmp_dir]="$(koopa::tmp_dir)"
-        [tmp_log_file]="$(koopa::tmp_log_file)"
         [version]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
@@ -113,7 +109,6 @@ koopa::update_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    # FIXME Need to improve our variable checks here.
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
@@ -171,7 +166,7 @@ koopa::update_app() { # {{{1
         # shellcheck disable=SC2030
         export UPDATE_PREFIX="${dict[prefix]}"
         "${dict[function]}" "$@"
-    ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
+    )
     koopa::rm "${dict[tmp_dir]}"
     if [[ -d "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]
     then
