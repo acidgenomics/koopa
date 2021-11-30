@@ -3,13 +3,11 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2021-11-16.
+    # @note Updated 2021-11-30.
     #
     # Intended primarily for virtual machine and Docker image builds.
-    # """
-    local dict install_base_flags mode prefixes
-    koopa::assert_has_no_envs
-    # Install mode:
+    #
+    # @section Install mode:
     # - "bioconductor": Bioconductor mode, for continuous integration (CI)
     #   checks. This flag is intended installing different R/BioC versions on
     #   top of the Bioconductor (Debian) base image.
@@ -20,8 +18,9 @@ koopa::linux_configure_system() { # {{{1
     #   required on a full interactive VM.
     # - "minimal": Minimal config used for lightweight Docker images. This mode
     #   skips all program installation.
-    mode='default'
-    # Associative array dictionary of key-value pairs.
+    # """
+    local dict prefixes
+    koopa::assert_has_no_envs
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
         [data_disk_prefix]=''
@@ -40,7 +39,7 @@ koopa::linux_configure_system() { # {{{1
         [install_automake]=0
         [install_aws_cli]=0
         [install_azure_cli]=0
-        [install_base_flags]=''
+        [install_base_system_args]=''
         [install_bash]=0
         [install_binutils]=0
         [install_cmake]=0
@@ -51,6 +50,7 @@ koopa::linux_configure_system() { # {{{1
         [install_curl]=0
         [install_docker]=0
         [install_docker_credential_pass]=0
+        [install_dotfiles]=0
         [install_emacs]=0
         [install_findutils]=0
         [install_fish]=0
@@ -115,8 +115,9 @@ koopa::linux_configure_system() { # {{{1
         [install_wget]=0
         [install_zsh]=0
         [make_prefix]="$(koopa::make_prefix)"
+        [mode]='default'
         [opt_prefix]="$(koopa::opt_prefix)"
-        [passwordless_sudo]=1
+        [passwordless_sudo]=0
         [python_version]="$(koopa::variable 'python')"
         [r_version]="$(koopa::variable 'r')"
         [ssh_key]=1
@@ -135,11 +136,11 @@ koopa::linux_configure_system() { # {{{1
                 shift 2
                 ;;
             '--mode='*)
-                mode="${1#*=}"
+                dict[mode]="${1#*=}"
                 shift 1
                 ;;
             '--mode')
-                mode="${2:?}"
+                dict[mode]="${2:?}"
                 shift 2
                 ;;
             '--python-version='*)
@@ -161,24 +162,24 @@ koopa::linux_configure_system() { # {{{1
             # Flags ------------------------------------------------------------
             '--all' | \
             '--full')
-                mode='full'
+                dict[mode]='full'
                 shift 1
                 ;;
             '--base-image')
-                mode='base-image'
+                dict[mode]='base-image'
                 shift 1
                 ;;
             '--bioconductor')
-                mode='bioconductor'
+                dict[mode]='bioconductor'
                 shift 1
                 ;;
             '--default' | \
             '--recommended')
-                mode='default'
+                dict[mode]='default'
                 shift 1
                 ;;
             '--minimal')
-                mode='minimal'
+                dict[mode]='minimal'
                 shift 1
                 ;;
             '--verbose')
@@ -192,16 +193,17 @@ koopa::linux_configure_system() { # {{{1
         esac
     done
     # Automatically set internal variables, based on user input.
-    case "$mode" in
+    case "${dict[mode]}" in
         'default' | \
         'minimal')
             ;;
         'base-image')
             # > dict[install_bash]=1
             # > dict[install_zsh]=1
-            dict[install_base_flags]='--base-image'
+            dict[install_base_system_args]='--base-image'
             ;;
         'bioconductor')
+            dict[install_dotfiles]=1
             dict[install_openjdk]=1
             ;;
         'full')
@@ -209,7 +211,7 @@ koopa::linux_configure_system() { # {{{1
             dict[install_autoconf]=1
             dict[install_automake]=1
             dict[install_azure_cli]=1
-            dict[install_base_flags]='--full'
+            dict[install_base_system_args]='--full'
             dict[install_bash]=1
             dict[install_binutils]=1
             dict[install_cmake]=1
@@ -219,6 +221,7 @@ koopa::linux_configure_system() { # {{{1
             dict[install_curl]=1
             dict[install_docker]=1
             dict[install_docker_credential_pass]=1
+            dict[install_dotfiles]=1
             dict[install_emacs]=1
             dict[install_findutils]=1
             dict[install_fish]=1
@@ -271,11 +274,13 @@ koopa::linux_configure_system() { # {{{1
             dict[install_udunits]=1
             dict[install_wget]=1
             dict[install_zsh]=1
+            dict[passwordless_sudo]=1
             dict[which_conda]='anaconda'
             ;;
         'recommended')
             dict[install_aws_cli]=1
             dict[install_conda]=1
+            dict[install_dotfiles]=1
             dict[install_homebrew]=1
             dict[install_htop]=1
             dict[install_openjdk]=1
@@ -326,7 +331,7 @@ koopa::linux_configure_system() { # {{{1
     fi
     # Early return in minimal mode {{{3
     # --------------------------------------------------------------------------
-    if [[ "$mode" == "minimal" ]]
+    if [[ "${dict[mode]}" == 'minimal' ]]
     then
         koopa::alert_success 'Minimal configuration was successful.'
         return 0
@@ -353,9 +358,7 @@ koopa::linux_configure_system() { # {{{1
     # --------------------------------------------------------------------------
     koopa::alert 'Installing base system.'
     koopa::linux_update_etc_profile_d
-    koopa::install_dotfiles
-    install_base_flags=("${dict[install_base_flags]}")
-    koopa install base "${install_base_flags[@]:-}"
+    koopa install base-system "${dict[install_base_system_args]}"
     # Consider requiring: gfortran, xml2-config.
     koopa::assert_is_installed \
         'autoconf' \
@@ -374,6 +377,8 @@ koopa::linux_configure_system() { # {{{1
     koopa::linux_update_ldconfig
     # Programs {{{2
     # --------------------------------------------------------------------------
+    [[ "${dict[install_dotfiles]}" -eq 1 ]] && \
+        koopa install dotfiles
     [[ "${dict[install_homebrew]}" -eq 1 ]] && \
         koopa install homebrew
     [[ "${dict[install_homebrew_bundle]}" -eq 1 ]] && \
