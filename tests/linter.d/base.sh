@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-# > set -x
-
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
 test() { # {{{1
     # """
@@ -28,7 +26,7 @@ test_illegal_strings() { # {{{1
         '\bFIXME\b'
         '\bTODO\b'
     )
-    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    pattern="$(koopa::paste --sep='|' "${array[@]}")"
     koopa::test_grep \
         --ignore='illegal-strings' \
         --name='base-illegal-strings' \

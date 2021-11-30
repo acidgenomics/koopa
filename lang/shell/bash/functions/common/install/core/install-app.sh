@@ -259,7 +259,7 @@ installed at '${dict[prefix]}'."
     (
         koopa::cd "${dict[tmp_dir]}"
         unset -v LD_LIBRARY_PATH PKG_CONFIG_PATH
-        PATH="$(koopa::paste0 ':' "${clean_path_arr[@]}")"
+        PATH="$(koopa::paste --sep=':' "${clean_path_arr[@]}")"
         export PATH
         if [[ -x '/usr/bin/pkg-config' ]]
         then

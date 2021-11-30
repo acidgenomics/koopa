@@ -2,7 +2,7 @@
 # shellcheck disable=SC2119
 
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
 test() { # {{{1
     # """
@@ -47,7 +47,7 @@ test_all_illegal_strings() { # {{{1
         '^path='            # can mess up Zsh PATH
         '_exe\b'
     )
-    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    pattern="$(koopa::paste --sep='|' "${array[@]}")"
     koopa::test_grep \
         --ignore='illegal-strings' \
         --name='shell | all | illegal-strings' \
@@ -103,7 +103,7 @@ test_bash_illegal_strings() { # {{{1
         '\[\[ ([^\]]+) = ([^\]]+) \]\]'
         '^\[ '
     )
-    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    pattern="$(koopa::paste --sep='|' "${array[@]}")"
     koopa::test_grep \
         --ignore='illegal-strings' \
         --name='shell | bash | illegal-strings' \
@@ -137,7 +137,7 @@ test_posix_illegal_strings() { # {{{1
         '\bexit\b'
         '^\[\[ '
     )
-    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    pattern="$(koopa::paste --sep='|' "${array[@]}")"
     koopa::test_grep \
         --ignore='illegal-strings' \
         --name='shell | posix | illegal-strings' \
@@ -169,7 +169,7 @@ test_zsh_illegal_strings() { # {{{1
         '\[\[ ([^\]]+) = ([^\]]+) \]\]'
         '^\[ '
     )
-    pattern="$(koopa::paste0 '|' "${array[@]}")"
+    pattern="$(koopa::paste --sep='|' "${array[@]}")"
     koopa::test_grep \
         --ignore='illegal-strings' \
         --name='shell | zsh | illegal-strings' \

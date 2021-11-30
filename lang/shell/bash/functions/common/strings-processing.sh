@@ -24,7 +24,7 @@ koopa::capitalize() { # {{{1
     return 0
 }
 
-koopa::paste0() { # {{{1
+koopa::paste() { # {{{1
     # """
     # Paste arguments into a string separated by delimiter.
     # @note Updated 2021-11-30.
@@ -35,7 +35,7 @@ koopa::paste0() { # {{{1
     # - https://stackoverflow.com/questions/1527049/
     #
     # @examples
-    # > koopa::paste0 --sep=', ' 'aaa bbb' 'ccc ddd'
+    # > koopa::paste --sep=', ' 'aaa bbb' 'ccc ddd'
     # # aaa bbb, ccc ddd
     # """
     local IFS pos sep str
@@ -70,6 +70,18 @@ koopa::paste0() { # {{{1
     str="${str:${#sep}}"
     koopa::print "$str"
     return 0
+}
+
+koopa::paste0() { # {{{1
+    # """
+    # Paste arguments to string without a delimiter.
+    # @note Updated 2021-11-30.
+    #
+    # @examples
+    # > koopa::paste0 'aaa' 'bbb'
+    # # aaabbb
+    # """
+    koopa::paste --sep='' "$@"
 }
 
 koopa::to_string() { # {{{1
