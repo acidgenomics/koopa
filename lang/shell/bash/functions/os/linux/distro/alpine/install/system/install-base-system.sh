@@ -1,17 +1,25 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap this.
-koopa::alpine_install_base() { # {{{1
+koopa::alpine_install_base_system() { # {{{1
+    koopa::install_app \
+        --name-fancy='Alpine base system' \
+        --name='base-system' \
+        --platform='alpine' \
+        --system \
+        "$@"
+}
+
+koopa:::alpine_install_base_system() { # {{{1
     # """
     # Install Alpine Linux base system.
-    # @note Updated 2021-11-02.
+    # @note Updated 2021-11-30.
     #
     # Use '<pkg>=~<version>' to pin package versions.
     #
     # Potentially useful flags:
     # > apk add --no-cache --virtual .build-dependencies
     # """
-    local dict name_fancy pkgs pos
+    local app dict pkgs
     declare -A app=(
         [apk]="$(koopa::alpine_locate_apk)"
         [sudo]="$(koopa::locate_sudo)"
@@ -20,14 +28,15 @@ koopa::alpine_install_base() { # {{{1
         [base]=1
         [dev]=1
         [extra]=0
-        [name_fancy]='Alpine base system'
         [recommended]=1
         [upgrade]=1
     )
-    pos=()
     while (("$#"))
     do
         case "$1" in
+            '')
+                shift 1
+                ;;
             '--base-image')
                 dict[base]=1
                 dict[dev]=0
@@ -44,21 +53,11 @@ koopa::alpine_install_base() { # {{{1
                 dict[upgrade]=1
                 shift 1
                 ;;
-            '')
-                shift 1
-                ;;
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
-    koopa::alert_install_start "${dict[name_fancy]}"
     "${app[sudo]}" "${app[apk]}" --no-cache update
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
@@ -125,7 +124,6 @@ koopa::alpine_install_base() { # {{{1
         )
     fi
     "${app[sudo]}" "${app[apk]}" --no-cache add "${pkgs[@]}"
-    koopa::alert_install_success "${dict[name_fancy]}"
     return 0
 }
 
