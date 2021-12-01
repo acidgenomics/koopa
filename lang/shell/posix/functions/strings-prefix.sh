@@ -362,6 +362,7 @@ _koopa_macos_gfortran_prefix() { # {{{1
     # @note Updated 2021-10-30.
     # """
     [ "$#" -eq 0 ] || return 1
+    _koopa_is_macos || return 1
     _koopa_print "$(_koopa_make_prefix)/gfortran"
     return 0
 }
@@ -369,15 +370,17 @@ _koopa_macos_gfortran_prefix() { # {{{1
 _koopa_macos_julia_prefix() { # {{{1
     # """
     # macOS Julia prefix.
-    # @note Updated 2021-06-14.
+    # @note Updated 2021-12-01.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
+    _koopa_is_macos || return 1
     x="$( \
         find '/Applications' \
             -mindepth 1 \
             -maxdepth 1 \
             -name 'Julia-*.app' \
-            -type d \
+            -type 'd' \
             -print \
         | sort \
         | tail -n 1 \
@@ -394,6 +397,8 @@ _koopa_macos_python_prefix() { # {{{1
     # @note Updated 2021-06-14.
     # """
     local x
+    [ "$#" -eq 0 ] || return 1
+    _koopa_is_macos || return 1
     x='/Library/Frameworks/Python.framework/Versions/Current'
     _koopa_print "$x"
 }
@@ -405,6 +410,7 @@ _koopa_macos_r_prefix() { # {{{1
     # """
     local x
     [ "$#" -eq 0 ] || return 1
+    _koopa_is_macos || return 1
     x='/Library/Frameworks/R.framework/Versions/Current/Resources'
     _koopa_print "$x"
 }
