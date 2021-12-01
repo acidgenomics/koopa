@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now seeing this issue with vim install:
-# vim: error while loading shared libraries: libpython3.10.so.1.0: cannot open shared object file: No such file or directory
-# FIXME: checking Python3's dll name... libpython3.10.so.1.0
-
 koopa:::install_vim() { # {{{1
     # """
     # Install Vim.
