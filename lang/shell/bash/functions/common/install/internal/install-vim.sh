@@ -39,13 +39,19 @@ archive/${dict[file]}"
         "--with-python3-config-dir=${dict[python_config_dir]}"
         '--enable-python3interp'
     )
-    dict[vim_rpath]="${dict[prefix]}/lib"
+    dict[make_rpath]="$(koopa::make_prefix)/lib"
     dict[python_rpath]="$(koopa::dirname "${app[python]}")/lib"
+    dict[vim_rpath]="${dict[prefix]}/lib"
+    koopa::assert_is_dir \
+        "${dict[make_rpath]}" \
+        "${dict[python_rpath]}" \
+        "${dict[vim_rpath]}"
     if koopa::is_linux
     then
-        # FIXME Does this work?
+        # FIXME This isn't working, need to rethink...
+        # FIXME Need to add '/usr/local/lib' to path?
         conf_args+=(
-            "LDFLAGS=-Wl,-rpath=${dict[vim_rpath]},-rpath=${dict[python_rpath]}"
+            "LDFLAGS=-Wl,-rpath=${dict[vim_rpath]},-rpath=${dict[python_rpath]},rpath="${dict[make_rpath]}"
         )
     elif koopa::is_macos
     then
