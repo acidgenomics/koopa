@@ -12,6 +12,7 @@ koopa:::install_vim() { # {{{1
     # - https://github.com/vim/vim/issues/1081
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
         [python]="$(koopa::locate_python)"
