@@ -40,7 +40,7 @@ archive/${dict[file]}"
         '--enable-python3interp'
     )
     dict[make_rpath]="$(koopa::make_prefix)/lib"
-    dict[python_rpath]="$(koopa::dirname "${app[python]}")/lib"
+    dict[python_rpath]="$(koopa::parent_dir --num=2 "${app[python]}")/lib"
     dict[vim_rpath]="${dict[prefix]}/lib"
     koopa::assert_is_dir \
         "${dict[make_rpath]}" \
