@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-11-24"
+koopa-date="2021-12-01"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -31,7 +31,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 anaconda="2021.05"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.7.3"
+armadillo="10.7.4"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="4.0.2.38"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.0"
+aws-cli="2.4.3"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.30.0"
@@ -140,13 +140,13 @@ geos="3.10.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.34.0"
+git="2.34.1"
 
 # https://gnupg.org/download/index.html
 gnupg="2.3.2"
 
 # https://golang.org/dl/
-go="1.17.2"
+go="1.17.3"
 
 # https://cloud.google.com/sdk/docs/install
 # NOTE Not currently compatible with Python 3.10, so pinning to 3.9.
@@ -163,17 +163,17 @@ gsl="2.7"
 
 hadolint="2.8.0"
 
-harfbuzz="3.1.1"
+harfbuzz="3.1.2"
 
 # https://www.hdfgroup.org/downloads/hdf5
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.4"
+homebrew="3.3.6"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
-htop="3.1.1"
+htop="3.1.2"
 
 # http://site.icu-project.org/
 icu="69.1"
@@ -226,7 +226,7 @@ ncurses="6.3.20211021"
 neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
-neovim="0.5.1"
+neovim="0.6.0"
 
 # https://nim-lang.org/
 nim="1.4.8"
@@ -253,7 +253,7 @@ oracle-instantclient="21.1.0.0.0-1"
 pandoc="2.16.2"
 
 # https://www.gnu.org/software/parallel/
-parallel="20211022"
+parallel="20211122"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
@@ -287,7 +287,7 @@ poetry="1.1.11"
 proj="8.2.0"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.2.1"
+pyenv="2.2.2"
 
 # https://www.python.org/downloads/
 # > python="3.9.7"
@@ -320,7 +320,7 @@ rstudio-server="2021.09.1+372"
 rstudio-workbench="2021.09.1-372.pro1"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="3.0.2p107"
+ruby="3.0.3p157"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
@@ -392,7 +392,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.3600"
+vim="8.2.3700"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
