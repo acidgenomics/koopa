@@ -185,7 +185,7 @@ imagemagick="7.1.0"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.6.4"
+julia="1.7.0"
 
 # https://github.com/wofr06/lesspipe/
 # FIXME Need to add install support for Linux.
