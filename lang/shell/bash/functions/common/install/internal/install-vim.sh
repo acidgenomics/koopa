@@ -2,6 +2,7 @@
 
 # FIXME Now seeing this issue with vim install:
 # vim: error while loading shared libraries: libpython3.10.so.1.0: cannot open shared object file: No such file or directory
+# FIXME: checking Python3's dll name... libpython3.10.so.1.0
 
 koopa:::install_vim() { # {{{1
     # """
@@ -21,8 +22,6 @@ koopa:::install_vim() { # {{{1
     )
     app[python_config]="${app[python]}-config"
     koopa::assert_is_installed "${app[python]}" "${app[python_config]}"
-    # FIXME Is this OK to take out?
-    koopa::add_to_path_start "$(koopa::dirname "${app[python]}")"
     declare -A dict=(
         [jobs]="$(koopa::cpu_count)"
         [name]='vim'
@@ -40,10 +39,13 @@ archive/${dict[file]}"
         "--with-python3-config-dir=${dict[python_config_dir]}"
         '--enable-python3interp'
     )
+    dict[vim_rpath]="${dict[prefix]}/lib"
+    dict[python_rpath]="$(koopa::dirname "${app[python]}")/lib"
     if koopa::is_linux
     then
+        # FIXME Does this work?
         conf_args+=(
-            "LDFLAGS=-Wl,-rpath=${dict[prefix]}/lib"
+            "LDFLAGS=-Wl,-rpath=${dict[vim_rpath]},-rpath=${dict[python_rpath]}"
         )
     elif koopa::is_macos
     then
