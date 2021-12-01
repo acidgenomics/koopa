@@ -652,6 +652,9 @@ koopa::locate_java() { # {{{1
         --name='java'
 }
 
+# FIXME This is now problematic on Linux:
+# find: ‘/Applications’: No such file or directory
+
 koopa::locate_julia() { # {{{1
     # """
     # Locate Julia.

@@ -267,7 +267,7 @@ koopa::install_julia() { # {{{1
     then
         koopa::install_app \
             --installer="julia-binary" \
-            --name-fancy='Julia' \
+            --name-fancy='Julia binary' \
             --name='julia' \
             --platform='linux' \
             "$@"

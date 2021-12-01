@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now seeing this error pop up with Julia installer:
-# find: ‘/Applications’: No such file or directory
-
 koopa:::linux_install_julia_binary() { # {{{1
     # """
     # Install Julia (from glibc binary).
