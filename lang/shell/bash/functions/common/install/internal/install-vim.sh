@@ -20,6 +20,7 @@ koopa:::install_vim() { # {{{1
         [make]="$(koopa::locate_make)"
         [python]="$(koopa::locate_python)"
     )
+    app[python]="$(koopa::realpath "${app[python]}")"
     app[python_config]="${app[python]}-config"
     koopa::assert_is_installed "${app[python]}" "${app[python_config]}"
     declare -A dict=(
