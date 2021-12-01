@@ -47,7 +47,7 @@ archive/${dict[file]}"
         # FIXME This isn't working, need to rethink...
         # FIXME Need to add '/usr/local/lib' to path?
         conf_args+=(
-            "LDFLAGS=-Wl,-rpath=${dict[vim_rpath]},-rpath=${dict[python_rpath]},rpath=${dict[make_rpath]}"
+            "LDFLAGS=-Wl,-rpath=${dict[vim_rpath]},-rpath=${dict[python_rpath]},-rpath=${dict[make_rpath]}"
         )
     elif koopa::is_macos
     then
