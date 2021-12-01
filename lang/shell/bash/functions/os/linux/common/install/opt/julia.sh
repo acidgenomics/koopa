@@ -18,7 +18,7 @@ koopa:::linux_install_julia_binary() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     dict[maj_min_ver]="$(koopa::major_minor_version "${dict[version]}")"
-    file="${dict[name]}-${dict[version]}-${dict[os]}-${dict[arch]}.tar.gz"
+    dict[file]="${dict[name]}-${dict[version]}-${dict[os]}-${dict[arch]}.tar.gz"
     case "${dict[arch]}" in
         'x86'*)
             dict[subdir]='x64'
