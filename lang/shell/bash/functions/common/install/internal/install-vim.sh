@@ -39,9 +39,9 @@ archive/${dict[file]}"
         "--with-python3-config-dir=${dict[python_config_dir]}"
         '--enable-python3interp'
     )
+    dict[vim_rpath]="${dict[prefix]}/lib"
     dict[python_rpath]="$(koopa::parent_dir --num=2 "${app[python]}")/lib"
     koopa::assert_is_dir "${dict[python_rpath]}"
-    dict[vim_rpath]="${dict[prefix]}/lib"
     if koopa::is_linux
     then
         conf_args+=(
