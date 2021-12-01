@@ -554,7 +554,7 @@ python-wheel="0.37.0"           # default; reticulate
 # Updated 2021-11-03.
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.2.30"           # 2021-10-26
+ruby-bundler="2.2.32"           # 2021-11-23
 
 ruby-bashcov="1.8.2"            # 2018-03-27
 ruby-ronn="0.7.3"               # 2010-06-24
