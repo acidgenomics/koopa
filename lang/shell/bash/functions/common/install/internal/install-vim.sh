@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing this issue with vim install:
+# vim: error while loading shared libraries: libpython3.10.so.1.0: cannot open shared object file: No such file or directory
+
 koopa:::install_vim() { # {{{1
     # """
     # Install Vim.
@@ -18,6 +21,8 @@ koopa:::install_vim() { # {{{1
     )
     app[python_config]="${app[python]}-config"
     koopa::assert_is_installed "${app[python]}" "${app[python_config]}"
+    # FIXME Is this OK to take out?
+    koopa::add_to_path_start "$(koopa::dirname "${app[python]}")"
     declare -A dict=(
         [jobs]="$(koopa::cpu_count)"
         [name]='vim'
