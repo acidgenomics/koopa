@@ -103,7 +103,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-10-05.
+    # @note Updated 2021-12-01.
     #
     # Don't activate 'binutils' here. Can mess up R package compilation.
     # """
@@ -115,6 +115,7 @@ _koopa_activate_homebrew() { # {{{1
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_NO_AUTO_UPDATE=1
+    export HOMEBREW_NO_ENV_HINTS=1
     export HOMEBREW_PREFIX="$prefix"
     _koopa_is_macos || return 0
     _koopa_activate_homebrew_opt_prefix \
