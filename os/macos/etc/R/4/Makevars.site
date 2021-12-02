@@ -13,28 +13,6 @@
 
 
 
-# FIXME Now seeing this ld issue for stringi compilation:
-#
-# Consult the INSTALL file first:
-# https://raw.githubusercontent.com/gagolews/stringi/master/INSTALL
-#
-# FIXME Try setting this to avoid duplication issue with Homebrew:
-# `STRINGI_DISABLE_PKG_CONFIG=1` in Renviron.
-#
-# Consider filing an issue on stringi repo:
-# https://github.com/gagolews/stringi
-#
-# Error message:
-# duplicate symbol 'icu_69_stringi::number::NumberFormatterSettings<icu_69_stringi::number::UnlocalizedNumberFormatter>::copyErrorTo(UErrorCode&) const' in:
-#     icu69/i18n/number_fluent.o
-#     icu69/i18n/number_skeletons.o
-# duplicate symbol 'icu_69_stringi::number::NumberFormatterSettings<icu_69_stringi::number::LocalizedNumberFormatter>::copyErrorTo(UErrorCode&) const' in:
-#     icu69/i18n/number_fluent.o
-#     icu69/i18n/number_skeletons.o
-# ld: 2 duplicate symbols for architecture x86_64
-# collect2: error: ld returned 1 exit status
-# make: *** [/Library/Frameworks/R.framework/Resources/share/make/shlib.mk:10: stringi.so] Error 1
-# ERROR: compilation failed for package ‘stringi’
 
 
 
@@ -62,6 +40,12 @@
 
 # Using CRAN-recommended GNU Fortran for compilation.
 
+# NOTE These compiler settings are problematic of stringi installation
+# when building both the package and ICU from source.
+
+# FIXME Double check if this works when not forcing install of ICU from source
+# during stringi package installation.
+
 LOC = /usr/local/gfortran
 SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
 
@@ -76,8 +60,8 @@ CXX14FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX17FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX20FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 
-CPPFLAGS = -I$(LOC)/include -I$(SDK_LOC)/include
-LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
+CPPFLAGS += -I$(LOC)/include -I$(SDK_LOC)/include
+LDFLAGS += -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 
 
 
@@ -113,11 +97,11 @@ LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 # to do so (data.table), and other packages that bork with '-fopenmp' flag
 # (e.g. fs, stringi) to be left alone.
 
-SHLIB_OPENMP_CFLAGS     += -fopenmp
+SHLIB_OPENMP_CFLAGS += -fopenmp
 SHLIB_OPENMP_CXX11FLAGS += -fopenmp
 SHLIB_OPENMP_CXX14FLAGS += -fopenmp
 SHLIB_OPENMP_CXX17FLAGS += -fopenmp
 SHLIB_OPENMP_CXX98FLAGS += -fopenmp
-SHLIB_OPENMP_CXXFLAGS   += -fopenmp
-SHLIB_OPENMP_FCFLAGS    += -fopenmp
-SHLIB_OPENMP_FFLAGS     += -fopenmp
+SHLIB_OPENMP_CXXFLAGS += -fopenmp
+SHLIB_OPENMP_FCFLAGS += -fopenmp
+SHLIB_OPENMP_FFLAGS += -fopenmp
