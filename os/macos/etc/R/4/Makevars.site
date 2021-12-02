@@ -13,9 +13,6 @@
 
 
 
-
-
-
 # C compiler {{{1
 # ==============================================================================
 
@@ -39,12 +36,6 @@
 # ------------------------------------------------------------------------------
 
 # Using CRAN-recommended GNU Fortran for compilation.
-
-# NOTE These compiler settings are problematic of stringi installation
-# when building both the package and ICU from source.
-
-# FIXME Double check if this works when not forcing install of ICU from source
-# during stringi package installation.
 
 LOC = /usr/local/gfortran
 SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
