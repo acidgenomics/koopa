@@ -56,28 +56,6 @@ LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 
 
 
-# Fortran {{{1
-# ==============================================================================
-
-
-# NOTE This is currently configured for Intel x86_64 Macs and needs to be
-# updated to support M1 ARM machines.
-#
-# See also:
-# - https://github.com/fxcoudert/gfortran-for-macOS/releases/
-# - https://thecoatlessprofessor.com/programming/cpp/
-#     rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error/
-
-# FIXME Test if we can remove this but still install Rcpp clean.
-
-# > ARCH = x86_64
-# > DARWIN_VER = 18
-# > FORTRAN_VER = 8.2.0
-
-# > FLIBS += -L/usr/local/gfortran/lib/gcc/$(ARCH)-apple-darwin$(DARWIN_VER)/$(FORTRAN_VER) -L/usr/local/gfortran/lib -lgfortran -lquadmath -lm
-
-
-
 # OpenMP {{{1
 # ==============================================================================
 
@@ -118,15 +96,3 @@ SHLIB_OPENMP_CXX98FLAGS += -fopenmp
 SHLIB_OPENMP_CXXFLAGS   += -fopenmp
 SHLIB_OPENMP_FCFLAGS    += -fopenmp
 SHLIB_OPENMP_FFLAGS     += -fopenmp
-
-
-
-# OpenSSL {{{1
-# ==============================================================================
-
-# See also:
-# - https://stackoverflow.com/questions/65207249/
-
-# These values are already handled by pkgconfig, defined in Renviron.
-# > CPPFLAGS += -I/usr/local/opt/openssl@1.1/include
-# > LDFLAGS  += -L/usr/local/opt/openssl@1.1/lib
