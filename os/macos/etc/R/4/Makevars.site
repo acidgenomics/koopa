@@ -25,6 +25,7 @@
 # C++17, C++20).
 #
 # See also:
+# - https://github.com/fxcoudert/gfortran-for-macOS/releases/
 # - https://github.com/Rdatatable/data.table/wiki/Installation
 # - https://thecoatlessprofessor.com/programming/cpp/
 #     r-compiler-tools-for-rcpp-on-macos/
@@ -34,43 +35,57 @@
 # Current configuration {{{2
 # ------------------------------------------------------------------------------
 
-LOC     = /usr/local/gfortran
-SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
-CC      = $(LOC)/bin/gcc
-CXX11   = $(LOC)/bin/g++
-CXX     = $(LOC)/bin/g++
+# Using CRAN-recommended GNU Fortran for compilation.
 
-CFLAGS     += -O3 -Wall -g -pedantic -pipe -mtune=native -std=gnu99
-CXXFLAGS   += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
+LOC = /usr/local/gfortran
+SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
+
+CC = $(LOC)/bin/gcc
+CXX11 = $(LOC)/bin/g++
+CXX = $(LOC)/bin/g++
+
+CFLAGS += -O3 -Wall -g -pedantic -pipe -mtune=native -std=gnu99
+CXXFLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX11FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX14FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX17FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX20FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 
-CPPFLAGS    = -I$(LOC)/include -I$(SDK_LOC)/include
-LDFLAGS     = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
+CPPFLAGS = -I$(LOC)/include -I$(SDK_LOC)/include
+LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 
 
 
 # Fortran {{{1
 # ==============================================================================
 
+
+# NOTE This is currently configured for Intel x86_64 Macs and needs to be
+# updated to support M1 ARM machines.
+#
 # See also:
+# - https://github.com/fxcoudert/gfortran-for-macOS/releases/
 # - https://thecoatlessprofessor.com/programming/cpp/
 #     rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error/
 
-FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/gfortran/lib -lgfortran -lquadmath -lm
+# FIXME Test if we can remove this but still install Rcpp clean.
+
+# > ARCH = x86_64
+# > DARWIN_VER = 18
+# > FORTRAN_VER = 8.2.0
+
+# > FLIBS += -L/usr/local/gfortran/lib/gcc/$(ARCH)-apple-darwin$(DARWIN_VER)/$(FORTRAN_VER) -L/usr/local/gfortran/lib -lgfortran -lquadmath -lm
 
 
 
 # OpenMP {{{1
 # ==============================================================================
 
-# NOTE This requires installation of libomp OpenMP run-time built from official
-# LLVM release sources using Xcode compilers.
+# NOTE If using macOS Xcode clang toolchain for compilation, need to install
+# libomp OpenMP run-time built from official LLVM release sources using Xcode
+# compilers.
 #
-# FIXME Add these checks to Rprofile.
-# Check for these files:
+# In that case, check for these files:
 # - /usr/local/include/omp-tools.h
 # - /usr/local/include/omp.h
 # - /usr/local/include/ompt.h
@@ -85,15 +100,11 @@ FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/
 # - https://stackoverflow.com/questions/40904488/
 # - https://iscinumpy.gitlab.io/post/omp-on-high-sierra/
 
-# FIXME Re-enable these after installation of fs.
+# Enabling these arguments globally will cause compilation issues with some
+# packages, including fs and stringi.
 # > CPPFLAGS += -Xclang -fopenmp
 # > LDFLAGS += -lomp
 # > LIBS += -lomp
-
-# FIXME Instead, do this specifically for data.table:
-# > PKG_CPPFLAGS='-Xclang -fopenmp' PKG_LIBS=-lomp R CMD INSTALL myPackage
-
-# FIXME Now this isn't working on macOS 12.0.1 with clang 13.0.0.
 
 # Flags for OpenMP support that should allow packages that want to use OpenMP
 # to do so (data.table), and other packages that bork with '-fopenmp' flag
