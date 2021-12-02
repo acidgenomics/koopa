@@ -13,6 +13,25 @@
 
 
 
+# FIXME Now seeing this ld issue for stringi compilation:
+# Is this an issue specific to ICU4C 69.1 (Homebrew)?
+#
+# Consider filing an issue on stringi repo:
+# https://github.com/gagolews/stringi
+#
+# .framework/.. -framework R -Wl,-framework -Wl,CoreFoundation
+# duplicate symbol 'icu_69_stringi::number::NumberFormatterSettings<icu_69_stringi::number::UnlocalizedNumberFormatter>::copyErrorTo(UErrorCode&) const' in:
+#     icu69/i18n/number_fluent.o
+#     icu69/i18n/number_skeletons.o
+# duplicate symbol 'icu_69_stringi::number::NumberFormatterSettings<icu_69_stringi::number::LocalizedNumberFormatter>::copyErrorTo(UErrorCode&) const' in:
+#     icu69/i18n/number_fluent.o
+#     icu69/i18n/number_skeletons.o
+# ld: 2 duplicate symbols for architecture x86_64
+# collect2: error: ld returned 1 exit status
+# make: *** [/Library/Frameworks/R.framework/Resources/share/make/shlib.mk:10: stringi.so] Error 1
+
+
+
 # C compiler {{{1
 # ==============================================================================
 
