@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Exclusion of directories isn't working correctly.
+# FIXME Need to add a mode that excludes all files that are under git in a
+# current directory. This will help avoid duplication of source code.
+
 # Better programmatic access:
 # > aws s3api list-buckets --output json
 # > aws s3api list-objects \
