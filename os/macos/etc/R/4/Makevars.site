@@ -59,11 +59,14 @@ FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/
 # NOTE This requires installation of libomp OpenMP run-time built from official
 # LLVM release sources using Xcode compilers.
 #
+# FIXME Add these checks to Rprofile.
 # Check for these files:
 # - /usr/local/include/omp-tools.h
 # - /usr/local/include/omp.h
 # - /usr/local/include/ompt.h
 # - /usr/local/lib/libomp.dylib
+# 
+# Currently problematic for installation of fs package from source.
 #
 # See also:
 # - https://mac.r-project.org/openmp/
@@ -71,9 +74,13 @@ FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/
 # - https://stackoverflow.com/questions/40904488/openmp-r-and-macos
 # - https://iscinumpy.gitlab.io/post/omp-on-high-sierra/
 
-CPPFLAGS += -Xclang -fopenmp
-LDFLAGS += -lomp
-LIBS += -lomp
+# FIXME Re-enable these after installation of fs.
+# > CPPFLAGS += -Xclang -fopenmp
+# > LDFLAGS += -lomp
+# > LIBS += -lomp
+
+# FIXME Instead, do this specifically for data.table:
+# > PKG_CPPFLAGS='-Xclang -fopenmp' PKG_LIBS=-lomp R CMD INSTALL myPackage
 
 # May need to enable:
 # > SHLIB_OPENMP_CFLAGS += -Xpreprocessor -fopenmp
