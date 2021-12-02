@@ -25,6 +25,7 @@
 # C++17, C++20).
 #
 # See also:
+# - https://github.com/Rdatatable/data.table/wiki/Installation
 # - https://thecoatlessprofessor.com/programming/cpp/
 #     r-compiler-tools-for-rcpp-on-macos/
 # - https://stackoverflow.com/a/23414789
@@ -33,12 +34,21 @@
 # Current configuration {{{2
 # ------------------------------------------------------------------------------
 
-CFLAGS += -O3 -Wall -g -pedantic -pipe -mtune=native -std=gnu99
-CXXFLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
+LOC     = /usr/local/gfortran
+SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
+CC      = $(LOC)/bin/gcc
+CXX11   = $(LOC)/bin/g++
+CXX     = $(LOC)/bin/g++
+
+CFLAGS     += -O3 -Wall -g -pedantic -pipe -mtune=native -std=gnu99
+CXXFLAGS   += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX11FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX14FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX17FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX20FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
+
+CPPFLAGS    = -I$(LOC)/include -I$(SDK_LOC)/include
+LDFLAGS     = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 
 
 
@@ -65,13 +75,14 @@ FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/
 # - /usr/local/include/omp.h
 # - /usr/local/include/ompt.h
 # - /usr/local/lib/libomp.dylib
-# 
-# Currently problematic for installation of fs package from source.
 #
 # See also:
 # - https://mac.r-project.org/openmp/
 # - https://github.com/Rdatatable/data.table/wiki/Installation
-# - https://stackoverflow.com/questions/40904488/openmp-r-and-macos
+# - https://firas.io/post/data.table_openmp/
+# - https://gist.github.com/btskinner/
+#     98f0501ceb21e1c8e7ff9dbaa5bf7b96#file-makevars
+# - https://stackoverflow.com/questions/40904488/
 # - https://iscinumpy.gitlab.io/post/omp-on-high-sierra/
 
 # FIXME Re-enable these after installation of fs.
@@ -82,10 +93,20 @@ FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/
 # FIXME Instead, do this specifically for data.table:
 # > PKG_CPPFLAGS='-Xclang -fopenmp' PKG_LIBS=-lomp R CMD INSTALL myPackage
 
-# May need to enable:
-# > SHLIB_OPENMP_CFLAGS += -Xpreprocessor -fopenmp
-# > SHLIB_OPENMP_CPPFLAGS += -Xpreprocessor -fopenmp
-# > SHLIB_OPENMP_CXXFLAGS += -Xpreprocessor -fopenmp
+# FIXME Now this isn't working on macOS 12.0.1 with clang 13.0.0.
+
+# Flags for OpenMP support that should allow packages that want to use OpenMP
+# to do so (data.table), and other packages that bork with '-fopenmp' flag
+# (e.g. fs, stringi) to be left alone.
+
+SHLIB_OPENMP_CFLAGS     += -fopenmp
+SHLIB_OPENMP_CXX11FLAGS += -fopenmp
+SHLIB_OPENMP_CXX14FLAGS += -fopenmp
+SHLIB_OPENMP_CXX17FLAGS += -fopenmp
+SHLIB_OPENMP_CXX98FLAGS += -fopenmp
+SHLIB_OPENMP_CXXFLAGS   += -fopenmp
+SHLIB_OPENMP_FCFLAGS    += -fopenmp
+SHLIB_OPENMP_FFLAGS     += -fopenmp
 
 
 
@@ -97,4 +118,4 @@ FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/
 
 # These values are already handled by pkgconfig, defined in Renviron.
 # > CPPFLAGS += -I/usr/local/opt/openssl@1.1/include
-# > LDFLAGS += -L/usr/local/opt/openssl@1.1/lib
+# > LDFLAGS  += -L/usr/local/opt/openssl@1.1/lib
