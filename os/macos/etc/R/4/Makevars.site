@@ -1,6 +1,6 @@
 # """
 # R for macOS Makevars configuration.
-# Updated 2021-09-03.
+# Updated 2021-12-02.
 #
 # See also:
 # - /Library/Frameworks/R.framework/Resources/etc/Makeconf
@@ -56,6 +56,15 @@ FLIBS += -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/
 # OpenMP {{{1
 # ==============================================================================
 
+# NOTE This requires installation of libomp OpenMP run-time built from official
+# LLVM release sources using Xcode compilers.
+#
+# Check for these files:
+# - /usr/local/include/omp-tools.h
+# - /usr/local/include/omp.h
+# - /usr/local/include/ompt.h
+# - /usr/local/lib/libomp.dylib
+#
 # See also:
 # - https://mac.r-project.org/openmp/
 # - https://github.com/Rdatatable/data.table/wiki/Installation
