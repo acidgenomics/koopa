@@ -3,6 +3,7 @@
 
 # """
 # Shared R environment configuration for macOS.
+#
 # @note Updated 2021-12-02.
 #
 # @seealso
@@ -106,6 +107,7 @@ PATH="/usr/local/gfortran/bin:${PATH}"
 # Package configuration {{{2
 # ------------------------------------------------------------------------------
 
+PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/icu4c/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
 PKG_CONFIG_PATH="${HOMEBREW_OPT_PREFIX}/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
@@ -167,11 +169,14 @@ R_REMOTES_STANDALONE="true"
 # stringi {{{2
 # ------------------------------------------------------------------------------
 
-# Ensure that ICU is compiled from source. This improves cross-platform
-# compatibility and consistency.
 # See also:
 # https://github.com/gagolews/stringi/blob/master/INSTALL
-STRINGI_DISABLE_PKG_CONFIG=1
+
+# Ensure usage of system ICU, insteading of building bundle from source.
+STRINGI_DISABLE_ICU_BUNDLE=1
+
+# Alternatively, ensure that ICU bundle is compiled from source.
+# > STRINGI_DISABLE_PKG_CONFIG=1
 
 # tools / rappdirs {{{2
 # ------------------------------------------------------------------------------
