@@ -16,6 +16,9 @@
 # FIXME Now seeing this ld issue for stringi compilation:
 # Is this an issue specific to ICU4C 69.1 (Homebrew)?
 #
+# Consult the INSTALL file first:
+# https://raw.githubusercontent.com/gagolews/stringi/master/INSTALL
+#
 # Consider filing an issue on stringi repo:
 # https://github.com/gagolews/stringi
 #
