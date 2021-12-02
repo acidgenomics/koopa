@@ -489,10 +489,10 @@ local({  # nolint
         )
     }
 
-    if (isInstalled("data.table")) {
-        ## Suppress annoying data.table startup message.
-        options("datatable.quiet" = TRUE)
-    }
+    ## > if (isInstalled("data.table")) {
+    ## >     ## Suppress annoying data.table startup message.
+    ## >     options("datatable.quiet" = TRUE)
+    ## > }
 
     if (isInstalled("future")) {
         ## If we have a large dataset, then we might need to adjust the limit
