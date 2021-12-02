@@ -3,7 +3,7 @@
 
 # """
 # Shared R environment configuration for Linux.
-# @note Updated 2021-09-29.
+# @note Updated 2021-12-02.
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -208,6 +208,15 @@ R_REMOTES_STANDALONE="true"
 # Check with `virtualenv_list()`.
 # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
 # > WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
+
+# stringi {{{2
+# ------------------------------------------------------------------------------
+
+# Ensure that ICU is compiled from source. This improves cross-platform
+# compatibility and consistency.
+# See also:
+# https://github.com/gagolews/stringi/blob/master/INSTALL
+STRINGI_DISABLE_PKG_CONFIG=1
 
 # tools {{{2
 # ------------------------------------------------------------------------------
