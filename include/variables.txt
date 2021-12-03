@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-12-01"
+koopa-date="2021-12-03"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.3"
+aws-cli="2.4.4"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.30.0"
@@ -200,7 +200,7 @@ libtool="2.4.6"
 
 # LLVM
 # https://releases.llvm.org/
-llvm="13.0.1"
+llvm="13.0.0"
 
 # https://lmod.readthedocs.io/
 # https://github.com/TACC/Lmod
@@ -232,7 +232,7 @@ neovim="0.6.0"
 nim="1.4.8"
 
 # https://nodejs.org/
-node="17.0.1"
+node="17.2.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
