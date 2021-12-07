@@ -221,13 +221,9 @@ koopa::install_app() { # {{{1
         if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
         then
             dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
-            if [[ "${dict[reinstall]}" -eq 1 ]]
+            if [[ "${dict[reinstall]}" -eq 1 ]] || \
+                koopa::is_empty_dir "${dict[prefix]}"
             then
-                if [[ "${dict[quiet]}" -eq 0 ]]
-                then
-                    koopa::alert "Removing previous install \
-at '${dict[prefix]}'."
-                fi
                 if [[ "${dict[system]}" -eq 1 ]]
                 then
                     koopa::rm --sudo "${dict[prefix]}"
@@ -238,7 +234,6 @@ at '${dict[prefix]}'."
                     koopa::rm "${dict[prefix]}"
                 fi
             fi
-            # FIXME Consider adding a check for non-empty directory here.
             if [[ -d "${dict[prefix]}" ]]
             then
                 if [[ "${dict[quiet]}" -eq 0 ]]
