@@ -1,14 +1,15 @@
 #!/bin/sh
 
-_koopa_macos_version() { # {{{1
+_koopa_macos_os_version() { # {{{1
     # """
     # macOS version.
-    # @note Updated 2021-11-18.
+    # @note Updated 2021-12-07.
     # """
-    local x
+    local sw_vers x
     [ "$#" -eq 0 ] || return 1
     _koopa_is_macos || return 1
-    x="$(/usr/bin/sw_vers -productVersion)"
+    sw_vers='/usr/bin/sw_vers'
+    x="$("$sw_vers" -productVersion)"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
