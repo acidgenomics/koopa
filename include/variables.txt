@@ -165,7 +165,7 @@ hadolint="2.8.0"
 
 harfbuzz="3.1.2"
 
-# https://www.hdfgroup.org/downloads/hdf5
+# https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.12.1"
 
 # https://brew.sh/
