@@ -238,6 +238,7 @@ at '${dict[prefix]}'."
                     koopa::rm "${dict[prefix]}"
                 fi
             fi
+            # FIXME Consider adding a check for non-empty directory here.
             if [[ -d "${dict[prefix]}" ]]
             then
                 if [[ "${dict[quiet]}" -eq 0 ]]
