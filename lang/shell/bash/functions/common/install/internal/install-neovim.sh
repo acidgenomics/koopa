@@ -45,6 +45,6 @@ refs/tags/${dict[file]}"
         --jobs="${dict[jobs]}" \
         CMAKE_BUILD_TYPE='Release' \
         CMAKE_INSTALL_PREFIX="${dict[prefix]}"
-    "$make" install
+    "${app[make]}" install
     return 0
 }
