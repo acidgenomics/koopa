@@ -514,41 +514,44 @@ node-prettier="2.5.1"               # 2021-12-04
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2021-11-10 from https://pypi.org/.
+# Updated 2021-12-07 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
 # Otherwise, for heavy libraries, consider using a conda environment instead.
 
-python-pip="21.3.1"             # default; reticulate
+python-pip="21.3.1"             # default
+python-setuptools="59.5.0"      # default
+python-wheel="0.37.0"           # default
 
-python-black="21.11b1"          # default; homebrew
-python-bpytop="1.0.67"          # default; homebrew
-python-cython="0.29.24"         # default; reticulate
-python-flake8="4.0.1"           # default; homebrew
-python-glances="3.2.3.1"        # default; homebrew
-python-isort="5.10.1"           # default
-python-leidenalg="0.8.7"        # reticulate
-python-louvain="0.7.0"          # reticulate
-python-numpy="1.21.2"           # reticulate
-python-pandas="1.3.3"           # reticulate
-python-pip2pi="0.8.2"           # default
-python-pipx="0.16.4"            # default; homebrew
-python-psutil="5.8.0"           # default
-python-pyflakes="2.4.0"         # default
-python-pylint="2.11.1"          # default; homebrew
-python-pynvim="0.4.3"           # default
-python-pytaglib="1.4.6"         # default
-python-pytest="6.2.5"           # default
-python-python-igraph="0.9.6"    # reticulate
-python-pyyaml="5.4.1"           # reticulate
-python-ranger-fm="1.9.3"        # default; homebrew
-python-scikit-learn="1.0"       # reticulate
-python-scipy="1.7.1"            # reticulate
-python-setuptools="58.5.3"      # default; reticulate
-python-six="1.16.0"             # default
-python-umap-learn="0.5.1"       # reticulate
-python-wheel="0.37.0"           # default; reticulate
+python-black="21.12b0"          # recommended
+python-bpytop="1.0.67"          # recommended
+python-flake8="4.0.1"           # recommended
+python-glances="3.2.4.2"        # recommended
+python-isort="5.10.1"           # recommended
+python-pip2pi="0.8.2"           # recommended
+python-pipx="0.16.4"            # recommended
+python-psutil="5.8.0"           # recommended
+python-pyflakes="2.4.0"         # recommended
+python-pylint="2.12.2"          # recommended
+python-pynvim="0.4.3"           # recommended
+python-pytest="6.2.5"           # recommended
+python-ranger-fm="1.9.3"        # recommended
+python-six="1.16.0"             # recommended
+
+# not 3.10 compatible:
+# > python-pytaglib="1.4.6"     # recommended
+
+python-cython="0.29.25"         # r-reticulate
+python-leidenalg="0.8.8"        # r-reticulate
+python-louvain="0.7.0"          # r-reticulate
+python-numpy="1.21.4"           # r-reticulate
+python-pandas="1.3.4"           # r-reticulate
+python-python-igraph="0.9.8"    # r-reticulate
+python-pyyaml="6.0"             # r-reticulate
+python-scikit-learn="1.0.1"     # r-reticulate
+python-scipy="1.7.3"            # r-reticulate
+python-umap-learn="0.5.2"       # r-reticulate
 
 # Ruby packages (gems) {{{1
 # ==============================================================================
