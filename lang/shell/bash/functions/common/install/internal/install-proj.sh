@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework this:
+# NOTE Now seeing this warning on Debian:
 # g++: warning: /usr/include/x86_64-linux-gnu: linker input file unused
 # because linking not done
 
@@ -18,6 +18,7 @@ koopa:::install_proj() { # {{{1
         [jobs]="$(koopa::cpu_count)"
         [make_prefix]="$(koopa::make_prefix)"
         [name]='proj'
+        [os]='linux-gnu'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
@@ -39,8 +40,8 @@ koopa:::install_proj() { # {{{1
         if koopa::is_debian_like
         then
             # pkg-config: '/usr/lib/x86_64-linux-gnu/pkgconfig/libtiff-4.pc'.
-            TIFF_CFLAGS="/usr/include/${dict[arch]}-linux-gnu"
-            TIFF_LIBS="/usr/lib/${dict[arch]}-linux-gnu -ltiff"
+            TIFF_CFLAGS="/usr/include/${dict[arch]}-${dict[os]}"
+            TIFF_LIBS="/usr/lib/${dict[arch]}-${dict[os]} -ltiff"
         elif koopa::is_fedora_like
         then
             # pkg-config: '/usr/lib64/pkgconfig/libtiff-4.pc'.
