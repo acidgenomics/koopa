@@ -3,39 +3,42 @@
 koopa:::install_htop() { # {{{1
     # """
     # Install htop.
-    # @note Updated 2021-05-27.
+    # @note Updated 2021-12-07.
     #
-    # Repo transferred from https://github.com/hishamhm/htop to 
+    # Repo transferred from https://github.com/hishamhm/htop to
     # https://github.com/htop-dev/htop in 2020-08.
     # """
-    local conf_args file jobs make name prefix url version
+    local app dict
+    declare -A app=(
+        [make]="$(koopa::locate_make)"
+    )
+    declare -A dict=(
+        [jobs]="$(koopa::cpu_count)"
+        [name]='htop'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    dict[file]="${dict[version]}.tar.gz"
+    dict[url]="https://github.com/${dict[name]}-dev/${dict[name]}/\
+archive/${dict[file]}"
     if koopa::is_macos
     then
-        koopa::activate_opt_prefix \
-            'autoconf' \
-            'automake'
+        koopa::activate_opt_prefix 'autoconf' 'automake'
         koopa::macos_activate_python
     else
         koopa::activate_opt_prefix 'python'
     fi
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    jobs="$(koopa::cpu_count)"
-    make="$(koopa::locate_make)"
-    name='htop'
-    file="${version}.tar.gz"
-    url="https://github.com/${name}-dev/${name}/archive/${file}"
-    koopa::download "$url" "$file"
-    koopa::extract "$file"
-    koopa::cd "${name}-${version}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::cd "${dict[name]}-${dict[version]}"
     ./autogen.sh
     conf_args=(
-        "--prefix=${prefix}"
+        "--prefix=${dict[prefix]}"
         '--disable-unicode'
     )
     ./configure "${conf_args[@]}"
-    "$make" --jobs="$jobs"
-    # > "$make" check
-    "$make" install
+    "${app[make]}" --jobs="${dict[jobs]}"
+    # > "${app[make]}" check
+    "${app[make]}" install
     return 0
 }
