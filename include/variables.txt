@@ -526,6 +526,7 @@ python-wheel="0.37.0"           # default
 
 python-black="21.12b0"          # recommended
 python-bpytop="1.0.67"          # recommended
+python-cython="0.29.25"         # recommended
 python-flake8="4.0.1"           # recommended
 python-glances="3.2.4.2"        # recommended
 python-isort="5.10.1"           # recommended
@@ -542,7 +543,6 @@ python-six="1.16.0"             # recommended
 # not 3.10 compatible:
 # > python-pytaglib="1.4.6"     # recommended
 
-python-cython="0.29.25"         # r-reticulate
 python-leidenalg="0.8.8"        # r-reticulate
 python-louvain="0.7.0"          # r-reticulate
 python-numpy="1.21.4"           # r-reticulate

@@ -3,7 +3,7 @@
 koopa:::install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2021-11-19.
+    # @note Updated 2021-12-07.
     # """
     local pkgs
     pkgs=("$@")
@@ -21,20 +21,20 @@ koopa:::install_python_packages() { # {{{1
         # Now we can install additional recommended extras.
         pkgs=(
             'Cython'
-            'black'         # homebrew
-            'bpytop'        # homebrew
-            'flake8'        # homebrew
-            'glances'       # homebrew
+            'black'
+            'bpytop'
+            'flake8'
+            'glances'
             'isort'
             'pip2pi'
-            'pipx'          # homebrew
+            'pipx'
             'psutil'
             'pyflakes'
-            'pylint'        # homebrew
+            'pylint'
             'pynvim'
-            # > 'pytaglib'      # Failed to install on Python 3.10.
+            # > 'pytaglib'  # not 3.10 compatible
             'pytest'
-            'ranger-fm'     # homebrew
+            'ranger-fm'
             'six'
         )
     fi
