@@ -5,7 +5,7 @@
 koopa:::install_tmux() { # {{{1
     # """
     # Install Tmux.
-    # @note Updated 2021-05-25.
+    # @note Updated 2021-12-07.
     # """
     local file jobs make name prefix url version
     prefix="${INSTALL_PREFIX:?}"

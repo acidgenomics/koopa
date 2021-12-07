@@ -3,7 +3,7 @@
 koopa:::install_julia_packages() { # {{{1
     # """
     # Install Julia packages.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-12-07.
     # @seealso
     # - 'JULIA_DEPOT_PATH' in shell.
     # - 'DEPOT_PATH' in Julia.
@@ -17,12 +17,18 @@ koopa:::install_julia_packages() { # {{{1
     #     getting-familiar-with-biojulia-bioinformatics-for-julia-796438aa059
     # - https://juliaobserver.com/packages
     # """
-    local julia script
+    local app dict
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [julia]="$(koopa::locate_julia)"
+    )
+    declare -A dict=(
+        [script_prefix]="$(koopa::julia_script_prefix)"
+    )
+    dict[script]="${dict[script_prefix]}/install-packages.jl"
+    koopa::assert_is_file "${dict[script]}"
     koopa::configure_julia
     koopa::activate_julia
-    julia="$(koopa::locate_julia)"
-    script="$(koopa::julia_script_prefix)/install-packages.jl"
-    koopa::assert_is_file "$script"
-    "$julia" "$script"
+    "${app[julia]}" "${app[script]}"
     return 0
 }
