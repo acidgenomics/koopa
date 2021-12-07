@@ -31,6 +31,7 @@ koopa:::install_node_packages() { # {{{1
     then
         # NOTE 'tldr' conflicts with Rust 'tealdeer'.
         pkgs=(
+            'bash-language-server'
             'gtop'
             'prettier'
         )
