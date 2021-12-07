@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Now the identifier generator isn't working the way we want on macOS?
+
 koopa::mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.
