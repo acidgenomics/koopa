@@ -257,6 +257,37 @@ koopa::is_doom_emacs_installed() { # {{{1
     koopa::file_match_fixed "$init_file" 'doom-emacs'
 }
 
+koopa::is_empty_dir() { # {{{1
+    # """
+    # Is the input an empty directory?
+    # @note Updated 2021-12-07.
+    #
+    # @examples
+    # koopa::mkdir 'aaa' 'bbb'
+    # koopa::is_empty_dir 'aaa' 'bbb'
+    # koopa::rm 'aaa' 'bbb'
+    # """
+    local app out prefix
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+    )
+    for prefix in "$@"
+    do
+        [[ -d "$prefix" ]] || return 1
+        prefix="$(koopa::realpath "$prefix")"
+        out="$("${app[find]}" "$prefix" \
+            -maxdepth 0 \
+            -mindepth 0 \
+            -type 'd' \
+            -empty \
+            2>/dev/null \
+        )"
+        [[ -n "$out" ]] || return 1
+    done
+    return 0
+}
+
 koopa::is_export() { # {{{1
     # """
     # Is a variable exported in the current shell session?
