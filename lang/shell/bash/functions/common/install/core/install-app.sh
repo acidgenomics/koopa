@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME 'koopa install base-system' is now failing on Debian due to missing
-# version here...need to rethink.
-
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-11-23.
+    # @note Updated 2021-12-07.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
     local link_include_arr opt_arr pos
