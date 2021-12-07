@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Need to remove 'install-dotfiles' link from koopa config at '~/.config/koopa'.
 ** TODO Improve install instructions on website to provide recommended default
    packages for Debian (apt) and Fedora (yum).
 ** TODO User permissions on Debian 11 clean install are 'admin:admin' instead
