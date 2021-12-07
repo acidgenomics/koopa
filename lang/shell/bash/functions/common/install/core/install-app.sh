@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME 'koopa install base-system' is now failing on Debian due to missing
+# version here...need to rethink.
+
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -174,6 +177,7 @@ koopa::install_app() { # {{{1
     if [[ "${dict[system]}" -eq 1 ]]
     then
         dict[auto_prefix]=0
+        dict[auto_version]=0
         dict[shared]=0
     fi
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]

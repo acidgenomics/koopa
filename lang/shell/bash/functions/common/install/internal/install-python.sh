@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing this error on Debian Docker image for 3.10.1:
+# ModuleNotFoundError: No module named 'zlib'
+
 koopa:::install_python() { # {{{1
     # """
     # Install Python.
