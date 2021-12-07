@@ -246,14 +246,14 @@ _koopa_macos_color_mode() { # {{{1
 _koopa_macos_os_codename() { # {{{1
     # """
     # macOS OS codename (marketing name).
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-12-07.
     # @seealso
     # - https://apple.stackexchange.com/questions/333452/
     # - https://unix.stackexchange.com/questions/234104/
     # """
     local version x
     [ "$#" -eq 0 ] || return 1
-    version="$(_koopa_macos_version)"
+    version="$(_koopa_macos_os_version)"
     case "$version" in
         '12.'*)
             x='Monterey'
@@ -389,7 +389,7 @@ _koopa_os_id() { # {{{1
 _koopa_os_string() { # {{{1
     # """
     # Operating system string.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-12-07.
     #
     # Alternatively, use 'hostnamectl'.
     # https://linuxize.com/post/how-to-check-linux-version/
@@ -401,7 +401,7 @@ _koopa_os_string() { # {{{1
     if _koopa_is_macos
     then
         id='macos'
-        version="$(_koopa_macos_version)"
+        version="$(_koopa_macos_os_version)"
         version="$(_koopa_major_minor_version "$version")"
     elif _koopa_is_linux
     then
