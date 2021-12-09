@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-12-03"
+koopa-date="2021-12-09"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -44,10 +44,10 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.4"
+aws-cli="2.4.5"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.30.0"
+azure-cli="2.31.0"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.12"
@@ -86,7 +86,7 @@ cellranger="6.1.2"  # 2021-10-25
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.22.0"
+cmake="3.22.1"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -169,7 +169,7 @@ harfbuzz="3.1.2"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.6"
+homebrew="3.3.7"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -281,7 +281,7 @@ php="8.0.11"
 pkg-config="0.29.2"
 
 # https://python-poetry.org/
-poetry="1.1.11"
+poetry="1.1.12"
 
 # https://proj.org/
 proj="8.2.0"
@@ -392,7 +392,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.3700"
+vim="8.2.3750"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
