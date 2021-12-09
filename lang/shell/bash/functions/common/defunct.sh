@@ -32,6 +32,13 @@ koopa::cellar_prefix() { # {{{1
     koopa::defunct 'koopa::app_prefix'
 }
 
+koopa::check_data_disk() { # {{{1
+    # """
+    # @note Updated 2020-11-19.
+    # """
+    koopa::defunct
+}
+
 koopa::configure_start() { # {{{1
     # """
     # @note Updated 2021-11-18.
@@ -44,6 +51,13 @@ koopa::configure_success() { # {{{1
     # @note Updated 2021-11-18.
     # """
     koopa::defunct 'koopa::alert_configure_success'
+}
+
+koopa::data_disk_link_prefix() { # {{{1
+    # """
+    # @note Updated 2021-12-09.
+    # """
+    koopa::defunct
 }
 
 koopa::find_cellar_version() { # {{{1
