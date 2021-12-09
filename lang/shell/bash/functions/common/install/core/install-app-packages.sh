@@ -48,7 +48,6 @@ koopa::install_app_packages() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    # FIXME Need to check that variables are defined here.
     dict[prefix_fun]="koopa::${dict[name]}_packages_prefix"
     koopa::assert_is_function "${dict[prefix_fun]}"
     koopa::install_app \
