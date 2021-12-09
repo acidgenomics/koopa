@@ -268,10 +268,6 @@ koopa::cpu_count() { # {{{1
     _koopa_cpu_count "$@"
 }
 
-koopa::data_disk_link_prefix() { # {{{1
-    _koopa_data_disk_link_prefix "$@"
-}
-
 koopa::deactivate_anaconda() { # {{{1
     _koopa_deactivate_anaconda "$@"
 }
