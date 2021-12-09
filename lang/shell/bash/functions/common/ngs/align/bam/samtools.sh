@@ -50,7 +50,9 @@ koopa::samtools_convert_sam_to_bam() { # {{{1
         esac
     done
     # FIXME Rethink this approach, reworking using dict approach.
-    koopa::assert_is_set 'input_sam' 'output_bam'
+    koopa::assert_is_set \
+        '--input-sam' "$input_sam" \
+        '--output-bam' "$output_bam"
     sam_bn="$(koopa::basename "$input_sam")"
     bam_bn="$(koopa::basename "$output_bam")"
     if [[ -f "$output_bam" ]]
