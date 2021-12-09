@@ -676,6 +676,14 @@ koopa::locate_lesspipe() { # {{{1
         --name='lesspipe.sh'
 }
 
+koopa::locate_lua() { # {{{1
+    # """
+    # Locate 'lua'.
+    # @note Updated 2021-12-09.
+    # """
+    koopa::locate_app 'lua'
+}
+
 koopa::locate_llvm_config() { # {{{1
     # """
     # Locate 'llvm-config' executable.
