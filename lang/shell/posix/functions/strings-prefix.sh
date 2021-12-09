@@ -86,17 +86,6 @@ _koopa_config_prefix() { # {{{1
     return 0
 }
 
-_koopa_data_disk_link_prefix() { # {{{1
-    # """
-    # Data disk symlink prefix.
-    # @note Updated 2020-07-30.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_is_linux || return 0
-    _koopa_print '/n'
-    return 0
-}
-
 _koopa_distro_prefix() { # {{{1
     # """
     # Operating system distro prefix.
@@ -589,10 +578,10 @@ _koopa_rbenv_prefix() { # {{{1
 _koopa_refdata_prefix() { # {{{1
     # """
     # Reference data prefix.
-    # @note Updated 2020-05-05.
+    # @note Updated 2021-12-09.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_print "$(_koopa_data_disk_link_prefix)/refdata"
+    _koopa_print "$(_koopa_opt_prefix)/refdata"
     return 0
 }
 
