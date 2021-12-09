@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Rework the '--indexes' approach to use '--index' multiple times instead.
 # FIXME Rework using app and dict approach.
 # FIXME Consider wrapping this in our 'install_app' call.
 koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     # """
     # Install bcbio-nextgen genome from Ensembl.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-12-09.
     #
     # This script can fail on a clean bcbio install if this file is missing:
     # 'install/galaxy/tool-data/sam_fa_indices.loc'.
@@ -41,66 +42,76 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     #     --organism="$organism" \
     #     --release="$release"
     # """
-    local bcbio_genome_name bcbio_species_dir build cores fasta gtf indexes
-    local install_prefix organism provider release script sed tee tmp_dir
-    local tool_data_prefix
+    local app dict indexes
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
-    koopa::activate_bcbio_nextgen
-    script='bcbio_setup_genome.py'
-    koopa::assert_is_installed "$script"
-    sed="$(koopa::locate_sed)"
-    tee="$(koopa::locate_tee)"
+    declare -A app=(
+        [bcbio_setup_genome]='bcbio_setup_genome.py'
+        [sed]="$(koopa::locate_sed)"
+        [tee]="$(koopa::locate_tee)"
+        [touch]="$(koopa::locate_touch)"
+    )
+    declare -A dict=(
+        [build]=''
+        [cores]="$(koopa::cpu_count)"
+        [fasta]=''
+        [gtf]=''
+        [indexes]='bowtie2 seq star'
+        [organism]=''
+        [release]=''
+        [tmp_dir]="$(koopa::tmp_dir)"
+        [tmp_log_file]="$(koopa::tmp_log_file)"
+    )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--build='*)
-                build="${1#*=}"
+                dict[build]="${1#*=}"
                 shift 1
                 ;;
             '--build')
-                build="${2:?}"
+                dict[build]="${2:?}"
                 shift 2
                 ;;
             '--fasta='*)
-                fasta="${1#*=}"
+                dict[fasta]="${1#*=}"
                 shift 1
                 ;;
             '--fasta')
-                fasta="${2:?}"
+                dict[fasta]="${2:?}"
                 shift 2
                 ;;
             '--gtf='*)
-                gtf="${1#*=}"
+                dict[gtf]="${1#*=}"
                 shift 1
                 ;;
             '--gtf')
-                gtf="${2:?}"
+                dict[gtf]="${2:?}"
                 shift 2
                 ;;
             '--indexes='*)
-                indexes="${1#*=}"
+                dict[indexes]="${1#*=}"
                 shift 1
                 ;;
             '--indexes')
-                indexes="${2:?}"
+                dict[indexes]="${2:?}"
                 shift 2
                 ;;
             '--organism='*)
-                organism="${1#*=}"
+                dict[organism]="${1#*=}"
                 shift 1
                 ;;
             '--organism')
-                organism="${2:?}"
+                dict[organism]="${2:?}"
                 shift 2
                 ;;
             '--release='*)
-                release="${1#*=}"
+                dict[release]="${1#*=}"
                 shift 1
                 ;;
             '--release')
-                release="${2:?}"
+                dict[release]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -109,61 +120,64 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
                 ;;
         esac
     done
-    [[ -z "${indexes:-}" ]] && indexes='bowtie2 seq star'
-    # FIXME Rework this.
-    koopa::assert_is_set 'build' 'fasta' 'gtf' 'indexes' 'organism' 'release'
-    koopa::assert_is_file "$fasta" "$gtf"
-    script="$(koopa::which_realpath "$script")"
-    fasta="$(koopa::realpath "$fasta")"
-    gtf="$(koopa::realpath "$gtf")"
+    koopa::assert_is_set \
+        '--build' "${dict[build]}" \
+        '--fasta' "${dict[fasta]}" \
+        '--gtf' "${dict[gtf]}" \
+        '--indexes' "${dict[indexes]}" \
+        '--organism' "${dict[organism]}" \
+        '--release' "${dict[release]}"
+    koopa::activate_bcbio_nextgen
+    koopa::assert_is_installed "${app[bcbio_setup_genome]}"
+    koopa::assert_is_file "${dict[fasta]}" "${dict[gtf]}"
+    dict[fasta]="$(koopa::realpath "${dict[fasta]}")"
+    dict[gtf]="$(koopa::realpath "${dict[gtf]}")"
     # Convert space-delimited string to array.
-    IFS=" " read -r -a indexes <<< "$indexes"
+    IFS=" " read -r -a indexes <<< "${dict[indexes]}"
     # Check for valid organism input.
-    if ! koopa::str_match_regex "$organism" '^([A-Z][a-z]+)(\s|_)([a-z]+)$'
+    if ! koopa::str_match_regex \
+        "${dict[organism]}" \
+        '^([A-Z][a-z]+)(\s|_)([a-z]+)$'
     then
-        koopa::stop "Invalid organism: '${organism}'."
+        koopa::stop "Invalid organism: '${dict[organism]}'."
     fi
-    provider='Ensembl'
+    dict[provider]='Ensembl'
     # e.g. "GRCh38_Ensembl_102".
-    bcbio_genome_name="${build} ${provider} ${release}"
-    bcbio_genome_name="${bcbio_genome_name// /_}"
-    koopa::alert_install_start "$bcbio_genome_name"
+    dict[bcbio_genome_name]="${dict[build]} ${dict[provider]} ${dict[release]}"
+    dict[bcbio_genome_name]="${dict[bcbio_genome_name]// /_}"
+    koopa::alert_install_start "${dict[bcbio_genome_name]}"
     # e.g. 'Hsapiens'.
-    bcbio_species_dir="$( \
-        koopa::print "${organism// /_}" \
-            | "$sed" -r 's/^([A-Z])[a-z]+_([a-z]+)$/\1\2/g' \
+    dict[bcbio_species_dir]="$( \
+        koopa::print "${dict[organism]// /_}" \
+            | "${app[sed]}" -r 's/^([A-Z])[a-z]+_([a-z]+)$/\1\2/g' \
     )"
-    tmp_dir="$(koopa::tmp_dir)"
-    cores="$(koopa::cpu_count)"
     # Ensure Galaxy is configured correctly for a clean bcbio install.
     # Recursive up from 'install/anaconda/bin/bcbio_setup_genome.py'.
-    install_prefix="$(koopa::parent_dir --num=3 "$script")"
+    dict[install_prefix]="$(koopa::parent_dir --num=3 "${dict[script]}")"
     # If the 'sam_fa_indices.loc' file is missing, the script will error.
-    tool_data_prefix="${install_prefix}/galaxy/tool-data"
+    dict[tool_data_prefix]="${dict[install_prefix]}/galaxy/tool-data"
     koopa::mkdir "$tool_data_prefix"
-    # FIXME Use 'koopa::touch' here.
-    touch "${tool_data_prefix}/sam_fa_indices.log"
+    "${app[touch]}" "${tool_data_prefix}/sam_fa_indices.log"
     (
         # This step will download cloudbiolinux, so migrating to a temporary
         # directory is helpful, to avoid clutter.
         set -x
-        koopa::cd "$tmp_dir"
+        koopa::cd "${dict[tmp_dir]}"
         koopa::dl \
             'FASTA file' "$fasta" \
             'GTF file' "$gtf" \
             'Indexes' "${indexes[*]}"
         # Note that '--buildversion' was added in 2021 and is now required.
-        "$script" \
+        "${app[bcbio_setup_genome]}" \
             --build "$bcbio_genome_name" \
             --buildversion "${provider}_${release}" \
-            --cores "$cores" \
+            --cores "${dict[cores]}" \
             --fasta "$fasta" \
             --gtf "$gtf" \
             --indexes "${indexes[@]}" \
             --name "$bcbio_species_dir"
-        set +x
-    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    koopa::alert_install_success "$bcbio_genome_name"
+    ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
+    koopa::rm "${dict[tmp_dir]}"
+    koopa::alert_install_success "${dict[bcbio_genome_name]}"
     return 0
 }

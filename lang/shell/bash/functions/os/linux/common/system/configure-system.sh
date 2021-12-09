@@ -3,7 +3,7 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2021-11-30.
+    # @note Updated 2021-12-09.
     #
     # Intended primarily for virtual machine and Docker image builds.
     #
@@ -23,7 +23,6 @@ koopa::linux_configure_system() { # {{{1
     koopa::assert_has_no_envs
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
-        [data_disk_prefix]=''
         [delete_cache]=0
         [delete_skel]=1
         [docker]="$(
@@ -127,14 +126,6 @@ koopa::linux_configure_system() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--data-disk='*)
-                dict[data_disk_prefix]="${1#*=}"
-                shift 1
-                ;;
-            '--data-disk')
-                dict[data_disk_prefix]="${2:?}"
-                shift 2
-                ;;
             '--mode='*)
                 dict[mode]="${1#*=}"
                 shift 1
@@ -349,11 +340,6 @@ koopa::linux_configure_system() { # {{{1
     )
     koopa::sys_mkdir "${prefixes[@]}"
     koopa::sys_set_permissions --recursive "${prefixes[@]}"
-    # Set up secondary data disk, if applicable.
-    if [[ -e "${dict[data_disk_prefix]}" ]]
-    then
-        koopa::linux_link_data_disk "${dict[data_disk_prefix]}"
-    fi
     # Base system {{{2
     # --------------------------------------------------------------------------
     koopa::alert 'Installing base system.'
@@ -575,40 +561,5 @@ koopa::linux_configure_system() { # {{{1
         koopa::linux_delete_cache
     fi
     koopa::alert_success 'Configuration completed successfully.'
-    return 0
-}
-
-koopa::linux_link_data_disk() { # {{{1
-    # """
-    # Link a secondary data disk.
-    # @note Updated 2020-11-19.
-    # """
-    local dd_link_prefix dd_prefix dd_real_prefix opt_prefix
-    dd_prefix="${1:?}"
-    dd_link_prefix="$(koopa::data_disk_link_prefix)"
-    opt_prefix="$(koopa::opt_prefix)"
-    if [[ -e "$dd_prefix" ]]
-    then
-        koopa::alert_info "Data disk detected at '${dd_prefix}'."
-    else
-        koopa::stop "Failed to detect data disk at '${dd_prefix}'."
-    fi
-    # Early return if data disk is already symlinked.
-    if [[ -L "$dd_link_prefix" ]] && [[ -L "$opt_prefix" ]]
-    then
-        return 0
-    fi
-    koopa::alert "Symlinking '${dd_link_prefix}' on '${dd_prefix}'."
-    koopa::sys_rm "$dd_link_prefix" "$opt_prefix"
-    # e.g. '/mnt/data01/n'.
-    dd_real_prefix="${dd_prefix}${dd_link_prefix}"
-    koopa::sys_ln "$dd_real_prefix" "$dd_link_prefix"
-    # e.g. '/opt/koopa/opt'.
-    opt_prefix_bn="$(koopa::basename "$opt_prefix")"
-    # e.g. '/mnt/data01/n/opt'
-    opt_prefix_real="${dd_real_prefix}/${opt_prefix_bn}"
-    koopa::sys_mkdir "$opt_prefix_real"
-    # e.g. '/mnt/data01/n/opt' to '/opt/koopa/opt'.
-    koopa::sys_ln "$opt_prefix_real" "$opt_prefix"
     return 0
 }
