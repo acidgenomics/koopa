@@ -59,49 +59,6 @@ koopa::linux_add_user_to_group() { # {{{1
     return 0
 }
 
-koopa::linux_link_docker() { # {{{1
-    # """
-    # Link Docker library onto data disk for VM.
-    # @note Updated 2021-11-16.
-    # """
-    local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    declare -A app=(
-        [sudo]="$(koopa::locate_sudo)"
-        [systemctl]="$(koopa::linux_locate_systemctl)"
-    )
-    declare -A dict=(
-        # e.g. '/mnt/data01/n' to '/n' for AWS.
-        [dd_link_prefix]="$(koopa::data_disk_link_prefix)"
-        [distro_prefix]="$(koopa::distro_prefix)"
-        [etc_target]='/etc/docker'
-        [lib_sys]='/var/lib/docker'
-    )
-    dict[etc_source]="${dict[distro_prefix]}${dict[etc_target]}"
-    dict[lib_n]="${dict[dd_link_prefix]}${dict[lib_sys]}"
-    koopa::assert_is_dir "${dict[dd_link_prefix]}"
-    koopa::alert 'Updating Docker configuration.'
-    koopa::alert_note 'Stopping Docker.'
-    "${app[sudo]}" "${app[systemctl]}" stop 'docker'
-    koopa::alert_note "Moving Docker lib from '${dict[lib_sys]}' \
-to '${dict[lib_n]}'."
-    if [[ -d "${dict[etc_source]}" ]]
-    then
-        koopa::ln \
-            --sudo \
-            --target-directory="${dict[etc_target]}" \
-            "${dict[etc_source]}/"*
-    fi
-    koopa::rm --sudo "${dict[lib_sys]}"
-    koopa::mkdir --sudo "${dict[lib_n]}"
-    koopa::ln --sudo "${dict[lib_n]}" "${dict[lib_sys]}"
-    koopa::alert_note 'Restarting Docker.'
-    "${app[sudo]}" "${app[systemctl]}" enable 'docker'
-    "${app[sudo]}" "${app[systemctl]}" start 'docker'
-    return 0
-}
-
 koopa::linux_remove_user_from_group() { # {{{1
     # """
     # Remove user from group.
