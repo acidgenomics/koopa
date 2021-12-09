@@ -46,31 +46,6 @@ koopa::check_access_octal() { # {{{1
     return 0
 }
 
-koopa::check_data_disk() { # {{{1
-    # """
-    # Check data disk configuration.
-    # @note Updated 2020-11-19.
-    # """
-    local data_disk_link_prefix opt_prefix
-    koopa::assert_has_no_args "$#"
-    koopa::is_linux || return 0
-    # e.g. '/n'.
-    data_disk_link_prefix="$(koopa::data_disk_link_prefix)"
-    if [[ -L "$data_disk_link_prefix" ]] && [[ ! -e "$data_disk_link_prefix" ]]
-    then
-        koopa::warn "Invalid symlink: '${data_disk_link_prefix}'."
-        return 1
-    fi
-    # e.g. '/opt/koopa/opt'; or previously '/usr/local/koopa/opt'.
-    opt_prefix="$(koopa::opt_prefix)"
-    if [[ -L "$opt_prefix" ]] && [[ ! -e "$opt_prefix" ]]
-    then
-        koopa::warn "Invalid symlink: '${opt_prefix}'."
-        return 1
-    fi
-    return 0
-}
-
 koopa::check_disk() { # {{{1
     # """
     # Check that disk has enough free space.
@@ -178,7 +153,6 @@ koopa::check_system() { # {{{1
     koopa::r_koopa --vanilla 'cliCheckSystem'
     koopa::check_exports
     koopa::check_disk
-    koopa::check_data_disk
     return 0
 }
 
