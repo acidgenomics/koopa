@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework, looping across opt and homebrew-opt.
-
 koopa::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2021-11-29.
+    # @note Updated 2021-12-09.
     # """
-    local clean_path_arr dict pkgs pos
+    local clean_path_arr dict homebrew_opt_arr opt_arr pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A dict=(
@@ -24,16 +22,18 @@ koopa::update_app() { # {{{1
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     koopa::is_shared_install && dict[shared]=1
+    homebrew_opt_arr=()
+    opt_arr=()
     pos=()
     while (("$#"))
     do
         case "$1" in
             '--homebrew-opt='*)
-                dict[homebrew_opt]="${1#*=}"
+                homebrew_opt_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--homebrew-opt')
-                dict[homebrew_opt]="${2:?}"
+                homebrew_opt_arr+=("${2:?}")
                 shift 2
                 ;;
             '--name='*)
@@ -53,11 +53,11 @@ koopa::update_app() { # {{{1
                 shift 2
                 ;;
             '--opt='*)
-                dict[opt]="${1#*=}"
+                opt_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--opt')
-                dict[opt]="${2:?}"
+                opt_arr+=("${2:?}")
                 shift 2
                 ;;
             '--platform='*)
@@ -153,15 +153,15 @@ koopa::update_app() { # {{{1
             koopa::add_to_pkg_config_path_start_2 \
                 '/usr/bin/pkg-config'
         fi
-        if [[ -n "${dict[homebrew_opt]}" ]]
+        # Activate packages installed in Homebrew 'opt/' directory.
+        if koopa::is_array_non_empty "${homebrew_opt_arr[@]:-}"
         then
-            IFS=',' read -r -a pkgs <<< "${dict[homebrew_opt]}"
-            koopa::activate_homebrew_opt_prefix "${pkgs[@]}"
+            koopa::activate_homebrew_opt_prefix "${homebrew_opt_arr[@]}"
         fi
-        if [[ -n "${dict[opt]}" ]]
+        # Activate packages installed in Koopa 'opt/' directory.
+        if koopa::is_array_non_empty "${opt_arr[@]:-}"
         then
-            IFS=',' read -r -a pkgs <<< "${dict[opt]}"
-            koopa::activate_opt_prefix "${pkgs[@]}"
+            koopa::activate_opt_prefix "${opt_arr[@]}"
         fi
         # shellcheck disable=SC2030
         export UPDATE_PREFIX="${dict[prefix]}"
