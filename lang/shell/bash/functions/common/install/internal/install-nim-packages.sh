@@ -3,15 +3,17 @@
 koopa:::install_nim_packages() { # {{{1
     # """
     # Install Nim packages using nimble.
-    # @note Updated 2021-10-05.
+    # @note Updated 2021-12-14.
     # @seealso
     # - https://github.com/nim-lang/nimble/issues/734
     # """
-    local nimble pkg pkg_lower pkgs version
+    local app pkg pkg_lower pkgs version
     koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [nimble]="$(koopa::locate_nimble)"
+    )
     koopa::configure_nim
     koopa::activate_nim
-    nimble="$(koopa::locate_nimble)"
     pkgs=("$@")
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
@@ -26,6 +28,6 @@ koopa:::install_nim_packages() { # {{{1
             pkgs[$i]="${pkg}@${version}"
         done
     fi
-    "$nimble" install "${pkgs[@]}"
+    "${app[nimble]}" install "${pkgs[@]}"
     return 0
 }
