@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.5"
+aws-cli="2.4.6"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.31.0"
@@ -146,7 +146,7 @@ git="2.34.1"
 gnupg="2.3.2"
 
 # https://golang.org/dl/
-go="1.17.3"
+go="1.17.5"
 
 # https://cloud.google.com/sdk/docs/install
 # NOTE Not currently compatible with Python 3.10, so pinning to 3.9.
@@ -163,13 +163,13 @@ gsl="2.7"
 
 hadolint="2.8.0"
 
-harfbuzz="3.1.2"
+harfbuzz="3.2.0"
 
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.7"
+homebrew="3.3.8"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -392,7 +392,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.3750"
+vim="8.2.3800"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
@@ -493,7 +493,7 @@ conda-vardict="2019.06.04"              # 2019-06-05 bioconda
 # Homebrew cask versions {{{1
 # ==============================================================================
 
-homebrew-cask-gpg-suite="2021.2"
+homebrew-cask-gpg-suite="2021.3"
 
 # Nim (Nimble) packages {{{1
 # ==============================================================================
@@ -571,15 +571,15 @@ ruby-ronn="0.7.3"               # 2010-06-24
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.3"               # homebrew
-rust-broot="1.7.2"              # homebrew; br
+rust-broot="1.7.4"              # homebrew; br
 rust-cargo-update="8.0.0"
 rust-cargo-outdated="0.9.18"    # homebrew
 rust-dog="0.1.0"                # homebrew
 rust-du-dust="0.7.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
-rust-fd-find="8.2.1"            # homebrew; fd
+rust-fd-find="8.3.0"            # homebrew; fd
 rust-hyperfine="1.12.0"         # homebrew
-rust-procs="0.11.10"            # homebrew
+rust-procs="0.11.11"            # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
 rust-starship="1.0.0"           # homebrew
