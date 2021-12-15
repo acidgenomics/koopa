@@ -6,7 +6,7 @@
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2021-10-25.
+    # @note Updated 2021-12-15.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -61,6 +61,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         [quality_control]=0
         [reticulate]=0
         [riboseq]=0
+        [rna_modification]=0
         [rnaseq]=0
         [singlecell]=0
         [smallrna]=0
@@ -126,6 +127,10 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 dict[riboseq]=1
                 shift 1
                 ;;
+            '--rna-modification')
+                dict[rna_modification]=1
+                shift 1
+                ;;
             '--rnaseq' | \
             '--rna-seq')
                 dict[rnaseq]=1
@@ -175,6 +180,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
         dict[quality_control]=1
         dict[reticulate]=1
         dict[riboseq]=1
+        dict[rna_modification]=1
         dict[rnaseq]=1
         dict[singlecell]=1
         dict[smallrna]=1
@@ -282,6 +288,12 @@ koopa::conda_create_bioinfo_envs() { # {{{1
                 'ribotaper'
             )
         fi
+    fi
+    if [[ "${dict[rna_modification]}" -eq 1 ]]
+    then
+        envs+=(
+            'r-tailfindr'
+        )
     fi
     if [[ "${dict[rnaseq]}" -eq 1 ]]
     then
