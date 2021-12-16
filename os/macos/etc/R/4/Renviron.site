@@ -8,7 +8,6 @@
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
-# - https://mac.r-project.org/
 # - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
 #       Renviron.site
 # """
@@ -35,7 +34,7 @@ R_LIBS_USER="${R_LIBS_SITE}"
 # ==============================================================================
 
 # Refer to CRAN website for details:
-# - http://mac.r-project.org/tools/
+# - http://mac.r-project.org/
 # - https://cran.r-project.org/bin/macosx/tools/
 
 # Restrict path, so we don't mask compiler binaries with virtual environment.
