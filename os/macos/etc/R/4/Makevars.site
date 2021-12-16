@@ -35,7 +35,7 @@
 # Current configuration {{{2
 # ------------------------------------------------------------------------------
 
-# Using CRAN-recommended GNU Fortran for compilation.
+# Using CRAN-recommended fxcoudert GNU Fortran build for compilation.
 
 LOC = /usr/local/gfortran
 SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
@@ -45,7 +45,8 @@ CXX = $(LOC)/bin/g++
 CXX11 = $(LOC)/bin/g++
 
 CFLAGS += -O3 -Wall -g -pedantic -pipe -mtune=native -std=gnu99
-CXXFLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
+
+CXXFLAGS   += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX11FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX14FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
 CXX17FLAGS += -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native
@@ -88,11 +89,11 @@ LDFLAGS += -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib
 # to do so (data.table), and other packages that bork with '-fopenmp' flag
 # (e.g. fs, stringi) to be left alone.
 
-SHLIB_OPENMP_CFLAGS += -fopenmp
-SHLIB_OPENMP_CXXFLAGS += -fopenmp
+SHLIB_OPENMP_CFLAGS     += -fopenmp
+SHLIB_OPENMP_CXXFLAGS   += -fopenmp
 SHLIB_OPENMP_CXX11FLAGS += -fopenmp
 SHLIB_OPENMP_CXX14FLAGS += -fopenmp
 SHLIB_OPENMP_CXX17FLAGS += -fopenmp
 SHLIB_OPENMP_CXX98FLAGS += -fopenmp
-SHLIB_OPENMP_FCFLAGS += -fopenmp
-SHLIB_OPENMP_FFLAGS += -fopenmp
+SHLIB_OPENMP_FCFLAGS    += -fopenmp
+SHLIB_OPENMP_FFLAGS     += -fopenmp
