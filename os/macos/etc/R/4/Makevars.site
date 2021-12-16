@@ -62,6 +62,8 @@
 # GNU compiler (GCC / Fortran) {{{2
 # ------------------------------------------------------------------------------
 
+# NOTE These settings currently don't work for httpuv package.
+
 LOC = /usr/local/gfortran
 SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
 
