@@ -8,6 +8,7 @@
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
+# - https://mac.r-project.org/
 # - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
 #       Renviron.site
 # """
@@ -104,7 +105,7 @@ PATH="/Library/TeX/texbin:${PATH}"
 # for improved R Markdown stability.
 PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 
-# GNU Fortran (from fxcoudert).
+# GNU Fortran from fxcoudert, recommended by CRAN.
 PATH="/usr/local/gfortran/bin:${PATH}"
 
 # Package configuration {{{2
