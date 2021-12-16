@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for macOS.
 #
-# @note Updated 2021-12-02.
+# @note Updated 2021-12-16.
 #
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -15,6 +15,9 @@
 # Global variables {{{1
 # ==============================================================================
 
+# NOTE This has changed to '/opt/homebrew' by default for Apple Silicon (ARM)
+# Macs, instead of '/usr/local' for Intel x86 Macs. This configuration should
+# work for both platforms currently, as long as variable is set in shell.
 HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/usr/local}"
 HOMEBREW_OPT_PREFIX="${HOMEBREW_PREFIX}/opt"
 
