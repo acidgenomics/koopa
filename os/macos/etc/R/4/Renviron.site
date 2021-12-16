@@ -7,7 +7,7 @@
 # @note Updated 2021-12-16.
 #
 # @seealso
-# - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
+# - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
 # - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
 #       Renviron.site
 # """
@@ -146,7 +146,7 @@ XML_CONFIG="${HOMEBREW_OPT_PREFIX}/libxml2/bin/xml2-config"
 
 # GitHub remote installs.
 # Always upgrade GitHub R packages, without prompting.
-# See `remotes::update_packages()` for details.
+# See 'remotes::update_packages()' for details.
 R_REMOTES_UPGRADE="always"
 
 # If you set the environment variable 'R_REMOTES_STANDALONE="true"' (e.g. in R
@@ -164,8 +164,8 @@ R_REMOTES_STANDALONE="true"
 # > RETICULATE_MINICONDA_PATH="${KOOPA_OPT_PREFIX}/conda"
 
 # Default path to virtual environments.
-# If left unset, defaults to `~/.virtualenvs`.
-# Check with `virtualenv_list()`.
+# If left unset, defaults to '~/.virtualenvs'.
+# Check with 'virtualenv_list()'.
 # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
 # > WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
 
@@ -184,7 +184,7 @@ STRINGI_DISABLE_ICU_BUNDLE=1
 # tools / rappdirs {{{2
 # ------------------------------------------------------------------------------
 
-# These values are inherited by `tools::R_user_dir()`.
+# These values are inherited by 'tools::R_user_dir()'.
 R_USER_CACHE_DIR="${XDG_CACHE_HOME:-~/.cache}"
 R_USER_CONFIG_DIR="${XDG_CONFIG_HOME:-~/.config}"
 R_USER_DATA_DIR="${XDG_DATA_HOME:-~/.local/share}"
@@ -193,7 +193,7 @@ R_USER_DATA_DIR="${XDG_DATA_HOME:-~/.local/share}"
 # ------------------------------------------------------------------------------
 
 # The units package requires udunits to be installed.
-# Use homebrew: brew install udunits
+# Use homebrew: 'brew install udunits'.
 
 UDUNITS2_INCLUDE="${HOMEBREW_OPT_PREFIX}/udunits/include"
 UDUNITS2_LIBS="${HOMEBREW_OPT_PREFIX}/udunits/lib"
