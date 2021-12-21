@@ -24,7 +24,9 @@
 # Using CRAN-recommended fxcoudert GNU Fortran build for compilation.
 #
 # '-O3' should be faster than '-O2' (default) level optimization.
-# 
+#
+# 'LTO' refers to link time optimization.
+#
 # 'CXXFLAGS' do not automagically promote to 'CXX11FLAGS' etc.
 #
 # See also:
