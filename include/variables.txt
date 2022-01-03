@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-01-02"
+koopa-date="2022-01-03"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -150,7 +150,7 @@ go="1.17.5"
 
 # https://cloud.google.com/sdk/docs/install
 # NOTE Not currently compatible with Python 3.10, so pinning to 3.9.
-google-cloud-sdk="362.0.0"
+google-cloud-sdk="367.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.7"
