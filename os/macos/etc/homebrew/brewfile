@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2021-12-02.
+# Updated 2022-01-03.
 # """
 
 # Taps {{{1
@@ -157,18 +157,17 @@ brew "vitorgalvao/tiny-scripts/cask-repair"
 # > mas "Numbers", id: 409203825
 # > mas "Pages", id: 409201541
 
-# FIXME Installation of Calca is now failing.
-# Unable to install Calca app. mas installation failed
+# NOTE [2022-01-03]: These are currently failing. Disabled for the moment.
 
-mas "Calca", id: 635758264
-mas "Disk Speed Test", id: 425264550
-mas "Gapplin", id: 768053424
-mas "Internet Access Policy Viewer", id: 1482630322
-mas "Name Mangler", id: 603637384
-mas "Pastebot", id: 1179623856
-mas "Reeder", id: 880001334
-mas "Soulver", id: 413965349
-mas "Table Tool", id: 1122008420
-mas "The Unarchiver", id: 425424353
-mas "Tweetbot", id: 1384080005
-mas "iA Writer", id: 775737590
+# > mas "Calca", id: 635758264
+# > mas "Disk Speed Test", id: 425264550
+# > mas "Gapplin", id: 768053424
+# > mas "Internet Access Policy Viewer", id: 1482630322
+# > mas "Name Mangler", id: 603637384
+# > mas "Pastebot", id: 1179623856
+# > mas "Reeder", id: 880001334
+# > mas "Soulver", id: 413965349
+# > mas "Table Tool", id: 1122008420
+# > mas "The Unarchiver", id: 425424353
+# > mas "Tweetbot", id: 1384080005
+# > mas "iA Writer", id: 775737590
