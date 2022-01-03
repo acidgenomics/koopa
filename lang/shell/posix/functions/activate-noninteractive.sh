@@ -123,7 +123,7 @@ _koopa_activate_homebrew() { # {{{1
         'curl' \
         'gnu-getopt' \
         'ncurses' \
-        'openssl' \
+        'openssl@3' \
         'ruby' \
         'texinfo'
     _koopa_activate_homebrew_opt_libexec_prefix \

@@ -21,6 +21,7 @@ koopa:::install_libevent() { # {{{1
 download/release-${dict[version]}-stable/${dict[file]}"
     if koopa::is_macos
     then
+        # FIXME Bump this to version 3?
         koopa::activate_homebrew_opt_prefix 'openssl@1.1'
     fi
     koopa::download "${dict[url]}" "${dict[file]}"

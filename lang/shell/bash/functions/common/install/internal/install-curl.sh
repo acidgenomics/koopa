@@ -38,6 +38,7 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
     if koopa::is_macos
     then
         dict[brew_prefix]="$(koopa::homebrew_prefix)"
+        # FIXME Bump this to version 3.0?
         conf_args+=(
             "--with-ssl=${dict[brew_prefix]}/opt/openssl@1.1"
         )
