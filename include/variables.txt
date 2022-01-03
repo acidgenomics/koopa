@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2021-12-15"
+koopa-date="2022-01-02"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -31,7 +31,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 anaconda="2021.05"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.7.4"
+armadillo="10.7.5"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="4.0.2.38"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.6"
+aws-cli="2.4.7"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.31.0"
@@ -133,7 +133,7 @@ gcc="11.2.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.3.3"
+gdal="3.4.0"
 
 # https://github.com/libgeos/geos/releases
 geos="3.10.1"
@@ -169,7 +169,7 @@ harfbuzz="3.2.0"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.8"
+homebrew="3.3.9"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -232,7 +232,7 @@ neovim="0.6.0"
 nim="1.4.8"
 
 # https://nodejs.org/
-node="17.2.0"
+node="17.3.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -253,7 +253,7 @@ oracle-instantclient="21.1.0.0.0-1"
 pandoc="2.16.2"
 
 # https://www.gnu.org/software/parallel/
-parallel="20211122"
+parallel="20211222"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
@@ -287,7 +287,7 @@ poetry="1.1.12"
 proj="8.2.0"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.2.2"
+pyenv="2.2.3"
 
 # https://www.python.org/downloads/
 # > python="3.9.7"
@@ -392,7 +392,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.3800"
+vim="8.2.3850"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
@@ -523,27 +523,25 @@ node-prettier="2.5.1"               # 2021-12-04
 # Otherwise, for heavy libraries, consider using a conda environment instead.
 
 python-pip="21.3.1"             # default
-python-setuptools="59.6.0"      # default
-python-wheel="0.37.0"           # default
+python-setuptools="60.2.0"      # default
+python-wheel="0.37.1"           # default
 
 python-black="21.12b0"          # recommended
-python-bpytop="1.0.67"          # recommended
-python-cython="0.29.25"         # recommended
+python-bpytop="1.0.68"          # recommended
+python-cython="0.29.26"         # recommended
 python-flake8="4.0.1"           # recommended
 python-glances="3.2.4.2"        # recommended
 python-isort="5.10.1"           # recommended
 python-pip2pi="0.8.2"           # recommended
-python-pipx="0.16.4"            # recommended
-python-psutil="5.8.0"           # recommended
+python-pipx="0.17.0"            # recommended
+python-psutil="5.9.0"           # recommended
 python-pyflakes="2.4.0"         # recommended
 python-pylint="2.12.2"          # recommended
 python-pynvim="0.4.3"           # recommended
+python-pytaglib="1.5.0"         # recommended
 python-pytest="6.2.5"           # recommended
 python-ranger-fm="1.9.3"        # recommended
 python-six="1.16.0"             # recommended
-
-# not out yet, but fixed -- enable when released
-# > python-pytaglib="1.5.0"     # recommended
 
 python-leidenalg="0.8.8"        # r-reticulate
 python-louvain="0.7.0"          # r-reticulate
