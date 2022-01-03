@@ -32,7 +32,7 @@ koopa:::install_python_packages() { # {{{1
             'pyflakes'
             'pylint'
             'pynvim'
-            # > 'pytaglib'  # not 3.10 compatible
+            'pytaglib'
             'pytest'
             'ranger-fm'
             'six'

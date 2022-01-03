@@ -3,7 +3,7 @@
 koopa:::install_openssl() { # {{{1
     # """
     # Install OpenSSL.
-    # @note Updated 2021-12-21.
+    # @note Updated 2022-01-03.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
