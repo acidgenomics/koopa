@@ -20,6 +20,7 @@ koopa:::install_perlbrew() { # {{{1
     "./${file}"
 }
 
+# FIXME Need to move this to separate file.
 # FIXME Need to locate perlbrew.
 koopa:::update_perlbrew() { # {{{1
     # """

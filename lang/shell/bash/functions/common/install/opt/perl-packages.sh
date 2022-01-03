@@ -4,7 +4,7 @@
 koopa:::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-12-21.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #

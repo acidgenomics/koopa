@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Need to move this to a separate file.
 koopa::configure_perl() { # {{{1
     # """
     # Configure Perl.
-    # @note Updated 2021-09-17.
+    # @note Updated 2021-12-21.
     #
     # Ignore these unit test errors:
     # > Failed test 'fish: activate PATH'
