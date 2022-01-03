@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME macOS Python framework installer isn't passing INSTALL_VERSION through
+# here correctly...need to add some other flag or approach here...argh
+
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
