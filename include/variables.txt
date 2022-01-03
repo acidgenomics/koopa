@@ -375,6 +375,7 @@ tar="1.34"
 # https://www.latex-project.org/get/
 tex="2021"
 
+# FIXME Need to clean up TeX Live masking of this on macOS into /usr/local...annoying.
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.8"
 

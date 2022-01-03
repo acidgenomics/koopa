@@ -795,6 +795,7 @@ koopa::return_version() { # {{{1
                 cmd='tldr'
                 ;;
             'texinfo')
+                # FIXME Need to clean up macOS TeX Live cask installation into /usr/local...
                 # NOTE Tex Live install can mask this on macOS.
                 cmd='texi2any'
                 ;;
