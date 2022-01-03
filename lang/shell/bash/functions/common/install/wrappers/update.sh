@@ -11,6 +11,8 @@ koopa::update_doom_emacs() { # {{{1
     koopa::update_app \
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
+        --no-shared \
+        --prefix="$(koopa::doom_emacs_prefix)" \
         "$@"
 }
 
