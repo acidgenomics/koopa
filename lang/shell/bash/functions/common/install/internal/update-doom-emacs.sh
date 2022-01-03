@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is now failing to locate Emacs...
+
 koopa:::update_doom_emacs() { # {{{1
     # """
     # Update Doom Emacs.
