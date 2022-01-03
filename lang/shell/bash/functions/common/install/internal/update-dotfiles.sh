@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME This is now erroring:
+# /opt/koopa/bin/../lang/shell/bash/include/header.sh: line 114: activate: unbound variable
+# /opt/koopa/opt/dotfiles/install: line 70: : No such file or directory
+
 koopa:::update_dotfiles() { # {{{1
     # """
     # Update dotfiles repo and run install script, if defined.
