@@ -157,6 +157,9 @@ brew "vitorgalvao/tiny-scripts/cask-repair"
 # > mas "Numbers", id: 409203825
 # > mas "Pages", id: 409201541
 
+# FIXME Installation of Calca is now failing.
+# Unable to install Calca app. mas installation failed
+
 mas "Calca", id: 635758264
 mas "Disk Speed Test", id: 425264550
 mas "Gapplin", id: 768053424
