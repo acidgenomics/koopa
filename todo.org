@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Emacs version check is now failing on old MacBook.
 ** TODO texinfo check is now failing again on old MacBook.
     Seeing 6.7 instead of expected 6.8, due to another program dumping into /usr/local.
 ** TODO Need to remove 'install-dotfiles' link from koopa config at '~/.config/koopa'.
