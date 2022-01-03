@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Should we rework the version approach here now?
+
 koopa:::install_the_silver_searcher() { # {{{1
     # """
     # Install the silver searcher.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-01-03.
     #
     # Ag has been renamed to The Silver Searcher.
     #
@@ -29,30 +31,43 @@ koopa:::install_the_silver_searcher() { # {{{1
     # # ./configure: [...] `PKG_CHECK_MODULES(PCRE, libpcre)'
     # https://github.com/ggreer/the_silver_searcher/issues/341
     # """
-    local file jobs make name name2 prefix url version
+    local app dict
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [make]="$(koopa::locate_make)"
+    )
+    declare -A dict=(
+        [jobs]="$(koopa::cpu_count)"
+        [name]='the-silver-searcher'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    dict[name2]="$(koopa::snake_case_simple "${dict[name]}")"
+    # Temporary fix for installation of current version, which has bug fixes
+    # that aren't yet available in tagged release, especially for GCC 10.
+    dict[url_stem]="https://github.com/ggreer/${dict[name2]}/archive"
+    case "${dict[version]}" in
+        '2.2.0')
+            dict[version]='master'
+            ;;
+        *)
+            dict[url_stem]="${dict[url_stem]}/refs/tags"
+            ;;
+    esac
+    dict[file]="${dict[version]}.tar.gz"
+    dict[url]="${dict[url_stem]}/${dict[file]}"
     if koopa::is_macos
     then
         koopa::activate_homebrew_opt_prefix 'pcre' 'pkg-config'
     fi
     koopa::assert_is_installed 'pcre-config' 'pkg-config'
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    jobs="$(koopa::cpu_count)"
-    make="$(koopa::locate_make)"
-    name='the-silver-searcher'
-    # Temporarily installing from master branch, which has bug fixes that aren't
-    # yet available in tagged release, especially for GCC 10.
-    version='master'
-    name2="$(koopa::snake_case_simple "$name")"
-    file="${version}.tar.gz"
-    url="https://github.com/ggreer/${name2}/archive/${file}"
-    koopa::download "$url" "$file"
-    koopa::extract "$file"
-    koopa::cd "${name2}-${version}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::cd "${dict[name2]}-${dict[version]}"
     # Refer to 'build.sh' script for details.
     ./autogen.sh
-    ./configure --prefix="$prefix"
-    "$make" --jobs="$jobs"
-    "$make" install
+    ./configure --prefix="${dict[prefix]}"
+    "${app[make]}" --jobs="${dict[jobs]}"
+    "${app[make]}" install
     return 0
 }
