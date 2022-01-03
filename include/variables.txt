@@ -31,7 +31,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 anaconda="2021.05"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.7.5"
+armadillo="10.8.0"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="4.0.2.38"
@@ -123,7 +123,7 @@ findutils="4.8.0"
 fish="3.3.1"
 
 # https://github.com/junegunn/fzf
-fzf="0.28.0"
+fzf="0.29.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.1.1"
@@ -185,7 +185,7 @@ imagemagick="7.1.0"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.7.0"
+julia="1.7.1"
 
 # https://github.com/wofr06/lesspipe/
 # FIXME Need to add install support for Linux.
@@ -226,7 +226,7 @@ ncurses="6.3.20211021"
 neofetch="7.1.0"
 
 # https://github.com/neovim/neovim/releases
-neovim="0.6.0"
+neovim="0.6.1"
 
 # https://nim-lang.org/
 nim="1.4.8"
@@ -284,7 +284,7 @@ pkg-config="0.29.2"
 poetry="1.1.12"
 
 # https://proj.org/
-proj="8.2.0"
+proj="8.2.1"
 
 # https://github.com/pyenv/pyenv
 pyenv="2.2.3"
@@ -324,7 +324,7 @@ ruby="3.0.3p157"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
-rust="1.56.1"
+rust="1.57.0"
 
 # https://rustup.rs/
 rustup="1.24.3"
@@ -392,7 +392,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.3850"
+vim="8.2.3950"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
@@ -571,7 +571,7 @@ ruby-ronn="0.7.3"               # 2010-06-24
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.3"               # homebrew
-rust-broot="1.7.4"              # homebrew; br
+rust-broot="1.8.1"              # homebrew; br
 rust-cargo-update="8.0.0"
 rust-cargo-outdated="0.9.18"    # homebrew
 rust-dog="0.1.0"                # homebrew
@@ -579,14 +579,14 @@ rust-du-dust="0.7.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
 rust-fd-find="8.3.0"            # homebrew; fd
 rust-hyperfine="1.12.0"         # homebrew
-rust-procs="0.11.11"            # homebrew
+rust-procs="0.11.13"            # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
-rust-starship="1.0.0"           # homebrew
-rust-tealdeer="1.4.1"           # homebrew; tldr
+rust-starship="1.1.1"           # homebrew
+rust-tealdeer="1.5.0"           # homebrew; tldr
 rust-tokei="12.1.2"             # homebrew
 rust-xsv="0.13.0"               # homebrew
-rust-zoxide="0.7.9"             # homebrew; z
+rust-zoxide="0.8.0"             # homebrew; z
 
 # Libraries without binaries {{{2
 # ------------------------------------------------------------------------------
