@@ -37,6 +37,7 @@ brew "bfg"
 brew "bind"  # installs dig
 brew "binutils"
 brew "black"  # python
+brew "bottom"
 brew "bpytop"  # python
 brew "broot"  # rust
 brew "bzip2"
@@ -191,9 +192,6 @@ brew "zsh"
 
 tap "cantino/mcfly"
 brew "cantino/mcfly/mcfly"
-
-tap "clementtsang/bottom"
-brew "clementtsang/bottom/bottom"
 
 # Currently warning:
 # Warning: Calling bottle :unneeded is deprecated!
