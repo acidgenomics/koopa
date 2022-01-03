@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rethink our automatic version handling here, similar to
+# our Python framework installer.
+
 koopa::macos_install_r_framework() { # {{{1
     koopa::install_app \
         --installer='r-framework' \
