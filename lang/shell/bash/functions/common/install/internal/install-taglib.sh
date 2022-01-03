@@ -34,8 +34,8 @@ koopa:::install_taglib() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://github.com/${dict[taglib]}/${dict[taglib]}/archive/\
-refs/tags/${dict[file]}"
+    dict[url]="https://github.com/${dict[name]}/${dict[name]}/archive/refs/\
+tags/${dict[file]}"
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
     koopa::cd "${dict[name]}-${dict[version]}"
