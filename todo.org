@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Rework 'koopa install XXX --reinstall' flag to 'koopa reinstall XXX' instead, similar to approach used in Homebrew.
 ** TODO Emacs version check is now failing on old MacBook.
 ** TODO texinfo check is now failing again on old MacBook.
     Seeing 6.7 instead of expected 6.8, due to another program dumping into /usr/local.
