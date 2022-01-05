@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-01-03"
+koopa-date="2022-01-05"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-version="0.12.1a"
@@ -50,7 +50,7 @@ aws-cli="2.4.7"
 azure-cli="2.32.0"
 
 # https://www.gnu.org/software/bash/
-bash="5.1.12"
+bash="5.1.16"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
@@ -133,7 +133,7 @@ gcc="11.2.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.4.0"
+gdal="3.4.1"
 
 # https://github.com/libgeos/geos/releases
 geos="3.10.1"
@@ -393,7 +393,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.3950"
+vim="8.2.4000"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
