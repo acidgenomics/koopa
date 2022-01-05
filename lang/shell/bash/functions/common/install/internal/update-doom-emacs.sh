@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME This is now failing to locate Emacs...
+# FIXME Consider adding this step:
+# Also useful: rm -rf .emacs.d/.local/straight/build-*
 
 koopa:::update_doom_emacs() { # {{{1
     # """
