@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for handling machine-specific brewfiles.
+
 koopa:::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
