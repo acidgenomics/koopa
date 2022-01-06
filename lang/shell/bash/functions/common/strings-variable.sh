@@ -140,6 +140,14 @@ koopa::koopa_github_url() { # {{{1
     return 0
 }
 
+koopa::koopa_installers_url() { # {{{1
+    # """
+    # Koopa installers URL.
+    # @note Updated 2022-01-06.
+    # """
+    koopa::print "$(koopa::koopa_url)/installers"
+}
+
 koopa::koopa_url() { # {{{1
     # """
     # Koopa URL.
