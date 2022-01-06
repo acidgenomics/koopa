@@ -3,7 +3,7 @@
 koopa:::install_sqlite() { # {{{1
     # """
     # Install SQLite.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-01-06.
     #
     # Use autoconf instead of amalgamation.
     #
@@ -29,6 +29,11 @@ koopa:::install_sqlite() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     case "${dict[version]}" in
+        '3.37.2')
+            dict[year]='2022'
+            ;;
+        '3.37.1' | \
+        '3.37.0' | \
         '3.36.'* | \
         '3.35.'* | \
         '3.34.1')
