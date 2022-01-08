@@ -100,7 +100,7 @@ coreutils="9.0"
 cpufetch="0.97"
 
 # https://curl.haxx.se/
-curl="7.80.0"
+curl="7.81.0"
 
 # https://docs.docker.com/install/
 docker="20.10.8"
@@ -518,14 +518,14 @@ node-prettier="2.5.1"               # 2021-12-04
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2021-12-14 from https://pypi.org/.
+# Updated 2022-01-08 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
 # Otherwise, for heavy libraries, consider using a conda environment instead.
 
 python-pip="21.3.1"             # default
-python-setuptools="60.2.0"      # default
+python-setuptools="60.3.1"      # default
 python-wheel="0.37.1"           # default
 
 python-black="21.12b0"          # recommended
@@ -535,7 +535,7 @@ python-flake8="4.0.1"           # recommended
 python-glances="3.2.4.2"        # recommended
 python-isort="5.10.1"           # recommended
 python-pip2pi="0.8.2"           # recommended
-python-pipx="0.17.0"            # recommended
+python-pipx="1.0.0"             # recommended
 python-psutil="5.9.0"           # recommended
 python-pyflakes="2.4.0"         # recommended
 python-pylint="2.12.2"          # recommended
@@ -567,19 +567,19 @@ ruby-ronn="0.7.3"               # 2010-06-24
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2021-11-10 from https://crates.io/.
+# Updated 2022-01-08 from https://crates.io/.
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
 rust-bat="0.18.3"               # homebrew
-rust-broot="1.8.1"              # homebrew; br
+rust-broot="1.9.1"              # homebrew; br
 rust-cargo-update="8.0.0"
 rust-cargo-outdated="0.9.18"    # homebrew
 rust-dog="0.1.0"                # homebrew
 rust-du-dust="0.7.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
-rust-fd-find="8.3.0"            # homebrew; fd
+rust-fd-find="8.3.1"            # homebrew; fd
 rust-hyperfine="1.12.0"         # homebrew
 rust-procs="0.11.13"            # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
