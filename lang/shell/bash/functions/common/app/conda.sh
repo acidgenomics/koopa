@@ -454,7 +454,7 @@ koopa::conda_create_env() { # {{{1
         # must use 'salmon=1.4.0' in the call to conda below.
         env_string="${env_string//@/=}"
         # If the version isn't specified, fetch the latest one automatically.
-        if ! koopa::str_match_fixed "$env_string" '='
+        if ! koopa::str_detect_fixed "$env_string" '='
         then
             koopa::alert "Obtaining latest version for '${env_string}'."
             env_version="$(koopa::conda_env_latest_version "$env_string")"

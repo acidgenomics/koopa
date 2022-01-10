@@ -9,7 +9,7 @@ koopa::rhel_enable_epel() { # {{{1
     local rpm
     koopa::assert_has_no_args "$#"
     if koopa::fedora_dnf repolist \
-        | koopa::str_match_fixed 'epel/'
+        | koopa::str_detect_fixed 'epel/'
     then
         koopa::alert_success 'EPEL is already enabled.'
         return 0

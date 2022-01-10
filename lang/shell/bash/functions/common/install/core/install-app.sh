@@ -217,7 +217,7 @@ koopa::install_app() { # {{{1
         then
             koopa::alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
         fi
-        if koopa::str_match_fixed "${dict[prefix]}" "${HOME:?}"
+        if koopa::str_detect_fixed "${dict[prefix]}" "${HOME:?}"
         then
             dict[shared]=0
         fi

@@ -43,7 +43,7 @@ koopa::download() { # {{{1
     then
         dict[file]="$(koopa::basename "${dict[url]}")"
     fi
-    if ! koopa::str_match_fixed "${dict[file]}" '/'
+    if ! koopa::str_detect_fixed "${dict[file]}" '/'
     then
         dict[file]="$(pwd)/${dict[file]}"
     fi

@@ -180,7 +180,7 @@ __koopa_is_interactive() { # {{{1
     # Is the current shell interactive?
     # @note Updated 2021-10-25.
     # """
-    __koopa_str_match_posix "$-" 'i'
+    __koopa_str_detect_posix "$-" 'i'
 }
 
 __koopa_is_linux() { # {{{1
@@ -287,10 +287,10 @@ __koopa_shell_name() { # {{{1
     __koopa_print "$shell"
 }
 
-__koopa_str_match_posix() { # {{{1
+__koopa_str_detect_posix() { # {{{1
     # """
     # Evaluate whether a string contains a desired value.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-10.
     # """
     [ "$#" -eq 2 ] || return 1
     test "${1#*"$2"}" != "$1"

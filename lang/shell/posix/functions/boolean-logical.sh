@@ -65,7 +65,7 @@ _koopa_is_aarch64() { # {{{1
 _koopa_is_alias() { # {{{1
     # """
     # Is the specified argument an alias?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-10.
     #
     # Intended primarily to determine if we need to unalias.
     # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
@@ -80,9 +80,9 @@ _koopa_is_alias() { # {{{1
         _koopa_is_installed "$cmd" || return 1
         str="$(type "$cmd")"
         # Bash convention.
-        _koopa_str_match_posix "$str" ' is aliased to ' && continue
+        _koopa_str_detect_posix "$str" ' is aliased to ' && continue
         # Zsh convention.
-        _koopa_str_match_posix "$str" ' is an alias for ' && continue
+        _koopa_str_detect_posix "$str" ' is an alias for ' && continue
         return 1
     done
     return 0
@@ -278,7 +278,7 @@ _koopa_is_gnu() { # {{{1
     do
         _koopa_is_installed "$cmd" || return 1
         str="$("$cmd" --version 2>&1 || true)"
-        _koopa_str_match_posix "$str" 'GNU' || return 1
+        _koopa_str_detect_posix "$str" 'GNU' || return 1
     done
     return 0
 }
@@ -315,7 +315,7 @@ _koopa_is_interactive() { # {{{1
     [ "$#" -eq 0 ] || return 1
     [ "${KOOPA_INTERACTIVE:-0}" -eq 1 ] && return 0
     [ "${KOOPA_FORCE:-0}" -eq 1 ] && return 0
-    _koopa_str_match_posix "$-" 'i' && return 0
+    _koopa_str_detect_posix "$-" 'i' && return 0
     _koopa_is_tty && return 0
     return 1
 }
@@ -335,7 +335,7 @@ _koopa_is_local_install() { # {{{1
     # @note Updated 2021-10-25.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_str_match_posix "$(_koopa_koopa_prefix)" "${HOME}"
+    _koopa_str_detect_posix "$(_koopa_koopa_prefix)" "${HOME}"
 }
 
 _koopa_is_macos() { # {{{1
@@ -544,7 +544,7 @@ _koopa_is_set_nounset() { # {{{1
     # Enabled: 'nounset'.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_str_match_posix "$(set +o)" 'set -o nounset'
+    _koopa_str_detect_posix "$(set +o)" 'set -o nounset'
 }
 
 _koopa_is_shared_install() { # {{{1
@@ -633,10 +633,10 @@ _koopa_macos_is_light_mode() { # {{{1
     ! _koopa_macos_is_dark_mode
 }
 
-_koopa_str_match_posix() { # {{{1
+_koopa_str_detect_posix() { # {{{1
     # """
     # Evaluate whether a string contains a desired value.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-01-10.
     # """
     [ "$#" -eq 2 ] || return 1
     test "${1#*"$2"}" != "$1"

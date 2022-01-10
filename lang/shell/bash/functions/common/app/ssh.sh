@@ -64,7 +64,7 @@ koopa::generate_ssh_key() { # {{{1
         '-f' "$file"
         '-q'
     )
-    if koopa::str_match_fixed "$file" '_rsa'
+    if koopa::str_detect_fixed "$file" '_rsa'
     then
         # RSA 4096.
         flags+=(
