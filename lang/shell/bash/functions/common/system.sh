@@ -27,7 +27,7 @@ koopa::help() { # {{{1
                 if [[ -s "$man_file" ]]
                 then
                     "${app[head]}" -n 10 "$man_file" \
-                        | koopa::str_match_fixed - '.TH ' \
+                        | koopa::str_detect_fixed - '.TH ' \
                         || koopa::stop "Invalid documentation at '${man_file}'."
                 else
                     koopa::stop "No documentation for '${script_name}'."

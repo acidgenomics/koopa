@@ -103,7 +103,10 @@ koopa::test_find_files_by_shebang() { # {{{1
         # Avoid 'command substitution: ignored null byte in input' warning.
         shebang="$("$tr" -d '\0' < "$file" | "$head" -n 1)"
         [[ -n "$shebang" ]] || continue
-        koopa::str_match_regex "$shebang" "$pattern" && shebang_files+=("$file")
+        if koopa::str_detect_regex "$shebang" "$pattern"
+        then
+            shebang_files+=("$file")
+        fi
     done
     koopa::print "${shebang_files[@]}"
     return 0

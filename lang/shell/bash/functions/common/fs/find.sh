@@ -422,11 +422,11 @@ koopa::find_and_replace_in_files() { # {{{1
     shift 2
     koopa::alert "Replacing '${from}' with '${to}' in ${#} files."
     if { \
-        koopa::str_match_fixed "${from}" '/' && \
-        ! koopa::str_match_fixed "${from}" '\/'; \
+        koopa::str_detect_fixed "${from}" '/' && \
+        ! koopa::str_detect_fixed "${from}" '\/'; \
     } || { \
-        koopa::str_match_fixed "${to}" '/' && \
-        ! koopa::str_match_fixed "${to}" '\/'; \
+        koopa::str_detect_fixed "${to}" '/' && \
+        ! koopa::str_detect_fixed "${to}" '\/'; \
     }
     then
         koopa::stop 'Unescaped slash detected.'

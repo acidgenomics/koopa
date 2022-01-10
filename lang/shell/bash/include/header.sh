@@ -238,7 +238,7 @@ __koopa_bash_header() { # {{{1
             fi
         fi
         # Require admin account to run 'sbin/' scripts.
-        if koopa::str_match_fixed "$0" '/sbin'
+        if koopa::str_detect_fixed "$0" '/sbin'
         then
             koopa::assert_is_admin
         fi

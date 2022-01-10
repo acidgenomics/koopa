@@ -3,13 +3,13 @@
 __koopa_add_to_path_string_end() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
-    # @note Updated 2021-04-23.
+    # @note Updated 2022-01-23.
     # """
     local string dir
     [ "$#" -eq 2 ] || return 1
     string="${1:-}"
     dir="${2:?}"
-    if _koopa_str_match_posix "$string" ":${dir}"
+    if _koopa_str_detect_posix "$string" ":${dir}"
     then
         string="$(__koopa_remove_from_path_string "$string" "$dir")"
     fi
@@ -27,7 +27,7 @@ __koopa_add_to_path_string_start() { # {{{1
     [ "$#" -eq 2 ] || return 1
     string="${1:-}"
     dir="${2:?}"
-    if _koopa_str_match_posix "$string" ":${dir}"
+    if _koopa_str_detect_posix "$string" ":${dir}"
     then
         string="$(__koopa_remove_from_path_string "$string" "$dir")"
     fi
