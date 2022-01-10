@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-koopa:::file_match() { # {{{1
+koopa:::file_detect() { # {{{1
     # """
     # Is a string defined in a file?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-10.
     #
     # Uses ripgrep instead of grep when possible (faster).
     #
     # @examples
-    # koopa::file_match_fixed 'FILE' 'PATTERN'
-    # koopa::file_match_regex 'FILE' '^PATTERN.+$'
+    # koopa::file_detect_fixed 'FILE' 'PATTERN'
+    # koopa::file_detect_regex 'FILE' '^PATTERN.+$'
     #
     # stdin support:
-    # echo 'FILE' | koopa::file_match_fixed - 'PATTERN'
-    # echo 'FILE' | koopa::file_match_regex - '^PATTERN.+$'
+    # echo 'FILE' | koopa::file_detect_fixed - 'PATTERN'
+    # echo 'FILE' | koopa::file_detect_regex - '^PATTERN.+$'
     # """
     local engine file grep grep_args mode pattern pos
     koopa::assert_has_args "$#"
@@ -100,10 +100,10 @@ koopa:::file_match() { # {{{1
     "${grep[@]}" "${grep_args[@]}" "$pattern" "$file" >/dev/null
 }
 
-koopa:::str_match() { # {{{1
+koopa:::str_detect() { # {{{1
     # """
     # Does the input match a string?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-10.
     #
     # Modes:
     # * -E, --extended-regexp
@@ -119,12 +119,12 @@ koopa:::str_match() { # {{{1
     # Redirecting output to '/dev/null' works more reliably.
     #
     # @examples
-    # koopa::str_match_fixed 'STRING' 'PATTERN'
-    # koopa::str_match_regex 'STRING' '^PATTERN.+$'
+    # koopa::str_detect_fixed 'STRING' 'PATTERN'
+    # koopa::str_detect_regex 'STRING' '^PATTERN.+$'
     #
     # stdin support:
-    # echo 'STRING' | koopa::str_match_fixed - 'PATTERN'
-    # echo 'STRING' | koopa::str_match_regex - '^PATTERN.+$'
+    # echo 'STRING' | koopa::str_detect_fixed - 'PATTERN'
+    # echo 'STRING' | koopa::str_detect_regex - '^PATTERN.+$'
     #
     # @seealso
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997
@@ -189,34 +189,34 @@ koopa:::str_match() { # {{{1
         | "${grep[@]}" "${grep_args[@]}" "$pattern" >/dev/null
 }
 
-koopa::file_match_fixed() { # {{{1
+koopa::file_detect_fixed() { # {{{1
     # """
     # Does the input file match a fixed string?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-10.
     # """
-    koopa:::file_match --mode='fixed' "$@"
+    koopa:::file_detect --mode='fixed' "$@"
 }
 
-koopa::file_match_regex() { # {{{1
+koopa::file_detect_regex() { # {{{1
     # """
     # Does the input file match a regular expression?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-10.
     # """
-    koopa:::file_match --mode='regex' "$@"
+    koopa:::file_detect --mode='regex' "$@"
 }
 
-koopa::str_match_fixed() { # {{{1
+koopa::str_detect_fixed() { # {{{1
     # """
     # Does the input match a fixed string?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-10.
     # """
-    koopa:::str_match --mode='fixed' "$@"
+    koopa:::str_detect --mode='fixed' "$@"
 }
 
-koopa::str_match_regex() { # {{{1
+koopa::str_detect_regex() { # {{{1
     # """
     # Does the input match a regular expression?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-10.
     # """
-    koopa:::str_match --mode='regex' "$@"
+    koopa:::str_detect --mode='regex' "$@"
 }

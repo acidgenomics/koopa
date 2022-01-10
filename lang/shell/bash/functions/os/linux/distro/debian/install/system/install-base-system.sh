@@ -85,7 +85,7 @@ koopa:::debian_install_base_system() { # {{{1
     fi
     # Requiring universe repo to be enabled on Ubuntu.
     if koopa::is_ubuntu && \
-        ! koopa::str_match_fixed "${dict[apt_enabled_repos]}" 'universe'
+        ! koopa::str_detect_fixed "${dict[apt_enabled_repos]}" 'universe'
     then
         koopa::stop \
             "The Ubuntu 'universe' repo is disabled." \

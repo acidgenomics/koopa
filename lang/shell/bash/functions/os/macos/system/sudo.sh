@@ -17,7 +17,7 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
         [target_file]='/etc/pam.d/sudo'
     )
     if [[ -f "${dict[target_file]}" ]] && \
-        ! koopa::file_match_fixed "${dict[target_file]}" 'pam_tid.so'
+        ! koopa::file_detect_fixed "${dict[target_file]}" 'pam_tid.so'
     then
         koopa::alert_note "Touch ID not enabled in '${dict[target_file]}'."
         return 0
@@ -51,7 +51,7 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
         [target_file]='/etc/pam.d/sudo'
     )
     if [[ -f "${dict[target_file]}" ]] && \
-        koopa::file_match_fixed "${dict[target_file]}" 'pam_tid.so'
+        koopa::file_detect_fixed "${dict[target_file]}" 'pam_tid.so'
     then
         koopa::alert_note "Touch ID already enabled in '${dict[target_file]}'."
         return 0

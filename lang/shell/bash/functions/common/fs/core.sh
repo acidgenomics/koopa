@@ -328,7 +328,7 @@ koopa::init_dir() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 1
     dict[dir]="${1:?}"
-    if koopa::str_match_regex "${dict[dir]}" '^~'
+    if koopa::str_detect_regex "${dict[dir]}" '^~'
     then
         dict[dir]="$(koopa::sub '^~' "${HOME:?}" "${dict[dir]}")"
     fi

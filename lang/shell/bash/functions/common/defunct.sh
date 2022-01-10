@@ -60,6 +60,20 @@ koopa::data_disk_link_prefix() { # {{{1
     koopa::defunct
 }
 
+koopa::file_match_fixed() {  #{{{1
+    # """
+    # @note Updated 2022-01-10.
+    # """
+    koopa::defunct 'koopa::file_detect_fixed'
+}
+
+koopa::file_match_regex() {  #{{{1
+    # """
+    # @note Updated 2022-01-10.
+    # """
+    koopa::defunct 'koopa::file_detect_regex'
+}
+
 koopa::find_cellar_version() { # {{{1
     # """
     # @note Updated 2020-11-22.
@@ -104,16 +118,16 @@ koopa::is_darwin() { # {{{1
 
 koopa::is_matching_fixed() {  #{{{1
     # """
-    # @note Updated 2020-04-29.
+    # @note Updated 2022-01-10.
     # """
-    koopa::defunct 'koopa::str_match'
+    koopa::defunct 'koopa::str_detect_fixed'
 }
 
 koopa::is_matching_regex() {  #{{{1
     # """
-    # @note Updated 2020-04-29.
+    # @note Updated 2022-01-10.
     # """
-    koopa::defunct 'koopa::str_match_regex'
+    koopa::defunct 'koopa::str_detect_regex'
 }
 
 koopa::link_cellar() { # {{{1
@@ -198,6 +212,20 @@ koopa::restart() { # {{{1
     # @note Updated 2021-03-31.
     # """
     koopa::defunct 'koopa::alert_restart'
+}
+
+koopa::str_match_fixed() {  #{{{1
+    # """
+    # @note Updated 2022-01-10.
+    # """
+    koopa::defunct 'koopa::str_detect_fixed'
+}
+
+koopa::str_match_regex() {  #{{{1
+    # """
+    # @note Updated 2022-01-10.
+    # """
+    koopa::defunct 'koopa::str_detect_regex'
 }
 
 koopa::success() { # {{{1

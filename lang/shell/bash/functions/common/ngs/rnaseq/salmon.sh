@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve error message on R1, R2 tail mismatch.
+# FIXME Deprecate and rework 'gff-file' as 'gtf-file' instead.
 
 # Main functions ===============================================================
 koopa::run_salmon_paired_end() { # {{{1
     # """
     # Run salmon on multiple paired-end FASTQ files.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-01-10.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -16,12 +16,13 @@ koopa::run_salmon_paired_end() { # {{{1
     koopa::assert_has_args "$#"
     declare -A app=(
         [find]="$(koopa::locate_find)"
+        [salmon]="$(koopa::locate_conda_salmon)"
         [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
         [bootstraps]=30
+        [fasta_file]=''
         [fastq_dir]='fastq'
-        # FIXME Work on making this optional.
         [gff_file]=''
         [index_dir]=''
         [lib_type]='A'
@@ -73,6 +74,14 @@ koopa::run_salmon_paired_end() { # {{{1
                 dict[index_dir]="${2:?}"
                 shift 2
                 ;;
+            '--lib-type='*)
+                dict[lib_type]="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
@@ -103,10 +112,16 @@ koopa::run_salmon_paired_end() { # {{{1
                 ;;
         esac
     done
-    # FIXME Improve the variable checks here.
     koopa::h1 'Running salmon (paired-end mode).'
-    # FIXME Consider locating conda salmon here instead.
-    koopa::activate_conda_env 'salmon'
+    koopa::assert_is_set \
+        '--bootstraps' "${dict[bootstraps]}" \
+        '--fasta-file' "${dict[fasta_file]}" \
+        '--fastq-dir' "${dict[fastq_dir]}" \
+        '--gff-file' "${dict[gff_file]}" \
+        '--lib-type' "${dict[lib_type]}" \
+        '--output-dir' "${dict[output_dir]}" \
+        '--r1-tail' "${dict[r1_tail]}" \
+        '--r2-tail' "${dict[r1_tail]}"
     dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
     dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
@@ -117,6 +132,7 @@ koopa::run_salmon_paired_end() { # {{{1
         dict[index_dir]="${dict[output_dir]}/index"
     fi
     koopa::dl \
+        'salmon' "${app[salmon]}" \
         'Bootstraps' "${dict[bootstraps]}" \
         'FASTA file' "${dict[fasta_file]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
@@ -163,7 +179,6 @@ with '${dict[r1_tail]}'."
     for fastq_r1 in "${fastq_r1_files[@]}"
     do
         fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
-        # FIXME Make gff file optional here.
         koopa::salmon_quant_paired_end \
             --bootstraps="${dict[bootstraps]}" \
             --fastq-r1="$fastq_r1" \
@@ -175,7 +190,6 @@ with '${dict[r1_tail]}'."
             --r1-tail="${dict[r1_tail]}" \
             --r2-tail="${dict[r2_tail]}"
     done
-    koopa::deactivate_conda
     koopa::alert_success "salmon run at '${dict[output_dir]}' \
 completed successfully."
     return 0
@@ -184,7 +198,7 @@ completed successfully."
 koopa::run_salmon_single_end() { # {{{1
     # """
     # Run salmon on multiple single-end FASTQ files.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-01-10.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -194,6 +208,7 @@ koopa::run_salmon_single_end() { # {{{1
     koopa::assert_has_args "$#"
     declare -A app=(
         [find]="$(koopa::locate_find)"
+        [salmon]="$(koopa::locate_conda_salmon)"
         [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
@@ -248,6 +263,14 @@ koopa::run_salmon_single_end() { # {{{1
                 dict[index_dir]="${2:?}"
                 shift 2
                 ;;
+            '--lib-type='*)
+                dict[lib_type]="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict[lib_type]="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 output_dir="${1#*=}"
                 shift 1
@@ -271,8 +294,14 @@ koopa::run_salmon_single_end() { # {{{1
         esac
     done
     koopa::h1 'Running salmon (single-end mode).'
-    # FIXME Consider locating conda salmon here instead.
-    koopa::activate_conda_env 'salmon'
+    koopa::assert_is_set \
+        '--bootstraps' "${dict[bootstraps]}" \
+        '--fasta-file' "${dict[fasta_file]}" \
+        '--fastq-dir' "${dict[fastq_dir]}" \
+        '--gff-file' "${dict[gff_file]}" \
+        '--lib-type' "${dict[lib_type]}" \
+        '--output-dir' "${dict[output_dir]}" \
+        '--tail' "${dict[tail]}"
     dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
     dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
@@ -283,6 +312,7 @@ koopa::run_salmon_single_end() { # {{{1
         dict[index_dir]="${dict[output_dir]}/index"
     fi
     koopa::dl \
+        'salmon' "${app[salmon]}" \
         'Bootstraps' "${dict[bootstraps]}" \
         'FASTA file' "${dict[fasta_file]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
@@ -336,7 +366,6 @@ with '${dict[tail]}'."
             --output-dir="${dict[samples_dir]}" \
             --tail="${dict[tail]}"
     done
-    koopa::deactivate_conda
     koopa::alert_success "salmon run at '${dict[output_dir]}' \
 completed successfully."
     return 0
@@ -354,19 +383,19 @@ completed successfully."
 koopa::salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2022-01-08.
+    # @note Updated 2022-01-10.
     # """
     local app dict
     koopa::assert_has_args "$#"
-    # FIXME Consider locating conda salmon here instead.
-    koopa::assert_is_installed 'salmon'
     declare -A app=(
+        [salmon]="$(koopa::locate_conda_salmon)"
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(
         [decoys]=0
         [fasta_file]=''
         [gencode]=0
+        [kmer_length]=31
         [output_dir]='salmon/index'
         [threads]="$(koopa::cpu_count)"
     )
@@ -380,6 +409,14 @@ koopa::salmon_index() { # {{{1
                 ;;
             '--fasta-file')
                 dict[fasta_file]="${2:?}"
+                shift 2
+                ;;
+            '--kmer-length='*)
+                dict[kmer_length]="${1#*=}"
+                shift 1
+                ;;
+            '--kmer-length')
+                dict[kmer_length]="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
@@ -409,6 +446,10 @@ koopa::salmon_index() { # {{{1
                 ;;
         esac
     done
+    koopa::assert_is_set \
+        '--fasta-file' "${dict[fasta_file]}" \
+        '--kmer-length' "${dict[kmer_length]}" \
+        '--output-dir' "${dict[output_dir]}"
     koopa::assert_is_file "${dict[fasta_file]}"
     if [[ -d "${dict[output_dir]}" ]]
     then
@@ -422,14 +463,17 @@ koopa::salmon_index() { # {{{1
     dict[log_file]="${dict[output_dir]}/index.log"
     index_args=(
         "--index=${dict[output_dir]}"
-        '--kmerLen=31'
+        "--kmerLen=${dict[kmer_length]}"
         "--threads=${dict[threads]}"
         "--transcripts=${dict[fasta_file]}"
     )
-    # FIXME Automatically detect GENCODE genome, and pass '--gencode', if necessary.
+    # Automatically detect GENCODE genome.
     # See related issue:
     # https://github.com/COMBINE-lab/salmon/issues/15
-    # FIXME Look for '^gencode\.' in basename, and enable automatically.
+    if koopa::str_detect "$(koopa::basename "${dict[fasta_file]}")" '^gencode\.'
+    then
+        dict[gencode]=1
+    fi
     if [[ "${dict[gencode]}" -eq 1 ]]
     then
         koopa::alert_info 'Indexing against GENCODE reference genome.'
@@ -449,7 +493,8 @@ koopa::salmon_index() { # {{{1
         index_args+=("--decoys=${dict[decoys_file]}")
     fi
     koopa::dl 'Index args' "${index_args[*]}"
-    salmon index "${index_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
+    "${app[salmon]}" index "${index_args[@]}" \
+        2>&1 | "${app[tee]}" "${dict[log_file]}"
     koopa::alert_success "Indexing of '${dict[fasta_file]}' at \
 '${dict[output_dir]}' was successful."
     return 0
@@ -499,9 +544,8 @@ koopa::salmon_quant_paired_end() { # {{{1
     # """
     local app dict quant_args
     koopa::assert_has_args "$#"
-    # FIXME Consider locating conda salmon here instead.
-    koopa::assert_is_installed 'salmon'
     declare -A app=(
+        [salmon]="$(koopa::locate_conda_salmon)"
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(
@@ -621,7 +665,8 @@ koopa::salmon_quant_paired_end() { # {{{1
         # > "--writeMappings=${dict[sam_file]}"
     )
     koopa::dl 'Quant args' "${quant_args[*]}"
-    salmon quant "${quant_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
+    "${app[salmon]}" quant "${quant_args[@]}" \
+        2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }
 

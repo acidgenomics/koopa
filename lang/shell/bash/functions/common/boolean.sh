@@ -20,7 +20,7 @@ koopa:::is_ssh_enabled() { # {{{1
             "$url" 2>&1 \
     )"
     [[ -n "$x" ]] || return 1
-    koopa::str_match_fixed "$x" "$pattern"
+    koopa::str_detect_fixed "$x" "$pattern"
 }
 
 koopa::contains() { # {{{1
@@ -59,7 +59,7 @@ koopa::has_file_ext() { # {{{1
     koopa::assert_has_args "$#"
     for file in "$@"
     do
-        koopa::str_match_fixed "$(koopa::print "$file")" '.' || return 1
+        koopa::str_detect_fixed "$(koopa::print "$file")" '.' || return 1
     done
     return 0
 }
@@ -155,7 +155,7 @@ koopa::is_admin() { # {{{1
     groups="$("${app[groups]}")"
     [[ -n "$groups" ]] || return 1
     pattern='\b(admin|root|sudo|wheel)\b'
-    koopa::str_match_regex "$groups" "$pattern" && return 0
+    koopa::str_detect_regex "$groups" "$pattern" && return 0
     return 1
 }
 
@@ -240,7 +240,7 @@ koopa::is_defined_in_user_profile() { # {{{1
     local file
     koopa::assert_has_no_args "$#"
     file="$(koopa::find_user_profile)"
-    koopa::file_match_fixed "$file" 'koopa'
+    koopa::file_detect_fixed "$file" 'koopa'
 }
 
 koopa::is_doom_emacs_installed() { # {{{1
@@ -254,7 +254,7 @@ koopa::is_doom_emacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
-    koopa::file_match_fixed "$init_file" 'doom-emacs'
+    koopa::file_detect_fixed "$init_file" 'doom-emacs'
 }
 
 koopa::is_empty_dir() { # {{{1
@@ -306,7 +306,7 @@ koopa::is_export() { # {{{1
     exports="$(export -p)"
     for arg in "$@"
     do
-        koopa::str_match_regex "$exports" "\b${arg}\b=" || return 1
+        koopa::str_detect_regex "$exports" "\b${arg}\b=" || return 1
     done
     return 0
 }
@@ -407,7 +407,7 @@ koopa::is_koopa_app() { # {{{1
         else
             return 1
         fi
-        koopa::str_match_regex "$str" "^${app_prefix}" || return 1
+        koopa::str_detect_regex "$str" "^${app_prefix}" || return 1
     done
     return 0
 }
@@ -434,7 +434,7 @@ koopa::is_python_package_installed() { # {{{1
     # Alternate, slow mode:
     # > local freeze
     # > freeze="$("$python" -m pip freeze)"
-    # > koopa::str_match_regex "$freeze" "^${pkg}=="
+    # > koopa::str_detect_regex "$freeze" "^${pkg}=="
     #
     # See also:
     # - https://stackoverflow.com/questions/1051254
@@ -522,7 +522,7 @@ koopa::is_spacemacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
-    koopa::file_match_fixed "$init_file" 'Spacemacs'
+    koopa::file_detect_fixed "$init_file" 'Spacemacs'
 }
 
 koopa::is_variable_defined() { # {{{1

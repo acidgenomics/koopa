@@ -4,7 +4,7 @@
 koopa::linux_add_user_to_etc_passwd() { # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
-    # @note Updated 2021-11-16.
+    # @note Updated 2022-01-10.
     #
     # Necessary for running 'chsh' with a Kerberos / Active Directory domain
     # account, on AWS or Azure for example.
@@ -20,7 +20,7 @@ koopa::linux_add_user_to_etc_passwd() { # {{{1
     koopa::assert_is_file "$passwd_file"
     user="${1:-}"
     [[ -z "${user:-}" ]] && user="$(koopa::user)"
-    if ! koopa::file_match_fixed --sudo "$passwd_file" "$user"
+    if ! koopa::file_detect_fixed --sudo "$passwd_file" "$user"
     then
         koopa::alert "Updating '${passwd_file}' to include '${user}'."
         user_string="$(getent passwd "$user")"

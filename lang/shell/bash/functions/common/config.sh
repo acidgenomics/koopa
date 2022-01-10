@@ -138,7 +138,7 @@ koopa::enable_passwordless_sudo() { # {{{1
     file='/etc/sudoers.d/sudo'
     group="$(koopa::admin_group)"
     if [[ -f "$file" ]] && \
-        koopa::file_match_fixed --sudo "$file" "$group"
+        koopa::file_detect_fixed --sudo "$file" "$group"
     then
         koopa::alert_success "sudo already configured at '${file}'."
         return 0
@@ -152,6 +152,7 @@ at '${file}'."
     return 0
 }
 
+# FIXME Rework using dict approach.
 koopa::enable_shell() { # {{{1
     # """
     # Enable shell.
@@ -166,7 +167,7 @@ koopa::enable_shell() { # {{{1
     etc_file='/etc/shells'
     [[ -f "$etc_file" ]] || return 0
     koopa::alert "Updating '${etc_file}' to include '${cmd_path}'."
-    if ! koopa::file_match_fixed "$etc_file" "$cmd_path"
+    if ! koopa::file_detect_fixed "$etc_file" "$cmd_path"
     then
         koopa::sudo_append_string "$cmd_path" "$etc_file"
     else
@@ -244,7 +245,7 @@ koopa::fix_zsh_permissions() { # {{{1
     make_prefix="$(koopa::make_prefix)"
     if [[ -d "${make_prefix}/share/zsh/site-functions" ]]
     then
-        if koopa::str_match_regex \
+        if koopa::str_detect_regex \
             "$(koopa::which zsh)" "^${make_prefix}"
         then
             koopa::sys_chmod 'g-w' \
@@ -255,7 +256,7 @@ koopa::fix_zsh_permissions() { # {{{1
     app_prefix="$(koopa::app_prefix)"
     if [[ -d "$app_prefix" ]]
     then
-        if koopa::str_match_regex \
+        if koopa::str_detect_regex \
             "$(koopa::which_realpath zsh)" "^${app_prefix}"
         then
             koopa::sys_chmod 'g-w' \

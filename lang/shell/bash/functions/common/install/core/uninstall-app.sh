@@ -116,9 +116,7 @@ koopa::uninstall_app() { # {{{1
                 "${dict[prefix]}"
             return 0
         fi
-        if koopa::str_match_regex \
-            "${dict[prefix]}" \
-            "^${dict[koopa_prefix]}"
+        if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
         then
             dict[shared]=1
         fi

@@ -75,7 +75,7 @@ koopa:::debian_install_bcbio_nextgen_vm() { # {{{1
         --channel='conda-forge' \
         --override-channels \
         "bcbio-nextgen-vm=${dict[version]}"
-    if ! koopa::str_match_fixed "${dict[groups]}" 'docker'
+    if ! koopa::str_detect_fixed "${dict[groups]}" 'docker'
     then
         "${app[sudo]}" "${app[groupadd]}" 'docker'
         "${app[sudo]}" "${app[service]}" docker restart

@@ -264,6 +264,14 @@ ${dict[env_name]}@${dict[env_version]}/bin/${dict[app_name]}"
     return 0
 }
 
+koopa::locate_conda_salmon() { # {{{1
+    # """
+    # Locate conda salmon.
+    # @note Updated 2022-01-10.
+    # """
+    koopa::locate_conda_app 'salmon'
+}
+
 koopa::locate_gnu_coreutils_app() { # {{{1
     # """
     # Locate a GNU coreutils app.

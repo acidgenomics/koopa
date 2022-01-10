@@ -136,7 +136,7 @@ koopa::invalid_arg() { # {{{1
     if [[ "$#" -gt 0 ]]
     then
         arg="${1:-}"
-        # > if koopa::str_match_posix "$arg" '--'
+        # > if koopa::str_detect_posix "$arg" '--'
         # > then
         # >     koopa::warn "Use '--arg=VALUE' not '--arg VALUE'."
         # > fi

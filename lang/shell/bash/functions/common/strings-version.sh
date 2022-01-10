@@ -622,7 +622,7 @@ koopa::perl_file_rename_version() { # {{{1
         "${app[rename]}" --version 2>/dev/null \
             | "${app[head]}" -n 1 \
     )"
-    koopa::str_match_fixed "$x" 'File::Rename' || return 1
+    koopa::str_detect_fixed "$x" 'File::Rename' || return 1
     x="$( \
         koopa::print "$x" \
             | "${app[cut]}" -d ' ' -f 5 \
@@ -678,7 +678,7 @@ koopa::r_version() { # {{{1
         "${app[r]}" --version 2>/dev/null \
         | "${app[head]}" -n 1 \
     )"
-    if koopa::str_match_fixed "$x" 'R Under development (unstable)'
+    if koopa::str_detect_fixed "$x" 'R Under development (unstable)'
     then
         x='devel'
     else
@@ -866,7 +866,7 @@ koopa::sanitize_version() { # {{{1
     pattern='[.0-9]+'
     for x in "$@"
     do
-        koopa::str_match_regex "$x" "$pattern" || return 1
+        koopa::str_detect_regex "$x" "$pattern" || return 1
         x="$(koopa::sub '^([.0-9]+).*$' '\1' "$x")"
         koopa::print "$x"
     done
@@ -930,7 +930,7 @@ koopa::vim_version() { # {{{1
             | "${app[head]}" -n 1 \
             | "${app[cut]}" -d ' ' -f 5 \
     )"
-    if koopa::str_match_fixed "$x" 'Included patches:'
+    if koopa::str_detect_fixed "$x" 'Included patches:'
     then
         patch="$( \
             koopa::print "$x" \
