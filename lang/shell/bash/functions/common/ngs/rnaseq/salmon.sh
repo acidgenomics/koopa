@@ -544,6 +544,8 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
             )"
         )
         koopa::cd "${dict[tmp_dir]}"
+        koopa::alert "Generating decoy-aware transcriptome in \
+'${dict[tmp_dir]}'."
         koopa::alert 'FIXME 1'
         koopa::cp \
             "${dict[genome_fasta_file]}" \
@@ -555,6 +557,9 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
             "${dict[transcriptome_fasta_file]}" \
             "${dict2[transcriptome_fasta_file]}"
         koopa::alert 'FIXME 2'
+
+
+
         # Decompress / extract compressed files, if necessary.
         if koopa::str_detect_regex \
             "${dict2[genome_fasta_file]}" \
