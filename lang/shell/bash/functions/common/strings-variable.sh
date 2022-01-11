@@ -41,6 +41,15 @@ koopa::admin_group() { # {{{1
     return 0
 }
 
+koopa::compress_ext_pattern() { # {{{1
+    # """
+    # Compressed file extension pattern.
+    # @note Updated 2022-01-11.
+    # """
+    koopa::print '\.(bz2|gz|xz|zip)$'
+    return 0
+}
+
 koopa::datetime() { # {{{
     # """
     # Datetime string.

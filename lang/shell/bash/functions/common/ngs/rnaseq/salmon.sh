@@ -441,18 +441,13 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
         [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
-        [decoys_fasta_file]='decoys.fa'
-        [decoys_txt_file]='decoys.txt'
-        [exons_bed_file]='exons.bed'
-        [genome_found_fasta_file]='genome-found.fa'
-        [genome_found_merged_bed_file]='genome-found-merged.bed'
-        [genome_found_sorted_bed_file]='genome-found-sorted.bed'
-        [gentrome_fasta_file]='gentrome.fa'
-        [mashmap_output_file]='mashmap.out'
-        [masked_genome_fasta_file]='reference-masked-genome.fa'
+        [compress_ext_pattern]="$(koopa::compress_ext_pattern)"
+        [genome_fasta_file]=''
+        [gtf_file]=''
         [output_dir]='salmon/index'
         [threads]="$(koopa::cpu_count)"
         [tmp_dir]="$(koopa::tmp_dir)"
+        [transcriptome_fasta_file]=''
     )
     while (("$#"))
     do
@@ -516,66 +511,139 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
         "${dict[transcriptome_fasta_file]}"
     koopa::mkdir "${dict[output_dir]}"
     (
+        local dict2
+        declare -A dict2=(
+            [decoys_fasta_file]='decoys.fa'
+            [decoys_txt_file]='decoys.txt'
+            [exons_bed_file]='exons.bed'
+            [genome_fasta_file]="$( \
+                koopa::basename "${dict[genome_fasta_file]}" \
+            )"
+            [genome_found_fasta_file]='genome-found.fa'
+            [genome_found_merged_bed_file]='genome-found-merged.bed'
+            [genome_found_sorted_bed_file]='genome-found-sorted.bed'
+            [gentrome_fasta_file]='gentrome.fa'
+            [gtf_file]="$( \
+                koopa::basename "${dict[gtf_file]}" \
+            )"
+            [mashmap_output_file]='mashmap.out'
+            [masked_genome_fasta_file]='reference-masked-genome.fa'
+            [transcriptome_fasta_file]="$(\
+                koopa::basename "${dict[transcriptome_fasta_file]}" \
+            )"
+        )
         koopa::cd "${dict[tmp_dir]}"
+        koopa::cp \
+            "${dict[genome_fasta_file]}" \
+            "${dict2[genome_fasta_file]}"
+        koopa::cp \
+            "${dict[gtf_file]}" \
+            "${dict2[gtf_file]}"
+        koopa::cp \
+            "${dict[transcriptome_fasta_file]}" \
+            "${dict2[transcriptome_fasta_file]}"
+        # Decompress / extract compressed files, if necessary.
+        if koopa::str_detect_regex \
+            "${dict2[genome_fasta_file]}" \
+            "${dict[compress_ext_pattern]}"
+        then
+            koopa::extract "${dict2[genome_fasta_file]}"
+            dict2[genome_fasta_file]="$( \
+                koopa::sub \
+                    "${dict[compress_ext_pattern]}" '' \
+                    "${dict2[genome_fasta_file]}" \
+            )"
+        fi
+        if koopa::str_detect_regex \
+            "${dict2[gtf_file]}" \
+            "${dict[compress_ext_pattern]}"
+        then
+            koopa::extract "${dict2[gtf_file]}"
+            dict2[gtf_file]="$( \
+                koopa::sub \
+                    "${dict[compress_ext_pattern]}" '' \
+                    "${dict2[gtf_file]}" \
+            )"
+        fi
+        if koopa::str_detect_regex \
+            "${dict2[transcriptome_fasta_file]}" \
+            "${dict[compress_ext_pattern]}"
+        then
+            koopa::extract "${dict2[transcriptome_fasta_file]}"
+            dict2[transcriptome_fasta_file]="$( \
+                koopa::sub \
+                    "${dict[compress_ext_pattern]}" '' \
+                    "${dict2[transcriptome_fasta_file]}" \
+            )"
+        fi
+        koopa::assert_is_file \
+            "${dict2[genome_fasta_file]}" \
+            "${dict2[gtf_file]}" \
+            "${dict2[transcriptome_fasta_file]}"
+        koopa::dl \
+            'GTF file' "${dict2[gtf_file]}" \
+            'Genome FASTA file' "${dict2[genome_fasta_file]}" \
+            'Transcriptome FASTA file' "${dict2[transcriptome_fasta_file]}"
+        koopa::stop 'FIXME Check that files are correct here.'
         koopa::alert 'Extracting exonic features from the GTF.'
         # shellcheck disable=SC2016
         "${app[awk]}" -v OFS='\t' \
             '{if ($3=="exon") {print $1,$4,$5}}' \
-            "${dict[gtf_file]}" > "${dict[exons_bed_file]}"
+            "${dict2[gtf_file]}" > "${dict2[exons_bed_file]}"
         koopa::alert 'Masking the genome FASTA.'
         "${app[bedtools]}" maskfasta \
-            -bed "${dict[exons_bed_file]}" \
-            -fi "${dict[genome_fasta_file]}" \
-            -fo "${dict[masked_genome_fasta_file]}"
+            -bed "${dict2[exons_bed_file]}" \
+            -fi "${dict2[genome_fasta_file]}" \
+            -fo "${dict2[masked_genome_fasta_file]}"
         koopa::alert 'Aligning transcriptome to genome.'
         "${app[mashmap]}" \
             --filter_mode 'map' \
             --kmer 16 \
-            --output "${dict[mashmap_output_file]}" \
+            --output "${dict2[mashmap_output_file]}" \
             --perc_identity 80 \
-            --query "${dict[transcriptome_fasta_file]}" \
-            --ref "${dict[masked_genome_fasta_file]}" \
+            --query "${dict2[transcriptome_fasta_file]}" \
+            --ref "${dict2[masked_genome_fasta_file]}" \
             --segLength 500 \
             --threads "${dict[threads]}"
-        koopa::assert_is_file "${dict[mashmap_output_file]}"
+        koopa::assert_is_file "${dict2[mashmap_output_file]}"
         koopa::alert 'Extracting intervals from mashmap alignments.'
         # shellcheck disable=SC2016
         "${app[awk]}" -v OFS='\t' \
             '{print $6,$8,$9}' \
-            "${dict[mashmap_output_file]}" \
+            "${dict2[mashmap_output_file]}" \
             | "${app[sort]}" -k1,1 -k2,2n - \
-            > "${dict[genome_found_sorted_bed_file]}"
+            > "${dict2[genome_found_sorted_bed_file]}"
         koopa::alert 'Merging the intervals.'
         "${app[bedtools]}" merge \
-            -i "${dict[genome_found_sorted_bed_file]}" \
-            > "${dict[genome_found_merged_bed_file]}"
+            -i "${dict2[genome_found_sorted_bed_file]}" \
+            > "${dict2[genome_found_merged_bed_file]}"
         koopa::alert 'Extracting sequences from the genome.'
         "${app[bedtools]}" getfasta \
-            -bed "${dict[genome_found_merged_bed_file]}" \
-            -fi "${dict[masked_genome_fasta_file]}" \
-            -fo "${dict[genome_found_fasta_file]}"
+            -bed "${dict2[genome_found_merged_bed_file]}" \
+            -fi "${dict2[masked_genome_fasta_file]}" \
+            -fo "${dict2[genome_found_fasta_file]}"
         koopa::alert 'Concatenating FASTA to get decoy sequences.'
         # FIXME How to fix this to 80 character width limit?
         # shellcheck disable=SC2016
         "${app[awk]}" '{a=$0; getline;split(a, b, ":");  r[b[1]] = r[b[1]]""$0} END { for (k in r) { print k"\n"r[k] } }' \
-            'genome_found.fa' \
-            > "${dict[decoys_fasta_file]}"
+            "${dict2[genome_found_fasta_file]}" \
+            > "${dict2[decoys_fasta_file]}"
         koopa::alert 'Making gentrome FASTA file.'
         "${app[cat]}" \
-            "${dict[transcriptome_fasta_file]}" \
-            "${dict[decoys_fasta_file]}" \
-            > "${dict[gentrome_fasta_file]}"
+            "${dict2[transcriptome_fasta_file]}" \
+            "${dict2[decoys_fasta_file]}" \
+            > "${dict2[gentrome_fasta_file]}"
         koopa::alert 'Extracting decoy sequence identifiers.'
         # shellcheck disable=SC2016
-        "${app[grep]}" '>' "${dict[decoys_fasta_file]}" \
+        "${app[grep]}" '>' "${dict2[decoys_fasta_file]}" \
             | "${app[awk]}" '{print substr($1,2); }' \
-            > "${dict[decoys_txt_file]}"
+            > "${dict2[decoys_txt_file]}"
         koopa::cp \
-            "${dict[gentrome_fasta_file]}" \
-            "${dict[output_dir]}/${dict[gentrome_fasta_file]}"
+            "${dict2[gentrome_fasta_file]}" \
+            "${dict[output_dir]}/${dict2[gentrome_fasta_file]}"
         koopa::cp \
-            "${dict[decoys_txt_file]}" \
-            "${dict[output_dir]}/${dict[decoys_txt_file]}"
+            "${dict2[decoys_txt_file]}" \
+            "${dict[output_dir]}/${dict2[decoys_txt_file]}"
     )
     koopa::rm "${dict[tmp_dir]}"
     return 0
