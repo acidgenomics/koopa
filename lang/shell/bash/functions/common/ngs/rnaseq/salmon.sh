@@ -527,83 +527,34 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
             [decoys_fasta_file]='decoys.fa'
             [decoys_txt_file]='decoys.txt'
             [exons_bed_file]='exons.bed'
-            [genome_fasta_file]="$( \
-                koopa::basename "${dict[genome_fasta_file]}" \
-            )"
+            [genome_fasta_file]='genome.fa'
             [genome_found_fasta_file]='genome-found.fa'
             [genome_found_merged_bed_file]='genome-found-merged.bed'
             [genome_found_sorted_bed_file]='genome-found-sorted.bed'
             [gentrome_fasta_file]='gentrome.fa'
-            [gtf_file]="$( \
-                koopa::basename "${dict[gtf_file]}" \
-            )"
+            [gtf_file]='annotation.gtf'
             [mashmap_output_file]='mashmap.out'
             [masked_genome_fasta_file]='reference-masked-genome.fa'
-            [transcriptome_fasta_file]="$(\
-                koopa::basename "${dict[transcriptome_fasta_file]}" \
-            )"
+            [transcriptome_fasta_file]='transcriptome.fa'
         )
         koopa::cd "${dict[tmp_dir]}"
         koopa::alert "Generating decoy-aware transcriptome in \
 '${dict[tmp_dir]}'."
-        koopa::alert 'FIXME 1'
-        koopa::cp \
+        # Decompress compressed genome files, if necessary. This step will
+        # simply copy uncompressed files, when applicable.
+        koopa::decompress \
             "${dict[genome_fasta_file]}" \
             "${dict2[genome_fasta_file]}"
-        koopa::cp \
+        koopa::decompress \
             "${dict[gtf_file]}" \
             "${dict2[gtf_file]}"
-        koopa::cp \
+        koopa::decompress \
             "${dict[transcriptome_fasta_file]}" \
             "${dict2[transcriptome_fasta_file]}"
-        koopa::alert 'FIXME 2'
-
-
-
-        # Decompress / extract compressed files, if necessary.
-        if koopa::str_detect_regex \
-            "${dict2[genome_fasta_file]}" \
-            "${dict[compress_ext_pattern]}"
-        then
-            koopa::extract "${dict2[genome_fasta_file]}"
-            dict2[genome_fasta_file]="$( \
-                koopa::sub \
-                    "${dict[compress_ext_pattern]}" '' \
-                    "${dict2[genome_fasta_file]}" \
-            )"
-        fi
-        if koopa::str_detect_regex \
-            "${dict2[gtf_file]}" \
-            "${dict[compress_ext_pattern]}"
-        then
-            koopa::extract "${dict2[gtf_file]}"
-            dict2[gtf_file]="$( \
-                koopa::sub \
-                    "${dict[compress_ext_pattern]}" '' \
-                    "${dict2[gtf_file]}" \
-            )"
-        fi
-        if koopa::str_detect_regex \
-            "${dict2[transcriptome_fasta_file]}" \
-            "${dict[compress_ext_pattern]}"
-        then
-            koopa::extract "${dict2[transcriptome_fasta_file]}"
-            dict2[transcriptome_fasta_file]="$( \
-                koopa::sub \
-                    "${dict[compress_ext_pattern]}" '' \
-                    "${dict2[transcriptome_fasta_file]}" \
-            )"
-        fi
-        # FIXME Take this out, once we test.
-        koopa::dl \
-            'GTF file' "${dict2[gtf_file]}" \
-            'Genome FASTA file' "${dict2[genome_fasta_file]}" \
-            'Transcriptome FASTA file' "${dict2[transcriptome_fasta_file]}"
         koopa::assert_is_file \
             "${dict2[genome_fasta_file]}" \
             "${dict2[gtf_file]}" \
             "${dict2[transcriptome_fasta_file]}"
-        # FIXME Take this out, once we test.
         koopa::dl \
             'GTF file' "${dict2[gtf_file]}" \
             'Genome FASTA file' "${dict2[genome_fasta_file]}" \
