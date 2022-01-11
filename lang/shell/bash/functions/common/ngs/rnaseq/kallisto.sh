@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure naming conventions here match salmon runners.
+# FIXME Need to add improved input checks, similar to salmon functions.
+
 # Main functions ===============================================================
 koopa::run_kallisto_paired_end() { # {{{1
     # """

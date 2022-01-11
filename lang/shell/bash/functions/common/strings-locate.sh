@@ -264,6 +264,30 @@ ${dict[env_name]}@${dict[env_version]}/bin/${dict[app_name]}"
     return 0
 }
 
+koopa::locate_conda_bedtools() { # {{{1
+    # """
+    # Locate conda bedtools.
+    # @note Updated 2022-01-11.
+    # """
+    koopa::locate_conda_app 'bedtools'
+}
+
+koopa::locate_conda_kallisto() { # {{{1
+    # """
+    # Locate conda kallisto.
+    # @note Updated 2022-01-11.
+    # """
+    koopa::locate_conda_app 'kallisto'
+}
+
+koopa::locate_conda_mashmap() { # {{{1
+    # """
+    # Locate conda mashmap.
+    # @note Updated 2022-01-11.
+    # """
+    koopa::locate_conda_app 'mashmap'
+}
+
 koopa::locate_conda_salmon() { # {{{1
     # """
     # Locate conda salmon.
