@@ -383,7 +383,204 @@ completed successfully."
 }
 
 # Individual runners ===========================================================
-# FIXME Allow the user to set the number of threads here.
+
+# FIXME Compare results of original script to our function, and confirm that
+#       output is consistent, before proceeding.
+
+koopa::salmon_generate_decoy_transcriptome() { # {{{1
+    # """
+    # Generate decoy transcriptome for salmon index.
+    # @note Updated 2022-01-11.
+    #
+    # @section Documentation on original COMBINE lab script:
+    #
+    # generateDecoyTranscriptome.sh: This is a preprocessing script for creating
+    # augmented hybrid FASTA file for 'salmon index'. It consumes a genome
+    # FASTA, transcriptome FASTA, and the annotation GTF file to create a new
+    # hybrid FASTA file which contains the decoy sequences from the genome,
+    # concatenated with the transcriptome, resulting in 'gentrome.fa'. It runs
+    # mashmap to align transcriptome to an exon masked genome, with 80%
+    # homology, and extracts the mapped genomic interval. It uses awk and
+    # bedtools to merge the contiguosly mapped interval, and extracts decoy
+    # sequences from the genome. It also dumps 'decoys.txt' file, which contains
+    # the name/identifier of the decoy sequences. Both 'gentrome.fa' and
+    # 'decoys.txt' can be used with 'salmon index' with salmon >=0.14.0.
+    #
+    # @section Arguments from original COMBINE lab script:
+    #
+    # * [-j <N> =1 default]
+    # * [-b <bedtools binary path> =bedtools default]
+    # * [-m <mashmap binary path> =mashmap default]
+    # * -a <gtf file>
+    # * -g <genome fasta>
+    # * -t <txome fasta>
+    # * -o <output path>
+    #
+    # @seealso
+    # - https://github.com/COMBINE-lab/SalmonTools/blob/master/
+    #       scripts/generateDecoyTranscriptome.sh
+    # - https://github.com/COMBINE-lab/SalmonTools/blob/master/README.md
+    # - https://salmon.readthedocs.io/en/latest/
+    #       salmon.html#quantifying-in-mapping-based-mode
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
+    #       rnaseq/salmon.py#L244
+    # - https://github.com/marbl/MashMap/
+    # """
+    local app dict
+    koopa::assert_has_args "$#"
+    # Linux check currently required until Bioconda recipe is fixed for macOS.
+    # See issue:
+    # https://github.com/bioconda/bioconda-recipes/issues/32329
+    koopa::assert_is_linux
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [bedtools]="$(koopa::locate_conda_bedtools)"
+        [cat]="$(koopa::locate_cat)"
+        [grep]="$(koopa::locate_grep)"
+        [mashmap]="$(koopa::locate_conda_mashmap)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [decoys_fasta_file]='decoys.fa'
+        [decoys_txt_file]='decoys.txt'
+        [exons_bed_file]='exons.bed'
+        [genome_found_fasta_file]='genome-found.fa'
+        [genome_found_merged_bed_file]='genome-found-merged.bed'
+        [genome_found_sorted_bed_file]='genome-found-sorted.bed'
+        [gentrome_fasta_file]='gentrome.fa'
+        [mashmap_output_file]='mashmap.out'
+        [masked_genome_fasta_file]='reference-masked-genome.fa'
+        [output_dir]='salmon/index'
+        [threads]="$(koopa::cpu_count)"
+        [tmp_dir]="$(koopa::tmp_dir)"
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--genome-fasta-file='*)
+                dict[genome_fasta_file]="${1#*=}"
+                shift 1
+                ;;
+            '--genome-fasta-file')
+                dict[genome_fasta_file]="${2:?}"
+                shift 2
+                ;;
+            '--gtf-file='*)
+                dict[gtf_file]="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict[gtf_file]="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict[output_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict[output_dir]="${2:?}"
+                shift 2
+                ;;
+            '--threads='*)
+                dict[threads]="${1#*=}"
+                shift 1
+                ;;
+            '--threads')
+                dict[threads]="${2:?}"
+                shift 2
+                ;;
+            '--transcriptome-fasta-file='*)
+                dict[transcriptome_fasta_file]="${1#*=}"
+                shift 1
+                ;;
+            '--transcriptome-fasta-file')
+                dict[transcriptome_fasta_file]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_set \
+        '--genome-fasta-file' "${dict[genome_fasta_file]}" \
+        '--gtf-file' "${dict[gtf_file]}" \
+        '--output-dir' "${dict[output_dir]}" \
+        '--threads' "${dict[threads]}" \
+        '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
+    koopa::assert_is_file \
+        "${dict[genome_fasta_file]}" \
+        "${dict[gtf_file]}" \
+        "${dict[transcriptome_fasta_file]}"
+    koopa::mkdir "${dict[output_dir]}"
+    (
+        koopa::cd "${dict[tmp_dir]}"
+        koopa::alert 'Extracting exonic features from the GTF.'
+        # shellcheck disable=SC2016
+        "${app[awk]}" -v OFS='\t' \
+            '{if ($3=="exon") {print $1,$4,$5}}' \
+            "${dict[gtf_file]}" > "${dict[exons_bed_file]}"
+        koopa::alert 'Masking the genome FASTA.'
+        "${app[bedtools]}" maskfasta \
+            -bed "${dict[exons_bed_file]}" \
+            -fi "${dict[genome_fasta_file]}" \
+            -fo "${dict[masked_genome_fasta_file]}"
+        koopa::alert 'Aligning transcriptome to genome.'
+        "${app[mashmap]}" \
+            --filter_mode 'map' \
+            --kmer 16 \
+            --output "${dict[mashmap_output_file]}" \
+            --perc_identity 80 \
+            --query "${dict[transcriptome_fasta_file]}" \
+            --ref "${dict[masked_genome_fasta_file]}" \
+            --segLength 500 \
+            --threads "${dict[threads]}"
+        koopa::assert_is_file "${dict[mashmap_output_file]}"
+        koopa::alert 'Extracting intervals from mashmap alignments.'
+        # shellcheck disable=SC2016
+        "${app[awk]}" -v OFS='\t' \
+            '{print $6,$8,$9}' \
+            "${dict[mashmap_output_file]}" \
+            | "${app[sort]}" -k1,1 -k2,2n - \
+            > "${dict[genome_found_sorted_bed_file]}"
+        koopa::alert 'Merging the intervals.'
+        "${app[bedtools]}" merge \
+            -i "${dict[genome_found_sorted_bed_file]}" \
+            > "${dict[genome_found_merged_bed_file]}"
+        koopa::alert 'Extracting sequences from the genome.'
+        "${app[bedtools]}" getfasta \
+            -bed "${dict[genome_found_merged_bed_file]}" \
+            -fi "${dict[masked_genome_fasta_file]}" \
+            -fo "${dict[genome_found_fasta_file]}"
+        koopa::alert 'Concatenating FASTA to get decoy sequences.'
+        # FIXME How to fix this to 80 character width limit?
+        # shellcheck disable=SC2016
+        "${app[awk]}" '{a=$0; getline;split(a, b, ":");  r[b[1]] = r[b[1]]""$0} END { for (k in r) { print k"\n"r[k] } }' \
+            'genome_found.fa' \
+            > "${dict[decoys_fasta_file]}"
+        koopa::alert 'Making gentrome FASTA file.'
+        "${app[cat]}" \
+            "${dict[transcriptome_fasta_file]}" \
+            "${dict[decoys_fasta_file]}" \
+            > "${dict[gentrome_fasta_file]}"
+        koopa::alert 'Extracting decoy sequence identifiers.'
+        # shellcheck disable=SC2016
+        "${app[grep]}" '>' "${dict[decoys_fasta_file]}" \
+            | "${app[awk]}" '{print substr($1,2); }' \
+            > "${dict[decoys_txt_file]}"
+        koopa::cp \
+            "${dict[gentrome_fasta_file]}" \
+            "${dict[output_dir]}/${dict[gentrome_fasta_file]}"
+        koopa::cp \
+            "${dict[decoys_txt_file]}" \
+            "${dict[output_dir]}/${dict[decoys_txt_file]}"
+    )
+    koopa::rm "${dict[tmp_dir]}"
+    return 0
+}
+
 koopa::salmon_index() { # {{{1
     # """
     # Generate salmon index.
@@ -879,210 +1076,5 @@ koopa::salmon_quant_single_end() { # {{{1
     koopa::dl 'Quant args' "${quant_args[*]}"
     "${app[salmon]}" quant "${quant_args[@]}" \
         2>&1 | "${app[tee]}" "${dict[log_file]}"
-    return 0
-}
-
-
-
-
-# FIXME Need to add function that generates decoy sequences.
-# FIXME Require mashmap conda environment.
-# FIXME Compare results of original script to our function, and confirm that
-#       output is consistent, before proceeding.
-# FIXME Note that mashmap conda recipe may only be working correctly on Linux.
-#       Check this and confirm.
-# FIXME Inform the user when skipping decoys on macOS.
-
-koopa::salmon_generate_decoy_transcriptome() { # {{{1
-    # """
-    # Generate decoy transcriptome for salmon index.
-    # @note Updated 2022-01-11.
-    #
-    # @section Documentation on original COMBINE lab script:
-    #
-    # generateDecoyTranscriptome.sh: This is a preprocessing script for creating
-    # augmented hybrid FASTA file for 'salmon index'. It consumes a genome
-    # FASTA, transcriptome FASTA, and the annotation GTF file to create a new
-    # hybrid FASTA file which contains the decoy sequences from the genome,
-    # concatenated with the transcriptome, resulting in 'gentrome.fa'. It runs
-    # mashmap to align transcriptome to an exon masked genome, with 80%
-    # homology, and extracts the mapped genomic interval. It uses awk and
-    # bedtools to merge the contiguosly mapped interval, and extracts decoy
-    # sequences from the genome. It also dumps 'decoys.txt' file, which contains
-    # the name/identifier of the decoy sequences. Both 'gentrome.fa' and
-    # 'decoys.txt' can be used with 'salmon index' with salmon >=0.14.0.
-    #
-    # @section Arguments from original COMBINE lab script:
-    #
-    # * [-j <N> =1 default]
-    # * [-b <bedtools binary path> =bedtools default]
-    # * [-m <mashmap binary path> =mashmap default]
-    # * -a <gtf file>
-    # * -g <genome fasta>
-    # * -t <txome fasta>
-    # * -o <output path>
-    #
-    # @seealso
-    # - https://github.com/COMBINE-lab/SalmonTools/blob/master/
-    #       scripts/generateDecoyTranscriptome.sh
-    # - https://github.com/COMBINE-lab/SalmonTools/blob/master/README.md
-    # - https://salmon.readthedocs.io/en/latest/
-    #       salmon.html#quantifying-in-mapping-based-mode
-    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
-    #       rnaseq/salmon.py#L244
-    # - https://github.com/marbl/MashMap/
-    # """
-    local app dict
-    koopa::assert_has_args "$#"
-    # Linux check currently required until Bioconda recipe is fixed for macOS.
-    # See issue:
-    # https://github.com/bioconda/bioconda-recipes/issues/32329
-    koopa::assert_is_linux
-    declare -A app=(
-        [awk]="$(koopa::locate_awk)"
-        [bedtools]="$(koopa::locate_conda_bedtools)"
-        [cat]="$(koopa::locate_cat)"
-        [grep]="$(koopa::locate_grep)"
-        [mashmap]="$(koopa::locate_conda_mashmap)"
-        [sort]="$(koopa::locate_sort)"
-    )
-    declare -A dict=(
-        [decoys_fasta_file]='decoys.fa'
-        [decoys_txt_file]='decoys.txt'
-        [exons_bed_file]='exons.bed'
-        [genome_found_fasta_file]='genome-found.fa'
-        [genome_found_merged_bed_file]='genome-found-merged.bed'
-        [genome_found_sorted_bed_file]='genome-found-sorted.bed'
-        [gentrome_fasta_file]='gentrome.fa'
-        [mashmap_output_file]='mashmap.out'
-        [masked_genome_fasta_file]='reference-masked-genome.fa'
-        [output_dir]="${PWD:?}"
-        [threads]="$(koopa::cpu_count)"
-        [tmp_dir]="$(koopa::tmp_dir)"
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--genome-fasta-file='*)
-                dict[genome_fasta_file]="${1#*=}"
-                shift 1
-                ;;
-            '--genome-fasta-file')
-                dict[genome_fasta_file]="${2:?}"
-                shift 2
-                ;;
-            '--gtf-file='*)
-                dict[gtf_file]="${1#*=}"
-                shift 1
-                ;;
-            '--gtf-file')
-                dict[gtf_file]="${2:?}"
-                shift 2
-                ;;
-            '--output-dir='*)
-                dict[output_dir]="${1#*=}"
-                shift 1
-                ;;
-            '--output-dir')
-                dict[output_dir]="${2:?}"
-                shift 2
-                ;;
-            '--threads='*)
-                dict[threads]="${1#*=}"
-                shift 1
-                ;;
-            '--threads')
-                dict[threads]="${2:?}"
-                shift 2
-                ;;
-            '--transcriptome-fasta-file='*)
-                dict[transcriptome_fasta_file]="${1#*=}"
-                shift 1
-                ;;
-            '--transcriptome-fasta-file')
-                dict[transcriptome_fasta_file]="${2:?}"
-                shift 2
-                ;;
-            # Other ------------------------------------------------------------
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa::assert_is_set \
-        '--genome-fasta-file' "${dict[genome_fasta_file]}" \
-        '--gtf-file' "${dict[gtf_file]}" \
-        '--output-dir' "${dict[output_dir]}" \
-        '--threads' "${dict[threads]}" \
-        '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
-    koopa::assert_is_file \
-        "${dict[genome_fasta_file]}" \
-        "${dict[gtf_file]}" \
-        "${dict[transcriptome_fasta_file]}"
-    koopa::mkdir "${dict[output_dir]}"
-    (
-        koopa::cd "${dict[tmp_dir]}"
-        koopa::alert 'Extracting exonic features from the GTF.'
-        # shellcheck disable=SC2016
-        "${app[awk]}" -v OFS='\t' \
-            '{if ($3=="exon") {print $1,$4,$5}}' \
-            "${dict[gtf_file]}" > "${dict[exons_bed_file]}"
-        koopa::alert 'Masking the genome FASTA.'
-        "${app[bedtools]}" maskfasta \
-            -bed "${dict[exons_bed_file]}" \
-            -fi "${dict[genome_fasta_file]}" \
-            -fo "${dict[masked_genome_fasta_file]}"
-        koopa::alert 'Aligning transcriptome to genome.'
-        "${app[mashmap]}" \
-            --filter_mode 'map' \
-            --kmer 16 \
-            --output "${dict[mashmap_output_file]}" \
-            --perc_identity 80 \
-            --query "${dict[transcriptome_fasta_file]}" \
-            --ref "${dict[masked_genome_fasta_file]}" \
-            --segLength 500 \
-            --threads "${dict[threads]}"
-        koopa::assert_is_file "${dict[mashmap_output_file]}"
-        koopa::alert 'Extracting intervals from mashmap alignments.'
-        # shellcheck disable=SC2016
-        "${app[awk]}" -v OFS='\t' \
-            '{print $6,$8,$9}' \
-            "${dict[mashmap_output_file]}" \
-            | "${app[sort]}" -k1,1 -k2,2n - \
-            > "${dict[genome_found_sorted_bed_file]}"
-        koopa::alert 'Merging the intervals.'
-        "${app[bedtools]}" merge \
-            -i "${dict[genome_found_sorted_bed_file]}" \
-            > "${dict[genome_found_merged_bed_file]}"
-        koopa::alert 'Extracting sequences from the genome.'
-        "${app[bedtools]}" getfasta \
-            -bed "${dict[genome_found_merged_bed_file]}" \
-            -fi "${dict[masked_genome_fasta_file]}" \
-            -fo "${dict[genome_found_fasta_file]}"
-        koopa::alert 'Concatenating FASTA to get decoy sequences.'
-        # FIXME How to fix this to 80 character width limit?
-        # shellcheck disable=SC2016
-        "${app[awk]}" '{a=$0; getline;split(a, b, ":");  r[b[1]] = r[b[1]]""$0} END { for (k in r) { print k"\n"r[k] } }' \
-            'genome_found.fa' \
-            > "${dict[decoys_fasta_file]}"
-        koopa::alert 'Making gentrome FASTA file.'
-        "${app[cat]}" \
-            "${dict[transcriptome_fasta_file]}" \
-            "${dict[decoys_fasta_file]}" \
-            > "${dict[gentrome_fasta_file]}"
-        koopa::alert 'Extracting decoy sequence identifiers.'
-        # shellcheck disable=SC2016
-        "${app[grep]}" '>' "${dict[decoys_fasta_file]}" \
-            | "${app[awk]}" '{print substr($1,2); }' \
-            > "${dict[decoys_txt_file]}"
-        koopa::cp \
-            "${dict[gentrome_fasta_file]}" \
-            "${dict[output_dir]}/${dict[gentrome_fasta_file]}"
-        koopa::cp \
-            "${dict[decoys_txt_file]}" \
-            "${dict[output_dir]}/${dict[decoys_txt_file]}"
-    )
-    koopa::rm "${dict[tmp_dir]}"
     return 0
 }
