@@ -509,6 +509,7 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
         "${dict[genome_fasta_file]}" \
         "${dict[gtf_file]}" \
         "${dict[transcriptome_fasta_file]}"
+    koopa::stop 'HELLO THERE, NEED TO RESOLVE FULL FILE PATHS'.
     koopa::mkdir "${dict[output_dir]}"
     (
         local dict2
