@@ -1,311 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::locate_app() { # {{{1
-    # """
-    # Locate file system path to an application.
-    # @note Updated 2022-01-10.
-    #
-    # App locator prioritization:
-    # 1. Allow for direct input of a program path.
-    # 2. Check in make prefix (e.g. '/usr/local').
-    # 3. Check in koopa opt.
-    # 4. Check in Homebrew opt.
-    # 5. Check in system library.
-    #
-    # Resolving the full executable path can cause BusyBox coreutils to error.
-    # """
-    # Fast return for direct executable input.
-    if [[ "$#" -eq 1 ]]
-    then
-        if [[ -x "${1:?}" ]]
-        then
-            koopa::print "${1:?}"
-            return 0
-        fi
-    fi
-    local app dict pos
-    declare -A dict=(
-        [app_name]=''
-        [brew_app]=''
-        [brew_opt_name]=''
-        [brew_prefix]="$(koopa::homebrew_prefix)"
-        [gnubin]=0
-        [koopa_app]=''
-        [koopa_opt_name]=''
-        [koopa_opt_prefix]="$(koopa::opt_prefix)"
-        [macos_app]=''
-        [make_prefix]="$(koopa::make_prefix)"
-    )
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            # Defunct key-value pairs ------------------------------------------
-            '--name='*)
-                koopa::stop "Use '--app-name' instead of '--name'."
-                ;;
-            '--name')
-                koopa::stop "Use '--app-name' instead of '--name'."
-                ;;
-            # Key-value pairs --------------------------------------------------
-            '--app-name='*)
-                dict[app_name]="${1#*=}"
-                shift 1
-                ;;
-            '--app-name')
-                dict[app_name]="${2:?}"
-                shift 2
-                ;;
-            '--brew-opt='*)
-                dict[brew_opt_name]="${1#*=}"
-                shift 1
-                ;;
-            '--brew-opt')
-                dict[brew_opt_name]="${2:?}"
-                shift 2
-                ;;
-            '--koopa-opt='*)
-                dict[koopa_opt_name]="${1#*=}"
-                shift 1
-                ;;
-            '--koopa-opt')
-                dict[koopa_opt_name]="${2:?}"
-                shift 2
-                ;;
-            '--macos-app='*)
-                dict[macos_app]="${1#*=}"
-                shift 1
-                ;;
-            '--macos-app')
-                dict[macos_app]="${2:?}"
-                shift 2
-                ;;
-            '--opt='*)
-                dict[brew_opt_name]="${1#*=}"
-                dict[koopa_opt_name]="${1#*=}"
-                shift 1
-                ;;
-            '--opt')
-                dict[brew_opt_name]="${2:?}"
-                dict[koopa_opt_name]="${2:?}"
-                shift 2
-                ;;
-            # Flags ------------------------------------------------------------
-            '--gnubin')
-                dict[gnubin]=1
-                shift 1
-                ;;
-            # Other ------------------------------------------------------------
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args_le "$#" 1
-    # Allow simple input using a single positional argument for name.
-    if [[ -z "${dict[app_name]}" ]]
-    then
-        koopa::assert_has_args_eq "$#" 1
-        dict[app_name]="${1:?}"
-    fi
-    if [[ -z "${dict[brew_opt_name]}" ]]
-    then
-        dict[brew_opt_name]="${dict[app_name]}"
-    fi
-    if [[ -z "${dict[koopa_opt_name]}" ]]
-    then
-        dict[koopa_opt_name]="${dict[app_name]}"
-    fi
-    # Prepare paths where to look for app.
-    dict[make_app]="${dict[make_prefix]}/bin/${dict[app_name]}"
-    dict[koopa_app]="${dict[koopa_opt_prefix]}/${dict[koopa_opt_name]}/\
-bin/${dict[app_name]}"
-    if [[ "${dict[gnubin]}" -eq 1 ]]
-    then
-        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
-libexec/gnubin/${dict[app_name]}"
-    else
-        dict[brew_app]="${dict[brew_prefix]}/opt/${dict[brew_opt_name]}/\
-bin/${dict[app_name]}"
-    fi
-    # Ready to locate the application by priority.
-    if [[ -x "${dict[macos_app]}" ]] && koopa::is_macos
-    then
-        app="${dict[macos_app]}"
-    elif [[ -x "${dict[app_name]}" ]]
-    then
-        app="${dict[app_name]}"
-    elif [[ "${dict[brew_prefix]}" != "${dict[make_prefix]}" ]] && \
-        [[ -x "${dict[make_app]}" ]]
-    then
-        app="${dict[make_app]}"
-    elif [[ -x "${dict[koopa_app]}" ]]
-    then
-        app="${dict[koopa_app]}"
-    elif [[ "${dict[brew_prefix]}" == "${dict[make_prefix]}" ]] && \
-        [[ -x "${dict[make_app]}" ]]
-    then
-        app="${dict[make_app]}"
-    elif [[ -x "${dict[brew_app]}" ]]
-    then
-        app="${dict[brew_app]}"
-    else
-        # Using 'realpath' here causes issues with Alpine BusyBox coreutils.
-        app="$(koopa::which "${dict[app_name]}")"
-    fi
-    if [[ -z "$app" ]]
-    then
-        koopa::warn "Failed to locate '${dict[app_name]}'."
-        return 1
-    fi
-    if [[ ! -x "$app" ]]
-    then
-        koopa::warn "Not executable: '${app}'."
-        return 1
-    fi
-    koopa::print "$app"
-    return 0
-}
-
-koopa::locate_conda_app() { # {{{1
-    # """
-    # Locate conda application.
-    # @note Updated 2022-01-10.
-    # """
-    local dict pos
-    koopa::assert_has_args "$#"
-    declare -A dict=(
-        [app_name]=''
-        [conda_prefix]="$(koopa::conda_prefix)"
-        [env_name]=''
-        [env_version]=''
-    )
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            # Key-value pairs --------------------------------------------------
-            '--app-name='*)
-                dict[app_name]="${1#*=}"
-                shift 1
-                ;;
-            '--app-name')
-                dict[app_name]="${2:?}"
-                shift 2
-                ;;
-            '--conda-prefix='*)
-                dict[conda_prefix]="${1#*=}"
-                shift 1
-                ;;
-            '--conda-prefix')
-                dict[conda_prefix]="${2:?}"
-                shift 2
-                ;;
-            '--env-name='*)
-                dict[env_name]="${1#*=}"
-                shift 1
-                ;;
-            '--env-name')
-                dict[env_name]="${2:?}"
-                shift 2
-                ;;
-            '--env-version='*)
-                dict[env_version]="${1#*=}"
-                shift 1
-                ;;
-            '--env-version')
-                dict[env_version]="${2:?}"
-                shift 2
-                ;;
-            # Other ------------------------------------------------------------
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args_le "$#" 1
-    # Allow simple input using a single positional argument for name.
-    if [[ -z "${dict[app_name]}" ]]
-    then
-        koopa::assert_has_args_eq "$#" 1
-        dict[app_name]="${1:?}"
-    fi
-    if [[ -z "${dict[env_name]}" ]]
-    then
-        dict[env_name]="${dict[app_name]}"
-    fi
-    if [[ -z "${dict[env_version]}" ]]
-    then
-        dict[env_version]="$(koopa::variable "conda-${dict[env_name]}")"
-        # Slower approach that isn't version pinned:
-        # > dict[env_version]="$( \
-        # >     koopa::conda_env_latest_version "${dict[env_name]}" \
-        # > )"
-    fi
-    koopa::assert_is_set \
-        '--app-name' "${dict[app_name]}" \
-        '--conda-prefix' "${dict[conda_prefix]}" \
-        '--env-name' "${dict[env_name]}" \
-        '--env-version' "${dict[env_version]}"
-    dict[app_path]="${dict[conda_prefix]}/envs/\
-${dict[env_name]}@${dict[env_version]}/bin/${dict[app_name]}"
-    koopa::assert_is_executable "${dict[app_path]}"
-    koopa::print "${dict[app_path]}"
-    return 0
-}
-
-koopa::locate_conda_bedtools() { # {{{1
-    # """
-    # Locate conda bedtools.
-    # @note Updated 2022-01-11.
-    # """
-    koopa::locate_conda_app 'bedtools'
-}
-
-koopa::locate_conda_kallisto() { # {{{1
-    # """
-    # Locate conda kallisto.
-    # @note Updated 2022-01-11.
-    # """
-    koopa::locate_conda_app 'kallisto'
-}
-
-koopa::locate_conda_mashmap() { # {{{1
-    # """
-    # Locate conda mashmap.
-    # @note Updated 2022-01-11.
-    # """
-    koopa::locate_conda_app 'mashmap'
-}
-
-koopa::locate_conda_salmon() { # {{{1
-    # """
-    # Locate conda salmon.
-    # @note Updated 2022-01-10.
-    # """
-    koopa::locate_conda_app 'salmon'
-}
-
-koopa::locate_gnu_coreutils_app() { # {{{1
-    # """
-    # Locate a GNU coreutils app.
-    # @note Updated 2022-01-10.
-    koopa::locate_app \
-        --app-name="${1:?}" \
-        --gnubin \
-        --opt='coreutils'
-}
-
 koopa::locate_7z() { # {{{1
     # """
     # Locate '7z'.
@@ -319,18 +13,13 @@ koopa::locate_7z() { # {{{1
 koopa::locate_anaconda() { # {{{1
     # """
     # Locate 'conda' inside Anaconda install.
-    # @note Updated 2021-10-26.
+    # @note Updated 2022-01-11.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba
     # - https://github.com/conda-forge/miniforge
     # """
-    local prefix x
-    prefix="$(koopa::anaconda_prefix)"
-    x="${prefix}/bin/conda"
-    [[ -x "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
+    koopa::locate_app "$(koopa::anaconda_prefix)/bin/conda"
 }
 
 koopa::locate_ascp() { # {{{1
@@ -498,6 +187,38 @@ koopa::locate_conda() { # {{{1
     # - https://github.com/conda-forge/miniforge
     # """
     koopa::locate_app "$(koopa::conda_prefix)/bin/conda"
+}
+
+koopa::locate_conda_bedtools() { # {{{1
+    # """
+    # Locate conda bedtools.
+    # @note Updated 2022-01-11.
+    # """
+    koopa::locate_conda_app 'bedtools'
+}
+
+koopa::locate_conda_kallisto() { # {{{1
+    # """
+    # Locate conda kallisto.
+    # @note Updated 2022-01-11.
+    # """
+    koopa::locate_conda_app 'kallisto'
+}
+
+koopa::locate_conda_mashmap() { # {{{1
+    # """
+    # Locate conda mashmap.
+    # @note Updated 2022-01-11.
+    # """
+    koopa::locate_conda_app 'mashmap'
+}
+
+koopa::locate_conda_salmon() { # {{{1
+    # """
+    # Locate conda salmon.
+    # @note Updated 2022-01-10.
+    # """
+    koopa::locate_conda_app 'salmon'
 }
 
 koopa::locate_convmv() { # {{{1
