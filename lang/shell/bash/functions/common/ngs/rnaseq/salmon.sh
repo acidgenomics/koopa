@@ -509,8 +509,18 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
         "${dict[genome_fasta_file]}" \
         "${dict[gtf_file]}" \
         "${dict[transcriptome_fasta_file]}"
-    koopa::stop 'HELLO THERE, NEED TO RESOLVE FULL FILE PATHS'.
-    koopa::mkdir "${dict[output_dir]}"
+    dict[genome_fasta_file]="$(koopa::realpath "${dict[genome_fasta_file]}")"
+    dict[gtf_file]="$(koopa::realpath "${dict[genome_fasta_file]}")"
+    dict[transcriptome_fasta_file]="$( \
+        koopa::realpath "${dict[transcriptome_fasta_file]}" \
+    )"
+    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
+    koopa::dl \
+        'GTF file' "${dict[gtf_file]}" \
+        'Genome FASTA file' "${dict[genome_fasta_file]}" \
+        'Output dir' "${dict[output_dir]}" \
+        'Threads' "${dict[threads]}" \
+        'Transcriptome FASTA file' "${dict[transcriptome_fasta_file]}"
     (
         local dict2
         declare -A dict2=(
@@ -581,6 +591,7 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
             "${dict2[genome_fasta_file]}" \
             "${dict2[gtf_file]}" \
             "${dict2[transcriptome_fasta_file]}"
+        # FIXME Take this out, once we test.
         koopa::dl \
             'GTF file' "${dict2[gtf_file]}" \
             'Genome FASTA file' "${dict2[genome_fasta_file]}" \
