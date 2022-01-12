@@ -502,10 +502,6 @@ koopa::locate_java() { # {{{1
         --opt='openjdk'
 }
 
-# FIXME This is now problematic on Linux:
-# find: ‘/Applications’: No such file or directory
-# FIXME Confirm that this isn't working, and rethink our macOS approach?
-
 koopa::locate_julia() { # {{{1
     # """
     # Locate Julia.
