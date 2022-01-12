@@ -171,7 +171,6 @@ with '${dict[fastq_r1_tail]}'."
     then
         koopa::salmon_index \
             --fasta-file="${dict[fasta_file]}" \
-            --no-decoy-aware \
             --output-dir="${dict[index_dir]}" \
             --threads="${dict[threads]}"
     fi
@@ -357,7 +356,6 @@ with '${dict[fastq_tail]}'."
     then
         koopa::salmon_index \
             --fasta-file="${dict[fasta_file]}" \
-            --no-decoy-aware \
             --output-dir="${dict[index_dir]}" \
             --threads="${dict[threads]}"
     fi
@@ -390,7 +388,7 @@ completed successfully."
 koopa::salmon_generate_decoy_transcriptome() { # {{{1
     # """
     # Generate decoy transcriptome for salmon index.
-    # @note Updated 2022-01-11.
+    # @note Updated 2022-01-12.
     #
     # @section Documentation on original COMBINE lab script:
     #
@@ -428,10 +426,6 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
     # """
     local app dict
     koopa::assert_has_args "$#"
-    # Linux check currently required until Bioconda recipe is fixed for macOS.
-    # See issue:
-    # https://github.com/bioconda/bioconda-recipes/issues/32329
-    koopa::assert_is_linux
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
         [bedtools]="$(koopa::locate_conda_bedtools)"
@@ -627,7 +621,7 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
 koopa::salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2022-01-11.
+    # @note Updated 2022-01-12.
     #
     # @section FASTA conventions:
     #
@@ -659,7 +653,7 @@ koopa::salmon_index() { # {{{1
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(
-        [decoy_aware]=0
+        [decoy_aware]=1
         [fasta_file]=''
         [gencode]=0
         [kmer_length]=31
