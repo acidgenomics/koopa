@@ -3,6 +3,8 @@
 # FIXME Rework our environment install functions to use 'mamba_or_conda'
 # function, which selectively picks mamba over conda.
 
+# FIXME Rework this using dict approach.
+
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
@@ -415,6 +417,11 @@ koopa::conda_create_bioinfo_envs() { # {{{1
 }
 
 # FIXME Rework using a dict approach here.
+# FIXME Require that environment is version pinned in 'variables.txt' file.
+# FIXME Allow the user to override with '--latest' flag instead.
+# FIXME This approach is useful, because it enables us to dynamically install
+#       missing conda environments, potentially during
+#       'koopa::locate_conda_XXX' calls.
 
 koopa::conda_create_env() { # {{{1
     # """
@@ -593,33 +600,38 @@ koopa::conda_env_prefix() { # {{{1
     return 0
 }
 
-# FIXME I think the conda environment step here is unnecessary, rework.
 koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
-    # @note Updated 2021-08-16.
+    # @note Updated 2022-01-13.
     #
     # @seealso
     # - conda env list --verbose
     # - conda env list --json
+    #
+    # @examples
+    # koopa::conda_remove_env 'kallisto' 'salmon'
     # """
-    local name nounset prefix
+    local app dict name
     koopa::assert_has_args "$#"
-    nounset="$(koopa::boolean_nounset)"
-    [[ "$nounset" -eq 1 ]] && set +u
-    koopa::activate_conda
-    conda="$(koopa::locate_conda)"
+    declare -A app=(
+        [conda]="$(koopa::locate_conda)"
+    )
+    declare -A dict=(
+        [nounset]="$(koopa::boolean_nounset)"
+    )
+    [[ "${dict[nounset]}" -eq 1 ]] && set +u
     for name in "$@"
     do
-        prefix="$(koopa::conda_env_prefix "$name")"
-        koopa::assert_is_dir "$prefix"
-        name="$(koopa::basename "$prefix")"
-        koopa::alert_uninstall_start "$name" "$prefix"
+        dict[prefix]="$(koopa::conda_env_prefix "${dict[name]}")"
+        koopa::assert_is_dir "${dict[prefix]}"
+        dict[name]="$(koopa::basename "${dict[prefix]}")"
+        koopa::alert_uninstall_start "${dict[name]}" "${dict[prefix]}"
         # Don't set the '--all' flag here, it can break other recipes.
-        "$conda" env remove --name="$name" --yes
-        [[ -d "$prefix" ]] && koopa::rm "$prefix"
-        koopa::alert_uninstall_success "$name" "$prefix"
+        "${app[conda]}" env remove --name="${dict[name]}" --yes
+        [[ -d "${dict[prefix]}" ]] && koopa::rm "${dict[prefix]}"
+        koopa::alert_uninstall_success "${dict[name]}" "${dict[prefix]}"
     done
-    [[ "$nounset" -eq 1 ]] && set -u
+    [[ "${dict[nounset]}" -eq 1 ]] && set -u
     return 0
 }
