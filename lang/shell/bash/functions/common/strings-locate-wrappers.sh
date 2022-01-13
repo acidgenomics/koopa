@@ -879,9 +879,9 @@ koopa::locate_rustup() { # {{{1
     # @note Updated 2021-11-19.
     # """
     koopa::locate_app \
+        --app-name='rustup' \
         --brew-opt='rustup' \
-        --koopa-opt='rust-packages' \
-        --name='rustup'
+        --koopa-opt='rust-packages'
 }
 
 koopa::locate_sed() { # {{{1
