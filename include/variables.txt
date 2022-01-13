@@ -217,7 +217,7 @@ luarocks="3.8.0"
 make="4.3"
 
 # FIXME Need to provide manual install support for this.
-mcfly="0.5.10"
+mcfly="0.5.12"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
