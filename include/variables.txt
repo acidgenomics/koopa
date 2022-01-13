@@ -567,12 +567,12 @@ ruby-ronn="0.7.3"               # 2010-06-24
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2022-01-08 from https://crates.io/.
+# Updated 2022-01-13 from https://crates.io/.
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
 
-rust-bat="0.18.3"               # homebrew
+rust-bat="0.19.0"               # homebrew
 rust-broot="1.9.1"              # homebrew; br
 rust-cargo-update="8.0.0"
 rust-cargo-outdated="0.9.18"    # homebrew
