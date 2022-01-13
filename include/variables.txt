@@ -560,7 +560,7 @@ python-umap-learn="0.5.2"       # r-reticulate
 # Updated 2021-11-03.
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.4"            # 2021-12-29
+ruby-bundler="2.3.5"            # 2022-01-12
 
 ruby-bashcov="1.8.2"            # 2018-03-27
 ruby-ronn="0.7.3"               # 2010-06-24
