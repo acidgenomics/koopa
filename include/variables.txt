@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.7"
+aws-cli="2.4.10"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.32.0"
@@ -169,7 +169,7 @@ harfbuzz="3.2.0"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.9"
+homebrew="3.3.10"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -189,7 +189,7 @@ julia="1.7.1"
 
 # https://github.com/wofr06/lesspipe/
 # FIXME Need to add install support for Linux.
-lesspipe="1.91"
+lesspipe="2.01"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
@@ -232,7 +232,7 @@ neovim="0.6.1"
 nim="1.4.8"
 
 # https://nodejs.org/
-node="17.3.0"
+node="17.3.1"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -393,7 +393,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4000"
+vim="8.2.4050"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
