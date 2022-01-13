@@ -415,6 +415,7 @@ koopa::conda_create_bioinfo_envs() { # {{{1
 }
 
 # FIXME Rework using a dict approach here.
+
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
