@@ -238,6 +238,7 @@ koopa:::koopa_system() { # {{{1
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
+        'create-conda-env' | \
         'delete-cache' | \
         'disable-passwordless-sudo' | \
         'disable-touch-id-sudo' | \
@@ -248,6 +249,7 @@ koopa:::koopa_system() { # {{{1
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
+        'remove-conda-env' | \
         'roff' | \
         'set-permissions' | \
         'switch-to-develop' | \
