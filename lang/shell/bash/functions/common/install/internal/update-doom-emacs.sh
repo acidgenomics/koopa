@@ -4,6 +4,8 @@
 # FIXME Consider adding this step:
 # Also useful: rm -rf .emacs.d/.local/straight/build-*
 
+# FIXME Need to change default branch to 'master' from 'develop'.
+
 koopa:::update_doom_emacs() { # {{{1
     # """
     # Update Doom Emacs.

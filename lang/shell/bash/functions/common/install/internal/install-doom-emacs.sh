@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to change default branch to 'master' from 'develop'.
+
 koopa:::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
