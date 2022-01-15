@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-01-14"
+koopa-date="2022-01-15"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.12.1a"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.10"
+aws-cli="2.4.11"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.32.0"
@@ -249,7 +249,7 @@ openssl="3.0.1"
 oracle-instantclient="21.1.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.16.2"
+pandoc="2.17"
 
 # https://www.gnu.org/software/parallel/
 parallel="20211222"
@@ -569,7 +569,7 @@ ruby-ronn="0.7.3"               # 2010-06-24
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2022-01-13 from https://crates.io/.
+# Updated 2022-01-15 from https://crates.io/.
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
@@ -586,7 +586,7 @@ rust-hyperfine="1.12.0"         # homebrew
 rust-procs="0.11.13"            # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
-rust-starship="1.2.0"           # homebrew
+rust-starship="1.2.1"           # homebrew
 rust-tealdeer="1.5.0"           # homebrew; tldr
 rust-tokei="12.1.2"             # homebrew
 rust-xsv="0.13.0"               # homebrew
