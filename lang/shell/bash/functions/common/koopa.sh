@@ -596,7 +596,7 @@ koopa::koopa() { # {{{1
 koopa::koopa_info() { # {{{
     # """
     # System information.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-01-17.
     # """
     local app dict info nf_info
     koopa::assert_has_no_args "$#"
@@ -626,15 +626,11 @@ koopa::koopa_info() { # {{{
     )
     if koopa::is_git_repo_top_level "${dict[koopa_prefix]}"
     then
-        # FIXME Rework this, supporting direct repo input.
-        dict[origin]="$( \
-            koopa::cd "${dict[koopa_prefix]}"; \
-            koopa::git_remote_url
-        )"
+        dict[remote]="$(koopa::git_remote_url "${dict[koopa_prefix]}")"
         dict[commit]="$(koopa::git_last_commit_local "${dict[koopa_prefix]}")"
         info+=(
-            "Git Remote: ${dict[origin]}"
-            "Commit: ${dict[commit]}"
+            "Git Remote: ${dict[remote]}"
+            "Git Commit: ${dict[commit]}"
         )
     fi
     info+=(
