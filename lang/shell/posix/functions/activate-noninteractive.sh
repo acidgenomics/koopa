@@ -43,25 +43,12 @@ _koopa_activate_bcbio_nextgen() { # {{{1
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda using 'activate' script.
-    # @note Updated 2021-11-01.
-    #
-    # Prefer Miniconda over Anaconda by default, if both are installed.
+    # @note Updated 2022-01-17.
     # """
-    local anaconda_prefix conda_prefix name nounset prefix
+    local name nounset prefix
     [ "$#" -le 1 ] || return 1
     prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        conda_prefix="$(_koopa_conda_prefix)"
-        anaconda_prefix="$(_koopa_anaconda_prefix)"
-        if [ -d "$conda_prefix" ]
-        then
-            prefix="$conda_prefix"
-        elif [ -d "$anaconda_prefix" ]
-        then
-            prefix="$anaconda_prefix"
-        fi
-    fi
+    [ -z "$prefix" ] && prefix="$(_koopa_conda_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
@@ -70,7 +57,7 @@ _koopa_activate_conda() { # {{{1
     # shellcheck source=/dev/null
     . "$script"
     # Ensure the base environment is deactivated by default.
-    conda deactivate
+    # > conda deactivate
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
