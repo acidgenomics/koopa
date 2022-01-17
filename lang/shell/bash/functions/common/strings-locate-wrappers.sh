@@ -181,10 +181,6 @@ koopa::locate_conda() { # {{{1
     # """
     # Locate 'conda' inside Miniconda install.
     # @note Updated 2022-01-10.
-    #
-    # @seealso
-    # - https://github.com/mamba-org/mamba
-    # - https://github.com/conda-forge/miniforge
     # """
     koopa::locate_app "$(koopa::conda_prefix)/bin/conda"
 }
@@ -604,6 +600,38 @@ koopa::locate_make() { # {{{1
     koopa::locate_app \
         --app-name='make' \
         --gnubin
+}
+
+koopa::locate_mamba() { # {{{1
+    # """
+    # Locate 'mamba' inside Miniconda install.
+    # @note Updated 2022-01-17.
+    #
+    # @seealso
+    # - https://github.com/mamba-org/mamba
+    # - https://github.com/conda-forge/miniforge
+    # """
+    koopa::locate_app "$(koopa::conda_prefix)/bin/mamba"
+}
+
+koopa::locate_mamba_or_conda() { # {{{1
+    # """
+    # Attempt to locate mamba first, and fall back to conda if not installed.
+    # @note Updated 2022-01-17.
+    # """
+    local str
+    str="$(koopa::locate_mamba 2>/dev/null || true)"
+    if [[ ! -x "$str" ]]
+    then
+        str="$(koopa::locate_conda 2>/dev/null || true)"
+    fi
+    if [[ ! -x "$str" ]]
+    then
+        koopa::warning 'Failed to locate mamba or conda.'
+        return 1
+    fi
+    koopa::print "$str"
+    return 0
 }
 
 koopa::locate_man() { # {{{1
