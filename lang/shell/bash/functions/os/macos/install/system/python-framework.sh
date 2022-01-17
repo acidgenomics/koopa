@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't passing through and setting INSTALL_VERSION correctly...
 koopa::macos_install_python_framework() { # {{{1
     koopa::install_app \
         --installer='python-framework' \
@@ -8,6 +7,7 @@ koopa::macos_install_python_framework() { # {{{1
         --name='python' \
         --platform='macos' \
         --system \
+        --version="$(koopa::variable 'python')" \
         "$@"
 }
 
