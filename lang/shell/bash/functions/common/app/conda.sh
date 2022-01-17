@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
 
-# FIXME Rework our environment install functions to use 'mamba_or_conda'
-# function, which selectively picks mamba over conda.
-
-# FIXME Rework this using dict approach.
-
 koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2021-12-15.
+    # @note Updated 2022-01-17.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
     # Currently, the conda activation script returns a 'conda()' function in
     # the current shell that doesn't propagate to subshells. This function
     # attempts to rectify the current situation.
+    #
+    # Don't use absolute path to conda binary here. Needs to use the conda
+    # function sourced in shell session, otherwise you will hit an
+    # initialization error.
     #
     # Note that the conda activation script currently has unbound variables
     # (e.g. PS1), that will cause this step to fail unless we temporarily
@@ -27,37 +26,27 @@ koopa::activate_conda_env() { # {{{1
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    local env_name env_prefix nounset
+    local dict
     koopa::assert_has_args_eq "$#" 1
-    if koopa::is_conda_env_active
-    then
-        koopa::stop 'conda environment is already active.'
-    fi
+    declare -A dict=(
+        [env_name]="${1:?}"
+        [nounset]="$(koopa::boolean_nounset)"
+    )
+    dict[env_prefix]="$(koopa::conda_env_prefix "${dict[env_name]}")"
+    koopa::assert_is_dir "${dict[env_prefix]}"
+    [[ "${dict[nounset]}" -eq 1 ]] && set +u
+    koopa::is_conda_env_active && koopa::deactivate_conda
     koopa::activate_conda
-    nounset="$(koopa::boolean_nounset)"
-    env_name="${1:?}"
-    env_prefix="$(koopa::conda_env_prefix "$env_name")"
-    koopa::assert_is_dir "$env_prefix"
-    env_name="$(koopa::basename "$env_prefix")"
-    [[ "$nounset" -eq 1 ]] && set +u
-    conda activate "$env_name"
-    [[ "$nounset" -eq 1 ]] && set -u
+    koopa::assert_is_function 'conda'
+    conda activate "${dict[env_prefix]}"
+    [[ "${dict[nounset]}" -eq 1 ]] && set -u
     return 0
 }
-
-# FIXME Rework using a dict approach here.
-# FIXME Require that environment is version pinned in 'variables.txt' file.
-# FIXME Allow the user to override with '--latest' flag instead.
-# FIXME This approach is useful, because it enables us to dynamically install
-#       missing conda environments, potentially during
-#       'koopa::locate_conda_XXX' calls.
-# FIXME Add support for '--build' pass-in, which will fix current issue
-#       with mashmap on macOS.
 
 koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
-    # @note Updated 2022-01-14.
+    # @note Updated 2022-01-17.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -65,7 +54,7 @@ koopa::conda_create_env() { # {{{1
     local app dict pos string
     koopa::assert_has_args "$#"
     declare -A app=(
-        [conda]="$(koopa::locate_conda)"
+        [conda]="$(koopa::locate_mamba_or_conda)"
         [cut]="$(koopa::locate_cut)"
     )
     declare -A dict=(
@@ -160,41 +149,41 @@ exists at '${dict[env_prefix]}'."
 koopa::conda_env_latest_version() { # {{{1
     # """
     # Get the latest version of a conda environment available.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-01-17.
     # """
-    local app dict x
+    local app dict str
     koopa::assert_has_args_eq "$#" 1
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
-        [conda]="$(koopa::locate_conda)"
+        [conda]="$(koopa::locate_mamba_or_conda)"
         [tail]="$(koopa::locate_tail)"
     )
     declare -A dict=(
         [env_name]="${1:?}"
     )
     # shellcheck disable=SC2016
-    x="$( \
-        "${app[conda]}" search "${dict[env_name]}" \
+    str="$( \
+        "${app[conda]}" search --quiet "${dict[env_name]}" \
             | "${app[tail]}" -n 1 \
             | "${app[awk]}" '{print $2}'
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 
 koopa::conda_env_list() { # {{{1
     # """
     # Return a list of conda environments in JSON format.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-01-17.
     # """
-    local app x
+    local app str
     koopa::assert_has_no_args "$#"
     declare -A app=(
-        [conda]="$(koopa::locate_conda)"
+        [conda]="$(koopa::locate_mamba_or_conda)"
     )
-    x="$("${app[conda]}" env list --json)"
-    koopa::print "$x"
+    str="$("${app[conda]}" env list --json --quiet)"
+    koopa::print "$str"
     return 0
 }
 
@@ -202,7 +191,7 @@ koopa::conda_env_list() { # {{{1
 koopa::conda_env_prefix() { # {{{1
     # """
     # Return prefix for a specified conda environment.
-    # @note Updated 2022-01-14.
+    # @note Updated 2022-01-17.
     #
     # Attempt to locate by default path first, which is the fastest approach.
     #
@@ -266,7 +255,7 @@ koopa::conda_env_prefix() { # {{{1
 koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
-    # @note Updated 2022-01-14.
+    # @note Updated 2022-01-17.
     #
     # @seealso
     # - conda env list --verbose
@@ -278,7 +267,7 @@ koopa::conda_remove_env() { # {{{1
     local app dict name
     koopa::assert_has_args "$#"
     declare -A app=(
-        [conda]="$(koopa::locate_conda)"
+        [conda]="$(koopa::locate_mamba_or_conda)"
     )
     declare -A dict=(
         [nounset]="$(koopa::boolean_nounset)"
@@ -290,7 +279,7 @@ koopa::conda_remove_env() { # {{{1
         koopa::assert_is_dir "${dict[prefix]}"
         dict[name]="$(koopa::basename "${dict[prefix]}")"
         koopa::alert_uninstall_start "${dict[name]}" "${dict[prefix]}"
-        # Don't set the '--all' flag here, it can break other recipes.
+        # Don't set the '--all' flag here; it can break other recipes.
         "${app[conda]}" env remove --name="${dict[name]}" --yes
         [[ -d "${dict[prefix]}" ]] && koopa::rm "${dict[prefix]}"
         koopa::alert_uninstall_success "${dict[name]}" "${dict[prefix]}"
