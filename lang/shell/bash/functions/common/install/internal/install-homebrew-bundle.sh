@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for handling machine-specific brewfiles.
-
 koopa:::install_homebrew_bundle() { # {{{1
     # """
     # Install Homebrew packages using Bundle Brewfile.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-01-17.
     #
     # Custom brewfile is supported using a positional argument.
     # """
@@ -16,6 +14,7 @@ koopa:::install_homebrew_bundle() { # {{{1
     )
     declare -A dict=(
         [koopa_prefix]="$(koopa::koopa_prefix)"
+        [local_brewfile]="$(koopa::xdg_config_home)/homebrew/brewfile"
     )
     if [[ "$#" -eq 0 ]]
     then
@@ -34,6 +33,10 @@ koopa:::install_homebrew_bundle() { # {{{1
         brewfiles+=(
             "${dict[koopa_prefix]}/etc/homebrew/brewfile"
         )
+        if [[ -f "${dict[local_brewfile]}" ]]
+        then
+            brewfiles+=("${dict[local_brewfile]}")
+        fi
     else
         brewfiles=("$@")
     fi
