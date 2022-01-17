@@ -44,6 +44,9 @@ _koopa_activate_conda() { # {{{1
     # """
     # Activate conda using 'activate' script.
     # @note Updated 2022-01-17.
+    #
+    # @seealso
+    # - https://github.com/mamba-org/mamba/issues/984
     # """
     local name nounset prefix
     [ "$#" -le 1 ] || return 1
@@ -59,6 +62,8 @@ _koopa_activate_conda() { # {{{1
     # Ensure the base environment is deactivated by default.
     # > conda deactivate
     [ "$nounset" -eq 1 ] && set -u
+    # Suppress mamba ASCII banner.
+    [ -z "${MAMBA_NO_BANNER:-}" ] && export MAMBA_NO_BANNER=1
     return 0
 }
 
