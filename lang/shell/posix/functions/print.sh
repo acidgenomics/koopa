@@ -263,12 +263,12 @@ _koopa_alert_success() { # {{{1
 _koopa_dl() { # {{{1
     # """
     # Definition list.
-    # @note Updated 2020-07-20.
+    # @note Updated 2021-01-17.
     # """
     [ "$#" -ge 2 ] || return 1
     while [ "$#" -ge 2 ]
     do
-        __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:?}"
+        __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:-}"
         shift 2
     done
     return 0
