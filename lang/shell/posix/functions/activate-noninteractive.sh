@@ -60,7 +60,11 @@ _koopa_activate_conda() { # {{{1
     # shellcheck source=/dev/null
     . "$script"
     # Ensure the base environment is deactivated by default.
-    # > conda deactivate
+    if [ "${CONDA_DEFAULT_ENV:-}" = 'base' ] && \
+        [ "${CONDA_SHLVL:-0}" -eq 1 ]
+    then
+        conda deactivate
+    fi
     [ "$nounset" -eq 1 ] && set -u
     # Suppress mamba ASCII banner.
     [ -z "${MAMBA_NO_BANNER:-}" ] && export MAMBA_NO_BANNER=1
