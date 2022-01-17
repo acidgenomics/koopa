@@ -6,6 +6,12 @@ koopa:::install_homebrew_bundle() { # {{{1
     # @note Updated 2022-01-17.
     #
     # Custom brewfile is supported using a positional argument.
+    #
+    # Potentially problematic brew/cask link conflicts:
+    # - emacs
+    # - gnupg
+    # - ranger
+    # - vim
     # """
     local app brewfile brewfiles dict install_args
     koopa::assert_is_admin
