@@ -150,22 +150,6 @@ brew "yt-dlp"  # youtube-dl alternative
 tap "vitorgalvao/tiny-scripts"
 brew "vitorgalvao/tiny-scripts/cask-repair"
 
-# Machine-specific {{{1
-# ==============================================================================
-
-# FIXME Rework this configuration to look for local brewfile per machine.
-# Consider putting this in '~/.brewfile' or '~/.config/homebrew/brewfile' or
-# something similar to this...configure in private dotfiles repo.
-#
-# FIXME Ensure that this step runs at the end, after common brews have been
-# installed first.
-#
-# Work laptop:
-# > brew "homebrew/cask-drivers/logitech-g-hub"
-
-# Home laptop:
-# > brew "homebrew/cask-drivers/fujitsu-scansnap-home"
-
 # App Store {{{1
 # ==============================================================================
 
