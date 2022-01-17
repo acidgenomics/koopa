@@ -187,7 +187,6 @@ koopa::conda_env_list() { # {{{1
     return 0
 }
 
-# FIXME Rework this using dict approach.
 koopa::conda_env_prefix() { # {{{1
     # """
     # Return prefix for a specified conda environment.
@@ -206,49 +205,48 @@ koopa::conda_env_prefix() { # {{{1
     # - conda info --envs
     # - conda info --json
     # """
-    local app conda_prefix env_dir env_list env_name sed tail x
+    local app dict
     koopa::assert_has_args_le "$#" 2
     declare -A app=(
         [sed]="$(koopa::locate_sed)"
         [tail]="$(koopa::locate_tail)"
     )
-    env_name="${1:?}"
-    [[ -n "$env_name" ]] || return 1
-    env_list="${2:-}"
-    if [[ -z "$env_list" ]]
+    declare -A dict=(
+        [env_name]="${1:?}"
+        [env_list]="${2:-}"
+    )
+    [[ -n "${dict[env_name]}" ]] || return 1
+    if [[ -z "${dict[env_list]}" ]]
     then
-        conda_prefix="$(koopa::conda_prefix)"
-        x="${conda_prefix}/envs/${env_name}"
-        if [[ -d "$x" ]]
+        dict[conda_prefix]="$(koopa::conda_prefix)"
+        dict[env_prefix]="${dict[conda_prefix]}/envs/${dict[env_name]}"
+        if [[ -d "${dict[env_prefix]}" ]]
         then
-            koopa::print "$x"
+            koopa::print "${dict[env_prefix]}"
             return 0
         fi
-        env_list="$(koopa::conda_env_list)"
+        dict[env_list]="$(koopa::conda_env_list)"
     fi
-    env_list="$( \
-        koopa::print "$env_list" \
-            | koopa::grep "$env_name" \
+    dict[env_list2]="$( \
+        koopa::print "${dict[env_list]}" \
+            | koopa::grep "${dict[env_name]}" \
     )"
-    if [[ -z "$env_list" ]]
+    if [[ -z "${dict[env_list2]}" ]]
     then
-        koopa::stop "conda environment does not exist: '${env_name}'."
+        koopa::stop "conda environment does not exist: '${dict[env_name]}'."
     fi
     # Note that this step attempts to automatically match the latest version.
-    env_dir="$( \
-        koopa::print "$env_list" \
-            | koopa::grep --extended-regexp "/${env_name}(@[.0-9]+)?\"" \
+    dict[env_prefix]="$( \
+        koopa::print "${dict[env_list]}" \
+            | koopa::grep --extended-regexp "/${dict[env_name]}(@[.0-9]+)?\"" \
             | "${app[tail]}" -n 1 \
-    )"
-    x="$( \
-        koopa::print "$env_dir" \
             | "${app[sed]}" -E 's/^.*"(.+)".*$/\1/' \
     )"
-    if [[ -z "$x" ]]
+    if [[ ! -d "${dict[env_prefix]}" ]]
     then
-        koopa::stop "Failed to get path for conda environment: '${env_name}'."
+        koopa::stop "Failed to resolve conda environment: '${dict[env_name]}'."
     fi
-    koopa::print "$x"
+    koopa::print "${dict[env_prefix]}"
     return 0
 }
 
