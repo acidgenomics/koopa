@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now the identifier generator isn't working the way we want on macOS?
-
 koopa::mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.
@@ -81,28 +79,33 @@ koopa::tmp_log_file() { # {{{1
 koopa::view_latest_tmp_log_file() { # {{{1
     # """
     # View the latest temporary log file.
-    # @note Updated 2021-08-31.
+    # @note Updated 2022-01-17.
     # """
-    local log_file sort tail tmp_dir user_id
+    local app dict
     koopa::assert_has_no_args "$#"
-    sort="$(koopa::locate_sort)"
-    tail="$(koopa::locate_tail)"
-    tmp_dir="${TMPDIR:-/tmp}"
-    user_id="$(koopa::user_id)"
-    # FIXME Need to rework this using '--sort' flag.
-    log_file="$( \
+    declare -A app=(
+        [tail]="$(koopa::locate_tail)"
+    )
+    declare -A dict=(
+        [tmp_dir]="${TMPDIR:-/tmp}"
+        [user_id]="$(koopa::user_id)"
+    )
+    dict[log_file]="$( \
         koopa::find \
-            --glob="koopa-${user_id}-*" \
+            --glob="koopa-${dict[user_id]}-*" \
             --max-depth=1 \
             --min-depth=1 \
-            --prefix="$tmp_dir" \
+            --prefix="${dict[tmp_dir]}" \
+            --sort \
             --type='f' \
-        | "$sort" \
-        | "$tail" -n 1 \
+        | "${app[tail]}" -n 1 \
     )"
-    [[ -f "$log_file" ]] || return 1
-    koopa::alert "Viewing '${log_file}'."
+    if [[ ! -f "${dict[log_file]}" ]]
+    then
+        koopa::stop "No koopa log file detected in '${dict[tmp_dir]}'."
+    fi
+    koopa::alert "Viewing '${dict[log_file]}'."
     # The use of '+G' flag here forces pager to return at end of line.
-    koopa::pager +G "$log_file"
+    koopa::pager +G "${dict[log_file]}"
     return 0
 }
