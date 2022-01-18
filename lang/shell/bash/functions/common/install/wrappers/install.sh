@@ -92,7 +92,6 @@ koopa::install_dotfiles() { # {{{1
         --name-fancy='Dotfiles' \
         --name='dotfiles' \
         --no-link \
-        --prefix="$(koopa::dotfiles_prefix)" \
         --version='rolling' \
         "$@"
 }
