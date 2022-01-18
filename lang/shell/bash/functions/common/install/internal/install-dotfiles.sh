@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't working correctly on clean AWS image install.
+# FIXME Need to rethink this approach.
+
 koopa:::install_dotfiles() { # {{{1
     # """
     # Install dotfiles.

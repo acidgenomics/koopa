@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME 'index-dir' input needs to resolve full path on disk, which makes the
+# log files more meaningful.
+
 # Main functions ===============================================================
 koopa::run_salmon_paired_end() { # {{{1
     # """
