@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Rename '--gff' to '--gtf'.
 # FIXME Ensure naming conventions here match salmon runners.
 # FIXME Need to add improved input checks, similar to salmon functions.
+# FIXME Rename 'fasta-file' to 'transcriptome-fasta-file'.
+# FIXME Rework using 'koopa::locate_conda_kallisto'.
 
 # Main functions ===============================================================
 koopa::run_kallisto_paired_end() { # {{{1
@@ -168,7 +171,7 @@ with '${dict[r1_tail]}'."
     then
         koopa::kallisto_index \
             --fasta-file="${dict[fasta_file]}" \
-            --output-dir="$index_dir"
+            --output-dir="${dict[index_dir]}"
     fi
     koopa::assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2
@@ -356,7 +359,7 @@ with '${dict[tail]}'."
     then
         koopa::kallisto_index \
             --fasta-file="${dict[fasta_file]}" \
-            --output-dir="$index_dir"
+            --output-dir="${dict[index_dir]}"
     fi
     koopa::assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2
