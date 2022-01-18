@@ -131,11 +131,12 @@ _koopa_export_pager() { # {{{1
     #   otherwise will return without proper escape code handling.
     # """
     [ "$#" -eq 0 ] || return 1
-    if [ -z "${PAGER:-}" ] && _koopa_is_installed 'less'
+    [ -n "${PAGER:-}" ] && return 0
+    if _koopa_is_installed 'less'
     then
-        PAGER='less -R'
+        echo 'FIXME HELLO THERE'
+        export PAGER='less -R'
     fi
-    export PAGER
     return 0
 }
 
