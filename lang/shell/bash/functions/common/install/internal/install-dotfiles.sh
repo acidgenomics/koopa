@@ -2,6 +2,8 @@
 
 # FIXME Now seeing this error on install:
 # Failed to locate '/opt/bin/koopa'.
+# FIXME This is deleting 'app/dotfiles/rolling' and attempting to install
+# directly into 'opt/dotfiles' instead.
 
 koopa:::install_dotfiles() { # {{{1
     # """

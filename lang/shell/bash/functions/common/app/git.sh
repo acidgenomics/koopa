@@ -103,6 +103,8 @@ koopa::git_checkout_recursive() { # {{{1
 }
 
 # FIXME Need to delete existing directory?
+# FIXME Only return with repo already cloned if existing git repo.
+# FIXME Don't attempt to delete directory first...
 
 koopa::git_clone() { # {{{1
     # """
