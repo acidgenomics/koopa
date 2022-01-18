@@ -7,7 +7,6 @@ koopa::macos_install_python_framework() { # {{{1
         --name='python' \
         --platform='macos' \
         --system \
-        --version="$(koopa::variable 'python')" \
         "$@"
 }
 

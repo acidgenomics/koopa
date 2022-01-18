@@ -7,7 +7,6 @@ koopa::macos_install_r_framework() { # {{{1
         --name='r' \
         --platform='macos' \
         --system \
-        --version="$(koopa::variable 'r')" \
         "$@"
 }
 
