@@ -800,7 +800,7 @@ of '--fasta-file'."
             --genome-fasta-file="${dict[genome_fasta_file]}" \
             --gtf-file="${dict[gtf_file]}" \
             --output-dir="${dict[decoys_prefix]}" \
-            --transcriptome-fasta-file='FIXME'
+            --transcriptome-fasta-file="${dict[transcriptome_fasta_file]}"
         koopa::assert_is_file "${dict[decoys_file]}"
         index_args+=("--decoys=${dict[decoys_file]}")
     fi
@@ -815,7 +815,7 @@ of '--fasta-file'."
 koopa::salmon_quant_paired_end() { # {{{1
     # """
     # Run salmon quant (per paired-end sample).
-    # @note Updated 2022-01-11.
+    # @note Updated 2022-01-17.
     #
     # Quartz is currently using only '--validateMappings' and '--gcBias' flags.
     #
