@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-02-06.
+# Updated 2022-01-18.
 # """
 
 # Taps {{{1
@@ -65,10 +65,14 @@ cask "font-cascadia-mono"
 cask "font-courier-prime"
 cask "font-courier-prime-code"
 cask "font-courier-prime-sans"
+cask "font-dejavu"
+cask "font-dejavu-sans-mono-nerd-font"
 cask "font-fira-code"
 cask "font-fira-code-nerd-font"
 cask "font-fira-mono"
+cask "font-fira-mono"
 cask "font-fira-mono-nerd-font"
+cask "font-fira-sans"
 cask "font-hack"
 cask "font-hack-nerd-font"
 cask "font-ia-writer-duospace"
