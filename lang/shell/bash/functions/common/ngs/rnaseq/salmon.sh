@@ -4,7 +4,7 @@
 koopa::run_salmon_paired_end() { # {{{1
     # """
     # Run salmon on multiple paired-end FASTQ files.
-    # @note Updated 2022-01-11.
+    # @note Updated 2022-01-17.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -19,19 +19,29 @@ koopa::run_salmon_paired_end() { # {{{1
     )
     declare -A dict=(
         [bootstraps]=30
-        [fasta_file]=''
         [fastq_dir]='fastq'
         [fastq_r1_tail]='_R1_001.fastq.gz'
         [fastq_r2_tail]='_R2_001.fastq.gz'
-        [gff_file]=''
+        [gtf_file]=''
         [index_dir]='salmon/index'
         [lib_type]='A'
         [output_dir]='salmon/samples'
         [threads]="$(koopa::cpu_count)"
+        [transcriptome_fasta_file]=''
     )
     while (("$#"))
     do
         case "$1" in
+            # Defunct ----------------------------------------------------------
+            '--fasta-file='* | \
+            '--fasta-file')
+                koopa::defunct "Use '--transcriptome-fasta-file' instead \
+of '--fasta-file'."
+                ;;
+            '--gff-file='* | \
+            '--gff-file')
+                koopa::defunct "Use '--gtf-file' instead of '--gff-file'."
+                ;;
             # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
@@ -39,14 +49,6 @@ koopa::run_salmon_paired_end() { # {{{1
                 ;;
             '--bootstraps')
                 dict[bootstraps]="${2:?}"
-                shift 2
-                ;;
-            '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
-                shift 1
-                ;;
-            '--fasta-file')
-                dict[fasta_file]="${2:?}"
                 shift 2
                 ;;
             '--fastq-dir='*)
@@ -73,12 +75,12 @@ koopa::run_salmon_paired_end() { # {{{1
                 dict[fastq_r2_tail]="${2:?}"
                 shift 2
                 ;;
-            '--gff-file='*)
-                dict[gff_file]="${1#*=}"
+            '--gtf-file='*)
+                dict[gtf_file]="${1#*=}"
                 shift 1
                 ;;
-            '--gff-file')
-                dict[gff_file]="${2:?}"
+            '--gtf-file')
+                dict[gtf_file]="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -113,6 +115,14 @@ koopa::run_salmon_paired_end() { # {{{1
                 dict[threads]="${2:?}"
                 shift 2
                 ;;
+            '--transcriptome-fasta-file='*)
+                dict[transcriptome_fasta_file]="${1#*=}"
+                shift 1
+                ;;
+            '--transcriptome-fasta-file')
+                dict[transcriptome_fasta_file]="${2:?}"
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
@@ -122,29 +132,31 @@ koopa::run_salmon_paired_end() { # {{{1
     koopa::h1 'Running salmon (paired-end mode).'
     koopa::assert_is_set \
         '--bootstraps' "${dict[bootstraps]}" \
-        '--fasta-file' "${dict[fasta_file]}" \
         '--fastq-dir' "${dict[fastq_dir]}" \
         '--fastq-r1-tail' "${dict[fastq_r1_tail]}" \
         '--fastq-r2-tail' "${dict[fastq_r1_tail]}" \
-        '--gff-file' "${dict[gff_file]}" \
+        '--gtf-file' "${dict[gtf_file]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}" \
-        '--threads' "${dict[threads]}"
-    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
+        '--threads' "${dict[threads]}" \
+        '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
-    dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
+    dict[gtf_file]="$(koopa::realpath "${dict[gtf_file]}")"
+    dict[transcriptome_fasta_file]="$( \
+        koopa::realpath "${dict[transcriptome_fasta_file]}" \
+    )"
     dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
     koopa::dl \
         'salmon' "${app[salmon]}" \
         'Bootstraps' "${dict[bootstraps]}" \
-        'FASTA file' "${dict[fasta_file]}" \
         'FASTQ R1 tail' "${dict[fastq_r1_tail]}" \
         'FASTQ R2 tail' "${dict[fastq_r2_tail]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
-        'GFF/GTF file' "${dict[gff_file]}" \
+        'GTF file' "${dict[gtf_file]}" \
         'Index dir' "${dict[index_dir]}" \
         'Output dir' "${dict[output_dir]}" \
-        'Threads' "${dict[threads]}"
+        'Threads' "${dict[threads]}" \
+        'Transcriptome FASTA file' "${dict[transcriptome_fasta_file]}"
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
     # Create a per-sample array from the R1 FASTQ files.
@@ -170,9 +182,10 @@ with '${dict[fastq_r1_tail]}'."
     if [[ ! -d "${dict[index_dir]}" ]]
     then
         koopa::salmon_index \
-            --fasta-file="${dict[fasta_file]}" \
+            --no-decoy-aware \
             --output-dir="${dict[index_dir]}" \
-            --threads="${dict[threads]}"
+            --threads="${dict[threads]}" \
+            --transcriptome-fasta-file="${dict[transcriptome_fasta_file]}"
     fi
     koopa::assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2
@@ -188,7 +201,7 @@ ${dict[fastq_r1_tail]}/${dict[fastq_r2_tail]}}"
             --fastq-r1-tail="${dict[fastq_r1_tail]}" \
             --fastq-r2-file="$fastq_r2_file" \
             --fastq-r2-tail="${dict[fastq_r2_tail]}" \
-            --gff-file="${dict[gff_file]}" \
+            --gtf-file="${dict[gtf_file]}" \
             --index-dir="${dict[index_dir]}" \
             --lib-type="${dict[lib_type]}" \
             --output-dir="${dict[output_dir]}" \
@@ -202,7 +215,7 @@ completed successfully."
 koopa::run_salmon_single_end() { # {{{1
     # """
     # Run salmon on multiple single-end FASTQ files.
-    # @note Updated 2022-01-11.
+    # @note Updated 2022-01-17.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -223,10 +236,21 @@ koopa::run_salmon_single_end() { # {{{1
         [lib_type]='A'
         [output_dir]='salmon/samples'
         [threads]="$(koopa::cpu_count)"
+        [transcriptome_fasta_file]=''
     )
     while (("$#"))
     do
         case "$1" in
+            # Defunct ----------------------------------------------------------
+            '--fasta-file='* | \
+            '--fasta-file')
+                koopa::defunct "Use '--transcriptome-fasta-file' instead \
+of '--fasta-file'."
+                ;;
+            '--gff-file='* | \
+            '--gff-file')
+                koopa::defunct "Use '--gtf-file' instead of '--gff-file'."
+                ;;
             # Key-value pairs --------------------------------------------------
             '--bootstraps='*)
                 dict[bootstraps]="${1#*=}"
@@ -234,14 +258,6 @@ koopa::run_salmon_single_end() { # {{{1
                 ;;
             '--bootstraps')
                 dict[bootstraps]="${2:?}"
-                shift 2
-                ;;
-            '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
-                shift 1
-                ;;
-            '--fasta-file')
-                dict[fasta_file]="${2:?}"
                 shift 2
                 ;;
             '--fastq-dir='*)
@@ -260,12 +276,12 @@ koopa::run_salmon_single_end() { # {{{1
                 dict[fastq_tail]="${2:?}"
                 shift 2
                 ;;
-            '--gff-file='*)
-                dict[gff_file]="${1#*=}"
+            '--gtf-file='*)
+                dict[gtf_file]="${1#*=}"
                 shift 1
                 ;;
-            '--gff-file')
-                dict[gff_file]="${2:?}"
+            '--gtf-file')
+                dict[gtf_file]="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -300,6 +316,14 @@ koopa::run_salmon_single_end() { # {{{1
                 dict[threads]="${2:?}"
                 shift 2
                 ;;
+            '--transcriptome-fasta-file='*)
+                dict[transcriptome_fasta_file]="${1#*=}"
+                shift 1
+                ;;
+            '--transcriptome-fasta-file')
+                dict[transcriptome_fasta_file]="${2:?}"
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
@@ -309,27 +333,29 @@ koopa::run_salmon_single_end() { # {{{1
     koopa::h1 'Running salmon (single-end mode).'
     koopa::assert_is_set \
         '--bootstraps' "${dict[bootstraps]}" \
-        '--fasta-file' "${dict[fasta_file]}" \
         '--fastq-dir' "${dict[fastq_dir]}" \
         '--fastq-tail' "${dict[fastq_tail]}" \
-        '--gff-file' "${dict[gff_file]}" \
+        '--gtf-file' "${dict[gtf_file]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}" \
-        '--threads' "${dict[threads]}"
-    dict[fasta_file]="$(koopa::realpath "${dict[fasta_file]}")"
+        '--threads' "${dict[threads]}" \
+        '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
-    dict[gff_file]="$(koopa::realpath "${dict[gff_file]}")"
+    dict[gtf_file]="$(koopa::realpath "${dict[gtf_file]}")"
+    dict[transcriptome_fasta_file]="$( \
+        koopa::realpath "${dict[transcriptome_fasta_file]}" \
+    )"
     dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
     koopa::dl \
         'salmon' "${app[salmon]}" \
         'Bootstraps' "${dict[bootstraps]}" \
-        'FASTA file' "${dict[fasta_file]}" \
         'FASTQ dir' "${dict[fastq_dir]}" \
         'FASTQ tail' "${dict[fastq_tail]}" \
-        'GFF/GTF file' "${dict[gff_file]}" \
+        'GTF file' "${dict[gtf_file]}" \
         'Index dir' "${dict[index_dir]}" \
         'Output dir' "${dict[output_dir]}" \
-        'Threads' "${dict[threads]}"
+        'Threads' "${dict[threads]}" \
+        'Transcriptome FASTA file' "${dict[transcriptome_fasta_file]}"
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
     # Create a per-sample array from the FASTQ files.
@@ -355,9 +381,10 @@ with '${dict[fastq_tail]}'."
     if [[ ! -d "${dict[index_dir]}" ]]
     then
         koopa::salmon_index \
-            --fasta-file="${dict[fasta_file]}" \
+            --no-decoy-aware \
             --output-dir="${dict[index_dir]}" \
-            --threads="${dict[threads]}"
+            --threads="${dict[threads]}" \
+            --transcriptome-fasta-file="${dict[transcriptome_fasta_file]}"
     fi
     koopa::assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2
@@ -369,7 +396,7 @@ with '${dict[fastq_tail]}'."
             --bootstraps="${dict[bootstraps]}" \
             --fastq-file="$fastq_file" \
             --fastq-tail="${dict[fastq_tail]}" \
-            --gff-file="${dict[gff_file]}" \
+            --gtf-file="${dict[gtf_file]}" \
             --index-dir="${dict[index_dir]}" \
             --lib-type="${dict[lib_type]}" \
             --output-dir="${dict[output_dir]}" \
@@ -384,6 +411,7 @@ completed successfully."
 
 # FIXME Compare results of original script to our function, and confirm that
 #       output is consistent, before proceeding.
+# FIXME This function is RAM intensive. Consider adding a check for this.
 
 koopa::salmon_generate_decoy_transcriptome() { # {{{1
     # """
@@ -621,7 +649,7 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
 koopa::salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2022-01-12.
+    # @note Updated 2022-01-17.
     #
     # @section FASTA conventions:
     #
@@ -653,23 +681,30 @@ koopa::salmon_index() { # {{{1
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(
-        [decoy_aware]=1
-        [fasta_file]=''
+        [decoy_aware]=0
         [gencode]=0
+        [genome_fasta_file]=''
         [kmer_length]=31
         [output_dir]='salmon/index'
         [threads]="$(koopa::cpu_count)"
+        [transcriptome_fasta_file]=''
     )
     while (("$#"))
     do
         case "$1" in
+            # Deprecated -------------------------------------------------------
+            '--fasta-file='* | \
+            '--fasta-file')
+                koopa::defunct "Use '--transcriptome-fasta-file' instead \
+of '--fasta-file'."
+                ;;
             # Key-value pairs --------------------------------------------------
-            '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
+            '--genome-fasta-file='*)
+                dict[genome_fasta_file]="${1#*=}"
                 shift 1
                 ;;
-            '--fasta-file')
-                dict[fasta_file]="${2:?}"
+            '--genome-fasta-file')
+                dict[genome_fasta_file]="${2:?}"
                 shift 2
                 ;;
             '--kmer-length='*)
@@ -696,6 +731,14 @@ koopa::salmon_index() { # {{{1
                 dict[threads]="${2:?}"
                 shift 2
                 ;;
+            '--transcriptome-fasta-file='*)
+                dict[transcriptome_fasta_file]="${1#*=}"
+                shift 1
+                ;;
+            '--transcriptome-fasta-file')
+                dict[transcriptome_fasta_file]="${2:?}"
+                shift 2
+                ;;
             # Flags ------------------------------------------------------------
             '--decoy-aware')
                 dict[decoy_aware]=1
@@ -716,11 +759,11 @@ koopa::salmon_index() { # {{{1
         esac
     done
     koopa::assert_is_set \
-        '--fasta-file' "${dict[fasta_file]}" \
         '--kmer-length' "${dict[kmer_length]}" \
         '--output-dir' "${dict[output_dir]}" \
-        '--threads' "${dict[threads]}"
-    koopa::assert_is_file "${dict[fasta_file]}"
+        '--threads' "${dict[threads]}" \
+        '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
+    koopa::assert_is_file "${dict[transcriptome_fasta_file]}"
     if [[ -d "${dict[output_dir]}" ]]
     then
         koopa::alert_note \
@@ -749,16 +792,16 @@ koopa::salmon_index() { # {{{1
     fi
     if [[ "${dict[decoy_aware]}" -eq 1 ]]
     then
-        koopa::stop 'FIXME Need to add support for this.'
-        # FIXME Need to rework this once we get our modified mashmap function working.
+        koopa::assert_is_set \
+            '--genome-fasta-file' "${dict[genome_fasta_file]}"
+        dict[decoy_prefix]="${dict[output_dir]}/decoys"
+        dict[decoys_file]="${dict[decoy_prefix]}/decoys.txt"
         koopa::salmon_generate_decoy_transcriptome \
-            --genome-fasta-file='FIXME' \
-            --gtf-file='FIXME' \
-            --output-dir='FIXME' \
+            --genome-fasta-file="${dict[genome_fasta_file]}" \
+            --gtf-file="${dict[gtf_file]}" \
+            --output-dir="${dict[decoys_prefix]}" \
             --transcriptome-fasta-file='FIXME'
-        dict[decoys_file]='FIXME_OUTPUT_DIR/decoys.txt'
         koopa::assert_is_file "${dict[decoys_file]}"
-        # FIXME Check that this is right convention.
         index_args+=("--decoys=${dict[decoys_file]}")
     fi
     koopa::dl 'Index args' "${index_args[*]}"
@@ -823,7 +866,7 @@ koopa::salmon_quant_paired_end() { # {{{1
         [fastq_r1_tail]='_R1_001.fastq.gz'
         [fastq_r2_file]=''
         [fastq_r2_tail]='_R2_001.fastq.gz'
-        [gff_file]=''
+        [gtf_file]=''
         [index_dir]='salmon/index'
         [lib_type]='A'
         [output_dir]='salmon/samples'
@@ -873,12 +916,12 @@ koopa::salmon_quant_paired_end() { # {{{1
                 dict[fastq_r2_tail]="${2:?}"
                 shift 2
                 ;;
-            '--gff-file='*)
-                dict[gff_file]="${1#*=}"
+            '--gtf-file='*)
+                dict[gtf_file]="${1#*=}"
                 shift 1
                 ;;
-            '--gff-file')
-                dict[gff_file]="${2:?}"
+            '--gtf-file')
+                dict[gtf_file]="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -925,7 +968,7 @@ koopa::salmon_quant_paired_end() { # {{{1
         '--fastq-r1-tail' "${dict[fastq_r1_tail]}" \
         '--fastq-r2-file' "${dict[fastq_r2_file]}" \
         '--fastq-r2-tail' "${dict[fastq_r2_tail]}" \
-        '--gff-file' "${dict[gff_file]}" \
+        '--gtf-file' "${dict[gtf_file]}" \
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}" \
@@ -933,7 +976,7 @@ koopa::salmon_quant_paired_end() { # {{{1
     koopa::assert_is_file \
         "${dict[fastq_r1_file]}" \
         "${dict[fastq_r2_file]}" \
-        "${dict[gff_file]}"
+        "${dict[gtf_file]}"
     koopa::assert_is_dir "${dict[index_dir]}"
     dict[fastq_r1_bn]="$(koopa::basename "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
@@ -954,7 +997,7 @@ koopa::salmon_quant_paired_end() { # {{{1
     # > dict[sam_file]="${dict[output_dir]}/output.sam"
     quant_args=(
         '--gcBias'
-        "--geneMap=${dict[gff_file]}"
+        "--geneMap=${dict[gtf_file]}"
         "--index=${dict[index_dir]}"
         "--libType=${dict[lib_type]}"
         "--mates1=${dict[fastq_r1_file]}"
@@ -990,7 +1033,7 @@ koopa::salmon_quant_single_end() { # {{{1
         [bootstraps]=30
         [fastq_file]=''
         [fastq_tail]='.fastq.gz'
-        [gff_file]=''
+        [gtf_file]=''
         [index_dir]='salmon/index'
         [lib_type]='A'
         [output_dir]='salmon/samples'
@@ -1024,12 +1067,12 @@ koopa::salmon_quant_single_end() { # {{{1
                 dict[fastq_tail]="${2:?}"
                 shift 2
                 ;;
-            '--gff-file='*)
-                dict[gff_file]="${1#*=}"
+            '--gtf-file='*)
+                dict[gtf_file]="${1#*=}"
                 shift 1
                 ;;
-            '--gff-file')
-                dict[gff_file]="${2:?}"
+            '--gtf-file')
+                dict[gtf_file]="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -1074,14 +1117,14 @@ koopa::salmon_quant_single_end() { # {{{1
         '--bootstraps' "${dict[bootstraps]}" \
         '--fastq-file' "${dict[fastq_file]}" \
         '--fastq-tail' "${dict[fastq_tail]}" \
-        '--gff-file' "${dict[gff_file]}" \
+        '--gtf-file' "${dict[gtf_file]}" \
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}" \
         '--threads' "${dict[threads]}"
     koopa::assert_is_file \
         "${dict[fastq_file]}" \
-        "${dict[gff_file]}"
+        "${dict[gtf_file]}"
     koopa::assert_is_dir "${dict[index_dir]}"
     dict[fastq_bn]="$(koopa::basename "${dict[fastq_file]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
@@ -1099,7 +1142,7 @@ koopa::salmon_quant_single_end() { # {{{1
     # Writing mappings to SAM file blows up disk space too much.
     # > dict[sam_file]="${dict[output_dir]}/output.sam"
     quant_args=(
-        "--geneMap=${dict[gff_file]}"
+        "--geneMap=${dict[gtf_file]}"
         "--index=${dict[index_dir]}"
         "--libType=${dict[lib_type]}"
         "--numBootstraps=${dict[bootstraps]}"
