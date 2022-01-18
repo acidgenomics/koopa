@@ -102,10 +102,12 @@ koopa::git_checkout_recursive() { # {{{1
     return 0
 }
 
+# FIXME Need to delete existing directory?
+
 koopa::git_clone() { # {{{1
     # """
     # Quietly clone a git repository.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-01-18.
     # """
     local app clone_args dict pos
     koopa::assert_has_args_ge "$#" 2
@@ -147,6 +149,7 @@ koopa::git_clone() { # {{{1
             [url]="${1:?}"
             [prefix]="${2:?}"
         )
+        koopa::stop 'FIXME HELLO THERE'
         if [[ -d "${dict2[prefix]}" ]]
         then
             koopa::rm "${dict2[prefix]}"
