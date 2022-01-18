@@ -134,7 +134,6 @@ _koopa_export_pager() { # {{{1
     [ -n "${PAGER:-}" ] && return 0
     if _koopa_is_installed 'less'
     then
-        echo 'FIXME HELLO THERE'
         export PAGER='less -R'
     fi
     return 0
