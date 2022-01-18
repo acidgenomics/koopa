@@ -287,7 +287,6 @@ install_koopa() { # {{{1
     # --------------------------------------------------------------------------
     # Alternatively, can consider using rsync here instead of cp.
     koopa::alert_install_start "${dict[name_fancy]}" "${dict[koopa_prefix]}"
-    koopa::assert_is_non_existing "${dict[koopa_prefix]}"
     if [[ "${dict[shared]}" -eq 1 ]]
     then
         koopa::alert_info 'Shared installation detected.'
