@@ -124,14 +124,14 @@ _koopa_export_history() { # {{{1
 _koopa_export_pager() { # {{{1
     # """
     # Export 'PAGER' variable.
-    # @note Updated 2021-08-31.
+    # @note Updated 2022-01-18.
     #
     # @seealso
     # - 'tldr --pager' (Rust tealdeer) requires the '-R' flag to be set here,
     #   otherwise will return without proper escape code handling.
     # """
     [ "$#" -eq 0 ] || return 1
-    if [ -z "${PAGER:-}" ]
+    if [ -z "${PAGER:-}" ] && _koopa_is_installed 'less'
     then
         PAGER='less -R'
     fi
