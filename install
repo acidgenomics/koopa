@@ -18,7 +18,7 @@ set -Eeu -o pipefail
 install_koopa_usage() { # {{{1
     # """
     # Help usage for koopa installer.
-    # @note Updated 2021-05-15.
+    # @note Updated 2022-01-18.
     # """
 cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
@@ -350,7 +350,10 @@ END
     # Final cleanup {{{3
     # --------------------------------------------------------------------------
     koopa::delete_broken_symlinks "${dict[koopa_prefix]}"
-    koopa::update_etc_profile_d
+    if [[ "${dict[shared]}" -eq 1 ]] && koopa::is_linux
+    then
+        koopa::linux_update_etc_profile_d
+    fi
     koopa::fix_zsh_permissions
     koopa::alert_install_success "${dict[name_fancy]}" "${dict[koopa_prefix]}"
     koopa::alert_restart
