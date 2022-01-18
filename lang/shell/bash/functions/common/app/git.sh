@@ -149,7 +149,6 @@ koopa::git_clone() { # {{{1
             [url]="${1:?}"
             [prefix]="${2:?}"
         )
-        koopa::stop 'FIXME HELLO THERE'
         if [[ -d "${dict2[prefix]}" ]]
         then
             koopa::rm "${dict2[prefix]}"
