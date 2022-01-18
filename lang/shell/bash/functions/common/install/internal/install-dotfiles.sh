@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing this error on install:
+# Failed to locate '/opt/bin/koopa'.
+
 koopa:::install_dotfiles() { # {{{1
     # """
     # Install dotfiles.
