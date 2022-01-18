@@ -74,7 +74,7 @@ stop() { # {{{1
 install_koopa() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-01-18.
     # """
     local bash_cutoff bash_maj_ver bash_version dict
     # Associative arrays ('dict') require Bash 4+.
@@ -95,6 +95,10 @@ install_koopa() { # {{{1
         [modify_user_profile]=0
         [name_fancy]='koopa'
         [passwordless]=0
+        [prefix]="$( \
+            cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && \
+            pwd -P \
+        )"
         [shared]=0
         [test]=0
     )
@@ -175,16 +179,11 @@ install_koopa() { # {{{1
     # Pre-flight checks {{{2
     # ==========================================================================
     unset KOOPA_PREFIX
-    dict[script_dir]="$( \
-        cd "$(dirname "${BASH_SOURCE[0]}")" \
-        &>/dev/null \
-        && pwd -P \
-    )"
     KOOPA_FORCE=1
     KOOPA_TEST="${dict[test]}"
     export KOOPA_FORCE KOOPA_TEST
     # shellcheck source=/dev/null
-    . "${dict[script_dir]}/lang/shell/bash/include/header.sh" || return 1
+    . "${dict[prefix]}/lang/shell/bash/include/header.sh" || return 1
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
         stop "Installer failed to set 'KOOPA_PREFIX'."
@@ -292,12 +291,18 @@ install_koopa() { # {{{1
         koopa::alert_info 'Shared installation detected.'
         koopa::alert_note 'Admin (sudo) permissions are required.'
         koopa::assert_is_admin
-        koopa::rm --sudo "${dict[koopa_prefix]}"
-        koopa::cp --sudo "${dict[script_dir]}" "${dict[koopa_prefix]}"
+        if [[ "${dict[koopa_prefix]}" != "${dict[prefix]}" ]]
+        then
+            koopa::rm --sudo "${dict[koopa_prefix]}"
+            koopa::cp --sudo "${dict[prefix]}" "${dict[koopa_prefix]}"
+        fi
         koopa::sys_set_permissions --recursive "${dict[koopa_prefix]}"
         koopa::add_make_prefix_link "${dict[koopa_prefix]}"
     else
-        koopa::cp "${dict[script_dir]}" "${dict[koopa_prefix]}"
+        if [[ "${dict[koopa_prefix]}" != "${dict[prefix]}" ]]
+        then
+            koopa::cp "${dict[prefix]}" "${dict[koopa_prefix]}"
+        fi
     fi
     # Activate koopa {{{2
     # ==========================================================================
