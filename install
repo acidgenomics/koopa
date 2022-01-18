@@ -174,10 +174,6 @@ install_koopa() { # {{{1
     done
     # Pre-flight checks {{{2
     # ==========================================================================
-    if [[ -d "${KOOPA_PREFIX:-}" ]]
-    then
-        stop "${dict[name_fancy]} already installed at '${KOOPA_PREFIX:?}'."
-    fi
     unset KOOPA_PREFIX
     dict[script_dir]="$( \
         cd "$(dirname "${BASH_SOURCE[0]}")" \
