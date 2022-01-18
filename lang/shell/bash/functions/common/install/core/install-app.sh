@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME macOS Python framework installer isn't passing INSTALL_VERSION through
-# here correctly...need to add some other flag or approach here...argh
-
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2021-12-07.
+    # @note Updated 2022-01-18.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
     local link_include_arr opt_arr pos
@@ -16,7 +13,6 @@ koopa::install_app() { # {{{1
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
         [auto_prefix]=1
-        [auto_version]=1
         [installer]=''
         [link_app]=1
         [make_prefix]="$(koopa::make_prefix)"
@@ -138,10 +134,6 @@ koopa::install_app() { # {{{1
                 dict[shared]=0
                 shift 1
                 ;;
-            '--no-version')
-                dict[auto_version]=0
-                shift 1
-                ;;
             '--prefix-check')
                 dict[prefix_check]=1
                 shift 1
@@ -177,7 +169,6 @@ koopa::install_app() { # {{{1
     if [[ "${dict[system]}" -eq 1 ]]
     then
         dict[auto_prefix]=0
-        dict[auto_version]=0
         dict[shared]=0
     fi
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
@@ -203,9 +194,9 @@ koopa::install_app() { # {{{1
     then
         koopa::stop 'Unsupported install command.'
     fi
-    if [[ -z "${dict[version]}" ]] && [[ "${dict[auto_version]}" -eq 1 ]]
+    if [[ -z "${dict[version]}" ]]
     then
-        dict[version]="$(koopa::variable "${dict[name]}")"
+        dict[version]="$(koopa::variable "${dict[name]}" 2>/dev/null || true)"
     fi
     if [[ -z "${dict[prefix]}" ]] && [[ "${dict[auto_prefix]}" -eq 1 ]]
     then
