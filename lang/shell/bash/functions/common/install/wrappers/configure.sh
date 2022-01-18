@@ -5,7 +5,10 @@ koopa::configure_dotfiles() { # {{{1
     # Configure dotfiles.
     # @note Updated 2022-01-18.
     # """
-    local dict
+    local app dict
+    declare -A app=(
+        [bash]="$(koopa::locate_bash)"
+    )
     declare -A dict=(
         [name]='dotfiles'
         [prefix]="$(koopa::dotfiles_prefix)"
@@ -13,7 +16,7 @@ koopa::configure_dotfiles() { # {{{1
     dict[script]="${dict[prefix]}/install"
     koopa::assert_is_file "${dict[script]}"
     koopa::add_koopa_config_link "${dict[prefix]}" "${dict[name]}"
-    "${dict[script]}"
+    "${app[bash]}" "${dict[script]}"
     return 0
 }
 
