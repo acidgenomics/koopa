@@ -3,10 +3,20 @@
 # FIXME I think multiple exclude calls aren't working here currently.
 # FIXME Work on improving '-not -name XXX' and '-not -path XXX' style support.
 
+# FIXME Need to add support for '--case-sensitive' or '--case-insensitive' flags.
+# fd options:
+#     -s, --case-sensitive
+#             Perform a case-sensitive search. By default, fd uses case-insensitive
+#             searches, unless the pattern contains an uppercase character (smart case).
+#     -i, --ignore-case
+#             Perform a case-insensitive search. By default, fd uses case-insensitive
+#             searches, unless the pattern contains an uppercase character (smart case)
+# GNU find options: -name or -iname.
+
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2021-11-04.
+    # @note Updated 2022-01-19.
     #
     # Consider updating the variant defined in the Bash header upon any
     # changes to this function.
@@ -25,6 +35,7 @@ koopa::find() { # {{{1
     local results sort sorted_results
     declare -A app
     declare -A dict=(
+        [case_sensitive]=1
         [empty]=0
         [engine]=''
         [glob]=''
@@ -125,8 +136,16 @@ koopa::find() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--case-sensitive')
+                dict[case_sensitive]=1
+                shift 1
+                ;;
             '--empty')
                 dict[empty]=1
+                shift 1
+                ;;
+            '--ignore-case')
+                dict[case_sensitive]=0
                 shift 1
                 ;;
             '--match-against-full-path')
@@ -206,7 +225,12 @@ koopa::find() { # {{{1
             fi
             if [[ -n "${dict[glob]}" ]]
             then
-                find_args+=('-name' "${dict[glob]}")
+                if [[ "${dict[case_sensitive]}" -eq 1 ]]
+                then
+                    find_args+=('-name' "${dict[glob]}")
+                else
+                    find_args+=('-iname' "${dict[glob]}")
+                fi
             fi
             if [[ -n "${dict[regex]}" ]]
             then
@@ -285,11 +309,16 @@ koopa::find() { # {{{1
             find_args=(
                 '--absolute-path'
                 '--base-directory' "${dict[prefix]}"
-                '--case-sensitive'
                 '--hidden'
                 '--no-ignore'
                 '--one-file-system'
             )
+            if [[ "${dict[case_sensitive]}" -eq 1 ]]
+            then
+                find_args+=('--case-sensitive')
+            else
+                find_args+=('--ignore-case')
+            fi
             if [[ -n "${dict[glob]}" ]]
             then
                 find_args+=('--glob' "${dict[glob]}")
