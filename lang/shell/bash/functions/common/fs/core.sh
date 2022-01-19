@@ -175,7 +175,7 @@ koopa::chown() { # {{{1
 koopa::cp() { # {{{1
     # """
     # Hardened version of coreutils cp (copy).
-    # @note Updated 2021-10-22.
+    # @note Updated 2022-01-19.
     # @note '-t' flag is not directly supported for BSD variant.
     #
     # @seealso
