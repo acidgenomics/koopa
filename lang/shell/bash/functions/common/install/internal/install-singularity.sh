@@ -19,6 +19,7 @@ koopa:::install_singularity() { # {{{1
         [name]='singularity'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
+        [version_file]='VERSION'
     )
     dict[file]="v${dict[version]}.tar.gz"
     dict[url]="https://github.com/apptainer/${dict[name]}/archive/refs/\
@@ -34,9 +35,10 @@ tags/${dict[file]}"
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
     koopa::cd "${dict[name]}-${dict[version]}"
-    if [[ ! -f 'VERSION' ]]
+    # This step is needed to avoid an error when not cloned from git repo.
+    if [[ ! -f "${dict[version_file]}" ]]
     then
-        koopa::print "${dict[version]}" > 'VERSION'
+        koopa::print "${dict[version]}" > "${dict[version_file]}"
     fi
     ./mconfig --prefix="${dict[prefix]}"
     "${app[make]}" -C builddir
