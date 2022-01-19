@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to change default branch to 'master' from 'develop'.
-
 koopa:::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
-    # @note Updated 2021-11-22.
+    # @note Updated 2022-01-19.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -28,7 +26,7 @@ koopa:::install_doom_emacs() { # {{{1
         [emacs]="$(koopa::locate_emacs)"
     )
     declare -A dict=(
-        [branch]='develop'
+        [branch]='master'
         [prefix]="${INSTALL_PREFIX:?}"
         [url]='https://github.com/hlissner/doom-emacs.git'
     )
