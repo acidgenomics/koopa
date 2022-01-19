@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa:::install_openssh() { # {{{1
+koopa:::install_lesspipe() { # {{{1
     # """
-    # Install OpenSSH.
+    # Install lesspipe.
     # @note Updated 2022-01-19.
     # """
     local app dict
@@ -12,13 +12,13 @@ koopa:::install_openssh() { # {{{1
     )
     declare -A dict=(
         [jobs]="$(koopa::cpu_count)"
-        [name]='openssh'
+        [name]='lesspipe'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
-portable/${dict[file]}"
+    dict[file]="v${dict[version]}.tar.gz"
+    dict[url]="https://github.com/wofr06/lesspipe/archive/refs/\
+tags/${dict[file]}"
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
     koopa::cd "${dict[name]}-${dict[version]}"
