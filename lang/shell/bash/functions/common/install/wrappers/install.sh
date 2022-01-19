@@ -287,6 +287,12 @@ koopa::install_julia_packages() { # {{{1
         "$@"
 }
 
+koopa::install_lesspipe() { # {{{1
+    koopa::install_app \
+        --name='lesspipe' \
+        "$@"
+}
+
 koopa::install_libevent() { # {{{1
     koopa::install_app \
         --name='libevent' \
