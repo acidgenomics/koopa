@@ -1,22 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME Now seeing this error on macOS (2022-01-06):
-#  GEN /private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220106-110831-kzrpdtLIgJ/singularity-ce-3.9.2/scripts/go-generate
-#  GO singularity
-#     [+] GO_TAGS "containers_image_openpgp exclude_graphdriver_btrfs exclude_graphdriver_devicemapper sylog oci_engine singularity_engine fakeroot_engine"
-# package github.com/sylabs/singularity/cmd/singularity
-# 	imports github.com/sylabs/singularity/cmd/internal/cli
-# 	imports github.com/sylabs/singularity/internal/app/singularity
-# 	imports github.com/sylabs/singularity/pkg/image
-# 	imports github.com/sylabs/singularity/internal/pkg/util/user
-# 	imports github.com/sylabs/singularity/pkg/util/namespaces: build constraints exclude all Go files in /private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220106-110831-kzrpdtLIgJ/singularity-ce-3.9.2/pkg/util/namespaces
-# make: *** [Makefile:169: singularity] Error 1
-# make: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20220106-110831-kzrpdtLIgJ/singularity-ce-3.9.2/builddir'
-
 koopa:::install_singularity() { # {{{1
     # """
     # Install Singularity.
-    # @note Updated 2022-01-06.
+    # @note Updated 2022-01-19.
+    #
+    # NOTE This is splitting into apptainer and singularity-ce in 2022.
+    #
+    # @seealso
+    # - https://issueexplorer.com/issue/hpcng/singularity/6225
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -24,13 +16,13 @@ koopa:::install_singularity() { # {{{1
         [make]="$(koopa::locate_make)"
     )
     declare -A dict=(
-        [name]='singularity-ce'
+        [name]='singularity'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    dict[file]="${dict[name]}-${dict[version]}.tar.gz"
-    dict[url]="https://github.com/sylabs/singularity/releases/download/\
-v${dict[version]}/${dict[file]}"
+    dict[file]="v${dict[version]}.tar.gz"
+    dict[url]="https://github.com/apptainer/${dict[name]}/archive/refs/\
+tags/${dict[file]}"
     if koopa::is_linux
     then
         koopa::activate_opt_prefix 'go'
@@ -42,6 +34,10 @@ v${dict[version]}/${dict[file]}"
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
     koopa::cd "${dict[name]}-${dict[version]}"
+    if [[ ! -f 'VERSION' ]]
+    then
+        koopa::print "${dict[version]}" > 'VERSION'
+    fi
     ./mconfig --prefix="${dict[prefix]}"
     "${app[make]}" -C builddir
     "${app[make]}" -C builddir install
