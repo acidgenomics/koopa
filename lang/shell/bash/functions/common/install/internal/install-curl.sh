@@ -3,7 +3,7 @@
 koopa:::install_curl() { # {{{1
     # """
     # Install cURL.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-01-19.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -38,7 +38,6 @@ download/${dict[name]}-${dict[version2]}/${dict[file]}"
     if koopa::is_macos
     then
         dict[brew_prefix]="$(koopa::homebrew_prefix)"
-        # FIXME Bump this to version 3.0?
         conf_args+=(
             "--with-ssl=${dict[brew_prefix]}/opt/openssl@1.1"
         )
