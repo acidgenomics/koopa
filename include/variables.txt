@@ -567,7 +567,7 @@ ruby-ronn="0.7.3"               # 2010-06-24
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2022-01-15 from https://crates.io/.
+# Updated 2022-01-19 from https://crates.io/.
 
 # Packages with binaries {{{2
 # ------------------------------------------------------------------------------
@@ -581,7 +581,7 @@ rust-du-dust="0.7.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
 rust-fd-find="8.3.1"            # homebrew; fd
 rust-hyperfine="1.12.0"         # homebrew
-rust-procs="0.11.13"            # homebrew
+rust-procs="0.12.0"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
 rust-starship="1.2.1"           # homebrew
