@@ -274,6 +274,12 @@ koopa::uninstall_koopa() { # {{{1
     return 0
 }
 
+koopa::uninstall_lesspipe() { # {{{1
+    koopa::uninstall_app \
+        --name='lesspipe' \
+        "$@"
+}
+
 koopa::uninstall_libevent() { # {{{1
     koopa::uninstall_app \
         --name='libevent' \

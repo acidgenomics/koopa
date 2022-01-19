@@ -109,6 +109,7 @@ _koopa_complete() { # {{{1
                     'htop'
                     'julia'
                     'julia-packages'
+                    'lesspipe'
                     'libevent'
                     'libtool'
                     'lua'
