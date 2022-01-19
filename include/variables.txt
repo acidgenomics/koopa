@@ -214,9 +214,6 @@ luarocks="3.8.0"
 # https://ftp.gnu.org/gnu/make/
 make="4.3"
 
-# FIXME Need to provide manual install support for this.
-mcfly="0.5.12"
-
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
 
@@ -342,9 +339,6 @@ sed="4.8"
 # https://github.com/koalaman/shellcheck/releases
 shellcheck="0.8.0"
 
-# FIXME Need to add install support for this on Linux.
-shellharden="4.1.3"
-
 # https://www.rstudio.com/products/shiny/download-server/
 # 2021-01-11
 shiny-server="1.5.17.973"
@@ -373,7 +367,7 @@ tar="1.34"
 # https://www.latex-project.org/get/
 tex="2021"
 
-# FIXME Need to clean up TeX Live masking of this on macOS into '/usr/local'.
+# NOTE There seems to be a Homebrew cask that masks this.
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.8"
 
