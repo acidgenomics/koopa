@@ -4,6 +4,11 @@ koopa:::install_lesspipe() { # {{{1
     # """
     # Install lesspipe.
     # @note Updated 2022-01-19.
+    #
+    # @seealso
+    # - https://github.com/wofr06/lesspipe
+    # - https://github.com/Homebrew/homebrew-core/blob/master/
+    #     Formula/lesspipe.rb
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -22,8 +27,15 @@ tags/${dict[file]}"
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
     koopa::cd "${dict[name]}-${dict[version]}"
+    # NOTE This currently uses sed internally, so we need to escape '/'.
+    # shellcheck disable=SC2016
+    koopa::find_and_replace_in_files \
+        '\\$(DESTDIR)\/etc\/bash_completion.d' \
+        '\\$(DESTDIR)\\$(PREFIX)\/etc\/bash_completion.d' \
+        'configure'
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
+    # > "${app[make]}" test
     "${app[make]}" install
     return 0
 }
