@@ -187,7 +187,7 @@ jq="1.6"
 julia="1.7.1"
 
 # https://github.com/wofr06/lesspipe/
-lesspipe="2.01"
+lesspipe="2.02"
 
 # https://libevent.org/
 # https://github.com/libevent/libevent/releases
