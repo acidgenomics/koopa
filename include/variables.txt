@@ -346,8 +346,8 @@ shiny-server="1.5.17.973"
 # https://github.com/kward/shunit2/releases
 shunit2="2.1.7"
 
-# https://github.com/sylabs/singularity/releases
-singularity="3.9.4"
+# https://github.com/apptainer/singularity
+singularity="3.8.5"
 
 # https://www.sqlite.org/download.html
 sqlite="3.37.2"
