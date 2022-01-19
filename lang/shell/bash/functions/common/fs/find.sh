@@ -403,40 +403,50 @@ koopa::find_and_move_in_sequence() { # {{{1
     return 0
 }
 
-# FIXME Rework using a dict approach.
 koopa::find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
-    # @note Updated 2021-05-08.
+    # @note Updated 2022-01-19.
     #
     # Parameterized, supporting multiple files.
     #
     # This step requires GNU sed and won't work with BSD sed currently installed
     # by default on macOS.
-    # https://stackoverflow.com/questions/4247068/
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/4247068/
+    #
+    # @examples
+    # koopa::find_and_replace_in_files 'XXX' 'YYY' 'file1' 'file2' 'file3'
     # """
-    local file from sed to
+    local app dict file
     koopa::assert_has_args_ge "$#" 3
-    sed="$(koopa::locate_sed)"
-    from="${1:?}"
-    to="${2:?}"
+    declare -A app=(
+        [sed]="$(koopa::locate_sed)"
+    )
+    declare -A dict=(
+        [from]="${1:?}"
+        [to]="${2:?}"
+    )
     shift 2
-    koopa::alert "Replacing '${from}' with '${to}' in ${#} files."
+    dict[str]="$(koopa::ngettext "$#" 'file' 'files')"
+    koopa::alert "Replacing '${dict[from]}' with '${dict[to]}' \
+in ${#} ${dict[str]}."
     if { \
-        koopa::str_detect_fixed "${from}" '/' && \
-        ! koopa::str_detect_fixed "${from}" '\/'; \
+        koopa::str_detect_fixed "${dict[from]}" '/' && \
+        ! koopa::str_detect_fixed "${dict[from]}" '\/'; \
     } || { \
-        koopa::str_detect_fixed "${to}" '/' && \
-        ! koopa::str_detect_fixed "${to}" '\/'; \
+        koopa::str_detect_fixed "${dict[to]}" '/' && \
+        ! koopa::str_detect_fixed "${dict[to]}" '\/'; \
     }
     then
         koopa::stop 'Unescaped slash detected.'
     fi
+    koopa::assert_is_file "$@"
     for file in "$@"
     do
-        [[ -f "$file" ]] || return 1
-        koopa::alert_info "$file"
-        "$sed" -i "s/${from}/${to}/g" "$file"
+        koopa::alert "$file"
+        "${app[sed]}" -i "s/${dict[from]}/${dict[to]}/g" "$file"
     done
     return 0
 }
