@@ -311,32 +311,37 @@ koopa::is_export() { # {{{1
     return 0
 }
 
-# FIXME Need to switch to 'koopa::find' here.
-# FIXME Need to add insensitive support to 'koopa::find'.
 koopa::is_file_system_case_sensitive() { # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-01-19.
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
-    local app count
+    local app dict
     koopa::assert_has_no_args "$#"
     declare -A app=(
-        [find]="$(koopa::locate_find)"
         [touch]="$(koopa::locate_touch)"
         [wc]="$(koopa::locate_wc)"
     )
-    "${app[touch]}" '.koopa.tmp.checkcase' '.koopa.tmp.checkCase'
-    count="$( \
-        "${app[find]}" . \
-            -maxdepth 1 \
-            -mindepth 1 \
-            -iname '.koopa.tmp.checkcase' \
+    declare -A dict=(
+        [prefix]="${PWD:?}"
+        [tmp_stem]='.koopa.tmp.'
+    )
+    dict[file1]="${dict[tmp_stem]}checkcase"
+    dict[file2]="${dict[tmp_stem]}checkCase"
+    "${app[touch]}" "${dict[file1]}" "${dict[file2]}"
+    dict[count]="$( \
+        koopa::find \
+            --glob="${dict[file1]}" \
+            --ignore-case \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict[prefix]}" \
         | "${app[wc]}" -l \
     )"
-    koopa::rm '.koopa.tmp.check'*
-    [[ "$count" -eq 2 ]]
+    koopa::rm "${dict[tmp_stem]}"*
+    [[ "${dict[count]}" -eq 2 ]]
 }
 
 koopa::is_function() { # {{{1
