@@ -17,7 +17,7 @@ koopa:::update_dotfiles() { # {{{1
     )
     dict[script]="${dict[prefix]}/install"
     koopa::assert_is_file "${dict[script]}"
-    koopa::git_reset "${dict[prefix]}"
+    # > koopa::git_reset "${dict[prefix]}"
     koopa::git_pull "${dict[prefix]}"
     # FIXME Error described above is happening here.
     koopa::configure_dotfiles "${dict[prefix]}"
