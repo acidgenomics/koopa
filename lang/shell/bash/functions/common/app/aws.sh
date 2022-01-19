@@ -617,6 +617,8 @@ koopa::aws_s3_mv_to_parent() { # {{{1
 
 # FIXME Consider ignoring all files managed under git by default.
 # These files are returned by 'git ls-files'.
+# See also:
+# - https://superuser.com/questions/429693
 
 koopa::aws_s3_sync() { # {{{1
     # """
