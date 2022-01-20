@@ -518,7 +518,7 @@ node-prettier="2.5.1"               # 2021-12-04
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2022-01-17 from https://pypi.org/.
+# Updated 2022-01-19 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
@@ -530,30 +530,21 @@ python-wheel="0.37.1"           # default
 
 python-black="21.12b0"          # recommended
 python-bpytop="1.0.68"          # recommended
-python-cython="0.29.26"         # recommended
 python-flake8="4.0.1"           # recommended
 python-glances="3.2.4.2"        # recommended
-python-isort="5.10.1"           # recommended
 python-pip2pi="0.8.2"           # recommended
 python-pipx="1.0.0"             # recommended
-python-psutil="5.9.0"           # recommended
 python-pyflakes="2.4.0"         # recommended
 python-pylint="2.12.2"          # recommended
 python-pynvim="0.4.3"           # recommended
 python-pytaglib="1.5.0"         # recommended
 python-pytest="6.2.5"           # recommended
 python-ranger-fm="1.9.3"        # recommended
-python-six="1.16.0"             # recommended
 
-python-leidenalg="0.8.8"        # r-reticulate
-python-louvain="0.7.0"          # r-reticulate
-python-numpy="1.21.4"           # r-reticulate
-python-pandas="1.3.4"           # r-reticulate
-python-python-igraph="0.9.8"    # r-reticulate
-python-pyyaml="6.0"             # r-reticulate
-python-scikit-learn="1.0.1"     # r-reticulate
+python-numpy="1.22.1"           # r-reticulate
+python-pandas="1.3.5"           # r-reticulate
+python-scikit-learn="1.0.2"     # r-reticulate
 python-scipy="1.7.3"            # r-reticulate
-python-umap-learn="0.5.2"       # r-reticulate
 
 # Ruby packages (gems) {{{1
 # ==============================================================================

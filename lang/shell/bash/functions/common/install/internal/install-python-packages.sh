@@ -20,22 +20,18 @@ koopa:::install_python_packages() { # {{{1
         koopa::python_pip_install "${pkgs[@]}"
         # Now we can install additional recommended extras.
         pkgs=(
-            'Cython'
             'black'
             'bpytop'
             'flake8'
             'glances'
-            'isort'
             'pip2pi'
             'pipx'
-            'psutil'
             'pyflakes'
             'pylint'
             'pynvim'
             'pytaglib'
             'pytest'
             'ranger-fm'
-            'six'
         )
     fi
     readarray -t pkgs <<< "$(koopa::python_get_pkg_versions "${pkgs[@]}")"
