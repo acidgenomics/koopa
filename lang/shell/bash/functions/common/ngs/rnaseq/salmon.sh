@@ -415,6 +415,7 @@ completed successfully."
 # FIXME Compare results of original script to our function, and confirm that
 #       output is consistent, before proceeding.
 # FIXME This function is RAM intensive. Consider adding a check for this.
+# Using 'koopa::mem_gb' to return the RAM, and consider at least 128 GB here.
 
 koopa::salmon_generate_decoy_transcriptome() { # {{{1
     # """

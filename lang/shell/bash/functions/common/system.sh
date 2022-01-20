@@ -1,5 +1,26 @@
 #!/usr/bin/env bash
 
+koopa::exec_dir() { # {{{1
+    # """
+    # Execute multiple shell scripts in a directory.
+    # @note Updated 2022-01-20.
+    # """
+    local file prefix
+    koopa::assert_has_args "$#"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        koopa::assert_is_dir "$prefix"
+        for file in "${prefix}/"*'.sh'
+        do
+            [ -x "$file" ] || continue
+            # shellcheck source=/dev/null
+            "$file"
+        done
+    done
+    return 0
+}
+
 koopa::help() { # {{{1
     # """
     # Show usage via '--help' flag.
