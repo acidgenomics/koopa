@@ -1,47 +1,53 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa::rg_sort() { # {{{1
     # """
     # ripgrep sorted.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-20.
     # """
-    local pattern rg x
+    local app dict
     koopa::assert_has_args_eq "$#" 1
-    rg="$(koopa::locate_rg)"
-    pattern="${1:?}"
-    x="$( \
-        "$rg" \
+    declare -A app=(
+        [rg]="$(koopa::locate_rg)"
+    )
+    declare -A dict=(
+        [pattern]="${1:?}"
+    )
+    dict[str]="$( \
+        "${app[rg]}" \
             --pretty \
             --sort 'path' \
-            "$pattern" \
+            "${dict[pattern]}" \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::print "${dict[str]}"
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::rg_unique() { # {{{1
     # """
     # ripgrep, but only return a summary of all unique matches.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-20.
     # """
-    local pattern rg sort x
+    local app dict
     koopa::assert_has_args_eq "$#" 1
-    rg="$(koopa::locate_rg)"
-    sort="$(koopa::locate_sort)"
-    pattern="${1:?}"
-    x="$( \
-        "$rg" \
+    declare -A app=(
+        [rg]="$(koopa::locate_rg)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [pattern]="${1:?}"
+    )
+    dict[str]="$( \
+        "${app[rg]}" \
             --no-filename \
             --no-line-number \
             --only-matching \
             --sort 'none' \
-            "$pattern" \
-        | "$sort" --unique \
+            "${dict[pattern]}" \
+        | "${app[sort]}" --unique \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::print "${dict[str]}"
     return 0
 }
