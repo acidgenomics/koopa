@@ -39,9 +39,7 @@ koopa:::h() { # {{{1
             koopa::stop 'Invalid header level.'
             ;;
     esac
-    # FIXME Consider reworking this, migrating ANSI code to Bash.
-    # FIXME Need to export this as '_koopa_msg' and 'koopa::msg' instead.
-    __koopa_msg 'magenta' 'default' "${dict[emoji]} ${dict[prefix]}" "$@"
+    koopa:::msg 'magenta' 'default' "${dict[emoji]} ${dict[prefix]}" "$@"
     return 0
 }
 
