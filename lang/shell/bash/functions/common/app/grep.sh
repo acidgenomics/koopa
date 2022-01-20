@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using dict approach.
 koopa::grep() { # {{{1
     # """
     # grep matching.

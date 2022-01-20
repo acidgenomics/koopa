@@ -83,6 +83,7 @@ koopa::pkgdown_deploy_to_aws() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::r_link_files_into_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
@@ -128,6 +129,7 @@ koopa::r_link_files_into_etc() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::r_link_site_library() { # {{{1
     # """
     # Link R site library.

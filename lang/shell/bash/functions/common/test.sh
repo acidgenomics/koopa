@@ -22,6 +22,7 @@ koopa::test() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
@@ -85,6 +86,7 @@ koopa::test_find_files_by_ext() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::test_find_files_by_shebang() { # {{{1
     # """
     # Find relevant test files by shebang.
@@ -112,6 +114,7 @@ koopa::test_find_files_by_shebang() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
@@ -202,6 +205,7 @@ koopa::test_grep() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::test_true_color() { # {{{1
     # """
     # Test 24-bit true color support.

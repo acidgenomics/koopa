@@ -105,6 +105,7 @@ koopa::python_pip_install() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::python_pip_outdated() { # {{{1
     # """
     # List oudated pip packages.
@@ -131,7 +132,7 @@ koopa::python_pip_outdated() { # {{{1
     return 0
 }
 
-# FIXME Need to rework using a dict approach here.
+# FIXME Rework using app/dict approach.
 koopa::python_venv_create() { # {{{1
     # """
     # Create Python virtual environment.
@@ -216,6 +217,7 @@ koopa::python_venv_create_base() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 # NOTE Consider pinning this to Python 3.9.
 koopa::python_venv_create_r_reticulate() { # {{{1
     # """
