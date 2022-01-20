@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa::r_link_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2021-06-16.
+    # @note Updated 2022-01-20.
     #
     # R on Fedora won't pick up site library in '--vanilla' mode unless we
     # symlink the site-library into '/usr/local/lib/R' as well.
@@ -12,30 +11,34 @@ koopa::r_link_site_library() { # {{{1
     #
     # Changed to unversioned library approach at opt prefix in koopa v0.9.
     # """
-    local conf_args lib_source lib_target r r_prefix version
+    local app conf_args dict
     koopa::assert_has_args_le "$#" 1
-    r="${1:-}"
-    [[ -z "$r" ]] && r="$(koopa::locate_r)"
-    koopa::assert_is_installed "$r"
-    r_prefix="$(koopa::r_prefix "$r")"
-    koopa::assert_is_dir "$r_prefix"
-    version="$(koopa::r_version "$r")"
-    lib_source="$(koopa::r_packages_prefix "$version")"
-    lib_target="${r_prefix}/site-library"
-    koopa::alert "Linking '${lib_target}' to '${lib_source}'."
-    koopa::sys_mkdir "$lib_source"
-    if koopa::is_koopa_app "$r"
+    declare -A app=(
+        [r]="${1:-}"
+    )
+    [[ -z "${app[r]}" ]] && app[r]="$(koopa::locate_r)"
+    koopa::assert_is_installed "${app[r]}"
+    declare -A dict=(
+        [r_prefix]="$(koopa::r_prefix "${app[r]}")"
+        [version]="$(koopa::r_version "${app[r]}")"
+    )
+    koopa::assert_is_dir "${dict[r_prefix]}"
+    dict[lib_source]="$(koopa::r_packages_prefix "${dict[version]}")"
+    dict[lib_target]="${dict[r_prefix]}/site-library"
+    koopa::alert "Linking '${dict[lib_target]}' to '${dict[lib_source]}'."
+    koopa::sys_mkdir "${dict[lib_source]}"
+    if koopa::is_koopa_app "${app[r]}"
     then
-        koopa::sys_ln "$lib_source" "$lib_target"
+        koopa::sys_ln "${dict[lib_source]}" "${dict[lib_target]}"
     else
-        koopa::ln --sudo "$lib_source" "$lib_target"
+        koopa::ln --sudo "${dict[lib_source]}" "${dict[lib_target]}"
     fi
     conf_args=(
-        "--prefix=${lib_source}"
+        "--prefix=${dict[lib_source]}"
         '--name-fancy=R'
         '--name=r'
     )
-    if [[ "$version" == 'devel' ]]
+    if [[ "${dict[version]}" == 'devel' ]]
     then
         conf_args+=(
             '--no-link'
