@@ -23,7 +23,6 @@ koopa::r_link_site_library() { # {{{1
         [version]="$(koopa::r_version "${app[r]}")"
     )
     koopa::assert_is_dir "${dict[r_prefix]}"
-    # FIXME Rework this, passing in R directly instead.
     dict[lib_source]="$(koopa::r_packages_prefix "${dict[version]}")"
     dict[lib_target]="${dict[r_prefix]}/site-library"
     koopa::alert "Linking '${dict[lib_target]}' to '${dict[lib_source]}'."
