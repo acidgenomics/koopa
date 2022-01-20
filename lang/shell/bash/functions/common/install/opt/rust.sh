@@ -12,7 +12,6 @@ koopa:::install_rust() { # {{{1
     local file pkg_prefix prefix url version
     prefix="${INSTALL_PREFIX:?}"
     version="${INSTALL_VERSION:?}"
-    # FIXME Rework this, passing in Rust directly? Need to move this to configure?
     pkg_prefix="$(koopa::rust_packages_prefix "$version")"
     RUSTUP_HOME="$prefix"
     CARGO_HOME="$pkg_prefix"
