@@ -1,33 +1,41 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa::docker_tag() { # {{{1
     # """
     # Add Docker tag.
-    # Updated 2021-10-25.
+    # Updated 2022-01-20.
     # """
-    local dest_tag docker image server source_tag
+    local app dict
     koopa::assert_has_args "$#"
-    docker="$(koopa::locate_docker)"
-    image="${1:?}"
-    source_tag="${2:?}"
-    dest_tag="${3:-latest}"
-    # Consider allowing this to be user-definable in a future update.
-    server='docker.io'
+    declare -A app=(
+        [docker]="$(koopa::locate_docker)"
+    )
+    declare -A dict=(
+        [dest_tag]="${3:-}"
+        [image]="${1:?}"
+        # Consider allowing this to be user-definable in the future.
+        [server]='docker.io'
+        [source_tag]="${2:?}"
+    )
+    [[ -z "${dict[dest_tag]}" ]] && dict[dest_tag]='latest'
     # Assume acidgenomics recipe by default.
-    if ! koopa::str_detect_fixed "$image" '/'
+    if ! koopa::str_detect_fixed "${dict[image]}" '/'
     then
-        image="acidgenomics/${image}"
+        dict[image]="acidgenomics/${dict[image]}"
     fi
-    if [[ "$source_tag" == "$dest_tag" ]]
+    if [[ "${dict[source_tag]}" == "${dict[dest_tag]}" ]]
     then
-        koopa::print "Source tag identical to destination ('${source_tag}')."
+        koopa::alert_info "Source tag identical to destination \
+('${dict[source_tag]}')."
         return 0
     fi
-    koopa::alert "Tagging '${image}:${source_tag}' as '${dest_tag}'."
-    "$docker" login "$server"
-    "$docker" pull "${server}/${image}:${source_tag}"
-    "$docker" tag "${image}:${source_tag}" "${image}:${dest_tag}"
-    "$docker" push "${server}/${image}:${dest_tag}"
+    koopa::alert "Tagging '${dict[image]}:${dict[source_tag]}' \
+as '${dict[dest_tag]}'."
+    "${app[docker]}" login "${dict[server]}"
+    "${app[docker]}" pull "${dict[server]}/${dict[image]}:${dict[source_tag]}"
+    "${app[docker]}" tag \
+        "${dict[image]}:${dict[source_tag]}" \
+        "${dict[image]}:${dict[dest_tag]}"
+    "${app[docker]}" push "${dict[server]}/${dict[image]}:${dict[dest_tag]}"
     return 0
 }
