@@ -4149,41 +4149,6 @@ _koopa_monorepo_prefix() { # {{{1
     return 0
 }
 
-# FIXME Move this to Bash library (print.sh) file.
-_koopa_ngettext() { # {{{1
-    # """
-    # Translate a text message.
-    # @note Updated 2021-04-26.
-    #
-    # A function to dynamically handle singular/plural words.
-    #
-    # @examples
-    # _koopa_ngettext 1 sample samples
-    # ## sample
-    # _koopa_ngettext 2 sample samples
-    # ## samples
-    #
-    # @seealso
-    # - https://stat.ethz.ch/R-manual/R-devel/library/base/html/gettext.html
-    # - https://www.php.net/manual/en/function.ngettext.php
-    # - https://www.oreilly.com/library/view/bash-cookbook/
-    #       0596526784/ch13s08.html
-    # """
-    [ "$#" -eq 3 ] || return 1
-    local msg1 msg2 n x
-    n="${1:?}"
-    msg1="${2:?}"
-    msg2="${3:?}"
-    if [ "$n" -eq 1 ]
-    then
-        x="$msg1"
-    else
-        x="$msg2"
-    fi
-    _koopa_print "$x"
-    return 0
-}
-
 _koopa_nim_packages_prefix() { # {{{1
     # """
     # Nim (Nimble) packages prefix.
