@@ -50,17 +50,42 @@ koopa::compress_ext_pattern() { # {{{1
     return 0
 }
 
-# FIXME Rework using app/dict approach.
+koopa::cpu_count() { # {{{1
+    # """
+    # Return a usable number of CPU cores.
+    # @note Updated 2022-01-20.
+    # """
+    local n
+    koopa::assert_has_no_args "$#"
+    if _koopa_is_installed 'nproc'
+    then
+        n="$(nproc)"
+    elif _koopa_is_macos
+    then
+        n="$(sysctl -n 'hw.ncpu')"
+    elif _koopa_is_linux
+    then
+        n="$(getconf _NPROCESSORS_ONLN)"
+    else
+        n=1
+    fi
+    koopa::print "$n"
+    return 0
+}
+
 koopa::datetime() { # {{{
     # """
     # Datetime string.
-    # @note Updated 2021-05-21.
-    local date x
+    # @note Updated 2022-01-20.
+    # """
+    local app str
     koopa::assert_has_no_args "$#"
-    date="$(koopa::locate_date)"
-    x="$("$date" '+%Y%m%d-%H%M%S')"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    declare -A app=(
+        [date]="$(koopa::locate_date)"
+    )
+    str="$("${app[date]}" '+%Y%m%d-%H%M%S')"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 

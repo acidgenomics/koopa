@@ -72,7 +72,6 @@ _koopa_posix_header() { # {{{1
     _koopa_activate_local_paths || return 1
     if [ "${KOOPA_ACTIVATE:-0}" -eq 1 ]
     then
-        _koopa_export_cpu_count || return 1
         _koopa_export_editor || return 1
         _koopa_export_git || return 1
         _koopa_export_gnupg || return 1
