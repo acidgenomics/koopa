@@ -19,7 +19,6 @@ koopa::python_pip_outdated() { # {{{1
     declare -A dict=(
         [version]="$(koopa::get_version "${app[python]}")"
     )
-    # FIXME Rework this, passing in Python directly instead.
     dict[prefix]="$(koopa::python_packages_prefix "${dict[version]}")"
     dict[str]="$( \
         "${app[python]}" -m pip list \

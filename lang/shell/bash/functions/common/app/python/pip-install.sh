@@ -3,7 +3,7 @@
 koopa::python_pip_install() { # {{{1
     # """
     # Internal pip install command.
-    # @note Updated 2021-11-11.
+    # @note Updated 2022-01-20.
     #
     # Usage of '--target' with '--upgrade' will remove existing bin files from
     # other packages that are not updated. This is annoying, but there's no
@@ -60,7 +60,6 @@ koopa::python_pip_install() { # {{{1
     pkgs=("$@")
     koopa::configure_python "${app[python]}"
     dict[version]="$(koopa::get_version "${app[python]}")"
-    # FIXME Rework this, passing in Python directly instead.
     dict[target]="$(koopa::python_packages_prefix "${dict[version]}")"
     koopa::dl \
         'Python' "${app[python]}" \
