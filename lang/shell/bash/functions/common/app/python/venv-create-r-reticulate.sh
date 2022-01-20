@@ -28,13 +28,7 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
-    local app pkgs
-    declare -A app=(
-        [llvm_config]="$(koopa::locate_llvm_config)"
-    )
-    koopa::assert_is_installed "${app[llvm_config]}"
-    LLVM_CONFIG="${app[llvm_config]}"
-    export LLVM_CONFIG
+    local pkgs
     pkgs=(
         'numpy'
         'pandas'
@@ -85,8 +79,7 @@ koopa::python_venv_create_r_reticulate() { # {{{1
             'CXX' "${CXX:-}" \
             'CXXFLAGS' "${CXXFLAGS:-}" \
             'DYLD_LIBRARY_PATH' "${DYLD_LIBRARY_PATH:-}" \
-            'LDFLAGS' "${LDFLAGS:-}" \
-            'LLVM_CONFIG' "${LLVM_CONFIG:?}"
+            'LDFLAGS' "${LDFLAGS:-}"
     fi
     koopa::python_venv_create --name='r-reticulate' "${pkgs[@]}" "$@"
     return 0
