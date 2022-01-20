@@ -3,22 +3,16 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2021-10-22.
+    # @note Updated 2022-01-20.
     # """
-    local file
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
-    # FIXME We likely can speed this up by sourcing a single file.
-    # Source POSIX functions.
-    for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'.sh'
-    do
-        # shellcheck source=/dev/null
-        [ -f "$file" ] && . "$file"
-    done
+    # shellcheck source=/dev/null
+    . "${KOOPA_PREFIX}/lang/shell/posix/functions.sh"
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         _koopa_duration_start || return 1
