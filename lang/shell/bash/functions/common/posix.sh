@@ -264,10 +264,6 @@ koopa::config_prefix() { # {{{1
     _koopa_config_prefix "$@"
 }
 
-koopa::cpu_count() { # {{{1
-    _koopa_cpu_count "$@"
-}
-
 koopa::deactivate_anaconda() { # {{{1
     _koopa_deactivate_anaconda "$@"
 }
