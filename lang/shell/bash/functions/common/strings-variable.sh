@@ -50,6 +50,7 @@ koopa::compress_ext_pattern() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::datetime() { # {{{
     # """
     # Datetime string.
@@ -251,6 +252,7 @@ koopa::os_type() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::public_ip_address() { # {{{1
     # """
     # Public (remote) IP address.

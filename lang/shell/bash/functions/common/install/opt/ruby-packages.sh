@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa:::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).

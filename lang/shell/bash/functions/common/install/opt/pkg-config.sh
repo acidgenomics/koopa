@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa:::install_pkg_config() { # {{{1
     # """
     # Install pkg-config.

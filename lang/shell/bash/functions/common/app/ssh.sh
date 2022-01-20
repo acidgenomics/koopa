@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa::generate_ssh_key() { # {{{1
     # """
     # Generate SSH key.
@@ -87,6 +88,7 @@ koopa::generate_ssh_key() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::ssh_key_info() { # {{{1
     # """
     # Get SSH key information.

@@ -9,6 +9,7 @@ koopa::julia_script_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::python_system_packages_prefix() { # {{{1
     # """
     # Python system site packages library prefix.
@@ -25,6 +26,7 @@ koopa::python_system_packages_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::r_prefix() { # {{{1
     # """
     # R prefix.
@@ -50,6 +52,7 @@ koopa::r_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::r_library_prefix() { # {{{1
     # """
     # R default library prefix.
@@ -67,6 +70,7 @@ koopa::r_library_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::r_system_library_prefix() { # {{{1
     # """
     # R system library prefix.

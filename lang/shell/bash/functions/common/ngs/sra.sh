@@ -168,6 +168,7 @@ koopa::sra_fastq_dump_parallel() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 # FIXME Allow the user to set target directory.
 # FIXME Allow the user to set 'accession-file' argument.
 koopa::sra_prefetch_parallel() { # {{{1

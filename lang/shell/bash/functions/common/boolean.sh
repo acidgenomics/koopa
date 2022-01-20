@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa:::is_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
@@ -159,6 +160,7 @@ koopa::is_admin() { # {{{1
     return 1
 }
 
+# FIXME Rework using app/dict approach.
 koopa::is_anaconda() { # {{{1
     # """
     # Is Anaconda (rather than Miniconda) installed?
@@ -429,6 +431,7 @@ koopa::is_powerful_machine() { # {{{1
     return 1
 }
 
+# FIXME Rework using app/dict approach.
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
@@ -462,6 +465,7 @@ koopa::is_python_package_installed() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
@@ -478,6 +482,7 @@ koopa::is_r_package_installed() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::is_recent() { # {{{1
     # """
     # If the file exists and is more recent than 2 weeks old.

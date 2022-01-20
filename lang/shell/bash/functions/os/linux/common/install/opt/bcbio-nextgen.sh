@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework using app and dict approach.
+# FIXME Rework using app/dict approach.
 koopa:::linux_install_bcbio_nextgen() { # {{{1
     # """
     # Install bcbio-nextgen.

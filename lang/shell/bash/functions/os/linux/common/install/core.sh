@@ -11,6 +11,7 @@ koopa::linux_delete_broken_app_symlinks() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
