@@ -109,48 +109,6 @@ __koopa_ansi_escape() { # {{{1
     return 0
 }
 
-# FIXME Can we move this to Bash? Seems unnecessary in POSIX.
-__koopa_h() { # {{{1
-    # """
-    # Header message generator.
-    # @note Updated 2022-01-20.
-    # """
-    local emoji level prefix x
-    [ "$#" -ge 2 ] || return 1
-    level="${1:?}"
-    shift 1
-    case "$level" in
-        '1')
-            _koopa_print ''
-            prefix='#'
-            ;;
-        '2')
-            prefix='##'
-            ;;
-        '3')
-            prefix='###'
-            ;;
-        '4')
-            prefix='####'
-            ;;
-        '5')
-            prefix='#####'
-            ;;
-        '6')
-            prefix='######'
-            ;;
-        '7')
-            prefix='#######'
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-    emoji="$(_koopa_acid_emoji)"
-    __koopa_msg 'magenta' 'default' "${emoji} ${prefix}" "$@"
-    return 0
-}
-
 __koopa_id() { # {{{1
     # """
     # Return ID string.
@@ -169,7 +127,7 @@ __koopa_msg() { # {{{1
     # Standard message generator.
     # @note Updated 2021-06-05.
     # """
-    local c1 c2 emoji nc prefix string x
+    local c1 c2 nc prefix string x
     [ "$#" -ge 4 ] || return 1
     c1="$(__koopa_ansi_escape "${1:?}")"
     c2="$(__koopa_ansi_escape "${2:?}")"
@@ -258,17 +216,6 @@ __koopa_remove_from_path_string() { # {{{1
     sed='sed'
     _koopa_print "${1:?}" | "$sed" "s|:${2:?}||g"
     return 0
-}
-
-_koopa_acid_emoji() { # {{{1
-    # """
-    # Acid Genomics test tube emoji.
-    # @note Updated 2022-01-20.
-    #
-    # Previous versions defaulted to using the '🐢' turtle.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_print '🧪'
 }
 
 _koopa_activate_aliases() { # {{{1
@@ -3087,55 +3034,6 @@ _koopa_gsub() { # {{{1
         _koopa_print "$string" \
             | "$sed" -E "s|${pattern}|${replacement}|g"
     done
-    return 0
-}
-
-# FIXME Move this to Bash?
-_koopa_h1() { # {{{1
-    [ "$#" -gt 0 ] || return 1
-    __koopa_h 1 "$@"
-    return 0
-}
-
-# FIXME Move this to Bash?
-_koopa_h2() { # {{{1
-    [ "$#" -gt 0 ] || return 1
-    __koopa_h 2 "$@"
-    return 0
-}
-
-# FIXME Move this to Bash?
-_koopa_h3() { # {{{1
-    [ "$#" -gt 0 ] || return 1
-    __koopa_h 3 "$@"
-    return 0
-}
-
-# FIXME Move this to Bash?
-_koopa_h4() { # {{{1
-    [ "$#" -gt 0 ] || return 1
-    __koopa_h 4 "$@"
-    return 0
-}
-
-# FIXME Move this to Bash?
-_koopa_h5() { # {{{1
-    [ "$#" -gt 0 ] || return 1
-    __koopa_h 5 "$@"
-    return 0
-}
-
-# FIXME Move this to Bash?
-_koopa_h6() { # {{{1
-    [ "$#" -gt 0 ] || return 1
-    __koopa_h 6 "$@"
-    return 0
-}
-
-# FIXME Move this to Bash?
-_koopa_h7() { # {{{1
-    [ "$#" -gt 0 ] || return 1
-    __koopa_h 7 "$@"
     return 0
 }
 
