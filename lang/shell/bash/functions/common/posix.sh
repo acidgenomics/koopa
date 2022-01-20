@@ -388,34 +388,6 @@ koopa::gsub() { # {{{1
     _koopa_gsub "$@"
 }
 
-koopa::h1() { # {{{1
-    _koopa_h1 "$@"
-}
-
-koopa::h2() { # {{{1
-    _koopa_h2 "$@"
-}
-
-koopa::h3() { # {{{1
-    _koopa_h3 "$@"
-}
-
-koopa::h4() { # {{{1
-    _koopa_h4 "$@"
-}
-
-koopa::h5() { # {{{1
-    _koopa_h5 "$@"
-}
-
-koopa::h6() { # {{{1
-    _koopa_h6 "$@"
-}
-
-koopa::h7() { # {{{1
-    _koopa_h7 "$@"
-}
-
 koopa::homebrew_cellar_prefix() { # {{{1
     _koopa_homebrew_cellar_prefix "$@"
 }
