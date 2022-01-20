@@ -31,6 +31,7 @@ _koopa_posix_header() { # {{{1
     fi
     _koopa_check_os || return 1
     _koopa_check_shell || return 1
+    # > _koopa_umask
     _koopa_activate_xdg || return 1
     _koopa_add_koopa_config_link \
         "$(_koopa_koopa_prefix)" 'home' \

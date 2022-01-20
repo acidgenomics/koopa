@@ -40,10 +40,6 @@ koopa::activate_homebrew() { # {{{1
     _koopa_activate_homebrew "$@"
 }
 
-koopa::activate_homebrew_cask_google_cloud_sdk() { # {{{1
-    _koopa_activate_homebrew_cask_google_cloud_sdk "$@"
-}
-
 koopa::activate_homebrew_opt_gnu_prefix() { # {{{1
     _koopa_activate_homebrew_opt_gnu_prefix "$@"
 }
@@ -62,10 +58,6 @@ koopa::activate_koopa_paths() { # {{{1
 
 koopa::activate_llvm() { # {{{1
     _koopa_activate_llvm "$@"
-}
-
-koopa::activate_local_etc_profile() { # {{{1
-    _koopa_activate_local_etc_profile "$@"
 }
 
 koopa::activate_local_paths() { # {{{1
@@ -224,10 +216,6 @@ koopa::arch() { # {{{1
     _koopa_arch "$@"
 }
 
-koopa::arch2() { # {{{1
-    _koopa_arch2 "$@"
-}
-
 koopa::aspera_prefix() { # {{{1
     _koopa_aspera_prefix "$@"
 }
@@ -318,14 +306,6 @@ koopa::emacs_prefix() { # {{{1
 
 koopa::ensembl_perl_api_prefix() { # {{{1
     _koopa_ensembl_perl_api_prefix "$@"
-}
-
-koopa::exec_dir() { # {{{1
-    _koopa_exec_dir "$@"
-}
-
-koopa::export_cpu_count() { # {{{1
-    _koopa_export_cpu_count "$@"
 }
 
 koopa::export_editor() { # {{{1
@@ -640,6 +620,10 @@ koopa::lowercase() { # {{{1
     _koopa_lowercase "$@"
 }
 
+koopa::macos_activate_google_cloud_sdk() { # {{{1
+    _koopa_macos_activate_google_cloud_sdk "$@"
+}
+
 koopa::macos_activate_gpg_suite() { # {{{1
     _koopa_macos_activate_gpg_suite "$@"
 }
@@ -694,10 +678,6 @@ koopa::major_minor_patch_version() { # {{{1
 
 koopa::make_prefix() { # {{{1
     _koopa_make_prefix "$@"
-}
-
-koopa::mem_gb() { # {{{1
-    _koopa_mem_gb "$@"
 }
 
 koopa::msigdb_prefix() { # {{{1
