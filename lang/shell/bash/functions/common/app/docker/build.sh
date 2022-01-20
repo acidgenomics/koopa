@@ -29,8 +29,7 @@ koopa::docker_build() { # {{{1
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
     # """
-    local app build_args build_name image image_ids memory platforms
-    local platforms_file platforms_string pos source_image tags tags_file
+    local app dict pos
     koopa::assert_has_args "$#"
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
@@ -115,42 +114,48 @@ koopa::docker_build() { # {{{1
     koopa::assert_has_args "$#"
     for image in "$@"
     do
-        # FIXME Consider using dict2 here, to reduce number of local variable
-        # calls needed.
+        local build_args dict2 image_ids platforms tag tags
+        declare -A dict2=(
+            [image]="$image"
+        )
+        build_args=()
+        platforms=()
+        tags=()
         # Assume input is an Acid Genomics Docker recipe by default.
-        if ! koopa::str_detect_fixed "$image" '/'
+        if ! koopa::str_detect_fixed "${dict2[image]}" '/'
         then
-            image="acidgenomics/${image}"
+            dict2[image]="acidgenomics/${dict2[image]}"
         fi
         # Handle tag support, if necessary.
-        if koopa::str_detect_fixed "$image" ':'
+        if koopa::str_detect_fixed "${dict2[image]}" ':'
         then
-            tag="$( \
-                koopa::print "$image" \
+            dict2[tag]="$( \
+                koopa::print "${dict2[image]}" \
                 | "${app[cut]}" -d ':' -f 2 \
             )"
-            image="$( \
-                koopa::print "$image" \
+            dict2[image]="$( \
+                koopa::print "${dict2[image]}" \
                 | "${app[cut]}" -d ':' -f 1 \
             )"
         fi
-        source_image="${dict[docker_dir]}/${image}/${tag}"
-        koopa::assert_is_dir "$source_image"
-        build_args=()
+        dict2[source_image]="${dict[docker_dir]}/${dict2[image]}/${dict2[tag]}"
+        koopa::assert_is_dir "${dict2[source_image]}"
         # Tags.
-        tags=()
-        tags_file="${source_image}/tags.txt"
-        if [[ -f "$tags_file" ]]
+        dict2[tags_file]="${dict2[source_image]}/tags.txt"
+        if [[ -f "${dict2[tags_file]}" ]]
         then
-            readarray -t tags < "$tags_file"
+            readarray -t tags < "${dict2[tags_file]}"
         fi
-        if [[ -L "$source_image" ]]
+        if [[ -L "${dict2[source_image]}" ]]
         then
-            tags+=("$tag")
-            source_image="$(koopa::realpath "$source_image")"
-            tag="$(koopa::basename "$source_image")"
+            tags+=("${dict2[tag]}")
+            dict2[source_image]="$(koopa::realpath "${dict2[source_image]}")"
+            dict2[tag]="$(koopa::basename "${dict2[source_image]}")"
         fi
-        tags+=("$tag" "${tag}-$(${app[date]} '+%Y%m%d')")
+        tags+=(
+            "${dict2[tag]}"
+            "${dict2[tag]}-$(${app[date]} '+%Y%m%d')"
+        )
         # Ensure tags are sorted and unique.
         readarray -t tags <<< "$( \
             koopa::print "${tags[@]}" \
@@ -158,19 +163,19 @@ koopa::docker_build() { # {{{1
         )"
         for tag in "${tags[@]}"
         do
-            build_args+=("--tag=${image}:${tag}")
+            build_args+=("--tag=${dict2[image]}:${tag}")
         done
         # Platforms.
         # Assume x86 by default.
         platforms=('linux/amd64')
-        platforms_file="${source_image}/platforms.txt"
-        if [[ -f "$platforms_file" ]]
+        dict2[platforms_file]="${dict2[source_image]}/platforms.txt"
+        if [[ -f "${dict2[platforms_file]}" ]]
         then
-            readarray -t platforms < "$platforms_file"
+            readarray -t platforms < "${dict2[platforms_file]}"
         fi
         # e.g. 'linux/amd64,linux/arm64'.
-        platforms_string="$(koopa::paste --sep=',' "${platforms[@]}")"
-        build_args+=("--platform=${platforms_string}")
+        dict2[platforms_string]="$(koopa::paste --sep=',' "${platforms[@]}")"
+        build_args+=("--platform=${dict2[platforms_string]}")
         # Harden against buildx blowing up memory on a local machine.
         # Consider raising this when we deploy a more powerful build machine.
         # > local memory
@@ -197,10 +202,10 @@ koopa::docker_build() { # {{{1
         # Force remove any existing locally tagged images before building.
         if [[ "${dict[delete]}" -eq 1 ]]
         then
-            koopa::alert "Pruning images matching '${image}:${tag}'."
+            koopa::alert "Pruning images '${dict2[image]}:${dict2[tag]}'."
             readarray -t image_ids <<< "$( \
                 "${app[docker]}" image ls \
-                    --filter reference="${image}:${tag}" \
+                    --filter reference="${dict2[image]}:${dict2[tag]}" \
                     --quiet \
             )"
             if koopa::is_array_non_empty "${image_ids[@]:-}"
@@ -208,17 +213,25 @@ koopa::docker_build() { # {{{1
                 "${app[docker]}" image rm --force "${image_ids[@]}"
             fi
         fi
-        koopa::alert "Building '${source_image}' Docker image."
+        koopa::alert "Building '${dict2[source_image]}' Docker image."
         koopa::dl 'Build args' "${build_args[*]}"
         "${app[docker]}" login "${dict[server]}" >/dev/null || return 1
-        build_name="$(koopa::basename "$image")"
+        dict2[build_name]="$(koopa::basename "${dict2[image]}")"
         # Ensure any previous build failres are removed.
-        "${app[docker]}" buildx rm "$build_name" &>/dev/null || true
-        "${app[docker]}" buildx create --name="$build_name" --use >/dev/null
+        "${app[docker]}" buildx rm \
+            "${dict2[build_name]}" \
+            &>/dev/null \
+            || true
+        "${app[docker]}" buildx create \
+            --name="${dict2[build_name]}" \
+            --use \
+            >/dev/null
         "${app[docker]}" buildx build "${build_args[@]}" || return 1
-        "${app[docker]}" buildx rm "$build_name"
-        "${app[docker]}" image ls --filter reference="${image}:${tag}"
-        koopa::alert_success "Build of '${source_image}' was successful."
+        "${app[docker]}" buildx rm "${dict2[build_name]}"
+        "${app[docker]}" image ls \
+            --filter \
+            reference="${dict2[image]}:${dict2[tag]}"
+        koopa::alert_success "Build of '${dict2[source_image]}' was successful."
     done
     return 0
 }
