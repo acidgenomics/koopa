@@ -12,6 +12,7 @@ _koopa_posix_header() { # {{{1
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
+    # FIXME We likely can speed this up by sourcing a single file.
     # Source POSIX functions.
     for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'.sh'
     do
