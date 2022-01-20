@@ -1,5 +1,50 @@
 #!/usr/bin/env bash
 
+koopa:::h() { # {{{1
+    # """
+    # Header message generator.
+    # @note Updated 2022-01-20.
+    # """
+    local dict
+    koopa::assert_has_args_ge "$#" 2
+    declare -A dict=(
+        [emoji]="$(koopa::acid_emoji)"
+        [level]="${1:?}"
+    )
+    shift 1
+    case "${dict[level]}" in
+        '1')
+            koopa::print ''
+            dict[prefix]='#'
+            ;;
+        '2')
+            dict[prefix]='##'
+            ;;
+        '3')
+            dict[prefix]='###'
+            ;;
+        '4')
+            dict[prefix]='####'
+            ;;
+        '5')
+            dict[prefix]='#####'
+            ;;
+        '6')
+            dict[prefix]='######'
+            ;;
+        '7')
+            dict[prefix]='#######'
+            ;;
+        *)
+            koopa::stop 'Invalid header level.'
+            ;;
+    esac
+    # FIXME Consider reworking this, migrating ANSI code to Bash.
+    # FIXME Need to export this as '_koopa_msg' and 'koopa::msg' instead.
+    __koopa_msg 'magenta' 'default' "${dict[emoji]} ${dict[prefix]}" "$@"
+    return 0
+}
+
 koopa:::alert_process_start() { # {{{1
     # """
     # Inform the user about the start of a process.
@@ -79,6 +124,17 @@ koopa:::status() { # {{{1
     return 0
 }
 
+koopa::acid_emoji() { # {{{1
+    # """
+    # Acid Genomics test tube emoji.
+    # @note Updated 2022-01-20.
+    #
+    # Previous versions defaulted to using the '🐢' turtle.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::print '🧪'
+}
+
 koopa::alert_coffee_time() { # {{{1
     # """
     # Alert that it's coffee time.
@@ -125,6 +181,62 @@ koopa::alert_update_start() { # {{{1
 
 koopa::alert_update_success() { # {{{1
     koopa:::alert_process_success 'Update' "$@"
+}
+
+koopa::h1() { # {{{1
+    # """
+    # Header level 1.
+    # @note Updated 2022-01-20.
+    # """
+    koopa:::h 1 "$@"
+}
+
+koopa::h2() { # {{{1
+    # """
+    # Header level 2.
+    # @note Updated 2022-01-20.
+    # """
+    koopa:::h 2 "$@"
+}
+
+koopa::h3() { # {{{1
+    # """
+    # Header level 3.
+    # @note Updated 2022-01-20.
+    # """
+    koopa:::h 3 "$@"
+}
+
+koopa::h4() { # {{{1
+    # """
+    # Header level 4.
+    # @note Updated 2022-01-20.
+    # """
+    koopa:::h 4 "$@"
+}
+
+koopa::h5() { # {{{1
+    # """
+    # Header level 5.
+    # @note Updated 2022-01-20.
+    # """
+    koopa:::h 5 "$@"
+}
+
+koopa::h6() { # {{{1
+    # """
+    # Header level 6.
+    # @note Updated 2022-01-20.
+    # """
+    koopa:::h 6 "$@"
+}
+
+koopa::h7() { # {{{1
+    # """
+    # Header level 7.
+    # @note Updated 2022-01-20.
+    # """
+    koopa:::h 7 "$@"
 }
 
 koopa::invalid_arg() { # {{{1
