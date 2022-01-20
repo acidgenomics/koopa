@@ -57,13 +57,13 @@ koopa::cpu_count() { # {{{1
     # """
     local n
     koopa::assert_has_no_args "$#"
-    if _koopa_is_installed 'nproc'
+    if koopa::is_installed 'nproc'
     then
         n="$(nproc)"
-    elif _koopa_is_macos
+    elif koopa::is_macos
     then
         n="$(sysctl -n 'hw.ncpu')"
-    elif _koopa_is_linux
+    elif koopa::is_linux
     then
         n="$(getconf _NPROCESSORS_ONLN)"
     else

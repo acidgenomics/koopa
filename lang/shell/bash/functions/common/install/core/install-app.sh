@@ -254,7 +254,7 @@ installed at '${dict[prefix]}'."
         export PATH
         if [[ -x '/usr/bin/pkg-config' ]]
         then
-            _koopa_add_to_pkg_config_path_start_2 \
+            koopa::add_to_pkg_config_path_start_2 \
                 '/usr/bin/pkg-config'
         fi
         # Activate packages installed in Homebrew 'opt/' directory.
