@@ -1,18 +1,5 @@
 #!/bin/sh
 
-# FIXME Consider reworking '__koopa' here.
-__koopa_acid_emoji() { # {{{1
-    # """
-    # Acid Genomics test tube emoji.
-    # @note Updated 2021-06-03.
-    #
-    # Previous versions defaulted to using the '🐢' turtle.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    _koopa_print '🧪'
-}
-
-# FIXME Consider reworking '__koopa' here.
 __koopa_add_to_path_string_end() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
@@ -31,7 +18,6 @@ __koopa_add_to_path_string_end() { # {{{1
     return 0
 }
 
-# FIXME Consider reworking '__koopa' here.
 __koopa_add_to_path_string_start() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
@@ -50,7 +36,6 @@ __koopa_add_to_path_string_start() { # {{{1
     return 0
 }
 
-# FIXME Consider reworking '__koopa' here.
 __koopa_ansi_escape() { # {{{1
     # """
     # ANSI escape codes.
@@ -124,49 +109,11 @@ __koopa_ansi_escape() { # {{{1
     return 0
 }
 
-# FIXME Remove the '__koopa' prefix.
-__koopa_git_repo_has_unstaged_changes() { # {{{1
-    # """
-    # Are there unstaged changes in current git repo?
-    # @note Updated 2021-08-19.
-    #
-    # Don't use '--quiet' flag here, as it can cause shell to exit if 'set -e'
-    # mode is enabled.
-    #
-    # @seealso
-    # - https://stackoverflow.com/questions/3878624/
-    # - https://stackoverflow.com/questions/28296130/
-    # """
-    local git x
-    [ "$#" -eq 0 ] || return 1
-    git='git'
-    "$git" update-index --refresh >/dev/null 2>&1
-    x="$("$git" diff-index 'HEAD' -- 2>/dev/null)"
-    [ -n "$x" ]
-}
-
-# FIXME Remove the '__koopa' prefix.
-__koopa_git_repo_needs_pull_or_push() { # {{{1
-    # """
-    # Does the current git repo need a pull or push?
-    # @note Updated 2021-08-19.
-    #
-    # This will return an expected fatal warning when no upstream exists.
-    # We're handling this case by piping errors to '/dev/null'.
-    # """
-    local git rev_1 rev_2
-    [ "$#" -eq 0 ] || return 1
-    git='git'
-    rev_1="$("$git" rev-parse 'HEAD' 2>/dev/null)"
-    rev_2="$("$git" rev-parse '@{u}' 2>/dev/null)"
-    [ "$rev_1" != "$rev_2" ]
-}
-
-# FIXME Consider reworking '__koopa' here.
+# FIXME Can we move this to Bash? Seems unnecessary in POSIX.
 __koopa_h() { # {{{1
     # """
-    # Koopa header.
-    # @note Updated 2021-03-31.
+    # Header message generator.
+    # @note Updated 2022-01-20.
     # """
     local emoji level prefix x
     [ "$#" -ge 2 ] || return 1
@@ -199,7 +146,7 @@ __koopa_h() { # {{{1
             return 1
             ;;
     esac
-    emoji="$(__koopa_acid_emoji)"
+    emoji="$(_koopa_acid_emoji)"
     __koopa_msg 'magenta' 'default' "${emoji} ${prefix}" "$@"
     return 0
 }
@@ -217,10 +164,9 @@ __koopa_id() { # {{{1
     return 0
 }
 
-# FIXME Consider reworking '__koopa' here.
 __koopa_msg() { # {{{1
     # """
-    # Koopa standard message.
+    # Standard message generator.
     # @note Updated 2021-06-05.
     # """
     local c1 c2 emoji nc prefix string x
@@ -249,8 +195,7 @@ __koopa_packages_prefix() { # {{{1
     # """
     local name version x
     [ "$#" -le 2 ] || return 1
-    name="${1:?}"
-    name="${name}-packages"
+    name="${1:?}-packages"
     version="${2:-}"
     if [ -n "$version" ]
     then
@@ -263,7 +208,6 @@ __koopa_packages_prefix() { # {{{1
     return 0
 }
 
-# FIXME Consider reworking '__koopa' here.
 __koopa_print_ansi() { # {{{1
     # """
     # Print a colored line in console.
@@ -301,7 +245,6 @@ __koopa_print_ansi() { # {{{1
     return 0
 }
 
-# FIXME Consider reworking '__koopa' here.
 __koopa_remove_from_path_string() { # {{{1
     # """
     # Remove directory from PATH string with POSIX conventions.
@@ -315,6 +258,17 @@ __koopa_remove_from_path_string() { # {{{1
     sed='sed'
     _koopa_print "${1:?}" | "$sed" "s|:${2:?}||g"
     return 0
+}
+
+_koopa_acid_emoji() { # {{{1
+    # """
+    # Acid Genomics test tube emoji.
+    # @note Updated 2022-01-20.
+    #
+    # Previous versions defaulted to using the '🐢' turtle.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print '🧪'
 }
 
 _koopa_activate_aliases() { # {{{1
@@ -2551,35 +2505,6 @@ _koopa_config_prefix() { # {{{1
     return 0
 }
 
-# FIXME Consider moving this to Bash, for performance speed up.
-_koopa_cpu_count() { # {{{1
-    # """
-    # Return a usable number of CPU cores.
-    # @note Updated 2020-07-21.
-    #
-    # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
-    # """
-    local n
-    [ "$#" -eq 0 ] || return 1
-    if _koopa_is_installed 'nproc'
-    then
-        n="$(nproc)"
-    elif _koopa_is_macos
-    then
-        n="$(sysctl -n hw.ncpu)"
-    elif _koopa_is_linux
-    then
-        n="$(getconf _NPROCESSORS_ONLN)"
-    else
-        # Otherwise assume single threaded.
-        n=1
-    fi
-    # Subtract some cores for login use on powerful machines.
-    [ "$n" -ge 17 ] && n=$((n - 2))
-    _koopa_print "$n"
-    return 0
-}
-
 _koopa_deactivate_anaconda() { # {{{1
     # """
     # Deactivate Anaconda environment.
@@ -2816,20 +2741,6 @@ _koopa_exec_dir() { # {{{1
         # shellcheck source=/dev/null
         "$file"
     done
-    return 0
-}
-
-_koopa_export_cpu_count() { # {{{1
-    # """
-    # Export 'CPU_COUNT' variable.
-    # @note Updated 2021-05-14.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    if [ -z "${CPU_COUNT:-}" ]
-    then
-        CPU_COUNT="$(_koopa_cpu_count)"
-    fi
-    export CPU_COUNT
     return 0
 }
 
@@ -3071,6 +2982,42 @@ _koopa_git_branch() { # {{{1
     return 0
 }
 
+_koopa_git_repo_has_unstaged_changes() { # {{{1
+    # """
+    # Are there unstaged changes in current git repo?
+    # @note Updated 2021-08-19.
+    #
+    # Don't use '--quiet' flag here, as it can cause shell to exit if 'set -e'
+    # mode is enabled.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/3878624/
+    # - https://stackoverflow.com/questions/28296130/
+    # """
+    local git x
+    [ "$#" -eq 0 ] || return 1
+    git='git'
+    "$git" update-index --refresh >/dev/null 2>&1
+    x="$("$git" diff-index 'HEAD' -- 2>/dev/null)"
+    [ -n "$x" ]
+}
+
+_koopa_git_repo_needs_pull_or_push() { # {{{1
+    # """
+    # Does the current git repo need a pull or push?
+    # @note Updated 2021-08-19.
+    #
+    # This will return an expected fatal warning when no upstream exists.
+    # We're handling this case by piping errors to '/dev/null'.
+    # """
+    local git rev_1 rev_2
+    [ "$#" -eq 0 ] || return 1
+    git='git'
+    rev_1="$("$git" rev-parse 'HEAD' 2>/dev/null)"
+    rev_2="$("$git" rev-parse '@{u}' 2>/dev/null)"
+    [ "$rev_1" != "$rev_2" ]
+}
+
 _koopa_go_packages_prefix() { # {{{1
     # """
     # Go packages 'GOPATH', for building from source.
@@ -3143,42 +3090,49 @@ _koopa_gsub() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash?
 _koopa_h1() { # {{{1
     [ "$#" -gt 0 ] || return 1
     __koopa_h 1 "$@"
     return 0
 }
 
+# FIXME Move this to Bash?
 _koopa_h2() { # {{{1
     [ "$#" -gt 0 ] || return 1
     __koopa_h 2 "$@"
     return 0
 }
 
+# FIXME Move this to Bash?
 _koopa_h3() { # {{{1
     [ "$#" -gt 0 ] || return 1
     __koopa_h 3 "$@"
     return 0
 }
 
+# FIXME Move this to Bash?
 _koopa_h4() { # {{{1
     [ "$#" -gt 0 ] || return 1
     __koopa_h 4 "$@"
     return 0
 }
 
+# FIXME Move this to Bash?
 _koopa_h5() { # {{{1
     [ "$#" -gt 0 ] || return 1
     __koopa_h 5 "$@"
     return 0
 }
 
+# FIXME Move this to Bash?
 _koopa_h6() { # {{{1
     [ "$#" -gt 0 ] || return 1
     __koopa_h 6 "$@"
     return 0
 }
 
+# FIXME Move this to Bash?
 _koopa_h7() { # {{{1
     [ "$#" -gt 0 ] || return 1
     __koopa_h 7 "$@"
@@ -3491,7 +3445,7 @@ _koopa_is_git_repo() { # {{{1i
 _koopa_is_git_repo_clean() { # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-01-20.
     #
     # This is used in prompt, so be careful with assert checks.
     #
@@ -3501,8 +3455,8 @@ _koopa_is_git_repo_clean() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_is_git_repo || return 1
-    __koopa_git_repo_has_unstaged_changes && return 1
-    __koopa_git_repo_needs_pull_or_push && return 1
+    _koopa_git_repo_has_unstaged_changes && return 1
+    _koopa_git_repo_needs_pull_or_push && return 1
     return 0
 }
 
