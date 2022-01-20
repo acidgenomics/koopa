@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
-# NOTE Consider pinning this to Python 3.9.
+# FIXME RuntimeError: Building llvmlite requires LLVM 10.0.x or 9.0.x, got '13.0.0'. Be sure to set LLVM_CONFIG to the right executable path
+
 koopa::python_venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
-    # @note Updated 2021-07-29.
+    # @note Updated 2022-01-20.
     #
     # Check that LLVM is configured correctly.
     # umap-learn > numba > llvmlite
@@ -28,28 +28,23 @@ koopa::python_venv_create_r_reticulate() { # {{{1
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
-    local cflags cppflags cxxflags dyld_library_path ldflags name pkgs
-    name='r-reticulate'
+    local app pkgs
+    declare -A app=(
+        [llvm_config]="$(koopa::locate_llvm_config)"
+    )
+    koopa::assert_is_installed "${app[llvm_config]}"
+    LLVM_CONFIG="${app[llvm_config]}"
+    export LLVM_CONFIG
     pkgs=(
-        # Essential defaults ---------------------------------------------------
-        'pip'
-        'setuptools'
-        'wheel'
-        # Other recommended packages -------------------------------------------
-        'Cython'
-        'PyYAML'
-        'leidenalg'         # R leiden
         'numpy'
-        'pandas'            # Fails on Python 3.10.
-        'python-igraph'     # R leiden
+        'pandas'
         'scikit-learn'
         'scipy'
-        'umap-learn'
     )
     readarray -t pkgs <<< "$(koopa::python_get_pkg_versions "${pkgs[@]}")"
-    # FIXME Use make_prefix here instead of hard coding to /usr/local
     if koopa::is_macos
     then
+        local cflags cppflags cxxflags dyld_library_path ldflags
         cflags=(
             "${CFLAGS:-}"
             '-I/usr/local/opt/libomp/include'
@@ -90,14 +85,9 @@ koopa::python_venv_create_r_reticulate() { # {{{1
             'CXX' "${CXX:-}" \
             'CXXFLAGS' "${CXXFLAGS:-}" \
             'DYLD_LIBRARY_PATH' "${DYLD_LIBRARY_PATH:-}" \
-            'LDFLAGS' "${LDFLAGS:-}"
+            'LDFLAGS' "${LDFLAGS:-}" \
+            'LLVM_CONFIG' "${LLVM_CONFIG:?}"
     fi
-    LLVM_CONFIG="$(koopa::locate_llvm_config)"
-    koopa::assert_is_executable "$LLVM_CONFIG"
-    export LLVM_CONFIG
-    koopa::python_venv_create \
-        --name="$name" \
-        "${pkgs[@]}" \
-        "$@"
+    koopa::python_venv_create --name='r-reticulate' "${pkgs[@]}" "$@"
     return 0
 }
