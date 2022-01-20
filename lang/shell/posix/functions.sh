@@ -2227,26 +2227,6 @@ _koopa_boolean_nounset() { # {{{1
     return 0
 }
 
-# FIXME Move this to Bash library.
-_koopa_camel_case_simple() { # {{{1
-    # """
-    # Simple camel case function.
-    # @note Updated 2021-05-26.
-    #
-    # @seealso
-    # https://stackoverflow.com/questions/34420091/
-    # """
-    local sed string
-    [ "$#" -gt 0 ] || return 1
-    sed='sed'
-    for string in "$@"
-    do
-        _koopa_print "$string" \
-            | "$sed" -E 's/([ -_])([a-z])/\U\2/g'
-    done
-    return 0
-}
-
 _koopa_check_os() { # {{{1
     # """
     # Check that operating system is supported.
@@ -3036,7 +3016,6 @@ _koopa_include_prefix() { # {{{1
     return 0
 }
 
-# FIXME Move this to Bash.
 _koopa_is_aarch64() { # {{{1
     # """
     # Is the architecture ARM 64-bit?
@@ -3074,7 +3053,6 @@ _koopa_is_alias() { # {{{1
     return 0
 }
 
-# FIXME Move this to Bash library.
 _koopa_is_alpine() { # {{{1
     # """
     # Is the operating system Alpine Linux?
@@ -3646,32 +3624,6 @@ _koopa_julia_packages_prefix() { # {{{1
     __koopa_packages_prefix 'julia' "$@"
 }
 
-_koopa_kebab_case_simple() { # {{{1
-    # """
-    # Simple snake case function.
-    # @note Updated 2021-06-03.
-    #
-    # @seealso
-    # - Exported 'kebab-case' that uses R syntactic internally.
-    #
-    # @examples
-    # _koopa_kebab_case_simple 'hello world'
-    # ## hello-world
-    #
-    # _koopa_kebab_case_simple 'bcbio-nextgen.py'
-    # ## bcbio-nextgen-py
-    # """
-    local string
-    [ "$#" -gt 0 ] || return 1
-    for string in "$@"
-    do
-        string="$(_koopa_gsub '[^-A-Za-z0-9]' '-' "$string")"
-        string="$(_koopa_lowercase "$string")"
-        _koopa_print "$string"
-    done
-    return 0
-}
-
 _koopa_koopa_prefix() { # {{{1
     # """
     # Koopa prefix (home).
@@ -3704,7 +3656,6 @@ _koopa_local_data_prefix() { # {{{1
     return 0
 }
 
-# FIXME Consider making this internal with '__koopa'.
 _koopa_locate_emacs() { # {{{1
     # """
     # Emacs binary for alias functions.
@@ -3788,28 +3739,6 @@ _koopa_locate_shell() { # {{{1
     fi
     [ -n "$shell" ] || return 1
     _koopa_print "$shell"
-    return 0
-}
-
-_koopa_lowercase() { # {{{1
-    # """
-    # Transform string to lowercase.
-    # @note Updated 2021-05-25.
-    #
-    # awk alternative:
-    # > _koopa_print "$string" | "$awk" '{print tolower($0)}'
-    #
-    # @seealso
-    # https://stackoverflow.com/questions/2264428
-    # """
-    local string tr
-    [ "$#" -gt 0 ] || return 1
-    tr='tr'
-    for string in "$@"
-    do
-        _koopa_print "$string" \
-            | "$tr" '[:upper:]' '[:lower:]'
-    done
     return 0
 }
 
@@ -4003,7 +3932,6 @@ _koopa_macos_julia_prefix() { # {{{1
     _koopa_print "$prefix"
 }
 
-# FIXME Can this go into Bash?
 _koopa_macos_os_codename() { # {{{1
     # """
     # macOS OS codename (marketing name).
@@ -4080,7 +4008,6 @@ _koopa_macos_os_codename() { # {{{1
     return 0
 }
 
-# FIXME Can this go into Bash?
 _koopa_macos_os_version() { # {{{1
     # """
     # macOS version.
@@ -4222,7 +4149,7 @@ _koopa_monorepo_prefix() { # {{{1
     return 0
 }
 
-# FIXME Move this to Bash library.
+# FIXME Move this to Bash library (print.sh) file.
 _koopa_ngettext() { # {{{1
     # """
     # Translate a text message.
@@ -4560,11 +4487,60 @@ _koopa_print_white_bold() { # {{{1
     return 0
 }
 
-# FIXME Rework this as Bash and Zsh-specific prompts.
-_koopa_prompt() { # {{{1
+_koopa_prompt_conda() { # {{{1
     # """
-    # Customize the interactive prompt.
-    # @note Updated 2021-09-21.
+    # Get conda environment name for prompt string.
+    # @note Updated 2021-08-17.
+    # """
+    local env
+    [ "$#" -eq 0 ] || return 1
+    env="$(_koopa_conda_env_name)"
+    [ -n "$env" ] || return 0
+    _koopa_print " conda:${env}"
+    return 0
+}
+
+_koopa_prompt_git() { # {{{1
+    # """
+    # Return the current git branch, if applicable.
+    # @note Updated 2021-08-19.
+    #
+    # Also indicate status with '*' if dirty (i.e. has unstaged changes).
+    # """
+    local git_branch git_status
+    [ "$#" -eq 0 ] || return 1
+    _koopa_is_git_repo || return 0
+    git_branch="$(_koopa_git_branch)"
+    if _koopa_is_git_repo_clean
+    then
+        git_status=''
+    else
+        git_status='*'
+    fi
+    _koopa_print " ${git_branch}${git_status}"
+    return 0
+}
+
+_koopa_prompt_python_venv() { # {{{1
+    # """
+    # Get Python virtual environment name for prompt string.
+    # @note Updated 2021-06-14.
+    #
+    # See also: https://stackoverflow.com/questions/10406926
+    # """
+    local env
+    [ "$#" -eq 0 ] || return 1
+    env="$(_koopa_python_venv_name)"
+    [ -n "$env" ] || return 0
+    _koopa_print " venv:${env}"
+    return 0
+}
+
+# FIXME Split this out into separate Bash and Zsh variants.
+_koopa_prompt_string() { # {{{1
+    # """
+    # Customize the interactive prompt string.
+    # @note Updated 2021-01-20.
     #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
@@ -4662,55 +4638,6 @@ _koopa_prompt() { # {{{1
         "$wd" "$git" \
         "$newline" \
         "$prompt"
-    return 0
-}
-
-_koopa_prompt_conda() { # {{{1
-    # """
-    # Get conda environment name for prompt string.
-    # @note Updated 2021-08-17.
-    # """
-    local env
-    [ "$#" -eq 0 ] || return 1
-    env="$(_koopa_conda_env_name)"
-    [ -n "$env" ] || return 0
-    _koopa_print " conda:${env}"
-    return 0
-}
-
-_koopa_prompt_git() { # {{{1
-    # """
-    # Return the current git branch, if applicable.
-    # @note Updated 2021-08-19.
-    #
-    # Also indicate status with '*' if dirty (i.e. has unstaged changes).
-    # """
-    local git_branch git_status
-    [ "$#" -eq 0 ] || return 1
-    _koopa_is_git_repo || return 0
-    git_branch="$(_koopa_git_branch)"
-    if _koopa_is_git_repo_clean
-    then
-        git_status=''
-    else
-        git_status='*'
-    fi
-    _koopa_print " ${git_branch}${git_status}"
-    return 0
-}
-
-_koopa_prompt_python_venv() { # {{{1
-    # """
-    # Get Python virtual environment name for prompt string.
-    # @note Updated 2021-06-14.
-    #
-    # See also: https://stackoverflow.com/questions/10406926
-    # """
-    local env
-    [ "$#" -eq 0 ] || return 1
-    env="$(_koopa_python_venv_name)"
-    [ -n "$env" ] || return 0
-    _koopa_print " venv:${env}"
     return 0
 }
 
@@ -4877,33 +4804,6 @@ _koopa_shell_name() { # {{{1
     str="$(basename "$shell")"
     [ -n "$str" ] || return 1
     _koopa_print "$str"
-    return 0
-}
-
-# FIXME Move this to Bash library.
-_koopa_snake_case_simple() { # {{{1
-    # """
-    # Simple snake case function.
-    # @note Updated 2021-06-03.
-    #
-    # @seealso
-    # - Exported 'snake-case' that uses R syntactic internally.
-    #
-    # @examples
-    # _koopa_snake_case_simple 'hello world'
-    # ## hello_world
-    #
-    # _koopa_snake_case_simple 'bcbio-nextgen.py'
-    # ## bcbio_nextgen_py
-    # """
-    local string
-    [ "$#" -gt 0 ] || return 1
-    for string in "$@"
-    do
-        string="$(_koopa_gsub '[^A-Za-z0-9_]' '_' "$string")"
-        string="$(_koopa_lowercase "$string")"
-        _koopa_print "$string"
-    done
     return 0
 }
 
