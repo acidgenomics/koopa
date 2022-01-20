@@ -401,13 +401,6 @@ _koopa_activate_conda() { # {{{1
     return 0
 }
 
-# FIXME Rework this, using GNU coreutils on macOS except for cp, which currently
-# has permissions issues on NFS file mounts. Usage of '--archive'/'-a' flag
-# can also be problematic and warn about ACLs onto NFS file mounts.
-# FIXME We need to switch rm back to GNU rm, so we can use
-# '--interactive=once'/-I', which is way better than prompting to remove for
-# each file.
-
 _koopa_activate_coreutils_aliases() { # {{{1
     # """
     # Activate GNU/BSD coreutils aliases.
@@ -443,8 +436,6 @@ _koopa_activate_coreutils_aliases() { # {{{1
     elif _koopa_is_macos
     then
         # BSD coreutils.
-        # FIXME usage of archive '-a' flag here can result in warnings on
-        # NFS mounts and other non-APFS file systems...
         cp_args='-ai'
         ln_args='-ins'
         mkdir_args='-p'
@@ -618,7 +609,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2021-12-01.
+    # @note Updated 2022-01-20.
     #
     # Don't activate 'binutils' here. Can mess up R package compilation.
     # """
@@ -632,60 +623,32 @@ _koopa_activate_homebrew() { # {{{1
     export HOMEBREW_NO_AUTO_UPDATE=1
     export HOMEBREW_NO_ENV_HINTS=1
     export HOMEBREW_PREFIX="$prefix"
-    _koopa_is_macos || return 0
-    _koopa_activate_homebrew_opt_prefix \
-        'bc' \
-        'curl' \
-        'gnu-getopt' \
-        'ncurses' \
-        'openssl@3' \
-        'ruby' \
-        'texinfo'
-    _koopa_activate_homebrew_opt_libexec_prefix \
-        'man-db'
-    _koopa_activate_homebrew_opt_gnu_prefix \
-        'coreutils' \
-        'findutils' \
-        'gnu-sed' \
-        'gnu-tar' \
-        'gnu-which' \
-        'grep' \
-        'make'
-    # Casks are macOS-specific.
-    _koopa_activate_homebrew_cask_google_cloud_sdk
-    export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
+    if _koopa_is_macos
+    then
+        _koopa_activate_homebrew_opt_prefix \
+            'bc' \
+            'curl' \
+            'gnu-getopt' \
+            'ncurses' \
+            'openssl@3' \
+            'ruby' \
+            'texinfo'
+        _koopa_activate_homebrew_opt_libexec_prefix \
+            'man-db'
+        _koopa_activate_homebrew_opt_gnu_prefix \
+            'coreutils' \
+            'findutils' \
+            'gnu-sed' \
+            'gnu-tar' \
+            'gnu-which' \
+            'grep' \
+            'make'
+        _koopa_macos_activate_google_cloud_sdk
+        export HOMEBREW_CASK_OPTS='--no-binaries --no-quarantine'
+    fi
     return 0
 }
 
-_koopa_activate_homebrew_cask_google_cloud_sdk() { # {{{1
-    # """
-    # Activate Homebrew Google Cloud SDK.
-    # @note Updated 2022-01-13.
-    #
-    # @seealso
-    # - https://cloud.google.com/sdk/docs/install#mac
-    # """
-    local brew_prefix prefix python
-    [ "$#" -eq 0 ] || return 1
-    brew_prefix="$(_koopa_homebrew_prefix)"
-    prefix="${brew_prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
-    _koopa_activate_prefix "$prefix"
-    python="${brew_prefix}/opt/python@3.8/bin/python3.8"
-    export CLOUDSDK_PYTHON="$python"
-    # Alternate (slower) approach that enables autocompletion.
-    # > local shell
-    # > [ -d "$prefix" ] || return 0
-    # > shell="$(_koopa_shell_name)"
-    # > # shellcheck source=/dev/null
-    # > [ -f "${prefix}/path.${shell}.inc" ] && \
-    # >     . "${prefix}/path.${shell}.inc"
-    # > # shellcheck source=/dev/null
-    # > [ -f "${prefix}/completion.${shell}.inc" ] && \
-    # >     . "${prefix}/completion.${shell}.inc"
-    return 0
-}
-
-# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix for a GNU program.
@@ -720,7 +683,6 @@ _koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
     # """
     # Activate Homebrew opt libexec prefix.
@@ -742,7 +704,6 @@ _koopa_activate_homebrew_opt_libexec_prefix() { # {{{1
     return 0
 }
 
-# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_homebrew_opt_prefix() { # {{{1
     # """
     # Activate Homebrew opt prefix.
@@ -830,37 +791,6 @@ _koopa_activate_lesspipe() { # {{{1
     _koopa_is_installed 'lesspipe.sh' || return 0
     export LESS_ADVANCED_PREPROCESSOR=1
     export LESSOPEN='|lesspipe.sh %s'
-    return 0
-}
-
-_koopa_activate_local_etc_profile() { # {{{1
-    # """
-    # Source 'profile.d' scripts in '/usr/local/etc'.
-    # @note Updated 2020-08-05.
-    #
-    # Currently only supported for Bash.
-    # """
-    local make_prefix prefix shell
-    [ "$#" -eq 0 ] || return 1
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
-        'bash')
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    make_prefix="$(_koopa_make_prefix)"
-    prefix="${make_prefix}/etc/profile.d"
-    [ -d "$prefix" ] || return 0
-    for script in "${prefix}/"*'.sh'
-    do
-        if [ -r "$script" ]
-        then
-            # shellcheck source=/dev/null
-            . "$script"
-        fi
-    done
     return 0
 }
 
@@ -996,7 +926,6 @@ _koopa_activate_openjdk() { # {{{1
     return 0
 }
 
-# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_opt_prefix() { # {{{1
     # """
     # Activate koopa opt prefix.
@@ -1148,7 +1077,6 @@ _koopa_activate_pkg_config() { # {{{1
     return 0
 }
 
-# FIXME Need corresponding deactivate function, which is useful for scripting.
 _koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure 'PATH', 'PKG_CONFIG_PATH' and 'MANPATH' for a
@@ -2257,35 +2185,6 @@ _koopa_arch() { # {{{1
     return 0
 }
 
-_koopa_arch2() { # {{{1
-    # """
-    # Alternative platform architecture.
-    # @note Updated 2021-05-26.
-    #
-    # e.g. Intel: amd64; ARM: arm64.
-    #
-    # @seealso
-    # - https://wiki.debian.org/ArchitectureSpecificsMemo
-    # """
-    local x
-    [ "$#" -eq 0 ] || return 1
-    x="$(_koopa_arch)"
-    case "$x" in
-        'aarch64')
-            x='arm64'
-            ;;
-        'x86_64')
-            x='amd64'
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
-
 _koopa_aspera_prefix() { # {{{1
     # """
     # Aspera Connect prefix.
@@ -2328,6 +2227,7 @@ _koopa_boolean_nounset() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
@@ -2672,25 +2572,6 @@ _koopa_ensembl_perl_api_prefix() { # {{{1
     return 0
 }
 
-# FIXME Is this OK to take out?
-_koopa_exec_dir() { # {{{1
-    # """
-    # Execute multiple shell scripts in a directory.
-    # @note Updated 2020-07-23.
-    # """
-    local dir file
-    [ "$#" -eq 1 ] || return 1
-    dir="${1:?}"
-    [ -d "$dir" ] || return 0
-    for file in "${dir}/"*'.sh'
-    do
-        [ -x "$file" ] || continue
-        # shellcheck source=/dev/null
-        "$file"
-    done
-    return 0
-}
-
 _koopa_export_editor() { # {{{1
     # """
     # Export 'EDITOR' variable.
@@ -2929,6 +2810,7 @@ _koopa_git_branch() { # {{{1
     return 0
 }
 
+# FIXME Export this in Bash POSIX file.
 _koopa_git_repo_has_unstaged_changes() { # {{{1
     # """
     # Are there unstaged changes in current git repo?
@@ -2949,6 +2831,7 @@ _koopa_git_repo_has_unstaged_changes() { # {{{1
     [ -n "$x" ]
 }
 
+# FIXME Export this in Bash POSIX file.
 _koopa_git_repo_needs_pull_or_push() { # {{{1
     # """
     # Does the current git repo need a pull or push?
@@ -3153,6 +3036,7 @@ _koopa_include_prefix() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash.
 _koopa_is_aarch64() { # {{{1
     # """
     # Is the architecture ARM 64-bit?
@@ -3190,6 +3074,7 @@ _koopa_is_alias() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_is_alpine() { # {{{1
     # """
     # Is the operating system Alpine Linux?
@@ -3953,6 +3838,34 @@ _koopa_macos_activate_color_mode() { # {{{1
     return 0
 }
 
+_koopa_macos_activate_google_cloud_sdk() { # {{{1
+    # """
+    # Activate macOS Google Cloud SDK Homebrew cask.
+    # @note Updated 2022-01-13.
+    #
+    # @seealso
+    # - https://cloud.google.com/sdk/docs/install#mac
+    # """
+    local brew_prefix prefix python
+    [ "$#" -eq 0 ] || return 1
+    brew_prefix="$(_koopa_homebrew_prefix)"
+    prefix="${brew_prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
+    _koopa_activate_prefix "$prefix"
+    python="${brew_prefix}/opt/python@3.8/bin/python3.8"
+    export CLOUDSDK_PYTHON="$python"
+    # Alternate (slower) approach that enables autocompletion.
+    # > local shell
+    # > [ -d "$prefix" ] || return 0
+    # > shell="$(_koopa_shell_name)"
+    # > # shellcheck source=/dev/null
+    # > [ -f "${prefix}/path.${shell}.inc" ] && \
+    # >     . "${prefix}/path.${shell}.inc"
+    # > # shellcheck source=/dev/null
+    # > [ -f "${prefix}/completion.${shell}.inc" ] && \
+    # >     . "${prefix}/completion.${shell}.inc"
+    return 0
+}
+
 _koopa_macos_activate_gpg_suite() { # {{{1
     # """
     # Activate MacGPG (gpg-suite) on macOS.
@@ -4289,38 +4202,6 @@ _koopa_make_prefix() { # {{{1
     return 0
 }
 
-# FIXME Is this OK to move to Bash?
-_koopa_mem_gb() { # {{{1
-    # """
-    # Get total system memory in GB.
-    # @note Updated 2021-05-26.
-    #
-    # - 1 GB / 1024 MB
-    # - 1 MB / 1024 KB
-    # - 1 KB / 1024 bytes
-    #
-    # Usage of 'int()' in awk rounds down.
-    # """
-    local awk denom mem
-    [ "$#" -eq 0 ] || return 1
-    awk='awk'
-    if _koopa_is_macos
-    then
-        mem="$(sysctl -n hw.memsize)"
-        denom=1073741824  # 1024^3; bytes
-    else
-        # shellcheck disable=SC2016
-        mem="$("$awk" '/MemTotal/ {print $2}' '/proc/meminfo')"
-        denom=1048576  # 1024^2; KB
-    fi
-    mem="$( \
-        "$awk" -v denom="$denom" -v mem="$mem" \
-        'BEGIN{ printf "%.0f\n", mem / denom }' \
-    )"
-    _koopa_print "$mem"
-    return 0
-}
-
 _koopa_msigdb_prefix() { # {{{1
     # """
     # MSigDB prefix.
@@ -4341,6 +4222,7 @@ _koopa_monorepo_prefix() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_ngettext() { # {{{1
     # """
     # Translate a text message.
@@ -4678,7 +4560,7 @@ _koopa_print_white_bold() { # {{{1
     return 0
 }
 
-# FIXME Split this out to Bash and Zsh-specific functions?
+# FIXME Rework this as Bash and Zsh-specific prompts.
 _koopa_prompt() { # {{{1
     # """
     # Customize the interactive prompt.
@@ -4998,25 +4880,7 @@ _koopa_shell_name() { # {{{1
     return 0
 }
 
-# FIXME Is this OK to take out?
-_koopa_source_dir() { # {{{1
-    # """
-    # Source multiple shell scripts in a directory.
-    # @note Updated 2020-07-23.
-    # """
-    local dir file
-    [ "$#" -eq 1 ] || return 1
-    dir="${1:?}"
-    [ -d "$dir" ] || return 0
-    for file in "${dir}/"*'.sh'
-    do
-        [ -f "$file" ] || continue
-        # shellcheck source=/dev/null
-        . "$file"
-    done
-    return 0
-}
-
+# FIXME Move this to Bash library.
 _koopa_snake_case_simple() { # {{{1
     # """
     # Simple snake case function.
@@ -5189,6 +5053,7 @@ _koopa_today() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_trim_ws() { # {{{1
     # """
     # Trim leading and trailing white-space from string.
@@ -5216,7 +5081,6 @@ _koopa_trim_ws() { # {{{1
     return 0
 }
 
-# FIXME OK to move this to Bash?
 _koopa_umask() { # {{{1
     # """
     # Set default file permissions.

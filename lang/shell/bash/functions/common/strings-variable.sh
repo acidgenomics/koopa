@@ -41,11 +41,40 @@ koopa::admin_group() { # {{{1
     return 0
 }
 
+koopa::arch2() { # {{{1
+    # """
+    # Alternative platform architecture.
+    # @note Updated 2022-01-20.
+    #
+    # e.g. Intel: amd64; ARM: arm64.
+    #
+    # @seealso
+    # - https://wiki.debian.org/ArchitectureSpecificsMemo
+    # """
+    local x
+    koopa::assert_has_no_args "$#"
+    case "$(koopa::arch)" in
+        'aarch64')
+            x='arm64'
+            ;;
+        'x86_64')
+            x='amd64'
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
+}
+
 koopa::compress_ext_pattern() { # {{{1
     # """
     # Compressed file extension pattern.
     # @note Updated 2022-01-11.
     # """
+    koopa::assert_has_no_args "$#"
     koopa::print '\.(bz2|gz|xz|zip)$'
     return 0
 }
@@ -57,15 +86,18 @@ koopa::cpu_count() { # {{{1
     # """
     local n
     koopa::assert_has_no_args "$#"
+    # FIXME Attempt to locate nproc but error gracefully here.
     if koopa::is_installed 'nproc'
     then
         n="$(nproc)"
     elif koopa::is_macos
     then
+        # FIXME Need to locate sysctl here.
         n="$(sysctl -n 'hw.ncpu')"
     elif koopa::is_linux
     then
-        n="$(getconf _NPROCESSORS_ONLN)"
+        # FIXME Need to locate getconf here.
+        n="$(getconf '_NPROCESSORS_ONLN')"
     else
         n=1
     fi
@@ -256,6 +288,49 @@ koopa::make_build_string() { # {{{1
     fi
     string="${arch}-${os_type}"
     koopa::print "$string"
+    return 0
+}
+
+# FIXME Need to locate sysctl on macOS.
+koopa::mem_gb() { # {{{1
+    # """
+    # Get total system memory in GB.
+    # @note Updated 2022-01-20.
+    #
+    # - 1 GB / 1024 MB
+    # - 1 MB / 1024 KB
+    # - 1 KB / 1024 bytes
+    #
+    # Usage of 'int()' in awk rounds down.
+    # """
+    local app dict
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [awk]='awk'
+    )
+    declare -A dict
+    if koopa::is_macos
+    then
+        # FIXME Need to locate this on macOS.
+        dict[mem]="$(sysctl -n 'hw.memsize')"
+        dict[denom]=1073741824  # 1024^3; bytes
+    elif koopa::is_linux
+    then
+        dict[meminfo]='/proc/meminfo'
+        koopa::assert_is_file "${dict[meminfo]}"
+        # shellcheck disable=SC2016
+        dict[mem]="$("${app[awk]}" '/MemTotal/ {print $2}' "${dict[meminfo]}")"
+        dict[denom]=1048576  # 1024^2; KB
+    else
+        koopa::stop 'Unsupported system.'
+    fi
+    mem="$( \
+        "${app[awk]}" \
+            -v denom="${dict[denom]}" \
+            -v mem="${dict[mem]}" \
+            'BEGIN{ printf "%.0f\n", mem / denom }' \
+    )"
+    koopa::print "$mem"
     return 0
 }
 
