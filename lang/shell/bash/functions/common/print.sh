@@ -265,6 +265,42 @@ koopa::missing_arg() { # {{{1
     koopa::stop 'Missing required argument.'
 }
 
+koopa::ngettext() { # {{{1
+    # """
+    # Translate a text message.
+    # @note Updated 2022-01-20.
+    #
+    # A function to dynamically handle singular/plural words.
+    #
+    # @examples
+    # koopa::ngettext 1 'sample' 'samples'
+    # ## sample
+    # koopa::ngettext 2 'sample' 'samples'
+    # ## samples
+    #
+    # @seealso
+    # - https://stat.ethz.ch/R-manual/R-devel/library/base/html/gettext.html
+    # - https://www.php.net/manual/en/function.ngettext.php
+    # - https://www.oreilly.com/library/view/bash-cookbook/
+    #       0596526784/ch13s08.html
+    # """
+    local dict
+    koopa::assert_has_args_eq "$#" 3
+    declare -A dict=(
+        [n]="${1:?}"
+        [msg1]="${2:?}"
+        [msg2]="${3:?}"
+    )
+    if [[ "${dict[n]}" -eq 1 ]]
+    then
+        dict[str]="${dict[msg1]}"
+    else
+        dict[str]="${dict[msg2]}"
+    fi
+    koopa::print "${dict[str]}"
+    return 0
+}
+
 koopa::status_fail() { # {{{1
     # """
     # 'FAIL' status.
