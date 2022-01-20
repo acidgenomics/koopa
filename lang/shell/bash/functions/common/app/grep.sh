@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using dict approach.
 koopa::grep() { # {{{1
     # """
     # grep matching.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-01-20.
     # """
-    local grep pos string
+    local app dict grep_cmd pos
     koopa::assert_has_args "$#"
-    grep=("$(koopa::locate_grep)")
-    grep_args=()
+    declare -A app=(
+        [grep]="$(koopa::locate_grep)"
+    )
+    declare -A dict
+    grep_cmd=("${app[grep]}")
     pos=()
     while (("$#"))
     do
@@ -17,23 +19,23 @@ koopa::grep() { # {{{1
         case "$1" in
             # Flags ------------------------------------------------------------
             '--extended-regexp')
-                grep_args+=('-E')
+                grep_cmd+=('-E')
                 shift 1
                 ;;
             '--fixed-strings')
-                grep_args+=('-F')
+                grep_cmd+=('-F')
                 shift 1
                 ;;
             '--invert-match')
-                grep_args+=('-v')
+                grep_cmd+=('-v')
                 shift 1
                 ;;
             '--only-matching')
-                grep_args+=('-o')
+                grep_cmd+=('-o')
                 shift 1
                 ;;
             '--sudo')
-                grep=('sudo' "${grep[@]}")
+                grep_cmd=('sudo' "${grep_cmd[@]}")
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -54,18 +56,18 @@ koopa::grep() { # {{{1
     if [[ "$#" -eq 1 ]]
     then
         # Piped input using stdin.
-        pattern="${1:?}"
+        dict[pattern]="${1:?}"
         shift 1
-        read -r -d '' string
-        koopa::print "$string" | "${grep[@]}" "${grep_args[@]}" "$pattern"
+        read -r -d '' "dict[string]"
+        koopa::print "${dict[string]}" | "${grep_cmd[@]}" "${dict[pattern]}"
     else
         # File mode.
         koopa::assert_has_args_eq "$#" 2
-        pattern="${1:?}"
-        file="${2:?}"
-        koopa::assert_is_file "$file"
-        koopa::assert_is_readable "$file"
-        "${grep[@]}" "${grep_args[@]}" "$pattern" "$file"
+        dict[pattern]="${1:?}"
+        dict[file]="${2:?}"
+        koopa::assert_is_file "${dict[file]}"
+        koopa::assert_is_readable "${dict[file]}"
+        "${grep_cmd[@]}" "${dict[pattern]}" "${dict[file]}"
     fi
     return 0
 }
