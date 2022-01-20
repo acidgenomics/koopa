@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework and improve dict approach.
 koopa::docker_push() { # {{{1
     # """
     # Push a local Docker build.
-    # Updated 2021-10-25.
+    # Updated 2022-01-20.
     #
     # Useful if GPG agent causes push failure.
     #
@@ -14,7 +13,7 @@ koopa::docker_push() { # {{{1
     # @examples
     # docker-push acidgenomics/debian:latest
     # """
-    local app image images json pattern server
+    local app dict pattern
     koopa::assert_has_args "$#"
     declare -A app=(
         [docker]="$(koopa::locate_docker)"
@@ -22,21 +21,25 @@ koopa::docker_push() { # {{{1
         [sort]="$(koopa::locate_sort)"
         [tr]="$(koopa::locate_tr)"
     )
-    # Consider allowing user to define, so we can support quay.io, for example.
-    server='docker.io'
+    declare -A dict=(
+        # Consider allowing user to define, so we can support quay.io.
+        [server]='docker.io'
+    )
     for pattern in "$@"
     do
-        # FIXME Use dict2 array approach here.
-        koopa::alert "Pushing images matching '${pattern}' to ${server}."
-        koopa::assert_is_matching_regex "$pattern" '^.+/.+$'
-        json="$( \
+        local dict2 image images
+        declare -A dict2=(
+            [pattern]="$pattern"
+        )
+        koopa::assert_is_matching_regex "${dict2[pattern]}" '^.+/.+$'
+        dict2[json]="$( \
             "${app[docker]}" inspect \
                 --format="{{json .RepoTags}}" \
-                "$pattern" \
+                "${dict2[pattern]}" \
         )"
         # Convert JSON to lines.
         readarray -t images <<< "$( \
-            koopa::print "$json" \
+            koopa::print "${dict2[json]}" \
                 | "${app[tr]}" ',' '\n' \
                 | "${app[sed]}" 's/^\[//' \
                 | "${app[sed]}" 's/\]$//' \
@@ -44,15 +47,14 @@ koopa::docker_push() { # {{{1
                 | "${app[sed]}" 's/\"$//g' \
                 | "${app[sort]}" \
         )"
-        if ! koopa::is_array_non_empty "${images[@]:-}"
+        if koopa::is_array_empty "${images[@]:-}"
         then
-            "${app[docker]}" image ls
-            koopa::stop "'${image}' failed to match any images."
+            koopa::stop "Failed to match any images with '${dict2[pattern]}'."
         fi
         for image in "${images[@]}"
         do
-            koopa::alert "Pushing '${image}'."
-            "${app[docker]}" push "${server}/${image}"
+            koopa::alert "Pushing '${image}' to '${dict[server]}'."
+            "${app[docker]}" push "${dict[server]}/${image}"
         done
     done
     return 0
