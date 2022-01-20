@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 # FIXME Need to move this to a separate file.
 koopa::configure_perl() { # {{{1
     # """
@@ -44,6 +45,8 @@ koopa::configure_perl() { # {{{1
     return 0
 }
 
+# FIXME Need to move this to a separate file.
+# FIXME Rework using app/dict approach.
 koopa:::install_perl() { # {{{1
     # """
     # Install Perl.

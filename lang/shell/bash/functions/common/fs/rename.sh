@@ -18,6 +18,7 @@ koopa_rename_from_csv() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::rename_lowercase() { # {{{1
     # """
     # Rename files to lowercase.

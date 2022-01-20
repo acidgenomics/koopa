@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa:::file_detect() { # {{{1
     # """
     # Is a string defined in a file?

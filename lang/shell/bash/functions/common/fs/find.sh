@@ -385,7 +385,10 @@ koopa::find() { # {{{1
             koopa::stop 'Invalid find engine.'
             ;;
     esac
-    [[ "${dict[sort]}" -eq 1 ]] && sort="$(koopa::locate_sort)"
+    if [[ "${dict[sort]}" -eq 1 ]]
+    then
+        app[sort]="$(koopa::locate_sort)"
+    fi
     if [[ "${dict[print0]}" -eq 1 ]]
     then
         # NULL-byte ('\0') approach (non-POSIX).
@@ -399,7 +402,7 @@ koopa::find() { # {{{1
         if [[ "${dict[sort]}" -eq 1 ]]
         then
             readarray -t -d '' sorted_results < <( \
-                printf '%s\0' "${results[@]}" | "$sort" -z \
+                printf '%s\0' "${results[@]}" | "${app[sort]}" -z \
             )
             results=("${sorted_results[@]}")
         fi
@@ -413,7 +416,7 @@ koopa::find() { # {{{1
         if [[ "${dict[sort]}" -eq 1 ]]
         then
             readarray -t sorted_results <<< "$( \
-                koopa::print "${results[@]}" | "$sort" \
+                koopa::print "${results[@]}" | "${app[sort]}" \
             )"
             results=("${sorted_results[@]}")
         fi

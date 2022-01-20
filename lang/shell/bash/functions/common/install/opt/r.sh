@@ -46,6 +46,8 @@ koopa::configure_r() { # {{{1
     return 0
 }
 
+# FIXME Need to move this to a separate file.
+# FIXME Rework using app/dict approach.
 koopa:::install_r() { # {{{1
     # """
     # Install R.

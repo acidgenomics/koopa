@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.

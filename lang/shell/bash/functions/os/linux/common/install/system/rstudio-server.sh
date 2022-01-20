@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa:::linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.

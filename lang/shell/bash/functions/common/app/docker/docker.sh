@@ -363,6 +363,7 @@ koopa::docker_build_all_tags() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::docker_prune_all_images() { # {{{1
     # """
     # Prune all Docker images.
@@ -392,6 +393,7 @@ koopa::docker_prune_all_stale_tags() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::docker_prune_old_images() { # {{{
     # """
     # Prune old Docker images.
@@ -514,6 +516,7 @@ koopa::docker_remove() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::docker_run() { # {{{1
     # """
     # Run Docker image.
@@ -607,6 +610,7 @@ koopa::docker_run() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::docker_tag() { # {{{1
     # """
     # Add Docker tag.
@@ -710,6 +714,7 @@ koopa::is_docker_build_recent() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::ghcr_docker_login() { # {{{1
     # """
     # Log in to GitHub Container Registry.
@@ -728,6 +733,7 @@ koopa::ghcr_docker_login() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::ghcr_docker_push() { # {{{
     # """
     # Push an image to GitHub Container Registry.

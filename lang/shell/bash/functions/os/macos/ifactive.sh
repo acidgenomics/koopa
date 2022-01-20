@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa::macos_ifactive() { # {{{1
     # """
     # Display active interfaces.

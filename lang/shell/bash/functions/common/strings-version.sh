@@ -300,11 +300,9 @@ koopa::eigen_version() { # {{{1
 koopa::emacs_version() { # {{{1
     # """
     # Emacs version.
-    # @note Updated 2021-09-15.
+    # @note Updated 2022-01-20.
     # """
-    local emacs
-    emacs="$(koopa::locate_emacs)"
-    koopa::get_version "$emacs"
+    koopa::get_version "$(koopa::locate_emacs)"
 }
 
 # FIXME Consider adding support for pipe workflows here.
@@ -338,15 +336,9 @@ koopa::extract_version() { # {{{1
 koopa::gcc_version() { # {{{1
     # """
     # GCC version.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-01-20.
     # """
-    local x
-    koopa::assert_has_no_args "$#"
-    gcc="$(koopa::locate_gcc)"
-    x="$(koopa::return_version "$gcc")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
+    koopa::get_version "$(koopa::locate_gcc)"
 }
 
 koopa::get_version() { # {{{1
@@ -491,15 +483,9 @@ koopa::lesspipe_version() { # {{{1
 koopa::llvm_version() { # {{{1
     # """
     # LLVM version.
-    # @note Updated 2021-09-15.
+    # @note Updated 2022-01-20.
     # """
-    local app x
-    koopa::assert_has_no_args "$#"
-    app="$(koopa::locate_llvm_config)"
-    x="$(koopa::return_version "$app")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
+    koopa::get_version "$(koopa::locate_llvm_config)"
 }
 
 koopa::lmod_version() { # {{{1

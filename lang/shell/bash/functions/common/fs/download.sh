@@ -212,7 +212,7 @@ koopa::download_sra_run_info_table() { # {{{1
     return 0
 }
 
-# FIXME Rework this using dict approach.
+# FIXME Rework using app/dict approach.
 koopa::ftp_mirror() { # {{{1
     # """
     # Mirror contents from an FTP server.
@@ -269,7 +269,7 @@ koopa::ftp_mirror() { # {{{1
     return 0
 }
 
-# FIXME Rework using dict approach.
+# FIXME Rework using app/dict approach.
 koopa::parse_url() { # {{{1
     # """
     # Parse a URL using cURL.
@@ -315,7 +315,7 @@ koopa::parse_url() { # {{{1
     return 0
 }
 
-# FIXME Rework using dict approach.
+# FIXME Rework using app/dict approach.
 koopa::wget_recursive() { # {{{1
     # """
     # Download files with wget recursively.

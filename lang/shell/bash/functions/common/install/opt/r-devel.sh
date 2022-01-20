@@ -17,6 +17,7 @@
 #
 # Maybe it's the 'rsync-recommended' step not working on macOS?
 
+# FIXME Rework using app/dict approach.
 koopa:::install_r_devel() { # {{{1
     # """
     # Install R-devel.

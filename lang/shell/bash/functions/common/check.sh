@@ -105,6 +105,7 @@ koopa::check_group() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::check_mount() { # {{{1
     # """
     # Check if a drive is mounted.

@@ -26,6 +26,7 @@ koopa::clone() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 # NOTE Consider checking for trailing slashes on directories.
 koopa::rsync() { # {{{1
     # """

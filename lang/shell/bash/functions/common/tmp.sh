@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa::mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.

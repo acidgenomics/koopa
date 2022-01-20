@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa::move_files_in_batch() { # {{{1
     # Batch move a limited number of files.
     # @note Updated 2021-05-24.
@@ -27,6 +28,7 @@ koopa::move_files_in_batch() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 # FIXME Rework this using 'koopa::find'.
 # FIXME Rework this using xargs?
 koopa::move_files_up_1_level() { # {{{1

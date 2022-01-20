@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Need to wrap this.
-# FIXME Need to rework using dict approach.
+# FIXME Rework using app/dict approach.
 koopa::linux_update_google_cloud_sdk() { # {{{1
     # """
     # Update Google Cloud SDK.
