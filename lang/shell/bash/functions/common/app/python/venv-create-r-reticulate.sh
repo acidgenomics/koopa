@@ -1,30 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME RuntimeError: Building llvmlite requires LLVM 10.0.x or 9.0.x, got '13.0.0'. Be sure to set LLVM_CONFIG to the right executable path
-
 koopa::python_venv_create_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
     # @note Updated 2022-01-20.
     #
-    # Check that LLVM is configured correctly.
-    # umap-learn > numba > llvmlite
-    # Note that llvmlite currently requires LLVM 7+.
-    # https://github.com/numba/llvmlite/issues/523
-    #
     # macOS compiler flags:
     # These flags are now required for scikit-learn to compile, which now
     # requires OpenMP that is unsupported by system default gcc alias.
     #
-    # Ensure that we're using the correct Clang and LLVM settings.
-    #
-    # Refer to 'system/activate/program.sh' for LLVM_CONFIG export.
-    #
-    # clang: error: unsupported option '-fopenmp'
-    # brew info libomp
-    #
     # @seealso
-    # - http://llvmlite.pydata.org/
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
