@@ -228,10 +228,6 @@ koopa::boolean_nounset() { # {{{1
     _koopa_boolean_nounset "$@"
 }
 
-koopa::camel_case_simple() { # {{{1
-    _koopa_camel_case_simple "$@"
-}
-
 koopa::check_os() { # {{{1
     _koopa_check_os "$@"
 }
@@ -596,10 +592,6 @@ koopa::julia_packages_prefix() { # {{{1
     _koopa_julia_packages_prefix "$@"
 }
 
-koopa::kebab_case_simple() { # {{{1
-    _koopa_kebab_case_simple "$@"
-}
-
 koopa::koopa_prefix() { # {{{1
     _koopa_koopa_prefix "$@"
 }
@@ -614,10 +606,6 @@ koopa::local_data_prefix() { # {{{1
 
 koopa::locate_shell() { # {{{1
     _koopa_locate_shell "$@"
-}
-
-koopa::lowercase() { # {{{1
-    _koopa_lowercase "$@"
 }
 
 koopa::macos_activate_google_cloud_sdk() { # {{{1
@@ -688,10 +676,6 @@ koopa::monorepo_prefix() { # {{{1
     _koopa_monorepo_prefix "$@"
 }
 
-koopa::ngettext() { # {{{1
-    _koopa_ngettext "$@"
-}
-
 koopa::nim_packages_prefix() { # {{{1
     _koopa_nim_packages_prefix "$@"
 }
@@ -734,10 +718,6 @@ koopa::pipx_prefix() { # {{{1
 
 koopa::prelude_emacs_prefix() { # {{{1
     _koopa_prelude_emacs_prefix "$@"
-}
-
-koopa::prompt() { # {{{1
-    _koopa_prompt "$@"
 }
 
 koopa::print() { # {{{1
@@ -874,14 +854,6 @@ koopa::scripts_private_prefix() { # {{{1
 
 koopa::shell_name() { # {{{1
     _koopa_shell_name "$@"
-}
-
-koopa::snake_case_simple() { # {{{1
-    _koopa_snake_case_simple "$@"
-}
-
-koopa::source_dir() { # {{{1
-    _koopa_source_dir "$@"
 }
 
 koopa::spacemacs_prefix() { # {{{1
