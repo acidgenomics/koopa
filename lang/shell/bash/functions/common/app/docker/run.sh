@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa::docker_run() { # {{{1
     # """
     # Run Docker image.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-20.
     #
     # No longer using bind mounts by default.
     # Use named volumes, which have better cross-platform compatiblity, instead.
@@ -13,13 +12,16 @@ koopa::docker_run() { # {{{1
     # - https://docs.docker.com/storage/volumes/
     # - https://docs.docker.com/storage/bind-mounts/
     # """
-    local dict docker image pos run_args workdir
+    local app dict pos run_args
     koopa::assert_has_args "$#"
-    docker="$(koopa::locate_docker)"
+    declare -A app=(
+        [docker]="$(koopa::locate_docker)"
+    )
     declare -A dict=(
         [arm]=0
         [bash]=0
         [bind]=0
+        [workdir]='/mnt/work'
         [x86]=0
     )
     pos=()
@@ -55,8 +57,8 @@ koopa::docker_run() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 1
-    image="${1:?}"
-    docker pull "$image"
+    dict[image]="${1:?}"
+    docker pull "${dict[image]}"
     run_args=(
         '--interactive'
         '--tty'
@@ -70,10 +72,9 @@ koopa::docker_run() { # {{{1
         then
             koopa::stop "Do not set '--bind' when running at HOME."
         fi
-        workdir='/mnt/work'
         run_args+=(
-            "--volume=${PWD:?}:${workdir}"
-            "--workdir=${workdir}"
+            "--volume=${PWD:?}:${dict[workdir]}"
+            "--workdir=${dict[workdir]}"
         )
     fi
     # Manually override the platform, if desired.
@@ -84,12 +85,12 @@ koopa::docker_run() { # {{{1
     then
         run_args+=('--platform=linux/amd64')
     fi
-    run_args+=("$image")
+    run_args+=("${dict[image]}")
     # Enable an interactive Bash login session, if desired.
     if [[ "${dict[bash]}" -eq 1 ]]
     then
         run_args+=('bash' '-il')
     fi
-    "$docker" run "${run_args[@]}"
+    "${app[docker]}" run "${run_args[@]}"
     return 0
 }
