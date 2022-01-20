@@ -20,6 +20,10 @@ koopa::macos_locate_hdiutil() { # {{{1
     koopa::locate_app '/usr/bin/hdiutil'
 }
 
+koopa::macos_locate_ifconfig() { # {{{1
+    koopa::locate_app '/sbin/ifconfig'
+}
+
 koopa::macos_locate_installer() { # {{{1
     koopa::locate_app '/usr/sbin/installer'
 }
@@ -83,6 +87,10 @@ koopa::macos_locate_softwareupdate() { # {{{1
 
 koopa::macos_locate_sw_vers() { # {{{1
     koopa::locate_app '/usr/bin/sw_vers'
+}
+
+koopa::macos_locate_sysctl() { # {{{1
+    koopa::locate_app '/usr/sbin/sysctl'
 }
 
 koopa::macos_locate_xattr() { # {{{1
