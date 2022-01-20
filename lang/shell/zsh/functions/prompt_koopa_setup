@@ -2,7 +2,7 @@
 
 # """
 # Koopa ZSH prompt.
-# @note Updated 2021-02-20.
+# @note Updated 2022-01-20.
 #
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
@@ -24,7 +24,7 @@ _koopa_prompt_setup() { # {{{1
         _koopa_activate_starship
         return 0
     fi
-    PROMPT="$(_koopa_prompt)"
+    PROMPT="$(_koopa_prompt_string)"
 }
 
 _koopa_prompt_setup "$@"

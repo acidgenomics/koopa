@@ -85,7 +85,7 @@ _koopa_activate_bash_extras() { # {{{1
 _koopa_activate_bash_prompt() { # {{{1
     # """
     # Activate Bash prompt.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-01-20.
     # """
     [[ "$#" -eq 0 ]] || return 1
     _koopa_is_root && return 0
@@ -98,7 +98,7 @@ _koopa_activate_bash_prompt() { # {{{1
         _koopa_activate_starship
         [[ -n "${STARSHIP_SHELL:-}" ]] && return 0
     fi
-    PS1="$(_koopa_prompt)"
+    PS1="$(_koopa_prompt_string)"
     export PS1
     return 0
 }
