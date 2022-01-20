@@ -84,20 +84,22 @@ koopa::cpu_count() { # {{{1
     # Return a usable number of CPU cores.
     # @note Updated 2022-01-20.
     # """
-    local n
+    local app n
     koopa::assert_has_no_args "$#"
-    # FIXME Attempt to locate nproc but error gracefully here.
-    if koopa::is_installed 'nproc'
+    declare -A app=(
+        [nproc]="$(koopa::locate_nproc 2>/dev/null || true)"
+    )
+    if koopa::is_installed "${app[nproc]}"
     then
-        n="$(nproc)"
+        n="$("${app[nproc]}")"
     elif koopa::is_macos
     then
-        # FIXME Need to locate sysctl here.
-        n="$(sysctl -n 'hw.ncpu')"
+        app[sysctl]="$(koopa::macos_locate_sysctl)"
+        n="$("${app[sysctl]}" -n 'hw.ncpu')"
     elif koopa::is_linux
     then
-        # FIXME Need to locate getconf here.
-        n="$(getconf '_NPROCESSORS_ONLN')"
+        app[getconf]="$(koopa::linux_locate_getconf)"
+        n="$("${app[getconf]}" '_NPROCESSORS_ONLN')"
     else
         n=1
     fi
@@ -225,11 +227,10 @@ koopa::koopa_url() { # {{{1
     return 0
 }
 
-# FIXME Need to locate ifconfig and hostname here.
 koopa::local_ip_address() { # {{{1
     # """
     # Local IP address.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-01-20.
     #
     # Some systems (e.g. macOS) will return multiple IP address matches for
     # Ethernet and WiFi. Here we're simplying returning the first match, which
@@ -244,20 +245,20 @@ koopa::local_ip_address() { # {{{1
     )
     if koopa::is_macos
     then
-        koopa::assert_is_installed 'ifconfig'
+        app[ifconfig]="$(koopa::macos_locate_ifconfig)"
         # shellcheck disable=SC2016
         x="$( \
-            ifconfig \
+            "${app[ifconfig]}" \
             | koopa::grep 'inet ' \
             | koopa::grep 'broadcast' \
             | "${app[awk]}" '{print $2}' \
             | "${app[tail]}" -n 1
         )"
     else
-        koopa::assert_is_installed 'hostname'
+        app[hostname]="$(koopa::locate_hostname)"
         # shellcheck disable=SC2016
         x="$( \
-            hostname -I \
+            "${app[hostname]}" -I \
             | "${app[awk]}" '{print $1}' \
             | "${app[head]}" -n 1
         )"

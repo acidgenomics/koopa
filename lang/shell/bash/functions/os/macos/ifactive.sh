@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa::macos_ifactive() { # {{{1
     # """
     # Display active interfaces.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-20.
     # """
-    local pcregrep x
-    pcregrep="$(koopa::locate_pcregrep)"
+    local app x
+    declare -A app=(
+        [ifconfig]="$(koopa::macos_locate_ifconfig)"
+        [pcregrep]="$(koopa::locate_pcregrep)"
+    )
     x="$( \
-        ifconfig \
-            | "$pcregrep" -M -o '^[^\t:]+:([^\n]|\n\t)*status: active' \
+        "${app[ifconfig]}" \
+            | "${app[pcregrep]}" -M -o '^[^\t:]+:([^\n]|\n\t)*status: active' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"

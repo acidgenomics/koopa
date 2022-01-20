@@ -480,6 +480,14 @@ koopa::locate_head() { # {{{1
     koopa::locate_gnu_coreutils_app 'head'
 }
 
+koopa::locate_hostname() {
+    # """
+    # Locate 'hostname'.
+    # @note Updated 2022-01-20.
+    # """
+    koopa::locate_app '/bin/hostname'
+}
+
 koopa::locate_id() { # {{{1
     # """
     # Locate GNU 'id'.
