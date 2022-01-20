@@ -452,6 +452,7 @@ koopa::is_python_package_installed() { # {{{1
     koopa::assert_has_args "$#"
     python="$(koopa::locate_python)"
     version="$(koopa::get_version "$python")"
+    # FIXME Rework this step, passing in Python in directly instead.
     prefix="$(koopa::python_packages_prefix "$version")"
     [[ -d "$prefix" ]] || return 1
     for pkg in "$@"
