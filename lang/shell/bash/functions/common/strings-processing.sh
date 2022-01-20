@@ -1,5 +1,30 @@
 #!/usr/bin/env bash
 
+koopa::camel_case_simple() { # {{{1
+    # """
+    # Simple camel case function.
+    # @note Updated 2022-01-20.
+    #
+    # @examples
+    # koopa::camel_case_simple 'hello world'
+    # ## helloWorld
+    #
+    # @seealso
+    # https://stackoverflow.com/questions/34420091/
+    # """
+    local app string
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [sed]="$(koopa::locate_sed)"
+    )
+    for string in "$@"
+    do
+        koopa::print "$string" \
+            | "${app[sed]}" -E 's/([ -_])([a-z])/\U\2/g'
+    done
+    return 0
+}
+
 koopa::capitalize() { # {{{1
     # """
     # Capitalize the first letter (only) of a string.
@@ -20,6 +45,60 @@ koopa::capitalize() { # {{{1
     do
         str="$("${app[tr]}" '[:lower:]' '[:upper:]' <<< "${str:0:1}")${str:1}"
         koopa::print "$str"
+    done
+    return 0
+}
+
+koopa::kebab_case_simple() { # {{{1
+    # """
+    # Simple snake case function.
+    # @note Updated 2022-01-20.
+    #
+    # @seealso
+    # - Exported 'kebab-case' that uses R syntactic internally.
+    #
+    # @examples
+    # koopa::kebab_case_simple 'hello world'
+    # ## hello-world
+    #
+    # koopa::kebab_case_simple 'bcbio-nextgen.py'
+    # ## bcbio-nextgen-py
+    # """
+    local string
+    koopa::assert_has_args "$#"
+    for string in "$@"
+    do
+        string="$(koopa::gsub '[^-A-Za-z0-9]' '-' "$string")"
+        string="$(koopa::lowercase "$string")"
+        koopa::print "$string"
+    done
+    return 0
+}
+
+koopa::lowercase() { # {{{1
+    # """
+    # Transform string to lowercase.
+    # @note Updated 2022-01-20.
+    #
+    # awk alternative:
+    # > koopa::print "$string" | "${app[awk]}" '{print tolower($0)}'
+    #
+    # @examples
+    # koopa::lowercase 'HELLO WORLD'
+    # ## hello world
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/2264428
+    # """
+    local app string
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [tr]="$(koopa::locate_tr)"
+    )
+    for string in "$@"
+    do
+        koopa::print "$string" \
+            | "${app[tr]}" '[:upper:]' '[:lower:]'
     done
     return 0
 }
@@ -82,6 +161,32 @@ koopa::paste0() { # {{{1
     # # aaabbb
     # """
     koopa::paste --sep='' "$@"
+}
+
+koopa::snake_case_simple() { # {{{1
+    # """
+    # Simple snake case function.
+    # @note Updated 2022-01-20.
+    #
+    # @seealso
+    # - Exported 'snake-case' that uses R syntactic internally.
+    #
+    # @examples
+    # koopa::snake_case_simple 'hello world'
+    # ## hello_world
+    #
+    # koopa::snake_case_simple 'bcbio-nextgen.py'
+    # ## bcbio_nextgen_py
+    # """
+    local string
+    koopa::assert_has_args "$#"
+    for string in "$@"
+    do
+        string="$(koopa::gsub '[^A-Za-z0-9_]' '_' "$string")"
+        string="$(koopa::lowercase "$string")"
+        koopa::print "$string"
+    done
+    return 0
 }
 
 koopa::to_string() { # {{{1
