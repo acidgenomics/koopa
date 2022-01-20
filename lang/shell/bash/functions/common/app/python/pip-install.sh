@@ -60,6 +60,7 @@ koopa::python_pip_install() { # {{{1
     pkgs=("$@")
     koopa::configure_python "${app[python]}"
     dict[version]="$(koopa::get_version "${app[python]}")"
+    # FIXME Rework this, passing in Python directly instead.
     dict[target]="$(koopa::python_packages_prefix "${dict[version]}")"
     koopa::dl \
         'Python' "${app[python]}" \

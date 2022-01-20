@@ -534,6 +534,7 @@ _koopa_pyenv_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rework this, passing in Python instead of version...
 _koopa_python_packages_prefix() { # {{{1
     # """
     # Python site packages library prefix.
@@ -557,6 +558,7 @@ _koopa_python_venv_prefix() { # {{{1
     return 0
 }
 
+# FIXME Rework this, expecting R directly instead.
 _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
