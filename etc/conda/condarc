@@ -1,6 +1,6 @@
 # """
 # Conda configuration.
-# Updated 2022-01-13.
+# Updated 2022-01-21.
 #
 # See also:
 # - 'conda config --set'
@@ -17,7 +17,9 @@ add_pip_as_python_dependency: True
 
 allow_other_channels: False
 
-always_yes: True
+# always_yes: True
+
+auto_activate_base: False
 
 auto_update_conda: False
 
