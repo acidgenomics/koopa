@@ -2826,7 +2826,6 @@ _koopa_go_prefix() { # {{{1
     return 0
 }
 
-# FIXME Move this to Bash library.
 _koopa_group() { # {{{1
     # """
     # Current user's default group.
@@ -2837,7 +2836,6 @@ _koopa_group() { # {{{1
     return 0
 }
 
-# FIXME Move this to Bash library.
 _koopa_group_id() { # {{{1
     # """
     # Current user's default group ID.
@@ -2845,33 +2843,6 @@ _koopa_group_id() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     __koopa_id -g
-    return 0
-}
-
-# FIXME Move this to Bash library.
-_koopa_gsub() { # {{{1
-    # """
-    # Global substitution.
-    # @note Updated 2021-05-25.
-    #
-    # Instead of using '|' in sed here, we can also escape '/'.
-    #
-    # @examples
-    # _koopa_gsub a '' aabb aacc
-    # ## bb
-    # ## cc
-    # """
-    local pattern replacement sed string
-    [ "$#" -ge 3 ] || return 1
-    pattern="${1:?}"
-    replacement="${2:-}"
-    shift 2
-    sed='sed'
-    for string in "$@"
-    do
-        _koopa_print "$string" \
-            | "$sed" -E "s|${pattern}|${replacement}|g"
-    done
     return 0
 }
 
@@ -3205,23 +3176,6 @@ _koopa_is_git_repo_top_level() { # {{{1
     [ "$#" -le 1 ] || return 1
     dir="${1:-.}"
     [ -e "${dir}/.git" ]
-}
-
-# FIXME Move this to Bash library.
-_koopa_is_gnu() { # {{{1
-    # """
-    # Is a GNU program installed?
-    # @note Updated 2020-07-20.
-    # """
-    local cmd str
-    [ "$#" -gt 0 ] || return 1
-    for cmd in "$@"
-    do
-        _koopa_is_installed "$cmd" || return 1
-        str="$("$cmd" --version 2>&1 || true)"
-        _koopa_str_detect_posix "$str" 'GNU' || return 1
-    done
-    return 0
 }
 
 _koopa_is_host() { # {{{1
@@ -4735,34 +4689,6 @@ _koopa_strip_trailing_slash() { # {{{1
     # """
     [ "$#" -gt 0 ] || return 1
     _koopa_strip_right '/' "$@"
-    return 0
-}
-
-# FIXME Move this to Bash library.
-_koopa_sub() { # {{{1
-    # """
-    # Substitution.
-    # @note Updated 2021-05-21.
-    #
-    # Instead of using '|' in sed here, we can also escape '/'.
-    #
-    # @seealso _koopa_gsub (for global matching).
-    # @examples
-    # _koopa_sub a '' aaa aaa
-    # ## aa
-    # ## aa
-    # """
-    local pattern replacement sed string
-    [ "$#" -ge 3 ] || return 1
-    pattern="${1:?}"
-    replacement="${2:-}"
-    shift 2
-    sed='sed'
-    for string in "$@"
-    do
-        _koopa_print "$string" \
-            | "$sed" -E "s|${pattern}|${replacement}|"
-    done
     return 0
 }
 
