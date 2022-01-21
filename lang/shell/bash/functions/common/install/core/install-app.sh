@@ -336,3 +336,12 @@ installed at '${dict[prefix]}'."
     fi
     return 0
 }
+
+koopa::reinstall_app() { # {{{1
+    # """
+    # Reinstall an application (alias).
+    # @note Updated 2022-01-21.
+    # """
+    koopa::assert_has_args "$#"
+    koopa::koopa install "$@" --reinstall
+}
