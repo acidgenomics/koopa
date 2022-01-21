@@ -123,6 +123,14 @@ koopa::cairo_version() { # {{{1
     koopa:::pkg_config_version 'cairo'
 }
 
+koopa::conda_version() { # {{{1
+    # """
+    # Conda version.
+    # @note Updated 2022-01-21.
+    # """
+    koopa::get_version "$(koopa::locate_conda)"
+}
+
 koopa::current_bcbio_nextgen_version() { # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.
@@ -504,6 +512,14 @@ koopa::lmod_version() { # {{{1
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
+}
+
+koopa::mamba_version() { # {{{1
+    # """
+    # Mamba version.
+    # @note Updated 2022-01-21.
+    # """
+    koopa::get_version "$(koopa::locate_mamba)"
 }
 
 koopa::openjdk_version() { # {{{1
