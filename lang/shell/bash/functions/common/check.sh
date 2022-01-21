@@ -151,14 +151,14 @@ koopa::check_system() { # {{{1
     # @note Updated 2022-01-21.
     # """
     koopa::assert_has_no_args "$#"
+    koopa::check_exports
+    koopa::check_disk '/'
     koopa::assert_is_installed 'R'
     if ! koopa::is_r_package_installed 'koopa'
     then
         koopa::install_r_koopa
     fi
     koopa::r_koopa --vanilla 'cliCheckSystem'
-    koopa::check_exports
-    koopa::check_disk '/'
     koopa::alert_success 'System passed all checks.'
     return 0
 }
