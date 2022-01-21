@@ -1452,7 +1452,8 @@ _koopa_activate_today_bucket() { # {{{1
 _koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification.
-    # @note Updated 2021-06-11.
+    # @note Updated 2022-01-21.
+    #
     # @seealso
     # - https://developer.gnome.org/basedir-spec/
     # - https://specifications.freedesktop.org/basedir-spec/
@@ -1491,17 +1492,6 @@ _koopa_activate_xdg() { # {{{1
         XDG_DATA_HOME="$(_koopa_xdg_data_home)"
     fi
     export XDG_DATA_HOME
-    # XDG_RUNTIME_DIR.
-    if [ -z "${XDG_RUNTIME_DIR:-}" ]
-    then
-        XDG_RUNTIME_DIR="$(_koopa_xdg_runtime_dir)"
-    fi
-    if [ ! -d "$XDG_RUNTIME_DIR" ]
-    then
-        unset -v XDG_RUNTIME_DIR
-    else
-        export XDG_RUNTIME_DIR
-    fi
     return 0
 }
 
@@ -2708,34 +2698,6 @@ _koopa_export_shell() { # {{{1
     return 0
 }
 
-_koopa_export_tmpdir() { # {{{1
-    # """
-    # Export 'TMPDIR' variable.
-    # @note Updated 2021-05-14.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    if [ -z "${TMPDIR:-}" ]
-    then
-        TMPDIR='/tmp'
-    fi
-    export TMPDIR
-    return 0
-}
-
-_koopa_export_user() { # {{{1
-    # """
-    # Export 'USER' variable.
-    # @note Updated 2021-05-14.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    if [ -z "${USER:-}" ]
-    then
-        USER="$(_koopa_user)"
-    fi
-    export USER
-    return 0
-}
-
 _koopa_expr() { # {{{1
     # """
     # Quiet regular expression matching that is POSIX compliant.
@@ -2864,6 +2826,7 @@ _koopa_go_prefix() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_group() { # {{{1
     # """
     # Current user's default group.
@@ -2874,6 +2837,7 @@ _koopa_group() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_group_id() { # {{{1
     # """
     # Current user's default group ID.
@@ -2884,6 +2848,7 @@ _koopa_group_id() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_gsub() { # {{{1
     # """
     # Global substitution.
@@ -2990,7 +2955,7 @@ _koopa_host_id() { # {{{1
     if [ -r '/etc/hostname' ]
     then
         id="$(cat '/etc/hostname')"
-    elif _koopa_is_installed hostname
+    elif _koopa_is_installed 'hostname'
     then
         id="$(hostname -f)"
     else
@@ -3167,16 +3132,16 @@ _koopa_is_debian_like() { # {{{1
 _koopa_is_docker() { # {{{1
     # """
     # Is the current session running inside Docker?
-    # @note Updated 2021-05-25.
+    # @note Updated 2022-01-21.
     # @seealso
     # - https://stackoverflow.com/questions/23513045
     # """
     local file grep pattern
     [ "$#" -eq 0 ] || return 1
     file='/proc/1/cgroup'
-    [ -f "$file" ] || return 1
-    pattern=':/docker/'
     grep='grep'
+    pattern=':/docker/'
+    [ -f "$file" ] || return 1
     "$grep" -q "$pattern" "$file"
 }
 
@@ -3201,14 +3166,14 @@ _koopa_is_fedora_like() { # {{{1
 _koopa_is_git_repo() { # {{{1i
     # """
     # Is the working directory a git repository?
-    # @note Updated 2021-08-19.
+    # @note Updated 2022-01-21.
     # @seealso
     # - https://stackoverflow.com/questions/2180270
     # """
     local git
     [ "$#" -eq 0 ] || return 1
-    _koopa_is_git_repo_top_level '.' && return 0
     git='git'
+    _koopa_is_git_repo_top_level '.' && return 0
     "$git" rev-parse --git-dir >/dev/null 2>&1 || return 1
     return 0
 }
@@ -3242,6 +3207,7 @@ _koopa_is_git_repo_top_level() { # {{{1
     [ -e "${dir}/.git" ]
 }
 
+# FIXME Move this to Bash library.
 _koopa_is_gnu() { # {{{1
     # """
     # Is a GNU program installed?
@@ -3364,13 +3330,13 @@ _koopa_is_os_like() { # {{{1
 _koopa_is_os_version() { # {{{1
     # """
     # Is a specific OS version?
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-01-21.
     # """
     local file grep version
     [ "$#" -eq 1 ] || return 1
+    file='/etc/os-release'
     grep='grep'
     version="${1:?}"
-    file='/etc/os-release'
     [ -f "$file" ] || return 1
     "$grep" -q "VERSION_ID=\"${version}" "$file"
 }
@@ -4877,6 +4843,7 @@ _koopa_strip_trailing_slash() { # {{{1
     return 0
 }
 
+# FIXME Move this to Bash library.
 _koopa_sub() { # {{{1
     # """
     # Substitution.
@@ -5086,31 +5053,5 @@ _koopa_xdg_local_home() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_print "${HOME:?}/.local"
-    return 0
-}
-
-_koopa_xdg_runtime_dir() { # {{{1
-    # """
-    # XDG runtime dir.
-    # @note Updated 2021-05-20.
-    #
-    # Specification:
-    # - Can only exist for the duration of the user's login.
-    # - Updated every 6 hours or set sticky bit if persistence is desired.
-    # - Should not store large files as it may be mounted as a tmpfs.
-    # """
-    local user_id x
-    [ "$#" -eq 0 ] || return 1
-    x="${XDG_RUNTIME_DIR:-}"
-    if [ -z "$x" ]
-    then
-        user_id="$(_koopa_user_id)"
-        x="/run/user/${user_id}"
-        if _koopa_is_macos
-        then
-            x="/tmp${x}"
-        fi
-    fi
-    _koopa_print "$x"
     return 0
 }
