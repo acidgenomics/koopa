@@ -364,10 +364,6 @@ koopa::group_id() { # {{{1
     _koopa_group_id "$@"
 }
 
-koopa::gsub() { # {{{1
-    _koopa_gsub "$@"
-}
-
 koopa::homebrew_cellar_prefix() { # {{{1
     _koopa_homebrew_cellar_prefix "$@"
 }
@@ -462,10 +458,6 @@ koopa::is_git_repo_clean() { # {{{1
 
 koopa::is_git_repo_top_level() { # {{{1
     _koopa_is_git_repo_top_level "$@"
-}
-
-koopa::is_gnu() { # {{{1
-    _koopa_is_gnu "$@"
 }
 
 koopa::is_host() { # {{{1
@@ -878,10 +870,6 @@ koopa::strip_right() { # {{{1
 
 koopa::strip_trailing_slash() { # {{{1
     _koopa_strip_trailing_slash "$@"
-}
-
-koopa::sub() { # {{{1
-    _koopa_sub "$@"
 }
 
 koopa::tests_prefix() { # {{{1
