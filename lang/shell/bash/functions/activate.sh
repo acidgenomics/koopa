@@ -134,29 +134,23 @@ _koopa_bash_prompt_string() { # {{{1
     # Bash prompt string (PS1).
     # @note Updated 2022-01-21.
     #
+    # This is a modified, lighter version of Pure, by Sindre Sorhus.
+    #
     # Subshell exec need to be escaped here, so they are evaluated dynamically
     # when the prompt is refreshed.
     #
     # Unicode characters don't work well with some Windows fonts.
     #
-    # User name and host.
-    # - Bash : user='\u@\h'
-    # - ZSH  : user='%n@%m'
-    #
-    # Bash: The default value is '\s-\v\$ '.
-    #
-    # ZSH: conda environment activation is messing up '%m'/'%M' flag on macOS.
-    # This seems to be specific to macOS and doesn't happen on Linux.
+    # The default PS1 value is '\s-\v\$ '.
     #
     # See also:
-    # - https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/
-    #       robbyrussell.zsh-theme
+    # - https://github.com/sindresorhus/pure/
     # - https://www.cyberciti.biz/tips/
     #       howto-linux-unix-bash-shell-setup-prompt.html
     # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
     # """
     local dict
-    [ "$#" -eq 0 ] || return 1
+    [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
         [conda]="\$(_koopa_prompt_conda)"
         [conda_color]=33

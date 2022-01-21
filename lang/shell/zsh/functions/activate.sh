@@ -185,3 +185,63 @@ _koopa_activate_zsh_reverse_search() { # {{{1
     fi
     return 0
 }
+
+_koopa_zsh_prompt_string() { # {{{1
+    # """
+    # Zsh prompt string (PS1).
+    # @note Updated 2022-01-21.
+    #
+    # This is a modified, lighter version of Pure, by Sindre Sorhus.
+    #
+    # Subshell exec need to be escaped here, so they are evaluated dynamically
+    # when the prompt is refreshed.
+    #
+    # Unicode characters don't work well with some Windows fonts.
+    #
+    # Conda environment activation is messing up '%m'/'%M' flag on macOS.
+    # This seems to be specific to macOS and doesn't happen on Linux.
+    #
+    # Prompt variables:
+    # - %* : time
+    # - %F : color dict
+    # - %M : machine (host) name (full)
+    # - %f : reset color
+    # - %m : machine (host) name (up to first '.')
+    # - %n : user name
+    # - %~ : current path
+    # - %(?..) : prompt conditional - %(condition.true.false)
+    #
+    # See also:
+    # - https://github.com/sindresorhus/pure/
+    # - https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/
+    #       robbyrussell.zsh-theme
+    # """
+    local dict
+    [[ "$#" -eq 0 ]] || return 1
+    declare -A dict=(
+        [conda]="\$(_koopa_prompt_conda)"
+        [conda_color]="${fg[yellow]}"
+        [git]="\$(_koopa_prompt_git)"
+        [git_color]="${fg[green]}"
+        [newline]=$'\n'
+        [prompt]='❯'  # default is '%%'.
+        [prompt_color]="${fg[magenta]}"
+        [user]="$(_koopa_user)@(_koopa_hostname)"
+        [user_color]="${fg[cyan]}"
+        [venv]="\$(_koopa_prompt_python_venv)"
+        [venv_color]="${fg[yellow]}"
+        [wd]='%~'
+        [wd_color]="${fg[blue]}"
+    )
+    printf '%s%s%s%s%s%s%s%s%s ' \
+        "${dict[newline]}" \
+        "%F%{${dict[user_color]}%}${dict[user]}%f" \
+        "%F%{${dict[conda_color]}%}${dict[conda]}%f" \
+        "%F%{${dict[venv_color]}%}${dict[venv]}%f" \
+        "${dict[newline]}" \
+        "%F%{${dict[wd_color]}%}${dict[wd]}%f" \
+        "%F%{${dict[git_color]}%}${dict[git]}%f" \
+        "${dict[newline]}" \
+        "%F%{${dict[prompt_color]}%}${dict[prompt]}%f"
+    return 0
+}
