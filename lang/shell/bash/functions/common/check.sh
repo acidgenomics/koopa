@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Switch to using dict approach.
 koopa::check_access_human() { # {{{1
     # """
     # Check if file or directory has expected human readable access.
@@ -23,6 +24,7 @@ koopa::check_access_human() { # {{{1
     return 0
 }
 
+# FIXME Switch to using dict approach.
 koopa::check_access_octal() { # {{{1
     # """
     # Check if file or directory has expected octal access.
@@ -49,14 +51,17 @@ koopa::check_access_octal() { # {{{1
 koopa::check_disk() { # {{{1
     # """
     # Check that disk has enough free space.
-    # @note Updated 2020-06-30.
+    # @note Updated 2022-01-21.
     # """
-    local limit used
-    limit=90
-    used="$(koopa::disk_pct_used "$@")"
-    if [[ "$used" -gt "$limit" ]]
+    local dict
+    koopa::assert_has_args "$#"
+    declare -A dict=(
+        [limit]=90
+        [used]="$(koopa::disk_pct_used "$@")"
+    )
+    if [[ "${dict[used]}" -gt "${dict[limit]}" ]]
     then
-        koopa::warn "Disk usage is ${used}%."
+        koopa::warn "Disk usage is ${dict[used]}%."
         return 1
     fi
     return 0
@@ -69,9 +74,9 @@ koopa::check_exports() { # {{{1
     #
     # Warn the user if they are setting unrecommended values.
     # """
+    local vars
     koopa::assert_has_no_args "$#"
     koopa::is_rstudio && return 0
-    local vars
     vars=(
         'JAVA_HOME'
         'LD_LIBRARY_PATH'
@@ -82,6 +87,7 @@ koopa::check_exports() { # {{{1
     return 0
 }
 
+# FIXME Switch to using dict appproach.
 koopa::check_group() { # {{{1
     # """
     # Check if file or directory has an expected group.
@@ -144,19 +150,19 @@ koopa::check_system() { # {{{1
     # Check system.
     # @note Updated 2022-01-21.
     # """
-    local current expected
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed R
+    koopa::assert_is_installed 'R'
     if ! koopa::is_r_package_installed 'koopa'
     then
         koopa::install_r_koopa
     fi
     koopa::r_koopa --vanilla 'cliCheckSystem'
     koopa::check_exports
-    koopa::check_disk
+    koopa::check_disk '/'
     return 0
 }
 
+# FIXME Switch to using dict approach.
 koopa::check_user() { # {{{1
     # """
     # Check if file or directory is owned by an expected user.
