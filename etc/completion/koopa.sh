@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-11-24.
+    # Updated 2022-01-21.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -32,6 +32,7 @@ _koopa_complete() { # {{{1
             'header'
             'install'
             'list'
+            'reinstall'
             'system'
             'test'
             'uninstall'
@@ -41,7 +42,7 @@ _koopa_complete() { # {{{1
         [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'koopa' ]]
     then
         case "${COMP_WORDS[COMP_CWORD-1]}" in
-            app)
+            'app')
                 args=(
                     'clean'
                     'list'
@@ -49,7 +50,7 @@ _koopa_complete() { # {{{1
                     'unlink'
                 )
                 ;;
-            configure)
+            'configure')
                 args=(
                     'dotfiles'
                     'go'
@@ -63,7 +64,7 @@ _koopa_complete() { # {{{1
                     'rust'
                 )
                 ;;
-            header)
+            'header')
                 args=(
                     'bash'
                     'posix'
@@ -71,8 +72,9 @@ _koopa_complete() { # {{{1
                     'zsh'
                 )
                 ;;
-            install | \
-            uninstall)
+            'install' | \
+            'reinstall' | \
+            'uninstall')
                 args=(
                     'anaconda'
                     'autoconf'
@@ -218,27 +220,28 @@ _koopa_complete() { # {{{1
                 fi
                 # Handle 'install' or 'uninstall'-specific arguments.
                 case "${COMP_WORDS[COMP_CWORD-1]}" in
-                    install)
+                    'install' | \
+                    'reinstall')
                         args+=(
                             'homebrew-bundle'
                             'tex-packages'
                         )
                         ;;
-                    uninstall)
+                    'uninstall')
                         args+=(
                             'koopa'
                         )
                         ;;
                 esac
                 ;;
-            list)
+            'list')
                 args=(
                     'app-versions'
                     'dotfiles'
                     'path-priority'
                 )
                 ;;
-            system)
+            'system')
                 args=(
                     'brew-dump-brewfile'
                     'brew-outdated'
@@ -275,7 +278,7 @@ _koopa_complete() { # {{{1
                     )
                 fi
                 ;;
-            update)
+            'update')
                 args=(
                     # koopa:
                     'koopa'
