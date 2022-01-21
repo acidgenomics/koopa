@@ -214,6 +214,9 @@ luarocks="3.8.0"
 # https://ftp.gnu.org/gnu/make/
 make="4.3"
 
+# https://github.com/mamba-org/mamba/tags/
+mamba="0.19.1"
+
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
 
@@ -445,7 +448,6 @@ conda-kraken2="2.1.2"           # 2021-05-10 bioconda                       [qc]
 conda-luigi="3.0.3"             # 2021-04-16 conda-forge             [workflows]
 conda-macs2="2.2.7.1"           # 2021-09-22 bioconda                  [chipseq]
 conda-mashmap="2.0"             # 2022-01-14 bioconda                   [rnaseq]
-conda-mamba="0.19.1"            # 2021-11-20 conda-forge                 [conda]
 conda-meme="5.4.1"              # 2022-01-02 bioconda               [enrichment]
 conda-merfishtools="1.5.0"      # 2018-10-24 bioconda linux            [spatial]
 conda-miniwdl="1.4.3"           # 2021-12-28 conda-forge             [workflows]
