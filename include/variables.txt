@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.11"
+aws-cli="2.4.12"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.32.0"
@@ -146,7 +146,7 @@ git="2.34.1"
 gnupg="2.3.2"
 
 # https://golang.org/dl/
-go="1.17.5"
+go="1.17.6"
 
 # https://cloud.google.com/sdk/docs/install
 google-cloud-sdk="368.0.0"
@@ -227,7 +227,7 @@ neovim="0.6.1"
 nim="1.4.8"
 
 # https://nodejs.org/
-node="17.3.1"
+node="17.4.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
