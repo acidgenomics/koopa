@@ -808,11 +808,12 @@ _koopa_activate_make_paths() { # {{{1
 _koopa_activate_mcfly() { #{{{1
     # """
     # Activate mcfly.
-    # @note Updated 2021-09-16.
+    # @note Updated 2022-01-21.
     #
     # Use 'mcfly search XXX' to query directly.
     # """
     local nounset shell
+    [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     _koopa_is_installed 'mcfly' || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
