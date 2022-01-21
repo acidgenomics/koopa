@@ -202,3 +202,30 @@ koopa::to_string() { # {{{1
     koopa::paste0 --sep=', ' "$@"
     return 0
 }
+
+koopa::trim_ws() { # {{{1
+    # """
+    # Trim leading and trailing white-space from string.
+    # @note Updated 2022-01-21.
+    #
+    # This is an alternative to sed, awk, perl and other tools. The function
+    # works by finding all leading and trailing white-space and removing it from
+    # the start and end of the string.
+    #
+    # We're allowing empty string input in this function.
+    #
+    # @examples
+    # > koopa::trim_ws '  hello world  ' ' foo bar '
+    # # hello world
+    # # foo bar
+    # """
+    local string
+    koopa::assert_has_args "$#"
+    for string in "$@"
+    do
+        string="${string#"${string%%[![:space:]]*}"}"
+        string="${string%"${string##*[![:space:]]}"}"
+        koopa::print "$string"
+    done
+    return 0
+}
