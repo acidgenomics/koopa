@@ -2142,69 +2142,6 @@ _koopa_boolean_nounset() { # {{{1
     return 0
 }
 
-# FIXME Safe to take this out?
-_koopa_check_os() { # {{{1
-    # """
-    # Check that operating system is supported.
-    # @note Updated 2021-05-07.
-    # """
-    case "$(uname -s)" in
-        'Darwin' | \
-        'Linux')
-            ;;
-        *)
-            _koopa_warn 'Unsupported operating system.'
-            return 1
-            ;;
-    esac
-    return 0
-}
-
-# FIXME OK to take this check out?
-_koopa_check_shell() { # {{{1
-    # """
-    # Check that current shell is supported, and export 'KOOPA_SHELL' variable.
-    # @note Updated 2021-10-05.
-    # """
-    local shell shell_name
-    unset -v KOOPA_SHELL
-    shell="$(_koopa_locate_shell)"
-    shell_name="$(_koopa_shell_name)"
-    KOOPA_SHELL="$shell"
-    SHELL="$shell_name"
-    export KOOPA_SHELL SHELL
-    case "$shell_name" in
-        'ash' | \
-        'bash' | \
-        'dash' | \
-        'zsh')
-            ;;
-        *)
-            >&2 cat << END
-WARNING: Failed to activate koopa in the current shell.
-
-    Recommended: Bash, Zsh.
-    Also supported: Ash, Dash.
-
-    KOOPA_SHELL : '${KOOPA_SHELL:-}'
-          SHELL : '${SHELL:-}'
-              - : '${-}'
-              0 : '${0}'
-              \$ : '${$}'
-
-    Change to Bash:
-        > chsh -s /bin/bash
-
-    Change to Zsh:
-        > chsh -s /bin/zsh
-
-END
-            return 1
-            ;;
-    esac
-    return 0
-}
-
 _koopa_conda_env_name() { # {{{1
     # """
     # Conda environment name.
