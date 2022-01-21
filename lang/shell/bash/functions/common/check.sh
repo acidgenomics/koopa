@@ -159,6 +159,7 @@ koopa::check_system() { # {{{1
     koopa::r_koopa --vanilla 'cliCheckSystem'
     koopa::check_exports
     koopa::check_disk '/'
+    koopa::alert_success 'System passed all checks.'
     return 0
 }
 
