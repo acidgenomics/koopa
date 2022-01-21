@@ -151,7 +151,6 @@ koopa::check_system() { # {{{1
     then
         koopa::install_r_koopa
     fi
-    koopa::activate_conda
     koopa::r_koopa --vanilla 'cliCheckSystem'
     koopa::check_exports
     koopa::check_disk
