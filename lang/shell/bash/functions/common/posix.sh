@@ -328,10 +328,6 @@ koopa::export_shell() { # {{{1
     _koopa_export_shell "$@"
 }
 
-koopa::export_user() { # {{{1
-    _koopa_export_user "$@"
-}
-
 koopa::expr() { # {{{1
     _koopa_expr "$@"
 }
@@ -934,8 +930,4 @@ koopa::xdg_data_home() { # {{{1
 
 koopa::xdg_local_home() { # {{{1
     _koopa_xdg_local_home "$@"
-}
-
-koopa::xdg_runtime_dir() { # {{{1
-    _koopa_xdg_runtime_dir "$@"
 }
