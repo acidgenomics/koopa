@@ -226,7 +226,7 @@ _koopa_zsh_prompt_string() { # {{{1
         [newline]=$'\n'
         [prompt]='❯'  # default is '%%'.
         [prompt_color]="${fg[magenta]}"
-        [user]="$(_koopa_user)@(_koopa_hostname)"
+        [user]="$(_koopa_user)@$(_koopa_hostname)"
         [user_color]="${fg[cyan]}"
         [venv]="\$(_koopa_prompt_python_venv)"
         [venv_color]="${fg[yellow]}"
