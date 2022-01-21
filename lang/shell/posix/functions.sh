@@ -2802,7 +2802,6 @@ _koopa_git_branch() { # {{{1
     return 0
 }
 
-# FIXME Export this in Bash POSIX file.
 _koopa_git_repo_has_unstaged_changes() { # {{{1
     # """
     # Are there unstaged changes in current git repo?
@@ -2823,7 +2822,6 @@ _koopa_git_repo_has_unstaged_changes() { # {{{1
     [ -n "$x" ]
 }
 
-# FIXME Export this in Bash POSIX file.
 _koopa_git_repo_needs_pull_or_push() { # {{{1
     # """
     # Does the current git repo need a pull or push?
@@ -4927,34 +4925,6 @@ _koopa_today() { # {{{1
     str="$("$date" '+%Y-%m-%d')"
     [ -n "$str" ] || return 1
     _koopa_print "$str"
-    return 0
-}
-
-# FIXME Move this to Bash library.
-_koopa_trim_ws() { # {{{1
-    # """
-    # Trim leading and trailing white-space from string.
-    # @note Updated 2020-07-01.
-    #
-    # This is an alternative to sed, awk, perl and other tools. The function
-    # works by finding all leading and trailing white-space and removing it from
-    # the start and end of the string.
-    #
-    # We're allowing empty string input in this function.
-    #
-    # @examples
-    # _koopa_trim_ws '  hello world  ' ' foo bar '
-    # """
-    local string
-    [ "$#" -gt 0 ] || return 1
-    for string in "$@"
-    do
-        # shellcheck disable=SC2295
-        string="${string#${string%%[![:space:]]*}}"
-        # shellcheck disable=SC2295
-        string="${string%${string##*[![:space:]]}}"
-        _koopa_print "$string"
-    done
     return 0
 }
 

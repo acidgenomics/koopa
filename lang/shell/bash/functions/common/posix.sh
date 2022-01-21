@@ -344,6 +344,14 @@ koopa::git_branch() { # {{{1
     _koopa_git_branch "$@"
 }
 
+koopa::git_repo_has_unstaged_changes() { # {{{1
+    _koopa_git_repo_has_unstaged_changes "$@"
+}
+
+koopa::git_repo_needs_pull_or_push() { # {{{1
+    _koopa_git_repo_needs_pull_or_push "$@"
+}
+
 koopa::go_packages_prefix() { # {{{1
     _koopa_go_packages_prefix "$@"
 }
@@ -886,10 +894,6 @@ koopa::tests_prefix() { # {{{1
 
 koopa::today() { # {{{1
     _koopa_today "$@"
-}
-
-koopa::trim_ws() { # {{{1
-    _koopa_trim_ws "$@"
 }
 
 koopa::umask() { # {{{1
