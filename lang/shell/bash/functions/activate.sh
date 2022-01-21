@@ -85,7 +85,7 @@ _koopa_activate_bash_extras() { # {{{1
 _koopa_activate_bash_prompt() { # {{{1
     # """
     # Activate Bash prompt.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-01-21.
     # """
     [[ "$#" -eq 0 ]] || return 1
     _koopa_is_root && return 0
@@ -98,7 +98,7 @@ _koopa_activate_bash_prompt() { # {{{1
         _koopa_activate_starship
         [[ -n "${STARSHIP_SHELL:-}" ]] && return 0
     fi
-    PS1="$(_koopa_prompt_string)"
+    PS1="$(_koopa_bash_prompt_string)"
     export PS1
     return 0
 }
@@ -126,5 +126,61 @@ _koopa_activate_bash_reverse_search() { # {{{1
     then
         _koopa_activate_mcfly
     fi
+    return 0
+}
+
+_koopa_bash_prompt_string() { # {{{1
+    # """
+    # Bash prompt string (PS1).
+    # @note Updated 2022-01-21.
+    #
+    # Subshell exec need to be escaped here, so they are evaluated dynamically
+    # when the prompt is refreshed.
+    #
+    # Unicode characters don't work well with some Windows fonts.
+    #
+    # User name and host.
+    # - Bash : user='\u@\h'
+    # - ZSH  : user='%n@%m'
+    #
+    # Bash: The default value is '\s-\v\$ '.
+    #
+    # ZSH: conda environment activation is messing up '%m'/'%M' flag on macOS.
+    # This seems to be specific to macOS and doesn't happen on Linux.
+    #
+    # See also:
+    # - https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/
+    #       robbyrussell.zsh-theme
+    # - https://www.cyberciti.biz/tips/
+    #       howto-linux-unix-bash-shell-setup-prompt.html
+    # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
+    # """
+    local dict
+    [ "$#" -eq 0 ] || return 1
+    declare -A dict=(
+        [conda]="\$(_koopa_prompt_conda)"
+        [conda_color]=33
+        [git]="\$(_koopa_prompt_git)"
+        [git_color]=32
+        [newline]='\n'
+        [prompt]='\$'
+        [prompt_color]=35
+        [user]="$(_koopa_user)@$(_koopa_hostname)"
+        [user_color]=36
+        [venv]="\$(_koopa_prompt_python_venv)"
+        [venv_color]=33
+        [wd]='\w'
+        [wd_color]=34
+    )
+    printf '%s%s%s%s%s%s%s%s%s ' \
+        "${dict[newline]}" \
+        "\[\033[${dict[user_color]}m\]${dict[user]}\[\033[00m\]" \
+        "\[\033[${dict[conda_color]}m\]${dict[conda]}\[\033[00m\]" \
+        "\[\033[${dict[venv_color]}m\]${dict[venv]}\[\033[00m\]" \
+        "${dict[newline]}" \
+        "\[\033[${dict[wd_color]}m\]${dict[wd]}\[\033[00m\]" \
+        "\[\033[${dict[git_color]}m\]${dict[git]}\[\033[00m\]" \
+        "${dict[newline]}" \
+        "\[\033[${dict[prompt_color]}m\]${dict[prompt]}\[\033[00m\]"
     return 0
 }
