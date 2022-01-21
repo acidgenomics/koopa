@@ -228,14 +228,6 @@ koopa::boolean_nounset() { # {{{1
     _koopa_boolean_nounset "$@"
 }
 
-koopa::check_os() { # {{{1
-    _koopa_check_os "$@"
-}
-
-koopa::check_shell() { # {{{1
-    _koopa_check_shell "$@"
-}
-
 koopa::conda_env_name() { # {{{1
     _koopa_conda_env_name "$@"
 }
