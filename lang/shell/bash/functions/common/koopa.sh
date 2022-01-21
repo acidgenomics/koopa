@@ -481,7 +481,11 @@ koopa::koopa() { # {{{1
         '--version' | \
         '-V' | \
         'version')
-            f='koopa_version'
+            f='koopa-version'
+            shift 1
+            ;;
+        'reinstall')
+            f='reinstall-app'
             shift 1
             ;;
         'app' | \
