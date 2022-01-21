@@ -386,6 +386,8 @@ _koopa_activate_conda() { # {{{1
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
+    _koopa_is_alias 'conda' && unalias 'conda'
+    _koopa_is_alias 'mamba' && unalias 'mamba'
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
