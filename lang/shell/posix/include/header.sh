@@ -78,7 +78,6 @@ _koopa_posix_header() { # {{{1
         _koopa_export_gnupg || return 1
         _koopa_export_history || return 1
         _koopa_export_pager || return 1
-        _koopa_export_tmpdir || return 1
         if [ "${KOOPA_MINIMAL:-0}" -eq 0 ] && _koopa_is_interactive
         then
             if _koopa_is_macos
