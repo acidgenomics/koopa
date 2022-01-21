@@ -3,7 +3,7 @@
 koopa::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2021-12-09.
+    # @note Updated 2022-01-21.
     # """
     local clean_path_arr dict homebrew_opt_arr opt_arr pos
     koopa::assert_has_args "$#"
@@ -132,8 +132,9 @@ koopa::update_app() { # {{{1
     fi
     if [[ -n "${dict[prefix]}" ]]
     then
-        koopa::alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
         koopa::assert_is_dir "${dict[prefix]}"
+        dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+        koopa::alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
     else
         koopa::alert_update_start "${dict[name_fancy]}"
     fi
