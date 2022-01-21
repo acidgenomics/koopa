@@ -49,6 +49,36 @@ koopa::capitalize() { # {{{1
     return 0
 }
 
+koopa::gsub() { # {{{1
+    # """
+    # Global substitution.
+    # @note Updated 2022-01-21.
+    #
+    # Instead of using '|' in sed here, we can also escape '/'.
+    #
+    # @examples
+    # koopa::gsub 'a' '' 'aabb' 'aacc'
+    # ## bb
+    # ## cc
+    # """
+    local app dict string
+    koopa::assert_has_args_eq "$#" 3
+    declare -A app=(
+        [sed]="$(koopa::locate_sed)"
+    )
+    declare -A dict=(
+        [pattern]="${1:?}"
+        [replacement]="${2:-}"
+    )
+    shift 2
+    for string in "$@"
+    do
+        koopa::print "$string" \
+            | "${app[sed]}" -E "s|${dict[pattern]}|${dict[replacement]}|g"
+    done
+    return 0
+}
+
 koopa::kebab_case_simple() { # {{{1
     # """
     # Simple snake case function.
@@ -185,6 +215,35 @@ koopa::snake_case_simple() { # {{{1
         string="$(koopa::gsub '[^A-Za-z0-9_]' '_' "$string")"
         string="$(koopa::lowercase "$string")"
         koopa::print "$string"
+    done
+    return 0
+}
+
+koopa::sub() { # {{{1
+    # """
+    # Single substitution.
+    # @note Updated 2022-01-21.
+    #
+    # Instead of using '|' in sed here, we can also escape '/'.
+    #
+    # @examples
+    # koopa::sub 'a' '' 'aaa' 'aaa'
+    # ## aa
+    # ## aa
+    # """
+    local app dict string
+    declare -A app=(
+        [sed]="$(koopa::locate_sed)"
+    )
+    declare -A dict=(
+        [pattern]="${1:?}"
+        [replacement]="${2:-}"
+    )
+    shift 2
+    for string in "$@"
+    do
+        koopa::print "$string" \
+            | "${app[sed]}" -E "s|${dict[pattern]}|${dict[replacement]}|"
     done
     return 0
 }
