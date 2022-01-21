@@ -394,6 +394,22 @@ koopa::is_gitlab_ssh_enabled() { # {{{1
     koopa:::is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
 }
 
+koopa::is_gnu() { # {{{1
+    # """
+    # Is a GNU program installed?
+    # @note Updated 2022-01-21.
+    # """
+    local cmd str
+    koopa::assert_has_args "$#"
+    for cmd in "$@"
+    do
+        koopa::is_installed "$cmd" || return 1
+        str="$("$cmd" --version 2>&1 || true)"
+        koopa::str_detect_posix "$str" 'GNU' || return 1
+    done
+    return 0
+}
+
 koopa::is_koopa_app() { # {{{1
     # """
     # Is a specific command installed in koopa app prefix?
