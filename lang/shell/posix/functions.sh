@@ -221,20 +221,21 @@ __koopa_remove_from_path_string() { # {{{1
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2021-10-22.
+    # @note Updated 2022-01-21.
     # """
     local file
     [ "$#" -eq 0 ] || return 1
     _koopa_activate_coreutils_aliases
     alias br='_koopa_alias_broot'
     alias bucket='_koopa_alias_bucket'
-    # > alias conda='_koopa_alias_conda'
+    alias conda='_koopa_alias_conda'
     alias doom-emacs='_koopa_alias_doom_emacs'
     alias emacs-vanilla='_koopa_alias_emacs_vanilla'
     alias emacs='_koopa_alias_emacs'
     alias fzf='_koopa_alias_fzf'
     alias j='z'
     alias k='_koopa_alias_k'
+    alias mamba='_koopa_alias_mamba'
     # > alias mcfly='_koopa_alias_mcfly'
     alias nvim-fzf='_koopa_alias_nvim_fzf'
     alias nvim-vanilla='_koopa_alias_nvim_vanilla'
@@ -1851,6 +1852,17 @@ _koopa_alias_k() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     cd "$(_koopa_koopa_prefix)" || return 1
+}
+
+_koopa_alias_mamba() { # {{{1
+    # """
+    # Mamba alias.
+    # @note Updated 2022-01-21.
+    # """
+    _koopa_is_alias 'conda' && unalias 'conda'
+    _koopa_is_alias 'mamba' && unalias 'mamba'
+    _koopa_activate_conda
+    mamba "$@"
 }
 
 _koopa_alias_mcfly() { # {{{1
