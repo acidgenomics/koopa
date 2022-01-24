@@ -31,7 +31,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 anaconda="2021.05"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.8.0"
+armadillo="10.8.1"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="4.0.2.38"
