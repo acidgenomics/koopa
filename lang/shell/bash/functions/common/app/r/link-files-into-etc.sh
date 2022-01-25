@@ -3,7 +3,7 @@
 koopa::r_link_files_into_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-01-25.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -44,10 +44,10 @@ koopa::r_link_files_into_etc() { # {{{1
     )
     for file in "${files[@]}"
     do
-        [[ -f "${dict[r_etc_source]}/${dict[file]}" ]] || continue
+        [[ -f "${dict[r_etc_source]}/${file}" ]] || continue
         koopa::sys_ln \
-            "${dict[r_etc_source]}/${dict[file]}" \
-            "${dict[r_etc_target]}/${dict[file]}"
+            "${dict[r_etc_source]}/${file}" \
+            "${dict[r_etc_target]}/${file}"
     done
     return 0
 }
