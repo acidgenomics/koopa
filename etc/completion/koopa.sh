@@ -140,7 +140,6 @@ _koopa_complete() { # {{{1
                     'python-packages'
                     'r'
                     'r-cmd-check'
-                    'r-devel'
                     'r-packages'
                     'rbenv'
                     'rmate'
@@ -196,6 +195,7 @@ _koopa_complete() { # {{{1
                             'node'
                             'pandoc'
                             'r-cran-binary'
+                            'r-devel'
                         )
                     elif _koopa_is_fedora_like
                     then
