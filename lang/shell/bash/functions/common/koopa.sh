@@ -187,7 +187,7 @@ koopa:::koopa_list() { # {{{1
 koopa:::koopa_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2021-03-01.
+    # @note Updated 2022-01-25.
     # """
     local f
     f="${1:-}"
@@ -200,7 +200,7 @@ koopa:::koopa_system() { # {{{1
             f='check-system'
             ;;
         'info')
-            f='sys-info'
+            f='system-info'
             ;;
         'log')
             f='view-latest-tmp-log-file'
@@ -471,7 +471,7 @@ koopa:::which_function() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2021-09-18.
+    # @note Updated 2022-01-25.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
@@ -506,22 +506,6 @@ koopa::koopa() { # {{{1
             f="$1"
             shift 1
             ;;
-        # Soft deprecated args {{{2
-        # ----------------------------------------------------------------------
-        'check' | \
-        'check-system')
-            f='check-system'
-            shift 1
-            ;;
-        'home' | \
-        'prefix')
-            f='koopa-prefix'
-            shift 1
-            ;;
-        'info')
-            f='koopa-info'
-            shift 1
-            ;;
         # Defunct args / error catching {{{2
         # ----------------------------------------------------------------------
         'app-prefix')
@@ -529,6 +513,10 @@ koopa::koopa() { # {{{1
             ;;
         'cellar-prefix')
             koopa::defunct 'koopa system prefix app'
+            ;;
+        'check' | \
+        'check-system')
+            koopa::defunct 'koopa system check'
             ;;
         'conda-prefix')
             koopa::defunct 'koopa system prefix conda'
@@ -554,8 +542,15 @@ koopa::koopa() { # {{{1
         'help')
             koopa::defunct 'koopa --help'
             ;;
+        'home' | \
+        'prefix')
+            koopa::defunct 'koopa system prefix'
+            ;;
         'host-id')
             koopa::defunct 'koopa system host-id'
+            ;;
+        'info')
+            koopa::defunct 'koopa system info'
             ;;
         'make-prefix')
             koopa::defunct 'koopa system prefix make'
@@ -597,10 +592,10 @@ koopa::koopa() { # {{{1
     return 0
 }
 
-koopa::koopa_info() { # {{{
+koopa::system_info() { # {{{
     # """
     # System information.
-    # @note Updated 2022-01-17.
+    # @note Updated 2022-01-25.
     # """
     local app dict info nf_info
     koopa::assert_has_no_args "$#"
