@@ -91,8 +91,6 @@ koopa:::debian_install_r_devel() { # {{{1
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" check
-    "${app[make]}" pdf
-    "${app[make]}" info
     "${app[make]}" install
     app[r]="${dict[prefix]}/bin/R"
     koopa::assert_is_installed "${app[r]}"
