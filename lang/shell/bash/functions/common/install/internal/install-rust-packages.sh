@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2021-09-22.
+    # @note Updated 2022-01-25.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -14,20 +13,22 @@ koopa:::install_rust_packages() { # {{{1
     # - https://github.com/rust-lang/cargo/pull/6798
     # - https://github.com/rust-lang/cargo/pull/7560
     # """
-    local args cargo default jobs pkg pkgs pkg_args root rustc version
+    local app dict pkg pkgs pkg_args
     koopa::configure_rust
     koopa::activate_rust
-    export RUST_BACKTRACE=1
-    cargo="$(koopa::locate_cargo)"
-    rustc="$(koopa::locate_rustc)"
-    koopa::add_to_path_start "$(koopa::dirname "$rustc")"
+    declare -A app=(
+        [cargo]="$(koopa::locate_cargo)"
+        [rustc]="$(koopa::locate_rustc)"
+    )
+    declare -A dict=(
+        [default]=0
+        [jobs]="$(koopa::cpu_count)"
+        [root]="${INSTALL_PREFIX:?}"
+    )
     pkgs=("$@")
-    root="${INSTALL_PREFIX:?}"
-    jobs="$(koopa::cpu_count)"
-    default=0
     if [[ "${#pkgs[@]}" -eq 0 ]]
     then
-        default=1
+        dict[default]=1
         pkgs=(
             # Currently failing to build due to cachedir constraint.
             # https://github.com/phiresky/ripgrep-all/issues/88
@@ -51,14 +52,17 @@ koopa:::install_rust_packages() { # {{{1
     koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
     # Can use '--force' flag here to force reinstall.
     pkg_args=(
-        '--jobs' "$jobs"
-        '--root' "$root"
+        '--jobs' "${dict[jobs]}"
+        '--root' "${dict[root]}"
         '--verbose'
     )
+    koopa::add_to_path_start "$(koopa::dirname "${app[rustc]}")"
+    export RUST_BACKTRACE=1
     for pkg in "${pkgs[@]}"
     do
+        local args version
         args=("${pkg_args[@]}")
-        if [[ "$default" -eq 1 ]]
+        if [[ "${dict[default]}" -eq 1 ]]
         then
             version="$(koopa::variable "rust-${pkg}")"
             args+=('--version' "${version}")
@@ -69,7 +73,7 @@ koopa:::install_rust_packages() { # {{{1
                 pkg='ripgrep_all'
                 ;;
         esac
-        "$cargo" install "$pkg" "${args[@]}"
+        "${app[cargo]}" install "$pkg" "${args[@]}"
     done
     return 0
 }
