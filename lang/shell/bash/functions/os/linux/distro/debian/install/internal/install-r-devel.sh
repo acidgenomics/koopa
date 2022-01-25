@@ -75,7 +75,6 @@ koopa:::debian_install_r_devel() { # {{{1
 		texlive-extra-utils \
 		texlive-fonts-extra \
 		texlive-fonts-recommended \
-		texlive-generic-recommended \
 		texlive-latex-base \
 		texlive-latex-extra \
 		texlive-latex-recommended \
