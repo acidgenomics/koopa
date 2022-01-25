@@ -3,7 +3,7 @@
 koopa:::install_miniconda() { # {{{1
     # """
     # Install Miniconda, including Mamba in base environment.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-01-25.
     # """
     local app dict
     declare -A app=(
@@ -12,7 +12,7 @@ koopa:::install_miniconda() { # {{{1
     declare -A dict=(
         [arch]="$(koopa::arch)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
-        [mamba]=1
+        [mamba]=0
         [mamba_version]="$(koopa::variable 'mamba')"
         [name2]='Miniconda'
         [name]='miniconda'
