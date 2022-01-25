@@ -41,12 +41,51 @@ koopa:::debian_install_r_devel() { # {{{1
         '--without-lapack'
         '--without-recommended-packages'
     )
-    koopa::mkdir --sudo '/usr/share/man/man1'
-    "${app[sudo]}" "${app[apt_key]}" adv \
-        --keyserver 'keyserver.ubuntu.com' \
-        --recv-keys 'B8F25A8A73EACF41'
-    koopa::debian_apt_add_r_repo
-    koopa::debian_apt_get build-dep 'r-base'
+    # FIXME Quote these and detab upon success.
+    koopa::debian_apt_install \
+		bash-completion \
+		bison \
+		debhelper \
+		default-jdk \
+		g++ \
+		gcc \
+		gdb \
+		gfortran \
+		groff-base \
+		libblas-dev \
+		libbz2-dev \
+		libcairo2-dev/unstable \
+		libcurl4-openssl-dev \
+		libjpeg-dev \
+		liblapack-dev \
+		liblzma-dev \
+		libncurses5-dev \
+		libpango1.0-dev \
+		libpcre3-dev \
+		libpng-dev \
+		libreadline-dev \
+		libtiff5-dev \
+		libx11-dev \
+		libxt-dev \
+		mpack \
+		subversion \
+		tcl8.6-dev \
+		texinfo \
+		texlive-base \
+		texlive-extra-utils \
+		texlive-fonts-extra \
+		texlive-fonts-recommended \
+		texlive-generic-recommended \
+		texlive-latex-base \
+		texlive-latex-extra \
+		texlive-latex-recommended \
+		tk8.6-dev \
+		x11proto-core-dev \
+		xauth \
+		xdg-utils \
+		xfonts-base \
+		xvfb \
+		zlib1g-dev
     "${app[svn]}" checkout \
         --revision="${dict[revision]}" \
         "${dict[svn_url]}" \
