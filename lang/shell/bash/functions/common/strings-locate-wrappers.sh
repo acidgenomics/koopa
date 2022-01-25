@@ -233,6 +233,24 @@ koopa::locate_cp() { # {{{1
     koopa::locate_app '/bin/cp'
 }
 
+koopa::locate_cpan() { # {{{1
+    # """
+    # Locate Perl 'cpan'.
+    # @note Updated 2022-01-25.
+    # """
+    koopa::locate_app 'cpan'
+}
+
+koopa::locate_cpanm() { # {{{1
+    # """
+    # Locate Perl CPAN Minus 'cpanm'.
+    # @note Updated 2022-01-25.
+    # """
+    koopa::locate_app \
+        --app-name='cpanm' \
+        --koopa-opt='perl-packages'
+}
+
 koopa::locate_curl() { # {{{1
     # """
     # Locate 'curl'.
@@ -583,13 +601,17 @@ koopa::locate_locale() { # {{{1
     koopa::locate_app '/usr/bin/locale'
 }
 
-# FIXME Need to add edge-case support for Alpine here: koopa::alpine_locate_localedef.
 koopa::locate_localedef() { # {{{1
     # """
     # Locate 'localedef'.
-    # @note Updated 2021-11-16.
+    # @note Updated 2022-01-25.
     # """
-    koopa::locate_app '/usr/bin/localedef'
+    if koopa::is_alpine
+    then
+        koopa::alpine_locate_localedef
+    else
+        koopa::locate_app '/usr/bin/localedef'
+    fi
 }
 
 koopa::locate_ls() { # {{{1

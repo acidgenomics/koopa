@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to locate cpan and cpanm here.
 koopa:::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2021-12-21.
+    # @note Updated 2022-01-25.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -12,18 +11,18 @@ koopa:::install_perl_packages() { # {{{1
     # * --mirror http://cpan.cpantesters.org/  # use the fast-syncing mirror
     # * --from https://cpan.metacpan.org/      # use only the HTTPS mirror
     # """
-    local module modules
+    local app module modules
     koopa::configure_perl
     koopa::activate_perl
-    if ! koopa::is_installed 'cpanm'
+    declare -A app=(
+        [cpan]="$(koopa::locate_cpan)"
+        [cpanm]="$(koopa::locate_cpanm 2>/dev/null || true)"
+    )
+    if ! koopa::is_installed "${app[cpanm]}"
     then
-        koopa::assert_is_installed 'cpan'
         koopa::alert_install_start 'CPAN Minus'
-        koopa::assert_is_installed 'cpan'
-        # FIXME Need to locate this.
-        cpan -i 'App::cpanminus' &>/dev/null
+        "${app[cpan]}" -i 'App::cpanminus' &>/dev/null
     fi
-    koopa::assert_is_installed 'cpanm'
     if [[ "$#" -gt 0 ]]
     then
         modules=("$@")
@@ -37,8 +36,7 @@ koopa:::install_perl_packages() { # {{{1
     for module in "${modules[@]}"
     do
         koopa::alert "${module}"
-        # FIXME Need to locate this.
-        cpanm "$module" &>/dev/null
+        "${app[cpanm]}" "$module" &>/dev/null
     done
     return 0
 }
