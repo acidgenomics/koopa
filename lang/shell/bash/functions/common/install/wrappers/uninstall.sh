@@ -495,13 +495,6 @@ koopa::uninstall_r_cmd_check() { # {{{1
         "$@"
 }
 
-koopa::uninstall_r_devel() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='R-devel' \
-        --name='r-devel' \
-        "$@"
-}
-
 koopa::uninstall_r_packages() { # {{{1
     koopa::uninstall_app \
         --name-fancy='R packages' \

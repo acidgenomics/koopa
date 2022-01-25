@@ -505,13 +505,6 @@ koopa::install_r_cmd_check() { # {{{1
         "$@"
 }
 
-koopa::install_r_devel() { # {{{1
-    koopa::install_app \
-        --name-fancy='R-devel' \
-        --name='r-devel' \
-        "$@"
-}
-
 koopa::install_r_koopa() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::r_koopa 'header'

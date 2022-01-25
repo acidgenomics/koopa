@@ -717,6 +717,14 @@ koopa::locate_neofetch() { # {{{1
     koopa::locate_app 'neofetch'
 }
 
+koopa::locate_newgrp() { # {{{1
+    # """
+    # Locate GNU 'newgrp'.
+    # @note Updated 2022-01-25.
+    # """
+    koopa::locate_app '/usr/bin/newgrp'
+}
+
 koopa::locate_nim() { # {{{1
     # """
     # Locate 'nim'.

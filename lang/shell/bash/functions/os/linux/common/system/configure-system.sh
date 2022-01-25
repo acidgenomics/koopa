@@ -502,6 +502,7 @@ koopa::linux_configure_system() { # {{{1
     then
         if [[ "${dict[r_version]}" == 'devel' ]]
         then
+            # Currently only supported for Debian.
             koopa install r-devel
         else
             if koopa::is_debian
