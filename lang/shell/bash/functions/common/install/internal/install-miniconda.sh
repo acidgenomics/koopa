@@ -13,7 +13,6 @@ koopa:::install_miniconda() { # {{{1
         [arch]="$(koopa::arch)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
         [mamba]=0
-        [mamba_version]="$(koopa::variable 'mamba')"
         [name2]='Miniconda'
         [name]='miniconda'
         [os_type]="$(koopa::os_type)"
@@ -85,17 +84,7 @@ py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch]}.sh"
     # Install mamba inside of conda base environment, if desired.
     if [[ "${dict[mamba]}" -eq 1 ]]
     then
-        koopa::alert "Installing mamba ${dict[mamba_version]} inside \
-conda base environment."
-        app[conda]="${dict[prefix]}/bin/conda"
-        koopa::assert_is_installed "${app[conda]}"
-        # > koopa::activate_conda "${dict[prefix]}"
-        "${app[conda]}" install \
-            --yes \
-            --name='base' \
-            --channel='conda-forge' \
-            "mamba==${dict[mamba_version]}"
-        # > koopa::deactivate_conda
+        koopa::install_mamba
     fi
     return 0
 }
