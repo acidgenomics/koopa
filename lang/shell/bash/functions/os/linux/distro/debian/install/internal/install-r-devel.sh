@@ -54,7 +54,7 @@ koopa:::debian_install_r_devel() { # {{{1
 		groff-base \
 		libblas-dev \
 		libbz2-dev \
-		libcairo2-dev/unstable \
+		libcairo2-dev \
 		libcurl4-openssl-dev \
 		libjpeg-dev \
 		liblapack-dev \
