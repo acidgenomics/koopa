@@ -19,7 +19,9 @@ koopa:::debian_install_r_devel() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
+        [apt_key]="$(koopa::debian_locate_apt_key)"
         [make]="$(koopa::locate_make)"
+        [sudo]="$(koopa::locate_sudo)"
         [svn]="$(koopa::locate_svn)"
     )
     declare -A dict=(
@@ -40,6 +42,9 @@ koopa:::debian_install_r_devel() { # {{{1
         '--without-recommended-packages'
     )
     koopa::mkdir --sudo '/usr/share/man/man1'
+    "${app[sudo]}" "${app[apt_key]}" adv \
+        --keyserver 'keyserver.ubuntu.com' \
+        --recv-keys 'B8F25A8A73EACF41'
     koopa::debian_apt_add_r_repo
     koopa::debian_apt_get build-dep 'r-base'
     "${app[svn]}" checkout \
