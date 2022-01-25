@@ -117,6 +117,7 @@ _koopa_complete() { # {{{1
                     'lua'
                     'luarocks'
                     'make'
+                    'mamba'
                     'ncurses'
                     'neofetch'
                     'neovim'
