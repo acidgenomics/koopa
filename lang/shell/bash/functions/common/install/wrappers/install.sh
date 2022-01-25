@@ -324,6 +324,14 @@ koopa::install_make() { # {{{1
         "$@"
 }
 
+koopa::install_mamba() { # {{{1
+    koopa::install_app \
+        --name-fancy='Mamba' \
+        --name='mamba' \
+        --system \
+        "$@"
+}
+
 koopa::install_miniconda() { # {{{1
     koopa::install_app \
         --installer='miniconda' \

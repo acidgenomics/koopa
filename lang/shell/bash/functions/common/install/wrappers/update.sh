@@ -43,6 +43,10 @@ koopa::update_koopa() { # {{{1
         "$@"
 }
 
+koopa::update_mamba() { # {{{1
+    koopa::install_mamba "$@"
+}
+
 koopa::update_nim_packages() { # {{{1
     koopa::install_nim_packages "$@"
 }
