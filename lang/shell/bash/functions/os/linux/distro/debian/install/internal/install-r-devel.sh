@@ -6,14 +6,12 @@ koopa:::debian_install_r_devel() { # {{{1
     # @note Updated 2022-01-25.
     #
     # @seealso
+    # - https://hub.docker.com/r/rocker/r-devel/dockerfile
     # - https://developer.r-project.org/
     # - https://svn.r-project.org/R/
     # - https://cran.r-project.org/doc/manuals/r-devel/
     #       R-admin.html#Getting-patched-and-development-versions
     # - https://cran.r-project.org/bin/linux/debian/
-    # - https://github.com/rocker-org/rocker/blob/
-    #       dd592d5c3ab289f33bf06c6c84eda354ddc40a38/r-devel/Dockerfile
-    # - https://github.com/geerlingguy/ansible-role-java/issues/64
     # """
     local app conf_args dict
     koopa::assert_has_no_args "$#"
@@ -39,7 +37,6 @@ koopa:::debian_install_r_devel() { # {{{1
         '--without-lapack'
         '--without-recommended-packages'
     )
-    # FIXME Quote these and detab upon success.
     koopa::debian_apt_install \
         'bash-completion' \
         'bison' \
