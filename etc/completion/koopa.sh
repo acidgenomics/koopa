@@ -290,6 +290,7 @@ _koopa_complete() { # {{{1
                     'dotfiles'
                     'google-cloud-sdk'
                     'homebrew'
+                    'mamba'
                     'nim-packages'
                     'node-packages'
                     'perl-packages'
