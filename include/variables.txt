@@ -567,7 +567,7 @@ ruby-ronn="0.7.3"               # 2010-06-24
 
 rust-bat="0.19.0"               # homebrew
 rust-broot="1.9.2"              # homebrew; br
-rust-cargo-update="8.0.0"
+rust-cargo-update="8.1.2"
 rust-cargo-outdated="0.9.18"    # homebrew
 rust-dog="0.1.0"                # homebrew
 rust-du-dust="0.7.0"            # homebrew; dust
