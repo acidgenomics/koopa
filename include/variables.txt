@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-01-21"
+koopa-date="2022-01-25"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.12.1a"
@@ -140,7 +140,7 @@ geos="3.10.2"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.34.1"
+git="2.35.0"
 
 # https://gnupg.org/download/index.html
 gnupg="2.3.2"
@@ -251,7 +251,7 @@ oracle-instantclient="21.1.0.0.0-1"
 pandoc="2.17.0.1"
 
 # https://www.gnu.org/software/parallel/
-parallel="20211222"
+parallel="20220122"
 
 # https://www.passwordstore.org/
 password-store="1.7.4"
@@ -370,7 +370,7 @@ tar="1.34"
 # https://www.latex-project.org/get/
 tex="2021"
 
-# NOTE There seems to be a Homebrew cask that masks this.
+# NOTE There seems to be a Homebrew cask that masks this on macOS.
 # https://ftp.gnu.org/gnu/texinfo/
 texinfo="6.8"
 
@@ -388,7 +388,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4100"
+vim="8.2.4200"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
