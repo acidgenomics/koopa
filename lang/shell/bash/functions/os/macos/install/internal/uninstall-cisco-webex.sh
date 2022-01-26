@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::macos_uninstall_cisco_webex() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='Cisco WebEx' \
-        --name='cisco-webex' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa:::macos_uninstall_cisco_webex() { # {{{1
     # """
     # Uninstall Cisco WebEx.

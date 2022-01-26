@@ -1,25 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::macos_install_r_framework() { # {{{1
-    koopa::install_app \
-        --installer='r-framework' \
-        --name-fancy='R framework' \
-        --name='r' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa::macos_uninstall_r_framework() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='R framework' \
-        --name='r' \
-        --platform='macos' \
-        --system \
-        --uninstaller='r-framework' \
-        "$@"
-}
-
 koopa:::macos_install_r_framework() { # {{{1
     # """
     # Install R framework.
@@ -78,19 +58,5 @@ base/${dict[pkg_file]}"
     koopa::download "${dict[url]}"
     "${app[sudo]}" "${app[installer]}" -pkg "${dict[pkg_file]}" -target '/'
     koopa::assert_is_dir "${dict[prefix]}"
-    return 0
-}
-
-koopa:::macos_uninstall_r_framework() { # {{{1
-    # """
-    # Uninstall R framework.
-    # @note Updated 2021-11-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    koopa::rm --sudo \
-        '/Applications/R.app' \
-        '/Library/Frameworks/R.framework'
-    koopa::delete_broken_symlinks '/usr/local/bin'
     return 0
 }
