@@ -24,16 +24,13 @@ koopa:::install_doom_emacs() { # {{{1
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [emacs]="$(koopa::locate_emacs)"
-        [rg]="$(koopa::locate_rg)"
     )
     declare -A dict=(
         [branch]='master'
         [prefix]="${INSTALL_PREFIX:?}"
         [url]='https://github.com/hlissner/doom-emacs.git'
     )
-    koopa::add_to_path_start \
-        "$(koopa::dirname "${app[emacs]}")" \
-        "$(koopa::dirname "${app[rg]}")"
+    koopa::add_to_path_start "$(koopa::dirname "${app[emacs]}")"
     koopa::git_clone \
         --branch="${dict[branch]}" \
         "${dict[url]}" \
@@ -48,6 +45,6 @@ koopa:::install_doom_emacs() { # {{{1
     )
     "${app[doom]}" --yes install "${install_args[@]}"
     "${app[doom]}" --yes sync
-    "${app[doom]}" --yes doctor
+    # > "${app[doom]}" --yes doctor
     return 0
 }
