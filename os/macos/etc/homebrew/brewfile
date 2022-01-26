@@ -1,6 +1,6 @@
 # """
 # macOS-specific Homebrew Bundle Brewfile.
-# Updated 2022-01-18.
+# Updated 2022-01-26.
 # """
 
 # Taps {{{1
@@ -16,7 +16,7 @@ tap "homebrew/core"
 # Priority brews {{{1
 # ==============================================================================
 
-# These are required for some casks to install correctly.
+brew "emacs", link: false
 brew "git"
 brew "subversion"
 
