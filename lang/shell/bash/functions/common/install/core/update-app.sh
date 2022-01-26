@@ -3,13 +3,14 @@
 koopa::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-01-26.
     # """
     local clean_path_arr dict homebrew_opt_arr opt_arr pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A dict=(
         [homebrew_opt]=''
+        [koopa_prefix]="$(koopa::koopa_prefix)"
         [name_fancy]=''
         [opt]=''
         [opt_prefix]="$(koopa::opt_prefix)"
@@ -21,7 +22,6 @@ koopa::update_app() { # {{{1
         [version]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
-    koopa::is_shared_install && dict[shared]=1
     homebrew_opt_arr=()
     opt_arr=()
     pos=()
@@ -85,14 +85,6 @@ koopa::update_app() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
-            '--no-shared')
-                dict[shared]=0
-                shift 1
-                ;;
-            '--shared')
-                dict[shared]=1
-                shift 1
-                ;;
             '--system')
                 dict[system]=1
                 shift 1
@@ -110,7 +102,26 @@ koopa::update_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
-    [[ "${dict[system]}" -eq 1 ]] && dict[shared]=0
+    if [[ -n "${dict[prefix]}" ]]
+    then
+        if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
+        then
+            dict[shared]=1
+        else
+            dict[shared]=0
+        fi
+    else
+        if koopa::is_shared_install
+        then
+            dict[shared]=1
+        else
+            dict[shared]=0
+        fi
+    fi
+    if [[ "${dict[system]}" -eq 1 ]]
+    then
+        dict[shared]=0
+    fi
     if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
     then
         koopa::assert_is_admin
