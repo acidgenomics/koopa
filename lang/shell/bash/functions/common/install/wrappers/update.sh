@@ -11,7 +11,6 @@ koopa::update_doom_emacs() { # {{{1
     koopa::update_app \
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
-        --no-shared \
         --prefix="$(koopa::doom_emacs_prefix)" \
         "$@"
 }
@@ -70,7 +69,6 @@ koopa::update_prelude_emacs() { # {{{1
     koopa::update_app \
         --name-fancy='Prelude Emacs' \
         --name='prelude-emacs' \
-        --no-shared \
         --prefix="$(koopa::prelude_emacs_prefix)" \
         "$@"
 }
@@ -130,7 +128,6 @@ koopa::update_spacemacs() { # {{{1
     koopa::update_app \
         --name-fancy='Spacemacs' \
         --name='spacemacs' \
-        --no-shared \
         --prefix="$(koopa::spacemacs_prefix)" \
         "$@"
 }
@@ -139,7 +136,6 @@ koopa::update_spacevim() { # {{{1
     koopa::update_app \
         --name-fancy='SpaceVim' \
         --name='spacevim' \
-        --no-shared \
         --prefix="$(koopa::spacevim_prefix)" \
         "$@"
 }

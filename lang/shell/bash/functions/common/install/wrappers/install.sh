@@ -81,7 +81,6 @@ koopa::install_doom_emacs() { # {{{1
     koopa::install_app \
         --name-fancy='Doom Emacs' \
         --name='doom-emacs' \
-        --no-shared \
         --prefix="$(koopa::doom_emacs_prefix)" \
         --version='rolling' \
         "$@"
@@ -460,7 +459,6 @@ koopa::install_prelude_emacs() { # {{{1
     koopa::install_app \
         --name-fancy='Prelude Emacs' \
         --name='prelude-emacs' \
-        --no-shared \
         --prefix="$(koopa::prelude_emacs_prefix)" \
         --version='rolling' \
         "$@"
@@ -609,7 +607,6 @@ koopa::install_spacemacs() { # {{{1
         --name='spacemacs' \
         --prefix="$(koopa::spacemacs_prefix)" \
         --version='rolling' \
-        --no-shared \
         "$@"
 }
 
@@ -619,7 +616,6 @@ koopa::install_spacevim() { # {{{1
         --name='spacevim' \
         --prefix="$(koopa::spacevim_prefix)" \
         --version='rolling' \
-        --no-shared \
         "$@"
 }
 
