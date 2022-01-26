@@ -3457,7 +3457,7 @@ _koopa_macos_activate_color_mode() { # {{{1
 _koopa_macos_activate_google_cloud_sdk() { # {{{1
     # """
     # Activate macOS Google Cloud SDK Homebrew cask.
-    # @note Updated 2022-01-13.
+    # @note Updated 2022-01-26.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install#mac
@@ -3466,7 +3466,7 @@ _koopa_macos_activate_google_cloud_sdk() { # {{{1
     brew_prefix="$(_koopa_homebrew_prefix)"
     prefix="${brew_prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
     _koopa_activate_prefix "$prefix"
-    python="${brew_prefix}/opt/python@3.8/bin/python3.8"
+    python="${brew_prefix}/opt/python@3.9/bin/python3.9"
     export CLOUDSDK_PYTHON="$python"
     # Alternate (slower) approach that enables autocompletion.
     # > local shell
