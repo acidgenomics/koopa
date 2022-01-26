@@ -6,6 +6,7 @@ koopa:::install_cpufetch() { # {{{1
     # @note Updated 2021-12-01.
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

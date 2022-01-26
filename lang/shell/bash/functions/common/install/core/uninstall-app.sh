@@ -3,7 +3,7 @@
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-01-26.
     # """
     local app dict pos
     declare -A app
@@ -17,7 +17,7 @@ koopa::uninstall_app() { # {{{1
         [opt_prefix]="$(koopa::opt_prefix)"
         [platform]=''
         [prefix]=''
-        [shared]=0
+        [shared]=''
         [system]=0
     )
     pos=()
@@ -63,6 +63,14 @@ koopa::uninstall_app() { # {{{1
                 ;;
             '--no-link')
                 dict[link_app]=0
+                shift 1
+                ;;
+            '--no-shared')
+                dict[shared]=0
+                shift 1
+                ;;
+            '--shared')
+                dict[shared]=1
                 shift 1
                 ;;
             '--system')
@@ -116,17 +124,23 @@ koopa::uninstall_app() { # {{{1
                 "${dict[prefix]}"
             return 0
         fi
-        if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
+        if [[ -z "${dict[shared]}" ]]
         then
-            dict[shared]=1
+            if koopa::str_detect_regex \
+                "${dict[prefix]}" "^${dict[koopa_prefix]}"
+            then
+                dict[shared]=1
+            else
+                dict[shared]=0
+            fi
         fi
-        koopa::alert_uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
         if [[ "${dict[shared]}" -eq 1 ]]
         then
             app[rm]='koopa::sys_rm'
         else
             app[rm]='koopa::rm'
         fi
+        koopa::alert_uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
         "${app[rm]}" \
             "${dict[prefix]}" \
             "${dict[opt_prefix]}/${dict[name]}"

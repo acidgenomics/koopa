@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This is now failing to locate Emacs...
-# FIXME Consider adding this step:
-# Also useful: rm -rf .emacs.d/.local/straight/build-*
-
-# FIXME Need to change default branch to 'master' from 'develop'.
-
 koopa:::update_doom_emacs() { # {{{1
     # """
     # Update Doom Emacs.
-    # @note Updated 2021-11-22.
+    # @note Updated 2022-01-26.
     #
     # @seealso
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/upgrade.el
