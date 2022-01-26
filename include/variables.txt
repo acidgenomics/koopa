@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-01-25"
+koopa-date="2022-01-26"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -285,7 +285,7 @@ poetry="1.1.12"
 proj="8.2.1"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.2.3"
+pyenv="2.2.4"
 
 # https://www.python.org/downloads/
 # > python="3.9.10"
