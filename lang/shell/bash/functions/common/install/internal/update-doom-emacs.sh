@@ -13,9 +13,13 @@ koopa:::update_doom_emacs() { # {{{1
     declare -A app=(
         [doom]="$(koopa::locate_doom)"
         [emacs]="$(koopa::locate_emacs)"
+        [rg]="$(koopa::locate_rg)"
     )
-    koopa::add_to_path_start "$(koopa::dirname "${app[emacs]}")"
+    koopa::add_to_path_start \
+        "$(koopa::dirname "${app[emacs]}")" \
+        "$(koopa::dirname "${app[rg]}")"
     "${app[doom]}" --yes upgrade --force
     "${app[doom]}" --yes sync
+    "${app[doom]}" --yes doctor
     return 0
 }
