@@ -46,7 +46,7 @@ _koopa_posix_header() { # {{{1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         # > _koopa_activate_conda || return 1
-        _koopa_activate_emacs || return 1
+        _koopa_activate_doom_emacs || return 1
         _koopa_activate_go || return 1
         _koopa_activate_nim || return 1
         _koopa_activate_node || return 1
