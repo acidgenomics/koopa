@@ -1,6 +1,6 @@
 # """
 # Linux-specific (Linuxbrew) Homebrew Bundle Brewfile.
-# Updated 2021-09-29.
+# Updated 2022-01-26.
 # """
 
 # Taps {{{1
@@ -17,3 +17,4 @@ brew "util-linux", link: false
 
 brew "docker"
 brew "docker-credential-helper"  # docker-credential-pass
+brew "emacs"

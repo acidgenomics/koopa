@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2021-11-09.
+# Updated 2022-01-26.
 #
 # @section ilmbase deprecation (due to neofetch):
 #
@@ -56,7 +56,6 @@ brew "dog"  # rust
 brew "duf"
 brew "dust"  # rust
 brew "editorconfig"
-brew "emacs"
 brew "exa"  # rust
 brew "exiftool"
 brew "expect"  # installs unbuffer
