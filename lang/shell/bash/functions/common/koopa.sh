@@ -462,7 +462,7 @@ koopa:::which_function() { # {{{1
     fi
     if ! koopa::is_function "$fun"
     then
-        koopa::stop 'Unsupported command.'
+        koopa::stop "Unsupported command."
     fi
     koopa::print "$fun"
     return 0

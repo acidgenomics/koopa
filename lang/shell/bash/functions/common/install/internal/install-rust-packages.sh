@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Simplify, not allowing user input here.
-
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-01-26.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
