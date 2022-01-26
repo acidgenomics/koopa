@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa::mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-01-26.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -18,19 +17,25 @@ koopa::mktemp() { # {{{1
     # Note that old version of mktemp (e.g. macOS) only supports '-t' instead of
     # '--tmpdir' flag for prefix.
     #
-    # See also:
-    # - https://stackoverflow.com/questions/4632028
+    # @seealso
+    # - https://st xackoverflow.com/questions/4632028
     # - https://stackoverflow.com/a/10983009/3911732
     # - https://gist.github.com/earthgecko/3089509
     # """
-    local date_id mktemp mktemp_args template user_id
-    mktemp="$(koopa::locate_mktemp)"
-    mktemp_args=("$@")
-    user_id="$(koopa::user_id)"
-    date_id="$(koopa::datetime)"
-    template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
-    mktemp_args+=('-t' "$template")
-    x="$("$mktemp" "${mktemp_args[@]}")"
+    local app dict mktemp_args x
+    declare -A app=(
+        [mktemp]="$(koopa::locate_mktemp)"
+    )
+    declare -A dict=(
+        [date_id]="$(koopa::datetime)"
+        [user_id]="$(koopa::user_id)"
+    )
+    dict[template]="koopa-${dict[user_id]}-${dict[date_id]}-XXXXXXXXXX"
+    mktemp_args=(
+        "$@"
+        '-t' "${dict[template]}"
+    )
+    x="$("${app[mktemp]}" "${mktemp_args[@]}")"
     koopa::print "$x"
     return 0
 }
