@@ -17,7 +17,7 @@ koopa::uninstall_app() { # {{{1
         [opt_prefix]="$(koopa::opt_prefix)"
         [platform]=''
         [prefix]=''
-        [shared]=''
+        [shared]=0
         [system]=0
     )
     pos=()
@@ -65,14 +65,6 @@ koopa::uninstall_app() { # {{{1
                 dict[link_app]=0
                 shift 1
                 ;;
-            '--no-shared')
-                dict[shared]=0
-                shift 1
-                ;;
-            '--shared')
-                dict[shared]=1
-                shift 1
-                ;;
             '--system')
                 dict[system]=1
                 shift 1
@@ -90,6 +82,34 @@ koopa::uninstall_app() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
+    if [[ -n "${dict[prefix]}" ]]
+    then
+        if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
+        then
+            dict[shared]=1
+        else
+            dict[shared]=0
+        fi
+    else
+        if koopa::is_shared_install
+        then
+            dict[shared]=1
+        else
+            dict[shared]=0
+        fi
+    fi
+    if [[ "${dict[system]}" -eq 1 ]]
+    then
+        dict[shared]=0
+    fi
+    if [[ "${dict[shared]}" -eq 1 ]] || [[ "${dict[system]}" -eq 1 ]]
+    then
+        koopa::assert_is_admin
+    fi
+    if [[ "${dict[shared]}" -eq 0 ]] || koopa::is_macos
+    then
+        dict[link_app]=0
+    fi
     if [[ "${dict[system]}" -eq 1 ]]
     then
         koopa::alert_uninstall_start "${dict[name_fancy]}"
@@ -124,16 +144,6 @@ koopa::uninstall_app() { # {{{1
                 "${dict[prefix]}"
             return 0
         fi
-        if [[ -z "${dict[shared]}" ]]
-        then
-            if koopa::str_detect_regex \
-                "${dict[prefix]}" "^${dict[koopa_prefix]}"
-            then
-                dict[shared]=1
-            else
-                dict[shared]=0
-            fi
-        fi
         if [[ "${dict[shared]}" -eq 1 ]]
         then
             app[rm]='koopa::sys_rm'
@@ -141,17 +151,10 @@ koopa::uninstall_app() { # {{{1
             app[rm]='koopa::rm'
         fi
         koopa::alert_uninstall_start "${dict[name_fancy]}" "${dict[prefix]}"
-        "${app[rm]}" \
-            "${dict[prefix]}" \
-            "${dict[opt_prefix]}/${dict[name]}"
-        if [[ -z "${dict[link_app]}" ]]
+        "${app[rm]}" "${dict[prefix]}"
+        if [[ "${dict[shared]}" -eq 1 ]]
         then
-            if [[ "${dict[shared]}" -eq 0 ]] || koopa::is_macos
-            then
-                dict[link_app]=0
-            else
-                dict[link_app]=1
-            fi
+            "${app[rm]}" "${dict[opt_prefix]}/${dict[name]}"
         fi
         if [[ "${dict[link_app]}" -eq 1 ]]
         then
