@@ -86,7 +86,7 @@ cellranger="6.1.2"  # 2021-10-25
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.22.1"
+cmake="3.22.2"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -487,7 +487,7 @@ conda-seqcluster="1.2.8"        # 2021-06-22 bioconda                 [smallrna]
 conda-seqkit="2.1.0"            # 2021-11-15 bioconda             [file formats]
 conda-seqtk="1.3"               # 2019-07-31 bioconda             [file formats]
 conda-sicer2="1.0.3"            # 2021-03-26 bioconda                  [chipseq]
-conda-snakemake="6.13.1"        # 2022-01-12 bioconda                [workflows]
+conda-snakemake="6.14.0"        # 2022-01-26 bioconda                [workflows]
 conda-squid="1.5"               # 2021-03-27 bioconda                [variation]
 conda-sra-tools="2.11.0"        # 2021-11-10 bioconda              [data mining]
 conda-star-fusion="1.10.0"      # 2021-04-15 bioconda                [variation]
