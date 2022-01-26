@@ -1,0 +1,131 @@
+# """
+# R for macOS Makevars configuration.
+# Updated 2021-12-16.
+#
+# Refer to corresponding 'Makeconf' file for current system defaults.
+#
+# See also:
+# - /Library/Frameworks/R.framework/Resources/etc/Makeconf
+# - https://mac.r-project.org/
+# - https://cran.r-project.org/doc/manuals/r-release/
+#     R-admin.html#macOS-packages
+# - https://cran.r-project.org/doc/manuals/r-devel/
+#     R-exts.html#Using-Makevars
+# """
+
+
+
+# Compiler settings {{{1
+# ==============================================================================
+
+# Notes {{{2
+# ------------------------------------------------------------------------------
+#
+# Using CRAN-recommended fxcoudert GNU Fortran build for compilation.
+#
+# '-O3' should be faster than '-O2' (default) level optimization.
+#
+# 'LTO' refers to link time optimization.
+#
+# 'CXXFLAGS' do not automagically promote to 'CXX11FLAGS' etc.
+#
+# See also:
+# - https://github.com/fxcoudert/gfortran-for-macOS/releases/
+# - https://github.com/Rdatatable/data.table/wiki/Installation/
+# - https://thecoatlessprofessor.com/programming/cpp/
+#     r-compiler-tools-for-rcpp-on-macos/
+# - https://stackoverflow.com/a/23414789/
+# - https://stackoverflow.com/a/37234225/
+# - https://github.com/rstudio/httpuv/issues/260/
+# - https://github.com/rstudio/httpuv/issues/325/
+# - https://yiqingxu.org/public/BigSurError.pdf
+
+# Apple clang compiler {{{2
+# ------------------------------------------------------------------------------
+
+# > CC = clang -mmacosx-version-min=10.13
+# > CFLAGS = -Wall -g -O2 $(LTO)
+# > CPPFLAGS = -I/usr/local/include
+# > CXX = clang++ -mmacosx-version-min=10.13 -std=gnu++14
+# > CXXFLAGS = -Wall -g -O2 $(LTO)
+# > CXX11 = clang++ -mmacosx-version-min=10.13
+# > CXX11FLAGS = -Wall -g -O2 $(LTO)
+# > CXX14 = clang++ -mmacosx-version-min=10.13
+# > CXX14FLAGS = -Wall -g -O2 $(LTO)
+# > CXX17 = clang++ -mmacosx-version-min=10.13
+# > CXX17FLAGS = -Wall -g -O2 $(LTO)
+# > CXX20 = clang++ -mmacosx-version-min=10.13
+# > CXX20FLAGS = -Wall -g -O2 $(LTO)
+# > FC = gfortran -mmacosx-version-min=10.13
+# > FCFLAGS = -Wall -g -O2 $(LTO_FC)
+# > FLIBS = -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/gfortran/lib -lgfortran -lquadmath -lm
+# > LDFLAGS = -L/usr/local/lib
+
+# GNU compiler (GCC / Fortran) {{{2
+# ------------------------------------------------------------------------------
+
+# NOTE These settings currently don't work for httpuv package.
+
+LOC = /usr/local/gfortran
+SDK_LOC = /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr
+
+CC = $(LOC)/bin/gcc
+CFLAGS = -O3 -Wall -g -pedantic -pipe -mtune=native -std=gnu99 $(LTO)
+CPPFLAGS = -I$(LOC)/include -I$(SDK_LOC)/include -I/usr/local/include
+CXX = $(LOC)/bin/g++
+CXXFLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
+CXX11 = $(LOC)/bin/g++
+CXX11FLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
+CXX14 = $(LOC)/bin/g++
+CXX14FLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
+CXX17 = $(LOC)/bin/g++
+CXX17FLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
+CXX20 = $(LOC)/bin/g++
+CXX20FLAGS = -O3 -Wall -Wno-unused -g -pedantic -pipe -mtune=native $(LTO)
+FC = $(LOC)/bin/gfortran
+FCFLAGS = -O3 -Wall -g $(LTO_FC)
+FLIBS = -L$(LOC)/lib/gcc/x86_64-apple-darwin18/8.2.0 -L$(LOC)/lib -lgfortran -lquadmath -lm
+LDFLAGS = -L$(LOC)/lib -Wl,-rpath,$(LOC)/lib -L/usr/local/lib
+
+
+
+# OpenMP {{{1
+# ==============================================================================
+
+# NOTE If using macOS Xcode clang toolchain for compilation, need to install
+# libomp OpenMP run-time built from official LLVM release sources using Xcode
+# compilers.
+#
+# In that case, check for these files:
+# - /usr/local/include/omp-tools.h
+# - /usr/local/include/omp.h
+# - /usr/local/include/ompt.h
+# - /usr/local/lib/libomp.dylib
+#
+# See also:
+# - https://mac.r-project.org/openmp/
+# - https://github.com/Rdatatable/data.table/wiki/Installation
+# - https://firas.io/post/data.table_openmp/
+# - https://gist.github.com/btskinner/
+#     98f0501ceb21e1c8e7ff9dbaa5bf7b96#file-makevars
+# - https://stackoverflow.com/questions/40904488/
+# - https://iscinumpy.gitlab.io/post/omp-on-high-sierra/
+
+# Enabling these arguments globally will cause compilation issues with some
+# packages, including fs and stringi.
+# > CPPFLAGS += -Xclang -fopenmp
+# > LDFLAGS += -lomp
+# > LIBS += -lomp
+
+# Flags for OpenMP support that should allow packages that want to use OpenMP
+# to do so (data.table), and other packages that bork with '-fopenmp' flag
+# (e.g. fs, stringi) to be left alone.
+
+SHLIB_OPENMP_CFLAGS += -fopenmp
+SHLIB_OPENMP_CXXFLAGS += -fopenmp
+SHLIB_OPENMP_CXX11FLAGS += -fopenmp
+SHLIB_OPENMP_CXX14FLAGS += -fopenmp
+SHLIB_OPENMP_CXX17FLAGS += -fopenmp
+SHLIB_OPENMP_CXX20FLAGS += -fopenmp
+SHLIB_OPENMP_FCFLAGS += -fopenmp
+SHLIB_OPENMP_FFLAGS += -fopenmp

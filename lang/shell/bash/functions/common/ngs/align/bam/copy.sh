@@ -15,6 +15,7 @@ koopa::copy_bam_files() { # {{{1
     target_dir="$(koopa::realpath "${2:?}")"
     koopa::dl 'Source' "${source_dir}"
     koopa::dl 'Target' "${target_dir}"
+    # FIXME Rework using 'koopa::find'.
     find -L "$source_dir" \
         -maxdepth 4 \
         -type f \

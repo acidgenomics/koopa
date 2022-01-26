@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME What's up with our arch approach here?
+# FIXME Does this now work for ARM? Need to double check.
+# FIXME Rework using app and dict approach.
 koopa::linux_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Linux.
@@ -64,7 +67,7 @@ koopa::linux_install_shiny_server() { # {{{1
     name_fancy="Shiny Server ${version}"
     ! koopa::is_current_version "$name" && reinstall=1
     [[ "$reinstall" -eq 0 ]] && koopa::is_installed "$name" && return 0
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     tmp_dir="$(koopa::tmp_dir)"
     if ! koopa::is_r_package_installed 'shiny'
     then
@@ -77,11 +80,11 @@ koopa::linux_install_shiny_server() { # {{{1
         koopa::cd "$tmp_dir"
         file="${name}-${version}-${arch2}.${file_ext}"
         url="https://download3.rstudio.org/${distro}/${arch}/${file}"
-        koopa::download "$url"
+        koopa::download "$url" "$file"
         "$install_fun" "$file"
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
     koopa::rm "$tmp_dir"
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 

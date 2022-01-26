@@ -1,13 +1,34 @@
 #!/usr/bin/env bash
 
+koopa::exec_dir() { # {{{1
+    # """
+    # Execute multiple shell scripts in a directory.
+    # @note Updated 2022-01-20.
+    # """
+    local file prefix
+    koopa::assert_has_args "$#"
+    koopa::assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        koopa::assert_is_dir "$prefix"
+        for file in "${prefix}/"*'.sh'
+        do
+            [ -x "$file" ] || continue
+            # shellcheck source=/dev/null
+            "$file"
+        done
+    done
+    return 0
+}
+
 koopa::help() { # {{{1
     # """
     # Show usage via '--help' flag.
-    # @note Updated 2021-06-07.
+    # @note Updated 2021-10-25.
     # """
-    local arg args first_arg last_arg man_file prefix script_name
+    local app arg args first_arg last_arg man_file prefix script_name
     [[ "$#" -eq 0 ]] && return 0
-    [[ "${1:-}" == "" ]] && return 0
+    [[ "${1:-}" == '' ]] && return 0
     first_arg="${1:?}"
     last_arg="${!#}"
     args=("$first_arg" "$last_arg")
@@ -16,20 +37,23 @@ koopa::help() { # {{{1
         case "$arg" in
             '--help' | \
             '-h')
-                koopa::assert_is_installed 'man'
+                declare -A app=(
+                    [head]="$(koopa::locate_head)"
+                    [man]="$(koopa::locate_man)"
+                )
                 file="$(koopa::realpath "$0")"
                 script_name="$(koopa::basename "$file")"
                 prefix="$(koopa::parent_dir --num=2 "$file")"
                 man_file="${prefix}/man/man1/${script_name}.1"
                 if [[ -s "$man_file" ]]
                 then
-                    head -n 10 "$man_file" \
-                        | koopa::str_match_regex '^\.TH ' \
+                    "${app[head]}" -n 10 "$man_file" \
+                        | koopa::str_detect_fixed - '.TH ' \
                         || koopa::stop "Invalid documentation at '${man_file}'."
                 else
                     koopa::stop "No documentation for '${script_name}'."
                 fi
-                man "$man_file"
+                "${app[man]}" "$man_file"
                 exit 0
                 ;;
         esac
@@ -80,7 +104,7 @@ koopa::pager() { # {{{1
 koopa::roff() { # {{{1
     # """
     # Convert roff markdown files to ronn man pages.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-10-22.
     # """
     local koopa_prefix
     koopa::assert_is_installed 'ronn'
@@ -88,7 +112,7 @@ koopa::roff() { # {{{1
     (
         koopa::cd "${koopa_prefix}/man"
         ronn --roff ./*.ronn
-        koopa::mv --target='man1' ./*.1
+        koopa::mv --target-directory='man1' ./*.1
     )
     return 0
 }
@@ -110,6 +134,30 @@ koopa::run_if_installed() { # {{{1
         exe="$(koopa::which_realpath "$arg")"
         "$exe"
     done
+    return 0
+}
+
+koopa::switch_to_develop() {  # {{{1
+    # """
+    # Switch koopa install to development version.
+    # @note Updated 2021-11-03.
+    # """
+    local app dict
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [git]="$(koopa::locate_git)"
+    )
+    declare -A dict=(
+        [branch]='develop'
+        [origin]='origin'
+        [prefix]="$(koopa::koopa_prefix)"
+    )
+    koopa::h1 "Switching koopa at '${dict[prefix]}' to '${dict[branch]}'."
+    "${app[git]}" checkout \
+        -B "${dict[branch]}" \
+        "${dict[origin]}/${dict[branch]}"
+    koopa::sys_set_permissions --recursive "${dict[prefix]}"
+    koopa::fix_zsh_permissions
     return 0
 }
 
@@ -178,38 +226,6 @@ koopa::sys_cp() { # {{{1
     return 0
 }
 
-koopa::sys_git_pull() { # {{{1
-    # """
-    # Pull koopa git repo.
-    # @note Updated 2021-09-20.
-    #
-    # Intended for use with 'koopa pull'.
-    #
-    # This handles updates to Zsh functions that are changed to group
-    # non-writable permissions, so Zsh passes 'compaudit' checks.
-    # """
-    koopa::assert_has_no_args "$#"
-    local current_branch default_branch prefix
-    (
-        prefix="$(koopa::koopa_prefix)"
-        koopa::cd "$prefix"
-        koopa::sys_set_permissions \
-            --recursive \
-            "${prefix}/lang/shell/zsh" \
-            &>/dev/null
-        current_branch="$(koopa::git_branch)"
-        default_branch="$(koopa::git_default_branch)"
-        koopa::git_pull
-        # Ensure other branches, such as develop, are rebased to main branch.
-        if [[ "$current_branch" != "$default_branch" ]]
-        then
-            koopa::git_pull origin "$default_branch"
-        fi
-        koopa::fix_zsh_permissions
-    )
-    return 0
-}
-
 koopa::sys_group() { # {{{1
     # """
     # Return the appropriate group to use with koopa installation.
@@ -229,86 +245,6 @@ koopa::sys_group() { # {{{1
         group="$(koopa::group)"
     fi
     koopa::print "$group"
-    return 0
-}
-
-koopa::sys_info() { # {{{
-    # """
-    # System information.
-    # @note Updated 2021-06-07.
-    # """
-    local array koopa_prefix nf origin os shell shell_name shell_version uname
-    koopa::assert_has_no_args "$#"
-    koopa_prefix="$(koopa::koopa_prefix)"
-    array=(
-        "koopa $(koopa::koopa_version) ($(koopa::koopa_date))"
-        "URL: $(koopa::koopa_url)"
-        "GitHub URL: $(koopa::koopa_github_url)"
-    )
-    if koopa::is_git_repo_top_level "$koopa_prefix"
-    then
-        origin="$( \
-            koopa::cd "$koopa_prefix"; \
-            koopa::git_remote_url
-        )"
-        commit="$( \
-            koopa::cd "$koopa_prefix"; \
-            koopa::git_last_commit_local
-        )"
-        array+=(
-            "Git Remote: ${origin}"
-            "Commit: ${commit}"
-        )
-    fi
-    array+=(
-        ''
-        'Configuration'
-        '-------------'
-        "Koopa Prefix: ${koopa_prefix}"
-        "App Prefix: $(koopa::app_prefix)"
-        "Opt Prefix: $(koopa::opt_prefix)"
-        "Make Prefix: $(koopa::make_prefix)"
-        "User Config Prefix: $(koopa::config_prefix)"
-    )
-    array+=('')
-    # Show neofetch info, if installed.
-    if koopa::is_installed 'neofetch'
-    then
-        readarray -t nf <<< "$(neofetch --stdout)"
-        array+=(
-            'System information (neofetch)'
-            '-----------------------------'
-            "${nf[@]:2}"
-        )
-    else
-        if koopa::is_macos
-        then
-            os="$( \
-                printf '%s %s (%s)\n' \
-                    "$(sw_vers -productName)" \
-                    "$(sw_vers -productVersion)" \
-                    "$(sw_vers -buildVersion)" \
-            )"
-        else
-            uname="$(koopa::locate_uname)"
-            os="$("$uname" --all)"
-            # Alternate approach using Python:
-            # > python="$(koopa::locate_python)"
-            # > os="$("$python" -mplatform)"
-        fi
-        shell_name="$(koopa::shell_name)"
-        shell_version="$(koopa::get_version "${shell_name}")"
-        shell="${shell_name} ${shell_version}"
-        array+=(
-            'System information'
-            '------------------'
-            "OS: ${os}"
-            "Shell: ${shell}"
-            "Architecture: $(koopa::arch)"
-        )
-    fi
-    cat "$(koopa::include_prefix)/ascii-turtle.txt"
-    koopa::info_box "${array[@]}"
     return 0
 }
 
@@ -515,7 +451,7 @@ koopa::warn_if_export() { # {{{1
     do
         if koopa::is_export "$arg"
         then
-            koopa::warning "'${arg}' is exported."
+            koopa::warn "'${arg}' is exported."
         fi
     done
     return 0

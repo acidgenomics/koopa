@@ -74,6 +74,7 @@ koopa::linux_bcbio_nextgen_run_tests() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::linux_patch_bcbio_nextgen_devel() { # {{{1
     # """
     # Patch bcbio-nextgen development install.

@@ -2,29 +2,16 @@
 
 # """
 # Koopa ZSH prompt.
-# @note Updated 2020-11-24.
-#
-# Modified, lighter version of Pure, by Sindre Sorhus.
-# https://github.com/sindresorhus/pure
-#
-# Prompt:
-# - %* : time
-# - %F : color dict
-# - %M : machine (host) name (full)
-# - %f : reset color
-# - %m : machine (host) name (up to first '.')
-# - %n : user name
-# - %~ : current path
-# - %(?..) : prompt conditional - %(condition.true.false)
+# @note Updated 2022-01-21.
 # """
 
-_koopa_prompt_setup() { # {{{1
-    if _koopa_is_installed starship
+_koopa_zsh_prompt_setup() { # {{{1
+    if _koopa_is_installed 'starship'
     then
         _koopa_activate_starship
         return 0
     fi
-    PROMPT="$(_koopa_prompt)"
+    PROMPT="$(_koopa_zsh_prompt_string)"
 }
 
-_koopa_prompt_setup "$@"
+_koopa_zsh_prompt_setup "$@"

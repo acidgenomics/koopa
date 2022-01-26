@@ -3,21 +3,16 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2021-10-05.
+    # @note Updated 2022-01-20.
     # """
-    local file
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
-    # Source POSIX functions.
-    for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'.sh'
-    do
-        # shellcheck source=/dev/null
-        [ -f "$file" ] && . "$file"
-    done
+    # shellcheck source=/dev/null
+    . "${KOOPA_PREFIX}/lang/shell/posix/functions.sh"
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         _koopa_duration_start || return 1
@@ -34,8 +29,7 @@ _koopa_posix_header() { # {{{1
     then
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
-    _koopa_check_os || return 1
-    _koopa_check_shell || return 1
+    # > _koopa_umask || return 1
     _koopa_activate_xdg || return 1
     _koopa_add_koopa_config_link \
         "$(_koopa_koopa_prefix)" 'home' \
@@ -51,8 +45,8 @@ _koopa_posix_header() { # {{{1
     _koopa_activate_pkg_config || return 1
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
-        _koopa_activate_conda || return 1
-        _koopa_activate_emacs || return 1
+        # > _koopa_activate_conda || return 1
+        _koopa_activate_doom_emacs || return 1
         _koopa_activate_go || return 1
         _koopa_activate_nim || return 1
         _koopa_activate_node || return 1
@@ -77,13 +71,11 @@ _koopa_posix_header() { # {{{1
     _koopa_activate_local_paths || return 1
     if [ "${KOOPA_ACTIVATE:-0}" -eq 1 ]
     then
-        _koopa_export_cpu_count || return 1
         _koopa_export_editor || return 1
         _koopa_export_git || return 1
         _koopa_export_gnupg || return 1
         _koopa_export_history || return 1
         _koopa_export_pager || return 1
-        _koopa_export_tmpdir || return 1
         if [ "${KOOPA_MINIMAL:-0}" -eq 0 ] && _koopa_is_interactive
         then
             if _koopa_is_macos
@@ -95,7 +87,6 @@ _koopa_posix_header() { # {{{1
             _koopa_activate_aliases || return 1
             _koopa_activate_dircolors || return 1
             _koopa_activate_gcc_colors || return 1
-            _koopa_activate_gnu_aliases || return 1
             _koopa_activate_lesspipe || return 1
             _koopa_activate_secrets || return 1
             _koopa_activate_ssh_key || return 1

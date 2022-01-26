@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
+# FIXME Consider defining 'koopa::cut' function to wrap the cut call here.
+# FIXME Rework using a dict approach.
+
 koopa::fedora_install_wine() { # {{{1
     # """
     # Install Wine.
-    # @note Updated 2020-07-30.
+    # @note Updated 2021-11-18.
     #
     # Note that 'winehq-stable' is currently only available on Fedora 31.
     # Can use 'winehq-devel' on Fedora 32.
@@ -11,19 +15,20 @@ koopa::fedora_install_wine() { # {{{1
     # @seealso
     # - https://wiki.winehq.org/Fedora
     # """
-    local cut grep name_fancy repo_url version
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
+    local app name_fancy repo_url version
     name_fancy='Wine'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     if koopa::is_installed 'wine'
     then
         koopa::alert_is_installed "$name_fancy"
         return 0
     fi
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+    )
     version="$( \
-        "$grep" 'VERSION_ID=' '/etc/os-release' \
-            | "$cut" -d '=' -f 2 \
+        koopa::grep 'VERSION_ID=' '/etc/os-release' \
+            | "${app[cut]}" -d '=' -f 2 \
     )"
     repo_url="https://dl.winehq.org/wine-builds/fedora/${version}/winehq.repo"
     koopa::fedora_dnf update
@@ -34,10 +39,11 @@ koopa::fedora_install_wine() { # {{{1
         'xorg-x11-apps' \
         'xorg-x11-server-Xvfb' \
         'xorg-x11-xauth'
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::fedora_uninstall_wine() { # {{{1
     # """
     # Uninstall Wine.

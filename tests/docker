@@ -1,25 +1,29 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
 koopa::test_docker() {
     # """
     # Install and test koopa inside Docker.
-    # Updated 2020-11-10.
+    # Updated 2021-10-29.
     # """
-    local cmd image
+    local app cmd image
+    koopa::assert_has_args_le "$#" 1
+    declare -A app=(
+        [docker]="$(koopa::locate_docker)"
+    )
     image="${1:-debian}"
     image="acidgenomics/${image}:minimal"
-    koopa::h1 "Running Docker install test in '${image}' image."
+    koopa::alert "Running Docker install test in '${image}' image."
     cmd="\
         if [ -d /usr/local/koopa ]; \
         then sudo rm -fr /usr/local/koopa; \
         else rm -fr ~/.local/share/koopa; fi \
      && curl -sSL https://koopa.acidgenomics.com/install \
             | bash -s -- --non-interactive --test"
-    docker pull "$image"
-    docker run -it "$image" bash -c "$cmd"
+    "${app[docker]}" pull "$image"
+    "${app[docker]}" run -it "$image" bash -c "$cmd"
     koopa::alert_success 'Installation test was successful.'
     return 0
 }
