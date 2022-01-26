@@ -58,7 +58,7 @@ cask "carbon-copy-cloner"
 cask "coconutbattery"
 cask "docker"
 cask "easyfind"
-cask "emacs"
+cask "emacs"  # no-binaries
 cask "firefox"
 cask "font-cascadia-code"
 cask "font-cascadia-mono"
