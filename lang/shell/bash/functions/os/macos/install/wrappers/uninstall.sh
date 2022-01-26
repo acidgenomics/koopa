@@ -65,3 +65,21 @@ koopa::macos_uninstall_r_framework() { # {{{1
         --uninstaller='r-framework' \
         "$@"
 }
+
+koopa::macos_uninstall_ringcentral() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='RingCentral' \
+        --name='ringcentral' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa::macos_uninstall_xcode_clt() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Xcode Command Line Tools (CLT)' \
+        --name='xcode-clt' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
