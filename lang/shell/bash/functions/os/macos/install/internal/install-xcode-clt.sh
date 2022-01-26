@@ -3,24 +3,6 @@
 # NOTE This currently requires user interaction, and may error inside of the
 # subshell approach currently used in 'koopa::install_app' handoff.
 
-koopa::macos_install_xcode_clt() { # {{{1
-    koopa::install_app \
-        --name-fancy='Xcode Command Line Tools (CLT)' \
-        --name='xcode-clt' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa::macos_uninstall_xcode_clt() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='Xcode Command Line Tools (CLT)' \
-        --name='xcode-clt' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa:::macos_install_xcode_clt() { # {{{1
     # """
     # Install Xcode CLT.
@@ -60,23 +42,5 @@ koopa:::macos_install_xcode_clt() { # {{{1
     "${app[sudo]}" "${app[xcode_select]}" -r
     prefix="$("${app[xcode_select]}" -p)"
     koopa::assert_is_dir "${dict[prefix]}"
-    return 0
-}
-
-koopa:::macos_uninstall_xcode_clt() { # {{{1
-    # """
-    # Uninstall Xcode CLT.
-    # @note Updated 2021-10-30.
-    # @seealso
-    # - https://apple.stackexchange.com/questions/308943
-    # """
-    local dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    declare -A dict=(
-        [prefix]='/Library/Developer/CommandLineTools'
-    )
-    koopa::assert_is_dir "${dict[prefix]}"
-    koopa::rm --sudo "${dict[prefix]}"
     return 0
 }

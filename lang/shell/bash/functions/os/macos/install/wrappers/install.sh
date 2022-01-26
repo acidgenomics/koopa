@@ -29,3 +29,12 @@ koopa::macos_install_r_framework() { # {{{1
         --system \
         "$@"
 }
+
+koopa::macos_install_xcode_clt() { # {{{1
+    koopa::install_app \
+        --name-fancy='Xcode Command Line Tools (CLT)' \
+        --name='xcode-clt' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
