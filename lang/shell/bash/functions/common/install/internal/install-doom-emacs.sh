@@ -3,7 +3,7 @@
 koopa:::install_doom_emacs() { # {{{1
     # """
     # Install Doom Emacs.
-    # @note Updated 2022-01-19.
+    # @note Updated 2022-01-26.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -31,13 +31,13 @@ koopa:::install_doom_emacs() { # {{{1
         [url]='https://github.com/hlissner/doom-emacs.git'
     )
     koopa::add_to_path_start "$(koopa::dirname "${app[emacs]}")"
-    koopa::activate_python_packages
+    # > koopa::activate_opt_prefix 'python_packages'
     koopa::git_clone \
         --branch="${dict[branch]}" \
         "${dict[url]}" \
         "${dict[prefix]}"
     app[doom]="${dict[prefix]}/bin/doom"
-    koopa::assert_is_executable "${app[doom]}"
+    koopa::assert_is_installed "${app[doom]}"
     install_args=(
         # > '--no-config'
         # > '--no-install'
