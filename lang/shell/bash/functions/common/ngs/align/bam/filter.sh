@@ -5,7 +5,7 @@
 koopa::bam_filter() { # {{{1
     # """
     # Apply multi-step filtering to BAM files.
-    # @note Updated 2021-08-17.
+    # @note Updated 2021-10-26.
     # """
     local bam_file bam_files dir final_output_bam final_output_tail input_bam
     local input_tail output_bam output_tail
@@ -14,13 +14,13 @@ koopa::bam_filter() { # {{{1
     koopa::assert_is_dir "$dir"
     dir="$(koopa::realpath "$dir")"
     readarray -t bam_files <<< "$( \
-        find "$dir" \
-            -maxdepth 3 \
-            -mindepth 1 \
-            -type f \
-            -iname '*.sorted.bam' \
-            -print \
-        | sort \
+        koopa::find \
+            --glob='*.sorted.bam' \
+            --max-depth 3 \
+            --min-depth 1 \
+            --prefix="$dir" \
+            --sort \
+            --type='f' \
     )"
     if ! koopa::is_array_non_empty "${bam_files[@]:-}"
     then
@@ -34,7 +34,7 @@ koopa::bam_filter() { # {{{1
         final_output_bam="${bam_file%.bam}.${final_output_tail}.bam"
         if [[ -f "$final_output_bam" ]]
         then
-            koopa::alert_note "Skipping '$(basename "$final_output_bam")'."
+            koopa::alert_note "Skipping '${final_output_bam}'."
             continue
         fi
         # 1. Filter duplicate reads.

@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_docker_credential_pass() { # {{{1
-    koopa:::install_app \
-        --name='docker-credential-pass' \
-        --platform='linux' \
-        "$@"
-}
-
+# FIXME Rework using dict approach.
 koopa:::linux_install_docker_credential_pass() { # {{{1
     # """
     # Install docker-credential-pass.
@@ -29,21 +23,11 @@ koopa:::linux_install_docker_credential_pass() { # {{{1
     file="${name}-v${version}-${arch2}.tar.gz"
     url="https://github.com/docker/docker-credential-helpers/releases/\
 download/v${version}/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::extract "$file"
     koopa::chmod '0775' "$name"
     koopa::mkdir "${prefix}/bin"
     koopa::sys_set_permissions --recursive "$prefix"
-    koopa::cp --target="${prefix}/bin" "$name"
+    koopa::cp "$name" "${prefix}/bin"
     return 0
-}
-
-koopa::linux_uninstall_docker_credential_pass() { # {{{1
-    # """
-    # Uninstall docker-credential-pass.
-    # @note Updated 2021-06-11.
-    # """
-    koopa:::uninstall_app \
-        --name='docker-credential-pass' \
-        "$@"
 }

@@ -3,7 +3,9 @@
 
 # """
 # Shared R environment configuration for Linux.
-# @note Updated 2021-09-29.
+#
+# @note Updated 2021-12-02.
+#
 # @seealso
 # - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -145,7 +147,6 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # Previous version on RHEL 7 VM: 12.2.0.1.0.
 #
 # For Debian/Ubuntu, convert the RPM into DEB format using alien.
-# > sudo apt-get install alien
 #
 # See also:
 # - https://www.oracle.com/database/technologies/instant-client/
@@ -209,6 +210,18 @@ R_REMOTES_STANDALONE="true"
 # Check with `virtualenv_list()`.
 # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
 # > WORKON_HOME="${KOOPA_OPT_PREFIX}/virtualenvs"
+
+# stringi {{{2
+# ------------------------------------------------------------------------------
+
+# See also:
+# https://github.com/gagolews/stringi/blob/master/INSTALL
+
+# Ensure usage of system ICU, insteading of building bundle from source.
+STRINGI_DISABLE_ICU_BUNDLE=1
+
+# Alternatively, ensure that ICU bundle is compiled from source.
+# > STRINGI_DISABLE_PKG_CONFIG=1
 
 # tools {{{2
 # ------------------------------------------------------------------------------

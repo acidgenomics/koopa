@@ -53,10 +53,14 @@ koopa::sambamba_filter() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'filter' 'input_bam' 'output_bam'
+    # FIXME Rework this.
+    koopa::assert_is_set \
+        '--filter' "$filter" \
+        '--intput-bam' "$input_bam" \
+        '--output-bam' "$output_bam"
     koopa::assert_are_not_identical "$input_bam" "$output_bam"
-    input_bam_bn="$(basename "$input_bam")"
-    output_bam_bn="$(basename "$output_bam")"
+    input_bam_bn="$(koopa::basename "$input_bam")"
+    output_bam_bn="$(koopa::basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
         koopa::alert_note "Skipping '${output_bam_bn}'."
@@ -152,8 +156,8 @@ koopa::sambamba_sort() { # {{{1
     koopa::assert_is_installed 'sambamba'
     unsorted_bam="${1:?}"
     sorted_bam="${unsorted_bam%.bam}.sorted.bam"
-    unsorted_bam_bn="$(basename "$unsorted_bam")"
-    sorted_bam_bn="$(basename "$sorted_bam")"
+    unsorted_bam_bn="$(koopa::basename "$unsorted_bam")"
+    sorted_bam_bn="$(koopa::basename "$sorted_bam")"
     if [[ -f "$sorted_bam" ]]
     then
         koopa::alert_note "Skipping '${sorted_bam_bn}'."

@@ -2,6 +2,8 @@
 
 # NOTE Need to migrate these functions to r-koopa.
 
+# FIXME Rework our location of conda environment tool here instead.
+
 koopa::samtools_convert_sam_to_bam() { # {{{1
     # """
     # Convert a SAM file to BAM format.
@@ -47,9 +49,12 @@ koopa::samtools_convert_sam_to_bam() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'input_sam' 'output_bam'
-    sam_bn="$(basename "$input_sam")"
-    bam_bn="$(basename "$output_bam")"
+    # FIXME Rethink this approach, reworking using dict approach.
+    koopa::assert_is_set \
+        '--input-sam' "$input_sam" \
+        '--output-bam' "$output_bam"
+    sam_bn="$(koopa::basename "$input_sam")"
+    bam_bn="$(koopa::basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
         koopa::alert_note "Skipping '${bam_bn}'."

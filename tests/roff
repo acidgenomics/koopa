@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
 koopa::test_roff() { # {{{1
     # """
@@ -12,10 +12,8 @@ koopa::test_roff() { # {{{1
     koopa_prefix="$(koopa::koopa_prefix)"
     status=0
     koopa::h1 "Running manual file '--help' flag checks."
-
     # man dirs {{{2
     # --------------------------------------------------------------------------
-
     # Put all 'man/' dirs into an array and loop.
     # Pipe GNU find into array.
     readarray -t man_dirs <<< "$( \
@@ -35,10 +33,8 @@ koopa::test_roff() { # {{{1
     do
         koopa::add_to_manpath_start "$dir"
     done
-
     # man file formatting {{{2
     # --------------------------------------------------------------------------
-
     koopa::h2 'Checking troff man file formatting.'
     for dir in "${man_dirs[@]}"
     do
@@ -57,17 +53,16 @@ koopa::test_roff() { # {{{1
         fi
         for file in "${files[@]}"
         do
-            if ! koopa::str_match_regex "$(head -n 1 "$file")" '^\.TH '
+            # FIXME Need to wrap 'head' here.
+            if ! koopa::str_detect_regex "$(head -n 1 "$file")" '^\.TH '
             then
                 koopa::alert_note "ERROR: '${file}'."
                 status=1
             fi
         done
     done
-
     # '--help' flag support {{{2
     # --------------------------------------------------------------------------
-
     koopa::h2 "Running exported script '--help' flag checks."
     # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
     readarray -t bin_dirs <<< "$( \

@@ -8,6 +8,10 @@ koopa:::msg() { # {{{1
     __koopa_msg "$@"
 }
 
+koopa::activate_anaconda() { # {{{1
+    _koopa_activate_anaconda "$@"
+}
+
 koopa::activate_aspera() { # {{{1
     _koopa_activate_aspera "$@"
 }
@@ -20,8 +24,8 @@ koopa::activate_conda() { # {{{1
     _koopa_activate_conda "$@"
 }
 
-koopa::activate_emacs() { # {{{1
-    _koopa_activate_emacs "$@"
+koopa::activate_doom_emacs() { # {{{1
+    _koopa_activate_doom_emacs "$@"
 }
 
 koopa::activate_fzf() { # {{{1
@@ -34,10 +38,6 @@ koopa::activate_go() { # {{{1
 
 koopa::activate_homebrew() { # {{{1
     _koopa_activate_homebrew "$@"
-}
-
-koopa::activate_homebrew_cask_google_cloud_sdk() { # {{{1
-    _koopa_activate_homebrew_cask_google_cloud_sdk "$@"
 }
 
 koopa::activate_homebrew_opt_gnu_prefix() { # {{{1
@@ -58,10 +58,6 @@ koopa::activate_koopa_paths() { # {{{1
 
 koopa::activate_llvm() { # {{{1
     _koopa_activate_llvm "$@"
-}
-
-koopa::activate_local_etc_profile() { # {{{1
-    _koopa_activate_local_etc_profile "$@"
 }
 
 koopa::activate_local_paths() { # {{{1
@@ -220,10 +216,6 @@ koopa::arch() { # {{{1
     _koopa_arch "$@"
 }
 
-koopa::arch2() { # {{{1
-    _koopa_arch2 "$@"
-}
-
 koopa::aspera_prefix() { # {{{1
     _koopa_aspera_prefix "$@"
 }
@@ -234,18 +226,6 @@ koopa::bcbio_nextgen_tools_prefix() { # {{{1
 
 koopa::boolean_nounset() { # {{{1
     _koopa_boolean_nounset "$@"
-}
-
-koopa::camel_case_simple() { # {{{1
-    _koopa_camel_case_simple "$@"
-}
-
-koopa::check_os() { # {{{1
-    _koopa_check_os "$@"
-}
-
-koopa::check_shell() { # {{{1
-    _koopa_check_shell "$@"
 }
 
 koopa::conda_env_name() { # {{{1
@@ -260,12 +240,8 @@ koopa::config_prefix() { # {{{1
     _koopa_config_prefix "$@"
 }
 
-koopa::cpu_count() { # {{{1
-    _koopa_cpu_count "$@"
-}
-
-koopa::data_disk_link_prefix() { # {{{1
-    _koopa_data_disk_link_prefix "$@"
+koopa::deactivate_anaconda() { # {{{1
+    _koopa_deactivate_anaconda "$@"
 }
 
 koopa::deactivate_conda() { # {{{1
@@ -320,14 +296,6 @@ koopa::ensembl_perl_api_prefix() { # {{{1
     _koopa_ensembl_perl_api_prefix "$@"
 }
 
-koopa::exec_dir() { # {{{1
-    _koopa_exec_dir "$@"
-}
-
-koopa::export_cpu_count() { # {{{1
-    _koopa_export_cpu_count "$@"
-}
-
 koopa::export_editor() { # {{{1
     _koopa_export_editor "$@"
 }
@@ -352,10 +320,6 @@ koopa::export_shell() { # {{{1
     _koopa_export_shell "$@"
 }
 
-koopa::export_user() { # {{{1
-    _koopa_export_user "$@"
-}
-
 koopa::expr() { # {{{1
     _koopa_expr "$@"
 }
@@ -366,6 +330,14 @@ koopa::fzf_prefix() { # {{{1
 
 koopa::git_branch() { # {{{1
     _koopa_git_branch "$@"
+}
+
+koopa::git_repo_has_unstaged_changes() { # {{{1
+    _koopa_git_repo_has_unstaged_changes "$@"
+}
+
+koopa::git_repo_needs_pull_or_push() { # {{{1
+    _koopa_git_repo_needs_pull_or_push "$@"
 }
 
 koopa::go_packages_prefix() { # {{{1
@@ -382,38 +354,6 @@ koopa::group() { # {{{1
 
 koopa::group_id() { # {{{1
     _koopa_group_id "$@"
-}
-
-koopa::gsub() { # {{{1
-    _koopa_gsub "$@"
-}
-
-koopa::h1() { # {{{1
-    _koopa_h1 "$@"
-}
-
-koopa::h2() { # {{{1
-    _koopa_h2 "$@"
-}
-
-koopa::h3() { # {{{1
-    _koopa_h3 "$@"
-}
-
-koopa::h4() { # {{{1
-    _koopa_h4 "$@"
-}
-
-koopa::h5() { # {{{1
-    _koopa_h5 "$@"
-}
-
-koopa::h6() { # {{{1
-    _koopa_h6 "$@"
-}
-
-koopa::h7() { # {{{1
-    _koopa_h7 "$@"
 }
 
 koopa::homebrew_cellar_prefix() { # {{{1
@@ -434,6 +374,10 @@ koopa::host_id() { # {{{1
 
 koopa::include_prefix() { # {{{1
     _koopa_include_prefix "$@"
+}
+
+koopa::is_aarch64() { # {{{1
+    _koopa_is_aarch64 "$@"
 }
 
 koopa::is_alias() { # {{{1
@@ -506,10 +450,6 @@ koopa::is_git_repo_clean() { # {{{1
 
 koopa::is_git_repo_top_level() { # {{{1
     _koopa_is_git_repo_top_level "$@"
-}
-
-koopa::is_gnu() { # {{{1
-    _koopa_is_gnu "$@"
 }
 
 koopa::is_host() { # {{{1
@@ -628,16 +568,16 @@ koopa::is_ubuntu_like() { # {{{1
     _koopa_is_ubuntu_like "$@"
 }
 
+koopa::is_x86_64() { # {{{1
+    _koopa_is_x86_64 "$@"
+}
+
 koopa::java_prefix() { # {{{1
     _koopa_java_prefix "$@"
 }
 
 koopa::julia_packages_prefix() { # {{{1
     _koopa_julia_packages_prefix "$@"
-}
-
-koopa::kebab_case_simple() { # {{{1
-    _koopa_kebab_case_simple "$@"
 }
 
 koopa::koopa_prefix() { # {{{1
@@ -656,8 +596,8 @@ koopa::locate_shell() { # {{{1
     _koopa_locate_shell "$@"
 }
 
-koopa::lowercase() { # {{{1
-    _koopa_lowercase "$@"
+koopa::macos_activate_google_cloud_sdk() { # {{{1
+    _koopa_macos_activate_google_cloud_sdk "$@"
 }
 
 koopa::macos_activate_gpg_suite() { # {{{1
@@ -670,6 +610,10 @@ koopa::macos_activate_r() { # {{{1
 
 koopa::macos_activate_visual_studio_code() { # {{{1
     _koopa_macos_activate_visual_studio_code "$@"
+}
+
+koopa::macos_gfortran_prefix() { # {{{1
+    _koopa_macos_gfortran_prefix "$@"
 }
 
 koopa::macos_is_dark_mode() { # {{{1
@@ -692,8 +636,8 @@ koopa::macos_r_prefix() { # {{{1
     _koopa_macos_r_prefix "$@"
 }
 
-koopa::macos_version() { # {{{1
-    _koopa_macos_version "$@"
+koopa::macos_os_version() { # {{{1
+    _koopa_macos_os_version "$@"
 }
 
 koopa::major_version() { # {{{1
@@ -712,20 +656,12 @@ koopa::make_prefix() { # {{{1
     _koopa_make_prefix "$@"
 }
 
-koopa::mem_gb() { # {{{1
-    _koopa_mem_gb "$@"
-}
-
 koopa::msigdb_prefix() { # {{{1
     _koopa_msigdb_prefix "$@"
 }
 
 koopa::monorepo_prefix() { # {{{1
     _koopa_monorepo_prefix "$@"
-}
-
-koopa::ngettext() { # {{{1
-    _koopa_ngettext "$@"
 }
 
 koopa::nim_packages_prefix() { # {{{1
@@ -770,10 +706,6 @@ koopa::pipx_prefix() { # {{{1
 
 koopa::prelude_emacs_prefix() { # {{{1
     _koopa_prelude_emacs_prefix "$@"
-}
-
-koopa::prompt() { # {{{1
-    _koopa_prompt "$@"
 }
 
 koopa::print() { # {{{1
@@ -912,40 +844,12 @@ koopa::shell_name() { # {{{1
     _koopa_shell_name "$@"
 }
 
-koopa::snake_case_simple() { # {{{1
-    _koopa_snake_case_simple "$@"
-}
-
-koopa::source_dir() { # {{{1
-    _koopa_source_dir "$@"
-}
-
 koopa::spacemacs_prefix() { # {{{1
     _koopa_spacemacs_prefix "$@"
 }
 
 koopa::spacevim_prefix() { # {{{1
     _koopa_spacevim_prefix "$@"
-}
-
-koopa::str_match() { # {{{1
-    _koopa_str_match "$@"
-}
-
-koopa::str_match_fixed() { # {{{1
-    _koopa_str_match_fixed "$@"
-}
-
-koopa::str_match_perl() { # {{{1
-    _koopa_str_match_perl "$@"
-}
-
-koopa::str_match_posix() { # {{{1
-    _koopa_str_match_posix "$@"
-}
-
-koopa::str_match_regex() { # {{{1
-    _koopa_str_match_regex "$@"
 }
 
 koopa::strip_left() { # {{{1
@@ -960,20 +864,12 @@ koopa::strip_trailing_slash() { # {{{1
     _koopa_strip_trailing_slash "$@"
 }
 
-koopa::sub() { # {{{1
-    _koopa_sub "$@"
-}
-
 koopa::tests_prefix() { # {{{1
     _koopa_tests_prefix "$@"
 }
 
 koopa::today() { # {{{1
     _koopa_today "$@"
-}
-
-koopa::trim_ws() { # {{{1
-    _koopa_trim_ws "$@"
 }
 
 koopa::umask() { # {{{1
@@ -988,8 +884,8 @@ koopa::user_id() { # {{{1
     _koopa_user_id "$@"
 }
 
-koopa::warning() { # {{{1
-    _koopa_warning "$@"
+koopa::warn() { # {{{1
+    _koopa_warn "$@"
 }
 
 koopa::xdg_cache_home() { # {{{1
@@ -1014,8 +910,4 @@ koopa::xdg_data_home() { # {{{1
 
 koopa::xdg_local_home() { # {{{1
     _koopa_xdg_local_home "$@"
-}
-
-koopa::xdg_runtime_dir() { # {{{1
-    _koopa_xdg_runtime_dir "$@"
 }

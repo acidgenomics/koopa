@@ -4,14 +4,10 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2021-09-29.
+    # Updated 2022-01-21.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
-    #
-    # Here's how to keep track of variables:
-    # > cur=${COMP_WORDS[COMP_CWORD]}
-    # > prev=${COMP_WORDS[COMP_CWORD-1]}
     #
     # Multi-level bash completion:
     # - https://stackoverflow.com/questions/17879322/
@@ -23,7 +19,7 @@ _koopa_complete() { # {{{1
     #     A-Programmable-Completion-Example.html
     #
     # """
-    local args cur prev
+    local args cur
     COMPREPLY=()
     if [[ "$COMP_CWORD" -eq 1 ]] && \
         [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'koopa' ]]
@@ -36,6 +32,7 @@ _koopa_complete() { # {{{1
             'header'
             'install'
             'list'
+            'reinstall'
             'system'
             'test'
             'uninstall'
@@ -45,7 +42,7 @@ _koopa_complete() { # {{{1
         [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'koopa' ]]
     then
         case "${COMP_WORDS[COMP_CWORD-1]}" in
-            app)
+            'app')
                 args=(
                     'clean'
                     'list'
@@ -53,8 +50,9 @@ _koopa_complete() { # {{{1
                     'unlink'
                 )
                 ;;
-            configure)
+            'configure')
                 args=(
+                    'dotfiles'
                     'go'
                     'julia'
                     'nim'
@@ -66,7 +64,7 @@ _koopa_complete() { # {{{1
                     'rust'
                 )
                 ;;
-            header)
+            'header')
                 args=(
                     'bash'
                     'posix'
@@ -74,8 +72,9 @@ _koopa_complete() { # {{{1
                     'zsh'
                 )
                 ;;
-            install | \
-            uninstall)
+            'install' | \
+            'reinstall' | \
+            'uninstall')
                 args=(
                     'anaconda'
                     'autoconf'
@@ -112,11 +111,13 @@ _koopa_complete() { # {{{1
                     'htop'
                     'julia'
                     'julia-packages'
+                    'lesspipe'
                     'libevent'
                     'libtool'
                     'lua'
                     'luarocks'
                     'make'
+                    'mamba'
                     'ncurses'
                     'neofetch'
                     'neovim'
@@ -140,7 +141,6 @@ _koopa_complete() { # {{{1
                     'python-packages'
                     'r'
                     'r-cmd-check'
-                    'r-devel'
                     'r-packages'
                     'rbenv'
                     'rmate'
@@ -173,10 +173,10 @@ _koopa_complete() { # {{{1
                         'aspera-connect'
                         'aws-cli'
                         'azure-cli'
+                        'base-system'
                         'bcbio-nextgen'
                         'bcbio-nextgen-ensembl-genome'
                         'bcbio-nextgen-genome'
-                        'bcbio-nextgen-vm'
                         'bcl2fastq'
                         'cellranger'
                         'cloudbiolinux'
@@ -192,9 +192,11 @@ _koopa_complete() { # {{{1
                     if _koopa_is_debian_like
                     then
                         args+=(
+                            'bcbio-nextgen-vm'
                             'node'
                             'pandoc'
                             'r-cran-binary'
+                            'r-devel'
                         )
                     elif _koopa_is_fedora_like
                     then
@@ -207,43 +209,46 @@ _koopa_complete() { # {{{1
                 then
                     args+=(
                         'adobe-creative-cloud'
-                        'onedrive'
+                        'cisco-webex'
+                        'microsoft-onedrive'
                         'oracle-java'
                         'python-framework'
                         'r-cran-gfortran'
                         'r-framework'
                         'ringcentral'
-                        'webex'
                         'xcode-clt'
                     )
                 fi
                 # Handle 'install' or 'uninstall'-specific arguments.
-                case "$prev" in
-                    install)
+                case "${COMP_WORDS[COMP_CWORD-1]}" in
+                    'install' | \
+                    'reinstall')
                         args+=(
                             'homebrew-bundle'
                             'tex-packages'
                         )
                         ;;
-                    uninstall)
+                    'uninstall')
                         args+=(
                             'koopa'
                         )
                         ;;
                 esac
                 ;;
-            list)
+            'list')
                 args=(
                     'app-versions'
                     'dotfiles'
                     'path-priority'
                 )
                 ;;
-            system)
+            'system')
                 args=(
                     'brew-dump-brewfile'
                     'brew-outdated'
                     'check'
+                    'conda-create-env'
+                    'conda-remove-env'
                     'delete-cache'
                     'disable-passwordless-sudo'
                     'enable-passwordless-sudo'
@@ -256,9 +261,9 @@ _koopa_complete() { # {{{1
                     'os-string'
                     'path'
                     'prefix'
-                    'pull'
                     'roff'
                     'set-permissions'
+                    'switch-to-develop'
                     'variable'
                     'variables'
                     'version'
@@ -274,17 +279,18 @@ _koopa_complete() { # {{{1
                     )
                 fi
                 ;;
-            update)
+            'update')
                 args=(
                     # koopa:
+                    'koopa'
                     'system'
-                    'user'
                     # packages:
                     'chemacs'
                     'doom-emacs'
                     'dotfiles'
                     'google-cloud-sdk'
                     'homebrew'
+                    'mamba'
                     'nim-packages'
                     'node-packages'
                     'perl-packages'

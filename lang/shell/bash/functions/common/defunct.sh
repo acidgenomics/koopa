@@ -32,6 +32,48 @@ koopa::cellar_prefix() { # {{{1
     koopa::defunct 'koopa::app_prefix'
 }
 
+koopa::check_data_disk() { # {{{1
+    # """
+    # @note Updated 2020-11-19.
+    # """
+    koopa::defunct
+}
+
+koopa::configure_start() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_configure_start'
+}
+
+koopa::configure_success() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_configure_success'
+}
+
+koopa::data_disk_link_prefix() { # {{{1
+    # """
+    # @note Updated 2021-12-09.
+    # """
+    koopa::defunct
+}
+
+koopa::file_match_fixed() {  #{{{1
+    # """
+    # @note Updated 2022-01-10.
+    # """
+    koopa::defunct 'koopa::file_detect_fixed'
+}
+
+koopa::file_match_regex() {  #{{{1
+    # """
+    # @note Updated 2022-01-10.
+    # """
+    koopa::defunct 'koopa::file_detect_regex'
+}
+
 koopa::find_cellar_version() { # {{{1
     # """
     # @note Updated 2020-11-22.
@@ -53,6 +95,20 @@ koopa::info() { # {{{1
     koopa::defunct 'koopa::alert_info'
 }
 
+koopa::install_start() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_install_start'
+}
+
+koopa::install_success() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_install_success'
+}
+
 koopa::is_darwin() { # {{{1
     # """
     # @note Updated 2020-01-14.
@@ -62,16 +118,16 @@ koopa::is_darwin() { # {{{1
 
 koopa::is_matching_fixed() {  #{{{1
     # """
-    # @note Updated 2020-04-29.
+    # @note Updated 2022-01-10.
     # """
-    koopa::defunct 'koopa::str_match'
+    koopa::defunct 'koopa::str_detect_fixed'
 }
 
 koopa::is_matching_regex() {  #{{{1
     # """
-    # @note Updated 2020-04-29.
+    # @note Updated 2022-01-10.
     # """
-    koopa::defunct 'koopa::str_match_regex'
+    koopa::defunct 'koopa::str_detect_regex'
 }
 
 koopa::link_cellar() { # {{{1
@@ -158,6 +214,20 @@ koopa::restart() { # {{{1
     koopa::defunct 'koopa::alert_restart'
 }
 
+koopa::str_match_fixed() {  #{{{1
+    # """
+    # @note Updated 2022-01-10.
+    # """
+    koopa::defunct 'koopa::str_detect_fixed'
+}
+
+koopa::str_match_regex() {  #{{{1
+    # """
+    # @note Updated 2022-01-10.
+    # """
+    koopa::defunct 'koopa::str_detect_regex'
+}
+
 koopa::success() { # {{{1
     # """
     # @note Updated 2021-03-31.
@@ -165,9 +235,37 @@ koopa::success() { # {{{1
     koopa::defunct 'koopa::alert_success'
 }
 
+koopa::uninstall_start() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_uninstall_start'
+}
+
+koopa::uninstall_success() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_uninstall_success'
+}
+
 koopa::unlink_cellar() { # {{{1
     # """
     # @note Updated 2020-11-11.
     # """
     koopa::defunct 'koopa::unlink_app'
+}
+
+koopa::update_start() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_update_start'
+}
+
+koopa::update_success() { # {{{1
+    # """
+    # @note Updated 2021-11-18.
+    # """
+    koopa::defunct 'koopa::alert_update_success'
 }

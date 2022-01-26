@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa::move_files_in_batch() { # {{{1
     # Batch move a limited number of files.
     # @note Updated 2021-05-24.
@@ -15,6 +16,8 @@ koopa::move_files_in_batch() { # {{{1
     source_dir="${2:?}"
     target_dir="${3:?}"
     koopa::assert_is_dir "$source_dir" "$target_dir"
+    # FIXME Rework using 'koopa::find'.
+    # FIXME Need to add support for '--regex' in addition to '--glob'.
     "$find" "$source_dir" \
         -type f \
         -regex '.+/[^.].+$' \
@@ -25,27 +28,30 @@ koopa::move_files_in_batch() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
+# FIXME Rework this using 'koopa::find'.
+# FIXME Rework this using xargs?
 koopa::move_files_up_1_level() { # {{{1
     # """
     # Move files up 1 level.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-10-25.
     # """
-    local dir
+    local prefix
     find="$(koopa::locate_find)"
-    dir="${1:-.}"
-    (
-        koopa::cd "$dir"
-        "$find" . -type f -mindepth 2 -exec koopa::mv {} . \;
-        "$find" . -mindepth 2
-        "$find" . -type d -delete -print
-    )
+    prefix="${1:-.}"
+    koopa::assert_is_dir "$prefix"
+    "$find" \
+        "$prefix" \
+        -mindepth 2 \
+        -type 'f' \
+        -exec koopa::mv --target-directory="$prefix" {} \;
     return 0
 }
 
 koopa::move_into_dated_dirs_by_filename() { # {{{1
     # """
     # Move into dated directories by filename.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-04.
     # """
     local day file grep_array grep_string month subdir year
     koopa::assert_has_args "$#"
@@ -67,7 +73,7 @@ koopa::move_into_dated_dirs_by_filename() { # {{{1
             month="${BASH_REMATCH[3]}"
             day="${BASH_REMATCH[5]}"
             subdir="${year}/${month}/${day}"
-            koopa::mv -t "$subdir" "$file"
+            koopa::mv --target-directory="$subdir" "$file"
         else
             koopa::stop "Does not contain date: '${file}'."
         fi
@@ -78,15 +84,14 @@ koopa::move_into_dated_dirs_by_filename() { # {{{1
 koopa::move_into_dated_dirs_by_timestamp() { # {{{1
     # """
     # Move into dated directories by timestamp.
-    # @note Updated 2021-05-24.
+    # @note Updated 2021-11-16.
     # """
     local file subdir
     koopa::assert_has_args "$#"
     for file in "$@"
     do
-        subdir="$(koopa::stat_modified "$file" '%Y/%m/%d')"
-        koopa::mv -t "$subdir" "$file"
+        subdir="$(koopa::stat_modified '%Y/%m/%d' "$file")"
+        koopa::mv --target-directory="$subdir" "$file"
     done
     return 0
 }
-

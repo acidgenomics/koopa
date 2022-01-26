@@ -1,317 +1,519 @@
 #!/usr/bin/env bash
 
-koopa:::debian_apt_key_add() {  #{{{1
+koopa::debian_apt_add_key() {  #{{{1
     # """
-    # Add an apt key.
-    # @note Updated 2021-06-11.
+    # Add a GPG key (and/or keyring) for apt.
+    # @note Updated 2021-11-09.
     #
-    # Using '-k/--insecure' flag here to handle some servers
-    # (e.g. download.opensuse.org) that will fail otherwise.
+    # @section Hardening against insecure URL failure:
+    # 
+    # Using '--insecure' flag here to handle some servers
+    # (e.g. download.opensuse.org) that can fail otherwise.
+    #
+    # @section Regarding apt-key deprecation:
+    #
+    # Although adding keys directly to '/etc/apt/trusted.gpg.d/' is suggested by
+    # 'apt-key' deprecation message, as per Debian Wiki, GPG keys for third
+    # party repositories should be added to '/usr/share/keyrings', and
+    # referenced with the 'signed-by' option in the '/etc/apt/sources.list.d'
+    # entry.
+    #
+    # @section Alternative approach using tee:
+    #
+    # > koopa::parse_url --insecure "${dict[url]}" \
+    # >     | "${app[gpg]}" --dearmor \
+    # >     | "${app[sudo]}" "${app[tee]}" "${dict[file]}" \
+    # >         >/dev/null 2>&1 \
+    # >     || true
+    #
+    # @seealso
+    # - https://github.com/docker/docker.github.io/issues/11625
+    # - https://github.com/docker/docker.github.io/issues/
+    #     11625#issuecomment-751388087
     # """
-    local curl name_fancy url key
-    koopa::assert_has_args_le "$#" 3
-    curl="$(koopa::locate_curl)"
-    koopa::assert_is_installed 'apt-key'
-    name_fancy="${1:?}"
-    url="${2:?}"
-    key="${3:-}"
-    if [[ -n "$key" ]]
-    then
-        koopa::debian_apt_is_key_imported "$key" && return 0
-    fi
-    koopa::alert "Adding '${name_fancy}' key to apt."
-    "$curl" -fksSL "$url" \
-        | sudo apt-key add - \
-        >/dev/null 2>&1 \
+    local app dict
+    koopa::assert_has_args "$#"
+    koopa::assert_is_admin
+    declare -A app=(
+        [gpg]="$(koopa::locate_gpg)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [name]=''
+        [name_fancy]=''
+        [prefix]="$(koopa::debian_apt_key_prefix)"
+        [url]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--name='*)
+                dict[name]="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
+                ;;
+            '--name-fancy='*)
+                dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--url='*)
+                dict[url]="${1#*=}"
+                shift 1
+                ;;
+            '--url')
+                dict[url]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_dir "${dict[prefix]}"
+    dict[file]="${dict[prefix]}/koopa-${dict[name]}.gpg"
+    [[ -f "${dict[file]}" ]] && return 0
+    koopa::alert "Adding ${dict[name_fancy]} key at '${dict[file]}'."
+    koopa::parse_url --insecure "${dict[url]}" \
+        | "${app[sudo]}" "${app[gpg]}" \
+            --dearmor \
+            --output "${dict[file]}" \
+            >/dev/null 2>&1 \
         || true
+    koopa::assert_is_file "${dict[file]}"
+    return 0
+}
+
+koopa::debian_apt_add_repo() {
+    # """
+    # Add an apt repo.
+    # @note Updated 2021-11-09.
+    #
+    # @section Debian Repository Format:
+    #
+    # The sources.list man page specifies this package source format:
+    # 
+    # > deb uri distribution [component1] [component2] [...]
+    #
+    # and gives an example:
+    #
+    # > deb https://deb.debian.org/debian stable main contrib non-free
+    #
+    # The 'uri', in this case 'https://deb.debian.org/debian', specifies the
+    # root of the archive. Often Debian archives are in the 'debian/' directory
+    # on the server but can be anywhere else (many mirrors for example have it
+    # in a 'pub/linux/debian' directory, for example).
+    #
+    # The 'distribution' part ('stable' in this case) specifies a subdirectory
+    # in '$ARCHIVE_ROOT/dists'. It can contain additional slashes to specify
+    # subdirectories nested deeper, eg. 'stable/updates'. 'distribution'
+    # typically corresponds to 'Suite' or 'Codename' specified in the
+    # 'Release' files.
+    #
+    # To download the index of the main component, apt would scan the 'Release'
+    # file for hashes of files in the main directory.
+    #
+    # eg. 'https://deb.debian.org/debian/dists/testing/main/
+    #      binary-i386/Packages.gz',
+    # which would be listed in
+    # 'https://deb.debian.org/debian/dists/testing/Release' as
+    # 'main/binary-i386/Packages.gz'.
+    #
+    # Binary package indices are in 'binary-$arch' subdirectory of the component
+    # directories. Source indices are in 'source' subdirectory.
+    #
+    # Package indices list specific source or binary packages relative to the
+    # archive root.
+    #
+    # To avoid file duplication binary and source packages are usually kept in
+    # the 'pool' subdirectory of the 'archive root'. The 'Packages' and
+    # 'Sources' indices can list any path relative to 'archive root', however.
+    # It is suggested that packages are placed in a subdirectory of 'archive
+    # root' other than dists rather than directly in archive root. Placing
+    # packages directly in the 'archive root' is not tested and some tools may
+    # fail to index or retrieve packages placed there.
+    #
+    # The 'Contents' and 'Translation' indices are not architecture-specific and
+    # are placed in 'dists/$DISTRIBUTION/$COMPONENT' directory, not architecture
+    # subdirectory. 
+    #
+    # @seealso
+    # - https://wiki.debian.org/DebianRepository/Format
+    # """
+    local components dict
+    koopa::assert_has_args "$#"
+    koopa::assert_is_admin
+    declare -A dict=(
+        [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
+        [key_prefix]="$(koopa::debian_apt_key_prefix)"
+        [prefix]="$(koopa::debian_apt_sources_prefix)"
+    )
+    components=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--component='*)
+                components+=("${1#*=}")
+                shift 1
+                ;;
+            '--component')
+                components+=("${2:?}")
+                shift 2
+                ;;
+            '--distribution='*)
+                dict[distribution]="${1#*=}"
+                shift 1
+                ;;
+            '--distribution')
+                dict[distribution]="${2:?}"
+                shift 2
+                ;;
+            '--key-name='*)
+                dict[key_name]="${1#*=}"
+                shift 1
+                ;;
+            '--key-name')
+                dict[key_name]="${2:?}"
+                shift 2
+                ;;
+            '--key-prefix='*)
+                dict[key_prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--key-prefix')
+                dict[key_prefix]="${2:?}"
+                shift 2
+                ;;
+            '--name-fancy='*)
+                dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
+                ;;
+            '--name='*)
+                dict[name]="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--signed-by='*)
+                dict[signed_by]="${1#*=}"
+                shift 1
+                ;;
+            '--signed-by')
+                dict[signed_by]="${2:?}"
+                shift 2
+                ;;
+            '--url='*)
+                dict[url]="${1#*=}"
+                shift 1
+                ;;
+            '--url')
+                dict[url]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ -z "${dict[key_name]:-}" ]]
+    then
+        dict[key_name]="${dict[name]}"
+    fi
+    koopa::assert_is_set \
+        '--distribution' "${dict[distribution]:-}" \
+        '--key-name' "${dict[key_name]:-}" \
+        '--key-prefix' "${dict[key_prefix]:-}" \
+        '--name' "${dict[name]:-}" \
+        '--name-fancy' "${dict[name_fancy]:-}" \
+        '--prefix' "${dict[prefix]:-}" \
+        '--url' "${dict[url]:-}"
+    koopa::assert_is_dir \
+        "${dict[key_prefix]}" \
+        "${dict[prefix]}"
+    dict[signed_by]="${dict[key_prefix]}/koopa-${dict[key_name]}.gpg"
+    koopa::assert_is_file "${dict[signed_by]}"
+    dict[file]="${dict[prefix]}/koopa-${dict[name]}.list"
+    dict[string]="deb [arch=${dict[arch]} signed-by=${dict[signed_by]}] \
+${dict[url]} ${dict[distribution]} ${components[*]}"
+    if [[ -f "${dict[file]}" ]]
+    then
+        koopa::alert_info "${dict[name_fancy]} repo exists at '${dict[file]}'."
+        return 0
+    fi
+    koopa::alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
+    koopa::sudo_write_string "${dict[string]}" "${dict[file]}"
     return 0
 }
 
 koopa::debian_apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-09.
     # """
-    local arch file name name_fancy os_codename string url
     koopa::assert_has_no_args "$#"
-    name='azure-cli'
-    name_fancy='Microsoft Azure CLI'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
-    then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
-        return 0
-    fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
     koopa::debian_apt_add_microsoft_key
-    os_codename="$(koopa::os_codename)"
-    arch="$(koopa::arch)"
-    url="https://packages.microsoft.com/repos/${name}/"
-    string="deb [arch=${arch}] ${url} ${os_codename} main"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::debian_apt_add_repo \
+        --name-fancy='Microsoft Azure CLI' \
+        --name='azure-cli' \
+        --key-name='microsoft' \
+        --url='https://packages.microsoft.com/repos/azure-cli/' \
+        --distribution="$(koopa::os_codename)" \
+        --component='main'
     return 0
 }
 
 koopa::debian_apt_add_docker_key() { # {{{1
     # """
     # Add the Docker key.
-    # @note Updated 2021-09-30.
+    # @note Updated 2021-11-09.
     #
     # @seealso
     # - https://docs.docker.com/engine/install/debian/
     # - https://docs.docker.com/engine/install/ubuntu/
     # """
-    local curl file gpg name_fancy os_id url
     koopa::assert_has_no_args "$#"
-    file='/usr/share/keyrings/docker-archive-keyring.gpg'
-    [[ -f "$file" ]] && return 0
-    name_fancy='Docker'
-    curl="$(koopa::locate_curl)"
-    gpg="$(koopa::locate_gpg)"
-    os_id="$(koopa::os_id)"
-    url="https://download.docker.com/linux/${os_id}/gpg"
-    koopa::alert "Adding ${name_fancy} keyring at '${file}'."
-    "$curl" -fsSL "$url" \
-        | sudo "$gpg" --dearmor -o "$file"
-    koopa::assert_is_file "$file"
+    koopa::debian_apt_add_key \
+        --name-fancy='Docker' \
+        --name='docker' \
+        --url="https://download.docker.com/linux/$(koopa::os_id)/gpg"
     return 0
 }
 
 koopa::debian_apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2021-09-30.
+    # @note Updated 2021-11-09.
     #
     # @seealso
     # - https://docs.docker.com/engine/install/debian/
     # - https://docs.docker.com/engine/install/ubuntu/
     # """
-    local arch file name name_fancy os_codename os_id signed_by string url
     koopa::assert_has_no_args "$#"
-    name='docker'
-    name_fancy='Docker'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
-    then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
-        return 0
-    fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
     koopa::debian_apt_add_docker_key
-    os_id="$(koopa::os_id)"
-    os_codename="$(koopa::os_codename)"
-    # e.g. "arm64" instead of "x86_64" here.
-    arch="$(koopa::arch2)"
-    url="https://download.docker.com/linux/${os_id}"
-    signed_by='/usr/share/keyrings/docker-archive-keyring.gpg'
-    string="deb [arch=${arch} signed-by=${signed_by}] \
-${url} ${os_codename} stable"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::debian_apt_add_repo \
+        --name-fancy='Docker' \
+        --name='docker' \
+        --url="https://download.docker.com/linux/$(koopa::os_id)" \
+        --distribution="$(koopa::os_codename)" \
+        --component='stable'
     return 0
 }
 
 koopa::debian_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
-    # @note Updated 2020-08-17.
+    # @note Updated 2021-11-09.
+    #
+    # @seealso
+    # - https://cloud.google.com/sdk/docs/install#deb
+    # - https://github.com/docker/docker.github.io/issues/11625
     # """
-    local curl file url
     koopa::assert_has_no_args "$#"
-    curl="$(koopa::locate_curl)"
-    koopa::assert_is_installed 'apt-key'
-    url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
-    file='/usr/share/keyrings/cloud.google.gpg'
-    [[ -e "$file" ]] && return 0
-    koopa::alert "Adding Google Cloud keyring at '${file}'."
-    "$curl" -fsSL "$url" \
-        | sudo apt-key --keyring "$file" add - \
-        >/dev/null 2>&1 \
-        || true
+    koopa::debian_apt_add_key \
+        --name-fancy='Google Cloud' \
+        --name='google-cloud' \
+        --url='https://packages.cloud.google.com/apt/doc/apt-key.gpg'
     return 0
 }
 
 koopa::debian_apt_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK apt repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-09.
     # """
-    local file name name_fancy string
     koopa::assert_has_no_args "$#"
-    name='google-cloud-sdk'
-    name_fancy='Google Cloud SDK'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
-    then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
-        return 0
-    fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
     koopa::debian_apt_add_google_cloud_key
-    string="deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
-https://packages.cloud.google.com/apt cloud-sdk main"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::debian_apt_add_repo \
+        --name-fancy='Google Cloud SDK' \
+        --name='google-cloud-sdk' \
+        --key-name='google-cloud' \
+        --url='https://packages.cloud.google.com/apt' \
+        --distribution='cloud-sdk' \
+        --component='main'
     return 0
 }
 
 koopa::debian_apt_add_llvm_key() { # {{{1
     # """
     # Add the LLVM key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-09.
     # """
-    local key name_fancy url
     koopa::assert_has_no_args "$#"
-    name_fancy='LLVM'
-    url='https://apt.llvm.org/llvm-snapshot.gpg.key'
-    key='6084F3CF814B57C1CF12EFD515CF4D18AF4F7421'
-    koopa:::debian_apt_key_add "$name_fancy" "$url" "$key"
+    koopa::debian_apt_add_key \
+        --name-fancy='LLVM' \
+        --name='llvm' \
+        --url='https://apt.llvm.org/llvm-snapshot.gpg.key'
     return 0
 }
 
 koopa::debian_apt_add_llvm_repo() { # {{{1
     # """
     # Add LLVM apt repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-10.
     # """
-    local file name name_fancy os_codename string version
-    koopa::assert_has_no_args "$#"
-    name='llvm'
-    name_fancy='LLVM'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
+    koopa::assert_has_args_le "$#" 1
+    declare -A dict=(
+        [component]='main'
+        [name]='llvm'
+        [name_fancy]='LLVM'
+        [os]="$(koopa::os_codename)"
+        [version]="${1:-}"
+    )
+    if [[ -z "${dict[version]}" ]]
     then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
-        return 0
+        dict[version]="$(koopa::variable "${dict[name]}")"
     fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
+    dict[url]="http://apt.llvm.org/${dict[os]}/"
+    dict[version2]="$(koopa::major_version "${dict[version]}")"
+    dict[distribution]="llvm-toolchain-${dict[os]}-${dict[version2]}"
     koopa::debian_apt_add_llvm_key
-    os_codename="$(koopa::os_codename)"
-    version="$(koopa::variable "$name")"
-    version="$(koopa::major_version "$version")"
-    string="deb http://apt.llvm.org/${os_codename}/ \
-llvm-toolchain-${os_codename}-${version} main"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::debian_apt_add_repo \
+        --name-fancy="${dict[name_fancy]}" \
+        --name="${dict[name]}" \
+        --url="${dict[url]}" \
+        --distribution="${dict[distribution]}" \
+        --component="${dict[component]}"
     return 0
 }
 
 koopa::debian_apt_add_microsoft_key() {  #{{{1
     # """
-    # Add the Microsoft Azure CLI key.
-    # @note Updated 2021-06-14.
+    # Add the Microsoft GPG key (for Azure CLI).
+    # @note Updated 2021-11-09.
     # """
-    local curl file gpg tee url
     koopa::assert_has_no_args "$#"
-    curl="$(koopa::locate_curl)"
-    gpg="$(koopa::locate_gpg)"
-    tee="$(koopa::locate_tee)"
-    url='https://packages.microsoft.com/keys/microsoft.asc'
-    file='/etc/apt/trusted.gpg.d/microsoft.asc.gpg'
-    [[ -e "$file" ]] && return 0
-    koopa::alert "Adding Microsoft key at '${file}'."
-    "$curl" -fsSL "$url" \
-        | "$gpg" --dearmor \
-        | sudo "$tee" "$file" \
-        >/dev/null 2>&1 \
-        || true
+    koopa::debian_apt_add_key \
+        --name-fancy='Microsoft' \
+        --name='microsoft' \
+        --url='https://packages.microsoft.com/keys/microsoft.asc'
     return 0
 }
 
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-03.
+    #
+    # Addition of signing key via keyserver directly into /etc/apt/trusted.gpg'
+    # file is deprecated in Debian, but currently the only supported method for
+    # installation of R CRAN binaries. Consider reworking this approach for
+    # future R releases, if possible.
+    #
+    # @section Previous archive key:
+    #
+    # Additional archive key (required as of 2020-09): 'FCAE2A0E115C3D8A'
     #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/
     # """
-    local key keys keyserver
+    local dict
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'apt-key'
-    if koopa::is_ubuntu
+    koopa::assert_is_admin
+    declare -A dict=(
+        [key_name]='r'
+        # Alternatively, can use 'keys.gnupg.net' keyserver.
+        [keyserver]='keyserver.ubuntu.com'
+        [prefix]="$(koopa::debian_apt_key_prefix)"
+    )
+    dict[file]="${dict[prefix]}/koopa-${dict[key_name]}.gpg"
+    if koopa::is_ubuntu_like
     then
-        # Release is signed by Michael Rutter <marutter@gmail.com>.
-        keys=(
-            'E298A3A825C0D65DFD57CBB651716619E084DAB9'
-        )
-        keyserver='keyserver.ubuntu.com'
+        # Ubuntu release is signed by Michael Rutter <marutter@gmail.com>.
+        dict[key]='E298A3A825C0D65DFD57CBB651716619E084DAB9'
     else
-        # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
-        keys=(
-            'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
-            'FCAE2A0E115C3D8A'  # required as of 2020-09
-        )
-        # > keyserver='keys.gnupg.net'
-        keyserver='keyserver.ubuntu.com'
+        # Debian release is signed by Johannes Ranke <jranke@uni-bremen.de>.
+        dict[key]='E19F5F87128899B192B1A2C2AD5F960A256A04AF'
     fi
-    for key in "${keys[@]}"
-    do
-        koopa::debian_apt_is_key_imported "$key" && continue
-        koopa::alert "Adding R key '${key}'."
-        sudo apt-key adv \
-            --keyserver "$keyserver" \
-            --recv-key "$key" \
-            >/dev/null 2>&1 \
-            || true
-    done
+    [[ -f "${dict[file]}" ]] && return 0
+    koopa::gpg_download_key_from_keyserver \
+        --file="${dict[file]}" \
+        --key="${dict[key]}" \
+        --keyserver="${dict[keyserver]}" \
+        --sudo
     return 0
 }
 
 koopa::debian_apt_add_r_repo() { # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-10.
     # """
-    local file name name_fancy os_codename os_id repo string version
+    local dict
     koopa::assert_has_args_le "$#" 1
-    version="${1:-}"
-    name='r'
-    name_fancy='R'
-    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
-    version="$(koopa::major_minor_version "$version")"
-    case "$version" in
+    declare -A dict=(
+        [name]='r'
+        [name_fancy]='R'
+        [os_codename]="$(koopa::os_codename)"
+        [version]="${1:-}"
+    )
+    if koopa::is_ubuntu_like
+    then
+        dict[os_id]='ubuntu'
+    else
+        dict[os_id]='debian'
+    fi
+    if [[ -z "${dict[version]}" ]]
+    then
+        dict[version]="$(koopa::variable "${dict[name]}")"
+    fi
+    dict[version2]="$(koopa::major_minor_version "${dict[version]}")"
+    case "${dict[version2]}" in
         '4.1')
-            version='4.0'
+            dict[version2]='4.0'
             ;;
         '3.6')
-            version='3.5'
+            dict[version2]='3.5'
             ;;
     esac
-    # Need to strip the periods here.
-    version="$(koopa::gsub '\.' '' "$version")"
-    version="cran${version}"
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
-    then
-        # Early return if version matches and Debian source is enabled.
-        if koopa::file_match "$file" "$version" && \
-            koopa::file_match "$file" 'deb-src'
-        then
-            koopa::alert_info "${name_fancy} repo exists at '${file}'."
-            return 0
-        else
-            koopa::rm --sudo "$file"
-        fi
-    fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
+    dict[version2]="$(koopa::gsub '\.' '' "${dict[version2]}")"
+    dict[url]="https://cloud.r-project.org/bin/linux/${dict[os_id]}"
+    dict[distribution]="${dict[os_codename]}-cran${dict[version2]}/"
     koopa::debian_apt_add_r_key
-    os_id="$(koopa::os_id)"
-    os_codename="$(koopa::os_codename)"
-    repo="https://cloud.r-project.org/bin/linux/${os_id} \
-${os_codename}-${version}/"
-    # Note that 'read' will return status 1 here.
-    # https://unix.stackexchange.com/questions/80045/
-    read -r -d '' string << END || true
-deb ${repo}
-deb-src ${repo}
-END
-    koopa::sudo_write_string "$string" "$file"
+    koopa::debian_apt_add_repo \
+        --name-fancy="${dict[name_fancy]}" \
+        --name="${dict[name]}" \
+        --url="${dict[url]}" \
+        --distribution="${dict[distribution]}"
     return 0
 }
 
 koopa::debian_apt_add_wine_key() { # {{{1
     # """
     # Add the WineHQ key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-09.
     #
     # Email: <wine-devel@winehq.org>
     #
@@ -326,122 +528,125 @@ koopa::debian_apt_add_wine_key() { # {{{1
     # > wget -nc https://dl.winehq.org/wine-builds/winehq.key
     # > sudo apt-key add winehq.key
     # """
-    local key name_fancy url
     koopa::assert_has_no_args "$#"
-    name_fancy='Wine'
-    url='https://dl.winehq.org/wine-builds/winehq.key'
-    key='D43F640145369C51D786DDEA76F1A20FF987672F'
-    koopa:::debian_apt_key_add "$name_fancy" "$url" "$key"
+    koopa::debian_apt_add_key \
+        --name-fancy='Wine' \
+        --name='wine' \
+        --url='https://dl.winehq.org/wine-builds/winehq.key'
     return 0
 }
 
 koopa::debian_apt_add_wine_repo() { # {{{1
     # """
     # Add WineHQ repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-10.
     #
     # - Debian:
     #   https://wiki.winehq.org/Debian
     # - Ubuntu:
     #   https://wiki.winehq.org/Ubuntu
     # """
-    local file os_codename os_id string url
     koopa::assert_has_no_args "$#"
-    name='wine'
-    name_fancy='Wine'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
-    then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
-        return 0
-    fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
     koopa::debian_apt_add_wine_key
-    os_id="$(koopa::os_id)"
-    os_codename="$(koopa::os_codename)"
-    url="https://dl.winehq.org/wine-builds/${os_id}/"
-    string="deb ${url} ${os_codename} main"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::debian_apt_add_repo \
+        --name-fancy='Wine' \
+        --name='wine' \
+        --url="https://dl.winehq.org/wine-builds/$(koopa::os_id)/" \
+        --distribution="$(koopa::os_codename)" \
+        --component='main'
     return 0
 }
 
 koopa::debian_apt_add_wine_obs_key() { # {{{1
     # """
     # Add the Wine OBS openSUSE key.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-10.
     # """
-    local key name_fancy os_string subdir url
+    local dict
     koopa::assert_has_no_args "$#"
-    name_fancy='Wine OBS'
-    os_string="$(koopa::os_string)"
-    # Signed by <Emulators@build.opensuse.org>.
-    key='31CFB0B65659B5D40DEEC98DDFA175A75104960E'
-    case "$os_string" in
+    declare -A dict=(
+        [name]='wine-obs'
+        [name_fancy]='Wine OBS'
+        [os_string]="$(koopa::os_string)"
+    )
+    case "${dict[os_string]}" in
         'debian-10')
-            subdir='Debian_10'
+            dict[subdir]='Debian_10'
+            ;;
+        'debian-11')
+            dict[subdir]='Debian_11'
             ;;
         'ubuntu-18')
-            url='xUbuntu_18.04'
+            dict[subdir]='xUbuntu_18.04'
             ;;
         'ubuntu-20')
-            url='xUbuntu_20.04'
+            dict[subdir]='xUbuntu_20.04'
             ;;
         *)
-            koopa::stop "Unsupported OS: '${os_string}'."
+            koopa::stop "Unsupported OS: '${dict[os_string]}'."
             ;;
     esac
-    url="https://download.opensuse.org/repositories/\
-Emulators:/Wine:/Debian/${subdir}/Release.key"
-    koopa:::debian_apt_key_add "$name_fancy" "$url" "$key"
+    dict[url]="https://download.opensuse.org/repositories/\
+Emulators:/Wine:/Debian/${dict[subdir]}/Release.key"
+    koopa::debian_apt_add_key \
+        --name-fancy="${dict[name_fancy]}" \
+        --name="${dict[name]}" \
+        --url="${dict[url]}"
     return 0
 }
 
 koopa::debian_apt_add_wine_obs_repo() { # {{{1
     # """
     # Add Wine OBS openSUSE repo.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-10.
     #
     # Required to install libfaudio0 dependency for Wine on Debian 10+.
     #
     # @seealso
     # - https://wiki.winehq.org/Debian
+    # - https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/
     # - https://forum.winehq.org/viewtopic.php?f=8&t=32192
     # """
-    local base_url file name name_fancy os_string repo_url string
+    local dict
     koopa::assert_has_no_args "$#"
-    name='wine-obs'
-    name_fancy='Wine OBS'
-    file="/etc/apt/sources.list.d/${name}.list"
-    if [[ -f "$file" ]]
-    then
-        koopa::alert_info "${name_fancy} repo exists at '${file}'."
-        return 0
-    fi
-    koopa::alert "Adding ${name_fancy} repo at '${file}'."
-    koopa::debian_apt_add_wine_obs_key
-    base_url="https://download.opensuse.org/repositories/\
+    declare -A dict=(
+        [base_url]="https://download.opensuse.org/repositories/\
 Emulators:/Wine:/Debian"
-    os_string="$(koopa::os_string)"
-    case "$os_string" in
+        [distribution]='./'
+        [name]='wine-obs'
+        [name_fancy]='Wine OBS'
+        [os_string]="$(koopa::os_string)"
+    )
+    case "${dict[os_string]}" in
         'debian-10')
-            repo_url="${base_url}/Debian_10/"
+            dict[url]="${dict[base_url]}/Debian_10/"
+            ;;
+        'debian-11')
+            dict[url]="${dict[base_url]}/Debian_11/"
             ;;
         'ubuntu-18')
-            repo_url="${base_url}/xUbuntu_18.04/"
+            dict[url]="${dict[base_url]}/xUbuntu_18.04/"
+            ;;
+        'ubuntu-20')
+            dict[url]="${dict[base_url]}/xUbuntu_20.04/"
             ;;
         *)
-            koopa::stop "Unsupported OS: '${os_string}'."
+            koopa::stop "Unsupported OS: '${dict[os_string]}'."
             ;;
     esac
-    string="deb ${repo_url} ./"
-    koopa::sudo_write_string "$string" "$file"
+    koopa::debian_apt_add_wine_obs_key
+    koopa::debian_apt_add_repo \
+        --name-fancy="${dict[name_fancy]}" \
+        --name="${dict[name]}" \
+        --url="${dict[url]}" \
+        --distribution="${dict[distribution]}"
     return 0
 }
 
 koopa::debian_apt_clean() { # {{{1
     # """
     # Clean up apt after an install/uninstall call.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     #
     # Alternatively, can consider using 'autoclean' here, which is lighter
     # than calling 'clean'.
@@ -458,8 +663,15 @@ koopa::debian_apt_clean() { # {{{1
     # - https://askubuntu.com/questions/3167/
     # - https://github.com/hadolint/hadolint/wiki/DL3009
     # """
-    sudo apt-get --yes autoremove
-    sudo apt-get --yes clean
+    local app
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[apt_get]}" --yes autoremove
+    "${app[sudo]}" "${app[apt_get]}" --yes clean
     # > koopa::rm --sudo '/var/lib/apt/lists/'*
     return 0
 }
@@ -467,7 +679,7 @@ koopa::debian_apt_clean() { # {{{1
 koopa::debian_apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
-    # @note Updated 2021-09-22.
+    # @note Updated 2021-11-05.
     #
     # Look up currently enabled sources with:
     # > grep -Eq '^deb\s' '/etc/apt/sources.list'
@@ -541,68 +753,90 @@ koopa::debian_apt_configure_sources() { # {{{1
     # > deb http://ports.ubuntu.com/ubuntu-ports
     #       focal-security multiverse
     # """
-    local codenames cut os_codename grep os_id repos
-    local sources_list sources_list_d tee urls
+    local app codenames repos urls
     koopa::assert_has_no_args "$#"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    head="$(koopa::locate_head)"
-    tee="$(koopa::locate_tee)"
-    sources_list='/etc/apt/sources.list'
-    koopa::alert "Configuring apt sources in '${sources_list}'."
-    koopa::assert_is_file "$sources_list"
-    os_id="$(koopa::os_id)"
-    os_codename="$(koopa::os_codename)"
-    declare -A codenames
-    declare -A urls
-    codenames[main]="$os_codename"
-    codenames[security]="${os_codename}-security"
-    codenames[updates]="${os_codename}-updates"
-    urls[main]="$( \
-        "$grep" -E '^deb\s' "$sources_list" \
-        | "$grep" -F ' main ' \
-        | "$head" -n 1 \
-        | "$cut" -d ' ' -f 2 \
-    )"
-    urls[security]="$( \
-        "$grep" -E '^deb\s' "$sources_list" \
-        | "$grep" -F " ${codenames[security]} " \
-        | "$head" -n 1 \
-        | "$cut" -d ' ' -f 2 \
-    )"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [head]="$(koopa::locate_head)"
+        [tee]="$(koopa::locate_tee)"
+    )
+    declare -A dict=(
+        [os_codename]="$(koopa::os_codename)"
+        [os_id]="$(koopa::os_id)"
+        [sources_list]="$(koopa::debian_apt_sources_file)"
+        [sources_list_d]="$(koopa::debian_apt_sources_prefix)"
+    )
+    koopa::alert "Configuring apt sources in '${dict[sources_list]}'."
+    koopa::assert_is_file "${dict[sources_list]}"
+    declare -A codenames=(
+        [main]="${dict[os_codename]}"
+        [security]="${dict[os_codename]}-security"
+        [updates]="${dict[os_codename]}-updates"
+    )
+    declare -A urls=(
+        [main]="$( \
+            koopa::grep \
+                --extended-regexp \
+                '^deb\s' \
+                "${dict[sources_list]}" \
+            | koopa::grep \
+                --fixed-strings \
+                " ${codenames[main]} main" \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f 2 \
+        )"
+        [security]="$( \
+            koopa::grep \
+                --extended-regexp \
+                    '^deb\s' \
+                    "${dict[sources_list]}" \
+            | koopa::grep \
+                --fixed-strings \
+                " ${codenames[security]} main" \
+            | "${app[head]}" -n 1 \
+            | "${app[cut]}" -d ' ' -f 2 \
+        )"
+    )
+    if [[ -z "${urls[main]}" ]]
+    then
+        koopa::stop 'Failed to extract apt main URL.'
+    fi
+    if [[ -z "${urls[security]}" ]]
+    then
+        koopa::stop 'Failed to extract apt security URL.'
+    fi
     urls[updates]="${urls[main]}"
-    case "$os_id" in
+    case "${dict[os_id]}" in
         'debian')
-            # Can consider including 'backports' here as well.
+            # Can consider including 'backports' here.
             repos=('main')
             ;;
         'ubuntu')
-            # Can consider including 'multiverse' here as well.
+            # Can consider including 'multiverse' here.
             repos=('main' 'restricted' 'universe')
             ;;
         *)
-            koopa::stop "Unsupported OS: '${os_id}'."
+            koopa::stop "Unsupported OS: '${dict[os_id]}'."
             ;;
     esac
     # Configure primary apt sources.
-    if [[ -L "$sources_list" ]]
+    if [[ -L "${dict[sources_list]}" ]]
     then
-        koopa::rm --sudo "$sources_list"
+        koopa::rm --sudo "${dict[sources_list]}"
     fi
-    sudo "$tee" "$sources_list" >/dev/null << END
+    sudo "${app[tee]}" "${dict[sources_list]}" >/dev/null << END
 deb ${urls[main]} ${codenames[main]} ${repos[*]}
 deb ${urls[security]} ${codenames[security]} ${repos[*]}
 deb ${urls[updates]} ${codenames[updates]} ${repos[*]}
 END
     # Configure secondary apt sources.
-    sources_list_d='/etc/apt/sources.list.d'
-    if [[ -L "$sources_list_d" ]]
+    if [[ -L "${dict[sources_list_d]}" ]]
     then
-        koopa::rm --sudo "$sources_list_d"
+        koopa::rm --sudo "${dict[sources_list_d]}"
     fi
-    if [[ ! -d "$sources_list_d" ]]
+    if [[ ! -d "${dict[sources_list_d]}" ]]
     then
-        koopa::mkdir --sudo "$sources_list_d"
+        koopa::mkdir --sudo "${dict[sources_list_d]}"
     fi
     return 0
 }
@@ -610,13 +844,17 @@ END
 koopa::debian_apt_delete_repo() { # {{{1
     # """
     # Delete an apt repo file.
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-11-05.
     # """
-    local file name
+    local dict file name
     koopa::assert_has_args "$#"
+    koopa::assert_is_admin
+    declare -A dict=(
+        [prefix]="$(koopa::debian_apt_sources_prefix)"
+    )
     for name in "$@"
     do
-        file="/etc/apt/sources.list.d/${name}.list"
+        file="${dict[prefix]}/koopa-${name}.list"
         koopa::assert_is_file "$file"
         koopa::rm --sudo "$file"
     done
@@ -625,82 +863,107 @@ koopa::debian_apt_delete_repo() { # {{{1
 
 koopa::debian_apt_disable_deb_src() { # {{{1
     # """
-    # Enable 'deb-src' source packages.
-    # @note Updated 2021-06-11.
+    # Disable 'deb-src' source packages.
+    # @note Updated 2021-11-05.
     # """
-    local file grep sed
+    local app dict
     koopa::assert_has_args_le "$#" 1
-    file="${1:-}"
-    [[ -z "$file" ]] && file='/etc/apt/sources.list'
-    file="$(koopa::realpath "$file")"
-    koopa::alert "Disabling Debian sources in '${file}'."
-    grep="$(koopa::locate_grep)"
-    sed="$(koopa::locate_sed)"
-    if ! "$grep" -Eq '^deb-src ' "$file"
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sed]="$(koopa::locate_sed)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [file]="${1:-}"
+    )
+    [[ -z "${dict[file]}" ]] && dict[file]="$(koopa::debian_apt_sources_file)"
+    koopa::assert_is_file "${dict[file]}"
+    koopa::alert "Disabling Debian sources in '${dict[file]}'."
+    if ! koopa::file_detect_regex "${dict[file]}" '^deb-src '
     then
-        koopa::alert_note "No 'deb-src' lines to comment in '${file}'."
+        koopa::alert_note "No lines to comment in '${dict[file]}'."
         return 0
     fi
-    "$sed" -Ei 's/^deb-src /# deb-src /' "$file"
-    sudo apt-get update
+    "${app[sudo]}" "${app[sed]}" -Ei 's/^deb-src /# deb-src /' "${dict[file]}"
+    "${app[sudo]}" "${app[apt_get]}" update
     return 0
 }
 
 koopa::debian_apt_enable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-05.
     # """
-    local file grep sed
+    local app dict
     koopa::assert_has_args_le "$#" 1
-    grep="$(koopa::locate_grep)"
-    sed="$(koopa::locate_sed)"
-    file="${1:-}"
-    [[ -z "$file" ]] && file='/etc/apt/sources.list'
-    file="$(koopa::realpath "$file")"
-    koopa::alert "Enabling Debian sources in '${file}'."
-    if ! "$grep" -Eq '^# deb-src ' "$file"
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sed]="$(koopa::locate_sed)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [file]="${1:-}"
+    )
+    [[ -z "${dict[file]}" ]] && dict[file]="$(koopa::debian_apt_sources_file)"
+    koopa::assert_is_file "${dict[file]}"
+    koopa::alert "Enabling Debian sources in '${dict[file]}'."
+    if ! koopa::file_detect_regex "${dict[file]}" '^# deb-src '
     then
-        koopa::alert_note "No '# deb-src' lines to uncomment in '${file}'."
+        koopa::alert_note "No lines to uncomment in '${dict[file]}'."
         return 0
     fi
-    sudo "$sed" -Ei 's/^# deb-src /deb-src /' "$file"
-    sudo apt-get update
+    "${app[sudo]}" "${app[sed]}" -Ei 's/^# deb-src /deb-src /' "${dict[file]}"
+    "${app[sudo]}" "${app[apt_get]}" update
     return 0
 }
 
 koopa::debian_apt_enabled_repos() { # {{{1
     # """
     # Get a list of enabled default apt repos.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-05.
     # """
-    local cut file grep os_codename pattern x
+    local app file os_codename pattern x
     koopa::assert_has_no_args "$#"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
-    os_codename="$(koopa::os_codename)"
-    file='/etc/apt/sources.list'
-    pattern="^deb\s.+\s${os_codename}\s.+$"
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+    )
+    declare -A dict=(
+        [file]="$(koopa::debian_apt_sources_file)"
+        [os]="$(koopa::os_codename)"
+    )
+    dict[pattern]="^deb\s.+\s${dict[os]}\s.+$"
     x="$( \
-        "$grep" -E "$pattern" "$file" \
-            | "$cut" -d ' ' -f '4-' \
+        koopa::grep \
+            --extended-regexp \
+            "${dict[pattern]}" \
+            "${dict[file]}" \
+        | "${app[cut]}" -d ' ' -f '4-' \
     )"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
 }
 
 koopa::debian_apt_get() { # {{{1
     # """
     # Non-interactive variant of apt-get, with saner defaults.
-    # @note Updated 2020-07-05.
+    # @note Updated 2021-11-02.
     #
     # Currently intended for:
     # - dist-upgrade
     # - install
     # """
+    local app
     koopa::assert_has_args "$#"
-    sudo apt-get update
-    sudo DEBIAN_FRONTEND='noninteractive' \
-        apt-get \
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[apt_get]}" update
+    "${app[sudo]}" DEBIAN_FRONTEND='noninteractive' \
+        "${app[apt_get]}" \
             --no-install-recommends \
             --quiet \
             --yes \
@@ -720,64 +983,119 @@ koopa::debian_apt_install() { # {{{1
 koopa::debian_apt_is_key_imported() { # {{{1
     # """
     # Is a GPG key imported for apt?
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-11-02.
+    #
+    # sed only supports up to 9 elements in replacement, even though our
+    # input contains 10. Need to switch to awk or another approach to make
+    # this matching even more exact.
     # """
-    local key sed x
+    local app dict
     koopa::assert_has_args_eq "$#" 1
-    sed="$(koopa::locate_sed)"
-    koopa::assert_is_installed 'apt-key'
-    key="${1:?}"
-    key="$( \
-        koopa::print "$key" \
-        | "$sed" 's/ //g' \
-        | "$sed" -E "s/\
-^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\$/\
-\1 \2 \3 \4 \5  \6 \7 \8 \9 \10/" \
+    declare -A app=(
+        [apt_key]="$(koopa::debian_locate_apt_key)"
+        [sed]="$(koopa::locate_sed)"
+    )
+    declare -A dict=(
+        [key]="${1:?}"
+    )
+    dict[key_pattern]="$( \
+        koopa::print "${dict[key]}" \
+        | "${app[sed]}" 's/ //g' \
+        | "${app[sed]}" -E "s/^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\
+(.{4})(.{4})(.{4})\$/\1 \2 \3 \4 \5  \6 \7 \8 \9/" \
     )"
-    x="$(apt-key list 2>&1 || true)"
-    koopa::str_match "$x" "$key"
+    dict[string]="$("${app[apt_key]}" list 2>&1 || true)"
+    koopa::str_detect_fixed "${dict[string]}" "${dict[key_pattern]}"
+}
+
+koopa::debian_apt_key_prefix() { # {{{1
+    # """
+    # Debian apt key prefix.
+    # @note Updated 2021-11-02.
+    # @seealso
+    # - '/etc/apt/trusted.gpg.d' (alternate location for apt).
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::print '/usr/share/keyrings'
 }
 
 koopa::debian_apt_remove() { # {{{1
     # """
     # Remove Debian apt package.
-    # @note Updated 2021-03-24.
+    # @note Updated 2021-11-02.
     # """
+    local app
     koopa::assert_has_args "$#"
-    sudo apt-get --yes remove --purge "$@"
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[apt_get]}" --yes remove --purge "$@"
     koopa::debian_apt_clean
     return 0
+}
+
+koopa::debian_apt_sources_file() { # {{{1
+    # """
+    # Debian apt sources file.
+    # @note Updated 2021-11-02.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::print '/etc/apt/sources.list'
+}
+
+koopa::debian_apt_sources_prefix() { # {{{1
+    # """
+    # Debian apt sources directory.
+    # @note Updated 2021-11-02.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::print '/etc/apt/sources.list.d'
 }
 
 koopa::debian_apt_space_used_by() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-11-02.
     #
     # Alternate approach that doesn't attempt to grep match.
     # """
+    local app
     koopa::assert_has_args "$#"
-    sudo apt-get --assume-no autoremove "$@"
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[apt_get]}" --assume-no autoremove "$@"
     return 0
 }
 
 koopa::debian_apt_space_used_by_grep() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     #
     # See also:
     # https://askubuntu.com/questions/490945
     # """
-    local cut grep x
+    local app x
     koopa::assert_has_args "$#"
-    cut="$(koopa::locate_cut)"
-    grep="$(koopa::locate_grep)"
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt_get]="$(koopa::debian_locate_apt_get)"
+        [cut]="$(koopa::locate_cut)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
     x="$( \
-        sudo apt-get --assume-no autoremove "$@" \
-            | "$grep" 'freed' \
-            | "$cut" -d ' ' -f '4-5' \
+        "${app[sudo]}" "${app[apt_get]}" \
+            --assume-no \
+            autoremove "$@" \
+        | koopa::grep 'freed' \
+        | "${app[cut]}" -d ' ' -f '4-5' \
     )"
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
@@ -785,24 +1103,39 @@ koopa::debian_apt_space_used_by_grep() { # {{{1
 koopa::debian_apt_space_used_by_no_deps() { # {{{1
     # """
     # Check install apt package size, without dependencies.
-    # @note Updated 2021-06-11.
+    # @note Updated 2021-11-02.
     # """
-    local grep
-    grep="$(koopa::locate_grep)"
+    local app x
     koopa::assert_has_args "$#"
-    sudo apt show "$@" | "$grep" 'Size'
+    koopa::assert_is_admin
+    declare -A app=(
+        [apt]="$(koopa::debian_locate_apt)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    x="$( \
+        "${app[sudo]}" "${app[apt]}" show "$@" 2>/dev/null \
+            | koopa::grep 'Size' \
+    )"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
     return 0
 }
 
 koopa::debian_install_from_deb() { # {{{1
     # """
     # Install directly from a '.deb' file.
-    # @note Updated 2021-06-17.
+    # @note Updated 2021-11-02.
     # """
-    local file
+    local app dict
     koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_installed 'gdebi'
-    file="${1:?}"
-    sudo gdebi --non-interactive "$file"
+    koopa::assert_is_admin
+    declare -A app=(
+        [gdebi]="$(koopa::debian_locate_gdebi)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    declare -A dict=(
+        [file]="${1:?}"
+    )
+    "${app[sudo]}" "${app[gdebi]}" --non-interactive "${dict[file]}"
     return 0
 }

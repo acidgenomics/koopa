@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::fedora_install_oracle_instantclient() { # {{{1
     # """
     # Install Oracle InstantClient.
@@ -16,7 +17,7 @@ koopa::fedora_install_oracle_instantclient() { # {{{1
     version="$(koopa::variable "$name")"
     platform='linux'
     arch="$(koopa::arch)"
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     koopa::fedora_dnf_install 'libaio-devel'
     # e.g. '21.1.0.0.0-1' to '211000'.
     version2="$(koopa::sub '-[0-9]+$' '' "$version")"
@@ -34,10 +35,11 @@ instantclient/${version2}"
             koopa::fedora_install_from_rpm "$file"
         done
     )
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
 
+# FIXME Need to wrap this.
 koopa::fedora_uninstall_oracle_instantclient() { # {{{1
     # """
     # Uninstall Oracle InstantClient.

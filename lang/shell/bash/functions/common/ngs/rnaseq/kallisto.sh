@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Rename '--gff' to '--gtf'.
+# FIXME Ensure naming conventions here match salmon runners.
+# FIXME Need to add improved input checks, similar to salmon functions.
+# FIXME Rename 'fasta-file' to 'transcriptome-fasta-file'.
+# FIXME Rework using 'koopa::locate_conda_kallisto'.
+
 # Main functions ===============================================================
 koopa::run_kallisto_paired_end() { # {{{1
     # """
@@ -140,6 +146,7 @@ koopa::run_kallisto_paired_end() { # {{{1
     # --------------------------------------------------------------------------
     # Create a per-sample array from the R1 FASTQ files.
     # Pipe GNU find into array.
+    # FIXME Rework using 'koopa::find'.
     readarray -t fastq_r1_files <<< "$( \
         "${app[find]}" "$fastq_dir" \
             -maxdepth 1 \
@@ -164,7 +171,7 @@ with '${dict[r1_tail]}'."
     then
         koopa::kallisto_index \
             --fasta-file="${dict[fasta_file]}" \
-            --output-dir="$index_dir"
+            --output-dir="${dict[index_dir]}"
     fi
     koopa::assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2
@@ -327,6 +334,7 @@ koopa::run_kallisto_single_end() { # {{{1
     # --------------------------------------------------------------------------
     # Create a per-sample array from the FASTQ files.
     # Pipe GNU find into array.
+    # FIXME Rework using 'koopa::find'.
     readarray -t fastq_files <<< "$( \
         "${app[find]}" "$fastq_dir" \
             -maxdepth 1 \
@@ -351,7 +359,7 @@ with '${dict[tail]}'."
     then
         koopa::kallisto_index \
             --fasta-file="${dict[fasta_file]}" \
-            --output-dir="$index_dir"
+            --output-dir="${dict[index_dir]}"
     fi
     koopa::assert_is_dir "${dict[index_dir]}"
     # Quantify {{{2

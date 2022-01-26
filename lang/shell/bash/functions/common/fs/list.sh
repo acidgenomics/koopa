@@ -3,7 +3,7 @@
 koopa:::list_path_priority() { # {{{1
     # """
     # Split PATH string by ':' delim into lines.
-    # @note Updated 2020-11-10.
+    # @note Updated 2021-01-20.
     #
     # Alternate approach using tr:
     # > tr="$(koopa::locate_tr)"
@@ -22,12 +22,13 @@ koopa:::list_path_priority() { # {{{1
     local str
     koopa::assert_has_args_le "$#" 1
     str="${1:-$PATH}"
-    x="$(koopa::print "${str//:/$'\n'}")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    str="$(koopa::print "${str//:/$'\n'}")"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa:::list_path_priority_unique() { # {{{1
     # """
     # Split PATH string by ':' delim into lines but only return uniques.
@@ -58,6 +59,7 @@ koopa::list() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::list_app_versions() { # {{{1
     # """
     # List installed application versions.
@@ -73,6 +75,7 @@ koopa::list_app_versions() { # {{{1
         koopa::alert_note "No applications are installed in '${prefix}'."
         return 0
     fi
+    # FIXME Rework using 'koopa::find'.
     x="$( \
         "$find" "$prefix" \
             -mindepth 2 \
@@ -97,6 +100,7 @@ koopa::list_dotfiles() { # {{{1
     koopa::find_dotfiles l 'Symlinks'
 }
 
+# FIXME Rework using app/dict approach.
 koopa::list_path_priority() { # {{{1
     # """
     # List path priority.

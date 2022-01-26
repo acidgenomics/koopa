@@ -4,12 +4,12 @@ koopa::rhel_enable_epel() { # {{{1
     # """
     # Enable Extra Packages for Enterprise Linux (EPEL) for Red Hat
     # Enterprise Linux (RHEL).
-    # @note Updated 2021-06-16.
+    # @note Updated 2021-10-25.
     # """
-    local grep rpm
+    local rpm
     koopa::assert_has_no_args "$#"
-    grep="$(koopa::locate_grep)"
-    if koopa::fedora_dnf repolist | "$grep" -q 'epel/'
+    if koopa::fedora_dnf repolist \
+        | koopa::str_detect_fixed 'epel/'
     then
         koopa::alert_success 'EPEL is already enabled.'
         return 0
@@ -18,4 +18,3 @@ koopa::rhel_enable_epel() { # {{{1
     koopa::fedora_dnf_install "$rpm"
     return 0
 }
-

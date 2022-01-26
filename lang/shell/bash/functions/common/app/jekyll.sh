@@ -3,41 +3,47 @@
 koopa::jekyll_deploy_to_aws() { # {{{1
     # """
     # Deploy Jekyll website to AWS S3 and CloudFront.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-12-08.
     # """
-    local aws bucket_prefix bundle distribution_id local_prefix profile
+    local app dict
     koopa::assert_has_args "$#"
-    aws="$(koopa::locate_aws)"
-    bundle="$(koopa::locate_bundle)"
-    profile="${AWS_PROFILE:-default}"
-    koopa::assert_is_file 'Gemfile'
-    local_prefix='_site'
+    declare -A app=(
+        [aws]="$(koopa::locate_aws)"
+        [bundle]="$(koopa::locate_bundle)"
+    )
+    declare -A dict=(
+        [bucket_prefix]=''
+        [distribution_id]=''
+        [local_prefix]='_site'
+        [profile]="${AWS_PROFILE:-}"
+    )
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--bucket='*)
-                bucket_prefix="${1#*=}"
+                dict[bucket_prefix]="${1#*=}"
                 shift 1
                 ;;
             '--bucket')
-                bucket_prefix="${2:?}"
+                dict[bucket_prefix]="${2:?}"
                 shift 2
                 ;;
             '--distribution-id='*)
-                distribution_id="${1#*=}"
+                dict[distribution_id]="${1#*=}"
                 shift 1
                 ;;
             '--distribution-id')
-                distribution_id="${2:?}"
+                dict[distribution_id]="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                profile="${1#*=}"
+                dict[profile]="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                profile="${2:?}"
+                dict[profile]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -46,43 +52,58 @@ koopa::jekyll_deploy_to_aws() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set 'bucket_prefix' 'distribution_id' 'local_prefix'
-    bucket_prefix="$(koopa::strip_trailing_slash "$bucket_prefix")"
-    local_prefix="$(koopa::strip_trailing_slash "$local_prefix")"
+    koopa::assert_is_set \
+        '--bucket' "${dict[bucket_prefix]:-}" \
+        '--distribution-id' "${dict[distribution_id]:-}" \
+        '--profile' "${dict[profile]:-}"
+    dict[bucket_prefix]="$( \
+        koopa::strip_trailing_slash "${dict[bucket_prefix]}" \
+    )"
+    dict[local_prefix]="$( \
+        koopa::strip_trailing_slash "${dict[local_prefix]}" \
+    )"
+    koopa::assert_is_file 'Gemfile'
     if [[ -f 'Gemfile.lock' ]]
     then
-        "$bundle" update --bundler
+        "${app[bundle]}" update --bundler
     fi
-    "$bundle" install
-    "$bundle" exec jekyll build
-    koopa::aws_s3_sync "${local_prefix}/" "${bucket_prefix}/"
-    "$aws" cloudfront create-invalidation \
-        --distribution-id="$distribution_id" \
-        --profile="$profile" \
-        --paths '/'
+    "${app[bundle]}" install
+    "${app[bundle]}" exec jekyll build
+    koopa::aws_s3_sync --profile="${dict[profile]}" \
+        "${dict[local_prefix]}/" \
+        "${dict[bucket_prefix]}/"
+    "${app[aws]}" --profile="${dict[profile]}" \
+        cloudfront create-invalidation \
+            --distribution-id="${dict[distribution_id]}" \
+            --paths '/'
     return 0
 }
 
 koopa::jekyll_serve() { # {{{1
     # """
     # Render Jekyll website.
-    # Updated 2021-09-21.
+    # Updated 2021-12-08.
     # """
-    local bundle dir
+    local app dict
     koopa::assert_has_args_le "$#" 1
-    bundle="$(koopa::locate_bundle)"
-    koopa::assert_is_file 'Gemfile'
-    dir="${1:-.}"
-    dir="$(koopa::realpath "$dir")"
-    koopa::alert "Serving Jekyll website in '${dir}'."
+    declare -A app=(
+        [bundle]="$(koopa::locate_bundle)"
+    )
+    declare -A dict=(
+        [prefix]="${1:-}"
+    )
+    [[ -z "${dict[prefix]}" ]] && dict[prefix]="${PWD:?}"
+    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    koopa::alert "Serving Jekyll website in '${dict[prefix]}'."
     (
-        koopa::cd "$dir"
+        koopa::cd "${dict[prefix]}"
+        koopa::assert_is_file 'Gemfile'
         if [[ -f 'Gemfile.lock' ]]
         then
-            "$bundle" update --bundler
+            "${app[bundle]}" update --bundler
         fi
-        "$bundle" install
-        "$bundle" exec jekyll serve
+        "${app[bundle]}" install
+        "${app[bundle]}" exec jekyll serve
     )
     return 0
 }

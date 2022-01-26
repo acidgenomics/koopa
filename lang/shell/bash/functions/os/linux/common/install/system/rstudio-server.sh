@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa:::linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
@@ -130,7 +131,7 @@ koopa:::linux_install_rstudio_server() { # {{{1
         koopa::alert_is_installed "${dict[name_fancy]}"
         return 0
     fi
-    koopa::install_start "${dict[name_fancy]}"
+    koopa::alert_install_start "${dict[name_fancy]}"
     tmp_dir="$(koopa::tmp_dir)"
     (
         koopa::cd "$tmp_dir"
@@ -141,8 +142,7 @@ ${dict[platform]}.${dict[file_ext]}"
 ${dict[platform]}/${file}"
         # Ensure '+' gets converted to '%2B'.
         url="$(koopa::gsub '\+' '%2B' "$url")"
-        koopa::download "$url"
-        file="$(basename "$url")"
+        koopa::download "$url" "$file"
         IFS=' ' read -r -a install <<< "${dict[install]}"
         "${install[@]}" "$file"
     ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
@@ -158,19 +158,33 @@ first deactivate it on the old system with the command:
 > sudo rstudio-server license-manager deactivate
 END
     fi
-    koopa::install_success "${dict[name_fancy]}"
+    koopa::alert_install_success "${dict[name_fancy]}"
     return 0
 }
 
 koopa::linux_add_rstudio_user() { #{{{1
     # """
     # Enable RStudio user on Linux.
-    # @note Updated 2021-09-27.
+    # @note Updated 2021-11-16.
     # """
-    sudo useradd 'rstudio'
-    sudo passwd 'rstudio'
-    sudo mkdir -p '/home/rstudio'
-    sudo chown 'rstudio:rstudio' '/home/rstudio'
-    sudo usermod -s '/bin/bash' 'rstudio'
+    local app dict
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
+    declare -A app=(
+        [passwd]="$(koopa::locate_passwd)"
+        [sudo]="$(koopa::locate_sudo)"
+        [useradd]="$(koopa::linux_locate_useradd)"
+        [usermod]="$(koopa::linux_locate_usermod)"
+    )
+    declare -A dict=(
+        [home]='/home/rstudio'
+        [shell]='/bin/bash'
+        [user]='rstudio'
+    )
+    "${app[sudo]}" "${app[useradd]}" "${dict[user]}"
+    "${app[sudo]}" "${app[passwd]}" "${dict[user]}"
+    koopa::mkdir --sudo "${dict[home]}"
+    koopa::chown --sudo "${dict[user]}:${dict[user]}" "${dict[home]}"
+    "${app[sudo]}" "${app[usermod]}" -s "${dict[shell]}" "${dict[user]}"
     return 0
 }

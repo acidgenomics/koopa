@@ -1,6 +1,6 @@
 # """
 # Conda configuration.
-# Updated 2021-09-08.
+# Updated 2022-01-21.
 #
 # See also:
 # - 'conda config --set'
@@ -17,6 +17,10 @@ add_pip_as_python_dependency: True
 
 allow_other_channels: False
 
+# always_yes: True
+
+auto_activate_base: False
+
 auto_update_conda: False
 
 changeps1: False
@@ -25,6 +29,12 @@ channels:
   - conda-forge
   - bioconda
   - defaults
+
+# Disallow installation of specific packages.
+# > disallow:
+# >   - anaconda
+# >   - conda
+# >   - mamba
 
 # Change default environment directory path.
 # > envs_dirs:
@@ -35,3 +45,5 @@ notify_outdated_conda: False
 report_errors: True
 
 show_channel_urls: True
+
+update_dependencies: False

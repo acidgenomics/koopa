@@ -18,6 +18,7 @@ koopa_rename_from_csv() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::rename_lowercase() { # {{{1
     # """
     # Rename files to lowercase.
@@ -52,6 +53,7 @@ koopa::rename_lowercase() { # {{{1
     then
         dir="${1:-.}"
         # Rename files.
+        # FIXME Rework using 'koopa::find'.
         "$find" "$dir" \
             -mindepth 1 \
             -type 'f' \
@@ -62,6 +64,7 @@ koopa::rename_lowercase() { # {{{1
             | "$xargs" -0 -I {} \
                 "$rename" --force --verbose 'y/A-Z/a-z/' {}
         # Rename directories.
+        # FIXME Rework using 'koopa::find'.
         "$find" "$dir" \
             -mindepth 1 \
             -type d \

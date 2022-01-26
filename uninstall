@@ -1,25 +1,29 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/shell/bash/include/header.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/shell/bash/include/header.sh"
 
 uninstall() { # {{{1
     # """
     # Uninstall koopa.
-    # @note Updated 2021-09-20.
+    # @note Updated 2021-11-24.
     # """
-    local koopa_prefix
-    koopa_prefix="$(koopa::koopa_prefix)"
-    if koopa::is_shared_install
+    local dict
+    declare -A dict=(
+        [config_prefix]="$(koopa::config_prefix)"
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [name_fancy]='koopa'
+    )
+    koopa::alert_uninstall_start "${dict[name_fancy]}" "${dict[koopa_prefix]}"
+    if koopa::is_linux && koopa::is_shared_install
     then
         koopa::rm --sudo '/etc/profile.d/zzz-koopa.sh'
     fi
     koopa::uninstall_dotfiles
-    koopa::uninstall_dotfiles_private
     koopa::rm \
-        "$(koopa::config_prefix)" \
-        "$koopa_prefix"
-    koopa::alert_success 'Uninstallation of koopa was successful.'
+        "${dict[config_prefix]}" \
+        "${dict[koopa_prefix]}"
+    koopa::alert_uninstall_success "${dict[name_fancy]}" "${dict[koopa_prefix]}"
     koopa::alert_note 'Restart the shell.'
     return 0
 }

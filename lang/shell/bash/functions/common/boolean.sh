@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using app/dict approach.
 koopa:::is_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
@@ -20,7 +21,7 @@ koopa:::is_ssh_enabled() { # {{{1
             "$url" 2>&1 \
     )"
     [[ -n "$x" ]] || return 1
-    koopa::str_match "$x" "$pattern"
+    koopa::str_detect_fixed "$x" "$pattern"
 }
 
 koopa::contains() { # {{{1
@@ -47,62 +48,6 @@ koopa::contains() { # {{{1
     return 1
 }
 
-koopa::file_match() { # {{{1
-    # """
-    # Is a string defined in a file?
-    # @note Updated 2021-05-21.
-    #
-    # @examples
-    # koopa::file_match FILE PATTERN
-    # echo FILE | koopa::file_match PATTERN
-    # """
-    local file grep pattern
-    koopa::assert_has_args "$#"
-    if [[ "$#" -eq 2 ]]
-    then
-        # Standard input.
-        file="${1:?}"
-        pattern="${2:?}"
-    elif [[ "$#" -eq 1 ]]
-    then
-        # Piped input using stdin.
-        pattern="${1:?}"
-        shift 1
-        read -r file
-    else
-        return 1
-    fi
-    [[ -f "$file" ]] || return 1
-    grep="$(koopa::locate_grep)"
-    "$grep" -Fq "$pattern" "$file" >/dev/null
-}
-
-koopa::file_match_regex() { # {{{1
-    # """
-    # Is a string defined in a file?
-    # @note Updated 2020-04-30.
-    # """
-    local file grep pattern
-    koopa::assert_has_args "$#"
-    if [[ "$#" -eq 2 ]]
-    then
-        # Standard input.
-        file="${1:?}"
-        pattern="${2:?}"
-    elif [[ "$#" -eq 1 ]]
-    then
-        # Piped input using stdin.
-        pattern="${1:?}"
-        shift 1
-        read -r file
-    else
-        return 1
-    fi
-    [[ -f "$file" ]] || return 1
-    grep="$(koopa::locate_grep)"
-    "$grep" -Eq "$pattern" "$file" >/dev/null
-}
-
 koopa::has_file_ext() { # {{{1
     # """
     # Does the input contain a file extension?
@@ -115,7 +60,7 @@ koopa::has_file_ext() { # {{{1
     koopa::assert_has_args "$#"
     for file in "$@"
     do
-        koopa::str_match "$(koopa::print "$file")" '.' || return 1
+        koopa::str_detect_fixed "$(koopa::print "$file")" '.' || return 1
     done
     return 0
 }
@@ -142,26 +87,28 @@ koopa::has_no_environments() { # {{{1
 koopa::has_passwordless_sudo() { # {{{1
     # """
     # Check if sudo is active or doesn't require a password.
-    # @note Updated 2021-05-14.
+    # @note Updated 2021-10-27.
     #
     # See also:
     # https://askubuntu.com/questions/357220
     # """
+    local app
     koopa::assert_has_no_args "$#"
-    koopa::is_installed 'sudo' || return 1
     koopa::is_root && return 0
-    sudo -n true 2>/dev/null && return 0
+    koopa::is_installed 'sudo' || return 1
+    declare -A app=(
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" -n true 2>/dev/null && return 0
     return 1
 }
 
 koopa::is_admin() { # {{{1
     # """
     # Check that current user has administrator permissions.
-    # @note Updated 2021-09-16.
+    # @note Updated 2021-10-27.
     #
-    # This check is hanging on an CPI AWS Ubuntu EC2 instance, I think due to
-    # 'groups' can lag on systems for domain user accounts.
-    # Currently seeing on CPI AWS Ubuntu config.
+    # This check can hang on some systems with domain user accounts.
     #
     # Avoid prompting with '-n, --non-interactive', but note that this isn't
     # supported on all systems.
@@ -172,7 +119,7 @@ koopa::is_admin() { # {{{1
     # > sudo -l
     #
     # List all users with sudo access:
-    # > getent group sudo
+    # > getent group 'sudo'
     #
     # - macOS: admin
     # - Debian: sudo
@@ -182,6 +129,7 @@ koopa::is_admin() { # {{{1
     # - https://serverfault.com/questions/364334
     # - https://linuxhandbook.com/check-if-user-has-sudo-rights/
     # """
+    local app groups pattern
     koopa::assert_has_no_args "$#"
     if [[ -n "${KOOPA_ADMIN:-}" ]]
     then
@@ -195,23 +143,37 @@ koopa::is_admin() { # {{{1
         esac
     fi
     # Always return true for root user.
-    [[ "$(koopa::user_id)" -eq 0 ]] && return 0
+    koopa::is_root && return 0
     # Return false if 'sudo' program is not installed.
     koopa::is_installed 'sudo' || return 1
     # Early return true if user has passwordless sudo enabled.
     koopa::has_passwordless_sudo && return 0
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.
-    koopa::str_match_regex "$(groups)" '\b(admin|root|sudo|wheel)\b' && return 0
+    declare -A app=(
+        [groups]="$(koopa::locate_groups)"
+    )
+    groups="$("${app[groups]}")"
+    [[ -n "$groups" ]] || return 1
+    pattern='\b(admin|root|sudo|wheel)\b'
+    koopa::str_detect_regex "$groups" "$pattern" && return 0
     return 1
 }
 
+# FIXME Rework using app/dict approach.
 koopa::is_anaconda() { # {{{1
     # """
     # Is Anaconda (rather than Miniconda) installed?
-    # @note Updated 2020-07-08.
+    # @note Updated 2021-10-25.
     # """
-    [[ -x "$(koopa::conda_prefix)/bin/anaconda" ]]
+    local conda prefix
+    koopa::assert_has_args_le "$#" 1
+    conda="${1:-}"
+    [[ -z "$conda" ]] && conda="$(koopa::locate_conda)"
+    [[ -x "$conda" ]] || return 1
+    prefix="$(koopa::parent_dir --num=2 "$conda")"
+    [[ -x "${prefix}/bin/anaconda" ]] || return 1
+    return 0
 }
 
 koopa::is_array_empty() { # {{{1
@@ -275,18 +237,18 @@ koopa::is_current_version() { # {{{1
 koopa::is_defined_in_user_profile() { # {{{1
     # """
     # Is koopa defined in current user's shell profile configuration file?
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-10-25.
     # """
     local file
     koopa::assert_has_no_args "$#"
     file="$(koopa::find_user_profile)"
-    koopa::file_match "$file" 'koopa'
+    koopa::file_detect_fixed "$file" 'koopa'
 }
 
 koopa::is_doom_emacs_installed() { # {{{1
     # """
     # Is Doom Emacs installed?
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-25.
     # """
     local init_file prefix
     koopa::assert_has_no_args "$#"
@@ -294,7 +256,38 @@ koopa::is_doom_emacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
-    koopa::file_match "$init_file" 'doom-emacs'
+    koopa::file_detect_fixed "$init_file" 'doom-emacs'
+}
+
+koopa::is_empty_dir() { # {{{1
+    # """
+    # Is the input an empty directory?
+    # @note Updated 2021-12-07.
+    #
+    # @examples
+    # koopa::mkdir 'aaa' 'bbb'
+    # koopa::is_empty_dir 'aaa' 'bbb'
+    # koopa::rm 'aaa' 'bbb'
+    # """
+    local app out prefix
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+    )
+    for prefix in "$@"
+    do
+        [[ -d "$prefix" ]] || return 1
+        prefix="$(koopa::realpath "$prefix")"
+        out="$("${app[find]}" "$prefix" \
+            -maxdepth 0 \
+            -mindepth 0 \
+            -type 'd' \
+            -empty \
+            2>/dev/null \
+        )"
+        [[ -n "$out" ]] || return 1
+    done
+    return 0
 }
 
 koopa::is_export() { # {{{1
@@ -315,7 +308,7 @@ koopa::is_export() { # {{{1
     exports="$(export -p)"
     for arg in "$@"
     do
-        koopa::str_match_regex "$exports" "\b${arg}\b=" || return 1
+        koopa::str_detect_regex "$exports" "\b${arg}\b=" || return 1
     done
     return 0
 }
@@ -323,24 +316,34 @@ koopa::is_export() { # {{{1
 koopa::is_file_system_case_sensitive() { # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-01-19.
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
-    local find wc
+    local app dict
     koopa::assert_has_no_args "$#"
-    find="$(koopa::locate_find)"
-    wc="$(koopa::locate_wc)"
-    touch '.tmp.checkcase' '.tmp.checkCase'
-    count="$( \
-        "$find" . \
-            -maxdepth 1 \
-            -mindepth 1 \
-            -iname '.tmp.checkcase' \
-        | "$wc" -l \
+    declare -A app=(
+        [touch]="$(koopa::locate_touch)"
+        [wc]="$(koopa::locate_wc)"
+    )
+    declare -A dict=(
+        [prefix]="${PWD:?}"
+        [tmp_stem]='.koopa.tmp.'
+    )
+    dict[file1]="${dict[tmp_stem]}checkcase"
+    dict[file2]="${dict[tmp_stem]}checkCase"
+    "${app[touch]}" "${dict[file1]}" "${dict[file2]}"
+    dict[count]="$( \
+        koopa::find \
+            --glob="${dict[file1]}" \
+            --ignore-case \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict[prefix]}" \
+        | "${app[wc]}" -l \
     )"
-    koopa::rm '.tmp.check'*
-    [[ "$count" -eq 2 ]]
+    koopa::rm "${dict[tmp_stem]}"*
+    [[ "${dict[count]}" -eq 2 ]]
 }
 
 koopa::is_function() { # {{{1
@@ -391,6 +394,22 @@ koopa::is_gitlab_ssh_enabled() { # {{{1
     koopa:::is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
 }
 
+koopa::is_gnu() { # {{{1
+    # """
+    # Is a GNU program installed?
+    # @note Updated 2022-01-21.
+    # """
+    local cmd str
+    koopa::assert_has_args "$#"
+    for cmd in "$@"
+    do
+        koopa::is_installed "$cmd" || return 1
+        str="$("$cmd" --version 2>&1 || true)"
+        koopa::str_detect_posix "$str" 'GNU' || return 1
+    done
+    return 0
+}
+
 koopa::is_koopa_app() { # {{{1
     # """
     # Is a specific command installed in koopa app prefix?
@@ -411,15 +430,15 @@ koopa::is_koopa_app() { # {{{1
         else
             return 1
         fi
-        koopa::str_match_regex "$str" "^${app_prefix}" || return 1
+        koopa::str_detect_regex "$str" "^${app_prefix}" || return 1
     done
     return 0
 }
 
-koopa::is_powerful() { # {{{1
+koopa::is_powerful_machine() { # {{{1
     # """
     # Is the current machine powerful?
-    # @note Updated 2020-03-07.
+    # @note Updated 2021-11-05.
     # """
     local cores
     koopa::assert_has_no_args "$#"
@@ -428,6 +447,7 @@ koopa::is_powerful() { # {{{1
     return 1
 }
 
+# FIXME Rework using app/dict approach.
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
@@ -438,7 +458,7 @@ koopa::is_python_package_installed() { # {{{1
     # Alternate, slow mode:
     # > local freeze
     # > freeze="$("$python" -m pip freeze)"
-    # > koopa::str_match_regex "$freeze" "^${pkg}=="
+    # > koopa::str_detect_regex "$freeze" "^${pkg}=="
     #
     # See also:
     # - https://stackoverflow.com/questions/1051254
@@ -461,18 +481,11 @@ koopa::is_python_package_installed() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2021-05-21.
-    #
-    # This will only return true for user-installed packages.
-    #
-    # Fast mode: checking the 'site-library' directory.
-    #
-    # Alternate, slow mode:
-    # > Rscript -e "'${1}' %in% rownames(utils::installed.packages())" \
-    # >     | grep -q 'TRUE'
+    # @note Updated 2021-10-25.
     # """
     local pkg r
     koopa::assert_has_args "$#"
@@ -485,6 +498,7 @@ koopa::is_r_package_installed() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::is_recent() { # {{{1
     # """
     # If the file exists and is more recent than 2 weeks old.
@@ -509,6 +523,8 @@ koopa::is_recent() { # {{{1
     for file in "$@"
     do
         [[ -e "$file" ]] || return 1
+        # FIXME Need to switch to koopa::find here.
+        # FIXME Rework our mtime approach here, to support fd.
         exists="$( \
             "$find" "$file" \
                 -mindepth 0 \
@@ -521,10 +537,24 @@ koopa::is_recent() { # {{{1
     return 0
 }
 
-koopa::is_set() { # {{{1
+koopa::is_spacemacs_installed() { # {{{1
     # """
-    # Is the variable set and non-empty?
-    # @note Updated 2021-02-15.
+    # Is Spacemacs installed?
+    # @note Updated 2021-10-25.
+    # """
+    local init_file prefix
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed 'emacs' || return 1
+    prefix="$(koopa::emacs_prefix)"
+    init_file="${prefix}/init.el"
+    [[ -s "$init_file" ]] || return 1
+    koopa::file_detect_fixed "$init_file" 'Spacemacs'
+}
+
+koopa::is_variable_defined() { # {{{1
+    # """
+    # Is the variable defined (and non-empty)?
+    # @note Updated 2021-11-05.
     #
     # Passthrough of empty strings is bad practice in shell scripting.
     #
@@ -536,6 +566,9 @@ koopa::is_set() { # {{{1
     # - https://unix.stackexchange.com/questions/504082
     # - https://www.gnu.org/software/bash/manual/html_node/
     #       Shell-Parameter-Expansion.html
+    #
+    # @examples
+    # koopa::is_variable_defined 'PATH'
     # """
     local nounset value var x
     koopa::assert_has_args "$#"
@@ -554,16 +587,13 @@ koopa::is_set() { # {{{1
     return 0
 }
 
-koopa::is_spacemacs_installed() { # {{{1
+koopa::is_xcode_clt_installed() { # {{{1
     # """
-    # Is Spacemacs installed?
-    # @note Updated 2021-05-21.
+    # Is Xcode CLT (command line tools) installed?
+    # @note Updated 2021-10-26.
     # """
-    local init_file prefix
     koopa::assert_has_no_args "$#"
-    koopa::is_installed 'emacs' || return 1
-    prefix="$(koopa::emacs_prefix)"
-    init_file="${prefix}/init.el"
-    [[ -s "$init_file" ]] || return 1
-    koopa::file_match "$init_file" 'Spacemacs'
+    koopa::is_macos || return 1
+    [[ -d '/Library/Developer/CommandLineTools/usr/bin' ]] || return 1
+    return 0
 }
