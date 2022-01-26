@@ -1,42 +1,10 @@
 #!/usr/bin/env bash
 
-# FIXME Need to remove the prefix if defined.
-# FIXME Need to rethink the version handling?
-# FIXME Need to define /usr/local/gfortran as a prefix?
-
-koopa::macos_install_r_cran_gfortran() { # {{{1
-    koopa::install_app \
-        --name-fancy='R CRAN gfortran' \
-        --name='r-cran-gfortran' \
-        --platform='macos' \
-        --prefix="$(koopa::macos_gfortran_prefix)" \
-        --system \
-        --version="$(koopa::variable 'r-cran-gfortran')" \
-        "$@"
-}
-
-# FIXME Need to support '--prefix' pathrough here with '--system' flag.
-
-koopa::macos_uninstall_r_cran_gfortran() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='R CRAN gfortran' \
-        --name='r-cran-gfortran' \
-        --platform='macos' \
-        --prefix="$(koopa::macos_gfortran_prefix)" \
-        --system \
-        "$@"
-}
-
-# FIXME Ensure we still support version here.
-# FIXME Need to convert to wrapper.
-# FIXME Reinstall may need to use '--sudo' here in system call.
-# FIXME Ensure that when prefix is defined and '--reinstall' is not declared,
-#       the install script errors.
-
 koopa:::macos_install_r_cran_gfortran() { # {{{1
     # """
     # Install CRAN gfortran.
     # @note Updated 2021-11-16.
+    #
     # @seealso
     # - https://mac.r-project.org/tools/
     # - https://github.com/fxcoudert/gfortran-for-macOS/

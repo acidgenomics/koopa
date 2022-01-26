@@ -1,25 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::macos_install_python_framework() { # {{{1
-    koopa::install_app \
-        --installer='python-framework' \
-        --name-fancy='Python framework' \
-        --name='python' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa::macos_uninstall_python_framework() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='Python framework' \
-        --name='python' \
-        --platform='macos' \
-        --system \
-        --uninstaller='python-framework' \
-        "$@"
-}
-
 koopa:::macos_install_python_framework() { # {{{1
     # """
     # Install Python framework.
@@ -81,18 +61,5 @@ ${dict[version]}/${dict[file]}"
     koopa::assert_is_executable "${dict[python]}"
     koopa::configure_python "${dict[python]}"
     koopa::alert_install_success "${dict[name_fancy]}"
-    return 0
-}
-
-koopa:::macos_uninstall_python_framework() { # {{{1
-    # """
-    # Uninstall Python framework.
-    # @note Updated 2021-11-02.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::rm --sudo \
-        '/Applications/Python'* \
-        '/Library/Frameworks/Python.framework'
-    koopa::delete_broken_symlinks '/usr/local/bin'
     return 0
 }
