@@ -3,7 +3,7 @@
 koopa:::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-01-26.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -12,6 +12,7 @@ koopa:::install_perl_packages() { # {{{1
     # * --from https://cpan.metacpan.org/      # use only the HTTPS mirror
     # """
     local app module modules
+    koopa::assert_has_no_args "$#"
     koopa::configure_perl
     koopa::activate_perl
     declare -A app=(
@@ -23,16 +24,11 @@ koopa:::install_perl_packages() { # {{{1
         koopa::alert_install_start 'CPAN Minus'
         "${app[cpan]}" -i 'App::cpanminus' &>/dev/null
     fi
-    if [[ "$#" -gt 0 ]]
-    then
-        modules=("$@")
-    else
-        modules=(
-            'App::Ack'
-            'File::Rename'
-            'Log::Log4perl'
-        )
-    fi
+    modules=(
+        'App::Ack'
+        'File::Rename'
+        'Log::Log4perl'
+    )
     for module in "${modules[@]}"
     do
         koopa::alert "${module}"
