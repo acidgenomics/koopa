@@ -503,13 +503,12 @@ _koopa_activate_dircolors() { # {{{1
     return 0
 }
 
-_koopa_activate_emacs() { # {{{1
+_koopa_activate_doom_emacs() { # {{{1
     # """
-    # Activate Emacs.
-    # @note Updated 2020-06-30.
+    # Activate Doom Emacs.
+    # @note Updated 2022-01-26.
     # """
-    _koopa_activate_prefix "${HOME}/.emacs.d"
-    return 0
+    _koopa_activate_prefix "$(_koopa_doom_emacs_prefix)"
 }
 
 _koopa_activate_fzf() { # {{{1

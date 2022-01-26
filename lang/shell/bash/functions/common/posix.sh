@@ -24,8 +24,8 @@ koopa::activate_conda() { # {{{1
     _koopa_activate_conda "$@"
 }
 
-koopa::activate_emacs() { # {{{1
-    _koopa_activate_emacs "$@"
+koopa::activate_doom_emacs() { # {{{1
+    _koopa_activate_doom_emacs "$@"
 }
 
 koopa::activate_fzf() { # {{{1
