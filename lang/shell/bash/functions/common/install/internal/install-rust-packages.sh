@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Simplify, not allowing user input here.
+
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
@@ -12,8 +14,12 @@ koopa:::install_rust_packages() { # {{{1
     # - https://stackoverflow.com/questions/34484361
     # - https://github.com/rust-lang/cargo/pull/6798
     # - https://github.com/rust-lang/cargo/pull/7560
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ripgrep.rb
     # """
     local app dict pkg pkgs pkg_args
+    koopa::assert_has_no_args "$#"
     koopa::configure_rust
     koopa::activate_rust
     declare -A app=(
@@ -21,34 +27,28 @@ koopa:::install_rust_packages() { # {{{1
         [rustc]="$(koopa::locate_rustc)"
     )
     declare -A dict=(
-        [default]=0
         [jobs]="$(koopa::cpu_count)"
         [root]="${INSTALL_PREFIX:?}"
     )
-    pkgs=("$@")
-    if [[ "${#pkgs[@]}" -eq 0 ]]
-    then
-        dict[default]=1
-        pkgs=(
-            # Currently failing to build due to cachedir constraint.
-            # https://github.com/phiresky/ripgrep-all/issues/88
-            # > 'ripgrep-all'
-            'bat'
-            'broot'
-            'cargo-outdated'
-            'cargo-update'
-            'du-dust'
-            'exa'
-            'fd-find'
-            'hyperfine'
-            'procs'
-            'ripgrep'
-            'starship'
-            'tokei'
-            'xsv'
-            'zoxide'
-        )
-    fi
+    pkgs=(
+        # Currently failing to build due to cachedir constraint.
+        # https://github.com/phiresky/ripgrep-all/issues/88
+        # > 'ripgrep-all'
+        'bat'
+        'broot'
+        'cargo-outdated'
+        'cargo-update'
+        'du-dust'
+        'exa'
+        'fd-find'
+        'hyperfine'
+        'procs'
+        'ripgrep'
+        'starship'
+        'tokei'
+        'xsv'
+        'zoxide'
+    )
     koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
     # Can use '--force' flag here to force reinstall.
     pkg_args=(
@@ -62,13 +62,13 @@ koopa:::install_rust_packages() { # {{{1
     do
         local args version
         args=("${pkg_args[@]}")
-        if [[ "${dict[default]}" -eq 1 ]]
-        then
-            version="$(koopa::variable "rust-${pkg}")"
-            args+=('--version' "${version}")
-        fi
+        version="$(koopa::variable "rust-${pkg}")"
+        args+=('--version' "${version}")
         # Edge case handling for package name variants on crates.io.
         case "$pkg" in
+            'ripgrep')
+                args+=('--features' 'pcre2')
+                ;;
             'ripgrep-all')
                 pkg='ripgrep_all'
                 ;;

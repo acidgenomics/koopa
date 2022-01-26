@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing 'unsupported command' at end of call, for 'rust-packages'.
+# FIXME This is erroring when we attempt to pass in 'ripgrep' toinstall call.
+
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.

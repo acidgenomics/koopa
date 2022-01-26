@@ -4,6 +4,7 @@ koopa:::install_julia_packages() { # {{{1
     # """
     # Install Julia packages.
     # @note Updated 2021-12-07.
+    #
     # @seealso
     # - 'JULIA_DEPOT_PATH' in shell.
     # - 'DEPOT_PATH' in Julia.
