@@ -3,7 +3,7 @@
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2022-01-18.
+    # @note Updated 2022-01-26.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
     local link_include_arr opt_arr pos
@@ -14,6 +14,7 @@ koopa::install_app() { # {{{1
         # of the automatically generated prefix.
         [auto_prefix]=1
         [installer]=''
+        [koopa_prefix]="$(koopa::koopa_prefix)"
         [link_app]=1
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
@@ -30,7 +31,6 @@ koopa::install_app() { # {{{1
         [tmp_dir]="$(koopa::tmp_dir)"
         [version]=''
     )
-    koopa::is_shared_install && dict[shared]=1
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     homebrew_opt_arr=()
     link_include_arr=()
@@ -130,20 +130,12 @@ koopa::install_app() { # {{{1
                 dict[prefix_check]=0
                 shift 1
                 ;;
-            '--no-shared')
-                dict[shared]=0
-                shift 1
-                ;;
             '--prefix-check')
                 dict[prefix_check]=1
                 shift 1
                 ;;
             '--quiet')
                 dict[quiet]=1
-                shift 1
-                ;;
-            '--shared')
-                dict[shared]=1
                 shift 1
                 ;;
             '--system')
@@ -162,9 +154,24 @@ koopa::install_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ -z "${dict[name_fancy]}" ]]
+    [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
+    if [[ -n "${dict[prefix]}" ]]
     then
-        dict[name_fancy]="${dict[name]}"
+        dict[auto_prefix]=0
+        if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
+        then
+            dict[shared]=1
+        else
+            dict[shared]=0
+        fi
+    else
+        dict[auto_prefix]=1
+        if koopa::is_shared_install
+        then
+            dict[shared]=1
+        else
+            dict[shared]=0
+        fi
     fi
     if [[ "${dict[system]}" -eq 1 ]]
     then
@@ -207,10 +214,6 @@ koopa::install_app() { # {{{1
         if [[ "${dict[quiet]}" -eq 0 ]]
         then
             koopa::alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
-        fi
-        if koopa::str_detect_fixed "${dict[prefix]}" "${HOME:?}"
-        then
-            dict[shared]=0
         fi
         if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
         then
