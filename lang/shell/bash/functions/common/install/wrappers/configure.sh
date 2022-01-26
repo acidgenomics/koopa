@@ -82,7 +82,6 @@ koopa::configure_python() { #{{{1
     dict[sys_site_pkgs]="$( \
         koopa::python_system_packages_prefix "${app[python]}" \
     )"
-    # FIXME Rework this, passing in Python directly instead.
     dict[k_site_pkgs]="$(koopa::python_packages_prefix "${dict[version]}")"
     dict[pth_file]="${dict[sys_site_pkgs]}/koopa.pth"
     koopa::alert "Adding '${dict[pth_file]}' path file."

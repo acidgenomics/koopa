@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Should we rework the version approach here now?
-
 koopa:::install_the_silver_searcher() { # {{{1
     # """
     # Install the silver searcher.
