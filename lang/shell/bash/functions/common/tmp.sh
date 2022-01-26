@@ -3,7 +3,7 @@
 koopa::mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-01-26.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -17,19 +17,25 @@ koopa::mktemp() { # {{{1
     # Note that old version of mktemp (e.g. macOS) only supports '-t' instead of
     # '--tmpdir' flag for prefix.
     #
-    # See also:
-    # - https://stackoverflow.com/questions/4632028
+    # @seealso
+    # - https://st xackoverflow.com/questions/4632028
     # - https://stackoverflow.com/a/10983009/3911732
     # - https://gist.github.com/earthgecko/3089509
     # """
-    local date_id mktemp mktemp_args template user_id
-    mktemp="$(koopa::locate_mktemp)"
-    mktemp_args=("$@")
-    user_id="$(koopa::user_id)"
-    date_id="$(koopa::datetime)"
-    template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
-    mktemp_args+=('-t' "$template")
-    x="$("$mktemp" "${mktemp_args[@]}")"
+    local app dict mktemp_args x
+    declare -A app=(
+        [mktemp]="$(koopa::locate_mktemp)"
+    )
+    declare -A dict=(
+        [date_id]="$(koopa::datetime)"
+        [user_id]="$(koopa::user_id)"
+    )
+    dict[template]="koopa-${dict[user_id]}-${dict[date_id]}-XXXXXXXXXX"
+    mktemp_args=(
+        "$@"
+        '-t' "${dict[template]}"
+    )
+    x="$("${app[mktemp]}" "${mktemp_args[@]}")"
     koopa::print "$x"
     return 0
 }
@@ -79,27 +85,33 @@ koopa::tmp_log_file() { # {{{1
 koopa::view_latest_tmp_log_file() { # {{{1
     # """
     # View the latest temporary log file.
-    # @note Updated 2021-08-31.
+    # @note Updated 2022-01-17.
     # """
-    local log_file sort tail tmp_dir user_id
+    local app dict
     koopa::assert_has_no_args "$#"
-    sort="$(koopa::locate_sort)"
-    tail="$(koopa::locate_tail)"
-    tmp_dir="${TMPDIR:-/tmp}"
-    user_id="$(koopa::user_id)"
-    log_file="$( \
+    declare -A app=(
+        [tail]="$(koopa::locate_tail)"
+    )
+    declare -A dict=(
+        [tmp_dir]="${TMPDIR:-/tmp}"
+        [user_id]="$(koopa::user_id)"
+    )
+    dict[log_file]="$( \
         koopa::find \
-            --glob="koopa-${user_id}-*" \
+            --glob="koopa-${dict[user_id]}-*" \
             --max-depth=1 \
             --min-depth=1 \
-            --prefix="$tmp_dir" \
+            --prefix="${dict[tmp_dir]}" \
+            --sort \
             --type='f' \
-        | "$sort" \
-        | "$tail" -n 1 \
+        | "${app[tail]}" -n 1 \
     )"
-    [[ -f "$log_file" ]] || return 1
-    koopa::alert "Viewing '${log_file}'."
+    if [[ ! -f "${dict[log_file]}" ]]
+    then
+        koopa::stop "No koopa log file detected in '${dict[tmp_dir]}'."
+    fi
+    koopa::alert "Viewing '${dict[log_file]}'."
     # The use of '+G' flag here forces pager to return at end of line.
-    koopa::pager +G "$log_file"
+    koopa::pager +G "${dict[log_file]}"
     return 0
 }

@@ -2,20 +2,17 @@
 
 koopa::fedora_dnf() { # {{{1
     # """
-    # Use either 'dnf' or 'yum' to manage packages.
-    # @note Updated 2021-06-15.
+    # Use 'dnf' to manage packages.
+    # @note Updated 2021-11-02.
+    #
+    # Previously defined as 'yum' in versions prior to RHEL 8.
     # """
     local app
-    if koopa::is_installed 'dnf'
-    then
-        app='dnf'
-    elif koopa::is_installed 'yum'
-    then
-        app='yum'
-    else
-        koopa::stop "Failed to locate package manager (e.g. 'dnf' or 'yum')."
-    fi
-    sudo "$app" -y "$@"
+    declare -A app=(
+        [dnf]="$(koopa::fedora_locate_dnf)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[dnf]}" -y "$@"
     return 0
 }
 
@@ -46,12 +43,16 @@ koopa::fedora_dnf_remove() { # {{{1
 koopa::fedora_install_from_rpm() { # {{{1
     # """
     # Install directly from RPM file.
-    # @note Updated 2021-06-17.
+    # @note Updated 2021-11-02.
     # Allowing passthrough of '--prefix' here.
     # """
+    local app
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'rpm'
-    sudo rpm -v \
+    declare -A app=(
+        [rpm]="$(koopa::locate_rpm)"
+        [sudo]="$(koopa::locate_sudo)"
+    )
+    "${app[sudo]}" "${app[rpm]}" -v \
         --force \
         --install \
         --nogpgcheck \

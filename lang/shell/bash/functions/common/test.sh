@@ -22,18 +22,18 @@ koopa::test() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
     # @note Updated 2021-05-21.
     # Not sorting here can speed the function up.
     # """
-    local find grep prefix sort x
+    local find prefix x
     koopa::assert_has_no_args "$#"
     find="$(koopa::locate_find)"
-    grep="$(koopa::locate_grep)"
-    sort="$(koopa::locate_sort)"
     prefix="$(koopa::koopa_prefix)"
+    # FIXME Rework using 'koopa::find'.
     x="$( \
         "$find" "$prefix" \
             -mindepth 1 \
@@ -59,27 +59,26 @@ koopa::test_find_files() { # {{{1
             -not -path "${prefix}/todo.org" \
             -not -path '*/etc/R/*' \
             -print \
-        2>&1 \
-        | "$grep" -v 'Permission denied' \
-        | "$sort" \
     )"
     koopa::print "$x"
 }
 
+# FIXME Consider grepping against '--ignore-case' here.
 koopa::test_find_files_by_ext() { # {{{1
     # """
     # Find relevant test files by extension.
-    # @note Updated 2021-05-21.
+    # @note Updated 2021-10-27.
     # """
-    local ext files grep pattern x
+    local ext files pattern x
     koopa::assert_has_args "$#"
-    grep="$(koopa::locate_grep)"
     ext="${1:?}"
     pattern="\.${ext}$"
     readarray -t files <<< "$(koopa::test_find_files)"
     x="$( \
         printf '%s\n' "${files[@]}" \
-        | "$grep" -Ei "$pattern" \
+        | koopa::grep \
+            --extended-regexp \
+            "$pattern" \
         || true \
     )"
     [[ -n "$x" ]] || return 1
@@ -87,6 +86,7 @@ koopa::test_find_files_by_ext() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::test_find_files_by_shebang() { # {{{1
     # """
     # Find relevant test files by shebang.
@@ -105,12 +105,16 @@ koopa::test_find_files_by_shebang() { # {{{1
         # Avoid 'command substitution: ignored null byte in input' warning.
         shebang="$("$tr" -d '\0' < "$file" | "$head" -n 1)"
         [[ -n "$shebang" ]] || continue
-        koopa::str_match_regex "$shebang" "$pattern" && shebang_files+=("$file")
+        if koopa::str_detect_regex "$shebang" "$pattern"
+        then
+            shebang_files+=("$file")
+        fi
     done
     koopa::print "${shebang_files[@]}"
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
@@ -201,6 +205,7 @@ koopa::test_grep() { # {{{1
     return 0
 }
 
+# FIXME Rework using app/dict approach.
 koopa::test_true_color() { # {{{1
     # """
     # Test 24-bit true color support.

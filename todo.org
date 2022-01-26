@@ -1,14 +1,41 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Confirm that not all bash functions load on interactive session.
+** TODO Rework 'koopa install XXX --reinstall' flag to 'koopa reinstall XXX' instead, similar to approach used in Homebrew.
+** TODO Emacs version check is now failing on old MacBook.
+** TODO texinfo check is now failing again on old MacBook.
+    Seeing 6.7 instead of expected 6.8, due to another program dumping into /usr/local.
+** TODO Need to remove 'install-dotfiles' link from koopa config at '~/.config/koopa'.
+** TODO Improve install instructions on website to provide recommended default
+   packages for Debian (apt) and Fedora (yum).
+** TODO User permissions on Debian 11 clean install are 'admin:admin' instead
+   of 'root:admin', which we're expecting. Need to fix.
+** TODO Dotifles are not installing clean on fresh Debian 11 AMI.
+    > # Installing dotfiles at '/opt/koopa/app/dotfiles/rolling'.
+    > ** Repo already cloned: '/opt/koopa/app/dotfiles/rolling'.
+    > → Deleting '/opt/koopa/app/dotfiles/rolling'.
+    > !! Error: Not directory: '/opt/koopa/app/dotfiles/rolling'.
+    > admin@ip-10-28-99-104:~$
+** TODO Need a simple batch rename utility to convert file extension to
+    lowercase. We may simply add this in a future update to syntactic engine.
+** TODO photos_rename_exiftool needs to error on file input instead of
+    directory more clearly.
+** TODO Ensure that no dict arrays contain '$dict' variable usage inside the
+    initial array call. This doesn't work in Bash. Double check this before
+    merging develop branch.
+** TODO Consider reworking our conda-based NGS utilites by locating the programs
+    directly, rather than by activating conda inside a function.
+** TODO Consider creating a koopa::grep function, that calls ripgrep rg
+    internally if installed (for speed).
 ** TODO conda base environment has been seen to stay active inside of RStudio
-        terminal on some AWS AMI EC2 instances.
+    terminal on some AWS AMI EC2 instances.
 * Development (medium priority)
 ** TODO Consider installing latest stable release by default for Docker images.
 ** TODO Consider linking '/etc/shells' on Linux, to enable easier configuration
-        of Linuxbrew Zsh and/or Bash.
+    of Linuxbrew Zsh and/or Bash.
 ** TODO Add step to generate BAM and/or CRAM files from salmon, kallisto,
-        bowtie2 output.
+    bowtie2 output.
 ** TODO Consider reworking git installs to use shallow clones?
 ** TODO Today bucket activation needs to relink if link is broken.
 ** TODO Consider removing non-symlinked programs in /usr/local/bin on macOS.
@@ -17,11 +44,11 @@
 ** TODO Add support for fish shell.
 ** TODO Add support for nushell.
 ** TODO Improve support for Void Linux.
-        Detect admin group.
-        Add support for configure-system.
+    Detect admin group.
+    Add support for configure-system.
 ** TODO Need to run bfg to make dotfiles more compact?
 * Documentation
 ** TODO Need to systematically check all exported scripts for documentation.
 ** TODO Need to explain which programs are automatically supported and get
-        activated by default more clearly.
+    activated by default more clearly.
 ** TODO Improve completion support for all exported scripts.

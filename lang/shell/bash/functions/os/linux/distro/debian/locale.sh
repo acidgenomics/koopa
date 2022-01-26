@@ -3,7 +3,7 @@
 koopa::debian_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-02.
     #
     # Refer to '/usr/share/i18n/SUPPORTED' for supported locales.
     #
@@ -13,25 +13,33 @@ koopa::debian_set_locale() { # {{{1
     # @seealso
     # - https://wiki.debian.org/Locale
     # """
-    local charset country lang lang_string file
+    local app dict
+    koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
-    koopa::add_to_path_start '/usr/sbin'
-    koopa::assert_is_installed \
-        'dpkg-reconfigure' \
-        'locale' \
-        'locale-gen' \
-        'update-locale' 
-    lang='en'
-    country='US'
-    charset='UTF-8'
-    lang_string="${lang}_${country}.${charset}"
-    koopa::alert "Setting locale to '${lang_string}'."
-    file='/etc/locale.gen'
-    koopa::sudo_write_string "${lang_string} ${charset}" "$file"
-    sudo locale-gen --purge
-    sudo dpkg-reconfigure --frontend='noninteractive' locales
-    sudo update-locale LANG="$lang_string"
-    locale -a
-    koopa::alert_success "Locale is defined as '${lang_string}'."
+    declare -A app=(
+        [dpkg_reconfigure]="$(koopa::debian_locate_dpkg_reconfigure)"
+        [locale]="$(koopa::locate_locale)"
+        [locale_gen]="$(koopa::debian_locate_locale_gen)"
+        [sudo]="$(koopa::locate_sudo)"
+        [update_locale]="$(koopa::debian_locate_update_locale)" 
+    )
+    declare -A dict=(
+        [charset]='UTF-8'
+        [country]='US'
+        [lang]='en'
+        [locale_file]='/etc/locale.gen'
+    )
+    dict[lang_string]="${dict[lang]}_${dict[country]}.${dict[charset]}"
+    koopa::alert "Setting locale to '${dict[lang_string]}'."
+    koopa::sudo_write_string \
+        "${dict[lang_string]} ${dict[charset]}" \
+        "${dict[locale_file]}"
+    "${app[sudo]}" "${app[locale_gen]}" --purge
+    "${app[sudo]}" "${app[dpkg_reconfigure]}" \
+        --frontend='noninteractive' \
+        'locales'
+    "${app[sudo]}" "${app[update_locale]}" LANG="${dict[lang_string]}"
+    "${app[locale]}" -a
+    koopa::alert_success "Locale is defined as '${dict[lang_string]}'."
     return 0
 }

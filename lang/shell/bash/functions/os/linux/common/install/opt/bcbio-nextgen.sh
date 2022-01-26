@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_bcbio_nextgen() { # {{{1
-    koopa:::install_app \
-        --name='bcbio-nextgen' \
-        --no-link \
-        --platform='linux' \
-        --version="$(koopa::current_bcbio_nextgen_version)" \
-        "$@"
-}
-
+# FIXME Rework using app/dict approach.
 koopa:::linux_install_bcbio_nextgen() { # {{{1
     # """
     # Install bcbio-nextgen.
@@ -35,7 +27,7 @@ koopa:::linux_install_bcbio_nextgen() { # {{{1
     esac
     file='bcbio_nextgen_install.py'
     url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
-    koopa::download "$url"
+    koopa::download "$url" "$file"
     koopa::mkdir "$prefix"
     "$python" \
         "$file" \
@@ -55,15 +47,4 @@ koopa:::linux_install_bcbio_nextgen() { # {{{1
         "$conda" clean --yes --tarballs
     fi
     return 0
-}
-
-koopa::linux_uninstall_bcbio() { # {{{1
-    # """
-    # Uninstall bcbio-nextgen.
-    # @note Updated 2021-06-11.
-    # """
-    koopa:::install_app \
-        --name='bcbio-nextgen' \
-        --no-link \
-        "$@"
 }

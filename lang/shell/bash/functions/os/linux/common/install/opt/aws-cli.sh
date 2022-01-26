@@ -1,21 +1,9 @@
 #!/usr/bin/env bash
 
-# [2021-05-27] Ubuntu success.
-
-koopa::linux_install_aws_cli() { # {{{1
-    koopa:::install_app \
-        --name='aws-cli' \
-        --name-fancy='AWS CLI' \
-        --link-include-dirs='bin' \
-        --platform='linux' \
-        --version='rolling' \
-        "$@"
-}
-
 koopa:::linux_install_aws_cli() { # {{{1
     # """
     # Install AWS CLI.
-    # @note Updated 2021-05-05.
+    # @note Updated 2021-11-16.
     #
     # Note that the AWS bundled installer isn't versioned in the file name.
     #
@@ -31,33 +19,35 @@ koopa:::linux_install_aws_cli() { # {{{1
     # - https://github.com/aws/aws-cli
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/awscli.rb
     # """
-    local arch file prefix tmp_bin_dir tmp_install_dir url version
-    koopa::assert_is_linux
-    prefix="${INSTALL_PREFIX:?}"
-    arch="$(koopa::arch)"
-    file="awscli-exe-linux-${arch}.zip"
-    url="https://awscli.amazonaws.com/${file}"
-    koopa::download "$url"
-    koopa::extract "$file"
-    tmp_install_dir='tmp_install'
-    tmp_bin_dir='tmp_bin'
-    ./aws/install -i "$tmp_install_dir" -b "$tmp_bin_dir" > /dev/null
-    koopa::cd "${tmp_install_dir}/v2"
+    local dict
+    declare -A dict=(
+        [arch]="$(koopa::arch)"
+        [prefix]="${INSTALL_PREFIX:?}"
+        [tmp_bin_dir]='tmp_bin'
+        [tmp_install_dir]='tmp_install'
+    )
+    dict[file]="awscli-exe-linux-${dict[arch]}.zip"
+    dict[url]="https://awscli.amazonaws.com/${dict[file]}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    ./aws/install \
+        -i "${dict[tmp_install_dir]}" \
+        -b "${dict[tmp_bin_dir]}" \
+        > /dev/null
+    koopa::cd "${dict[tmp_install_dir]}/v2"
     # Note that directory structure currently returns differently for Alpine.
-    version="$(find . -mindepth 1 -maxdepth 1 -type d -name '2.*')"
-    [[ -z "$version" ]] && koopa::stop 'Failed to detect version.'
-    version="$(basename "$version")"
-    koopa::sys_cp "$version" "$prefix"
+    dict[version_subdir]="$( \
+        koopa::find \
+            --glob='2.*' \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${PWD:?}" \
+            --type='d' \
+    )"
+    if [[ -z "${dict[version_subdir]}" ]]
+    then
+        koopa::stop 'Failed to detect version.'
+    fi
+    koopa::sys_cp "${dict[version_subdir]}" "${dict[prefix]}"
     return 0
-}
-
-koopa::linux_uninstall_aws_cli() { # {{{1
-    # """
-    # Uninstall AWS CLI.
-    # @note Updated 2021-06-11.
-    # """
-    koopa:::uninstall_app \
-        --name='aws-cli' \
-        --name-fancy='AWS CLI' \
-        "$@"
 }

@@ -187,7 +187,7 @@ koopa:::koopa_list() { # {{{1
 koopa:::koopa_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2021-03-01.
+    # @note Updated 2022-01-25.
     # """
     local f
     f="${1:-}"
@@ -200,7 +200,7 @@ koopa:::koopa_system() { # {{{1
             f='check-system'
             ;;
         'info')
-            f='sys-info'
+            f='system-info'
             ;;
         'log')
             f='view-latest-tmp-log-file'
@@ -224,9 +224,6 @@ koopa:::koopa_system() { # {{{1
                     ;;
             esac
             ;;
-        'pull')
-            f='sys-git-pull'
-            ;;
         'homebrew-cask-version')
             f='get-homebrew-cask-version'
             ;;
@@ -241,6 +238,8 @@ koopa:::koopa_system() { # {{{1
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
+        'conda-create-env' | \
+        'conda-remove-env' | \
         'delete-cache' | \
         'disable-passwordless-sudo' | \
         'disable-touch-id-sudo' | \
@@ -253,6 +252,7 @@ koopa:::koopa_system() { # {{{1
         'os-string' | \
         'roff' | \
         'set-permissions' | \
+        'switch-to-develop' | \
         'variable' | \
         'variables')
             ;;
@@ -329,7 +329,7 @@ koopa:::koopa_uninstall_denylist() { # {{{1
 koopa:::koopa_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
-    # @note Updated 2021-09-21.
+    # @note Updated 2021-11-23.
     # """
     local app app_args apps denylist pos
     app_args=()
@@ -339,8 +339,7 @@ koopa:::koopa_update() { # {{{1
     do
         case "$1" in
             # Renamers ---------------------------------------------------------
-            'system' | \
-            'user')
+            'system')
                 pos+=("koopa-${name}")
                 ;;
             # Defunct ----------------------------------------------------------
@@ -463,7 +462,7 @@ koopa:::which_function() { # {{{1
     fi
     if ! koopa::is_function "$fun"
     then
-        koopa::stop 'Unsupported command.'
+        koopa::stop "Unsupported command."
     fi
     koopa::print "$fun"
     return 0
@@ -472,7 +471,7 @@ koopa:::which_function() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2021-09-18.
+    # @note Updated 2022-01-25.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
@@ -482,7 +481,11 @@ koopa::koopa() { # {{{1
         '--version' | \
         '-V' | \
         'version')
-            f='koopa_version'
+            f='koopa-version'
+            shift 1
+            ;;
+        'reinstall')
+            f='reinstall-app'
             shift 1
             ;;
         'app' | \
@@ -503,22 +506,6 @@ koopa::koopa() { # {{{1
             f="$1"
             shift 1
             ;;
-        # Soft deprecated args {{{2
-        # ----------------------------------------------------------------------
-        'check' | \
-        'check-system')
-            f='check-system'
-            shift 1
-            ;;
-        'home' | \
-        'prefix')
-            f='koopa-prefix'
-            shift 1
-            ;;
-        'info')
-            f='sys-info'
-            shift 1
-            ;;
         # Defunct args / error catching {{{2
         # ----------------------------------------------------------------------
         'app-prefix')
@@ -526,6 +513,10 @@ koopa::koopa() { # {{{1
             ;;
         'cellar-prefix')
             koopa::defunct 'koopa system prefix app'
+            ;;
+        'check' | \
+        'check-system')
+            koopa::defunct 'koopa system check'
             ;;
         'conda-prefix')
             koopa::defunct 'koopa system prefix conda'
@@ -551,8 +542,15 @@ koopa::koopa() { # {{{1
         'help')
             koopa::defunct 'koopa --help'
             ;;
+        'home' | \
+        'prefix')
+            koopa::defunct 'koopa system prefix'
+            ;;
         'host-id')
             koopa::defunct 'koopa system host-id'
+            ;;
+        'info')
+            koopa::defunct 'koopa system info'
             ;;
         'make-prefix')
             koopa::defunct 'koopa system prefix make'
@@ -593,3 +591,94 @@ koopa::koopa() { # {{{1
     "$fun" "$@"
     return 0
 }
+
+koopa::system_info() { # {{{
+    # """
+    # System information.
+    # @note Updated 2022-01-25.
+    # """
+    local app dict info nf_info
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [bash]="$(koopa::locate_bash)"
+        [cat]="$(koopa::locate_cat)"
+    )
+    declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
+        [arch]="$(koopa::arch)"
+        [arch2]="$(koopa::arch2)"
+        [ascii_turtle_file]="$(koopa::include_prefix)/ascii-turtle.txt"
+        [bash_version]="$(koopa::get_version "${app[bash]}")"
+        [config_prefix]="$(koopa::config_prefix)"
+        [koopa_date]="$(koopa::koopa_date)"
+        [koopa_github_url]="$(koopa::koopa_github_url)"
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [koopa_url]="$(koopa::koopa_url)"
+        [koopa_version]="$(koopa::koopa_version)"
+        [make_prefix]="$(koopa::make_prefix)"
+        [opt_prefix]="$(koopa::opt_prefix)"
+    )
+    info=(
+        "koopa ${dict[koopa_version]} (${dict[koopa_date]})"
+        "URL: ${dict[koopa_url]}"
+        "GitHub URL: ${dict[koopa_github_url]}"
+    )
+    if koopa::is_git_repo_top_level "${dict[koopa_prefix]}"
+    then
+        dict[remote]="$(koopa::git_remote_url "${dict[koopa_prefix]}")"
+        dict[commit]="$(koopa::git_last_commit_local "${dict[koopa_prefix]}")"
+        info+=(
+            "Git Remote: ${dict[remote]}"
+            "Git Commit: ${dict[commit]}"
+        )
+    fi
+    info+=(
+        ''
+        'Configuration'
+        '-------------'
+        "Koopa Prefix: ${dict[koopa_prefix]}"
+        "App Prefix: ${dict[app_prefix]}"
+        "Opt Prefix: ${dict[opt_prefix]}"
+        "Config Prefix: ${dict[config_prefix]}"
+        "Make Prefix: ${dict[make_prefix]}"
+    )
+    if koopa::is_macos
+    then
+        app[sw_vers]="$(koopa::macos_locate_sw_vers)"
+        dict[os]="$( \
+            printf '%s %s (%s)\n' \
+                "$("${app[sw_vers]}" -productName)" \
+                "$("${app[sw_vers]}" -productVersion)" \
+                "$("${app[sw_vers]}" -buildVersion)" \
+        )"
+    else
+        app[uname]="$(koopa::locate_uname)"
+        dict[os]="$("${app[uname]}" --all)"
+        # Alternate approach using Python:
+        # > app[python]="$(koopa::locate_python)"
+        # > dict[os]="$("${app[python]}" -mplatform)"
+    fi
+    info+=(
+        ''
+        'System information'
+        '------------------'
+        "OS: ${dict[os]}"
+        "Architecture: ${dict[arch]} / ${dict[arch2]}"
+        "Bash: ${dict[bash_version]}"
+    )
+    if koopa::is_installed 'neofetch'
+    then
+        app[neofetch]="$(koopa::locate_neofetch)"
+        readarray -t nf_info <<< "$("${app[neofetch]}" --stdout)"
+        info+=(
+            ''
+            'Neofetch'
+            '--------'
+            "${nf_info[@]:2}"
+        )
+    fi
+    "${app[cat]}" "${dict[ascii_turtle_file]}"
+    koopa::info_box "${info[@]}"
+    return 0
+}
+

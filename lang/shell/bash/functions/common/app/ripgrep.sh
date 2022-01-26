@@ -3,40 +3,51 @@
 koopa::rg_sort() { # {{{1
     # """
     # ripgrep sorted.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-01-20.
     # """
-    local pattern x
-    koopa::assert_has_args "$#" 1
-    koopa::assert_is_installed 'rg'
-    pattern="${1:?}"
-    x="$( \
-        rg \
+    local app dict
+    koopa::assert_has_args_eq "$#" 1
+    declare -A app=(
+        [rg]="$(koopa::locate_rg)"
+    )
+    declare -A dict=(
+        [pattern]="${1:?}"
+    )
+    dict[str]="$( \
+        "${app[rg]}" \
             --pretty \
             --sort 'path' \
-            "$pattern" \
+            "${dict[pattern]}" \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::print "${dict[str]}"
     return 0
 }
 
 koopa::rg_unique() { # {{{1
     # """
     # ripgrep, but only return a summary of all unique matches.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-01-20.
     # """
-    local pattern x
+    local app dict
     koopa::assert_has_args_eq "$#" 1
-    koopa::assert_is_installed 'rg'
-    pattern="${1:?}"
-    x="$( \
-        rg \
+    declare -A app=(
+        [rg]="$(koopa::locate_rg)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [pattern]="${1:?}"
+    )
+    dict[str]="$( \
+        "${app[rg]}" \
             --no-filename \
             --no-line-number \
             --only-matching \
-            --sort 'path' \
-            "$pattern" \
+            --sort 'none' \
+            "${dict[pattern]}" \
+        | "${app[sort]}" --unique \
     )"
-    koopa::print "$x"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::print "${dict[str]}"
     return 0
 }

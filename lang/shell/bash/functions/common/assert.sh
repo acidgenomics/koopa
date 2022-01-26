@@ -204,6 +204,19 @@ koopa::assert_has_no_flags() { # {{{1
     return 0
 }
 
+koopa::assert_is_aarch64() { # {{{1
+    # """
+    # Assert that platform is ARM 64-bit.
+    # @note Updated 2021-11-02.
+    # """
+    koopa::assert_has_no_args "$#"
+    if ! koopa::is_aarch64
+    then
+        koopa::stop 'Architecture is not aarch64 (ARM 64-bit).'
+    fi
+    return 0
+}
+
 koopa::assert_is_admin() { # {{{1
     # """
     # Assert that current user has admin permissions.
@@ -486,7 +499,7 @@ koopa::assert_is_matching_fixed() { # {{{1
     koopa::assert_has_args_eq "$#" 2
     string="${1:?}"
     pattern="${2:?}"
-    if ! koopa::str_match "$string" "$pattern"
+    if ! koopa::str_detect_fixed "$string" "$pattern"
     then
         koopa::stop "'${string}' doesn't match '${pattern}'."
     fi
@@ -502,7 +515,7 @@ koopa::assert_is_matching_regex() { # {{{1
     koopa::assert_has_args_eq "$#" 2
     string="${1:?}"
     pattern="${2:?}"
-    if ! koopa::str_match_regex "$string" "$pattern"
+    if ! koopa::str_detect_regex "$string" "$pattern"
     then
         koopa::stop "'${string}' doesn't match regex '${pattern}'."
     fi
@@ -699,7 +712,36 @@ koopa::assert_is_root() { # {{{1
 koopa::assert_is_set() { # {{{1
     # """
     # Assert that variables are set (and not unbound).
-    # @note Updated 2020-03-04.
+    # @note Updated 2021-11-05.
+    #
+    # @examples
+    # declare -A dict=(
+    #     [aaa]='AAA'
+    #     [bbb]='BBB'
+    # )
+    # koopa::assert_is_set \
+    #     '--aaa' "${dict[aaa]:-}" \
+    #     '--bbb' "${dict[bbb]:-}"
+    # """
+    local name value
+    koopa::assert_has_args_ge "$#" 2
+    while (("$#"))
+    do
+        name="${1:?}"
+        value="${2:-}"
+        shift 2
+        if [[ -z "${value}" ]]
+        then
+            koopa::stop "'${name}' is unset."
+        fi
+    done
+    return 0
+}
+
+koopa::assert_is_set_2() { # {{{1
+    # """
+    # Assert that variables are set (and not unbound).
+    # @note Updated 2021-11-05.
     #
     # Intended to use inside of functions, where we can't be sure that 'set -u'
     # mode is set, which otherwise catches unbound variables.
@@ -707,8 +749,8 @@ koopa::assert_is_set() { # {{{1
     # How to return bash variable name:
     # - https://unix.stackexchange.com/questions/129084
     #
-    # Example:
-    # koopa::assert_is_set 'PATH' 'MANPATH' 'xxx'
+    # @examples
+    # koopa::assert_is_set_2 'PATH' 'MANPATH'
     # """
     local arg
     koopa::assert_has_args "$#"
@@ -753,5 +795,18 @@ koopa::assert_is_writable() { # {{{1
             koopa::stop "Not writable: '${arg}'."
         fi
     done
+    return 0
+}
+
+koopa::assert_is_x86_64() { # {{{1
+    # """
+    # Assert that platform is Intel x86 64-bit.
+    # @note Updated 2021-11-02.
+    # """
+    koopa::assert_has_no_args "$#"
+    if ! koopa::is_x86_64
+    then
+        koopa::stop 'Architecture is not x86_64 (Intel x86 64-bit).'
+    fi
     return 0
 }

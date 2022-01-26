@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Need to wrap this.
 koopa::debian_install_node() { # {{{1
     # """
     # Install Node.js for Debian using NodeSource.
@@ -9,7 +10,7 @@ koopa::debian_install_node() { # {{{1
     # """
     local file name_fancy tmp_dir url version
     name_fancy='Node.js'
-    koopa::install_start "$name_fancy"
+    koopa::alert_install_start "$name_fancy"
     version="$(koopa::get_version 'node')"
     version="$(koopa::major_version "$version")"
     tmp_dir="$(koopa::tmp_dir)"
@@ -23,6 +24,6 @@ koopa::debian_install_node() { # {{{1
     )
     koopa::rm "$tmp_dir"
     koopa::debian_apt_install 'nodejs'
-    koopa::install_success "$name_fancy"
+    koopa::alert_install_success "$name_fancy"
     return 0
 }
