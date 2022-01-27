@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-01-26"
+koopa-date="2022-01-27"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -34,7 +34,7 @@ anaconda="2021.05"
 armadillo="10.8.1"
 
 # https://www.ibm.com/aspera/connect/
-aspera-connect="4.0.2.38"
+aspera-connect="4.1.1.73"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.71"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.13"
+aws-cli="2.4.14"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.32.0"
