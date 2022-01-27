@@ -158,7 +158,7 @@ grep="3.7"
 groff="1.22.4"
 
 # https://www.gnu.org/software/gsl/
-gsl="2.7"
+gsl="2.7.1"
 
 hadolint="2.8.0"
 
