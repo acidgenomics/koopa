@@ -186,6 +186,7 @@ koopa::install_app() { # {{{1
     then
         dict[link_app]=0
     fi
+    # FIXME Rethink naming and standardize better with 'update-app.sh'.
     if [[ -z "${dict[installer]}" ]]
     then
         dict[installer]="${dict[name]}"
