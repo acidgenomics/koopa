@@ -719,6 +719,7 @@ _koopa_activate_julia() { # {{{1
     return 0
 }
 
+# FIXME Rethink the distro approach.
 _koopa_activate_koopa_paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
@@ -733,6 +734,7 @@ _koopa_activate_koopa_paths() { # {{{1
     if _koopa_is_linux
     then
         linux_prefix="${koopa_prefix}/os/linux"
+        # FIXME Rework, take this out.
         distro_prefix="${linux_prefix}/distro"
         _koopa_activate_prefix "${linux_prefix}/common"
         if _koopa_is_debian_like
