@@ -3,7 +3,7 @@
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2022-01-26.
+    # @note Updated 2022-01-27.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
     local link_include_arr opt_arr pos
@@ -190,12 +190,18 @@ koopa::install_app() { # {{{1
     then
         dict[installer]="${dict[name]}"
     fi
-    dict[function]="$(koopa::snake_case_simple "${dict[installer]}")"
-    dict[function]="install_${dict[function]}"
+    dict[installer]="$(koopa::snake_case_simple "install_${dict[function]}")"
     if [[ -n "${dict[platform]}" ]]
     then
-        dict[function]="${dict[platform]}_${dict[function]}"
+        dict[installer]="${dict[platform]}_${dict[function]}"
     fi
+    dict[installer_file]="$(koopa::kebab_case_simple "${dict[installer]}")"
+    dict[installer_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+installers/${dict[installer_file]}.sh"
+    koopa::assert_is_file "${dict[installer_file]}"
+    # shellcheck source=/dev/null
+    source "${dict[installer_file]}"
+    dict[function]="$(koopa::snake_case_simple "${dict[installer]}")"
     dict[function]="koopa:::${dict[function]}"
     if ! koopa::is_function "${dict[function]}"
     then
