@@ -206,7 +206,7 @@ installers/${dict[platform]}/${dict[installer_file]}.sh"
     dict[function]="koopa:::${dict[function]}"
     if ! koopa::is_function "${dict[function]}"
     then
-        koopa::stop 'Unsupported install command.'
+        koopa::stop "Unsupported installer: '${dict[function]}'."
     fi
     if [[ -z "${dict[version]}" ]]
     then

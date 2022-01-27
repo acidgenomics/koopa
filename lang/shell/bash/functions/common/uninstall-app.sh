@@ -137,7 +137,7 @@ include/installers/${dict[platform]}/${dict[uninstaller_file]}.sh"
             dict[function]="koopa:::${dict[function]}"
             if ! koopa::is_function "${dict[function]}"
             then
-                koopa::stop 'Unsupported uninstall command.'
+                koopa::stop "Unsupported uninstaller: '${dict[function]}'."
             fi
             "${dict[function]}" "$@"
         fi

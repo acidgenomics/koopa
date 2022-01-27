@@ -126,10 +126,6 @@ koopa::update_app() { # {{{1
     then
         koopa::assert_is_admin
     fi
-
-
-
-
     # FIXME Rethink naming and standardize better with 'install-app.sh'.
     dict[updater]="${dict[name]}"
     dict[updater]="$(koopa::snake_case_simple "update_${dict[updater]}")"
@@ -147,12 +143,8 @@ installers/${dict[platform]}/${dict[updater_file]}.sh"
     dict[function]="koopa:::${dict[function]}"
     if ! koopa::is_function "${dict[function]}"
     then
-        koopa::stop 'Unsupported update command.'
+        koopa::stop "Unsupported updater: '${dict[function]}'."
     fi
-
-
-
-
     if [[ -z "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]
     then
         dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
