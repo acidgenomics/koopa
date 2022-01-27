@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+koopa::debian_install_azure_cli() { # {{{1
+    koopa::install_app \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
 koopa::debian_install_bcbio_nextgen_vm() { # {{{1
     koopa::install_app \
         --name='bcbio-nextgen-vm' \
@@ -26,11 +35,16 @@ koopa::debian_install_r_devel() { # {{{1
         "$@"
 }
 
+koopa::debian_uninstall_azure_cli() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='Azure CLI' \
+        --name='azure-cli' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
 koopa::debian_uninstall_bcbio_nextgen_vm() { # {{{1
-    # """
-    # Uninstall bcbio-nextgen-vm.
-    # @note Updated 2021-11-02.
-    # """
     koopa::uninstall_app \
         --name='bcbio-nextgen-vm' \
         --no-link \
@@ -55,11 +69,11 @@ koopa::debian_uninstall_r_devel() { # {{{1
         "$@"
 }
 
-# FIXME Technically this isn't a wrapper. Need to rework.
 koopa::debian_uninstall_shiny_server() { # {{{1
-    # """
-    # Uninstall Shiny Server.
-    # @note Updated 2021-06-14.
-    # """
-    koopa::debian_apt_remove 'shiny-server'
+    koopa::uninstall_app \
+        --name-fancy='Shiny Server' \
+        --name='shiny-server' \
+        --platform='debian' \
+        --system \
+        "$@"
 }
