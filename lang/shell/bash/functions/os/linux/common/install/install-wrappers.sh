@@ -89,6 +89,15 @@ koopa::linux_install_lmod() { # {{{1
         "$@"
 }
 
+koopa::linux_install_shiny_server() { # {{{1
+    koopa::install_app \
+        --name-fancy='Shiny Server' \
+        --name='shiny-server' \
+        --platform='linux' \
+        --server \
+        "$@"
+}
+
 koopa::linux_uninstall_aspera_connect() { # {{{1
     # """
     # Uninstall Aspera Connect.
@@ -187,7 +196,6 @@ koopa::linux_update_google_cloud_sdk() { # {{{1
     koopa::update_app \
         --name-fancy='Google Cloud SDK' \
         --name='google-cloud-sdk' \
-        --no-link \
         --platform='linux' \
         --system \
         "$@"
