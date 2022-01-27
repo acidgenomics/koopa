@@ -51,7 +51,7 @@ _koopa_posix_header() { # {{{1
         _koopa_activate_nim || return 1
         _koopa_activate_node || return 1
         _koopa_activate_openjdk || return 1
-        _koopa_activate_aspera || return 1
+        _koopa_activate_aspera_connect || return 1
         _koopa_activate_julia || return 1
         _koopa_activate_nextflow || return 1
         _koopa_activate_perl || return 1
