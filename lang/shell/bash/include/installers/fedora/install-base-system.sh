@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::fedora_install_base_system() { # {{{1
-    koopa::install_app \
-        --name-fancy='Fedora base system' \
-        --name='base-system' \
-        --platform='fedora' \
-        --system \
-        "$@"
-}
-
 koopa:::fedora_install_base_system() { # {{{1
     # """
     # Install Fedora base system.
