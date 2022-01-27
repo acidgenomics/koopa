@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve consolidation of wrappers here.
-
 koopa::linux_install_aspera_connect() { # {{{1
     koopa::install_app \
         --name-fancy='Aspera Connect' \
@@ -86,6 +84,24 @@ koopa::linux_install_lmod() { # {{{1
         --name='lmod' \
         --no-link \
         --platform='linux' \
+        "$@"
+}
+
+koopa::linux_install_pihole() { # {{{1
+    koopa::update_app \
+        --name-fancy='Pi-hole' \
+        --name='pihole' \
+        --platform='linux' \
+        --system \
+        "$@"
+}
+
+koopa::linux_install_pivpn() { # {{{1
+    koopa::update_app \
+        --name-fancy='PiVPN' \
+        --name='pivpn' \
+        --platform='linux' \
+        --system \
         "$@"
 }
 
