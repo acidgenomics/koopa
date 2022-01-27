@@ -3,19 +3,18 @@
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2022-01-26.
+    # @note Updated 2022-01-27.
     # """
     local app dict pos
     declare -A app
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
-        [function]=''
         [koopa_prefix]="$(koopa::koopa_prefix)"
         [link_app]=''
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt_prefix]="$(koopa::opt_prefix)"
-        [platform]=''
+        [platform]='common'
         [prefix]=''
         [shared]=0
         [system]=0
@@ -117,16 +116,28 @@ koopa::uninstall_app() { # {{{1
         then
             koopa::rm --sudo "${dict[prefix]}"
         else
-            dict[function]="$(koopa::snake_case_simple "${dict[name]}")"
-            dict[function]="uninstall_${dict[function]}"
-            if [[ -n "${dict[platform]}" ]]
+            # FIXME Work on improving naming consistency here with 'install-app.sh'
+            dict[uninstaller]="${dict[name]}"
+            dict[uninstaller]="$( \
+                koopa::snake_case_simple "uninstall_${dict[uninstaller]}" \
+            )"
+            dict[uninstaller_file]="$( \
+                koopa::kebab_case_simple "${dict[uninstaller]}" \
+            )"
+            dict[uninstaller_file]="${dict[koopa_prefix]}/lang/shell/bash/\
+include/installers/${dict[platform]}/${dict[uninstaller_file]}.sh"
+            koopa::assert_is_file "${dict[uninstaller_file]}"
+            # shellcheck source=/dev/null
+            source "${dict[uninstaller_file]}"
+            dict[function]="$(koopa::snake_case_simple "${dict[uninstaller]}")"
+            if [[ "${dict[platform]}" != 'common' ]]
             then
                 dict[function]="${dict[platform]}_${dict[function]}"
             fi
             dict[function]="koopa:::${dict[function]}"
             if ! koopa::is_function "${dict[function]}"
             then
-                koopa::stop 'Unsupported command.'
+                koopa::stop 'Unsupported uninstall command.'
             fi
             "${dict[function]}" "$@"
         fi
