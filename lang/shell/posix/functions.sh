@@ -719,13 +719,12 @@ _koopa_activate_julia() { # {{{1
     return 0
 }
 
-# FIXME Rethink the distro approach.
 _koopa_activate_koopa_paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2021-01-19.
+    # @note Updated 2022-01-27.
     # """
-    local config_prefix distro_prefix koopa_prefix linux_prefix shell
+    local config_prefix koopa_prefix linux_prefix shell
     koopa_prefix="$(_koopa_koopa_prefix)"
     config_prefix="$(_koopa_config_prefix)"
     shell="$(_koopa_shell_name)"
@@ -734,19 +733,17 @@ _koopa_activate_koopa_paths() { # {{{1
     if _koopa_is_linux
     then
         linux_prefix="${koopa_prefix}/os/linux"
-        # FIXME Rework, take this out.
-        distro_prefix="${linux_prefix}/distro"
         _koopa_activate_prefix "${linux_prefix}/common"
         if _koopa_is_debian_like
         then
-            _koopa_activate_prefix "${distro_prefix}/debian"
+            _koopa_activate_prefix "${linux_prefix}/debian"
             _koopa_is_ubuntu_like && \
-                _koopa_activate_prefix "${distro_prefix}/ubuntu"
+                _koopa_activate_prefix "${linux_prefix}/ubuntu"
         elif _koopa_is_fedora_like
         then
-            _koopa_activate_prefix "${distro_prefix}/fedora"
+            _koopa_activate_prefix "${linux_prefix}/fedora"
             _koopa_is_rhel_like && \
-                _koopa_activate_prefix "${distro_prefix}/rhel"
+                _koopa_activate_prefix "${linux_prefix}/rhel"
         fi
     fi
     _koopa_activate_prefix "$(_koopa_distro_prefix)"
@@ -2258,14 +2255,14 @@ _koopa_dl() { # {{{1
 _koopa_distro_prefix() { # {{{1
     # """
     # Operating system distro prefix.
-    # @note Updated 2021-05-25.
+    # @note Updated 2022-01-27.
     # """
     local koopa_prefix os_id prefix
     koopa_prefix="$(_koopa_koopa_prefix)"
     os_id="$(_koopa_os_id)"
     if _koopa_is_linux
     then
-        prefix="${koopa_prefix}/os/linux/distro/${os_id}"
+        prefix="${koopa_prefix}/os/linux/${os_id}"
     else
         prefix="${koopa_prefix}/os/${os_id}"
     fi
