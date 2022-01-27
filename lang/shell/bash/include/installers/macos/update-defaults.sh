@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::macos_update_defaults() { # {{{1
+koopa:::macos_update_defaults() { # {{{1
     # """
     # Update macOS defaults.
-    # @note Updated 2021-11-16.
+    # @note Updated 2022-01-27.
     #
     # Tested to work on macOS Big Sur.
     #
@@ -48,10 +48,8 @@ koopa::macos_update_defaults() { # {{{1
         [sudo]="$(koopa::locate_sudo)"
     )
     declare -A dict=(
-        [name_fancy]='macOS defaults'
         [screenshots_dir]="${HOME}/Documents/screenshots"
     )
-    koopa::alert_update_start "${dict[name_fancy]}"
     # General UI/UX {{{2
     # --------------------------------------------------------------------------
     # For reference, here's how to set computer name automatically.
@@ -1469,7 +1467,6 @@ WebKit2AllowsInlineMediaPlayback" \
     do
         "${app[kill_all]}" "${app_name}" &>/dev/null || true
     done
-    koopa::alert_update_success "${dict[name_fancy]}"
     koopa::alert_note 'Some of these changes require logout to take effect.'
     return 0
 }

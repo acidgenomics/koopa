@@ -131,3 +131,21 @@ koopa::macos_update_google_cloud_sdk() { # {{{1
         --system \
         "$@"
 }
+
+koopa::macos_update_defaults() { # {{{1
+    koopa::update_app \
+        --name-fancy='macOS defaults' \
+        --name='defaults' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa::macos_update_system() { # {{{1
+    koopa::update_app \
+        --name-fancy='macOS system' \
+        --name='system' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
