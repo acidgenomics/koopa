@@ -3,7 +3,7 @@
 koopa::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-01-26.
+    # @note Updated 2022-01-27.
     # """
     local clean_path_arr dict homebrew_opt_arr opt_arr pos
     koopa::assert_has_args "$#"
@@ -14,7 +14,7 @@ koopa::update_app() { # {{{1
         [name_fancy]=''
         [opt]=''
         [opt_prefix]="$(koopa::opt_prefix)"
-        [platform]=''
+        [platform]='common'
         [prefix]=''
         [shared]=0
         [system]=0
@@ -126,17 +126,33 @@ koopa::update_app() { # {{{1
     then
         koopa::assert_is_admin
     fi
-    dict[function]="$(koopa::snake_case_simple "${dict[name]}")"
-    dict[function]="update_${dict[function]}"
-    if [[ -n "${dict[platform]}" ]]
+
+
+
+
+    # FIXME Rethink naming and standardize better with 'install-app.sh'.
+    dict[updater]="${dict[name]}"
+    dict[updater]="$(koopa::snake_case_simple "update_${dict[updater]}")"
+    dict[updater_file]="$(koopa::kebab_case_simple "${dict[updater]}")"
+    dict[updater_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
+installers/${dict[platform]}/${dict[updater_file]}.sh"
+    koopa::assert_is_file "${dict[updater_file]}"
+    # shellcheck source=/dev/null
+    source "${dict[updater_file]}"
+    dict[function]="$(koopa::snake_case_simple "${dict[updater]}")"
+    if [[ "${dict[platform]}" != 'common' ]]
     then
         dict[function]="${dict[platform]}_${dict[function]}"
     fi
     dict[function]="koopa:::${dict[function]}"
     if ! koopa::is_function "${dict[function]}"
     then
-        koopa::stop 'Unsupported command.'
+        koopa::stop 'Unsupported update command.'
     fi
+
+
+
+
     if [[ -z "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]
     then
         dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
