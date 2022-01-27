@@ -18,7 +18,7 @@ koopa::install_app() { # {{{1
         [link_app]=1
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
-        [platform]=''
+        [platform]='common'
         [prefix]=''
         # This override is useful for app packages configuration.
         [prefix_check]=1
@@ -190,18 +190,18 @@ koopa::install_app() { # {{{1
     then
         dict[installer]="${dict[name]}"
     fi
-    dict[installer]="$(koopa::snake_case_simple "install_${dict[function]}")"
-    if [[ -n "${dict[platform]}" ]]
-    then
-        dict[installer]="${dict[platform]}_${dict[function]}"
-    fi
+    dict[installer]="$(koopa::snake_case_simple "install_${dict[installer]}")"
     dict[installer_file]="$(koopa::kebab_case_simple "${dict[installer]}")"
     dict[installer_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
-installers/${dict[installer_file]}.sh"
+installers/${dict[platform]}/${dict[installer_file]}.sh"
     koopa::assert_is_file "${dict[installer_file]}"
     # shellcheck source=/dev/null
     source "${dict[installer_file]}"
     dict[function]="$(koopa::snake_case_simple "${dict[installer]}")"
+    if [[ "${dict[platform]}" != 'common' ]]
+    then
+        dict[function]="${dict[platform]}_${dict[function]}"
+    fi
     dict[function]="koopa:::${dict[function]}"
     if ! koopa::is_function "${dict[function]}"
     then
