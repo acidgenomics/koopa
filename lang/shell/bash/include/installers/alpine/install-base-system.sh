@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::alpine_install_base_system() { # {{{1
-    koopa::install_app \
-        --name-fancy='Alpine base system' \
-        --name='base-system' \
-        --platform='alpine' \
-        --system \
-        "$@"
-}
-
 koopa:::alpine_install_base_system() { # {{{1
     # """
     # Install Alpine Linux base system.
