@@ -3,10 +3,11 @@
 # FIXME What's up with our arch approach here?
 # FIXME Does this now work for ARM? Need to double check.
 # FIXME Rework using app and dict approach.
+
 koopa::linux_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Linux.
-    # @note Updated 2021-06-16.
+    # @note Updated 2022-01-27.
     #
     # Currently Debian/Ubuntu and Fedora/RHEL are supported.
     # Currently only "amd64" (x86) architecture is supported here.
@@ -86,12 +87,4 @@ koopa::linux_install_shiny_server() { # {{{1
     koopa::rm "$tmp_dir"
     koopa::alert_install_success "$name_fancy"
     return 0
-}
-
-koopa::debian_uninstall_shiny_server() { # {{{1
-    # """
-    # Uninstall Shiny Server.
-    # @note Updated 2021-06-14.
-    # """
-    koopa::debian_apt_remove 'shiny-server'
 }
