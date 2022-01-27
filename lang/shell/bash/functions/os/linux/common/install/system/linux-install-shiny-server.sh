@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME What's up with our arch approach here?
-# FIXME Does this now work for ARM? Need to double check.
-# FIXME Rework using app and dict approach.
-
-koopa::linux_install_shiny_server() { # {{{1
+koopa:::linux_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Linux.
     # @note Updated 2022-01-27.
@@ -16,75 +12,46 @@ koopa::linux_install_shiny_server() { # {{{1
     # - https://www.rstudio.com/products/shiny/download-server/ubuntu/
     # - https://www.rstudio.com/products/shiny/download-server/redhat-centos/
     # """
-    local arch arch2 distro file file_ext install_fun name name_fancy pos
-    local r reinstall url version
-    arch="$(koopa::arch)"
-    r="$(koopa::locate_r)"
-    case "$arch" in
+    local app dict
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [r]="$(koopa::locate_r)"
+    )
+    declare -A dict=(
+        [arch]="$(koopa::arch)"
+        [name]='shiny-server'
+        [version]="${INSTALL_VERSION:?}"
+    )
+    case "${dict[arch]}" in
         'x86_64')
-            arch2='amd64'
+            dict[arch2]='amd64'
             ;;
         *)
-            arch2="$arch"
+            dict[arch2]="${dict[arch]}"
             ;;
     esac
     if koopa::is_debian_like
     then
-        distro='ubuntu-14.04'
-        file_ext='deb'
-        install_fun='koopa::debian_install_from_deb'
+        app[fun]='koopa::debian_install_from_deb'
+        dict[distro]='ubuntu-14.04'
+        dict[file_ext]='deb'
     elif koopa::is_fedora_like
     then
-        distro='centos7'
-        file_ext='rpm'
-        install_fun='koopa::debian_install_from_rpm'
+        app[fun]='koopa::debian_install_from_rpm'
+        dict[distro]='centos7'
+        dict[file_ext]='rpm'
     else
         koopa::stop 'Unsupported Linux distro.'
     fi
-    reinstall=0
-    tee="$(koopa::locate_tee)"
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--reinstall')
-                reinstall=1
-                shift 1
-                ;;
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'R'
-    name='shiny-server'
-    version="$(koopa::variable "$name")"
-    name_fancy="Shiny Server ${version}"
-    ! koopa::is_current_version "$name" && reinstall=1
-    [[ "$reinstall" -eq 0 ]] && koopa::is_installed "$name" && return 0
-    koopa::alert_install_start "$name_fancy"
-    tmp_dir="$(koopa::tmp_dir)"
+    dict[file]="${dict[name]}-${dict[version]}-${dict[arch2]}.${dict[file_ext]}"
+    dict[url]="https://download3.rstudio.org/${dict[distro]}/\
+${dict[arch]}/${dict[file]}"
     if ! koopa::is_r_package_installed 'shiny'
     then
         koopa::alert 'Installing shiny R package.'
-        (
-            "$r" -e 'install.packages("shiny")'
-        ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
+        "${app[r]}" -e 'install.packages("shiny")'
     fi
-    (
-        koopa::cd "$tmp_dir"
-        file="${name}-${version}-${arch2}.${file_ext}"
-        url="https://download3.rstudio.org/${distro}/${arch}/${file}"
-        koopa::download "$url" "$file"
-        "$install_fun" "$file"
-    ) 2>&1 | "$tee" "$(koopa::tmp_log_file)"
-    koopa::rm "$tmp_dir"
-    koopa::alert_install_success "$name_fancy"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    "${app[fun]}" "${dict[file]}"
     return 0
 }
