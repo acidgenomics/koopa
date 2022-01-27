@@ -264,12 +264,12 @@ _koopa_activate_anaconda() { # {{{1
     _koopa_activate_conda "$(_koopa_anaconda_prefix)"
 }
 
-_koopa_activate_aspera() { # {{{1
+_koopa_activate_aspera_connect() { # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
-    # @note Updated 2021-09-15.
+    # @note Updated 2022-01-27.
     # """
-    _koopa_activate_prefix "$(_koopa_aspera_prefix)"
+    _koopa_activate_prefix "$(_koopa_aspera_connect_prefix)"
 }
 
 _koopa_activate_bcbio_nextgen() { # {{{1
@@ -2102,10 +2102,10 @@ _koopa_arch() { # {{{1
     return 0
 }
 
-_koopa_aspera_prefix() { # {{{1
+_koopa_aspera_connect_prefix() { # {{{1
     # """
     # Aspera Connect prefix.
-    # @note Updated 2020-11-24.
+    # @note Updated 2021-02-27.
     # """
     _koopa_print "$(_koopa_opt_prefix)/aspera-connect"
     return 0

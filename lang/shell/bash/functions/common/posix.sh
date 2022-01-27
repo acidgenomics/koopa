@@ -12,8 +12,8 @@ koopa::activate_anaconda() { # {{{1
     _koopa_activate_anaconda "$@"
 }
 
-koopa::activate_aspera() { # {{{1
-    _koopa_activate_aspera "$@"
+koopa::activate_aspera_connect() { # {{{1
+    _koopa_activate_aspera_connect "$@"
 }
 
 koopa::activate_bcbio_nextgen() { # {{{1
@@ -216,8 +216,8 @@ koopa::arch() { # {{{1
     _koopa_arch "$@"
 }
 
-koopa::aspera_prefix() { # {{{1
-    _koopa_aspera_prefix "$@"
+koopa::aspera_connect_prefix() { # {{{1
+    _koopa_aspera_connect_prefix "$@"
 }
 
 koopa::bcbio_nextgen_tools_prefix() { # {{{1
