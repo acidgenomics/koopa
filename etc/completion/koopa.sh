@@ -201,7 +201,7 @@ _koopa_complete() { # {{{1
                     elif _koopa_is_fedora_like
                     then
                         args+=(
-                            'oracle-instantclient'
+                            'oracle-instant-client'
                         )
                     fi
                 fi
