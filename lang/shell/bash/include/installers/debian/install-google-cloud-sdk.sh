@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap this.
-koopa::debian_install_google_cloud_sdk() { # {{{1
+koopa:::debian_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2021-06-11.
+    # @note Updated 2022-01-27.
     #
     # Required packages:
     # - apt-transport-https
@@ -14,28 +13,8 @@ koopa::debian_install_google_cloud_sdk() { # {{{1
     # @seealso
     # - https://cloud.google.com/sdk/docs/downloads-apt-get
     # """
-    local name_fancy
     koopa::assert_has_no_args "$#"
-    name_fancy='Google Cloud SDK'
-    if koopa::is_installed 'gcloud'
-    then
-        koopa::alert_is_installed "$name_fancy"
-        return 0
-    fi
-    koopa::alert_install_start "$name_fancy"
     koopa::debian_apt_add_google_cloud_sdk_repo
     koopa::debian_apt_install 'google-cloud-sdk'
-    koopa::alert_install_success "$name_fancy"
-    return 0
-}
-
-# FIXME Need to wrap this.
-koopa::debian_uninstall_google_cloud_sdk() { # {{{1
-    # """
-    # Uninstall Google Cloud SDK.
-    # @note Updated 2021-11-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::debian_apt_remove 'google-cloud-sdk'
     return 0
 }
