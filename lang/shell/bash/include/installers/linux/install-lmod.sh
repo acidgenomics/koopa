@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app and dict approach.
-# FIXME Need to locate these programs directly.
-
 koopa:::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
     # @note Updated 2022-01-28.
     # """
     local app dict
+    koopa::activate_opt_prefix 'lua' 'luarocks'
     declare -A app=(
-        [lua]="$(koopa::locate_lua)"  # FIXME Does this exist?
-        [luarocks]="$(koopa::locate_luarocks)"  # FIXME Does this exist?
+        [lua]="$(koopa::locate_lua)"
+        [luarocks]="$(koopa::locate_luarocks)"
         [make]="$(koopa::locate_make)"
     )
     declare -A dict=(
@@ -20,23 +18,19 @@ koopa:::linux_install_lmod() { # {{{1
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-
     dict[apps_dir]="${dict[prefix]}/apps"
     dict[data_dir]="${dict[prefix]}/moduleData"
-
-    file="${version}.tar.gz"
-    url="https://github.com/TACC/${name2}/archive/${file}"
-
-    koopa::activate_opt_prefix 'lua' 'luarocks'
+    dict[file]="${dict[version]}.tar.gz"
+    dict[url]="https://github.com/TACC/${dict[name2]}/archive/${dict[file]}"
     "${app[luarocks]}" install 'luaposix'
     "${app[luarocks]}" install 'luafilesystem'
-    koopa::download "$url" "$file"
-    koopa::extract "$file"
-    koopa::cd "${name2}-${version}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::cd "${dict[name2]}-${dict[version]}"
     ./configure \
-        --prefix="$apps_dir" \
-        --with-spiderCacheDir="${data_dir}/cacheDir" \
-        --with-updateSystemFn="${data_dir}/system.txt"
+        --prefix="${dict[apps_dir]}" \
+        --with-spiderCacheDir="${dict[data_dir]}/cacheDir" \
+        --with-updateSystemFn="${dict[data_dir]}/system.txt"
     "${app[make]}"
     "${app[make]}" install
     if koopa::is_admin
