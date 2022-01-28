@@ -202,7 +202,7 @@ llvm="13.0.0"
 
 # https://lmod.readthedocs.io/
 # https://github.com/TACC/Lmod
-lmod="8.5"
+lmod="8.6"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
