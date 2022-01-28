@@ -1,32 +1,16 @@
 #!/usr/bin/env bash
 
 koopa::locate_7z() { # {{{1
-    # """
-    # Locate '7z'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app \
         --app-name='7z' \
         --opt='p7zip'
 }
 
 koopa::locate_anaconda() { # {{{1
-    # """
-    # Locate 'conda' inside Anaconda install.
-    # @note Updated 2022-01-11.
-    #
-    # @seealso
-    # - https://github.com/mamba-org/mamba
-    # - https://github.com/conda-forge/miniforge
-    # """
     koopa::locate_app "$(koopa::anaconda_prefix)/bin/conda"
 }
 
 koopa::locate_ascp() { # {{{1
-    # """
-    # Locate Aspera Connect 'ascp'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='ascp' \
         --macos-app="${HOME}/Applications/Aspera Connect.app/\
@@ -35,10 +19,6 @@ Contents/Resources/ascp" \
 }
 
 koopa::locate_awk() { # {{{1
-    # """
-    # Locate GNU 'awk'.
-    # @note Updated 2021-01-10.
-    # """
     koopa::locate_app \
         --app-name='awk' \
         --gnubin \
@@ -46,60 +26,32 @@ koopa::locate_awk() { # {{{1
 }
 
 koopa::locate_aws() { # {{{1
-    # """
-    # Locate AWS CLI ('aws').
-    # @note Updated 2021-09-20.
-    # """
     koopa::locate_app 'aws'
 }
 
 koopa::locate_basename() { # {{{1
-    # """
-    # Locate GNU 'basename'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'basename'
 }
 
 koopa::locate_bash() { # {{{1
-    # """
-    # Locate 'bash'.
-    # @note Updated 2021-11-01.
-    # """
     koopa::locate_app 'bash'
 }
 
 koopa::locate_bc() { # {{{1
-    # """
-    # Locate GNU 'bc'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'bc'
 }
 
 koopa::locate_bpytop() { # {{{1
-    # """
-    # Locate 'bpytop'.
-    # @note Updated 2021-10-25.
-    # """
     koopa::locate_app \
         --app-name='bpytop' \
         --koopa-opt='python-packages'
 }
 
 koopa::locate_brew() { # {{{1
-    # """
-    # Locate Homebrew 'brew'.
-    # @note Updated 2021-09-20.
-    # """
     koopa::locate_app 'brew'
 }
 
 koopa::locate_bundle() { # {{{1
-    # """
-    # Locate Ruby bundler ('bundle').
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='bundle' \
         --brew-opt='ruby' \
@@ -107,20 +59,12 @@ koopa::locate_bundle() { # {{{1
 }
 
 koopa::locate_bunzip2() { # {{{1
-    # """
-    # Locate 'bunzip2'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='bunzip2' \
         --opt='bzip2'
 }
 
 koopa::locate_cargo() { # {{{1
-    # """
-    # Locate 'cargo'.
-    # @note Updated 2022-09-20.
-    # """
     koopa::locate_app \
         --app-name='cargo' \
         --brew-opt='rust' \
@@ -128,34 +72,18 @@ koopa::locate_cargo() { # {{{1
 }
 
 koopa::locate_cat() { # {{{1
-    # """
-    # Locate GNU 'cat'.
-    # @note Updated 2021-11-11.
-    # """
     koopa::locate_gnu_coreutils_app 'cat'
 }
 
 koopa::locate_chgrp() { # {{{1
-    # """
-    # Locate GNU 'chgrp'.
-    # @note Updated 2021-10-22.
-    # """
     koopa::locate_app '/usr/bin/chgrp'
 }
 
 koopa::locate_chmod() { # {{{1
-    # """
-    # Locate GNU 'chmod'.
-    # @note Updated 2021-10-22.
-    # """
     koopa::locate_app '/bin/chmod'
 }
 
 koopa::locate_chown() { # {{{1
-    # """
-    # Locate GNU 'chown'.
-    # @note Updated 2021-11-03.
-    # """
     local os_id str
     os_id="$(koopa::os_id)"
     case "$os_id" in
@@ -170,174 +98,90 @@ koopa::locate_chown() { # {{{1
 }
 
 koopa::locate_cmake() { # {{{1
-    # """
-    # Locate 'cmake'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'cmake'
 }
 
 koopa::locate_conda() { # {{{1
-    # """
-    # Locate 'conda' inside Miniconda install.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app "$(koopa::conda_prefix)/bin/conda"
 }
 
 koopa::locate_conda_bedtools() { # {{{1
-    # """
-    # Locate conda bedtools.
-    # @note Updated 2022-01-11.
-    # """
     koopa::locate_conda_app 'bedtools'
 }
 
 koopa::locate_conda_kallisto() { # {{{1
-    # """
-    # Locate conda kallisto.
-    # @note Updated 2022-01-11.
-    # """
     koopa::locate_conda_app 'kallisto'
 }
 
 koopa::locate_conda_mashmap() { # {{{1
-    # """
-    # Locate conda mashmap.
-    # @note Updated 2022-01-11.
-    # """
     koopa::locate_conda_app 'mashmap'
 }
 
 koopa::locate_conda_salmon() { # {{{1
-    # """
-    # Locate conda salmon.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_conda_app 'salmon'
 }
 
 koopa::locate_convmv() { # {{{1
-    # """
-    # Locate 'convmv'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_app 'convmv'
 }
 
 koopa::locate_cp() { # {{{1
-    # """
-    # Locate GNU 'cp'.
-    # @note Updated 2021-10-22.
-    # """
     koopa::locate_app '/bin/cp'
 }
 
 koopa::locate_cpan() { # {{{1
-    # """
-    # Locate Perl 'cpan'.
-    # @note Updated 2022-01-25.
-    # """
     koopa::locate_app 'cpan'
 }
 
 koopa::locate_cpanm() { # {{{1
-    # """
-    # Locate Perl CPAN Minus 'cpanm'.
-    # @note Updated 2022-01-25.
-    # """
     koopa::locate_app \
         --app-name='cpanm' \
         --koopa-opt='perl-packages'
 }
 
 koopa::locate_curl() { # {{{1
-    # """
-    # Locate 'curl'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'curl'
 }
 
 koopa::locate_cut() { # {{{1
-    # """
-    # Locate GNU 'cut'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'cut'
 }
 
 koopa::locate_date() { # {{{1
-    # """
-    # Locate GNU 'date'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'date'
 }
 
 koopa::locate_df() { # {{{1
-    # """
-    # Locate GNU 'df'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'df'
 }
 
 koopa::locate_dig() { # {{{1
-    # """
-    # Locate BIND 'dig'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='dig' \
         --opt='bind'
 }
 
 koopa::locate_dirname() { # {{{1
-    # """
-    # Locate GNU 'dirname'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'dirname'
 }
 
 koopa::locate_docker() { # {{{1
-    # """
-    # Locate Docker.
-    # @note Updated 2021-10-25.
-    # """
     koopa::locate_app 'docker'
 }
 
 koopa::locate_doom() { # {{{1
-    # """
-    # Locate Doom Emacs ('doom').
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app "$(koopa::doom_emacs_prefix)/bin/doom"
 }
 
 koopa::locate_du() { # {{{1
-    # """
-    # Locate GNU 'du'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'du'
 }
 
 koopa::locate_emacs() { # {{{1
-    # """
-    # Locate Emacs.
-    # @note Updated 2021-09-23.
-    # """
     koopa::locate_app 'emacs'
 }
 
 koopa::locate_fd() { # {{{1
-    # """
-    # Locate Rust 'fd' (find).
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='fd' \
         --brew-opt='fd' \
@@ -345,10 +189,6 @@ koopa::locate_fd() { # {{{1
 }
 
 koopa::locate_find() { # {{{1
-    # """
-    # Locate GNU 'find'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='find' \
         --gnubin \
@@ -356,66 +196,39 @@ koopa::locate_find() { # {{{1
 }
 
 koopa::locate_fish() { # {{{1
-    # """
-    # Locate 'fish' (shell).
-    # @note Updated 2021-09-17.
-    # """
     koopa::locate_app 'fish'
 }
 
 koopa::locate_gcc() { # {{{1
-    # """
-    # Locate GNU 'gcc'.
-    # @note Updated 2022-01-10.
-    # """
-    local name version
-    name='gcc'
-    version="$(koopa::variable "$name")"
-    version="$(koopa::major_version "$version")"
+    local dict
+    declare -A dict=(
+        [version]="$(koopa::variable 'gcc')"
+    )
+    dict[maj_ver]="$(koopa::major_version "${dict[version]}")"
     koopa::locate_app \
-        --app-name="${name}-${version}" \
-        --opt="${name}@${version}"
+        --app-name="gcc-${dict[maj_ver]}" \
+        --opt="gcc@${dict[maj_ver]}"
 }
 
 koopa::locate_gcloud() { # {{{1
-    # """
-    # Locate Google Cloud API ('gcloud').
-    # @note Updated 2021-09-20.
-    # """
     koopa::locate_app 'gcloud'
 }
 
 koopa::locate_gem() { # {{{1
-    # """
-    # Locate Ruby 'gem' package manager.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='gem' \
         --opt='ruby'
 }
 
 koopa::locate_git() { # {{{1
-    # """
-    # Locate 'git'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'git'
 }
 
 koopa::locate_go() { # {{{1
-    # """
-    # Locate 'go'.
-    # @note Updated 2021-09-17.
-    # """
     koopa::locate_app 'go'
 }
 
 koopa::locate_gpg() { # {{{1
-    # """
-    # Locate 'gpg'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='gpg' \
         --macos-app='/usr/local/MacGPG2/bin/gpg' \
@@ -423,10 +236,6 @@ koopa::locate_gpg() { # {{{1
 }
 
 koopa::locate_gpg_agent() { # {{{1
-    # """
-    # Locate 'gpg-agent'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='gpg-agent' \
         --macos-app='/usr/local/MacGPG2/bin/gpg-agent' \
@@ -434,10 +243,6 @@ koopa::locate_gpg_agent() { # {{{1
 }
 
 koopa::locate_gpgconf() { # {{{1
-    # """
-    # Locate 'gpgconf'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='gpgconf' \
         --macos-app='/usr/local/MacGPG2/bin/gpgconf' \
@@ -445,159 +250,98 @@ koopa::locate_gpgconf() { # {{{1
 }
 
 koopa::locate_grep() { # {{{1
-    # """
-    # Locate GNU 'grep'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='grep' \
         --gnubin
 }
 
 koopa::locate_groups() { # {{{1
-    # """
-    # Locate GNU 'groups'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'groups'
 }
 
 koopa::locate_gunzip() { # {{{1
-    # """
-    # Locate GNU 'gunzip'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='gunzip' \
         --opt='gzip'
 }
 
 koopa::locate_gzip() { # {{{1
-    # """
-    # Locate GNU 'gzip'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'gzip'
 }
 
 koopa::locate_h5cc() { # {{{1
-    # """
-    # Locate HDF5 'h5cc'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='h5cc' \
         --opt='hdf5'
 }
 
 koopa::locate_head() { # {{{1
-    # """
-    # Locate GNU 'head'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'head'
 }
 
 koopa::locate_hostname() {
-    # """
-    # Locate 'hostname'.
-    # @note Updated 2022-01-20.
-    # """
     koopa::locate_app '/bin/hostname'
 }
 
 koopa::locate_id() { # {{{1
-    # """
-    # Locate GNU 'id'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'id'
 }
 
 koopa::locate_java() { # {{{1
-    # """
-    # Locate OpenJDK 'java'.
-    # @note Updated 2021-10-26.
-    # """
     koopa::locate_app \
         --app-name='java' \
         --opt='openjdk'
 }
 
 koopa::locate_julia() { # {{{1
-    # """
-    # Locate Julia.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='julia' \
         --macos-app="$(koopa::macos_julia_prefix)/bin/julia"
 }
 
 koopa::locate_lesspipe() { # {{{1
-    # """
-    # Locate 'lesspipe.sh'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='lesspipe.sh' \
         --opt='lesspipe'
 }
 
 koopa::locate_lua() { # {{{1
-    # """
-    # Locate 'lua'.
-    # @note Updated 2021-12-09.
-    # """
     koopa::locate_app 'lua'
 }
 
+koopa::locate_luarocks() { # {{{1
+    koopa::locate_app 'luarocks'
+}
+
 koopa::locate_llvm_config() { # {{{1
-    # """
-    # Locate 'llvm-config' executable.
-    # @note Updated 2022-01-10.
-    #
-    # This is versioned on many Linux systems.
-    # """
     local app dict
-    app='llvm-config'
-    if [[ -n "${LLVM_CONFIG:-}" ]]
+    declare -A app=(
+        [brew]="$(koopa::locate_brew 2>/dev/null || true)"
+        [llvm_config]="${LLVM_CONFIG:-}"
+    )
+    if [[ ! -x "${app[llvm_config]}" ]] && \
+        [[ ! -x "${app[brew]}" ]]
     then
-        app="${LLVM_CONFIG:?}"
-    elif koopa::is_linux && ! koopa::is_installed 'brew'
-    then
-        # Fall back to looking for system LLVM on Linux when
-        # Homebrew isn't installed.
-        declare -A dict=(
-            [find]="$(koopa::locate_find)"
-            [sort]="$(koopa::locate_sort)"
-            [tail]="$(koopa::locate_tail)"
-        )
-        x="$( \
-            "${dict[find]}" '/usr/bin' -name 'llvm-config-*' \
-            | "${dict[sort]}" \
+        app[tail]="$(koopa::locate_tail)"
+        app[llvm_config]="$( \
+            koopa::find \
+                --glob='llvm-config-*' \
+                --prefix='/usr/bin' \
+                --sort \
             | "${dict[tail]}" -n 1 \
         )"
-        [[ -n "$x" ]] && app="$x"
     fi
+    [[ ! -x "${app[llvm_config]}" ]] && app[llvm_config]='llvm-config'
     koopa::locate_app \
-        --app-name="$app" \
+        --app-name="${app[llvm_config]}" \
         --opt='llvm'
 }
 
 koopa::locate_ln() { # {{{1
-    # """
-    # Locate GNU 'ln'.
-    # @note Updated 2021-10-22.
-    # """
     koopa::locate_app '/bin/ln'
 }
 
 koopa::locate_locale() { # {{{1
-    # """
-    # Locate 'locale'.
-    # @note Updated 2021-11-01.
-    # """
     koopa::locate_app '/usr/bin/locale'
 }
 
