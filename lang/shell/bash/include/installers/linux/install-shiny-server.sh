@@ -13,7 +13,6 @@ koopa:::linux_install_shiny_server() { # {{{1
     # - https://www.rstudio.com/products/shiny/download-server/redhat-centos/
     # """
     local app dict
-    echo 'FIXME HELLO THERE'
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [r]="$(koopa::locate_r)"

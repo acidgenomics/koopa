@@ -110,7 +110,7 @@ koopa::linux_install_shiny_server() { # {{{1
         --name-fancy='Shiny Server' \
         --name='shiny-server' \
         --platform='linux' \
-        --server \
+        --system \
         "$@"
 }
 
