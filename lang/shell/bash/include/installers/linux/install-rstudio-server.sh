@@ -104,8 +104,8 @@ koopa:::linux_install_rstudio_server() { # {{{1
 ${dict[platform]}.${dict[file_ext]}"
     dict[url]="https://download2.rstudio.org/server/${dict[os_codename]}/\
 ${dict[platform]}/${dict[file]}"
-    # Ensure '+' gets converted to '%2B'.
-    dict[url]="$(koopa::gsub '\+' '%2B' "${dict[url]}")"
+    # Ensure '+' gets converted to '-'.
+    dict[url]="$(koopa::gsub '\+' '-' "${dict[url]}")"
     koopa::download "${dict[url]}" "${dict[file]}"
     IFS=' ' read -r -a install <<< "${dict[install]}"
     "${install[@]}" "${dict[file]}"
