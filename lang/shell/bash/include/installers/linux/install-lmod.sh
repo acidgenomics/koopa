@@ -15,6 +15,9 @@ koopa:::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
     # @note Updated 2022-01-28.
+    #
+    # @seealso
+    # - https://lmod.readthedocs.io/en/latest/030_installing.html
     # """
     local app dict
     koopa::activate_opt_prefix 'lua' 'luarocks'
@@ -44,6 +47,11 @@ koopa:::linux_install_lmod() { # {{{1
     LUAROCKS_PREFIX="$(koopa::opt_prefix)/luarocks"
     export LUAROCKS_PREFIX
     # FIXME Seems like we need to set LUA_PATH and/or LUA_CPATH here...
+
+    "${app[lua]}" -e 'print(package.path)'
+    "${app[lua]}" -e 'print(package.cpath)'
+
+    koopa::stop 'FIXME Need to debug lua config'
 
     ./configure \
         --prefix="${dict[apps_dir]}" \
