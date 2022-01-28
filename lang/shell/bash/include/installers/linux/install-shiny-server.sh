@@ -22,19 +22,16 @@ koopa:::linux_install_shiny_server() { # {{{1
         [name]='shiny-server'
         [version]="${INSTALL_VERSION:?}"
     )
-    case "${dict[arch]}" in
-        'x86_64')
-            dict[arch2]='amd64'
-            ;;
-        *)
-            dict[arch2]="${dict[arch]}"
-            ;;
-    esac
     if koopa::is_debian_like
     then
         app[fun]='koopa::debian_install_from_deb'
         dict[distro]='ubuntu-14.04'
         dict[file_ext]='deb'
+        case "${dict[arch]}" in
+            'x86_64')
+                dict[arch2]='amd64'
+                ;;
+        esac
     elif koopa::is_fedora_like
     then
         app[fun]='koopa::debian_install_from_rpm'
@@ -43,7 +40,7 @@ koopa:::linux_install_shiny_server() { # {{{1
     else
         koopa::stop 'Unsupported Linux distro.'
     fi
-    dict[file]="${dict[name]}-${dict[version]}-${dict[arch2]}.${dict[file_ext]}"
+    dict[file]="${dict[name]}-${dict[version]}-${dict[arch]}.${dict[file_ext]}"
     dict[url]="https://download3.rstudio.org/${dict[distro]}/\
 ${dict[arch]}/${dict[file]}"
     koopa::download "${dict[url]}" "${dict[file]}"
