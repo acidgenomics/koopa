@@ -313,6 +313,9 @@ rmate="1.0.2"
 # https://www.rstudio.com/products/rstudio/download-server/
 rstudio-server="2021.09.1+372"
 
+# FIXME Need to rethink our version lookup approach here, in passthroughs
+# to our app install calls...
+
 # RStudio Server Pro renamed to Workbench in 2021-06.
 # https://www.rstudio.com/products/rstudio/download-commercial/
 rstudio-workbench="2021.09.1-372.pro1"

@@ -71,6 +71,9 @@ koopa::debian_install_pandoc() { # {{{1
         "$@"
 }
 
+# FIXME This isn't detecting R version correctly, need to rethink 'name' approach here.
+# FIXME Need to query 'r' for NAME and 'r-cran-binary' for installer file...
+# We need to think of a way to split this out in installer calls, when necessary.
 koopa::debian_install_r_cran_binary() { # {{{1
     koopa::install_app \
         --name-fancy='R CRAN binary' \
@@ -86,6 +89,26 @@ koopa::debian_install_r_devel() { # {{{1
         --name='r-devel' \
         --no-link \
         --platform='debian' \
+        "$@"
+}
+
+# FIXME Version handling likely doesn't pass through correctly here, need to check.
+koopa::debian_install_rstudio_server() { # {{{1
+    koopa::install_app \
+        --name-fancy='RStudio Server' \
+        --name='rstudio-server' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+# FIXME Need to ensure we pass the correct version through here.
+koopa::debian_install_rstudio_workbench() { # {{{1
+    koopa::install_app \
+        --name-fancy='RStudio Workbench' \
+        --name='rstudio-workbench' \
+        --platform='debian' \
+        --system \
         "$@"
 }
 
@@ -165,6 +188,24 @@ koopa::debian_uninstall_r_devel() { # {{{1
         --name='r-devel' \
         --no-link \
         --platform='debian' \
+        "$@"
+}
+
+koopa::debian_uninstall_rstudio_server() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='RStudio Server' \
+        --name='rstudio-server' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa::debian_uninstall_rstudio_workbench() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='RStudio Workbench' \
+        --name='rstudio-workbench' \
+        --platform='debian' \
+        --system \
         "$@"
 }
 
