@@ -43,13 +43,14 @@ koopa::fedora_dnf_remove() { # {{{1
 koopa::fedora_install_from_rpm() { # {{{1
     # """
     # Install directly from RPM file.
-    # @note Updated 2021-11-02.
+    # @note Updated 2022-01-28.
+    #
     # Allowing passthrough of '--prefix' here.
     # """
     local app
     koopa::assert_has_args "$#"
     declare -A app=(
-        [rpm]="$(koopa::locate_rpm)"
+        [rpm]="$(koopa::fedora_locate_rpm)"
         [sudo]="$(koopa::locate_sudo)"
     )
     "${app[sudo]}" "${app[rpm]}" -v \
