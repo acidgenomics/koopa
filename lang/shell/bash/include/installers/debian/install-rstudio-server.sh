@@ -23,8 +23,8 @@ koopa:::debian_install_rstudio_server() { # {{{1
         [os_codename]='bionic'
     )
     # shellcheck source=/dev/null
-    source "$(koopa::koopa_prefix)/lang/bash/include/installers/linux/\
-install-rstudio-server.sh"
+    source "$(koopa::koopa_prefix)/lang/shell/bash/include/installers/\
+linux/install-rstudio-server.sh"
     koopa:::linux_install_rstudio_server \
         --file-ext='deb' \
         --install="${app[sudo]} ${app[gdebi]} --non-interactive" \
