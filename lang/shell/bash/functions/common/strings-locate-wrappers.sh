@@ -328,7 +328,7 @@ koopa::locate_llvm_config() { # {{{1
                 --glob='llvm-config-*' \
                 --prefix='/usr/bin' \
                 --sort \
-            | "${dict[tail]}" -n 1 \
+            | "${app[tail]}" -n 1 \
         )"
     fi
     [[ ! -x "${app[llvm_config]}" ]] && app[llvm_config]='llvm-config'
