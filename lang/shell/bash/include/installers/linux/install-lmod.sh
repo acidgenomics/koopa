@@ -35,8 +35,8 @@ koopa:::linux_install_lmod() { # {{{1
     export LUAROCKS_PREFIX="${dict[make_prefix]}"
     koopa::dl \
         'LUAROCKS_PREFIX' "${LUAROCKS_PREFIX:?}" \
-        'LUA_PATH' "${app[lua]}" -e 'print(package.path)' \
-        'LUA_CPATH' "${app[lua]}" -e 'print(package.cpath)'
+        'LUA_PATH' "$("${app[lua]}" -e 'print(package.path)')" \
+        'LUA_CPATH' "$("${app[lua]}" -e 'print(package.cpath)')"
     ./configure \
         --prefix="${dict[apps_dir]}" \
         --with-spiderCacheDir="${dict[data_dir]}/cacheDir" \
