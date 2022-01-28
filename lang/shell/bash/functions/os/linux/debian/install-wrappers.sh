@@ -71,6 +71,15 @@ koopa::debian_install_pandoc() { # {{{1
         "$@"
 }
 
+koopa::debian_install_r_cran_binary() { # {{{1
+    koopa::install_app \
+        --name-fancy='R CRAN binary' \
+        --name='r-cran-binary' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
 koopa::debian_install_r_devel() { # {{{1
     koopa::install_app \
         --name-fancy='R-devel' \
@@ -136,6 +145,15 @@ koopa::debian_uninstall_pandoc() { # {{{1
     koopa::uninstall_app \
         --name-fancy='Pandoc' \
         --name='pandoc' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
+koopa::debian_uninstall_r_cran_binary() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='R CRAN binary' \
+        --name='r-cran-binary' \
         --platform='debian' \
         --system \
         "$@"
