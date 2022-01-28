@@ -206,7 +206,7 @@ lmod="8.6"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
-lua="5.4.3"
+lua="5.4.4"
 
 # https://github.com/luarocks/luarocks/releases
 luarocks="3.8.0"
