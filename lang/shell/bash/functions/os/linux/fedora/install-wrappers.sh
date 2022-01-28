@@ -45,6 +45,8 @@ koopa::fedora_install_rstudio_server() { # {{{1
         "$@"
 }
 
+# FIXME Rework this, with same consistency as Debian.
+# FIXME Need to rework the version and name passthrough here.
 koopa::fedora_install_rstudio_workbench() { # {{{1
     koopa::fedora_install_rstudio_server --workbench "$@"
     return 0
@@ -86,10 +88,12 @@ koopa::fedora_uninstall_rstudio_server() { # {{{1
         "$@"
 }
 
+# FIXME Rework this, same as Debian.
 koopa::fedora_uninstall_rstudio_workbench() { # {{{1
     koopa::fedora_uninstall_rstudio_server "$@"
 }
 
+# FIXME This technically isn't a wrapper, so rethink...
 koopa::fedora_update_system() { # {{{1
     # """
     # Update Fedora.
