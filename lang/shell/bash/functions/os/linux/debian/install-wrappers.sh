@@ -77,7 +77,7 @@ koopa::debian_install_r_cran_binary() { # {{{1
         --name='r-cran-binary' \
         --platform='debian' \
         --system \
-        --version-name='r' \
+        --version-key='r' \
         "$@"
 }
 
