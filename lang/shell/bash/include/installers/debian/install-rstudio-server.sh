@@ -5,7 +5,7 @@
 koopa:::debian_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
-    # @note Updated 2021-11-02.
+    # @note Updated 2022-01-28.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -22,7 +22,9 @@ koopa:::debian_install_rstudio_server() { # {{{1
         [arch]="$(koopa::arch2)"  # e.g. 'amd64'.
         [os_codename]='bionic'
     )
-    # FIXME Need to confirm that this step works.
+    # shellcheck source=/dev/null
+    source "$(koopa::koopa_prefix)/lang/bash/include/installers/linux/\
+install-rstudio-server.sh"
     koopa:::linux_install_rstudio_server \
         --file-ext='deb' \
         --install="${app[sudo]} ${app[gdebi]} --non-interactive" \
