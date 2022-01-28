@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting this error:
-#
-# checking for valid Lua version... 5.4
-# checking for lua modules: posix
-#
-# Error: The follow lua module(s) are missing:  posix
-#
-# You can not run Lmod without:  posix
-
-
-
 koopa:::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
@@ -27,6 +16,7 @@ koopa:::linux_install_lmod() { # {{{1
         [make]="$(koopa::locate_make)"
     )
     declare -A dict=(
+        [make_prefix]="$(koopa::make_prefix)"
         [name2]='Lmod'
         [name]='lmod'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -36,23 +26,17 @@ koopa:::linux_install_lmod() { # {{{1
     dict[data_dir]="${dict[prefix]}/moduleData"
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/TACC/${dict[name2]}/archive/${dict[file]}"
+    koopa::activate_prefix "${dict[make_prefix]}"
     "${app[luarocks]}" install 'luaposix'
     "${app[luarocks]}" install 'luafilesystem'
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
     koopa::cd "${dict[name2]}-${dict[version]}"
-
-    # FIXME Does this help?
-    # https://lmod.readthedocs.io/en/latest/030_installing.html
-    LUAROCKS_PREFIX="$(koopa::opt_prefix)/luarocks"
-    export LUAROCKS_PREFIX
-    # FIXME Seems like we need to set LUA_PATH and/or LUA_CPATH here...
-
-    "${app[lua]}" -e 'print(package.path)'
-    "${app[lua]}" -e 'print(package.cpath)'
-
-    koopa::stop 'FIXME Need to debug lua config'
-
+    export LUAROCKS_PREFIX="${dict[make_prefix]}"
+    koopa::dl \
+        'LUAROCKS_PREFIX' "${LUAROCKS_PREFIX:?}" \
+        'LUA_PATH' "${app[lua]}" -e 'print(package.path)' \
+        'LUA_CPATH' "${app[lua]}" -e 'print(package.cpath)'
     ./configure \
         --prefix="${dict[apps_dir]}" \
         --with-spiderCacheDir="${dict[data_dir]}/cacheDir" \
