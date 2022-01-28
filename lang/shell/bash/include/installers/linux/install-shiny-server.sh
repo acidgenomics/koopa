@@ -3,7 +3,7 @@
 koopa:::linux_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Linux.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-01-28.
     #
     # Currently Debian/Ubuntu and Fedora/RHEL are supported.
     # Currently only "amd64" (x86) architecture is supported here.
@@ -52,6 +52,7 @@ ${dict[arch]}/${dict[file]}"
         "${app[r]}" -e 'install.packages("shiny")'
     fi
     koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::configure_r "${app[r]}"
     "${app[fun]}" "${dict[file]}"
     return 0
 }
