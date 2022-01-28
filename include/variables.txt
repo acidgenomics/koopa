@@ -311,14 +311,11 @@ rbenv="1.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2021.09.1+372"
+rstudio-server="2021.09.2+382"
 
-# FIXME Need to rethink our version lookup approach here, in passthroughs
-# to our app install calls...
-
-# RStudio Server Pro renamed to Workbench in 2021-06.
 # https://www.rstudio.com/products/rstudio/download-commercial/
-rstudio-workbench="2021.09.1-372.pro1"
+# https://docs.rstudio.com/rsw/installation/
+rstudio-workbench="2021.09.2-382.pro1"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.0.3p157"
@@ -346,7 +343,6 @@ sed="4.8"
 shellcheck="0.8.0"
 
 # https://www.rstudio.com/products/shiny/download-server/
-# 2021-01-11
 shiny-server="1.5.17.973"
 
 # https://github.com/kward/shunit2/releases
