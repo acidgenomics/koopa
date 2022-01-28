@@ -56,7 +56,6 @@ koopa::fedora_install_from_rpm() { # {{{1
     "${app[sudo]}" "${app[rpm]}" -v \
         --force \
         --install \
-        --nogpgcheck \
         "$@"
     return 0
 }
