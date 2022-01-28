@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-koopa::fedora_install_rstudio_server() { # {{{1
+koopa:::fedora_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Fedora / RHEL / CentOS.
-    # @note Updated 2021-11-02.
+    # @note Updated 2022-01-28.
     # """
     local dict
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     declare -A dict=(
         [arch]="$(koopa::arch)"  # e.g. 'x86_64'.
         [init_dir]='/etc/init.d'
