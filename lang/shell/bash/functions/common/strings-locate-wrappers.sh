@@ -202,12 +202,13 @@ koopa::locate_fish() { # {{{1
 koopa::locate_gcc() { # {{{1
     local dict
     declare -A dict=(
-        [version]="$(koopa::variable 'gcc')"
+        [name]='gcc'
     )
+    dict[version]="$(koopa::variable "${dict[name]}")"
     dict[maj_ver]="$(koopa::major_version "${dict[version]}")"
     koopa::locate_app \
-        --app-name="gcc-${dict[maj_ver]}" \
-        --opt="gcc@${dict[maj_ver]}"
+        --app-name="${dict[name]}-${dict[maj_ver]}" \
+        --opt="${dict[name]}@${dict[maj_ver]}"
 }
 
 koopa::locate_gcloud() { # {{{1
@@ -346,10 +347,6 @@ koopa::locate_locale() { # {{{1
 }
 
 koopa::locate_localedef() { # {{{1
-    # """
-    # Locate 'localedef'.
-    # @note Updated 2022-01-25.
-    # """
     if koopa::is_alpine
     then
         koopa::alpine_locate_localedef
@@ -359,40 +356,20 @@ koopa::locate_localedef() { # {{{1
 }
 
 koopa::locate_ls() { # {{{1
-    # """
-    # Locate GNU 'ls'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'ls'
 }
 
 koopa::locate_make() { # {{{1
-    # """
-    # Locate GNU 'make'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app \
         --app-name='make' \
         --gnubin
 }
 
 koopa::locate_mamba() { # {{{1
-    # """
-    # Locate 'mamba' inside Miniconda install.
-    # @note Updated 2022-01-17.
-    #
-    # @seealso
-    # - https://github.com/mamba-org/mamba
-    # - https://github.com/conda-forge/miniforge
-    # """
     koopa::locate_app "$(koopa::conda_prefix)/bin/mamba"
 }
 
 koopa::locate_mamba_or_conda() { # {{{1
-    # """
-    # Attempt to locate mamba first, and fall back to conda if not installed.
-    # @note Updated 2022-01-17.
-    # """
     local str
     str="$(koopa::locate_mamba 2>/dev/null || true)"
     if [[ ! -x "$str" ]]
@@ -409,10 +386,6 @@ koopa::locate_mamba_or_conda() { # {{{1
 }
 
 koopa::locate_man() { # {{{1
-    # """
-    # Locate GNU 'man'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='man' \
         --gnubin \
@@ -420,76 +393,41 @@ koopa::locate_man() { # {{{1
 }
 
 koopa::locate_md5sum() { # {{{1
-    # """
-    # Locate GNU 'md5sum'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'md5sum'
 }
 
 koopa::locate_mkdir() { # {{{1
-    # """
-    # Locate GNU 'mkdir'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'mkdir'
 }
 
 koopa::locate_mktemp() { # {{{1
-    # """
-    # Locate GNU 'mktemp'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_app 'mktemp'
 }
 
 koopa::locate_mv() { # {{{1
     # """
-    # Locate GNU 'mv'.
-    # @note Updated 2021-10-22.
-    #
-    # macOS gmv currently has issues on NFS shares.
+    # @note macOS gmv currently has issues on NFS shares.
     # """
     koopa::locate_app '/bin/mv'
 }
 
 koopa::locate_neofetch() { # {{{1
-    # """
-    # Locate 'neofetch'.
-    # @note Updated 2021-11-18.
-    # """
     koopa::locate_app 'neofetch'
 }
 
 koopa::locate_newgrp() { # {{{1
-    # """
-    # Locate GNU 'newgrp'.
-    # @note Updated 2022-01-25.
-    # """
     koopa::locate_app '/usr/bin/newgrp'
 }
 
 koopa::locate_nim() { # {{{1
-    # """
-    # Locate 'nim'.
-    # @note Updated 2021-09-29.
-    # """
     koopa::locate_app 'nim'
 }
 
 koopa::locate_node() { # {{{1
-    # """
-    # Locate 'node'.
-    # @note Updated 2021-09-16.
-    # """
     koopa::locate_app 'node'
 }
 
 koopa::locate_npm() { # {{{1
-    # """
-    # Locate node package manager ('npm').
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='npm' \
         --brew-opt='node' \
@@ -497,186 +435,106 @@ koopa::locate_npm() { # {{{1
 }
 
 koopa::locate_openssl() { # {{{1
-    # """
-    # Locate 'openssl'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'openssl'
 }
 
 koopa::locate_parallel() { # {{{1
-    # """
-    # Locate GNU 'parallel'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'parallel'
 }
 
 koopa::locate_passwd() { # {{{1
-    # """
-    # Locate 'passwd'.
-    # @note Updated 2021-11-01.
-    # """
     koopa::locate_app '/usr/bin/passwd'
 }
 
 koopa::locate_paste() { # {{{1
-    # """
-    # Locate GNU 'paste'.
-    # @note Updated 2021-11-4.
-    # """
     koopa::locate_gnu_coreutils_app 'paste'
 }
 
 koopa::locate_patch() { # {{{1
-    # """
-    # Locate GNU 'patch'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='patch' \
         --opt='gpatch'
 }
 
 koopa::locate_pcregrep() { # {{{1
-    # """
-    # Locate 'pcregrep'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='pcregrep' \
         --opt='pcre'
 }
 
 koopa::locate_perl() { # {{{1
-    # """
-    # Locate 'perl'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'perl'
 }
 
 koopa::locate_perlbrew() { # {{{1
-    # """
-    # Locate 'perlbrew'.
-    # @note Updated 2021-09-17.
-    # """
     koopa::locate_app 'perlbrew'
 }
 
 koopa::locate_pkg_config() { # {{{1
-    # """
-    # Locate 'pkg-config'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'pkg-config'
 }
 
 koopa::locate_python() { # {{{1
-    # """
-    # Locate Python.
-    # @note Updated 2022-01-10.
-    # """
-    local app name version
-    name='python'
-    version="$(koopa::variable "$name")"
-    version="$(koopa::major_version "$version")"
-    app="${name}${version}"
+    local app dict
+    declare -A app
+    declare -A dict=(
+        [macos_python_prefix]="$(koopa::macos_python_prefix)"
+        [name]='python'
+    )
+    dict[version]="$(koopa::variable "${dict[name]}")"
+    dict[maj_ver]="$(koopa::major_version "${dict[version]}")"
+    app[python]="${dict[name]}${dict[maj_ver]}"
     koopa::locate_app \
-        --app-name="$app" \
-        --macos-app="$(koopa::macos_python_prefix)/bin/${app}"
+        --app-name="${app[python]}" \
+        --macos-app="${dict[macos_python_prefix]}/bin/${app[python]}"
 }
 
 koopa::locate_r() { # {{{1
-    # """
-    # Locate R.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='R' \
         --macos-app="$(koopa::macos_r_prefix)/bin/R"
 }
 
 koopa::locate_rscript() { # {{{1
-    # """
-    # Locate Rscript.
-    # @note Updated 2022-01-10.
-    # """
-    local r rscript
-    r="$(koopa::locate_r)"
-    rscript="${r}script"
-    if [[ ! -x "$rscript" ]]
-    then
-        koopa::warn "Not executable: '${rscript}'."
-        return 1
-    fi
-    koopa::print "$rscript"
-    return 0
+    local app
+    declare -A app=(
+        [r]="$(koopa::locate_r)"
+    )
+    app[rscript]="${app[r]}script"
+    koopa::locate_app "${app[rscript]}"
 }
 
 koopa::locate_readlink() { # {{{1
-    # """
-    # Locate GNU 'readlink'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'readlink'
 }
 
 koopa::locate_realpath() { # {{{1
-    # """
-    # Locate GNU 'realpath'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'realpath'
 }
 
 koopa::locate_rename() { # {{{1
-    # """
-    # Locate Perl 'rename'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app "$(koopa::perl_packages_prefix)/bin/rename"
 }
 
 koopa::locate_rg() { # {{{1
-    # """
-    # Locate 'ripgrep'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='rg' \
         --opt='ripgrep'
 }
 
 koopa::locate_rm() { # {{{1
-    # """
-    # Locate GNU 'rm'.
-    # @note Updated 2021-10-22.
-    # """
     koopa::locate_app '/bin/rm'
 }
 
 koopa::locate_rsync() { # {{{1
-    # """
-    # Locate 'rsync'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'rsync'
 }
 
 koopa::locate_ruby() { # {{{1
-    # """
-    # Locate 'ruby'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'ruby'
 }
 
 koopa::locate_rustc() { # {{{1
-    # """
-    # Locate Rust compiler ('rustc').
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='rustc' \
         --brew-opt='rust' \
@@ -684,10 +542,6 @@ koopa::locate_rustc() { # {{{1
 }
 
 koopa::locate_rustup() { # {{{1
-    # """
-    # Locate Rust compiler ('rustc').
-    # @note Updated 2021-11-19.
-    # """
     koopa::locate_app \
         --app-name='rustup' \
         --brew-opt='rustup' \
@@ -695,10 +549,6 @@ koopa::locate_rustup() { # {{{1
 }
 
 koopa::locate_sed() { # {{{1
-    # """
-    # Locate GNU 'sed'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='sed' \
         --gnubin \
@@ -706,86 +556,46 @@ koopa::locate_sed() { # {{{1
 }
 
 koopa::locate_sort() { # {{{1
-    # """
-    # Locate GNU 'sort'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'sort'
 }
 
 koopa::locate_sqlplus() { # {{{1
-    # """
-    # Locate Oracle 'sqlplus'.
-    # @note Updated 2021-10-27.
-    # """
     koopa::locate_app 'sqlplus'
 }
 
 koopa::locate_ssh() { # {{{1
-    # """
-    # Locate 'ssh'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='ssh' \
         --opt='openssh'
 }
 
 koopa::locate_ssh_keygen() { # {{{1
-    # """
-    # Locate 'ssh'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='ssh-keygen' \
         --opt='openssh'
 }
 
 koopa::locate_stat() { # {{{1
-    # """
-    # Locate GNU 'stat'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'stat'
 }
 
 koopa::locate_sudo() { # {{{1
-    # """
-    # Locate 'sudo'.
-    # @note Updated 2021-10-27.
-    # """
     koopa::locate_app '/usr/bin/sudo'
 }
 
 koopa::locate_svn() { # {{{1
-    # """
-    # Locate 'svn'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'svn'
 }
 
 koopa::locate_tac() { # {{{1
-    # """
-    # Locate GNU 'tac'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'tac'
 }
 
 koopa::locate_tail() { # {{{1
-    # """
-    # Locate GNU 'tail'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'tail'
 }
 
 koopa::locate_tar() { # {{{1
-    # """
-    # Locate GNU 'tar'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='tar' \
         --gnubin \
@@ -793,54 +603,30 @@ koopa::locate_tar() { # {{{1
 }
 
 koopa::locate_tee() { # {{{1
-    # """
-    # Locate GNU 'tee'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'tee'
 }
 
 koopa::locate_tex() { # {{{1
-    # """
-    # Locate TeX.
-    # @note Updated 2021-10-27.
-    # """
     koopa::locate_app \
         --app-name='tex' \
         --macos-app='/Library/TeX/texbin/tex'
 }
 
 koopa::locate_tlmgr() { # {{{1
-    # """
-    # Locate Tex 'tlmgr'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='tlmgr' \
         --macos-app='/Library/TeX/texbin/tlmgr'
 }
 
 koopa::locate_touch() { # {{{1
-    # """
-    # Locate GNU 'touch'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'touch'
 }
 
 koopa::locate_tr() { # {{{1
-    # """
-    # Locate GNU 'tr'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'tr'
 }
 
 koopa::locate_uncompress() { # {{{1
-    # """
-    # Locate GNU 'uncompress'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='uncompress' \
         --gnubin \
@@ -848,66 +634,34 @@ koopa::locate_uncompress() { # {{{1
 }
 
 koopa::locate_uname() { # {{{1
-    # """
-    # Locate GNU 'uname'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'uname'
 }
 
 koopa::locate_uniq() { # {{{1
-    # """
-    # Locate GNU 'uniq'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'uniq'
 }
 
 koopa::locate_unzip() { # {{{1
-    # """
-    # Locate 'unzip'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'unzip'
 }
 
 koopa::locate_vim() { # {{{1
-    # """
-    # Locate 'vim'.
-    # @note Updated 2021-10-27.
-    # """
     koopa::locate_app 'vim'
 }
 
 koopa::locate_wc() { # {{{1
-    # """
-    # Locate GNU 'wc'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'wc'
 }
 
 koopa::locate_wget() { # {{{1
-    # """
-    # Locate 'wget'.
-    # @note Updated 2021-09-15.
-    # """
     koopa::locate_app 'wget'
 }
 
 koopa::locate_whoami() { # {{{1
-    # """
-    # Locate GNU 'whoami'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'whoami'
 }
 
 koopa::locate_xargs() { # {{{1
-    # """
-    # Locate GNU 'xargs'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='xargs' \
         --gnubin \
@@ -915,18 +669,10 @@ koopa::locate_xargs() { # {{{1
 }
 
 koopa::locate_yes() { # {{{1
-    # """
-    # Locate GNU 'yes'.
-    # @note Updated 2021-11-04.
-    # """
     koopa::locate_gnu_coreutils_app 'yes'
 }
 
 koopa::locate_zcat() { # {{{1
-    # """
-    # Locate GNU 'zcat'.
-    # @note Updated 2022-01-10.
-    # """
     koopa::locate_app \
         --app-name='zcat' \
         --opt='gzip'
