@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME Now hitting this error:
+#
+# checking for valid Lua version... 5.4
+# checking for lua modules: posix
+#
+# Error: The follow lua module(s) are missing:  posix
+#
+# You can not run Lmod without:  posix
+
+
+
 koopa:::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
@@ -27,6 +38,13 @@ koopa:::linux_install_lmod() { # {{{1
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
     koopa::cd "${dict[name2]}-${dict[version]}"
+
+    # FIXME Does this help?
+    # https://lmod.readthedocs.io/en/latest/030_installing.html
+    LUAROCKS_PREFIX="$(koopa::opt_prefix)/luarocks"
+    export LUAROCKS_PREFIX
+    # FIXME Seems like we need to set LUA_PATH and/or LUA_CPATH here...
+
     ./configure \
         --prefix="${dict[apps_dir]}" \
         --with-spiderCacheDir="${dict[data_dir]}/cacheDir" \
