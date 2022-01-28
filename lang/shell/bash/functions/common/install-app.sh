@@ -31,7 +31,7 @@ koopa::install_app() { # {{{1
         [system]=0
         [tmp_dir]="$(koopa::tmp_dir)"
         [version]=''
-        [version_name]=''
+        [version_key]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     homebrew_opt_arr=()
@@ -114,12 +114,12 @@ koopa::install_app() { # {{{1
                 dict[version]="${2:?}"
                 shift 2
                 ;;
-            '--version-name='*)
-                dict[version_name]="${1#*=}"
+            '--version-key='*)
+                dict[version_key]="${1#*=}"
                 shift 1
                 ;;
-            '--version-name')
-                dict[version_name]="${2:?}"
+            '--version-key')
+                dict[version_key]="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
@@ -166,7 +166,7 @@ koopa::install_app() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_is_set '--name' "${dict[name]}"
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
-    [[ -z "${dict[version_name]}" ]] && dict[version_name]="${dict[name]}"
+    [[ -z "${dict[version_key]}" ]] && dict[version_key]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
         dict[auto_prefix]=0
@@ -220,7 +220,7 @@ installers/${dict[platform]}/${dict[installer_file]}.sh"
     if [[ -z "${dict[version]}" ]]
     then
         dict[version]="$(\
-            koopa::variable "${dict[version_name]}" \
+            koopa::variable "${dict[version_key]}" \
                 2>/dev/null \
                 || true \
         )"
