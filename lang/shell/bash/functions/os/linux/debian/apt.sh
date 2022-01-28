@@ -424,7 +424,7 @@ koopa::debian_apt_add_microsoft_key() {  #{{{1
 koopa::debian_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
-    # @note Updated 2021-11-03.
+    # @note Updated 2022-01-28.
     #
     # Addition of signing key via keyserver directly into /etc/apt/trusted.gpg'
     # file is deprecated in Debian, but currently the only supported method for
@@ -455,7 +455,7 @@ koopa::debian_apt_add_r_key() { # {{{1
         dict[key]='E298A3A825C0D65DFD57CBB651716619E084DAB9'
     else
         # Debian release is signed by Johannes Ranke <jranke@uni-bremen.de>.
-        dict[key]='E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+        dict[key]='95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
     fi
     [[ -f "${dict[file]}" ]] && return 0
     koopa::gpg_download_key_from_keyserver \
