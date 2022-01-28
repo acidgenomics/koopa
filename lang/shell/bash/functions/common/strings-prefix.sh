@@ -9,6 +9,15 @@ koopa::julia_script_prefix() { # {{{1
     return 0
 }
 
+koopa::installers_prefix() { # {{{1
+    # """
+    # Koopa installers prefix.
+    # @note Updated 2022-01-28.
+    # """
+    koopa::print "$(koopa::koopa_prefix)/lang/shell/bash/include/installers"
+    return 0
+}
+
 # FIXME Rework using app/dict approach.
 koopa::python_system_packages_prefix() { # {{{1
     # """

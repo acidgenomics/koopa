@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME How to passthrough workbench and workbench version here?
+
 koopa:::debian_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
@@ -21,8 +23,7 @@ koopa:::debian_install_rstudio_server() { # {{{1
         [os_codename]='bionic'
     )
     # shellcheck source=/dev/null
-    source "$(koopa::koopa_prefix)/lang/shell/bash/include/installers/\
-linux/install-rstudio-server.sh"
+    source "$(koopa::installers_prefix)/linux/install-rstudio-server.sh"
     koopa:::linux_install_rstudio_server \
         --file-ext='deb' \
         --install="${app[sudo]} ${app[gdebi]} --non-interactive" \
