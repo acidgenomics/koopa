@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
+koopa:::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     # """
     # Install bcbio-nextgen genome from Ensembl.
-    # @note Updated 2022-01-10.
+    # @note Updated 2022-01-28.
     #
     # This script can fail on a clean bcbio install if this file is missing:
     # 'install/galaxy/tool-data/sam_fa_indices.loc'.
@@ -52,7 +52,6 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     declare -A app=(
         [bcbio_setup_genome]='bcbio_setup_genome.py'
         [sed]="$(koopa::locate_sed)"
-        [tee]="$(koopa::locate_tee)"
         [touch]="$(koopa::locate_touch)"
     )
     declare -A dict=(
@@ -64,8 +63,6 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
         [organism_pattern]='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
         [provider]='Ensembl'
         [release]=''
-        [tmp_dir]="$(koopa::tmp_dir)"
-        [tmp_log_file]="$(koopa::tmp_log_file)"
     )
     indexes=()
     while (("$#"))
@@ -161,26 +158,21 @@ koopa::linux_install_bcbio_nextgen_ensembl_genome() { # {{{1
     dict[tool_data_prefix]="${dict[install_prefix]}/galaxy/tool-data"
     koopa::mkdir "${dict[tool_data_prefix]}"
     "${app[touch]}" "${dict[tool_data_prefix]}/sam_fa_indices.log"
-    (
-        # This step will download cloudbiolinux, so migrating to a temporary
-        # directory is helpful, to avoid clutter.
-        set -x
-        koopa::cd "${dict[tmp_dir]}"
-        koopa::dl \
-            'FASTA file' "${dict[fasta_file]}" \
-            'GTF file' "${dict[gtf_file]}" \
-            'Indexes' "${indexes[*]}"
-        # Note that '--buildversion' was added in 2021 and is now required.
-        "${app[bcbio_setup_genome]}" \
-            --build "${dict[bcbio_genome_name]}" \
-            --buildversion "${dict[build_version]}" \
-            --cores "${dict[cores]}" \
-            --fasta "${dict[fasta_file]}" \
-            --gtf "${dict[gtf_file]}" \
-            --indexes "${indexes[@]}" \
-            --name "${dict[bcbio_species_dir]}"
-    ) 2>&1 | "${app[tee]}" "${dict[tmp_log_file]}"
-    koopa::rm "${dict[tmp_dir]}"
+    # This step will download cloudbiolinux, so migrating to a temporary
+    # directory is helpful, to avoid clutter.
+    koopa::dl \
+        'FASTA file' "${dict[fasta_file]}" \
+        'GTF file' "${dict[gtf_file]}" \
+        'Indexes' "${indexes[*]}"
+    # Note that '--buildversion' was added in 2021 and is now required.
+    "${app[bcbio_setup_genome]}" \
+        --build "${dict[bcbio_genome_name]}" \
+        --buildversion "${dict[build_version]}" \
+        --cores "${dict[cores]}" \
+        --fasta "${dict[fasta_file]}" \
+        --gtf "${dict[gtf_file]}" \
+        --indexes "${indexes[@]}" \
+        --name "${dict[bcbio_species_dir]}"
     koopa::alert_install_success "${dict[bcbio_genome_name]}"
     return 0
 }
