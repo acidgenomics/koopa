@@ -46,13 +46,13 @@ koopa:::linux_install_shiny_server() { # {{{1
     dict[file]="${dict[name]}-${dict[version]}-${dict[arch2]}.${dict[file_ext]}"
     dict[url]="https://download3.rstudio.org/${dict[distro]}/\
 ${dict[arch]}/${dict[file]}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::configure_r "${app[r]}"
     if ! koopa::is_r_package_installed 'shiny'
     then
         koopa::alert 'Installing shiny R package.'
         "${app[r]}" -e 'install.packages("shiny")'
     fi
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::configure_r "${app[r]}"
     "${app[fun]}" "${dict[file]}"
     return 0
 }
