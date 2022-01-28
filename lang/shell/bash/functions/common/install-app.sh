@@ -3,7 +3,7 @@
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-01-28.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
     local link_include_arr opt_arr pos
@@ -17,6 +17,7 @@ koopa::install_app() { # {{{1
         [koopa_prefix]="$(koopa::koopa_prefix)"
         [link_app]=1
         [make_prefix]="$(koopa::make_prefix)"
+        [name]=''
         [name_fancy]=''
         [platform]='common'
         [prefix]=''
@@ -30,6 +31,7 @@ koopa::install_app() { # {{{1
         [system]=0
         [tmp_dir]="$(koopa::tmp_dir)"
         [version]=''
+        [version_name]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
     homebrew_opt_arr=()
@@ -112,6 +114,14 @@ koopa::install_app() { # {{{1
                 dict[version]="${2:?}"
                 shift 2
                 ;;
+            '--version-name='*)
+                dict[version_name]="${1#*=}"
+                shift 1
+                ;;
+            '--version-name')
+                dict[version_name]="${2:?}"
+                shift 2
+                ;;
             # Flags ------------------------------------------------------------
             '--force' | \
             '--reinstall')
@@ -154,7 +164,9 @@ koopa::install_app() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_is_set '--name' "${dict[name]}"
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
+    [[ -z "${dict[version_name]}" ]] && dict[version_name]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
         dict[auto_prefix]=0
@@ -187,10 +199,7 @@ koopa::install_app() { # {{{1
         dict[link_app]=0
     fi
     # FIXME Rethink naming and standardize better with 'update-app.sh'.
-    if [[ -z "${dict[installer]}" ]]
-    then
-        dict[installer]="${dict[name]}"
-    fi
+    [[ -z "${dict[installer]}" ]] && dict[installer]="${dict[name]}"
     dict[installer]="$(koopa::snake_case_simple "install_${dict[installer]}")"
     dict[installer_file]="$(koopa::kebab_case_simple "${dict[installer]}")"
     dict[installer_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
@@ -210,7 +219,11 @@ installers/${dict[platform]}/${dict[installer_file]}.sh"
     fi
     if [[ -z "${dict[version]}" ]]
     then
-        dict[version]="$(koopa::variable "${dict[name]}" 2>/dev/null || true)"
+        dict[version]="$(\
+            koopa::variable "${dict[version_name]}" \
+                2>/dev/null \
+                || true \
+        )"
     fi
     if [[ -z "${dict[prefix]}" ]] && [[ "${dict[auto_prefix]}" -eq 1 ]]
     then

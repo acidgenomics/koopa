@@ -71,15 +71,13 @@ koopa::debian_install_pandoc() { # {{{1
         "$@"
 }
 
-# FIXME This isn't detecting R version correctly, need to rethink 'name' approach here.
-# FIXME Need to query 'r' for NAME and 'r-cran-binary' for installer file...
-# We need to think of a way to split this out in installer calls, when necessary.
 koopa::debian_install_r_cran_binary() { # {{{1
     koopa::install_app \
         --name-fancy='R CRAN binary' \
         --name='r-cran-binary' \
         --platform='debian' \
         --system \
+        --version-name='r' \
         "$@"
 }
 
