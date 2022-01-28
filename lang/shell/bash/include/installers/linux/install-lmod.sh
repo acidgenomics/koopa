@@ -27,8 +27,11 @@ koopa:::linux_install_lmod() { # {{{1
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/TACC/${dict[name2]}/archive/${dict[file]}"
     koopa::activate_prefix "${dict[make_prefix]}"
+    # FIXME Need to relink into /usr/local after installing these...
     "${app[luarocks]}" install 'luaposix'
     "${app[luarocks]}" install 'luafilesystem'
+    # > koopa::link_app 'lua'
+    koopa::link_app 'luarocks'
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
     koopa::cd "${dict[name2]}-${dict[version]}"
