@@ -44,6 +44,15 @@ koopa::debian_install_llvm() { # {{{1
         "$@"
 }
 
+koopa::debian_install_node() { # {{{1
+    koopa::install_app \
+        --name-fancy='Node.js' \
+        --name='node' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
 koopa::debian_install_r_devel() { # {{{1
     koopa::install_app \
         --name-fancy='R-devel' \
