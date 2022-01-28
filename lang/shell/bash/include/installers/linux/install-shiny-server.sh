@@ -34,7 +34,7 @@ koopa:::linux_install_shiny_server() { # {{{1
         esac
     elif koopa::is_fedora_like
     then
-        app[fun]='koopa::debian_install_from_rpm'
+        app[fun]='koopa::fedora_install_from_rpm'
         dict[distro]='centos7'
         dict[file_ext]='rpm'
     else
