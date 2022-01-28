@@ -19,7 +19,8 @@ koopa:::fedora_install_rstudio_server() { # {{{1
     then
         koopa::mkdir --sudo "${dict[init_dir]}"
     fi
-    # FIXME This approach won't work now. Need to rethink call here.
+    # shellcheck source=/dev/null
+    source "$(koopa::installers_prefix)/linux/install-rstudio-server.sh"
     koopa:::linux_install_rstudio_server \
         --file-ext='rpm' \
         --install='koopa::fedora_dnf_install' \
