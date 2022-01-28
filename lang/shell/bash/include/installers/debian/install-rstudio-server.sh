@@ -2,6 +2,12 @@
 
 # FIXME How to passthrough workbench and version here?
 
+# FIXME Expecting this URL:
+# https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2021.09.2-382-amd64.deb
+
+# Currently returning:
+# https://download2.rstudio.org/server/bionic/amd64/rstudio-server-2021.09.2%2B382-amd64.deb
+
 koopa:::debian_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Debian / Ubuntu.
