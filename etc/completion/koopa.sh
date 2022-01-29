@@ -175,8 +175,6 @@ _koopa_complete() { # {{{1
                         'azure-cli'
                         'base-system'
                         'bcbio-nextgen'
-                        'bcbio-nextgen-ensembl-genome'
-                        'bcbio-nextgen-genome'
                         'bcl2fastq'
                         'cellranger'
                         'cloudbiolinux'

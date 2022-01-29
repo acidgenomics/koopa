@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+koopa::linux_locate_bcbio() { # {{{1
+    koopa::locate_app 'bcbio-nextgen.py'
+}
+
 koopa::linux_locate_bcl2fastq() { # {{{1
     koopa::locate_app 'bcl2fastq'
 }
