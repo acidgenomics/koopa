@@ -1,33 +1,34 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using dict approach.
 koopa:::linux_install_docker_credential_pass() { # {{{1
     # """
     # Install docker-credential-pass.
-    # @note Updated 2021-04-28.
+    # @note Updated 2022-01-29.
     # """
-    local arch arch2 file name prefix url version
-    koopa::assert_is_linux
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    name='docker-credential-pass'
-    arch="$(koopa::arch)"
-    case "$arch" in
+    local dict
+    koopa::assert_has_no_args "$#"
+    declare -A dict=(
+        [arch]="$(koopa::arch)"
+        [name]='docker-credential-pass'
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    case "${dict[arch]}" in
         'x86_64')
-            arch2='amd64'
+            dict[arch2]='amd64'
             ;;
         *)
-            arch2='arch'
+            dict[arch2]='arch'
             ;;
     esac
-    file="${name}-v${version}-${arch2}.tar.gz"
-    url="https://github.com/docker/docker-credential-helpers/releases/\
-download/v${version}/${file}"
-    koopa::download "$url" "$file"
-    koopa::extract "$file"
-    koopa::chmod '0775' "$name"
-    koopa::mkdir "${prefix}/bin"
-    koopa::sys_set_permissions --recursive "$prefix"
-    koopa::cp "$name" "${prefix}/bin"
+    dict[file]="${dict[name]}-v${dict[version]}-${dict[arch2]}.tar.gz"
+    dict[url]="https://github.com/docker/docker-credential-helpers/releases/\
+download/v${dict[version]}/${dict[file]}"
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::extract "${dict[file]}"
+    koopa::chmod '0775' "${dict[name]}"
+    koopa::mkdir "${dict[prefix]}/bin"
+    koopa::sys_set_permissions --recursive "${dict[prefix]}"
+    koopa::cp "${dict[name]}" "${dict[prefix]}/bin"
     return 0
 }
