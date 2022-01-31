@@ -11,6 +11,7 @@ koopa::uninstall_app() { # {{{1
     declare -A app
     declare -A dict=(
         [app_prefix]="$(koopa::app_prefix)"
+        [installers_prefix]="$(koopa::installers_prefix)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
         [link_app]=''
         [make_prefix]="$(koopa::make_prefix)"
@@ -127,16 +128,15 @@ koopa::uninstall_app() { # {{{1
         then
             koopa::rm --sudo "${dict[prefix]}"
         else
-            dict[uninstaller]="${dict[name]}"
+            [[ -z "${dict[uninstaller]}" ]] && dict[uninstaller]="${dict[name]}"
             dict[uninstaller]="$( \
                 koopa::snake_case_simple "uninstall_${dict[uninstaller]}" \
             )"
             dict[uninstaller_file]="$( \
                 koopa::kebab_case_simple "${dict[uninstaller]}" \
             )"
-            # FIXME Use 'installer_prefix' here.
-            dict[uninstaller_file]="${dict[koopa_prefix]}/lang/shell/bash/\
-include/installers/${dict[platform]}/${dict[uninstaller_file]}.sh"
+            dict[uninstaller_file]="${dict[installers_prefix]}/\
+${dict[platform]}/${dict[uninstaller_file]}.sh"
             koopa::assert_is_file "${dict[uninstaller_file]}"
             # shellcheck source=/dev/null
             source "${dict[uninstaller_file]}"

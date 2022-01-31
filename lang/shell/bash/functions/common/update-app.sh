@@ -3,13 +3,14 @@
 koopa::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-01-31.
     # """
     local clean_path_arr dict homebrew_opt_arr opt_arr pos
     koopa::assert_has_args "$#"
     koopa::assert_has_no_envs
     declare -A dict=(
         [homebrew_opt]=''
+        [installers_prefix]="$(koopa::installers_prefix)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
         [name_fancy]=''
         [opt]=''
@@ -19,6 +20,7 @@ koopa::update_app() { # {{{1
         [shared]=0
         [system]=0
         [tmp_dir]="$(koopa::tmp_dir)"
+        [updater]=''
         [version]=''
     )
     clean_path_arr=('/usr/bin' '/bin' '/usr/sbin' '/sbin')
@@ -76,6 +78,14 @@ koopa::update_app() { # {{{1
                 dict[prefix]="${2:?}"
                 shift 2
                 ;;
+            '--updater='*)
+                dict[updater]="${1#*=}"
+                shift 1
+                ;;
+            '--updater')
+                dict[updater]="${2:?}"
+                shift 2
+                ;;
             '--version='*)
                 dict[version]="${1#*=}"
                 shift 1
@@ -126,12 +136,11 @@ koopa::update_app() { # {{{1
     then
         koopa::assert_is_admin
     fi
-    # FIXME Rethink naming and standardize better with 'install-app.sh'.
-    dict[updater]="${dict[name]}"
+    [[ -z "${dict[updater]}" ]] && dict[updater]="${dict[name]}"
     dict[updater]="$(koopa::snake_case_simple "update_${dict[updater]}")"
     dict[updater_file]="$(koopa::kebab_case_simple "${dict[updater]}")"
-    dict[updater_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
-installers/${dict[platform]}/${dict[updater_file]}.sh"
+    dict[updater_file]="${dict[installers_prefix]}/\
+${dict[platform]}/${dict[updater_file]}.sh"
     koopa::assert_is_file "${dict[updater_file]}"
     # shellcheck source=/dev/null
     source "${dict[updater_file]}"
