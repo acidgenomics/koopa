@@ -36,6 +36,7 @@ koopa:::linux_install_lmod() { # {{{1
         'LUA_CPATH' "$("${app[lua]}" -e 'print(package.cpath)')"
     ./configure \
         --prefix="${dict[apps_dir]}" \
+        --with-fastTCLInterp='no' \
         --with-spiderCacheDir="${dict[data_dir]}/cacheDir" \
         --with-updateSystemFn="${dict[data_dir]}/system.txt"
     "${app[make]}"
