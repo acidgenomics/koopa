@@ -3,7 +3,7 @@
 koopa:::linux_install_pihole() { # {{{1
     # """
     # Install Pi-hole.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-01-31.
     #
     # @seealso
     # - https://pi-hole.net
@@ -11,6 +11,7 @@ koopa:::linux_install_pihole() { # {{{1
     # """
     local dict
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     declare -A dict=(
         [file]='pihole.sh'
         [url]='https://install.pi-hole.net'

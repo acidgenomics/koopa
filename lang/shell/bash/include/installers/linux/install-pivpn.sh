@@ -3,13 +3,14 @@
 koopa:::linux_install_pivpn() { # {{{1
     # """
     # Install PiVPN.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-01-31.
     #
     # @seealso
     # - https://www.pivpn.io
     # """
     local dict
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     declare -A dict=(
         [file]='pivpn.sh'
         [url]='https://install.pivpn.io'
