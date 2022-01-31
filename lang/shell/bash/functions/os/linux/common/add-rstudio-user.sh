@@ -24,9 +24,10 @@ koopa::linux_add_rstudio_user() { #{{{1
         [user]='rstudio'
     )
     "${app[sudo]}" "${app[useradd]}" "${dict[user]}"
-    # FIXME This step is interactive currently.
-    # FIXME It would be more ideal to set a default password here.
-    "${app[sudo]}" "${app[passwd]}" "${dict[user]}"
+    if koopa::is_interactive
+    then
+        "${app[sudo]}" "${app[passwd]}" "${dict[user]}"
+    fi
     koopa::mkdir --sudo "${dict[home]}"
     koopa::chown --sudo "${dict[user]}:${dict[user]}" "${dict[home]}"
     "${app[sudo]}" "${app[usermod]}" -s "${dict[shell]}" "${dict[user]}"
