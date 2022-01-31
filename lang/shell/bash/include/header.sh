@@ -209,20 +209,20 @@ __koopa_bash_header() { # {{{1
         dict[os_id]="$(koopa::os_id)"
         if koopa::is_linux
         then
-            __koopa_bash_source_dir 'os/linux/common'
-            dict[distro_prefix]='os/linux/distro'
+            dict[linux_prefix]='os/linux'
+            __koopa_bash_source_dir "${dict[linux_prefix]}/common"
             if koopa::is_debian_like
             then
-                __koopa_bash_source_dir "${dict[distro_prefix]}/debian"
+                __koopa_bash_source_dir "${dict[linux_prefix]}/debian"
                 koopa::is_ubuntu_like && \
-                    __koopa_bash_source_dir "${dict[distro_prefix]}/ubuntu"
+                    __koopa_bash_source_dir "${dict[linux_prefix]}/ubuntu"
             elif koopa::is_fedora_like
             then
-                __koopa_bash_source_dir "${dict[distro_prefix]}/fedora"
+                __koopa_bash_source_dir "${dict[linux_prefix]}/fedora"
                 koopa::is_rhel_like && \
-                    __koopa_bash_source_dir "${dict[distro_prefix]}/rhel"
+                    __koopa_bash_source_dir "${dict[linux_prefix]}/rhel"
             fi
-            __koopa_bash_source_dir "${dict[distro_prefix]}/${dict[os_id]}"
+            __koopa_bash_source_dir "${dict[linux_prefix]}/${dict[os_id]}"
         else
             __koopa_bash_source_dir "os/${dict[os_id]}"
         fi

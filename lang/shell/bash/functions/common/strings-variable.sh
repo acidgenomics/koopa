@@ -292,11 +292,10 @@ koopa::make_build_string() { # {{{1
     return 0
 }
 
-# FIXME Need to locate sysctl on macOS.
 koopa::mem_gb() { # {{{1
     # """
     # Get total system memory in GB.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-01-31.
     #
     # - 1 GB / 1024 MB
     # - 1 MB / 1024 KB
@@ -312,8 +311,8 @@ koopa::mem_gb() { # {{{1
     declare -A dict
     if koopa::is_macos
     then
-        # FIXME Need to locate this on macOS.
-        dict[mem]="$(sysctl -n 'hw.memsize')"
+        app[sysctl]="$(koopa::macos_locate_sysctl)"
+        dict[mem]="$("${app[sysctl]}" -n 'hw.memsize')"
         dict[denom]=1073741824  # 1024^3; bytes
     elif koopa::is_linux
     then

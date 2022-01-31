@@ -84,18 +84,48 @@ END
     return 0
 }
 
-# FIXME Need to add support for '--config'.
+
 koopa::delete_dotfile() { # {{{1
     # """
     # Delete a dot file.
-    # @note Updated 2020-07-20.
+    # @note Updated 2022-01-31.
     # """
-    local filepath name
+    local dict name pos
+    koopa::assert_has_args "$#"
+    declare -A dict=(
+        [config]=0
+        [xdg_config_home]="$(koopa::xdg_config_home)"
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--config')
+                dict[config]=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     for name in "$@"
     do
-        name="${1:?}"
-        filepath="${HOME:?}/.${name}"
+        local filepath
+        if [[ "${dict[config]}" -eq 1 ]]
+        then
+            filepath="${dict[xdg_config_home]}/${name}"
+        else
+            filepath="${HOME:?}/.${name}"
+        fi
         if [[ -L "$filepath" ]]
         then
             koopa::alert "Removing '${filepath}'."
