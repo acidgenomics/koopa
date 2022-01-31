@@ -110,5 +110,6 @@ ${dict[platform]}/${dict[file]}"
     koopa::download "${dict[url]}" "${dict[file]}"
     IFS=' ' read -r -a install <<< "${dict[install]}"
     "${install[@]}" "${dict[file]}"
+    koopa::linux_add_rstudio_user
     return 0
 }
