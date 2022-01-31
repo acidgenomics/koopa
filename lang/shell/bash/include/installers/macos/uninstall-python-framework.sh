@@ -6,6 +6,7 @@ koopa:::macos_uninstall_python_framework() { # {{{1
     # @note Updated 2021-11-02.
     # """
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     koopa::rm --sudo \
         '/Applications/Python'* \
         '/Library/Frameworks/Python.framework'

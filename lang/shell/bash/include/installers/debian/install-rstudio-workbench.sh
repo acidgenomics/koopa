@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Confirm that this works.
+
 koopa:::debian_install_rstudio_workbench() { # {{{1
     # """
     # Install RStudio Workbench.

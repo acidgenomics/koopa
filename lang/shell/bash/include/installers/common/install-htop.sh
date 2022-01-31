@@ -9,6 +9,7 @@ koopa:::install_htop() { # {{{1
     # https://github.com/htop-dev/htop in 2020-08.
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

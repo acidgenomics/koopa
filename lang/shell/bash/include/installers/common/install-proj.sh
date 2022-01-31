@@ -6,6 +6,7 @@ koopa:::install_proj() { # {{{1
     # @note Updated 2021-12-07.
     # """
     local app conf_args dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

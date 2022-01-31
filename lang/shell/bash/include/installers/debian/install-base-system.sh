@@ -23,6 +23,7 @@ koopa:::debian_install_base_system() { # {{{1
     #   https://serverfault.com/questions/56848
     # """
     local app dict pkgs
+    koopa::assert_is_admin
     declare -A app=(
         [dpkg]="$(koopa::debian_locate_dpkg)"
         [sudo]="$(koopa::locate_sudo)"

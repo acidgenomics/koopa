@@ -8,6 +8,7 @@ koopa:::rhel_install_base_system() { # {{{1
     # 'dnf-plugins-core' installs 'config-manager'.
     # """
     local dict
+    koopa::assert_is_admin
     declare -A dict
     koopa::fedora_install_base_system "$@"
     # Early return for legacy RHEL 7 configs (e.g. Amazon Linux 2).

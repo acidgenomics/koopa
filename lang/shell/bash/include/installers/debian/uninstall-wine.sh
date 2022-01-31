@@ -7,4 +7,5 @@ koopa:::debian_uninstall_wine() { # {{{1
     # """
     koopa::debian_apt_remove 'wine-*'
     koopa::debian_apt_delete_repo 'wine' 'wine-obs'
+    return 0
 }

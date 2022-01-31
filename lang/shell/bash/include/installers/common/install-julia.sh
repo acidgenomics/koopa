@@ -13,7 +13,6 @@ koopa:::install_julia() { # {{{1
     # """
     local app dict
     koopa::assert_has_no_args "$#"
-    koopa::alert_coffee_time
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )
