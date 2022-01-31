@@ -35,7 +35,6 @@ koopa:::linux_install_rstudio_server() { # {{{1
         [os_codename]=''
         [platform]=''
         [version]="${INSTALL_VERSION:?}"
-        [workbench]=0
     )
     while (("$#"))
     do
