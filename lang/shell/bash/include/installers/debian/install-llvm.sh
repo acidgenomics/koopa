@@ -16,6 +16,7 @@ koopa:::debian_install_llvm() { # {{{1
     # """
     local dict pkgs
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     declare -A dict=(
         [version]="${INSTALL_VERSION:?}"
     )
