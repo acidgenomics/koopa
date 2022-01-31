@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Shared install isn't setting user permissions recursively correctly.
+    Need to ensure that '/opt/koopa' isn't owned by current user after install.
+    We're seeing this currently on AWS EC2 instances.
 ** TODO Confirm that not all bash functions load on interactive session.
 ** TODO Rework 'koopa install XXX --reinstall' flag to 'koopa reinstall XXX' instead, similar to approach used in Homebrew.
 ** TODO Emacs version check is now failing on old MacBook.
