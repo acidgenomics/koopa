@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This is currently prompting for password interactively.
+# We don't want this.
+
 koopa::linux_add_rstudio_user() { #{{{1
     # """
     # Enable RStudio user on Linux.
