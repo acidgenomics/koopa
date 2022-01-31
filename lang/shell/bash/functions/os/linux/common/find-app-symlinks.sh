@@ -47,7 +47,8 @@ koopa::linux_find_app_symlinks() { # {{{1
     # Replace the cellar prefix with our build prefix.
     for file in "${links[@]}"
     do
-        koopa::print "${file//$app_prefix/$make_prefix}"
+        # FIXME Need to confirm that this new approach works.
+        koopa::print "${file//${dict[app_prefix]}/${dict[make_prefix]}}"
     done
     return 0
 }
