@@ -82,7 +82,7 @@ koopa::macos_locate_scutil() { # {{{1
 }
 
 koopa::macos_locate_softwareupdate() { # {{{1
-    koopa::locate_app '/usr/sbin/automount'
+    koopa::locate_app '/usr/sbin/softwareupdate'
 }
 
 koopa::macos_locate_sw_vers() { # {{{1
