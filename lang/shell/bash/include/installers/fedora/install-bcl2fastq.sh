@@ -7,6 +7,7 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     # """
     local dict
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     declare -A dict=(
         [arch]="$(koopa::arch)"
         [installers_url]="$(koopa::koopa_installers_url)"

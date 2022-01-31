@@ -11,6 +11,7 @@ koopa:::fedora_install_oracle_instant_client() { # {{{1
     # """
     local dict stems
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     declare -A dict=(
         [arch]="$(koopa::arch)"
         [platform]='linux'
