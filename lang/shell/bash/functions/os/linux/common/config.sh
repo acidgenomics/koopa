@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this using dict approach.
 koopa::linux_add_user_to_etc_passwd() { # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
-    # @note Updated 2022-01-10.
+    # @note Updated 2022-01-31.
     #
     # Necessary for running 'chsh' with a Kerberos / Active Directory domain
     # account, on AWS or Azure for example.
@@ -14,19 +13,23 @@ koopa::linux_add_user_to_etc_passwd() { # {{{1
     # @examples
     # > koopa::linux_add_user_to_etc_passwd 'domain.user'
     # """
-    local passwd_file user user_string
+    local dict
     koopa::assert_has_args_le "$#" 1
-    passwd_file='/etc/passwd'
-    koopa::assert_is_file "$passwd_file"
-    user="${1:-}"
-    [[ -z "${user:-}" ]] && user="$(koopa::user)"
-    if ! koopa::file_detect_fixed --sudo "$passwd_file" "$user"
+    declare -A dict=(
+        [passwd_file]='/etc/passwd'
+        [user]="${1:-}"
+    )
+    koopa::assert_is_file "${dict[passwd_file]}"
+    [[ -z "${dict[user]}" ]] && dict[user]="$(koopa::user)"
+    if ! koopa::file_detect_fixed --sudo "${dict[passwd_file]}" "${dict[user]}"
     then
-        koopa::alert "Updating '${passwd_file}' to include '${user}'."
-        user_string="$(getent passwd "$user")"
-        koopa::sudo_append_string "$user_string" "$passwd_file"
+        koopa::alert "Updating '${dict[passwd_file]}' to \
+include '${dict[user]}'."
+        dict[user_string]="$(getent passwd "${dict[user]}")"
+        koopa::sudo_append_string "${dict[user_string]}" "${dict[passwd_file]}"
     else
-        koopa::alert_note "'${user}' already defined in '${passwd_file}'."
+        koopa::alert_note "'${dict[user]}' already defined \
+in '${dict[passwd_file]}'."
     fi
     return 0
 }
@@ -37,7 +40,7 @@ koopa::linux_add_user_to_group() { # {{{1
     # @note Updated 2021-11-16.
     #
     # Alternate approach:
-    # > usermod -a -G group user
+    # > "${app[usermod]}" -a -G group user
     #
     # @examples
     # > koopa::linux_add_user_to_group 'docker'
@@ -127,9 +130,9 @@ END
 koopa::linux_update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # @note Updated 2021-11-16.
+    # @note Updated 2022-01-31.
     # """
-    local app dict source_file target_bn target_file
+    local app dict source_file
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
@@ -150,6 +153,7 @@ koopa::linux_update_ldconfig() { # {{{1
     koopa::alert "Updating ldconfig in '${dict[target_prefix]}'."
     for source_file in "${dict[conf_source]}/"*".conf"
     do
+        local target_bn target_file
         target_bn="koopa-$(koopa::basename "$source_file")"
         target_file="${dict[target_prefix]}/${target_bn}"
         koopa::ln --sudo "$source_file" "$target_file"

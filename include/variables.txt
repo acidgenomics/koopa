@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-01-25"
+koopa-date="2022-01-31"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -34,7 +34,7 @@ anaconda="2021.05"
 armadillo="10.8.1"
 
 # https://www.ibm.com/aspera/connect/
-aspera-connect="4.0.2.38"
+aspera-connect="4.1.1.73"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.71"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.13"
+aws-cli="2.4.15"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.32.0"
@@ -140,10 +140,10 @@ geos="3.10.2"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.35.0"
+git="2.35.1"
 
 # https://gnupg.org/download/index.html
-gnupg="2.3.2"
+gnupg="2.3.4"
 
 # https://golang.org/dl/
 go="1.17.6"
@@ -158,7 +158,7 @@ grep="3.7"
 groff="1.22.4"
 
 # https://www.gnu.org/software/gsl/
-gsl="2.7"
+gsl="2.7.1"
 
 hadolint="2.8.0"
 
@@ -168,7 +168,7 @@ harfbuzz="3.2.0"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.12"
+homebrew="3.3.13"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -202,11 +202,11 @@ llvm="13.0.0"
 
 # https://lmod.readthedocs.io/
 # https://github.com/TACC/Lmod
-lmod="8.5"
+lmod="8.6"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
-lua="5.4.3"
+lua="5.4.4"
 
 # https://github.com/luarocks/luarocks/releases
 luarocks="3.8.0"
@@ -245,10 +245,10 @@ openssl="3.0.1"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
-oracle-instantclient="21.1.0.0.0-1"
+oracle-instant-client="21.5.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.17.0.1"
+pandoc="2.17.1"
 
 # https://www.gnu.org/software/parallel/
 parallel="20220122"
@@ -285,7 +285,7 @@ poetry="1.1.12"
 proj="8.2.1"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.2.3"
+pyenv="2.2.4"
 
 # https://www.python.org/downloads/
 # > python="3.9.10"
@@ -311,11 +311,11 @@ rbenv="1.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2021.09.1+372"
+rstudio-server="2021.09.2+382"
 
-# RStudio Server Pro renamed to Workbench in 2021-06.
 # https://www.rstudio.com/products/rstudio/download-commercial/
-rstudio-workbench="2021.09.1-372.pro1"
+# https://docs.rstudio.com/rsw/installation/
+rstudio-workbench="2021.09.2-382.pro1"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.0.3p157"
@@ -343,7 +343,6 @@ sed="4.8"
 shellcheck="0.8.0"
 
 # https://www.rstudio.com/products/shiny/download-server/
-# 2021-01-11
 shiny-server="1.5.17.973"
 
 # https://github.com/kward/shunit2/releases
@@ -388,7 +387,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4200"
+vim="8.2.4250"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
@@ -436,6 +435,7 @@ conda-fastqc="0.11.9"           # 2021-03-25 bioconda                       [qc]
 conda-fgbio="1.5.0"             # 2022-01-11 bioconda                [workflows]
 conda-gatk4="4.2.4.1"           # 2022-01-05 bioconda                [workflows]
 conda-genrich="0.6.1"           # 2021-03-17 bioconda                  [chipseq]
+conda-gffread="0.12.7"          # 2021-09-24 bioconda             [file formats]
 conda-gffutils="0.10.1"         # 2020-07-26 bioconda             [file formats]
 conda-gseapy="0.10.7"           # 2021-11-17 bioconda               [enrichment]
 conda-hisat2="2.2.1"            # 2020-07-24 bioconda                 [aligners]
@@ -475,7 +475,6 @@ conda-ribodiff="0.2.2"          # 2019-10-27 bioconda                  [riboseq]
 conda-ribotaper="1.3.1"         # 2020-07-13 bioconda linux            [riboseq]
 conda-rsem="1.3.3"              # 2020-07-26 bioconda                 [aligners]
 conda-salmon="1.6.0"            # 2021-11-23 bioconda                   [rnaseq]
-# NOTE 0.8.2 has been released, but is not on bioconda yet.
 conda-sambamba="0.8.0"          # 2021-01-02 bioconda             [file formats]
 conda-samblaster="0.1.26"       # 2021-03-26 bioconda             [file formats]
 conda-samtools="1.14"           # 2021-10-22 bioconda             [file formats]
@@ -489,6 +488,7 @@ conda-seqtk="1.3"               # 2019-07-31 bioconda             [file formats]
 conda-sicer2="1.0.3"            # 2021-03-26 bioconda                  [chipseq]
 conda-snakemake="6.14.0"        # 2022-01-26 bioconda                [workflows]
 conda-squid="1.5"               # 2021-03-27 bioconda                [variation]
+conda-stringtie="2.2.0"         # 2022-01-02 bioconda                   [rnaseq]
 conda-sra-tools="2.11.0"        # 2021-11-10 bioconda              [data mining]
 conda-star-fusion="1.10.0"      # 2021-04-15 bioconda                [variation]
 conda-star="2.7.9a"             # 2021-05-11 bioconda                 [aligners]
@@ -530,7 +530,7 @@ python-pip="21.3.1"             # default
 python-setuptools="60.5.0"      # default
 python-wheel="0.37.1"           # default
 
-python-black="21.12b0"          # recommended
+python-black="22.1.0"           # recommended
 python-bpytop="1.0.68"          # recommended
 python-flake8="4.0.1"           # recommended
 python-glances="3.2.4.2"        # recommended
@@ -574,7 +574,7 @@ rust-du-dust="0.7.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
 rust-fd-find="8.3.1"            # homebrew; fd
 rust-hyperfine="1.12.0"         # homebrew
-rust-procs="0.12.0"             # homebrew
+rust-procs="0.12.1"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
 rust-starship="1.2.1"           # homebrew

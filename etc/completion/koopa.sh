@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-01-21.
+    # Updated 2022-01-31.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -175,8 +175,6 @@ _koopa_complete() { # {{{1
                         'azure-cli'
                         'base-system'
                         'bcbio-nextgen'
-                        'bcbio-nextgen-ensembl-genome'
-                        'bcbio-nextgen-genome'
                         'bcl2fastq'
                         'cellranger'
                         'cloudbiolinux'
@@ -184,6 +182,8 @@ _koopa_complete() { # {{{1
                         'google-cloud-sdk'
                         'julia'
                         'lmod'
+                        'pihole'
+                        'pivpn'
                         'rstudio-server'
                         'rstudio-workbench'
                         'shiny-server'
@@ -201,7 +201,7 @@ _koopa_complete() { # {{{1
                     elif _koopa_is_fedora_like
                     then
                         args+=(
-                            'oracle-instantclient'
+                            'oracle-instant-client'
                         )
                     fi
                 fi
