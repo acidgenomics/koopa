@@ -195,7 +195,7 @@ koopa:::str_detect() { # {{{1
             grep_args+=('-E')  # --extended-regexp
             ;;
     esac
-    grep_args+=("$pattern")
+    grep_args+=("${dict[pattern]}")
     koopa::print "${dict[string]}" \
         | "${grep[@]}" "${grep_args[@]}" >/dev/null
 }

@@ -725,11 +725,65 @@ koopa::rm() { # {{{1
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa::locate_sudo)"
-        rm=("${app[sudo]}" "${app[rm]}")
+        rm+=("${app[sudo]}" "${app[rm]}")
     else
         rm=("${app[rm]}")
     fi
     "${rm[@]}" "${rm_args[@]}" "$@"
+    return 0
+}
+
+koopa::touch() { # {{{1
+    # """
+    # Touch (create) a file on disk.
+    # @note Updated 2022-01-31.
+    # """
+    local app pos touch
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [touch]="$(koopa::locate_touch)"
+    )
+    declare -A dict=(
+        [sudo]=0
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--sudo' | \
+            '-S')
+                dict[sudo]=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    if [[ "${dict[sudo]}" -eq 1 ]]
+    then
+        app[sudo]="$(koopa::locate_sudo)"
+        touch=("${app[sudo]}" "${app[touch]}")
+    else
+        touch=("${app[touch]}")
+    fi
+    for file in "$@"
+    do
+        if [[ -e "$file" ]]
+        then
+            koopa::assert_is_not_dir "$file"
+            koopa::assert_is_not_symlink "$file"
+        fi
+        "${app[touch]}" "$file"
+    done
     return 0
 }
 
