@@ -1,48 +1,52 @@
 #!/usr/bin/env bash
 
-# FIXME Switch to using dict approach.
 koopa::check_access_human() { # {{{1
     # """
     # Check if file or directory has expected human readable access.
-    # @note Updated 2020-07-04.
+    # @note Updated 2021-01-31.
     # """
-    local access code file
+    local dict
     koopa::assert_has_args "$#"
-    file="${1:?}"
-    code="${2:?}"
-    if [[ ! -e "$file" ]]
+    declare -A dict=(
+        [file]="${1:?}"
+        [code]="${2:?}"
+    )
+    if [[ ! -e "${dict[file]}" ]]
     then
-        koopa::warn "'${file}' does not exist."
+        koopa::warn "'${dict[file]}' does not exist."
         return 1
     fi
-    access="$(koopa::stat_access_human "$file")"
-    if [[ "$access" != "$code" ]]
+    dict[access]="$(koopa::stat_access_human "${dict[file]}")"
+    if [[ "${dict[access]}" != "${dict[code]}" ]]
     then
-        koopa::warn "'${file}' current access '${access}' is not '${code}'."
+        koopa::warn "'${dict[file]}' current access '${dict[access]}' \
+is not '${dict[code]}'."
         return 1
     fi
     return 0
 }
 
-# FIXME Switch to using dict approach.
 koopa::check_access_octal() { # {{{1
     # """
     # Check if file or directory has expected octal access.
-    # @note Updated 2020-07-04.
+    # @note Updated 2022-01-31.
     # """
-    local access code file
+    local dict
     koopa::assert_has_args "$#"
-    file="${1:?}"
-    code="${2:?}"
-    if [[ ! -e "$file" ]]
+    declare -A dict=(
+        [file]="${1:?}"
+        [code]="${2:?}"
+    )
+    if [[ ! -e "${dict[file]}" ]]
     then
-        koopa::warn "'${file}' does not exist."
+        koopa::warn "'${dict[file]}' does not exist."
         return 1
     fi
-    access="$(koopa::stat_access_octal "$file")"
-    if [[ "$access" != "$code" ]]
+    dict[access]="$(koopa::stat_access_octal "${dict[file]}")"
+    if [[ "${dict[access]}" != "${dict[code]}" ]]
     then
-        koopa::warn "'${file}' current access '${access}' is not '${code}'."
+        koopa::warn "'${dict[file]}' current access '${dict[access]}' \
+is not '${dict[code]}'."
         return 1
     fi
     return 0
@@ -87,59 +91,63 @@ koopa::check_exports() { # {{{1
     return 0
 }
 
-# FIXME Switch to using dict appproach.
 koopa::check_group() { # {{{1
     # """
     # Check if file or directory has an expected group.
-    # @note Updated 2020-07-04.
+    # @note Updated 2022-01-31.
     # """
-    local code file group
+    local dict
     koopa::assert_has_args "$#"
-    file="${1:?}"
-    code="${2:?}"
-    if [[ ! -e "$file" ]]
+    declare -A dict=(
+        [file]="${1:?}"
+        [code]="${2:?}"
+    )
+    if [[ ! -e "${dict[file]}" ]]
     then
-        koopa::warn "'${file}' does not exist."
+        koopa::warn "'${dict[file]}' does not exist."
         return 1
     fi
-    group="$(koopa::stat_group "$file")"
-    if [[ "$group" != "$code" ]]
+    dict[group]="$(koopa::stat_group "${dict[file]}")"
+    if [[ "${dict[group]}" != "${dict[code]}" ]]
     then
-        koopa::warn "'${file}' current group '${group}' is not '${code}'."
+        koopa::warn "'${dict[file]}' current group '${dict[group]}' \
+is not '${dict[code]}'."
         return 1
     fi
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::check_mount() { # {{{1
     # """
     # Check if a drive is mounted.
-    # @note Updated 2021-10-22.
+    # @note Updated 2022-01-31.
     #
     # @examples
     # koopa::check_mount '/mnt/scratch'
     # """
-    local mnt nfiles wc
+    local app dict
     koopa::assert_has_args "$#"
-    mnt="${1:?}"
-    if [[ ! -r "$mnt" ]] || [[ ! -d "$mnt" ]]
+    declare -A app=(
+        [wc]="$(koopa::locate_wc)"
+    )
+    declare -A dict=(
+        [prefix]="${1:?}"
+    )
+    if [[ ! -r "${dict[prefix]}" ]] || [[ ! -d "${dict[prefix]}" ]]
     then
-        koopa::warn "'${mnt}' is not a readable directory."
+        koopa::warn "'${dict[prefix]}' is not a readable directory."
         return 1
     fi
-    wc="$(koopa::locate_wc)"
-    # FIXME Consider adding '--count' support here.
-    nfiles="$( \
+    dict[nfiles]="$( \
         koopa::find \
-            --prefix="$mnt" \
+            --prefix="${dict[prefix]}" \
             --min-depth=1 \
             --max-depth=1 \
-        | "$wc" -l \
+        | "${app[wc]}" -l \
     )"
-    if [[ "$nfiles" -eq 0 ]]
+    if [[ "${dict[nfiles]}" -eq 0 ]]
     then
-        koopa::warn "'${mnt}' is unmounted and/or empty."
+        koopa::warn "'${dict[prefix]}' is unmounted and/or empty."
         return 1
     fi
     return 0
@@ -163,27 +171,28 @@ koopa::check_system() { # {{{1
     return 0
 }
 
-# FIXME Switch to using dict approach.
 koopa::check_user() { # {{{1
     # """
     # Check if file or directory is owned by an expected user.
-    # @note Updated 2020-07-04.
+    # @note Updated 2022-01-31.
     # """
-    local current_user expected_user file
-    koopa::assert_has_args "$#"
-    file="${1:?}"
-    if [[ ! -e "$file" ]]
+    local dict
+    koopa::assert_has_args_eq "$#" 2
+    declare -A dict=(
+        [file]="${1:?}"
+        [expected_user]="${2:?}"
+    )
+    if [[ ! -e "${dict[file]}" ]]
     then
-        koopa::warn "'${file}' does not exist on disk."
+        koopa::warn "'${dict[file]}' does not exist on disk."
         return 1
     fi
-    file="$(koopa::realpath "$file")"
-    expected_user="${2:?}"
-    current_user="$(koopa::stat_user "$file")"
-    if [[ "$current_user" != "$expected_user" ]]
+    dict[file]="$(koopa::realpath "${dict[file]}")"
+    dict[current_user]="$(koopa::stat_user "${dict[file]}")"
+    if [[ "${dict[current_user]}" != "${dict[expected_user]}" ]]
     then
-        koopa::warn "'${file}' user '${current_user}' is not \
-'${expected_user}'."
+        koopa::warn "'${dict[file]}' user '${dict[current_user]}' \
+is not '${dict[expected_user]}'."
         return 1
     fi
     return 0
