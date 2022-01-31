@@ -13,6 +13,7 @@ koopa:::fedora_install_wine() { # {{{1
     # """
     local app dict
     koopa::assert_has_no_args "$#"
+    koopa::asset_is_admin
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
     )

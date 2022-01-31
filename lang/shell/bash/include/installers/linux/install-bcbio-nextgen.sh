@@ -1,50 +1,54 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa:::linux_install_bcbio_nextgen() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2021-06-11.
+    # @note Updated 2022-01-31.
     #
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
     # """
-    local conda file install_dir prefix python
-    local tools_dir upgrade url version
-    prefix="${INSTALL_PREFIX:?}"
-    version="${INSTALL_VERSION:?}"
-    python="$(koopa::locate_python)"
-    koopa::alert_coffee_time
-    install_dir="${prefix}/install"
-    tools_dir="${prefix}/tools"
-    case "$version" in
+    local app dict
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [python]="$(koopa::locate_python)"
+    )
+    declare -A dict=(
+        [prefix]="${INSTALL_PREFIX:?}"
+        [version]="${INSTALL_VERSION:?}"
+    )
+    dict[install_dir]="${dict[prefix]}/install"
+    dict[tools_dir]="${dict[prefix]}/tools"
+    case "${dict[version]}" in
         'development')
-            upgrade='development'
+            dict[upgrade]='development'
             ;;
         *)
-            upgrade='stable'
+            dict[upgrade]='stable'
             ;;
     esac
-    file='bcbio_nextgen_install.py'
-    url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
-    koopa::download "$url" "$file"
-    koopa::mkdir "$prefix"
-    "$python" \
-        "$file" \
-        "$install_dir" \
+    dict[file]='bcbio_nextgen_install.py'
+    dict[url]="https://raw.github.com/bcbio/bcbio-nextgen/master/\
+scripts/${dict[file]}"
+    koopa::alert_coffee_time
+    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa::mkdir "${dict[prefix]}"
+    "${app[python]}" \
+        "${dict[file]}" \
+        "${dict[install_dir]}" \
         --datatarget='rnaseq' \
         --datatarget='variation' \
         --isolate \
         --nodata \
-        --tooldir="$tools_dir" \
-        --upgrade="$upgrade"
+        --tooldir="${dict[tools_dir]}" \
+        --upgrade="${dict[upgrade]}"
     # Clean up conda packages inside Docker image.
     if koopa::is_docker
     then
-        # > conda="${install_dir}/anaconda/bin/conda"
-        conda="${tools_dir}/bin/bcbio_conda"
-        koopa::assert_is_executable "$conda"
-        "$conda" clean --yes --tarballs
+        # > app[conda]="${dict[install_dir]}/anaconda/bin/conda"
+        app[conda]="${dict[tools_dir]}/bin/bcbio_conda"
+        koopa::assert_is_installed "${app[conda]}"
+        "${app[conda]}" clean --yes --tarballs
     fi
     return 0
 }
