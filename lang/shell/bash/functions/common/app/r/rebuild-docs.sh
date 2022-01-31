@@ -3,7 +3,7 @@
 koopa::r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-01-31.
     #
     # 1. Ensure HTML package index is writable.
     # 2. Touch an empty 'R.css' file to eliminate additional package warnings.
@@ -17,8 +17,6 @@ koopa::r_rebuild_docs() { # {{{1
     local app doc_dir html_dir pkg_index rscript_args
     declare -A app=(
         [r]="${1:-}"
-        [sudo]="$(koopa::locate_sudo)"
-        [touch]="$(koopa::locate_touch)"
     )
     declare -A dict
     [[ -z "${app[r]:-}" ]] && app[r]="$(koopa::locate_r)"
@@ -39,12 +37,12 @@ koopa::r_rebuild_docs() { # {{{1
     if [[ ! -f "${dict[pkg_index]}" ]]
     then
         koopa::assert_is_admin
-        "${app[sudo]}" "${app[touch]}" "${dict[pkg_index]}"
+        koopa::touch --sudo "${dict[pkg_index]}"
     fi
     if [[ ! -f "${dict[r_css]}" ]]
     then
         koopa::assert_is_admin
-        "${app[sudo]}" "${app[touch]}" "${dict[r_css]}"
+        koopa::touch --sudo "${dict[r_css]}"
     fi
     koopa::sys_set_permissions "${dict[pkg_index]}"
     "${app[rscript]}" "${rscript_args[@]}" -e 'utils::make.packages.html()'

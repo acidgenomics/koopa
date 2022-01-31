@@ -2434,7 +2434,7 @@ _koopa_export_gnupg() { # {{{1
 _koopa_export_history() { # {{{1
     # """
     # Export history.
-    # @note Updated 2020-06-30.
+    # @note Updated 2021-01-31.
     #
     # See bash(1) for more options.
     # For setting history length, see HISTSIZE and HISTFILESIZE.
@@ -2450,7 +2450,9 @@ _koopa_export_history() { # {{{1
     export HISTFILE
     # Create the history file, if necessary.
     # Note that the HOME check here hardens against symlinked data disk failure.
-    if [ ! -f "$HISTFILE" ] && [ -e "${HOME:-}" ]
+    if [ ! -f "$HISTFILE" ] \
+        && [ -e "${HOME:-}" ] \
+        && _koopa_is_installed 'touch'
     then
         touch "$HISTFILE"
     fi
