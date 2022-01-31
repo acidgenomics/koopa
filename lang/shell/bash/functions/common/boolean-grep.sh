@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa:::file_detect() { # {{{1
     # """
     # Is a string defined in a file?
-    # @note Updated 2022-01-10.
+    # @note Updated 2022-01-31.
     #
     # Uses ripgrep instead of grep when possible (faster).
     #
@@ -16,20 +15,25 @@ koopa:::file_detect() { # {{{1
     # echo 'FILE' | koopa::file_detect_fixed - 'PATTERN'
     # echo 'FILE' | koopa::file_detect_regex - '^PATTERN.+$'
     # """
-    local engine file grep grep_args mode pattern pos
+    local app dict grep grep_args pos
     koopa::assert_has_args "$#"
-    grep="$(koopa::locate_rg 2>/dev/null || true)"
-    [[ ! -x "$grep" ]] && grep="$(koopa::locate_grep)"
-    engine="$(koopa::basename "$grep")"
+    declare -A app=(
+        [grep]="$(koopa::locate_rg 2>/dev/null || true)"
+    )
+    [[ ! -x "${app[grep]}" ]] && app[grep]="$(koopa::locate_grep)"
+    declare -A dict=(
+        [engine]="$(koopa::basename "${app[grep]}")"
+        [mode]=''
+    )
     # Converting into an array here so we can prepend sudo, if necessary.
-    grep=("$grep")
+    grep=("${app[grep]}")
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--mode='*)
-                mode="${1#*=}"
+                dict[mode]="${1#*=}"
                 shift 1
                 ;;
             # Flags ------------------------------------------------------------
@@ -54,18 +58,18 @@ koopa:::file_detect() { # {{{1
     if [[ "$#" -eq 1 ]]
     then
         # Piped input using stdin.
-        pattern="${1:?}"
+        dict[pattern]="${1:?}"
         shift 1
-        read -r -d '' file
+        read -r -d '' "dict[file]"
     else
         # Positional variable input.
         # Note that we're allowing empty string input here.
         koopa::assert_has_args_eq "$#" 2
-        file="${1:?}"
-        pattern="${2:?}"
+        dict[file]="${1:?}"
+        dict[pattern]="${2:?}"
     fi
     grep_args=()
-    case "$engine" in
+    case "${dict[engine]}" in
         'rg')
             grep_args+=(
                 '--case-sensitive'
@@ -75,7 +79,7 @@ koopa:::file_detect() { # {{{1
                 '--one-file-system'
                 '--quiet'
             )
-            case "$mode" in
+            case "${dict[mode]}" in
                 'fixed')
                     grep_args+=('--fixed-strings')
                     ;;
@@ -86,7 +90,7 @@ koopa:::file_detect() { # {{{1
         'grep')
             # Using short flags here for BSD compatibility.
             grep_args+=('-q')  # --quiet
-            case "$mode" in
+            case "${dict[mode]}" in
                 'fixed')
                     grep_args+=('-F')  # --fixed-strings
                     ;;
@@ -96,15 +100,16 @@ koopa:::file_detect() { # {{{1
             esac
             ;;
     esac
-    koopa::assert_is_file "$file"
-    koopa::assert_is_readable "$file"
-    "${grep[@]}" "${grep_args[@]}" "$pattern" "$file" >/dev/null
+    koopa::assert_is_file "${dict[file]}"
+    koopa::assert_is_readable "${dict[file]}"
+    grep_args+=("${dict[pattern]}" "${dict[file]}")
+    "${grep[@]}" "${grep_args[@]}" >/dev/null
 }
 
 koopa:::str_detect() { # {{{1
     # """
     # Does the input match a string?
-    # @note Updated 2022-01-10.
+    # @note Updated 2022-01-31.
     #
     # Modes:
     # * -E, --extended-regexp
@@ -131,17 +136,21 @@ koopa:::str_detect() { # {{{1
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997
     # - https://unix.stackexchange.com/questions/233987
     # """
-    local engine grep grep_args mode pattern pos string
+    local app dict grep grep_args pos
     koopa::assert_has_args "$#"
+    declare -A app=(
+        [grep]="$(koopa::locate_grep)"
+    )
+    declare -A dict
     # Converting into an array here so we can prepend sudo, if necessary.
-    grep=("$(koopa::locate_grep)")
+    grep=("${app[grep]}")
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--mode='*)
-                mode="${1#*=}"
+                dict[mode]="${1#*=}"
                 shift 1
                 ;;
             # Flags ------------------------------------------------------------
@@ -166,19 +175,19 @@ koopa:::str_detect() { # {{{1
     if [[ "$#" -eq 1 ]]
     then
         # Piped input using stdin.
-        pattern="${1:?}"
+        dict[pattern]="${1:?}"
         shift 1
-        read -r -d '' string
+        read -r -d '' "dict[string]"
     else
         # Positional variable input.
         # Note that we're allowing empty string input here.
         koopa::assert_has_args_eq "$#" 2
-        string="${1:-}"
-        pattern="${2:?}"
+        dict[string]="${1:-}"
+        dict[pattern]="${2:?}"
     fi
     # Using short flags here for BSD compatibility.
     grep_args=('-q')
-    case "$mode" in
+    case "${dict[mode]}" in
         'fixed')
             grep_args+=('-F')  # --fixed-strings
             ;;
@@ -186,8 +195,9 @@ koopa:::str_detect() { # {{{1
             grep_args+=('-E')  # --extended-regexp
             ;;
     esac
-    koopa::print "$string" \
-        | "${grep[@]}" "${grep_args[@]}" "$pattern" >/dev/null
+    grep_args+=("$pattern")
+    koopa::print "${dict[string]}" \
+        | "${grep[@]}" "${grep_args[@]}" >/dev/null
 }
 
 koopa::file_detect_fixed() { # {{{1
