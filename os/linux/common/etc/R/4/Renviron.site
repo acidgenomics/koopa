@@ -141,7 +141,6 @@ _R_CHECK_SYSTEM_CLOCK_=0
 # ------------------------------------------------------------------------------
 
 # This requires installation of the Oracle Database Instant Client.
-# Refer to 'install-oracle-instantclient' script for details.
 #
 # Install basic, devel, jdbc, odbc, and sqlplus.
 # Previous version on RHEL 7 VM: 12.2.0.1.0.

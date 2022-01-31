@@ -316,14 +316,13 @@ koopa::is_export() { # {{{1
 koopa::is_file_system_case_sensitive() { # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2022-01-19.
+    # @note Updated 2022-01-31.
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
     declare -A app=(
-        [touch]="$(koopa::locate_touch)"
         [wc]="$(koopa::locate_wc)"
     )
     declare -A dict=(
@@ -332,7 +331,7 @@ koopa::is_file_system_case_sensitive() { # {{{1
     )
     dict[file1]="${dict[tmp_stem]}checkcase"
     dict[file2]="${dict[tmp_stem]}checkCase"
-    "${app[touch]}" "${dict[file1]}" "${dict[file2]}"
+    koopa::touch "${dict[file1]}" "${dict[file2]}"
     dict[count]="$( \
         koopa::find \
             --glob="${dict[file1]}" \

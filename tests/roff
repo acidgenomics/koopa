@@ -8,56 +8,69 @@ koopa::test_roff() { # {{{1
     # Check that all scripts support '--help' flag.
     # Updated 2020-12-31.
     # """
-    local bin_dirs dir file files koopa_prefix man_dirs status
-    koopa_prefix="$(koopa::koopa_prefix)"
-    status=0
+    local app dict
+    local bin_dir bin_dirs bin_file bin_files
+    local man_dir man_dirs man_file man_files
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+        [head]="$(koopa::locate_head)"
+        [sort]="$(koopa::locate_sort)"
+    )
+    declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
+        [dotfiles_prefix]="$(koopa::dotfiles_prefix)"
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [opt_prefix]="$(koopa::opt_prefix)"
+        [status]=0
+    )
     koopa::h1 "Running manual file '--help' flag checks."
     # man dirs {{{2
     # --------------------------------------------------------------------------
     # Put all 'man/' dirs into an array and loop.
-    # Pipe GNU find into array.
+    # FIXME Rework using 'koopa::find' here.
     readarray -t man_dirs <<< "$( \
-        find "$koopa_prefix" \
+        "${app[find]}" "${dict[koopa_prefix]}" \
             -mindepth 1 \
-            -type d \
+            -type 'd' \
             -name 'man' \
-            -not -path "$(koopa::app_prefix)/*" \
-            -not -path "$(koopa::dotfiles_prefix)/*" \
-            -not -path "$(koopa::opt_prefix)/*" \
-            -not -path "${koopa_prefix}/.git/*" \
-            -not -path "${koopa_prefix}/shunit2-*" \
+            -not -path "${dict[app_prefix]}/*" \
+            -not -path "${dict[dotfiles_prefix]}/*" \
+            -not -path "${dict[koopa_prefix]}/.git/*" \
+            -not -path "${dict[koopa_prefix]}/shunit2-*" \
+            -not -path "${dict[opt_prefix]}/*" \
             -print \
-        | sort \
+        | "${app[sort]}" \
     )"
-    for dir in "${man_dirs[@]}"
+    for man_dir in "${man_dirs[@]}"
     do
-        koopa::add_to_manpath_start "$dir"
+        koopa::add_to_manpath_start "$man_dir"
     done
     # man file formatting {{{2
     # --------------------------------------------------------------------------
     koopa::h2 'Checking troff man file formatting.'
-    for dir in "${man_dirs[@]}"
+    for man_dir in "${man_dirs[@]}"
     do
-        koopa::h3 "$dir"
-        readarray -t files <<< "$( \
-            find "$dir" \
+        koopa::h3 "$man_dir"
+        # FIXME Rework using 'koopa::find' here.
+        readarray -t man_files <<< "$( \
+            "${app[find]}" "$man_dir" \
                 -mindepth 2 \
                 -maxdepth 2 \
-                -type f \
+                -type 'f' \
                 -print \
-            | sort \
+            | "${app[sort]}" \
         )"
-        if ! koopa::is_array_non_empty "${files[@]:-}"
+        if ! koopa::is_array_non_empty "${man_files[@]:-}"
         then
-            koopa::stop "No files: '${dir}'."
+            koopa::stop "No files: '${man_dir}'."
         fi
-        for file in "${files[@]}"
+        for man_file in "${man_files[@]}"
         do
-            # FIXME Need to wrap 'head' here.
-            if ! koopa::str_detect_regex "$(head -n 1 "$file")" '^\.TH '
+            if ! koopa::str_detect_regex \
+                "$("${app[head]}" -n 1 "$man_file")" '^\.TH '
             then
-                koopa::alert_note "ERROR: '${file}'."
-                status=1
+                koopa::alert_note "ERROR: '${man_file}'."
+                dict[status]=1
             fi
         done
     done
@@ -65,39 +78,41 @@ koopa::test_roff() { # {{{1
     # --------------------------------------------------------------------------
     koopa::h2 "Running exported script '--help' flag checks."
     # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
+    # FIXME Rework using 'koopa::find' here.
     readarray -t bin_dirs <<< "$( \
-        find "$koopa_prefix" \
+        "${app[find]}" "${dict[koopa_prefix]}" \
             -mindepth 1 \
-            -type d \
+            -type 'd' \
             \( -name 'bin' -o -name 'sbin' \) \
-            -not -path "$(koopa::app_prefix)/*" \
-            -not -path "$(koopa::dotfiles_prefix)/*" \
-            -not -path "$(koopa::opt_prefix)/*" \
-            -not -path "${koopa_prefix}/shunit2-*" \
+            -not -path "${dict[app_prefix]}/*" \
+            -not -path "${dict[dotfiles_prefix]}/*" \
+            -not -path "${dict[koopa_prefix]}/shunit2-*" \
+            -not -path "${dict[opt_prefix]}/*" \
             -print \
-        | sort \
+        | "${app[sort]}" \
     )"
-    for dir in "${bin_dirs[@]}"
+    for bin_dir in "${bin_dirs[@]}"
     do
-        koopa::h3 "$dir"
-        readarray -t files <<< "$( \
-            find "$dir" \
+        koopa::h3 "$bin_dir"
+        # FIXME Rework using 'koopa::find' here.
+        readarray -t bin_files <<< "$( \
+            "${app[find]}" "$bin_dir" \
                 -mindepth 1 \
                 -maxdepth 1 \
                 -type f \
                 -print \
-            | sort \
+            | "${app[sort]}" \
         )"
-        for file in "${files[@]}"
+        for bin_file in "${bin_files[@]}"
         do
-            if ! "$file" --help &>/dev/null
+            if ! "$bin_file" --help &>/dev/null
             then
-                koopa::alert_note "ERROR: '${file}'."
-                status=1
+                koopa::alert_note "ERROR: '${bin_file}'."
+                dict[status]=1
             fi
         done
     done
-    return "$status"
+    return "${dict[status]}"
 }
 
 koopa::test_roff "$@"

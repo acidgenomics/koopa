@@ -22,20 +22,26 @@ koopa::test() { # {{{1
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-01-31.
+    #
     # Not sorting here can speed the function up.
     # """
-    local find prefix x
+    local app dict
     koopa::assert_has_no_args "$#"
-    find="$(koopa::locate_find)"
-    prefix="$(koopa::koopa_prefix)"
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+    )
+    declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
+        [opt_prefix]="$(koopa::opt_prefix)"
+        [prefix]="$(koopa::koopa_prefix)"
+    )
     # FIXME Rework using 'koopa::find'.
-    x="$( \
-        "$find" "$prefix" \
+    dict[files]="$( \
+        "${app[find]}" "${dict[prefix]}" \
             -mindepth 1 \
             -type 'f' \
             -not -name "$(koopa::basename "$0")" \
@@ -44,68 +50,82 @@ koopa::test_find_files() { # {{{1
             -not -name '*.ronn' \
             -not -name '*.swp' \
             -not -name '.pylintrc' \
-            -not -path "$(koopa::app_prefix)/*" \
-            -not -path "$(koopa::opt_prefix)/*" \
-            -not -path "${prefix}/.*" \
-            -not -path "${prefix}/.git/*" \
-            -not -path "${prefix}/app/*" \
-            -not -path "${prefix}/cellar/*" \
-            -not -path "${prefix}/coverage/*" \
-            -not -path "${prefix}/dotfiles/*" \
-            -not -path "${prefix}/lang/r/.Rproj.user/*" \
-            -not -path "${prefix}/lang/shell/bash/functions/deprecated/*" \
-            -not -path "${prefix}/opt/*" \
-            -not -path "${prefix}/tests/*" \
-            -not -path "${prefix}/todo.org" \
+            -not -path "${dict[app_prefix]}/*" \
+            -not -path "${dict[opt_prefix]}/*" \
+            -not -path "${dict[prefix]}/.*" \
+            -not -path "${dict[prefix]}/.git/*" \
+            -not -path "${dict[prefix]}/app/*" \
+            -not -path "${dict[prefix]}/cellar/*" \
+            -not -path "${dict[prefix]}/coverage/*" \
+            -not -path "${dict[prefix]}/dotfiles/*" \
+            -not -path "${dict[prefix]}/lang/r/.Rproj.user/*" \
+            -not -path "${dict[prefix]}/opt/*" \
+            -not -path "${dict[prefix]}/tests/*" \
+            -not -path "${dict[prefix]}/todo.org" \
             -not -path '*/etc/R/*' \
             -print \
     )"
-    koopa::print "$x"
+    if [[ -z "${dict[files]}" ]]
+    then
+        koopa::stop 'Failed to find any test files.'
+    fi
+    koopa::print "${dict[files]}"
 }
 
-# FIXME Consider grepping against '--ignore-case' here.
 koopa::test_find_files_by_ext() { # {{{1
     # """
     # Find relevant test files by extension.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-01-31.
     # """
-    local ext files pattern x
+    local all_files dict
     koopa::assert_has_args "$#"
-    ext="${1:?}"
-    pattern="\.${ext}$"
-    readarray -t files <<< "$(koopa::test_find_files)"
-    x="$( \
-        printf '%s\n' "${files[@]}" \
+    declare -A dict=(
+        [ext]="${1:?}"
+    )
+    dict[pattern]="\.${dict[ext]}$"
+    readarray -t all_files <<< "$(koopa::test_find_files)"
+    dict[files]="$( \
+        printf '%s\n' "${all_files[@]}" \
         | koopa::grep \
             --extended-regexp \
-            "$pattern" \
+            "${dict[pattern]}" \
         || true \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    if [[ -z "${dict[files]}" ]]
+    then
+        koopa::stop "Failed to find test files with extension '${dict[ext]}'."
+    fi
+    koopa::print "${dict[files]}"
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::test_find_files_by_shebang() { # {{{1
     # """
     # Find relevant test files by shebang.
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-01-31.
     # """
-    local file files head pattern shebang shebang_files tr x
+    local all_files app dict file shebang_files
     koopa::assert_has_args "$#"
-    head="$(koopa::locate_head)"
-    tr="$(koopa::locate_tr)"
-    pattern="${1:?}"
-    readarray -t files <<< "$(koopa::test_find_files)"
+    declare -A app=(
+        [head]="$(koopa::locate_head)"
+        [tr]="$(koopa::locate_tr)"
+    )
+    declare -A dict=(
+        [pattern]="${1:?}"
+    )
+    readarray -t all_files <<< "$(koopa::test_find_files)"
     shebang_files=()
-    for file in "${files[@]}"
+    for file in "${all_files[@]}"
     do
+        local shebang
         [[ -s "$file" ]] || continue
         # Avoid 'command substitution: ignored null byte in input' warning.
-        shebang="$("$tr" -d '\0' < "$file" | "$head" -n 1)"
+        shebang="$( \
+            "${app[tr]}" -d '\0' < "$file" \
+                | "${app[head]}" -n 1 \
+        )"
         [[ -n "$shebang" ]] || continue
-        if koopa::str_detect_regex "$shebang" "$pattern"
+        if koopa::str_detect_regex "$shebang" "${dict[pattern]}"
         then
             shebang_files+=("$file")
         fi
@@ -114,49 +134,55 @@ koopa::test_find_files_by_shebang() { # {{{1
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::test_grep() { # {{{1
     # """
     # Grep illegal patterns.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-01-31.
     #
     # Requires Perl-compatible regular expression (PCRE) support (-P).
     #
     # This doesn't currently ignore commented lines.
     # """
-    local failures file grep ignore name pattern pos x
+    local app dict failures file pos
     koopa::assert_has_args "$#"
-    ignore=''
+    declare -A app=(
+        [grep]="$(koopa::locate_grep)"
+    )
+    declare -A dict=(
+        [ignore]=''
+        [name]=''
+        [pattern]=''
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--ignore='*)
-                ignore="${1#*=}"
+                dict[ignore]="${1#*=}"
                 shift 1
                 ;;
             '--ignore' | \
             '-i')
-                ignore="${2:?}"
+                dict[ignore]="${2:?}"
                 shift 2
                 ;;
             '--name='*)
-                name="${1#*=}"
+                dict[name]="${1#*=}"
                 shift 1
                 ;;
             '--name' | \
             '-n')
-                name="${2:?}"
+                dict[name]="${2:?}"
                 shift 2
                 ;;
             '--pattern='*)
-                pattern="${1#*=}"
+                dict[pattern]="${1#*=}"
                 shift 1
                 ;;
             '--pattern' | \
             '-p')
-                pattern="${2:?}"
+                dict[pattern]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -171,25 +197,28 @@ koopa::test_grep() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    grep="$(koopa::locate_grep)"
+    koopa::assert_is_set \
+        '--name' "${dict[name]}" \
+        '--pattern' "${dict[pattern]}"
     failures=()
     for file in "$@"
     do
+        local x
         # Skip ignored files.
-        if [[ -n "$ignore" ]]
+        if [[ -n "${dict[ignore]}" ]]
         then
-            if "$grep" -Pq \
+            if "${app[grep]}" -Pq \
                 --binary-files='without-match' \
-                "^# koopa nolint=${ignore}$" \
+                "^# koopa nolint=${dict[ignore]}$" \
                 "$file"
             then
                 continue
             fi
         fi
         x="$(
-            "$grep" -HPn \
+            "${app[grep]}" -HPn \
                 --binary-files='without-match' \
-                "$pattern" \
+                "${dict[pattern]}" \
                 "$file" \
             || true \
         )"
@@ -197,27 +226,28 @@ koopa::test_grep() { # {{{1
     done
     if [[ "${#failures[@]}" -gt 0 ]]
     then
-        koopa::status_fail "${name} [${#failures[@]}]"
+        koopa::status_fail "${dict[name]} [${#failures[@]}]"
         printf '%s\n' "${failures[@]}"
         return 1
     fi
-    koopa::status_ok "${name} [${#}]"
+    koopa::status_ok "${dict[name]} [${#}]"
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::test_true_color() { # {{{1
     # """
     # Test 24-bit true color support.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-01-31.
     #
     # @seealso
     # https://jdhao.github.io/2018/10/19/tmux_nvim_true_color/
     # """
-    local awk
+    local app
     koopa::assert_has_no_args "$#"
-    awk="$(koopa::locate_awk)"
-    "$awk" 'BEGIN{
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+    )
+    "${app[awk]}" 'BEGIN{
         s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
         for (colnum = 0; colnum<77; colnum++) {
             r = 255-(colnum*255/76);
