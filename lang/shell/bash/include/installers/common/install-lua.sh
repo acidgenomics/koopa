@@ -9,6 +9,7 @@ koopa:::install_lua() { # {{{1
     # - http://www.lua.org/manual/5.3/readme.html
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

@@ -16,6 +16,7 @@ koopa:::debian_install_bcbio_nextgen_vm() { # {{{1
     # > "${bin_dir}/bcbio_vm.py" install --tools --image "$image"
     # """
     local app dict
+    koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
         [bash]="$(koopa::locate_bash)"

@@ -7,6 +7,7 @@ koopa:::macos_install_python_framework() { # {{{1
     # """
     local app dict
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     declare -A app=(
         [installer]="$(koopa::macos_locate_installer)"
         [sudo]="$(koopa::locate_sudo)"

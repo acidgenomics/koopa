@@ -6,6 +6,7 @@ koopa:::install_nim() { # {{{1
     # @note Updated 2021-11-16.
     # """
     local dict
+    koopa::assert_has_no_args "$#"
     declare -A dict=(
         [name]='nim'
         [prefix]="${INSTALL_PREFIX:?}"

@@ -6,6 +6,7 @@ koopa:::install_rust() { # {{{1
     # @note Updated 2022-01-24.
     # """
     local dict
+    koopa::assert_has_no_args "$#"
     declare -A dict=(
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
