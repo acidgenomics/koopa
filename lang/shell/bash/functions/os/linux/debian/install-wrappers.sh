@@ -90,7 +90,6 @@ koopa::debian_install_r_devel() { # {{{1
         "$@"
 }
 
-# FIXME Version handling likely doesn't pass through correctly here, need to check.
 koopa::debian_install_rstudio_server() { # {{{1
     koopa::install_app \
         --name-fancy='RStudio Server' \
@@ -100,8 +99,6 @@ koopa::debian_install_rstudio_server() { # {{{1
         "$@"
 }
 
-# FIXME Need to ensure we pass the correct version through here.
-# FIXME Need to pass the correct installer here.
 koopa::debian_install_rstudio_workbench() { # {{{1
     koopa::install_app \
         --installer='rstudio-server' \
@@ -200,7 +197,6 @@ koopa::debian_uninstall_rstudio_server() { # {{{1
         "$@"
 }
 
-# FIXME Confirm that this works.
 koopa::debian_uninstall_rstudio_workbench() { # {{{1
     koopa::uninstall_app \
         --name-fancy='RStudio Workbench' \
