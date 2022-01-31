@@ -15,6 +15,7 @@ koopa:::debian_install_docker() { # {{{1
     # """
     local pkgs
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     koopa::debian_apt_add_docker_repo
     pkgs=(
         'docker-ce'

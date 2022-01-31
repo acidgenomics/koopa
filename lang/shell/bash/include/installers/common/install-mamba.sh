@@ -7,7 +7,6 @@ koopa:::install_mamba() { # {{{1
     # """
     local app dict
     koopa::assert_has_no_args "$#"
-    koopa::assert_has_no_envs
     declare -A app=(
         [conda]="$(koopa::locate_conda)"
     )

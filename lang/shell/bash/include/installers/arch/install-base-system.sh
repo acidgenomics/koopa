@@ -21,6 +21,7 @@ koopa:::arch_install_base_system() { # {{{1
     # This is due to configuration in '/etc/profile'.
     # """
     local app dict pkgs
+    koopa::assert_is_admin
     declare -A app=(
         [pacman]="$(koopa::arch_locate_pacman)"
         [pacman_db_upgrade]="$(koopa::arch_locate_pacman_db_upgrade)"
