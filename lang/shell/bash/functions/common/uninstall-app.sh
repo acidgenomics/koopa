@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Allow the user to pass in an '--uninstaller' argument.
+
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-01-31.
     # """
     local app dict pos
     declare -A app
@@ -18,6 +20,7 @@ koopa::uninstall_app() { # {{{1
         [prefix]=''
         [shared]=0
         [system]=0
+        [uninstaller]=''
     )
     pos=()
     while (("$#"))
@@ -53,6 +56,14 @@ koopa::uninstall_app() { # {{{1
                 ;;
             '--prefix')
                 dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--uninstaller='*)
+                dict[uninstaller]="${1#*=}"
+                shift 1
+                ;;
+            '--uninstaller')
+                dict[uninstaller]="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
@@ -116,7 +127,6 @@ koopa::uninstall_app() { # {{{1
         then
             koopa::rm --sudo "${dict[prefix]}"
         else
-            # FIXME Work on improving naming consistency here with 'install-app.sh'
             dict[uninstaller]="${dict[name]}"
             dict[uninstaller]="$( \
                 koopa::snake_case_simple "uninstall_${dict[uninstaller]}" \
@@ -124,6 +134,7 @@ koopa::uninstall_app() { # {{{1
             dict[uninstaller_file]="$( \
                 koopa::kebab_case_simple "${dict[uninstaller]}" \
             )"
+            # FIXME Use 'installer_prefix' here.
             dict[uninstaller_file]="${dict[koopa_prefix]}/lang/shell/bash/\
 include/installers/${dict[platform]}/${dict[uninstaller_file]}.sh"
             koopa::assert_is_file "${dict[uninstaller_file]}"
