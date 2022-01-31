@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently prompting for password interactively.
-# We don't want this.
-
 koopa::linux_add_rstudio_user() { #{{{1
     # """
     # Enable RStudio user on Linux.
     # @note Updated 2021-11-16.
+    #
+    # @seealso
+    # - https://askubuntu.com/questions/80444
     # """
     local app dict
     koopa::assert_has_no_args "$#"
     koopa::assert_is_admin
     declare -A app=(
+        [chpasswd]="$(koopa::locate_chpasswd)"  # FIXME This doesn't exist.
         [passwd]="$(koopa::locate_passwd)"
         [sudo]="$(koopa::locate_sudo)"
         [useradd]="$(koopa::linux_locate_useradd)"
@@ -23,6 +24,7 @@ koopa::linux_add_rstudio_user() { #{{{1
         [user]='rstudio'
     )
     "${app[sudo]}" "${app[useradd]}" "${dict[user]}"
+    # NOTE This step is interactive currently.
     "${app[sudo]}" "${app[passwd]}" "${dict[user]}"
     koopa::mkdir --sudo "${dict[home]}"
     koopa::chown --sudo "${dict[user]}:${dict[user]}" "${dict[home]}"
