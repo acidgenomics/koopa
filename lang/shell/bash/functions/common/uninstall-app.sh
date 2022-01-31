@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Allow the user to pass in an '--uninstaller' argument.
-
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
