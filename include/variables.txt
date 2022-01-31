@@ -168,7 +168,7 @@ harfbuzz="3.2.0"
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.12"
+homebrew="3.3.13"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
