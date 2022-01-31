@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-01-21.
+    # Updated 2022-01-31.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -182,6 +182,8 @@ _koopa_complete() { # {{{1
                         'google-cloud-sdk'
                         'julia'
                         'lmod'
+                        'pihole'
+                        'pivpn'
                         'rstudio-server'
                         'rstudio-workbench'
                         'shiny-server'
