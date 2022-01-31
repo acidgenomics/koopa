@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-01-27"
+koopa-date="2022-01-31"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.14"
+aws-cli="2.4.15"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.32.0"
@@ -140,10 +140,10 @@ geos="3.10.2"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.35.0"
+git="2.35.1"
 
 # https://gnupg.org/download/index.html
-gnupg="2.3.2"
+gnupg="2.3.4"
 
 # https://golang.org/dl/
 go="1.17.6"
@@ -248,7 +248,7 @@ openssl="3.0.1"
 oracle-instant-client="21.5.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.17.0.1"
+pandoc="2.17.1"
 
 # https://www.gnu.org/software/parallel/
 parallel="20220122"
@@ -387,7 +387,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4200"
+vim="8.2.4250"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
@@ -530,7 +530,7 @@ python-pip="21.3.1"             # default
 python-setuptools="60.5.0"      # default
 python-wheel="0.37.1"           # default
 
-python-black="21.12b0"          # recommended
+python-black="22.1.0"           # recommended
 python-bpytop="1.0.68"          # recommended
 python-flake8="4.0.1"           # recommended
 python-glances="3.2.4.2"        # recommended
@@ -572,7 +572,7 @@ rust-cargo-outdated="0.10.2"    # homebrew
 rust-dog="0.1.0"                # homebrew
 rust-du-dust="0.7.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
-rust-fd-find="8.3.1"            # homebrew; fd
+rust-fd-find="8.3.2"            # homebrew; fd
 rust-hyperfine="1.12.0"         # homebrew
 rust-procs="0.12.1"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
