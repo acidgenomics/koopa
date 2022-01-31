@@ -7,6 +7,7 @@ koopa:::debian_uninstall_docker() { # {{{1
     # """
     local pkgs
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     pkgs=(
         'containerd.io'
         'docker-ce'
