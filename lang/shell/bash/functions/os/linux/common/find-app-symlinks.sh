@@ -1,50 +1,48 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa::linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-01-31.
     # """
-    local app_prefix find koopa_prefix make_prefix file links name
-    local sort tail version
-    koopa::assert_has_args "$#"
+    local app file dict links
     koopa::assert_has_args_le "$#" 2
-    koopa::assert_is_linux
-    name="${1:?}"
-    version="${2:-}"
-    koopa_prefix="$(koopa::koopa_prefix)"
-    make_prefix="$(koopa::make_prefix)"
-    find="$(koopa::locate_find)"
-    sort="$(koopa::locate_sort)"
-    tail="$(koopa::locate_tail)"
+    declare -A app=(
+        [find]="$(koopa::locate_find)"  # FIXME Take out (see below)
+        [sort]="$(koopa::locate_sort)"  # FIXME Take out (see below)
+        [tail]="$(koopa::locate_tail)"
+    )
+    declare -A dict=(
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [make_prefix]="$(koopa::make_prefix)"
+        [name]="${1:?}"
+        [version]="${2:-}"
+    )
     # Automatically detect version, if left unset.
-    app_prefix="$(koopa::app_prefix)/${name}"
-    koopa::assert_is_dir "$app_prefix"
-    if [[ -n "$version" ]]
+    dict[app_prefix]="$(koopa::app_prefix)/${dict[name]}"
+    koopa::assert_is_dir "${dict[app_prefix]}"
+    if [[ -n "${dict[version]}" ]]
     then
-        app_prefix="${app_prefix}/${version}"
+        dict[app_prefix]="${dict[app_prefix]}/${dict[version]}"
     else
-        # FIXME Use '--sort' flag in find call here instead.
-        # FIXME Always sort using print0?
-        app_prefix="$( \
+        dict[app_prefix]="$( \
             koopa::find \
-                --prefix="$app_prefix" \
                 --max-depth=1 \
+                --prefix="${dict[app_prefix]}" \
+                --sort \
                 --type='d' \
-            | "$sort" \
-            | "$tail" -n 1 \
+            | "${app[tail]}" -n 1 \
         )"
     fi
     # Pipe GNU find into array.
     # FIXME Need to rework this using koopa::find.
     readarray -t links <<< "$( \
-        "$find" -L "$make_prefix" \
-            -type f \
-            -path "${app_prefix}/*" \
-            ! -path "$koopa_prefix" \
+        "${app[find]}" -L "${dict[make_prefix]}" \
+            -type 'f' \
+            -path "${dict[app_prefix]}/*" \
+            ! -path "${dict[koopa_prefix]}" \
             -print0 \
-        | "$sort" -z \
+        | "${app[sort]}" -z \
     )"
     # Replace the cellar prefix with our build prefix.
     for file in "${links[@]}"
