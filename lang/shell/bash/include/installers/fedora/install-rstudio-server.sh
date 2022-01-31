@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME How to passthrough workbench and workbench version here?
-# FIXME Need to pass the name through here?
-
 koopa:::fedora_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server on Fedora / RHEL / CentOS.

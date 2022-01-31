@@ -101,8 +101,10 @@ koopa::debian_install_rstudio_server() { # {{{1
 }
 
 # FIXME Need to ensure we pass the correct version through here.
+# FIXME Need to pass the correct installer here.
 koopa::debian_install_rstudio_workbench() { # {{{1
     koopa::install_app \
+        --installer='rstudio-server' \
         --name-fancy='RStudio Workbench' \
         --name='rstudio-workbench' \
         --platform='debian' \
@@ -198,12 +200,14 @@ koopa::debian_uninstall_rstudio_server() { # {{{1
         "$@"
 }
 
+# FIXME Confirm that this works.
 koopa::debian_uninstall_rstudio_workbench() { # {{{1
     koopa::uninstall_app \
         --name-fancy='RStudio Workbench' \
         --name='rstudio-workbench' \
         --platform='debian' \
         --system \
+        --uninstaller='rstudio-server' \
         "$@"
 }
 
