@@ -3,7 +3,7 @@
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2022-01-28.
+    # @note Updated 2022-01-31.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
     local link_include_arr opt_arr pos
@@ -14,6 +14,7 @@ koopa::install_app() { # {{{1
         # of the automatically generated prefix.
         [auto_prefix]=1
         [installer]=''
+        [installers_prefix]="$(koopa::installers_prefix)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
         [link_app]=1
         [make_prefix]="$(koopa::make_prefix)"
@@ -198,12 +199,11 @@ koopa::install_app() { # {{{1
     then
         dict[link_app]=0
     fi
-    # FIXME Rethink naming and standardize better with 'update-app.sh'.
     [[ -z "${dict[installer]}" ]] && dict[installer]="${dict[name]}"
     dict[installer]="$(koopa::snake_case_simple "install_${dict[installer]}")"
     dict[installer_file]="$(koopa::kebab_case_simple "${dict[installer]}")"
-    dict[installer_file]="${dict[koopa_prefix]}/lang/shell/bash/include/\
-installers/${dict[platform]}/${dict[installer_file]}.sh"
+    dict[installer_file]="${dict[installers_prefix]}/\
+${dict[platform]}/${dict[installer_file]}.sh"
     koopa::assert_is_file "${dict[installer_file]}"
     # shellcheck source=/dev/null
     source "${dict[installer_file]}"
