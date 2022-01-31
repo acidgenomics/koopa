@@ -3,7 +3,7 @@
 koopa:::install_gnupg() { # {{{1
     # """
     # Install GnuPG.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-01-27.
     #
     # @seealso
     # - https://gnupg.org/download/index.html
@@ -20,6 +20,15 @@ koopa:::install_gnupg() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     case "${dict[version]}" in
+        '2.3.4')
+            # 2021-12-20.
+            dict[libgpg_error_version]='1.44'     # 2022-01-27
+            dict[libgcrypt_version]='1.9.4'       # 2021-08-22
+            dict[libksba_version]='1.6.0'         # 2021-06-10
+            dict[libassuan_version]='2.5.5'       # 2021-03-22
+            dict[npth_version]='1.6'              # 2018-07-16
+            dict[pinentry_version]='1.2.0'        # 2021-08-25
+            ;;
         '2.3.3')
             # 2021-10-12.
             dict[libgpg_error_version]='1.43'     # 2021-11-03
