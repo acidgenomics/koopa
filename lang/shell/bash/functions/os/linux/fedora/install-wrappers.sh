@@ -45,11 +45,14 @@ koopa::fedora_install_rstudio_server() { # {{{1
         "$@"
 }
 
-# FIXME Rework this, with same consistency as Debian.
-# FIXME Need to rework the version and name passthrough here.
 koopa::fedora_install_rstudio_workbench() { # {{{1
-    koopa::fedora_install_rstudio_server --workbench "$@"
-    return 0
+    koopa::install_app \
+        --installer='rstudio-server' \
+        --name-fancy='RStudio Workbench' \
+        --name='rstudio-workbench' \
+        --platform='fedora' \
+        --system \
+        "$@"
 }
 
 koopa::fedora_uninstall_azure_cli() { # {{{1
@@ -88,19 +91,12 @@ koopa::fedora_uninstall_rstudio_server() { # {{{1
         "$@"
 }
 
-# FIXME Rework this, same as Debian.
 koopa::fedora_uninstall_rstudio_workbench() { # {{{1
-    koopa::fedora_uninstall_rstudio_server "$@"
-}
-
-# FIXME This technically isn't a wrapper, so rethink...
-koopa::fedora_update_system() { # {{{1
-    # """
-    # Update Fedora.
-    # @note Updated 2021-11-18.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::fedora_dnf update
-    koopa::update_system
-    return 0
+    koopa::uninstall_app \
+        --name-fancy='RStudio Workbench' \
+        --name='rstudio-workbench' \
+        --platform='fedora' \
+        --system \
+        --uninstaller='rstudio-server' \
+        "$@"
 }
