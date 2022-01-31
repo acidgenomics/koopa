@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to wrap this.
-# FIXME Need to prefix this with Raspbian.
-# FIXME Needs a corresponding updater.
-# FIXME Needs a corresponding uninstaller.
-# FIXME This also works on Ubuntu, so consider moving.
-
 koopa:::linux_install_pihole() { # {{{1
     # """
     # Install Pi-hole.
