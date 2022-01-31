@@ -3,7 +3,7 @@
 koopa:::install_luarocks() { # {{{1
     # """
     # Install Luarocks.
-    # @note Updated 2021-12-09.
+    # @note Updated 2022-01-31.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -30,5 +30,9 @@ koopa:::install_luarocks() { # {{{1
         --versioned-rocks-dir
     "${app[make]}" build
     "${app[make]}" install
+    app[luarocks]="${dict[prefix]}/bin/luarocks"
+    koopa::assert_is_installed "${app[luarocks]}"
+    "${app[luarocks]}" install 'luaposix'
+    "${app[luarocks]}" install 'luafilesystem'
     return 0
 }

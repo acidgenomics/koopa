@@ -1,20 +1,26 @@
 #!/usr/bin/env bash
 
+# FIXME Can we get this to work without activating the lua and luarocks
+# prefixes? What if we resolve to full path? How do we get the lua config
+# to include the full path?
+# FIXME Install these modules when we install luarocks...
+
 koopa:::linux_install_lmod() { # {{{1
     # """
     # Install Lmod.
-    # @note Updated 2022-01-28.
+    # @note Updated 2022-01-30.
     #
     # @seealso
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
     # """
     local app dict
-    koopa::activate_opt_prefix 'lua' 'luarocks'
     declare -A app=(
         [lua]="$(koopa::locate_lua)"
         [luarocks]="$(koopa::locate_luarocks)"
         [make]="$(koopa::locate_make)"
     )
+    app[lua]="$(koopa::realpath "${app[lua]}")"
+    app[luarocks]="$(koopa::realpath "${app[luarocks]}")"
     declare -A dict=(
         [make_prefix]="$(koopa::make_prefix)"
         [name2]='Lmod'
@@ -26,13 +32,11 @@ koopa:::linux_install_lmod() { # {{{1
     dict[data_dir]="${dict[prefix]}/moduleData"
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/TACC/${dict[name2]}/archive/${dict[file]}"
-    "${app[luarocks]}" install 'luaposix'
-    "${app[luarocks]}" install 'luafilesystem'
-    koopa::link_app 'luarocks'
+    # > koopa::activate_opt_prefix 'lua' 'luarocks'
+    koopa::activate_prefix "${dict[make_prefix]}"
     koopa::download "${dict[url]}" "${dict[file]}"
     koopa::extract "${dict[file]}"
     koopa::cd "${dict[name2]}-${dict[version]}"
-    koopa::activate_prefix "${dict[make_prefix]}"
     export LUAROCKS_PREFIX="${dict[make_prefix]}"
     koopa::dl \
         'LUAROCKS_PREFIX' "${LUAROCKS_PREFIX:?}" \

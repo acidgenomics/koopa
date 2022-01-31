@@ -6,6 +6,7 @@ koopa:::fedora_uninstall_wine() { # {{{1
     # @note Updated 2022-01-27.
     # """
     koopa::assert_has_no_args "$#"
+    koopa::assert_is_admin
     koopa::fedora_dnf_remove \
         'winehq-stable' \
         'xorg-x11-apps' \

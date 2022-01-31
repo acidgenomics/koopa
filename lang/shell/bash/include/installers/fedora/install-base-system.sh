@@ -10,6 +10,7 @@ koopa:::fedora_install_base_system() { # {{{1
     # Refer to Debian install base script for more details on supported args.
     # """
     local dict pkgs
+    koopa::assert_is_admin
     declare -A dict=(
         [base]=1
         [dev]=1
