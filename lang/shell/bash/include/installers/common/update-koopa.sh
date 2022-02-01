@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME sys_set_permissions needs to ensure g+w recursively.
+# FIXME This doesn't seem to be happening correctly at the moment.
+# FIXME Need to ensure that installer also sets permissions correctly
+# to 'root:sudo' with g+w for all files.
+
 koopa:::update_koopa() { # {{{1
     # """
     # Update koopa installation.
