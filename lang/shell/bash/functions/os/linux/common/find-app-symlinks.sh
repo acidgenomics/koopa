@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This doesn't seem to be working currently.
+
 koopa::linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
@@ -34,6 +36,9 @@ koopa::linux_find_app_symlinks() { # {{{1
             | "${app[tail]}" -n 1 \
         )"
     fi
+
+    koopa::stop "FIXME version: ${dict[version]}"
+
     # Pipe GNU find into array.
     # FIXME Need to rework this using koopa::find.
     readarray -t links <<< "$( \
