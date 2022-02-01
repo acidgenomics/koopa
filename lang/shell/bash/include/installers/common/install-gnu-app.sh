@@ -3,12 +3,11 @@
 koopa:::install_gnu_app() { # {{{1
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2021-11-13.
+    # @note Updated 2022-02-01.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
     local app conf_args dict
-    koopa::assert_has_no_args "$#"
     declare -A app=(
         [make]="$(koopa::locate_make)"
     )

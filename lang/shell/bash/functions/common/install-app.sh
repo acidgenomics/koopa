@@ -3,7 +3,7 @@
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-01.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
     local link_include_arr opt_arr pos
