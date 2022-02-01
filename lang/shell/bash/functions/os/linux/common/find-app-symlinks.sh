@@ -27,6 +27,7 @@ koopa::linux_find_app_symlinks() { # {{{1
     then
         dict[app_prefix]="${dict[app_prefix]}/${dict[version]}"
     else
+        # FIXME Automatic version detection doesn't seem to be working...
         dict[app_prefix]="$( \
             koopa::find \
                 --max-depth=1 \
@@ -37,7 +38,8 @@ koopa::linux_find_app_symlinks() { # {{{1
         )"
     fi
 
-    koopa::stop "FIXME version: ${dict[version]}"
+    koopa::print "FIXME version: ${dict[version]}"
+    return 0
 
     # Pipe GNU find into array.
     # FIXME Need to rework this using koopa::find.
