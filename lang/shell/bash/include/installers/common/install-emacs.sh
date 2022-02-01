@@ -3,7 +3,7 @@
 koopa:::install_emacs() { # {{{1
     # """
     # Install Emacs.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-02-01.
     #
     # Consider defining '--enable-locallisppath' and '--infodir' args.
     #
@@ -52,9 +52,6 @@ koopa:::install_emacs() { # {{{1
             '--without-x'
         )
     fi
-    koopa::dl \
-        'install args' "${install_args[*]}" \
-        'conf args' "${conf_args[*]}"
     koopa::install_gnu_app \
         "${install_args[@]}" \
         "${conf_args[@]}" \
