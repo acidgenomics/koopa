@@ -1,27 +1,30 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using app/dict approach.
 koopa:::is_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-02-01.
     #
     # @seealso
     # - https://help.github.com/en/github/authenticating-to-github/
     #       testing-your-ssh-connection
     # """
-    local pattern ssh url x
+    local app dict
     koopa::assert_has_args_eq "$#" 2
-    ssh="$(koopa::locate_ssh)"
-    url="${1:?}"
-    pattern="${2:?}"
-    x="$( \
-        "$ssh" -T \
+    declare -A app=(
+        [ssh]="$(koopa::locate_ssh)"
+    )
+    declare -A dict=(
+        [url]="${1:?}"
+        [pattern]="${2:?}"
+    )
+    dict[str]="$( \
+        "${app[ssh]}" -T \
             -o StrictHostKeyChecking='no' \
-            "$url" 2>&1 \
+            "${dict[url]}" 2>&1 \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::str_detect_fixed "$x" "$pattern"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::str_detect_fixed "${dict[str]}" "${dict[pattern]}"
 }
 
 koopa::contains() { # {{{1
@@ -160,19 +163,22 @@ koopa::is_admin() { # {{{1
     return 1
 }
 
-# FIXME Rework using app/dict approach.
 koopa::is_anaconda() { # {{{1
     # """
     # Is Anaconda (rather than Miniconda) installed?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-01.
     # """
-    local conda prefix
+    local app dict
     koopa::assert_has_args_le "$#" 1
-    conda="${1:-}"
-    [[ -z "$conda" ]] && conda="$(koopa::locate_conda)"
-    [[ -x "$conda" ]] || return 1
-    prefix="$(koopa::parent_dir --num=2 "$conda")"
-    [[ -x "${prefix}/bin/anaconda" ]] || return 1
+    declare -A app=(
+        [conda]="${1:-}"
+    )
+    [[ -z "${app[conda]}" ]] && app[conda]="$(koopa::locate_conda)"
+    [[ -x "${app[conda]}" ]] || return 1
+    declare -A dict=(
+        [prefix]="$(koopa::parent_dir --num=2 "${app[conda]}")"
+    )
+    [[ -x "${dict[prefix]}/bin/anaconda" ]] || return 1
     return 0
 }
 
@@ -201,21 +207,6 @@ koopa::is_array_non_empty() { # {{{1
     [[ "${#arr[@]}" -gt 0 ]] || return 1
     [[ -n "${arr[0]}" ]] || return 1
     return 0
-}
-
-koopa::is_bash_ok() { # {{{1
-    # """
-    # Is the current version of Bash OK (or super old)?
-    # @note Updated 2020-07-05.
-    #
-    # Older versions (< 4; e.g. shipping version on macOS) have issues with
-    # 'read' that we have to handle with special care here.
-    # """
-    local major_version version
-    koopa::is_installed 'bash' || return 1
-    version="$(koopa::get_version 'bash')"
-    major_version="$(koopa::major_version "$version")"
-    [[ "$major_version" -ge 4 ]]
 }
 
 koopa::is_current_version() { # {{{1
