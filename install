@@ -300,6 +300,7 @@ install_koopa() { # {{{1
             koopa::rm --sudo "${dict[koopa_prefix]}"
             koopa::cp --sudo "${dict[prefix]}" "${dict[koopa_prefix]}"
         fi
+        # FIXME This doesn't appear to be working correctly in current develop code.
         koopa::sys_set_permissions --recursive "${dict[koopa_prefix]}"
         koopa::add_make_prefix_link "${dict[koopa_prefix]}"
     else
