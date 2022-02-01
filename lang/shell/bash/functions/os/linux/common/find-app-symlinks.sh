@@ -41,7 +41,6 @@ koopa::linux_find_app_symlinks() { # {{{1
         "${app[find]}" -L "${dict[make_prefix]}" \
             -type 'f' \
             -path "${dict[app_prefix]}/*" \
-            ! -path "${dict[koopa_prefix]}" \
             -print0 \
         | "${app[sort]}" -z \
     )"
