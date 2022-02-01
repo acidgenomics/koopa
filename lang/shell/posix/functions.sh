@@ -837,9 +837,12 @@ _koopa_activate_mcfly() { #{{{1
     export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK'  # or 'LAST_RUN'
-    if _koopa_is_light_mode
+    if _koopa_is_macos
     then
-        export MCFLY_LIGHT=true
+        if _koopa_macos_is_light_mode
+        then
+            export MCFLY_LIGHT=true
+        fi
     fi
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
