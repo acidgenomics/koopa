@@ -39,18 +39,19 @@ koopa::linux_find_app_symlinks() { # {{{1
     fi
     koopa::assert_is_dir "${dict[app_prefix]}"
     # Pipe GNU find into array.
+    # FIXME Seeing command substition, null byte here, argh...
     readarray -t -d '' symlinks <<< "$( \
         "${app[find]}" -L "${dict[make_prefix]}" \
             -xtype 'l' \
             -print0 \
         | "${app[xargs]}" --no-run-if-empty --null \
             "${app[realpath]}" --zero \
-        | "${app[sort]}" --zero-terminated \
     )"
         #| "${app[grep]}" \
         #    --extended-regexp \
         #    --null \
         #    "^${dict[app_prefix]}/" \
+        # | "${app[sort]}" --zero-terminated \
     if koopa::is_array_empty "${symlinks[@]}"
     then
         koopa::stop "Failed to find symlinks for '${dict[name]}'."
