@@ -42,6 +42,7 @@ koopa::sudo_append_string() { # {{{1
     if [[ ! -f "${dict[file]}" ]]
     then
         koopa::mkdir --sudo "$(koopa::dirname "${dict[file]}")"
+        # FIXME The '--sudo' flag here doesn't seem to be working correctly.
         koopa::touch --sudo "${dict[file]}"
     fi
     koopa::print "$string" \

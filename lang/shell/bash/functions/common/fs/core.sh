@@ -768,6 +768,7 @@ koopa::touch() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
+    koopa::stop "FIXME sudo: ${dict[sudo]}"
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa::locate_sudo)"
