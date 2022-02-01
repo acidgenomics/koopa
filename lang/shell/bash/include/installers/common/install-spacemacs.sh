@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Check that chemacs is installed first.
+
 koopa:::install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.

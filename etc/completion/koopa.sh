@@ -52,6 +52,7 @@ _koopa_complete() { # {{{1
                 ;;
             'configure')
                 args=(
+                    'chemacs'
                     'dotfiles'
                     'go'
                     'julia'
