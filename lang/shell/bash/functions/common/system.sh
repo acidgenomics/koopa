@@ -140,7 +140,7 @@ koopa::run_if_installed() { # {{{1
 koopa::switch_to_develop() {  # {{{1
     # """
     # Switch koopa install to development version.
-    # @note Updated 2021-11-03.
+    # @note Updated 2022-02-01.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -152,7 +152,8 @@ koopa::switch_to_develop() {  # {{{1
         [origin]='origin'
         [prefix]="$(koopa::koopa_prefix)"
     )
-    koopa::h1 "Switching koopa at '${dict[prefix]}' to '${dict[branch]}'."
+    koopa::alert "Switching koopa at '${dict[prefix]}' to '${dict[branch]}'."
+    koopa::sys_set_permissions --recursive "${dict[prefix]}"
     "${app[git]}" checkout \
         -B "${dict[branch]}" \
         "${dict[origin]}/${dict[branch]}"
@@ -322,10 +323,11 @@ koopa::sys_rm() { # {{{1
     return 0
 }
 
+# FIXME This isn't working correctly in 'koopa update' call.
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2021-10-05.
+    # @note Updated 2022-02-01.
     # """
     koopa::assert_has_args "$#"
     local arg chmod chown dict group pos user
@@ -397,6 +399,12 @@ koopa::sys_set_permissions() { # {{{1
         chmod+=('u+rw,g+r,g-w')
     fi
     chown+=("${user}:${group}")
+
+    koopa::dl \
+        'chown' "${chown[*]}" \
+        'chmod' "${chmod[*]}"
+    koopa::stop 'FIXME AAAAH'
+
     for arg in "$@"
     do
         if [[ "${dict[dereference]}" -eq 1 ]] && [[ -L "$arg" ]]
