@@ -8,7 +8,7 @@
 koopa:::update_koopa() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-02-02.
     #
     # Update of pinned stable releases is intentionally not supported.
     #
@@ -25,8 +25,10 @@ koopa:::update_koopa() { # {{{1
         koopa::alert_note "Pinned release detected at '${dict[prefix]}'."
         return 1
     fi
+    echo 'FIXME AAA'
     koopa::sys_set_permissions --recursive "${dict[prefix]}"
     koopa::git_pull "${dict[prefix]}"
+    echo 'FIXME BBB'
     koopa::sys_set_permissions --recursive "${dict[prefix]}"
     koopa::fix_zsh_permissions
     return 0
