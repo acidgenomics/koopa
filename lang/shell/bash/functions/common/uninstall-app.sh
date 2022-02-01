@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This doesn't seem to be unlinking apps correctly on Linux.
-
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-01.
     # """
     local app dict pos
     declare -A app
@@ -13,7 +11,7 @@ koopa::uninstall_app() { # {{{1
         [app_prefix]="$(koopa::app_prefix)"
         [installers_prefix]="$(koopa::installers_prefix)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
-        [link_app]=''
+        [link_app]=1
         [make_prefix]="$(koopa::make_prefix)"
         [name_fancy]=''
         [opt_prefix]="$(koopa::opt_prefix)"
@@ -180,7 +178,7 @@ ${dict[platform]}/${dict[uninstaller_file]}.sh"
         fi
         if [[ "${dict[link_app]}" -eq 1 ]]
         then
-            koopa::alert "Deleting broken symlinks in '${dict[make_prefix]}'."
+            koopa::alert "Deleting symlinks in '${dict[make_prefix]}'."
             koopa::delete_broken_symlinks "${dict[make_prefix]}"
         fi
         koopa::alert_uninstall_success "${dict[name_fancy]}" "${dict[prefix]}"
