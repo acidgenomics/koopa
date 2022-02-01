@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-## FIXME The '--reinstall' flag doesn't seem to work correctly for this.
+## FIXME The '--reinstall' flag doesn't seem to work correctly here.
 
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-01-26.
+    # @note Updated 2022-02-01.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -42,6 +42,7 @@ koopa:::install_rust_packages() { # {{{1
         'exa'
         'fd-find'
         'hyperfine'
+        'mcfly'
         'procs'
         'ripgrep'
         'starship'
@@ -63,17 +64,34 @@ koopa:::install_rust_packages() { # {{{1
         local args version
         args=("${pkg_args[@]}")
         version="$(koopa::variable "rust-${pkg}")"
-        args+=('--version' "${version}")
-        # Edge case handling for package name variants on crates.io.
+        # Edge case handling of name variants on crates.io.
         case "$pkg" in
-            'ripgrep')
-                args+=('--features' 'pcre2')
-                ;;
             'ripgrep-all')
                 pkg='ripgrep_all'
                 ;;
         esac
-        "${app[cargo]}" install "$pkg" "${args[@]}"
+        case "$pkg" in
+            'mcfly')
+                # Currently only available on GitHub.
+                args+=(
+                    --git 'https://github.com/cantino/mcfly.git'
+                    --tag "v${version]}"
+                )
+                ;;
+            *)
+                # Packages available on crates.io.
+                args+=(
+                    "$pkg"
+                    '--version' "${version}"
+                )
+                case "$pkg" in
+                    'ripgrep')
+                        args+=('--features' 'pcre2')
+                        ;;
+                esac
+                ;;
+        esac
+        "${app[cargo]}" install "${args[@]}"
     done
     return 0
 }
