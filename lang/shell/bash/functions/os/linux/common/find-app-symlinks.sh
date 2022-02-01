@@ -38,7 +38,7 @@ koopa::linux_find_app_symlinks() { # {{{1
     fi
     koopa::assert_is_dir "${dict[app_prefix]}"
     # Pipe GNU find into array.
-    readarray -t symlinks <<< "$( \
+    readarray -t -d '' symlinks <<< "$( \
         "${app[find]}" -L "${dict[make_prefix]}" \
             -xtype 'l' \
             -path "${dict[app_prefix]}/*" \
@@ -46,6 +46,7 @@ koopa::linux_find_app_symlinks() { # {{{1
         | "${app[xargs]}" -r0 "${app[realpath]}" -z \
         | "${app[sort]}" -z \
     )"
+    koopa::print "${symlinks[*]}"
     if koopa::is_array_empty "${symlinks[@]}"
     then
         koopa::stop "Failed to find symlinks for '${dict[name]}'."
