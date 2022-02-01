@@ -49,8 +49,8 @@ koopa::linux_find_app_symlinks() { # {{{1
             --extended-regexp \
             --null \
             "^${dict[app_prefix]}/" \
-        | "${app[sort]}" --zero-terminated \
     )"
+        # | "${app[sort]}" --zero-terminated \
     if koopa::is_array_empty "${symlinks[@]}"
     then
         koopa::stop "Failed to find symlinks for '${dict[name]}'."
