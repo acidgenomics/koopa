@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to configure this for the current user.
+
 koopa:::install_chemacs() { # {{{1
     # """
     # Install Chemacs2.
