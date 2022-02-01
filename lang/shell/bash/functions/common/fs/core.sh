@@ -736,7 +736,7 @@ koopa::rm() { # {{{1
 koopa::touch() { # {{{1
     # """
     # Touch (create) a file on disk.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-01.
     # """
     local app pos touch
     koopa::assert_has_args "$#"
@@ -768,7 +768,6 @@ koopa::touch() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    koopa::stop "FIXME sudo: ${dict[sudo]}"
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa::locate_sudo)"
@@ -783,7 +782,7 @@ koopa::touch() { # {{{1
             koopa::assert_is_not_dir "$file"
             koopa::assert_is_not_symlink "$file"
         fi
-        "${app[touch]}" "$file"
+        "${touch[@]}" "$file"
     done
     return 0
 }
