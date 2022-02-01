@@ -404,8 +404,8 @@ koopa::sys_set_permissions() { # {{{1
         then
             arg="$(koopa::realpath "$arg")"
         fi
-        "${chown[@]}" "$arg"
         "${chmod[@]}" "$arg"
+        "${chown[@]}" "$arg"
     done
     return 0
 }
