@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+## FIXME The '--reinstall' flag doesn't seem to work correctly for this.
+
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
