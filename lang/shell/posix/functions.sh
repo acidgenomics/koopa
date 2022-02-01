@@ -2501,6 +2501,16 @@ _koopa_export_history() { # {{{1
     return 0
 }
 
+_koopa_export_koopa_shell() { # {{{1
+    # """
+    # Export 'KOOPA_SHELL' variable.
+    # @note Updated 2022-02-01.
+    # """
+    KOOPA_SHELL="$(_koopa_locate_shell)"
+    export KOOPA_SHELL
+    return 0
+}
+
 _koopa_export_pager() { # {{{1
     # """
     # Export 'PAGER' variable.
