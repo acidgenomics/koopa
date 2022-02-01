@@ -75,7 +75,7 @@ koopa:::install_rust_packages() { # {{{1
                 # Currently only available on GitHub.
                 args+=(
                     --git 'https://github.com/cantino/mcfly.git'
-                    --tag "v${version]}"
+                    --tag "v${version}"
                 )
                 ;;
             *)
