@@ -404,9 +404,7 @@ koopa::sys_set_permissions() { # {{{1
         then
             arg="$(koopa::realpath "$arg")"
         fi
-        echo 'FIXME YOOOOO'
         "${chmod[@]}" "$arg"
-        echo 'FIXME HOOOOO'
         "${chown[@]}" "$arg"
     done
     return 0
