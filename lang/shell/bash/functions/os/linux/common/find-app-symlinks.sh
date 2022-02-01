@@ -9,6 +9,7 @@ koopa::linux_find_app_symlinks() { # {{{1
     koopa::assert_has_args_le "$#" 2
     declare -A app=(
         [find]="$(koopa::locate_find)"
+        [grep]="$(koopa::locate_grep)"
         [realpath]="$(koopa::locate_realpath)"
         [sort]="$(koopa::locate_sort)"
         [tail]="$(koopa::locate_tail)"
@@ -41,12 +42,15 @@ koopa::linux_find_app_symlinks() { # {{{1
     readarray -t -d '' symlinks <<< "$( \
         "${app[find]}" -L "${dict[make_prefix]}" \
             -xtype 'l' \
-            -path "${dict[app_prefix]}/*" \
             -print0 \
-        | "${app[xargs]}" -r0 "${app[realpath]}" -z \
-        | "${app[sort]}" -z \
+        | "${app[xargs]}" --no-run-if-empty --null \
+            "${app[realpath]}" --null \
+        | "${app[grep]}" \
+            --extended-regexp \
+            --null \
+            "^${dict[app_prefix]}/" \
+        | "${app[sort]}" --zero-terminated \
     )"
-    koopa::print "${symlinks[*]}"
     if koopa::is_array_empty "${symlinks[@]}"
     then
         koopa::stop "Failed to find symlinks for '${dict[name]}'."
