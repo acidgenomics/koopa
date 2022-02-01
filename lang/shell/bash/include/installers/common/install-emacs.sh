@@ -39,7 +39,7 @@ koopa:::install_emacs() { # {{{1
             install_args+=("--homebrew-opt=${pkg}")
         done
         conf_args+=(
-            "CC=gcc-${dict[gcc_maj_ver]}"
+            # > "CC=gcc-${dict[gcc_maj_ver]}"
             '--disable-silent-rules'
             '--with-gnutls'
             '--with-modules'
@@ -51,6 +51,8 @@ koopa:::install_emacs() { # {{{1
             '--without-x'
         )
     fi
+    # FIXME Need to rework our argument passthrough approach here...
+    export "CC=gcc-${dict[gcc_maj_ver]}"
     koopa::install_gnu_app \
         "${install_args[@]}" \
         "${conf_args[@]}" \
