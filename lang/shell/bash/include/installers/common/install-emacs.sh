@@ -52,6 +52,9 @@ koopa:::install_emacs() { # {{{1
             '--without-x'
         )
     fi
+    koopa::dl \
+        'install args' "${install_args[*]}" \
+        'conf args' "${conf_args[*]}"
     koopa::install_gnu_app \
         "${install_args[@]}" \
         "${conf_args[@]}" \
