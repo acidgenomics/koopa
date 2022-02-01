@@ -44,7 +44,7 @@ koopa::linux_find_app_symlinks() { # {{{1
             -xtype 'l' \
             -print0 \
         | "${app[xargs]}" --no-run-if-empty --null \
-            "${app[realpath]}" --null \
+            "${app[realpath]}" --zero \
         | "${app[grep]}" \
             --extended-regexp \
             --null \
