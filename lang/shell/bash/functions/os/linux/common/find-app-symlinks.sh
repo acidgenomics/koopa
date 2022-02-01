@@ -44,12 +44,13 @@ koopa::linux_find_app_symlinks() { # {{{1
             -print0 \
         | "${app[xargs]}" --no-run-if-empty --null \
             "${app[realpath]}" --zero \
-        | "${app[grep]}" \
-            --extended-regexp \
-            --null \
-            "^${dict[app_prefix]}/" \
         | "${app[sort]}" --zero-terminated \
     )
+        # FIXME How to add this?
+        # | "${app[grep]}" \
+        #     --extended-regexp \
+        #     --null \
+        #     "^${dict[app_prefix]}/" \
     if koopa::is_array_empty "${symlinks[@]}"
     then
         koopa::stop "Failed to find symlinks for '${dict[name]}'."
