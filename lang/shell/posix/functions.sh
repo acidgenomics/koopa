@@ -1742,7 +1742,7 @@ _koopa_alias_doom_emacs() { # {{{1
 _koopa_alias_emacs() { # {{{1
     # """
     # Emacs alias that provides 24-bit color support.
-    # @note Updated 2021-09-15.
+    # @note Updated 2022-02-01.
     # """
     local emacs prefix
     prefix="${HOME:?}/.emacs.d"
@@ -1752,7 +1752,7 @@ _koopa_alias_emacs() { # {{{1
         return 1
     fi
     emacs="$(_koopa_locate_emacs)"
-    if [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ]
+    if [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] && _koopa_is_macos
     then
         TERM='xterm-24bit' \
             "$emacs" --no-window-system "$@"
