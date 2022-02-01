@@ -803,15 +803,17 @@ _koopa_activate_make_paths() { # {{{1
     return 0
 }
 
+
 _koopa_activate_mcfly() { #{{{1
     # """
     # Activate mcfly.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-02-01.
     #
-    # Use 'mcfly search XXX' to query directly.
+    # Use "mcfly search 'query'" to query directly.
     # """
     local nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
+    _koopa_is_root && return 0
     _koopa_is_installed 'mcfly' || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
@@ -829,10 +831,16 @@ _koopa_activate_mcfly() { #{{{1
             export MCFLY_KEY_SCHEME="${EDITOR:?}"
         ;;
     esac
-    export MCFLY_FUZZY=true
+    export MCFLY_FUZZY=2
     export MCFLY_HISTORY_LIMIT=10000
+    export MCFLY_INTERFACE_VIEW='TOP'  # or 'BOTTOM'
     export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
+    export MCFLY_RESULTS_SORT='RANK'  # or 'LAST_RUN'
+    if _koopa_is_light_mode
+    then
+        export MCFLY_LIGHT=true
+    fi
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     eval "$(mcfly init "$shell")"
