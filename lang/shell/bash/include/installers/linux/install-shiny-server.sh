@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Improve this installer by informing the user how to connect by default.
-
 koopa:::linux_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Linux.
