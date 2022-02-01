@@ -8,9 +8,11 @@ koopa::linux_find_app_symlinks() { # {{{1
     local app dict symlink symlinks
     koopa::assert_has_args_le "$#" 2
     declare -A app=(
-        [find]="$(koopa::locate_find)"  # FIXME Take out (see below)
-        [sort]="$(koopa::locate_sort)"  # FIXME Take out (see below)
+        [find]="$(koopa::locate_find)"
+        [realpath]="$(koopa::locate_realpath)"
+        [sort]="$(koopa::locate_sort)"
         [tail]="$(koopa::locate_tail)"
+        [xargs]="$(koopa::locate_xargs)"
     )
     declare -A dict=(
         [koopa_prefix]="$(koopa::koopa_prefix)"
@@ -36,27 +38,20 @@ koopa::linux_find_app_symlinks() { # {{{1
     fi
     koopa::assert_is_dir "${dict[app_prefix]}"
     # Pipe GNU find into array.
-    # FIXME Need to rework this using koopa::find.
     readarray -t symlinks <<< "$( \
         "${app[find]}" -L "${dict[make_prefix]}" \
-            -type 'f' \
+            -xtype 'l' \
             -path "${dict[app_prefix]}/*" \
             -print0 \
+        | "${app[xargs]}" -r0 "${app[realpath]}" -z \
         | "${app[sort]}" -z \
     )"
     if koopa::is_array_empty "${symlinks[@]}"
     then
         koopa::stop "Failed to find symlinks for '${dict[name]}'."
     fi
-    # Replace the cellar prefix with our build prefix.
-    koopa::dl \
-        'app_prefix' "${dict[app_prefix]}" \
-        'make_prefix' "${dict[make_prefix]}"
     for symlink in "${symlinks[@]}"
     do
-        koopa::print "$symlink"
-        # FIXME This substition approach doesn't work...
-        # FIXME Need to confirm that this new approach works.
         koopa::print "${symlink//${dict[app_prefix]}/${dict[make_prefix]}}"
     done
     return 0
