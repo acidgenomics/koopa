@@ -106,7 +106,7 @@ koopa::chmod() { # {{{1
     fi
     if [[ "${dict[recursive]}" -eq 1 ]]
     then
-        chown+=('-R')
+        chmod+=('-R')
     fi
     "${chmod[@]}" "$@"
     return 0

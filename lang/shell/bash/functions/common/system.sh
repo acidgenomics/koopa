@@ -191,9 +191,6 @@ koopa::sys_chmod() { # {{{1
     then
         chmod+=('--sudo')
     fi
-
-    koopa::dl 'FIXME args' "$*"
-
     "${chmod[@]}" "$@"
     return 0
 }
@@ -408,7 +405,6 @@ koopa::sys_set_permissions() { # {{{1
             arg="$(koopa::realpath "$arg")"
         fi
         "${chown[@]}" "$arg"
-        # FIXME This doesn't seem to be setting group permissions correctly.
         "${chmod[@]}" "$arg"
     done
     return 0
