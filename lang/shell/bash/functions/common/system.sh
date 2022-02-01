@@ -323,7 +323,6 @@ koopa::sys_rm() { # {{{1
     return 0
 }
 
-# FIXME This isn't working correctly in 'koopa update' call.
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
@@ -353,7 +352,7 @@ koopa::sys_set_permissions() { # {{{1
             '--recursive' | \
             '-R' | \
             '-r')
-                dict[recursive]=0
+                dict[recursive]=1
                 shift 1
                 ;;
             '--user' | \
@@ -399,12 +398,6 @@ koopa::sys_set_permissions() { # {{{1
         chmod+=('u+rw,g+r,g-w')
     fi
     chown+=("${user}:${group}")
-
-    koopa::dl \
-        'chown' "${chown[*]}" \
-        'chmod' "${chmod[*]}"
-    koopa::stop 'FIXME AAAAH'
-
     for arg in "$@"
     do
         if [[ "${dict[dereference]}" -eq 1 ]] && [[ -L "$arg" ]]
