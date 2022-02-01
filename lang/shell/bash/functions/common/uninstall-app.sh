@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This doesn't seem to be unlinking apps correctly on Linux.
+
 koopa::uninstall_app() { # {{{1
     # """
     # Uninstall an application.
