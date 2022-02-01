@@ -27,8 +27,10 @@ koopa::linux_find_app_symlinks() { # {{{1
     then
         dict[app_prefix]="${dict[app_prefix]}/${dict[version]}"
     else
+        koopa::print "FIXME app_prefix: ${dict[app_prefix]}"
         # FIXME Automatic version detection doesn't seem to be working...
-        dict[app_prefix]="$( \
+        # FIXME Is this not working because it is git ignored?
+        dict[version]="$( \
             koopa::find \
                 --max-depth=1 \
                 --prefix="${dict[app_prefix]}" \
@@ -39,6 +41,7 @@ koopa::linux_find_app_symlinks() { # {{{1
     fi
 
     koopa::print "FIXME version: ${dict[version]}"
+    # koopa::print "FIXME version: ${dict[version]}"
     return 0
 
     # Pipe GNU find into array.
