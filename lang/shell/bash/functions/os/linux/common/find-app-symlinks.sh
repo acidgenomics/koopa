@@ -3,14 +3,17 @@
 koopa::linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-01.
     # """
-    local app file dict links
+    local app dict symlink symlinks
     koopa::assert_has_args_le "$#" 2
     declare -A app=(
-        [find]="$(koopa::locate_find)"  # FIXME Take out (see below)
-        [sort]="$(koopa::locate_sort)"  # FIXME Take out (see below)
+        [find]="$(koopa::locate_find)"
+        [grep]="$(koopa::locate_grep)"
+        [realpath]="$(koopa::locate_realpath)"
+        [sort]="$(koopa::locate_sort)"
         [tail]="$(koopa::locate_tail)"
+        [xargs]="$(koopa::locate_xargs)"
     )
     declare -A dict=(
         [koopa_prefix]="$(koopa::koopa_prefix)"
@@ -34,21 +37,27 @@ koopa::linux_find_app_symlinks() { # {{{1
             | "${app[tail]}" -n 1 \
         )"
     fi
-    # Pipe GNU find into array.
-    # FIXME Need to rework this using koopa::find.
-    readarray -t links <<< "$( \
+    koopa::assert_is_dir "${dict[app_prefix]}"
+    readarray -t -d '' symlinks < <(
         "${app[find]}" -L "${dict[make_prefix]}" \
-            -type 'f' \
-            -path "${dict[app_prefix]}/*" \
-            ! -path "${dict[koopa_prefix]}" \
+            -xtype 'l' \
             -print0 \
-        | "${app[sort]}" -z \
-    )"
-    # Replace the cellar prefix with our build prefix.
-    for file in "${links[@]}"
+        | "${app[xargs]}" --no-run-if-empty --null \
+            "${app[realpath]}" --zero \
+        | "${app[grep]}" \
+            --extended-regexp \
+            --null \
+            --null-data \
+            "^${dict[app_prefix]}/" \
+        | "${app[sort]}" --zero-terminated \
+    )
+    if koopa::is_array_empty "${symlinks[@]}"
+    then
+        koopa::stop "Failed to find symlinks for '${dict[name]}'."
+    fi
+    for symlink in "${symlinks[@]}"
     do
-        # FIXME Need to confirm that this new approach works.
-        koopa::print "${file//${dict[app_prefix]}/${dict[make_prefix]}}"
+        koopa::print "${symlink//${dict[app_prefix]}/${dict[make_prefix]}}"
     done
     return 0
 }

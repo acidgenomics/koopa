@@ -3,7 +3,7 @@
 koopa:::debian_install_base_system() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-11-30.
+    # @note Updated 2021-12-31.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -131,6 +131,7 @@ koopa:::debian_install_base_system() { # {{{1
             'automake'
             'byacc'
             'cmake'
+            'default-jdk'
             'diffutils'
             'dirmngr'
             'expect-dev'  # installs unbuffer

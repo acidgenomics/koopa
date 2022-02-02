@@ -3,7 +3,7 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-01.
     # """
     [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -29,6 +29,8 @@ _koopa_posix_header() { # {{{1
     then
         export PATH="${KOOPA_DEFAULT_SYSTEM_PATH:?}"
     fi
+    _koopa_export_koopa_shell
+    _koopa_export_shell
     # > _koopa_umask || return 1
     _koopa_activate_xdg || return 1
     _koopa_add_koopa_config_link \

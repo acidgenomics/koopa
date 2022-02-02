@@ -3,7 +3,7 @@
 koopa:::update_koopa() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-02-01.
     #
     # Update of pinned stable releases is intentionally not supported.
     #

@@ -88,6 +88,11 @@ koopa::list_app_versions() { # {{{1
     return 0
 }
 
+# FIXME Now seeing this error:
+# !! Error: Invalid type argument for Rust fd.
+# basename: missing operand
+# Try '/usr/local/opt/coreutils/libexec/gnubin/basename --help' for more information.
+
 koopa::list_dotfiles() { # {{{1
     # """
     # List dotfiles.

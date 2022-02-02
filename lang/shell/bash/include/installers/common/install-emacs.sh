@@ -3,7 +3,7 @@
 koopa:::install_emacs() { # {{{1
     # """
     # Install Emacs.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-02-01.
     #
     # Consider defining '--enable-locallisppath' and '--infodir' args.
     #
@@ -38,8 +38,9 @@ koopa:::install_emacs() { # {{{1
         do
             install_args+=("--homebrew-opt=${pkg}")
         done
+        export "CC=gcc-${dict[gcc_maj_ver]}"
         conf_args+=(
-            "CC=gcc-${dict[gcc_maj_ver]}"
+            # > "CC=gcc-${dict[gcc_maj_ver]}"
             '--disable-silent-rules'
             '--with-gnutls'
             '--with-modules'
