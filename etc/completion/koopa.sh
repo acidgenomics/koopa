@@ -50,7 +50,7 @@ _koopa_complete() { # {{{1
                         'conda'
                         'list'
                     )
-                    if koopa::is_linux
+                    if _koopa_is_linux
                     then
                         args+=(
                             'clean'
