@@ -28,7 +28,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
-anaconda="2021.05"
+anaconda="2021.11"
 
 # http://arma.sourceforge.net/download.html
 armadillo="10.8.2"
