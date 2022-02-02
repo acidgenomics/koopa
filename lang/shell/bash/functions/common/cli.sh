@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Consider creating 'koopa conda create-env' and 'koopa conda remove-env'?
+# FIXME Alternatively, 'koopa app conda create-env'...
+# FIXME Need to migrate these out of 'koopa system'...
 
 koopa::cli_app() { # {{{1
     # """
@@ -16,6 +18,10 @@ koopa::cli_app() { # {{{1
     case "$key" in
         'clean')
             key='delete-broken-app-symlinks'
+            ;;
+        'conda')
+            shift 1
+            key="conda-${1:?}"
             ;;
         'list')
             key='list-app-versions'
@@ -91,12 +97,7 @@ koopa::cli_install() { # {{{1
     # """
     local app app_args apps denylist pos
     app_args=()
-    denylist=(
-        'app'
-        'gnu-app'
-        'start'
-        'success'
-    )
+    denylist=('app' 'gnu-app')
     pos=()
     while (("$#"))
     do
@@ -156,28 +157,26 @@ koopa::cli_list() { # {{{1
     return 0
 }
 
-# FIXME Need to add support for 'test' key here.
-# FIXME Rework 'f' as 'key' here.
 koopa::cli_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-02-02.
     # """
-    local f
-    f="${1:-}"
-    if [[ -z "$f" ]]
+    local key
+    key="${1:-}"
+    if [[ -z "$key" ]]
     then
         koopa::stop "Missing argument: 'koopa system <ARG>...'."
     fi
-    case "$f" in
+    case "$key" in
         'check')
-            f='check-system'
+            key='check-system'
             ;;
         'info')
-            f='system-info'
+            key='system-info'
             ;;
         'log')
-            f='view-latest-tmp-log-file'
+            key='view-latest-tmp-log-file'
             ;;
         'path')
             koopa::print "${PATH:-}"
@@ -186,34 +185,32 @@ koopa::cli_system() { # {{{1
         'prefix')
             case "${2:-}" in
                 '')
-                    f='prefix'
+                    key='prefix'
                     ;;
                 'koopa')
-                    f='prefix'
+                    key='prefix'
                     shift 1
                     ;;
                 *)
-                    f="${2}-prefix"
+                    key="${2}-prefix"
                     shift 1
                     ;;
             esac
             ;;
         'homebrew-cask-version')
-            f='get-homebrew-cask-version'
+            key='get-homebrew-cask-version'
             ;;
         'macos-app-version')
-            f='get-macos-app-version'
+            key='get-macos-app-version'
             ;;
         'version')
-            f='get-version'
+            key='get-version'
             ;;
         'which')
-            f='which-realpath'
+            key='which-realpath'
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
-        'conda-create-env' | \
-        'conda-remove-env' | \
         'delete-cache' | \
         'disable-passwordless-sudo' | \
         'disable-touch-id-sudo' | \
@@ -227,15 +224,24 @@ koopa::cli_system() { # {{{1
         'roff' | \
         'set-permissions' | \
         'switch-to-develop' | \
+        'test' | \
         'variable' | \
         'variables')
             ;;
+        # Defunct --------------------------------------------------------------
+        'conda-create-env')
+            koopa::defunct 'koopa app conda create-env'
+            ;;
+        'conda-remove-env')
+            koopa::defunct 'koopa app conda remove-env'
+            ;;
+        # Invalid --------------------------------------------------------------
         *)
             koopa::invalid_arg "$*"
             ;;
     esac
     shift 1
-    koopa::cli_run_function "$f" "$@"
+    koopa::cli_run_function "$key" "$@"
     return 0
 }
 
@@ -246,10 +252,7 @@ koopa::cli_uninstall() { # {{{1
     # """
     local app app_args apps denylist pos
     app_args=()
-    denylist=(
-        'app'
-        'gnu-app'
-    )
+    denylist=('app')
     pos=()
     while (("$#"))
     do
@@ -297,10 +300,7 @@ koopa:::koopa_update() { # {{{1
     # """
     local app app_args apps denylist pos
     app_args=()
-    denylist=(
-        'app'
-        'gnu-app'
-    )
+    denylist=('app')
     pos=()
     while (("$#"))
     do
@@ -375,7 +375,6 @@ koopa::cli_run_function() { # {{{1
     return 0
 }
 
-# FIXME Rework using dict approach.
 koopa::cli_which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
@@ -421,7 +420,6 @@ koopa::cli_which_function() { # {{{1
     return 0
 }
 
-# FIXME Rework using dict approach.
 koopa::koopa() { # {{{1
     # """
     # Main koopa CLI function, corresponding to 'koopa' binary.
