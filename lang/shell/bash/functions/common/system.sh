@@ -140,7 +140,7 @@ koopa::run_if_installed() { # {{{1
 koopa::switch_to_develop() {  # {{{1
     # """
     # Switch koopa install to development version.
-    # @note Updated 2021-11-03.
+    # @note Updated 2022-02-01.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -152,7 +152,8 @@ koopa::switch_to_develop() {  # {{{1
         [origin]='origin'
         [prefix]="$(koopa::koopa_prefix)"
     )
-    koopa::h1 "Switching koopa at '${dict[prefix]}' to '${dict[branch]}'."
+    koopa::alert "Switching koopa at '${dict[prefix]}' to '${dict[branch]}'."
+    koopa::sys_set_permissions --recursive "${dict[prefix]}"
     "${app[git]}" checkout \
         -B "${dict[branch]}" \
         "${dict[origin]}/${dict[branch]}"
@@ -325,7 +326,7 @@ koopa::sys_rm() { # {{{1
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2021-10-05.
+    # @note Updated 2022-02-01.
     # """
     koopa::assert_has_args "$#"
     local arg chmod chown dict group pos user
@@ -351,7 +352,7 @@ koopa::sys_set_permissions() { # {{{1
             '--recursive' | \
             '-R' | \
             '-r')
-                dict[recursive]=0
+                dict[recursive]=1
                 shift 1
                 ;;
             '--user' | \
@@ -423,6 +424,96 @@ koopa::sys_user() { # {{{1
         user="$(koopa::user)"
     fi
     koopa::print "$user"
+    return 0
+}
+
+koopa::system_info() { # {{{
+    # """
+    # System information.
+    # @note Updated 2022-01-25.
+    # """
+    local app dict info nf_info
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [bash]="$(koopa::locate_bash)"
+        [cat]="$(koopa::locate_cat)"
+    )
+    declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
+        [arch]="$(koopa::arch)"
+        [arch2]="$(koopa::arch2)"
+        [ascii_turtle_file]="$(koopa::include_prefix)/ascii-turtle.txt"
+        [bash_version]="$(koopa::get_version "${app[bash]}")"
+        [config_prefix]="$(koopa::config_prefix)"
+        [koopa_date]="$(koopa::koopa_date)"
+        [koopa_github_url]="$(koopa::koopa_github_url)"
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [koopa_url]="$(koopa::koopa_url)"
+        [koopa_version]="$(koopa::koopa_version)"
+        [make_prefix]="$(koopa::make_prefix)"
+        [opt_prefix]="$(koopa::opt_prefix)"
+    )
+    info=(
+        "koopa ${dict[koopa_version]} (${dict[koopa_date]})"
+        "URL: ${dict[koopa_url]}"
+        "GitHub URL: ${dict[koopa_github_url]}"
+    )
+    if koopa::is_git_repo_top_level "${dict[koopa_prefix]}"
+    then
+        dict[remote]="$(koopa::git_remote_url "${dict[koopa_prefix]}")"
+        dict[commit]="$(koopa::git_last_commit_local "${dict[koopa_prefix]}")"
+        info+=(
+            "Git Remote: ${dict[remote]}"
+            "Git Commit: ${dict[commit]}"
+        )
+    fi
+    info+=(
+        ''
+        'Configuration'
+        '-------------'
+        "Koopa Prefix: ${dict[koopa_prefix]}"
+        "App Prefix: ${dict[app_prefix]}"
+        "Opt Prefix: ${dict[opt_prefix]}"
+        "Config Prefix: ${dict[config_prefix]}"
+        "Make Prefix: ${dict[make_prefix]}"
+    )
+    if koopa::is_macos
+    then
+        app[sw_vers]="$(koopa::macos_locate_sw_vers)"
+        dict[os]="$( \
+            printf '%s %s (%s)\n' \
+                "$("${app[sw_vers]}" -productName)" \
+                "$("${app[sw_vers]}" -productVersion)" \
+                "$("${app[sw_vers]}" -buildVersion)" \
+        )"
+    else
+        app[uname]="$(koopa::locate_uname)"
+        dict[os]="$("${app[uname]}" --all)"
+        # Alternate approach using Python:
+        # > app[python]="$(koopa::locate_python)"
+        # > dict[os]="$("${app[python]}" -mplatform)"
+    fi
+    info+=(
+        ''
+        'System information'
+        '------------------'
+        "OS: ${dict[os]}"
+        "Architecture: ${dict[arch]} / ${dict[arch2]}"
+        "Bash: ${dict[bash_version]}"
+    )
+    if koopa::is_installed 'neofetch'
+    then
+        app[neofetch]="$(koopa::locate_neofetch)"
+        readarray -t nf_info <<< "$("${app[neofetch]}" --stdout)"
+        info+=(
+            ''
+            'Neofetch'
+            '--------'
+            "${nf_info[@]:2}"
+        )
+    fi
+    "${app[cat]}" "${dict[ascii_turtle_file]}"
+    koopa::info_box "${info[@]}"
     return 0
 }
 

@@ -204,9 +204,7 @@ __koopa_remove_from_path_string() { # {{{1
     # Alternative non-POSIX approach that works on Bash and Zsh:
     # > PATH="${PATH//:$dir/}"
     # """
-    local sed
-    sed='sed'
-    _koopa_print "${1:?}" | "$sed" "s|:${2:?}||g"
+    _koopa_print "${1:?}" | sed "s|:${2:?}||g"
     return 0
 }
 
@@ -803,15 +801,17 @@ _koopa_activate_make_paths() { # {{{1
     return 0
 }
 
+
 _koopa_activate_mcfly() { #{{{1
     # """
     # Activate mcfly.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-02-01.
     #
-    # Use 'mcfly search XXX' to query directly.
+    # Use "mcfly search 'query'" to query directly.
     # """
     local nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
+    _koopa_is_root && return 0
     _koopa_is_installed 'mcfly' || return 1
     shell="$(_koopa_shell_name)"
     case "$shell" in
@@ -829,10 +829,19 @@ _koopa_activate_mcfly() { #{{{1
             export MCFLY_KEY_SCHEME="${EDITOR:?}"
         ;;
     esac
-    export MCFLY_FUZZY=true
+    export MCFLY_FUZZY=2
     export MCFLY_HISTORY_LIMIT=10000
+    export MCFLY_INTERFACE_VIEW='TOP'  # or 'BOTTOM'
     export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
+    export MCFLY_RESULTS_SORT='RANK'  # or 'LAST_RUN'
+    if _koopa_is_macos
+    then
+        if _koopa_macos_is_light_mode
+        then
+            export MCFLY_LIGHT=true
+        fi
+    fi
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     eval "$(mcfly init "$shell")"
@@ -1731,7 +1740,7 @@ _koopa_alias_doom_emacs() { # {{{1
 _koopa_alias_emacs() { # {{{1
     # """
     # Emacs alias that provides 24-bit color support.
-    # @note Updated 2021-09-15.
+    # @note Updated 2022-02-01.
     # """
     local emacs prefix
     prefix="${HOME:?}/.emacs.d"
@@ -1741,7 +1750,7 @@ _koopa_alias_emacs() { # {{{1
         return 1
     fi
     emacs="$(_koopa_locate_emacs)"
-    if [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ]
+    if [ -f "${HOME:?}/.terminfo/78/xterm-24bit" ] && _koopa_is_macos
     then
         TERM='xterm-24bit' \
             "$emacs" --no-window-system "$@"
@@ -2487,6 +2496,17 @@ _koopa_export_history() { # {{{1
         SAVEHIST="$HISTSIZE"
     fi
     export SAVEHIST
+    return 0
+}
+
+_koopa_export_koopa_shell() { # {{{1
+    # """
+    # Export 'KOOPA_SHELL' variable.
+    # @note Updated 2022-02-02.
+    # """
+    unset -v KOOPA_SHELL
+    KOOPA_SHELL="$(_koopa_locate_shell)"
+    export KOOPA_SHELL
     return 0
 }
 
@@ -3365,7 +3385,7 @@ _koopa_locate_emacs() { # {{{1
 _koopa_locate_shell() { # {{{1
     # """
     # Locate the current shell executable.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-02-02.
     #
     # Detection issues with qemu ARM emulation on x86:
     # - The 'ps' approach will return correct shell for ARM running via
@@ -3381,14 +3401,13 @@ _koopa_locate_shell() { # {{{1
     # - https://unix.stackexchange.com/questions/87061/
     # - https://unix.stackexchange.com/questions/182590/
     # """
-    local proc_file pid sed shell
+    local proc_file pid shell
     shell="${KOOPA_SHELL:-}"
-    if [ -x "$shell" ]
+    if [ -n "$shell" ]
     then
         _koopa_print "$shell"
         return 0
     fi
-    sed='sed'
     pid="${$}"
     if _koopa_is_linux
     then
@@ -3396,11 +3415,11 @@ _koopa_locate_shell() { # {{{1
         if [ -x "$proc_file" ] && ! _koopa_is_qemu
         then
             shell="$(_koopa_realpath "$proc_file")"
-        elif _koopa_is_installed ps
+        elif _koopa_is_installed 'ps'
         then
             shell="$( \
                 ps -p "$pid" -o 'comm=' \
-                | "$sed" 's/^-//' \
+                | sed 's/^-//' \
             )"
         fi
     elif _koopa_is_macos
@@ -3412,8 +3431,8 @@ _koopa_locate_shell() { # {{{1
                 -d 'txt' \
                 -p "$pid" \
                 2>/dev/null \
-            | "$sed" -n '3p' \
-            | "$sed" 's/^n//' \
+            | sed -n '3p' \
+            | sed 's/^n//' \
         )"
     fi
     # Fallback support for detection failure inside of some subprocesses.

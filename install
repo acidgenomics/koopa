@@ -18,7 +18,7 @@ set -Eeu -o pipefail
 install_koopa_usage() { # {{{1
     # """
     # Help usage for koopa installer.
-    # @note Updated 2022-01-18.
+    # @note Updated 2022-02-02.
     # """
 cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
@@ -188,6 +188,8 @@ install_koopa() { # {{{1
     then
         stop "Installer failed to set 'KOOPA_PREFIX'."
     fi
+    koopa::assert_is_installed 'cp' 'curl' 'find' 'git' 'grep' 'mkdir' \
+        'mktemp' 'mv' 'rm' 'sed' 'tar' 'unzip'
     # Configuration {{{2
     # ==========================================================================
     dict[config_prefix]="$(koopa::config_prefix)"
