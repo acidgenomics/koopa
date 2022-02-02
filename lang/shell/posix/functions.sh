@@ -1711,6 +1711,11 @@ _koopa_alias_bucket() { # {{{1
     ls
 }
 
+# FIXME This is problematic with Bash 5.0 on Ubuntu 20.
+# FIXME Maybe need to rethink the unalias approach?
+# FIXME This seems to be problematic on Ubuntu 20 with Bash shell.
+# Need to investigate this.
+
 _koopa_alias_conda() { # {{{1
     # """
     # Conda alias.
