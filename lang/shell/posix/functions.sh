@@ -376,9 +376,9 @@ _koopa_activate_conda() { # {{{1
     echo 'FIXME ACTIVATE E'
     [ -r "$script" ] || return 0
     echo 'FIXME ACTIVATE F'
-    _koopa_is_alias 'conda' && unalias 'conda'
+    # > _koopa_is_alias 'conda' && unalias 'conda'
     echo 'FIXME ACTIVATE G'
-    _koopa_is_alias 'mamba' && unalias 'mamba'
+    # > _koopa_is_alias 'mamba' && unalias 'mamba'
     echo 'FIXME ACTIVATE H'
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
