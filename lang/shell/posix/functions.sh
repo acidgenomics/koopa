@@ -211,13 +211,12 @@ __koopa_remove_from_path_string() { # {{{1
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-02-02.
     # """
     local file
     _koopa_activate_coreutils_aliases
     alias br='_koopa_alias_broot'
     alias bucket='_koopa_alias_bucket'
-    alias conda='_koopa_alias_conda'
     alias doom-emacs='_koopa_alias_doom_emacs'
     alias emacs-vanilla='_koopa_alias_emacs_vanilla'
     alias emacs='_koopa_alias_emacs'
@@ -225,10 +224,8 @@ _koopa_activate_aliases() { # {{{1
     alias j='z'
     alias k='_koopa_alias_k'
     alias mamba='_koopa_alias_mamba'
-    # > alias mcfly='_koopa_alias_mcfly'
     alias nvim-fzf='_koopa_alias_nvim_fzf'
     alias nvim-vanilla='_koopa_alias_nvim_vanilla'
-    # > alias perl='_koopa_alias_perl'
     alias perlbrew='_koopa_alias_perlbrew'
     alias pipx='_koopa_alias_pipx'
     alias prelude-emacs='_koopa_alias_prelude_emacs'
@@ -353,50 +350,35 @@ _koopa_activate_completion() { # {{{1
     return 0
 }
 
-# FIXME We may need to be careful with the alias steps here, seems to be
-# problematic with conda 4.10.3 / Bash 5.0 on Ubuntu 20?
-
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda using 'activate' script.
-    # @note Updated 2022-02-20.
+    # @note Updated 2022-02-02.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba/issues/984
     # """
     local nounset prefix
-    echo 'FIXME ACTIVATE A'
     prefix="${1:-}"
-    echo 'FIXME ACTIVATE B'
     [ -z "$prefix" ] && prefix="$(_koopa_conda_prefix)"
-    echo 'FIXME ACTIVATE C'
     [ -d "$prefix" ] || return 0
-    echo 'FIXME ACTIVATE D'
     script="${prefix}/bin/activate"
-    echo 'FIXME ACTIVATE E'
     [ -r "$script" ] || return 0
-    echo 'FIXME ACTIVATE F'
-    # > _koopa_is_alias 'conda' && unalias 'conda'
-    echo 'FIXME ACTIVATE G'
-    # > _koopa_is_alias 'mamba' && unalias 'mamba'
-    echo 'FIXME ACTIVATE H'
+    _koopa_is_alias 'conda' && unalias 'conda'
+    _koopa_is_alias 'mamba' && unalias 'mamba'
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
-    echo 'FIXME ACTIVATE I'
     . "$script"
-    echo 'FIXME ACTIVATE J'
     # Ensure the base environment is deactivated by default.
     if [ "${CONDA_DEFAULT_ENV:-}" = 'base' ] && \
         [ "${CONDA_SHLVL:-0}" -eq 1 ]
     then
         conda deactivate
     fi
-    echo 'FIXME ACTIVATE K'
     [ "$nounset" -eq 1 ] && set -u
     # Suppress mamba ASCII banner.
     [ -z "${MAMBA_NO_BANNER:-}" ] && export MAMBA_NO_BANNER=1
-    echo 'FIXME ACTIVATE L'
     return 0
 }
 
@@ -1726,22 +1708,13 @@ _koopa_alias_bucket() { # {{{1
     ls
 }
 
-# FIXME This is problematic with Bash 5.0 on Ubuntu 20.
-# FIXME Maybe need to rethink the unalias approach?
-# FIXME This seems to be problematic on Ubuntu 20 with Bash shell.
-# Need to investigate this.
-# This is getting stuck in an endless loop of FIXME AAAA BBBB here hmmm....
-
 _koopa_alias_conda() { # {{{1
     # """
     # Conda alias.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-02-02.
     # """
-    echo 'FIXME ALIAS A'
     _koopa_is_alias 'conda' && unalias 'conda'
-    echo 'FIXME ALIAS B'
     _koopa_activate_conda
-    echo 'FIXME ALIAS C'
     conda "$@"
 }
 
@@ -1822,16 +1795,6 @@ _koopa_alias_mamba() { # {{{1
     mamba "$@"
 }
 
-_koopa_alias_mcfly() { # {{{1
-    # """
-    # mcfly alias.
-    # @note Updated 2021-06-16.
-    # """
-    _koopa_is_alias 'mcfly' && unalias 'mcfly'
-    _koopa_activate_mcfly
-    mcfly "$@"
-}
-
 _koopa_alias_nvim_fzf() { # {{{1
     # """
     # Pipe FZF output to Neovim.
@@ -1848,17 +1811,6 @@ _koopa_alias_nvim_vanilla() { # {{{1
     # """
     _koopa_is_installed 'nvim' || return 1
     nvim -u 'NONE' "$@"
-}
-
-# NOTE This is not currently loaded during activation.
-_koopa_alias_perl() { #{{{1
-    # """
-    # Perl alias.
-    # @note Updated 2021-06-13.
-    # """
-    _koopa_is_alias 'perl' && unalias 'perl'
-    _koopa_activate_perl
-    perl "$@"
 }
 
 _koopa_alias_perlbrew() { # {{{1
