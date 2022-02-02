@@ -353,35 +353,50 @@ _koopa_activate_completion() { # {{{1
     return 0
 }
 
+# FIXME We may need to be careful with the alias steps here, seems to be
+# problematic with conda 4.10.3 / Bash 5.0 on Ubuntu 20?
+
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda using 'activate' script.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-20.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba/issues/984
     # """
     local nounset prefix
+    echo 'FIXME ACTIVATE A'
     prefix="${1:-}"
+    echo 'FIXME ACTIVATE B'
     [ -z "$prefix" ] && prefix="$(_koopa_conda_prefix)"
+    echo 'FIXME ACTIVATE C'
     [ -d "$prefix" ] || return 0
+    echo 'FIXME ACTIVATE D'
     script="${prefix}/bin/activate"
+    echo 'FIXME ACTIVATE E'
     [ -r "$script" ] || return 0
+    echo 'FIXME ACTIVATE F'
     _koopa_is_alias 'conda' && unalias 'conda'
+    echo 'FIXME ACTIVATE G'
     _koopa_is_alias 'mamba' && unalias 'mamba'
+    echo 'FIXME ACTIVATE H'
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
+    echo 'FIXME ACTIVATE I'
     . "$script"
+    echo 'FIXME ACTIVATE J'
     # Ensure the base environment is deactivated by default.
     if [ "${CONDA_DEFAULT_ENV:-}" = 'base' ] && \
         [ "${CONDA_SHLVL:-0}" -eq 1 ]
     then
         conda deactivate
     fi
+    echo 'FIXME ACTIVATE K'
     [ "$nounset" -eq 1 ] && set -u
     # Suppress mamba ASCII banner.
     [ -z "${MAMBA_NO_BANNER:-}" ] && export MAMBA_NO_BANNER=1
+    echo 'FIXME ACTIVATE L'
     return 0
 }
 
@@ -1715,17 +1730,18 @@ _koopa_alias_bucket() { # {{{1
 # FIXME Maybe need to rethink the unalias approach?
 # FIXME This seems to be problematic on Ubuntu 20 with Bash shell.
 # Need to investigate this.
+# This is getting stuck in an endless loop of FIXME AAAA BBBB here hmmm....
 
 _koopa_alias_conda() { # {{{1
     # """
     # Conda alias.
     # @note Updated 2021-05-26.
     # """
-    echo 'FIXME AAAA'
+    echo 'FIXME ALIAS A'
     _koopa_is_alias 'conda' && unalias 'conda'
-    echo 'FIXME BBBB'
+    echo 'FIXME ALIAS B'
     _koopa_activate_conda
-    echo 'FIXME CCCC'
+    echo 'FIXME ALIAS C'
     conda "$@"
 }
 
