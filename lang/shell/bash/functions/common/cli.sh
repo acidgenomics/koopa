@@ -288,7 +288,7 @@ koopa::cli_uninstall() { # {{{1
     return 0
 }
 
-koopa:::koopa_update() { # {{{1
+koopa::cli_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
     # @note Updated 2022-02-02.
