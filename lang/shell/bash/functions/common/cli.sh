@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider creating 'koopa conda create-env' and 'koopa conda remove-env'?
-# FIXME Alternatively, 'koopa app conda create-env'...
-# FIXME Need to migrate these out of 'koopa system'...
-
 koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
@@ -138,7 +134,6 @@ koopa::cli_install() { # {{{1
     return 0
 }
 
-# FIXME Not using this a lot...consider nesting under 'koopa system'.
 koopa::cli_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
