@@ -47,12 +47,17 @@ _koopa_complete() { # {{{1
             case "${COMP_WORDS[COMP_CWORD-1]}" in
                 'app')
                     args=(
-                        'clean'
                         'conda'
                         'list'
-                        'link'
-                        'unlink'
                     )
+                    if koopa::is_linux
+                    then
+                        args+=(
+                            'clean'
+                            'link'
+                            'unlink'
+                        )
+                    fi
                     ;;
                 'configure')
                     args=(
