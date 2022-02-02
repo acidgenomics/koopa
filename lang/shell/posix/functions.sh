@@ -204,9 +204,7 @@ __koopa_remove_from_path_string() { # {{{1
     # Alternative non-POSIX approach that works on Bash and Zsh:
     # > PATH="${PATH//:$dir/}"
     # """
-    local sed
-    sed='sed'
-    _koopa_print "${1:?}" | "$sed" "s|:${2:?}||g"
+    _koopa_print "${1:?}" | sed "s|:${2:?}||g"
     return 0
 }
 
@@ -2504,8 +2502,9 @@ _koopa_export_history() { # {{{1
 _koopa_export_koopa_shell() { # {{{1
     # """
     # Export 'KOOPA_SHELL' variable.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-02.
     # """
+    unset -v KOOPA_SHELL
     KOOPA_SHELL="$(_koopa_locate_shell)"
     export KOOPA_SHELL
     return 0
@@ -3386,7 +3385,7 @@ _koopa_locate_emacs() { # {{{1
 _koopa_locate_shell() { # {{{1
     # """
     # Locate the current shell executable.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-02-02.
     #
     # Detection issues with qemu ARM emulation on x86:
     # - The 'ps' approach will return correct shell for ARM running via
@@ -3402,14 +3401,13 @@ _koopa_locate_shell() { # {{{1
     # - https://unix.stackexchange.com/questions/87061/
     # - https://unix.stackexchange.com/questions/182590/
     # """
-    local proc_file pid sed shell
+    local proc_file pid shell
     shell="${KOOPA_SHELL:-}"
-    if [ -x "$shell" ]
+    if [ -n "$shell" ]
     then
         _koopa_print "$shell"
         return 0
     fi
-    sed='sed'
     pid="${$}"
     if _koopa_is_linux
     then
@@ -3417,11 +3415,11 @@ _koopa_locate_shell() { # {{{1
         if [ -x "$proc_file" ] && ! _koopa_is_qemu
         then
             shell="$(_koopa_realpath "$proc_file")"
-        elif _koopa_is_installed ps
+        elif _koopa_is_installed 'ps'
         then
             shell="$( \
                 ps -p "$pid" -o 'comm=' \
-                | "$sed" 's/^-//' \
+                | sed 's/^-//' \
             )"
         fi
     elif _koopa_is_macos
@@ -3433,8 +3431,8 @@ _koopa_locate_shell() { # {{{1
                 -d 'txt' \
                 -p "$pid" \
                 2>/dev/null \
-            | "$sed" -n '3p' \
-            | "$sed" 's/^n//' \
+            | sed -n '3p' \
+            | sed 's/^n//' \
         )"
     fi
     # Fallback support for detection failure inside of some subprocesses.
