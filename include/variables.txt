@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-01-31"
+koopa-date="2022-02-02"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -31,7 +31,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 anaconda="2021.05"
 
 # http://arma.sourceforge.net/download.html
-armadillo="10.8.1"
+armadillo="10.8.2"
 
 # https://www.ibm.com/aspera/connect/
 aspera-connect="4.1.1.73"
@@ -162,7 +162,7 @@ gsl="2.7.1"
 
 hadolint="2.8.0"
 
-harfbuzz="3.2.0"
+harfbuzz="3.3.1"
 
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.12.1"
@@ -574,6 +574,7 @@ rust-du-dust="0.7.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
 rust-fd-find="8.3.1"            # homebrew; fd
 rust-hyperfine="1.12.0"         # homebrew
+rust-mcfly="0.5.13"                  # github only
 rust-procs="0.12.1"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg

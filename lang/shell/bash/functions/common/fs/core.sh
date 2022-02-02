@@ -60,13 +60,14 @@ koopa::chgrp() { # {{{1
 koopa::chmod() { # {{{1
     # """
     # Hardened version of coreutils chmod (change file mode bits).
-    # @note Updated 2021-10-29.
+    # @note Updated 2022-02-01.
     # """
     local app chmod dict pos
     declare -A app=(
         [chmod]="$(koopa::locate_chmod)"
     )
     declare -A dict=(
+        [recursive]=0
         [sudo]=0
     )
     pos=()
@@ -74,6 +75,11 @@ koopa::chmod() { # {{{1
     do
         case "$1" in
             # Flags ------------------------------------------------------------
+            '--recursive' | \
+            '-R')
+                dict[recursive]=1
+                shift 1
+                ;;
             '--sudo' | \
             '-S')
                 dict[sudo]=1
@@ -97,6 +103,10 @@ koopa::chmod() { # {{{1
         chmod=("${app[sudo]}" "${app[chmod]}")
     else
         chmod=("${app[chmod]}")
+    fi
+    if [[ "${dict[recursive]}" -eq 1 ]]
+    then
+        chmod+=('-R')
     fi
     "${chmod[@]}" "$@"
     return 0
@@ -736,7 +746,7 @@ koopa::rm() { # {{{1
 koopa::touch() { # {{{1
     # """
     # Touch (create) a file on disk.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-01.
     # """
     local app pos touch
     koopa::assert_has_args "$#"
@@ -782,7 +792,7 @@ koopa::touch() { # {{{1
             koopa::assert_is_not_dir "$file"
             koopa::assert_is_not_symlink "$file"
         fi
-        "${app[touch]}" "$file"
+        "${touch[@]}" "$file"
     done
     return 0
 }

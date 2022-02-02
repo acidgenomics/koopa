@@ -159,25 +159,28 @@ koopa::disable_passwordless_sudo() { # {{{1
 koopa::enable_passwordless_sudo() { # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-01-31.
     # """
-    local file group string
+    local dict
     koopa::assert_has_no_args "$#"
-    koopa::is_root && return 0
     koopa::assert_is_admin
-    file='/etc/sudoers.d/sudo'
-    group="$(koopa::admin_group)"
-    if [[ -f "$file" ]] && \
-        koopa::file_detect_fixed --sudo "$file" "$group"
+    declare -A dict=(
+        [file]='/etc/sudoers.d/sudo'
+        [group]="$(koopa::admin_group)"
+    )
+    dict[string]="%${dict[group]} ALL=(ALL) NOPASSWD: ALL"
+    if [[ -f "${dict[file]}" ]] && \
+        koopa::file_detect_fixed --sudo "${dict[file]}" "${dict[group]}"
     then
-        koopa::alert_success "sudo already configured at '${file}'."
+        koopa::alert_success "Passwordless sudo for '${dict[group]}' group \
+already enabled at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Modifying '${file}' to include '${group}'."
-    string="%${group} ALL=(ALL) NOPASSWD: ALL"
-    koopa::sudo_append_string "$string" "$file"
-    koopa::chmod --sudo '0440' "$file"
-    koopa::alert_success "Passwordless sudo enabled for '${group}' \
+    koopa::alert "Modifying '${dict[file]}' to include '${dict[group]}'."
+    # FIXME This isn't passing sudo to touch correctly.
+    koopa::sudo_append_string "${dict[string]}" "${dict[file]}"
+    koopa::chmod --sudo '0440' "${dict[file]}"
+    koopa::alert_success "Passwordless sudo enabled for '${dict[group]}' \
 at '${file}'."
     return 0
 }
@@ -190,6 +193,7 @@ koopa::enable_shell() { # {{{1
     # """
     local cmd_name cmd_path etc_file make_prefix user
     koopa::assert_has_args "$#"
+    # FIXME Need to inform the user when this is skipped.
     koopa::is_admin || return 0
     cmd_name="${1:?}"
     make_prefix="$(koopa::make_prefix)"

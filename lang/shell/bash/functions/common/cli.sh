@@ -1,95 +1,100 @@
 #!/usr/bin/env bash
 
-koopa:::koopa_app() { # {{{1
+koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2021-06-11.
+    # @note Updated 2022-02-02.
     # """
-    local name
-    name="${1:-}"
-    if [[ -z "$name" ]]
+    local key
+    key="${1:-}"
+    if [[ -z "$key" ]]
     then
         koopa::stop "Missing argument: 'koopa app <ARG>...'."
     fi
-    case "$name" in
+    case "$key" in
         'clean')
-            name='delete-broken-app-symlinks'
+            key='delete-broken-app-symlinks'
+            ;;
+        'conda')
+            shift 1
+            key="conda-${1:?}"
             ;;
         'list')
-            name='list-app-versions'
+            key='list-app-versions'
             ;;
         'link')
-            name='link-app'
+            key='link-app'
             ;;
         'prune')
-            name='prune-apps'
+            key='prune-apps'
             ;;
         'unlink')
-            name='unlink-app'
+            key='unlink-app'
             ;;
     esac
     shift 1
-    koopa:::run_function "$name" "$@"
+    koopa::cli_run_function "$key" "$@"
     return 0
 }
 
-koopa:::koopa_configure() { # {{{1
+koopa::cli_configure() { # {{{1
     # """
     # Parse user input to 'koopa configure'.
-    # @note Updated 2021-06-11.
+    # @note Updated 2022-02-02.
     # """
-    local name
-    name="${1:-}"
-    if [[ -z "$name" ]]
+    local key
+    key="${1:-}"
+    if [[ -z "$key" ]]
     then
         koopa::stop "Missing argument: 'koopa configure <ARG>...'."
     fi
     shift 1
-    koopa:::run_function "configure-${name}" "$@"
+    koopa::cli_run_function "configure-${key}" "$@"
     return 0
 }
 
-koopa:::koopa_header() { # {{{1
+koopa::cli_header() { # {{{1
     # """
     # Parse user input to 'koopa header'.
-    # @note Updated 2021-01-19.
+    # @note Updated 2022-02-02.
     #
     # Useful for private scripts using koopa code outside of package.
     # """
-    local arg ext file koopa_prefix subdir
+    local dict
     koopa::assert_has_args_eq "$#" 1
-    arg="$(koopa::lowercase "${1:?}")"
-    koopa_prefix="$(koopa::koopa_prefix)"
-    subdir='lang'
-    case "$arg" in
+    declare -A dict=(
+        [lang]="$(koopa::lowercase "${1:?}")"
+        [prefix]="$(koopa::koopa_prefix)/lang"
+    )
+    case "${dict[lang]}" in
         'bash' | \
         'posix' | \
         'zsh')
-            subdir="${subdir}/shell"
-            ext='sh'
+            dict[prefix]="${dict[prefix]}/shell"
+            dict[ext]='sh'
             ;;
         'r')
-            ext='R'
+            dict[ext]='R'
             ;;
         *)
-            koopa::invalid_arg "$arg"
+            koopa::invalid_arg "${dict[lang]}"
             ;;
     esac
-    file="${koopa_prefix}/${subdir}/${arg}/include/header.${ext}"
-    koopa::assert_is_file "$file"
-    koopa::print "$file"
+    dict[file]="${dict[prefix]}/${dict[lang]}/include/header.${dict[ext]}"
+    koopa::assert_is_file "${dict[file]}"
+    koopa::print "${dict[file]}"
     return 0
 }
 
-koopa:::koopa_install() { # {{{1
+koopa::cli_install() { # {{{1
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2021-09-20.
+    # @note Updated 2022-02-02.
     # """
     local app app_args apps denylist pos
     app_args=()
+    denylist=('app' 'gnu-app')
     pos=()
-    readarray -t denylist <<< "$(koopa:::koopa_install_denylist)"
     while (("$#"))
     do
         case "$1" in
@@ -124,86 +129,49 @@ koopa:::koopa_install() { # {{{1
     done
     for app in "${apps[@]}"
     do
-        app="install-${app}"
-        if koopa::is_array_non_empty "${app_args[@]:-}"
-        then
-            koopa:::run_function "$app" "${app_args[@]}"
-        else
-            koopa:::run_function "$app"
-        fi
+        koopa::cli_run_function "install-${app}" "${app_args[@]}"
     done
     return 0
 }
 
-koopa:::koopa_install_denylist() { # {{{1
-    # """
-    # App names that are intentionally not supported.
-    # @note Updated 2021-05-07.
-    # """
-    local names
-    names=(
-        'app'
-        'gnu-app'
-        'start'
-        'success'
-    )
-    koopa::print "${names[@]}"
-}
-
-koopa:::koopa_link() { # {{{1
-    # """
-    # Parse user input to 'koopa link'.
-    # @note Updated 2021-03-01.
-    # """
-    local name
-    name="${1:-}"
-    if [[ -z "$name" ]]
-    then
-        koopa::stop "Missing argument: 'koopa link <ARG>...'."
-    fi
-    shift 1
-    koopa:::run_function "link-${name}" "$@"
-    return 0
-}
-
-koopa:::koopa_list() { # {{{1
+koopa::cli_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
-    # @note Updated 2021-03-01.
+    # @note Updated 2022-02-02.
     # """
-    local name
-    name="${1:-}"
-    if [[ -z "$name" ]]
+    local key
+    key="${1:-}"
+    if [[ -z "$key" ]]
     then
-        name='list'
+        key='list'
     else
-        name="list-${name}"
+        key="list-${key}"
         shift 1
     fi
-    koopa:::run_function "$name" "$@"
+    koopa::cli_run_function "$key" "$@"
     return 0
 }
 
-koopa:::koopa_system() { # {{{1
+koopa::cli_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-02-02.
     # """
-    local f
-    f="${1:-}"
-    if [[ -z "$f" ]]
+    local key
+    key="${1:-}"
+    if [[ -z "$key" ]]
     then
         koopa::stop "Missing argument: 'koopa system <ARG>...'."
     fi
-    case "$f" in
+    case "$key" in
         'check')
-            f='check-system'
+            key='check-system'
             ;;
         'info')
-            f='system-info'
+            key='system-info'
             ;;
         'log')
-            f='view-latest-tmp-log-file'
+            key='view-latest-tmp-log-file'
             ;;
         'path')
             koopa::print "${PATH:-}"
@@ -212,34 +180,32 @@ koopa:::koopa_system() { # {{{1
         'prefix')
             case "${2:-}" in
                 '')
-                    f='prefix'
+                    key='prefix'
                     ;;
                 'koopa')
-                    f='prefix'
+                    key='prefix'
                     shift 1
                     ;;
                 *)
-                    f="${2}-prefix"
+                    key="${2}-prefix"
                     shift 1
                     ;;
             esac
             ;;
         'homebrew-cask-version')
-            f='get-homebrew-cask-version'
+            key='get-homebrew-cask-version'
             ;;
         'macos-app-version')
-            f='get-macos-app-version'
+            key='get-macos-app-version'
             ;;
         'version')
-            f='get-version'
+            key='get-version'
             ;;
         'which')
-            f='which-realpath'
+            key='which-realpath'
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
-        'conda-create-env' | \
-        'conda-remove-env' | \
         'delete-cache' | \
         'disable-passwordless-sudo' | \
         'disable-touch-id-sudo' | \
@@ -253,27 +219,36 @@ koopa:::koopa_system() { # {{{1
         'roff' | \
         'set-permissions' | \
         'switch-to-develop' | \
+        'test' | \
         'variable' | \
         'variables')
             ;;
+        # Defunct --------------------------------------------------------------
+        'conda-create-env')
+            koopa::defunct 'koopa app conda create-env'
+            ;;
+        'conda-remove-env')
+            koopa::defunct 'koopa app conda remove-env'
+            ;;
+        # Invalid --------------------------------------------------------------
         *)
             koopa::invalid_arg "$*"
             ;;
     esac
     shift 1
-    koopa:::run_function "$f" "$@"
+    koopa::cli_run_function "$key" "$@"
     return 0
 }
 
-koopa:::koopa_uninstall() { # {{{1
+koopa::cli_uninstall() { # {{{1
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2021-09-20.
+    # @note Updated 2022-02-02.
     # """
     local app app_args apps denylist pos
     app_args=()
+    denylist=('app')
     pos=()
-    readarray -t denylist <<< "$(koopa:::koopa_uninstall_denylist)"
     while (("$#"))
     do
         case "$1" in
@@ -296,7 +271,7 @@ koopa:::koopa_uninstall() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     if [[ "$#" -eq 0 ]]
     then
-        koopa::stop "Missing argument: 'koopa uminstall <ARG>...'."
+        koopa::stop "Missing argument: 'koopa uninstall <ARG>...'."
     fi
     apps=("$@")
     for app in "${apps[@]}"
@@ -308,33 +283,20 @@ koopa:::koopa_uninstall() { # {{{1
     done
     for app in "${apps[@]}"
     do
-        koopa:::run_function "uninstall-${app}" "${app_args[@]}"
+        koopa::cli_run_function "uninstall-${app}" "${app_args[@]}"
     done
     return 0
 }
 
-koopa:::koopa_uninstall_denylist() { # {{{1
-    # """
-    # App names that are intentionally not supported.
-    # @note Updated 2021-05-07.
-    # """
-    local names
-    names=(
-        'start'
-        'success'
-    )
-    koopa::print "${names[@]}"
-}
-
-koopa:::koopa_update() { # {{{1
+koopa::cli_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-02.
     # """
     local app app_args apps denylist pos
     app_args=()
+    denylist=('app')
     pos=()
-    readarray -t denylist <<< "$(koopa:::koopa_update_denylist)"
     while (("$#"))
     do
         case "$1" in
@@ -386,53 +348,42 @@ koopa:::koopa_update() { # {{{1
     done
     for app in "${apps[@]}"
     do
-        koopa:::run_function "update-${app}" "${app_args[@]}"
+        koopa::cli_run_function "update-${app}" "${app_args[@]}"
     done
     return 0
 }
 
-koopa:::koopa_update_denylist() { # {{{1
-    # """
-    # App names that are intentionally not supported.
-    # @note Updated 2021-05-07.
-    # """
-    local names
-    names=(
-        'start'
-        'success'
-    )
-    koopa::print "${names[@]}"
-}
-
-koopa:::run_function() { # {{{1
+koopa::cli_run_function() { # {{{1
     # """
     # Lookup and execute a koopa function automatically.
-    # @note Updated 2020-11-18.
+    # @note Updated 2022-02-02.
     # """
-    local name fun
+    local dict
     koopa::assert_has_args "$#"
-    name="${1:?}"
-    fun="$(koopa:::which_function "$name")"
-    koopa::assert_is_function "$fun"
+    declare -A dict=(
+        [name]="${1:?}"
+    )
+    dict[fun]="$(koopa::cli_which_function "${dict[name]}")"
+    koopa::assert_is_function "${dict[fun]}"
     shift 1
-    "$fun" "$@"
+    "${dict[fun]}" "$@"
     return 0
 }
 
-koopa:::which_function() { # {{{1
+koopa::cli_which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2021-06-11.
+    # @note Updated 2022-02-02.
     # """
-    local fun os_id
+    local fun key os_id
     koopa::assert_has_args_eq "$#" 1
-    fun="${1:?}"
-    if koopa::is_function "${fun}"
+    key="${1:?}"
+    if koopa::is_function "${key}"
     then
-        koopa::print "$fun"
+        koopa::print "$key"
         return 0
     fi
-    fun="${fun//-/_}"
+    fun="${key//-/_}"
     os_id="$(koopa::os_id)"
     if koopa::is_function "koopa::${os_id}_${fun}"
     then
@@ -458,7 +409,7 @@ koopa:::which_function() { # {{{1
     fi
     if ! koopa::is_function "$fun"
     then
-        koopa::stop "Unsupported command."
+        koopa::stop "Unsupported command: '${key}'."
     fi
     koopa::print "$fun"
     return 0
@@ -466,22 +417,23 @@ koopa:::which_function() { # {{{1
 
 koopa::koopa() { # {{{1
     # """
-    # Main koopa function, corresponding to 'koopa' binary.
-    # @note Updated 2022-01-25.
+    # Main koopa CLI function, corresponding to 'koopa' binary.
+    # @note Updated 2022-02-02.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
     # """
+    local fun key
     koopa::assert_has_args "$#"
     case "$1" in
         '--version' | \
         '-V' | \
         'version')
-            f='koopa-version'
+            key='koopa-version'
             shift 1
             ;;
         'reinstall')
-            f='reinstall-app'
+            key='reinstall-app'
             shift 1
             ;;
         'app' | \
@@ -493,13 +445,7 @@ koopa::koopa() { # {{{1
         'system' | \
         'uninstall' | \
         'update')
-            # Note that the ':' is necessary here to call the internal functions
-            # defined above.
-            f=":koopa_${1}"
-            shift 1
-            ;;
-        'test')
-            f="$1"
+            key="cli-${1}"
             shift 1
             ;;
         # Defunct args / error catching {{{2
@@ -563,6 +509,9 @@ koopa::koopa() { # {{{1
         'set-permissions')
             koopa::defunct 'koopa system set-permissions'
             ;;
+        'test')
+            koopa::defunct 'koopa system test'
+            ;;
         'update-r-config')
             koopa::defunct 'koopa update r-config'
             ;;
@@ -582,99 +531,8 @@ koopa::koopa() { # {{{1
             koopa::invalid_arg "$*"
             ;;
     esac
-    fun="koopa::${f//-/_}"
+    fun="koopa::${key//-/_}"
     koopa::assert_is_function "$fun"
     "$fun" "$@"
     return 0
 }
-
-koopa::system_info() { # {{{
-    # """
-    # System information.
-    # @note Updated 2022-01-25.
-    # """
-    local app dict info nf_info
-    koopa::assert_has_no_args "$#"
-    declare -A app=(
-        [bash]="$(koopa::locate_bash)"
-        [cat]="$(koopa::locate_cat)"
-    )
-    declare -A dict=(
-        [app_prefix]="$(koopa::app_prefix)"
-        [arch]="$(koopa::arch)"
-        [arch2]="$(koopa::arch2)"
-        [ascii_turtle_file]="$(koopa::include_prefix)/ascii-turtle.txt"
-        [bash_version]="$(koopa::get_version "${app[bash]}")"
-        [config_prefix]="$(koopa::config_prefix)"
-        [koopa_date]="$(koopa::koopa_date)"
-        [koopa_github_url]="$(koopa::koopa_github_url)"
-        [koopa_prefix]="$(koopa::koopa_prefix)"
-        [koopa_url]="$(koopa::koopa_url)"
-        [koopa_version]="$(koopa::koopa_version)"
-        [make_prefix]="$(koopa::make_prefix)"
-        [opt_prefix]="$(koopa::opt_prefix)"
-    )
-    info=(
-        "koopa ${dict[koopa_version]} (${dict[koopa_date]})"
-        "URL: ${dict[koopa_url]}"
-        "GitHub URL: ${dict[koopa_github_url]}"
-    )
-    if koopa::is_git_repo_top_level "${dict[koopa_prefix]}"
-    then
-        dict[remote]="$(koopa::git_remote_url "${dict[koopa_prefix]}")"
-        dict[commit]="$(koopa::git_last_commit_local "${dict[koopa_prefix]}")"
-        info+=(
-            "Git Remote: ${dict[remote]}"
-            "Git Commit: ${dict[commit]}"
-        )
-    fi
-    info+=(
-        ''
-        'Configuration'
-        '-------------'
-        "Koopa Prefix: ${dict[koopa_prefix]}"
-        "App Prefix: ${dict[app_prefix]}"
-        "Opt Prefix: ${dict[opt_prefix]}"
-        "Config Prefix: ${dict[config_prefix]}"
-        "Make Prefix: ${dict[make_prefix]}"
-    )
-    if koopa::is_macos
-    then
-        app[sw_vers]="$(koopa::macos_locate_sw_vers)"
-        dict[os]="$( \
-            printf '%s %s (%s)\n' \
-                "$("${app[sw_vers]}" -productName)" \
-                "$("${app[sw_vers]}" -productVersion)" \
-                "$("${app[sw_vers]}" -buildVersion)" \
-        )"
-    else
-        app[uname]="$(koopa::locate_uname)"
-        dict[os]="$("${app[uname]}" --all)"
-        # Alternate approach using Python:
-        # > app[python]="$(koopa::locate_python)"
-        # > dict[os]="$("${app[python]}" -mplatform)"
-    fi
-    info+=(
-        ''
-        'System information'
-        '------------------'
-        "OS: ${dict[os]}"
-        "Architecture: ${dict[arch]} / ${dict[arch2]}"
-        "Bash: ${dict[bash_version]}"
-    )
-    if koopa::is_installed 'neofetch'
-    then
-        app[neofetch]="$(koopa::locate_neofetch)"
-        readarray -t nf_info <<< "$("${app[neofetch]}" --stdout)"
-        info+=(
-            ''
-            'Neofetch'
-            '--------'
-            "${nf_info[@]:2}"
-        )
-    fi
-    "${app[cat]}" "${dict[ascii_turtle_file]}"
-    koopa::info_box "${info[@]}"
-    return 0
-}
-

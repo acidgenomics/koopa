@@ -312,6 +312,10 @@ koopa::export_history() { # {{{1
     _koopa_export_history "$@"
 }
 
+koopa::export_koopa_shell() { # {{{1
+    _koopa_export_koopa_shell "$@"
+}
+
 koopa::export_pager() { # {{{1
     _koopa_export_pager "$@"
 }
