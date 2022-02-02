@@ -1721,8 +1721,11 @@ _koopa_alias_conda() { # {{{1
     # Conda alias.
     # @note Updated 2021-05-26.
     # """
+    echo 'FIXME AAAA'
     _koopa_is_alias 'conda' && unalias 'conda'
+    echo 'FIXME BBBB'
     _koopa_activate_conda
+    echo 'FIXME CCCC'
     conda "$@"
 }
 
