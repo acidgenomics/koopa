@@ -170,6 +170,10 @@ koopa::install_app() { # {{{1
     if [[ -n "${dict[prefix]}" ]]
     then
         dict[auto_prefix]=0
+        if [[ -d "${dict[prefix]}" ]]
+        then
+            dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+        fi
         if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
         then
             dict[shared]=1
@@ -212,10 +216,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         dict[function]="${dict[platform]}_${dict[function]}"
     fi
     dict[function]="koopa:::${dict[function]}"
-    if ! koopa::is_function "${dict[function]}"
-    then
-        koopa::stop "Unsupported installer: '${dict[function]}'."
-    fi
+    koopa::assert_is_function "${dict[function]}"
     if [[ -z "${dict[version]}" ]]
     then
         dict[version]="$(\
@@ -236,7 +237,6 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         fi
         if [[ -d "${dict[prefix]}" ]] && [[ "${dict[prefix_check]}" -eq 1 ]]
         then
-            dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
             if [[ "${dict[reinstall]}" -eq 1 ]] || \
                 koopa::is_empty_dir "${dict[prefix]}"
             then
@@ -254,8 +254,8 @@ ${dict[platform]}/${dict[installer_file]}.sh"
             then
                 if [[ "${dict[quiet]}" -eq 0 ]]
                 then
-                    koopa::alert_note "${dict[name_fancy]} is already \
-installed at '${dict[prefix]}'."
+                    koopa::alert_is_installed \
+                        "${dict[name_fancy]}" "${dict[prefix]}"
                 fi
                 return 0
             fi
@@ -268,6 +268,12 @@ installed at '${dict[prefix]}'."
         then
             koopa::alert_install_start "${dict[name_fancy]}"
         fi
+    fi
+    if [[ -d "${dict[prefix]}" ]] && \
+        [[ "${dict[auto_prefix]}" -eq 1 ]] && \
+        [[ "${dict[system]}" -eq 0 ]]
+    then
+        koopa::link_app_into_opt "${dict[prefix]}" "${dict[name]}"
     fi
     (
         koopa::cd "${dict[tmp_dir]}"
@@ -335,9 +341,6 @@ installed at '${dict[prefix]}'."
             fi
             # Including the 'true' catch here to avoid 'cp' issues on Arch.
             koopa::link_app "${link_args[@]}" || true
-        elif [[ "${dict[auto_prefix]}" -eq 1 ]]
-        then
-            koopa::link_app_into_opt "${dict[prefix]}" "${dict[name]}"
         fi
     fi
     if koopa::is_linux && \
