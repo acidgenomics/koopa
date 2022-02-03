@@ -3,7 +3,7 @@
 koopa:::install_bash() { # {{{1
     # """
     # Install Bash.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-02-03.
     #
     # @section Applying patches:
     #
@@ -98,7 +98,7 @@ ${dict[name]}${dict[mmv_tr]}-[${dict[patch_range]}]"
     "${app[make]}" install
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
-        koopa::enable_shell "${dict[name]}"
+        koopa::enable_shell_for_all_users "${dict[name]}"
     fi
     return 0
 }
