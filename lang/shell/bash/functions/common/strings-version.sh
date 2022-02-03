@@ -313,7 +313,7 @@ koopa::emacs_version() { # {{{1
     koopa::get_version "$(koopa::locate_emacs)"
 }
 
-# FIXME Consider adding support for pipe workflows here.
+# NOTE Consider adding support for pipe workflows here.
 koopa::extract_version() { # {{{1
     # """
     # Extract version number.
