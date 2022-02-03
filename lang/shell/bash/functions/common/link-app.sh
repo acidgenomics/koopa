@@ -3,7 +3,7 @@
 koopa::link_app() { # {{{1
     # """
     # Symlink application into make directory.
-    # @note Updated 2021-11-16.
+    # @note Updated 2022-02-03.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -24,6 +24,9 @@ koopa::link_app() { # {{{1
     # """
     local cp_args cp_source cp_target dict i include pos
     koopa::assert_has_args "$#"
+    # NOTE Remove this assert once we have an ARM MacBook with Homebrew
+    # configured to install into '/opt/homebrew' instead of '/usr/local'.
+    koopa::assert_is_linux
     koopa::assert_has_no_envs
     declare -A dict=(
         [make_prefix]="$(koopa::make_prefix)"
@@ -81,8 +84,6 @@ koopa::link_app() { # {{{1
     fi
     dict[app_prefix]="$(koopa::app_prefix)/${dict[name]}/${dict[version]}"
     koopa::assert_is_dir "${dict[app_prefix]}" "${dict[make_prefix]}"
-    koopa::link_app_into_opt "${dict[app_prefix]}" "${dict[name]}"
-    koopa::is_macos && return 0
     koopa::alert "Linking '${dict[app_prefix]}' in '${dict[make_prefix]}'."
     koopa::sys_set_permissions --recursive "${dict[app_prefix]}"
     koopa::delete_broken_symlinks "${dict[app_prefix]}" "${dict[make_prefix]}"
@@ -111,5 +112,25 @@ koopa::link_app() { # {{{1
         cp_args+=("--target-directory=${dict[make_prefix]}")
         koopa::cp "${cp_args[@]}" "${include[@]}"
     fi
+    return 0
+}
+
+koopa::link_app_into_opt() { # {{{1
+    # """
+    # Link an application into koopa opt prefix.
+    # @note Updated 2022-02-03.
+    # """
+    local dict
+    koopa::assert_has_args_eq "$#" 2
+    declare -A dict=(
+        [opt_prefix]="$(koopa::opt_prefix)"
+        [source_dir]="${1:?}"
+    )
+    dict[target_dir]="${dict[opt_prefix]}/${2:?}"
+    [[ ! -d "${dict[opt_prefix]}" ]] && koopa::sys_mkdir "${dict[opt_prefix]}"
+    [[ "${dict[source_dir]}" == "${dict[target_dir]}" ]] && return 0
+    [[ ! -d "${dict[source_dir]}" ]] && koopa::sys_mkdir "${dict[source_dir]}"
+    [[ -d "${dict[target_dir]}" ]] && koopa::sys_rm "${dict[target_dir]}"
+    koopa::sys_ln "${dict[source_dir]}" "${dict[target_dir]}"
     return 0
 }
