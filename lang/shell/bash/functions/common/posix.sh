@@ -320,10 +320,6 @@ koopa::export_pager() { # {{{1
     _koopa_export_pager "$@"
 }
 
-koopa::export_shell() { # {{{1
-    _koopa_export_shell "$@"
-}
-
 koopa::expr() { # {{{1
     _koopa_expr "$@"
 }
