@@ -3,23 +3,28 @@
 koopa::add_make_prefix_link() { # {{{1
     # """
     # Ensure 'koopa' is linked inside make prefix.
-    # @note Updated 2020-07-20.
+    # @note Updated 2022-02-03.
     #
     # This is particularly useful for external scripts that source koopa header.
     # This approach works nicely inside a hardened R environment.
     # """
-    local koopa_prefix make_prefix source_link target_link
+    local dict
     koopa::assert_has_args_le "$#" 1
     koopa::is_shared_install || return 0
-    koopa_prefix="${1:-}"
-    [[ -z "$koopa_prefix" ]] && koopa_prefix="$(koopa::koopa_prefix)"
-    make_prefix="$(koopa::make_prefix)"
-    [[ -d "$make_prefix" ]] || return 0
-    target_link="${make_prefix}/bin/koopa"
-    [[ -L "$target_link" ]] && return 0
-    koopa::alert "Adding 'koopa' link inside '${make_prefix}'."
-    source_link="${koopa_prefix}/bin/koopa"
-    koopa::sys_ln "$source_link" "$target_link"
+    declare -A dict=(
+        [koopa_prefix]="${1:-}"
+        [make_prefix]="$(koopa::make_prefix)"
+    )
+    if [[ -z "${dict[koopa_prefix]}" ]]
+    then
+        dict[koopa_prefix]="$(koopa::koopa_prefix)"
+    fi
+    dict[source_link]="${dict[koopa_prefix]}/bin/koopa"
+    dict[target_link]="${dict[make_prefix]}/bin/koopa"
+    [[ -d "${dict[make_prefix]}" ]] || return 0
+    [[ -L "${dict[target_link]}" ]] && return 0
+    koopa::alert "Adding 'koopa' link inside '${dict[make_prefix]}'."
+    koopa::sys_ln "${dict[source_link]}" "${dict[target_link]}"
     return 0
 }
 
@@ -159,7 +164,7 @@ koopa::disable_passwordless_sudo() { # {{{1
 koopa::enable_passwordless_sudo() { # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-03.
     # """
     local dict
     koopa::assert_has_no_args "$#"
@@ -177,7 +182,6 @@ already enabled at '${dict[file]}'."
         return 0
     fi
     koopa::alert "Modifying '${dict[file]}' to include '${dict[group]}'."
-    # FIXME This isn't passing sudo to touch correctly.
     koopa::sudo_append_string "${dict[string]}" "${dict[file]}"
     koopa::chmod --sudo '0440' "${dict[file]}"
     koopa::alert_success "Passwordless sudo enabled for '${dict[group]}' \
@@ -185,55 +189,60 @@ at '${file}'."
     return 0
 }
 
-# FIXME Rework using dict approach.
-koopa::enable_shell() { # {{{1
+koopa::enable_shell_for_all_users() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-03.
     # """
-    local cmd_name cmd_path etc_file make_prefix user
+    local dict
     koopa::assert_has_args "$#"
-    # FIXME Need to inform the user when this is skipped.
-    koopa::is_admin || return 0
-    cmd_name="${1:?}"
-    make_prefix="$(koopa::make_prefix)"
-    cmd_path="${make_prefix}/bin/${cmd_name}"
-    etc_file='/etc/shells'
-    [[ -f "$etc_file" ]] || return 0
-    koopa::alert "Updating '${etc_file}' to include '${cmd_path}'."
-    if ! koopa::file_detect_fixed "$etc_file" "$cmd_path"
+    koopa::assert_is_admin
+    declare -A dict=(
+        [cmd_name]="${1:?}"
+        [etc_file]='/etc/shells'
+        [make_prefix]="$(koopa::make_prefix)"
+        [user]="$(koopa::user)"
+    )
+    dict[cmd_path]="${dict[make_prefix]}/bin/${dict[cmd_name]}"
+    koopa::assert_is_installed "${dict[cmd_path]}"
+    koopa::assert_is_file "${dict[etc_file]}"
+    if ! koopa::file_detect_fixed "${dict[etc_file]}" "${dict[cmd_path]}"
     then
-        koopa::sudo_append_string "$cmd_path" "$etc_file"
+        koopa::alert "Updating '${dict[etc_file]}' to \
+include '${dict[cmd_path]}'."
+        koopa::sudo_append_string "${dict[cmd_path]}" "${dict[etc_file]}"
     else
-        koopa::alert_success "'${cmd_path}' already defined in '${etc_file}'."
+        koopa::alert_note "'${dict[cmd_path]}' already defined \
+in '${dict[etc_file]}'."
     fi
-    user="$(koopa::user)"
-    koopa::alert_note "Run 'chsh -s ${cmd_path} ${user}' to change the \
-default shell."
+    koopa::alert_info "Run 'chsh -s ${dict[cmd_path]} ${dict[user]}' to \
+change the default shell."
     return 0
 }
 
 koopa::find_user_profile() { # {{{1
     # """
     # Find current user's shell profile configuration file.
-    # @note Updated 2021-05-15.
+    # @note Updated 2022-02-03.
     # """
-    local file shell
+    local dict
     koopa::assert_has_no_args "$#"
-    shell="$(koopa::shell_name)"
-    case "$shell" in
+    declare -A dict=(
+        [shell]="$(koopa::shell_name)"
+    )
+    case "${dict[shell]}" in
         'bash')
-            file="${HOME}/.bashrc"
+            dict[file]="${HOME}/.bashrc"
             ;;
         'zsh')
-            file="${HOME}/.zshrc"
+            dict[file]="${HOME}/.zshrc"
             ;;
         *)
-            file="${HOME}/.profile"
+            dict[file]="${HOME}/.profile"
             ;;
     esac
-    [[ -n "$file" ]] || return 1
-    koopa::print "$file"
+    [[ -n "${dict[file]}" ]] || return 1
+    koopa::print "${dict[file]}"
     return 0
 }
 
@@ -265,48 +274,50 @@ koopa::fix_rbenv_permissions() { # {{{1
 
 koopa::fix_zsh_permissions() { # {{{1
     # """
-    # Fix ZSH permissions, to ensure compaudit checks pass.
-    # @note Updated 2021-03-18.
+    # Fix ZSH permissions, to ensure 'compaudit' checks pass.
+    # @note Updated 2022-02-03.
     # """
-    local app_prefix koopa_prefix make_prefix
+    local app dict
     koopa::assert_has_no_args "$#"
-    koopa::alert 'Fixing Zsh permissions.'
-    koopa_prefix="$(koopa::koopa_prefix)"
+    declare -A app=(
+        [zsh]="$(koopa::locate_zsh 2>/dev/null || true)"
+    )
+    declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
+        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [make_prefix]="$(koopa::make_prefix)"
+    )
     koopa::sys_chmod 'g-w' \
-        "${koopa_prefix}/lang/shell/zsh" \
-        "${koopa_prefix}/lang/shell/zsh/functions"
-    koopa::is_installed 'zsh' || return 0
-    make_prefix="$(koopa::make_prefix)"
-    if [[ -d "${make_prefix}/share/zsh/site-functions" ]]
+        "${dict[koopa_prefix]}/lang/shell/zsh" \
+        "${dict[koopa_prefix]}/lang/shell/zsh/functions"
+    koopa::is_installed "${app[zsh]}" || return 0
+    if [[ -d "${dict[make_prefix]}/share/zsh/site-functions" ]]
     then
-        if koopa::str_detect_regex \
-            "$(koopa::which zsh)" "^${make_prefix}"
+        if koopa::str_detect_regex "${app[zsh]}" "^${dict[make_prefix]}"
         then
             koopa::sys_chmod 'g-w' \
-                "${make_prefix}/share/zsh" \
-                "${make_prefix}/share/zsh/site-functions"
+                "${dict[make_prefix]}/share/zsh" \
+                "${dict[make_prefix]}/share/zsh/site-functions"
         fi
     fi
-    app_prefix="$(koopa::app_prefix)"
-    if [[ -d "$app_prefix" ]]
+    if [[ -d "${dict[app_prefix]}" ]]
     then
         if koopa::str_detect_regex \
-            "$(koopa::which_realpath zsh)" "^${app_prefix}"
+            "$(koopa::realpath "${app[zsh]}")" "^${dict[app_prefix]}"
         then
             koopa::sys_chmod 'g-w' \
-                "${app_prefix}/zsh/"*'/share/zsh' \
-                "${app_prefix}/zsh/"*'/share/zsh/'* \
-                "${app_prefix}/zsh/"*'/share/zsh/'*'/functions'
+                "${dict[app_prefix]}/zsh/"*'/share/zsh' \
+                "${dict[app_prefix]}/zsh/"*'/share/zsh/'* \
+                "${dict[app_prefix]}/zsh/"*'/share/zsh/'*'/functions'
         fi
     fi
-    koopa::alert_success 'Zsh permissions should pass compaudit checks.'
     return 0
 }
 
 koopa::link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-02-03.
     # """
     local dict pos
     koopa::assert_has_args "$#"
@@ -315,10 +326,12 @@ koopa::link_dotfile() { # {{{1
         [dotfiles_config_link]="$(koopa::dotfiles_config_link)"
         [dotfiles_prefix]="$(koopa::dotfiles_prefix)"
         [dotfiles_private_prefix]="$(koopa::dotfiles_private_prefix)"
-        [force]=0
         [opt]=0
         [opt_prefix]="$(koopa::opt_prefix)"
+        [overwrite]=0
         [private]=0
+        [source_subdir]="${1:?}"
+        [symlink_basename]="${2:-}"
         [xdg_config_home]="$(koopa::xdg_config_home)"
     )
     pos=()
@@ -329,12 +342,13 @@ koopa::link_dotfile() { # {{{1
                 dict[config]=1
                 shift 1
                 ;;
-            '--force')
-                dict[force]=1
-                shift 1
-                ;;
             '--opt')
                 dict[opt]=1
+                shift 1
+                ;;
+            '--overwrite' | \
+            '--force')
+                dict[overwrite]=1
                 shift 1
                 ;;
             '--private')
@@ -352,8 +366,6 @@ koopa::link_dotfile() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_le "$#" 2
-    dict[source_subdir]="${1:?}"
-    dict[symlink_basename]="${2:-}"
     if [[ -z "${dict[symlink_basename]}" ]]
     then
         dict[symlink_basename]="$(koopa::basename "${dict[source_subdir]}")"
@@ -387,7 +399,7 @@ koopa::link_dotfile() { # {{{1
     fi
     dict[symlink_path]="${dict[symlink_prefix]}/${dict[symlink_basename]}"
     # Inform the user when nuking a broken symlink.
-    if [[ "${dict[force]}" -eq 1 ]] ||
+    if [[ "${dict[overwrite]}" -eq 1 ]] ||
         { [[ -L "${dict[symlink_path]}" ]] && \
             [[ ! -e "${dict[symlink_path]}" ]]; }
     then
@@ -410,10 +422,14 @@ koopa::link_dotfile() { # {{{1
 koopa::reload_shell() { # {{{1
     # """
     # Reload the current shell.
-    # @note Updated 2021-03-18.
+    # @note Updated 2022-02-03.
     # """
+    local app
     koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [shell]="$(koopa::locate_shell)"
+    )
     # shellcheck disable=SC2093
-    exec "${SHELL:?}" -il
+    exec "${app[shell]}" -il
     return 0
 }
