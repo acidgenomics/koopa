@@ -325,7 +325,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         else
             koopa::sys_set_permissions --recursive --user "${dict[prefix]}"
         fi
-        koopa::delete_empty_dirs "${dict[prefix]}"
+        # > koopa::delete_empty_dirs "${dict[prefix]}"
         if [[ "${dict[link_app]}" -eq 1 ]]
         then
             koopa::delete_broken_symlinks "${dict[make_prefix]}"
