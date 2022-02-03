@@ -330,8 +330,6 @@ koopa::link_dotfile() { # {{{1
         [opt_prefix]="$(koopa::opt_prefix)"
         [overwrite]=0
         [private]=0
-        [source_subdir]="${1:?}"
-        [symlink_basename]="${2:-}"
         [xdg_config_home]="$(koopa::xdg_config_home)"
     )
     pos=()
@@ -346,8 +344,7 @@ koopa::link_dotfile() { # {{{1
                 dict[opt]=1
                 shift 1
                 ;;
-            '--overwrite' | \
-            '--force')
+            '--overwrite')
                 dict[overwrite]=1
                 shift 1
                 ;;
@@ -366,6 +363,8 @@ koopa::link_dotfile() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_le "$#" 2
+    dict[source_subdir]="${1:?}"
+    dict[symlink_basename]="${2:-}"
     if [[ -z "${dict[symlink_basename]}" ]]
     then
         dict[symlink_basename]="$(koopa::basename "${dict[source_subdir]}")"
