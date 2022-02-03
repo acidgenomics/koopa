@@ -438,13 +438,11 @@ _koopa_activate_coreutils_aliases() { # {{{1
 _koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2021-05-10.
+    # @note Updated 2022-02-03.
     #
-    # This will set the 'LD_COLORS' environment variable.
+    # This will set the 'LS_COLORS' environment variable.
     # """
     local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
-    [ -n "${SHELL:-}" ] || return 0
-    export SHELL  # RStudio shell config edge case.
     dir='dir'
     dircolors='dircolors'
     egrep='egrep'
@@ -452,7 +450,7 @@ _koopa_activate_dircolors() { # {{{1
     grep='grep'
     ls='ls'
     vdir='vdir'
-    if _koopa_is_macos && _koopa_is_installed gdircolors
+    if _koopa_is_macos && _koopa_is_installed 'gdircolors'
     then
         dir='gdir'
         dircolors='gdircolors'
@@ -2500,24 +2498,6 @@ _koopa_export_pager() { # {{{1
     then
         export PAGER='less -R'
     fi
-    return 0
-}
-
-_koopa_export_shell() { # {{{1
-    # """
-    # Export 'SHELL' variable.
-    # @note Updated 2021-05-21.
-    #
-    # Some POSIX shells, such as Dash, don't export this by default.
-    #
-    # RStudio Server terminal also doesn't export this, and can cause a
-    # warning to occur with dircolors.
-    #
-    # We are ensuring reexport here so that subshells contain the correct
-    # value, e.g. running 'bash -il' inside a Zsh login shell.
-    # """
-    SHELL="$(_koopa_shell_name)"
-    export SHELL
     return 0
 }
 
