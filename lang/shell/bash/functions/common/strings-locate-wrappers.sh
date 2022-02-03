@@ -294,6 +294,10 @@ koopa::locate_java() { # {{{1
         --opt='openjdk'
 }
 
+koopa::locate_jq() { # {{{1
+    koopa::locate_app 'jq'
+}
+
 koopa::locate_julia() { # {{{1
     koopa::locate_app \
         --app-name='julia' \
