@@ -3,11 +3,15 @@
 koopa::install_app_packages() { # {{{1
     # """
     # Install application packages.
-    # @note Updated 2021-11-17.
+    # @note Updated 2022-02-03.
     # """
     local name name_fancy pos
     koopa::assert_has_args "$#"
-    declare -A dict
+    declare -A dict=(
+        [name]=''
+        [name_fancy]=''
+        [reinstall]=0
+    )
     pos=()
     while (("$#"))
     do
@@ -29,6 +33,11 @@ koopa::install_app_packages() { # {{{1
                 dict[name_fancy]="${2:?}"
                 shift 2
                 ;;
+            # Flags ------------------------------------------------------------
+            '--reinstall')
+                dict[reinstall]=1
+                shift 1
+                ;;
             # Internally defined arguments -------------------------------------
             '--prefix='* | \
             '--prefix' | \
@@ -48,14 +57,25 @@ koopa::install_app_packages() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_is_set \
+        '--name' "${dict[name]}"
     dict[prefix_fun]="koopa::${dict[name]}_packages_prefix"
     koopa::assert_is_function "${dict[prefix_fun]}"
+    dict[prefix]="$("${dict[prefix_fun]}")"
+    if [[ -d "${dict[prefix]}" ]]
+    then
+        dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    fi
+    if [[ "${dict[reinstall]}" -eq 1 ]]
+    then
+        koopa::sys_rm "${dict[prefix]}"
+    fi
     koopa::install_app \
         --name-fancy="${dict[name_fancy]} packages" \
         --name="${dict[name]}-packages" \
         --no-link \
         --no-prefix-check \
-        --prefix="$("${dict[prefix_fun]}")" \
+        --prefix="${dict[prefix]}" \
         --version='rolling' \
         "$@"
     return 0
