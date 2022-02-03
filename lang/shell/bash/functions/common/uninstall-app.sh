@@ -154,10 +154,7 @@ ${dict[platform]}/${dict[uninstaller_file]}.sh"
                 dict[function]="${dict[platform]}_${dict[function]}"
             fi
             dict[function]="koopa:::${dict[function]}"
-            if ! koopa::is_function "${dict[function]}"
-            then
-                koopa::stop "Unsupported uninstaller: '${dict[function]}'."
-            fi
+            koopa::assert_is_function "${dict[function]}"
             "${dict[function]}" "$@"
         fi
         if [[ "${dict[quiet]}" -eq 0 ]]

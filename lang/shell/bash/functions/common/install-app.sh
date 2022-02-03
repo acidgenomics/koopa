@@ -271,6 +271,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
     fi
     if [[ -d "${dict[prefix]}" ]] && \
         [[ "${dict[auto_prefix]}" -eq 1 ]] && \
+        [[ "${dict[shared]}" -eq 1 ]] && \
         [[ "${dict[system]}" -eq 0 ]]
     then
         koopa::link_app_into_opt "${dict[prefix]}" "${dict[name]}"
