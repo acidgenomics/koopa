@@ -407,7 +407,9 @@ koopa::link_dotfile() { # {{{1
     then
         koopa::stop "Existing dotfile: '${dict[symlink_path]}'."
     fi
-    koopa::dl "${dict[symlink_path]}" "${dict[source_path]}"
+
+    koopa::alert "Linking dotfile from '${dict[source_path]}' \
+to '${dict[symlink_path]}'."
     # Create the parent directory, if necessary.
     dict[symlink_dirname]="$(koopa::dirname "${dict[symlink_path]}")"
     if [[ "${dict[symlink_dirname]}" != "${HOME:?}" ]]
