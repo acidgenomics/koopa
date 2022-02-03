@@ -338,6 +338,7 @@ _koopa_complete() { # {{{1
                 args=('create-env' 'remove-env')
             fi
             ;;
+            # FIXME Consider adding nested support for AWS CLI tools here.
     esac
     # Quoting inside the array doesn't work for Bash, but does for Zsh.
     COMPREPLY=($(compgen -W "${args[*]}" -- "${COMP_WORDS[COMP_CWORD]}"))
