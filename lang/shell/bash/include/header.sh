@@ -84,7 +84,7 @@ __koopa_realpath() { # {{{1
         return 1
     fi
     x="$("$readlink" -f "$@")"
-    [[ -e "$x" ]] || return 1
+    [[ -n "$x" ]] || return 1
     __koopa_print "$x"
     return 0
 }

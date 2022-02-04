@@ -4207,7 +4207,7 @@ _koopa_realpath() { # {{{1
         readlink="${brew_prefix}/opt/coreutils/bin/greadlink"
     fi
     x="$("$readlink" -f "$@")"
-    [ -e "$x" ] || return 1
+    [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
 }
