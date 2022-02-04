@@ -500,7 +500,6 @@ koopa::is_r_package_installed() { # {{{1
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::is_recent() { # {{{1
     # """
     # If the file exists and is more recent than 2 weeks old.
@@ -575,10 +574,12 @@ koopa::is_variable_defined() { # {{{1
     # @examples
     # koopa::is_variable_defined 'PATH'
     # """
-    local nounset var
+    local dict var
     koopa::assert_has_args "$#"
-    nounset="$(koopa::boolean_nounset)"
-    [[ "${nounset:-0}" -eq 1 ]] && set +u
+    declare -A dict=(
+        [nounset]="$(koopa::boolean_nounset)"
+    )
+    [[ "${dict[nounset]}" -eq 1 ]] && set +u
     for var
     do
         local x value
@@ -589,7 +590,7 @@ koopa::is_variable_defined() { # {{{1
         value="${!var}"
         [[ -n "${value:-}" ]] || return 1
     done
-    [[ "${nounset:-0}" -eq 1 ]] && set -u
+    [[ "${dict[nounset]}" -eq 1 ]] && set -u
     return 0
 }
 
