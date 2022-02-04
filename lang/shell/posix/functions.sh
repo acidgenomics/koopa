@@ -443,6 +443,7 @@ _koopa_activate_dircolors() { # {{{1
     # This will set the 'LS_COLORS' environment variable.
     # """
     local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
+    [ -n "${SHELL:-}" ] || return 0
     dir='dir'
     dircolors='dircolors'
     egrep='egrep'

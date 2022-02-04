@@ -36,6 +36,8 @@ _koopa_posix_header() { # {{{1
     then
         # > _koopa_umask || return 1
         _koopa_export_koopa_shell || return 1
+        # Edge case for RStudio Server terminal to support dircolors correctly.
+        [ -n "${SHELL:-}" ] && export SHELL
         _koopa_activate_xdg || return 1
         _koopa_add_koopa_config_link \
             "$(_koopa_koopa_prefix)" 'home' \
