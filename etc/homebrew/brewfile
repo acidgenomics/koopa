@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2022-01-26.
+# Updated 2022-02-07.
 #
 # @section ilmbase deprecation (due to neofetch):
 #
@@ -148,6 +148,7 @@ brew "procs"  # rust
 brew "proj"
 brew "protobuf"
 brew "pyenv"
+brew "pygments"
 brew "pylint"  # python
 brew "ranger"  # python
 brew "rename"

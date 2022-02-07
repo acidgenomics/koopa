@@ -748,16 +748,26 @@ _koopa_activate_koopa_paths() { # {{{1
 _koopa_activate_lesspipe() { # {{{1
     # """
     # Activate lesspipe.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-02-07.
     #
     # @seealso
-    # - https://github.com/wofr06/lesspipe
-    # - https://manned.org/lesspipe
+    # - https://github.com/wofr06/lesspipe/
+    # - https://manned.org/lesspipe/
+    # - https://superuser.com/questions/117841/
     # - brew info lesspipe
+    # - To list available styles (requires pygments):
+    #   'pygmentize -L styles'
     # """
     _koopa_is_installed 'lesspipe.sh' || return 0
-    export LESS_ADVANCED_PREPROCESSOR=1
+    export LESS='-R'
+    export LESSCOLOR='yes'
     export LESSOPEN='|lesspipe.sh %s'
+    export LESSQUIET=1
+    export LESS_ADVANCED_PREPROCESSOR=1
+    [ -z "${LESSCHARSET:-}" ] &&
+        export LESSCHARSET='utf-8'
+    [ -z "${PYGMENTIZE_STYLE:-}" ] &&
+        export PYGMENTIZE_STYLE='dracula'
     return 0
 }
 
