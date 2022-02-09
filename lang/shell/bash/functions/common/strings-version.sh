@@ -192,18 +192,17 @@ koopa::current_ensembl_version() { # {{{1
 koopa::current_flybase_version() { # {{{1
     # """
     # Current FlyBase version.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-09.
     # """
-    local app url x
+    local app x
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
         [head]="$(koopa::locate_head)"
         [tail]="$(koopa::locate_tail)"
     )
-    url='ftp://ftp.flybase.net/releases'
     x="$( \
-        koopa::parse_url --list-only "${url}/" \
+        koopa::parse_url --list-only "ftp://ftp.flybase.net/releases/" \
         | koopa::grep --extended-regexp '^FB[0-9]{4}_[0-9]{2}$' \
         | "${app[tail]}" -n 1 \
     )"
@@ -215,9 +214,9 @@ koopa::current_flybase_version() { # {{{1
 koopa::current_gencode_version() { # {{{1
     # """
     # Current GENCODE version.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-09.
     # """
-    local app base_url organism pattern short_name url x
+    local app dict
     koopa::assert_has_args_le "$#" 1
     declare -A app=(
         [curl]="$(koopa::locate_curl)"
@@ -225,35 +224,38 @@ koopa::current_gencode_version() { # {{{1
         [grep]="$(koopa::locate_grep)"
         [head]="$(koopa::locate_head)"
     )
-    organism="${1:-Homo sapiens}"
-    case "$organism" in
+    declare -A dict=(
+        [organism]="${1:-}"
+    )
+    [[ -z "${dict[organism]}" ]] && dict[organism]='Homo sapiens'
+    case "${dict[organism]}" in
         'Homo sapiens' | \
         'human')
-            short_name='human'
-            pattern='Release [0-9]+'
+            dict[short_name]='human'
+            dict[pattern]='Release [0-9]+'
             ;;
         'Mus musculus' | \
         'mouse')
-            short_name='mouse'
-            pattern='Release M[0-9]+'
+            dict[short_name]='mouse'
+            dict[pattern]='Release M[0-9]+'
             ;;
         *)
-            koopa::stop "Unsupported organism: '${organism}'."
+            koopa::stop "Unsupported organism: '${dict[organism]}'."
             ;;
     esac
-    base_url='https://www.gencodegenes.org'
-    url="${base_url}/${short_name}/"
-    x="$( \
-        koopa::parse_url "$url" \
+    dict[base_url]='https://www.gencodegenes.org'
+    dict[url]="${dict[base_url]}/${dict[short_name]}/"
+    dict[str]="$( \
+        koopa::parse_url "${dict[url]}" \
         | koopa::grep \
             --extended-regexp \
             --only-matching \
-            "$pattern" \
+            "${dict[pattern]}" \
         | "${app[head]}" -n 1 \
         | "${app[cut]}" -d ' ' -f 2 \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::print "${dict[str]}"
     return 0
 }
 
@@ -429,14 +431,6 @@ koopa::hdf5_version() { # {{{1
     koopa::print "$x"
     return 0
 }
-
-# FIXME This check seems to be failing on macOS.
-# FIXME Need to update Homebrew configuration?
-# Seeing this error, need to resolve:
-# Package icu-uc was not found in the pkg-config search path.
-# Perhaps you should add the directory containing `icu-uc.pc'
-# to the PKG_CONFIG_PATH environment variable
-# No package 'icu-uc' found
 
 koopa::icu4c_version() { # {{{1
     # """

@@ -582,7 +582,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-09.
     #
     # Don't activate 'binutils' here. Can mess up R package compilation.
     # """
@@ -601,6 +601,7 @@ _koopa_activate_homebrew() { # {{{1
             'bc' \
             'curl' \
             'gnu-getopt' \
+            'icu4c' \
             'ncurses' \
             'openssl@3' \
             'ruby' \
