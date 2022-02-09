@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing this error with Ruby 3.1:
+# Building native extensions. This could take a while...
+# ERROR:  While executing gem ... (Errno::EACCES)
+#     Permission denied @ rb_sysopen - /usr/local/Cellar/ruby/3.1.0/lib/ruby/gems/3.1.0/specifications/debug-1.4.0.gemspec
+
 koopa:::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
