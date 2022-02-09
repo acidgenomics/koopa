@@ -44,28 +44,28 @@ koopa::admin_group() { # {{{1
 koopa::arch2() { # {{{1
     # """
     # Alternative platform architecture.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-09.
     #
     # e.g. Intel: amd64; ARM: arm64.
     #
     # @seealso
     # - https://wiki.debian.org/ArchitectureSpecificsMemo
     # """
-    local x
+    local str
     koopa::assert_has_no_args "$#"
     case "$(koopa::arch)" in
         'aarch64')
-            x='arm64'
+            str='arm64'
             ;;
         'x86_64')
-            x='amd64'
+            str='amd64'
             ;;
         *)
             return 1
             ;;
     esac
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 
@@ -82,28 +82,28 @@ koopa::compress_ext_pattern() { # {{{1
 koopa::cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-09.
     # """
-    local app n
+    local app num
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [nproc]="$(koopa::locate_nproc 2>/dev/null || true)"
     )
     if koopa::is_installed "${app[nproc]}"
     then
-        n="$("${app[nproc]}")"
+        num="$("${app[nproc]}")"
     elif koopa::is_macos
     then
         app[sysctl]="$(koopa::macos_locate_sysctl)"
-        n="$("${app[sysctl]}" -n 'hw.ncpu')"
+        num="$("${app[sysctl]}" -n 'hw.ncpu')"
     elif koopa::is_linux
     then
         app[getconf]="$(koopa::linux_locate_getconf)"
-        n="$("${app[getconf]}" '_NPROCESSORS_ONLN')"
+        num="$("${app[getconf]}" '_NPROCESSORS_ONLN')"
     else
-        n=1
+        num=1
     fi
-    koopa::print "$n"
+    koopa::print "$num"
     return 0
 }
 
@@ -159,18 +159,21 @@ koopa::gnu_mirror_url() { # {{{1
 koopa::ip_address() { # {{{1
     # """
     # IP address.
-    # @note Updated 2020-07-14.
+    # @note Updated 2022-02-09.
     # """
-    type='public'
+    local dict
+    declare -A dict=(
+        [type]='public'
+    )
     while (("$#"))
     do
         case "$1" in
             '--local')
-                type='local'
+                dict[type]='local'
                 shift 1
                 ;;
             '--public')
-                type='public'
+                dict[type]='public'
                 shift 1
                 ;;
             *)
@@ -178,7 +181,7 @@ koopa::ip_address() { # {{{1
                 ;;
         esac
     done
-    case "$type" in
+    case "${dict[type]}" in
         'local')
             koopa::local_ip_address
             ;;
@@ -214,6 +217,7 @@ koopa::koopa_installers_url() { # {{{1
     # Koopa installers URL.
     # @note Updated 2022-01-06.
     # """
+    koopa::assert_has_no_args "$#"
     koopa::print "$(koopa::koopa_url)/installers"
 }
 
@@ -230,13 +234,13 @@ koopa::koopa_url() { # {{{1
 koopa::local_ip_address() { # {{{1
     # """
     # Local IP address.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-09.
     #
     # Some systems (e.g. macOS) will return multiple IP address matches for
     # Ethernet and WiFi. Here we're simplying returning the first match, which
     # corresponds to the default on macOS.
     # """
-    local app x
+    local app str
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
@@ -247,7 +251,7 @@ koopa::local_ip_address() { # {{{1
     then
         app[ifconfig]="$(koopa::macos_locate_ifconfig)"
         # shellcheck disable=SC2016
-        x="$( \
+        str="$( \
             "${app[ifconfig]}" \
             | koopa::grep 'inet ' \
             | koopa::grep 'broadcast' \
@@ -257,45 +261,46 @@ koopa::local_ip_address() { # {{{1
     else
         app[hostname]="$(koopa::locate_hostname)"
         # shellcheck disable=SC2016
-        x="$( \
+        str="$( \
             "${app[hostname]}" -I \
             | "${app[awk]}" '{print $1}' \
             | "${app[head]}" -n 1
         )"
     fi
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 
 koopa::make_build_string() { # {{{1
     # """
     # OS build string for 'make' configuration.
-    # @note Updated 2021-01-01.
+    # @note Updated 2022-02-09.
     #
     # Use this for 'configure --build' flag.
     #
     # - macOS: x86_64-darwin15.6.0
     # - Linux: x86_64-linux-gnu
     # """
+    local dict
     koopa::assert_has_no_args "$#"
-    local arch os_type string
-    arch="$(koopa::arch)"
+    declare -A dict=(
+        [arch]="$(koopa::arch)"
+    )
     if koopa::is_linux
     then
-        os_type='linux-gnu'
+        dict[os_type]='linux-gnu'
     else
-        os_type="$(koopa::os_type)"
+        dict[os_type]="$(koopa::os_type)"
     fi
-    string="${arch}-${os_type}"
-    koopa::print "$string"
+    koopa::print "${dict[arch]}-${dict[os_type]}"
     return 0
 }
 
 koopa::mem_gb() { # {{{1
     # """
     # Get total system memory in GB.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-09.
     #
     # - 1 GB / 1024 MB
     # - 1 MB / 1024 KB
@@ -324,117 +329,125 @@ koopa::mem_gb() { # {{{1
     else
         koopa::stop 'Unsupported system.'
     fi
-    mem="$( \
+    dict[str]="$( \
         "${app[awk]}" \
             -v denom="${dict[denom]}" \
             -v mem="${dict[mem]}" \
             'BEGIN{ printf "%.0f\n", mem / denom }' \
     )"
-    koopa::print "$mem"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::print "${dict[str]}"
     return 0
 }
 
 koopa::os_type() { # {{{1
     # """
     # Operating system type.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-02-09.
     # """
-    local app x
+    local app str
+    koopa::assert_has_no_args "$#"
     declare -A app=(
         [tr]="$(koopa::locate_tr)"
         [uname]="$(koopa::locate_uname)"
     )
-    x="$( \
+    str="$( \
         "${app[uname]}" -s \
         | "${app[tr]}" '[:upper:]' '[:lower:]' \
     )"
-    koopa::print "$x"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::public_ip_address() { # {{{1
     # """
     # Public (remote) IP address.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-09.
     #
     # @seealso
     # - https://www.cyberciti.biz/faq/
     #     how-to-find-my-public-ip-address-from-command-line-on-a-linux/
     # """
-    local dig x
+    local app str
     koopa::assert_has_no_args "$#"
-    x=''
-    # Attempt to use BIND's Domain Information Groper (dig) tool.
-    dig="$(koopa::locate_dig 2>/dev/null || true)"
-    if koopa::is_installed "$dig"
+    declare -A app=(
+        [dig]="$(koopa::locate_dig 2>/dev/null || true)"
+    )
+    if koopa::is_installed "${app[dig]}"
     then
-        x="$("$dig" +short 'myip.opendns.com' '@resolver1.opendns.com')"
+        # Attempt to use BIND's Domain Information Groper (dig) tool.
+        str="$( \
+            "${app[dig]}" +short \
+                'myip.opendns.com' '@resolver1.opendns.com' \
+        )"
+    else
+        # Otherwise fall back to parsing URL via cURL.
+        str="$(koopa::parse_url 'https://ipecho.net/plain')"
     fi
-    # Otherwise fall back to parsing URL via cURL.
-    if [[ -z "$x" ]]
-    then
-        x="$(koopa::parse_url 'https://ipecho.net/plain')"
-    fi
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 
 koopa::script_name() { # {{{1
     # """
     # Get the calling script name.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-02-09.
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """
-    local app file x
+    local app dict
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
         [head]="$(koopa::locate_head)"
     )
-    file="$( \
+    declare -A dict
+    dict[file]="$( \
         caller \
         | "${app[head]}" -n 1 \
         | "${app[cut]}" -d ' ' -f 2 \
     )"
-    x="$(koopa::basename "$file")"
-    [[ -n "$x" ]] || return 0
-    koopa::print "$x"
+    dict[bn]="$(koopa::basename "${dict[file]}")"
+    [[ -n "${dict[bn]}" ]] || return 0
+    koopa::print "${dict[bn]}"
     return 0
 }
 
 koopa::variable() { # {{{1
     # """
     # Return a variable stored 'variables.txt' include file.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-02-09.
     #
     # This approach handles inline comments.
     # """
-    local app file include_prefix key value
+    local app dict
+    koopa::assert_has_args_eq "$#" 1
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
         [head]="$(koopa::locate_head)"
     )
-    key="${1:?}"
-    include_prefix="$(koopa::include_prefix)"
-    file="${include_prefix}/variables.txt"
-    koopa::assert_is_file "$file"
-    value="$( \
+    declare -A dict=(
+        [key]="${1:?}"
+        [include_prefix]="$(koopa::include_prefix)"
+    )
+    dict[file]="${dict[include_prefix]}/variables.txt"
+    koopa::assert_is_file "${dict[file]}"
+    dict[str]="$( \
         koopa::grep \
             --extended-regexp \
             --only-matching \
-            "^${key}=\"[^\"]+\"" \
-            "$file" \
-        || koopa::stop "'${key}' not defined in '${file}'." \
+            "^${dict[key]}=\"[^\"]+\"" \
+            "${dict[file]}" \
+        || koopa::stop "'${dict[key]}' not defined in '${dict[file]}'." \
     )"
-    value="$( \
-        koopa::print "$value" \
+    dict[str]="$( \
+        koopa::print "${dict[str]}" \
             | "${app[head]}" -n 1 \
             | "${app[cut]}" -d '"' -f 2 \
     )"
-    [[ -n "$value" ]] || return 1
-    koopa::print "$value"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::print "${dict[str]}"
     return 0
 }
