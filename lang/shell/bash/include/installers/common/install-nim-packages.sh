@@ -3,7 +3,7 @@
 koopa:::install_nim_packages() { # {{{1
     # """
     # Install Nim packages using nimble.
-    # @note Updated 2022-01-26.
+    # @note Updated 2022-02-09.
     #
     # @seealso
     # - https://github.com/nim-lang/nimble/issues/734
@@ -13,7 +13,6 @@ koopa:::install_nim_packages() { # {{{1
     declare -A app=(
         [nimble]="$(koopa::locate_nimble)"
     )
-    koopa::configure_nim
     koopa::activate_nim
     pkgs=(
         'markdown'
