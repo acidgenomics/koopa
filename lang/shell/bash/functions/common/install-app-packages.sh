@@ -63,8 +63,12 @@ koopa::install_app_packages() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_is_set \
-        '--name' "${dict[name]}"
+    koopa::assert_is_set '--name' "${dict[name]}"
+    # Configure the language.
+    dict[configure_fun]="koopa::configure_${dict[name]}"
+    "${dict[configure_fun]}"
+    koopa::assert_is_function "${dict[configure_fun]}"
+    # Detect the linked package prefix, defined in 'opt'.
     dict[prefix_fun]="koopa::${dict[name]}_packages_prefix"
     koopa::assert_is_function "${dict[prefix_fun]}"
     dict[prefix]="$("${dict[prefix_fun]}")"
