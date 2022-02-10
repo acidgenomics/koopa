@@ -275,6 +275,7 @@ koopa::cli_system() { # {{{1
         'test' | \
         'variable' | \
         'variables')
+            key="${1:?}"
             ;;
         # Defunct --------------------------------------------------------------
         'conda-create-env')
