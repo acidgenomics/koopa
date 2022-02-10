@@ -168,50 +168,6 @@ ${dict[prefix]} was successful."
     return 0
 }
 
-koopa::download_sra_accession_list() { # {{{1
-    # """
-    # Download SRA accession list.
-    # @note Updated 2021-10-25.
-    # """
-    local app file id
-    koopa::assert_has_args_le "$#" 2
-    declare -A app=(
-        [cut]="$(koopa::locate_cut)"
-        [sed]="$(koopa::locate_sed)"
-    )
-    koopa::activate_conda_env 'entrez-direct'
-    koopa::assert_is_installed 'esearch' 'efetch'
-    id="${1:?}"
-    file="${2:-SraAccList.txt}"
-    koopa::alert "Downloading SRA '${id}' to '${file}'."
-    esearch -db sra -q "$id" \
-        | efetch -format 'runinfo' \
-        | "${app[sed]}" '1d' \
-        | "${app[cut]}" -d ',' -f 1 \
-        > "$file"
-    koopa::deactivate_conda
-    return 0
-}
-
-# FIXME Need to rework using dict approach.
-koopa::download_sra_run_info_table() { # {{{1
-    # """
-    # Download SRA run info table.
-    # @note Updated 2021-10-25.
-    # """
-    koopa::assert_has_args_le "$#" 2
-    koopa::activate_conda_env 'entrez-direct'
-    koopa::assert_is_installed 'esearch' 'efetch'
-    id="${1:?}"
-    file="${2:-SraRunTable.txt}"
-    koopa::alert "Downloading SRA '${id}' to '${file}'."
-    esearch -db sra -q "$id" \
-        | efetch -format runinfo \
-        > "$file"
-    koopa::deactivate_conda
-    return 0
-}
-
 # FIXME Rework using app/dict approach.
 koopa::ftp_mirror() { # {{{1
     # """
