@@ -3,24 +3,22 @@
 koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-10.
     # """
     local key
-    key="${1:-}"
-    if [[ -z "$key" ]]
-    then
-        koopa::stop "Missing argument: 'koopa app <ARG>...'."
-    fi
-    case "$key" in
-        'clean')
-            key='delete-broken-app-symlinks'
-            ;;
+    case "${1:-}" in
+        # Cross platform -------------------------------------------------------
+        'aws' | \
         'conda')
+            key="${1:?}-${2:?}"
             shift 1
-            key="conda-${1:?}"
             ;;
         'list')
             key='list-app-versions'
+            ;;
+        # Linux-specifc --------------------------------------------------------
+        'clean')
+            key='delete-broken-app-symlinks'
             ;;
         'link')
             key='link-app'
@@ -30,6 +28,13 @@ koopa::cli_app() { # {{{1
             ;;
         'unlink')
             key='unlink-app'
+            ;;
+        # Invalid --------------------------------------------------------------
+        '')
+            koopa::stop "Missing argument: 'koopa app <ARG>...'."
+            ;;
+        *)
+            koopa::invalid_arg "$*"
             ;;
     esac
     shift 1
@@ -155,15 +160,10 @@ koopa::cli_list() { # {{{1
 koopa::cli_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-10.
     # """
     local key
-    key="${1:-}"
-    if [[ -z "$key" ]]
-    then
-        koopa::stop "Missing argument: 'koopa system <ARG>...'."
-    fi
-    case "$key" in
+    case "${1:-}" in
         'check')
             key='check-system'
             ;;
@@ -231,6 +231,9 @@ koopa::cli_system() { # {{{1
             koopa::defunct 'koopa app conda remove-env'
             ;;
         # Invalid --------------------------------------------------------------
+        '')
+            koopa::stop "Missing argument: 'koopa system <ARG>...'."
+            ;;
         *)
             koopa::invalid_arg "$*"
             ;;
@@ -418,14 +421,14 @@ koopa::cli_which_function() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa CLI function, corresponding to 'koopa' binary.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-10.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
     # """
     local fun key
     koopa::assert_has_args "$#"
-    case "$1" in
+    case "${1:?}" in
         '--version' | \
         '-V' | \
         'version')
