@@ -147,7 +147,6 @@ koopa::sra_fastq_dump() { # {{{1
             [[ ! -f "${dict[fastq_dir]}/${id}_1.fastq.gz" ]]
         then
             koopa::alert "Extracting FASTQ in '${sra_file}'."
-            # FIXME We need to specify where the SRA file is, no?
             "${app[fasterq_dump]}" \
                 --details \
                 --force \
