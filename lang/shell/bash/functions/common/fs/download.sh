@@ -127,8 +127,6 @@ koopa::download_github_latest() { # {{{1
     return 0
 }
 
-# FIXME The refdata prefix doesn't currently work on macOS...need to put
-# inside koopa instead?
 koopa::download_refdata_scsig() { # {{{1
     # """
     # Download MSigDB SCSig reference data (now archived).
