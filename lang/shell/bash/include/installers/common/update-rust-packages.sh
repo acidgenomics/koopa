@@ -10,7 +10,6 @@ koopa:::update_rust_packages() { # {{{1
     # """
     local app
     koopa::assert_has_no_args "$#"
-    koopa::configure_rust
     koopa::activate_rust
     declare -A app=(
         [cargo]="$(koopa::locate_cargo)"
