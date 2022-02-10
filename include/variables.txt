@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-02-09"
+koopa-date="2022-02-10"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -520,14 +520,14 @@ node-prettier="2.5.1"               # 2021-12-04
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2022-01-19 from https://pypi.org/.
+# Updated 2022-02-10 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
 # Otherwise, for heavy libraries, consider using a conda environment instead.
 
-python-pip="21.3.1"             # default
-python-setuptools="60.5.0"      # default
+python-pip="22.0.2"             # default
+python-setuptools="60.6.0"      # default
 python-wheel="0.37.1"           # default
 
 python-black="22.1.0"           # recommended
