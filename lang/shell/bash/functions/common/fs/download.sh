@@ -166,42 +166,47 @@ ${dict[prefix]} was successful."
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::ftp_mirror() { # {{{1
     # """
     # Mirror contents from an FTP server.
-    # @note Updated 2021-12-09.
+    # @note Updated 2022-02-10.
     # """
-    local dir host user wget
+    local app dict
     koopa::assert_has_args "$#"
-    wget="$(koopa::locate_wget)"
-    dir=''
+    declare -A app=(
+        [wget]="$(koopa::locate_wget)"
+    )
+    declare -A dict=(
+        [dir]=''
+        [host]=''
+        [user]=''
+    )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--dir='*)
-                dir="${1#*=}"
+                dict[dir]="${1#*=}"
                 shift 1
                 ;;
             '--dir')
-                dir="${2:?}"
+                dict[dir]="${2:?}"
                 shift 2
                 ;;
             '--host='*)
-                host="${1#*=}"
+                dict[host]="${1#*=}"
                 shift 1
                 ;;
             '--host')
-                host="${2:?}"
+                dict[host]="${2:?}"
                 shift 2
                 ;;
             '--user='*)
-                user="${1#*=}"
+                dict[user]="${1#*=}"
                 shift 1
                 ;;
             '--user')
-                user="${2:?}"
+                dict[user]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -211,27 +216,31 @@ koopa::ftp_mirror() { # {{{1
         esac
     done
     koopa::assert_is_set \
-        '--host' "$host" \
-        '--user' "$user"
-    if [[ -n "$dir" ]]
+        '--host' "${dict[host]}" \
+        '--user' "${dict[user]}"
+    if [[ -n "${dict[dir]}" ]]
     then
-        dir="${host}/${dir}"
+        dict[dir]="${dict[host]}/${dict[dir]}"
     else
-        dir="${host}"
+        dict[dir]="${dict[host]}"
     fi
-    "$wget" --ask-password --mirror "ftp://${user}@${dir}/"*
+    "${app[wget]}" \
+        --ask-password \
+        --mirror \
+        "ftp://${dict[user]}@${dict[dir]}/"*
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::parse_url() { # {{{1
     # """
     # Parse a URL using cURL.
-    # @note Updated 2021-11-02.
+    # @note Updated 2022-02-10.
     # """
-    local curl curl_args pos url
+    local app curl_args dict pos
     koopa::assert_has_args "$#"
-    curl="$(koopa::locate_curl)"
+    declare -A app=(
+        [curl]="$(koopa::locate_curl)"
+    )
     curl_args=(
         '--disable'  # Ignore '~/.curlrc'. Must come first.
         '--fail'
@@ -262,41 +271,91 @@ koopa::parse_url() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 1
-    url="${1:?}"
+    curl_args+=("${1:?}")
     # NOTE Don't use 'koopa::print' here, since we need to pass binary output
     # in some cases for GPG key configuration.
-    "$curl" "${curl_args[@]}" "$url"
+    "${app[curl]}" "${curl_args[@]}"
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::wget_recursive() { # {{{1
     # """
     # Download files with wget recursively.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-02-10.
     #
     # Note that we need to escape the wildcards in the password.
     # For direct input, can just use single quotes to escape.
-    # See also: https://unix.stackexchange.com/questions/379181
+    #
+    # @seealso
+    # - https://unix.stackexchange.com/questions/379181
+    #
+    # @examples
+    # > koopa::wget_recursive \
+    # >     --url='ftp://ftp.example.com/' \
+    # >     --user='user' \
+    # >     --password='pass'
     # """
-    local datetime log_file name password url user wget wget_args
-    koopa::assert_has_args_eq "$#" 3
-    wget="$(koopa::locate_wget)"
-    url="${1:?}"
-    user="${2:?}"
-    password="${3:?}"
-    password="${password@Q}"
-    datetime="$(koopa::datetime)"
-    log_file="wget-${datetime}.log"
+    local app dict wget_args
+    koopa::assert_has_args "$#"
+    declare -A app=(
+        [wget]="$(koopa::locate_wget)"
+    )
+    declare -A dict=(
+        [datetime]="$(koopa::datetime)"
+        [password]=''
+        [url]=''
+        [user]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--password='*)
+                dict[password]="${1#*=}"
+                shift 1
+                ;;
+            '--password')
+                dict[password]="${2:?}"
+                shift 2
+                ;;
+            '--url='*)
+                dict[url]="${1#*=}"
+                shift 1
+                ;;
+            '--url')
+                dict[url]="${2:?}"
+                shift 2
+                ;;
+            '--user='*)
+                dict[user]="${1#*=}"
+                shift 1
+                ;;
+            '--user')
+                dict[user]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_set \
+        '--password' "${dict[password]}" \
+        '--url' "${dict[url]}" \
+        '--user' "${dict[user]}"
+    dict[log_file]="wget-${dict[datetime]}.log"
+    dict[password]="${dict[password]@Q}"
     wget_args=(
-        "--output-file=${log_file}"
-        "--password=${password}"
-        "--user=${user}"
+        "--output-file=${dict[log_file]}"
+        "--password=${dict[password]}"
+        "--user=${dict[user]}"
         '--continue'
         '--debug'
         '--no-parent'
         '--recursive'
+        "${dict[url]}"/*
     )
-    "$wget" "${wget_args[@]}" "$url"/*
+    "${app[wget]}" "${wget_args[@]}"
     return 0
 }
