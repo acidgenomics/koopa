@@ -57,6 +57,18 @@ koopa::cli_app() { # {{{1
         'list')
             key='list-app-versions'
             ;;
+        'python')
+            # e.g. 'koopa app python pip-outdated'.
+            case "${2:-}" in
+                'pip-outdated')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
         # Linux-specifc --------------------------------------------------------
         'clean')
             key='delete-broken-app-symlinks'
