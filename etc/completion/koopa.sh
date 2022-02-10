@@ -48,6 +48,7 @@ _koopa_complete() { # {{{1
                         'conda'
                         'list'
                         'python'
+                        'sra'
                     )
                     if _koopa_is_linux
                     then
@@ -348,6 +349,14 @@ _koopa_complete() { # {{{1
                         'python')
                             args=(
                                 'pip-outdated'
+                            )
+                            ;;
+                        'sra')
+                            args=(
+                                'download-accession-list'
+                                'download-run-info-table'
+                                'fastq-dump'
+                                'prefetch'
                             )
                             ;;
                     esac

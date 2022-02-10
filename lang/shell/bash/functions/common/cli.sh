@@ -69,6 +69,22 @@ koopa::cli_app() { # {{{1
             key="${1:?}-${2:?}"
             shift 1
             ;;
+        'sra')
+            # e.g. 'koopa app sra fastq-dump ...'.
+            case "${2:-}" in
+                'download-accession-list' | \
+                'download-run-info-table' | \
+                'fastq-dump' | \
+                'prefetch')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+
         # Linux-specifc --------------------------------------------------------
         'clean')
             key='delete-broken-app-symlinks'
