@@ -8,8 +8,49 @@ koopa::cli_app() { # {{{1
     local key
     case "${1:-}" in
         # Cross platform -------------------------------------------------------
-        'aws' | \
+        'aws')
+            # e.g. 'koopa app aws batch list-jobs ...'.
+            case "${2:-}" in
+                'batch')
+                    case "${3:-}" in
+                        'fetch-and-run' | \
+                        'list-jobs')
+                            ;;
+                        *)
+                            koopa::invalid_arg "$*"
+                        ;;
+                    esac
+                    ;;
+                's3')
+                    case "${3:-}" in
+                        'find' | \
+                        'list-large-files' | \
+                        'ls' | \
+                        'mv-to-parent' | \
+                        'sync')
+                            ;;
+                        *)
+                            koopa::invalid_arg "$*"
+                        ;;
+                    esac
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}-${3:?}"
+            shift 2
+            ;;
         'conda')
+            # e.g. 'koopa app conda create-env ...'.
+            case "${2:-}" in
+                'create-env' | \
+                'remove-env')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
             key="${1:?}-${2:?}"
             shift 1
             ;;
