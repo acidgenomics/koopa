@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider renaming this function, prefixing with 'sra-'.
-# FIXME Need to compress FASTQ files here.
-# FIXME Allow the user to set FASTQ output and SRA input targets.
-# FIXME Allow the user to pass in temp directory
-# FIXME Allow the user to set '--compress' or '--no-compress' overrides.
-
 koopa::sra_fastq_dump() { # {{{1
     # """
     # Dump FASTQ files from SRA file list (in parallel).
@@ -56,6 +50,12 @@ koopa::sra_fastq_dump() { # {{{1
     # - https://rnnh.github.io/bioinfo-notebook/docs/fasterq-dump.html
     # - https://edwards.sdsu.edu/research/the-perils-of-fasterq-dump/
     # - https://www.reneshbedre.com/blog/ncbi_sra_toolkit.html
+    #
+    # @examples
+    # > koopa::sra_fastq_dump \
+    # >     --accession-file='srp049596-accession-list.txt' \
+    # >     --prefetch-directory='srp049596-prefetch' \
+    # >     --fastq-directory='srp049596-fastq'
     # """
     local app dict sra_file sra_files
     declare -A app=(
@@ -66,55 +66,92 @@ koopa::sra_fastq_dump() { # {{{1
     declare -A dict=(
         [acc_file]=''
         [compress]=1
+        [fastq_dir]='fastq'
+        [prefetch_dir]='sra'
         [threads]="$(koopa::cpu_count)"
     )
-    # FIXME Allow override of '--compress' with '--no-compress'
-    # FIXME Allow for direct input of identifiers, or an accession file.
-    # FIXME '--accession-file'.
-    if [[ -n "${dict[acc_file]}" ]]
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--accession-file='*)
+                dict[acc_file]="${1#*=}"
+                shift 1
+                ;;
+            '--accession-file')
+                dict[acc_file]="${2:?}"
+                shift 2
+                ;;
+            '--fastq-directory='*)
+                dict[fastq_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-directory')
+                dict[fastq_dir]="${2:?}"
+                shift 2
+                ;;
+            '--prefetch-directory='*)
+                dict[prefetch_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--prefetch-directory')
+                dict[prefetch_dir]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--compress')
+                dict[compress]=1
+                shift 1
+                ;;
+            '--no-compress')
+                dict[compress]=0
+                shift 1
+                ;;
+            # Invalid ----------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                shift 1
+                ;;
+        esac
+    done
+    koopa::assert_is_set \
+        '--accession-file' "${dict[acc_file]}" \
+        '--fastq-directory' "${dict[fastq_dir]}" \
+        '--prefetch-directory' "${dict[prefetch_dir]}"
+    koopa::assert_is_file "${dict[acc_file]}"
+    if [[ ! -d "${dict[prefetch_dir]}" ]]
     then
-        koopa::assert_is_file "$acc_file"
-        # Parse this and pass identifiers to 'sra_prefetch_parallel'.
-        # FIXME Need to rework our prefetcher to support direct ID input
-        # or an accession file.
+        koopa::sra_prefetch_parallel \
+            --accession-file="${acc_file}" \
+            --output-directory="${dict[prefetch_dir]}"
     fi
-    fastq_dir='fastq'
-    sra_dir='sra'
-    if [[ ! -d "$sra_dir" ]]
-    then
-        koopa::sra_prefetch_parallel "$acc_file"
-    fi
-    koopa::assert_is_dir "$sra_dir"
+    koopa::assert_is_dir "${dict[prefetch_dir]}"
+    koopa::alert "Extracting FASTQ to '${dict[fastq_dir]}'."
     readarray -t sra_files <<< "$(
         koopa::find \
             --glob='*.sra' \
             --max-depth=2 \
             --min-depth=2 \
-            --prefix="$sra_dir" \
+            --prefix="${dict[prefetch_dir]}" \
             --sort \
             --type='f' \
     )"
     koopa::assert_is_array_non_empty "${sra_files[@]:-}"
-    # FIXME Need to match this against our input, and check that all the files
-    # exist...allow for manual input of 'SRR*' files, for example.
     for sra_file in "${sra_files[@]}"
     do
+        local id
         id="$(koopa::basename_sans_ext "$sra_file")"
-        if [[ ! -f "${fastq_dir}/${id}.fastq" ]] && \
-            [[ ! -f "${fastq_dir}/${id}_1.fastq" ]] && \
-            [[ ! -f "${fastq_dir}/${id}.fastq.gz" ]] && \
-            [[ ! -f "${fastq_dir}/${id}_1.fastq.gz" ]]
+        if [[ ! -f "${dict[fastq_dir]}/${id}.fastq" ]] && \
+            [[ ! -f "${dict[fastq_dir]}/${id}_1.fastq" ]] && \
+            [[ ! -f "${dict[fastq_dir]}/${id}.fastq.gz" ]] && \
+            [[ ! -f "${dict[fastq_dir]}/${id}_1.fastq.gz" ]]
         then
             koopa::alert "Extracting FASTQ in '${sra_file}'."
-            koopa::dl \
-                'SRA accession' "$id" \
-                'SRA file' "$sra_file"
-            # FIXME Can we locate this program without activating conda
-            # and/or Homebrew prefix? Simpler. Think about this one.
+            # FIXME We need to specify where the SRA file is, no?
             "${app[fasterq_dump]}" \
                 --details \
                 --force \
-                --outdir "$fastq_dir" \
+                --outdir "${dict[fastq_dir]}" \
                 --print-read-nr \
                 --progress \
                 --skip-technical \
@@ -122,21 +159,17 @@ koopa::sra_fastq_dump() { # {{{1
                 --strict \
                 --threads "${dict[threads]}" \
                 --verbose \
-                "${id}"
+                "$sra_file"
         fi
     done
-    # FIXME Look in FASTQ target directory and gzip and uncompressed files.
-    # FIXME Run gzip compression here in parallel if we detect any uncompressed
-    # FASTQ files.
-    # FIXME Alert the user that we are compressing specific files...
     if [[ "${dict[compress]}" -eq 1 ]]
     then
-        # FIXME This should only proceed when we detect files...
+        koopa::alert 'Compressing FASTQ files.'
         koopa::find \
             --glob='*.fastq' \
             --max-depth=1 \
             --min-depth=1 \
-            --prefix="$fastq_dir" \
+            --prefix="${dict[fastq_dir]}" \
             --sort \
             --type='f' \
         | "${app[parallel]}" \
