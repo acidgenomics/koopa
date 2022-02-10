@@ -57,34 +57,27 @@ koopa::sra_fastq_dump() { # {{{1
     # - https://edwards.sdsu.edu/research/the-perils-of-fasterq-dump/
     # - https://www.reneshbedre.com/blog/ncbi_sra_toolkit.html
     # """
-    local app dict
-    local acc_file fastq_dir gzip id sra_dir sra_file sra_files threads
-    # FIXME Rework the argparse here
-    koopa::assert_has_args_le "$#" 1
+    local app dict sra_file sra_files
     declare -A app=(
+        [fasterq_dump]="$(koopa::locate_fasterq_dump)"
         [gzip]="$(koopa::locate_gzip)"
         [parallel]="$(koopa::locate_parallel)"
     )
     declare -A dict=(
-        # FIXME Allow override with '--no-compress'
+        [acc_file]=''
         [compress]=1
         [threads]="$(koopa::cpu_count)"
     )
-
-    # FIXME Add a locator function for this instead, that switches between
-    # conda and Homebrew opt on macOS.
-    # FIXME Rework this to merely locate the program directly instead.
-    if koopa::is_macos
+    # FIXME Allow override of '--compress' with '--no-compress'
+    # FIXME Allow for direct input of identifiers, or an accession file.
+    # FIXME '--accession-file'.
+    if [[ -n "${dict[acc_file]}" ]]
     then
-        koopa::activate_homebrew_opt_prefix 'sratoolkit'
-    else
-        koopa::activate_conda_env 'sra-tools'
+        koopa::assert_is_file "$acc_file"
+        # Parse this and pass identifiers to 'sra_prefetch_parallel'.
+        # FIXME Need to rework our prefetcher to support direct ID input
+        # or an accession file.
     fi
-    koopa::assert_is_installed 'fasterq-dump'
-
-    acc_file="${1:-}"
-    [[ -z "$acc_file" ]] && acc_file='sra-accession-list.txt'
-    koopa::assert_is_file "$acc_file"
     fastq_dir='fastq'
     sra_dir='sra'
     if [[ ! -d "$sra_dir" ]]
@@ -102,6 +95,8 @@ koopa::sra_fastq_dump() { # {{{1
             --type='f' \
     )"
     koopa::assert_is_array_non_empty "${sra_files[@]:-}"
+    # FIXME Need to match this against our input, and check that all the files
+    # exist...allow for manual input of 'SRR*' files, for example.
     for sra_file in "${sra_files[@]}"
     do
         id="$(koopa::basename_sans_ext "$sra_file")"
@@ -116,7 +111,7 @@ koopa::sra_fastq_dump() { # {{{1
                 'SRA file' "$sra_file"
             # FIXME Can we locate this program without activating conda
             # and/or Homebrew prefix? Simpler. Think about this one.
-            fasterq-dump \
+            "${app[fasterq_dump]}" \
                 --details \
                 --force \
                 --outdir "$fastq_dir" \
@@ -130,12 +125,10 @@ koopa::sra_fastq_dump() { # {{{1
                 "${id}"
         fi
     done
-
     # FIXME Look in FASTQ target directory and gzip and uncompressed files.
     # FIXME Run gzip compression here in parallel if we detect any uncompressed
     # FASTQ files.
     # FIXME Alert the user that we are compressing specific files...
-
     if [[ "${dict[compress]}" -eq 1 ]]
     then
         # FIXME This should only proceed when we detect files...
