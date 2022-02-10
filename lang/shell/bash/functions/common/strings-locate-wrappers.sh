@@ -109,6 +109,18 @@ koopa::locate_conda_bedtools() { # {{{1
     koopa::locate_conda_app 'bedtools'
 }
 
+koopa::locate_conda_efetch() { # {{{1
+    koopa::locate_conda_app \
+        --app-name='efetch' \
+        --env-name='entrez-direct'
+}
+
+koopa::locate_conda_esearch() { # {{{1
+    koopa::locate_conda_app \
+        --app-name='esearch' \
+        --env-name='entrez-direct'
+}
+
 koopa::locate_conda_kallisto() { # {{{1
     koopa::locate_conda_app 'kallisto'
 }
@@ -179,6 +191,12 @@ koopa::locate_du() { # {{{1
 
 koopa::locate_emacs() { # {{{1
     koopa::locate_app 'emacs'
+}
+
+koopa::locate_fasterq_dump() { # {{{1
+    koopa::locate_app \
+        --app-name='fasterq-dump' \
+        --opt='sratoolkit'
 }
 
 koopa::locate_fd() { # {{{1
@@ -476,6 +494,12 @@ koopa::locate_perlbrew() { # {{{1
 
 koopa::locate_pkg_config() { # {{{1
     koopa::locate_app 'pkg-config'
+}
+
+koopa::locate_prefetch() { # {{{1
+    koopa::locate_app \
+        --app-name='prefetch' \
+        --opt='sratoolkit'
 }
 
 koopa::locate_python() { # {{{1

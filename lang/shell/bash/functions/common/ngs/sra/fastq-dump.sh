@@ -5,10 +5,11 @@
 # FIXME Allow the user to set FASTQ output and SRA input targets.
 # FIXME Allow the user to pass in temp directory
 # FIXME Allow the user to set '--compress' or '--no-compress' overrides.
-koopa::sra_fastq_dump_parallel() { # {{{1
+
+koopa::sra_fastq_dump() { # {{{1
     # """
-    # Dump FASTQ files from SRA file list.
-    # @note Updated 2021-10-13.
+    # Dump FASTQ files from SRA file list (in parallel).
+    # @note Updated 2022-02-10.
     #
     # @section fasterq-dump vs. fastq-dump:
     #
@@ -57,21 +58,21 @@ koopa::sra_fastq_dump_parallel() { # {{{1
     # - https://www.reneshbedre.com/blog/ncbi_sra_toolkit.html
     # """
     local app dict
-    local acc_file fastq_dir gzip id sort sra_dir sra_file sra_files threads
+    local acc_file fastq_dir gzip id sra_dir sra_file sra_files threads
     # FIXME Rework the argparse here
     koopa::assert_has_args_le "$#" 1
     declare -A app=(
         [gzip]="$(koopa::locate_gzip)"
         [parallel]="$(koopa::locate_parallel)"
-        # FIXME Take this out once we add '--sort' support to 'koopa::find'.
-        [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
         # FIXME Allow override with '--no-compress'
         [compress]=1
         [threads]="$(koopa::cpu_count)"
     )
-    
+
+    # FIXME Add a locator function for this instead, that switches between
+    # conda and Homebrew opt on macOS.
     # FIXME Rework this to merely locate the program directly instead.
     if koopa::is_macos
     then
@@ -79,10 +80,10 @@ koopa::sra_fastq_dump_parallel() { # {{{1
     else
         koopa::activate_conda_env 'sra-tools'
     fi
-
     koopa::assert_is_installed 'fasterq-dump'
+
     acc_file="${1:-}"
-    [[ -z "$acc_file" ]] && acc_file='SRR_Acc_List.txt'
+    [[ -z "$acc_file" ]] && acc_file='sra-accession-list.txt'
     koopa::assert_is_file "$acc_file"
     fastq_dir='fastq'
     sra_dir='sra'
@@ -91,17 +92,14 @@ koopa::sra_fastq_dump_parallel() { # {{{1
         koopa::sra_prefetch_parallel "$acc_file"
     fi
     koopa::assert_is_dir "$sra_dir"
-
-    # FIXME Rework 'koopa::find' to support '--sort' natively.
     readarray -t sra_files <<< "$(
-        # FIXME Need to only match file.
         koopa::find \
             --glob='*.sra' \
             --max-depth=2 \
             --min-depth=2 \
             --prefix="$sra_dir" \
+            --sort \
             --type='f' \
-        | "${app[sort]}" \
     )"
     koopa::assert_is_array_non_empty "${sra_files[@]:-}"
     for sra_file in "${sra_files[@]}"
@@ -141,12 +139,12 @@ koopa::sra_fastq_dump_parallel() { # {{{1
     if [[ "${dict[compress]}" -eq 1 ]]
     then
         # FIXME This should only proceed when we detect files...
-        # FIXME Add a sort call here, once we add support to 'koopa::find'.
         koopa::find \
             --glob='*.fastq' \
             --max-depth=1 \
             --min-depth=1 \
             --prefix="$fastq_dir" \
+            --sort \
             --type='f' \
         | "${app[parallel]}" \
             --bar \
@@ -155,76 +153,6 @@ koopa::sra_fastq_dump_parallel() { # {{{1
             --progress \
             --will-cite \
             "${app[gzip]} --force --verbose {}"
-    fi
-
-    echo 'FIXME 4'
-
-    if koopa::is_macos
-    then
-        echo 'FIXME Need to deactivate Homebrew prefix.'
-    else
-        koopa::deactivate_conda
-    fi
-    return 0
-}
-
-# FIXME Rework using app/dict approach.
-# FIXME Allow the user to set target directory.
-# FIXME Allow the user to set 'accession-file' argument.
-koopa::sra_prefetch_parallel() { # {{{1
-    # """
-    # Prefetch files from SRA in parallel with Aspera.
-    # @note Updated 2021-10-13.
-    #
-    # @seealso
-    # - Conda build isn't currently working on macOS.
-    #   https://github.com/ncbi/sra-tools/issues/497
-    # """
-    local acc_file cmd dir jobs parallel
-    # FIXME Rework the argparse, similar to FASTQ dump function above.
-    koopa::assert_has_args_le "$#" 1
-    acc_file="${1:-}"
-    [[ -z "$acc_file" ]] && acc_file='SRR_Acc_List.txt'
-    koopa::assert_is_file "$acc_file"
-
-    # FIXME Rework this to merely locate the program directly instead.
-    if koopa::is_macos
-    then
-        koopa::activate_homebrew_opt_prefix 'sratoolkit'
-    else
-        koopa::activate_conda_env 'sra-tools'
-    fi
-    koopa::assert_is_installed 'prefetch'
-    jobs="$(koopa::cpu_count)"
-    parallel="$(koopa::locate_parallel)"
-    sort="$(koopa::locate_sort)"
-    dir="$(koopa::init_dir 'sra')"
-    cmd=(
-        'prefetch'
-        '--force' 'no'
-        '--output-directory' "${dir}"
-        '--progress'
-        '--resume' 'yes'
-        '--type' 'sra'
-        '--verbose'
-        '--verify' 'yes'
-        '{}'
-    )
-    # FIXME Rework this an an internal koopa function.
-    "$parallel" \
-        --arg-file "$acc_file" \
-        --bar \
-        --eta \
-        --jobs "$jobs" \
-        --progress \
-        --will-cite \
-        "${cmd[*]}"
-    # FIXME If we locate program directly, this step will be unnecessary.
-    if koopa::is_macos
-    then
-        echo 'FIXME deactivate homebrew opt prefix'
-    else
-        koopa::deactivate_conda
     fi
     return 0
 }
