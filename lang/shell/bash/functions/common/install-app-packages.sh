@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This needs to always run configure script first, otherwise we can end
-# up with this weird path mismatch in CLI message about install start:
-# - ruby-packages/3.0
-# - ruby-packages/3.1
-# This is due to opt link being updated after we start the installer...
-
 koopa::install_app_packages() { # {{{1
     # """
     # Install application packages.
