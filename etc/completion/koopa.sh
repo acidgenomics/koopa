@@ -47,6 +47,7 @@ _koopa_complete() { # {{{1
                         'aws'
                         'conda'
                         'list'
+                        'python'
                     )
                     if _koopa_is_linux
                     then
@@ -342,6 +343,11 @@ _koopa_complete() { # {{{1
                             args=(
                                 'create-env'
                                 'remove-env'
+                            )
+                            ;;
+                        'python')
+                            args=(
+                                'pip-outdated'
                             )
                             ;;
                     esac
