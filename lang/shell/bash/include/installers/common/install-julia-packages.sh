@@ -3,7 +3,7 @@
 koopa:::install_julia_packages() { # {{{1
     # """
     # Install Julia packages.
-    # @note Updated 2022-02-09.
+    # @note Updated 2022-02-10.
     #
     # @seealso
     # - 'JULIA_DEPOT_PATH' in shell.
@@ -20,6 +20,7 @@ koopa:::install_julia_packages() { # {{{1
     # """
     local app dict
     koopa::assert_has_no_args "$#"
+    koopa::activate_julia
     declare -A app=(
         [julia]="$(koopa::locate_julia)"
     )
@@ -28,7 +29,6 @@ koopa:::install_julia_packages() { # {{{1
     )
     dict[script]="${dict[script_prefix]}/install-packages.jl"
     koopa::assert_is_file "${dict[script]}"
-    koopa::activate_julia
     "${app[julia]}" "${app[script]}"
     return 0
 }

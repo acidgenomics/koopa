@@ -3,7 +3,7 @@
 koopa:::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2022-02-09.
+    # @note Updated 2022-02-10.
     #
     # @seealso
     # - 'gem pristine --all'
@@ -13,7 +13,6 @@ koopa:::install_ruby_packages() { # {{{1
     # """
     local app dict gem gems
     koopa::assert_has_no_args "$#"
-    koopa::configure_ruby
     koopa::activate_ruby
     declare -A app=(
         [gem]="$(koopa::locate_gem)"
