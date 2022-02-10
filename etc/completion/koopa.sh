@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-02-02.
+    # Updated 2022-02-10.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -23,10 +23,8 @@ _koopa_complete() { # {{{1
     # """
     local args
     COMPREPLY=()
-    [[ -n "${COMP_CWORD:-}" ]] || return 0
-    case "${COMP_CWORD:?}" in
+    case "${COMP_CWORD:-}" in
         '1')
-            [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'koopa' ]] || return 0
             args=(
                 '--help'
                 '--version'
@@ -43,10 +41,10 @@ _koopa_complete() { # {{{1
             )
             ;;
         '2')
-            [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'koopa' ]] || return 0
             case "${COMP_WORDS[COMP_CWORD-1]}" in
                 'app')
                     args=(
+                        'aws'
                         'conda'
                         'list'
                     )
@@ -331,14 +329,52 @@ _koopa_complete() { # {{{1
             esac
             ;;
         '3')
-            [[ "${COMP_WORDS[COMP_CWORD-3]}" == 'koopa' ]] || return 0
-            if [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'app' ]] && \
-                [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'conda' ]]
-            then
-                args=('create-env' 'remove-env')
-            fi
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                'app')
+                    case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        'aws')
+                            args=(
+                                'batch'
+                                's3'
+                            )
+                            ;;
+                        'conda')
+                            args=(
+                                'create-env'
+                                'remove-env'
+                            )
+                            ;;
+                    esac
+                    ;;
+            esac
             ;;
-            # FIXME Consider adding nested support for AWS CLI tools here.
+        '4')
+            case "${COMP_WORDS[COMP_CWORD-3]}" in
+                'app')
+                    case "${COMP_WORDS[COMP_CWORD-2]}" in
+                        'aws')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'batch')
+                                    args=(
+                                        'fetch-and-run'
+                                        'list-jobs'
+                                    )
+                                    ;;
+                                's3')
+                                    args=(
+                                        'find'
+                                        'list-large-files'
+                                        'ls'
+                                        'mv-to-parent'
+                                        'sync'
+                                    )
+                                    ;;
+                            esac
+                            ;;
+                    esac
+                    ;;
+            esac
+            ;;
     esac
     # Quoting inside the array doesn't work for Bash, but does for Zsh.
     COMPREPLY=($(compgen -W "${args[*]}" -- "${COMP_WORDS[COMP_CWORD]}"))
