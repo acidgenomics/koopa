@@ -535,7 +535,6 @@ koopa::install_python() { # {{{1
         --name-fancy='Python' \
         --name='python' \
         "$@"
-    koopa::configure_python
 }
 
 koopa::install_python_packages() { # {{{1
