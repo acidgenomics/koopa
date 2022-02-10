@@ -215,7 +215,7 @@ luarocks="3.8.0"
 make="4.3"
 
 # https://github.com/mamba-org/mamba/tags/
-mamba="0.20.0"
+mamba="0.21.0"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
