@@ -3484,7 +3484,7 @@ _koopa_macos_activate_gpg_suite() { # {{{1
 _koopa_macos_activate_iterm() { # {{{1
     # """
     # Activate iTerm2 configuration.
-    # @note Updated 2021-05-07.
+    # @note Updated 2022-02-10.
     #
     # Only attempt to dynamically set dark/light theme if the current iTerm2
     # theme is named either 'dark' or 'light'.
@@ -3500,8 +3500,6 @@ _koopa_macos_activate_iterm() { # {{{1
     if [ "$iterm_theme" != "$koopa_theme" ] && \
         { [ "$iterm_theme" = 'dark' ] || [ "$iterm_theme" = 'light' ]; }
     then
-        _koopa_alert "🌗 Switching iTerm '${iterm_theme}' to \
-non-default '${koopa_theme}' profile."
         _koopa_print "\033]50;SetProfile=${koopa_theme}\a"
         ITERM_PROFILE="$koopa_theme"
     fi
