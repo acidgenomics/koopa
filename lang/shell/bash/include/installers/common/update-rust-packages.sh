@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE We should early return here when no packages need updating.
+
 koopa:::update_rust_packages() { # {{{1
     # """
     # Update Rust packages.
