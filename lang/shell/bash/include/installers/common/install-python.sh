@@ -57,5 +57,6 @@ ${dict[file]}"
     "${app[make]}" install
     app[python]="${dict[prefix]}/bin/${dict[name]}${dict[maj_min_ver]}"
     koopa::assert_is_installed "${app[python]}"
+    koopa::configure_python "${app[python]}"
     return 0
 }
