@@ -57,6 +57,29 @@ koopa::cli_app() { # {{{1
             key="${1:?}-${2:?}"
             shift 1
             ;;
+        'docker')
+            # e.g. 'koopa app docker run'.
+            case "${2:-}" in
+                'build' | \
+                'build-all-images' | \
+                'build-all-tags' | \
+                'prune-all-images' | \
+                'prune-all-stale-tags' | \
+                'prune-old-images' | \
+                'prune-stale-tags' | \
+                'push' | \
+                'remove' | \
+                'run' | \
+                'tag')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+
         'list')
             key='list-app-versions'
             ;;
