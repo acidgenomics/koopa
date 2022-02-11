@@ -3,7 +3,7 @@
 koopa:::install_bash() { # {{{1
     # """
     # Install Bash.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-02-11.
     #
     # @section Applying patches:
     #
@@ -46,9 +46,13 @@ ${dict[name]}-${dict[maj_min_ver]}-patches"
     # Apply patches, if necessary.
     if [[ "${dict[n_patches]}" -gt 0 ]]
     then
-        dict[np_str]="$(koopa::ngettext "${dict[n_patches]}" 'patch' 'patches')"
-        koopa::alert "Applying ${dict[n_patches]} ${dict[np_str]} \
-from ${dict[patch_base_url]}."
+        koopa::alert "$(koopa::ngettext \
+            --prefix='Applying ' \
+            --num="${dict[n_patches]}" \
+            --msg1='patch' \
+            --msg2='patches' \
+            --suffix="from '${dict[patch_base_url]}'." \
+        )"
         # mmv_tr: trimmed major minor version.
         dict[mmv_tr]="$( \
             koopa::print "${dict[maj_min_ver]}" \

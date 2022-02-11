@@ -61,7 +61,7 @@ koopa::test_roff() { # {{{1
                 --sort \
                 --type 'f' \
         )"
-        if ! koopa::is_array_non_empty "${man_files[@]:-}"
+        if koopa::is_array_empty "${man_files[@]:-}"
         then
             koopa::stop "No files: '${man_dir}'."
         fi
