@@ -3,7 +3,7 @@
 koopa::sra_download_accession_list() { # {{{1
     # """
     # Download SRA accession list.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-02-11.
     #
     # @examples
     # > koopa::sra_download_accession_list --srp-id='SRP049596'
@@ -13,8 +13,8 @@ koopa::sra_download_accession_list() { # {{{1
     koopa::assert_has_args "$#"
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
-        [efetch]="$(koopa::locate_conda_efetch)"
-        [esearch]="$(koopa::locate_conda_esearch)"
+        [efetch]="$(koopa::locate_efetch)"
+        [esearch]="$(koopa::locate_esearch)"
         [sed]="$(koopa::locate_sed)"
     )
     declare -A dict=(
@@ -67,7 +67,7 @@ to '${dict[acc_file]}'."
 koopa::sra_download_run_info_table() { # {{{1
     # """
     # Download SRA run info table.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-02-11.
     #
     # @examples
     # > koopa::sra_download_run_info_table --srp-id='SRP049596'
@@ -76,8 +76,8 @@ koopa::sra_download_run_info_table() { # {{{1
     local app dict
     koopa::assert_has_args "$#"
     declare -A app=(
-        [efetch]="$(koopa::locate_conda_efetch)"
-        [esearch]="$(koopa::locate_conda_esearch)"
+        [efetch]="$(koopa::locate_efetch)"
+        [esearch]="$(koopa::locate_esearch)"
     )
     declare -A dict=(
         [run_info_file]=''

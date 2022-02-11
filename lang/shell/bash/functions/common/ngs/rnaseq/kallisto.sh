@@ -4,7 +4,7 @@
 # FIXME Ensure naming conventions here match salmon runners.
 # FIXME Need to add improved input checks, similar to salmon functions.
 # FIXME Rename 'fasta-file' to 'transcriptome-fasta-file'.
-# FIXME Rework using 'koopa::locate_conda_kallisto'.
+# FIXME Rework using 'koopa::locate_kallisto'.
 
 # Main functions ===============================================================
 koopa::run_kallisto_paired_end() { # {{{1
