@@ -257,6 +257,7 @@ _koopa_complete() { # {{{1
                         'app-versions'
                         'dotfiles'
                         'path-priority'
+                        'programs'
                     )
                     ;;
                 'system')
