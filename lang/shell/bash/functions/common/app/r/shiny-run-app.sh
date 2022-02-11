@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::run_shiny_app() { # {{{1
+koopa::r_shiny_run_app() { # {{{1
     # """
-    # Run Shiny application.
-    # @note Updated 2022-01-20.
+    # Run an R/Shiny application.
+    # @note Updated 2022-02-11.
     # """
     local app dict
     declare -A app=(
