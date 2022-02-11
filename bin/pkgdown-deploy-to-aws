@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
-
-koopa::pkgdown_deploy_to_aws "$@"

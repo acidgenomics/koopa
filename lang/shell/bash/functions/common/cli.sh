@@ -110,6 +110,17 @@ koopa::cli_app() { # {{{1
             key="${1:?}-${2:?}"
             shift 1
             ;;
+        'jekyll')
+            case "${2:-}" in
+                'serve')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
         'list')
             key='list-app-versions'
             ;;
@@ -118,6 +129,18 @@ koopa::cli_app() { # {{{1
                 'pip-outdated' | \
                 'venv-create' | \
                 'venv-create-r-reticulate')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'r')
+            case "${2:-}" in
+                'drat' | \
+                'pkgdown-deploy-to-aws')
                     ;;
                 *)
                     koopa::invalid_arg "$*"
