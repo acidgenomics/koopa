@@ -63,7 +63,9 @@ koopa::cli_app() { # {{{1
         'python')
             # e.g. 'koopa app python pip-outdated'.
             case "${2:-}" in
-                'pip-outdated')
+                'pip-outdated' | \
+                'venv-create' | \
+                'venv-create-r-reticulate')
                     ;;
                 *)
                     koopa::invalid_arg "$*"
