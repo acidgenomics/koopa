@@ -76,6 +76,40 @@ koopa::cli_app() { # {{{1
             key="${1:?}-${2:?}"
             shift 1
             ;;
+        'git')
+            case "${2:-}" in
+                'checkout-recursive' | \
+                'pull' | \
+                'pull-recursive' | \
+                'push-recursive' | \
+                'push-submodules' | \
+                'rename-master-to-main' | \
+                'reset' | \
+                'reset-fork-to-upstream' | \
+                'rm-submodule' | \
+                'rm-untracked' | \
+                'status-recursive')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'gpg')
+            case "${2:-}" in
+                'prompt' | \
+                'reload' | \
+                'restart')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
         'list')
             key='list-app-versions'
             ;;
@@ -109,6 +143,17 @@ koopa::cli_app() { # {{{1
         'ssh')
             case "${2:-}" in
                 'generate-key')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'wget')
+            case "${2:-}" in
+                'recursive')
                     ;;
                 *)
                     koopa::invalid_arg "$*"
