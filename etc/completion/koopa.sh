@@ -50,6 +50,7 @@ _koopa_complete() { # {{{1
                         'list'
                         'python'
                         'sra'
+                        'ssh'
                     )
                     if _koopa_is_linux
                     then
@@ -375,6 +376,11 @@ _koopa_complete() { # {{{1
                                 'download-run-info-table'
                                 'fastq-dump'
                                 'prefetch'
+                            )
+                            ;;
+                        'ssh')
+                            args=(
+                                'generate-key'
                             )
                             ;;
                     esac
