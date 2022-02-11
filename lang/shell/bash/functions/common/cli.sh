@@ -76,6 +76,17 @@ koopa::cli_app() { # {{{1
             key="${1:?}-${2:?}"
             shift 1
             ;;
+        'ftp')
+            case "${2:-}" in
+                'mirror')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
         'git')
             case "${2:-}" in
                 'checkout-recursive' | \
@@ -123,6 +134,17 @@ koopa::cli_app() { # {{{1
             ;;
         'list')
             key='list-app-versions'
+            ;;
+        'md5sum')
+            case "${2:-}" in
+                'check-to-new-md5-file')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
             ;;
         'python')
             case "${2:-}" in

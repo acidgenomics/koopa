@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# shellcheck source=/dev/null
-. "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
-
-koopa::md5sum_check_to_new_md5_file "$@"
