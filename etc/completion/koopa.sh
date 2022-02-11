@@ -349,6 +349,8 @@ _koopa_complete() { # {{{1
                         'python')
                             args=(
                                 'pip-outdated'
+                                'venv-create'
+                                'venv-create-r-reticulate'
                             )
                             ;;
                         'sra')
