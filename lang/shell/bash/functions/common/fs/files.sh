@@ -42,7 +42,7 @@ koopa::autopad_zeros() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     files=("$@")
-    if ! koopa::is_array_non_empty "${files[@]:-}"
+    if koopa::is_array_empty "${files[@]:-}"
     then
         koopa::stop 'No files.'
     fi
@@ -182,7 +182,7 @@ koopa::delete_adobe_bridge_cache() { # {{{1
             --regex='^\.BridgeCache(T)?$' \
             --type='f' \
     )"
-    if ! koopa::is_array_non_empty "${files[@]:-}"
+    if koopa::is_array_empty "${files[@]:-}"
     then
         koopa::alert_note 'Failed to detect any Bridge cache files.'
         return 1

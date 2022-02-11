@@ -17,7 +17,7 @@ koopa::git_status_recursive() { # {{{1
         local dir
         for dir in "${dirs[@]}"
         do
-            local repo repos str
+            local repo repos
             dir="$(koopa::realpath "$dir")"
             readarray -t repos <<< "$( \
                 koopa::find \
@@ -27,12 +27,17 @@ koopa::git_status_recursive() { # {{{1
                     --prefix="$dir" \
                     --sort \
             )"
-            if ! koopa::is_array_non_empty "${repos[@]:-}"
+            if koopa::is_array_empty "${repos[@]:-}"
             then
                 koopa::stop "Failed to detect any git repos in '${dir}'."
             fi
-            str="$(koopa::ngettext "${#repos[@]}" 'repo' 'repos')"
-            koopa::h1 "Checking status of ${#repos[@]} ${str} in '${dir}'."
+            koopa::h1 "$(koopa::ngettext \
+                --prefix='Checking status of ' \
+                --num="${#repos[@]}" \
+                --msg1='repo' \
+                --msg2='repos' \
+                --suffix=" in '${dir}'." \
+            )"
             for repo in "${repos[@]}"
             do
                 koopa::h2 "$repo"

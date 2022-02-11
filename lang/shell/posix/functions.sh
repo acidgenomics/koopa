@@ -211,13 +211,12 @@ __koopa_remove_from_path_string() { # {{{1
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-02-02.
     # """
     local file
     _koopa_activate_coreutils_aliases
     alias br='_koopa_alias_broot'
     alias bucket='_koopa_alias_bucket'
-    alias conda='_koopa_alias_conda'
     alias doom-emacs='_koopa_alias_doom_emacs'
     alias emacs-vanilla='_koopa_alias_emacs_vanilla'
     alias emacs='_koopa_alias_emacs'
@@ -225,10 +224,8 @@ _koopa_activate_aliases() { # {{{1
     alias j='z'
     alias k='_koopa_alias_k'
     alias mamba='_koopa_alias_mamba'
-    # > alias mcfly='_koopa_alias_mcfly'
     alias nvim-fzf='_koopa_alias_nvim_fzf'
     alias nvim-vanilla='_koopa_alias_nvim_vanilla'
-    # > alias perl='_koopa_alias_perl'
     alias perlbrew='_koopa_alias_perlbrew'
     alias pipx='_koopa_alias_pipx'
     alias prelude-emacs='_koopa_alias_prelude_emacs'
@@ -356,7 +353,7 @@ _koopa_activate_completion() { # {{{1
 _koopa_activate_conda() { # {{{1
     # """
     # Activate conda using 'activate' script.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-02.
     #
     # @seealso
     # - https://github.com/mamba-org/mamba/issues/984
@@ -441,13 +438,12 @@ _koopa_activate_coreutils_aliases() { # {{{1
 _koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2021-05-10.
+    # @note Updated 2022-02-03.
     #
-    # This will set the 'LD_COLORS' environment variable.
+    # This will set the 'LS_COLORS' environment variable.
     # """
     local dir dircolors dircolors_file dotfiles_prefix egrep fgrep grep ls vdir
     [ -n "${SHELL:-}" ] || return 0
-    export SHELL  # RStudio shell config edge case.
     dir='dir'
     dircolors='dircolors'
     egrep='egrep'
@@ -455,7 +451,7 @@ _koopa_activate_dircolors() { # {{{1
     grep='grep'
     ls='ls'
     vdir='vdir'
-    if _koopa_is_macos && _koopa_is_installed gdircolors
+    if _koopa_is_macos && _koopa_is_installed 'gdircolors'
     then
         dir='gdir'
         dircolors='gdircolors'
@@ -586,7 +582,7 @@ _koopa_activate_go() { # {{{1
 _koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-09.
     #
     # Don't activate 'binutils' here. Can mess up R package compilation.
     # """
@@ -605,6 +601,7 @@ _koopa_activate_homebrew() { # {{{1
             'bc' \
             'curl' \
             'gnu-getopt' \
+            'icu4c' \
             'ncurses' \
             'openssl@3' \
             'ruby' \
@@ -752,16 +749,26 @@ _koopa_activate_koopa_paths() { # {{{1
 _koopa_activate_lesspipe() { # {{{1
     # """
     # Activate lesspipe.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-02-07.
     #
     # @seealso
-    # - https://github.com/wofr06/lesspipe
-    # - https://manned.org/lesspipe
+    # - https://github.com/wofr06/lesspipe/
+    # - https://manned.org/lesspipe/
+    # - https://superuser.com/questions/117841/
     # - brew info lesspipe
+    # - To list available styles (requires pygments):
+    #   'pygmentize -L styles'
     # """
     _koopa_is_installed 'lesspipe.sh' || return 0
-    export LESS_ADVANCED_PREPROCESSOR=1
+    export LESS='-R'
+    export LESSCOLOR='yes'
     export LESSOPEN='|lesspipe.sh %s'
+    export LESSQUIET=1
+    export LESS_ADVANCED_PREPROCESSOR=1
+    [ -z "${LESSCHARSET:-}" ] &&
+        export LESSCHARSET='utf-8'
+    [ -z "${PYGMENTIZE_STYLE:-}" ] &&
+        export PYGMENTIZE_STYLE='dracula'
     return 0
 }
 
@@ -1714,7 +1721,7 @@ _koopa_alias_bucket() { # {{{1
 _koopa_alias_conda() { # {{{1
     # """
     # Conda alias.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-02-02.
     # """
     _koopa_is_alias 'conda' && unalias 'conda'
     _koopa_activate_conda
@@ -1798,16 +1805,6 @@ _koopa_alias_mamba() { # {{{1
     mamba "$@"
 }
 
-_koopa_alias_mcfly() { # {{{1
-    # """
-    # mcfly alias.
-    # @note Updated 2021-06-16.
-    # """
-    _koopa_is_alias 'mcfly' && unalias 'mcfly'
-    _koopa_activate_mcfly
-    mcfly "$@"
-}
-
 _koopa_alias_nvim_fzf() { # {{{1
     # """
     # Pipe FZF output to Neovim.
@@ -1824,17 +1821,6 @@ _koopa_alias_nvim_vanilla() { # {{{1
     # """
     _koopa_is_installed 'nvim' || return 1
     nvim -u 'NONE' "$@"
-}
-
-# NOTE This is not currently loaded during activation.
-_koopa_alias_perl() { #{{{1
-    # """
-    # Perl alias.
-    # @note Updated 2021-06-13.
-    # """
-    _koopa_is_alias 'perl' && unalias 'perl'
-    _koopa_activate_perl
-    perl "$@"
 }
 
 _koopa_alias_perlbrew() { # {{{1
@@ -2524,24 +2510,6 @@ _koopa_export_pager() { # {{{1
     then
         export PAGER='less -R'
     fi
-    return 0
-}
-
-_koopa_export_shell() { # {{{1
-    # """
-    # Export 'SHELL' variable.
-    # @note Updated 2021-05-21.
-    #
-    # Some POSIX shells, such as Dash, don't export this by default.
-    #
-    # RStudio Server terminal also doesn't export this, and can cause a
-    # warning to occur with dircolors.
-    #
-    # We are ensuring reexport here so that subshells contain the correct
-    # value, e.g. running 'bash -il' inside a Zsh login shell.
-    # """
-    SHELL="$(_koopa_shell_name)"
-    export SHELL
     return 0
 }
 
@@ -3516,7 +3484,7 @@ _koopa_macos_activate_gpg_suite() { # {{{1
 _koopa_macos_activate_iterm() { # {{{1
     # """
     # Activate iTerm2 configuration.
-    # @note Updated 2021-05-07.
+    # @note Updated 2022-02-10.
     #
     # Only attempt to dynamically set dark/light theme if the current iTerm2
     # theme is named either 'dark' or 'light'.
@@ -3532,8 +3500,6 @@ _koopa_macos_activate_iterm() { # {{{1
     if [ "$iterm_theme" != "$koopa_theme" ] && \
         { [ "$iterm_theme" = 'dark' ] || [ "$iterm_theme" = 'light' ]; }
     then
-        _koopa_alert "🌗 Switching iTerm '${iterm_theme}' to \
-non-default '${koopa_theme}' profile."
         _koopa_print "\033]50;SetProfile=${koopa_theme}\a"
         ITERM_PROFILE="$koopa_theme"
     fi
@@ -4251,7 +4217,7 @@ _koopa_realpath() { # {{{1
         readlink="${brew_prefix}/opt/coreutils/bin/greadlink"
     fi
     x="$("$readlink" -f "$@")"
-    [ -e "$x" ] || return 1
+    [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
 }

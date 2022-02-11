@@ -28,108 +28,111 @@ koopa:::list_path_priority() { # {{{1
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa:::list_path_priority_unique() { # {{{1
     # """
     # Split PATH string by ':' delim into lines but only return uniques.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-02-11.
     # """
-    local awk tac x
-    awk="$(koopa::locate_awk)"
-    tac="$(koopa::locate_tac)"
+    local app str
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [tac]="$(koopa::locate_tac)"
+    )
     # shellcheck disable=SC2016
-    x="$( \
+    str="$( \
         koopa:::list_path_priority "$@" \
-            | "$tac" \
-            | "$awk" '!a[$0]++' \
-            | "$tac" \
+            | "${app[tac]}" \
+            | "${app[awk]}" '!a[$0]++' \
+            | "${app[tac]}" \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 
-koopa::list() { # {{{1
+koopa::list_app_versions() { # {{{1
+    # """
+    # List installed application versions.
+    # @note Updated 2022-02-11.
+    # """
+    local dict
+    koopa::assert_has_no_args "$#"
+    declare -A dict=(
+        [prefix]="$(koopa::app_prefix)"
+    )
+    if [[ ! -d "${dict[prefix]}" ]]
+    then
+        koopa::alert_note "No apps are installed in '${dict[prefix]}'."
+        return 0
+    fi
+    dict[str]="$( \
+        koopa::find \
+            --max-depth=2 \
+            --min-depth=2 \
+            --prefix="${dict[prefix]}" \
+            --sort \
+            --type='d' \
+    )"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::print "${dict[str]}"
+    return 0
+}
+
+koopa::list_dotfiles() { # {{{1
+    # """
+    # List dotfiles.
+    # @note Updated 2022-02-11.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::h1 "Listing dotfiles in '${HOME:?}'."
+    koopa::find_dotfiles 'd' 'Directories'
+    koopa::find_dotfiles 'f' 'Files'
+    # FIXME We can't use the 'l' argument currently with Rust fd...rework.
+    # > koopa::find_dotfiles 'l' 'Symlinks'
+}
+
+koopa::list_path_priority() { # {{{1
+    # """
+    # List path priority.
+    # @note Updated 2022-02-11.
+    # """
+    local all_arr app dict unique_arr
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+    )
+    declare -A dict
+    readarray -t all_arr <<< "$( \
+        koopa:::list_path_priority "$@" \
+    )"
+    koopa::is_array_non_empty "${all_arr[@]:-}" || return 1
+    # shellcheck disable=SC2016
+    readarray -t unique_arr <<< "$( \
+        koopa::print "${all_arr[@]}" \
+            | "${app[awk]}" '!a[$0]++' \
+    )"
+    koopa::is_array_non_empty "${unique_arr[@]:-}" || return 1
+    dict[n_all]="${#all_arr[@]}"
+    dict[n_unique]="${#unique_arr[@]}"
+    dict[n_dupes]="$((dict[n_all] - dict[n_unique]))"
+    if [[ "${dict[n_dupes]}" -gt 0 ]]
+    then
+        koopa::alert_note "$(koopa::ngettext \
+            --num="${dict[n_dupes]}" \
+            --msg1='duplicate' \
+            --msg2='duplicates' \
+            --suffix=' detected.' \
+        )"
+    fi
+    koopa::print "${all_arr[@]}"
+    return 0
+}
+
+koopa::list_programs() { # {{{1
     # """
     # List koopa programs available in PATH.
     # @note Updated 2021-08-14.
     # """
     koopa::assert_has_no_args "$#"
     koopa::r_koopa --vanilla 'cliListPrograms'
-    return 0
-}
-
-# FIXME Rework using app/dict approach.
-koopa::list_app_versions() { # {{{1
-    # """
-    # List installed application versions.
-    # @note Updated 2021-05-24.
-    # """
-    local find prefix sort x
-    koopa::assert_has_no_args "$#"
-    find="$(koopa::locate_find)"
-    sort="$(koopa::locate_sort)"
-    prefix="$(koopa::app_prefix)"
-    if [[ ! -d "$prefix" ]]
-    then
-        koopa::alert_note "No applications are installed in '${prefix}'."
-        return 0
-    fi
-    # FIXME Rework using 'koopa::find'.
-    x="$( \
-        "$find" "$prefix" \
-            -mindepth 2 \
-            -maxdepth 2 \
-            -type 'd' \
-        | "$sort" \
-    )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
-    return 0
-}
-
-# FIXME Now seeing this error:
-# !! Error: Invalid type argument for Rust fd.
-# basename: missing operand
-# Try '/usr/local/opt/coreutils/libexec/gnubin/basename --help' for more information.
-
-koopa::list_dotfiles() { # {{{1
-    # """
-    # List dotfiles.
-    # @note Updated 2020-11-25.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::h1 'Listing dotfiles.'
-    koopa::find_dotfiles d 'Directories'
-    koopa::find_dotfiles f 'Files'
-    koopa::find_dotfiles l 'Symlinks'
-}
-
-# FIXME Rework using app/dict approach.
-koopa::list_path_priority() { # {{{1
-    # """
-    # List path priority.
-    # @note Updated 2021-05-24.
-    # """
-    local all all_arr awk n_all n_dupes n_unique str unique
-    awk="$(koopa::locate_awk)"
-    all="$(koopa:::list_path_priority "$@")"
-    [[ -n "$all" ]] || return 1
-    readarray -t all_arr <<< "$(koopa::print "$all")"
-    # shellcheck disable=SC2016
-    unique="$( \
-        koopa::print "$all" \
-        | "$awk" '!a[$0]++' \
-    )"
-    readarray -t unique_arr <<< "$(koopa::print "$unique")"
-    n_all="${#all_arr[@]}"
-    n_unique="${#unique_arr[@]}"
-    n_dupes="$((n_all - n_unique))"
-    if [[ "$n_dupes" -gt 0 ]]
-    then
-        str="$(koopa::ngettext "${n_dupes}" 'duplicate' 'duplicates')"
-        koopa::alert_note "${n_dupes} ${str} detected."
-    fi
-    koopa::print "$all"
     return 0
 }

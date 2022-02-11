@@ -3,7 +3,7 @@
 koopa:::install_zsh() { # {{{1
     # """
     # Install Zsh.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-02-03.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -63,7 +63,7 @@ ${dict[name]}/${dict[name]}/${dict[version]}/${dict[file]}"
     fi
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
-        koopa::enable_shell "${dict[name]}"
+        koopa::enable_shell_for_all_users "${dict[name]}"
     fi
     return 0
 }

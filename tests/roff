@@ -28,6 +28,7 @@ koopa::test_roff() { # {{{1
     # --------------------------------------------------------------------------
     # Put all 'man/' dirs into an array and loop.
     # FIXME Rework using 'koopa::find' here.
+    # FIXME Need to improve exclusion support in 'koopa::find'.
     readarray -t man_dirs <<< "$( \
         "${app[find]}" "${dict[koopa_prefix]}" \
             -mindepth 1 \
@@ -51,16 +52,16 @@ koopa::test_roff() { # {{{1
     for man_dir in "${man_dirs[@]}"
     do
         koopa::h3 "$man_dir"
-        # FIXME Rework using 'koopa::find' here.
+        # FIXME Confirm that this works here.
         readarray -t man_files <<< "$( \
-            "${app[find]}" "$man_dir" \
-                -mindepth 2 \
-                -maxdepth 2 \
-                -type 'f' \
-                -print \
-            | "${app[sort]}" \
+            koopa::find \
+                --max-depth=2 \
+                --min-depth=2 \
+                --prefix="$man_dir" \
+                --sort \
+                --type 'f' \
         )"
-        if ! koopa::is_array_non_empty "${man_files[@]:-}"
+        if koopa::is_array_empty "${man_files[@]:-}"
         then
             koopa::stop "No files: '${man_dir}'."
         fi
@@ -79,6 +80,7 @@ koopa::test_roff() { # {{{1
     koopa::h2 "Running exported script '--help' flag checks."
     # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
     # FIXME Rework using 'koopa::find' here.
+    # FIXME Need to improve exclusion support here.
     readarray -t bin_dirs <<< "$( \
         "${app[find]}" "${dict[koopa_prefix]}" \
             -mindepth 1 \
@@ -94,14 +96,13 @@ koopa::test_roff() { # {{{1
     for bin_dir in "${bin_dirs[@]}"
     do
         koopa::h3 "$bin_dir"
-        # FIXME Rework using 'koopa::find' here.
+        # FIXME Need to confirm that this works.
         readarray -t bin_files <<< "$( \
             "${app[find]}" "$bin_dir" \
-                -mindepth 1 \
-                -maxdepth 1 \
-                -type f \
-                -print \
-            | "${app[sort]}" \
+                --max-depth=1 \
+                --min-depth=1 \
+                --sort \
+                --type='f' \
         )"
         for bin_file in "${bin_files[@]}"
         do

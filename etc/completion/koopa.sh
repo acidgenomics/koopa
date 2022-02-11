@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-02-02.
+    # Updated 2022-02-11.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -23,10 +23,8 @@ _koopa_complete() { # {{{1
     # """
     local args
     COMPREPLY=()
-    [[ -n "${COMP_CWORD:-}" ]] || return 0
-    case "${COMP_CWORD:?}" in
+    case "${COMP_CWORD:-}" in
         '1')
-            [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'koopa' ]] || return 0
             args=(
                 '--help'
                 '--version'
@@ -43,16 +41,30 @@ _koopa_complete() { # {{{1
             )
             ;;
         '2')
-            [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'koopa' ]] || return 0
             case "${COMP_WORDS[COMP_CWORD-1]}" in
                 'app')
                     args=(
-                        'clean'
+                        'aws'
                         'conda'
+                        'docker'
+                        'ftp'
+                        'git'
+                        'gpg'
                         'list'
-                        'link'
-                        'unlink'
+                        'python'
+                        'r'
+                        'sra'
+                        'ssh'
+                        'wget'
                     )
+                    if _koopa_is_linux
+                    then
+                        args+=(
+                            'clean'
+                            'link'
+                            'unlink'
+                        )
+                    fi
                     ;;
                 'configure')
                     args=(
@@ -245,6 +257,7 @@ _koopa_complete() { # {{{1
                         'app-versions'
                         'dotfiles'
                         'path-priority'
+                        'programs'
                     )
                     ;;
                 'system')
@@ -264,6 +277,7 @@ _koopa_complete() { # {{{1
                         'os-string'
                         'path'
                         'prefix'
+                        'reload-shell'
                         'roff'
                         'set-permissions'
                         'switch-to-develop'
@@ -326,12 +340,135 @@ _koopa_complete() { # {{{1
             esac
             ;;
         '3')
-            [[ "${COMP_WORDS[COMP_CWORD-3]}" == 'koopa' ]] || return 0
-            if [[ "${COMP_WORDS[COMP_CWORD-2]}" == 'app' ]] && \
-                [[ "${COMP_WORDS[COMP_CWORD-1]}" == 'conda' ]]
-            then
-                args=('create-env' 'remove-env')
-            fi
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                'app')
+                    case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        'aws')
+                            args=(
+                                'batch'
+                                's3'
+                            )
+                            ;;
+                        'conda')
+                            args=(
+                                'create-env'
+                                'remove-env'
+                            )
+                            ;;
+                        'docker')
+                            args=(
+                                'build'
+                                'build-all-images'
+                                'build-all-tags'
+                                'prune-all-images'
+                                'prune-all-stale-tags'
+                                'prune-old-images'
+                                'prune-stale-tags'
+                                'push'
+                                'remove'
+                                'run'
+                                'tag'
+                            )
+                            ;;
+                        'ftp')
+                            args=(
+                                'mirror'
+                            )
+                            ;;
+                        'git')
+                            args=(
+                                'checkout-recursive'
+                                'pull'
+                                'pull-recursive'
+                                'push-recursive'
+                                'push-submodules'
+                                'rename-master-to-main'
+                                'reset'
+                                'reset-fork-to-upstream'
+                                'rm-submodule'
+                                'rm-untracked'
+                                'status-recursive'
+                            )
+                            ;;
+                        'gpg')
+                            args=(
+                                'prompt'
+                                'reload'
+                                'restart'
+                            )
+                            ;;
+                        'jekyll')
+                            args=(
+                                'serve'
+                            )
+                            ;;
+                        'md5sum')
+                            args=(
+                                'check-to-new-md5-file'
+                            )
+                            ;;
+                        'python')
+                            args=(
+                                'pip-outdated'
+                                'venv-create'
+                                'venv-create-r-reticulate'
+                            )
+                            ;;
+                        'r')
+                            args=(
+                                'drat'
+                                'pkgdown-deploy-to-aws'
+                                'shiny-run-app'
+                            )
+                            ;;
+                        'sra')
+                            args=(
+                                'download-accession-list'
+                                'download-run-info-table'
+                                'fastq-dump'
+                                'prefetch'
+                            )
+                            ;;
+                        'ssh')
+                            args=(
+                                'generate-key'
+                            )
+                            ;;
+                        'wget')
+                            args=(
+                                'recursive'
+                            )
+                            ;;
+                    esac
+                    ;;
+            esac
+            ;;
+        '4')
+            case "${COMP_WORDS[COMP_CWORD-3]}" in
+                'app')
+                    case "${COMP_WORDS[COMP_CWORD-2]}" in
+                        'aws')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'batch')
+                                    args=(
+                                        'fetch-and-run'
+                                        'list-jobs'
+                                    )
+                                    ;;
+                                's3')
+                                    args=(
+                                        'find'
+                                        'list-large-files'
+                                        'ls'
+                                        'mv-to-parent'
+                                        'sync'
+                                    )
+                                    ;;
+                            esac
+                            ;;
+                    esac
+                    ;;
+            esac
             ;;
     esac
     # Quoting inside the array doesn't work for Bash, but does for Zsh.

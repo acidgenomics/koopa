@@ -244,11 +244,13 @@ local({  # nolint
     } else {
         ## Alternatively, can use:
         ## > repos[["CRAN"]] <-
+        ## >     "https://cloud.r-project.org"
+        ## > repos[["CRAN"]] <-
         ## >     "https://cran.rstudio.com"
         ## > repos[["CRAN"]] <-
         ## >     "https://packagemanager.rstudio.com/cran/latest"
         repos[["CRAN"]] <-
-            "https://cloud.r-project.org"
+            "https://repo.miserver.it.umich.edu/cran"
     }
     ## Always include our Acid Genomics repo.
     repos[["AcidGenomics"]] <-

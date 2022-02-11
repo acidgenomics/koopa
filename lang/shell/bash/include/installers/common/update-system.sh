@@ -36,7 +36,6 @@ koopa:::update_system() { # {{{1
         koopa::update_pyenv
         koopa::update_rbenv
     fi
-    # > koopa::update_python_packages
     koopa::update_r_packages
     koopa::update_rust
     koopa::update_rust_packages

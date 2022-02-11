@@ -3,7 +3,7 @@
 koopa:::install_chemacs() { # {{{1
     # """
     # Install Chemacs2.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-02.
     # """
     local dict
     koopa::assert_has_no_args "$#"

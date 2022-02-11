@@ -3,7 +3,7 @@
 koopa:::install_fish() { # {{{1
     # """
     # Install Fish shell.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-02-03.
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
     # """
@@ -41,7 +41,7 @@ releases/download/${dict[version]}/${dict[file]}"
     "${app[cmake]}" --install 'build'
     if [[ "${dict[link_app]}" -eq 1 ]]
     then
-        koopa::enable_shell "${dict[name]}"
+        koopa::enable_shell_for_all_users "${dict[name]}"
     fi
     return 0
 }
