@@ -334,18 +334,16 @@ koopa::cli_install() { # {{{1
 koopa::cli_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-10.
     # """
     local key
     key="${1:-}"
     if [[ -z "$key" ]]
     then
-        key='list'
-    else
-        key="list-${key}"
-        shift 1
+        koopa::stop "Missing argument: 'koopa list <ARG>...'."
     fi
-    koopa::cli_run_function "$key" "$@"
+    shift 1
+    koopa::cli_run_function "list-${key}" "$@"
     return 0
 }
 
