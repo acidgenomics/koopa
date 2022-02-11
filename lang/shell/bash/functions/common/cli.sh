@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME We need to improve support for '--help' flag in nested calls.
+# e.g. 'koopa app conda create-env --help' should return conda-specific help.
+
 koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
