@@ -47,10 +47,13 @@ _koopa_complete() { # {{{1
                         'aws'
                         'conda'
                         'docker'
+                        'git'
+                        'gpg'
                         'list'
                         'python'
                         'sra'
                         'ssh'
+                        'wget'
                     )
                     if _koopa_is_linux
                     then
@@ -363,6 +366,28 @@ _koopa_complete() { # {{{1
                                 'tag'
                             )
                             ;;
+                        'git')
+                            args=(
+                                'checkout-recursive'
+                                'pull'
+                                'pull-recursive'
+                                'push-recursive'
+                                'push-submodules'
+                                'rename-master-to-main'
+                                'reset'
+                                'reset-fork-to-upstream'
+                                'rm-submodule'
+                                'rm-untracked'
+                                'status-recursive'
+                            )
+                            ;;
+                        'gpg')
+                            args=(
+                                'prompt'
+                                'reload'
+                                'restart'
+                            )
+                            ;;
                         'python')
                             args=(
                                 'pip-outdated'
@@ -381,6 +406,11 @@ _koopa_complete() { # {{{1
                         'ssh')
                             args=(
                                 'generate-key'
+                            )
+                            ;;
+                        'wget')
+                            args=(
+                                'recursive'
                             )
                             ;;
                     esac
