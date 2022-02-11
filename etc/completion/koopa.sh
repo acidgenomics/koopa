@@ -46,6 +46,7 @@ _koopa_complete() { # {{{1
                     args=(
                         'aws'
                         'conda'
+                        'docker'
                         'list'
                         'python'
                         'sra'
@@ -344,6 +345,21 @@ _koopa_complete() { # {{{1
                             args=(
                                 'create-env'
                                 'remove-env'
+                            )
+                            ;;
+                        'docker')
+                            args=(
+                                'build'
+                                'build-all-images'
+                                'build-all-tags'
+                                'prune-all-images'
+                                'prune-all-stale-tags'
+                                'prune-old-images'
+                                'prune-stale-tags'
+                                'push'
+                                'remove'
+                                'run'
+                                'tag'
                             )
                             ;;
                         'python')
