@@ -41,6 +41,10 @@ koopa::locate_bc() { # {{{1
     koopa::locate_app 'bc'
 }
 
+koopa::locate_bedtools() { # {{{1
+    koopa::locate_conda_app 'bedtools'
+}
+
 koopa::locate_bpytop() { # {{{1
     koopa::locate_app \
         --app-name='bpytop' \
@@ -105,22 +109,6 @@ koopa::locate_conda() { # {{{1
     koopa::locate_app "$(koopa::conda_prefix)/bin/conda"
 }
 
-koopa::locate_conda_bedtools() { # {{{1
-    koopa::locate_conda_app 'bedtools'
-}
-
-koopa::locate_conda_kallisto() { # {{{1
-    koopa::locate_conda_app 'kallisto'
-}
-
-koopa::locate_conda_mashmap() { # {{{1
-    koopa::locate_conda_app 'mashmap'
-}
-
-koopa::locate_conda_salmon() { # {{{1
-    koopa::locate_conda_app 'salmon'
-}
-
 koopa::locate_convmv() { # {{{1
     koopa::locate_app 'convmv'
 }
@@ -177,8 +165,26 @@ koopa::locate_du() { # {{{1
     koopa::locate_gnu_coreutils_app 'du'
 }
 
+koopa::locate_efetch() { # {{{1
+    koopa::locate_conda_app \
+        --app-name='efetch' \
+        --env-name='entrez-direct'
+}
+
+koopa::locate_esearch() { # {{{1
+    koopa::locate_conda_app \
+        --app-name='esearch' \
+        --env-name='entrez-direct'
+}
+
 koopa::locate_emacs() { # {{{1
     koopa::locate_app 'emacs'
+}
+
+koopa::locate_fasterq_dump() { # {{{1
+    koopa::locate_app \
+        --app-name='fasterq-dump' \
+        --opt='sratoolkit'
 }
 
 koopa::locate_fd() { # {{{1
@@ -294,10 +300,18 @@ koopa::locate_java() { # {{{1
         --opt='openjdk'
 }
 
+koopa::locate_jq() { # {{{1
+    koopa::locate_app 'jq'
+}
+
 koopa::locate_julia() { # {{{1
     koopa::locate_app \
         --app-name='julia' \
         --macos-app="$(koopa::macos_julia_prefix)/bin/julia"
+}
+
+koopa::locate_kallisto() { # {{{1
+    koopa::locate_conda_app 'kallisto'
 }
 
 koopa::locate_lesspipe() { # {{{1
@@ -392,6 +406,10 @@ koopa::locate_man() { # {{{1
         --opt='man-db'
 }
 
+koopa::locate_mashmap() { # {{{1
+    koopa::locate_conda_app 'mashmap'
+}
+
 koopa::locate_md5sum() { # {{{1
     koopa::locate_gnu_coreutils_app 'md5sum'
 }
@@ -474,6 +492,12 @@ koopa::locate_pkg_config() { # {{{1
     koopa::locate_app 'pkg-config'
 }
 
+koopa::locate_prefetch() { # {{{1
+    koopa::locate_app \
+        --app-name='prefetch' \
+        --opt='sratoolkit'
+}
+
 koopa::locate_python() { # {{{1
     local app dict
     declare -A app
@@ -546,6 +570,10 @@ koopa::locate_rustup() { # {{{1
         --app-name='rustup' \
         --brew-opt='rustup' \
         --koopa-opt='rust-packages'
+}
+
+koopa::locate_salmon() { # {{{1
+    koopa::locate_conda_app 'salmon'
 }
 
 koopa::locate_sed() { # {{{1

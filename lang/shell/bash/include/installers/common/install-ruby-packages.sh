@@ -3,15 +3,16 @@
 koopa:::install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
-    # @note Updated 2022-01-26.
+    # @note Updated 2022-02-10.
     #
     # @seealso
+    # - 'gem pristine --all'
+    # - 'gem update --system'
     # - https://bundler.io/man/bundle-pristine.1.html
     # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
     # """
     local app dict gem gems
     koopa::assert_has_no_args "$#"
-    koopa::configure_ruby
     koopa::activate_ruby
     declare -A app=(
         [gem]="$(koopa::locate_gem)"
@@ -33,11 +34,6 @@ koopa:::install_ruby_packages() { # {{{1
         koopa::activate_homebrew_opt_prefix 'libffi'
     fi
     "${app[gem]}" cleanup
-    "${app[gem]}" pristine --all
-    # > if koopa::is_shared_install
-    # > then
-    # >     "${app[gem]}" update --system
-    # > fi
     for gem in "${gems[@]}"
     do
         "${app[gem]}" install "$gem"

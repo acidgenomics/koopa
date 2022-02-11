@@ -437,11 +437,10 @@ koopa::is_powerful_machine() { # {{{1
     return 1
 }
 
-# FIXME Rework using app/dict approach.
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-02-03.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -453,16 +452,23 @@ koopa::is_python_package_installed() { # {{{1
     # See also:
     # - https://stackoverflow.com/questions/1051254
     # - https://askubuntu.com/questions/588390
+
+    # @examples
+    # koopa::is_python_package_installed 'black' 'pytest'
     # """
-    local pkg prefix python version
+    local app dict pkg
     koopa::assert_has_args "$#"
-    python="$(koopa::locate_python)"
-    version="$(koopa::get_version "$python")"
-    prefix="$(koopa::python_packages_prefix "$version")"
-    [[ -d "$prefix" ]] || return 1
+    declare -A app=(
+        [python]="$(koopa::locate_python)"
+    )
+    declare -A dict
+    dict[version]="$(koopa::get_version "${app[python]}")"
+    dict[prefix]="$(koopa::python_packages_prefix "${dict[version]}")"
+    [[ -d "${dict[prefix]}" ]] || return 1
     for pkg in "$@"
     do
-        if [[ ! -d "${prefix}/${pkg}" ]] && [[ ! -f "${prefix}/${pkg}.py" ]]
+        if [[ ! -d "${dict[prefix]}/${pkg}" ]] && \
+            [[ ! -f "${dict[prefix]}/${pkg}.py" ]]
         then
             return 1
         fi
@@ -471,28 +477,33 @@ koopa::is_python_package_installed() { # {{{1
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-03.
+    #
+    # @examples
+    # koopa::is_r_package_installed 'BiocGenerics' 'S4Vectors'
     # """
-    local pkg r
+    local app dict pkg
     koopa::assert_has_args "$#"
-    r="$(koopa::locate_r)"
-    prefix="$(koopa::r_library_prefix "$r")"
+    declare -A app=(
+        [r]="$(koopa::locate_r)"
+    )
+    declare -A dict
+    dict[version]="$(koopa::get_version "${app[r]}")"
+    dict[prefix]="$(koopa::r_packages_prefix "${dict[version]}")"
     for pkg in "$@"
     do
-        [[ -d "${prefix}/${pkg}" ]] || return 1
+        [[ -d "${dict[prefix]}/${pkg}" ]] || return 1
     done
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa::is_recent() { # {{{1
     # """
     # If the file exists and is more recent than 2 weeks old.
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-02-04.
     #
     # Current approach uses GNU find to filter based on modification date.
     #
@@ -506,20 +517,23 @@ koopa::is_recent() { # {{{1
     # @examples
     # koopa::is_recent ~/hello-world.txt
     # """
-    local days exists file find
+    local app dict file
     koopa::assert_has_args "$#"
-    find="$(koopa::locate_find)"
-    days=14
+    declare -A app=(
+        [find]="$(koopa::locate_find)"
+    )
+    declare -A dict=(
+        [days]=14
+    )
     for file in "$@"
     do
+        local exists
         [[ -e "$file" ]] || return 1
-        # FIXME Need to switch to koopa::find here.
-        # FIXME Rework our mtime approach here, to support fd.
         exists="$( \
-            "$find" "$file" \
+            "${app[find]}" "$file" \
                 -mindepth 0 \
                 -maxdepth 0 \
-                -mtime "-${days}" \
+                -mtime "-${dict[days]}" \
             2>/dev/null \
         )"
         [[ -n "$exists" ]] || return 1
@@ -544,7 +558,7 @@ koopa::is_spacemacs_installed() { # {{{1
 koopa::is_variable_defined() { # {{{1
     # """
     # Is the variable defined (and non-empty)?
-    # @note Updated 2021-11-05.
+    # @note Updated 2022-02-04.
     #
     # Passthrough of empty strings is bad practice in shell scripting.
     #
@@ -560,12 +574,15 @@ koopa::is_variable_defined() { # {{{1
     # @examples
     # koopa::is_variable_defined 'PATH'
     # """
-    local nounset value var x
+    local dict var
     koopa::assert_has_args "$#"
-    nounset="$(koopa::boolean_nounset)"
-    [[ "${nounset:-0}" -eq 1 ]] && set +u
+    declare -A dict=(
+        [nounset]="$(koopa::boolean_nounset)"
+    )
+    [[ "${dict[nounset]}" -eq 1 ]] && set +u
     for var
     do
+        local x value
         # Check if variable is defined.
         x="$(declare -p "$var" 2>/dev/null || true)"
         [[ -n "${x:-}" ]] || return 1
@@ -573,7 +590,7 @@ koopa::is_variable_defined() { # {{{1
         value="${!var}"
         [[ -n "${value:-}" ]] || return 1
     done
-    [[ "${nounset:-0}" -eq 1 ]] && set -u
+    [[ "${dict[nounset]}" -eq 1 ]] && set -u
     return 0
 }
 

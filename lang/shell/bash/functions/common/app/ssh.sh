@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa::generate_ssh_key() { # {{{1
+koopa::ssh_generate_key() { # {{{1
     # """
     # Generate SSH key.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-11.
     #
     # This script is called inside our Linux VM configuration function, so
     # don't use assert here.

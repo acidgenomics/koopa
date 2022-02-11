@@ -265,18 +265,21 @@ koopa::missing_arg() { # {{{1
     koopa::stop 'Missing required argument.'
 }
 
+# FIXME Add support for padding of middle of string.
+# FIXME e.g. 'outdated brew' (see Homebrew function).
+
 koopa::ngettext() { # {{{1
     # """
     # Translate a text message.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-11.
     #
     # A function to dynamically handle singular/plural words.
     #
     # @examples
-    # koopa::ngettext 1 'sample' 'samples'
-    # ## sample
-    # koopa::ngettext 2 'sample' 'samples'
-    # ## samples
+    # koopa::ngettext --num=1 --msg1='sample' --msg2='samples'
+    # ## 1 sample
+    # koopa::ngettext --num=2 --msg1='sample' --msg2='samples'
+    # ## 2 samples
     #
     # @seealso
     # - https://stat.ethz.ch/R-manual/R-devel/library/base/html/gettext.html
@@ -285,18 +288,81 @@ koopa::ngettext() { # {{{1
     #       0596526784/ch13s08.html
     # """
     local dict
-    koopa::assert_has_args_eq "$#" 3
+    koopa::assert_has_args "$#"
     declare -A dict=(
-        [n]="${1:?}"
-        [msg1]="${2:?}"
-        [msg2]="${3:?}"
+        [prefix]=''
+        [num]=''
+        [msg1]=''
+        [msg2]=''
+        [suffix]=''
+        [str]=''
     )
-    if [[ "${dict[n]}" -eq 1 ]]
-    then
-        dict[str]="${dict[msg1]}"
-    else
-        dict[str]="${dict[msg2]}"
-    fi
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--msg1='*)
+                dict[msg1]="${1#*=}"
+                shift 1
+                ;;
+            '--msg1')
+                dict[msg1]="${2:?}"
+                shift 2
+                ;;
+            '--msg2='*)
+                dict[msg2]="${1#*=}"
+                shift 1
+                ;;
+            '--msg2')
+                dict[msg2]="${2:?}"
+                shift 2
+                ;;
+            '--num='*)
+                dict[num]="${1#*=}"
+                shift 1
+                ;;
+            '--num')
+                dict[num]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--suffix='*)
+                dict[suffix]="${1#*=}"
+                shift 1
+                ;;
+            '--suffix')
+                dict[suffix]="${2:?}"
+                shift 2
+                ;;
+            # Invalid ----------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_set \
+        '--msg1' "${dict[msg1]}"  \
+        '--msg2' "${dict[msg2]}"  \
+        '--num' "${dict[num]}"
+    # Pad the prefix and suffix automatically, if desired.
+    # > [[ -n "${dict[prefix]}" ]] && dict[prefix]="${dict[prefix]} "
+    # > [[ -n "${dict[suffix]}" ]] && dict[suffix]=" ${dict[suffix]}"
+    case "${dict[num]}" in
+        '1')
+            dict[msg]="${dict[msg1]}"
+            ;;
+        *)
+            dict[msg]="${dict[msg2]}"
+            ;;
+    esac
+    dict[str]="${dict[prefix]:-}${dict[num]} ${dict[msg]}${dict[suffix]:-}"
     koopa::print "${dict[str]}"
     return 0
 }

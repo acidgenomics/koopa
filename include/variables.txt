@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-02-02"
+koopa-date="2022-02-11"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -28,7 +28,7 @@ gnu-mirror-url="https://mirrors.tripadvisor.com/gnu"
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
-anaconda="2021.05"
+anaconda="2021.11"
 
 # http://arma.sourceforge.net/download.html
 armadillo="10.8.2"
@@ -44,10 +44,10 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.15"
+aws-cli="2.4.18"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.32.0"
+azure-cli="2.33.0"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
@@ -116,7 +116,7 @@ emacs="27.2"
 ensembl-perl="5.26.3"
 
 # https://www.gnu.org/software/findutils/
-findutils="4.8.0"
+findutils="4.9.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
@@ -149,7 +149,7 @@ gnupg="2.3.4"
 go="1.17.6"
 
 # https://cloud.google.com/sdk/docs/install
-google-cloud-sdk="368.0.0"
+google-cloud-sdk="372.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.7"
@@ -162,13 +162,13 @@ gsl="2.7.1"
 
 hadolint="2.8.0"
 
-harfbuzz="3.3.1"
+harfbuzz="3.3.2"
 
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.12.1"
 
 # https://brew.sh/
-homebrew="3.3.13"
+homebrew="3.3.14"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -184,7 +184,7 @@ imagemagick="7.1.0"
 jq="1.6"
 
 # https://github.com/JuliaLang/julia/releases
-julia="1.7.1"
+julia="1.7.2"
 
 # https://github.com/wofr06/lesspipe/
 lesspipe="2.02"
@@ -198,7 +198,7 @@ libtool="2.4.6"
 
 # LLVM
 # https://releases.llvm.org/
-llvm="13.0.0"
+llvm="13.0.1"
 
 # https://lmod.readthedocs.io/
 # https://github.com/TACC/Lmod
@@ -215,7 +215,7 @@ luarocks="3.8.0"
 make="4.3"
 
 # https://github.com/mamba-org/mamba/tags/
-mamba="0.20.0"
+mamba="0.21.0"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
@@ -230,12 +230,12 @@ neovim="0.6.1"
 nim="1.4.8"
 
 # https://nodejs.org/
-node="17.4.0"
+node="17.5.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-openjdk="17.0.1"
+openjdk="17.0.2"
 
 # https://www.openssh.com/portable.html
 openssh="8.8p1"
@@ -248,7 +248,7 @@ openssl="3.0.1"
 oracle-instant-client="21.5.0.0.0-1"
 
 # https://pandoc.org/releases.html
-pandoc="2.17.1"
+pandoc="2.17.1.1"
 
 # https://www.gnu.org/software/parallel/
 parallel="20220122"
@@ -279,7 +279,7 @@ php="8.1.2"
 pkg-config="0.29.2"
 
 # https://python-poetry.org/
-poetry="1.1.12"
+poetry="1.1.13"
 
 # https://proj.org/
 proj="8.2.1"
@@ -318,7 +318,7 @@ rstudio-server="2021.09.2+382"
 rstudio-workbench="2021.09.2-382.pro1"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="3.0.3p157"
+ruby="3.1.0p0"
 
 # https://www.rust-lang.org/
 # Use 'koopa update rust' to resolve.
@@ -387,7 +387,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4250"
+vim="8.2.4300"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
@@ -520,14 +520,14 @@ node-prettier="2.5.1"               # 2021-12-04
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2022-01-19 from https://pypi.org/.
+# Updated 2022-02-10 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
 # Otherwise, for heavy libraries, consider using a conda environment instead.
 
-python-pip="21.3.1"             # default
-python-setuptools="60.5.0"      # default
+python-pip="22.0.2"             # default
+python-setuptools="60.6.0"      # default
 python-wheel="0.37.1"           # default
 
 python-black="22.1.0"           # recommended
@@ -550,10 +550,10 @@ python-scipy="1.7.3"            # r-reticulate
 
 # Ruby packages (gems) {{{1
 # ==============================================================================
-# Updated 2021-11-03.
+# Updated 2022-02-09.
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.5"            # 2022-01-12
+ruby-bundler="2.3.6"            # 2022-01-12
 
 ruby-bashcov="1.8.2"            # 2018-03-27
 ruby-ronn="0.7.3"               # 2010-06-24
@@ -578,7 +578,7 @@ rust-mcfly="0.5.13"                  # github only
 rust-procs="0.12.1"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
-rust-starship="1.2.1"           # homebrew
+rust-starship="1.3.0"           # homebrew
 rust-tealdeer="1.5.0"           # homebrew; tldr
 rust-tokei="12.1.2"             # homebrew
 rust-xsv="0.13.0"               # homebrew

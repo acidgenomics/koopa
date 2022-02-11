@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME Need to test that all of these runners are working correctly.
 # NOTE Need to add option to generate BAM and CRAM files here.
 
 # Main function ================================================================
 koopa::run_bowtie2() { # {{{1
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-02-11.
     # """
-    local app dict
-    local fastq_r1_files r1_tail r2_tail str
-    declare -A app=(
-        [find]="$(koopa::locate_find)"
-        [sort]="$(koopa::locate_sort)"
-    )
+    local dict
+    local fastq_r1_file fastq_r1_files
     declare -A dict=(
         [fastq_dir]='fastq'
         [output_dir]='bowtie2'
@@ -48,6 +45,7 @@ koopa::run_bowtie2() { # {{{1
                 dict[output_dir]="${2:?}"
                 shift 2
                 ;;
+            # FIXME Consider renaming this to include 'fastq'.
             '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
@@ -56,6 +54,7 @@ koopa::run_bowtie2() { # {{{1
                 dict[r1_tail]="${2:?}"
                 shift 2
                 ;;
+            # FIXME Consider renaming this to include 'fastq'.
             '--r2-tail='*)
                 dict[r2_tail]="${1#*=}"
                 shift 1
@@ -71,7 +70,6 @@ koopa::run_bowtie2() { # {{{1
         esac
     done
     koopa::h1 'Running bowtie2.'
-    koopa::activate_conda_env 'bowtie2'
     koopa::assert_is_file "${dict[fasta_file]}"
     dict[fastq_dir]="$(koopa::realpath "${dict[fastq_dir]}")"
     dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
@@ -81,16 +79,14 @@ koopa::run_bowtie2() { # {{{1
     # Sample array from FASTQ files {{{2
     # --------------------------------------------------------------------------
     # Create a per-sample array from the R1 FASTQ files.
-    # Pipe GNU find into array.
-    # FIXME Rework using 'koopa::find'.
     readarray -t fastq_r1_files <<< "$( \
-        "${app[find]}" "$fastq_dir" \
-            -maxdepth 1 \
-            -mindepth 1 \
-            -type 'f' \
-            -name "*${r1_tail}" \
-            -print \
-        | "${app[sort]}" \
+        koopa::find \
+            --glob="*${dict[r1_tail]}" \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict[fastq_dir]}" \
+            --sort \
+            --type='f' \
     )"
     # Error on FASTQ match failure.
     if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
@@ -98,8 +94,12 @@ koopa::run_bowtie2() { # {{{1
         koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
 with '${dict[r1_tail]}'."
     fi
-    str="$(koopa::ngettext "${#fastq_r1_files[@]}" 'sample' 'samples')"
-    koopa::alert_info "${#fastq_r1_files[@]} ${str} detected."
+    koopa::alert_info "$(koopa::ngettext \
+        --num="${#fastq_r1_files[@]}" \
+        --msg1='sample' \
+        --msg2='samples' \
+        --suffix=' detected.' \
+    )"
     # Index {{{2
     # --------------------------------------------------------------------------
     koopa::bowtie2_index \
@@ -109,24 +109,25 @@ with '${dict[r1_tail]}'."
     # Alignment {{{2
     # --------------------------------------------------------------------------
     # Loop across the per-sample array and align.
-    for fastq_r1 in "${fastq_r1_files[@]}"
+    for fastq_r1_file in "${fastq_r1_files[@]}"
     do
-        fastq_r2="${fastq_r1/${dict[r1_tail]}/${dict[r2_tail]}}"
+        local fastq_r2_file
+        fastq_r2_file="${fastq_r1_file/${dict[r1_tail]}/${dict[r2_tail]}}"
         koopa::bowtie2_align \
-            --fastq-r1="$fastq_r1" \
-            --fastq-r2="$fastq_r2" \
+            --fastq-r1="$fastq_r1_file" \
+            --fastq-r2="$fastq_r2_file" \
             --index-base="${dict[index_base]}" \
             --output-dir="${dict[samples_dir]}" \
             --r1-tail="${dict[r1_tail]}" \
             --r2-tail="${dict[r2_tail]}"
     done
     # NOTE Need a step to convert SAM to BAM here.
-    koopa::deactivate_conda
     koopa::alert_success 'bowtie alignment completed successfully.'
     return 0
 }
 
 # Individual runners ===========================================================
+# FIXME Need to locate bowtie2 directly here, rather than activating conda.
 koopa::bowtie2_align() { # {{{1
     # """
     # Run bowtie2 alignment on multiple paired-end FASTQ files.
@@ -145,6 +146,7 @@ koopa::bowtie2_align() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            # FIXME Indicate that this is a file more clearly.
             '--fastq-r1='*)
                 dict[fastq_r1]="${1#*=}"
                 shift 1
@@ -177,6 +179,7 @@ koopa::bowtie2_align() { # {{{1
                 dict[output_dir]="${2:?}"
                 shift 2
                 ;;
+            # FIXME Work on including 'fastq' in variable here.
             '--r1-tail='*)
                 dict[r1_tail]="${1#*=}"
                 shift 1
@@ -296,6 +299,7 @@ koopa::bowtie2_index() { # {{{1
         "${dict[index_base]}"
     )
     koopa::dl 'Index args' "${index_args[*]}"
+    # FIXME Need to locate this directly.
     bowtie2-build "${index_args[@]}" 2>&1 | "${app[tee]}" "${dict[log_file]}"
     return 0
 }

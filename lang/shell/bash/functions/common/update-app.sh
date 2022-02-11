@@ -3,7 +3,7 @@
 koopa::update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-03.
     # """
     local clean_path_arr dict homebrew_opt_arr opt_arr pos
     koopa::assert_has_args "$#"
@@ -17,6 +17,7 @@ koopa::update_app() { # {{{1
         [opt_prefix]="$(koopa::opt_prefix)"
         [platform]='common'
         [prefix]=''
+        [quiet]=0
         [shared]=0
         [system]=0
         [tmp_dir]="$(koopa::tmp_dir)"
@@ -95,6 +96,10 @@ koopa::update_app() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--quiet')
+                dict[quiet]=1
+                shift 1
+                ;;
             '--system')
                 dict[system]=1
                 shift 1
@@ -114,6 +119,8 @@ koopa::update_app() { # {{{1
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
+        koopa::assert_is_dir "${dict[prefix]}"
+        dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
         if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
         then
             dict[shared]=1
@@ -150,10 +157,7 @@ ${dict[platform]}/${dict[updater_file]}.sh"
         dict[function]="${dict[platform]}_${dict[function]}"
     fi
     dict[function]="koopa:::${dict[function]}"
-    if ! koopa::is_function "${dict[function]}"
-    then
-        koopa::stop "Unsupported updater: '${dict[function]}'."
-    fi
+    koopa::assert_is_function "${dict[function]}"
     if [[ -z "${dict[prefix]}" ]] && [[ "${dict[system]}" -eq 0 ]]
     then
         dict[prefix]="${dict[opt_prefix]}/${dict[name]}"
@@ -203,7 +207,7 @@ ${dict[platform]}/${dict[updater_file]}.sh"
         then
             koopa::sys_set_permissions --recursive "${dict[prefix]}"
         fi
-        koopa::delete_empty_dirs "${dict[prefix]}"
+        # > koopa::delete_empty_dirs "${dict[prefix]}"
     fi
     if koopa::is_linux && \
         { [[ "${dict[shared]}" -eq 1 ]] || \

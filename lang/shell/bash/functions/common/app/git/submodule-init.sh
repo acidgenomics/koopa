@@ -34,7 +34,7 @@ koopa::git_submodule_init() { # {{{1
                     --file "${dict[module_file]}" \
                     --get-regexp '^submodule\..*\.path$' \
             )"
-            if ! koopa::is_array_non_empty "${lines[@]:-}"
+            if koopa::is_array_empty "${lines[@]:-}"
             then
                 koopa::stop "Failed to detect submodules in '${repo}'."
             fi

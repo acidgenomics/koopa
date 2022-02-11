@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Work on improving function consistency with kallisto runners.
 # FIXME 'index-dir' input needs to resolve full path on disk, which makes the
 # log files more meaningful.
 
@@ -7,17 +8,17 @@
 koopa::run_salmon_paired_end() { # {{{1
     # """
     # Run salmon on multiple paired-end FASTQ files.
-    # @note Updated 2022-01-17.
+    # @note Updated 2022-02-11.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
     # """
     local app dict
-    local fastq_r1_files fastq_r1_file fastq_r2_file str
+    local fastq_r1_files fastq_r1_file fastq_r2_file
     koopa::assert_has_args "$#"
     declare -A app=(
         [find]="$(koopa::locate_find)"
-        [salmon]="$(koopa::locate_conda_salmon)"
+        [salmon]="$(koopa::locate_salmon)"
         [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
@@ -178,8 +179,12 @@ of '--fasta-file'."
         koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
 with '${dict[fastq_r1_tail]}'."
     fi
-    str="$(koopa::ngettext "${#fastq_r1_files[@]}" 'sample' 'samples')"
-    koopa::alert_info "${#fastq_r1_files[@]} ${str} detected."
+    koopa::alert_info "$(koopa::ngettext \
+        --num="${#fastq_r1_files[@]}" \
+        --msg1='sample' \
+        --msg2='samples' \
+        --suffix=' detected.' \
+    )"
     # Index {{{2
     # --------------------------------------------------------------------------
     if [[ ! -d "${dict[index_dir]}" ]]
@@ -218,17 +223,17 @@ completed successfully."
 koopa::run_salmon_single_end() { # {{{1
     # """
     # Run salmon on multiple single-end FASTQ files.
-    # @note Updated 2022-01-17.
+    # @note Updated 2022-02-11.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
     # """
     local app dict
-    local fastq_file fastq_files str
+    local fastq_file fastq_files
     koopa::assert_has_args "$#"
     declare -A app=(
         [find]="$(koopa::locate_find)"
-        [salmon]="$(koopa::locate_conda_salmon)"
+        [salmon]="$(koopa::locate_salmon)"
         [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
@@ -377,8 +382,12 @@ of '--fasta-file'."
         koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
 with '${dict[fastq_tail]}'."
     fi
-    str="$(koopa::ngettext "${#fastq_files[@]}" 'sample' 'samples')"
-    koopa::alert_info "${#fastq_files[@]} ${str} detected."
+    koopa::alert_info "$(koopa::ngettext \
+        --num="${#fastq_files[@]}" \
+        --msg1='sample' \
+        --msg2='samples' \
+        --suffix=' detected.' \
+    )"
     # Index {{{2
     # --------------------------------------------------------------------------
     if [[ ! -d "${dict[index_dir]}" ]]
@@ -420,7 +429,7 @@ completed successfully."
 koopa::salmon_generate_decoy_transcriptome() { # {{{1
     # """
     # Generate decoy transcriptome for salmon index.
-    # @note Updated 2022-01-12.
+    # @note Updated 2022-02-11.
     #
     # @section Documentation on original COMBINE lab script:
     #
@@ -460,10 +469,10 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
     koopa::assert_has_args "$#"
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
-        [bedtools]="$(koopa::locate_conda_bedtools)"
+        [bedtools]="$(koopa::locate_bedtools)"
         [cat]="$(koopa::locate_cat)"
         [grep]="$(koopa::locate_grep)"
-        [mashmap]="$(koopa::locate_conda_mashmap)"
+        [mashmap]="$(koopa::locate_mashmap)"
         [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
@@ -653,7 +662,7 @@ koopa::salmon_generate_decoy_transcriptome() { # {{{1
 koopa::salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2022-01-17.
+    # @note Updated 2022-02-11.
     #
     # @section FASTA conventions:
     #
@@ -681,7 +690,7 @@ koopa::salmon_index() { # {{{1
     local app dict
     koopa::assert_has_args "$#"
     declare -A app=(
-        [salmon]="$(koopa::locate_conda_salmon)"
+        [salmon]="$(koopa::locate_salmon)"
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(
@@ -819,7 +828,7 @@ of '--fasta-file'."
 koopa::salmon_quant_paired_end() { # {{{1
     # """
     # Run salmon quant (per paired-end sample).
-    # @note Updated 2022-01-17.
+    # @note Updated 2022-02-11.
     #
     # Quartz is currently using only '--validateMappings' and '--gcBias' flags.
     #
@@ -861,7 +870,7 @@ koopa::salmon_quant_paired_end() { # {{{1
     local app dict quant_args
     koopa::assert_has_args "$#"
     declare -A app=(
-        [salmon]="$(koopa::locate_conda_salmon)"
+        [salmon]="$(koopa::locate_salmon)"
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(
@@ -1022,7 +1031,7 @@ koopa::salmon_quant_paired_end() { # {{{1
 koopa::salmon_quant_single_end() { # {{{1
     # """
     # Run salmon quant (per single-end sample).
-    # @note Updated 2022-01-11.
+    # @note Updated 2022-02-11.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html
@@ -1030,7 +1039,7 @@ koopa::salmon_quant_single_end() { # {{{1
     local app dict quant_args
     koopa::assert_has_args "$#"
     declare -A app=(
-        [salmon]="$(koopa::locate_conda_salmon)"
+        [salmon]="$(koopa::locate_salmon)"
         [tee]="$(koopa::locate_tee)"
     )
     declare -A dict=(

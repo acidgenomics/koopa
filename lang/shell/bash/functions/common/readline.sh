@@ -1,26 +1,24 @@
 #!/usr/bin/env bash
 
-# FIXME Confirm that this work correctly in a new koopa clean install.
-
 koopa:::int_to_yn() { # {{{1
     # """
     # Convert integer to yes/no choice.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-09.
     # """
-    local x
+    local str
     koopa::assert_has_args_eq "$#" 1
     case "${1:?}" in
         '0')
-            x='no'
+            str='no'
             ;;
         '1')
-            x='yes'
+            str='yes'
             ;;
         *)
             koopa::stop "Invalid choice: requires '0' or '1'."
             ;;
     esac
-    koopa::print "$x"
+    koopa::print "$str"
     return 0
 }
 

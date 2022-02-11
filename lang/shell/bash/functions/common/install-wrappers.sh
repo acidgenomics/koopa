@@ -535,7 +535,6 @@ koopa::install_python() { # {{{1
         --name-fancy='Python' \
         --name='python' \
         "$@"
-    koopa::configure_python
 }
 
 koopa::install_python_packages() { # {{{1
@@ -1489,13 +1488,6 @@ koopa::update_prelude_emacs() { # {{{1
 koopa::update_pyenv() { # {{{1
     koopa::update_app \
         --name='pyenv' \
-        "$@"
-}
-
-koopa::update_python_packages() { # {{{1
-    koopa::update_app \
-        --name='python-packages' \
-        --name-fancy='Python packages' \
         "$@"
 }
 

@@ -4,7 +4,7 @@
 # """
 # Shared R environment configuration for macOS.
 #
-# @note Updated 2022-01-03.
+# @note Updated 2022-02-09.
 #
 # @seealso
 # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
@@ -56,6 +56,7 @@ PATH="${HOMEBREW_PREFIX}/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/bc/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/curl/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/gnu-getopt/bin:${PATH}"
+PATH="${HOMEBREW_OPT_PREFIX}/icu4c/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ncurses/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/openssl@3/bin:${PATH}"
 PATH="${HOMEBREW_OPT_PREFIX}/ruby/bin:${PATH}"

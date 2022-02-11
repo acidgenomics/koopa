@@ -1,26 +1,216 @@
 #!/usr/bin/env bash
 
+# FIXME We need to improve support for '--help' flag in nested calls.
+# e.g. 'koopa app conda create-env --help' should return conda-specific help.
+
 koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-11.
     # """
     local key
-    key="${1:-}"
-    if [[ -z "$key" ]]
-    then
-        koopa::stop "Missing argument: 'koopa app <ARG>...'."
-    fi
-    case "$key" in
-        'clean')
-            key='delete-broken-app-symlinks'
+    case "${1:-}" in
+        # Cross platform -------------------------------------------------------
+        'aws')
+            case "${2:-}" in
+                'batch')
+                    case "${3:-}" in
+                        'fetch-and-run' | \
+                        'list-jobs')
+                            ;;
+                        *)
+                            koopa::invalid_arg "$*"
+                        ;;
+                    esac
+                    ;;
+                's3')
+                    case "${3:-}" in
+                        'find' | \
+                        'list-large-files' | \
+                        'ls' | \
+                        'mv-to-parent' | \
+                        'sync')
+                            ;;
+                        *)
+                            koopa::invalid_arg "$*"
+                        ;;
+                    esac
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}-${3:?}"
+            shift 2
             ;;
         'conda')
+            case "${2:-}" in
+                'create-env' | \
+                'remove-env')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
             shift 1
-            key="conda-${1:?}"
+            ;;
+        'docker')
+            case "${2:-}" in
+                'build' | \
+                'build-all-images' | \
+                'build-all-tags' | \
+                'prune-all-images' | \
+                'prune-all-stale-tags' | \
+                'prune-old-images' | \
+                'prune-stale-tags' | \
+                'push' | \
+                'remove' | \
+                'run' | \
+                'tag')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'ftp')
+            case "${2:-}" in
+                'mirror')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'git')
+            case "${2:-}" in
+                'checkout-recursive' | \
+                'pull' | \
+                'pull-recursive' | \
+                'push-recursive' | \
+                'push-submodules' | \
+                'rename-master-to-main' | \
+                'reset' | \
+                'reset-fork-to-upstream' | \
+                'rm-submodule' | \
+                'rm-untracked' | \
+                'status-recursive')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'gpg')
+            case "${2:-}" in
+                'prompt' | \
+                'reload' | \
+                'restart')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'jekyll')
+            case "${2:-}" in
+                'serve')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
             ;;
         'list')
             key='list-app-versions'
+            ;;
+        'md5sum')
+            case "${2:-}" in
+                'check-to-new-md5-file')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'python')
+            case "${2:-}" in
+                'pip-outdated' | \
+                'venv-create' | \
+                'venv-create-r-reticulate')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'r')
+            case "${2:-}" in
+                'drat' | \
+                'pkgdown-deploy-to-aws' | \
+                'shiny-run-app')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'sra')
+            case "${2:-}" in
+                'download-accession-list' | \
+                'download-run-info-table' | \
+                'fastq-dump' | \
+                'prefetch')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'ssh')
+            case "${2:-}" in
+                'generate-key')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        'wget')
+            case "${2:-}" in
+                'recursive')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
+        # Linux-specifc --------------------------------------------------------
+        'clean')
+            key='delete-broken-app-symlinks'
             ;;
         'link')
             key='link-app'
@@ -30,6 +220,13 @@ koopa::cli_app() { # {{{1
             ;;
         'unlink')
             key='unlink-app'
+            ;;
+        # Invalid --------------------------------------------------------------
+        '')
+            koopa::stop "Missing argument: 'koopa app <ARG>...'."
+            ;;
+        *)
+            koopa::invalid_arg "$*"
             ;;
     esac
     shift 1
@@ -137,33 +334,26 @@ koopa::cli_install() { # {{{1
 koopa::cli_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-10.
     # """
     local key
     key="${1:-}"
     if [[ -z "$key" ]]
     then
-        key='list'
-    else
-        key="list-${key}"
-        shift 1
+        koopa::stop "Missing argument: 'koopa list <ARG>...'."
     fi
-    koopa::cli_run_function "$key" "$@"
+    shift 1
+    koopa::cli_run_function "list-${key}" "$@"
     return 0
 }
 
 koopa::cli_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-11.
     # """
     local key
-    key="${1:-}"
-    if [[ -z "$key" ]]
-    then
-        koopa::stop "Missing argument: 'koopa system <ARG>...'."
-    fi
-    case "$key" in
+    case "${1:-}" in
         'check')
             key='check-system'
             ;;
@@ -216,12 +406,14 @@ koopa::cli_system() { # {{{1
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
+        'reload-shell' | \
         'roff' | \
         'set-permissions' | \
         'switch-to-develop' | \
         'test' | \
         'variable' | \
         'variables')
+            key="${1:?}"
             ;;
         # Defunct --------------------------------------------------------------
         'conda-create-env')
@@ -231,6 +423,9 @@ koopa::cli_system() { # {{{1
             koopa::defunct 'koopa app conda remove-env'
             ;;
         # Invalid --------------------------------------------------------------
+        '')
+            koopa::stop "Missing argument: 'koopa system <ARG>...'."
+            ;;
         *)
             koopa::invalid_arg "$*"
             ;;
@@ -418,14 +613,14 @@ koopa::cli_which_function() { # {{{1
 koopa::koopa() { # {{{1
     # """
     # Main koopa CLI function, corresponding to 'koopa' binary.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-10.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
     # """
     local fun key
     koopa::assert_has_args "$#"
-    case "$1" in
+    case "${1:?}" in
         '--version' | \
         '-V' | \
         'version')

@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Return the real file path of decompressed file.
-# FIXME Early return without modification when no compressed file extension is detected.
-
 koopa::decompress() { # {{{1
     # """
     # Decompress a compressed file.

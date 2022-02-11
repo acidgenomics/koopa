@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME These need options to also rename the extension to lowercase.
-
 koopa::camel_case() { # {{{1
     # """
     # Camel case.
