@@ -28,81 +28,67 @@ koopa:::list_path_priority() { # {{{1
     return 0
 }
 
-# FIXME Rework using app/dict approach.
 koopa:::list_path_priority_unique() { # {{{1
     # """
     # Split PATH string by ':' delim into lines but only return uniques.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-02-11.
     # """
-    local awk tac x
-    awk="$(koopa::locate_awk)"
-    tac="$(koopa::locate_tac)"
+    local app str
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+        [tac]="$(koopa::locate_tac)"
+    )
     # shellcheck disable=SC2016
-    x="$( \
+    str="$( \
         koopa:::list_path_priority "$@" \
-            | "$tac" \
-            | "$awk" '!a[$0]++' \
-            | "$tac" \
+            | "${app[tac]}" \
+            | "${app[awk]}" '!a[$0]++' \
+            | "${app[tac]}" \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 
-koopa::list() { # {{{1
-    # """
-    # List koopa programs available in PATH.
-    # @note Updated 2021-08-14.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::r_koopa --vanilla 'cliListPrograms'
-    return 0
-}
-
-# FIXME Rework using app/dict approach.
 koopa::list_app_versions() { # {{{1
     # """
     # List installed application versions.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-02-11.
     # """
-    local find prefix sort x
+    local dict
     koopa::assert_has_no_args "$#"
-    find="$(koopa::locate_find)"
-    sort="$(koopa::locate_sort)"
-    prefix="$(koopa::app_prefix)"
-    if [[ ! -d "$prefix" ]]
+    declare -A dict=(
+        [prefix]="$(koopa::app_prefix)"
+    )
+    if [[ ! -d "${dict[prefix]}" ]]
     then
-        koopa::alert_note "No applications are installed in '${prefix}'."
+        koopa::alert_note "No apps are installed in '${dict[prefix]}'."
         return 0
     fi
-    # FIXME Rework using 'koopa::find'.
-    x="$( \
-        "$find" "$prefix" \
-            -mindepth 2 \
-            -maxdepth 2 \
-            -type 'd' \
-        | "$sort" \
+    dict[str]="$( \
+        koopa::find \
+            --max-depth=2 \
+            --min-depth=2 \
+            --prefix="${dict[prefix]}" \
+            --sort \
+            --type='d' \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa::print "${dict[str]}"
     return 0
 }
-
-# FIXME Now seeing this error:
-# !! Error: Invalid type argument for Rust fd.
-# basename: missing operand
-# Try '/usr/local/opt/coreutils/libexec/gnubin/basename --help' for more information.
 
 koopa::list_dotfiles() { # {{{1
     # """
     # List dotfiles.
-    # @note Updated 2020-11-25.
+    # @note Updated 2022-02-11.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::h1 'Listing dotfiles.'
+    koopa::h1 "Listing dotfiles in '${HOME:?}'."
     koopa::find_dotfiles d 'Directories'
     koopa::find_dotfiles f 'Files'
-    koopa::find_dotfiles l 'Symlinks'
+    # FIXME We can't use the 'l' argument currently with Rust fd...rework.
+    # > koopa::find_dotfiles l 'Symlinks'
 }
 
 # FIXME Rework using app/dict approach.
@@ -131,5 +117,15 @@ koopa::list_path_priority() { # {{{1
         koopa::alert_note "${n_dupes} ${str} detected."
     fi
     koopa::print "$all"
+    return 0
+}
+
+koopa::list_programs() { # {{{1
+    # """
+    # List koopa programs available in PATH.
+    # @note Updated 2021-08-14.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::r_koopa --vanilla 'cliListPrograms'
     return 0
 }
