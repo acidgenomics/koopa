@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Work on improving function consistency with kallisto runners.
 # FIXME 'index-dir' input needs to resolve full path on disk, which makes the
 # log files more meaningful.
 
@@ -13,7 +14,7 @@ koopa::run_salmon_paired_end() { # {{{1
     # Attempting to detect library type (strandedness) automatically by default.
     # """
     local app dict
-    local fastq_r1_files fastq_r1_file fastq_r2_file str
+    local fastq_r1_files fastq_r1_file fastq_r2_file
     koopa::assert_has_args "$#"
     declare -A app=(
         [find]="$(koopa::locate_find)"
@@ -178,8 +179,12 @@ of '--fasta-file'."
         koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
 with '${dict[fastq_r1_tail]}'."
     fi
-    str="$(koopa::ngettext "${#fastq_r1_files[@]}" 'sample' 'samples')"
-    koopa::alert_info "${#fastq_r1_files[@]} ${str} detected."
+    koopa::alert_info "$(koopa::ngettext \
+        --num="${#fastq_r1_files[@]}" \
+        --msg1='sample' \
+        --msg2='samples' \
+        --suffix=' detected.' \
+    )"
     # Index {{{2
     # --------------------------------------------------------------------------
     if [[ ! -d "${dict[index_dir]}" ]]
@@ -224,7 +229,7 @@ koopa::run_salmon_single_end() { # {{{1
     # Attempting to detect library type (strandedness) automatically by default.
     # """
     local app dict
-    local fastq_file fastq_files str
+    local fastq_file fastq_files
     koopa::assert_has_args "$#"
     declare -A app=(
         [find]="$(koopa::locate_find)"
@@ -377,8 +382,12 @@ of '--fasta-file'."
         koopa::stop "No FASTQ files in '${dict[fastq_dir]}' ending \
 with '${dict[fastq_tail]}'."
     fi
-    str="$(koopa::ngettext "${#fastq_files[@]}" 'sample' 'samples')"
-    koopa::alert_info "${#fastq_files[@]} ${str} detected."
+    koopa::alert_info "$(koopa::ngettext \
+        --num="${#fastq_files[@]}" \
+        --msg1='sample' \
+        --msg2='samples' \
+        --suffix=' detected.' \
+    )"
     # Index {{{2
     # --------------------------------------------------------------------------
     if [[ ! -d "${dict[index_dir]}" ]]
