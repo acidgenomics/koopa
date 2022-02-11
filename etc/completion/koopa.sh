@@ -417,6 +417,7 @@ _koopa_complete() { # {{{1
                             args=(
                                 'drat'
                                 'pkgdown-deploy-to-aws'
+                                'shiny-run-app'
                             )
                             ;;
                         'sra')

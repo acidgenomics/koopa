@@ -162,7 +162,8 @@ koopa::cli_app() { # {{{1
         'r')
             case "${2:-}" in
                 'drat' | \
-                'pkgdown-deploy-to-aws')
+                'pkgdown-deploy-to-aws' | \
+                'shiny-run-app')
                     ;;
                 *)
                     koopa::invalid_arg "$*"
