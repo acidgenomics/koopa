@@ -47,6 +47,7 @@ _koopa_complete() { # {{{1
                         'aws'
                         'conda'
                         'docker'
+                        'ftp'
                         'git'
                         'gpg'
                         'list'
@@ -368,6 +369,11 @@ _koopa_complete() { # {{{1
                                 'tag'
                             )
                             ;;
+                        'ftp')
+                            args=(
+                                'mirror'
+                            )
+                            ;;
                         'git')
                             args=(
                                 'checkout-recursive'
@@ -393,6 +399,11 @@ _koopa_complete() { # {{{1
                         'jekyll')
                             args=(
                                 'serve'
+                            )
+                            ;;
+                        'md5sum')
+                            args=(
+                                'check-to-new-md5-file'
                             )
                             ;;
                         'python')
