@@ -116,10 +116,12 @@ koopa::list_path_priority() { # {{{1
     dict[n_dupes]="$((dict[n_all] - dict[n_unique]))"
     if [[ "${dict[n_dupes]}" -gt 0 ]]
     then
-        dict[ngettext]="$( \
-            koopa::ngettext "${dict[n_dupes]}" 'duplicate' 'duplicates' \
+        koopa::alert_note "$(koopa::ngettext \
+            --num="${dict[n_dupes]}" \
+            --msg1='duplicate' \
+            --msg2='duplicates' \
+            --suffix=' detected.' \
         )"
-        koopa::alert_note "${dict[n_dupes]} ${dict[ngettext]} detected."
     fi
     koopa::print "${all_arr[@]}"
     return 0
