@@ -306,7 +306,7 @@ koopa::cli_list() { # {{{1
 koopa::cli_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-02-11.
     # """
     local key
     case "${1:-}" in
@@ -362,6 +362,7 @@ koopa::cli_system() { # {{{1
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
+        'reload-shell' | \
         'roff' | \
         'set-permissions' | \
         'switch-to-develop' | \
