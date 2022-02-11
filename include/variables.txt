@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.17"
+aws-cli="2.4.18"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.33.0"
@@ -230,7 +230,7 @@ neovim="0.6.1"
 nim="1.4.8"
 
 # https://nodejs.org/
-node="17.4.0"
+node="17.5.0"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -279,7 +279,7 @@ php="8.1.2"
 pkg-config="0.29.2"
 
 # https://python-poetry.org/
-poetry="1.1.12"
+poetry="1.1.13"
 
 # https://proj.org/
 proj="8.2.1"
