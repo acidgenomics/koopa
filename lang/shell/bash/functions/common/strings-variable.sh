@@ -3,20 +3,16 @@
 koopa::admin_group() { # {{{1
     # """
     # Return the administrator group.
-    # @note Updated 2021-03-18.
+    # @note Updated 2022-02-11.
     #
-    # Usage of 'groups' here is terribly slow for domain users.
-    # Currently seeing this with CPI AWS Ubuntu config.
-    # Instead of grep matching against 'groups' return, just set the
-    # expected default per Linux distro. In the event that we're unsure,
-    # the function will intentionally error.
+    # Usage of 'groups' can be terribly slow for domain users. Instead of grep
+    # matching against 'groups' return, just set the expected default per Linux
+    # distro. In the event that we're unsure, the function will intentionally
+    # error.
     # """
     local group
     koopa::assert_has_no_args "$#"
-    if koopa::is_root
-    then
-        group='root'
-    elif koopa::is_alpine
+    if koopa::is_alpine
     then
         group='wheel'
     elif koopa::is_arch
@@ -35,7 +31,7 @@ koopa::admin_group() { # {{{1
     then
         group='wheel'
     else
-        koopa::stop 'Failed to detect admin group.'
+        koopa::stop 'Failed to determine admin group.'
     fi
     koopa::print "$group"
     return 0
