@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Syntactic naming functions need an option to also convert the extension to lowercase.
 ** TODO Shared install isn't setting user permissions recursively correctly.
     Need to ensure that '/opt/koopa' isn't owned by current user after install.
     We're seeing this currently on AWS EC2 instances.

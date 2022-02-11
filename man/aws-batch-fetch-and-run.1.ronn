@@ -1,8 +1,8 @@
-# aws-batch-fetch-and-run(1) - aws batch fetch and run
+# aws-batch-fetch-and-run(1) - AWS Batch fetch and run
 
 ## SYNOPSIS
 
-`aws-batch-fetch-and-run`
+`koopa app aws batch fetch-and-run`
 
 ## DESCRIPTION
 

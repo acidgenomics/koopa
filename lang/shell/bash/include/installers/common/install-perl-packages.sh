@@ -3,7 +3,7 @@
 koopa:::install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
-    # @note Updated 2022-01-26.
+    # @note Updated 2022-02-10.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -13,7 +13,6 @@ koopa:::install_perl_packages() { # {{{1
     # """
     local app module modules
     koopa::assert_has_no_args "$#"
-    koopa::configure_perl
     koopa::activate_perl
     declare -A app=(
         [cpan]="$(koopa::locate_cpan)"

@@ -11,14 +11,14 @@
 # FIXME Exclusion of directories isn't working correctly.
 # FIXME Need to add a mode that excludes all files that are under git in a
 # current directory. This will help avoid duplication of source code.
-
 # FIXME Consider ignoring all files managed under git by default.
 # These files are returned by 'git ls-files'.
 # See also:
 # - https://superuser.com/questions/429693
-#
 # FIXME Consider naming this option '--ignore-git'.
 # This should only apply when source is local, and target is 's3://...'.
+# FIXME This needs to support '--exclude' and '--include' more intuitively.
+# FIXME If '--exclude=*' is set, we need to rethink our default exclude flags.
 
 koopa::aws_s3_sync() { # {{{1
     # """
@@ -54,6 +54,7 @@ koopa::aws_s3_sync() { # {{{1
     )
     [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     # Include common file system and Git cruft that we don't want on S3.
+    # FIXME Only set this if the user doesn't pass in exclude?
     exclude_patterns=(
         '*.Rproj/*'
         '*.swp'

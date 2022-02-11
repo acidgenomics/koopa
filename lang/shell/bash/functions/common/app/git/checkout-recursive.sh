@@ -64,7 +64,7 @@ koopa::git_checkout_recursive() { # {{{1
                     --prefix="$dir" \
                     --sort \
             )"
-            if ! koopa::is_array_non_empty "${repos[@]:-}"
+            if koopa::is_array_empty "${repos[@]:-}"
             then
                 koopa::stop "Failed to detect any repos in '${dir}'."
             fi

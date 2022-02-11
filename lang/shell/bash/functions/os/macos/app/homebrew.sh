@@ -69,22 +69,25 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
 koopa::macos_brew_upgrade_casks() { # {{{1
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-02-11.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
     # function.
     # """
-    local app cask casks str
+    local app cask casks
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [brew]="$(koopa::locate_brew)"
     )
     readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
     koopa::is_array_non_empty "${casks[@]:-}" || return 0
-    str="$(koopa::ngettext "${#casks[@]}" 'cask' 'casks')"
     koopa::dl \
-        "${#casks[@]} outdated ${str}" \
+        "$(koopa::ngettext \
+            --num="${#casks[@]}" \
+            --msg1='outdated cask' \
+            --msg2='outdated casks' \
+        )" \
         "$(koopa::to_string "${casks[@]}")"
     for cask in "${casks[@]}"
     do

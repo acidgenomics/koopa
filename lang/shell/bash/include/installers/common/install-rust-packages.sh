@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-## FIXME The '--reinstall' flag doesn't seem to work correctly here.
-
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-10.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -20,7 +18,6 @@ koopa:::install_rust_packages() { # {{{1
     # """
     local app dict pkg pkgs pkg_args
     koopa::assert_has_no_args "$#"
-    koopa::configure_rust
     koopa::activate_rust
     declare -A app=(
         [cargo]="$(koopa::locate_cargo)"

@@ -3,7 +3,7 @@
 koopa::configure_app_packages() { # {{{1
     # """
     # Configure language application.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-02-09.
     # """
     local dict
     declare -A dict=(

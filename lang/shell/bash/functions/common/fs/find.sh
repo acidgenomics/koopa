@@ -2,7 +2,8 @@
 
 # FIXME I think multiple exclude calls aren't working here currently.
 # FIXME Work on improving '-not -name XXX' and '-not -path XXX' style support.
-
+# FIXME Can we improve support for symlink detection in fd call?
+#       See related issue with list_dotfiles function.
 # FIXME Need to add support for '--case-sensitive' or '--case-insensitive' flags.
 # fd options:
 #     -s, --case-sensitive
@@ -461,9 +462,13 @@ koopa::find_and_replace_in_files() { # {{{1
         [to]="${2:?}"
     )
     shift 2
-    dict[str]="$(koopa::ngettext "$#" 'file' 'files')"
-    koopa::alert "Replacing '${dict[from]}' with '${dict[to]}' \
-in ${#} ${dict[str]}."
+    koopa::alert "$(koopa::ngettext \
+        --prefix="Replacing '${dict[from]}' with '${dict[to]}' in " \
+        --num="${#}" \
+        --msg1='file' \
+        --msg2='files' \
+        --suffix='.' \
+    )"
     if { \
         koopa::str_detect_fixed "${dict[from]}" '/' && \
         ! koopa::str_detect_fixed "${dict[from]}" '\/'; \

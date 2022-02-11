@@ -3,16 +3,19 @@
 _koopa_activate_bash_aliases() { # {{{1
     # """
     # Alias definitions.
-    # @note Updated 2021-06-04.
+    # @note Updated 2022-02-04.
+    #
     # See /usr/share/doc/bash-doc/examples in the bash-doc package.
     # """
-    local user_aliases
+    local dict
     [[ "$#" -eq 0 ]] || return 1
-    user_aliases="${HOME}/.bash_aliases"
-    if [[ -f "$user_aliases" ]]
+    declare -A dict=(
+        [user_aliases_file]="${HOME}/.bash_aliases"
+    )
+    if [[ -f "${dict[user_aliases_file]}" ]]
     then
         # shellcheck source=/dev/null
-        source "$user_aliases"
+        source "${dict[user_aliases_file]}"
     fi
     return 0
 }
@@ -20,45 +23,24 @@ _koopa_activate_bash_aliases() { # {{{1
 _koopa_activate_bash_completion() { # {{{1
     # """
     # Activate Bash completion.
-    # @note Updated 2021-09-29.
-    #
-    # Adds tab completion for many commands.
-    # Consider adding detection support inside of make prefix.
+    # @note Updated 2022-02-04.
     # """
-    local brew_prefix brew_script nounset
+    local dict
     [[ "$#" -eq 0 ]] || return 1
-    brew_prefix="$(_koopa_homebrew_prefix)"
-    brew_script="${brew_prefix}/etc/profile.d/bash_completion.sh"
-    # Disabled because sourcing system Bash completion is problematic on
-    # Ubuntu 20.
-    # > if [[ ! -r "$brew_script" ]] && [[ ! -r "$sys_script" ]]
-    # > then
-    # >     return 0
-    # > fi
-    if [[ ! -r "$brew_script" ]]
-    then
-        return 0
-    fi
-    nounset="$(_koopa_boolean_nounset)"
-    if [[ "$nounset" -eq 1 ]]
+    declare -A dict=(
+        [make_prefix]="$(_koopa_make_prefix)"
+        [nounset]="$(_koopa_boolean_nounset)"
+    )
+    dict[script]="${dict[make_prefix]}/etc/profile.d/bash_completion.sh"
+    [[ -r "${dict[script]}" ]] || return 0
+    if [[ "${dict[nounset]}" -eq 1 ]]
     then
         set +e
         set +u
     fi
-    if [[ -r "$brew_script" ]]
-    then
-        # shellcheck source=/dev/null
-        source "$brew_script"
-    fi
-    # This is problematic on Ubuntu 20 LTS.
-    # > local sys_script
-    # > sys_script='/etc/bash_completion'
-    # > if [[ -r "$sys_script" ]]
-    # > then
-    # >     # shellcheck source=/dev/null
-    # >     source "$sys_script"
-    # > fi
-    if [[ "$nounset" -eq 1 ]]
+    # shellcheck source=/dev/null
+    source "${dict[script]}"
+    if [[ "${dict[nounset]}" -eq 1 ]]
     then
         set -e
         set -u
@@ -106,14 +88,16 @@ _koopa_activate_bash_prompt() { # {{{1
 _koopa_activate_bash_readline() { # {{{1
     # """
     # Readline input options.
-    # @note Updated 2020-11-24.
+    # @note Updated 2022-02-04.
     # """
-    local input_rc
+    local dict
     [[ "$#" -eq 0 ]] || return 1
     [[ -n "${INPUTRC:-}" ]] && return 0
-    input_rc="${HOME}/.inputrc"
-    [[ -r "$input_rc" ]] || return 0
-    export INPUTRC="${HOME}/.inputrc"
+    declare -A dict=(
+        [input_rc_file]="${HOME}/.inputrc"
+    )
+    [[ -r "${dict[input_rc_file]}" ]] || return 0
+    export INPUTRC="${dict[input_rc_file]}"
     return 0
 }
 
