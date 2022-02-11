@@ -548,7 +548,7 @@ koopa::linux_configure_system() { # {{{1
     # --------------------------------------------------------------------------
     # Generate an SSH key.
     [[ "${dict[ssh_key]}" -eq 1 ]] && \
-        koopa::generate_ssh_key
+        koopa::ssh_generate_key
     # Clean up and fix permissions {{{3
     # --------------------------------------------------------------------------
     koopa::sys_set_permissions --recursive "${prefixes[@]}"

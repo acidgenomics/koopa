@@ -6,13 +6,12 @@
 koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-02-11.
     # """
     local key
     case "${1:-}" in
         # Cross platform -------------------------------------------------------
         'aws')
-            # e.g. 'koopa app aws batch list-jobs ...'.
             case "${2:-}" in
                 'batch')
                     case "${3:-}" in
@@ -45,7 +44,6 @@ koopa::cli_app() { # {{{1
             shift 2
             ;;
         'conda')
-            # e.g. 'koopa app conda create-env ...'.
             case "${2:-}" in
                 'create-env' | \
                 'remove-env')
@@ -58,7 +56,6 @@ koopa::cli_app() { # {{{1
             shift 1
             ;;
         'docker')
-            # e.g. 'koopa app docker run'.
             case "${2:-}" in
                 'build' | \
                 'build-all-images' | \
@@ -79,12 +76,10 @@ koopa::cli_app() { # {{{1
             key="${1:?}-${2:?}"
             shift 1
             ;;
-
         'list')
             key='list-app-versions'
             ;;
         'python')
-            # e.g. 'koopa app python pip-outdated'.
             case "${2:-}" in
                 'pip-outdated' | \
                 'venv-create' | \
@@ -98,7 +93,6 @@ koopa::cli_app() { # {{{1
             shift 1
             ;;
         'sra')
-            # e.g. 'koopa app sra fastq-dump ...'.
             case "${2:-}" in
                 'download-accession-list' | \
                 'download-run-info-table' | \
@@ -112,7 +106,17 @@ koopa::cli_app() { # {{{1
             key="${1:?}-${2:?}"
             shift 1
             ;;
-
+        'ssh')
+            case "${2:-}" in
+                'generate-key')
+                    ;;
+                *)
+                    koopa::invalid_arg "$*"
+                    ;;
+            esac
+            key="${1:?}-${2:?}"
+            shift 1
+            ;;
         # Linux-specifc --------------------------------------------------------
         'clean')
             key='delete-broken-app-symlinks'
