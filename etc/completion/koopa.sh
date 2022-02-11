@@ -51,6 +51,7 @@ _koopa_complete() { # {{{1
                         'gpg'
                         'list'
                         'python'
+                        'r'
                         'sra'
                         'ssh'
                         'wget'
@@ -389,11 +390,22 @@ _koopa_complete() { # {{{1
                                 'restart'
                             )
                             ;;
+                        'jekyll')
+                            args=(
+                                'serve'
+                            )
+                            ;;
                         'python')
                             args=(
                                 'pip-outdated'
                                 'venv-create'
                                 'venv-create-r-reticulate'
+                            )
+                            ;;
+                        'r')
+                            args=(
+                                'drat'
+                                'pkgdown-deploy-to-aws'
                             )
                             ;;
                         'sra')
