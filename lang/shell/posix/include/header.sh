@@ -3,7 +3,7 @@
 _koopa_posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-11.
     # """
     local shell
     [ "$#" -eq 0 ] || return 1
@@ -45,6 +45,7 @@ _koopa_posix_header() { # {{{1
             "$(_koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
         _koopa_activate_homebrew || return 1
+        _koopa_activate_openjdk || return 1
         _koopa_activate_ruby || return 1
         _koopa_activate_node || return 1
         _koopa_activate_nim || return 1
@@ -53,7 +54,6 @@ _koopa_posix_header() { # {{{1
         _koopa_activate_perl || return 1
         _koopa_activate_python || return 1
         _koopa_activate_rust || return 1
-        _koopa_activate_openjdk || return 1
         _koopa_activate_nextflow || return 1
         if _koopa_is_linux
         then

@@ -265,6 +265,9 @@ koopa::missing_arg() { # {{{1
     koopa::stop 'Missing required argument.'
 }
 
+# FIXME Improve our handling here, always returning with the input number.
+# FIXME This will make handling in CLI alert calls easier.
+
 koopa::ngettext() { # {{{1
     # """
     # Translate a text message.
