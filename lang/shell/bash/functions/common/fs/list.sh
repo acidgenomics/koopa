@@ -85,38 +85,43 @@ koopa::list_dotfiles() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::h1 "Listing dotfiles in '${HOME:?}'."
-    koopa::find_dotfiles d 'Directories'
-    koopa::find_dotfiles f 'Files'
+    koopa::find_dotfiles 'd' 'Directories'
+    koopa::find_dotfiles 'f' 'Files'
     # FIXME We can't use the 'l' argument currently with Rust fd...rework.
-    # > koopa::find_dotfiles l 'Symlinks'
+    # > koopa::find_dotfiles 'l' 'Symlinks'
 }
 
-# FIXME Rework using app/dict approach.
 koopa::list_path_priority() { # {{{1
     # """
     # List path priority.
-    # @note Updated 2021-05-24.
+    # @note Updated 2022-02-11.
     # """
-    local all all_arr awk n_all n_dupes n_unique str unique
-    awk="$(koopa::locate_awk)"
-    all="$(koopa:::list_path_priority "$@")"
-    [[ -n "$all" ]] || return 1
-    readarray -t all_arr <<< "$(koopa::print "$all")"
-    # shellcheck disable=SC2016
-    unique="$( \
-        koopa::print "$all" \
-        | "$awk" '!a[$0]++' \
+    local all_arr app dict unique_arr
+    declare -A app=(
+        [awk]="$(koopa::locate_awk)"
+    )
+    declare -A dict
+    readarray -t all_arr <<< "$( \
+        koopa:::list_path_priority "$@" \
     )"
-    readarray -t unique_arr <<< "$(koopa::print "$unique")"
-    n_all="${#all_arr[@]}"
-    n_unique="${#unique_arr[@]}"
-    n_dupes="$((n_all - n_unique))"
-    if [[ "$n_dupes" -gt 0 ]]
+    koopa::is_array_non_empty "${all_arr[@]:-}" || return 1
+    # shellcheck disable=SC2016
+    readarray -t unique_arr <<< "$( \
+        koopa::print "${all_arr[@]}" \
+            | "${app[awk]}" '!a[$0]++' \
+    )"
+    koopa::is_array_non_empty "${unique_arr[@]:-}" || return 1
+    dict[n_all]="${#all_arr[@]}"
+    dict[n_unique]="${#unique_arr[@]}"
+    dict[n_dupes]="$((dict[n_all] - dict[n_unique]))"
+    if [[ "${dict[n_dupes]}" -gt 0 ]]
     then
-        str="$(koopa::ngettext "${n_dupes}" 'duplicate' 'duplicates')"
-        koopa::alert_note "${n_dupes} ${str} detected."
+        dict[ngettext]="$( \
+            koopa::ngettext "${dict[n_dupes]}" 'duplicate' 'duplicates' \
+        )"
+        koopa::alert_note "${dict[n_dupes]} ${dict[ngettext]} detected."
     fi
-    koopa::print "$all"
+    koopa::print "${all_arr[@]}"
     return 0
 }
 
