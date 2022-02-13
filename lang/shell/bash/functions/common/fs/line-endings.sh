@@ -10,6 +10,9 @@ koopa::convert_line_endings_from_crlf_to_lf() { # {{{1
     #
     # @seealso
     # - https://stackoverflow.com/questions/27810758/
+    #
+    # @examples
+    # > koopa::convert_line_endings_from_crlf_to_lf 'metadata.csv'
     # """
     local app file
     koopa::assert_has_args "$#"
@@ -31,6 +34,9 @@ koopa::convert_line_endings_from_lf_to_crlf() { # {{{1
     #
     # @seealso
     # - https://stackoverflow.com/questions/27810758/
+    #
+    # @examples
+    # > koopa::convert_line_endings_from_lf_to_crlf 'metadata.csv'
     # """
     local app file
     koopa::assert_has_ars "$#"
