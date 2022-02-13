@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-02-11"
+koopa-date="2022-02-13"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -495,6 +495,7 @@ conda-star="2.7.9a"             # 2021-05-11 bioconda                 [aligners]
 conda-trimmomatic="0.39"        # 2021-03-27 bioconda                 [trimming]
 conda-umap-learn="0.5.2"        # 2021-11-03 bioconda               [singlecell]
 conda-vardict="2019.06.04"      # 2019-06-05 bioconda                  [vardict]
+conda-visidata="2.8"            # 2022-01-13 conda-forge          [file formats]
 
 # Homebrew cask versions {{{1
 # ==============================================================================
