@@ -107,6 +107,7 @@ cask "little-snitch"
 cask "macvim"  # no-binaries
 cask "museeks"
 cask "netnewswire"
+cask "nightfall"
 cask "omnidisksweeper"
 cask "pacifist"
 cask "pycharm-ce"
