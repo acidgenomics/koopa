@@ -3,7 +3,7 @@
 koopa:::debian_install_base_system() { # {{{1
     # """
     # Install Debian base system.
-    # @note Updated 2021-12-31.
+    # @note Updated 2022-02-13.
     #
     # Backup package configuration:
     # > sudo dpkg --get-selections > /tmp/dpkglist.txt
@@ -159,6 +159,7 @@ koopa:::debian_install_base_system() { # {{{1
             'tree'
             'udunits-bin'
             'vim'
+            'visidata'
             'zip'
             'zsh'
         )
