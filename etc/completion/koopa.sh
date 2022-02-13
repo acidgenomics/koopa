@@ -346,6 +346,7 @@ _koopa_complete() { # {{{1
                         'aws')
                             args=(
                                 'batch'
+                                'ec2'
                                 's3'
                             )
                             ;;
@@ -453,6 +454,13 @@ _koopa_complete() { # {{{1
                                     args=(
                                         'fetch-and-run'
                                         'list-jobs'
+                                    )
+                                    ;;
+                                'ec2')
+                                    args=(
+                                        'create-instance'
+                                        'suspend-instance'
+                                        'terminate-instance'
                                     )
                                     ;;
                                 's3')
