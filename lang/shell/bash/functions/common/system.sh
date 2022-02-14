@@ -140,7 +140,7 @@ koopa::run_if_installed() { # {{{1
 koopa::switch_to_develop() {  # {{{1
     # """
     # Switch koopa install to development version.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-14.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -154,9 +154,12 @@ koopa::switch_to_develop() {  # {{{1
     )
     koopa::alert "Switching koopa at '${dict[prefix]}' to '${dict[branch]}'."
     koopa::sys_set_permissions --recursive "${dict[prefix]}"
-    "${app[git]}" checkout \
-        -B "${dict[branch]}" \
-        "${dict[origin]}/${dict[branch]}"
+    (
+        koopa::cd "${dict[prefix]}"
+        "${app[git]}" checkout \
+            -B "${dict[branch]}" \
+            "${dict[origin]}/${dict[branch]}"
+    )
     koopa::sys_set_permissions --recursive "${dict[prefix]}"
     koopa::fix_zsh_permissions
     return 0
