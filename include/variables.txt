@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-02-13"
+koopa-date="2022-02-14"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -47,7 +47,7 @@ automake="1.16.5"
 aws-cli="2.4.18"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.33.0"
+azure-cli="2.33.1"
 
 # https://www.gnu.org/software/bash/
 bash="5.1.16"
@@ -162,7 +162,7 @@ gsl="2.7.1"
 
 hadolint="2.8.0"
 
-harfbuzz="3.3.2"
+harfbuzz="3.4.0"
 
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.12.1"
@@ -177,8 +177,9 @@ htop="3.1.2"
 # http://site.icu-project.org/
 icu="69.1"
 
+# FIXME How to add support for '-24'?
 # https://imagemagick.org/
-imagemagick="7.1.0"
+imagemagick="7.1.0-24"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -227,7 +228,7 @@ neofetch="7.1.0"
 neovim="0.6.1"
 
 # https://nim-lang.org/
-nim="1.4.8"
+nim="1.6.4"
 
 # https://nodejs.org/
 node="17.5.0"
@@ -387,13 +388,13 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4300"
+vim="8.2.4350"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.2"
 
 # http://zsh.sourceforge.net/Arc/source.html
-zsh="5.8"
+zsh="5.8.1"
 
 # Conda environments {{{1
 # ==============================================================================
