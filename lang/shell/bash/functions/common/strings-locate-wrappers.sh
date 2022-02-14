@@ -181,6 +181,10 @@ koopa::locate_emacs() { # {{{1
     koopa::locate_app 'emacs'
 }
 
+koopa::locate_exiftool() { # {{{1
+    koopa::locate_app 'exiftool'
+}
+
 koopa::locate_fasterq_dump() { # {{{1
     koopa::locate_app \
         --app-name='fasterq-dump' \
@@ -192,6 +196,10 @@ koopa::locate_fd() { # {{{1
         --app-name='fd' \
         --brew-opt='fd' \
         --koopa-opt='rust-packages'
+}
+
+koopa::locate_ffmpeg() { # {{{1
+    koopa::locate_app 'ffmpeg'
 }
 
 koopa::locate_find() { # {{{1
@@ -576,6 +584,12 @@ koopa::locate_salmon() { # {{{1
     koopa::locate_conda_app 'salmon'
 }
 
+koopa::locate_scp() { # {{{1
+    koopa::locate_app \
+        --app-name='scp' \
+        --opt='openssh'
+}
+
 koopa::locate_sed() { # {{{1
     koopa::locate_app \
         --app-name='sed' \
@@ -583,8 +597,16 @@ koopa::locate_sed() { # {{{1
         --opt='gnu-sed'
 }
 
+koopa::locate_sshfs() { # {{{1
+    koopa::locate_app 'sshfs'
+}
+
 koopa::locate_sort() { # {{{1
     koopa::locate_gnu_coreutils_app 'sort'
+}
+
+koopa::locate_sox() { # {{{1
+    koopa::locate_app 'sox'
 }
 
 koopa::locate_sqlplus() { # {{{1
@@ -594,6 +616,13 @@ koopa::locate_sqlplus() { # {{{1
 koopa::locate_ssh() { # {{{1
     koopa::locate_app \
         --app-name='ssh' \
+        --opt='openssh'
+}
+
+koopa::locate_ssh_add() { # {{{1
+    koopa::locate_app \
+        --app-name='ssh-add' \
+        --macos-app='/usr/bin/ssh-add' \
         --opt='openssh'
 }
 
