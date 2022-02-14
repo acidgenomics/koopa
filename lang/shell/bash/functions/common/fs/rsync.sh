@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using dict approach.
 koopa::clone() { # {{{1
     # """
     # Clone files using rsync (with saner defaults).
     # @note Updated 2020-12-31.
     # """
+    local rsync_args source_dir target_dir
     koopa::assert_has_no_flags "$@"
     koopa::assert_has_args_eq "$#" 2
-    local rsync_args source_dir target_dir
     source_dir="${1:?}"
     target_dir="${2:?}"
     koopa::assert_is_dir "$source_dir" "$target_dir"
