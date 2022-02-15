@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this to just return the function key.
 koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
     # @note Updated 2022-02-15.
+    #
+    # @examples
+    # > koopa::cli_app 'aws' 'batch' 'fetch-and-run'
     # """
     local key
     case "${1:-}" in
@@ -228,131 +230,69 @@ koopa::cli_app() { # {{{1
             ;;
     esac
     shift 1
-    koopa::cli_run_function "$key" "$@"
+    koopa::print "$key" "$@"
     return 0
 }
 
-# FIXME Rework this to just return the function key.
 koopa::cli_configure() { # {{{1
     # """
     # Parse user input to 'koopa configure'.
-    # @note Updated 2022-02-02.
-    # """
-    local key
-    key="${1:-}"
-    if [[ -z "$key" ]]
-    then
-        koopa::stop "Missing argument: 'koopa configure <ARG>...'."
-    fi
-    shift 1
-    koopa::cli_run_function "configure-${key}" "$@"
-    return 0
-}
-
-# FIXME Consider renaming this? Not really CLI specific.
-koopa::cli_header() { # {{{1
-    # """
-    # Parse user input to 'koopa header'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-15.
     #
-    # Useful for private scripts using koopa code outside of package.
+    # @examples
+    # > koopa::cli_configure 'python'
     # """
-    local dict
-    koopa::assert_has_args_eq "$#" 1
-    declare -A dict=(
-        [lang]="$(koopa::lowercase "${1:?}")"
-        [prefix]="$(koopa::koopa_prefix)/lang"
-    )
-    case "${dict[lang]}" in
-        'bash' | \
-        'posix' | \
-        'zsh')
-            dict[prefix]="${dict[prefix]}/shell"
-            dict[ext]='sh'
-            ;;
-        'r')
-            dict[ext]='R'
-            ;;
-        *)
-            koopa::invalid_arg "${dict[lang]}"
-            ;;
-    esac
-    dict[file]="${dict[prefix]}/${dict[lang]}/include/header.${dict[ext]}"
-    koopa::assert_is_file "${dict[file]}"
-    koopa::print "${dict[file]}"
-    return 0
+    koopa::cli_nested_runner 'configure' "$@"
 }
 
 koopa::cli_install() { # {{{1
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-15.
+    #
+    # @examples
+    # > koopa::cli_install 'python'
     # """
-    local app app_args apps denylist pos
-    app_args=()
-    denylist=('app' 'gnu-app')
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '')
-                shift 1
-                ;;
-            '--'*)
-                app_args+=("$1")
-                shift 1
-                ;;
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -eq 0 ]]
-    then
-        koopa::stop "Missing argument: 'koopa install <ARG>...'."
-    fi
-    apps=("$@")
-    for app in "${apps[@]}"
-    do
-        if koopa::contains "$app" "${denylist[@]}"
-        then
-            koopa::stop "Invalid argument: '${app}'."
-        fi
-    done
-    for app in "${apps[@]}"
-    do
-        koopa::cli_run_function "install-${app}" "${app_args[@]}"
-    done
-    return 0
+    koopa::cli_nested_runner 'install' "$@"
 }
 
-# FIXME Just return the function key and args here instead.
 koopa::cli_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-02-15.
+    #
+    # @examples
+    # > koopa::cli_list 'dotfiles'
     # """
-    local key
-    key="${1:-}"
-    if [[ -z "$key" ]]
+    koopa::cli_nested_runner 'list' "$@"
+}
+
+koopa::cli_nested_runner() { # {{{1
+    # """
+    # Nested CLI runner function.
+    # @note Updated 2022-02-15.
+    #
+    # Used to standardize handoff handling of 'configure', 'install',
+    # 'uninstall', and 'update' commands.
+    # """
+    local dict
+    declare -A dict=(
+        [runner]="${1:?}"
+        [key]="${2:-}"
+    )
+    if [[ -z "${dict[key]}" ]]
     then
-        koopa::stop "Missing argument: 'koopa list <ARG>...'."
+        koopa::stop "Missing argument: 'koopa ${dict[runner]} <ARG>...'."
     fi
-    shift 1
-    koopa::cli_run_function "list-${key}" "$@"
+    shift 2
+    koopa::print "${dict[runner]}-${dict[key]}" "$@"
     return 0
 }
 
-# FIXME Just return the function key and args here instead.
 koopa::cli_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-02-15.
     # """
     local key
     case "${1:-}" in
@@ -364,10 +304,6 @@ koopa::cli_system() { # {{{1
             ;;
         'log')
             key='view-latest-tmp-log-file'
-            ;;
-        'path')
-            koopa::print "${PATH:-}"
-            return 0
             ;;
         'prefix')
             case "${2:-}" in
@@ -433,145 +369,31 @@ koopa::cli_system() { # {{{1
             ;;
     esac
     shift 1
-    koopa::cli_run_function "$key" "$@"
+    koopa::print "$key" "$@"
     return 0
 }
 
-# FIXME Just return the function key and args here instead.
 koopa::cli_uninstall() { # {{{1
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-15.
+    #
+    # @seealso
+    # > koopa::cli_uninstall 'python'
     # """
-    local app app_args apps denylist pos
-    app_args=()
-    denylist=('app')
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '')
-                shift 1
-                ;;
-            '--'*)
-                app_args+=("$1")
-                shift 1
-                ;;
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -eq 0 ]]
-    then
-        koopa::stop "Missing argument: 'koopa uninstall <ARG>...'."
-    fi
-    apps=("$@")
-    for app in "${apps[@]}"
-    do
-        if koopa::contains "$app" "${denylist[@]}"
-        then
-            koopa::stop "Invalid argument: '${app}'."
-        fi
-    done
-    for app in "${apps[@]}"
-    do
-        koopa::cli_run_function "uninstall-${app}" "${app_args[@]}"
-    done
-    return 0
+    koopa::cli_nested_runner 'uninstall' "$@"
 }
 
-# FIXME Just return the function key and args here instead.
 koopa::cli_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
-    # @note Updated 2022-02-02.
+    # @note Updated 2022-02-15.
+    #
+    # @examples
+    # > koopa::cli_update 'dotfiles'
     # """
-    local app app_args apps denylist pos
-    app_args=()
-    denylist=('app')
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            # Defunct ----------------------------------------------------------
-            '--fast')
-                koopa::defunct 'koopa update'
-                ;;
-            '--source-ip='* | \
-            '--source-ip')
-                koopa::defunct 'koopa configure system --source-ip=SOURCE_IP'
-                ;;
-            '--system')
-                koopa::defunct 'koopa update system'
-                ;;
-            '--user')
-                koopa::defunct 'koopa update user'
-                ;;
-            # General catchers -------------------------------------------------
-            '')
-                shift 1
-                ;;
-            '--'*)
-                app_args+=("$1")
-                shift 1
-                ;;
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    # Pass to 'koopa::update_koopa' by default.
-    [[ "${#pos[@]}" -eq 0 ]] && pos=('koopa')
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    if [[ "$#" -eq 0 ]]
-    then
-        koopa::stop "Missing argument: 'koopa update <ARG>...'."
-    fi
-    apps=("$@")
-    for app in "${apps[@]}"
-    do
-        if koopa::contains "$app" "${denylist[@]}"
-        then
-            koopa::stop "Invalid argument: '${app}'."
-        fi
-    done
-    for app in "${apps[@]}"
-    do
-        koopa::cli_run_function "update-${app}" "${app_args[@]}"
-    done
-    return 0
+    koopa::cli_nested_runner 'update' "$@"
 }
-
-# FIXME This is general and should be moved to system.
-# FIXME Just move this to the main koopa CLI runner...rethink usage of this.
-koopa::cli_run_function() { # {{{1
-    # """
-    # Lookup and execute a koopa function automatically.
-    # @note Updated 2022-02-02.
-    # """
-    local dict
-    koopa::assert_has_args "$#"
-    declare -A dict=(
-        [name]="${1:?}"
-    )
-    dict[fun]="$(koopa::which_function "${dict[name]}")"
-    koopa::assert_is_function "${dict[fun]}"
-    shift 1
-    "${dict[fun]}" "$@"
-    return 0
-}
-
-# FIXME This is general and should be moved to system.
 
 koopa::koopa() { # {{{1
     # """
@@ -583,7 +405,9 @@ koopa::koopa() { # {{{1
     # """
     local dict
     koopa::assert_has_args "$#"
-    declare -A dict
+    declare -A dict=(
+        [nested_runner]=0
+    )
     case "${1:?}" in
         '--version' | \
         '-V' | \
@@ -591,19 +415,26 @@ koopa::koopa() { # {{{1
             dict[key]='koopa-version'
             shift 1
             ;;
+        # This is a wrapper for 'koopa install XXX --reinstall'.
         'reinstall')
             dict[key]='reinstall-app'
             shift 1
             ;;
+        'header')
+            dict[key]="$1"
+            shift 1
+            ;;
+        # Nested CLI runners {{{2
+        # ----------------------------------------------------------------------
         'app' | \
         'configure' | \
-        'header' | \
         'install' | \
         'link' | \
         'list' | \
         'system' | \
         'uninstall' | \
         'update')
+            dict[nested_runner]=1
             dict[key]="cli-${1}"
             shift 1
             ;;
@@ -692,10 +523,18 @@ koopa::koopa() { # {{{1
     esac
     dict[fun]="koopa::${dict[key]//-/_}"
     koopa::assert_is_function "${dict[fun]}"
-
-    # FIXME The nested functions should return the key, which we can then
-    # evaluate here...need to rethink the CLI approach...
-
+    # Evaluate nested CLI runner function and reset positional arguments.
+    if [[ "${dict[nested_runner]}"  -eq 1 ]]
+    then
+        local pos
+        koopa::assert_is_function "${dict[fun]}"
+        readarray -t pos <<< "$("${dict[fun]}" "$@")"
+        dict[key]="${pos[0]}"
+        dict[fun]="koopa::${dict[key]//-/_}"
+        koopa::assert_is_function "${dict[fun]}"
+        unset "pos[0]"
+        set -- "${pos[@]:-}"
+    fi
     # Check if user is requesting help, by evaluating last argument.
     case "${!#:-}" in
         '--help' | \
