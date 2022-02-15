@@ -329,7 +329,10 @@ koopa::sys_rm() { # {{{1
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-15.
+    #
+    # Consider ensuring that nested directories are also executable.
+    # e.g. 'app/julia-packages/1.6/registries/General'.
     # """
     koopa::assert_has_args "$#"
     local arg chmod chown dict group pos user
@@ -396,9 +399,9 @@ koopa::sys_set_permissions() { # {{{1
     fi
     if koopa::is_shared_install
     then
-        chmod+=('u+rw,g+rw')
+        chmod+=('u+rw,g+rw,o+r,o-w')
     else
-        chmod+=('u+rw,g+r,g-w')
+        chmod+=('u+rw,g+r,g-w,o+r,o-w')
     fi
     chown+=("${user}:${group}")
     for arg in "$@"
