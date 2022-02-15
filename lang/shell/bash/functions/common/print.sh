@@ -405,7 +405,13 @@ koopa::stop() { # {{{1
     # @seealso
     # - https://unix.stackexchange.com/questions/256873/
     # """
+    local pid
     koopa:::msg 'red-bold' 'red' '!! Error:' "$@" >&2
-    kill "${$}" || return 1
-    exit 1
+    if [[ -n "${KOOPA_PROCESS_ID:-}" ]]
+    then
+        pid="${KOOPA_PROCESS_ID:?}"
+    else
+        pid="${$}"
+    fi
+    kill "$pid" && exit 1
 }
