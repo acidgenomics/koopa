@@ -393,13 +393,19 @@ koopa::status_ok() { # {{{1
 
 koopa::stop() { # {{{1
     # """
-    # Stop with an error message, and exit.
-    # @note Updated 2021-06-03.
+    # Stop with an error message, and kill the parent process.
+    # @note Updated 2022-02-15.
+
+    # NOTE Using 'exit' here doesn't not reliably stop inside command substition
+    # and subshells, even with errexit and errtrace enabled.
     #
     # Defining here rather than in POSIX functions library, since we never want
-    # to use 'exit' inside of activation scripts. This can cause unwanted shell
-    # lockout.
+    # to stop inside of activation scripts. This can cause unwanted lockout.
+    #
+    # @seealso
+    # - https://unix.stackexchange.com/questions/256873/
     # """
     koopa:::msg 'red-bold' 'red' '!! Error:' "$@" >&2
-    exit 1
+    kill "${$}"
+    return 1
 }
