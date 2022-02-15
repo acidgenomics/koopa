@@ -322,6 +322,10 @@ koopa::locate_kallisto() { # {{{1
     koopa::locate_conda_app 'kallisto'
 }
 
+koopa::locate_less() { # {{{1
+    koopa::locate_app 'less'
+}
+
 koopa::locate_lesspipe() { # {{{1
     koopa::locate_app \
         --app-name='lesspipe.sh' \

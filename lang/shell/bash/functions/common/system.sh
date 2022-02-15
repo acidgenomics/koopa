@@ -24,41 +24,23 @@ koopa::exec_dir() { # {{{1
 koopa::help() { # {{{1
     # """
     # Show usage via '--help' flag.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-15.
     # """
-    local app arg args first_arg last_arg man_file prefix script_name
-    [[ "$#" -eq 0 ]] && return 0
-    [[ "${1:-}" == '' ]] && return 0
-    first_arg="${1:?}"
-    last_arg="${!#}"
-    args=("$first_arg" "$last_arg")
-    for arg in "${args[@]}"
-    do
-        case "$arg" in
-            '--help' | \
-            '-h')
-                declare -A app=(
-                    [head]="$(koopa::locate_head)"
-                    [man]="$(koopa::locate_man)"
-                )
-                file="$(koopa::realpath "$0")"
-                script_name="$(koopa::basename "$file")"
-                prefix="$(koopa::parent_dir --num=2 "$file")"
-                man_file="${prefix}/man/man1/${script_name}.1"
-                if [[ -s "$man_file" ]]
-                then
-                    "${app[head]}" -n 10 "$man_file" \
-                        | koopa::str_detect_fixed - '.TH ' \
-                        || koopa::stop "Invalid documentation at '${man_file}'."
-                else
-                    koopa::stop "No documentation for '${script_name}'."
-                fi
-                "${app[man]}" "$man_file"
-                exit 0
-                ;;
-        esac
-    done
-    return 0
+    local app dict
+    koopa::assert_has_args_eq "$#" 1
+    declare -A app=(
+        [head]="$(koopa::locate_head)"
+        [man]="$(koopa::locate_man)"
+    )
+    declare -A dict=(
+        [man_file]="${1:?}"
+    )
+    koopa::assert_is_file "${dict[man_file]}"
+    "${app[head]}" -n 10 "${dict[man_file]}" \
+        | koopa::str_detect_fixed - '.TH ' \
+        || koopa::stop "Invalid documentation at '${dict[man_file]}'."
+    "${app[man]}" "${dict[man_file]}"
+    exit 0
 }
 
 koopa::info_box() { # {{{1
@@ -86,18 +68,20 @@ koopa::info_box() { # {{{1
 koopa::pager() { # {{{1
     # """
     # Run less with support for colors (escape characters).
-    # @note Updated 2021-08-31.
+    # @note Updated 2022-02-15.
     #
     # Detail on handling escape sequences:
     # https://major.io/2013/05/21/
     #     handling-terminal-color-escape-sequences-in-less/
     # """
-    local args
+    local app args
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'less'
+    declare -A app=(
+        [less]="$(koopa::locate_less)"
+    )
     args=("$@")
     koopa::assert_is_file "${args[-1]}"
-    less -R "${args[@]}"
+    "${app[less]}" -R "${args[@]}"
     return 0
 }
 
@@ -551,5 +535,52 @@ koopa::warn_if_export() { # {{{1
             koopa::warn "'${arg}' is exported."
         fi
     done
+    return 0
+}
+
+koopa::which_function() { # {{{1
+    # """
+    # Locate a koopa function automatically.
+    # @note Updated 2022-02-15.
+    # """
+    local dict
+    koopa::assert_has_args_eq "$#" 1
+    declare -A dict=(
+        [input_key]="${1:?}"
+    )
+    if koopa::is_function "${dict[input_key]}"
+    then
+        koopa::print "${dict[input_key]}"
+        return 0
+    fi
+    dict[key]="${dict[input_key]//-/_}"
+    dict[os_id]="$(koopa::os_id)"
+    if koopa::is_function "koopa::${dict[os_id]}_${dict[key]}"
+    then
+        dict[fun]="koopa::${dict[os_id]}_${dict[key]}"
+    elif koopa::is_rhel_like && \
+        koopa::is_function "koopa::rhel_${dict[key]}"
+    then
+        dict[fun]="koopa::rhel_${dict[key]}"
+    elif koopa::is_debian_like && \
+        koopa::is_function "koopa::debian_${dict[key]}"
+    then
+        dict[fun]="koopa::debian_${dict[key]}"
+    elif koopa::is_fedora_like && \
+        koopa::is_function "koopa::fedora_${dict[key]}"
+    then
+        dict[fun]="koopa::fedora_${dict[key]}"
+    elif koopa::is_linux && \
+        koopa::is_function "koopa::linux_${dict[key]}"
+    then
+        dict[fun]="koopa::linux_${dict[key]}"
+    else
+        dict[fun]="koopa::${dict[key]}"
+    fi
+    if ! koopa::is_function "${dict[fun]}"
+    then
+        koopa::stop "Unsupported command: '${dict[input_key]}'."
+    fi
+    koopa::print "${dict[fun]}"
     return 0
 }
