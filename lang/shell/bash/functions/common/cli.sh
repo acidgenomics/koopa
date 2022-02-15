@@ -533,7 +533,12 @@ koopa::koopa() { # {{{1
         dict[fun]="koopa::${dict[key]//-/_}"
         koopa::assert_is_function "${dict[fun]}"
         unset "pos[0]"
-        set -- "${pos[@]:-}"
+        if koopa::is_array_non_empty "${pos[@]:-}"
+        then
+            set -- "${pos[@]}"
+        else
+            set --
+        fi
     fi
     # Check if user is requesting help, by evaluating last argument.
     case "${!#:-}" in
