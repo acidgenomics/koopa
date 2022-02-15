@@ -25,11 +25,11 @@ koopa::test() { # {{{1
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-15.
     #
     # Not sorting here can speed the function up.
     # """
-    local app dict
+    local app dict files
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [find]="$(koopa::locate_find)"
@@ -39,8 +39,7 @@ koopa::test_find_files() { # {{{1
         [opt_prefix]="$(koopa::opt_prefix)"
         [prefix]="$(koopa::koopa_prefix)"
     )
-    # FIXME Rework using 'koopa::find'.
-    dict[files]="$( \
+    readarray -t files <<< "$( \
         "${app[find]}" "${dict[prefix]}" \
             -mindepth 1 \
             -type 'f' \
@@ -64,12 +63,13 @@ koopa::test_find_files() { # {{{1
             -not -path "${dict[prefix]}/todo.org" \
             -not -path '*/etc/R/*' \
             -print \
+            2>/dev/null \
     )"
-    if [[ -z "${dict[files]}" ]]
+    if koopa::is_array_empty "${files[@]:-}"
     then
         koopa::stop 'Failed to find any test files.'
     fi
-    koopa::print "${dict[files]}"
+    koopa::print "${files[@]}"
 }
 
 koopa::test_find_files_by_ext() { # {{{1
