@@ -409,6 +409,6 @@ koopa::stop() { # {{{1
     # - https://unix.stackexchange.com/questions/478281/
     # """
     koopa:::msg 'red-bold' 'red' '!! Error:' "$@" >&2
-    kill -SIGPIPE "${$}"
+    kill -SIGKILL "${$}"
     exit 1
 }
