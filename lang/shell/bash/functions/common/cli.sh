@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# FIXME We need to improve support for '--help' flag in nested calls.
-# e.g. 'koopa app conda create-env --help' should return conda-specific help.
-
+# FIXME Rework this to just return the function key.
 koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-02-15.
     # """
     local key
     case "${1:-}" in
@@ -234,6 +232,7 @@ koopa::cli_app() { # {{{1
     return 0
 }
 
+# FIXME Rework this to just return the function key.
 koopa::cli_configure() { # {{{1
     # """
     # Parse user input to 'koopa configure'.
@@ -250,6 +249,7 @@ koopa::cli_configure() { # {{{1
     return 0
 }
 
+# FIXME Consider renaming this? Not really CLI specific.
 koopa::cli_header() { # {{{1
     # """
     # Parse user input to 'koopa header'.
@@ -331,6 +331,7 @@ koopa::cli_install() { # {{{1
     return 0
 }
 
+# FIXME Just return the function key and args here instead.
 koopa::cli_list() { # {{{1
     # """
     # Parse user input to 'koopa list'.
@@ -347,6 +348,7 @@ koopa::cli_list() { # {{{1
     return 0
 }
 
+# FIXME Just return the function key and args here instead.
 koopa::cli_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
@@ -435,6 +437,7 @@ koopa::cli_system() { # {{{1
     return 0
 }
 
+# FIXME Just return the function key and args here instead.
 koopa::cli_uninstall() { # {{{1
     # """
     # Parse user input to 'koopa uninstall'.
@@ -483,6 +486,7 @@ koopa::cli_uninstall() { # {{{1
     return 0
 }
 
+# FIXME Just return the function key and args here instead.
 koopa::cli_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
@@ -548,6 +552,8 @@ koopa::cli_update() { # {{{1
     return 0
 }
 
+# FIXME This is general and should be moved to system.
+# FIXME Just move this to the main koopa CLI runner...rethink usage of this.
 koopa::cli_run_function() { # {{{1
     # """
     # Lookup and execute a koopa function automatically.
@@ -558,77 +564,35 @@ koopa::cli_run_function() { # {{{1
     declare -A dict=(
         [name]="${1:?}"
     )
-    dict[fun]="$(koopa::cli_which_function "${dict[name]}")"
+    dict[fun]="$(koopa::which_function "${dict[name]}")"
     koopa::assert_is_function "${dict[fun]}"
     shift 1
     "${dict[fun]}" "$@"
     return 0
 }
 
-koopa::cli_which_function() { # {{{1
-    # """
-    # Locate a koopa function automatically.
-    # @note Updated 2022-02-02.
-    # """
-    local fun key os_id
-    koopa::assert_has_args_eq "$#" 1
-    key="${1:?}"
-    if koopa::is_function "${key}"
-    then
-        koopa::print "$key"
-        return 0
-    fi
-    fun="${key//-/_}"
-    os_id="$(koopa::os_id)"
-    if koopa::is_function "koopa::${os_id}_${fun}"
-    then
-        fun="koopa::${os_id}_${fun}"
-    elif koopa::is_rhel_like && \
-        koopa::is_function "koopa::rhel_${fun}"
-    then
-        fun="koopa::rhel_${fun}"
-    elif koopa::is_debian_like && \
-        koopa::is_function "koopa::debian_${fun}"
-    then
-        fun="koopa::debian_${fun}"
-    elif koopa::is_fedora_like && \
-        koopa::is_function "koopa::fedora_${fun}"
-    then
-        fun="koopa::fedora_${fun}"
-    elif koopa::is_linux && \
-        koopa::is_function "koopa::linux_${fun}"
-    then
-        fun="koopa::linux_${fun}"
-    else
-        fun="koopa::${fun}"
-    fi
-    if ! koopa::is_function "$fun"
-    then
-        koopa::stop "Unsupported command: '${key}'."
-    fi
-    koopa::print "$fun"
-    return 0
-}
+# FIXME This is general and should be moved to system.
 
 koopa::koopa() { # {{{1
     # """
     # Main koopa CLI function, corresponding to 'koopa' binary.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-02-15.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
     # """
-    local fun key
+    local dict
     koopa::assert_has_args "$#"
+    declare -A dict
     case "${1:?}" in
         '--version' | \
         '-V' | \
         'version')
-            key='koopa-version'
+            dict[key]='koopa-version'
             shift 1
             ;;
         'reinstall')
-            key='reinstall-app'
+            dict[key]='reinstall-app'
             shift 1
             ;;
         'app' | \
@@ -640,7 +604,7 @@ koopa::koopa() { # {{{1
         'system' | \
         'uninstall' | \
         'update')
-            key="cli-${1}"
+            dict[key]="cli-${1}"
             shift 1
             ;;
         # Defunct args / error catching {{{2
@@ -726,8 +690,21 @@ koopa::koopa() { # {{{1
             koopa::invalid_arg "$*"
             ;;
     esac
-    fun="koopa::${key//-/_}"
-    koopa::assert_is_function "$fun"
-    "$fun" "$@"
+    dict[fun]="koopa::${dict[key]//-/_}"
+    koopa::assert_is_function "${dict[fun]}"
+
+    # FIXME The nested functions should return the key, which we can then
+    # evaluate here...need to rethink the CLI approach...
+
+    # Check if user is requesting help, by evaluating last argument.
+    case "${!#:-}" in
+        '--help' | \
+        '-h')
+            dict[koopa_prefix]="$(koopa::koopa_prefix)"
+            dict[man_file]="${dict[koopa_prefix]}/man/man1/${dict[key]}.1"
+            koopa::help "${dict[man_file]}"
+            ;;
+    esac
+    "${dict[fun]}" "$@"
     return 0
 }

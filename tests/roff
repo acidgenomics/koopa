@@ -91,6 +91,7 @@ koopa::test_roff() { # {{{1
             -not -path "${dict[koopa_prefix]}/shunit2-*" \
             -not -path "${dict[opt_prefix]}/*" \
             -print \
+            2>/dev/null \
         | "${app[sort]}" \
     )"
     for bin_dir in "${bin_dirs[@]}"

@@ -227,7 +227,19 @@ __koopa_bash_header() { # {{{1
             __koopa_bash_source_dir "os/${dict[os_id]}"
         fi
         # Check if user is requesting help documentation.
-        koopa::help "$@"
+        case "${1:-}" in
+            '--help' | \
+            '-h')
+                dict[script_file]="$(koopa::realpath "$0")"
+                dict[script_name]="$(koopa::basename "${dict[script_file]}")"
+                dict[man_prefix]="$( \
+                    koopa::parent_dir --num=2 "${dict[script_file]}" \
+                )"
+                dict[man_file]="${dict[man_prefix]}/man/\
+man1/${dict[script_name]}.1"
+                koopa::help "${dict[man_file]}"
+                ;;
+        esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
         then
             if koopa::is_shared_install && koopa::is_admin
