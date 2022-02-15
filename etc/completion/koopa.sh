@@ -35,7 +35,6 @@ _koopa_complete() { # {{{1
                 'list'
                 'reinstall'
                 'system'
-                'test'
                 'uninstall'
                 'update'
             )
@@ -281,6 +280,7 @@ _koopa_complete() { # {{{1
                         'roff'
                         'set-permissions'
                         'switch-to-develop'
+                        'test'
                         'variable'
                         'variables'
                         'version'

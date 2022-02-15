@@ -395,7 +395,7 @@ koopa::stop() { # {{{1
     # """
     # Stop with an error message, and kill the parent process.
     # @note Updated 2022-02-15.
-
+    #
     # NOTE Using 'exit' here doesn't not reliably stop inside command substition
     # and subshells, even with errexit and errtrace enabled.
     #
@@ -406,6 +406,6 @@ koopa::stop() { # {{{1
     # - https://unix.stackexchange.com/questions/256873/
     # """
     koopa:::msg 'red-bold' 'red' '!! Error:' "$@" >&2
-    kill "${$}"
-    return 1
+    kill "${$}" || return 1
+    exit 1
 }

@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME Need to provide clear help support for:
+# - app
+# - configure
+# - header
+# - install
+# - list
+# - reinstall
+# - system
+# - uninstall
+# - update
+
 koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
@@ -541,6 +552,7 @@ koopa::koopa() { # {{{1
         fi
     fi
     # Check if user is requesting help, by evaluating last argument.
+    # FIXME Allow 'koopa::help' to set default man_prefix, for convenience.
     case "${!#:-}" in
         '--help' | \
         '-h')
