@@ -84,12 +84,10 @@ koopa::find() { # {{{1
                 shift 2
                 ;;
             '--max-depth='*)
-                koopa::stop 'FIXME AAAA'
                 dict[max_depth]="${1#*=}"
                 shift 1
                 ;;
             '--max-depth')
-                koopa::stop 'FIXME BBB'
                 dict[max_depth]="${2:?}"
                 shift 2
                 ;;
@@ -217,6 +215,7 @@ koopa::find() { # {{{1
     find+=("${app[find]}")
     case "${dict[engine]}" in
         'gnu-find')
+            koopa::stop 'FIXME HELLO THERE'
             find_args=(
                 "${dict[prefix]}"
                 '-xdev'
