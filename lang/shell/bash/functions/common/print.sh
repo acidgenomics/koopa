@@ -406,15 +406,9 @@ koopa::stop() { # {{{1
     # - https://unix.stackexchange.com/questions/256873/
     # - https://stackoverflow.com/questions/28657676/
     # - https://linuxize.com/post/kill-command-in-linux/
+    # - https://unix.stackexchange.com/questions/478281/
     # """
     koopa:::msg 'red-bold' 'red' '!! Error:' "$@" >&2
-    # Kill the main koopa process, if defined.
-    if [[ -n "${KOOPA_PROCESS_ID:-}" ]]
-    then
-        kill -SIGKILL "${KOOPA_PROCESS_ID:?}"
-    fi
-    # Otherwise kill the current parent process.
-    kill -SIGKILL "${$}"
-    # If all else fails, ensure we exit.
+    kill -SIGPIPE "${$}"
     exit 1
 }
