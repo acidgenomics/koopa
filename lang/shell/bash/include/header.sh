@@ -141,33 +141,24 @@ __koopa_bash_header() { # {{{1
     fi
     if [[ "${dict[checks]}" -eq 1 ]]
     then
+        # Can check these settings with 'shopt'.
+        # https://www.gnu.org/software/bash/manual/
+        #   html_node/The-Shopt-Builtin.html
+        # Bash POSIX mode is too strict and errors on our function names.
+        # > set -o posix
         # > set -o noglob  # -f
         set -o errexit  # -e
         set -o errtrace  # -E
         set -o nounset  # -u
         set -o pipefail
+        # Try to enforce that command substitution stops on first error code.
+        # https://unix.stackexchange.com/questions/541682/
+        shopt -s inherit_errexit
         # This setting helps protect our conda alias defined in the interactive
         # login shell from messing with 'koopa::activate_conda_env'.
         shopt -u expand_aliases
-        dict[major_version]="$( \
-            printf '%s\n' "${BASH_VERSION}" \
-            | cut -d '.' -f 1 \
-        )"
-        if [[ ! "${dict[major_version]}" -ge 4 ]]
-        then
-            __koopa_warn \
-                'Koopa requires Bash >= 4.' \
-                "Current Bash version: '${BASH_VERSION}'."
-            if [[ "$(uname -s)" == 'Darwin' ]]
-            then
-                __koopa_warn \
-                    'On macOS, we recommend installing Homebrew.' \
-                    'Refer to "https://brew.sh" for instructions.' \
-                    'Then install Bash with "brew install bash".'
-            fi
-            return 1
-        fi
-        [[ $(type -t readarray) == 'builtin' ]] || return 1
+        # Check for readarray / mapfile, which is in Bash 4+.
+        [[ "$(type -t 'readarray')" == 'builtin' ]] || return 1
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
