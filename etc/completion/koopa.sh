@@ -276,7 +276,6 @@ _koopa_complete() { # {{{1
                         'info'
                         'log'
                         'os-string'
-                        'path'
                         'prefix'
                         'reload-shell'
                         'roff'
