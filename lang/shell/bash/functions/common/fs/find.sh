@@ -14,9 +14,6 @@
 #             searches, unless the pattern contains an uppercase character (smart case)
 # GNU find options: -name or -iname.
 
-# FIXME This doesn't seem to be passing '-mindepth' '-maxdepth' correctly to
-# GNU find.
-
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
@@ -24,6 +21,25 @@ koopa::find() { # {{{1
     #
     # Consider updating the variant defined in the Bash header upon any
     # changes to this function.
+    #
+    # @section Supported regex types for GNU find:
+    #
+    # - findutils-default
+    # - ed
+    # - emacs
+    # - gnu-awk
+    # - grep
+    # - posix-awk
+    # - awk
+    # - posix-basic
+    # - posix-egrep
+    # - egrep
+    # - posix-extended
+    # - posix-minimal-basic
+    # - sed
+    #
+    # Check for supported regex types with:
+    # > find . -regextype type
     #
     # @seealso
     # - NULL-byte handling in Bash
@@ -244,26 +260,7 @@ koopa::find() { # {{{1
                 then
                     dict[regex]="$(koopa::sub '\^' '^.+/' "${dict[regex]}")"
                 fi
-                # Supported regex types for GNU find:
-                #
-                # - findutils-default
-                # - ed
-                # - emacs
-                # - gnu-awk
-                # - grep
-                # - posix-awk
-                # - awk
-                # - posix-basic
-                # - posix-egrep
-                # - egrep
-                # - posix-extended
-                # - posix-minimal-basic
-                # - sed
-                #
-                # Check for supported regex types with:
-                # > find . -regextype type
-                #
-                # Note that '-regextype' must come before '-regex' here.
+                # NOTE '-regextype' must come before '-regex' here.
                 find_args+=(
                     '-regextype' 'posix-egrep'
                     '-regex' "${dict[regex]}"

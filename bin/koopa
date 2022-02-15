@@ -79,6 +79,7 @@ then
 fi
 [[ -x "$bash_source" ]] || return 1
 export KOOPA_ACTIVATE=0
+export KOOPA_HELP=0
 # Need to keep this step outside of a function, otherwise we won't detect
 # the '--help' flag correctly.
 # shellcheck source=/dev/null
