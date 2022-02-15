@@ -313,7 +313,7 @@ _koopa_activate_broot() { # {{{1
             return 0
             ;;
     esac
-    config_dir="${HOME}/.config/broot"
+    config_dir="${HOME:?}/.config/broot"
     [ -d "$config_dir" ] || return 0
     # This is supported for Bash and Zsh.
     script="${config_dir}/launcher/bash/br"
@@ -1255,7 +1255,7 @@ _koopa_activate_secrets() { # {{{1
     # """
     local file
     file="${1:-}"
-    [ -z "$file" ] && file="${HOME}/.secrets"
+    [ -z "$file" ] && file="${HOME:?}/.secrets"
     [ -r "$file" ] || return 0
     # shellcheck source=/dev/null
     . "$file"
@@ -1283,7 +1283,7 @@ _koopa_activate_ssh_key() { # {{{1
     then
         key="$SSH_KEY"
     else
-        key="${HOME}/.ssh/id_rsa"
+        key="${HOME:?}/.ssh/id_rsa"
     fi
     [ -r "$key" ] || return 0
     eval "$(ssh-agent -s)" >/dev/null 2>&1
@@ -1323,18 +1323,18 @@ _koopa_activate_starship() { # {{{1
 _koopa_activate_tealdeer() { # {{{1
     # """
     # Activate Rust tealdeer (tldr).
-    # @note Updated 2021-08-31.
+    # @note Updated 2022-02-15.
     #
     # This helps standardization the configuration across Linux and macOS.
     # """
     _koopa_is_installed 'tldr' || return 0
     if [ -z "${TEALDEER_CACHE_DIR:-}" ]
     then
-        TEALDEER_CACHE_DIR="${XDG_CACHE_HOME:?}/tealdeer"
+        TEALDEER_CACHE_DIR="$(_koopa_xdg_cache_home)/tealdeer"
     fi
     if [ -z "${TEALDEER_CONFIG_DIR:-}" ]
     then
-        TEALDEER_CONFIG_DIR="${XDG_CONFIG_HOME:?}/tealdeer"
+        TEALDEER_CONFIG_DIR="$(_koopa_xdg_config_home)/tealdeer"
     fi
     if [ ! -d "${TEALDEER_CACHE_DIR:?}" ]
     then
@@ -2440,7 +2440,7 @@ _koopa_export_history() { # {{{1
     # Note that snake case is commonly used here across platforms.
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME}/.${shell}_history"
+        HISTFILE="${HOME:?}/.${shell}_history"
     fi
     export HISTFILE
     # Create the history file, if necessary.
@@ -3005,9 +3005,9 @@ _koopa_is_linux() { # {{{1
 _koopa_is_local_install() { # {{{1
     # """
     # Is koopa installed only for the current user?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-15.
     # """
-    _koopa_str_detect_posix "$(_koopa_koopa_prefix)" "${HOME}"
+    _koopa_str_detect_posix "$(_koopa_koopa_prefix)" "${HOME:?}"
 }
 
 _koopa_is_macos() { # {{{1
@@ -3768,17 +3768,17 @@ _koopa_major_minor_patch_version() { # {{{1
 _koopa_make_prefix() { # {{{1
     # """
     # Return the installation prefix to use.
-    # @note Updated 2020-08-09.
+    # @note Updated 2022-02-15.
     # """
     local prefix
     if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
     then
         prefix="$KOOPA_MAKE_PREFIX"
-    elif _koopa_is_shared_install
+    elif _koopa_is_local_install
     then
-        prefix='/usr/local'
+        prefix="$(_koopa_xdg_local_home)"
     else
-        prefix="${HOME}/.local"
+        prefix='/usr/local'
     fi
     _koopa_print "$prefix"
     return 0
@@ -4304,8 +4304,12 @@ _koopa_spacevim_prefix() { # {{{1
 _koopa_str_detect_posix() { # {{{1
     # """
     # Evaluate whether a string contains a desired value.
-    # @note Updated 2022-01-10.
+    # @note Updated 2022-02-15.
+    #
+    # We're unsetting 'test' here to ensure no variables/functions mask the
+    # shell built-in.
     # """
+    unset test
     test "${1#*"$2"}" != "$1"
 }
 
