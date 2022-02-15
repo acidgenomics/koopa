@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to provide clear help support for:
-# - app
-# - configure
-# - header
-# - install
-# - list
-# - reinstall
-# - system
-# - uninstall
-# - update
-
 koopa::cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
@@ -21,6 +10,11 @@ koopa::cli_app() { # {{{1
     # """
     local key
     case "${1:-}" in
+        # Help documentation ---------------------------------------------------
+        '--help' | \
+        '-h')
+            koopa::help "$(koopa::man_prefix)/man1/app.1"
+            ;;
         # Cross platform -------------------------------------------------------
         'aws')
             case "${2:-}" in
@@ -291,10 +285,18 @@ koopa::cli_nested_runner() { # {{{1
         [runner]="${1:?}"
         [key]="${2:-}"
     )
-    if [[ -z "${dict[key]}" ]]
-    then
-        koopa::stop "Missing argument: 'koopa ${dict[runner]} <ARG>...'."
-    fi
+    case "${dict[key]}" in
+        '')
+            koopa::stop "Missing argument: 'koopa ${dict[runner]} <ARG>...'."
+            ;;
+        '--help' | \
+        '-h')
+            koopa::help "$(koopa::man_prefix)/man/man1/${dict[runner]}.1"
+            ;;
+        '-'*)
+            koopa::invalid_arg "$*"
+            ;;
+    esac
     shift 2
     koopa::print "${dict[runner]}-${dict[key]}" "$@"
     return 0
@@ -307,6 +309,10 @@ koopa::cli_system() { # {{{1
     # """
     local key
     case "${1:-}" in
+        '--help' | \
+        '-h')
+            koopa::help "$(koopa::man_prefix)/man1/system.1"
+            ;;
         'check')
             key='check-system'
             ;;
@@ -552,13 +558,10 @@ koopa::koopa() { # {{{1
         fi
     fi
     # Check if user is requesting help, by evaluating last argument.
-    # FIXME Allow 'koopa::help' to set default man_prefix, for convenience.
     case "${!#:-}" in
         '--help' | \
         '-h')
-            dict[koopa_prefix]="$(koopa::koopa_prefix)"
-            dict[man_file]="${dict[koopa_prefix]}/man/man1/${dict[key]}.1"
-            koopa::help "${dict[man_file]}"
+            koopa::help "$(koopa::man_prefix)/man1/${dict[key]}.1"
             ;;
     esac
     "${dict[fun]}" "$@"
