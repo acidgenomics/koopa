@@ -18,6 +18,15 @@ koopa::installers_prefix() { # {{{1
     return 0
 }
 
+koopa::man_prefix() { # {{{1
+    # """
+    # man documentation file prefix.
+    # @note Updated 2022-02-15.
+    # """
+    koopa::print "$(koopa::koopa_prefix)/man"
+    return 0
+}
+
 koopa::python_system_packages_prefix() { # {{{1
     # """
     # Python system site packages library prefix.
