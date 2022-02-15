@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-02-11.
+    # Updated 2022-02-15.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -126,6 +126,7 @@ _koopa_complete() { # {{{1
                         'homebrew'
                         'homebrew-bundle'
                         'htop'
+                        'imagemagick'
                         'julia'
                         'julia-packages'
                         'lesspipe'
