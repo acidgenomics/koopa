@@ -97,9 +97,10 @@ koopa::test_roff() { # {{{1
     do
         koopa::h3 "$bin_dir"
         readarray -t bin_files <<< "$( \
-            "${app[find]}" "$bin_dir" \
+            koopa::find \
                 --max-depth=1 \
                 --min-depth=1 \
+                --prefix="$bin_dir" \
                 --sort \
                 --type='f' \
         )"

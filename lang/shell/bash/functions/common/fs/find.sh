@@ -215,7 +215,6 @@ koopa::find() { # {{{1
     find+=("${app[find]}")
     case "${dict[engine]}" in
         'gnu-find')
-            koopa::stop 'FIXME HELLO THERE'
             find_args=(
                 "${dict[prefix]}"
                 '-xdev'
