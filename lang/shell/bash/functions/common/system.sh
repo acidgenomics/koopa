@@ -21,6 +21,39 @@ koopa::exec_dir() { # {{{1
     return 0
 }
 
+koopa::header() { # {{{1
+    # """
+    # Shared language-specific header file.
+    # @note Updated 2022-02-15.
+    #
+    # Useful for private scripts using koopa code outside of package.
+    # """
+    local dict
+    koopa::assert_has_args_eq "$#" 1
+    declare -A dict=(
+        [lang]="$(koopa::lowercase "${1:?}")"
+        [prefix]="$(koopa::koopa_prefix)/lang"
+    )
+    case "${dict[lang]}" in
+        'bash' | \
+        'posix' | \
+        'zsh')
+            dict[prefix]="${dict[prefix]}/shell"
+            dict[ext]='sh'
+            ;;
+        'r')
+            dict[ext]='R'
+            ;;
+        *)
+            koopa::invalid_arg "${dict[lang]}"
+            ;;
+    esac
+    dict[file]="${dict[prefix]}/${dict[lang]}/include/header.${dict[ext]}"
+    koopa::assert_is_file "${dict[file]}"
+    koopa::print "${dict[file]}"
+    return 0
+}
+
 koopa::help() { # {{{1
     # """
     # Show usage via '--help' flag.
