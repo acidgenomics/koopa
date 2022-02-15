@@ -1004,6 +1004,13 @@ koopa::uninstall_htop() { # {{{1
         "$@"
 }
 
+koopa::uninstall_imagemagick() { # {{{1
+    koopa::uninstall_app \
+        --name-fancy='ImageMagick' \
+        --name='imagemagick' \
+        "$@"
+}
+
 koopa::uninstall_julia() { # {{{1
     koopa::uninstall_app \
         --name-fancy='Julia' \
