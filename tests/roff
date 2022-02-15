@@ -52,7 +52,6 @@ koopa::test_roff() { # {{{1
     for man_dir in "${man_dirs[@]}"
     do
         koopa::h3 "$man_dir"
-        # FIXME Confirm that this works here.
         readarray -t man_files <<< "$( \
             koopa::find \
                 --max-depth=2 \
@@ -96,7 +95,6 @@ koopa::test_roff() { # {{{1
     for bin_dir in "${bin_dirs[@]}"
     do
         koopa::h3 "$bin_dir"
-        # FIXME Need to confirm that this works.
         readarray -t bin_files <<< "$( \
             "${app[find]}" "$bin_dir" \
                 --max-depth=1 \
