@@ -14,10 +14,13 @@
 #             searches, unless the pattern contains an uppercase character (smart case)
 # GNU find options: -name or -iname.
 
+# FIXME This doesn't seem to be passing '-mindepth' '-maxdepth' correctly to
+# GNU find.
+
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2022-01-19.
+    # @note Updated 2022-02-15.
     #
     # Consider updating the variant defined in the Bash header upon any
     # changes to this function.
@@ -81,10 +84,12 @@ koopa::find() { # {{{1
                 shift 2
                 ;;
             '--max-depth='*)
+                koopa::stop 'FIXME AAAA'
                 dict[max_depth]="${1#*=}"
                 shift 1
                 ;;
             '--max-depth')
+                koopa::stop 'FIXME BBB'
                 dict[max_depth]="${2:?}"
                 shift 2
                 ;;
