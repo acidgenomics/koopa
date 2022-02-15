@@ -155,7 +155,7 @@ koopa::assert_has_no_args() { # {{{1
     fi
     if [[ "${1:?}" -ne 0 ]]
     then
-        koopa::stop 'Arguments are not allowed.'
+        koopa::stop "Arguments are not allowed (${1} detected)."
     fi
     return 0
 }
