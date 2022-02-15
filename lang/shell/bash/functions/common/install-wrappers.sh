@@ -38,7 +38,6 @@ koopa::configure_ruby() { # {{{1
         --name='ruby' \
         --which-app="$(koopa::locate_ruby)" \
         "$@"
-    koopa::rm "${HOME}/.gem"
     return 0
 }
 
@@ -307,6 +306,13 @@ koopa::install_homebrew_bundle() { # {{{1
 koopa::install_htop() { # {{{1
     koopa::install_app \
         --name='htop' \
+        "$@"
+}
+
+koopa::install_imagemagick() { # {{{1
+    koopa::install_app \
+        --name-fancy='ImageMagick' \
+        --name='imagemagick' \
         "$@"
 }
 
