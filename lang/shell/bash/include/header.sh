@@ -163,6 +163,7 @@ __koopa_bash_header() { # {{{1
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
         [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
+        [[ -z "${KOOPA_PROCESS_ID:-}" ]] && export KOOPA_PROCESS_ID="${$}"
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
