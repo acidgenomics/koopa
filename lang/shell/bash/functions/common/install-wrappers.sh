@@ -837,7 +837,7 @@ koopa::uninstall_doom_emacs() { # {{{1
 koopa::uninstall_dotfiles() { # {{{1
     # """
     # Uninstall dotfiles.
-    # @note Updated 2021-11-24.
+    # @note Updated 2022-02-15.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -845,7 +845,7 @@ koopa::uninstall_dotfiles() { # {{{1
         [bash]="$(koopa::locate_bash)"
     )
     declare -A dict=(
-        [name-fancy]='Dotfiles'
+        [name_fancy]='Dotfiles'
         [name]='dotfiles'
         [prefix]="$(koopa::dotfiles_prefix)"
     )
