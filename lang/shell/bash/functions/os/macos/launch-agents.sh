@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
 koopa::macos_list_launch_agents() { # {{{1
+    # """
+    # List launch agents.
+    # @note Updated 2022-02-16.
+    # """
     koopa::assert_has_no_args "$#"
-    koopa::h1 'Listing launch agents and daemons.'
+    koopa::alert 'Listing launch agents and daemons.'
     ls \
         "${HOME}/Library/LaunchAgents" \
         '/Library/LaunchAgents' \

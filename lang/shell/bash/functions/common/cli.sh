@@ -305,10 +305,15 @@ koopa::cli_nested_runner() { # {{{1
 koopa::cli_system() { # {{{1
     # """
     # Parse user input to 'koopa system'.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-02-16.
     # """
     local key
+    key=''
+    # Platform independent.
     case "${1:-}" in
+        '')
+            koopa::stop "Missing argument: 'koopa system <ARG>...'."
+            ;;
         '--help' | \
         '-h')
             koopa::help "$(koopa::man_prefix)/man1/system.1"
@@ -337,12 +342,6 @@ koopa::cli_system() { # {{{1
                     ;;
             esac
             ;;
-        'homebrew-cask-version')
-            key='get-homebrew-cask-version'
-            ;;
-        'macos-app-version')
-            key='get-macos-app-version'
-            ;;
         'version')
             key='get-version'
             ;;
@@ -351,13 +350,9 @@ koopa::cli_system() { # {{{1
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
-        'delete-cache' | \
         'disable-passwordless-sudo' | \
-        'disable-touch-id-sudo' | \
         'enable-passwordless-sudo' | \
-        'enable-touch-id-sudo' | \
         'find-non-symlinked-make-files' | \
-        'fix-sudo-setrlimit-error' | \
         'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
@@ -377,14 +372,37 @@ koopa::cli_system() { # {{{1
         'conda-remove-env')
             koopa::defunct 'koopa app conda remove-env'
             ;;
-        # Invalid --------------------------------------------------------------
-        '')
-            koopa::stop "Missing argument: 'koopa system <ARG>...'."
-            ;;
-        *)
-            koopa::invalid_arg "$*"
-            ;;
     esac
+    # Platform specific.
+    if koopa::is_linux
+    then
+        case "$1" in
+            'delete-cache' | \
+            'fix-sudo-setrlimit-error')
+                key="${1:?}"
+                ;;
+        esac
+    elif koopa::is_macos
+    then
+        case "$1" in
+            'homebrew-cask-version')
+                key='get-homebrew-cask-version'
+                ;;
+            'macos-app-version')
+                key='get-macos-app-version'
+                ;;
+            'clean-launch-services' | \
+            'disable-touch-id-sudo' | \
+            'enable-touch-id-sudo' | \
+            'flush-dns' | \
+            'ifactive' | \
+            'list-launch-agents' | \
+            'reload-autofs')
+                key="${1:?}"
+                ;;
+        esac
+    fi
+    [[ -z "$key" ]] && koopa::invalid_arg "$*"
     shift 1
     koopa::print "$key" "$@"
     return 0

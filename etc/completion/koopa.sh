@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-02-15.
+    # Updated 2022-02-16.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -281,7 +281,6 @@ _koopa_complete() { # {{{1
                         'set-permissions'
                         'switch-to-develop'
                         'test'
-                        'variable'
                         'variables'
                         'version'
                         'which'
@@ -289,10 +288,15 @@ _koopa_complete() { # {{{1
                     if _koopa_is_macos
                     then
                         args+=(
+                            'clean-launch-services'
                             'disable-touch-id-sudo'
                             'enable-touch-id-sudo'
+                            'flush-dns'
                             'homebrew-cask-version'
+                            'ifactive'
+                            'list-launch-agents'
                             'macos-app-version'
+                            'reload-autofs'
                         )
                     fi
                     ;;
