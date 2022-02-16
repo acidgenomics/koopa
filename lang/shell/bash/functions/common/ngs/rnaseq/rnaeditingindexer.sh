@@ -22,30 +22,30 @@ koopa::run_rnaeditingindexer() { # {{{1
     # @examples
     # > koopa::run_rnaeditingindexer --example
     # """
-    local app dict
+    local app dict run_args
     declare -A app=(
         [docker]="$(koopa::locate_docker)"
     )
     declare -A dict=(
-        [bam_dir]='bam'
         [bam_suffix]='.Aligned.sortedByCoord.out.bam'
         [docker_image]='acidgenomics/rnaeditingindexer'
         [example]=0
         [genome]='hg38'
+        [local_bam_dir]='bam'
+        [local_output_dir]='rnaedit'
         [mnt_bam_dir]='/mnt/bam'
         [mnt_output_dir]='/mnt/output'
-        [output_dir]='rnaedit'
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--bam-dir='*)
-                dict[bam_dir]="${1#*=}"
+                dict[local_bam_dir]="${1#*=}"
                 shift 1
                 ;;
             '--bam-dir')
-                dict[bam_dir]="${2:?}"
+                dict[local_bam_dir]="${2:?}"
                 shift 2
                 ;;
             '--genome='*)
@@ -57,11 +57,11 @@ koopa::run_rnaeditingindexer() { # {{{1
                 shift 2
                 ;;
             '--output-dir='*)
-                dict[output_dir]="${1#*=}"
+                dict[local_output_dir]="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
-                dict[output_dir]="${2:?}"
+                dict[local_output_dir]="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
@@ -75,21 +75,25 @@ koopa::run_rnaeditingindexer() { # {{{1
                 ;;
         esac
     done
+    run_args=()
     if [[ "${dict[example]}" -eq 1 ]]
     then
-        dict[bam_dir]='/bin/AEI/RNAEditingIndexer/TestResources/BAMs'
-        dict[bam_suffix]="_sampled_with_0.1.Aligned.sortedByCoord.out\
-.bam.AluChr1Only.bam"
+        dict[bam_suffix]="_sampled_with_0.1.Aligned.sortedByCoord.out.\
+bam.AluChr1Only.bam"
+        dict[local_bam_dir]=''
+        dict[mnt_bam_dir]='/bin/AEI/RNAEditingIndexer/TestResources/BAMs'
     else
-        koopa::assert_is_dir "${dict[bam_dir]}"
-        dict[bam_dir]="$(koopa::realpath "${dict[bam_dir]}")"
+        koopa::assert_is_dir "${dict[local_bam_dir]}"
+        dict[local_bam_dir]="$(koopa::realpath "${dict[local_bam_dir]}")"
+        koopa::rm "${dict[local_output_dir]}"
+        dict[local_output_dir]="$(koopa::init_dir "${dict[local_output_dir]}")"
+        run_args+=(
+            -v "${dict[local_bam_dir]}:${dict[mnt_bam_dir]}:ro"
+            -v "${dict[local_output_dir]}:${dict[mnt_output_dir]}:rw"
+        )
     fi
-    koopa::rm "${dict[output_dir]}"
-    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
-    "${app[docker]}" run \
-        -v "${dict[bam_dir]}:${dict[mnt_bam_dir]}:ro" \
-        -v "${dict[output_dir]}:${dict[mnt_output_dir]}:rw" \
-        "${dict[docker_image]}" \
+    run_args+=("${dict[docker_image]}")
+    "${app[docker]}" run "${run_args[@]}" \
         RNAEditingIndex \
             --genome "${dict[genome]}" \
             --keep_cmpileup \
