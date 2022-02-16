@@ -530,7 +530,7 @@ koopa::find_dotfiles() { # {{{1
             --print0 \
             --sort \
             --type="$type" \
-        | "${app[xargs]}" -0 -n1 "${app[basename]}" \
+        | "${app[xargs]}" --max-args=1 --null "${app[basename]}" \
         | "${app[awk]}" '{print "    -",$0}' \
     )"
     koopa::h2 "${header}:"
@@ -629,12 +629,12 @@ koopa::find_large_dirs() { # {{{1
 koopa::find_large_files() { # {{{1
     # """
     # Find large files.
-    # @note Updated 2021-10-26.
+    # @note Updated 2022-02-16.
     #
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
-    local app prefix x
+    local app prefix str
     koopa::assert_has_args "$#"
     declare -A app=(
         [du]="$(koopa::locate_du)"
@@ -645,19 +645,19 @@ koopa::find_large_files() { # {{{1
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
-        x="$( \
+        str="$( \
             koopa::find \
                 --min-depth=1 \
                 --prefix="$(koopa::realpath "$prefix")" \
                 --print0 \
                 --size='+100000000c' \
                 --type='f' \
-            | "${app[xargs]}" -0 "${app[du]}" \
-            | "${app[sort]}" -n \
-            | "${app[tail]}" -n 50 \
+            | "${app[xargs]}" --null "${app[du]}" \
+            | "${app[sort]}" --numeric-sort \
+            | "${app[tail]}" --lines=50 \
         )"
-        [[ -n "$x" ]] || continue
-        koopa::print "$x"
+        [[ -n "$str" ]] || continue
+        koopa::print "$str"
     done
     return 0
 }
