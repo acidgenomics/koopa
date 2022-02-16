@@ -51,7 +51,6 @@ koopa::macos_disable_microsoft_teams_updater() { # {[[1
     return 0
 }
 
-# FIXME Rework this, moving to a 'disabled' subdirectory instead. It's cleaner.
 koopa::macos_disable_plist_file() { # {{{1
     # """
     # Disable a plist file correponding to a launch agent or daemon.
@@ -69,11 +68,11 @@ koopa::macos_disable_plist_file() { # {{{1
         local dict
         declare -A dict=(
             [daemon]=0
-            [enabled_file]="$(koopa::realpath "$file")"
+            [enabled_file]="$file"
             [sudo]=1
         )
-        # FIXME Rework this.
-        dict[disabled_file]="${dict[enabled_file]}.disabled"
+        dict[disabled_file]="$(koopa::parent_dir "${dict[enabled_file]}")/\
+disabled/$(koopa::basename "${dict[enabled_file]}")"
         koopa::alert "Disabling '${dict[enabled_file]}' \
 to '${dict[disabled_file]}'."
         if koopa::str_detect_fixed "${dict[enabled_file]}" '/LaunchDaemons/'
@@ -170,7 +169,6 @@ koopa::macos_enable_microsoft_teams_updater() { # {[[1
     return 0
 }
 
-# FIXME Rework this, moving to a 'disabled' subdirectory instead. It's cleaner.
 koopa::macos_enable_plist_file() { # {{{1
     # """
     # Enable a disabled plist file correponding to a launch agent or daemon.
@@ -182,20 +180,17 @@ koopa::macos_enable_plist_file() { # {{{1
         [launchctl]="$(koopa::macos_locate_launchctl)"
         [sudo]="$(koopa::locate_sudo)"
     )
+    koopa::assert_is_not_file "$@"
     for file in "$@"
     do
         local dict
         declare -A dict=(
             [daemon]=0
-            # FIXME Rework this.
-            [disabled_file]="${file}.disabled"
+            [enabled_file]="$file"
             [sudo]=1
         )
-        koopa::assert_is_file "${dict[disabled_file]}"
-        dict[disabled_file]="$(koopa::realpath "${dict[disabled_file]}")"
-        dict[enabled_file]="$( \
-            koopa::sub '\.disabled$' '' "${dict[disabled_file]}" \
-        )"
+        dict[disabled_file]="$(koopa::parent_dir "${dict[enabled_file]}")/\
+disabled/$(koopa::basename "${dict[enabled_file]}")"
         koopa::alert "Enabling '${dict[enabled_file]}' \
 from '${dict[disabled_file]}'."
         if koopa::str_detect_fixed "${dict[enabled_file]}" '/LaunchDaemons/'
