@@ -22,12 +22,15 @@ koopa::cli_app() { # {{{1
                     case "${3:-}" in
                         'fetch-and-run' | \
                         'list-jobs')
+                            key="${1:?}-${2:?}-${3:?}"
+                            shift 3
                             ;;
                         *)
                             koopa::invalid_arg "$*"
                         ;;
                     esac
                     ;;
+                # FIXME Need to add support for EC2 functions here.
                 's3')
                     case "${3:-}" in
                         'find' | \
@@ -35,6 +38,8 @@ koopa::cli_app() { # {{{1
                         'ls' | \
                         'mv-to-parent' | \
                         'sync')
+                            key="${1:?}-${2:?}-${3:?}"
+                            shift 3
                             ;;
                         *)
                             koopa::invalid_arg "$*"
@@ -45,20 +50,18 @@ koopa::cli_app() { # {{{1
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}-${3:?}"
-            shift 2
             ;;
         'conda')
             case "${2:-}" in
                 'create-env' | \
                 'remove-env')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'docker')
             case "${2:-}" in
@@ -73,24 +76,24 @@ koopa::cli_app() { # {{{1
                 'remove' | \
                 'run' | \
                 'tag')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'ftp')
             case "${2:-}" in
                 'mirror')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'git')
             case "${2:-}" in
@@ -105,77 +108,88 @@ koopa::cli_app() { # {{{1
                 'rm-submodule' | \
                 'rm-untracked' | \
                 'status-recursive')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'gpg')
             case "${2:-}" in
                 'prompt' | \
                 'reload' | \
                 'restart')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'jekyll')
             case "${2:-}" in
                 'serve')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'list')
             key='list-app-versions'
+            shift 1
             ;;
         'md5sum')
             case "${2:-}" in
                 'check-to-new-md5-file')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'python')
             case "${2:-}" in
-                'pip-outdated' | \
-                'venv-create' | \
-                'venv-create-r-reticulate')
+                'create-venv')
+                    case "${3:-}" in
+                        'r-reticulate')
+                            key="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            key="${1:?}-${2:?}"
+                            shift 2
+                            ;;
+                    esac
+                    ;;
+                'pip-outdated')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'r')
             case "${2:-}" in
                 'drat' | \
                 'pkgdown-deploy-to-aws' | \
                 'shiny-run-app')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'sra')
             case "${2:-}" in
@@ -183,48 +197,52 @@ koopa::cli_app() { # {{{1
                 'download-run-info-table' | \
                 'fastq-dump' | \
                 'prefetch')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'ssh')
             case "${2:-}" in
                 'generate-key')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         'wget')
             case "${2:-}" in
                 'recursive')
+                    key="${1:?}-${2:?}"
+                    shift 2
                     ;;
                 *)
                     koopa::invalid_arg "$*"
                     ;;
             esac
-            key="${1:?}-${2:?}"
-            shift 1
             ;;
         # Linux-specifc --------------------------------------------------------
         'clean')
             key='delete-broken-app-symlinks'
+            shift 1
             ;;
         'link')
             key='link-app'
+            shift 1
             ;;
         'prune')
             key='prune-apps'
+            shift 1
             ;;
         'unlink')
             key='unlink-app'
+            shift 1
             ;;
         # Invalid --------------------------------------------------------------
         '')
@@ -234,7 +252,6 @@ koopa::cli_app() { # {{{1
             koopa::invalid_arg "$*"
             ;;
     esac
-    shift 1
     koopa::print "$key" "$@"
     return 0
 }
@@ -275,7 +292,7 @@ koopa::cli_list() { # {{{1
 koopa::cli_nested_runner() { # {{{1
     # """
     # Nested CLI runner function.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-02-16.
     #
     # Used to standardize handoff handling of 'configure', 'install',
     # 'uninstall', and 'update' commands.
@@ -296,8 +313,10 @@ koopa::cli_nested_runner() { # {{{1
         '-'*)
             koopa::invalid_arg "$*"
             ;;
+        *)
+            shift 2
+            ;;
     esac
-    shift 2
     koopa::print "${dict[runner]}-${dict[key]}" "$@"
     return 0
 }
@@ -320,33 +339,39 @@ koopa::cli_system() { # {{{1
             ;;
         'check')
             key='check-system'
+            shift 1
             ;;
         'info')
             key='system-info'
+            shift 1
             ;;
         'log')
             key='view-latest-tmp-log-file'
+            shift 1
             ;;
         'prefix')
             case "${2:-}" in
                 '')
-                    key='prefix'
+                    key='koopa-prefix'
+                    shift 1
                     ;;
                 'koopa')
-                    key='prefix'
-                    shift 1
+                    key='koopa-prefix'
+                    shift 2
                     ;;
                 *)
                     key="${2}-prefix"
-                    shift 1
+                    shift 2
                     ;;
             esac
             ;;
         'version')
             key='get-version'
+            shift 1
             ;;
         'which')
             key='which-realpath'
+            shift 1
             ;;
         'brew-dump-brewfile' | \
         'brew-outdated' | \
@@ -364,6 +389,7 @@ koopa::cli_system() { # {{{1
         'variable' | \
         'variables')
             key="${1:?}"
+            shift 1
             ;;
         # Defunct --------------------------------------------------------------
         'conda-create-env')
@@ -374,36 +400,42 @@ koopa::cli_system() { # {{{1
             ;;
     esac
     # Platform specific.
-    if koopa::is_linux
+    if [[ -z "$key" ]]
     then
-        case "$1" in
-            'delete-cache' | \
-            'fix-sudo-setrlimit-error')
-                key="${1:?}"
-                ;;
-        esac
-    elif koopa::is_macos
-    then
-        case "$1" in
-            'homebrew-cask-version')
-                key='get-homebrew-cask-version'
-                ;;
-            'macos-app-version')
-                key='get-macos-app-version'
-                ;;
-            'clean-launch-services' | \
-            'disable-touch-id-sudo' | \
-            'enable-touch-id-sudo' | \
-            'flush-dns' | \
-            'ifactive' | \
-            'list-launch-agents' | \
-            'reload-autofs')
-                key="${1:?}"
-                ;;
-        esac
+        if koopa::is_linux
+        then
+            case "${1:-}" in
+                'delete-cache' | \
+                'fix-sudo-setrlimit-error')
+                    key="${1:?}"
+                    shift 1
+                    ;;
+            esac
+        elif koopa::is_macos
+        then
+            case "${1:-}" in
+                'homebrew-cask-version')
+                    key='get-homebrew-cask-version'
+                    shift 1
+                    ;;
+                'macos-app-version')
+                    key='get-macos-app-version'
+                    shift 1
+                    ;;
+                'clean-launch-services' | \
+                'disable-touch-id-sudo' | \
+                'enable-touch-id-sudo' | \
+                'flush-dns' | \
+                'ifactive' | \
+                'list-launch-agents' | \
+                'reload-autofs')
+                    key="${1:?}"
+                    shift 1
+                    ;;
+            esac
+        fi
     fi
     [[ -z "$key" ]] && koopa::invalid_arg "$*"
-    shift 1
     koopa::print "$key" "$@"
     return 0
 }
