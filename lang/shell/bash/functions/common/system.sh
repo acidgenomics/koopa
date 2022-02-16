@@ -574,7 +574,7 @@ koopa::warn_if_export() { # {{{1
 koopa::which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-02-16.
     # """
     local dict
     koopa::assert_has_args_eq "$#" 1
@@ -610,10 +610,7 @@ koopa::which_function() { # {{{1
     else
         dict[fun]="koopa::${dict[key]}"
     fi
-    if ! koopa::is_function "${dict[fun]}"
-    then
-        koopa::stop "Unsupported command: '${dict[input_key]}'."
-    fi
+    koopa::is_function "${dict[fun]}" || return 1
     koopa::print "${dict[fun]}"
     return 0
 }
