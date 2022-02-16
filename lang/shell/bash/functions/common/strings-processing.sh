@@ -52,9 +52,7 @@ koopa::capitalize() { # {{{1
 koopa::gsub() { # {{{1
     # """
     # Global substitution.
-    # @note Updated 2022-01-21.
-    #
-    # Instead of using '|' in sed here, we can also escape '/'.
+    # @note Updated 2022-02-16.
     #
     # @examples
     # koopa::gsub 'a' '' 'aabb' 'aacc'
@@ -222,9 +220,7 @@ koopa::snake_case_simple() { # {{{1
 koopa::sub() { # {{{1
     # """
     # Single substitution.
-    # @note Updated 2022-01-21.
-    #
-    # Instead of using '|' in sed here, we can also escape '/'.
+    # @note Updated 2022-02-16.
     #
     # @examples
     # koopa::sub 'a' '' 'aaa' 'aaa'
