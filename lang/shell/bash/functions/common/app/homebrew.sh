@@ -98,7 +98,7 @@ koopa::brew_reset_permissions() { # {{{1
 koopa::brew_upgrade_brews() { # {{{1
     # """
     # Upgrade outdated Homebrew brews.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-02-16.
     # """
     local app brew brews
     koopa::assert_has_no_args "$#"
@@ -110,8 +110,9 @@ koopa::brew_upgrade_brews() { # {{{1
     koopa::dl \
         "$(koopa::ngettext \
             --num="${#brews[@]}" \
-            --msg1='outdated brew' \
-            --msg2='outdated brews' \
+            --middle=' outdated ' \
+            --msg1='brew' \
+            --msg2='brews' \
         )" \
         "$(koopa::to_string "${brews[@]}")"
     for brew in "${brews[@]}"
