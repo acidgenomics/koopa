@@ -538,17 +538,14 @@ koopa::koopa() { # {{{1
             koopa::invalid_arg "$*"
             ;;
     esac
-    dict[fun]="koopa::${dict[key]//-/_}"
-    koopa::assert_is_function "${dict[fun]}"
     # Evaluate nested CLI runner function and reset positional arguments.
     if [[ "${dict[nested_runner]}"  -eq 1 ]]
     then
         local pos
+        dict[fun]="koopa::${dict[key]//-/_}"
         koopa::assert_is_function "${dict[fun]}"
         readarray -t pos <<< "$("${dict[fun]}" "$@")"
         dict[key]="${pos[0]}"
-        dict[fun]="koopa::${dict[key]//-/_}"
-        koopa::assert_is_function "${dict[fun]}"
         unset "pos[0]"
         if koopa::is_array_non_empty "${pos[@]:-}"
         then
@@ -564,6 +561,11 @@ koopa::koopa() { # {{{1
             koopa::help "$(koopa::man_prefix)/man1/${dict[key]}.1"
             ;;
     esac
+    dict[fun]="$(koopa::which_function "${dict[key]}" || true)"
+    if ! koopa::is_function "${dict[fun]}"
+    then
+        koopa::stop 'Unsupported command.'
+    fi
     "${dict[fun]}" "$@"
     return 0
 }
