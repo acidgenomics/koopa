@@ -239,6 +239,10 @@ koopa::locate_git() { # {{{1
     koopa::locate_app 'git'
 }
 
+koopa::locate_gnu_mv() { # {{{1
+    koopa::locate_app 'mv'
+}
+
 koopa::locate_go() { # {{{1
     koopa::locate_app 'go'
 }
