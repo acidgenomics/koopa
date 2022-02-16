@@ -746,9 +746,9 @@ koopa::rm() { # {{{1
 koopa::touch() { # {{{1
     # """
     # Touch (create) a file on disk.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-16.
     # """
-    local app pos touch
+    local app mkdir pos touch
     koopa::assert_has_args "$#"
     declare -A app=(
         [touch]="$(koopa::locate_touch)"
@@ -778,19 +778,29 @@ koopa::touch() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
+    mkdir=('koopa::mkdir')
     if [[ "${dict[sudo]}" -eq 1 ]]
     then
         app[sudo]="$(koopa::locate_sudo)"
+        mkdir+=('--sudo')
         touch=("${app[sudo]}" "${app[touch]}")
     else
         touch=("${app[touch]}")
     fi
     for file in "$@"
     do
+        local dn
         if [[ -e "$file" ]]
         then
             koopa::assert_is_not_dir "$file"
             koopa::assert_is_not_symlink "$file"
+        fi
+        # Automatically create parent directory, if necessary.
+        dn="$(koopa::dirname "$file")"
+        if [[ ! -d "$dn" ]] && \
+            koopa::str_detect_fixed "$dn" '/'
+        then
+            "${mkdir[@]}" "$dn"
         fi
         "${touch[@]}" "$file"
     done
