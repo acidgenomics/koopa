@@ -407,8 +407,10 @@ koopa::stop() { # {{{1
     # - https://stackoverflow.com/questions/28657676/
     # - https://linuxize.com/post/kill-command-in-linux/
     # - https://unix.stackexchange.com/questions/478281/
+    # - https://stackoverflow.com/questions/41370092/
     # """
     koopa:::msg 'red-bold' 'red' '!! Error:' "$@" >&2
-    kill -SIGKILL "${$}"
+    [[ -n "${!:-}" ]] && kill -SIGKILL "${!}"  # subprocess
+    [[ -n "${$:-}" ]] && kill -SIGKILL "${$}"  # parent
     exit 1
 }
