@@ -265,13 +265,10 @@ koopa::missing_arg() { # {{{1
     koopa::stop 'Missing required argument.'
 }
 
-# FIXME Add support for padding of middle of string.
-# FIXME e.g. 'outdated brew' (see Homebrew function).
-
 koopa::ngettext() { # {{{1
     # """
     # Translate a text message.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-02-16.
     #
     # A function to dynamically handle singular/plural words.
     #
@@ -290,17 +287,26 @@ koopa::ngettext() { # {{{1
     local dict
     koopa::assert_has_args "$#"
     declare -A dict=(
-        [prefix]=''
-        [num]=''
+        [middle]=' '
         [msg1]=''
         [msg2]=''
-        [suffix]=''
+        [num]=''
+        [prefix]=''
         [str]=''
+        [suffix]=''
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--middle='*)
+                dict[middle]="${1#*=}"
+                shift 1
+                ;;
+            '--middle')
+                dict[middle]="${2:?}"
+                shift 2
+                ;;
             '--msg1='*)
                 dict[msg1]="${1#*=}"
                 shift 1
@@ -348,6 +354,7 @@ koopa::ngettext() { # {{{1
         esac
     done
     koopa::assert_is_set \
+        '--middle' "${dict[middle]}"  \
         '--msg1' "${dict[msg1]}"  \
         '--msg2' "${dict[msg2]}"  \
         '--num' "${dict[num]}"
@@ -362,7 +369,8 @@ koopa::ngettext() { # {{{1
             dict[msg]="${dict[msg2]}"
             ;;
     esac
-    dict[str]="${dict[prefix]:-}${dict[num]} ${dict[msg]}${dict[suffix]:-}"
+    dict[str]="${dict[prefix]}${dict[num]}${dict[middle]}\
+${dict[msg]}${dict[suffix]}"
     koopa::print "${dict[str]}"
     return 0
 }
@@ -394,7 +402,7 @@ koopa::status_ok() { # {{{1
 koopa::stop() { # {{{1
     # """
     # Stop with an error message, and kill the parent process.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-02-16.
     #
     # NOTE Using 'exit' here doesn't not reliably stop inside command substition
     # and subshells, even with errexit and errtrace enabled.
@@ -409,6 +417,7 @@ koopa::stop() { # {{{1
     # - https://unix.stackexchange.com/questions/478281/
     # - https://stackoverflow.com/questions/41370092/
     # """
+    unset kill
     koopa:::msg 'red-bold' 'red' '!! Error:' "$@" >&2
     [[ -n "${!:-}" ]] && kill -SIGKILL "${!}"  # subprocess
     [[ -n "${$:-}" ]] && kill -SIGKILL "${$}"  # parent
