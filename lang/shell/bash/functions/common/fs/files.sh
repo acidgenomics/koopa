@@ -452,11 +452,11 @@ koopa::file_ext2() { # {{{1
 koopa::line_count() { # {{{1
     # """
     # Return the number of lines in a file.
-    # @note Updated 2021-11-04.
+    # @note Updated 2022-02-16.
     #
-    # Example: koopa::line_count tx2gene.csv
+    # Example: koopa::line_count 'tx2gene.csv'
     # """
-    local app file x
+    local app file str
     koopa::assert_has_args "$#"
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
@@ -465,13 +465,14 @@ koopa::line_count() { # {{{1
     )
     for file in "$@"
     do
-        x="$( \
-            "${app[wc]}" -l "$file" \
+        str="$( \
+            "${app[wc]}" --lines "$file" \
                 | "${app[xargs]}" \
-                | "${app[cut]}" -d ' ' -f 1 \
+                | "${app[cut]}" --delimiter=' ' --fields=1 \
         )"
-        koopa::print "$x"
-    done    
+        [[ -n "$str" ]] || return 1
+        koopa::print "$str"
+    done
     return 0
 }
 
@@ -556,14 +557,20 @@ koopa::reset_permissions() { # {{{1
         --prefix="${dict[prefix]}" \
         --print0 \
         --type='d' \
-    | "${app[xargs]}" -0 -I {} \
+    | "${app[xargs]}" \
+        --no-run-if-empty \
+        --null \
+        -I {} \
         "${app[chmod]}" 'u=rwx,g=rwx,o=rx' {}
     # Files.
     koopa::find \
         --prefix="${dict[prefix]}" \
         --print0 \
         --type='f' \
-    | "${app[xargs]}" -0 -I {} \
+    | "${app[xargs]}" \
+        --no-run-if-empty \
+        --null \
+        -I {} \
         "${app[chmod]}" 'u=rw,g=rw,o=r' {}
     # Executable (shell) scripts.
     koopa::find \
@@ -571,7 +578,10 @@ koopa::reset_permissions() { # {{{1
         --prefix="${dict[prefix]}" \
         --print0 \
         --type='f' \
-    | "${app[xargs]}" -0 -I {} \
+    | "${app[xargs]}" \
+        --no-run-if-empty \
+        --null \
+        -I {} \
         "${app[chmod]}" 'u=rwx,g=rwx,o=rx' {}
     return 0
 }
