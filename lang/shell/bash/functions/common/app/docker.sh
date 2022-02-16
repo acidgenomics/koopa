@@ -371,16 +371,6 @@ koopa::docker_build_all_images() { # {{{1
     return 0
 }
 
-koopa::docker_build_all_tags() { # {{{1
-    # """
-    # Build all Docker tags.
-    # @note Updated 2020-08-14.
-    # """
-    koopa::assert_has_args "$#"
-    koopa::r_koopa 'cliDockerBuildAllTags' "$@"
-    return 0
-}
-
 koopa::docker_ghcr_login() { # {{{1
     # """
     # Log in to GitHub Container Registry.
@@ -530,16 +520,6 @@ koopa::docker_prune_all_images() { # {{{1
     return 0
 }
 
-koopa::docker_prune_all_stale_tags() { # {{{1
-    # """
-    # Prune (delete) all stale tags on DockerHub for all images.
-    # @note Updated 2021-08-14.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::r_koopa 'cliDockerPruneAllStaleTags' "$@"
-    return 0
-}
-
 koopa::docker_prune_old_images() { # {{{
     # """
     # Prune old Docker images.
@@ -565,23 +545,6 @@ koopa::docker_prune_old_images() { # {{{
         || true
     # Clean any remaining dangling images.
     "${app[docker]}" image prune --force || true
-    return 0
-}
-
-koopa::docker_prune_stale_tags() { # {{{1
-    # """
-    # Prune (delete) all stale tags on DockerHub for a specific image.
-    # @note Updated 2021-08-14.
-    #
-    # NOTE This doesn't currently work when 2FA and PAT are enabled.
-    # This issue may be resolved by the end of 2021-07.
-    # See also:
-    # - https://github.com/docker/roadmap/issues/115
-    # - https://github.com/docker/hub-feedback/issues/1914
-    # - https://github.com/docker/hub-feedback/issues/1927
-    # """
-    koopa::assert_has_args "$#"
-    koopa::r_koopa 'cliDockerPruneStaleTags' "$@"
     return 0
 }
 

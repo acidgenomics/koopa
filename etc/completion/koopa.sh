@@ -414,9 +414,8 @@ _koopa_complete() { # {{{1
                             ;;
                         'python')
                             args=(
+                                'create-venv'
                                 'pip-outdated'
-                                'venv-create'
-                                'venv-create-r-reticulate'
                             )
                             ;;
                         'r')

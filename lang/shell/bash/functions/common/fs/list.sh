@@ -126,13 +126,3 @@ koopa::list_path_priority() { # {{{1
     koopa::print "${all_arr[@]}"
     return 0
 }
-
-koopa::list_programs() { # {{{1
-    # """
-    # List koopa programs available in PATH.
-    # @note Updated 2021-08-14.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::r_koopa --vanilla 'cliListPrograms'
-    return 0
-}
