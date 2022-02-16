@@ -122,6 +122,8 @@ koopa::macos_disable_privileged_helper_tool() { # {{{1
 disabled/$(koopa::basename "${dict[enabled_file]}")"
         koopa::assert_is_file "${dict[enabled_file]}"
         koopa::assert_is_not_file "${dict[disabled_file]}"
+        koopa::alert "Disabling priviledged helper tool \
+at '${dict[enabled_file]}' to '${dict[disabled_file]}'."
         koopa::mv --sudo "${dict[enabled_file]}" "${dict[disabled_file]}"
     done
     return 0
@@ -261,6 +263,8 @@ koopa::macos_enable_privileged_helper_tool() { # {{{1
 disabled/$(koopa::basename "${dict[enabled_file]}")"
         koopa::assert_is_not_file "${dict[enabled_file]}"
         koopa::assert_is_file "${dict[disabled_file]}"
+        koopa::alert "Enabling priviledged helper tool \
+at '${dict[enabled_file]}' from '${dict[disabled_file]}'."
         koopa::mv --sudo "${dict[disabled_file]}" "${dict[enabled_file]}"
     done
     return 0
