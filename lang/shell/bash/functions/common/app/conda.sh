@@ -35,7 +35,7 @@ koopa::conda_activate_env() { # {{{1
     dict[env_prefix]="$(koopa::conda_env_prefix "${dict[env_name]}")"
     koopa::assert_is_dir "${dict[env_prefix]}"
     [[ "${dict[nounset]}" -eq 1 ]] && set +u
-    koopa::is_conda_env_active && koopa::deactivate_conda
+    koopa::is_conda_env_active && koopa::conda_deactivate
     koopa::activate_conda
     koopa::assert_is_function 'conda'
     conda activate "${dict[env_prefix]}"
@@ -143,6 +143,28 @@ exists at '${dict[env_prefix]}'."
         koopa::sys_set_permissions --recursive "${dict[env_prefix]}"
         koopa::alert_install_success "${dict[env_name]}" "${dict[env_prefix]}"
     done
+    return 0
+}
+
+koopa::conda_deactivate() { # {{{1
+    # """
+    # Deactivate Conda environment.
+    # @note Updated 2022-02-16.
+    # """
+    local dict
+    koopa::assert_has_no_args "$#"
+    declare -A dict=(
+        [env_name]="$(koopa::conda_env_name)"
+        [nounset]="$(koopa::boolean_nounset)"
+    )
+    if [[ -z "${dict[env_name]}" ]]
+    then
+        koopa::stop 'conda is not active.'
+    fi
+    koopa::assert_is_function 'conda'
+    [[ "${dict[nounset]}" -eq 1 ]] && set +u
+    conda deactivate
+    [[ "${dict[nounset]}" -eq 1 ]] && set -u
     return 0
 }
 

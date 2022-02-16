@@ -23,6 +23,10 @@ koopa::active_conda_env() { # {{{1
     koopa::conda_activate_env "$@"
 }
 
+koopa::deactivate_conda() { # {{{1
+    koopa::conda_deactivate "$@"
+}
+
 # Defunct functions ============================================================
 koopa::brew_update() { # {{{1
     # """
