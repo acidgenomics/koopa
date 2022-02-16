@@ -89,7 +89,6 @@ END
     return 0
 }
 
-
 koopa::delete_dotfile() { # {{{1
     # """
     # Delete a dot file.

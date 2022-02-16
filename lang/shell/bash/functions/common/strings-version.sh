@@ -632,7 +632,7 @@ koopa::perl_file_rename_version() { # {{{1
 koopa::r_package_version() { # {{{1
     # """
     # R package version.
-    # @note Updated 2021-10-29.
+    # @note Updated 2022-02-16.
     # """
     local app vec x
     koopa::assert_has_args "$#"
@@ -641,7 +641,7 @@ koopa::r_package_version() { # {{{1
     )
     pkgs=("$@")
     koopa::assert_is_r_package_installed "${pkgs[@]}"
-    vec="$(koopa::array_to_r_vector "${pkgs[@]}")"
+    vec="$(koopa::r_paste_to_vector "${pkgs[@]}")"
     x="$( \
         "${app[rscript]}" -e " \
             cat(vapply( \
