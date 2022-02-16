@@ -283,9 +283,14 @@ koopa::macos_list_launch_agents() { # {{{1
     # List launch agents.
     # @note Updated 2022-02-16.
     # """
+    local app
     koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [ls]="$(koopa::locate_ls)"
+    )
     koopa::alert 'Listing launch agents and daemons.'
-    ls \
+    "${app[ls]}" \
+        --ignore='disabled' \
         "${HOME}/Library/LaunchAgents" \
         '/Library/LaunchAgents' \
         '/Library/LaunchDaemons' \
