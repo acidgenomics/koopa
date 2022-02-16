@@ -2134,27 +2134,6 @@ _koopa_config_prefix() { # {{{1
     return 0
 }
 
-# FIXME Move this to Bash.
-_koopa_deactivate_conda() { # {{{1
-    # """
-    # Deactivate Conda environment.
-    # @note Updated 2021-08-17.
-    # """
-    local env_name nounset
-    env_name="$(_koopa_conda_env_name)"
-    if [ -z "$env_name" ]
-    then
-        _koopa_warn 'conda is not active.'
-        return 1
-    fi
-    # Avoid exit on unbound PS1 in conda script.
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    conda deactivate
-    [ "$nounset" -eq 1 ] && set -u
-    return 0
-}
-
 _koopa_debian_os_codename() { # {{{1
     # """
     # Debian operating system codename.
