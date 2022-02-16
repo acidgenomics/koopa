@@ -69,7 +69,7 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
 koopa::macos_brew_upgrade_casks() { # {{{1
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-02-16.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
@@ -106,6 +106,13 @@ koopa::macos_brew_upgrade_casks() { # {{{1
             'r' | \
             'temurin')
                 koopa::configure_r
+                ;;
+            'google-'*)
+                # Currently in 'google-chrome' and 'google-drive' recipes.
+                koopa::macos_disable_google_keystone || true
+                ;;
+            'gpg-suite'*)
+                koopa::macos_disable_gpg_updater
                 ;;
             'microsoft-teams')
                 koopa::macos_disable_microsoft_teams_updater
