@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add a function to disable / enable PriviledgedHelperTools.
-# FIXME Also move disabled things to a 'disabled' subfolder here.
-
-
-
 koopa::macos_disable_crashplan() { # {{{1
     # """
     # Disable CrashPlan.
@@ -71,7 +66,7 @@ koopa::macos_disable_plist_file() { # {{{1
             [enabled_file]="$file"
             [sudo]=1
         )
-        dict[disabled_file]="$(koopa::parent_dir "${dict[enabled_file]}")/\
+        dict[disabled_file]="$(koopa::dirname "${dict[enabled_file]}")/\
 disabled/$(koopa::basename "${dict[enabled_file]}")"
         koopa::alert "Disabling '${dict[enabled_file]}' \
 to '${dict[disabled_file]}'."
@@ -109,6 +104,29 @@ to '${dict[disabled_file]}'."
     return 0
 }
 
+koopa::macos_disable_privileged_helper_tool() { # {{{1
+    # """
+    # Disable a privileged helper tool.
+    # @note Updated 2022-02-16.
+    # """
+    local bn dict
+    koopa::assert_has_args "$#"
+    koopa::assert_is_admin
+    for bn in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [enabled_file]="/Library/PrivilegedHelperTools/${bn}"
+        )
+        dict[disabled_file]="$(koopa::dirname "${dict[enabled_file]}")/\
+disabled/$(koopa::basename "${dict[enabled_file]}")"
+        koopa::assert_is_file "${dict[enabled_file]}"
+        koopa::assert_is_not_file "${dict[disabled_file]}"
+        koopa::mv --sudo "${dict[enabled_file]}" "${dict[disabled_file]}"
+    done
+    return 0
+}
+
 koopa::macos_disable_zoom_daemon() { # {{{1
     # """
     # Disable Zoom daemon.
@@ -117,10 +135,8 @@ koopa::macos_disable_zoom_daemon() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::macos_disable_plist_file \
         '/Library/LaunchDaemons/us.zoom.ZoomDaemon.plist'
-    # FIXME Need to add support for this.
-    # FIXME Don't need to set the path here.
-    koopa::macos_disable_priviledged_helper_tool \
-        '/Library/PrivilegedHelperTools/us.zoom.ZoomDaemon'
+    koopa::macos_disable_privileged_helper_tool \
+        'us.zoom.ZoomDaemon'
 }
 
 koopa::macos_enable_crashplan() {  # {{{1
@@ -189,7 +205,7 @@ koopa::macos_enable_plist_file() { # {{{1
             [enabled_file]="$file"
             [sudo]=1
         )
-        dict[disabled_file]="$(koopa::parent_dir "${dict[enabled_file]}")/\
+        dict[disabled_file]="$(koopa::dirname "${dict[enabled_file]}")/\
 disabled/$(koopa::basename "${dict[enabled_file]}")"
         koopa::alert "Enabling '${dict[enabled_file]}' \
 from '${dict[disabled_file]}'."
@@ -227,6 +243,29 @@ from '${dict[disabled_file]}'."
     return 0
 }
 
+koopa::macos_enable_privileged_helper_tool() { # {{{1
+    # """
+    # Enable a privileged helper tool.
+    # @note Updated 2022-02-16.
+    # """
+    local bn dict
+    koopa::assert_has_args "$#"
+    koopa::assert_is_admin
+    for bn in "$@"
+    do
+        local dict
+        declare -A dict=(
+            [enabled_file]="/Library/PrivilegedHelperTools/${bn}"
+        )
+        dict[disabled_file]="$(koopa::dirname "${dict[enabled_file]}")/\
+disabled/$(koopa::basename "${dict[enabled_file]}")"
+        koopa::assert_is_not_file "${dict[enabled_file]}"
+        koopa::assert_is_file "${dict[disabled_file]}"
+        koopa::mv --sudo "${dict[disabled_file]}" "${dict[enabled_file]}"
+    done
+    return 0
+}
+
 koopa::macos_enable_zoom_daemon() { # {{{1
     # """
     # Enable Zoom daemon.
@@ -235,10 +274,8 @@ koopa::macos_enable_zoom_daemon() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::macos_enable_plist_file \
         '/Library/LaunchDaemons/us.zoom.ZoomDaemon.plist'
-    # FIXME Need to add support for this.
-    # FIXME Don't need to set the path here.
-    koopa::macos_enable_priviledged_helper_tool \
-        '/Library/PrivilegedHelperTools/us.zoom.ZoomDaemon'
+    koopa::macos_enable_privileged_helper_tool \
+        'us.zoom.ZoomDaemon'
 }
 
 koopa::macos_list_launch_agents() { # {{{1
