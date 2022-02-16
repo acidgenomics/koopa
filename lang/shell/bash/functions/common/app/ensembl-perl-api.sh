@@ -27,17 +27,3 @@ koopa::activate_ensembl_perl_api() { # {{{1
     export PERL5LIB
     return 0
 }
-
-koopa::activate_llvm() { # {{{1
-    # """
-    # Activate LLVM config.
-    # @note Updated 2021-11-18.
-    # """
-    local app
-    declare -A app=(
-        [llvm_config]="$(koopa::locate_llvm_config)"
-    )
-    LLVM_CONFIG="${app[llvm_config]}"
-    export LLVM_CONFIG
-    return 0
-}

@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::check_bin_man_consistency() { # {{{1
-    # """
-    # Check bin and man consistency.
-    # @note Updated 2021-08-14.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::r_koopa 'cliCheckBinManConsistency' "$@"
-    return 0
-}
-
 koopa::test() { # {{{1
     # """
     # Run koopa unit tests.

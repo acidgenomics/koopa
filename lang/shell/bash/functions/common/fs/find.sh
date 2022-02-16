@@ -426,16 +426,6 @@ koopa::find() { # {{{1
     return 0
 }
 
-koopa::find_and_move_in_sequence() { # {{{1
-    # """
-    # Find and move files in sequence.
-    # @note Updated 2021-08-14.
-    # """
-    koopa::assert_has_args "$#"
-    koopa::r_koopa 'cliFindAndMoveInSequence' "$@"
-    return 0
-}
-
 koopa::find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.

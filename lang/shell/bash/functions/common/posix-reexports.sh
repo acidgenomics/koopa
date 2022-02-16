@@ -56,10 +56,6 @@ koopa::activate_koopa_paths() { # {{{1
     _koopa_activate_koopa_paths "$@"
 }
 
-koopa::activate_llvm() { # {{{1
-    _koopa_activate_llvm "$@"
-}
-
 koopa::activate_local_paths() { # {{{1
     _koopa_activate_local_paths "$@"
 }
@@ -134,10 +130,6 @@ koopa::activate_secrets() { # {{{1
 
 koopa::activate_ssh_key() { # {{{1
     _koopa_activate_ssh_key "$@"
-}
-
-koopa::activate_python_venv() { # {{{1
-    _koopa_activate_python_venv "$@"
 }
 
 koopa::activate_xdg() { # {{{1
@@ -238,18 +230,6 @@ koopa::conda_prefix() { # {{{1
 
 koopa::config_prefix() { # {{{1
     _koopa_config_prefix "$@"
-}
-
-koopa::deactivate_anaconda() { # {{{1
-    _koopa_deactivate_anaconda "$@"
-}
-
-koopa::deactivate_conda() { # {{{1
-    _koopa_deactivate_conda "$@"
-}
-
-koopa::deactivate_python_venv() { # {{{1
-    _koopa_deactivate_python_venv "$@"
 }
 
 koopa::distro_prefix() { # {{{

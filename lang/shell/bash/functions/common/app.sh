@@ -1,5 +1,138 @@
 #!/usr/bin/env bash
 
+koopa::configure_app_packages() { # {{{1
+    # """
+    # Configure language application.
+    # @note Updated 2022-02-09.
+    # """
+    local dict
+    declare -A dict=(
+        [link_app]=1
+        [name]=''
+        [name_fancy]=''
+        [prefix]=''
+        [version]=''
+        [which_app]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--name='*)
+                dict[name]="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
+                ;;
+            '--name-fancy='*)
+                dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict[prefix]="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict[prefix]="${2:?}"
+                shift 2
+                ;;
+            '--version='*)
+                dict[version]="${1#*=}"
+                shift 1
+                ;;
+            '--version')
+                dict[version]="${2:?}"
+                shift 2
+                ;;
+            '--which-app='*)
+                dict[which_app]="${1#*=}"
+                shift 1
+                ;;
+            '--which-app')
+                dict[which_app]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--link')
+                dict[link_app]=1
+                shift 1
+                ;;
+            '--no-link')
+                dict[link_app]=0
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ -z "${dict[name_fancy]}" ]]
+    then
+        dict[name_fancy]="${dict[name]}"
+    fi
+    dict[pkg_prefix_fun]="koopa::${dict[name]}_packages_prefix"
+    koopa::assert_is_function "${dict[pkg_prefix_fun]}"
+    if [[ -z "${dict[prefix]}" ]]
+    then
+        if [[ -z "${dict[version]}" ]]
+        then
+            dict[version]="$(koopa::get_version "${dict[which_app]}")"
+        fi
+        dict[prefix]="$("${dict[pkg_prefix_fun]}" "${dict[version]}")"
+    fi
+    koopa::alert_configure_start "${dict[name_fancy]}" "${dict[prefix]}"
+    if [[ ! -d "${dict[prefix]}" ]]
+    then
+        koopa::sys_mkdir "${dict[prefix]}"
+        koopa::sys_set_permissions "$(koopa::dirname "${dict[prefix]}")"
+    fi
+    if [[ "${dict[link_app]}" -eq 1 ]]
+    then
+        koopa::link_app_into_opt "${dict[prefix]}" "${dict[name]}-packages"
+    fi
+    koopa::alert_configure_success "${dict[name_fancy]}" "${dict[prefix]}"
+    return 0
+}
+
+koopa::find_app_version() { # {{{1
+    # """
+    # Find the latest application version.
+    # @note Updated 2021-11-11.
+    # """
+    local app dict
+    koopa::assert_has_args_eq "$#" 1
+    declare -A app=(
+        [sort]="$(koopa::locate_sort)"
+        [tail]="$(koopa::locate_tail)"
+    )
+    declare -A dict=(
+        [app_prefix]="$(koopa::app_prefix)"
+        [name]="${1:?}"
+    )
+    dict[prefix]="${dict[app_prefix]}/${dict[name]}"
+    koopa::assert_is_dir "${dict[prefix]}"
+    dict[hit]="$( \
+        koopa::find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict[prefix]}" \
+            --type='d' \
+        | "${app[sort]}" \
+        | "${app[tail]}" -n 1 \
+    )"
+    [[ -d "${dict[hit]}" ]] || return 1
+    dict[hit_bn]="$(koopa::basename "${dict[hit]}")"
+    koopa::print "${dict[hit_bn]}"
+    return 0
+}
+
 koopa::install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
@@ -360,6 +493,91 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         fi
 
     fi
+    return 0
+}
+
+koopa::install_app_packages() { # {{{1
+    # """
+    # Install application packages.
+    # @note Updated 2022-02-03.
+    # """
+    local name name_fancy pos
+    koopa::assert_has_args "$#"
+    declare -A dict=(
+        [name]=''
+        [name_fancy]=''
+        [reinstall]=0
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--name='*)
+                dict[name]="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict[name]="${2:?}"
+                shift 2
+                ;;
+            '--name-fancy='*)
+                dict[name_fancy]="${1#*=}"
+                shift 1
+                ;;
+            '--name-fancy')
+                dict[name_fancy]="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--reinstall')
+                dict[reinstall]=1
+                shift 1
+                ;;
+            # Internally defined arguments -------------------------------------
+            '--prefix='* | \
+            '--prefix' | \
+            '--version='* | \
+            '--version' | \
+            '--link' | \
+            '--no-link' | \
+            '--no-prefix-check' | \
+            '--prefix-check')
+                koopa::invalid_arg "$1"
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_is_set '--name' "${dict[name]}"
+    # Configure the language.
+    dict[configure_fun]="koopa::configure_${dict[name]}"
+    "${dict[configure_fun]}"
+    koopa::assert_is_function "${dict[configure_fun]}"
+    # Detect the linked package prefix, defined in 'opt'.
+    dict[prefix_fun]="koopa::${dict[name]}_packages_prefix"
+    koopa::assert_is_function "${dict[prefix_fun]}"
+    dict[prefix]="$("${dict[prefix_fun]}")"
+    if [[ -d "${dict[prefix]}" ]]
+    then
+        dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    fi
+    if [[ "${dict[reinstall]}" -eq 1 ]]
+    then
+        koopa::sys_rm "${dict[prefix]}"
+    fi
+    koopa::install_app \
+        --name-fancy="${dict[name_fancy]} packages" \
+        --name="${dict[name]}-packages" \
+        --no-link \
+        --no-prefix-check \
+        --prefix="${dict[prefix]}" \
+        --version='rolling' \
+        "$@"
     return 0
 }
 

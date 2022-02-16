@@ -18,6 +18,12 @@ koopa::defunct() { # {{{1
     koopa::stop "${msg}"
 }
 
+# Soft deprecations ============================================================
+koopa::active_conda_env() { # {{{1
+    koopa::conda_activate_env "$@"
+}
+
+# Defunct functions ============================================================
 koopa::brew_update() { # {{{1
     # """
     # @note Updated 2020-12-17.

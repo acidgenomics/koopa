@@ -1142,47 +1142,6 @@ _koopa_activate_python() { # {{{1
     return 0
 }
 
-_koopa_activate_python_venv() { # {{{1
-    # """
-    # Activate Python virtual environment.
-    # @note Updated 2020-06-30.
-    #
-    # Note that we're using this instead of conda as our default interactive
-    # Python environment, so we can easily use pip.
-    #
-    # Here's how to write a function to detect virtual environment name:
-    # https://stackoverflow.com/questions/10406926
-    #
-    # Only attempt to autoload for bash or zsh.
-    #
-    # This needs to be run last, otherwise PATH can get messed upon
-    # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
-    #
-    # Refer to 'declare -f deactivate' for function source code.
-    # """
-    local name nounset prefix script shell
-    [ -n "${VIRTUAL_ENV:-}" ] && return 0
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            return 0
-            ;;
-    esac
-    name="${1:-base}"
-    prefix="$(_koopa_python_venv_prefix)"
-    script="${prefix}/${name}/bin/activate"
-    [ -r "$script" ] || return 0
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    # shellcheck source=/dev/null
-    . "$script"
-    [ "$nounset" -eq 1 ] && set -u
-    return 0
-}
-
 _koopa_activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
@@ -2175,15 +2134,7 @@ _koopa_config_prefix() { # {{{1
     return 0
 }
 
-_koopa_deactivate_anaconda() { # {{{1
-    # """
-    # Deactivate Anaconda environment.
-    # @note Updated 2021-10-26.
-    # """
-    _koopa_deactivate_conda
-    return 0
-}
-
+# FIXME Move this to Bash.
 _koopa_deactivate_conda() { # {{{1
     # """
     # Deactivate Conda environment.
@@ -2201,23 +2152,6 @@ _koopa_deactivate_conda() { # {{{1
     [ "$nounset" -eq 1 ] && set +u
     conda deactivate
     [ "$nounset" -eq 1 ] && set -u
-    return 0
-}
-
-_koopa_deactivate_python_venv() { # {{{1
-    # """
-    # Deactivate Python virtual environment.
-    # @note Updated 2021-08-17.
-    # """
-    local prefix
-    prefix="${VIRTUAL_ENV:-}"
-    if [ -z "$prefix" ]
-    then
-        _koopa_warn 'Python virtual environment is not active.'
-        return 1
-    fi
-    _koopa_remove_from_path "${prefix}/bin"
-    unset -v VIRTUAL_ENV
     return 0
 }
 
