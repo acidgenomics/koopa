@@ -336,6 +336,7 @@ koopa::docker_build_all_images() { # {{{1
                     --type='d' \
                 | "${app[xargs]}" \
                     --max-args=1 \
+                    --no-run-if-empty \
                     --null \
                     "${app[basename]}" \
             )"
@@ -611,7 +612,7 @@ koopa::docker_push() { # {{{1
 koopa::docker_remove() { # {{{1
     # """
     # Remove docker images by pattern.
-    # Updated 2022-02-1.
+    # Updated 2022-02-16.
     # """
     local app pattern
     koopa::assert_has_args "$#"
@@ -626,7 +627,10 @@ koopa::docker_remove() { # {{{1
         "${app[docker]}" images \
             | koopa::grep "$pattern" \
             | "${app[awk]}" '{print $1 ":" $2}' \
-            | "${app[xargs]}" "${app[docker]}" rmi
+            | "${app[xargs]}" \
+                --no-run-if-empty \
+                --verbose \
+                "${app[docker]}" rmi
     done
     return 0
 }
