@@ -3,7 +3,7 @@
 koopa::locate_app() { # {{{1
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-01-25.
+    # @note Updated 2022-02-16.
     #
     # App locator prioritization:
     # 1. Allow for direct input of a program path.
@@ -160,12 +160,12 @@ bin/${dict[app_name]}"
     fi
     if [[ -z "$app" ]]
     then
-        koopa::stop "Failed to locate '${dict[app_name]}'."
+        koopa::warn "Failed to locate '${dict[app_name]}'."
         return 1
     fi
     if [[ ! -x "$app" ]]
     then
-        koopa::stop "Not executable: '${app}'."
+        koopa::warn "Not executable: '${app}'."
         return 1
     fi
     koopa::print "$app"
