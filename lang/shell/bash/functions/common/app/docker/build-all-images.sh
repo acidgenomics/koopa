@@ -3,7 +3,7 @@
 koopa::docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-02-16.
     # """
     local app build_file build_args image images
     local pos repo repos repo_name 
@@ -98,7 +98,10 @@ koopa::docker_build_all_images() { # {{{1
                     --print0 \
                     --sort \
                     --type='d' \
-                | "${app[xargs]}" -0 -n1 "${app[basename]}" \
+                | "${app[xargs]}" \
+                    --max-args=1 \
+                    --null \
+                    "${app[basename]}" \
             )"
         fi
         koopa::assert_is_array_non_empty "${images[@]:-}"
