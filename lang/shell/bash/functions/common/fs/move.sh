@@ -6,56 +6,112 @@ koopa::move_files_in_batch() { # {{{1
     # @note Updated 2022-02-16.
     #
     # @examples
-    # koopa::move_files_in_batch 100 'source_dir' 'target_dir'
+    # > koopa::touch \
+    # >     'source/aaa.txt' 'source/bbb.txt' \
+    # >     'source/ccc.txt' 'source/ddd.txt'
+    # > koopa::move_files_in_batch \
+    # >     --num=2 \
+    # >     --source-dir='source/' \
+    # >     --target-dir='target/'
+    # # Silent, but returns these file paths:
+    # # source/ccc.txt
+    # # source/ddd.txt
+    # # target/aaa.txt
+    # # target/bbb.txt
     # """
-    local app dict
+    local app dict files
     koopa::assert_has_args_eq "$#" 3
     declare -A app=(
         [head]="$(koopa::locate_head)"
-        [mv]="$(koopa::locate_gnu_mv)"
-        [xargs]="$(koopa::locate_xargs)"
     )
     declare -A dict=(
-        [num]="${1:?}"
-        [source_dir]="${2:?}"
-        [target_dir]="${3:?}"
+        [num]=''
+        [source_dir]=''
+        [target_dir]=''
     )
-    [[ ! -d "${dict[target_dir]}" ]] && koopa::mkdir "${dict[target_dir]}"
-    koopa::assert_is_dir "${dict[source_dir]}" "${dict[target_dir]}"
-    koopa::find \
-        --max-depth=1 \
-        --min-depth=1 \
-        --prefix="${dict[source_dir]}" \
-        --print0 \
-        --sort \
-        --type='f' \
-    | "${app[head]}" \
-        --lines="${dict[num]}" \
-        --zero-terminated \
-    | "${app[xargs]}" --null \
-        "${app[mv]}" \
-            --target-directory "${dict[target_dir]}" \
-            --verbose
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--num='*)
+                dict[num]="${1#*=}"
+                shift 1
+                ;;
+            '--num')
+                dict[num]="${2:?}"
+                shift 2
+                ;;
+            '--source-dir='*)
+                dict[source_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--source-dir')
+                dict[source_dir]="${2:?}"
+                shift 2
+                ;;
+            '--target-dir='*)
+                dict[target_dir]="${1#*=}"
+                shift 1
+                ;;
+            '--target-dir')
+                dict[target_dir]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa::invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa::assert_is_set \
+        '--num' "${dict[num]}" \
+        '--source-dir' "${dict[source_dir]}" \
+        '--target-dir' "${dict[target_dir]}"
+    koopa::assert_is_dir "${dict[target_dir]}"
+    dict[target_dir]="$(koopa::init_dir "${dict[target_dir]}")"
+    readarray -t files <<< "$( \
+        koopa::find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict[source_dir]}" \
+            --sort \
+            --type='f' \
+        | "${app[head]}" --lines="${dict[num]}" \
+    )"
+    koopa::is_array_non_empty "${files[@]:-}" || return 1
+    koopa::mv --target-directory="${dict[target_dir]}" "${files[@]}"
     return 0
 }
 
-# FIXME Rework using app/dict approach.
-# FIXME Rework this using 'koopa::find'.
-# FIXME Rework this using xargs?
 koopa::move_files_up_1_level() { # {{{1
     # """
     # Move files up 1 level.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-16.
+    #
+    # @examples
+    # > koopa::touch 'a/aa/aaa.txt'
+    # > koopa::move_files_up_1_level 'a/'
+    # # Silent, but returns this structure:
+    # # 'a/aa'
+    # # 'a/aaa.txt'
     # """
-    local prefix
-    find="$(koopa::locate_find)"
-    prefix="${1:-.}"
-    koopa::assert_is_dir "$prefix"
-    "$find" \
-        "$prefix" \
-        -mindepth 2 \
-        -type 'f' \
-        -exec koopa::mv --target-directory="$prefix" {} \;
+    local dict files
+    koopa::assert_has_args_le "$#" 1
+    declare -A dict=(
+        [prefix]="${1:-}"
+    )
+    [[ -z "${dict[prefix]}" ]] && dict[prefix]="${PWD:?}"
+    koopa::assert_is_dir "${dict[prefix]}"
+    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    readarray -t files <<< "$( \
+        koopa::find \
+            --max-depth=2 \
+            --min-depth=2 \
+            --prefix="${dict[prefix]}" \
+            --type='f' \
+    )"
+    koopa::is_array_non_empty "${files[@]:-}" || return 1
+    koopa::mv --target-directory="${dict[prefix]}" "${files[@]}"
     return 0
 }
 
