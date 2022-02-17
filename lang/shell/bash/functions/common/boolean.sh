@@ -348,6 +348,57 @@ koopa::is_file_system_case_sensitive() { # {{{1
     [[ "${dict[count]}" -eq 2 ]]
 }
 
+koopa::is_file_type() { # {{{1
+    # """
+    # Does the input exist and match a file type extension?
+    # @note Updated 2022-02-17.
+    #
+    # @usage koopa::is_file_type --ext=EXT FILE...
+    #
+    # @examples
+    # > koopa::is_file_type --ext='csv' 'aaa.csv' 'bbb.csv'
+    # """
+    local dict file pos
+    declare -A dict=(
+        [ext]=''
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--ext='*)
+                dict[ext]="${1#*=}"
+                shift 1
+                ;;
+            '--ext')
+                dict[ext]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    koopa::assert_is_set '--ext' "${dict[ext]}"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    for file in "$@"
+    do
+        [[ -f "$file" ]] || return 1
+        koopa::str_detect_regex \
+            --string="$file" \
+            --pattern="\.${dict[ext]}$" \
+        || return 1
+    done
+    return 0
+}
+
 koopa::is_function() { # {{{1
     # """
     # Check if variable is a function.
@@ -378,7 +429,6 @@ koopa::is_function() { # {{{1
     return 0
 }
 
-# FIXME Need to improve the argument handling for 'koopa:::is_ssh_enabled'.
 koopa::is_github_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled for GitHub access?
@@ -388,7 +438,6 @@ koopa::is_github_ssh_enabled() { # {{{1
     koopa:::is_ssh_enabled 'git@github.com' 'successfully authenticated'
 }
 
-# FIXME Need to improve the argument handling for 'koopa:::is_ssh_enabled'.
 koopa::is_gitlab_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled for GitLab access?

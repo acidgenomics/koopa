@@ -3,12 +3,14 @@
 koopa_rename_from_csv() { # {{{1
     # """
     # Rename files from CSV template.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-02-17.
+    #
+    # @usage koopa::rename_from_csv CSV_FILE
     # """
     local file line
     koopa::assert_has_args "$#"
     file="${1:?}"
-    koopa::assert_is_file_type "$file" 'csv'
+    koopa::assert_is_file_type --ext='csv' "$file"
     while read -r line
     do
         local from to
@@ -23,6 +25,8 @@ koopa::rename_lowercase() { # {{{1
     # """
     # Rename files to lowercase.
     # @note Updated 2022-02-16.
+    #
+    # @usage koopa::rename_lowercase FILE...
     # """
     local app dict
     koopa::assert_has_args "$#"
