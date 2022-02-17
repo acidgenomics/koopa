@@ -642,7 +642,7 @@ koopa::docker_remove() { # {{{1
 koopa::docker_run() { # {{{1
     # """
     # Run Docker image.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-17.
     #
     # No longer using bind mounts by default.
     # Use named volumes, which have better cross-platform compatiblity, instead.
@@ -697,7 +697,7 @@ koopa::docker_run() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 1
     dict[image]="${1:?}"
-    docker pull "${dict[image]}"
+    "${app[docker]}" pull "${dict[image]}"
     run_args=(
         '--interactive'
         '--tty'
