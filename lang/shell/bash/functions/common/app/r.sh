@@ -232,12 +232,12 @@ koopa::r_koopa() { # {{{1
 koopa::r_paste_to_vector() { # {{{1
     # """
     # Paste a bash array into an R vector string.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-02-17.
     # """
     local str
     koopa::assert_has_args "$#"
     str="$(printf '"%s", ' "$@")"
-    str="$(koopa::strip_right ', ' "$str")"
+    str="$(koopa::strip_right --pattern=', ' "$str")"
     str="$(printf 'c(%s)\n' "$str")"
     [[ -n "$str" ]] || return 1
     koopa::print "$str"
