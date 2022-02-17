@@ -71,7 +71,10 @@ koopa::rename_lowercase() { # {{{1
             -not -name '.*' \
             -print0 \
             | "${app[sort]}" --zero-terminated \
-            | "${app[xargs]}" --null -I {} \
+            | "${app[xargs]}" \
+                --no-run-if-empty \
+                --null \
+                -I {} \
                 "${app[rename]}" \
                     --force \
                     --verbose \
@@ -86,7 +89,10 @@ koopa::rename_lowercase() { # {{{1
             -not -name '.*' \
             -print0 \
             | "${app[sort]}" --reverse --zero-terminated \
-            | "${app[xargs]}" --null -I {} \
+            | "${app[xargs]}" \
+                --no-run-if-empty \
+                --null \
+                -I {} \
                 "${app[rename]}" \
                     --force \
                     --verbose \
