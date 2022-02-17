@@ -374,7 +374,7 @@ koopa::find() { # {{{1
             if [[ -n "${dict[size]}" ]]
             then
                 # Convert GNU find 'c' for bytes into 'b' convention here.
-                dict[size]="$(koopa::sub 'c^' 'b' "${dict[size]}")"
+                dict[size]="$(koopa::sub 'c$' 'b' "${dict[size]}")"
                 find_args+=('--size' "${dict[size]}")
             fi
             if [[ "${dict[print0]}" -eq 1 ]]
@@ -505,7 +505,7 @@ koopa::find_broken_symlinks() { # {{{1
 koopa::find_dotfiles() { # {{{1
     # """
     # Find dotfiles by type.
-    # @note Updated 2021-10-26.
+    # @note Updated 2022-02-16.
     #
     # This is used internally by 'koopa::list_dotfiles' script.
     #
@@ -521,6 +521,7 @@ koopa::find_dotfiles() { # {{{1
     )
     type="${1:?}"
     header="${2:?}"
+    # FIXME Rename 'x' to 'str' in all functions.
     # shellcheck disable=SC2016
     x="$( \
         koopa::find \
@@ -530,7 +531,10 @@ koopa::find_dotfiles() { # {{{1
             --print0 \
             --sort \
             --type="$type" \
-        | "${app[xargs]}" --max-args=1 --null "${app[basename]}" \
+        | "${app[xargs]}" \
+            --max-args=1 \
+            --null \
+            "${app[basename]}" \
         | "${app[awk]}" '{print "    -",$0}' \
     )"
     koopa::h2 "${header}:"
@@ -538,6 +542,7 @@ koopa::find_dotfiles() { # {{{1
     return 0
 }
 
+# FIXME Replace 'x' with 'str' in all functions.
 koopa::find_empty_dirs() { # {{{1
     # """
     # Find empty directories.
@@ -566,7 +571,7 @@ koopa::find_empty_dirs() { # {{{1
 koopa::find_files_without_line_ending() { # {{{1
     # """
     # Find files without line ending.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-16.
     #
     # @seealso
     # - https://stackoverflow.com/questions/4631068/
@@ -579,6 +584,7 @@ koopa::find_files_without_line_ending() { # {{{1
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
+        local str
         readarray -t files <<< "$(
             koopa::find \
                 --min-depth=1 \
@@ -587,9 +593,9 @@ koopa::find_files_without_line_ending() { # {{{1
                 --type='f' \
         )"
         koopa::is_array_non_empty "${files[@]:-}" || continue
-        x="$("${app[pcregrep]}" -LMr '\n$' "${files[@]}")"
-        [[ -n "$x" ]] || continue
-        koopa::print "$x"
+        str="$("${app[pcregrep]}" -LMr '\n$' "${files[@]}")"
+        [[ -n "$str" ]] || continue
+        koopa::print "$str"
     done
     return 0
 }
@@ -597,9 +603,14 @@ koopa::find_files_without_line_ending() { # {{{1
 koopa::find_large_dirs() { # {{{1
     # """
     # Find large directories.
-    # @note Updated 2021-10-26.
+    # @note Updated 2022-02-16.
+    #
+    # Results are reverse sorted by size.
+    #
+    # @examples
+    # # > koopa::find_large_dirs "${HOME}/monorepo"
     # """
-    local app prefix x
+    local app prefix
     koopa::assert_has_args "$#"
     declare -A app=(
         [du]="$(koopa::locate_du)"
@@ -609,19 +620,20 @@ koopa::find_large_dirs() { # {{{1
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
+        local str
         prefix="$(koopa::realpath "$prefix")"
-        x="$( \
+        str="$( \
             "${app[du]}" \
                 --max-depth=10 \
                 --threshold=100000000 \
                 "${prefix}"/* \
                 2>/dev/null \
-            | "${app[sort]}" -n \
-            | "${app[tail]}" -n 50 \
+            | "${app[sort]}" --numeric-sort \
+            | "${app[tail]}" --lines=50 \
             || true \
         )"
-        [[ -n "$x" ]] || continue
-        koopa::print "$x"
+        [[ -n "$str" ]] || continue
+        koopa::print "$str"
     done
     return 0
 }
@@ -631,16 +643,18 @@ koopa::find_large_files() { # {{{1
     # Find large files.
     # @note Updated 2022-02-16.
     #
+    # Results are sorted alphabetically currently, not by size.
+    #
     # @seealso
-    # https://unix.stackexchange.com/questions/140367/
+    # - https://unix.stackexchange.com/questions/140367/
+    #
+    # @examples
+    # > koopa::find_large_files "${HOME}/monorepo"
     # """
     local app prefix str
     koopa::assert_has_args "$#"
     declare -A app=(
-        [du]="$(koopa::locate_du)"
-        [sort]="$(koopa::locate_sort)"
-        [tail]="$(koopa::locate_tail)"
-        [xargs]="$(koopa::locate_xargs)"
+        [head]="$(koopa::locate_head)"
     )
     koopa::assert_is_dir "$@"
     for prefix in "$@"
@@ -648,13 +662,11 @@ koopa::find_large_files() { # {{{1
         str="$( \
             koopa::find \
                 --min-depth=1 \
-                --prefix="$(koopa::realpath "$prefix")" \
-                --print0 \
+                --prefix="$prefix" \
                 --size='+100000000c' \
+                --sort \
                 --type='f' \
-            | "${app[xargs]}" --null "${app[du]}" \
-            | "${app[sort]}" --numeric-sort \
-            | "${app[tail]}" --lines=50 \
+            | "${app[head]}" --lines=50 \
         )"
         [[ -n "$str" ]] || continue
         koopa::print "$str"
