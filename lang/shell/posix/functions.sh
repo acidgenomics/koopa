@@ -140,11 +140,9 @@ __koopa_msg() { # {{{1
 __koopa_packages_prefix() { # {{{1
     # """
     # Packages prefix for a specific language.
-    # @note Updated 2021-06-11.
+    # @note Updated 2022-02-17.
     #
-    # @seealso
-    # > perl -V
-    # # Inspect the '@INC' variable.
+    # @usage __koopa_packages_prefix NAME [VERSION]
     # """
     local name version x
     name="${1:?}-packages"
@@ -2530,6 +2528,8 @@ _koopa_go_packages_prefix() { # {{{1
     #
     # This must be different from 'go root' value.
     #
+    # @usage _koopa_go_packages_prefix [VERSION]
+    #
     # @seealso
     # - go help gopath
     # - go env GOPATH
@@ -3213,6 +3213,8 @@ _koopa_julia_packages_prefix() { # {{{1
     # Julia packages (depot) library prefix.
     # @note Updated 2021-06-14.
     #
+    # @usage _koopa_julia_packages_prefix [VERSION]
+    #
     # In the shell environment, check 'JULIA_DEPOT_PATH'.
     # Inside Julia, check 'DEPOT_PATH'.
     # """
@@ -3719,6 +3721,8 @@ _koopa_nim_packages_prefix() { # {{{1
     # """
     # Nim (Nimble) packages prefix.
     # @note Updated 2021-09-29.
+    #
+    # @usage _koopa_nim_packages_prefix [VERSION]
     # """
     __koopa_packages_prefix 'nim' "$@"
 }
@@ -3727,6 +3731,8 @@ _koopa_node_packages_prefix() { # {{{1
     # """
     # Node.js (NPM) packages prefix.
     # @note Updated 2021-05-25.
+    #
+    # @usage _koopa_node_packages_prefix [VERSION]
     # """
     __koopa_packages_prefix 'node' "$@"
 }
@@ -3843,6 +3849,8 @@ _koopa_perl_packages_prefix() { # {{{1
     # """
     # Perl site library prefix.
     # @note Updated 2021-06-11.
+    #
+    # @usage _koopa_perl_packages_prefix [VERSION]
     #
     # @seealso
     # > perl -V
@@ -4054,7 +4062,7 @@ _koopa_python_packages_prefix() { # {{{1
     # Python site packages library prefix.
     # @note Updated 2021-06-11.
     #
-    # This was changed to an unversioned approach in koopa v0.9.
+    # @usage _koopa_python_packages_prefix [VERSION]
     #
     # @seealso
     # > "$python" -m site
@@ -4090,6 +4098,8 @@ _koopa_r_packages_prefix() { # {{{1
     # """
     # R site library prefix.
     # @note Updated 2021-06-11.
+    #
+    # @usage _koopa_r_packages_prefix [VERSION]
     # """
     __koopa_packages_prefix 'r' "$@"
 }
@@ -4148,6 +4158,8 @@ _koopa_ruby_packages_prefix() { # {{{1
     # """
     # Ruby packags (gems) prefix.
     # @note Updated 2021-05-25.
+    #
+    # @usage _koopa_ruby_packages_prefix [VERSION]
     # """
     __koopa_packages_prefix 'ruby' "$@"
 }
@@ -4156,8 +4168,10 @@ _koopa_rust_packages_prefix() { # {{{1
     # """
     # Rust packages (cargo) install prefix.
     # @note Updated 2021-05-25.
+
+    # @usage _koopa_rust_packages_prefix [VERSION]
     #
-    # See also:
+    # @seealso:
     # - https://github.com/rust-lang/rustup#environment-variables
     # - CARGO_HOME
     # - RUSTUP_HOME
