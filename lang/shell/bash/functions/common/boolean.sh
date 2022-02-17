@@ -3,7 +3,7 @@
 koopa:::is_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-17.
     #
     # @seealso
     # - https://help.github.com/en/github/authenticating-to-github/
@@ -24,7 +24,9 @@ koopa:::is_ssh_enabled() { # {{{1
             "${dict[url]}" 2>&1 \
     )"
     [[ -n "${dict[str]}" ]] || return 1
-    koopa::str_detect_fixed "${dict[str]}" "${dict[pattern]}"
+    koopa::str_detect_fixed \
+        --string="${dict[str]}" \
+        --pattern="${dict[pattern]}"
 }
 
 koopa::contains() { # {{{1
@@ -54,7 +56,7 @@ koopa::contains() { # {{{1
 koopa::has_file_ext() { # {{{1
     # """
     # Does the input contain a file extension?
-    # @note Updated 2020-07-04.
+    # @note Updated 2022-02-17.
     #
     # @examples
     # koopa::has_file_ext 'hello.txt'
@@ -63,7 +65,10 @@ koopa::has_file_ext() { # {{{1
     koopa::assert_has_args "$#"
     for file in "$@"
     do
-        koopa::str_detect_fixed "$(koopa::print "$file")" '.' || return 1
+        koopa::str_detect_fixed \
+            --string="$(koopa::print "$file")" \
+            --pattern='.' \
+        || return 1
     done
     return 0
 }
@@ -109,7 +114,7 @@ koopa::has_passwordless_sudo() { # {{{1
 koopa::is_admin() { # {{{1
     # """
     # Check that current user has administrator permissions.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-02-17.
     #
     # This check can hang on some systems with domain user accounts.
     #
@@ -159,7 +164,10 @@ koopa::is_admin() { # {{{1
     groups="$("${app[groups]}")"
     [[ -n "$groups" ]] || return 1
     pattern='\b(admin|root|sudo|wheel)\b'
-    koopa::str_detect_regex "$groups" "$pattern" && return 0
+    koopa::str_detect_regex \
+        --string="$groups" \
+        --pattern="$pattern" \
+        && return 0
     return 1
 }
 
@@ -228,12 +236,12 @@ koopa::is_current_version() { # {{{1
 koopa::is_defined_in_user_profile() { # {{{1
     # """
     # Is koopa defined in current user's shell profile configuration file?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-17.
     # """
     local file
     koopa::assert_has_no_args "$#"
     file="$(koopa::find_user_profile)"
-    koopa::file_detect_fixed "$file" 'koopa'
+    koopa::file_detect_fixed --file="$file" --pattern='koopa'
 }
 
 koopa::is_doom_emacs_installed() { # {{{1
@@ -247,7 +255,7 @@ koopa::is_doom_emacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
-    koopa::file_detect_fixed "$init_file" 'doom-emacs'
+    koopa::file_detect_fixed --file="$init_file" --pattern='doom-emacs'
 }
 
 koopa::is_empty_dir() { # {{{1
@@ -269,6 +277,7 @@ koopa::is_empty_dir() { # {{{1
     do
         [[ -d "$prefix" ]] || return 1
         prefix="$(koopa::realpath "$prefix")"
+        # FIXME Rework using koopa::find.
         out="$("${app[find]}" "$prefix" \
             -maxdepth 0 \
             -mindepth 0 \
@@ -284,7 +293,7 @@ koopa::is_empty_dir() { # {{{1
 koopa::is_export() { # {{{1
     # """
     # Is a variable exported in the current shell session?
-    # @note Updated 2020-06-30.
+    # @note Updated 2022-02-17.
     #
     # Use 'export -p' (POSIX) instead of 'declare -x' (Bashism).
     #
@@ -299,7 +308,10 @@ koopa::is_export() { # {{{1
     exports="$(export -p)"
     for arg in "$@"
     do
-        koopa::str_detect_regex "$exports" "\b${arg}\b=" || return 1
+        koopa::str_detect_regex \
+            --string="$exports" \
+            --pattern="\b${arg}\b=" \
+        || return 1
     done
     return 0
 }
@@ -307,7 +319,7 @@ koopa::is_export() { # {{{1
 koopa::is_file_system_case_sensitive() { # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-02-17.
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
@@ -330,7 +342,7 @@ koopa::is_file_system_case_sensitive() { # {{{1
             --max-depth=1 \
             --min-depth=1 \
             --prefix="${dict[prefix]}" \
-        | "${app[wc]}" -l \
+        | "${app[wc]}" --lines \
     )"
     koopa::rm "${dict[tmp_stem]}"*
     [[ "${dict[count]}" -eq 2 ]]
@@ -366,6 +378,7 @@ koopa::is_function() { # {{{1
     return 0
 }
 
+# FIXME Need to improve the argument handling for 'koopa:::is_ssh_enabled'.
 koopa::is_github_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled for GitHub access?
@@ -375,6 +388,7 @@ koopa::is_github_ssh_enabled() { # {{{1
     koopa:::is_ssh_enabled 'git@github.com' 'successfully authenticated'
 }
 
+# FIXME Need to improve the argument handling for 'koopa:::is_ssh_enabled'.
 koopa::is_gitlab_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled for GitLab access?
@@ -403,7 +417,7 @@ koopa::is_gnu() { # {{{1
 koopa::is_koopa_app() { # {{{1
     # """
     # Is a specific command installed in koopa app prefix?
-    # @note Updated 2021-06-14.
+    # @note Updated 2022-02-17.
     # """
     local app_prefix str
     koopa::assert_has_args "$#"
@@ -420,7 +434,10 @@ koopa::is_koopa_app() { # {{{1
         else
             return 1
         fi
-        koopa::str_detect_regex "$str" "^${app_prefix}" || return 1
+        koopa::str_detect_regex \
+            --string="$str" \
+            --pattern="^${app_prefix}" \
+            || return 1
     done
     return 0
 }
@@ -447,7 +464,7 @@ koopa::is_python_package_installed() { # {{{1
     # Alternate, slow mode:
     # > local freeze
     # > freeze="$("$python" -m pip freeze)"
-    # > koopa::str_detect_regex "$freeze" "^${pkg}=="
+    # > koopa::str_detect_regex --string="$freeze" --pattern="^${pkg}=="
     #
     # See also:
     # - https://stackoverflow.com/questions/1051254
@@ -544,7 +561,7 @@ koopa::is_recent() { # {{{1
 koopa::is_spacemacs_installed() { # {{{1
     # """
     # Is Spacemacs installed?
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-17.
     # """
     local init_file prefix
     koopa::assert_has_no_args "$#"
@@ -552,7 +569,7 @@ koopa::is_spacemacs_installed() { # {{{1
     prefix="$(koopa::emacs_prefix)"
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
-    koopa::file_detect_fixed "$init_file" 'Spacemacs'
+    koopa::file_detect_fixed --file="$init_file" --pattern='Spacemacs'
 }
 
 koopa::is_variable_defined() { # {{{1

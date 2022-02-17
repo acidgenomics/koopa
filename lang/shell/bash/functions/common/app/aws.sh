@@ -545,7 +545,9 @@ koopa::aws_s3_ls() { # {{{1
         dict[prefix]="${dict[prefix]}/"
     fi
     # Automatically add 's3://' if missing.
-    if ! koopa::str_detect_regex "${dict[prefix]}" '^s3://'
+    if ! koopa::str_detect_regex \
+        --string="${dict[prefix]}" \
+        --pattern='^s3://'
     then
         dict[prefix]="s3://${dict[prefix]}"
     fi

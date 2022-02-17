@@ -68,7 +68,8 @@ main() { # {{{1
         for man_file in "${man_files[@]}"
         do
             if ! koopa::str_detect_regex \
-                "$("${app[head]}" -n 1 "$man_file")" '^\.TH '
+                --string="$("${app[head]}" -n 1 "$man_file")" \
+                --pattern='^\.TH '
             then
                 koopa::alert_note "ERROR: '${man_file}'."
                 dict[status]=1

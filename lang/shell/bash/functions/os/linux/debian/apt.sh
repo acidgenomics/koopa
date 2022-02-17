@@ -864,7 +864,7 @@ koopa::debian_apt_delete_repo() { # {{{1
 koopa::debian_apt_disable_deb_src() { # {{{1
     # """
     # Disable 'deb-src' source packages.
-    # @note Updated 2021-11-05.
+    # @note Updated 2022-02-17.
     # """
     local app dict
     koopa::assert_has_args_le "$#" 1
@@ -880,12 +880,18 @@ koopa::debian_apt_disable_deb_src() { # {{{1
     [[ -z "${dict[file]}" ]] && dict[file]="$(koopa::debian_apt_sources_file)"
     koopa::assert_is_file "${dict[file]}"
     koopa::alert "Disabling Debian sources in '${dict[file]}'."
-    if ! koopa::file_detect_regex "${dict[file]}" '^deb-src '
+    if ! koopa::file_detect_regex \
+        --file="${dict[file]}" \
+        --pattern='^deb-src '
     then
         koopa::alert_note "No lines to comment in '${dict[file]}'."
         return 0
     fi
-    "${app[sudo]}" "${app[sed]}" -Ei 's/^deb-src /# deb-src /' "${dict[file]}"
+    "${app[sudo]}" "${app[sed]}" \
+        --in-place \
+        --regexp-extended \
+        's/^deb-src /# deb-src /' \
+        "${dict[file]}"
     "${app[sudo]}" "${app[apt_get]}" update
     return 0
 }
@@ -893,7 +899,7 @@ koopa::debian_apt_disable_deb_src() { # {{{1
 koopa::debian_apt_enable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
-    # @note Updated 2021-11-05.
+    # @note Updated 2022-02-17.
     # """
     local app dict
     koopa::assert_has_args_le "$#" 1
@@ -909,12 +915,18 @@ koopa::debian_apt_enable_deb_src() { # {{{1
     [[ -z "${dict[file]}" ]] && dict[file]="$(koopa::debian_apt_sources_file)"
     koopa::assert_is_file "${dict[file]}"
     koopa::alert "Enabling Debian sources in '${dict[file]}'."
-    if ! koopa::file_detect_regex "${dict[file]}" '^# deb-src '
+    if ! koopa::file_detect_regex \
+        --file="${dict[file]}" \
+        --pattern='^# deb-src '
     then
         koopa::alert_note "No lines to uncomment in '${dict[file]}'."
         return 0
     fi
-    "${app[sudo]}" "${app[sed]}" -Ei 's/^# deb-src /deb-src /' "${dict[file]}"
+    "${app[sudo]}" "${app[sed]}" \
+        --in-place \
+        --regexp-extended \
+        's/^# deb-src /deb-src /' \
+        "${dict[file]}"
     "${app[sudo]}" "${app[apt_get]}" update
     return 0
 }
@@ -1005,7 +1017,9 @@ koopa::debian_apt_is_key_imported() { # {{{1
 (.{4})(.{4})(.{4})\$/\1 \2 \3 \4 \5  \6 \7 \8 \9/" \
     )"
     dict[string]="$("${app[apt_key]}" list 2>&1 || true)"
-    koopa::str_detect_fixed "${dict[string]}" "${dict[key_pattern]}"
+    koopa::str_detect_fixed \
+        --string="${dict[string]}" \
+        --pattern="${dict[key_pattern]}"
 }
 
 koopa::debian_apt_key_prefix() { # {{{1

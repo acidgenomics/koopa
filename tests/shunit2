@@ -38,7 +38,6 @@ main() { # {{{1
     # Don't exit on errors, which are handled by shunit2.
     set +o errexit
     suite() {
-        # FIXME This function is no longer defined, need to add back.
         koopa::source_dir "${dict[shunit2_dir]}"
         if [[ "${dict[extra]}" -eq 1 ]]
         then

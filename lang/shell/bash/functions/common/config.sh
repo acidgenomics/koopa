@@ -163,7 +163,7 @@ koopa::disable_passwordless_sudo() { # {{{1
 koopa::enable_passwordless_sudo() { # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-02-17.
     # """
     local dict
     koopa::assert_has_no_args "$#"
@@ -174,7 +174,10 @@ koopa::enable_passwordless_sudo() { # {{{1
     )
     dict[string]="%${dict[group]} ALL=(ALL) NOPASSWD: ALL"
     if [[ -f "${dict[file]}" ]] && \
-        koopa::file_detect_fixed --sudo "${dict[file]}" "${dict[group]}"
+        koopa::file_detect_fixed \
+            --file="${dict[file]}" \
+            --pattern="${dict[group]}" \
+            --sudo
     then
         koopa::alert_success "Passwordless sudo for '${dict[group]}' group \
 already enabled at '${dict[file]}'."
@@ -191,7 +194,7 @@ at '${file}'."
 koopa::enable_shell_for_all_users() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-02-17.
     # """
     local dict
     koopa::assert_has_args "$#"
@@ -205,7 +208,9 @@ koopa::enable_shell_for_all_users() { # {{{1
     dict[cmd_path]="${dict[make_prefix]}/bin/${dict[cmd_name]}"
     koopa::assert_is_installed "${dict[cmd_path]}"
     koopa::assert_is_file "${dict[etc_file]}"
-    if ! koopa::file_detect_fixed "${dict[etc_file]}" "${dict[cmd_path]}"
+    if ! koopa::file_detect_fixed \
+        --file="${dict[etc_file]}" \
+        --pattern="${dict[cmd_path]}"
     then
         koopa::alert "Updating '${dict[etc_file]}' to \
 include '${dict[cmd_path]}'."
@@ -274,7 +279,7 @@ koopa::fix_rbenv_permissions() { # {{{1
 koopa::fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-02-17.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
@@ -292,7 +297,9 @@ koopa::fix_zsh_permissions() { # {{{1
     koopa::is_installed "${app[zsh]}" || return 0
     if [[ -d "${dict[make_prefix]}/share/zsh/site-functions" ]]
     then
-        if koopa::str_detect_regex "${app[zsh]}" "^${dict[make_prefix]}"
+        if koopa::str_detect_regex \
+            --string="${app[zsh]}" \
+            --pattern="^${dict[make_prefix]}"
         then
             koopa::sys_chmod 'g-w' \
                 "${dict[make_prefix]}/share/zsh" \
@@ -302,7 +309,8 @@ koopa::fix_zsh_permissions() { # {{{1
     if [[ -d "${dict[app_prefix]}" ]]
     then
         if koopa::str_detect_regex \
-            "$(koopa::realpath "${app[zsh]}")" "^${dict[app_prefix]}"
+            --string="$(koopa::realpath "${app[zsh]}")" \
+            --pattern="^${dict[app_prefix]}"
         then
             koopa::sys_chmod 'g-w' \
                 "${dict[app_prefix]}/zsh/"*'/share/zsh' \

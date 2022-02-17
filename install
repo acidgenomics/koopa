@@ -227,7 +227,9 @@ install_koopa() { # {{{1
                 'Install prefix' \
                 "${dict[koopa_prefix]}" \
         )"
-        if koopa::str_detect_regex "${dict[koopa_prefix]}" "^${HOME:?}"
+        if koopa::str_detect_regex \
+            --string="${dict[koopa_prefix]}" \
+            --pattern="^${HOME:?}"
         then
             dict[shared]=0
         else

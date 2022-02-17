@@ -794,7 +794,9 @@ of '--fasta-file'."
         "--transcripts=${dict[fasta_file]}"
     )
     # Automatically detect GENCODE genome, when applicable.
-    if koopa::str_detect "$(koopa::basename "${dict[fasta_file]}")" '^gencode\.'
+    if koopa::str_detect \
+        --string="$(koopa::basename "${dict[fasta_file]}")" \
+        --pattern='^gencode\.'
     then
         dict[gencode]=1
     fi

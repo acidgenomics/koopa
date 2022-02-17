@@ -57,10 +57,11 @@ koopa::chgrp() { # {{{1
     return 0
 }
 
+# FIXME Require the user to set '--permissions=0644', etc.
 koopa::chmod() { # {{{1
     # """
     # Hardened version of coreutils chmod (change file mode bits).
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-17.
     # """
     local app chmod dict pos
     declare -A app=(
@@ -338,7 +339,9 @@ koopa::init_dir() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args_eq "$#" 1
     dict[dir]="${1:?}"
-    if koopa::str_detect_regex "${dict[dir]}" '^~'
+    if koopa::str_detect_regex \
+        --string="${dict[dir]}" \
+        --pattern='^~'
     then
         dict[dir]="$(koopa::sub '^~' "${HOME:?}" "${dict[dir]}")"
     fi
@@ -798,7 +801,9 @@ koopa::touch() { # {{{1
         # Automatically create parent directory, if necessary.
         dn="$(koopa::dirname "$file")"
         if [[ ! -d "$dn" ]] && \
-            koopa::str_detect_fixed "$dn" '/'
+            koopa::str_detect_fixed \
+                --string="$dn" \
+                --pattern='/'
         then
             "${mkdir[@]}" "$dn"
         fi

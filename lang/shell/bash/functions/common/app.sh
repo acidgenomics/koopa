@@ -307,7 +307,9 @@ koopa::install_app() { # {{{1
         then
             dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
         fi
-        if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
+        if koopa::str_detect_regex \
+            --string="${dict[prefix]}" \
+            --pattern="^${dict[koopa_prefix]}"
         then
             dict[shared]=1
         else
