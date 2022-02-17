@@ -256,9 +256,6 @@ koopa::file_detect_regex() { # {{{1
     koopa:::file_detect --mode='regex' "$@"
 }
 
-# FIXME Require this to be more verbose, requiring '--string',
-# '--pattern', and '--replacement'?
-
 koopa::str_detect_fixed() { # {{{1
     # """
     # Does the input match a fixed string?
