@@ -486,40 +486,44 @@ koopa::assert_is_macos() { # {{{1
     return 0
 }
 
-# FIXME Rework using dict?
+# FIXME Consider requiring '--string' and '--pattern' input flags here.
 koopa::assert_is_matching_fixed() { # {{{1
     # """
     # Assert that input matches a fixed pattern.
     # @note Updated 2022-02-17.
     # """
-    local pattern string
+    local dict
     koopa::assert_has_args_eq "$#" 2
-    string="${1:?}"
-    pattern="${2:?}"
+    declare -A dict=(
+        [string]="${1:?}"
+        [pattern]="${2:?}"
+    )
     if ! koopa::str_detect_fixed \
-        --string="$string" \
-        --pattern="$pattern"
+        --string="${dict[string]}" \
+        --pattern="${dict[pattern]}"
     then
-        koopa::stop "'${string}' doesn't match '${pattern}'."
+        koopa::stop "'${dict[string]}' doesn't match '${dict[pattern]}'."
     fi
     return 0
 }
 
-# FIXME Rework using dict?
+# FIXME Consider requiring '--string' and '--pattern' input flags here.
 koopa::assert_is_matching_regex() { # {{{1
     # """
     # Assert that input matches a regular expression pattern.
     # @note Updated 2022-02-17.
     # """
-    local pattern string
+    local dict
     koopa::assert_has_args_eq "$#" 2
-    string="${1:?}"
-    pattern="${2:?}"
+    declare -A dict=(
+        [string]="${1:?}"
+        [pattern]="${2:?}"
+    )
     if ! koopa::str_detect_regex \
-        --string="$string" \
-        --pattern="$pattern"
+        --string="${dict[string]}" \
+        --pattern="${dict[pattern]}"
     then
-        koopa::stop "'${string}' doesn't match regex '${pattern}'."
+        koopa::stop "'${dict[string]}' doesn't match regex '${dict[pattern]}'."
     fi
     return 0
 }
