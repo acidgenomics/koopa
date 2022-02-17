@@ -100,7 +100,9 @@ koopa::uninstall_app() { # {{{1
     then
         koopa::assert_is_dir "${dict[prefix]}"
         dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
-        if koopa::str_detect_regex "${dict[prefix]}" "^${dict[koopa_prefix]}"
+        if koopa::str_detect_regex \
+            --string="${dict[prefix]}" \
+            --pattern="^${dict[koopa_prefix]}"
         then
             dict[shared]=1
         else

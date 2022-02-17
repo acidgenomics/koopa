@@ -121,7 +121,9 @@ koopa::test_find_files_by_shebang() { # {{{1
                 | "${app[head]}" -n 1 \
         )"
         [[ -n "$shebang" ]] || continue
-        if koopa::str_detect_regex "$shebang" "${dict[pattern]}"
+        if koopa::str_detect_regex \
+            --string="$shebang" \
+            --pattern="${dict[pattern]}"
         then
             shebang_files+=("$file")
         fi

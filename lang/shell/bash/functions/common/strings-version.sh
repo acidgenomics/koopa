@@ -602,10 +602,11 @@ koopa::parallel_version() { # {{{1
     return 0
 }
 
+# FIXME Rename 'x' to 'str'.
 koopa::perl_file_rename_version() { # {{{1
     # """
     # Perl File::Rename version.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-17.
     # """
     local app x
     koopa::assert_has_no_args "$#"
@@ -618,7 +619,10 @@ koopa::perl_file_rename_version() { # {{{1
         "${app[rename]}" --version 2>/dev/null \
             | "${app[head]}" -n 1 \
     )"
-    koopa::str_detect_fixed "$x" 'File::Rename' || return 1
+    koopa::str_detect_fixed \
+        --string="$x" \
+        --pattern='File::Rename' \
+        || return 1
     x="$( \
         koopa::print "$x" \
             | "${app[cut]}" -d ' ' -f 5 \
@@ -629,6 +633,7 @@ koopa::perl_file_rename_version() { # {{{1
     return 0
 }
 
+# FIXME Rename 'x' to 'str'.
 koopa::r_package_version() { # {{{1
     # """
     # R package version.
@@ -658,10 +663,11 @@ koopa::r_package_version() { # {{{1
     return 0
 }
 
+# FIXME Rename 'x' to 'str'.
 koopa::r_version() { # {{{1
     # """
     # R version.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-02-17.
     # """
     local app x
     koopa::assert_has_args_le "$#" 1
@@ -674,7 +680,9 @@ koopa::r_version() { # {{{1
         "${app[r]}" --version 2>/dev/null \
         | "${app[head]}" -n 1 \
     )"
-    if koopa::str_detect_fixed "$x" 'R Under development (unstable)'
+    if koopa::str_detect_fixed \
+        --string="$x" \
+        --pattern='R Under development (unstable)'
     then
         x='devel'
     else
@@ -685,6 +693,7 @@ koopa::r_version() { # {{{1
     return 0
 }
 
+# FIXME Rework using dict.
 koopa::return_version() { # {{{1
     # """
     # Return version (via extraction).
@@ -851,17 +860,21 @@ koopa::ruby_api_version() { # {{{1
 koopa::sanitize_version() { # {{{1
     # """
     # Sanitize version.
-    # @note Updated 2020-07-14.
+    # @note Updated 2022-02-17.
+    #
     # @examples
-    # koopa::sanitize_version '2.7.1p83'
-    # ## 2.7.1
+    # > koopa::sanitize_version '2.7.1p83'
+    # # 2.7.1
     # """
     local pattern x
     koopa::assert_has_args "$#"
     pattern='[.0-9]+'
     for x in "$@"
     do
-        koopa::str_detect_regex "$x" "$pattern" || return 1
+        koopa::str_detect_regex \
+            --string="$x" \
+            --pattern="$pattern" \
+            || return 1
         x="$(koopa::sub '^([.0-9]+).*$' '\1' "$x")"
         koopa::print "$x"
     done
@@ -907,10 +920,11 @@ koopa::version_pattern() { # {{{1
     return 0
 }
 
+# FIXME Rework using dict.
 koopa::vim_version() { # {{{1
     # """
     # Vim version.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-02-17.
     # """
     local app major_minor patch version vim x
     koopa::assert_has_no_args "$#"
@@ -925,7 +939,9 @@ koopa::vim_version() { # {{{1
             | "${app[head]}" -n 1 \
             | "${app[cut]}" -d ' ' -f 5 \
     )"
-    if koopa::str_detect_fixed "$x" 'Included patches:'
+    if koopa::str_detect_fixed \
+        --string="$x" \
+        --pattern='Included patches:'
     then
         patch="$( \
             koopa::print "$x" \

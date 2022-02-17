@@ -70,7 +70,7 @@ koopa::help() { # {{{1
     )
     koopa::assert_is_file "${dict[man_file]}"
     "${app[head]}" -n 10 "${dict[man_file]}" \
-        | koopa::str_detect_fixed - '.TH ' \
+        | koopa::str_detect_fixed - --pattern='.TH ' \
         || koopa::stop "Invalid documentation at '${dict[man_file]}'."
     "${app[man]}" "${dict[man_file]}"
     exit 0

@@ -69,11 +69,15 @@ koopa::macos_disable_plist_file() { # {{{1
         dict[disabled_file]="$(koopa::dirname "${dict[enabled_file]}")/\
 disabled/$(koopa::basename "${dict[enabled_file]}")"
         koopa::alert "Disabling '${dict[enabled_file]}'."
-        if koopa::str_detect_fixed "${dict[enabled_file]}" '/LaunchDaemons/'
+        if koopa::str_detect_fixed \
+            --string="${dict[enabled_file]}" \
+            --pattern='/LaunchDaemons/'
         then
             dict[daemon]=1
         fi
-        if koopa::str_detect_regex "${dict[enabled_file]}" "^${HOME:?}"
+        if koopa::str_detect_regex \
+            --string="${dict[enabled_file]}" \
+            --pattern="^${HOME:?}"
         then
             dict[sudo]=0
         fi
@@ -208,11 +212,15 @@ koopa::macos_enable_plist_file() { # {{{1
         dict[disabled_file]="$(koopa::dirname "${dict[enabled_file]}")/\
 disabled/$(koopa::basename "${dict[enabled_file]}")"
         koopa::alert "Enabling '${dict[enabled_file]}'."
-        if koopa::str_detect_fixed "${dict[enabled_file]}" '/LaunchDaemons/'
+        if koopa::str_detect_fixed \
+            --string="${dict[enabled_file]}" \
+            --pattern='/LaunchDaemons/'
         then
             dict[daemon]=1
         fi
-        if koopa::str_detect_regex "${dict[enabled_file]}" "^${HOME:?}"
+        if koopa::str_detect_regex \
+            --string="${dict[enabled_file]}" \
+            --pattern="^${HOME:?}"
         then
             dict[sudo]=0
         fi

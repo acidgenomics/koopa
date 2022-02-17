@@ -152,10 +152,14 @@ koopa::git_clone() { # {{{1
             koopa::rm "${dict2[prefix]}"
         fi
         # Check if user has sufficient permissions.
-        if koopa::str_detect_fixed "${dict2[url]}" 'git@github.com'
+        if koopa::str_detect_fixed \
+            --string="${dict2[url]}" \
+            --pattern='git@github.com'
         then
             koopa::assert_is_github_ssh_enabled
-        elif koopa::str_detect_fixed "${dict2[url]}" 'git@gitlab.com'
+        elif koopa::str_detect_fixed \
+            --string="${dict2[url]}" \
+            --pattern='git@gitlab.com'
         then
             koopa::assert_is_gitlab_ssh_enabled
         fi

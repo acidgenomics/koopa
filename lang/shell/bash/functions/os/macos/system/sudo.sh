@@ -17,7 +17,9 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
         [target_file]='/etc/pam.d/sudo'
     )
     if [[ -f "${dict[target_file]}" ]] && \
-        ! koopa::file_detect_fixed "${dict[target_file]}" 'pam_tid.so'
+        ! koopa::file_detect_fixed \
+            --file="${dict[target_file]}" \
+            --pattern='pam_tid.so'
     then
         koopa::alert_note "Touch ID not enabled in '${dict[target_file]}'."
         return 0
@@ -25,7 +27,9 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     koopa::alert "Disabling Touch ID defined in '${dict[target_file]}'."
     # NOTE Don't use 'koopa::cp' here, as it will remove the target file
     # and can cause system lockout in this case.
-    "${app[sudo]}" "${app[cp]}" -v "${dict[source_file]}" "${dict[target_file]}"
+    "${app[sudo]}" "${app[cp]}" -v \
+        "${dict[source_file]}" "${dict[target_file]}"
+    # FIXME Require '--permission' flag here.
     koopa::chmod --sudo '0444' "${dict[target_file]}"
     koopa::alert_success 'Touch ID disabled for sudo.'
     return 0
@@ -35,6 +39,7 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     # """
     # Enable sudo authentication via Touch ID PAM.
     # @note Updated 2021-10-30.
+    #
     # @seealso
     # - https://davidwalsh.name/touch-sudo
     # - https://news.ycombinator.com/item?id=26302139
@@ -51,7 +56,9 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
         [target_file]='/etc/pam.d/sudo'
     )
     if [[ -f "${dict[target_file]}" ]] && \
-        koopa::file_detect_fixed "${dict[target_file]}" 'pam_tid.so'
+        koopa::file_detect_fixed \
+            --file="${dict[target_file]}" \
+            --pattern='pam_tid.so'
     then
         koopa::alert_note "Touch ID already enabled in '${dict[target_file]}'."
         return 0
@@ -60,7 +67,9 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     koopa::assert_is_file "${dict[source_file]}"
     # NOTE Don't use 'koopa::cp' here, as it will remove the target file
     # and can cause system lockout in this case.
-    "${app[sudo]}" "${app[cp]}" -v "${dict[source_file]}" "${dict[target_file]}"
+    "${app[sudo]}" "${app[cp]}" -v \
+        "${dict[source_file]}" "${dict[target_file]}"
+    # FIXME Require '--permissions' and '--file' flags here.
     koopa::chmod --sudo '0444' "${dict[target_file]}"
     koopa::alert_success 'Touch ID enabled for sudo.'
     return 0

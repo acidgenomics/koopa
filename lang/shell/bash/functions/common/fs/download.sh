@@ -3,7 +3,7 @@
 koopa::download() { # {{{1
     # """
     # Download a file.
-    # @note Updated 2021-11-16.
+    # @note Updated 2022-02-17.
     #
     # @section curl:
     #
@@ -43,7 +43,9 @@ koopa::download() { # {{{1
     then
         dict[file]="$(koopa::basename "${dict[url]}")"
     fi
-    if ! koopa::str_detect_fixed "${dict[file]}" '/'
+    if ! koopa::str_detect_fixed \
+        --string="${dict[file]}" \
+        --pattern='/'
     then
         dict[file]="$(pwd)/${dict[file]}"
     fi

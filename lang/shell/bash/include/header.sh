@@ -242,7 +242,7 @@ man1/${dict[script_name]}.1"
             fi
         fi
         # Require admin account to run 'sbin/' scripts.
-        if koopa::str_detect_fixed "$0" '/sbin'
+        if koopa::str_detect_fixed --string="$0" --pattern='/sbin'
         then
             koopa::assert_is_admin
         fi
