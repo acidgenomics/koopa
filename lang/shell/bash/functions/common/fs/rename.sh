@@ -67,7 +67,7 @@ koopa::rename_lowercase() { # {{{1
             -not -name '.*' \
             -print0 \
             | "${app[sort]}" --zero-terminated \
-            | "${app[xargs]}" -0 -I {} \
+            | "${app[xargs]}" --null -I {} \
                 "${app[rename]}" \
                     --force \
                     --verbose \
@@ -77,12 +77,12 @@ koopa::rename_lowercase() { # {{{1
         # FIXME Rework using 'koopa::find'.
         "${app[find]}" "${dict[prefix]}" \
             -mindepth 1 \
-            -type d \
+            -type 'd' \
             -name '*[A-Z]*' \
             -not -name '.*' \
             -print0 \
             | "${app[sort]}" --reverse --zero-terminated \
-            | "${app[xargs]}" -0 -I {} \
+            | "${app[xargs]}" --null -I {} \
                 "${app[rename]}" \
                     --force \
                     --verbose \
