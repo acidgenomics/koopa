@@ -2,7 +2,12 @@
 
 test_gsub() { # {{{1
     assertEquals \
-        "$(koopa::gsub 'bbb' 'ccc' 'aaa-aaa-bbb-bbb')" \
+        "$(\
+            koopa::gsub \
+                --pattern='bbb' \
+                --replacement='ccc' \
+                'aaa-aaa-bbb-bbb' \
+        )" \
         'aaa-aaa-ccc-ccc'
 }
 
@@ -26,13 +31,21 @@ test_snake_case_simple() { # {{{1
 
 test_strip_left() { # {{{1
     assertEquals \
-        "$(koopa::strip_left 'The ' 'The Quick Brown Fox')" \
+        "$( \
+            koopa::strip_left \
+                --pattern='The ' \
+                'The Quick Brown Fox' \
+        )" \
         'Quick Brown Fox'
 }
 
 test_strip_right() { # {{{1
     assertEquals \
-        "$(koopa::strip_right ' Fox' 'The Quick Brown Fox')" \
+        "$( \
+            koopa::strip_right \
+                --pattern=' Fox' \
+                'The Quick Brown Fox' \
+        )" \
         'The Quick Brown'
 }
 
@@ -44,7 +57,12 @@ _test_strip_trailing_slash() { # {{{1
 
 test_sub() { # {{{1
     assertEquals \
-        "$(koopa::sub 'bbb' 'ccc' 'aaa-aaa-bbb-bbb')" \
+        "$( \
+            koopa::sub \
+                --pattern='bbb' \
+                --replacement='ccc' \
+                'aaa-aaa-bbb-bbb' \
+        )" \
         'aaa-aaa-ccc-bbb'
 }
 
