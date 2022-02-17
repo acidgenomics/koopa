@@ -3,24 +3,25 @@
 koopa::camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
-    # @note Updated 2022-01-20.
-    #
-    # @examples
-    # koopa::camel_case_simple 'hello world'
-    # ## helloWorld
+    # @note Updated 2022-02-17.
     #
     # @seealso
-    # https://stackoverflow.com/questions/34420091/
+    # - syntactic R package.
+    # - https://stackoverflow.com/questions/34420091/
+    #
+    # @examples
+    # > koopa::camel_case_simple 'hello world'
+    # # helloWorld
     # """
-    local app string
+    local app str
     koopa::assert_has_args "$#"
     declare -A app=(
         [sed]="$(koopa::locate_sed)"
     )
-    for string in "$@"
+    for str in "$@"
     do
-        koopa::print "$string" \
-            | "${app[sed]}" -E 's/([ -_])([a-z])/\U\2/g'
+        koopa::print "$str" \
+            | "${app[sed]}" --regexp-extended 's/([ -_])([a-z])/\U\2/g'
     done
     return 0
 }
@@ -52,53 +53,43 @@ koopa::capitalize() { # {{{1
 koopa::gsub() { # {{{1
     # """
     # Global substitution.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-02-17.
     #
     # @examples
-    # koopa::gsub 'a' '' 'aabb' 'aacc'
-    # ## bb
-    # ## cc
+    # > koopa::gsub --pattern='a' --replacement='' 'aabb' 'aacc'
+    # # bb
+    # # cc
     # """
-    local app dict string
-    koopa::assert_has_args_eq "$#" 3
-    declare -A app=(
-        [sed]="$(koopa::locate_sed)"
-    )
-    declare -A dict=(
-        [pattern]="${1:?}"
-        [replacement]="${2:-}"
-    )
-    shift 2
-    for string in "$@"
-    do
-        koopa::print "$string" \
-            | "${app[sed]}" -E "s|${dict[pattern]}|${dict[replacement]}|g"
-    done
-    return 0
+    koopa::sub --global "$@"
 }
 
 koopa::kebab_case_simple() { # {{{1
     # """
     # Simple snake case function.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-17.
     #
     # @seealso
-    # - Exported 'kebab-case' that uses R syntactic internally.
+    # - syntactic R package.
     #
     # @examples
-    # koopa::kebab_case_simple 'hello world'
-    # ## hello-world
+    # > koopa::kebab_case_simple 'hello world'
+    # # hello-world
     #
-    # koopa::kebab_case_simple 'bcbio-nextgen.py'
-    # ## bcbio-nextgen-py
+    # > koopa::kebab_case_simple 'bcbio-nextgen.py'
+    # # bcbio-nextgen-py
     # """
-    local string
+    local str
     koopa::assert_has_args "$#"
-    for string in "$@"
+    for str in "$@"
     do
-        string="$(koopa::gsub '[^-A-Za-z0-9]' '-' "$string")"
-        string="$(koopa::lowercase "$string")"
-        koopa::print "$string"
+        str="$(\
+            koopa::gsub \
+                --pattern='[^-A-Za-z0-9]' \
+                --replacement='-' \
+                "$str" \
+        )"
+        str="$(koopa::lowercase "$str")"
+        koopa::print "$str"
     done
     return 0
 }
@@ -106,10 +97,10 @@ koopa::kebab_case_simple() { # {{{1
 koopa::lowercase() { # {{{1
     # """
     # Transform string to lowercase.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-17.
     #
     # awk alternative:
-    # > koopa::print "$string" | "${app[awk]}" '{print tolower($0)}'
+    # > koopa::print "$str" | "${app[awk]}" '{print tolower($0)}'
     #
     # @examples
     # koopa::lowercase 'HELLO WORLD'
@@ -118,14 +109,14 @@ koopa::lowercase() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/2264428
     # """
-    local app string
+    local app str
     koopa::assert_has_args "$#"
     declare -A app=(
         [tr]="$(koopa::locate_tr)"
     )
-    for string in "$@"
+    for str in "$@"
     do
-        koopa::print "$string" \
+        koopa::print "$str" \
             | "${app[tr]}" '[:upper:]' '[:lower:]'
     done
     return 0
@@ -194,25 +185,25 @@ koopa::paste0() { # {{{1
 koopa::snake_case_simple() { # {{{1
     # """
     # Simple snake case function.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-17.
     #
     # @seealso
-    # - Exported 'snake-case' that uses R syntactic internally.
+    # - syntactic R package.
     #
     # @examples
-    # koopa::snake_case_simple 'hello world'
-    # ## hello_world
+    # > koopa::snake_case_simple 'hello world'
+    # # hello_world
     #
-    # koopa::snake_case_simple 'bcbio-nextgen.py'
-    # ## bcbio_nextgen_py
+    # > koopa::snake_case_simple 'bcbio-nextgen.py'
+    # # bcbio_nextgen_py
     # """
-    local string
+    local str
     koopa::assert_has_args "$#"
-    for string in "$@"
+    for str in "$@"
     do
-        string="$(koopa::gsub '[^A-Za-z0-9_]' '_' "$string")"
-        string="$(koopa::lowercase "$string")"
-        koopa::print "$string"
+        str="$(koopa::gsub '[^A-Za-z0-9_]' '_' "$str")"
+        str="$(koopa::lowercase "$str")"
+        koopa::print "$str"
     done
     return 0
 }
@@ -220,26 +211,65 @@ koopa::snake_case_simple() { # {{{1
 koopa::sub() { # {{{1
     # """
     # Single substitution.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-02-17.
     #
     # @examples
-    # koopa::sub 'a' '' 'aaa' 'aaa'
-    # ## aa
-    # ## aa
+    # > koopa::sub --pattern='a' --replacement='' 'aaa' 'aaa'
+    # # aa
+    # # aa
     # """
-    local app dict string
+    local app dict pos str
     declare -A app=(
         [sed]="$(koopa::locate_sed)"
     )
     declare -A dict=(
-        [pattern]="${1:?}"
-        [replacement]="${2:-}"
+        [global]=0
+        [pattern]=''
+        [replacement]=''
+        [sed_tail]=''
     )
-    shift 2
-    for string in "$@"
+    pos=()
+    while (("$#"))
     do
-        koopa::print "$string" \
-            | "${app[sed]}" -E "s|${dict[pattern]}|${dict[replacement]}|"
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
+            '--replacement='*)
+                dict[replacement]="${1#*=}"
+                shift 1
+                ;;
+            '--replacement')
+                dict[replacement]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    koopa::assert_is_set \
+        '--pattern' "${dict[pattern]}" \
+        '--replacement' "${dict[replacement]}"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    [[ "${dict[global]}" -eq 1 ]] && dict[sed_tail]='g'
+    for str in "$@"
+    do
+        koopa::print "$str" \
+            | "${app[sed]}" --regexp-extended \
+                "s|${dict[pattern]}|${dict[replacement]}|${dict[sed_tail]}"
     done
     return 0
 }
@@ -261,7 +291,7 @@ koopa::to_string() { # {{{1
 koopa::trim_ws() { # {{{1
     # """
     # Trim leading and trailing white-space from string.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-02-17.
     #
     # This is an alternative to sed, awk, perl and other tools. The function
     # works by finding all leading and trailing white-space and removing it from
@@ -274,13 +304,13 @@ koopa::trim_ws() { # {{{1
     # # hello world
     # # foo bar
     # """
-    local string
+    local str
     koopa::assert_has_args "$#"
-    for string in "$@"
+    for str in "$@"
     do
-        string="${string#"${string%%[![:space:]]*}"}"
-        string="${string%"${string##*[![:space:]]}"}"
-        koopa::print "$string"
+        str="${str#"${str%%[![:space:]]*}"}"
+        str="${str%"${str##*[![:space:]]}"}"
+        koopa::print "$str"
     done
     return 0
 }
