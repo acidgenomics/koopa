@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-koopa::test_linter() {
+test_linter() {
     # """
     # Check that scripts do not contain lints.
     # Updated 2020-08-12.
@@ -17,4 +17,4 @@ koopa::test_linter() {
     return 0
 }
 
-koopa::test_linter "$@"
+test_linter "$@"

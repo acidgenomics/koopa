@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-koopa::test_conda() {
+main() {
     # """
     # Conda environment test script.
     # @note Updated 2022-02-16.
@@ -28,4 +28,4 @@ koopa::test_conda() {
     return 0
 }
 
-koopa::test_conda "$@"
+main "$@"
