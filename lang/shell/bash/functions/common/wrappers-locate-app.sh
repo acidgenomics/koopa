@@ -239,10 +239,6 @@ koopa::locate_git() { # {{{1
     koopa::locate_app 'git'
 }
 
-koopa::locate_gnu_mv() { # {{{1
-    koopa::locate_app 'mv'
-}
-
 koopa::locate_go() { # {{{1
     koopa::locate_app 'go'
 }
@@ -603,6 +599,10 @@ koopa::locate_sed() { # {{{1
         --app-name='sed' \
         --gnubin \
         --opt='gnu-sed'
+}
+
+koopa::locate_shunit2() { # {{{1
+    koopa::locate_app 'shunit2'
 }
 
 koopa::locate_sshfs() { # {{{1
