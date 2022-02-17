@@ -2,13 +2,19 @@
 
 koopa::test() { # {{{1
     # """
-    # Run koopa unit tests.
-    # @note Updated 2020-08-12.
+    # Run all koopa unit tests.
+    # @note Updated 2022-02-17.
     # """
-    local script
-    script="$(koopa::tests_prefix)/tests"
-    koopa::assert_is_file "$script"
-    "$script" "$@"
+    local prefix
+    koopa::assert_has_no_args "$#"
+    prefix="$(koopa::tests_prefix)"
+    (
+        koopa::cd "$prefix"
+        ./bin-man-consistency
+        ./linter
+        ./shunit2
+        # > ./roff
+    )
     return 0
 }
 
