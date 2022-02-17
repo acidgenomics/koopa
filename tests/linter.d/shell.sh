@@ -178,6 +178,7 @@ test_zsh_illegal_strings() { # {{{1
     return 0
 }
 
+# FIXME Need to locate shellcheck.
 test_shellcheck() { # {{{1
     # """
     # Run ShellCheck.
