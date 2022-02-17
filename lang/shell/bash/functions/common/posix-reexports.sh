@@ -320,7 +320,6 @@ koopa::git_repo_needs_pull_or_push() { # {{{1
     _koopa_git_repo_needs_pull_or_push "$@"
 }
 
-# FIXME Require user to pass in '--version' here, it makes it less confusing.
 koopa::go_packages_prefix() { # {{{1
     _koopa_go_packages_prefix "$@"
 }
@@ -557,7 +556,6 @@ koopa::java_prefix() { # {{{1
     _koopa_java_prefix "$@"
 }
 
-# FIXME Require user to pass in '--version' here, it makes it less confusing.
 koopa::julia_packages_prefix() { # {{{1
     _koopa_julia_packages_prefix "$@"
 }
@@ -646,12 +644,10 @@ koopa::monorepo_prefix() { # {{{1
     _koopa_monorepo_prefix "$@"
 }
 
-# FIXME Require user to pass in '--version' here, it makes it less confusing.
 koopa::nim_packages_prefix() { # {{{1
     _koopa_nim_packages_prefix "$@"
 }
 
-# FIXME Require user to pass in '--version' here, it makes it less confusing.
 koopa::node_packages_prefix() { # {{{1
     _koopa_node_packages_prefix "$@"
 }
@@ -676,7 +672,6 @@ koopa::os_string() { # {{{1
     _koopa_os_string "$@"
 }
 
-# FIXME Require user to pass in '--version' here, it makes it less confusing.
 koopa::perl_packages_prefix() { # {{{1
     _koopa_perl_packages_prefix "$@"
 }
@@ -773,7 +768,6 @@ koopa::pyenv_prefix() { # {{{1
     _koopa_pyenv_prefix "$@"
 }
 
-# FIXME Require user to pass in '--version' here, it makes it less confusing.
 koopa::python_packages_prefix() { # {{{1
     _koopa_python_packages_prefix "$@"
 }
@@ -786,7 +780,6 @@ koopa::python_venv_prefix() { # {{{1
     _koopa_python_venv_prefix "$@"
 }
 
-# FIXME Require user to pass in '--version' here, it makes it less confusing.
 koopa::r_packages_prefix() { # {{{1
     _koopa_r_packages_prefix "$@"
 }
@@ -811,12 +804,10 @@ koopa::remove_from_path() { # {{{1
     _koopa_remove_from_path "$@"
 }
 
-# FIXME Require user to pass in '--version' here, it makes it less confusing.
 koopa::ruby_packages_prefix() { # {{{1
     _koopa_ruby_packages_prefix "$@"
 }
 
-# FIXME Require user to pass in '--version' here, it makes it less confusing.
 koopa::rust_packages_prefix() { # {{{1
     _koopa_rust_packages_prefix "$@"
 }
