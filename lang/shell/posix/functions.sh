@@ -2586,7 +2586,7 @@ _koopa_homebrew_prefix() { # {{{1
     x="${HOMEBREW_PREFIX:-}"
     if [ -z "$x" ]
     then
-        if _koopa_is_installed brew
+        if _koopa_is_installed 'brew'
         then
             x="$(brew --prefix)"
         elif _koopa_is_macos
