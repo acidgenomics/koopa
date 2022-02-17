@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
-test() { # {{{1
+main() { # {{{1
     # """
     # Base lint checks.
     # @note Updated 2020-07-08.
@@ -45,4 +45,4 @@ test_line_width() { # {{{1
     return 0
 }
 
-test "$@"
+main "$@"

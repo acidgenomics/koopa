@@ -3,14 +3,15 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
-test() { # {{{1
+main() { # {{{1
     # """
     # R script checks.
     # Updated 2020-07-07.
     # """
+    local files merge r_files rscript_files
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed R
-    koopa::assert_is_r_package_installed lintr
+    koopa::assert_is_installed 'R'
+    koopa::assert_is_r_package_installed 'lintr'
     # Find scripts by file extension.
     readarray -t r_files <<< "$(koopa::test_find_files_by_ext '.R')"
     # Find scripts by shebang.
@@ -42,4 +43,4 @@ test_lintr() { # {{{1
     return 0
 }
 
-test "$@"
+main "$@"

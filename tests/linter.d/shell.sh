@@ -4,7 +4,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
-test() { # {{{1
+main() { # {{{1
     # """
     # Shell script checks.
     # Updated 2020-07-20.
@@ -196,4 +196,4 @@ test_shellcheck() { # {{{1
     return 0
 }
 
-test "$@"
+main "$@"

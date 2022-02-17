@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-koopa::test_docker() {
+test_docker() {
     # """
     # Install and test koopa inside Docker.
     # Updated 2021-10-29.
@@ -28,4 +28,4 @@ koopa::test_docker() {
     return 0
 }
 
-koopa::test_docker "$@"
+test_docker "$@"

@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../../lang/shell/bash/include/header.sh"
 
-test() { # {{{1
+main() { # {{{1
     # """
     # Python script checks.
     # Updated 2021-02-15.
@@ -33,4 +33,4 @@ test_pylint() { # {{{1
     return 0
 }
 
-test "$@"
+main "$@"
