@@ -30,7 +30,20 @@ koopa::cli_app() { # {{{1
                         ;;
                     esac
                     ;;
-                # FIXME Need to add support for EC2 functions here.
+                'ec2')
+                    case "${3:-}" in
+                        'create-instance' | \
+                        'instance-id' | \
+                        'suspend-instance' | \
+                        'terminate-instance')
+                            key="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa::invalid_arg "$*"
+                        ;;
+                    esac
+                    ;;
                 's3')
                     case "${3:-}" in
                         'find' | \
