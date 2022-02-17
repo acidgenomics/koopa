@@ -200,6 +200,24 @@ koopa::run_if_installed() { # {{{1
     return 0
 }
 
+koopa::source_dir() { # {{{1
+    # """
+    # Source multiple shell scripts in a directory.
+    # @note Updated 2022-02-17.
+    # """
+    local file prefix
+    koopa::assert_has_args_eq "$#" 1
+    prefix="${1:?}"
+    koopa::assert_is_dir "$prefix"
+    for file in "${prefix}/"*'.sh'
+    do
+        [[ -f "$file" ]] || continue
+        # shellcheck source=/dev/null
+        . "$file"
+    done
+    return 0
+}
+
 koopa::switch_to_develop() {  # {{{1
     # """
     # Switch koopa install to development version.
