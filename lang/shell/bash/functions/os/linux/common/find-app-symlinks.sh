@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Confirm that this works, after changing koopa::find.
 koopa::linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-02-17.
     # """
     local app dict symlink symlinks
     koopa::assert_has_args_le "$#" 2
     declare -A app=(
-        [find]="$(koopa::locate_find)"
         [grep]="$(koopa::locate_grep)"
         [realpath]="$(koopa::locate_realpath)"
         [sort]="$(koopa::locate_sort)"
@@ -39,10 +39,13 @@ koopa::linux_find_app_symlinks() { # {{{1
     fi
     koopa::assert_is_dir "${dict[app_prefix]}"
     readarray -t -d '' symlinks < <(
-        "${app[find]}" -L "${dict[make_prefix]}" \
-            -xtype 'l' \
-            -print0 \
-        | "${app[xargs]}" --no-run-if-empty --null \
+        koopa::find \
+            --prefix="${dict[make_prefix]}" \
+            --print0 \
+            --type='l' \
+        | "${app[xargs]}" \
+            --no-run-if-empty \
+            --null \
             "${app[realpath]}" --zero \
         | "${app[grep]}" \
             --extended-regexp \
