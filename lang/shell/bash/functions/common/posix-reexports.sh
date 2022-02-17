@@ -844,10 +844,6 @@ koopa::strip_trailing_slash() { # {{{1
     _koopa_strip_trailing_slash "$@"
 }
 
-koopa::tests_prefix() { # {{{1
-    _koopa_tests_prefix "$@"
-}
-
 koopa::today() { # {{{1
     _koopa_today "$@"
 }
