@@ -342,17 +342,17 @@ koopa::assert_is_file() { # {{{1
 koopa::assert_is_file_type() { # {{{1
     # """
     # Assert that input matches a specified file type.
-    # @note Updated 2020-01-12.
+    # @note Updated 2022-02-17.
     #
-    # @examples
-    # koopa::assert_is_file_type "$x' 'csv"
+    # @usage
+    # > koopa::assert_is_file_type --string=STRING --pattern=PATTERN
     # """
-    local ext file
-    koopa::assert_has_args_eq "$#" 2
-    file="${1:?}"
-    ext="${2:?}"
-    koopa::assert_is_file "$file"
-    koopa::assert_is_matching_regex "$file" "\.${ext}\$"
+    koopa::assert_has_args "$#"
+    if ! koopa::is_file_type "$@"
+    then
+        koopa::stop 'Input does not match expected file type extension.'
+    fi
+    return 0
 }
 
 koopa::assert_is_function() { # {{{1
