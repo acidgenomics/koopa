@@ -10,7 +10,7 @@ koopa::test() { # {{{1
     prefix="$(koopa::tests_prefix)"
     (
         koopa::cd "$prefix"
-        ./bin-man-consistency
+        ./check-bin-man-consistency
         ./linter
         ./shunit2
         # > ./roff
