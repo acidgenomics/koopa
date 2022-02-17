@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider requiring '--file', '--string', '--pattern',
+# and '--replacement' arguments here, except when using stdin?
+
 koopa:::file_detect() { # {{{1
     # """
     # Is a string defined in a file?
@@ -215,6 +218,9 @@ koopa::file_detect_regex() { # {{{1
     # """
     koopa:::file_detect --mode='regex' "$@"
 }
+
+# FIXME Require this to be more verbose, requiring '--string',
+# '--pattern', and '--replacement'?
 
 koopa::str_detect_fixed() { # {{{1
     # """
