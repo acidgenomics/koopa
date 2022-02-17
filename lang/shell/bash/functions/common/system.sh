@@ -162,15 +162,20 @@ koopa::pager() { # {{{1
 koopa::roff() { # {{{1
     # """
     # Convert roff markdown files to ronn man pages.
-    # @note Updated 2021-10-22.
+    # @note Updated 2022-02-17.
     # """
-    local koopa_prefix
-    koopa::assert_is_installed 'ronn'
-    koopa_prefix="$(koopa::koopa_prefix)"
+    local app dict
+    koopa::assert_has_no_args "$#"
+    declare -A app=(
+        [ronn]="$(koopa::locate_ronn)"
+    )
+    declare -A app=(
+        [man_prefix]="$(koopa::man_prefix)"
+    )
     (
-        koopa::cd "${koopa_prefix}/man"
-        ronn --roff ./*.ronn
-        koopa::mv --target-directory='man1' ./*.1
+        koopa::cd "${dict[man_prefix]}"
+        "${app[ronn]}" --roff ./*'.ronn'
+        koopa::mv --target-directory='man1' ./*'.1'
     )
     return 0
 }
@@ -183,12 +188,12 @@ koopa::run_if_installed() { # {{{1
     koopa::assert_has_args "$#"
     for arg in "$@"
     do
+        local exe
         if ! koopa::is_installed "$arg"
         then
             koopa::alert_note "Skipping '${arg}'."
             continue
         fi
-        local exe
         exe="$(koopa::which_realpath "$arg")"
         "$exe"
     done
