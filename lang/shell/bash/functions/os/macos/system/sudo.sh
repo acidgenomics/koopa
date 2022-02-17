@@ -29,7 +29,6 @@ koopa::macos_disable_touch_id_sudo() { # {{{1
     # and can cause system lockout in this case.
     "${app[sudo]}" "${app[cp]}" -v \
         "${dict[source_file]}" "${dict[target_file]}"
-    # FIXME Require '--permission' flag here.
     koopa::chmod --sudo '0444' "${dict[target_file]}"
     koopa::alert_success 'Touch ID disabled for sudo.'
     return 0
@@ -69,7 +68,6 @@ koopa::macos_enable_touch_id_sudo() { # {{{1
     # and can cause system lockout in this case.
     "${app[sudo]}" "${app[cp]}" -v \
         "${dict[source_file]}" "${dict[target_file]}"
-    # FIXME Require '--permissions' and '--file' flags here.
     koopa::chmod --sudo '0444' "${dict[target_file]}"
     koopa::alert_success 'Touch ID enabled for sudo.'
     return 0
