@@ -81,14 +81,13 @@ koopa::list_app_versions() { # {{{1
 koopa::list_dotfiles() { # {{{1
     # """
     # List dotfiles.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-02-17.
     # """
     koopa::assert_has_no_args "$#"
     koopa::h1 "Listing dotfiles in '${HOME:?}'."
     koopa::find_dotfiles 'd' 'Directories'
     koopa::find_dotfiles 'f' 'Files'
-    # FIXME We can't use the 'l' argument currently with Rust fd...rework.
-    # > koopa::find_dotfiles 'l' 'Symlinks'
+    koopa::find_dotfiles 'l' 'Symlinks'
 }
 
 koopa::list_path_priority() { # {{{1
