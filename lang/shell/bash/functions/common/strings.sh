@@ -9,6 +9,8 @@ koopa::camel_case_simple() { # {{{1
     # - syntactic R package.
     # - https://stackoverflow.com/questions/34420091/
     #
+    # @usage koopa::camel_case_simple STRING...
+    #
     # @examples
     # > koopa::camel_case_simple 'hello world'
     # # helloWorld
@@ -29,13 +31,16 @@ koopa::camel_case_simple() { # {{{1
 koopa::capitalize() { # {{{1
     # """
     # Capitalize the first letter (only) of a string.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-02-17.
     #
-    # @examples
-    # koopa::capitalize 'hello world' 'foo bar'
-    # ## 'Hello world' 'Foo bar'
     # @seealso
     # - https://stackoverflow.com/a/12487465
+    #
+    # @usage koopa::capitalize STRING...
+    #
+    # @examples
+    # > koopa::capitalize 'hello world' 'foo bar'
+    # # 'Hello world' 'Foo bar'
     # """
     local app str
     koopa::assert_has_args "$#"
@@ -54,6 +59,8 @@ koopa::gsub() { # {{{1
     # """
     # Global substitution.
     # @note Updated 2022-02-17.
+    #
+    # @usage koopa::gsub --pattern=PATTERN --replacement=REPLACEMENT STRING...
     #
     # @examples
     # > koopa::gsub --pattern='a' --replacement='' 'aabb' 'aacc'
@@ -201,10 +208,139 @@ koopa::snake_case_simple() { # {{{1
     koopa::assert_has_args "$#"
     for str in "$@"
     do
-        str="$(koopa::gsub '[^A-Za-z0-9_]' '_' "$str")"
+        str="$( \
+            koopa::gsub \
+                --pattern='[^A-Za-z0-9_]' \
+                --replacement='_' \
+                "$str" \
+        )"
         str="$(koopa::lowercase "$str")"
         koopa::print "$str"
     done
+    return 0
+}
+
+koopa::strip_left() { # {{{1
+    # """
+    # Strip pattern from left side (start) of string.
+    # @note Updated 2022-02-17.
+    #
+    # @usage koopa::strip_left --pattern=PATTERN STRING...
+    #
+    # @examples
+    # > koopa::strip_left \
+    # >     --pattern='The ' \
+    # >     'The Quick Brown Fox' \
+    # >     'The White Lady'
+    # # Quick Brown Fox
+    # # White Lady
+    # """
+    local dict pos str
+    declare -A dict=(
+        [pattern]=''
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    koopa::assert_is_set '--pattern' "${dict[pattern]}"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    for str in "$@"
+    do
+        printf '%s\n' "${str##"${dict[pattern]}"}"
+    done
+    return 0
+}
+
+koopa::strip_right() { # {{{1
+    # """
+    # Strip pattern from right side (end) of string.
+    # @note Updated 2022-02-17.
+    #
+    # @usage koopa::strip_right --pattern=PATTERN STRING...
+    #
+    # @examples
+    # > koopa::strip_right \
+    # >     --pattern=' Fox' \
+    # >     'The Quick Brown Fox' \
+    # >     'Michael J. Fox'
+    # # The Quick Brown
+    # # Michael J.
+    # """
+    local dict pos str
+    declare -A dict=(
+        [pattern]=''
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    koopa::assert_is_set '--pattern' "${dict[pattern]}"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    for str in "$@"
+    do
+        printf '%s\n' "${str%%"${dict[pattern]}"}"
+    done
+    return 0
+}
+
+koopa::strip_trailing_slash() { # {{{1
+    # """
+    # Strip trailing slash in file path string.
+    # @note Updated 2022-02-17.
+    #
+    # Alternate approach using sed:
+    # > sed 's/\/$//' <<< "$1"
+    #
+    # @usage koopa::strip_trailing_slash STRING...
+    #
+    # @examples
+    # > koopa::strip_trailing_slash './dir1/' './dir2/'
+    # # ./dir1
+    # # ./dir2
+    # """
+    koopa::assert_has_args "$#"
+    koopa::strip_right --pattern='/' "$@"
     return 0
 }
 
@@ -212,6 +348,8 @@ koopa::sub() { # {{{1
     # """
     # Single substitution.
     # @note Updated 2022-02-17.
+    #
+    # @usage koopa::sub --pattern=PATTERN --replacement=REPLACEMENT STRING...
     #
     # @examples
     # > koopa::sub --pattern='a' --replacement='' 'aaa' 'aaa'

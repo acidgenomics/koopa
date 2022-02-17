@@ -841,18 +841,6 @@ koopa::spacevim_prefix() { # {{{1
     _koopa_spacevim_prefix "$@"
 }
 
-koopa::strip_left() { # {{{1
-    _koopa_strip_left "$@"
-}
-
-koopa::strip_right() { # {{{1
-    _koopa_strip_right "$@"
-}
-
-koopa::strip_trailing_slash() { # {{{1
-    _koopa_strip_trailing_slash "$@"
-}
-
 koopa::today() { # {{{1
     _koopa_today "$@"
 }

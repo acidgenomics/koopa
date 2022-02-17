@@ -4226,69 +4226,6 @@ _koopa_str_detect_posix() { # {{{1
     test "${1#*"$2"}" != "$1"
 }
 
-_koopa_strip_left() { # {{{1
-    # """
-    # Strip pattern from left side (start) of string.
-    # @note Updated 2020-07-01.
-    #
-    # @usage _koopa_strip_left STRING PATTERN
-    #
-    # @examples
-    # _koopa_strip_left 'The ' 'The Quick Brown Fox' 'The White Lady'
-    # ## Quick Brown Fox
-    # ## White Lady
-    # """
-    local pattern string
-    pattern="${1:?}"
-    shift 1
-    for string in "$@"
-    do
-        # shellcheck disable=SC2295
-        printf '%s\n' "${string##$pattern}"
-    done
-    return 0
-}
-
-_koopa_strip_right() { # {{{1
-    # """
-    # Strip pattern from right side (end) of string.
-    # @note Updated 2020-07-01.
-    #
-    # @usage _koopa_strip_right STRING PATTERN
-    #
-    # @examples
-    # _koopa_strip_right ' Fox' 'The Quick Brown Fox' 'Michael J. Fox'
-    # ## The Quick Brown
-    # ## Michael J.
-    # """
-    local pattern string
-    pattern="${1:?}"
-    shift 1
-    for string in "$@"
-    do
-        # shellcheck disable=SC2295
-        printf '%s\n' "${string%%$pattern}"
-    done
-    return 0
-}
-
-_koopa_strip_trailing_slash() { # {{{1
-    # """
-    # Strip trailing slash in file path string.
-    # @note Updated 2020-07-01.
-    #
-    # Alternate approach using sed:
-    # > sed 's/\/$//' <<< "$1"
-    #
-    # @examples
-    # _koopa_strip_trailing_slash './dir1/' './dir2/'
-    # ## ./dir1
-    # ## ./dir2
-    # """
-    _koopa_strip_right '/' "$@"
-    return 0
-}
-
 _koopa_today() { # {{{1
     # """
     # Today string.
