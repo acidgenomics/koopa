@@ -4289,15 +4289,6 @@ _koopa_strip_trailing_slash() { # {{{1
     return 0
 }
 
-_koopa_tests_prefix() { # {{{1
-    # """
-    # Unit tests prefix.
-    # @note Updated 2020-06-24.
-    # """
-    _koopa_print "$(_koopa_koopa_prefix)/tests"
-    return 0
-}
-
 _koopa_today() { # {{{1
     # """
     # Today string.
