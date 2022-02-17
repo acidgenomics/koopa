@@ -467,7 +467,7 @@ koopa::line_count() { # {{{1
     do
         str="$( \
             "${app[wc]}" --lines "$file" \
-                | "${app[xargs]}" \
+                | "${app[xargs]}" --no-run-if-empty \
                 | "${app[cut]}" --delimiter=' ' --fields=1 \
         )"
         [[ -n "$str" ]] || return 1
