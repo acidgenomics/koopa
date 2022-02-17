@@ -41,7 +41,7 @@ koopa::sra_download_accession_list() { # {{{1
                 dict[srp_id]="${2:?}"
                 shift 2
                 ;;
-            # Invalid ------------------------------------------------------------
+            # Invalid ----------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 shift 1
@@ -103,7 +103,7 @@ koopa::sra_download_run_info_table() { # {{{1
                 dict[srp_id]="${2:?}"
                 shift 2
                 ;;
-            # Invalid ------------------------------------------------------------
+            # Invalid ----------------------------------------------------------
             *)
                 koopa::invalid_arg "$1"
                 shift 1
