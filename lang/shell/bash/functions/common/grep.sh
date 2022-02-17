@@ -3,6 +3,8 @@
 # FIXME Consider requiring '--file', '--string', '--pattern',
 # and '--replacement' arguments here, except when using stdin?
 
+# FIXME Rethink stdin support here, not requiring '--file' or '--string'.
+
 koopa:::file_detect() { # {{{1
     # """
     # Is a string defined in a file?
@@ -11,12 +13,12 @@ koopa:::file_detect() { # {{{1
     # Uses ripgrep instead of grep when possible (faster).
     #
     # @examples
-    # koopa::file_detect_fixed 'FILE' 'PATTERN'
-    # koopa::file_detect_regex 'FILE' '^PATTERN.+$'
+    # koopa::file_detect_fixed --file='FILE' --pattern='PATTERN'
+    # koopa::file_detect_regex --file='FILE' --pattern='^PATTERN.+$'
     #
     # stdin support:
-    # echo 'FILE' | koopa::file_detect_fixed - 'PATTERN'
-    # echo 'FILE' | koopa::file_detect_regex - '^PATTERN.+$'
+    # echo 'FILE' | koopa::file_detect_fixed - --pattern='PATTERN'
+    # echo 'FILE' | koopa::file_detect_regex - --pattern='^PATTERN.+$'
     # """
     local app dict grep grep_args pos
     koopa::assert_has_args "$#"
@@ -128,12 +130,12 @@ koopa:::str_detect() { # {{{1
     # Redirecting output to '/dev/null' works more reliably.
     #
     # @examples
-    # koopa::str_detect_fixed 'STRING' 'PATTERN'
-    # koopa::str_detect_regex 'STRING' '^PATTERN.+$'
+    # koopa::str_detect_fixed --string='STRING' --pattern='PATTERN'
+    # koopa::str_detect_regex --string='STRING' --pattern='^PATTERN.+$'
     #
     # stdin support:
-    # echo 'STRING' | koopa::str_detect_fixed - 'PATTERN'
-    # echo 'STRING' | koopa::str_detect_regex - '^PATTERN.+$'
+    # echo 'STRING' | koopa::str_detect_fixed - --pattern='PATTERN'
+    # echo 'STRING' | koopa::str_detect_regex - --pattern='^PATTERN.+$'
     #
     # @seealso
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997

@@ -429,7 +429,7 @@ koopa::find() { # {{{1
 koopa::find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
-    # @note Updated 2022-01-19.
+    # @note Updated 2022-02-17.
     #
     # Parameterized, supporting multiple files.
     #
@@ -460,11 +460,19 @@ koopa::find_and_replace_in_files() { # {{{1
         --suffix='.' \
     )"
     if { \
-        koopa::str_detect_fixed "${dict[from]}" '/' && \
-        ! koopa::str_detect_fixed "${dict[from]}" '\/'; \
+        koopa::str_detect_fixed \
+            --string="${dict[from]}" \
+            --pattern='/' && \
+        ! koopa::str_detect_fixed \
+            --string="${dict[from]}" \
+            --pattern='\/'; \
     } || { \
-        koopa::str_detect_fixed "${dict[to]}" '/' && \
-        ! koopa::str_detect_fixed "${dict[to]}" '\/'; \
+        koopa::str_detect_fixed \
+            --string="${dict[to]}" \
+            --pattern='/' && \
+        ! koopa::str_detect_fixed \
+            --string="${dict[to]}" \
+            --pattern='\/'; \
     }
     then
         koopa::stop 'Unescaped slash detected.'

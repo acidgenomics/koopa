@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Require the user to use '--string' and '--file' flags here.
 koopa::append_string() { # {{{1
     # """
     # Append a string at end of file.
@@ -20,6 +21,7 @@ koopa::append_string() { # {{{1
     return 0
 }
 
+# FIXME Require the user to use '--string' and '--file' flags here.
 koopa::sudo_append_string() { # {{{1
     # """
     # Append a string at end of file as root user.
@@ -49,6 +51,7 @@ koopa::sudo_append_string() { # {{{1
     return 0
 }
 
+# FIXME Require the user to use '--string' and '--file' flags here.
 koopa::sudo_write_string() { # {{{1
     # """
     # Write a string to disk using root user.
@@ -78,6 +81,7 @@ koopa::sudo_write_string() { # {{{1
     return 0
 }
 
+# FIXME Require the user to use '--string' and '--file' flags here.
 koopa::write_string() { # {{{1
     # """
     # Write a string to disk.

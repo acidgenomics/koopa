@@ -95,7 +95,9 @@ koopa::conda_create_env() { # {{{1
         dict[env_string]="${string//@/=}"
         if [[ "${dict[latest]}" -eq 1 ]]
         then
-            if koopa::str_detect_fixed "${dict[env_string]}" '='
+            if koopa::str_detect_fixed \
+                --string="${dict[env_string]}" \
+                --pattern='='
             then
                 koopa::stop "Don't specify version when using '--latest'."
             fi
@@ -105,7 +107,9 @@ koopa::conda_create_env() { # {{{1
             )"
             [[ -n "${dict[env_version]}" ]] || return 1
             dict[env_string]="${dict[env_string]}=${dict[env_version]}"
-        elif ! koopa::str_detect_fixed "${dict[env_string]}" '='
+        elif ! koopa::str_detect_fixed \
+            --string="${dict[env_string]}" \
+            --pattern='='
         then
             dict[env_version]="$( \
                 koopa::variable "conda-${dict[env_string]}" \

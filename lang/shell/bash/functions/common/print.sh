@@ -240,21 +240,17 @@ koopa::h7() { # {{{1
 koopa::invalid_arg() { # {{{1
     # """
     # Error on invalid argument.
-    # @note Updated 2021-09-21.
+    # @note Updated 2022-02-17.
     # """
-    local arg x
+    local arg str
     if [[ "$#" -gt 0 ]]
     then
         arg="${1:-}"
-        # > if koopa::str_detect_posix "$arg" '--'
-        # > then
-        # >     koopa::warn "Use '--arg=VALUE' not '--arg VALUE'."
-        # > fi
-        x="Invalid argument: '${arg}'."
+        str="Invalid argument: '${arg}'."
     else
-        x='Invalid argument.'
+        str='Invalid argument.'
     fi
-    koopa::stop "$x"
+    koopa::stop "$str"
 }
 
 koopa::missing_arg() { # {{{1

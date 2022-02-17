@@ -486,32 +486,38 @@ koopa::assert_is_macos() { # {{{1
     return 0
 }
 
+# FIXME Rework using dict?
 koopa::assert_is_matching_fixed() { # {{{1
     # """
     # Assert that input matches a fixed pattern.
-    # @note Updated 2020-01-12.
+    # @note Updated 2022-02-17.
     # """
     local pattern string
     koopa::assert_has_args_eq "$#" 2
     string="${1:?}"
     pattern="${2:?}"
-    if ! koopa::str_detect_fixed "$string" "$pattern"
+    if ! koopa::str_detect_fixed \
+        --string="$string" \
+        --pattern="$pattern"
     then
         koopa::stop "'${string}' doesn't match '${pattern}'."
     fi
     return 0
 }
 
+# FIXME Rework using dict?
 koopa::assert_is_matching_regex() { # {{{1
     # """
     # Assert that input matches a regular expression pattern.
-    # @note Updated 2020-01-12.
+    # @note Updated 2022-02-17.
     # """
     local pattern string
     koopa::assert_has_args_eq "$#" 2
     string="${1:?}"
     pattern="${2:?}"
-    if ! koopa::str_detect_regex "$string" "$pattern"
+    if ! koopa::str_detect_regex \
+        --string="$string" \
+        --pattern="$pattern"
     then
         koopa::stop "'${string}' doesn't match regex '${pattern}'."
     fi
