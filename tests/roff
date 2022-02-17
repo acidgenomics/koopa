@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-koopa::test_roff() { # {{{1
+main() { # {{{1
     # """
     # Check that all scripts support '--help' flag.
     # Updated 2020-12-31.
@@ -117,4 +117,4 @@ koopa::test_roff() { # {{{1
     return "${dict[status]}"
 }
 
-koopa::test_roff "$@"
+main "$@"
