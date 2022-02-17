@@ -121,3 +121,12 @@ koopa::r_system_library_prefix() { # {{{1
     koopa::print "${dict[prefix]}"
     return 0
 }
+
+koopa::tests_prefix() { # {{{1
+    # """
+    # Unit tests prefix.
+    # @note Updated 2022-02-17.
+    # """
+    koopa::print "$(koopa::koopa_prefix)/tests"
+    return 0
+}
