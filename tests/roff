@@ -12,36 +12,26 @@ main() { # {{{1
     local bin_dir bin_dirs bin_file bin_files
     local man_dir man_dirs man_file man_files
     declare -A app=(
-        [find]="$(koopa::locate_find)"
         [head]="$(koopa::locate_head)"
-        [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
-        [app_prefix]="$(koopa::app_prefix)"
-        [dotfiles_prefix]="$(koopa::dotfiles_prefix)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
-        [opt_prefix]="$(koopa::opt_prefix)"
         [status]=0
     )
     koopa::h1 "Running manual file '--help' flag checks."
     # man dirs {{{2
     # --------------------------------------------------------------------------
     # Put all 'man/' dirs into an array and loop.
-    # FIXME Rework using 'koopa::find' here.
-    # FIXME Need to improve exclusion support in 'koopa::find'.
     readarray -t man_dirs <<< "$( \
-        "${app[find]}" "${dict[koopa_prefix]}" \
-            -mindepth 1 \
-            -type 'd' \
-            -name 'man' \
-            -not -path "${dict[app_prefix]}/*" \
-            -not -path "${dict[dotfiles_prefix]}/*" \
-            -not -path "${dict[koopa_prefix]}/.git/*" \
-            -not -path "${dict[koopa_prefix]}/shunit2-*" \
-            -not -path "${dict[opt_prefix]}/*" \
-            -print \
-            2>/dev/null \
-        | "${app[sort]}" \
+        koopa::find \
+            --exclude='.git/*' \
+            --exclude='app/*' \
+            --exclude='opt/*' \
+            --glob='man' \
+            --min-depth=1 \
+            --prefix="${dict[koopa_prefix]}" \
+            --sort \
+            --type='d' \
     )"
     for man_dir in "${man_dirs[@]}"
     do
@@ -79,21 +69,18 @@ main() { # {{{1
     # '--help' flag support {{{2
     # --------------------------------------------------------------------------
     koopa::h2 "Running exported script '--help' flag checks."
+    # FIXME Also need to run this for 'sbin' dirs now.
     # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
-    # FIXME Rework using 'koopa::find' here.
-    # FIXME Need to improve exclusion support here.
     readarray -t bin_dirs <<< "$( \
-        "${app[find]}" "${dict[koopa_prefix]}" \
-            -mindepth 1 \
-            -type 'd' \
-            \( -name 'bin' -o -name 'sbin' \) \
-            -not -path "${dict[app_prefix]}/*" \
-            -not -path "${dict[dotfiles_prefix]}/*" \
-            -not -path "${dict[koopa_prefix]}/shunit2-*" \
-            -not -path "${dict[opt_prefix]}/*" \
-            -print \
-            2>/dev/null \
-        | "${app[sort]}" \
+        koopa::find \
+            --exclude='.git/*' \
+            --exclude='app/*' \
+            --exclude='opt/*' \
+            --glob='bin' \
+            --min-depth=1 \
+            --prefix="${dict[koopa_prefix]}" \
+            --sort \
+            --type='d' \
     )"
     for bin_dir in "${bin_dirs[@]}"
     do
