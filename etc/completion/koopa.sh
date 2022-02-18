@@ -4,7 +4,7 @@
 _koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-02-16.
+    # Updated 2022-02-18.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -336,6 +336,7 @@ _koopa_complete() { # {{{1
                     then
                         args+=(
                             'defaults'
+                            'microsoft-office'
                         )
                     fi
                     ;;
