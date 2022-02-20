@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-02-18"
+koopa-date="2022-02-20"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -311,11 +311,11 @@ rbenv="1.1.2"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="2021.09.2+382"
+rstudio-server="2022.02.0+443"
 
 # https://www.rstudio.com/products/rstudio/download-commercial/
 # https://docs.rstudio.com/rsw/installation/
-rstudio-workbench="2021.09.2-382.pro1"
+rstudio-workbench="2022.02.0+443.pro2"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="3.1.0p0"
