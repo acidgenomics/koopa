@@ -1,6 +1,7 @@
 #!/usr/bin/env R
 
 #' Shared R profile configuration.
+#'
 #' @note Updated 2022-02-22.
 #'
 #' @section Restarting R:
@@ -61,6 +62,14 @@ local({  # nolint
         "macos" = identical(dict[["sysname"]], "Darwin"),
         "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))
     )
+
+    ## Secrets {{{2
+    ## -------------------------------------------------------------------------
+
+    ## Load per-user secrets that we don't want to save in a shared Renviron.
+    if (isTRUE(file.exists(dict[["secretsFile"]]))) {
+        source(dict[["secretsFile"]])
+    }
 
     ## Functions {{{2
     ## -------------------------------------------------------------------------
@@ -155,15 +164,6 @@ local({  # nolint
             )))))
         }
     }
-
-    ## RStudio {{{2
-    ## -------------------------------------------------------------------------
-
-    ## Fix file permissions. RStudio doesn't pick up the system umask.
-    ## Note that we're allowing group write here by default.
-    ## > if (isTRUE(flag[["rstudio"]])) {
-    ## >     Sys.umask("0002")
-    ## > }
 
     ## Package installation {{{2
     ## -------------------------------------------------------------------------
@@ -541,12 +541,63 @@ local({  # nolint
         options("tidyverse.quiet" = TRUE)
     }
 
-    ## Secrets {{{2
+    ## RStudio {{{2
     ## -------------------------------------------------------------------------
 
-    ## Load per-user secrets that we don't want to save in a shared Renviron.
-    if (isTRUE(file.exists(dict[["secretsFile"]]))) {
-        source(dict[["secretsFile"]])
+    ## Fix file permissions. RStudio doesn't pick up the system umask.
+    ## Note that we're allowing group write here by default.
+    ## > if (isTRUE(flag[["rstudio"]])) {
+    ## >     Sys.umask("0002")
+    ## > }
+
+    ## Automatic dark/light theme handling (Experimental) {{{3
+    ## -------------------------------------------------------------------------
+
+    ## See also:
+    ## - https://github.com/gadenbuie/rsthemes
+    ## - https://github.com/gadenbuie/rsthemes/issues/6
+
+    ## These values are currently defined in secrets file.
+    dict[["theme_dark"]] <- Sys.getenv("RSTUDIO_THEME_DARK")
+    dict[["theme_light"]] <- Sys.getenv("RSTUDIO_THEME_LIGHT")
+
+    if (
+        isTRUE(flag[["interactive"]]) &&
+        isTRUE(flag[["rstudio"]]) &&
+        isTRUE(flag[["macos"]]) &&
+        isTRUE(nzchar(dict[["theme_dark"]])) &&
+        isTRUE(nzchar(dict[["theme_light"]])) &&
+        all(isInstalled(c("later", "rstudioapi")))
+    ) {
+        autoDark <- function() {
+            themes <- c(
+                "dark" = dict[["theme_dark"]],
+                "light" = dict[["theme_light"]]
+            )
+            ## This returns "Dark" for Dark Mode; errors for Light Mode.
+            colorMode <- try({
+                suppressWarnings({
+                    system2(
+                        command = "defaults",
+                        args = c(
+                            "read",
+                            "NSGlobalDomain",
+                            "AppleInterfaceStyle"
+                        ),
+                        stdout = TRUE,
+                        stderr = FALSE
+                    )
+                })
+            })
+            colorMode <- ifelse(
+                test = identical(colorMode, "Dark"),
+                yes = "dark",
+                no = "light"
+            )
+            rstudioapi::applyTheme(themes[[colorMode]])
+            invisible(colorMode)
+        }
+        later::later(func = autoDark, delay = 1L)
     }
 
     ## Session info {{{2
