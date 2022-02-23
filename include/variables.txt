@@ -88,10 +88,8 @@ clang="11.0.0"
 # https://cmake.org/download/
 cmake="3.22.2"
 
-# https://docs.conda.io/
-# https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
-# https://docs.conda.io/projects/conda/en/latest/user-guide/install/
-conda="4.10.3"  # 2021-07-21
+# https://repo.anaconda.com/miniconda/
+conda="4.11.0"  # 2022-02-15
 
 # https://www.gnu.org/software/coreutils/
 coreutils="9.0"
@@ -215,7 +213,7 @@ luarocks="3.8.0"
 make="4.3"
 
 # https://github.com/mamba-org/mamba/tags/
-mamba="0.21.0"
+mamba="0.21.1"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.3.20211021"
