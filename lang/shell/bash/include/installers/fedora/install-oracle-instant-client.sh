@@ -18,8 +18,18 @@ koopa:::fedora_install_oracle_instant_client() { # {{{1
         [version]="${INSTALL_VERSION:?}"
     )
     # e.g. '21.1.0.0.0-1' to '211000'.
-    dict[version2]="$(koopa::sub '-[0-9]+$' '' "${dict[version]}")"
-    dict[version2]="$(koopa::gsub '\.' '' "${dict[version2]}")"
+    dict[version2]="$( \
+        koopa::sub \
+            --pattern='-[0-9]+$' \
+            --replacement='' \
+            "${dict[version]}" \
+    )"
+    dict[version2]="$( \
+        koopa::gsub \
+            --pattern='\.' \
+            --replacement='' \
+            "${dict[version2]}" \
+    )"
     dict[url_prefix]="https://download.oracle.com/otn_software/\
 ${dict[platform]}/instantclient/${dict[version2]}"
     koopa::fedora_dnf_install 'libaio-devel'

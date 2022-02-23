@@ -420,7 +420,12 @@ koopa::aws_s3_list_large_files() { # {{{1
         '--bucket' "${dict[bucket]}" \
         '--num' "${dict[num]}" \
         '--profile' "${dict[profile]}"
-    dict[bucket]="$(koopa::sub 's3://' '' "${dict[bucket]}")"
+    dict[bucket]="$( \
+        koopa::sub \
+            --pattern='s3://' \
+            --replacement='' \
+            "${dict[bucket]}" \
+    )"
     dict[bucket]="$(koopa::strip_trailing_slash "${dict[bucket]}")"
     dict[str]="$( \
         "${app[aws]}" --profile="${dict[profile]}" \

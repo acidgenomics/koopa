@@ -498,7 +498,12 @@ koopa::debian_apt_add_r_repo() { # {{{1
             dict[version2]='3.5'
             ;;
     esac
-    dict[version2]="$(koopa::gsub '\.' '' "${dict[version2]}")"
+    dict[version2]="$( \
+        koopa::gsub \
+            --pattern='\.' \
+            --replacement='' \
+            "${dict[version2]}" \
+    )"
     dict[url]="https://cloud.r-project.org/bin/linux/${dict[os_id]}"
     dict[distribution]="${dict[os_codename]}-cran${dict[version2]}/"
     koopa::debian_apt_add_r_key

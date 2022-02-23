@@ -104,7 +104,11 @@ koopa::install_cmake() { # {{{1
 }
 
 koopa::install_conda() { # {{{1
-    koopa::install_miniconda "$@"
+    koopa::install_app \
+        --name-fancy='Miniconda' \
+        --name='conda' \
+        --no-link \
+        "$@"
 }
 
 koopa::install_coreutils() { # {{{1
@@ -388,12 +392,7 @@ koopa::install_mamba() { # {{{1
 }
 
 koopa::install_miniconda() { # {{{1
-    koopa::install_app \
-        --installer='miniconda' \
-        --name-fancy='Miniconda' \
-        --name='conda' \
-        --no-link \
-        "$@"
+    koopa::install_conda "$@"
 }
 
 koopa::install_ncurses() { # {{{1
@@ -804,7 +803,11 @@ koopa::uninstall_cmake() { # {{{1
 }
 
 koopa::uninstall_conda() { # {{{1
-    koopa::uninstall_miniconda "$@"
+    koopa::uninstall_app \
+        --name-fancy='Miniconda' \
+        --name='conda' \
+        --no-link \
+        "$@"
 }
 
 koopa::uninstall_coreutils() { # {{{1
@@ -1073,12 +1076,7 @@ koopa::uninstall_make() { # {{{1
 }
 
 koopa::uninstall_miniconda() { # {{{1
-    koopa::uninstall_app \
-        --name-fancy='Miniconda' \
-        --name='conda' \
-        --no-link \
-        --uninstaller='miniconda' \
-        "$@"
+    koopa::uninstall_conda "$@"
 }
 
 koopa::uninstall_ncurses() { # {{{1

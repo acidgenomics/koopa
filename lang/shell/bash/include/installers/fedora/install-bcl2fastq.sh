@@ -20,7 +20,12 @@ koopa:::fedora_install_bcl2fastq_from_rpm() { # {{{
     dict[platform2]="$(koopa::capitalize "${dict[platform]}")"
     dict[maj_ver]="$(koopa::major_version "${dict[version]}")"
     # e.g. '2.20.0.422' to '2-20-0'.
-    dict[version2]="$(koopa::sub '\.[0-9]+$' '' "${dict[version]}")"
+    dict[version2]="$( \
+        koopa::sub \
+            --pattern='\.[0-9]+$' \
+            --replacement='' \
+            "${dict[version]}" \
+    )"
     dict[version2]="$(koopa::kebab_case_simple "${dict[version2]}")"
     dict[file]="${dict[name]}${dict[maj_ver]}-v${dict[version2]}-\
 ${dict[platform]}-${dict[arch2]}.zip"

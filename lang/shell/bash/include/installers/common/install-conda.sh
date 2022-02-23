@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-koopa:::install_miniconda() { # {{{1
+koopa:::install_conda() { # {{{1
     # """
-    # Install Miniconda, including Mamba in base environment.
-    # @note Updated 2022-01-25.
+    # Install Miniconda.
+    # @note Updated 2022-02-23.
+    #
+    # Optionally, can include Mamba in base environment using '--with-mamba'.
     # """
     local app dict
     declare -A app=(
@@ -13,8 +15,6 @@ koopa:::install_miniconda() { # {{{1
         [arch]="$(koopa::arch)"
         [koopa_prefix]="$(koopa::koopa_prefix)"
         [mamba]=0
-        [name2]='Miniconda'
-        [name]='miniconda'
         [os_type]="$(koopa::os_type)"
         [prefix]="${INSTALL_PREFIX:?}"
         [py_version]="$(koopa::variable 'python')"
@@ -71,11 +71,13 @@ koopa:::install_miniconda() { # {{{1
     dict[py_major_version]="$(koopa::major_version "${dict[py_version]}")"
     dict[py_version2]="$( \
         koopa::gsub \
-            '\.' '' "$(koopa::major_minor_version "${dict[py_version]}")" \
+            --pattern='\.' \
+            --replacement='' \
+            "$(koopa::major_minor_version "${dict[py_version]}")" \
     )"
-    dict[script]="${dict[name2]}${dict[py_major_version]}-\
+    dict[script]="Miniconda${dict[py_major_version]}-\
 py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch]}.sh"
-    dict[url]="https://repo.continuum.io/${dict[name]}/${dict[script]}"
+    dict[url]="https://repo.continuum.io/miniconda/${dict[script]}"
     koopa::download "${dict[url]}" "${dict[script]}"
     "${app[bash]}" "${dict[script]}" -bf -p "${dict[prefix]}"
     koopa::ln \
