@@ -68,6 +68,8 @@ koopa::test_find_files() { # {{{1
     koopa::print "${files[@]}"
 }
 
+# FIXME Double check that change to koopa::print works here.
+
 koopa::test_find_files_by_ext() { # {{{1
     # """
     # Find relevant test files by extension.
@@ -81,10 +83,10 @@ koopa::test_find_files_by_ext() { # {{{1
     dict[pattern]="\.${dict[ext]}$"
     readarray -t all_files <<< "$(koopa::test_find_files)"
     dict[files]="$( \
-        printf '%s\n' "${all_files[@]}" \
+        koopa::print "${all_files[@]}" \
         | koopa::grep \
             --extended-regexp \
-            "${dict[pattern]}" \
+            --pattern="${dict[pattern]}" \
         || true \
     )"
     if [[ -z "${dict[files]}" ]]
@@ -117,8 +119,8 @@ koopa::test_find_files_by_shebang() { # {{{1
         [[ -s "$file" ]] || continue
         # Avoid 'command substitution: ignored null byte in input' warning.
         shebang="$( \
-            "${app[tr]}" -d '\0' < "$file" \
-                | "${app[head]}" -n 1 \
+            "${app[tr]}" --delete '\0' < "$file" \
+                | "${app[head]}" --lines=1 \
         )"
         [[ -n "$shebang" ]] || continue
         if koopa::str_detect_regex \

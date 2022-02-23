@@ -249,10 +249,10 @@ koopa::local_ip_address() { # {{{1
         # shellcheck disable=SC2016
         str="$( \
             "${app[ifconfig]}" \
-            | koopa::grep 'inet ' \
-            | koopa::grep 'broadcast' \
+            | koopa::grep --pattern='inet ' \
+            | koopa::grep --pattern='broadcast' \
             | "${app[awk]}" '{print $2}' \
-            | "${app[tail]}" -n 1
+            | "${app[tail]}" --lines=1 \
         )"
     else
         app[hostname]="$(koopa::locate_hostname)"
@@ -260,7 +260,7 @@ koopa::local_ip_address() { # {{{1
         str="$( \
             "${app[hostname]}" -I \
             | "${app[awk]}" '{print $1}' \
-            | "${app[head]}" -n 1
+            | "${app[head]}" --lines=1 \
         )"
     fi
     [[ -n "$str" ]] || return 1
@@ -412,8 +412,8 @@ koopa::script_name() { # {{{1
     declare -A dict
     dict[file]="$( \
         caller \
-        | "${app[head]}" -n 1 \
-        | "${app[cut]}" -d ' ' -f 2 \
+        | "${app[head]}" --lines=1 \
+        | "${app[cut]}" --delimiter=' ' --fields='2' \
     )"
     dict[bn]="$(koopa::basename "${dict[file]}")"
     [[ -n "${dict[bn]}" ]] || return 0
@@ -443,15 +443,15 @@ koopa::variable() { # {{{1
     dict[str]="$( \
         koopa::grep \
             --extended-regexp \
+            --file="${dict[file]}" \
             --only-matching \
-            "^${dict[key]}=\"[^\"]+\"" \
-            "${dict[file]}" \
+            --pattern="^${dict[key]}=\"[^\"]+\"" \
         || koopa::stop "'${dict[key]}' not defined in '${dict[file]}'." \
     )"
     dict[str]="$( \
         koopa::print "${dict[str]}" \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d '"' -f 2 \
+            | "${app[head]}" --lines=1 \
+            | "${app[cut]}" --delimiter='"' --fields='2' \
     )"
     [[ -n "${dict[str]}" ]] || return 1
     koopa::print "${dict[str]}"

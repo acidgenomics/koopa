@@ -45,7 +45,7 @@ main() { # {{{1
         fi
         readarray -t tests <<< "$( \
             declare -F \
-                | "${app[cut]}" --delimiter=' ' --fields=3 \
+                | "${app[cut]}" --delimiter=' ' --fields='3' \
                 | "${app[grep]}" --extended-regexp '^test_' \
                 | "${app[sort]}" \
         )"

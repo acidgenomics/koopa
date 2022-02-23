@@ -495,7 +495,7 @@ koopa::find_and_replace_in_files() { # {{{1
     for file in "$@"
     do
         koopa::alert "$file"
-        "${app[sed]}" -i "s/${dict[from]}/${dict[to]}/g" "$file"
+        "${app[sed]}" --in-place "s/${dict[from]}/${dict[to]}/g" "$file"
     done
     return 0
 }
