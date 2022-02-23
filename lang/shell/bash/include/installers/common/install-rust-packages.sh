@@ -3,10 +3,17 @@
 koopa:::install_rust_packages() { # {{{1
     # """
     # Install Rust packages.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-02-23.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
+    #
+    # @section Useful development packages (without binaries):
+    #
+    # - crossbeam
+    # - hyper
+    # - rayon
+    # - tide
     #
     # install-update now supported:
     # - https://stackoverflow.com/questions/34484361
@@ -20,6 +27,7 @@ koopa:::install_rust_packages() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::activate_rust
     declare -A app=(
+        [brew]="$(koopa::locate_brew 2>/dev/null || true)"
         [cargo]="$(koopa::locate_cargo)"
         [rustc]="$(koopa::locate_rustc)"
     )
@@ -28,25 +36,30 @@ koopa:::install_rust_packages() { # {{{1
         [root]="${INSTALL_PREFIX:?}"
     )
     pkgs=(
-        # Currently failing to build due to cachedir constraint.
-        # https://github.com/phiresky/ripgrep-all/issues/88
-        # > 'ripgrep-all'
-        'bat'
-        'broot'
         'cargo-outdated'
         'cargo-update'
-        'du-dust'
-        'exa'
-        'fd-find'
-        'hyperfine'
-        'mcfly'
-        'procs'
-        'ripgrep'
-        'starship'
-        'tokei'
-        'xsv'
-        'zoxide'
     )
+    if [[ ! -x "${app[brew]}" ]]
+    then
+        pkgs+=(
+            # Currently failing to build due to cachedir constraint.
+            # https://github.com/phiresky/ripgrep-all/issues/88
+            # > 'ripgrep-all'
+            'bat'
+            'broot'
+            'du-dust'
+            'exa'
+            'fd-find'
+            'hyperfine'
+            'mcfly'
+            'procs'
+            'ripgrep'
+            'starship'
+            'tokei'
+            'xsv'
+            'zoxide'
+        )
+    fi
     koopa::dl 'Packages' "$(koopa::to_string "${pkgs[@]}")"
     # Can use '--force' flag here to force reinstall.
     pkg_args=(

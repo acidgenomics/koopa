@@ -53,6 +53,7 @@ _koopa_posix_header() { # {{{1
         _koopa_activate_julia || return 1
         _koopa_activate_perl || return 1
         _koopa_activate_python || return 1
+        _koopa_activate_pipx || return 1
         _koopa_activate_rust || return 1
         _koopa_activate_nextflow || return 1
         if _koopa_is_linux

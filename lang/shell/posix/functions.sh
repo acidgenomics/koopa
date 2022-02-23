@@ -1004,18 +1004,18 @@ _koopa_activate_perlbrew() { # {{{1
 _koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
-    # @note Updated 2021-04-23.
+    # @note Updated 2022-02-23.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
     # """
     local prefix
-    _koopa_is_installed 'pipx' || return 0
     prefix="$(_koopa_pipx_prefix)"
+    [ -d "$prefix" ] || return 0
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
-    _koopa_add_to_path_start "$PIPX_BIN_DIR"
     export PIPX_HOME PIPX_BIN_DIR
+    _koopa_add_to_path_start "$PIPX_BIN_DIR"
     return 0
 }
 
