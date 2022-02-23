@@ -36,7 +36,7 @@ koopa:::install_bash() { # {{{1
 ${dict[name]}-${dict[maj_min_ver]}-patches"
     dict[n_patches]="$( \
         koopa::major_minor_patch_version "${dict[version]}" \
-        | "${app[cut]}" -d '.' -f 3 \
+        | "${app[cut]}" --delimiter='.' --fields='3' \
     )"
     dict[file]="${dict[name]}-${dict[maj_min_ver]}.tar.gz"
     dict[url]="${dict[gnu_mirror]}/${dict[name]}/${dict[file]}"
@@ -56,7 +56,7 @@ ${dict[name]}-${dict[maj_min_ver]}-patches"
         # mmv_tr: trimmed major minor version.
         dict[mmv_tr]="$( \
             koopa::print "${dict[maj_min_ver]}" \
-            | "${app[tr]}" -d '.' \
+            | "${app[tr]}" --delete '.' \
         )"
         dict[patch_range]="$(printf '%03d-%03d' '1' "${dict[n_patches]}")"
         dict[patch_request_urls]="${dict[patch_base_url]}/\

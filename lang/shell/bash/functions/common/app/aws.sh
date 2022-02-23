@@ -176,7 +176,7 @@ koopa::aws_s3_cp_regex() { # {{{1
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
     #
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-23.
     #
     # @seealso
     # - aws s3 cp help
@@ -187,7 +187,10 @@ koopa::aws_s3_cp_regex() { # {{{1
         [aws]="$(koopa::locate_aws)"
     )
     declare -A dict=(
+        [pattern]=''
         [profile]="${AWS_PROFILE:-}"
+        [source_prefix]=''
+        [target_prefix]=''
     )
     [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     while (("$#"))
@@ -195,35 +198,35 @@ koopa::aws_s3_cp_regex() { # {{{1
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--pattern='*)
-                pattern="${1#*=}"
+                dict[pattern]="${1#*=}"
                 shift 1
                 ;;
             '--pattern')
-                pattern="${2:?}"
+                dict[pattern]="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
-                profile="${1#*=}"
+                dict[profile]="${1#*=}"
                 shift 1
                 ;;
             '--profile')
-                profile="${2:?}"
+                dict[profile]="${2:?}"
                 shift 2
                 ;;
             '--source_prefix='*)
-                source_prefix="${1#*=}"
+                dict[source_prefix]="${1#*=}"
                 shift 1
                 ;;
             '--source_prefix')
-                source_prefix="${2:?}"
+                dict[source_prefix]="${2:?}"
                 shift 2
                 ;;
             '--target_prefix='*)
-                target_prefix="${1#*=}"
+                dict[target_prefix]="${1#*=}"
                 shift 1
                 ;;
             '--target_prefix')
-                target_prefix="${2:?}"
+                dict[target_prefix]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -233,10 +236,10 @@ koopa::aws_s3_cp_regex() { # {{{1
         esac
     done
     koopa::assert_is_set \
-        '--pattern' "${dict[pattern]:-}" \
-        '--profile or AWS_PROFILE' "${dict[profile]:-}" \
-        '--source-prefix' "${dict[source_prefix]:-}" \
-        '--target-prefix' "${dict[target_prefix]:-}"
+        '--pattern' "${dict[pattern]}" \
+        '--profile or AWS_PROFILE' "${dict[profile]}" \
+        '--source-prefix' "${dict[source_prefix]}" \
+        '--target-prefix' "${dict[target_prefix]}"
     "${app[aws]}" --profile="${dict[profile]}" \
         s3 cp \
             --exclude='*' \
@@ -248,11 +251,12 @@ koopa::aws_s3_cp_regex() { # {{{1
     return 0
 }
 
+# FIXME Need to harden against user input, ensure they put in pattern here.
 koopa::aws_s3_find() { # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
-    # @note Updated 2021-11-05.
+    # @note Updated 2022-02-23.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
@@ -263,7 +267,7 @@ koopa::aws_s3_find() { # {{{1
     #     --exclude='antisense' \
     #     's3://bioinfo/igv/'
     # """
-    local dict pos x
+    local dict pos str
     koopa::assert_has_args "$#"
     declare -A dict=(
         [exclude]=''
@@ -311,48 +315,46 @@ koopa::aws_s3_find() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    x="$( \
+    str="$( \
         koopa::aws_s3_ls \
         --profile="${dict[profile]}" \
         --recursive \
         "$@" \
     )"
-    if [[ -z "$x" ]]
+    if [[ -z "$str" ]]
     then
-        koopa::warn 'Failed to recursively list any files.'
-        return 1
+        koopa::stop 'Failed to recursively list any files.'
     fi
     # Exclude pattern.
     if [[ -n "${dict[exclude]}" ]]
     then
-        x="$( \
-            koopa::print "$x" \
-                | koopa::grep \
-                    --extended-regexp \
-                    --invert-match \
-                    "${dict[exclude]}" \
+        str="$( \
+            koopa::grep \
+                --extended-regexp \
+                --invert-match \
+                --pattern="${dict[exclude]}" \
+                --string="$str" \
         )"
-        if [[ -z "$x" ]]
+        if [[ -z "$str" ]]
         then
-            koopa::warn "No files left with '--exclude' argument."
-            return 1
+            koopa::stop "No files left with '--exclude' argument."
         fi
     fi
     # Include pattern.
     if [[ -n "${dict[include]}" ]]
     then
-        x="$( \
-            koopa::print "$x" \
-                | koopa::grep \
-                    --extended-regexp "${dict[include]}" \
+        str="$( \
+            koopa::grep \
+                --extended-regexp \
+                --pattern="${dict[include]}" \
+                --string="$str" \
         )"
-        if [[ -z "$x" ]]
+        if [[ -z "$str" ]]
         then
-            koopa::warn "No files left with '--include' argument."
-            return 1
+            koopa::stop "No files left with '--include' argument."
         fi
     fi
-    koopa::print "$x"
+    koopa::print "$str"
     return 0
 }
 
@@ -432,10 +434,14 @@ koopa::aws_s3_list_large_files() { # {{{1
     return 0
 }
 
+# FIXME Rework flags here.
+# FIXME Rework 'x' as 'str' here.
+# FIXME Rework grep calls here.
+
 koopa::aws_s3_ls() { # {{{1
     # """
     # List an AWS S3 bucket.
-    # @note Updated 2021-11-05.
+    # @note Updated 2022-02-23.
     #
     # @seealso
     # - aws s3 ls help
@@ -452,7 +458,7 @@ koopa::aws_s3_ls() { # {{{1
     # # Directories only:
     # koopa::aws_s3_ls --type='d' "$prefix"
     # """
-    local app dict flags pos x
+    local app dict ls_args pos str
     declare -A app=(
         [awk]="$(koopa::locate_awk)"
         [aws]="$(koopa::locate_aws)"
@@ -465,7 +471,7 @@ koopa::aws_s3_ls() { # {{{1
         [type]=''
     )
     [[ -z "${dict[profile]}" ]] && dict[profile]='default'
-    flags=()
+    ls_args=()
     pos=()
     while (("$#"))
     do
@@ -498,7 +504,6 @@ koopa::aws_s3_ls() { # {{{1
             # Flags ------------------------------------------------------------
             '--recursive')
                 dict[recursive]=1
-                flags+=('--recursive')
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -512,6 +517,11 @@ koopa::aws_s3_ls() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "$#" -gt 0 ]]
+    then
+        koopa::assert_has_args_eq "$#" 1
+        dict[prefix]="${1:?}"
+    fi
     # Don't allow '--type' argument when '--recursive' flag is set.
     if [[ "${dict[recursive]}" -eq 1 ]] && \
         [[ -n "${dict[type]}" ]]
@@ -535,10 +545,7 @@ koopa::aws_s3_ls() { # {{{1
             koopa::stop "Unsupported type: '${dict[type]}'."
             ;;
     esac
-    if [[ "$#" -gt 0 ]]
-    then
-        dict[prefix]="${1:?}"
-    fi
+    [[ "${dict[recursive]}" -eq 1 ]] && ls_args+=('--recursive')
     if [[ "${dict[prefix]}" != 's3://' ]]
     then
         dict[prefix]="$(koopa::strip_trailing_slash "${dict[prefix]}")"
@@ -551,31 +558,31 @@ koopa::aws_s3_ls() { # {{{1
     then
         dict[prefix]="s3://${dict[prefix]}"
     fi
-    x="$( \
+    str="$( \
         "${app[aws]}" --profile="${dict[profile]}" \
-            s3 ls "${flags[@]}" "${dict[prefix]}" \
+            s3 ls "${ls_args[@]}" "${dict[prefix]}" \
     )"
     if [[ "$#" -eq 0 ]]
     then
-        koopa::print "$x"
+        koopa::print "$str"
     fi
     # Recursive mode. Note that in this mode, 'aws s3 ls' returns the full path
     # after the bucket name.
     if [[ "${dict[recursive]}" -eq 1 ]]
     then
         dict[bucket_prefix]="$( \
-            koopa::print "${dict[prefix]}" \
-                | koopa::grep \
-                    --extended-regexp \
-                    --only-matching \
-                    '^s3://[^/]+' \
+            koopa::grep \
+                --extended-regexp \
+                --only-matching \
+                --pattern='^s3://[^/]+' \
+                --string="${dict[prefix]}" \
         )"
         files="$( \
-            koopa::print "$x" \
-                | koopa::grep \
-                    --extended-regexp \
-                    '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
-                || true \
+            koopa::grep \
+                --extended-regexp \
+                --pattern='^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+                --string="$str" \
+            || true \
         )"
         [[ -n "$files" ]] || return 0
         files="$( \
@@ -592,12 +599,12 @@ koopa::aws_s3_ls() { # {{{1
     if [[ "${dict[dirs]}" -eq 1 ]]
     then
         dirs="$( \
-            koopa::print "$x" \
-                | koopa::grep \
-                    --extended-regexp \
-                    --only-matching \
-                    '^\s+PRE\s.+/$' \
-                || true \
+            koopa::grep \
+                --extended-regexp \
+                --only-matching \
+                --pattern='^\s+PRE\s.+/$' \
+                --string="$str" \
+            || true \
         )"
         if [[ -n "$dirs" ]]
         then
@@ -614,11 +621,11 @@ koopa::aws_s3_ls() { # {{{1
     if [[ "${dict[files]}" -eq 1 ]]
     then
         files="$( \
-            koopa::print "$x" \
-                | koopa::grep \
-                    --extended-regexp \
-                    '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
-                || true \
+            koopa::grep \
+                --extended-regexp \
+                --pattern='^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+                --string="$str" \
+            || true \
         )"
         if [[ -n "$files" ]]
         then
@@ -639,14 +646,14 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     # """
     # Move objects in an S3 bucket directory to parent directory.
     #
-    # @note Updated 2021-11-05.
+    # @note Updated 2022-02-23.
     #
     # @details
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
     local app dict pos
-    local bn dn1 dn2 file files prefix profile target x
+    local file files prefix
     koopa::assert_has_args "$#"
     declare -A app=(
         [aws]="$(koopa::locate_aws)"
@@ -695,25 +702,27 @@ koopa::aws_s3_mv_to_parent() { # {{{1
     koopa::assert_is_set \
         '--profile or AWS_PROFILE' "${dict[profile]:-}"
         '--prefix' "${dict[prefix]:-}"
-    x="$( \
+    dict[str]="$( \
         koopa::aws_s3_ls \
+            --prefix="${dict[prefix]}" \
             --profile="${dict[profile]}" \
-            "${dict[prefix]}" \
     )"
-    if [[ -z "$x" ]]
+    if [[ -z "${dict[str]}" ]]
     then
-        koopa::warn "Failed to list any files in '${dict[prefix]}'."
-        return 1
+        koopa::stop "Failed to list any files in '${dict[prefix]}'."
     fi
-    readarray -t files <<< "$x"
+    readarray -t files <<< "${dict[str]}"
     for file in "${files[@]}"
     do
-        bn="$(koopa::basename "$file")"
-        dn1="$(koopa::dirname "$file")"
-        dn2="$(koopa::dirname "$dn1")"
-        target="${dn2}/${bn}"
+        local dict2
+        declare -A dict2=(
+            [bn]="$(koopa::basename "$file")"
+            [dn1]="$(koopa::dirname "$file")"
+        )
+        dict2[dn2]="$(koopa::dirname "${dict2[dn1]}")"
+        dict2[target]="${dict2[dn2]}/${dict2[bn]}"
         "${app[aws]}" --profile="${dict[profile]}" \
-            s3 mv "$file" "$target"
+            s3 mv "${dict2[file]}" "${dict2[target]}"
     done
     return 0
 }
@@ -756,8 +765,8 @@ koopa::aws_s3_sync() { # {{{1
     # Currently ignores:
     # - Invisible dot files, prefixed with '.'.
     # - Temporary files.
-    # - *.Rproj directories.
-    # - *.swp files (from vim).
+    # - '*.Rproj' directories.
+    # - '*.swp' files (from vim).
     # """
     local aws dict exclude_args exclude_patterns pattern pos sync_args
     koopa::assert_has_args "$#"

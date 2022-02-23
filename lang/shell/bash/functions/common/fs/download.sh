@@ -95,8 +95,8 @@ koopa::download_cran_latest() { # {{{1
             | koopa::grep \
                 --extended-regexp \
                 --only-matching \
-                "$pattern" \
-            | "${app[head]}" -n 1 \
+                --pattern="$pattern" \
+            | "${app[head]}" --lines=1 \
         )"
         koopa::download "https://cran.r-project.org/src/contrib/${file}"
     done
@@ -119,9 +119,9 @@ koopa::download_github_latest() { # {{{1
         api_url="https://api.github.com/repos/${repo}/releases/latest"
         tarball_url="$( \
             koopa::parse_url "$api_url" \
-            | koopa::grep 'tarball_url' \
-            | "${app[cut]}" -d ':' -f 2,3 \
-            | "${app[tr]}" -d ' ,"' \
+            | koopa::grep --pattern='tarball_url' \
+            | "${app[cut]}" --delimiter=':' --fields='2,3' \
+            | "${app[tr]}" --delete ' ,"' \
         )"
         tag="$(koopa::basename "$tarball_url")"
         koopa::download "$tarball_url" "${tag}.tar.gz"

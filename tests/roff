@@ -58,7 +58,7 @@ main() { # {{{1
         for man_file in "${man_files[@]}"
         do
             if ! koopa::str_detect_regex \
-                --string="$("${app[head]}" -n 1 "$man_file")" \
+                --string="$("${app[head]}" --lines=1 "$man_file")" \
                 --pattern='^\.TH '
             then
                 koopa::alert_note "ERROR: '${man_file}'."
@@ -69,14 +69,15 @@ main() { # {{{1
     # '--help' flag support {{{2
     # --------------------------------------------------------------------------
     koopa::h2 "Running exported script '--help' flag checks."
-    # FIXME Also need to run this for 'sbin' dirs now.
-    # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
+    # FIXME This glob approach works with Rust fd but not GNU find, argh...
+    # FIXME Rethink how we're doing bracketed glob matching...maybe we need
+    # to capture and expand to '-glob XXX -o -glob XXX'...
     readarray -t bin_dirs <<< "$( \
         koopa::find \
             --exclude='.git/*' \
             --exclude='app/*' \
             --exclude='opt/*' \
-            --glob='bin' \
+            --glob='{bin,sbin}' \
             --min-depth=1 \
             --prefix="${dict[koopa_prefix]}" \
             --sort \

@@ -183,15 +183,17 @@ koopa::git_clone() { # {{{1
     return 0
 }
 
+# FIXME Confirm that this works, after changing our 'koopa::grep' approach.
+
 koopa::git_default_branch() { # {{{1
     # """
     # Default branch of Git repository.
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-02-23.
     #
     # Alternate approach:
     # > x="$( \
-    # >     git symbolic-ref "refs/remotes/${remote}/HEAD" \
-    # >         | sed "s@^refs/remotes/${remote}/@@" \
+    # >     "${app[git]}" symbolic-ref "refs/remotes/${remote}/HEAD" \
+    # >         | "${app[sed]}" "s@^refs/remotes/${remote}/@@" \
     # > )"
     #
     # @seealso
@@ -223,7 +225,7 @@ koopa::git_default_branch() { # {{{1
             koopa::is_git_repo || return 1
             x="$( \
                 "${app[git]}" remote show "${dict[remote]}" \
-                    | koopa::grep 'HEAD branch' \
+                    | koopa::grep --pattern='HEAD branch' \
                     | "${app[sed]}" 's/.*: //' \
             )"
             [[ -n "$x" ]] || return 1
@@ -302,7 +304,7 @@ koopa::git_last_commit_remote() { # {{{1
         # shellcheck disable=SC2016
         x="$( \
             "${app[git]}" ls-remote --quiet "$url" "${dict[ref]}" \
-            | "${app[head]}" -n 1 \
+            | "${app[head]}" --lines=1 \
             | "${app[awk]}" '{ print $1 }' \
         )"
         [[ -n "$x" ]] || return 1

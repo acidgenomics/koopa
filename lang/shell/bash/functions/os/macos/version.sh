@@ -19,9 +19,9 @@ koopa::get_macos_app_version() { # {{{1
         # shellcheck disable=SC2016
         x="$( \
             "${app[plutil]}" -p "$plist" \
-                | koopa::grep 'CFBundleShortVersionString' \
+                | koopa::grep --pattern='CFBundleShortVersionString' - \
                 | "${app[awk]}" -F ' => ' '{print $2}' \
-                | "${app[tr]}" -d '\"' \
+                | "${app[tr]}" --delete '\"' \
         )"
         [[ -n "$x" ]] || return 1
         koopa::print "$x"

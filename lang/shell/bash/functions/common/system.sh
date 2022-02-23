@@ -69,11 +69,11 @@ koopa::help() { # {{{1
         [man_file]="${1:?}"
     )
     koopa::assert_is_file "${dict[man_file]}"
-    "${app[head]}" -n 10 "${dict[man_file]}" \
-        | koopa::str_detect_fixed - --pattern='.TH ' \
+    "${app[head]}" --lines=10 "${dict[man_file]}" \
+        | koopa::str_detect_fixed --pattern='.TH ' \
         || koopa::stop "Invalid documentation at '${dict[man_file]}'."
     "${app[man]}" "${dict[man_file]}"
-    exit 0
+    return 0
 }
 
 koopa::info_box() { # {{{1
@@ -407,6 +407,9 @@ koopa::sys_rm() { # {{{1
     return 0
 }
 
+# FIXME Ensure that directories are ugo +x....
+# FIXME ./app/julia-packages/1.6/registries/General failing
+
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
@@ -679,7 +682,7 @@ koopa::view_latest_tmp_log_file() { # {{{1
             --prefix="${dict[tmp_dir]}" \
             --sort \
             --type='f' \
-        | "${app[tail]}" -n 1 \
+        | "${app[tail]}" --lines=1 \
     )"
     if [[ ! -f "${dict[log_file]}" ]]
     then

@@ -22,8 +22,15 @@ koopa::camel_case_simple() { # {{{1
     )
     for str in "$@"
     do
-        koopa::print "$str" \
-            | "${app[sed]}" --regexp-extended 's/([ -_])([a-z])/\U\2/g'
+        [[ -n "$str" ]] || return 1
+        str="$( \
+            koopa::print "$str" \
+                | "${app[sed]}" \
+                    --regexp-extended \
+                    's/([ -_])([a-z])/\U\2/g' \
+        )"
+        [[ -n "$str" ]] || return 1
+        koopa::print "$str"
     done
     return 0
 }
@@ -192,7 +199,7 @@ koopa::paste0() { # {{{1
 koopa::snake_case_simple() { # {{{1
     # """
     # Simple snake case function.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-02-23.
     #
     # @seealso
     # - syntactic R package.
@@ -411,7 +418,8 @@ koopa::sub() { # {{{1
     for str in "$@"
     do
         koopa::print "$str" \
-            | "${app[sed]}" --regexp-extended \
+            | "${app[sed]}" \
+                --regexp-extended \
                 "s|${dict[pattern]}|${dict[replacement]}|${dict[sed_tail]}"
     done
     return 0

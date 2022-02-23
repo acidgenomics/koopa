@@ -135,7 +135,7 @@ koopa::basename_sans_ext2() { # {{{1
         then
             str="$( \
                 koopa::print "$str" \
-                | "${app[cut]}" -d '.' -f 1 \
+                | "${app[cut]}" --delimiter='.' --fields='1' \
             )"
         fi
         koopa::print "$str"
@@ -329,7 +329,7 @@ koopa::dirname() { # {{{1
 koopa::ensure_newline_at_end_of_file() { # {{{1
     # """
     # Ensure output CSV contains trailing line break.
-    # @note Updated 2021-11-04.
+    # @note Updated 2022-02-23.
     #
     # Otherwise 'readr::read_csv()' will skip the last line in R.
     # https://unix.stackexchange.com/questions/31947
@@ -348,7 +348,7 @@ koopa::ensure_newline_at_end_of_file() { # {{{1
     declare -A dict=(
         [file]="${1:?}"
     )
-    [[ -n "$("${app[tail]}" -c1 "${dict[file]}")" ]] || return 0
+    [[ -n "$("${app[tail]}" --bytes=1 "${dict[file]}")" ]] || return 0
     printf '\n' >> "${dict[file]}"
     return 0
 }
@@ -439,7 +439,7 @@ koopa::file_ext2() { # {{{1
         then
             x="$( \
                 koopa::print "$file" \
-                | "${app[cut]}" -d '.' -f '2-' \
+                | "${app[cut]}" --delimiter='.' --fields='2-' \
             )"
         else
             x=''
@@ -468,7 +468,7 @@ koopa::line_count() { # {{{1
         str="$( \
             "${app[wc]}" --lines "$file" \
                 | "${app[xargs]}" --no-run-if-empty \
-                | "${app[cut]}" --delimiter=' ' --fields=1 \
+                | "${app[cut]}" --delimiter=' ' --fields='1' \
         )"
         [[ -n "$str" ]] || return 1
         koopa::print "$str"
@@ -520,11 +520,11 @@ koopa::nfiletypes() { # {{{1
             --min-depth 1 \
             --type 'f' \
             --regex '^.+\.[A-Za-z0-9]+$' \
-        | "${app[sed]}" 's/.*\.//' \
+        | "${app[sed]}" --quiet 's/.*\.//' \
         | "${app[sort]}" \
         | "${app[uniq]}" --count \
         | "${app[sort]}" --numeric-sort \
-        | "${app[sed]}" 's/^ *//g' \
+        | "${app[sed]}" --quiet 's/^ *//g' \
         | "${app[sed]}" 's/ /\t/g' \
     )"
     [[ -n "${dict[out]}" ]] || return 1

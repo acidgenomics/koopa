@@ -124,7 +124,7 @@ koopa::conda_create_env() { # {{{1
         # Ensure we handle edge case of '<NAME>=<VERSION>=<BUILD>' here.
         dict[env_name]="$( \
             koopa::print "${dict[env_string]//=/@}" \
-            | "${app[cut]}" -d '@' -f '1-2' \
+            | "${app[cut]}" --delimiter='@' --fields='1-2' \
         )"
         dict[env_prefix]="${dict[conda_prefix]}/envs/${dict[env_name]}"
         if [[ -d "${dict[env_prefix]}" ]]
@@ -190,7 +190,7 @@ koopa::conda_env_latest_version() { # {{{1
     # shellcheck disable=SC2016
     str="$( \
         "${app[conda]}" search --quiet "${dict[env_name]}" \
-            | "${app[tail]}" -n 1 \
+            | "${app[tail]}" --lines=1 \
             | "${app[awk]}" '{print $2}'
     )"
     [[ -n "$str" ]] || return 1
@@ -216,7 +216,7 @@ koopa::conda_env_list() { # {{{1
 koopa::conda_env_prefix() { # {{{1
     # """
     # Return prefix for a specified conda environment.
-    # @note Updated 2022-01-17.
+    # @note Updated 2022-02-23.
     #
     # Attempt to locate by default path first, which is the fastest approach.
     #
@@ -254,8 +254,9 @@ koopa::conda_env_prefix() { # {{{1
         dict[env_list]="$(koopa::conda_env_list)"
     fi
     dict[env_list2]="$( \
-        koopa::print "${dict[env_list]}" \
-            | koopa::grep "${dict[env_name]}" \
+        koopa::grep \
+            --pattern="${dict[env_name]}" \
+            --string="${dict[env_list]}" \
     )"
     if [[ -z "${dict[env_list2]}" ]]
     then
@@ -263,10 +264,12 @@ koopa::conda_env_prefix() { # {{{1
     fi
     # Note that this step attempts to automatically match the latest version.
     dict[env_prefix]="$( \
-        koopa::print "${dict[env_list]}" \
-            | koopa::grep --extended-regexp "/${dict[env_name]}(@[.0-9]+)?\"" \
-            | "${app[tail]}" -n 1 \
-            | "${app[sed]}" -E 's/^.*"(.+)".*$/\1/' \
+        koopa::grep \
+            --extended-regexp \
+            --pattern="/${dict[env_name]}(@[.0-9]+)?\"" \
+            --string="${dict[env_list]}" \
+        | "${app[tail]}" --lines=1 \
+        | "${app[sed]}" --regexp-extended 's/^.*"(.+)".*$/\1/' \
     )"
     if [[ ! -d "${dict[env_prefix]}" ]]
     then

@@ -35,11 +35,14 @@ koopa::macos_brew_cask_outdated() { # {{{
         "${app[brew]}" outdated --cask --greedy >/dev/null
     if [[ "$keep_latest" -eq 1 ]]
     then
-        x="$("${app[cut]}" -d ' ' -f 1 < "$tmp_file")"
+        x="$("${app[cut]}" --delimiter=' ' --fields='1' < "$tmp_file")"
     else
         x="$( \
-            koopa::grep --invert-match '(latest)' "$tmp_file" \
-            | "${app[cut]}" -d ' ' -f 1 \
+            koopa::grep \
+                --file="$tmp_file" \
+                --invert-match \
+                --pattern='(latest)' \
+            | "${app[cut]}" --delimiter=' ' --fields='1' \
         )"
     fi
     koopa::rm "$tmp_file"

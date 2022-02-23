@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Rework all 'x' assignment as 'str' instead.
+
 __koopa_add_to_path_string_end() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
@@ -1314,7 +1316,7 @@ _koopa_activate_tmux_sessions() { # {{{1
     [ -n "$x" ] || return 0
     x="$( \
         _koopa_print "$x" \
-        | cut -d ':' -f 1 \
+        | cut -d ':' -f '1' \
         | tr '\n' ' ' \
     )"
     _koopa_dl 'tmux' "$x"
@@ -2450,7 +2452,7 @@ _koopa_fzf_prefix() { # {{{1
 _koopa_git_branch() { # {{{1
     # """
     # Current git branch name.
-    # @note Updated 2021-08-19.
+    # @note Updated 2022-02-23.
     #
     # Currently used in prompt, so be careful with assert checks.
     #
@@ -2467,19 +2469,16 @@ _koopa_git_branch() { # {{{1
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
-    local branch cut git head
+    local branch
     _koopa_is_git_repo || return 0
-    cut='cut'
-    git='git'
-    head='head'
-    branch="$("$git" branch --show-current 2>/dev/null)"
+    branch="$(git branch --show-current 2>/dev/null)"
     # Keep track of detached HEAD state, similar to starship.
     if [ -z "$branch" ]
     then
         branch="$( \
-            "$git" branch 2>/dev/null \
-            | "$head" -n 1 \
-            | "$cut" -c '3-' \
+            git branch 2>/dev/null \
+            | head -n 1 \
+            | cut -c '3-' \
         )"
     fi
     [ -n "$branch" ] || return 0
@@ -2499,10 +2498,9 @@ _koopa_git_repo_has_unstaged_changes() { # {{{1
     # - https://stackoverflow.com/questions/3878624/
     # - https://stackoverflow.com/questions/28296130/
     # """
-    local git x
-    git='git'
-    "$git" update-index --refresh >/dev/null 2>&1
-    x="$("$git" diff-index 'HEAD' -- 2>/dev/null)"
+    local x
+    git update-index --refresh >/dev/null 2>&1
+    x="$(git diff-index 'HEAD' -- 2>/dev/null)"
     [ -n "$x" ]
 }
 
@@ -2514,10 +2512,9 @@ _koopa_git_repo_needs_pull_or_push() { # {{{1
     # This will return an expected fatal warning when no upstream exists.
     # We're handling this case by piping errors to '/dev/null'.
     # """
-    local git rev_1 rev_2
-    git='git'
-    rev_1="$("$git" rev-parse 'HEAD' 2>/dev/null)"
-    rev_2="$("$git" rev-parse '@{u}' 2>/dev/null)"
+    local rev_1 rev_2
+    rev_1="$(git rev-parse 'HEAD' 2>/dev/null)"
+    rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
     [ "$rev_1" != "$rev_2" ]
 }
 
@@ -2835,14 +2832,12 @@ _koopa_is_fedora_like() { # {{{1
 _koopa_is_git_repo() { # {{{1i
     # """
     # Is the working directory a git repository?
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-02-23.
     # @seealso
     # - https://stackoverflow.com/questions/2180270
     # """
-    local git
-    git='git'
     _koopa_is_git_repo_top_level '.' && return 0
-    "$git" rev-parse --git-dir >/dev/null 2>&1 || return 1
+    git rev-parse --git-dir >/dev/null 2>&1 || return 1
     return 0
 }
 
@@ -3624,17 +3619,16 @@ _koopa_macos_r_prefix() { # {{{1
 _koopa_major_version() { # {{{1
     # """
     # Program 'MAJOR' version.
-    # @note Updated 2021-05-26.
+    # @note Updated 2022-02-23.
     #
     # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
-    local cut version x
-    cut='cut'
+    local version x
     for version in "$@"
     do
         x="$( \
             _koopa_print "$version" \
-            | "$cut" -d '.' -f 1 \
+            | cut -d '.' -f '1' \
         )"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
@@ -3647,13 +3641,12 @@ _koopa_major_minor_version() { # {{{1
     # Program 'MAJOR.MINOR' version.
     # @note Updated 2021-05-26.
     # """
-    local cut version x
-    cut='cut'
+    local version x
     for version in "$@"
     do
         x="$( \
             _koopa_print "$version" \
-            | "$cut" -d '.' -f '1-2' \
+            | cut -d '.' -f '1-2' \
         )"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
@@ -3666,13 +3659,12 @@ _koopa_major_minor_patch_version() { # {{{1
     # Program 'MAJOR.MINOR.PATCH' version.
     # @note Updated 2021-05-26.
     # """
-    local cut version x
-    cut='cut'
+    local version x
     for version in "$@"
     do
         x="$( \
             _koopa_print "$version" \
-            | "$cut" -d '.' -f '1-3' \
+            | cut -d '.' -f '1-3' \
         )"
         [ -n "$x" ] || return 1
         _koopa_print "$x"
@@ -3779,11 +3771,10 @@ _koopa_os_id() { # {{{1
     #
     # Just return the OS platform ID (e.g. debian).
     # """
-    local cut x
-    cut='cut'
+    local x
     x="$( \
         _koopa_os_string \
-        | "$cut" -d '-' -f 1 \
+        | cut -d '-' -f '1' \
     )"
     [ -n "$x" ] || return 1
     _koopa_print "$x"
@@ -3793,14 +3784,14 @@ _koopa_os_id() { # {{{1
 _koopa_os_string() { # {{{1
     # """
     # Operating system string.
-    # @note Updated 2021-12-07.
+    # @note Updated 2022-02-23.
     #
     # Alternatively, use 'hostnamectl'.
     # https://linuxize.com/post/how-to-check-linux-version/
     #
     # If we ever add Windows support, look for: cygwin, mingw32*, msys*.
     # """
-    local awk id release_file string tr version
+    local id release_file string version
     if _koopa_is_macos
     then
         id='macos'
@@ -3808,21 +3799,19 @@ _koopa_os_string() { # {{{1
         version="$(_koopa_major_minor_version "$version")"
     elif _koopa_is_linux
     then
-        awk='awk'
-        tr='tr'
         release_file='/etc/os-release'
         if [ -r "$release_file" ]
         then
             # shellcheck disable=SC2016
             id="$( \
-                "$awk" -F= '$1=="ID" { print $2 ;}' "$release_file" \
-                | "$tr" -d '"' \
+                awk -F= '$1=="ID" { print $2 ;}' "$release_file" \
+                | tr -d '"' \
             )"
             # Include the major release version.
             # shellcheck disable=SC2016
             version="$( \
-                "$awk" -F= '$1=="VERSION_ID" { print $2 ;}' "$release_file" \
-                | "$tr" -d '"'
+                awk -F= '$1=="VERSION_ID" { print $2 ;}' "$release_file" \
+                | tr -d '"'
             )"
             if [ -n "$version" ]
             then

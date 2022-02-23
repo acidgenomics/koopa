@@ -6,7 +6,7 @@ koopa::debian_apt_add_key() {  #{{{1
     # @note Updated 2021-11-09.
     #
     # @section Hardening against insecure URL failure:
-    # 
+    #
     # Using '--insecure' flag here to handle some servers
     # (e.g. download.opensuse.org) that can fail otherwise.
     #
@@ -108,7 +108,7 @@ koopa::debian_apt_add_repo() {
     # @section Debian Repository Format:
     #
     # The sources.list man page specifies this package source format:
-    # 
+    #
     # > deb uri distribution [component1] [component2] [...]
     #
     # and gives an example:
@@ -151,7 +151,7 @@ koopa::debian_apt_add_repo() {
     #
     # The 'Contents' and 'Translation' indices are not architecture-specific and
     # are placed in 'dists/$DISTRIBUTION/$COMPONENT' directory, not architecture
-    # subdirectory. 
+    # subdirectory.
     #
     # @seealso
     # - https://wiki.debian.org/DebianRepository/Format
@@ -777,24 +777,24 @@ koopa::debian_apt_configure_sources() { # {{{1
         [main]="$( \
             koopa::grep \
                 --extended-regexp \
-                '^deb\s' \
-                "${dict[sources_list]}" \
+                --file="${dict[sources_list]}" \
+                --pattern='^deb\s' \
             | koopa::grep \
                 --fixed-strings \
-                " ${codenames[main]} main" \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d ' ' -f 2 \
+                --pattern=" ${codenames[main]} main" \
+            | "${app[head]}" --lines=1 \
+            | "${app[cut]}" --delimiter=' ' --fields='2' \
         )"
         [security]="$( \
             koopa::grep \
                 --extended-regexp \
-                    '^deb\s' \
-                    "${dict[sources_list]}" \
+                --file"${dict[sources_list]}" \
+                --pattern='^deb\s' \
             | koopa::grep \
                 --fixed-strings \
-                " ${codenames[security]} main" \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d ' ' -f 2 \
+                --pattern=" ${codenames[security]} main" \
+            | "${app[head]}" --lines=1 \
+            | "${app[cut]}" --delimiter=' ' --fields='2' \
         )"
     )
     if [[ -z "${urls[main]}" ]]
@@ -949,9 +949,9 @@ koopa::debian_apt_enabled_repos() { # {{{1
     x="$( \
         koopa::grep \
             --extended-regexp \
-            "${dict[pattern]}" \
-            "${dict[file]}" \
-        | "${app[cut]}" -d ' ' -f '4-' \
+            --file="${dict[file]}" \
+            --pattern="${dict[pattern]}" \
+        | "${app[cut]}" --delimiter=' ' --fields='4-' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -1013,7 +1013,9 @@ koopa::debian_apt_is_key_imported() { # {{{1
     dict[key_pattern]="$( \
         koopa::print "${dict[key]}" \
         | "${app[sed]}" 's/ //g' \
-        | "${app[sed]}" -E "s/^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\
+        | "${app[sed]}" \
+            --regexp-extended \
+            "s/^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\
 (.{4})(.{4})(.{4})\$/\1 \2 \3 \4 \5  \6 \7 \8 \9/" \
     )"
     dict[string]="$("${app[apt_key]}" list 2>&1 || true)"
@@ -1106,8 +1108,8 @@ koopa::debian_apt_space_used_by_grep() { # {{{1
         "${app[sudo]}" "${app[apt_get]}" \
             --assume-no \
             autoremove "$@" \
-        | koopa::grep 'freed' \
-        | "${app[cut]}" -d ' ' -f '4-5' \
+        | koopa::grep --pattern='freed' \
+        | "${app[cut]}" --delimiter=' ' --fields='4-5' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -1128,7 +1130,7 @@ koopa::debian_apt_space_used_by_no_deps() { # {{{1
     )
     x="$( \
         "${app[sudo]}" "${app[apt]}" show "$@" 2>/dev/null \
-            | koopa::grep 'Size' \
+            | koopa::grep --pattern='Size' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"

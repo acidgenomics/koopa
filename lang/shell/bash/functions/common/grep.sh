@@ -125,7 +125,7 @@ koopa::grep() { # {{{1
     # Piped input using stdin (string mode).
     if [[ "${dict[stdin]}" -eq 1 ]]
     then
-        read -r -d '' "dict[string]"
+        dict[string]="$(</dev/stdin)"
     fi
     # Check that user isn't mixing up file and string mode.
     if [[ -n "${dict[file]}" ]] && [[ -n "${dict[string]}" ]]
@@ -152,10 +152,15 @@ koopa::grep() { # {{{1
         'rg')
             grep_args+=(
                 '--case-sensitive'
-                '--no-config'
-                '--no-ignore'
-                '--one-file-system'
             )
+            if [[ -n "${dict[file]}" ]]
+            then
+                grep_args+=(
+                    '--no-config'
+                    '--no-ignore'
+                    '--one-file-system'
+                )
+            fi
             case "${dict[mode]}" in
                 'fixed')
                     grep_args+=('--fixed-strings')
@@ -267,7 +272,7 @@ koopa:::file_detect() { # {{{1
     # Piped input using stdin (file mode).
     if [[ "${dict[stdin]}" -eq 1 ]]
     then
-        read -r -d '' "dict[file]"
+        dict[file]="$(</dev/stdin)"
     fi
     koopa::assert_is_set \
         '--file' "${dict[file]}" \
@@ -358,7 +363,7 @@ koopa:::str_detect() { # {{{1
     # Piped input using stdin (string mode).
     if [[ "${dict[stdin]}" -eq 1 ]]
     then
-        read -r -d '' "dict[str]"
+        dict[string]="$(</dev/stdin)"
     fi
     # Note that we're allowing empty string input here.
     koopa::assert_is_set \

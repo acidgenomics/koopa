@@ -19,7 +19,6 @@ __koopa_is_macos() { # {{{1
     # is the operating system macos?
     # @note updated 2021-06-04.
     # """
-    [[ "$#" -eq 0 ]] || return 1
     [[ "$(uname -s)" == 'Darwin' ]]
 }
 
@@ -78,7 +77,7 @@ __koopa_warn() { # {{{1
 __koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2021-06-04.
+    # @note Updated 2022-02-23.
     # """
     local dict
     [[ "$#" -eq 0 ]] || return 1
@@ -107,17 +106,6 @@ __koopa_zsh_header() { # {{{1
         setopt errexit  # -e
         setopt nounset  # -u
         setopt pipefail
-        dict[major_version]="$( \
-            printf '%s\n' "${ZSH_VERSION:?}" \
-            | cut -d '.' -f 1 \
-        )"
-        if [[ ! "${dict[major_version]}" -ge 5 ]]
-        then
-            __koopa_warn \
-                'Koopa requires Zsh >= 5.' \
-                "Current Zsh version: '${ZSH_VERSION:?}'."
-            return 1
-        fi
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then

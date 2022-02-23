@@ -17,7 +17,7 @@ __koopa_bash_source_dir() { # {{{1
     fun_scripts="$( \
         find -L "$prefix" \
             -mindepth 1 \
-            -type f \
+            -type 'f' \
             -name '*.sh' \
             -print \
     )"
@@ -49,7 +49,6 @@ __koopa_is_macos() { # {{{1
     # Is the operating system macOS?
     # @note Updated 2021-06-04.
     # """
-    [[ "$#" -eq 0 ]] || return 1
     [[ "$(uname -s)" == 'Darwin' ]]
 }
 
@@ -230,6 +229,7 @@ __koopa_bash_header() { # {{{1
                 dict[man_file]="${dict[man_prefix]}/man/\
 man1/${dict[script_name]}.1"
                 koopa::help "${dict[man_file]}"
+                return 0
                 ;;
         esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
