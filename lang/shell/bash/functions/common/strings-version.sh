@@ -33,7 +33,9 @@ koopa::anaconda_version() { # {{{
     # shellcheck disable=SC2016
     x="$( \
         "${app[conda]}" list 'anaconda' \
-            | koopa::grep --extended-regexp '^anaconda ' \
+            | koopa::grep \
+                --extended-regexp \
+                --pattern='^anaconda ' \
             | "${app[awk]}" '{print $2}' \
     )"
     [[ -n "$x" ]] || return 1
@@ -81,7 +83,7 @@ koopa::boost_version() { # {{{1
     x="$( \
         koopa::print '#include <boost/version.hpp>\nBOOST_VERSION' \
         | "${app[gcc]}" "${gcc_args[@]}" \
-        | koopa::grep --extended-regexp '^[0-9]+$' \
+        | koopa::grep --extended-regexp --pattern='^[0-9]+$' \
     )"
     [[ -n "$x" ]] || return 1
     # Convert '107500' to '1.75.0', for example.
@@ -106,7 +108,7 @@ koopa::bpytop_version() { # {{{1
     # shellcheck disable=SC2016
     x="$( \
         "${app[bpytop]}" --version \
-            | koopa::grep 'bpytop version:' \
+            | koopa::grep --pattern='bpytop version:' \
             | "${app[awk]}" '{ print $NF }' \
     )"
     [[ -n "$x" ]] || return 1
@@ -147,8 +149,8 @@ koopa::current_bcbio_nextgen_version() { # {{{1
 /master/requirements-conda.txt"
     x="$( \
         koopa::parse_url "$url" \
-            | koopa::grep 'bcbio-nextgen=' \
-            | "${app[cut]}" -d '=' -f 2 \
+            | koopa::grep --pattern='bcbio-nextgen=' \
+            | "${app[cut]}" --delimiter='=' --fields='2' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -171,7 +173,7 @@ koopa::current_bioconductor_version() { # {{{1
 koopa::current_ensembl_version() { # {{{1
     # """
     # Current Ensembl version.
-    # @note Updated 2021-10-25.
+    # @note Updated 2022-02-23.
     # """
     local app x
     koopa::assert_has_no_args "$#"
@@ -181,8 +183,8 @@ koopa::current_ensembl_version() { # {{{1
     )
     x="$( \
         koopa::parse_url 'ftp://ftp.ensembl.org/pub/current_README' \
-        | "${app[sed]}" -n '3p' \
-        | "${app[cut]}" -d ' ' -f 3 \
+        | "${app[sed]}" --quiet '3p' \
+        | "${app[cut]}" --delimiter=' ' --fields='3' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -203,8 +205,8 @@ koopa::current_flybase_version() { # {{{1
     )
     x="$( \
         koopa::parse_url --list-only "ftp://ftp.flybase.net/releases/" \
-        | koopa::grep --extended-regexp '^FB[0-9]{4}_[0-9]{2}$' \
-        | "${app[tail]}" -n 1 \
+        | koopa::grep --extended-regexp --pattern='^FB[0-9]{4}_[0-9]{2}$' \
+        | "${app[tail]}" --lines=1 \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -250,9 +252,9 @@ koopa::current_gencode_version() { # {{{1
         | koopa::grep \
             --extended-regexp \
             --only-matching \
-            "${dict[pattern]}" \
-        | "${app[head]}" -n 1 \
-        | "${app[cut]}" -d ' ' -f 2 \
+            --pattern="${dict[pattern]}" \
+        | "${app[head]}" --lines=1 \
+        | "${app[cut]}" --delimiter=' ' --fields='2' \
     )"
     [[ -n "${dict[str]}" ]] || return 1
     koopa::print "${dict[str]}"
@@ -290,8 +292,8 @@ releases/current-production-release"
             | koopa::grep \
                 --extended-regexp \
                 --only-matching \
-                'letter.WS[0-9]+' \
-            | "${app[cut]}" -d '.' -f 2 \
+                --pattern='letter.WS[0-9]+' \
+            | "${app[cut]}" --delimiter='.' --fields='2' \
     )"
     [[ -n "$version" ]] || return 1
     koopa::print "$version"
@@ -315,30 +317,36 @@ koopa::emacs_version() { # {{{1
     koopa::get_version "$(koopa::locate_emacs)"
 }
 
-# NOTE Consider adding support for pipe workflows here.
 koopa::extract_version() { # {{{1
     # """
     # Extract version number.
-    # @note Updated 2021-10-27.
+    # @note Updated 2022-02-23.
+    #
+    # @examples
+    # > koopa::extract_version "$(bash --version)"
+    # # 5.1.16
     # """
-    local app arg pattern x
+    local app arg dict
     koopa::assert_has_args "$#"
     declare -A app=(
         [head]="$(koopa::locate_head)"
     )
-    pattern="$(koopa::version_pattern)"
+    declare -A dict=(
+        [pattern]="$(koopa::version_pattern)"
+    )
     for arg in "$@"
     do
-        x="$( \
-            koopa::print "$arg" \
-                | koopa::grep \
-                    --extended-regexp \
-                    --only-matching \
-                    "$pattern" \
-                | "${app[head]}" -n 1 \
+        local str
+        str="$( \
+            koopa::grep \
+                --extended-regexp \
+                --only-matching \
+                --pattern="${dict[pattern]}" \
+                --string="$arg" \
+            | "${app[head]}" --lines=1 \
         )"
-        [[ -n "$x" ]] || return 1
-        koopa::print "$x"
+        [[ -n "$str" ]] || return 1
+        koopa::print "$str"
     done
     return 0
 }
@@ -354,21 +362,22 @@ koopa::gcc_version() { # {{{1
 koopa::get_version() { # {{{1
     # """
     # Get the version of an installed program.
-    # @note Updated 2020-07-05.
+    # @note Updated 2022-02-23.
     # """
-    local cmd fun x
+    local cmd
     koopa::assert_has_args "$#"
     for cmd in "$@"
     do
+        local fun str
         fun="koopa::$(koopa::snake_case_simple "$cmd")_version"
         if koopa::is_function "$fun"
         then
-            x="$("$fun")"
+            str="$("$fun")"
         else
-            x="$(koopa::return_version "$cmd")"
+            str="$(koopa::return_version "$cmd")"
         fi
-        [[ -n "$x" ]] || return 1
-        koopa::print "$x"
+        [[ -n "$str" ]] || return 1
+        koopa::print "$str"
     done
     return 0
 }
@@ -391,8 +400,8 @@ koopa::github_latest_release() { # {{{1
     url="https://api.github.com/repos/${repo}/releases/latest"
     x="$( \
         koopa::parse_url "$url" \
-            | koopa::grep '"tag_name":' \
-            | "${app[cut]}" -d '"' -f 4 \
+            | koopa::grep --pattern='"tag_name":' \
+            | "${app[cut]}" --delimiter='"' --fields='4' \
             | "${app[sed]}" 's/^v//' \
     )"
     [[ -n "$x" ]] || return 1
@@ -424,8 +433,8 @@ koopa::hdf5_version() { # {{{1
     )
     x="$( \
         "${app[h5cc]}" -showconfig \
-            | koopa::grep 'HDF5 Version:' \
-            | "${app[sed]}" -E 's/^(.+): //' \
+            | koopa::grep --pattern='HDF5 Version:' \
+            | "${app[sed]}" --regexp-extended 's/^(.+): //' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -464,21 +473,21 @@ koopa::koopa_version() { # {{{1
 koopa::lesspipe_version() { # {{{1
     # """
     # lesspipe.sh version.
-    # @note Updated 2021-11-11.
+    # @note Updated 2022-02-23.
     # """
-    local app x
+    local app str
     declare -A app=(
         [cat]="$(koopa::locate_cat)"
         [lesspipe]="$(koopa::locate_lesspipe)"
         [sed]="$(koopa::locate_sed)"
     )
-    x="$( \
+    str="$( \
         "${app[cat]}" "${app[lesspipe]}" \
-            | "${app[sed]}" -n '2 p' \
+            | "${app[sed]}" --quiet '2p' \
     )"
-    x="$(koopa::extract_version "$x")"
-    [[ -n "$x" ]] || return 1
-    koopa::print "$x"
+    str="$(koopa::extract_version "$str")"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
     return 0
 }
 
@@ -493,12 +502,7 @@ koopa::llvm_version() { # {{{1
 koopa::lmod_version() { # {{{1
     # """
     # Lmod version.
-    # @note Updated 2020-06-29.
-    #
-    # Alterate approach:
-    # > module --version 2>&1 \
-    # >     | grep -Eo 'Version [.0-9]+' \
-    # >     | cut -d ' ' -f 2
+    # @note Updated 2022-02-23.
     # """
     local x
     koopa::assert_has_no_args "$#"
@@ -530,8 +534,8 @@ koopa::openjdk_version() { # {{{1
     )
     x="$( \
         "${app[java]}" --version \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d ' ' -f 2 \
+            | "${app[head]}" --lines=1 \
+            | "${app[cut]}" --delimiter=' ' --fields='2' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -550,7 +554,7 @@ koopa::oracle_instantclient_version() { # {{{1
     )
     x="$( \
         "${app[sqlplus]}" -v \
-            | koopa::grep --extended-regexp '^Version' \
+            | koopa::grep --extended-regexp --pattern='^Version' \
     )"
     x="$(koopa::extract_version "$x")"
     [[ -n "$x" ]] || return 1
@@ -594,8 +598,8 @@ koopa::parallel_version() { # {{{1
     )
     x="$( \
         "${app[parallel]}" --version \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d ' ' -f 3 \
+            | "${app[head]}" --lines=1 \
+            | "${app[cut]}" --delimiter=' ' --fields='3' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -617,7 +621,7 @@ koopa::perl_file_rename_version() { # {{{1
     )
     x="$( \
         "${app[rename]}" --version 2>/dev/null \
-            | "${app[head]}" -n 1 \
+            | "${app[head]}" --lines=1 \
     )"
     koopa::str_detect_fixed \
         --string="$x" \
@@ -625,7 +629,7 @@ koopa::perl_file_rename_version() { # {{{1
         || return 1
     x="$( \
         koopa::print "$x" \
-            | "${app[cut]}" -d ' ' -f 5 \
+            | "${app[cut]}" --delimiter=' ' --fields='5' \
     )"
     x="$(koopa::extract_version "$x")"
     [[ -n "$x" ]] || return 1
@@ -678,7 +682,7 @@ koopa::r_version() { # {{{1
     [[ -z "${app[r]}" ]] && app[r]="$(koopa::locate_r)"
     x="$( \
         "${app[r]}" --version 2>/dev/null \
-        | "${app[head]}" -n 1 \
+        | "${app[head]}" --lines=1 \
     )"
     if koopa::str_detect_fixed \
         --string="$x" \
@@ -899,11 +903,11 @@ koopa::tex_version() { # {{{1
     )
     x="$( \
         "${app[tex]}" --version \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d '(' -f 2 \
-            | "${app[cut]}" -d ')' -f 1 \
-            | "${app[cut]}" -d ' ' -f 3 \
-            | "${app[cut]}" -d '/' -f 1 \
+            | "${app[head]}" --lines=1 \
+            | "${app[cut]}" --delimiter='(' --fields='2' \
+            | "${app[cut]}" --delimiter=')' --fields='1' \
+            | "${app[cut]}" --delimiter=' ' --fields='3' \
+            | "${app[cut]}" --delimiter='/' --fields='1' \
     )"
     [[ -n "$x" ]] || return 1
     koopa::print "$x"
@@ -921,33 +925,36 @@ koopa::version_pattern() { # {{{1
 }
 
 # FIXME Rework using dict.
+# FIXME Rework 'x' as 'str'?
+
 koopa::vim_version() { # {{{1
     # """
     # Vim version.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-02-23.
     # """
-    local app major_minor patch version vim x
+    local app major_minor patch str version vim
     koopa::assert_has_no_args "$#"
     declare -A app=(
         [cut]="$(koopa::locate_cut)"
         [head]="$(koopa::locate_head)"
         [vim]="$(koopa::locate_vim)"
     )
-    x="$("${app[vim]}" --version 2>/dev/null)"
+    str="$("${app[vim]}" --version 2>/dev/null)"
     major_minor="$( \
-        koopa::print "$x" \
-            | "${app[head]}" -n 1 \
-            | "${app[cut]}" -d ' ' -f 5 \
+        koopa::print "$str" \
+            | "${app[head]}" --lines=1 \
+            | "${app[cut]}" --delimiter=' ' --fields='5' \
     )"
     if koopa::str_detect_fixed \
-        --string="$x" \
+        --string="$str" \
         --pattern='Included patches:'
     then
+        # FIXME The grep matching step here isn't working, need to rethink.
         patch="$( \
-            koopa::print "$x" \
-                | koopa::grep 'Included patches:' \
-                | "${app[cut]}" -d '-' -f 2 \
-                | "${app[cut]}" -d ',' -f 1 \
+            koopa::print "$str" \
+                | koopa::grep --pattern='Included patches:' \
+                | "${app[cut]}" --delimiter='-' --fields='2' \
+                | "${app[cut]}" --delimiter=',' --fields='1' \
         )"
         version="${major_minor}.${patch}"
     else

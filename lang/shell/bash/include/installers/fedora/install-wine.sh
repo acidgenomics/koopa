@@ -3,7 +3,7 @@
 koopa:::fedora_install_wine() { # {{{1
     # """
     # Install Wine.
-    # @note Updated 2022-01-27.
+    # @note Updated 2022-02-23.
     #
     # Note that 'winehq-stable' is currently only available on Fedora 31.
     # Can use 'winehq-devel' on Fedora 32.
@@ -19,8 +19,10 @@ koopa:::fedora_install_wine() { # {{{1
     )
     declare -A dict
     dict[version]="$( \
-        koopa::grep 'VERSION_ID=' '/etc/os-release' \
-            | "${app[cut]}" -d '=' -f 2 \
+        koopa::grep \
+            --file='/etc/os-release' \
+            --pattern='VERSION_ID=' \
+        | "${app[cut]}" --delimiter='=' --fields='2' \
     )"
     dict[repo_url]="https://dl.winehq.org/wine-builds/fedora/\
 ${dict[version]}/winehq.repo"

@@ -34,7 +34,7 @@ koopa::linux_find_app_symlinks() { # {{{1
                 --prefix="${dict[app_prefix]}" \
                 --sort \
                 --type='d' \
-            | "${app[tail]}" -n 1 \
+            | "${app[tail]}" --lines=1 \
         )"
     fi
     koopa::assert_is_dir "${dict[app_prefix]}"

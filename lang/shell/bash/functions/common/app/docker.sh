@@ -135,11 +135,11 @@ koopa::docker_build() { # {{{1
         then
             dict2[tag]="$( \
                 koopa::print "${dict2[image]}" \
-                | "${app[cut]}" -d ':' -f 2 \
+                | "${app[cut]}" --delimiter=':' --fields='2' \
             )"
             dict2[image]="$( \
                 koopa::print "${dict2[image]}" \
-                | "${app[cut]}" -d ':' -f 1 \
+                | "${app[cut]}" --delimiter=':' --fields='1' \
             )"
         fi
         dict2[source_image]="${dict[docker_dir]}/${dict2[image]}/${dict2[tag]}"
@@ -245,8 +245,8 @@ koopa::docker_build_all_images() { # {{{1
     # Build all Docker images.
     # @note Updated 2022-02-16.
     # """
-    local app build_file build_args image images
-    local pos repo repos repo_name 
+    local app build_args image images
+    local pos repo repos
     declare -A app=(
         [basename]="$(koopa::locate_basename)"
         [docker]="$(koopa::locate_docker)"
@@ -318,6 +318,7 @@ koopa::docker_build_all_images() { # {{{1
     "${app[docker]}" login
     for repo in "${repos[@]}"
     do
+        local build_file repo_name
         repo_name="$(koopa::basename "$(koopa::realpath "$repo")")"
         koopa::h1 "Building '${repo_name}' images."
         build_file="${repo}/build.txt"
@@ -326,8 +327,8 @@ koopa::docker_build_all_images() { # {{{1
             readarray -t images <<< "$( \
                 koopa::grep \
                     --extended-regexp \
-                    '^[-_a-z0-9]+$' \
-                    "$build_file" \
+                    --file="$build_file" \
+                    --pattern='^[-_a-z0-9]+$' \
             )"
         else
             readarray -t images <<< "$( \
@@ -488,15 +489,17 @@ koopa::docker_is_build_recent() { # {{{1
                 "${dict2[image]}" \
         )"
         dict2[created]="$( \
-            koopa::print "${dict2[json]}" \
-                | koopa::grep \
-                    --extended-regexp \
-                    --only-matching \
-                    '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
-                | "${app[sed]}" 's/T/ /' \
-                | "${app[sed]}" 's/\$/ UTC/'
+            koopa::grep \
+                --extended-regexp \
+                --only-matching \
+                --pattern='[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
+                --string="${dict2[json]}" \
+            | "${app[sed]}" 's/T/ /' \
+            | "${app[sed]}" 's/\$/ UTC/'
         )"
-        dict2[created]="$("${app[date]}" -u -d "${dict2[created]}" '+%s')"
+        dict2[created]="$( \
+            "${app[date]}" --utc --date="${dict2[created]}" '+%s' \
+        )"
         dict2[diff]=$((dict2[current] - dict2[created]))
         [[ "${dict2[diff]}" -le "${dict[seconds]}" ]] && continue
         return 1
@@ -613,10 +616,15 @@ koopa::docker_push() { # {{{1
     return 0
 }
 
+# FIXME Confirm that this works, after changing our grep approach.
+
 koopa::docker_remove() { # {{{1
     # """
     # Remove docker images by pattern.
-    # Updated 2022-02-16.
+    # Updated 2022-02-23.
+    #
+    # @examples
+    # > koopa::docker_remove 'debian' 'ubuntu'
     # """
     local app pattern
     koopa::assert_has_args "$#"
@@ -629,7 +637,7 @@ koopa::docker_remove() { # {{{1
     do
         # shellcheck disable=SC2016
         "${app[docker]}" images \
-            | koopa::grep "$pattern" \
+            | koopa::grep --pattern="$pattern" \
             | "${app[awk]}" '{print $1 ":" $2}' \
             | "${app[xargs]}" \
                 --no-run-if-empty \
