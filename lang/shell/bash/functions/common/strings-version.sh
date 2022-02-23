@@ -454,10 +454,24 @@ koopa::icu4c_version() { # {{{1
 koopa::imagemagick_version() { # {{{1
     # """
     # ImageMagick version.
-    # @note Updated 2021-09-15.
+    # @note Updated 2022-02-23.
+    #
+    # Other approach, that doesn't keep track of patch version:
+    # > koopa:::pkg_config_version 'ImageMagick'
     # """
+    local app str
+    declare -A app=(
+        [cut]="$(koopa::locate_cut)"
+        [magick_core_config]="$(koopa::locate_magick_core_config)"
+    )
     koopa::assert_has_no_args "$#"
-    koopa:::pkg_config_version 'ImageMagick'
+    str="$( \
+        "${app[magick_core_config]}" --version \
+            | "${app[cut]}" --delimiter=' ' --fields=1 \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa::print "$str"
+    return 0
 }
 
 koopa::koopa_version() { # {{{1

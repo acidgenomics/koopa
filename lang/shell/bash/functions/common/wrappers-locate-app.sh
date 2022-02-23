@@ -385,6 +385,12 @@ koopa::locate_ls() { # {{{1
     koopa::locate_gnu_coreutils_app 'ls'
 }
 
+koopa::locate_magick_core_config() { # {{{1
+    koopa::locate_app \
+        --app-name='MagickCore-config' \
+        --opt='imagemagick'
+}
+
 koopa::locate_make() { # {{{1
     koopa::locate_app \
         --app-name='make' \
