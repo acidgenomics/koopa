@@ -521,61 +521,56 @@ node-prettier="2.5.1"               # 2021-12-04
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2022-02-10 from https://pypi.org/.
+# Updated 2022-02-23 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
 # Otherwise, for heavy libraries, consider using a conda environment instead.
 
-python-pip="22.0.2"             # default
-python-setuptools="60.6.0"      # default
-python-wheel="0.37.1"           # default
+# Potentially useful:
+# - pip2p
+# - pipx
 
-python-black="22.1.0"           # recommended
-python-bpytop="1.0.68"          # recommended
-python-flake8="4.0.1"           # recommended
-python-glances="3.2.4.2"        # recommended
-python-pip2pi="0.8.2"           # recommended
-python-pipx="1.0.0"             # recommended
-python-pyflakes="2.4.0"         # recommended
-python-pylint="2.12.2"          # recommended
-python-pynvim="0.4.3"           # recommended
-python-pytaglib="1.5.0"         # recommended
-python-pytest="6.2.5"           # recommended
-python-ranger-fm="1.9.3"        # recommended
+python-pip="22.0.3"             # default; system
+python-setuptools="60.9.3"      # default; system
+python-wheel="0.37.1"           # default; system
 
-python-numpy="1.22.1"           # r-reticulate
-python-pandas="1.3.5"           # r-reticulate
-python-scikit-learn="1.0.2"     # r-reticulate
-python-scipy="1.7.3"            # r-reticulate
+python-pipx="1.0.0"             # system
+
+python-black="22.1.0"           # homebrew
+python-bpytop="1.0.68"          # homebrew
+python-flake8="4.0.1"           # homebrew
+python-glances="3.2.4.2"        # homebrew
+python-pyflakes="2.4.0"         # homebrew
+python-pylint="2.12.2"          # homebrew
+python-pytest="6.2.5"           # homebrew
+python-ranger-fm="1.9.3"        # homebrew
 
 # Ruby packages (gems) {{{1
 # ==============================================================================
 # Updated 2022-02-09.
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.7"            # 2022-02-09
+ruby-bundler="2.3.7"            # system
 
-ruby-bashcov="1.8.2"            # 2018-03-27
-ruby-ronn="0.7.3"               # 2010-06-24
+ruby-bashcov="1.8.2"            # recommended
+ruby-ronn="0.7.3"               # recommended
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2022-01-19 from https://crates.io/.
+# Updated 2022-02-23 from https://crates.io/.
 
-# Packages with binaries {{{2
-# ------------------------------------------------------------------------------
+rust-cargo-outdated="0.10.2"    # system
+rust-cargo-update="8.1.2"       # system
 
 rust-bat="0.19.0"               # homebrew
 rust-broot="1.9.3"              # homebrew; br
-rust-cargo-update="8.1.2"
-rust-cargo-outdated="0.10.2"    # homebrew
 rust-dog="0.1.0"                # homebrew
 rust-du-dust="0.7.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
 rust-fd-find="8.3.1"            # homebrew; fd
 rust-hyperfine="1.12.0"         # homebrew
-rust-mcfly="0.5.13"                  # github only
+rust-mcfly="0.5.13"             # homebrew
 rust-procs="0.12.1"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
@@ -584,12 +579,3 @@ rust-tealdeer="1.5.0"           # homebrew; tldr
 rust-tokei="12.1.2"             # homebrew
 rust-xsv="0.13.0"               # homebrew
 rust-zoxide="0.8.0"             # homebrew; z
-
-# Libraries without binaries {{{2
-# ------------------------------------------------------------------------------
-
-# Consider (for package development):
-# - crossbeam
-# - hyper
-# - rayon
-# - tide
