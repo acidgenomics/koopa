@@ -82,7 +82,7 @@ install_koopa() { # {{{1
     bash_version="${BASH_VERSION:?}"
     bash_maj_ver="$( \
         printf '%s\n' "$bash_version" \
-        | cut -d '.' -f 1 \
+        | cut -d '.' -f '1' \
     )"
     if [[ ! "$bash_maj_ver" -ge "$bash_cutoff" ]]
     then
