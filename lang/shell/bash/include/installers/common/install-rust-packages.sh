@@ -88,6 +88,13 @@ koopa:::install_rust_packages() { # {{{1
                     --tag "v${version}"
                 )
                 ;;
+            'fd-find')
+                # Currently outdated on crates.io.
+                args+=(
+                    --git 'https://github.com/sharkdp/fd.git'
+                    --tag "v${version}"
+                )
+                ;;
             'mcfly')
                 # Currently only available on GitHub.
                 args+=(
