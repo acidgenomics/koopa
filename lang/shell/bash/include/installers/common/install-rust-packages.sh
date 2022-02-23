@@ -81,6 +81,13 @@ koopa:::install_rust_packages() { # {{{1
                 ;;
         esac
         case "$pkg" in
+            'du-dust')
+                # Currently outdated on crates.io.
+                args+=(
+                    --git 'https://github.com/bootandy/dust.git'
+                    --tag "v${version}"
+                )
+                ;;
             'mcfly')
                 # Currently only available on GitHub.
                 args+=(
