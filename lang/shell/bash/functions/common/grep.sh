@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure that empty strings are allowed to propagage...ARGH.
-
 koopa::grep() { # {{{1
     # """
     # grep matching: print lines that match patterns in a string or file.
@@ -50,10 +48,12 @@ koopa::grep() { # {{{1
             # Key-value pairs --------------------------------------------------
             '--file='*)
                 dict[file]="${1#*=}"
+                dict[stdin]=0
                 shift 1
                 ;;
             '--file')
                 dict[file]="${2:?}"
+                dict[stdin]=0
                 shift 2
                 ;;
             '--mode='*)
@@ -78,8 +78,8 @@ koopa::grep() { # {{{1
                 shift 1
                 ;;
             '--string')
-                # FIXME May need to allow empty string to propagate here.
-                dict[string]="${2:?}"
+                # Allowing empty string to propagate here.
+                dict[string]="${2:-}"
                 dict[stdin]=0
                 shift 2
                 ;;
@@ -274,6 +274,7 @@ koopa:::file_detect() { # {{{1
         '--mode' "${dict[mode]}" \
         '--pattern' "${dict[pattern]}"
     grep_args=(
+        '--boolean'
         '--file' "${dict[file]}"
         '--mode' "${dict[mode]}"
         '--pattern' "${dict[pattern]}"
@@ -334,7 +335,8 @@ koopa:::str_detect() { # {{{1
                 shift 1
                 ;;
             '--string')
-                dict[string]="${2:?}"
+                # Allowing empty string to propagate here.
+                dict[string]="${2:-}"
                 dict[stdin]=0
                 shift 2
                 ;;
@@ -363,6 +365,7 @@ koopa:::str_detect() { # {{{1
         '--mode' "${dict[mode]}" \
         '--pattern' "${dict[pattern]}"
     grep_args=(
+        '--boolean'
         '--mode' "${dict[mode]}"
         '--pattern' "${dict[pattern]}"
         '--string' "${dict[string]}"
