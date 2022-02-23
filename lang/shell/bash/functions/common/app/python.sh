@@ -42,6 +42,7 @@ koopa::python_activate_venv() { # {{{1
     return 0
 }
 
+# FIXME Allow easy creation with single positional argument, e.g. pytaglib.
 koopa::python_create_venv() { # {{{1
     # """
     # Create Python virtual environment.
@@ -128,7 +129,7 @@ koopa::python_create_venv() { # {{{1
 koopa::python_create_venv_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-02-23.
     #
     # macOS compiler flags:
     # These flags are now required for scikit-learn to compile, which now
@@ -140,12 +141,11 @@ koopa::python_create_venv_r_reticulate() { # {{{1
     # """
     local pkgs
     pkgs=(
-        'numpy'
-        'pandas'
-        'scikit-learn'
-        'scipy'
+        'numpy==1.22.1'
+        'pandas==1.3.5'
+        'scikit-learn==1.0.2'
+        'scipy==1.7.3'
     )
-    readarray -t pkgs <<< "$(koopa::python_get_pkg_versions "${pkgs[@]}")"
     if koopa::is_macos
     then
         local cflags cppflags cxxflags dyld_library_path ldflags
@@ -302,7 +302,6 @@ koopa::python_pip_install() { # {{{1
         "--target=${dict[target]}"
         '--disable-pip-version-check'
         '--no-warn-script-location'
-        '--progress-bar=pretty'
         '--upgrade'
     )
     if [[ "${dict[reinstall]}" -eq 1 ]]
