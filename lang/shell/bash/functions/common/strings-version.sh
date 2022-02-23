@@ -893,7 +893,12 @@ koopa::sanitize_version() { # {{{1
             --string="$x" \
             --pattern="$pattern" \
             || return 1
-        x="$(koopa::sub '^([.0-9]+).*$' '\1' "$x")"
+        x="$( \
+            koopa::sub \
+                --pattern='^([.0-9]+).*$' \
+                --replacement='\1' \
+                "$x" \
+        )"
         koopa::print "$x"
     done
     return 0

@@ -259,9 +259,9 @@ koopa::find() { # {{{1
                 then
                     dict[regex]="$( \
                         koopa::sub \
-                            --string="${dict[regex]}" \
                             --pattern='\^' \
                             --replacement="^${dict[prefix]}/" \
+                            "${dict[regex]}" \
                     )"
                 fi
                 # NOTE '-regextype' must come before '-regex' here.
@@ -383,7 +383,12 @@ koopa::find() { # {{{1
             if [[ -n "${dict[size]}" ]]
             then
                 # Convert GNU find 'c' for bytes into 'b' convention here.
-                dict[size]="$(koopa::sub 'c$' 'b' "${dict[size]}")"
+                dict[size]="$( \
+                    koopa::sub \
+                        --pattern='c$' \
+                        --replacement='b' \
+                        "${dict[size]}" \
+                )"
                 find_args+=('--size' "${dict[size]}")
             fi
             if [[ "${dict[print0]}" -eq 1 ]]

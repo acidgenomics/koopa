@@ -343,7 +343,12 @@ koopa::init_dir() { # {{{1
         --string="${dict[dir]}" \
         --pattern='^~'
     then
-        dict[dir]="$(koopa::sub '^~' "${HOME:?}" "${dict[dir]}")"
+        dict[dir]="$( \
+            koopa::sub \
+                --pattern='^~' \
+                --replacement="${HOME:?}" \
+                "${dict[dir]}" \
+        )"
     fi
     mkdir=('koopa::mkdir')
     [[ "${dict[sudo]}" -eq 1 ]] && mkdir+=('--sudo')

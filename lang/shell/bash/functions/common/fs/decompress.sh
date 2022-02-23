@@ -14,8 +14,10 @@ koopa::decompress() { # {{{1
         [manual_target_file]="${2:-}"
     )
     dict[auto_target_file]="$( \
-        koopa::sub "${dict[compress_ext_pattern]}" '' \
-        "${dict[source_file]}" \
+        koopa::sub \
+            --pattern="${dict[compress_ext_pattern]}" \
+            --replacement='' \
+            "${dict[source_file]}" \
     )"
     case "${dict[source_file]}" in
         *'.bz2')

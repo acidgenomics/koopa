@@ -3,7 +3,7 @@
 koopa::linux_configure_system() { # {{{1
     # """
     # Configure Linux system.
-    # @note Updated 2021-12-09.
+    # @note Updated 2022-02-23.
     #
     # Intended primarily for virtual machine and Docker image builds.
     #
@@ -120,7 +120,7 @@ koopa::linux_configure_system() { # {{{1
         [python_version]="$(koopa::variable 'python')"
         [r_version]="$(koopa::variable 'r')"
         [ssh_key]=1
-        [which_conda]='miniconda'
+        [which_conda]='conda'
     )
     while (("$#"))
     do
