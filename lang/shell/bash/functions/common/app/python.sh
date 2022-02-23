@@ -42,11 +42,10 @@ koopa::python_activate_venv() { # {{{1
     return 0
 }
 
-# FIXME Allow easy creation with single positional argument, e.g. pytaglib.
 koopa::python_create_venv() { # {{{1
     # """
     # Create Python virtual environment.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-02-23.
     #
     # @examples
     # > koopa::python_create_venv --name='base'
