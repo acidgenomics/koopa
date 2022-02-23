@@ -521,7 +521,7 @@ local({  # nolint
     }
 
     if (isInstalled("reticulate")) {
-        ## Ensure that miniconda is used by default.
+        ## Ensure that Miniconda is used by default.
         options(
             "reticulate.conda_binary" =
                 file.path(
