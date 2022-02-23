@@ -391,7 +391,8 @@ koopa::sub() { # {{{1
                 shift 1
                 ;;
             '--replacement')
-                dict[replacement]="${2:?}"
+                # Allowing empty string passthrough here.
+                dict[replacement]="${2:-}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
@@ -409,9 +410,7 @@ koopa::sub() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_is_set \
-        '--pattern' "${dict[pattern]}" \
-        '--replacement' "${dict[replacement]}"
+    koopa::assert_is_set '--pattern' "${dict[pattern]}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     [[ "${dict[global]}" -eq 1 ]] && dict[sed_tail]='g'
