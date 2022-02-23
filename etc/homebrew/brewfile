@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2022-02-07.
+# Updated 2022-02-23.
 #
 # @section ilmbase deprecation (due to neofetch):
 #
@@ -120,6 +120,7 @@ brew "luarocks"
 brew "make"
 brew "man-db"
 brew "mariadb-connector-c"
+brew "mcfly"
 brew "neofetch"
 brew "neovim"
 brew "nim"
@@ -186,21 +187,3 @@ brew "xsv"  # rust
 brew "zlib"
 brew "zoxide"  # rust
 brew "zsh"
-
-# External brews {{{1
-# ==============================================================================
-
-tap "cantino/mcfly"
-brew "cantino/mcfly/mcfly"
-
-# Currently warning:
-# Warning: Calling bottle :unneeded is deprecated!
-# https://github.com/mongodb/homebrew-brew
-# > tap "mongodb/brew"
-# > brew "mongodb/brew/mongodb-community@5.0"
-
-# Currently warning:
-# Warning: Calling bottle :unneeded is deprecated!
-# https://github.com/rs/homebrew-tap/
-# > tap "rs/tap"
-# > brew "rs/tap/curlie"
