@@ -57,7 +57,6 @@ koopa::chgrp() { # {{{1
     return 0
 }
 
-# FIXME Require the user to set '--permissions=0644', etc.
 koopa::chmod() { # {{{1
     # """
     # Hardened version of coreutils chmod (change file mode bits).
