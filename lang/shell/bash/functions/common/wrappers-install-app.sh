@@ -804,7 +804,7 @@ koopa::uninstall_cmake() { # {{{1
 }
 
 koopa::uninstall_conda() { # {{{1
-    koopa:::uninstall_miniconda "$@"
+    koopa::uninstall_miniconda "$@"
 }
 
 koopa::uninstall_coreutils() { # {{{1
