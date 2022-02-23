@@ -178,18 +178,21 @@ test_zsh_illegal_strings() { # {{{1
     return 0
 }
 
-# FIXME Need to locate shellcheck.
 test_shellcheck() { # {{{1
     # """
     # Run ShellCheck.
-    # @note Updated 2021-04-22.
+    # @note Updated 2022-02-23.
+    #
     # Only Bash and POSIX (but not Zsh) are supported.
     # """
+    local app
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed shellcheck
+    declare -A app=(
+        [shellcheck]="$(koopa::locate_shellcheck)"
+    )
     readarray -t files <<< \
         "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh)$')"
-    shellcheck \
+    "${app[shellcheck]}" \
         --exclude='SC2119,SC2120,SC3043' \
         --external-sources \
         "${files[@]}"
