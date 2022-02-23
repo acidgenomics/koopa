@@ -87,7 +87,6 @@ PATH="${KOOPA_OPT_PREFIX}/rust-packages/bin:${PATH}"
 # Python.
 PATH="/Library/Frameworks/Python.framework/Versions/Current/bin:${PATH}"
 PATH="${KOOPA_OPT_PREFIX}/python-packages/bin:${PATH}"
-# > PATH="${KOOPA_OPT_PREFIX}/virtualenvs/r-reticulate/bin:${PATH}"
 
 # Conda.
 PATH="${KOOPA_OPT_PREFIX}/conda/condabin:${PATH}"
