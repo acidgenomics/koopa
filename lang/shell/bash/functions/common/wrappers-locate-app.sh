@@ -607,6 +607,10 @@ koopa::locate_sed() { # {{{1
         --opt='gnu-sed'
 }
 
+koopa::locate_shellcheck() { # {{{1
+    koopa::locate_app 'shellcheck'
+}
+
 koopa::locate_shunit2() { # {{{1
     koopa::locate_app 'shunit2'
 }
