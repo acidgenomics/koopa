@@ -261,29 +261,28 @@ koopa::is_doom_emacs_installed() { # {{{1
 koopa::is_empty_dir() { # {{{1
     # """
     # Is the input an empty directory?
-    # @note Updated 2021-12-07.
+    # @note Updated 2022-02-24
     #
     # @examples
     # koopa::mkdir 'aaa' 'bbb'
     # koopa::is_empty_dir 'aaa' 'bbb'
     # koopa::rm 'aaa' 'bbb'
     # """
-    local app out prefix
+    local prefix
     koopa::assert_has_args "$#"
-    declare -A app=(
-        [find]="$(koopa::locate_find)"
-    )
     for prefix in "$@"
     do
+        local out
         [[ -d "$prefix" ]] || return 1
-        prefix="$(koopa::realpath "$prefix")"
-        # FIXME Rework using koopa::find.
-        out="$("${app[find]}" "$prefix" \
-            -maxdepth 0 \
-            -mindepth 0 \
-            -type 'd' \
-            -empty \
-            2>/dev/null \
+        out="$(\
+            koopa::find \
+            --empty \
+            --engine='find' \
+            --max-depth=0 \
+            --min-depth=0 \
+            --prefix="$prefix" \
+            --type='d' \
+            --verbose \
         )"
         [[ -n "$out" ]] || return 1
     done
