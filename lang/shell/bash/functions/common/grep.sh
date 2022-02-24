@@ -154,14 +154,21 @@ koopa::grep() { # {{{1
     grep_args=()
     case "${dict[engine]}" in
         'grep')
+            # Using short flags for BSD compatibility here.
             case "${dict[mode]}" in
                 'fixed')
-                    grep_args+=('--fixed-strings')
+                    grep_args+=('-F')
                     ;;
                 'regex')
-                    grep_args+=('--extended-regexp')
+                    grep_args+=('-E')
                     ;;
             esac
+            [[ "${dict[invert_match]}" -eq 1 ]] && \
+                grep_args+=('-v')  # --invert-match
+            [[ "${dict[only_matching]}" -eq 1 ]] && \
+                grep_args+=('-o')  # --only-matching
+            [[ "${dict[boolean]}" -eq 1 ]] && \
+                grep_args+=('-q')  # --quiet
             ;;
         'rg')
             grep_args+=(
@@ -183,11 +190,14 @@ koopa::grep() { # {{{1
                     grep_args+=('--engine' 'default')
                     ;;
             esac
+            [[ "${dict[invert_match]}" -eq 1 ]] && \
+                grep_args+=('--invert-match')
+            [[ "${dict[only_matching]}" -eq 1 ]] && \
+                grep_args+=('--only-matching')
+            [[ "${dict[boolean]}" -eq 1 ]] && \
+                grep_args+=('--quiet')
             ;;
     esac
-    [[ "${dict[invert_match]}" -eq 1 ]] && grep_args+=('--invert-match')
-    [[ "${dict[only_matching]}" -eq 1 ]] && grep_args+=('--only-matching')
-    [[ "${dict[boolean]}" -eq 1 ]] && grep_args+=('--quiet')
     grep_args+=("${dict[pattern]}")
     if [[ -n "${dict[file]}" ]]
     then

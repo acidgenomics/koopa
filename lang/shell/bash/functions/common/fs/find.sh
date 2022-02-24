@@ -58,7 +58,6 @@ koopa::find() { # {{{1
         [sort]=0
         [sudo]=0
         [type]=''
-        [verbose]=0
     )
     exclude_arr=()
     while (("$#"))
@@ -174,10 +173,6 @@ koopa::find() { # {{{1
                 ;;
             '--sudo')
                 dict[sudo]=1
-                shift 1
-                ;;
-            '--verbose')
-                dict[verbose]=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -343,7 +338,7 @@ koopa::find() { # {{{1
                         find_args+=('-type' "${dict[type]}")
                         ;;
                     *)
-                        koopa::stop 'Invalid type argument for GNU find.'
+                        koopa::stop 'Invalid type argument for find.'
                 esac
             fi
             if [[ "${dict[min_days_old]}" -gt 0 ]]
@@ -379,11 +374,6 @@ koopa::find() { # {{{1
             koopa::stop 'Invalid find engine.'
             ;;
     esac
-    # Print the find query in verbose mode.
-    if [[ "${dict[verbose]}" -eq 1 ]]
-    then
-        koopa::dl 'Find command' "${find[*]} ${find_args[*]}"
-    fi
     if [[ "${dict[sort]}" -eq 1 ]]
     then
         app[sort]="$(koopa::locate_sort)"
