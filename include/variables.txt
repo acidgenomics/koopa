@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-02-23"
+koopa-date="2022-02-24"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -236,7 +236,7 @@ node="17.6.0"
 openjdk="17.0.2"
 
 # https://www.openssh.com/portable.html
-openssh="8.8p1"
+openssh="8.9p1"
 
 # https://www.openssl.org/source/
 openssl="3.0.1"
@@ -546,10 +546,10 @@ python-ranger-fm="1.9.3"        # homebrew
 
 # Ruby packages (gems) {{{1
 # ==============================================================================
-# Updated 2022-02-09.
+# Updated 2022-02-24.
 # https://rubygems.org/gems/bundler/versions/
 
-ruby-bundler="2.3.7"            # system
+ruby-bundler="2.3.8"            # system
 
 ruby-bashcov="1.8.2"            # recommended
 ruby-ronn="0.7.3"               # recommended
