@@ -43,7 +43,7 @@ koopa::find() { # {{{1
     # - https://unix.stackexchange.com/questions/247655/
     # """
     local app dict exclude_arg exclude_arr find find_args
-    local results sort sorted_results
+    local results sorted_results
     declare -A app
     declare -A dict=(
         [case_sensitive]=1
@@ -209,9 +209,9 @@ koopa::find() { # {{{1
     case "${dict[engine]}" in
         'fd')
             find_args=(
+                # > '--full-path'  # Need to use '**' for glob with this.
                 '--absolute-path'
                 '--base-directory' "${dict[prefix]}"
-                '--full-path'  # FIXME Consider turning off for glob matching.
                 '--hidden'
                 '--no-ignore'
                 '--one-file-system'
