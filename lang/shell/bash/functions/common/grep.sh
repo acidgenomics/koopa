@@ -197,6 +197,9 @@ koopa::grep() { # {{{1
             [[ "${dict[boolean]}" -eq 1 ]] && \
                 grep_args+=('--quiet')
             ;;
+        *)
+            koopa::stop 'Invalid grep engine.'
+            ;;
     esac
     grep_args+=("${dict[pattern]}")
     if [[ -n "${dict[file]}" ]]
