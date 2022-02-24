@@ -319,39 +319,32 @@ koopa::find() { # {{{1
                     --string="${dict[glob]}"
                 then
                     # Look for '{aaa,bbb,ccc}' and convert to
-                    # '-name aaa -o -name bbb -o name ccc'.
-                    local curly_globs_1 curly_globs_2 curly_globs_3
-                    readarray -d ',' -t curly_globs_1 <<< "$( \
-                        koopa::gsub \
-                            --pattern='[{}]' \
-                            --replacement='' \
-                            "${dict[glob]}" \
-                    )"
-                    curly_globs_2=()
-                    for i in "${!curly_globs_1[@]}"
-                    do
-                        curly_globs_2+=(
-                            "-${dict[glob_key]} ${curly_globs_1[i]}"
-                        )
-                    done
-                    readarray -d ' ' -t curly_globs_3 <<< "$(
-                        koopa::paste --sep=' -o ' "${curly_globs_2[@]}"
-                    )"
-                    # FIXME Consider appending array instead.
-                    # https://stackoverflow.com/a/53091662
-                    # Need to bracket 'or' statement here with '(' and ')'.
-                    find_args+=('(' ${curly_globs_3[@]} ')')
-
+                    # '( -name aaa -o -name bbb -o name ccc )'.
                     # Usage of '-O' here refers to array index origin.
                     # This is a really useful way to append an array.
-                    readarray \
-                        -t \
-                        -d ' ' \
-                        -O "${#find_args[@]}" \
-                        find_args <<< "$ \
-
-
-                            koopa
+                    readarray -O "${#find_args[@]}" -t find_args <<< "$( \
+                        local globs_1 globs_2 globs_3 str
+                        readarray -d ',' -t globs_1 <<< "$( \
+                            koopa::gsub \
+                                --pattern='[{}]' \
+                                --replacement='' \
+                                "${dict[glob]}" \
+                        )"
+                        globs_2=()
+                        for i in "${!globs_1[@]}"
+                        do
+                            globs_2+=(
+                                "-${dict[glob_key]} ${globs_1[i]}"
+                            )
+                        done
+                        str="$( \
+                            koopa::paste --sep=' -o ' "${globs_2[@]}"
+                        )"
+                        str="( ${str} )"
+                        readarray -d ' ' -t globs_3 <<< "$(
+                            koopa::print "$str"
+                        )"
+                        koopa::print "${globs_3[@]}"
                     )"
                 else
                     find_args+=("-${dict[glob_key]}" "${dict[glob]}")
@@ -397,9 +390,6 @@ koopa::find() { # {{{1
             # calling '-prune' here instead.
             if [[ "${dict[exclude]}" -eq 1 ]]
             then
-                # FIXME This needs to include full path here, or use
-                # prune instead...
-                koopa::warn "match against full: ${dict[match_against_full_path]}"
                 for exclude_arg in "${exclude_arr[@]}"
                 do
                     if [[ "${dict[match_against_full_path]}" -eq 0 ]]
@@ -411,11 +401,7 @@ koopa::find() { # {{{1
                                 "$exclude_arg" \
                         )"
                     fi
-                    find_args+=(
-                        '-not'
-                        '-path'
-                        "$exclude_arg"
-                    )
+                    find_args+=('-not' '-path' "$exclude_arg")
                 done
             fi
             if [[ "${dict[empty]}" -eq 1 ]]
@@ -439,7 +425,7 @@ koopa::find() { # {{{1
     esac
     if [[ "${dict[verbose]}" -eq 1 ]]
     then
-        koopa::warn "${find[*]} ${find_args[*]}"
+        koopa::warn "Find command: ${find[*]} ${find_args[*]}"
     fi
     if [[ "${dict[sort]}" -eq 1 ]]
     then
