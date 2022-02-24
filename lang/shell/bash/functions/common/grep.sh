@@ -131,7 +131,7 @@ koopa::grep() { # {{{1
     then
         app[grep]="$(koopa::locate_rg 2>/dev/null || true)"
         [[ ! -x "${app[grep]}" ]] && app[grep]="$(koopa::locate_grep)"
-        dict[engine]="$(koopa::basename "${app[find]}")"
+        dict[engine]="$(koopa::basename "${app[grep]}")"
     else
         app[grep]="$(koopa::locate_"${dict[engine]}")"
     fi
