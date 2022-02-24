@@ -3,7 +3,7 @@
 koopa::grep() { # {{{1
     # """
     # grep matching: print lines that match patterns in a string or file.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-02-24.
     #
     # Uses ripgrep instead of grep when possible (faster).
     # Consider passing short flags to 'grep' for BSD compatibility.
@@ -26,13 +26,10 @@ koopa::grep() { # {{{1
     # """
     local app dict grep_args grep_cmd
     koopa::assert_has_args "$#"
-    declare -A app=(
-        [grep]="$(koopa::locate_rg 2>/dev/null || true)"
-    )
-    [[ ! -x "${app[grep]}" ]] && app[grep]="$(koopa::locate_grep)"
+    declare -A app
     declare -A dict=(
         [boolean]=0
-        [engine]="$(koopa::basename "${app[grep]}")"
+        [engine]="${KOOPA_GREP_ENGINE:-}"
         [file]=''
         [invert_match]=0
         [only_matching]=0
@@ -46,6 +43,14 @@ koopa::grep() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--engine='*)
+                dict[engine]="${1#*=}"
+                shift 1
+                ;;
+            '--engine')
+                dict[engine]="${2:?}"
+                shift 2
+                ;;
             '--file='*)
                 dict[file]="${1#*=}"
                 dict[stdin]=0
@@ -122,6 +127,15 @@ koopa::grep() { # {{{1
         esac
     done
     koopa::assert_is_set '--pattern' "${dict[pattern]}"
+    if [[ -z "${dict[engine]}" ]]
+    then
+        app[grep]="$(koopa::locate_rg 2>/dev/null || true)"
+        [[ ! -x "${app[grep]}" ]] && app[grep]="$(koopa::locate_grep)"
+        dict[engine]="$(koopa::basename "${app[find]}")"
+    else
+        app[grep]="$(koopa::locate_"${dict[engine]}")"
+    fi
+    koopa::assert_is_installed "${app[grep]}"
     # Piped input using stdin (string mode).
     if [[ "${dict[stdin]}" -eq 1 ]]
     then
