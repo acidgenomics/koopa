@@ -261,7 +261,7 @@ koopa::is_doom_emacs_installed() { # {{{1
 koopa::is_empty_dir() { # {{{1
     # """
     # Is the input an empty directory?
-    # @note Updated 2022-02-24
+    # @note Updated 2022-02-24.
     #
     # @examples
     # koopa::mkdir 'aaa' 'bbb'
@@ -281,8 +281,7 @@ koopa::is_empty_dir() { # {{{1
             --max-depth=0 \
             --min-depth=0 \
             --prefix="$prefix" \
-            --type='d' \
-            --verbose \
+            --type='d'
         )"
         [[ -n "$out" ]] || return 1
     done
