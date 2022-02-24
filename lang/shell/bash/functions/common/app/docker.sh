@@ -616,12 +616,10 @@ koopa::docker_push() { # {{{1
     return 0
 }
 
-# FIXME Confirm that this works, after changing our grep approach.
-
 koopa::docker_remove() { # {{{1
     # """
     # Remove docker images by pattern.
-    # Updated 2022-02-23.
+    # Updated 2022-02-24.
     #
     # @examples
     # > koopa::docker_remove 'debian' 'ubuntu'
@@ -635,14 +633,18 @@ koopa::docker_remove() { # {{{1
     )
     for pattern in "$@"
     do
+        # Previous awk approach:
+        # returns 'acidgenomics/debian:latest', for example.
+        # > | "${app[awk]}" '{print $1 ":" $2}' \
+        # New approach matches image ID instead.
         # shellcheck disable=SC2016
         "${app[docker]}" images \
             | koopa::grep --pattern="$pattern" \
-            | "${app[awk]}" '{print $1 ":" $2}' \
+            | "${app[awk]}" '{print $3}' \
             | "${app[xargs]}" \
                 --no-run-if-empty \
                 --verbose \
-                "${app[docker]}" rmi
+                "${app[docker]}" rmi --force
     done
     return 0
 }
