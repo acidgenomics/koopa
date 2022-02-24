@@ -252,34 +252,6 @@ koopa::delete_empty_dirs() { # {{{1
     return 0
 }
 
-koopa::delete_file_system_cruft() { # {{{1
-    # """
-    # Delete file system cruft.
-    # @note Updated 2021-11-04.
-    # """
-    local app dict
-    koopa::assert_has_args "$#"
-    declare -A app=(
-        [find]="$(koopa::locate_find)"
-    )
-    declare -A dict=(
-        [prefix]="${1:?}"
-    )
-    koopa::assert_is_dir "${dict[prefix]}"
-    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
-    "${app[find]}" \
-        "${dict[prefix]}" \
-        -type 'f' \
-        \( \
-               -name '.DS_Store' \
-            -o -name '._*' \
-            -o -name 'Thumbs.db*' \
-        \) \
-        -delete \
-        -print
-    return 0
-}
-
 koopa::delete_named_subdirs() { # {{{1
     # """
     # Delete named subdirectories.
@@ -356,14 +328,14 @@ koopa::ensure_newline_at_end_of_file() { # {{{1
 koopa::file_count() { # {{{1
     # """
     # Return number of files.
-    # @note Updated 2021-11-04.
+    # @note Updated 2022-02-24.
     #
     # Intentionally doesn't perform this search recursively.
     #
     # Alternate approach:
     # > ls -1 "$prefix" | wc -l
     # """
-    local find prefix wc x
+    local app dict
     koopa::assert_has_args_eq "$#" 1
     declare -A app=(
         [wc]="$(koopa::locate_wc)"
@@ -497,10 +469,11 @@ koopa::md5sum_check_to_new_md5_file() { # {{{1
     return 0
 }
 
+# FIXME This doesn't seem to work any more.
 koopa::nfiletypes() { # {{{1
     # """
     # Return the number of file types in a specific directory.
-    # @note Updated 2021-11-04.
+    # @note Updated 2022-02-24.
     # """
     local app dict
     koopa::assert_has_args_eq "$#" 1
@@ -515,16 +488,16 @@ koopa::nfiletypes() { # {{{1
     koopa::assert_is_dir "${dict[prefix]}"
     dict[out]="$( \
         koopa::find \
+            --max-depth=1 \
+            --min-depth=1 \
             --prefix="${dict[prefix]}" \
-            --max-depth 1 \
-            --min-depth 1 \
+            --regex='^.+\.[A-Za-z0-9]+$' \
             --type 'f' \
-            --regex '^.+\.[A-Za-z0-9]+$' \
-        | "${app[sed]}" --quiet 's/.*\.//' \
+        | "${app[sed]}" 's/.*\.//' \
         | "${app[sort]}" \
         | "${app[uniq]}" --count \
         | "${app[sort]}" --numeric-sort \
-        | "${app[sed]}" --quiet 's/^ *//g' \
+        | "${app[sed]}" 's/^ *//g' \
         | "${app[sed]}" 's/ /\t/g' \
     )"
     [[ -n "${dict[out]}" ]] || return 1
@@ -535,13 +508,12 @@ koopa::nfiletypes() { # {{{1
 koopa::reset_permissions() { # {{{1
     # """
     # Reset default permissions on a specified directory recursively.
-    # @note Updated 2021-11-04.
+    # @note Updated 2022-02-24.
     # """
     local app dict
     koopa::assert_has_args_eq "$#" 1
     declare -A app=(
         [chmod]="$(koopa::locate_chmod)"
-        [find]="$(koopa::locate_find)"
         [xargs]="$(koopa::locate_xargs)"
     )
     declare -A dict=(
