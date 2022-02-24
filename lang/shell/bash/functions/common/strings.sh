@@ -136,10 +136,16 @@ koopa::lowercase() { # {{{1
     return 0
 }
 
+# FIXME Need to harden this against our koopa::find globs input.
+
 koopa::paste() { # {{{1
     # """
     # Paste arguments into a string separated by delimiter.
-    # @note Updated 2021-11-30.
+    # @note Updated 2022-02-24.
+    #
+    # NB Don't harden against '-*' input here, as we want to be able to pass in
+    # arguments that begin with '-'. This is useful in some edge cases, such as
+    # curly bracket glob handling in GNU find engine of 'koopa::find' function.
     #
     # @seealso
     # - https://stackoverflow.com/a/57536163/3911732/
@@ -166,9 +172,6 @@ koopa::paste() { # {{{1
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
-            '-'*)
-                koopa::invalid_arg "$1"
-                ;;
             *)
                 pos+=("$1")
                 shift 1
@@ -351,6 +354,7 @@ koopa::strip_trailing_slash() { # {{{1
     return 0
 }
 
+# FIXME Consider adding support for stdin here.
 koopa::sub() { # {{{1
     # """
     # Single substitution.
