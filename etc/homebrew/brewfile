@@ -1,6 +1,6 @@
 # """
 # Homebrew Bundle Brewfile.
-# Updated 2022-02-23.
+# Updated 2022-02-24.
 #
 # @section ilmbase deprecation (due to neofetch):
 #
@@ -142,6 +142,7 @@ brew "pcre"
 # > brew "php"
 brew "pipenv"  # python
 brew "pkg-config"
+brew "podman"
 brew "podofo"
 brew "poetry"
 brew "prettier"  # node
