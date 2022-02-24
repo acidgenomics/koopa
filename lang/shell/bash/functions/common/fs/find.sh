@@ -211,7 +211,7 @@ koopa::find() { # {{{1
             find_args=(
                 '--absolute-path'
                 '--base-directory' "${dict[prefix]}"
-                '--full-path'
+                '--full-path'  # FIXME Consider turning off for glob matching.
                 '--hidden'
                 '--no-ignore'
                 '--one-file-system'
