@@ -47,13 +47,14 @@ koopa::find() { # {{{1
     declare -A app
     declare -A dict=(
         [case_sensitive]=1
+        [days_modified_gt]=''
+        [days_modified_lt]=''
         [empty]=0
         [engine]="${KOOPA_FIND_ENGINE:-}"
         [exclude]=0
         [glob]=''
         [max_depth]=''
-        [min_days_old]=0
-        [min_depth]=''
+        [min_depth]=1
         [print0]=0
         [regex]=''
         [size]=''
@@ -67,6 +68,22 @@ koopa::find() { # {{{1
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--days-modified-before='*)
+                dict[days_modified_gt]="${1#*=}"
+                shift 1
+                ;;
+            '--days-modified-before')
+                dict[days_modified_gt]="${2:?}"
+                shift 2
+                ;;
+            '--days-modified-within='*)
+                dict[days_modified_lt]="${1#*=}"
+                shift 1
+                ;;
+            '--days-modified-within')
+                dict[days_modified_lt]="${2:?}"
+                shift 2
+                ;;
             '--engine='*)
                 dict[engine]="${1#*=}"
                 shift 1
@@ -99,14 +116,6 @@ koopa::find() { # {{{1
                 ;;
             '--max-depth')
                 dict[max_depth]="${2:?}"
-                shift 2
-                ;;
-            '--min-days-old='*)
-                dict[min_days_old]="${1#*=}"
-                shift 1
-                ;;
-            '--min-days-old')
-                dict[min_days_old]="${2:?}"
                 shift 2
                 ;;
             '--min-depth='*)
@@ -213,6 +222,7 @@ koopa::find() { # {{{1
                 '--absolute-path'
                 '--base-directory' "${dict[prefix]}"
                 '--hidden'
+                '--no-follow'
                 '--no-ignore'
                 '--one-file-system'
             )
@@ -260,9 +270,19 @@ koopa::find() { # {{{1
                 # This is additive with other '--type' calls.
                 find_args+=('--type' 'empty')
             fi
-            if [[ "${dict[min_days_old]}" -gt 0 ]]
+            if [[ -n "${dict[days_modified_gt]}" ]]
             then
-                find_args+=('--changed-before' "${dict[min_days_old]}d")
+                find_args+=(
+                    '--changed-before'
+                    "${dict[days_modified_gt]}d"
+                )
+            fi
+            if [[ -n "${dict[days_modified_lt]}" ]]
+            then
+                find_args+=(
+                    '--changed-within'
+                    "${dict[days_modified_lt]}d"
+                )
             fi
             if [[ "${dict[exclude]}" -eq 1 ]]
             then
@@ -300,7 +320,6 @@ koopa::find() { # {{{1
             then
                 find_args+=('-maxdepth' "${dict[max_depth]}")
             fi
-            # FIXME Need to test support for this change in tests/roff:80.
             if [[ -n "${dict[glob]}" ]]
             then
                 if [[ "${dict[case_sensitive]}" -eq 1 ]]
@@ -374,11 +393,21 @@ koopa::find() { # {{{1
                         koopa::stop 'Invalid type argument for find.'
                 esac
             fi
-            if [[ "${dict[min_days_old]}" -gt 0 ]]
+            if [[ -n "${dict[days_modified_gt]}" ]]
             then
-                find_args+=('-ctime' "+${dict[min_days_old]}")
+                find_args+=(
+                    '-mtime'
+                    "+${dict[days_modified_gt]}"
+                )
             fi
-            # NB To ignore a directory and the files under it, consider
+            if [[ -n "${dict[days_modified_lt]}" ]]
+            then
+                find_args+=(
+                    '-mtime'
+                    "-${dict[days_modified_lt]}"
+                )
+            fi
+            # FIXME To ignore a directory and the files under it, consider
             # calling '-prune' here instead.
             if [[ "${dict[exclude]}" -eq 1 ]]
             then
