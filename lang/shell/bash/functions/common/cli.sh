@@ -14,7 +14,6 @@ koopa::cli_app() { # {{{1
         '--help' | \
         '-h')
             koopa::help "$(koopa::man_prefix)/man1/app.1"
-            return 0
             ;;
         # Cross platform -------------------------------------------------------
         'aws')
@@ -323,7 +322,6 @@ koopa::cli_nested_runner() { # {{{1
         '--help' | \
         '-h')
             koopa::help "$(koopa::man_prefix)/man/man1/${dict[runner]}.1"
-            return 0
             ;;
         '-'*)
             koopa::invalid_arg "$*"
@@ -351,7 +349,6 @@ koopa::cli_system() { # {{{1
         '--help' | \
         '-h')
             koopa::help "$(koopa::man_prefix)/man1/system.1"
-            return 0
             ;;
         'check')
             key='check-system'
@@ -625,7 +622,6 @@ koopa::koopa() { # {{{1
         '--help' | \
         '-h')
             koopa::help "$(koopa::man_prefix)/man1/${dict[key]}.1"
-            return 0
             ;;
     esac
     dict[fun]="$(koopa::which_function "${dict[key]}" || true)"
