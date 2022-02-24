@@ -229,7 +229,6 @@ __koopa_bash_header() { # {{{1
                 dict[man_file]="${dict[man_prefix]}/man/\
 man1/${dict[script_name]}.1"
                 koopa::help "${dict[man_file]}"
-                return 0
                 ;;
         esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
