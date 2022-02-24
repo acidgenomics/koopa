@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME glob matching against full path is broken for fd.
+# FIXME How to resolve this? Currently an issue with roff tests.
+
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
@@ -48,10 +51,9 @@ koopa::find() { # {{{1
         [engine]="${KOOPA_FIND_ENGINE:-}"
         [exclude]=0
         [glob]=''
-        [match_against_full_path]=0
-        [max_depth]=0
+        [max_depth]=''
         [min_days_old]=0
-        [min_depth]=1
+        [min_depth]=''
         [print0]=0
         [regex]=''
         [size]=''
@@ -160,10 +162,6 @@ koopa::find() { # {{{1
                 dict[case_sensitive]=0
                 shift 1
                 ;;
-            '--match-against-full-path')
-                dict[match_against_full_path]=1
-                shift 1
-                ;;
             '--print0')
                 dict[print0]=1
                 shift 1
@@ -213,14 +211,11 @@ koopa::find() { # {{{1
             find_args=(
                 '--absolute-path'
                 '--base-directory' "${dict[prefix]}"
+                '--full-path'
                 '--hidden'
                 '--no-ignore'
                 '--one-file-system'
             )
-            if [[ "${dict[match_against_full_path]}" -eq 1 ]]
-            then
-                find_args+=('--full-path')
-            fi
             if [[ "${dict[case_sensitive]}" -eq 1 ]]
             then
                 find_args+=('--case-sensitive')
@@ -234,11 +229,11 @@ koopa::find() { # {{{1
             then
                 find_args+=('--regex' "${dict[regex]}")
             fi
-            if [[ "${dict[min_depth]}" -gt 0 ]]
+            if [[ -n "${dict[min_depth]}" ]]
             then
                 find_args+=('--min-depth' "${dict[min_depth]}")
             fi
-            if [[ "${dict[max_depth]}" -gt 0 ]]
+            if [[ -n "${dict[max_depth]}" ]]
             then
                 find_args+=('--max-depth' "${dict[max_depth]}")
             fi
@@ -297,11 +292,11 @@ koopa::find() { # {{{1
                 "${dict[prefix]}"
                 '-xdev'
             )
-            if [[ "${dict[min_depth]}" -gt 0 ]]
+            if [[ -n "${dict[min_depth]}" ]]
             then
                 find_args+=('-mindepth' "${dict[min_depth]}")
             fi
-            if [[ "${dict[max_depth]}" -gt 0 ]]
+            if [[ -n "${dict[max_depth]}" ]]
             then
                 find_args+=('-maxdepth' "${dict[max_depth]}")
             fi
@@ -353,15 +348,12 @@ koopa::find() { # {{{1
             then
                 # GNU file '-regex' argument matches against the entire file
                 # path, so we need to adjust our match here.
-                if [[ "${dict[match_against_full_path]}" -eq 0 ]]
-                then
-                    dict[regex]="$( \
-                        koopa::sub \
-                            --pattern='^' \
-                            --replacement="^${dict[prefix]}/" \
-                            "${dict[regex]}" \
-                    )"
-                fi
+                dict[regex]="$( \
+                    koopa::sub \
+                        --pattern='^' \
+                        --replacement="^${dict[prefix]}/" \
+                        "${dict[regex]}" \
+                )"
                 # NOTE '-regextype' must come before '-regex' here.
                 find_args+=(
                     '-regextype' 'posix-egrep'
@@ -392,15 +384,12 @@ koopa::find() { # {{{1
             then
                 for exclude_arg in "${exclude_arr[@]}"
                 do
-                    if [[ "${dict[match_against_full_path]}" -eq 0 ]]
-                    then
-                        exclude_arg="$( \
-                            koopa::sub \
-                                --pattern='^' \
-                                --replacement="${dict[prefix]}/" \
-                                "$exclude_arg" \
-                        )"
-                    fi
+                    exclude_arg="$( \
+                        koopa::sub \
+                            --pattern='^' \
+                            --replacement="${dict[prefix]}/" \
+                            "$exclude_arg" \
+                    )"
                     find_args+=('-not' '-path' "$exclude_arg")
                 done
             fi
