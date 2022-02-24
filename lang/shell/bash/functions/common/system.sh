@@ -73,7 +73,7 @@ koopa::help() { # {{{1
         | koopa::str_detect_fixed --pattern='.TH ' \
         || koopa::stop "Invalid documentation at '${dict[man_file]}'."
     "${app[man]}" "${dict[man_file]}"
-    return 0
+    exit 0
 }
 
 koopa::info_box() { # {{{1
