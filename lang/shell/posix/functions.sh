@@ -4296,9 +4296,9 @@ _koopa_user_id() { # {{{1
 _koopa_warn() { # {{{1
     # """
     # Warning message.
-    # @note Updated 2021-01-19.
+    # @note Updated 2022-02-24.
     # """
-    __koopa_msg 'magenta-bold' 'magenta' '!! Warning:' "$@" >&2
+    __koopa_msg 'magenta-bold' 'magenta' '!!' "$@" >&2
     return 0
 }
 
