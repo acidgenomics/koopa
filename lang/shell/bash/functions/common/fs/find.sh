@@ -3,7 +3,7 @@
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-02-24.
     #
     # Consider updating the variant defined in the Bash header upon any
     # changes to this function.
@@ -186,7 +186,6 @@ koopa::find() { # {{{1
                 ;;
         esac
     done
-    koopa::assert_has_no_args "$#"
     if [[ -n "${dict[glob]}" ]] && [[ -n "${dict[regex]}" ]]
     then
         koopa::stop "Specify '--glob' or '--regex' but not both."
@@ -197,29 +196,9 @@ koopa::find() { # {{{1
     then
         app[find]="$(koopa::locate_fd 2>/dev/null || true)"
         [[ ! -x "${app[find]}" ]] && app[find]="$(koopa::locate_find)"
-        case "$(koopa::basename "${app[find]}")" in
-            'fd')
-                dict[engine]='rust-fd'
-                ;;
-            'find')
-                dict[engine]='gnu-find'
-                ;;
-            *)
-                koopa::stop 'Unable to locate supported find engine.'
-                ;;
-        esac
+        dict[engine]="$(koopa::basename "${app[find]}")"
     else
-        case "${dict[engine]}" in
-            'gnu-find')
-                app[find]="$(koopa::locate_find)"
-                ;;
-            'rust-fd')
-                app[find]="$(koopa::locate_fd)"
-                ;;
-            *)
-                koopa::stop "Invalid engline '${dict[engine]}'."
-                ;;
-        esac
+        app[find]="$(koopa::locate_"${dict[engine]}")"
     fi
     koopa::assert_is_installed "${app[find]}"
     find=()
@@ -230,90 +209,7 @@ koopa::find() { # {{{1
     fi
     find+=("${app[find]}")
     case "${dict[engine]}" in
-        'gnu-find')
-            find_args=(
-                "${dict[prefix]}"
-                '-xdev'
-            )
-            if [[ "${dict[min_depth]}" -gt 0 ]]
-            then
-                find_args+=('-mindepth' "${dict[min_depth]}")
-            fi
-            if [[ "${dict[max_depth]}" -gt 0 ]]
-            then
-                find_args+=('-maxdepth' "${dict[max_depth]}")
-            fi
-            if [[ -n "${dict[glob]}" ]]
-            then
-                if [[ "${dict[case_sensitive]}" -eq 1 ]]
-                then
-                    find_args+=('-name' "${dict[glob]}")
-                else
-                    find_args+=('-iname' "${dict[glob]}")
-                fi
-            elif [[ -n "${dict[regex]}" ]]
-            then
-                # GNU file '-regex' argument matches against the entire file
-                # path, so we need to adjust our match here.
-                if [[ "${dict[match_against_full_path]}" -eq 0 ]]
-                then
-                    dict[regex]="$( \
-                        koopa::sub \
-                            --pattern='\^' \
-                            --replacement="^${dict[prefix]}/" \
-                            "${dict[regex]}" \
-                    )"
-                fi
-                # NOTE '-regextype' must come before '-regex' here.
-                find_args+=(
-                    '-regextype' 'posix-egrep'
-                    '-regex' "${dict[regex]}"
-                )
-            fi
-            if [[ -n "${dict[type]}" ]]
-            then
-                case "${dict[type]}" in
-                    'broken-symlink')
-                        find_args+=('-xtype' 'l')
-                        ;;
-                    'd' | \
-                    'f')
-                        find_args+=('-type' "${dict[type]}")
-                        ;;
-                    *)
-                        koopa::stop 'Invalid type argument for GNU find.'
-                esac
-            fi
-            if [[ "${dict[min_days_old]}" -gt 0 ]]
-            then
-                find_args+=('-ctime' "+${dict[min_days_old]}")
-            fi
-
-            # FIXME To ignore a directory and the files under it, call '-prune'.
-
-            if [[ "${dict[exclude]}" -eq 1 ]]
-            then
-                for exclude_arg in "${exclude_arr[@]}"
-                do
-                    find_args+=('-not' '-path' "$exclude_arg")
-                done
-            fi
-            if [[ "${dict[empty]}" -eq 1 ]]
-            then
-                find_args+=('-empty')
-            fi
-            if [[ -n "${dict[size]}" ]]
-            then
-                find_args+=('-size' "${dict[size]}")
-            fi
-            if [[ "${dict[print0]}" -eq 1 ]]
-            then
-                find_args+=('-print0')
-            else
-                find_args+=('-print')
-            fi
-            ;;
-        'rust-fd')
+        'fd')
             find_args=(
                 '--absolute-path'
                 '--base-directory' "${dict[prefix]}"
@@ -394,6 +290,89 @@ koopa::find() { # {{{1
             if [[ "${dict[print0]}" -eq 1 ]]
             then
                 find_args+=('--print0')
+            fi
+            ;;
+        'find')
+            find_args=(
+                "${dict[prefix]}"
+                '-xdev'
+            )
+            if [[ "${dict[min_depth]}" -gt 0 ]]
+            then
+                find_args+=('-mindepth' "${dict[min_depth]}")
+            fi
+            if [[ "${dict[max_depth]}" -gt 0 ]]
+            then
+                find_args+=('-maxdepth' "${dict[max_depth]}")
+            fi
+            if [[ -n "${dict[glob]}" ]]
+            then
+                if [[ "${dict[case_sensitive]}" -eq 1 ]]
+                then
+                    find_args+=('-name' "${dict[glob]}")
+                else
+                    find_args+=('-iname' "${dict[glob]}")
+                fi
+            elif [[ -n "${dict[regex]}" ]]
+            then
+                # GNU file '-regex' argument matches against the entire file
+                # path, so we need to adjust our match here.
+                if [[ "${dict[match_against_full_path]}" -eq 0 ]]
+                then
+                    dict[regex]="$( \
+                        koopa::sub \
+                            --pattern='\^' \
+                            --replacement="^${dict[prefix]}/" \
+                            "${dict[regex]}" \
+                    )"
+                fi
+                # NOTE '-regextype' must come before '-regex' here.
+                find_args+=(
+                    '-regextype' 'posix-egrep'
+                    '-regex' "${dict[regex]}"
+                )
+            fi
+            if [[ -n "${dict[type]}" ]]
+            then
+                case "${dict[type]}" in
+                    'broken-symlink')
+                        find_args+=('-xtype' 'l')
+                        ;;
+                    'd' | \
+                    'f')
+                        find_args+=('-type' "${dict[type]}")
+                        ;;
+                    *)
+                        koopa::stop 'Invalid type argument for GNU find.'
+                esac
+            fi
+            if [[ "${dict[min_days_old]}" -gt 0 ]]
+            then
+                find_args+=('-ctime' "+${dict[min_days_old]}")
+            fi
+
+            # FIXME To ignore a directory and the files under it, call '-prune'.
+
+            if [[ "${dict[exclude]}" -eq 1 ]]
+            then
+                for exclude_arg in "${exclude_arr[@]}"
+                do
+                    find_args+=('-not' '-path' "$exclude_arg")
+                done
+            fi
+            if [[ "${dict[empty]}" -eq 1 ]]
+            then
+                find_args+=('-empty')
+            fi
+            if [[ -n "${dict[size]}" ]]
+            then
+                find_args+=('-size' "${dict[size]}")
+            fi
+            if [[ "${dict[print0]}" -eq 1 ]]
+            then
+                find_args+=('-print0')
+            else
+                find_args+=('-print')
             fi
             ;;
         *)
@@ -517,7 +496,7 @@ koopa::find_broken_symlinks() { # {{{1
     do
         str="$( \
             koopa::find \
-                --engine='gnu-find' \
+                --engine='find' \
                 --min-depth=1 \
                 --prefix="$prefix" \
                 --sort \
