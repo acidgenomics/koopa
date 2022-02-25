@@ -164,33 +164,6 @@ koopa::convert_utf8_nfd_to_nfc() { # {{{1
     return 0
 }
 
-koopa::delete_adobe_bridge_cache() { # {{{1
-    # """
-    # Delete Adobe Bridge cache files.
-    # @note Updated 2021-11-04.
-    # """
-    local files prefix
-    koopa::assert_has_args "$#"
-    prefix="${1:?}"
-    koopa::assert_is_dir "$prefix"
-    prefix="$(koopa::realpath "$prefix")"
-    koopa::alert "Deleting Adobe Bridge cache in '${prefix}'."
-    readarray -t files <<< "$( \
-        koopa::find \
-            --min-depth=1 \
-            --prefix="$prefix" \
-            --regex='^\.BridgeCache(T)?$' \
-            --type='f' \
-    )"
-    if koopa::is_array_empty "${files[@]:-}"
-    then
-        koopa::alert_note 'Failed to detect any Bridge cache files.'
-        return 1
-    fi
-    koopa::rm "${files[@]}"
-    return 0
-}
-
 koopa::delete_broken_symlinks() { # {{{1
     # """
     # Delete broken symlinks.
@@ -265,7 +238,7 @@ koopa::delete_named_subdirs() { # {{{1
     )
     readarray -t matches <<< "$( \
         koopa::find \
-            --glob="${dict[subdir_name]}" \
+            --pattern="${dict[subdir_name]}" \
             --prefix="${dict[prefix]}" \
             --type='d' \
     )"
@@ -490,9 +463,9 @@ koopa::nfiletypes() { # {{{1
         koopa::find \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern='*.*' \
             --prefix="${dict[prefix]}" \
-            --regex='^.+\.[A-Za-z0-9]+$' \
-            --type 'f' \
+            --type='f' \
         | "${app[sed]}" 's/.*\.//' \
         | "${app[sort]}" \
         | "${app[uniq]}" --count \
@@ -546,7 +519,7 @@ koopa::reset_permissions() { # {{{1
         "${app[chmod]}" 'u=rw,g=rw,o=r' {}
     # Executable (shell) scripts.
     koopa::find \
-        --glob='*.sh' \
+        --pattern='*.sh' \
         --prefix="${dict[prefix]}" \
         --print0 \
         --type='f' \

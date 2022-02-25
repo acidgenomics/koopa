@@ -21,19 +21,18 @@ koopa_rename_from_csv() { # {{{1
     return 0
 }
 
+# FIXME Need to test that this works recursively using 'koopa::find'.
 koopa::rename_lowercase() { # {{{1
     # """
     # Rename files to lowercase.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-02-24.
     #
     # @usage koopa::rename_lowercase FILE...
     # """
-    local app dict
+    local app dict pos
     koopa::assert_has_args "$#"
     declare -A app=(
-        [find]="$(koopa::locate_find)"
         [rename]="$(koopa::locate_rename)"
-        [sort]="$(koopa::locate_sort)"
         [xargs]="$(koopa::locate_xargs)"
     )
     declare -A dict=(
@@ -62,42 +61,42 @@ koopa::rename_lowercase() { # {{{1
     then
         koopa::assert_has_args_le "$#" 1
         dict[prefix]="${1:-.}"
+        koopa::assert_is_dir "${dict[prefix]}"
         # Rename files.
-        # FIXME Rework using 'koopa::find'.
-        "${app[find]}" "${dict[prefix]}" \
-            -mindepth 1 \
-            -type 'f' \
-            -name '*[A-Z]*' \
-            -not -name '.*' \
-            -print0 \
-            | "${app[sort]}" --zero-terminated \
-            | "${app[xargs]}" \
-                --no-run-if-empty \
-                --null \
-                -I {} \
-                "${app[rename]}" \
-                    --force \
-                    --verbose \
-                    "${dict[pattern]}" \
-                    {}
+        koopa::find \
+            --exclude='.*' \
+            --min-depth=1 \
+            --pattern='*[A-Z]*' \
+            --prefix="${dict[prefix]}" \
+            --print0 \
+            --sort \
+            --type='f' \
+        | "${app[xargs]}" \
+            --no-run-if-empty \
+            --null \
+            -I {} \
+            "${app[rename]}" \
+                --force \
+                --verbose \
+                "${dict[pattern]}" \
+                {}
         # Rename directories.
-        # FIXME Rework using 'koopa::find'.
-        "${app[find]}" "${dict[prefix]}" \
-            -mindepth 1 \
-            -type 'd' \
-            -name '*[A-Z]*' \
-            -not -name '.*' \
-            -print0 \
-            | "${app[sort]}" --reverse --zero-terminated \
-            | "${app[xargs]}" \
-                --no-run-if-empty \
-                --null \
-                -I {} \
-                "${app[rename]}" \
-                    --force \
-                    --verbose \
-                    "${dict[pattern]}" \
-                    {}
+        koopa::find \
+            --exclude='.*' \
+            --min-depth=1 \
+            --pattern='*[A-Z]*' \
+            --prefix="${dict[prefix]}" \
+            --print0 \
+            --type='d' \
+        | "${app[xargs]}" \
+            --no-run-if-empty \
+            --null \
+            -I {} \
+            "${app[rename]}" \
+                --force \
+                --verbose \
+                "${dict[pattern]}" \
+                {}
     else
         "${app[rename]}" \
             --force \

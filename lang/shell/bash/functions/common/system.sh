@@ -676,9 +676,9 @@ koopa::view_latest_tmp_log_file() { # {{{1
     )
     dict[log_file]="$( \
         koopa::find \
-            --glob="koopa-${dict[user_id]}-*" \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern="koopa-${dict[user_id]}-*" \
             --prefix="${dict[tmp_dir]}" \
             --sort \
             --type='f' \
