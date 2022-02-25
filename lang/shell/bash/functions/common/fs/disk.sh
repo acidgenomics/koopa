@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE These statistics can return incorrectly for macOS APFS volumes.
-# FIXME Confirm that this works, after changing our grep approach.
-
 koopa_disk_gb_free() { # {{{1
     # """
     # Available free disk space in GB.
@@ -36,8 +33,6 @@ koopa_disk_gb_free() { # {{{1
     koopa_print "$str"
     return 0
 }
-
-# FIXME Check that this works, after changing grep approach.
 
 koopa_disk_gb_total() { # {{{1
     # """
