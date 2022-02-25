@@ -2,7 +2,6 @@
 #+STARTUP: content
 * Development (high priority)
 ** TODO Add improved stack trace of error messages.
-** TODO Switch koopa::find calls to use '--prune' instead of directory exclusion.
 ** TODO Before pushing changes, ensure sed with '--quiet' change is non breaking.
 ** TODO Syntactic naming functions need an option to also convert the extension to lowercase.
 ** TODO Shared install isn't setting user permissions recursively correctly.
