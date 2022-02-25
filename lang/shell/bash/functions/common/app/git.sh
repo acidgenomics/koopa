@@ -58,9 +58,9 @@ koopa::git_checkout_recursive() { # {{{1
             dir="$(koopa::realpath "$dir")"
             readarray -t repos <<< "$( \
                 koopa::find \
-                    --glob='.git' \
                     --max-depth=3 \
                     --min-depth=2 \
+                    --pattern='.git' \
                     --prefix="$dir" \
                     --sort \
             )"
@@ -405,9 +405,9 @@ koopa::git_pull_recursive() { # {{{1
             dir="$(koopa::realpath "$dir")"
             readarray -t repos <<< "$( \
                 koopa::find \
-                    --glob='.git' \
                     --max-depth=3 \
                     --min-depth=2 \
+                    --pattern='.git' \
                     --prefix="$dir" \
                     --sort \
             )"
@@ -457,9 +457,9 @@ koopa::git_push_recursive() { # {{{1
             dir="$(koopa::realpath "$dir")"
             readarray -t repos <<< "$( \
                 koopa::find \
-                    --glob='.git' \
                     --max-depth=3 \
                     --min-depth=2 \
+                    --pattern='.git' \
                     --prefix="$dir" \
                     --sort \
             )"
@@ -774,9 +774,9 @@ koopa::git_status_recursive() { # {{{1
             dir="$(koopa::realpath "$dir")"
             readarray -t repos <<< "$( \
                 koopa::find \
-                    --glob='.git' \
                     --max-depth=3 \
                     --min-depth=2 \
+                    --pattern='.git' \
                     --prefix="$dir" \
                     --sort \
             )"

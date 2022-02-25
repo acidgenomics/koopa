@@ -21,45 +21,32 @@ koopa::test() { # {{{1
 koopa::test_find_files() { # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-02-24.
     #
     # Not sorting here can speed the function up.
     # """
-    local app dict files
+    local dict files
     koopa::assert_has_no_args "$#"
-    declare -A app=(
-        [find]="$(koopa::locate_find)"
-    )
     declare -A dict=(
-        [app_prefix]="$(koopa::app_prefix)"
-        [opt_prefix]="$(koopa::opt_prefix)"
         [prefix]="$(koopa::koopa_prefix)"
     )
     readarray -t files <<< "$( \
-        "${app[find]}" "${dict[prefix]}" \
-            -mindepth 1 \
-            -type 'f' \
-            -not -name "$(koopa::basename "$0")" \
-            -not -name '*.1' \
-            -not -name '*.md' \
-            -not -name '*.ronn' \
-            -not -name '*.swp' \
-            -not -name '.pylintrc' \
-            -not -path "${dict[app_prefix]}/*" \
-            -not -path "${dict[opt_prefix]}/*" \
-            -not -path "${dict[prefix]}/.*" \
-            -not -path "${dict[prefix]}/.git/*" \
-            -not -path "${dict[prefix]}/app/*" \
-            -not -path "${dict[prefix]}/cellar/*" \
-            -not -path "${dict[prefix]}/coverage/*" \
-            -not -path "${dict[prefix]}/dotfiles/*" \
-            -not -path "${dict[prefix]}/lang/r/.Rproj.user/*" \
-            -not -path "${dict[prefix]}/opt/*" \
-            -not -path "${dict[prefix]}/tests/*" \
-            -not -path "${dict[prefix]}/todo.org" \
-            -not -path '*/etc/R/*' \
-            -print \
-            2>/dev/null \
+        koopa::find \
+            --exclude='**/etc/R/**' \
+            --exclude='*.1' \
+            --exclude='*.md' \
+            --exclude='*.ronn' \
+            --exclude='*.swp' \
+            --exclude='.*' \
+            --exclude='.git/**' \
+            --exclude='app/**' \
+            --exclude='coverage/**' \
+            --exclude='etc/R/**' \
+            --exclude='opt/**' \
+            --exclude='tests/**' \
+            --exclude='todo.org' \
+            --prefix="${dict[prefix]}" \
+            --type='f' \
     )"
     if koopa::is_array_empty "${files[@]:-}"
     then
@@ -67,8 +54,6 @@ koopa::test_find_files() { # {{{1
     fi
     koopa::print "${files[@]}"
 }
-
-# FIXME Double check that change to koopa::print works here.
 
 koopa::test_find_files_by_ext() { # {{{1
     # """
