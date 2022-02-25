@@ -193,7 +193,7 @@ test_shellcheck() { # {{{1
     readarray -t files <<< \
         "$(koopa::test_find_files_by_shebang '^#!/.+\b(bash|sh)$')"
     "${app[shellcheck]}" \
-        --exclude='SC2119,SC2120,SC3043' \
+        --exclude='SC2119,SC2120,SC3040,SC3043' \
         --external-sources \
         "${files[@]}"
     koopa::status_ok "shell | shellcheck [${#files[@]}]"
