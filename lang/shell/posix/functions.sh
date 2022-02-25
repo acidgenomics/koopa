@@ -1,38 +1,39 @@
 #!/bin/sh
 
 # FIXME Rework all 'x' assignment as 'str' instead.
+# FIXME Rework all 'string' assignment as 'str' instead.
 
 __koopa_add_to_path_string_end() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
-    # @note Updated 2022-01-23.
+    # @note Updated 2022-02-25.
     # """
-    local string dir
-    string="${1:-}"
+    local dir str
+    str="${1:-}"
     dir="${2:?}"
-    if koopa_str_detect_posix "$string" ":${dir}"
+    if koopa_str_detect_posix "$str" ":${dir}"
     then
-        string="$(__koopa_remove_from_path_string "$string" "$dir")"
+        str="$(__koopa_remove_from_path_string "$str" "$dir")"
     fi
-    string="${string}:${dir}"
-    koopa_print "$string"
+    str="${str}:${dir}"
+    koopa_print "$str"
     return 0
 }
 
 __koopa_add_to_path_string_start() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
-    # @note Updated 2021-04-23.
+    # @note Updated 2022-02-25.
     # """
-    local string dir
-    string="${1:-}"
+    local dir str
+    str="${1:-}"
     dir="${2:?}"
-    if koopa_str_detect_posix "$string" ":${dir}"
+    if koopa_str_detect_posix "$str" ":${dir}"
     then
-        string="$(__koopa_remove_from_path_string "$string" "$dir")"
+        str="$(__koopa_remove_from_path_string "$str" "$dir")"
     fi
-    string="${dir}:${string}"
-    koopa_print "$string"
+    str="${dir}:${str}"
+    koopa_print "$str"
     return 0
 }
 
@@ -111,30 +112,29 @@ __koopa_ansi_escape() { # {{{1
 __koopa_id() { # {{{1
     # """
     # Return ID string.
-    # @note Updated 2021-05-25.
+    # @note Updated 2022-02-25.
     # """
-    local x
-    x="$(id "$@")"
-    [ -n "$x" ] || return 1
-    koopa_print "$x"
+    local str
+    str="$(id "$@")"
+    [ -n "$str" ] || return 1
+    koopa_print "$str"
     return 0
 }
 
 __koopa_msg() { # {{{1
     # """
     # Standard message generator.
-    # @note Updated 2021-06-05.
+    # @note Updated 2022-02-25.
     # """
-    local c1 c2 nc prefix string x
+    local c1 c2 nc prefix str
     c1="$(__koopa_ansi_escape "${1:?}")"
     c2="$(__koopa_ansi_escape "${2:?}")"
     nc="$(__koopa_ansi_escape 'nocolor')"
     prefix="${3:?}"
     shift 3
-    for string in "$@"
+    for str in "$@"
     do
-        x="${c1}${prefix}${nc} ${c2}${string}${nc}"
-        koopa_print "$x"
+        koopa_print "${c1}${prefix}${nc} ${c2}${str}${nc}"
     done
     return 0
 }
@@ -142,28 +142,28 @@ __koopa_msg() { # {{{1
 __koopa_packages_prefix() { # {{{1
     # """
     # Packages prefix for a specific language.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-02-25.
     #
     # @usage __koopa_packages_prefix NAME [VERSION]
     # """
-    local name version x
+    local name str version
     name="${1:?}-packages"
     version="${2:-}"
     if [ -n "$version" ]
     then
         version="$(koopa_major_minor_version "$version")"
-        x="$(koopa_app_prefix)/${name}/${version}"
+        str="$(koopa_app_prefix)/${name}/${version}"
     else
-        x="$(koopa_opt_prefix)/${name}"
+        str="$(koopa_opt_prefix)/${name}"
     fi
-    koopa_print "$x"
+    koopa_print "$str"
     return 0
 }
 
 __koopa_print_ansi() { # {{{1
     # """
     # Print a colored line in console.
-    # @note Updated 2020-07-30.
+    # @note Updated 2022-02-25.
     #
     # Currently using ANSI escape codes.
     # This is the classic 8 color terminal approach.
@@ -185,13 +185,13 @@ __koopa_print_ansi() { # {{{1
     # - https://stackoverflow.com/questions/15736223
     # - https://bixense.com/clicolors/
     # """
-    local color nocolor string
+    local color nocolor str
     color="$(__koopa_ansi_escape "${1:?}")"
     nocolor="$(__koopa_ansi_escape 'nocolor')"
     shift 1
-    for string in "$@"
+    for str in "$@"
     do
-        printf '%s%b%s\n' "$color" "$string" "$nocolor"
+        printf '%s%b%s\n' "$color" "$str" "$nocolor"
     done
     return 0
 }
@@ -404,8 +404,7 @@ koopa_activate_coreutils_aliases() { # {{{1
     if koopa_is_linux
     then
         # GNU coreutils.
-        # The '--archive' flag can have issues on some file systems.
-        cp_args='--archive --interactive'
+        cp_args='--interactive'
         ln_args='--interactive --no-dereference --symbolic'
         mkdir_args='--parents'
         mv_args='--interactive'
@@ -416,7 +415,7 @@ koopa_activate_coreutils_aliases() { # {{{1
     elif koopa_is_macos
     then
         # BSD coreutils.
-        cp_args='-ai'
+        cp_args='-i'
         ln_args='-ins'
         mkdir_args='-p'
         mv_args='-i'
