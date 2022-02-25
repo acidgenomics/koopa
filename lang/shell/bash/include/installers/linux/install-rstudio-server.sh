@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::linux_install_rstudio_server() { # {{{1
+linux_install_rstudio_server() { # {{{1
     # """
     # Install RStudio Server.
     # @note Updated 2022-01-28.
@@ -26,7 +26,7 @@ koopa:::linux_install_rstudio_server() { # {{{1
     # """
     local app dict install
     declare -A app=(
-        [r]="$(koopa::locate_r)"
+        [r]="$(koopa_locate_r)"
     )
     declare -A dict=(
         [file_ext]=''
@@ -82,11 +82,11 @@ koopa:::linux_install_rstudio_server() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--file-ext' "${dict[file_ext]}" \
         '--install' "${dict[install]}" \
         '--name' "${dict[name]}" \
@@ -94,23 +94,23 @@ koopa:::linux_install_rstudio_server() { # {{{1
         '--platform' "${dict[platform]}" \
         '--version' "${dict[version]}"
     dict[file_stem]="${dict[name]}"
-    if koopa::is_fedora_like
+    if koopa_is_fedora_like
     then
         dict[file_stem]="${dict[file_stem]}-rhel"
     fi
-    koopa::add_to_path_start "$(koopa::dirname "${app[r]}")"
+    koopa_add_to_path_start "$(koopa_dirname "${app[r]}")"
     dict[file]="${dict[file_stem]}-${dict[version]}-\
 ${dict[platform]}.${dict[file_ext]}"
     dict[url]="https://download2.rstudio.org/server/${dict[os_codename]}/\
 ${dict[platform]}/${dict[file]}"
     # Ensure '+' gets converted to '-'.
     dict[url]="$( \
-        koopa::gsub \
+        koopa_gsub \
             --pattern='\+' \
             --replacement='-' \
             "${dict[url]}" \
     )"
-    koopa::download "${dict[url]}" "${dict[file]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
     IFS=' ' read -r -a install <<< "${dict[install]}"
     "${install[@]}" "${dict[file]}"
     return 0

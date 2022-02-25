@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_curl() { # {{{1
+install_curl() { # {{{1
     # """
     # Install cURL.
     # @note Updated 2022-01-19.
@@ -14,12 +14,12 @@ koopa:::install_curl() { # {{{1
     # - https://stackoverflow.com/questions/30017397
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='curl'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -28,16 +28,16 @@ koopa:::install_curl() { # {{{1
     dict[version2]="${dict[version]//./_}"
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/releases/\
 download/${dict[name]}-${dict[version2]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-versioned-symbols'
     )
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        dict[brew_prefix]="$(koopa::homebrew_prefix)"
+        dict[brew_prefix]="$(koopa_homebrew_prefix)"
         conf_args+=(
             "--with-ssl=${dict[brew_prefix]}/opt/openssl@1.1"
         )

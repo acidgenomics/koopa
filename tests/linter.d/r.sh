@@ -9,14 +9,14 @@ main() { # {{{1
     # Updated 2020-07-07.
     # """
     local files merge r_files rscript_files
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'R'
-    koopa::assert_is_r_package_installed 'lintr'
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_installed 'R'
+    koopa_assert_is_r_package_installed 'lintr'
     # Find scripts by file extension.
-    readarray -t r_files <<< "$(koopa::test_find_files_by_ext '.R')"
+    readarray -t r_files <<< "$(koopa_test_find_files_by_ext '.R')"
     # Find scripts by shebang.
     readarray -t rscript_files <<< \
-        "$(koopa::test_find_files_by_shebang '^#!/.*\bRscript\b$')"
+        "$(koopa_test_find_files_by_shebang '^#!/.*\bRscript\b$')"
     # Merge the arrays.
     merge=("${r_files[@]}" "${rscript_files[@]}")
     files="$(printf '%q\n' "${merge[@]}" | sort -u)"
@@ -29,9 +29,9 @@ main() { # {{{1
 
 test_lintr() { # {{{1
     local app file
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [rscript]="$(koopa::locate_rscript)"
+        [rscript]="$(koopa_locate_rscript)"
     )
     for file in "$@"
     do
@@ -39,7 +39,7 @@ test_lintr() { # {{{1
         [ -f "$file" ] || continue
         "${app[rscript]}" -e "lintr::lint(file = '${file}')"
     done
-    koopa::status_ok "r-linter [${#}]"
+    koopa_status_ok "r-linter [${#}]"
     return 0
 }
 

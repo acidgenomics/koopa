@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::uninstall_homebrew() { # {{{1
+uninstall_homebrew() { # {{{1
     # """
     # Uninstall Homebrew.
     # @note Updated 2021-11-22.
@@ -11,24 +11,24 @@ koopa:::uninstall_homebrew() { # {{{1
     # - https://docs.brew.sh/FAQ
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [yes]="$(koopa::locate_yes)"
+        [yes]="$(koopa_locate_yes)"
     )
     declare -A dict=(
-        [user]="$(koopa::user)"
+        [user]="$(koopa_user)"
     )
     dict[file]='uninstall.sh'
     dict[url]="https://raw.githubusercontent.com/Homebrew/install/\
 master/${dict[file]}"
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        koopa::alert 'Changing default shell to system Zsh.'
+        koopa_alert 'Changing default shell to system Zsh.'
         chsh -s '/bin/zsh' "${dict[user]}"
     fi
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::chmod 'u+x' "${dict[file]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_chmod 'u+x' "${dict[file]}"
     "${app[yes]}" | "./${dict[file]}" || true
     return 0
 }

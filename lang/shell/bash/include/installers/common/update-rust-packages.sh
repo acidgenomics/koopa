@@ -2,7 +2,7 @@
 
 # NOTE We should early return here when no packages need updating.
 
-koopa:::update_rust_packages() { # {{{1
+update_rust_packages() { # {{{1
     # """
     # Update Rust packages.
     # @note Updated 2022-02-10.
@@ -11,13 +11,13 @@ koopa:::update_rust_packages() { # {{{1
     # - https://github.com/nabijaczleweli/cargo-update
     # """
     local app
-    koopa::assert_has_no_args "$#"
-    koopa::activate_rust
+    koopa_assert_has_no_args "$#"
+    koopa_activate_rust
     declare -A app=(
-        [cargo]="$(koopa::locate_cargo)"
+        [cargo]="$(koopa_locate_cargo)"
     )
     export RUST_BACKTRACE=1
-    koopa::add_to_path_start "$(koopa::dirname "${app[cargo]}")"
+    koopa_add_to_path_start "$(koopa_dirname "${app[cargo]}")"
     "${app[cargo]}" install-update -a
     return 0
 }

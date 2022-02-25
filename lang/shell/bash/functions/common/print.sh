@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-koopa:::h() { # {{{1
+__koopa_h() { # {{{1
     # """
     # Header message generator.
     # @note Updated 2022-01-20.
     # """
     local dict
-    koopa::assert_has_args_ge "$#" 2
+    koopa_assert_has_args_ge "$#" 2
     declare -A dict=(
-        [emoji]="$(koopa::acid_emoji)"
+        [emoji]="$(koopa_acid_emoji)"
         [level]="${1:?}"
     )
     shift 1
     case "${dict[level]}" in
         '1')
-            koopa::print ''
+            koopa_print ''
             dict[prefix]='#'
             ;;
         '2')
@@ -36,14 +36,14 @@ koopa:::h() { # {{{1
             dict[prefix]='#######'
             ;;
         *)
-            koopa::stop 'Invalid header level.'
+            koopa_stop 'Invalid header level.'
             ;;
     esac
-    koopa:::msg 'magenta' 'default' "${dict[emoji]} ${dict[prefix]}" "$@"
+    __koopa_msg 'magenta' 'default' "${dict[emoji]} ${dict[prefix]}" "$@"
     return 0
 }
 
-koopa:::alert_process_start() { # {{{1
+__koopa_alert_process_start() { # {{{1
     # """
     # Inform the user about the start of a process.
     # @note Updated 2021-11-18.
@@ -52,7 +52,7 @@ koopa:::alert_process_start() { # {{{1
     declare -A dict
     dict[word]="${1:?}"
     shift 1
-    koopa::assert_has_args_le "$#" 3
+    koopa_assert_has_args_le "$#" 3
     dict[name]="${1:?}"
     dict[version]=''
     dict[prefix]=''
@@ -74,11 +74,11 @@ at '${dict[prefix]}'."
     else
         dict[out]="${dict[word]} ${dict[name]}."
     fi
-    koopa::h1 "${dict[out]}"
+    koopa_h1 "${dict[out]}"
     return 0
 }
 
-koopa:::alert_process_success() { # {{{1
+__koopa_alert_process_success() { # {{{1
     # """
     # Inform the user about the successful completion of a process.
     # @note Updated 2021-11-18.
@@ -87,7 +87,7 @@ koopa:::alert_process_success() { # {{{1
     declare -A dict
     dict[word]="${1:?}"
     shift 1
-    koopa::assert_has_args_le "$#" 2
+    koopa_assert_has_args_le "$#" 2
     dict[name]="${1:?}"
     dict[prefix]="${2:-}"
     if [[ -n "${dict[prefix]}" ]]
@@ -97,147 +97,147 @@ was successful."
     else
         dict[out]="${dict[word]} of ${dict[name]} was successful."
     fi
-    koopa::alert_success "${dict[out]}"
+    koopa_alert_success "${dict[out]}"
     return 0
 }
 
-koopa:::status() { # {{{1
+__koopa_status() { # {{{1
     # """
     # Koopa status.
     # @note Updated 2021-11-18.
     # """
     local dict string
-    koopa::assert_has_args_ge "$#" 3
+    koopa_assert_has_args_ge "$#" 3
     declare -A dict=(
         [label]="$(printf '%10s\n' "${1:?}")"
-        [color]="$(koopa:::ansi_escape "${2:?}")"
-        [nocolor]="$(koopa:::ansi_escape 'nocolor')"
+        [color]="$(__koopa_ansi_escape "${2:?}")"
+        [nocolor]="$(__koopa_ansi_escape 'nocolor')"
     )
     shift 2
     for string in "$@"
     do
         string="${dict[color]}${dict[label]}${dict[nocolor]} | ${string}"
-        koopa::print "$string"
+        koopa_print "$string"
     done
     return 0
 }
 
-koopa::acid_emoji() { # {{{1
+koopa_acid_emoji() { # {{{1
     # """
     # Acid Genomics test tube emoji.
     # @note Updated 2022-01-20.
     #
     # Previous versions defaulted to using the '🐢' turtle.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::print '🧪'
+    koopa_assert_has_no_args "$#"
+    koopa_print '🧪'
 }
 
-koopa::alert_coffee_time() { # {{{1
+koopa_alert_coffee_time() { # {{{1
     # """
     # Alert that it's coffee time.
     # @note Updated 2021-03-31.
     # """
-    koopa::alert_note 'This step takes a while. Time for a coffee break! ☕'
+    koopa_alert_note 'This step takes a while. Time for a coffee break! ☕'
 }
 
-koopa::alert_configure_start() { # {{{1
-    koopa:::alert_process_start 'Configuring' "$@"
+koopa_alert_configure_start() { # {{{1
+    __koopa_alert_process_start 'Configuring' "$@"
 }
 
-koopa::alert_configure_success() { # {{{1
-    koopa:::alert_process_success 'Configuration' "$@"
+koopa_alert_configure_success() { # {{{1
+    __koopa_alert_process_success 'Configuration' "$@"
 }
 
-koopa::alert_install_start() { # {{{1
-    koopa:::alert_process_start 'Installing' "$@"
+koopa_alert_install_start() { # {{{1
+    __koopa_alert_process_start 'Installing' "$@"
 }
 
-koopa::alert_install_success() { # {{{1
-    koopa:::alert_process_success 'Installation' "$@"
+koopa_alert_install_success() { # {{{1
+    __koopa_alert_process_success 'Installation' "$@"
 }
 
-koopa::alert_restart() { # {{{1
+koopa_alert_restart() { # {{{1
     # """
     # Alert the user that they should restart shell.
     # @note Updated 2021-06-02.
     # """
-    koopa::alert_note 'Restart the shell.'
+    koopa_alert_note 'Restart the shell.'
 }
 
-koopa::alert_uninstall_start() { # {{{1
-    koopa:::alert_process_start 'Uninstalling' "$@"
+koopa_alert_uninstall_start() { # {{{1
+    __koopa_alert_process_start 'Uninstalling' "$@"
 }
 
-koopa::alert_uninstall_success() { # {{{1
-    koopa:::alert_process_success 'Uninstallation' "$@"
+koopa_alert_uninstall_success() { # {{{1
+    __koopa_alert_process_success 'Uninstallation' "$@"
 }
 
-koopa::alert_update_start() { # {{{1
-    koopa:::alert_process_start 'Updating' "$@"
+koopa_alert_update_start() { # {{{1
+    __koopa_alert_process_start 'Updating' "$@"
 }
 
-koopa::alert_update_success() { # {{{1
-    koopa:::alert_process_success 'Update' "$@"
+koopa_alert_update_success() { # {{{1
+    __koopa_alert_process_success 'Update' "$@"
 }
 
-koopa::h1() { # {{{1
+koopa_h1() { # {{{1
     # """
     # Header level 1.
     # @note Updated 2022-01-20.
     # """
-    koopa:::h 1 "$@"
+    __koopa_h 1 "$@"
 }
 
-koopa::h2() { # {{{1
+koopa_h2() { # {{{1
     # """
     # Header level 2.
     # @note Updated 2022-01-20.
     # """
-    koopa:::h 2 "$@"
+    __koopa_h 2 "$@"
 }
 
-koopa::h3() { # {{{1
+koopa_h3() { # {{{1
     # """
     # Header level 3.
     # @note Updated 2022-01-20.
     # """
-    koopa:::h 3 "$@"
+    __koopa_h 3 "$@"
 }
 
-koopa::h4() { # {{{1
+koopa_h4() { # {{{1
     # """
     # Header level 4.
     # @note Updated 2022-01-20.
     # """
-    koopa:::h 4 "$@"
+    __koopa_h 4 "$@"
 }
 
-koopa::h5() { # {{{1
+koopa_h5() { # {{{1
     # """
     # Header level 5.
     # @note Updated 2022-01-20.
     # """
-    koopa:::h 5 "$@"
+    __koopa_h 5 "$@"
 }
 
-koopa::h6() { # {{{1
+koopa_h6() { # {{{1
     # """
     # Header level 6.
     # @note Updated 2022-01-20.
     # """
-    koopa:::h 6 "$@"
+    __koopa_h 6 "$@"
 }
 
-koopa::h7() { # {{{1
+koopa_h7() { # {{{1
     # """
     # Header level 7.
     # @note Updated 2022-01-20.
     # """
-    koopa:::h 7 "$@"
+    __koopa_h 7 "$@"
 }
 
-koopa::invalid_arg() { # {{{1
+koopa_invalid_arg() { # {{{1
     # """
     # Error on invalid argument.
     # @note Updated 2022-02-17.
@@ -250,18 +250,18 @@ koopa::invalid_arg() { # {{{1
     else
         str='Invalid argument.'
     fi
-    koopa::stop "$str"
+    koopa_stop "$str"
 }
 
-koopa::missing_arg() { # {{{1
+koopa_missing_arg() { # {{{1
     # """
     # Error on a missing argument.
     # @note Updated 2021-06-02.
     # """
-    koopa::stop 'Missing required argument.'
+    koopa_stop 'Missing required argument.'
 }
 
-koopa::ngettext() { # {{{1
+koopa_ngettext() { # {{{1
     # """
     # Translate a text message.
     # @note Updated 2022-02-16.
@@ -269,9 +269,9 @@ koopa::ngettext() { # {{{1
     # A function to dynamically handle singular/plural words.
     #
     # @examples
-    # koopa::ngettext --num=1 --msg1='sample' --msg2='samples'
+    # koopa_ngettext --num=1 --msg1='sample' --msg2='samples'
     # ## 1 sample
-    # koopa::ngettext --num=2 --msg1='sample' --msg2='samples'
+    # koopa_ngettext --num=2 --msg1='sample' --msg2='samples'
     # ## 2 samples
     #
     # @seealso
@@ -281,7 +281,7 @@ koopa::ngettext() { # {{{1
     #       0596526784/ch13s08.html
     # """
     local dict
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A dict=(
         [middle]=' '
         [msg1]=''
@@ -345,11 +345,11 @@ koopa::ngettext() { # {{{1
                 ;;
             # Invalid ----------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--middle' "${dict[middle]}"  \
         '--msg1' "${dict[msg1]}"  \
         '--msg2' "${dict[msg2]}"  \
@@ -367,35 +367,35 @@ koopa::ngettext() { # {{{1
     esac
     dict[str]="${dict[prefix]}${dict[num]}${dict[middle]}\
 ${dict[msg]}${dict[suffix]}"
-    koopa::print "${dict[str]}"
+    koopa_print "${dict[str]}"
     return 0
 }
 
-koopa::status_fail() { # {{{1
+koopa_status_fail() { # {{{1
     # """
     # 'FAIL' status.
     # @note Updated 2021-06-03.
     # """
-    koopa:::status 'FAIL' 'red' "$@" >&2
+    __koopa_status 'FAIL' 'red' "$@" >&2
 }
 
-koopa::status_note() { # {{{1
+koopa_status_note() { # {{{1
     # """
     # 'NOTE' status.
     # @note Updated 2021-06-03.
     # """
-    koopa:::status 'NOTE' 'yellow' "$@"
+    __koopa_status 'NOTE' 'yellow' "$@"
 }
 
-koopa::status_ok() { # {{{1
+koopa_status_ok() { # {{{1
     # """
     # 'OK' status.
     # @note Updated 2021-06-03.
     # """
-    koopa:::status 'OK' 'green' "$@"
+    __koopa_status 'OK' 'green' "$@"
 }
 
-koopa::stop() { # {{{1
+koopa_stop() { # {{{1
     # """
     # Stop with an error message, and kill the parent process.
     # @note Updated 2022-02-16.
@@ -414,7 +414,7 @@ koopa::stop() { # {{{1
     # - https://stackoverflow.com/questions/41370092/
     # """
     unset kill
-    koopa:::msg 'red-bold' 'red' '!! Error:' "$@" >&2
+    __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
     [[ -n "${!:-}" ]] && kill -SIGKILL "${!}"  # subprocess
     [[ -n "${$:-}" ]] && kill -SIGKILL "${$}"  # parent
     exit 1

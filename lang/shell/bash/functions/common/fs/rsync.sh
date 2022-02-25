@@ -1,35 +1,35 @@
 #!/usr/bin/env bash
 
 # FIXME Rework using dict approach.
-koopa::clone() { # {{{1
+koopa_clone() { # {{{1
     # """
     # Clone files using rsync (with saner defaults).
     # @note Updated 2020-12-31.
     # """
     local rsync_args source_dir target_dir
-    koopa::assert_has_no_flags "$@"
-    koopa::assert_has_args_eq "$#" 2
+    koopa_assert_has_no_flags "$@"
+    koopa_assert_has_args_eq "$#" 2
     source_dir="${1:?}"
     target_dir="${2:?}"
-    koopa::assert_is_dir "$source_dir" "$target_dir"
+    koopa_assert_is_dir "$source_dir" "$target_dir"
     rsync_args=(
         '--archive'
         '--delete-before'
     )
-    source_dir="$(koopa::realpath "$source_dir")"
-    source_dir="$(koopa::strip_trailing_slash "$source_dir")"
-    target_dir="$(koopa::realpath "$target_dir")"
-    target_dir="$(koopa::strip_trailing_slash "$target_dir")"
-    koopa::dl \
+    source_dir="$(koopa_realpath "$source_dir")"
+    source_dir="$(koopa_strip_trailing_slash "$source_dir")"
+    target_dir="$(koopa_realpath "$target_dir")"
+    target_dir="$(koopa_strip_trailing_slash "$target_dir")"
+    koopa_dl \
         'Source' "$source_dir" \
         'Target' "$target_dir"
-    koopa::rsync "${rsync_args[@]}" "${source_dir}/" "${target_dir}/"
+    koopa_rsync "${rsync_args[@]}" "${source_dir}/" "${target_dir}/"
     return 0
 }
 
 # FIXME Rework using app/dict approach.
 # NOTE Consider checking for trailing slashes on directories.
-koopa::rsync() { # {{{1
+koopa_rsync() { # {{{1
     # """
     # GNU rsync wrapper.
     # @note Updated 2021-05-20.
@@ -62,8 +62,8 @@ koopa::rsync() { # {{{1
     # - https://unix.stackexchange.com/questions/165423
     # """
     local rsync rsync_args
-    koopa::assert_has_args_ge "$#" 2
-    rsync="$(koopa::locate_rsync)"
+    koopa_assert_has_args_ge "$#" 2
+    rsync="$(koopa_locate_rsync)"
     rsync_args=(
         '--human-readable'
         '--progress'
@@ -72,7 +72,7 @@ koopa::rsync() { # {{{1
         '--stats'
         '--verbose'
     )
-    if koopa::is_macos
+    if koopa_is_macos
     then
         rsync_args+=(
             '--iconv=utf-8,utf-8-mac'
@@ -82,15 +82,15 @@ koopa::rsync() { # {{{1
     return 0
 }
 
-koopa::rsync_cloud() { # {{{1
+koopa_rsync_cloud() { # {{{1
     # """
     # Rsync to cloud object storage buckets, such as AWS.
     # @note Updated 2021-10-29.
     # """
     local rsync_args
-    koopa::assert_has_no_flags "$@"
-    koopa::assert_has_args_eq "$#" 2
-    koopa::assert_is_admin
+    koopa_assert_has_no_flags "$@"
+    koopa_assert_has_args_eq "$#" 2
+    koopa_assert_is_admin
     rsync_args=(
         '--exclude' '.Rproj.user'
         '--exclude' '.git'
@@ -100,11 +100,11 @@ koopa::rsync_cloud() { # {{{1
         '--rsync-path' 'sudo rsync'
         '--size-only'
     )
-    koopa::rsync "${rsync_args[@]}" "$@"
+    koopa_rsync "${rsync_args[@]}" "$@"
     return 0
 }
 
-koopa::rsync_ignore() { # {{{1
+koopa_rsync_ignore() { # {{{1
     # """
     # Run rsync with automatic ignore.
     # @note Updated 2021-05-08.
@@ -113,8 +113,8 @@ koopa::rsync_ignore() { # {{{1
     # https://stackoverflow.com/questions/13713101/
     # """
     local ignore_global rsync_args
-    koopa::assert_has_no_flags "$@"
-    koopa::assert_has_args_eq "$#" 2
+    koopa_assert_has_no_flags "$@"
+    koopa_assert_has_args_eq "$#" 2
     rsync_args=(
         # > '--exclude=.*/'
         # > '--exclude=/.git'
@@ -128,6 +128,6 @@ koopa::rsync_ignore() { # {{{1
     then
         rsync_args+=("--filter=dir-merge,- ${ignore_global}")
     fi
-    koopa::rsync "${rsync_args[@]}" "$@"
+    koopa_rsync "${rsync_args[@]}" "$@"
     return 0
 }

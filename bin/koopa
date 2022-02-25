@@ -86,4 +86,4 @@ export KOOPA_HELP=0
 . "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
 unset -v bash_source
 
-koopa::koopa "$@"
+koopa_koopa "$@"

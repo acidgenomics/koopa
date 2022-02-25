@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_gnupg() { # {{{1
+install_gnupg() { # {{{1
     # """
     # Install GnuPG.
     # @note Updated 2022-01-27.
@@ -11,7 +11,7 @@ koopa:::install_gnupg() { # {{{1
     # - https://gnupg.org/download/integrity_check.html
     # """
     local app dict gpg_keys install_args opt opt_arr
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'
@@ -122,10 +122,10 @@ koopa:::install_gnupg() { # {{{1
             dict[pinentry_version]='1.1.0'
             ;;
         *)
-            koopa::stop "Unsupported version: '${dict[version]}'."
+            koopa_stop "Unsupported version: '${dict[version]}'."
             ;;
     esac
-    if koopa::is_installed "${app[gpg_agent]}"
+    if koopa_is_installed "${app[gpg_agent]}"
     then
         # Current releases are signed by one or more of these keys:
         #
@@ -160,39 +160,39 @@ koopa:::install_gnupg() { # {{{1
         "${app[gpg]}" --list-keys
     fi
     # Install dependencies.
-    koopa::install_app \
+    koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgpg-error' \
         --version="${dict[libgpg_error_version]}" \
         "$@"
-    koopa::install_app \
+    koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libgcrypt' \
         --opt='libgpg-error' \
         --version="${dict[libgcrypt_version]}" \
         "$@"
-    koopa::install_app \
+    koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libassuan' \
         --opt='libgpg-error' \
         --version="${dict[libassuan_version]}" \
         "$@"
-    koopa::install_app \
+    koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='libksba' \
         --opt='libgpg-error' \
         --version="${dict[libksba_version]}" \
         "$@"
-    koopa::install_app \
+    koopa_install_app \
         --installer='gnupg-gcrypt' \
         --name='npth' \
         --version="${dict[npth_version]}" \
         "$@"
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        koopa::alert_note 'Skipping installation of pinentry on macOS.'
+        koopa_alert_note 'Skipping installation of pinentry on macOS.'
     else
-        koopa::install_app \
+        koopa_install_app \
             --installer='gnupg-pinentry' \
             --name='pinentry' \
             --version="${dict[pinentry_version]}" \
@@ -211,7 +211,7 @@ koopa:::install_gnupg() { # {{{1
         'libksba'
         'npth'
     )
-    if ! koopa::is_macos
+    if ! koopa_is_macos
     then
         opt_arr+=('pinentry')
     fi
@@ -219,25 +219,25 @@ koopa:::install_gnupg() { # {{{1
     do
         install_args+=("--opt=${opt}")
     done
-    koopa::install_app "${install_args[@]}" "$@"
+    koopa_install_app "${install_args[@]}" "$@"
     return 0
 }
 
-koopa:::install_gnupg_gcrypt() { # {{{1
+install_gnupg_gcrypt() { # {{{1
     # """
     # Install GnuPG gcrypt library.
     # @note Updated 2021-11-30.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [gcrypt_url]="$(koopa::gcrypt_url)"
-        [jobs]="$(koopa::cpu_count)"
+        [gcrypt_url]="$(koopa_gcrypt_url)"
+        [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -245,37 +245,37 @@ koopa:::install_gnupg_gcrypt() { # {{{1
     dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
     dict[tar_file]="${dict[name]}-${dict[version]}.tar.bz2"
     dict[tar_url]="${dict[base_url]}/${dict[tar_file]}"
-    koopa::download "${dict[tar_url]}" "${dict[tar_file]}"
-    if koopa::is_installed "${app[gpg_agent]}"
+    koopa_download "${dict[tar_url]}" "${dict[tar_file]}"
+    if koopa_is_installed "${app[gpg_agent]}"
     then
         dict[sig_file]="${dict[tar_file]}.sig"
         dict[sig_url]="${dict[base_url]}/${dict[sig_file]}"
-        koopa::download "${dict[sig_url]}" "${dict[sig_file]}"
+        koopa_download "${dict[sig_url]}" "${dict[sig_file]}"
         "${app[gpg]}" --verify "${dict[sig_file]}" || return 1
     fi
-    koopa::extract "${dict[tar_file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_extract "${dict[tar_file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     ./configure --prefix="${dict[prefix]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     "${app[make]}" install
     return 0
 }
 
-koopa:::install_gnupg_pinentry() { # {{{1
+install_gnupg_pinentry() { # {{{1
     # """
     # Install GnuPG pinentry library.
     # @note Updated 2021-11-30.
     # """
     local app conf_args dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
         [gpg]='/usr/bin/gpg'
         [gpg_agent]='/usr/bin/gpg-agent'
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [gcrypt_url]="$(koopa::gcrypt_url)"
-        [jobs]="$(koopa::cpu_count)"
+        [gcrypt_url]="$(koopa_gcrypt_url)"
+        [jobs]="$(koopa_cpu_count)"
         [name]="${INSTALL_NAME:?}"
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -283,18 +283,18 @@ koopa:::install_gnupg_pinentry() { # {{{1
     dict[base_url]="${dict[gcrypt_url]}/${dict[name]}"
     dict[tar_file]="${dict[name]}-${dict[version]}.tar.bz2"
     dict[tar_url]="${dict[base_url]}/${dict[tar_file]}"
-    koopa::download "${dict[tar_url]}" "${dict[tar_file]}"
-    if koopa::is_installed "${app[gpg_agent]}"
+    koopa_download "${dict[tar_url]}" "${dict[tar_file]}"
+    if koopa_is_installed "${app[gpg_agent]}"
     then
         dict[sig_file]="${dict[tar_file]}.sig"
         dict[sig_url]="${dict[base_url]}/${dict[sig_file]}"
-        koopa::download "${dict[sig_url]}" "${dict[sig_file]}"
+        koopa_download "${dict[sig_url]}" "${dict[sig_file]}"
         "${app[gpg]}" --verify "${dict[sig_file]}" || return 1
     fi
-    koopa::extract "${dict[tar_file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_extract "${dict[tar_file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=("--prefix=${dict[prefix]}")
-    if koopa::is_opensuse
+    if koopa_is_opensuse
     then
         # Build with ncurses is currently failing on openSUSE, due to
         # hard-coded link to '/usr/include/ncursesw' that isn't easy to resolve.

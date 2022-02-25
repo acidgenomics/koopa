@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_taglib() { # {{{1
+install_taglib() { # {{{1
     # """
     # Install TagLib.
     # @note Updated 2022-01-03.
@@ -23,12 +23,12 @@ koopa:::install_taglib() { # {{{1
     # - https://github.com/gabime/spdlog/issues/1190
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cmake]="$(koopa::locate_cmake)"
+        [cmake]="$(koopa_locate_cmake)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='taglib'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -36,9 +36,9 @@ koopa:::install_taglib() { # {{{1
     dict[file]="v${dict[version]}.tar.gz"
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/archive/refs/\
 tags/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     "${app[cmake]}" \
         -S . \
         -B 'build' \

@@ -4,7 +4,7 @@
 
 # FIXME Rework our location of conda environment tool here instead.
 
-koopa::samtools_convert_sam_to_bam() { # {{{1
+koopa_samtools_convert_sam_to_bam() { # {{{1
     # """
     # Convert a SAM file to BAM format.
     # @note Updated 2021-09-21.
@@ -21,8 +21,8 @@ koopa::samtools_convert_sam_to_bam() { # {{{1
     # -u                    uncompressed BAM output (implies -b)
     # """
     local bam_bn input_sam output_bam sam_bn threads
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed 'samtools'
+    koopa_assert_has_args "$#"
+    koopa_assert_is_installed 'samtools'
     while (("$#"))
     do
         case "$1" in
@@ -45,25 +45,25 @@ koopa::samtools_convert_sam_to_bam() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
     # FIXME Rethink this approach, reworking using dict approach.
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--input-sam' "$input_sam" \
         '--output-bam' "$output_bam"
-    sam_bn="$(koopa::basename "$input_sam")"
-    bam_bn="$(koopa::basename "$output_bam")"
+    sam_bn="$(koopa_basename "$input_sam")"
+    bam_bn="$(koopa_basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
-        koopa::alert_note "Skipping '${bam_bn}'."
+        koopa_alert_note "Skipping '${bam_bn}'."
         return 0
     fi
-    koopa::h2 "Converting '${sam_bn}' to '${bam_bn}'."
-    koopa::assert_is_file "$input_sam"
-    threads="$(koopa::cpu_count)"
-    koopa::dl 'Threads' "$threads"
+    koopa_h2 "Converting '${sam_bn}' to '${bam_bn}'."
+    koopa_assert_is_file "$input_sam"
+    threads="$(koopa_cpu_count)"
+    koopa_dl 'Threads' "$threads"
     samtools view \
         -@ "$threads" \
         -b \

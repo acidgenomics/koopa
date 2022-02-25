@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_emacs() { # {{{1
+install_emacs() { # {{{1
     # """
     # Install Emacs.
     # @note Updated 2022-02-01.
@@ -18,17 +18,17 @@ koopa:::install_emacs() { # {{{1
         '--quiet'
     )
     conf_args=()
-    if koopa::is_linux
+    if koopa_is_linux
     then
         conf_args+=(
             '--with-x-toolkit=no'
             '--with-xpm=no'
         )
-    elif koopa::is_macos
+    elif koopa_is_macos
     then
         declare -A dict
-        dict[gcc_version]="$(koopa::variable 'gcc')"
-        dict[gcc_maj_ver]="$(koopa::major_version "${dict[gcc_version]}")"
+        dict[gcc_version]="$(koopa_variable 'gcc')"
+        dict[gcc_maj_ver]="$(koopa_major_version "${dict[gcc_version]}")"
         pkgs=(
             "gcc@${dict[gcc_maj_ver]}"
             'gnutls'
@@ -52,7 +52,7 @@ koopa:::install_emacs() { # {{{1
             '--without-x'
         )
     fi
-    koopa::install_gnu_app \
+    koopa_install_gnu_app \
         "${install_args[@]}" \
         "${conf_args[@]}" \
         "$@"

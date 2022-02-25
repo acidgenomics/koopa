@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::download() { # {{{1
+koopa_download() { # {{{1
     # """
     # Download a file.
     # @note Updated 2022-02-17.
@@ -25,25 +25,25 @@ koopa::download() { # {{{1
     # > wget -qO-
     # """
     local app dict download_args
-    koopa::assert_has_args_le "$#" 2
+    koopa_assert_has_args_le "$#" 2
     declare -A dict=(
         [url]="${1:?}"
         [file]="${2:-}"
     )
-    if koopa::is_qemu
+    if koopa_is_qemu
     then
         dict[engine]='wget'
     else
         dict[engine]='curl'
     fi
     declare -A app=(
-        [download]="$("koopa::locate_${dict[engine]}")"
+        [download]="$("koopa_locate_${dict[engine]}")"
     )
     if [[ -z "${dict[file]}" ]]
     then
-        dict[file]="$(koopa::basename "${dict[url]}")"
+        dict[file]="$(koopa_basename "${dict[url]}")"
     fi
-    if ! koopa::str_detect_fixed \
+    if ! koopa_str_detect_fixed \
         --string="${dict[file]}" \
         --pattern='/'
     then
@@ -70,66 +70,66 @@ koopa::download() { # {{{1
             ;;
     esac
     download_args+=("${dict[url]}")
-    koopa::alert "Downloading '${dict[url]}' to '${dict[file]}' \
+    koopa_alert "Downloading '${dict[url]}' to '${dict[file]}' \
 using '${dict[engine]}'."
     "${app[download]}" "${download_args[@]}"
     return 0
 }
 
-koopa::download_cran_latest() { # {{{1
+koopa_download_cran_latest() { # {{{1
     # """
     # Download CRAN latest.
     # @note Updated 2021-10-25.
     # """
     local app file name pattern url
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [head]="$(koopa::locate_head)"
+        [head]="$(koopa_locate_head)"
     )
     for name in "$@"
     do
         url="https://cran.r-project.org/web/packages/${name}/"
         pattern="${name}_[-.0-9]+.tar.gz"
         file="$( \
-            koopa::parse_url "$url" \
-            | koopa::grep \
+            koopa_parse_url "$url" \
+            | koopa_grep \
                 --extended-regexp \
                 --only-matching \
                 --pattern="$pattern" \
             | "${app[head]}" --lines=1 \
         )"
-        koopa::download "https://cran.r-project.org/src/contrib/${file}"
+        koopa_download "https://cran.r-project.org/src/contrib/${file}"
     done
     return 0
 }
 
-koopa::download_github_latest() { # {{{1
+koopa_download_github_latest() { # {{{1
     # """
     # Download GitHub latest release.
     # @note Updated 2021-10-25.
     # """
     local api_url app repo tag tarball_url
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa::locate_cut)"
-        [tr]="$(koopa::locate_tr)"
+        [cut]="$(koopa_locate_cut)"
+        [tr]="$(koopa_locate_tr)"
     )
     for repo in "$@"
     do
         api_url="https://api.github.com/repos/${repo}/releases/latest"
         tarball_url="$( \
-            koopa::parse_url "$api_url" \
-            | koopa::grep --pattern='tarball_url' \
+            koopa_parse_url "$api_url" \
+            | koopa_grep --pattern='tarball_url' \
             | "${app[cut]}" --delimiter=':' --fields='2,3' \
             | "${app[tr]}" --delete ' ,"' \
         )"
-        tag="$(koopa::basename "$tarball_url")"
-        koopa::download "$tarball_url" "${tag}.tar.gz"
+        tag="$(koopa_basename "$tarball_url")"
+        koopa_download "$tarball_url" "${tag}.tar.gz"
     done
     return 0
 }
 
-koopa::download_refdata_scsig() { # {{{1
+koopa_download_refdata_scsig() { # {{{1
     # """
     # Download MSigDB SCSig reference data (now archived).
     # @note Updated 2021-12-09.
@@ -138,18 +138,18 @@ koopa::download_refdata_scsig() { # {{{1
     # - https://www.gsea-msigdb.org/gsea/msigdb/supplementary_genesets.jsp
     # """
     local basename basenames dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A dict=(
         [base_url]='http://software.broadinstitute.org/gsea/msigdb/supplemental'
         [name_fancy]='MSigDB SCSig'
-        [refdata_prefix]="$(koopa::refdata_prefix)"
+        [refdata_prefix]="$(koopa_refdata_prefix)"
         [version]='1.0.1'
     )
     dict[prefix]="${dict[refdata_prefix]}/scsig/${dict[version]}"
-    koopa::assert_is_not_dir "${dict[prefix]}"
-    koopa::alert "Downloading ${dict[name_fancy]} ${dict[version]} \
+    koopa_assert_is_not_dir "${dict[prefix]}"
+    koopa_alert "Downloading ${dict[name_fancy]} ${dict[version]} \
 to ${dict[prefix]}."
-    koopa::mkdir "${dict[prefix]}"
+    koopa_mkdir "${dict[prefix]}"
     basenames=(
         "scsig.all.v${dict[version]}.entrez.gmt"
         "scsig.all.v${dict[version]}.symbols.gmt"
@@ -158,25 +158,25 @@ to ${dict[prefix]}."
     )
     for basename in "${basenames[@]}"
     do
-        koopa::download \
+        koopa_download \
             "${dict[base_url]}/${basename}" \
             "${dict[prefix]}/${basename]}"
     done
-    koopa::sys_set_permissions --recursive "${dict[prefix]}"
-    koopa::alert_success "Download of ${dict[name_fancy]} to \
+    koopa_sys_set_permissions --recursive "${dict[prefix]}"
+    koopa_alert_success "Download of ${dict[name_fancy]} to \
 ${dict[prefix]} was successful."
     return 0
 }
 
-koopa::ftp_mirror() { # {{{1
+koopa_ftp_mirror() { # {{{1
     # """
     # Mirror contents from an FTP server.
     # @note Updated 2022-02-10.
     # """
     local app dict
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [wget]="$(koopa::locate_wget)"
+        [wget]="$(koopa_locate_wget)"
     )
     declare -A dict=(
         [dir]=''
@@ -213,11 +213,11 @@ koopa::ftp_mirror() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--host' "${dict[host]}" \
         '--user' "${dict[user]}"
     if [[ -n "${dict[dir]}" ]]
@@ -233,15 +233,15 @@ koopa::ftp_mirror() { # {{{1
     return 0
 }
 
-koopa::parse_url() { # {{{1
+koopa_parse_url() { # {{{1
     # """
     # Parse a URL using cURL.
     # @note Updated 2022-02-10.
     # """
     local app curl_args dict pos
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [curl]="$(koopa::locate_curl)"
+        [curl]="$(koopa_locate_curl)"
     )
     curl_args=(
         '--disable'  # Ignore '~/.curlrc'. Must come first.
@@ -263,7 +263,7 @@ koopa::parse_url() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -272,15 +272,15 @@ koopa::parse_url() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args_eq "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     curl_args+=("${1:?}")
-    # NOTE Don't use 'koopa::print' here, since we need to pass binary output
+    # NOTE Don't use 'koopa_print' here, since we need to pass binary output
     # in some cases for GPG key configuration.
     "${app[curl]}" "${curl_args[@]}"
     return 0
 }
 
-koopa::wget_recursive() { # {{{1
+koopa_wget_recursive() { # {{{1
     # """
     # Download files with wget recursively.
     # @note Updated 2022-02-10.
@@ -292,18 +292,18 @@ koopa::wget_recursive() { # {{{1
     # - https://unix.stackexchange.com/questions/379181
     #
     # @examples
-    # > koopa::wget_recursive \
+    # > koopa_wget_recursive \
     # >     --url='ftp://ftp.example.com/' \
     # >     --user='user' \
     # >     --password='pass'
     # """
     local app dict wget_args
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [wget]="$(koopa::locate_wget)"
+        [wget]="$(koopa_locate_wget)"
     )
     declare -A dict=(
-        [datetime]="$(koopa::datetime)"
+        [datetime]="$(koopa_datetime)"
         [password]=''
         [url]=''
         [user]=''
@@ -338,11 +338,11 @@ koopa::wget_recursive() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--password' "${dict[password]}" \
         '--url' "${dict[url]}" \
         '--user' "${dict[user]}"

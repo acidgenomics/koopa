@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::grep() { # {{{1
+koopa_grep() { # {{{1
     # """
     # grep matching: print lines that match patterns in a string or file.
     # @note Updated 2022-02-24.
@@ -22,10 +22,10 @@ koopa::grep() { # {{{1
     # Redirecting output to '/dev/null' works more reliably.
     #
     # @examples
-    # > koopa::grep --pattern='aaa' --string='aaabbb'
+    # > koopa_grep --pattern='aaa' --string='aaabbb'
     # """
     local app dict grep_args grep_cmd
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app
     declare -A dict=(
         [boolean]=0
@@ -122,20 +122,20 @@ koopa::grep() { # {{{1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_is_set '--pattern' "${dict[pattern]}"
+    koopa_assert_is_set '--pattern' "${dict[pattern]}"
     if [[ -z "${dict[engine]}" ]]
     then
-        app[grep]="$(koopa::locate_rg 2>/dev/null || true)"
-        [[ ! -x "${app[grep]}" ]] && app[grep]="$(koopa::locate_grep)"
-        dict[engine]="$(koopa::basename "${app[grep]}")"
+        app[grep]="$(koopa_locate_rg 2>/dev/null || true)"
+        [[ ! -x "${app[grep]}" ]] && app[grep]="$(koopa_locate_grep)"
+        dict[engine]="$(koopa_basename "${app[grep]}")"
     else
-        app[grep]="$(koopa::locate_"${dict[engine]}")"
+        app[grep]="$(koopa_locate_"${dict[engine]}")"
     fi
-    koopa::assert_is_installed "${app[grep]}"
+    koopa_assert_is_installed "${app[grep]}"
     # Piped input using stdin (string mode).
     if [[ "${dict[stdin]}" -eq 1 ]]
     then
@@ -144,7 +144,7 @@ koopa::grep() { # {{{1
     # Check that user isn't mixing up file and string mode.
     if [[ -n "${dict[file]}" ]] && [[ -n "${dict[string]}" ]]
     then
-        koopa::stop "Use '--file' or '--string', but not both."
+        koopa_stop "Use '--file' or '--string', but not both."
     fi
     grep_cmd=("${app[grep]}")
     if [[ "${dict[sudo]}" -eq 1 ]]
@@ -198,15 +198,15 @@ koopa::grep() { # {{{1
                 grep_args+=('--quiet')
             ;;
         *)
-            koopa::stop 'Invalid grep engine.'
+            koopa_stop 'Invalid grep engine.'
             ;;
     esac
     grep_args+=("${dict[pattern]}")
     if [[ -n "${dict[file]}" ]]
     then
         # File mode.
-        koopa::assert_is_file "${dict[file]}"
-        koopa::assert_is_readable "${dict[file]}"
+        koopa_assert_is_file "${dict[file]}"
+        koopa_assert_is_readable "${dict[file]}"
         grep_args+=("${dict[file]}")
         if [[ "${dict[boolean]}" -eq 1 ]]
         then
@@ -218,16 +218,16 @@ koopa::grep() { # {{{1
         # String mode.
         if [[ "${dict[boolean]}" -eq 1 ]]
         then
-            koopa::print "${dict[string]}" \
+            koopa_print "${dict[string]}" \
                 | "${grep_cmd[@]}" "${grep_args[@]}" >/dev/null
         else
-            koopa::print "${dict[string]}" \
+            koopa_print "${dict[string]}" \
                 | "${grep_cmd[@]}" "${grep_args[@]}"
         fi
     fi
 }
 
-koopa:::file_detect() { # {{{1
+__koopa_file_detect() { # {{{1
     # """
     # Is a pattern defined in a file?
     # @note Updated 2022-02-23.
@@ -235,15 +235,15 @@ koopa:::file_detect() { # {{{1
     # Uses ripgrep instead of grep when possible (faster).
     #
     # @usage
-    # koopa::file_detect_fixed --file=FILE --pattern='PATTERN'
-    # koopa::file_detect_regex --file=FILE --pattern='^PATTERN.+$'
+    # koopa_file_detect_fixed --file=FILE --pattern='PATTERN'
+    # koopa_file_detect_regex --file=FILE --pattern='^PATTERN.+$'
     #
     # stdin support:
-    # echo FILE | koopa::file_detect_fixed --pattern='PATTERN'
-    # echo FILE | koopa::file_detect_regex --pattern='^PATTERN.+$'
+    # echo FILE | koopa_file_detect_fixed --pattern='PATTERN'
+    # echo FILE | koopa_file_detect_regex --pattern='^PATTERN.+$'
     # """
     local dict grep_args
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A dict=(
         [file]=''
         [mode]=''
@@ -292,7 +292,7 @@ koopa:::file_detect() { # {{{1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
@@ -301,7 +301,7 @@ koopa:::file_detect() { # {{{1
     then
         dict[file]="$(</dev/stdin)"
     fi
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--file' "${dict[file]}" \
         '--mode' "${dict[mode]}" \
         '--pattern' "${dict[pattern]}"
@@ -312,28 +312,28 @@ koopa:::file_detect() { # {{{1
         '--pattern' "${dict[pattern]}"
     )
     [[ "${dict[sudo]}" -eq 1 ]] && grep_args+=('--sudo')
-    koopa::grep "${grep_args[@]}"
+    koopa_grep "${grep_args[@]}"
 }
 
-koopa:::str_detect() { # {{{1
+__koopa_str_detect() { # {{{1
     # """
     # Does the input pattern match a string?
     # @note Updated 2022-02-23.
     #
     # @usage
-    # koopa::str_detect_fixed --string=STRING --pattern='PATTERN'
-    # koopa::str_detect_regex --string=STRING --pattern='^PATTERN.+$'
+    # koopa_str_detect_fixed --string=STRING --pattern='PATTERN'
+    # koopa_str_detect_regex --string=STRING --pattern='^PATTERN.+$'
     #
     # stdin support:
-    # echo STRING | koopa::str_detect_fixed --pattern='PATTERN'
-    # echo STRING | koopa::str_detect_regex --pattern='^PATTERN.+$'
+    # echo STRING | koopa_str_detect_fixed --pattern='PATTERN'
+    # echo STRING | koopa_str_detect_regex --pattern='^PATTERN.+$'
     #
     # @seealso
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997
     # - https://unix.stackexchange.com/questions/233987
     # """
     local dict grep_args
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A dict=(
         [mode]=''
         [pattern]=''
@@ -383,7 +383,7 @@ koopa:::str_detect() { # {{{1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
@@ -393,7 +393,7 @@ koopa:::str_detect() { # {{{1
         dict[string]="$(</dev/stdin)"
     fi
     # Note that we're allowing empty string input here.
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--mode' "${dict[mode]}" \
         '--pattern' "${dict[pattern]}"
     grep_args=(
@@ -403,21 +403,21 @@ koopa:::str_detect() { # {{{1
         '--string' "${dict[string]}"
     )
     [[ "${dict[sudo]}" -eq 1 ]] && grep_args+=('--sudo')
-    koopa::grep "${grep_args[@]}"
+    koopa_grep "${grep_args[@]}"
 }
 
-koopa::file_detect_fixed() { # {{{1
-    koopa:::file_detect --mode='fixed' "$@"
+koopa_file_detect_fixed() { # {{{1
+    __koopa_file_detect --mode='fixed' "$@"
 }
 
-koopa::file_detect_regex() { # {{{1
-    koopa:::file_detect --mode='regex' "$@"
+koopa_file_detect_regex() { # {{{1
+    __koopa_file_detect --mode='regex' "$@"
 }
 
-koopa::str_detect_fixed() { # {{{1
-    koopa:::str_detect --mode='fixed' "$@"
+koopa_str_detect_fixed() { # {{{1
+    __koopa_str_detect --mode='fixed' "$@"
 }
 
-koopa::str_detect_regex() { # {{{1
-    koopa:::str_detect --mode='regex' "$@"
+koopa_str_detect_regex() { # {{{1
+    __koopa_str_detect --mode='regex' "$@"
 }

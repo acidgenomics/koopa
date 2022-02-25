@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_ruby_packages() { # {{{1
+install_ruby_packages() { # {{{1
     # """
     # Install Ruby packages (gems).
     # @note Updated 2022-02-10.
@@ -12,10 +12,10 @@ koopa:::install_ruby_packages() { # {{{1
     # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
     # """
     local app dict gem gems
-    koopa::assert_has_no_args "$#"
-    koopa::activate_ruby
+    koopa_assert_has_no_args "$#"
+    koopa_activate_ruby
     declare -A app=(
-        [gem]="$(koopa::locate_gem)"
+        [gem]="$(koopa_locate_gem)"
     )
     declare -A dict=(
         [gemdir]="$("${app[gem]}" environment 'gemdir')"
@@ -26,12 +26,12 @@ koopa:::install_ruby_packages() { # {{{1
         'bashcov'
         'ronn'
     )
-    koopa::dl \
+    koopa_dl \
         'Target' "${dict[gemdir]}" \
-        'Gems' "$(koopa::to_string "${gems[@]}")"
-    if koopa::is_macos
+        'Gems' "$(koopa_to_string "${gems[@]}")"
+    if koopa_is_macos
     then
-        koopa::activate_homebrew_opt_prefix 'libffi'
+        koopa_activate_homebrew_opt_prefix 'libffi'
     fi
     "${app[gem]}" cleanup
     for gem in "${gems[@]}"

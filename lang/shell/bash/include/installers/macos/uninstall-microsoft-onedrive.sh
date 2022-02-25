@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-koopa:::macos_uninstall_microsoft_onedrive() { # {{{1
+macos_uninstall_microsoft_onedrive() { # {{{1
     # """
     # Uninstall Microsoft OneDrive.
     # @note Updated 2021-10-30.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    koopa::rm --sudo \
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    koopa_rm --sudo \
         '/Applications/OneDrive.app'
-    koopa::rm \
+    koopa_rm \
         "${HOME}/Library/Containers/com.microsoft.OneDrive-mac.FinderSync" \
         "${HOME}/Library/Application Scripts/\
 com.microsoft.OneDrive-mac.FinderSync" \

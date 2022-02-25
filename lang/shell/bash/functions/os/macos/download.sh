@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_download_macos() { # {{{1
+koopa_macos_download_macos() { # {{{1
     # """
     # Download a full copy of macOS system installer.
     # @note Updated 2020-11-20.
@@ -14,7 +14,7 @@ koopa::macos_download_macos() { # {{{1
     # """
     local version
     version="${1:?}"
-    koopa::assert_is_macos
+    koopa_assert_is_macos
     softwareupdate \
         --fetch-full-installer \
         --full-installer-version "$version"

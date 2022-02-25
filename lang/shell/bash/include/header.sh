@@ -102,13 +102,22 @@ __koopa_warn() { # {{{1
     return 0
 }
 
-
-
 __koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2021-09-16.
+    # @note Updated 2022-02-25.
+    #
+    # @seealso
+    # - shopt
+    #   https://www.gnu.org/software/bash/manual/
+    #     html_node/The-Shopt-Builtin.html
     # """
+    # Check for Bash 4+.
+    case "${BASH_VERSION:-}" in
+        '1.'* | '2.'* | '3.'*)
+            return 1
+            ;;
+    esac
     local dict
     declare -A dict=(
         [activate]=0
@@ -140,24 +149,17 @@ __koopa_bash_header() { # {{{1
     fi
     if [[ "${dict[checks]}" -eq 1 ]]
     then
-        # Can check these settings with 'shopt'.
-        # https://www.gnu.org/software/bash/manual/
-        #   html_node/The-Shopt-Builtin.html
-        # Bash POSIX mode is too strict and errors on our function names.
-        # > set -o posix
-        # > set -o noglob  # -f
         set -o errexit  # -e
         set -o errtrace  # -E
         set -o nounset  # -u
         set -o pipefail
+        set -o posix
+        # This setting helps protect our conda alias defined in the interactive
+        # login shell from messing with 'koopa_activate_conda_env'.
+        shopt -u expand_aliases
         # Try to enforce that command substitution stops on first error code.
         # https://unix.stackexchange.com/questions/541682/
         shopt -s inherit_errexit
-        # This setting helps protect our conda alias defined in the interactive
-        # login shell from messing with 'koopa::activate_conda_env'.
-        shopt -u expand_aliases
-        # Check for readarray / mapfile, which is in Bash 4+.
-        [[ "$(type -t 'readarray')" == 'builtin' ]] || return 1
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
@@ -197,20 +199,20 @@ __koopa_bash_header() { # {{{1
         [[ "${dict[dev]}" -eq 1 ]]
     then
         __koopa_bash_source_dir 'common'
-        dict[os_id]="$(koopa::os_id)"
-        if koopa::is_linux
+        dict[os_id]="$(koopa_os_id)"
+        if koopa_is_linux
         then
             dict[linux_prefix]='os/linux'
             __koopa_bash_source_dir "${dict[linux_prefix]}/common"
-            if koopa::is_debian_like
+            if koopa_is_debian_like
             then
                 __koopa_bash_source_dir "${dict[linux_prefix]}/debian"
-                koopa::is_ubuntu_like && \
+                koopa_is_ubuntu_like && \
                     __koopa_bash_source_dir "${dict[linux_prefix]}/ubuntu"
-            elif koopa::is_fedora_like
+            elif koopa_is_fedora_like
             then
                 __koopa_bash_source_dir "${dict[linux_prefix]}/fedora"
-                koopa::is_rhel_like && \
+                koopa_is_rhel_like && \
                     __koopa_bash_source_dir "${dict[linux_prefix]}/rhel"
             fi
             __koopa_bash_source_dir "${dict[linux_prefix]}/${dict[os_id]}"
@@ -221,19 +223,19 @@ __koopa_bash_header() { # {{{1
         case "${1:-}" in
             '--help' | \
             '-h')
-                dict[script_file]="$(koopa::realpath "$0")"
-                dict[script_name]="$(koopa::basename "${dict[script_file]}")"
+                dict[script_file]="$(koopa_realpath "$0")"
+                dict[script_name]="$(koopa_basename "${dict[script_file]}")"
                 dict[man_prefix]="$( \
-                    koopa::parent_dir --num=2 "${dict[script_file]}" \
+                    koopa_parent_dir --num=2 "${dict[script_file]}" \
                 )"
                 dict[man_file]="${dict[man_prefix]}/man/\
 man1/${dict[script_name]}.1"
-                koopa::help "${dict[man_file]}"
+                koopa_help "${dict[man_file]}"
                 ;;
         esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
         then
-            if koopa::is_shared_install && koopa::is_admin
+            if koopa_is_shared_install && koopa_is_admin
             then
                 export KOOPA_ADMIN=1
             else
@@ -241,9 +243,9 @@ man1/${dict[script_name]}.1"
             fi
         fi
         # Require admin account to run 'sbin/' scripts.
-        if koopa::str_detect_fixed --string="$0" --pattern='/sbin'
+        if koopa_str_detect_fixed --string="$0" --pattern='/sbin'
         then
-            koopa::assert_is_admin
+            koopa_assert_is_admin
         fi
         # Disable user-defined aliases.
         unalias -a
@@ -256,3 +258,5 @@ man1/${dict[script_name]}.1"
 }
 
 __koopa_bash_header "$@"
+
+unset -f __koopa_bash_header

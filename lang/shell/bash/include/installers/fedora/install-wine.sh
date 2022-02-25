@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::fedora_install_wine() { # {{{1
+fedora_install_wine() { # {{{1
     # """
     # Install Wine.
     # @note Updated 2022-02-23.
@@ -12,24 +12,24 @@ koopa:::fedora_install_wine() { # {{{1
     # - https://wiki.winehq.org/Fedora
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::asset_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_asset_is_admin
     declare -A app=(
-        [cut]="$(koopa::locate_cut)"
+        [cut]="$(koopa_locate_cut)"
     )
     declare -A dict
     dict[version]="$( \
-        koopa::grep \
+        koopa_grep \
             --file='/etc/os-release' \
             --pattern='VERSION_ID=' \
         | "${app[cut]}" --delimiter='=' --fields='2' \
     )"
     dict[repo_url]="https://dl.winehq.org/wine-builds/fedora/\
 ${dict[version]}/winehq.repo"
-    koopa::fedora_dnf update
-    koopa::fedora_dnf_install 'dnf-plugins-core'
-    koopa::fedora_dnf config-manager --add-repo "${dict[repo_url]}"
-    koopa::fedora_dnf_install \
+    koopa_fedora_dnf update
+    koopa_fedora_dnf_install 'dnf-plugins-core'
+    koopa_fedora_dnf config-manager --add-repo "${dict[repo_url]}"
+    koopa_fedora_dnf_install \
         'winehq-stable' \
         'xorg-x11-apps' \
         'xorg-x11-server-Xvfb' \

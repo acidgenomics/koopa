@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::convert_line_endings_from_crlf_to_lf() { # {{{1
+koopa_convert_line_endings_from_crlf_to_lf() { # {{{1
     # """
     # Convert CRLF (Windows) to LF (Unix) line endings.
     # @note Updated 2022-02-13.
@@ -12,22 +12,22 @@ koopa::convert_line_endings_from_crlf_to_lf() { # {{{1
     # - https://stackoverflow.com/questions/27810758/
     #
     # @examples
-    # > koopa::convert_line_endings_from_crlf_to_lf 'metadata.csv'
+    # > koopa_convert_line_endings_from_crlf_to_lf 'metadata.csv'
     # """
     local app file
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [perl]="$(koopa::locate_perl)"
+        [perl]="$(koopa_locate_perl)"
     )
     for file in "$@"
     do
         "${app[perl]}" -pe 's/\r$//g' < "$file" > "${file}.tmp"
-        koopa::mv "${file}.tmp" "$file"
+        koopa_mv "${file}.tmp" "$file"
     done
     return 0
 }
 
-koopa::convert_line_endings_from_lf_to_crlf() { # {{{1
+koopa_convert_line_endings_from_lf_to_crlf() { # {{{1
     # """
     # Convert LF (Unix) to CRLF (Windows) line endings.
     # @note Updated 2022-02-13.
@@ -36,17 +36,17 @@ koopa::convert_line_endings_from_lf_to_crlf() { # {{{1
     # - https://stackoverflow.com/questions/27810758/
     #
     # @examples
-    # > koopa::convert_line_endings_from_lf_to_crlf 'metadata.csv'
+    # > koopa_convert_line_endings_from_lf_to_crlf 'metadata.csv'
     # """
     local app file
-    koopa::assert_has_ars "$#"
+    koopa_assert_has_ars "$#"
     declare -A app=(
-        [perl]="$(koopa::locate_perl)"
+        [perl]="$(koopa_locate_perl)"
     )
     for file in "$@"
     do
         "${app[perl]}" -pe 's/(?<!\r)\n/\r\n/g' < "$file" > "${file}.tmp"
-        koopa::mv "${file}.tmp" "$file"
+        koopa_mv "${file}.tmp" "$file"
     done
     return 0
 }

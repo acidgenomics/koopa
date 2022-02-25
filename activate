@@ -1,7 +1,5 @@
 #!/bin/sh
 
-
-
 # Csh is not supported, primarily due to lack of functions.
 # > csh -l or csh -i
 [ "$0" = 'csh' ] && \
@@ -21,8 +19,6 @@ then
     printf '%s\n' 'koopa does not support ksh.'
     return 1
 fi
-
-
 
 __koopa_activate_usage() { # {{{1
     # """
@@ -71,8 +67,6 @@ examples:
 END
 }
 
-
-
 __koopa_bash_source() { # {{{1
     # """
     # Bash source file location.
@@ -119,7 +113,7 @@ __koopa_export_koopa_prefix() { # {{{1
     script="$("__koopa_${shell}_source")"
     if [ ! -x "$script" ]
     then
-        __koopa_warning 'Failed to locate koopa activate script.'
+        __koopa_warn 'Failed to locate koopa activate script.'
         return 1
     fi
     # Note that running realpath on the file instead of the directory will
@@ -214,7 +208,7 @@ __koopa_posix_source() { # {{{1
     fi
     if [ ! -d "$prefix" ]
     then
-        __koopa_warning \
+        __koopa_warn \
             'Failed to locate koopa activation script.' \
             "Required 'KOOPA_PREFIX' variable is unset."
         return 1
@@ -259,9 +253,9 @@ __koopa_realpath() { # {{{1
     __koopa_is_macos && readlink='greadlink'
     if ! __koopa_is_installed "$readlink"
     then
-        __koopa_warning "Not installed: '${readlink}'."
+        __koopa_warn "Not installed: '${readlink}'."
         __koopa_is_macos && \
-            __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
+            __koopa_warn 'Install Homebrew and GNU coreutils to resolve.'
         return 1
     fi
     x="$("$readlink" -f "$@")"
@@ -296,7 +290,7 @@ __koopa_str_detect_posix() { # {{{1
     test "${1#*"$2"}" != "$1"
 }
 
-__koopa_warning() { # {{{1
+__koopa_warn() { # {{{1
     # """
     # Print a warning message to the console.
     # @note Updated 2021-05-14.
@@ -322,8 +316,6 @@ __koopa_zsh_source() { # {{{1
     __koopa_print "${(%):-%x}"
     return 0
 }
-
-
 
 __koopa_activate() { # {{{1
     # """

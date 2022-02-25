@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::linux_install_aws_cli() { # {{{1
+linux_install_aws_cli() { # {{{1
     # """
     # Install AWS CLI.
     # @note Updated 2021-11-16.
@@ -21,23 +21,23 @@ koopa:::linux_install_aws_cli() { # {{{1
     # """
     local dict
     declare -A dict=(
-        [arch]="$(koopa::arch)"
+        [arch]="$(koopa_arch)"
         [prefix]="${INSTALL_PREFIX:?}"
         [tmp_bin_dir]='tmp_bin'
         [tmp_install_dir]='tmp_install'
     )
     dict[file]="awscli-exe-linux-${dict[arch]}.zip"
     dict[url]="https://awscli.amazonaws.com/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
     ./aws/install \
         -i "${dict[tmp_install_dir]}" \
         -b "${dict[tmp_bin_dir]}" \
         > /dev/null
-    koopa::cd "${dict[tmp_install_dir]}/v2"
+    koopa_cd "${dict[tmp_install_dir]}/v2"
     # Note that directory structure currently returns differently for Alpine.
     dict[version_subdir]="$( \
-        koopa::find \
+        koopa_find \
             --max-depth=1 \
             --min-depth=1 \
             --pattern='2.*' \
@@ -46,8 +46,8 @@ koopa:::linux_install_aws_cli() { # {{{1
     )"
     if [[ -z "${dict[version_subdir]}" ]]
     then
-        koopa::stop 'Failed to detect version.'
+        koopa_stop 'Failed to detect version.'
     fi
-    koopa::sys_cp "${dict[version_subdir]}" "${dict[prefix]}"
+    koopa_sys_cp "${dict[version_subdir]}" "${dict[prefix]}"
     return 0
 }

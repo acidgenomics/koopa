@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::convert_fastq_to_fasta() { # {{{1
+koopa_convert_fastq_to_fasta() { # {{{1
     # """
     # Convert FASTQ files into FASTA format.
     # @note Updated 2022-02-16.
@@ -15,17 +15,17 @@ koopa::convert_fastq_to_fasta() { # {{{1
     # >     > "$fasta_file"
     #
     # @examples
-    # > koopa::convert_fastq_to_fastq \
+    # > koopa_convert_fastq_to_fastq \
     # >     --source-dir='fastq/' \
     # >     --target-dir='fasta/'
     # """
     local app dict fastq_file fastq_files
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa::locate_cut)"
-        [paste]="$(koopa::locate_paste)"
-        [sed]="$(koopa::locate_sed)"
-        [tr]="$(koopa::locate_tr)"
+        [cut]="$(koopa_locate_cut)"
+        [paste]="$(koopa_locate_paste)"
+        [sed]="$(koopa_locate_sed)"
+        [tr]="$(koopa_locate_tr)"
     )
     declare -A dict=(
         [source_dir]="${PWD:?}"
@@ -53,14 +53,14 @@ koopa::convert_fastq_to_fasta() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_is_dir "${dict[source_dir]}"
-    dict[source_dir]="$(koopa::realpath "${dict[source_dir]}")"
+    koopa_assert_is_dir "${dict[source_dir]}"
+    dict[source_dir]="$(koopa_realpath "${dict[source_dir]}")"
     readarray -t fastq_files <<< "$( \
-        koopa::find \
+        koopa_find \
             --max-depth=1 \
             --min-depth=1 \
             --pattern='*.fastq' \
@@ -70,9 +70,9 @@ koopa::convert_fastq_to_fasta() { # {{{1
     )"
     if [[ "${#fastq_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No FASTQ files detected in '${dict[source_dir]}'."
+        koopa_stop "No FASTQ files detected in '${dict[source_dir]}'."
     fi
-    dict[target_dir]="$(koopa::init_dir "${dict[target_dir]}")"
+    dict[target_dir]="$(koopa_init_dir "${dict[target_dir]}")"
     for fastq_file in "${fastq_files[@]}"
     do
         local fasta_file
@@ -85,18 +85,18 @@ koopa::convert_fastq_to_fasta() { # {{{1
     return 0
 }
 
-koopa::fastq_lanepool() { # {{{1
+koopa_fastq_lanepool() { # {{{1
     # """
     # Pool lane-split FASTQ files.
     # @note Updated 2022-02-16.
     #
     # @examples
-    # > koopa::fastq_lanepool --source-dir='fastq/'
+    # > koopa_fastq_lanepool --source-dir='fastq/'
     # """
     local app dict
     local basenames head i out tail
     declare -A app=(
-        [cat]="$(koopa::locate_cat)"
+        [cat]="$(koopa_locate_cat)"
     )
     declare -A dict=(
         [prefix]='lanepool'
@@ -133,14 +133,14 @@ koopa::fastq_lanepool() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_is_dir "${dict[source_dir]}"
-    dict[source_dir]="$(koopa::realpath "${dict[source_dir]}")"
+    koopa_assert_is_dir "${dict[source_dir]}"
+    dict[source_dir]="$(koopa_realpath "${dict[source_dir]}")"
     readarray -t fastq_files <<< "$( \
-        koopa::find \
+        koopa_find \
             --max-depth=1 \
             --min-depth=1 \
             --pattern='*_L001_*.fastq*' \
@@ -151,13 +151,13 @@ koopa::fastq_lanepool() { # {{{1
     # Error if file array is empty.
     if [[ "${#fastq_files[@]}" -eq 0 ]]
     then
-        koopa::stop "No lane-split FASTQ files in '${dict[source_dir]}'."
+        koopa_stop "No lane-split FASTQ files in '${dict[source_dir]}'."
     fi
-    dict[target_dir]="$(koopa::init_dir "${dict[target_dir]}")"
+    dict[target_dir]="$(koopa_init_dir "${dict[target_dir]}")"
     basenames=()
     for i in "${fastq_files[@]}"
     do
-        basenames+=("$(koopa::basename "$i")")
+        basenames+=("$(koopa_basename "$i")")
     done
     head=()
     for i in "${basenames[@]}"
@@ -188,25 +188,25 @@ koopa::fastq_lanepool() { # {{{1
     return 0
 }
 
-koopa::fastq_reads_per_file() { # {{{1
+koopa_fastq_reads_per_file() { # {{{1
     # """
     # Determine the number of reads per FASTQ file.
     # @note Updated 2022-02-16.
     #
     # @examples
-    # > koopa::fastq_reads_per_file 'fastq/'
+    # > koopa_fastq_reads_per_file 'fastq/'
     # """
     local app dict
     declare -A app=(
-        [awk]="$(koopa::locate_awk)"
-        [wc]="$(koopa::locate_wc)"
-        [zcat]="$(koopa::locate_zcat)"
+        [awk]="$(koopa_locate_awk)"
+        [wc]="$(koopa_locate_wc)"
+        [zcat]="$(koopa_locate_zcat)"
     )
     declare -A dict=(
         [prefix]="${1:-}"
     )
     [[ -z "${dict[prefix]}" ]] && dict[prefix]="${PWD:?}"
-    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     # Divide by 4.
     # shellcheck disable=SC2016
     "${app[zcat]}" "${dict[prefix]}/"*'_R1.fastq.gz' \

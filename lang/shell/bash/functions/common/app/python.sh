@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::python_activate_venv() { # {{{1
+koopa_python_activate_venv() { # {{{1
     # """
     # Activate Python virtual environment.
     # @note Updated 2022-02-16.
@@ -19,21 +19,21 @@ koopa::python_activate_venv() { # {{{1
     # Refer to 'declare -f deactivate' for function source code.
     #
     # @examples
-    # > koopa::python_activate_venv 'r-reticulate'
+    # > koopa_python_activate_venv 'r-reticulate'
     # """
     local dict
-    koopa::assert_has_args_eq "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     declare -A dict=(
         [active_env]="${VIRTUAL_ENV:-}"
         [name]="${1:?}"
-        [nounset]="$(koopa::boolean_nounset)"
-        [prefix]="$(koopa::python_venv_prefix)"
+        [nounset]="$(koopa_boolean_nounset)"
+        [prefix]="$(koopa_python_venv_prefix)"
     )
     dict[script]="${dict[prefix]}/${dict[name]}/bin/activate"
-    koopa::assert_is_readable "${dict[script]}"
+    koopa_assert_is_readable "${dict[script]}"
     if [[ -n "${dict[active_env]}" ]]
     then
-        koopa::python_deactivate_venv "${dict[active_env]}"
+        koopa_python_deactivate_venv "${dict[active_env]}"
     fi
     [[ "${dict[nounset]}" -eq 1 ]] && set +u
     # shellcheck source=/dev/null
@@ -42,19 +42,19 @@ koopa::python_activate_venv() { # {{{1
     return 0
 }
 
-koopa::python_create_venv() { # {{{1
+koopa_python_create_venv() { # {{{1
     # """
     # Create Python virtual environment.
     # @note Updated 2022-02-23.
     #
     # @examples
-    # > koopa::python_create_venv --name='base'
+    # > koopa_python_create_venv --name='base'
     # """
     local app default_pkgs dict pos
-    koopa::assert_has_args "$#"
-    koopa::assert_has_no_envs
+    koopa_assert_has_args "$#"
+    koopa_assert_has_no_envs
     declare -A app=(
-        [python]="$(koopa::locate_python)"
+        [python]="$(koopa_locate_python)"
     )
     declare -A dict=(
         [name]=''
@@ -90,7 +90,7 @@ koopa::python_create_venv() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -99,33 +99,33 @@ koopa::python_create_venv() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         --name "${dict[name]}" \
         --python "${app[python]}"
-    koopa::assert_is_installed "${app[python]}"
-    dict[prefix]="$(koopa::python_venv_prefix)/${dict[name]}"
+    koopa_assert_is_installed "${app[python]}"
+    dict[prefix]="$(koopa_python_venv_prefix)/${dict[name]}"
     if [[ "${dict[reinstall]}" -eq 1 ]]
     then
-        koopa::sys_rm "${dict[prefix]}"
+        koopa_sys_rm "${dict[prefix]}"
     fi
-    koopa::alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
-    koopa::assert_is_not_dir "${dict[prefix]}"
-    koopa::sys_mkdir "${dict[prefix]}"
+    koopa_alert_install_start "${dict[name_fancy]}" "${dict[prefix]}"
+    koopa_assert_is_not_dir "${dict[prefix]}"
+    koopa_sys_mkdir "${dict[prefix]}"
     "${app[python]}" -m venv "${dict[prefix]}"
     app[venv_python]="${dict[prefix]}/bin/python3"
-    koopa::assert_is_installed "${app[venv_python]}"
+    koopa_assert_is_installed "${app[venv_python]}"
     "${app[venv_python]}" -m pip install --upgrade "${default_pkgs[@]}"
     if [[ "$#" -gt 0 ]]
     then
         "${app[venv_python]}" -m pip install --upgrade "$@"
     fi
-    koopa::sys_set_permissions --recursive "${dict[prefix]}"
+    koopa_sys_set_permissions --recursive "${dict[prefix]}"
     "${app[venv_python]}" -m pip list
-    koopa::alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
+    koopa_alert_install_success "${dict[name_fancy]}" "${dict[prefix]}"
     return 0
 }
 
-koopa::python_create_venv_r_reticulate() { # {{{1
+koopa_python_create_venv_r_reticulate() { # {{{1
     # """
     # Create Python virtual environment for reticulate in R.
     # @note Updated 2022-02-23.
@@ -145,7 +145,7 @@ koopa::python_create_venv_r_reticulate() { # {{{1
         'scikit-learn==1.0.2'
         'scipy==1.7.3'
     )
-    if koopa::is_macos
+    if koopa_is_macos
     then
         local cflags cppflags cxxflags dyld_library_path ldflags
         cflags=(
@@ -181,7 +181,7 @@ koopa::python_create_venv_r_reticulate() { # {{{1
         export CXXFLAGS="${cxxflags[*]}"
         export DYLD_LIBRARY_PATH="${dyld_library_path[*]}"
         export LDFLAGS="${ldflags[*]}"
-        koopa::dl \
+        koopa_dl \
             'CC' "${CC:-}" \
             'CFLAGS' "${CFLAGS:-}" \
             'CPPFLAGS' "${CPPFLAGS:-}" \
@@ -190,11 +190,11 @@ koopa::python_create_venv_r_reticulate() { # {{{1
             'DYLD_LIBRARY_PATH' "${DYLD_LIBRARY_PATH:-}" \
             'LDFLAGS' "${LDFLAGS:-}"
     fi
-    koopa::python_create_venv --name='r-reticulate' "${pkgs[@]}" "$@"
+    koopa_python_create_venv --name='r-reticulate' "${pkgs[@]}" "$@"
     return 0
 }
 
-koopa::python_deactivate_venv() { # {{{1
+koopa_python_deactivate_venv() { # {{{1
     # """
     # Deactivate Python virtual environment.
     # @note Updated 2022-02-16.
@@ -205,33 +205,33 @@ koopa::python_deactivate_venv() { # {{{1
     )
     if [[ -z "${dict[prefix]}" ]]
     then
-        koopa::stop 'Python virtual environment is not active.'
+        koopa_stop 'Python virtual environment is not active.'
     fi
-    koopa::remove_from_path "${dict[prefix]}/bin"
+    koopa_remove_from_path "${dict[prefix]}/bin"
     unset -v VIRTUAL_ENV
     return 0
 }
 
-koopa::python_get_pkg_versions() {
+koopa_python_get_pkg_versions() {
     # """
     # Get pinned Python package versions for pip install call.
     # @note Updated 2022-01-20.
     # """
     local i pkg pkgs pkg_lower version
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     pkgs=("$@")
     for i in "${!pkgs[@]}"
     do
         pkg="${pkgs[$i]}"
-        pkg_lower="$(koopa::lowercase "$pkg")"
-        version="$(koopa::variable "python-${pkg_lower}")"
+        pkg_lower="$(koopa_lowercase "$pkg")"
+        version="$(koopa_variable "python-${pkg_lower}")"
         pkgs[$i]="${pkg}==${version}"
     done
-    koopa::print "${pkgs[@]}"
+    koopa_print "${pkgs[@]}"
     return 0
 }
 
-koopa::python_pip_install() { # {{{1
+koopa_python_pip_install() { # {{{1
     # """
     # Internal pip install command.
     # @note Updated 2022-01-20.
@@ -251,9 +251,9 @@ koopa::python_pip_install() { # {{{1
     # - https://github.com/pypa/pip/issues/8063
     # """
     local app dict pkgs pos
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [python]="$(koopa::locate_python)"
+        [python]="$(koopa_locate_python)"
     )
     declare -A dict=(
         [reinstall]=0
@@ -278,7 +278,7 @@ koopa::python_pip_install() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -287,14 +287,14 @@ koopa::python_pip_install() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     pkgs=("$@")
-    koopa::configure_python "${app[python]}"
-    dict[version]="$(koopa::get_version "${app[python]}")"
-    dict[target]="$(koopa::python_packages_prefix "${dict[version]}")"
-    koopa::dl \
+    koopa_configure_python "${app[python]}"
+    dict[version]="$(koopa_get_version "${app[python]}")"
+    dict[target]="$(koopa_python_packages_prefix "${dict[version]}")"
+    koopa_dl \
         'Python' "${app[python]}" \
-        'Packages' "$(koopa::to_string "${pkgs[*]}")" \
+        'Packages' "$(koopa_to_string "${pkgs[*]}")" \
         'Target' "${dict[target]}"
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
@@ -316,7 +316,7 @@ koopa::python_pip_install() { # {{{1
     return 0
 }
 
-koopa::python_pip_outdated() { # {{{1
+koopa_python_pip_outdated() { # {{{1
     # """
     # List oudated pip packages.
     # @note Updated 2022-01-20.
@@ -330,12 +330,12 @@ koopa::python_pip_outdated() { # {{{1
     declare -A app=(
         [python]="${1:-}"
     )
-    [[ -z "${app[python]}" ]] && app[python]="$(koopa::locate_python)"
-    koopa::assert_is_installed "${app[python]}"
+    [[ -z "${app[python]}" ]] && app[python]="$(koopa_locate_python)"
+    koopa_assert_is_installed "${app[python]}"
     declare -A dict=(
-        [version]="$(koopa::get_version "${app[python]}")"
+        [version]="$(koopa_get_version "${app[python]}")"
     )
-    dict[prefix]="$(koopa::python_packages_prefix "${dict[version]}")"
+    dict[prefix]="$(koopa_python_packages_prefix "${dict[version]}")"
     dict[str]="$( \
         "${app[python]}" -m pip list \
             --format 'freeze' \
@@ -343,6 +343,6 @@ koopa::python_pip_outdated() { # {{{1
             --path "${dict[prefix]}" \
     )"
     [[ -n "${dict[str]}" ]] || return 0
-    koopa::print "${dict[str]}"
+    koopa_print "${dict[str]}"
     return 0
 }

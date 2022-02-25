@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::arch_install_base_system() { # {{{1
+arch_install_base_system() { # {{{1
     # """
     # Install Arch Linux base system.
     # @note Updated 2021-11-30.
@@ -21,11 +21,11 @@ koopa:::arch_install_base_system() { # {{{1
     # This is due to configuration in '/etc/profile'.
     # """
     local app dict pkgs
-    koopa::assert_is_admin
+    koopa_assert_is_admin
     declare -A app=(
-        [pacman]="$(koopa::arch_locate_pacman)"
-        [pacman_db_upgrade]="$(koopa::arch_locate_pacman_db_upgrade)"
-        [sudo]="$(koopa::locate_sudo)"
+        [pacman]="$(koopa_arch_locate_pacman)"
+        [pacman_db_upgrade]="$(koopa_arch_locate_pacman_db_upgrade)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     declare -A dict=(
         [base]=1
@@ -55,14 +55,14 @@ koopa:::arch_install_base_system() { # {{{1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
     # Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
     # is non-standard and can cause koopa's application link script to break.
     [[ -L '/usr/local/share/man' ]] && \
-        koopa::rm --sudo '/usr/local/share/man'
+        koopa_rm --sudo '/usr/local/share/man'
     if [[ "${dict[upgrade]}" -eq 1 ]]
     then
         "${app[sudo]}" "${app[pacman]}" -Syyu --noconfirm

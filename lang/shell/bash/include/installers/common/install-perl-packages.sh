@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_perl_packages() { # {{{1
+install_perl_packages() { # {{{1
     # """
     # Install Perl packages.
     # @note Updated 2022-02-10.
@@ -12,15 +12,15 @@ koopa:::install_perl_packages() { # {{{1
     # * --from https://cpan.metacpan.org/      # use only the HTTPS mirror
     # """
     local app module modules
-    koopa::assert_has_no_args "$#"
-    koopa::activate_perl
+    koopa_assert_has_no_args "$#"
+    koopa_activate_perl
     declare -A app=(
-        [cpan]="$(koopa::locate_cpan)"
-        [cpanm]="$(koopa::locate_cpanm 2>/dev/null || true)"
+        [cpan]="$(koopa_locate_cpan)"
+        [cpanm]="$(koopa_locate_cpanm 2>/dev/null || true)"
     )
-    if ! koopa::is_installed "${app[cpanm]}"
+    if ! koopa_is_installed "${app[cpanm]}"
     then
-        koopa::alert_install_start 'CPAN Minus'
+        koopa_alert_install_start 'CPAN Minus'
         "${app[cpan]}" -i 'App::cpanminus' &>/dev/null
     fi
     modules=(
@@ -30,7 +30,7 @@ koopa:::install_perl_packages() { # {{{1
     )
     for module in "${modules[@]}"
     do
-        koopa::alert "${module}"
+        koopa_alert "${module}"
         "${app[cpanm]}" "$module" &>/dev/null
     done
     return 0

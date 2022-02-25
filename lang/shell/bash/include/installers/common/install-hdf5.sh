@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
 
-koopa:::install_hdf5() { # {{{1
+install_hdf5() { # {{{1
     # """
     # Install HDF5.
     # @note Updated 2021-12-07.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='hdf5'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa::is_macos
+    if koopa_is_macos
     then
         dict[gfortran_prefix]='/usr/local/gfortran'
-        koopa::assert_is_dir "${dict[gfortran_prefix]}"
-        koopa::add_to_path_start "${dict[gfortran_prefix]}/bin"
+        koopa_assert_is_dir "${dict[gfortran_prefix]}"
+        koopa_add_to_path_start "${dict[gfortran_prefix]}/bin"
     fi
-    koopa::assert_is_installed 'gfortran'
-    dict[maj_min_ver]="$(koopa::major_minor_version "${dict[version]}")"
+    koopa_assert_is_installed 'gfortran'
+    dict[maj_min_ver]="$(koopa_major_minor_version "${dict[version]}")"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://support.hdfgroup.org/ftp/HDF5/releases/\
 ${dict[name]}-${dict[maj_min_ver]}/${dict[name]}-${dict[version]}/\
 src/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         '--enable-cxx'

@@ -5,35 +5,35 @@ koopa_rename_from_csv() { # {{{1
     # Rename files from CSV template.
     # @note Updated 2022-02-17.
     #
-    # @usage koopa::rename_from_csv CSV_FILE
+    # @usage koopa_rename_from_csv CSV_FILE
     # """
     local file line
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     file="${1:?}"
-    koopa::assert_is_file_type --ext='csv' "$file"
+    koopa_assert_is_file_type --ext='csv' "$file"
     while read -r line
     do
         local from to
         from="${line%,*}"
         to="${line#*,}"
-        koopa::mv "$from" "$to"
+        koopa_mv "$from" "$to"
     done < "$file"
     return 0
 }
 
-# FIXME Need to test that this works recursively using 'koopa::find'.
-koopa::rename_lowercase() { # {{{1
+# FIXME Need to test that this works recursively using 'koopa_find'.
+koopa_rename_lowercase() { # {{{1
     # """
     # Rename files to lowercase.
     # @note Updated 2022-02-24.
     #
-    # @usage koopa::rename_lowercase FILE...
+    # @usage koopa_rename_lowercase FILE...
     # """
     local app dict pos
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [rename]="$(koopa::locate_rename)"
-        [xargs]="$(koopa::locate_xargs)"
+        [rename]="$(koopa_locate_rename)"
+        [xargs]="$(koopa_locate_xargs)"
     )
     declare -A dict=(
         [pattern]='y/A-Z/a-z/'
@@ -48,7 +48,7 @@ koopa::rename_lowercase() { # {{{1
                 shift 1
                 ;;
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -59,11 +59,11 @@ koopa::rename_lowercase() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     if [[ "${dict[recursive]}" -eq 1 ]]
     then
-        koopa::assert_has_args_le "$#" 1
+        koopa_assert_has_args_le "$#" 1
         dict[prefix]="${1:-.}"
-        koopa::assert_is_dir "${dict[prefix]}"
+        koopa_assert_is_dir "${dict[prefix]}"
         # Rename files.
-        koopa::find \
+        koopa_find \
             --exclude='.*' \
             --min-depth=1 \
             --pattern='*[A-Z]*' \
@@ -81,7 +81,7 @@ koopa::rename_lowercase() { # {{{1
                 "${dict[pattern]}" \
                 {}
         # Rename directories.
-        koopa::find \
+        koopa_find \
             --exclude='.*' \
             --min-depth=1 \
             --pattern='*[A-Z]*' \

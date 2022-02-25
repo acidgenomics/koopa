@@ -1,71 +1,71 @@
 #!/usr/bin/env bash
 
-koopa::brew_cleanup() { # {{{1
+koopa_brew_cleanup() { # {{{1
     # """
     # Clean up Homebrew.
     # @note Updated 2021-11-22.
     # """
     local app
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa::locate_brew)"
+        [brew]="$(koopa_locate_brew)"
     )
-    koopa::alert 'Cleaning up Homebrew install.'
+    koopa_alert 'Cleaning up Homebrew install.'
     "${app[brew]}" cleanup -s || true
-    koopa::rm "$("${app[brew]}" --cache)"
+    koopa_rm "$("${app[brew]}" --cache)"
     return 0
 }
 
-koopa::brew_dump_brewfile() { # {{{1
+koopa_brew_dump_brewfile() { # {{{1
     # """
     # Dump a Homebrew Bundle Brewfile.
     # @note Updated 2021-10-27.
     # """
     local app today
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa::locate_brew)"
+        [brew]="$(koopa_locate_brew)"
     )
-    today="$(koopa::today)"
+    today="$(koopa_today)"
     "${app[brew]}" bundle dump \
         --file="brewfile-${today}" \
         --force
     return 0
 }
 
-koopa::brew_outdated() { # {{{1
+koopa_brew_outdated() { # {{{1
     # """
     # Listed outdated Homebrew brews and casks, in a single call.
     # @note Updated 2021-10-27.
     # """
     local app x
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa::locate_brew)"
+        [brew]="$(koopa_locate_brew)"
     )
     x="$("${app[brew]}" outdated --quiet)"
-    koopa::print "$x"
+    koopa_print "$x"
     return 0
 }
 
-koopa::brew_reset_core_repo() { # {{{1
+koopa_brew_reset_core_repo() { # {{{1
     # """
     # Ensure internal 'homebrew-core' repo is clean.
     # @note Updated 2021-10-27.
     # """
     local app branch origin prefix repo
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa::locate_brew)"
-        [git]="$(koopa::locate_git)"
+        [brew]="$(koopa_locate_brew)"
+        [git]="$(koopa_locate_git)"
     )
     repo='homebrew/core'
     origin='origin'
     (
         prefix="$("${app[brew]}" --repo "$repo")"
-        koopa::assert_is_dir "$prefix"
-        koopa::cd "$prefix"
-        branch="$(koopa::git_default_branch)"
+        koopa_assert_is_dir "$prefix"
+        koopa_cd "$prefix"
+        branch="$(koopa_git_default_branch)"
         "${app[git]}" checkout -q "$branch"
         "${app[git]}" branch -q "$branch" -u "${origin}/${branch}"
         "${app[git]}" reset -q --hard "${origin}/${branch}"
@@ -74,19 +74,19 @@ koopa::brew_reset_core_repo() { # {{{1
     return 0
 }
 
-koopa::brew_reset_permissions() { # {{{1
+koopa_brew_reset_permissions() { # {{{1
     # """
     # Reset permissions on Homebrew installation.
     # @note Updated 2021-10-27.
     # """
     local group prefix user
-    koopa::assert_has_no_args "$#"
-    user="$(koopa::user)"
-    group="$(koopa::admin_group)"
-    prefix="$(koopa::homebrew_prefix)"
-    koopa::alert "Resetting ownership of files in \
+    koopa_assert_has_no_args "$#"
+    user="$(koopa_user)"
+    group="$(koopa_admin_group)"
+    prefix="$(koopa_homebrew_prefix)"
+    koopa_alert "Resetting ownership of files in \
 '${prefix}' to '${user}:${group}'."
-    koopa::chown \
+    koopa_chown \
         --no-dereference \
         --recursive \
         --sudo \
@@ -95,31 +95,31 @@ koopa::brew_reset_permissions() { # {{{1
     return 0
 }
 
-koopa::brew_upgrade_brews() { # {{{1
+koopa_brew_upgrade_brews() { # {{{1
     # """
     # Upgrade outdated Homebrew brews.
     # @note Updated 2022-02-16.
     # """
     local app brew brews
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa::locate_brew)"
+        [brew]="$(koopa_locate_brew)"
     )
-    readarray -t brews <<< "$(koopa::brew_outdated)"
-    koopa::is_array_non_empty "${brews[@]:-}" || return 0
-    koopa::dl \
-        "$(koopa::ngettext \
+    readarray -t brews <<< "$(koopa_brew_outdated)"
+    koopa_is_array_non_empty "${brews[@]:-}" || return 0
+    koopa_dl \
+        "$(koopa_ngettext \
             --num="${#brews[@]}" \
             --middle=' outdated ' \
             --msg1='brew' \
             --msg2='brews' \
         )" \
-        "$(koopa::to_string "${brews[@]}")"
+        "$(koopa_to_string "${brews[@]}")"
     for brew in "${brews[@]}"
     do
         "${app[brew]}" reinstall --force "$brew" || true
         # Ensure specific brews are properly linked on macOS.
-        if koopa::is_macos
+        if koopa_is_macos
         then
             case "$brew" in
                 'gcc' | \

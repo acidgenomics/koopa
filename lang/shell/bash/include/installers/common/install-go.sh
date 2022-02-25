@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-koopa:::install_go() { # {{{1
+install_go() { # {{{1
     # """
     # Install Go.
     # @note Updated 2021-11-23.
     # """
     local dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa::arch2)"  # e.g. "amd64".
+        [arch]="$(koopa_arch2)"  # e.g. "amd64".
         [name]='go'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa::is_macos
+    if koopa_is_macos
     then
         dict[os_id]='darwin'
     else
@@ -22,8 +22,8 @@ koopa:::install_go() { # {{{1
     dict[file]="${dict[name]}${dict[version]}.${dict[os_id]}-\
 ${dict[arch]}.tar.gz"
     dict[url]="https://dl.google.com/${dict[name]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cp --target-directory="${dict[prefix]}" "${dict[name]}/"*
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cp --target-directory="${dict[prefix]}" "${dict[name]}/"*
     return 0
 }

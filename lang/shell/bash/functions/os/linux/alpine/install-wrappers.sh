@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-koopa::alpine_install_base_system() { # {{{1
-    koopa::install_app \
+koopa_alpine_install_base_system() { # {{{1
+    koopa_install_app \
         --name-fancy='Alpine base system' \
         --name='base-system' \
         --platform='alpine' \
@@ -9,8 +9,8 @@ koopa::alpine_install_base_system() { # {{{1
         "$@"
 }
 
-koopa::alpine_install_glibc() { # {{{1
-    koopa::install_app \
+koopa_alpine_install_glibc() { # {{{1
+    koopa_install_app \
         --name='glibc' \
         --platform='alpine' \
         --system \

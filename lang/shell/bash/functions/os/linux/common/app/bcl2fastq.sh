@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-koopa::linux_bcl2fastq_indrops() { # {{{1
+koopa_linux_bcl2fastq_indrops() { # {{{1
     # """
     # Run bcl2fastq on inDrops sequencing run.
     # @note Updated 2021-11-16.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [bcl2fastq]="$(koopa::linux_locate_bcl2fastq)"
-        [tee]="$(koopa::locate_tee)"
+        [bcl2fastq]="$(koopa_linux_locate_bcl2fastq)"
+        [tee]="$(koopa_locate_tee)"
     )
     declare -A dict=(
         [log_file]='bcl2fastq-indrops.log'
