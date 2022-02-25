@@ -253,9 +253,9 @@ koopa::sra_fastq_dump() { # {{{1
     koopa::alert "Extracting FASTQ to '${dict[fastq_dir]}'."
     readarray -t sra_files <<< "$(
         koopa::find \
-            --glob='*.sra' \
             --max-depth=2 \
             --min-depth=2 \
+            --pattern='*.sra' \
             --prefix="${dict[prefetch_dir]}" \
             --sort \
             --type='f' \
@@ -289,9 +289,9 @@ koopa::sra_fastq_dump() { # {{{1
     then
         koopa::alert 'Compressing FASTQ files.'
         koopa::find \
-            --glob='*.fastq' \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern='*.fastq' \
             --prefix="${dict[fastq_dir]}" \
             --sort \
             --type='f' \

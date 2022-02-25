@@ -38,9 +38,9 @@ koopa:::linux_install_aws_cli() { # {{{1
     # Note that directory structure currently returns differently for Alpine.
     dict[version_subdir]="$( \
         koopa::find \
-            --glob='2.*' \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern='2.*' \
             --prefix="${PWD:?}" \
             --type='d' \
     )"

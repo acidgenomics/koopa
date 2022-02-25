@@ -81,9 +81,9 @@ koopa::run_bowtie2() { # {{{1
     # Create a per-sample array from the R1 FASTQ files.
     readarray -t fastq_r1_files <<< "$( \
         koopa::find \
-            --glob="*${dict[r1_tail]}" \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern="*${dict[r1_tail]}" \
             --prefix="${dict[fastq_dir]}" \
             --sort \
             --type='f' \
