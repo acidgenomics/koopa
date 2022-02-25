@@ -3,7 +3,7 @@
 koopa_uninstall_app() { # {{{1
     # """
     # Uninstall an application.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-02-25.
     # """
     local app dict pos
     declare -A app
@@ -98,7 +98,12 @@ koopa_uninstall_app() { # {{{1
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
-        koopa_assert_is_dir "${dict[prefix]}"
+        if [[ ! -d "${dict[prefix]}" ]]
+        then
+            koopa_warn "${dict[name_fancy]} is not installed \
+at '${dict[prefix]}'."
+            return 1
+        fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
         if koopa_str_detect_regex \
             --string="${dict[prefix]}" \
@@ -169,7 +174,12 @@ ${dict[platform]}/${dict[uninstaller_file]}.sh"
         then
             dict[prefix]="${dict[app_prefix]}/${dict[name]}"
         fi
-        koopa_assert_is_dir "${dict[prefix]}"
+        if [[ ! -d "${dict[prefix]}" ]]
+        then
+            koopa_warn "${dict[name_fancy]} is not installed \
+at '${dict[prefix]}'."
+            return 1
+        fi
         if [[ "${dict[shared]}" -eq 1 ]]
         then
             app[rm]='koopa_sys_rm'
