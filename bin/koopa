@@ -75,7 +75,7 @@ __koopa_warn() { # {{{1
     return 0
 }
 
-__koopa_koopa() {
+main() {
     # """
     # Main koopa CLI function.
     # @note Updated 2022-02-25.
@@ -98,4 +98,4 @@ __koopa_koopa() {
     return 0
 }
 
-__koopa_koopa "$@"
+main "$@"
