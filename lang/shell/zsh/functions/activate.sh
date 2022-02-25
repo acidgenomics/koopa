@@ -1,12 +1,11 @@
 #!/usr/bin/env zsh
 
-_koopa_activate_zsh_aliases() { # {{{1
+koopa_activate_zsh_aliases() { # {{{1
     # """
     # Activate Zsh aliases.
     # @note Updated 2020-11-24.
     # """
     local user_aliases
-    [[ "$#" -eq 0 ]] || return 1
     user_aliases="${HOME}/.zsh_aliases"
     if [[ -f "$user_aliases" ]]
     then
@@ -16,42 +15,38 @@ _koopa_activate_zsh_aliases() { # {{{1
     return 0
 }
 
-_koopa_activate_zsh_bashcompinit() { # {{{1
+koopa_activate_zsh_bashcompinit() { # {{{1
     # """
     # Activate Bash completions for Zsh.
     # @note Updated 2020-11-24.
     # """
-    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz bashcompinit && bashcompinit 2>/dev/null
     return 0
 }
 
-_koopa_activate_zsh_colors() { # {{{1
+koopa_activate_zsh_colors() { # {{{1
     # """
     # Enable colors in terminal.
     # @note Updated 2020-11-24.
     # """
-    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz colors && colors 2>/dev/null
     return 0
 }
 
-_koopa_activate_zsh_compinit() { # {{{1
+koopa_activate_zsh_compinit() { # {{{1
     # """
     # Activate Zsh compinit (completion system).
     # @note Updated 2020-11-24.
     # """
-    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz compinit && compinit 2>/dev/null
     return 0
 }
 
-_koopa_activate_zsh_editor() { # {{{1
+koopa_activate_zsh_editor() { # {{{1
     # """
     # Activate Zsh editor.
     # @note Updated 2020-11-24.
     # """
-    [[ "$#" -eq 0 ]] || return 1
     case "${EDITOR:-}" in
         'emacs')
             bindkey -e
@@ -64,7 +59,7 @@ _koopa_activate_zsh_editor() { # {{{1
     return 0
 }
 
-_koopa_activate_zsh_extras() { # {{{1
+koopa_activate_zsh_extras() { # {{{1
     # """
     # Activate Zsh extras.
     # @note Updated 2021-06-16.
@@ -80,40 +75,39 @@ _koopa_activate_zsh_extras() { # {{{1
     # https://unix.stackexchange.com/questions/214296
     # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
     # """
-    [[ "$#" -eq 0 ]] || return 1
-    _koopa_is_interactive || return 0
-    _koopa_activate_zsh_fpath
-    _koopa_activate_zsh_compinit
-    _koopa_activate_zsh_bashcompinit
-    _koopa_activate_zsh_colors
-    _koopa_activate_zsh_editor
-    _koopa_activate_zsh_plugins
-    _koopa_activate_zsh_aliases
-    _koopa_activate_zsh_prompt
-    _koopa_activate_zsh_reverse_search
-    _koopa_activate_completion
+    koopa_is_interactive || return 0
+    koopa_activate_zsh_fpath
+    koopa_activate_zsh_compinit
+    koopa_activate_zsh_bashcompinit
+    koopa_activate_zsh_colors
+    koopa_activate_zsh_editor
+    koopa_activate_zsh_plugins
+    koopa_activate_zsh_aliases
+    koopa_activate_zsh_prompt
+    koopa_activate_zsh_reverse_search
+    koopa_activate_completion
     return 0
 }
 
-_koopa_activate_zsh_fpath() { # {{{1
+koopa_activate_zsh_fpath() { # {{{1
     # """
     # Activate Zsh FPATH.
     # @note Updated 2021-01-19.
     # """
     local koopa_fpath koopa_prefix
     [[ "$#" -eq 0 ]] || return 1
-    koopa_prefix="$(_koopa_koopa_prefix)"
+    koopa_prefix="$(koopa_koopa_prefix)"
     koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
     then
-        _koopa_warn "FPATH directory is missing: '${koopa_fpath}'."
+        koopa_warn "FPATH directory is missing: '${koopa_fpath}'."
         return 1
     fi
-    _koopa_add_to_fpath_start "$koopa_fpath"
+    koopa_add_to_fpath_start "$koopa_fpath"
     return 0
 }
 
-_koopa_activate_zsh_plugins() { # {{{1
+koopa_activate_zsh_plugins() { # {{{1
     # """
     # Activate Zsh plugins.
     # Updated 2022-02-16.
@@ -127,7 +121,7 @@ _koopa_activate_zsh_plugins() { # {{{1
     # """
     local dotfiles_prefix plugin plugins zsh_plugins_dir
     [[ "$#" -eq 0 ]] || return 1
-    dotfiles_prefix="$(_koopa_dotfiles_prefix)"
+    dotfiles_prefix="$(koopa_dotfiles_prefix)"
     zsh_plugins_dir="${dotfiles_prefix}/shell/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
     plugins=("${(@f)$( \
@@ -150,7 +144,7 @@ _koopa_activate_zsh_plugins() { # {{{1
     return 0
 }
 
-_koopa_activate_zsh_prompt() { # {{{1
+koopa_activate_zsh_prompt() { # {{{1
     # """
     # Activate Zsh prompt.
     # Updated 2021-09-21.
@@ -164,8 +158,8 @@ _koopa_activate_zsh_prompt() { # {{{1
     # """
     local nounset
     [[ "$#" -eq 0 ]] || return 1
-    _koopa_is_root && return 0
-    nounset="$(_koopa_boolean_nounset)"
+    koopa_is_root && return 0
+    nounset="$(koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +u
     setopt promptsubst
     autoload -U promptinit
@@ -175,76 +169,16 @@ _koopa_activate_zsh_prompt() { # {{{1
     return 0
 }
 
-_koopa_activate_zsh_reverse_search() { # {{{1
+koopa_activate_zsh_reverse_search() { # {{{1
     # """
     # Activate reverse search using Ctrl+R in Zsh.
     # @note Updated 2022-01-21.
     # """
-    if _koopa_is_installed 'mcfly'
+    if koopa_is_installed 'mcfly'
     then
-        _koopa_activate_mcfly
+        koopa_activate_mcfly
     else
         bindkey '^R' 'history-incremental-search-backward'
     fi
-    return 0
-}
-
-_koopa_zsh_prompt_string() { # {{{1
-    # """
-    # Zsh prompt string (PS1).
-    # @note Updated 2022-01-21.
-    #
-    # This is a modified, lighter version of Pure, by Sindre Sorhus.
-    #
-    # Subshell exec need to be escaped here, so they are evaluated dynamically
-    # when the prompt is refreshed.
-    #
-    # Unicode characters don't work well with some Windows fonts.
-    #
-    # Conda environment activation is messing up '%m'/'%M' flag on macOS.
-    # This seems to be specific to macOS and doesn't happen on Linux.
-    #
-    # Prompt variables:
-    # - %* : time
-    # - %F : color dict
-    # - %M : machine (host) name (full)
-    # - %f : reset color
-    # - %m : machine (host) name (up to first '.')
-    # - %n : user name
-    # - %~ : current path
-    # - %(?..) : prompt conditional - %(condition.true.false)
-    #
-    # See also:
-    # - https://github.com/sindresorhus/pure/
-    # - https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/
-    #       robbyrussell.zsh-theme
-    # """
-    local dict
-    [[ "$#" -eq 0 ]] || return 1
-    declare -A dict=(
-        [conda]="\$(_koopa_prompt_conda)"
-        [conda_color]="${fg[yellow]}"
-        [git]="\$(_koopa_prompt_git)"
-        [git_color]="${fg[green]}"
-        [newline]=$'\n'
-        [prompt]='❯'  # default is '%%'.
-        [prompt_color]="${fg[magenta]}"
-        [user]="$(_koopa_user)@$(_koopa_hostname)"
-        [user_color]="${fg[cyan]}"
-        [venv]="\$(_koopa_prompt_python_venv)"
-        [venv_color]="${fg[yellow]}"
-        [wd]='%~'
-        [wd_color]="${fg[blue]}"
-    )
-    printf '%s%s%s%s%s%s%s%s%s ' \
-        "${dict[newline]}" \
-        "%F%{${dict[user_color]}%}${dict[user]}%f" \
-        "%F%{${dict[conda_color]}%}${dict[conda]}%f" \
-        "%F%{${dict[venv_color]}%}${dict[venv]}%f" \
-        "${dict[newline]}" \
-        "%F%{${dict[wd_color]}%}${dict[wd]}%f" \
-        "%F%{${dict[git_color]}%}${dict[git]}%f" \
-        "${dict[newline]}" \
-        "%F%{${dict[prompt_color]}%}${dict[prompt]}%f"
     return 0
 }
