@@ -76,7 +76,7 @@ koopa_help() { # {{{1
     exit 0
 }
 
-koopa_help2() { # {{{1
+koopa_help_2() { # {{{1
     # """
     # Resolve man file for current script, and call help.
     # @note Updated 2022-02-25.
