@@ -139,28 +139,102 @@ __koopa_bash_header() { # {{{1
     then
         dict[checks]=0
     fi
-    if [[ "${dict[activate]}" -eq 0 ]] || [[ "${dict[dev]}" -eq 1 ]]
+    if [[ "${dict[activate]}" -eq 0 ]]
     then
-        unalias -a
-    fi
-    if [[ "${dict[verbose]}" -eq 1 ]]
-    then
-        set -o xtrace  # -x
-    fi
-    if [[ "${dict[checks]}" -eq 1 ]]
-    then
-        set -o errexit  # -e
-        set -o errtrace  # -E
-        set -o nounset  # -u
-        set -o pipefail
-        set +o posix
-        shopt -u expand_aliases
-        shopt -s inherit_errexit
         [[ -z "${KOOPA_PROCESS_ID:-}" ]] && export KOOPA_PROCESS_ID="${$}"
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
         [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
+    fi
+    if [[ "${dict[activate]}" -eq 0 ]] || [[ "${dict[dev]}" -eq 1 ]]
+    then
+        unalias -a
+    fi
+    if [[ "${dict[checks]}" -eq 1 ]]
+    then
+        # Compare with current values defined in '~/.bashrc'.
+        # Check all values with 'set +o'.
+        set +o allexport  # -a
+        set -o braceexpand  # -B
+        set -o errexit  # -e
+        set -o errtrace  # -E
+        set -o functrace  # -T
+        set -o hashall  # -h
+        set -o histexpand  # -H
+        set -o history
+        set +o ignoreeof
+        set -o interactive-comments
+        set +o keyword  # -k
+        set -o monitor  # -m
+        set +o noclobber  # -C
+        set +o noexec  # -n
+        set +o noglob  # -f
+        set +o notify  # -b
+        set -o nounset  # -u
+        set +o onecmd  # -t
+        set -o pipefail
+        set +o posix
+        set +o physical  # -P
+        set +o verbose  # -v
+        set +o xtrace  # -x
+        # Check all values with 'shopt'.
+        shopt -s autocd
+        shopt -u cdable_vars
+        shopt -s cdspell
+        shopt -u checkhash
+        shopt -u checkjobs
+        shopt -s checkwinsize
+        shopt -s cmdhist
+        shopt -s complete_fullquote
+        shopt -u direxpand
+        shopt -u dirspell
+        shopt -u dotglob
+        shopt -u execfail
+        shopt -u expand_aliases
+        shopt -u extdebug
+        shopt -s extglob
+        shopt -s extquote
+        shopt -u failglob
+        shopt -s force_fignore
+        shopt -s globasciiranges
+        shopt -s globstar
+        shopt -s gnu_errfmt
+        shopt -s histappend
+        shopt -s histreedit
+        shopt -u histverify
+        shopt -s hostcomplete
+        shopt -u huponexit
+        shopt -s inherit_errexit
+        shopt -s interactive_comments
+        shopt -u lastpipe
+        shopt -u lithist
+        shopt -u mailwarn
+        shopt -s no_empty_cmd_completion
+        shopt -s nocaseglob
+        shopt -u nocasematch
+        shopt -u nullglob
+        shopt -s progcomp
+        shopt -s promptvars
+        shopt -s shift_verbose
+        shopt -s sourcepath
+        shopt -u xpg_echo
+        case "${BASH_VERSION:-}" in
+            '1.'* | '2.'* | '3.'* | '4.'*)
+                ;;
+            *)
+                # Bash 5+ supported options.
+                shopt -u assoc_expand_once
+                shopt -u localvar_inherit
+                shopt -u localvar_unset
+                shopt -u progcomp_alias
+                ;;
+        esac
+    fi
+    if [[ "${dict[verbose]}" -eq 1 ]]
+    then
+        set -o verbose  # -v
+        set -o xtrace  # -x
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
