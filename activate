@@ -320,7 +320,7 @@ __koopa_zsh_source() { # {{{1
 __koopa_activate() { # {{{1
     # """
     # Activate koopa bootloader inside shell session.
-    # @note Updated 2021-10-05.
+    # @note Updated 2022-02-25.
     # """
     case "${1:-}" in
         --help|-h)
@@ -334,23 +334,6 @@ __koopa_activate() { # {{{1
     export KOOPA_ACTIVATE=1
     # shellcheck source=/dev/null
     . "$(__koopa_header)" || return 1
-    if [ "${KOOPA_TEST:-0}" -eq 1 ] || [ "${KOOPA_VERBOSE:-0}" -eq 1 ]
-    then
-        if _koopa_is_installed 'locale'
-        then
-            _koopa_alert_info 'Locale'
-            locale
-        fi
-        _koopa_alert_info 'Shell options'
-        set +o
-        _koopa_alert_info 'Shell variables'
-        _koopa_dl \
-            '$' "${$}" \
-            '-' "${-}" \
-            'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
-            'SHELL' "${SHELL:-}"
-        _koopa_alert_success 'Activation was successful.'
-    fi
     unset -v KOOPA_ACTIVATE
     return 0
 }
