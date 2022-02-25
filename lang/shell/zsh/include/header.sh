@@ -97,12 +97,14 @@ __koopa_zsh_header() { # {{{1
     fi
     if [[ "${dict[verbose]}" -eq 1 ]]
     then
-        setopt xtrace  # -x
+        setopt sourcetrace
+        setopt verbose
+        setopt xtrace
     fi
     if [[ "${dict[checks]}" -eq 1 ]]
     then
-        setopt errexit  # -e
-        setopt nounset  # -u
+        setopt errexit
+        setopt nounset
         setopt pipefail
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_conda() { # {{{1
+install_conda() { # {{{1
     # """
     # Install Miniconda.
     # @note Updated 2022-02-23.
@@ -9,15 +9,15 @@ koopa:::install_conda() { # {{{1
     # """
     local app dict
     declare -A app=(
-        [bash]="$(koopa::locate_bash)"
+        [bash]="$(koopa_locate_bash)"
     )
     declare -A dict=(
-        [arch]="$(koopa::arch)"
-        [koopa_prefix]="$(koopa::koopa_prefix)"
+        [arch]="$(koopa_arch)"
+        [koopa_prefix]="$(koopa_koopa_prefix)"
         [mamba]=0
-        [os_type]="$(koopa::os_type)"
+        [os_type]="$(koopa_os_type)"
         [prefix]="${INSTALL_PREFIX:?}"
-        [py_version]="$(koopa::variable 'python')"
+        [py_version]="$(koopa_variable 'python')"
         [version]="${INSTALL_VERSION:?}"
     )
     case "${dict[os_type]}" in
@@ -28,7 +28,7 @@ koopa:::install_conda() { # {{{1
             dict[os_type2]='Linux'
             ;;
         *)
-            koopa::stop "'${dict[os_type]}' is not supported."
+            koopa_stop "'${dict[os_type]}' is not supported."
             ;;
     esac
     while (("$#"))
@@ -54,11 +54,11 @@ koopa:::install_conda() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    dict[py_version]="$(koopa::major_minor_version "${dict[py_version]}")"
+    dict[py_version]="$(koopa_major_minor_version "${dict[py_version]}")"
     case "${dict[py_version]}" in
         '3.7' | \
         '3.8' | \
@@ -68,25 +68,25 @@ koopa:::install_conda() { # {{{1
             dict[py_version]='3.9'
             ;;
     esac
-    dict[py_major_version]="$(koopa::major_version "${dict[py_version]}")"
+    dict[py_major_version]="$(koopa_major_version "${dict[py_version]}")"
     dict[py_version2]="$( \
-        koopa::gsub \
+        koopa_gsub \
             --pattern='\.' \
             --replacement='' \
-            "$(koopa::major_minor_version "${dict[py_version]}")" \
+            "$(koopa_major_minor_version "${dict[py_version]}")" \
     )"
     dict[script]="Miniconda${dict[py_major_version]}-\
 py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch]}.sh"
     dict[url]="https://repo.continuum.io/miniconda/${dict[script]}"
-    koopa::download "${dict[url]}" "${dict[script]}"
+    koopa_download "${dict[url]}" "${dict[script]}"
     "${app[bash]}" "${dict[script]}" -bf -p "${dict[prefix]}"
-    koopa::ln \
+    koopa_ln \
         "${dict[koopa_prefix]}/etc/conda/condarc" \
         "${dict[prefix]}/.condarc"
     # Install mamba inside of conda base environment, if desired.
     if [[ "${dict[mamba]}" -eq 1 ]]
     then
-        koopa::install_mamba
+        koopa_install_mamba
     fi
     return 0
 }

@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-koopa:::install_tex_packages() { # {{{1
+install_tex_packages() { # {{{1
     # """
     # Install TeX packages.
     # @note Updated 2022-01-26.
     # """
     local app package packages
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [gpg]="$(koopa::locate_gpg)"
-        [sudo]="$(koopa::locate_sudo)"
-        [tlmgr]="$(koopa::locate_tlmgr)"
+        [gpg]="$(koopa_locate_gpg)"
+        [sudo]="$(koopa_locate_sudo)"
+        [tlmgr]="$(koopa_locate_tlmgr)"
     )
-    koopa::add_to_path_start "$(koopa::dirname "${app[gpg]}")"
+    koopa_add_to_path_start "$(koopa_dirname "${app[gpg]}")"
     "${app[sudo]}" "${app[tlmgr]}" update --self
     packages=(
         # Priority ----

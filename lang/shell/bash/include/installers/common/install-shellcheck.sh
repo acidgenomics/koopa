@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-koopa:::install_shellcheck() { # {{{1
+install_shellcheck() { # {{{1
     # """
     # Install ShellCheck.
     # @note Updated 2022-01-19.
     # """
     local dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa::arch)"
+        [arch]="$(koopa_arch)"
         [name]='shellcheck'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa::is_macos
+    if koopa_is_macos
     then
         dict[os_id]='darwin'
     else
@@ -23,9 +23,9 @@ koopa:::install_shellcheck() { # {{{1
 ${dict[arch]}.tar.xz"
     dict[url]="https://github.com/koalaman/${dict[name]}/releases/download/\
 v${dict[version]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cp \
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cp \
         "${dict[name]}-v${dict[version]}/${dict[name]}" \
         "${dict[prefix]}/bin/${dict[name]}"
     return 0

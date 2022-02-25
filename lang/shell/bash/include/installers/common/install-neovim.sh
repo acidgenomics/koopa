@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_neovim() { # {{{1
+install_neovim() { # {{{1
     # """
     # Install Neovim.
     # @note Updated 2021-12-07.
@@ -11,12 +11,12 @@ koopa:::install_neovim() { # {{{1
     # - https://github.com/neovim/neovim/issues/11192
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='neovim'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -31,13 +31,13 @@ koopa:::install_neovim() { # {{{1
     esac
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/archive/\
 refs/tags/${dict[file]}"
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        koopa::activate_homebrew_opt_prefix 'cmake' 'luarocks' 'pkg-config'
+        koopa_activate_homebrew_opt_prefix 'cmake' 'luarocks' 'pkg-config'
     fi
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     # > "${app[make]}" distclean
     # Alternatively, can use:
     # CMAKE_BUILD_TYPE='RelWithDebInfo'

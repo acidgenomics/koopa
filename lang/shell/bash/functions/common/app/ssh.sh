@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::ssh_generate_key() { # {{{1
+koopa_ssh_generate_key() { # {{{1
     # """
     # Generate SSH key.
     # @note Updated 2022-02-11.
@@ -20,13 +20,13 @@ koopa::ssh_generate_key() { # {{{1
     # """
     local app dict ssh_args
     declare -A app=(
-        [ssh_keygen]="$(koopa::locate_ssh_keygen)"
+        [ssh_keygen]="$(koopa_locate_ssh_keygen)"
     )
     declare -A dict=(
-        [hostname]="$(koopa::hostname)"
+        [hostname]="$(koopa_hostname)"
         [key_name]='id_rsa'  # or 'id_ed25519'
         [prefix]="${HOME:?}/.ssh"
-        [user]="$(koopa::user)"
+        [user]="$(koopa_user)"
     )
     while (("$#"))
     do
@@ -42,17 +42,17 @@ koopa::ssh_generate_key() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
     file="${dict[prefix]}/${dict[key_name]}"
     if [[ -f "${dict[file]}" ]]
     then
-        koopa::alert_note "SSH key exists at '${dict[file]}'."
+        koopa_alert_note "SSH key exists at '${dict[file]}'."
         return 0
     fi
-    koopa::alert "Generating SSH key at '${dict[file]}'."
+    koopa_alert "Generating SSH key at '${dict[file]}'."
     ssh_args=(
         '-C' "${dict[user]}@${dict[hostname]}"
         '-N' ''
@@ -76,18 +76,18 @@ koopa::ssh_generate_key() { # {{{1
             )
             ;;
         *)
-            koopa::stop "Unsupported key: '${dict[key_name]}'."
+            koopa_stop "Unsupported key: '${dict[key_name]}'."
             ;;
     esac
-    koopa::dl \
+    koopa_dl \
         'ssh-keygen' "${app[ssh_keygen]}" \
         'args' "${ssh_args[*]}"
     "${app[ssh_keygen]}" "${ssh_args[@]}"
-    koopa::alert_success "Generated SSH key at '${dict[file]}'."
+    koopa_alert_success "Generated SSH key at '${dict[file]}'."
     return 0
 }
 
-koopa::ssh_key_info() { # {{{1
+koopa_ssh_key_info() { # {{{1
     # """
     # Get SSH key information.
     # @note Updated 2022-01-20.
@@ -97,8 +97,8 @@ koopa::ssh_key_info() { # {{{1
     # """
     local app dict keyfile
     declare -A app=(
-        [ssh_keygen]="$(koopa::locate_ssh_keygen)"
-        [uniq]="$(koopa::locate_uniq)"
+        [ssh_keygen]="$(koopa_locate_ssh_keygen)"
+        [uniq]="$(koopa_locate_uniq)"
     )
     declare -A dict=(
         [prefix]="${HOME:?}/.ssh"

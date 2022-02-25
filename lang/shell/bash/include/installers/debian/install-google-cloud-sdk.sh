@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::debian_install_google_cloud_sdk() { # {{{1
+debian_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.
     # @note Updated 2022-01-27.
@@ -13,9 +13,9 @@ koopa:::debian_install_google_cloud_sdk() { # {{{1
     # @seealso
     # - https://cloud.google.com/sdk/docs/downloads-apt-get
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    koopa::debian_apt_add_google_cloud_sdk_repo
-    koopa::debian_apt_install 'google-cloud-sdk'
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    koopa_debian_apt_add_google_cloud_sdk_repo
+    koopa_debian_apt_install 'google-cloud-sdk'
     return 0
 }

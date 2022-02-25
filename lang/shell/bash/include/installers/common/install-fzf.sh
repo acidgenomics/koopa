@@ -3,7 +3,7 @@
 # NOTE Safe to ignore this warning/error:
 # fatal: not a git repository (or any of the parent directories): .git
 
-koopa:::install_fzf() { # {{{1
+install_fzf() { # {{{1
     # """
     # Install fzf.
     # @note Updated 2021-11-23.
@@ -11,23 +11,23 @@ koopa:::install_fzf() { # {{{1
     # - https://github.com/junegunn/fzf/blob/master/BUILD.md
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='fzf'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    koopa::activate_go
-    koopa::assert_is_installed 'go'
+    koopa_activate_go
+    koopa_assert_is_installed 'go'
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/junegunn/${dict[name]}/archive/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     export FZF_VERSION="${dict[version]}"
     export FZF_REVISION='tarball'
     "${app[make]}" --jobs="${dict[jobs]}"
@@ -36,7 +36,7 @@ koopa:::install_fzf() { # {{{1
     "${app[make]}" install
     # > ./install --help
     ./install --bin --no-update-rc
-    koopa::cp \
+    koopa_cp \
         --target-directory="${dict[prefix]}" \
         'bin' 'doc' 'man' 'plugin' 'shell'
     return 0

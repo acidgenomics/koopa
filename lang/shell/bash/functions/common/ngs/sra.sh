@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-koopa::sra_download_accession_list() { # {{{1
+koopa_sra_download_accession_list() { # {{{1
     # """
     # Download SRA accession list.
     # @note Updated 2022-02-11.
     #
     # @examples
-    # > koopa::sra_download_accession_list --srp-id='SRP049596'
+    # > koopa_sra_download_accession_list --srp-id='SRP049596'
     # # Downloads 'srp049596-accession-list.txt' to disk.
     # """
     local app dict
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa::locate_cut)"
-        [efetch]="$(koopa::locate_efetch)"
-        [esearch]="$(koopa::locate_esearch)"
-        [sed]="$(koopa::locate_sed)"
+        [cut]="$(koopa_locate_cut)"
+        [efetch]="$(koopa_locate_efetch)"
+        [esearch]="$(koopa_locate_esearch)"
+        [sed]="$(koopa_locate_sed)"
     )
     declare -A dict=(
         [acc_file]=''
@@ -43,18 +43,18 @@ koopa::sra_download_accession_list() { # {{{1
                 ;;
             # Invalid ----------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 shift 1
                 ;;
         esac
     done
-    koopa::assert_is_set '--srp-id' "${dict[srp_id]}"
+    koopa_assert_is_set '--srp-id' "${dict[srp_id]}"
     if [[ -z "${dict[acc_file]}" ]]
     then
-        dict[acc_file]="$(koopa::lowercase "${dict[srp_id]}")-\
+        dict[acc_file]="$(koopa_lowercase "${dict[srp_id]}")-\
 accession-list.txt"
     fi
-    koopa::alert "Downloading SRA accession list for '${dict[srp_id]}' \
+    koopa_alert "Downloading SRA accession list for '${dict[srp_id]}' \
 to '${dict[acc_file]}'."
     "${app[esearch]}" -db 'sra' -query "${dict[srp_id]}" \
         | "${app[efetch]}" -format 'runinfo' \
@@ -64,20 +64,20 @@ to '${dict[acc_file]}'."
     return 0
 }
 
-koopa::sra_download_run_info_table() { # {{{1
+koopa_sra_download_run_info_table() { # {{{1
     # """
     # Download SRA run info table.
     # @note Updated 2022-02-11.
     #
     # @examples
-    # > koopa::sra_download_run_info_table --srp-id='SRP049596'
+    # > koopa_sra_download_run_info_table --srp-id='SRP049596'
     # # Downloads 'srp049596-run-info-table.csv' to disk.
     # """
     local app dict
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [efetch]="$(koopa::locate_efetch)"
-        [esearch]="$(koopa::locate_esearch)"
+        [efetch]="$(koopa_locate_efetch)"
+        [esearch]="$(koopa_locate_esearch)"
     )
     declare -A dict=(
         [run_info_file]=''
@@ -105,18 +105,18 @@ koopa::sra_download_run_info_table() { # {{{1
                 ;;
             # Invalid ----------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 shift 1
                 ;;
         esac
     done
-    koopa::assert_is_set '--srp-id' "${dict[srp_id]}"
+    koopa_assert_is_set '--srp-id' "${dict[srp_id]}"
     if [[ -z "${dict[run_info_file]}" ]]
     then
-        dict[run_info_file]="$(koopa::lowercase "${dict[srp_id]}")-\
+        dict[run_info_file]="$(koopa_lowercase "${dict[srp_id]}")-\
 run-info-table.csv"
     fi
-    koopa::alert "Downloading SRA run info table for '${dict[srp_id]}' \
+    koopa_alert "Downloading SRA run info table for '${dict[srp_id]}' \
 to '${dict[run_info_file]}'."
     "${app[esearch]}" -db 'sra' -query "${dict[srp_id]}" \
         | "${app[efetch]}" -format 'runinfo' \
@@ -124,7 +124,7 @@ to '${dict[run_info_file]}'."
     return 0
 }
 
-koopa::sra_fastq_dump() { # {{{1
+koopa_sra_fastq_dump() { # {{{1
     # """
     # Dump FASTQ files from SRA file list (in parallel).
     # @note Updated 2022-02-10.
@@ -176,23 +176,23 @@ koopa::sra_fastq_dump() { # {{{1
     # - https://www.reneshbedre.com/blog/ncbi_sra_toolkit.html
     #
     # @examples
-    # > koopa::sra_fastq_dump \
+    # > koopa_sra_fastq_dump \
     # >     --accession-file='srp049596-accession-list.txt' \
     # >     --prefetch-directory='srp049596-prefetch' \
     # >     --fastq-directory='srp049596-fastq'
     # """
     local app dict sra_file sra_files
     declare -A app=(
-        [fasterq_dump]="$(koopa::locate_fasterq_dump)"
-        [gzip]="$(koopa::locate_gzip)"
-        [parallel]="$(koopa::locate_parallel)"
+        [fasterq_dump]="$(koopa_locate_fasterq_dump)"
+        [gzip]="$(koopa_locate_gzip)"
+        [parallel]="$(koopa_locate_parallel)"
     )
     declare -A dict=(
         [acc_file]=''
         [compress]=1
         [fastq_dir]='fastq'
         [prefetch_dir]='sra'
-        [threads]="$(koopa::cpu_count)"
+        [threads]="$(koopa_cpu_count)"
     )
     while (("$#"))
     do
@@ -233,26 +233,26 @@ koopa::sra_fastq_dump() { # {{{1
                 ;;
             # Invalid ----------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 shift 1
                 ;;
         esac
     done
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--accession-file' "${dict[acc_file]}" \
         '--fastq-directory' "${dict[fastq_dir]}" \
         '--prefetch-directory' "${dict[prefetch_dir]}"
-    koopa::assert_is_file "${dict[acc_file]}"
+    koopa_assert_is_file "${dict[acc_file]}"
     if [[ ! -d "${dict[prefetch_dir]}" ]]
     then
-        koopa::sra_prefetch_parallel \
+        koopa_sra_prefetch_parallel \
             --accession-file="${acc_file}" \
             --output-directory="${dict[prefetch_dir]}"
     fi
-    koopa::assert_is_dir "${dict[prefetch_dir]}"
-    koopa::alert "Extracting FASTQ to '${dict[fastq_dir]}'."
+    koopa_assert_is_dir "${dict[prefetch_dir]}"
+    koopa_alert "Extracting FASTQ to '${dict[fastq_dir]}'."
     readarray -t sra_files <<< "$(
-        koopa::find \
+        koopa_find \
             --max-depth=2 \
             --min-depth=2 \
             --pattern='*.sra' \
@@ -260,17 +260,17 @@ koopa::sra_fastq_dump() { # {{{1
             --sort \
             --type='f' \
     )"
-    koopa::assert_is_array_non_empty "${sra_files[@]:-}"
+    koopa_assert_is_array_non_empty "${sra_files[@]:-}"
     for sra_file in "${sra_files[@]}"
     do
         local id
-        id="$(koopa::basename_sans_ext "$sra_file")"
+        id="$(koopa_basename_sans_ext "$sra_file")"
         if [[ ! -f "${dict[fastq_dir]}/${id}.fastq" ]] && \
             [[ ! -f "${dict[fastq_dir]}/${id}_1.fastq" ]] && \
             [[ ! -f "${dict[fastq_dir]}/${id}.fastq.gz" ]] && \
             [[ ! -f "${dict[fastq_dir]}/${id}_1.fastq.gz" ]]
         then
-            koopa::alert "Extracting FASTQ in '${sra_file}'."
+            koopa_alert "Extracting FASTQ in '${sra_file}'."
             "${app[fasterq_dump]}" \
                 --details \
                 --force \
@@ -287,8 +287,8 @@ koopa::sra_fastq_dump() { # {{{1
     done
     if [[ "${dict[compress]}" -eq 1 ]]
     then
-        koopa::alert 'Compressing FASTQ files.'
-        koopa::find \
+        koopa_alert 'Compressing FASTQ files.'
+        koopa_find \
             --max-depth=1 \
             --min-depth=1 \
             --pattern='*.fastq' \
@@ -306,13 +306,13 @@ koopa::sra_fastq_dump() { # {{{1
     return 0
 }
 
-koopa::sra_prefetch() { # {{{1
+koopa_sra_prefetch() { # {{{1
     # """
     # Prefetch files from SRA (in parallel).
     # @note Updated 2022-02-10.
     #
     # @examples
-    # > koopa::sra_prefetch \
+    # > koopa_sra_prefetch \
     # >     --accession-file='srp049596-accession-list.txt' \
     # >     --output-directory='srp049596-prefetch'
     #
@@ -322,12 +322,12 @@ koopa::sra_prefetch() { # {{{1
     # """
     local app cmd dict
     declare -A app=(
-        [parallel]="$(koopa::locate_parallel)"
-        [prefetch]="$(koopa::locate_prefetch)"
+        [parallel]="$(koopa_locate_parallel)"
+        [prefetch]="$(koopa_locate_prefetch)"
     )
     declare -A dict=(
         [acc_file]=''
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [output_dir]='sra'
     )
     while (("$#"))
@@ -352,17 +352,17 @@ koopa::sra_prefetch() { # {{{1
                 ;;
             # Invalid ----------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 shift 1
                 ;;
         esac
     done
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--accession-file' "${dict[acc_file]}" \
         '--output-directory' "${dict[output_dir]}"
-    koopa::assert_is_file "${dict[acc_file]}"
-    dict[output_dir]="$(koopa::init_dir "${dict[output_dir]}")"
-    koopa::alert "Prefetching SRA files to '${dict[output_dir]}'."
+    koopa_assert_is_file "${dict[acc_file]}"
+    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
+    koopa_alert "Prefetching SRA files to '${dict[output_dir]}'."
     cmd=(
         "${app[prefetch]}"
         '--force' 'no'

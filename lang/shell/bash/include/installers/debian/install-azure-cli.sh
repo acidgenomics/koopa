@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::debian_install_azure_cli() { # {{{1
+debian_install_azure_cli() { # {{{1
     # """
     # Install Azure CLI.
     # @note Updated 2022-01-27.
@@ -18,9 +18,9 @@ koopa:::debian_install_azure_cli() { # {{{1
     # Automated script:
     # > curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    koopa::debian_apt_add_azure_cli_repo
-    koopa::debian_apt_install 'azure-cli'
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    koopa_debian_apt_add_azure_cli_repo
+    koopa_debian_apt_install 'azure-cli'
     return 0
 }

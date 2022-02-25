@@ -9,22 +9,22 @@ main() {
     # @note Updated 2022-02-16.
     # """
     local kallisto_version salmon_version
-    kallisto_version="$(koopa::variable 'conda-kallisto')"
-    salmon_version="$(koopa::variable 'conda-salmon')"
-    koopa::h1 'Testing conda environment loading.'
-    koopa::conda_create_env \
+    kallisto_version="$(koopa_variable 'conda-kallisto')"
+    salmon_version="$(koopa_variable 'conda-salmon')"
+    koopa_h1 'Testing conda environment loading.'
+    koopa_conda_create_env \
         "kallisto@${kallisto_version}" \
         "salmon@${salmon_version}"
-    koopa::conda_activate_env 'kallisto'
+    koopa_conda_activate_env 'kallisto'
     kallisto version
-    koopa::conda_activate_env "kallisto@${kallisto_version}"
+    koopa_conda_activate_env "kallisto@${kallisto_version}"
     kallisto version
-    koopa::conda_activate_env 'salmon'
+    koopa_conda_activate_env 'salmon'
     salmon --version
-    koopa::conda_activate_env "salmon@${salmon_version}"
+    koopa_conda_activate_env "salmon@${salmon_version}"
     salmon --version
-    koopa::deactivate_conda
-    koopa::alert_success 'Conda environments loaded successfully.'
+    koopa_deactivate_conda
+    koopa_alert_success 'Conda environments loaded successfully.'
     return 0
 }
 

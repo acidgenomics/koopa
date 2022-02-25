@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::linux_install_shiny_server() { # {{{1
+linux_install_shiny_server() { # {{{1
     # """
     # Install Shiny Server for Linux.
     # @note Updated 2022-01-28.
@@ -13,18 +13,18 @@ koopa:::linux_install_shiny_server() { # {{{1
     # - https://www.rstudio.com/products/shiny/download-server/redhat-centos/
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [r]="$(koopa::locate_r)"
+        [r]="$(koopa_locate_r)"
     )
     declare -A dict=(
-        [arch]="$(koopa::arch)"
+        [arch]="$(koopa_arch)"
         [name]='shiny-server'
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa::is_debian_like
+    if koopa_is_debian_like
     then
-        app[fun]='koopa::debian_install_from_deb'
+        app[fun]='koopa_debian_install_from_deb'
         dict[distro]='ubuntu-14.04'
         dict[file_ext]='deb'
         case "${dict[arch]}" in
@@ -32,22 +32,22 @@ koopa:::linux_install_shiny_server() { # {{{1
                 dict[arch2]='amd64'
                 ;;
         esac
-    elif koopa::is_fedora_like
+    elif koopa_is_fedora_like
     then
-        app[fun]='koopa::fedora_install_from_rpm'
+        app[fun]='koopa_fedora_install_from_rpm'
         dict[distro]='centos7'
         dict[file_ext]='rpm'
     else
-        koopa::stop 'Unsupported Linux distro.'
+        koopa_stop 'Unsupported Linux distro.'
     fi
     dict[file]="${dict[name]}-${dict[version]}-${dict[arch]}.${dict[file_ext]}"
     dict[url]="https://download3.rstudio.org/${dict[distro]}/\
 ${dict[arch]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::configure_r "${app[r]}"
-    if ! koopa::is_r_package_installed 'shiny'
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_configure_r "${app[r]}"
+    if ! koopa_is_r_package_installed 'shiny'
     then
-        koopa::alert 'Installing shiny R package.'
+        koopa_alert 'Installing shiny R package.'
         "${app[r]}" -e 'install.packages("shiny")'
     fi
     "${app[fun]}" "${dict[file]}"
