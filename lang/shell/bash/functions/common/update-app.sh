@@ -3,7 +3,7 @@
 koopa_update_app() { # {{{1
     # """
     # Update application.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-02-25.
     # """
     local clean_path_arr dict homebrew_opt_arr opt_arr pos
     koopa_assert_has_args "$#"
@@ -119,7 +119,12 @@ koopa_update_app() { # {{{1
     [[ -z "${dict[name_fancy]}" ]] && dict[name_fancy]="${dict[name]}"
     if [[ -n "${dict[prefix]}" ]]
     then
-        koopa_assert_is_dir "${dict[prefix]}"
+        if [[ ! -d "${dict[prefix]}" ]]
+        then
+            koopa_warn "${dict[name_fancy]} is not installed \
+at '${dict[prefix]}'."
+            return 1
+        fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
         if koopa_str_detect_regex \
             --string="${dict[prefix]}" \
@@ -166,7 +171,12 @@ ${dict[platform]}/${dict[updater_file]}.sh"
     fi
     if [[ -n "${dict[prefix]}" ]]
     then
-        koopa_assert_is_dir "${dict[prefix]}"
+        if [[ ! -d "${dict[prefix]}" ]]
+        then
+            koopa_warn "${dict[name_fancy]} is not installed \
+at '${dict[prefix]}'."
+            return 1
+        fi
         dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
         koopa_alert_update_start "${dict[name_fancy]}" "${dict[prefix]}"
     else
