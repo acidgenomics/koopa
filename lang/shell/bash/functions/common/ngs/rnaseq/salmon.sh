@@ -17,9 +17,7 @@ koopa::run_salmon_paired_end() { # {{{1
     local fastq_r1_files fastq_r1_file fastq_r2_file
     koopa::assert_has_args "$#"
     declare -A app=(
-        [find]="$(koopa::locate_find)"
         [salmon]="$(koopa::locate_salmon)"
-        [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
         [bootstraps]=30
@@ -166,9 +164,9 @@ of '--fasta-file'."
     # Create a per-sample array from the R1 FASTQ files.
     readarray -t fastq_r1_files <<< "$( \
         koopa::find \
-            --glob="*${dict[fastq_r1_tail]}" \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern="*${dict[fastq_r1_tail]}" \
             --prefix="${dict[fastq_dir]}" \
             --sort \
             --type='f' \
@@ -232,9 +230,7 @@ koopa::run_salmon_single_end() { # {{{1
     local fastq_file fastq_files
     koopa::assert_has_args "$#"
     declare -A app=(
-        [find]="$(koopa::locate_find)"
         [salmon]="$(koopa::locate_salmon)"
-        [sort]="$(koopa::locate_sort)"
     )
     declare -A dict=(
         [bootstraps]=30
@@ -369,10 +365,10 @@ of '--fasta-file'."
     # Create a per-sample array from the FASTQ files.
     readarray -t fastq_files <<< "$( \
         koopa::find \
-            --glob="*${dict[fastq_tail]}" \
             --max-depth=1 \
             --min-depth=1 \
-            --pattern="${dict[fastq_dir]}" \
+            --pattern="*${dict[fastq_tail]}" \
+            --prefix="${dict[fastq_dir]}" \
             --sort \
             --type='f' \
     )"

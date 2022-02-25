@@ -19,9 +19,9 @@ koopa::bam_filter() { # {{{1
     dir="$(koopa::realpath "$dir")"
     readarray -t bam_files <<< "$( \
         koopa::find \
-            --glob='*.sorted.bam' \
-            --max-depth 3 \
-            --min-depth 1 \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern='*.sorted.bam' \
             --prefix="$dir" \
             --sort \
             --type='f' \
