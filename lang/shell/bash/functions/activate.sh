@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_activate_bash_aliases() { # {{{1
+koopa_activate_bash_aliases() { # {{{1
     # """
     # Alias definitions.
     # @note Updated 2022-02-04.
@@ -20,7 +20,7 @@ _koopa_activate_bash_aliases() { # {{{1
     return 0
 }
 
-_koopa_activate_bash_completion() { # {{{1
+koopa_activate_bash_completion() { # {{{1
     # """
     # Activate Bash completion.
     # @note Updated 2022-02-04.
@@ -28,8 +28,8 @@ _koopa_activate_bash_completion() { # {{{1
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        [make_prefix]="$(_koopa_make_prefix)"
-        [nounset]="$(_koopa_boolean_nounset)"
+        [make_prefix]="$(koopa_make_prefix)"
+        [nounset]="$(koopa_boolean_nounset)"
     )
     dict[script]="${dict[make_prefix]}/etc/profile.d/bash_completion.sh"
     [[ -r "${dict[script]}" ]] || return 0
@@ -48,44 +48,44 @@ _koopa_activate_bash_completion() { # {{{1
     return 0
 }
 
-_koopa_activate_bash_extras() { # {{{1
+koopa_activate_bash_extras() { # {{{1
     # """
     # Activate Bash extras.
     # @note Updated 2021-09-29.
     # """
     [[ "$#" -eq 0 ]] || return 1
-    _koopa_is_interactive || return 0
-    _koopa_activate_bash_completion
-    _koopa_activate_bash_readline
-    _koopa_activate_bash_aliases
-    _koopa_activate_bash_prompt
-    _koopa_activate_bash_reverse_search
-    _koopa_activate_completion
+    koopa_is_interactive || return 0
+    koopa_activate_bash_completion
+    koopa_activate_bash_readline
+    koopa_activate_bash_aliases
+    koopa_activate_bash_prompt
+    koopa_activate_bash_reverse_search
+    koopa_activate_completion
     return 0
 }
 
-_koopa_activate_bash_prompt() { # {{{1
+koopa_activate_bash_prompt() { # {{{1
     # """
     # Activate Bash prompt.
     # @note Updated 2022-01-21.
     # """
     [[ "$#" -eq 0 ]] || return 1
-    _koopa_is_root && return 0
+    koopa_is_root && return 0
     if [[ -z "${_PRESERVED_PROMPT_COMMAND:-}" ]]
     then
         export _PRESERVED_PROMPT_COMMAND=''
     fi
-    if _koopa_is_installed 'starship'
+    if koopa_is_installed 'starship'
     then
-        _koopa_activate_starship
+        koopa_activate_starship
         [[ -n "${STARSHIP_SHELL:-}" ]] && return 0
     fi
-    PS1="$(_koopa_bash_prompt_string)"
+    PS1="$(koopa_bash_prompt_string)"
     export PS1
     return 0
 }
 
-_koopa_activate_bash_readline() { # {{{1
+koopa_activate_bash_readline() { # {{{1
     # """
     # Readline input options.
     # @note Updated 2022-02-04.
@@ -101,19 +101,19 @@ _koopa_activate_bash_readline() { # {{{1
     return 0
 }
 
-_koopa_activate_bash_reverse_search() { # {{{1
+koopa_activate_bash_reverse_search() { # {{{1
     # """
     # Activate reverse search for Bash.
     # @note Updated 2021-06-16.
     # """
-    if _koopa_is_installed 'mcfly'
+    if koopa_is_installed 'mcfly'
     then
-        _koopa_activate_mcfly
+        koopa_activate_mcfly
     fi
     return 0
 }
 
-_koopa_bash_prompt_string() { # {{{1
+koopa_bash_prompt_string() { # {{{1
     # """
     # Bash prompt string (PS1).
     # @note Updated 2022-01-21.
@@ -136,16 +136,16 @@ _koopa_bash_prompt_string() { # {{{1
     local dict
     [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
-        [conda]="\$(_koopa_prompt_conda)"
+        [conda]="\$(koopa_prompt_conda)"
         [conda_color]=33
-        [git]="\$(_koopa_prompt_git)"
+        [git]="\$(koopa_prompt_git)"
         [git_color]=32
         [newline]='\n'
         [prompt]='\$'
         [prompt_color]=35
-        [user]="$(_koopa_user)@$(_koopa_hostname)"
+        [user]="$(koopa_user)@$(koopa_hostname)"
         [user_color]=36
-        [venv]="\$(_koopa_prompt_python_venv)"
+        [venv]="\$(koopa_prompt_python_venv)"
         [venv_color]=33
         [wd]='\w'
         [wd_color]=34
