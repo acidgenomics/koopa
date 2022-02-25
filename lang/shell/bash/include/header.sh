@@ -235,6 +235,8 @@ __koopa_bash_header() { # {{{1
     then
         set -o verbose  # -v
         set -o xtrace  # -x
+        set +o
+        shopt
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
@@ -293,16 +295,7 @@ __koopa_bash_header() { # {{{1
         case "${1:-}" in
             '--help' | \
             '-h')
-                # FIXME Make this into a shared function.
-                # FIXME Call it something like 'koopa_help_locate_man_file'.
-                dict[script_file]="$(koopa_realpath "$0")"
-                dict[script_name]="$(koopa_basename "${dict[script_file]}")"
-                dict[man_prefix]="$( \
-                    koopa_parent_dir --num=2 "${dict[script_file]}" \
-                )"
-                dict[man_file]="${dict[man_prefix]}/man/\
-man1/${dict[script_name]}.1"
-                koopa_help "${dict[man_file]}"
+                koopa_help2
                 ;;
         esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
