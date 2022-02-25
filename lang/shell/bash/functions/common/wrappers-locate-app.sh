@@ -352,7 +352,7 @@ koopa::locate_llvm_config() { # {{{1
         app[tail]="$(koopa::locate_tail)"
         app[llvm_config]="$( \
             koopa::find \
-                --glob='llvm-config-*' \
+                --pattern='llvm-config-*' \
                 --prefix='/usr/bin' \
                 --sort \
             | "${app[tail]}" --lines=1 \

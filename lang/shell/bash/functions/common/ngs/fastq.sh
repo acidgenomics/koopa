@@ -61,9 +61,9 @@ koopa::convert_fastq_to_fasta() { # {{{1
     dict[source_dir]="$(koopa::realpath "${dict[source_dir]}")"
     readarray -t fastq_files <<< "$( \
         koopa::find \
-            --glob='*.fastq' \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern='*.fastq' \
             --prefix="${dict[source_dir]}" \
             --sort \
             --type='f' \
@@ -141,9 +141,9 @@ koopa::fastq_lanepool() { # {{{1
     dict[source_dir]="$(koopa::realpath "${dict[source_dir]}")"
     readarray -t fastq_files <<< "$( \
         koopa::find \
-            --glob='*_L001_*.fastq*' \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern='*_L001_*.fastq*' \
             --prefix="${dict[source_dir]}" \
             --sort \
             --type='f' \
