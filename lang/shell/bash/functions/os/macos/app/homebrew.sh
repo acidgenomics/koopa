@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_brew_cask_outdated() { # {{{
+koopa_macos_brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.
     # @note Updated 2021-10-27.
@@ -19,10 +19,10 @@ koopa::macos_brew_cask_outdated() { # {{{
     # - brew info
     # """
     local app keep_latest tmp_file x
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa::locate_brew)"
-        [cut]="$(koopa::locate_cut)"
+        [brew]="$(koopa_locate_brew)"
+        [cut]="$(koopa_locate_cut)"
     )
     # Whether we want to keep unversioned 'latest' casks returned with
     # '--greedy'. This tends to include font casks and the Google Cloud SDK,
@@ -30,7 +30,7 @@ koopa::macos_brew_cask_outdated() { # {{{
     # here by default.
     keep_latest=0
     # This approach keeps the version information, which we can parse.
-    tmp_file="$(koopa::tmp_file)"
+    tmp_file="$(koopa_tmp_file)"
     script -q "$tmp_file" \
         "${app[brew]}" outdated --cask --greedy >/dev/null
     if [[ "$keep_latest" -eq 1 ]]
@@ -38,30 +38,30 @@ koopa::macos_brew_cask_outdated() { # {{{
         x="$("${app[cut]}" --delimiter=' ' --fields='1' < "$tmp_file")"
     else
         x="$( \
-            koopa::grep \
+            koopa_grep \
                 --file="$tmp_file" \
                 --invert-match \
                 --pattern='(latest)' \
             | "${app[cut]}" --delimiter=' ' --fields='1' \
         )"
     fi
-    koopa::rm "$tmp_file"
+    koopa_rm "$tmp_file"
     [[ -n "$x" ]] || return 0
-    koopa::print "$x"
+    koopa_print "$x"
     return 0
 }
 
-koopa::macos_brew_cask_quarantine_fix() { # {{{1
+koopa_macos_brew_cask_quarantine_fix() { # {{{1
     # """
     # Homebrew cask fix for macOS quarantine.
     # @note Updated 2021-10-27.
     # """
     local app
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa::locate_sudo)"
-        [xattr]="$(koopa::macos_locate_xattr)"
+        [sudo]="$(koopa_locate_sudo)"
+        [xattr]="$(koopa_macos_locate_xattr)"
     )
     "${app[sudo]}" "${app[xattr]}" -r -d \
         'com.apple.quarantine' \
@@ -69,7 +69,7 @@ koopa::macos_brew_cask_quarantine_fix() { # {{{1
     return 0
 }
 
-koopa::macos_brew_upgrade_casks() { # {{{1
+koopa_macos_brew_upgrade_casks() { # {{{1
     # """
     # Upgrade Homebrew casks.
     # @note Updated 2022-02-16.
@@ -79,19 +79,19 @@ koopa::macos_brew_upgrade_casks() { # {{{1
     # function.
     # """
     local app cask casks
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [brew]="$(koopa::locate_brew)"
+        [brew]="$(koopa_locate_brew)"
     )
-    readarray -t casks <<< "$(koopa::macos_brew_cask_outdated)"
-    koopa::is_array_non_empty "${casks[@]:-}" || return 0
-    koopa::dl \
-        "$(koopa::ngettext \
+    readarray -t casks <<< "$(koopa_macos_brew_cask_outdated)"
+    koopa_is_array_non_empty "${casks[@]:-}" || return 0
+    koopa_dl \
+        "$(koopa_ngettext \
             --num="${#casks[@]}" \
             --msg1='outdated cask' \
             --msg2='outdated casks' \
         )" \
-        "$(koopa::to_string "${casks[@]}")"
+        "$(koopa_to_string "${casks[@]}")"
     for cask in "${casks[@]}"
     do
         case "$cask" in
@@ -108,17 +108,17 @@ koopa::macos_brew_upgrade_casks() { # {{{1
             'openjdk' | \
             'r' | \
             'temurin')
-                koopa::configure_r
+                koopa_configure_r
                 ;;
             'google-'*)
                 # Currently in 'google-chrome' and 'google-drive' recipes.
-                koopa::macos_disable_google_keystone || true
+                koopa_macos_disable_google_keystone || true
                 ;;
             'gpg-suite'*)
-                koopa::macos_disable_gpg_updater
+                koopa_macos_disable_gpg_updater
                 ;;
             'microsoft-teams')
-                koopa::macos_disable_microsoft_teams_updater
+                koopa_macos_disable_microsoft_teams_updater
                 ;;
         esac
     done

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::debian_install_wine() { # {{{1
+debian_install_wine() { # {{{1
     # """
     # Install Wine.
     # @note Updated 2022-01-28.
@@ -24,19 +24,19 @@ koopa:::debian_install_wine() { # {{{1
     # - https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949
     # """
     local app
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [dpkg]="$(koopa::debian_locate_dpkg)"
-        [sudo]="$(koopa::locate_sudo)"
+        [dpkg]="$(koopa_debian_locate_dpkg)"
+        [sudo]="$(koopa_locate_sudo)"
     )
-    koopa::debian_apt_add_wine_repo
+    koopa_debian_apt_add_wine_repo
     # This is required to install missing libaudio0 dependency.
-    koopa::debian_apt_add_wine_obs_repo
+    koopa_debian_apt_add_wine_obs_repo
     # Enable 32-bit packages.
     "${app[sudo]}" "${app[dpkg]}" --add-architecture 'i386'
     # Old stable version: Use wine, wine32 here.
-    koopa::debian_apt_get install \
+    koopa_debian_apt_get install \
         'winbind' \
         'x11-apps' \
         'xauth' \

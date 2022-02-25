@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::docker_build() { # {{{1
+koopa_docker_build() { # {{{1
     # """
     # Build and push a multi-architecture Docker image using buildx.
     # Updated 2022-01-20.
@@ -30,15 +30,15 @@ koopa::docker_build() { # {{{1
     #       on-an-m1-mac/
     # """
     local app dict pos
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [cut]="$(koopa::locate_cut)"
-        [date]="$(koopa::locate_date)"
-        [docker]="$(koopa::locate_docker)"
-        [sort]="$(koopa::locate_sort)"
+        [cut]="$(koopa_locate_cut)"
+        [date]="$(koopa_locate_date)"
+        [docker]="$(koopa_locate_docker)"
+        [sort]="$(koopa_locate_sort)"
     )
     declare -A dict=(
-        [docker_dir]="$(koopa::docker_prefix)"
+        [docker_dir]="$(koopa_docker_prefix)"
         [delete]=0
         [memory]=''
         [push]=1
@@ -102,7 +102,7 @@ koopa::docker_build() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -111,7 +111,7 @@ koopa::docker_build() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for image in "$@"
     do
         local build_args dict2 image_ids platforms tag tags
@@ -122,28 +122,28 @@ koopa::docker_build() { # {{{1
         platforms=()
         tags=()
         # Assume input is an Acid Genomics Docker recipe by default.
-        if ! koopa::str_detect_fixed \
+        if ! koopa_str_detect_fixed \
             --string="${dict2[image]}" \
             --pattern='/'
         then
             dict2[image]="acidgenomics/${dict2[image]}"
         fi
         # Handle tag support, if necessary.
-        if koopa::str_detect_fixed \
+        if koopa_str_detect_fixed \
             --string="${dict2[image]}" \
             --pattern=':'
         then
             dict2[tag]="$( \
-                koopa::print "${dict2[image]}" \
+                koopa_print "${dict2[image]}" \
                 | "${app[cut]}" --delimiter=':' --fields='2' \
             )"
             dict2[image]="$( \
-                koopa::print "${dict2[image]}" \
+                koopa_print "${dict2[image]}" \
                 | "${app[cut]}" --delimiter=':' --fields='1' \
             )"
         fi
         dict2[source_image]="${dict[docker_dir]}/${dict2[image]}/${dict2[tag]}"
-        koopa::assert_is_dir "${dict2[source_image]}"
+        koopa_assert_is_dir "${dict2[source_image]}"
         # Tags.
         dict2[tags_file]="${dict2[source_image]}/tags.txt"
         if [[ -f "${dict2[tags_file]}" ]]
@@ -153,8 +153,8 @@ koopa::docker_build() { # {{{1
         if [[ -L "${dict2[source_image]}" ]]
         then
             tags+=("${dict2[tag]}")
-            dict2[source_image]="$(koopa::realpath "${dict2[source_image]}")"
-            dict2[tag]="$(koopa::basename "${dict2[source_image]}")"
+            dict2[source_image]="$(koopa_realpath "${dict2[source_image]}")"
+            dict2[tag]="$(koopa_basename "${dict2[source_image]}")"
         fi
         tags+=(
             "${dict2[tag]}"
@@ -162,7 +162,7 @@ koopa::docker_build() { # {{{1
         )
         # Ensure tags are sorted and unique.
         readarray -t tags <<< "$( \
-            koopa::print "${tags[@]}" \
+            koopa_print "${tags[@]}" \
             | "${app[sort]}" -u \
         )"
         for tag in "${tags[@]}"
@@ -178,7 +178,7 @@ koopa::docker_build() { # {{{1
             readarray -t platforms < "${dict2[platforms_file]}"
         fi
         # e.g. 'linux/amd64,linux/arm64'.
-        dict2[platforms_string]="$(koopa::paste --sep=',' "${platforms[@]}")"
+        dict2[platforms_string]="$(koopa_paste --sep=',' "${platforms[@]}")"
         build_args+=("--platform=${dict2[platforms_string]}")
         # Harden against buildx blowing up memory on a local machine.
         # Consider raising this when we deploy a more powerful build machine.
@@ -206,21 +206,21 @@ koopa::docker_build() { # {{{1
         # Force remove any existing locally tagged images before building.
         if [[ "${dict[delete]}" -eq 1 ]]
         then
-            koopa::alert "Pruning images '${dict2[image]}:${dict2[tag]}'."
+            koopa_alert "Pruning images '${dict2[image]}:${dict2[tag]}'."
             readarray -t image_ids <<< "$( \
                 "${app[docker]}" image ls \
                     --filter reference="${dict2[image]}:${dict2[tag]}" \
                     --quiet \
             )"
-            if koopa::is_array_non_empty "${image_ids[@]:-}"
+            if koopa_is_array_non_empty "${image_ids[@]:-}"
             then
                 "${app[docker]}" image rm --force "${image_ids[@]}"
             fi
         fi
-        koopa::alert "Building '${dict2[source_image]}' Docker image."
-        koopa::dl 'Build args' "${build_args[*]}"
+        koopa_alert "Building '${dict2[source_image]}' Docker image."
+        koopa_dl 'Build args' "${build_args[*]}"
         "${app[docker]}" login "${dict[server]}" >/dev/null || return 1
-        dict2[build_name]="$(koopa::basename "${dict2[image]}")"
+        dict2[build_name]="$(koopa_basename "${dict2[image]}")"
         # Ensure any previous build failres are removed.
         "${app[docker]}" buildx rm \
             "${dict2[build_name]}" \
@@ -235,12 +235,12 @@ koopa::docker_build() { # {{{1
         "${app[docker]}" image ls \
             --filter \
             reference="${dict2[image]}:${dict2[tag]}"
-        koopa::alert_success "Build of '${dict2[source_image]}' was successful."
+        koopa_alert_success "Build of '${dict2[source_image]}' was successful."
     done
     return 0
 }
 
-koopa::docker_build_all_images() { # {{{1
+koopa_docker_build_all_images() { # {{{1
     # """
     # Build all Docker images.
     # @note Updated 2022-02-16.
@@ -248,13 +248,13 @@ koopa::docker_build_all_images() { # {{{1
     local app build_args image images
     local pos repo repos
     declare -A app=(
-        [basename]="$(koopa::locate_basename)"
-        [docker]="$(koopa::locate_docker)"
-        [xargs]="$(koopa::locate_xargs)"
+        [basename]="$(koopa_locate_basename)"
+        [docker]="$(koopa_locate_docker)"
+        [xargs]="$(koopa_locate_xargs)"
     )
     declare -A dict=(
         [days]=7
-        [docker_dir]="$(koopa::docker_prefix)"
+        [docker_dir]="$(koopa_docker_prefix)"
         [force]=0
         [prune]=0
     )
@@ -290,7 +290,7 @@ koopa::docker_build_all_images() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -310,29 +310,29 @@ koopa::docker_build_all_images() { # {{{1
     else
         repos=("${dict[docker_dir]}/acidgenomics")
     fi
-    koopa::assert_is_dir "${repos[@]}"
+    koopa_assert_is_dir "${repos[@]}"
     if [[ "${dict[prune]}" -eq 1 ]]
     then
-        koopa::docker_prune_all_images
+        koopa_docker_prune_all_images
     fi
     "${app[docker]}" login
     for repo in "${repos[@]}"
     do
         local build_file repo_name
-        repo_name="$(koopa::basename "$(koopa::realpath "$repo")")"
-        koopa::h1 "Building '${repo_name}' images."
+        repo_name="$(koopa_basename "$(koopa_realpath "$repo")")"
+        koopa_h1 "Building '${repo_name}' images."
         build_file="${repo}/build.txt"
         if [[ -f "$build_file" ]]
         then
             readarray -t images <<< "$( \
-                koopa::grep \
+                koopa_grep \
                     --extended-regexp \
                     --file="$build_file" \
                     --pattern='^[-_a-z0-9]+$' \
             )"
         else
             readarray -t images <<< "$( \
-                koopa::find \
+                koopa_find \
                     --max-depth=1 \
                     --min-depth=1 \
                     --prefix="${PWD:?}" \
@@ -346,10 +346,10 @@ koopa::docker_build_all_images() { # {{{1
                     "${app[basename]}" \
             )"
         fi
-        koopa::assert_is_array_non_empty "${images[@]:-}"
-        koopa::dl \
+        koopa_assert_is_array_non_empty "${images[@]:-}"
+        koopa_dl \
             "${#images[@]} images" \
-            "$(koopa::to_string "${images[@]}")"
+            "$(koopa_to_string "${images[@]}")"
         for image in "${images[@]}"
         do
             image="${repo_name}/${image}"
@@ -361,23 +361,23 @@ koopa::docker_build_all_images() { # {{{1
                 # significantly by querying the DockerHub API directly instead.
                 # Refer to 'docker-prune-stale-tags' approach for example code,
                 # which is currently written in R instead of Bash.
-                if koopa::docker_is_build_recent \
+                if koopa_docker_is_build_recent \
                     --days="${dict[days]}" \
                     "$image"
                 then
-                    koopa::alert_note "'${image}' was built recently. Skipping."
+                    koopa_alert_note "'${image}' was built recently. Skipping."
                     continue
                 fi
             fi
-            koopa::docker_build_all_tags "${build_args[@]}" "$image"
+            koopa_docker_build_all_tags "${build_args[@]}" "$image"
         done
     done
-    [[ "${dict[prune]}" -eq 1 ]] && koopa::docker_prune_all_images
-    koopa::alert_success 'All Docker images built successfully.'
+    [[ "${dict[prune]}" -eq 1 ]] && koopa_docker_prune_all_images
+    koopa_alert_success 'All Docker images built successfully.'
     return 0
 }
 
-koopa::docker_ghcr_login() { # {{{1
+koopa_docker_ghcr_login() { # {{{1
     # """
     # Log in to GitHub Container Registry.
     # @note Updated 2022-01-20.
@@ -385,16 +385,16 @@ koopa::docker_ghcr_login() { # {{{1
     # User ('GHCR_USER') and PAT ('GHCR_PAT') are defined by exported globals.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [docker]="$(koopa::locate_docker)"
+        [docker]="$(koopa_locate_docker)"
     )
     declare -A dict=(
         [pat]="${GHCR_PAT:?}"
         [server]='ghcr.io'
         [user]="${GHCR_USER:?}"
     )
-    koopa::print "${dict[pat]}" \
+    koopa_print "${dict[pat]}" \
         | "${app[docker]}" login \
             "${dict[server]}" \
             -u "${dict[user]}" \
@@ -402,18 +402,18 @@ koopa::docker_ghcr_login() { # {{{1
     return 0
 }
 
-koopa::docker_ghcr_push() { # {{{
+koopa_docker_ghcr_push() { # {{{
     # """
     # Push an image to GitHub Container Registry.
     # @note Updated 2022-01-20.
     #
     # @examples
-    # koopa::docker_ghcr_push 'OWNER' 'IMAGE_NAME' 'VERSION'
+    # koopa_docker_ghcr_push 'OWNER' 'IMAGE_NAME' 'VERSION'
     # """
     local app dict
-    koopa::assert_has_args_eq "$#" 3
+    koopa_assert_has_args_eq "$#" 3
     declare -A app=(
-        [docker]="$(koopa::locate_docker)"
+        [docker]="$(koopa_locate_docker)"
     )
     declare -A dict=(
         [image_name]="${2:?}"
@@ -423,12 +423,12 @@ koopa::docker_ghcr_push() { # {{{
     )
     dict[url]="${dict[server]}/${dict[owner]}/\
 ${dict[image_name]}:${dict[version]}"
-    koopa::docker_ghcr_login
+    koopa_docker_ghcr_login
     "${app[docker]}" push "${dict[url]}"
     return 0
 }
 
-koopa::docker_is_build_recent() { # {{{1
+koopa_docker_is_build_recent() { # {{{1
     # """
     # Has the requested Docker image been built recently?
     # @note Updated 2022-01-20.
@@ -439,11 +439,11 @@ koopa::docker_is_build_recent() { # {{{1
     # - https://unix.stackexchange.com/questions/27013/
     # """
     local app dict image pos
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [date]="$(koopa::locate_date)"
-        [docker]="$(koopa::locate_docker)"
-        [sed]="$(koopa::locate_sed)"
+        [date]="$(koopa_locate_date)"
+        [docker]="$(koopa_locate_docker)"
+        [sed]="$(koopa_locate_sed)"
     )
     declare -A dict=(
         [days]=7
@@ -463,7 +463,7 @@ koopa::docker_is_build_recent() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -472,7 +472,7 @@ koopa::docker_is_build_recent() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     # 24 hours * 60 minutes * 60 seconds = 86400.
     dict[seconds]="$((dict[days] * 86400))"
     for image in "$@"
@@ -489,7 +489,7 @@ koopa::docker_is_build_recent() { # {{{1
                 "${dict2[image]}" \
         )"
         dict2[created]="$( \
-            koopa::grep \
+            koopa_grep \
                 --extended-regexp \
                 --only-matching \
                 --pattern='[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
@@ -507,7 +507,7 @@ koopa::docker_is_build_recent() { # {{{1
     return 0
 }
 
-koopa::docker_prune_all_images() { # {{{1
+koopa_docker_prune_all_images() { # {{{1
     # """
     # Prune all Docker images.
     # @note Updated 2022-01-20.
@@ -515,20 +515,20 @@ koopa::docker_prune_all_images() { # {{{1
     # This is a nuclear option for resetting Docker.
     # """
     local app
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [docker]="$(koopa::locate_docker)"
+        [docker]="$(koopa_locate_docker)"
     )
-    koopa::alert 'Pruning Docker images.'
+    koopa_alert 'Pruning Docker images.'
     "${app[docker]}" system prune --all --force || true
     "${app[docker]}" images
-    koopa::alert 'Pruning Docker buildx.'
+    koopa_alert 'Pruning Docker buildx.'
     "${app[docker]}" buildx prune --all --force || true
     "${app[docker]}" buildx ls
     return 0
 }
 
-koopa::docker_prune_old_images() { # {{{
+koopa_docker_prune_old_images() { # {{{
     # """
     # Prune old Docker images.
     # @note Updated 2022-01-20.
@@ -541,11 +541,11 @@ koopa::docker_prune_old_images() { # {{{
     # - https://stackoverflow.com/questions/32723111
     # """
     local app
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [docker]="$(koopa::locate_docker)"
+        [docker]="$(koopa_locate_docker)"
     )
-    koopa::alert 'Pruning Docker images older than 3 months.'
+    koopa_alert 'Pruning Docker images older than 3 months.'
     "${app[docker]}" image prune \
         --all \
         --filter 'until=2160h' \
@@ -556,7 +556,7 @@ koopa::docker_prune_old_images() { # {{{
     return 0
 }
 
-koopa::docker_push() { # {{{1
+koopa_docker_push() { # {{{1
     # """
     # Push a local Docker build.
     # Updated 2022-01-20.
@@ -570,12 +570,12 @@ koopa::docker_push() { # {{{1
     # docker-push acidgenomics/debian:latest
     # """
     local app dict pattern
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [docker]="$(koopa::locate_docker)"
-        [sed]="$(koopa::locate_sed)"
-        [sort]="$(koopa::locate_sort)"
-        [tr]="$(koopa::locate_tr)"
+        [docker]="$(koopa_locate_docker)"
+        [sed]="$(koopa_locate_sed)"
+        [sort]="$(koopa_locate_sort)"
+        [tr]="$(koopa_locate_tr)"
     )
     declare -A dict=(
         # Consider allowing user to define, so we can support quay.io.
@@ -587,7 +587,7 @@ koopa::docker_push() { # {{{1
         declare -A dict2=(
             [pattern]="$pattern"
         )
-        koopa::assert_is_matching_regex "${dict2[pattern]}" '^.+/.+$'
+        koopa_assert_is_matching_regex "${dict2[pattern]}" '^.+/.+$'
         dict2[json]="$( \
             "${app[docker]}" inspect \
                 --format="{{json .RepoTags}}" \
@@ -595,7 +595,7 @@ koopa::docker_push() { # {{{1
         )"
         # Convert JSON to lines.
         readarray -t images <<< "$( \
-            koopa::print "${dict2[json]}" \
+            koopa_print "${dict2[json]}" \
                 | "${app[tr]}" ',' '\n' \
                 | "${app[sed]}" 's/^\[//' \
                 | "${app[sed]}" 's/\]$//' \
@@ -603,33 +603,33 @@ koopa::docker_push() { # {{{1
                 | "${app[sed]}" 's/\"$//g' \
                 | "${app[sort]}" \
         )"
-        if koopa::is_array_empty "${images[@]:-}"
+        if koopa_is_array_empty "${images[@]:-}"
         then
-            koopa::stop "Failed to match any images with '${dict2[pattern]}'."
+            koopa_stop "Failed to match any images with '${dict2[pattern]}'."
         fi
         for image in "${images[@]}"
         do
-            koopa::alert "Pushing '${image}' to '${dict[server]}'."
+            koopa_alert "Pushing '${image}' to '${dict[server]}'."
             "${app[docker]}" push "${dict[server]}/${image}"
         done
     done
     return 0
 }
 
-koopa::docker_remove() { # {{{1
+koopa_docker_remove() { # {{{1
     # """
     # Remove docker images by pattern.
     # Updated 2022-02-24.
     #
     # @examples
-    # > koopa::docker_remove 'debian' 'ubuntu'
+    # > koopa_docker_remove 'debian' 'ubuntu'
     # """
     local app pattern
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [awk]="$(koopa::locate_awk)"
-        [docker]="$(koopa::locate_docker)"
-        [xargs]="$(koopa::locate_xargs)"
+        [awk]="$(koopa_locate_awk)"
+        [docker]="$(koopa_locate_docker)"
+        [xargs]="$(koopa_locate_xargs)"
     )
     for pattern in "$@"
     do
@@ -639,7 +639,7 @@ koopa::docker_remove() { # {{{1
         # New approach matches image ID instead.
         # shellcheck disable=SC2016
         "${app[docker]}" images \
-            | koopa::grep --pattern="$pattern" \
+            | koopa_grep --pattern="$pattern" \
             | "${app[awk]}" '{print $3}' \
             | "${app[xargs]}" \
                 --no-run-if-empty \
@@ -649,7 +649,7 @@ koopa::docker_remove() { # {{{1
     return 0
 }
 
-koopa::docker_run() { # {{{1
+koopa_docker_run() { # {{{1
     # """
     # Run Docker image.
     # @note Updated 2022-02-17.
@@ -662,9 +662,9 @@ koopa::docker_run() { # {{{1
     # - https://docs.docker.com/storage/bind-mounts/
     # """
     local app dict pos run_args
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [docker]="$(koopa::locate_docker)"
+        [docker]="$(koopa_locate_docker)"
     )
     declare -A dict=(
         [arm]=0
@@ -696,7 +696,7 @@ koopa::docker_run() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -705,7 +705,7 @@ koopa::docker_run() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args_eq "$#" 1
+    koopa_assert_has_args_eq "$#" 1
     dict[image]="${1:?}"
     "${app[docker]}" pull "${dict[image]}"
     run_args=(
@@ -719,7 +719,7 @@ koopa::docker_run() { # {{{1
         # This check helps prevent Docker from chewing up a bunch of CPU.
         if [[ "${HOME:?}" == "${PWD:?}" ]]
         then
-            koopa::stop "Do not set '--bind' when running at HOME."
+            koopa_stop "Do not set '--bind' when running at HOME."
         fi
         run_args+=(
             "--volume=${PWD:?}:${dict[workdir]}"
@@ -744,15 +744,15 @@ koopa::docker_run() { # {{{1
     return 0
 }
 
-koopa::docker_tag() { # {{{1
+koopa_docker_tag() { # {{{1
     # """
     # Add Docker tag.
     # Updated 2022-01-20.
     # """
     local app dict
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [docker]="$(koopa::locate_docker)"
+        [docker]="$(koopa_locate_docker)"
     )
     declare -A dict=(
         [dest_tag]="${3:-}"
@@ -763,7 +763,7 @@ koopa::docker_tag() { # {{{1
     )
     [[ -z "${dict[dest_tag]}" ]] && dict[dest_tag]='latest'
     # Assume acidgenomics recipe by default.
-    if ! koopa::str_detect_fixed \
+    if ! koopa_str_detect_fixed \
         --string="${dict[image]}" \
         --pattern='/'
     then
@@ -771,11 +771,11 @@ koopa::docker_tag() { # {{{1
     fi
     if [[ "${dict[source_tag]}" == "${dict[dest_tag]}" ]]
     then
-        koopa::alert_info "Source tag identical to destination \
+        koopa_alert_info "Source tag identical to destination \
 ('${dict[source_tag]}')."
         return 0
     fi
-    koopa::alert "Tagging '${dict[image]}:${dict[source_tag]}' \
+    koopa_alert "Tagging '${dict[image]}:${dict[source_tag]}' \
 as '${dict[dest_tag]}'."
     "${app[docker]}" login "${dict[server]}"
     "${app[docker]}" pull "${dict[server]}/${dict[image]}:${dict[source_tag]}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_openjdk() { # {{{1
+install_openjdk() { # {{{1
     # """
     # Install OpenJDK.
     # @note Updated 2021-12-14.
@@ -18,14 +18,14 @@ koopa:::install_openjdk() { # {{{1
     # - https://www.oracle.com/java/technologies/javase-downloads.html#JDK16
     # """
     local dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A dict=(
-        [arch]="$(koopa::arch)"
+        [arch]="$(koopa_arch)"
         [name]='openjdk'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa::is_macos
+    if koopa_is_macos
     then
         dict[platform]='osx'
     else
@@ -82,23 +82,23 @@ koopa:::install_openjdk() { # {{{1
             dict[unique]='5b8a42f3905b406298b72d750b6919f6/33'
             ;;
         *)
-            koopa::stop "Unsupported version: '${dict[version]}'."
+            koopa_stop "Unsupported version: '${dict[version]}'."
     esac
     dict[file]="${dict[name]}-${dict[version]}_${dict[platform]}-\
 ${dict[arch2]}_bin.tar.gz"
     dict[url]="https://download.java.net/java/GA/jdk${dict[version]}/\
 ${dict[unique]}/GPL/${dict[file]}"
     dict[jdk_dirname]="jdk-${dict[version]}"
-    if koopa::is_macos
+    if koopa_is_macos
     then
         dict[jdk_dirname]="${dict[jdk_dirname]}.jdk"
     fi
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::mv "${dict[jdk_dirname]}" "${dict[prefix]}"
-    if koopa::is_linux
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_mv "${dict[jdk_dirname]}" "${dict[prefix]}"
+    if koopa_is_linux
     then
         # This step will skip for non-shared install.
-        koopa::linux_java_update_alternatives "${dict[prefix]}"
+        koopa_linux_java_update_alternatives "${dict[prefix]}"
     fi
 }

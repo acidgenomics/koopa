@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_password_store() { # {{{1
+install_password_store() { # {{{1
     # """
     # Install Password Store.
     # @note Updated 2021-12-21.
@@ -9,9 +9,9 @@ koopa:::install_password_store() { # {{{1
     # - https://git.zx2c4.com/password-store/
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [name]='password-store'
@@ -20,9 +20,9 @@ koopa:::install_password_store() { # {{{1
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="https://git.zx2c4.com/${dict[name]}/snapshot/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     PREFIX="${dict[prefix]}" "${app[make]}" install
     return 0
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::macos_force_reset_icloud_drive() { # {{{1
+koopa_macos_force_reset_icloud_drive() { # {{{1
     # """
     # Force reset iCloud Drive.
     # @note Updated 2021-11-16.
@@ -26,28 +26,28 @@ koopa::macos_force_reset_icloud_drive() { # {{{1
     # > sudo launchctl remove 'com.apple.bird'
     # """
     local app
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [kill_all]="$(koopa::macos_locate_kill_all)"
-        [reboot]="$(koopa::macos_locate_reboot)"
-        [sudo]="$(koopa::locate_sudo)"
+        [kill_all]="$(koopa_macos_locate_kill_all)"
+        [reboot]="$(koopa_macos_locate_reboot)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     "${app[sudo]}" "${app[kill_all]}" bird
-    koopa::rm \
+    koopa_rm \
         "${HOME:?}/Library/Application Support/CloudDocs" \
         "${HOME:?}/Library/Caches/"*
     "${app[sudo]}" "${app[reboot]}" now
     return 0
 }
 
-koopa::macos_symlink_icloud_drive() { # {{{1
+koopa_macos_symlink_icloud_drive() { # {{{1
     # """
     # Symlink iCloud Drive into user home directory.
     # @note Updated 2021-10-29.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::ln \
+    koopa_assert_has_no_args "$#"
+    koopa_ln \
         "${HOME}/Library/Mobile Documents/com~apple~CloudDocs" \
         "${HOME}/icloud"
     return 0

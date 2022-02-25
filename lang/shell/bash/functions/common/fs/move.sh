@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-koopa::move_files_in_batch() { # {{{1
+koopa_move_files_in_batch() { # {{{1
     # """
     # Batch move a limited number of files.
     # @note Updated 2022-02-16.
     #
     # @examples
-    # > koopa::touch \
+    # > koopa_touch \
     # >     'source/aaa.txt' 'source/bbb.txt' \
     # >     'source/ccc.txt' 'source/ddd.txt'
-    # > koopa::move_files_in_batch \
+    # > koopa_move_files_in_batch \
     # >     --num=2 \
     # >     --source-dir='source/' \
     # >     --target-dir='target/'
@@ -20,9 +20,9 @@ koopa::move_files_in_batch() { # {{{1
     # # target/bbb.txt
     # """
     local app dict files
-    koopa::assert_has_args_eq "$#" 3
+    koopa_assert_has_args_eq "$#" 3
     declare -A app=(
-        [head]="$(koopa::locate_head)"
+        [head]="$(koopa_locate_head)"
     )
     declare -A dict=(
         [num]=''
@@ -59,18 +59,18 @@ koopa::move_files_in_batch() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::assert_is_set \
+    koopa_assert_is_set \
         '--num' "${dict[num]}" \
         '--source-dir' "${dict[source_dir]}" \
         '--target-dir' "${dict[target_dir]}"
-    koopa::assert_is_dir "${dict[target_dir]}"
-    dict[target_dir]="$(koopa::init_dir "${dict[target_dir]}")"
+    koopa_assert_is_dir "${dict[target_dir]}"
+    dict[target_dir]="$(koopa_init_dir "${dict[target_dir]}")"
     readarray -t files <<< "$( \
-        koopa::find \
+        koopa_find \
             --max-depth=1 \
             --min-depth=1 \
             --prefix="${dict[source_dir]}" \
@@ -78,50 +78,50 @@ koopa::move_files_in_batch() { # {{{1
             --type='f' \
         | "${app[head]}" --lines="${dict[num]}" \
     )"
-    koopa::is_array_non_empty "${files[@]:-}" || return 1
-    koopa::mv --target-directory="${dict[target_dir]}" "${files[@]}"
+    koopa_is_array_non_empty "${files[@]:-}" || return 1
+    koopa_mv --target-directory="${dict[target_dir]}" "${files[@]}"
     return 0
 }
 
-koopa::move_files_up_1_level() { # {{{1
+koopa_move_files_up_1_level() { # {{{1
     # """
     # Move files up 1 level.
     # @note Updated 2022-02-16.
     #
     # @examples
-    # > koopa::touch 'a/aa/aaa.txt'
-    # > koopa::move_files_up_1_level 'a/'
+    # > koopa_touch 'a/aa/aaa.txt'
+    # > koopa_move_files_up_1_level 'a/'
     # # Silent, but returns this structure:
     # # 'a/aa'
     # # 'a/aaa.txt'
     # """
     local dict files
-    koopa::assert_has_args_le "$#" 1
+    koopa_assert_has_args_le "$#" 1
     declare -A dict=(
         [prefix]="${1:-}"
     )
     [[ -z "${dict[prefix]}" ]] && dict[prefix]="${PWD:?}"
-    koopa::assert_is_dir "${dict[prefix]}"
-    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    koopa_assert_is_dir "${dict[prefix]}"
+    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     readarray -t files <<< "$( \
-        koopa::find \
+        koopa_find \
             --max-depth=2 \
             --min-depth=2 \
             --prefix="${dict[prefix]}" \
             --type='f' \
     )"
-    koopa::is_array_non_empty "${files[@]:-}" || return 1
-    koopa::mv --target-directory="${dict[prefix]}" "${files[@]}"
+    koopa_is_array_non_empty "${files[@]:-}" || return 1
+    koopa_mv --target-directory="${dict[prefix]}" "${files[@]}"
     return 0
 }
 
-koopa::move_into_dated_dirs_by_filename() { # {{{1
+koopa_move_into_dated_dirs_by_filename() { # {{{1
     # """
     # Move into dated directories by filename.
     # @note Updated 2022-02-16.
     # """
     local file grep_array grep_string
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     grep_array=(
         '^([0-9]{4})'
         '([-_])?'
@@ -131,7 +131,7 @@ koopa::move_into_dated_dirs_by_filename() { # {{{1
         '([-_])?'
         '(.+)$'
     )
-    grep_string="$(koopa::paste0 "${grep_array[@]}")"
+    grep_string="$(koopa_paste0 "${grep_array[@]}")"
     for file in "$@"
     do
         local dict
@@ -145,26 +145,26 @@ koopa::move_into_dated_dirs_by_filename() { # {{{1
             dict[month]="${BASH_REMATCH[3]}"
             dict[day]="${BASH_REMATCH[5]}"
             dict[subdir]="${dict[year]}/${dict[month]}/${dict[day]}"
-            koopa::mv --target-directory="${dict[subdir]}" "${dict[file]}"
+            koopa_mv --target-directory="${dict[subdir]}" "${dict[file]}"
         else
-            koopa::stop "Does not contain date: '${dict[file]}'."
+            koopa_stop "Does not contain date: '${dict[file]}'."
         fi
     done
     return 0
 }
 
-koopa::move_into_dated_dirs_by_timestamp() { # {{{1
+koopa_move_into_dated_dirs_by_timestamp() { # {{{1
     # """
     # Move into dated directories by timestamp.
     # @note Updated 2022-02-16.
     # """
     local file
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for file in "$@"
     do
         local subdir
-        subdir="$(koopa::stat_modified '%Y/%m/%d' "$file")"
-        koopa::mv --target-directory="$subdir" "$file"
+        subdir="$(koopa_stat_modified '%Y/%m/%d' "$file")"
+        koopa_mv --target-directory="$subdir" "$file"
     done
     return 0
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::opensuse_install_base_system() { # {{{1
+opensuse_install_base_system() { # {{{1
     # """
     # Install openSUSE base system.
     # @note Updated 2021-11-30.
@@ -9,10 +9,10 @@ koopa:::opensuse_install_base_system() { # {{{1
     # https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
     # """
     local app dict pkgs
-    koopa::assert_is_admin
+    koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa::locate_sudo)"
-        [zypper]="$(koopa::locate_zypper)"
+        [sudo]="$(koopa_locate_sudo)"
+        [zypper]="$(koopa_locate_zypper)"
     )
     declare -A dict=(
         [base]=1
@@ -48,7 +48,7 @@ koopa:::opensuse_install_base_system() { # {{{1
                 shift 1
                 ;;
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")

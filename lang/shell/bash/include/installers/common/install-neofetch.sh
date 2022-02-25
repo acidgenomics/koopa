@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-koopa:::install_neofetch() { # {{{1
+install_neofetch() { # {{{1
     # """
     # Install neofetch.
     # @note Updated 2021-12-14.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
         [name]='neofetch'
@@ -18,10 +18,10 @@ koopa:::install_neofetch() { # {{{1
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/dylanaraps/${dict[name]}/\
 archive/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
-    koopa::mkdir "${dict[prefix]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
+    koopa_mkdir "${dict[prefix]}"
     "${app[make]}" PREFIX="${dict[prefix]}" install
     return 0
 }

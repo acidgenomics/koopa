@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::r_javareconf() { # {{{1
+koopa_r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
     # @note Updated 2022-01-20.
@@ -25,38 +25,38 @@ koopa::r_javareconf() { # {{{1
     # > .jinit()
     # """
     local app dict java_args r_cmd
-    koopa::assert_has_args_le "$#" 1
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [r]="${1:-}"
-        [sudo]="$(koopa::locate_sudo)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     declare -A dict=(
-        [java_home]="$(koopa::java_prefix)"
+        [java_home]="$(koopa_java_prefix)"
     )
-    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa::locate_r)"
-    app[r]="$(koopa::which_realpath "${app[r]}")"
+    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa_locate_r)"
+    app[r]="$(koopa_which_realpath "${app[r]}")"
     if [[ ! -d "${dict[java_home]}" ]]
     then
-        koopa::alert_note 'Skipping R Java configuration.'
+        koopa_alert_note 'Skipping R Java configuration.'
         return 0
     fi
     dict[jar]="${dict[java_home]}/bin/jar"
     dict[java]="${dict[java_home]}/bin/java"
     dict[javac]="${dict[java_home]}/bin/javac"
     dict[javah]="${dict[java_home]}/bin/javah"
-    koopa::alert 'Updating R Java configuration.'
-    koopa::dl \
+    koopa_alert 'Updating R Java configuration.'
+    koopa_dl \
         'JAR' "${dict[jar]}" \
         'JAVA' "${dict[java]}" \
         'JAVAC' "${dict[javac]}" \
         'JAVAH' "${dict[javah]}" \
         'JAVA_HOME' "${dict[java_home]}" \
         'R' "${app[r]}"
-    if koopa::is_koopa_app "${app[r]}"
+    if koopa_is_koopa_app "${app[r]}"
     then
         r_cmd=("${app[r]}")
     else
-        koopa::assert_is_admin
+        koopa_assert_is_admin
         r_cmd=("${app[sudo]}" "${app[r]}")
     fi
     java_args=(
@@ -70,7 +70,7 @@ koopa::r_javareconf() { # {{{1
     return 0
 }
 
-koopa::r_link_files_into_etc() { # {{{1
+koopa_r_link_files_into_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
     # @note Updated 2022-01-25.
@@ -78,27 +78,27 @@ koopa::r_link_files_into_etc() { # {{{1
     # Don't copy Makevars file across machines.
     # """
     local app dict file files
-    koopa::assert_has_args_le "$#" 1
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [r]="${1:-}"
     )
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa::locate_r)"
-    koopa::assert_is_installed "${app[r]}"
-    app[r]="$(koopa::which_realpath "${app[r]}")"
+    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    koopa_assert_is_installed "${app[r]}"
+    app[r]="$(koopa_which_realpath "${app[r]}")"
     declare -A dict=(
-        [distro_prefix]="$(koopa::distro_prefix)"
-        [r_prefix]="$(koopa::r_prefix "${app[r]}")"
-        [version]="$(koopa::r_version "${app[r]}")"
+        [distro_prefix]="$(koopa_distro_prefix)"
+        [r_prefix]="$(koopa_r_prefix "${app[r]}")"
+        [version]="$(koopa_r_version "${app[r]}")"
     )
-    koopa::assert_is_dir "${dict[r_prefix]}"
+    koopa_assert_is_dir "${dict[r_prefix]}"
     if [[ "${dict[version]}" != 'devel' ]]
     then
-        dict[version]="$(koopa::major_minor_version "${dict[version]}")"
+        dict[version]="$(koopa_major_minor_version "${dict[version]}")"
     fi
     dict[r_etc_source]="${dict[distro_prefix]}/etc/R/${dict[version]}"
-    koopa::assert_is_dir "${dict[r_etc_source]}"
-    if koopa::is_linux && \
-        ! koopa::is_koopa_app "${app[r]}" && \
+    koopa_assert_is_dir "${dict[r_etc_source]}"
+    if koopa_is_linux && \
+        ! koopa_is_koopa_app "${app[r]}" && \
         [[ -d '/etc/R' ]]
     then
         # This applies to Debian/Ubuntu CRAN binary installs.
@@ -115,14 +115,14 @@ koopa::r_link_files_into_etc() { # {{{1
     for file in "${files[@]}"
     do
         [[ -f "${dict[r_etc_source]}/${file}" ]] || continue
-        koopa::sys_ln \
+        koopa_sys_ln \
             "${dict[r_etc_source]}/${file}" \
             "${dict[r_etc_target]}/${file}"
     done
     return 0
 }
 
-koopa::r_link_site_library() { # {{{1
+koopa_r_link_site_library() { # {{{1
     # """
     # Link R site library.
     # @note Updated 2022-01-20.
@@ -134,26 +134,26 @@ koopa::r_link_site_library() { # {{{1
     # Changed to unversioned library approach at opt prefix in koopa v0.9.
     # """
     local app conf_args dict
-    koopa::assert_has_args_le "$#" 1
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [r]="${1:-}"
     )
-    [[ -z "${app[r]}" ]] && app[r]="$(koopa::locate_r)"
-    koopa::assert_is_installed "${app[r]}"
+    [[ -z "${app[r]}" ]] && app[r]="$(koopa_locate_r)"
+    koopa_assert_is_installed "${app[r]}"
     declare -A dict=(
-        [r_prefix]="$(koopa::r_prefix "${app[r]}")"
-        [version]="$(koopa::r_version "${app[r]}")"
+        [r_prefix]="$(koopa_r_prefix "${app[r]}")"
+        [version]="$(koopa_r_version "${app[r]}")"
     )
-    koopa::assert_is_dir "${dict[r_prefix]}"
-    dict[lib_source]="$(koopa::r_packages_prefix "${dict[version]}")"
+    koopa_assert_is_dir "${dict[r_prefix]}"
+    dict[lib_source]="$(koopa_r_packages_prefix "${dict[version]}")"
     dict[lib_target]="${dict[r_prefix]}/site-library"
-    koopa::alert "Linking '${dict[lib_target]}' to '${dict[lib_source]}'."
-    koopa::sys_mkdir "${dict[lib_source]}"
-    if koopa::is_koopa_app "${app[r]}"
+    koopa_alert "Linking '${dict[lib_target]}' to '${dict[lib_source]}'."
+    koopa_sys_mkdir "${dict[lib_source]}"
+    if koopa_is_koopa_app "${app[r]}"
     then
-        koopa::sys_ln "${dict[lib_source]}" "${dict[lib_target]}"
+        koopa_sys_ln "${dict[lib_source]}" "${dict[lib_target]}"
     else
-        koopa::ln --sudo "${dict[lib_source]}" "${dict[lib_target]}"
+        koopa_ln --sudo "${dict[lib_source]}" "${dict[lib_target]}"
     fi
     conf_args=(
         "--prefix=${dict[lib_source]}"
@@ -166,27 +166,27 @@ koopa::r_link_site_library() { # {{{1
             '--no-link'
         )
     fi
-    koopa::configure_app_packages "${conf_args[@]}"
-    if koopa::is_fedora && [[ -d '/usr/lib64/R' ]]
+    koopa_configure_app_packages "${conf_args[@]}"
+    if koopa_is_fedora && [[ -d '/usr/lib64/R' ]]
     then
-        koopa::alert_note "Fixing Fedora R configuration at '/usr/lib64/R'."
-        koopa::mkdir --sudo '/usr/lib64/R/site-library'
-        koopa::ln --sudo \
+        koopa_alert_note "Fixing Fedora R configuration at '/usr/lib64/R'."
+        koopa_mkdir --sudo '/usr/lib64/R/site-library'
+        koopa_ln --sudo \
             '/usr/lib64/R/site-library' \
             '/usr/local/lib/R/site-library'
     fi
     return 0
 }
 
-koopa::r_koopa() { # {{{1
+koopa_r_koopa() { # {{{1
     # """
     # Execute a function in koopa R package.
     # @note Updated 2021-10-29.
     # """
     local app code header_file fun pos rscript_args
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [rscript]="$(koopa::locate_rscript)"
+        [rscript]="$(koopa_locate_rscript)"
     )
     rscript_args=()
     pos=()
@@ -202,7 +202,7 @@ koopa::r_koopa() { # {{{1
                 shift 1
                 ;;
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -211,17 +211,17 @@ koopa::r_koopa() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     fun="${1:?}"
     shift 1
-    header_file="$(koopa::koopa_prefix)/lang/r/include/header.R"
-    koopa::assert_is_file "$header_file"
+    header_file="$(koopa_koopa_prefix)/lang/r/include/header.R"
+    koopa_assert_is_file "$header_file"
     code=("source('${header_file}');")
     # The 'header' variable is currently used to simply load the shared R
     # script header and check that the koopa R package is installed.
     if [[ "$fun" != 'header' ]]
     then
-        code+=("koopa::${fun}();")
+        code+=("koopa_${fun}();")
     fi
     # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
@@ -229,22 +229,22 @@ koopa::r_koopa() { # {{{1
     return 0
 }
 
-koopa::r_paste_to_vector() { # {{{1
+koopa_r_paste_to_vector() { # {{{1
     # """
     # Paste a bash array into an R vector string.
     # @note Updated 2022-02-17.
     # """
     local str
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     str="$(printf '"%s", ' "$@")"
-    str="$(koopa::strip_right --pattern=', ' "$str")"
+    str="$(koopa_strip_right --pattern=', ' "$str")"
     str="$(printf 'c(%s)\n' "$str")"
     [[ -n "$str" ]] || return 1
-    koopa::print "$str"
+    koopa_print "$str"
     return 0
 }
 
-koopa::r_rebuild_docs() { # {{{1
+koopa_r_rebuild_docs() { # {{{1
     # """
     # Rebuild R HTML/CSS files in 'docs' directory.
     # @note Updated 2022-01-31.
@@ -263,11 +263,11 @@ koopa::r_rebuild_docs() { # {{{1
         [r]="${1:-}"
     )
     declare -A dict
-    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa::locate_r)"
+    [[ -z "${app[r]:-}" ]] && app[r]="$(koopa_locate_r)"
     app[rscript]="${app[r]}script"
-    koopa::assert_is_installed "${app[rscript]}"
+    koopa_assert_is_installed "${app[rscript]}"
     rscript_args=('--vanilla')
-    koopa::alert 'Updating HTML package index.'
+    koopa_alert 'Updating HTML package index.'
     dict[doc_dir]="$( \
         "${app[rscript]}" "${rscript_args[@]}" -e 'cat(R.home("doc"))' \
     )"
@@ -276,38 +276,38 @@ koopa::r_rebuild_docs() { # {{{1
     dict[r_css]="${dict[html_dir]}/R.css"
     if [[ ! -d "${dict[html_dir]}" ]]
     then
-        koopa::mkdir --sudo "${dict[html_dir]}"
+        koopa_mkdir --sudo "${dict[html_dir]}"
     fi
     if [[ ! -f "${dict[pkg_index]}" ]]
     then
-        koopa::assert_is_admin
-        koopa::touch --sudo "${dict[pkg_index]}"
+        koopa_assert_is_admin
+        koopa_touch --sudo "${dict[pkg_index]}"
     fi
     if [[ ! -f "${dict[r_css]}" ]]
     then
-        koopa::assert_is_admin
-        koopa::touch --sudo "${dict[r_css]}"
+        koopa_assert_is_admin
+        koopa_touch --sudo "${dict[r_css]}"
     fi
-    koopa::sys_set_permissions "${dict[pkg_index]}"
+    koopa_sys_set_permissions "${dict[pkg_index]}"
     "${app[rscript]}" "${rscript_args[@]}" -e 'utils::make.packages.html()'
     return 0
 }
 
-koopa::r_shiny_run_app() { # {{{1
+koopa_r_shiny_run_app() { # {{{1
     # """
     # Run an R/Shiny application.
     # @note Updated 2022-02-11.
     # """
     local app dict
     declare -A app=(
-        [r]="$(koopa::locate_r)"
+        [r]="$(koopa_locate_r)"
     )
     declare -A dict=(
         [prefix]="${1:-}"
     )
     [[ -z "${dict[prefix]}" ]] && dict[prefix]="${PWD:?}"
-    koopa::assert_is_dir "${dict[prefix]}"
-    dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
+    koopa_assert_is_dir "${dict[prefix]}"
+    dict[prefix]="$(koopa_realpath "${dict[prefix]}")"
     "${app[r]}" \
         --no-restore \
         --no-save \

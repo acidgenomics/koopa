@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::macos_uninstall_cisco_webex() { # {{{1
+macos_uninstall_cisco_webex() { # {{{1
     # """
     # Uninstall Cisco WebEx.
     # @note Updated 2021-10-30.
@@ -18,11 +18,11 @@ koopa:::macos_uninstall_cisco_webex() { # {{{1
     # - https://help.webex.com/en-us/WBX38280/
     #       How-Do-I-Uninstall-Webex-Software-on-a-Mac
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    koopa::rm --sudo \
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    koopa_rm --sudo \
         '/Applications/Cisco Webex Meetings.app'
-    koopa::rm \
+    koopa_rm \
         "${HOME}/Library/Application Support/Cisco/WebEx Meetings" \
         "${HOME}/Library/Application Support/WebEx Folder" \
         "${HOME}/Library/Application Support/com.apple.sharedfilelist/\

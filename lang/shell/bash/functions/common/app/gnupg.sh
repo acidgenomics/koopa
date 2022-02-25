@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::gpg_download_key_from_keyserver() { # {{{1
+koopa_gpg_download_key_from_keyserver() { # {{{1
     # """
     # Download a GPG key from a keyserver to a local file, without importing.
     # @note Updated 2021-11-03.
@@ -9,13 +9,13 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
     # - https://superuser.com/a/1643115/589630
     # """
     local app cp dict
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     declare -A app=(
-        [gpg]="$(koopa::locate_gpg)"
+        [gpg]="$(koopa_locate_gpg)"
     )
     declare -A dict=(
         [sudo]=0
-        [tmp_dir]="$(koopa::tmp_dir)"
+        [tmp_dir]="$(koopa_tmp_dir)"
     )
     dict[tmp_file]="${dict[tmp_dir]}/export.gpg"
     while (("$#"))
@@ -53,13 +53,13 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
     [[ -f "${dict[file]}" ]] && return 0
-    koopa::alert "Exporting GPG key '${dict[key]}' at '${dict[file]}'."
-    cp=('koopa::cp')
+    koopa_alert "Exporting GPG key '${dict[key]}' at '${dict[file]}'."
+    cp=('koopa_cp')
     [[ "${dict[sudo]}" -eq 1 ]] && cp+=('--sudo')
     "${app[gpg]}" \
         --homedir "${dict[tmp_dir]}" \
@@ -75,35 +75,35 @@ koopa::gpg_download_key_from_keyserver() { # {{{1
         --quiet \
         --output "${dict[tmp_file]}" \
         "${dict[key]}"
-    koopa::assert_is_file "${dict[tmp_file]}"
+    koopa_assert_is_file "${dict[tmp_file]}"
     "${cp[@]}" "${dict[tmp_file]}" "${dict[file]}"
-    koopa::rm "${dict[tmp_dir]}"
-    koopa::assert_is_file "${dict[file]}"
+    koopa_rm "${dict[tmp_dir]}"
+    koopa_assert_is_file "${dict[file]}"
     return 0
 }
 
-koopa::gpg_prompt() { # {{{1
+koopa_gpg_prompt() { # {{{1
     # """
     # Force GPG to prompt for password.
     # @note Updated 2020-07-10.
     # Useful for building Docker images, etc. inside tmux.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'gpg'
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_installed 'gpg'
     printf '' | gpg -s
     return 0
 }
 
-koopa::gpg_reload() { # {{{1
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'gpg-connect-agent'
+koopa_gpg_reload() { # {{{1
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_installed 'gpg-connect-agent'
     gpg-connect-agent reloadagent /bye
     return 0
 }
 
-koopa::gpg_restart() { # {{{1
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed 'gpgconf'
+koopa_gpg_restart() { # {{{1
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_installed 'gpgconf'
     gpgconf --kill gpg-agent
     return 0
 }

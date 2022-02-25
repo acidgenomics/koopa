@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 
-koopa::check_bin_man_consistency "$@"
+koopa_check_bin_man_consistency "$@"

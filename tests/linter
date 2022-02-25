@@ -9,11 +9,11 @@ test_linter() {
     # Updated 2020-08-12.
     # """
     local koopa_prefix linter_prefix
-    koopa_prefix="$(koopa::koopa_prefix)"
-    koopa::h1 'Running linter checks.'
-    koopa::assert_is_file "${koopa_prefix}/."{'lintr','pylintrc'}
+    koopa_prefix="$(koopa_koopa_prefix)"
+    koopa_h1 'Running linter checks.'
+    koopa_assert_is_file "${koopa_prefix}/."{'lintr','pylintrc'}
     linter_prefix="${koopa_prefix}/tests/linter.d"
-    koopa::exec_dir "$linter_prefix"
+    koopa_exec_dir "$linter_prefix"
     return 0
 }
 

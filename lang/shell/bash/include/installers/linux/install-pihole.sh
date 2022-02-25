@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::linux_install_pihole() { # {{{1
+linux_install_pihole() { # {{{1
     # """
     # Install Pi-hole.
     # @note Updated 2022-01-31.
@@ -10,14 +10,14 @@ koopa:::linux_install_pihole() { # {{{1
     # - https://github.com/pi-hole/pi-hole/#one-step-automated-install
     # """
     local dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A dict=(
         [file]='pihole.sh'
         [url]='https://install.pi-hole.net'
     )
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::chmod 'u+x' "${dict[file]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_chmod 'u+x' "${dict[file]}"
     "./${dict[file]}"
     return 0
 }

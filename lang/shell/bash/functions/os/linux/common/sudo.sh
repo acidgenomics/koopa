@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::linux_fix_sudo_setrlimit_error() { # {{{1
+koopa_linux_fix_sudo_setrlimit_error() { # {{{1
     # """
     # Fix bug in recent version of sudo.
     # @note Updated 2021-03-24.
@@ -14,9 +14,9 @@ koopa::linux_fix_sudo_setrlimit_error() { # {{{1
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1773148
     # """
     local file
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     string='Set disable_coredump false'
     file='/etc/sudo.conf'
-    koopa::sudo_append_string "$string" "$file"
+    koopa_sudo_append_string "$string" "$file"
     return 0
 }

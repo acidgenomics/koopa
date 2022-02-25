@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa::run_rnaeditingindexer() { # {{{1
+koopa_run_rnaeditingindexer() { # {{{1
     # """
     # Run dockerized RNAEditingIndexer pipeline.
     # @note Updated 2022-02-16.
@@ -20,11 +20,11 @@ koopa::run_rnaeditingindexer() { # {{{1
     # - https://hub.docker.com/r/acidgenomics/rnaeditingindexer
     #
     # @examples
-    # > koopa::run_rnaeditingindexer --example
+    # > koopa_run_rnaeditingindexer --example
     # """
     local app dict run_args
     declare -A app=(
-        [docker]="$(koopa::locate_docker)"
+        [docker]="$(koopa_locate_docker)"
     )
     declare -A dict=(
         [bam_suffix]='.Aligned.sortedByCoord.out.bam'
@@ -71,7 +71,7 @@ koopa::run_rnaeditingindexer() { # {{{1
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
@@ -83,10 +83,10 @@ bam.AluChr1Only.bam"
         dict[local_bam_dir]=''
         dict[mnt_bam_dir]='/bin/AEI/RNAEditingIndexer/TestResources/BAMs'
     else
-        koopa::assert_is_dir "${dict[local_bam_dir]}"
-        dict[local_bam_dir]="$(koopa::realpath "${dict[local_bam_dir]}")"
-        koopa::rm "${dict[local_output_dir]}"
-        dict[local_output_dir]="$(koopa::init_dir "${dict[local_output_dir]}")"
+        koopa_assert_is_dir "${dict[local_bam_dir]}"
+        dict[local_bam_dir]="$(koopa_realpath "${dict[local_bam_dir]}")"
+        koopa_rm "${dict[local_output_dir]}"
+        dict[local_output_dir]="$(koopa_init_dir "${dict[local_output_dir]}")"
         run_args+=(
             -v "${dict[local_bam_dir]}:${dict[mnt_bam_dir]}:ro"
             -v "${dict[local_output_dir]}:${dict[mnt_output_dir]}:rw"

@@ -13,14 +13,14 @@ main() { # {{{1
     # """
     local app dict
     declare -A app=(
-        [cut]="$(koopa::locate_cut)"
-        [grep]="$(koopa::locate_grep)"
-        [shunit2]="$(koopa::locate_shunit2)"
-        [sort]="$(koopa::locate_sort)"
+        [cut]="$(koopa_locate_cut)"
+        [grep]="$(koopa_locate_grep)"
+        [shunit2]="$(koopa_locate_shunit2)"
+        [sort]="$(koopa_locate_sort)"
     )
     declare -A dict=(
         [extra]=0
-        [shunit2_dir]="$(koopa::koopa_prefix)/tests/shunit2.d"
+        [shunit2_dir]="$(koopa_koopa_prefix)/tests/shunit2.d"
     )
     while (("$#"))
     do
@@ -30,18 +30,18 @@ main() { # {{{1
                 shift 1
                 ;;
             *)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    koopa::alert 'Running unit tests with shUnit2.'
+    koopa_alert 'Running unit tests with shUnit2.'
     # Don't exit on errors, which are handled by shunit2.
     set +o errexit
     suite() {
-        koopa::source_dir "${dict[shunit2_dir]}"
+        koopa_source_dir "${dict[shunit2_dir]}"
         if [[ "${dict[extra]}" -eq 1 ]]
         then
-            koopa::source_dir "${dict[shunit2_dir]}/extra"
+            koopa_source_dir "${dict[shunit2_dir]}/extra"
         fi
         readarray -t tests <<< "$( \
             declare -F \
