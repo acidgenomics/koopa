@@ -6,7 +6,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 main() { # {{{1
     # """
     # Check that all scripts support '--help' flag.
-    # Updated 2020-12-31.
+    # Updated 2022-02-24.
     # """
     local app dict
     local bin_dir bin_dirs bin_file bin_files
@@ -24,15 +24,19 @@ main() { # {{{1
     # Put all 'man/' dirs into an array and loop.
     readarray -t man_dirs <<< "$( \
         koopa::find \
-            --exclude='.git/*' \
-            --exclude='app/*' \
-            --exclude='opt/*' \
-            --glob='man' \
+            --exclude='.git/**' \
+            --exclude='app/**' \
+            --exclude='opt/**' \
             --min-depth=1 \
+            --pattern='man' \
             --prefix="${dict[koopa_prefix]}" \
             --sort \
             --type='d' \
     )"
+    if koopa::is_array_empty "${man_dirs[@]}"
+    then
+        koopa::stop 'Failed to locate any man dirs.'
+    fi
     for man_dir in "${man_dirs[@]}"
     do
         koopa::add_to_manpath_start "$man_dir"
@@ -71,15 +75,19 @@ main() { # {{{1
     koopa::h2 "Running exported script '--help' flag checks."
     readarray -t bin_dirs <<< "$( \
         koopa::find \
-            --exclude='.git/*' \
-            --exclude='app/*' \
-            --exclude='opt/*' \
-            --glob='{bin,sbin}' \
+            --exclude='.git/**' \
+            --exclude='app/**' \
+            --exclude='opt/**' \
             --min-depth=1 \
+            --pattern='{bin,sbin}' \
             --prefix="${dict[koopa_prefix]}" \
             --sort \
-            --type='d'
+            --type='d' \
     )"
+    if koopa::is_array_empty "${bin_dirs[@]}"
+    then
+        koopa::stop 'Failed to locate any bin dirs.'
+    fi
     for bin_dir in "${bin_dirs[@]}"
     do
         koopa::h3 "$bin_dir"
