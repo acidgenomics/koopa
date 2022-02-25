@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# FIXME Rework all 'x' assignment as 'str' instead.
-# FIXME Rework all 'string' assignment as 'str' instead.
-
 __koopa_add_to_path_string_end() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
@@ -1305,20 +1302,20 @@ koopa_activate_tealdeer() { # {{{1
 koopa_activate_tmux_sessions() { # {{{1
     # """
     # Show active tmux sessions.
-    # @note Updated 2022-01-21.
+    # @note Updated 2022-02-25.
     # """
-    local x
+    local str
     koopa_is_installed 'tmux' || return 0
     koopa_is_tmux && return 0
     # shellcheck disable=SC2033
-    x="$(tmux ls 2>/dev/null || true)"
-    [ -n "$x" ] || return 0
-    x="$( \
-        koopa_print "$x" \
+    str="$(tmux ls 2>/dev/null || true)"
+    [ -n "$str" ] || return 0
+    str="$( \
+        koopa_print "$str" \
         | cut -d ':' -f '1' \
         | tr '\n' ' ' \
     )"
-    koopa_dl 'tmux' "$x"
+    koopa_dl 'tmux' "$str"
     return 0
 }
 
