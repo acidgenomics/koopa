@@ -111,6 +111,7 @@ __koopa_posix_header() { # {{{1
     return 0
 }
 
-__koopa_posix_header "$@"
+# NOTE Don't pass "$@" here, will pass through in Bash header.
+__koopa_posix_header
 
 unset -f __koopa_posix_header
