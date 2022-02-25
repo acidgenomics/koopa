@@ -72,12 +72,10 @@ __koopa_warn() { # {{{1
     return 0
 }
 
-
-
 __koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-02-25.
     # """
     local dict
     [[ "$#" -eq 0 ]] || return 1
@@ -124,18 +122,26 @@ __koopa_zsh_header() { # {{{1
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
     then
-        _koopa_duration_start || return 1
+        koopa_duration_start || return 1
     fi
     if [[ "${dict[activate]}" -eq 1 ]] && [[ "${dict[minimal]}" -eq 0 ]]
     then
         source "${KOOPA_PREFIX:?}/lang/shell/zsh/functions/activate.sh"
-        _koopa_activate_zsh_extras
+        koopa_activate_zsh_extras
     fi
     if [[ "${dict[test]}" -eq 1 ]]
     then
-        _koopa_duration_stop 'zsh' || return 1
+        koopa_duration_stop 'zsh' || return 1
     fi
     return 0
 }
 
-__koopa_zsh_header
+__koopa_zsh_header "$@"
+
+unset -f \
+    __koopa_is_installed \
+    __koopa_is_macos \
+    __koopa_print \
+    __koopa_realpath \
+    __koopa_warn \
+    __koopa_zsh_header
