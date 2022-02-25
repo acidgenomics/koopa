@@ -3,7 +3,7 @@
 __koopa_bash_source_dir() { # {{{1
     # """
     # Source multiple Bash script files inside a directory.
-    # @note Updated 2021-05-21.
+    # @note Updated 2022-02-25.
     #
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
@@ -11,7 +11,7 @@ __koopa_bash_source_dir() { # {{{1
     local fun_script fun_scripts fun_scripts_arr koopa_prefix prefix
     [[ "$#" -eq 1 ]] || return 1
     [[ $(type -t readarray) == 'builtin' ]] || return 1
-    koopa_prefix="$(_koopa_koopa_prefix)"
+    koopa_prefix="$(koopa_koopa_prefix)"
     prefix="${koopa_prefix}/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
     fun_scripts="$( \
@@ -153,18 +153,14 @@ __koopa_bash_header() { # {{{1
         set -o errtrace  # -E
         set -o nounset  # -u
         set -o pipefail
-        set -o posix
-        # This setting helps protect our conda alias defined in the interactive
-        # login shell from messing with 'koopa_activate_conda_env'.
+        set +o posix
         shopt -u expand_aliases
-        # Try to enforce that command substitution stops on first error code.
-        # https://unix.stackexchange.com/questions/541682/
         shopt -s inherit_errexit
+        [[ -z "${KOOPA_PROCESS_ID:-}" ]] && export KOOPA_PROCESS_ID="${$}"
         # Fix for RHEL/CentOS/Rocky Linux 'BASHRCSOURCED' unbound variable.
         # https://100things.wzzrd.com/2018/07/11/
         #   The-confusing-Bash-configuration-files.html
         [[ -z "${BASHRCSOURCED:-}" ]] && export BASHRCSOURCED='Y'
-        [[ -z "${KOOPA_PROCESS_ID:-}" ]] && export KOOPA_PROCESS_ID="${$}"
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
@@ -184,7 +180,7 @@ __koopa_bash_header() { # {{{1
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     if [[ "${dict[test]}" -eq 1 ]]
     then
-        _koopa_duration_start || return 1
+        koopa_duration_start || return 1
     fi
     if [[ "${dict[activate]}" -eq 1 ]]
     then
@@ -192,7 +188,7 @@ __koopa_bash_header() { # {{{1
         source "${KOOPA_PREFIX:?}/lang/shell/bash/functions/activate.sh"
         if [[ "${dict[minimal]}" -eq 0 ]]
         then
-            _koopa_activate_bash_extras
+            koopa_activate_bash_extras
         fi
     fi
     if [[ "${dict[activate]}" -eq 0 ]] || \
@@ -223,6 +219,8 @@ __koopa_bash_header() { # {{{1
         case "${1:-}" in
             '--help' | \
             '-h')
+                # FIXME Make this into a shared function.
+                # FIXME Call it something like 'koopa_help_locate_man_file'.
                 dict[script_file]="$(koopa_realpath "$0")"
                 dict[script_name]="$(koopa_basename "${dict[script_file]}")"
                 dict[man_prefix]="$( \
@@ -252,11 +250,18 @@ man1/${dict[script_name]}.1"
     fi
     if [[ "${dict[test]}" -eq 1 ]]
     then
-        _koopa_duration_stop 'bash' || return 1
+        koopa_duration_stop 'bash' || return 1
     fi
     return 0
 }
 
 __koopa_bash_header "$@"
 
-unset -f __koopa_bash_header
+unset -f \
+    __koopa_bash_header \
+    __koopa_bash_source_dir \
+    __koopa_is_installed \
+    __koopa_is_macos \
+    __koopa_print \
+    __koopa_realpath \
+    __koopa_warn
