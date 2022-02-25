@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+set -o errexit  # -e
+set -o errtrace  # -E
+set -o nounset  # -u
+set -o pipefail
 
 __koopa_is_installed() { # {{{1
     # """
@@ -46,9 +50,9 @@ __koopa_realpath() { # {{{1
     __koopa_is_macos && readlink='greadlink'
     if ! __koopa_is_installed "$readlink"
     then
-        __koopa_warning "Not installed: '${readlink}'."
+        __koopa_warn "Not installed: '${readlink}'."
         __koopa_is_macos && \
-            __koopa_warning 'Install Homebrew and GNU coreutils to resolve.'
+            __koopa_warn 'Install Homebrew and GNU coreutils to resolve.'
         return 1
     fi
     x="$("$readlink" -f "$@")"
@@ -57,7 +61,7 @@ __koopa_realpath() { # {{{1
     return 0
 }
 
-__koopa_warning() { # {{{1
+__koopa_warn() { # {{{1
     # """
     # Print a warning message to the console.
     # @note Updated 2021-05-14.
@@ -71,19 +75,27 @@ __koopa_warning() { # {{{1
     return 0
 }
 
+__koopa_koopa() {
+    # """
+    # Main koopa CLI function.
+    # @note Updated 2022-02-25.
+    # """
+    # Check for Bash 4+.
+    case "${BASH_VERSION:-}" in
+        '1.'* | '2.'* | '3.'*)
+            return 1
+            ;;
+    esac
+    local bash_source
+    bash_source="${BASH_SOURCE[0]}"
+    [[ -L "$bash_source" ]] && bash_source="$(__koopa_realpath "$bash_source")"
+    [[ -x "$bash_source" ]] || return 1
+    export KOOPA_ACTIVATE=0
+    export KOOPA_HELP=0
+    # shellcheck source=/dev/null
+    source "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
+    koopa_koopa "$@"
+    return 0
+}
 
-bash_source="${BASH_SOURCE[0]}"
-if [[ -L "$bash_source" ]]
-then
-    bash_source="$(__koopa_realpath "$bash_source")"
-fi
-[[ -x "$bash_source" ]] || return 1
-export KOOPA_ACTIVATE=0
-export KOOPA_HELP=0
-# Need to keep this step outside of a function, otherwise we won't detect
-# the '--help' flag correctly.
-# shellcheck source=/dev/null
-. "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
-unset -v bash_source
-
-koopa_koopa "$@"
+__koopa_koopa "$@"
