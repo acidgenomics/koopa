@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME glob matching against full path is broken for fd.
-# FIXME How to resolve this? Currently an issue with roff tests.
-
 koopa::find() { # {{{1
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
     # @note Updated 2022-02-24.
-    #
-    # Consider updating the variant defined in the Bash header upon any
-    # changes to this function.
     #
     # @section Supported regex types for GNU find:
     #
@@ -31,32 +25,28 @@ koopa::find() { # {{{1
     # > find . -regextype type
     #
     # @seealso
-    # - NULL-byte handling in Bash
+    # - NULL-byte handling in Bash.
     #   https://unix.stackexchange.com/questions/174016/
     # - https://stackoverflow.com/questions/55015044/
     # - https://unix.stackexchange.com/questions/356045/
-    # - Prune option ('-prune') to ignore dirs in GNU find (see also '-path').
+    # - Prune option ('-prune') to ignore traversing into a directory.
     #   https://stackoverflow.com/a/24565095
-    #
-    # Bash array sorting:
-    # - https://stackoverflow.com/questions/7442417/
-    # - https://unix.stackexchange.com/questions/247655/
+    # - Bash array sorting.
+    #   https://stackoverflow.com/questions/7442417/
+    #   https://unix.stackexchange.com/questions/247655/
     # """
-    local app dict exclude_arg exclude_arr find find_args
-    local results sorted_results
+    local app dict exclude_arg exclude_arr find find_args results sorted_results
     declare -A app
     declare -A dict=(
-        [case_sensitive]=1
         [days_modified_gt]=''
         [days_modified_lt]=''
         [empty]=0
         [engine]="${KOOPA_FIND_ENGINE:-}"
         [exclude]=0
-        [glob]=''
         [max_depth]=''
         [min_depth]=1
+        [pattern]=''
         [print0]=0
-        [regex]=''
         [size]=''
         [sort]=0
         [sudo]=0
@@ -102,14 +92,6 @@ koopa::find() { # {{{1
                 exclude_arr+=("${2:?}")
                 shift 2
                 ;;
-            '--glob='*)
-                dict[glob]="${1#*=}"
-                shift 1
-                ;;
-            '--glob')
-                dict[glob]="${2:?}"
-                shift 2
-                ;;
             '--max-depth='*)
                 dict[max_depth]="${1#*=}"
                 shift 1
@@ -126,20 +108,20 @@ koopa::find() { # {{{1
                 dict[min_depth]="${2:?}"
                 shift 2
                 ;;
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict[prefix]="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
                 dict[prefix]="${2:?}"
-                shift 2
-                ;;
-            '--regex='*)
-                dict[regex]="${1#*=}"
-                shift 1
-                ;;
-            '--regex')
-                dict[regex]="${2:?}"
                 shift 2
                 ;;
             '--size='*)
@@ -159,16 +141,8 @@ koopa::find() { # {{{1
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
-            '--case-sensitive')
-                dict[case_sensitive]=1
-                shift 1
-                ;;
             '--empty')
                 dict[empty]=1
-                shift 1
-                ;;
-            '--ignore-case')
-                dict[case_sensitive]=0
                 shift 1
                 ;;
             '--print0')
@@ -193,10 +167,6 @@ koopa::find() { # {{{1
                 ;;
         esac
     done
-    if [[ -n "${dict[glob]}" ]] && [[ -n "${dict[regex]}" ]]
-    then
-        koopa::stop "Specify '--glob' or '--regex' but not both."
-    fi
     koopa::assert_is_dir "${dict[prefix]}"
     dict[prefix]="$(koopa::realpath "${dict[prefix]}")"
     if [[ -z "${dict[engine]}" ]]
@@ -218,27 +188,16 @@ koopa::find() { # {{{1
     case "${dict[engine]}" in
         'fd')
             find_args=(
-                # > '--full-path'  # Need to use '**' for glob with this.
+                # Don't use '--full-path' here.
                 '--absolute-path'
                 '--base-directory' "${dict[prefix]}"
+                '--case-sensitive'
+                '--glob'
                 '--hidden'
                 '--no-follow'
                 '--no-ignore'
                 '--one-file-system'
             )
-            if [[ "${dict[case_sensitive]}" -eq 1 ]]
-            then
-                find_args+=('--case-sensitive')
-            else
-                find_args+=('--ignore-case')
-            fi
-            if [[ -n "${dict[glob]}" ]]
-            then
-                find_args+=('--glob' "${dict[glob]}")
-            elif [[ -n "${dict[regex]}" ]]
-            then
-                find_args+=('--regex' "${dict[regex]}")
-            fi
             if [[ -n "${dict[min_depth]}" ]]
             then
                 find_args+=('--min-depth' "${dict[min_depth]}")
@@ -306,6 +265,10 @@ koopa::find() { # {{{1
             then
                 find_args+=('--print0')
             fi
+            if [[ -n "${dict[pattern]}" ]]
+            then
+                find_args+=("${dict[pattern]}")
+            fi
             ;;
         'find')
             find_args=(
@@ -320,64 +283,40 @@ koopa::find() { # {{{1
             then
                 find_args+=('-maxdepth' "${dict[max_depth]}")
             fi
-            if [[ -n "${dict[glob]}" ]]
+            if [[ -n "${dict[pattern]}" ]]
             then
-                if [[ "${dict[case_sensitive]}" -eq 1 ]]
-                then
-                    dict[glob_key]='name'
-                else
-                    dict[glob_key]='iname'
-                fi
                 if koopa::str_detect_fixed \
                     --pattern="{" \
-                    --string="${dict[glob]}"
+                    --string="${dict[pattern]}"
                 then
                     # Look for '{aaa,bbb,ccc}' and convert to
                     # '( -name aaa -o -name bbb -o name ccc )'.
                     # Usage of '-O' here refers to array index origin.
                     # This is a really useful way to append an array.
                     readarray -O "${#find_args[@]}" -t find_args <<< "$( \
-                        local globs_1 globs_2 globs_3 str
-                        readarray -d ',' -t globs_1 <<< "$( \
+                        local globs1 globs2 globs3 str
+                        readarray -d ',' -t globs1 <<< "$( \
                             koopa::gsub \
                                 --pattern='[{}]' \
                                 --replacement='' \
-                                "${dict[glob]}" \
+                                "${dict[pattern]}" \
                         )"
-                        globs_2=()
-                        for i in "${!globs_1[@]}"
+                        globs2=()
+                        for i in "${!globs1[@]}"
                         do
-                            globs_2+=(
-                                "-${dict[glob_key]} ${globs_1[i]}"
+                            globs2+=(
+                                "-name ${globs1[i]}"
                             )
                         done
-                        str="$( \
-                            koopa::paste --sep=' -o ' "${globs_2[@]}"
-                        )"
-                        str="( ${str} )"
-                        readarray -d ' ' -t globs_3 <<< "$(
+                        str="( $(koopa::paste --sep=' -o ' "${globs2[@]}") )"
+                        readarray -d ' ' -t globs3 <<< "$(
                             koopa::print "$str"
                         )"
-                        koopa::print "${globs_3[@]}"
+                        koopa::print "${globs3[@]}"
                     )"
                 else
-                    find_args+=("-${dict[glob_key]}" "${dict[glob]}")
+                    find_args+=('-name' "${dict[pattern]}")
                 fi
-            elif [[ -n "${dict[regex]}" ]]
-            then
-                # GNU file '-regex' argument matches against the entire file
-                # path, so we need to adjust our match here.
-                dict[regex]="$( \
-                    koopa::sub \
-                        --pattern='^' \
-                        --replacement="^${dict[prefix]}/" \
-                        "${dict[regex]}" \
-                )"
-                # NOTE '-regextype' must come before '-regex' here.
-                find_args+=(
-                    '-regextype' 'posix-egrep'
-                    '-regex' "${dict[regex]}"
-                )
             fi
             if [[ -n "${dict[type]}" ]]
             then
@@ -390,25 +329,18 @@ koopa::find() { # {{{1
                         find_args+=('-type' "${dict[type]}")
                         ;;
                     *)
-                        koopa::stop 'Invalid type argument for find.'
+                        koopa::stop 'Invalid file type argument.'
+                        ;;
                 esac
             fi
             if [[ -n "${dict[days_modified_gt]}" ]]
             then
-                find_args+=(
-                    '-mtime'
-                    "+${dict[days_modified_gt]}"
-                )
+                find_args+=('-mtime' "+${dict[days_modified_gt]}")
             fi
             if [[ -n "${dict[days_modified_lt]}" ]]
             then
-                find_args+=(
-                    '-mtime'
-                    "-${dict[days_modified_lt]}"
-                )
+                find_args+=('-mtime' "-${dict[days_modified_lt]}")
             fi
-            # FIXME To ignore a directory and the files under it, consider
-            # calling '-prune' here instead.
             if [[ "${dict[exclude]}" -eq 1 ]]
             then
                 for exclude_arg in "${exclude_arr[@]}"
@@ -540,7 +472,10 @@ koopa::find_and_replace_in_files() { # {{{1
     for file in "$@"
     do
         koopa::alert "$file"
-        "${app[sed]}" --in-place "s/${dict[from]}/${dict[to]}/g" "$file"
+        "${app[sed]}" \
+            --in-place \
+            "s/${dict[from]}/${dict[to]}/g" \
+            "$file"
     done
     return 0
 }
@@ -593,8 +528,8 @@ koopa::find_dotfiles() { # {{{1
     # shellcheck disable=SC2016
     dict[str]="$( \
         koopa::find \
-            --glob='.*' \
             --max-depth=1 \
+            --pattern='.*' \
             --prefix="${HOME:?}" \
             --print0 \
             --sort \
@@ -615,18 +550,17 @@ koopa::find_dotfiles() { # {{{1
 koopa::find_empty_dirs() { # {{{1
     # """
     # Find empty directories.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-02-24.
     # """
-    local prefix str
+    local prefix
     koopa::assert_has_args "$#"
     koopa::assert_is_dir "$@"
     for prefix in "$@"
     do
+        local str
         str="$( \
             koopa::find \
                 --empty \
-                --exclude='*/.*/*' \
-                --min-depth=0 \
                 --prefix="$prefix" \
                 --sort \
                 --type='d' \
@@ -743,14 +677,11 @@ koopa::find_large_files() { # {{{1
     return 0
 }
 
-# FIXME This doesn't seem to be working when we switch engine to rust.
+# FIXME Confirm that this works consistently between find and fd engines.
 koopa::find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
-    # @note Updated 2022-02-17.
-    #
-    # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
-    # share, src.
+    # @note Updated 2022-02-24.
     # """
     local dict find_args
     koopa::assert_has_no_args "$#"
@@ -767,25 +698,25 @@ koopa::find_non_symlinked_make_files() { # {{{1
     if koopa::is_linux
     then
         find_args+=(
-            '--exclude' 'share/applications/mimeinfo.cache'
-            '--exclude' 'share/emacs/site-lisp/*'
-            '--exclude' 'share/zsh/site-functions/*'
+            '--exclude' 'share/applications/**'
+            '--exclude' 'share/emacs/site-lisp/**'
+            '--exclude' 'share/zsh/site-functions/**'
         )
     elif koopa::is_macos
     then
         find_args+=(
-            '--exclude' 'MacGPG2/*'
-            '--exclude' 'gfortran/*'
-            '--exclude' 'texlive/*'
+            '--exclude' 'MacGPG2/**'
+            '--exclude' 'gfortran/**'
+            '--exclude' 'texlive/**'
         )
     fi
     if [[ "${dict[brew_prefix]}" == "${dict[make_prefix]}" ]]
     then
         find_args+=(
-            '--exclude' 'Caskroom/*'
-            '--exclude' 'Cellar/*'
-            '--exclude' 'Homebrew/*'
-            '--exclude' 'var/homebrew/*'
+            '--exclude' 'Caskroom/**'
+            '--exclude' 'Cellar/**'
+            '--exclude' 'Homebrew/**'
+            '--exclude' 'var/homebrew/**'
         )
     fi
     dict[out]="$(koopa::find "${find_args[@]}")"
