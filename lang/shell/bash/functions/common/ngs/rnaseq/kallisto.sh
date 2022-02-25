@@ -146,9 +146,9 @@ koopa::run_kallisto_paired_end() { # {{{1
     # Create a per-sample array from the R1 FASTQ files.
     readarray -t fastq_r1_files <<< "$( \
         koopa::find \
-            --glob="*${dict[r1_tail]}" \
-            --maxdepth 1 \
-            --mindepth 1 \
+            --max-depth=1 \
+            --min-depth=1 \
+            --pattern="*${dict[r1_tail]}" \
             --prefix="${dict[fastq_dir]}" \
             --sort \
             --type 'f' \
@@ -202,13 +202,8 @@ koopa::run_kallisto_single_end() { # {{{1
     # Run kallisto on multiple single-end FASTQ files.
     # @note Updated 2022-02-11.
     # """
-    local app dict
-    local fastq_files fastq
+    local dict fastq_files fastq
     koopa::assert_has_args "$#"
-    declare -A app=(
-        [find]="$(koopa::locate_find)"
-        [sort]="$(koopa::locate_sort)"
-    )
     declare -A dict=(
         [bootstraps]=30
         [fastq_dir]='fastq'
@@ -335,9 +330,9 @@ koopa::run_kallisto_single_end() { # {{{1
     # FIXME Need to confirm that this works.
     readarray -t fastq_files <<< "$( \
         koopa::find \
-            --glob="*${dict[tail]}" \
             --max-depth=1 \
             --min-depth=1 \
+            --pattern="*${dict[tail]}" \
             --prefix="${dict[fastq_dir]}" \
             --sort \
             --type='f' \
