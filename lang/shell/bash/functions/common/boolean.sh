@@ -317,13 +317,12 @@ koopa::is_export() { # {{{1
 koopa::is_file_system_case_sensitive() { # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2022-02-17.
-    #
-    # Linux is case sensitive by default, whereas macOS and Windows are not.
+    # @note Updated 2022-02-24.
     # """
     local app dict
     koopa::assert_has_no_args "$#"
     declare -A app=(
+        [find]="$(koopa::locate_find)"
         [wc]="$(koopa::locate_wc)"
     )
     declare -A dict=(
@@ -334,12 +333,11 @@ koopa::is_file_system_case_sensitive() { # {{{1
     dict[file2]="${dict[tmp_stem]}checkCase"
     koopa::touch "${dict[file1]}" "${dict[file2]}"
     dict[count]="$( \
-        koopa::find \
-            --glob="${dict[file1]}" \
-            --ignore-case \
-            --max-depth=1 \
-            --min-depth=1 \
-            --prefix="${dict[prefix]}" \
+        "${app[find]}" \
+            "${dict[prefix]}" \
+            -maxdepth 1 \
+            -mindepth 1 \
+            -name "${dict[file1]}" \
         | "${app[wc]}" --lines \
     )"
     koopa::rm "${dict[tmp_stem]}"*
@@ -567,12 +565,15 @@ koopa::is_r_package_installed() { # {{{1
 koopa::is_recent() { # {{{1
     # """
     # If the file exists and is more recent than 2 weeks old.
-    # @note Updated 2022-02-04.
+    # @note Updated 2022-02-24.
     #
-    # Current approach uses GNU find to filter based on modification date.
+    # Current approach uses find to filter based on modification date.
     #
     # Alternatively, can we use 'stat' to compare the modification time to Unix
     # epoch in seconds or with GNU date.
+    #
+    # NB Don't attempt to use 'koopa::find' here, as this is acting directly
+    # on a file rather than directory input.
     #
     # @seealso
     # - https://stackoverflow.com/a/32019461
