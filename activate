@@ -356,3 +356,6 @@ __koopa_activate() { # {{{1
 }
 
 __koopa_activate "$@"
+
+# NOTE Don't attempt to unset functions here, can cause hash table warnings
+# with active interactive Zsh session.
