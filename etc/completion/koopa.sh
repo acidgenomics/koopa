@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2207
 
-_koopa_complete() { # {{{1
+__koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-02-18.
+    # Updated 2022-02-25.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -56,7 +56,7 @@ _koopa_complete() { # {{{1
                         'ssh'
                         'wget'
                     )
-                    if _koopa_is_linux
+                    if koopa_is_linux
                     then
                         args+=(
                             'clean'
@@ -184,7 +184,7 @@ _koopa_complete() { # {{{1
                         'wget'
                         'zsh'
                     )
-                    if _koopa_is_linux
+                    if koopa_is_linux
                     then
                         args+=(
                             'aspera-connect'
@@ -206,7 +206,7 @@ _koopa_complete() { # {{{1
                             'shiny-server'
                             'wine'
                         )
-                        if _koopa_is_debian_like
+                        if koopa_is_debian_like
                         then
                             args+=(
                                 'bcbio-nextgen-vm'
@@ -215,14 +215,14 @@ _koopa_complete() { # {{{1
                                 'r-cran-binary'
                                 'r-devel'
                             )
-                        elif _koopa_is_fedora_like
+                        elif koopa_is_fedora_like
                         then
                             args+=(
                                 'oracle-instant-client'
                             )
                         fi
                     fi
-                    if _koopa_is_macos
+                    if koopa_is_macos
                     then
                         args+=(
                             'adobe-creative-cloud'
@@ -285,7 +285,7 @@ _koopa_complete() { # {{{1
                         'version'
                         'which'
                     )
-                    if _koopa_is_macos
+                    if koopa_is_macos
                     then
                         args+=(
                             'clean-launch-services'
@@ -327,12 +327,12 @@ _koopa_complete() { # {{{1
                         'spacevim'
                         'tex-packages'
                     )
-                    if _koopa_is_linux
+                    if koopa_is_linux
                     then
                         args+=(
                             'google-cloud-sdk'
                         )
-                    elif _koopa_is_macos
+                    elif koopa_is_macos
                     then
                         args+=(
                             'defaults'
@@ -489,4 +489,4 @@ _koopa_complete() { # {{{1
     return 0
 }
 
-complete -F _koopa_complete koopa
+complete -F __koopa_complete koopa
