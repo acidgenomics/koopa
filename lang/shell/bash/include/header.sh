@@ -235,8 +235,20 @@ __koopa_bash_header() { # {{{1
     then
         set -o verbose  # -v
         set -o xtrace  # -x
+        koopa_alert_info 'Shell options'
         set +o
         shopt
+        koopa_alert_info 'Shell variables'
+        koopa_dl \
+            '$' "${$}" \
+            '-' "${-}" \
+            'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
+            'SHELL' "${SHELL:-}"
+        if koopa_is_installed 'locale'
+        then
+            koopa_alert_info 'Locale'
+            locale
+        fi
     fi
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
