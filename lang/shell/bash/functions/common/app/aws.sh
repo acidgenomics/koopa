@@ -452,16 +452,16 @@ koopa_aws_s3_ls() { # {{{1
     # - aws s3 ls help
     #
     # @examples
-    # prefix='s3://r.acidgenomics.com/src/contrib/'
+    # > prefix='s3://r.acidgenomics.com/src/contrib/'
     #
-    # Files and directories (default).
-    # koopa_aws_s3_ls "$prefix"
+    # # Files and directories (default):
+    # > koopa_aws_s3_ls "$prefix"
     #
     # # Files only:
-    # koopa_aws_s3_ls --type='f' "$prefix"
+    # > koopa_aws_s3_ls --type='f' "$prefix"
     #
     # # Directories only:
-    # koopa_aws_s3_ls --type='d' "$prefix"
+    # > koopa_aws_s3_ls --type='d' "$prefix"
     # """
     local app dict ls_args pos str
     declare -A app=(

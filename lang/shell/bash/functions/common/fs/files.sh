@@ -196,13 +196,13 @@ koopa_delete_empty_dirs() { # {{{1
     # Don't pass a single call to 'rm' here, as argument list can be too
     # long to parse.
     #
-    # @examples
-    # koopa_mkdir 'a/aa/aaa/aaaa' 'b/bb/bbb/bbbb'
-    # koopa_delete_empty_dirs 'a' 'b'
-    #
     # @seealso
     # - While loop
     #   https://www.cyberciti.biz/faq/bash-while-loop/
+    #
+    # @examples
+    # > koopa_mkdir 'a/aa/aaa/aaaa' 'b/bb/bbb/bbbb'
+    # > koopa_delete_empty_dirs 'a' 'b'
     # """
     local dir dirs prefix
     koopa_assert_has_args "$#"
@@ -606,14 +606,14 @@ koopa_stat_modified() { # {{{1
     # Get file modification time.
     # @note Updated 2021-11-16.
     #
-    # @examples
-    # > koopa_stat_modified '%Y-%m-%d' '/tmp'
-    # # 2021-10-17
-    #
     # @seealso
     # - Convert seconds since Epoch into a useful format.
     #   https://www.gnu.org/software/coreutils/manual/html_node/
     #     Examples-of-date.html
+    #
+    # @examples
+    # > koopa_stat_modified '%Y-%m-%d' '/tmp'
+    # # 2021-10-17
     # """
     local app dict timestamp timestamps x
     koopa_assert_has_args_ge "$#" 2

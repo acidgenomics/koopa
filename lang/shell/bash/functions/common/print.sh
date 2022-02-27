@@ -269,10 +269,10 @@ koopa_ngettext() { # {{{1
     # A function to dynamically handle singular/plural words.
     #
     # @examples
-    # koopa_ngettext --num=1 --msg1='sample' --msg2='samples'
-    # ## 1 sample
-    # koopa_ngettext --num=2 --msg1='sample' --msg2='samples'
-    # ## 2 samples
+    # > koopa_ngettext --num=1 --msg1='sample' --msg2='samples'
+    # # 1 sample
+    # > koopa_ngettext --num=2 --msg1='sample' --msg2='samples'
+    # # 2 samples
     #
     # @seealso
     # - https://stat.ethz.ch/R-manual/R-devel/library/base/html/gettext.html
