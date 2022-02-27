@@ -325,7 +325,8 @@ koopa_find() { # {{{1
                         find_args+=('-xtype' 'l')
                         ;;
                     'd' | \
-                    'f')
+                    'f' | \
+                    'l')
                         find_args+=('-type' "${dict[type]}")
                         ;;
                     *)
