@@ -721,13 +721,13 @@ koopa_assert_is_set() { # {{{1
     # @note Updated 2021-11-05.
     #
     # @examples
-    # declare -A dict=(
-    #     [aaa]='AAA'
-    #     [bbb]='BBB'
-    # )
-    # koopa_assert_is_set \
-    #     '--aaa' "${dict[aaa]:-}" \
-    #     '--bbb' "${dict[bbb]:-}"
+    # > declare -A dict=(
+    # >     [aaa]='AAA'
+    # >     [bbb]='BBB'
+    # > )
+    # > koopa_assert_is_set \
+    # >     '--aaa' "${dict[aaa]:-}" \
+    # >     '--bbb' "${dict[bbb]:-}"
     # """
     local name value
     koopa_assert_has_args_ge "$#" 2
@@ -756,7 +756,7 @@ koopa_assert_is_set_2() { # {{{1
     # - https://unix.stackexchange.com/questions/129084
     #
     # @examples
-    # koopa_assert_is_set_2 'PATH' 'MANPATH'
+    # > koopa_assert_is_set_2 'PATH' 'MANPATH'
     # """
     local arg
     koopa_assert_has_args "$#"
