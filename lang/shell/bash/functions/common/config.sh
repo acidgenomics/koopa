@@ -194,7 +194,7 @@ at '${file}'."
 koopa_enable_shell_for_all_users() { # {{{1
     # """
     # Enable shell.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-02-27.
     # """
     local dict
     koopa_assert_has_args "$#"
@@ -206,7 +206,6 @@ koopa_enable_shell_for_all_users() { # {{{1
         [user]="$(koopa_user)"
     )
     dict[cmd_path]="${dict[make_prefix]}/bin/${dict[cmd_name]}"
-    koopa_assert_is_installed "${dict[cmd_path]}"
     koopa_assert_is_file "${dict[etc_file]}"
     if ! koopa_file_detect_fixed \
         --file="${dict[etc_file]}" \
