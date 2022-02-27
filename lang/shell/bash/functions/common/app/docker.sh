@@ -407,8 +407,7 @@ koopa_docker_ghcr_push() { # {{{
     # Push an image to GitHub Container Registry.
     # @note Updated 2022-01-20.
     #
-    # @examples
-    # koopa_docker_ghcr_push 'OWNER' 'IMAGE_NAME' 'VERSION'
+    # @usage koopa_docker_ghcr_push 'OWNER' 'IMAGE_NAME' 'VERSION'
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 3
@@ -567,7 +566,7 @@ koopa_docker_push() { # {{{1
     # - https://docs.docker.com/config/formatting/
     #
     # @examples
-    # docker-push acidgenomics/debian:latest
+    # > koopa_docker_push 'acidgenomics/debian:latest'
     # """
     local app dict pattern
     koopa_assert_has_args "$#"
@@ -619,7 +618,9 @@ koopa_docker_push() { # {{{1
 koopa_docker_remove() { # {{{1
     # """
     # Remove docker images by pattern.
-    # Updated 2022-02-24.
+    # Updated 2022-02-25.
+    #
+    # @usage koopa_docker_remove IMAGE...
     #
     # @examples
     # > koopa_docker_remove 'debian' 'ubuntu'
