@@ -262,10 +262,10 @@ koopa_aws_s3_find() { # {{{1
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
     #
     # @examples
-    # koopa_aws_s3_find \
-    #     --include='*.bw$' \
-    #     --exclude='antisense' \
-    #     's3://bioinfo/igv/'
+    # > koopa_aws_s3_find \
+    # >     --include='*.bw$' \
+    # >     --exclude='antisense' \
+    # >     's3://bioinfo/igv/'
     # """
     local dict pos str
     koopa_assert_has_args "$#"
@@ -364,10 +364,10 @@ koopa_aws_s3_list_large_files() { # {{{1
     # @note Updated 2022-02-03.
     #
     # @examples
-    # koopa_aws_s3_list_large_files \
-    #     --profile='acidgenomics' \
-    #     --bucket='s3://r.acidgenomics.com/' \
-    #     --num=10
+    # > koopa_aws_s3_list_large_files \
+    # >     --profile='acidgenomics' \
+    # >     --bucket='s3://r.acidgenomics.com/' \
+    # >     --num=10
     # """
     local app dict
     koopa_assert_has_args "$#"

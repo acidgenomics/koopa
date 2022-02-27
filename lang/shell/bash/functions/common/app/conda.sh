@@ -22,7 +22,7 @@ koopa_conda_activate_env() { # {{{1
     # Alternate approach:
     # > eval "$(conda shell.bash hook)"
     #
-    # See also:
+    # @seealso
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
@@ -289,7 +289,7 @@ koopa_conda_remove_env() { # {{{1
     # - conda env list --json
     #
     # @examples
-    # koopa_conda_remove_env 'kallisto' 'salmon'
+    # > koopa_conda_remove_env 'kallisto' 'salmon'
     # """
     local app dict name
     koopa_assert_has_args "$#"
