@@ -745,7 +745,7 @@ koopa_activate_koopa_paths() { # {{{1
 koopa_activate_lesspipe() { # {{{1
     # """
     # Activate lesspipe.
-    # @note Updated 2022-02-07.
+    # @note Updated 2022-02-27.
     #
     # @seealso
     # - https://github.com/wofr06/lesspipe/
@@ -761,10 +761,7 @@ koopa_activate_lesspipe() { # {{{1
     export LESSOPEN='|lesspipe.sh %s'
     export LESSQUIET=1
     export LESS_ADVANCED_PREPROCESSOR=1
-    [ -z "${LESSCHARSET:-}" ] &&
-        export LESSCHARSET='utf-8'
-    [ -z "${PYGMENTIZE_STYLE:-}" ] &&
-        export PYGMENTIZE_STYLE='dracula'
+    [ -z "${LESSCHARSET:-}" ] && export LESSCHARSET='utf-8'
     return 0
 }
 
