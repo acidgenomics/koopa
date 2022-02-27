@@ -71,7 +71,7 @@ koopa_linux_remove_user_from_group() { # {{{1
     # @note Updated 2021-11-16.
     #
     # @examples
-    # koopa_linux_remove_user_from_group 'docker'
+    # > koopa_linux_remove_user_from_group 'docker'
     # """
     local app dict
     koopa_assert_has_args_le "$#" 2

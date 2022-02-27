@@ -431,7 +431,7 @@ koopa_find_and_replace_in_files() { # {{{1
     # - https://stackoverflow.com/questions/4247068/
     #
     # @examples
-    # koopa_find_and_replace_in_files 'XXX' 'YYY' 'file1' 'file2' 'file3'
+    # > koopa_find_and_replace_in_files 'XXX' 'YYY' 'file1' 'file2' 'file3'
     # """
     local app dict file
     koopa_assert_has_args_ge "$#" 3
@@ -611,7 +611,7 @@ koopa_find_large_dirs() { # {{{1
     # Results are reverse sorted by size.
     #
     # @examples
-    # # > koopa_find_large_dirs "${HOME}/monorepo"
+    # > koopa_find_large_dirs "${HOME}/monorepo"
     # """
     local app prefix
     koopa_assert_has_args "$#"

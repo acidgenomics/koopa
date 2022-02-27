@@ -857,7 +857,7 @@ koopa_which_realpath() { # {{{1
     # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
     #
     # @examples
-    # koopa_which_realpath bash vim
+    # > koopa_which_realpath 'bash' 'vim'
     # """
     local cmd
     koopa_assert_has_args "$#"

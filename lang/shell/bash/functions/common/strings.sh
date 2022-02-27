@@ -116,12 +116,12 @@ koopa_lowercase() { # {{{1
     # awk alternative:
     # > koopa_print "$str" | "${app[awk]}" '{print tolower($0)}'
     #
-    # @examples
-    # koopa_lowercase 'HELLO WORLD'
-    # ## hello world
-    #
     # @seealso
     # - https://stackoverflow.com/questions/2264428
+    #
+    # @examples
+    # > koopa_lowercase 'HELLO WORLD'
+    # # hello world
     # """
     local app str
     koopa_assert_has_args "$#"

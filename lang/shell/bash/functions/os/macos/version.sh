@@ -34,7 +34,8 @@ koopa_get_homebrew_cask_version() { # {{{1
     # Get Homebrew Cask version.
     # @note Updated 2021-10-27.
     #
-    # @examples koopa_get_homebrew_cask_version gpg-suite
+    # @examples
+    # > koopa_get_homebrew_cask_version 'gpg-suite'
     # # 2019.2
     # """
     local app cask x

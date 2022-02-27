@@ -123,7 +123,7 @@ koopa_check_mount() { # {{{1
     # @note Updated 2022-01-31.
     #
     # @examples
-    # koopa_check_mount '/mnt/scratch'
+    # > koopa_check_mount '/mnt/scratch'
     # """
     local app dict
     koopa_assert_has_args "$#"

@@ -628,7 +628,7 @@ koopa_activate_homebrew_opt_gnu_prefix() { # {{{1
     # Note that libtool is always prefixed with 'g', even in 'opt/'.
     #
     # @examples
-    # koopa_activate_homebrew_opt_gnu_prefix 'binutils' 'coreutils'
+    # > koopa_activate_homebrew_opt_gnu_prefix 'binutils' 'coreutils'
     # """
     local homebrew_prefix name prefix
     homebrew_prefix="$(koopa_homebrew_prefix)"
@@ -908,7 +908,7 @@ koopa_activate_opt_prefix() { # {{{1
     # @note Updated 2021-05-26.
     #
     # @examples
-    # koopa_activate_opt_prefix 'geos' 'proj' 'gdal'
+    # > koopa_activate_opt_prefix 'geos' 'proj' 'gdal'
     # """
     local name opt_prefix prefix
     opt_prefix="$(koopa_opt_prefix)"
@@ -2685,7 +2685,7 @@ koopa_is_alias() { # {{{1
     # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
     #
     # @example
-    # koopa_is_alias 'R'
+    # > koopa_is_alias 'R'
     # """
     local cmd str
     for cmd in "$@"
