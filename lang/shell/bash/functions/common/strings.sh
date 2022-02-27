@@ -136,8 +136,6 @@ koopa_lowercase() { # {{{1
     return 0
 }
 
-# FIXME Need to harden this against our koopa_find globs input.
-
 koopa_paste() { # {{{1
     # """
     # Paste arguments into a string separated by delimiter.
