@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Confirm that this works, after changing koopa_find.
+# FIXME This is erroring out with 'invalid file type argument'.
+
 koopa_linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-02-27.
     # """
     local app dict symlink symlinks
     koopa_assert_has_args_le "$#" 2
