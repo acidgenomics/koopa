@@ -183,8 +183,6 @@ koopa_git_clone() { # {{{1
     return 0
 }
 
-# FIXME Confirm that this works, after changing our 'koopa_grep' approach.
-
 koopa_git_default_branch() { # {{{1
     # """
     # Default branch of Git repository.
