@@ -311,14 +311,14 @@ koopa_sra_prefetch() { # {{{1
     # Prefetch files from SRA (in parallel).
     # @note Updated 2022-02-10.
     #
+    # @seealso
+    # - Conda build of sratools prefetch isn't currently working on macOS.
+    #   https://github.com/ncbi/sra-tools/issues/497
+    #
     # @examples
     # > koopa_sra_prefetch \
     # >     --accession-file='srp049596-accession-list.txt' \
     # >     --output-directory='srp049596-prefetch'
-    #
-    # @seealso
-    # - Conda build of sratools prefetch isn't currently working on macOS.
-    #   https://github.com/ncbi/sra-tools/issues/497
     # """
     local app cmd dict
     declare -A app=(

@@ -423,7 +423,7 @@ koopa_github_latest_release() { # {{{1
     # @note Updated 2022-02-27.
     #
     # @examples
-    # koopa_github_latest_release 'acidgenomics/koopa'
+    # > koopa_github_latest_release 'acidgenomics/koopa'
     # """
     local app repo str url
     koopa_assert_has_args "$#"
