@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is erroring out with 'invalid file type argument'.
-
 koopa_linux_find_app_symlinks() { # {{{1
     # """
     # Find application symlinks.
