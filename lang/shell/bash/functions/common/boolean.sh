@@ -34,13 +34,13 @@ koopa_contains() { # {{{1
     # Does an array contain a specific element?
     # @note Updated 2021-05-07.
     #
-    # @examples
-    # string='foo'
-    # array=('foo' 'bar')
-    # koopa_contains "$string" "${array[@]}"
-    #
     # @seealso
     # https://stackoverflow.com/questions/3685970/
+    #
+    # @examples
+    # > string='foo'
+    # > array=('foo' 'bar')
+    # > koopa_contains "$string" "${array[@]}"
     # """
     local string x
     koopa_assert_has_args_ge "$#" 2
@@ -59,7 +59,7 @@ koopa_has_file_ext() { # {{{1
     # @note Updated 2022-02-17.
     #
     # @examples
-    # koopa_has_file_ext 'hello.txt'
+    # > koopa_has_file_ext 'hello.txt'
     # """
     local file
     koopa_assert_has_args "$#"
@@ -264,9 +264,9 @@ koopa_is_empty_dir() { # {{{1
     # @note Updated 2022-02-24.
     #
     # @examples
-    # koopa_mkdir 'aaa' 'bbb'
-    # koopa_is_empty_dir 'aaa' 'bbb'
-    # koopa_rm 'aaa' 'bbb'
+    # > koopa_mkdir 'aaa' 'bbb'
+    # > koopa_is_empty_dir 'aaa' 'bbb'
+    # > koopa_rm 'aaa' 'bbb'
     # """
     local prefix
     koopa_assert_has_args "$#"
@@ -299,7 +299,7 @@ koopa_is_export() { # {{{1
     # - https://unix.stackexchange.com/questions/390831
     #
     # @examples
-    # koopa_is_export 'KOOPA_SHELL'
+    # > koopa_is_export 'KOOPA_SHELL'
     # """
     local arg exports
     koopa_assert_has_args "$#"
@@ -516,7 +516,7 @@ koopa_is_python_package_installed() { # {{{1
     # - https://askubuntu.com/questions/588390
 
     # @examples
-    # koopa_is_python_package_installed 'black' 'pytest'
+    # > koopa_is_python_package_installed 'black' 'pytest'
     # """
     local app dict pkg
     koopa_assert_has_args "$#"
@@ -545,7 +545,7 @@ koopa_is_r_package_installed() { # {{{1
     # @note Updated 2022-02-03.
     #
     # @examples
-    # koopa_is_r_package_installed 'BiocGenerics' 'S4Vectors'
+    # > koopa_is_r_package_installed 'BiocGenerics' 'S4Vectors'
     # """
     local app dict pkg
     koopa_assert_has_args "$#"
@@ -580,7 +580,7 @@ koopa_is_recent() { # {{{1
     # - fd using '--changed-before <DAYS>d' argument.
     #
     # @examples
-    # koopa_is_recent ~/hello-world.txt
+    # > koopa_is_recent ~/hello-world.txt
     # """
     local app dict file
     koopa_assert_has_args "$#"
@@ -637,7 +637,7 @@ koopa_is_variable_defined() { # {{{1
     #       Shell-Parameter-Expansion.html
     #
     # @examples
-    # koopa_is_variable_defined 'PATH'
+    # > koopa_is_variable_defined 'PATH'
     # """
     local dict var
     koopa_assert_has_args "$#"
