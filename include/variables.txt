@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.20"
+aws-cli="2.4.21"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.33.1"
@@ -166,7 +166,7 @@ harfbuzz="3.4.0"
 hdf5="1.13.0"
 
 # https://brew.sh/
-homebrew="3.3.16"
+homebrew="3.4.0"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -388,7 +388,7 @@ udunits="2.2.28"
 vim="8.2.4450"
 
 # https://www.gnu.org/software/wget/
-wget="1.21.2"
+wget="1.21.3"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8.1"
@@ -561,12 +561,12 @@ ruby-ronn="0.7.3"               # recommended
 rust-cargo-outdated="0.10.2"    # system
 rust-cargo-update="8.1.2"       # system
 
-rust-bat="0.19.0"               # homebrew
+rust-bat="0.20.0"               # homebrew
 rust-broot="1.9.3"              # homebrew; br
 rust-dog="0.1.0"                # homebrew
-rust-du-dust="0.7.5"            # homebrew; dust
+rust-du-dust="0.8.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
-rust-fd-find="8.3.1"            # homebrew; fd
+rust-fd-find="8.3.2"            # homebrew; fd
 rust-hyperfine="1.12.0"         # homebrew
 rust-mcfly="0.5.13"             # homebrew
 rust-procs="0.12.1"             # homebrew
