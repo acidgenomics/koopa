@@ -578,7 +578,7 @@ koopa_activate_go() { # {{{1
 koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2022-02-09.
+    # @note Updated 2022-02-28.
     #
     # Don't activate 'binutils' here. Can mess up R package compilation.
     # """
@@ -586,6 +586,7 @@ koopa_activate_homebrew() { # {{{1
     prefix="$(koopa_homebrew_prefix)"
     koopa_activate_prefix "$prefix"
     koopa_is_installed 'brew' || return 0
+    export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_NO_AUTO_UPDATE=1
