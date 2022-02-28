@@ -16,6 +16,10 @@ koopa_macos_locate_dscacheutil() { # {{{1
     koopa_locate_app '/usr/bin/dscacheutil'
 }
 
+koopa_macos_locate_fs_usage() { # {{{1
+    koopa_locate_app '/usr/bin/fs_usage'
+}
+
 koopa_macos_locate_hdiutil() { # {{{1
     koopa_locate_app '/usr/bin/hdiutil'
 }
