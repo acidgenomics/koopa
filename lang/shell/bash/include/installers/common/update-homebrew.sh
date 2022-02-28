@@ -3,7 +3,7 @@
 update_homebrew() { # {{{1
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2021-11-22.
+    # @note Updated 2022-02-28.
     #
     # @seealso
     # - Refer to useful discussion regarding '--greedy' flag.
