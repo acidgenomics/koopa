@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Can we add support for stdin here?
 koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
@@ -35,6 +36,7 @@ koopa_camel_case_simple() { # {{{1
     return 0
 }
 
+# FIXME Can we add support for stdin here?
 koopa_capitalize() { # {{{1
     # """
     # Capitalize the first letter (only) of a string.
@@ -62,6 +64,7 @@ koopa_capitalize() { # {{{1
     return 0
 }
 
+# FIXME Can we add support for stdin here?
 koopa_gsub() { # {{{1
     # """
     # Global substitution.
@@ -77,6 +80,7 @@ koopa_gsub() { # {{{1
     koopa_sub --global "$@"
 }
 
+# FIXME Can we add support for stdin here?
 koopa_kebab_case_simple() { # {{{1
     # """
     # Simple snake case function.
@@ -108,6 +112,7 @@ koopa_kebab_case_simple() { # {{{1
     return 0
 }
 
+# FIXME Can we add support for stdin here?
 koopa_lowercase() { # {{{1
     # """
     # Transform string to lowercase.
@@ -197,6 +202,7 @@ koopa_paste0() { # {{{1
     koopa_paste --sep='' "$@"
 }
 
+# FIXME Can we add support for stdin here?
 koopa_snake_case_simple() { # {{{1
     # """
     # Simple snake case function.
@@ -228,6 +234,7 @@ koopa_snake_case_simple() { # {{{1
     return 0
 }
 
+# FIXME Can we add support for stdin here?
 koopa_strip_left() { # {{{1
     # """
     # Strip pattern from left side (start) of string.
@@ -280,6 +287,7 @@ koopa_strip_left() { # {{{1
     return 0
 }
 
+# FIXME Can we add support for stdin here?
 koopa_strip_right() { # {{{1
     # """
     # Strip pattern from right side (end) of string.
@@ -332,6 +340,7 @@ koopa_strip_right() { # {{{1
     return 0
 }
 
+# FIXME Can we add support for stdin here?
 koopa_strip_trailing_slash() { # {{{1
     # """
     # Strip trailing slash in file path string.
@@ -440,6 +449,7 @@ koopa_to_string() { # {{{1
     return 0
 }
 
+# FIXME Can we add support for stdin here?
 koopa_trim_ws() { # {{{1
     # """
     # Trim leading and trailing white-space from string.
