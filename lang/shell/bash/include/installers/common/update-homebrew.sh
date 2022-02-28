@@ -6,6 +6,7 @@ update_homebrew() { # {{{1
     # @note Updated 2022-02-28.
     #
     # @seealso
+    # - brew linkage --test
     # - Refer to useful discussion regarding '--greedy' flag.
     # - https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
     # - https://github.com/Homebrew/brew/issues/9139
