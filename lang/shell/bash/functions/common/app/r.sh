@@ -221,7 +221,7 @@ koopa_r_koopa() { # {{{1
     # script header and check that the koopa R package is installed.
     if [[ "$fun" != 'header' ]]
     then
-        code+=("koopa_${fun}();")
+        code+=("koopa::${fun}();")
     fi
     # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
