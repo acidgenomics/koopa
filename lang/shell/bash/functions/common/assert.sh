@@ -486,42 +486,95 @@ koopa_assert_is_macos() { # {{{1
     return 0
 }
 
-# FIXME Consider requiring '--string' and '--pattern' input flags here.
 koopa_assert_is_matching_fixed() { # {{{1
     # """
     # Assert that input matches a fixed pattern.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-02-27.
     # """
     local dict
-    koopa_assert_has_args_eq "$#" 2
     declare -A dict=(
-        [string]="${1:?}"
-        [pattern]="${2:?}"
+        [pattern]=''
+        [string]=''
     )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict[string]="${1#*=}"
+                shift 1
+                ;;
+            '--string')
+                dict[string]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--pattern' "${dict[pattern]}" \
+        '--string' "${dict[string]}"
     if ! koopa_str_detect_fixed \
-        --string="${dict[string]}" \
-        --pattern="${dict[pattern]}"
+        --pattern="${dict[pattern]}" \
+        --string="${dict[string]}"
     then
         koopa_stop "'${dict[string]}' doesn't match '${dict[pattern]}'."
     fi
     return 0
 }
 
-# FIXME Consider requiring '--string' and '--pattern' input flags here.
 koopa_assert_is_matching_regex() { # {{{1
     # """
     # Assert that input matches a regular expression pattern.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-02-27.
     # """
-    local dict
-    koopa_assert_has_args_eq "$#" 2
     declare -A dict=(
-        [string]="${1:?}"
-        [pattern]="${2:?}"
+        [pattern]=''
+        [string]=''
     )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict[string]="${1#*=}"
+                shift 1
+                ;;
+            '--string')
+                dict[string]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--pattern' "${dict[pattern]}" \
+        '--string' "${dict[string]}"
     if ! koopa_str_detect_regex \
-        --string="${dict[string]}" \
-        --pattern="${dict[pattern]}"
+        --pattern="${dict[pattern]}" \
+        --string="${dict[string]}"
     then
         koopa_stop "'${dict[string]}' doesn't match regex '${dict[pattern]}'."
     fi
