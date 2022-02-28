@@ -93,15 +93,6 @@ koopa_download_ucsc_genome() { # {{{1
     koopa_r_koopa 'cliDownloadUCSCGenome' "$@"
 }
 
-koopa_drat() { # {{{
-    # """
-    # Add R package to drat repository.
-    # @note Updated 2021-08-14.
-    # """
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliDrat' "$@"
-}
-
 koopa_find_and_move_in_sequence() { # {{{1
     # """
     # Find and move files in sequence.
@@ -131,15 +122,6 @@ koopa_list_programs() { # {{{1
     return 0
 }
 
-koopa_pkgdown_deploy_to_aws() { # {{{1
-    # """
-    # Deploy a pkgdown website to AWS.
-    # @note Updated 2021-08-14.
-    # """
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliPkgdownDeployToAWS' "$@"
-}
-
 koopa_prune_apps() { # {{{1
     # """
     # Prune applications.
@@ -152,6 +134,24 @@ koopa_prune_apps() { # {{{1
     fi
     koopa_r_koopa 'cliPruneApps' "$@"
     return 0
+}
+
+koopa_r_drat() { # {{{
+    # """
+    # Add R package to drat repository.
+    # @note Updated 2021-08-14.
+    # """
+    koopa_assert_has_args "$#"
+    koopa_r_koopa 'cliDrat' "$@"
+}
+
+koopa_r_pkgdown_deploy_to_aws() { # {{{1
+    # """
+    # Deploy a pkgdown website to AWS.
+    # @note Updated 2021-08-14.
+    # """
+    koopa_assert_has_args "$#"
+    koopa_r_koopa 'cliPkgdownDeployToAWS' "$@"
 }
 
 koopa_snake_case() { # {{{1
