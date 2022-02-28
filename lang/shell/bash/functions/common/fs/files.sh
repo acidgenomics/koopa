@@ -442,11 +442,13 @@ koopa_md5sum_check_to_new_md5_file() { # {{{1
     return 0
 }
 
-# FIXME This doesn't seem to work any more.
 koopa_nfiletypes() { # {{{1
     # """
     # Return the number of file types in a specific directory.
-    # @note Updated 2022-02-24.
+    # @note Updated 2022-02-27.
+    #
+    # @examples
+    # > koopa_nfiletypes "$PWD"
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
@@ -461,6 +463,7 @@ koopa_nfiletypes() { # {{{1
     koopa_assert_is_dir "${dict[prefix]}"
     dict[out]="$( \
         koopa_find \
+            --exclude='.*' \
             --max-depth=1 \
             --min-depth=1 \
             --pattern='*.*' \
@@ -481,7 +484,10 @@ koopa_nfiletypes() { # {{{1
 koopa_reset_permissions() { # {{{1
     # """
     # Reset default permissions on a specified directory recursively.
-    # @note Updated 2022-02-24.
+    # @note Updated 2022-02-27.
+    #
+    # @examples
+    # > koopa_reset_permissions "$PWD"
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
@@ -534,7 +540,11 @@ koopa_reset_permissions() { # {{{1
 koopa_stat() { # {{{1
     # """
     # Display file or file system status.
-    # @note Updated 2021-11-16.
+    # @note Updated 2022-02-28.
+    #
+    # @examples
+    # > koopa_stat '%A' '/tmp/'
+    # # drwxrwxrwt
     # """
     local app dict
     koopa_assert_has_args_ge "$#" 2
