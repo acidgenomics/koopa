@@ -3,7 +3,7 @@
 install_julia_packages() { # {{{1
     # """
     # Install Julia packages.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-03-01.
     #
     # @seealso
     # - 'JULIA_DEPOT_PATH' in shell.
@@ -29,6 +29,6 @@ install_julia_packages() { # {{{1
     )
     dict[script]="${dict[script_prefix]}/install-packages.jl"
     koopa_assert_is_file "${dict[script]}"
-    "${app[julia]}" "${app[script]}"
+    "${app[julia]}" "${dict[script]}"
     return 0
 }

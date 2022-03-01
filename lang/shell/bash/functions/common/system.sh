@@ -426,9 +426,6 @@ koopa_sys_rm() { # {{{1
     return 0
 }
 
-# FIXME Ensure that directories are ugo +x....
-# FIXME ./app/julia-packages/1.6/registries/General failing
-
 koopa_sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
