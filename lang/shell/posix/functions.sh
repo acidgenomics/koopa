@@ -487,11 +487,9 @@ koopa_activate_dircolors() { # {{{1
     then
         if koopa_macos_is_dark_mode
         then
-            # e.g. dracula
             dircolors_file="${dircolors_file}-dark"
         elif koopa_macos_is_light_mode
         then
-            # e.g. solarized light
             dircolors_file="${dircolors_file}-light"
         fi
     fi
