@@ -35,7 +35,9 @@ koopa_configure_python() { #{{{1
     else
         app[write_string]='koopa_sudo_write_string'
     fi
-    "${app[write_string]}" "${dict[k_site_pkgs]}" "${dict[pth_file]}"
+    "${app[write_string]}" \
+        --file="${dict[pth_file]}" \
+        --string="${dict[k_site_pkgs]}"
     koopa_configure_app_packages \
         --name-fancy='Python' \
         --name='python' \
