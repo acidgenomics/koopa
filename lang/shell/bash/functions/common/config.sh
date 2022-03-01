@@ -85,7 +85,9 @@ __koopa_activate_user_profile() { # {{{1
 
 __koopa_activate_user_profile
 END
-    koopa_append_string "\n${dict[string]}" "${dict[file]}"
+    koopa_append_string \
+        --file="${dict[file]}" \
+        --string="\n${dict[string]}"
     return 0
 }
 
@@ -184,7 +186,9 @@ already enabled at '${dict[file]}'."
         return 0
     fi
     koopa_alert "Modifying '${dict[file]}' to include '${dict[group]}'."
-    koopa_sudo_append_string "${dict[string]}" "${dict[file]}"
+    koopa_sudo_append_string \
+        --file="${dict[file]}" \
+        --string="${dict[string]}"
     koopa_chmod --sudo '0440' "${dict[file]}"
     koopa_alert_success "Passwordless sudo enabled for '${dict[group]}' \
 at '${file}'."
@@ -213,7 +217,9 @@ koopa_enable_shell_for_all_users() { # {{{1
     then
         koopa_alert "Updating '${dict[etc_file]}' to \
 include '${dict[cmd_path]}'."
-        koopa_sudo_append_string "${dict[cmd_path]}" "${dict[etc_file]}"
+        koopa_sudo_append_string \
+            --file="${dict[etc_file]}" \
+            --string="${dict[cmd_path]}"
     else
         koopa_alert_note "'${dict[cmd_path]}' already defined \
 in '${dict[etc_file]}'."
