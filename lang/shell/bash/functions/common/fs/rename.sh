@@ -21,7 +21,6 @@ koopa_rename_from_csv() { # {{{1
     return 0
 }
 
-# FIXME Need to test that this works recursively using 'koopa_find'.
 koopa_rename_lowercase() { # {{{1
     # """
     # Rename files to lowercase.

@@ -678,7 +678,6 @@ koopa_find_large_files() { # {{{1
     return 0
 }
 
-# FIXME Confirm that this works consistently between find and fd engines.
 koopa_find_non_symlinked_make_files() { # {{{1
     # """
     # Find non-symlinked make files.
