@@ -2448,12 +2448,6 @@ koopa_expr() { # {{{1
     # """
     # Quiet regular expression matching that is POSIX compliant.
     # @note Updated 2020-06-30.
-    #
-    # Avoid using '[[ =~ ]]' in sh config files.
-    # 'expr' is faster than using 'case'.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/21115121
     # """
     expr "${1:?}" : "${2:?}" 1>/dev/null
 }
