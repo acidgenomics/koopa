@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Can we add support for stdin here?
 koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-01.
     #
     # @seealso
     # - syntactic R package.
@@ -16,12 +15,17 @@ koopa_camel_case_simple() { # {{{1
     # > koopa_camel_case_simple 'hello world'
     # # helloWorld
     # """
-    local app str
-    koopa_assert_has_args "$#"
+    local app args str
     declare -A app=(
         [sed]="$(koopa_locate_sed)"
     )
-    for str in "$@"
+    if [[ "$#" -eq 0 ]]
+    then
+        args=("$(</dev/stdin)")
+    else
+        args=("$@")
+    fi
+    for str in "${args[@]}"
     do
         [[ -n "$str" ]] || return 1
         str="$( \
@@ -36,11 +40,10 @@ koopa_camel_case_simple() { # {{{1
     return 0
 }
 
-# FIXME Can we add support for stdin here?
 koopa_capitalize() { # {{{1
     # """
     # Capitalize the first letter (only) of a string.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-01.
     #
     # @seealso
     # - https://stackoverflow.com/a/12487465
@@ -51,12 +54,17 @@ koopa_capitalize() { # {{{1
     # > koopa_capitalize 'hello world' 'foo bar'
     # # 'Hello world' 'Foo bar'
     # """
-    local app str
-    koopa_assert_has_args "$#"
+    local app args str
     declare -A app=(
         [tr]="$(koopa_locate_tr)"
     )
-    for str in "$@"
+    if [[ "$#" -eq 0 ]]
+    then
+        args=("$(</dev/stdin)")
+    else
+        args=("$@")
+    fi
+    for str in "${args[@]}"
     do
         str="$("${app[tr]}" '[:lower:]' '[:upper:]' <<< "${str:0:1}")${str:1}"
         koopa_print "$str"
@@ -64,7 +72,6 @@ koopa_capitalize() { # {{{1
     return 0
 }
 
-# FIXME Can we add support for stdin here?
 koopa_gsub() { # {{{1
     # """
     # Global substitution.
@@ -80,11 +87,10 @@ koopa_gsub() { # {{{1
     koopa_sub --global "$@"
 }
 
-# FIXME Can we add support for stdin here?
 koopa_kebab_case_simple() { # {{{1
     # """
     # Simple snake case function.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-01.
     #
     # @seealso
     # - syntactic R package.
@@ -96,9 +102,14 @@ koopa_kebab_case_simple() { # {{{1
     # > koopa_kebab_case_simple 'bcbio-nextgen.py'
     # # bcbio-nextgen-py
     # """
-    local str
-    koopa_assert_has_args "$#"
-    for str in "$@"
+    local args str
+    if [[ "$#" -eq 0 ]]
+    then
+        args=("$(</dev/stdin)")
+    else
+        args=("$@")
+    fi
+    for str in "${args[@]}"
     do
         str="$(\
             koopa_gsub \
@@ -112,11 +123,10 @@ koopa_kebab_case_simple() { # {{{1
     return 0
 }
 
-# FIXME Can we add support for stdin here?
 koopa_lowercase() { # {{{1
     # """
     # Transform string to lowercase.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-01.
     #
     # awk alternative:
     # > koopa_print "$str" | "${app[awk]}" '{print tolower($0)}'
@@ -128,12 +138,18 @@ koopa_lowercase() { # {{{1
     # > koopa_lowercase 'HELLO WORLD'
     # # hello world
     # """
-    local app str
+    local app args str
     koopa_assert_has_args "$#"
     declare -A app=(
         [tr]="$(koopa_locate_tr)"
     )
-    for str in "$@"
+    if [[ "$#" -eq 0 ]]
+    then
+        args=("$(</dev/stdin)")
+    else
+        args=("$@")
+    fi
+    for str in "${args[@]}"
     do
         koopa_print "$str" \
             | "${app[tr]}" '[:upper:]' '[:lower:]'
@@ -202,11 +218,10 @@ koopa_paste0() { # {{{1
     koopa_paste --sep='' "$@"
 }
 
-# FIXME Can we add support for stdin here?
 koopa_snake_case_simple() { # {{{1
     # """
     # Simple snake case function.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-03-01.
     #
     # @seealso
     # - syntactic R package.
@@ -218,9 +233,14 @@ koopa_snake_case_simple() { # {{{1
     # > koopa_snake_case_simple 'bcbio-nextgen.py'
     # # bcbio_nextgen_py
     # """
-    local str
-    koopa_assert_has_args "$#"
-    for str in "$@"
+    local args str
+    if [[ "$#" -eq 0 ]]
+    then
+        args=("$(</dev/stdin)")
+    else
+        args=("$@")
+    fi
+    for str in "${args[@]}"
     do
         str="$( \
             koopa_gsub \
@@ -234,11 +254,10 @@ koopa_snake_case_simple() { # {{{1
     return 0
 }
 
-# FIXME Can we add support for stdin here?
 koopa_strip_left() { # {{{1
     # """
     # Strip pattern from left side (start) of string.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-01.
     #
     # @usage koopa_strip_left --pattern=PATTERN STRING...
     #
@@ -278,20 +297,18 @@ koopa_strip_left() { # {{{1
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    for str in "$@"
+    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    for str in "${pos[@]}"
     do
         printf '%s\n' "${str##"${dict[pattern]}"}"
     done
     return 0
 }
 
-# FIXME Can we add support for stdin here?
 koopa_strip_right() { # {{{1
     # """
     # Strip pattern from right side (end) of string.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-01.
     #
     # @usage koopa_strip_right --pattern=PATTERN STRING...
     #
@@ -331,20 +348,18 @@ koopa_strip_right() { # {{{1
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    for str in "$@"
+    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
+    for str in "${pos[@]}"
     do
         printf '%s\n' "${str%%"${dict[pattern]}"}"
     done
     return 0
 }
 
-# FIXME Can we add support for stdin here?
 koopa_strip_trailing_slash() { # {{{1
     # """
     # Strip trailing slash in file path string.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-01.
     #
     # Alternate approach using sed:
     # > sed 's/\/$//' <<< "$1"
@@ -356,16 +371,21 @@ koopa_strip_trailing_slash() { # {{{1
     # # ./dir1
     # # ./dir2
     # """
-    koopa_assert_has_args "$#"
-    koopa_strip_right --pattern='/' "$@"
+    local args
+    if [[ "$#" -eq 0 ]]
+    then
+        args=("$(</dev/stdin)")
+    else
+        args=("$@")
+    fi
+    koopa_strip_right --pattern='/' "${args[@]}"
     return 0
 }
 
-# FIXME Consider adding support for stdin here.
 koopa_sub() { # {{{1
     # """
     # Single substitution.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-01.
     #
     # @usage koopa_sub --pattern=PATTERN --replacement=REPLACEMENT STRING...
     #
@@ -422,10 +442,9 @@ koopa_sub() { # {{{1
         esac
     done
     koopa_assert_is_set '--pattern' "${dict[pattern]}"
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
+    [[ "${#pos[@]}" -eq 0 ]] && pos=("$(</dev/stdin)")
     [[ "${dict[global]}" -eq 1 ]] && dict[sed_tail]='g'
-    for str in "$@"
+    for str in "${pos[@]}"
     do
         koopa_print "$str" \
             | "${app[sed]}" \
@@ -449,11 +468,10 @@ koopa_to_string() { # {{{1
     return 0
 }
 
-# FIXME Can we add support for stdin here?
 koopa_trim_ws() { # {{{1
     # """
     # Trim leading and trailing white-space from string.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-01.
     #
     # This is an alternative to sed, awk, perl and other tools. The function
     # works by finding all leading and trailing white-space and removing it from
@@ -466,9 +484,14 @@ koopa_trim_ws() { # {{{1
     # # hello world
     # # foo bar
     # """
-    local str
-    koopa_assert_has_args "$#"
-    for str in "$@"
+    local args str
+    if [[ "$#" -eq 0 ]]
+    then
+        args=("$(</dev/stdin)")
+    else
+        args=("$@")
+    fi
+    for str in "${args[@]}"
     do
         str="${str#"${str%%[![:space:]]*}"}"
         str="${str%"${str##*[![:space:]]}"}"
