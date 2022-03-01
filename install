@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # """
 # koopa shell
 # https://koopa.acidgenomics.com/
 # Refer to 'LICENSE' file for terms of usage.
 # """
+
+set -o errexit  # -e
+set -o errtrace  # -E
+set -o nounset  # -u
+set -o pipefail
 
 usage() { # {{{1
     # """
@@ -67,10 +71,10 @@ stop() { # {{{1
 main() { # {{{1
     # """
     # Install koopa.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-03-01.
     # """
     case "${BASH_VERSION:-}" in
-        '1.'* | '2.'* | '3.'*)
+        [1-3].*)
             stop 'Bash 4+ is required.'
             ;;
     esac
