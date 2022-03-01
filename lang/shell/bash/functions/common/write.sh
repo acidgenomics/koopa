@@ -1,17 +1,45 @@
 #!/usr/bin/env bash
 
-# FIXME Require the user to use '--string' and '--file' flags here.
 koopa_append_string() { # {{{1
     # """
     # Append a string at end of file.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-03-01.
     # """
     local dict
-    koopa_assert_has_args_eq "$#" 2
+    koopa_assert_has_args "$#"
     declare -A dict=(
-        [string]="${1:?}"
-        [file]="${2:?}"
+        [file]=''
+        [string]=''
     )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key value pairs --------------------------------------------------
+            '--file='*)
+                dict[file]="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict[file]="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict[string]="${1#*=}"
+                shift 1
+                ;;
+            '--string')
+                dict[string]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--file' "${dict[file]}" \
+        '--string' "${dict[string]}"
     if [[ ! -f "${dict[file]}" ]]
     then
         koopa_mkdir "$(koopa_dirname "${dict[file]}")"
@@ -21,26 +49,54 @@ koopa_append_string() { # {{{1
     return 0
 }
 
-# FIXME Require the user to use '--string' and '--file' flags here.
 koopa_sudo_append_string() { # {{{1
     # """
     # Append a string at end of file as root user.
-    # @note Updated 2022-02-01.
+    # @note Updated 2022-03-01.
     #
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' >> '${file}'"
     # """
     local app dict
-    koopa_assert_has_args_eq "$#" 2
+    koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
     declare -A dict=(
-        [string]="${1:?}"
-        [file]="${2:?}"
+        [file]=''
+        [string]=''
     )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key value pairs --------------------------------------------------
+            '--file='*)
+                dict[file]="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict[file]="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict[string]="${1#*=}"
+                shift 1
+                ;;
+            '--string')
+                dict[string]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--file' "${dict[file]}" \
+        '--string' "${dict[string]}"
     if [[ ! -f "${dict[file]}" ]]
     then
         koopa_mkdir --sudo "$(koopa_dirname "${dict[file]}")"
@@ -51,7 +107,6 @@ koopa_sudo_append_string() { # {{{1
     return 0
 }
 
-# FIXME Require the user to use '--string' and '--file' flags here.
 koopa_sudo_write_string() { # {{{1
     # """
     # Write a string to disk using root user.
@@ -61,16 +116,45 @@ koopa_sudo_write_string() { # {{{1
     # > sudo sh -c "printf '%s\n' '$string' > '${file}'"
     # """
     local app dict
-    koopa_assert_has_args_eq "$#" 2
+    koopa_assert_has_args "$#"
     koopa_assert_is_admin
     declare -A app=(
         [sudo]="$(koopa_locate_sudo)"
         [tee]="$(koopa_locate_tee)"
     )
     declare -A dict=(
-        [string]="${1:?}"
-        [file]="${2:?}"
+        [file]=''
+        [string]=''
     )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key value pairs --------------------------------------------------
+            '--file='*)
+                dict[file]="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict[file]="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict[string]="${1#*=}"
+                shift 1
+                ;;
+            '--string')
+                dict[string]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--file' "${dict[file]}" \
+        '--string' "${dict[string]}"
     dict[parent_dir]="$(koopa_dirname "${dict[file]}")"
     if [[ ! -d "${dict[parent_dir]}" ]]
     then
@@ -81,19 +165,51 @@ koopa_sudo_write_string() { # {{{1
     return 0
 }
 
-# FIXME Require the user to use '--string' and '--file' flags here.
 koopa_write_string() { # {{{1
     # """
     # Write a string to disk.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-03-01.
     # """
     local dict
-    koopa_assert_has_args_eq "$#" 2
+    koopa_assert_has_args "$#"
     declare -A dict=(
-        [string]="${1:?}"
-        [file]="${2:?}"
+        [file]=''
+        [string]=''
     )
-    koopa_mkdir "$(koopa_dirname "${dict[file]}")"
+    while (("$#"))
+    do
+        case "$1" in
+            # Key value pairs --------------------------------------------------
+            '--file='*)
+                dict[file]="${1#*=}"
+                shift 1
+                ;;
+            '--file')
+                dict[file]="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict[string]="${1#*=}"
+                shift 1
+                ;;
+            '--string')
+                dict[string]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--file' "${dict[file]}" \
+        '--string' "${dict[string]}"
+    dict[parent_dir]="$(koopa_dirname "${dict[file]}")"
+    if [[ ! -d "${dict[parent_dir]}" ]]
+    then
+        koopa_mkdir "${dict[parent_dir]}"
+    fi
     koopa_print "${dict[string]}" > "${dict[file]}"
     return 0
 }
