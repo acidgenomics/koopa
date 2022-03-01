@@ -49,6 +49,10 @@ koopa_macos_locate_mas() { # {{{1
     koopa_locate_app 'mas'
 }
 
+koopa_macos_locate_mount_nfs() { # {{{1
+    koopa_locate_app '/sbin/mount_nfs'
+}
+
 koopa_macos_locate_nfsstat() { # {{{1
     koopa_locate_app '/usr/bin/nfsstat'
 }
