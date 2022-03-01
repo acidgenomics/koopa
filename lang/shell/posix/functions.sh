@@ -264,6 +264,29 @@ koopa_activate_aspera_connect() { # {{{1
     koopa_activate_prefix "$(koopa_aspera_connect_prefix)"
 }
 
+koopa_activate_bat() { # {{{1
+    # """
+    # Activate bat configuration.
+    # @note Updated 2022-03-01.
+    # """
+    local conf_file dotfiles_prefix
+    dotfiles_prefix="$(koopa_dotfiles_prefix)"
+    conf_file="${dotfiles_prefix}/app/bat/config"
+    if koopa_is_macos
+    then
+        if koopa_macos_is_dark_mode
+        then
+            conf_file="${conf_file}-dark"
+        elif koopa_macos_is_light_mode
+        then
+            conf_file="${conf_file}-light"
+        fi
+    fi
+    [ -f "$conf_file" ] || return 0
+    export BAT_CONFIG_PATH="$conf_file"
+    return 0
+}
+
 koopa_activate_bcbio_nextgen() { # {{{1
     # """
     # Activate bcbio-nextgen tool binaries.
@@ -746,9 +769,12 @@ koopa_activate_koopa_paths() { # {{{1
 koopa_activate_lesspipe() { # {{{1
     # """
     # Activate lesspipe.
-    # @note Updated 2022-02-27.
+    # @note Updated 2022-03-01.
+    #
+    # Preferentially uses 'bat' when installed.
     #
     # @seealso
+    # - man lesspipe
     # - https://github.com/wofr06/lesspipe/
     # - https://manned.org/lesspipe/
     # - https://superuser.com/questions/117841/
@@ -3385,32 +3411,6 @@ koopa_macos_activate_gpg_suite() { # {{{1
     return 0
 }
 
-koopa_macos_activate_iterm() { # {{{1
-    # """
-    # Activate iTerm2 configuration.
-    # @note Updated 2022-02-10.
-    #
-    # Only attempt to dynamically set dark/light theme if the current iTerm2
-    # theme is named either 'dark' or 'light'.
-    #
-    # @seealso
-    # - https://apas.gr/2018/11/dark-mode-macos-safari-iterm-vim/
-    # """
-    local iterm_theme koopa_theme
-    [ "${TERM_PROGRAM:-}" = 'iTerm.app' ] || return 0
-    iterm_theme="${ITERM_PROFILE:-}"
-    koopa_theme="${KOOPA_COLOR_MODE:-}"
-    [ -n "$koopa_theme" ] || return 0
-    if [ "$iterm_theme" != "$koopa_theme" ] && \
-        { [ "$iterm_theme" = 'dark' ] || [ "$iterm_theme" = 'light' ]; }
-    then
-        koopa_print "\033]50;SetProfile=${koopa_theme}\a"
-        ITERM_PROFILE="$koopa_theme"
-    fi
-    export ITERM_PROFILE
-    return 0
-}
-
 koopa_macos_activate_r() { # {{{1
     # """
     # Activate R on macOS.
@@ -3436,16 +3436,20 @@ koopa_macos_activate_visual_studio_code() { # {{{1
 koopa_macos_color_mode() { # {{{1
     # """
     # macOS color mode (dark/light) value.
-    # @note Updated 2021-05-07.
+    # @note Updated 2022-03-01.
     # """
-    local x
-    if koopa_macos_is_dark_mode
+    local str
+    str="${KOOPA_COLOR_MODE:-}"
+    if [ -z "$str" ]
     then
-        x='dark'
-    else
-        x='light'
+        if koopa_macos_is_dark_mode
+        then
+            str='dark'
+        else
+            str='light'
+        fi
     fi
-    koopa_print "$x"
+    koopa_print "$str"
 }
 
 koopa_macos_gfortran_prefix() { # {{{1
