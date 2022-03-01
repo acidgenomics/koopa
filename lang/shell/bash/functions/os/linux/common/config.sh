@@ -29,7 +29,9 @@ koopa_linux_add_user_to_etc_passwd() { # {{{1
         koopa_alert "Updating '${dict[passwd_file]}' to \
 include '${dict[user]}'."
         dict[user_string]="$(getent passwd "${dict[user]}")"
-        koopa_sudo_append_string "${dict[user_string]}" "${dict[passwd_file]}"
+        koopa_sudo_append_string \
+            --file="${dict[passwd_file]}" \
+            --string="${dict[user_string]}"
     else
         koopa_alert_note "'${dict[user]}' already defined \
 in '${dict[passwd_file]}'."
@@ -127,7 +129,9 @@ __koopa_activate_shared_profile() { # {{{1
 
 __koopa_activate_shared_profile
 END
-    koopa_sudo_write_string "${dict[string]}" "${dict[file]}"
+    koopa_sudo_write_string \
+        --file="${dict[file]}" \
+        --string="${dict[string]}"
 }
 
 koopa_linux_update_ldconfig() { # {{{1

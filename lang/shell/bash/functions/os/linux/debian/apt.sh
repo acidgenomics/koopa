@@ -273,7 +273,9 @@ ${dict[url]} ${dict[distribution]} ${components[*]}"
         return 0
     fi
     koopa_alert "Adding ${dict[name_fancy]} repo at '${dict[file]}'."
-    koopa_sudo_write_string "${dict[string]}" "${dict[file]}"
+    koopa_sudo_write_string \
+        --file="${dict[file]}" \
+        --string="${dict[string]}"
     return 0
 }
 
