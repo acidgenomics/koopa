@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# S3 API programmatic access examples:
+# > aws s3api list-buckets --output 'json'
+# > aws s3api list-objects --output 'json' --bucket 'koopa.acidgenomics.com'
+
 # FIXME Ensure that all input consistently requires 's3://' as prefix input.
 # FIXME Ensure that this is consistent for CLI parser to JSON...bucket API one
 
@@ -269,6 +273,9 @@ koopa_aws_s3_find() { # {{{1
     # Find files in an AWS S3 bucket.
     #
     # @note Updated 2022-03-01.
+    #
+    # This uses regular expression matching against the full path for
+    # '--exclude' and '--include', instead of globbing.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
@@ -793,11 +800,6 @@ koopa_aws_s3_mv_to_parent() { # {{{1
     return 0
 }
 
-# FIXME Better programmatic access example:
-# > aws s3api list-buckets --output 'json'
-# > aws s3api list-objects \
-# >     --output 'json' \
-# >     --bucket 'koopa.acidgenomics.com'
 # FIXME Exclusion of directories isn't working correctly.
 # FIXME Need to add a mode that excludes all files that are under git in a
 # current directory. This will help avoid duplication of source code.
@@ -810,11 +812,13 @@ koopa_aws_s3_mv_to_parent() { # {{{1
 # FIXME This needs to support '--exclude' and '--include' more intuitively.
 # FIXME If '--exclude=*' is set, we need to rethink our default exclude flags.
 # FIXME Don't allow positional arguments here.
+# FIXME Exclude uses glob matching here, whereas our find pattern uses regex...
+# FIXME Improve this to automatically exclude files under git!
 
 koopa_aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
-    # @note Updated 2021-11-05.
+    # @note Updated 2022-03-01.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
