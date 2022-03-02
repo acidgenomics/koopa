@@ -280,7 +280,7 @@ pkg-config="0.29.2"
 poetry="1.1.13"
 
 # https://proj.org/
-proj="8.2.1"
+proj="9.0.0"
 
 # https://github.com/pyenv/pyenv
 pyenv="2.2.4"
