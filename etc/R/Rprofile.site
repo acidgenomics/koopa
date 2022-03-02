@@ -372,7 +372,7 @@ local({  # nolint
     ## can be printed through the function warnings. If warn is 1, warnings are
     ## printed as they occur. If warn is 2 or larger, all warnings are turned
     ## into errors.
-    options("warn" = 2L)
+    options("warn" = 1L)
 
     ## Improve the verbosity of errors and/or warnings.
     options(
