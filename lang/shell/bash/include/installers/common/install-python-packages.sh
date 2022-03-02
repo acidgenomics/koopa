@@ -1,26 +1,25 @@
 #!/usr/bin/env bash
 
+# FIXME pip3 is currently returning 21.2.4 even though 22.0.3 is installed.
+# Python package management is seriously annoying...
+
 install_python_packages() { # {{{1
     # """
     # Install Python packages.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-03-02.
     # """
     local app pkgs
     koopa_assert_has_no_args "$#"
     declare -A app=(
         [brew]="$(koopa_locate_brew 2>/dev/null || true)"
     )
-    # Install essential defaults first.
+    # Always install essential defaults.
     pkgs=(
         'pip'
         'setuptools'
         'wheel'
     )
-    readarray -t pkgs <<< "$(koopa_python_get_pkg_versions "${pkgs[@]}")"
-    koopa_alert_info 'Ensuring essential defaults are version pinned.'
-    koopa_python_pip_install "${pkgs[@]}"
-    # Now we can install additional recommended extras.
-    pkgs=('pipx')
+    pkgs+=('pipx')
     if [[ ! -x "${app[brew]}" ]]
     then
         pkgs+=(
