@@ -546,7 +546,7 @@ koopa_git_remote_url() { # {{{1
 koopa_git_rename_master_to_main() { # {{{1
     # """
     # Rename default branch from "master" to "main".
-    # @note Updated 2021-11-23.
+    # @note Updated 2022-03-03.
     #
     # @examples
     # > koopa_git_rename_master_to_main "${HOME}/git/example"
@@ -571,14 +571,18 @@ koopa_git_rename_master_to_main() { # {{{1
         do
             koopa_cd "$repo"
             koopa_assert_is_git_repo
-            "${app[git]}" branch -m \
+            "${app[git]}" branch --move \
                 "${dict[old_branch]}" \
                 "${dict[new_branch]}"
+            "${app[git]}" switch "${dict[new_branch]}"
             "${app[git]}" fetch "${dict[origin]}"
             "${app[git]}" branch \
-                -u "${dict[origin]}/${dict[new_branch]}" \
+                --set-upstream-to="${dict[origin]}/${dict[new_branch]}" \
                 "${dict[new_branch]}"
-            "${app[git]}" remote set-head "${dict[origin]}" -a
+            "${app[git]}" remote set-head "${dict[origin]}" --auto
+            "${app[git]}" push --set-upstream \
+                "${dict[origin]}" \
+                "${dict[new_branch]}"
         done
     )
     return 0
