@@ -332,9 +332,6 @@ koopa_cli_nested_runner() { # {{{1
             shift 2
             ;;
     esac
-
-    koopa_warn "FIXME ${dict[runner]}-${dict[key]}"
-
     koopa_print "${dict[runner]}-${dict[key]}" "$@"
     return 0
 }
@@ -610,7 +607,8 @@ koopa_koopa() { # {{{1
     if [[ "${dict[nested_runner]}"  -eq 1 ]]
     then
         local pos
-        dict[fun]="koopa_${dict[key]//-/_}"
+
+        dict[fun]="$(koopa_which_function "${dict[key]}")"
         koopa_assert_is_function "${dict[fun]}"
         readarray -t pos <<< "$("${dict[fun]}" "$@")"
         dict[key]="${pos[0]}"
