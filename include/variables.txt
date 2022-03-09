@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.22"
+aws-cli="2.4.23"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.34.1"
@@ -86,7 +86,7 @@ cellranger="6.1.2"  # 2021-10-25
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.22.2"
+cmake="3.22.3"
 
 # https://repo.anaconda.com/miniconda/
 conda="4.11.0"  # 2022-02-15
@@ -98,7 +98,7 @@ coreutils="9.0"
 cpufetch="0.97"
 
 # https://curl.haxx.se/
-curl="7.81.0"
+curl="7.82.0"
 
 # https://docs.docker.com/install/
 docker="20.10.8"
@@ -144,7 +144,7 @@ git="2.35.1"
 gnupg="2.3.4"
 
 # https://golang.org/dl/
-go="1.17.6"
+go="1.17.8"
 
 # https://cloud.google.com/sdk/docs/install
 google-cloud-sdk="372.0.0"
@@ -176,7 +176,7 @@ htop="3.1.2"
 icu="70.1"
 
 # https://imagemagick.org/
-imagemagick="7.1.0-26"
+imagemagick="7.1.0-27"
 
 # https://github.com/stedolan/jq/releases
 jq="1.6"
@@ -384,7 +384,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4450"
+vim="8.2.4500"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.3"
@@ -528,7 +528,7 @@ node-prettier="2.5.1"               # 2021-12-04
 # - pip2p
 # - pipx
 
-python-pip="22.0.3"             # default; system
+python-pip="22.0.4"             # default; system
 python-setuptools="60.9.3"      # default; system
 python-wheel="0.37.1"           # default; system
 
@@ -566,7 +566,7 @@ rust-dog="0.1.0"                # homebrew
 rust-du-dust="0.8.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
 rust-fd-find="8.3.2"            # homebrew; fd
-rust-hyperfine="1.12.0"         # homebrew
+rust-hyperfine="1.13.0"         # homebrew
 rust-mcfly="0.5.13"             # homebrew
 rust-procs="0.12.1"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga

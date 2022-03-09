@@ -688,6 +688,24 @@ koopa_perl_file_rename_version() { # {{{1
     return 0
 }
 
+koopa_pip_version() { # {{{1
+    # """
+    # Python pip version.
+    # @note Updated 2022-03-09.
+    # """
+    local app str
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [python]="$(koopa_locate_python)"
+    )
+    str="$("${app[python]}" -m pip --version)"
+    [[ -n "$str" ]] || return 1
+    str="$(koopa_extract_version "$str")"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}
+
 koopa_r_package_version() { # {{{1
     # """
     # R package version.
