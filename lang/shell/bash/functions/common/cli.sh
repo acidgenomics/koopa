@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME 'koopa install base-system' isn't working...need to debug.
+
 koopa_cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
@@ -515,6 +517,7 @@ koopa_koopa() { # {{{1
         'uninstall' | \
         'update')
             dict[nested_runner]=1
+            koopa_warn "FIXME ${1}"
             dict[key]="cli-${1}"
             shift 1
             ;;
