@@ -730,7 +730,6 @@ koopa_warn_if_export() { # {{{1
     return 0
 }
 
-# FIXME This is failing to locate platform-specific 'install-base-system'.
 koopa_which_function() { # {{{1
     # """
     # Locate a koopa function automatically.
@@ -770,7 +769,6 @@ koopa_which_function() { # {{{1
     else
         dict[fun]="koopa_${dict[key]}"
     fi
-    koopa_warn "FIXME ${dict[fun]}"
     koopa_is_function "${dict[fun]}" || return 1
     koopa_print "${dict[fun]}"
     return 0
