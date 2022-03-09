@@ -686,7 +686,7 @@ koopa_debian_apt_clean() { # {{{1
 koopa_debian_apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
-    # @note Updated 2021-11-05.
+    # @note Updated 2022-03-09.
     #
     # Look up currently enabled sources with:
     # > grep -Eq '^deb\s' '/etc/apt/sources.list'
@@ -795,7 +795,7 @@ koopa_debian_apt_configure_sources() { # {{{1
         [security]="$( \
             koopa_grep \
                 --extended-regexp \
-                --file"${dict[sources_list]}" \
+                --file="${dict[sources_list]}" \
                 --pattern='^deb\s' \
             | koopa_grep \
                 --fixed-strings \
