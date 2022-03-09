@@ -9,9 +9,7 @@ koopa_debian_install_azure_cli() { # {{{1
         "$@"
 }
 
-# FIXME This isn't working.
 koopa_debian_install_base_system() { # {{{1
-    set -x  # FIXME
     koopa_install_app \
         --name-fancy='Debian base system' \
         --name='base-system' \
