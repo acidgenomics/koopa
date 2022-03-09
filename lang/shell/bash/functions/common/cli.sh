@@ -611,7 +611,6 @@ koopa_koopa() { # {{{1
         koopa_assert_is_function "${dict[fun]}"
         readarray -t pos <<< "$("${dict[fun]}" "$@")"
         dict[key]="${pos[0]}"
-        koopa_warn "FIXME ${dict[key]}"
         unset "pos[0]"
         if koopa_is_array_non_empty "${pos[@]:-}"
         then
@@ -627,6 +626,7 @@ koopa_koopa() { # {{{1
             koopa_help "$(koopa_man_prefix)/man1/${dict[key]}.1"
             ;;
     esac
+    # FIXME This is failing to locate 'install-base-system' on Ubuntu.
     dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
     if ! koopa_is_function "${dict[fun]}"
     then
