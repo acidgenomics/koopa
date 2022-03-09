@@ -607,8 +607,8 @@ koopa_koopa() { # {{{1
     if [[ "${dict[nested_runner]}"  -eq 1 ]]
     then
         local pos
-
         dict[fun]="$(koopa_which_function "${dict[key]}")"
+        koopa_warn "FIXME ${dict[fun]}"
         koopa_assert_is_function "${dict[fun]}"
         readarray -t pos <<< "$("${dict[fun]}" "$@")"
         dict[key]="${pos[0]}"
