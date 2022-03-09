@@ -424,7 +424,7 @@ koopa_script_name() { # {{{1
 koopa_variable() { # {{{1
     # """
     # Return a variable stored 'variables.txt' include file.
-    # @note Updated 2022-02-09.
+    # @note Updated 2022-03-09.
     #
     # This approach handles inline comments.
     # """
@@ -446,8 +446,8 @@ koopa_variable() { # {{{1
             --file="${dict[file]}" \
             --only-matching \
             --pattern="^${dict[key]}=\"[^\"]+\"" \
-        || koopa_stop "'${dict[key]}' not defined in '${dict[file]}'." \
     )"
+    [[ -n "${dict[str]}" ]] || return 1
     dict[str]="$( \
         koopa_print "${dict[str]}" \
             | "${app[head]}" --lines=1 \
