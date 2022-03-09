@@ -3,7 +3,7 @@
 koopa_debian_set_locale() { # {{{1
     # """
     # Set locale to English US UTF-8.
-    # @note Updated 2021-11-02.
+    # @note Updated 2022-03-09.
     #
     # Refer to '/usr/share/i18n/SUPPORTED' for supported locales.
     #
@@ -32,8 +32,8 @@ koopa_debian_set_locale() { # {{{1
     dict[lang_string]="${dict[lang]}_${dict[country]}.${dict[charset]}"
     koopa_alert "Setting locale to '${dict[lang_string]}'."
     koopa_sudo_write_string \
-        "${dict[lang_string]} ${dict[charset]}" \
-        "${dict[locale_file]}"
+        --file="${dict[locale_file]}" \
+        --string="${dict[lang_string]} ${dict[charset]}"
     "${app[sudo]}" "${app[locale_gen]}" --purge
     "${app[sudo]}" "${app[dpkg_reconfigure]}" \
         --frontend='noninteractive' \
