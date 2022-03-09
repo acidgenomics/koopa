@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Need to ensure 0775 permissions on coc packages:
+    /opt/koopa/app/dotfiles/rolling/app/coc/extensions/node_modules
 ** TODO Add improved stack trace of error messages.
 ** TODO Before pushing changes, ensure sed with '--quiet' change is non breaking.
 ** TODO Syntactic naming functions need an option to also convert the extension to lowercase.
