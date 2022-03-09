@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-03-03"
+koopa-date="2022-03-07"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -319,8 +319,7 @@ rstudio-workbench="2022.02.0+443.pro2"
 ruby="3.1.1p18"
 
 # https://www.rust-lang.org/
-# Use 'koopa update rust' to resolve.
-rust="1.58.1"
+rust="1.59.0"
 
 # https://rustup.rs/
 rustup="1.24.3"

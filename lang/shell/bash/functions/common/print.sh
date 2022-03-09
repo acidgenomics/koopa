@@ -46,7 +46,7 @@ __koopa_h() { # {{{1
 __koopa_alert_process_start() { # {{{1
     # """
     # Inform the user about the start of a process.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-03-09.
     # """
     local dict
     declare -A dict
@@ -66,13 +66,13 @@ __koopa_alert_process_start() { # {{{1
     fi
     if [[ -n "${dict[prefix]}" ]] && [[ -n "${dict[version]}" ]]
     then
-        dict[out]="${dict[word]} ${dict[name]} ${dict[version]} \
+        dict[out]="${dict[word]} '${dict[name]}' ${dict[version]} \
 at '${dict[prefix]}'."
     elif [[ -n "${dict[prefix]}" ]]
     then
-        dict[out]="${dict[word]} ${dict[name]} at '${dict[prefix]}'."
+        dict[out]="${dict[word]} '${dict[name]}' at '${dict[prefix]}'."
     else
-        dict[out]="${dict[word]} ${dict[name]}."
+        dict[out]="${dict[word]} '${dict[name]}'."
     fi
     koopa_h1 "${dict[out]}"
     return 0
@@ -81,7 +81,7 @@ at '${dict[prefix]}'."
 __koopa_alert_process_success() { # {{{1
     # """
     # Inform the user about the successful completion of a process.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-03-09.
     # """
     local dict
     declare -A dict
@@ -92,10 +92,10 @@ __koopa_alert_process_success() { # {{{1
     dict[prefix]="${2:-}"
     if [[ -n "${dict[prefix]}" ]]
     then
-        dict[out]="${dict[word]} of ${dict[name]} at '${dict[prefix]}' \
+        dict[out]="${dict[word]} of '${dict[name]}' at '${dict[prefix]}' \
 was successful."
     else
-        dict[out]="${dict[word]} of ${dict[name]} was successful."
+        dict[out]="${dict[word]} of '${dict[name]}' was successful."
     fi
     koopa_alert_success "${dict[out]}"
     return 0
