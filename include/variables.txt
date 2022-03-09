@@ -470,7 +470,7 @@ conda-ribocode="1.2.13"         # 2021-12-30 bioconda                  [riboseq]
 conda-ribodiff="0.2.2"          # 2019-10-27 bioconda                  [riboseq]
 conda-ribotaper="1.3.1"         # 2020-07-13 bioconda linux            [riboseq]
 conda-rsem="1.3.3"              # 2020-07-26 bioconda                 [aligners]
-conda-salmon="1.7.0"            # 2022-02-16 bioconda                   [rnaseq]
+conda-salmon="1.8.0"            # 2022-03-08 bioconda                   [rnaseq]
 conda-sambamba="0.8.0"          # 2021-01-02 bioconda             [file formats]
 conda-samblaster="0.1.26"       # 2021-03-26 bioconda             [file formats]
 # NOTE 1.15 release but not yet on bioconda.
