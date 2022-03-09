@@ -332,6 +332,9 @@ koopa_cli_nested_runner() { # {{{1
             shift 2
             ;;
     esac
+
+    koopa_warn "FIXME ${dict[runner]}-${dict[key]}"
+
     koopa_print "${dict[runner]}-${dict[key]}" "$@"
     return 0
 }
@@ -517,7 +520,6 @@ koopa_koopa() { # {{{1
         'uninstall' | \
         'update')
             dict[nested_runner]=1
-            koopa_warn "FIXME ${1}"
             dict[key]="cli-${1}"
             shift 1
             ;;
