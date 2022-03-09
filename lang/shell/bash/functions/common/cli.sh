@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME 'koopa install base-system' isn't working...need to debug.
-
 koopa_cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
@@ -469,11 +467,12 @@ koopa_cli_uninstall() { # {{{1
 koopa_cli_update() { # {{{1
     # """
     # Parse user input to 'koopa update'.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-03-09.
     #
     # @examples
     # > koopa_cli_update 'dotfiles'
     # """
+    [[ "$#" -eq 0 ]] && set -- 'koopa'
     koopa_cli_nested_runner 'update' "$@"
 }
 
