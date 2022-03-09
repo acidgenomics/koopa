@@ -6,6 +6,7 @@
 ** TODO Add improved stack trace of error messages.
 ** TODO Before pushing changes, ensure sed with '--quiet' change is non breaking.
 ** TODO Syntactic naming functions need an option to also convert the extension to lowercase.
+** TODO Update of Bash via Homebrew will cause current session to exit.
 ** TODO Shared install isn't setting user permissions recursively correctly.
     Need to ensure that '/opt/koopa' isn't owned by current user after install.
     We're seeing this currently on AWS EC2 instances.
