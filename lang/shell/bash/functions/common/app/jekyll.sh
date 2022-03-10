@@ -3,13 +3,14 @@
 koopa_jekyll_deploy_to_aws() { # {{{1
     # """
     # Deploy Jekyll website to AWS S3 and CloudFront.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-03-10.
     # """
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
         [bundle]="$(koopa_locate_bundle)"
+        [yes]="$(koopa_locate_yes)"
     )
     declare -A dict=(
         [bucket_prefix]=''
@@ -69,11 +70,11 @@ koopa_jekyll_deploy_to_aws() { # {{{1
     koopa_aws_s3_sync --profile="${dict[profile]}" \
         "${dict[local_prefix]}/" \
         "${dict[bucket_prefix]}/"
-    "${app[aws]}" --profile="${dict[profile]}" \
+    # Using 'yes' here to avoid pager invocation.
+    "${app[yes]}" | "${app[aws]}" --profile="${dict[profile]}" \
         cloudfront create-invalidation \
             --distribution-id="${dict[distribution_id]}" \
-            --paths '/' \
-            >/dev/null
+            --paths '/'
     [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
     return 0
 }

@@ -329,7 +329,7 @@ koopa_fix_zsh_permissions() { # {{{1
 koopa_link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-03-10.
     # """
     local dict pos
     koopa_assert_has_args "$#"
@@ -409,20 +409,19 @@ koopa_link_dotfile() { # {{{1
         dict[symlink_basename]=".${dict[symlink_basename]}"
     fi
     dict[symlink_path]="${dict[symlink_prefix]}/${dict[symlink_basename]}"
-    # Inform the user when nuking a broken symlink.
     if [[ "${dict[overwrite]}" -eq 1 ]] ||
         { [[ -L "${dict[symlink_path]}" ]] && \
             [[ ! -e "${dict[symlink_path]}" ]]; }
     then
         koopa_rm "${dict[symlink_path]}"
-    elif [[ -e "${dict[symlink_path]}" ]]
-    then
-        koopa_stop "Existing dotfile: '${dict[symlink_path]}'."
     fi
-
+    if [[ -e "${dict[symlink_path]}" ]] && \
+        [[ ! -L "${dict[symlink_path]}" ]]
+    then
+        koopa_stop "Exists and not symlink: '${dict[symlink_path]}'."
+    fi
     koopa_alert "Linking dotfile from '${dict[source_path]}' \
 to '${dict[symlink_path]}'."
-    # Create the parent directory, if necessary.
     dict[symlink_dirname]="$(koopa_dirname "${dict[symlink_path]}")"
     if [[ "${dict[symlink_dirname]}" != "${HOME:?}" ]]
     then
