@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-03-09.
+#' @note Updated 2022-03-10.
 #'
 #' @section Restarting R:
 #'
@@ -326,17 +326,16 @@ local({  # nolint
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
 
-    ## Attach BiocManager automatically.
-    ## > if (isTRUE(flag[["interactive"]])) {
-    ## >     if (isInstalled("BiocManager")) {
-    ## >         options(
-    ## >             defaultPackages = c(
-    ## >                 getOption("defaultPackages"),
-    ## >                 "BiocManager"
-    ## >             )
-    ## >         )
-    ## >     }
-    ## > }
+    if (isTRUE(flag[["interactive"]])) {
+        if (isInstalled("AcidDevTools")) {
+            options(
+                "defaultPackages" = c(
+                    getOption("defaultPackages"),
+                    "AcidDevTools"
+                )
+            )
+        }
+    }
 
     ## Console and interface {{{2
     ## -------------------------------------------------------------------------
@@ -510,6 +509,22 @@ local({  # nolint
         options(
             "Ncpus" = cores,
             "mc.cores" = cores
+        )
+    }
+
+    if (isInstalled("pipette")) {
+        ## Ensure we load and save RDS files from a nested dated directory
+        ## by default.
+        options(
+            "acid.save.ext" = "rds"
+        )
+        options(
+            "acid.save.dir" = file.path(
+                getOption("acid.save.ext"), Sys.Date()
+            )
+        )
+        options(
+            "acid.load.dir" = getOption("acid.save.dir")
         )
     }
 
