@@ -418,7 +418,8 @@ koopa_link_dotfile() { # {{{1
     if [[ -e "${dict[symlink_path]}" ]] && \
         [[ ! -L "${dict[symlink_path]}" ]]
     then
-        koopa_stop "Exists and not symlink: '${dict[symlink_path]}'."
+        koopa_warn "Exists and not symlink: '${dict[symlink_path]}'."
+        return 0
     fi
     koopa_alert "Linking dotfile from '${dict[source_path]}' \
 to '${dict[symlink_path]}'."
