@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-03-09"
+koopa-date="2022-03-10"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.23"
+aws-cli="2.4.24"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.34.1"
@@ -166,7 +166,7 @@ harfbuzz="4.0.0"
 hdf5="1.13.0"
 
 # https://brew.sh/
-homebrew="3.4.0"
+homebrew="3.4.1"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -497,7 +497,7 @@ conda-visidata="2.8"            # 2022-01-13 conda-forge          [file formats]
 # Homebrew cask versions {{{1
 # ==============================================================================
 
-homebrew-cask-gpg-suite="2021.3"
+homebrew-cask-gpg-suite="2022.1"
 
 # Nim (Nimble) packages {{{1
 # ==============================================================================
@@ -571,7 +571,7 @@ rust-mcfly="0.5.13"             # homebrew
 rust-procs="0.12.1"             # homebrew
 rust-ripgrep-all="0.9.6"        # homebrew; rga
 rust-ripgrep="13.0.0"           # homebrew; rg
-rust-starship="1.4.0"           # homebrew
+rust-starship="1.4.2"           # homebrew
 rust-tealdeer="1.5.0"           # homebrew; tldr
 rust-tokei="12.1.2"             # homebrew
 rust-xsv="0.13.0"               # homebrew
