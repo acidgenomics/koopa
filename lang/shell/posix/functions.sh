@@ -3,7 +3,7 @@
 __koopa_add_to_path_string_end() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-03-11.
     # """
     local dir str
     str="${1:-}"
@@ -12,7 +12,12 @@ __koopa_add_to_path_string_end() { # {{{1
     then
         str="$(__koopa_remove_from_path_string "$str" "$dir")"
     fi
-    str="${str}:${dir}"
+    if [ -z "$str" ]
+    then
+        str="$dir"
+    else
+        str="${str}:${dir}"
+    fi
     koopa_print "$str"
     return 0
 }
@@ -20,7 +25,7 @@ __koopa_add_to_path_string_end() { # {{{1
 __koopa_add_to_path_string_start() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
-    # @note Updated 2022-02-25.
+    # @note Updated 2022-03-11.
     # """
     local dir str
     str="${1:-}"
@@ -29,7 +34,12 @@ __koopa_add_to_path_string_start() { # {{{1
     then
         str="$(__koopa_remove_from_path_string "$str" "$dir")"
     fi
-    str="${dir}:${str}"
+    if [ -z "$str" ]
+    then
+        str="$dir"
+    else
+        str="${dir}:${str}"
+    fi
     koopa_print "$str"
     return 0
 }
@@ -1121,8 +1131,8 @@ koopa_activate_pyenv() { # {{{1
 
 koopa_activate_python() { # {{{1
     # """
-    # Activate Python.
-    # @note Updated 2021-10-27.
+    # Activate Python, including custom installed packages.
+    # @note Updated 2022-03-11.
     #
     # Configures:
     # - Site packages library.
@@ -1131,19 +1141,31 @@ koopa_activate_python() { # {{{1
     # This ensures that 'bin' will be added to PATH, which is useful when
     # installing via pip with '--target' flag.
     #
+    # Check path configuration with:
+    # > python3 -c "import sys; print('\n'.join(sys.path))"
+    #
+    # Check which pip with:
+    # > python3 -m pip show pip
+    #
     # @seealso
+    # - https://docs.python.org/3/tutorial/modules.html#the-module-search-path
     # - https://stackoverflow.com/questions/33683744/
     # - https://twitter.com/sadhlife/status/1450459992419622920
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # """
-    local prefix startup_file
+    local prefix prefix_real startup_file
     if koopa_is_macos
     then
         prefix="$(koopa_macos_python_prefix)"
         koopa_activate_prefix "$prefix"
     fi
     prefix="$(koopa_python_packages_prefix)"
-    koopa_activate_prefix "$prefix"
+    if [ -d "$prefix" ]
+    then
+        koopa_activate_prefix "$prefix"
+        prefix_real="$(koopa_realpath "$prefix")"
+        koopa_add_to_pythonpath_start "$prefix_real"
+    fi
     if [ -z "${PIP_REQUIRE_VIRTUALENV:-}" ]
     then
         export PIP_REQUIRE_VIRTUALENV='true'
@@ -1670,6 +1692,38 @@ koopa_add_to_pkg_config_path_start_2() { # {{{1
         )"
     done
     export PKG_CONFIG_PATH
+    return 0
+}
+
+koopa_add_to_pythonpath_end() { # {{{1
+    # """
+    # Force add to 'PYTHONPATH' end.
+    # @note Updated 2022-03-11.
+    # """
+    local dir
+    PYTHONPATH="${PYTHONPATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        PYTHONPATH="$(__koopa_add_to_path_string_end "$PYTHONPATH" "$dir")"
+    done
+    export PYTHONPATH
+    return 0
+}
+
+koopa_add_to_pythonpath_start() { # {{{1
+    # """
+    # Force add to 'PYTHONPATH' start.
+    # @note Updated 2022-03-11.
+    # """
+    local dir
+    PYTHONPATH="${PYTHONPATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        PYTHONPATH="$(__koopa_add_to_path_string_start "$PYTHONPATH" "$dir")"
+    done
+    export PYTHONPATH
     return 0
 }
 
