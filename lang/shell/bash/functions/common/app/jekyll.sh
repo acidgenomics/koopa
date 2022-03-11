@@ -71,10 +71,12 @@ koopa_jekyll_deploy_to_aws() { # {{{1
         "${dict[local_prefix]}/" \
         "${dict[bucket_prefix]}/"
     # Using 'yes' here to avoid pager invocation.
+    koopa_alert "Invalidating CloudFront cache at '${dict[distribution_id]}'."
     "${app[yes]}" | "${app[aws]}" --profile="${dict[profile]}" \
         cloudfront create-invalidation \
             --distribution-id="${dict[distribution_id]}" \
-            --paths '/'
+            --paths='/' \
+            --paths='/css/*'
     [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
     return 0
 }
