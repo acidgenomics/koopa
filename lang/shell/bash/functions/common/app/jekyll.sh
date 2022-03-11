@@ -3,14 +3,13 @@
 koopa_jekyll_deploy_to_aws() { # {{{1
     # """
     # Deploy Jekyll website to AWS S3 and CloudFront.
-    # @note Updated 2022-03-10.
+    # @note Updated 2022-03-11.
     # """
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
         [aws]="$(koopa_locate_aws)"
         [bundle]="$(koopa_locate_bundle)"
-        [yes]="$(koopa_locate_yes)"
     )
     declare -A dict=(
         [bucket_prefix]=''
@@ -72,11 +71,13 @@ koopa_jekyll_deploy_to_aws() { # {{{1
         "${dict[bucket_prefix]}/"
     # Using 'yes' here to avoid pager invocation.
     koopa_alert "Invalidating CloudFront cache at '${dict[distribution_id]}'."
-    "${app[yes]}" | "${app[aws]}" --profile="${dict[profile]}" \
+    # The '--paths' variable should only be called once, using space-separated
+    # variables. Consider adding '/css/*' here if necessary.
+    "${app[aws]}" --profile="${dict[profile]}" \
         cloudfront create-invalidation \
             --distribution-id="${dict[distribution_id]}" \
-            --paths='/' \
-            --paths='/css/*'
+            --paths='/*' \
+            >/dev/null
     [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
     return 0
 }
