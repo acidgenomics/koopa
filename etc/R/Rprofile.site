@@ -472,6 +472,19 @@ local({  # nolint
     ## >     options("datatable.quiet" = TRUE)
     ## > }
 
+    if (isInstalled("formatR")) {
+        options(
+            "formatR.args.newline" = FALSE,
+            "formatR.arrow" = TRUE,
+            "formatR.blank" = TRUE,
+            "formatR.brace.newline" = FALSE,
+            "formatR.comment" = TRUE,
+            "formatR.indent" = 4L,
+            "formatR.width" = 80L,
+            "formatR.wrap" = TRUE
+        )
+    }
+
     if (isInstalled("future")) {
         ## If we have a large dataset, then we might need to adjust the limit
         ## for allowable object sizes within R.
