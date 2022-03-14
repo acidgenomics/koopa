@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2022-03-10.
+#' @note Updated 2022-03-14.
 #'
 #' @section Restarting R:
 #'
@@ -545,6 +545,13 @@ local({  # nolint
                 )
         )
     }
+
+    ## > if (isInstalled("styler")) {
+    ## >     options(
+    ## >         "styler.addins_style_transformer" =
+    ## >             "AcidDevTools::acid_style()"
+    ## >     )
+    ## > }
 
     if (isInstalled("testthat")) {
         ## Stop on the first check failure.
