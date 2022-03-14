@@ -547,9 +547,11 @@ local({  # nolint
     }
 
     ## > if (isInstalled("styler")) {
+    ## >     ## https://styler.r-lib.org/reference/styler_addins.html
     ## >     options(
     ## >         "styler.addins_style_transformer" =
-    ## >             "AcidDevTools::acid_style()"
+    ## >             "AcidDevTools::acid_style()",
+    ## >         "styler.save_after_styling" = TRUE
     ## >     )
     ## > }
 
