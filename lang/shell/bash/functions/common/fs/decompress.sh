@@ -49,7 +49,8 @@ koopa_decompress() { # {{{1
             ;;
         *'.tar' | \
         *'.zip')
-            koopa_warn "Use 'koopa_extract' instead of 'koopa_decompress'."
+            koopa_warn "Use 'koopa_extract' instead of 'koopa_decompress' \
+for TAR and ZIP files."
             ;;
         *)
             ;;
