@@ -17,7 +17,7 @@ tap "homebrew/core"
 # Brews {{{1
 # ==============================================================================
 
-brew "nghttp2", link: false  # libnghttp2 / curl
+# > brew "nghttp2", link: false  # libnghttp2 / curl
 # NOTE Python 3.9 currently required for Google Cloud SDK.
 brew "python@3.9", link: false
 brew "python@3.10", link: false
