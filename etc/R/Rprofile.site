@@ -480,7 +480,7 @@ local({  # nolint
             "formatR.brace.newline" = FALSE,
             "formatR.comment" = TRUE,
             "formatR.indent" = 4L,
-            "formatR.width" = 80L,
+            "formatR.width" = I(80L),
             "formatR.wrap" = TRUE
         )
     }
