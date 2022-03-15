@@ -118,7 +118,7 @@ findutils="4.9.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
-fish="3.3.1"
+fish="3.4.0"
 
 # https://github.com/junegunn/fzf
 fzf="0.29.0"
@@ -160,7 +160,7 @@ gsl="2.7.1"
 
 hadolint="2.8.0"
 
-harfbuzz="4.0.0"
+harfbuzz="4.0.1"
 
 # https://www.hdfgroup.org/downloads/hdf5/
 hdf5="1.13.0"
@@ -384,7 +384,7 @@ udunits="2.2.28"
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on multiples of 25.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.2.4500"
+vim="8.2.4550"
 
 # https://www.gnu.org/software/wget/
 wget="1.21.3"
