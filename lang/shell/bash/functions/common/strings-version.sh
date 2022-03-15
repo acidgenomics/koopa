@@ -444,6 +444,15 @@ koopa_github_latest_release() { # {{{1
     return 0
 }
 
+koopa_gtop_version() { # {{{1
+    # """
+    # gtop (Node package) version.
+    # @note Updated 2022-03-15.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_node_package_version 'gtop'
+}
+
 koopa_harfbuzz_version() { # {{{1
     # """
     # Harfbuzz (libharfbuzz) version.
@@ -569,6 +578,37 @@ koopa_mamba_version() { # {{{1
     # """
     koopa_assert_has_no_args "$#"
     koopa_get_version "$(koopa_locate_mamba)"
+}
+
+koopa_node_package_version() { # {{{1
+    # """
+    # Node (NPM) package version.
+    # @note Updated 2022-03-15.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/10972176/
+    #
+    # @examples
+    # > koopa_node_package_version 'gtop'
+    # """
+    koopa_assert_has_args_eq "$#" 1
+    local app dict
+    declare -A app=(
+        [jq]="$(koopa_locate_jq)"
+        [npm]="$(koopa_locate_npm)"
+    )
+    declare -A dict=(
+        [pkg_name]="${1:?}"
+    )
+    dict[str]="$( \
+        "${app[npm]}" --global --json list "${dict[pkg_name]}" \
+        | "${app[jq]}" \
+            --raw-output \
+            ".dependencies.${dict[pkg_name]}.version" \
+    )"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa_print "${dict[str]}"
+    return 0
 }
 
 koopa_openjdk_version() { # {{{1
@@ -704,6 +744,15 @@ koopa_pip_version() { # {{{1
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
     return 0
+}
+
+koopa_prettier_version() { # {{{1
+    # """
+    # Prettier (Node package) version.
+    # @note Updated 2022-03-15.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_node_package_version 'prettier'
 }
 
 koopa_r_package_version() { # {{{1
