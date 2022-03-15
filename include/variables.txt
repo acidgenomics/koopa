@@ -555,13 +555,13 @@ ruby-ronn="0.7.3"               # recommended
 
 # Rust packages {{{1
 # ==============================================================================
-# Updated 2022-02-23 from https://crates.io/.
+# Updated 2022-03-15 from https://crates.io/.
 
 rust-cargo-outdated="0.11.0"    # system
 rust-cargo-update="8.1.2"       # system
 
 rust-bat="0.20.0"               # homebrew
-rust-broot="1.9.3"              # homebrew; br
+rust-broot="1.9.4"              # homebrew; br
 rust-dog="0.1.0"                # homebrew
 rust-du-dust="0.8.0"            # homebrew; dust
 rust-exa="0.10.1"               # homebrew
