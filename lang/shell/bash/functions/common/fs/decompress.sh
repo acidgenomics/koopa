@@ -3,7 +3,9 @@
 koopa_decompress() { # {{{1
     # """
     # Decompress a compressed file.
-    # @note Updated 2022-01-11.
+    # @note Updated 2022-03-15.
+    #
+    # This function currently allows uncompressed files to pass through.
     # """
     local app dict
     koopa_assert_has_args_le "$#" 2
@@ -11,7 +13,7 @@ koopa_decompress() { # {{{1
     declare -A dict=(
         [compress_ext_pattern]="$(koopa_compress_ext_pattern)"
         [source_file]="${1:?}"
-        [manual_target_file]="${2:-}"
+        [target_file]="${2:-}"
     )
     dict[auto_target_file]="$( \
         koopa_sub \
@@ -47,10 +49,9 @@ koopa_decompress() { # {{{1
             ;;
         *'.tar' | \
         *'.zip')
-            koopa_stop "Use 'koopa_extract' instead."
+            koopa_warn "Use 'koopa_extract' instead of 'koopa_decompress'."
             ;;
         *)
-            koopa_stop "Unsupported extension: '${dict[source_file]}'."
             ;;
     esac
     koopa_assert_is_file "${dict[auto_target_file]}"
