@@ -17,6 +17,8 @@ add_pip_as_python_dependency: True
 
 allow_other_channels: False
 
+allow_softlinks: True
+
 # Don't ever prompt the user.
 # > always_yes: True
 
@@ -31,6 +33,10 @@ channels:
   - bioconda
   - defaults
 
+# Configure number of threads to use.
+# This applies to 'repodata_threads', 'verify_threads', and 'execute_threads'.
+default_threads: 4
+
 # Disallow installation of specific packages.
 # > disallow:
 # >   - anaconda
@@ -39,15 +45,25 @@ channels:
 
 # Change default environment directory path.
 # > envs_dirs:
-# >   - /opt/koopa/opt/conda/envs
+# >   - ~/my-envs
+# >   - /opt/anaconda/envs
 
 notify_outdated_conda: False
+
+offline: False
+
+# > pkgs_dirs:
+# >   - /opt/anaconda/pkgs
 
 report_errors: True
 
 show_channel_urls: True
 
+ssl_verify: True
+
 update_dependencies: False
+
+use_only_tar_bz2: False
 
 # Use pip when listing packages.
 use_pip: True
