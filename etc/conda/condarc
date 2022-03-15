@@ -1,8 +1,8 @@
 # """
 # Conda configuration.
-# Updated 2022-01-21.
+# @note Updated 2022-03-15.
 #
-# See also:
+# @seealso
 # - 'conda config --set'
 # - https://bioconda.github.io/#set-up-channels
 # - https://conda.io/projects/conda/en/latest/user-guide/configuration/
@@ -17,7 +17,8 @@ add_pip_as_python_dependency: True
 
 allow_other_channels: False
 
-# always_yes: True
+# Don't ever prompt the user.
+# > always_yes: True
 
 auto_activate_base: False
 
@@ -47,3 +48,6 @@ report_errors: True
 show_channel_urls: True
 
 update_dependencies: False
+
+# Use pip when listing packages.
+use_pip: True
