@@ -5,6 +5,10 @@ debian_install_r_cran_binary() { # {{{1
     # Install latest version of R from CRAN.
     # @note Updated 2022-01-28.
     #
+    # In case of missing files in '/etc/R', such as ldpaths or Makeconf:
+    # > sudo apt purge r-base-core
+    # > sudo apt install r-base-core
+    #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/README.html
