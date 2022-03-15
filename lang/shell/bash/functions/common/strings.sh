@@ -3,7 +3,7 @@
 koopa_camel_case_simple() { # {{{1
     # """
     # Simple camel case function.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-03-15.
     #
     # @seealso
     # - syntactic R package.
@@ -385,7 +385,7 @@ koopa_strip_trailing_slash() { # {{{1
 koopa_sub() { # {{{1
     # """
     # Single substitution.
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-03-15.
     #
     # @usage koopa_sub --pattern=PATTERN --replacement=REPLACEMENT STRING...
     #
@@ -446,6 +446,10 @@ koopa_sub() { # {{{1
     [[ "${dict[global]}" -eq 1 ]] && dict[sed_tail]='g'
     for str in "${pos[@]}"
     do
+        # Ensure '|' are escaped. Need to use '//' here for global escaping
+        # of multiple vertical pipes.
+        dict[pattern]="${dict[pattern]//|/\\|}"
+        dict[replacement]="${dict[replacement]//|/\\|}"
         koopa_print "$str" \
             | "${app[sed]}" \
                 --regexp-extended \
