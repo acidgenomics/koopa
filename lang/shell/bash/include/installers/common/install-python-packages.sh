@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME pip3 is currently returning 21.2.4 even though 22.0.3 is installed.
-# Python package management is seriously annoying...
-
 install_python_packages() { # {{{1
     # """
     # Install Python packages.
