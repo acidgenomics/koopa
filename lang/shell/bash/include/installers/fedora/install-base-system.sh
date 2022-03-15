@@ -107,6 +107,7 @@ fedora_install_base_system() { # {{{1
             'gcc-gfortran'                                        # |        ? |
             'gnupg2'                                              # |      YES |
             'gnutls'                                              # |      YES |
+            'jq'
             'libtool'                                             # |      YES |
             'lua'                                                 # |      YES |
             'openssl'                                             # |      YES |
@@ -203,7 +204,6 @@ fedora_install_base_system() { # {{{1
         pkgs+=(
             # > emacs
             # > golang
-            'jq'
             'llvm'
             'nim'
             'texlive'
