@@ -3,6 +3,7 @@
 # @note Updated 2022-03-15.
 #
 # @seealso
+# - Check configuration with 'conda config --validate'.
 # - 'conda config --set'
 # - https://bioconda.github.io/#set-up-channels
 # - https://conda.io/projects/conda/en/latest/user-guide/configuration/
