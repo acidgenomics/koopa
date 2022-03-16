@@ -167,6 +167,7 @@ with '${dict[r1_tail]}'."
     )"
     # Index {{{2
     # --------------------------------------------------------------------------
+    # FIXME Don't allow dynamic indexing here, need to rethink.
     if [[ ! -d "${dict[index_dir]}" ]]
     then
         koopa_kallisto_index \
@@ -588,15 +589,16 @@ koopa_kallisto_quant_paired_end() { # {{{1
     koopa_mkdir "${dict[output_dir]}"
     dict[log_file]="${dict[output_dir]}/quant.log"
     quant_args=(
-        '--bias'
+        # Consider enabling these:
+        # > '--genomebam'
+        # > '--pseudobam'
         "--bootstrap-samples=${dict[bootstraps]}"
         "--chromosomes=${dict[chromosomes_file]}"
-        '--genomebam'
         "--gtf=${dict[gff_file]}"
         "--index=${dict[index_file]}"
         "--output-dir=${dict[output_dir]}"
-        '--pseudobam'
         "--threads=${dict[threads]}"
+        '--bias'
         '--verbose'
     )
     # Run kallisto in stranded mode, depending on the library type. Using salmon
