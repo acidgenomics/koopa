@@ -301,10 +301,10 @@ main() { # {{{1
     # Activate koopa {{{2
     # ==========================================================================
     koopa_alert "Activating ${dict[name_fancy]} at '${dict[koopa_prefix]}'."
-    set +u
+    set +o nounset
     # shellcheck source=/dev/null
     . "${dict[koopa_prefix]}/activate" || return 1
-    set -u
+    set -o nounset
     # Check that 'KOOPA_PREFIX' is set correctly by activation script.
     if [[ "${dict[koopa_prefix]}" != "${KOOPA_PREFIX:-}" ]]
     then
