@@ -159,7 +159,7 @@ at '${dict[output_file]}'."
     "${app[cat]}" \
         "${dict[transcriptome_fasta_file]}" \
         "${dict[genome_fasta_file]}" \
-        > "${dict[gentrome_fasta_file]}"
-    koopa_assert_is_file "${dict[gentrome_fasta_file]}"
+        > "${dict[output_file]}"
+    koopa_assert_is_file "${dict[output_file]}"
     return 0
 }
