@@ -1129,10 +1129,11 @@ koopa_activate_pyenv() { # {{{1
     return 0
 }
 
+# FIXME Setting PYTHONPATH may be messing with conda on Linux.
 koopa_activate_python() { # {{{1
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2022-03-11.
+    # @note Updated 2022-03-16.
     #
     # Configures:
     # - Site packages library.
@@ -1160,12 +1161,13 @@ koopa_activate_python() { # {{{1
         koopa_activate_prefix "$prefix"
     fi
     prefix="$(koopa_python_packages_prefix)"
-    if [ -d "$prefix" ]
-    then
-        koopa_activate_prefix "$prefix"
-        prefix_real="$(koopa_realpath "$prefix")"
-        koopa_add_to_pythonpath_start "$prefix_real"
-    fi
+    # FIXME Enabling this may mess up conda configuration.
+    # > if [ -d "$prefix" ]
+    # > then
+    # >     koopa_activate_prefix "$prefix"
+    # >     prefix_real="$(koopa_realpath "$prefix")"
+    # >     koopa_add_to_pythonpath_start "$prefix_real"
+    # > fi
     if [ -z "${PIP_REQUIRE_VIRTUALENV:-}" ]
     then
         export PIP_REQUIRE_VIRTUALENV='true'
