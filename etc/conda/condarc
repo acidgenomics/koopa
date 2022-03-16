@@ -36,7 +36,7 @@ channels:
 
 # Configure number of threads to use.
 # This applies to 'repodata_threads', 'verify_threads', and 'execute_threads'.
-default_threads: 4
+# > default_threads: 4
 
 # Disallow installation of specific packages.
 # > disallow:
