@@ -49,11 +49,11 @@ __koopa_complete() { # {{{1
                         'ftp'
                         'git'
                         'gpg'
-                        'kallisto'  # FIXME Need to support.
+                        'kallisto'
                         'list'
                         'python'
                         'r'
-                        'salmon'  # FIXME Need to support.
+                        'salmon'
                         'sra'
                         'ssh'
                         'wget'
