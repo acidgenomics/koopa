@@ -417,67 +417,49 @@ completed successfully."
 
 # Individual runners ===========================================================
 
-# FIXME Compare results of original script to our function, and confirm that
-#       output is consistent, before proceeding.
-# FIXME This function is RAM intensive. Consider adding a check for this.
-# Using 'koopa_mem_gb' to return the RAM, and consider at least 128 GB here.
-
 koopa_salmon_generate_decoy_transcriptome() { # {{{1
     # """
     # Generate decoy transcriptome for salmon index.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-03-15.
     #
-    # @section Documentation on original COMBINE lab script:
+    # This script generates a 'decoys.txt' file and a FASTA file named
+    # 'gentrome.fa.gz', containing input from both the genome and transcriptome
+    # FASTA files.
     #
-    # generateDecoyTranscriptome.sh: This is a preprocessing script for creating
-    # augmented hybrid FASTA file for 'salmon index'. It consumes a genome
-    # FASTA, transcriptome FASTA, and the annotation GTF file to create a new
-    # hybrid FASTA file which contains the decoy sequences from the genome,
-    # concatenated with the transcriptome, resulting in 'gentrome.fa'. It runs
-    # mashmap to align transcriptome to an exon masked genome, with 80%
-    # homology, and extracts the mapped genomic interval. It uses awk and
-    # bedtools to merge the contiguosly mapped interval, and extracts decoy
-    # sequences from the genome. It also dumps 'decoys.txt' file, which contains
-    # the name/identifier of the decoy sequences. Both 'gentrome.fa' and
-    # 'decoys.txt' can be used with 'salmon index' with salmon >=0.14.0.
-    #
-    # @section Arguments from original COMBINE lab script:
-    #
-    # * [-j <N> =1 default]
-    # * [-b <bedtools binary path> =bedtools default]
-    # * [-m <mashmap binary path> =mashmap default]
-    # * -a <gtf file>
-    # * -g <genome fasta>
-    # * -t <txome fasta>
-    # * -o <output path>
+    # The genome targets (decoys) should come after the transcriptome targets
+    # in the 'gentrome' reference file.
     #
     # @seealso
-    # - https://github.com/COMBINE-lab/SalmonTools/blob/master/
-    #       scripts/generateDecoyTranscriptome.sh
-    # - https://github.com/COMBINE-lab/SalmonTools/blob/master/README.md
+    # - https://salmon.readthedocs.io/en/latest/salmon.html
+    #     #preparing-transcriptome-indices-mapping-based-mode
     # - https://salmon.readthedocs.io/en/latest/
-    #       salmon.html#quantifying-in-mapping-based-mode
-    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
-    #       rnaseq/salmon.py#L244
+    #     salmon.html#quantifying-in-mapping-based-mode
+    # - https://combine-lab.github.io/alevin-tutorial/2019/selective-alignment/
+    # - https://github.com/nf-core/rnaseq/blob/master/modules/nf-core/
+    #     modules/salmon/index/main.nf
+    # - https://github.com/COMBINE-lab/SalmonTools/blob/master/
+    #     scripts/generateDecoyTranscriptome.sh
     # - https://github.com/marbl/MashMap/
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
+    #     rnaseq/salmon.py#L244
+    # - https://github.com/chapmanb/cloudbiolinux/blob/master/ggd-recipes/
+    #     hg38/salmon-decoys.yaml
     # """
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [bedtools]="$(koopa_locate_bedtools)"
         [cat]="$(koopa_locate_cat)"
+        [cut]="$(koopa_locate_cut)"
         [grep]="$(koopa_locate_grep)"
-        [mashmap]="$(koopa_locate_mashmap)"
-        [sort]="$(koopa_locate_sort)"
+        [gunzip]="$(koopa_locate_gunzip)"
+        [gzip]="$(koopa_locate_gzip)"
+        [sed]="$(koopa_locate_sed)"
     )
     declare -A dict=(
-        [compress_ext_pattern]="$(koopa_compress_ext_pattern)"
         [genome_fasta_file]=''
         [gtf_file]=''
-        [output_dir]='salmon/index'
+        [output_dir]="${PWD:?}"
         [threads]="$(koopa_cpu_count)"
-        [tmp_dir]="$(koopa_tmp_dir)"
         [transcriptome_fasta_file]=''
     )
     while (("$#"))
@@ -541,124 +523,53 @@ koopa_salmon_generate_decoy_transcriptome() { # {{{1
         "${dict[gtf_file]}" \
         "${dict[transcriptome_fasta_file]}"
     dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
+    koopa_assert_is_matching_regex \
+        --pattern='\.gz$' \
+        --string="${dict[genome_fasta_file]}"
     dict[gtf_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
+    koopa_assert_is_matching_regex \
+        --pattern='\.gz$' \
+        --string="${dict[gtf_file]}"
     dict[transcriptome_fasta_file]="$( \
         koopa_realpath "${dict[transcriptome_fasta_file]}" \
     )"
+    koopa_assert_is_matching_regex \
+        --pattern='\.gz$' \
+        --string="${dict[transcriptome_fasta_file]}"
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
+    dict[decoys_txt_file]="${dict[output_dir]}/decoys.txt"
+    dict[gentrome_fasta_file]="${dict[output_dir]}/gentrome.fa.gz"
+    koopa_alert "Generating decoy-aware transcriptome in '${dict[output_dir]}'."
     koopa_dl \
         'Genome FASTA file' "${dict[genome_fasta_file]}" \
         'Transcriptome FASTA file' "${dict[transcriptome_fasta_file]}" \
         'GTF file' "${dict[gtf_file]}" \
-        'Output dir' "${dict[output_dir]}" \
+        'Decoys file' "${dict[decoys_txt_file]}" \
+        'Gentrome FASTA file' "${dict[gentrome_fasta_file]}" \
         'Threads' "${dict[threads]}"
-    (
-        local dict2
-        declare -A dict2=(
-            [decoys_fasta_file]='decoys.fa'
-            [decoys_txt_file]='decoys.txt'
-            [exons_bed_file]='exons.bed'
-            [genome_fasta_file]='genome.fa'
-            [genome_found_fasta_file]='genome-found.fa'
-            [genome_found_merged_bed_file]='genome-found-merged.bed'
-            [genome_found_sorted_bed_file]='genome-found-sorted.bed'
-            [gentrome_fasta_file]='gentrome.fa'
-            [gtf_file]='annotation.gtf'
-            [mashmap_output_file]='mashmap.out'
-            [masked_genome_fasta_file]='reference-masked-genome.fa'
-            [transcriptome_fasta_file]='transcriptome.fa'
-        )
-        koopa_cd "${dict[tmp_dir]}"
-        koopa_alert "Generating decoy-aware transcriptome in \
-'${dict[tmp_dir]}'."
-        # Decompress compressed genome files, if necessary. This step will
-        # simply copy uncompressed files, when applicable.
-        koopa_decompress \
-            "${dict[genome_fasta_file]}" \
-            "${dict2[genome_fasta_file]}"
-        koopa_decompress \
-            "${dict[gtf_file]}" \
-            "${dict2[gtf_file]}"
-        koopa_decompress \
-            "${dict[transcriptome_fasta_file]}" \
-            "${dict2[transcriptome_fasta_file]}"
-        koopa_assert_is_file \
-            "${dict2[genome_fasta_file]}" \
-            "${dict2[gtf_file]}" \
-            "${dict2[transcriptome_fasta_file]}"
-        koopa_dl \
-            'GTF file' "${dict2[gtf_file]}" \
-            'Genome FASTA file' "${dict2[genome_fasta_file]}" \
-            'Transcriptome FASTA file' "${dict2[transcriptome_fasta_file]}"
-        koopa_stop 'FIXME Check that files are correct here.'
-        koopa_alert 'Extracting exonic features from the GTF.'
-        # shellcheck disable=SC2016
-        "${app[awk]}" -v OFS='\t' \
-            '{if ($3=="exon") {print $1,$4,$5}}' \
-            "${dict2[gtf_file]}" > "${dict2[exons_bed_file]}"
-        koopa_alert 'Masking the genome FASTA.'
-        "${app[bedtools]}" maskfasta \
-            -bed "${dict2[exons_bed_file]}" \
-            -fi "${dict2[genome_fasta_file]}" \
-            -fo "${dict2[masked_genome_fasta_file]}"
-        koopa_alert 'Aligning transcriptome to genome.'
-        "${app[mashmap]}" \
-            --filter_mode 'map' \
-            --kmer 16 \
-            --output "${dict2[mashmap_output_file]}" \
-            --perc_identity 80 \
-            --query "${dict2[transcriptome_fasta_file]}" \
-            --ref "${dict2[masked_genome_fasta_file]}" \
-            --segLength 500 \
-            --threads "${dict[threads]}"
-        koopa_assert_is_file "${dict2[mashmap_output_file]}"
-        koopa_alert 'Extracting intervals from mashmap alignments.'
-        # shellcheck disable=SC2016
-        "${app[awk]}" -v OFS='\t' \
-            '{print $6,$8,$9}' \
-            "${dict2[mashmap_output_file]}" \
-            | "${app[sort]}" -k1,1 -k2,2n - \
-            > "${dict2[genome_found_sorted_bed_file]}"
-        koopa_alert 'Merging the intervals.'
-        "${app[bedtools]}" merge \
-            -i "${dict2[genome_found_sorted_bed_file]}" \
-            > "${dict2[genome_found_merged_bed_file]}"
-        koopa_alert 'Extracting sequences from the genome.'
-        "${app[bedtools]}" getfasta \
-            -bed "${dict2[genome_found_merged_bed_file]}" \
-            -fi "${dict2[masked_genome_fasta_file]}" \
-            -fo "${dict2[genome_found_fasta_file]}"
-        koopa_alert 'Concatenating FASTA to get decoy sequences.'
-        # FIXME How to fix this to 80 character width limit?
-        # shellcheck disable=SC2016
-        "${app[awk]}" '{a=$0; getline;split(a, b, ":");  r[b[1]] = r[b[1]]""$0} END { for (k in r) { print k"\n"r[k] } }' \
-            "${dict2[genome_found_fasta_file]}" \
-            > "${dict2[decoys_fasta_file]}"
-        koopa_alert 'Making gentrome FASTA file.'
-        "${app[cat]}" \
-            "${dict2[transcriptome_fasta_file]}" \
-            "${dict2[decoys_fasta_file]}" \
-            > "${dict2[gentrome_fasta_file]}"
-        koopa_alert 'Extracting decoy sequence identifiers.'
-        # shellcheck disable=SC2016
-        "${app[grep]}" '>' "${dict2[decoys_fasta_file]}" \
-            | "${app[awk]}" '{print substr($1,2); }' \
-            > "${dict2[decoys_txt_file]}"
-        koopa_cp \
-            "${dict2[gentrome_fasta_file]}" \
-            "${dict[output_dir]}/${dict2[gentrome_fasta_file]}"
-        koopa_cp \
-            "${dict2[decoys_txt_file]}" \
-            "${dict[output_dir]}/${dict2[decoys_txt_file]}"
-    )
-    koopa_rm "${dict[tmp_dir]}"
+    koopa_alert "Generating '${dict[decoys_txt_file]}'."
+    "${app[grep]}" '^>' \
+        <("${app[gunzip]}" --stdout "${dict[genome_fasta_file]}") \
+        | "${app[cut]}" --delimiter=' ' --fields='1' \
+        > "${dict[decoys_txt_file]}"
+    "${app[sed]}" \
+        --expression='s/>//g' \
+        --in-place \
+        "${dict[decoys_txt_file]}"
+    koopa_assert_is_file "${dict[decoys_txt_file]}"
+    koopa_alert "Generating '${dict[gentrome_fasta_file]}'."
+    "${app[cat]}" \
+        "${dict[transcriptome_fasta_file]}" \
+        "${dict[genome_fasta_file]}" \
+        > "${dict[gentrome_fasta_file]}"
+    koopa_assert_is_file "${dict[gentrome_fasta_file]}"
     return 0
 }
 
 koopa_salmon_index() { # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-03-15.
     #
     # @section FASTA conventions:
     #
@@ -862,6 +773,7 @@ koopa_salmon_quant_paired_end() { # {{{1
     # - https://salmon.readthedocs.io/en/latest/salmon.html
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
     #       rnaseq/salmon.py
+    # - https://github.com/hbctraining/Intro-to-rnaseq-hpc-salmon-flipped
     # - How to output pseudobams:
     #   https://github.com/COMBINE-lab/salmon/issues/38
     # """
@@ -1018,6 +930,7 @@ koopa_salmon_quant_paired_end() { # {{{1
         "--output=${dict[output_dir]}"
         '--seqBias'
         "--threads=${dict[threads]}"
+        '--useVBOpt'  # default
         # > "--writeMappings=${dict[sam_file]}"
     )
     koopa_dl 'Quant args' "${quant_args[*]}"
