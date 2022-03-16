@@ -15,9 +15,7 @@ koopa_fasta_generate_chromosomes_file() { # {{{1
     )
     declare -A dict=(
         [genome_fasta_file]=''
-        # This is referred to as 'decoys.txt' by salmon index, and
-        # 'chromosomes.txt' by kallisto index.
-        [output_file]='chromosomes.txt'
+        [output_file]=''
     )
     while (("$#"))
     do
@@ -96,7 +94,7 @@ koopa_fasta_generate_decoy_transcriptome_file() { # {{{1
     )
     declare -A dict=(
         [genome_fasta_file]=''
-        [output_file]='gentrome.fa.gz'
+        [output_file]=''
         [transcriptome_fasta_file]=''
     )
     while (("$#"))
