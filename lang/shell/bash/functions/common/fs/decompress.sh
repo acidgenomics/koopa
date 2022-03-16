@@ -11,32 +11,43 @@ koopa_decompress() { # {{{1
     koopa_assert_has_args_le "$#" 2
     declare -A app
     declare -A dict=(
+        [alert]=1
         [compress_ext_pattern]="$(koopa_compress_ext_pattern)"
         [source_file]="${1:?}"
         [target_file]="${2:-}"
     )
-    dict[auto_target_file]="$( \
-        koopa_sub \
-            --pattern="${dict[compress_ext_pattern]}" \
-            --replacement='' \
-            "${dict[source_file]}" \
-    )"
+    koopa_assert_is_file "${dict[source_file]}"
+    if [[ -z "${dict[target_file]}" ]]
+    then
+        dict[target_file]="$( \
+            koopa_sub \
+                --pattern="${dict[compress_ext_pattern]}" \
+                --replacement='' \
+                "${dict[source_file]}" \
+        )"
+    fi
+    if [[ "${dict[source_file]}" == "${dict[target_file]}" ]]
+    then
+        return 0
+    fi
     case "${dict[source_file]}" in
         *'.bz2')
             app[bunzip2]="$(koopa_locate_bunzip2)"
             "${app[bunzip2]}" \
                 --force \
                 --keep \
-                --verbose \
-                "${dict[source_file]}"
+                --stdout \
+                "${dict[source_file]}" \
+                > "${dict[target_file]}"
             ;;
         *'.gz')
             app[gunzip]="$(koopa_locate_gunzip)"
             "${app[gunzip]}" \
                 --force \
                 --keep \
-                --verbose \
-                "${dict[source_file]}"
+                --stdout \
+                "${dict[source_file]}" \
+                > "${dict[target_file]}"
             ;;
         *'.xz')
             app[xz]="$(koopa_locate_xz)"
@@ -44,28 +55,14 @@ koopa_decompress() { # {{{1
                 --decompress \
                 --force \
                 --keep \
-                --verbose \
-                "${dict[source_file]}"
-            ;;
-        *'.tar' | \
-        *'.zip')
-            koopa_warn "Use 'koopa_extract' instead of 'koopa_decompress' \
-for TAR and ZIP files."
+                --stdout \
+                "${dict[source_file]}" \
+                > "${dict[target_file]}"
             ;;
         *)
+            koopa_cp "${dict[source_file]}" "${dict[target_file]}"
             ;;
     esac
-    koopa_assert_is_file "${dict[auto_target_file]}"
-    if [[ -n "${dict[manual_target_file]}" ]]
-    then
-        koopa_mv \
-            "${dict[auto_target_file]}" \
-            "${dict[manual_target_file]}"
-        dict[target_file]="${dict[manual_target_file]}"
-    else
-        dict[target_file]="${dict[auto_target_file]}"
-    fi
-    dict[target_file]="$(koopa_realpath "${dict[target_file]}")"
-    koopa_print "${dict[target_file]}"
+    koopa_assert_is_file "${dict[target_file]}"
     return 0
 }
