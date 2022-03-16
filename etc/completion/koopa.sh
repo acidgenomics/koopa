@@ -49,9 +49,11 @@ __koopa_complete() { # {{{1
                         'ftp'
                         'git'
                         'gpg'
+                        'kallisto'  # FIXME Need to support.
                         'list'
                         'python'
                         'r'
+                        'salmon'  # FIXME Need to support.
                         'sra'
                         'ssh'
                         'wget'
@@ -406,6 +408,13 @@ __koopa_complete() { # {{{1
                         'jekyll')
                             args=(
                                 'serve'
+                            )
+                            ;;
+                        'kallisto' | \
+                        'salmon')
+                            args=(
+                                'index'  # FIXME Need to add support.
+                                'quant'  # FIXME Need to add support -- work on dirs.
                             )
                             ;;
                         'md5sum')
