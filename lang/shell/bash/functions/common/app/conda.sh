@@ -3,7 +3,7 @@
 koopa_conda_activate_env() { # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-16.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -32,21 +32,31 @@ koopa_conda_activate_env() { # {{{1
         [env_name]="${1:?}"
         [nounset]="$(koopa_boolean_nounset)"
     )
-    dict[env_prefix]="$(koopa_conda_env_prefix "${dict[env_name]}")"
-    koopa_assert_is_dir "${dict[env_prefix]}"
-    [[ "${dict[nounset]}" -eq 1 ]] && set +u
+    dict[env_prefix]="$(koopa_conda_env_prefix "${dict[env_name]}" || true)"
+    if [[ ! -d "${dict[env_prefix]}" ]]
+    then
+        koopa_alert_info "Attempting to install missing conda \
+environment '${dict[env_name]}'."
+        koopa_conda_create_env "${dict[env_name]}"
+        dict[env_prefix]="$(koopa_conda_env_prefix "${dict[env_name]}" || true)"
+    fi
+    if [[ ! -d "${dict[env_prefix]}" ]]
+    then
+        koopa_stop "'${dict[env_name]}' conda environment is not installed."
+    fi
+    [[ "${dict[nounset]}" -eq 1 ]] && set +o nounset
     koopa_is_conda_env_active && koopa_conda_deactivate
     koopa_activate_conda
     koopa_assert_is_function 'conda'
     conda activate "${dict[env_prefix]}"
-    [[ "${dict[nounset]}" -eq 1 ]] && set -u
+    [[ "${dict[nounset]}" -eq 1 ]] && set -o nounset
     return 0
 }
 
 koopa_conda_create_env() { # {{{1
     # """
     # Create a conda environment.
-    # @note Updated 2022-01-17.
+    # @note Updated 2022-03-16.
     #
     # Creates a unique environment for each recipe requested.
     # Supports versioning, which will return as 'star@2.7.5a' for example.
@@ -144,7 +154,9 @@ exists at '${dict[env_prefix]}'."
             --quiet \
             --yes \
             "${dict[env_string]}"
-        koopa_sys_set_permissions --recursive "${dict[env_prefix]}"
+        koopa_sys_set_permissions --recursive \
+            "${dict[conda_prefix]}/pkgs" \
+            "${dict[env_prefix]}"
         koopa_alert_install_success "${dict[env_name]}" "${dict[env_prefix]}"
     done
     return 0
@@ -153,7 +165,7 @@ exists at '${dict[env_prefix]}'."
 koopa_conda_deactivate() { # {{{1
     # """
     # Deactivate Conda environment.
-    # @note Updated 2022-02-16.
+    # @note Updated 2022-03-16.
     # """
     local dict
     koopa_assert_has_no_args "$#"
@@ -166,9 +178,9 @@ koopa_conda_deactivate() { # {{{1
         koopa_stop 'conda is not active.'
     fi
     koopa_assert_is_function 'conda'
-    [[ "${dict[nounset]}" -eq 1 ]] && set +u
+    [[ "${dict[nounset]}" -eq 1 ]] && set +o nounset
     conda deactivate
-    [[ "${dict[nounset]}" -eq 1 ]] && set -u
+    [[ "${dict[nounset]}" -eq 1 ]] && set -o nounset
     return 0
 }
 
@@ -216,7 +228,7 @@ koopa_conda_env_list() { # {{{1
 koopa_conda_env_prefix() { # {{{1
     # """
     # Return prefix for a specified conda environment.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-03-16.
     #
     # Attempt to locate by default path first, which is the fastest approach.
     #
@@ -258,10 +270,7 @@ koopa_conda_env_prefix() { # {{{1
             --pattern="${dict[env_name]}" \
             --string="${dict[env_list]}" \
     )"
-    if [[ -z "${dict[env_list2]}" ]]
-    then
-        koopa_stop "conda environment does not exist: '${dict[env_name]}'."
-    fi
+    [[ -n "${dict[env_list2]}" ]] || return 1
     # Note that this step attempts to automatically match the latest version.
     dict[env_prefix]="$( \
         koopa_grep \
@@ -271,10 +280,7 @@ koopa_conda_env_prefix() { # {{{1
         | "${app[tail]}" --lines=1 \
         | "${app[sed]}" --regexp-extended 's/^.*"(.+)".*$/\1/' \
     )"
-    if [[ ! -d "${dict[env_prefix]}" ]]
-    then
-        koopa_stop "Failed to resolve conda environment: '${dict[env_name]}'."
-    fi
+    [[ -d "${dict[env_prefix]}" ]] || return 1
     koopa_print "${dict[env_prefix]}"
     return 0
 }
@@ -299,7 +305,7 @@ koopa_conda_remove_env() { # {{{1
     declare -A dict=(
         [nounset]="$(koopa_boolean_nounset)"
     )
-    [[ "${dict[nounset]}" -eq 1 ]] && set +u
+    [[ "${dict[nounset]}" -eq 1 ]] && set +o nounset
     for name in "$@"
     do
         dict[prefix]="$(koopa_conda_env_prefix "$name")"
@@ -311,6 +317,6 @@ koopa_conda_remove_env() { # {{{1
         [[ -d "${dict[prefix]}" ]] && koopa_rm "${dict[prefix]}"
         koopa_alert_uninstall_success "${dict[name]}" "${dict[prefix]}"
     done
-    [[ "${dict[nounset]}" -eq 1 ]] && set -u
+    [[ "${dict[nounset]}" -eq 1 ]] && set -o nounset
     return 0
 }
