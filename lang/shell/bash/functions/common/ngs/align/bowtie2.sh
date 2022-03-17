@@ -3,6 +3,8 @@
 # FIXME Need to test that all of these runners are working correctly.
 # NOTE Need to add option to generate BAM and CRAM files here.
 
+# FIXME Rework and move these to 'koopa app bowtie2'.
+
 # Main function ================================================================
 koopa_run_bowtie2() { # {{{1
     # """
