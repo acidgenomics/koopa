@@ -3,7 +3,7 @@
 koopa_cli_app() { # {{{1
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2022-02-15.
+    # @note Updated 2022-03-17.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -147,6 +147,31 @@ koopa_cli_app() { # {{{1
                 'serve')
                     key="${1:?}-${2:?}"
                     shift 2
+                    ;;
+                *)
+                    koopa_invalid_arg "$*"
+                    ;;
+            esac
+            ;;
+        'kallisto' | \
+        'salmon')
+            case "${2:-}" in
+                'index')
+                    key="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                # FIXME Double check that this works.
+                'quant')
+                    case "${3:-}" in
+                        'paired-end' | \
+                        'single-end')
+                            key="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_invalid_arg "$*"
+                        ;;
+                    esac
                     ;;
                 *)
                     koopa_invalid_arg "$*"
