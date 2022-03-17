@@ -3,7 +3,7 @@
 install_anaconda() { # {{{1
     # """
     # Install full Anaconda distribution.
-    # @note Updated 2021-11-18.
+    # @note Updated 2022-03-16.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -33,6 +33,7 @@ install_anaconda() { # {{{1
 ${dict[os_type]}-${dict[arch]}.sh"
     dict[url]="https://repo.anaconda.com/archive/${dict[file]}"
     koopa_download "${dict[url]}" "${dict[file]}"
+    unset -v PYTHONHOME PYTHONPATH
     "${app[bash]}" "${dict[file]}" -bf -p "${dict[prefix]}"
     koopa_ln \
         "${dict[koopa_prefix]}/etc/conda/condarc" \

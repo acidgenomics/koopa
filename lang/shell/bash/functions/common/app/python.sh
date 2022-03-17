@@ -35,10 +35,10 @@ koopa_python_activate_venv() { # {{{1
     then
         koopa_python_deactivate_venv "${dict[active_env]}"
     fi
-    [[ "${dict[nounset]}" -eq 1 ]] && set +u
+    [[ "${dict[nounset]}" -eq 1 ]] && set +o nounset
     # shellcheck source=/dev/null
     source "${dict[script]}"
-    [[ "${dict[nounset]}" -eq 1 ]] && set -u
+    [[ "${dict[nounset]}" -eq 1 ]] && set -o nounset
     return 0
 }
 
