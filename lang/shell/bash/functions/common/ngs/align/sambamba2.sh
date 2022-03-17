@@ -31,7 +31,8 @@ koopa_bam_filter() { # {{{1
         koopa_stop "No BAM files detected in '${dir}'."
     fi
     koopa_h1 "Filtering BAM files in '${dir}'."
-    koopa_activate_conda_env 'sambamba'
+    # FIXME Just locate this directly.
+    koopa_conda_activate_env 'sambamba'
     for bam_file in "${bam_files[@]}"
     do
         final_output_tail='filtered'
@@ -69,7 +70,7 @@ koopa_bam_filter() { # {{{1
         koopa_sambamba_index "$final_output_bam"
     done
     # FIXME Rework this, not requiring conda activation.
-    koopa_deactivate_conda
+    koopa_conda_deactivate
     return 0
 }
 
@@ -100,12 +101,14 @@ koopa_bam_sort() { # {{{1
         koopa_stop "No BAM files detected in '${dir}'."
     fi
     koopa_h1 "Sorting BAM files in '${dir}'."
-    koopa_activate_conda_env 'sambamba'
+    # FIXME Just locate this directly.
+    koopa_conda_activate_env 'sambamba'
     for bam_file in "${bam_files[@]}"
     do
         koopa_sambamba_sort "$bam_file"
     done
-    koopa_deactivate_conda
+    # FIXME Work on removing this.
+    koopa_conda_deactivate
     return 0
 }
 
@@ -152,7 +155,8 @@ koopa_convert_sam_to_bam() { # {{{1
         koopa_stop "No SAM files detected in '${dir}'."
     fi
     koopa_h1 "Converting SAM files in '${dir}' to BAM format."
-    koopa_activate_conda_env 'samtools'
+    # FIXME Just locate this directly.
+    koopa_conda_activate_env 'samtools'
     case "$keep_sam" in
         '0')
             koopa_alert_note 'SAM files will be deleted.'
@@ -170,6 +174,6 @@ koopa_convert_sam_to_bam() { # {{{1
         [[ "$keep_sam" -eq 0 ]] && koopa_rm "$sam_file"
     done
     # FIXME Don't do this approach here, rework.
-    koopa_deactivate_conda
+    koopa_conda_deactivate
     return 0
 }

@@ -432,7 +432,7 @@ koopa_kallisto_index() { # {{{1
     koopa_h2 "Generating kallisto index at '${dict[output_dir]}'."
     koopa_mkdir "${dict[output_dir]}"
     dict[index_file]="${dict[output_dir]}/kallisto.idx"
-    dict[log_file]="${dict[output_dir]}/index.log"
+    dict[log_file]="${dict[output_dir]}/koopa-index.log"
     index_args=(
         "--index=${dict[index_file]}"
         '--kmer-size=31'
@@ -587,7 +587,8 @@ koopa_kallisto_quant_paired_end() { # {{{1
     fi
     koopa_h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
     koopa_mkdir "${dict[output_dir]}"
-    dict[log_file]="${dict[output_dir]}/quant.log"
+    dict[log_file]="${dict[output_dir]}/koopa-quant.log"
+
     quant_args=(
         # Consider enabling these:
         # > '--genomebam'
@@ -751,7 +752,7 @@ koopa_kallisto_quant_single_end() { # {{{1
     fi
     koopa_h2 "Quantifying '${dict[id]}' into '${dict[output_dir]}'."
     koopa_mkdir "${dict[output_dir]}"
-    dict[log_file]="${dict[output_dir]}/quant.log"
+    dict[log_file]="${dict[output_dir]}/koopa-quant.log"
     quant_args=(
         "--bootstrap-samples=${dict[bootstraps]}"
         "--chromosomes=${dict[chromosomes_file]}"

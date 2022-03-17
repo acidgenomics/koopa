@@ -147,7 +147,7 @@ koopa_activate_zsh_plugins() { # {{{1
 koopa_activate_zsh_prompt() { # {{{1
     # """
     # Activate Zsh prompt.
-    # Updated 2021-09-21.
+    # Updated 2022-03-16.
     #
     # See also:
     # - https://github.com/sindresorhus/pure
@@ -160,12 +160,12 @@ koopa_activate_zsh_prompt() { # {{{1
     [[ "$#" -eq 0 ]] || return 1
     koopa_is_root && return 0
     nounset="$(koopa_boolean_nounset)"
-    [[ "$nounset" -eq 1 ]] && set +u
+    [[ "$nounset" -eq 1 ]] && set +o nounset
     setopt promptsubst
     autoload -U promptinit
     promptinit
     prompt koopa
-    [[ "$nounset" -eq 1 ]] && set -u
+    [[ "$nounset" -eq 1 ]] && set -o nounset
     return 0
 }
 

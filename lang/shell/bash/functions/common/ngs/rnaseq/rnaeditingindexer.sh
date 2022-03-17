@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename this and move to 'koopa app rnaeditingindexer'.
+
 koopa_run_rnaeditingindexer() { # {{{1
     # """
     # Run dockerized RNAEditingIndexer pipeline.

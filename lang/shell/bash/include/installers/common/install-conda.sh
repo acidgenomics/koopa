@@ -3,7 +3,7 @@
 install_conda() { # {{{1
     # """
     # Install Miniconda.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-03-16.
     #
     # Optionally, can include Mamba in base environment using '--with-mamba'.
     # """
@@ -79,6 +79,7 @@ install_conda() { # {{{1
 py${dict[py_version2]}_${dict[version]}-${dict[os_type2]}-${dict[arch]}.sh"
     dict[url]="https://repo.continuum.io/miniconda/${dict[script]}"
     koopa_download "${dict[url]}" "${dict[script]}"
+    unset -v PYTHONHOME PYTHONPATH
     "${app[bash]}" "${dict[script]}" -bf -p "${dict[prefix]}"
     koopa_ln \
         "${dict[koopa_prefix]}/etc/conda/condarc" \

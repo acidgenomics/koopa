@@ -23,10 +23,10 @@ koopa_salmon_index() { # {{{1
         [gencode]=0
         [genome_fasta_file]=''
         [kmer_length]=31
-        [output_dir]='salmon-index'
+        [output_dir]='' # 'salmon-index'
         [threads]="$(koopa_cpu_count)"
         [transcriptome_fasta_file]=''
-        [type]='puff'
+        [type]='puff' # default
     )
     index_args=()
     while (("$#"))
@@ -47,14 +47,6 @@ koopa_salmon_index() { # {{{1
                 ;;
             '--output-dir')
                 dict[output_dir]="${2:?}"
-                shift 2
-                ;;
-            '--threads='*)
-                dict[threads]="${1#*=}"
-                shift 1
-                ;;
-            '--threads')
-                dict[threads]="${2:?}"
                 shift 2
                 ;;
             '--transcriptome-fasta-file='*)
@@ -89,11 +81,11 @@ koopa_salmon_index() { # {{{1
         '--output-dir' "${dict[output_dir]}" \
         '--threads' "${dict[threads]}" \
         '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
-    koopa_assert_is_not_dir "${dict[output_dir]}"
-    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_assert_is_file \
         "${dict[genome_fasta_file]}" \
         "${dict[transcriptome_fasta_file]}"
+    koopa_assert_is_not_dir "${dict[output_dir]}"
+    dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     dict[genome_fasta_file]="$(koopa_realpath "${dict[genome_fasta_file]}")"
     dict[transcriptome_fasta_file]="$( \
         koopa_realpath "${dict[transcriptome_fasta_file]}" \
@@ -125,7 +117,6 @@ koopa_salmon_index() { # {{{1
             --output-file="${dict[gentrome_fasta_file]}" \
             --transcriptome-fasta-file="${dict[transcriptome_fasta_file]}"
         koopa_assert_is_file "${dict[gentrome_fasta_file]}"
-        koopa_rm "${dict[tmp_dir]}"
         index_args+=(
             "--decoys=${dict[decoys_file]}"
             "--transcripts=${dict[gentrome_fasta_file]}"
@@ -161,7 +152,7 @@ koopa_salmon_quant_paired_end() { # {{{1
         [fastq_r2_tail]='' # '_R2_001.fastq.gz'
         [gtf_file]=''
         [index_dir]=''
-        [lib_type]='A'
+        [lib_type]='A' # automatic strandedness detection
         [output_dir]=''
     )
     while (("$#"))
@@ -474,8 +465,8 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         "--libType=${dict[lib_type]}"
         "--mates1=${dict[fastq_r1_file]}"
         "--mates2=${dict[fastq_r2_file]}"
-        "--numBootstraps=${dict[bootstraps]}"
         '--no-version-check'
+        "--numBootstraps=${dict[bootstraps]}"
         "--output=${dict[output_dir]}"
         '--seqBias'
         "--threads=${dict[threads]}"

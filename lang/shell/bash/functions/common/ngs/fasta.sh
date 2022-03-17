@@ -15,7 +15,7 @@ koopa_fasta_generate_chromosomes_file() { # {{{1
     )
     declare -A dict=(
         [genome_fasta_file]=''
-        [output_file]=''
+        [output_file]='' # 'chromosomes.txt'
     )
     while (("$#"))
     do
@@ -46,6 +46,7 @@ koopa_fasta_generate_chromosomes_file() { # {{{1
     koopa_assert_is_set \
         '--genome-fasta-file' "${dict[genome_fasta_file]}" \
         '--output-file' "${dict[output_file]}"
+    koopa_assert_is_not_file "${dict[output_file]}"
     koopa_assert_is_file "${dict[genome_fasta_file]}"
     koopa_alert "Generating '${dict[output_file]}'."
     "${app[grep]}" '^>' \
@@ -94,7 +95,7 @@ koopa_fasta_generate_decoy_transcriptome_file() { # {{{1
     )
     declare -A dict=(
         [genome_fasta_file]=''
-        [output_file]=''
+        [output_file]='' # 'gentrome.fa.gz'
         [transcriptome_fasta_file]=''
     )
     while (("$#"))
@@ -135,6 +136,7 @@ koopa_fasta_generate_decoy_transcriptome_file() { # {{{1
         '--genome-fasta-file' "${dict[genome_fasta_file]}" \
         '--output-file' "${dict[output_file]}" \
         '--transcriptome-fasta-file' "${dict[transcriptome_fasta_file]}"
+    koopa_assert_is_not_file "${dict[output_file]}"
     koopa_assert_is_file \
         "${dict[genome_fasta_file]}" \
         "${dict[transcriptome_fasta_file]}"
