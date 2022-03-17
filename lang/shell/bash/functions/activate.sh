@@ -35,15 +35,15 @@ koopa_activate_bash_completion() { # {{{1
     [[ -r "${dict[script]}" ]] || return 0
     if [[ "${dict[nounset]}" -eq 1 ]]
     then
-        set +e
-        set +u
+        set +o errexit
+        set +o nounset
     fi
     # shellcheck source=/dev/null
     source "${dict[script]}"
     if [[ "${dict[nounset]}" -eq 1 ]]
     then
-        set -e
-        set -u
+        set -o errexit
+        set -o nounset
     fi
     return 0
 }
