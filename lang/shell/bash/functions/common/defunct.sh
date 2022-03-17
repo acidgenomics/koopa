@@ -19,7 +19,7 @@ koopa_defunct() { # {{{1
 }
 
 # Soft deprecations ============================================================
-koopa_active_conda_env() { # {{{1
+koopa_activate_conda_env() { # {{{1
     koopa_conda_activate_env "$@"
 }
 

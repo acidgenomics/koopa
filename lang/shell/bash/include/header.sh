@@ -155,6 +155,7 @@ __koopa_bash_header() { # {{{1
     then
         # Compare with current values defined in '~/.bashrc'.
         # Check all values with 'set +o'.
+        # Note that '+o' here means disable, '-o' means enable.
         set +o allexport  # -a
         set -o braceexpand  # -B
         set -o errexit  # -e
