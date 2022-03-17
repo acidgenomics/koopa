@@ -1129,11 +1129,10 @@ koopa_activate_pyenv() { # {{{1
     return 0
 }
 
-# FIXME This doesn't seem to be working right on Linux, need to debug...
 koopa_activate_python() { # {{{1
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2022-03-16.
+    # @note Updated 2022-03-17.
     #
     # Configures:
     # - Site packages library.
@@ -1154,9 +1153,7 @@ koopa_activate_python() { # {{{1
     # - https://twitter.com/sadhlife/status/1450459992419622920
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # """
-    # > local prefix_real  FIXME
-    local prefix startup_file
-    koopa_warn 'FIXME AAA'
+    local prefix prefix_real startup_file
     if koopa_is_macos
     then
         prefix="$(koopa_macos_python_prefix)"
@@ -1165,12 +1162,10 @@ koopa_activate_python() { # {{{1
     prefix="$(koopa_python_packages_prefix)"
     if [ -d "$prefix" ]
     then
-        koopa_warn 'FIXME HELLO THERE'
         koopa_activate_prefix "$prefix"
         prefix_real="$(koopa_realpath "$prefix")"
         koopa_add_to_pythonpath_start "$prefix_real"
     fi
-    koopa_warn 'FIXME BBB'
     if [ -z "${PIP_REQUIRE_VIRTUALENV:-}" ]
     then
         export PIP_REQUIRE_VIRTUALENV='true'
@@ -1184,7 +1179,6 @@ koopa_activate_python() { # {{{1
     then
         export PYTHONSTARTUP="$startup_file"
     fi
-    koopa_warn 'FIXME CCC'
     return 0
 }
 
