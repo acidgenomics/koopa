@@ -300,7 +300,7 @@ koopa_activate_bat() { # {{{1
 koopa_activate_bcbio_nextgen() { # {{{1
     # """
     # Activate bcbio-nextgen tool binaries.
-    # @note Updated 2021-06-11.
+    # @note Updated 2022-03-16.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
@@ -312,7 +312,7 @@ koopa_activate_bcbio_nextgen() { # {{{1
     prefix="$(koopa_bcbio_nextgen_tools_prefix)"
     [ -d "$prefix" ] || return 0
     koopa_add_to_path_end "${prefix}/bin"
-    unset -v PYTHONHOME PYTHONPATH
+    # > unset -v PYTHONHOME PYTHONPATH
     return 0
 }
 
@@ -349,10 +349,10 @@ koopa_activate_broot() { # {{{1
     script="${config_dir}/launcher/bash/br"
     [ -f "$script" ] || return 0
     nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
+    [ "$nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null
     . "$script"
-    [ "$nounset" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
 
@@ -397,7 +397,7 @@ koopa_activate_conda() { # {{{1
     koopa_is_alias 'conda' && unalias 'conda'
     koopa_is_alias 'mamba' && unalias 'mamba'
     nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
+    [ "$nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null
     . "$script"
     # Ensure the base environment is deactivated by default.
@@ -406,7 +406,7 @@ koopa_activate_conda() { # {{{1
     then
         conda deactivate
     fi
-    [ "$nounset" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -o nounset
     # Suppress mamba ASCII banner.
     [ -z "${MAMBA_NO_BANNER:-}" ] && export MAMBA_NO_BANNER=1
     return 0
@@ -552,8 +552,8 @@ koopa_activate_fzf() { # {{{1
     # Relax hardened shell temporarily, if necessary.
     if [ "$nounset" -eq 1 ]
     then
-        set +e
-        set +u
+        set +o errexit
+        set +o nounset
     fi
     # Auto-completion.
     script="${prefix}/shell/completion.${shell}"
@@ -572,8 +572,8 @@ koopa_activate_fzf() { # {{{1
     # Reset hardened shell, if necessary.
     if [ "$nounset" -eq 1 ]
     then
-        set -e
-        set -u
+        set -o errexit
+        set -o nounset
     fi
     return 0
 }
@@ -878,9 +878,9 @@ koopa_activate_mcfly() { #{{{1
         fi
     fi
     nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
+    [ "$nounset" -eq 1 ] && set +o nounset
     eval "$(mcfly init "$shell")"
-    [ "$nounset" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
 
@@ -1021,11 +1021,11 @@ koopa_activate_perlbrew() { # {{{1
     script="${prefix}/etc/bashrc"
     [ -r "$script" ] || return 0
     nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
+    [ "$nounset" -eq 1 ] && set +o nounset
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
     . "$script"
-    [ "$nounset" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
 
@@ -1123,13 +1123,13 @@ koopa_activate_pyenv() { # {{{1
     export PYENV_ROOT="$prefix"
     koopa_activate_prefix "$prefix"
     nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
+    [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
-    [ "$nounset" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
 
-# FIXME Setting PYTHONPATH may be messing with conda on Linux.
+# FIXME This doesn't seem to be working right on Linux, need to debug...
 koopa_activate_python() { # {{{1
     # """
     # Activate Python, including custom installed packages.
@@ -1154,20 +1154,23 @@ koopa_activate_python() { # {{{1
     # - https://twitter.com/sadhlife/status/1450459992419622920
     # - https://docs.python-guide.org/dev/pip-virtualenv/
     # """
-    local prefix prefix_real startup_file
+    # > local prefix_real  FIXME
+    local prefix startup_file
+    koopa_warn 'FIXME AAA'
     if koopa_is_macos
     then
         prefix="$(koopa_macos_python_prefix)"
         koopa_activate_prefix "$prefix"
     fi
     prefix="$(koopa_python_packages_prefix)"
-    # FIXME Enabling this may mess up conda configuration.
-    # > if [ -d "$prefix" ]
-    # > then
-    # >     koopa_activate_prefix "$prefix"
-    # >     prefix_real="$(koopa_realpath "$prefix")"
-    # >     koopa_add_to_pythonpath_start "$prefix_real"
-    # > fi
+    if [ -d "$prefix" ]
+    then
+        koopa_warn 'FIXME HELLO THERE'
+        koopa_activate_prefix "$prefix"
+        prefix_real="$(koopa_realpath "$prefix")"
+        koopa_add_to_pythonpath_start "$prefix_real"
+    fi
+    koopa_warn 'FIXME BBB'
     if [ -z "${PIP_REQUIRE_VIRTUALENV:-}" ]
     then
         export PIP_REQUIRE_VIRTUALENV='true'
@@ -1181,6 +1184,7 @@ koopa_activate_python() { # {{{1
     then
         export PYTHONSTARTUP="$startup_file"
     fi
+    koopa_warn 'FIXME CCC'
     return 0
 }
 
@@ -1206,9 +1210,9 @@ koopa_activate_rbenv() { # {{{1
     export RBENV_ROOT="$prefix"
     koopa_activate_prefix "$prefix"
     nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
+    [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
-    [ "$nounset" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
 
@@ -1484,9 +1488,9 @@ koopa_activate_zoxide() { # {{{1
     esac
     koopa_is_installed zoxide || return 0
     nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
+    [ "$nounset" -eq 1 ] && set +o nounset
     eval "$(zoxide init "$shell")"
-    [ "$nounset" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -o nounset
     return 0
 }
 
@@ -3161,8 +3165,7 @@ koopa_is_set_nounset() { # {{{1
     # variables that can cause the shell session to exit.
     #
     # How to enable:
-    # > set -o nounset
-    # > set -u
+    # > set -o nounset  # -u
     #
     # Bash:
     # shopt -o (arg?)
