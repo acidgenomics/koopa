@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-02-25.
+    # Updated 2022-03-17.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -413,7 +413,7 @@ __koopa_complete() { # {{{1
                         'kallisto' | \
                         'salmon')
                             args=(
-                                'index'  # FIXME Need to add support.
+                                'index'  # FIXME Need to update support for kallisto.
                                 'quant'  # FIXME Need to add support -- work on dirs.
                             )
                             ;;
@@ -484,6 +484,18 @@ __koopa_complete() { # {{{1
                                         'ls'
                                         'mv-to-parent'
                                         'sync'
+                                    )
+                                    ;;
+                            esac
+                            ;;
+                        'kallisto' | \
+                        'salmon')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                # FIXME Need to ensure that this works.
+                                'quant')
+                                    args=(
+                                        'paired-end'
+                                        'single-end'
                                     )
                                     ;;
                             esac
