@@ -783,22 +783,22 @@ koopa_debian_apt_configure_sources() { # {{{1
     declare -A urls=(
         [main]="$( \
             koopa_grep \
-                --extended-regexp \
                 --file="${dict[sources_list]}" \
                 --pattern='^deb\s' \
+                --regex \
             | koopa_grep \
-                --fixed-strings \
+                --fixed \
                 --pattern=" ${codenames[main]} main" \
             | "${app[head]}" --lines=1 \
             | "${app[cut]}" --delimiter=' ' --fields='2' \
         )"
         [security]="$( \
             koopa_grep \
-                --extended-regexp \
                 --file="${dict[sources_list]}" \
                 --pattern='^deb\s' \
+                --regex \
             | koopa_grep \
-                --fixed-strings \
+                --fixed \
                 --pattern=" ${codenames[security]} main" \
             | "${app[head]}" --lines=1 \
             | "${app[cut]}" --delimiter=' ' --fields='2' \
@@ -955,9 +955,9 @@ koopa_debian_apt_enabled_repos() { # {{{1
     dict[pattern]="^deb\s.+\s${dict[os]}\s.+$"
     x="$( \
         koopa_grep \
-            --extended-regexp \
             --file="${dict[file]}" \
             --pattern="${dict[pattern]}" \
+            --regex \
         | "${app[cut]}" --delimiter=' ' --fields='4-' \
     )"
     [[ -n "$x" ]] || return 1

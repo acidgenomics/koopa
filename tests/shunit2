@@ -6,7 +6,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lang/shell/bash/include/header.sh"
 main() { # {{{1
     # """
     # Run shUnit2 tests.
-    # @note Updated 2022-02-17.
+    # @note Updated 2022-03-18.
     #
     # @seealso
     # - https://github.com/kward/shunit2
@@ -14,7 +14,6 @@ main() { # {{{1
     local app dict
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
-        [grep]="$(koopa_locate_grep)"
         [shunit2]="$(koopa_locate_shunit2)"
         [sort]="$(koopa_locate_sort)"
     )
@@ -46,7 +45,7 @@ main() { # {{{1
         readarray -t tests <<< "$( \
             declare -F \
                 | "${app[cut]}" --delimiter=' ' --fields='3' \
-                | "${app[grep]}" --extended-regexp '^test_' \
+                | koopa_grep --pattern='^test_' --regex \
                 | "${app[sort]}" \
         )"
         for test in "${tests[@]}"
