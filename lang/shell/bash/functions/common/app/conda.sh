@@ -274,8 +274,8 @@ koopa_conda_env_prefix() { # {{{1
     # Note that this step attempts to automatically match the latest version.
     dict[env_prefix]="$( \
         koopa_grep \
-            --extended-regexp \
             --pattern="/${dict[env_name]}(@[.0-9]+)?\"" \
+            --regex \
             --string="${dict[env_list]}" \
         | "${app[tail]}" --lines=1 \
         | "${app[sed]}" --regexp-extended 's/^.*"(.+)".*$/\1/' \

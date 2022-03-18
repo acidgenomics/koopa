@@ -326,9 +326,9 @@ koopa_docker_build_all_images() { # {{{1
         then
             readarray -t images <<< "$( \
                 koopa_grep \
-                    --extended-regexp \
                     --file="$build_file" \
                     --pattern='^[-_a-z0-9]+$' \
+                    --regex \
             )"
         else
             readarray -t images <<< "$( \
@@ -489,9 +489,9 @@ koopa_docker_is_build_recent() { # {{{1
         )"
         dict2[created]="$( \
             koopa_grep \
-                --extended-regexp \
                 --only-matching \
                 --pattern='[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
+                --regex \
                 --string="${dict2[json]}" \
             | "${app[sed]}" 's/T/ /' \
             | "${app[sed]}" 's/\$/ UTC/'
