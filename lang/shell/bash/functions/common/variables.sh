@@ -442,10 +442,10 @@ koopa_variable() { # {{{1
     koopa_assert_is_file "${dict[file]}"
     dict[str]="$( \
         koopa_grep \
-            --extended-regexp \
             --file="${dict[file]}" \
             --only-matching \
             --pattern="^${dict[key]}=\"[^\"]+\"" \
+            --regex \
     )"
     [[ -n "${dict[str]}" ]] || return 1
     dict[str]="$( \

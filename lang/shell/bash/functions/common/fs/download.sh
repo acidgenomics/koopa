@@ -93,9 +93,9 @@ koopa_download_cran_latest() { # {{{1
         file="$( \
             koopa_parse_url "$url" \
             | koopa_grep \
-                --extended-regexp \
                 --only-matching \
                 --pattern="$pattern" \
+                --regex \
             | "${app[head]}" --lines=1 \
         )"
         koopa_download "https://cran.r-project.org/src/contrib/${file}"

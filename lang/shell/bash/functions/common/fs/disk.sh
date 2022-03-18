@@ -22,9 +22,9 @@ koopa_disk_gb_free() { # {{{1
             | "${app[head]}" --lines=2 \
             | "${app[sed]}" --quiet '2p' \
             | koopa_grep \
-                --extended-regexp \
                 --only-matching \
                 --pattern='(\b[.0-9]+G\b)' \
+                --regex \
             | "${app[head]}" --lines=3 \
             | "${app[sed]}" --quiet '3p' \
             | "${app[sed]}" 's/G$//' \
@@ -53,9 +53,9 @@ koopa_disk_gb_total() { # {{{1
             | "${app[head]}" --lines=2 \
             | "${app[sed]}" --quiet '2p' \
             | koopa_grep \
-                --extended-regexp \
                 --only-matching \
                 --pattern='(\b[.0-9]+G\b)' \
+                --regex \
             | "${app[head]}" --lines=1 \
             | "${app[sed]}" 's/G$//' \
     )"
@@ -83,9 +83,9 @@ koopa_disk_gb_used() { # {{{1
             | "${app[head]}" --lines=2 \
             | "${app[sed]}" --quiet '2p' \
             | koopa_grep \
-                --extended-regexp \
                 --only-matching \
                 --pattern='(\b[.0-9]+G\b)' \
+                --regex \
             | "${app[head]}" --lines=2 \
             | "${app[sed]}" --quiet '2p' \
             | "${app[sed]}" 's/G$//' \
@@ -129,9 +129,9 @@ koopa_disk_pct_used() { # {{{1
             | "${app[head]}" --lines=2 \
             | "${app[sed]}" --quiet '2p' \
             | koopa_grep \
-                --extended-regexp \
                 --only-matching \
                 --pattern='([.0-9]+%)' \
+                --regex \
             | "${app[head]}" --lines=1 \
             | "${app[sed]}" 's/%$//' \
     )"

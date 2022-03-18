@@ -390,9 +390,9 @@ koopa_aws_s3_find() { # {{{1
             fi
             str="$( \
                 koopa_grep \
-                    --extended-regexp \
                     --invert-match \
                     --pattern="$pattern" \
+                    --regex \
                     --string="$str" \
             )"
             [[ -n "$str" ]] || return 1
@@ -417,8 +417,8 @@ koopa_aws_s3_find() { # {{{1
             fi
             str="$( \
                 koopa_grep \
-                    --extended-regexp \
                     --pattern="$pattern" \
+                    --regex \
                     --string="$str" \
             )"
             [[ -n "$str" ]] || return 1
@@ -648,15 +648,15 @@ koopa_aws_s3_ls() { # {{{1
     then
         dict[bucket_prefix]="$( \
             koopa_grep \
-                --extended-regexp \
                 --only-matching \
                 --pattern='^s3://[^/]+' \
+                --regex \
                 --string="${dict[prefix]}" \
         )"
         files="$( \
             koopa_grep \
-                --extended-regexp \
                 --pattern='^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+                --regex \
                 --string="$str" \
             || true \
         )"
@@ -667,7 +667,7 @@ koopa_aws_s3_ls() { # {{{1
                 | "${app[awk]}" '{print $4}' \
                 | "${app[awk]}" 'NF' \
                 | "${app[sed]}" "s|^|${dict[bucket_prefix]}/|g" \
-                | koopa_grep --extended-regexp --pattern='^s3://.+[^/]$' \
+                | koopa_grep --pattern='^s3://.+[^/]$' --regex \
         )"
         koopa_print "$files"
         return 0
@@ -677,9 +677,9 @@ koopa_aws_s3_ls() { # {{{1
     then
         dirs="$( \
             koopa_grep \
-                --extended-regexp \
                 --only-matching \
                 --pattern='^\s+PRE\s.+/$' \
+                --regex \
                 --string="$str" \
             || true \
         )"
@@ -699,8 +699,8 @@ koopa_aws_s3_ls() { # {{{1
     then
         files="$( \
             koopa_grep \
-                --extended-regexp \
                 --pattern='^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+                --regex \
                 --string="$str" \
             || true \
         )"

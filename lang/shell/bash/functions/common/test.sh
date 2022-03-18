@@ -70,8 +70,8 @@ koopa_test_find_files_by_ext() { # {{{1
     dict[files]="$( \
         koopa_print "${all_files[@]}" \
         | koopa_grep \
-            --extended-regexp \
             --pattern="${dict[pattern]}" \
+            --regex \
         || true \
     )"
     if [[ -z "${dict[files]}" ]]
