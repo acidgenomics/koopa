@@ -136,7 +136,7 @@ koopa_find_app_version() { # {{{1
 koopa_install_app() { # {{{1
     # """
     # Install application into a versioned directory structure.
-    # @note Updated 2022-02-03.
+    # @note Updated 2022-03-17.
     # """
     local clean_path_arr dict homebrew_opt_arr init_dir link_args link_include
     local link_include_arr opt_arr pos
@@ -150,6 +150,7 @@ koopa_install_app() { # {{{1
         [installers_prefix]="$(koopa_installers_prefix)"
         [koopa_prefix]="$(koopa_koopa_prefix)"
         [link_app]=1
+        [link_opt]=1
         [make_prefix]="$(koopa_make_prefix)"
         [name]=''
         [name_fancy]=''
@@ -263,6 +264,10 @@ koopa_install_app() { # {{{1
                 ;;
             '--no-link')
                 dict[link_app]=0
+                shift 1
+                ;;
+            '--no-link-opt')
+                dict[link_opt]=0
                 shift 1
                 ;;
             '--no-prefix-check')
@@ -405,6 +410,7 @@ ${dict[platform]}/${dict[installer_file]}.sh"
         fi
     fi
     if [[ -d "${dict[prefix]}" ]] && \
+        [[ "${dict[link_opt]}" -eq 1 ]] && \
         [[ "${dict[auto_prefix]}" -eq 1 ]] && \
         [[ "${dict[shared]}" -eq 1 ]] && \
         [[ "${dict[system]}" -eq 0 ]]
