@@ -1,29 +1,312 @@
 #!/usr/bin/env bash
 
-koopa_anaconda_version() { # {{{
+# Core functions ===============================================================
+
+koopa_extract_version() { # {{{1
     # """
-    # Anaconda verison.
-    # @note Updated 2022-02-25.
+    # Extract version number.
+    # @note Updated 2022-02-27.
+    #
+    # @examples
+    # > koopa_extract_version "$(bash --version)"
+    # # 5.1.16
     # """
-    local app str
-    koopa_assert_has_no_args "$#"
+    local app arg dict
     declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [conda]="$(koopa_locate_anaconda)"
+        [head]="$(koopa_locate_head)"
     )
-    koopa_is_anaconda "${app[conda]}" || return 1
-    # shellcheck disable=SC2016
-    str="$( \
-        "${app[conda]}" list 'anaconda' \
-            | koopa_grep \
+    declare -A dict=(
+        [pattern]="$(koopa_version_pattern)"
+    )
+    if [[ "$#" -eq 0 ]]
+    then
+        args=("$(</dev/stdin)")
+    else
+        args=("$@")
+    fi
+    for arg in "${args[@]}"
+    do
+        local str
+        str="$( \
+            koopa_grep \
                 --extended-regexp \
-                --pattern='^anaconda ' \
-            | "${app[awk]}" '{print $2}' \
-    )"
+                --only-matching \
+                --pattern="${dict[pattern]}" \
+                --string="$arg" \
+            | "${app[head]}" --lines=1 \
+        )"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
+    done
+    return 0
+}
+
+# FIXME This seems too complicated, break out into component parts??
+
+koopa_get_version() { # {{{1
+    # """
+    # Get the version of an installed program.
+    # @note Updated 2022-03-17.
+    #
+    # @section Version lookup priority:
+    # 1. Direct executable input.
+    # 2. Specific version function handoff.
+    # 3. Locate app attempt.
+    # """
+    local cmd
+    koopa_assert_has_args "$#"
+    for cmd in "$@"
+    do
+        local dict
+        declare -A dict
+        if [[ -x "$cmd" ]]
+        then
+            dict[cmd]="$cmd"
+        fi
+        dict[cmd_name]="$(koopa_basename "$cmd")"
+        # FIXME Consider using an internal prefix for this, or including 'get'.
+        dict[fun]="koopa_$(koopa_snake_case_simple "${dict[cmd_name]}")_version"
+        dict[ver_arg]="$(koopa_get_version_argument "${dict[cmd_name]}")"
+        if koopa_is_function "${dict[fun]}"
+        then
+            # FIXME We need to pass in the executable path here, when applicable (e.g. R)....
+            # FIXME Rethink version lookups, where we're locating the specific program.
+            # FIXME We should use 'get_version' as the main runner....
+            dict[str]="$("${dict[fun]}")"
+        else
+            dict[str]="$("$cmd" "${dict[ver_arg]}" 2>&1 || true)"
+        fi
+        if [[ -x "$cmd" ]]
+        then
+            # FIXME Rework calling with 'koopa_get_version_name'.
+            # FIXME Rework calling with 'koopa_get_version_argument'.
+            # FIXME Call 'locate_version' here if necessary.
+            # FIXME Split this out as a separate function...
+            # FIXME Handoff to 'locate_app_XXX' needs to sanitize into snake_case.
+            # FIXME Need to call 'locate_app' here...
+            # FIXME Consider passing the 'cmd' in here only for specific
+            # functions (see below).
+            koopa_is_installed "${app[cmd]}" || return 1
+            dict[version_arg]="$(koopa_get_version_argument "${app[cmd]}")"
+            dict[str]="$("${app[cmd]}" "${dict[version_arg]}" 2>&1 || true)"
+            [[ -n "${dict[str]}" ]] || return 1
+            koopa_extract_version "${dict[str]}"
+        fi
+        [[ -n "${dict[str]}" ]] || return 1
+        koopa_print "${dict[str]}"
+    done
+    return 0
+}
+
+koopa_get_version_from_pkg_config() { # {{{1
+    # """
+    # Get a library version via pkg-config.
+    # @note Updated 2022-02-27.
+    # """
+    local app pkg str
+    koopa_assert_has_args_eq "$#" 1
+    pkg="${1:?}"
+    declare -A app=(
+        [pkg_config]="$(koopa_locate_pkg_config)"
+    )
+    str="$("${app[pkg_config]}" --modversion "$pkg")"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
     return 0
 }
+
+koopa_get_version_argument() { # {{{1
+    # """
+    # Return matching version argument for an input program.
+    # @note Updated 2022-03-17.
+    #
+    # @examples
+    # > koopa_return_version_argument 'rstudio-server'
+    # """
+    local arg name
+    koopa_assert_has_args_eq "$#" 1
+    name="$(koopa_basename "${1:?}")"
+    case "$name" in
+        'docker-credential-pass' | \
+        'go' | \
+        'openssl' | \
+        'rstudio-server' | \
+        'singularity')
+            arg='version'
+            ;;
+        'lua')
+            arg='-v'
+            ;;
+        'openssh' | \
+        'ssh' | \
+        'tmux')
+            arg='-V'
+            ;;
+        *)
+            arg='--version'
+            ;;
+    esac
+    koopa_print "$arg"
+    return 0
+}
+
+koopa_get_version_name() { # {{{1
+    # """
+    # Match a desired program name to corresponding to dependency to
+    # run with a version argument (e.g. '--version').
+    # @note Updated 2022-03-17.
+    # """
+    local name
+    koopa_assert_has_args_eq "$#" 1
+    name="$(koopa_basename "${1:?}")"
+    case "$name" in
+        'aspera-connect')
+            name='ascp'
+            ;;
+        'aws-cli')
+            name='aws'
+            ;;
+        'azure-cli')
+            name='az'
+            ;;
+        'bcbio-nextgen')
+            name='bcbio_nextgen.py'
+            ;;
+        'binutils')
+            # Checking against 'ld' doesn't work on macOS with Homebrew.
+            name='dlltool'
+            ;;
+        'coreutils')
+            name='env'
+            ;;
+        'du-dust')
+            name='dust'
+            ;;
+        'fd-find')
+            name='fd'
+            ;;
+        'findutils')
+            name='find'
+            ;;
+        'gdal')
+            name='gdal-config'
+            ;;
+        'geos')
+            name='geos-config'
+            ;;
+        'gnupg')
+            name='gpg'
+            ;;
+        'google-cloud-sdk')
+            name='gcloud'
+            ;;
+        'gsl')
+            name='gsl-config'
+            ;;
+        'homebrew')
+            name='brew'
+            ;;
+        'icu')
+            name='icu-config'
+            ;;
+        'llvm')
+            name='llvm-config'
+            ;;
+        'ncurses')
+            name='ncurses6-config'
+            ;;
+        'neovim')
+            name='nvim'
+            ;;
+        'openssh')
+            name='ssh'
+            ;;
+        'password-store')
+            name='pass'
+            ;;
+        'pcre2')
+            name='pcre2-config'
+            ;;
+        'pip')
+            name='pip3'
+            ;;
+        'python')
+            name='python3'
+            ;;
+        'ranger-fm')
+            name='ranger'
+            ;;
+        'ripgrep')
+            name='rg'
+            ;;
+        'ripgrep-all')
+            name='rga'
+            ;;
+        'rust')
+            name='rustc'
+            ;;
+        'sqlite')
+            name='sqlite3'
+            ;;
+        'subversion')
+            name='svn'
+            ;;
+        'tealdeer')
+            name='tldr'
+            ;;
+        'texinfo')
+            # TeX Live install can mask this on macOS.
+            name='texi2any'
+            ;;
+        'the-silver-searcher')
+            name='ag'
+            ;;
+    esac
+    koopa_print "$name"
+    return 0
+}
+
+koopa_sanitize_version() { # {{{1
+    # """
+    # Sanitize version.
+    # @note Updated 2022-02-27.
+    #
+    # @examples
+    # > koopa_sanitize_version '2.7.1p83'
+    # # 2.7.1
+    # """
+    local str
+    koopa_assert_has_args "$#"
+    for str in "$@"
+    do
+        koopa_str_detect_regex \
+            --string="$str" \
+            --pattern='[.0-9]+' \
+            || return 1
+        str="$( \
+            koopa_sub \
+                --pattern='^([.0-9]+).*$' \
+                --replacement='\1' \
+                "$str" \
+        )"
+        koopa_print "$str"
+    done
+    return 0
+}
+
+koopa_version_pattern() { # {{{1
+    # """
+    # Version pattern.
+    # @note Updated 2022-02-27.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_print '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?([0-9]+)?'
+    return 0
+}
+
+
+
+# Runners supporting only current version ======================================
 
 koopa_armadillo_version() { # {{{1
     # """
@@ -77,28 +360,6 @@ koopa_boost_version() { # {{{1
     return 0
 }
 
-koopa_bpytop_version() { # {{{1
-    # """
-    # bpytop version.
-    # @note Updated 2022-02-25.
-    # """
-    local app str
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [bpytop]="$(koopa_locate_bpytop)"
-    )
-    # shellcheck disable=SC2016
-    str="$( \
-        "${app[bpytop]}" --version \
-            | koopa_grep --pattern='bpytop version:' \
-            | "${app[awk]}" '{ print $NF }' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
 koopa_cairo_version() { # {{{1
     # """
     # Cairo (libcairo) version.
@@ -106,15 +367,6 @@ koopa_cairo_version() { # {{{1
     # """
     koopa_assert_has_no_args "$#"
     koopa_get_version_from_pkg_config 'cairo'
-}
-
-koopa_conda_version() { # {{{1
-    # """
-    # Conda version.
-    # @note Updated 2022-01-21.
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_get_version "$(koopa_locate_conda)"
 }
 
 koopa_current_bcbio_nextgen_version() { # {{{1
@@ -320,103 +572,6 @@ koopa_eigen_version() { # {{{1
     koopa_get_version_from_pkg_config 'eigen3'
 }
 
-koopa_emacs_version() { # {{{1
-    # """
-    # Emacs version.
-    # @note Updated 2022-01-20.
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_get_version "$(koopa_locate_emacs)"
-}
-
-koopa_extract_version() { # {{{1
-    # """
-    # Extract version number.
-    # @note Updated 2022-02-27.
-    #
-    # @examples
-    # > koopa_extract_version "$(bash --version)"
-    # # 5.1.16
-    # """
-    local app arg dict
-    declare -A app=(
-        [head]="$(koopa_locate_head)"
-    )
-    declare -A dict=(
-        [pattern]="$(koopa_version_pattern)"
-    )
-    if [[ "$#" -eq 0 ]]
-    then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
-    fi
-    for arg in "${args[@]}"
-    do
-        local str
-        str="$( \
-            koopa_grep \
-                --extended-regexp \
-                --only-matching \
-                --pattern="${dict[pattern]}" \
-                --string="$arg" \
-            | "${app[head]}" --lines=1 \
-        )"
-        [[ -n "$str" ]] || return 1
-        koopa_print "$str"
-    done
-    return 0
-}
-
-koopa_gcc_version() { # {{{1
-    # """
-    # GCC version.
-    # @note Updated 2022-01-20.
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_get_version "$(koopa_locate_gcc)"
-}
-
-koopa_get_version() { # {{{1
-    # """
-    # Get the version of an installed program.
-    # @note Updated 2022-02-23.
-    # """
-    local cmd
-    koopa_assert_has_args "$#"
-    for cmd in "$@"
-    do
-        local fun str
-        fun="koopa_$(koopa_snake_case_simple "$cmd")_version"
-        if koopa_is_function "$fun"
-        then
-            str="$("$fun")"
-        else
-            str="$(koopa_return_version "$cmd")"
-        fi
-        [[ -n "$str" ]] || return 1
-        koopa_print "$str"
-    done
-    return 0
-}
-
-koopa_get_version_from_pkg_config() { # {{{1
-    # """
-    # Get a library version via pkg-config.
-    # @note Updated 2022-02-27.
-    # """
-    local app pkg str
-    koopa_assert_has_args_eq "$#" 1
-    pkg="${1:?}"
-    declare -A app=(
-        [pkg_config]="$(koopa_locate_pkg_config)"
-    )
-    str="$("${app[pkg_config]}" --modversion "$pkg")"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
 koopa_github_latest_release() { # {{{1
     # """
     # Get the latest release version from GitHub.
@@ -528,36 +683,6 @@ koopa_koopa_version() { # {{{1
     return 0
 }
 
-koopa_lesspipe_version() { # {{{1
-    # """
-    # lesspipe.sh version.
-    # @note Updated 2022-02-23.
-    # """
-    local app str
-    declare -A app=(
-        [cat]="$(koopa_locate_cat)"
-        [lesspipe]="$(koopa_locate_lesspipe)"
-        [sed]="$(koopa_locate_sed)"
-    )
-    str="$( \
-        "${app[cat]}" "${app[lesspipe]}" \
-            | "${app[sed]}" --quiet '2p' \
-            | koopa_extract_version \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
-koopa_llvm_version() { # {{{1
-    # """
-    # LLVM version.
-    # @note Updated 2022-01-20.
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_get_version "$(koopa_locate_llvm_config)"
-}
-
 koopa_lmod_version() { # {{{1
     # """
     # Lmod version.
@@ -569,15 +694,6 @@ koopa_lmod_version() { # {{{1
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
     return 0
-}
-
-koopa_mamba_version() { # {{{1
-    # """
-    # Mamba version.
-    # @note Updated 2022-01-21.
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_get_version "$(koopa_locate_mamba)"
 }
 
 koopa_node_package_version() { # {{{1
@@ -608,28 +724,6 @@ koopa_node_package_version() { # {{{1
     )"
     [[ -n "${dict[str]}" ]] || return 1
     koopa_print "${dict[str]}"
-    return 0
-}
-
-koopa_openjdk_version() { # {{{1
-    # """
-    # Java (OpenJDK) version.
-    # @note Updated 2022-02-27.
-    # """
-    local app str
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [head]="$(koopa_locate_head)"
-        [java]="$(koopa_locate_java)"
-    )
-    str="$( \
-        "${app[java]}" --version \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter=' ' --fields='2' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
     return 0
 }
 
@@ -674,76 +768,18 @@ koopa_os_version() { # {{{1
     return 0
 }
 
-koopa_parallel_version() { # {{{1
-    # """
-    # GNU parallel version.
-    # @note Updated 2022-02-27.
-    # """
-    local app str
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [head]="$(koopa_locate_head)"
-        [parallel]="$(koopa_locate_parallel)"
-    )
-    str="$( \
-        "${app[parallel]}" --version \
-            | "${app[head]}" --lines=1 \
-            | "${app[cut]}" --delimiter=' ' --fields='3' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
+# FIXME This is a draft function.
+# FIXME Need to harden and finalize.
 
-koopa_perl_file_rename_version() { # {{{1
+koopa_python_package_version() { # {{{1
     # """
-    # Perl File::Rename version.
-    # @note Updated 2022-02-27.
+    # Python package version.
+    # @note Updated 2022-03-17.
     # """
-    local app str
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [cut]="$(koopa_locate_cut)"
-        [head]="$(koopa_locate_head)"
-        [rename]="$(koopa_locate_rename)"
-    )
-    str="$( \
-        "${app[rename]}" --version 2>/dev/null \
-            | "${app[head]}" --lines=1 \
-
-    )"
-    # Ensure we're detecting the Perl module.
-    koopa_str_detect_fixed \
-        --string="$str" \
-        --pattern='File::Rename' \
-        || return 1
-    str="$( \
-        koopa_print "$str" \
-            | "${app[cut]}" --delimiter=' ' --fields='5' \
-            | koopa_extract_version \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
-koopa_pip_version() { # {{{1
-    # """
-    # Python pip version.
-    # @note Updated 2022-03-09.
-    # """
-    local app str
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        [python]="$(koopa_locate_python)"
-    )
-    str="$("${app[python]}" -m pip --version)"
-    [[ -n "$str" ]] || return 1
-    str="$(koopa_extract_version "$str")"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
+    pkg="${1:?}"
+    python3 -m pip show "$pkg" \
+        | grep '^Version:' \
+        | cut -d ' ' -f 2
 }
 
 koopa_prettier_version() { # {{{1
@@ -787,6 +823,221 @@ koopa_r_package_version() { # {{{1
     return 0
 }
 
+koopa_xcode_clt_version() { # {{{1
+    # """
+    # Xcode CLT version.
+    # @note Updated 2022-02-27.
+    #
+    # @seealso
+    # - https://apple.stackexchange.com/questions/180957
+    # - pkgutil --pkgs=com.apple.pkg.Xcode
+    # """
+    local app dict
+    koopa_assert_has_no_args "$#"
+    koopa_is_xcode_clt_installed || return 1
+    declare -A app=(
+        [awk]="$(koopa_locate_awk)"
+        [pkgutil]="$(koopa_macos_locate_pkgutil)"
+    )
+    declare -A dict=(
+        [pkg]='com.apple.pkg.CLTools_Executables'
+    )
+    "${app[pkgutil]}" --pkgs="${dict[pkg]}" >/dev/null || return 1
+    # shellcheck disable=SC2016
+    dict[str]="$( \
+        "${app[pkgutil]}" --pkg-info="${dict[pkg]}" \
+            | "${app[awk]}" '/version:/ {print $2}' \
+    )"
+    [[ -n "${dict[str]}" ]] || return 1
+    koopa_print "${dict[str]}"
+    return 0
+}
+
+
+
+# Runners supporting flexible version ==========================================
+
+koopa_anaconda_version() { # {{{
+    # """
+    # Anaconda verison.
+    # @note Updated 2022-03-17.
+    #
+    # @examples
+    # # Version-specific lookup:
+    # > koopa_anaconda_version '/opt/koopa/app/anaconda/2021.05/bin/conda'
+    # """
+    local app str
+    koopa_assert_has_args_le "$#" 1
+    declare -A app=(
+        [awk]="$(koopa_locate_awk)"
+        [conda]="${1:-}"
+    )
+    [[ -z "${app[conda]}" ]] && app[conda]="$(koopa_locate_anaconda)"
+    koopa_is_anaconda "${app[conda]}" || return 1
+    # shellcheck disable=SC2016
+    str="$( \
+        "${app[conda]}" list 'anaconda' \
+            | koopa_grep \
+                --extended-regexp \
+                --pattern='^anaconda ' \
+            | "${app[awk]}" '{print $2}' \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}
+
+# FIXME Rework using a Python package lookup instead.
+# FIXME Allow the user to pass in executable here.
+# FIXME We don't need version specific lookup of this, simplify.
+
+koopa_bpytop_version() { # {{{1
+    # """
+    # bpytop version.
+    # @note Updated 2022-02-25.
+    # """
+    local app str
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [awk]="$(koopa_locate_awk)"
+        [bpytop]="$(koopa_locate_bpytop)"
+    )
+    # shellcheck disable=SC2016
+    str="$( \
+        "${app[bpytop]}" --version \
+            | koopa_grep --pattern='bpytop version:' \
+            | "${app[awk]}" '{ print $NF }' \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}
+
+# FIXME Allow the user to pass in executable here.
+koopa_lesspipe_version() { # {{{1
+    # """
+    # lesspipe.sh version.
+    # @note Updated 2022-02-23.
+    # """
+    local app str
+    declare -A app=(
+        [cat]="$(koopa_locate_cat)"
+        [lesspipe]="$(koopa_locate_lesspipe)"
+        [sed]="$(koopa_locate_sed)"
+    )
+    str="$( \
+        "${app[cat]}" "${app[lesspipe]}" \
+            | "${app[sed]}" --quiet '2p' \
+            | koopa_extract_version \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}
+
+# FIXME Consider renaming this to Java version?
+koopa_openjdk_version() { # {{{1
+    # """
+    # Java (OpenJDK) version.
+    # @note Updated 2022-02-27.
+    # """
+    local app str
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [cut]="$(koopa_locate_cut)"
+        [head]="$(koopa_locate_head)"
+        [java]="$(koopa_locate_java)"
+    )
+    str="$( \
+        "${app[java]}" --version \
+            | "${app[head]}" --lines=1 \
+            | "${app[cut]}" --delimiter=' ' --fields='2' \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}
+
+# FIXME Allow the user to pass in executable.
+koopa_parallel_version() { # {{{1
+    # """
+    # GNU parallel version.
+    # @note Updated 2022-02-27.
+    # """
+    local app str
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [cut]="$(koopa_locate_cut)"
+        [head]="$(koopa_locate_head)"
+        [parallel]="$(koopa_locate_parallel)"
+    )
+    str="$( \
+        "${app[parallel]}" --version \
+            | "${app[head]}" --lines=1 \
+            | "${app[cut]}" --delimiter=' ' --fields='3' \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}
+
+# FIXME Can we detect this as a Perl package version instead? Is there a way
+# to consistently do this that doesn't rely on '--version'?
+koopa_perl_file_rename_version() { # {{{1
+    # """
+    # Perl File::Rename version.
+    # @note Updated 2022-02-27.
+    # """
+    local app str
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [cut]="$(koopa_locate_cut)"
+        [head]="$(koopa_locate_head)"
+        [rename]="$(koopa_locate_rename)"
+    )
+    str="$( \
+        "${app[rename]}" --version 2>/dev/null \
+            | "${app[head]}" --lines=1 \
+
+    )"
+    # Ensure we're detecting the Perl module.
+    koopa_str_detect_fixed \
+        --string="$str" \
+        --pattern='File::Rename' \
+        || return 1
+    str="$( \
+        koopa_print "$str" \
+            | "${app[cut]}" --delimiter=' ' --fields='5' \
+            | koopa_extract_version \
+    )"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}
+
+# FIXME Can we standardize this as Python package version instead?
+# FIXME Rethink this approach...JSON parsing?
+# FIXME Allow the user to pass in a specific Python?
+# FIXME Consider unsetting PYTHONPATH in a subshell here.
+
+koopa_pip_version() { # {{{1
+    # """
+    # Python pip version.
+    # @note Updated 2022-03-09.
+    # """
+    local app str
+    koopa_assert_has_no_args "$#"
+    declare -A app=(
+        [python]="$(koopa_locate_python)"
+    )
+    str="$("${app[python]}" -m pip --version)"
+    [[ -n "$str" ]] || return 1
+    str="$(koopa_extract_version "$str")"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}
+
 koopa_r_version() { # {{{1
     # """
     # R version.
@@ -816,153 +1067,7 @@ koopa_r_version() { # {{{1
     return 0
 }
 
-koopa_return_version() { # {{{1
-    # """
-    # Return version (via extraction).
-    # @note Updated 2022-02-27.
-    # """
-    local app dict
-    koopa_assert_has_args_le "$#" 2
-    declare -A app=(
-        [cmd]="${1:?}"
-    )
-    declare -A dict=(
-        [cmd_name]="$(koopa_basename "${app[cmd]}")"
-        [flag]="${2:-}"
-    )
-    if [[ ! -x "${app[cmd]}" ]]
-    then
-        case "${dict[cmd_name]}" in
-            'aspera-connect')
-                app[cmd]='ascp'
-                ;;
-            'aws-cli')
-                app[cmd]='aws'
-                ;;
-            'azure-cli')
-                app[cmd]='az'
-                ;;
-            'bcbio-nextgen')
-                app[cmd]='bcbio_nextgen.py'
-                ;;
-            'binutils')
-                # Checking against 'ld' doesn't work on macOS with Homebrew.
-                app[cmd]='dlltool'
-                ;;
-            'coreutils')
-                app[cmd]='env'
-                ;;
-            'du-dust')
-                app[cmd]='dust'
-                ;;
-            'fd-find')
-                app[cmd]='fd'
-                ;;
-            'findutils')
-                app[cmd]='find'
-                ;;
-            'gdal')
-                app[cmd]='gdal-config'
-                ;;
-            'geos')
-                app[cmd]='geos-config'
-                ;;
-            'gnupg')
-                app[cmd]='gpg'
-                ;;
-            'google-cloud-sdk')
-                app[cmd]='gcloud'
-                ;;
-            'gsl')
-                app[cmd]='gsl-config'
-                ;;
-            'homebrew')
-                app[cmd]='brew'
-                ;;
-            'icu')
-                app[cmd]='icu-config'
-                ;;
-            'ncurses')
-                app[cmd]='ncurses6-config'
-                ;;
-            'neovim')
-                app[cmd]='nvim'
-                ;;
-            'openssh')
-                app[cmd]='ssh'
-                ;;
-            'password-store')
-                app[cmd]='pass'
-                ;;
-            'pcre2')
-                app[cmd]='pcre2-config'
-                ;;
-            'pip')
-                app[cmd]='pip3'
-                ;;
-            'python')
-                app[cmd]='python3'
-                ;;
-            'ranger-fm')
-                app[cmd]='ranger'
-                ;;
-            'ripgrep')
-                app[cmd]='rg'
-                ;;
-            'ripgrep-all')
-                app[cmd]='rga'
-                ;;
-            'rust')
-                app[cmd]='rustc'
-                ;;
-            'sqlite')
-                app[cmd]='sqlite3'
-                ;;
-            'subversion')
-                app[cmd]='svn'
-                ;;
-            'tealdeer')
-                app[cmd]='tldr'
-                ;;
-            'texinfo')
-                # TeX Live install can mask this on macOS.
-                app[cmd]='texi2any'
-                ;;
-            'the-silver-searcher')
-                app[cmd]='ag'
-                ;;
-        esac
-    fi
-    if [[ -z "${dict[flag]}" ]]
-    then
-        case "${dict[cmd_name]}" in
-            'docker-credential-pass' | \
-            'go' | \
-            'openssl' | \
-            'rstudio-server' | \
-            'singularity')
-                dict[flag]='version'
-                ;;
-            'lua')
-                dict[flag]='-v'
-                ;;
-            'openssh' | \
-            'ssh' | \
-            'tmux')
-                dict[flag]='-V'
-                ;;
-            *)
-                dict[flag]='--version'
-                ;;
-        esac
-    fi
-    koopa_is_installed "${app[cmd]}" || return 1
-    dict[str]="$("${app[cmd]}" "${dict[flag]}" 2>&1 || true)"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_extract_version "${dict[str]}"
-    return 0
-}
-
+# FIXME Allow the user to pass in specific Ruby.
 koopa_ruby_api_version() { # {{{1
     # """
     # Ruby API version.
@@ -972,44 +1077,18 @@ koopa_ruby_api_version() { # {{{1
     # See 'brew info ruby' for details.
     # """
     local app str
-    koopa_assert_has_no_args "$#"
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
-        [ruby]="$(koopa_locate_ruby)"
+        [ruby]="${1:-}"
     )
+    [[ -z "${app[ruby]}" ]] && app="$(koopa_locate_ruby)"
     str="$("${app[ruby]}" -e 'print Gem.ruby_api_version')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
     return 0
 }
 
-koopa_sanitize_version() { # {{{1
-    # """
-    # Sanitize version.
-    # @note Updated 2022-02-27.
-    #
-    # @examples
-    # > koopa_sanitize_version '2.7.1p83'
-    # # 2.7.1
-    # """
-    local str
-    koopa_assert_has_args "$#"
-    for str in "$@"
-    do
-        koopa_str_detect_regex \
-            --string="$str" \
-            --pattern='[.0-9]+' \
-            || return 1
-        str="$( \
-            koopa_sub \
-                --pattern='^([.0-9]+).*$' \
-                --replacement='\1' \
-                "$str" \
-        )"
-        koopa_print "$str"
-    done
-    return 0
-}
-
+# FIXME Allow the user to pass in tex version.
 koopa_tex_version() { # {{{1
     # """
     # TeX version.
@@ -1039,16 +1118,7 @@ koopa_tex_version() { # {{{1
     return 0
 }
 
-koopa_version_pattern() { # {{{1
-    # """
-    # Version pattern.
-    # @note Updated 2022-02-27.
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_print '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?([0-9]+)?'
-    return 0
-}
-
+# FIXME Allow the user to pass in vim version.
 koopa_vim_version() { # {{{1
     # """
     # Vim version.
@@ -1083,35 +1153,5 @@ koopa_vim_version() { # {{{1
         dict[out]="${dict[out]}.${dict[patch]}"
     fi
     koopa_print "${dict[out]}"
-    return 0
-}
-
-koopa_xcode_clt_version() { # {{{1
-    # """
-    # Xcode CLT version.
-    # @note Updated 2022-02-27.
-    #
-    # @seealso
-    # - https://apple.stackexchange.com/questions/180957
-    # - pkgutil --pkgs=com.apple.pkg.Xcode
-    # """
-    local app dict
-    koopa_assert_has_no_args "$#"
-    koopa_is_xcode_clt_installed || return 1
-    declare -A app=(
-        [awk]="$(koopa_locate_awk)"
-        [pkgutil]="$(koopa_macos_locate_pkgutil)"
-    )
-    declare -A dict=(
-        [pkg]='com.apple.pkg.CLTools_Executables'
-    )
-    "${app[pkgutil]}" --pkgs="${dict[pkg]}" >/dev/null || return 1
-    # shellcheck disable=SC2016
-    dict[str]="$( \
-        "${app[pkgutil]}" --pkg-info="${dict[pkg]}" \
-            | "${app[awk]}" '/version:/ {print $2}' \
-    )"
-    [[ -n "${dict[str]}" ]] || return 1
-    koopa_print "${dict[str]}"
     return 0
 }
