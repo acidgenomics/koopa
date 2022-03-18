@@ -860,11 +860,12 @@ koopa_xcode_clt_version() { # {{{1
 koopa_anaconda_version() { # {{{
     # """
     # Anaconda verison.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-18.
     #
     # @examples
     # # Version-specific lookup:
     # > koopa_anaconda_version '/opt/koopa/app/anaconda/2021.05/bin/conda'
+    # # 2021.05
     # """
     local app str
     koopa_assert_has_args_le "$#" 1
@@ -886,10 +887,6 @@ koopa_anaconda_version() { # {{{
     koopa_print "$str"
     return 0
 }
-
-# FIXME Rework using a Python package lookup instead.
-# FIXME Allow the user to pass in executable here.
-# FIXME We don't need version specific lookup of this, simplify.
 
 koopa_bpytop_version() { # {{{1
     # """
@@ -913,18 +910,19 @@ koopa_bpytop_version() { # {{{1
     return 0
 }
 
-# FIXME Allow the user to pass in executable here.
 koopa_lesspipe_version() { # {{{1
     # """
     # lesspipe.sh version.
-    # @note Updated 2022-02-23.
+    # @note Updated 2022-03-18.
     # """
     local app str
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [cat]="$(koopa_locate_cat)"
-        [lesspipe]="$(koopa_locate_lesspipe)"
+        [lesspipe]="${1:-}"
         [sed]="$(koopa_locate_sed)"
     )
+    [[ -z "${app[lesspipe]}" ]] && app[lesspipe]="$(koopa_locate_lesspipe)"
     str="$( \
         "${app[cat]}" "${app[lesspipe]}" \
             | "${app[sed]}" --quiet '2p' \
@@ -1067,11 +1065,12 @@ koopa_r_version() { # {{{1
     return 0
 }
 
-# FIXME Allow the user to pass in specific Ruby.
 koopa_ruby_api_version() { # {{{1
     # """
     # Ruby API version.
-    # @note Updated 2022-02-27.
+    # @note Updated 2022-03-18.
+    #
+    # @section Gem installation path:
     #
     # Used by Homebrew Ruby for default gem installation path.
     # See 'brew info ruby' for details.
@@ -1081,30 +1080,32 @@ koopa_ruby_api_version() { # {{{1
     declare -A app=(
         [ruby]="${1:-}"
     )
-    [[ -z "${app[ruby]}" ]] && app="$(koopa_locate_ruby)"
+    [[ -z "${app[ruby]}" ]] && app[ruby]="$(koopa_locate_ruby)"
     str="$("${app[ruby]}" -e 'print Gem.ruby_api_version')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
     return 0
 }
 
-# FIXME Allow the user to pass in tex version.
 koopa_tex_version() { # {{{1
     # """
-    # TeX version.
-    # @note Updated 2022-02-27.
+    # TeX version (release year).
+    # @note Updated 2022-03-18.
+    #
+    # @section Release year parsing:
     #
     # We're checking the TeX Live release year here.
     # Here's what it looks like on Debian/Ubuntu:
     # TeX 3.14159265 (TeX Live 2017/Debian)
     # """
     local app str
-    koopa_assert_has_no_args "$#"
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
         [head]="$(koopa_locate_head)"
-        [tex]="$(koopa_locate_tex)"
+        [tex]="${1:-}"
     )
+    [[ -z "${app[tex]}" ]] && app[tex]="$(koopa_locate_tex)"
     str="$( \
         "${app[tex]}" --version \
             | "${app[head]}" --lines=1 \
