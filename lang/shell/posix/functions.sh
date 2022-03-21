@@ -1,14 +1,5 @@
 #!/bin/sh
 
-
-
-# FIXME need to fix MANPATH for Linux.
-# FIXME man cp, man grep not working
-# FIXME man /usr/bin/cp
-# FIXME man /usr/bin/grep
-
-
-
 __koopa_add_to_path_string_end() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
@@ -1583,7 +1574,10 @@ koopa_add_to_manpath_end() { # {{{1
 koopa_add_to_manpath_start() { # {{{1
     # """
     # Force add to 'MANPATH' start.
-    # @note Updated 2021-04-23.
+    # @note Updated 2022-03-21.
+    #
+    # @seealso
+    # - /etc/manpath.config
     # """
     local dir
     MANPATH="${MANPATH:-}"
