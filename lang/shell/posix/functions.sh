@@ -1,5 +1,14 @@
 #!/bin/sh
 
+
+
+# FIXME need to fix MANPATH for Linux.
+# FIXME man cp, man grep not working
+# FIXME man /usr/bin/cp
+# FIXME man /usr/bin/grep
+
+
+
 __koopa_add_to_path_string_end() { # {{{1
     # """
     # Add a directory to the beginning of a PATH string.
