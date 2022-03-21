@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Don't install gtop and prettier if homebrew is installed.
-
 install_node_packages() { # {{{1
     # """
     # Install Node.js packages using npm.
