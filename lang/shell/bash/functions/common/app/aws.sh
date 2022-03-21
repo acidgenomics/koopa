@@ -173,8 +173,30 @@ koopa_aws_ec2_suspend_instance() { # {{{1
     )
     declare -A dict=(
         [id]="$(koopa_aws_ec2_instance_id)"
+        [profile]="${AWS_PROFILE:-}"
     )
-    "${app[aws]}" ec2 stop-instances --instance-id "${dict[id]}"
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--profile='*)
+                dict[profile]="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict[profile]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict[profile]:-}"
+    "${app[aws]}" --profile="${dict[profile]}" \
+        ec2 stop-instances --instance-id "${dict[id]}"
     return 0
 }
 
@@ -189,8 +211,30 @@ koopa_aws_ec2_terminate_instance() { # {{{1
     )
     declare -A dict=(
         [id]="$(koopa_aws_ec2_instance_id)"
+        [profile]="${AWS_PROFILE:-}"
     )
-    "${app[aws]}" ec2 terminate-instances --instance-id "${dict[id]}"
+    [[ -z "${dict[profile]}" ]] && dict[profile]='default'
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--profile='*)
+                dict[profile]="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict[profile]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict[profile]:-}"
+    "${app[aws]}" --profile="${dict[profile]}" \
+        ec2 terminate-instances --instance-id "${dict[id]}"
     return 0
 }
 
