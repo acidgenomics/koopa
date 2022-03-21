@@ -413,8 +413,8 @@ __koopa_complete() { # {{{1
                         'kallisto' | \
                         'salmon')
                             args=(
-                                'index'  # FIXME Need to update support for kallisto.
-                                'quant'  # FIXME Need to add support -- work on dirs.
+                                'index'
+                                'quant'
                             )
                             ;;
                         'md5sum')
