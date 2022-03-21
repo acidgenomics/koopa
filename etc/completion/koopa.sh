@@ -491,7 +491,6 @@ __koopa_complete() { # {{{1
                         'kallisto' | \
                         'salmon')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
-                                # FIXME Need to ensure that this works.
                                 'quant')
                                     args=(
                                         'paired-end'
