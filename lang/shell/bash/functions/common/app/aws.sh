@@ -162,21 +162,35 @@ koopa_aws_ec2_instance_id() { # {{{1
     return 0
 }
 
-# FIXME Work on adding support for this.
 koopa_aws_ec2_suspend_instance() { # {{{1
     # """
-    # Suspend an AWS EC2 instance.
-    # @note Updated 2022-02-11.
+    # Suspend current AWS EC2 instance.
+    # @note Updated 2022-03-21.
     # """
+    local app dict
+    declare -A app=(
+        [aws]="$(koopa_locate_aws)"
+    )
+    declare -A dict=(
+        [id]="$(koopa_aws_ec2_instance_id)"
+    )
+    "${app[aws]}" ec2 stop-instances --instance-id "${dict[id]}"
     return 0
 }
 
-# FIXME Work on adding support for this.
 koopa_aws_ec2_terminate_instance() { # {{{1
     # """
-    # Terminate an AWS EC2 instance.
-    # @note Updated 2022-02-11.
+    # Terminate current AWS EC2 instance.
+    # @note Updated 2022-03-21.
     # """
+    local app dict
+    declare -A app=(
+        [aws]="$(koopa_locate_aws)"
+    )
+    declare -A dict=(
+        [id]="$(koopa_aws_ec2_instance_id)"
+    )
+    "${app[aws]}" ec2 terminate-instances --instance-id "${dict[id]}"
     return 0
 }
 
