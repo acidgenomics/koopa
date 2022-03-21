@@ -162,7 +162,7 @@ koopa_aws_ec2_instance_id() { # {{{1
     return 0
 }
 
-koopa_aws_ec2_suspend_instance() { # {{{1
+koopa_aws_ec2_suspend() { # {{{1
     # """
     # Suspend current AWS EC2 instance.
     # @note Updated 2022-03-21.
@@ -200,7 +200,7 @@ koopa_aws_ec2_suspend_instance() { # {{{1
     return 0
 }
 
-koopa_aws_ec2_terminate_instance() { # {{{1
+koopa_aws_ec2_terminate() { # {{{1
     # """
     # Terminate current AWS EC2 instance.
     # @note Updated 2022-03-21.
