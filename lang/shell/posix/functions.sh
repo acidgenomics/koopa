@@ -1555,9 +1555,6 @@ koopa_add_to_fpath_start() { # {{{1
     return 0
 }
 
-# FIXME This is creating '/usr/local/share/man::/usr/share/man' situation
-# on Linux...need to rethink...
-
 koopa_add_to_manpath_end() { # {{{1
     # """
     # Force add to 'MANPATH' end.
