@@ -1,122 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_extract_version() { # {{{1
-    # """
-    # Extract version number.
-    # @note Updated 2022-02-27.
-    #
-    # @examples
-    # > koopa_extract_version "$(bash --version)"
-    # # 5.1.16
-    # """
-    local app arg dict
-    declare -A app=(
-        [head]="$(koopa_locate_head)"
-    )
-    declare -A dict=(
-        [pattern]="$(koopa_version_pattern)"
-    )
-    if [[ "$#" -eq 0 ]]
-    then
-        args=("$(</dev/stdin)")
-    else
-        args=("$@")
-    fi
-    for arg in "${args[@]}"
-    do
-        local str
-        str="$( \
-            koopa_grep \
-                --only-matching \
-                --pattern="${dict[pattern]}" \
-                --regex \
-                --string="$arg" \
-            | "${app[head]}" --lines=1 \
-        )"
-        [[ -n "$str" ]] || return 1
-        koopa_print "$str"
-    done
-    return 0
-}
-
-# FIXME This seems too complicated, break out into component parts??
-
-koopa_get_version() { # {{{1
-    # """
-    # Get the version of an installed program.
-    # @note Updated 2022-03-17.
-    #
-    # @section Version lookup priority:
-    # 1. Direct executable input.
-    # 2. Specific version function handoff.
-    # 3. Locate app attempt.
-    # """
-    local cmd
-    koopa_assert_has_args "$#"
-    for cmd in "$@"
-    do
-        local dict
-        declare -A dict
-        if [[ -x "$cmd" ]]
-        then
-            dict[cmd]="$cmd"
-        fi
-        dict[cmd_name]="$(koopa_basename "$cmd")"
-        # FIXME Consider using an internal prefix for this, or including 'get'.
-        dict[fun]="koopa_$(koopa_snake_case_simple "${dict[cmd_name]}")_version"
-        dict[ver_arg]="$(koopa_get_version_argument "${dict[cmd_name]}")"
-        if koopa_is_function "${dict[fun]}"
-        then
-            # FIXME We need to pass in the executable path here, when applicable (e.g. R)....
-            # FIXME Rethink version lookups, where we're locating the specific program.
-            # FIXME We should use 'get_version' as the main runner....
-            dict[str]="$("${dict[fun]}")"
-        else
-            dict[str]="$("$cmd" "${dict[ver_arg]}" 2>&1 || true)"
-        fi
-        if [[ -x "$cmd" ]]
-        then
-            # FIXME Rework calling with 'koopa_get_version_name'.
-            # FIXME Rework calling with 'koopa_get_version_argument'.
-            # FIXME Call 'locate_version' here if necessary.
-            # FIXME Split this out as a separate function...
-            # FIXME Handoff to 'locate_app_XXX' needs to sanitize into snake_case.
-            # FIXME Need to call 'locate_app' here...
-            # FIXME Consider passing the 'cmd' in here only for specific
-            # functions (see below).
-            koopa_is_installed "${app[cmd]}" || return 1
-            dict[version_arg]="$(koopa_get_version_argument "${app[cmd]}")"
-            dict[str]="$("${app[cmd]}" "${dict[version_arg]}" 2>&1 || true)"
-            [[ -n "${dict[str]}" ]] || return 1
-            koopa_extract_version "${dict[str]}"
-        fi
-        [[ -n "${dict[str]}" ]] || return 1
-        koopa_print "${dict[str]}"
-    done
-    return 0
-}
-
-koopa_get_version_from_pkg_config() { # {{{1
-    # """
-    # Get a library version via pkg-config.
-    # @note Updated 2022-02-27.
-    # """
-    local app pkg str
-    koopa_assert_has_args_eq "$#" 1
-    pkg="${1:?}"
-    declare -A app=(
-        [pkg_config]="$(koopa_locate_pkg_config)"
-    )
-    str="$("${app[pkg_config]}" --modversion "$pkg")"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
-koopa_get_version_argument() { # {{{1
+__koopa_get_version_arg() { # {{{1
     # """
     # Return matching version argument for an input program.
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-18.
     #
     # @examples
     # > koopa_return_version_argument 'rstudio-server'
@@ -148,11 +35,11 @@ koopa_get_version_argument() { # {{{1
     return 0
 }
 
-koopa_get_version_name() { # {{{1
+__koopa_get_version_name() { # {{{1
     # """
     # Match a desired program name to corresponding to dependency to
     # run with a version argument (e.g. '--version').
-    # @note Updated 2022-03-17.
+    # @note Updated 2022-03-18.
     # """
     local name
     koopa_assert_has_args_eq "$#" 1
@@ -263,6 +150,121 @@ koopa_get_version_name() { # {{{1
     koopa_print "$name"
     return 0
 }
+
+koopa_extract_version() { # {{{1
+    # """
+    # Extract version number.
+    # @note Updated 2022-02-27.
+    #
+    # @examples
+    # > koopa_extract_version "$(bash --version)"
+    # # 5.1.16
+    # """
+    local app arg dict
+    declare -A app=(
+        [head]="$(koopa_locate_head)"
+    )
+    declare -A dict=(
+        [pattern]="$(koopa_version_pattern)"
+    )
+    if [[ "$#" -eq 0 ]]
+    then
+        args=("$(</dev/stdin)")
+    else
+        args=("$@")
+    fi
+    for arg in "${args[@]}"
+    do
+        local str
+        str="$( \
+            koopa_grep \
+                --only-matching \
+                --pattern="${dict[pattern]}" \
+                --regex \
+                --string="$arg" \
+            | "${app[head]}" --lines=1 \
+        )"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
+    done
+    return 0
+}
+
+koopa_get_version() { # {{{1
+    # """
+    # Get the version of an installed program.
+    # @note Updated 2022-03-21.
+    #
+    # @examples
+    # > koopa system version 'R' 'conda' 'coreutils' 'python' 'salmon'
+    # """
+    local cmd
+    koopa_assert_has_args "$#"
+    for cmd in "$@"
+    do
+        local dict
+        declare -A dict
+        dict[cmd]="$cmd"
+        dict[bn1]="$(koopa_basename "${dict[cmd]}")"
+        dict[bn]="${dict[bn1]}"
+        dict[bn2]="$(__koopa_get_version_name "${dict[bn1]}")"
+        if [[ "${dict[bn1]}" != "${dict[bn2]}" ]]
+        then
+            dict[bn]="${dict[bn2]}"
+            dict[cmd]="${dict[bn]}"
+        fi
+        dict[bn_snake]="$(koopa_snake_case_simple "${dict[bn]}")"
+        dict[version_arg]="$(__koopa_get_version_arg "${dict[bn]}")"
+        dict[locate_fun]="koopa_locate_${dict[bn_snake]}"
+        dict[version_fun]="koopa_${dict[bn_snake]}_version"
+        if koopa_is_function "${dict[version_fun]}"
+        then
+            if [[ -x "${dict[cmd]}" ]]
+            then
+                dict[str]="$("${dict[version_fun]}" "${dict[cmd]}")"
+            else
+                dict[str]="$("${dict[version_fun]}")"
+            fi
+            [[ -n "${dict[str]}" ]] || return 1
+            koopa_print "${dict[str]}"
+            continue
+        fi
+        if [[ ! -x "${dict[cmd]}" ]]
+        then
+            if koopa_is_function "${dict[locate_fun]}"
+            then
+                dict[cmd]="$("${dict[locate_fun]}" "${dict[cmd]}")"
+            else
+                dict[cmd]="$(koopa_which_realpath "${dict[cmd]}")"
+            fi
+            [[ -x "${dict[cmd]}" ]] || return 1
+        fi
+        dict[str]="$("${dict[cmd]}" "${dict[version_arg]}" 2>&1 || true)"
+        [[ -n "${dict[str]}" ]] || return 1
+        dict[str]="$(koopa_extract_version "${dict[str]}")"
+        [[ -n "${dict[str]}" ]] || return 1
+        koopa_print "${dict[str]}"
+    done
+    return 0
+}
+
+koopa_get_version_from_pkg_config() { # {{{1
+    # """
+    # Get a library version via pkg-config.
+    # @note Updated 2022-02-27.
+    # """
+    local app pkg str
+    koopa_assert_has_args_eq "$#" 1
+    pkg="${1:?}"
+    declare -A app=(
+        [pkg_config]="$(koopa_locate_pkg_config)"
+    )
+    str="$("${app[pkg_config]}" --modversion "$pkg")"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
+    return 0
+}
+
 
 koopa_sanitize_version() { # {{{1
     # """
