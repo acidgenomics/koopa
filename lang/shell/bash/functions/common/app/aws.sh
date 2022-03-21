@@ -4,13 +4,10 @@
 # > aws s3api list-buckets --output 'json'
 # > aws s3api list-objects --output 'json' --bucket 'koopa.acidgenomics.com'
 
-# FIXME Ensure that all input consistently requires 's3://' as prefix input.
-# FIXME Ensure that this is consistent for CLI parser to JSON...bucket API one
-
 koopa_aws_batch_fetch_and_run() { # {{{1
     # """
     # Fetch and run a script on AWS Batch.
-    # @note Updated 2022-01-20.
+    # @note Updated 2022-03-21.
     #
     # S3 bucket paths and remote URLs are supported.
     #
@@ -31,11 +28,11 @@ koopa_aws_batch_fetch_and_run() { # {{{1
     )
     [[ -z "${dict[profile]}" ]] && dict[profile]='default'
     case "${dict[url]}" in
-        'ftp'* | \
-        'http'*)
+        'ftp://'* | \
+        'http://'*)
             koopa_download "${dict[url]}" "${dict[file]}"
             ;;
-        's3'*)
+        's3://'*)
             "${app[aws]}" --profile="${dict[profile]}" \
                 s3 cp "${dict[url]}" "${dict[file]}"
             ;;
@@ -129,7 +126,6 @@ koopa_aws_batch_list_jobs() { # {{{1
         'SUCCEEDED'
         'FAILED'
     )
-
     dict[job_queue]="$(koopa_paste --sep=':' "${job_queue_array[@]}")"
     for status in "${status_array[@]}"
     do
@@ -142,21 +138,27 @@ koopa_aws_batch_list_jobs() { # {{{1
     return 0
 }
 
-# FIXME Work on adding support for this.
-koopa_aws_ec2_create_instance() { # {{{1
-    # """
-    # Create an AWS EC2 instance.
-    # @note Updated 2022-01-11.
-    # """
-    return 0
-}
-
-# FIXME Work on adding support for this.
 koopa_aws_ec2_instance_id() { # {{{1
     # """
     # AWS EC2 instance identifier.
-    # @note Updated 2022-01-11.
+    # @note Updated 2022-03-21.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/625644/
     # """
+    local app
+    declare -A app
+    if koopa_is_ubuntu
+    then
+        app[ec2_metadata]='/usr/bin/ec2metadata'
+    else
+        # e.g. Amazon Linux 2.
+        app[ec2_metadata]='/usr/bin/ec2-metadata'
+    fi
+    [[ -x "${app[ec2_metadata]}" ]] || return 1
+    str="$("${app[ec2_metadata]}" --instance-id)"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
     return 0
 }
 
