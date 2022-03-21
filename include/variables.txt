@@ -5,7 +5,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2022-03-18"
+koopa-date="2022-03-21"
 koopa-github-url="https://github.com/acidgenomics/koopa"
 koopa-url="https://koopa.acidgenomics.com"
 koopa-version="0.13.0a"
@@ -44,7 +44,7 @@ automake="1.16.5"
 
 # https://aws.amazon.com/cli/
 # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-aws-cli="2.4.25"
+aws-cli="2.4.26"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.34.1"
@@ -129,9 +129,8 @@ gawk="5.1.1"
 # https://ftp.gnu.org/gnu/gcc/
 gcc="11.2.0"
 
-# https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.4.1"
+gdal="3.4.2"
 
 # https://github.com/libgeos/geos/releases
 geos="3.10.2"
@@ -166,7 +165,7 @@ harfbuzz="4.0.1"
 hdf5="1.13.0"
 
 # https://brew.sh/
-homebrew="3.4.1"
+homebrew="3.4.2"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -228,7 +227,7 @@ neovim="0.6.1"
 nim="1.6.4"
 
 # https://nodejs.org/
-node="17.7.1"
+node="17.7.2"
 
 # https://openjdk.java.net/
 # https://projects.eclipse.org/projects/adoptium.temurin
@@ -239,7 +238,7 @@ openjdk="17.0.2"
 openssh="8.9p1"
 
 # https://www.openssl.org/source/
-openssl="3.0.1"
+openssl="3.0.2"
 
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
@@ -283,7 +282,7 @@ poetry="1.1.13"
 proj="9.0.0"
 
 # https://github.com/pyenv/pyenv
-pyenv="2.2.4"
+pyenv="2.2.5"
 
 # https://www.python.org/downloads/
 # > python="3.9.10"
