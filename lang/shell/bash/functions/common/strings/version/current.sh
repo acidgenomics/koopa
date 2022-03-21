@@ -266,14 +266,14 @@ koopa_eigen_version() { # {{{1
     koopa_get_version_from_pkg_config 'eigen3'
 }
 
-koopa_gtop_version() { # {{{1
-    # """
-    # gtop (Node package) version.
-    # @note Updated 2022-03-15.
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_node_package_version 'gtop'
-}
+# > koopa_gtop_version() { # {{{1
+# >     # """
+# >     # gtop (Node package) version.
+# >     # @note Updated 2022-03-15.
+# >     # """
+# >     koopa_assert_has_no_args "$#"
+# >     koopa_node_package_version 'gtop'
+# > }
 
 koopa_harfbuzz_version() { # {{{1
     # """
@@ -363,6 +363,15 @@ koopa_lmod_version() { # {{{1
     return 0
 }
 
+koopa_npm_version() { # {{{1
+    # """
+    # Node package manager (NPM) version.
+    # @note Updated 2022-03-21.
+    # """
+    koopa_assert_has_no_args "$#"
+    koopa_node_package_version 'npm'
+}
+
 koopa_oracle_instantclient_version() { # {{{1
     # """
     # Oracle InstantClient version.
@@ -422,14 +431,14 @@ koopa_pip_version() { # {{{1
     koopa_python_package_version 'pip'
 }
 
-koopa_prettier_version() { # {{{1
-    # """
-    # Prettier (Node package) version.
-    # @note Updated 2022-03-15.
-    # """
-    koopa_assert_has_no_args "$#"
-    koopa_node_package_version 'prettier'
-}
+# > koopa_prettier_version() { # {{{1
+# >     # """
+# >     # Prettier (Node package) version.
+# >     # @note Updated 2022-03-15.
+# >     # """
+# >     koopa_assert_has_no_args "$#"
+# >     koopa_node_package_version 'prettier'
+# > }
 
 koopa_xcode_clt_version() { # {{{1
     # """
