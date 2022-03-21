@@ -160,7 +160,6 @@ koopa_cli_app() { # {{{1
                     key="${1:?}-${2:?}"
                     shift 2
                     ;;
-                # FIXME Double check that this works.
                 'quant')
                     case "${3:-}" in
                         'paired-end' | \
@@ -650,7 +649,6 @@ koopa_koopa() { # {{{1
             koopa_help "$(koopa_man_prefix)/man1/${dict[key]}.1"
             ;;
     esac
-    # FIXME This is failing to locate 'install-base-system' on Ubuntu.
     dict[fun]="$(koopa_which_function "${dict[key]}" || true)"
     if ! koopa_is_function "${dict[fun]}"
     then
