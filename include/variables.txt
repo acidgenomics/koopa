@@ -506,7 +506,7 @@ node-prettier="2.6.0"               # 2022-03-16
 
 # Python packages {{{1
 # ==============================================================================
-# Updated 2022-02-23 from https://pypi.org/.
+# Updated 2022-03-21 from https://pypi.org/.
 
 # Python pip pinned versions.
 # These are essential Python tools that should always be available.
@@ -517,7 +517,7 @@ node-prettier="2.6.0"               # 2022-03-16
 # - pipx
 
 python-pip="22.0.4"             # default; system
-python-setuptools="60.9.3"      # default; system
+python-setuptools="60.10.0"     # default; system
 python-wheel="0.37.1"           # default; system
 
 python-pipx="1.0.0"             # system
