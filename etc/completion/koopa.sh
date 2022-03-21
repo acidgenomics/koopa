@@ -472,8 +472,8 @@ __koopa_complete() { # {{{1
                                 'ec2')
                                     args=(
                                         'instance-id'
-                                        'suspend-instance'
-                                        # > 'terminate-instance'
+                                        'suspend'
+                                        # > 'terminate'
                                     )
                                     ;;
                                 's3')
