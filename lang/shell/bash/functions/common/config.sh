@@ -329,7 +329,7 @@ koopa_fix_zsh_permissions() { # {{{1
 koopa_link_dotfile() { # {{{1
     # """
     # Link dotfile.
-    # @note Updated 2022-03-10.
+    # @note Updated 2022-03-18.
     # """
     local dict pos
     koopa_assert_has_args "$#"
@@ -418,7 +418,7 @@ koopa_link_dotfile() { # {{{1
     if [[ -e "${dict[symlink_path]}" ]] && \
         [[ ! -L "${dict[symlink_path]}" ]]
     then
-        koopa_warn "Exists and not symlink: '${dict[symlink_path]}'."
+        koopa_alert_note "Exists and not symlink: '${dict[symlink_path]}'."
         return 0
     fi
     koopa_alert "Linking dotfile from '${dict[source_path]}' \
