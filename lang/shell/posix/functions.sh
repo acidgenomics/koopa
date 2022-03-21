@@ -1565,14 +1565,12 @@ koopa_add_to_manpath_end() { # {{{1
     # """
     local dir
     MANPATH="${MANPATH:-}"
-    koopa_warn "MANPATH ${MANPATH}"
     for dir in "$@"
     do
         [ -d "$dir" ] || continue
         MANPATH="$(__koopa_add_to_path_string_end "$MANPATH" "$dir")"
     done
     export MANPATH
-    koopa_warn "MANPATH ${MANPATH}"
     return 0
 }
 
@@ -1586,14 +1584,12 @@ koopa_add_to_manpath_start() { # {{{1
     # """
     local dir
     MANPATH="${MANPATH:-}"
-    koopa_warn "MANPATH ${MANPATH}"
     for dir in "$@"
     do
         [ -d "$dir" ] || continue
         MANPATH="$(__koopa_add_to_path_string_start "$MANPATH" "$dir")"
     done
     export MANPATH
-    koopa_warn "MANPATH ${MANPATH}"
     return 0
 }
 
