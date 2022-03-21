@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to support removal of older app versions.
-# FIXME In the case where it's not current link in opt, don't remove the opt link.
-
 koopa_uninstall_app() { # {{{1
     # """
     # Uninstall an application.
