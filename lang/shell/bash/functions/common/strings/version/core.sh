@@ -4,9 +4,6 @@ __koopa_get_version_arg() { # {{{1
     # """
     # Return matching version argument for an input program.
     # @note Updated 2022-03-18.
-    #
-    # @examples
-    # > koopa_return_version_argument 'rstudio-server'
     # """
     local arg name
     koopa_assert_has_args_eq "$#" 1
