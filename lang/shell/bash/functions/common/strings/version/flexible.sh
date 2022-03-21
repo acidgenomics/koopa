@@ -105,10 +105,10 @@ koopa_openjdk_version() { # {{{1
 koopa_parallel_version() { # {{{1
     # """
     # GNU parallel version.
-    # @note Updated 2022-03-18.
+    # @note Updated 2022-03-21.
     # """
     local app str
-    koopa_assert_has_no_args "$#"
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
         [cut]="$(koopa_locate_cut)"
         [head]="$(koopa_locate_head)"
