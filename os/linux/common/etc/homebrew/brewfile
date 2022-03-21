@@ -17,5 +17,4 @@ brew "util-linux", link: false
 
 brew "docker"
 brew "docker-credential-helper"  # docker-credential-pass
-brew "emacs"
 brew "pass"
