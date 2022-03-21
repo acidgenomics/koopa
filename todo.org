@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Improve 'uninstall_app' to support removal of specific previous versions.
+    - Need to support removal of older app versions.
+    - In the case where it's not current link in opt, don't remove the opt link.
 ** TODO Need to ensure 0775 permissions on coc packages:
     /opt/koopa/app/dotfiles/rolling/app/coc/extensions/node_modules
 ** TODO Add improved stack trace of error messages.
