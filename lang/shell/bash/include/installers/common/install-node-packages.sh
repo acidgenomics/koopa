@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Don't install gtop and prettier if homebrew is installed.
+
 install_node_packages() { # {{{1
     # """
     # Install Node.js packages using npm.
-    # @note Updated 2022-02-10.
+    # @note Updated 2022-03-21.
+    #
+    # Node 'tldr' conflicts with Rust 'tealdeer'.
     #
     # @seealso
     # - npm help config
@@ -14,6 +18,7 @@ install_node_packages() { # {{{1
     koopa_assert_has_no_args "$#"
     koopa_activate_node
     declare -A app=(
+        [brew]="$(koopa_locate_brew 2>/dev/null || true)"
         [node]="$(koopa_locate_node)"
         [npm1]="$(koopa_locate_npm)"
     )
@@ -27,12 +32,16 @@ install_node_packages() { # {{{1
     "${app[npm1]}" install -g "npm@${dict[npm_version]}" &>/dev/null
     app[npm2]="${dict[prefix]}/bin/npm"
     koopa_assert_is_executable "${app[npm2]}"
-    # NOTE 'tldr' conflicts with Rust 'tealdeer'.
     pkgs=(
         'bash-language-server'
-        'gtop'
-        'prettier'
     )
+    if [[ ! -x "${app[brew]}" ]]
+    then
+        pkgs+=(
+            'gtop'
+            'prettier'
+        )
+    fi
     for i in "${!pkgs[@]}"
     do
         local pkg pkg_lower version
