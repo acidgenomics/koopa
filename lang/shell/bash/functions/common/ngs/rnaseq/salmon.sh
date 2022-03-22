@@ -440,11 +440,11 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
+    koopa_assert_is_dir "${dict[index_dir]}"
     koopa_assert_is_file \
         "${dict[fastq_r1_file]}" \
         "${dict[fastq_r2_file]}" \
         "${dict[gtf_file]}"
-    koopa_assert_is_dir "${dict[index_dir]}"
     dict[fastq_r1_bn]="$(koopa_basename "${dict[fastq_r1_file]}")"
     dict[fastq_r1_bn]="${dict[fastq_r1_bn]/${dict[fastq_r1_tail]}/}"
     dict[fastq_r2_bn]="$(koopa_basename "${dict[fastq_r2_file]}")"
@@ -606,7 +606,7 @@ koopa_salmon_quant_single_end() { # {{{1
             --lib-type="${dict[lib_type]}" \
             --output-dir="${dict[output_dir]}"
     done
-    koopa_alert_success "salmon quant was successful."
+    koopa_alert_success 'salmon quant was successful.'
     return 0
 }
 
@@ -703,8 +703,8 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
         '--index-dir' "${dict[index_dir]}" \
         '--lib-type' "${dict[lib_type]}" \
         '--output-dir' "${dict[output_dir]}"
-    koopa_assert_is_file "${dict[fastq_file]}" "${dict[gtf_file]}"
     koopa_assert_is_dir "${dict[index_dir]}"
+    koopa_assert_is_file "${dict[fastq_file]}" "${dict[gtf_file]}"
     dict[fastq_bn]="$(koopa_basename "${dict[fastq_file]}")"
     dict[fastq_bn]="${dict[fastq_bn]/${dict[tail]}/}"
     dict[id]="${dict[fastq_bn]}"
