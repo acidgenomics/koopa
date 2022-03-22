@@ -12,6 +12,9 @@ koopa_salmon_index() { # {{{1
     #
     # @seealso
     # - salmon index --help
+    # - https://combine-lab.github.io/alevin-tutorial/2019/selective-alignment/
+    # - https://salmon.readthedocs.io/en/latest/salmon.html
+    # - https://github.com/refgenie/refgenieserver/issues/63
     # """
     local app dict index_args
     koopa_assert_has_args "$#"
