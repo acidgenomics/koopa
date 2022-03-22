@@ -32,14 +32,6 @@ linux_install_bcbio_nextgen() { # {{{1
     )
     dict[install_dir]="${dict[prefix]}/install"
     dict[tools_dir]="${dict[prefix]}/tools"
-    case "${dict[version]}" in
-        'development')
-            dict[upgrade]='development'
-            ;;
-        *)
-            dict[upgrade]='stable'
-            ;;
-    esac
     dict[file]='bcbio_nextgen_install.py'
     dict[url]="https://raw.github.com/bcbio/bcbio-nextgen/master/\
 scripts/${dict[file]}"
@@ -51,10 +43,10 @@ scripts/${dict[file]}"
         # > '--datatarget' 'variation'
         '--datatarget' 'rnaseq'
         '--isolate'
-        '--mamba'
+        # > '--mamba'
         '--nodata'
+        '--revision' "v${dict[version]}"
         '--tooldir' "${dict[tools_dir]}"
-        '--upgrade' "${dict[upgrade]}"
     )
     koopa_dl 'Install args' "${install_args[*]}"
     "${app[python]}" "${dict[file]}" "${install_args[@]}"
