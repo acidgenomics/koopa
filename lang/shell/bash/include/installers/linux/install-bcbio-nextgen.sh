@@ -3,10 +3,16 @@
 linux_install_bcbio_nextgen() { # {{{1
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2022-01-31.
+    # @note Updated 2022-03-22.
     #
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
+    #
+    # Consider using '--revision REVISION' for a pinned version install.
+    #
+    # @seealso
+    # - https://bcbio-nextgen.readthedocs.io/en/latest/contents/
+    #     installation.html
     # """
     local app dict
     koopa_assert_has_no_args "$#"
@@ -39,14 +45,14 @@ scripts/${dict[file]}"
         --datatarget='rnaseq' \
         --datatarget='variation' \
         --isolate \
+        --mamba \
         --nodata \
         --tooldir="${dict[tools_dir]}" \
         --upgrade="${dict[upgrade]}"
     # Clean up conda packages inside Docker image.
     if koopa_is_docker
     then
-        # > app[conda]="${dict[install_dir]}/anaconda/bin/conda"
-        app[conda]="${dict[tools_dir]}/bin/bcbio_conda"
+        app[conda]="${dict[install_dir]}/anaconda/bin/conda"
         koopa_assert_is_installed "${app[conda]}"
         "${app[conda]}" clean --yes --tarballs
     fi
