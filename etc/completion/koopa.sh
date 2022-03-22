@@ -4,7 +4,7 @@
 __koopa_complete() { # {{{1
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # Updated 2022-03-17.
+    # Updated 2022-03-22.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -53,6 +53,7 @@ __koopa_complete() { # {{{1
                         'list'
                         'python'
                         'r'
+                        'rnaeditingindexer'
                         'salmon'
                         'sra'
                         'ssh'
