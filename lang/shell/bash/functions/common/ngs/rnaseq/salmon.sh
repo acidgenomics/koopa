@@ -356,6 +356,7 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
+    quant_args=()
     while (("$#"))
     do
         case "$1" in
@@ -458,7 +459,7 @@ koopa_salmon_quant_paired_end_per_sample() { # {{{1
     fi
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
-    quant_args=(
+    quant_args+=(
         '--gcBias' # Recommended for DESeq2.
         "--geneMap=${dict[gtf_file]}"
         "--index=${dict[index_dir]}"
@@ -636,6 +637,7 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
         [output_dir]=''
         [threads]="$(koopa_cpu_count)"
     )
+    quant_args=()
     while (("$#"))
     do
         case "$1" in
@@ -714,7 +716,7 @@ koopa_salmon_quant_single_end_per_sample() { # {{{1
     fi
     dict[output_dir]="$(koopa_init_dir "${dict[output_dir]}")"
     koopa_alert "Quantifying '${dict[id]}' in '${dict[output_dir]}'."
-    quant_args=(
+    quant_args+=(
         "--geneMap=${dict[gtf_file]}"
         "--index=${dict[index_dir]}"
         "--libType=${dict[lib_type]}"
