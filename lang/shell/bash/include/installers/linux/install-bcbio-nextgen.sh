@@ -14,6 +14,8 @@ linux_install_bcbio_nextgen() { # {{{1
     # - bcbio_nextgen.py upgrade --help
     # - https://bcbio-nextgen.readthedocs.io/en/latest/contents/
     #     installation.html
+    # - samtools install issue (libcrypto.so.1.0.0)
+    #   https://github.com/PacificBiosciences/pbbioconda/issues/85
     # """
     local app dict install_args
     koopa_assert_has_no_args "$#"
