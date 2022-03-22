@@ -58,7 +58,7 @@ koopa_node_package_version() { # {{{1
             "${app[npm]}" --global --json list "${dict[pkg]}" \
             | "${app[jq]}" \
                 --raw-output \
-                ".dependencies.${dict[pkg_name]}.version" \
+                ".dependencies.${dict[pkg]}.version" \
         )"
         [[ -n "${dict[str]}" ]] || return 1
         koopa_print "${dict[str]}"
