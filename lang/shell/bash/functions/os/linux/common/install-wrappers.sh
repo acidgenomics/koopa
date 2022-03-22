@@ -24,7 +24,6 @@ koopa_linux_install_bcbio_nextgen() { # {{{1
         --name='bcbio-nextgen' \
         --no-link \
         --platform='linux' \
-        --version="$(koopa_current_bcbio_nextgen_version)" \
         "$@"
 }
 
