@@ -64,6 +64,18 @@ koopa_cli_app() { # {{{1
                     ;;
             esac
             ;;
+        'bowtie2')
+            case "${2:-}" in
+                'align' | \
+                'index')
+                    key="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                *)
+                    koopa_invalid_arg "$*"
+                    ;;
+            esac
+            ;;
         'conda')
             case "${2:-}" in
                 'create-env' | \

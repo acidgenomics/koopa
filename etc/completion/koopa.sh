@@ -44,6 +44,7 @@ __koopa_complete() { # {{{1
                 'app')
                     args=(
                         'aws'
+                        'bowtie2'
                         'conda'
                         'docker'
                         'ftp'
@@ -356,6 +357,12 @@ __koopa_complete() { # {{{1
                                 'batch'
                                 'ec2'
                                 's3'
+                            )
+                            ;;
+                        'bowtie2')
+                            args=(
+                                'align'
+                                'index'
                             )
                             ;;
                         'conda')

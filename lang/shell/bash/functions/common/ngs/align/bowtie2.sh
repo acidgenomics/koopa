@@ -1,36 +1,26 @@
 #!/usr/bin/env bash
 
-# FIXME Need to test that all of these runners are working correctly.
-# NOTE Need to add option to generate BAM and CRAM files here.
+# FIXME Rename this to align.
+# FIXME This needs to call align per sample.
+# FIXME Need to split out the indexer to separate function.
 
-# FIXME Rework and move these to 'koopa app bowtie2'.
-
-# Main function ================================================================
-koopa_run_bowtie2() { # {{{1
+koopa_bowtie2() { # {{{1
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
-    # @note Updated 2022-02-11.
+    # @note Updated 2022-03-22.
     # """
-    local dict
-    local fastq_r1_file fastq_r1_files
+    local dict fastq_r1_file fastq_r1_files
     declare -A dict=(
-        [fastq_dir]='fastq'
-        [output_dir]='bowtie2'
-        [r1_tail]='_R1_001.fastq.gz'
-        [r2_tail]='_R2_001.fastq.gz'
+        [fastq_dir]=''
+        [fastq_r1_tail]='' # '_R1_001.fastq.gz'
+        [fastq_r2_tail]='' # '_R2_001.fastq.gz'
+        [genome_fasta_file]=''
+        [output_dir]=''
     )
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--fasta-file='*)
-                dict[fasta_file]="${1#*=}"
-                shift 1
-                ;;
-            '--fasta-file')
-                dict[fasta_file]="${2:?}"
-                shift 2
-                ;;
             '--fastq-dir='*)
                 dict[fastq_dir]="${1#*=}"
                 shift 1
@@ -39,30 +29,36 @@ koopa_run_bowtie2() { # {{{1
                 dict[fastq_dir]="${2:?}"
                 shift 2
                 ;;
+            '--fastq-r1-tail='*)
+                dict[fastq_r1_tail]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-r1-tail')
+                dict[fastq_r1_tail]="${2:?}"
+                shift 2
+                ;;
+            '--fastq-r2-tail='*)
+                dict[fastq_r2_tail]="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-r2-tail')
+                dict[fastq_r2_tail]="${2:?}"
+                shift 2
+                ;;
+            '--genome-fasta-file='*)
+                dict[genome_fasta_file]="${1#*=}"
+                shift 1
+                ;;
+            '--genome-fasta-file')
+                dict[genome_fasta_file]="${2:?}"
+                shift 2
+                ;;
             '--output-dir='*)
                 dict[output_dir]="${1#*=}"
                 shift 1
                 ;;
             '--output-dir')
                 dict[output_dir]="${2:?}"
-                shift 2
-                ;;
-            # FIXME Consider renaming this to include 'fastq'.
-            '--r1-tail='*)
-                dict[r1_tail]="${1#*=}"
-                shift 1
-                ;;
-            '--r1-tail')
-                dict[r1_tail]="${2:?}"
-                shift 2
-                ;;
-            # FIXME Consider renaming this to include 'fastq'.
-            '--r2-tail='*)
-                dict[r2_tail]="${1#*=}"
-                shift 1
-                ;;
-            '--r2-tail')
-                dict[r2_tail]="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -78,9 +74,6 @@ koopa_run_bowtie2() { # {{{1
     dict[index_dir]="${dict[output_dir]}/index"
     dict[index_base]="${dict[index_dir]}/bowtie2"
     dict[samples_dir]="${dict[output_dir]}/samples"
-    # Sample array from FASTQ files {{{2
-    # --------------------------------------------------------------------------
-    # Create a per-sample array from the R1 FASTQ files.
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -124,7 +117,7 @@ with '${dict[r1_tail]}'."
             --r2-tail="${dict[r2_tail]}"
     done
     # NOTE Need a step to convert SAM to BAM here.
-    koopa_alert_success 'bowtie alignment completed successfully.'
+    koopa_alert_success 'bowtie2 alignment completed successfully.'
     return 0
 }
 
