@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * Development (high priority)
+** TODO Add support for easily extracting multiple tarballs in a directory.
+    `for f in *.tar.xz; do tar -xzvf "$f"; done`
 ** TODO Improve consistency of AWS functions.
     - Ensure that all input consistently requires 's3://' as prefix input.
     - Ensure that this is consistent for CLI parser to JSON...bucket API one
