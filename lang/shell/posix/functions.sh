@@ -315,9 +315,9 @@ koopa_activate_bcbio_nextgen() { # {{{1
     local prefix
     prefix="$(koopa_bcbio_nextgen_prefix)"
     [ -d "$prefix" ] || return 0
-    koopa_add_to_path_end \
-        "${prefix}/install/anaconda/bin" \
-        "${prefix}/tools/bin"
+    # Only enable this when debugging.
+    # > koopa_add_to_path_end "${prefix}/install/anaconda/bin"
+    koopa_add_to_path_end "${prefix}/tools/bin"
     return 0
 }
 
