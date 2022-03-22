@@ -54,7 +54,8 @@ bash="5.1.16"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-bcbio-nextgen="1.2.9"
+# 1.2.9 has issues with bcftools and samtools
+bcbio-nextgen="1.2.8"
 
 # https://github.com/bcbio/bcbio-nextgen-vm/releases
 bcbio-nextgen-vm="0.1.6"
