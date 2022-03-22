@@ -47,13 +47,13 @@ scripts/${dict[file]}"
     koopa_mkdir "${dict[prefix]}"
     install_args=(
         "${dict[install_dir]}"
-        '--datatarget' 'rnaseq'
         # > '--datatarget' 'variation'
+        '--datatarget' 'rnaseq'
         '--isolate'
         '--mamba'
         '--nodata'
         '--tooldir' "${dict[tools_dir]}"
-        # > '--upgrade' "${dict[upgrade]}"
+        '--upgrade' "${dict[upgrade]}"
     )
     koopa_dl 'Install args' "${install_args[*]}"
     "${app[python]}" "${dict[file]}" "${install_args[@]}"
