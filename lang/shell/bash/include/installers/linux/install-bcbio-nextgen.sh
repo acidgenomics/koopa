@@ -11,6 +11,7 @@ linux_install_bcbio_nextgen() { # {{{1
     # Consider using '--revision REVISION' for a pinned version install.
     #
     # @seealso
+    # - bcbio_nextgen.py upgrade --help
     # - https://bcbio-nextgen.readthedocs.io/en/latest/contents/
     #     installation.html
     # """
