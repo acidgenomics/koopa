@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_geos() { # {{{1
+install_geos() { # {{{1
     # """
     # Install GEOS.
     # @note Updated 2021-11-24.
@@ -21,28 +21,28 @@ koopa:::install_geos() { # {{{1
     # > "${app[make]}" check
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [cmake]="$(koopa::locate_cmake)"
-        [make]="$(koopa::locate_make)"
+        [cmake]="$(koopa_locate_cmake)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='geos'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
     )
-    if koopa::is_macos
+    if koopa_is_macos
     then
-        koopa::activate_homebrew_opt_prefix 'cmake'
+        koopa_activate_homebrew_opt_prefix 'cmake'
     fi
     dict[file]="${dict[version]}.tar.gz"
     dict[url]="https://github.com/lib${dict[name]}/${dict[name]}/\
 archive/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::mkdir 'build'
-    koopa::cd 'build'
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_mkdir 'build'
+    koopa_cd 'build'
     # Can disable tests with:
     # > '-DGEOS_ENABLE_TESTS='OFF'
     "${app[cmake]}" \

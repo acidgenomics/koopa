@@ -86,13 +86,13 @@ local({
 
     #' R script header
     #'
-    #' @note Updated 2021-08-17.
+    #' @note Updated 2022-03-02.
     #' @noRd
     header <- function() {
         options(
             "error" = quote(quit(status = 1L)),
-            "warn" = 2L,
-            "warning" = quote(quit(status = 1L))
+            "warn" = 1L
+            ## > "warning" = quote(quit(status = 1L))
         )
         if (isVerbose()) {
             options("verbose" = TRUE)

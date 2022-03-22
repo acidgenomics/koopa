@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_spacemacs() { # {{{1
+install_spacemacs() { # {{{1
     # """
     # Install Spacemacs.
     # @note Updated 2022-02-01.
@@ -9,17 +9,17 @@ koopa:::install_spacemacs() { # {{{1
     # Switching to more recent code on develop branch.
     # """
     local dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A dict=(
         [branch]='develop'
-        [opt_prefix]="$(koopa::opt_prefix)"
+        [opt_prefix]="$(koopa_opt_prefix)"
         [prefix]="${INSTALL_PREFIX:?}"
         [url]='https://github.com/syl20bnr/spacemacs.git'
     )
     if [[ ! -d "${dict[opt_prefix]}/chemacs" ]]
     then
-        koopa::stop 'Install chemacs first.'
+        koopa_stop 'Install chemacs first.'
     fi
-    koopa::git_clone --branch='develop' "${dict[url]}" "${dict[prefix]}"
+    koopa_git_clone --branch='develop' "${dict[url]}" "${dict[prefix]}"
     return 0
 }

@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../../../../lang/shell/bash/include/header.sh"
 
-koopa::linux_bcl2fastq_indrops "$@"
+koopa_linux_bcl2fastq_indrops "$@"

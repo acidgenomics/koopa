@@ -1,69 +1,67 @@
 #!/usr/bin/env bash
 
-koopa::assert_are_identical() { # {{{1
+koopa_assert_are_identical() { # {{{1
     # """
     # Assert that two strings are identical.
     # @note Updated 2020-07-07.
     # """
-    koopa::assert_has_args_eq "$#" 2
+    koopa_assert_has_args_eq "$#" 2
     if [[ "${1:?}" != "${2:?}" ]]
     then
-        koopa::stop "'${1}' is not identical to '${2}'."
+        koopa_stop "'${1}' is not identical to '${2}'."
     fi
     return 0
 }
 
-koopa::assert_are_not_identical() { # {{{1
+koopa_assert_are_not_identical() { # {{{1
     # """
     # Assert that two strings are not identical.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_args_eq "$#" 2
+    koopa_assert_has_args_eq "$#" 2
     if [[ "${1:?}" == "${2:?}" ]]
     then
-        koopa::stop "'${1}' is identical to '${2}'."
+        koopa_stop "'${1}' is identical to '${2}'."
     fi
     return 0
 }
 
-koopa::assert_has_args() { # {{{1
+koopa_assert_has_args() { # {{{1
     # """
     # Assert that non-zero arguments have been passed.
-    # @note Updated 2020-07-20.
+    # @note Updated 2022-02-15.
     # Does not check for empty strings.
     # """
     if [[ "$#" -ne 1 ]]
     then
-        koopa::stop \
-            '"koopa::assert_has_args" requires 1 arg.' \
+        koopa_stop \
+            '"koopa_assert_has_args" requires 1 arg.' \
             'Pass "$#" not "$@" to this function.'
     fi
     if [[ "${1:?}" -eq 0 ]]
     then
-        koopa::stop \
-            'Required arguments missing.' \
-            "Run with '--help' flag for usage details."
+        koopa_stop 'Required arguments missing.'
     fi
     return 0
 }
 
-koopa::assert_has_args_eq() { # {{{1
+koopa_assert_has_args_eq() { # {{{1
     # """
     # Assert that an expected number of arguments have been passed.
     # @note Updated 2020-07-03.
     # """
     if [[ "$#" -ne 2 ]]
     then
-        koopa::stop '"koopa::assert_has_args_eq" requires 2 args.'
+        koopa_stop '"koopa_assert_has_args_eq" requires 2 args.'
     fi
     if [[ "${1:?}" -ne "${2:?}" ]]
     then
-        koopa::stop 'Invalid number of arguments.'
+        koopa_stop 'Invalid number of arguments.'
     fi
     return 0
 }
 
-koopa::assert_has_args_ge() { # {{{1
+koopa_assert_has_args_ge() { # {{{1
     # """
     # Assert that greater-than-or-equal-to an expected number of arguments have
     # been passed.
@@ -71,16 +69,16 @@ koopa::assert_has_args_ge() { # {{{1
     # """
     if [[ "$#" -ne 2 ]]
     then
-        koopa::stop '"koopa::assert_has_args_ge" requires 2 args.'
+        koopa_stop '"koopa_assert_has_args_ge" requires 2 args.'
     fi
     if [[ ! "${1:?}" -ge "${2:?}" ]]
     then
-        koopa::stop 'Invalid number of arguments.'
+        koopa_stop 'Invalid number of arguments.'
     fi
     return 0
 }
 
-koopa::assert_has_args_ge() { # {{{1
+koopa_assert_has_args_ge() { # {{{1
     # """
     # Assert that greater-than-or-equal-to an expected number of arguments have
     # been passed.
@@ -88,16 +86,16 @@ koopa::assert_has_args_ge() { # {{{1
     # """
     if [[ "$#" -ne 2 ]]
     then
-        koopa::stop '"koopa::assert_has_args_ge" requires 2 args.'
+        koopa_stop '"koopa_assert_has_args_ge" requires 2 args.'
     fi
     if [[ ! "${1:?}" -ge "${2:?}" ]]
     then
-        koopa::stop 'Invalid number of arguments.'
+        koopa_stop 'Invalid number of arguments.'
     fi
     return 0
 }
 
-koopa::assert_has_args_le() { # {{{1
+koopa_assert_has_args_le() { # {{{1
     # """
     # Assert that less-than-or-equal-to an expected number of arguments have
     # been passed.
@@ -105,74 +103,72 @@ koopa::assert_has_args_le() { # {{{1
     # """
     if [[ "$#" -ne 2 ]]
     then
-        koopa::stop '"koopa::assert_has_args_le" requires 2 args.'
+        koopa_stop '"koopa_assert_has_args_le" requires 2 args.'
     fi
     if [[ ! "${1:?}" -le "${2:?}" ]]
     then
-        koopa::stop 'Invalid number of arguments.'
+        koopa_stop 'Invalid number of arguments.'
     fi
     return 0
 }
 
-koopa::assert_has_file_ext() { # {{{1
+koopa_assert_has_file_ext() { # {{{1
     # """
     # Assert that input contains a file extension.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
-        if ! koopa::has_file_ext "$arg"
+        if ! koopa_has_file_ext "$arg"
         then
-            koopa::stop "No file extension: '${arg}'."
+            koopa_stop "No file extension: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_has_monorepo() { # {{{1
+koopa_assert_has_monorepo() { # {{{1
     # """
     # Assert that the user has a git monorepo.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_monorepo
+    koopa_assert_has_no_args "$#"
+    if ! koopa_has_monorepo
     then
-        koopa::stop "No monorepo at '$(koopa::monorepo_prefix)'."
+        koopa_stop "No monorepo at '$(koopa_monorepo_prefix)'."
     fi
     return 0
 }
 
-koopa::assert_has_no_args() { # {{{1
+koopa_assert_has_no_args() { # {{{1
     # """
     # Assert that the user has not passed any arguments to a script.
-    # @note Updated 2020-07-03.
+    # @note Updated 2022-02-15.
     # """
     if [[ "$#" -ne 1 ]]
     then
-        koopa::stop \
-            '"koopa::assert_has_no_args" requires 1 arg.' \
+        koopa_stop \
+            '"koopa_assert_has_no_args" requires 1 arg.' \
             'Pass "$#" not "$@" to this function.'
     fi
     if [[ "${1:?}" -ne 0 ]]
     then
-        koopa::stop \
-            'Arguments are not allowed.' \
-            "Run with '--help' flag for usage details."
+        koopa_stop "Arguments are not allowed (${1} detected)."
     fi
     return 0
 }
 
-koopa::assert_has_no_envs() { # {{{1
+koopa_assert_has_no_envs() { # {{{1
     # """
     # Assert that conda and Python virtual environments aren't active.
     # @note Updated 2020-07-01.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::has_no_environments
+    koopa_assert_has_no_args "$#"
+    if ! koopa_has_no_environments
     then
-        koopa::stop "\
+        koopa_stop "\
 Active environment detected.
        (conda and/or python venv)
 
@@ -185,7 +181,7 @@ Deactivate venv prior to conda, otherwise conda python may be left in PATH."
     return 0
 }
 
-koopa::assert_has_no_flags() { # {{{1
+koopa_assert_has_no_flags() { # {{{1
     # """
     # Assert that the user input does not contain flags.
     # @note Updated 2021-09-20.
@@ -194,7 +190,7 @@ koopa::assert_has_no_flags() { # {{{1
     do
         case "$1" in
             '-'*)
-                koopa::invalid_arg "$1"
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 shift 1
@@ -204,110 +200,110 @@ koopa::assert_has_no_flags() { # {{{1
     return 0
 }
 
-koopa::assert_is_aarch64() { # {{{1
+koopa_assert_is_aarch64() { # {{{1
     # """
     # Assert that platform is ARM 64-bit.
     # @note Updated 2021-11-02.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_aarch64
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_aarch64
     then
-        koopa::stop 'Architecture is not aarch64 (ARM 64-bit).'
+        koopa_stop 'Architecture is not aarch64 (ARM 64-bit).'
     fi
     return 0
 }
 
-koopa::assert_is_admin() { # {{{1
+koopa_assert_is_admin() { # {{{1
     # """
     # Assert that current user has admin permissions.
     # @note Updated 2021-05-14.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_admin
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_admin
     then
-        koopa::stop 'Administrator account is required.'
+        koopa_stop 'Administrator account is required.'
     fi
     return 0
 }
 
-koopa::assert_is_array_non_empty() { # {{{1
+koopa_assert_is_array_non_empty() { # {{{1
     # """
     # Assert that array is non-empty.
     # @note Updated 2020-03-06.
     # """
-    if ! koopa::is_array_non_empty "$@"
+    if ! koopa_is_array_non_empty "$@"
     then
-        koopa::stop 'Array is empty.'
+        koopa_stop 'Array is empty.'
     fi
     return 0
 }
 
-koopa::assert_is_conda_active() { # {{{1
+koopa_assert_is_conda_active() { # {{{1
     # """
     # Assert that a Conda environment is active.
     # @note Updated 2020-07-03.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_conda_active
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_conda_active
     then
-        koopa::stop 'No active Conda environment detected.'
+        koopa_stop 'No active Conda environment detected.'
     fi
     return 0
 }
 
-koopa::assert_is_current_version() { # {{{1
+koopa_assert_is_current_version() { # {{{1
     # """
     # Assert that programs are installed (and current).
     # @note Updated 2020-02-16.
     # """
     local arg expected
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
-        if ! koopa::is_installed "$arg"
+        if ! koopa_is_installed "$arg"
         then
-            expected="$(koopa::variable "$arg")"
-            koopa::stop "'${arg}' is not current; expecting '${expected}'."
+            expected="$(koopa_variable "$arg")"
+            koopa_stop "'${arg}' is not current; expecting '${expected}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_dir() { # {{{1
+koopa_assert_is_dir() { # {{{1
     # """
     # Assert that input is a directory.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ ! -d "$arg" ]]
         then
-            koopa::stop "Not directory: '${arg}'."
+            koopa_stop "Not directory: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_executable() { # {{{1
+koopa_assert_is_executable() { # {{{1
     # """
     # Assert that input is executable.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ ! -x "$arg" ]]
         then
-            koopa::stop "Not executable: '${arg}'."
+            koopa_stop "Not executable: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_existing() { # {{{1
+koopa_assert_is_existing() { # {{{1
     # """
     # Assert that input exists on disk.
     # @note Updated 2020-02-16.
@@ -315,416 +311,479 @@ koopa::assert_is_existing() { # {{{1
     # Note that '-e' flag returns true for file, dir, or symlink.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ ! -e "$arg" ]]
         then
-            koopa::stop "Does not exist: '${arg}'."
+            koopa_stop "Does not exist: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_file() { # {{{1
+koopa_assert_is_file() { # {{{1
     # """
     # Assert that input is a file.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ ! -f "$arg" ]]
         then
-            koopa::stop "Not file: '${arg}'."
+            koopa_stop "Not file: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_file_type() { # {{{1
+koopa_assert_is_file_type() { # {{{1
     # """
     # Assert that input matches a specified file type.
-    # @note Updated 2020-01-12.
+    # @note Updated 2022-02-17.
     #
-    # @examples
-    # koopa::assert_is_file_type "$x' 'csv"
+    # @usage
+    # > koopa_assert_is_file_type --string=STRING --pattern=PATTERN
     # """
-    local ext file
-    koopa::assert_has_args_eq "$#" 2
-    file="${1:?}"
-    ext="${2:?}"
-    koopa::assert_is_file "$file"
-    koopa::assert_is_matching_regex "$file" "\.${ext}\$"
+    koopa_assert_has_args "$#"
+    if ! koopa_is_file_type "$@"
+    then
+        koopa_stop 'Input does not match expected file type extension.'
+    fi
+    return 0
 }
 
-koopa::assert_is_function() { # {{{1
+koopa_assert_is_function() { # {{{1
     # """
     # Assert that variable is a function.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
-        if ! koopa::is_function "$arg"
+        if ! koopa_is_function "$arg"
         then
-            koopa::stop "Not function: '${arg}'."
+            koopa_stop "Not function: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_git_repo() { # {{{1
+koopa_assert_is_git_repo() { # {{{1
     # """
     # Assert that current directory is a git repo.
     # @note Updated 2021-08-19.
     #
     # Intentionally doesn't support input of multiple directories here.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_git_repo
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_git_repo
     then
-        koopa::stop "Not a Git repo: '${PWD:?}'."
+        koopa_stop "Not a Git repo: '${PWD:?}'."
     fi
     return 0
 }
 
-koopa::assert_is_github_ssh_enabled() { # {{{1
+koopa_assert_is_github_ssh_enabled() { # {{{1
     # """
     # Assert that current user has SSH key access to GitHub.
     # @note Updated 2020-02-11.
     # """
-    if ! koopa::is_github_ssh_enabled
+    if ! koopa_is_github_ssh_enabled
     then
-        koopa::stop 'GitHub SSH access is not configured correctly.'
+        koopa_stop 'GitHub SSH access is not configured correctly.'
     fi
     return 0
 }
 
-koopa::assert_is_gitlab_ssh_enabled() { # {{{1
+koopa_assert_is_gitlab_ssh_enabled() { # {{{1
     # """
     # Assert that current user has SSH key access to GitLab.
     # @note Updated 2020-02-11.
     # """
-    if ! koopa::is_gitlab_ssh_enabled
+    if ! koopa_is_gitlab_ssh_enabled
     then
-        koopa::stop 'GitLab SSH access is not configured correctly.'
+        koopa_stop 'GitLab SSH access is not configured correctly.'
     fi
     return 0
 }
 
-koopa::assert_is_gnu() {  #{{{1
+koopa_assert_is_gnu() {  #{{{1
     # """
     # Assert that GNU version of a program is installed.
     # @note Updated 2021-05-20.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
-        if ! koopa::is_gnu "$arg"
+        if ! koopa_is_gnu "$arg"
         then
-            koopa::stop "GNU ${arg} is not installed."
+            koopa_stop "GNU ${arg} is not installed."
         fi
     done
     return 0
 }
 
-koopa::assert_is_installed() { # {{{1
+koopa_assert_is_installed() { # {{{1
     # """
     # Assert that programs are installed.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
-        if ! koopa::is_installed "$arg"
+        if ! koopa_is_installed "$arg"
         then
-            koopa::stop "Not installed: '${arg}'."
+            koopa_stop "Not installed: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_koopa_app() { # {{{1
+koopa_assert_is_koopa_app() { # {{{1
     # """
     # Assert that input is an application installed in koopa app prefix.
     # @note Updated 2021-06-14.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
-        if ! koopa::is_koopa_app "$arg"
+        if ! koopa_is_koopa_app "$arg"
         then
-            koopa::stop "Not koopa app: '${arg}'."
+            koopa_stop "Not koopa app: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_linux() { # {{{1
+koopa_assert_is_linux() { # {{{1
     # """
     # Assert that operating system is Linux.
     # @note Updated 2020-11-13.
     # """
-    if ! koopa::is_linux
+    if ! koopa_is_linux
     then
-        koopa::stop 'Linux is required.'
+        koopa_stop 'Linux is required.'
     fi
     return 0
 }
 
-koopa::assert_is_macos() { # {{{1
+koopa_assert_is_macos() { # {{{1
     # """
     # Assert that operating system is macOS.
     # @note Updated 2020-11-13.
     # """
-    if ! koopa::is_macos
+    if ! koopa_is_macos
     then
-        koopa::stop 'macOS is required.'
+        koopa_stop 'macOS is required.'
     fi
     return 0
 }
 
-koopa::assert_is_matching_fixed() { # {{{1
+koopa_assert_is_matching_fixed() { # {{{1
     # """
     # Assert that input matches a fixed pattern.
-    # @note Updated 2020-01-12.
+    # @note Updated 2022-02-27.
     # """
-    local pattern string
-    koopa::assert_has_args_eq "$#" 2
-    string="${1:?}"
-    pattern="${2:?}"
-    if ! koopa::str_detect_fixed "$string" "$pattern"
+    local dict
+    declare -A dict=(
+        [pattern]=''
+        [string]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict[string]="${1#*=}"
+                shift 1
+                ;;
+            '--string')
+                dict[string]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--pattern' "${dict[pattern]}" \
+        '--string' "${dict[string]}"
+    if ! koopa_str_detect_fixed \
+        --pattern="${dict[pattern]}" \
+        --string="${dict[string]}"
     then
-        koopa::stop "'${string}' doesn't match '${pattern}'."
+        koopa_stop "'${dict[string]}' doesn't match '${dict[pattern]}'."
     fi
     return 0
 }
 
-koopa::assert_is_matching_regex() { # {{{1
+koopa_assert_is_matching_regex() { # {{{1
     # """
     # Assert that input matches a regular expression pattern.
-    # @note Updated 2020-01-12.
+    # @note Updated 2022-02-27.
     # """
-    local pattern string
-    koopa::assert_has_args_eq "$#" 2
-    string="${1:?}"
-    pattern="${2:?}"
-    if ! koopa::str_detect_regex "$string" "$pattern"
+    declare -A dict=(
+        [pattern]=''
+        [string]=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--pattern='*)
+                dict[pattern]="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict[pattern]="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict[string]="${1#*=}"
+                shift 1
+                ;;
+            '--string')
+                dict[string]="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--pattern' "${dict[pattern]}" \
+        '--string' "${dict[string]}"
+    if ! koopa_str_detect_regex \
+        --pattern="${dict[pattern]}" \
+        --string="${dict[string]}"
     then
-        koopa::stop "'${string}' doesn't match regex '${pattern}'."
+        koopa_stop "'${dict[string]}' doesn't match regex '${dict[pattern]}'."
     fi
     return 0
 }
 
-koopa::assert_is_non_existing() { # {{{1
+koopa_assert_is_non_existing() { # {{{1
     # """
     # Assert that input does not exist on disk.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ -e "$arg" ]]
         then
-            koopa::stop "Exists: '${arg}'."
+            koopa_stop "Exists: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_nonzero_file() { # {{{1
+koopa_assert_is_nonzero_file() { # {{{1
     # """
     # Assert that input is a non-zero file.
     # @note Updated 2020-03-06.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ ! -s "$arg" ]]
         then
-            koopa::stop "Not non-zero file: '${arg}'."
+            koopa_stop "Not non-zero file: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_not_dir() { # {{{1
+koopa_assert_is_not_dir() { # {{{1
     # """
     # Assert that input is not a directory.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ -d "$arg" ]]
         then
-            koopa::stop "Directory exists: '${arg}'."
+            koopa_stop "Directory exists: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_not_file() { # {{{1
+koopa_assert_is_not_file() { # {{{1
     # """
     # Assert that input is not a file.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ -f "$arg" ]]
         then
-            koopa::stop "File exists: '${arg}'."
+            koopa_stop "File exists: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_not_installed() { # {{{1
+koopa_assert_is_not_installed() { # {{{1
     # """
     # Assert that programs are not installed.
     # @note Updated 2020-02-16.
     # """
     local arg where
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
-        if koopa::is_installed "$arg"
+        if koopa_is_installed "$arg"
         then
-            where="$(koopa::which_realpath "$arg")"
-            koopa::stop "'${arg}' is already installed at '${where}'."
+            where="$(koopa_which_realpath "$arg")"
+            koopa_stop "'${arg}' is already installed at '${where}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_not_root() { # {{{1
+koopa_assert_is_not_root() { # {{{1
     # """
     # Assert that current user is not root.
     # @note Updated 2019-12-17.
     # """
-    koopa::assert_has_no_args "$#"
-    if koopa::is_root
+    koopa_assert_has_no_args "$#"
+    if koopa_is_root
     then
-        koopa::stop 'root user detected.'
+        koopa_stop 'root user detected.'
     fi
     return 0
 }
 
-koopa::assert_is_not_symlink() { # {{{1
+koopa_assert_is_not_symlink() { # {{{1
     # """
     # Assert that input is not a symbolic link.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ -L "$arg" ]]
         then
-            koopa::stop "Symlink exists: '${arg}'."
+            koopa_stop "Symlink exists: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_python_package_installed() { # {{{1
+koopa_assert_is_python_package_installed() { # {{{1
     # """
     # Assert that specific Python packages are installed.
     # @note Updated 2020-07-10.
     # """
-    koopa::assert_has_args "$#"
-    if ! koopa::is_python_package_installed "$@"
+    koopa_assert_has_args "$#"
+    if ! koopa_is_python_package_installed "$@"
     then
-        koopa::dl 'Args' "$*"
-        koopa::stop 'Required Python packages missing.'
+        koopa_dl 'Args' "$*"
+        koopa_stop 'Required Python packages missing.'
     fi
     return 0
 }
 
-koopa::assert_is_python_venv_active() { # {{{1
+koopa_assert_is_python_venv_active() { # {{{1
     # """
     # Assert that a Python virtual environment is active.
     # @note Updated 2021-06-14.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_python_venv_active
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_python_venv_active
     then
-        koopa::stop 'No active Python venv detected.'
+        koopa_stop 'No active Python venv detected.'
     fi
     return 0
 }
 
-koopa::assert_is_r_package_installed() { # {{{1
+koopa_assert_is_r_package_installed() { # {{{1
     # """
     # Assert that specific R packages are installed.
     # @note Updated 2020-07-10.
     # """
-    koopa::assert_has_args "$#"
-    if ! koopa::is_r_package_installed "$@"
+    koopa_assert_has_args "$#"
+    if ! koopa_is_r_package_installed "$@"
     then
-        koopa::dl 'Args' "$*"
-        koopa::stop 'Required R packages missing.'
+        koopa_dl 'Args' "$*"
+        koopa_stop 'Required R packages missing.'
     fi
     return 0
 }
 
-koopa::assert_is_readable() { # {{{1
+koopa_assert_is_readable() { # {{{1
     # """
     # Assert that input is readable.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ ! -r "$arg" ]]
         then
-            koopa::stop "Not readable: '${arg}'."
+            koopa_stop "Not readable: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_root() { # {{{1
+koopa_assert_is_root() { # {{{1
     # """
     # Assert that the current user is root.
     # @note Updated 2019-12-17.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_root
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_root
     then
-        koopa::stop 'root user is required.'
+        koopa_stop 'root user is required.'
     fi
     return 0
 }
 
-koopa::assert_is_set() { # {{{1
+koopa_assert_is_set() { # {{{1
     # """
     # Assert that variables are set (and not unbound).
     # @note Updated 2021-11-05.
     #
     # @examples
-    # declare -A dict=(
-    #     [aaa]='AAA'
-    #     [bbb]='BBB'
-    # )
-    # koopa::assert_is_set \
-    #     '--aaa' "${dict[aaa]:-}" \
-    #     '--bbb' "${dict[bbb]:-}"
+    # > declare -A dict=(
+    # >     [aaa]='AAA'
+    # >     [bbb]='BBB'
+    # > )
+    # > koopa_assert_is_set \
+    # >     '--aaa' "${dict[aaa]:-}" \
+    # >     '--bbb' "${dict[bbb]:-}"
     # """
     local name value
-    koopa::assert_has_args_ge "$#" 2
+    koopa_assert_has_args_ge "$#" 2
     while (("$#"))
     do
         name="${1:?}"
@@ -732,81 +791,81 @@ koopa::assert_is_set() { # {{{1
         shift 2
         if [[ -z "${value}" ]]
         then
-            koopa::stop "'${name}' is unset."
+            koopa_stop "'${name}' is unset."
         fi
     done
     return 0
 }
 
-koopa::assert_is_set_2() { # {{{1
+koopa_assert_is_set_2() { # {{{1
     # """
     # Assert that variables are set (and not unbound).
     # @note Updated 2021-11-05.
     #
-    # Intended to use inside of functions, where we can't be sure that 'set -u'
-    # mode is set, which otherwise catches unbound variables.
+    # Intended to use inside of functions, where we can't be sure that
+    # 'set -o nounset' mode is set, which otherwise catches unbound variables.
     #
     # How to return bash variable name:
     # - https://unix.stackexchange.com/questions/129084
     #
     # @examples
-    # koopa::assert_is_set_2 'PATH' 'MANPATH'
+    # > koopa_assert_is_set_2 'PATH' 'MANPATH'
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
-        if ! koopa::is_set "$arg"
+        if ! koopa_is_set "$arg"
         then
-            koopa::stop "'${arg}' is unset."
+            koopa_stop "'${arg}' is unset."
         fi
     done
     return 0
 }
 
-koopa::assert_is_symlink() { # {{{1
+koopa_assert_is_symlink() { # {{{1
     # """
     # Assert that input is a symbolic link.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ ! -L "$arg" ]]
         then
-            koopa::stop "Not symlink: '${arg}'."
+            koopa_stop "Not symlink: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_writable() { # {{{1
+koopa_assert_is_writable() { # {{{1
     # """
     # Assert that input is writable.
     # @note Updated 2020-02-16.
     # """
     local arg
-    koopa::assert_has_args "$#"
+    koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [[ ! -r "$arg" ]]
         then
-            koopa::stop "Not writable: '${arg}'."
+            koopa_stop "Not writable: '${arg}'."
         fi
     done
     return 0
 }
 
-koopa::assert_is_x86_64() { # {{{1
+koopa_assert_is_x86_64() { # {{{1
     # """
     # Assert that platform is Intel x86 64-bit.
     # @note Updated 2021-11-02.
     # """
-    koopa::assert_has_no_args "$#"
-    if ! koopa::is_x86_64
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_x86_64
     then
-        koopa::stop 'Architecture is not x86_64 (Intel x86 64-bit).'
+        koopa_stop 'Architecture is not x86_64 (Intel x86 64-bit).'
     fi
     return 0
 }

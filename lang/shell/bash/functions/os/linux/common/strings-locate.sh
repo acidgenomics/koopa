@@ -1,28 +1,28 @@
 #!/usr/bin/env bash
 
-koopa::linux_locate_bcbio() { # {{{1
-    koopa::locate_app 'bcbio-nextgen.py'
+koopa_linux_locate_bcbio() { # {{{1
+    koopa_locate_app 'bcbio-nextgen.py'
 }
 
-koopa::linux_locate_bcl2fastq() { # {{{1
-    koopa::locate_app 'bcl2fastq'
+koopa_linux_locate_bcl2fastq() { # {{{1
+    koopa_locate_app 'bcl2fastq'
 }
 
-koopa::linux_locate_getconf() { # {{{1
-    koopa::locate_app '/usr/bin/getconf'
+koopa_linux_locate_getconf() { # {{{1
+    koopa_locate_app '/usr/bin/getconf'
 }
 
-koopa::linux_locate_groupadd() { # {{{1
-    koopa::locate_app '/usr/sbin/groupadd'
+koopa_linux_locate_groupadd() { # {{{1
+    koopa_locate_app '/usr/sbin/groupadd'
 }
 
-koopa::linux_locate_gpasswd() { # {{{1
-    koopa::locate_app '/usr/bin/gpasswd'
+koopa_linux_locate_gpasswd() { # {{{1
+    koopa_locate_app '/usr/bin/gpasswd'
 }
 
-koopa::linux_locate_ldconfig() { # {{{1
+koopa_linux_locate_ldconfig() { # {{{1
     local os_id str
-    os_id="$(koopa::os_id)"
+    os_id="$(koopa_os_id)"
     case "$os_id" in
         'alpine' | \
         'debian')
@@ -32,12 +32,12 @@ koopa::linux_locate_ldconfig() { # {{{1
             str='/usr/sbin/ldconfig'
             ;;
     esac
-    koopa::locate_app "$str"
+    koopa_locate_app "$str"
 }
 
-koopa::linux_locate_systemctl() { # {{{1
+koopa_linux_locate_systemctl() { # {{{1
     local os_id str
-    os_id="$(koopa::os_id)"
+    os_id="$(koopa_os_id)"
     case "$os_id" in
         'debian')
             str='/bin/systemctl'
@@ -46,24 +46,24 @@ koopa::linux_locate_systemctl() { # {{{1
             str='/usr/bin/systemctl'
             ;;
     esac
-    koopa::locate_app "$str"
+    koopa_locate_app "$str"
 }
 
-koopa::linux_locate_update_alternatives() { # {{{1
+koopa_linux_locate_update_alternatives() { # {{{1
     local str
-    if koopa::is_fedora_like
+    if koopa_is_fedora_like
     then
         str='/usr/sbin/update-alternatives'
     else
         str='/usr/bin/update-alternatives'
     fi
-    koopa::locate_app "$str"
+    koopa_locate_app "$str"
 }
 
-koopa::linux_locate_useradd() { # {{{1
-    koopa::locate_app '/usr/sbin/useradd'
+koopa_linux_locate_useradd() { # {{{1
+    koopa_locate_app '/usr/sbin/useradd'
 }
 
-koopa::linux_locate_usermod() { # {{{1
-    koopa::locate_app '/usr/sbin/usermod'
+koopa_linux_locate_usermod() { # {{{1
+    koopa_locate_app '/usr/sbin/usermod'
 }

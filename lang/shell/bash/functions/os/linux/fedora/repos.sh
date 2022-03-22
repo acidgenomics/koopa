@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-koopa::fedora_add_azure_cli_repo() { # {{{1
+koopa_fedora_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI repo.
     # @note Updated 2021-11-02.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [sudo]="$(koopa::locate_sudo)"
-        [tee]="$(koopa::locate_tee)"
+        [sudo]="$(koopa_locate_sudo)"
+        [tee]="$(koopa_locate_tee)"
     )
     declare -A dict=(
         [file]='/etc/yum.repos.d/azure-cli.repo'
@@ -27,7 +27,7 @@ END
     return 0
 }
 
-koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
+koopa_fedora_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK repo.
     # @note Updated 2021-11-02.
@@ -42,12 +42,12 @@ koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
     # - https://github.com/GoogleCloudPlatform/google-fluentd/issues/136
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    koopa::assert_is_x86_64
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    koopa_assert_is_x86_64
     declare -A app=(
-        [sudo]="$(koopa::locate_sudo)"
-        [tee]="$(koopa::locate_tee)"
+        [sudo]="$(koopa_locate_sudo)"
+        [tee]="$(koopa_locate_tee)"
     )
     declare -A dict=(
         [arch]='x86_64'
@@ -56,14 +56,14 @@ koopa::fedora_add_google_cloud_sdk_repo() { # {{{1
         [gpgcheck]=1
         [repo_gpgcheck]=0
     )
-    if koopa::is_fedora || koopa::is_rhel_8_like
+    if koopa_is_fedora || koopa_is_rhel_8_like
     then
         dict[platform]='el8'
-    elif koopa::is_rhel_7_like
+    elif koopa_is_rhel_7_like
     then
         dict[platform]='el7'
     else
-        koopa::stop 'Unsupported platform.'
+        koopa_stop 'Unsupported platform.'
     fi
     dict[baseurl]="https://packages.cloud.google.com/yum/repos/\
 cloud-sdk-${dict[platform]}-${dict[arch]}"
@@ -81,17 +81,17 @@ END
     return 0
 }
 
-koopa::fedora_import_azure_cli_key() { # {{{1
+koopa_fedora_import_azure_cli_key() { # {{{1
     # """
     # Import the Microsoft Azure CLI public key.
     # @note Updated 2021-11-02.
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A app=(
-        [rpm]="$(koopa::fedora_locate_rpm)"
-        [sudo]="$(koopa::locate_sudo)"
+        [rpm]="$(koopa_fedora_locate_rpm)"
+        [sudo]="$(koopa_locate_sudo)"
     )
     declare -A dict=(
         [key]='https://packages.microsoft.com/keys/microsoft.asc'

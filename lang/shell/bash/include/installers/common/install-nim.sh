@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-koopa:::install_nim() { # {{{1
+install_nim() { # {{{1
     # """
     # Install Nim.
     # @note Updated 2021-11-16.
     # """
     local dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A dict=(
         [name]='nim'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -14,13 +14,13 @@ koopa:::install_nim() { # {{{1
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.xz"
     dict[url]="https://nim-lang.org/download/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     ./build.sh
     bin/nim c koch
     ./koch boot -d:release
     ./koch tools
-    koopa::cp "${PWD:?}" "${dict[prefix]}"
+    koopa_cp "${PWD:?}" "${dict[prefix]}"
     return 0
 }

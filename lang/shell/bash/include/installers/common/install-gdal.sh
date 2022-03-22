@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_gdal() { # {{{1
+install_gdal() { # {{{1
     # """
     # Install GDAL.
     # @note Updated 2021-11-24.
@@ -18,13 +18,13 @@ koopa:::install_gdal() { # {{{1
     # - https://github.com/OSGeo/gdal/issues/1708
     # """
     local app brew_opt_pkgs conf_args dict opt_pkgs
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
+        [make]="$(koopa_locate_make)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
-        [make_prefix]="$(koopa::make_prefix)"
+        [jobs]="$(koopa_cpu_count)"
+        [make_prefix]="$(koopa_make_prefix)"
         [name]='gdal'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -62,7 +62,7 @@ koopa:::install_gdal() { # {{{1
         '--without-sosi'
     )
     opt_pkgs=('geos' 'proj')
-    if koopa::is_linux
+    if koopa_is_linux
     then
         opt_pkgs+=('sqlite')
         conf_args+=(
@@ -70,19 +70,19 @@ koopa:::install_gdal() { # {{{1
             "CPPFLAGS=-I${dict[make_prefix]}/include"
             "LDFLAGS=-L${dict[make_prefix]}/lib"
         )
-    elif koopa::is_macos
+    elif koopa_is_macos
     then
         brew_opt_pkgs=('sqlite')
-        koopa::activate_homebrew_opt_prefix "${brew_opt_pkgs[@]}"
+        koopa_activate_homebrew_opt_prefix "${brew_opt_pkgs[@]}"
     fi
-    koopa::activate_opt_prefix "${opt_pkgs[@]}"
+    koopa_activate_opt_prefix "${opt_pkgs[@]}"
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="https://github.com/OSGeo/${dict[name]}/releases/download/\
 v${dict[version]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
-    koopa::alert_coffee_time
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
+    koopa_alert_coffee_time
     ./configure "${conf_args[@]}"
     # Use '-d' flag for more verbose debug mode.
     "${app[make]}" --jobs="${dict[jobs]}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_vim() { # {{{1
+install_vim() { # {{{1
     # """
     # Install Vim.
     # @note Updated 2021-12-01.
@@ -12,16 +12,16 @@ koopa:::install_vim() { # {{{1
     # - https://github.com/vim/vim/issues/1081
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
+    koopa_assert_has_no_args "$#"
     declare -A app=(
-        [make]="$(koopa::locate_make)"
-        [python]="$(koopa::locate_python)"
+        [make]="$(koopa_locate_make)"
+        [python]="$(koopa_locate_python)"
     )
-    app[python]="$(koopa::realpath "${app[python]}")"
+    app[python]="$(koopa_realpath "${app[python]}")"
     app[python_config]="${app[python]}-config"
-    koopa::assert_is_installed "${app[python]}" "${app[python_config]}"
+    koopa_assert_is_installed "${app[python]}" "${app[python_config]}"
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [name]='vim'
         [prefix]="${INSTALL_PREFIX:?}"
         [version]="${INSTALL_VERSION:?}"
@@ -30,7 +30,7 @@ koopa:::install_vim() { # {{{1
     dict[url]="https://github.com/${dict[name]}/${dict[name]}/\
 archive/${dict[file]}"
     dict[python_config_dir]="$("${app[python_config]}" --configdir)"
-    koopa::assert_is_dir "${dict[python_config_dir]}"
+    koopa_assert_is_dir "${dict[python_config_dir]}"
     conf_args=(
         "--prefix=${dict[prefix]}"
         "--with-python3-command=${app[python]}"
@@ -38,14 +38,14 @@ archive/${dict[file]}"
         '--enable-python3interp'
     )
     dict[vim_rpath]="${dict[prefix]}/lib"
-    dict[python_rpath]="$(koopa::parent_dir --num=2 "${app[python]}")/lib"
-    koopa::assert_is_dir "${dict[python_rpath]}"
-    if koopa::is_linux
+    dict[python_rpath]="$(koopa_parent_dir --num=2 "${app[python]}")/lib"
+    koopa_assert_is_dir "${dict[python_rpath]}"
+    if koopa_is_linux
     then
         conf_args+=(
             "LDFLAGS=-Wl,-rpath=${dict[vim_rpath]},-rpath=${dict[python_rpath]}"
         )
-    elif koopa::is_macos
+    elif koopa_is_macos
     then
         conf_args+=(
             '--enable-cscope'
@@ -59,9 +59,9 @@ archive/${dict[file]}"
             '--without-x'
         )
     fi
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     ./configure "${conf_args[@]}"
     "${app[make]}" --jobs="${dict[jobs]}"
     # > "${app[make]}" test

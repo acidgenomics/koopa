@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::install_git() { # {{{1
+install_git() { # {{{1
     # """
     # Install Git.
     # @note Updated 2021-11-23.
@@ -14,17 +14,17 @@ koopa:::install_git() { # {{{1
     # > url="https://github.com/git/${name}/archive/${file}"
     # """
     local app dict
-    koopa::assert_has_no_args "$#"
-    if koopa::is_macos
+    koopa_assert_has_no_args "$#"
+    if koopa_is_macos
     then
-        koopa::activate_opt_prefix 'autoconf'
+        koopa_activate_opt_prefix 'autoconf'
     fi
     declare -A app=(
-        [make]="$(koopa::locate_make)"
-        [openssl]="$(koopa::locate_openssl)"
+        [make]="$(koopa_locate_make)"
+        [openssl]="$(koopa_locate_openssl)"
     )
     declare -A dict=(
-        [jobs]="$(koopa::cpu_count)"
+        [jobs]="$(koopa_cpu_count)"
         [mirror_url]='https://mirrors.edge.kernel.org/pub/software/scm/'
         [name]='git'
         [prefix]="${INSTALL_PREFIX:?}"
@@ -32,9 +32,9 @@ koopa:::install_git() { # {{{1
     )
     dict[file]="${dict[name]}-${dict[version]}.tar.gz"
     dict[url]="${dict[mirror_url]}/${dict[name]}/${dict[file]}"
-    koopa::download "${dict[url]}" "${dict[file]}"
-    koopa::extract "${dict[file]}"
-    koopa::cd "${dict[name]}-${dict[version]}"
+    koopa_download "${dict[url]}" "${dict[file]}"
+    koopa_extract "${dict[file]}"
+    koopa_cd "${dict[name]}-${dict[version]}"
     "${app[make]}" configure
     ./configure \
         --prefix="${dict[prefix]}" \

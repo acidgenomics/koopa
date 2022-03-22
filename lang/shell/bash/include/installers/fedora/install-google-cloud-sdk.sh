@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa:::fedora_install_google_cloud_sdk() { # {{{1
+fedora_install_google_cloud_sdk() { # {{{1
     # """
     # Install Google Cloud SDK.
     # @note Updated 2022-01-27.
@@ -8,9 +8,9 @@ koopa:::fedora_install_google_cloud_sdk() { # {{{1
     # @seealso
     # - https://cloud.google.com/sdk/docs/downloads-yum
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_admin
-    koopa::fedora_add_google_cloud_sdk_repo
-    koopa::fedora_dnf_install 'google-cloud-sdk'
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    koopa_fedora_add_google_cloud_sdk_repo
+    koopa_fedora_dnf_install 'google-cloud-sdk'
     return 0
 }
